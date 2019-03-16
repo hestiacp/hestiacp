@@ -14,6 +14,7 @@ OPENSSL_V='1.1.1a'
 PCRE_V='8.42'
 ZLIB_V='1.2.11'
 PHP_V='7.3.3'
+ZPUSH_V='2.3.9'
 
 # Generate Links for sourcecode
 HESTIA='https://github.com/hestiacp/hestiacp/archive/master.zip'
@@ -22,6 +23,7 @@ OPENSSL='https://www.openssl.org/source/openssl-'$OPENSSL_V'.tar.gz'
 PCRE='https://ftp.pcre.org/pub/pcre/pcre-'$PCRE_V'.tar.gz'
 ZLIB='https://www.zlib.net/zlib-'$ZLIB_V'.tar.gz'
 PHP='http://de2.php.net/distributions/php-'$PHP_V'.tar.gz'
+ZPUSH='http://download.z-push.org/final/2.3/z-push-'$ZPUSH_V'.tar.gz'
 
 # Set package dependencies for compiling
 SOFTWARE='build-essential libxml2-dev libz-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config'
@@ -59,15 +61,22 @@ for arg; do
         --hestia)
           HESTIA_B='true'
           ;;
+        --zpush)
+          ZPUSH_B='true'
+          ;;
         *)
           NOARGUMENT='true'
           ;;
     esac
 done
 
-if [[ $# -eq 0 ]] ; then
-    echo "!!! Please run with argument --all, --hestia, --nginx or --php !!!"
+if [[ $# -eq 0 ]]; then
+    echo "!!! Please run with argument --all, --hestia, --nginx, --php or --zpush !!!"
     exit 1
+fi
+
+if [ "$1" = '--beta' ]; then
+    GIT_REP='https://raw.githubusercontent.com/hestiacp/hestiacp/beta/src/deb'
 fi
 
 
@@ -164,6 +173,7 @@ if [ "$NGINX_B" = true ] ; then
     rm -r hestia-nginx_$HESTIA_V
 fi
 
+
 #################################################################################
 #
 # Building hestia-php
@@ -237,6 +247,7 @@ if [ "$PHP_B" = true ] ; then
     rm -r hestia-php_$HESTIA_V
 fi
 
+
 #################################################################################
 #
 # Building hestia
@@ -290,4 +301,63 @@ if [ "$HESTIA_B" = true ] ; then
     # clear up the source folder
     rm -r hestia_$HESTIA_V
     rm -r hestiacp-master
+fi
+
+
+#################################################################################
+#
+# Building hestia-zpush
+#
+#################################################################################
+
+if [ "$ZPUSH_B" = true ] ; then
+    # Change to build directory
+    cd $BUILD_DIR
+
+    # Check if target directory exist
+    if [ -d $BUILD_DIR/hestia-zpush_$HESTIA_V ]; then
+          #mv $BUILD_DIR/hestia-zpush_$HESTIA_V $BUILD_DIR/hestia-zpush_$HESTIA_V-$(timestamp)
+          rm -r $BUILD_DIR/hestia-zpush_$HESTIA_V
+    fi
+
+    # Create directory
+    mkdir $BUILD_DIR/hestia-zpush_$ZPUSH_V
+
+    # Download and unpack source files
+    wget $ZPUSH
+    tar xfz z-push-$ZPUSH_V.tar.gz
+    rm z-push-$ZPUSH_V.tar.gz
+
+    # Prepare Deb Package Folder Structure
+    cd hestia-zpush_$ZPUSH_V/
+    mkdir -p usr/share/z-push var/lib/z-push usr/sbin var/log/z-push DEBIAN
+
+    # Download control, postinst and postrm files
+    cd DEBIAN
+    wget $GIT_REP/zpush/control
+    wget $GIT_REP/zpush/postinst
+
+    # Set permission
+    chmod +x postinst
+
+    # Move needed directories
+    cd $BUILD_DIR/z-push-$ZPUSH_V
+    mv * ../hestia-zpush_$ZPUSH_V/usr/share/z-push
+    cp ../hestia-zpush_$ZPUSH_V/usr/share/z-push/z-push-admin.php ../hestia-zpush_$ZPUSH_V/usr/local/sbin/z-push-admin
+    cp ../hestia-zpush_$ZPUSH_V/usr/share/z-push/z-push-top.php ../hestia-zpush_$ZPUSH_V/usr/local/sbin/z-push-top
+
+    # Set permission
+    chmod +x ../hestia-zpush_$ZPUSH_V/usr/local/sbin/z-push-admin
+    chmod +x ../hestia-zpush_$ZPUSH_V/usr/local/sbin/z-push-top
+
+    # change permission and build the package
+    cd $BUILD_DIR
+    chown -R root:root hestia-zpush_$ZPUSH_V
+    chown -R www-data:www-data hestia-zpush_$ZPUSH_V/var/log/z-push
+    chown -R www-data:www-data hestia-zpush_$ZPUSH_V/var/lib/z-push
+    dpkg-deb --build hestia-zpush_$ZPUSH_V
+
+    # clear up the source folder
+    rm -fr hestia-zpush_$ZPUSH_V
+    rm -fr z-push-$ZPUSH_V
 fi

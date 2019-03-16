@@ -1,0 +1,18 @@
+Package: hestia-zpush
+Source: z-push
+Version: 2.4.5+0-0
+Architecture: all
+Maintainer: Hestia Control Panel <info@hestiacp.com>
+Installed-Size: 1920
+Depends: php (>= 5.4) | php5 (>= 5.4), php-cli | php5-cli, php-soap, php-mbstring
+Conflicts: d-push, z-push
+Replaces: d-push, z-push
+Section: web
+Priority: extra
+Homepage: http://z-push.org
+Description: open source implementation of the ActiveSync protocol
+ Z-Push is an implementation of the ActiveSync protocol which is used
+ 'over-the-air' for multi platform ActiveSync devices, including Windows
+ Phone, Apple iPhone and iPad, Android, Blackberry 10 devices and
+ MS Outlook 2013 and later. With Z-Push any groupware can be connected
+ and synchronized with these devices.

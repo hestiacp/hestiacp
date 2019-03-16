@@ -31,12 +31,12 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     apparmor-utils awstats bc bind9 bsdmainutils bsdutils clamav-daemon
     cron curl dnsutils dovecot-imapd dovecot-pop3d e2fslibs e2fsprogs exim4
     exim4-daemon-heavy expect fail2ban flex ftp git idn imagemagick
-    libapache2-mod-fcgid libapache2-mod-php libapache2-mod-rpaf
+    libapache2-mod-fcgid libapache2-mod-php libapache2-mod-rpaf php-mapi php-soap
     libapache2-mod-ruid2 lsof mc mariadb-client mariadb-common mariadb-server nginx
     ntpdate php php-cgi php-common php-curl phpmyadmin php-mysql phppgadmin
     php-pgsql postgresql postgresql-contrib proftpd-basic quota roundcube-core
     roundcube-mysql roundcube-plugins rrdtool rssh spamassassin sudo hestia
-    hestia-nginx hestia-php vim-common vsftpd webalizer whois zip"
+    hestia-nginx hestia-php hestia-zpush vim-common vsftpd webalizer whois zip"
 
 # Defining help function
 help() {
@@ -536,11 +536,9 @@ echo "deb [arch=amd64] http://nginx.org/packages/mainline/$VERSION/ $codename ng
 wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/nginx_signing.key > /dev/null 2>&1
 
-if [ "$multiphp" = 'yes' ] || [ "$phpfpm" = 'yes' ]; then
-    # Installing sury php repo
-    echo "(*) PHP"
-    add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
-fi
+# Installing sury php repo
+echo "(*) PHP"
+add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
 
 # Installing MariaDB repo
 echo "(*) MariaDB"
@@ -693,6 +691,9 @@ if [ "$exim" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/dovecot-pop3d//")
     software=$(echo "$software" | sed -e "s/clamav-daemon//")
     software=$(echo "$software" | sed -e "s/spamassassin//")
+    software=$(echo "$software" | sed -e "s/php-mapi//")
+    software=$(echo "$software" | sed -e "s/php-soap//")
+    software=$(echo "$software" | sed -e "s/hestia-zpush//")
 fi
 if [ "$clamd" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/clamav-daemon//")
@@ -1355,6 +1356,23 @@ fi
 
 
 #----------------------------------------------------------#
+#                     Configure Z-Push                     #
+#----------------------------------------------------------#
+
+if [ "$exim" = 'yes' ]
+    if [ "$apache" = 'yes' ]; then
+        cp -f $hestiacp/zpush/z-push.conf /etc/apache2/conf.d/
+    fi
+    if [ "$nginx" = 'yes' ]; then
+        cp -f $hestiacp/nginx/z-push.inc /etc/nginx/conf.d/
+    fi
+
+    #Set permissions
+    set_perms www-data www-data 700 /var/lib/z-push
+    set_perms www-data www-data 700 /var/log/z-push
+fi
+
+#----------------------------------------------------------#
 #                   Configure Roundcube                    #
 #----------------------------------------------------------#
 
@@ -1578,7 +1596,7 @@ or if you encounter any bugs or problems:
 
 E-Mail:  info@hestiacp.com
 Web:     https://www.hestiacp.com/
-Forum:   https://www.hestiacp.com/
+Forum:   https://forum.hestiacp.com/
 GitHub:  https://www.github.com/hestiacp/hestiacp
 
 --

@@ -27,7 +27,7 @@ multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3")
 fpm_v="7.3"
 
 if [ "$release" -eq 9 ]; then
-    software="nginx apache2 apache2-utils apache2-suexec-custom
+    software="nginx apache2 apache2-utils apache2-suexec-custom php-mapi
         libapache2-mod-ruid2 libapache2-mod-fcgid libapache2-mod-php php
         php-common php-cgi php-mysql php-curl php-pgsql awstats webalizer
         vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy clamav-daemon 
@@ -36,12 +36,12 @@ if [ "$release" -eq 9 ]; then
         mariadb-server postgresql postgresql-contrib phppgadmin phpmyadmin mc
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
-        unrar-free vim-common"
+        bsdmainutils cron hestia hestia-nginx hestia-php hestia-zpush
+        expect libmail-dkim-perl unrar-free vim-common php-soap"
 else
     software="nginx apache2 apache2-utils apache2.2-common
-        apache2-suexec-custom libapache2-mod-ruid2
-        libapache2-mod-fcgid libapache2-mod-php5 php5 php5-common php5-cgi
+        apache2-suexec-custom libapache2-mod-ruid2 libapache2-mod-fcgid
+        libapache2-mod-php5 php5 php5-common php5-cgi php5-mapi
         php5-mysql php5-curl php5-pgsql awstats webalizer vsftpd net-tools
         proftpd-basic bind9 exim4 exim4-daemon-heavy clamav-daemon
         spamassassin dovecot-imapd dovecot-pop3d roundcube-core
@@ -49,8 +49,8 @@ else
         mariadb-server postgresql postgresql-contrib phppgadmin phpMyAdmin mc
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
-        unrar-free vim-common"
+        bsdmainutils cron hestia hestia-nginx hestia-php hestia-zpush
+        unrar-free vim-common expect libmail-dkim-perl"
 fi
 
 # Defining help function
@@ -558,13 +558,11 @@ echo "deb [arch=amd64] http://nginx.org/packages/mainline/$VERSION/ $codename ng
 wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/nginx_signing.key > /dev/null 2>&1
 
-if [ "$multiphp" = 'yes' ] || [ "$phpfpm" = 'yes' ]; then
-    # Installing sury php repo
-    echo "(*) PHP"
-    echo "deb https://packages.sury.org/php/ $codename main" > $apt/php.list
-    wget --quiet https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key
-    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/php_signing.key > /dev/null 2>&1
-fi
+# Installing sury php repo
+echo "(*) PHP"
+echo "deb https://packages.sury.org/php/ $codename main" > $apt/php.list
+wget --quiet https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key
+APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/php_signing.key > /dev/null 2>&1
 
 # Installing MariaDB repo
 echo "(*) MariaDB"
@@ -726,6 +724,9 @@ if [ "$exim" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/dovecot-pop3d//")
     software=$(echo "$software" | sed -e "s/clamav-daemon//")
     software=$(echo "$software" | sed -e "s/spamassassin//")
+    software=$(echo "$software" | sed -e "s/php-mapi//")
+    software=$(echo "$software" | sed -e "s/php-soap//")
+    software=$(echo "$software" | sed -e "s/hestia-zpush//")
 fi
 if [ "$clamd" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/clamav-daemon//")
@@ -1392,6 +1393,24 @@ fi
 
 
 #----------------------------------------------------------#
+#                     Configure Z-Push                     #
+#----------------------------------------------------------#
+
+if [ "$exim" = 'yes' ]
+    if [ "$apache" = 'yes' ]; then
+        cp -f $hestiacp/zpush/z-push.conf /etc/apache2/conf.d/
+    fi
+    if [ "$nginx" = 'yes' ]; then
+        cp -f $hestiacp/nginx/z-push.inc /etc/nginx/conf.d/
+    fi
+
+    #Set permissions
+    set_perms www-data www-data 700 /var/lib/z-push
+    set_perms www-data www-data 700 /var/log/z-push
+fi
+
+
+#----------------------------------------------------------#
 #                   Configure Roundcube                    #
 #----------------------------------------------------------#
 
@@ -1664,7 +1683,7 @@ or if you encounter any bugs or problems:
 
 E-Mail:  info@hestiacp.com
 Web:     https://www.hestiacp.com/
-Forum:   https://www.hestiacp.com/
+Forum:   https://forum.hestiacp.com/
 GitHub:  https://www.github.com/hestiacp/hestiacp
 
 --

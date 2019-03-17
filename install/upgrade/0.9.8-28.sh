@@ -88,9 +88,9 @@ fi
 
 # Update default page templates
 echo '************************************************************************'
-echo "* Upgrading default page templates...                                  *"
-echo "* Existing templates have been backed up to the following location:    *"
-echo "* $HESTIA_BACKUP/templates/                                            *"
+echo "Upgrading default page templates...                                     "
+echo "Existing templates have been backed up to the following location:       "
+echo "$HESTIA_BACKUP/templates/                                               "
 echo '************************************************************************'
 
 if [ -d $HESTIA/data/templates/ ]; then

@@ -19,7 +19,7 @@ spinner="/-\|"
 os='ubuntu'
 release="$(lsb_release -s -r)"
 codename="$(lsb_release -s -c)"
-hestiacp="$HESTIA/install/$VERSION/$release"
+hestiacp="$HESTIA/install/hestia-data"
 
 # Define software versions
 pma_v='4.8.5'
@@ -963,9 +963,8 @@ cp -rf $hestiacp/packages $HESTIA/data/
 # Installing templates
 cp -rf $hestiacp/templates $HESTIA/data/
 
-# Copy default "Success" page for unassigned hosts
-# TO-DO: Enable when remaining packages have been updated
-# cp -rf $hestiacp/templates/web/unassigned/* /var/www/
+# Install default success page
+cp -rf $hestiacp/templates/web/unassigned/* /var/www/html/
 
 # Installing firewall rules
 cp -rf $hestiacp/firewall $HESTIA/data/

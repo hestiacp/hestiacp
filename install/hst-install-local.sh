@@ -35,8 +35,8 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     libapache2-mod-ruid2 lsof mc mariadb-client mariadb-common mariadb-server nginx
     ntpdate php php-cgi php-common php-curl phpmyadmin php-mysql phppgadmin
     php-pgsql postgresql postgresql-contrib proftpd-basic quota roundcube-core
-    hestia-nginx hestia-php hestia-zpush roundcube-mysql roundcube-plugins rrdtool
-    rssh spamassassin sudo vim-common vsftpd webalizer whois zip"
+    roundcube-mysql roundcube-plugins rrdtool rssh spamassassin sudo vim-common 
+    vsftpd webalizer whois zip"
 
 # Defining help function
 help() {
@@ -771,11 +771,13 @@ apt-get -qq update
 echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod a+x /usr/sbin/policy-rc.d
 
-# Installing apt packages
-echo "Installing Hestia Control Panel and required dependencies..."
+# Install local apt packages
+echo "Installing Hestia Control Panel packages..."
+for i in ~/hestia-install/*hestia*.deb; do
+    dpkg -i $i > /dev/null 2>&1
+done
 
-dpkg -i ~/hestia_0.9.8-28_amd64.deb
-
+echo "Installing necessary dependencies and configuring system,"
 echo -ne "NOTE: This process may take 10 to 15 minutes to complete, please wait... "
 apt-get -y install $software > /dev/null 2>&1 &
 BACK_PID=$!

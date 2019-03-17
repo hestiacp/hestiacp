@@ -1,5 +1,7 @@
 #!/bin/bash
 
+HESTIA="/usr/local/hestia"
+
 # Set version(s)
 pma_v='4.8.5'
 
@@ -49,13 +51,13 @@ if [ "$DNS_SYSTEM" = 'bind9' ] && [ ! -f /etc/apparmor.d/local/usr.sbin.named ];
 fi
 
 # Remove obsolete ports.conf if exists.
-if [ -f /usr/local/hestia/data/firewall/ports.conf ]; then
-    rm -f /usr/local/hestia/data/firewall/ports.conf
+if [ -f $HESTIA/data/firewall/ports.conf ]; then
+    rm -f $HESTIA/data/firewall/ports.conf
 fi
 
 # Reset backend port
 if [ ! -z "$BACKEND_PORT" ]; then
-    /usr/local/hestia/bin/v-change-sys-port $BACKEND_PORT
+    $HESTIA/bin/v-change-sys-port $BACKEND_PORT
 fi
 
 # Set Purge to false in roundcube config - https://goo.gl/3Nja3u
@@ -75,9 +77,9 @@ if [ -f /etc/roundcube/main.inc.php ]; then
 fi
 
 # Update Office 365 DNS templates
-if [ -f /usr/local/hestia/data/templates/dns/o365.tpl ]; then
-    rm -f /usr/local/hestia/data/templates/dns/o365.tpl 
-    cp -f /usr/local/hestia/install/hestia-data/templates/dns/office365.tpl /usr/local/hestia/data/templates/dns/
+if [ -f $HESTIA/data/templates/dns/o365.tpl ]; then
+    rm -f $HESTIA/data/templates/dns/o365.tpl 
+    cp -f $HESTIA/install/hestia-data/templates/dns/office365.tpl $HESTIA/data/templates/dns/
 fi
 
 # Update default page templates
@@ -86,10 +88,10 @@ echo "Upgrading default page templates..."
 echo "Existing templates have been backed up to /root/hestia_backup/templates/"
 echo '************************************************************************'
 
-if [ -d /usr/local/hestia/data/templates/ ]; then
+if [ -d $HESTIA/data/templates/ ]; then
     # Back up old template set
     mkdir -p /root/hestia_backup/templates/
-    cp -rf /usr/local/hestia/data/templates/* /root/hestia_backup/templates/
+    cp -rf $HESTIA/data/templates/* /root/hestia_backup/templates/
 
     # Back up and remove default index.html if it exists
     if [ -f /var/www/html/index.html ]; then
@@ -98,15 +100,15 @@ if [ -d /usr/local/hestia/data/templates/ ]; then
     fi
 
     # Remove old default page templates
-    rm -rf /usr/local/hestia/data/templates/web/skel/*
-    rm -rf /usr/local/hestia/data/templates/web/suspend/*
-    mkdir -p /usr/local/hestia/data/templates/web/unassigned/
+    rm -rf $HESTIA/data/templates/web/skel/*
+    rm -rf $HESTIA/data/templates/web/suspend/*
+    mkdir -p $HESTIA/data/templates/web/unassigned/
 
     # Copy new default templates to Hestia installation
-    cp -rf /usr/local/hestia/install/hestia-data/templates/web/skel/* /usr/local/hestia/data/templates/web/skel/
-    cp -rf /usr/local/hestia/install/hestia-data/templates/web/suspend/* /usr/local/hestia/data/templates/web/suspend/
-    cp -rf /usr/local/hestia/install/hestia-data/templates/web/unassigned/* /usr/local/hestia/data/templates/web/unassigned/
-    cp -rf /usr/local/hestia/install/hestia-data/templates/web/unassigned/* /var/www/html/
+    cp -rf $HESTIA/install/hestia-data/templates/web/skel/* $HESTIA/data/templates/web/skel/
+    cp -rf $HESTIA/install/hestia-data/templates/web/suspend/* $HESTIA/data/templates/web/suspend/
+    cp -rf $HESTIA/install/hestia-data/templates/web/unassigned/* $HESTIA/data/templates/web/unassigned/
+    cp -rf $HESTIA/install/hestia-data/templates/web/unassigned/* /var/www/html/
 
     # Correct permissions on CSS, JavaScript, and Font dependencies for unassigned hosts
     chmod 644 /var/www/html/*
@@ -115,23 +117,23 @@ if [ -d /usr/local/hestia/data/templates/ ]; then
     chmod 751 /var/www/html/webfonts
     
     # Correct permissions on CSS, JavaScript, and Font dependencies for default templates
-    chmod 751 /usr/local/hestia/data/templates/web/skel/document_errors/css
-    chmod 751 /usr/local/hestia/data/templates/web/skel/document_errors/js
-    chmod 751 /usr/local/hestia/data/templates/web/skel/document_errors/webfonts
-    chmod 751 /usr/local/hestia/data/templates/web/skel/public_*html/css
-    chmod 751 /usr/local/hestia/data/templates/web/skel/public_*html/js
-    chmod 751 /usr/local/hestia/data/templates/web/skel/public_*html/webfonts
-    chmod 751 /usr/local/hestia/data/templates/web/suspend/css
-    chmod 751 /usr/local/hestia/data/templates/web/suspend/js
-    chmod 751 /usr/local/hestia/data/templates/web/suspend/webfonts
-    chmod 751 /usr/local/hestia/data/templates/web/unassigned/css
-    chmod 751 /usr/local/hestia/data/templates/web/unassigned/js
-    chmod 751 /usr/local/hestia/data/templates/web/unassigned/webfonts
+    chmod 751 $HESTIA/data/templates/web/skel/document_errors/css
+    chmod 751 $HESTIA/data/templates/web/skel/document_errors/js
+    chmod 751 $HESTIA/data/templates/web/skel/document_errors/webfonts
+    chmod 751 $HESTIA/data/templates/web/skel/public_*html/css
+    chmod 751 $HESTIA/data/templates/web/skel/public_*html/js
+    chmod 751 $HESTIA/data/templates/web/skel/public_*html/webfonts
+    chmod 751 $HESTIA/data/templates/web/suspend/css
+    chmod 751 $HESTIA/data/templates/web/suspend/js
+    chmod 751 $HESTIA/data/templates/web/suspend/webfonts
+    chmod 751 $HESTIA/data/templates/web/unassigned/css
+    chmod 751 $HESTIA/data/templates/web/unassigned/js
+    chmod 751 $HESTIA/data/templates/web/unassigned/webfonts
 fi
 
 # Move clamav to proper location - https://goo.gl/zNuM11
-if [ ! -d /usr/local/hestia/web/edit/server/clamav-daemon ]; then
-    mv /usr/local/hestia/web/edit/server/clamd /usr/local/web/edit/server/clamav-daemon
+if [ ! -d $HESTIA/web/edit/server/clamav-daemon ]; then
+    mv $HESTIA/web/edit/server/clamd $HESTIA/web/edit/server/clamav-daemon
 fi
 
 # Fix dovecot configuration
@@ -141,19 +143,19 @@ if [ -f /etc/dovecot/conf.d/15-mailboxes.conf ]; then
 fi
 if [ -f /etc/dovecot/dovecot.conf ]; then
     # Update dovecot configuration and restart dovecot service
-    cp -f /usr/local/hestia/install/hestia-data/dovecot/dovecot.conf /etc/dovecot/dovecot.conf
+    cp -f $HESTIA/install/hestia-data/dovecot/dovecot.conf /etc/dovecot/dovecot.conf
     systemctl restart dovecot
 fi
 
 # Rebuild mailboxes
-for user in `ls /usr/local/hestia/data/users/`; do
-    v-rebuild-mail-domains $user
+for user in `ls $HESTIA/data/users/`; do
+    $HESTIA/bin/v-rebuild-mail-domains $user
 done
 
 # Remove old OS-specific installation files if they exist to free up space
-if [ -d /usr/local/hestia/install/ubuntu ]; then
-    rm -rf /usr/local/hestia/install/ubuntu
+if [ -d $HESTIA/install/ubuntu ]; then
+    rm -rf $HESTIA/install/ubuntu
 fi
-if [ -d /usr/local/hestia/install/debian ]; then
-    rm -rf /usr/local/hestia/install/debian
+if [ -d $HESTIA/install/debian ]; then
+    rm -rf $HESTIA/install/debian
 fi

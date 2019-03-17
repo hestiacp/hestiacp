@@ -31,7 +31,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     apparmor-utils awstats bc bind9 bsdmainutils bsdutils clamav-daemon
     cron curl dnsutils dovecot-imapd dovecot-pop3d e2fslibs e2fsprogs exim4
     exim4-daemon-heavy expect fail2ban flex ftp git idn imagemagick
-    libapache2-mod-fcgid libapache2-mod-php libapache2-mod-rpaf php-mapi php-soap
+    libapache2-mod-fcgid libapache2-mod-php libapache2-mod-rpaf php-soap
     libapache2-mod-ruid2 lsof mc mariadb-client mariadb-common mariadb-server nginx
     ntpdate php php-cgi php-common php-curl phpmyadmin php-mysql phppgadmin
     php-pgsql postgresql postgresql-contrib proftpd-basic quota roundcube-core
@@ -774,13 +774,12 @@ chmod a+x /usr/sbin/policy-rc.d
 # Install local apt packages
 echo "Installing Hestia Control Panel packages..."
 for i in ~/hestia-install/*hestia*.deb; do
-    dpkg -i $i > /dev/null 2>&1
+    dpkg -i $i
 done
 
 echo "Installing necessary dependencies and configuring system,"
 echo -ne "NOTE: This process may take 10 to 15 minutes to complete, please wait... "
-apt-get -y install $software > /dev/null 2>&1 &
-BACK_PID=$!
+apt-get -y install $software
 
 # Check if package installation is done, print a spinner
 spin_i=1

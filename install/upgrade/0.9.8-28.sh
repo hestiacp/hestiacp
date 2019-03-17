@@ -133,3 +133,11 @@ fi
 if [ ! -d /usr/local/hestia/web/edit/server/clamav-daemon ]; then
     mv /usr/local/hestia/web/edit/server/clamd /usr/local/web/edit/server/clamav-daemon
 fi
+
+# Remove old OS-specific installation files if they exist to free up space
+if [-d /usr/local/hestia/install/ubuntu ]; then
+    rm -rf /usr/local/hestia/install/ubuntu
+fi
+if [-d /usr/local/hestia/install/debian ]; then
+    rm -rf /usr/local/hestia/install/debian
+fi

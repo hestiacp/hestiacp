@@ -2,12 +2,12 @@
 # Hestia installation wrapper
 # https://www.hestiacp.com
 
-#
-# Currently Supported Operating Systems:
-#
-#   Debian 8, 9
-#   Ubuntu 14.04, 16.04, 18.04
-#
+# ========================================================= #
+#   Currently Supported Operating Systems:                  #
+#                                                           #
+#   Debian 8, 9                                             #
+#   Ubuntu 16.04, 18.04 (LTS releases)                      #
+# ========================================================= #
 
 # Am I root?
 if [ "x$(id -u)" != 'x0' ]; then

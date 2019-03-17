@@ -1,6 +1,10 @@
 #!/bin/bash
 
+HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
 HESTIA="/usr/local/hestia"
+
+# Create backup directory
+mkdir -p $HESTIA_BACKUP
 
 # Set version(s)
 pma_v='4.8.5'
@@ -84,18 +88,19 @@ fi
 
 # Update default page templates
 echo '************************************************************************'
-echo "Upgrading default page templates..."
-echo "Existing templates have been backed up to /root/hestia_backup/templates/"
+echo "* Upgrading default page templates...                                  *"
+echo "* Existing templates have been backed up to the following location:    *"
+echo "* $HESTIA_BACKUP/templates/                                            *"
 echo '************************************************************************'
 
 if [ -d $HESTIA/data/templates/ ]; then
     # Back up old template set
-    mkdir -p /root/hestia_backup/templates/
-    cp -rf $HESTIA/data/templates/* /root/hestia_backup/templates/
+    mkdir -p $HESTIA_BACKUP/templates/
+    cp -rf $HESTIA/data/templates/* $HESTIA_BACKUP/
 
     # Back up and remove default index.html if it exists
     if [ -f /var/www/html/index.html ]; then
-        cp -rf /var/www/html/index.html /root/hestia_backup/templates/
+        cp -rf /var/www/html/index.html $HESTIA_BACKUP/templates/
         rm -rf /var/www/html/index.html
     fi
 

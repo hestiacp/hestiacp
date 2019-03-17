@@ -66,6 +66,14 @@ if [ -f /etc/roundcube/main.inc.php ]; then
     sed -i "s/deletion'] = 'Purge'/deletion'] = false/g" /etc/roundcube/main.inc.php
 fi
 
+# Enable spell-check exception dictionary for Roundcube users
+if [ -f /etc/roundcube/config.inc.php ]; then
+    sed -i "s/spellcheck_dictionary'] = false/spellcheck_dictionary'] = true/g" /etc/roundcube/config.inc.php
+fi
+if [ -f /etc/roundcube/main.inc.php ]; then
+    sed -i "s/spellcheck_dictionary'] = false/spellcheck_dictionary'] = true/g" /etc/roundcube/main.inc.php
+fi
+
 # Update Office 365 DNS templates
 if [ -f /usr/local/hestia/data/templates/dns/o365.tpl ]; then
     rm -f /usr/local/hestia/data/templates/dns/o365.tpl 

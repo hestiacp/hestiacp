@@ -457,7 +457,7 @@ $rcmail_config['enable_spellcheck'] = true;
 
 // Enables spellchecker exceptions dictionary.
 // Setting it to 'shared' will make the dictionary shared by all users.
-$rcmail_config['spellcheck_dictionary'] = false;
+$rcmail_config['spellcheck_dictionary'] = true;
 
 // Set the spell checking engine. 'googie' is the default. 'pspell' is also available,
 // but requires the Pspell extensions. When using Nox Spell Server, also set 'googie' here.

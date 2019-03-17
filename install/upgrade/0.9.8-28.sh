@@ -69,7 +69,7 @@ fi
 # Update Office 365 DNS templates
 if [ -f /usr/local/hestia/data/templates/dns/o365.tpl ]; then
     rm -f /usr/local/hestia/data/templates/dns/o365.tpl 
-    cp -f /usr/local/hestia/install/ubuntu/18.04/templates/dns/office365.tpl /usr/local/hestia/data/templates/dns/
+    cp -f /usr/local/hestia/install/hestia-data/templates/dns/office365.tpl /usr/local/hestia/data/templates/dns/
 fi
 
 # Update default page templates
@@ -82,19 +82,23 @@ if [ -d /usr/local/hestia/data/templates/ ]; then
     # Back up old template set
     mkdir -p /root/hestia_backup/templates/
     cp -rf /usr/local/hestia/data/templates/* /root/hestia_backup/templates/
-    cp -rf /var/www/html/index.html /root/hestia_backup/templates/
+
+    # Back up and remove default index.html if it exists
+    if [ -f /var/www/html/index.html ]; then
+        cp -rf /var/www/html/index.html /root/hestia_backup/templates/
+        rm -rf /var/www/html/index.html
+    fi
 
     # Remove old default page templates
     rm -rf /usr/local/hestia/data/templates/web/skel/*
     rm -rf /usr/local/hestia/data/templates/web/suspend/*
-    rm -rf /var/www/html/index.html
     mkdir -p /usr/local/hestia/data/templates/web/unassigned/
 
     # Copy new default templates to Hestia installation
-    cp -rf /usr/local/hestia/install/ubuntu/18.04/templates/web/skel/* /usr/local/hestia/data/templates/web/skel/
-    cp -rf /usr/local/hestia/install/ubuntu/18.04/templates/web/suspend/* /usr/local/hestia/data/templates/web/suspend/
-    cp -rf /usr/local/hestia/install/ubuntu/18.04/templates/web/unassigned/* /usr/local/hestia/data/templates/web/unassigned/
-    cp -rf /usr/local/hestia/install/ubuntu/18.04/templates/web/unassigned/* /var/www/html/
+    cp -rf /usr/local/hestia/install/hestia-data/templates/web/skel/* /usr/local/hestia/data/templates/web/skel/
+    cp -rf /usr/local/hestia/install/hestia-data/templates/web/suspend/* /usr/local/hestia/data/templates/web/suspend/
+    cp -rf /usr/local/hestia/install/hestia-data/templates/web/unassigned/* /usr/local/hestia/data/templates/web/unassigned/
+    cp -rf /usr/local/hestia/install/hestia-data/templates/web/unassigned/* /var/www/html/
 
     # Correct permissions on CSS, JavaScript, and Font dependencies for unassigned hosts
     chmod 644 /var/www/html/*

@@ -34,7 +34,7 @@ ssh root@your.server
 ```
 Download the installation script:
 ```bash
-wget https://raw.githubusercontent.com/kristankenney/hestiacp/master/install/hst-install-ubuntu.sh
+wget https://raw.githubusercontent.com/kristankenney/hestiacp/development/install/hst-install-ubuntu.sh
 ```
 Run the installation script and follow the on-screen instructions:
 ```bash

@@ -11,4 +11,4 @@ ID='10' RECORD='pop' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%tim
 ID='11' RECORD='imap' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='12' RECORD='@' TYPE='MX' PRIORITY='10' VALUE='mail.%domain%.' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='13' RECORD='@' TYPE='TXT' PRIORITY='' VALUE='"v=spf1 a mx ip4:%ip% ~all"' SUSPENDED='no' TIME='%time%' DATE='%date%'
-ID='14' RECORD='_dmarc' TYPE='TXT' PRIORITY='' VALUE='"v=DMARC1; p=none"' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='14' RECORD='_dmarc' TYPE='TXT' PRIORITY='' VALUE='"v=DMARC1; p=quarantine; pct=100"' SUSPENDED='no' TIME='%time%' DATE='%date%'

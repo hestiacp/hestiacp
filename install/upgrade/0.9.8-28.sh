@@ -92,6 +92,13 @@ if [ -f $HESTIA/data/templates/dns/o365.tpl ]; then
     cp -f $HESTIA/install/hestia-data/templates/dns/office365.tpl $HESTIA/data/templates/dns/
 fi
 
+# Upgrade default hosting package templates
+if [ -f $HESTIA/data/packages/default.pkg ]; then
+    mkdir -p $HESTIA_BACKUP/packages/
+    cp -rf $HESTIA/data/packages/* $HESTIA_BACKUP/packages/
+    cp -f $HESTIA/install/hestia-data/packages/* $HESTIA/data/packages/
+fi
+
 # Update default page templates
 echo '************************************************************************'
 echo "Upgrading default page templates...                                     "

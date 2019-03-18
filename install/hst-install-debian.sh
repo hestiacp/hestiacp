@@ -27,22 +27,22 @@ multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3")
 fpm_v="7.3"
 
 if [ "$release" -eq 9 ]; then
-    software="nginx apache2 apache2-utils apache2-suexec-custom php-mapi
+    software="nginx apache2 apache2-utils apache2-suexec-custom
         libapache2-mod-ruid2 libapache2-mod-fcgid libapache2-mod-php php
         php-common php-cgi php-mysql php-curl php-pgsql awstats webalizer
         vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy clamav-daemon 
         spamassassin dovecot-imapd dovecot-pop3d roundcube-core net-tools
         roundcube-mysql roundcube-plugins mariadb-client mariadb-common
-        mariadb-server postgresql postgresql-contrib phppgadmin phpmyadmin mc
-        flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
-        e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron hestia hestia-nginx hestia-php hestia-zpush
-        expect libmail-dkim-perl unrar-free vim-common php-soap"
+        mariadb-server postgresql postgresql-contrib php-imap php-mapi php-soap
+        phppgadmin phpmyadmin mc flex whois rssh git idn zip sudo bc ftp
+        lsof ntpdate rrdtool quota e2fslibs bsdutils e2fsprogs curl imagemagick
+        fail2ban dnsutils bsdmainutils cron hestia hestia-nginx hestia-php 
+        hestia-zpush expect libmail-dkim-perl unrar-free vim-common "
 else
     software="nginx apache2 apache2-utils apache2.2-common
         apache2-suexec-custom libapache2-mod-ruid2 libapache2-mod-fcgid
         libapache2-mod-php5 php5 php5-common php5-cgi php5-mapi
-        php5-mysql php5-curl php5-pgsql awstats webalizer vsftpd net-tools
+        php5-mysql php5-curl php5-pgsql php5-imap php5-apcu
         proftpd-basic bind9 exim4 exim4-daemon-heavy clamav-daemon
         spamassassin dovecot-imapd dovecot-pop3d roundcube-core
         roundcube-mysql roundcube-plugins mariadb-client mariadb-common
@@ -50,7 +50,8 @@ else
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron hestia hestia-nginx hestia-php hestia-zpush
-        unrar-free vim-common expect libmail-dkim-perl"
+        unrar-free vim-common expect libmail-dkim-perl awstats
+        webalizer vsftpd net-tools"
 fi
 
 # Defining help function

@@ -31,12 +31,13 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     apparmor-utils awstats bc bind9 bsdmainutils bsdutils clamav-daemon
     cron curl dnsutils dovecot-imapd dovecot-pop3d e2fslibs e2fsprogs exim4
     exim4-daemon-heavy expect fail2ban flex ftp git idn imagemagick
-    libapache2-mod-fcgid libapache2-mod-php libapache2-mod-rpaf php-mapi php-soap
+    libapache2-mod-fcgid libapache2-mod-php libapache2-mod-rpaf 
     libapache2-mod-ruid2 lsof mc mariadb-client mariadb-common mariadb-server nginx
-    ntpdate php php-cgi php-common php-curl phpmyadmin php-mysql phppgadmin
-    php-pgsql postgresql postgresql-contrib proftpd-basic quota roundcube-core
-    roundcube-mysql roundcube-plugins rrdtool rssh spamassassin sudo hestia
-    hestia-nginx hestia-php hestia-zpush vim-common vsftpd webalizer whois zip"
+    ntpdate php php-cgi php-common php-imap php-apcu php-curl php-mapi php-soap
+    phpmyadmin php-mysql phppgadmin php-pgsql postgresql postgresql-contrib
+    proftpd-basic quota roundcube-core roundcube-mysql roundcube-plugins rrdtool
+    rssh spamassassin sudo hestia hestia-nginx hestia-php hestia-zpush
+    vim-common vsftpd webalizer whois zip"
 
 # Defining help function
 help() {

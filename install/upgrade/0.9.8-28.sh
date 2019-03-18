@@ -142,6 +142,17 @@ if [ -d $HESTIA/data/templates/ ]; then
     chmod 751 $HESTIA/data/templates/web/unassigned/webfonts
 fi
 
+# Add unassigned hosts configuration to nginx
+if [ -f /usr/local/hestia/data/ips/* ]; then
+    for ip in /usr/local/hestia/data/ips/*; do
+        ipaddr=${ip##*/}
+        rm -f /etc/nginx/conf.d/$ip.conf
+        cp -f $HESTIA/install/hestia-data/nginx/unassigned.inc /etc/nginx/conf.d/$ipaddr.conf
+        sed -i 's/directIP/'$ipaddr'/g' /etc/nginx/conf.d/$ipaddr.conf
+        systemctl restart nginx
+    done
+fi
+
 # Move clamav to proper location - https://goo.gl/zNuM11
 if [ ! -d $HESTIA/web/edit/server/clamav-daemon ]; then
     mv $HESTIA/web/edit/server/clamd $HESTIA/web/edit/server/clamav-daemon

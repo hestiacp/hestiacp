@@ -1042,6 +1042,17 @@ if [ "$nginx" = 'yes' ]; then
         service php$fpm_v-fpm start >> $LOG
         check_result $? "php$fpm_v-fpm start failed"
     fi
+
+    # Add unassigned hosts configuration
+    if [ -f /usr/local/hestia/data/ips/* ]; then
+        for ip in /usr/local/hestia/data/ips/*; do
+            ipaddr=${ip##*/}
+            rm -f /etc/nginx/conf.d/$ip.conf
+            cp -f $hestiacp/nginx/unassigned.inc /etc/nginx/conf.d/$ipaddr.conf
+            sed -i 's/directIP/'$ipaddr'/g' /etc/nginx/conf.d/$ipaddr.conf
+        done
+    fi
+
     update-rc.d nginx defaults > /dev/null 2>&1
     service nginx start >> $LOG
     check_result $? "nginx start failed"

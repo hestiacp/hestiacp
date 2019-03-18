@@ -760,5 +760,5 @@ $LANG['en'] = array(
 
     '2 Factor Authentication' => 'Two-factor Authentication',
     'Enable 2FA' => 'Enable two-factor authentication',
-    'Please scan the code below in your 2FA application:' => 'Scan the QR code below using an authentication app:',
+    'Please scan the code below in your 2FA application:' => 'Scan the QR code below using an authentication app<br />(such as Google Authenticator) in order to use two-factor authentication:',
 );

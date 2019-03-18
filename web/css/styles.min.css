@@ -3110,6 +3110,15 @@ a.button.cancel {
   vertical-align: top;
   width: 500px;
 }
+.qr-code {
+  border: 1px solid #cfcfcf;
+  border-radius: 4px;
+  box-shadow: 0px 1px 4px rgba(0,0,0,0.15);
+}
+
+.password-option {
+  margin-top: 15px;
+}
 
 .login a.error {
   color: #BE5ABF;

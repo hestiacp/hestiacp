@@ -6,6 +6,9 @@ HESTIA="/usr/local/hestia"
 # Create backup directory
 mkdir -p $HESTIA_BACKUP
 
+# load hestia.conf
+source /usr/local/hestia/conf/hestia.conf
+
 # Set version(s)
 pma_v='4.8.5'
 

@@ -757,4 +757,8 @@ $LANG['en'] = array(
     'Email Credentials' => 'Email Credentials',
 
     'Force SSL/HTTPS' => 'Force secure connections (SSL) for this domain',
+
+    '2 Factor Authentication' => 'Two-factor Authentication',
+    'Enable 2FA' => 'Enable two-factor authentication',
+    'Please scan the code below in your 2FA application:' => 'Scan the QR code below using an authentication app:',
 );

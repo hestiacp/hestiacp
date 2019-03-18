@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: enable/disable directory browsing
+# info: enable/disable directory listing
 # options: USER DOMAIN MODE
 #
-# The call is used for changing directory browsing mode.
+# The call is used for changing the directory list mode.
 
 
 #----------------------------------------------------------#
@@ -45,21 +45,21 @@ is_object_unsuspended 'web' 'DOMAIN' "$domain"
 get_domain_values 'web'
 
 if [ "$mode" = "on" ]; then
-# Enable directory browsing
+# Enable directory listing
 sed -i "s/-Index/+Index/g" /home/$user/conf/web/$domain.apache2.conf
     if [ -e "$ssl_dir/$domain.ca" ]; then
-    # Enable directory browsing when SSL is enforced
+        # Enable directory listing for SSL-enforced domains
         sed -i "s/-Index/+Index/g" /home/$user/conf/web/forcessl.$domain.apache2.conf
     fi
-echo "Enabled directory browsing for $domain."
+echo "INFO: Enabled directory browsing for $domain."
 else
-# Disable directory browsing
+# Disable directory listing
 sed -i "s/+Index/-Index/g" /home/$user/conf/web/$domain.apache2.conf
     if [ -e "$ssl_dir/$domain.ca" ]; then
-    # Disable directory browsing when SSL is enforced
+        # Enable directory listing for SSL-enforced domains
         sed -i "s/+Index/-Index/g" /home/$user/conf/web/forcessl.$domain.apache2.conf
     fi
-echo "Disabled directory browsing for $domain."
+echo "INFO: Disabled directory browsing for $domain."
 fi
 
 
@@ -71,7 +71,7 @@ fi
 $BIN/v-restart-web
 
 # Logging
-log_history "Turned directory browsing $mode for $domain."
+log_history "turned directory browsing $mode for $domain."
 log_event "$OK" "$EVENT"
 
 exit

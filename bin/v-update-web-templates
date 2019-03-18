@@ -16,31 +16,13 @@ restart=$1
 source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
 
-# Detect OS
-case $(head -n1 /etc/issue | cut -f 1 -d ' ') in
-    Debian)     type="debian" ;;
-    Ubuntu)     type="ubuntu" ;;
-    *)          type="NoSupport" ;;
-esac
-
-# Detect version
-if [ "$type" = "ubuntu" ]; then
-    release="$(lsb_release -s -r)"
-elif [ "$type" = "debian" ]; then
-    release=$(cat /etc/debian_version|grep -o [0-9]|head -n1)
-else
-    echo "Error: can't detect supported os"
-    log_event "$E_NOTEXIST"
-    exit $E_NOTEXIST
-fi
-
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Update templates
-cp -rf $HESTIA/install/$type/$release/templates/web $HESTIA/data/templates/
+cp -rf $HESTIA/install/hestia-data/templates/web $HESTIA/data/templates/
 
 # Rebuilding web domains
 for user in $($BIN/v-list-sys-users plain); do

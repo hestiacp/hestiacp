@@ -48,25 +48,25 @@ is_web_domain_cert_valid
 # Deleting old certificate
 tmpdir=$(mktemp -p $HOMEDIR/$user/web/$domain/private -d)
 rm -f $HOMEDIR/$user/conf/web/ssl.$domain.*
-mv $USER_DATA/mail-ssl/$domain.* $tmpdir
+mv $USER_DATA/ssl/mail/$domain.* $tmpdir
 chown -R $user:$user $tmpdir
 
 # Adding new certificate to user data directory
-cp -f $ssl_dir/$domain.crt $USER_DATA/mail-ssl/$domain.crt
-cp -f $ssl_dir/$domain.key $USER_DATA/mail-ssl/$domain.key
-cp -f $ssl_dir/$domain.crt $USER_DATA/mail-ssl/$domain.pem
+cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/mail/$domain.crt
+cp -f $ssl_dir/$domain.key $USER_DATA/ssl/mail/$domain.key
+cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/mail/$domain.pem
 if [ -e "$ssl_dir/$domain.ca" ]; then
-    cp -f $ssl_dir/$domain.ca $USER_DATA/mail-ssl/$domain.ca
-    cat $USER_DATA/ssl/$domain.ca >> $USER_DATA/mail-ssl/$domain.pem
+    cp -f $ssl_dir/$domain.ca $USER_DATA/ssl/mail/$domain.ca
+    cat $USER_DATA/ssl/$domain.ca >> $USER_DATA/ssl/mail/$domain.pem
 fi
-chmod 660 $USER_DATA/mail-ssl/${domain_idn}.*
+chmod 660 $USER_DATA/ssl/mail/${domain_idn}.*
 
 # Adding new certificate to user dir
-cp -f $USER_DATA/mail-ssl/$domain.crt $HOMEDIR/$user/conf/mail/ssl.$domain.crt
-cp -f $USER_DATA/mail-ssl/$domain.key $HOMEDIR/$user/conf/mail/ssl.$domain.key
-cp -f $USER_DATA/mail-ssl/$domain.pem $HOMEDIR/$user/conf/mail/ssl.$domain.pem
-if [ -e "$USER_DATA/mail-ssl/$domain.ca" ]; then
-    cp -f $USER_DATA/mail-ssl/$domain.ca $HOMEDIR/$user/conf/mail/ssl.$domain.ca
+cp -f $USER_DATA/ssl/mail/$domain.crt $HOMEDIR/$user/conf/mail/ssl.$domain.crt
+cp -f $USER_DATA/ssl/mail/$domain.key $HOMEDIR/$user/conf/mail/ssl.$domain.key
+cp -f $USER_DATA/ssl/mail/$domain.pem $HOMEDIR/$user/conf/mail/ssl.$domain.pem
+if [ -e "$USER_DATA/ssl/mail/$domain.ca" ]; then
+    cp -f $USER_DATA/ssl/mail/$domain.ca $HOMEDIR/$user/conf/mail/ssl.$domain.ca
 fi
 
 

@@ -39,7 +39,7 @@ fi
 
 # Reset counters
 U_MAIL_DOMAINS=0
-U_MAIL_DKMI=0
+U_MAIL_DKIM=0
 U_MAIL_ACCOUNTS=0
 SUSPENDED_MAIL=0
 U_DISK_MAIL=0
@@ -62,7 +62,7 @@ done
 
 # Updating counters
 update_user_value "$user" '$U_MAIL_DOMAINS' "$U_MAIL_DOMAINS"
-update_user_value "$user" '$U_MAIL_DKMI' "$U_MAIL_DKMI"
+update_user_value "$user" '$U_MAIL_DKIM' "$U_MAIL_DKIM"
 update_user_value "$user" '$U_MAIL_ACCOUNTS' "$U_MAIL_ACCOUNTS"
 update_user_value "$user" '$SUSPENDED_MAIL' "$SUSPENDED_MAIL"
 update_user_value "$user" '$U_DISK_MAIL' "$U_DISK_MAIL"

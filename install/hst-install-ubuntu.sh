@@ -1636,4 +1636,7 @@ echo
 cat $tmpfile
 rm -f $tmpfile
 
+# Reload bash profile to enable Hestia commands
+source ~/.bash_profile
+
 # EOF

@@ -78,7 +78,122 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_catchall" value="<?=htmlentities(trim($v_catchall, "'"))?>" >
+                                    <input type="text" size="20" class="vst-input" name="v_catchall" value="<?=htmlentities(trim($v_catchall, "'"))?>" > <?php /*'*/ ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text step-top">
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');"> <?php print __('SSL Support');?></label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="step-left">
+                                    <table style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;" id="ssltable">
+                                        <tr>
+                                            <td class="input-label vst-text">
+                                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letencrypt == 'on') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_letsencrypt(this)"> <?php print __('Lets Encrypt Support');?></label>
+                                            </td>
+                                        </tr>
+                                      
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print __('SSL Certificate');?>
+                                                <span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=$v_domain?>"><?=__('Generate CSR')?></a></span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <textarea size="20" class="vst-textinput" name="v_ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print __('SSL Key');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <textarea size="20" class="vst-textinput" name="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print __('SSL Certificate Authority / Intermediate');?> <span class="optional">(<?php print __('optional');?>)</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <textarea size="20" class="vst-textinput" name="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
+                                            </td>
+                                        </tr>
+                                        <?
+                                        if ($v_ssl != 'no' ) { ?>
+                                            <tr>
+                                                <td>
+                                                    <table class="additional-info">
+                                                        <tr>
+                                                            <td>
+                                                                <?=__('SUBJECT')?>:
+                                                            </td>
+                                                            <td class="details">
+                                                                <?=$v_ssl_subject?>
+                                                            </td>
+                                                        </tr>
+                                                        <? if($v_ssl_aliases){?>
+                                                            <tr>
+                                                                <td>
+                                                                    <?=__('ALIASES')?>:
+                                                                </td>
+                                                                <td class="details">
+                                                                    <?=$v_ssl_aliases?>
+                                                                </td>
+                                                            </tr>
+                                                        <? } ?>
+                                                        <tr>
+                                                            <td>
+                                                                <?=__('NOT_BEFORE')?>:
+                                                            </td>
+                                                            <td class="details">
+                                                                <?=$v_ssl_not_before?>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <?=__('NOT_AFTER')?>:
+                                                            </td>
+                                                            <td class="details">
+                                                                <?=$v_ssl_not_after?>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <?=__('SIGNATURE')?>:
+                                                            </td>
+                                                            <td class="details">
+                                                                <?=$v_ssl_signature?>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <?=__('PUB_KEY')?>:
+                                                            </td>
+                                                            <td class="details">
+                                                                <?=$v_ssl_pub_key?>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <?=__('ISSUER')?>
+                                                            </td>
+                                                            <td class="details">
+                                                                <?=$v_ssl_issuer?>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        <? } // if ssl is enabled ?>
+                                    </table>
                                 </td>
                             </tr>
                         </table>

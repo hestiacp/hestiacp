@@ -28,6 +28,8 @@ json_list() {
         "CATCHALL": "'$CATCHALL'",
         "ACCOUNTS": "'$ACCOUNTS'",
         "U_DISK": "'$U_DISK'",
+        "SSL": "'$SSL'",
+        "LETSENCRYPT": "'$LETSENCRYPT'",
         "SUSPENDED": "'$SUSPENDED'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
@@ -44,6 +46,8 @@ shell_list() {
     echo "CATCHALL:       $CATCHALL"
     echo "ACCOUNTS:       $ACCOUNTS"
     echo "DISK:           $U_DISK"
+    echo "SSL:            $SSL"
+    echo "LETSENCRYPT:    $LETSENCRYPT"
     echo "SUSPENDED:      $SUSPENDED"
     echo "TIME:           $TIME"
     echo "DATE:           $DATE"
@@ -52,15 +56,15 @@ shell_list() {
 # PLAIN list function
 plain_list() {
     echo -ne "$DOMAIN\t$ANTIVIRUS\t$ANTISPAM\t$DKIM\t$CATCHALL\t"
-    echo -e "$ACCOUNTS\t$U_DISK\t$SUSPENDED\t$TIME\t$DATE"
+    echo -e "$ACCOUNTS\t$U_DISK\t$SSL\t$LETSENCRYPT\t$SUSPENDED\t$TIME\t$DATE"
 }
 
 # CSV list function
 csv_list() {
     echo -n "DOMAIN,ANTIVIRUS,ANTISPAM,DKIM,CATCHALL,ACCOUNTS,U_DISK,"
-    echo "SUSPENDED,TIME,DATE"
+    echo "SSL,LETSENCRYPT,SUSPENDED,TIME,DATE"
     echo -n "$DOMAIN,$ANTIVIRUS,$ANTISPAM,$DKIM,$CATCHALL,$ACCOUNTS,$U_DISK"
-    echo "$SUSPENDED,$TIME,$DATE"
+    echo "$SSL,$LETSENCRYPT,$SUSPENDED,$TIME,$DATE"
 }
 
 

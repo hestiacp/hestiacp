@@ -77,7 +77,7 @@ rm -f $USER_DATA/mail/*@$domain.msg
 # Decreasing domain value
 decrease_user_value "$user" '$U_MAIL_DOMAINS'
 if [ "$DKIM" = 'yes' ]; then
-    decrease_user_value "$user" '$U_MAIL_DKMI'
+    decrease_user_value "$user" '$U_MAIL_DKIM'
 fi
 decrease_user_value "$user" '$U_MAIL_ACCOUNTS' "$accounts"
 

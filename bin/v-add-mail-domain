@@ -136,7 +136,7 @@ fi
 # Increasing domain value
 increase_user_value "$user" '$U_MAIL_DOMAINS'
 if [ "$dkim" = 'yes' ]; then
-    increase_user_value "$user" '$U_MAIL_DKMI'
+    increase_user_value "$user" '$U_MAIL_DKIM'
 fi
 
 # Logging

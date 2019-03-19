@@ -9,6 +9,9 @@ mkdir -p $HESTIA_BACKUP
 # load hestia.conf
 source /usr/local/hestia/conf/hestia.conf
 
+# load hestia main functions
+source /usr/local/hestia/func/main.sh
+
 # Set version(s)
 pma_v='4.8.5'
 

@@ -61,10 +61,6 @@ is_web_domain_cert_valid
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-if [ ! -d "$USER_DATA/mail-ssl" ]; then
-    mkdir -p $USER_DATA/mail-ssl
-    chmod 750 $USER_DATA/mail-ssl
-fi
 
 if [ ! -d "$HOMEDIR/$user/conf/mail/$domain/ssl" ]; then
     mkdir -p $HOMEDIR/$user/conf/mail/$domain/ssl

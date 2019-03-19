@@ -31,6 +31,7 @@ json_list() {
         "CATCHALL": "'$CATCHALL'",
         "ACCOUNTS": "'$ACCOUNTS'",
         "U_DISK": "'$U_DISK'",
+        "SSL": "'$SSL'",
         "SUSPENDED": "'$SUSPENDED'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
@@ -48,11 +49,11 @@ json_list() {
 # SHELL list function
 shell_list() {
     IFS=$'\n'
-    echo "DOMAIN   ANTIVIRUS   ANTISPAM   DKIM  ACC   DISK   SPND   DATE"
-    echo "------   ---------   --------   ----  ---   ----   ---   ----"
+    echo "DOMAIN   ANTIVIRUS   ANTISPAM   DKIM  SSL   ACC   DISK   SPND   DATE"
+    echo "------   ---------   --------   ----  ---   ---   ----   ---   ----"
     while read str; do
         eval $str
-        echo -n "$DOMAIN $ANTIVIRUS $ANTISPAM $DKIM $ACCOUNTS $U_DISK "
+        echo -n "$DOMAIN $ANTIVIRUS $ANTISPAM $DKIM $SSL $ACCOUNTS $U_DISK "
         echo "$SUSPENDED $DATE"
     done < <(cat $USER_DATA/mail.conf)
 }
@@ -62,7 +63,7 @@ plain_list() {
     IFS=$'\n'
     while read str; do
         eval $str
-        echo -ne "$DOMAIN\t$ANTIVIRUS\t$ANTISPAM\t$DKIM\t$CATCHALL\t"
+        echo -ne "$DOMAIN\t$ANTIVIRUS\t$ANTISPAM\t$DKIM\t$SSL\$CATCHALL\t"
         echo -e "$ACCOUNTS\t$U_DISK\t$SUSPENDED\t$TIME\t$DATE"
     done < <(cat $USER_DATA/mail.conf)
 }
@@ -70,11 +71,11 @@ plain_list() {
 # CSV list function
 csv_list() {
     IFS=$'\n'
-    echo -n "DOMAIN,ANTIVIRUS,ANTISPAM,DKIM,CATCHALL,ACCOUNTS,U_DISK,"
+    echo -n "DOMAIN,ANTIVIRUS,ANTISPAM,DKIM,SSL,CATCHALL,ACCOUNTS,U_DISK,"
     echo "SUSPENDED,TIME,DATE"
     while read str; do
         eval $str
-        echo -n "$DOMAIN,$ANTIVIRUS,$ANTISPAM,$DKIM,$CATCHALL,$ACCOUNTS,"
+        echo -n "$DOMAIN,$ANTIVIRUS,$ANTISPAM,$DKIM,$SSL,$CATCHALL,$ACCOUNTS,"
         echo "'$U_DISK,$SUSPENDED,$TIME,$DATE"
         echo
     done < <(cat $USER_DATA/mail.conf)

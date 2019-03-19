@@ -62,6 +62,13 @@ is_web_domain_cert_valid
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Create necessary data directories if they do not exist
+
+if [ ! -d "$USER_DATA/ssl/mail" ]; then
+    mkdir -p $USER_DATA/ssl/mail
+    chmod 750 $USER_DATA/ssl/mail
+fi
+
 if [ ! -d "$HOMEDIR/$user/conf/mail/$domain/ssl" ]; then
     mkdir -p $HOMEDIR/$user/conf/mail/$domain/ssl
     chmod 750 $HOMEDIR/$user/conf/mail/$domain/ssl

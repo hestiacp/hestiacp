@@ -8,7 +8,7 @@
 #SPAM_SCORE = 50
 #CLAMD = yes
 
-smtp_banner = $smtp_active_hostname \
+smtp_banner = $smtp_active_hostname
 add_environment = <; PATH=/bin:/usr/bin
 keep_environment =
 disable_ipv6 = true
@@ -34,9 +34,10 @@ spamd_address = 127.0.0.1 783
 av_scanner = clamd: /var/run/clamav/clamd.ctl
 .endif
 
+
 tls_advertise_hosts = *
-tls_certificate = /usr/local/hestia/ssl/certificate.crt
-tls_privatekey = /usr/local/hestia/ssl/certificate.key
+tls_privatekey = ${if exists{/usr/local/hestia/ssl/exim.${tls_sni}.key}{/usr/local/hestia/ssl/exim.${tls_sni}.key}{/usr/local/hestia/ssl/certificate.crt}}
+tls_certificate = ${if exists{/usr/local/hestia/ssl/exim.${tls_sni}.pem}{/usr/local/hestia/ssl/exim.${tls_sni}.pem}{/usr/local/hestia/ssl/certificate.crt}}
 
 daemon_smtp_ports = 25 : 465 : 587
 tls_on_connect_ports = 465

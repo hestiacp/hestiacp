@@ -240,3 +240,9 @@ for user in $userlist; do
     done < $conf
 done
 
+# Update exim configuration to support multi-domain mail SSL
+if [ -f /etc/exim4/exim4.conf.template ]; then
+    rm -f /etc/exim4/exim4.conf.template
+    cp -f $HESTIA/install/hestia-data/exim/exim4.conf.template /etc/exim4/
+    systemctl restart exim4
+fi

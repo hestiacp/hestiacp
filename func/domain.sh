@@ -575,7 +575,7 @@ get_mail_config_lines() {
         check_result $E_PARSING "V_DOMAIN in get_mail_config_lines is empty"
     fi
 
-    vhost_lines=$(grep -ni "local_name ${v_domain} {" $1)
+    vhost_lines=$(grep -ni "local_name mail.${v_domain} {" $1)
     vhost_lines=$(echo "$vhost_lines" |cut -f 1 -d : |cut -f 1 -d \-)
     if [ -z "$vhost_lines" ]; then
         check_result $E_PARSING "can't parse config $1"

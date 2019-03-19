@@ -60,7 +60,7 @@ for user in $($BIN/v-list-users plain |cut -f 1); do
         if [ ! -z "$spnd" ]; then
             echo "$domain is suspended"
         else
-            crt="$USER_DATA/ssl/mail/$domain.crt"
+            crt="$USER_DATA/ssl/mail.$domain.crt"
             if [ ! -f $crt ]; then
                 echo "$domain Let Encrypt renew failed"
                 update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'no'

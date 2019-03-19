@@ -73,6 +73,8 @@ check_result $? "can't restart proxy" > /dev/null
 $BIN/v-restart-dns $restart
 check_result $? "can't restart dns" > /dev/null
 
+$BIN/v-restart-mail $restart
+check_result $? "can't restart mail" > /dev/null
 
 #----------------------------------------------------------#
 #                       Hestia                             #

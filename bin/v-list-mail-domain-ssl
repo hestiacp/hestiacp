@@ -110,10 +110,10 @@ is_object_valid 'mail' 'DOMAIN' "$domain_idn"
 #----------------------------------------------------------#
 
 # Parsing domain SSL certificate
-if [ -e "$USER_DATA/ssl/mail/$domain_idn.crt" ]; then
-    crt=$(cat $USER_DATA/ssl/mail/$domain.crt |sed ':a;N;$!ba;s/\n/\\n/g')
+if [ -e "$USER_DATA/ssl/mail.$domain.crt" ]; then
+    crt=$(cat $USER_DATA/ssl/mail.$domain.crt |sed ':a;N;$!ba;s/\n/\\n/g')
 
-    info=$(openssl x509 -text -in $USER_DATA/ssl/mail/$domain.crt)
+    info=$(openssl x509 -text -in $USER_DATA/ssl/mail.$domain.crt)
     subj=$(echo "$info" |grep Subject: |cut -f 2 -d =)
     before=$(echo "$info" |grep Before: |sed -e "s/.*Before: //")
     after=$(echo "$info" |grep "After :" |sed -e "s/.*After : //")
@@ -126,12 +126,12 @@ if [ -e "$USER_DATA/ssl/mail/$domain_idn.crt" ]; then
     alt_dns=$(echo "$alt_dns" |sed -e ':a;N;$!ba;s/\n/,/g')
 fi
 
-if [ -e "$USER_DATA/ssl/mail/$domain_idn.key" ]; then
-    key=$(cat $USER_DATA/ssl/mail/$domain.key |sed ':a;N;$!ba;s/\n/\\n/g')
+if [ -e "$USER_DATA/ssl/mail.$domain.key" ]; then
+    key=$(cat $USER_DATA/ssl/mail.$domain.key |sed ':a;N;$!ba;s/\n/\\n/g')
 fi
 
-if [ -e "$USER_DATA/ssl/mail/$domain_idn.ca" ]; then
-    ca=$(cat $USER_DATA/ssl/mail/$domain.ca |sed ':a;N;$!ba;s/\n/\\n/g')
+if [ -e "$USER_DATA/ssl/mail.$domain.ca" ]; then
+    ca=$(cat $USER_DATA/ssl/mail.$domain.ca |sed ':a;N;$!ba;s/\n/\\n/g')
 fi
 
 # Listing data

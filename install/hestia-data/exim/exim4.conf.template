@@ -8,7 +8,7 @@
 #SPAM_SCORE = 50
 #CLAMD = yes
 
-smtp_banner = $smtp_active_hostname
+smtp_banner = mail.$sender_address_domain
 add_environment = <; PATH=/bin:/usr/bin
 keep_environment =
 disable_ipv6 = true
@@ -304,7 +304,7 @@ begin transports
 
 remote_smtp:
   driver = smtp
-  #helo_data = $sender_address_domain
+  helo_data = mail.$sender_address_domain
   dkim_domain = DKIM_DOMAIN
   dkim_selector = mail
   dkim_private_key = DKIM_PRIVATE_KEY

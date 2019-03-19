@@ -111,6 +111,8 @@ if [ ! -z "$DNS_CLUSTER" ]; then
     fi
 fi
 
+# TO-DO: Check if mail is enabled, and if so is DKIM enabled?
+#        If it is, then update the records accordingly.
 
 #----------------------------------------------------------#
 #                       Hestia                             #

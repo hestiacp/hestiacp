@@ -38,23 +38,27 @@ log_selector = +tls_sni
 
 tls_advertise_hosts = *
 
-tls_certificate = ${
-  if exists{/usr/local/hestia/ssl/${tls_sni}.crt} {
-    /usr/local/hestia/ssl/${tls_sni}.crt
-  } {
-      /usr/local/hestia/ssl/certificate.crt
-    }
-  }
-}
+# here we test that $tls_in_sni really is a domain, but constructing an arbitrary email address foo@...
+# and then extracting the domain with a function that should fails if the email address is not valid
+# then we looks to see that the cert exists, and use it
+# otherwise we use the default cert in /etc/ssl
+tls_certificate = \
+        ${if and {\
+                     { eq {${domain:foo@$tls_in_sni}} {$tls_in_sni}}\
+                     { exists{/usr/local/hestia/ssl/$tls_in_sni.crt} }\
+                 }\
+                 {/usr/local/hestia/ssl/$tls_in_sni.crt}\
+                 {/usr/local/hestia/ssl/certificate.crt}\
+         }
 
-tls_privatekey = ${
-  if exists{/usr/local/hestia/ssl/${tls_sni}.key} {
-    /usr/local/hestia/ssl/${tls_sni}.key
-  } {
-      /usr/local/hestia/ssl/certificate.key
-    }
-  }
-}
+tls_privatekey = \
+        ${if and {\
+                     { eq {${domain:foo@$tls_in_sni}} {$tls_in_sni}}\
+                     { exists{/usr/local/hestia/ssl/$tls_in_sni.key} }\
+                 }\
+                 {/usr/local/hestia/ssl/$tls_in_sni.key}\
+                 {/usr/local/hestia/ssl/certificate.key}\
+         }
 
 daemon_smtp_ports = 25 : 465 : 587
 tls_on_connect_ports = 465

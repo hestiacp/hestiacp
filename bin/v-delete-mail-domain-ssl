@@ -47,9 +47,8 @@ del_mail_ssl_config
 # Deleting old certificate
 tmpdir=$(mktemp -p $HOMEDIR/$user/mail/$domain/private -d)
 rm -f $HOMEDIR/$user/conf/mail/ssl.$domain.*
-mv $USER_DATA/ssl/mail/$domain.* $tmpdir
-chown -R $user:$user $tmpdir
-
+rm -f $USER_DATA/ssl/mail.$domain.*
+rm -f /usr/local/hestia/ssl/mail.$domain.*
 
 #----------------------------------------------------------#
 #                       Hestia                              #

@@ -182,24 +182,6 @@ sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favouri
                   <? } ?>
                 </td>
                 <td></td>
-                <td>
-                  <? if($data[$key]['SSL'] == 'no'){ ?>
-                    <div class="l-unit__stat-cols clearfix disabled"><?=__('SSL Support')?></div>
-                  <? } else {?>
-                    <div class="l-unit__stat-cols clearfix">
-                      <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('SSL Support')?>:</div>
-                      <div class="l-unit__stat-col l-unit__stat-col--right">
-                        <b>
-                            <? if($data[$key]['LETSENCRYPT'] == 'yes'){
-                                echo __('Lets Encrypt');
-                            } else {
-                                echo __($data[$key]['SSL']);
-                            }?>
-                        </b>
-                      </div>
-                    </div>
-                  <? } ?>
-                </td>
               </tr>
               <tr>
                 <td></td>
@@ -222,6 +204,27 @@ sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favouri
                       <b><?=$data[$key]['CATCHALL']?></b>
                     </div>
                   </div>
+                </td>
+              </tr>
+              <tr>
+               <td></td>
+                <td>
+                  <? if($data[$key]['SSL'] == 'no'){ ?>
+                    <div class="l-unit__stat-cols clearfix disabled"><?=__('SSL Support')?></div>
+                  <? } else {?>
+                    <div class="l-unit__stat-cols clearfix">
+                      <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('SSL Support')?>:</div>
+                      <div class="l-unit__stat-col l-unit__stat-col--right">
+                        <b>
+                            <? if($data[$key]['LETSENCRYPT'] == 'yes'){
+                                echo __('Lets Encrypt');
+                            } else {
+                                echo __($data[$key]['SSL']);
+                            }?>
+                        </b>
+                      </div>
+                    </div>
+                  <? } ?>
                 </td>
               </tr>
             </table>

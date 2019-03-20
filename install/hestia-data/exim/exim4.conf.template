@@ -34,6 +34,8 @@ spamd_address = 127.0.0.1 783
 av_scanner = clamd: /var/run/clamav/clamd.ctl
 .endif
 
+log_selector = +tls_sni
+
 tls_advertise_hosts = *
 
 tls_certificate = ${

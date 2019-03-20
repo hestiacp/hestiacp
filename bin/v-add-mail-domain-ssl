@@ -98,6 +98,8 @@ rm -f /usr/local/hestia/ssl/mail.$domain.crt
 ln -s $HOMEDIR/$user/conf/mail/ssl.$domain.key /usr/local/hestia/ssl/mail.$domain.key
 ln -s $HOMEDIR/$user/conf/mail/ssl.$domain.pem /usr/local/hestia/ssl/mail.$domain.crt
 
+# Set correct permissions on exim certificates, otherwise the daemon cannot read them
+chmod 0644 /usr/local/hestia/ssl/mail.$domain.*
 chown -h $user:mail /usr/local/hestia/ssl/mail.$domain.*
 
 #----------------------------------------------------------#

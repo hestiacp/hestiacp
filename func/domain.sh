@@ -586,7 +586,9 @@ get_mail_config_lines() {
 }
 
 del_mail_ssl_config() {
-    rm -f /etc/dovecot/conf.d/10-ssl-$domain.conf
+    conf="/etc/dovecot/conf.d/10-ssl-"$domain".conf"
+    get_mail_config_lines $conf
+    rm -f $conf
 }
 
 #----------------------------------------------------------#

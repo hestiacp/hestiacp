@@ -84,11 +84,11 @@ fi
 
 # Add domain SSL configuration to dovecot
 # TO-DO: Add this confoiguration to a separate file for each domain
-echo "" >> /etc/dovecot/conf.d/10-ssl.conf
-echo "local_name mail.$domain {" >> /etc/dovecot/conf.d/10-ssl.conf
-echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/ssl.$domain.pem" >> /etc/dovecot/conf.d/10-ssl.conf
-echo "  ssl_key = <$HOMEDIR/$user/conf/mail/ssl.$domain.key" >> /etc/dovecot/conf.d/10-ssl.conf
-echo "}" >> /etc/dovecot/conf.d/10-ssl.conf
+echo "" >> /etc/dovecot/conf.d/10-ssl-$domain.conf
+echo "local_name mail.$domain {" >> /etc/dovecot/conf.d/10-ssl-$domain.conf
+echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/ssl.$domain.pem" >> /etc/dovecot/conf.d/10-ssl-$domain.conf
+echo "  ssl_key = <$HOMEDIR/$user/conf/mail/ssl.$domain.key" >> /etc/dovecot/conf.d/10-ssl-$domain.conf
+echo "}" >> /etc/dovecot/conf.d/10-ssl-$domain.conf
 
 # Remove old SSL certificate files from exim configuration
 rm -f /usr/local/hestia/ssl/mail.$domain.key

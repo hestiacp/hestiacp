@@ -586,10 +586,7 @@ get_mail_config_lines() {
 }
 
 del_mail_ssl_config() {
-    conf="/etc/dovecot/conf.d/10-ssl.conf"
-
-    get_mail_config_lines $conf
-    sed -i "$top_line,$bottom_line d" $conf
+    rm -f /etc/dovecot/conf.d/10-ssl-$domain.conf
 }
 
 #----------------------------------------------------------#

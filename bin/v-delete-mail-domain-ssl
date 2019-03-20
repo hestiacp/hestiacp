@@ -4,10 +4,14 @@
 #
 # The function delete ssl certificates.
 
-
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/conf/hestia.conf
 
 # Argument definition
 user=$1
@@ -16,12 +20,6 @@ domain=$2
 # Additional argument formatting
 format_domain
 format_domain_idn
-
-# Includes
-source $HESTIA/func/main.sh
-source $HESTIA/func/domain.sh
-source $HESTIA/conf/hestia.conf
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -41,7 +39,7 @@ is_object_value_exist 'mail' 'DOMAIN' "$domain" '$SSL'
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Deleting ssl
+# Deleting ssl files
 del_mail_ssl_config
 
 # Deleting old certificate
@@ -54,7 +52,7 @@ rm -f /usr/local/hestia/ssl/mail.$domain.*
 #                       Hestia                              #
 #----------------------------------------------------------#
 
-# Updatoing config
+# Updating config
 update_object_value 'mail' 'DOMAIN' "$domain" '$SSL' 'no'
 decrease_user_value "$user" '$U_MAIL_SSL'
 

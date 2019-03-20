@@ -49,6 +49,22 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['account'])))  {
     exit;
 }
 
+// Mail domain SSL
+if ((!empty($_GET['domain'])) && (empty($_GET['account'])))  {
+    $v_username = escapeshellarg($user);
+    $v_domain = escapeshellarg($_GET['domain']);
+    exec (HESTIA_CMD."v-delete-mail-domain-ssl ".$v_username." ".$v_domain, $output, $return_var);
+    check_return_code($return_var,$output);
+    unset($output);
+    $back = $_SESSION['back'];
+    if (!empty($back)) {
+        header("Location: ".$back);
+        exit;
+    }
+    header("Location: /list/mail/");
+    exit;
+}
+
 $back = $_SESSION['back'];
 if (!empty($back)) {
     header("Location: ".$back);

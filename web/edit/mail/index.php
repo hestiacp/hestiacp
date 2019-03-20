@@ -253,8 +253,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
         $v_letsencrypt = 'no';
         $v_letsencrypt_deleted = 'yes';
         $v_ssl = 'no';
-        $restart_web = 'yes';
-        $restart_proxy = 'yes';
+        $restart_mail = 'yes';
     }
 
     // Delete SSL certificate
@@ -266,8 +265,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
         $v_ssl_key = '';
         $v_ssl_ca = '';
         $v_ssl = 'no';
-        $restart_web = 'yes';
-        $restart_proxy = 'yes';
+        $restart_mail = 'yes';
     }
 
     // Add Lets Encrypt support
@@ -278,8 +276,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
         unset($output);
         $v_letsencrypt = 'yes';
         $v_ssl = 'yes';
-        $restart_web = 'yes';
-        $restart_proxy = 'yes';
+        $restart_mail = 'yes';
      }
 
      // Add SSL certificate

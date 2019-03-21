@@ -13,5 +13,9 @@ server {
         location /phppgadmin/ {
         proxy_pass  http://directIP:8080;
         }
+
+        location /error/ {
+        alias /usr/local/hestia/data/templates/document_errors/;
+        }
     }
 }

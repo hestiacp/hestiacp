@@ -15,7 +15,7 @@ server {
         }
 
         location /error/ {
-        alias /usr/local/hestia/data/templates/document_errors/;
+        alias /var/www/document_errors/;
         }
     }
 }

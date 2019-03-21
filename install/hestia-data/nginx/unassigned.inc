@@ -7,15 +7,18 @@ server {
         root /var/www/html;
 
         location /phpmyadmin/ {
-        proxy_pass  http://directIP:8080;
+            alias /var/www/document_errors/;
         }
 
         location /phppgadmin/ {
-        proxy_pass  http://directIP:8080;
+            alias /var/www/document_errors/;
         }
 
+        location /webmail {
+            alias /var/www/document_errors/;
+        }
         location /error/ {
-        alias /var/www/document_errors/;
+            alias /var/www/document_errors/;
         }
     }
 }

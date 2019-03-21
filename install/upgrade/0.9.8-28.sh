@@ -130,12 +130,18 @@ if [ -d $HESTIA/data/templates/ ]; then
     cp -rf $HESTIA/install/hestia-data/templates/web/suspend/* $HESTIA/data/templates/web/suspend/
     cp -rf $HESTIA/install/hestia-data/templates/web/unassigned/* $HESTIA/data/templates/web/unassigned/
     cp -rf $HESTIA/install/hestia-data/templates/web/unassigned/* /var/www/html/
+    cp -rf $HESTIA/install/hestia-data/templates/web/skel/document_errors/* /var/www/document_errors/
 
     # Correct permissions on CSS, JavaScript, and Font dependencies for unassigned hosts
     chmod 644 /var/www/html/*
     chmod 751 /var/www/html/css
     chmod 751 /var/www/html/js
     chmod 751 /var/www/html/webfonts
+    
+    chmod 644 /var/www/document_errors/*
+    chmod 751 /var/www/document_errors/css
+    chmod 751 /var/www/document_errors/js
+    chmod 751 /var/www/document_errors/webfonts
     
     # Correct permissions on CSS, JavaScript, and Font dependencies for default templates
     chmod 751 $HESTIA/data/templates/web/skel/document_errors/css

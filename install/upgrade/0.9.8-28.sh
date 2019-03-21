@@ -125,6 +125,15 @@ if [ -d $HESTIA/data/templates/ ]; then
     rm -rf $HESTIA/data/templates/web/suspend/*
     mkdir -p $HESTIA/data/templates/web/unassigned/
 
+    # Check for existence of default web server file location in order to copy unassigned hosts configuration
+    if [ ! -d /var/www/html ]; then
+        mkdir -p /var/www/html/
+    fi
+
+    if [ ! -d /var/www/document_errors/ ]; then
+        mkdir -p /var/www/document_errors/
+    fi
+
     # Copy new default templates to Hestia installation
     cp -rf $HESTIA/install/hestia-data/templates/web/skel/* $HESTIA/data/templates/web/skel/
     cp -rf $HESTIA/install/hestia-data/templates/web/suspend/* $HESTIA/data/templates/web/suspend/
@@ -142,7 +151,7 @@ if [ -d $HESTIA/data/templates/ ]; then
     chmod 751 /var/www/document_errors/css
     chmod 751 /var/www/document_errors/js
     chmod 751 /var/www/document_errors/webfonts
-    
+
     # Correct permissions on CSS, JavaScript, and Font dependencies for default templates
     chmod 751 $HESTIA/data/templates/web/skel/document_errors/css
     chmod 751 $HESTIA/data/templates/web/skel/document_errors/js

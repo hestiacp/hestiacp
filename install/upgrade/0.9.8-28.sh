@@ -125,7 +125,7 @@ if [ -d $HESTIA/data/templates/ ]; then
     rm -rf $HESTIA/data/templates/web/suspend/*
     mkdir -p $HESTIA/data/templates/web/unassigned/
 
-    # Check for existence of default web server file location in order to copy unassigned hosts configuration
+    # Check for existence of default web server file location in order to copy unassigned hosts configuration   
     if [ ! -d /var/www/html ]; then
         mkdir -p /var/www/html/
     fi
@@ -167,13 +167,19 @@ if [ -d $HESTIA/data/templates/ ]; then
     chmod 751 $HESTIA/data/templates/web/unassigned/webfonts
 fi
 
-# Add unassigned hosts configuration to nginx
+# Add unassigned hosts configuration to nginx and apache2
 if [ -f /usr/local/hestia/data/ips/* ]; then
     for ip in /usr/local/hestia/data/ips/*; do
         ipaddr=${ip##*/}
         rm -f /etc/nginx/conf.d/$ip.conf
         cp -f $HESTIA/install/hestia-data/nginx/unassigned.inc /etc/nginx/conf.d/$ipaddr.conf
         sed -i 's/directIP/'$ipaddr'/g' /etc/nginx/conf.d/$ipaddr.conf
+
+        rm -f /etc/apache2/conf.d/$ip.conf
+        cp -f $HESTIA/install/hestia-data/apache2/unassigned.conf /etc/apache2/conf.d/$ipaddr.conf
+        sed -i 's/directIP/'$ipaddr'/g' /etc/apache2/conf.d/$ipaddr.conf
+
+        systemctl restart apache2
         systemctl restart nginx
     done
 fi

@@ -16,11 +16,6 @@ server {
             return 404;
         }
 
-        location /webmail/ {
-            alias /var/www/document_errors/;
-            return 404;
-        }
-        
         location /webmail {
             alias /var/www/document_errors/;
             return 404;
@@ -32,7 +27,7 @@ server {
         }
 
         location /error/ {
-            alias  /var/www/document_errors/;
+            alias /var/www/document_errors/;
         }
     }
 }

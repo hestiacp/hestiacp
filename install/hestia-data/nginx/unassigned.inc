@@ -13,9 +13,5 @@ server {
         location /phppgadmin/ {
         proxy_pass  http://directIP:8080;
         }
-
-        location /webmail/ {
-        proxy_pass  http://directIP:8080;
-        }
     }
 }

@@ -8,17 +8,31 @@ server {
 
         location /phpmyadmin/ {
             alias /var/www/document_errors/;
+            return 404;
         }
 
         location /phppgadmin/ {
             alias /var/www/document_errors/;
+            return 404;
         }
 
+        location /webmail/ {
+            alias /var/www/document_errors/;
+            return 404;
+        }
+        
         location /webmail {
             alias /var/www/document_errors/;
+            return 404;
         }
-        location /error/ {
+        
+        location /webmail/ {
             alias /var/www/document_errors/;
+            return 404;
+        }
+
+        location /error/ {
+            alias  /var/www/document_errors/;
         }
     }
 }

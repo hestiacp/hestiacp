@@ -55,7 +55,6 @@ for domain in $(search_objects 'mail' 'SUSPENDED' "*" 'DOMAIN'); do
     rebuild_mail_domain_conf
 done
 
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

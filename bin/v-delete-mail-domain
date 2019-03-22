@@ -73,9 +73,17 @@ fi
 # Delete webmail configuration files
 if [ -f $HOMEDIR/$user/conf/mail/mail.$domain.apache2.conf ]; then
     rm -f $HOMEDIR/$user/conf/mail/mail.$domain.apache2*.conf
+
+    # Restarting web server
+    $BIN/v-restart-web $restart
+    check_result $? "Web restart failed" >/dev/null
 fi
 if [ -f $HOMEDIR/$user/conf/mail/mail.$domain.nginx.conf ]; then
     rm -f $HOMEDIR/$user/conf/mail/mail.$domain.nginx*.conf
+
+    # Restarting proxy server
+    $BIN/v-restart-proxy $restart
+    check_result $? "Proxy restart failed" >/dev/null
 fi
 
 #----------------------------------------------------------#

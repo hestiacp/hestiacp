@@ -212,6 +212,7 @@ if [ -f /etc/dovecot/conf.d/15-mailboxes.conf ]; then
     # Remove mailboxes configuration if it exists
     rm -f /etc/dovecot/conf.d/15-mailboxes.conf
 fi
+
 if [ -f /etc/dovecot/dovecot.conf ]; then
     # Update dovecot configuration and restart dovecot service
     cp -f $HESTIA/install/hestia-data/dovecot/dovecot.conf /etc/dovecot/dovecot.conf
@@ -265,6 +266,7 @@ fi
 # Rebuild users
 userlist=$(ls --sort=time $HESTIA/data/users/)
 for user in $userlist; do
+    echo "Rebuilding user configuration: $user ..."
     v-rebuild-user $user
 done
 

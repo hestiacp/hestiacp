@@ -38,6 +38,6 @@
     </IfModule>
 
     IncludeOptional %home%/%user%/conf/web/s%web_system%.%domain%.conf*
+    IncludeOptional %home%/%user%/conf/mail/mail.%domain%.apache2.ssl.conf*
 </VirtualHost>
 
-IncludeOptional %home%/%user%/conf/mail/mail.%domain%.apache2.ssl.conf*

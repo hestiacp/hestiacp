@@ -51,8 +51,8 @@
     
     SSLEngine on
     SSLVerifyClient none
-    SSLCertificateFile %home%/%user%/mail/ssl.%domain%.crt
-    SSLCertificateKeyFile %home%/%user%/mail/ssl.%domain%.key
+    SSLCertificateFile %home%/%user%/conf/mail/ssl.%domain%.crt
+    SSLCertificateKeyFile %home%/%user%/conf/mail/ssl.%domain%.key
     IncludeOptional %home%/%user%/conf/mail/forcessl.apache2.%domain%.conf*
     
     <Directory "/usr/share/tinymce/www/">

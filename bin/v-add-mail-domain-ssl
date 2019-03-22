@@ -102,6 +102,26 @@ ln -s $HOMEDIR/$user/conf/mail/ssl.$domain.pem /usr/local/hestia/ssl/mail.$domai
 chmod 0644 /usr/local/hestia/ssl/mail.$domain.*
 chown -h $user:mail /usr/local/hestia/ssl/mail.$domain.*
 
+# Turn on SSL-enabled webmail for domain
+if [ ! -z "$WEB_SYSTEM" ]; then
+    # Check if webmail is turned on already, if not skip
+    if [ -f $HOMEDIR/$user/conf/mail/mail.$domain.apache2.conf ]; then
+        cp -f $HESTIA/install/hestia-data/roundcube/vhost-ssl.conf $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf
+
+        # Restart webserver
+        $BIN/v-restart-web $restart
+    fi
+fi
+if [ ! -z "$PROXY_SYSTEM" ]; then
+    # Check if webmail is turned on already, if not skip
+    if [ -f $HOMEDIR/$user/conf/mail/mail.$domain.nginx.conf]; then
+        cp -f $HESTIA/install/hestia-data/roundcube/nginx-ssl.conf $HOMEDIR/$user/conf/mail/mail.$domain.nginx.ssl.conf
+
+        # Restart proxy server
+        $BIN/v-restart-proxy $restart
+    fi
+fi
+
 #----------------------------------------------------------#
 #                       Hestia                              #
 #----------------------------------------------------------#

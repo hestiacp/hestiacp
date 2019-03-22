@@ -107,7 +107,7 @@ fi
 
 # Update default page templates
 echo '************************************************************************'
-echo "Upgrading default page templates...                                     "
+echo "Upgrading default templates...                                     "
 echo "Existing templates have been backed up to the following location:       "
 echo "$HESTIA_BACKUP/templates/                                               "
 echo '************************************************************************'
@@ -168,6 +168,21 @@ if [ -d $HESTIA/data/templates/ ]; then
     chmod 751 $HESTIA/data/templates/web/unassigned/css
     chmod 751 $HESTIA/data/templates/web/unassigned/js
     chmod 751 $HESTIA/data/templates/web/unassigned/webfonts
+fi
+
+# Update default web and nginx templates
+if [ ! -d $HESTIA/data/templates/web/nginx/default.tpl ]; then
+    rm -f $HESTIA/data/templates/web/nginx/default.tpl
+    rm -f $HESTIA/data/templates/web/nginx/default.stpl
+    cp -rf $HESTIA/install/hestia-data/templates/web/nginx/* $HESTIA/data/templates/web/nginx/
+    cp -rf $HESTIA/install/hestia-data/templates/web/nginx/* $HESTIA/data/templates/web/nginx/
+fi
+
+if [ ! -d $HESTIA/data/templates/web/apache2/default.tpl ]; then
+    rm -f $HESTIA/data/templates/web/apache2/default.tpl
+    rm -f $HESTIA/data/templates/web/apache2/default.stpl
+    cp -rf $HESTIA/install/hestia-data/templates/web/apache2/* $HESTIA/data/templates/web/apache2/
+    cp -rf $HESTIA/install/hestia-data/templates/web/apache2/* $HESTIA/data/templates/web/apache2/
 fi
 
 # Add unassigned hosts configuration to nginx and apache2
@@ -246,3 +261,10 @@ if [ -f /etc/exim4/exim4.conf.template ]; then
     cp -f $HESTIA/install/hestia-data/exim/exim4.conf.template /etc/exim4/
     systemctl restart exim4
 fi
+
+# Rebuild users
+userlist=$(ls --sort=time $HESTIA/data/users/)
+for user in $userlist; do
+    v-rebuild-user $user
+done
+

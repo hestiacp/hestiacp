@@ -31,5 +31,6 @@ server {
     location ~ /\.bzr/  {return 404;}
 
     include %home%/%user%/conf/web/snginx.%domain%.conf*;
-    include %home%/%user%/conf/mail/mail.%domain%.nginx.ssl.conf*;
 }
+
+include %home%/%user%/conf/mail/mail.%domain%.nginx.ssl.conf*;

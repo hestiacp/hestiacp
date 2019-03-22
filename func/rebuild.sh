@@ -540,7 +540,7 @@ rebuild_mail_domain_conf() {
                 sed -i 's|%home%|'$HOMEDIR'|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.conf
                 sed -i 's|%user%|'$user'|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.conf
                 sed -i 's|%ip%|'$ip'|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.conf
-                sed -i 's|%web_port%|80|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.conf
+                sed -i 's|%web_port%|8080|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.conf
 
                 echo "Include $HOMEDIR/$user/conf/mail/mail.$domain.apache2.conf" >> /etc/apache2/conf.d/hestia.conf
 
@@ -555,7 +555,6 @@ rebuild_mail_domain_conf() {
                 sed -i 's|%home%|'$HOMEDIR'|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf
                 sed -i 's|%user%|'$user'|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf
                 sed -i 's|%ip%|'$ip'|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf
-                sed -i 's|%web_port%|443|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf
                 sed -i 's|%web_ssl_port%|8443|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf
 
                 echo "Include $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf" >> /etc/apache2/conf.d/hestia.conf
@@ -565,6 +564,9 @@ rebuild_mail_domain_conf() {
 
         # Create mail v-host for nginx
         if [ ! -z "$PROXY_SYSTEM" ]; then
+            # Set proxy extensions
+
+
             # Check for existence of non-SSL web domain configuration
             if [ -f $HOMEDIR/$user/conf/web/$domain.nginx.conf ]; then
                     cp -f $HESTIA/install/hestia-data/roundcube/nginx.conf $HOMEDIR/$user/conf/mail/mail.$domain.nginx.conf
@@ -581,6 +583,7 @@ rebuild_mail_domain_conf() {
 
                     echo "include $HOMEDIR/$user/conf/mail/mail.$domain.nginx.conf;" >> /etc/nginx/conf.d/hestia.conf
             fi
+
             # Check for existence of SSL web domain configuration
             if [ -f $HOMEDIR/$user/conf/web/$domain.nginx.ssl.conf ]; then
                     cp -f $HESTIA/install/hestia-data/roundcube/nginx-ssl.conf $HOMEDIR/$user/conf/mail/mail.$domain.nginx.ssl.conf

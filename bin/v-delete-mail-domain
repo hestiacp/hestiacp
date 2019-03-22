@@ -74,12 +74,18 @@ fi
 if [ -f $HOMEDIR/$user/conf/mail/mail.$domain.apache2.conf ]; then
     rm -f $HOMEDIR/$user/conf/mail/mail.$domain.apache2*.conf
 
+    sed -i '|Include $home/$user/conf/mail/mail.$domain.apache2.conf||g' /etc/apache2/conf.d/hestia.conf
+    sed -i '|Include $home/$user/conf/mail/mail.$domain.apache2.ssl.conf||g' /etc/apache2/conf.d/hestia.conf
+
     # Restarting web server
     $BIN/v-restart-web $restart
     check_result $? "Web restart failed" >/dev/null
 fi
 if [ -f $HOMEDIR/$user/conf/mail/mail.$domain.nginx.conf ]; then
     rm -f $HOMEDIR/$user/conf/mail/mail.$domain.nginx*.conf
+
+    sed -i '|Include $home/$user/conf/mail/mail.$domain.nginx.conf||g' /etc/nginx/conf.d/hestia.conf
+    sed -i '|Include $home/$user/conf/mail/mail.$domain.nginx.ssl.conf||g' /etc/nginx/conf.d/hestia.conf
 
     # Restarting proxy server
     $BIN/v-restart-proxy $restart

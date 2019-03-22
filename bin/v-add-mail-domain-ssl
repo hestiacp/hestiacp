@@ -125,14 +125,14 @@ if [ ! -z "$PROXY_SYSTEM" ]; then
         cp -f $HESTIA/install/hestia-data/roundcube/nginx-ssl.conf $HOMEDIR/$user/conf/mail/mail.$domain.nginx.ssl.conf
 
         # Write domain specific variables to configuration file
-        sed -i 's|%home%|'$HOMEDIR'|g' $HOMEDIR/$user/conf/mail/mail.$domain.nginx.conf
-        sed -i 's|%user%|'$user'|g' $HOMEDIR/$user/conf/mail/mail.$domain.nginx.conf
-        sed -i 's|%domain_idn%|'$domain'|g' $HOMEDIR/$user/conf/mail/mail.$domain.nginx.conf
-        sed -i 's|%domain%|'$domain'|g' $HOMEDIR/$user/conf/mail/mail.$domain.nginx.conf
-        sed -i 's|%ip%|'$ip'|g' $HOMEDIR/$user/conf/mail/mail.$domain.nginx.conf
-        sed -i 's|%proxy_ssl_port%|443|g' $HOMEDIR/$user/conf/mail/mail.$domain.nginx.conf
-        sed -i 's|%web_ssl_port%|8443|g' $HOMEDIR/$user/conf/mail/mail.$domain.nginx.conf
-        sed -i 's|%web_system%|'$WEB_SYSTEM'|g' $HOMEDIR/$user/conf/mail/mail.$domain.nginx.conf
+        sed -i 's|%home%|'$HOMEDIR'|g' $HOMEDIR/$user/conf/mail/mail.$domain.nginx.ssl.conf
+        sed -i 's|%user%|'$user'|g' $HOMEDIR/$user/conf/mail/mail.$domain.nginx.ssl.conf
+        sed -i 's|%domain_idn%|'$domain'|g' $HOMEDIR/$user/conf/mail/mail.$domain.nginx.ssl.conf
+        sed -i 's|%domain%|'$domain'|g' $HOMEDIR/$user/conf/mail/mail.$domain.nginx.ssl.conf
+        sed -i 's|%ip%|'$ip'|g' $HOMEDIR/$user/conf/mail/mail.$domain.nginx.ssl.conf
+        sed -i 's|%proxy_ssl_port%|443|g' $HOMEDIR/$user/conf/mail/mail.$domain.nginx.ssl.conf
+        sed -i 's|%web_ssl_port%|8443|g' $HOMEDIR/$user/conf/mail/mail.$domain.nginx.ssl.conf
+        sed -i 's|%web_system%|'$WEB_SYSTEM'|g' $HOMEDIR/$user/conf/mail/mail.$domain.nginx.ssl.conf
 
         # Restart proxy server
         $BIN/v-restart-proxy $restart

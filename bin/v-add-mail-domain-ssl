@@ -114,7 +114,9 @@ if [ ! -z "$WEB_SYSTEM" ]; then
         sed -i 's|%domain%|'$domain'|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf
         sed -i 's|%home%|'$HOMEDIR'|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf
         sed -i 's|%user%|'$user'|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf
-
+        sed -i 's|%ip%|'$ip'|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf
+        sed -i 's|%web_port%|80|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf
+        sed -i 's|%web_ssl_port%|8443|g' $HOMEDIR/$user/conf/mail/mail.$domain.nginx.ssl.conf
         # Restart web server
         $BIN/v-restart-web $restart
     fi

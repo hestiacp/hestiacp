@@ -13,7 +13,7 @@
     ErrorLog /var/log/%web_system%/domains/%domain%.error.log
         
     IncludeOptional %home%/%user%/conf/web/forcessl.apache2.%domain%.conf*
-    
+
     <Directory %docroot%>
         AllowOverride All
         Options +Includes -Indexes +ExecCGI
@@ -38,61 +38,4 @@
 
 </VirtualHost>
 
-<VirtualHost %ip%:%web_port%>
-
-    ServerName mail.%domain_idn%
-    ServerAdmin %email%
-    DocumentRoot /var/lib/roundcube/
-    Alias /error/ %home%/%user%/web/%domain%/document_errors/
-    #SuexecUserGroup %user% %group%
-        
-    IncludeOptional %home%/%user%/conf/mail/forcessl.apache2.%domain%.conf*
-    
-    <Directory "/usr/share/tinymce/www/">
-      Options Indexes MultiViews FollowSymLinks
-      AllowOverride None
-      Order allow,deny
-      allow from all
-    </Directory>
-
-    <Directory /var/lib/roundcube/>
-        Options +FollowSymLinks
-        # This is needed to parse /var/lib/roundcube/.htaccess. See its
-        # content before setting AllowOverride to None.
-        AllowOverride All
-        order allow,deny
-        allow from all
-    </Directory>
-
-    # Protecting basic directories:
-    <Directory /var/lib/roundcube/config>
-            Options -FollowSymLinks
-            AllowOverride None
-    </Directory>
-
-    <Directory /var/lib/roundcube/temp>
-            Options -FollowSymLinks
-            AllowOverride None
-        Order allow,deny
-        Deny from all
-    </Directory>
-
-    <Directory /var/lib/roundcube/logs>
-            Options -FollowSymLinks
-            AllowOverride None
-        Order allow,deny
-        Deny from all
-    </Directory>
-
-
-    <IfModule mod_ruid2.c>
-        RMode config
-        RUidGid %user% %group%
-        RGroups www-data
-    </IfModule>
-    <IfModule itk.c>
-        AssignUserID %user% %group%
-    </IfModule>
-
-</VirtualHost>
-
+IncludeOptional %home%/%user%/conf/mail/mail.%domain%.apache2.conf*

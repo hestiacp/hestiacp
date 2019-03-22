@@ -128,6 +128,26 @@ if [ ! -z "$DNS_SYSTEM" ] && [ "$dkim" = 'yes' ]; then
     fi
 fi
 
+# Turn on webmail for domain
+if [ ! -z "$WEB_SYSTEM" ]; then
+    # Check for existence of web domain configuration
+    if [ -f $HOMEDIR/$user/conf/web/$domain.apache2.conf ]; then
+        cp -f $HESTIA/install/hestia-data/roundcube/vhost.conf $HOMEDIR/$user/conf/mail/mail.$domain.apache2.conf
+
+        # Restart proxy server
+        $BIN/v-restart-web $restart
+    fi
+fi
+if [ ! -z "$PROXY_SYSTEM" ]; then
+    # Check for existence of web domain configuration
+    if [ -f $HOMEDIR/$user/conf/web/$domain.nginx.conf]; then
+        cp -f $HESTIA/install/hestia-data/roundcube/nginx.conf $HOMEDIR/$user/conf/mail/mail.$domain.nginx.conf
+
+        # Restart proxy server
+        $BIN/v-restart-proxy $restart
+    fi
+    
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #

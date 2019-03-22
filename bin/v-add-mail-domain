@@ -134,6 +134,9 @@ if [ ! -z "$WEB_SYSTEM" ]; then
     if [ -f $HOMEDIR/$user/conf/web/$domain.apache2.conf ]; then
         cp -f $HESTIA/install/hestia-data/roundcube/vhost.conf $HOMEDIR/$user/conf/mail/mail.$domain.apache2.conf
 
+        sed -i "/s/%domain_idn%/$domain/g" $HOMEDIR/$user/conf/mail/mail.$domain.apache2.conf
+        sed -i "/s/%domain%/$domain/g" $HOMEDIR/$user/conf/mail/mail.$domain.apache2.conf
+        
         # Restart proxy server
         $BIN/v-restart-web $restart
     fi

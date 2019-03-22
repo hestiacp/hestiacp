@@ -257,7 +257,8 @@ fi
 if [ -z "$LETSENCRYPT" ]; then
     add_object_key "mail" 'DOMAIN' "$domain" 'LETSENCRYPT' 'SUSPENDED'
 fi
-update_object_value 'mail' 'DOMAIN' "$domain" '$LETSENCRYPT' 'yes'
+
+update_object_value 'mail' 'DOMAIN' "$domain" 'LETSENCRYPT' 'yes'
 
 #----------------------------------------------------------#
 #                        Hestia                            #

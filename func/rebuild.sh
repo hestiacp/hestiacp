@@ -518,6 +518,8 @@ rebuild_mail_domain_conf() {
     done
 
     # Rebuild webmail configuration
+    get_user_ip
+    
         # Remove old configuration files
         rm -f $HOMEDIR/$user/conf/mail/mail.$domain*.conf
 

@@ -15,9 +15,9 @@ user=$1
 # Includes
 source $HESTIA/func/main.sh
 source $HESTIA/func/domain.sh
+source $HESTIA/func/ip.sh
 source $HESTIA/func/rebuild.sh
 source $HESTIA/conf/hestia.conf
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #

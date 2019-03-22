@@ -35,5 +35,4 @@
     </IfModule>
 
     IncludeOptional %home%/%user%/conf/web/%web_system%.%domain%.conf*
-    IncludeOptional %home%/%user%/conf/mail/mail.%domain%.apache2.conf*
 </VirtualHost>

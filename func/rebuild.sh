@@ -519,9 +519,11 @@ rebuild_mail_domain_conf() {
 
     # Rebuild webmail configuration
     get_user_ip
-    
+
         # Remove old configuration files
         rm -f $HOMEDIR/$user/conf/mail/mail.$domain*.conf
+        echo "Include $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf" >> /etc/apache2/conf.d/hestia.conf
+        echo "include $HOMEDIR/$user/conf/mail/mail.$domain.nginx.ssl.conf;" >> /etc/nginx/conf.d/hestia.conf
 
         # Create mail v-host for apache2
         if [ ! -z "$WEB_SYSTEM" ]; then
@@ -535,6 +537,11 @@ rebuild_mail_domain_conf() {
                 sed -i 's|%domain%|'$domain'|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.conf
                 sed -i 's|%home%|'$HOMEDIR'|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.conf
                 sed -i 's|%user%|'$user'|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.conf
+                sed -i 's|%ip%|'$ip'|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.conf
+                sed -i 's|%web_port%|80|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.conf
+
+                echo "Include $HOMEDIR/$user/conf/mail/mail.$domain.apache2.conf" >> /etc/apache2/conf.d/hestia.conf
+
             fi
             if [ -f $HOMEDIR/$user/conf/web/$domain.apache2.ssl.conf ]; then
                 # Copy configuration file template
@@ -545,6 +552,12 @@ rebuild_mail_domain_conf() {
                 sed -i 's|%domain%|'$domain'|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf
                 sed -i 's|%home%|'$HOMEDIR'|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf
                 sed -i 's|%user%|'$user'|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf
+                sed -i 's|%ip%|'$ip'|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf
+                sed -i 's|%web_port%|443|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf
+                sed -i 's|%web_ssl_port%|8443|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf
+
+                echo "Include $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf" >> /etc/apache2/conf.d/hestia.conf
+
             fi
         fi
 
@@ -563,6 +576,8 @@ rebuild_mail_domain_conf() {
                     sed -i 's|%proxy_port%|80|g' $HOMEDIR/$user/conf/mail/mail.$domain.nginx.conf
                     sed -i 's|%web_port%|8080|g' $HOMEDIR/$user/conf/mail/mail.$domain.nginx.conf
                     sed -i 's|%web_system%|'$WEB_SYSTEM'|g' $HOMEDIR/$user/conf/mail/mail.$domain.nginx.conf
+
+                    echo "include $HOMEDIR/$user/conf/mail/mail.$domain.nginx.conf;" >> /etc/nginx/conf.d/hestia.conf
             fi
             # Check for existence of SSL web domain configuration
             if [ -f $HOMEDIR/$user/conf/web/$domain.nginx.ssl.conf ]; then
@@ -577,6 +592,8 @@ rebuild_mail_domain_conf() {
                     sed -i 's|%proxy_ssl_port%|443|g' $HOMEDIR/$user/conf/mail/mail.$domain.nginx.ssl.conf
                     sed -i 's|%web_ssl_port%|8443|g' $HOMEDIR/$user/conf/mail/mail.$domain.nginx.ssl.conf
                     sed -i 's|%web_system%|'$WEB_SYSTEM'|g' $HOMEDIR/$user/conf/mail/mail.$domain.nginx.ssl.conf
+
+                    echo "include $HOMEDIR/$user/conf/mail/mail.$domain.nginx.ssl.conf;" >> /etc/nginx/conf.d/hestia.conf
             fi
         fi
 

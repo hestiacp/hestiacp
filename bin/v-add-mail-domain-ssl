@@ -115,7 +115,6 @@ if [ ! -z "$WEB_SYSTEM" ]; then
         sed -i 's|%home%|'$HOMEDIR'|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf
         sed -i 's|%user%|'$user'|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf
         sed -i 's|%ip%|'$ip'|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf
-        sed -i 's|%web_port%|443|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf
         sed -i 's|%web_ssl_port%|8443|g' $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf
 
         echo "Include $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf" >> /etc/apache2/conf.d/hestia.conf

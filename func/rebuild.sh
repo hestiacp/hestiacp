@@ -522,10 +522,10 @@ rebuild_mail_domain_conf() {
 
         # Remove old configuration files
         rm -f $HOMEDIR/$user/conf/mail/mail.$domain*.conf
-        sed -i 's|include $home/$user/conf/mail/mail.$domain.apache2.conf;||g' /etc/apache2/conf.d/hestia.conf
-        sed -i 's|include $home/$user/conf/mail/mail.$domain.apache2.ssl.conf;||g' /etc/apache2/conf.d/hestia.conf
-        sed -i 's|include $home/$user/conf/mail/mail.$domain.nginx.conf;||g' /etc/nginx/conf.d/hestia.conf
-        sed -i 's|include $home/$user/conf/mail/mail.$domain.nginx.ssl.conf;||g' /etc/nginx/conf.d/hestia.conf
+        sed -i 's|Include '$HOMEDIR'\/'$user'\/conf\/mail\/mail.'$domain'.apache2.conf||g' /etc/apache2/conf.d/hestia.conf
+        sed -i 's|Include '$HOMEDIR'\/'$user'\/conf\/mail\/mail.'$domain'.apache2.ssl.conf||g' /etc/apache2/conf.d/hestia.conf
+        sed -i 's|include '$HOMEDIR'\/'$user'\/conf\/mail\/mail.'$domain'.nginx.conf;||g' /etc/nginx/conf.d/hestia.conf
+        sed -i 's|include '$HOMEDIR'\/'$user'\/conf\/mail\/mail.'$domain'.nginx.ssl.conf;||g' /etc/nginx/conf.d/hestia.conf
 
         # Create mail v-host for apache2
         if [ ! -z "$WEB_SYSTEM" ]; then

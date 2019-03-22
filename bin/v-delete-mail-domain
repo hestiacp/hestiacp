@@ -71,11 +71,11 @@ if [ "$SSL" = "yes" ]; then
 fi
 
 # Delete webmail configuration files
-if [ -f $HOMEDIR/$user/conf/mail/mail.$domain.apache2.conf ];
-    rm -f $HOMEDIR/$user/conf/mail/*.apache2*.conf
+if [ -f $HOMEDIR/$user/conf/mail/mail.$domain.apache2.conf ]; then
+    rm -f $HOMEDIR/$user/conf/mail/mail.$domain.apache2*.conf
 fi
-if [ -f $HOMEDIR/$user/conf/mail/mail.$domain.nginx.conf ];
-    rm -f $HOMEDIR/$user/conf/mail/*.nginx*.conf
+if [ -f $HOMEDIR/$user/conf/mail/mail.$domain.nginx.conf ]; then
+    rm -f $HOMEDIR/$user/conf/mail/mail.$domain.nginx*.conf
 fi
 
 #----------------------------------------------------------#

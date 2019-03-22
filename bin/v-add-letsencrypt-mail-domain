@@ -63,7 +63,7 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
 is_object_unsuspended 'mail' 'DOMAIN' "$domain"
-#is_object_value_empty 'mail' 'DOMAIN' "$domain" '$SSL'
+is_object_value_empty 'mail' 'DOMAIN' "$domain" '$SSL'
 
 
 #----------------------------------------------------------#
@@ -72,15 +72,9 @@ is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 # Parsing domain data
 get_domain_values 'web'
 
-# Add temporary aliases for common mail services
-$BIN/v-add-web-domain-alias $user $domain "mail.$domain"
-
 # Registering LetsEncrypt user account
 $BIN/v-add-letsencrypt-user $user
 if [ "$?" -ne 0  ]; then
-    # Remove temporary aliases
-    $BIN/v-delete-web-domain-alias $user $domain "mail.$domain"
-
     touch $HESTIA/data/queue/letsencrypt.pipe
     sed -i "/ $domain /d" $HESTIA/data/queue/letsencrypt.pipe
     send_notice "LETSENCRYPT" "Account registration failed"
@@ -106,8 +100,6 @@ answer=$(curl -s -I "$LE_API/directory")
 nonce=$(echo "$answer" |grep Nonce |cut -f2 -d \ |tr -d '\r\n')
 status=$(echo "$answer"|grep HTTP/1.1 |tail -n1 |cut -f 2 -d ' ')
 if [[ "$status" -ne 200 ]]; then
-    # Remove temporary aliases
-    $BIN/v-delete-web-domain-alias $user $domain "mail.$domain"
     check_result $E_CONNECT "Let's Encrypt nonce request status $status"
 fi
 
@@ -125,8 +117,6 @@ authz=$(echo "$answer" |grep "acme/authz" |cut -f2 -d '"')
 finalize=$(echo "$answer" |grep 'finalize":' |cut -f4 -d '"')
 status=$(echo "$answer" |grep HTTP/1.1 |tail -n1 |cut -f2 -d ' ')
 if [[ "$status" -ne 201 ]]; then
-    # Remove temporary aliases
-    $BIN/v-delete-web-domain-alias $user $domain "mail.$domain"
     check_result $E_CONNECT "Let's Encrypt new auth status $status"
 fi
 
@@ -139,8 +129,6 @@ for auth in $authz; do
     nonce=$(echo "$answer" |grep Nonce |cut -f2 -d \ |tr -d '\r\n')
     status=$(echo "$answer"|grep HTTP/1.1 |tail -n1 |cut -f 2 -d ' ')
     if [[ "$status" -ne 200 ]]; then
-        # Remove temporary aliases
-        $BIN/v-delete-web-domain-alias $user $domain "mail.$domain"
         check_result $E_CONNECT "Let's Encrypt acme/authz bad status $status"
     fi
 
@@ -200,22 +188,16 @@ for auth in $authz; do
         nonce=$(echo "$answer" |grep Nonce |cut -f2 -d \ |tr -d '\r\n')
         status=$(echo "$answer"|grep HTTP/1.1 |tail -n1 |cut -f 2 -d ' ')
         if [[ "$status" -ne 200 ]]; then
-            # Remove temporary aliases
-            $BIN/v-delete-web-domain-alias $user $domain "mail.$domain"
             check_result $E_CONNECT "Let's Encrypt validation status $status"
         fi
 
         i=$((i + 1))
         if [ "$i" -gt 10 ]; then
-            # Remove temporary aliases
-            $BIN/v-delete-web-domain-alias $user $domain "mail.$domain"
             check_result $E_CONNECT "Let's Encrypt domain validation timeout"
         fi
         sleep 1
     done
     if [ "$validation" = 'invalid' ]; then
-        # Remove temporary aliases
-        $BIN/v-delete-web-domain-alias $user $domain "mail.$domain"
         check_result $E_CONNECT "Let's Encrypt domain verification failed"
     fi
 done
@@ -257,8 +239,6 @@ $BIN/v-delete-mail-domain-ssl $user $domain >/dev/null 2>&1
 $BIN/v-add-mail-domain-ssl $user $domain $ssl_dir
 
 if [ "$?" -ne '0' ]; then
-    # Remove temporary aliases
-    $BIN/v-delete-web-domain-alias $user $domain "mail.$domain"
     touch $HESTIA/data/queue/letsencrypt.pipe
     sed -i "/ $domain /d" $HESTIA/data/queue/letsencrypt.pipe
     send_notice 'LETSENCRYPT' "$domain certificate installation failed"
@@ -278,9 +258,6 @@ if [ -z "$LETSENCRYPT" ]; then
     add_object_key "mail" 'DOMAIN' "$domain" 'LETSENCRYPT' 'SUSPENDED'
 fi
 update_object_value 'mail' 'DOMAIN' "$domain" '$LETSENCRYPT' 'yes'
-
-# Remove temporary aliases
-$BIN/v-delete-web-domain-alias $user $domain "mail.$domain"
 
 #----------------------------------------------------------#
 #                        Hestia                            #

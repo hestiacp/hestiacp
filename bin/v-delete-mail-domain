@@ -84,8 +84,8 @@ fi
 if [ -f $HOMEDIR/$user/conf/mail/mail.$domain.nginx.conf ]; then
     rm -f $HOMEDIR/$user/conf/mail/mail.$domain.nginx*.conf
 
-    sed -i '|Include $home/$user/conf/mail/mail.$domain.nginx.conf||g' /etc/nginx/conf.d/hestia.conf
-    sed -i '|Include $home/$user/conf/mail/mail.$domain.nginx.ssl.conf||g' /etc/nginx/conf.d/hestia.conf
+    sed -i '|include $home/$user/conf/mail/mail.$domain.nginx.conf;||g' /etc/nginx/conf.d/hestia.conf
+    sed -i '|include $home/$user/conf/mail/mail.$domain.nginx.ssl.conf;||g' /etc/nginx/conf.d/hestia.conf
 
     # Restarting proxy server
     $BIN/v-restart-proxy $restart

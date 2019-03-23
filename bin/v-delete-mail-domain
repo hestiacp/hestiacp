@@ -64,7 +64,7 @@ fi
 
 # Delete SSL certificates
 if [ "$SSL" = "yes" ]; then
-    rm -f $HOMEDIR/$user/conf/mail/ssl.$domain.*
+    rm -f $HOMEDIR/$user/conf/mail/$domain/ssl/mail.$domain.*
     rm -f $USER_DATA/ssl/mail.$domain.*
     rm -f /usr/local/hestia/ssl/mail.$domain.*
     rm -f /etc/dovecot/conf.d/10-ssl-$domain.conf

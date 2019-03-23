@@ -53,7 +53,7 @@ chown -R $user:$user $tmpdir
 
 
 # Add certificate to user home directory
-cp -f $USER_DATA/ssl/mail.$domain.crt $HOMEDIR/$user/conf/mail/ssl/.$domain.crt
+cp -f $USER_DATA/ssl/mail.$domain.crt $HOMEDIR/$user/conf/mail/$domain/ssl/mail.$domain.crt
 cp -f $USER_DATA/ssl/mail.$domain.key $HOMEDIR/$user/conf/mail/$domain/ssl/mail.$domain.key
 cp -f $USER_DATA/ssl/mail.$domain.pem $HOMEDIR/$user/conf/mail/$domain/ssl/mail.$domain.pem
 if [ -e "$USER_DATA/ssl/$domain.ca" ]; then

@@ -196,9 +196,6 @@ if [ -f /usr/local/hestia/data/ips/* ]; then
         rm -f /etc/apache2/conf.d/$ip.conf
         cp -f $HESTIA/install/hestia-data/apache2/unassigned.conf /etc/apache2/conf.d/$ipaddr.conf
         sed -i 's/directIP/'$ipaddr'/g' /etc/apache2/conf.d/$ipaddr.conf
-
-        systemctl restart apache2
-        systemctl restart nginx
     done
 fi
 
@@ -214,15 +211,9 @@ if [ -f /etc/dovecot/conf.d/15-mailboxes.conf ]; then
 fi
 
 if [ -f /etc/dovecot/dovecot.conf ]; then
-    # Update dovecot configuration and restart dovecot service
+    # Update dovecot configuration
     cp -f $HESTIA/install/hestia-data/dovecot/dovecot.conf /etc/dovecot/dovecot.conf
-    systemctl restart dovecot
 fi
-
-# Rebuild mailboxes
-for user in `ls $HESTIA/data/users/`; do
-    $HESTIA/bin/v-rebuild-mail-domains $user
-done
 
 # Remove old OS-specific installation files if they exist to free up space
 if [ -d $HESTIA/install/ubuntu ]; then
@@ -232,15 +223,21 @@ if [ -d $HESTIA/install/debian ]; then
     rm -rf $HESTIA/install/debian
 fi
 
+# Remove system-level webmail configuration files in favor of per-domain configuration
+if [ -f /etc/nginx/conf.d/webmail.inc ]; then
+    rm -f /etc/nginx/conf.d/webmail.inc
+fi
+if [ -f /etc/apache2/conf.d/roundcube.conf ]; then
+    rm -f /etc/apache2/conf.d/roundcube.conf
+fi
+
 # Update user information for mail domain SSL configuration
 userlist=$(ls --sort=time $HESTIA/data/users/)
 for user in $userlist; do
     USER_DATA="$HESTIA/data/users/$user"
-    # Update user counter
+    # Update user counter if SSL variable doesn't exist
     if [ -z "$(grep "U_MAIL_SSL" $USER_DATA/user.conf)" ]; then
         echo "U_MAIL_SSL='0'" >> $USER_DATA/user.conf
-    else
-        sed -i "s/U_MAIL_SSL=.*/U_MAIL_SSL='0'/g" $USER_DATA/user.conf
     fi
 
     # Update mail configuration file
@@ -260,15 +257,6 @@ done
 if [ -f /etc/exim4/exim4.conf.template ]; then
     rm -f /etc/exim4/exim4.conf.template
     cp -f $HESTIA/install/hestia-data/exim/exim4.conf.template /etc/exim4/
-    systemctl restart exim4
-fi
-
-# Remove system-wide webmail configuration files
-if [ -f /etc/nginx/conf.d/webmail.inc ]; then
-    rm -f /etc/nginx/conf.d/webmail.inc
-fi
-if [ -f /etc/apache2/conf.d/roundcube.conf ]; then
-    rm -f /etc/apache2/conf.d/roundcube.conf
 fi
 
 # Rebuild users

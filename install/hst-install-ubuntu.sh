@@ -1020,7 +1020,6 @@ if [ "$nginx" = 'yes' ]; then
     cp -f $hestiacp/nginx/status.conf /etc/nginx/conf.d/
     cp -f $hestiacp/nginx/phpmyadmin.inc /etc/nginx/conf.d/
     cp -f $hestiacp/nginx/phppgadmin.inc /etc/nginx/conf.d/
-    cp -f $hestiacp/nginx/webmail.inc /etc/nginx/conf.d/
     cp -f $hestiacp/logrotate/nginx /etc/logrotate.d/
     echo > /etc/nginx/conf.d/hestia.conf
     mkdir -p /var/log/nginx/domains

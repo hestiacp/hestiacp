@@ -263,6 +263,14 @@ if [ -f /etc/exim4/exim4.conf.template ]; then
     systemctl restart exim4
 fi
 
+# Remove system-wide webmail configuration files
+if [ -f /etc/nginx/conf.d/webmail.inc ]; then
+    rm -f /etc/nginx/conf.d/webmail.inc
+fi
+if [ -f /etc/apache2/conf.d/roundcube.conf ]; then
+    rm -f /etc/apache2/conf.d/roundcube.conf
+fi
+
 # Rebuild users
 userlist=$(ls --sort=time $HESTIA/data/users/)
 for user in $userlist; do

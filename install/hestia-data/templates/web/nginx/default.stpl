@@ -32,5 +32,3 @@ server {
 
     include %home%/%user%/conf/web/snginx.%domain%.conf*;
 }
-
-include %home%/%user%/conf/mail/mail.%domain%.nginx.ssl.conf*;

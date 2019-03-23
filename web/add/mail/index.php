@@ -170,7 +170,7 @@ if (!empty($_POST['ok_acc'])) {
     // Get webmail url
     if (empty($_SESSION['error_msg'])) {
         list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
-        $webmail = "http://".$http_host."/webmail/";
+        $webmail = "http://mail.".$http_host."/";
         if (!empty($_SESSION['MAIL_URL'])) $webmail = $_SESSION['MAIL_URL'];
     }
 

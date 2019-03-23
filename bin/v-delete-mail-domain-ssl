@@ -51,16 +51,16 @@ rm -f /usr/local/hestia/ssl/mail.$domain.*
 # Turn off SSL-enabled webmail
 if [ ! -z "$WEB_SYSTEM" ]; then
     # Check if webmail is turned on
-    if [ -f $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf ]; then
-        rm -f $HOMEDIR/$user/conf/mail/mail.$domain.apache2.ssl.conf
+    if [ -f $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.apache2.ssl.conf ]; then
+        rm -f $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.apache2.ssl.conf
        
         # Restart web server
         $BIN/v-restart-web $restart
     fi
 fi
 if [ ! -z "$PROXY_SYSTEM" ]; then
-    if [ -f $HOMEDIR/$user/conf/mail/mail.$domain.nginx.ssl.conf]; then
-        rm -f $HOMEDIR/$user/conf/mail/mail.$domain.nginx.ssl.conf
+    if [ -f $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.nginx.ssl.conf]; then
+        rm -f $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.nginx.ssl.conf
         
         # Restart proxy server
         $BIN/v-restart-web $restart

@@ -47,25 +47,25 @@ is_web_domain_cert_valid
 
 # Deleting old certificate
 tmpdir=$(mktemp -p $HOMEDIR/$user/mail/$domain/private -d)
-rm -f $HOMEDIR/$user/conf/mail/ssl.$domain.*
+rm -f $HOMEDIR/$user/conf/mail/$domain/ssl/mail.$domain.*
 mv $USER_DATA/ssl/mail/$domain.* $tmpdir
 chown -R $user:$user $tmpdir
 
 
 # Add certificate to user home directory
-cp -f $USER_DATA/ssl/mail.$domain.crt $HOMEDIR/$user/conf/mail/ssl.$domain.crt
-cp -f $USER_DATA/ssl/mail.$domain.key $HOMEDIR/$user/conf/mail/ssl.$domain.key
-cp -f $USER_DATA/ssl/mail.$domain.pem $HOMEDIR/$user/conf/mail/ssl.$domain.pem
+cp -f $USER_DATA/ssl/mail.$domain.crt $HOMEDIR/$user/conf/mail/ssl/.$domain.crt
+cp -f $USER_DATA/ssl/mail.$domain.key $HOMEDIR/$user/conf/mail/$domain/ssl/mail.$domain.key
+cp -f $USER_DATA/ssl/mail.$domain.pem $HOMEDIR/$user/conf/mail/$domain/ssl/mail.$domain.pem
 if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
-    cp -f $USER_DATA/ssl/mail.$domain.ca $HOMEDIR/$user/conf/mail/ssl.$domain.ca
+    cp -f $USER_DATA/ssl/mail.$domain.ca $HOMEDIR/$user/conf/mail/$domain/ssl/mail.$domain.ca
 fi
 
 # Add domain SSL configuration to dovecot
 # TO-DO: Add this confoiguration to a separate file for each domain
 echo "" >> /etc/dovecot/conf.d/10-ssl.conf
 echo "local_name mail.$domain {" >> /etc/dovecot/conf.d/10-ssl.conf
-echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/ssl.$domain.pem" >> /etc/dovecot/conf.d/10-ssl.conf
-echo "  ssl_key = <$HOMEDIR/$user/conf/mail/ssl.$domain.key" >> /etc/dovecot/conf.d/10-ssl.conf
+echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/mail.$domain.pem" >> /etc/dovecot/conf.d/10-ssl.conf
+echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/mail.$domain.key" >> /etc/dovecot/conf.d/10-ssl.conf
 echo "}" >> /etc/dovecot/conf.d/10-ssl.conf
 
 # Remove old SSL certificate files from exim configuration
@@ -73,8 +73,8 @@ rm -f /usr/local/hestia/ssl/mail.$domain.key
 rm -f /usr/local/hestia/ssl/mail.$domain.crt
 
 # Create symbolic link to certificate files
-ln -s $HOMEDIR/$user/conf/mail/ssl.$domain.key /usr/local/hestia/ssl/mail.$domain.key
-ln -s $HOMEDIR/$user/conf/mail/ssl.$domain.pem /usr/local/hestia/ssl/mail.$domain.crt
+ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/mail.$domain.key /usr/local/hestia/ssl/mail.$domain.key
+ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/mail.$domain.pem /usr/local/hestia/ssl/mail.$domain.crt
 
 chown -h $user:mail /usr/local/hestia/ssl/mail.$domain.*
 

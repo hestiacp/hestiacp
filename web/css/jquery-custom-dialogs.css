@@ -423,7 +423,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 .ui-dialog .ui-dialog-titlebar-close { position: absolute; right: .3em; top: 50%; width: 19px; margin: -10px 0 0 0; padding: 1px; height: 18px; }
 .ui-dialog .ui-dialog-titlebar-close span { display: block; margin: 1px; }
 .ui-dialog .ui-dialog-titlebar-close:hover, .ui-dialog .ui-dialog-titlebar-close:focus { padding: 0; }
-.ui-dialog .ui-dialog-content { position: relative; border: 0; padding: 10px 14px 30px; background: none; overflow: auto; zoom: 1; }
+.ui-dialog .ui-dialog-content { position: relative; border: 0; padding: 10px 14px 30px; background: none; overflow: auto; zoom: 1; color: #121212; }
 .ui-dialog .ui-dialog-buttonpane { border-color: #555; border-style: solid none none; text-align: left; margin: .5em 0 0 0; padding: 6px 0 1px 1px; }
 .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset { text-align: center; ;margin: 0 0 0 0px; }
 .ui-dialog .ui-dialog-buttonpane button { margin: .5em .4em .5em 0; cursor: pointer; }

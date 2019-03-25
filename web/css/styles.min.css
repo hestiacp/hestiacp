@@ -750,8 +750,8 @@ body {
 .body-login, .body-reset {
   height: auto;
   padding-top: 10%;
-  /*background: url(/images/edit_bg.png);*/
-  background-color: #aaaaaa;
+  background-color: #686868;
+  background: linear-gradient(to bottom, rgba(91,91,91,1) 5%,rgba(124,124,124,1) 100%);
 }
 
 a {

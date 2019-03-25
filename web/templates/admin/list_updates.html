@@ -53,9 +53,9 @@
               <div style="margin-bottom: 40px;">
                   <div class="clearfix l-unit__stat-col--left"><b><?php print __('Package');?></b></div>
                   <div class="clearfix l-unit__stat-col--left wide-2"><b><?php print __('Description');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left"><b><?php print __('Version');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left"><b><?php print __('Release');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left" style="text-align: center;"><b><?php print __('Status');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Version');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Release');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Status');?></b></div>
               </div>
             </div>
           </div>
@@ -99,9 +99,9 @@
           <div class="l-unit__stats">
               <div class="clearfix l-unit__stat-col--left"><b><?=$key?></b></div>
               <div class="clearfix l-unit__stat-col--left wide-2"><b><?=__($data[$key]['DESCR'])?></b></div>
-              <div class="clearfix l-unit__stat-col--left"><?=$data[$key]['VERSION'] ?> (<?=$data[$key]['ARCH']?>)</div>
-              <div class="clearfix l-unit__stat-col--left"><?=$data[$key]['RELEASE']?></div>
-              <div class="clearfix l-unit__stat-col--left" style="text-align: center;"><b>
+              <div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['VERSION'] ?> (<?=$data[$key]['ARCH']?>)</div>
+              <div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['RELEASE']?></div>
+              <div class="clearfix l-unit__stat-col--left text-center"><b>
                 
                   <? if ($data[$key]['UPDATED'] == 'no') {
                     echo '

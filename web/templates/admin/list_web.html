@@ -64,8 +64,8 @@
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('SSL');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print __('Statistics');?></b></div>
               </div>
-            </div>
-         </div>
+             </div>
+          </div>
 
                 <?php
                     foreach ($data as $key => $value) {
@@ -179,49 +179,35 @@ sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-dis
                       <i class="l-icon-star" title="<?=__('save to favorites')?>"></i>
                   </div>
                   <div class="clearfix l-unit__stat-col--left wide-2" style="margin-left: -5px;"><b><?=$key?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center">
-                      <?=empty($ips[$data[$key]['IP']]['NAT']) ? $data[$key]['IP'] : "{$ips[$data[$key]['IP']]['NAT']}"; ?>
-                   
-                  </div>
-
+                  <div class="clearfix l-unit__stat-col--left text-center"><?=empty($ips[$data[$key]['IP']]['NAT']) ? $data[$key]['IP'] : "{$ips[$data[$key]['IP']]['NAT']}"; ?></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK'])?></div>
+                  <div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_BANDWIDTH'])?></b> <?=humanize_usage_measure($data[$key]['U_BANDWIDTH'])?></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b>
-                      <?=humanize_usage_size($data[$key]['U_DISK'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK'])?>
-                  </div>
-
-                  <div class="clearfix l-unit__stat-col--left text-center compact"><b>
-                    <?=humanize_usage_size($data[$key]['U_BANDWIDTH'])?></b> <?=humanize_usage_measure($data[$key]['U_BANDWIDTH'])?>
-                  </div>
-
-                  <div class="clearfix l-unit__stat-col--left text-center"><b>
-                      <? if($data[$key]['SSL'] == 'no'){ ?>
-                        <i class="fas fa-times-circle" style="color: red;"></i>
-                      <? } else {?>
-                        <i class="fas fa-check-circle" style="color: green;"></i>
-                      <? } ?>
-                    </b>
+                        <? if($data[$key]['SSL'] == 'no'){ ?>
+                          <i class="fas fa-times-circle" style="color: red;"></i>
+                        <? } else {?>
+                          <i class="fas fa-check-circle" style="color: green;"></i>
+                        <? } ?>
+                      </b>
                   </div>
                   <div class="clearfix l-unit__stat-col--left text-center compact"><b>
-                      <? if($web_stats == 'no'){ ?>
-                        <i class="fas fa-times-circle" style="color: red;"></i>
-                      <? } else {?>
-                        <i class="fas fa-check-circle" style="color: green;"></i>
-                      <? } ?>
-                    </b>
+                        <? if($web_stats == 'no'){ ?>
+                          <i class="fas fa-plus-circle" style="color: #3399cc;"></i>
+                        <? } else {?>
+                          <i class="fas fa-check-circle" style="color: green;"></i>
+                        <? } ?>
+                      </b>
+                   </div>
                   </div>
-               </div>
+                </div>
              </div>
-           </div>
-          <!-- /.l-unit__stats -->
-        </div>
-        <!-- /.l-unit__col -->
-      </div>
-      <!-- /.l-unit -->
-      <!-- div class="l-separator"></div -->
-      <!-- /.l-separator -->
-      <?}?>
-
-    </div>
-
+           <!-- /.l-unit__col -->
+         </div>
+         <!-- /.l-unit -->
+         <!--div class="l-separator"></div-->
+         <!-- /.l-separator -->
+         <?}?>
+       </div>
 
     <div id="vstobjects">
       <div class="l-separator"></div>

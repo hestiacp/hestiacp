@@ -751,7 +751,7 @@ body {
   height: auto;
   padding-top: 10%;
   /*background: url(/images/edit_bg.png);*/
-  background-color: #eee;
+  background-color: #aaaaaa;
 }
 
 a {
@@ -3101,14 +3101,16 @@ a.button.cancel {
 
 .login {
   background-color: #fff;
-  box-shadow: 0 2px 8px rgba(100, 100, 100, 0.3);
+  box-shadow: 0px 9px 35px rgba(70, 70, 70, 0.7);
   font-family: 'Exo 2', Arial, Helvetica,sans-serif;
   margin: 0;
   padding: 0;
   text-align: left;
   vertical-align: top;
   width: 500px;
+  border-radius: 5px;
 }
+
 .qr-code {
   border: 1px solid #cfcfcf;
   border-radius: 4px;

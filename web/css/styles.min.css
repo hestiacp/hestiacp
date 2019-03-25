@@ -1493,7 +1493,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 .units .l-unit {
   border-bottom: 1px solid #ddd;
-  border-left: 2px solid #fff;
 }
 .units .l-unit.l-unit--starred {
   border-left: 2px solid #ff6701;

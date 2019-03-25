@@ -106,7 +106,26 @@
               <div class="clearfix l-unit__stat-col--left wide-2"><b><?=__($data[$key]['DESCR'])?></b></div>
               <div class="clearfix l-unit__stat-col--left"><?=$data[$key]['VERSION'] ?> (<?=$data[$key]['ARCH']?>)</div>
               <div class="clearfix l-unit__stat-col--left"><?=$data[$key]['RELEASE']?></div>
-              <div class="clearfix l-unit__stat-col--left"><b><?=__($upd_status)?></b></div>
+              <div class="clearfix l-unit__stat-col--left"><b>
+                
+                  <? if ($data[$key]['UPDATED'] == 'no') {
+                    echo '
+                    <i class="fas fa-exclamation-triangle"></i>
+                    ';
+                  }
+                  ?>
+                  <? if ($data[$key]['UPDATED'] == 'yes') {
+                    echo '
+                    <i class="fas fa-check-circle"></i></i>
+                    ';
+                  }
+                  ?>
+
+
+
+
+
+              </b></div>
           </div>
           <!-- /.l-unit__stats -->
         </div>

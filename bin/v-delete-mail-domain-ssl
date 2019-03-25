@@ -42,12 +42,6 @@ is_object_value_exist 'mail' 'DOMAIN' "$domain" '$SSL'
 # Deleting ssl files
 del_mail_ssl_config
 
-# Deleting old certificate
-tmpdir=$(mktemp -p $HOMEDIR/$user/mail/$domain/private -d)
-rm -f $HOMEDIR/$user/conf/mail/$domain/ssl/mail.$domain.*
-rm -f $USER_DATA/ssl/mail.$domain.*
-rm -f /usr/local/hestia/ssl/mail.$domain.*
-
 # Turn off SSL-enabled webmail
 if [ ! -z "$WEB_SYSTEM" ]; then
     # Check if webmail is turned on

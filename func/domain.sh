@@ -586,9 +586,15 @@ get_mail_config_lines() {
 }
 
 del_mail_ssl_config() {
-    conf="/etc/dovecot/conf.d/10-ssl-"$domain".conf"
-    get_mail_config_lines $conf
-    rm -f $conf
+    rm -f /etc/dovecot/conf.d/10-ssl-$domain.conf
+    rm -f $HOMEDIR/$user/conf/mail/$domain/ssl/mail.$domain.*
+    rm -f $USER_DATA/ssl/mail.$domain.*
+    rm -f /usr/local/hestia/ssl/mail.$domain.*
+}
+
+get_webmail_config() {
+    wbmconf="$HOMEDIR/$user/mail/conf/$domain/webmail/"$WEB_SYSTEM".conf"
+    wbmproxyconf="$HOMEDIR/$user/mail/conf/$domain/webmail/"$PROXY_SYSTEM".conf"
 }
 
 #----------------------------------------------------------#

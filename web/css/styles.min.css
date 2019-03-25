@@ -3330,17 +3330,21 @@ form#vstobjects.suspended {
 }
 
 .shortcuts {
-  background: rgba(50, 50, 50, 0.9);
+  background: rgba(20, 20, 20, 0.92);
   display: inline-block;
   position: fixed;
   left: 50%;
   bottom: 0;
   color: #eee;
   width: 800px;
-  border: 1px solid #333;
-  font-size: 13px;
+  border: 1px solid rgba(255,255,255,0.7);
+  border-bottom: 0px;
+  font-size: 12px;
   z-index: 120;
   transform: translate(-50%, 0);
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  box-shadow: 0px 3px 40px rgba(0,0,0,0.6);
 }
 .shortcuts .header {
   border-bottom: 1px solid #333;
@@ -3352,7 +3356,9 @@ form#vstobjects.suspended {
   padding: 7px 0 7px 14px;
   display: inline-block;
   float: left;
-  font-size: 12px;
+  font-size: 14px;
+  letter-spacing: -0.01em;
+
 }
 .shortcuts .close {
   background: url("/images/sprite.png?1446554103") repeat scroll -408px -469px;

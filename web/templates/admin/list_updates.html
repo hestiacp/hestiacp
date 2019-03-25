@@ -55,11 +55,10 @@
                   <div class="clearfix l-unit__stat-col--left wide-2"><b><?php print __('Description');?></b></div>
                   <div class="clearfix l-unit__stat-col--left"><b><?php print __('Version');?></b></div>
                   <div class="clearfix l-unit__stat-col--left"><b><?php print __('Release');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left"><b><?php print __('Status');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left" style="text-align: center;"><b><?php print __('Status');?></b></div>
               </div>
             </div>
           </div>
-
       <?php
         foreach ($data as $key => $value) {
           ++$i;
@@ -73,10 +72,6 @@
           }
 
       ?>
-
-
-
-
       <div class="l-unit<? if($status == 'suspended') echo ' l-unit--outdated';?>">
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
@@ -106,7 +101,7 @@
               <div class="clearfix l-unit__stat-col--left wide-2"><b><?=__($data[$key]['DESCR'])?></b></div>
               <div class="clearfix l-unit__stat-col--left"><?=$data[$key]['VERSION'] ?> (<?=$data[$key]['ARCH']?>)</div>
               <div class="clearfix l-unit__stat-col--left"><?=$data[$key]['RELEASE']?></div>
-              <div class="clearfix l-unit__stat-col--left"><b>
+              <div class="clearfix l-unit__stat-col--left" style="text-align: center;"><b>
                 
                   <? if ($data[$key]['UPDATED'] == 'no') {
                     echo '
@@ -120,11 +115,6 @@
                     ';
                   }
                   ?>
-
-
-
-
-
               </b></div>
           </div>
           <!-- /.l-unit__stats -->

@@ -129,8 +129,8 @@ sort-expire="<?=strtotime($data[$key]['EXP'])?>" sort-records="<?=(int)$data[$ke
                   <div class="clearfix l-unit__stat-col--left wide-2" style="margin-left: -5px;"><b><?=$key?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center compact"><? if(!empty($data[$key]['SRC'])) echo "<span>⇢ ".$data[$key]['SRC']."</span>&nbsp; &nbsp; ";  if($data[$key]['RECORDS']) echo '<span>'.$data[$key]['RECORDS'].'</span>';?></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['TPL']?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['TTL']?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['SOA']?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['TTL']?></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['SOA']?></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['EXP']?></b></div>
                </div>
              </div>

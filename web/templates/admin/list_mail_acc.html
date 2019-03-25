@@ -55,13 +55,27 @@
 
     <div class="l-separator"></div>
     <!-- /.l-separator -->
-
-
-
     <div class="l-center units animated fadeIn">
-      <div class="l-unit header">
-        <div class="subtitle"><?=__('Listing')?>  <?=htmlentities($_GET['domain'])?></div>
-      </div>
+        <div class="l-unit header">
+            <div class="subtitle"><?=__('Listing')?>  <?=htmlentities($_GET['domain'])?></div>
+        </div>
+        <div class="l-unit header">
+            <div class="l-unit__col l-unit__col--left clearfix">
+              <div class="text-center jump-small-top"></div>
+            </div>
+      
+            <div class="l-unit__col l-unit__col--right step-top">
+              <div style="margin-bottom: 40px;">
+                  <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print __('Username');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print __('Disk');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Quota');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Aliases');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Forwarding');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Autoreply');?></b></div>
+              </div>
+            </div>
+          </div>
+
 
       <?
         foreach ($data as $key => $value) {
@@ -117,84 +131,49 @@ sort-star="<? if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] =
           <!-- l-unit-toolbar__col -->
         </div>
         <!-- /.l-unit-toolbar -->
-
-        <div class="l-unit__col l-unit__col--left clearfix">
-          <div class="l-unit__date">
-            <?=translate_date($data[$key]['DATE'])?>
-          </div>
-          <div class="l-unit__suspended"><?=__('suspended')?></div>
-          <div class="text-center">
-            <i class="l-icon-star" title="<?=__('save to favorites')?>"></i>
-          </div>
-        </div>
-        <!-- /.l-unit__col -->
-        <div class="l-unit__col l-unit__col--right">
-          <div class="l-unit__name separate">
-            <?=$key."@".$_GET['domain']?> <span><?=str_replace(',', ', ', $data[$key]['ALIAS'])?></span>
-          </div>
-          <!-- /.l-unit__name -->
-          <div class="l-unit__stats">
-            <table>
-              <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix graph">
-                    <div class="l-unit__stat-col l-unit__stat-col--left">
-                      <?=__('Disk')?>
-                    </div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right text-right volume">
-                      <b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK'])?>
-                    </div>
+        <div class="l-unit header">
+            <div class="l-unit__col l-unit__col--right">
+              <div style="margin-bottom: 50px;">
+                  <div class="clearfix l-unit__stat-col--left">
+                      <i class="l-icon-star" title="<?=__('save to favorites')?>"></i>
                   </div>
-                  <div class="l-percent">
-                    <div class="l-percent__fill" style="width: <?=get_percentage($data[$key]['U_DISK'],$data[$key]['QUOTA'])?>%"></div>
+                  <div class="clearfix l-unit__stat-col--left wide-3" style="margin-left: -5px;"><b><?=$key."@".$_GET['domain']?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK'])?></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?=__(humanize_usage_size($data[$key]['QUOTA'])) ?></b> <?=__(humanize_usage_measure($data[$key]['QUOTA'])) ?></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b>
+                      <? if($data[$key]['ALIAS'] == ''){ ?>
+                        0
+                      <? } else {?>
+                        <i class="fas fa-check-circle" style="color: green;"></i>
+                      <? } ?>
+                    </b>
                   </div>
-                  <!-- /.percent -->
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Quota')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=__(humanize_usage_size($data[$key]['QUOTA'])) ?></b> <?=__(humanize_usage_measure($data[$key]['QUOTA'])) ?>
-                    </div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b>
+                      <? if($data[$key]['FWD'] == ''){ ?>
+                        <i class="fas fa-minus-circle"></i>
+                      <? } else {?>
+                        <i class="fas fa-check-circle" style="color: green;"></i>
+                      <? } ?>
+                    </b>
                   </div>
-                </td>
-                <td>
-                  <? if($data[$key]['AUTOREPLY'] == 'no'){ ?>
-                    <div class="l-unit__stat-cols clearfix disabled"><?=__('Autoreply')?></div>
-                  <? } else {?>
-                    <div class="l-unit__stat-cols clearfix">
-                      <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Autoreply')?>:</div>
-                      <div class="l-unit__stat-col l-unit__stat-col--right">
-                        <b><?=__($data[$key]['AUTOREPLY'])?></b>
-                      </div>
-                    </div>
-                  <? } ?>
-                </td>
-              </tr>
-              <tr>
-                <td></td>
-                <td colspan="2">
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Forward to')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right wide">
-                      <b><?=str_replace(',', ', ', $data[$key]['FWD'])?></b>
-                    </div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b>
+                      <? if($data[$key]['AUTOREPLY'] == 'no'){ ?>
+                        <i class="fas fa-minus-circle"></i>
+                      <? } else {?>
+                        <i class="fas fa-check-circle" style="color: green;"></i>
+                      <? } ?>
+                    </b>
                   </div>
-                </td>
-              </tr>
-            </table>
-          </div>
-          <!-- /.l-unit__stats -->
-        </div>
+               </div>
+             </div>
+           </div>
         <!-- /.l-unit__col -->
       </div>
       <!-- /.l-unit -->
       <!--div class="l-separator"></div-->
       <!-- /.l-separator -->
       <?}?>
-
     </div>
-
 
     <div id="vstobjects">
       <div class="l-separator"></div>

@@ -317,9 +317,10 @@ rebuild_web_domain_conf() {
     done
 
     # Adding http auth protection
-    htaccess="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.$domain.conf_htaccess"
-    htpasswd="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.$domain.htpasswd"
+    htaccess="$HOMEDIR/$user/conf/web/$domain/auth/htaccess"
+    htpasswd="$HOMEDIR/$user/conf/web/$domain/auth/htpasswd"
     docroot="$HOMEDIR/$user/web/$domain/public_html"
+
     for auth_user in ${AUTH_USER//:/ }; do
         # Parsing auth user variables
         position=$(echo $AUTH_USER |tr ':' '\n' |grep -n '' |\
@@ -419,7 +420,7 @@ rebuild_dns_domain_conf() {
 
 # MAIL domain rebuild
 rebuild_mail_domain_conf() {
-
+    get_mail_alias
     get_domain_values 'mail'
 
     if [[ "$domain" = *[![:ascii:]]* ]]; then
@@ -474,6 +475,7 @@ rebuild_mail_domain_conf() {
             mkdir $HOMEDIR/$user/mail/$domain_idn
         fi
 
+        # Remove and recreate SSL configuration
         if [ "$SSL" = 'yes' ]; then
             mkdir -p $HOMEDIR/$user/conf/mail/$domain/ssl/
             del_mail_ssl_config
@@ -526,10 +528,7 @@ rebuild_mail_domain_conf() {
     # Rebuild webmail configuration
     get_user_ip
     del_webmail_config
-    # Delete configuration files
-    if [ ! -z "$WEB_SYSTEM" ]; then
-        add_webmail_config
-    fi  
+    add_webmail_config
         
     # Set permissions and ownership
     if [[ "$MAIL_SYSTEM" =~ exim ]]; then

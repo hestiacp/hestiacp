@@ -40,8 +40,9 @@ is_object_unsuspended 'user' 'USER' "$user"
 if [ ! -z "$WEB_SYSTEM" ]; then
     sed -i "/.*\/$user\/conf\/web\//d" /etc/$WEB_SYSTEM/conf.d/hestia.conf
 
-    if [ -e "$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.conf"  ]; then
+    if [ -f "$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.conf"  ]; then
         rm -f $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM*.conf
+        rm -f $HOMEDIR/$user/conf/web/$domain*.conf
     fi
 fi
 
@@ -49,8 +50,9 @@ fi
 if [ ! -z "$PROXY_SYSTEM" ]; then
     sed -i "/.*\/$user\/conf\/web\//d" /etc/$PROXY_SYSTEM/conf.d/hestia.conf
 
-    if [ -e "$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.conf" ]; then
+    if [ -f "$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.conf" ]; then
         rm -f $HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM*.conf
+        rm -f $HOMEDIR/$user/conf/web/$domain*.conf
     fi
 fi
 

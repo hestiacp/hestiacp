@@ -63,12 +63,14 @@ if [ "$DKIM" = 'yes' ] && [ -e "$USER_DATA/dns/$domain.conf" ]; then
 fi
 
 # Delete SSL certificates and configuration
-if [ "$SSL" = "yes" ]; then
+if [ "$SSL" = 'yes' ]; then
     del_mail_ssl_config
 fi
 
 # Delete webmail configuration
-del_webmail_config
+if [ ! -z "$WEB_SYSTEM" ]; then
+    del_webmail_config
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -272,6 +272,10 @@ if [ -f /etc/$PROXY_SYSTEM/nginx.conf ]; then
     cp $INSTALLDIR/$PROXY_SYSTEM/$PROXY_SYSTEM.conf /etc/$PROXY_SYSTEM/$PROXY_SYSTEM.conf
 fi
 
+# Add mail domain variable to system configuration
+sed -i "/MAIL_ALIAS='mail'/d" $HESTIA/conf/hestia.conf
+echo "MAIL_ALIAS='mail'" >> $HESTIA/conf/hestia.conf
+
 # Rebuild users
 userlist=$(ls --sort=time $HESTIA/data/users/)
 for user in $userlist; do

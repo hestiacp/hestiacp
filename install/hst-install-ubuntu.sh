@@ -644,6 +644,7 @@ if [ "$multiphp" = 'yes' ]; then
              php$fpm_v-mysql php$fpm_v-soap php$fpm_v-xml php$fpm_v-zip
              php$fpm_v-mbstring php$fpm_v-json php$fpm_v-bz2 php$fpm_v-pspell"
         software="$software $fpm"
+        multiphp+=("$fpm_v")
     fi
 fi
 
@@ -667,6 +668,7 @@ if [ "$nginx" = 'no'  ]; then
 fi
 if [ "$apache" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/apache2 //")
+    software=$(echo "$software" | sed -e "s/apache2-bin//")
     software=$(echo "$software" | sed -e "s/apache2-utils//")
     software=$(echo "$software" | sed -e "s/apache2-suexec-custom//")
     software=$(echo "$software" | sed -e "s/apache2.2-common//")

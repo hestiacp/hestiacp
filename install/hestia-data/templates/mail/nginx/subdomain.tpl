@@ -1,15 +1,14 @@
 server {
-    listen      %ip%:%proxy_ssl_port% ssl http2;
-    server_name mail.%domain%;
-    ssl_certificate          %home%/%user%/conf/mail/%domain%/ssl/mail.%domain%.crt;
-    ssl_certificate_key      %home%/%user%/conf/mail/%domain%/ssl/mail.%domain%.key;
-    error_log  /var/log/%web_system%/domains/%domain%.error.log error;
+    listen      %ip%:%proxy_port%;
+    server_name %mailalias%.%domain%;
+        
+    include %home%/%user%/conf/web/forcessl.nginx.%domain%.conf*;
 
     location / {
-        proxy_pass      https://%ip%:%web_ssl_port%;
+        proxy_pass      http://%ip%:%web_port%;
         location ~* ^.+\.(jpg,jpeg,gif,png,ico,svg,css,zip,tgz,gz,rar,bz2,doc,xls,exe,pdf,ppt,txt,odt,ods,odp,odf,tar,wav,bmp,rtf,js,mp3,avi,mpeg,flv,html,htm)$ {
             alias          /var/lib/roundcube/;
-            expires        10m;
+            expires        15m;
             try_files      $uri @fallback;
         }
     }
@@ -29,9 +28,9 @@ server {
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $request_filename;
     }
-
+    
     location @fallback {
-        proxy_pass      https://%ip%:%web_ssl_port%;
+        proxy_pass      http://%ip%:%web_port%;
     }
 
     location ~ /\.ht    {return 404;}
@@ -39,6 +38,4 @@ server {
     location ~ /\.git/  {return 404;}
     location ~ /\.hg/   {return 404;}
     location ~ /\.bzr/  {return 404;}
-
-    include %home%/%user%/conf/web/snginx.%domain%.conf*;
 }

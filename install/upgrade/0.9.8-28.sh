@@ -259,6 +259,19 @@ if [ -f /etc/exim4/exim4.conf.template ]; then
     cp -f $HESTIA/install/hestia-data/exim/exim4.conf.template /etc/exim4/
 fi
 
+# Copy mail vhost templates to data directory
+rm -rf /usr/local/hestia/data/templates/mail
+mkdir -p /usr/local/hestia/data/templates/mail/
+cp -rf $INSTALLDIR/templates/mail /usr/local/hestia/data/templates/
+
+# Update web and proxy system configuration files to include domain configuration
+if [ -f /etc/$WEB_SYSTEM/$WEB_SYSTEM.conf ]; then
+    cp $INSTALLDIR/$WEB_SYSTEM/$WEB_SYSTEM.conf /etc/$WEB_SYSTEM/$WEB_SYSTEM.conf 
+fi
+if [ -f /etc/$PROXY_SYSTEM/nginx.conf ]; then
+    cp $INSTALLDIR/$PROXY_SYSTEM/$PROXY_SYSTEM.conf /etc/$PROXY_SYSTEM/$PROXY_SYSTEM.conf
+fi
+
 # Rebuild users
 userlist=$(ls --sort=time $HESTIA/data/users/)
 for user in $userlist; do
@@ -266,3 +279,8 @@ for user in $userlist; do
     v-rebuild-user $user
 done
 
+# Restart services
+$HESTIA/bin/v-restart-web $restart
+$HESTIA/bin/v-restart-proxy $restart
+$HESTIA/bin/v-restart-mail $restart
+$HESTIA/bin/v-restart-service $IMAP_SYSTEM

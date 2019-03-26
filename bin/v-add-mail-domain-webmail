@@ -18,12 +18,12 @@ domain_idn=$2
 source $HESTIA/func/main.sh
 source $HESTIA/func/domain.sh
 source $HESTIA/conf/hestia.conf
+source $HESTIA/conf/ip.conf
 
 # Additional argument formatting
 format_domain
 format_domain_idn
-# TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
-
+get_user_ip
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -36,106 +36,16 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
 is_object_unsuspended 'mail' 'DOMAIN' "$domain"
-is_object_value_empty 'mail' 'DOMAIN' "$domain" '$ANTIVIRUS'
+is_object_value_exist 'mail' 'DOMAIN' "$domain" '$WEBMAIL'
+is_object_value_empty 'mail' 'DOMAIN' "$domain" '$WEBMAIL'
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Turn on webmail for domain
-
-# Ensure that webmail configuration folder exists
-if [ ! -d $HOMEDIR/$user/conf/mail/$domain/webmail/ ]; then
-    mkdir -p $HOMEDIR/$user/conf/mail/$domain/webmail/
-fi
-
-if [ ! -z "$WEB_SYSTEM" ]; then
-    # Check for existence of web domain configuration
-    if [ -f $HOMEDIR/$user/conf/web/$domain.apache2.conf ]; then
-        # Copy configuration file template
-        cp -f $HESTIA/install/hestia-data/roundcube/vhost.conf $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.apache2.conf
-        
-        # Write domain specific variables to configuration file
-        sed -i 's|%domain_idn%|'$domain'|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.apache2.conf
-        sed -i 's|%domain%|'$domain'|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.apache2.conf
-        sed -i 's|%home%|'$HOMEDIR'|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.apache2.conf
-        sed -i 's|%user%|'$user'|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.apache2.conf
-        sed -i 's|%ip%|'$ip'|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.apache2.conf
-        sed -i 's|%web_port%|8080|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.apache2.conf
-
-        echo "Include $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.apache2.conf" >> /etc/apache2/conf.d/hestia.conf
-
-        # Restart web server
-        $BIN/v-restart-web $restart
-    fi
-fi
-
-if [ ! -z "$PROXY_SYSTEM" ]; then
-    # Check for existence of web domain configuration
-    if [ -f $HOMEDIR/$user/conf/web/$domain.nginx.conf ]; then
-        cp -f $HESTIA/install/hestia-data/roundcube/nginx.conf $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.nginx.conf
-
-        # Write domain specific variables to configuration file
-        sed -i 's|%home%|'$HOMEDIR'|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.nginx.conf
-        sed -i 's|%user%|'$user'|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.nginx.conf
-        sed -i 's|%domain_idn%|'$domain'|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.nginx.conf
-        sed -i 's|%domain%|'$domain'|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.nginx.conf
-        sed -i 's|%ip%|'$ip'|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.nginx.conf
-        sed -i 's|%proxy_port%|80|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.nginx.conf
-        sed -i 's|%web_port%|8080|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.nginx.conf
-        sed -i 's|%web_system%|'$WEB_SYSTEM'|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.nginx.conf
-        
-        echo "include $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.nginx.conf;" >> /etc/nginx/conf.d/hestia.conf
-
-        # Restart proxy server
-        $BIN/v-restart-proxy $restart
-    fi
-    
-fi
-
-# Turn on SSL-enabled webmail for domain
-if [ ! -z "$WEB_SYSTEM" ] && "SSL" = 'yes' ]; then
-    # Check for existence of web domain configuration
-    if [ -f $HOMEDIR/$user/conf/web/$domain.apache2.conf ]; then
-        # Copy configuration file template
-        cp -f $HESTIA/install/hestia-data/roundcube/vhost-ssl.conf $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.apache2.ssl.conf
-
-        # Write domain specific variables to configuration file
-        sed -i 's|%domain_idn%|'$domain'|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.apache2.ssl.conf
-        sed -i 's|%domain%|'$domain'|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.apache2.ssl.conf
-        sed -i 's|%home%|'$HOMEDIR'|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.apache2.ssl.conf
-        sed -i 's|%user%|'$user'|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.apache2.ssl.conf
-        sed -i 's|%ip%|'$ip'|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.apache2.ssl.conf
-        sed -i 's|%web_ssl_port%|8443|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.apache2.ssl.conf
-
-        echo "Include $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.apache2.ssl.conf" >> /etc/apache2/conf.d/hestia.conf
-
-        # Restart web server
-        $BIN/v-restart-web $restart
-    fi
-fi
-if [ ! -z "$PROXY_SYSTEM" ] && "SSL" = 'yes' ]; then
-    # Check for existence of web domain configuration
-    if [ -f $HOMEDIR/$user/conf/web/$domain.nginx.conf ]; then
-        cp -f $HESTIA/install/hestia-data/roundcube/nginx-ssl.conf $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.nginx.ssl.conf
-
-        # Write domain specific variables to configuration file
-        sed -i 's|%home%|'$HOMEDIR'|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.nginx.ssl.conf
-        sed -i 's|%user%|'$user'|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.nginx.ssl.conf
-        sed -i 's|%domain_idn%|'$domain'|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.nginx.ssl.conf
-        sed -i 's|%domain%|'$domain'|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.nginx.ssl.conf
-        sed -i 's|%ip%|'$ip'|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.nginx.ssl.conf
-        sed -i 's|%proxy_ssl_port%|443|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.nginx.ssl.conf
-        sed -i 's|%web_ssl_port%|8443|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.nginx.ssl.conf
-        sed -i 's|%web_system%|'$WEB_SYSTEM'|g' $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.nginx.ssl.conf
-
-        echo "include $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.nginx.ssl.conf;" >> /etc/nginx/conf.d/hestia.conf
-
-        # Restart proxy server
-        $BIN/v-restart-proxy $restart
-    fi
-fi
+# Build webmail configuration for domain
+add_webmail_config
 
 #----------------------------------------------------------#
 #                       Hestia                             #
@@ -144,9 +54,9 @@ fi
 # Adding webmail in config
 update_object_value 'mail' 'DOMAIN' "$domain" '$WEBMAIL' 'yes'
 
-# Restarting servers
+# Restart services
 $BIN/v-restart-mail $restart
-$BIN/v-restart-service dovecot $restart
+$BIN/v-restart-service $IMAP_SYSTEM $restart
 $BIN/v-restart-web $restart
 $BIN/v-restart-proxy $restart
 

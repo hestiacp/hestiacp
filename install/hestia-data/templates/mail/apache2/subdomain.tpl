@@ -1,15 +1,10 @@
-<VirtualHost %ip%:%web_ssl_port%>
-    ServerName mail.%domain%
+<VirtualHost %ip%:%web_port%>
+    ServerName %mailalias%.%domain%
     Alias / /var/lib/roundcube/
     Alias /error/ %home%/%user%/web/%domain%/document_errors/
     #SuexecUserGroup %user% %group%
-    
-    SSLEngine on
-    SSLVerifyClient none
-    SSLCertificateFile     %home%/%user%/conf/mail/%domain%/ssl/mail.%domain%.crt
-    SSLCertificateKey      %home%/%user%/conf/mail/%domain%/ssl/mail.%domain%.key
-
-   IncludeOptional %home%/%user%/conf/web/forcessl.apache2.%domain%.conf*
+        
+    IncludeOptional %home%/%user%/conf/web/forcessl.apache2.%domain%.conf*
     
     <Directory "/usr/share/tinymce/www/">
       Options Indexes MultiViews FollowSymLinks

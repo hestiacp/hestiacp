@@ -54,13 +54,11 @@ is_dir_symlink $HOMEDIR/$user/mail
 #----------------------------------------------------------#
 
 # Generating timestamp
-time_n_date=$(date +'%T %F')
-time=$(echo "$time_n_date" |cut -f 1 -d \ )
-date=$(echo "$time_n_date" |cut -f 2 -d \ )
+new_timestamp
 
 # Adding domain to mail.conf
 s="DOMAIN='$domain' ANTIVIRUS='$antivirus' ANTISPAM='$antispam' DKIM='$dkim'"
-s="$s SSL='no' LETSENCRYPT='no' CATCHALL='' ACCOUNTS='0' U_DISK='0' SUSPENDED='no' TIME='$time'"
+s="$s SSL='no' LETSENCRYPT='no' CATCHALL='' ACCOUNTS='0' WEBMAIL='yes' U_DISK='0' SUSPENDED='no' TIME='$time'"
 s="$s DATE='$date'"
 echo $s >> $USER_DATA/mail.conf
 touch $USER_DATA/mail/$domain.conf
@@ -129,8 +127,14 @@ if [ ! -z "$DNS_SYSTEM" ] && [ "$dkim" = 'yes' ]; then
     fi
 fi
 
-# Enable webmail services
-$BIN/v-add-mail/domain/webmail $user $domain
+# Enable webmail
+if [ ! -z "$WEB_SYSTEM" ]; then
+    add_webmail_config
+
+    # Restart web services for webmail changes to take effect
+    $BIN/v-restart-web $restart
+    $BIN/v-restart-proxy $restart
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #
@@ -138,12 +142,10 @@ $BIN/v-add-mail/domain/webmail $user $domain
 
 # Increasing domain value
 increase_user_value "$user" '$U_MAIL_DOMAINS'
+
 if [ "$dkim" = 'yes' ]; then
     increase_user_value "$user" '$U_MAIL_DKIM'
 fi
-
-# Adding webmail in config
-update_object_value 'mail' 'DOMAIN' "$domain" '$WEBMAIL' 'yes'
 
 # Logging
 log_history "added mail domain $domain"

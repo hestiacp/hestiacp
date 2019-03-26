@@ -62,16 +62,14 @@ if [ "$DKIM" = 'yes' ] && [ -e "$USER_DATA/dns/$domain.conf" ]; then
     done
 fi
 
-# Delete SSL certificates
+# Delete SSL certificates and configuration
 if [ "$SSL" = "yes" ]; then
-    rm -f $HOMEDIR/$user/conf/mail/$domain/ssl/mail.$domain.*
-    rm -f $USER_DATA/ssl/mail.$domain.*
-    rm -f /usr/local/hestia/ssl/mail.$domain.*
-    rm -f /etc/dovecot/conf.d/10-ssl-$domain.conf
+    del_mail_ssl_config
 fi
 
 # Delete webmail configuration
-$BIN/v-delete-mail-domain-webmail $user $domain
+del_webmail_config
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
@@ -89,6 +87,10 @@ if [ "$DKIM" = 'yes' ]; then
     decrease_user_value "$user" '$U_MAIL_DKIM'
 fi
 decrease_user_value "$user" '$U_MAIL_ACCOUNTS' "$accounts"
+
+# Restart servers
+$BIN/v-restart-web $restart
+$BIN/v-restart-proxy $restart
 
 # Logging
 log_history "deleted mail domain $domain"

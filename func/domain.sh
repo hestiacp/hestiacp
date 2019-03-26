@@ -173,10 +173,10 @@ prepare_web_domain_values() {
     ssl_ca_str=''
     prepare_web_aliases $ALIAS
 
-    ssl_crt="$HOMEDIR/$user/conf/web/ssl.$domain.crt"
-    ssl_key="$HOMEDIR/$user/conf/web/ssl.$domain.key"
-    ssl_pem="$HOMEDIR/$user/conf/web/ssl.$domain.pem"
-    ssl_ca="$HOMEDIR/$user/conf/web/ssl.$domain.ca"
+    ssl_crt="$HOMEDIR/$user/conf/web/$domain/ssl/$domain.crt"
+    ssl_key="$HOMEDIR/$user/conf/web/$domain/ssl/$domain.key"
+    ssl_pem="$HOMEDIR/$user/conf/web/$domain/ssl/$domain.pem"
+    ssl_ca="$HOMEDIR/$user/conf/web/$domain/ssl/$domain.ca"
     if [ ! -e "$USER_DATA/ssl/$domain.ca" ]; then
         ssl_ca_str='#'
     fi
@@ -244,7 +244,7 @@ add_web_config() {
     if [ ! -z /etc/$1/conf.d/domains/$domain.conf ]; then
         rm -f /etc/$1/conf.d/domains/$domain.conf
     fi
-    
+
     # Link configuration file to global domains directory 
     ln -s $conf /etc/$1/conf.d/domains/$domain.conf
 

@@ -210,14 +210,14 @@ rebuild_web_domain_conf() {
         conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
         add_web_config "$WEB_SYSTEM" "$TPL.stpl"
         cp -f $USER_DATA/ssl/$domain.crt \
-            $HOMEDIR/$user/conf/web/ssl.$domain.crt
+            $HOMEDIR/$user/conf/web/$domain/ssl/$domain.crt
         cp -f $USER_DATA/ssl/$domain.key \
-            $HOMEDIR/$user/conf/web/ssl.$domain.key
+            $HOMEDIR/$user/conf/web/$domain/ssl/$domain.key
         cp -f $USER_DATA/ssl/$domain.pem \
-            $HOMEDIR/$user/conf/web/ssl.$domain.pem
+            $HOMEDIR/$user/conf/web/$domain/ssl/$domain.pem
         if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
             cp -f $USER_DATA/ssl/$domain.ca \
-                $HOMEDIR/$user/conf/web/ssl.$domain.ca
+                $HOMEDIR/$user/conf/web/$domain/ssl/$domain.ca
         fi
     fi
 

@@ -562,40 +562,14 @@ is_mail_new() {
 }
 
 # Delete mail SSL configuration
-get_mail_config_lines() {
-    v_domain=""
-    if [ ! -z $domain_idn ]; then
-        v_domain=$domain_idn
-    else
-        domain_idn=$domain
-        format_domain_idn
-        v_domain=$domain_idn
-    fi
-    if [ -z "$v_domain" ]; then
-        check_result $E_PARSING "V_DOMAIN in get_mail_config_lines is empty"
-    fi
-
-    vhost_lines=$(grep -ni "local_name mail.${v_domain} {" $1)
-    vhost_lines=$(echo "$vhost_lines" |cut -f 1 -d : |cut -f 1 -d \-)
-    if [ -z "$vhost_lines" ]; then
-        check_result $E_PARSING "can't parse config $1"
-    fi
-
-    top_line=$vhost_lines
-    bottom_line=$((top_line + 4))
-}
-
 del_mail_ssl_config() {
     rm -f /etc/dovecot/conf.d/10-ssl-$domain.conf
     rm -f $HOMEDIR/$user/conf/mail/$domain/ssl/mail.$domain.*
+    rm -f $HOMEDIR/$user/conf/mail/$domain/webmail/mail.$domain.*.ssl.conf
     rm -f $USER_DATA/ssl/mail.$domain.*
     rm -f /usr/local/hestia/ssl/mail.$domain.*
 }
 
-get_webmail_config() {
-    wbmconf="$HOMEDIR/$user/mail/conf/$domain/webmail/"$WEB_SYSTEM".conf"
-    wbmproxyconf="$HOMEDIR/$user/mail/conf/$domain/webmail/"$PROXY_SYSTEM".conf"
-}
 
 #----------------------------------------------------------#
 #                        CMN                               #

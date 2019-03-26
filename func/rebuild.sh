@@ -202,7 +202,7 @@ rebuild_web_domain_conf() {
     chown root:$user /var/log/$WEB_SYSTEM/domains/$domain.*
 
     # Adding vhost configuration
-    conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
+    conf="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.conf"
     add_web_config "$WEB_SYSTEM" "$TPL.tpl"
 
     # Adding SSL vhost configuration
@@ -317,8 +317,8 @@ rebuild_web_domain_conf() {
     done
 
     # Adding http auth protection
-    htaccess="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.conf_htaccess"
-    htpasswd="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.htpasswd"
+    htaccess="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.$domain.conf_htaccess"
+    htpasswd="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.$domain.htpasswd"
     docroot="$HOMEDIR/$user/web/$domain/public_html"
     for auth_user in ${AUTH_USER//:/ }; do
         # Parsing auth user variables

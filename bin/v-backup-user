@@ -145,7 +145,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
         else
             # old style configs
             tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.tpl"
-            conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
+            conf="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.conf"
             get_web_config_lines $tpl_file $conf
             sed -n "$top_line,$bottom_line p" $conf > conf/$WEB_SYSTEM.conf
         fi

@@ -66,6 +66,12 @@ is_web_domain_cert_valid
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Ensure that domain SSL directory exists
+
+if [ ! -d $HOMEDIR/$user/conf/web/$domain/ssl/ ]; then
+    mkdir -p $HOMEDIR/$user/conf/web/$domain/ssl/
+fi
+
 # Adding certificate to user data directory
 cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/$domain.crt
 cp -f $ssl_dir/$domain.key $USER_DATA/ssl/$domain.key

@@ -45,18 +45,18 @@ tls_advertise_hosts = *
 tls_certificate = \
         ${if and {\
                      { eq {${domain:foo@$tls_in_sni}} {$tls_in_sni}}\
-                     { exists{/usr/local/hestia/ssl/$tls_in_sni.crt} }\
+                     { exists{/etc/exim4/domains/$tls_in_sni/ssl/$tls_in_sni.crt} }\
                  }\
-                 {/usr/local/hestia/ssl/$tls_in_sni.crt}\
+                 {/etc/exim4/domains/$tls_in_sni/ssl/$tls_in_sni.crt}\
                  {/usr/local/hestia/ssl/certificate.crt}\
          }
 
 tls_privatekey = \
         ${if and {\
                      { eq {${domain:foo@$tls_in_sni}} {$tls_in_sni}}\
-                     { exists{/usr/local/hestia/ssl/$tls_in_sni.key} }\
+                     { exists{/etc/exim4/domains/$tls_in_sni/ssl/$tls_in_sni.key} }\
                  }\
-                 {/usr/local/hestia/ssl/$tls_in_sni.key}\
+                 {/etc/exim4/domains/$tls_in_sni/ssl/$tls_in_sni.key}\
                  {/usr/local/hestia/ssl/certificate.key}\
          }
 

@@ -64,7 +64,6 @@ chown -R $user:$user $tmpdir
 # Deleting force ssl
 $BIN/v-delete-web-domain-ssl-force $user $domain
 
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

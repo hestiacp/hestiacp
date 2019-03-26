@@ -335,6 +335,15 @@ del_web_config() {
    # fi
 }
 
+# Verify status of SSL-force setting
+get_web_forcessl_config() {
+    if ls $HOMEDIR/$user/conf/web/$domain/*.forcessl.conf 1> /dev/null 2>&1; then
+        forcessl="yes"
+    else
+        forcessl="no"
+    fi
+}
+
 # SSL certificate verification
 is_web_domain_cert_valid() {
     if [ ! -e "$ssl_dir/$domain.crt" ]; then
@@ -714,6 +723,10 @@ del_mail_ssl_config() {
 
     # Remove SSL vhost configuration
     rm -f $HOMEDIR/$user/conf/mail/$domain/*.ssl.conf
+
+    # Remove SSL vhost configuration for webmail
+    rm -f /etc/$WEB_SYSTEM/conf.d/domains/$maildomain.conf
+    rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$maildomain.conf
 
     # Remove data from backup directory
     rm -f $USER_DATA/ssl/$maildomain.*

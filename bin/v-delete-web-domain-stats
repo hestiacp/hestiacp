@@ -54,7 +54,7 @@ rm -rf $stats_dir/*
 
 # Deleting config
 rm -f /etc/awstats/$STATS.$domain_idn.conf
-rm -f $HOMEDIR/$user/conf/web/$STATS.$domain.conf
+rm -f $HOMEDIR/$user/conf/web/$domain/$STATS.conf
 
 
 #----------------------------------------------------------#

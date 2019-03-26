@@ -244,10 +244,10 @@ rebuild_web_domain_conf() {
                 -e "s|%home%|$HOMEDIR|g" \
                 -e "s|%alias%|${aliases//,/ }|g" \
                 -e "s|%alias_idn%|${aliases_idn//,/ }|g" \
-                > $HOMEDIR/$user/conf/web/$STATS.$domain.conf
+                > $HOMEDIR/$user/conf/web/$domain/$STATS.conf
         if [ "$STATS" == 'awstats' ]; then
             if [ ! -e "/etc/awstats/$STATS.$domain_idn.conf" ]; then
-                ln -f -s $HOMEDIR/$user/conf/web/$STATS.$domain.conf \
+                ln -f -s $HOMEDIR/$user/conf/web/$domain/$STATS.conf \
                     /etc/awstats/$STATS.$domain_idn.conf
             fi
         fi
@@ -436,7 +436,6 @@ rebuild_mail_domain_conf() {
     if [[ "$MAIL_SYSTEM" =~ exim ]]; then
         rm -f /etc/$MAIL_SYSTEM/domains/$domain_idn
         mkdir -p $HOMEDIR/$user/conf/mail/$domain
-        mkdir -p $HOMEDIR/$user/conf/mail/$domain/ssl
         ln -s $HOMEDIR/$user/conf/mail/$domain \
             /etc/$MAIL_SYSTEM/domains/$domain_idn
         rm -f $HOMEDIR/$user/conf/mail/$domain/aliases
@@ -476,6 +475,7 @@ rebuild_mail_domain_conf() {
         fi
 
         if [ "$SSL" = 'yes' ]; then
+            mkdir -p $HOMEDIR/$user/conf/mail/$domain/ssl/
             del_mail_ssl_config
             add_mail_ssl_config
         fi

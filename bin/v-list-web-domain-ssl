@@ -136,7 +136,7 @@ fi
 
 # Check if force ssl is enabled
 forcessl="no"
-if ls /home/$user/conf/web/forcessl.*$domain*.conf 1> /dev/null 2>&1; then
+if ls $HOMEDIR/$user/conf/web/forcessl.*$domain*.conf 1> /dev/null 2>&1; then
     forcessl="yes"
 fi
 

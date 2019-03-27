@@ -100,20 +100,23 @@ echo "Existing templates have been backed up to the following location:       "
 echo "$HESTIA_BACKUP/templates/                                               "
 echo '************************************************************************'
 
+# Back up default package and install latest version
+if [ -d $HESTIA/data/packages/ ]; then
+    cp -f $HESTIA/data/packages/default.pkg $HESTIA_BACKUP/packages/
+fi
+
 # Back up old template files and install the latest versions
 if [ -d $HESTIA/data/templates/ ]; then
-    # Remove old Office 365 template as there is a newer version with an updated name
-    rm -f $HESTIA/data/templates/dns/o365.tpl
     cp -rf $HESTIA/data/templates $HESTIA_BACKUP/
     $HESTIA/bin/v-update-web-templates
     $HESTIA/bin/v-update-dns-templates
     $HESTIA/bin/v-update-mail-templates
+    $HESTIA/bin/v-update-sys-packages
 fi
 
-# Back up default package and install latest version
-if [ -d $HESTIA/data/packages/ ]; then
-    cp -f $HESTIA/data/packages/default.pkg $HESTIA_BACKUP/packages/
-    cp -f $HESTIA/install/hestia-data/packages/default.pkg $HESTIA/data/packages/
+# Remove old Office 365 template as there is a newer version with an updated name
+if [ -f $HESTIA/data/templates/dns/o365.tpl ]; then 
+    rm -f $HESTIA/data/templates/dns/o365.tpl
 fi
 
 # Back up and remove default index.html if it exists

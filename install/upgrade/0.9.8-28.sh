@@ -1,13 +1,14 @@
 #!/bin/bash
-
-HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
 HESTIA="/usr/local/hestia"
-
-# Create backup directory
-mkdir -p $HESTIA_BACKUP
+HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
 
 # load hestia.conf
-source /usr/local/hestia/conf/hestia.conf
+source $HESTIA/conf/hestia.conf
+
+# Initialize backup directory structure
+# Initialize backup directory
+mkdir -p $HESTIA_BACKUP/templates/
+mkdir -p $HESTIA_BACKUP/packages/
 
 # load hestia main functions
 source /usr/local/hestia/func/main.sh
@@ -92,98 +93,66 @@ if [ -f /etc/roundcube/main.inc.php ]; then
     sed -i "s/\['spellcheck_dictionary'] = false;/\['spellcheck_dictionary'] = true;/gI" /etc/roundcube/main.inc.php
 fi
 
-# Update Office 365 DNS templates
-if [ -f $HESTIA/data/templates/dns/o365.tpl ]; then
-    rm -f $HESTIA/data/templates/dns/o365.tpl 
-    cp -f $HESTIA/install/hestia-data/templates/dns/office365.tpl $HESTIA/data/templates/dns/
-fi
-
-# Upgrade default hosting package templates
-if [ -f $HESTIA/data/packages/default.pkg ]; then
-    mkdir -p $HESTIA_BACKUP/packages/
-    cp -rf $HESTIA/data/packages/* $HESTIA_BACKUP/packages/
-    cp -f $HESTIA/install/hestia-data/packages/* $HESTIA/data/packages/
-fi
-
 # Update default page templates
 echo '************************************************************************'
-echo "Upgrading default templates...                                     "
+echo "Replacing default templates and packages...                             "
 echo "Existing templates have been backed up to the following location:       "
 echo "$HESTIA_BACKUP/templates/                                               "
 echo '************************************************************************'
 
+# Back up old template files and install the latest versions
 if [ -d $HESTIA/data/templates/ ]; then
-    # Back up old template set
-    mkdir -p $HESTIA_BACKUP/templates/
-    cp -rf $HESTIA/data/templates/* $HESTIA_BACKUP/
-
-    # Back up and remove default index.html if it exists
-    if [ -f /var/www/html/index.html ]; then
-        cp -rf /var/www/html/index.html $HESTIA_BACKUP/templates/
-        rm -rf /var/www/html/index.html
-    fi
-
-    # Remove old default page templates
-    rm -rf $HESTIA/data/templates/web/skel/*
-    rm -rf $HESTIA/data/templates/web/suspend/*
-    mkdir -p $HESTIA/data/templates/web/unassigned/
-
-    # Check for existence of default web server file location in order to copy unassigned hosts configuration   
-    if [ ! -d /var/www/html ]; then
-        mkdir -p /var/www/html/
-    fi
-
-    if [ ! -d /var/www/document_errors/ ]; then
-        mkdir -p /var/www/document_errors/
-    fi
-
-    # Copy new default templates to Hestia installation
-    cp -rf $HESTIA/install/hestia-data/templates/web/skel/* $HESTIA/data/templates/web/skel/
-    cp -rf $HESTIA/install/hestia-data/templates/web/suspend/* $HESTIA/data/templates/web/suspend/
-    cp -rf $HESTIA/install/hestia-data/templates/web/unassigned/* $HESTIA/data/templates/web/unassigned/
-    cp -rf $HESTIA/install/hestia-data/templates/web/unassigned/* /var/www/html/
-    cp -rf $HESTIA/install/hestia-data/templates/web/skel/document_errors/* /var/www/document_errors/
-
-    # Correct permissions on CSS, JavaScript, and Font dependencies for unassigned hosts
-    chmod 644 /var/www/html/*
-    chmod 751 /var/www/html/css
-    chmod 751 /var/www/html/js
-    chmod 751 /var/www/html/webfonts
-    
-    chmod 644 /var/www/document_errors/*
-    chmod 751 /var/www/document_errors/css
-    chmod 751 /var/www/document_errors/js
-    chmod 751 /var/www/document_errors/webfonts
-
-    # Correct permissions on CSS, JavaScript, and Font dependencies for default templates
-    chmod 751 $HESTIA/data/templates/web/skel/document_errors/css
-    chmod 751 $HESTIA/data/templates/web/skel/document_errors/js
-    chmod 751 $HESTIA/data/templates/web/skel/document_errors/webfonts
-    chmod 751 $HESTIA/data/templates/web/skel/public_*html/css
-    chmod 751 $HESTIA/data/templates/web/skel/public_*html/js
-    chmod 751 $HESTIA/data/templates/web/skel/public_*html/webfonts
-    chmod 751 $HESTIA/data/templates/web/suspend/css
-    chmod 751 $HESTIA/data/templates/web/suspend/js
-    chmod 751 $HESTIA/data/templates/web/suspend/webfonts
-    chmod 751 $HESTIA/data/templates/web/unassigned/css
-    chmod 751 $HESTIA/data/templates/web/unassigned/js
-    chmod 751 $HESTIA/data/templates/web/unassigned/webfonts
+    cp -rf $HESTIA/data/templates $HESTIA_BACKUP/
+    rm -rf $HESTIA/data/templates
+    mkdir -p $HESTIA/data/templates
+    cp -rf $HESTIA/install/hestia-data/templates $HESTIA/data/
 fi
 
-# Update default web and nginx templates
-if [ ! -d $HESTIA/data/templates/web/nginx/default.tpl ]; then
-    rm -f $HESTIA/data/templates/web/nginx/default.tpl
-    rm -f $HESTIA/data/templates/web/nginx/default.stpl
-    cp -rf $HESTIA/install/hestia-data/templates/web/nginx/* $HESTIA/data/templates/web/nginx/
-    cp -rf $HESTIA/install/hestia-data/templates/web/nginx/* $HESTIA/data/templates/web/nginx/
+# Back up default package and install latest version
+if [ -d $HESTIA/data/packages/ ]; then
+    cp -f $HESTIA/data/packages/default.pkg $HESTIA_BACKUP/packages/
+    cp -f $HESTIA/install/hestia-data/packages/default.pkg $HESTIA/data/packages/
 fi
 
-if [ ! -d $HESTIA/data/templates/web/apache2/default.tpl ]; then
-    rm -f $HESTIA/data/templates/web/apache2/default.tpl
-    rm -f $HESTIA/data/templates/web/apache2/default.stpl
-    cp -rf $HESTIA/install/hestia-data/templates/web/apache2/* $HESTIA/data/templates/web/apache2/
-    cp -rf $HESTIA/install/hestia-data/templates/web/apache2/* $HESTIA/data/templates/web/apache2/
+# Back up and remove default index.html if it exists
+if [ -f /var/www/html/index.html ]; then
+    cp -rf /var/www/html/index.html $HESTIA_BACKUP/templates/
+    rm -rf /var/www/html/index.html
 fi
+
+# Configure default success page and set permissions on CSS, JavaScript, and Font dependencies for unassigned hosts
+if [ ! -d /var/www/html ]; then
+    mkdir -p /var/www/html/
+fi
+
+if [ ! -d /var/www/document_errors/ ]; then
+    mkdir -p /var/www/document_errors/
+fi
+
+cp -rf $HESTIA/install/hestia-data/templates/web/unassigned/* /var/www/html/
+cp -rf $HESTIA/install/hestia-data/templates/web/skel/document_errors/* /var/www/document_errors/
+chmod 644 /var/www/html/*
+chmod 751 /var/www/html/css
+chmod 751 /var/www/html/js
+chmod 751 /var/www/html/webfonts
+chmod 644 /var/www/document_errors/*
+chmod 751 /var/www/document_errors/css
+chmod 751 /var/www/document_errors/js
+chmod 751 /var/www/document_errors/webfonts
+
+# Correct permissions on CSS, JavaScript, and Font dependencies for default templates
+chmod 751 $HESTIA/data/templates/web/skel/document_errors/css
+chmod 751 $HESTIA/data/templates/web/skel/document_errors/js
+chmod 751 $HESTIA/data/templates/web/skel/document_errors/webfonts
+chmod 751 $HESTIA/data/templates/web/skel/public_*html/css
+chmod 751 $HESTIA/data/templates/web/skel/public_*html/js
+chmod 751 $HESTIA/data/templates/web/skel/public_*html/webfonts
+chmod 751 $HESTIA/data/templates/web/suspend/css
+chmod 751 $HESTIA/data/templates/web/suspend/js
+chmod 751 $HESTIA/data/templates/web/suspend/webfonts
+chmod 751 $HESTIA/data/templates/web/unassigned/css
+chmod 751 $HESTIA/data/templates/web/unassigned/js
+chmod 751 $HESTIA/data/templates/web/unassigned/webfonts
 
 # Add unassigned hosts configuration to nginx and apache2
 if [ -f /usr/local/hestia/data/ips/* ]; then
@@ -223,7 +192,7 @@ if [ -d $HESTIA/install/debian ]; then
     rm -rf $HESTIA/install/debian
 fi
 
-# Remove system-level webmail configuration files in favor of per-domain configuration
+# Remove old webmail configuration files in favor of per-domain configuration
 if [ -f /etc/nginx/conf.d/webmail.inc ]; then
     rm -f /etc/nginx/conf.d/webmail.inc
 fi
@@ -257,34 +226,38 @@ done
 if [ -f /etc/exim4/exim4.conf.template ]; then
     rm -f /etc/exim4/exim4.conf.template
     cp -f $HESTIA/install/hestia-data/exim/exim4.conf.template /etc/exim4/
+
+    # Reconfigure spam filter and virus scanning
+    if [ ! -z "$ANTISPAM_SYSTEM" ]; then
+        sed -i "s/#SPAM/SPAM/g" /etc/exim4/exim4.conf.template
+    fi
+    if [ ! -z "$ANTIVIRUS_SYSTEM" ]; then
+        sed -i "s/#CLAMD/CLAMD/g" /etc/exim4/exim4.conf.template
+    fi
+
 fi
 
-# Copy mail vhost templates to data directory
-rm -rf /usr/local/hestia/data/templates/mail
-mkdir -p /usr/local/hestia/data/templates/mail/
-cp -rf $INSTALLDIR/templates/mail /usr/local/hestia/data/templates/
-
-# Update web and proxy system configuration files to include domain configuration
+# Update web and proxy service configuration files to include user domains
 if [ -f /etc/$WEB_SYSTEM/$WEB_SYSTEM.conf ]; then
-    cp $INSTALLDIR/$WEB_SYSTEM/$WEB_SYSTEM.conf /etc/$WEB_SYSTEM/$WEB_SYSTEM.conf 
+    cp $HESTIA/install/hestia-data/$WEB_SYSTEM/$WEB_SYSTEM.conf /etc/$WEB_SYSTEM/$WEB_SYSTEM.conf 
 fi
 if [ -f /etc/$PROXY_SYSTEM/nginx.conf ]; then
-    cp $INSTALLDIR/$PROXY_SYSTEM/$PROXY_SYSTEM.conf /etc/$PROXY_SYSTEM/$PROXY_SYSTEM.conf
+    cp $HESTIA/install/hestia-data/$PROXY_SYSTEM/$PROXY_SYSTEM.conf /etc/$PROXY_SYSTEM/$PROXY_SYSTEM.conf
 fi
 
-# Add mail domain variable to system configuration
+# Add webmail alias variable to system configuration
 sed -i "/WEBMAIL_ALIAS='mail'/d" $HESTIA/conf/hestia.conf
 echo "WEBMAIL_ALIAS='mail'" >> $HESTIA/conf/hestia.conf
 
 # Rebuild users
 userlist=$(ls --sort=time $HESTIA/data/users/)
 for user in $userlist; do
-    echo "Rebuilding user configuration: $user ..."
-    v-rebuild-user $user
+    echo "Rebuilding user: $user ..."
+    v-rebuild-user $user $restart
 done
 
 # Restart services
 $HESTIA/bin/v-restart-web $restart
 $HESTIA/bin/v-restart-proxy $restart
 $HESTIA/bin/v-restart-mail $restart
-$HESTIA/bin/v-restart-service $IMAP_SYSTEM
+$HESTIA/bin/v-restart-service $IMAP_SYSTEM $restart

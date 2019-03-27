@@ -88,7 +88,7 @@
               <div style="margin-bottom: 40px;">
                   <div class="clearfix l-unit__stat-col--left wide-2"><b><?php print __('Database');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print __('Type');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Username');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center wide"><b><?php print __('Username');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Hostname');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Disk');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Charset');?></b></div>
@@ -157,19 +157,18 @@ sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" so
           <!-- l-unit-toolbar__col -->
         </div>
         <!-- /.l-unit-toolbar -->
-        <div class="l-unit header">
             <div class="l-unit__col l-unit__col--right">
               <div style="margin-bottom: 50px;">
                   <div class="clearfix l-unit__stat-col--left"><i class="l-icon-star" title="<?=__('save to favorites')?>"></i></div>
-                  <div class="clearfix l-unit__stat-col--left wide-2" style="margin-left: -5px;"><b><?=$key?></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide-2"><b><?=$key?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center compact"><?=$data[$key]['TYPE']?></div>
-                  <div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['DBUSER']?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center wide"><b><?=$data[$key]['DBUSER']?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['HOST']?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK'])?></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['CHARSET']?></div>
                </div>
-             </div>
-          </div>
+            </div>
+
         <!-- /.l-unit__col -->
       </div>
       <!-- /.l-unit -->

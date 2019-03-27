@@ -1487,7 +1487,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .l-unit {
   color: #707070;
-  padding: 0 0 0 20px;
+  padding: 0 0 0 24px;
   overflow: hidden;
   font-size: 13px;
 }
@@ -1615,9 +1615,10 @@ div.l-content > div.l-separator:nth-of-type(4) {
   vertical-align: top;
 }
 .l-unit__col--left {
-  width: 124px;
+  width: 100px;
   padding-right: 10px;
 }
+
 .units.compact .l-unit__col--left {
   vertical-align: top;
 }
@@ -1752,9 +1753,12 @@ div.l-content > div.l-separator:nth-of-type(4) {
   width: 110px;
 }
 .l-unit__stat-col--left.compact {
-  width: 65px;
+  width: 70px;
 }
 .l-unit__stat-col--left.compact-2 {
+  width: 80px;
+}
+.l-unit__stat-col--left.compact-3 {
   width: 90px;
 }
 .l-unit__stat-col--left.wide {

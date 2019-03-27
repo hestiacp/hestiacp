@@ -2,7 +2,7 @@ server {
     listen      %ip%:%proxy_port%;
     server_name %webmail_vhost%;
         
-    include %home%/%user%/conf/web/forcessl.nginx.%domain%.conf*;
+    include %home%/%user%/conf/web/%domain/nginx.forcessl.conf*;
 
     location / {
         proxy_pass      http://%ip%:%web_port%;

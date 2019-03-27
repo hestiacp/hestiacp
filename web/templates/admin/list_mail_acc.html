@@ -134,8 +134,8 @@ sort-star="<? if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] =
                       <label for="check<?php echo $i ?>" class="check-label"></label>
                     </div>
                   <div class="clearfix l-unit__stat-col--left wide-3"><b><?=$key."@".$_GET['domain']?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK'])?></div>
-                  <div class="clearfix l-unit__stat-col--left text-center"><b><?=__(humanize_usage_size($data[$key]['QUOTA'])) ?></b> <?=__(humanize_usage_measure($data[$key]['QUOTA'])) ?></div>
+                  <div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?=__(humanize_usage_size($data[$key]['QUOTA'])) ?></b> <span class="text-small"><?=__(humanize_usage_measure($data[$key]['QUOTA'])) ?></span></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b>
                       <? if($data[$key]['SUSPENDED'] == 'no'){ ?>
                           <? if($data[$key]['ALIAS'] == ''){ ?>
@@ -181,7 +181,7 @@ sort-star="<? if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] =
                           <? } else {?>
                             <i class="fas fa-check-circle"></i>
                           <? } ?>
-                      <? } ?>
+                          <? } ?>
                     </b>
                   </div>
                </div>

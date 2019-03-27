@@ -155,7 +155,7 @@ sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favouri
                     </b>
                   </div>
                   <div class="clearfix l-unit__stat-col--left text-center compact"><b>
-                    <?=humanize_usage_size($data[$key]['U_DISK'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK'])?>
+                    <?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span>
                   </div>
                   <div class="clearfix l-unit__stat-col--left text-center compact-3"><b>
                     <? if($data[$key]['WEBMAIL'] == 'no'){ ?>

@@ -163,7 +163,7 @@ sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" so
                   <div class="clearfix l-unit__stat-col--left text-center compact"><?=$data[$key]['TYPE']?></div>
                   <div class="clearfix l-unit__stat-col--left text-center wide"><b><?=$data[$key]['DBUSER']?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['HOST']?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK'])?></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['CHARSET']?></div>
                </div>
             </div>

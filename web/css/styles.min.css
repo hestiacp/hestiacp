@@ -781,6 +781,10 @@ a {
   text-align: center;
 }
 
+.text-small {
+  font-size: 0.85em;
+}
+
 .check-label {
   display: inline-block;
   cursor: pointer;

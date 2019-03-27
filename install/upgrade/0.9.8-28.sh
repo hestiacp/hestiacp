@@ -103,9 +103,9 @@ echo '************************************************************************'
 # Back up old template files and install the latest versions
 if [ -d $HESTIA/data/templates/ ]; then
     cp -rf $HESTIA/data/templates $HESTIA_BACKUP/
-    rm -rf $HESTIA/data/templates
-    mkdir -p $HESTIA/data/templates
-    cp -rf $HESTIA/install/hestia-data/templates $HESTIA/data/
+    $HESTIA/bin/v-update-web-templates
+    $HESTIA/bin/v-update-dns-templates
+    $HESTIA/bin/v-update-mail-templates
 fi
 
 # Back up default package and install latest version

@@ -1178,6 +1178,11 @@ for pconf in $(find /etc/php* -name php.ini); do
     sed -i 's%_open_tag = Off%_open_tag = On%g' $pconf
 done
 
+# Set default cli php version acording to fpm_v.
+if [ "$multiphp" = 'yes' ]; then
+    update-alternatives --set php /usr/bin/php$fpm_v > /dev/null 2>&1
+fi
+
 
 #----------------------------------------------------------#
 #                    Configure Vsftpd                      #

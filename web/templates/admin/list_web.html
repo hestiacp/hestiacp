@@ -57,7 +57,7 @@
       
             <div class="l-unit__col l-unit__col--right step-top table-header">
               <div style="margin-bottom: 40px;">
-                  <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print __('Domain');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide-5"><b><?php print __('Domain');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('IP address');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Disk');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print __('Bandwidth');?></b></div>
@@ -178,7 +178,7 @@ sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-dis
                 <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?=$key?>">
                 <label for="check<?=$i?>" class="check-label"></label>
               </div>
-                  <div class="clearfix l-unit__stat-col--left wide-3"><b><?=$key?></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide-5"><b><?=$key?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><?=empty($ips[$data[$key]['IP']]['NAT']) ? $data[$key]['IP'] : "{$ips[$data[$key]['IP']]['NAT']}"; ?></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
                   <div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_BANDWIDTH'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_BANDWIDTH'])?></span></div>

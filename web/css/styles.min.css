@@ -1782,6 +1782,10 @@ div.l-content > div.l-separator:nth-of-type(4) {
   width: 550px;
 }
 
+.l-unit__stat-col--left.wide-5 {
+  width: 330px;
+}
+
 .l-unit__stat-col--left.small-2 {
   line-height: 11px;
 }

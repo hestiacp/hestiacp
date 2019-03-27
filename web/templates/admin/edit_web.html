@@ -339,24 +339,11 @@
                                 </td>
                             </tr>
 
-                            <tr>
-                                <td class="input-label vst-text">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_stats" <?php if($v_stats == 'awstats') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_forcessl(this)"> <?php print __('Enable Web Statistics');?></label>
-                                </td>
-                            </tr>
-
-                            <tr class="stats-auth" style="<? if ($v_stats == 'none') { ?>display:none<? } ?>">
-                                <td class="vst-text input-label">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_stats" ><?php print __('Statistics Authorization');?></label>
-                                </td>
-                            </tr>
-
                             <tr  class="stats-auth" style="<? if ($v_stats == 'none') { ?>display:none<? } ?>">
                                 <td class="vst-text input-label step-left">
                                     <label><input type="checkbox" size="20" class="vst-checkbox" name="v_stats_auth" <?php if (!empty($v_stats_user)) echo "checked=yes" ?> onclick="javascript:elementHideShow('statstable');"><?php print __('Statistics Authorization');?></label>
                                 </td>
                             </tr>
-
 
                             <tr class="stats-auth">
                                 <td class="step-left">

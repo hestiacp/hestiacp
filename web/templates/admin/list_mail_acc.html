@@ -137,26 +137,50 @@ sort-star="<? if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] =
                   <div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK'])?></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?=__(humanize_usage_size($data[$key]['QUOTA'])) ?></b> <?=__(humanize_usage_measure($data[$key]['QUOTA'])) ?></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b>
-                      <? if($data[$key]['ALIAS'] == ''){ ?>
-                        0
+                      <? if($data[$key]['SUSPENDED'] == 'no'){ ?>
+                          <? if($data[$key]['ALIAS'] == ''){ ?>
+                            0
+                          <? } else {?>
+                            <i class="fas fa-check-circle status-icon-green"></i>
+                          <? } ?>
                       <? } else {?>
-                        <i class="fas fa-check-circle" style="color: green;"></i>
+                        <? if($data[$key]['ALIAS'] == ''){ ?>
+                          0
+                        <? } else {?>
+                          <i class="fas fa-check-circle"></i>
+                        <? } ?>
                       <? } ?>
                     </b>
                   </div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b>
-                      <? if($data[$key]['FWD'] == ''){ ?>
-                        <i class="fas fa-minus-circle"></i>
+                      <? if($data[$key]['SUSPENDED'] == 'no'){ ?>
+                          <? if($data[$key]['FWD'] == ''){ ?>
+                            <i class="fas fa-minus-circle"></i>
+                          <? } else {?>
+                            <i class="fas fa-check-circle status-icon-green"></i>
+                          <? } ?>
                       <? } else {?>
-                        <i class="fas fa-check-circle" style="color: green;"></i>
-                      <? } ?>
+                          <? if($data[$key]['FWD'] == ''){ ?>
+                            <i class="fas fa-minus-circle"></i>
+                          <? } else {?>
+                            <i class="fas fa-check-circle"></i>
+                          <? } ?>
+                       <? } ?>
                     </b>
                   </div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b>
-                      <? if($data[$key]['AUTOREPLY'] == 'no'){ ?>
-                        <i class="fas fa-minus-circle"></i>
+                      <? if($data[$key]['SUSPENDED'] == 'no'){ ?>
+                          <? if($data[$key]['AUTOREPLY'] == 'no'){ ?>
+                            <i class="fas fa-minus-circle"></i>
+                          <? } else {?>
+                            <i class="fas fa-check-circle status-icon-green"></i>
+                          <? } ?>
                       <? } else {?>
-                        <i class="fas fa-check-circle" style="color: green;"></i>
+                          <? if($data[$key]['AUTOREPLY'] == 'no'){ ?>
+                            <i class="fas fa-minus-circle"></i>
+                          <? } else {?>
+                            <i class="fas fa-check-circle"></i>
+                          <? } ?>
                       <? } ?>
                     </b>
                   </div>

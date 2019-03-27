@@ -578,11 +578,11 @@ is_mail_new() {
 get_mail_config() {
     mail_domain="mail.$domain"
     webmail_vhost="$WEBMAIL_ALIAS.$domain"
-    MAIL_CONF="$HOMEDIR/$user/conf/mail/$domain/"
-    WEB_CONF="/etc/$WEB_SYSTEM/conf.d/domains/"
-    PROXY_CONF="/etc/$PROXY_SYSTEM/conf.d/domains/"
-    EXIM_SSL="/usr/local/hestia/ssl/mail/"
-    DOVECOT_CONF="/etc/dovecot/conf.d/domains/"
+    MAIL_CONF="$HOMEDIR/$user/conf/mail/$domain"
+    WEB_CONF="/etc/$WEB_SYSTEM/conf.d/domains"
+    PROXY_CONF="/etc/$PROXY_SYSTEM/conf.d/domains"
+    EXIM_SSL="/usr/local/hestia/ssl/mail"
+    DOVECOT_CONF="/etc/dovecot/conf.d/domains"
 }
 
 # Write per-domain webmail configuration values
@@ -592,8 +592,8 @@ add_webmail_config() {
     # Remove old configuration files if they exist
     rm -f $MAIL_CONF/$WEB_SYSTEM*.conf
     rm -f $MAIL_CONF/$PROXY_SYSTEM*.conf
-    rm -f /etc/$WEB_SYSTEM/conf.d/domains/$webmail_vhost.conf
-    rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$webmail_vhost.conf
+    rm -f /etc/$WEB_SYSTEM/conf.d/domains/$webmail_vhost*.conf
+    rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$webmail_vhost*.conf
 
     # Copy configuration files
     cp -f $MAILTPL/$WEB_SYSTEM/subdomain.tpl $MAIL_CONF/$WEB_SYSTEM.conf
@@ -602,6 +602,7 @@ add_webmail_config() {
     cp -f $MAILTPL/$PROXY_SYSTEM/subdomain.stpl $MAIL_CONF/$PROXY_SYSTEM.ssl.conf
 
     # Write web server configuration
+    sed -i 's|%mail_domain%|'$mail_domain'|g' $MAIL_CONF/$WEB_SYSTEM*.conf
     sed -i 's|%webmail_vhost%|'$webmail_vhost'|g' $MAIL_CONF/$WEB_SYSTEM*.conf
     sed -i 's|%domain%|'$domain'|g' $MAIL_CONF/$WEB_SYSTEM*.conf
     sed -i 's|%domain_idn%|'$domain'|g' $MAIL_CONF/$WEB_SYSTEM*.conf
@@ -616,6 +617,7 @@ add_webmail_config() {
     sed -i 's|%web_system%|'$WEB_SYSTEM'|g' $MAIL_CONF/$WEB_SYSTEM*.conf
 
     # Write proxy server configurationls
+    sed -i 's|%mail_domain%|'$mail_domain'|g' $MAIL_CONF/$PROXY_SYSTEM*.conf
     sed -i 's|%webmail_vhost%|'$webmail_vhost'|g' $MAIL_CONF/$PROXY_SYSTEM*.conf
     sed -i 's|%domain%|'$domain'|g' $MAIL_CONF/$PROXY_SYSTEM*.conf
     sed -i 's|%domain_idn%|'$domain'|g' $MAIL_CONF/$PROXY_SYSTEM*.conf
@@ -651,6 +653,7 @@ add_webmail_config() {
 
 # Add mail server SSL configuration
 add_mail_ssl_config() {
+
     get_mail_config
     # Ensure that SSL certificate directories exists
     if [ ! -d $MAIL_CONF/ssl/ ]; then
@@ -687,25 +690,24 @@ add_mail_ssl_config() {
 
     # Add domain SSL configuration to dovecot
     if [ -f $DOVECOT_CONF/$mail_domain.conf ]; then
-        # Remove old configuration file if it exists
         rm -f $DOVECOT_CONF/$mail_domain.conf
     fi
 
     echo "" >> $DOVECOT_CONF/$mail_domain.conf
     echo "local_name $mail_domain {" >> $DOVECOT_CONF/$mail_domain.conf
-    echo "  ssl_cert = <$MAIL_CONF/ssl/$domain.pem" >> $DOVECOT_CONF/$mail_domain.conf
-    echo "  ssl_key = <$MAIL_CONF/ssl/$domain.key" >> $DOVECOT_CONF/$mail_domain.conf
+    echo "  ssl_cert = <$MAIL_CONF/ssl/$mail_domain.pem" >> $DOVECOT_CONF/$mail_domain.conf
+    echo "  ssl_key = <$MAIL_CONF/ssl/$mail_domain.key" >> $DOVECOT_CONF/$mail_domain.conf
     echo "}" >> $DOVECOT_CONF/$mail_domain.conf
 
     # Add domain SSL configuration to exim4
-    ln -s $MAIL_CONF/ssl/$domain.pem $EXIM_SSL/$mail_domain.crt
-    ln -s $MAIL_CONF/ssl/$domain.key $EXIM_SSL/$mail_domain.key
+    ln -s $MAIL_CONF/ssl/$mail_domain.pem $EXIM_SSL/$mail_domain.crt
+    ln -s $MAIL_CONF/ssl/$mail_domain.key $EXIM_SSL/$mail_domain.key
 
     # Set correct permissions on certificates
     chmod 0644 $MAIL_CONF/ssl/*
     chown -h $user:mail $MAIL_CONF/ssl/*
-    chmod 0644 /usr/local/hestia/ssl/mail/$mail_domain.crt
-    chown -h $user:mail /usr/local/hestia/ssl/mail/$mail_domain.key
+    chmod -R 0644 /usr/local/hestia/ssl/mail/*
+    chown -h $user:mail /usr/local/hestia/ssl/mail/*
 }
 
 # Delete SSL support for mail domain

@@ -578,10 +578,14 @@ is_mail_new() {
 # Write per-domain webmail configuration values
 add_webmail_config() {
     # Remove old configuration files if they exist
-    rm -f $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM*.conf
-    rm -f $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM*.conf
-    rm -f /etc/$WEB_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain*.conf
-    rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain*.conf
+    rm -f $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM.conf
+    rm -f $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM.conf
+    rm -f $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM.ssl.conf
+    rm -f $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM.ssl.conf
+    rm -f /etc/$WEB_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
+    rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
+    rm -f /etc/$WEB_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
+    rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
 
     # Copy configuration files
     cp -f $MAILTPL/$WEB_SYSTEM/subdomain.tpl $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM.conf
@@ -617,12 +621,13 @@ add_webmail_config() {
     sed -i 's|%proxy_ssl_port%|'$PROXY_SSL_PORT'|g' $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM*.conf
     sed -i 's|%web_system%|'$WEB_SYSTEM'|g' $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM*.conf 
 
-    # Create links to vhost from user directory
+    # Create links to vhost from user directory for web and proxy systems
     if [ ! -z "$WEB_SYSTEM" ]; then
         # Link user configuration to global domain configuration directory
         ln -s $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM.conf /etc/$WEB_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
 
-        if [ -f $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.ssl.conf ]; then
+        # Enable SSL for webmail if web domain is SSL enabled and SSL certificate exists for mail domain
+        if [ -f $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.ssl.conf ] && [ -f $USER_DATA/ssl/mail.$domain.crt ]; then
             ln -s $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM.ssl.conf /etc/$WEB_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
         fi
     fi
@@ -630,8 +635,8 @@ add_webmail_config() {
         # Link user configuration to global domain configuration directory
         ln -s $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM.conf /etc/$PROXY_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
 
-        # Enable SSL for webmail if web domain is SSL enabled
-        if [ -f $HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.ssl.conf ]; then
+        # Enable SSL for webmail if web domain is SSL enabled and SSL certificate exists for mail domain
+        if [ -f $HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.ssl.conf ] && [ -f $USER_DATA/ssl/mail.$domain.crt ]; then
             ln -s $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM.ssl.conf /etc/$PROXY_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
         fi
     fi
@@ -721,7 +726,8 @@ del_webmail_config() {
 
 # Delete Webmail SSL configuration
 del_webmail_ssl_config() {
-    rm -f $HOMEDIR/$user/conf/mail/$domain/*.ssl.conf
+    rm -f $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM.ssl.conf
+    rm -f $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM.conf
 
     rm -f /etc/$WEB_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
     rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf

@@ -131,7 +131,7 @@ fi
 if [ ! -z "$WEB_SYSTEM" ]; then
     add_webmail_config
 
-    # Restart web services for webmail changes to take effect
+    # Restart web services for webmail vhost/alias to take effect
     $BIN/v-restart-web $restart
     $BIN/v-restart-proxy $restart
 fi

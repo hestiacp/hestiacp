@@ -111,8 +111,22 @@ if [ ! -z "$DNS_CLUSTER" ]; then
     fi
 fi
 
-# TO-DO: Check if mail is enabled, and if so is DKIM enabled?
-#        If it is, then update the records accordingly.
+# Refresh DKIM records in DNS if signing key exists for domain
+if [ "$template" = "default" ] || [ "$template" = "child-ns" ]; then
+    if [ ! -z "MAIL_SYSTEM" ] && [ -f $HOMEDIR/$user/conf/mail/$domain/dkim.pem ]; then
+        check_dns_domain=$(is_object_valid 'dns' 'DOMAIN' "$domain")
+        if [ "$?" -eq 0 ]; then
+            p=$(cat $USER_DATA/mail/$domain.pub|grep -v ' KEY---'|tr -d '\n')
+            record='_domainkey'
+            policy="\"t=y; o=~;\""
+            $BIN/v-add-dns-record $user $domain $record TXT "$policy" '' '' 'no'
+
+            record='mail._domainkey'
+            selector="\"v=DKIM1\; k=rsa\; p=$p\""
+            $BIN/v-add-dns-record $user $domain $record TXT "$selector"
+        fi
+    fi
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #
@@ -121,6 +135,11 @@ fi
 # Updating hestia config
 update_object_value 'dns' 'DOMAIN' "$domain" '$TPL' "$template"
 update_object_value 'dns' 'DOMAIN' "$domain" '$RECORDS' "$records"
+
+# Rebuild DNS zone and update counters to ensure that it has updated correctly
+$BIN/v-rebuild-dns-domain $user $domain no
+$BIN/v-update-user-stats $user
+$BIN/v-update-user-counters $user
 
 # Restarting named
 $BIN/v-restart-dns $restart

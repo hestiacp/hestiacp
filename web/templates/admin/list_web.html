@@ -183,19 +183,35 @@ sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-dis
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK'])?></div>
                   <div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_BANDWIDTH'])?></b> <?=humanize_usage_measure($data[$key]['U_BANDWIDTH'])?></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b>
-                        <? if($data[$key]['SSL'] == 'no'){ ?>
-                          <i class="fas fa-times-circle" style="color: red;"></i>
-                        <? } else {?>
-                          <i class="fas fa-check-circle" style="color: green;"></i>
-                        <? } ?>
+                      <? if($data[$key]['SUSPENDED'] == 'no'){ ?>
+                          <? if($data[$key]['SSL'] == 'no'){ ?>
+                            <i class="fas fa-times-circle status-icon-red"></i>
+                          <? } else {?>
+                            <i class="fas fa-check-circle status-icon-green"></i>
+                          <? } ?>
+                      <? } else {?>
+                          <? if($data[$key]['SSL'] == 'no'){ ?>
+                            <i class="fas fa-times-circle"></i>
+                          <? } else {?>
+                            <i class="fas fa-check-circle"></i>
+                          <? } ?>
+                      <? } ?>
                       </b>
                   </div>
                   <div class="clearfix l-unit__stat-col--left text-center compact"><b>
+                      <? if($data[$key]['SUSPENDED'] == 'no'){ ?>
+                          <? if($web_stats == 'no'){ ?>
+                            <i class="fas fa-minus-circle"></i>
+                          <? } else {?>
+                            <i class="fas fa-check-circle status-icon-green"></i>
+                          <? } ?>
+                      <? } else {?>
                         <? if($web_stats == 'no'){ ?>
                           <i class="fas fa-minus-circle"></i>
                         <? } else {?>
-                          <i class="fas fa-check-circle" style="color: green;"></i>
+                          <i class="fas fa-check-circle"></i>
                         <? } ?>
+                      <? } ?>
                       </b>
                    </div>
                   </div>

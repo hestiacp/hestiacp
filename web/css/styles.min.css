@@ -1487,10 +1487,11 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .l-unit {
   color: #707070;
-  padding: 0 0 0 15px;
+  padding: 0 0 0 20px;
   overflow: hidden;
   font-size: 13px;
 }
+
 .units .l-unit {
   border-bottom: 1px solid #ddd;
 }
@@ -1736,6 +1737,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .l-unit__stats {
   margin-bottom: 50px;
 }
+
 .l-unit__stats table {
   width: 100%;
   table-layout: fixed;
@@ -1747,13 +1749,13 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 .l-unit__stat-col--left {
   float: left;
-  width: 124px;
+  width: 110px;
 }
 .l-unit__stat-col--left.compact {
-  width: 70px;
+  width: 65px;
 }
 .l-unit__stat-col--left.compact-2 {
-  width: 95px;
+  width: 90px;
 }
 .l-unit__stat-col--left.wide {
   width: 190px;
@@ -1767,7 +1769,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .l-unit__stat-col--left.wide-4 {
   width: 550px;
 }
-
 
 .l-unit__stat-col--left.small-2 {
   line-height: 11px;

@@ -735,7 +735,7 @@ $LANG['ru'] = array(
     'every' => 'каждые',
     'Generate' => 'Генерировать',
 
-    'webalizer' => 'webalizer',
+
     'awstats' => 'awstats',
 
     'Hestia SSL' => 'Hestia SSL',

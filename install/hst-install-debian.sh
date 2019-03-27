@@ -29,7 +29,7 @@ fpm_v="7.3"
 if [ "$release" -eq 9 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
         libapache2-mod-ruid2 libapache2-mod-fcgid libapache2-mod-php php
-        php-common php-cgi php-mysql php-curl php-pgsql awstats webalizer
+        php-common php-cgi php-mysql php-curl php-pgsql awstats
         vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy clamav-daemon 
         spamassassin dovecot-imapd dovecot-pop3d roundcube-core net-tools
         roundcube-mysql roundcube-plugins mariadb-client mariadb-common
@@ -51,7 +51,7 @@ else
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron hestia hestia-nginx hestia-php hestia-zpush
         unrar-free vim-common expect libmail-dkim-perl awstats
-        webalizer vsftpd net-tools"
+        vsftpd net-tools"
 fi
 
 # Defining help function
@@ -925,7 +925,7 @@ if [ "$apache" = 'yes' ] && [ "$nginx" = 'no' ] ; then
     echo "WEB_PORT='80'" >> $HESTIA/conf/hestia.conf
     echo "WEB_SSL_PORT='443'" >> $HESTIA/conf/hestia.conf
     echo "WEB_SSL='mod_ssl'"  >> $HESTIA/conf/hestia.conf
-    echo "STATS_SYSTEM='webalizer,awstats'" >> $HESTIA/conf/hestia.conf
+    echo "STATS_SYSTEM='awstats'" >> $HESTIA/conf/hestia.conf
 fi
 if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
     echo "WEB_SYSTEM='apache2'" >> $HESTIA/conf/hestia.conf
@@ -936,7 +936,7 @@ if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
     echo "PROXY_SYSTEM='nginx'" >> $HESTIA/conf/hestia.conf
     echo "PROXY_PORT='80'" >> $HESTIA/conf/hestia.conf
     echo "PROXY_SSL_PORT='443'" >> $HESTIA/conf/hestia.conf
-    echo "STATS_SYSTEM='webalizer,awstats'" >> $HESTIA/conf/hestia.conf
+    echo "STATS_SYSTEM='awstats'" >> $HESTIA/conf/hestia.conf
 fi
 if [ "$apache" = 'no' ] && [ "$nginx"  = 'yes' ]; then
     echo "WEB_SYSTEM='nginx'" >> $HESTIA/conf/hestia.conf
@@ -952,7 +952,7 @@ if [ "$apache" = 'no' ] && [ "$nginx"  = 'yes' ]; then
             echo "WEB_BACKEND='php5-fpm'" >> $HESTIA/conf/hestia.conf
         fi
     fi
-    echo "STATS_SYSTEM='webalizer,awstats'" >> $HESTIA/conf/hestia.conf
+    echo "STATS_SYSTEM='awstats'" >> $HESTIA/conf/hestia.conf
 fi
 
 # FTP stack

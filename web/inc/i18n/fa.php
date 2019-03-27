@@ -708,7 +708,6 @@ $LANG['fa'] = array(
     'every two minutes' => 'هر دو دقیقه',
     'every' => 'هر',
     'Generate' => 'آفریدن',
-    'webalizer' => 'webalizer',
     'awstats' => 'awstats',
     'Hestia SSL' => 'وستا SSL',
     'SUBJECT' => 'موضوع',

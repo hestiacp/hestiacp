@@ -740,7 +740,6 @@ $LANG['es'] = array(
     'every' => 'cada',
     'Generate' => 'Generar',
 
-    'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
     'Hestia SSL' => 'Hestia SSL',

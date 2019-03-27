@@ -741,7 +741,6 @@ $LANG['cn'] = array(
     'every' => '每隔',
     'Generate' => '生成',
 
-    'webalizer' => 'Webalizer',
     'awstats' => 'AWStats',
 
     'Hestia SSL' => 'Hestia SSL',

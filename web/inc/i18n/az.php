@@ -705,7 +705,6 @@ $LANG['az'] = array(
     'every two minutes' => 'hər iki dəqiqdə bir',
     'every' => 'hər',
     'Generate' => 'Yaratmaq',
-    'webalizer' => 'webalizer',
     'awstats' => 'awstats',
     'Vesta SSL' => 'Vesta SSL',
     'SUBJECT' => 'MÖVZU',

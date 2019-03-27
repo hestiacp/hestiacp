@@ -86,10 +86,6 @@
 v_section="dns" sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>"
 sort-expire="<?=strtotime($data[$key]['EXP'])?>" sort-records="<?=(int)$data[$key]['RECORDS']?>" sort-star="<?if($_SESSION['favourites']['DNS'][$key] == 1) echo '1'; else echo '0';?>">
         <div class="l-unit-toolbar clearfix">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?php echo $key ?>">
-            <label for="check<?php echo $i ?>" class="check-label"></label>
-          </div>
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
@@ -124,7 +120,10 @@ sort-expire="<?=strtotime($data[$key]['EXP'])?>" sort-records="<?=(int)$data[$ke
         <!-- /.l-unit-toolbar -->
             <div class="l-unit__col l-unit__col--right">
               <div style="margin-bottom: 50px;">
-                  <div class="clearfix l-unit__stat-col--left"><i class="l-icon-star" title="<?=__('save to favorites')?>"></i></div>
+                  <div class="clearfix l-unit__stat-col--left">
+                      <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?php echo $key ?>">
+                      <label for="check<?php echo $i ?>" class="check-label"></label>
+                    </div>
                   <div class="clearfix l-unit__stat-col--left wide-2"><b><?=$key?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center compact"><? if(!empty($data[$key]['SRC'])) echo "<span>⇢ ".$data[$key]['SRC']."</span>&nbsp; &nbsp; ";  if($data[$key]['RECORDS']) echo '<span>'.$data[$key]['RECORDS'].'</span>';?></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['TPL']?></b></div>

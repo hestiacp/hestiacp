@@ -105,10 +105,7 @@
 sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?=$data[$key]['U_DISK']?>"
 sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favourites']['MAIL'][$key] == 1) echo "1"; else echo "0"; ?>">
         <div class="l-unit-toolbar clearfix">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?php echo $key ?>">
-            <label for="check<?php echo $i ?>" class="check-label"></label>
-          </div>
+
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
@@ -146,8 +143,9 @@ sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favouri
             <div class="l-unit__col l-unit__col--right">
               <div style="margin-bottom: 50px;">
                   <div class="clearfix l-unit__stat-col--left">
-                      <i class="l-icon-star" title="<?=__('save to favorites')?>"></i>
-                  </div>
+                      <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?php echo $key ?>">
+                      <label for="check<?php echo $i ?>" class="check-label"></label>
+                    </div>
                   <div class="clearfix l-unit__stat-col--left wide-2"><b><?=$key?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center compact"><b>
                     <? if($data[$key]['ACCOUNTS']) { echo '<span>'.$data[$key]['ACCOUNTS'].'</span>'; ?>

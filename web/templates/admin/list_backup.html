@@ -77,10 +77,6 @@
 
       <div class="l-unit<? if($status == 'suspended') echo ' l-unit--outdated';?>">
         <div class="l-unit-toolbar clearfix">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="backup[]" value="<?php echo $key ?>">
-            <label for="check<?php echo $i ?>" class="check-label"></label>
-          </div>
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
@@ -110,8 +106,9 @@
             <div class="l-unit__col l-unit__col--right">
               <div style="margin-bottom: 50px;">
                   <div class="clearfix l-unit__stat-col--left">
-                      <i class="l-icon-star" title="<?=__('save to favorites')?>"></i>
-                  </div>
+                      <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="backup[]" value="<?php echo $key ?>">
+                      <label for="check<?php echo $i ?>" class="check-label"></label>
+                    </div>
                   <div class="clearfix l-unit__stat-col--left wide-3"><b><?=$key?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center wide"><b><?=translate_date($data[$key]['DATE'])?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?=humanize_usage_size($data[$key]['SIZE'])?></b> <?=humanize_usage_measure($data[$key]['SIZE'])?></div>

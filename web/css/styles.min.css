@@ -1496,6 +1496,10 @@ div.l-content > div.l-separator:nth-of-type(4) {
   font-size: 13px;
 }
 
+.table-header {
+  font-size: 1.05em;
+}
+
 .units .l-unit {
   border-bottom: 1px solid #ddd;
 }

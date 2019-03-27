@@ -1,8 +1,8 @@
 server {
     listen      %ip%:%proxy_ssl_port% ssl http2;
     server_name %webmail_vhost%;
-    ssl_certificate          %home%/%user%/conf/mail/%domain%/ssl/%mail_domain%.crt;
-    ssl_certificate_key      %home%/%user%/conf/mail/%domain%/ssl/%mail_domain%.key;
+    ssl_certificate          %home%/%user%/conf/mail/%domain%/ssl/%domain%.crt;
+    ssl_certificate_key      %home%/%user%/conf/mail/%domain%/ssl/%domain%.key;
     error_log  /var/log/%web_system%/domains/%domain%.error.log error;
 
     location / {

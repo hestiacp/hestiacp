@@ -189,8 +189,10 @@ prepare_web_domain_values() {
 # Add web config
 add_web_config() {
     conf="$HOMEDIR/$user/conf/web/$domain/$1.conf"
+    globalconf="/etc/$1/conf.d/domains/$domain.conf"
     if [[ "$2" =~ stpl$ ]]; then
         conf="$HOMEDIR/$user/conf/web/$domain/$1.ssl.conf"
+        globalconf="/etc/$1/conf.d/domains/$domain.ssl.conf"
     fi
 
     # Ensure global domains directories exist
@@ -232,21 +234,13 @@ add_web_config() {
     chown root:$user $conf
     chmod 640 $conf
 
-    #if [ -z "$(grep "$conf" /etc/$1/conf.d/hestia.conf)" ]; then
-    #    if [ "$1" != 'nginx' ]; then
-    #        echo "Include $conf" >> /etc/$1/conf.d/hestia.conf
-    #    else
-    #        echo "include $conf;" >> /etc/$1/conf.d/hestia.conf
-    #    fi
-    #fi
-
     # Ensure that there are no old configuration files
-    if [ ! -z /etc/$1/conf.d/domains/$domain.conf ]; then
-        rm -f /etc/$1/conf.d/domains/$domain.conf
+    if [ ! -z $globalconf ]; then
+        rm -f $globalconf
     fi
 
-    # Link configuration file to global domains directory 
-    ln -s $conf /etc/$1/conf.d/domains/$domain.conf
+    # Link configuration files to global domains directory 
+    ln -s $conf $globalconf
 
     trigger="${2/.*pl/.sh}"
     if [ -x "$WEBTPL/$1/$WEB_BACKEND/$trigger" ]; then
@@ -285,31 +279,38 @@ get_web_config_lines() {
 # Replace web config
 replace_web_config() {
     conf="$HOMEDIR/$user/conf/web/$domain/$1.conf"
+    globalconf="/etc/$1/conf.d/domains/$domain.conf"
     if [[ "$2" =~ stpl$ ]]; then
         conf="$HOMEDIR/$user/conf/web/$domain/$1.ssl.conf"
+        globalconf="/etc/$1/conf.d/domains/$domain.ssl.conf"
     fi
 
     if [ -e "$conf" ]; then
         sed -i  "s|$old|$new|g" $conf
-    else
-        # fallback to old style configs
-        conf="$HOMEDIR/$user/conf/web/$1.conf"
-        if [[ "$2" =~ stpl$ ]]; then
-            conf="$HOMEDIR/$user/conf/web/s$1.conf"
-        fi
-        get_web_config_lines $WEBTPL/$1/$WEB_BACKEND/$2 $conf
-        sed -i  "$top_line,$bottom_line s|$old|$new|g" $conf
     fi
+
+    # Re-link configuration files
+    rm -f $globalconf
+
+    # Link configuration file to global domains directory 
+    ln -s $conf $globalconf
 }
 
 # Delete web configuration
 del_web_config() {
-    rm -f $HOMEDIR/$user/conf/web/$domain.*$WEB_SYSTEM*.conf
-    rm -f $HOMEDIR/$user/conf/web/$domain.*$PROXY_SYSTEM*.conf
-    rm -f $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM*.conf
-    rm -f $HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM*.conf
-    rm -f /etc/$1/conf.d/domains/$domain.conf
-    rm -f /etc/$1/conf.d/domains/$domain.ssl.conf
+    conf="$HOMEDIR/$user/conf/web/$domain/$1.conf"
+    globalconf="/etc/$1/conf.d/domains/$domain.conf"
+    if [[ "$2" =~ stpl$ ]]; then
+        conf="$HOMEDIR/$user/conf/web/$domain/$1.ssl.conf"
+        globalconf="/etc/$1/conf.d/domains/$domain.ssl.conf"
+    fi
+
+    if [ ! -z "$userconf" ]; then
+        rm -f $userconf
+    fi
+    if [ ! -z "$globalconf" ]; then
+        rm -f $globalconf
+    fi
 }
 
 # Verify status of SSL-force setting
@@ -574,177 +575,156 @@ is_mail_new() {
     fi
 }
 
-# Set webmail alias
-get_mail_config() {
-    mail_domain="mail.$domain"
-    webmail_vhost="$WEBMAIL_ALIAS.$domain"
-    MAIL_CONF="$HOMEDIR/$user/conf/mail/$domain"
-    WEB_CONF="/etc/$WEB_SYSTEM/conf.d/domains"
-    PROXY_CONF="/etc/$PROXY_SYSTEM/conf.d/domains"
-    EXIM_SSL="/usr/local/hestia/ssl/mail"
-    DOVECOT_CONF="/etc/dovecot/conf.d/domains"
-}
-
 # Write per-domain webmail configuration values
 add_webmail_config() {
-    get_mail_config
-
     # Remove old configuration files if they exist
-    rm -f $MAIL_CONF/$WEB_SYSTEM*.conf
-    rm -f $MAIL_CONF/$PROXY_SYSTEM*.conf
-    rm -f /etc/$WEB_SYSTEM/conf.d/domains/$webmail_vhost*.conf
-    rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$webmail_vhost*.conf
+    rm -f $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM*.conf
+    rm -f $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM*.conf
+    rm -f /etc/$WEB_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain*.conf
+    rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain*.conf
 
     # Copy configuration files
-    cp -f $MAILTPL/$WEB_SYSTEM/subdomain.tpl $MAIL_CONF/$WEB_SYSTEM.conf
-    cp -f $MAILTPL/$PROXY_SYSTEM/subdomain.tpl $MAIL_CONF/$PROXY_SYSTEM.conf
-    cp -f $MAILTPL/$WEB_SYSTEM/subdomain.stpl $MAIL_CONF/$WEB_SYSTEM.ssl.conf 
-    cp -f $MAILTPL/$PROXY_SYSTEM/subdomain.stpl $MAIL_CONF/$PROXY_SYSTEM.ssl.conf
+    cp -f $MAILTPL/$WEB_SYSTEM/subdomain.tpl $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM.conf
+    cp -f $MAILTPL/$PROXY_SYSTEM/subdomain.tpl $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM.conf
+    cp -f $MAILTPL/$WEB_SYSTEM/subdomain.stpl $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM.ssl.conf 
+    cp -f $MAILTPL/$PROXY_SYSTEM/subdomain.stpl $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM.ssl.conf
 
     # Write web server configuration
-    sed -i 's|%mail_domain%|'$mail_domain'|g' $MAIL_CONF/$WEB_SYSTEM*.conf
-    sed -i 's|%webmail_vhost%|'$webmail_vhost'|g' $MAIL_CONF/$WEB_SYSTEM*.conf
-    sed -i 's|%domain%|'$domain'|g' $MAIL_CONF/$WEB_SYSTEM*.conf
-    sed -i 's|%domain_idn%|'$domain'|g' $MAIL_CONF/$WEB_SYSTEM*.conf
-    sed -i 's|%home%|'$HOMEDIR'|g' $MAIL_CONF/$WEB_SYSTEM*.conf
-    sed -i 's|%user%|'$user'|g' $MAIL_CONF/$WEB_SYSTEM*.conf
-    sed -i 's|%group%|'$user'|g' $MAIL_CONF/$WEB_SYSTEM*.conf
-    sed -i 's|%ip%|'$ip'|g' $MAIL_CONF/$WEB_SYSTEM*.conf
-    sed -i 's|%web_port%|'$WEB_PORT'|g' $MAIL_CONF/$WEB_SYSTEM*.conf
-    sed -i 's|%proxy_port%|'$PROXY_PORT'|g' $MAIL_CONF/$WEB_SYSTEM*.conf
-    sed -i 's|%web_ssl_port%|'$WEB_SSL_PORT'|g' $MAIL_CONF/$WEB_SYSTEM*.conf
-    sed -i 's|%proxy_ssl_port%|'$PROXY_SSL_PORT'|g' $MAIL_CONF/$WEB_SYSTEM*.conf
-    sed -i 's|%web_system%|'$WEB_SYSTEM'|g' $MAIL_CONF/$WEB_SYSTEM*.conf
+    sed -i 's|%webmail_vhost%|'$WEBMAIL_ALIAS.$domain'|g' $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM*.conf
+    sed -i 's|%domain%|'$domain'|g' $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM*.conf
+    sed -i 's|%domain_idn%|'$domain'|g' $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM*.conf
+    sed -i 's|%home%|'$HOMEDIR'|g' $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM*.conf
+    sed -i 's|%user%|'$user'|g' $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM*.conf
+    sed -i 's|%group%|'$user'|g' $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM*.conf
+    sed -i 's|%ip%|'$ip'|g' $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM*.conf
+    sed -i 's|%web_port%|'$WEB_PORT'|g' $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM*.conf
+    sed -i 's|%proxy_port%|'$PROXY_PORT'|g' $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM*.conf
+    sed -i 's|%web_ssl_port%|'$WEB_SSL_PORT'|g' $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM*.conf
+    sed -i 's|%proxy_ssl_port%|'$PROXY_SSL_PORT'|g' $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM*.conf
+    sed -i 's|%web_system%|'$WEB_SYSTEM'|g' $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM*.conf
 
     # Write proxy server configurationls
-    sed -i 's|%mail_domain%|'$mail_domain'|g' $MAIL_CONF/$PROXY_SYSTEM*.conf
-    sed -i 's|%webmail_vhost%|'$webmail_vhost'|g' $MAIL_CONF/$PROXY_SYSTEM*.conf
-    sed -i 's|%domain%|'$domain'|g' $MAIL_CONF/$PROXY_SYSTEM*.conf
-    sed -i 's|%domain_idn%|'$domain'|g' $MAIL_CONF/$PROXY_SYSTEM*.conf
-    sed -i 's|%home%|'$HOMEDIR'|g' $MAIL_CONF/$PROXY_SYSTEM*.conf
-    sed -i 's|%user%|'$user'|g' $MAIL_CONF/$PROXY_SYSTEM*.conf
-    sed -i 's|%group%|'$user'|g' $MAIL_CONF/$PROXY_SYSTEM*.conf
-    sed -i 's|%ip%|'$ip'|g' $MAIL_CONF/$PROXY_SYSTEM*.conf
-    sed -i 's|%web_port%|'$WEB_PORT'|g' $MAIL_CONF/$PROXY_SYSTEM*.conf
-    sed -i 's|%proxy_port%|'$PROXY_PORT'|g' $MAIL_CONF/$PROXY_SYSTEM*.conf
-    sed -i 's|%web_ssl_port%|'$WEB_SSL_PORT'|g' $MAIL_CONF/$PROXY_SYSTEM*.conf
-    sed -i 's|%proxy_ssl_port%|'$PROXY_SSL_PORT'|g' $MAIL_CONF/$PROXY_SYSTEM*.conf
-    sed -i 's|%web_system%|'$WEB_SYSTEM'|g' $MAIL_CONF/$PROXY_SYSTEM*.conf 
+    sed -i 's|%webmail_vhost%|'$WEBMAIL_ALIAS.$domain'|g' $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM*.conf
+    sed -i 's|%domain%|'$domain'|g' $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM*.conf
+    sed -i 's|%domain_idn%|'$domain'|g' $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM*.conf
+    sed -i 's|%home%|'$HOMEDIR'|g' $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM*.conf
+    sed -i 's|%user%|'$user'|g' $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM*.conf
+    sed -i 's|%group%|'$user'|g' $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM*.conf
+    sed -i 's|%ip%|'$ip'|g' $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM*.conf
+    sed -i 's|%web_port%|'$WEB_PORT'|g' $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM*.conf
+    sed -i 's|%proxy_port%|'$PROXY_PORT'|g' $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM*.conf
+    sed -i 's|%web_ssl_port%|'$WEB_SSL_PORT'|g' $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM*.conf
+    sed -i 's|%proxy_ssl_port%|'$PROXY_SSL_PORT'|g' $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM*.conf
+    sed -i 's|%web_system%|'$WEB_SYSTEM'|g' $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM*.conf 
 
     # Create links to vhost from user directory
     if [ ! -z "$WEB_SYSTEM" ]; then
         # Link user configuration to global domain configuration directory
-        ln -s $MAIL_CONF/$WEB_SYSTEM.conf $WEB_CONF/$webmail_vhost.conf
+        ln -s $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM.conf /etc/$WEB_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
 
         if [ -f $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.ssl.conf ]; then
-            ln -s $MAIL_CONF/$WEB_SYSTEM.ssl.conf $WEB_CONF/$webmail_vhost.ssl.conf
+            ln -s $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM.ssl.conf /etc/$WEB_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
         fi
     fi
     if [ ! -z "$PROXY_SYSTEM" ]; then
         # Link user configuration to global domain configuration directory
-        ln -s $MAIL_CONF/$PROXY_SYSTEM.conf $PROXY_CONF/$webmail_vhost.conf
+        ln -s $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM.conf /etc/$PROXY_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
 
         # Enable SSL for webmail if web domain is SSL enabled
         if [ -f $HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.ssl.conf ]; then
-            ln -s $MAIL_CONF/$PROXY_SYSTEM.ssl.conf $PROXY_CONF/$webmail_vhost.ssl.conf
+            ln -s $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM.ssl.conf /etc/$PROXY_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
         fi
     fi
 }
 
 # Add mail server SSL configuration
 add_mail_ssl_config() {
-
-    get_mail_config
-    # Ensure that SSL certificate directories exists
-    if [ ! -d $MAIL_CONF/ssl/ ]; then
-        mkdir -p $MAIL_CONF/ssl/
+     # Ensure that SSL certificate directories exists
+    if [ ! -d $HOMEDIR/$user/conf/mail/$domain/ssl/ ]; then
+        mkdir -p $HOMEDIR/$user/conf/mail/$domain/ssl/
     fi
 
-    if [ ! -d $EXIM_SSL ]; then
-        mkdir -p $EXIM_SSL
+    if [ ! -d /usr/local/hestia/ssl/mail ]; then
+        mkdir -p /usr/local/hestia/ssl/mail
     fi
 
-    if [ ! -d $DOVECOT_CONF ]; then
-        mkdir -p $DOVECOT_CONF
+    if [ ! -d /etc/dovecot/conf.d/domains ]; then
+        mkdir -p /etc/dovecot/conf.d/domains
     fi
 
     # Add certificate to Hestia user configuration data directory
-    cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/$mail_domain.crt
-    cp -f $ssl_dir/$domain.key $USER_DATA/ssl/$mail_domain.key
-    cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/$mail_domain.pem
+    cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/mail.$domain.crt
+    cp -f $ssl_dir/$domain.key $USER_DATA/ssl/mail.$domain.key
+    cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/mail.$domain.pem
     if [ -e "$ssl_dir/$domain.ca" ]; then
-        cp -f $ssl_dir/$domain.ca $USER_DATA/ssl/$mail_domain.ca
-        echo >> $USER_DATA/ssl/$mail_domain.pem
-        cat $USER_DATA/ssl/$mail_domain.ca >> $USER_DATA/ssl/$mail_domain.pem
+        cp -f $ssl_dir/$domain.ca $USER_DATA/ssl/mail.$domain.ca
+        echo >> $USER_DATA/ssl/mail.$domain.pem
+        cat $USER_DATA/ssl/mail.$domain.ca >> $USER_DATA/ssl/mail.$domain.pem
     fi
 
-    chmod 660 $USER_DATA/ssl/$mail_domain.*
+    chmod 660 $USER_DATA/ssl/mail.$domain.*
 
     # Add certificate to user home directory
-    cp -f $USER_DATA/ssl/$mail_domain.crt $MAIL_CONF/ssl/$mail_domain.crt
-    cp -f $USER_DATA/ssl/$mail_domain.key $MAIL_CONF/ssl/$mail_domain.key
-    cp -f $USER_DATA/ssl/$mail_domain.pem $MAIL_CONF/ssl/$mail_domain.pem
-    if [ -e "$USER_DATA/ssl/$mail_domain.ca" ]; then
-        cp -f $USER_DATA/ssl/$mail_domain.ca $MAIL_CONF/ssl/$mail_domain.ca
+    cp -f $USER_DATA/ssl/mail.$domain.crt $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt
+    cp -f $USER_DATA/ssl/mail.$domain.key $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key
+    cp -f $USER_DATA/ssl/mail.$domain.pem $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem
+    if [ -e "$USER_DATA/ssl/mail.$domain.ca" ]; then
+        cp -f $USER_DATA/ssl/mail.$domain.ca $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.ca
     fi
 
     # Add domain SSL configuration to dovecot
-    if [ -f $DOVECOT_CONF/$mail_domain.conf ]; then
-        rm -f $DOVECOT_CONF/$mail_domain.conf
+    if [ -f /etc/dovecot/conf.d/domains/$domain.conf ]; then
+        rm -f /etc/dovecot/conf.d/domains/$domain.conf
     fi
-
-    echo "" >> $DOVECOT_CONF/$mail_domain.conf
-    echo "local_name $mail_domain {" >> $DOVECOT_CONF/$mail_domain.conf
-    echo "  ssl_cert = <$MAIL_CONF/ssl/$mail_domain.pem" >> $DOVECOT_CONF/$mail_domain.conf
-    echo "  ssl_key = <$MAIL_CONF/ssl/$mail_domain.key" >> $DOVECOT_CONF/$mail_domain.conf
-    echo "}" >> $DOVECOT_CONF/$mail_domain.conf
+    
+    echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
+    echo "local_name mail.$domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
+    echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
+    echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
+    echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
 
     # Add domain SSL configuration to exim4
-    ln -s $MAIL_CONF/ssl/$mail_domain.pem $EXIM_SSL/$mail_domain.crt
-    ln -s $MAIL_CONF/ssl/$mail_domain.key $EXIM_SSL/$mail_domain.key
+    ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem /usr/local/hestia/ssl/mail/mail.$domain.crt
+    ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key /usr/local/hestia/ssl/mail/mail.$domain.key
 
     # Set correct permissions on certificates
-    chmod 0644 $MAIL_CONF/ssl/*
-    chown -h $user:mail $MAIL_CONF/ssl/*
+    chmod 0644 $HOMEDIR/$user/conf/mail/$domain/ssl/*
+    chown -h $user:mail $HOMEDIR/$user/conf/mail/$domain/ssl/*
     chmod -R 0644 /usr/local/hestia/ssl/mail/*
     chown -h $user:mail /usr/local/hestia/ssl/mail/*
 }
 
 # Delete SSL support for mail domain
 del_mail_ssl_config() {
-    get_mail_config
-
     # Remove dovecot configuration
-    rm -f $DOVECOT_CONF/$mail_domain.conf
+    rm -f /etc/dovecot/conf.d/domains/mail.$domain.conf
 
     # Remove SSL vhost configuration
-    rm -f $MAIL_CONF/*.ssl.conf
-    rm -f $WEB_CONF/$webmail_vhost.ssl.conf
-    rm -f $PROXY_CONF/$webmail_vhost.ssl.conf
+    rm -f $HOMEDIR/$user/conf/mail/$domain/*.ssl.conf
+    rm -f /etc/$WEB_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
+    rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
 
     # Remove SSL certificates
-    rm -f $MAIL_CONF/ssl/*
-    rm -f $USER_DATA/ssl/$mail_domain.*
-    rm -f $EXIM_SSL/$mail_domain.*
+    rm -f $HOMEDIR/$user/conf/mail/$domain/ssl/*
+    rm -f $USER_DATA/ssl/mail.$domain.*
+    rm -f /usr/local/hestia/ssl/mail/mail.$domain.*
 }
 
 # Delete Webmail configuration
 del_webmail_config() {
-    get_mail_config
-    rm -f $MAIL_CONF/$WEB_SYSTEM.conf
-    rm -f $MAIL_CONF/$PROXY_SYSTEM.conf
+    rm -f $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM.conf
+    rm -f $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM.conf
 
-    rm -f $WEB_CONF/$webmail_vhost.conf
-    rm -f $PROXY_CONF/$webmail_vhost.conf
+    rm -f /etc/$WEB_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
+    rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
 }
 
 # Delete Webmail SSL configuration
 del_webmail_ssl_config() {
-    get_mail_config
-    rm -f $MAIL_CONF/*.ssl.conf
+    rm -f $HOMEDIR/$user/conf/mail/$domain/*.ssl.conf
 
-    rm -f $WEB_CONF/$webmail_vhost.ssl.conf
-    rm -f $PROXY_CONF/$webmail_vhost.ssl.conf
+    rm -f /etc/$WEB_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
+    rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
 }
 
 #----------------------------------------------------------#

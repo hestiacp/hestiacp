@@ -420,7 +420,6 @@ rebuild_dns_domain_conf() {
 
 # MAIL domain rebuild
 rebuild_mail_domain_conf() {
-    get_mail_config
     get_domain_values 'mail'
 
     if [[ "$domain" = *[![:ascii:]]* ]]; then

@@ -1,0 +1,44 @@
+#!/bin/bash
+# info: update web templates
+# options: [RESTART]
+#
+# The function for obtaining updated pack of web templates.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+restart=$1
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Update templates
+cp -rf $HESTIA/install/hestia-data/packages $HESTIA/data/packages/
+
+# Changing user package
+change_user_package
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Restarting web server
+$BIN/v-restart-web $restart
+check_result $? "restart" >/dev/null 2>&1
+
+$BIN/v-restart-proxy $restart
+check_result $? "restart" >/dev/null 2>&1
+
+$BIN/v-restart-proxy $restart
+check_result $? "restart" >/dev/null 2>&1
+
+exit

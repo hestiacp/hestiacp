@@ -1,6 +1,6 @@
 server {
     listen      %ip%:%proxy_port%;
-    server_name %mailalias%.%domain%;
+    server_name %webmail_vhost%;
         
     include %home%/%user%/conf/web/forcessl.nginx.%domain%.conf*;
 

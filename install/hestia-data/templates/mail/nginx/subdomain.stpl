@@ -1,6 +1,6 @@
 server {
     listen      %ip%:%proxy_ssl_port% ssl http2;
-    server_name %mailalias%.%domain%;
+    server_name %webmail_vhost%;
     ssl_certificate          %home%/%user%/conf/mail/%domain%/ssl/%domain%.crt;
     ssl_certificate_key      %home%/%user%/conf/mail/%domain%/ssl/%domain%.key;
     error_log  /var/log/%web_system%/domains/%domain%.error.log error;
@@ -40,5 +40,4 @@ server {
     location ~ /\.hg/   {return 404;}
     location ~ /\.bzr/  {return 404;}
 
-    include %home%/%user%/conf/web/snginx.%domain%.conf*;
 }

@@ -1,10 +1,10 @@
 <VirtualHost %ip%:%web_port%>
-    ServerName %mailalias%.%domain%
+    ServerName %webmail_vhost%
     Alias / /var/lib/roundcube/
     Alias /error/ %home%/%user%/web/%domain%/document_errors/
     #SuexecUserGroup %user% %group%
         
-    IncludeOptional %home%/%user%/conf/web/forcessl.apache2.%domain%.conf*
+    IncludeOptional %home%/%user%/conf/web/%domain%/apache2.forcessl.conf*
     
     <Directory "/usr/share/tinymce/www/">
       Options Indexes MultiViews FollowSymLinks

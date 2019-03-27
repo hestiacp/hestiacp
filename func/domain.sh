@@ -602,7 +602,7 @@ add_webmail_config() {
     cp -f $MAILTPL/$PROXY_SYSTEM/subdomain.stpl $MAIL_CONF/$PROXY_SYSTEM.ssl.conf
 
     # Write web server configuration
-    sed -i 's|%mailalias%|'$webmail_vhost'|g' $MAIL_CONF/$WEB_SYSTEM*.conf
+    sed -i 's|%webmail_vhost%|'$webmail_vhost'|g' $MAIL_CONF/$WEB_SYSTEM*.conf
     sed -i 's|%domain%|'$domain'|g' $MAIL_CONF/$WEB_SYSTEM*.conf
     sed -i 's|%domain_idn%|'$domain'|g' $MAIL_CONF/$WEB_SYSTEM*.conf
     sed -i 's|%home%|'$HOMEDIR'|g' $MAIL_CONF/$WEB_SYSTEM*.conf
@@ -616,7 +616,7 @@ add_webmail_config() {
     sed -i 's|%web_system%|'$WEB_SYSTEM'|g' $MAIL_CONF/$WEB_SYSTEM*.conf
 
     # Write proxy server configurationls
-    sed -i 's|%mailalias%|'$webmail_vhost'|g' $MAIL_CONF/$PROXY_SYSTEM*.conf
+    sed -i 's|%webmail_vhost%|'$webmail_vhost'|g' $MAIL_CONF/$PROXY_SYSTEM*.conf
     sed -i 's|%domain%|'$domain'|g' $MAIL_CONF/$PROXY_SYSTEM*.conf
     sed -i 's|%domain_idn%|'$domain'|g' $MAIL_CONF/$PROXY_SYSTEM*.conf
     sed -i 's|%home%|'$HOMEDIR'|g' $MAIL_CONF/$PROXY_SYSTEM*.conf

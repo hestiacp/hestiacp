@@ -12,7 +12,7 @@
     CustomLog /var/log/%web_system%/domains/%domain%.log combined
     ErrorLog /var/log/%web_system%/domains/%domain%.error.log
         
-    IncludeOptional %home%/%user%/conf/web/forcessl.apache2.%domain%.conf*
+    IncludeOptional %home%/%user%/conf/web/%domain%/apache2.forcessl.conf*
     
     <Directory %docroot%>
         AllowOverride All
@@ -39,8 +39,6 @@
     <IfModule itk.c>
         AssignUserID %user% %group%
     </IfModule>
-
-    IncludeOptional %home%/%user%/conf/web/%domain%/%web_system%.conf*
 
 </VirtualHost>
 

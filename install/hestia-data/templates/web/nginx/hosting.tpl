@@ -31,6 +31,5 @@ server {
 
     disable_symlinks if_not_owner from=%docroot%;
 
-    include %home%/%user%/conf/web/%domain%/nginx.conf*;
 }
 

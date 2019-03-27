@@ -37,7 +37,5 @@
         AssignUserID %user% %group%
     </IfModule>
 
-    IncludeOptional %home%/%user%/conf/web/%web_system%.ssl.conf*
-
 </VirtualHost>
 

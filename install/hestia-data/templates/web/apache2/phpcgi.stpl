@@ -32,7 +32,5 @@
     SSLCertificateKeyFile %ssl_key%
     %ssl_ca_str%SSLCertificateChainFile %ssl_ca%
 
-    IncludeOptional %home%/%user%/conf/web/%domain%/%web_system%.ssl.conf*
-
 </VirtualHost>
 

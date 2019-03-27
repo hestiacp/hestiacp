@@ -34,6 +34,4 @@
         AssignUserID %user% %group%
     </IfModule>
 
-    IncludeOptional %home%/%user%/conf/web/%web_system%.conf*
-
 </VirtualHost>

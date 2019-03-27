@@ -249,6 +249,10 @@ fi
 sed -i "/WEBMAIL_ALIAS='mail'/d" $HESTIA/conf/hestia.conf
 echo "WEBMAIL_ALIAS='mail'" >> $HESTIA/conf/hestia.conf
 
+# Remove webalizer in favor of awstats as default
+apt purge webalizer -y > /dev/null 2>&1
+sed -i "s/STATS_SYSTEM='webalizer,awstats'/STATS_SYSTEM='awstats'/g" $HESTIA/conf/hestia.conf
+
 # Rebuild users
 userlist=$(ls --sort=time $HESTIA/data/users/)
 for user in $userlist; do

@@ -23,6 +23,12 @@ source $HESTIA/conf/hestia.conf
 # Update templates
 cp -rf $HESTIA/install/hestia-data/templates/mail $HESTIA/data/templates/
 
+# Rebuild web and mail domains to synchronize webmail config
+for user in $($BIN/v-list-sys-users plain); do
+    $BIN/v-rebuild-web-domains $user no
+    $BIN/v-rebuild-mail-domains $user no
+done
+
 
 #----------------------------------------------------------#
 #                       Hestia                             #

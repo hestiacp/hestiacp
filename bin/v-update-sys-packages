@@ -22,10 +22,7 @@ source $HESTIA/conf/hestia.conf
 #----------------------------------------------------------#
 
 # Update templates
-cp -rf $HESTIA/install/hestia-data/packages $HESTIA/data/packages/
-
-# Changing user package
-change_user_package
+cp -rf $HESTIA/install/hestia-data/packages $HESTIA/data/
 
 #----------------------------------------------------------#
 #                       Hestia                             #
@@ -33,9 +30,6 @@ change_user_package
 
 # Restarting web server
 $BIN/v-restart-web $restart
-check_result $? "restart" >/dev/null 2>&1
-
-$BIN/v-restart-proxy $restart
 check_result $? "restart" >/dev/null 2>&1
 
 $BIN/v-restart-proxy $restart

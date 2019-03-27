@@ -1,0 +1,34 @@
+#!/bin/bash
+# info: update mail templates
+# options: [RESTART]
+#
+# The function for obtaining updated pack of mail templates.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+restart=$1
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Update templates
+cp -rf $HESTIA/install/hestia-data/templates/mail $HESTIA/data/templates/
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Clean tmpdir
+rm -rf $tmpdir
+
+exit

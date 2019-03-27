@@ -102,6 +102,8 @@ echo '************************************************************************'
 
 # Back up old template files and install the latest versions
 if [ -d $HESTIA/data/templates/ ]; then
+    # Remove old Office 365 template as there is a newer version with an updated name
+    rm -f $HESTIA/data/templates/dns/o365.tpl
     cp -rf $HESTIA/data/templates $HESTIA_BACKUP/
     $HESTIA/bin/v-update-web-templates
     $HESTIA/bin/v-update-dns-templates

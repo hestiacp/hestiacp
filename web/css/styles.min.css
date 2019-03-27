@@ -3259,11 +3259,20 @@ form#vstobjects.suspended {
   background-color: #3BF0E6 !important;
 }
 
-
-
-
 .l-sort__create-btn:active #tooltip {
   background-color: #54a6e5;
+}
+
+.status-icon-red {
+  color: #ff3333;
+}
+
+.status-icon-green {
+  color: #33cc33;
+}
+
+.status-icon-orange {
+  color: #faab00;
 }
 
 .noselect {

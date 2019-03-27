@@ -980,7 +980,7 @@ if [ "$exim" = 'yes' ]; then
     if [ "$dovecot" = 'yes' ]; then
         echo "IMAP_SYSTEM='dovecot'" >> $HESTIA/conf/hestia.conf
     fi
-    echo "MAIL_ALIAS='mail'" >> $HESTIA/conf/hestia.conf
+    echo "WEBMAIL_ALIAS='mail'" >> $HESTIA/conf/hestia.conf
 fi
 
 # Cron daemon

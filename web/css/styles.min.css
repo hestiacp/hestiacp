@@ -1436,7 +1436,13 @@ div.l-content > div.l-separator:nth-of-type(4) {
   /*color: #92af0b;*/
 }
 
-
+.subtitle {
+  color: #ff6701;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 20px 0 18px 129px;
+  text-transform: uppercase;
+}
 
 .l-select {
   width: 178px;
@@ -2302,6 +2308,9 @@ body.mobile .l-unit-toolbar__col--right {
   background-position: -78px -482px;
 }
 
+.icon-pad-right {
+  margin-right: 5px;
+}
 
 .l-icon-up-arrow, .l-icon-down-arrow, .l-icon-star, .l-icon-to-top, .l-icon-shortcuts, .l-icon-star-orange, .l-icon-star-blue {
   display: inline-block;

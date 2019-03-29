@@ -29,7 +29,6 @@ encode_base64() {
 
 # Let's Encrypt v2 curl function
 query_le_v2() {
-
     protected='{"nonce": "'$3'",'
     protected=''$protected' "url": "'$1'",'
     protected=''$protected' "alg": "RS256", "kid": "'$KID'"}'
@@ -54,7 +53,7 @@ query_le_v2() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN [ALIASES]'
+check_args '2' "$#" 'USER DOMAIN [ALIASES] [MAIL]'
 is_format_valid 'user' 'domain' 'aliases'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"

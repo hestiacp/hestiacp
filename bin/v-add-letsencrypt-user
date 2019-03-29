@@ -129,7 +129,7 @@ if [ ! -e "$USER_DATA/ssl/le.conf" ]; then
     echo "THUMB='$THUMB'" >> $USER_DATA/ssl/le.conf
     echo "EMAIL='$EMAIL'" >> $USER_DATA/ssl/le.conf
     echo "KID='$kid'" >> $USER_DATA/ssl/le.conf
-    chmod 660  $USER_DATA/ssl/le.conf
+    chmod 660 $USER_DATA/ssl/le.conf
 else
     sed -i '/^KID=/d' $USER_DATA/ssl/le.conf
     echo "KID='$kid'" >> $USER_DATA/ssl/le.conf

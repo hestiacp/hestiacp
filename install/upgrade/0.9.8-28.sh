@@ -262,11 +262,17 @@ sed -i "s/STATS_SYSTEM='webalizer,awstats'/STATS_SYSTEM='awstats'/g" $HESTIA/con
 userlist=$(ls --sort=time $HESTIA/data/users/)
 for user in $userlist; do
     echo "Rebuilding user: $user ..."
-    v-rebuild-user $user $restart
+    v-rebuild-user $user no
+    sleep 1
 done
 
 # Restart services
+echo "Restarting services..."
 $HESTIA/bin/v-restart-web $restart
+sleep 1
 $HESTIA/bin/v-restart-proxy $restart
+sleep 1
 $HESTIA/bin/v-restart-mail $restart
+sleep 1
 $HESTIA/bin/v-restart-service $IMAP_SYSTEM $restart
+sleep 1

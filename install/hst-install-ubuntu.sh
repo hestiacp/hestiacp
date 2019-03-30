@@ -1018,6 +1018,12 @@ fi
 #----------------------------------------------------------#
 
 if [ "$nginx" = 'yes' ]; then
+
+    # Generate dhparams.pem for NGINX SSL
+    if [ ! -f /etc/nginx/dhparams.pem ]; then
+        openssl dhparam -out /etc/nginx/dhparams.pem 4096 > /dev/null 2>&1
+    fi
+
     rm -f /etc/nginx/conf.d/*.conf
     cp -f $hestiacp/nginx/nginx.conf /etc/nginx/
     cp -f $hestiacp/nginx/status.conf /etc/nginx/conf.d/

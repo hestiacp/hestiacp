@@ -506,6 +506,11 @@ if [ "$dns" != 'no' ] && [ ! -z "$DNS_SYSTEM" ]; then
 
         # Rebuilding DNS domain
         rebuild_dns_domain_conf
+
+        # Sync with remote host
+        if [ ! -z "$DNS_CLUSTER" ]; then
+            $BIN/v-add-remote-dns-domain $domain
+        fi
     done
 
     # Restarting DNS

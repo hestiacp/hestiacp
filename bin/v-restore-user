@@ -507,9 +507,10 @@ if [ "$dns" != 'no' ] && [ ! -z "$DNS_SYSTEM" ]; then
         # Rebuilding DNS domain
         rebuild_dns_domain_conf
 
-        # Sync with remote host
+        # Updating dns-cluster queue
         if [ ! -z "$DNS_CLUSTER" ]; then
-            $BIN/v-add-remote-dns-domain $user $domain
+            cmd="$BIN/v-add-remote-dns-domain $user $domain yes"
+            echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
         fi
     done
 

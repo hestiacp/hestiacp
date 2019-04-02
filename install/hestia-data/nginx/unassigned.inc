@@ -31,3 +31,18 @@ server {
         }
     }
 }
+
+server {
+    listen directIP:443 ssl http2 default;
+    server_name _;
+    ssl_certificate      /usr/local/hestia/ssl/certificate.crt;
+    ssl_certificate_key  /usr/local/hestia/ssl/certificate.key;
+
+    location / {
+        root /var/www/html;
+    }
+
+    location /error/ {
+        alias /var/www/document_errors/;
+    }
+}

@@ -504,6 +504,11 @@ if [ "$dns" != 'no' ] && [ ! -z "$DNS_SYSTEM" ]; then
         # Restoring DNS records
         cp -f $tmpdir/dns/$domain/$backup_system/$domain.conf $USER_DATA/dns/
 
+        # Update IP in records
+        if [ ! -z "$old_ip" ]; then
+            sed -i s/$old_ip/$IP/g $USER_DATA/dns/$domain.conf
+        fi
+
         # Rebuilding DNS domain
         rebuild_dns_domain_conf
 

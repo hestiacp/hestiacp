@@ -205,6 +205,11 @@ if [ -f /etc/apache2/conf.d/roundcube.conf ]; then
     rm -f /etc/apache2/conf.d/roundcube.conf
 fi
 
+# Generate dhparams.pem for NGINX SSL
+if [ ! -f /etc/nginx/dhparams.pem ]; then
+    openssl dhparam -out /etc/nginx/dhparams.pem 4096
+fi
+
 # Update user information for mail domain SSL configuration
 userlist=$(ls --sort=time $HESTIA/data/users/)
 for user in $userlist; do

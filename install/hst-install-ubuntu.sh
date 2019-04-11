@@ -266,6 +266,13 @@ apt-get -qq update
 # Creating backup directory
 mkdir -p $hst_backups
 
+# Checking ntpdate
+if [ ! -e '/usr/sbin/ntpdate' ]; then
+    echo "Install missing ntpdate..."
+    apt-get -y install ntpdate >> $LOG
+    check_result $? "Can't install ntpdate"
+fi
+
 # Checking wget
 if [ ! -e '/usr/bin/wget' ]; then
     echo "Install missing wget..."

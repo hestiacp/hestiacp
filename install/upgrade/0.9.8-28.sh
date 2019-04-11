@@ -125,6 +125,20 @@ chmod 751 $HESTIA/data/templates/web/unassigned/css
 chmod 751 $HESTIA/data/templates/web/unassigned/js
 chmod 751 $HESTIA/data/templates/web/unassigned/webfonts
 
+# Add unassigned hosts configuration to nginx and apache2
+if [ -f /usr/local/hestia/data/ips/* ]; then
+    for ip in /usr/local/hestia/data/ips/*; do
+        ipaddr=${ip##*/}
+        rm -f /etc/nginx/conf.d/$ip.conf
+        cp -f $HESTIA/install/deb/nginx/unassigned.inc /etc/nginx/conf.d/$ipaddr.conf
+        sed -i 's/directIP/'$ipaddr'/g' /etc/nginx/conf.d/$ipaddr.conf
+
+        rm -f /etc/apache2/conf.d/$ip.conf
+        cp -f $HESTIA/install/deb/apache2/unassigned.conf /etc/apache2/conf.d/$ipaddr.conf
+        sed -i 's/directIP/'$ipaddr'/g' /etc/apache2/conf.d/$ipaddr.conf
+    done
+fi
+
 # Set Purge to false in roundcube config - https://goo.gl/3Nja3u
 if [ -f /etc/roundcube/config.inc.php ]; then
     sed -i "s/\['flag_for_deletion'] = 'Purge';/\['flag_for_deletion'] = false;/gI" /etc/roundcube/config.inc.php

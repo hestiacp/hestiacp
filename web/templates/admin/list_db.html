@@ -78,10 +78,24 @@
 
     <div class="l-separator"></div>
     <!-- /.l-separator -->
-
-
-
     <div class="l-center units animated fadeIn">
+        <div class="l-unit header">
+            <div class="l-unit__col l-unit__col--left clearfix">
+              <div class="text-center jump-small-top"></div>
+            </div>
+      
+            <div class="l-unit__col l-unit__col--right step-top table-header">
+              <div style="margin-bottom: 40px;">
+                  <div class="clearfix l-unit__stat-col--left wide-2"><b><?php print __('Database');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print __('Type');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center wide"><b><?php print __('Username');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Hostname');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Disk');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Charset');?></b></div>
+              </div>
+             </div>
+          </div>
+          
       <?
         list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
         foreach ($data as $key => $value) {
@@ -109,10 +123,6 @@
 sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?=$data[$key]['U_DISK']?>"
 sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" sort-star="<? if($_SESSION['favourites']['DB'][$key] == 1) echo '1'; else echo '0'; ?>">
         <div class="l-unit-toolbar clearfix">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="database[]" value="<?php echo $key ?>">
-            <label for="check<?php echo $i ?>" class="check-label"></label>
-          </div>
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
@@ -143,88 +153,28 @@ sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" so
           <!-- l-unit-toolbar__col -->
         </div>
         <!-- /.l-unit-toolbar -->
+            <div class="l-unit__col l-unit__col--right">
+              <div style="margin-bottom: 50px;">
+                  <div class="clearfix l-unit__stat-col--left">
+                      <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="database[]" value="<?php echo $key ?>">
+                      <label for="check<?php echo $i ?>" class="check-label"></label>
+                    </div>
+                  <div class="clearfix l-unit__stat-col--left wide-2"><b><?=$key?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center compact"><?=$data[$key]['TYPE']?></div>
+                  <div class="clearfix l-unit__stat-col--left text-center wide"><b><?=$data[$key]['DBUSER']?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['HOST']?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['CHARSET']?></div>
+               </div>
+            </div>
 
-        <div class="l-unit__col l-unit__col--left clearfix">
-          <div class="l-unit__date">
-            <?=translate_date($data[$key]['DATE'])?>
-          </div>
-          <div class="l-unit__suspended"><?=__('suspended')?></div>
-          <div class="text-center">
-            <i class="l-icon-star" title="<?=__('save to favorites')?>"></i>
-          </div>
-        </div>
-        <!-- /.l-unit__col -->
-        <div class="l-unit__col l-unit__col--right">
-          <div class="l-unit__name separate">
-            <?=$key?>
-          </div>
-          <!-- /.l-unit__name -->
-          <div class="l-unit__stats">
-            <table>
-              <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix graph">
-                    <div class="l-unit__stat-col l-unit__stat-col--left">
-                      <?=__('Disk')?>
-                    </div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right text-right volume">
-                      <b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK'])?>
-                    </div>
-                  </div>
-                  <div class="l-percent">
-                    <div class="l-percent__fill" style="width: <?=get_percentage($data[$key]['U_DISK'],$panel[$user]['DISK_QUOTA'])?>%"></div>
-                  </div>
-                  <!-- /.percent -->
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('User')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['DBUSER']?></b>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                    <div class="l-unit__stat-cols clearfix last">
-                      <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Host')?>:</div>
-                      <div class="l-unit__stat-col l-unit__stat-col--right">
-                        <b><?=$data[$key]['HOST']?></b>
-                      </div>
-                    </div>
-                </td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>
-                    <div class="l-unit__stat-cols clearfix">
-                      <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Charset')?>:</div>
-                      <div class="l-unit__stat-col l-unit__stat-col--right">
-                        <b><?=$data[$key]['CHARSET']?></b>
-                      </div>
-                    </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix last">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Type')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['TYPE']?></b>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            </table>
-          </div>
-          <!-- /.l-unit__stats -->
-        </div>
         <!-- /.l-unit__col -->
       </div>
       <!-- /.l-unit -->
-      <!-- div class="l-separator"></div-->
+      <!--div class="l-separator"></div-->
       <!-- /.l-separator -->
       <?}?>
-
     </div>
-
 
     <div id="vstobjects">
       <div class="l-separator"></div>

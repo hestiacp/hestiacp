@@ -259,6 +259,9 @@ if [ ! -z "$(grep ^admin: /etc/passwd /etc/group)" ] && [ -z "$force" ]; then
     check_result 1 "User admin exists"
 fi
 
+# Clear the screen once launch permissions have been verified
+clear
+
 # Update apt repository
 echo "Please wait a moment while we update your systems APT repositories..."
 apt-get -qq update

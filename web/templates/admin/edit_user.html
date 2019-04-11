@@ -68,16 +68,12 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text input-label">
-                                    <?php print __('2 Factor Authentication');?>
-                                </td>
-                            </tr>
-                            <tr>
                                 <td>
-                                    <label><input type="checkbox" class="vst-checkbox" name="v_twofa" <?php if(!empty($v_twofa)) echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_twofa(this)"> <?php print __('Enable 2FA');?></label>
+                                    <label><input type="checkbox" class="vst-checkbox password-option" name="v_twofa" <?php if(!empty($v_twofa)) echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_twofa(this)"> <?php print __('Enable 2FA');?></label>
                                     <?php if (!empty($v_twofa)) { ?>
+                                    <p><?php echo __('2FA Reset Code:').' '.$v_twofa; ?></br></p>
                                     <p><?php echo __('Please scan the code below in your 2FA application:'); ?></p>
-                                    <img src="<?php echo $v_qrcode; ?>">
+                                    <div><img class="qr-code" src="<?php echo $v_qrcode; ?>"></div>
                                     <?php } ?>
                                 </td>
                             </tr>

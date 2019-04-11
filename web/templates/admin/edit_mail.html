@@ -58,6 +58,16 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
+                                    <?php print __('Catchall email');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_catchall" value="<?=htmlentities(trim($v_catchall, "'"))?>" > <?php /*'*/ ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label">
                                     <label><input type="checkbox" size="20" class="vst-checkbox" name="v_antispam" <?php if ($v_antispam == 'yes') echo "checked=yes"; ?>> <?php print __('AntiSpam Support');?></label>
                                 </td>
                             </tr>
@@ -69,16 +79,6 @@
                             <tr>
                                 <td class="vst-text input-label">
                                     <label><input type="checkbox" size="20" class="vst-checkbox" name="v_dkim" <?php if ($v_dkim == 'yes') echo "checked=yes"; ?>> <?php print __('DKIM Support');?></label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text input-label">
-                                    <?php print __('Catchall email');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" size="20" class="vst-input" name="v_catchall" value="<?=htmlentities(trim($v_catchall, "'"))?>" >
                                 </td>
                             </tr>
                         </table>

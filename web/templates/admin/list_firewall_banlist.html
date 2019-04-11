@@ -39,6 +39,21 @@
 
 
     <div class="l-center units animated fadeIn">
+        <div class="l-unit header">
+            <div class="l-unit__col l-unit__col--left clearfix">
+              <div class="text-center jump-small-top"></div>
+            </div>
+      
+            <div class="l-unit__col l-unit__col--right step-top table-header">
+              <div style="margin-bottom: 40px;">
+                  <div class="clearfix l-unit__stat-col--left"><b><?php print __('Date');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left"><b><?php print __('Time');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide text-center"><b><?php print __('Comment');?></b></div>   
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('IP address');?></b></div>
+              </div>
+            </div>
+          </div>
+
       <?php
         foreach ($data as $key => $value) {
           ++$i;
@@ -77,10 +92,10 @@
         <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
           <div class="l-unit__stats">
-            <div class="clearfix l-unit__stat-col--left wide"><b><?=$data[$key]['DATE']?></b> &nbsp; <?=$data[$key]['TIME']?> </div>
-            <div class="clearfix l-unit__stat-col--left"></div>
-            <div class="clearfix l-unit__stat-col--left wide-3"><b><?=__($value['CHAIN'])?></b></div>
-            <div class="clearfix l-unit__stat-col--left"><b><?=$ip?></b></div>
+              <div class="clearfix l-unit__stat-col--left"><b><?=__($data[$key]['DATE'])?></b></div>
+              <div class="clearfix l-unit__stat-col--left"><b><?=$data[$key]['TIME']?></b></div>
+              <div class="clearfix l-unit__stat-col--left wide text-center"><b><?=__($value['CHAIN'])?></b></div>
+              <div class="clearfix l-unit__stat-col--left text-center"><?=$ip?></div>
           </div>
           <!-- /.l-unit__stats -->
         </div>

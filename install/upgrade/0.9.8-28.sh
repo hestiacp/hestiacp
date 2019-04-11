@@ -1,7 +1,19 @@
 #!/bin/bash
+HESTIA="/usr/local/hestia"
+HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
+
+# load hestia.conf
+source $HESTIA/conf/hestia.conf
 
 # Set version(s)
 pma_v='4.8.5'
+
+# Initialize backup directory
+mkdir -p $HESTIA_BACKUP/templates/
+mkdir -p $HESTIA_BACKUP/packages/
+
+# load hestia main functions
+source /usr/local/hestia/func/main.sh
 
 # Upgrade phpMyAdmin
 if [ "$DB_SYSTEM" = 'mysql' ]; then
@@ -58,7 +70,6 @@ if [ ! -z "$BACKEND_PORT" ]; then
     /usr/local/hestia/bin/v-change-sys-port $BACKEND_PORT
 fi
 
-
 # Update default page templates
 echo '************************************************************************'
 echo "Replacing default templates and packages...                             "
@@ -76,8 +87,6 @@ if [ -d $HESTIA/data/templates/ ]; then
     cp -rf $HESTIA/data/templates $HESTIA_BACKUP/
     $HESTIA/bin/v-update-web-templates
     $HESTIA/bin/v-update-dns-templates
-    $HESTIA/bin/v-update-mail-templates
-    $HESTIA/bin/v-update-sys-packages
 fi
 
 # Remove old Office 365 template as there is a newer version with an updated name
@@ -150,12 +159,12 @@ if [ -f /etc/roundcube/main.inc.php ]; then
     sed -i "s/\['flag_for_deletion'] = 'Purge';/\['flag_for_deletion'] = false;/gI" /etc/roundcube/main.inc.php
 fi
 
-# Copy default "Success" page for unassigned hosts
-cp -rf /usr/local/hestia/install/ubuntu/18.04/templates/web/unassigned/* /var/www/
-
-# Move clamav to proper location - https://goo.gl/zNuM11
-if [ ! -d /usr/local/hestia/web/edit/server/clamav-daemon ]; then
-    mv /usr/local/hestia/web/edit/server/clamd /usr/local/web/edit/server/clamav-daemon
+# Remove old OS-specific installation files if they exist to free up space
+if [ -d $HESTIA/install/ubuntu ]; then
+    rm -rf $HESTIA/install/ubuntu
+fi
+if [ -d $HESTIA/install/debian ]; then
+    rm -rf $HESTIA/install/debian
 fi
 
 # Fix dovecot configuration
@@ -173,3 +182,8 @@ fi
 for user in `ls /usr/local/hestia/data/users/`; do
     v-rebuild-mail-domains $user
 done
+
+# Move clamav to proper location - https://goo.gl/zNuM11
+if [ ! -d /usr/local/hestia/web/edit/server/clamav-daemon ]; then
+    mv /usr/local/hestia/web/edit/server/clamd /usr/local/web/edit/server/clamav-daemon
+fi

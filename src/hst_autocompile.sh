@@ -9,11 +9,11 @@ GIT_REP='https://raw.githubusercontent.com/hestiacp/hestiacp/master/src/deb'
 
 # Set Version for compiling
 HESTIA_V='0.9.8-28_amd64'
-NGINX_V='1.15.9'
-OPENSSL_V='1.1.1a'
+NGINX_V='1.15.10'
+OPENSSL_V='1.1.1b'
 PCRE_V='8.42'
 ZLIB_V='1.2.11'
-PHP_V='7.3.3'
+PHP_V='7.3.4'
 
 # Generate Links for sourcecode
 HESTIA='https://github.com/hestiacp/hestiacp/archive/master.zip'

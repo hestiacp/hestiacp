@@ -174,8 +174,9 @@ if [ -f /etc/dovecot/conf.d/15-mailboxes.conf ]; then
 fi
 if [ -f /etc/dovecot/dovecot.conf ]; then
     # Update dovecot configuration and restart dovecot service
-    cp -f /usr/local/hestia/install/hestia-data/dovecot/dovecot.conf /etc/dovecot/dovecot.conf
+    cp -f $HESTIA/install/deb/dovecot/dovecot.conf /etc/dovecot/dovecot.conf
     systemctl restart dovecot
+    sleep 0.5
 fi
 
 # Rebuild mailboxes

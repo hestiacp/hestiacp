@@ -73,3 +73,19 @@ cp -rf /usr/local/hestia/install/ubuntu/18.04/templates/web/unassigned/* /var/ww
 if [ ! -d /usr/local/hestia/web/edit/server/clamav-daemon ]; then
     mv /usr/local/hestia/web/edit/server/clamd /usr/local/web/edit/server/clamav-daemon
 fi
+
+# Fix dovecot configuration
+if [ -f /etc/dovecot/conf.d/15-mailboxes.conf ]; then
+    # Remove mailboxes configuration if it exists
+    rm -f /etc/dovecot/conf.d/15-mailboxes.conf
+fi
+if [ -f /etc/dovecot/dovecot.conf ]; then
+    # Update dovecot configuration and restart dovecot service
+    cp -f /usr/local/hestia/install/hestia-data/dovecot/dovecot.conf /etc/dovecot/dovecot.conf
+    systemctl restart dovecot
+fi
+
+# Rebuild mailboxes
+for user in `ls /usr/local/hestia/data/users/`; do
+    v-rebuild-mail-domains $user
+done

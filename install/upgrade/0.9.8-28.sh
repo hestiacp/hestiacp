@@ -58,6 +58,73 @@ if [ ! -z "$BACKEND_PORT" ]; then
     /usr/local/hestia/bin/v-change-sys-port $BACKEND_PORT
 fi
 
+
+# Update default page templates
+echo '************************************************************************'
+echo "Replacing default templates and packages...                             "
+echo "Existing templates have been backed up to the following location:       "
+echo "$HESTIA_BACKUP/templates/                                               "
+echo '************************************************************************'
+
+# Back up default package and install latest version
+if [ -d $HESTIA/data/packages/ ]; then
+    cp -f $HESTIA/data/packages/default.pkg $HESTIA_BACKUP/packages/
+fi
+
+# Back up old template files and install the latest versions
+if [ -d $HESTIA/data/templates/ ]; then
+    cp -rf $HESTIA/data/templates $HESTIA_BACKUP/
+    $HESTIA/bin/v-update-web-templates
+    $HESTIA/bin/v-update-dns-templates
+    $HESTIA/bin/v-update-mail-templates
+    $HESTIA/bin/v-update-sys-packages
+fi
+
+# Remove old Office 365 template as there is a newer version with an updated name
+if [ -f $HESTIA/data/templates/dns/o365.tpl ]; then 
+    rm -f $HESTIA/data/templates/dns/o365.tpl
+fi
+
+# Back up and remove default index.html if it exists
+if [ -f /var/www/html/index.html ]; then
+    cp -rf /var/www/html/index.html $HESTIA_BACKUP/templates/
+    rm -rf /var/www/html/index.html
+fi
+
+# Configure default success page and set permissions on CSS, JavaScript, and Font dependencies for unassigned hosts
+if [ ! -d /var/www/html ]; then
+    mkdir -p /var/www/html/
+fi
+
+if [ ! -d /var/www/document_errors/ ]; then
+    mkdir -p /var/www/document_errors/
+fi
+
+cp -rf $HESTIA/install/deb/templates/web/unassigned/* /var/www/html/
+cp -rf $HESTIA/install/deb/templates/web/skel/document_errors/* /var/www/document_errors/
+chmod 644 /var/www/html/*
+chmod 751 /var/www/html/css
+chmod 751 /var/www/html/js
+chmod 751 /var/www/html/webfonts
+chmod 644 /var/www/document_errors/*
+chmod 751 /var/www/document_errors/css
+chmod 751 /var/www/document_errors/js
+chmod 751 /var/www/document_errors/webfonts
+
+# Correct permissions on CSS, JavaScript, and Font dependencies for default templates
+chmod 751 $HESTIA/data/templates/web/skel/document_errors/css
+chmod 751 $HESTIA/data/templates/web/skel/document_errors/js
+chmod 751 $HESTIA/data/templates/web/skel/document_errors/webfonts
+chmod 751 $HESTIA/data/templates/web/skel/public_*html/css
+chmod 751 $HESTIA/data/templates/web/skel/public_*html/js
+chmod 751 $HESTIA/data/templates/web/skel/public_*html/webfonts
+chmod 751 $HESTIA/data/templates/web/suspend/css
+chmod 751 $HESTIA/data/templates/web/suspend/js
+chmod 751 $HESTIA/data/templates/web/suspend/webfonts
+chmod 751 $HESTIA/data/templates/web/unassigned/css
+chmod 751 $HESTIA/data/templates/web/unassigned/js
+chmod 751 $HESTIA/data/templates/web/unassigned/webfonts
+
 # Set Purge to false in roundcube config - https://goo.gl/3Nja3u
 if [ -f /etc/roundcube/config.inc.php ]; then
     sed -i "s/deletion'] = 'Purge'/deletion'] = false/g" /etc/roundcube/config.inc.php

@@ -483,7 +483,7 @@ rebuild_mail_domain_conf() {
 
     # Rebuild domain accounts
     accs=0
-    dom_diks=0
+    dom_disk=0
     if [ -e "$USER_DATA/mail/$domain.conf" ]; then
         accounts=$(search_objects "mail/$domain" 'SUSPENDED' "no" 'ACCOUNT')
     else
@@ -491,7 +491,7 @@ rebuild_mail_domain_conf() {
     fi
     for account in $accounts; do
         (( ++accs))
-        dom_diks=$((dom_diks + U_DISK))
+        dom_disk=$((dom_disk + U_DISK))
         object=$(grep "ACCOUNT='$account'" $USER_DATA/mail/$domain.conf)
         FWD_ONLY='no'
         eval "$object"
@@ -531,9 +531,9 @@ rebuild_mail_domain_conf() {
 
     # Update counters
     update_object_value 'mail' 'DOMAIN' "$domain" '$ACCOUNTS' "$accs"
-    update_object_value 'mail' 'DOMAIN' "$domain" '$U_DISK' "$dom_diks"
+    update_object_value 'mail' 'DOMAIN' "$domain" '$U_DISK' "$dom_disk"
     U_MAIL_ACCOUNTS=$((U_MAIL_ACCOUNTS + accs))
-    U_DISK_MAIL=$((U_DISK_MAIL + dom_diks))
+    U_DISK_MAIL=$((U_DISK_MAIL + dom_disk))
     U_MAIL_DOMAINS=$((U_MAIL_DOMAINS + 1))
 }
 

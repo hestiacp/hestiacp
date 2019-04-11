@@ -19,7 +19,7 @@ spinner="/-\|"
 os='ubuntu'
 release="$(lsb_release -s -r)"
 codename="$(lsb_release -s -c)"
-hestiacp="$HESTIA/install/$VERSION/$release"
+hestiacp="$HESTIA/install/deb"
 
 # Define software versions
 pma_v='4.8.5'

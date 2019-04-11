@@ -40,7 +40,7 @@ if [ "$type" = "ubuntu" ]; then
     VERSION='ubuntu'
 fi
 
-hestiacp="$HESTIA/install/$VERSION/$release"
+hestiacp="$HESTIA/install/deb"
 
 # Am I root?
 if [ "x$(id -u)" != 'x0' ]; then

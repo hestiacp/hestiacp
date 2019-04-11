@@ -688,6 +688,7 @@ if [ "$multiphp" = 'yes' ]; then
              php$fpm_v-mysql php$fpm_v-soap php$fpm_v-xml php$fpm_v-zip
              php$fpm_v-mbstring php$fpm_v-json php$fpm_v-bz2 php$fpm_v-pspell"
         software="$software $fpm"
+        multiphp+=("$fpm_v")
     fi
 fi
 
@@ -711,6 +712,7 @@ if [ "$nginx" = 'no'  ]; then
 fi
 if [ "$apache" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/apache2 //")
+    software=$(echo "$software" | sed -e "s/apache2-bin//")
     software=$(echo "$software" | sed -e "s/apache2-utils//")
     software=$(echo "$software" | sed -e "s/apache2-suexec-custom//")
     software=$(echo "$software" | sed -e "s/apache2.2-common//")
@@ -789,7 +791,22 @@ if [ "$phpfpm" = 'yes' ]; then
     software=$(echo "$software" | sed -e 's/php-cgi//')
     software=$(echo "$software" | sed -e 's/php-mysql//')
 fi
-
+if [ "$multiphp" = 'yes' ]; then
+    software=$(echo "$software" | sed -e 's/ php //')
+    software=$(echo "$software" | sed -e 's/php-auth-sasl//')
+    software=$(echo "$software" | sed -e 's/php-cgi//')
+    software=$(echo "$software" | sed -e 's/php-common//')
+    software=$(echo "$software" | sed -e 's/php-curl//')
+    software=$(echo "$software" | sed -e 's/php-mail-mime//')
+    software=$(echo "$software" | sed -e 's/php-mysql//')
+    software=$(echo "$software" | sed -e 's/php-net-sieve//')
+    software=$(echo "$software" | sed -e 's/php-net-smtp//')
+    software=$(echo "$software" | sed -e 's/php-net-socket//')
+    software=$(echo "$software" | sed -e 's/php-pear//')
+    software=$(echo "$software" | sed -e 's/php-php-gettext//')
+    software=$(echo "$software" | sed -e 's/php-phpseclib//')
+    software=$(echo "$software" | sed -e 's/php-pgsql//')
+fi
 
 #----------------------------------------------------------#
 #                     Install packages                     #

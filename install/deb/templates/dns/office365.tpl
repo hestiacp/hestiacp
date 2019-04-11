@@ -5,7 +5,7 @@ ID='4' RECORD='ftp' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time
 ID='6' RECORD='www' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='7' RECORD='@' TYPE='MX' PRIORITY='0' VALUE='%domain%.mail.protection.outlook.com.' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='8' RECORD='@' TYPE='TXT' PRIORITY='' VALUE='"v=spf1 a mx ip4:%ip% include:spf.protection.outlook.com -all"' SUSPENDED='no' TIME='%time%' DATE='%date%'
-ID='9' RECORD='_dmarc' TYPE='TXT' PRIORITY='' VALUE='v=DMARC1; p=none; pct=100; rua=mailto:d@rua.agari.com; ruf=mailto:d@ruf.agari.com; fo=1'
+ID='9' RECORD='_dmarc' TYPE='TXT' PRIORITY='' VALUE='v=DMARC1; p=none; pct=100; fo=1'
 ID='10' RECORD='autodiscover' TYPE='CNAME' PRIORITY='' VALUE='autodiscover.outlook.com.' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='11' RECORD='lyncdiscover' TYPE='CNAME' PRIORITY='' VALUE='webdir.online.lync.com.' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='12' RECORD='sip' TYPE='CNAME' PRIORITY='' VALUE='sipdir.online.lync.com.' SUSPENDED='no' TIME='%time%' DATE='%date%'

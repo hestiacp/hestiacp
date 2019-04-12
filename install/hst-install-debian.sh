@@ -29,9 +29,9 @@ fpm_v="7.3"
 if [ "$release" -eq 9 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
         libapache2-mod-ruid2 libapache2-mod-fcgid libapache2-mod-php php
-        php-common php-cgi php-mysql php-curl php-pgsql awstats webalizer
-        vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy clamav-daemon 
-        spamassassin dovecot-imapd dovecot-pop3d roundcube-core net-tools
+        php-common php-cgi php-mysql php-curl php-pgsql php-imap php-ldap php-apcu
+        awstats webalizer vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy 
+        clamav-daemon spamassassin dovecot-imapd dovecot-pop3d roundcube-core net-tools
         roundcube-mysql roundcube-plugins mariadb-client mariadb-common
         mariadb-server postgresql postgresql-contrib phppgadmin phpmyadmin mc
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota

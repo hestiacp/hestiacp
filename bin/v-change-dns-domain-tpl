@@ -95,6 +95,23 @@ echo "$template_data" |\
         -e "s/%date%/$DATE/g" > $USER_DATA/dns/$domain.conf
 records="$(wc -l $USER_DATA/dns/$domain.conf |cut -f 1 -d ' ')"
 
+# Refresh DKIM records in DNS if signing key exists for domain
+if [ "$template" = "default" ] || [ "$template" = "child-ns" ]; then
+    if [ ! -z "MAIL_SYSTEM" ] && [ -f $HOMEDIR/$user/conf/mail/$domain/dkim.pem ]; then
+        check_dns_domain=$(is_object_valid 'dns' 'DOMAIN' "$domain")
+        if [ "$?" -eq 0 ]; then
+            p=$(cat $USER_DATA/mail/$domain.pub|grep -v ' KEY---'|tr -d '\n')
+            record='_domainkey'
+            policy="\"t=y; o=~;\""
+            $BIN/v-add-dns-record $user $domain $record TXT "$policy" '' '' 'no'
+
+            record='mail._domainkey'
+            selector="\"v=DKIM1\; k=rsa\; p=$p\""
+            $BIN/v-add-dns-record $user $domain $record TXT "$selector"
+        fi
+    fi
+fi
+
 # Updating zone
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
     update_domain_serial

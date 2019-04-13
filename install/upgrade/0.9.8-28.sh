@@ -15,6 +15,7 @@ mkdir -p $HESTIA_BACKUP/packages/
 # load hestia main functions
 source /usr/local/hestia/func/main.sh
 
+echo "(*) Upgrading to Hestia Control Panel v$VERSION..."
 # Upgrade phpMyAdmin
 if [ "$DB_SYSTEM" = 'mysql' ]; then
     # Display upgrade information

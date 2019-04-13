@@ -18,7 +18,7 @@ source /usr/local/hestia/func/main.sh
 # Upgrade phpMyAdmin
 if [ "$DB_SYSTEM" = 'mysql' ]; then
     # Display upgrade information
-    echo "Upgrade phpMyAdmin to v$pma_v..."
+    echo "(*) Upgrading phpMyAdmin to v$pma_v..."
 
     # Download latest phpMyAdmin release
     wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
@@ -71,11 +71,9 @@ if [ ! -z "$BACKEND_PORT" ]; then
 fi
 
 # Update default page templates
-echo '************************************************************************'
-echo "Replacing default templates and packages...                             "
-echo "Existing templates have been backed up to the following location:       "
-echo "$HESTIA_BACKUP/templates/                                               "
-echo '************************************************************************'
+echo "(*) Replacing default templates and packages..."
+echo "    Existing templates have been backed up to the following location:"
+echo "    $HESTIA_BACKUP/templates/"
 
 # Back up default package and install latest version
 if [ -d $HESTIA/data/packages/ ]; then
@@ -138,21 +136,29 @@ chmod 751 $HESTIA/data/templates/web/unassigned/webfonts
 if [ "$WEB_BACKEND" = "php-fpm" ]; then
     echo "(!) Unassigned hosts configuration for Apache not necessary on PHP-FPM installations."
 elif [ "$WEB_BACKEND" = "apache2" ]; then
+    echo "(*) Adding unassigned hosts configuration to apache2..."
+    if [ -f /usr/local/hestia/data/ips/* ]; then
+        for ip in /usr/local/hestia/data/ips/*; do
+            ipaddr=${ip##*/}
+            rm -f /etc/apache2/conf.d/$ip.conf
+            cp -f $HESTIA/install/deb/apache2/unassigned.conf /etc/apache2/conf.d/$ipaddr.conf
+            sed -i 's/directIP/'$ipaddr'/g' /etc/apache2/conf.d/$ipaddr.conf
+        done
+    fi
+elif [ "$PROXY_SYSTEM" = "nginx" ]; then
+    echo "(*) Adding unassigned hosts configuration to nginx.."
     if [ -f /usr/local/hestia/data/ips/* ]; then
         for ip in /usr/local/hestia/data/ips/*; do
             ipaddr=${ip##*/}
             rm -f /etc/nginx/conf.d/$ip.conf
             cp -f $HESTIA/install/deb/nginx/unassigned.inc /etc/nginx/conf.d/$ipaddr.conf
             sed -i 's/directIP/'$ipaddr'/g' /etc/nginx/conf.d/$ipaddr.conf
-
-            rm -f /etc/apache2/conf.d/$ip.conf
-            cp -f $HESTIA/install/deb/apache2/unassigned.conf /etc/apache2/conf.d/$ipaddr.conf
-            sed -i 's/directIP/'$ipaddr'/g' /etc/apache2/conf.d/$ipaddr.conf
         done
     fi
 fi
  
 # Set Purge to false in roundcube config - https://goo.gl/3Nja3u
+echo "(*) Updating Roundcube configuration..."
 if [ -f /etc/roundcube/config.inc.php ]; then
     sed -i "s/\['flag_for_deletion'] = 'Purge';/\['flag_for_deletion'] = false;/gI" /etc/roundcube/config.inc.php
 fi
@@ -165,13 +171,16 @@ fi
 
 # Remove old OS-specific installation files if they exist to free up space
 if [ -d $HESTIA/install/ubuntu ]; then
+    echo "(*) Removing old installation data files for Ubuntu..."
     rm -rf $HESTIA/install/ubuntu
 fi
 if [ -d $HESTIA/install/debian ]; then
+    echo "(*) Removing old installation data files for Debian..."
     rm -rf $HESTIA/install/debian
 fi
 
 # Fix dovecot configuration
+echo "(*) Updating dovecot IMAP/POP server configuration..."
 if [ -f /etc/dovecot/conf.d/15-mailboxes.conf ]; then
     # Remove mailboxes configuration if it exists
     rm -f /etc/dovecot/conf.d/15-mailboxes.conf
@@ -185,6 +194,7 @@ fi
 
 # Rebuild mailboxes
 for user in `ls /usr/local/hestia/data/users/`; do
+    echo "(*) Rebuilding mail domain for $user..."
     v-rebuild-mail-domains $user
 done
 

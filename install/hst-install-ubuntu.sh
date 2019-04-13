@@ -1650,20 +1650,27 @@ Ready to get started? Log in using the following credentials:
     Username:   admin
     Password:   $vpass
 
-Thank you for choosing Hestia Control Panel to power your server,
-we hope that you enjoy it as much as we do!
+Thank you for choosing Hestia Control Panel to power your full stack web server,
+we hope that you enjoy using it as much as we do!
 
 Please feel free to contact us at any time if you have any questions,
 or if you encounter any bugs or problems:
 
-E-Mail:  info@hestiacp.com
+E-mail:  info@hestiacp.com
 Web:     https://www.hestiacp.com/
 Forum:   https://forum.hestiacp.com/
 GitHub:  https://www.github.com/hestiacp/hestiacp
 
+Want to join the our beta test program? Please email us at
+info@hestiacp.com or join in on GitHub to start contributing today.
+
+Help support the Hestia Contol Panel project by donating via PayPal:
+https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ST87LQH2CHGLA
 --
 Sincerely yours,
 The Hestia Control Panel development team
+
+Made with love & pride from the open-source community around the world.
 " > $tmpfile
 
 send_mail="$HESTIA/web/inc/mail-wrapper.php"
@@ -1673,5 +1680,13 @@ cat $tmpfile | $send_mail -s "Hestia Control Panel" $email
 echo
 cat $tmpfile
 rm -f $tmpfile
+
+echo "(!) IMPORTANT: You must logout or restart the server before continuing."
+echo -n " Do you want to logout now? [Y/N] "
+read resetshell
+
+if [ $resetshell = "Y" ] || [ $resetshell = "y" ]; then
+    logout
+fi
 
 # EOF

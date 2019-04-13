@@ -126,6 +126,61 @@
                         </tr>
                         <?php echo ""; }?>
                         <tr>
+                                <td class="vst-text step-top">
+                                    <?php print __('Web Statistics');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_stats">
+                                        <?php
+                                            foreach ($stats as $key => $value) {
+                                                $svalue = "'".$value."'";
+                                                echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
+                                                if (empty($v_stats)) $v_stats = 'none';
+                                                if (( $value == $v_stats ) || ($svalue == $v_stats )){
+                                                    echo ' selected' ;
+                                                }
+                                                echo ">" . htmlentities(__($value)) . "</option>\n";
+                                            }
+                                        ?>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr  class="stats-auth" style="<? if (trim($v_stats, "'") == 'none') { ?>display:none<? } ?>">
+                                <td class="step-left vst-text input-label">
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_stats_auth" <?php if (!empty($v_stats_user)) echo "checked=yes" ?>
+                                        onclick="javascript:elementHideShow('statstable');"> <?=__('Statistics Authorization')?></label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="step-left">
+                                    <table style="display:<?php if (empty($v_stats_user)) { echo 'none';} else {echo 'block';}?> ;" id="statstable" name="v-add-web-domain-stats-user">
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print __('Username');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_stats_user" value="<?=htmlentities(trim($v_stats_user, "'"))?>">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print __('Password');?> / <a href="javascript:WEBrandom();" class="generate"><?php print __('generate');?></a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input password" name="v_stats_password" value="<?=htmlentities(trim($v_stats_password, "'"))?>" id="v_password">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                        <tr>
                             <td class="step-top vst-text">
                                 <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if($v_ssl == 'yes' || $v_ssl == 'on') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');"> <?php print __('SSL Support');?></label>
                             </td>
@@ -189,60 +244,6 @@
                                     <tr>
                                         <td class="step-left">
                                             <textarea size="20" class="vst-textinput" name="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="vst-text step-top">
-                                <?php print __('Web Statistics');?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <select class="vst-list" name="v_stats">
-                                    <?php
-                                        foreach ($stats as $key => $value) {
-                                            $svalue = "'".$value."'";
-                                            echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
-                                            if (empty($v_stats)) $v_stats = 'none';
-                                            if (( $value == $v_stats ) || ($svalue == $v_stats )){
-                                                echo ' selected' ;
-                                            }
-                                            echo ">" . htmlentities(__($value)) . "</option>\n";
-                                        }
-                                    ?>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr  class="stats-auth" style="<? if (trim($v_stats, "'") == 'none') { ?>display:none<? } ?>">
-                            <td class="step-left vst-text input-label">
-                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_stats_auth" <?php if (!empty($v_stats_user)) echo "checked=yes" ?>
-                                    onclick="javascript:elementHideShow('statstable');"> <?=__('Statistics Authorization')?></label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="step-left">
-                                <table style="display:<?php if (empty($v_stats_user)) { echo 'none';} else {echo 'block';}?> ;" id="statstable" name="v-add-web-domain-stats-user">
-                                    <tr>
-                                        <td class="vst-text input-label">
-                                            <?php print __('Username');?>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input type="text" size="20" class="vst-input" name="v_stats_user" value="<?=htmlentities(trim($v_stats_user, "'"))?>">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="vst-text input-label">
-                                            <?php print __('Password');?> / <a href="javascript:WEBrandom();" class="generate"><?php print __('generate');?></a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input type="text" size="20" class="vst-input password" name="v_stats_password" value="<?=htmlentities(trim($v_stats_password, "'"))?>" id="v_password">
                                         </td>
                                     </tr>
                                 </table>

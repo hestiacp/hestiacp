@@ -1077,6 +1077,25 @@ if [ "$nginx" = 'yes' ]; then
         done
     fi
 
+    # Generating dhparam.
+    echo "(*) Enabling HTTPS Strict Transport Security (HSTS) support, this will take some time. Please wait..."
+    openssl dhparam 4096 -out /etc/ssl/dhparam.pem > /dev/null 2>&1 &
+    BACK_PID=$!
+
+    # Check if package installation is done, print a spinner
+    spin_i=1
+    while kill -0 $BACK_PID > /dev/null 2>&1 ; do
+        printf "\b${spinner:spin_i++%${#spinner}:1}"
+        sleep 0.5
+    done
+
+    # Do a blank echo to get the \n back
+    echo
+
+    # Update dns servers in nginx.conf
+    dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
+    sed -i "s/1.0.0.1 1.1.1.1/$dns_resolver/g" /etc/nginx/nginx.conf
+
     update-rc.d nginx defaults > /dev/null 2>&1
     service nginx start >> $LOG
     check_result $? "nginx start failed"

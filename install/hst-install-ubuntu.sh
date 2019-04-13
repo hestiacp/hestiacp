@@ -1665,7 +1665,7 @@ Want to join the our beta test program? Please email us at
 info@hestiacp.com or join in on GitHub to start contributing today.
 
 Help support the Hestia Contol Panel project by donating via PayPal:
-https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ST87LQH2CHGLA
+https://www.hestiacp.com/donate
 --
 Sincerely yours,
 The Hestia Control Panel development team

@@ -36,7 +36,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     ntpdate php php-cgi php-common php-curl phpmyadmin php-mysql php-imap php-ldap
     php-apcu phppgadmin php-pgsql postgresql postgresql-contrib proftpd-basic quota
     roundcube-core roundcube-mysql roundcube-plugins rrdtool rssh spamassassin
-    sudo hestia hestia-nginx hestia-php vim-common vsftpd webalizer whois zip"
+    sudo hestia hestia-nginx hestia-php vim-common vsftpd whois zip"
 
 # Defining help function
 help() {
@@ -906,7 +906,7 @@ if [ "$apache" = 'yes' ] && [ "$nginx" = 'no' ] ; then
     echo "WEB_PORT='80'" >> $HESTIA/conf/hestia.conf
     echo "WEB_SSL_PORT='443'" >> $HESTIA/conf/hestia.conf
     echo "WEB_SSL='mod_ssl'"  >> $HESTIA/conf/hestia.conf
-    echo "STATS_SYSTEM='webalizer,awstats'" >> $HESTIA/conf/hestia.conf
+    echo "STATS_SYSTEM='awstats'" >> $HESTIA/conf/hestia.conf
 fi
 if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
     echo "WEB_SYSTEM='apache2'" >> $HESTIA/conf/hestia.conf
@@ -917,7 +917,7 @@ if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
     echo "PROXY_SYSTEM='nginx'" >> $HESTIA/conf/hestia.conf
     echo "PROXY_PORT='80'" >> $HESTIA/conf/hestia.conf
     echo "PROXY_SSL_PORT='443'" >> $HESTIA/conf/hestia.conf
-    echo "STATS_SYSTEM='webalizer,awstats'" >> $HESTIA/conf/hestia.conf
+    echo "STATS_SYSTEM='awstats'" >> $HESTIA/conf/hestia.conf
 fi
 if [ "$apache" = 'no' ] && [ "$nginx"  = 'yes' ]; then
     echo "WEB_SYSTEM='nginx'" >> $HESTIA/conf/hestia.conf
@@ -927,7 +927,7 @@ if [ "$apache" = 'no' ] && [ "$nginx"  = 'yes' ]; then
     if [ "$phpfpm" = 'yes' ]; then
         echo "WEB_BACKEND='php-fpm'" >> $HESTIA/conf/hestia.conf
     fi
-    echo "STATS_SYSTEM='webalizer,awstats'" >> $HESTIA/conf/hestia.conf
+    echo "STATS_SYSTEM='awstats'" >> $HESTIA/conf/hestia.conf
 fi
 
 # FTP stack

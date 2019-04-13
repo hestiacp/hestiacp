@@ -206,6 +206,12 @@ for user in `ls /usr/local/hestia/data/users/`; do
     v-rebuild-mail-domains $user
 done
 
+
+# Remove Webalizer and replace it with awstats as default
+echo "(*) Setting awstats as default web statistics backend..."
+apt purge webalizer -y > /dev/null 2>&1
+sed -i "s/STATS_SYSTEM='webalizer,awstats'/STATS_SYSTEM='awstats'/g" $HESTIA/conf/hestia.conf
+
 # Move clamav to proper location - https://goo.gl/zNuM11
 if [ ! -d /usr/local/hestia/web/edit/server/clamav-daemon ]; then
     mv /usr/local/hestia/web/edit/server/clamd /usr/local/web/edit/server/clamav-daemon

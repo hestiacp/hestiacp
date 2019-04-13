@@ -737,17 +737,22 @@ if [ "$exim" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/dovecot-pop3d//")
     software=$(echo "$software" | sed -e "s/clamav-daemon//")
     software=$(echo "$software" | sed -e "s/spamassassin//")
+    software=$(echo "$software" | sed -e "s/roundcube-core//")
+    software=$(echo "$software" | sed -e "s/roundcube-mysql//")
+    software=$(echo "$software" | sed -e "s/roundcube-plugins//")
 fi
 if [ "$clamd" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/clamav-daemon//")
 fi
 if [ "$spamd" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/spamassassin//")
-    software=$(echo "$software" | sed -e "s/libmail-dkim-perl//")
 fi
 if [ "$dovecot" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/dovecot-imapd//")
     software=$(echo "$software" | sed -e "s/dovecot-pop3d//")
+    software=$(echo "$software" | sed -e "s/roundcube-core//")
+    software=$(echo "$software" | sed -e "s/roundcube-mysql//")
+    software=$(echo "$software" | sed -e "s/roundcube-plugins//")
 fi
 if [ "$mysql" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/mariadb-server//')

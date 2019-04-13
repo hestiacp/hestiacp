@@ -68,6 +68,7 @@ if [ ! "$1" = "--all" ] || [ ! "$1" = "--hestia" ] || [ ! "$1" = "--nginx" ] || 
   echo "--php"
   echo ""
   echo "You may also specify --install to install the packages after compilation."
+  exit 1
 fi
 
 # If branch was specified at run-time, convert its value to the branch variable

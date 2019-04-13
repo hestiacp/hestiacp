@@ -1,6 +1,7 @@
 #!/bin/bash
 HESTIA="/usr/local/hestia"
 HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
+spinner="/-\|"
 
 # load hestia.conf
 source $HESTIA/conf/hestia.conf
@@ -69,6 +70,28 @@ fi
 # Reset backend port
 if [ ! -z "$BACKEND_PORT" ]; then
     /usr/local/hestia/bin/v-change-sys-port $BACKEND_PORT
+fi
+
+# Generating dhparam.
+if [ -z /etc/ssl/dhparam.pem ]; then
+    echo "(*) Enabling HTTPS Strict Transport Security (HSTS) support"
+    echo -n "    This will take some time, please wait..."
+    openssl dhparam 4096 -out /etc/ssl/dhparam.pem > /dev/null 2>&1 &
+    BACK_PID=$!
+
+    # Check if package installation is done, print a spinner
+    spin_i=1
+    while kill -0 $BACK_PID > /dev/null 2>&1 ; do
+        printf "\b${spinner:spin_i++%${#spinner}:1}"
+        sleep 0.5
+    done
+
+    # Do a blank echo to get the \n back
+    echo
+
+    # Update dns servers in nginx.conf
+    dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
+    sed -i "s/1.0.0.1 1.1.1.1/$dns_resolver/g" /etc/nginx/nginx.conf
 fi
 
 # Update default page templates

@@ -15,14 +15,6 @@ PCRE_V='8.42'
 ZLIB_V='1.2.11'
 PHP_V='7.3.4'
 
-# Generate Links for sourcecode
-HESTIA='https://github.com/hestiacp/hestiacp/archive/master.zip'
-NGINX='https://nginx.org/download/nginx-'$NGINX_V'.tar.gz'
-OPENSSL='https://www.openssl.org/source/openssl-'$OPENSSL_V'.tar.gz'
-PCRE='https://ftp.pcre.org/pub/pcre/pcre-'$PCRE_V'.tar.gz'
-ZLIB='https://www.zlib.net/zlib-'$ZLIB_V'.tar.gz'
-PHP='http://de2.php.net/distributions/php-'$PHP_V'.tar.gz'
-
 # Set package dependencies for compiling
 SOFTWARE='build-essential libxml2-dev libz-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config'
 
@@ -59,16 +51,53 @@ for arg; do
         --hestia)
           HESTIA_B='true'
           ;;
+        --install)
+          answer='Y'
+          ;; 
         *)
           NOARGUMENT='true'
           ;;
     esac
 done
 
+# If branch was specified at run-time, convert its value to the branch variable
+if [ "$3" ]; then
+    branch=$3
+fi
+
+if [ ! "$1" = "--all" ] || [ ! "$1" = "--hestia" ] || [ ! "$1" = "--nginx" ] || [ ! "$1" = "--php" ];  then
+  echo "(!) Invalid compilation flag specified. Valid flags:"
+  echo "--all"
+  echo "--hestia"
+  echo "--nginx"
+  echo "--php"
+  echo ""
+  echo "You may also specify --install to install the packages after compilation."
+fi
+
+# Prompt for Git branch to download and build from if not specified at run-time
+if [ ! $3 ]; then
+  echo -n "Please enter the name of the branch to build from (e.g. master): "
+  read branch
+fi
+
 if [[ $# -eq 0 ]] ; then
     echo "!!! Please run with argument --all, --hestia, --nginx or --php !!!"
     exit 1
 fi
+
+if [ ! "$2" = "--install" ]; then
+  echo -n 'Would you like to install the compiled packages? [Y/N] '
+  read answer
+fi
+
+# Generate Links for sourcecode
+HESTIA='https://github.com/hestiacp/hestiacp/archive/$branch.zip'
+NGINX='https://nginx.org/download/nginx-'$NGINX_V'.tar.gz'
+OPENSSL='https://www.openssl.org/source/openssl-'$OPENSSL_V'.tar.gz'
+PCRE='https://ftp.pcre.org/pub/pcre/pcre-'$PCRE_V'.tar.gz'
+ZLIB='https://www.zlib.net/zlib-'$ZLIB_V'.tar.gz'
+PHP='http://de2.php.net/distributions/php-'$PHP_V'.tar.gz'
 
 
 #################################################################################
@@ -164,6 +193,7 @@ if [ "$NGINX_B" = true ] ; then
     rm -r hestia-nginx_$NGINX_V
 fi
 
+
 #################################################################################
 #
 # Building hestia-php
@@ -237,6 +267,7 @@ if [ "$PHP_B" = true ] ; then
     rm -r hestia-php_$PHP_V
 fi
 
+
 #################################################################################
 #
 # Building hestia
@@ -290,4 +321,19 @@ if [ "$HESTIA_B" = true ] ; then
     # clear up the source folder
     rm -r hestia_$HESTIA_V
     rm -r hestiacp-master
+fi
+
+
+#################################################################################
+#
+# Install Packages
+#
+#################################################################################
+
+if [ "$answer" = 'y' ] || [ "$answer" = 'Y'  ]; then
+    for i in ~/*hestia*.deb; do
+      # Install all available packages
+      dpkg -i $i
+    done
+    unset $answer
 fi

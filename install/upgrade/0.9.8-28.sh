@@ -135,19 +135,23 @@ chmod 751 $HESTIA/data/templates/web/unassigned/js
 chmod 751 $HESTIA/data/templates/web/unassigned/webfonts
 
 # Add unassigned hosts configuration to nginx and apache2
-if [ -f /usr/local/hestia/data/ips/* ]; then
-    for ip in /usr/local/hestia/data/ips/*; do
-        ipaddr=${ip##*/}
-        rm -f /etc/nginx/conf.d/$ip.conf
-        cp -f $HESTIA/install/deb/nginx/unassigned.inc /etc/nginx/conf.d/$ipaddr.conf
-        sed -i 's/directIP/'$ipaddr'/g' /etc/nginx/conf.d/$ipaddr.conf
+if [ "$WEB_BACKEND" = "php-fpm" ]; then
+    echo "(!) Unassigned hosts configuration for Apache not necessary on PHP-FPM installations."
+elif [ "$WEB_BACKEND" = "apache2" ]; then
+    if [ -f /usr/local/hestia/data/ips/* ]; then
+        for ip in /usr/local/hestia/data/ips/*; do
+            ipaddr=${ip##*/}
+            rm -f /etc/nginx/conf.d/$ip.conf
+            cp -f $HESTIA/install/deb/nginx/unassigned.inc /etc/nginx/conf.d/$ipaddr.conf
+            sed -i 's/directIP/'$ipaddr'/g' /etc/nginx/conf.d/$ipaddr.conf
 
-        rm -f /etc/apache2/conf.d/$ip.conf
-        cp -f $HESTIA/install/deb/apache2/unassigned.conf /etc/apache2/conf.d/$ipaddr.conf
-        sed -i 's/directIP/'$ipaddr'/g' /etc/apache2/conf.d/$ipaddr.conf
-    done
+            rm -f /etc/apache2/conf.d/$ip.conf
+            cp -f $HESTIA/install/deb/apache2/unassigned.conf /etc/apache2/conf.d/$ipaddr.conf
+            sed -i 's/directIP/'$ipaddr'/g' /etc/apache2/conf.d/$ipaddr.conf
+        done
+    fi
 fi
-
+ 
 # Set Purge to false in roundcube config - https://goo.gl/3Nja3u
 if [ -f /etc/roundcube/config.inc.php ]; then
     sed -i "s/\['flag_for_deletion'] = 'Purge';/\['flag_for_deletion'] = false;/gI" /etc/roundcube/config.inc.php
@@ -188,3 +192,4 @@ done
 if [ ! -d /usr/local/hestia/web/edit/server/clamav-daemon ]; then
     mv /usr/local/hestia/web/edit/server/clamd /usr/local/web/edit/server/clamav-daemon
 fi
+

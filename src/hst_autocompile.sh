@@ -82,13 +82,13 @@ if [ "$NGINX_B" = true ] ; then
     cd $BUILD_DIR
 
     # Check if target directory exist
-    if [ -d $BUILD_DIR/hestia-nginx_$HESTIA_V ]; then
-          #mv $BUILD_DIR/hestia-nginx_$HESTIA_V $BUILD_DIR/hestia-nginx_$HESTIA_V-$(timestamp)
-          rm -r $BUILD_DIR/hestia-nginx_$HESTIA_V
+    if [ -d $BUILD_DIR/hestia-nginx_$NGINX_V ]; then
+          #mv $BUILD_DIR/hestia-nginx_$NGINX_V $BUILD_DIR/hestia-nginx_$NGINX_V-$(timestamp)
+          rm -r $BUILD_DIR/hestia-nginx_$NGINX_V
     fi
 
     # Create directory
-    mkdir $BUILD_DIR/hestia-nginx_$HESTIA_V
+    mkdir $BUILD_DIR/hestia-nginx_$NGINX_V
 
     # Download and unpack source files
     wget -qO- $NGINX | tar xz
@@ -125,7 +125,7 @@ if [ "$NGINX_B" = true ] ; then
     rm -r nginx-$NGINX_V openssl-$OPENSSL_V pcre-$PCRE_V zlib-$ZLIB_V
 
     # Prepare Deb Package Folder Structure
-    cd hestia-nginx_$HESTIA_V/
+    cd hestia-nginx_$NGINX_V/
     mkdir -p usr/local/hestia etc/init.d DEBIAN
 
     # Download control, postinst and postrm files
@@ -157,11 +157,11 @@ if [ "$NGINX_B" = true ] ; then
 
     # change permission and build the package
     cd $BUILD_DIR
-    chown -R  root:root hestia-nginx_$HESTIA_V
-    dpkg-deb --build hestia-nginx_$HESTIA_V
+    chown -R  root:root hestia-nginx_$NGINX_V
+    dpkg-deb --build hestia-nginx_$NGINX_V
 
     # clear up the source folder
-    rm -r hestia-nginx_$HESTIA_V
+    rm -r hestia-nginx_$NGINX_V
 fi
 
 #################################################################################
@@ -175,13 +175,13 @@ if [ "$PHP_B" = true ] ; then
     cd $BUILD_DIR
 
     # Check if target directory exist
-    if [ -d $BUILD_DIR/hestia-php_$HESTIA_V ]; then
-          #mv $BUILD_DIR/hestia-php_$HESTIA_V $BUILD_DIR/hestia-php_$HESTIA_V-$(timestamp)
-          rm -r $BUILD_DIR/hestia-php_$HESTIA_V
+    if [ -d $BUILD_DIR/hestia-php_$PHP_V ]; then
+          #mv $BUILD_DIR/hestia-php_$PHP_V $BUILD_DIR/hestia-php_$PHP_V-$(timestamp)
+          rm -r $BUILD_DIR/hestia-php_$PHP_V
     fi
 
     # Create directory
-    mkdir $BUILD_DIR/hestia-php_$HESTIA_V
+    mkdir $BUILD_DIR/hestia-php_$PHP_V
 
     # Download and unpack source files
     wget -qO- $PHP | tar xz
@@ -207,7 +207,7 @@ if [ "$PHP_B" = true ] ; then
     rm -r php-$PHP_V
 
     # Prepare Deb Package Folder Structure
-    cd hestia-php_$HESTIA_V/
+    cd hestia-php_$PHP_V/
     mkdir -p usr/local/hestia DEBIAN
 
     # Download control, postinst and postrm files
@@ -230,11 +230,11 @@ if [ "$PHP_B" = true ] ; then
 
     # change permission and build the package
     cd $BUILD_DIR
-    chown -R  root:root hestia-php_$HESTIA_V
-    dpkg-deb --build hestia-php_$HESTIA_V
+    chown -R  root:root hestia-php_$PHP_V
+    dpkg-deb --build hestia-php_$PHP_V
 
     # clear up the source folder
-    rm -r hestia-php_$HESTIA_V
+    rm -r hestia-php_$PHP_V
 fi
 
 #################################################################################

@@ -1725,7 +1725,7 @@ or if you encounter any bugs or problems:
 
 E-Mail:  info@hestiacp.com
 Web:     https://www.hestiacp.com/
-Forum:   https://www.hestiacp.com/
+Forum:   https://forum.hestiacp.com/
 GitHub:  https://www.github.com/hestiacp/hestiacp
 
 --

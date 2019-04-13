@@ -60,11 +60,6 @@ for arg; do
     esac
 done
 
-# If branch was specified at run-time, convert its value to the branch variable
-if [ "$3" ]; then
-    branch=$3
-fi
-
 if [ ! "$1" = "--all" ] || [ ! "$1" = "--hestia" ] || [ ! "$1" = "--nginx" ] || [ ! "$1" = "--php" ];  then
   echo "(!) Invalid compilation flag specified. Valid flags:"
   echo "--all"
@@ -73,6 +68,11 @@ if [ ! "$1" = "--all" ] || [ ! "$1" = "--hestia" ] || [ ! "$1" = "--nginx" ] || 
   echo "--php"
   echo ""
   echo "You may also specify --install to install the packages after compilation."
+fi
+
+# If branch was specified at run-time, convert its value to the branch variable
+if [ "$3" ]; then
+    branch=$3
 fi
 
 # Prompt for Git branch to download and build from if not specified at run-time

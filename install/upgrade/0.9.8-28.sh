@@ -192,6 +192,14 @@ if [ -f /etc/dovecot/dovecot.conf ]; then
     sleep 0.5
 fi
 
+# Add IMAP system variable to configuration if dovecot is installed
+if [ -z  "$IMAP_SYSTEM" ]; then 
+    if [ -f /usr/bin/dovecot ]; then
+        echo "(*) Adding IMAP_SYSTEM variable to hestia.conf..."
+        echo "IMAP_SYSTEM = 'dovecot'" >> $HESTIA/conf/hestia.conf
+    fi
+fi
+
 # Rebuild mailboxes
 for user in `ls /usr/local/hestia/data/users/`; do
     echo "(*) Rebuilding mail domain for $user..."

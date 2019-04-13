@@ -525,7 +525,9 @@ rebuild_mail_domain_conf() {
         chmod 771 /etc/$MAIL_SYSTEM/domains/$domain_idn
         chmod 770 $HOMEDIR/$user/mail/$domain_idn
         chown -R $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain
-        chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain/passwd
+        if [ "$IMAP_SYSTEM" = "dovecot" ]; then
+            chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain/passwd
+        fi
         chown $user:mail $HOMEDIR/$user/mail/$domain_idn
     fi
 

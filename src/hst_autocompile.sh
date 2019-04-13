@@ -272,8 +272,8 @@ if [ "$HESTIA_B" = true ] ; then
 
     # Download and unpack source files
     wget $HESTIA
-    unzip -q master.zip
-    rm master.zip
+    unzip -q $branch.zip
+    rm $branch.zip
 
     # Prepare Deb Package Folder Structure
     cd hestia_$HESTIA_V/
@@ -289,7 +289,7 @@ if [ "$HESTIA_B" = true ] ; then
     chmod +x postinst
 
     # Move needed directories
-    cd ../../hestiacp-master
+    cd ../../hestiacp-$branch
     mv bin func install upd web ../hestia_$HESTIA_V/usr/local/hestia/
 
     # Set permission
@@ -303,7 +303,7 @@ if [ "$HESTIA_B" = true ] ; then
 
     # clear up the source folder
     rm -r hestia_$HESTIA_V
-    rm -r hestiacp-master
+    rm -r hestiacp-$branch
 fi
 
 

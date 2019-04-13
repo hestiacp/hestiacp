@@ -1105,7 +1105,8 @@ if [ "$nginx" = 'yes' ]; then
     fi
 
     # Generating dhparam.
-    echo "(*) Enabling HTTPS Strict Transport Security (HSTS) support, this will take some time. Please wait..."
+    echo "(*) Enabling HTTPS Strict Transport Security (HSTS) support,"
+    echo -n "    this will take some time. Please wait..."
     openssl dhparam 4096 -out /etc/ssl/dhparam.pem > /dev/null 2>&1 &
     BACK_PID=$!
 

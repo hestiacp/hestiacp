@@ -73,7 +73,7 @@ if [ ! -z "$BACKEND_PORT" ]; then
 fi
 
 # Generating dhparam.
-if [ -z /etc/ssl/dhparam.pem ]; then
+if [ ! -e /etc/ssl/dhparam.pem ]; then
     echo "(*) Enabling HTTPS Strict Transport Security (HSTS) support"
     echo -n "    This will take some time, please wait..."
     openssl dhparam 4096 -out /etc/ssl/dhparam.pem > /dev/null 2>&1 &

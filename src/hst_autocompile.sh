@@ -4,9 +4,6 @@
 BUILD_DIR='/root'
 INSTALL_DIR='/usr/local/hestia'
 
-# Set git repository raw path
-GIT_REP='https://raw.githubusercontent.com/hestiacp/hestiacp/master/src/deb'
-
 # Set Version for compiling
 HESTIA_V='0.9.8-28_amd64'
 NGINX_V='1.15.10'
@@ -51,49 +48,34 @@ for arg; do
         --hestia)
           HESTIA_B='true'
           ;;
-        --install)
-          answer='Y'
-          ;; 
         *)
           NOARGUMENT='true'
           ;;
     esac
 done
 
-if [ ! "$1" = "--all" ] || [ ! "$1" = "--hestia" ] || [ ! "$1" = "--nginx" ] || [ ! "$1" = "--php" ];  then
+if [[ $# -eq 0 ]] ; then
   echo "(!) Invalid compilation flag specified. Valid flags:"
   echo "--all"
   echo "--hestia"
   echo "--nginx"
   echo "--php"
-  echo ""
-  echo "You may also specify --install to install the packages after compilation."
   exit 1
 fi
 
-# If branch was specified at run-time, convert its value to the branch variable
-if [ "$3" ]; then
-    branch=$3
-fi
+# Ask for branch
+echo -n "Please enter the name of the branch to build from (e.g. master): "
+read branch
 
-# Prompt for Git branch to download and build from if not specified at run-time
-if [ ! $3 ]; then
-  echo -n "Please enter the name of the branch to build from (e.g. master): "
-  read branch
-fi
+# Ask if package should be installed after compilation
+echo -n 'Would you like to install the compiled packages? [y/N] '
+read INSTALL
 
-if [[ $# -eq 0 ]] ; then
-    echo "!!! Please run with argument --all, --hestia, --nginx or --php !!!"
-    exit 1
-fi
-
-if [ ! "$2" = "--install" ]; then
-  echo -n 'Would you like to install the compiled packages? [Y/N] '
-  read answer
-fi
+# Set git repository raw path
+GIT_REP='https://raw.githubusercontent.com/hestiacp/hestiacp/'$branch'/src/deb'
 
 # Generate Links for sourcecode
-HESTIA='https://github.com/hestiacp/hestiacp/archive/$branch.zip'
+HESTIA='https://github.com/hestiacp/hestiacp/archive/'$branch'.zip'
 NGINX='https://nginx.org/download/nginx-'$NGINX_V'.tar.gz'
 OPENSSL='https://www.openssl.org/source/openssl-'$OPENSSL_V'.tar.gz'
 PCRE='https://ftp.pcre.org/pub/pcre/pcre-'$PCRE_V'.tar.gz'
@@ -331,7 +313,7 @@ fi
 #
 #################################################################################
 
-if [ "$answer" = 'y' ] || [ "$answer" = 'Y'  ]; then
+if [ "$INSTALL" = 'y' ] || [ "$INSTALL" = 'Y'  ]; then
     for i in ~/*hestia*.deb; do
       # Install all available packages
       dpkg -i $i

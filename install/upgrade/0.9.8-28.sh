@@ -202,7 +202,7 @@ fi
 
 # Rebuild mailboxes
 for user in `ls /usr/local/hestia/data/users/`; do
-    echo "(*) Rebuilding mail domain for $user..."
+    echo "(*) Rebuilding mail domains for user: $user..."
     v-rebuild-mail-domains $user
 done
 

@@ -170,7 +170,7 @@ elif [ "$WEB_BACKEND" = "apache2" ]; then
         done
     fi
 elif [ "$PROXY_SYSTEM" = "nginx" ]; then
-    echo "(*) Adding unassigned hosts configuration to nginx.."
+    echo "(*) Adding unassigned hosts configuration to nginx..."
     if [ -f /usr/local/hestia/data/ips/* ]; then
         for ip in /usr/local/hestia/data/ips/*; do
             ipaddr=${ip##*/}

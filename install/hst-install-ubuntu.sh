@@ -1668,7 +1668,7 @@ Web:     https://www.hestiacp.com/
 Forum:   https://forum.hestiacp.com/
 GitHub:  https://www.github.com/hestiacp/hestiacp
 
-Want to join the our beta test program? Please email us at
+Want to join our beta test program? Please email us at
 info@hestiacp.com or join in on GitHub to start contributing today.
 
 Help support the Hestia Contol Panel project by donating via PayPal:

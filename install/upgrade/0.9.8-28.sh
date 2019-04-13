@@ -193,9 +193,9 @@ if [ -f /etc/dovecot/dovecot.conf ]; then
 fi
 
 # Add IMAP system variable to configuration if dovecot is installed
-if [ -z  "$IMAP_SYSTEM" ]; then 
+if [ -z "$IMAP_SYSTEM" ]; then 
     if [ -f /usr/bin/dovecot ]; then
-        echo "(*) Adding IMAP_SYSTEM variable to hestia.conf..."
+        echo "(*) Adding missing IMAP_SYSTEM variable to hestia.conf..."
         echo "IMAP_SYSTEM = 'dovecot'" >> $HESTIA/conf/hestia.conf
     fi
 fi

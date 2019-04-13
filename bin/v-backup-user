@@ -210,7 +210,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
         exlusion=$(echo -e "$WEB" |tr ',' '\n' |grep "^$domain:")
         set -f
         fargs=()
-        fargs+=(--exclude='logs/*')
+        fargs+=(--exclude='./logs/*')
         if [ ! -z "$exlusion" ]; then
             xdirs="$(echo -e "$exlusion" |tr ':' '\n' |grep -v $domain)"
             for xpath in $xdirs; do

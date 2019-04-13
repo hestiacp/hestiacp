@@ -733,7 +733,6 @@ $LANG['id'] = array(
     'every' => 'setiap',
     'Generate' => 'Hasilkan',
 
-    'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
     'Hestia SSL' => 'Hestia SSL',

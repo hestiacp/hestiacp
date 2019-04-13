@@ -732,7 +732,6 @@ $LANG['de'] = array(
     'every' => 'every',
     'Generate' => 'Generate',
 
-    'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
     'Hestia SSL' => 'Hestia SSL',

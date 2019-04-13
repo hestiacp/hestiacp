@@ -727,7 +727,6 @@ $LANG['bg'] = array(
     'every' => 'всеки',
     'Generate' => 'Генерирай',
 
-    'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
     'Hestia SSL' => 'Hestia SSL',

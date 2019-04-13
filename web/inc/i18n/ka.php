@@ -732,7 +732,6 @@ $LANG['ka'] = array(
     'every' => 'ყოველ',
     'Generate' => 'გენერაცია',
 
-    'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
     'Hestia SSL' => 'Hestia SSL',

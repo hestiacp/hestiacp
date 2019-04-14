@@ -14,7 +14,6 @@ source /usr/local/hestia/func/main.sh
 mkdir -p $HESTIA_BACKUP/templates/
 mkdir -p $HESTIA_BACKUP/packages/
 
-
 echo "(*) Upgrading to Hestia Control Panel v$VERSION..."
 
 # Generating dhparam.
@@ -178,3 +177,6 @@ done
 echo "(*) Setting awstats as default web statistics backend..."
 apt purge webalizer -y > /dev/null 2>&1
 sed -i "s/STATS_SYSTEM='webalizer,awstats'/STATS_SYSTEM='awstats'/g" $HESTIA/conf/hestia.conf
+
+# Run sftp jail once
+$HESTIA/bin/v-add-sys-sftp-jail

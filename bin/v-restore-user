@@ -504,8 +504,19 @@ if [ "$dns" != 'no' ] && [ ! -z "$DNS_SYSTEM" ]; then
         # Restoring DNS records
         cp -f $tmpdir/dns/$domain/$backup_system/$domain.conf $USER_DATA/dns/
 
+        # Update IP in records
+        if [ ! -z "$old_ip" ]; then
+            sed -i s/$old_ip/$IP/g $USER_DATA/dns/$domain.conf
+        fi
+
         # Rebuilding DNS domain
         rebuild_dns_domain_conf
+
+        # Updating dns-cluster queue
+        if [ ! -z "$DNS_CLUSTER" ]; then
+            cmd="$BIN/v-add-remote-dns-domain $user $domain yes"
+            echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
+        fi
     done
 
     # Restarting DNS

@@ -732,7 +732,6 @@ $LANG['ja'] = array(
     'every' => '毎',
     'Generate' => '生成',
 
-    'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
     'Hestia SSL' => 'Hestia SSL',

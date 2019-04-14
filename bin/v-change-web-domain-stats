@@ -86,8 +86,6 @@ if [ "$type" == 'awstats' ]; then
     rm -f /etc/awstats/$type.$domain_idn.conf
     ln -s $HOMEDIR/$user/conf/web/$type.$domain.conf \
         /etc/awstats/$type.$domain_idn.conf
-else
-    mkdir -p /var/lib/webalizer
 fi
 
 

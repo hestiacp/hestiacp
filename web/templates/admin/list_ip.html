@@ -51,6 +51,25 @@
 
 
     <div class="l-center units animated fadeIn">
+        <div class="l-unit header">
+            <div class="l-unit__col l-unit__col--left clearfix">
+              <div class="text-center jump-small-top"></div>
+            </div>
+      
+            <div class="l-unit__col l-unit__col--right step-top table-header">
+              <div style="margin-bottom: 40px;">
+                  <div class="clearfix l-unit__stat-col--left wide-2"><b><?php print __('IP Address');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Netmask');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Interface');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Status');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Domains');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Owner');?></b></div>
+              </div>
+            </div>
+          </div>
+
+
+
       <?php
         foreach ($data as $key => $value) {
            ++$i;
@@ -61,10 +80,7 @@ v_section="ip" sort-ip="<?=str_replace('.', '', $key)?>" sort-date="<?=strtotime
 sort-netmask="<?=str_replace('.', '', $data[$key]['NETMASK'])?>" sort-interface="<?=$data[$key]['INTERFACE']?>" sort-domains="<?=$data[$key]['U_WEB_DOMAINS']?>"
 sort-owner="<?=$data[$key]['OWNER']?>" sort-star="<? if($_SESSION['favourites']['IP'][$key] == 1) echo '1'; else echo '0'; ?>">
         <div class="l-unit-toolbar clearfix">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="ip[]" value="<?=$key?>">
-            <label for="check<?php echo $i ?>" class="check-label"></label>
-          </div>
+
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
@@ -86,86 +102,31 @@ sort-owner="<?=$data[$key]['OWNER']?>" sort-star="<? if($_SESSION['favourites'][
         </div>
         <!-- /.l-unit-toolbar -->
 
-        <div class="l-unit__col l-unit__col--left clearfix">
-          <div class="l-unit__date">
-            <?=translate_date($data[$key]['DATE'])?>
-          </div>
-          <div class="l-unit__suspended"><?=__('suspended')?></div>
-          <div class="text-center">
-            <i class="l-icon-star" title="<?=__('save to favorites')?>"></i>
-          </div>
-        </div>
         <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
-          <div class="l-unit__name separate">
-            <?=$key?>
+           <!-- <?=$key?>
                 <?php if (!empty($data[$key]['NAT'])) echo ' → <b>' . $data[$key]['NAT'] . '</b>'; ?>
                 <span><?=str_replace(',', ', ', $data[$key]['NAME'])?></span>
           </div>
 
+        -->
 
-
-          <div class="l-unit__stats">
-            <table>
-
-               <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><b><?=$data[$key]['NETMASK']?></b></div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
+          <div class="l-unit__col l-unit__col--right">
+              <div style="margin-bottom: 50px;">
+                  <div class="clearfix l-unit__stat-col--left">
+                      <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="ip[]" value="<?=$key?>">
+                      <label for="check<?php echo $i ?>" class="check-label"></label>
                     </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left compact-2"><?=__('Domains')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['U_WEB_DOMAINS']?></b>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix last">
-                    <div class="l-unit__stat-col l-unit__stat-col--left compact-2"><?=__('Owner')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['OWNER']?></b>
-                    </div>
-                  </div>
-                </td>
-              </tr>
+                  <div class="clearfix l-unit__stat-col--left wide-2"><b><?=$key?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['NETMASK']?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['INTERFACE']?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?=__($data[$key]['STATUS'])?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['U_WEB_DOMAINS']?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['OWNER']?></b></div>
+              </div>
+            </div>
 
 
-               <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><b><?=$data[$key]['INTERFACE']?></b></div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left compact-2"><?=__('Status')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=__($data[$key]['STATUS'])?></b>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix last">
-                    <div class="l-unit__stat-col l-unit__stat-col--left compact-2"><?=__('Users')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=str_replace(',', ', ', $data[$key]['U_SYS_USERS'])?></b>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-
-
-
-
-
-            </table>
           </div>
           <!-- /.l-unit__stats -->
         </div>

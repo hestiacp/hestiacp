@@ -733,7 +733,6 @@ $LANG['ar'] = array(
     'every' => 'كل',
     'Generate' => 'توليد',
 
-    'webalizer' => 'محلل الويب webalizer',
     'awstats' => 'احصائيات الويب awstats',
 
     'Hestia SSL' => 'فيستا SSL',

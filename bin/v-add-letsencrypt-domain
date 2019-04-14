@@ -85,9 +85,9 @@ fi
 
 # Rework domain and alieses for mail.
 if [ ! -z "$mail" ]; then
-    original_domain="mail.$domain"
-    domain="mail.$domain"
+    original_domain=$domain
     aliases="webmail.$domain,autodiscover.$domain"
+    domain="mail.$domain"
 fi
 
 # Registering LetsEncrypt user account

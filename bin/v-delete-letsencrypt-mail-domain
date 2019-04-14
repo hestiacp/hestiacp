@@ -1,8 +1,9 @@
 #!/bin/bash
-# info: rebuild mail domains
-# options: USER
+# info: deleting letsencrypt ssl cetificate for domain
+# options: USER DOMAIN [RESTART]
 #
-# The function rebuilds EXIM configuration files for all mail domains.
+# The function turns off letsencrypt SSL support for a
+# mail domain.
 
 
 #----------------------------------------------------------#
@@ -11,11 +12,12 @@
 
 # Argument definition
 user=$1
+domain=$2
+restart=$3
 
 # Includes
 source $HESTIA/func/main.sh
 source $HESTIA/func/domain.sh
-source $HESTIA/func/rebuild.sh
 source $HESTIA/conf/hestia.conf
 
 
@@ -23,51 +25,35 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'USER'
-is_format_valid 'user'
-is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
+check_args '2' "$#" 'USER DOMAIN [RESTART]'
+is_format_valid 'user' 'domain'
+is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
+is_system_enabled "$WEB_SSL" 'SSL_SUPPORT'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-if [ "$MAIL_SYSTEM" = 'remote' ]; then
-    exit
-fi
-
+is_object_valid 'mail' 'DOMAIN' "$domain"
+is_object_unsuspended 'mail' 'DOMAIN' "$domain"
+is_object_value_exist 'mail' 'DOMAIN' "$domain" '$LETSENCRYPT'
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Reset counters
-U_MAIL_DOMAINS=0
-U_MAIL_DKIM=0
-U_MAIL_ACCOUNTS=0
-SUSPENDED_MAIL=0
-U_DISK_MAIL=0
-
-# Checking mail folder
-if [ ! -d "$USER_DATA/mail" ]; then
-    rm -f $USER_DATA/mail
-    mkdir $USER_DATA/mail
-fi
-
-# Starting loop
-for domain in $(search_objects 'mail' 'SUSPENDED' "*" 'DOMAIN'); do
-    rebuild_mail_domain_conf
-done
+# Delete SSL
+$BIN/v-delete-mail-domain-ssl $user $domain $restart >/dev/null 2>&1
+check_result $? "SSL delete" >/dev/null
 
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-# Updating counters
-update_user_value "$user" '$U_MAIL_DOMAINS' "$U_MAIL_DOMAINS"
-update_user_value "$user" '$U_MAIL_DKIM' "$U_MAIL_DKIM"
-update_user_value "$user" '$U_MAIL_ACCOUNTS' "$U_MAIL_ACCOUNTS"
-update_user_value "$user" '$SUSPENDED_MAIL' "$SUSPENDED_MAIL"
-update_user_value "$user" '$U_DISK_MAIL' "$U_DISK_MAIL"
+# Updating letsencrypt flag
+update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'no'
 
-recalc_user_disk_usage
+# Restarting web
+$BIN/v-restart-mail $restart
+check_result $? "Mail restart failed" >/dev/null
 
 # Logging
 log_event "$OK" "$ARGUMENTS"

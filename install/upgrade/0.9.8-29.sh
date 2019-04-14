@@ -160,6 +160,29 @@ if [ -f /etc/dovecot/dovecot.conf ]; then
     sleep 0.5
 fi
 
+# Update user information for mail domain SSL configuration
+userlist=$(ls --sort=time $HESTIA/data/users/)
+for user in $userlist; do
+    USER_DATA="$HESTIA/data/users/$user"
+    # Update user counter if SSL variable doesn't exist
+    if [ -z "$(grep "U_MAIL_SSL" $USER_DATA/user.conf)" ]; then
+        echo "(*) Adding missing variable for per-domain mail SSL..."
+        echo "U_MAIL_SSL='0'" >> $USER_DATA/user.conf
+    fi
+
+    # Update mail configuration file
+    conf="$USER_DATA/mail.conf"
+    while read line ; do
+        eval $line
+        
+        add_object_key "mail" 'DOMAIN' "$DOMAIN" 'SSL' 'SUSPENDED'
+        update_object_value 'mail' 'DOMAIN' "$DOMAIN" '$SSL' 'no'
+        
+        add_object_key "mail" 'DOMAIN' "$DOMAIN" 'LETSENCRYPT' 'SUSPENDED'
+        update_object_value 'mail' 'DOMAIN' "$DOMAIN" '$LETSENCRYPT' 'no'
+    done < $conf
+done
+
 # Add IMAP system variable to configuration if dovecot is installed
 if [ -z "$IMAP_SYSTEM" ]; then 
     if [ -f /usr/bin/dovecot ]; then
@@ -173,6 +196,7 @@ for user in `ls /usr/local/hestia/data/users/`; do
     echo "(*) Rebuilding mail domains for user: $user..."
     v-rebuild-mail-domains $user
 done
+
 
 # Remove Webalizer and replace it with awstats as default
 echo "(*) Setting awstats as default web statistics backend..."

@@ -42,14 +42,26 @@ case $(head -n1 /etc/issue | cut -f 1 -d ' ') in
     *)          type="NoSupport" ;;
 esac
 
-no_support_message() {
-    echo "Your OS is currently not supported, please consider to use:"
-    echo "  Debian:  8, 9"
-    echo "  Ubuntu:  16.04, 18.04"
+# Detect release for Debian
+if [ "$type" = "debian" ]; then
+    release=$(cat /etc/debian_version|grep -o [0-9]|head -n1)
+    VERSION='debian'
+elif [ "$type" = "ubuntu" ]; then
+    release="$(lsb_release -s -r)"
+    VERSION='ubuntu'
+fi
+
+no_support_message(){
+    echo "****************************************************"
+	echo "Your operating system (OS) is not supported by"
+	echo "Hestia Control Panel. Officially supported releases:"
+	echo "****************************************************"
+    echo "  Debian 8, 9"
+    echo "  Ubuntu 16.04 LTS, 18.04 LTS"
+	echo ""
     exit 1;
 }
 
-# Check if OS is supported
 if [ "$type" = "NoSupport" ]; then
     no_support_message
 fi
@@ -80,20 +92,8 @@ check_wget_curl(){
     fi
 }
 
-
-# Detect codename for debian
-if [ "$type" = "debian" ]; then
-    release=$(cat /etc/debian_version|grep -o [0-9]|head -n1)
-    VERSION='debian'
-fi
-
-# Detect codename for ubuntu
-if [ "$type" = "ubuntu" ]; then
-    release="$(lsb_release -s -r)"
-    VERSION='ubuntu'
-fi
-
-# Check Ubuntu Version Are Acceptable to install
+# Check for supported operating system before proceeding with download
+# of OS-specific installer, and throw error message if unsupported OS detected.
 if [[ "$release" =~ ^(8|9|16.04|18.04)$ ]]; then
     check_wget_curl
 else

@@ -1,0 +1,277 @@
+#!/bin/bash
+# info: check letsencrypt domain
+# options: USER DOMAIN [ALIASES] [RESTART] [NOTIFY]
+#
+# The function check and validates domain with Let's Encrypt
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+aliases=$3
+restart=$4
+notify=$5
+
+# LE API
+LE_API='https://acme-v02.api.letsencrypt.org'
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/conf/hestia.conf
+
+# encode base64
+encode_base64() {
+    cat |base64 |tr '+/' '-_' |tr -d '\r\n='
+}
+
+# Let's Encrypt v2 curl function
+query_le_v2() {
+
+    protected='{"nonce": "'$3'",'
+    protected=''$protected' "url": "'$1'",'
+    protected=''$protected' "alg": "RS256", "kid": "'$KID'"}'
+    content="Content-Type: application/jose+json"
+
+    payload_=$(echo -n "$2" |encode_base64)
+    protected_=$(echo -n "$protected" |encode_base64)
+    signature_=$(printf "%s" "$protected_.$payload_" |\
+        openssl dgst -sha256 -binary -sign $USER_DATA/ssl/user.key |\
+        encode_base64)
+
+    post_data='{"protected":"'"$protected_"'",'
+    post_data=$post_data'"payload":"'"$payload_"'",'
+    post_data=$post_data'"signature":"'"$signature_"'"}'
+
+    curl -s -i -d "$post_data" "$1" -H "$content"
+}
+
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN [ALIASES] [RESTART] [NOTIFY]'
+is_format_valid 'user' 'domain'
+is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'mail' 'DOMAIN' "$domain"
+is_object_unsuspended 'mail' 'DOMAIN' "$domain"
+is_object_value_empty 'mail' 'DOMAIN' "$domain" '$SSL'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+# Parsing domain data
+get_domain_values 'web'
+
+# Registering LetsEncrypt user account
+$BIN/v-add-letsencrypt-user $user
+if [ "$?" -ne 0  ]; then
+    touch $HESTIA/data/queue/letsencrypt.pipe
+    sed -i "/ $domain /d" $HESTIA/data/queue/letsencrypt.pipe
+    send_notice "LETSENCRYPT" "Account registration failed"
+    check_result $E_CONNECT "LE account registration" > /dev/null
+fi
+
+# Parsing LetsEncrypt account data
+source $USER_DATA/ssl/le.conf
+
+# Checking wildcard alias
+if [ "$aliases" = "*.$domain" ]; then
+    wildcard='yes'
+    proto="dns-01"
+    if [ ! -e "$HESTIA/data/users/$user/dns/$domain.conf" ]; then
+        check_result $E_NOTEXIST "DNS domain $domain doesn't exist"
+    fi
+else
+    proto="http-01"
+fi
+
+# Requesting nonce / STEP 1
+answer=$(curl -s -I "$LE_API/directory")
+nonce=$(echo "$answer" |grep Nonce |cut -f2 -d \ |tr -d '\r\n')
+status=$(echo "$answer"|grep HTTP/1.1 |tail -n1 |cut -f 2 -d ' ')
+if [[ "$status" -ne 200 ]]; then
+    check_result $E_CONNECT "Let's Encrypt nonce request status $status"
+fi
+
+# Placing new order / STEP 2
+url="$LE_API/acme/new-order"
+payload='{"identifiers":['
+for identifier in $(echo $domain,$aliases |tr ',' '\n' |sort -u); do
+    payload=$payload'{"type":"dns","value":"'$identifier'"},'
+done
+payload=$(echo "$payload"|sed "s/,$//")
+payload=$payload']}'
+answer=$(query_le_v2 "$url" "$payload" "$nonce")
+nonce=$(echo "$answer" |grep Nonce |cut -f2 -d \ |tr -d '\r\n')
+authz=$(echo "$answer" |grep "acme/authz" |cut -f2 -d '"')
+finalize=$(echo "$answer" |grep 'finalize":' |cut -f4 -d '"')
+status=$(echo "$answer" |grep HTTP/1.1 |tail -n1 |cut -f2 -d ' ')
+if [[ "$status" -ne 201 ]]; then
+    check_result $E_CONNECT "Let's Encrypt new auth status $status"
+fi
+
+# Requesting authorization token / STEP 3
+for auth in $authz; do
+    payload=''
+    answer=$(query_le_v2 "$auth" "$payload" "$nonce")
+    url=$(echo "$answer" |grep -A3 $proto |grep url |cut -f 4 -d \")
+    token=$(echo "$answer" |grep -A3 $proto |grep token |cut -f 4 -d \")
+    nonce=$(echo "$answer" |grep Nonce |cut -f2 -d \ |tr -d '\r\n')
+    status=$(echo "$answer"|grep HTTP/1.1 |tail -n1 |cut -f 2 -d ' ')
+    if [[ "$status" -ne 200 ]]; then
+        check_result $E_CONNECT "Let's Encrypt acme/authz bad status $status"
+    fi
+
+    # Accepting challenge / STEP 4
+    if [ "$wildcard" = 'yes'  ]; then
+        record=$(printf "%s" "$token.$THUMB" |\
+            openssl dgst -sha256 -binary |encode_base64)
+        old_records=$($BIN/v-list-dns-records $user $domain plain|grep 'TXT')
+        old_records=$(echo "$old_records" |grep _acme-challenge |cut -f 1)
+        for old_record in $old_records; do
+            $BIN/v-delete-dns-record $user $domain $old_record
+        done
+        $BIN/v-add-dns-record $user $domain "_acme-challenge" "TXT" $record
+        check_result $? "DNS _acme-challenge record wasn't created"
+    else
+        if [ "$WEB_SYSTEM" = 'nginx' ] || [ ! -z "$PROXY_SYSTEM" ]; then
+            conf="$HOMEDIR/$user/conf/web/$domain/nginx.conf_letsencrypt"
+            sconf="$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_letsencrypt"
+            if [ ! -e "$conf" ]; then
+                echo 'location ~ "^/\.well-known/acme-challenge/(.*)$" {' \
+                    > $conf
+                echo '    default_type text/plain;' >> $conf
+                echo '    return 200 "$1.'$THUMB'";' >> $conf
+                echo '}' >> $conf
+            fi
+            if [ ! -e "$sconf" ]; then
+                ln -s "$conf" "$sconf"
+            fi
+            $BIN/v-restart-proxy
+            check_result $? "Proxy restart failed" > /dev/null
+
+        else
+            well_known="$HOMEDIR/$user/web/$rdomain/public_html/.well-known"
+            acme_challenge="$well_known/acme-challenge"
+            mkdir -p $acme_challenge
+            echo "$token.$THUMB" > $acme_challenge/$token
+            chown -R $user:$user $well_known
+        fi
+        $BIN/v-restart-web
+        check_result $? "Web restart failed" > /dev/null
+    fi
+
+    # Requesting ACME validation / STEP 5
+    validation_check=$(echo "$answer" |grep '"valid"')
+    if [[ ! -z "$validation_check" ]]; then
+        validation='valid'
+    else
+        validation='pending'
+    fi
+
+    # Doing pol check on status
+    i=1
+    while [ "$validation" = 'pending' ]; do
+        payload='{}'
+        answer=$(query_le_v2 "$url" "$payload" "$nonce")
+        validation=$(echo "$answer"|grep -A1 $proto |tail -n1|cut -f4 -d \")
+        nonce=$(echo "$answer" |grep Nonce |cut -f2 -d \ |tr -d '\r\n')
+        status=$(echo "$answer"|grep HTTP/1.1 |tail -n1 |cut -f 2 -d ' ')
+        if [[ "$status" -ne 200 ]]; then
+            check_result $E_CONNECT "Let's Encrypt validation status $status"
+        fi
+
+        i=$((i + 1))
+        if [ "$i" -gt 10 ]; then
+            check_result $E_CONNECT "Let's Encrypt domain validation timeout"
+        fi
+        sleep 1
+    done
+    if [ "$validation" = 'invalid' ]; then
+        check_result $E_CONNECT "Let's Encrypt domain verification failed"
+    fi
+done
+
+# Generating new ssl certificate
+ssl_dir=$($BIN/v-generate-ssl-cert "$domain" "info@$domain" "US" "California"\
+    "San Francisco" "Hestia" "IT" "$aliases" |tail -n1 |awk '{print $2}')
+
+# Sending CSR to finalize order / STEP 6
+csr=$(openssl req -in $ssl_dir/$domain.csr -outform DER |encode_base64)
+payload='{"csr":"'$csr'"}'
+answer=$(query_le_v2 "$finalize" "$payload" "$nonce")
+nonce=$(echo "$answer" |grep Nonce |cut -f2 -d \ |tr -d '\r\n')
+status=$(echo "$answer"|grep HTTP/1.1 |tail -n1 |cut -f 2 -d ' ')
+certificate=$(echo "$answer"|grep 'certificate":' |cut -f4 -d '"')
+if [[ "$status" -ne 200 ]]; then
+    check_result $E_CONNECT "Let's Encrypt finalize bad status $status"
+fi
+
+# Downloading signed certificate / STEP 7
+curl -s "$certificate" -o $ssl_dir/$domain.pem
+
+# Splitting up downloaded pem
+crt_end=$(grep -n END $ssl_dir/$domain.pem |head -n1 |cut -f1 -d:)
+head -n $crt_end $ssl_dir/$domain.pem > $ssl_dir/$domain.crt
+
+pem_lines=$(wc -l $ssl_dir/$domain.pem |cut -f 1 -d ' ')
+ca_end=$(grep -n  "BEGIN" $ssl_dir/$domain.pem |tail -n1 |cut -f 1 -d :)
+ca_end=$(( pem_lines - crt_end + 1 ))
+tail -n $ca_end $ssl_dir/$domain.pem > $ssl_dir/$domain.ca
+
+# Temporary fix for double "END CERTIFICATE"
+if [[ $(head -n 1 $ssl_dir/$domain.ca) = "-----END CERTIFICATE-----" ]]; then
+    sed -i '1,2d' $ssl_dir/$domain.ca
+fi
+
+# Adding SSL
+$BIN/v-delete-mail-domain-ssl $user $domain >/dev/null 2>&1
+$BIN/v-add-mail-domain-ssl $user $domain $ssl_dir
+
+if [ "$?" -ne '0' ]; then
+    touch $HESTIA/data/queue/letsencrypt.pipe
+    sed -i "/ $domain /d" $HESTIA/data/queue/letsencrypt.pipe
+    send_notice 'LETSENCRYPT' "$domain certificate installation failed"
+    check_result $? "SSL install" > /dev/null
+fi
+
+# Adding LE autorenew cronjob
+if [ -z "$(grep v-update-lets $HESTIA/data/users/admin/cron.conf)" ]; then
+    min=$(generate_password '012345' '2')
+    hour=$(generate_password '1234567' '1')
+    cmd="sudo $BIN/v-update-letsencrypt-ssl"
+    $BIN/v-add-cron-job admin "$min" "$hour" '*' '*' '*' "$cmd" > /dev/null
+fi
+
+# Updating letsencrypt key
+if [ -z "$LETSENCRYPT" ]; then
+    add_object_key "mail" 'DOMAIN' "$domain" 'LETSENCRYPT' 'SUSPENDED'
+fi
+
+update_object_value 'mail' 'DOMAIN' "$domain" 'LETSENCRYPT' 'yes'
+
+#----------------------------------------------------------#
+#                        Hestia                            #
+#----------------------------------------------------------#
+
+# Deleting task from queue
+touch $HESTIA/data/queue/letsencrypt.pipe
+sed -i "/ $domain /d" $HESTIA/data/queue/letsencrypt.pipe
+
+# Notifying user
+send_notice 'LETSENCRYPT' "$domain SSL has been installed successfully"
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

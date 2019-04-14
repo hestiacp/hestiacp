@@ -19,7 +19,7 @@ spinner="/-\|"
 os='debian'
 release=$(cat /etc/debian_version|grep -o [0-9]|head -n1)
 codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
-hestiacp="$HESTIA/install/$VERSION/$release"
+hestiacp="$HESTIA/install/deb"
 
 # Define software versions
 pma_v='4.8.5'
@@ -29,9 +29,9 @@ fpm_v="7.3"
 if [ "$release" -eq 9 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
         libapache2-mod-ruid2 libapache2-mod-fcgid libapache2-mod-php php
-        php-common php-cgi php-mysql php-curl php-pgsql awstats webalizer
-        vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy clamav-daemon 
-        spamassassin dovecot-imapd dovecot-pop3d roundcube-core net-tools
+        php-common php-cgi php-mysql php-curl php-pgsql php-imap php-ldap php-apcu
+        awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy 
+        clamav-daemon spamassassin dovecot-imapd dovecot-pop3d roundcube-core net-tools
         roundcube-mysql roundcube-plugins mariadb-client mariadb-common
         mariadb-server postgresql postgresql-contrib phppgadmin phpmyadmin mc
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
@@ -42,7 +42,7 @@ else
     software="nginx apache2 apache2-utils apache2.2-common
         apache2-suexec-custom libapache2-mod-ruid2
         libapache2-mod-fcgid libapache2-mod-php5 php5 php5-common php5-cgi
-        php5-mysql php5-curl php5-pgsql awstats webalizer vsftpd net-tools
+        php5-mysql php5-curl php5-pgsql awstats vsftpd net-tools
         proftpd-basic bind9 exim4 exim4-daemon-heavy clamav-daemon
         spamassassin dovecot-imapd dovecot-pop3d roundcube-core
         roundcube-mysql roundcube-plugins mariadb-client mariadb-common
@@ -568,13 +568,12 @@ echo "deb [arch=amd64] http://nginx.org/packages/mainline/$VERSION/ $codename ng
 wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/nginx_signing.key > /dev/null 2>&1
 
-if [ "$multiphp" = 'yes' ] || [ "$phpfpm" = 'yes' ]; then
-    # Installing sury php repo
-    echo "(*) PHP"
-    echo "deb https://packages.sury.org/php/ $codename main" > $apt/php.list
-    wget --quiet https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key
-    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/php_signing.key > /dev/null 2>&1
-fi
+# Installing sury php repo
+echo "(*) PHP"
+echo "deb https://packages.sury.org/php/ $codename main" > $apt/php.list
+wget --quiet https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key
+APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/php_signing.key > /dev/null 2>&1
+
 
 # Installing MariaDB repo
 echo "(*) MariaDB"
@@ -688,6 +687,7 @@ if [ "$multiphp" = 'yes' ]; then
              php$fpm_v-mysql php$fpm_v-soap php$fpm_v-xml php$fpm_v-zip
              php$fpm_v-mbstring php$fpm_v-json php$fpm_v-bz2 php$fpm_v-pspell"
         software="$software $fpm"
+        multiphp+=("$fpm_v")
     fi
 fi
 
@@ -711,6 +711,7 @@ if [ "$nginx" = 'no'  ]; then
 fi
 if [ "$apache" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/apache2 //")
+    software=$(echo "$software" | sed -e "s/apache2-bin//")
     software=$(echo "$software" | sed -e "s/apache2-utils//")
     software=$(echo "$software" | sed -e "s/apache2-suexec-custom//")
     software=$(echo "$software" | sed -e "s/apache2.2-common//")
@@ -736,17 +737,22 @@ if [ "$exim" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/dovecot-pop3d//")
     software=$(echo "$software" | sed -e "s/clamav-daemon//")
     software=$(echo "$software" | sed -e "s/spamassassin//")
+    software=$(echo "$software" | sed -e "s/roundcube-core//")
+    software=$(echo "$software" | sed -e "s/roundcube-mysql//")
+    software=$(echo "$software" | sed -e "s/roundcube-plugins//")
 fi
 if [ "$clamd" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/clamav-daemon//")
 fi
 if [ "$spamd" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/spamassassin//")
-    software=$(echo "$software" | sed -e "s/libmail-dkim-perl//")
 fi
 if [ "$dovecot" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/dovecot-imapd//")
     software=$(echo "$software" | sed -e "s/dovecot-pop3d//")
+    software=$(echo "$software" | sed -e "s/roundcube-core//")
+    software=$(echo "$software" | sed -e "s/roundcube-mysql//")
+    software=$(echo "$software" | sed -e "s/roundcube-plugins//")
 fi
 if [ "$mysql" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/mariadb-server//')
@@ -789,7 +795,22 @@ if [ "$phpfpm" = 'yes' ]; then
     software=$(echo "$software" | sed -e 's/php-cgi//')
     software=$(echo "$software" | sed -e 's/php-mysql//')
 fi
-
+if [ "$multiphp" = 'yes' ]; then
+    software=$(echo "$software" | sed -e 's/ php //')
+    software=$(echo "$software" | sed -e 's/php-auth-sasl//')
+    software=$(echo "$software" | sed -e 's/php-cgi//')
+    software=$(echo "$software" | sed -e 's/php-common//')
+    software=$(echo "$software" | sed -e 's/php-curl//')
+    software=$(echo "$software" | sed -e 's/php-mail-mime//')
+    software=$(echo "$software" | sed -e 's/php-mysql//')
+    software=$(echo "$software" | sed -e 's/php-net-sieve//')
+    software=$(echo "$software" | sed -e 's/php-net-smtp//')
+    software=$(echo "$software" | sed -e 's/php-net-socket//')
+    software=$(echo "$software" | sed -e 's/php-pear//')
+    software=$(echo "$software" | sed -e 's/php-php-gettext//')
+    software=$(echo "$software" | sed -e 's/php-phpseclib//')
+    software=$(echo "$software" | sed -e 's/php-pgsql//')
+fi
 
 #----------------------------------------------------------#
 #                     Install packages                     #
@@ -911,7 +932,7 @@ if [ "$apache" = 'yes' ] && [ "$nginx" = 'no' ] ; then
     echo "WEB_PORT='80'" >> $HESTIA/conf/hestia.conf
     echo "WEB_SSL_PORT='443'" >> $HESTIA/conf/hestia.conf
     echo "WEB_SSL='mod_ssl'"  >> $HESTIA/conf/hestia.conf
-    echo "STATS_SYSTEM='webalizer,awstats'" >> $HESTIA/conf/hestia.conf
+    echo "STATS_SYSTEM='awstats'" >> $HESTIA/conf/hestia.conf
 fi
 if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
     echo "WEB_SYSTEM='apache2'" >> $HESTIA/conf/hestia.conf
@@ -922,7 +943,7 @@ if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
     echo "PROXY_SYSTEM='nginx'" >> $HESTIA/conf/hestia.conf
     echo "PROXY_PORT='80'" >> $HESTIA/conf/hestia.conf
     echo "PROXY_SSL_PORT='443'" >> $HESTIA/conf/hestia.conf
-    echo "STATS_SYSTEM='webalizer,awstats'" >> $HESTIA/conf/hestia.conf
+    echo "STATS_SYSTEM='awstats'" >> $HESTIA/conf/hestia.conf
 fi
 if [ "$apache" = 'no' ] && [ "$nginx"  = 'yes' ]; then
     echo "WEB_SYSTEM='nginx'" >> $HESTIA/conf/hestia.conf
@@ -938,7 +959,7 @@ if [ "$apache" = 'no' ] && [ "$nginx"  = 'yes' ]; then
             echo "WEB_BACKEND='php5-fpm'" >> $HESTIA/conf/hestia.conf
         fi
     fi
-    echo "STATS_SYSTEM='webalizer,awstats'" >> $HESTIA/conf/hestia.conf
+    echo "STATS_SYSTEM='awstats'" >> $HESTIA/conf/hestia.conf
 fi
 
 # FTP stack
@@ -1072,6 +1093,37 @@ if [ "$nginx" = 'yes' ]; then
         service php$fpm_v-fpm start >> $LOG
         check_result $? "php$fpm_v-fpm start failed"
     fi
+
+    # Redirect unassigned hosts to default "Success" page
+    if [ -f /usr/local/hestia/data/ips/* ]; then
+        for ip in /usr/local/hestia/data/ips/*; do
+            ipaddr=${ip##*/}
+            rm -f /etc/nginx/conf.d/$ip.conf
+            cp -f $HESTIA/install/deb/nginx/unassigned.inc /etc/nginx/conf.d/$ipaddr.conf
+            sed -i 's/directIP/'$ipaddr'/g' /etc/nginx/conf.d/$ipaddr.conf
+        done
+    fi
+
+    # Generating dhparam.
+    echo "(*) Enabling HTTPS Strict Transport Security (HSTS) support,"
+    echo -n "    this will take some time. Please wait..."
+    openssl dhparam 4096 -out /etc/ssl/dhparam.pem > /dev/null 2>&1 &
+    BACK_PID=$!
+
+    # Check if package installation is done, print a spinner
+    spin_i=1
+    while kill -0 $BACK_PID > /dev/null 2>&1 ; do
+        printf "\b${spinner:spin_i++%${#spinner}:1}"
+        sleep 0.5
+    done
+
+    # Do a blank echo to get the \n back
+    echo
+
+    # Update dns servers in nginx.conf
+    dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
+    sed -i "s/1.0.0.1 1.1.1.1/$dns_resolver/g" /etc/nginx/nginx.conf
+
     update-rc.d nginx defaults > /dev/null 2>&1
     service nginx start >> $LOG
     check_result $? "nginx start failed"
@@ -1118,6 +1170,17 @@ if [ "$apache" = 'yes' ]; then
             sed -i 's/#//g' $HESTIA/data/templates/web/apache2/*.stpl
         fi
     fi
+
+    # Add unassigned hosts configuration to apache2
+    if [ -f /usr/local/hestia/data/ips/* ]; then
+        for ip in /usr/local/hestia/data/ips/*; do
+            ipaddr=${ip##*/}
+            rm -f /etc/apache2/conf.d/$ip.conf
+            cp -f $HESTIA/install/deb/apache2/unassigned.conf /etc/apache2/conf.d/$ipaddr.conf
+            sed -i 's/directIP/'$ipaddr'/g' /etc/apache2/conf.d/$ipaddr.conf
+        done
+    fi
+
     update-rc.d apache2 defaults > /dev/null 2>&1
     service apache2 start >> $LOG
     check_result $? "apache2 start failed"
@@ -1679,20 +1742,27 @@ Ready to get started? Log in using the following credentials:
     Username:   admin
     Password:   $vpass
 
-Thank you for choosing Hestia Control Panel to power your server,
-we hope that you enjoy it as much as we do!
+Thank you for choosing Hestia Control Panel to power your full stack web server,
+we hope that you enjoy using it as much as we do!
 
 Please feel free to contact us at any time if you have any questions,
 or if you encounter any bugs or problems:
 
-E-Mail:  info@hestiacp.com
+E-mail:  info@hestiacp.com
 Web:     https://www.hestiacp.com/
-Forum:   https://www.hestiacp.com/
+Forum:   https://forum.hestiacp.com/
 GitHub:  https://www.github.com/hestiacp/hestiacp
 
+Want to join our beta test program? Please email us at
+info@hestiacp.com or join in on GitHub to start contributing today.
+
+Help support the Hestia Contol Panel project by donating via PayPal:
+https://www.hestiacp.com/donate
 --
 Sincerely yours,
 The Hestia Control Panel development team
+
+Made with love & pride from the open-source community around the world.
 " > $tmpfile
 
 send_mail="$HESTIA/web/inc/mail-wrapper.php"
@@ -1702,5 +1772,13 @@ cat $tmpfile | $send_mail -s "Hestia Control Panel" $email
 echo
 cat $tmpfile
 rm -f $tmpfile
+
+echo "(!) IMPORTANT: You must logout or restart the server before continuing."
+echo -n " Do you want to logout now? [Y/N] "
+read resetshell
+
+if [ $resetshell = "Y" ] || [ $resetshell = "y" ]; then
+    logout
+fi
 
 # EOF

@@ -60,6 +60,23 @@
 
 
     <div class="l-center units animated fadeIn">
+            <div class="l-unit header">
+                <div class="l-unit__col l-unit__col--left clearfix">
+                  <div class="text-center jump-small-top"></div>
+                </div>
+          
+                <div class="l-unit__col l-unit__col--right step-top table-header">
+                  <div style="margin-bottom: 40px;">
+                      <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print __('Domain');?></b></div>
+                      <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Accounts');?></b></div>
+                      <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Disk');?></b></div>
+                      <div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?php print __('Antivirus');?></b></div>
+                      <div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?php print __('AntiSpam');?></b></div>
+                      <div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?php print __('DKIM');?></b></div>
+                  </div>
+                </div>
+              </div>
+
       <?
         list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
         $webmail = "http://".$http_host."/webmail/";
@@ -86,10 +103,7 @@
 sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?=$data[$key]['U_DISK']?>"
 sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favourites']['MAIL'][$key] == 1) echo "1"; else echo "0"; ?>">
         <div class="l-unit-toolbar clearfix">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?php echo $key ?>">
-            <label for="check<?php echo $i ?>" class="check-label"></label>
-          </div>
+
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
@@ -124,91 +138,49 @@ sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favouri
           <!-- l-unit-toolbar__col -->
         </div>
         <!-- /.l-unit-toolbar -->
-
-        <div class="l-unit__col l-unit__col--left clearfix">
-          <div class="l-unit__date">
-            <?=translate_date($data[$key]['DATE'])?>
-          </div>
-          <div class="l-unit__suspended"><?=__('suspended')?></div>
-          <div class="text-center">
-            <i class="l-icon-star" title="<?=__('save to favorites')?>"></i>
-          </div>
-        </div>
-        <!-- /.l-unit__col -->
-        <div class="l-unit__col l-unit__col--right">
-          <div class="l-unit__name separate">
-            <?=$key?> <? if($data[$key]['ACCOUNTS']) echo '<span>/ '.$data[$key]['ACCOUNTS'].'</span>';?>
-          </div>
-          <!-- /.l-unit__name -->
-          <div class="l-unit__stats">
-            <table>
-              <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix graph">
-                    <div class="l-unit__stat-col l-unit__stat-col--left">
-                      <?=__('Disk')?>
+            <div class="l-unit__col l-unit__col--right">
+              <div style="margin-bottom: 50px;">
+                  <div class="clearfix l-unit__stat-col--left">
+                      <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?php echo $key ?>">
+                      <label for="check<?php echo $i ?>" class="check-label"></label>
                     </div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right text-right volume">
-                      <b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK'])?>
-                    </div>
+                  <div class="clearfix l-unit__stat-col--left wide-3"><b><?=$key?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b>
+                    <? if($data[$key]['ACCOUNTS']) { echo '<span>'.$data[$key]['ACCOUNTS'].'</span>'; ?>
+                    <? } else {?>
+                      <span>0</span>
+                    <? } ?>
+                    </b>
                   </div>
-                  <div class="l-percent">
-                    <div class="l-percent__fill" style="width: <?=get_percentage($data[$key]['U_DISK'],$panel[$user]['DISK_QUOTA'])?>%"></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b>
+                    <?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span>
                   </div>
-                  <!-- /.percent -->
-                </td>
-                <td>
-                  <? if($data[$key]['ANTIVIRUS'] == 'no'){ ?>
-                    <div class="l-unit__stat-cols clearfix disabled"><?=__('AntiVirus Support')?></div>
-                  <? } else {?>
-                    <div class="l-unit__stat-cols clearfix">
-                      <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('AntiVirus Support')?>:</div>
-                      <div class="l-unit__stat-col l-unit__stat-col--right">
-                        <b><?=__($data[$key]['ANTIVIRUS'])?></b>
-                      </div>
-                    </div>
-                  <? } ?>
-                </td>
-                <td>
-                  <? if($data[$key]['ANTISPAM'] == 'no'){ ?>
-                    <div class="l-unit__stat-cols clearfix disabled"><?=__('AntiSpam Support')?></div>
-                  <? } else {?>
-                    <div class="l-unit__stat-cols clearfix">
-                      <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('AntiSpam Support')?>:</div>
-                      <div class="l-unit__stat-col l-unit__stat-col--right">
-                        <b><?=__($data[$key]['ANTISPAM'])?></b>
-                      </div>
-                    </div>
-                  <? } ?>
-                </td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>
-                  <? if($data[$key]['DKIM'] == 'no'){ ?>
-                    <div class="l-unit__stat-cols clearfix disabled"><?=__('DKIM Support')?></div>
-                  <? } else {?>
-                    <div class="l-unit__stat-cols clearfix">
-                      <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('DKIM Support')?>:</div>
-                      <div class="l-unit__stat-col l-unit__stat-col--right">
-                        <b><?=__($data[$key]['DKIM'])?></b>
-                      </div>
-                    </div>
-                  <? } ?>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix last">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Catchall email')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['CATCHALL']?></b>
-                    </div>
+                  <div class="clearfix l-unit__stat-col--left text-center compact-3"><b>
+                      <? if($data[$key]['ANTIVIRUS'] == 'no'){ ?>
+                        <i class="fas fa-times-circle" style="color: red;"></i>
+                      <? } else {?>
+                        <i class="fas fa-check-circle status-icon-green"></i>
+                      <? } ?>
+                    </b>
                   </div>
-                </td>
-              </tr>
-            </table>
-          </div>
-          <!-- /.l-unit__stats -->
-        </div>
+                  <div class="clearfix l-unit__stat-col--left text-center compact-3"><b>
+                      <? if($data[$key]['ANTISPAM'] == 'no'){ ?>
+                        <i class="fas fa-times-circle" style="color: red;"></i>
+                      <? } else {?>
+                        <i class="fas fa-check-circle status-icon-green"></i>
+                      <? } ?>
+                    </b>
+                  </div>
+                  <div class="clearfix l-unit__stat-col--left text-center compact-3"><b>
+                      <? if($data[$key]['DKIM'] == 'no'){ ?>
+                        <i class="fas fa-times-circle" style="color: red;"></i>
+                      <? } else {?>
+                        <i class="fas fa-check-circle status-icon-green"></i>
+                      <? } ?>
+                    </b>
+                  </div>
+              </div>
+            </div>
         <!-- /.l-unit__col -->
       </div>
       <!-- /.l-unit -->

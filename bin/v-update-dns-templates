@@ -24,10 +24,8 @@ case $(head -n1 /etc/issue | cut -f 1 -d ' ') in
 esac
 
 # Detect version
-if [ "$type" = "ubuntu" ]; then
-    release="$(lsb_release -s -r)"
-elif [ "$type" = "ubuntu" ]; then
-    release=$(cat /etc/debian_version|grep -o [0-9]|head -n1)
+if [ "$type" = "ubuntu" ] || [ "$type" = "debian" ]; then
+    type="deb"
 else
     echo "Error: can't detect supported os"
     log_event "$E_NOTEXIST"
@@ -40,7 +38,7 @@ fi
 #----------------------------------------------------------#
 
 # Update templates
-cp -rf $HESTIA/install/$type/$release/templates/dns $HESTIA/data/templates/
+cp -rf $HESTIA/install/$type/templates/dns $HESTIA/data/templates/
 
 
 #----------------------------------------------------------#

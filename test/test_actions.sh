@@ -206,14 +206,14 @@ $cmd > $tmpfile 2>> $tmpfile
 echo_result "WEB: Disabling cgi support" "$?" "$tmpfile" "$cmd"
 
 # Add web domain stats
-cmd="v_add_web_domain_stats $user $domain webalizer"
+cmd="v_add_web_domain_stats $user $domain awstats"
 $cmd > $tmpfile 2>> $tmpfile
-echo_result "WEB: Enabling webalizer" "$?" "$tmpfile" "$cmd"
+echo_result "WEB: Enabling awstats" "$?" "$tmpfile" "$cmd"
 
 # Add web domain stats 
 cmd="v_add_web_domain_stats_user $user $domain test m3g4p4ssw0rd"
 $cmd > $tmpfile 2>> $tmpfile
-echo_result "WEB: Adding webalizer uzer" "$?" "$tmpfile" "$cmd"
+echo_result "WEB: Adding awstats uzer" "$?" "$tmpfile" "$cmd"
 
 # Add web domain nginx
 cmd="v_add_web_domain_nginx $user $domain"

@@ -2,8 +2,7 @@
 # info: add log analyzer to generate domain statitics
 # options: USER DOMAIN TYPE
 #
-# The call is used for enabling log analyzer system to a domain.  At this time
-# two types of these system is supported - awstats and webalizer. For viewing
+# The call is used for enabling log analyzer system to a domain. For viewing
 # the domain statistics use http://domain.tld/vstats/ link. Access this page
 # is not protected by default. If you want to secure it with passwords you
 # should use v-add-web-domain_stat_auth script.
@@ -74,8 +73,6 @@ if [ "$type" == 'awstats' ]; then
     rm -f /etc/awstats/$type.$domain_idn.conf
     ln -s $HOMEDIR/$user/conf/web/$type.$domain.conf \
         /etc/awstats/$type.$domain_idn.conf
-else
-    mkdir -p /var/lib/webalizer
 fi
 
 

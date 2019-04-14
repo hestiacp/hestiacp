@@ -529,6 +529,12 @@ rebuild_mail_domain_conf() {
             chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain/passwd
         fi
         chown $user:mail $HOMEDIR/$user/mail/$domain_idn
+        # Remove and recreate SSL configuration
+            if [ "$SSL" = 'yes' ]; then
+                mkdir -p $HOMEDIR/$user/conf/mail/$domain/ssl/
+                del_mail_ssl_config
+                add_mail_ssl_config
+            fi
     fi
 
     # Update counters

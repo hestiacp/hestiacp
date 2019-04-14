@@ -28,6 +28,12 @@ if [ -z "$user_str" ]; then
     exit
 fi
 
+# Do not create chroot for syslog user
+if [ $user = "syslog" ]; then
+    exit
+fi
+
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#

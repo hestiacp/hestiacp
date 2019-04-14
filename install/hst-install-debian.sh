@@ -1104,21 +1104,8 @@ if [ "$nginx" = 'yes' ]; then
         done
     fi
 
-    # Generating dhparam.
-    echo "(*) Enabling HTTPS Strict Transport Security (HSTS) support,"
-    echo -n "    this will take some time. Please wait..."
-    openssl dhparam 4096 -out /etc/ssl/dhparam.pem > /dev/null 2>&1 &
-    BACK_PID=$!
-
-    # Check if package installation is done, print a spinner
-    spin_i=1
-    while kill -0 $BACK_PID > /dev/null 2>&1 ; do
-        printf "\b${spinner:spin_i++%${#spinner}:1}"
-        sleep 0.5
-    done
-
-    # Do a blank echo to get the \n back
-    echo
+    # Install dhparam.
+    cp -f $HESTIA/install/deb/ssl/dhparam.pem /etc/ssl
 
     # Update dns servers in nginx.conf
     dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)

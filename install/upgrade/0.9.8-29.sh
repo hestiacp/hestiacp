@@ -1,37 +1,41 @@
 #!/bin/bash
 
+# define vars
+HESTIA="/usr/local/hestia"
+hestiacp="$HESTIA/install/deb"
+
 # load hestia.conf
 source $HESTIA/conf/hestia.conf
+
+# load hestia main functions
+source /usr/local/hestia/func/main.sh
 
 # Initialize backup directory
 mkdir -p $HESTIA_BACKUP/templates/
 mkdir -p $HESTIA_BACKUP/packages/
 
-# load hestia main functions
-source /usr/local/hestia/func/main.sh
 
 echo "(*) Upgrading to Hestia Control Panel v$VERSION..."
 
 # Generating dhparam.
 if [ ! -e /etc/ssl/dhparam.pem ]; then
     echo "(*) Enabling HTTPS Strict Transport Security (HSTS) support"
-    echo -n "    This will take some time, please wait..."
-    openssl dhparam 4096 -out /etc/ssl/dhparam.pem > /dev/null 2>&1 &
-    BACK_PID=$!
 
-    # Check if package installation is done, print a spinner
-    spin_i=1
-    while kill -0 $BACK_PID > /dev/null 2>&1 ; do
-        printf "\b${spinner:spin_i++%${#spinner}:1}"
-        sleep 0.5
-    done
+    # Backup existing conf
+    mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
 
-    # Do a blank echo to get the \n back
-    echo
+    # Copy new nginx config
+    cp -f $hestiacp/nginx/nginx.conf /etc/nginx/
+
+    # Copy dhparam
+    cp -f $hestiacp/ssl/dhparam.pem /etc/ssl/
 
     # Update dns servers in nginx.conf
     dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
     sed -i "s/1.0.0.1 1.1.1.1/$dns_resolver/g" /etc/nginx/nginx.conf
+
+    # Restart nginx service
+    service nginx restart >/dev/null 2>&1
 fi
 
 # Update default page templates

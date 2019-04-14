@@ -137,6 +137,11 @@ fi
 update_object_value 'dns' 'DOMAIN' "$domain" '$TPL' "$template"
 update_object_value 'dns' 'DOMAIN' "$domain" '$RECORDS' "$records"
 
+# Rebuild DNS zone and update counters to ensure that it has updated correctly
+$BIN/v-rebuild-dns-domain $user $domain no
+$BIN/v-update-user-stats $user
+$BIN/v-update-user-counters $user
+
 # Restarting named
 $BIN/v-restart-dns $restart
 check_result $? "DNS restart failed" >/dev/null

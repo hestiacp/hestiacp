@@ -2,6 +2,7 @@
 
 # define vars
 HESTIA="/usr/local/hestia"
+HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
 hestiacp="$HESTIA/install/deb"
 
 # load hestia.conf

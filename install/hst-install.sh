@@ -90,13 +90,13 @@ if [ "$type" = "ubuntu" ]; then
 	codename="$(lsb_release -s -c)"
 	release="$(lsb_release -s -r)"
 	VERSION='ubuntu'
-fi
 
-# Check Ubuntu Version Are Acceptable to install
-if [ "$codename" = "14.04" ] or [ "$codename" = "16.04" ] or [  "$codename" = "18.04" ]; then
-	check_wget_curl
-else
-	no_support_message
+	# Check Ubuntu Version Are Acceptable to install
+	if [[ $codename = '14.04' ]] || [[ $codename = '16.04' ]] || [[ $codename = '18.04' ]]; then
+		check_wget_curl
+	else
+		no_support_message
+	fi
 fi
 
 

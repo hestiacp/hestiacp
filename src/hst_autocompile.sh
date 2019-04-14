@@ -5,7 +5,7 @@ BUILD_DIR='/root'
 INSTALL_DIR='/usr/local/hestia'
 
 # Set Version for compiling
-HESTIA_V='0.9.8-28_amd64'
+HESTIA_V='0.9.8-29_amd64'
 NGINX_V='1.15.10'
 OPENSSL_V='1.1.1b'
 PCRE_V='8.42'

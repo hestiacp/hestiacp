@@ -244,7 +244,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
 
     // Delete Lets Encrypt support
     if (( $v_letsencrypt == 'yes' ) && (empty($_POST['v_letsencrypt'])) && (empty($_SESSION['error_msg']))) {
-        exec (HESTIA_CMD."v-delete-letsencrypt-mail-domain ".$user." ".$v_domain." 'no'", $output, $return_var);
+        exec (HESTIA_CMD."v-delete-letsencrypt-domain ".$user." ".$v_domain." 'no'", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
         $v_ssl_crt = '';
@@ -258,7 +258,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
 
     // Delete SSL certificate
     if (( $v_ssl == 'yes' ) && (empty($_POST['v_ssl'])) && (empty($_SESSION['error_msg']))) {
-        exec (HESTIA_CMD."v-delete-mail-domain-ssl ".$v_username." ".$v_domain." 'no'", $output, $return_var);
+        exec (HESTIA_CMD."v-delete-domain-ssl ".$v_username." ".$v_domain." 'no' 'yes'", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
         $v_ssl_crt = '';
@@ -270,8 +270,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
 
     // Add Lets Encrypt support
     if ((!empty($_POST['v_ssl'])) && ( $v_letsencrypt == 'no' ) && (!empty($_POST['v_letsencrypt'])) && empty($_SESSION['error_msg'])) {
-        $l_aliases = 'mail.' . $v_domain;
-        exec (HESTIA_CMD."v-add-letsencrypt-mail-domain ".$user." ".$v_domain." '".$l_aliases."' 'no'", $output, $return_var);
+        exec (HESTIA_CMD."v-add-letsencrypt-domain ".$user." ".$v_domain." '' 'yes'", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
         $v_letsencrypt = 'yes';

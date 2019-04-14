@@ -92,8 +92,8 @@ if [ "$type" = "ubuntu" ]; then
 	VERSION='ubuntu'
 fi
 
-# Check Ubuntu Version Are Acceptable
-if [[ $codename = '14.04' ]] or [[ $codename = '16.04' ]] or [[ $codename = '18.04' ]]; then
+# Check Ubuntu Version Are Acceptable to install
+if [ "$codename" = "14.04" ] or [ "$codename" = "16.04" ] or [  "$codename" = "18.04" ]; then
 	check_wget_curl
 else
 	no_support_message

@@ -1608,6 +1608,10 @@ check_result $? "can't create admin user"
 $HESTIA/bin/v-change-user-shell admin nologin
 $HESTIA/bin/v-change-user-language admin $lang
 
+# Enable sftp jail
+$HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1
+check_result $? "can't enable sftp jail"
+
 # Roundcube permissions fix
 if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     if [ ! -d "/var/log/roundcube" ]; then

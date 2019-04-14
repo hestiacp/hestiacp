@@ -22,10 +22,6 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-#if [ -z "$SFTPJAIL_KEY" ]; then
-#    exit
-#fi
-
 
 #----------------------------------------------------------#
 #                       Action                             #

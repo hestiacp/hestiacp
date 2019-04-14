@@ -9,11 +9,8 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Importing system environment  as we run this script
-# mostly by cron which do not read it by itself
-source /etc/profile
-
 # Includes
+source /etc/profile
 source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
 
@@ -21,10 +18,6 @@ source $HESTIA/conf/hestia.conf
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
-
-if [ -z "$SFTPJAIL_KEY" ]; then
-    exit
-fi
 
 
 #----------------------------------------------------------#

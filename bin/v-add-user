@@ -204,9 +204,7 @@ if [ -x "$HESTIA/data/packages/$package.sh" ]; then
 fi
 
 # Adding jailed sftp env
-if [ ! -z "$SFTPJAIL_KEY" ]; then
-    $BIN/v-add-user-sftp-jail $user
-fi
+$BIN/v-add-user-sftp-jail $user
 
 # Logging
 log_history "added system user $user" '' 'admin'

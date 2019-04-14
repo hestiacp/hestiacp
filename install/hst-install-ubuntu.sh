@@ -1546,6 +1546,10 @@ if [ ! -z "$(grep ^admin: /etc/group)" ] && [ "$force" = 'yes' ]; then
     groupdel admin > /dev/null 2>&1
 fi
 
+# Enable sftp jail
+$HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1
+check_result $? "can't enable sftp jail"
+
 # Adding Hestia admin account
 $HESTIA/bin/v-add-user admin $vpass $email default System Administrator
 check_result $? "can't create admin user"

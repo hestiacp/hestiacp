@@ -290,7 +290,7 @@ if [ "$HESTIA_B" = true ] ; then
 
     # Move needed directories
     cd ../../hestiacp-$branch
-    mv bin func install upd web ../hestia_$HESTIA_V/usr/local/hestia/
+    mv bin func install web ../hestia_$HESTIA_V/usr/local/hestia/
 
     # Set permission
     cd ../hestia_$HESTIA_V/usr/local/hestia/bin

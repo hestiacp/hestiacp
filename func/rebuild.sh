@@ -74,7 +74,7 @@ rebuild_user_conf() {
         if [[ -L "$HOMEDIR/$user/web" ]]; then
             rm $HOMEDIR/$user/web
         fi
-        mkdir -p $HOMEDIR/$user/conf/web
+        mkdir -p $HOMEDIR/$user/conf/web/$domain
         mkdir -p $HOMEDIR/$user/web
         mkdir -p $HOMEDIR/$user/tmp
         chmod 751 $HOMEDIR/$user/conf/web
@@ -111,7 +111,7 @@ rebuild_user_conf() {
         if [[ -L "$HOMEDIR/$user/mail" ]]; then
             rm $HOMEDIR/$user/mail
         fi
-        mkdir -p $HOMEDIR/$user/conf/mail
+        mkdir -p $HOMEDIR/$user/conf/mail/$domain
         mkdir -p $HOMEDIR/$user/mail
         chmod 751 $HOMEDIR/$user/mail
         chmod 751 $HOMEDIR/$user/conf/mail
@@ -159,8 +159,7 @@ rebuild_web_domain_conf() {
         $HOMEDIR/$user/web/$domain/cgi-bin \
         $HOMEDIR/$user/web/$domain/private \
         $HOMEDIR/$user/web/$domain/stats \
-        $HOMEDIR/$user/web/$domain/logs \
-        $HOMEDIR/$user/conf/web/$domain
+        $HOMEDIR/$user/web/$domain/logs
 
     # Creating domain logs
     if [ ! -e "/var/log/$WEB_SYSTEM/domains" ]; then

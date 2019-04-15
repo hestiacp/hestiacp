@@ -1,6 +1,6 @@
 server {
     listen      %ip%:%proxy_port%;
-    server_name %domain%;
+    server_name %domain% %alias%;
         
     include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
     location / {

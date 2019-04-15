@@ -6,12 +6,10 @@ server {
     error_log  /var/log/%web_system%/domains/%domain%.error.log error;
 
     location / {
-        proxy_pass      https://%ip%:%web_ssl_port%;
-        location ~* ^.+\.(%proxy_extentions%)$ {
-            root           %sdocroot%;
-            access_log     /var/log/%web_system%/domains/%domain%.log combined;
-            access_log     /var/log/%web_system%/domains/%domain%.bytes bytes;
-            expires        max;
+        proxy_pass      http://%ip%:%web_port%;
+        location ~* ^.+\.(jpg,jpeg,gif,png,ico,svg,css,zip,tgz,gz,rar,bz2,doc,xls,exe,pdf,ppt,txt,odt,ods,odp,odf,tar,wav,bmp,rtf,js,mp3,avi,mpeg,flv,html,htm)$ {
+            alias          /var/lib/roundcube/;
+            expires        15m;
             try_files      $uri @fallback;
         }
     }
@@ -20,8 +18,20 @@ server {
         alias   %home%/%user%/web/%root_domain%/document_errors/;
     }
 
+    location ~ /(config|temp|logs) {
+        return 404;
+    }
+
+    location ~ ^/(.*\.php)$ {
+        alias /var/lib/roundcube/$1;
+        fastcgi_pass 127.0.0.1:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $request_filename;
+    }
+    
     location @fallback {
-        proxy_pass      https://%ip%:%web_ssl_port%;
+        proxy_pass      http://%ip%:%web_port%;
     }
 
     location ~ /\.ht    {return 404;}

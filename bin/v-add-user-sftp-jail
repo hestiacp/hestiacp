@@ -23,13 +23,16 @@ source $HESTIA/conf/hestia.conf
 
 check_args '1' "$#" 'USER'
 is_format_valid 'user'
-if [ -z "$SFTPJAIL_KEY" ]; then
-    exit
-fi
 user_str=$(grep "^$user:" /etc/passwd |egrep "rssh|nologin")
 if [ -z "$user_str" ]; then
     exit
 fi
+
+# Do not create chroot for syslog user
+if [ $user = "syslog" ]; then
+    exit
+fi
+
 
 #----------------------------------------------------------#
 #                       Action                             #

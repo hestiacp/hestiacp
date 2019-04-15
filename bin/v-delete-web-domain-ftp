@@ -57,9 +57,7 @@ if [ "$?" != 0 ]; then
 fi
 
 # Deleting sftp jail
-if [ ! -z "$SFTPJAIL_KEY" ]; then
-    $BINv-delete-user-sftp-jail $ftp_user
-fi
+$BINv-delete-user-sftp-jail $ftp_user
 
 
 #----------------------------------------------------------#

@@ -1,0 +1,77 @@
+#!/bin/bash
+# info: enable/disable directory listing
+# options: USER DOMAIN MODE
+#
+# The call is used for changing the directory list mode.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument defenition
+user=$1
+domain=$2
+mode=$3
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/conf/hestia.conf
+
+# Additional argument formatting
+format_domain
+format_domain_idn
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'USER DOMAIN MODE'
+is_format_valid 'user' 'domain'
+is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Fetching domain variables
+get_domain_values 'web'
+
+if [ "$mode" = "on" ]; then
+    # Enable directory listing
+    sed -i "s/-Index/+Index/g" $HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.conf
+    if [ -e "$ssl_dir/$domain.ca" ]; then
+        # Enable directory listing for SSL-enforced domains
+        sed -i "s/-Index/+Index/g" $HOMEDIR/$user/conf/web/s$WEB_SYSTEM.$domain.conf
+    fi
+    echo "INFO: Enabled directory browsing for $domain."
+else
+    # Disable directory listing
+    sed -i "s/+Index/-Index/g" $HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.conf
+    if [ -e "$ssl_dir/$domain.ca" ]; then
+        # Enable directory listing for SSL-enforced domains
+        sed -i "s/+Index/-Index/g" $HOMEDIR/$user/conf/web/s$WEB_SYSTEM.$domain.conf
+    fi
+    echo "INFO: Disabled directory browsing for $domain."
+fi
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Rebuilding vhosts
+$BIN/v-restart-web
+
+# Logging
+log_history "turned directory browsing $mode for $domain."
+log_event "$OK" "$EVENT"
+
+exit

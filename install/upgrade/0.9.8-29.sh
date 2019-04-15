@@ -2,6 +2,7 @@
 
 # define vars
 HESTIA="/usr/local/hestia"
+HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
 hestiacp="$HESTIA/install/deb"
 
 # load hestia.conf
@@ -13,7 +14,6 @@ source /usr/local/hestia/func/main.sh
 # Initialize backup directory
 mkdir -p $HESTIA_BACKUP/templates/
 mkdir -p $HESTIA_BACKUP/packages/
-
 
 echo "(*) Upgrading to Hestia Control Panel v$VERSION..."
 
@@ -101,9 +101,7 @@ chmod 751 $HESTIA/data/templates/web/unassigned/js
 chmod 751 $HESTIA/data/templates/web/unassigned/webfonts
 
 # Add unassigned hosts configuration to nginx and apache2
-if [ "$WEB_BACKEND" = "php-fpm" ]; then
-    echo "(!) Unassigned hosts configuration for Apache not necessary on PHP-FPM installations."
-elif [ "$WEB_BACKEND" = "apache2" ]; then
+if [ "$WEB_SYSTEM" = "apache2" ]; then
     echo "(*) Adding unassigned hosts configuration to apache2..."
     if [ -f /usr/local/hestia/data/ips/* ]; then
         for ip in /usr/local/hestia/data/ips/*; do
@@ -113,7 +111,8 @@ elif [ "$WEB_BACKEND" = "apache2" ]; then
             sed -i 's/directIP/'$ipaddr'/g' /etc/apache2/conf.d/$ipaddr.conf
         done
     fi
-elif [ "$PROXY_SYSTEM" = "nginx" ]; then
+fi
+if [ "$PROXY_SYSTEM" = "nginx" ]; then
     echo "(*) Adding unassigned hosts configuration to nginx..."
     if [ -f /usr/local/hestia/data/ips/* ]; then
         for ip in /usr/local/hestia/data/ips/*; do
@@ -202,3 +201,6 @@ done
 echo "(*) Setting awstats as default web statistics backend..."
 apt purge webalizer -y > /dev/null 2>&1
 sed -i "s/STATS_SYSTEM='webalizer,awstats'/STATS_SYSTEM='awstats'/g" $HESTIA/conf/hestia.conf
+
+# Run sftp jail once
+$HESTIA/bin/v-add-sys-sftp-jail

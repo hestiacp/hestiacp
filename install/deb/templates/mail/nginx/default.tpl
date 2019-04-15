@@ -37,4 +37,6 @@ server {
     location ~ /\.git/  {return 404;}
     location ~ /\.hg/   {return 404;}
     location ~ /\.bzr/  {return 404;}
+
+    include %home%/%user%/conf/mail/%domain%/nginx.conf_*;
 }

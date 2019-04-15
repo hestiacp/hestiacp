@@ -41,4 +41,7 @@
         Order allow,deny
         Deny from all
     </Directory>
+
+    IncludeOptional %home%/%user%/conf/mail/%domain%/%web_system%.conf_*
+
 </VirtualHost>

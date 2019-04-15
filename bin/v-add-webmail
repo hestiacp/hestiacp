@@ -78,12 +78,14 @@ fi
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-# Restarting web server
-$BIN/v-restart-web $restart
-check_result $? "Web restart failed" >/dev/null
+if [ ! -z "$3" ]; then 
+    # Restarting web server
+    $BIN/v-restart-web $restart
+    check_result $? "Web restart failed" >/dev/null
 
-$BIN/v-restart-proxy $restart
-check_result $? "Proxy restart failed" >/dev/null
+    $BIN/v-restart-proxy $restart
+    check_result $? "Proxy restart failed" >/dev/null
+fi
 
 # Logging
 log_history "enabled webmail support for $domain"

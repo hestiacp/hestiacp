@@ -220,10 +220,10 @@ $HESTIA/bin/v-add-sys-sftp-jail
 # Rebuild user
 for user in `ls /usr/local/hestia/data/users/`; do
     echo "(*) Rebuilding domains and account for user: $user..."
-    v-rebuild-web-domains $user
-    sleep 0.5
-    v-rebuild-dns-domains $user
-    sleep 0.5
-    v-rebuild-mail-domains $user
-    sleep 0.5
+    v-rebuild-web-domains $user >/dev/null 2>&1
+    sleep 1
+    v-rebuild-dns-domains $user >/dev/null 2>&1
+    sleep 1
+    v-rebuild-mail-domains $user >/dev/null 2>&1
+    sleep 1
 done

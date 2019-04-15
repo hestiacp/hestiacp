@@ -1,6 +1,6 @@
 server {
     listen      %ip%:%proxy_ssl_port% ssl http2;
-    server_name %webmail_alias%.%domain%;
+    server_name %domain%;
     ssl_certificate      %ssl_pem%;
     ssl_certificate_key  %ssl_key%;
     error_log  /var/log/%web_system%/domains/%domain%.error.log error;

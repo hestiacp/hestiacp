@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # define vars
 HESTIA="/usr/local/hestia"
 HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
@@ -19,7 +18,23 @@ source /usr/local/hestia/func/main.sh
 mkdir -p $HESTIA_BACKUP/templates/
 mkdir -p $HESTIA_BACKUP/packages/
 
-echo "(*) Upgrading to Hestia Control Panel v$VERSION..."
+# Clear the screen from apt output to prepare for upgrade installer experience
+clear
+echo
+echo '  _   _           _   _        ____ ____  '
+echo ' | | | | ___  ___| |_(_) __ _ / ___|  _ \ '
+echo ' | |_| |/ _ \/ __| __| |/ _` | |   | |_) |'
+echo ' |  _  |  __/\__ \ |_| | (_| | |___|  __/ '
+echo ' |_| |_|\___||___/\__|_|\__,_|\____|_|    '
+echo
+echo '                      Hestia Control Panel'
+echo -e "\n\n"
+echo "Upgrading to Hestia Control Panel v$VERSION..."
+echo "==================================================="
+echo ""
+echo "This process may take a few minutes, please wait..."
+echo ""
+echo ""
 
 # Update Apache and NGINX configuration to support new file structure
 if [ -f /etc/apache2/apache.conf ]; then

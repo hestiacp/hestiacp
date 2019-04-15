@@ -299,6 +299,7 @@ del_web_config() {
         conf="$HOMEDIR/$user/conf/web/$domain/$1.ssl.conf"
     fi
 
+    # Clean up legacy configuration files
     if [ -e "$conf" ]; then
         sed -i "\|$conf|d" /etc/$1/conf.d/hestia.conf
         rm -f $conf
@@ -318,6 +319,14 @@ del_web_config() {
         if [ -f "$conf" ]; then
             rm -f $conf
         fi
+    fi
+
+    # Remove domain file symbolic links
+    if [ -f /etc/$WEB_SYSTEM/conf.d/domains/$domain.conf ]; then
+        rm -f /etc/$WEB_SYSTEM/conf.d/domains/$domain*.conf 
+    fi
+    if [ -f /etc/$PROXY_SYSTEM/conf.d/domains/$domain.conf ]; then
+        rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$domain*.conf 
     fi
 }
 

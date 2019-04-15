@@ -159,7 +159,8 @@ rebuild_web_domain_conf() {
         $HOMEDIR/$user/web/$domain/cgi-bin \
         $HOMEDIR/$user/web/$domain/private \
         $HOMEDIR/$user/web/$domain/stats \
-        $HOMEDIR/$user/web/$domain/logs
+        $HOMEDIR/$user/web/$domain/logs \
+        $HOMEDIR/$user/conf/web/$domain
 
     # Creating domain logs
     if [ ! -e "/var/log/$WEB_SYSTEM/domains" ]; then

@@ -188,6 +188,7 @@ prepare_web_domain_values() {
 
 # Add web config
 add_web_config() {
+    mkdir -p "$HOMEDIR/$user/conf/web/$domain"
     conf="$HOMEDIR/$user/conf/web/$domain/$1.conf"
     if [[ "$2" =~ stpl$ ]]; then
         conf="$HOMEDIR/$user/conf/web/$domain/$1.ssl.conf"

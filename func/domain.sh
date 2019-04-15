@@ -588,7 +588,7 @@ is_mail_new() {
 add_webmail_config() {
     mkdir -p "$HOMEDIR/$user/conf/mail/$domain"
     conf="$HOMEDIR/$user/conf/mail/$domain/$1.conf"
-    if [[ "$2" =~ stpl$ ]]; then
+    if [ "$2" = "default.stpl" ]; then
         conf="$HOMEDIR/$user/conf/mail/$domain/$1.ssl.conf"
     fi
 

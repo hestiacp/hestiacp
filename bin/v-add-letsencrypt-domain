@@ -147,8 +147,8 @@ for auth in $authz; do
         check_result $? "DNS _acme-challenge record wasn't created"
     else
         if [ "$WEB_SYSTEM" = 'nginx' ] || [ ! -z "$PROXY_SYSTEM" ]; then
-            conf="$HOMEDIR/$user/conf/web/nginx.$domain.conf_letsencrypt"
-            sconf="$HOMEDIR/$user/conf/web/snginx.$domain.conf_letsencrypt"
+            conf="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.conf_letsencrypt"
+            sconf="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.conf_letsencrypt"
             if [ ! -e "$conf" ]; then
                 echo 'location ~ "^/\.well-known/acme-challenge/(.*)$" {' \
                     > $conf

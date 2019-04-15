@@ -17,6 +17,16 @@ mkdir -p $HESTIA_BACKUP/packages/
 
 echo "(*) Upgrading to Hestia Control Panel v$VERSION..."
 
+# Update Apache and NGINX configuration to support new file structure
+if [ -f /etc/apache2/apache.conf ]; then
+    echo "(*) Updating Apache configuration..."
+    cp -f $HESTIA/install/deb/apache2/apache.conf /etc/apache2/apache.conf
+fi
+if [ -f /etc/nginx/nginx.conf ]; then
+    echo "(*) Updating nginx configuration..."
+    cp -f $HESTIA/install/deb/nginx/nginx.conf /etc/nginx/nginx.conf
+fi
+
 # Generating dhparam.
 if [ ! -e /etc/ssl/dhparam.pem ]; then
     echo "(*) Enabling HTTPS Strict Transport Security (HSTS) support"
@@ -167,12 +177,6 @@ if [ -z "$IMAP_SYSTEM" ]; then
     fi
 fi
 
-# Rebuild mailboxes
-for user in `ls /usr/local/hestia/data/users/`; do
-    echo "(*) Rebuilding mail domains for user: $user..."
-    v-rebuild-mail-domains $user
-done
-
 # Remove Webalizer and replace it with awstats as default
 echo "(*) Setting awstats as default web statistics backend..."
 apt purge webalizer -y > /dev/null 2>&1
@@ -180,3 +184,14 @@ sed -i "s/STATS_SYSTEM='webalizer,awstats'/STATS_SYSTEM='awstats'/g" $HESTIA/con
 
 # Run sftp jail once
 $HESTIA/bin/v-add-sys-sftp-jail
+
+# Rebuild user
+for user in `ls /usr/local/hestia/data/users/`; do
+    echo "(*) Rebuilding domains and account for user: $user..."
+    v-rebuild-web-domains $user
+    sleep 0.5
+    v-rebuild-dns-domains $user
+    sleep 0.5
+    v-rebuild-mail-domains $user
+    sleep 0.5
+done

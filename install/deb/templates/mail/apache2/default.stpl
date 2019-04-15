@@ -7,8 +7,8 @@
     
     SSLEngine on
     SSLVerifyClient none
-    SSLCertificateFile         %home%/%user%/conf/mail/%root_domain%/ssl/mail.%root_domain%.crt
-    SSLCertificateKeyFile      %home%/%user%/conf/mail/%root_domain%/ssl/mail.%root_domain%.key
+    SSLCertificateFile         %home%/%user%/conf/mail/%root_domain%/ssl/%root_domain%.crt
+    SSLCertificateKeyFile      %home%/%user%/conf/mail/%root_domain%/ssl/%root_domain%.key
 
    IncludeOptional %home%/%user%/conf/web/%root_domain%/apache2.forcessl.conf*
     

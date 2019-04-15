@@ -53,8 +53,8 @@ fi
 backup_datetime=`date '+%Y-%m-%d_%H-%M-%S'`
 
 # Copy hostnames certificates from user dir
-cp /home/$user/conf/web/$hostname/ssl.$hostname.pem $HESTIA/ssl/certificate.crt
-cp /home/$user/conf/web/$hostname/ssl.$hostname.key $HESTIA/ssl/certificate.key
+cp /home/$user/conf/web/$hostname/$hostname.pem $HESTIA/ssl/certificate.crt
+cp /home/$user/conf/web/$hostname/$hostname.key $HESTIA/ssl/certificate.key
 
 # Checking exim username for later chowning
 exim_user="exim";

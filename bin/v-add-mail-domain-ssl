@@ -86,8 +86,15 @@ update_object_value 'mail' 'DOMAIN' "$domain" '$SSL' "yes"
 # Restarting mail server
 $BIN/v-restart-mail $restart
 $BIN/v-restart-service $IMAP_SYSTEM $restart
-
 check_result $? "Mail restart failed" >/dev/null
+
+# Restarting web server
+$BIN/v-restart-web $restart
+check_result $? "Web restart failed" >/dev/null
+
+# Restarting proxy server
+$BIN/v-restart-proxy $restart
+check_result $? "Proxy restart failed" >/dev/null
 
 # Logging
 log_history "enabled mail ssl support for $domain"

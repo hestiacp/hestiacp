@@ -146,6 +146,14 @@ if [ "$dkim" = 'yes' ]; then
     increase_user_value "$user" '$U_MAIL_DKIM'
 fi
 
+# Restarting web server
+$BIN/v-restart-web $restart
+check_result $? "Web restart failed" >/dev/null
+
+# Restarting proxy server
+$BIN/v-restart-proxy $restart
+check_result $? "Proxy restart failed" >/dev/null
+
 # Logging
 log_history "added mail domain $domain"
 log_event "$OK" "$ARGUMENTS"

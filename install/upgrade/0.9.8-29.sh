@@ -166,6 +166,12 @@ if [ -f /etc/dovecot/conf.d/15-mailboxes.conf ]; then
     # Remove mailboxes configuration if it exists
     rm -f /etc/dovecot/conf.d/15-mailboxes.conf
 fi
+if [ -f /etc/dovecot/dovecot.conf ]; then
+    # Update dovecot configuration and restart dovecot service
+    cp -f $HESTIA/install/deb/dovecot/dovecot.conf /etc/dovecot/dovecot.conf
+    systemctl restart dovecot
+    sleep 0.5
+fi
 
 # Fix exim configuration
 if [ -f /etc/exim4/exim4.conf.template ]; then
@@ -180,60 +186,26 @@ if [ -f /etc/exim4/exim4.conf.template ]; then
     fi
 fi
 
-if [ -f /etc/dovecot/dovecot.conf ]; then
-    # Update dovecot configuration and restart dovecot service
-    cp -f $HESTIA/install/deb/dovecot/dovecot.conf /etc/dovecot/dovecot.conf
-    systemctl restart dovecot
-    sleep 0.5
-fi
-
-# Update Roundcube webmail configuration
-if [ "$WEB_SYSTEM" = 'apache2' ]; then
-    echo "(*) Updating Roundcube global subdomain configuration for apache2..."
-    cp -f $HESTIA/install/deb/roundcube/apache.conf /etc/apache2/conf.d/roundcube.conf
-fi
-if [ ! -z "$PROXY_SYSTEM" ]; then
-    echo "(*) Updating Roundcube global subdomain configuration for nginx..."
-    if [ -f /etc/nginx/conf.d/webmail.inc ]; then
-        rm -f /etc/nginx/conf.d/webmail.inc
-    fi
-    cp -f $HESTIA/install/deb/nginx/webmail.conf /etc/nginx/conf.d/webmail.conf
-fi
-
-# Write web server configuration
-    sed -i 's|%webmail_alias%|'$WEBMAIL_ALIAS'|g' /etc/apache2/conf.d/roundcube.conf
-    sed -i 's|%domain%|'$domain'|g'  /etc/apache2/conf.d/roundcube.conf
-    sed -i 's|%domain_idn%|'$domain'|g'  /etc/apache2/conf.d/roundcube.conf
-    sed -i 's|%home%|'$HOMEDIR'|g'  /etc/apache2/conf.d/roundcube.conf
-    sed -i 's|%user%|'$user'|g'  /etc/apache2/conf.d/roundcube.conf
-    sed -i 's|%group%|'$user'|g'  /etc/apache2/conf.d/roundcube.conf
-    sed -i 's|%ip%|'$ipaddr'|g'  /etc/apache2/conf.d/roundcube.conf
-    sed -i 's|%web_port%|'$WEB_PORT'|g'  /etc/apache2/conf.d/roundcube.conf
-    sed -i 's|%proxy_port%|'$PROXY_PORT'|g' /etc/apache2/conf.d/roundcube.conf
-    sed -i 's|%web_ssl_port%|'$WEB_SSL_PORT'|g'  /etc/apache2/conf.d/roundcube.conf
-    sed -i 's|%proxy_ssl_port%|'$PROXY_SSL_PORT'|g'  /etc/apache2/conf.d/roundcube.conf
-    sed -i 's|%web_system%|'$WEB_SYSTEM'|g' /etc/apache2/conf.d/roundcube.conf
-
-# Write proxy server configurationls
-    sed -i 's|%webmail_alias%|'$WEBMAIL_ALIAS'|g' /etc/nginx/conf.d/webmail.conf
-    sed -i 's|%domain%|'$domain'|g' /etc/nginx/conf.d/webmail.conf
-    sed -i 's|%domain_idn%|'$domain'|g' /etc/nginx/conf.d/webmail.conf
-    sed -i 's|%home%|'$HOMEDIR'|g' /etc/nginx/conf.d/webmail.conf
-    sed -i 's|%user%|'$user'|g' /etc/nginx/conf.d/webmail.conf
-    sed -i 's|%group%|'$user'|g' /etc/nginx/conf.d/webmail.conf
-    sed -i 's|%ip%|'$ipaddr'|g' /etc/nginx/conf.d/webmail.conf
-    sed -i 's|%web_port%|'$WEB_PORT'|g' /etc/nginx/conf.d/webmail.conf
-    sed -i 's|%proxy_port%|'$PROXY_PORT'|g' /etc/nginx/conf.d/webmail.conf
-    sed -i 's|%web_ssl_port%|'$WEB_SSL_PORT'|g' /etc/nginx/conf.d/webmail.conf
-    sed -i 's|%proxy_ssl_port%|'$PROXY_SSL_PORT'|g' /etc/nginx/conf.d/webmail.conf
-    sed -i 's|%web_system%|'$WEB_SYSTEM'|g' /etc/nginx/conf.d/webmail.conf
-
 # Add IMAP system variable to configuration if dovecot is installed
 if [ -z "$IMAP_SYSTEM" ]; then 
     if [ -f /usr/bin/dovecot ]; then
         echo "(*) Adding missing IMAP_SYSTEM variable to hestia.conf..."
         echo "IMAP_SYSTEM = 'dovecot'" >> $HESTIA/conf/hestia.conf
     fi
+fi
+
+# Remove global webmail configuration files in favor of per-domain vhosts
+if [ -f /etc/apache2/conf.d/roundcube.conf ]; then
+    echo "(*) Removing global webmail configuration files for Apache2..."
+    rm -f /etc/apache2/conf.d/roundcube.conf
+fi
+if [ -f /etc/nginx/conf.d/webmail.inc ]; then
+    echo "(*) Removing global webmail configuration files for nginx..."
+    rm -f /etc/nginx/conf.d/webmail.inc 
+fi
+if [ -f /etc/nginx/conf.d/webmail.conf ]; then
+    echo "(*) Removing global webmail configuration files for nginx..."
+    rm -f /etc/nginx/conf.d/webmail.conf
 fi
 
 # Remove Webalizer and replace it with awstats as default

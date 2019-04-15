@@ -584,9 +584,7 @@ is_mail_new() {
     fi
 }
 
-
-
-# Add web config
+# Add webmail config
 add_webmail_config() {
     mkdir -p "$HOMEDIR/$user/conf/mail/$domain"
     conf="$HOMEDIR/$user/conf/mail/$domain/$1.conf"

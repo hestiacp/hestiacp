@@ -5,6 +5,10 @@ HESTIA="/usr/local/hestia"
 HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
 hestiacp="$HESTIA/install/deb"
 
+# Add webmail alias variable to system configuration
+sed -i "/WEBMAIL_ALIAS/d" $HESTIA/conf/hestia.conf
+echo "WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
+
 # load hestia.conf
 source $HESTIA/conf/hestia.conf
 
@@ -179,6 +183,34 @@ if [ -f /etc/nginx/conf.d/webmail.inc ]; then
     rm -f /etc/nginx/conf.d/webmail.inc
     cp -f $HESTIA/install/deb/nginx/webmail.conf /etc/nginx/conf.d/webmail.conf
 fi
+
+# Write web server configuration
+    sed -i 's|%webmail_alias%|'$WEBMAIL_ALIAS'|g' /etc/apache2/conf.d/roundcube.conf
+    sed -i 's|%domain%|'$domain'|g'  /etc/apache2/conf.d/roundcube.conf
+    sed -i 's|%domain_idn%|'$domain'|g'  /etc/apache2/conf.d/roundcube.conf
+    sed -i 's|%home%|'$HOMEDIR'|g'  /etc/apache2/conf.d/roundcube.conf
+    sed -i 's|%user%|'$user'|g'  /etc/apache2/conf.d/roundcube.conf
+    sed -i 's|%group%|'$user'|g'  /etc/apache2/conf.d/roundcube.conf
+    sed -i 's|%ip%|'$ipaddr'|g'  /etc/apache2/conf.d/roundcube.conf
+    sed -i 's|%web_port%|'$WEB_PORT'|g'  /etc/apache2/conf.d/roundcube.conf
+    sed -i 's|%proxy_port%|'$PROXY_PORT'|g' /etc/apache2/conf.d/roundcube.conf
+    sed -i 's|%web_ssl_port%|'$WEB_SSL_PORT'|g'  /etc/apache2/conf.d/roundcube.conf
+    sed -i 's|%proxy_ssl_port%|'$PROXY_SSL_PORT'|g'  /etc/apache2/conf.d/roundcube.conf
+    sed -i 's|%web_system%|'$WEB_SYSTEM'|g' /etc/apache2/conf.d/roundcube.conf
+
+# Write proxy server configurationls
+    sed -i 's|%webmail_alias%|'$WEBMAIL_ALIAS'|g' /etc/nginx/conf.d/webmail.conf
+    sed -i 's|%domain%|'$domain'|g' /etc/nginx/conf.d/webmail.conf
+    sed -i 's|%domain_idn%|'$domain'|g' /etc/nginx/conf.d/webmail.conf
+    sed -i 's|%home%|'$HOMEDIR'|g' /etc/nginx/conf.d/webmail.conf
+    sed -i 's|%user%|'$user'|g' /etc/nginx/conf.d/webmail.conf
+    sed -i 's|%group%|'$user'|g' /etc/nginx/conf.d/webmail.conf
+    sed -i 's|%ip%|'$ipaddr'|g' /etc/nginx/conf.d/webmail.conf
+    sed -i 's|%web_port%|'$WEB_PORT'|g' /etc/nginx/conf.d/webmail.conf
+    sed -i 's|%proxy_port%|'$PROXY_PORT'|g' /etc/nginx/conf.d/webmail.conf
+    sed -i 's|%web_ssl_port%|'$WEB_SSL_PORT'|g' /etc/nginx/conf.d/webmail.conf
+    sed -i 's|%proxy_ssl_port%|'$PROXY_SSL_PORT'|g' /etc/nginx/conf.d/webmail.conf
+    sed -i 's|%web_system%|'$WEB_SYSTEM'|g' /etc/nginx/conf.d/webmail.conf
 
 # Add IMAP system variable to configuration if dovecot is installed
 if [ -z "$IMAP_SYSTEM" ]; then 

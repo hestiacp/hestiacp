@@ -67,6 +67,7 @@ if [ -d $HESTIA/data/templates/ ]; then
     cp -rf $HESTIA/data/templates $HESTIA_BACKUP/
     $HESTIA/bin/v-update-web-templates
     $HESTIA/bin/v-update-dns-templates
+    $HESTIA/bin/v-update-mail-templates
 fi
 
 # Remove old Office 365 template as there is a newer version with an updated name

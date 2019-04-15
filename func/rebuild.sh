@@ -253,10 +253,10 @@ rebuild_web_domain_conf() {
                 -e "s|%home%|$HOMEDIR|g" \
                 -e "s|%alias%|${aliases//,/ }|g" \
                 -e "s|%alias_idn%|${aliases_idn//,/ }|g" \
-                > $HOMEDIR/$user/conf/web/$STATS.$domain.conf
+                > $HOMEDIR/$user/conf/web/$domain/$STATS.conf
         if [ "$STATS" == 'awstats' ]; then
             if [ ! -e "/etc/awstats/$STATS.$domain_idn.conf" ]; then
-                ln -f -s $HOMEDIR/$user/conf/web/$STATS.$domain.conf \
+                ln -f -s $HOMEDIR/$user/conf/web/$domain/$STATS.conf \
                     /etc/awstats/$STATS.$domain_idn.conf
             fi
         fi

@@ -61,7 +61,7 @@ stats_dir="$HOMEDIR/$user/web/$domain/stats"
 rm -rf $stats_dir/*
 
 # Deleting config
-rm -f $HOMEDIR/$user/conf/web/$STATS.$domain.conf
+rm -f $HOMEDIR/$user/conf/web/$domain/$STATS.conf
 
 # Adding statistic config
 prepare_web_domain_values

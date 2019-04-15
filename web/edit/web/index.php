@@ -446,6 +446,18 @@ if (!empty($_POST['save'])) {
         }
     }
     
+    // Add Lets Encrypt Mail domain support
+    if ((!empty($_POST['v_ssl'])) && ( $v_letsencrypt == 'no' ) && (!empty($_POST['v_letsencrypt'])) && empty($_SESSION['error_msg'])) {
+        $l_aliases = str_replace("\n", ',', $v_aliases);
+        exec (HESTIA_CMD."v-add-letsencrypt-domain ".$user." ".$v_domain." ' ' 'yes'", $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
+        $v_letsencrypt = 'yes';
+        $v_ssl = 'yes';
+        $restart_web = 'yes';
+        $restart_proxy = 'yes';
+    }
+
     // Add Force SSL
     if ((!empty($_POST['v_ssl_forcessl'])) && (!empty($_POST['v_ssl'])) && (empty($_SESSION['error_msg']))) {
         exec (HESTIA_CMD."v-add-web-domain-ssl-force ".$user." ".$v_domain, $output, $return_var);

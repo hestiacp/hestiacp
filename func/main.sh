@@ -9,6 +9,7 @@ RRD_STEP=300
 BIN=$HESTIA/bin
 USER_DATA=$HESTIA/data/users/$user
 WEBTPL=$HESTIA/data/templates/web
+MAILTPL=$HESTIA/data/templates/mail
 DNSTPL=$HESTIA/data/templates/dns
 RRD=$HESTIA/web/rrd
 SENDMAIL="$HESTIA/web/inc/mail-wrapper.php"

@@ -633,8 +633,8 @@ add_webmail_config() {
     chmod 640 $conf
 
     if [[ "$2" =~ stpl$ ]]; then
-        rm -f /etc/$1/conf.d/domains/mail.$domain.ssl.conf
-        echo "include $conf;" > /etc/$1/conf.d/domains/mail.$domain.ssl.conf
+        rm -f /etc/$1/conf.d/domains/webmail.$domain.ssl.conf
+        echo "include $conf;" > /etc/$1/conf.d/domains/webmail.$domain.ssl.conf
 
         # Clear old configurations
         rm -rf $HOMEDIR/$user/conf/mail/$domain.*
@@ -642,7 +642,7 @@ add_webmail_config() {
         rm -rf $HOMEDIR/$user/conf/mail/*nginx.$domain.*
     else
         rm -f /etc/$1/conf.d/domains/mail.$domain.conf
-        echo "include $conf;" > /etc/$1/conf.d/domains/mail.$domain.conf
+        echo "include $conf;" > /etc/$1/conf.d/domains/webmail.$domain.conf
 
         # Clear old configurations
         rm -rf $HOMEDIR/$user/conf/mail/$domain.*

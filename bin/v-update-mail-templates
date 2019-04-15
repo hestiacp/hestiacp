@@ -1,0 +1,57 @@
+#!/bin/bash
+# info: update mail templates
+# options: [RESTART]
+#
+# The function for obtaining updated pack of mail templates.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+restart=$1
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+# Detect OS
+case $(head -n1 /etc/issue | cut -f 1 -d ' ') in
+    Debian)     type="debian" ;;
+    Ubuntu)     type="ubuntu" ;;
+    *)          type="NoSupport" ;;
+esac
+
+# Detect version
+if [ "$type" = "ubuntu" ] || [ "$type" = "debian" ]; then
+    type="deb"
+else
+    echo "Error: can't detect supported os"
+    log_event "$E_NOTEXIST"
+    exit $E_NOTEXIST
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Update templates
+cp -rf $HESTIA/install/$type/templates/mail $HESTIA/data/templates/
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Restarting web server
+$BIN/v-restart-web $restart
+check_result $? "restart" >/dev/null 2>&1
+
+$BIN/v-restart-proxy $restart
+check_result $? "restart" >/dev/null 2>&1
+
+$BIN/v-restart-proxy $restart
+check_result $? "restart" >/dev/null 2>&1
+
+exit

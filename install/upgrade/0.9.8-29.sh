@@ -227,3 +227,17 @@ for user in `ls /usr/local/hestia/data/users/`; do
     v-rebuild-mail-domains $user >/dev/null 2>&1
     sleep 1
 done
+echo ""
+echo "    Upgrade complete! Please report any bugs or issues to"
+echo "    https://github.com/hestiacp/hestiacp/issues."
+echo ""
+echo "    We hope that you enjoy this release of Hestia Control Panel,"
+echo "    enjoy your day!"
+echo ""
+echo "    Sincerely,"
+echo "    The Hestia Control Panel development team"
+echo ""
+echo "    www.hestiacp.com"
+echo "    Made with love & pride from the open-source community around the world."
+echo ""
+echo ""

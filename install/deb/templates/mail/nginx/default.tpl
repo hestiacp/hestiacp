@@ -13,7 +13,7 @@ server {
     }
 
     location /error/ {
-        alias   %home%/%user%/web/%domain%/document_errors/;
+        alias   %home%/%user%/web/%root_domain%/document_errors/;
     }
 
     location ~ /(config|temp|logs) {
@@ -38,5 +38,5 @@ server {
     location ~ /\.hg/   {return 404;}
     location ~ /\.bzr/  {return 404;}
 
-    include %home%/%user%/conf/mail/%domain%/nginx.conf_*;
+    include %home%/%user%/conf/mail/%root_domain%/nginx.conf_*;
 }

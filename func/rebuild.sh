@@ -223,7 +223,11 @@ rebuild_web_domain_conf() {
 
     # Adding SSL vhost configuration
     if [ "$SSL" = 'yes' ]; then
+        ssl_file_dir="$HOMEDIR/$user/conf/web/$domain/ssl"
         conf="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.ssl.conf"
+        if [ ! -d "$ssl_file_dir" ]; then
+            mkdir -p $ssl_file_dir
+        fi
         add_web_config "$WEB_SYSTEM" "$TPL.stpl"
         cp -f $USER_DATA/ssl/$domain.crt \
             $HOMEDIR/$user/conf/web/$domain/ssl/$domain.crt

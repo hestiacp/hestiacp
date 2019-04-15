@@ -600,7 +600,7 @@ add_webmail_config() {
     ssl_pem="$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem"
     ssl_ca="$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.ca"
 
-    cat $MAILTPL/$1/$WEB_BACKEND/$2 | \
+    cat $MAILTPL/$WEB_BACKEND/$2 | \
         sed -e "s|%ip%|$local_ip|g" \
             -e "s|%domain%|$domain|g" \
             -e "s|%domain_idn%|$domain_idn|g" \
@@ -650,13 +650,6 @@ add_webmail_config() {
 
     if [ "$1" != 'nginx' ]; then
         find /etc/$1/conf.d/domains -type f -name "$domain.*"  | xargs sed -i "s/;//g"
-    fi
-
-    trigger="${2/.*pl/.sh}"
-    if [ -x "$WEBTPL/$1/$WEB_BACKEND/$trigger" ]; then
-        $WEBTPL/$1/$WEB_BACKEND/$trigger \
-            $user $domain $local_ip $HOMEDIR \
-            $HOMEDIR/$user/web/$domain/public_html
     fi
 }
 

@@ -326,8 +326,8 @@ rebuild_web_domain_conf() {
     done
 
     # Adding http auth protection
-    htaccess="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.conf_htaccess"
-    htpasswd="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.htpasswd"
+    htaccess="$HOMEDIR/$user/conf/web/$domain/htaccess"
+    htpasswd="$HOMEDIR/$user/conf/web/$domain/htpasswd"
     docroot="$HOMEDIR/$user/web/$domain/public_html"
     for auth_user in ${AUTH_USER//:/ }; do
         # Parsing auth user variables

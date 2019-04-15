@@ -79,9 +79,6 @@ increase_user_value "$user" '$U_MAIL_SSL'
 # Set SSL as enabled in configuration
 update_object_value 'mail' 'DOMAIN' "$domain" '$SSL' "yes"
 
-
-
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

@@ -42,11 +42,6 @@ is_object_value_exist 'mail' 'DOMAIN' "$domain" '$SSL'
 # Delete mail domain SSL configuration
 del_mail_ssl_config
 
-# Delete SSL webmail configuration
-if [ ! -z "$WEB_SYSTEM" ]; then
-    del_webmail_ssl_config
-fi
-
 #----------------------------------------------------------#
 #                       Hestia                              #
 #----------------------------------------------------------#

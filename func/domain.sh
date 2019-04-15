@@ -173,10 +173,10 @@ prepare_web_domain_values() {
     ssl_ca_str=''
     prepare_web_aliases $ALIAS
 
-    ssl_crt="$HOMEDIR/$user/conf/web/ssl.$domain.crt"
-    ssl_key="$HOMEDIR/$user/conf/web/ssl.$domain.key"
-    ssl_pem="$HOMEDIR/$user/conf/web/ssl.$domain.pem"
-    ssl_ca="$HOMEDIR/$user/conf/web/ssl.$domain.ca"
+    ssl_crt="$HOMEDIR/$user/conf/web/$domain/ssl/$domain.crt"
+    ssl_key="$HOMEDIR/$user/conf/web/$domain/ssl/$domain.key"
+    ssl_pem="$HOMEDIR/$user/conf/web/$domain/ssl/$domain.pem"
+    ssl_ca="$HOMEDIR/$user/conf/web/$domain/ssl/$domain.ca"
     if [ ! -e "$USER_DATA/ssl/$domain.ca" ]; then
         ssl_ca_str='#'
     fi
@@ -188,9 +188,9 @@ prepare_web_domain_values() {
 
 # Add web config
 add_web_config() {
-    conf="$HOMEDIR/$user/conf/web/$domain.$1.conf"
+    conf="$HOMEDIR/$user/conf/web/$domain/$1.conf"
     if [[ "$2" =~ stpl$ ]]; then
-        conf="$HOMEDIR/$user/conf/web/$domain.$1.ssl.conf"
+        conf="$HOMEDIR/$user/conf/web/$domain/$1.ssl.conf"
     fi
 
     domain_idn=$domain
@@ -228,12 +228,10 @@ add_web_config() {
     chown root:$user $conf
     chmod 640 $conf
 
-    if [ -z "$(grep "$conf" /etc/$1/conf.d/hestia.conf)" ]; then
-        if [ "$1" != 'nginx' ]; then
-            echo "Include $conf" >> /etc/$1/conf.d/hestia.conf
-        else
-            echo "include $conf;" >> /etc/$1/conf.d/hestia.conf
-        fi
+    if [ "$1" != 'nginx' ]; then
+        ln -s $HOMEDIR/$user/conf/web/$domain/$1.conf /etc/$1/conf.d/domains/$domain.conf
+    else
+        ln -s $HOMEDIR/$user/conf/web/$domain/$1.conf /etc/$1/conf.d/domains/$domain.conf
     fi
 
     trigger="${2/.*pl/.sh}"
@@ -272,9 +270,9 @@ get_web_config_lines() {
 
 # Replace web config
 replace_web_config() {
-    conf="$HOMEDIR/$user/conf/web/$domain.$1.conf"
+    conf="$HOMEDIR/$user/conf/web/$domain/$1.conf"
     if [[ "$2" =~ stpl$ ]]; then
-        conf="$HOMEDIR/$user/conf/web/$domain.$1.ssl.conf"
+        conf="$HOMEDIR/$user/conf/web/$domain/$1.ssl.conf"
     fi
 
     if [ -e "$conf" ]; then
@@ -292,9 +290,9 @@ replace_web_config() {
 
 # Delete web configuration
 del_web_config() {
-    conf="$HOMEDIR/$user/conf/web/$domain.$1.conf"
+    conf="$HOMEDIR/$user/conf/web/$domain/$1.conf"
     if [[ "$2" =~ stpl$ ]]; then
-        conf="$HOMEDIR/$user/conf/web/$domain.$1.ssl.conf"
+        conf="$HOMEDIR/$user/conf/web/$domain/$1.ssl.conf"
     fi
 
     if [ -e "$conf" ]; then

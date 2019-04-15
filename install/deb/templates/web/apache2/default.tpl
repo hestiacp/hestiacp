@@ -34,7 +34,7 @@
         AssignUserID %user% %group%
     </IfModule>
 
-    IncludeOptional %home%/%user%/conf/web/%web_system%.%domain%.conf*
+    IncludeOptional %home%/%user%/conf/web/%domain%/%web_system%.conf**
 
 </VirtualHost>
 

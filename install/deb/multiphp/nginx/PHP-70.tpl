@@ -49,5 +49,5 @@ server {
     include     /etc/nginx/conf.d/phppgadmin.inc*;
     include     /etc/nginx/conf.d/webmail.inc*;
 
-    include     %home%/%user%/conf/web/nginx.%domain%.conf*;
+    include     %home%/%user%/conf/web/%domain%/nginx.conf*;
 }

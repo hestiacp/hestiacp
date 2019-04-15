@@ -202,31 +202,31 @@ rebuild_web_domain_conf() {
     chown root:$user /var/log/$WEB_SYSTEM/domains/$domain.*
 
     # Adding vhost configuration
-    conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
+    conf="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.conf"
     add_web_config "$WEB_SYSTEM" "$TPL.tpl"
 
     # Adding SSL vhost configuration
     if [ "$SSL" = 'yes' ]; then
-        conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
+        conf="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.ssl.conf"
         add_web_config "$WEB_SYSTEM" "$TPL.stpl"
         cp -f $USER_DATA/ssl/$domain.crt \
-            $HOMEDIR/$user/conf/web/ssl.$domain.crt
+            $HOMEDIR/$user/conf/web/$domain/ssl/$domain.crt
         cp -f $USER_DATA/ssl/$domain.key \
-            $HOMEDIR/$user/conf/web/ssl.$domain.key
+            $HOMEDIR/$user/conf/web/$domain/ssl/$domain.key
         cp -f $USER_DATA/ssl/$domain.pem \
-            $HOMEDIR/$user/conf/web/ssl.$domain.pem
+            $HOMEDIR/$user/conf/web/$domain/ssl/$domain.pem
         if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
             cp -f $USER_DATA/ssl/$domain.ca \
-                $HOMEDIR/$user/conf/web/ssl.$domain.ca
+                $HOMEDIR/$user/conf/web/$domain/ssl/$domain.ca
         fi
     fi
 
     # Adding proxy configuration
     if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
-        conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
+        conf="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.conf"
         add_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
         if [ "$SSL" = 'yes' ]; then
-            conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
+            conf="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.ssl.conf"
             add_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
         fi
     fi

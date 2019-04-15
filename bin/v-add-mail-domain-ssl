@@ -65,20 +65,22 @@ is_web_domain_cert_valid
 # Call routine to add SSL configuration to mail domain
 add_mail_ssl_config
 
+# Add webmail configuration to mail domain
+if [ ! -z "$WEB_SYSTEM" ]; then
+    add_webmail_config "$WEB_SYSTEM" "default.stpl"
+fi
+if [ ! -z "$PROXY_SYSTEM" ]; then
+    add_webmail_config "$PROXY_SYSTEM" "default.stpl"
+fi
+
 # Increase value for domain
 increase_user_value "$user" '$U_MAIL_SSL'
 
 # Set SSL as enabled in configuration
 update_object_value 'mail' 'DOMAIN' "$domain" '$SSL' "yes"
 
-# Refresh webmail configuration
-if [ ! -z "$WEB_SYSTEM" ]; then
-    add_ssl_webmail_config
 
-    # Restart web services for webmail changes to take effect
-    $BIN/v-restart-web $restart
-    $BIN/v-restart-proxy $restart
-fi
+
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -495,6 +495,15 @@ rebuild_mail_domain_conf() {
         if [ ! -z "$CATCHALL" ]; then
             echo "*@$domain_idn:$CATCHALL" >> $dom_aliases
         fi
+
+        # Remove and recreate SSL configuration
+        if [ "$SSL" = 'yes' ]; then
+            add_mail_ssl_config
+
+            # Update counters
+            update_object_value 'mail' 'DOMAIN' "$domain" '$SSL' "yes"
+            U_MAIL_SSL=$((U_MAIL_SSL + 1))
+        fi
     fi
 
     # Rebuild domain accounts
@@ -545,12 +554,6 @@ rebuild_mail_domain_conf() {
             chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain/passwd
         fi
         chown $user:mail $HOMEDIR/$user/mail/$domain_idn
-        # Remove and recreate SSL configuration
-            if [ "$SSL" = 'yes' ]; then
-                mkdir -p $HOMEDIR/$user/conf/mail/$domain/ssl/
-                del_mail_ssl_config
-                add_mail_ssl_config
-            fi
     fi
 
     # Update counters

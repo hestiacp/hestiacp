@@ -629,6 +629,10 @@ add_mail_ssl_config() {
 
 # Delete SSL support for mail domain
 del_mail_ssl_config() {
+    
+    # Remove old mail certificates
+    rm -f $HOMEDIR/$user/conf/mail/$domain/ssl/*
+
     # Remove dovecot configuration
     rm -f /etc/dovecot/conf.d/domains/mail.$domain.conf
 

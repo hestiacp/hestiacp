@@ -498,6 +498,7 @@ rebuild_mail_domain_conf() {
 
         # Remove and recreate SSL configuration
         if [ "$SSL" = 'yes' ]; then
+            del_mail_ssl_config
             add_mail_ssl_config
 
             # Update counters

@@ -9,6 +9,7 @@ RRD_STEP=300
 BIN=$HESTIA/bin
 USER_DATA=$HESTIA/data/users/$user
 WEBTPL=$HESTIA/data/templates/web
+MAILTPL=$HESTIA/data/templates/mail
 DNSTPL=$HESTIA/data/templates/dns
 RRD=$HESTIA/web/rrd
 SENDMAIL="$HESTIA/web/inc/mail-wrapper.php"
@@ -35,6 +36,13 @@ E_DB=17
 E_RRD=18
 E_UPDATE=19
 E_RESTART=20
+
+# Generate time stamp
+new_timestamp() {
+    time_n_date=$(date +'%T %F')
+    time=$(echo "$time_n_date" |cut -f 1 -d \ )
+    date=$(echo "$time_n_date" |cut -f 2 -d \ )
+}
 
 # Event string for logger
 for ((I=1; I <= $# ; I++)); do

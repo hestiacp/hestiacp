@@ -53,6 +53,11 @@ fi
 # Starting loop
 for domain in $(search_objects 'mail' 'SUSPENDED' "*" 'DOMAIN'); do
     rebuild_mail_domain_conf
+    if [ ! -z "$WEB_SYSTEM" ] || [ ! -z "$PROXY_SYSTEM" ]; then
+        $BIN/v-delete-webmail $1 $domain ''
+        $BIN/v-add-webmail $1 $domain '' 
+        sleep 0.5
+    fi
 done
 
 

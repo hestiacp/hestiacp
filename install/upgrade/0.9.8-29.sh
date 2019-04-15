@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # define vars
 HESTIA="/usr/local/hestia"
 HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
@@ -19,7 +18,23 @@ source /usr/local/hestia/func/main.sh
 mkdir -p $HESTIA_BACKUP/templates/
 mkdir -p $HESTIA_BACKUP/packages/
 
-echo "(*) Upgrading to Hestia Control Panel v$VERSION..."
+# Clear the screen from apt output to prepare for upgrade installer experience
+clear
+echo
+echo '  _   _           _   _        ____ ____  '
+echo ' | | | | ___  ___| |_(_) __ _ / ___|  _ \ '
+echo ' | |_| |/ _ \/ __| __| |/ _` | |   | |_) |'
+echo ' |  _  |  __/\__ \ |_| | (_| | |___|  __/ '
+echo ' |_| |_|\___||___/\__|_|\__,_|\____|_|    '
+echo
+echo '                      Hestia Control Panel'
+echo -e "\n\n"
+echo "Upgrading to Hestia Control Panel v$VERSION..."
+echo "==================================================="
+echo ""
+echo "This process may take a few minutes, please wait..."
+echo ""
+echo ""
 
 # Update Apache and NGINX configuration to support new file structure
 if [ -f /etc/apache2/apache.conf ]; then
@@ -67,6 +82,7 @@ if [ -d $HESTIA/data/templates/ ]; then
     cp -rf $HESTIA/data/templates $HESTIA_BACKUP/
     $HESTIA/bin/v-update-web-templates
     $HESTIA/bin/v-update-dns-templates
+    $HESTIA/bin/v-update-mail-templates
 fi
 
 # Remove old Office 365 template as there is a newer version with an updated name
@@ -166,6 +182,12 @@ if [ -f /etc/dovecot/conf.d/15-mailboxes.conf ]; then
     # Remove mailboxes configuration if it exists
     rm -f /etc/dovecot/conf.d/15-mailboxes.conf
 fi
+if [ -f /etc/dovecot/dovecot.conf ]; then
+    # Update dovecot configuration and restart dovecot service
+    cp -f $HESTIA/install/deb/dovecot/dovecot.conf /etc/dovecot/dovecot.conf
+    systemctl restart dovecot
+    sleep 0.5
+fi
 
 # Fix exim configuration
 if [ -f /etc/exim4/exim4.conf.template ]; then
@@ -180,60 +202,26 @@ if [ -f /etc/exim4/exim4.conf.template ]; then
     fi
 fi
 
-if [ -f /etc/dovecot/dovecot.conf ]; then
-    # Update dovecot configuration and restart dovecot service
-    cp -f $HESTIA/install/deb/dovecot/dovecot.conf /etc/dovecot/dovecot.conf
-    systemctl restart dovecot
-    sleep 0.5
-fi
-
-# Update Roundcube webmail configuration
-if [ "$WEB_SYSTEM" = 'apache2' ]; then
-    echo "(*) Updating Roundcube global subdomain configuration for apache2..."
-    cp -f $HESTIA/install/deb/roundcube/apache.conf /etc/apache2/conf.d/roundcube.conf
-fi
-if [ ! -z "$PROXY_SYSTEM" ]; then
-    echo "(*) Updating Roundcube global subdomain configuration for nginx..."
-    if [ -f /etc/nginx/conf.d/webmail.inc ]; then
-        rm -f /etc/nginx/conf.d/webmail.inc
-    fi
-    cp -f $HESTIA/install/deb/nginx/webmail.conf /etc/nginx/conf.d/webmail.conf
-fi
-
-# Write web server configuration
-    sed -i 's|%webmail_alias%|'$WEBMAIL_ALIAS'|g' /etc/apache2/conf.d/roundcube.conf
-    sed -i 's|%domain%|'$domain'|g'  /etc/apache2/conf.d/roundcube.conf
-    sed -i 's|%domain_idn%|'$domain'|g'  /etc/apache2/conf.d/roundcube.conf
-    sed -i 's|%home%|'$HOMEDIR'|g'  /etc/apache2/conf.d/roundcube.conf
-    sed -i 's|%user%|'$user'|g'  /etc/apache2/conf.d/roundcube.conf
-    sed -i 's|%group%|'$user'|g'  /etc/apache2/conf.d/roundcube.conf
-    sed -i 's|%ip%|'$ipaddr'|g'  /etc/apache2/conf.d/roundcube.conf
-    sed -i 's|%web_port%|'$WEB_PORT'|g'  /etc/apache2/conf.d/roundcube.conf
-    sed -i 's|%proxy_port%|'$PROXY_PORT'|g' /etc/apache2/conf.d/roundcube.conf
-    sed -i 's|%web_ssl_port%|'$WEB_SSL_PORT'|g'  /etc/apache2/conf.d/roundcube.conf
-    sed -i 's|%proxy_ssl_port%|'$PROXY_SSL_PORT'|g'  /etc/apache2/conf.d/roundcube.conf
-    sed -i 's|%web_system%|'$WEB_SYSTEM'|g' /etc/apache2/conf.d/roundcube.conf
-
-# Write proxy server configurationls
-    sed -i 's|%webmail_alias%|'$WEBMAIL_ALIAS'|g' /etc/nginx/conf.d/webmail.conf
-    sed -i 's|%domain%|'$domain'|g' /etc/nginx/conf.d/webmail.conf
-    sed -i 's|%domain_idn%|'$domain'|g' /etc/nginx/conf.d/webmail.conf
-    sed -i 's|%home%|'$HOMEDIR'|g' /etc/nginx/conf.d/webmail.conf
-    sed -i 's|%user%|'$user'|g' /etc/nginx/conf.d/webmail.conf
-    sed -i 's|%group%|'$user'|g' /etc/nginx/conf.d/webmail.conf
-    sed -i 's|%ip%|'$ipaddr'|g' /etc/nginx/conf.d/webmail.conf
-    sed -i 's|%web_port%|'$WEB_PORT'|g' /etc/nginx/conf.d/webmail.conf
-    sed -i 's|%proxy_port%|'$PROXY_PORT'|g' /etc/nginx/conf.d/webmail.conf
-    sed -i 's|%web_ssl_port%|'$WEB_SSL_PORT'|g' /etc/nginx/conf.d/webmail.conf
-    sed -i 's|%proxy_ssl_port%|'$PROXY_SSL_PORT'|g' /etc/nginx/conf.d/webmail.conf
-    sed -i 's|%web_system%|'$WEB_SYSTEM'|g' /etc/nginx/conf.d/webmail.conf
-
 # Add IMAP system variable to configuration if dovecot is installed
 if [ -z "$IMAP_SYSTEM" ]; then 
     if [ -f /usr/bin/dovecot ]; then
         echo "(*) Adding missing IMAP_SYSTEM variable to hestia.conf..."
         echo "IMAP_SYSTEM = 'dovecot'" >> $HESTIA/conf/hestia.conf
     fi
+fi
+
+# Remove global webmail configuration files in favor of per-domain vhosts
+if [ -f /etc/apache2/conf.d/roundcube.conf ]; then
+    echo "(*) Removing global webmail configuration files for Apache2..."
+    rm -f /etc/apache2/conf.d/roundcube.conf
+fi
+if [ -f /etc/nginx/conf.d/webmail.inc ]; then
+    echo "(*) Removing global webmail configuration files for nginx..."
+    rm -f /etc/nginx/conf.d/webmail.inc 
+fi
+if [ -f /etc/nginx/conf.d/webmail.conf ]; then
+    echo "(*) Removing global webmail configuration files for nginx..."
+    rm -f /etc/nginx/conf.d/webmail.conf
 fi
 
 # Remove Webalizer and replace it with awstats as default
@@ -247,10 +235,24 @@ $HESTIA/bin/v-add-sys-sftp-jail
 # Rebuild user
 for user in `ls /usr/local/hestia/data/users/`; do
     echo "(*) Rebuilding domains and account for user: $user..."
-    v-rebuild-web-domains $user
-    sleep 0.5
-    v-rebuild-dns-domains $user
-    sleep 0.5
-    v-rebuild-mail-domains $user
-    sleep 0.5
+    v-rebuild-web-domains $user >/dev/null 2>&1
+    sleep 1
+    v-rebuild-dns-domains $user >/dev/null 2>&1
+    sleep 1
+    v-rebuild-mail-domains $user >/dev/null 2>&1
+    sleep 1
 done
+echo ""
+echo "    Upgrade complete! Please report any bugs or issues to"
+echo "    https://github.com/hestiacp/hestiacp/issues."
+echo ""
+echo "    We hope that you enjoy this release of Hestia Control Panel,"
+echo "    enjoy your day!"
+echo ""
+echo "    Sincerely,"
+echo "    The Hestia Control Panel development team"
+echo ""
+echo "    www.hestiacp.com"
+echo "    Made with love & pride from the open-source community around the world."
+echo ""
+echo ""

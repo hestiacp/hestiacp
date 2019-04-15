@@ -1,8 +1,8 @@
 server {
     listen      %ip%:%proxy_port%;
-    server_name %webmail_vhost%;
+    server_name %domain% %alias%;
         
-    include %home%/%user%/conf/web/%domain/nginx.forcessl.conf*;
+    include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
     location / {
         proxy_pass      http://%ip%:%web_port%;
         location ~* ^.+\.(jpg,jpeg,gif,png,ico,svg,css,zip,tgz,gz,rar,bz2,doc,xls,exe,pdf,ppt,txt,odt,ods,odp,odf,tar,wav,bmp,rtf,js,mp3,avi,mpeg,flv,html,htm)$ {
@@ -13,7 +13,7 @@ server {
     }
 
     location /error/ {
-        alias   %home%/%user%/web/%domain%/document_errors/;
+        alias   %home%/%user%/web/%root_domain%/document_errors/;
     }
 
     location ~ /(config|temp|logs) {
@@ -37,4 +37,6 @@ server {
     location ~ /\.git/  {return 404;}
     location ~ /\.hg/   {return 404;}
     location ~ /\.bzr/  {return 404;}
+
+    include %home%/%user%/conf/mail/%root_domain%/nginx.conf_*;
 }

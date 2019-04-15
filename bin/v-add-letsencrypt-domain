@@ -13,7 +13,7 @@
 user=$1
 domain=$2
 aliases=$3
-mail=$3
+mail=$4
 
 # LE API
 LE_API='https://acme-v02.api.letsencrypt.org'
@@ -86,7 +86,7 @@ fi
 # Rework domain and alieses for mail.
 if [ ! -z "$mail" ]; then
     original_domain=$domain
-    aliases="webmail.$domain,autodiscover.$domain"
+    aliases="webmail.$original_domain,autodiscover.$original_domain"
     domain="mail.$domain"
 fi
 
@@ -163,8 +163,14 @@ for auth in $authz; do
         check_result $? "DNS _acme-challenge record wasn't created"
     else
         if [ "$WEB_SYSTEM" = 'nginx' ] || [ ! -z "$PROXY_SYSTEM" ]; then
-            conf="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.conf_letsencrypt"
-            sconf="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.conf_letsencrypt"
+            if [ -z "$mail" ]; then
+                conf="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.conf_letsencrypt"
+                sconf="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.ssl.conf_letsencrypt"
+            else
+                conf="$HOMEDIR/$user/conf/web/$original_domain/$PROXY_SYSTEM.conf_letsencryptmail"
+                sconf="$HOMEDIR/$user/conf/web/$original_domain/$PROXY_SYSTEM.ssl.conf_letsencryptmail"
+            fi
+
             if [ ! -e "$conf" ]; then
                 echo 'location ~ "^/\.well-known/acme-challenge/(.*)$" {' \
                     > $conf

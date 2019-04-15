@@ -65,7 +65,7 @@ for user in $($BIN/v-list-users plain |cut -f 1); do
                 sleep 10
             fi
             ((lecounter++))
-            msg=$($BIN/v-add-letsencrypt-domain $user $domain '' yes)
+            msg=$($BIN/v-add-letsencrypt-domain $user $domain ' ' yes)
             if [ $? -ne 0 ]; then
                 echo "$domain $msg"
             fi

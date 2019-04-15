@@ -633,7 +633,7 @@ add_webmail_config() {
     chown root:$user $conf
     chmod 640 $conf
 
-    if [[ "$2" =~ stpl$ ]]; then
+    if [ "$2" = "default.stpl" ]; then
         if [ ! -z "$WEB_SYSTEM" ]; then
             rm -f /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
             ln -s $conf /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
@@ -642,7 +642,6 @@ add_webmail_config() {
             rm -f /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
             ln -s $conf /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
         fi
-
         # Clear old configurations
         rm -rf $HOMEDIR/$user/conf/mail/$domain.*
         rm -rf $HOMEDIR/$user/conf/mail/ssl.$domain.*
@@ -656,7 +655,6 @@ add_webmail_config() {
             rm -f /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
             ln -s $conf /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
         fi
-
         # Clear old configurations
         rm -rf $HOMEDIR/$user/conf/mail/$domain.*
     fi

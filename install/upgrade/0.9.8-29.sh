@@ -166,6 +166,20 @@ if [ -f /etc/dovecot/conf.d/15-mailboxes.conf ]; then
     # Remove mailboxes configuration if it exists
     rm -f /etc/dovecot/conf.d/15-mailboxes.conf
 fi
+
+# Fix exim configuration
+if [ -f /etc/exim4/exim4.conf.template ]; then
+    echo "(*) Updating exim SMTP server configuration..."
+    cp -f $HESTIA/install/deb/exim/exim4.conf.template /etc/exim4/exim4.conf.template 
+    # Reconfigure spam filter and virus scanning
+    if [ ! -z "$ANTISPAM_SYSTEM" ]; then
+        sed -i "s/#SPAM/SPAM/g" /etc/exim4/exim4.conf.template
+    fi
+    if [ ! -z "$ANTIVIRUS_SYSTEM" ]; then
+        sed -i "s/#CLAMD/CLAMD/g" /etc/exim4/exim4.conf.template
+    fi
+fi
+
 if [ -f /etc/dovecot/dovecot.conf ]; then
     # Update dovecot configuration and restart dovecot service
     cp -f $HESTIA/install/deb/dovecot/dovecot.conf /etc/dovecot/dovecot.conf

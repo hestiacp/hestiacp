@@ -229,13 +229,24 @@ add_web_config() {
     chown root:$user $conf
     chmod 640 $conf
 
-    if [ "$1" != 'nginx' ]; then
-        rm -f /etc/$1/conf.d/domains/$domain.conf
-        ln -s $HOMEDIR/$user/conf/web/$domain/$1.conf /etc/$1/conf.d/domains/$domain.conf
+    if [[ "$2" =~ stpl$ ]]; then
+        rm -f /etc/$1/conf.d/domains/$domain.ssl.conf
+        echo "include $conf;" > /etc/$1/conf.d/domains/$domain.ssl.conf
 
+        # Clear old configurations
+        rm -fr $HOMEDIR/$user/conf/web/$domain.*
+        rm -fr $HOMEDIR/$user/conf/web/ssl.$domain.*
+        rm -fr $HOMEDIR/$user/conf/web/*nginx.$domain.*
     else
         rm -f /etc/$1/conf.d/domains/$domain.conf
-        ln -s $HOMEDIR/$user/conf/web/$domain/$1.conf /etc/$1/conf.d/domains/$domain.conf
+        echo "include $conf;" > /etc/$1/conf.d/domains/$domain.conf
+
+        # Clear old configurations
+        rm -fr $HOMEDIR/$user/conf/web/$domain.*
+    fi
+
+    if [ "$1" != 'nginx' ]; then
+        find /etc/$1/conf.d/domains -type f -name "$domain.*"  | xargs sed -i "s/;//g"
     fi
 
     trigger="${2/.*pl/.sh}"

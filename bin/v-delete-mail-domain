@@ -62,6 +62,10 @@ if [ "$DKIM" = 'yes' ] && [ -e "$USER_DATA/dns/$domain.conf" ]; then
     done
 fi
 
+# Delete SSL certificates and configuration
+if [ "$SSL" = 'yes' ]; then
+    del_mail_ssl_config
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #
@@ -77,9 +81,13 @@ rm -f $USER_DATA/mail/*@$domain.msg
 # Decreasing domain value
 decrease_user_value "$user" '$U_MAIL_DOMAINS'
 if [ "$DKIM" = 'yes' ]; then
-    decrease_user_value "$user" '$U_MAIL_DKMI'
+    decrease_user_value "$user" '$U_MAIL_DKIM'
 fi
 decrease_user_value "$user" '$U_MAIL_ACCOUNTS' "$accounts"
+
+# Restart servers
+$BIN/v-restart-web $restart
+$BIN/v-restart-proxy $restart
 
 # Logging
 log_history "deleted mail domain $domain"

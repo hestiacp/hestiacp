@@ -633,6 +633,18 @@ add_webmail_config() {
     chown root:$user $conf
     chmod 640 $conf
 
+    if [ "$2" = "default.tpl" ]; then
+        if [ ! -z "$WEB_SYSTEM" ]; then
+            rm -f /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
+            ln -s $conf /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
+        fi
+        if [ ! -z "$PROXY_SYSTEM" ]; then
+            rm -f /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
+            ln -s $conf /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
+        fi
+        # Clear old configurations
+        rm -rf $HOMEDIR/$user/conf/mail/$domain.*
+    fi
     if [ "$2" = "default.stpl" ]; then
         if [ ! -z "$WEB_SYSTEM" ]; then
             rm -f /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
@@ -646,17 +658,6 @@ add_webmail_config() {
         rm -rf $HOMEDIR/$user/conf/mail/$domain.*
         rm -rf $HOMEDIR/$user/conf/mail/ssl.$domain.*
         rm -rf $HOMEDIR/$user/conf/mail/*nginx.$domain.*
-    else
-        if [ ! -z "$WEB_SYSTEM" ]; then
-            rm -f /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
-            ln -s $conf /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
-        fi
-        if [ ! -z "$PROXY_SYSTEM" ]; then
-            rm -f /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
-            ln -s $conf /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
-        fi
-        # Clear old configurations
-        rm -rf $HOMEDIR/$user/conf/mail/$domain.*
     fi
 }
 

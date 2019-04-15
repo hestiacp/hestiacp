@@ -65,7 +65,7 @@ if [ ! -z "$PROXY_SYSTEM" ]; then
 fi
 
 # Enable SSL for webmail if available
-if [ '$SSL' = 'yes' ]; then
+if [ -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt ]; then
     if [ ! -z "$WEB_SYSTEM" ]; then
         add_webmail_config "$WEB_SYSTEM" "default.stpl"
     fi

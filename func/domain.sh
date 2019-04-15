@@ -600,7 +600,7 @@ add_webmail_config() {
     ssl_pem="$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem"
     ssl_ca="$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.ca"
 
-    cat $MAILTPL/$1/$WEB_BACKEND/$2 | \
+    cat $MAILTPL/$1/$2 | \
         sed -e "s|%ip%|$local_ip|g" \
             -e "s|%domain%|$WEBMAIL_ALIAS.$domain|g" \
             -e "s|%domain_idn%|$domain_idn|g" \
@@ -633,8 +633,8 @@ add_webmail_config() {
     chmod 640 $conf
 
     if [[ "$2" =~ stpl$ ]]; then
-        rm -f /etc/$1/conf.d/domains/webmail.$domain.ssl.conf
-        echo "include $conf;" > /etc/$1/conf.d/domains/webmail.$domain.ssl.conf
+        rm -f /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
+        echo "include $conf;" > /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
 
         # Clear old configurations
         rm -rf $HOMEDIR/$user/conf/mail/$domain.*
@@ -642,7 +642,7 @@ add_webmail_config() {
         rm -rf $HOMEDIR/$user/conf/mail/*nginx.$domain.*
     else
         rm -f /etc/$1/conf.d/domains/mail.$domain.conf
-        echo "include $conf;" > /etc/$1/conf.d/domains/webmail.$domain.conf
+        echo "include $conf;" > /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
 
         # Clear old configurations
         rm -rf $HOMEDIR/$user/conf/mail/$domain.*

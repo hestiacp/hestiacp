@@ -439,7 +439,7 @@ rebuild_dns_domain_conf() {
 
 # MAIL domain rebuild
 rebuild_mail_domain_conf() {
-
+    get_domain_values 'web'
     get_domain_values 'mail'
 
     if [[ "$domain" = *[![:ascii:]]* ]]; then
@@ -505,9 +505,19 @@ rebuild_mail_domain_conf() {
             del_mail_ssl_config
             add_mail_ssl_config
 
+            add_webmail_config '$WEB_SYSTEM' 'default.stpl'
+
             # Update counters
             update_object_value 'mail' 'DOMAIN' "$domain" '$SSL' "yes"
             U_MAIL_SSL=$((U_MAIL_SSL + 1))
+        fi
+
+        # Add webmail configuration
+        if [ ! -z "$WEB_SYSTEM" ]; then 
+            add_webmail_config '$WEB_SYSTEM' 'default.tpl'
+        fi
+        if [ ! -z "PROXY_SYSTEM" ]; then 
+            add_webmail_config 'PROXY_SYSTEM' 'default.tpl'
         fi
     fi
 

@@ -24,8 +24,8 @@ source $HESTIA/conf/hestia.conf
 # Defining htpasswd file
 htaccess="$HOMEDIR/$user/conf/web/$domain/htaccess"
 htpasswd="$HOMEDIR/$user/conf/web/$domain/htpasswd"
-shtaccess="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.$domain.conf_htaccess"
-shtpasswd="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.$domain.htpasswd"
+shtaccess="$htaccess"
+shtpasswd="$htpasswd"
 docroot="$HOMEDIR/$user/web/$domain/public_html"
 
 

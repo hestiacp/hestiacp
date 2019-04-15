@@ -101,9 +101,7 @@ chmod 751 $HESTIA/data/templates/web/unassigned/js
 chmod 751 $HESTIA/data/templates/web/unassigned/webfonts
 
 # Add unassigned hosts configuration to nginx and apache2
-if [ "$WEB_BACKEND" = "php-fpm" ]; then
-    echo "(!) Unassigned hosts configuration for Apache not necessary on PHP-FPM installations."
-elif [ "$WEB_BACKEND" = "apache2" ]; then
+if [ "$WEB_SYSTEM" = "apache2" ]; then
     echo "(*) Adding unassigned hosts configuration to apache2..."
     if [ -f /usr/local/hestia/data/ips/* ]; then
         for ip in /usr/local/hestia/data/ips/*; do
@@ -113,7 +111,8 @@ elif [ "$WEB_BACKEND" = "apache2" ]; then
             sed -i 's/directIP/'$ipaddr'/g' /etc/apache2/conf.d/$ipaddr.conf
         done
     fi
-elif [ "$PROXY_SYSTEM" = "nginx" ]; then
+fi
+if [ "$PROXY_SYSTEM" = "nginx" ]; then
     echo "(*) Adding unassigned hosts configuration to nginx..."
     if [ -f /usr/local/hestia/data/ips/* ]; then
         for ip in /usr/local/hestia/data/ips/*; do

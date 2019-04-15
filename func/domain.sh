@@ -602,7 +602,7 @@ add_webmail_config() {
 
     cat $MAILTPL/$1/$WEB_BACKEND/$2 | \
         sed -e "s|%ip%|$local_ip|g" \
-            -e "s|%domain%|$domain|g" \
+            -e "s|%domain%|$WEBMAIL_ALIAS.$domain|g" \
             -e "s|%domain_idn%|$domain_idn|g" \
             -e "s|%alias%|${aliases//,/ }|g" \
             -e "s|%alias_idn%|${aliases_idn//,/ }|g" \

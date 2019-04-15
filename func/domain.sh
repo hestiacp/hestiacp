@@ -230,8 +230,11 @@ add_web_config() {
     chmod 640 $conf
 
     if [ "$1" != 'nginx' ]; then
+        rm -f /etc/$1/conf.d/domains/$domain.conf
         ln -s $HOMEDIR/$user/conf/web/$domain/$1.conf /etc/$1/conf.d/domains/$domain.conf
+
     else
+        rm -f /etc/$1/conf.d/domains/$domain.conf
         ln -s $HOMEDIR/$user/conf/web/$domain/$1.conf /etc/$1/conf.d/domains/$domain.conf
     fi
 

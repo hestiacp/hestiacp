@@ -148,7 +148,6 @@ rebuild_user_conf() {
 rebuild_web_domain_conf() {
 
     # Ensure that global domain folders are available
-    
     if [ ! -d /etc/$WEB_SYSTEM/conf.d/domains ]; then
         mkdir -p /etc/$WEB_SYSTEM/conf.d/domains
     fi
@@ -159,6 +158,14 @@ rebuild_web_domain_conf() {
     get_domain_values 'web'
     is_ip_valid $IP
     prepare_web_domain_values
+
+    # Remove old web configuration files
+    if [ -f /etc/$PROXY_SYSTEM/conf.d/$domain.conf ]; then
+        rm -f /etc/$PROXY_SYSTEM/conf.d/$domain*.conf
+    fi
+    if [ -f /etc/$WEB_SYSTEM/conf.d/$domain.conf ]; then
+        rm -f /etc/$WEB_SYSTEM/conf.d/$domain*.conf
+    fi
 
     # Rebuilding domain directories
     mkdir -p $HOMEDIR/$user/web/$domain \

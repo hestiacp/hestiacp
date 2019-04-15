@@ -316,7 +316,11 @@ del_web_config() {
 
     # Clean up legacy configuration files
     if [ -e "$conf" ]; then
-        sed -i "\|$conf|d" /etc/$1/conf.d/hestia.conf
+        if [[ "$2" =~ stpl$ ]]; then
+            rm -f /etc/$WEB_SYSTEM/conf.d/domains/$domain.ssl.conf
+        else
+            rm -f /etc/$WEB_SYSTEM/conf.d/domains/$domain.conf
+        fi
         rm -f $conf
     else
         # fallback to old style configs

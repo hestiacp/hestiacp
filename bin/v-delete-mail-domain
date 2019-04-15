@@ -67,6 +67,9 @@ if [ "$SSL" = 'yes' ]; then
     del_mail_ssl_config
 fi
 
+# Delete webmail configuration
+del_webmail_config
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

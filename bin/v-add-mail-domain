@@ -127,6 +127,9 @@ if [ ! -z "$DNS_SYSTEM" ] && [ "$dkim" = 'yes' ]; then
     fi
 fi
 
+# Add webmail configuration to mail domain
+add_webmail_config
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

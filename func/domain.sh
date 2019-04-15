@@ -739,6 +739,14 @@ del_mail_ssl_config() {
     rm -f /usr/local/hestia/ssl/mail/mail.$domain.*
 }
 
+del_webmail_config() {
+    if [ ! -z "$WEB_SYSTEM" ]; then 
+        rm -f $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM*.conf
+    fi
+    if [ ! -z "$PROXY_SYSTEM" ]; then
+        rm -f $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM*.conf
+    fi
+}
 #----------------------------------------------------------#
 #                        CMN                               #
 #----------------------------------------------------------#

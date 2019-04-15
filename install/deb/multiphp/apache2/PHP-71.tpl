@@ -35,7 +35,7 @@
     </FilesMatch>
     SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0
 
-    IncludeOptional %home%/%user%/conf/web/%domain%/%web_system%.conf**
+    IncludeOptional %home%/%user%/conf/web/%domain%/%web_system%.conf_*
 
 </VirtualHost>
 

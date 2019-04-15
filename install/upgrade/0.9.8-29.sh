@@ -169,6 +169,16 @@ if [ -f /etc/dovecot/dovecot.conf ]; then
     sleep 0.5
 fi
 
+# Update Roundcube webmail configuration
+if [ -f /etc/apache2/conf.d/webmail.conf ]; then
+    echo "(*) Updating Roundcube global subdomain configuration for apache2..."
+    cp -f $HESTIA/install/deb/roundcube/apache.conf /etc/apache2/conf.d/roundcube.conf.conf
+fi
+if [ -f /etc/nginx/conf.d/webmail.conf ]; then
+    echo "(*) Updating Roundcube global subdomain configuration for nginx..."
+    cp -f $HESTIA/install/deb/nginx/webmail.conf /etc/nginx/conf.d/webmail.conf
+fi
+
 # Add IMAP system variable to configuration if dovecot is installed
 if [ -z "$IMAP_SYSTEM" ]; then 
     if [ -f /usr/bin/dovecot ]; then

@@ -1,5 +1,5 @@
 <VirtualHost %ip%:%web_port%>
-    ServerName %webmail_vhost%
+    ServerName %webmail_alias%.%domain%
     Alias / /var/lib/roundcube/
     Alias /error/ %home%/%user%/web/%domain%/document_errors/
     #SuexecUserGroup %user% %group%

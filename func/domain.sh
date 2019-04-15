@@ -604,6 +604,7 @@ add_webmail_config() {
         sed -e "s|%ip%|$local_ip|g" \
             -e "s|%domain%|$WEBMAIL_ALIAS.$domain|g" \
             -e "s|%domain_idn%|$domain_idn|g" \
+            -e "s|%webmail_alias%|$WEBMAIL_ALIAS|g" \
             -e "s|%alias%|${aliases//,/ }|g" \
             -e "s|%alias_idn%|${aliases_idn//,/ }|g" \
             -e "s|%alias_string%|$alias_string|g" \
@@ -646,7 +647,7 @@ add_webmail_config() {
         rm -rf $HOMEDIR/$user/conf/mail/ssl.$domain.*
         rm -rf $HOMEDIR/$user/conf/mail/*nginx.$domain.*
     else
-        rm -f /etc/$1/conf.d/domains/mail.$domain.conf
+        rm -f /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
         if [ ! -z "$WEB_SYSTEM" ]; then
             ln -s $conf /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
         fi
@@ -656,10 +657,6 @@ add_webmail_config() {
 
         # Clear old configurations
         rm -rf $HOMEDIR/$user/conf/mail/$domain.*
-    fi
-
-    if [ "$1" != 'nginx' ]; then
-        find /etc/$1/conf.d/domains -type f -name "$domain.*"  | xargs sed -i "s/;//g"
     fi
 }
 
@@ -740,14 +737,28 @@ del_mail_ssl_config() {
     rm -f /usr/local/hestia/ssl/mail/mail.$domain.*
 }
 
+# Delete webmail support
 del_webmail_config() {
     if [ ! -z "$WEB_SYSTEM" ]; then 
         rm -f $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM*.conf
     fi
+
     if [ ! -z "$PROXY_SYSTEM" ]; then
         rm -f $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM*.conf
     fi
 }
+
+# Delete SSL webmail support
+del_webmail_ssl_config() {
+    if [ ! -z "$WEB_SYSTEM" ]; then 
+        rm -f $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM.ssl.conf
+    fi
+    
+    if [ ! -z "$PROXY_SYSTEM" ]; then
+        rm -f $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM.ssl.conf
+    fi
+}
+
 #----------------------------------------------------------#
 #                        CMN                               #
 #----------------------------------------------------------#

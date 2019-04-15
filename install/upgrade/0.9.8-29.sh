@@ -29,7 +29,7 @@ fi
 
 # Generating dhparam.
 if [ ! -e /etc/ssl/dhparam.pem ]; then
-    echo "(*) Enabling HTTPS Strict Transport Security (HSTS) support"
+    echo "(*) Enabling HTTPS Strict Transport Security (HSTS) support..."
 
     # Backup existing conf
     mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
@@ -174,8 +174,9 @@ if [ -f /etc/apache2/conf.d/webmail.conf ]; then
     echo "(*) Updating Roundcube global subdomain configuration for apache2..."
     cp -f $HESTIA/install/deb/roundcube/apache.conf /etc/apache2/conf.d/roundcube.conf.conf
 fi
-if [ -f /etc/nginx/conf.d/webmail.conf ]; then
+if [ -f /etc/nginx/conf.d/webmail.inc ]; then
     echo "(*) Updating Roundcube global subdomain configuration for nginx..."
+    rm -f /etc/nginx/conf.d/webmail.inc
     cp -f $HESTIA/install/deb/nginx/webmail.conf /etc/nginx/conf.d/webmail.conf
 fi
 

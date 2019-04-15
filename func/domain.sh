@@ -634,7 +634,12 @@ add_webmail_config() {
 
     if [[ "$2" =~ stpl$ ]]; then
         rm -f /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
-        echo "include $conf;" > /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
+        if [ ! -z "$WEB_SYSTEM" ]; then
+            ln -s $conf /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
+        fi
+        if [ ! -z "$PROXY_SYSTEM" ]; then
+            ln -s $conf /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
+        fi
 
         # Clear old configurations
         rm -rf $HOMEDIR/$user/conf/mail/$domain.*
@@ -642,7 +647,12 @@ add_webmail_config() {
         rm -rf $HOMEDIR/$user/conf/mail/*nginx.$domain.*
     else
         rm -f /etc/$1/conf.d/domains/mail.$domain.conf
-        echo "include $conf;" > /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
+        if [ ! -z "$WEB_SYSTEM" ]; then
+            ln -s $conf /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
+        fi
+        if [ ! -z "$PROXY_SYSTEM" ]; then
+            ln -s $conf /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
+        fi
 
         # Clear old configurations
         rm -rf $HOMEDIR/$user/conf/mail/$domain.*

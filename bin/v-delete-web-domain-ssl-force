@@ -38,7 +38,7 @@ is_object_unsuspended 'web' 'DOMAIN' "$domain"
 eval $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 
 # Remove forcessl configs
-rm -f /home/$user/conf/web/forcessl.*$domain*.conf
+rm -f /home/$user/conf/web/$domain/forcessl.*.conf
 
 
 #----------------------------------------------------------#

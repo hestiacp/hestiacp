@@ -7,7 +7,7 @@ server {
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;
     error_log   /var/log/nginx/domains/%domain%.error.log error;
         
-    include %home%/%user%/conf/web/forcessl.nginx.%domain%.conf*;
+    include %home%/%user%/conf/web/%domain%/forcessl.nginx.conf*;
     
     proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
     proxy_redirect          off;

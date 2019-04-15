@@ -2,7 +2,7 @@ server {
     listen      %ip%:%proxy_port%;
     server_name %domain_idn% %alias_idn%;
         
-    include %home%/%user%/conf/web/forcessl.nginx.%domain%.conf*;
+    include %home%/%user%/conf/web/%domain%/forcessl.nginx.conf*;
 
     location / {
         proxy_pass      http://%ip%:%web_port%;

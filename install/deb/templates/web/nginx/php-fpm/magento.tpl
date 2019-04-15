@@ -13,7 +13,7 @@ server {
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;
     error_log   /var/log/nginx/domains/%domain%.error.log error;
         
-    include %home%/%user%/conf/web/forcessl.nginx.%domain%.conf*;
+    include %home%/%user%/conf/web/%domain%/forcessl.nginx.conf*;
 
     # PHP entry point for setup application
     location ~* ^/setup($|/) {

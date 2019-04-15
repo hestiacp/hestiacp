@@ -47,12 +47,12 @@ if [ ! -z "$PROXY_SYSTEM" ] || [ ! -z "$PROXY" ]; then
     if ! grep --quiet "forcessl" $HESTIA/data/templates/web/nginx/default.tpl; then
         $BIN/v-update-web-templates
     fi
-    forcessl="/home/$user/conf/web/$domain/$PROXY_SYSTEM.force-ssl.conf"
+    forcessl="/home/$user/conf/web/$domain/forcessl.$PROXY_SYSTEM.conf"
 else
     if ! grep --quiet "forcessl" $HESTIA/data/templates/web/nginx/default.tpl; then
         $BIN/v-update-web-templates
     fi
-    forcessl="/home/$user/conf/web/$domain/$WEB_SYSTEM.force-ssl.conf"
+    forcessl="/home/$user/conf/web/$domain/forcessl.$WEB_SYSTEM.conf"
 fi
 
 # Insert redirect commands

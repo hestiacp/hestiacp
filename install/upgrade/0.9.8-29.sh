@@ -5,6 +5,10 @@ HESTIA="/usr/local/hestia"
 HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
 hestiacp="$HESTIA/install/deb"
 
+# Add webmail alias variable to system configuration
+sed -i "/WEBMAIL_ALIAS/d" $HESTIA/conf/hestia.conf
+echo "WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
+
 # load hestia.conf
 source $HESTIA/conf/hestia.conf
 
@@ -17,9 +21,19 @@ mkdir -p $HESTIA_BACKUP/packages/
 
 echo "(*) Upgrading to Hestia Control Panel v$VERSION..."
 
+# Update Apache and NGINX configuration to support new file structure
+if [ -f /etc/apache2/apache.conf ]; then
+    echo "(*) Updating Apache configuration..."
+    cp -f $HESTIA/install/deb/apache2/apache.conf /etc/apache2/apache.conf
+fi
+if [ -f /etc/nginx/nginx.conf ]; then
+    echo "(*) Updating nginx configuration..."
+    cp -f $HESTIA/install/deb/nginx/nginx.conf /etc/nginx/nginx.conf
+fi
+
 # Generating dhparam.
 if [ ! -e /etc/ssl/dhparam.pem ]; then
-    echo "(*) Enabling HTTPS Strict Transport Security (HSTS) support"
+    echo "(*) Enabling HTTPS Strict Transport Security (HSTS) support..."
 
     # Backup existing conf
     mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
@@ -152,6 +166,20 @@ if [ -f /etc/dovecot/conf.d/15-mailboxes.conf ]; then
     # Remove mailboxes configuration if it exists
     rm -f /etc/dovecot/conf.d/15-mailboxes.conf
 fi
+
+# Fix exim configuration
+if [ -f /etc/exim4/exim4.conf.template ]; then
+    echo "(*) Updating exim SMTP server configuration..."
+    cp -f $HESTIA/install/deb/exim/exim4.conf.template /etc/exim4/exim4.conf.template 
+    # Reconfigure spam filter and virus scanning
+    if [ ! -z "$ANTISPAM_SYSTEM" ]; then
+        sed -i "s/#SPAM/SPAM/g" /etc/exim4/exim4.conf.template
+    fi
+    if [ ! -z "$ANTIVIRUS_SYSTEM" ]; then
+        sed -i "s/#CLAMD/CLAMD/g" /etc/exim4/exim4.conf.template
+    fi
+fi
+
 if [ -f /etc/dovecot/dovecot.conf ]; then
     # Update dovecot configuration and restart dovecot service
     cp -f $HESTIA/install/deb/dovecot/dovecot.conf /etc/dovecot/dovecot.conf
@@ -159,28 +187,47 @@ if [ -f /etc/dovecot/dovecot.conf ]; then
     sleep 0.5
 fi
 
-# Update user information for mail domain SSL configuration
-userlist=$(ls --sort=time $HESTIA/data/users/)
-for user in $userlist; do
-    USER_DATA="$HESTIA/data/users/$user"
-    # Update user counter if SSL variable doesn't exist
-    if [ -z "$(grep "U_MAIL_SSL" $USER_DATA/user.conf)" ]; then
-        echo "(*) Adding missing variable for per-domain mail SSL..."
-        echo "U_MAIL_SSL='0'" >> $USER_DATA/user.conf
-    fi
+# Update Roundcube webmail configuration
+if [ -f /etc/apache2/conf.d/roundcube.conf ]; then
+    echo "(*) Updating Roundcube global subdomain configuration for apache2..."
+    cp -f $HESTIA/install/deb/roundcube/apache.conf /etc/apache2/conf.d/roundcube.conf
+fi
 
-    # Update mail configuration file
-    conf="$USER_DATA/mail.conf"
-    while read line ; do
-        eval $line
-        
-        add_object_key "mail" 'DOMAIN' "$DOMAIN" 'SSL' 'SUSPENDED'
-        update_object_value 'mail' 'DOMAIN' "$DOMAIN" '$SSL' 'no'
-        
-        add_object_key "mail" 'DOMAIN' "$DOMAIN" 'LETSENCRYPT' 'SUSPENDED'
-        update_object_value 'mail' 'DOMAIN' "$DOMAIN" '$LETSENCRYPT' 'no'
-    done < $conf
-done
+if [ ! -z "$PROXY_SYSTEM" ]; then
+    echo "(*) Updating Roundcube global subdomain configuration for nginx..."
+    if [ -f /etc/nginx/conf.d/webmail.inc ]; then
+        rm -f /etc/nginx/conf.d/webmail.inc
+    fi
+    cp -f $HESTIA/install/deb/nginx/webmail.conf /etc/nginx/conf.d/webmail.conf
+fi
+
+# Write web server configuration
+    sed -i 's|%webmail_alias%|'$WEBMAIL_ALIAS'|g' /etc/apache2/conf.d/roundcube.conf
+    sed -i 's|%domain%|'$domain'|g'  /etc/apache2/conf.d/roundcube.conf
+    sed -i 's|%domain_idn%|'$domain'|g'  /etc/apache2/conf.d/roundcube.conf
+    sed -i 's|%home%|'$HOMEDIR'|g'  /etc/apache2/conf.d/roundcube.conf
+    sed -i 's|%user%|'$user'|g'  /etc/apache2/conf.d/roundcube.conf
+    sed -i 's|%group%|'$user'|g'  /etc/apache2/conf.d/roundcube.conf
+    sed -i 's|%ip%|'$ipaddr'|g'  /etc/apache2/conf.d/roundcube.conf
+    sed -i 's|%web_port%|'$WEB_PORT'|g'  /etc/apache2/conf.d/roundcube.conf
+    sed -i 's|%proxy_port%|'$PROXY_PORT'|g' /etc/apache2/conf.d/roundcube.conf
+    sed -i 's|%web_ssl_port%|'$WEB_SSL_PORT'|g'  /etc/apache2/conf.d/roundcube.conf
+    sed -i 's|%proxy_ssl_port%|'$PROXY_SSL_PORT'|g'  /etc/apache2/conf.d/roundcube.conf
+    sed -i 's|%web_system%|'$WEB_SYSTEM'|g' /etc/apache2/conf.d/roundcube.conf
+
+# Write proxy server configurationls
+    sed -i 's|%webmail_alias%|'$WEBMAIL_ALIAS'|g' /etc/nginx/conf.d/webmail.conf
+    sed -i 's|%domain%|'$domain'|g' /etc/nginx/conf.d/webmail.conf
+    sed -i 's|%domain_idn%|'$domain'|g' /etc/nginx/conf.d/webmail.conf
+    sed -i 's|%home%|'$HOMEDIR'|g' /etc/nginx/conf.d/webmail.conf
+    sed -i 's|%user%|'$user'|g' /etc/nginx/conf.d/webmail.conf
+    sed -i 's|%group%|'$user'|g' /etc/nginx/conf.d/webmail.conf
+    sed -i 's|%ip%|'$ipaddr'|g' /etc/nginx/conf.d/webmail.conf
+    sed -i 's|%web_port%|'$WEB_PORT'|g' /etc/nginx/conf.d/webmail.conf
+    sed -i 's|%proxy_port%|'$PROXY_PORT'|g' /etc/nginx/conf.d/webmail.conf
+    sed -i 's|%web_ssl_port%|'$WEB_SSL_PORT'|g' /etc/nginx/conf.d/webmail.conf
+    sed -i 's|%proxy_ssl_port%|'$PROXY_SSL_PORT'|g' /etc/nginx/conf.d/webmail.conf
+    sed -i 's|%web_system%|'$WEB_SYSTEM'|g' /etc/nginx/conf.d/webmail.conf
 
 # Add IMAP system variable to configuration if dovecot is installed
 if [ -z "$IMAP_SYSTEM" ]; then 
@@ -190,13 +237,6 @@ if [ -z "$IMAP_SYSTEM" ]; then
     fi
 fi
 
-# Rebuild mailboxes
-for user in `ls /usr/local/hestia/data/users/`; do
-    echo "(*) Rebuilding mail domains for user: $user..."
-    v-rebuild-mail-domains $user
-done
-
-
 # Remove Webalizer and replace it with awstats as default
 echo "(*) Setting awstats as default web statistics backend..."
 apt purge webalizer -y > /dev/null 2>&1
@@ -204,3 +244,14 @@ sed -i "s/STATS_SYSTEM='webalizer,awstats'/STATS_SYSTEM='awstats'/g" $HESTIA/con
 
 # Run sftp jail once
 $HESTIA/bin/v-add-sys-sftp-jail
+
+# Rebuild user
+for user in `ls /usr/local/hestia/data/users/`; do
+    echo "(*) Rebuilding domains and account for user: $user..."
+    v-rebuild-web-domains $user
+    sleep 0.5
+    v-rebuild-dns-domains $user
+    sleep 0.5
+    v-rebuild-mail-domains $user
+    sleep 0.5
+done

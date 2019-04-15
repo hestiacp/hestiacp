@@ -38,23 +38,23 @@ is_object_unsuspended 'user' 'USER' "$user"
 
 # Deleting old web configs
 sed -i "/.*\/$user\/conf\/web\//d" /etc/$WEB_SYSTEM/conf.d/hestia.conf
-if [ -e "$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"  ]; then
-    rm $HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf
+if [ -e "$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.conf"  ]; then
+    rm $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.conf
 fi
-if [ -e "$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf" ]; then
-    rm $HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf
+if [ -e "$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.ssl.conf" ]; then
+    rm $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.ssl.conf
 fi
 
 # Deleting old proxy configs
 if [ ! -z "$PROXY_SYSTEM" ]; then
     sed -i "/.*\/$user\/conf\/web\//d" /etc/$PROXY_SYSTEM/conf.d/hestia.conf
 
-    if [ -e "$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf" ]; then
-        rm $HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf
+    if [ -e "$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.conf" ]; then
+        rm $HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.conf
     fi
 
-    if [ -e "$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf" ]; then
-        rm $HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf
+    if [ -e "$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.ssl.conf" ]; then
+        rm $HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.ssl.conf
     fi
 fi
 

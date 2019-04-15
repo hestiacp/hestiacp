@@ -1073,7 +1073,7 @@ if [ "$nginx" = 'yes' ]; then
     cp -f $hestiacp/nginx/phppgadmin.inc /etc/nginx/conf.d/
     cp -f $hestiacp/nginx/webmail.inc /etc/nginx/conf.d/
     cp -f $hestiacp/logrotate/nginx /etc/logrotate.d/
-    echo > /etc/nginx/conf.d/hestia.conf
+    mkdir -p /etc/nginx/conf.d/domains
     mkdir -p /var/log/nginx/domains
     if [ "$apache" = 'no' ] && [ "$multiphp" = 'yes' ]; then
         rm -fr $HESTIA/data/templates/web/nginx/*
@@ -1131,7 +1131,7 @@ if [ "$apache" = 'yes' ]; then
     a2enmod actions > /dev/null 2>&1
     a2enmod ruid2 > /dev/null 2>&1
     mkdir -p /etc/apache2/conf.d
-    echo > /etc/apache2/conf.d/hestia.conf
+    mkdir -p /etc/apache2/conf.d/domains
     echo "# Powered by hestia" > /etc/apache2/sites-available/default
     echo "# Powered by hestia" > /etc/apache2/sites-available/default-ssl
     echo "# Powered by hestia" > /etc/apache2/ports.conf

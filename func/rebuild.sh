@@ -74,7 +74,7 @@ rebuild_user_conf() {
         if [[ -L "$HOMEDIR/$user/web" ]]; then
             rm $HOMEDIR/$user/web
         fi
-        mkdir -p $HOMEDIR/$user/conf/web
+        mkdir -p $HOMEDIR/$user/conf/web/$domain
         mkdir -p $HOMEDIR/$user/web
         mkdir -p $HOMEDIR/$user/tmp
         chmod 751 $HOMEDIR/$user/conf/web
@@ -111,7 +111,7 @@ rebuild_user_conf() {
         if [[ -L "$HOMEDIR/$user/mail" ]]; then
             rm $HOMEDIR/$user/mail
         fi
-        mkdir -p $HOMEDIR/$user/conf/mail
+        mkdir -p $HOMEDIR/$user/conf/mail/$domain
         mkdir -p $HOMEDIR/$user/mail
         chmod 751 $HOMEDIR/$user/mail
         chmod 751 $HOMEDIR/$user/conf/mail
@@ -147,9 +147,25 @@ rebuild_user_conf() {
 # WEB domain rebuild
 rebuild_web_domain_conf() {
 
+    # Ensure that global domain folders are available
+    if [ ! -d /etc/$WEB_SYSTEM/conf.d/domains ]; then
+        mkdir -p /etc/$WEB_SYSTEM/conf.d/domains
+    fi
+    if [ ! -d /etc/$PROXY_SYSTEM/conf.d/domains ]; then
+        mkdir -p /etc/$PROXY_SYSTEM/conf.d/domains
+    fi
+
     get_domain_values 'web'
     is_ip_valid $IP
     prepare_web_domain_values
+
+    # Remove old web configuration files
+    if [ -f /etc/$PROXY_SYSTEM/conf.d/$domain.conf ]; then
+        rm -f /etc/$PROXY_SYSTEM/conf.d/$domain*.conf
+    fi
+    if [ -f /etc/$WEB_SYSTEM/conf.d/$domain.conf ]; then
+        rm -f /etc/$WEB_SYSTEM/conf.d/$domain*.conf
+    fi
 
     # Rebuilding domain directories
     mkdir -p $HOMEDIR/$user/web/$domain \
@@ -202,31 +218,31 @@ rebuild_web_domain_conf() {
     chown root:$user /var/log/$WEB_SYSTEM/domains/$domain.*
 
     # Adding vhost configuration
-    conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
+    conf="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.conf"
     add_web_config "$WEB_SYSTEM" "$TPL.tpl"
 
     # Adding SSL vhost configuration
     if [ "$SSL" = 'yes' ]; then
-        conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
+        conf="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.ssl.conf"
         add_web_config "$WEB_SYSTEM" "$TPL.stpl"
         cp -f $USER_DATA/ssl/$domain.crt \
-            $HOMEDIR/$user/conf/web/ssl.$domain.crt
+            $HOMEDIR/$user/conf/web/$domain/ssl/$domain.crt
         cp -f $USER_DATA/ssl/$domain.key \
-            $HOMEDIR/$user/conf/web/ssl.$domain.key
+            $HOMEDIR/$user/conf/web/$domain/ssl/$domain.key
         cp -f $USER_DATA/ssl/$domain.pem \
-            $HOMEDIR/$user/conf/web/ssl.$domain.pem
+            $HOMEDIR/$user/conf/web/$domain/ssl/$domain.pem
         if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
             cp -f $USER_DATA/ssl/$domain.ca \
-                $HOMEDIR/$user/conf/web/ssl.$domain.ca
+                $HOMEDIR/$user/conf/web/$domain/ssl/$domain.ca
         fi
     fi
 
     # Adding proxy configuration
     if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
-        conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
+        conf="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.conf"
         add_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
         if [ "$SSL" = 'yes' ]; then
-            conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
+            conf="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.ssl.conf"
             add_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
         fi
     fi
@@ -244,10 +260,10 @@ rebuild_web_domain_conf() {
                 -e "s|%home%|$HOMEDIR|g" \
                 -e "s|%alias%|${aliases//,/ }|g" \
                 -e "s|%alias_idn%|${aliases_idn//,/ }|g" \
-                > $HOMEDIR/$user/conf/web/$STATS.$domain.conf
+                > $HOMEDIR/$user/conf/web/$domain/$STATS.conf
         if [ "$STATS" == 'awstats' ]; then
             if [ ! -e "/etc/awstats/$STATS.$domain_idn.conf" ]; then
-                ln -f -s $HOMEDIR/$user/conf/web/$STATS.$domain.conf \
+                ln -f -s $HOMEDIR/$user/conf/web/$domain/$STATS.conf \
                     /etc/awstats/$STATS.$domain_idn.conf
             fi
         fi
@@ -317,8 +333,8 @@ rebuild_web_domain_conf() {
     done
 
     # Adding http auth protection
-    htaccess="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.conf_htaccess"
-    htpasswd="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.htpasswd"
+    htaccess="$HOMEDIR/$user/conf/web/$domain/htaccess"
+    htpasswd="$HOMEDIR/$user/conf/web/$domain/htpasswd"
     docroot="$HOMEDIR/$user/web/$domain/public_html"
     for auth_user in ${AUTH_USER//:/ }; do
         # Parsing auth user variables
@@ -479,6 +495,15 @@ rebuild_mail_domain_conf() {
         if [ ! -z "$CATCHALL" ]; then
             echo "*@$domain_idn:$CATCHALL" >> $dom_aliases
         fi
+
+        # Remove and recreate SSL configuration
+        if [ "$SSL" = 'yes' ]; then
+            add_mail_ssl_config
+
+            # Update counters
+            update_object_value 'mail' 'DOMAIN' "$domain" '$SSL' "yes"
+            U_MAIL_SSL=$((U_MAIL_SSL + 1))
+        fi
     fi
 
     # Rebuild domain accounts
@@ -529,12 +554,6 @@ rebuild_mail_domain_conf() {
             chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain/passwd
         fi
         chown $user:mail $HOMEDIR/$user/mail/$domain_idn
-        # Remove and recreate SSL configuration
-            if [ "$SSL" = 'yes' ]; then
-                mkdir -p $HOMEDIR/$user/conf/mail/$domain/ssl/
-                del_mail_ssl_config
-                add_mail_ssl_config
-            fi
     fi
 
     # Update counters

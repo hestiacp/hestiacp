@@ -740,11 +740,13 @@ del_mail_ssl_config() {
 # Delete webmail support
 del_webmail_config() {
     if [ ! -z "$WEB_SYSTEM" ]; then 
-        rm -f $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM*.conf
+        rm -f $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM.*.conf
+        rm -f /etc/$WEB_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.*.conf
     fi
 
     if [ ! -z "$PROXY_SYSTEM" ]; then
-        rm -f $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM*.conf
+        rm -f $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM.*.conf
+        rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.*.conf
     fi
 }
 
@@ -752,10 +754,12 @@ del_webmail_config() {
 del_webmail_ssl_config() {
     if [ ! -z "$WEB_SYSTEM" ]; then 
         rm -f $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM.ssl.conf
+        rm -f /etc/$WEB_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.*.conf
     fi
     
     if [ ! -z "$PROXY_SYSTEM" ]; then
         rm -f $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM.ssl.conf
+        rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.*.conf
     fi
 }
 

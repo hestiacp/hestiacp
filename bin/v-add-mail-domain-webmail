@@ -1,0 +1,91 @@
+#!/bin/bash
+# info: add webmail support for a domain
+# options: USER DOMAIN [RESTART]
+#
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+restart="$3"
+
+# Additional argument formatting
+if [[ "$domain" =~ [[:upper:]] ]]; then
+    domain=$(echo "$domain" |tr '[:upper:]' '[:lower:]')
+fi
+if [[ "$domain" =~ ^www\..* ]]; then
+    domain=$(echo "$domain" |sed -e "s/^www.//")
+fi
+if [[ "$domain" =~ .*\.$ ]]; then
+    domain=$(echo "$domain" |sed -e "s/\.$//")
+fi
+
+domain=$(idn -t --quiet -u "$domain" )
+domain_idn=$(idn -t --quiet -a "$domain")
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/func/ip.sh
+source $HESTIA/conf/hestia.conf
+
+# Additional argument formatting
+format_domain
+format_domain_idn
+get_user_ip
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'USER DOMAIN [RESTART]'
+is_format_valid 'user' 'domain'
+is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'mail' 'DOMAIN' "$domain"
+is_object_unsuspended 'mail' 'DOMAIN' "$domain"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Add webmail configuration to mail domain
+if [ ! -z "$WEB_SYSTEM" ]; then
+    add_webmail_config "$WEB_SYSTEM" "default.tpl"
+fi
+if [ ! -z "$PROXY_SYSTEM" ]; then
+    add_webmail_config "$PROXY_SYSTEM" "default.tpl"
+fi
+
+# Enable SSL for webmail if available
+if [ '$SSL' = 'yes' ]; then
+    if [ ! -z "$WEB_SYSTEM" ]; then
+        add_webmail_config "$WEB_SYSTEM" "default.stpl"
+    fi
+    if [ ! -z "$PROXY_SYSTEM" ]; then
+        add_webmail_config "$PROXY_SYSTEM" "default.stpl"
+    fi
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Restarting web server
+$BIN/v-restart-web $restart
+check_result $? "Web restart failed" >/dev/null
+
+$BIN/v-restart-proxy $restart
+check_result $? "Proxy restart failed" >/dev/null
+
+# Logging
+log_history "enabled webmail support for $domain"
+log_event "$OK" "$ARGUMENTS"
+
+exit

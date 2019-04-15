@@ -86,7 +86,7 @@ fi
 # Rework domain and alieses for mail.
 if [ ! -z "$mail" ]; then
     original_domain=$domain
-    aliases="webmail.$original_domain,autodiscover.$original_domain"
+    aliases="webmail.$domain,autodiscover.$domain"
     domain="mail.$domain"
 fi
 
@@ -167,8 +167,8 @@ for auth in $authz; do
                 conf="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.conf_letsencrypt"
                 sconf="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.ssl.conf_letsencrypt"
             else
-                conf="$HOMEDIR/$user/conf/web/$original_domain/$PROXY_SYSTEM.conf_letsencryptmail"
-                sconf="$HOMEDIR/$user/conf/web/$original_domain/$PROXY_SYSTEM.ssl.conf_letsencryptmail"
+                conf="$HOMEDIR/$user/conf/mail/$original_domain/$PROXY_SYSTEM.conf_letsencryptmail"
+                sconf="$HOMEDIR/$user/conf/mail/$original_domain/$PROXY_SYSTEM.ssl.conf_letsencryptmail"
             fi
 
             if [ ! -e "$conf" ]; then
@@ -185,7 +185,11 @@ for auth in $authz; do
             check_result $? "Proxy restart failed" > /dev/null
 
         else
-            well_known="$HOMEDIR/$user/web/$rdomain/public_html/.well-known"
+            if [ -z "$mail" ]; then
+                well_known="$HOMEDIR/$user/web/$domain/public_html/.well-known"
+            else
+                well_known="/var/lib/roundcube/.well-known"
+            fi
             acme_challenge="$well_known/acme-challenge"
             mkdir -p $acme_challenge
             echo "$token.$THUMB" > $acme_challenge/$token

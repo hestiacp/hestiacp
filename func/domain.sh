@@ -600,7 +600,7 @@ add_webmail_config() {
     ssl_pem="$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem"
     ssl_ca="$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.ca"
 
-    cat $MAILTPL/$WEB_BACKEND/$2 | \
+    cat $MAILTPL/$1/$WEB_BACKEND/$2 | \
         sed -e "s|%ip%|$local_ip|g" \
             -e "s|%domain%|$domain|g" \
             -e "s|%domain_idn%|$domain_idn|g" \

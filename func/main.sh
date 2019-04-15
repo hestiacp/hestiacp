@@ -37,6 +37,13 @@ E_RRD=18
 E_UPDATE=19
 E_RESTART=20
 
+# Generate time stamp
+new_timestamp() {
+    time_n_date=$(date +'%T %F')
+    time=$(echo "$time_n_date" |cut -f 1 -d \ )
+    date=$(echo "$time_n_date" |cut -f 2 -d \ )
+}
+
 # Event string for logger
 for ((I=1; I <= $# ; I++)); do
     if [[ "$HIDE" != $I ]]; then

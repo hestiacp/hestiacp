@@ -21,9 +21,7 @@ json_list() {
     echo "{"
 
     # Generating timestamp
-    time_n_date=$(date +'%T %F')
-    TIME=$(echo "$time_n_date" |cut -f 1 -d \ )
-    DATE=$(echo "$time_n_date" |cut -f 2 -d \ )
+    new_timestamp
 
     for type in $rrd_types; do
         for rrd in $(ls $RRD/$type |grep rrd$ |sed "s/\.rrd$//g"); do

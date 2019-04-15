@@ -174,13 +174,16 @@ if [ -f /etc/dovecot/dovecot.conf ]; then
 fi
 
 # Update Roundcube webmail configuration
-if [ -f /etc/apache2/conf.d/webmail.conf ]; then
+if [ -f /etc/apache2/conf.d/roundcube.conf ]; then
     echo "(*) Updating Roundcube global subdomain configuration for apache2..."
-    cp -f $HESTIA/install/deb/roundcube/apache.conf /etc/apache2/conf.d/roundcube.conf.conf
+    cp -f $HESTIA/install/deb/roundcube/apache.conf /etc/apache2/conf.d/roundcube.conf
 fi
-if [ -f /etc/nginx/conf.d/webmail.inc ]; then
+
+if [ ! -z "$PROXY_SYSTEM" ]; then
     echo "(*) Updating Roundcube global subdomain configuration for nginx..."
-    rm -f /etc/nginx/conf.d/webmail.inc
+    if [ -f /etc/nginx/conf.d/webmail.inc ]; then
+        rm -f /etc/nginx/conf.d/webmail.inc
+    fi
     cp -f $HESTIA/install/deb/nginx/webmail.conf /etc/nginx/conf.d/webmail.conf
 fi
 

@@ -59,11 +59,12 @@ fi
 # Insert redirect commands
 if [ ! -z $PROXY ]; then
     echo 'return 301 https://$server_name$request_uri;' > $forcessl
+    ln -s $forcessl /etc/$PROXY_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.forcessl.conf
 else
     echo 'RewriteEngine On' > $forcessl
     echo 'RewriteRule ^(.*)$ https://%{HTTP_HOST}$1 [R=301,L]' >> $forcessl
+    ln -s $forcessl /etc/$WEB_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.forcessl.conf
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -104,7 +104,7 @@ if [ ! -z "$MAIL_SYSTEM" ]; then
     fi
 
     apt-get -qq update > /dev/null 2>&1
-    apt-get -qq -y install z-push-common z-push-backend-imap z-push-backend-combined > /dev/null 2>&1
+    apt-get -qq -y install z-push-common z-push-backend-imap z-push-backend-combined z-push-autodiscover > /dev/null 2>&1
 fi
 
 # Update default page templates

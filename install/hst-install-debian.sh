@@ -37,7 +37,8 @@ if [ "$release" -eq 9 ]; then
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
-        unrar-free vim-common z-push-common z-push-backend-imap"
+        unrar-free vim-common z-push-common z-push-backend-imap z-push-backend-combined
+        z-push-autodiscover"
 else
     software="nginx apache2 apache2-utils apache2.2-common
         apache2-suexec-custom libapache2-mod-ruid2
@@ -50,7 +51,8 @@ else
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
-        unrar-free vim-common z-push-common z-push-backend-imap"
+        unrar-free vim-common z-push-common z-push-backend-imap  z-push-backend-combined
+        z-push-autodiscover"
 fi
 
 # Defining help function

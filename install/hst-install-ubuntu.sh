@@ -37,7 +37,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     php-apcu phppgadmin php-pgsql postgresql postgresql-contrib proftpd-basic quota
     roundcube-core roundcube-mysql roundcube-plugins rrdtool rssh spamassassin
     sudo hestia hestia-nginx hestia-php vim-common vsftpd whois zip
-    z-push-common z-push-backend-imap"
+    z-push-common z-push-backend-imap z-push-backend-combined z-push-autodiscover"
 
 # Defining help function
 help() {

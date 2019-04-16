@@ -45,7 +45,7 @@ echo ' |_| |_|\___||___/\__|_|\__,_|\____|_|    '
 echo
 echo '                      Hestia Control Panel'
 echo -e "\n\n"
-echo "Upgrading to Hestia Control Panel v$VERSION..."
+echo "Upgrading Hestia Control Panel..."
 echo "==================================================="
 echo ""
 echo "This process may take a few minutes, please wait..."

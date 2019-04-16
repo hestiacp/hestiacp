@@ -86,8 +86,8 @@ fi
 
 # Install and configure z-push
 if [ ! -z "$MAIL_SYSTEM" ]; then
-    echo "(*) Install and configure Z-Push"
-    if [ "$os" == 'ubuntu' ]; then
+    echo "(*) Installing Z-Push..."
+    if [ "$os" = 'ubuntu' ]; then
         echo "deb http://repo.z-hub.io/z-push:/final/Ubuntu_$release/ /" > $apt/z-push.list
         wget --quiet http://repo.z-hub.io/z-push:/final/Ubuntu_$release/Release.key -O /tmp/z-push_signing.key
         APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/z-push_signing.key > /dev/null 2>&1
@@ -104,7 +104,7 @@ if [ ! -z "$MAIL_SYSTEM" ]; then
     fi
 
     apt-get -qq update > /dev/null 2>&1
-    apt-get -qq -y install z-push-common z-push-backend-imap > /dev/null 2>&1
+    apt-get -qq -y install z-push-common z-push-backend-imap z-push-backend-combined > /dev/null 2>&1
 fi
 
 # Update default page templates

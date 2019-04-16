@@ -37,7 +37,7 @@ if [ "$release" -eq 9 ]; then
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
-        unrar-free vim-common"
+        unrar-free vim-common z-push-common z-push-backend-imap"
 else
     software="nginx apache2 apache2-utils apache2.2-common
         apache2-suexec-custom libapache2-mod-ruid2
@@ -50,7 +50,7 @@ else
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
-        unrar-free vim-common"
+        unrar-free vim-common z-push-common z-push-backend-imap"
 fi
 
 # Defining help function
@@ -574,6 +574,19 @@ echo "deb https://packages.sury.org/php/ $codename main" > $apt/php.list
 wget --quiet https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/php_signing.key > /dev/null 2>&1
 
+# Installing z-push repo
+if [ "$exim" == 'yes' ]; then
+    echo "(*) Z-Push"
+    if [ "$release" -eq 8 ]; then
+        $zpush_os='Debian_8.0'
+    else
+        $zpush_os='Debian_9.0'
+    fi
+
+    echo "deb http://repo.z-hub.io/z-push:/final/$zpush_os/ /" > $apt/z-push.list
+    wget --quiet http://repo.z-hub.io/z-push:/final/$zpush_os/Release.key -O /tmp/z-push_signing.key
+    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/z-push_signing.key > /dev/null 2>&1
+fi
 
 # Installing MariaDB repo
 echo "(*) MariaDB"
@@ -740,6 +753,8 @@ if [ "$exim" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/roundcube-core//")
     software=$(echo "$software" | sed -e "s/roundcube-mysql//")
     software=$(echo "$software" | sed -e "s/roundcube-plugins//")
+    software=$(echo "$software" | sed -e "s/z-push-common//")
+    software=$(echo "$software" | sed -e "s/z-push-backend-imap//")
 fi
 if [ "$clamd" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/clamav-daemon//")
@@ -753,6 +768,8 @@ if [ "$dovecot" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/roundcube-core//")
     software=$(echo "$software" | sed -e "s/roundcube-mysql//")
     software=$(echo "$software" | sed -e "s/roundcube-plugins//")
+    software=$(echo "$software" | sed -e "s/z-push-common//")
+    software=$(echo "$software" | sed -e "s/z-push-backend-imap//")
 fi
 if [ "$mysql" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/mariadb-server//')
@@ -1461,6 +1478,21 @@ if [ "$spamd" = 'yes' ]; then
     if [[ "$unit_files" =~ "disabled" ]]; then
         systemctl enable spamassassin > /dev/null 2>&1
     fi
+fi
+
+
+#----------------------------------------------------------#
+#                     Configure Z-Push                     #
+#----------------------------------------------------------#
+
+if [ "$exim" = 'yes' ]; then
+    # Copy configuration files
+    cp -f $hestiacp/zpush/z-push.conf.php /etc/z-push/
+    cp -f $hestiacp/zpush/imap.conf.php /etc/z-push/
+
+    # Set permissions - chmod 777 needs further testing!
+    set_perms www-data www-data 777 /var/lib/z-push
+    set_perms www-data www-data 777 /var/log/z-push
 fi
 
 

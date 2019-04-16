@@ -18,6 +18,23 @@ source /usr/local/hestia/func/main.sh
 mkdir -p $HESTIA_BACKUP/templates/
 mkdir -p $HESTIA_BACKUP/packages/
 
+# Detect OS
+case $(head -n1 /etc/issue | cut -f 1 -d ' ') in
+    Debian)     type="debian" ;;
+    Ubuntu)     type="ubuntu" ;;
+    *)          type="NoSupport" ;;
+esac
+
+# Detect release for Debian
+if [ "$type" = "debian" ]; then
+    release=$(cat /etc/debian_version|grep -o [0-9]|head -n1)
+    VERSION='debian'
+elif [ "$type" = "ubuntu" ]; then
+    release="$(lsb_release -s -r)"
+    VERSION='ubuntu'
+fi
+
+
 # Clear the screen from apt output to prepare for upgrade installer experience
 clear
 echo
@@ -65,6 +82,29 @@ if [ ! -e /etc/ssl/dhparam.pem ]; then
 
     # Restart nginx service
     service nginx restart >/dev/null 2>&1
+fi
+
+# Install and configure z-push
+if [ ! -z "$MAIL_SYSTEM" ]; then
+    echo "(*) Install and configure Z-Push"
+    if [ "$os" == 'ubuntu' ]; then
+        echo "deb http://repo.z-hub.io/z-push:/final/Ubuntu_$release/ /" > $apt/z-push.list
+        wget --quiet http://repo.z-hub.io/z-push:/final/Ubuntu_$release/Release.key -O /tmp/z-push_signing.key
+        APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/z-push_signing.key > /dev/null 2>&1
+    else
+        if [ "$release" -eq 8 ]; then
+            $zpush_os='Debian_8.0'
+        else
+            $zpush_os='Debian_9.0'
+        fi
+
+        echo "deb http://repo.z-hub.io/z-push:/final/$zpush_os/ /" > $apt/z-push.list
+        wget --quiet http://repo.z-hub.io/z-push:/final/$zpush_os/Release.key -O /tmp/z-push_signing.key
+        APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/z-push_signing.key > /dev/null 2>&1
+    fi
+
+    apt-get -qq update > /dev/null 2>&1
+    apt-get -qq -y install z-push-common z-push-backend-imap > /dev/null 2>&1
 fi
 
 # Update default page templates

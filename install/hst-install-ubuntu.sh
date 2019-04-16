@@ -36,7 +36,8 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     ntpdate php php-cgi php-common php-curl phpmyadmin php-mysql php-imap php-ldap
     php-apcu phppgadmin php-pgsql postgresql postgresql-contrib proftpd-basic quota
     roundcube-core roundcube-mysql roundcube-plugins rrdtool rssh spamassassin
-    sudo hestia hestia-nginx hestia-php vim-common vsftpd whois zip"
+    sudo hestia hestia-nginx hestia-php vim-common vsftpd whois zip
+    z-push-common z-push-backend-imap"
 
 # Defining help function
 help() {
@@ -556,6 +557,14 @@ echo "(*) MariaDB"
 echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/10.3/$VERSION $codename main" > $apt/mariadb.list
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8 > /dev/null 2>&1
 
+# Installing z-push repo
+if [ "$exim" == 'yes' ]; then
+    echo "(*) Z-Push"
+    echo "deb http://repo.z-hub.io/z-push:/final/Ubuntu_$release/ /" > $apt/z-push.list
+    wget --quiet http://repo.z-hub.io/z-push:/final/Ubuntu_$release/Release.key -O /tmp/z-push_signing.key
+    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/z-push_signing.key > /dev/null 2>&1
+fi
+
 # Installing hestia repo
 echo "(*) Hestia Control Panel"
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
@@ -707,6 +716,8 @@ if [ "$exim" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/roundcube-core//")
     software=$(echo "$software" | sed -e "s/roundcube-mysql//")
     software=$(echo "$software" | sed -e "s/roundcube-plugins//")
+    software=$(echo "$software" | sed -e "s/z-push-common//")
+    software=$(echo "$software" | sed -e "s/z-push-backend-imap//")
 fi
 if [ "$clamd" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/clamav-daemon//")
@@ -720,6 +731,8 @@ if [ "$dovecot" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/roundcube-core//")
     software=$(echo "$software" | sed -e "s/roundcube-mysql//")
     software=$(echo "$software" | sed -e "s/roundcube-plugins//")
+    software=$(echo "$software" | sed -e "s/z-push-common//")
+    software=$(echo "$software" | sed -e "s/z-push-backend-imap//")
 fi
 if [ "$mysql" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/mariadb-server//')
@@ -1426,6 +1439,21 @@ if [ "$spamd" = 'yes' ]; then
     if [[ "$unit_files" =~ "disabled" ]]; then
         systemctl enable spamassassin > /dev/null 2>&1
     fi
+fi
+
+
+#----------------------------------------------------------#
+#                     Configure Z-Push                     #
+#----------------------------------------------------------#
+
+if [ "$exim" = 'yes' ]; then
+    # Copy configuration files
+    cp -f $hestiacp/zpush/z-push.conf.php /etc/z-push/
+    cp -f $hestiacp/zpush/imap.conf.php /etc/z-push/
+
+    # Set permissions - chmod 777 needs further testing!
+    set_perms www-data www-data 777 /var/lib/z-push
+    set_perms www-data www-data 777 /var/log/z-push
 fi
 
 

@@ -730,8 +730,13 @@ del_mail_ssl_config() {
 
     # Remove SSL certificates
     rm -f $HOMEDIR/$user/conf/mail/$domain/ssl/*
-    rm -f $USER_DATA/ssl/mail.$domain.*
     rm -f /usr/local/hestia/ssl/mail/mail.$domain.*
+}
+
+# Delete generated certificates from user configuration data directory
+del_mail_ssl_certificates(){
+    rm -f $USER_DATA/ssl/mail.$domain.*
+    rm -f $HOMEDIR/$user/conf/mail/$domain/ssl/*
 }
 
 # Delete webmail support

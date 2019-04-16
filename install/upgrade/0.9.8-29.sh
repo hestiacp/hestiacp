@@ -202,6 +202,16 @@ if [ "$PROXY_SYSTEM" = "nginx" ]; then
     fi
 fi
 
+# Fix empty pool error message for multiphp
+php_versions=$( ls -l /etc/php/ | grep ^d | wc -l )
+if [ "$php_versions" -gt 1 ]; then
+    for v in $(ls /etc/php/); do
+        cp -f $hestiacp/php-fpm/dummy.conf /etc/php/$d/fpm/pool.d/
+        v1=$(echo "$v" | sed -e 's/[.]//')
+        sed -i "s/9999/9999$v1/g" /etc/php/$v/fpm/pool.d/dummy.conf
+    done
+fi
+
 # Set Purge to false in roundcube config - https://goo.gl/3Nja3u
 echo "(*) Updating Roundcube configuration..."
 if [ -f /etc/roundcube/config.inc.php ]; then

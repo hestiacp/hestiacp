@@ -21,10 +21,10 @@ timestamp() {
 }
 
 # Install needed software
-echo "Update system repository..."
-apt-get -qq update
+echo "Updating system APT repositories..."
+apt-get -qq update > /dev/null 2>&1
 echo "Installing dependencies for compilation..."
-apt-get -qq install -y $SOFTWARE
+apt-get -qq install -y $SOFTWARE > /dev/null 2>&1
 
 # Fix for Debian PHP Envroiment
 if [ ! -e /usr/local/include/curl ]; then
@@ -314,7 +314,7 @@ fi
 #################################################################################
 
 if [ "$INSTALL" = 'y' ] || [ "$INSTALL" = 'Y'  ]; then
-    for i in ~/*hestia*.deb; do
+    for i in $BUILD_DIR/*hestia*.deb; do
       # Install all available packages
       dpkg -i $i
     done

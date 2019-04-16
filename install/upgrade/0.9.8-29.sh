@@ -20,9 +20,8 @@ mkdir -p $HESTIA_BACKUP/packages/
 
 # Detect OS
 case $(head -n1 /etc/issue | cut -f 1 -d ' ') in
-    Debian)     type="debian" ;;
-    Ubuntu)     type="ubuntu" ;;
-    *)          type="NoSupport" ;;
+    Debian)     os="debian" ;;
+    Ubuntu)     os="ubuntu" ;;
 esac
 
 # Detect release for Debian
@@ -93,9 +92,9 @@ if [ ! -z "$MAIL_SYSTEM" ]; then
         APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/z-push_signing.key > /dev/null 2>&1
     else
         if [ "$release" -eq 8 ]; then
-            $zpush_os='Debian_8.0'
+            zpush_os='Debian_8.0'
         else
-            $zpush_os='Debian_9.0'
+            zpush_os='Debian_9.0'
         fi
 
         echo "deb http://repo.z-hub.io/z-push:/final/$zpush_os/ /" > $apt/z-push.list

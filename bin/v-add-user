@@ -84,7 +84,7 @@ fi
 
 # Set permissions
 chmod a+x $HOMEDIR/$user
-chattr +i $HOMEDIR/$user/conf
+chattr +i $HOMEDIR/$user/conf > /dev/null 2>&1
 
 
 #----------------------------------------------------------#

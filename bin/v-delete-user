@@ -90,7 +90,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Deleting user directories
-chattr -i $HOMEDIR/$user/conf
+chattr -i $HOMEDIR/$user/conf > /dev/null 2>&1
 rm -rf $HOMEDIR/$user
 rm -f /var/spool/mail/$user
 rm -f /var/spool/cron/$user

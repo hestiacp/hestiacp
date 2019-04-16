@@ -46,7 +46,7 @@ rebuild_user_conf() {
 
     # Building directory tree
     if [ -e "$HOMEDIR/$user/conf" ]; then
-        chattr -i $HOMEDIR/$user/conf
+        chattr -i $HOMEDIR/$user/conf > /dev/null 2>&1
     fi
     mkdir -p $HOMEDIR/$user/conf
     chmod a+x $HOMEDIR/$user
@@ -141,7 +141,7 @@ rebuild_user_conf() {
     fi
 
     # Set immutable flag
-    chattr +i $HOMEDIR/$user/conf
+    chattr +i $HOMEDIR/$user/conf > /dev/null 2>&1
 }
 
 # WEB domain rebuild

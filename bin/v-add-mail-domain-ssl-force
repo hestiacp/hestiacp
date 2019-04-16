@@ -46,14 +46,14 @@ fi
 # Check if proxy is active
 if [ ! -z "$PROXY_SYSTEM" ] || [ ! -z "$PROXY" ]; then
     if ! grep --quiet "forcessl" $HESTIA/data/templates/mail/nginx/default.tpl; then
-        $BIN/v-update-web-templates
+        $BIN/v-update-mail-templates
     fi
-    forcessl="/home/$user/conf/mail/$domain/forcessl.$PROXY_SYSTEM.conf"
+    forcessl="/home/$user/conf/mail/$domain/$PROXY_SYSTEM.forcessl.conf"
 else
     if ! grep --quiet "forcessl" $HESTIA/data/templates/mail/nginx/default.tpl; then
-        $BIN/v-update-web-templates
+        $BIN/v-update-mail-templates
     fi
-    forcessl="/home/$user/conf/mail/$domain/forcessl.$WEB_SYSTEM.conf"
+    forcessl="/home/$user/conf/mail/$domain/$WEB_SYSTEM.forcessl.conf"
 fi
 
 # Insert redirect commands

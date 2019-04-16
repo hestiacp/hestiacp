@@ -580,9 +580,9 @@ APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/php_signing.key > /dev/n
 if [ "$exim" == 'yes' ]; then
     echo "(*) Z-Push"
     if [ "$release" -eq 8 ]; then
-        $zpush_os='Debian_8.0'
+        zpush_os='Debian_8.0'
     else
-        $zpush_os='Debian_9.0'
+        zpush_os='Debian_9.0'
     fi
 
     echo "deb http://repo.z-hub.io/z-push:/final/$zpush_os/ /" > $apt/z-push.list

@@ -63,7 +63,7 @@ if [ ! -z "$PROXY_SYSTEM" ]; then
 fi
 
 # Enable SSL for webmail if available
-if [ -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt ] || [ $SSL = 'yes' ]; then
+if [ -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt ] || [ "$SSL" = 'yes' ]; then
     if [ ! -z "$WEB_SYSTEM" ]; then
         add_webmail_config "$WEB_SYSTEM" "default.stpl"
     fi
@@ -76,7 +76,7 @@ fi
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-if [ ! -z "$3" ]; then 
+if [ "$3" = 'yes' ]; then 
     # Restarting web server
     $BIN/v-restart-web $restart
     check_result $? "Web restart failed" >/dev/null

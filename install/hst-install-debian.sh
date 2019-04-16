@@ -51,7 +51,7 @@ else
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
-        unrar-free vim-common z-push-common z-push-backend-imap  z-push-backend-combined
+        unrar-free vim-common z-push-common z-push-backend-imap z-push-backend-combined
         z-push-autodiscover"
 fi
 

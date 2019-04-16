@@ -65,6 +65,7 @@ fi
 # Delete SSL certificates and configuration
 if [ "$SSL" = 'yes' ]; then
     del_mail_ssl_config
+    del_mail_ssl_certificates
 fi
 
 # Delete webmail configuration

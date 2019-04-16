@@ -25,10 +25,10 @@ case $(head -n1 /etc/issue | cut -f 1 -d ' ') in
 esac
 
 # Detect release for Debian
-if [ "$type" = "debian" ]; then
+if [ "$os" = "debian" ]; then
     release=$(cat /etc/debian_version|grep -o [0-9]|head -n1)
     VERSION='debian'
-elif [ "$type" = "ubuntu" ]; then
+elif [ "$os" = "ubuntu" ]; then
     release="$(lsb_release -s -r)"
     VERSION='ubuntu'
 fi
@@ -86,6 +86,7 @@ fi
 # Install and configure z-push
 if [ ! -z "$MAIL_SYSTEM" ]; then
     echo "(*) Installing Z-Push..."
+    apt="/etc/apt/sources.list.d"
     if [ "$os" = 'ubuntu' ]; then
         echo "deb http://repo.z-hub.io/z-push:/final/Ubuntu_$release/ /" > $apt/z-push.list
         wget --quiet http://repo.z-hub.io/z-push:/final/Ubuntu_$release/Release.key -O /tmp/z-push_signing.key
@@ -125,7 +126,7 @@ if [ -d $HESTIA/data/templates/ ]; then
 fi
 
 # Remove old Office 365 template as there is a newer version with an updated name
-if [ -f $HESTIA/data/templates/dns/o365.tpl ]; then 
+if [ -f $HESTIA/data/templates/dns/o365.tpl ]; then
     rm -f $HESTIA/data/templates/dns/o365.tpl
 fi
 
@@ -231,7 +232,7 @@ fi
 # Fix exim configuration
 if [ -f /etc/exim4/exim4.conf.template ]; then
     echo "(*) Updating exim SMTP server configuration..."
-    cp -f $HESTIA/install/deb/exim/exim4.conf.template /etc/exim4/exim4.conf.template 
+    cp -f $HESTIA/install/deb/exim/exim4.conf.template /etc/exim4/exim4.conf.template
     # Reconfigure spam filter and virus scanning
     if [ ! -z "$ANTISPAM_SYSTEM" ]; then
         sed -i "s/#SPAM/SPAM/g" /etc/exim4/exim4.conf.template
@@ -242,7 +243,7 @@ if [ -f /etc/exim4/exim4.conf.template ]; then
 fi
 
 # Add IMAP system variable to configuration if dovecot is installed
-if [ -z "$IMAP_SYSTEM" ]; then 
+if [ -z "$IMAP_SYSTEM" ]; then
     if [ -f /usr/bin/dovecot ]; then
         echo "(*) Adding missing IMAP_SYSTEM variable to hestia.conf..."
         echo "IMAP_SYSTEM = 'dovecot'" >> $HESTIA/conf/hestia.conf
@@ -256,7 +257,7 @@ if [ -f /etc/apache2/conf.d/roundcube.conf ]; then
 fi
 if [ -f /etc/nginx/conf.d/webmail.inc ]; then
     echo "(*) Removing global webmail configuration files for nginx..."
-    rm -f /etc/nginx/conf.d/webmail.inc 
+    rm -f /etc/nginx/conf.d/webmail.inc
 fi
 if [ -f /etc/nginx/conf.d/webmail.conf ]; then
     echo "(*) Removing global webmail configuration files for nginx..."

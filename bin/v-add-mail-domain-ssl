@@ -73,9 +73,6 @@ if [ ! -z "$PROXY_SYSTEM" ]; then
     add_webmail_config "$PROXY_SYSTEM" "default.stpl"
 fi
 
-# Enable force ssl
-$BIN/v-add-mail-domain-ssl-force $user $domain
-
 # Increase value for domain
 increase_user_value "$user" '$U_MAIL_SSL'
 

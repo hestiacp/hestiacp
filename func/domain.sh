@@ -643,14 +643,25 @@ add_webmail_config() {
     fi
     if [ "$2" = "default.stpl" ]; then
         if [ ! -z "$WEB_SYSTEM" ]; then
+            forcessl="$HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM.forcessl.conf"
             rm -f /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
             ln -s $conf /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
         fi
         if [ ! -z "$PROXY_SYSTEM" ]; then
+            forcessl="$HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM.forcessl.conf"
             rm -f /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
             ln -s $conf /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
         fi
-        # Clear old configurations
+
+        # Add rewrite rules to force HTTPS/SSL connections
+        if [ ! -z "$PROXY_SYSTEM" ]; then
+            echo 'return 301 https://$server_name$request_uri;' > $forcessl
+        else
+            echo 'RewriteEngine On' > $forcessl
+            echo 'RewriteRule ^(.*)$ https://%{HTTP_HOST}$1 [R=301,L]' >> $forcessl
+        fi
+
+        # Remove old configurations
         rm -rf $HOMEDIR/$user/conf/mail/$domain.*
         rm -rf $HOMEDIR/$user/conf/mail/ssl.$domain.*
         rm -rf $HOMEDIR/$user/conf/mail/*nginx.$domain.*
@@ -714,6 +725,47 @@ add_mail_ssl_config() {
     chown -h $user:mail /usr/local/hestia/ssl/mail/*
 }
 
+check_mail_ssl_config(){
+    if [ -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt ]; then
+        SSL='yes'
+    else
+        echo "Error: SSL certificate not available."
+        exit $E_NOTEXIST
+    fi
+}
+
+repair_mail_ssl_config(){
+    if [ -f $USER_DATA/ssl/mail.$domain.crt ]; then
+
+        # Ensure SSL directory exists
+        if [ ! -d $HOMEDIR/$user/conf/mail/$domain/ssl/ ]; then
+            mkdir -p $HOMEDIR/$user/conf/mail/$domain/ssl/
+        fi
+
+        # Remove existing certificates
+        rm -rf $HOMEDIR/$user/conf/mail/$domain/ssl/*
+
+        # Add certificates to user home directory
+        cp -f $USER_DATA/ssl/mail.$domain.crt $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt
+        cp -f $USER_DATA/ssl/mail.$domain.key $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key
+        cp -f $USER_DATA/ssl/mail.$domain.pem $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem
+
+        if [ -e "$USER_DATA/ssl/mail.$domain.ca" ]; then
+            cp -f $USER_DATA/ssl/mail.$domain.ca $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.ca
+        fi
+
+        # Increase value for domain
+        increase_user_value "$user" '$U_MAIL_SSL'
+
+        # Set SSL as enabled in configuration
+        update_object_value 'mail' 'DOMAIN' "$domain" '$SSL' "yes"
+
+    else
+        echo "Error: no available SSL certificates for $domain."
+        exit $E_NOTEXIST
+    fi
+}
+
 # Delete SSL support for mail domain
 del_mail_ssl_config() {
     
@@ -724,7 +776,7 @@ del_mail_ssl_config() {
     rm -f /etc/dovecot/conf.d/domains/mail.$domain.conf
 
     # Remove SSL vhost configuration
-    rm -f $HOMEDIR/$user/conf/mail/$domain/*.ssl.conf
+    rm -f $HOMEDIR/$user/conf/mail/$domain/*.*ssl.conf
     rm -f /etc/$WEB_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
     rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
 
@@ -742,16 +794,16 @@ del_mail_ssl_certificates(){
 # Delete webmail support
 del_webmail_config() {
     if [ ! -z "$WEB_SYSTEM" ]; then 
-        rm -f $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM.conf
+        rm -f $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM.*conf
         rm -f /etc/$WEB_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
-        rm -f $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM.ssl.conf
+        rm -f $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM.*ssl.conf
         rm -f /etc/$WEB_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
     fi
 
     if [ ! -z "$PROXY_SYSTEM" ]; then
-        rm -f $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM.conf
+        rm -f $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM.*conf
         rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
-        rm -f $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM.ssl.conf
+        rm -f $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM.*ssl.conf
         rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
     fi
 }

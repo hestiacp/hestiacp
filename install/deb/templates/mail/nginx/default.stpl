@@ -52,6 +52,6 @@ server {
     location ~ /\.hg/   {return 404;}
     location ~ /\.bzr/  {return 404;}
 
-    include %home%/%user%/conf/mail/%root_domain%/nginx.ssl.conf_*;
+    include %home%/%user%/conf/mail/%root_domain%/%proxy_system%.ssl.conf_*;
 }
 

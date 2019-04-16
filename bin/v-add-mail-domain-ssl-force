@@ -43,27 +43,23 @@ if [ "$SSL" != 'yes' ]; then
     exit $E_NOTEXIST
 fi
 
+# Update mail templates
+$BIN/v-update-mail-templates
+
 # Check if proxy is active
+
 if [ ! -z "$PROXY_SYSTEM" ] || [ ! -z "$PROXY" ]; then
-    if ! grep --quiet "forcessl" $HESTIA/data/templates/mail/nginx/default.tpl; then
-        $BIN/v-update-mail-templates
-    fi
     forcessl="/home/$user/conf/mail/$domain/$PROXY_SYSTEM.forcessl.conf"
 else
-    if ! grep --quiet "forcessl" $HESTIA/data/templates/mail/nginx/default.tpl; then
-        $BIN/v-update-mail-templates
-    fi
     forcessl="/home/$user/conf/mail/$domain/$WEB_SYSTEM.forcessl.conf"
 fi
 
 # Insert redirect commands
-if [ ! -z $PROXY ]; then
+if [ ! -z "$PROXY_SYSTEM" ]; then
     echo 'return 301 https://$server_name$request_uri;' > $forcessl
-    ln -s $forcessl /etc/$PROXY_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.forcessl.conf
 else
     echo 'RewriteEngine On' > $forcessl
     echo 'RewriteRule ^(.*)$ https://%{HTTP_HOST}$1 [R=301,L]' >> $forcessl
-    ln -s $forcessl /etc/$WEB_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.forcessl.conf
 fi
 
 #----------------------------------------------------------#

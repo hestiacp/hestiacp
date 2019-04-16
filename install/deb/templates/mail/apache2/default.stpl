@@ -12,7 +12,7 @@
     SSLCertificateFile         %home%/%user%/conf/mail/%root_domain%/ssl/%root_domain%.crt
     SSLCertificateKeyFile      %home%/%user%/conf/mail/%root_domain%/ssl/%root_domain%.key
 
-   IncludeOptional %home%/%user%/conf/web/%root_domain%/apache2.forcessl.conf*
+    IncludeOptional %home%/%user%/conf/mail/%root_domain%/apache2.forcessl.conf*
     
     <Directory "/usr/share/tinymce/www/">
       Options Indexes MultiViews FollowSymLinks
@@ -30,7 +30,7 @@
         allow from all
     </Directory>
 
-    <Directory /usr/share/z-push>
+    <Directory /usr/share/z-push/>
         # Don't list a directory index, follow symlinks (maybe state dir is somewhere linked)
         DirectoryIndex index.php
         Options -Indexes +FollowSymLinks

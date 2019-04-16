@@ -37,15 +37,14 @@ fi
 # Clear the screen from apt output to prepare for upgrade installer experience
 clear
 echo
-echo '  _   _           _   _        ____ ____  '
-echo ' | | | | ___  ___| |_(_) __ _ / ___|  _ \ '
-echo ' | |_| |/ _ \/ __| __| |/ _` | |   | |_) |'
-echo ' |  _  |  __/\__ \ |_| | (_| | |___|  __/ '
-echo ' |_| |_|\___||___/\__|_|\__,_|\____|_|    '
+echo '     _   _           _   _        ____ ____  '
+echo '    | | | | ___  ___| |_(_) __ _ / ___|  _ \ '
+echo '    | |_| |/ _ \/ __| __| |/ _` | |   | |_) |'
+echo '    |  _  |  __/\__ \ |_| | (_| | |___|  __/ '
+echo '    |_| |_|\___||___/\__|_|\__,_|\____|_|    '
 echo
-echo '                      Hestia Control Panel'
 echo -e "\n\n"
-echo "Upgrading Hestia Control Panel..."
+echo "       Hestia Control Panel Upgrade Script"
 echo "==================================================="
 echo ""
 echo "This process may take a few minutes, please wait..."
@@ -140,8 +139,8 @@ fi
 
 # Update default page templates
 echo "(*) Replacing default templates and packages..."
-echo "    Existing templates have been backed up to the following location:"
-echo "    $HESTIA_BACKUP/templates/"
+echo "    Existing files have been backed up to the following location:"
+echo "    $HESTIA_BACKUP/"
 
 # Back up default package and install latest version
 if [ -d $HESTIA/data/packages/ ]; then

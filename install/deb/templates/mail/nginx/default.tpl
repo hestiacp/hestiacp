@@ -2,7 +2,7 @@ server {
     listen      %ip%:%proxy_port%;
     server_name %domain% %alias%;
         
-    include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
+    include %home%/%user%/conf/mail/%domain%/nginx.forcessl.conf*;
     location / {
         proxy_pass      http://%ip%:%web_port%;
         location ~* ^.+\.(jpg,jpeg,gif,png,ico,svg,css,zip,tgz,gz,rar,bz2,doc,xls,exe,pdf,ppt,txt,odt,ods,odp,odf,tar,wav,bmp,rtf,js,mp3,avi,mpeg,flv,html,htm)$ {

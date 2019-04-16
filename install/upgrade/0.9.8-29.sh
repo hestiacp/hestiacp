@@ -113,8 +113,8 @@ if [ ! -z "$MAIL_SYSTEM" ]; then
         APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/z-push_signing.key > /dev/null 2>&1
     fi
 
-    apt-get -qq update
-    apt-get -qq -y install z-push-common z-push-backend-imap z-push-backend-combined z-push-autodiscover
+    apt-get -qq update > /dev/null 2>&1
+    apt-get -qq -y install php-imap php-apcu php-ldap z-push-common z-push-backend-imap z-push-backend-combined z-push-autodiscover > /dev/null 2>&1
 
     echo "(I) Adding Z-Push configuration directory"
     mkdir -p /etc/z-push/

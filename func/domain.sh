@@ -725,47 +725,6 @@ add_mail_ssl_config() {
     chown -h $user:mail /usr/local/hestia/ssl/mail/*
 }
 
-check_mail_ssl_config(){
-    if [ -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt ]; then
-        SSL='yes'
-    else
-        echo "Error: SSL certificate not available."
-        exit $E_NOTEXIST
-    fi
-}
-
-repair_mail_ssl_config(){
-    if [ -f $USER_DATA/ssl/mail.$domain.crt ]; then
-
-        # Ensure SSL directory exists
-        if [ ! -d $HOMEDIR/$user/conf/mail/$domain/ssl/ ]; then
-            mkdir -p $HOMEDIR/$user/conf/mail/$domain/ssl/
-        fi
-
-        # Remove existing certificates
-        rm -rf $HOMEDIR/$user/conf/mail/$domain/ssl/*
-
-        # Add certificates to user home directory
-        cp -f $USER_DATA/ssl/mail.$domain.crt $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt
-        cp -f $USER_DATA/ssl/mail.$domain.key $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key
-        cp -f $USER_DATA/ssl/mail.$domain.pem $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem
-
-        if [ -e "$USER_DATA/ssl/mail.$domain.ca" ]; then
-            cp -f $USER_DATA/ssl/mail.$domain.ca $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.ca
-        fi
-
-        # Increase value for domain
-        increase_user_value "$user" '$U_MAIL_SSL'
-
-        # Set SSL as enabled in configuration
-        update_object_value 'mail' 'DOMAIN' "$domain" '$SSL' "yes"
-
-    else
-        echo "Error: no available SSL certificates for $domain."
-        exit $E_NOTEXIST
-    fi
-}
-
 # Delete SSL support for mail domain
 del_mail_ssl_config() {
     

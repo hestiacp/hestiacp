@@ -323,14 +323,14 @@ for user in `ls /usr/local/hestia/data/users/`; do
     sleep 1
 done
 
-sleep 2
-
 # Restart services server
 echo "(*) Restarting services..."
+sleep 5
 $BIN/v-restart-mail $restart
 $BIN/v-restart-service $IMAP_SYSTEM $restart
 $BIN/v-restart-web $restart
 $BIN/v-restart-proxy $restart
+$BIN/v-restart-dns $restart
 
 echo ""
 echo "    Upgrade complete! Please report any bugs or issues to"

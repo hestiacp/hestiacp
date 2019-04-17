@@ -41,6 +41,7 @@ is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 
 # Delete webmail configuration
 del_webmail_config
+del_webmail_ssl_config
 
 #----------------------------------------------------------#
 #                       Hestia                              #

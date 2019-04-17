@@ -42,6 +42,7 @@ is_object_value_exist 'mail' 'DOMAIN' "$domain" '$SSL'
 # Delete mail domain SSL configuration
 del_mail_ssl_config
 del_mail_ssl_certificates
+del_webmail_ssl_config
 
 #----------------------------------------------------------#
 #                       Hestia                              #

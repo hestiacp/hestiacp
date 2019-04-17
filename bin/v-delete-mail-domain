@@ -63,13 +63,13 @@ if [ "$DKIM" = 'yes' ] && [ -e "$USER_DATA/dns/$domain.conf" ]; then
 fi
 
 # Delete SSL certificates and configuration
-if [ "$SSL" = 'yes' ] || [ -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt ]; then
+if [ "$SSL" = 'yes' ] || [ -e "$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt" ]; then
     $BIN/v-delete-mail-domain-ssl $user $domain 
 fi
 
 # Delete webmail configuration if it exists
 if [ ! -z "$WEB_SYSTEM" ] || [ ! -z "$PROXY_SYSTEM" ]; then
-    $BIN/v-delete-webmail $user $admin 'yes'
+    $BIN/v-delete-webmail $user $domain 'yes'
 fi
 
 #----------------------------------------------------------#

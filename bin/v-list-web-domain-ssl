@@ -134,12 +134,6 @@ if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
     ca=$(cat $USER_DATA/ssl/$domain.ca |sed ':a;N;$!ba;s/\n/\\n/g')
 fi
 
-# Check if force ssl is enabled
-forcessl="no"
-if ls /home/$user/conf/web/forcessl.*$domain*.conf 1> /dev/null 2>&1; then
-    forcessl="yes"
-fi
-
 # Listing data
 case $format in
     json)   json_list ;;

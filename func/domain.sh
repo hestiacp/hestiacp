@@ -649,7 +649,7 @@ del_mail_ssl_config() {
     rm -f $HOMEDIR/$user/conf/mail/$domain/ssl/*
 
     # Remove dovecot configuration
-    rm -f /etc/dovecot/conf.d/domains/mail.$domain.conf
+    rm -f /etc/dovecot/conf.d/domains/$domain.conf
 
     # Remove SSL vhost configuration
     rm -f $HOMEDIR/$user/conf/mail/$domain/*.*ssl.conf

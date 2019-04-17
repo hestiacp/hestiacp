@@ -16,19 +16,19 @@ restart=$3
 
 # Includes
 source $HESTIA/func/main.sh
-
+source $HESTIA/conf/hestia.conf
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER DOMAIN'
-is_format_valid 'user' 'domain' 'ssl_dir'
+is_format_valid 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
-
+is_object_valid 'web' 'DOMAIN' "$domain" "$FORCESSL"
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -41,10 +41,11 @@ eval $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 rm -f $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.forcessl.conf
 rm -f $HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.forcessl.conf
 
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
+
+update_object_value 'web' 'DOMAIN' "$domain" '$FORCESSL' 'no'
 
 # Restart services if requested
 if [ ! -z "$restart" ]; then

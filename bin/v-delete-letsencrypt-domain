@@ -31,7 +31,7 @@ is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_system_enabled "$WEB_SSL" 'SSL_SUPPORT'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-if [ -z "$mail"]; then
+if [ -z "$mail" ]; then
     is_object_valid 'web' 'DOMAIN' "$domain"
     is_object_unsuspended 'web' 'DOMAIN' "$domain"
     is_object_value_exist 'web' 'DOMAIN' "$domain" '$LETSENCRYPT'
@@ -47,7 +47,7 @@ fi
 #----------------------------------------------------------#
 
 # Delete SSL
-if [ -z "$mail"]; then
+if [ -z "$mail" ]; then
     $BIN/v-delete-web-domain-ssl $user $domain $restart >/dev/null 2>&1
 else
     $BIN/v-delete-mail-domain-ssl $user $domain $restart >/dev/null 2>&1
@@ -60,7 +60,7 @@ check_result $? "SSL delete" >/dev/null
 #----------------------------------------------------------#
 
 # Updating letsencrypt flag
-if [ -z "$mail"]; then
+if [ -z "$mail" ]; then
     update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'no'
 else
     update_object_value 'mail' 'DOMAIN' "$domain" '$LETSENCRYPT' 'no'

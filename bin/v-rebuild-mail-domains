@@ -44,6 +44,9 @@ U_MAIL_ACCOUNTS=0
 SUSPENDED_MAIL=0
 U_DISK_MAIL=0
 
+# Update mail templates
+$BIN/v-update-mail-templates
+
 # Checking mail folder
 if [ ! -d "$USER_DATA/mail" ]; then
     rm -f $USER_DATA/mail
@@ -54,8 +57,8 @@ fi
 for domain in $(search_objects 'mail' 'SUSPENDED' "*" 'DOMAIN'); do
     rebuild_mail_domain_conf
     if [ ! -z "$WEB_SYSTEM" ] || [ ! -z "$PROXY_SYSTEM" ]; then
-        $BIN/v-delete-webmail $1 $domain ''
-        $BIN/v-add-webmail $1 $domain '' 
+        $BIN/v-delete-webmail $user $domain ''
+        $BIN/v-add-webmail $user $domain '' 
         sleep 0.5
     fi
 done

@@ -54,7 +54,7 @@ for user in $($BIN/v-list-users plain |cut -f 1); do
     done
 
     for domain in $(search_objects 'mail' 'LETSENCRYPT' 'yes' 'DOMAIN'); do
-        crt_data=$(openssl x509 -text -in $USER_DATA/ssl/$domain.crt)
+        crt_data=$(openssl x509 -text -in $USER_DATA/ssl/mail.$domain.crt)
         not_after=$(echo "$crt_data" |grep "Not After" |cut -f 2,3,4 -d :)
         expiration=$(date -d "$not_after" +%s)
         now=$(date +%s)

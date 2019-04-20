@@ -11,7 +11,7 @@ pool_conf="[$2]
 listen = /run/php/php5.6-fpm-$2.sock
 listen.owner = $1
 listen.group = $1
-listen.mode = 0666
+listen.mode = 0660
 
 user = $1
 group = $1

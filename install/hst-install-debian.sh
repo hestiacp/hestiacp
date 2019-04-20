@@ -26,19 +26,7 @@ pma_v='4.8.5'
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3")
 fpm_v="7.3"
 
-if [ "$release" -eq 9 ]; then
-    software="nginx apache2 apache2-utils apache2-suexec-custom
-        libapache2-mod-ruid2 libapache2-mod-fcgid libapache2-mod-php php
-        php-common php-cgi php-mysql php-curl php-pgsql php-imap php-ldap php-apcu
-        awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy 
-        clamav-daemon spamassassin dovecot-imapd dovecot-pop3d roundcube-core net-tools
-        roundcube-mysql roundcube-plugins mariadb-client mariadb-common
-        mariadb-server postgresql postgresql-contrib phppgadmin phpmyadmin mc
-        flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
-        e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
-        unrar-free vim-common"
-else
+if [ "$release" -eq 8 ]; then
     software="nginx apache2 apache2-utils apache2.2-common
         apache2-suexec-custom libapache2-mod-ruid2
         libapache2-mod-fcgid libapache2-mod-php5 php5 php5-common php5-cgi
@@ -47,6 +35,18 @@ else
         spamassassin dovecot-imapd dovecot-pop3d roundcube-core
         roundcube-mysql roundcube-plugins mariadb-client mariadb-common
         mariadb-server postgresql postgresql-contrib phppgadmin phpMyAdmin mc
+        flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
+        e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
+        bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
+        unrar-free vim-common"
+else
+    software="nginx apache2 apache2-utils apache2-suexec-custom
+        libapache2-mod-ruid2 libapache2-mod-fcgid libapache2-mod-php php
+        php-common php-cgi php-mysql php-curl php-pgsql php-imap php-ldap php-apcu
+        awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy 
+        clamav-daemon spamassassin dovecot-imapd dovecot-pop3d roundcube-core net-tools
+        roundcube-mysql roundcube-plugins mariadb-client mariadb-common
+        mariadb-server postgresql postgresql-contrib phppgadmin phpmyadmin mc
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
@@ -587,6 +587,11 @@ fi
 # Installing Backport repo for debian 8
 if [ "$release" -eq 8 ]; then
     echo "deb http://ftp.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
+fi
+
+# Installing Backport repo for debian 10
+if [ "$release" -eq 10 ]; then
+    echo "deb http://ftp.debian.org/debian stretch-backports main" >> /etc/apt/sources.list
 fi
 
 # Installing hestia repo

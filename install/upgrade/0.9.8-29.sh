@@ -96,6 +96,9 @@ if [ ! -z "$MAIL_SYSTEM" ]; then
     mkdir -p /var/lib/dpkg/updates/
 
     apt="/etc/apt/sources.list.d"
+    # Remove old z-push apt data
+    rm -f $apt/z-push.list
+    
     if [ "$os" = 'ubuntu' ]; then
         echo "deb http://repo.z-hub.io/z-push:/final/Ubuntu_$release/ /" > $apt/z-push.list
         wget --quiet http://repo.z-hub.io/z-push:/final/Ubuntu_$release/Release.key -O /tmp/z-push_signing.key

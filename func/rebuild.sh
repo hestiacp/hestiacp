@@ -549,6 +549,14 @@ rebuild_mail_domain_conf() {
         chown $user:mail $HOMEDIR/$user/mail/$domain_idn
     fi
 
+    # Add missing SSL configuration flags to existing domains
+    # for per-domain SSL migration
+
+    sslcheck=$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf | grep SSL)
+    if [ -z "$sslcheck" ]; then
+        sed -i "s|$domain'|$domain' SSL='no' LETSENCRYPT='no'|g" $USER_DATA/mail.conf
+    fi 
+    
     # Remove and recreate SSL configuration
     if [ -f "$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt" ]; then
         del_mail_ssl_config

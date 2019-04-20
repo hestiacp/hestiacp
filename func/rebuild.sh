@@ -521,7 +521,6 @@ rebuild_mail_domain_conf() {
     fi
     for account in $accounts; do
         (( ++accs))
-        dom_disk=$((dom_disk + U_DISK))
         object=$(grep "ACCOUNT='$account'" $USER_DATA/mail/$domain.conf)
         FWD_ONLY='no'
         eval "$object"
@@ -561,12 +560,25 @@ rebuild_mail_domain_conf() {
         chown $user:mail $HOMEDIR/$user/mail/$domain_idn
     fi
 
-    # Update counters
+    dom_disk=0
+    for account in $(search_objects "mail/$domain" 'SUSPENDED' "no" 'ACCOUNT'); do
+        home_dir=$HOMEDIR/$user/mail/$domain/$account
+        if [ -e "$home_dir" ]; then
+            udisk=$(nice -n 19 du -shm $home_dir | cut -f 1 )
+        else
+            udisk=0
+        fi
+        update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$U_DISK' "$udisk"
+        dom_disk=$((dom_disk + udisk))
+    done
+
     update_object_value 'mail' 'DOMAIN' "$domain" '$ACCOUNTS' "$accs"
     update_object_value 'mail' 'DOMAIN' "$domain" '$U_DISK' "$dom_disk"
+
+    # Update usage counters
     U_MAIL_ACCOUNTS=$((U_MAIL_ACCOUNTS + accs))
-    U_DISK_MAIL=$((U_DISK_MAIL + dom_disk))
     U_MAIL_DOMAINS=$((U_MAIL_DOMAINS + 1))
+    recalc_user_disk_usage
 }
 
 # Rebuild MySQL

@@ -1454,8 +1454,10 @@ if [ "$exim" = 'yes' ]; then
     cp -f $hestiacp/zpush/imap.conf.php /etc/z-push/
 
     # Set permissions - chmod 777 needs further testing!
-    set_perms www-data www-data 777 /var/lib/z-push
-    set_perms www-data www-data 777 /var/log/z-push
+    chown -R www-data:www-data /var/lib/z-push
+    chown -R www-data:www-data /var/log/z-push
+    chmod 777 /var/lib/z-push
+    chmod 777 /var/log/z-push
 fi
 
 

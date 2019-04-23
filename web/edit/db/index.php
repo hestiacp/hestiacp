@@ -27,7 +27,7 @@ unset($output);
 
 // Parse database
 $v_username = $user;
-$v_database = $_GET['database'];
+$v_database = escapeshellarg($_GET['database']);
 $v_dbuser = $data[$v_database]['DBUSER'];
 $v_password = "";
 $v_host = $data[$v_database]['HOST'];

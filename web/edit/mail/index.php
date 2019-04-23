@@ -26,7 +26,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account'])))  {
     unset($output);
 
     // Parse domain
-    $v_domain = $_GET['domain'];
+    $v_domain = escapeshellarg($_GET['domain']);
     $v_antispam = $data[$v_domain]['ANTISPAM'];
     $v_antivirus = $data[$v_domain]['ANTIVIRUS'];
     $v_dkim = $data[$v_domain]['DKIM'];
@@ -51,8 +51,8 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['account'])))  {
 
     // Parse mail account
     $v_username = $user;
-    $v_domain = $_GET['domain'];
-    $v_account = $_GET['account'];
+    $v_domain = escapeshellarg($_GET['domain']);
+    $v_account = escapeshellarg($_GET['account']);
     $v_password = "";
     $v_aliases = str_replace(',', "\n", $data[$v_account]['ALIAS']);
     $valiases = explode(",", $data[$v_account]['ALIAS']);
@@ -219,7 +219,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['acco
 
     // Change account aliases
     if (empty($_SESSION['error_msg'])) {
-        $waliases = preg_replace("/\n/", " ", $_POST['v_aliases']);
+        $waliases = preg_replace("/\n/", " ", escapeshellarg($_POST['v_aliases']));
         $waliases = preg_replace("/,/", " ", $waliases);
         $waliases = preg_replace('/\s+/', ' ',$waliases);
         $waliases = trim($waliases);
@@ -245,7 +245,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['acco
 
     // Change forwarders
     if (empty($_SESSION['error_msg'])) {
-        $wfwd = preg_replace("/\n/", " ", $_POST['v_fwd']);
+        $wfwd = preg_replace("/\n/", " ", escapeshellarg($_POST['v_fwd']));
         $wfwd = preg_replace("/,/", " ", $wfwd);
         $wfwd = preg_replace('/\s+/', ' ',$wfwd);
         $wfwd = trim($wfwd);

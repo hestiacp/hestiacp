@@ -54,7 +54,7 @@
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
               <div class="actions-panel__col actions-panel__configure shortcut-enter" key-action="href"><a href="/edit/server/"><?=__('configure')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
-              <div class="actions-panel__col actions-panel__restart shortcut-r" key-action="href"><a href="/restart/system/?hostname=<?php echo $sys['sysinfo']['HOSTNAME'] ?>"><?=__('restart')?> <i></i></a><span class="shortcut">&nbsp;R</span></div>
+              <div class="actions-panel__col actions-panel__restart shortcut-r" key-action="href"><a href="/restart/system/?hostname=<?php echo $sys['sysinfo']['HOSTNAME'] ?>&token=<?=$_SESSION['token']?>"><?=__('restart')?> <i></i></a><span class="shortcut">&nbsp;R</span></div>
             </div>
             <!-- /.actions-panel -->
           </div>

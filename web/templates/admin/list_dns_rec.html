@@ -89,11 +89,11 @@ v_unit_id="<?=$key?>" v_section="dns_rec">
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=$_GET['domain']?>&record_id=<?=$data[$key]['ID']?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
+              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
               <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                 <a id="delete_link_<?=$i?>" class="data-controls do_delete">
                   <?=__('delete')?> <i class="do_delete"></i>
-                  <input type="hidden" name="delete_url" value="/delete/dns/?domain=<?=$_GET['domain']?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" />
+                  <input type="hidden" name="delete_url" value="/delete/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" />
                   <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
                     <p class="confirmation"><?=__('DELETE_RECORD_CONFIRMATION',$data[$key]['RECORD'])?></p>
                   </div>

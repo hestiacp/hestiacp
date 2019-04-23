@@ -112,6 +112,9 @@ fi
 url="$LE_API/acme/new-order"
 payload='{"identifiers":['
 for identifier in $(echo $domain,$aliases |tr ',' '\n' |sort -u); do
+    if [[ "$identifier" = *[![:ascii:]]* ]]; then
+        identifier=$(idn -t --quiet -a $identifier)
+    fi
     payload=$payload'{"type":"dns","value":"'$identifier'"},'
 done
 payload=$(echo "$payload"|sed "s/,$//")

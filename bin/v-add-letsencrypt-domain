@@ -62,12 +62,15 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 get_domain_values 'web'
-for alias in $(echo "$aliases" |tr ',' '\n' |sort -u); do
-    check_alias="$(echo $ALIAS |tr ',' '\n' |grep ^$alias$)"
-    if [ -z "$check_alias" ]; then
-        check_result $E_NOTEXIST "domain alias $alias doesn't exist"
-    fi
-done
+# check if alias is the letsencrypt wildcard domain, if not, make the normal checks
+if [[ "$aliases" != "*.$domain" ]]; then
+    for alias in $(echo "$aliases" |tr ',' '\n' |sort -u); do
+        check_alias="$(echo $ALIAS |tr ',' '\n' |grep ^$alias$)"
+        if [ -z "$check_alias" ]; then
+            check_result $E_NOTEXIST "domain alias $alias doesn't exist"
+        fi
+    done
+fi;
 
 
 #----------------------------------------------------------#

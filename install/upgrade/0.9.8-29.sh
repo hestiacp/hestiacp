@@ -15,8 +15,9 @@ source $HESTIA/conf/hestia.conf
 source /usr/local/hestia/func/main.sh
 
 # Initialize backup directory
-mkdir -p $HESTIA_BACKUP/templates/
+mkdir -p $HESTIA_BACKUP/conf/
 mkdir -p $HESTIA_BACKUP/packages/
+mkdir -p $HESTIA_BACKUP/templates/
 
 # Detect OS
 case $(head -n1 /etc/issue | cut -f 1 -d ' ') in
@@ -50,45 +51,47 @@ echo ""
 echo "This process may take a few minutes, please wait..."
 echo ""
 echo ""
+echo "Existing files will be backed up to the following location:"
+echo "$HESTIA_BACKUP/"
+echo ""
+echo ""
 
-# Update Apache and NGINX configuration to support new file structure
+# Update Apache and Nginx configuration to support new file structure
 if [ -f /etc/apache2/apache.conf ]; then
     echo "(*) Updating Apache configuration..."
+    mv  /etc/apache2/apache.conf $HESTIA_BACKUP/conf/
     cp -f $HESTIA/install/deb/apache2/apache.conf /etc/apache2/apache.conf
 fi
 if [ -f /etc/nginx/nginx.conf ]; then
-    echo "(*) Updating nginx configuration..."
+    echo "(*) Updating Nginx configuration..."
+    mv  /etc/nginx/nginx.conf $HESTIA_BACKUP/conf/
     cp -f $HESTIA/install/deb/nginx/nginx.conf /etc/nginx/nginx.conf
 fi
 
-# Generating dhparam.
+# Generating dhparam
 if [ ! -e /etc/ssl/dhparam.pem ]; then
     echo "(*) Enabling HTTPS Strict Transport Security (HSTS) support..."
-
-    # Backup existing conf
-    mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
-
-    # Copy new nginx config
+    mv  /etc/nginx/nginx.conf $HESTIA_BACKUP/conf/
     cp -f $hestiacp/nginx/nginx.conf /etc/nginx/
 
     # Copy dhparam
     cp -f $hestiacp/ssl/dhparam.pem /etc/ssl/
 
-    # Update dns servers in nginx.conf
+    # Update DNS servers in nginx.conf
     dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
     sed -i "s/1.0.0.1 1.1.1.1/$dns_resolver/g" /etc/nginx/nginx.conf
 
-    # Restart nginx service
+    # Restart Nginx service
     service nginx restart >/dev/null 2>&1
 fi
 
-# Install and configure z-push
+# Install and configure Z-Push
 if [ ! -z "$MAIL_SYSTEM" ]; then
     echo "(*) Installing Z-Push..."
     # Remove previous Z-Push configuration
     rm -rf /etc/z-push/*
     
-    # Disable apt package lock to install z-push
+    # Disable apt package lock to install Z-Push
     mv /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock-frontend.bak
     mv /var/lib/dpkg/lock /var/lib/dpkg/lock.bak
     mv /var/cache/apt/archives/lock /var/cache/apt/archives/lock.bak
@@ -96,7 +99,7 @@ if [ ! -z "$MAIL_SYSTEM" ]; then
     mkdir -p /var/lib/dpkg/updates/
 
     apt="/etc/apt/sources.list.d"
-    # Remove old z-push apt data
+    # Remove old Z-Push apt data
     rm -f $apt/z-push.list
     
     if [ "$os" = 'ubuntu' ]; then
@@ -142,8 +145,6 @@ fi
 
 # Update default page templates
 echo "(*) Replacing default templates and packages..."
-echo "    Existing files have been backed up to the following location:"
-echo "    $HESTIA_BACKUP/"
 
 # Back up default package and install latest version
 if [ -d $HESTIA/data/packages/ ]; then
@@ -152,7 +153,7 @@ fi
 
 # Back up old template files and install the latest versions
 if [ -d $HESTIA/data/templates/ ]; then
-    cp -rf $HESTIA/data/templates $HESTIA_BACKUP/
+    cp -rf $HESTIA/data/templates $HESTIA_BACKUP/templates/
     $HESTIA/bin/v-update-web-templates
     $HESTIA/bin/v-update-dns-templates
     $HESTIA/bin/v-update-mail-templates
@@ -165,8 +166,7 @@ fi
 
 # Back up and remove default index.html if it exists
 if [ -f /var/www/html/index.html ]; then
-    cp -rf /var/www/html/index.html $HESTIA_BACKUP/templates/
-    rm -rf /var/www/html/index.html
+    mv /var/www/html/index.html $HESTIA_BACKUP/templates/
 fi
 
 # Configure default success page and set permissions on CSS, JavaScript, and Font dependencies for unassigned hosts
@@ -203,9 +203,9 @@ chmod 751 $HESTIA/data/templates/web/unassigned/css
 chmod 751 $HESTIA/data/templates/web/unassigned/js
 chmod 751 $HESTIA/data/templates/web/unassigned/webfonts
 
-# Add unassigned hosts configuration to nginx and apache2
+# Add unassigned hosts configuration to Nginx and Apache
 if [ "$WEB_SYSTEM" = "apache2" ]; then
-    echo "(*) Adding unassigned hosts configuration to apache2..."
+    echo "(*) Adding unassigned hosts configuration to Apache..."
     if [ -f /usr/local/hestia/data/ips/* ]; then
         for ip in /usr/local/hestia/data/ips/*; do
             ipaddr=${ip##*/}
@@ -216,7 +216,7 @@ if [ "$WEB_SYSTEM" = "apache2" ]; then
     fi
 fi
 if [ "$PROXY_SYSTEM" = "nginx" ]; then
-    echo "(*) Adding unassigned hosts configuration to nginx..."
+    echo "(*) Adding unassigned hosts configuration to Nginx..."
     if [ -f /usr/local/hestia/data/ips/* ]; then
         for ip in /usr/local/hestia/data/ips/*; do
             ipaddr=${ip##*/}
@@ -227,7 +227,7 @@ if [ "$PROXY_SYSTEM" = "nginx" ]; then
     fi
 fi
 
-# Fix empty pool error message for multiphp
+# Fix empty pool error message for MultiPHP
 php_versions=$( ls -l /etc/php/ | grep ^d | wc -l )
 if [ "$php_versions" -gt 1 ]; then
     for v in $(ls /etc/php/); do
@@ -237,7 +237,7 @@ if [ "$php_versions" -gt 1 ]; then
     done
 fi
 
-# Set Purge to false in roundcube config - https://goo.gl/3Nja3u
+# Set Purge to false in Roundcube configuration - https://goo.gl/3Nja3u
 echo "(*) Updating Roundcube configuration..."
 if [ -f /etc/roundcube/config.inc.php ]; then
     sed -i "s/\['flag_for_deletion'] = 'Purge';/\['flag_for_deletion'] = false;/gI" /etc/roundcube/config.inc.php
@@ -251,30 +251,31 @@ fi
 
 # Remove old OS-specific installation files if they exist to free up space
 if [ -d $HESTIA/install/ubuntu ]; then
-    echo "(*) Removing old installation data files for Ubuntu..."
+    echo "(*) Removing old HestiaCP installation files for Ubuntu..."
     rm -rf $HESTIA/install/ubuntu
 fi
 if [ -d $HESTIA/install/debian ]; then
-    echo "(*) Removing old installation data files for Debian..."
+    echo "(*) Removing old HestiaCP installation files for Debian..."
     rm -rf $HESTIA/install/debian
 fi
 
-# Fix dovecot configuration
-echo "(*) Updating dovecot IMAP/POP server configuration..."
+# Fix Dovecot configuration
+echo "(*) Updating Dovecot IMAP/POP server configuration..."
 if [ -f /etc/dovecot/conf.d/15-mailboxes.conf ]; then
-    # Remove mailboxes configuration if it exists
-    rm -f /etc/dovecot/conf.d/15-mailboxes.conf
+    mv  /etc/dovecot/conf.d/15-mailboxes.conf $HESTIA_BACKUP/conf/
 fi
 if [ -f /etc/dovecot/dovecot.conf ]; then
-    # Update dovecot configuration and restart dovecot service
+    # Update Dovecot configuration and restart Dovecot service
+    mv  /etc/dovecot/dovecot.conf $HESTIA_BACKUP/conf/
     cp -f $HESTIA/install/deb/dovecot/dovecot.conf /etc/dovecot/dovecot.conf
     systemctl restart dovecot
     sleep 0.5
 fi
 
-# Fix exim configuration
+# Fix Exim configuration
 if [ -f /etc/exim4/exim4.conf.template ]; then
-    echo "(*) Updating exim SMTP server configuration..."
+    echo "(*) Updating Exim SMTP server configuration..."
+    mv  /etc/exim4/exim4.conf.template $HESTIA_BACKUP/conf/
     cp -f $HESTIA/install/deb/exim/exim4.conf.template /etc/exim4/exim4.conf.template
     # Reconfigure spam filter and virus scanning
     if [ ! -z "$ANTISPAM_SYSTEM" ]; then
@@ -285,7 +286,7 @@ if [ -f /etc/exim4/exim4.conf.template ]; then
     fi
 fi
 
-# Add IMAP system variable to configuration if dovecot is installed
+# Add IMAP system variable to configuration if Dovecot is installed
 if [ -z "$IMAP_SYSTEM" ]; then
     if [ -f /usr/bin/dovecot ]; then
         echo "(*) Adding missing IMAP_SYSTEM variable to hestia.conf..."
@@ -295,20 +296,20 @@ fi
 
 # Remove global webmail configuration files in favor of per-domain vhosts
 if [ -f /etc/apache2/conf.d/roundcube.conf ]; then
-    echo "(*) Removing global webmail configuration files for Apache2..."
-    rm -f /etc/apache2/conf.d/roundcube.conf
+    echo "(*) Removing global webmail configuration files for Apache..."
+    mv /etc/apache2/conf.d/roundcube.conf $HESTIA_BACKUP/conf/
 fi
 if [ -f /etc/nginx/conf.d/webmail.inc ]; then
-    echo "(*) Removing global webmail configuration files for nginx..."
-    rm -f /etc/nginx/conf.d/webmail.inc
+    echo "(*) Removing global webmail configuration files for Nginx..."
+    mv /etc/nginx/conf.d/webmail.inc $HESTIA_BACKUP/conf/
 fi
 if [ -f /etc/nginx/conf.d/webmail.conf ]; then
-    echo "(*) Removing global webmail configuration files for nginx..."
-    rm -f /etc/nginx/conf.d/webmail.conf
+    echo "(*) Removing global webmail configuration files for Nginx..."
+    mv /etc/nginx/conf.d/webmail.conf $HESTIA_BACKUP/conf/
 fi
 
-# Remove Webalizer and replace it with awstats as default
-echo "(*) Setting awstats as default web statistics backend..."
+# Remove Webalizer and set AWStats as default
+echo "(*) Removing Webalizer and setting AWStats as default web statistics backend..."
 apt purge webalizer -y > /dev/null 2>&1
 sed -i "s/STATS_SYSTEM='webalizer,awstats'/STATS_SYSTEM='awstats'/g" $HESTIA/conf/hestia.conf
 
@@ -326,7 +327,7 @@ for user in `ls /usr/local/hestia/data/users/`; do
     sleep 1
 done
 
-# Restart services server
+# Restart server services
 echo "(*) Restarting services..."
 sleep 5
 $BIN/v-restart-mail $restart

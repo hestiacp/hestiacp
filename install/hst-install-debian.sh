@@ -1108,7 +1108,7 @@ if [ "$nginx" = 'yes' ]; then
             v_tpl=$(echo "$v" | sed -e 's/[.]//')
             cp -f $hestiacp/multiphp/nginx/PHP-$v_tpl.* $HESTIA/data/templates/web/nginx/
             cp -f $hestiacp/php-fpm/dummy.conf /etc/php/$v/fpm/pool.d/
-            sed -i "/s/9999/9999$v_tpl/g" /etc/php/$v/fpm/pool.d/dummy.conf
+            sed -i "s/9999/99$v_tpl/g" /etc/php/$v/fpm/pool.d/dummy.conf
         done
         cp -f $hestiacp/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/
         chmod a+x $HESTIA/data/templates/web/nginx/*.sh

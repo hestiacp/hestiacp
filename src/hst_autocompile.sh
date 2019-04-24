@@ -1,7 +1,8 @@
 # Autocompile Script for HestiaCP deb Files.
 
 # Set compiling directory
-BUILD_DIR='/root'
+BUILD_DIR='/tmp/hestiacp-src/'
+DEB_DIR="$BUILD_DIR/debs/"
 INSTALL_DIR='/usr/local/hestia'
 
 # Set Version for compiling
@@ -12,6 +13,10 @@ PCRE_V='8.42'
 ZLIB_V='1.2.11'
 PHP_V='7.3.4'
 
+# Create build directories
+rm -rf $BUILD_DIR
+mkdir -p $DEB_DIR
+
 # Set package dependencies for compiling
 SOFTWARE='build-essential libxml2-dev libz-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config'
 
@@ -19,6 +24,24 @@ SOFTWARE='build-essential libxml2-dev libz-dev libcurl4-gnutls-dev unzip openssl
 timestamp() {
     date +%s
 }
+
+branch=$2
+install=$3
+
+# Set install flags
+if [ ! -z "$2" ]; then
+  branch=$2
+else
+  echo -n "Please enter the name of the branch to build from (e.g. master): "
+  read branch
+fi
+
+if [ ! -z "$3" ]; then
+  install=$3
+else
+  echo -n 'Would you like to install the compiled packages? [y/N] '
+  read install
+fi
 
 # Install needed software
 echo "Updating system APT repositories..."
@@ -55,21 +78,21 @@ for arg; do
 done
 
 if [[ $# -eq 0 ]] ; then
-  echo "(!) Invalid compilation flag specified. Valid flags:"
-  echo "--all"
-  echo "--hestia"
-  echo "--nginx"
-  echo "--php"
+  echo "ERROR: Invalid compilation flag specified. Valid flags include:"
+  echo "--all:      Build all hestia packages."
+  echo "--hestia:   Build only the Control Panel package."
+  echo "--nginx:    Build only the backend nginx engine package."
+  echo "--php:      Build only the backend php engine package"
+  echo ""
+  echo "For automated builds and installatioms, you may specify the branch"
+  echo "after one of the above flags. To install the packages, specify 'Y'"
+  echo "following the branch name."
+  echo ""
+  echo "Example: bash hst_autocompile.sh --hestia develop Y"
+  echo "This would install a Hestia Control Panel package compiled with the"
+  echo "develop branch code."
   exit 1
 fi
-
-# Ask for branch
-echo -n "Please enter the name of the branch to build from (e.g. master): "
-read branch
-
-# Ask if package should be installed after compilation
-echo -n 'Would you like to install the compiled packages? [y/N] '
-read INSTALL
 
 # Set git repository raw path
 GIT_REP='https://raw.githubusercontent.com/hestiacp/hestiacp/'$branch'/src/deb'
@@ -171,6 +194,7 @@ if [ "$NGINX_B" = true ] ; then
     cd $BUILD_DIR
     chown -R  root:root hestia-nginx_$NGINX_V
     dpkg-deb --build hestia-nginx_$NGINX_V
+    mv *.deb $DEB_DIR
 
     # clear up the source folder
     rm -r hestia-nginx_$NGINX_V
@@ -245,6 +269,7 @@ if [ "$PHP_B" = true ] ; then
     cd $BUILD_DIR
     chown -R  root:root hestia-php_$PHP_V
     dpkg-deb --build hestia-php_$PHP_V
+    mv *.deb $DEB_DIR
 
     # clear up the source folder
     rm -r hestia-php_$PHP_V
@@ -300,6 +325,7 @@ if [ "$HESTIA_B" = true ] ; then
     cd $BUILD_DIR
     chown -R root:root hestia_$HESTIA_V
     dpkg-deb --build hestia_$HESTIA_V
+    mv *.deb $DEB_DIR
 
     # clear up the source folder
     rm -r hestia_$HESTIA_V
@@ -313,8 +339,8 @@ fi
 #
 #################################################################################
 
-if [ "$INSTALL" = 'y' ] || [ "$INSTALL" = 'Y'  ]; then
-    for i in $BUILD_DIR/*hestia*.deb; do
+if [ "$install" = 'yes' ] || [ "$install" = 'YES' ] || [ "$install" = 'y' ] || [ "$install" = 'Y' ]; then
+    for i in $DEB_DIR/*.deb; do
       # Install all available packages
       dpkg -i $i
     done

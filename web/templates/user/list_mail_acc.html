@@ -88,11 +88,11 @@ sort-star="<? if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] =
           <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/mail/?domain=<?=$_GET['domain']?>&account=<?=$key?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
+              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
               <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                 <a id="delete_link_<?=$i?>" class="data-controls do_delete">
                   <?=__('delete')?> <i class="do_delete"></i>
-                  <input type="hidden" name="delete_url" value="/delete/mail/?domain=<?=$_GET['domain']?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" />
+                  <input type="hidden" name="delete_url" value="/delete/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" />
                   <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
                     <p class="confirmation"><?=__('DELETE_MAIL_ACCOUNT_CONFIRMATION',$key)?></p>
                   </div>

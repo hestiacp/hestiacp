@@ -26,7 +26,7 @@ unset($output);
 
 // Parse domain
 $v_username = $user;
-$v_domain = $_GET['domain'];
+$v_domain = escapeshellarg($_GET['domain']);
 $v_ip = $data[$v_domain]['IP'];
 $v_template = $data[$v_domain]['TPL'];
 $v_aliases = str_replace(',', "\n", $data[$v_domain]['ALIAS']);
@@ -116,6 +116,7 @@ if (!empty($_POST['save'])) {
     }
 
     // Change web domain IP
+    
     if (($v_ip != $_POST['v_ip']) && (empty($_SESSION['error_msg']))) {
         $v_ip = escapeshellarg($_POST['v_ip']);
         exec (HESTIA_CMD."v-change-web-domain-ip ".$v_username." ".$v_domain." ".$v_ip." 'no'", $output, $return_var);
@@ -162,7 +163,7 @@ if (!empty($_POST['save'])) {
 
     // Change aliases
     if (empty($_SESSION['error_msg'])) {
-        $waliases = preg_replace("/\n/", " ", $_POST['v_aliases']);
+        $waliases = preg_replace("/\n/", " ", escapeshellarg($_POST['v_aliases']));
         $waliases = preg_replace("/,/", " ", $waliases);
         $waliases = preg_replace('/\s+/', ' ',$waliases);
         $waliases = trim($waliases);
@@ -588,7 +589,7 @@ if (!empty($_POST['save'])) {
                         $subject = __("FTP login credentials");
                         $hostname = exec('hostname');
                         $from = __('MAIL_FROM',$hostname);
-                        $mailtext = __('FTP_ACCOUNT_READY',$_GET['domain'],$user,$v_ftp_username,$v_ftp_user_data['v_ftp_password']);
+                        $mailtext = __('FTP_ACCOUNT_READY',escapeshellarg($_GET['domain']),$user,$v_ftp_username,$v_ftp_user_data['v_ftp_password']);
                         send_email($to, $subject, $mailtext, $from);
                         unset($v_ftp_email);
                     }
@@ -662,7 +663,7 @@ if (!empty($_POST['save'])) {
                     $subject = __("FTP login credentials");
                     $hostname = exec('hostname');
                     $from = __('MAIL_FROM',$hostname);
-                    $mailtext = __('FTP_ACCOUNT_READY',$_GET['domain'],$user,$v_ftp_username_for_emailing,$v_ftp_user_data['v_ftp_password']);
+                    $mailtext = __('FTP_ACCOUNT_READY',escapeshellarg($_GET['domain']),$user,$v_ftp_username_for_emailing,$v_ftp_user_data['v_ftp_password']);
                     send_email($to, $subject, $mailtext, $from);
                     unset($v_ftp_email);
                 }

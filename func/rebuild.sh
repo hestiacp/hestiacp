@@ -667,7 +667,7 @@ rebuild_pgsql_database() {
     query="GRANT ALL PRIVILEGES ON DATABASE $DB TO $DBUSER"
     psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
 
-    query="GRANT CONNECT ON DATABASE template1 to $dbuser"
+    query="GRANT CONNECT ON DATABASE template1 to $DBUSER"
     psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
 }
 

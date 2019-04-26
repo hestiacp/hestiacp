@@ -7,9 +7,9 @@ INSTALL_DIR='/usr/local/hestia'
 
 # Set Version for compiling
 HESTIA_V='0.9.8-29_amd64'
-NGINX_V='1.15.11'
+NGINX_V='1.16.0'
 OPENSSL_V='1.1.1b'
-PCRE_V='8.42'
+PCRE_V='8.43'
 ZLIB_V='1.2.11'
 PHP_V='7.3.4'
 

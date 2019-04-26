@@ -54,6 +54,9 @@ if [ ! -e /usr/local/include/curl ]; then
     ln -s /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl
 fi
 
+# Get system cpu cores
+NUM_CPUS=$(grep "^cpu cores" /proc/cpuinfo | uniq |  awk '{print $4}')
+
 # Set packages to compile
 for arg; do
     case "$1" in
@@ -113,6 +116,8 @@ PHP='http://de2.php.net/distributions/php-'$PHP_V'.tar.gz'
 #################################################################################
 
 if [ "$NGINX_B" = true ] ; then
+
+    echo "Building hestia-nginx package..."
     # Change to build directory
     cd $BUILD_DIR
 
@@ -146,14 +151,13 @@ if [ "$NGINX_B" = true ] ; then
                   --with-pcre-jit \
                   --with-zlib=../zlib-$ZLIB_V
 
-    # Check install directory and move if exists
-    if [ -d $INSTALL_DIR ]; then
-          #mv $INSTALL_DIR $INSTALL_DIR$(timestamp)
-          rm -r $INSTALL_DIR
+    # Check install directory and remove if exists
+    if [ -d "$BUILD_DIR$INSTALL_DIR" ]; then
+          rm -r "$BUILD_DIR$INSTALL_DIR"
     fi
 
     # Create the files and install them
-    make && make install
+    make -j $NUM_CPUS && make DESTDIR=$BUILD_DIR install
 
     # Cleare up unused files
     cd $BUILD_DIR
@@ -175,7 +179,7 @@ if [ "$NGINX_B" = true ] ; then
 
     # Move nginx directory
     cd ..
-    mv /usr/local/hestia/nginx usr/local/hestia/
+    mv $BUILD_DIR/usr/local/hestia/nginx usr/local/hestia/
 
     # Get Service File
     cd etc/init.d
@@ -208,6 +212,7 @@ fi
 #################################################################################
 
 if [ "$PHP_B" = true ] ; then
+    echo "Building hestia-php package..."
     # Change to build directory
     cd $BUILD_DIR
 
@@ -218,7 +223,7 @@ if [ "$PHP_B" = true ] ; then
     fi
 
     # Create directory
-    mkdir $BUILD_DIR/hestia-php_$PHP_V
+    mkdir ${BUILD_DIR}/hestia-php_$PHP_V
 
     # Download and unpack source files
     wget -qO- $PHP | tar xz
@@ -237,7 +242,7 @@ if [ "$PHP_B" = true ] ; then
                 --enable-mbstring
 
     # Create the files and install them
-    make && make install
+    make -j $NUM_CPUS && make INSTALL_ROOT=$BUILD_DIR install
 
     # Cleare up unused files
     cd $BUILD_DIR
@@ -254,7 +259,7 @@ if [ "$PHP_B" = true ] ; then
 
     # Move php directory
     cd ..
-    mv /usr/local/hestia/php usr/local/hestia/
+    mv ${BUILD_DIR}/usr/local/hestia/php usr/local/hestia/
 
     # Get php-fpm.conf
     wget $GIT_REP/php/php-fpm.conf -O usr/local/hestia/php/etc/php-fpm.conf
@@ -283,6 +288,7 @@ fi
 #################################################################################
 
 if [ "$HESTIA_B" = true ] ; then
+    echo "Building Hestia Control Panel package..."
     # Change to build directory
     cd $BUILD_DIR
 
@@ -339,7 +345,8 @@ fi
 #
 #################################################################################
 
-if [ "$install" = 'yes' ] || [ "$install" = 'YES' ] || [ "$install" = 'y' ] || [ "$install" = 'Y' ]; then
+if [ "$install" = 'yes' ] || [ "$install" = 'y' ]; then
+    echo "Installing packages..."
     for i in $DEB_DIR/*.deb; do
       # Install all available packages
       dpkg -i $i

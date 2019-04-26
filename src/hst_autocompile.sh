@@ -42,6 +42,7 @@ else
   echo -n 'Would you like to install the compiled packages? [y/N] '
   read install
 fi
+install=$(echo "$install" | tr '[:upper:]' '[:lower:]')
 
 # Install needed software
 echo "Updating system APT repositories..."
@@ -339,7 +340,7 @@ fi
 #
 #################################################################################
 
-if [ "$install" = 'yes' ] || [ "$install" = 'YES' ] || [ "$install" = 'y' ] || [ "$install" = 'Y' ]; then
+if [ "$install" = 'yes' ] || [ "$install" = 'y' ]; then
     for i in $DEB_DIR/*.deb; do
       # Install all available packages
       dpkg -i $i

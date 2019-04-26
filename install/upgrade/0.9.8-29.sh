@@ -48,12 +48,10 @@ echo -e "\n\n"
 echo "       Hestia Control Panel Upgrade Script"
 echo "==================================================="
 echo ""
-echo "This process may take a few minutes, please wait..."
-echo ""
-echo ""
 echo "Existing files will be backed up to the following location:"
 echo "$HESTIA_BACKUP/"
 echo ""
+echo "This process may take a few moments, please wait..."
 echo ""
 
 # Update Apache and Nginx configuration to support new file structure

@@ -8,15 +8,15 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Includes
-source $HESTIA/func/main.sh
-source $HESTIA/func/domain.sh
-source $HESTIA/conf/hestia.conf
-
 # Argument definition
 user=$1
 domain=$2
 restart="$3"
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
 format_domain

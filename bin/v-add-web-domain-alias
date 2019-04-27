@@ -34,8 +34,12 @@ format_aliases
 #                    Verifications                         #
 #----------------------------------------------------------#
 
+if [ -z "$aliases" ]; then
+    check_result $E_INVALID "invalid alias format: empty"
+fi
+
 check_args '3' "$#" 'USER DOMAIN ALIASES [RESTART]'
-is_format_valid 'user' 'domain' 'dom_alias'
+is_format_valid 'user' 'domain' 'aliases'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"

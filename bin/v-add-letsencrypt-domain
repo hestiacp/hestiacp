@@ -166,7 +166,7 @@ for auth in $authz; do
         check_result $? "DNS _acme-challenge record wasn't created"
     else
         if [ -z "$mail" ]; then
-            if [ "$WEB_SYSTEM" = 'nginx' ] || [ ! -z "$PROXY_SYSTEM" ]; then
+            if [ "$WEB_SYSTEM" = 'nginx' ] && [ ! -z "$PROXY_SYSTEM" ]; then
                 if [ ! -z "$mail" ]; then
                     conf="$HOMEDIR/$user/conf/mail/$root_domain/$PROXY_SYSTEM.conf_letsencrypt"
                     sconf="$HOMEDIR/$user/conf/mail/$root_domain/$PROXY_SYSTEM.ssl.conf_letsencrypt"

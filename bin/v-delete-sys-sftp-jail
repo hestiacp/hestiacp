@@ -67,7 +67,7 @@ fi
 
 # Remove v-add-sys-sftp-jail to startup
 if [ ! -e "/etc/cron.d/hestia-sftp" ]; then
-    rm "@reboot /usr/local/hestia/bin/v-add-sys-sftp-jail" > /etc/cron.d/hestia-sftp
+    rm -f /etc/cron.d/hestia-sftp
 fi
 
 

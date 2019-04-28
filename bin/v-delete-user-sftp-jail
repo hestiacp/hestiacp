@@ -28,34 +28,39 @@ if [ -z "$user_str" ]; then
     exit
 fi
 
+# Get current users and split into array
+ssh_users=$(grep -A1 "^# Hestia SFTP Chroot" /etc/ssh/sshd_config | sed -n 2p | sed 's/Match User //')
+IFS=',' read -r -a users <<< "$ssh_users"
+
+# Check if jail exist
+if [[ ! " ${users[@]} " =~ " ${user} " ]]; then
+    exit
+fi
+
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining user homedir
-home="$(echo $user_str |cut -f 6 -d :)"
-
-# Unmounting home directory
-mount_dir=$(mount |grep /chroot/$user/ |awk '{print $3}')
-if [ ! -z "$mount_dir" ]; then
-    umount -f $mount_dir 2>/dev/null
-    if [ $? -ne 0 ]; then
-        gpasswd -d $user sftp-only >/dev/null 2>&1
-        exit 1
+# Remove user from array
+for sftp_user in "${users[@]}"; do
+    if [ "$sftp_user" != "$user" ]; then
+        new_users+=($sftp_user)
     fi
-fi
+done
 
-# Deleting chroot dir
-rmdir $mount_dir 2>/dev/null
-rm -rf /chroot/$user
-
-# Deleting user from sftp group
-gpasswd -d $user sftp-only >/dev/null 2>&1
+# Write new user list to config
+users=$(IFS=',';echo "${new_users[*]// /|}";IFS=$' \t\n')
+sed -i "s/$ssh_users/$users/g" /etc/ssh/sshd_config
 
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
+
+# Restart ssh service
+service ssh restart > /dev/null 2>&1
+service sshd restart > /dev/null 2>&1
 
 # Logging
 #log_event "$OK" "$ARGUMENTS"

@@ -69,6 +69,12 @@ for user in $(grep "$HOMEDIR" /etc/passwd |egrep "$shells" |cut -f 1 -d:); do
     $BIN/v-add-user-sftp-jail $user
 done
 
+# Add v-add-sys-sftp-jail to startup
+if [ ! -e "/etc/cron.d/hestia-sftp" ]; then
+    echo "@reboot /usr/local/hestia/bin/v-add-sys-sftp-jail" > /etc/cron.d/hestia-sftp
+    chmod +x /etc/rc.local
+fi
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

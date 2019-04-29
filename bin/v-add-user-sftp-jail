@@ -38,7 +38,7 @@ ssh_users=$(grep -A1 "^# Hestia SFTP Chroot" /etc/ssh/sshd_config | sed -n 2p | 
 IFS=',' read -r -a users <<< "$ssh_users"
 
 # Check if jail is already enabled
-if [[ ! " ${users[@]} " =~ " ${user} " ]]; then
+if [[ " ${users[@]} " =~ " ${user} " ]]; then
     exit
 fi
 

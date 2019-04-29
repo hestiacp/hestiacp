@@ -1,5 +1,13 @@
 # Autocompile Script for HestiaCP deb Files.
 
+# Clear previous screen output
+clear
+
+# Define download function
+download_file() {
+  wget $1 -q --show-progress --progress=bar:force
+}
+
 # Set compiling directory
 BUILD_DIR='/tmp/hestiacp-src/'
 DEB_DIR="$BUILD_DIR/debs/"
@@ -131,10 +139,10 @@ if [ "$NGINX_B" = true ] ; then
     mkdir $BUILD_DIR/hestia-nginx_$NGINX_V
 
     # Download and unpack source files
-    wget -qO- $NGINX | tar xz
-    wget -qO- $OPENSSL | tar xz
-    wget -qO- $PCRE | tar xz
-    wget -qO- $ZLIB | tar xz
+    download_file $NGINX | tar xz
+    download_file $OPENSSL | tar xz
+    download_file $PCRE | tar xz
+    download_file $ZLIB | tar xz
 
     # Change to nginx directory
     cd nginx-$NGINX_V
@@ -169,10 +177,10 @@ if [ "$NGINX_B" = true ] ; then
 
     # Download control, postinst and postrm files
     cd DEBIAN
-    wget $GIT_REP/nginx/control
-    wget $GIT_REP/nginx/copyright
-    wget $GIT_REP/nginx/postinst
-    wget $GIT_REP/nginx/postrm
+    download_file $GIT_REP/nginx/control
+    download_file $GIT_REP/nginx/copyright
+    download_file $GIT_REP/nginx/postinst
+    download_file $GIT_REP/nginx/postrm
 
     # Set permission
     chmod +x postinst postrm
@@ -183,13 +191,13 @@ if [ "$NGINX_B" = true ] ; then
 
     # Get Service File
     cd etc/init.d
-    wget $GIT_REP/nginx/hestia
+    download_file $GIT_REP/nginx/hestia
     chmod +x hestia
 
     # Get nginx.conf
     cd ../../
     rm usr/local/hestia/nginx/conf/nginx.conf
-    wget $GIT_REP/nginx/nginx.conf -O usr/local/hestia/nginx/conf/nginx.conf
+    download_file $GIT_REP/nginx/nginx.conf -O usr/local/hestia/nginx/conf/nginx.conf
 
     # copy binary
     cp usr/local/hestia/nginx/sbin/nginx usr/local/hestia/nginx/sbin/hestia-nginx
@@ -226,7 +234,7 @@ if [ "$PHP_B" = true ] ; then
     mkdir ${BUILD_DIR}/hestia-php_$PHP_V
 
     # Download and unpack source files
-    wget -qO- $PHP | tar xz
+    download_file $PHP | tar xz
 
     # Change to php directory
     cd php-$PHP_V
@@ -254,18 +262,18 @@ if [ "$PHP_B" = true ] ; then
 
     # Download control, postinst and postrm files
     cd DEBIAN
-    wget $GIT_REP/php/control
-    wget $GIT_REP/php/copyright
+    download_file $GIT_REP/php/control
+    download_file $GIT_REP/php/copyright
 
     # Move php directory
     cd ..
     mv ${BUILD_DIR}/usr/local/hestia/php usr/local/hestia/
 
     # Get php-fpm.conf
-    wget $GIT_REP/php/php-fpm.conf -O usr/local/hestia/php/etc/php-fpm.conf
+    download_file $GIT_REP/php/php-fpm.conf -O usr/local/hestia/php/etc/php-fpm.conf
 
     # Get php.ini
-    wget $GIT_REP/php/php.ini -O usr/local/hestia/php/lib/php.ini
+    download_file $GIT_REP/php/php.ini -O usr/local/hestia/php/lib/php.ini
 
     # copy binary
     cp usr/local/hestia/php/sbin/php-fpm usr/local/hestia/php/sbin/hestia-php
@@ -302,7 +310,7 @@ if [ "$HESTIA_B" = true ] ; then
     mkdir $BUILD_DIR/hestia_$HESTIA_V
 
     # Download and unpack source files
-    wget $HESTIA
+    download_file $HESTIA
     unzip -q $branch.zip
     rm $branch.zip
 
@@ -312,9 +320,9 @@ if [ "$HESTIA_B" = true ] ; then
 
     # Download control, postinst and postrm files
     cd DEBIAN
-    wget $GIT_REP/hestia/control
-    wget $GIT_REP/hestia/copyright
-    wget $GIT_REP/hestia/postinst
+    download_file $GIT_REP/hestia/control
+    download_file $GIT_REP/hestia/copyright
+    download_file $GIT_REP/hestia/postinst
 
     # Set permission
     chmod +x postinst

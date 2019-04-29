@@ -15,6 +15,9 @@ Type here (e.g. Ubuntu 18.04 LTS)
 ### HestiaCP Version:
 Type here (e.g. 0.9.8-29)
 
+### Which branch are you using?
+Type here (e.g master, develop, etc.)
+
 ### What software is installed?
 Type here (e.g. Apache, Nginx, PHP-FPM, Dovecot/Exim, MariaDB, etc.)
 

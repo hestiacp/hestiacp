@@ -878,9 +878,9 @@ chmod 440 /etc/sudoers.d/admin
 echo "export HESTIA='$HESTIA'" > /etc/profile.d/hestia.sh
 chmod 755 /etc/profile.d/hestia.sh
 source /etc/profile.d/hestia.sh
-echo 'PATH=$PATH:'$HESTIA'/bin' >> /root/.bash_profile
-echo 'export PATH' >> /root/.bash_profile
-source /root/.bash_profile
+echo 'PATH=$PATH:'$HESTIA'/bin' >> /etc/profile
+echo 'export PATH' >> /etc/profile
+source /etc/profile
 
 # Configuring logrotate for Hestia logs
 cp -f $hestiacp/logrotate/hestia /etc/logrotate.d/hestia

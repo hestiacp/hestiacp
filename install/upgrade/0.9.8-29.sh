@@ -83,64 +83,6 @@ if [ ! -e /etc/ssl/dhparam.pem ]; then
     service nginx restart >/dev/null 2>&1
 fi
 
-# Install and configure Z-Push
-if [ ! -z "$MAIL_SYSTEM" ]; then
-    echo "(*) Installing Z-Push..."
-    # Remove previous Z-Push configuration
-    rm -rf /etc/z-push/*
-    
-    # Disable apt package lock to install Z-Push
-    mv /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock-frontend.bak
-    mv /var/lib/dpkg/lock /var/lib/dpkg/lock.bak
-    mv /var/cache/apt/archives/lock /var/cache/apt/archives/lock.bak
-    mv /var/lib/dpkg/updates/ /var/lib/dpkg/updates.bak/
-    mkdir -p /var/lib/dpkg/updates/
-
-    apt="/etc/apt/sources.list.d"
-    # Remove old Z-Push apt data
-    rm -f $apt/z-push.list
-    
-    if [ "$os" = 'ubuntu' ]; then
-        echo "deb http://repo.z-hub.io/z-push:/final/Ubuntu_$release/ /" > $apt/z-push.list
-        wget --quiet http://repo.z-hub.io/z-push:/final/Ubuntu_$release/Release.key -O /tmp/z-push_signing.key
-        APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/z-push_signing.key > /dev/null 2>&1
-    else
-        if [ "$release" -eq 8 ]; then
-            zpush_os='Debian_8.0'
-        else
-            zpush_os='Debian_9.0'
-        fi
-
-        echo "deb http://repo.z-hub.io/z-push:/final/$zpush_os/ /" > $apt/z-push.list
-        wget --quiet http://repo.z-hub.io/z-push:/final/$zpush_os/Release.key -O /tmp/z-push_signing.key
-        APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/z-push_signing.key > /dev/null 2>&1
-    fi
-
-    apt-get -qq update > /dev/null 2>&1
-    apt-get -qq -y install php-imap php-apcu php-ldap z-push-common z-push-backend-imap z-push-backend-combined z-push-autodiscover > /dev/null 2>&1
-
-    echo "(I) Adding Z-Push configuration directory"
-    mkdir -p /etc/z-push/
-    cp -f $hestiacp/zpush/z-push.conf.php /etc/z-push/
-    cp -f $hestiacp/zpush/imap.conf.php /etc/z-push/
-
-    # Set permissions - chmod 777 needs further testing!
-    echo "(I) Adding Z-Push logs directory"
-    mkdir -p /var/log/z-push
-
-    chmod 777 /var/lib/z-push
-    chown -R www-data:www-data /var/lib/z-push
-    chmod 777 /var/log/z-push
-    chown -R www-data:www-data /var/log/z-push
-
-    # Enable apt package lock
-    mv /var/lib/dpkg/lock-frontend.bak /var/lib/dpkg/lock-frontend
-    mv /var/lib/dpkg/lock.bak /var/lib/dpkg/lock
-    mv /var/cache/apt/archives/lock.bak /var/cache/apt/archives/lock
-    rm -rf /var/lib/dpkg/updates/
-    mv /var/lib/dpkg/updates.bak/ /var/lib/dpkg/updates/
-fi
-
 # Update default page templates
 echo "(*) Replacing default templates and packages..."
 

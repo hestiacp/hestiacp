@@ -688,7 +688,7 @@ add_webmail_config() {
             -e "s|%domain%|$WEBMAIL_ALIAS.$domain|g" \
             -e "s|%domain_idn%|$domain_idn|g" \
             -e "s|%root_domain%|$domain|g" \
-            -e "s|%alias%|mail.$domain autodiscover.$domain|g" \
+            -e "s|%alias%|mail.$domain|g" \
             -e "s|%alias_idn%|${aliases_idn//,/ }|g" \
             -e "s|%alias_string%|$alias_string|g" \
             -e "s|%email%|info@$domain|g" \

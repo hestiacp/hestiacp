@@ -87,7 +87,7 @@ fi
 if [ ! -z "$mail" ]; then
     root_domain=$domain
     domain="mail.$root_domain"
-    aliases="$WEBMAIL_ALIAS.$root_domain,autodiscover.$root_domain"
+    aliases="$WEBMAIL_ALIAS.$root_domain"
 fi
 
 # Registering LetsEncrypt user account

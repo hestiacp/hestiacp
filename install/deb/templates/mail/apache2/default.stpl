@@ -3,8 +3,6 @@
     ServerAlias %alias
     Alias / /var/lib/roundcube/
     Alias /error/ %home%/%user%/web/%root_domain%/document_errors/
-    Alias /Microsoft-Server-ActiveSync /usr/share/z-push/index.php
-    AliasMatch (?i)/Autodiscover/Autodiscover.xml "/usr/share/z-push/autodiscover/autodiscover.php"
     #SuexecUserGroup %user% %group%
     
     SSLEngine on
@@ -28,32 +26,6 @@
         AllowOverride All
         order allow,deny
         allow from all
-    </Directory>
-
-    <Directory /usr/share/z-push/>
-        # Don't list a directory index, follow symlinks (maybe state dir is somewhere linked)
-        DirectoryIndex index.php
-        Options -Indexes +FollowSymLinks
-
-        # Security
-        # Don't allow .htaccess Overrides, disallow access to files
-        AllowOverride none
-        <IfModule !mod_authz_core.c>
-            Order allow,deny
-            allow from all
-        </IfModule>
-        <IfModule mod_authz_core.c>
-            Require all granted
-        </IfModule>
-
-        <Files "config.php">
-          <IfModule !mod_authz_core.c>
-            Deny from All
-          </IfModule>
-          <IfModule mod_authz_core.c>
-            Require all denied
-          </IfModule>
-        </Files>
     </Directory>
 
     # Protecting basic directories:

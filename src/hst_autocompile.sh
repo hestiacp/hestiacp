@@ -14,7 +14,7 @@ DEB_DIR="$BUILD_DIR/debs/"
 INSTALL_DIR='/usr/local/hestia'
 
 # Set Version for compiling
-HESTIA_V='0.9.8-29_amd64'
+HESTIA_V='0.10.0-190430_amd64'
 NGINX_V='1.16.0'
 OPENSSL_V='1.1.1b'
 PCRE_V='8.43'

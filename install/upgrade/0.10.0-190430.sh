@@ -220,6 +220,7 @@ if [ -f /etc/exim4/exim4.conf.template ]; then
     # Reconfigure spam filter and virus scanning
     if [ ! -z "$ANTISPAM_SYSTEM" ]; then
         sed -i "s/#SPAM/SPAM/g" /etc/exim4/exim4.conf.template
+        sed -i "s/#SPAM_SCORE/SPAM_SCORE/g" /etc/exim4/exim4.conf.template
     fi
     if [ ! -z "$ANTIVIRUS_SYSTEM" ]; then
         sed -i "s/#CLAMD/CLAMD/g" /etc/exim4/exim4.conf.template

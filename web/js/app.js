@@ -715,7 +715,8 @@ var App = {
         DB:      {},
         WEB:     {},
         PACKAGE: {},
-        MAIL_ACC:{}
+        MAIL_ACC:{},
+        MAIL:    {}
     },
     // Utilities
     Helpers: {},

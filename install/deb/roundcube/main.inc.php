@@ -72,10 +72,10 @@ $rcmail_config['smtp_debug'] = false;
 // %d - domain (http hostname without the first part)
 // %s - domain name after the '@' from e-mail address provided at login screen
 // For example %n = mail.domain.tld, %d = domain.tld
-$rcmail_config['default_host'] = 'localhost';
+$rcmail_config['default_host'] = 'tls://localhost';
 
 // TCP port used for IMAP connections
-$rcmail_config['default_port'] = 143;
+$rcmail_config['default_port'] = 993;
 
 // IMAP AUTH type (DIGEST-MD5, CRAM-MD5, LOGIN, PLAIN or empty to use
 // best server supported one)
@@ -139,19 +139,19 @@ $rcmail_config['messages_cache'] = false;
 // %d - domain (http hostname without the first part)
 // %z - IMAP domain (IMAP hostname without the first part)
 // For example %n = mail.domain.tld, %d = domain.tld
-$rcmail_config['smtp_server'] = '';
+$rcmail_config['smtp_server'] = 'tls://localhost';
 
 // SMTP port (default is 25; use 587 for STARTTLS or 465 for the
 // deprecated SSL over SMTP (aka SMTPS))
-$rcmail_config['smtp_port'] = 25;
+$rcmail_config['smtp_port'] = 587;
 
 // SMTP username (if required) if you use %u as the username Roundcube
 // will use the current username for login
-$rcmail_config['smtp_user'] = '';
+$rcmail_config['smtp_user'] = '%u';
 
 // SMTP password (if required) if you use %p as the password Roundcube
 // will use the current user's password for login
-$rcmail_config['smtp_pass'] = '';
+$rcmail_config['smtp_pass'] = '%p';
 
 // SMTP AUTH type (DIGEST-MD5, CRAM-MD5, LOGIN, PLAIN or empty to use
 // best server supported one)
@@ -298,11 +298,11 @@ $rcmail_config['password_charset'] = 'ISO-8859-1';
 $rcmail_config['sendmail_delay'] = 0;
 
 // Maximum number of recipients per message. Default: 0 (no limit)
-$rcmail_config['max_recipients'] = 100; 
+$rcmail_config['max_recipients'] = 100;
 
 // Maximum allowednumber of members of an address group. Default: 0 (no limit)
 // If 'max_recipients' is set this value should be less or equal
-$rcmail_config['max_group_members'] = 100; 
+$rcmail_config['max_group_members'] = 100;
 
 // add this user-agent to message headers when sending
 $rcmail_config['useragent'] = 'Roundcube Webmail';

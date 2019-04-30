@@ -234,20 +234,6 @@ if [ -z "$IMAP_SYSTEM" ]; then
     fi
 fi
 
-# Remove global webmail configuration files in favor of per-domain vhosts
-if [ -f /etc/apache2/conf.d/roundcube.conf ]; then
-    echo "(*) Removing global webmail configuration files for Apache..."
-    mv /etc/apache2/conf.d/roundcube.conf $HESTIA_BACKUP/conf/
-fi
-if [ -f /etc/nginx/conf.d/webmail.inc ]; then
-    echo "(*) Removing global webmail configuration files for Nginx..."
-    mv /etc/nginx/conf.d/webmail.inc $HESTIA_BACKUP/conf/
-fi
-if [ -f /etc/nginx/conf.d/webmail.conf ]; then
-    echo "(*) Removing global webmail configuration files for Nginx..."
-    mv /etc/nginx/conf.d/webmail.conf $HESTIA_BACKUP/conf/
-fi
-
 # Remove Webalizer and set AWStats as default
 echo "(*) Removing Webalizer and setting AWStats as default web statistics backend..."
 apt purge webalizer -y > /dev/null 2>&1

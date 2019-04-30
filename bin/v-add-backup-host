@@ -169,9 +169,7 @@ fi
 
 # Adding backup host
 if [ $type != 'local' ]; then
-    time_n_date=$(date +'%T %F')
-    time=$(echo "$time_n_date" |cut -f 1 -d \ )
-    date=$(echo "$time_n_date" |cut -f 2 -d \ )
+    new_timestamp
     str="HOST='$host'\nUSERNAME='$user'\nPASSWORD='$password'"
     str="$str\nBPATH='$path'\nPORT='$port'\nTIME='$time'\nDATE='$date'"
     echo -e "$str" > $HESTIA/conf/$type.backup.conf

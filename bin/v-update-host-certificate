@@ -40,7 +40,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$hostname"
 is_object_unsuspended 'web' 'DOMAIN' "$hostname"
 
-if [ ! -f "/home/$user/conf/web/ssl.$hostname.pem" ]; then
+if [ ! -f "/home/$user/conf/web/$hostname/ssl.$hostname.pem" ]; then
     echo "This domain does not have certificate";
     exit 1;
 fi
@@ -52,13 +52,9 @@ fi
 # Get current datetime for backup of old files
 backup_datetime=`date '+%Y-%m-%d_%H-%M-%S'`
 
-# Keep a backup of the old certificate - todo: remove in production
-#mv $HESTIA/ssl/certificate.crt $HESTIA/ssl/certificate.crt_backup_$backup_datetime
-#mv $HESTIA/ssl/certificate.key $HESTIA/ssl/certificate.key_backup_$backup_datetime
-
 # Copy hostnames certificates from user dir
-cp /home/$user/conf/web/ssl.$hostname.pem $HESTIA/ssl/certificate.crt
-cp /home/$user/conf/web/ssl.$hostname.key $HESTIA/ssl/certificate.key
+cp /home/$user/conf/web/$hostname/$hostname.pem $HESTIA/ssl/certificate.crt
+cp /home/$user/conf/web/$hostname/$hostname.key $HESTIA/ssl/certificate.key
 
 # Checking exim username for later chowning
 exim_user="exim";

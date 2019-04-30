@@ -837,16 +837,19 @@ rm -f /usr/sbin/policy-rc.d
 sed -i "s/rdAuthentication no/rdAuthentication yes/g" /etc/ssh/sshd_config
 
 # Disable SSH suffix broadcast
-echo '' >> /etc/ssh/sshd_config
-echo 'DebianBanner no' >> /etc/ssh/sshd_config
-
-service ssh restart
+if [ -z "$(grep "^DebianBanner no" /etc/ssh/sshd_config)" ]; then
+    echo '' >> /etc/ssh/sshd_config
+    echo 'DebianBanner no' >> /etc/ssh/sshd_config
+    service ssh restart
+fi
 
 # Disable AWStats cron
 rm -f /etc/cron.d/awstats
 
 # Set directory color
-echo 'LS_COLORS="$LS_COLORS:di=00;33"' >> /etc/profile
+if [ -z "$(grep 'LS_COLORS="$LS_COLORS:di=00;33"' /etc/profile)" ]; then
+    echo 'LS_COLORS="$LS_COLORS:di=00;33"' >> /etc/profile
+fi
 
 # Registering /usr/sbin/nologin
 if [ -z "$(grep nologin /etc/shells)" ]; then
@@ -1012,6 +1015,8 @@ chmod 751 $HESTIA/data/templates/web/unassigned/css
 chmod 751 $HESTIA/data/templates/web/unassigned/js
 chmod 751 $HESTIA/data/templates/web/unassigned/webfonts
 
+mkdir -p /var/www/html
+
 # Install default success page
 cp -rf $hestiacp/templates/web/unassigned/* /var/www/html/
 
@@ -1054,9 +1059,8 @@ if [ "$nginx" = 'yes' ]; then
     cp -f $hestiacp/nginx/status.conf /etc/nginx/conf.d/
     cp -f $hestiacp/nginx/phpmyadmin.inc /etc/nginx/conf.d/
     cp -f $hestiacp/nginx/phppgadmin.inc /etc/nginx/conf.d/
-    cp -f $hestiacp/nginx/webmail.inc /etc/nginx/conf.d/
     cp -f $hestiacp/logrotate/nginx /etc/logrotate.d/
-    echo > /etc/nginx/conf.d/hestia.conf
+    mkdir -p /etc/nginx/conf.d/domains
     mkdir -p /var/log/nginx/domains
     if [ "$apache" = 'no' ] && [ "$multiphp" = 'yes' ]; then
         rm -fr $HESTIA/data/templates/web/nginx/*
@@ -1116,7 +1120,8 @@ if [ "$apache" = 'yes' ]; then
     a2enmod actions > /dev/null 2>&1
     a2enmod ruid2 > /dev/null 2>&1
     mkdir -p /etc/apache2/conf.d
-    echo > /etc/apache2/conf.d/hestia.conf
+    mkdir -p /etc/apache2/conf.d
+    mkdir -p /etc/apache2/conf.d/domains
     echo "# Powered by hestia" > /etc/apache2/sites-available/default
     echo "# Powered by hestia" > /etc/apache2/sites-available/default-ssl
     echo "# Powered by hestia" > /etc/apache2/ports.conf
@@ -1321,6 +1326,7 @@ if [ "$named" = 'yes' ]; then
     cp -f $hestiacp/bind/named.conf.options /etc/bind/
     chown root:bind /etc/bind/named.conf
     chown root:bind /etc/bind/named.conf.options
+    chown bind:bind /var/cache/bind
     chmod 640 /etc/bind/named.conf
     chmod 640 /etc/bind/named.conf.options
     aa-complain /usr/sbin/named > /dev/null 2>&1
@@ -1444,12 +1450,10 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
         ln -s /etc/roundcube/apache.conf /etc/apache2/conf.d/roundcube.conf
     fi
     cp -f $hestiacp/roundcube/main.inc.php /etc/roundcube/
-    cp -f  $hestiacp/roundcube/db.inc.php /etc/roundcube/
-    chmod 640 /etc/roundcube/debian-db*
-    chown root:www-data /etc/roundcube/debian-db*
-    cp -f $hestiacp/roundcube/hestia.php \
-        /usr/share/roundcube/plugins/password/drivers/
+    cp -f $hestiacp/roundcube/db.inc.php /etc/roundcube/
     cp -f $hestiacp/roundcube/config.inc.php /etc/roundcube/plugins/password/
+    cp -f $hestiacp/roundcube/hestia.php /usr/share/roundcube/plugins/password/drivers/
+
     r="$(gen_pass)"
     mysql -e "CREATE DATABASE roundcube"
     mysql -e "GRANT ALL ON roundcube.*
@@ -1457,9 +1461,9 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     sed -i "s/%password%/$r/g" /etc/roundcube/db.inc.php
 
     # Send all emails through SMTP and add user information
-    sed -i "/\$config\['smtp_server'\]/c\$config\['smtp_server'\] = 'localhost';" /etc/roundcube/defaults.inc.php
-    sed -i "/\$config\['smtp_user'\]/c\$config\['smtp_user'\] = '%u';" /etc/roundcube/defaults.inc.php
-    sed -i "/\$config\['smtp_pass'\]/c\$config\['smtp_pass'\] = '%p';" /etc/roundcube/defaults.inc.php
+    sed -i "/\$config\['smtp_server'\]/c\$config\['smtp_server'\] = 'localhost';" /etc/roundcube/main.inc.php
+    sed -i "/\$config\['smtp_user'\]/c\$config\['smtp_user'\] = '%u';" /etc/roundcube/main.inc.php
+    sed -i "/\$config\['smtp_pass'\]/c\$config\['smtp_pass'\] = '%p';" /etc/roundcube/main.inc.php
 
     touch /var/log/roundcube/errors
     chmod 640 /var/log/roundcube/errors
@@ -1467,9 +1471,9 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     if [ "$release" = '16.04' ] || [ "$release" = '18.04' ]; then
         mv /etc/roundcube/db.inc.php /etc/roundcube/debian-db-roundcube.php
         mv /etc/roundcube/main.inc.php /etc/roundcube/config.inc.php
-        chmod 640 /etc/roundcube/debian-db-roundcube.php
-        chown root:www-data /etc/roundcube/debian-db-roundcube.php
     fi
+    chmod 640           /etc/roundcube/debian-db*
+    chown root:www-data /etc/roundcube/debian-db*
 
     mysql roundcube < /usr/share/dbconfig-common/data/roundcube/install/mysql
     phpenmod mcrypt > /dev/null 2>&1

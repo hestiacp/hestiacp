@@ -60,7 +60,7 @@ if (!empty($v_ssl)) {
     $v_ssl_signature = $ssl_str[$v_domain]['SIGNATURE'];
     $v_ssl_pub_key = $ssl_str[$v_domain]['PUB_KEY'];
     $v_ssl_issuer = $ssl_str[$v_domain]['ISSUER'];
-    $v_ssl_forcessl = $ssl_str[$v_domain]['FORCESSL'];
+    $v_ssl_forcessl = $data[$v_domain]['FORCESSL'];
 }
 $v_letsencrypt = $data[$v_domain]['LETSENCRYPT'];
 if (empty($v_letsencrypt)) $v_letsencrypt = 'no';

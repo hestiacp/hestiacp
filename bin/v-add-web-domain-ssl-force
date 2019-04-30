@@ -15,6 +15,7 @@ domain=$2
 
 # Includes
 source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -22,12 +23,11 @@ source $HESTIA/func/main.sh
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER DOMAIN'
-is_format_valid 'user' 'domain' 'ssl_dir'
+is_format_valid 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -47,12 +47,12 @@ if [ ! -z "$PROXY_SYSTEM" ] || [ ! -z "$PROXY" ]; then
     if ! grep --quiet "forcessl" $HESTIA/data/templates/web/nginx/default.tpl; then
         $BIN/v-update-web-templates
     fi
-    forcessl="/home/$user/conf/web/forcessl.nginx.$domain.conf"
+    forcessl="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.forcessl.conf"
 else
     if ! grep --quiet "forcessl" $HESTIA/data/templates/web/nginx/default.tpl; then
         $BIN/v-update-web-templates
     fi
-    forcessl="/home/$user/conf/web/forcessl.apache2.$domain.conf"
+    forcessl="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.forcessl.conf"
 fi
 
 # Insert redirect commands
@@ -67,6 +67,9 @@ fi
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
+
+# Set forcessl flag to enabled
+update_object_value 'web' 'DOMAIN' "$domain" '$FORCESSL' 'yes'
 
 # Restart web server
 $BIN/v-restart-web

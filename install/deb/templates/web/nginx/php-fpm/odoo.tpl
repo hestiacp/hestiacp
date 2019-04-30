@@ -7,7 +7,7 @@ server {
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;
     error_log   /var/log/nginx/domains/%domain%.error.log error;
         
-    include %home%/%user%/conf/web/forcessl.nginx.%domain%.conf*;
+    include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
     
     proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
     proxy_redirect          off;
@@ -62,7 +62,5 @@ server {
 
     include     /etc/nginx/conf.d/phpmyadmin.inc*;
     include     /etc/nginx/conf.d/phppgadmin.inc*;
-    include     /etc/nginx/conf.d/webmail.inc*;
-
-    include     %home%/%user%/conf/web/nginx.%domain%.conf*;
+    include     %home%/%user%/conf/web/%domain%/nginx.conf_*;
 }

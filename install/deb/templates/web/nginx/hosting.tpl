@@ -2,7 +2,7 @@ server {
     listen      %ip%:%proxy_port%;
     server_name %domain_idn% %alias_idn%;
         
-    include %home%/%user%/conf/web/forcessl.nginx.%domain%.conf*;
+    include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
 
     location / {
         proxy_pass      http://%ip%:%web_port%;
@@ -31,6 +31,6 @@ server {
 
     disable_symlinks if_not_owner from=%docroot%;
 
-    include %home%/%user%/conf/web/nginx.%domain%.conf*;
+    include %home%/%user%/conf/web/%domain%/nginx.conf_*;
 }
 

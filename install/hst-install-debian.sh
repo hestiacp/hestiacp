@@ -578,7 +578,6 @@ echo "deb https://packages.sury.org/php/ $codename main" > $apt/php.list
 wget --quiet https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/php_signing.key > /dev/null 2>&1
 
-
 # Installing MariaDB repo
 echo "(*) MariaDB"
 echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/10.3/$VERSION $codename main" > $apt/mariadb.list
@@ -863,8 +862,11 @@ rm -f /usr/sbin/policy-rc.d
 sed -i "s/rdAuthentication no/rdAuthentication yes/g" /etc/ssh/sshd_config
 
 # Disable SSH suffix broadcast
-echo '' >> /etc/ssh/sshd_config
-echo 'DebianBanner no' >> /etc/ssh/sshd_config
+if [ -z "$(grep "^DebianBanner no" /etc/ssh/sshd_config)" ]; then
+    echo '' >> /etc/ssh/sshd_config
+    echo 'DebianBanner no' >> /etc/ssh/sshd_config
+    service ssh restart
+fi
 
 service ssh restart
 
@@ -872,11 +874,18 @@ service ssh restart
 rm -f /etc/cron.d/awstats
 
 # Set directory color
-echo 'LS_COLORS="$LS_COLORS:di=00;33"' >> /etc/profile
+if [ -z "$(grep 'LS_COLORS="$LS_COLORS:di=00;33"' /etc/profile)" ]; then
+    echo 'LS_COLORS="$LS_COLORS:di=00;33"' >> /etc/profile
+fi
 
 # Register /sbin/nologin and /usr/sbin/nologin
-echo "/sbin/nologin" >> /etc/shells
-echo "/usr/sbin/nologin" >> /etc/shells
+if [ -z "$(grep ^/sbin/nologin /etc/shells)" ]; then
+    echo "/sbin/nologin" >> /etc/shells
+fi
+
+if [ -z "$(grep ^/usr/sbin/nologin /etc/shells)" ]; then
+    echo "/usr/sbin/nologin" >> /etc/shells
+fi
 
 # Configuring NTP
 echo '#!/bin/sh' > /etc/cron.daily/ntpdate
@@ -1043,6 +1052,8 @@ chmod 751 $HESTIA/data/templates/web/unassigned/css
 chmod 751 $HESTIA/data/templates/web/unassigned/js
 chmod 751 $HESTIA/data/templates/web/unassigned/webfonts
 
+mkdir -p /var/www/html
+
 # Install default success page
 cp -rf $hestiacp/templates/web/unassigned/* /var/www/html/
 
@@ -1080,9 +1091,8 @@ if [ "$nginx" = 'yes' ]; then
     cp -f $hestiacp/nginx/status.conf /etc/nginx/conf.d/
     cp -f $hestiacp/nginx/phpmyadmin.inc /etc/nginx/conf.d/
     cp -f $hestiacp/nginx/phppgadmin.inc /etc/nginx/conf.d/
-    cp -f $hestiacp/nginx/webmail.inc /etc/nginx/conf.d/
     cp -f $hestiacp/logrotate/nginx /etc/logrotate.d/
-    echo > /etc/nginx/conf.d/hestia.conf
+    mkdir -p /etc/nginx/conf.d/domains
     mkdir -p /var/log/nginx/domains
     if [ "$apache" = 'no' ] && [ "$multiphp" = 'yes' ]; then
         rm -fr $HESTIA/data/templates/web/nginx/*
@@ -1142,7 +1152,7 @@ if [ "$apache" = 'yes' ]; then
     a2enmod actions > /dev/null 2>&1
     a2enmod ruid2 > /dev/null 2>&1
     mkdir -p /etc/apache2/conf.d
-    echo > /etc/apache2/conf.d/hestia.conf
+    mkdir -p /etc/apache2/conf.d/domains
     echo "# Powered by hestia" > /etc/apache2/sites-available/default
     echo "# Powered by hestia" > /etc/apache2/sites-available/default-ssl
     echo "# Powered by hestia" > /etc/apache2/ports.conf
@@ -1351,6 +1361,7 @@ if [ "$named" = 'yes' ]; then
     cp -f $hestiacp/bind/named.conf.options /etc/bind/
     chown root:bind /etc/bind/named.conf
     chown root:bind /etc/bind/named.conf.options
+    chown bind:bind /var/cache/bind
     chmod 640 /etc/bind/named.conf
     chmod 640 /etc/bind/named.conf.options
     aa-complain /usr/sbin/named 2>/dev/null

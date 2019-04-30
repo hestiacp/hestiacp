@@ -67,11 +67,11 @@ cat $WEBTPL/$type/$type.tpl |\
         -e "s|%home%|$HOMEDIR|g" \
         -e "s|%alias%|${aliases//,/ }|g" \
         -e "s|%alias_idn%|${aliases_idn//,/ }|g" \
-    > $HOMEDIR/$user/conf/web/$type.$domain.conf
+    > $HOMEDIR/$user/conf/web/$domain/$type.conf
 
 if [ "$type" == 'awstats' ]; then
     rm -f /etc/awstats/$type.$domain_idn.conf
-    ln -s $HOMEDIR/$user/conf/web/$type.$domain.conf \
+    ln -s $HOMEDIR/$user/conf/web/$domain/$type.conf \
         /etc/awstats/$type.$domain_idn.conf
 fi
 

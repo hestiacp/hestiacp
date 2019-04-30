@@ -39,10 +39,14 @@ fi
 
 # Reset counters
 U_MAIL_DOMAINS=0
-U_MAIL_DKMI=0
+U_MAIL_DKIM=0
 U_MAIL_ACCOUNTS=0
+U_MAIL_SSL=0
 SUSPENDED_MAIL=0
 U_DISK_MAIL=0
+
+# Update mail templates
+$BIN/v-update-mail-templates
 
 # Checking mail folder
 if [ ! -d "$USER_DATA/mail" ]; then
@@ -53,6 +57,11 @@ fi
 # Starting loop
 for domain in $(search_objects 'mail' 'SUSPENDED' "*" 'DOMAIN'); do
     rebuild_mail_domain_conf
+    if [ ! -z "$WEB_SYSTEM" ] || [ ! -z "$PROXY_SYSTEM" ]; then
+        $BIN/v-delete-webmail $user $domain ''
+        $BIN/v-add-webmail $user $domain '' 
+        sleep 0.5
+    fi
 done
 
 
@@ -62,8 +71,9 @@ done
 
 # Updating counters
 update_user_value "$user" '$U_MAIL_DOMAINS' "$U_MAIL_DOMAINS"
-update_user_value "$user" '$U_MAIL_DKMI' "$U_MAIL_DKMI"
+update_user_value "$user" '$U_MAIL_DKIM' "$U_MAIL_DKIM"
 update_user_value "$user" '$U_MAIL_ACCOUNTS' "$U_MAIL_ACCOUNTS"
+update_user_value "$user" '$U_MAIL_SSL' "$U_MAIL_SSL"
 update_user_value "$user" '$SUSPENDED_MAIL' "$SUSPENDED_MAIL"
 update_user_value "$user" '$U_DISK_MAIL' "$U_DISK_MAIL"
 

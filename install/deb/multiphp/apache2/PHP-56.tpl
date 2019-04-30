@@ -12,7 +12,7 @@
     CustomLog /var/log/%web_system%/domains/%domain%.log combined
     ErrorLog /var/log/%web_system%/domains/%domain%.error.log
         
-    IncludeOptional %home%/%user%/conf/web/forcessl.apache2.%domain%.conf*
+    IncludeOptional %home%/%user%/conf/web/%domain%/apache2.forcessl.conf*
     
     <Directory %home%/%user%/web/%domain%/stats>
         AllowOverride All
@@ -35,7 +35,7 @@
     </FilesMatch>
     SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0
 
-    IncludeOptional %home%/%user%/conf/web/%web_system%.%domain%.conf*
+    IncludeOptional %home%/%user%/conf/web/%domain%/%web_system%.conf_*
 
 </VirtualHost>
 

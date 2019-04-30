@@ -49,7 +49,7 @@ is_web_domain_cert_valid
 
 # Deleting old certificate
 tmpdir=$(mktemp -p $HOMEDIR/$user/web/$domain/private -d)
-rm -f $HOMEDIR/$user/conf/web/ssl.$domain.*
+rm -f $HOMEDIR/$user/conf/web/$domain/ssl/$domain.*
 mv $USER_DATA/ssl/$domain.* $tmpdir
 chown -R $user:$user $tmpdir
 
@@ -63,11 +63,11 @@ if [ -e "$ssl_dir/$domain.ca" ]; then
 fi
 
 # Adding new certificate to user dir
-cp -f $USER_DATA/ssl/$domain.crt $HOMEDIR/$user/conf/web/ssl.$domain.crt
-cp -f $USER_DATA/ssl/$domain.key $HOMEDIR/$user/conf/web/ssl.$domain.key
-cp -f $USER_DATA/ssl/$domain.pem $HOMEDIR/$user/conf/web/ssl.$domain.pem
+cp -f $USER_DATA/ssl/$domain.crt $HOMEDIR/$user/conf/web/$domain/ssl/$domain.crt
+cp -f $USER_DATA/ssl/$domain.key $HOMEDIR/$user/conf/web/$domain/ssl/$domain.key
+cp -f $USER_DATA/ssl/$domain.pem $HOMEDIR/$user/conf/web/$domain/ssl/$domain.pem
 if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
-    cp -f $USER_DATA/ssl/$domain.ca $HOMEDIR/$user/conf/web/ssl.$domain.ca
+    cp -f $USER_DATA/ssl/$domain.ca $HOMEDIR/$user/conf/web/$domain/ssl/$domain.ca
 fi
 
 

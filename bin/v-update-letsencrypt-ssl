@@ -52,6 +52,26 @@ for user in $($BIN/v-list-users plain |cut -f 1); do
             fi
         fi
     done
+
+    for domain in $(search_objects 'mail' 'LETSENCRYPT' 'yes' 'DOMAIN'); do
+        crt_data=$(openssl x509 -text -in $USER_DATA/ssl/mail.$domain.crt)
+        not_after=$(echo "$crt_data" |grep "Not After" |cut -f 2,3,4 -d :)
+        expiration=$(date -d "$not_after" +%s)
+        now=$(date +%s)
+        seconds_valid=$((expiration - now))
+        days_valid=$((seconds_valid / 86400))
+        if [[ "$days_valid" -lt 31 ]]; then
+            if [ $lecounter -gt 0 ]; then
+                sleep 10
+            fi
+            ((lecounter++))
+            msg=$($BIN/v-add-letsencrypt-domain $user $domain ' ' yes)
+            if [ $? -ne 0 ]; then
+                echo "$domain $msg"
+            fi
+        fi
+    done
+
 done
 
 #----------------------------------------------------------#

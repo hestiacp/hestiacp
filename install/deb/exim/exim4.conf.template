@@ -34,9 +34,31 @@ spamd_address = 127.0.0.1 783
 av_scanner = clamd: /var/run/clamav/clamd.ctl
 .endif
 
+log_selector = +tls_sni
+
 tls_advertise_hosts = *
-tls_certificate = /usr/local/hestia/ssl/certificate.crt
-tls_privatekey = /usr/local/hestia/ssl/certificate.key
+
+# here we test that $tls_in_sni really is a domain, but constructing an arbitrary email address foo@...
+# and then extracting the domain with a function that should fails if the email address is not valid
+# then we looks to see that the cert exists, and use it
+# otherwise we use the default cert in /etc/ssl
+tls_certificate = \
+        ${if and {\
+                     { eq {${domain:foo@$tls_in_sni}} {$tls_in_sni}}\
+                     { exists{/usr/local/hestia/ssl/mail/$tls_in_sni.crt} }\
+                 }\
+                 {/usr/local/hestia/ssl/mail/$tls_in_sni.crt}\
+                 {/usr/local/hestia/ssl/certificate.crt}\
+         }
+
+tls_privatekey = \
+        ${if and {\
+                     { eq {${domain:foo@$tls_in_sni}} {$tls_in_sni}}\
+                     { exists{/usr/local/hestia/ssl/mail/$tls_in_sni.key} }\
+                 }\
+                 {/usr/local/hestia/ssl/mail/$tls_in_sni.key}\
+                 {/usr/local/hestia/ssl/certificate.key}\
+         }
 
 daemon_smtp_ports = 25 : 465 : 587
 tls_on_connect_ports = 465
@@ -86,7 +108,7 @@ acl_check_mail:
   deny    condition     = ${if eq{$sender_helo_name}{}}
           message       = HELO required before MAIL
 
-  drop    message       = Helo name contains a ip address (HELO was $sender_helo_name) and not is valid
+  drop    message       = Helo name contains an IP address (HELO was $sender_helo_name) and not is valid
           condition     = ${if match{$sender_helo_name}{\N((\d{1,3}[.-]\d{1,3}[.-]\d{1,3}[.-]\d{1,3})|([0-9a-f]{8})|([0-9A-F]{8}))\N}{yes}{no}}
           condition     = ${if match {${lookup dnsdb{>: defer_never,ptr=$sender_host_address}}\}{$sender_helo_name}{no}{yes}}
           delay         = 45s
@@ -303,7 +325,7 @@ begin transports
 
 remote_smtp:
   driver = smtp
-  #helo_data = $sender_address_domain
+  helo_data = mail.$sender_address_domain
   dkim_domain = DKIM_DOMAIN
   dkim_selector = mail
   dkim_private_key = DKIM_PRIVATE_KEY

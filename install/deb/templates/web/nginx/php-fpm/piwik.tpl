@@ -7,7 +7,7 @@ server {
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;
     error_log   /var/log/nginx/domains/%domain%.error.log error;
         
-    include %home%/%user%/conf/web/forcessl.nginx.%domain%.conf*;
+    include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
 
     location = /favicon.ico {
         try_files /favicon.ico =204;
@@ -65,7 +65,5 @@ server {
 
     include     /etc/nginx/conf.d/phpmyadmin.inc*;
     include     /etc/nginx/conf.d/phppgadmin.inc*;
-    include     /etc/nginx/conf.d/webmail.inc*;
-
-    include     %home%/%user%/conf/web/nginx.%domain%.conf*;
+    include     %home%/%user%/conf/web/%domain%/nginx.conf_*;
 }

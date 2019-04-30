@@ -64,7 +64,7 @@ is_web_domain_cert_valid
 add_mail_ssl_config
 
 # Add webmail configuration to mail domain
-WEBMAIL_TEMPLATE="proxy_system"
+WEBMAIL_TEMPLATE="default"
 if [ "$WEB_SYSTEM" = "nginx" ]; then
     WEBMAIL_TEMPLATE="web_system"
 fi

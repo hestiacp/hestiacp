@@ -38,10 +38,9 @@ log_selector = +tls_sni
 
 tls_advertise_hosts = *
 
-# here we test that $tls_in_sni really is a domain, but constructing an arbitrary email address foo@...
-# and then extracting the domain with a function that should fails if the email address is not valid
-# then we looks to see that the cert exists, and use it
-# otherwise we use the default cert in /etc/ssl
+# We test that $tls_in_sni is a valid domain, by an arbitrary email address foo@domain.tld .
+# Then, we extract the domain with a function that would fail if the email address is invalid.
+# If the certificate exists, we will use it, otherwise the default certificate in /etc/ssl will be used.
 tls_certificate = \
         ${if and {\
                      { eq {${domain:foo@$tls_in_sni}} {$tls_in_sni}}\

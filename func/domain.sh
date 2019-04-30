@@ -671,7 +671,7 @@ del_mail_ssl_certificates(){
 add_webmail_config() {
     mkdir -p "$HOMEDIR/$user/conf/mail/$domain"
     conf="$HOMEDIR/$user/conf/mail/$domain/$1.conf"
-    if [ "$2" = "default.stpl" ]; then
+    if [[ "$2" =~ stpl$ ]]; then
         conf="$HOMEDIR/$user/conf/mail/$domain/$1.ssl.conf"
     fi
 
@@ -716,19 +716,7 @@ add_webmail_config() {
     chown root:$user $conf
     chmod 640 $conf
 
-    if [ "$2" = "default.tpl" ]; then
-        if [ ! -z "$WEB_SYSTEM" ]; then
-            rm -f /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
-            ln -s $conf /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
-        fi
-        if [ ! -z "$PROXY_SYSTEM" ]; then
-            rm -f /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
-            ln -s $conf /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
-        fi
-        # Clear old configurations
-        rm -rf $HOMEDIR/$user/conf/mail/$domain.*
-    fi
-    if [ "$2" = "default.stpl" ]; then
+    if [[ "$2" =~ stpl$ ]]; then
         if [ ! -z "$WEB_SYSTEM" ]; then
             forcessl="$HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM.forcessl.conf"
             rm -f /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
@@ -741,7 +729,7 @@ add_webmail_config() {
         fi
 
         # Add rewrite rules to force HTTPS/SSL connections
-        if [ ! -z "$PROXY_SYSTEM" ]; then
+        if [ ! -z "$PROXY_SYSTEM" ] || [ "$WEB_SYSTEM" = 'nginx' ]; then
             echo 'return 301 https://$server_name$request_uri;' > $forcessl
         else
             echo 'RewriteEngine On' > $forcessl
@@ -752,6 +740,17 @@ add_webmail_config() {
         rm -rf $HOMEDIR/$user/conf/mail/$domain.*
         rm -rf $HOMEDIR/$user/conf/mail/ssl.$domain.*
         rm -rf $HOMEDIR/$user/conf/mail/*nginx.$domain.*
+    else
+        if [ ! -z "$WEB_SYSTEM" ]; then
+            rm -f /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
+            ln -s $conf /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
+        fi
+        if [ ! -z "$PROXY_SYSTEM" ]; then
+            rm -f /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
+            ln -s $conf /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
+        fi
+        # Clear old configurations
+        rm -rf $HOMEDIR/$user/conf/mail/$domain.*
     fi
 }
 

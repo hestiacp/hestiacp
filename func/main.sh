@@ -949,3 +949,8 @@ check_backup_conditions() {
         la=$(cat /proc/loadavg |cut -f 1 -d ' ' |cut -f 1 -d '.')
     done
 }
+
+# Define file download function
+download_file() {
+  wget $1 -q --show-progress --progress=bar:force
+}

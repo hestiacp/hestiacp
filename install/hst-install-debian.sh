@@ -86,6 +86,10 @@ help() {
     exit 1
 }
 
+# Define file download function
+download_file() {
+  wget $1 -q --show-progress --progress=bar:force
+}
 
 # Defining password-gen function
 gen_pass() {

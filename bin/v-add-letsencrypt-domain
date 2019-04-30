@@ -113,6 +113,15 @@ else
     proto="http-01"
 fi
 
+# Check if dns records exist for requested domain/aliases
+if [ "$proto" = "http-01"]; then
+    for identifier in $(echo $domain,$aliases |tr ',' '\n' |sort -u); do
+        if ! nslookup "${identifier}" >/dev/null 2>&1 ; then
+            check_result $E_NOTEXIST "DNS record for $identifier doesn't exist"
+        fi
+    done
+fi
+
 # Requesting nonce / STEP 1
 answer=$(curl -s -I "$LE_API/directory")
 nonce=$(echo "$answer" |grep Nonce |cut -f2 -d \ |tr -d '\r\n')

@@ -307,10 +307,12 @@ del_web_config() {
     fi
 
     # Remove domain configuration files and clean up symbolic links
-    rm -f /etc/$WEB_SYSTEM/conf.d/domains/$domain.conf 
-    rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$domain.conf 
-    rm -f /etc/$WEB_SYSTEM/conf.d/domains/$domain.ssl.conf 
-    rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$domain.ssl.conf 
+    rm -f /etc/$WEB_SYSTEM/conf.d/domains/$domain.conf
+    rm -f /etc/$WEB_SYSTEM/conf.d/domains/$domain.ssl.conf
+    if [ ! -z $PROXY_SYSTEM ]; then
+        rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$domain.conf 
+        rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$domain.ssl.conf 
+    fi
 
     # Clean up legacy configuration files
     if [ -e "$conf" ]; then

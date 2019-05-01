@@ -171,7 +171,7 @@ fi
 php_versions=$( ls -l /etc/php/ | grep ^d | wc -l )
 if [ "$php_versions" -gt 1 ]; then
     for v in $(ls /etc/php/); do
-        cp -f $hestiacp/php-fpm/dummy.conf /etc/php/$d/fpm/pool.d/
+        cp -f $hestiacp/php-fpm/dummy.conf /etc/php/$v/fpm/pool.d/
         v1=$(echo "$v" | sed -e 's/[.]//')
         sed -i "s/9999/99$v1/g" /etc/php/$v/fpm/pool.d/dummy.conf
     done

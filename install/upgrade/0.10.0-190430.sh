@@ -149,6 +149,10 @@ chown bind:bind /var/cache/bind
 chmod 640 /etc/roundcube/debian-db*
 chown root:www-data /etc/roundcube/debian-db*
 
+# Add missing packages
+echo "(*) Adding missing packages..."
+apt-get -y install php-imap php-ldap php-apcu
+
 # Add unassigned hosts configuration to Nginx and Apache
 if [ "$WEB_SYSTEM" = "apache2" ]; then
     echo "(*) Adding unassigned hosts configuration to Apache..."

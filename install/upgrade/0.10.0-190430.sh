@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # define vars
 HESTIA="/usr/local/hestia"
 HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
@@ -142,6 +143,11 @@ chmod 751 $HESTIA/data/templates/web/suspend/webfonts
 chmod 751 $HESTIA/data/templates/web/unassigned/css
 chmod 751 $HESTIA/data/templates/web/unassigned/js
 chmod 751 $HESTIA/data/templates/web/unassigned/webfonts
+
+# Correct other permissions
+chown bind:bind /var/cache/bind
+chmod 640 /etc/roundcube/debian-db*
+chown root:www-data /etc/roundcube/debian-db*
 
 # Add unassigned hosts configuration to Nginx and Apache
 if [ "$WEB_SYSTEM" = "apache2" ]; then

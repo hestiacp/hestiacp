@@ -265,7 +265,7 @@ $BIN/v-restart-dns $restart
 
 echo ""
 echo "    Upgrade complete! Please report any bugs or issues to"
-echo "    https://github.com/hestiacp/hestiacp/issues."
+echo "    https://github.com/hestiacp/hestiacp/issues"
 echo ""
 echo "    We hope that you enjoy this release of Hestia Control Panel,"
 echo "    enjoy your day!"

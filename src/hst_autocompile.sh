@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Autocompile Script for HestiaCP deb Files.
 
 # Clear previous screen output
@@ -5,13 +7,41 @@ clear
 
 # Define download function
 download_file() {
-  wget $1 -q --show-progress --progress=bar:force
+  local url=$1
+  local destination=$2
+
+  # default destionation is the curent working directory
+  local dstopt=""
+
+  if [ ! -z "$(echo "$url" | grep -E "\.(gz|gzip|bz2|zip|xz)$")" ]; then
+    # when a archive file is downloaded it will be first saved localy
+    dstopt="--directory-prefix=$ARHIVE_DIR"
+    local is_archive="true"
+    local filename="${url##*/}"
+  elif [ ! -z "$destination" ]; then
+    # Plain files will be written to specified location
+    dstopt="-O $destination"
+  fi
+
+  if [ ! -f "$ARHIVE_DIR/$filename" ]; then
+    wget $url -q $dstopt --show-progress --progress=bar:force
+  fi
+
+  if [ ! -z "$destination" ] && [ "$is_archive" = "true" ]; then
+    if [ "$destination" = "-" ]; then
+      cat "$ARHIVE_DIR/$filename"
+    elif [ -d $(basename $destination) ]; then
+      cp "$ARHIVE_DIR/$filename" "$destination"
+    fi
+  fi
 }
 
 # Set compiling directory
 BUILD_DIR='/tmp/hestiacp-src/'
 DEB_DIR="$BUILD_DIR/debs/"
 INSTALL_DIR='/usr/local/hestia'
+SRC_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+ARHIVE_DIR="$SRC_DIR/src/archive/"
 
 # Set Version for compiling
 HESTIA_V='0.10.0-190430_amd64'
@@ -24,6 +54,7 @@ PHP_V='7.3.5'
 # Create build directories
 rm -rf $BUILD_DIR
 mkdir -p $DEB_DIR
+mkdir -p $ARHIVE_DIR
 
 # Set package dependencies for compiling
 SOFTWARE='build-essential libxml2-dev libz-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config'
@@ -109,7 +140,7 @@ fi
 GIT_REP='https://raw.githubusercontent.com/hestiacp/hestiacp/'$branch'/src/deb'
 
 # Generate Links for sourcecode
-HESTIA='https://github.com/hestiacp/hestiacp/archive/'$branch'.zip'
+HESTIA='https://github.com/hestiacp/hestiacp/archive/'$branch'.tar.gz'
 NGINX='https://nginx.org/download/nginx-'$NGINX_V'.tar.gz'
 OPENSSL='https://www.openssl.org/source/openssl-'$OPENSSL_V'.tar.gz'
 PCRE='https://ftp.pcre.org/pub/pcre/pcre-'$PCRE_V'.tar.gz'
@@ -139,10 +170,10 @@ if [ "$NGINX_B" = true ] ; then
     mkdir $BUILD_DIR/hestia-nginx_$NGINX_V
 
     # Download and unpack source files
-    download_file $NGINX | tar xz
-    download_file $OPENSSL | tar xz
-    download_file $PCRE | tar xz
-    download_file $ZLIB | tar xz
+    download_file $NGINX '-' | tar xz
+    download_file $OPENSSL '-' | tar xz
+    download_file $PCRE '-' | tar xz
+    download_file $ZLIB '-' | tar xz
 
     # Change to nginx directory
     cd nginx-$NGINX_V
@@ -197,7 +228,7 @@ if [ "$NGINX_B" = true ] ; then
     # Get nginx.conf
     cd ../../
     rm usr/local/hestia/nginx/conf/nginx.conf
-    download_file $GIT_REP/nginx/nginx.conf -O usr/local/hestia/nginx/conf/nginx.conf
+    download_file "$GIT_REP/nginx/nginx.conf" "usr/local/hestia/nginx/conf/nginx.conf"
 
     # copy binary
     cp usr/local/hestia/nginx/sbin/nginx usr/local/hestia/nginx/sbin/hestia-nginx
@@ -234,7 +265,7 @@ if [ "$PHP_B" = true ] ; then
     mkdir ${BUILD_DIR}/hestia-php_$PHP_V
 
     # Download and unpack source files
-    download_file $PHP | tar xz
+    download_file $PHP '-' | tar xz
 
     # Change to php directory
     cd php-$PHP_V
@@ -270,10 +301,10 @@ if [ "$PHP_B" = true ] ; then
     mv ${BUILD_DIR}/usr/local/hestia/php usr/local/hestia/
 
     # Get php-fpm.conf
-    download_file $GIT_REP/php/php-fpm.conf -O usr/local/hestia/php/etc/php-fpm.conf
+    download_file "$GIT_REP/php/php-fpm.conf" "usr/local/hestia/php/etc/php-fpm.conf"
 
     # Get php.ini
-    download_file $GIT_REP/php/php.ini -O usr/local/hestia/php/lib/php.ini
+    download_file "$GIT_REP/php/php.ini" "usr/local/hestia/php/lib/php.ini"
 
     # copy binary
     cp usr/local/hestia/php/sbin/php-fpm usr/local/hestia/php/sbin/hestia-php
@@ -310,9 +341,7 @@ if [ "$HESTIA_B" = true ] ; then
     mkdir $BUILD_DIR/hestia_$HESTIA_V
 
     # Download and unpack source files
-    download_file $HESTIA
-    unzip -q $branch.zip
-    rm $branch.zip
+    download_file $HESTIA '-' | tar xz
 
     # Prepare Deb Package Folder Structure
     cd hestia_$HESTIA_V/

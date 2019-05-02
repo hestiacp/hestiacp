@@ -7,7 +7,7 @@ server {
     include %home%/%user%/conf/mail/%root_domain%/nginx.forcessl.conf*;
     
     location ~ /(config|temp|logs) {
-        deny all
+        deny all;
         return 404;
     }
     

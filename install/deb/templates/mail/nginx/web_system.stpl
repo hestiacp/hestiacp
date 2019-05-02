@@ -7,7 +7,7 @@ server {
     index       index.php;
    
     location ~ /(config|temp|logs) {
-        deny all
+        deny all;
         return 404;
     }
     

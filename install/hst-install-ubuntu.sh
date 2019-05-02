@@ -357,7 +357,7 @@ if [ -d /etc/netplan ] && [ -z "$force" ]; then
         echo
         echo '!!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!!'
         echo
-        check_result 1 "Unable to detect netplan configuration."    
+        check_result 1 "Unable to detect netplan configuration."
     fi
 fi
 
@@ -554,7 +554,6 @@ APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/nginx_signing.key > /dev
 echo "(*) PHP"
 LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
 
-
 # Installing MariaDB repo
 echo "(*) MariaDB"
 echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/10.3/$VERSION $codename main" > $apt/mariadb.list
@@ -647,7 +646,7 @@ if [ "$multiphp" = 'yes' ]; then
              php$v-gd php$v-intl php$v-mysql php$v-soap php$v-xml php$v-zip
              php$v-mbstring php$v-json php$v-bz2 php$v-pspell"
         # Check is version is 7.1 or below to add mcrypt
-        if [[ `echo "$v 7.2" | awk '{print ($1 < $2)}'` == 1 ]]; then 
+        if [[ `echo "$v 7.2" | awk '{print ($1 < $2)}'` == 1 ]]; then
             mph="$mph php$v-mcrypt"
         fi
         software="$software $mph"
@@ -1337,7 +1336,7 @@ if [ "$named" = 'yes' ]; then
         if [ $? -ne 0 ]; then
             service apparmor restart
         fi
-    fi    
+    fi
     update-rc.d bind9 defaults
     service bind9 start
     check_result $? "bind9 start failed"
@@ -1511,7 +1510,7 @@ if [ "$fail2ban" = 'yes' ]; then
         fline=$(cat /etc/fail2ban/jail.local |grep -n vsftpd-iptables -A 2)
         fline=$(echo "$fline" |grep enabled |tail -n1 |cut -f 1 -d -)
         sed -i "${fline}s/false/true/" /etc/fail2ban/jail.local
-    fi 
+    fi
     update-rc.d fail2ban defaults
     service fail2ban start
     check_result $? "fail2ban start failed"
@@ -1651,7 +1650,7 @@ fi
 # Sending notification to admin email
 echo -e "Congratulations!
 
-You have successfully installed Hestia Control Panel on your server. 
+You have successfully installed Hestia Control Panel on your server.
 
 Ready to get started? Log in using the following credentials:
 

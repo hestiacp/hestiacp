@@ -1497,38 +1497,26 @@ if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
         cp -f $hestiacp/roundcube/apache.conf /etc/roundcube/
         ln -s /etc/roundcube/apache.conf /etc/apache2/conf.d/roundcube.conf
     fi
-    cp -f $hestiacp/roundcube/main.inc.php /etc/roundcube/
-    cp -f  $hestiacp/roundcube/db.inc.php /etc/roundcube/
-    chmod 640 /etc/roundcube/debian-db-roundcube.php
-    chmod 640 /etc/roundcube/config.inc.php
-    chown root:www-data /etc/roundcube/debian-db-roundcube.php
-    chown root:www-data /etc/roundcube/config.inc.php
-    cp -f $hestiacp/roundcube/hestia.php \
-        /usr/share/roundcube/plugins/password/drivers/
+    cp -f $hestiacp/roundcube/main.inc.php /etc/roundcube/config.inc.php
+    cp -f $hestiacp/roundcube/db.inc.php /etc/roundcube/debian-db-roundcube.php
     cp -f $hestiacp/roundcube/config.inc.php /etc/roundcube/plugins/password/
+    cp -f $hestiacp/roundcube/hestia.php /usr/share/roundcube/plugins/password/drivers/
+    touch /var/log/roundcube/errors
+    chmod 640 /etc/roundcube/config.inc.php
+    chown root:www-data /etc/roundcube/config.inc.php
+    chmod 640 /etc/roundcube/debian-db-roundcube.php
+    chown root:www-data /etc/roundcube/debian-db-roundcube.php
+    chmod 640 /var/log/roundcube/errors
+    chown www-data:adm /var/log/roundcube/errors
+
     r="$(gen_pass)"
     mysql -e "CREATE DATABASE roundcube"
-    mysql -e "GRANT ALL ON roundcube.* 
+    mysql -e "GRANT ALL ON roundcube.*
         TO roundcube@localhost IDENTIFIED BY '$r'"
-    sed -i "s/%password%/$r/g" /etc/roundcube/db.inc.php
-    sed -i "s/localhost/$servername/g" \
-        /etc/roundcube/plugins/password/config.inc.php
+    sed -i "s/%password%/$r/g" /etc/roundcube/debian-db-roundcube.php
+    sed -i "s/localhost/$servername/g" /etc/roundcube/plugins/password/config.inc.php
     mysql roundcube < /usr/share/dbconfig-common/data/roundcube/install/mysql
-    chmod a+r /etc/roundcube/main.inc.php
 
-    # Send all emails through SMTP and add user information
-    sed -i "/\$config\['smtp_server'\]/c\$config\['smtp_server'\] = 'localhost';" /etc/roundcube/defaults.inc.php
-    sed -i "/\$config\['smtp_user'\]/c\$config\['smtp_user'\] = '%u';" /etc/roundcube/defaults.inc.php
-    sed -i "/\$config\['smtp_pass'\]/c\$config\['smtp_pass'\] = '%p';" /etc/roundcube/defaults.inc.php
-
-    if [ "$release" -eq 8 ] || [ "$release" -eq 9 ]; then
-        mv -f /etc/roundcube/main.inc.php /etc/roundcube/config.inc.php
-        mv -f /etc/roundcube/db.inc.php /etc/roundcube/debian-db-roundcube.php
-        chmod 640 /etc/roundcube/debian-db-roundcube.php
-        chmod 640 /etc/roundcube/config.inc.php
-        chown root:www-data /etc/roundcube/debian-db-roundcube.php
-        chown root:www-data /etc/roundcube/config.inc.php
-    fi
     if [ "$release" -eq 8 ]; then
         # RoundCube tinyMCE fix
         tinymceFixArchiveURL=$hestiacp/roundcube/roundcube-tinymce.tar.gz

@@ -958,7 +958,49 @@ check_backup_conditions() {
     done
 }
 
-# Define file download function
+# Define download function
 download_file() {
-  wget $1 -q --show-progress --progress=bar:force
+  local url=$1
+  local destination=$2
+  local force=$3
+
+  # Default destination is the curent working directory
+  local dstopt=""
+
+  if [ ! -z "$(echo "$url" | grep -E "\.(gz|gzip|bz2|zip|xz)$")" ]; then
+    # When an archive file is downloaded it will be first saved localy
+    dstopt="--directory-prefix=$ARCHIVE_DIR"
+    local is_archive="true"
+    local filename="${url##*/}"
+    if [ -z "$filename" ]; then
+      >&2 echo "[!] No filename was found in url, exiting ($url)"
+      exit 1
+    fi
+    if [ ! -z "$force" ] && [ -f "$ARCHIVE_DIR/$filename" ]; then
+      rm -f $ARCHIVE_DIR/$filename
+    fi
+  elif [ ! -z "$destination" ]; then
+    # Plain files will be written to specified location
+    dstopt="-O $destination"
+  fi
+  # check for corrupted archive
+  if [ -f "$ARCHIVE_DIR/$filename" ] && [ "$is_archive" = "true" ]; then
+    tar -tzf "$ARCHIVE_DIR/$filename" > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+      >&2 echo "[!] Archive $ARCHIVE_DIR/$filename is corrupted, redownloading"
+      rm -f $ARCHIVE_DIR/$filename
+    fi
+  fi
+
+  if [ ! -f "$ARCHIVE_DIR/$filename" ]; then
+    wget $url -q $dstopt --show-progress --progress=bar:force --limit-rate=3m
+  fi
+
+  if [ ! -z "$destination" ] && [ "$is_archive" = "true" ]; then
+    if [ "$destination" = "-" ]; then
+      cat "$ARCHIVE_DIR/$filename"
+    elif [ -d "$(dirname $destination)" ]; then
+      cp "$ARCHIVE_DIR/$filename" "$destination"
+    fi
+  fi
 }

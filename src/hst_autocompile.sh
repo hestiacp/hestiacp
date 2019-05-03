@@ -19,7 +19,7 @@ NGINX_V='1.16.0'
 OPENSSL_V='1.1.1b'
 PCRE_V='8.43'
 ZLIB_V='1.2.11'
-PHP_V='7.3.4'
+PHP_V='7.3.5'
 
 # Create build directories
 rm -rf $BUILD_DIR

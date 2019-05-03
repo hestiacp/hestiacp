@@ -2,5 +2,6 @@
 *.zip
 *.gzip
 *.gz
+*.bz2
 .vscode
 .DS_Store

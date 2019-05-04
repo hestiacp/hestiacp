@@ -156,25 +156,21 @@ fi
 # Add unassigned hosts configuration to Nginx and Apache
 if [ "$WEB_SYSTEM" = "apache2" ]; then
     echo "(*) Adding unassigned hosts configuration to Apache..."
-    if [ -f /usr/local/hestia/data/ips/* ]; then
-        for ip in /usr/local/hestia/data/ips/*; do
-            ipaddr=${ip##*/}
-            rm -f /etc/apache2/conf.d/$ip.conf
-            cp -f $HESTIA/install/deb/apache2/unassigned.conf /etc/apache2/conf.d/$ipaddr.conf
-            sed -i 's/directIP/'$ipaddr'/g' /etc/apache2/conf.d/$ipaddr.conf
-        done
-    fi
+    for ip in /usr/local/hestia/data/ips/*; do
+        ipaddr=${ip##*/}
+        rm -f /etc/apache2/conf.d/$ip.conf
+        cp -f $HESTIA/install/deb/apache2/unassigned.conf /etc/apache2/conf.d/$ipaddr.conf
+        sed -i 's/directIP/'$ipaddr'/g' /etc/apache2/conf.d/$ipaddr.conf
+    done
 fi
 if [ "$PROXY_SYSTEM" = "nginx" ]; then
     echo "(*) Adding unassigned hosts configuration to Nginx..."
-    if [ -f /usr/local/hestia/data/ips/* ]; then
-        for ip in /usr/local/hestia/data/ips/*; do
-            ipaddr=${ip##*/}
-            rm -f /etc/nginx/conf.d/$ip.conf
-            cp -f $HESTIA/install/deb/nginx/unassigned.inc /etc/nginx/conf.d/$ipaddr.conf
-            sed -i 's/directIP/'$ipaddr'/g' /etc/nginx/conf.d/$ipaddr.conf
-        done
-    fi
+    for ip in /usr/local/hestia/data/ips/*; do
+        ipaddr=${ip##*/}
+        rm -f /etc/nginx/conf.d/$ip.conf
+        cp -f $HESTIA/install/deb/nginx/unassigned.inc /etc/nginx/conf.d/$ipaddr.conf
+        sed -i 's/directIP/'$ipaddr'/g' /etc/nginx/conf.d/$ipaddr.conf
+    done
 fi
 
 # Fix empty pool error message for MultiPHP

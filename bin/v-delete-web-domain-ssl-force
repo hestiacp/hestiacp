@@ -49,6 +49,10 @@ fi
 #                       Hestia                             #
 #----------------------------------------------------------#
 
+if [ -z "$FORCESSL" ]; then
+    add_object_key "web" 'DOMAIN' "$domain" 'FORCESSL' 'SSL'
+fi
+
 update_object_value 'web' 'DOMAIN' "$domain" '$FORCESSL' 'no'
 
 # Restart services if requested

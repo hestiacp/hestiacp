@@ -145,9 +145,13 @@ chmod 751 $HESTIA/data/templates/web/unassigned/js
 chmod 751 $HESTIA/data/templates/web/unassigned/webfonts
 
 # Correct other permissions
-chown bind:bind /var/cache/bind
-chmod 640 /etc/roundcube/debian-db*
-chown root:www-data /etc/roundcube/debian-db*
+if [ -d "/var/cache/bind" ]; then
+    chown bind:bind /var/cache/bind
+fi
+if [ -d "/etc/roundcube" ]; then
+    chmod 640 /etc/roundcube/debian-db*
+    chown root:www-data /etc/roundcube/debian-db*
+fi
 
 # Add unassigned hosts configuration to Nginx and Apache
 if [ "$WEB_SYSTEM" = "apache2" ]; then
@@ -174,9 +178,12 @@ if [ "$PROXY_SYSTEM" = "nginx" ]; then
 fi
 
 # Fix empty pool error message for MultiPHP
-php_versions=$( ls -l /etc/php/ | grep ^d | wc -l )
+php_versions=$(ls /etc/php/*/fpm -d | wc -l)
 if [ "$php_versions" -gt 1 ]; then
     for v in $(ls /etc/php/); do
+        if [ ! -d "/etc/php/$v/fpm/pool.d/" ]; then
+            continue
+        fi
         cp -f $hestiacp/php-fpm/dummy.conf /etc/php/$v/fpm/pool.d/
         v1=$(echo "$v" | sed -e 's/[.]//')
         sed -i "s/9999/99$v1/g" /etc/php/$v/fpm/pool.d/dummy.conf

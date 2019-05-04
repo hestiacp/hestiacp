@@ -189,28 +189,24 @@
                                     <table style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;" id="ssltable">
                                       <tr>
                                           <td class="input-label vst-text">
-                                              <label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letencrypt == 'on') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_letsencrypt(this)"> <?php print __('Lets Encrypt Support');?></label>
-                                          </td>
-                                      </tr>
-                                      <tr>
-                                          <td class="input-label vst-text">
                                               <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl_forcessl" <?php if($v_ssl_forcessl == 'yes') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_forcessl(this)"> <?php print __('Force SSL/HTTPS');?></label>
                                           </td>
                                       </tr>
                                       <tr>
+                                        <td class="input-label vst-text">
+                                            <label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letencrypt == 'on') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_letsencrypt(this)"> <?php print __('Lets Encrypt Support');?></label>
+                                        </td>
+                                    </tr>
+                                      <tr style="display: none;">
                                             <td class="vst-text input-label">
-                                                <?php print __('SSL Home Directory');?>
+                                                <?php print __('Home Directory');?>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr style="display: none;">
                                             <td>
                                                 <select class="vst-list" name="v_ssl_home">
-
-                                                    <option value='same' <?php if ($v_ssl_home == 'same') echo "selected";?>>
+                                                    <option value='same'>
                                                          public_html
-                                                    </option>
-                                                    <option value='single' <?php if ($v_ssl_home == 'single') echo "selected";?>>
-                                                        public_shtml
                                                     </option>
                                                 </select>
                                             </td>

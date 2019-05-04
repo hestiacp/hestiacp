@@ -204,7 +204,7 @@
                         </tr>
                         <?
                             list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
-                            $webmail = "http://webmail.".$http_host."/";
+                            $webmail = "http://webmail.".$v_domain."/";
                             if (!empty($_SESSION['MAIL_URL'])) $webmail = $_SESSION['MAIL_URL'];
                         ?>
                         <tr>

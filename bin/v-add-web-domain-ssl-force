@@ -43,7 +43,7 @@ if [ "$SSL" != 'yes' ]; then
 fi
 
 # Check if proxy is active
-if [ ! -z "$PROXY_SYSTEM" ] || [ ! -z "$PROXY" ]; then
+if [ ! -z "$PROXY_SYSTEM" ]; then
     if ! grep --quiet "forcessl" $HESTIA/data/templates/web/nginx/default.tpl; then
         $BIN/v-update-web-templates
     fi
@@ -56,7 +56,7 @@ else
 fi
 
 # Insert redirect commands
-if [ ! -z $PROXY ]; then
+if [ ! -z "$PROXY_SYSTEM" ] || [ "$WEB_SYSTEM" = 'nginx' ]; then
     echo 'return 301 https://$host$request_uri;' > $forcessl
 else
     echo 'RewriteEngine On' > $forcessl
@@ -67,6 +67,10 @@ fi
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
+
+if [ -z "$FORCESSL" ]; then
+    add_object_key "web" 'DOMAIN' "$domain" 'FORCESSL' 'SSL'
+fi
 
 # Set forcessl flag to enabled
 update_object_value 'web' 'DOMAIN' "$domain" '$FORCESSL' 'yes'

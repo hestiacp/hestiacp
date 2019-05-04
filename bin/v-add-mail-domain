@@ -128,16 +128,10 @@ if [ ! -z "$DNS_SYSTEM" ] && [ "$dkim" = 'yes' ]; then
 fi
 
 # Add webmail configuration to mail domain
-WEBMAIL_TEMPLATE="default"
-if [ "$WEB_SYSTEM" = "nginx" ]; then
-    WEBMAIL_TEMPLATE="web_system"
+if [ ! -z "$WEB_SYSTEM" ] || [ ! -z "$PROXY_SYSTEM" ]; then
+    $BIN/v-add-webmail $user $domain '' 
 fi
-add_webmail_config "$WEB_SYSTEM" "${WEBMAIL_TEMPLATE}.tpl"
-
-if [ ! -z "$PROXY_SYSTEM" ]; then
-    add_webmail_config "$PROXY_SYSTEM" "default.tpl"
-fi
-
+    
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

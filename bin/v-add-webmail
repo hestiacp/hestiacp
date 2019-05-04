@@ -41,7 +41,7 @@ get_user_ip
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'USER DOMAIN [RESTART]'
+check_args '2' "$#" 'USER DOMAIN [RESTART]'
 is_format_valid 'user' 'domain'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'

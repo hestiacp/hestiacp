@@ -154,7 +154,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
 
     // Add antivirs
     if (($v_antivirus == 'no') && (!empty($_POST['v_antivirus'])) && (empty($_SESSION['error_msg']))) {
-        exec (HESTIA_CMD."v-add-mail-domain-antivirus ".$v_username." ".$escapeshellarg($v_domain), $output, $return_var);
+        exec (HESTIA_CMD."v-add-mail-domain-antivirus ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
         check_return_code($return_var,$output);
         $v_antivirus = 'yes';
         unset($output);
@@ -162,7 +162,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
 
     // Delete DKIM
     if (($v_dkim == 'yes') && (empty($_POST['v_dkim'])) && (empty($_SESSION['error_msg']))) {
-        exec (HESTIA_CMD."v-delete-mail-domain-dkim ".$v_username." ".$escapeshellarg($v_domain), $output, $return_var);
+        exec (HESTIA_CMD."v-delete-mail-domain-dkim ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
         check_return_code($return_var,$output);
         $v_dkim = 'no';
         unset($output);
@@ -170,7 +170,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
 
     // Add DKIM
     if (($v_dkim == 'no') && (!empty($_POST['v_dkim'])) && (empty($_SESSION['error_msg']))) {
-        exec (HESTIA_CMD."v-add-mail-domain-dkim ".$v_username." ".$escapeshellarg($v_domain), $output, $return_var);
+        exec (HESTIA_CMD."v-add-mail-domain-dkim ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
         check_return_code($return_var,$output);
         $v_dkim = 'yes';
         unset($output);

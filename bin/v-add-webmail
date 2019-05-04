@@ -54,6 +54,21 @@ is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Ensure DNS record exists if Hestia is hosting DNS zones
+if [ ! -z "$DNS_SYSTEM" ]; then
+    dns_domain=$($BIN/v-list-dns-domains $user | grep $domain | cut -d' ' -f1)
+    webmail_record=$($BIN/v-list-dns-records $user $domain | grep -i $WEBMAIL_ALIAS | cut -d' ' -f1)
+
+    if [ "$dns_domain" = "$domain" ]; then
+        if [ -z "$webmail_record" ]; then
+            $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip
+        else
+            $BIN/v-delete-dns-record $user $domain $webmail_record
+            $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip
+        fi
+    fi
+fi
+
 # Add webmail configuration to mail domain
 WEBMAIL_TEMPLATE="default"
 if [ "$WEB_SYSTEM" = "nginx" ]; then

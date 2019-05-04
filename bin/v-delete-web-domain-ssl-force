@@ -38,8 +38,12 @@ is_object_valid 'web' 'DOMAIN' "$domain" "$FORCESSL"
 eval $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 
 # Remove forcessl configs
-rm -f $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.forcessl.conf
-rm -f $HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.forcessl.conf
+if [ -f $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.forcessl.conf ]; then
+    rm -f $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.forcessl.conf
+fi
+if [ -f $HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.forcessl.conf ]; then
+    rm -f $HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.forcessl.conf
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #

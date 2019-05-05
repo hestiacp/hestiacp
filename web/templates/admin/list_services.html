@@ -1,13 +1,12 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a href="/edit/server/" class="ui-button cancel" title="<?=__('Configure')?>"><i class="fas fa-cog status-icon-lightblue"></i> <?=__('Configure')?></a>
+          <a href="/edit/server/" class="ui-button cancel" title="<?=__('Configure')?>"><i class="fas fa-cog status-icon-maroon"></i> <?=__('Configure')?></a>
+          <a href="/list/rrd/" class="ui-button cancel" title="<?=__('Graphs')?>"><i class="fas fa-chart-area status-icon-green"></i> <?=__('Graphs')?></a>
           <a href="/list/package/" class="ui-button cancel" title="<?=__('Packages')?>"><i class="fas fa-box-open status-icon-orange"></i> <?=__('Packages')?></a>
           <a href="/list/ip/" class="ui-button cancel" title="<?=__('IP')?>"><i class="fas fa-ethernet status-icon-blue"></i> <?=__('IP')?></a>
           <?php if ((isset($_SESSION['FIREWALL_SYSTEM'])) && (!empty($_SESSION['FIREWALL_SYSTEM']))) {?><a href="/list/firewall/" class="ui-button cancel" title="<?=__('Firewall')?>"><i class="fas fa-shield-alt status-icon-red"></i> <?=__('Firewall')?></a><?php }?>
-          <a href="/list/rrd/" class="ui-button cancel" title="<?=__('Graphs')?>"><i class="fas fa-chart-area status-icon-orange"></i> <?=__('Graphs')?></a>
           <a href="/list/updates/" class="ui-button cancel" title="<?=__('Updates')?>"><i class="fas fa-sync status-icon-green"></i> <?=__('Updates')?></a>
-          <a href="/list/server/?cpu" class="ui-button cancel" title="<?=__('show: CPU / MEM / NET / DISK');?>"><i class="fas fa-search status-icon-blue"></i> <?=__('show: CPU / MEM / NET / DISK');?></a>
         </div>
         <div class="l-sort-toolbar clearfix">
           <table>

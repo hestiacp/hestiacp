@@ -7,7 +7,7 @@
 $LANG['en'] = array(
     'Packages'  => 'Packages',
     'IP'  => 'Network',
-    'Graphs'  => 'Graphs',
+    'Graphs'  => 'Task Monitor',
     'Statistics'  => 'Statistics',
     'Log'  => 'Logs',
     'Server'  => 'Server',
@@ -29,7 +29,7 @@ $LANG['en'] = array(
     'RESET PASSWORD'  => 'RESET PASSWORD',
     'SEARCH'  => 'SEARCH',
     'PACKAGE'  => 'PACKAGE',
-    'RRD'  => 'RRD',
+    'RRD'  => 'TASK MONITOR',
     'STATS'  => 'STATS',
     'LOG'  => 'LOGS',
     'UPDATES'  => 'UPDATES',
@@ -583,7 +583,7 @@ $LANG['en'] = array(
     'Template Manager' => 'Template Manager',
     'Backup Migration Manager' => 'Backup Migration Manager',
     'FileManager' => 'File Manager',
-    'show: CPU / MEM / NET / DISK' => 'Usage Details',
+    'show: CPU / MEM / NET / DISK' => 'View Advanced Details',
 
     'sort by' => 'sort by',
     'Date' => 'Date',

@@ -28,7 +28,7 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
-is_object_valid 'web' 'DOMAIN' "$domain" "$FORCESSL"
+is_object_valid 'web' 'DOMAIN' "$domain" "$SSL_FORCE"
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -49,11 +49,11 @@ fi
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-if [ -z "$FORCESSL" ]; then
-    add_object_key "web" 'DOMAIN' "$domain" 'FORCESSL' 'SSL'
+if [ -z "$SSL_FORCE" ]; then
+    add_object_key "web" 'DOMAIN' "$domain" 'SSL_FORCE' 'SSL_HOME'
 fi
 
-update_object_value 'web' 'DOMAIN' "$domain" '$FORCESSL' 'no'
+update_object_value 'web' 'DOMAIN' "$domain" '$SSL_FORCE' 'no'
 
 # Restart services if requested
 if [ ! -z "$restart" ]; then

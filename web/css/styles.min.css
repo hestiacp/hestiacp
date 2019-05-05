@@ -305,6 +305,25 @@
        url('../webfonts/exo-2-v5-latin-900italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
        url('../webfonts/exo-2-v5-latin-900italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
+/* inconsolata-bold - latin */
+@font-face {
+  font-family: 'Inconsolata';
+  src: local('Inconsolata Bold'), local('Inconsolata-Bold'),
+      url('hinted-Inconsolata-Bold.woff2') format('woff2'),
+      url('hinted-Inconsolata-Bold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+}
+/* inconsolata - latin */
+@font-face {
+  font-family: 'Inconsolata';
+  src: local('Inconsolata Regular'), local('Inconsolata-Regular'),
+      url('hinted-Inconsolata-Regular.woff2') format('woff2'),
+      url('hinted-Inconsolata-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 /* Base
    ========================================================================== */
 /**
@@ -2854,7 +2873,7 @@ a.vst-text:active b{
   font-size: 0.8rem;
   width: 630px;
   height: 300px;
-  font-family:"Lucida Console", Monaco, monospace;
+  font-family: "Inconsolata", "Lucida Console", Monaco, monospace;
   white-space: pre;
 }
 .vst-textinput.short {
@@ -3313,8 +3332,8 @@ div.l-content.collapsed .l-sort {
 }
 
 .console-output {
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 0.8rem;
+  font-family: "Inconsolata", "Lucida Console", Monaco, monospace;
+  font-size: 0.7rem;
   color: #202020;
   letter-spacing: -0.01em;
 }

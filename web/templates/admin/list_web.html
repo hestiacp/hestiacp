@@ -140,7 +140,7 @@ sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-dis
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
               <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/web/?domain=<?=$key?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
-              <div class="actions-panel__col actions-panel__logs shortcut-l" key-action="href"><a href="/list/web-log/?domain=<?php echo $key ?>&type=access#" target="_blank"><?=__('view logs')?> <i></i></a><span class="shortcut">&nbsp;L</span></div>
+              <div class="actions-panel__col actions-panel__logs shortcut-l" key-action="href"><a href="/list/web-log/?domain=<?php echo $key ?>&type=access#"><?=__('view logs')?> <i></i></a><span class="shortcut">&nbsp;L</span></div>
               <? if (!empty($data[$key]['STATS'])) { ?>
                   <div class="actions-panel__col actions-panel__logs shortcut-w" key-action="href"><a href="http://<?=$key?>/vstats/"  target="_blank"><?=__('open webstats')?> <i></i></a><span class="shortcut">&nbsp;W</span></div>
               <? } ?>

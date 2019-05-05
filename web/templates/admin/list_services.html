@@ -1,20 +1,17 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
-        <a href="/edit/server/" class="l-sort__create-btn edit" title="<?=__('Configure')?>"></a>
-
+        <div class="l-unit-toolbar__buttonstrip">
+          <a href="/edit/server/" class="ui-button cancel" title="<?=__('Configure')?>"><i class="fas fa-cog status-icon-lightblue"></i> <?=__('Configure')?></a>
+          <a href="/list/package/" class="ui-button cancel" title="<?=__('Packages')?>"><i class="fas fa-box-open status-icon-orange"></i> <?=__('Packages')?></a>
+          <a href="/list/ip/" class="ui-button cancel" title="<?=__('IP')?>"><i class="fas fa-ethernet status-icon-blue"></i> <?=__('IP')?></a>
+          <?php if ((isset($_SESSION['FIREWALL_SYSTEM'])) && (!empty($_SESSION['FIREWALL_SYSTEM']))) {?><a href="/list/firewall/" class="ui-button cancel" title="<?=__('Firewall')?>"><i class="fas fa-shield-alt status-icon-red"></i> <?=__('Firewall')?></a><?php }?>
+          <a href="/list/rrd/" class="ui-button cancel" title="<?=__('Graphs')?>"><i class="fas fa-chart-area status-icon-orange"></i> <?=__('Graphs')?></a>
+          <a href="/list/updates/" class="ui-button cancel" title="<?=__('Updates')?>"><i class="fas fa-sync status-icon-green"></i> <?=__('Updates')?></a>
+          <a href="/list/server/?cpu" class="ui-button cancel" title="<?=__('show: CPU / MEM / NET / DISK');?>"><i class="fas fa-search status-icon-blue"></i> <?=__('show: CPU / MEM / NET / DISK');?></a>
+        </div>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
-              <td class="l-sort-toolbar__search-box">
-                <form action="/search/" method="get">
-                  <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-                  <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
-                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
-                </form>
-              </td>
-              <td class="step-right">
-                <a class="vst" href="/list/server/?cpu" target="_blank" > <?=__('show: CPU / MEM / NET / DISK');?> </a>
-              </td>
               <td class="toggle-all">
                 <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
                 <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
@@ -30,7 +27,7 @@
                       <option value="restart"><?php print __('restart');?></option>
                     </select>
                 </div>
-                <input type="submit" class="l-sort-toolbar__filter-apply" value="">
+                <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
               </td>
             </tr>
           </table>

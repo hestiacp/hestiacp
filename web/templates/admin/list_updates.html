@@ -1,22 +1,16 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
+            <div class="l-unit-toolbar__buttonstrip">
+                <a class="ui-button cancel" href="/list/server/"><i class="fas fa-arrow-left status-icon-blue"></i> <?=__('Back')?></a>
+                <? if($autoupdate == 'Enabled') {
+                  echo '<a class="ui-button cancel" href="/delete/cron/autoupdate/?token='.$_SESSION['token'].'"><i class="fas fa-toggle-on status-icon-green"></i>'.__('disable autoupdate').'</a>';
+                } else {
+                  echo '<a class="ui-button cancel" href="/add/cron/autoupdate/?token='.$_SESSION['token'].'"><i class="fas fa-toggle-off status-icon-red"></i>'.__('enable autoupdate').'</a>';
+                } ?>
+             </div>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
-              <td class="step-right">
-                <? if($autoupdate == 'Enabled') {
-                     echo '<a class="vst" href="/delete/cron/autoupdate/?token='.$_SESSION['token'].'">'.__('disable autoupdate').'</a>';
-                   } else {
-                     echo '<a class="vst" href="/add/cron/autoupdate/?token='.$_SESSION['token'].'">'.__('enable autoupdate').'</a>';
-                   } ?>
-              </td>
-              <td class="l-sort-toolbar__search-box step-left">
-                <form action="/search/" method="get">
-                  <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-                  <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
-                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
-                </form>
-              </td>
               <td class="toggle-all">
                 <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
                 <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
@@ -30,7 +24,7 @@
                     <option value="update"><?php print __('update') ?></option>
                   </select>
                 </div>
-                <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
+                <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
               </td>
             </tr>
           </table>
@@ -44,12 +38,12 @@
 
 
     <div class="l-center units animated fadeIn">
-        <div class="l-unit header">
+        <div class="l-unit header table-header">
             <div class="l-unit__col l-unit__col--left clearfix">
               <div class="text-center jump-small-top"></div>
             </div>
       
-            <div class="l-unit__col l-unit__col--right step-top table-header">
+            <div class="l-unit__col l-unit__col--right step-top">
               <div style="margin-bottom: 40px;">
                   <div class="clearfix l-unit__stat-col--left wide"><b><?php print __('Package');?></b></div>
                   <div class="clearfix l-unit__stat-col--left wide-5"><b><?php print __('Description');?></b></div>

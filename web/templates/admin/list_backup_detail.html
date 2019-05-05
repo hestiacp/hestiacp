@@ -1,6 +1,8 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
-        <a href="/schedule/restore/?backup=<?=htmlentities($_GET['backup'])?>" class="l-sort__create-btn restore" title="<?=__('Restore All')?>"></a>
+        <div class="l-unit-toolbar__buttonstrip">
+          <a href="/schedule/restore/?backup=<?=htmlentities($_GET['backup'])?>" class="ui-button cancel" title="<?=__('Restore All')?>"><i class="fas fa-undo status-icon-green"></i> <?=__('Restore All')?></a>
+        </div>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
@@ -8,7 +10,7 @@
                 <form action="/search/" method="get">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                   <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
-                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
+                  <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value=""><i class="fas fa-search"></i></button>
                 </form>
               </td>
               <td class="toggle-all">
@@ -25,7 +27,7 @@
                     <option value="restore"><?php print __('restore') ?></option>
                   </select>
                 </div>
-                <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
+                <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
               </td>
             </tr>
           </table>

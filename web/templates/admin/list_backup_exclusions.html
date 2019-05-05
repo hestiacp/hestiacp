@@ -1,6 +1,9 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
-        <a href="/edit/backup/exclusions/" class="l-sort__create-btn edit" title="<?=__('Configure')?>"></a>
+        <div class="l-unit-toolbar__buttonstrip">
+          <a class="ui-button cancel" href="/list/backup/"><i class="fas fa-arrow-left status-icon-blue"></i><?=__('Back')?></a>
+          <a href="/edit/backup/exclusions/" class="ui-button cancel" title="<?=__('Edit Backup Exclusions')?>"><i class="fas fa-pencil-alt status-icon-orange"></i> <?=__('Edit Backup Exclusions')?></a>
+        </div>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
@@ -8,24 +11,9 @@
                 <form action="/search/" method="get">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                   <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
-                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
+                  <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value=""><i class="fas fa-search"></i></button>
                 </form>
               </td>
-              <!--td class="toggle-all">
-                <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all">
-                <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
-              </td>
-              <td>
-                <form action="/bulk/backup/exclusions/" method="post" id="objects">
-                <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-                <div class="l-select">
-                  <select name="" id="">
-                    <option value=""><?=__('apply to selected')?></option>
-                    <option value="delete"><?php print __('delete') ?></option>
-                  </select>
-                </div>
-                <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
-              </td-->
             </tr>
           </table>
         </div>
@@ -107,7 +95,6 @@
           <!-- /form -->
           <div class="l-unit__col l-unit__col--left clearfix"></div>
           <div class="data-count l-unit__col l-unit__col--right total clearfix">
-            <a class="button cancel" href="/list/backup/"><?=__('Back')?></a>
           </div>
       </div>
     </div>

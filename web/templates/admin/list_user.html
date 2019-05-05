@@ -1,12 +1,14 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
+        <div class="l-unit-toolbar__buttonstrip">
         <?php
           if ($user == 'admin') {
-            echo '<a class="l-sort__create-btn" href="/add/user/" title="'.__('Add User').'"></a>';
+            echo '<a href="/add/user/" class="ui-button cancel" title="'.__('Add User').'"><i class="fas fa-plus-circle status-icon-green"></i>'.__('Add User').'</a>&nbsp;';
           } else {
-            echo '<a class="l-sort__create-btn" href="/add/web/" title="'.__('Add Web Domain').'"></a>';
+            echo '<a href="/add/web/" class="ui-button cancel" title="'.__('Add Web Domain').'"><i class="fas fa-plus-circle status-icon-green"></i>'.__('Add Web Domain').'</a>';
           }
         ?>
+      </div>
         <ul class="context-menu sort-order" style="display:none;">
           <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?></span><span class="up">&nbsp;</span></li>
           <li entity="sort-name"><span class="name"><?=__('Username')?></span><span class="up">&nbsp;</span></li>
@@ -17,17 +19,13 @@
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
-              <td class="l-sort-toolbar__search-box">
-                <form action="/search/" method="get">
-                  <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-                  <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
-                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
-                </form>
-              </td>
               <td class="toggle-all">
                 <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
                 <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
               </td>
+              <td class="sort-by">
+                  <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
+                </td>
               <td>
                 <form action="/bulk/user/" method="post" id="objects">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
@@ -46,11 +44,9 @@
                       <option value="delete"><?=__('delete')?></option>
                     </select>
                   </div>
-                  <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
+                  <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
               </td>
-              <td class="sort-by">
-                <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
-              </td>
+
             </tr>
           </table>
         </div>

@@ -1,6 +1,12 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
-        <a href="/add/firewall/" class="l-sort__create-btn" title="<?=__('Add Rule')?>"></a>
+        <div class="l-unit-toolbar__buttonstrip">
+          <a class="ui-button cancel" href="/list/server/"><i class="fas fa-arrow-left status-icon-blue"></i> <?=__('Back')?></a>
+          <a href="/add/firewall/" class="ui-button cancel" title="<?=__('Add Rule')?>"><i class="fas fa-plus-circle status-icon-green"></i> <?=__('Add Rule')?></a>
+          <? if(!empty($_SESSION['FIREWALL_EXTENSION'])) {
+            echo '<a class="ui-button cancel" href="/list/firewall/banlist/"><i class="fas fa-eye status-icon-red"></i> '.__('list fail2ban').'</a>';
+          } ?>
+        </div>
         <ul class="context-menu sort-order" style="display:none;">
           <li entity="sort-action"><span class="name active"><?=__('Action')?></span><span class="up">&nbsp;</span></li>
           <li entity="sort-protocol"><span class="name"><?=__('Protocol')?></span><span class="up">&nbsp;</span></li>
@@ -12,22 +18,13 @@
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
-              <td class="step-right">
-                <? if(!empty($_SESSION['FIREWALL_EXTENSION'])) {
-                     echo '<a class="vst" href="/list/firewall/banlist/"> '.__('list fail2ban').'</a>';
-                   } ?>
-              </td>
-              <td class="l-sort-toolbar__search-box step-left">
-                <form action="/search/" method="get">
-                  <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-                  <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
-                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
-                </form>
-              </td>
               <td class="toggle-all">
                 <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
                 <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
               </td>
+              <td class="sort-by">
+                  <?=__('sort by');?>: <span><b><?=__('Action')?></b></span> <i class="l-icon-down-arrow media-top"></i>
+                </td>
               <td>
                 <form action="/bulk/firewall/" method="post" id="objects">
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
@@ -37,10 +34,7 @@
                     <option value="delete"><?php print __('delete') ?></option>
                   </select>
                 </div>
-                <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
-              </td>
-              <td class="sort-by">
-                <?=__('sort by');?>: <span><b><?=__('Action')?></b></span> <i class="l-icon-down-arrow media-top"></i>
+                <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
               </td>
             </tr>
           </table>
@@ -53,12 +47,12 @@
     <!-- /.l-separator -->
 
     <div class="l-center units compact animated fadeIn">         
-          <div class="l-unit header">
+          <div class="l-unit header table-header">
             <div class="l-unit__col l-unit__col--left clearfix">
               <div class="text-center jump-small-top"></div>
             </div>
       
-            <div class="l-unit__col l-unit__col--right step-top table-header">
+            <div class="l-unit__col l-unit__col--right step-top">
               <div style="margin-bottom: 40px;">
                   <div class="clearfix l-unit__stat-col--left wide"><b><?php print __('Action');?></b></div>
                   <div class="clearfix l-unit__stat-col--left wide-1 text-center"><b><?php print __('Comment');?></b></div>   
@@ -126,27 +120,22 @@ sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$k
                   <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="rule[]" value="<?php echo $key ?>">
                   <label for="check<?php echo $i ?>" class="check-label"></label>
                 </div>
-            <div class="clearfix l-unit__stat-col--left wide"><b>
-
+            <div class="clearfix l-unit__stat-col--left wide"><b><a href="/edit/firewall/?rule=<?=$key?>">
                 <? if($data[$key]['SUSPENDED'] == 'no'){ ?>
-
                   <? if ($data[$key]['ACTION'] == 'DROP') { ?>
                     <i class="fas fa-minus-circle status-icon-red icon-pad-right"></i> <?=__($data[$key]['ACTION'])?>
                   <? } else {?>
                     <i class="fas fa-check-circle status-icon-green icon-pad-right"></i> <?=__($data[$key]['ACTION'])?>
                   <? } ?>
-                  
                 <? } else {?>
-
                   <? if ($data[$key]['ACTION'] == 'DROP') { ?>
                     <i class="fas fa-minus-circle icon-pad-right" style=""></i> <?=__($data[$key]['ACTION'])?>
                   <? } else {?>
                     <i class="fas fa-check-circle icon-pad-right"></i> <?=__($data[$key]['ACTION'])?>
                   <? } ?>
-
                 <? } ?>
-
-            </b></div>
+              </a></b>
+            </div>
             <div class="clearfix l-unit__stat-col--left wide-1 text-center"><b><? if(!empty($data[$key]['COMMENT'])) echo '' . $data[$key]['COMMENT']; else echo "&nbsp;"; ?></b></div>
             <div class="clearfix l-unit__stat-col--left text-center"><b><?=__($data[$key]['PROTOCOL'])?></b></div>
             <div class="clearfix l-unit__stat-col--left wide-2 text-center"><b><?=$data[$key]['PORT']?></b></div>

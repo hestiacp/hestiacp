@@ -37,15 +37,12 @@
                         <table class="data-col1">
                             <tr>
                                 <td>
-                                    <a class="data-date"><?=translate_date($v_date)?></a><br>
-                                    <a class="data-date"><?=$v_time?></a>
                                 </td>
                             </tr>
-                            <tr><td class="data-<?=$v_status?>"><b><?=__($v_status)?></b></td></tr>
                         </table>
                     </td>
                     <td class="data-dotted">
-                      <table class="data-col2" width="600px">
+                      <table class="data-col2" width="440px">
                         <tr>
                             <td class="vst-text step-top input-label">
                                 <?php print __('Account');?>
@@ -96,7 +93,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <textarea size="20" class="vst-textinput" name="v_fwd"><?=htmlentities(trim($v_fwd, "'"))?></textarea>
+                                <textarea size="20" class="vst-textinput short" name="v_fwd"><?=htmlentities(trim($v_fwd, "'"))?></textarea>
                             </td>
                         </tr>
                         <tr>
@@ -155,7 +152,6 @@
                         <tr>
                             <td colspan="2">
                                 <select id="mail_configuration" class="vst-list flat">
-                                    <option v_type="hostname" domain="<?=$hostname?>"><?=__('Use server hostname')?></option>
                                     <option v_type="hostname" domain="<?=$v_domain?>"><?=__('Use domain hostname')?></option>
                                     <option v_type="starttls"><?=__('Use STARTTLS')?></option>
                                     <option v_type="ssl"><?=__('Use SSL / TLS')?></option>
@@ -173,7 +169,7 @@
                         </tr>
                         <tr>
                             <td><?=__('IMAP hostname')?>:</td>
-                            <td><div id="td_imap_hostname"><?=$hostname?></div></td>
+                            <td><div id="td_imap_hostname">mail.<?=$v_domain?></div></td>
                         </tr>
                         <tr>
                             <td><?=__('IMAP port')?>:</td>
@@ -189,7 +185,7 @@
                         </tr>
                         <tr>
                             <td><?=__('SMTP hostname')?>:</td>
-                            <td><div id="td_smtp_hostname"><?=$hostname?></div></td>
+                            <td><div id="td_smtp_hostname">mail.<?=$v_domain?></div></td>
                         </tr>
                         <tr>
                             <td><?=__('SMTP port')?>:</td>
@@ -205,7 +201,7 @@
                         </tr>
                         <?
                             list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
-                            $webmail = "http://webmail.".$http_host."/";
+                            $webmail = "http://webmail.".$v_domain."/";
                             if (!empty($_SESSION['MAIL_URL'])) $webmail = $_SESSION['MAIL_URL'];
                         ?>
                         <tr>

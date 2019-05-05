@@ -1,17 +1,17 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
-        <a href="/schedule/backup/" class="l-sort__create-btn" title="<?=__('Create Backup')?>"></a>
+        <div class="l-unit-toolbar__buttonstrip">
+          <a href="/schedule/backup/" class="ui-button cancel" title="<?=__('Create Backup')?>"><i class="fas fa-plus-circle status-icon-green"></i> <?=__('Create Backup')?></a>
+          <a href="/list/backup/exclusions/" class="ui-button cancel" title="<?=__('backup exclusions')?>"><i class="fas fa-folder-minus status-icon-orange"></i> <?=__('backup exclusions')?></a>
+        </div>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
-              <td class="step-right">
-                <a class="vst" href="/list/backup/exclusions/"><?=__('backup exclusions')?></a>
-              </td>
               <td class="l-sort-toolbar__search-box">
                 <form action="/search/" method="get">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                   <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
-                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
+                  <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value=""><i class="fas fa-search"></i></button>
                 </form>
               </td>
               <td class="toggle-all">
@@ -27,7 +27,7 @@
                     <option value="delete"><?php print __('delete') ?></option>
                   </select>
                 </div>
-                <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
+                <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
               </td>
             </tr>
           </table>
@@ -41,12 +41,12 @@
 
 
     <div class="l-center units animated fadeIn">
-        <div class="l-unit header">
+        <div class="l-unit header table-header">
             <div class="l-unit__col l-unit__col--left clearfix">
               <div class="text-center jump-small-top"></div>
             </div>
       
-            <div class="l-unit__col l-unit__col--right step-top table-header">
+            <div class="l-unit__col l-unit__col--right step-top">
               <div style="margin-bottom: 40px;">
                   <div class="clearfix l-unit__stat-col--left wide-5"><b><?php print __('File Name');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center wide"><b><?php print __('Date');?></b></div>
@@ -109,7 +109,7 @@
                       <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="backup[]" value="<?php echo $key ?>">
                       <label for="check<?php echo $i ?>" class="check-label"></label>
                     </div>
-                  <div class="clearfix l-unit__stat-col--left wide-5"><b><?=$key?></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide-5"><b><a href="/download/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>"><?=$key?></a></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center wide"><b><?=translate_date($data[$key]['DATE'])?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?=humanize_usage_size($data[$key]['SIZE'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['SIZE'])?></span></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['TYPE']?></div>

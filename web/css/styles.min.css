@@ -3312,6 +3312,13 @@ div.l-content.collapsed .l-sort {
   height: 225px;
 }
 
+.console-output {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.8rem;
+  color: #202020;
+  letter-spacing: -0.01em;
+}
+
 form#vstobjects {
   padding-top: 240px;
 }

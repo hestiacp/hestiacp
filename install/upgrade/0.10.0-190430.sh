@@ -255,6 +255,26 @@ sed -i "s/STATS_SYSTEM='webalizer,awstats'/STATS_SYSTEM='awstats'/g" $HESTIA/con
 # Run sftp jail once
 $HESTIA/bin/v-add-sys-sftp-jail
 
+# Remove and migrate obsolete object keys
+for user in `ls /usr/local/hestia/data/users/`; do
+    USER_DATA=$HESTIA/data/users/$user
+
+    # Web keys
+    for domain in $($BIN/v-list-web-domains $user plain |cut -f 1); do
+        obskey=$(get_object_value 'web' 'DOMAIN' "$domain" '$FORCESSL')
+        if [ ! -z "$obskey" ]; then
+            echo "(*) Fixing HTTP-to-HTTPS redirection for $domain"
+            update_object_value 'web' 'DOMAIN' "$domain" '$FORCESSL' ''
+
+            # copy value under new key name
+            add_object_key "web" 'DOMAIN' "$domain" 'SSL_FORCE' 'SSL_HOME'
+            update_object_value 'web' 'DOMAIN' "$domain" '$SSL_FORCE' "$obskey"
+        fi
+        unset FORCESSL
+    done
+    sed -i "s/\sFORCESSL=''//g" $USER_DATA/web.conf
+done
+
 # Rebuild user
 for user in `ls /usr/local/hestia/data/users/`; do
     echo "(*) Rebuilding domains and account for user: $user..."

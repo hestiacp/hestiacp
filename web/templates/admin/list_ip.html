@@ -53,6 +53,7 @@
         <div class="l-unit__col l-unit__col--right step-top">
           <div style="margin-bottom: 40px;">
             <div class="clearfix l-unit__stat-col--left wide-2"><b><?php print __('IP Address');?></b></div>
+            <div class="clearfix l-unit__stat-col--left compact text-right"><b>&nbsp;</b></div>
             <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Netmask');?></b></div>
             <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Interface');?></b></div>
             <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Status');?></b></div>
@@ -72,25 +73,6 @@ v_section="ip" sort-ip="<?=str_replace('.', '', $key)?>" sort-date="<?=strtotime
 sort-netmask="<?=str_replace('.', '', $data[$key]['NETMASK'])?>" sort-interface="<?=$data[$key]['INTERFACE']?>" sort-domains="<?=$data[$key]['U_WEB_DOMAINS']?>"
 sort-owner="<?=$data[$key]['OWNER']?>" sort-star="<? if($_SESSION['favourites']['IP'][$key] == 1) echo '1'; else echo '0'; ?>">
         <div class="l-unit-toolbar clearfix">
-
-          <!-- l-unit-toolbar__col -->
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-            <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/ip/?ip=<?=$key?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
-              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-                <a id="delete_link_<?=$i?>" class="data-controls do_delete">
-                  <?=__('delete')?> <i class="do_delete"></i>
-                  <input type="hidden" name="delete_url" value="/delete/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>" />
-                  <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
-                    <p class="confirmation"><?=__('DELETE_IP_CONFIRMATION',$key)?></p>
-                  </div>
-                </a>
-                <span class="shortcut delete">&nbsp;Del</span>
-              </div>
-            </div>
-            <!-- /.actions-panel -->
-          </div>
-          <!-- l-unit-toolbar__col -->
         </div>
         <!-- /.l-unit-toolbar -->
 
@@ -102,6 +84,26 @@ sort-owner="<?=$data[$key]['OWNER']?>" sort-star="<? if($_SESSION['favourites'][
                 <label for="check<?php echo $i ?>" class="check-label"></label>
               </div>
               <div class="clearfix l-unit__stat-col--left wide-2"><b><a href="/edit/ip/?ip=<?=$key?>"><?=$key?></a></b></div>
+              <div class="clearfix l-unit__stat-col--left compact text-right"><b>
+                  <!-- START QUICK ACTION TOOLBAR AREA -->
+                    <!-- l-unit-toolbar__col -->
+                    <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+                        <div class="actions-panel clearfix">
+                          <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/ip/?ip=<?=$key?>"><i class="fas fa-pencil-alt status-icon-orange status-icon-dim"></i></a></div>
+                          <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+                            <a id="delete_link_<?=$i?>" class="data-controls do_delete">
+                              <i class="fas fa-trash status-icon-red status-icon-dim do_delete"></i>
+                              <input type="hidden" name="delete_url" value="/delete/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>" />
+                              <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
+                                <p class="confirmation"><?=__('DELETE_DOMAIN_CONFIRMATION',$key)?></p>
+                              </div>
+                            </a>
+                          </div>
+                        </div>
+                        <!-- /.actiona-panel -->
+                      </div>
+                    <!-- END QUICK ACTION TOOLBAR AREA -->
+                </b></div>
               <div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['NETMASK']?></b></div>
               <div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['INTERFACE']?></b></div>
               <div class="clearfix l-unit__stat-col--left text-center"><b><?=__($data[$key]['STATUS'])?></b></div>

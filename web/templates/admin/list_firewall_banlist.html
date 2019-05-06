@@ -41,10 +41,11 @@
       
             <div class="l-unit__col l-unit__col--right step-top">
               <div style="margin-bottom: 40px;">
+                  <div class="clearfix l-unit__stat-col--left wide"><b><?php print __('IP address');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left compact text-right"><b>&nbsp;</b></div>
+                  <div class="clearfix l-unit__stat-col--left compact-4 text-center"><b><?php print __('Comment');?></b></div>
                   <div class="clearfix l-unit__stat-col--left"><b><?php print __('Date');?></b></div>
                   <div class="clearfix l-unit__stat-col--left"><b><?php print __('Time');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left wide text-center"><b><?php print __('Comment');?></b></div>   
-                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('IP address');?></b></div>
               </div>
             </div>
           </div>
@@ -62,24 +63,6 @@
             <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="ipchain[]" value="<?php echo $ip . ':' . $value['CHAIN'] ?>">
             <label for="check<?php echo $i ?>" class="check-label"></label>
           </div>
-          <!-- l-unit-toolbar__col -->
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-            <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-                <a id="delete_link_<?=$i?>" class="data-controls do_delete">
-                  <?=__('delete')?> <i class="do_delete"></i>
-                  <input type="hidden" name="delete_url" value="/delete/firewall/banlist/?ip=<?=$ip?>&chain=<?=$value['CHAIN']?>&token=<?=$_SESSION['token']?>" />
-                  <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
-                    <p class="confirmation"><?=__('DELETE_IP_CONFIRMATION',$key)?></p>
-                  </div>
-                </a>
-                <span class="shortcut delete">&nbsp;Del</span>
-              </div>
-
-            </div>
-            <!-- /.actiona-panel -->
-          </div>
-          <!-- l-unit-toolbar__col -->
         </div>
         <!-- /.l-unit-toolbar -->
 
@@ -87,10 +70,32 @@
         <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
           <div class="l-unit__stats">
+              <div class="clearfix l-unit__stat-col--left compact-4 text-center"><?=$ip?></div>
+               <div class="clearfix l-unit__stat-col--left compact text-right"><b>
+                <!-- START QUICK ACTION TOOLBAR AREA -->
+  
+                  <!-- l-unit-toolbar__col -->
+                  <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+                      <div class="actions-panel clearfix">
+                        <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+                          <a id="delete_link_<?=$i?>" class="data-controls do_delete">
+                            <i class="fas fa-trash status-icon-red status-icon-dim do_delete"></i>
+                            <input type="hidden" name="delete_url" value="/delete/firewall/banlist/?ip=<?=$ip?>&chain=<?=$value['CHAIN']?>&token=<?=$_SESSION['token']?>" />
+                            <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
+                              <p class="confirmation"><?=__('DELETE_IP_CONFIRMATION',$key)?></p>
+                            </div>
+                          </a>
+                        </div>
+          
+                      </div>
+                      <!-- /.actiona-panel -->
+                    </div>
+  
+                  <!-- END QUICK ACTION TOOLBAR AREA -->
+              </b></div>
+              <div class="clearfix l-unit__stat-col--left wide text-center"><b><?=__($value['CHAIN'])?></b></div>
               <div class="clearfix l-unit__stat-col--left"><b><?=__($data[$key]['DATE'])?></b></div>
               <div class="clearfix l-unit__stat-col--left"><b><?=$data[$key]['TIME']?></b></div>
-              <div class="clearfix l-unit__stat-col--left wide text-center"><b><?=__($value['CHAIN'])?></b></div>
-              <div class="clearfix l-unit__stat-col--left text-center"><?=$ip?></div>
           </div>
           <!-- /.l-unit__stats -->
         </div>

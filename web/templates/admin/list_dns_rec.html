@@ -56,6 +56,7 @@
       <div class="l-unit__col l-unit__col--right step-top">
         <div style="margin-bottom: 40px;">
           <div class="clearfix l-unit__stat-col--left small"><b><?php print __('Record');?></b></div>
+          <div class="clearfix l-unit__stat-col--left compact text-right"><b>&nbsp;</b></div>
           <div class="clearfix l-unit__stat-col--left compact"><b><?php print __('Type');?></b></div>
           <div class="clearfix l-unit__stat-col--left compact"><b><?php print __('Priority');?></b></div>
           <div class="clearfix l-unit__stat-col--left wide-4"><b><?php print __('IP or Value');?></b></div>
@@ -85,25 +86,6 @@ v_unit_id="<?=$key?>" v_section="dns_rec">
             <input id="check<?=$data[$key]['ID']?>" class="ch-toggle" type="checkbox" name="record[]" value="<?=$data[$key]['ID']?>">
             <label for="check<?=$data[$key]['ID']?>" class="check-label"></label>
           </div>
-          <!-- l-unit-toolbar__col -->
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-            <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
-              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-                <a id="delete_link_<?=$i?>" class="data-controls do_delete">
-                  <?=__('delete')?> <i class="do_delete"></i>
-                  <input type="hidden" name="delete_url" value="/delete/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" />
-                  <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
-                    <p class="confirmation"><?=__('DELETE_RECORD_CONFIRMATION',$data[$key]['RECORD'])?></p>
-                  </div>
-                </a>
-                <span class="shortcut delete">&nbsp;Del</span>
-              </div>
-
-            </div>
-            <!-- /.actiona-panel -->
-          </div>
-          <!-- l-unit-toolbar__col -->
         </div>
         <!-- /.l-unit-toolbar -->
 
@@ -117,7 +99,31 @@ v_unit_id="<?=$key?>" v_section="dns_rec">
         <div class="l-unit__col l-unit__col--right">
           <div class="l-unit__stats">
             <div class="clearfix l-unit__stat-col--left small"><b><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>"><? echo substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?></a></b></div>
-            <div class="clearfix l-unit__stat-col--left compact"><b><?=$data[$key]['TYPE']?></b></div>
+
+            <div class="clearfix l-unit__stat-col--left compact text-right"><b>
+              <!-- START QUICK ACTION TOOLBAR AREA -->
+
+                <!-- l-unit-toolbar__col -->
+                <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+                    <div class="actions-panel clearfix">
+                      <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>"><i class="fas fa-pencil-alt status-icon-orange status-icon-dim"></i></a></div>
+                      <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+                        <a id="delete_link_<?=$i?>" class="data-controls do_delete">
+                          <i class="fas fa-trash status-icon-red status-icon-dim do_delete"></i>
+                          <input type="hidden" name="delete_url" value="/delete/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" />
+                          <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
+                            <p class="confirmation"><?=__('DELETE_DOMAIN_CONFIRMATION',$key)?></p>
+                          </div>
+                        </a>
+                      </div>
+        
+                    </div>
+                    <!-- /.actiona-panel -->
+                  </div>
+
+                <!-- END QUICK ACTION TOOLBAR AREA -->
+            </b></div>
+            <div class="clearfix l-unit__stat-col--left compact text-center"><b><?=$data[$key]['TYPE']?></b></div>
             <div class="clearfix l-unit__stat-col--left compact"><?=$data[$key]['PRIORITY']?>&nbsp;</div>
             <div class="clearfix l-unit__stat-col--left wide-4"><?=htmlspecialchars($data[$key]['VALUE'], ENT_QUOTES, 'UTF-8')?></div>
           </div>

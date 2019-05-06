@@ -4,9 +4,9 @@
           <a href="/add/cron/" class="ui-button cancel" title="<?=__('Add Cron Job')?>"><i class="fas fa-plus-circle status-icon-green"></i> <?=__('Add Cron Job')?></a>
           <?
             if($panel[$user]['CRON_REPORTS'] == 'yes') {
-              echo '<a class="ui-button cancel" href="/delete/cron/reports/?token='.$_SESSION['token'].'"><i class="fas fa-bell-slash status-icon-orange"></i> '.__('turn off notifications').'</a>';
+              echo '<a class="ui-button cancel" href="/delete/cron/reports/?token='.$_SESSION['token'].'"><i class="fas fa-bell status-icon-orange"></i> '.__('turn off notifications').'</a>';
             } else {
-              echo '<a class="ui-button cancel" href="/add/cron/reports/?token='.$_SESSION['token'].'"><i class="fas fa-bell status-icon-orange"></i> '.__('turn on notifications').'</a>';
+              echo '<a class="ui-button cancel" href="/add/cron/reports/?token='.$_SESSION['token'].'"><i class="fas fa-bell-slash status-icon-orange"></i> '.__('turn on notifications').'</a>';
             }
           ?>
         </div>
@@ -160,9 +160,9 @@ sort-star="<? if($_SESSION['favourites']['CRON'][$key] == 1) echo '1'; else echo
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php
               if ( $i == 1) {
-                echo __('1 task');
+                echo __('1 cron job');
               } else {
-                echo __('%s tasks',$i);
+                echo __('%s cron jobs',$i);
               }
             ?>
           </div>

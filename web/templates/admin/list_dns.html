@@ -59,7 +59,7 @@
             </div>
       
             <div class="l-unit__col l-unit__col--right step-top">
-              <div style="margin-bottom: 40px;">
+              <div>
                   <div class="clearfix l-unit__stat-col--left wide-2"><b><?php print __('Domain');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-right"><b>&nbsp;</b></div>
                   <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print __('Records');?></b></div>
@@ -93,10 +93,10 @@ sort-expire="<?=strtotime($data[$key]['EXP'])?>" sort-records="<?=(int)$data[$ke
         </div>
         <!-- /.l-unit-toolbar -->
             <div class="l-unit__col l-unit__col--right">
-              <div style="margin-bottom: 50px;">
+              <div>
                   <div class="clearfix l-unit__stat-col--left">
                       <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?php echo $key ?>">
-                      <label for="check<?php echo $i ?>" class="check-label"></label>
+                      
                     </div>
                   <div class="clearfix l-unit__stat-col--left wide-2"><b><a href="/list/dns/?domain=<?=$key?>"><?=$key?></a></b></div>
 

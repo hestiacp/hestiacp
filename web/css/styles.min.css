@@ -1554,9 +1554,9 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .l-unit {
   color: #707070;
-  padding: 0 0 0 24px;
+  padding: 0 0 0 14px;
   overflow: hidden;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   border-radius: 0;
 }
 

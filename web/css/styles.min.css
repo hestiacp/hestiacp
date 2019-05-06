@@ -1703,7 +1703,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   background-color: #d1eddc;
 }
 .l-unit-toolbar{
-  height: 39px;
+  height: 10px;
 }
 
 .l-unit label {
@@ -1840,7 +1840,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 
 .l-unit__stats {
-  margin-bottom: 50px;
+  margin-bottom: 10px;
 }
 
 .l-unit__stats table {

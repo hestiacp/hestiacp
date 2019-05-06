@@ -95,7 +95,7 @@ sort-owner="<?=$data[$key]['OWNER']?>" sort-star="<? if($_SESSION['favourites'][
                               <i class="fas fa-trash status-icon-red status-icon-dim do_delete"></i>
                               <input type="hidden" name="delete_url" value="/delete/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>" />
                               <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
-                                <p class="confirmation"><?=__('DELETE_DOMAIN_CONFIRMATION',$key)?></p>
+                                <p class="confirmation"><?=__('DELETE_IP_CONFIRMATION',$key)?></p>
                               </div>
                             </a>
                           </div>

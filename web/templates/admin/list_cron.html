@@ -65,13 +65,13 @@
       
             <div class="l-unit__col l-unit__col--right step-top">
               <div>
-                  <div class="clearfix l-unit__stat-col--left wide-5"><b><?php print __('Cron Job');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left compact text-right"><b>&nbsp;</b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center wide"><b><?=__('Min')?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center"><b><?=__('Hour')?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center"><b><?=__('Day')?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center"><b><?=__('Month')?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center"><b><?=__('Day of week')?></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide-6"><b><?php print __('Cron Job');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left compact-2 text-right"><b>&nbsp;</b></div>
+                  <div class="clearfix l-unit__stat-col--left compact-2 text-center"><b><?=__('Min')?></b></div>
+                  <div class="clearfix l-unit__stat-col--left compact-2 text-center"><b><?=__('Hour')?></b></div>
+                  <div class="clearfix l-unit__stat-col--left compact-2 text-center"><b><?=__('Day')?></b></div>
+                  <div class="clearfix l-unit__stat-col--left compact-2 text-center"><b><?=__('Month')?></b></div>
+                  <div class="clearfix l-unit__stat-col--left compact-2 text-center"><b><?=__('Day of week')?></b></div>
               </div>
              </div>
           </div>
@@ -93,68 +93,59 @@
 sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?>"
 sort-star="<? if($_SESSION['favourites']['CRON'][$key] == 1) echo '1'; else echo '0';  ?>">
         <div class="l-unit-toolbar clearfix">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="job[]" value="<?php echo $key ?>">
-            
-          </div>
-          <!-- l-unit-toolbar__col -->
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-            <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
-              <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
-                <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
-                  <?=__($spnd_action)?> <i class="do_<?=$spnd_action?>"></i>
-                  <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" />
-                  <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
-                    <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
-                  </div>
-                </a>
-                <span class="shortcut">&nbsp;S</span>
-              </div>
-              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-                <a id="delete_link_<?=$i?>" class="data-controls do_delete">
-                  <?=__('delete')?> <i class="do_delete"></i>
-                  <input type="hidden" name="delete_url" value="/delete/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" />
-                  <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
-                    <p class="confirmation"><?=__('DELETE_CRON_CONFIRMATION',$key)?></p>
-                  </div>
-                </a>
-                <span class="shortcut delete">&nbsp;Del</span>
-              </div>
-
-
-            </div>
-            <!-- /.actiona-panel -->
-          </div>
-          <!-- l-unit-toolbar__col -->
         </div>
         <!-- /.l-unit-toolbar -->
+      <div class="l-unit__col l-unit__col--right">
+          <div>
+              <div class="clearfix l-unit__stat-col--left">
+                  <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="job[]" value="<?php echo $key ?>">
+                </div>
+              <div class="clearfix l-unit__stat-col--left wide-6"><b><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>"><?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?></a></b></div>
+              <div class="clearfix l-unit__stat-col--left compact-2 text-right"><b>
+                  <!-- START QUICK ACTION TOOLBAR AREA -->
+    
+                    <!-- l-unit-toolbar__col -->
+                    <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+                        <div class="actions-panel clearfix">
+                          <div class="actions-panel__col actions-panel__download shortcut-d" key-action="href"><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>"><i class="fas fa-pencil-alt status-icon-orange status-icon-dim"></i></a></div>
+                          <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
+                              <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
+                                <i class="fas fa-pause status-icon-highlight status-icon-dim do_<?=$spnd_action?>"></i>
+                                <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" />
+                                <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
+                                  <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
+                                </div>
+                              </a>
+                            </div>
+                          <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+                            <a id="delete_link_<?=$i?>" class="data-controls do_delete">
+                              <i class="fas fa-trash status-icon-red status-icon-dim do_delete"></i>
+                              <input type="hidden" name="delete_url" value="/delete/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" />
+                              <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
+                                <p class="confirmation"><?=__('DELETE_CRON_CONFIRMATION',$key)?></p>
+                              </div>
+                            </a>
+                          </div>
+            
+                        </div>
+                        <!-- /.actiona-panel -->
+                      </div>
+                    <!-- END QUICK ACTION TOOLBAR AREA -->
+                </b></div>
+              <div class="clearfix l-unit__stat-col--left compact-2 text-center"><?=$data[$key]['MIN']?></div>
+              <div class="clearfix l-unit__stat-col--left compact-2 text-center"><?=$data[$key]['HOUR']?></div>
+              <div class="clearfix l-unit__stat-col--left compact-2 text-center"><?=$data[$key]['DAY']?></div>
+              <div class="clearfix l-unit__stat-col--left compact-2 text-center"><?=$data[$key]['MONTH']?></div>
+              <div class="clearfix l-unit__stat-col--left compact-2 text-center"><?=$data[$key]['WDAY']?></div>
+           </div>
+         </div>
+       <!-- /.l-unit__col -->
+     </div>
+     <!-- /.l-unit -->
+     <!--div class="l-separator"></div-->
+     <!-- /.l-separator -->
 
-        <!-- /.l-unit__col -->
-        <div class="l-unit__col l-unit__col--right">
-          <div class="l-unit__name separate small-2">
-            <a href="/edit/cron/?job=<?=$data[$key]['JOB']?>"><?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?></a>
-          </div>
-          
-          <!-- /.l-unit__name -->
-          <div class="l-unit__stats separate">
-            <div class="l-unit__stat-col l-unit__stat-col--left tiny"><?=__('Min')?><br><b><?=$data[$key]['MIN']?></b></div>
-            <div class="l-unit__stat-col l-unit__stat-col--left tiny"><?=__('Hour')?><br><b><?=$data[$key]['HOUR']?></b></div>
-            <div class="l-unit__stat-col l-unit__stat-col--left tiny"><?=__('Day')?><br><b><?=$data[$key]['DAY']?></b></div>
-            <div class="l-unit__stat-col l-unit__stat-col--left tiny"><?=__('Month')?><br><b><?=$data[$key]['MONTH']?></b></div>
-            <div class="l-unit__stat-col l-unit__stat-col--left tiny"><?=__('Day of week')?><br><b><?=$data[$key]['WDAY']?></b></div>
-          </div>
 
-          <div class="l-unit__stats">
-          </div>
-          <!-- /.l-unit__stats -->
-
-        </div>
-        <!-- /.l-unit__col -->
-      </div>
-      <!-- /.l-unit -->
-      <!--div class="l-separator"></div-->
-      <!-- /.l-separator -->
       <?}?>
 
     </div>

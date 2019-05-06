@@ -17,7 +17,6 @@
                   $webmail = "http://".$http_host."/webmail/";
                   if (!empty($_SESSION['MAIL_URL'])) $webmail = $_SESSION['MAIL_URL'];
                 ?>
-                <a class="vst" href="<?=$webmail?>" target="_blank"><?=__('open webmail')?> <i></i></a>
               </td>
               <td class="l-sort-toolbar__search-box step-left">
                 <form action="/search/" method="get">

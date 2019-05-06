@@ -1,6 +1,8 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
-        <a href="/add/mail/" class="l-sort__create-btn" title="<?=__('Add Mail Domain')?>"></a>
+        <div class="l-unit-toolbar__buttonstrip">
+          <a href="/add/mail/" class="ui-button cancel" title="<?=__('Add Mail Domain')?>"><i class="fas fa-plus-circle status-icon-green"></i> <?=__('Add Mail Domain')?></a>
+        </div>
         <ul class="context-menu sort-order" style="display:none;">
           <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?></span><span class="up">&nbsp;</span></li>
           <li entity="sort-name"><span class="name"><?=__('Domain')?></span><span class="up">&nbsp;</span></li>
@@ -11,18 +13,18 @@
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
-              <td class="step-right">
+              <td class="">
                 <?
                   list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
-                  $webmail = "http://webmail.".$http_host."/";
+                  $webmail = "http://".$http_host."/webmail/";
                   if (!empty($_SESSION['MAIL_URL'])) $webmail = $_SESSION['MAIL_URL'];
                 ?>
               </td>
-              <td class="l-sort-toolbar__search-box step-left">
+              <td class="l-sort-toolbar__search-box">
                 <form action="/search/" method="get">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                   <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
-                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
+                  <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value=""><i class="fas fa-search"></i></button>
                 </form>
               </td>
               <td class="toggle-all">
@@ -40,7 +42,7 @@
                     <option value="delete"><?=__('delete')?></option>
                   </select>
                 </div>
-                <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
+                <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
               </td>
               <td class="sort-by">
                 <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
@@ -59,12 +61,12 @@
 
 
     <div class="l-center units animated fadeIn">
-            <div class="l-unit header">
+            <div class="l-unit header table-header">
                 <div class="l-unit__col l-unit__col--left clearfix">
                   <div class="text-center jump-small-top"></div>
                 </div>
           
-                <div class="l-unit__col l-unit__col--right step-top table-header">
+                <div class="l-unit__col l-unit__col--right step-top">
                   <div style="margin-bottom: 40px;">
                       <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print __('Domain');?></b></div>
                       <div class="clearfix l-unit__stat-col--left text-center compact-2"><b><?php print __('Accounts');?></b></div>
@@ -144,7 +146,7 @@ sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favouri
                       <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?php echo $key ?>">
                       <label for="check<?php echo $i ?>" class="check-label"></label>
                     </div>
-                  <div class="clearfix l-unit__stat-col--left wide-3"><b><?=$key?></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="?domain=<?=$key?>"><?=$key?></a></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center compact-2"><b>
                     <? if($data[$key]['ACCOUNTS']) { echo '<span>'.$data[$key]['ACCOUNTS'].'</span>'; ?>
                     <? } else {?>

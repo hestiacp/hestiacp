@@ -1,6 +1,9 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
-        <a href="/add/package/" class="l-sort__create-btn" title="<?=__('Add Package')?>"></a>
+        <div class="l-unit-toolbar__buttonstrip">
+          <a class="ui-button cancel" href="/list/server/"><i class="fas fa-arrow-left status-icon-blue"></i> <?=__('Back')?></a>
+          <a href="/add/package/" class="ui-button cancel" title="<?=__('Add Package')?>"><i class="fas fa-plus-circle status-icon-green"></i> <?=__('Add Package')?></a>
+        </div>
         <ul class="context-menu sort-order" style="display:none;">
           <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?></span><span class="up">&nbsp;</span></li>
           <li entity="sort-name"><span class="name"><?=__('Package Name')?></span><span class="up">&nbsp;</span></li>
@@ -13,7 +16,7 @@
                 <form action="/search/" method="get">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                   <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
-                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
+                  <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value=""><i class="fas fa-search"></i></button>
                 </form>
               </td>
               <td class="toggle-all">

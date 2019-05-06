@@ -3,10 +3,12 @@
 <head>
   <meta charset="utf-8">
   <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
-  <title>Hestia - <?=__($TAB)?></title>
-  <link rel="stylesheet" href="/css/styles.min.css">
-
-  <link type="text/css" href="/css/jquery-custom-dialogs.css" rel="stylesheet" />
+  <title>Hestia Task Viewer - <?=__($TAB)?></title>
+  <link rel="stylesheet" href="/css/styles.min.css?1446554103">
+  <link type="text/css" href="/css/animate.css?1446554103" rel="stylesheet" />
+  <link type="text/css" href="/css/jquery-custom-dialogs.css?1446554103" rel="stylesheet" />
+  <link type="text/css" href="/css/all.min.css?1446554103" rel="stylesheet" />
+  <script src="/inc/jquery/jquery-3.3.1.min.js"></script>
   <script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
   <script type="text/javascript" src="/js/jquery.cookie.js"></script>
   <script type="text/javascript" src="/js/jquery-ui-1.8.20.custom.min.js"></script>
@@ -18,27 +20,30 @@
   </a>
   <div class="l-header">
     <div class="l-center">
-      <a href="/list/user/" class="l-logo"></a>
+      <a href="/list/web/" class="l-logo"></a>
       <!-- /.l-logo -->
       <div class="l-menu clearfix">
-        <div class="l-menu__item <?php if(isset($_GET['cpu'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?cpu"><?=__('CPU')?></a></div>
-        <div class="l-menu__item <?php if(isset($_GET['mem'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?mem"><?=__('MEMORY')?></a></div>
-        <div class="l-menu__item <?php if(isset($_GET['disk'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?disk"><?=__('DISK')?></a></div>
-        <div class="l-menu__item <?php if(isset($_GET['net'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?net"><?=__('NETWORK')?></a></div>
-        <div class="l-menu__item <?php if(isset($_GET['web'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?web"><?=__('WEB')?></a></div>
-        <div class="l-menu__item <?php if(isset($_GET['dns'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?dns"><?=__('DNS')?></a></div>
-        <div class="l-menu__item <?php if(isset($_GET['mail'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?mail"><?=__('MAIL')?></a></div>
-        <div class="l-menu__item <?php if(isset($_GET['db'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?db"><?=__('DB')?></a></div>
+        <div class="l-menu__item"><a href="/list/rrd/"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;&nbsp;<?=__('Back')?></a></div>
+        <div class="l-menu__item <?php if(isset($_GET['cpu'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?cpu"><i class="fas fa-microchip"></i>&nbsp;&nbsp;&nbsp;<?=__('CPU')?></a></div>
+        <div class="l-menu__item <?php if(isset($_GET['mem'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?mem"><i class="fas fa-memory"></i>&nbsp;&nbsp;&nbsp;<?=__('RAM')?></a></div>
+        <div class="l-menu__item <?php if(isset($_GET['disk'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?disk"><i class="fas fa-hdd"></i>&nbsp;&nbsp;&nbsp;<?=__('Disk')?></a></div>
+        <div class="l-menu__item <?php if(isset($_GET['net'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?net"><i class="fas fa-ethernet"></i>&nbsp;&nbsp;&nbsp;<?=__('Network')?></a></div>
+        <div class="l-menu__item <?php if(isset($_GET['web'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?web"><i class="fas fa-globe-europe"></i>&nbsp;&nbsp;&nbsp;<?=__('Web')?></a></div>
+        <div class="l-menu__item <?php if(isset($_GET['dns'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?dns"><i class="fas fa-at"></i>&nbsp;&nbsp;&nbsp;<?=__('DNS')?></a></div>
+        <div class="l-menu__item <?php if(isset($_GET['mail'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?mail"><i class="fas fa-mail-bulk"></i>&nbsp;&nbsp;&nbsp;<?=__('Mail')?></a></div>
+        <div class="l-menu__item <?php if(isset($_GET['db'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?db"><i class="fas fa-database"></i>&nbsp;&nbsp;&nbsp;<?=__('DB')?></a></div>
+        
       </div>
       <!-- /.l-menu -->
       <div class="l-profile">
+        <div class="l-menu__item"><a href="javascript:location.reload();"><i class="fas fa-redo"></i></a></div>
         <a class="l-profile__username" href="/edit/user/?user=<?php echo $user; ?>"><?=$user?></a>
-        <a class="l-profile__logout" href="/logout/"> <?=__('Log out')?> </a>
+        <a class="l-profile__logout" href="/logout/"> <?=__('Log out')?> <i class="fas fa-sign-out-alt"></i></a>
       </div>
       <!-- /.l-profile -->
     </div>
   </div>
   <!-- /.l-header -->
 
-  <div style="color: #ff6701; padding: 10px 0 20px 20px; background: #fff; ">.</div><div class="l-center">
-  <pre style="color: #555">
+  <div style="color: #cc3366; padding: 10px 0 20px 20px; background: #fff; ">.</div><div class="l-center">
+  <pre class="console-output">

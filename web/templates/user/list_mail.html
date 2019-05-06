@@ -11,18 +11,18 @@
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
-              <td class="step-right">
+              <td class="">
                 <?
                   list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
                   $webmail = "http://".$http_host."/webmail/";
                   if (!empty($_SESSION['MAIL_URL'])) $webmail = $_SESSION['MAIL_URL'];
                 ?>
               </td>
-              <td class="l-sort-toolbar__search-box step-left">
+              <td class="l-sort-toolbar__search-box">
                 <form action="/search/" method="get">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                   <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
-                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
+                  <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value=""><i class="fas fa-search"></i></button>
                 </form>
               </td>
               <td class="toggle-all">
@@ -38,7 +38,7 @@
                     <option value="delete"><?=__('delete')?></option>
                   </select>
                 </div>
-                <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
+                <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
               </td>
               <td class="sort-by">
                 <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>

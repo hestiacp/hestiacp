@@ -57,9 +57,24 @@
     <div class="l-separator"></div>
     <!-- /.l-separator -->
 
-
-
     <div class="l-center units animated fadeIn">
+        <div class="l-unit header table-header">
+            <div class="l-unit__col l-unit__col--left clearfix">
+              <div class="text-center jump-small-top"></div>
+            </div>
+      
+            <div class="l-unit__col l-unit__col--right step-top">
+              <div>
+                  <div class="clearfix l-unit__stat-col--left wide-5"><b><?php print __('Cron Job');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left compact text-right"><b>&nbsp;</b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center wide"><b><?=__('Min')?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?=__('Hour')?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?=__('Day')?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?=__('Month')?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?=__('Day of week')?></b></div>
+              </div>
+             </div>
+          </div>
       <?
         foreach ($data as $key => $value) {
           ++$i;
@@ -115,20 +130,12 @@ sort-star="<? if($_SESSION['favourites']['CRON'][$key] == 1) echo '1'; else echo
         </div>
         <!-- /.l-unit-toolbar -->
 
-        <div class="l-unit__col l-unit__col--left clearfix">
-          <div class="l-unit__date">
-            <?=translate_date($data[$key]['DATE'])?>
-          </div>
-          <div class="l-unit__suspended"><?=__('suspended')?></div>
-          <div class="text-center">
-            <i class="l-icon-star" title="<?=__('save to favorites')?>"></i>
-          </div>
-        </div>
         <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
           <div class="l-unit__name separate small-2">
             <a href="/edit/cron/?job=<?=$data[$key]['JOB']?>"><?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?></a>
           </div>
+          
           <!-- /.l-unit__name -->
           <div class="l-unit__stats separate">
             <div class="l-unit__stat-col l-unit__stat-col--left tiny"><?=__('Min')?><br><b><?=$data[$key]['MIN']?></b></div>

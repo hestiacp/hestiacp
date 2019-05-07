@@ -2673,6 +2673,7 @@ td.hint {
   box-shadow: 0px 1px 3px rgba(0,0,0,0.15),
               inset 0px 0px 1px #fff,
               inset 0px 0px 6px rgba(255,255,255,0.6) !important;
+  transition: 0.2s;
 }
 .ui-button:focus,.ui-button:active,
 .button:active,.button:focus,.ui-button.cancel:focus,.ui-button.cancel:active,

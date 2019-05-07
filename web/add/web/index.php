@@ -41,7 +41,6 @@ if (!empty($_POST['ok'])) {
 
     // Set domain to lowercase and remove www prefix
     $v_domain = preg_replace("/^www\./i", "", $_POST['v_domain']);
-    $v_domain = escapeshellarg($v_domain);
     $v_domain = strtolower($v_domain);
 
     // Define domain ip address
@@ -118,7 +117,7 @@ if (!empty($_POST['ok'])) {
 
     // Add web domain
     if (empty($_SESSION['error_msg'])) {
-        exec (HESTIA_CMD."v-add-web-domain ".$user." ".$v_domain." ".$v_ip." 'no' ".$aliases." ".$proxy_ext, $output, $return_var);
+        exec (HESTIA_CMD."v-add-web-domain ".$user." ".escapeshellarg($v_domain)." ".$v_ip." 'no' ".$aliases." ".$proxy_ext, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
         $domain_added = empty($_SESSION['error_msg']);
@@ -126,7 +125,7 @@ if (!empty($_POST['ok'])) {
 
     // Add DNS domain
     if (($_POST['v_dns'] == 'on') && (empty($_SESSION['error_msg']))) {
-        exec (HESTIA_CMD."v-add-dns-domain ".$user." ".$v_domain." ".$v_public_ip." '' '' '' '' '' '' '' '' 'no'", $output, $return_var);
+        exec (HESTIA_CMD."v-add-dns-domain ".$user." ".escapeshellarg($v_domain)." ".$v_public_ip." '' '' '' '' '' '' '' '' 'no'", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }
@@ -134,7 +133,7 @@ if (!empty($_POST['ok'])) {
     // Add DNS for domain aliases
     if (($_POST['v_dns'] == 'on') && (empty($_SESSION['error_msg']))) {
         foreach ($aliases_arr as $alias) {
-            if ($alias != "www.".$_POST['v_domain']) {
+            if ($alias != "www.".$v_domain) {
                 $alias = escapeshellarg($alias);
                 exec (HESTIA_CMD."v-add-dns-on-web-alias ".$user." ".$alias." ".$v_ip." 'no'", $output, $return_var);
                 check_return_code($return_var,$output);
@@ -145,7 +144,7 @@ if (!empty($_POST['ok'])) {
 
     // Add mail domain
     if (($_POST['v_mail'] == 'on') && (empty($_SESSION['error_msg']))) {
-        exec (HESTIA_CMD."v-add-mail-domain ".$user." ".$v_domain, $output, $return_var);
+        exec (HESTIA_CMD."v-add-mail-domain ".$user." ".escapeshellarg($v_domain), $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }
@@ -153,14 +152,14 @@ if (!empty($_POST['ok'])) {
     // Delete proxy support
     if ((!empty($_SESSION['PROXY_SYSTEM'])) && ($_POST['v_proxy'] == 'off')  && (empty($_SESSION['error_msg']))) {
         $ext = escapeshellarg($ext);
-        exec (HESTIA_CMD."v-delete-web-domain-proxy ".$user." ".$v_domain." 'no'", $output, $return_var);
+        exec (HESTIA_CMD."v-delete-web-domain-proxy ".$user." ".escapeshellarg($v_domain)." 'no'", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }
 
     // Add Lets Encrypt support
      if ((!empty($_POST['v_letsencrypt'])) && (empty($_SESSION['error_msg']))) {
-        exec (HESTIA_CMD."v-schedule-letsencrypt-domain ".$user." ".$v_domain, $output, $return_var);
+        exec (HESTIA_CMD."v-schedule-letsencrypt-domain ".$user." ".escapeshellarg($v_domain), $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
      } else {
@@ -195,7 +194,7 @@ if (!empty($_POST['ok'])) {
              }
 
              $v_ssl_home = escapeshellarg($_POST['v_ssl_home']);
-             exec (HESTIA_CMD."v-add-web-domain-ssl ".$user." ".$v_domain." ".$tmpdir." ".$v_ssl_home." 'no'", $output, $return_var);
+             exec (HESTIA_CMD."v-add-web-domain-ssl ".$user." ".escapeshellarg($v_domain)." ".$tmpdir." ".$v_ssl_home." 'no'", $output, $return_var);
              check_return_code($return_var,$output);
              unset($output);
          }
@@ -204,7 +203,7 @@ if (!empty($_POST['ok'])) {
     // Add web stats
     if ((!empty($_POST['v_stats'])) && ($_POST['v_stats'] != 'none' ) && (empty($_SESSION['error_msg']))) {
         $v_stats = escapeshellarg($_POST['v_stats']);
-        exec (HESTIA_CMD."v-add-web-domain-stats ".$user." ".$v_domain." ".$v_stats, $output, $return_var);
+        exec (HESTIA_CMD."v-add-web-domain-stats ".$user." ".escapeshellarg($v_domain)." ".$v_stats, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }
@@ -216,7 +215,7 @@ if (!empty($_POST['ok'])) {
         $fp = fopen($v_stats_password, "w");
         fwrite($fp, $_POST['v_stats_password']."\n");
         fclose($fp);
-        exec (HESTIA_CMD."v-add-web-domain-stats-user ".$user." ".$v_domain." ".$v_stats_user." ".$v_stats_password, $output, $return_var);
+        exec (HESTIA_CMD."v-add-web-domain-stats-user ".$user." ".escapeshellarg($v_domain)." ".$v_stats_user." ".$v_stats_password, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
         unlink($v_stats_password);
@@ -286,15 +285,15 @@ if (!empty($_POST['ok'])) {
                     $fp = fopen($v_ftp_password, "w");
                     fwrite($fp, $v_ftp_user_data['v_ftp_password']."\n");
                     fclose($fp);
-                    exec (HESTIA_CMD."v-add-web-domain-ftp ".$user." ".$v_domain." ".$v_ftp_user." ".$v_ftp_password . " " . $v_ftp_path, $output, $return_var);
+                    exec (HESTIA_CMD."v-add-web-domain-ftp ".$user." ".escapeshellarg($v_domain)." ".$v_ftp_user." ".$v_ftp_password . " " . $v_ftp_path, $output, $return_var);
                     check_return_code($return_var,$output);
                     unset($output);
                     unlink($v_ftp_password);
                     if ((!empty($v_ftp_user_data['v_ftp_email'])) && (empty($_SESSION['error_msg']))) {
                         $to = $v_ftp_user_data['v_ftp_email'];
                         $subject = __("FTP login credentials");
-                        $from = __('MAIL_FROM',$_POST['v_domain']);
-                        $mailtext = __('FTP_ACCOUNT_READY',$_POST['v_domain'],$user,$v_ftp_user_data['v_ftp_user'],$v_ftp_user_data['v_ftp_password']);
+                        $from = __('MAIL_FROM', $v_domain );
+                        $mailtext = __('FTP_ACCOUNT_READY',$v_domain,$user,$v_ftp_user_data['v_ftp_user'],$v_ftp_user_data['v_ftp_password']);
                         send_email($to, $subject, $mailtext, $from);
                         unset($v_ftp_email);
                     }
@@ -323,9 +322,9 @@ if (!empty($_POST['ok'])) {
         }
 
         if (!empty($_SESSION['error_msg']) && $domain_added) {
-            $_SESSION['ok_msg'] = __('WEB_DOMAIN_CREATED_OK',htmlentities($_POST[v_domain]),htmlentities($_POST[v_domain]));
+            $_SESSION['ok_msg'] = __('WEB_DOMAIN_CREATED_OK',htmlentities($v_domain),htmlentities($v_domain));
             $_SESSION['flash_error_msg'] = $_SESSION['error_msg'];
-            $url = '/edit/web/?domain='.strtolower(preg_replace("/^www\./i", "", $_POST['v_domain']));
+            $url = '/edit/web/?domain='.strtolower(preg_replace("/^www\./i", "", $v_domain));
             header('Location: ' . $url);
             exit;
         }
@@ -333,7 +332,7 @@ if (!empty($_POST['ok'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('WEB_DOMAIN_CREATED_OK',htmlentities($_POST['v_domain']),htmlentities($_POST['v_domain']));
+        $_SESSION['ok_msg'] = __('WEB_DOMAIN_CREATED_OK',htmlentities($v_domain),htmlentities($v_domain));
         unset($v_domain);
         unset($v_aliases);
         unset($v_ssl);

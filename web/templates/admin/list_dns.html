@@ -115,7 +115,7 @@ sort-expire="<?=strtotime($data[$key]['EXP'])?>" sort-records="<?=(int)$data[$ke
                             </div>
                             <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                               <a id="delete_link_<?=$i?>" class="data-controls do_delete">
-                                <i class="fas fa-trash-alt status-icon-red status-icon-dim do_delete"></i>
+                                <i class="fas fa-trash status-icon-red status-icon-dim do_delete"></i>
                                 <input type="hidden" name="delete_url" value="/delete/dns/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
                                 <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
                                   <p class="confirmation"><?=__('DELETE_DOMAIN_CONFIRMATION',$key)?></p>

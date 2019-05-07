@@ -1383,10 +1383,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
   padding-left: 96px;
 }
 
-.l-sort-toolbar td:first-of-type {
-  padding-left: 10px;
-}
-
 .l-sort-toolbar td.step-right:first-of-type {
   padding-right: 20px;
 }
@@ -3150,6 +3146,7 @@ form#vstobjects.suspended {
 
 .l-sort-toolbar table td {
   float: left;
+  margin-left: 10px;
 }
 .l-sort-toolbar__search-box {
   float: right !important;

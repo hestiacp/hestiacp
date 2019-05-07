@@ -13,12 +13,8 @@
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
-              <td class="">
-                <?
-                  list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
-                  $webmail = "http://".$http_host."/webmail/";
-                  if (!empty($_SESSION['MAIL_URL'])) $webmail = $_SESSION['MAIL_URL'];
-                ?>
+              <td class="sort-by">
+                  <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
               </td>
               <td class="l-sort-toolbar__search-box">
                 <form action="/search/" method="get">
@@ -40,9 +36,7 @@
                 </div>
                 <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
               </td>
-              <td class="sort-by">
-                <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
-              </td>
+
             </tr>
           </table>
           <!--  -->

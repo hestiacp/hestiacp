@@ -18,10 +18,6 @@
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
-              <td class="toggle-all">
-                <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
-                <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
-              </td>
               <td class="sort-by">
                   <?=__('sort by');?>: <span><b><?=__('Action')?></b></span> <i class="l-icon-down-arrow media-top"></i>
                 </td>
@@ -47,18 +43,17 @@
     <!-- /.l-separator -->
 
     <div class="l-center units compact animated fadeIn">         
-          <div class="l-unit header table-header">
-            <div class="l-unit__col l-unit__col--left clearfix">
-              <div class="text-center jump-small-top"></div>
-            </div>
-      
+          <div class="l-unit header table-header">     
             <div class="l-unit__col l-unit__col--right step-top">
               <div>
-                  <div class="clearfix l-unit__stat-col--left wide"><b><?php print __('Action');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left super-compact">
+                      <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
+                  </div>
+                  <div class="clearfix l-unit__stat-col--left wide-2"><b><?php print __('Action');?></b></div>
                   <div class="clearfix l-unit__stat-col--left compact text-right"><b>&nbsp;</b></div>
                   <div class="clearfix l-unit__stat-col--left wide-1 text-center"><b><?php print __('Comment');?></b></div>   
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Protocol');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left wide-2 text-center"><b><?php print __('Port');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide-5 text-center"><b><?php print __('Port');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('IP address');?></b></div>
               </div>
             </div>
@@ -88,11 +83,10 @@ sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$k
         <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
           <div class="l-unit__stats">
-              <div class="clearfix l-unit__stat-col--left">
+              <div class="clearfix l-unit__stat-col--left super-compact">
                   <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="rule[]" value="<?php echo $key ?>">
-                  
                 </div>
-            <div class="clearfix l-unit__stat-col--left wide"><b><a href="/edit/firewall/?rule=<?=$key?>">
+            <div class="clearfix l-unit__stat-col--left wide-2"><b><a href="/edit/firewall/?rule=<?=$key?>">
                 <? if($data[$key]['SUSPENDED'] == 'no'){ ?>
                   <? if ($data[$key]['ACTION'] == 'DROP') { ?>
                     <i class="fas fa-minus-circle status-icon-red icon-pad-right"></i> <?=__($data[$key]['ACTION'])?>
@@ -144,7 +138,7 @@ sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$k
               </b></div>
             <div class="clearfix l-unit__stat-col--left wide-1 text-center"><b><? if(!empty($data[$key]['COMMENT'])) echo '' . $data[$key]['COMMENT']; else echo "&nbsp;"; ?></b></div>
             <div class="clearfix l-unit__stat-col--left text-center"><b><?=__($data[$key]['PROTOCOL'])?></b></div>
-            <div class="clearfix l-unit__stat-col--left wide-2 text-center"><b><?=$data[$key]['PORT']?></b></div>
+            <div class="clearfix l-unit__stat-col--left wide-5 text-center"><b><?=$data[$key]['PORT']?></b></div>
             <div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['IP']?></div>
           </div>
           <!-- /.l-unit__stats -->

@@ -63,7 +63,7 @@
                   
                   <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print __('Name');?></b></div>
                   <div class="clearfix l-unit__stat-col--left"><b>&nbsp;</b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print __('Package');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?php print __('Package');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print __('IPs');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print __('Disk');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print __('Bandwidth');?></b></div>
@@ -97,7 +97,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
 <!-- /.l-unit-toolbar -->
         <div class="l-unit__col l-unit__col--right">
           <div class="clearfix l-unit__stat-col--left super-compact">
-            <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?=$key?>">
+            <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="user[]" value="<?=$key?>">
           </div>
               <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>"><?=$data[$key]['FNAME']?> <?=$data[$key]['LNAME']?> <span style="font-weight: normal !important;">(<?=$key?>)</span></b></a><br /><span style="font-size: 0.75rem;"><?=str_replace(',', '<br />',$data[$key]['NS'])?></span></div>
               <div class="clearfix l-unit__stat-col--left text-right"><b>
@@ -141,7 +141,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                       <!-- l-unit-toolbar__col -->
                     <!-- END QUICK ACTION TOOLBAR AREA -->
                 </b></div>
-              <div class="clearfix l-unit__stat-col--left text-center compact"><b><?=$data[$key]['PACKAGE']?></b></div>
+              <div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?=$data[$key]['PACKAGE']?></b></div>
               <div class="clearfix l-unit__stat-col--left text-center compact"><?=$data[$key]['IP_OWNED']?></div>
               <div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
               <div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_BANDWIDTH'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_BANDWIDTH'])?></span></div>

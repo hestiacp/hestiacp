@@ -1556,7 +1556,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   color: #707070;
   padding: 0 0 0 14px;
   overflow: hidden;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   border-radius: 0;
 }
 
@@ -1872,7 +1872,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   border-left: 1px solid transparent;
 }
 .l-unit__stat-col--left.super-compact {
-  width: 40px;
+  width: 50px;
 }
 .l-unit__stat-col--left.compact {
   width: 60px;
@@ -1908,7 +1908,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   width: 330px;
 }
 .l-unit__stat-col--left.wide-6 {
-  width: 370px;
+  width: 440px;
 }
 
 .l-unit__stat-col--left.small-2 {

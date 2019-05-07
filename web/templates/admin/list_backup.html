@@ -41,14 +41,13 @@
 
     <div class="l-center units animated fadeIn">
         <div class="l-unit header table-header">
-            <div class="l-unit__col l-unit__col--left clearfix">
-              <div class="text-center jump-small-top"></div>
-            </div>
-      
             <div class="l-unit__col l-unit__col--right step-top">
               <div>
+                  <div class="clearfix l-unit__stat-col--left super-compact">
+                      <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
+                  </div>
                   <div class="clearfix l-unit__stat-col--left wide-5"><b><?php print __('File Name');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left compact text-right"><b>&nbsp;</b></div>
+                  <div class="clearfix l-unit__stat-col--left compact-3 text-right"><b>&nbsp;</b></div>
                   <div class="clearfix l-unit__stat-col--left text-center wide"><b><?php print __('Date');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Size');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Type');?></b></div>
@@ -82,12 +81,12 @@
 
             <div class="l-unit__col l-unit__col--right">
               <div>
-                  <div class="clearfix l-unit__stat-col--left">
+                  <div class="clearfix l-unit__stat-col--left super-compact">
                       <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="backup[]" value="<?php echo $key ?>">
                       
                     </div>
                   <div class="clearfix l-unit__stat-col--left wide-5"><b><a href="/list/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>"><?=$key?></a></b></div>
-                  <div class="clearfix l-unit__stat-col--left compact text-right"><b>
+                  <div class="clearfix l-unit__stat-col--left compact-3 text-right"><b>
                       <!-- START QUICK ACTION TOOLBAR AREA -->
         
                         <!-- l-unit-toolbar__col -->

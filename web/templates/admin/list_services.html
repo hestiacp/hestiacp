@@ -88,13 +88,13 @@
       <!-- /.l-unit -->
           <div class="l-unit table-header">
               <div class="l-unit__col l-unit__col--right">
-                    <div class="clearfix l-unit__stat-col--left">
+                    <div class="clearfix l-unit__stat-col--left super-compact">
                         <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
                       </div>
                     
-                      <div class="clearfix l-unit__stat-col--left wide"><b><?php print __('Service');?></b></div>
-                      <div class="clearfix l-unit__stat-col--left text-right compact">&nbsp;</div>
-                      <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print __('Description');?></b></div>
+                      <div class="clearfix l-unit__stat-col--left wide-2"><b><?php print __('Service');?></b></div>
+                      <div class="clearfix l-unit__stat-col--left text-right compact-2">&nbsp;</div>
+                      <div class="clearfix l-unit__stat-col--left wide-5"><b><?php print __('Description');?></b></div>
                       <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Uptime');?></b></div>
                       <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('CPU');?></b></div>
                       <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Memory');?></b></div>
@@ -121,19 +121,19 @@
       <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended';?>">
 
         <div class="l-unit__col l-unit__col--right">
-        <div class="clearfix l-unit__stat-col--left">
+        <div class="clearfix l-unit__stat-col--left super-compact">
           <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="service[]" value="<?php echo $key ?>">
         </div>
 
-        <div class="clearfix l-unit__stat-col--left wide"><b><a href="/edit/server/<? echo $key ?>/"><?=$key?></a></b></div>
-        <div class="clearfix l-unit__stat-col--left text-center compact">
+        <div class="clearfix l-unit__stat-col--left wide-2"><b><a href="/edit/server/<? echo $key ?>/"><?=$key?></a></b></div>
+        <div class="clearfix l-unit__stat-col--left text-center compact-2">
             <b>
                 <a href="/edit/server/<? echo $key ?>/"><i class="fas fa-pencil-alt status-icon-orange status-icon-dim icon-large"></i></a>
                 <a href="/restart/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="data-controls fas fa-undo status-icon-highlight status-icon-dim icon-large"></i></a>
                 <a href="/<?php echo $action ?>/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-pause status-icon-red status-icon-dim icon-large"></i></a>
             </b>
           </div>
-        <div class="clearfix l-unit__stat-col--left wide-3"><?=__($data[$key]['SYSTEM'])?></div>
+        <div class="clearfix l-unit__stat-col--left wide-5"><?=__($data[$key]['SYSTEM'])?></div>
         <div class="clearfix l-unit__stat-col--left text-center"><b><?=humanize_time($data[$key]['RTIME'])?></b></div>
         <div class="clearfix l-unit__stat-col--left text-center"><b><?=$cpu?></b></div>
         <div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['MEM']?> <?=__('mb')?></b></div>

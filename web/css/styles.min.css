@@ -1702,7 +1702,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   background-color: #d1eddc;
 }
 .l-unit-toolbar{
-  height: 15px;
+  display: none;
 }
 
 .l-unit label {
@@ -1714,7 +1714,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 .l-unit__col {
   display: table-cell;
-  padding-top: 1px;
+  padding-top: 15px;
   vertical-align: top;
   padding-bottom: 15px;
 }
@@ -1938,6 +1938,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   padding-top: 15px;
   width: 30px;
   cursor: pointer;
+  display: none;
 }
 
 .l-unit-toolbar__col--right {
@@ -2735,6 +2736,29 @@ a.button.cancel {
 }
 */
 
+/*
+.ui-button.danger, .button.danger {
+  background: linear-gradient(to bottom, #fbf1ef 0%,#f7c5bf 50%,#f5ada5 51%,#fde2df 100%) !important;
+  color: #F4301A !important;
+  text-shadow: 0px 1px rgba(255,255,255,0.5) !important;
+  border: 1px solid #F4968B !important;
+}
+*/
+
+.ui-button.danger:hover, .button.danger:hover {
+  background: linear-gradient(to bottom, #fbf2f1 0%,#f7cac5 50%,#f6b4ac 51%,#fde6e3 100%) !important;
+  color: #F4301A !important;
+  text-shadow: 0px 1px rgba(255,255,255,0.5) !important;
+  border: 1px solid #F27E71 !important;
+}
+
+.ui-button.danger:active, .button.danger:active, .ui-button.danger:focus, .button.danger:focus {
+  background: linear-gradient(to bottom, #f9e3df 0%,#f5a69d 50%,#f48578 51%,#fcd0ca 100%) !important; 
+  color: #fff !important;
+  text-shadow: 0px -1px 1px rgba(0,0,0,0.3) !important;
+  border: 1px solid #F4301A !important;
+}
+
 .ui-button span {
   color: #fff;
 }
@@ -3422,6 +3446,22 @@ form#vstobjects.suspended {
 .context-helper-close:active {
   background-color: #999;
   filter: none;
+}
+
+.server-info {
+  padding-left: 110px;
+}
+.server-info-data {
+  margin-left: 100px; 
+  margin-top: -20px;
+}
+.server-info-name {
+  margin-top: 10px;
+}
+.icon-server-info {
+  font-size: 5.2em;
+  float: left;
+  margin-right: 32px;
 }
 
 @media screen and (max-width: 950px) {

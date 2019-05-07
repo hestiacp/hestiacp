@@ -7,14 +7,11 @@
           <a href="/list/ip/" class="ui-button cancel" title="<?=__('IP')?>"><i class="fas fa-ethernet status-icon-blue"></i> <?=__('IP')?></a>
           <?php if ((isset($_SESSION['FIREWALL_SYSTEM'])) && (!empty($_SESSION['FIREWALL_SYSTEM']))) {?><a href="/list/firewall/" class="ui-button cancel" title="<?=__('Firewall')?>"><i class="fas fa-shield-alt status-icon-red"></i> <?=__('Firewall')?></a><?php }?>
           <a href="/list/updates/" class="ui-button cancel" title="<?=__('Updates')?>"><i class="fas fa-sync status-icon-green"></i> <?=__('Updates')?></a>
+          <a href="/restart/system/?hostname=<?php echo $sys['sysinfo']['HOSTNAME'] ?>&token=<?=$_SESSION['token']?>" class="ui-button danger cancel" title="<?=__('Restart')?>"><i class="fas fa-undo status-icon-red"></i> <?=__('Restart')?></a>
         </div>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
-              <td class="toggle-all">
-                <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
-                <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
-              </td>
               <td>
                 <form action="/bulk/service/" method="post" id="objects">
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
@@ -40,39 +37,24 @@
 
 
     <div class="l-center units animated fadeIn">
+
+    
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
+
+    <div class="l-center units animated fadeIn">
+
       <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended';?>">
         <div class="l-unit-toolbar clearfix">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check0" class="ch-toggle" type="checkbox" name="srv[]" value="<?php echo $sys['sysinfo']['HOSTNAME'] ?>">
-            <label for="check0" class="check-label"></label>
-          </div>
-          <!-- l-unit-toolbar__col -->
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-            <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__configure shortcut-enter" key-action="href"><a href="/edit/server/"><?=__('configure')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
-              <div class="actions-panel__col actions-panel__restart shortcut-r" key-action="href"><a href="/restart/system/?hostname=<?php echo $sys['sysinfo']['HOSTNAME'] ?>&token=<?=$_SESSION['token']?>"><?=__('restart')?> <i></i></a><span class="shortcut">&nbsp;R</span></div>
-            </div>
-            <!-- /.actions-panel -->
-          </div>
-          <!-- l-unit-toolbar__col -->
-        </div>
+         </div>
         <!-- /.l-unit-toolbar -->
 
-        <div class="l-unit__col l-unit__col--left clearfix">
-          <div class="l-unit__suspended"><?__('suspended')?></div>
-          <!-- div class="l-unit__date">
-          </div-->
-        </div>
         <!-- /.l-unit__col -->
-        <div class="l-unit__col l-unit__col--right">
-          <div class="l-unit__name separate">
-            <?=$sys['sysinfo']['HOSTNAME']?>
-          </div>
-
-
-          <div class="l-unit__stats">
+        <div class="l-unit__col l-unit__col--right server-info">
+          <div class="icon-server-info"><i class="fas fa-server"></i></div>
+          <div class="l-unit__name separate server-info-name"><?=$sys['sysinfo']['HOSTNAME']?></div>
+          <div class="l-unit__stats server-info-data">
             <table>
-
                <tr>
                 <td>
                   <div class="l-unit__stat-cols clearfix">
@@ -97,15 +79,27 @@
                 </td>
               </tr>
 
-            </table>
-          </div>
+             </table>
+           </div>
           <!-- /.l-unit__stats -->
-        </div>
+         </div>
         <!-- /.l-unit__col -->
       </div>
       <!-- /.l-unit -->
-
-
+          <div class="l-unit table-header">
+              <div class="l-unit__col l-unit__col--right">
+                    <div class="clearfix l-unit__stat-col--left">
+                        <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
+                      </div>
+                    
+                      <div class="clearfix l-unit__stat-col--left wide"><b><?php print __('Service');?></b></div>
+                      <div class="clearfix l-unit__stat-col--left text-right compact">&nbsp;</div>
+                      <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print __('Description');?></b></div>
+                      <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Uptime');?></b></div>
+                      <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('CPU');?></b></div>
+                      <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Memory');?></b></div>
+               </div>
+            </div>
 
       <?php
         foreach ($data as $key => $value) {
@@ -125,74 +119,33 @@
 
 
       <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended';?>">
-        <div class="l-unit-toolbar clearfix">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="service[]" value="<?php echo $key ?>">
-            <label for="check<?php echo $i ?>" class="check-label"></label>
-          </div>
-          <!-- l-unit-toolbar__col -->
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-            <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__configure shortcut-enter" key-action="href"><a href="/edit/server/<? echo $key ?>/"><?=__('configure')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
-              <div class="actions-panel__col actions-panel__<?=$action?> shortcut-s" key-action="href"><a href="/<?php echo $action ?>/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>"><?=__($action)?> <i></i></a><span class="shortcut">&nbsp;S</span></div>
-              <div class="actions-panel__col actions-panel__restart shortcut-r" key-action="href"><a href="/restart/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>"><?=__('restart')?> <i></i></a><span class="shortcut">&nbsp;R</span></div>
-            </div>
-            <!-- /.actions-panel -->
-          </div>
-          <!-- l-unit-toolbar__col -->
-        </div>
-        <!-- /.l-unit-toolbar -->
 
-        <div class="l-unit__col l-unit__col--left clearfix step-left">
-          <!-- div class="l-unit__date">
-          </div-->
-        </div>
-        <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
-          <div class="l-unit__name small-2">
-            <?=$key?>
-          </div>
-
-
-          <div class="l-unit__stats">
-            <table>
-
-               <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><b><?=__($data[$key]['SYSTEM'])?></b></div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right"></div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('CPU')?>: <b><?=$cpu?></b></div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right"><?=__('Memory')?>: <b><?=$data[$key]['MEM']?> <?=__('mb')?></b></div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix last">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Uptime')?>: <b><?=humanize_time($data[$key]['RTIME'])?></b></div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right"></div>
-                  </div>
-                </td>
-              </tr>
-
-            </table>
-          </div>
-          <!-- /.l-unit__stats -->
+        <div class="clearfix l-unit__stat-col--left">
+          <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="service[]" value="<?php echo $key ?>">
         </div>
-        <!-- /.l-unit__col -->
-      </div>
-      <!-- /.l-unit -->
-      <!-- div class="l-separator"></div -->
-      <!-- /.l-separator -->
+
+        <div class="clearfix l-unit__stat-col--left wide"><b><a href="/edit/server/<? echo $key ?>/"><?=$key?></a></b></div>
+        <div class="clearfix l-unit__stat-col--left text-center compact">
+            <b>
+                <a href="/edit/server/<? echo $key ?>/"><i class="fas fa-pencil-alt status-icon-orange status-icon-dim icon-large"></i></a>
+                <a href="/restart/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="data-controls fas fa-undo status-icon-highlight status-icon-dim icon-large"></i></a>
+                <a href="/<?php echo $action ?>/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-pause status-icon-red status-icon-dim icon-large"></i></a>
+            </b>
+          </div>
+        <div class="clearfix l-unit__stat-col--left wide-3"><?=__($data[$key]['SYSTEM'])?></div>
+        <div class="clearfix l-unit__stat-col--left text-center"><b><?=humanize_time($data[$key]['RTIME'])?></b></div>
+        <div class="clearfix l-unit__stat-col--left text-center"><b><?=$cpu?></b></div>
+        <div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['MEM']?> <?=__('mb')?></b></div>
+
+            </div>
+          </div>
       <?}?>
 
     </div>
 
     <div id="vstobjects">
-      <div class="l-separator"></div>
+      <div class="l-separator visible"></div>
       <div class="l-center">
         <div class="l-unit-ft">
           <div class="l-unit__col l-unit__col--left clearfix"></div>

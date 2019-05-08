@@ -1,7 +1,8 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
           <div class="l-unit-toolbar__buttonstrip">
-              <a class="ui-button cancel" href="/list/user/"><i class="fas fa-arrow-left status-icon-blue"></i> <?=__('Back')?></a>
+              <a class="ui-button cancel" href='/list/stats/'><i class="fas fa-info-circle status-icon-lightblue"></i> <?=__('Overall Statistics')?></a>
+
             </div>
         <div class="l-sort-toolbar clearfix">
           <table>
@@ -12,10 +13,6 @@
                   <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
                   <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value=""><i class="fas fa-search"></i></button>
                 </form>
-              </td>
-              <td></td>
-              <td>
-                <a class="vst" href='/list/stats/'><?=__('Overall Statistics')?></a>
               </td>
               <td>
                 <form action="/list/stats/" method="get" id="objects">

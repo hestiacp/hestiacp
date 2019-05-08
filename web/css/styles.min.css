@@ -1860,7 +1860,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
   width: 110px;
 }
 
-
 .l-unit__stat-col--left.border {
   border-left: 1px solid #ebebeb;
 }
@@ -3041,6 +3040,74 @@ form#vstobjects.suspended {
 
 .l-sort__create-btn:active #tooltip {
   background-color: #54a6e5;
+}
+
+.pill {
+  border-radius: 18px;
+}
+
+.pill.blue {
+  border: 1px solid #fff;
+  box-shadow: 0px 1px 4px rgba(120,120,120,0.3);
+  background-color: #316198;
+  color: #fff;
+  text-shadow: 0px 1px rgba(0,0,0,0.35);
+}
+
+.pill.purple {
+  border: 1px solid #fff;
+  box-shadow: 0px 1px 4px rgba(120,120,120,0.3);
+  background-color: #8e2fca;
+  color: #fff;
+  text-shadow: 0px 1px rgba(0,0,0,0.35);
+}
+
+.pill.teal {
+  border: 1px solid #fff;
+  box-shadow: 0px 1px 4px rgba(120,120,120,0.3);
+  background-color: #33cccc;
+  color: #fff;
+  text-shadow: 0px 1px rgba(0,0,0,0.35);
+}
+
+.pill.maroon {
+  border: 1px solid #fff;
+  box-shadow: 0px 1px 4px rgba(120,120,120,0.3);
+  background-color: #cc3366;
+  color: #fff;
+  text-shadow: 0px 1px rgba(0,0,0,0.35);
+}
+
+.pill.red {
+  border: 1px solid #fff;
+  box-shadow: 0px 1px 4px rgba(120,120,120,0.3);
+  background-color: #ff3333;
+  color: #fff;
+  text-shadow: 0px 1px rgba(0,0,0,0.35);
+}
+
+.pill.orange {
+  border: 1px solid #fff;
+  box-shadow: 0px 1px 4px rgba(120,120,120,0.3);
+  background-color: #f6a800;
+  color: #fff;
+  text-shadow: 0px 1px rgba(0,0,0,0.35);
+}
+
+.pill.green {
+  border: 1px solid #fff;
+  box-shadow: 0px 1px 4px rgba(120,120,120,0.3);
+  background-color: #53ba55;
+  color: #fff;
+  text-shadow: 0px 1px rgba(0,0,0,0.35);
+}
+
+.pill.lightblue {
+  border: 1px solid #fff;
+  box-shadow: 0px 1px 4px rgba(120,120,120,0.3);
+  background-color: #6eb6f0;
+  color: #fff;
+  text-shadow: 0px 1px rgba(0,0,0,0.35);
 }
 
 .status-icon-yellow, .status-icon-maroon:hover {

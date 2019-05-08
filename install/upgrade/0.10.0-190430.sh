@@ -13,6 +13,14 @@ if [ -z "$WEBMAIL_ALIAS_CHECK" ]; then
     echo "WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
 fi
 
+# Add release branch system configuration if non-existent
+release_branch_check=$(cat $HESTIA/conf/hestia.conf | grep RELEASE_BRANCH)
+if [ -z "$release_branch_check" ]; then
+    echo "(*) Adding global release branch variable to system configuration..."
+    sed -i "/RELEASE_BRANCH/d" $HESTIA/conf/hestia.conf
+    echo "RELEASE_BRANCH='develop'" >> $HESTIA/conf/hestia.conf
+fi
+
 # load hestia.conf
 source $HESTIA/conf/hestia.conf
 
@@ -58,6 +66,11 @@ echo "$HESTIA_BACKUP/"
 echo ""
 echo "This process may take a few moments, please wait..."
 echo ""
+
+# Set new version
+sed -i "/VERSION/d" $HESTIA/conf/hestia.conf
+# Set new branch variable
+echo "VERSION='0.10.0'" >> $HESTIA/conf/hestia.conf
 
 # Update Apache and Nginx configuration to support new file structure
 if [ -f /etc/apache2/apache.conf ]; then

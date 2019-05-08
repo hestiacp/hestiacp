@@ -99,7 +99,10 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
           <div class="clearfix l-unit__stat-col--left super-compact">
             <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="user[]" value="<?=$key?>">
           </div>
-              <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>"><?=$data[$key]['FNAME']?> <?=$data[$key]['LNAME']?> <span style="font-weight: normal !important;">(<?=$key?>)</span></b></a><br /><span style="font-size: 0.75rem;"><?=str_replace(',', '<br />',$data[$key]['NS'])?></span></div>
+              <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>"><?=$data[$key]['FNAME']?> <?=$data[$key]['LNAME']?> <span style="font-weight: normal !important;">(<?=$key?>)</span></b></a>
+                <br />
+                <span style="font-size: 0.8rem;"><b><?=__('Email')?>:</b> <?=$data[$key]['CONTACT']?></span>
+              </div>
               <div class="clearfix l-unit__stat-col--left text-right"><b>
                   <!-- START QUICK ACTION TOOLBAR AREA -->
 
@@ -145,12 +148,12 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
               <div class="clearfix l-unit__stat-col--left text-center compact"><?=$data[$key]['IP_OWNED']?></div>
               <div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
               <div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_BANDWIDTH'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_BANDWIDTH'])?></span></div>
-              <div class="clearfix l-unit__stat-col--left text-center compact"><?=$data[$key]['U_WEB_DOMAINS']?></div>
-              <div class="clearfix l-unit__stat-col--left text-center compact"><?=$data[$key]['U_MAIL_DOMAINS']?></div>
-              <div class="clearfix l-unit__stat-col--left text-center compact"><?=$data[$key]['U_DNS_DOMAINS']?></div>
-              <div class="clearfix l-unit__stat-col--left text-center compact"><?=$data[$key]['U_DATABASES']?></div>
-              <div class="clearfix l-unit__stat-col--left text-center compact"><?=$data[$key]['U_CRON_JOBS']?></div>
-              <div class="clearfix l-unit__stat-col--left text-center compact"><?=$data[$key]['U_BACKUPS']?></div>
+              <div class="clearfix l-unit__stat-col--left text-center compact"><span class="jump-top badge gray raised"><?=$data[$key]['U_WEB_DOMAINS']?></span></div>
+              <div class="clearfix l-unit__stat-col--left text-center compact"><span class="jump-top badge gray raised"><?=$data[$key]['U_MAIL_DOMAINS']?></span></div>
+              <div class="clearfix l-unit__stat-col--left text-center compact"><span class="jump-top badge gray raised"><?=$data[$key]['U_DNS_DOMAINS']?></span></div>
+              <div class="clearfix l-unit__stat-col--left text-center compact"><span class="jump-top badge gray raised"><?=$data[$key]['U_DATABASES']?></span></div>
+              <div class="clearfix l-unit__stat-col--left text-center compact"><span class="jump-top badge gray raised"><?=$data[$key]['U_CRON_JOBS']?></span></div>
+              <div class="clearfix l-unit__stat-col--left text-center compact"><span class="jump-top badge gray raised"><?=$data[$key]['U_BACKUPS']?></span></div>
           </div>
          </div>
        <!-- /.l-unit__col -->

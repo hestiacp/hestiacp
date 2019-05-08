@@ -3044,70 +3044,90 @@ form#vstobjects.suspended {
 
 .pill {
   border-radius: 18px;
+  display: inline-block;
+  text-shadow: 0px 1px 2px rgba(0,0,0,0.4);
 }
 
-.pill.blue {
+.badge {
+  display: inline-block;
+  min-width: 24px;
+  min-height: 24px;
+  line-height: 24px;
+  border-radius: 50%;
+  font-weight: 600;
+  box-shadow: 0px 1px 3px rgba(120,120,120,0.6);
+  text-shadow: 0px 1px 2px rgba(0,0,0,0.5);
+}
+
+.badge.large {
+  min-width: 48px;
+  min-height: 48px;
+  line-height: 48px;
+}
+
+.badge.raised {
+  background: radial-gradient(ellipse at center, rgba(255,255,255,0.2) 0%,rgba(255,255,255,0.05) 100%);
+}
+
+.l-unit--suspended .badge {
+  background: #eaeaea !important;
+  color: #c0c0c0 !important;
+  text-shadow: 0px -1px #fafafa !important;
+}
+
+.pill.gray, .badge.gray {
+  border: 1px solid #ddd;
+  background-color: #eaeaea;
+  color: #6c6c6c;
+  text-shadow: 0px 1px #fafafa !important;
+}
+
+.pill.blue, .badge.blue {
   border: 1px solid #fff;
-  box-shadow: 0px 1px 4px rgba(120,120,120,0.3);
   background-color: #316198;
   color: #fff;
-  text-shadow: 0px 1px rgba(0,0,0,0.35);
 }
 
-.pill.purple {
+.pill.purple, .badge.purple {
   border: 1px solid #fff;
-  box-shadow: 0px 1px 4px rgba(120,120,120,0.3);
   background-color: #8e2fca;
   color: #fff;
-  text-shadow: 0px 1px rgba(0,0,0,0.35);
 }
 
-.pill.teal {
+.pill.teal, .badge.teal {
   border: 1px solid #fff;
-  box-shadow: 0px 1px 4px rgba(120,120,120,0.3);
   background-color: #33cccc;
   color: #fff;
-  text-shadow: 0px 1px rgba(0,0,0,0.35);
 }
 
-.pill.maroon {
+.pill.maroon, .badge.maroon {
   border: 1px solid #fff;
-  box-shadow: 0px 1px 4px rgba(120,120,120,0.3);
   background-color: #cc3366;
   color: #fff;
-  text-shadow: 0px 1px rgba(0,0,0,0.35);
 }
 
-.pill.red {
+.pill.red, .badge.red {
   border: 1px solid #fff;
-  box-shadow: 0px 1px 4px rgba(120,120,120,0.3);
   background-color: #ff3333;
   color: #fff;
-  text-shadow: 0px 1px rgba(0,0,0,0.35);
 }
 
-.pill.orange {
+.pill.orange, .badge.orange {
   border: 1px solid #fff;
-  box-shadow: 0px 1px 4px rgba(120,120,120,0.3);
   background-color: #f6a800;
   color: #fff;
-  text-shadow: 0px 1px rgba(0,0,0,0.35);
 }
 
-.pill.green {
+.pill.green, .badge.green {
   border: 1px solid #fff;
-  box-shadow: 0px 1px 4px rgba(120,120,120,0.3);
   background-color: #53ba55;
   color: #fff;
-  text-shadow: 0px 1px rgba(0,0,0,0.35);
 }
 
-.pill.lightblue {
+.pill.lightblue, .badge.lightblue {
   border: 1px solid #fff;
-  box-shadow: 0px 1px 4px rgba(120,120,120,0.3);
   background-color: #6eb6f0;
   color: #fff;
-  text-shadow: 0px 1px rgba(0,0,0,0.35);
 }
 
 .status-icon-yellow, .status-icon-maroon:hover {

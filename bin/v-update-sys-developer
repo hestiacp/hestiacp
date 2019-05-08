@@ -37,7 +37,8 @@ install=$3
 if [ ! -z "$1" ]; then
   branch=$1
 else
-  branch="develop"
+  source /usr/local/hestia/conf/hestia.conf
+  branch=$RELEASE_BRANCH
 fi
 
 if [ ! -z "$2" ]; then

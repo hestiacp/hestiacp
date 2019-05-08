@@ -86,7 +86,8 @@ shell_list() {
         fi
         echo
         if [ ! -z "$WEBMAIL_ALIAS" ]; then
-            echo "Web Mail:       hostname + $WEBMAIL_ALIAS"
+            echo "Webmail (subdomain):       $WEBMAIL_ALIAS.domain.tld"
+            echo "Webmail (alias):        hostname/$WEBMAIL_ALIAS"
         fi
     fi
     if [ ! -z "$DB_SYSTEM" ]; then

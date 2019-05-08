@@ -5,7 +5,7 @@ server {
     index       index.php;
 
     include %home%/%user%/conf/mail/%root_domain%/nginx.forcessl.conf*;
-    
+
     location ~ /(config|temp|logs) {
         deny all;
         return 404;
@@ -21,7 +21,7 @@ server {
         location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
             alias /var/lib/roundcube/;
             expires 1h;
-            try_files $uri @fallback;
+            try_files $uri $uri/ index.php?$args @fallback;
         }
     }
 

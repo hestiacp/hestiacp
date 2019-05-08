@@ -21,6 +21,7 @@ server {
         location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
             expires 1h;
             fastcgi_hide_header "Set-Cookie";
+            try_files $uri $uri/ index.php?$args @fallback;
         }
     }
 
@@ -31,7 +32,8 @@ server {
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $request_filename;
     }
-    
+}
+
     error_page 403 /error/404.html;
     error_page 404 /error/404.html;
     error_page 500 502 503 504 /error/50x.html;

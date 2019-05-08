@@ -43,6 +43,7 @@ json_list() {
         "FIREWALL_EXTENSION": "'$FIREWALL_EXTENSION'",
         "REPOSITORY": "'$REPOSITORY'",
         "VERSION": "'$VERSION'",
+        "RELEASE_BRANCH": "'$RELEASE_BRANCH'",
         "LANGUAGE": "'$LANGUAGE'",
         "BACKUP_GZIP": "'$BACKUP_GZIP'",
         "BACKUP": "'$BACKUP'",
@@ -129,6 +130,7 @@ shell_list() {
         echo "Language:       $LANGUAGE"
     fi
     echo "Version:        $VERSION"
+    echo "Release Branch: $RELEASE_BRANCH"
 }
 
 # PLAIN list function
@@ -139,7 +141,7 @@ plain_list() {
     echo -ne "$ANTIVIRUS_SYSTEM\t$ANTISPAM_SYSTEM\t$DB_SYSTEM\t"
     echo -ne "$DNS_SYSTEM\t$DNS_CLUSTER\t$STATS_SYSTEM\t$BACKUP_SYSTEM\t"
     echo -ne "$CRON_SYSTEM\t$DISK_QUOTA\t$FIREWALL_SYSTEM\t"
-    echo -ne "$FIREWALL_EXTENSION\t$REPOSITORY\t$VERSION\t$LANGUAGE\t"
+    echo -ne "$FIREWALL_EXTENSION\t$REPOSITORY\t$VERSION\t$RELEASE_BRANCH\t$LANGUAGE\t"
     echo -e "$BACKUP_GZIP\t$BACKUP\t$WEBMAIL_ALIAS\t$DB_PMA_URL\t$DB_PGA_URL"
 }
 
@@ -162,7 +164,7 @@ csv_list() {
     echo -n "'$ANTIVIRUS_SYSTEM','$ANTISPAM_SYSTEM','$DB_SYSTEM',"
     echo -n "'$DNS_SYSTEM','$DNS_CLUSTER','$STATS_SYSTEM','$BACKUP_SYSTEM',"
     echo -n "'$CRON_SYSTEM','$DISK_QUOTA','$FIREWALL_SYSTEM','$REPOSITORY',"
-    echo -n "'$FIREWALL_EXTENSION','$VERSION','$LANGUAGE','$BACKUP_GZIP',"
+    echo -n "'$FIREWALL_EXTENSION','$VERSION','$RELEASE_BRANCH','$LANGUAGE','$BACKUP_GZIP',"
     echo -n "'$BACKUP','$WEBMAIL_ALIAS','$DB_PMA_URL','$DB_PGA_URL'"
     echo
 }

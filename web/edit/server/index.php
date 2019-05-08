@@ -223,6 +223,16 @@ if (!empty($_POST['save'])) {
         }
     }
 
+    // Update release branch
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_release_branch'] != $_SESSION['RELEASE_BRANCH']) {
+            exec (HESTIA_CMD."v-change-sys-release ".escapeshellarg($_POST['v_release_branch']), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            $v_release_adv = 'yes';
+        }
+    }
+
     // Disable local backup
     if (empty($_SESSION['error_msg'])) {
         if (($_POST['v_backup'] == 'no') && ($v_backup == 'yes' )) {

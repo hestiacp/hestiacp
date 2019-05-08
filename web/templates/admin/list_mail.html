@@ -13,6 +13,9 @@
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
+              <td class="sort-by">
+                    <i class="fas fa-filter"></i> <?=__('sort by');?>: <span><b><?=__('Date')?></b></span></i>
+              </td>
               <td class="l-sort-toolbar__search-box">
                 <form action="/search/" method="get">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />

@@ -36,7 +36,7 @@ check_args '1' "$#" 'WEBMAIL'
 # Delete old webmail configuration
 for user in `ls /usr/local/hestia/data/users/`; do
     for domain in $($BIN/v-list-web-domains $user plain |cut -f 1); do
-        v-delete-webmail $user $domain
+        $BIN/v-delete-webmail $user $domain
     done
 done
 
@@ -46,7 +46,7 @@ sed -i "s|WEBMAIL_ALIAS='$OLD_ALIAS'|WEBMAIL_ALIAS='$NEW_ALIAS'|gI" $HESTIA/conf
 for user in `ls /usr/local/hestia/data/users/`; do
     for domain in $($BIN/v-list-web-domains $user plain |cut -f 1); do
         echo "Changing webmail alias for $domain"
-        v-add-webmail $user $domain
+        $BIN/v-add-webmail $user $domain
     done
 done
 

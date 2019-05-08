@@ -170,7 +170,7 @@ if (!empty($_POST['ok_acc'])) {
     // Get webmail url
     if (empty($_SESSION['error_msg'])) {
         list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
-        $webmail = "http://".$http_host."/webmail/";
+        $webmail = "http://".$hostname."/".$v_webmail_alias."/";
         if (!empty($_SESSION['WEBMAIL_ALIAS'])) $webmail = $_SESSION['WEBMAIL_ALIAS'];
     }
 
@@ -187,7 +187,6 @@ if (!empty($_POST['ok_acc'])) {
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
         $_SESSION['ok_msg'] = __('MAIL_ACCOUNT_CREATED_OK',htmlentities(strtolower($_POST['v_account'])),htmlentities($_POST[v_domain]),htmlentities(strtolower($_POST['v_account'])),htmlentities($_POST[v_domain]));
-        $_SESSION['ok_msg'] .= " / <a href=".$webmail." target='_blank'>" . __('open webmail') . "</a>";
         unset($v_account);
         unset($v_password);
         unset($v_password);

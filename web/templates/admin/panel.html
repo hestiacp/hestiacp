@@ -19,15 +19,15 @@
 		</div>
 		<!-- /.l-menu -->
 		<div class="l-profile noselect">
-			<a class="l-profile__notifications <? if($panel[$user]['NOTIFICATIONS'] == 'yes') echo " updates"; ?>">&nbsp;</a>
-			<a class="l-profile__server" href="/edit/server/"><? echo gethostname(); ?></a>
-			<a class="l-profile__username" href="/edit/user/?user=<?php echo $user; ?>"><i class="fas fa-user-circle"></i> <?=$user?></a>
-			<a class="l-profile__logout" href="/logout/"> <?=__('Log out')?> <i class="fas fa-sign-out-alt"></i></a>
+			<div class="l-menu__item"><a href="/edit/server/"><? echo gethostname(); ?></a></div>
+			<div class="l-menu__item"><a class="l-profile__notifications <? if($panel[$user]['NOTIFICATIONS'] == 'yes') echo " updates"; ?>"><i class="fas fa-bell"></i></a></div>
+			<div class="l-menu__item"><a href="/edit/user/?user=<?php echo $user; ?>"><i class="fas fa-user-circle"></i> <?=$user?></a></div>
+			<div class="l-menu__item"><a href="/logout/"> <?=__('Log out')?> <i class="fas fa-sign-out-alt"></i></a></div>
 		</div>
 		<!-- /.l-profile -->
 	</div>
 </div>
-<ul class="notification-container hidden"></ul>
+<ul class="notification-container hidden animated slideInDown"></ul>
 
 <!-- /.l-header -->
 

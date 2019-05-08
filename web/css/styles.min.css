@@ -997,54 +997,57 @@ a {
 }
 
 .l-profile__notifications {
-  border-radius: 30px;
   color: #fff;
   cursor: pointer;
-  float: left;
   font-weight: 600;
-  height: 15px;
-  margin-right: 4px;
-  margin-top: 5px;
   padding: 10px 5px 0;
-  width: 15px;
+  font-size: 0.95rem;
+  line-height: 0.95rem;
 }
+
 .l-profile__notifications.active {
-  background-color: #454545;
+  border: 1px solid #378ccd !important;
+  background: linear-gradient(to bottom, rgba(210,232,250,1) 0%,rgba(187,220,247,1) 50%,rgba(162,207,244,1) 51%,rgba(194,224,248,1) 100%) !important;
+  color: #046c98 !important;
+  text-shadow: 0px -1px 1px rgba(255,255,255,0.5) !important;
+  box-shadow: 0px 1px 3px rgba(0,0,0,0.15),
+              inset 0px 0px 1px #fff,
+              inset -1px -1px 4px rgba(220,220,220,0.4) !important;
 }
-.l-profile__notifications:hover {
-  background-color: #333;
-}
-.l-profile__notifications:active {
-  background-color: #c4da5e;
-}
+
 .l-profile__notifications.updates {
   background-position: -202px -135px;
 }
 
 .notification-container {
-  background-color: #454545;
-  box-shadow: 0 2px 7px 0 rgba(0, 0, 0, 0.3);
+  background-color: rgba(0,0,0,0.90);
+  box-shadow: 0 3px 30px 0 rgba(0, 0, 0, 0.5);
   list-style-type: none;
-  margin: 0;
+  margin: 0 21px;
   overflow: hidden;
   padding-left: 0;
   position: fixed;
   top: 34px;
-  width: 351px;
-  z-index: 200;
+  width: 393px;
+  z-index: 300;
   font-size: 0.8rem;
   padding: 0;
-  color: #7f7f7f;
-}
-.notification-container .unseen {
-  color: #ABABAB;
+  color: #e9e9e9;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  border: 1px solid #fff;
+  border-top: none;
 }
 
+.notification-container .unseen {
+  color: #f6a800;;
+}
 
 .notification-container li {
   border-bottom: 1px solid #4b4b4b;
-  padding: 10px 15px 24px;
+  padding: 20px;
 }
+
 .notification-container .mark-seen {
   background-color: #abc04b;
   border: 2px solid #454545;

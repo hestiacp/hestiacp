@@ -1029,8 +1029,9 @@ echo "BACKUP_SYSTEM='local'" >> $HESTIA/conf/hestia.conf
 # Language
 echo "LANGUAGE='$lang'" >> $HESTIA/conf/hestia.conf
 
-# Version
-echo "VERSION='0.9.8'" >> $HESTIA/conf/hestia.conf
+# Version & Release Branch
+echo "VERSION='0.10.0'" >> $HESTIA/conf/hestia.conf
+echo "RELEASE='develop'" >> $HESTIA/conf/hestia.conf
 
 # Installing hosting packages
 cp -rf $hestiacp/packages $HESTIA/data/

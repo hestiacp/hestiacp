@@ -3427,9 +3427,9 @@ form#vstobjects.suspended {
 
 .helper-container {
   float: right;
-  height: 293px;
   margin-bottom: -450px;
-  margin-top: 459px;
+  margin-top: 359px;
+  margin-right: 80px;
   padding-top: 3px;
   width: 563px;
   box-shadow: 0px 1px 4px rgba(0,0,0,0.15);

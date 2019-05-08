@@ -1040,7 +1040,7 @@ a {
 }
 
 .notification-container .unseen {
-  color: #f6a800;;
+  color: #e7e7e7;
 }
 
 .notification-container li {
@@ -1049,7 +1049,7 @@ a {
 }
 
 .notification-container .mark-seen {
-  background-color: #abc04b;
+  background-color: #cc3366;
   border: 2px solid #454545;
   border-radius: 10px;
   cursor: pointer;
@@ -1057,12 +1057,12 @@ a {
   float: right;
   height: 7px;
   margin-right: -5px;
-  margin-top: 0;
+  margin-top: 10px;
   width: 7px;
 }
 .notification-container .mark-seen:hover {
   background-color: #333;
-  border-color: #abc04b;
+  border-color: #e83b75;
 }
 .notification-container .mark-seen:active {
   background-color: #777;
@@ -1086,13 +1086,13 @@ a {
 
 .notification-container .unseen .title a,
 .notification-container .unseen .title {
-  color: #C4DA5E;
+  color: #cc3366;
 }
 .notification-container .unseen .title a:hover {
-  color: #ffcc00;
+  color: #e83b75;
 }
 .notification-container .unseen .title a:active {
-  color: #dacf2e;
+  color: #e83b75;
 }
 
 .notification-container a {

@@ -303,6 +303,8 @@ for user in `ls /usr/local/hestia/data/users/`; do
     sleep 1
 done
 
+# Adding upgrade notification
+$BIN/v-add-user-notification admin 'Upgrade complete' 'Your server has been updated to v0.10.0.<br>Please report any bugs on GitHub at<br>https://github.com/hestiacp/hestiacp/Issues<br><br>Have a great day!'
 # Restart server services
 echo "(*) Restarting services..."
 sleep 5

@@ -171,7 +171,7 @@ if (!empty($_POST['ok_acc'])) {
     if (empty($_SESSION['error_msg'])) {
         list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
         $webmail = "http://".$http_host."/webmail/";
-        if (!empty($_SESSION['MAIL_URL'])) $webmail = $_SESSION['MAIL_URL'];
+        if (!empty($_SESSION['WEBMAIL_ALIAS'])) $webmail = $_SESSION['WEBMAIL_ALIAS'];
     }
 
     // Email login credentials

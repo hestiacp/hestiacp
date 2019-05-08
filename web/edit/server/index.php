@@ -195,8 +195,8 @@ if (!empty($_POST['save'])) {
 
     // Update webmail url
     if (empty($_SESSION['error_msg'])) {
-        if ($_POST['v_mail_url'] != $_SESSION['MAIL_URL']) {
-            exec (HESTIA_CMD."v-change-sys-config-value MAIL_URL ".escapeshellarg($_POST['v_mail_url']), $output, $return_var);
+        if ($_POST['v_webmail_alias'] != $_SESSION['WEBMAIL_ALIAS']) {
+            exec (HESTIA_CMD."v-change-sys-webmail ".escapeshellarg($_POST['v_webmail_alias']), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
             $v_mail_adv = 'yes';

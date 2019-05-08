@@ -1286,19 +1286,19 @@ div.l-content > div.l-separator:nth-of-type(4) {
   margin: 0;
   overflow: hidden;
   top: 42px;
-  background-color: rgba(49,97,152,0.95);
+  background-color: rgba(255,255,255,0.95);
   list-style-type: none;
-  padding-left: 0;
-  box-shadow: 0 2px 8px 0 rgba(20, 20, 20, 0.25);
-  border-radius: 4px;
-  border: 1px solid rgba(255,255,255,0.95);
+  box-shadow: 0 2px 12px 0 rgba(20, 20, 20, 0.45);
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,1);
+  padding: 0px;
 }
 .context-menu.sort-order li {
   padding: 0;
 }
 .context-menu li {
-  border-bottom: 1px solid #777;
-  color: #fff;
+  border-bottom: 1px solid #ddd;
+  color: #2e2e2e;
   cursor: pointer;
   font-size: 0.8rem;
   padding: 12px;
@@ -1307,8 +1307,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   display: inline-block;
   padding: 12px 28px 12px 12px;
   width: 117px;
-  text-transform: uppercase;
-  font-weight: 600;
+  font-weight: 500;
 }
 .context-menu.sort-order span.up {
   display: inline-block;

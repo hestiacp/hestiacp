@@ -5,9 +5,13 @@ HESTIA="/usr/local/hestia"
 HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
 hestiacp="$HESTIA/install/deb"
 
-# Add webmail alias variable to system configuration
-sed -i "/WEBMAIL_ALIAS/d" $HESTIA/conf/hestia.conf
-echo "WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
+# Add webmail alias variable to system configuration if non-existent
+webmail_alias_check=$(cat $HESTIA/conf/hestia.conf | grep WEBMAIL_ALIAS)
+if [ -z "$WEBMAIL_ALIAS_CHECK" ]; then
+    echo "(*) Adding global webmail alias to system configuration..."
+    sed -i "/WEBMAIL_ALIAS/d" $HESTIA/conf/hestia.conf
+    echo "WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
+fi
 
 # load hestia.conf
 source $HESTIA/conf/hestia.conf

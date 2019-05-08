@@ -46,7 +46,7 @@ json_list() {
         "LANGUAGE": "'$LANGUAGE'",
         "BACKUP_GZIP": "'$BACKUP_GZIP'",
         "BACKUP": "'$BACKUP'",
-        "MAIL_URL": "'$MAIL_URL'",
+        "WEBMAIL_ALIAS": "'$WEBMAIL_ALIAS'",
         "DB_PMA_URL": "'$DB_PMA_URL'",
         "DB_PGA_URL": "'$DB_PGA_URL'",
         "SOFTACULOUS": "'$SOFTACULOUS'"
@@ -85,8 +85,9 @@ shell_list() {
             echo -n " + $ANTISPAM_SYSTEM"
         fi
         echo
-        if [ ! -z "$MAIL_URL" ]; then
-            echo "Web Mail:       hostname + $MAIL_URL"
+        if [ ! -z "$WEBMAIL_ALIAS" ]; then
+            echo "Webmail (subdomain):       $WEBMAIL_ALIAS.domain.tld"
+            echo "Webmail (alias):        hostname/$WEBMAIL_ALIAS"
         fi
     fi
     if [ ! -z "$DB_SYSTEM" ]; then
@@ -139,7 +140,7 @@ plain_list() {
     echo -ne "$DNS_SYSTEM\t$DNS_CLUSTER\t$STATS_SYSTEM\t$BACKUP_SYSTEM\t"
     echo -ne "$CRON_SYSTEM\t$DISK_QUOTA\t$FIREWALL_SYSTEM\t"
     echo -ne "$FIREWALL_EXTENSION\t$REPOSITORY\t$VERSION\t$LANGUAGE\t"
-    echo -e "$BACKUP_GZIP\t$BACKUP\t$MAIL_URL\t$DB_PMA_URL\t$DB_PGA_URL"
+    echo -e "$BACKUP_GZIP\t$BACKUP\t$WEBMAIL_ALIAS\t$DB_PMA_URL\t$DB_PGA_URL"
 }
 
 
@@ -152,7 +153,7 @@ csv_list() {
     echo -n "'DNS_SYSTEM','DNS_CLUSTER','STATS_SYSTEM','BACKUP_SYSTEM',"
     echo -n "'CRON_SYSTEM','DISK_QUOTA','FIREWALL_SYSTEM',"
     echo -n "'FIREWALL_EXTENSION','REPOSITORY',"
-    echo -n "'VERSION','LANGUAGE','BACKUP_GZIP','BACKUP','MAIL_URL',"
+    echo -n "'VERSION','LANGUAGE','BACKUP_GZIP','BACKUP','WEBMAIL_ALIAS',"
     echo -n "'DB_PMA_URL','DB_PGA_URL'"
     echo
     echo -n "'$WEB_SYSTEM','$WEB_RGROUPS','$WEB_PORT','$WEB_SSL',"
@@ -162,7 +163,7 @@ csv_list() {
     echo -n "'$DNS_SYSTEM','$DNS_CLUSTER','$STATS_SYSTEM','$BACKUP_SYSTEM',"
     echo -n "'$CRON_SYSTEM','$DISK_QUOTA','$FIREWALL_SYSTEM','$REPOSITORY',"
     echo -n "'$FIREWALL_EXTENSION','$VERSION','$LANGUAGE','$BACKUP_GZIP',"
-    echo -n "'$BACKUP','$MAIL_URL','$DB_PMA_URL','$DB_PGA_URL'"
+    echo -n "'$BACKUP','$WEBMAIL_ALIAS','$DB_PMA_URL','$DB_PGA_URL'"
     echo
 }
 

@@ -7,19 +7,19 @@
             echo '<a class="ui-button cancel" href="/list/firewall/banlist/"><i class="fas fa-eye status-icon-red"></i> '.__('list fail2ban').'</a>';
           } ?>
         </div>
-        <ul class="context-menu sort-order animated bounceIn" style="display:none;">
-          <li entity="sort-action"><span class="name active"><?=__('Action')?></span><span class="up">&nbsp;</span></li>
-          <li entity="sort-protocol"><span class="name"><?=__('Protocol')?></span><span class="up">&nbsp;</span></li>
-          <li entity="sort-port"><span class="name"><?=__('Port')?></span><span class="up">&nbsp;</span></li>
-          <li entity="sort-ip" sort_as_int="1"><span class="name"><?=__('IP address')?></span><span class="up">&nbsp;</span></li>
-          <li entity="sort-comment"><span class="name"><?=__('Comment')?></span><span class="up">&nbsp;</span></li>
-          <li entity="sort-star"><span class="name"><?=__('Starred')?></span><span class="up">&nbsp;</span></li>
+        <ul class="context-menu sort-order animated fadeIn" style="display:none;">
+          <li entity="sort-action"><span class="name active"><?=__('Action')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-protocol"><span class="name"><?=__('Protocol')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-port"><span class="name"><?=__('Port')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-ip" sort_as_int="1"><span class="name"><?=__('IP address')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-comment"><span class="name"><?=__('Comment')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-star"><span class="name"><?=__('Starred')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
         </ul>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
               <td class="sort-by">
-                  <?=__('sort by');?>: <span><b><?=__('Action')?></b></span> <i class="l-icon-down-arrow media-top"></i>
+                  <?=__('sort by');?>: <span><b><?=__('Action')?> <i class="fas fa-sort-amount-down"></i></b></span>
               </td>
               <td>
                 <form action="/bulk/firewall/" method="post" id="objects">
@@ -43,7 +43,7 @@
     <!-- /.l-separator -->
 
     <div class="l-center units compact animated fadeIn">         
-          <div class="l-unit header table-header">     
+          <div class="header table-header">     
             <div class="l-unit__col l-unit__col--right step-top">
               <div>
                   <div class="clearfix l-unit__stat-col--left super-compact">

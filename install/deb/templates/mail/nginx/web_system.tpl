@@ -22,7 +22,7 @@ server {
     
 	location / {
         location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
-            expires 90h;
+            expires 90d;
             fastcgi_hide_header "Set-Cookie";
         }
     }

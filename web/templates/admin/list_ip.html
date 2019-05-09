@@ -4,20 +4,20 @@
           <a class="ui-button cancel" href="/list/server/"><i class="fas fa-arrow-left status-icon-blue"></i> <?=__('Back')?></a>
           <a href="/add/ip/" class="ui-button cancel" title="<?=__('Add IP')?>"><i class="fas fa-plus-circle status-icon-green"></i> <?=__('Add IP')?></a>
         </div>
-        <ul class="context-menu sort-order animated bounceIn" style="display:none;">
-          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?></span><span class="up">&nbsp;</span></li>
-          <li entity="sort-ip"><span class="name"><?=__('ip')?></span><span class="up">&nbsp;</span></li>
-          <li entity="sort-netmask"><span class="name"><?=__('Netmask')?></span><span class="up">&nbsp;</span></li>
-          <li entity="sort-interface"><span class="name"><?=__('Interface')?></span><span class="up">&nbsp;</span></li>
-          <li entity="sort-domains" sort_as_int="1"><span class="name"><?=__('Domains')?></span><span class="up">&nbsp;</span></li>
-          <li entity="sort-owner"><span class="name"><?=__('Owner')?></span><span class="up">&nbsp;</span></li>
-          <li entity="sort-star" sort_as_int="1"><span class="name"><?=__('Starred')?></span><span class="up">&nbsp;</span></li>
+        <ul class="context-menu sort-order animated fadeIn" style="display:none;">
+          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-ip"><span class="name"><?=__('ip')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-netmask"><span class="name"><?=__('Netmask')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-interface"><span class="name"><?=__('Interface')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-domains" sort_as_int="1"><span class="name"><?=__('Domains')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-owner"><span class="name"><?=__('Owner')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-star" sort_as_int="1"><span class="name"><?=__('Starred')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
         </ul>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
               <td class="sort-by">
-                  <i class="fas fa-filter"></i> <?=__('sort by');?>: <span><b><?=__('Date')?></b></span></i>
+                  <?=__('sort by');?>: <span><b><?=__('Date')?> <i class="fas fa-sort-amount-down"></i></b></span>
                 </td>
               <td>
                 <form action="/bulk/ip/" method="post" id="objects">
@@ -41,7 +41,7 @@
     <div class="l-separator"></div>
     <!-- /.l-separator -->
     <div class="l-center units animated fadeIn">
-      <div class="l-unit header table-header">     
+      <div class="header table-header">     
         <div class="l-unit__col l-unit__col--right step-top">
           <div>
             <div class="clearfix l-unit__stat-col--left super-compact">

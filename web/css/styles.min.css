@@ -1300,7 +1300,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 .context-menu.sort-order span.name {
   display: inline-block;
-  padding: 12px 28px 12px 12px;
+  padding: 12px;
   width: 117px;
   font-weight: 500;
 }
@@ -1310,18 +1310,34 @@ div.l-content > div.l-separator:nth-of-type(4) {
   width: 16px;
 }
 .context-menu.sort-order span.active {
-  background-color: #4f8bbc;
-  color: #fff;
+  background-color: #4f8bbc !important;
+  color: #4686b8;
+  font-size: 0.8rem;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.75) 50%,rgba(255,255,255,0.95) 95%);
+  text-shadow: 0px 1px rgba(255,255,255,0.8);
 }
 .context-menu.sort-order span:hover {
-  background-color: #777;
-  color: #fff;
+  color: #3b9de8;
+  text-shadow: 1px 1px rgba(255,255,255,0.5);
+  background: linear-gradient(to bottom, rgba(241,248,253,1) 0%,rgba(218,236,250,1) 50%,rgba(190,221,246,1) 51%,rgba(227,240,251,1) 100%);
+  box-shadow: inset 0px 0px 1px #fff,
+              inset 0px 0px 6px rgba(255,255,255,0.6);
+  transition: 0.2s;
 }
-.context-menu.sort-order span:active {
-  background-color: #4f8bbc;
+.context-menu.sort-order span:active,.context-menu.sort-order span:focus {
+  background: linear-gradient(to bottom, rgba(210,232,250,1) 0%,rgba(187,220,247,1) 50%,rgba(162,207,244,1) 51%,rgba(194,224,248,1) 100%);
+  color: #046c98;
+  text-shadow: 0px -1px 1px rgba(255,255,255,0.5);
+  box-shadow: inset 0px 0px 1px #fff,
+              inset -1px -1px 4px rgba(220,220,220,0.4);
 }
-
-
+.context-menu.sort-order span.name i.fas.fa-sort-amount-down {
+  float: right;
+  margin-top: 2px;
+}
+.context-menu.sort-order li:last-child {
+  border-bottom: none;
+}
 .l-sort-toolbar {
   float: right;
   padding: 7px 0 7px 0;
@@ -1473,6 +1489,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   padding-right: 4px;
 }
 
+
 .subtitle {
   color: #cc3366;
   font-size: 0.8rem;
@@ -1558,13 +1575,17 @@ div.l-content > div.l-separator:nth-of-type(4) {
   background: linear-gradient(to bottom, rgba(247,247,247,1) 0%,rgba(255,255,255,1) 100%) !important;
   border-left: 1px solid #ddd !important;
   border-right: 1px solid #ddd !important;
+  border-bottom: 1px solid #ddd !important;
   text-shadow: 0px 1px rgba(255,255,255,0.95);
-  box-shadow: inset 0px 0px 1px rgba(255,255,255,1), inset 0px 0px 4px rgba(255,255,255,0.8), 0px 4px 6px rgba(190,190,190,0.25) !important;
+  box-shadow: inset 0px 0px 1px rgba(255,255,255,1), inset 0px 0px 4px rgba(255,255,255,0.8), 0px 4px 6px rgba(190,190,190,0.3) !important;
   border-top-left-radius: 0px;
   border-top-right-radius: 0px;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   min-height: 28px;
+  color: #707070;
+  padding: 0 0 0 14px;
+  overflow: hidden;
 }
 
 .table-header:hover {

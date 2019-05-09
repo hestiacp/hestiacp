@@ -27,7 +27,7 @@ $(document).ready(function(){
             $(window).scroll(function(){hover_menu()});
 
             $('.l-sort-toolbar .sort-by').click(function(){
-              $('.context-menu.sort-order').toggle().css({left: $(this).position().left - 10});
+              $('.context-menu.sort-order').toggle().css({left: $(this).position().left - 0});
             });
 
 
@@ -109,11 +109,11 @@ $(document).ready(function(){
               $(this).addClass('active');
               VE.tmp.sort_par = $(this).parent('li').attr('entity');
               VE.tmp.sort_as_int = $(this).parent('li').attr('sort_as_int');
-              VE.tmp.sort_direction = $(this).hasClass('up')*1 || -1;
+              VE.tmp.sort_direction = $(this).hasClass('up')*1 || -1; 
 
               $('.l-sort .sort-by span b').html($(this).parent('li').find('.name').html());
-              $('.l-sort .sort-by i').removeClass('l-icon-up-arrow l-icon-down-arrow');
-              $(this).hasClass('up') ? $('.l-sort .sort-by i').addClass('l-icon-up-arrow') : $('.l-sort .sort-by i').addClass('l-icon-down-arrow');
+              $('.l-sort .sort-by i').removeClass('fa-sort-amount-up fa-sort-amount-down');
+              $(this).hasClass('up') ? $('.l-sort .sort-by i').addClass('fa-sort-amount-up') : $('.l-sort .sort-by i').addClass('fa-sort-amount-down');
               $('.units .l-unit').sort(function (a, b) {
                 if(VE.tmp.sort_as_int)
                   return parseInt($(a).attr(VE.tmp.sort_par)) >= parseInt($(b).attr(VE.tmp.sort_par)) ? VE.tmp.sort_direction : VE.tmp.sort_direction * -1;

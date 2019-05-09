@@ -4,7 +4,7 @@ server {
     ssl_certificate      %ssl_pem%;
     ssl_certificate_key  %ssl_key%;
     root        /var/lib/roundcube;
-    index       index.php;
+    index       index.php index.html index.htm;
     
     location / {
         proxy_pass http://%ip%:%web_port%;

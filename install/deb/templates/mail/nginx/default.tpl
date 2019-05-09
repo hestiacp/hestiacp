@@ -2,7 +2,7 @@ server {
     listen      %ip%:%proxy_port%;
     server_name %domain% %alias%;
     root        /var/lib/roundcube;
-    index       index.php;
+    index       index.php index.html index.htm;
 
     include %home%/%user%/conf/mail/%root_domain%/nginx.forcessl.conf*;
 

@@ -2,7 +2,7 @@ server {
     listen      %ip%:%web_port%;
     server_name %domain% %alias%;
     root        /var/lib/roundcube;
-    index       index.php;
+    index       index.php index.html index.htm;
 
     include %home%/%user%/conf/mail/%root_domain%/nginx.forcessl.conf*;
 
@@ -54,7 +54,6 @@ server {
 
     location /error/ {
         alias   /var/www/document_errors/;
-
     }
 
     include %home%/%user%/conf/mail/%root_domain%/%web_system%.conf_*;

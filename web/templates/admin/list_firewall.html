@@ -8,7 +8,7 @@
           } ?>
         </div>
         <ul class="context-menu sort-order animated fadeIn" style="display:none;">
-          <li entity="sort-action"><span class="name active"><?=__('Action')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-action"><span class="name"><?=__('Action')?> <i class="fas fa-sort-amount-down"></i></span><span class="up active"><i class="fas fa-sort-amount-up"></i></span></li>
           <li entity="sort-protocol"><span class="name"><?=__('Protocol')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
           <li entity="sort-port"><span class="name"><?=__('Port')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
           <li entity="sort-ip" sort_as_int="1"><span class="name"><?=__('IP address')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
@@ -19,7 +19,7 @@
           <table>
             <tr>
               <td class="sort-by">
-                  <?=__('sort by');?>: <span><b><?=__('Action')?> <i class="fas fa-sort-amount-down"></i></b></span>
+                  <?=__('sort by');?>: <span><b><?=__('Action')?> <i class="fas fa-sort-amount-up"></i></b></span>
               </td>
               <td>
                 <form action="/bulk/firewall/" method="post" id="objects">

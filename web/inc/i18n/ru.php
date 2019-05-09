@@ -754,6 +754,11 @@ $LANG['ru'] = array(
     'Do not use encryption' => 'Не использовать шифрование',
 
     'maximum characters length, including prefix' => 'максимальное %s количество символов, включая префикс',
-
-    'Email Credentials' => 'Email Credentials',
+	
+    'Email Credentials' => 'Отправить доступы на Email',
+	'2 Factor Authentication' => 'Двухфакторная аутентификация',
+    'Enable 2FA' => 'Включить двухфакторную аутентификацию',
+    'Please scan the code below in your 2FA application:' => 'Чтобы закончить настройку 2FA, сканируйте QR-Code ниже <br /> в приложении на Вашем устройстве (например, <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google Authenticator</a>):',
+    '2FA Reset Code:' => 'Код восстановления доступа к аккаунту:',
+	'Force SSL/HTTPS' => 'Принудительный редирект HTTP-на-HTTPS',
 );

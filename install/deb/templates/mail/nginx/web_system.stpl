@@ -46,6 +46,7 @@ server {
         fastcgi_index index.php;
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $request_filename;
+        fastcgi_param HTTPS on;
     }
     
     error_page 403 /error/404.html;

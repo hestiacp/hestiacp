@@ -16,12 +16,16 @@ server {
         return 404;
     }
 
-    location / {
+location =/ {
         try_files $uri $uri/ /index.php?$args;
+        }
+    
+	location / {
         location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
-            expires 1h;
+            expires 90d;
             fastcgi_hide_header "Set-Cookie";
         }
+    
     }
 
     location ~ ^/(.*\.php)$ {

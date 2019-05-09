@@ -3,5 +3,7 @@
 *.gzip
 *.gz
 *.bz2
+*.deb
+
 .vscode
 .DS_Store

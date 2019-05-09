@@ -2,7 +2,7 @@ server {
     listen      %ip%:%proxy_port%;
     server_name %domain% %alias%;
     root        /var/lib/roundcube;
-    index       index.php;
+    index       index.php index.html index.htm;
 
     include %home%/%user%/conf/mail/%root_domain%/nginx.forcessl.conf*;
 
@@ -46,16 +46,17 @@ server {
         fastcgi_param SCRIPT_FILENAME $request_filename;
     }
     
-    location @fallback {
-        proxy_pass http://%ip%:%web_port%;
-    }
-
     error_page 403 /error/404.html;
     error_page 404 /error/404.html;
-    error_page 500 502 503 504 /error/50x.html;
+    error_page 500 502 503 504 505 /error/50x.html;
 
     location /error/ {
-        alias   /var/www/document_errors/;
+        alias       /var/www/document_errors/;
+        try_files   $uri $uri/;
+    }
+
+    location @fallback {
+        proxy_pass http://%ip%:%web_port%;
     }
 
     include %home%/%user%/conf/mail/%root_domain%/%proxy_system%.conf_*;

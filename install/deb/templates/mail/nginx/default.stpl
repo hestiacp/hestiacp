@@ -4,7 +4,7 @@ server {
     ssl_certificate      %ssl_pem%;
     ssl_certificate_key  %ssl_key%;
     root        /var/lib/roundcube;
-    index       index.php;
+    index       index.php index.html index.htm;
     
     location / {
         proxy_pass http://%ip%:%web_port%;
@@ -44,18 +44,20 @@ server {
         fastcgi_index index.php;
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $request_filename;
+        fastcgi_param HTTPS on;
     }
     
-    location @fallback {
-        proxy_pass http://%ip%:%web_port%;
-    }
-
     error_page 403 /error/404.html;
     error_page 404 /error/404.html;
-    error_page 500 502 503 504 /error/50x.html;
-
+    error_page 500 502 503 504 505 /error/50x.html;
+    
     location /error/ {
-        alias   /var/www/document_errors/;
+        alias       /var/www/document_errors/;
+        try_files   $uri $uri/;
+    }
+
+    location @fallback {
+        proxy_pass http://%ip%:%web_port%;
     }
 
     include %home%/%user%/conf/mail/%root_domain%/%proxy_system%.conf_*;

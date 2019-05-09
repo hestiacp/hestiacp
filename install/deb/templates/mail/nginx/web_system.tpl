@@ -2,7 +2,7 @@ server {
     listen      %ip%:%web_port%;
     server_name %domain% %alias%;
     root        /var/lib/roundcube;
-    index       index.php;
+    index       index.php index.html index.htm;
 
     include %home%/%user%/conf/mail/%root_domain%/nginx.forcessl.conf*;
 
@@ -11,8 +11,7 @@ server {
     }
 
     location / {
-        try_files $uri $uri/ /index.php?q=$uri&$args;
-        location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
+       location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
             expires 1h;
             fastcgi_hide_header "Set-Cookie";
         }
@@ -50,11 +49,11 @@ server {
     
     error_page 403 /error/404.html;
     error_page 404 /error/404.html;
-    error_page 500 502 503 504 /error/50x.html;
+    error_page 500 502 503 504 505 /error/50x.html;
 
     location /error/ {
-        alias   /var/www/document_errors/;
-
+        alias       /var/www/document_errors/;
+        try_files   $uri $uri/;
     }
 
     include %home%/%user%/conf/mail/%root_domain%/%web_system%.conf_*;

@@ -15,11 +15,14 @@ server {
         deny all;
         return 404;
     }
-
-    location / {
+	
+	location =/ {
         try_files $uri $uri/ /index.php?$args;
+        }
+    
+	location / {
         location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
-            expires 1h;
+            expires 90d;
             fastcgi_hide_header "Set-Cookie";
         }
     }
@@ -31,14 +34,13 @@ server {
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $request_filename;
     }
-    
+    location /error/ {
+        alias   %home%/%user%/web/%root_domain%/document_errors/;
+    }
+}
+
     error_page 403 /error/404.html;
     error_page 404 /error/404.html;
     error_page 500 502 503 504 /error/50x.html;
     
-    location /error/ {
-        alias   %home%/%user%/web/%root_domain%/document_errors/;
-    }
-
-    include %home%/%user%/conf/mail/%root_domain%/%web_system%.conf_*;
-}
+   include %home%/%user%/conf/mail/%root_domain%/%web_system%.conf_*;

@@ -4,6 +4,10 @@ server {
     root        /var/lib/roundcube;
     index       index.php index.html index.htm;
 
+
+    error_log /var/log/nginx/domains/%domain%.error.log;
+    access_log /var/log/nginx/domains/%domain%.access.log;
+
     include %home%/%user%/conf/mail/%root_domain%/nginx.forcessl.conf*;
 
 	location =/ {
@@ -12,7 +16,7 @@ server {
 
     location / {
        location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
-            expires 1h;
+            expires 7d;
             fastcgi_hide_header "Set-Cookie";
         }
     }
@@ -32,6 +36,11 @@ server {
         return 404;
     }
 
+    location ~ ^/(bin|SQL)/ {
+        deny all;
+        return 404;
+    }
+    
     location ~ /\. {
         return 404;
         deny all;
@@ -52,7 +61,7 @@ server {
     error_page 500 502 503 504 505 /error/50x.html;
 
     location /error/ {
-        alias       /var/www/document_errors/;
+        root        /var/www/document_errors/;
         try_files   $uri $uri/;
     }
 

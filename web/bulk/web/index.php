@@ -17,17 +17,17 @@ $action = $_POST['action'];
 
 if ($_SESSION['user'] == 'admin') {
     switch ($action) {
-        case 'delete': $cmd='v-delete-domain';
+        case 'delete': $cmd='v-delete-web-domain';
             break;
-        case 'suspend': $cmd='v-suspend-domain';
+        case 'suspend': $cmd='v-suspend-web-domain';
             break;
-        case 'unsuspend': $cmd='v-unsuspend-domain';
+        case 'unsuspend': $cmd='v-unsuspend-web-domain';
             break;
         default: header("Location: /list/web/"); exit;
     }
 } else {
     switch ($action) {
-        case 'delete': $cmd='v-delete-domain';
+        case 'delete': $cmd='v-delete-web-domain';
             break;
         default: header("Location: /list/web/"); exit;
     }

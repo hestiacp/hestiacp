@@ -19,10 +19,9 @@
 		</div>
 		<!-- /.l-menu -->
 		<div class="l-profile noselect">
-			<div class="l-menu__item"><a href="/edit/server/"><? echo gethostname(); ?></a></div>
-			<div class="l-menu__item"><a class="l-profile__notifications <? if($panel[$user]['NOTIFICATIONS'] == 'yes') echo " updates"; ?>"><i class="fas fa-bell <? if($panel[$user]['NOTIFICATIONS'] == 'yes') echo " status-icon-yellow"; ?>"></i></a></div>
-			<div class="l-menu__item"><a href="/edit/user/?user=<?php echo $user; ?>"><i class="fas fa-user-circle"></i> <?=$user?></a></div>
-			<div class="l-menu__item"><a href="/logout/"> <?=__('Log out')?> <i class="fas fa-sign-out-alt"></i></a></div>
+			<div class="l-menu__item"><a alt="<?=__('Notifications')?>" class="l-profile__notifications <? if($panel[$user]['NOTIFICATIONS'] == 'yes') echo " updates"; ?>"><i class="fas fa-bell <?if($panel[$user]['NOTIFICATIONS'] == 'yes') echo " status-icon-orange"; ?>"></i></a></div>
+			<div class="l-menu__item"><a href="/edit/user/?user=<?php echo $user; ?>" alt="<?=$user?>"><i class="fas fa-user-circle"></i></a></div>
+			<div class="l-menu__item"><a href="/logout/" alt="<?=__('Log out')?>"> <?=__('Log out')?>&nbsp;&nbsp;&nbsp;<i class="fas fa-sign-out-alt"></i></a></div>
 		</div>
 		<!-- /.l-profile -->
 	</div>

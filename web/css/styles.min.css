@@ -957,26 +957,21 @@ a {
   overflow: hidden;
   float: right;
 }
+
 .l-profile__username {
-  float: left;
   color: #8ed8fd;
-  padding: 10px 0 0 10px;
-  margin-right: 2px;
-  font-weight: 600;
+  font-size: 1.4rem;
 }
+
 .l-profile__username:hover {
   color: #d2f0ff;
 }
-.l-profile__username:active {
-  color: #56a9d2;
-}
+
 
 .l-profile__logout {
-  float: left;
   color: #dbf94e;
-  padding: 10px 0 0 10px;
-  font-weight: 600;
 }
+
 .l-profile__logout:hover {
   color: #f5ffc3 !important;
 }
@@ -3156,7 +3151,7 @@ form#vstobjects.suspended {
 }
 
 .status-icon-orange, .status-icon-orange:hover {
-  color: #f6a800;
+  color: #ffc043;
 }
 
 .status-icon-lightblue, .status-icon-lightblue:hover {

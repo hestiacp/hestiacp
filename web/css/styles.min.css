@@ -836,7 +836,7 @@ a {
 
 .l-center {
   margin: 0 auto;
-  max-width: 1080px;
+  max-width: 1020px;
 }
 
 .l-logo {
@@ -1120,7 +1120,8 @@ a {
   overflow: hidden;
   text-align: center;
   display: flex;
-  width: 1080px;
+  width: 100%;
+  max-width: 1020px;
 }
 
 .l-stat__col {
@@ -1224,7 +1225,8 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .l-sort {
   position: fixed;
-  width: 1080px;
+  width: 100%;
+  max-width: 1020px;
   background-color: #fff;
   z-index: 120;
   margin-top: 181px;
@@ -1918,7 +1920,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   width: 550px;
 }
 .l-unit__stat-col--left.wide-5 {
-  width: 330px;
+  width: 350px;
 }
 .l-unit__stat-col--left.wide-6 {
   width: 440px;

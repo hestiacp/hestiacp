@@ -54,7 +54,7 @@
                   <div class="clearfix l-unit__stat-col--left super-compact">
                       <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
                   </div>
-                  <div class="clearfix l-unit__stat-col--left wide-5"><b><?php print __('Domain');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print __('Domain');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-right"><b>&nbsp;</b></div>
                   <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print __('Records');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Template');?></b></div>
@@ -91,7 +91,7 @@ sort-expire="<?=strtotime($data[$key]['EXP'])?>" sort-records="<?=(int)$data[$ke
                       <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?php echo $key ?>">
                       
                     </div>
-                  <div class="clearfix l-unit__stat-col--left wide-5"><b><a href="/list/dns/?domain=<?=$key?>"><?=$key?></a></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/list/dns/?domain=<?=$key?>"><?=$key?></a></b></div>
 
                   <div class="clearfix l-unit__stat-col--left text-right"><b>
                     <!-- START QUICK ACTION TOOLBAR AREA -->

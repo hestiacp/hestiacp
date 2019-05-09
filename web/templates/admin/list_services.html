@@ -93,7 +93,7 @@
                     
                       <div class="clearfix l-unit__stat-col--left wide-2"><b><?php print __('Service');?></b></div>
                       <div class="clearfix l-unit__stat-col--left text-right compact-2">&nbsp;</div>
-                      <div class="clearfix l-unit__stat-col--left wide-5"><b><?php print __('Description');?></b></div>
+                      <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print __('Description');?></b></div>
                       <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Uptime');?></b></div>
                       <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('CPU');?></b></div>
                       <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Memory');?></b></div>
@@ -132,7 +132,7 @@
                 <a href="/<?php echo $action ?>/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-pause status-icon-red status-icon-dim icon-large"></i></a>
             </b>
           </div>
-        <div class="clearfix l-unit__stat-col--left wide-5"><?=__($data[$key]['SYSTEM'])?></div>
+        <div class="clearfix l-unit__stat-col--left wide-3"><?=__($data[$key]['SYSTEM'])?></div>
         <div class="clearfix l-unit__stat-col--left text-center"><b><?=humanize_time($data[$key]['RTIME'])?></b></div>
         <div class="clearfix l-unit__stat-col--left text-center"><b><?=$cpu?></b></div>
         <div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['MEM']?> <?=__('mb')?></b></div>

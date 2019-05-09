@@ -60,7 +60,7 @@
                   <div class="clearfix l-unit__stat-col--left super-compact">
                       <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
                   </div>
-                  <div class="clearfix l-unit__stat-col--left wide-5"><b><?php print __('Username');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print __('Username');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-right compact-4"><b>&nbsp;</b></div>
                   <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print __('Disk');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Quota');?></b></div>
@@ -99,7 +99,7 @@ sort-star="<? if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] =
                       <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="account[]" value="<?php echo $key ?>">
                       <input type="hidden" value="<?php echo $_GET['domain'] ?>" name="domain" />
                     </div>
-                  <div class="clearfix l-unit__stat-col--left wide-5"><b><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>"><?=$key."@".$_GET['domain']?></a></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>"><?=$key."@".$_GET['domain']?></a></b></div>
 
 
                   <div class="clearfix l-unit__stat-col--left text-right compact-4"><b>

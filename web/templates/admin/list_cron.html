@@ -59,7 +59,7 @@
                   <div class="clearfix l-unit__stat-col--left super-compact">
                       <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
                   </div>
-                  <div class="clearfix l-unit__stat-col--left wide-6"><b><?php print __('Cron Job');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide-5"><b><?php print __('Cron Job');?></b></div>
                   <div class="clearfix l-unit__stat-col--left compact-2 text-right"><b>&nbsp;</b></div>
                   <div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?=__('Min')?></b></div>
                   <div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?=__('Hour')?></b></div>
@@ -93,7 +93,7 @@ sort-star="<? if($_SESSION['favourites']['CRON'][$key] == 1) echo '1'; else echo
               <div class="clearfix l-unit__stat-col--left super-compact">
                   <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="job[]" value="<?php echo $key ?>">
                 </div>
-              <div class="clearfix l-unit__stat-col--left wide-6"><b><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>"><?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?></a></b></div>
+              <div class="clearfix l-unit__stat-col--left wide-5"><b><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>"><?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?></a></b></div>
               <div class="clearfix l-unit__stat-col--left compact-2 text-right"><b>
                   <!-- START QUICK ACTION TOOLBAR AREA -->
     

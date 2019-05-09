@@ -53,7 +53,7 @@
                   <div class="clearfix l-unit__stat-col--left compact text-right"><b>&nbsp;</b></div>
                   <div class="clearfix l-unit__stat-col--left wide-1 text-center"><b><?php print __('Comment');?></b></div>   
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Protocol');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left wide-5 text-center"><b><?php print __('Port');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide-3 text-center"><b><?php print __('Port');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('IP address');?></b></div>
               </div>
             </div>
@@ -138,7 +138,7 @@ sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$k
               </b></div>
             <div class="clearfix l-unit__stat-col--left wide-1 text-center"><b><? if(!empty($data[$key]['COMMENT'])) echo '' . $data[$key]['COMMENT']; else echo "&nbsp;"; ?></b></div>
             <div class="clearfix l-unit__stat-col--left text-center"><b><?=__($data[$key]['PROTOCOL'])?></b></div>
-            <div class="clearfix l-unit__stat-col--left wide-5 text-center"><b><?=$data[$key]['PORT']?></b></div>
+            <div class="clearfix l-unit__stat-col--left wide-3 text-center"><b><?=$data[$key]['PORT']?></b></div>
             <div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['IP']?></div>
           </div>
           <!-- /.l-unit__stats -->

@@ -63,17 +63,17 @@
                     </div>
                   
                   <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print __('Name');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left"><b>&nbsp;</b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?php print __('Package');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print __('IPs');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print __('Disk');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print __('Bandwidth');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print __('Web');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print __('Mail');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print __('DNS');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print __('DB');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print __('Jobs');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print __('Backups');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left compact-3"><b>&nbsp;</b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center compact-2"><b><?php print __('Package');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><?php print __('IPs');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-hdd"></i></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-exchange-alt"></i></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-globe-americas"></i></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-mail-bulk"></i></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-atlas"></i></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-database"></i></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-clock"></i></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-undo"></i></b></div>
              </div>
           </div>
 
@@ -104,7 +104,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                 <br />
                 <span style="font-size: 0.8rem;"><b><?=__('Email')?>:</b> <?=$data[$key]['CONTACT']?></span>
               </div>
-              <div class="clearfix l-unit__stat-col--left text-right"><b>
+              <div class="clearfix l-unit__stat-col--left text-right compact-3"><b>
                   <!-- START QUICK ACTION TOOLBAR AREA -->
 
                     <!-- l-unit-toolbar__col -->
@@ -145,16 +145,16 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                       <!-- l-unit-toolbar__col -->
                     <!-- END QUICK ACTION TOOLBAR AREA -->
                 </b></div>
-              <div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?=$data[$key]['PACKAGE']?></b></div>
-              <div class="clearfix l-unit__stat-col--left text-center compact"><?=$data[$key]['IP_OWNED']?></div>
-              <div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
+              <div class="clearfix l-unit__stat-col--left text-center compact-2"><b><?=$data[$key]['PACKAGE']?></b></div>
+              <div class="clearfix l-unit__stat-col--left text-center super-compact"><?=$data[$key]['IP_OWNED']?></div>
+              <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
               <div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_BANDWIDTH'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_BANDWIDTH'])?></span></div>
-              <div class="clearfix l-unit__stat-col--left text-center compact"><span class="jump-top badge gray raised"><?=$data[$key]['U_WEB_DOMAINS']?></span></div>
-              <div class="clearfix l-unit__stat-col--left text-center compact"><span class="jump-top badge gray raised"><?=$data[$key]['U_MAIL_DOMAINS']?></span></div>
-              <div class="clearfix l-unit__stat-col--left text-center compact"><span class="jump-top badge gray raised"><?=$data[$key]['U_DNS_DOMAINS']?></span></div>
-              <div class="clearfix l-unit__stat-col--left text-center compact"><span class="jump-top badge gray raised"><?=$data[$key]['U_DATABASES']?></span></div>
-              <div class="clearfix l-unit__stat-col--left text-center compact"><span class="jump-top badge gray raised"><?=$data[$key]['U_CRON_JOBS']?></span></div>
-              <div class="clearfix l-unit__stat-col--left text-center compact"><span class="jump-top badge gray raised"><?=$data[$key]['U_BACKUPS']?></span></div>
+              <div class="clearfix l-unit__stat-col--left text-center super-compact"><span class="jump-top badge gray raised"><?=$data[$key]['U_WEB_DOMAINS']?></span></div>
+              <div class="clearfix l-unit__stat-col--left text-center super-compact"><span class="jump-top badge gray raised"><?=$data[$key]['U_MAIL_DOMAINS']?></span></div>
+              <div class="clearfix l-unit__stat-col--left text-center super-compact"><span class="jump-top badge gray raised"><?=$data[$key]['U_DNS_DOMAINS']?></span></div>
+              <div class="clearfix l-unit__stat-col--left text-center super-compact"><span class="jump-top badge gray raised"><?=$data[$key]['U_DATABASES']?></span></div>
+              <div class="clearfix l-unit__stat-col--left text-center super-compact"><span class="jump-top badge gray raised"><?=$data[$key]['U_CRON_JOBS']?></span></div>
+              <div class="clearfix l-unit__stat-col--left text-center super-compact"><span class="jump-top badge gray raised"><?=$data[$key]['U_BACKUPS']?></span></div>
           </div>
          </div>
        <!-- /.l-unit__col -->

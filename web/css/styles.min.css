@@ -1565,6 +1565,8 @@ div.l-content > div.l-separator:nth-of-type(4) {
   overflow: hidden;
   font-size: 0.8rem;
   border-radius: 0;
+  border-left: 1px solid transparent;
+  border-right: 1px solid transparent;
 }
 
 .table-header {

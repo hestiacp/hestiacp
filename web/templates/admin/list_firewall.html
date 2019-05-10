@@ -45,7 +45,6 @@
     <div class="l-center units compact animated fadeIn">         
           <div class="header table-header">     
             <div class="l-unit__col l-unit__col--right step-top">
-              <div>
                   <div class="clearfix l-unit__stat-col--left super-compact">
                       <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
                   </div>
@@ -55,7 +54,6 @@
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Protocol');?></b></div>
                   <div class="clearfix l-unit__stat-col--left wide-3 text-center"><b><?php print __('Port');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('IP address');?></b></div>
-              </div>
             </div>
           </div>
 
@@ -76,16 +74,11 @@
       <div class="l-unit<? if($status == 'suspended') echo ' l-unit--suspended'; if($_SESSION['favourites']['FIREWALL'][$key] == 1) echo ' l-unit--starred'; ?>" v_unit_id="<?=$key?>" v_section="firewall"
 sort-action="<?=$data[$key]['ACTION']?>" sort-protocol="<?=$data[$key]['PROTOCOL']?>" sort-port="<?=$data[$key]['PORT']?>"
 sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$key]['COMMENT']?>" sort-star="<? if($_SESSION['favourites']['FIREWALL'][$key] == 1) echo '1'; else echo '2'; ?>">
-        <div class="l-unit-toolbar clearfix">
-        </div>
-        <!-- /.l-unit-toolbar -->
-
-        <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
           <div class="l-unit__stats">
               <div class="clearfix l-unit__stat-col--left super-compact">
-                  <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="rule[]" value="<?php echo $key ?>">
-                </div>
+                <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="rule[]" value="<?php echo $key ?>">
+              </div>
             <div class="clearfix l-unit__stat-col--left wide-2"><b><a href="/edit/firewall/?rule=<?=$key?>">
                 <? if($data[$key]['SUSPENDED'] == 'no'){ ?>
                   <? if ($data[$key]['ACTION'] == 'DROP') { ?>
@@ -102,52 +95,41 @@ sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$k
                 <? } ?>
               </a></b>
             </div>
-
-            <div class="clearfix l-unit__stat-col--left compact text-right"><b>
-                <!-- START QUICK ACTION TOOLBAR AREA -->
-  
-                  <!-- l-unit-toolbar__col -->
-                  <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-                      <div class="actions-panel clearfix">
-                        <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/firewall/?rule=<?=$key?>"><i class="fas fa-pencil-alt status-icon-orange status-icon-dim"></i></a></div>
+            <!-- START QUICK ACTION TOOLBAR AREA -->
+            <div class="clearfix l-unit__stat-col--left compact text-right">
+              <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+                <div class="actions-panel clearfix">
+                  <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/firewall/?rule=<?=$key?>"><i class="fas fa-pencil-alt status-icon-orange status-icon-dim"></i></a></div>
                         
-                        <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
-                            <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
-                              <i class="fas fa-pause status-icon-highlight status-icon-dim do_<?=$spnd_action?>"></i>
-                              <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>" />
-                              <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
-                                <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
-                              </div>
-                            </a>
-                        </div>
-                        <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-                          <a id="delete_link_<?=$i?>" class="data-controls do_delete">
-                            <i class="fas fa-trash status-icon-red status-icon-dim do_delete"></i>
-                            <input type="hidden" name="delete_url" value="/delete/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>" />
-                            <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
-                              <p class="confirmation"><?=__('DELETE_RULE_CONFIRMATION',$key)?></p>
-                            </div>
-                          </a>
-                        </div>
-          
+                  <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
+                    <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
+                      <i class="fas fa-pause status-icon-highlight status-icon-dim do_<?=$spnd_action?>"></i>
+                      <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>" />
+                      <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
+                        <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
                       </div>
-                      <!-- /.actiona-panel -->
-                    </div>
-  
-                  <!-- END QUICK ACTION TOOLBAR AREA -->
-              </b></div>
+                    </a>
+                  </div>
+                  <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+                    <a id="delete_link_<?=$i?>" class="data-controls do_delete">
+                      <i class="fas fa-trash status-icon-red status-icon-dim do_delete"></i>
+                      <input type="hidden" name="delete_url" value="/delete/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>" />
+                      <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
+                        <p class="confirmation"><?=__('DELETE_RULE_CONFIRMATION',$key)?></p>
+                      </div>
+                    </a>
+                  </div>
+                 </div>
+              </div>
+            </div>
+            <!-- END QUICK ACTION TOOLBAR AREA -->
             <div class="clearfix l-unit__stat-col--left wide-1 text-center"><b><? if(!empty($data[$key]['COMMENT'])) echo '' . $data[$key]['COMMENT']; else echo "&nbsp;"; ?></b></div>
             <div class="clearfix l-unit__stat-col--left text-center"><b><?=__($data[$key]['PROTOCOL'])?></b></div>
             <div class="clearfix l-unit__stat-col--left wide-3 text-center"><b><?=$data[$key]['PORT']?></b></div>
             <div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['IP']?></div>
           </div>
-          <!-- /.l-unit__stats -->
         </div>
-        <!-- /.l-unit__col -->
       </div>
-      <!-- /.l-unit -->
-      <!-- div class="l-separator"></div-->
-      <!-- /.l-separator -->
       <?}?>
 
     </div>
@@ -157,7 +139,6 @@ sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$k
     <div class="l-center">
         <div class="l-unit-ft">
           <table class='data'></table>
-          <!-- /form -->
           <div class="l-unit__col l-unit__col--left clearfix"></div>
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php

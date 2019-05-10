@@ -29,11 +29,9 @@
           </table>
         </div>
       </div>
-      <!-- /.l-sort -->
     </div>
 
     <div class="l-separator"></div>
-    <!-- /.l-separator -->
 
     <div class="l-center units animated fadeIn">
         <div class="header table-header">
@@ -71,60 +69,41 @@
       ?>
 
       <div class="l-unit<? if($status == 'suspended') echo ' l-unit--outdated';?>">
-        <div class="l-unit-toolbar clearfix">
-        </div>
-        <!-- /.l-unit-toolbar -->
-
             <div class="l-unit__col l-unit__col--right">
               <div>
                   <div class="clearfix l-unit__stat-col--left super-compact">
-                      <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="backup[]" value="<?php echo $key ?>">
-                      
-                    </div>
+                    <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="backup[]" value="<?php echo $key ?>">
+                  </div>
                   <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/list/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>"><?=$key?></a></b></div>
-                  <div class="clearfix l-unit__stat-col--left compact-4 text-right"><b>
-                      <!-- START QUICK ACTION TOOLBAR AREA -->
-        
-                        <!-- l-unit-toolbar__col -->
-                        <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-                            <div class="actions-panel clearfix">
-                              <div class="actions-panel__col actions-panel__download shortcut-d" key-action="href"><a href="/download/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-file-download status-icon-lightblue status-icon-dim"></i></a></div>
-
-                              <div class="actions-panel__col actions-panel__list shortcut-d" key-action="href"><a href="/list/backup/?backup=<?=$key?>"><i class="fas fa-undo status-icon-green status-icon-dim"></i></a></div>
-
-                              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-                                <a id="delete_link_<?=$i?>" class="data-controls do_delete">
-                                  <i class="fas fa-trash status-icon-red status-icon-dim do_delete"></i>
-                                  <input type="hidden" name="delete_url" value="/delete/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" />
-                                  <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
-                                    <p class="confirmation"><?=__('DELETE_BACKUP_CONFIRMATION',$key)?></p>
-                                  </div>
-                                </a>
-                              </div>
-                
+                  <!-- START QUICK ACTION TOOLBAR AREA -->
+                  <div class="clearfix l-unit__stat-col--left compact-4 text-right">
+                    <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+                      <div class="actions-panel clearfix">
+                        <div class="actions-panel__col actions-panel__download shortcut-d" key-action="href"><a href="/download/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-file-download status-icon-lightblue status-icon-dim"></i></a></div>
+                        <div class="actions-panel__col actions-panel__list shortcut-d" key-action="href"><a href="/list/backup/?backup=<?=$key?>"><i class="fas fa-undo status-icon-green status-icon-dim"></i></a></div>
+                        <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+                          <a id="delete_link_<?=$i?>" class="data-controls do_delete">
+                            <i class="fas fa-trash status-icon-red status-icon-dim do_delete"></i>
+                            <input type="hidden" name="delete_url" value="/delete/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" />
+                            <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
+                              <p class="confirmation"><?=__('DELETE_BACKUP_CONFIRMATION',$key)?></p>
                             </div>
-                            <!-- /.actiona-panel -->
-                          </div>
-                        <!-- END QUICK ACTION TOOLBAR AREA -->
-                    </b></div>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- END QUICK ACTION TOOLBAR AREA -->
                   <div class="clearfix l-unit__stat-col--left text-center wide"><b><?=translate_date($data[$key]['DATE'])?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?=humanize_usage_size($data[$key]['SIZE'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['SIZE'])?></span></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['TYPE']?></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><?=humanize_time($data[$key]['RUNTIME'])?></div>
                </div>
              </div>
-           <!-- /.l-unit__col -->
+
          </div>
-         <!-- /.l-unit -->
-         <!--div class="l-separator"></div-->
-         <!-- /.l-separator -->
          <?}?>
        </div>
-
-
-
-
-
 
     <div id="vstobjects">
       <div class="l-separator"></div>

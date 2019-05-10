@@ -45,14 +45,12 @@
               </td>
             </tr>
           </table>
-          <!--  -->
         </div>
       </div>
-      <!-- /.l-sort -->
     </div>
 
     <div class="l-separator"></div>
-    <!-- /.l-separator -->
+
     <div class="l-center units animated fadeIn">
         <div class="header table-header">     
             <div class="l-unit__col l-unit__col--right step-top">
@@ -70,7 +68,6 @@
               </div>
             </div>
           </div>
-
 
       <?
         foreach ($data as $key => $value) {
@@ -90,57 +87,47 @@
       <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] == 1) echo ' l-unit--starred'; ?>"
  v_unit_id="<?=$key."@".$_GET['domain']?>" v_section="mail_acc" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?$data[$key]['U_DISK']?>"
 sort-star="<? if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] == 1) echo '1'; else echo '0'; ?>">
-        <div class="l-unit-toolbar clearfix">
-        </div>
-        <!-- /.l-unit-toolbar -->
             <div class="l-unit__col l-unit__col--right">
-              <div>
-                  <div class="clearfix l-unit__stat-col--left super-compact">
-                      <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="account[]" value="<?php echo $key ?>">
-                      <input type="hidden" value="<?php echo $_GET['domain'] ?>" name="domain" />
-                    </div>
-                  <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>"><?=$key."@".$_GET['domain']?></a></b></div>
+              <div class="clearfix l-unit__stat-col--left super-compact">
+                <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="account[]" value="<?php echo $key ?>">
+                <input type="hidden" value="<?php echo $_GET['domain'] ?>" name="domain" />
+              </div>
+              <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>"><?=$key."@".$_GET['domain']?></a></b></div>
 
+              <!-- START QUICK ACTION TOOLBAR AREA -->
+              <div class="clearfix l-unit__stat-col--left text-right compact-4">
+                <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+                  <div class="actions-panel clearfix">
+                    <div class="actions-panel__col actions-panel__edit" key-action="href"><a href="http://webmail.<?=htmlspecialchars($_GET['domain'])?>/?_user=<?=$key?>@<?=htmlspecialchars($_GET['domain'])?>&&_action=login" target="_blank"><i class="fas fa-envelope-open-text status-icon-maroon status-icon-dim"></i></div>
+                    <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>"><i class="fas fa-pencil-alt status-icon-orange status-icon-dim"></i></a></div>
 
-                  <div class="clearfix l-unit__stat-col--left text-right compact-4"><b>
-                    <!-- START QUICK ACTION TOOLBAR AREA -->
-
-                      <!-- l-unit-toolbar__col -->
-                      <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-                          <div class="actions-panel clearfix">
-                            <div class="actions-panel__col actions-panel__edit" key-action="href"><a href="http://webmail.<?=htmlspecialchars($_GET['domain'])?>/?_user=<?=$key?>@<?=htmlspecialchars($_GET['domain'])?>&&_action=login" target="_blank"><i class="fas fa-envelope-open-text status-icon-maroon status-icon-dim"></i></div>
-                            <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>"><i class="fas fa-pencil-alt status-icon-orange status-icon-dim"></i></a></div>
-
-                            <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
-                              <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
-                                <i class="fas fa-pause status-icon-highlight status-icon-dim do_<?=$spnd_action?>"></i>
-                                <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?php echo $key ?>&token=<?=$_SESSION['token']?>" />
-                                <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
-                                  <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
-                                </div>
-                              </a>
-                            </div>
-                            <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-                              <a id="delete_link_<?=$i?>" class="data-controls do_delete">
-                                <i class="fas fa-trash status-icon-red status-icon-dim do_delete"></i>
-                                <input type="hidden" name="delete_url" value="/delete/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" />
-                                <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
-                                  <p class="confirmation"><?=__('DELETE_MAIL_ACCOUNT_CONFIRMATION',$key)?></p>
-                                </div>
-                              </a>
-                            </div>
-              
-                          </div>
-                          <!-- /.actiona-panel -->
+                    <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
+                      <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
+                        <i class="fas fa-pause status-icon-highlight status-icon-dim do_<?=$spnd_action?>"></i>
+                        <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?php echo $key ?>&token=<?=$_SESSION['token']?>" />
+                        <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
+                          <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
                         </div>
+                      </a>
+                    </div>
+                    <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+                    <a id="delete_link_<?=$i?>" class="data-controls do_delete">
+                      <i class="fas fa-trash status-icon-red status-icon-dim do_delete"></i>
+                        <input type="hidden" name="delete_url" value="/delete/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" />
+                        <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
+                          <p class="confirmation"><?=__('DELETE_MAIL_ACCOUNT_CONFIRMATION',$key)?></p>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+             </div>
 
-                      <!-- END QUICK ACTION TOOLBAR AREA -->
-                  </b></div>
+            <!-- END QUICK ACTION TOOLBAR AREA -->
 
-
-                  <div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
-                  <div class="clearfix l-unit__stat-col--left text-center"><b><?=__(humanize_usage_size($data[$key]['QUOTA'])) ?></b> <span class="text-small"><?=__(humanize_usage_measure($data[$key]['QUOTA'])) ?></span></div>
-                  <div class="clearfix l-unit__stat-col--left text-center"><b>
+            <div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
+            <div class="clearfix l-unit__stat-col--left text-center"><b><?=__(humanize_usage_size($data[$key]['QUOTA'])) ?></b> <span class="text-small"><?=__(humanize_usage_measure($data[$key]['QUOTA'])) ?></span></div>
+            <div class="clearfix l-unit__stat-col--left text-center"><b>
                       <? if($data[$key]['SUSPENDED'] == 'no'){ ?>
                           <? if($data[$key]['ALIAS'] == ''){ ?>
                             0
@@ -155,8 +142,8 @@ sort-star="<? if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] =
                         <? } ?>
                       <? } ?>
                     </b>
-                  </div>
-                  <div class="clearfix l-unit__stat-col--left text-center"><b>
+              </div>
+              <div class="clearfix l-unit__stat-col--left text-center"><b>
                       <? if($data[$key]['SUSPENDED'] == 'no'){ ?>
                           <? if($data[$key]['FWD'] == ''){ ?>
                             <i class="fas fa-minus-circle"></i>
@@ -171,8 +158,8 @@ sort-star="<? if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] =
                           <? } ?>
                        <? } ?>
                     </b>
-                  </div>
-                  <div class="clearfix l-unit__stat-col--left text-center"><b>
+                </div>
+                <div class="clearfix l-unit__stat-col--left text-center"><b>
                       <? if($data[$key]['SUSPENDED'] == 'no'){ ?>
                           <? if($data[$key]['AUTOREPLY'] == 'no'){ ?>
                             <i class="fas fa-minus-circle"></i>
@@ -187,14 +174,9 @@ sort-star="<? if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] =
                           <? } ?>
                           <? } ?>
                     </b>
-                  </div>
-               </div>
-             </div>
-        <!-- /.l-unit__col -->
+                </div>
+            </div>
       </div>
-      <!-- /.l-unit -->
-      <!--div class="l-separator"></div-->
-      <!-- /.l-separator -->
       <?}?>
     </div>
 

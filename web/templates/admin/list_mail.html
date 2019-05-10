@@ -39,30 +39,28 @@
 
             </tr>
           </table>
-          <!--  -->
         </div>
       </div>
-      <!-- /.l-sort -->
     </div>
 
     <div class="l-separator"></div>
-    <!-- /.l-separator -->
+
     <div class="l-center units animated fadeIn">
-            <div class="header table-header">
-                <div class="l-unit__col l-unit__col--right step-top">
-                      <div class="clearfix l-unit__stat-col--left super-compact">
-                        <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
-                      </div>
-                      <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print __('Domain');?></b></div>
-                      <div class="clearfix l-unit__stat-col--left text-right compact-4"><b>&nbsp;</b></div>
-                      <div class="clearfix l-unit__stat-col--left text-center compact-2"><b><?php print __('Accounts');?></b></div>
-                      <div class="clearfix l-unit__stat-col--left text-center compact-2"><b><?php print __('Disk');?></b></div>
-                      <div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?php print __('Antivirus');?></b></div>
-                      <div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?php print __('AntiSpam');?></b></div>
-                      <div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?php print __('DKIM');?></b></div>
-                      <div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?php print __('SSL');?></b></div>
-                </div>
-              </div>
+      <div class="header table-header">
+        <div class="l-unit__col l-unit__col--right step-top">
+            <div class="clearfix l-unit__stat-col--left super-compact">
+              <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
+            </div>
+            <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print __('Domain');?></b></div>
+            <div class="clearfix l-unit__stat-col--left text-right compact-4"><b>&nbsp;</b></div>
+            <div class="clearfix l-unit__stat-col--left text-center compact-2"><b><?php print __('Accounts');?></b></div>
+            <div class="clearfix l-unit__stat-col--left text-center compact-2"><b><?php print __('Disk');?></b></div>
+            <div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?php print __('Antivirus');?></b></div>
+            <div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?php print __('AntiSpam');?></b></div>
+            <div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?php print __('DKIM');?></b></div>
+            <div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?php print __('SSL');?></b></div>
+          </div>
+        </div>
 
       <?
         list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
@@ -89,22 +87,14 @@
       <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['MAIL'][$key] == 1) echo ' l-unit--starred'; ?>" v_unit_id="<?=$key?>" v_section="mail"
 sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?=$data[$key]['U_DISK']?>"
 sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favourites']['MAIL'][$key] == 1) echo "1"; else echo "0"; ?>">
-        <div class="l-unit-toolbar clearfix">
-        </div>
-        <!-- /.l-unit-toolbar -->
             <div class="l-unit__col l-unit__col--right">
               <div>
                   <div class="clearfix l-unit__stat-col--left super-compact">
-                      <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?php echo $key ?>">
-                      
-                    </div>
+                    <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?php echo $key ?>">
+                  </div>
                   <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="?domain=<?=$key?>"><?=$key?></a></b></div>
-
-
-                  <div class="clearfix l-unit__stat-col--left text-right compact-4"><b>
-                    <!-- START QUICK ACTION TOOLBAR AREA -->
-
-                      <!-- l-unit-toolbar__col -->
+                  <!-- START QUICK ACTION TOOLBAR AREA -->
+                  <div class="clearfix l-unit__stat-col--left text-right compact-4">
                       <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                           <div class="actions-panel clearfix">
                             <div class="actions-panel__col actions-panel__logs shortcut-n" key-action="href"><a href="/add/mail/?domain=<?=$key?>"><i class="fas fa-plus-circle status-icon-green status-icon-dim"></i></a></div>
@@ -130,15 +120,10 @@ sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favouri
                                 </div>
                               </a>
                             </div>
-              
                           </div>
-                          <!-- /.actiona-panel -->
                         </div>
-
-                      <!-- END QUICK ACTION TOOLBAR AREA -->
-                  </b></div>
-
-
+                  </div>
+                  <!-- END QUICK ACTION TOOLBAR AREA -->
                   <div class="clearfix l-unit__stat-col--left text-center compact-2"><b>
                     <? if($data[$key]['ACCOUNTS']) { echo '<span>'.$data[$key]['ACCOUNTS'].'</span>'; ?>
                     <? } else {?>
@@ -183,13 +168,8 @@ sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favouri
                   </div>
               </div>
             </div>
-        <!-- /.l-unit__col -->
       </div>
-      <!-- /.l-unit -->
-      <!--div class="l-separator"></div-->
-      <!-- /.l-separator -->
       <?}?>
-
     </div>
 
 

@@ -22,7 +22,7 @@
             <tr>
               <td class="sort-by">
                   <?=__('sort by');?>: <span><b><?=__('Date')?> <i class="fas fa-sort-amount-down"></i></b></span>
-                </td>
+              </td>
               <td>
                 <form action="/bulk/user/" method="post" id="objects">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
@@ -43,28 +43,23 @@
                   </div>
                   <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
               </td>
-
             </tr>
           </table>
         </div>
       </div>
-      <!-- /.l-sort -->
     </div>
 
     <div class="l-separator"></div>
 
-    <!-- /.l-separator --> 
     <div class="l-center units animated fadeIn">
         <div class="table-header"> 
-      
             <div class="l-unit__col l-unit__col--right">
                   <div class="clearfix l-unit__stat-col--left super-compact">
-                      <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
-                    </div>
-                  
+                    <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
+                  </div>
                   <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print __('Name');?></b></div>
                   <div class="clearfix l-unit__stat-col--left compact-3"><b>&nbsp;</b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center compact-2"><b><?php print __('Package');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Package');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><?php print __('IPs');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-hdd"></i></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-exchange-alt"></i></b></div>
@@ -94,8 +89,6 @@
       <div class="l-unit  <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['USER'][$key] == 1) echo ' l-unit--starred';?>" v_section="user"
 v_unit_id="<?=$key?>" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>"
 sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DISK']?>" sort-star="<? if($_SESSION['favourites']['USER'][$key] == 1) echo '1'; else echo '0'; ?>">
-      
-<!-- /.l-unit-toolbar -->
         <div class="l-unit__col l-unit__col--right">
           <div class="clearfix l-unit__stat-col--left super-compact">
             <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="user[]" value="<?=$key?>">
@@ -104,10 +97,8 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                 <br />
                 <span style="font-size: 0.8rem;"><b><?=__('Email')?>:</b> <?=$data[$key]['CONTACT']?></span>
               </div>
-              <div class="clearfix l-unit__stat-col--left text-right compact-3"><b>
-                  <!-- START QUICK ACTION TOOLBAR AREA -->
-
-                    <!-- l-unit-toolbar__col -->
+              <!-- START QUICK ACTION TOOLBAR AREA -->
+              <div class="clearfix l-unit__stat-col--left text-right compact-3">
                     <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                         <div class="actions-panel clearfix">
                             <?
@@ -118,7 +109,6 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                               ?>
                               <a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-sign-in-alt status-icon-green status-icon-dim icon-large"></i></a>
                             <?}?>
-                            
                           <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-pencil-alt status-icon-orange status-icon-dim"></i></div>
                           <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
                             <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
@@ -138,14 +128,11 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                               </div>
                             </a>
                           </div>
-            
                         </div>
-                        <!-- /.actiona-panel -->
                       </div>
-                      <!-- l-unit-toolbar__col -->
-                    <!-- END QUICK ACTION TOOLBAR AREA -->
-                </b></div>
-              <div class="clearfix l-unit__stat-col--left text-center compact-2"><b><?=$data[$key]['PACKAGE']?></b></div>
+              </div>
+              <!-- END QUICK ACTION TOOLBAR AREA -->
+              <div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['PACKAGE']?></b></div>
               <div class="clearfix l-unit__stat-col--left text-center super-compact"><?=$data[$key]['IP_OWNED']?></div>
               <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
               <div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_BANDWIDTH'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_BANDWIDTH'])?></span></div>
@@ -157,12 +144,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
               <div class="clearfix l-unit__stat-col--left text-center super-compact"><span class="jump-top badge gray raised"><?=$data[$key]['U_BACKUPS']?></span></div>
           </div>
          </div>
-       <!-- /.l-unit__col -->
-     <!-- /.l-unit -->
-     <!--div class="l-separator"></div-->
-     <!-- /.l-separator -->
       <?}?>
-
     </div>
 
     <div id="vstobjects">
@@ -170,7 +152,6 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
     <div class="l-center">
         <div class="l-unit-ft">
           <table class='data'></table>
-          <!-- /form -->
           <div class="l-unit__col l-unit__col--left clearfix"></div>
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php

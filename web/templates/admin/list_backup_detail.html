@@ -34,12 +34,9 @@
           </table>
         </div>
       </div>
-      <!-- /.l-sort -->
     </div>
 
     <div class="l-separator"></div>
-    <!-- /.l-separator -->
-
 
     <div class="l-center units animated fadeIn">
     <div class="l-unit header">
@@ -60,22 +57,13 @@
             <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="web[]" value="<?=$key?>">
             <label for="check<?=$i++?>" class="check-label"></label>
           </div>
-          <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right">
             <div class="actions-panel__col actions-panel__update shortcut-r" key-action="href"><a href="/schedule/restore/?backup=<?=$backup?>&type=web&object=<?=$key?>&token=<?=$_SESSION['token']?>"><?=__('restore')?> <i></i></a><span class="shortcut">&nbsp;R</span></div>
-            <!-- /.actiona-panel -->
           </div>
-          <!-- l-unit-toolbar__col -->
         </div>
-        <!-- /.l-unit-toolbar -->
 
         <div class="l-unit__col l-unit__col--left clearfix"></div>
-        <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
-          <!-- div class="l-unit__name separate">
-            <?=$key?>
-          </div -->
-
           <div class="l-unit__stats">
             <table>
                <tr>
@@ -88,16 +76,10 @@
               </tr>
             </table>
           </div>
-          <!-- /.l-unit__stats -->
         </div>
-        <!-- /.l-unit__col -->
       </div>
-      <!-- /.l-unit -->
-      <!--div class="l-separator"></div-->
-      <!-- /.l-separator -->
+
       <? }} ?>
-
-
 
       <?
         $mail = explode(',',$data[$backup]['MAIL']);
@@ -111,17 +93,12 @@
             <input id="check2<?=$i?>" type="checkbox" name="mail[]" value="<?=$key?>">
             <label for="check2<?=$i++?>" class="check-label"></label>
           </div>
-          <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel__col actions-panel__update shortcut-r" key-action="href"><a href="/schedule/restore/?backup=<?=$backup?>&type=mail&object=<?=$key?>"><?=__('restore')?> <i></i></a><span class="shortcut">&nbsp;R</span></div>
-            <!-- /.actiona-panel -->
           </div>
-          <!-- l-unit-toolbar__col -->
         </div>
-        <!-- /.l-unit-toolbar -->
 
         <div class="l-unit__col l-unit__col--left clearfix"></div>
-        <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
           <div class="l-unit__stats">
             <table>
@@ -135,17 +112,10 @@
               </tr>
             </table>
           </div>
-          <!-- /.l-unit__stats -->
         </div>
-        <!-- /.l-unit__col -->
       </div>
-      <!-- /.l-unit -->
-      <!--div class="l-separator"></div-->
-      <!-- /.l-separator -->
+
       <? }} ?>
-
-
-
 
       <?
         $dns = explode(',',$data[$backup]['DNS']);
@@ -159,17 +129,12 @@
             <input id="check3<?=$i?>" type="checkbox" name="dns[]" value="<?=$key?>">
             <label for="check3<?=$i++?>" class="check-label"></label>
           </div>
-          <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right">
             <div class="actions-panel__col actions-panel__update shortcut-r" key-action="href"><a href="/schedule/restore/?backup=<?=$backup?>&type=dns&object=<?=$key?>"><?=__('restore')?> <i></i></a><span class="shortcut">&nbsp;R</span></div>
-            <!-- /.actiona-panel -->
           </div>
-          <!-- l-unit-toolbar__col -->
         </div>
-        <!-- /.l-unit-toolbar -->
 
         <div class="l-unit__col l-unit__col--left clearfix"></div>
-        <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
           <div class="l-unit__stats">
             <table>
@@ -183,16 +148,10 @@
               </tr>
             </table>
           </div>
-          <!-- /.l-unit__stats -->
         </div>
-        <!-- /.l-unit__col -->
       </div>
-      <!-- /.l-unit -->
-      <!--div class="l-separator"></div-->
-      <!-- /.l-separator -->
+
       <? }} ?>
-
-
 
       <?
         $db = explode(',',$data[$backup]['DB']);
@@ -206,17 +165,11 @@
             <input id="check4<?=$i?>" type="checkbox" name="db[]" value="<?=$key?>">
             <label for="check4<?=$i++?>" class="check-label"></label>
           </div>
-          <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right">
             <div class="actions-panel__col actions-panel__update shortcut-r" key-action="href"><a href="/schedule/restore/?backup=<?=$backup?>&type=db&object=<?=$key?>"><?=__('restore')?> <i></i></a><span class="shortcut">&nbsp;R</span></div>
-            <!-- /.actiona-panel -->
           </div>
-          <!-- l-unit-toolbar__col -->
         </div>
-        <!-- /.l-unit-toolbar -->
-
         <div class="l-unit__col l-unit__col--left clearfix"></div>
-        <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
           <div class="l-unit__stats">
             <table>
@@ -230,17 +183,10 @@
               </tr>
             </table>
           </div>
-          <!-- /.l-unit__stats -->
         </div>
-        <!-- /.l-unit__col -->
       </div>
-      <!-- /.l-unit -->
-      <!--div class="l-separator"></div-->
-      <!-- /.l-separator -->
+
       <? }} ?>
-
-
-
 
       <?
         $backup = $_GET['backup'];
@@ -254,17 +200,12 @@
             <input id="check5<?=$i?>" type="checkbox" name="check" value="<?=$key?>">
             <label for="check5<?=$i++?>" class="check-label"></label>
           </div>
-          <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right">
             <div class="actions-panel__col actions-panel__update shortcut-r" key-action="href"><a href="/schedule/restore/?backup=<?=$backup?>&type=cron&object=records"><?=__('restore')?> <i></i></a><span class="shortcut">&nbsp;R</span></div>
-            <!-- /.actiona-panel -->
           </div>
-          <!-- l-unit-toolbar__col -->
         </div>
-        <!-- /.l-unit-toolbar -->
 
         <div class="l-unit__col l-unit__col--left clearfix"></div>
-        <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
           <div class="l-unit__stats">
             <table>
@@ -278,17 +219,9 @@
               </tr>
             </table>
           </div>
-          <!-- /.l-unit__stats -->
         </div>
-        <!-- /.l-unit__col -->
       </div>
-      <!-- /.l-unit -->
-      <!--div class="l-separator"></div-->
-      <!-- /.l-separator -->
       <? }} ?>
-
-
-
 
       <?
         $udir = explode(',',$data[$backup]['UDIR']);
@@ -302,17 +235,12 @@
             <input id="check6<?=$i?>" type="checkbox" name="udir[]" value="<?=$key?>">
             <label for="check6<?=$i++?>" class="check-label"></label>
           </div>
-          <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right">
             <div class="actions-panel__col actions-panel__update shortcut-r" key-action="href"><a href="/schedule/restore/?backup=<?=$backup?>&type=udir&object=<?=$key?>"><?=__('restore')?> <i></i></a><span class="shortcut">&nbsp;R</span></div>
-            <!-- /.actiona-panel -->
           </div>
-          <!-- l-unit-toolbar__col -->
         </div>
-        <!-- /.l-unit-toolbar -->
 
         <div class="l-unit__col l-unit__col--left clearfix"></div>
-        <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
           <div class="l-unit__stats">
             <table>
@@ -326,13 +254,8 @@
               </tr>
             </table>
           </div>
-          <!-- /.l-unit__stats -->
         </div>
-        <!-- /.l-unit__col -->
       </div>
-      <!-- /.l-unit -->
-      <!-- div class="l-separator"></div-->
-      <!-- /.l-separator -->
       <? }} ?>
 
       <div class="l-unit">
@@ -341,17 +264,12 @@
             <input id="check7<?=$i?>" type="checkbox" name="cron" value="<?=$i?>">
             <label for="check7<?=$i++?>" class="check-label"></label>
           </div>
-          <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right">
             <div class="actions-panel__col actions-panel__update shortcut-r" key-action="href"><a href="/schedule/restore/?backup=<?=$backup?>&type=cron"><?=__('restore')?> <i></i></a><span class="shortcut">&nbsp;R</span></div>
-            <!-- /.actiona-panel -->
           </div>
-          <!-- l-unit-toolbar__col -->
         </div>
-        <!-- /.l-unit-toolbar -->
 
         <div class="l-unit__col l-unit__col--left clearfix"></div>
-        <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
           <div class="l-unit__stats">
             <table>
@@ -365,16 +283,9 @@
               </tr>
             </table>
           </div>
-          <!-- /.l-unit__stats -->
         </div>
-        <!-- /.l-unit__col -->
       </div>
-      <!-- /.l-unit -->
-      <!-- div class="l-separator"></div-->
-      <!-- /.l-separator -->
     </div>
-
-
 
     <div id="vstobjects">
       <div class="l-separator"></div>

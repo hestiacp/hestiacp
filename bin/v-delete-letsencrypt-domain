@@ -46,6 +46,18 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Delete DNS CAA record
+if [ ! -z "$DNS_SYSTEM" ]; then
+    dns_domain=$($BIN/v-list-dns-domains $user | grep $domain | cut -d' ' -f1)
+    caa_record=$($BIN/v-list-dns-records $user $domain | grep -i "letsencrypt" | cut -d' ' -f1)
+
+    if [ "$dns_domain" = "$domain" ]; then
+        if [ ! -z "$caa_record" ]; then
+            $BIN/v-delete-dns-record $user $domain $caa_record
+        fi
+    fi
+fi
+
 # Delete SSL
 if [ -z "$mail" ]; then
     $BIN/v-delete-web-domain-ssl $user $domain $restart >/dev/null 2>&1

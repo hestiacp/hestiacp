@@ -721,7 +721,7 @@ $LANG['ua'] = array(
     'No encryption' => 'Без шифрування',
     'Do not use encryption' => 'Не використовувати шифрування',
     'maximum characters length, including prefix' => 'максимальна %s кількість символів, включаючи префікс',
-    'Email Credentials' => 'Надіслати доступи на Email',
+    'Email Credentials' => 'Дані для доступу до Hestia',
 	'2 Factor Authentication' => 'Двоетапна аутентифікація',
     'Enable 2FA' => 'Увімкнути двоетапну аутентіфікацію',
     'Please scan the code below in your 2FA application:' => 'Щоб закінчити налаштування 2FA, скануйте QR-Code нижче <br /> за допомогою додатку на Вашому пристрої (наприклад, <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google Authenticator</a>):',

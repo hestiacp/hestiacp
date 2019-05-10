@@ -64,6 +64,7 @@ help() {
   -s, --hostname          Set hostname
   -e, --email             Set admin email
   -p, --password          Set admin password
+  -D, --with-debs         Path to Hestia debs
   -f, --force             Force installation
   -h, --help              Print this help
 
@@ -164,6 +165,7 @@ for arg; do
         --email)                args="${args}-e " ;;
         --password)             args="${args}-p " ;;
         --force)                args="${args}-f " ;;
+        --with-debs)            args="${args}-D " ;;
         --help)                 args="${args}-h " ;;
         *)                      [[ "${arg:0:1}" == "-" ]] || delim="\""
                                 args="${args}${delim}${arg}${delim} ";;
@@ -172,7 +174,7 @@ done
 eval set -- "$args"
 
 # Parsing arguments
-while getopts "a:n:w:v:j:k:m:g:d:x:z:c:t:i:b:r:o:q:l:y:s:e:p:fh" Option; do
+while getopts "a:n:w:v:j:k:m:g:d:x:z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
     case $Option in
         a) apache=$OPTARG ;;            # Apache
         n) nginx=$OPTARG ;;             # Nginx
@@ -197,6 +199,7 @@ while getopts "a:n:w:v:j:k:m:g:d:x:z:c:t:i:b:r:o:q:l:y:s:e:p:fh" Option; do
         s) servername=$OPTARG ;;        # Hostname
         e) email=$OPTARG ;;             # Admin email
         p) vpass=$OPTARG ;;             # Admin password
+        D) withdebs=$OPTARG ;;          # Hestia debs path
         f) force='yes' ;;               # Force install
         h) help ;;                      # Help
         *) help ;;                      # Print help (default)
@@ -265,6 +268,11 @@ fi
 
 # Clear the screen once launch permissions have been verified
 clear
+
+# Configure apt to retry downloading on error
+if [ ! -f /etc/apt/apt.conf.d/80-retries ]; then
+    echo "APT::Acquire::Retries \"3\";" > /etc/apt/apt.conf.d/80-retries
+fi
 
 # Update apt repository
 echo "Please wait a moment while we update your systems APT repositories..."
@@ -781,6 +789,11 @@ if [ "$multiphp" = 'yes' ]; then
     software=$(echo "$software" | sed -e 's/php-phpseclib//')
     software=$(echo "$software" | sed -e 's/php-pgsql//')
 fi
+if [ -d "$withdebs" ]; then
+    software=$(echo "$software" | sed -e 's/hestia-nginx//')
+    software=$(echo "$software" | sed -e 's/hestia-php//')
+    software=$(echo "$software" | sed -e 's/hestia//')
+fi
 
 #----------------------------------------------------------#
 #                 Disable Apparmor on LXC                  #
@@ -823,6 +836,13 @@ echo
 
 # Check Installation result
 check_result $? "apt-get install failed"
+
+# Install Hestia packages from local folder
+if [ ! -z "$withdebs" ] && [ -d "$withdebs" ]; then
+    dpkg -i $withdebs/hestia_*.deb
+    dpkg -i $withdebs/hestia-php_*.deb
+    dpkg -i $withdebs/hestia-nginx_*.deb
+fi
 
 # Restoring autostart policy
 rm -f /usr/sbin/policy-rc.d
@@ -1682,7 +1702,7 @@ echo "(!) IMPORTANT: You must logout or restart the server before continuing."
 echo -n " Do you want to logout now? [Y/N] "
 read resetshell
 
-if [ $resetshell = "Y" ] || [ $resetshell = "y" ]; then
+if [ "$resetshell" = "Y" ] || [ "$resetshell" = "y" ]; then
     logout
 fi
 

@@ -49,7 +49,11 @@ query_le_v2() {
     curl -s -i -d "$post_data" "$1" -H "$content"
 }
 
-
+# Set DNS CAA record retrieval commands
+if [ ! -z "$DNS_SYSTEM" ]; then
+    dns_domain=$($BIN/v-list-dns-domains $user | grep $domain | cut -d' ' -f1)
+    caa_record=$($BIN/v-list-dns-records $user $domain | grep -i "CAA" | cut -d' ' -f1)
+fi
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -122,11 +126,33 @@ if [ "$proto" = "http-01" ]; then
     done
 fi
 
+# Ensure DNS CAA record exists for Let's Encrypt before requesting certificate
+if [ ! -z "$DNS_SYSTEM" ]; then
+    # Check for DNS zone
+    if [ "$dns_domain" = "$domain" ]; then
+        # Replace DNS domain CAA records with Let's Encrypt values
+        if [ -z "$caa_record" ]; then
+            $BIN/v-add-dns-record $user $domain '@' 'CAA' 'issue 0 "letsencrypt.org"'
+        else
+            $BIN/v-delete-dns-record $user $domain $caa_record
+            $BIN/v-add-dns-record $user $domain '@' 'CAA' 'issue 0 "letsencrypt.org"'
+        fi
+    fi
+fi
+
 # Requesting nonce / STEP 1
 answer=$(curl -s -I "$LE_API/directory")
 nonce=$(echo "$answer" |grep Nonce |cut -f2 -d \ |tr -d '\r\n')
 status=$(echo "$answer"|grep HTTP/1.1 |tail -n1 |cut -f 2 -d ' ')
 if [[ "$status" -ne 200 ]]; then
+    # Delete DNS CAA record
+    if [ ! -z "$DNS_SYSTEM" ]; then
+        if [ "$dns_domain" = "$domain" ]; then
+            if [ ! -z "$caa_record" ]; then
+                $BIN/v-delete-dns-record $user $domain $caa_record
+            fi
+        fi
+    fi
     check_result $E_CONNECT "Let's Encrypt nonce request status $status"
 fi
 
@@ -147,6 +173,14 @@ authz=$(echo "$answer" |grep "acme/authz" |cut -f2 -d '"')
 finalize=$(echo "$answer" |grep 'finalize":' |cut -f4 -d '"')
 status=$(echo "$answer" |grep HTTP/1.1 |tail -n1 |cut -f2 -d ' ')
 if [[ "$status" -ne 201 ]]; then
+    # Delete DNS CAA record
+    if [ ! -z "$DNS_SYSTEM" ]; then
+        if [ "$dns_domain" = "$domain" ]; then
+            if [ ! -z "$caa_record" ]; then
+                $BIN/v-delete-dns-record $user $domain $caa_record
+            fi
+        fi
+    fi
     check_result $E_CONNECT "Let's Encrypt new auth status $status"
 fi
 
@@ -159,6 +193,17 @@ for auth in $authz; do
     nonce=$(echo "$answer" |grep Nonce |cut -f2 -d \ |tr -d '\r\n')
     status=$(echo "$answer"|grep HTTP/1.1 |tail -n1 |cut -f 2 -d ' ')
     if [[ "$status" -ne 200 ]]; then
+        # Delete DNS CAA record
+        if [ ! -z "$DNS_SYSTEM" ]; then
+            dns_domain=$($BIN/v-list-dns-domains $user | grep $domain | cut -d' ' -f1)
+            caa_record=$($BIN/v-list-dns-records $user $domain | grep -i "letsencrypt" | cut -d' ' -f1)
+
+            if [ "$dns_domain" = "$domain" ]; then
+                if [ ! -z "$caa_record" ]; then
+                    $BIN/v-delete-dns-record $user $domain $caa_record
+                fi
+            fi
+        fi
         check_result $E_CONNECT "Let's Encrypt acme/authz bad status $status"
     fi
 
@@ -232,16 +277,49 @@ for auth in $authz; do
         nonce=$(echo "$answer" |grep Nonce |cut -f2 -d \ |tr -d '\r\n')
         status=$(echo "$answer"|grep HTTP/1.1 |tail -n1 |cut -f 2 -d ' ')
         if [[ "$status" -ne 200 ]]; then
+            # Delete DNS CAA record
+            if [ ! -z "$DNS_SYSTEM" ]; then
+                dns_domain=$($BIN/v-list-dns-domains $user | grep $domain | cut -d' ' -f1)
+                caa_record=$($BIN/v-list-dns-records $user $domain | grep -i "letsencrypt" | cut -d' ' -f1)
+
+                if [ "$dns_domain" = "$domain" ]; then
+                    if [ ! -z "$caa_record" ]; then
+                        $BIN/v-delete-dns-record $user $domain $caa_record
+                    fi
+                fi
+            fi
             check_result $E_CONNECT "Let's Encrypt validation status $status"
         fi
 
         i=$((i + 1))
         if [ "$i" -gt 10 ]; then
+            # Delete DNS CAA record
+            if [ ! -z "$DNS_SYSTEM" ]; then
+                dns_domain=$($BIN/v-list-dns-domains $user | grep $domain | cut -d' ' -f1)
+                caa_record=$($BIN/v-list-dns-records $user $domain | grep -i "letsencrypt" | cut -d' ' -f1)
+
+                if [ "$dns_domain" = "$domain" ]; then
+                    if [ ! -z "$caa_record" ]; then
+                        $BIN/v-delete-dns-record $user $domain $caa_record
+                    fi
+                fi
+            fi
             check_result $E_CONNECT "Let's Encrypt domain validation timeout"
         fi
         sleep 1
     done
     if [ "$validation" = 'invalid' ]; then
+        # Delete DNS CAA record
+        if [ ! -z "$DNS_SYSTEM" ]; then
+            dns_domain=$($BIN/v-list-dns-domains $user | grep $domain | cut -d' ' -f1)
+            caa_record=$($BIN/v-list-dns-records $user $domain | grep -i "letsencrypt" | cut -d' ' -f1)
+
+            if [ "$dns_domain" = "$domain" ]; then
+                if [ ! -z "$caa_record" ]; then
+                    $BIN/v-delete-dns-record $user $domain $caa_record
+                fi
+            fi
+        fi    
         check_result $E_CONNECT "Let's Encrypt domain verification failed"
     fi
 done

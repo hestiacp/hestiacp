@@ -40,6 +40,11 @@ fi
 # Update templates
 cp -rf $HESTIA/install/$type/templates/mail $HESTIA/data/templates/
 
+# Rebuilding mail domains
+for user in $($BIN/v-list-sys-users plain); do
+    $BIN/v-rebuild-mail-domains $user no
+done
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

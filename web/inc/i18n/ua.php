@@ -4,7 +4,6 @@
  * COLOBOCman (colobocman@gmail.com)
  * Alexandr Loskutov (alex_connor@icloud.com)
  */
-
 $LANG['ua'] = array(
     'Packages' => 'Пакети',
     'IP' => 'IP',
@@ -17,7 +16,6 @@ $LANG['ua'] = array(
     'Updates' => 'Оновлення',
     'Log in' => 'Увійти',
     'Log out' => 'Вийти',
-
     'USER' => 'USER',
     'WEB' => 'WEB',
     'DNS' => 'DNS',
@@ -25,7 +23,6 @@ $LANG['ua'] = array(
     'DB' => 'DB',
     'CRON' => 'CRON',
     'BACKUP' => 'BACKUP',
-
     'LOGIN'  => 'ВВІЙТИ',
     'RESET PASSWORD'  => 'СКИНУТИ ПАРОЛЬ',
     'SEARCH'  => 'ПОШУК',
@@ -40,9 +37,7 @@ $LANG['ua'] = array(
     'DISK'  => 'ДИСК',
     'NETWORK'  => 'МЕРЕЖА',
     'Web Log Manager'  => 'Менеджер Web журналу',
-
     'no notifications'  => 'без сповіщень',
-
     'Add User' => 'Додати користувача',
     'Add Domain' => 'Додати домен',
     'Add Web Domain' => 'Додати WEB домен',
@@ -70,7 +65,6 @@ $LANG['ua'] = array(
     'Back' => 'Назад',
     'Save' => 'Зберегти',
     'Submit' => 'Відправити',
-
     'toggle all' => 'виділити все',
     'apply to selected' => 'застосувати до вибраних',
     'rebuild' => 'перебудувати',
@@ -111,7 +105,6 @@ $LANG['ua'] = array(
     'turn on notifications' => 'увімкнути сповіщення',
     'turn off notifications' => 'вимкнути сповіщення',
     'configure' => 'configure',
-
     'Adding User' => 'Додавання користувача',
     'Editing User' => 'Редагування користувача',
     'Adding Domain' => 'Додавання домену',
@@ -139,7 +132,6 @@ $LANG['ua'] = array(
     'Adding Firewall Rule' => 'Додавання правила',
     'Editing Firewall Rule' => 'Редагування правила',
     'Adding IP Address to Banlist' => 'Додавання IP-адреси в чорний список',
-
     'active' => 'активне',
     'spnd' => 'заблоковано',
     'suspended' => 'заблокований',
@@ -147,7 +139,6 @@ $LANG['ua'] = array(
     'stopped' => 'зупинений',
     'outdated' => 'застарілий',
     'updated' => 'оновлений',
-
     'yes' => 'так',
     'no' => 'ні',
     'none' => 'нема',
@@ -398,17 +389,14 @@ $LANG['ua'] = array(
     'FTP' => 'FTP',
     'HESTIA' => 'HESTIA',
     'Add one more Name Server' => 'Додати ще один сервер імен',
-
     'web domain' => 'web домен',
     'dns domain' => 'dns домен',
     'dns record' => 'dns запис',
     'mail domain' => 'mail домен',
     'mail account' => 'mail акаунт',
     'cron job' => 'cron завдання',
-
     'cron' => 'cron',
     'user dir' => 'тека користувача',
-
     'unlimited'  => 'безлімітний',
     '1 account' => ' 1 акаунт',
     '%s accounts' => '%s акаунтів',
@@ -440,7 +428,6 @@ $LANG['ua'] = array(
     '1 rule' => '1 правило',
     '%s rules' => '%s правил',
     'There are no currently banned IP' => 'Немає заблокованих IP',
-
     'USER_CREATED_OK' => 'Аккаунт <a href="/edit/user/?user=%s"><b>%s</b></a> успішно створено',
     'WEB_DOMAIN_CREATED_OK' => 'WEB домен <a href="/edit/web/?domain=%s"><b>%s</b></a> успішно створено.',
     'DNS_DOMAIN_CREATED_OK' => 'DNS домен <a href="/list/dns/?domain=%s"><b>%s</b></a> успішно створено.',
@@ -503,26 +490,21 @@ $LANG['ua'] = array(
     'BACKUP_EXISTS'  => 'Резервне копіювання вже виконується, будь-ласка, дочекайтесь закінчення.',
     'RESTORE_SCHEDULED'  => 'Завдання успішно додано в чергу. Після виконання ви отримаєте повний звіт по пошті.',
     'RESTORE_EXISTS'  => 'Завдання вже виконується, будь-ласка, дочекайтесь закінчення.',
-
     'WEB_EXCLUSIONS' => 'Вкажіть домени по одному на рядок. Для того, щоб виключити всі, використовуйте *. Щоб виключити тільки деякі теки, використовуйте наступний формат: domain.com:public_html/cache:public_html/tmp',
     'DNS_EXCLUSIONS' => 'Вкажіть домени по одному на рядок. Для того, щоб виключити всі, використовуйте *',
     'MAIL_EXCLUSIONS' => 'Вкажіть домени по одному на рядок. Для того, щоб виключити всі, використовуйте *. Щоб виключити тільки деякі акаунти, використовуйте наступний формат: domain.com:info:support:postmaster',
     'DB_EXCLUSIONS' => 'Вкажіть бази по одній на рядок. Для того, щоб виключити всі, використовуйте *',
     'CRON_EXCLUSIONS' => 'Для того, щоб виключити всі завдання, використовуйте *',
     'USER_EXCLUSIONS' => 'Вкажіть теки по одній на рядок. Для того, щоб виключити всі, використовуйте *',
-
     'Welcome to Hestia Control Panel' => 'Вітаємо в панелі керування Hestia',
     'MAIL_FROM' => 'Hestia Control Panel <noreply@%s>',
     'GREETINGS_GORDON_FREEMAN' => "Вітаємо, %s %s,\n",
     'GREETINGS' => "Вітаємо,\n",
     'ACCOUNT_READY' => "Ваш аккаунт успішно створено і готовий до використання.\n\nhttps://%s/login/\nІм'я користувача: %s\nПароль: %s\n\n--\nПанель керування Hestia\n",
-
     'FTP login credentials' => 'Дані доступу до FTP',
     'FTP_ACCOUNT_READY' => "FTP аккаунт успішно створено і готовий до використання.\n\nХост: %s\nІм'я користувача: %s_%s\nПароль: %s\n\n--\nПанель керування Hestia\n",
-
     'Database Credentials' => 'Дані доступу до БД',
     'DATABASE_READY' => "База даних успішно створена.\n\nБаза даних: %s\nКористувач: %s\nПароль: %s\n%s\n\n--\nПанель керування Hestia\n",
-
     'forgot password' => 'нагадати пароль',
     'Confirm' => 'Підтвердити',
     'New Password' => 'Новий пароль',
@@ -533,7 +515,6 @@ $LANG['ua'] = array(
     'RESET_CODE_SENT' => 'Код для відновлення паролю успішно відправлено на вашу електронну пошту.<br>',
     'MAIL_RESET_SUBJECT' => 'Відновлення паролю %s',
     'PASSWORD_RESET_REQUEST'=>"Щоб відновити пароль, будь-ласка, перейдіть за посиланням :\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\nТакож ви можете відкрити сторінку https://%s/reset/?action=code&user=%s і вручну ввести код для відновлення:\n%s\n\nЯкщо ви не виконували процедуру відновлення паролю, будь ласка, проігноруйте цей лист і прийміть наші вибачення.\n\n--\nПанель керування Hestia\n",
-
     'Jan' => 'Січ',
     'Feb' => 'Лют',
     'Mar' => 'Бер',
@@ -546,7 +527,6 @@ $LANG['ua'] = array(
     'Oct' => 'Жовт',
     'Nov' => 'Лист',
     'Dec' => 'Груд',
-
     'Configuring Server' => 'Налаштування серверу',
     'Hostname' => "Ім'я хоста",
     'Time Zone' => 'Часовий пояс',
@@ -583,14 +563,11 @@ $LANG['ua'] = array(
     'Backup Migration Manager' => 'Менеджер міграції архівів',
     'FileManager' => 'Файл менеджер',
     'show: CPU / MEM / NET / DISK' => 'show: CPU / MEM / NET / DISK',
-
     'sort by' => 'сортувати за',
     'Date' => 'Дата',
     'Starred' => 'Вибране',
     'Name' => "Ім'я",
-
     'save to favorites' => 'зберегти до улюблених',
-
     'File Manager' => 'Файловий менеджер',
     'size' => 'розмір',
     'date' => 'дата',
@@ -653,7 +630,6 @@ $LANG['ua'] = array(
     'read by others' => 'читання для інших',
     'write by others' => 'запис для інших',
     'execute/search by others' => 'виконання/пошук для інших',
-
     'Shortcuts' => 'Скорочення',
     'Add New object' => "Додати новий об'єкт",
     'Save Form' => 'Зберегти форму',
@@ -672,7 +648,6 @@ $LANG['ua'] = array(
     'Enter focused element' => 'Перейти до активного пункту меню',
     'Move up through elements list' => 'Перейти до попереднього елементу списку',
     'Move down through elements list' => 'Перейти до наступного елементу списку',
-
     'Upload' => 'Вивантажити',
     'New File' => 'Новий файл',
     'New Folder' => 'Нова тека',
@@ -696,7 +671,6 @@ $LANG['ua'] = array(
     'Select All Files' => 'Виділити всі файли',
     'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' =>
         'скорочення позичені у файлогово менеджера GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a>',
-
     'Licence Key' => 'Ліцензійний ключ',
     'Enter License Key' => 'Введіть ліцензійний ключ',
     'Buy Licence' => 'Придбати ліцензію',
@@ -707,7 +681,6 @@ $LANG['ua'] = array(
     'Restrict users so that they cannot use SSH and access only their home directory.' => 'Обмежити користувачів, так що вони не можуть використовувати SSH і мають доступ тільки до домашньої теки.',
     'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.' => 'Перегляд, копіювання, редагування, переглядання та використання всіх файлів веб-доменів за допомогою повнофункціонального Файлового менеджеру.',
     'This is a commercial module, you would need to purchace license key to enable it.' => 'Це коммерційний модуль, ви повинні придбати ліцензіний ключ для увімкнення.',
-
     'Minutes' => 'Щохвилини',
     'Hourly' => 'Щогодини',
     'Run Command' => 'Виконати команду',
@@ -732,9 +705,7 @@ $LANG['ua'] = array(
     'every two minutes' => 'кожні дві хвилини',
     'every' => 'кожні',
     'Generate' => 'Генерувати',
-
     'awstats' => 'awstats',
-
     'Hestia SSL' => 'Hestia SSL',
     'SUBJECT' => "ОБ'ЄКТ",
     'ALIASES' => 'АЛІАСИ',
@@ -743,15 +714,16 @@ $LANG['ua'] = array(
     'SIGNATURE' => 'ПІДПИС',
     'PUB_KEY' => 'ПУБЛІЧНИЙ КЛЮЧ',
     'ISSUER' => 'ВИДАВЕЦЬ',
-
     'Use server hostname' => "Використовувати серверне ім'я хоста",
     'Use domain hostname' => "Використовувати доменне ім'я хоста",
     'Use STARTTLS' => 'Використовувати STARTTLS',
     'Use SSL / TLS' => 'Використовувати SSL / TLS',
     'No encryption' => 'Без шифрування',
     'Do not use encryption' => 'Не використовувати шифрування',
-
     'maximum characters length, including prefix' => 'максимальна %s кількість символів, включаючи префікс',
-
-    'Email Credentials' => 'Email Credentials',
-);
+    'Email Credentials' => 'Надіслати доступи на Email',
+	'2 Factor Authentication' => 'Двоетапна аутентифікація',
+    'Enable 2FA' => 'Увімкнути двоетапну аутентіфікацію',
+    'Please scan the code below in your 2FA application:' => 'Щоб закінчити налаштування 2FA, скануйте QR-Code нижче <br /> за допомогою додатку на Вашому пристрої (наприклад, <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google Authenticator</a>):',
+    '2FA Reset Code:' => 'Код відновлення доступу до акаунту:',
+	'Force SSL/HTTPS' => 'Примусовий редирект HTTP-на-HTTPS',

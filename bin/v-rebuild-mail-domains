@@ -45,9 +45,6 @@ U_MAIL_SSL=0
 SUSPENDED_MAIL=0
 U_DISK_MAIL=0
 
-# Update mail templates
-$BIN/v-update-mail-templates
-
 # Checking mail folder
 if [ ! -d "$USER_DATA/mail" ]; then
     rm -f $USER_DATA/mail

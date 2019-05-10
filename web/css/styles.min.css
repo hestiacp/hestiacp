@@ -2875,7 +2875,6 @@ a.button.cancel {
 }
 
 .additional-info {
-    margin-left: 30px;
     margin-top: 30px;
     width: 547px;
 }
@@ -2884,11 +2883,10 @@ a.button.cancel {
     height: 22px;
     font-weight: normal;
 }
+
 .additional-info td.details {
     padding-left: 20px;
 }
-
-
 
 :focus {outline:none;}
 ::-moz-focus-inner {border:0;}

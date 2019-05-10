@@ -4,12 +4,17 @@
                     <td>
                         <table>
                             <tr>
-                                <td style="padding: 0 10px 0 42px; height: 280px; width: 170px;">
-                                    <a href="/"><img border=0 src="/images/logo.png" width="124px" height="46px" alt="Hestia Control Panel" /></a>
+                                <td style="padding: 22px 30px 0 42px; height: 280px; width: 170px;">
+                                    <a href="/"><img border=0 src="/images/logo.png" alt="Hestia Control Panel" style="margin: 20px; margin-top: 40px;" /></a>
                                 </td>
-                                <td style="padding: 10px 0 0 0;">
+                                <td style="padding: 40px 60px 0 0;">
                                     <form method="post">
                                         <table class="login-box">
+                                            <tr>
+                                                <td syle="padding: 12px 0 0 2px;" class="login-welcome">
+                                                    <?php print __('Forgot Password');?>
+                                                </td>
+                                            </tr>
                                             <tr>
                                                 <td style="padding: 12px 0 0 2px;">
                                                     <input type="hidden" name="action" value="confirm" >
@@ -47,7 +52,6 @@
                                 <td colspan=2>
                                     <div class="login-bottom">
                                         <div style="height:20px"><?php if (isset($ERROR)) echo $ERROR ?></div>
-                                        <a class="hestiacp" href="https://www.hestiacp.com" >hestiacp.com</a>
                                     </div>
                                 </td>
                             </tr>

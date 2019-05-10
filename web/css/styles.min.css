@@ -1588,12 +1588,17 @@ div.l-content > div.l-separator:nth-of-type(4) {
   color: #707070;
   padding: 0 0 0 14px;
   overflow: hidden;
+  line-height: 1rem;
 }
 
 .table-header:hover {
   background-color: linear-gradient(to bottom, rgba(247,247,247,1) 0%,rgba(255,255,255,1) 100%) !important;
   border-left: 1px solid #ddd !important;
   border-right: 1px solid #ddd !important;
+}
+
+.table-header .fas {
+  font-size: 1rem;
 }
 
 .units .l-unit {

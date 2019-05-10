@@ -61,8 +61,7 @@ server {
     error_page 500 502 503 504 505 /error/50x.html;
 
     location /error/ {
-        root        /var/www/document_errors/;
-        try_files   $uri $uri/;
+        alias       /var/www/document_errors/;
     }
 
     include %home%/%user%/conf/mail/%root_domain%/%web_system%.conf_*;

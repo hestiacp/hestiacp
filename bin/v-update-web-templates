@@ -41,23 +41,21 @@ fi
 cp -rf $HESTIA/install/$type/templates/web $HESTIA/data/templates/
 
 # Update Multi-PHP templates
-if [ -d "/etc/php/*/fpm" ]; then
-    php_versions=$(ls /etc/php/*/fpm -d | wc -l)
-    if [ "$php_versions" -gt 1 ]; then
-        if [ "$WEB_SYSTEM" = "nginx" ]; then
-            for tplname in $(ls $HESTIA/data/templates/web/$WEB_SYSTEM/ | grep -v 'default'); do
-                rm -fr $HESTIA/data/templates/web/$WEB_SYSTEM/$tplname
-            done
-        fi
-        for v in $(ls /etc/php/); do
-            if [ ! -d "/etc/php/$v/fpm/pool.d/" ]; then
-                continue
-            fi
-            v_tpl=$(echo "$v" | sed -e 's/[.]//')
-            cp -f $HESTIA/install/$type/multiphp/$WEB_SYSTEM/PHP-$v_tpl.* $HESTIA/data/templates/web/$WEB_SYSTEM/
+php_versions=$(ls /etc/php/*/fpm -d 2>/dev/null | wc -l)
+if [ "$php_versions" -gt 1 ]; then
+    if [ "$WEB_SYSTEM" = "nginx" ]; then
+        for tplname in $(ls $HESTIA/data/templates/web/$WEB_SYSTEM/ | grep -v 'default'); do
+            rm -fr $HESTIA/data/templates/web/$WEB_SYSTEM/$tplname
         done
-        chmod a+x $HESTIA/data/templates/web/$WEB_SYSTEM/*.sh
     fi
+    for v in $(ls /etc/php/); do
+        if [ ! -d "/etc/php/$v/fpm/pool.d/" ]; then
+            continue
+        fi
+        v_tpl=$(echo "$v" | sed -e 's/[.]//')
+        cp -f $HESTIA/install/$type/multiphp/$WEB_SYSTEM/PHP-$v_tpl.* $HESTIA/data/templates/web/$WEB_SYSTEM/
+    done
+    chmod a+x $HESTIA/data/templates/web/$WEB_SYSTEM/*.sh
 fi
 
 # Rebuilding web domains

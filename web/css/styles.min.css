@@ -959,8 +959,8 @@ a {
 }
 
 .l-profile__username {
-  color: #8ed8fd;
-  font-size: 1.4rem;
+  color: #d2e2ee !important;
+  font-size: 1.2rem !important;
 }
 
 .l-profile__username:hover {
@@ -969,20 +969,8 @@ a {
 
 
 .l-profile__logout {
-  color: #dbf94e;
-}
-
-.l-profile__logout:hover {
-  color: #f5ffc3 !important;
-}
-.l-profile__logout:active {
-  color: #d0e859;
-}
-.lang-cn .l-profile__logout {
-  padding: 10px 5px;
-}
-.lang-tw .l-profile__logout {
-  padding: 10px 5px;
+  color: #dbf94e !important;
+  font-size: 1.2rem !important;
 }
 
 .l-profile__server {
@@ -996,11 +984,11 @@ a {
   cursor: pointer;
   font-weight: 600;
   padding: 10px 5px 0;
-  font-size: 0.95rem;
+  font-size: 1.2rem !important;
   line-height: 0.95rem;
 }
 
-.l-profile__notifications.active {
+.l-profile__notifications.active.l-profile__notifications.updates:active {
   border: 1px solid #378ccd !important;
   background: linear-gradient(to bottom, rgba(210,232,250,1) 0%,rgba(187,220,247,1) 50%,rgba(162,207,244,1) 51%,rgba(194,224,248,1) 100%) !important;
   color: #046c98 !important;
@@ -1008,17 +996,24 @@ a {
   box-shadow: 0px 1px 3px rgba(0,0,0,0.15),
               inset 0px 0px 1px #fff,
               inset -1px -1px 4px rgba(220,220,220,0.4) !important;
+  transition: 0.2s;
 }
-
-.l-profile__notifications.updates {
-  background-position: -202px -135px;
+.l-profile__notifications:hover,.l-profile__notifications.updates:hover {
+  color: #3b9de8 !important;
+  text-shadow: 1px 1px rgba(255,255,255,0.5) !important;
+  border: 1px solid #54a6e5 !important;
+  background: linear-gradient(to bottom, rgba(241,248,253,1) 0%,rgba(218,236,250,1) 50%,rgba(190,221,246,1) 51%,rgba(227,240,251,1) 100%) !important;
+  box-shadow: 0px 1px 3px rgba(0,0,0,0.15),
+              inset 0px 0px 1px #fff,
+              inset 0px 0px 6px rgba(255,255,255,0.6) !important;
+  transition: 0.2s;
 }
 
 .notification-container {
   background-color: rgba(0,0,0,0.90);
   box-shadow: 0 3px 30px 0 rgba(0, 0, 0, 0.5);
   list-style-type: none;
-  margin: 0 21px;
+  margin: 0 27px;
   overflow: hidden;
   padding-left: 0;
   position: fixed;

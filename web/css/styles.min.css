@@ -2916,11 +2916,11 @@ a.button.cancel {
 
 .login a.error {
   color: #BE5ABF;
+  font-size: 0.8rem;
 }
+
 .hestiacp {
   color: #505050;
-  font-size: 10px;
-  text-align: right;
 }
 .hestiacp:hover {
   color: #326b9b;
@@ -2928,13 +2928,13 @@ a.button.cancel {
 .hestiacp:active {
   color: #cc3366;
 }
+
 .login-bottom {
-  height: 50px;
-  margin: 0;
-  padding: 0 26px 0 0;
+  height: 60px;
   text-align: right;
   vertical-align: top;
-  width: 474px;
+  font-size: 0.75rem !important;
+  margin-right: 65px;
 }
 
 .l-unit.selected {

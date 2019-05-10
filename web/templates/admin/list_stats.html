@@ -66,17 +66,11 @@
         </div>
         <!-- /.l-unit-toolbar -->
 
-        <div class="l-unit__col l-unit__col--left clearfix">
-          <div class="l-unit__date">
-            <?=translate_date($key)?>
-          </div>
-        </div>
         <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
           <div class="l-unit__name separate">
-            <?=__(strftime("%b", strtotime($key))).strftime(" %Y", strtotime($key))?>
+              <i class="fas fa-calendar-alt"></i> <?=__(strftime("%b", strtotime($key))).strftime(" %Y", strtotime($key))?>
           </div>
-
 
           <div class="l-unit__stats">
             <table>

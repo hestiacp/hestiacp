@@ -20,14 +20,14 @@
 		<!-- /.l-menu -->
 		<div class="l-profile noselect">
 			<div class="l-menu__item"><span class="pill usage"> <i class="fas fa-hdd"></i> <b><?=humanize_usage_size($panel[$user]['U_DISK'])?></b> <?=humanize_usage_measure($panel[$user]['U_DISK'])?> / <i class="fas fa-exchange-alt"></i> <b><?=humanize_usage_size($panel[$user]['U_BANDWIDTH'])?></b> <?=humanize_usage_measure($panel[$user]['U_BANDWIDTH'])?></span></div>
-			<div class="l-menu__item"><a alt="<?=__('Notifications')?>" class="l-profile__notifications <? if($panel[$user]['NOTIFICATIONS'] == 'yes') echo " updates"; ?>"><i class="fas fa-bell <?if($panel[$user]['NOTIFICATIONS'] == 'yes') echo " status-icon-orange"; ?>"></i></a></div>
+			<div class="l-menu__item"><a alt="<?=__('Notifications')?>" class="l-profile__notifications <? if($panel[$user]['NOTIFICATIONS'] == 'yes') echo " updates"; ?>"><i class="fas fa-bell <?if($panel[$user]['NOTIFICATIONS'] == 'yes') echo " animated extended swing status-icon-orange"; ?>"></i></a></div>
 			<div class="l-menu__item"><a href="/edit/user/?user=<?php echo $user; ?>" alt="<?=$user?>"><i class="fas fa-user-circle"></i></a></div>
 			<div class="l-menu__item"><a href="/logout/" alt="<?=__('Log out')?>"> <?=__('Log out')?>&nbsp;&nbsp;&nbsp;<i class="fas fa-sign-out-alt"></i></a></div>
 		</div>
 		<!-- /.l-profile -->
 	</div>
 </div>
-<ul class="notification-container hidden animated slideInDown"></ul>
+<ul class="notification-container hidden animated fadeIn"></ul>
 
 <!-- /.l-header -->
 

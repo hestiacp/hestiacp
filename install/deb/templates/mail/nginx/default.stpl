@@ -1,49 +1,31 @@
 server {
     listen      %ip%:%proxy_ssl_port% ssl http2;
     server_name %domain% %alias%;
-    ssl_certificate      %ssl_pem%;
-    ssl_certificate_key  %ssl_key%;
+    ssl_certificate     %ssl_pem%;
+    ssl_certificate_key %ssl_key%;
     root        /var/lib/roundcube;
     index       index.php index.html index.htm;
+    access_log /var/log/nginx/domains/%domain%.log combined;
+    error_log  /var/log/nginx/domains/%domain%.error.log error;
 
-    error_log /var/log/nginx/domains/%domain%.error.log;
-    access_log /var/log/nginx/domains/%domain%.access.log;
+    location ~ /\.(?!well-known\/) {
+        deny all;
+        return 404;
+    }
+
+    location ~ ^/(README.md|config|temp|logs|bin|SQL|INSTALL|LICENSE|CHANGELOG|UPGRADING)$ {
+        deny all;
+        return 404;
+    }
 
     location / {
-        proxy_pass http://%ip%:%web_port%;
+        proxy_pass https://%ip%:%web_ssl_port%;
         try_files $uri $uri/ /index.php?q=$uri&$args;
         alias /var/lib/roundcube/;
         location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
             expires 7d;
             fastcgi_hide_header "Set-Cookie";
         }
-    }   
-
-    location ~ /(config|temp|logs) {
-        deny all;
-        return 404;
-    }
-    
-    location ~ /\.(?!well-known\/) {
-        deny all;
-        return 404;
-    }
-
-    location ~ ^/(README.md|INSTALL|LICENSE|CHANGELOG|UPGRADING)$ {
-        deny all;
-        return 404;
-    }
-
-    location ~ ^/(bin|SQL)/ {
-        deny all;
-        return 404;
-    }
-
-    location ~ /\. {
-        return 404;
-        deny all;
-        access_log off;
-        log_not_found off;
     }
 
     location ~ ^/(.*\.php)$ {
@@ -52,19 +34,18 @@ server {
         fastcgi_index index.php;
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $request_filename;
-        fastcgi_param HTTPS on;
     }
-    
+
     error_page 403 /error/404.html;
     error_page 404 /error/404.html;
     error_page 500 502 503 504 505 /error/50x.html;
-    
+
     location /error/ {
-        alias       /var/www/document_errors/;
+        alias /var/www/document_errors/;
     }
 
     location @fallback {
-        proxy_pass http://%ip%:%web_port%;
+        proxy_pass https://%ip%:%web_ssl_port%;
     }
 
     include %home%/%user%/conf/mail/%root_domain%/%proxy_system%.conf_*;

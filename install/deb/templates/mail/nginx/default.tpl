@@ -3,11 +3,20 @@ server {
     server_name %domain% %alias%;
     root        /var/lib/roundcube;
     index       index.php index.html index.htm;
-
-    error_log /var/log/nginx/domains/%domain%.error.log;
-    access_log /var/log/nginx/domains/%domain%.access.log;
+    access_log /var/log/nginx/domains/%domain%.log combined;
+    error_log  /var/log/nginx/domains/%domain%.error.log error;
 
     include %home%/%user%/conf/mail/%root_domain%/nginx.forcessl.conf*;
+
+    location ~ /\.(?!well-known\/) {
+        deny all;
+        return 404;
+    }
+
+    location ~ ^/(README.md|config|temp|logs|bin|SQL|INSTALL|LICENSE|CHANGELOG|UPGRADING)$ {
+        deny all;
+        return 404;
+    }
 
     location / {
         proxy_pass http://%ip%:%web_port%;
@@ -19,33 +28,6 @@ server {
         }
     }
 
-    location ~ /(config|temp|logs) {
-        deny all;
-        return 404;
-    }
-    
-    location ~ /\.(?!well-known\/) {
-        deny all;
-        return 404;
-    }
-
-    location ~ ^/(README.md|INSTALL|LICENSE|CHANGELOG|UPGRADING)$ {
-        deny all;
-        return 404;
-    }
-
-    location ~ ^/(bin|SQL)/ {
-        deny all;
-        return 404;
-    }
-
-    location ~ /\. {
-        return 404;
-        deny all;
-        access_log off;
-        log_not_found off;
-    }
-
     location ~ ^/(.*\.php)$ {
         alias /var/lib/roundcube/$1;
         fastcgi_pass 127.0.0.1:9000;
@@ -53,13 +35,13 @@ server {
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $request_filename;
     }
-    
+
     error_page 403 /error/404.html;
     error_page 404 /error/404.html;
     error_page 500 502 503 504 505 /error/50x.html;
 
     location /error/ {
-        alias       /var/www/document_errors/;
+        alias /var/www/document_errors/;
     }
 
     location @fallback {

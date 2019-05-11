@@ -575,7 +575,7 @@ $LANG['id'] = array(
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
     'FileSystem Disk Quota' => 'Kuota Diska FileSystem',
-    'Hestia Control Panel Plugins' => 'Hestia Control Panel Plugins',
+    'Hestia Control Panel Plugins' => 'Plugins',
     'preview' => 'pratinjau',
     'Reseller Role' => 'Aturan Reseller',
     'Web Config Editor' => 'Web Config Editor',
@@ -735,7 +735,7 @@ $LANG['id'] = array(
 
     'awstats' => 'awstats',
 
-    'Hestia SSL' => 'Hestia SSL',
+    'Hestia SSL' => 'SSL',
     'SUBJECT' => 'SUBJECT',
     'ALIASES' => 'ALIASES',
     'NOT_BEFORE' => 'NOT_BEFORE',

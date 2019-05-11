@@ -578,7 +578,7 @@ $LANG['nl'] = array(
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
     'FileSystem Disk Quota' => 'Bestandssysteem Schijf Quotum',
-    'Hestia Control Panel Plugins' => 'Hestia Control Panel Plugins',
+    'Hestia Control Panel Plugins' => 'Plugins',
     'preview' => 'Voorbeeld',
     'Reseller Role' => 'Verkoper Rol',
     'Web Config Editor' => 'Web Configuratie Bewerker',
@@ -738,7 +738,7 @@ $LANG['nl'] = array(
 
     'awstats' => 'awstats',
 
-    'Hestia SSL' => 'Hestia SSL',
+    'Hestia SSL' => 'SSL',
     'SUBJECT' => 'ONDERWERP',
     'ALIASES' => 'ALIASEN',
     'NOT_BEFORE' => 'NIET_VOOR',

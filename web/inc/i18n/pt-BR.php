@@ -734,7 +734,7 @@ $LANG['pt-BR'] = array(
 
     'awstats' => 'awstats',
 
-    'Hestia SSL' => 'Hestia SSL',
+    'Hestia SSL' => 'SSL',
     'SUBJECT' => 'ASSUNTO',
     'ALIASES' => 'APELIDOS',
     'NOT_BEFORE' => 'NAO_ANTES',

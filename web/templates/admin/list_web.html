@@ -1,7 +1,7 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a href="/add/web/" class="ui-button cancel" title="<?=__('Add Web Domain')?>"><i class="fas fa-plus-circle status-icon-green"></i> <?=__('Add Web Domain')?></a>
+          <a href="/add/web/" class="ui-button cancel" title="<?=__('Add Web Domain')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=__('Add Web Domain')?></a>
         </div>
         <ul class="context-menu sort-order animated fadeIn" style="display:none;">
           <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
@@ -134,15 +134,15 @@ sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-dis
           <div class="clearfix l-unit__stat-col--left compact-5 text-right">
             <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
               <div class="actions-panel clearfix">
-                <div class="actions-panel__col actions-panel__view" key-action="href"><a href="http://<?=$key?>/" target="_blank"><i class="fas fa-external-link-square-alt status-icon-lightblue status-icon-dim"></i></div>
-                <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/web/?domain=<?=$key?>"><i class="fas fa-pencil-alt status-icon-orange status-icon-dim"></i></div>
-                <div class="actions-panel__col actions-panel__logs shortcut-l" key-action="href"><a href="/list/web-log/?domain=<?php echo $key ?>&type=access#"><i class="fas fa-binoculars status-icon-purple status-icon-dim"></i></a></div>
+                <div class="actions-panel__col actions-panel__view" key-action="href"><a href="http://<?=$key?>/" target="_blank"><i class="fas fa-external-link-square-alt status-icon lightblue status-icon dim"></i></div>
+                <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/web/?domain=<?=$key?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></div>
+                <div class="actions-panel__col actions-panel__logs shortcut-l" key-action="href"><a href="/list/web-log/?domain=<?php echo $key ?>&type=access#"><i class="fas fa-binoculars status-icon purple status-icon dim"></i></a></div>
                 <? if (!empty($data[$key]['STATS'])) { ?>
-                  <div class="actions-panel__col actions-panel__logs shortcut-w" key-action="href"><a href="http://<?=$key?>/vstats/"  target="_blank"><i class="fas fa-chart-bar status-icon-maroon status-icon-dim"></i></a></div>
+                  <div class="actions-panel__col actions-panel__logs shortcut-w" key-action="href"><a href="http://<?=$key?>/vstats/"  target="_blank"><i class="fas fa-chart-bar status-icon maroon status-icon dim"></i></a></div>
                 <? } ?>
                 <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
                   <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
-                    <i class="fas fa-pause status-icon-highlight status-icon-dim do_<?=$spnd_action?>"></i>
+                    <i class="fas fa-pause status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
                     <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
                     <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
                       <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
@@ -151,7 +151,7 @@ sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-dis
                 </div>
                 <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                   <a id="delete_link_<?=$i?>" class="data-controls do_delete">
-                    <i class="fas fa-trash status-icon-red status-icon-dim do_delete"></i>
+                    <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
                     <input type="hidden" name="delete_url" value="/delete/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
                     <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
                       <p class="confirmation"><?=__('DELETE_DOMAIN_CONFIRMATION',$key)?></p>
@@ -169,9 +169,9 @@ sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-dis
                   <b>
                     <? if($data[$key]['SUSPENDED'] == 'no'){ ?>
                         <? if($data[$key]['SSL'] == 'no'){ ?>
-                          <i class="fas fa-times-circle status-icon-red"></i>
+                          <i class="fas fa-times-circle status-icon red"></i>
                         <? } else {?>
-                          <i class="fas fa-check-circle status-icon-green"></i>
+                          <i class="fas fa-check-circle status-icon green"></i>
                         <? } ?>
                     <? } else {?>
                         <? if($data[$key]['SSL'] == 'no'){ ?>
@@ -188,7 +188,7 @@ sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-dis
                         <? if($web_stats == 'no'){ ?>
                           <i class="fas fa-minus-circle"></i>
                         <? } else {?>
-                          <i class="fas fa-check-circle status-icon-green"></i>
+                          <i class="fas fa-check-circle status-icon green"></i>
                         <? } ?>
                     <? } else {?>
                       <? if($web_stats == 'no'){ ?>

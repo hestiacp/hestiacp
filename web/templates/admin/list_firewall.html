@@ -1,10 +1,10 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a class="ui-button cancel" href="/list/server/"><i class="fas fa-arrow-left status-icon-blue"></i> <?=__('Back')?></a>
-          <a href="/add/firewall/" class="ui-button cancel" title="<?=__('Add Rule')?>"><i class="fas fa-plus-circle status-icon-green"></i> <?=__('Add Rule')?></a>
+          <a class="ui-button cancel" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+          <a href="/add/firewall/" class="ui-button cancel" title="<?=__('Add Rule')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=__('Add Rule')?></a>
           <? if(!empty($_SESSION['FIREWALL_EXTENSION'])) {
-            echo '<a class="ui-button cancel" href="/list/firewall/banlist/"><i class="fas fa-eye status-icon-red"></i> '.__('list fail2ban').'</a>';
+            echo '<a class="ui-button cancel" href="/list/firewall/banlist/"><i class="fas fa-eye status-icon red"></i> '.__('list fail2ban').'</a>';
           } ?>
         </div>
         <ul class="context-menu sort-order animated fadeIn" style="display:none;">
@@ -82,9 +82,9 @@ sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$k
             <div class="clearfix l-unit__stat-col--left wide-2"><b><a href="/edit/firewall/?rule=<?=$key?>">
                 <? if($data[$key]['SUSPENDED'] == 'no'){ ?>
                   <? if ($data[$key]['ACTION'] == 'DROP') { ?>
-                    <i class="fas fa-minus-circle status-icon-red icon-pad-right"></i> <?=__($data[$key]['ACTION'])?>
+                    <i class="fas fa-minus-circle status-icon red icon-pad-right"></i> <?=__($data[$key]['ACTION'])?>
                   <? } else {?>
-                    <i class="fas fa-check-circle status-icon-green icon-pad-right"></i> <?=__($data[$key]['ACTION'])?>
+                    <i class="fas fa-check-circle status-icon green icon-pad-right"></i> <?=__($data[$key]['ACTION'])?>
                   <? } ?>
                 <? } else {?>
                   <? if ($data[$key]['ACTION'] == 'DROP') { ?>
@@ -99,11 +99,11 @@ sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$k
             <div class="clearfix l-unit__stat-col--left compact text-right">
               <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                 <div class="actions-panel clearfix">
-                  <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/firewall/?rule=<?=$key?>"><i class="fas fa-pencil-alt status-icon-orange status-icon-dim"></i></a></div>
+                  <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/firewall/?rule=<?=$key?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
                         
                   <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
                     <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
-                      <i class="fas fa-pause status-icon-highlight status-icon-dim do_<?=$spnd_action?>"></i>
+                      <i class="fas fa-pause status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
                       <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>" />
                       <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
                         <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
@@ -112,7 +112,7 @@ sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$k
                   </div>
                   <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                     <a id="delete_link_<?=$i?>" class="data-controls do_delete">
-                      <i class="fas fa-trash status-icon-red status-icon-dim do_delete"></i>
+                      <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
                       <input type="hidden" name="delete_url" value="/delete/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>" />
                       <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
                         <p class="confirmation"><?=__('DELETE_RULE_CONFIRMATION',$key)?></p>

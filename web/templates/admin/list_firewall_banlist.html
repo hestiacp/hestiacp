@@ -1,8 +1,8 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a class="ui-button cancel" href="/list/firewall/"><i class="fas fa-arrow-left status-icon-blue"></i> <?=__('Back')?></a>
-          <a href="/add/firewall/banlist" class="ui-button cancel" title="<?=__('Ban IP Address')?>"><i class="fas fa-plus-circle status-icon-green"></i> <?=__('Ban IP Address')?></a>
+          <a class="ui-button cancel" href="/list/firewall/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+          <a href="/add/firewall/banlist" class="ui-button cancel" title="<?=__('Ban IP Address')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=__('Ban IP Address')?></a>
         </div>
         <div class="l-sort-toolbar clearfix">
           <table>
@@ -60,7 +60,7 @@
                     <div class="actions-panel clearfix">
                       <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                         <a id="delete_link_<?=$i?>" class="data-controls do_delete">
-                          <i class="fas fa-trash status-icon-red status-icon-dim do_delete"></i>
+                          <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
                           <input type="hidden" name="delete_url" value="/delete/firewall/banlist/?ip=<?=$ip?>&chain=<?=$value['CHAIN']?>&token=<?=$_SESSION['token']?>" />
                           <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
                             <p class="confirmation"><?=__('DELETE_IP_CONFIRMATION',$key)?></p>

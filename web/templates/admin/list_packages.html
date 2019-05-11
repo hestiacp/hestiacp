@@ -1,301 +1,217 @@
-    <div class="l-center">
-      <div class="l-sort clearfix noselect">
-        <div class="l-unit-toolbar__buttonstrip">
-          <a class="ui-button cancel" href="/list/user/"><i class="fas fa-arrow-left status-icon-blue"></i> <?=__('Back')?></a>
-          <a href="/add/package/" class="ui-button cancel" title="<?=__('Add Package')?>"><i class="fas fa-plus-circle status-icon-green"></i> <?=__('Add Package')?></a>
-        </div>
-        <ul class="context-menu sort-order animated fadeIn" style="display:none;">
-          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
-          <li entity="sort-name"><span class="name"><?=__('Package Name')?></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
-          <li entity="sort-star" sort_as_int="1"><span class="name"><?=__('Starred')?></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
-        </ul>
-        <div class="l-sort-toolbar clearfix">
-          <table>
-            <tr>
-              <td class="sort-by">
+  <div class="l-center">
+    <div class="l-sort clearfix noselect">
+      <div class="l-unit-toolbar__buttonstrip">
+        <a class="ui-button cancel" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+        <a href="/add/package/" class="ui-button cancel" title="<?=__('Add Package')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=__('Add Package')?></a>
+    </div>
+      <ul class="context-menu sort-order animated fadeIn" style="display:none;">
+        <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+        <li entity="sort-name"><span class="name"><?=__('Package Name')?></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+        <li entity="sort-star" sort_as_int="1"><span class="name"><?=__('Starred')?></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>      </ul>
+      <div class="l-sort-toolbar clearfix">
+        <table>
+          <tr>
+            <td class="sort-by">
                 <?=__('sort by');?>: <span><b><?=__('Date')?> <i class="fas fa-sort-amount-down"></i></b></span>
-              </td>
-              <td class="l-sort-toolbar__search-box">
-                <form action="/search/" method="get">
-                  <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-                  <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
-                  <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value=""><i class="fas fa-search"></i></button>
-                </form>
-              </td>
-              <td class="toggle-all">
-                <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
-                <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
-              </td>
-              <td>
-                <form action="/bulk/package/" method="post" id="objects">
+            </td>
+            <td>
+              <form action="/bulk/package/" method="post" id="objects">
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                 <div class="l-select">
-                  <select name="action" id="">
+                  <select class="" name="action">
                     <option value=""><?=__('apply to selected')?></option>
                     <option value="delete"><?=__('delete')?></option>
                   </select>
                 </div>
-                <input type="submit" class="l-sort-toolbar__filter-apply" value="" />
-              </td>
-
-            </tr>
-          </table>
-        </div>
-      </div>
-      <!-- /.l-sort -->
-    </div>
-
-    <div class="l-separator"></div>
-    <!-- /.l-separator -->
-
-
-    <div class="l-center units animated fadeIn">
-      <?php
-        foreach ($data as $key => $value) {
-           ++$i;
-      ?>
-
-
-      <div class="l-unit <? if($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended'; if($_SESSION['favourites']['PACKAGE'][$key] == 1) echo ' l-unit--starred'; ?>"
-v_unit_id="<?=$key?>" v_section="package" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>"
-sort-star="<?if($_SESSION['favourites']['PACKAGE'][$key] == 1) echo '1'; else echo '0'; ?>">
-        <div class="l-unit-toolbar clearfix">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="package[]" value="<?php echo $key ?>">
-            
-          </div>
-          <!-- l-unit-toolbar__col -->
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-            <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/package/?package=<?=$key?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
-              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-                <a id="delete_link_<?=$i?>" class="data-controls do_delete">
-                  <?=__('delete')?> <i class="do_delete"></i>
-                  <input type="hidden" name="delete_url" value="/delete/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" />
-                  <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
-                    <p class="confirmation"><?=__('DELETE_PACKAGE_CONFIRMATION',$key)?></p>
-                  </div>
-                </a>
-                <span class="shortcut delete">&nbsp;Del</span>
-              </div>
-
-            </div>
-            <!-- /.actiona-panel -->
-          </div>
-          <!-- l-unit-toolbar__col -->
-        </div>
-        <!-- /.l-unit-toolbar -->
-
-        <div class="l-unit__col l-unit__col--left clearfix">
-          <div class="l-unit__date">
-            <?=translate_date($data[$key]['DATE'])?>
-          </div>
-          <div class="l-unit__suspended"><?__('suspended')?></div>
-          <div class="text-center">
-            <i class="l-icon-star" title="<?=__('save to favorites')?>"></i>
-          </div>
-        </div>
-        <!-- /.l-unit__col -->
-        <div class="l-unit__col l-unit__col--right">
-          <div class="l-unit__name separate">
-            <?=$key?>
-          </div>
-
-
-          <div class="l-unit__stats">
-            <table>
-
-               <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Web Template')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['WEB_TEMPLATE']?></b>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('DNS domains')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=__($data[$key]['DNS_DOMAINS'])?></b>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix last">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Backups')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['BACKUPS']?></b>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-
-              <tr>
-                <td>
-                  <? if (!empty($_SESSION['PROXY_SYSTEM'])) { ?>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Proxy Template')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['PROXY_TEMPLATE']?></b>
-                    </div>
-                  </div>
-                  <? } ?>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('DNS records')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=__($data[$key]['DNS_RECORDS'])?></b>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix last">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Bandwidth')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-<?php if (preg_match('/[a-z]/i', $data[$key]['BANDWIDTH'])): ?>
-                      <b><?=__($data[$key]['BANDWIDTH'])?></b>
-<?php else: ?>
-                      <b><?=humanize_usage_size($data[$key]['BANDWIDTH'])?></b> <?=humanize_usage_measure($data[$key]['BANDWIDTH'])?>
-
-<?php endif; ?>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-
-              <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('DNS Template')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['DNS_TEMPLATE']?></b>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Mail Domains')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=__($data[$key]['MAIL_DOMAINS'])?></b>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix last">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Disk')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-<?php if (preg_match('/[a-z]/i', $data[$key]['DISK_QUOTA'])): ?>
-                      <b><?=__($data[$key]['DISK_QUOTA'])?></b>
-<?php else: ?>
-                      <b><?=humanize_usage_size($data[$key]['DISK_QUOTA'])?></b> <?=humanize_usage_measure($data[$key]['DISK_QUOTA'])?>
-
-<?php endif; ?>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-
-              <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('SSH Access')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['SHELL']?></b>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Mail Accounts')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=__($data[$key]['MAIL_ACCOUNTS'])?></b>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix last">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Name Servers')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=str_replace(',', '<br>',$data[$key]['NS'])?></b>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-
-              <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Web Domains')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=__($data[$key]['WEB_DOMAINS'])?></b>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Databases')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=__($data[$key]['DATABASES'])?></b>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                </td>
-              </tr>
-
-              <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Web Aliases')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=__($data[$key]['WEB_ALIASES'])?></b>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Cron Jobs')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=__($data[$key]['CRON_JOBS'])?></b>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                </td>
-              </tr>
-
-            </table>
-          </div>
-          <!-- /.l-unit__stats -->
-        </div>
-        <!-- /.l-unit__col -->
-      </div>
-      <!-- /.l-unit -->
-      <!-- div class="l-separator"></div-->
-      <!-- /.l-separator -->
-      <?}?>
-
-    </div>
-
-    <div id="vstobjects">
-        <div class="l-separator"></div>
-    <div class="l-center">
-        <div class="l-unit-ft">
-          <table class='data'></table>
-          <!-- /form -->
-          <div class="l-unit__col l-unit__col--left clearfix"></div>
-          <div class="data-count l-unit__col l-unit__col--right clearfix">
-            <?php
-              if ( $i == 1) {
-                echo __('1 package');
-              } else {
-                echo __('%s packages',$i);
-              }
-            ?>
-          </div>
+                <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
+            </td>
+          </tr>
+        </table>
       </div>
     </div>
   </div>
+
+  <div class="l-separator"></div>
+
+  <div class="l-center units animated fadeIn">
+      <div class="table-header"> 
+          <div class="l-unit__col l-unit__col--right">
+                <div class="clearfix l-unit__stat-col--left super-compact">
+                  <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
+                </div>
+                <div class="clearfix l-unit__stat-col--left wide-2"><b><?php print __('Package');?></b></div>
+                <div class="clearfix l-unit__stat-col--left compact-3 text-right"><b>&nbsp;</b></div>
+                <div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-terminal"></i></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-hdd"></i></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-exchange-alt"></i></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-globe-americas"></i></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-link"></i></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-atlas"></i></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-globe"></i></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-mail-bulk"></i></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-inbox"></i></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-database"></i></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-clock"></i></b></div>
+           </div>
+        </div>
+
+    <?php
+      foreach ($data as $key => $value) {
+        ++$i;
+        if ($data[$key]['SUSPENDED'] == 'yes') {
+          $status = 'suspended';
+          $spnd_action = 'unsuspend' ;
+          $spnd_confirmation = 'UNSUSPEND_USER_CONFIRMATION' ;
+        } else {
+          $status = 'active';
+          $spnd_action = 'suspend' ;
+          $spnd_confirmation = 'SUSPEND_USER_CONFIRMATION' ;
+        }
+    ?>
+
+    <div class="l-unit  <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['USER'][$key] == 1) echo ' l-unit--starred';?>" v_section="user"
+v_unit_id="<?=$key?>" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>"
+sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DISK']?>" sort-star="<? if($_SESSION['favourites']['USER'][$key] == 1) echo '1'; else echo '0'; ?>">
+      <div class="l-unit__col l-unit__col--right">
+        <div class="clearfix l-unit__stat-col--left super-compact">
+          <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="user[]" value="<?=$key?>">
+        </div>
+            <div class="clearfix l-unit__stat-col--left wide-2"><b><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>"><?=$key?></b></a>
+              <br />
+              <span style="font-size: 0.8rem;"><?=str_replace(',', ', ',$data[$key]['NS'])?></span>
+            </div>
+            <!-- START QUICK ACTION TOOLBAR AREA -->
+            <div class="clearfix l-unit__stat-col--left text-right compact-3">
+                  <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+                      <div class="actions-panel clearfix">
+                        <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></div>
+                        <div class="actions-panel__col actions-panel__edit" key-action="href"><a href="/copy/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-clone status-icon teal status-icon dim"></i></div>
+                        <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+                          <a id="delete_link_<?=$i?>" class="data-controls do_delete">
+                            <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
+                            <input type="hidden" name="delete_url" value="/delete/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" />
+                            <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
+                              <p class="confirmation"><?=__('DELETE_PACKAGE_CONFIRMATION',$key)?></p>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+            </div>
+            <!-- END QUICK ACTION TOOLBAR AREA -->
+            <div class="clearfix l-unit__stat-col--left text-center compact">
+              <? if($data[$key]['SHELL'] == 'nologin'){ ?>
+                <i class="fas fa-minus-circle status-icon large"></i>
+              <? } else {?>
+                <i class="fas fa-check-circle status-icon large"></i>
+              <? } ?>
+            </div>
+            <div class="clearfix l-unit__stat-col--left text-center compact">
+              <?php if (preg_match('/[a-z]/i', $data[$key]['DISK_QUOTA'])): ?>
+                <b>&infin;</b>
+              <?php else: ?>
+                  <b><?=humanize_usage_size($data[$key]['DISK_QUOTA'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['DISK_QUOTA'])?></span>
+              <?php endif; ?>
+            </div>
+            <div class="clearfix l-unit__stat-col--left text-center compact">
+                <? if($data[$key]['WEB_DOMAINS'] == 'unlimited'){ ?>
+                  <b>&infin;</b>
+                <? } else {?>
+                  <b><?=humanize_usage_size($data[$key]['BANDWIDTH'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['BANDWIDTH'])?></span>
+                <? } ?>
+            </div>
+            <div class="clearfix l-unit__stat-col--left text-center super-compact">
+              <span class="jump-top badge gray raised">
+                <? if($data[$key]['WEB_DOMAINS'] == 'unlimited'){ ?>
+                  <b>&infin;</b>
+                <? } else {?>
+                 <b><?=$data[$key]['WEB_DOMAINS']?></b>
+                <? } ?>
+              </span>
+            </div>
+            <div class="clearfix l-unit__stat-col--left text-center super-compact">
+                <span class="jump-top badge gray raised">
+                  <? if($data[$key]['WEB_ALIASES'] == 'unlimited'){ ?>
+                    <b>&infin;</b>
+                  <? } else {?>
+                   <b><?=$data[$key]['WEB_ALIASES']?></b>
+                  <? } ?>
+                </span>
+            </div>
+            <div class="clearfix l-unit__stat-col--left text-center super-compact">
+                <span class="jump-top badge gray raised">
+                  <? if($data[$key]['DNS_DOMAINS'] == 'unlimited'){ ?>
+                    <b>&infin;</b>
+                  <? } else {?>
+                   <b><?=$data[$key]['DNS_DOMAINS']?></b>
+                  <? } ?>
+                </span>
+            </div>
+            <div class="clearfix l-unit__stat-col--left text-center super-compact">
+                <span class="jump-top badge gray raised">
+                  <? if($data[$key]['DNS_RECORDS'] == 'unlimited'){ ?>
+                    <b>&infin;</b>
+                  <? } else {?>
+                   <b><?=$data[$key]['DNS_RECORDS']?></b>
+                  <? } ?>
+                </span>
+            </div>
+            <div class="clearfix l-unit__stat-col--left text-center super-compact">
+                <span class="jump-top badge gray raised">
+                  <? if($data[$key]['MAIL_DOMAINS'] == 'unlimited'){ ?>
+                    <b>&infin;</b>
+                  <? } else {?>
+                   <b><?=$data[$key]['MAIL_DOMAINS']?></b>
+                  <? } ?>
+                </span>
+            </div>
+            <div class="clearfix l-unit__stat-col--left text-center super-compact">
+                <span class="jump-top badge gray raised">
+                  <? if($data[$key]['MAIL_ACCOUNTS'] == 'unlimited'){ ?>
+                    <b>&infin;</b>
+                  <? } else {?>
+                   <b><?=$data[$key]['MAIL_ACCOUNTS']?></b>
+                  <? } ?>
+                </span>
+            </div>
+            <div class="clearfix l-unit__stat-col--left text-center super-compact">
+                <span class="jump-top badge gray raised">
+                  <? if($data[$key]['DATABASES'] == 'unlimited'){ ?>
+                    <b>&infin;</b>
+                  <? } else {?>
+                   <b><?=$data[$key]['DATABASES']?></b>
+                  <? } ?>
+                </span>
+              </div>
+              <div class="clearfix l-unit__stat-col--left text-center super-compact">
+                  <span class="jump-top badge gray raised">
+                    <? if($data[$key]['CRON_JOBS'] == 'unlimited'){ ?>
+                      <b>&infin;</b>
+                    <? } else {?>
+                     <b><?=$data[$key]['CRON_JOBS']?></b>
+                    <? } ?>
+                  </span>
+                </div>
+        </div>
+       </div>
+    <?}?>
+  </div>
+
+  <div id="vstobjects">
+      <div class="l-separator visible"></div>
+  <div class="l-center">
+      <div class="l-unit-ft">
+        <table class='data'></table>
+        <div class="l-unit__col l-unit__col--left clearfix"></div>
+        <div class="data-count l-unit__col l-unit__col--right clearfix">
+          <?php
+          if ( $i == 1) {
+            echo __('1 package');
+          } else {
+            echo __('%s packages',$i);
+          }
+        ?>
+        </div>
+    </div>
+  </div>
+</div>

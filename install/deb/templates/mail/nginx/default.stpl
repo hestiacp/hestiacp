@@ -44,8 +44,8 @@ server {
         alias /var/www/document_errors/;
     }
 
-        location @fallback {
-        proxy_pass https://%ip%:%web_ssl_port%;
+    location @fallback {
+    proxy_pass https://%ip%:%web_ssl_port%;
     }
 
     include %home%/%user%/conf/mail/%root_domain%/%proxy_system%.conf_*;

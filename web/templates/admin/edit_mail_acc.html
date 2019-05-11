@@ -201,7 +201,7 @@
                         </tr>
                         <?
                             list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
-                            $webmail = "http://webmail.".$v_domain."/";
+                            $webmail = "http://".$v_webmail_alias.".$v_domain."/";
                         ?>
                         <tr>
                             <td><?=__('Webmail URL')?>:</td>

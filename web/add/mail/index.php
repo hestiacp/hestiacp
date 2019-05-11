@@ -52,11 +52,8 @@ if (!empty($_POST['ok'])) {
 
     // Set domain name to lowercase and remove www prefix
     $v_domain = preg_replace("/^www./i", "", $_POST['v_domain']);
+    $v_domain = escapeshellarg($v_domain);
     $v_domain = strtolower($v_domain);
-    exec (HESTIA_CMD."v-list-mail-domain ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
-    $data = json_decode(implode('', $output), true);
-    unset($output);
-    $v_webmail_alias = $data[$v_domain]['WEBMAIL_ALIAS'];
 
     // Add mail domain
     if (empty($_SESSION['error_msg'])) {
@@ -168,6 +165,13 @@ if (!empty($_POST['ok_acc'])) {
         exec (HESTIA_CMD."v-add-mail-account-fwd-only ".$user." ".$v_domain." ".$v_account, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
+    }
+
+    // Get webmail url
+    if (empty($_SESSION['error_msg'])) {
+        list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
+        $webmail = "http://".$hostname."/".$v_webmail_alias."/";
+        if (!empty($_SESSION['WEBMAIL_ALIAS'])) $webmail = $_SESSION['WEBMAIL_ALIAS'];
     }
 
     // Email login credentials

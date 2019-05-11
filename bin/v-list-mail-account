@@ -17,6 +17,7 @@ format=${4-shell}
 
 # Includes
 source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
 
 # JSON list function
 json_list() {
@@ -30,7 +31,8 @@ json_list() {
         "U_DISK": "'$U_DISK'",
         "SUSPENDED": "'$SUSPENDED'",
         "TIME": "'$TIME'",
-        "DATE": "'$DATE'"
+        "DATE": "'$DATE'",
+        "WEBMAIL_ALIAS": "'$WEBMAIL_ALIAS.$domain'"
     }'
     echo '}'
 }
@@ -47,12 +49,13 @@ shell_list() {
     echo "SUSPENDED:      $SUSPENDED"
     echo "TIME:           $TIME"
     echo "DATE:           $DATE"
+    echo "WEBMAIL_ALIAS:  $WEBMAIL_ALIAS.$domain"
 }
 
 # PLAIN list function
 plain_list() {
     echo -ne "$account\t$ALIAS\t$FWD\t$FWD_ONLY\t$AUTOREPLY\t$QUOTA\t"
-    echo -e "$U_DISK\t$SUSPENDED\t$TIME\t$DATE"
+    echo -e "$U_DISK\t$SUSPENDED\t$TIME\t$DATE\t$WEBMAIL_ALIAS.$domain"
 }
 
 # CSV list function
@@ -60,7 +63,7 @@ csv_list() {
     echo -n  "ACCOUNT,ALIAS,FWD,FWD_ONLY,AUTOREPLY,QUOTA,U_DISK"
     echo "SUSPENDED,TIME,DATE"
     echo -n "$ACCOUNT,\"$ALIAS\",\"$FWD\",$FWD_ONLY,$AUTOREPLY,$QUOTA,"
-    echo "$U_DISK,$SUSPENDED,$TIME,$DATE"
+    echo "$U_DISK,$SUSPENDED,$TIME,$DATE\t$WEBMAIL_ALIAS.$domain"
 }
 
 

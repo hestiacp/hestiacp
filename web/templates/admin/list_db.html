@@ -121,12 +121,12 @@ sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" so
                 <div class="clearfix l-unit__stat-col--left super-compact">
                   <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="database[]" value="<?php echo $key ?>">
                 </div>
-                <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/db/?database=<?=$key?>"><?=$key?></a></b></div>
+                <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>"><?=$key?></a></b></div>
                 <!-- START QUICK ACTION TOOLBAR AREA -->
                 <div class="clearfix l-unit__stat-col--left text-right compact-2">
                       <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                           <div class="actions-panel clearfix">
-                            <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/db/?database=<?=$key?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+                            <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
                             <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
                               <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
                                 <i class="fas fa-pause status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>

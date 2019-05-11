@@ -79,7 +79,7 @@ sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$k
               <div class="clearfix l-unit__stat-col--left super-compact">
                 <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="rule[]" value="<?php echo $key ?>">
               </div>
-            <div class="clearfix l-unit__stat-col--left wide-2"><b><a href="/edit/firewall/?rule=<?=$key?>">
+            <div class="clearfix l-unit__stat-col--left wide-2"><b><a href="/edit/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>">
                 <? if($data[$key]['SUSPENDED'] == 'no'){ ?>
                   <? if ($data[$key]['ACTION'] == 'DROP') { ?>
                     <i class="fas fa-minus-circle status-icon red icon-pad-right"></i> <?=__($data[$key]['ACTION'])?>
@@ -99,7 +99,7 @@ sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$k
             <div class="clearfix l-unit__stat-col--left compact text-right">
               <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                 <div class="actions-panel clearfix">
-                  <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/firewall/?rule=<?=$key?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+                  <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
                         
                   <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
                     <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">

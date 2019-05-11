@@ -92,15 +92,15 @@ sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favouri
                   <div class="clearfix l-unit__stat-col--left super-compact">
                     <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?php echo $key ?>">
                   </div>
-                  <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="?domain=<?=$key?>"><?=$key?></a></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>"><?=$key?></a></b></div>
                   <!-- START QUICK ACTION TOOLBAR AREA -->
                   <div class="clearfix l-unit__stat-col--left text-right compact-4">
                       <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                           <div class="actions-panel clearfix">
-                            <div class="actions-panel__col actions-panel__logs shortcut-n" key-action="href"><a href="/add/mail/?domain=<?=$key?>"><i class="fas fa-plus-circle status-icon green status-icon dim"></i></a></div>
-                            <div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="?domain=<?=$key?>"><i class="fas fa-users status-icon blue status-icon dim"></i></div>
+                            <div class="actions-panel__col actions-panel__logs shortcut-n" key-action="href"><a href="/add/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-plus-circle status-icon green status-icon dim"></i></a></div>
+                            <div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-users status-icon blue status-icon dim"></i></div>
                             <div class="actions-panel__col actions-panel__edit" key-action="href"><a href="http://webmail.<?=$key?>/" target="_blank"><i class="fas fa-paper-plane status-icon lightblue status-icon dim"></i></div>
-                            <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/mail/?domain=<?=$key?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+                            <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
 
                             <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
                               <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">

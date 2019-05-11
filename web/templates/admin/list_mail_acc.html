@@ -92,14 +92,14 @@ sort-star="<? if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] =
                 <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="account[]" value="<?php echo $key ?>">
                 <input type="hidden" value="<?php echo $_GET['domain'] ?>" name="domain" />
               </div>
-              <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>"><?=$key."@".$_GET['domain']?></a></b></div>
+              <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>"><?=$key."@".$_GET['domain']?></a></b></div>
 
               <!-- START QUICK ACTION TOOLBAR AREA -->
               <div class="clearfix l-unit__stat-col--left text-right compact-4">
                 <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                   <div class="actions-panel clearfix">
                     <div class="actions-panel__col actions-panel__edit" key-action="href"><a href="http://webmail.<?=htmlspecialchars($_GET['domain'])?>/?_user=<?=$key?>@<?=htmlspecialchars($_GET['domain'])?>&&_action=login" target="_blank"><i class="fas fa-envelope-open-text status-icon maroon status-icon dim"></i></div>
-                    <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+                    <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
 
                     <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
                       <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">

@@ -4,7 +4,7 @@ server {
     root        /var/lib/roundcube;
     index       index.php index.html index.htm;
     access_log /var/log/nginx/domains/%domain%.log combined;
-    error_log /var/log/nginx/domains/%domain%.error.log error;
+    error_log  /var/log/nginx/domains/%domain%.error.log error;
 
     include %home%/%user%/conf/mail/%root_domain%/nginx.forcessl.conf*;
   

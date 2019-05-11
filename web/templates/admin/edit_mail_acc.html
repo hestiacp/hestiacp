@@ -115,7 +115,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="step-left">
+                            <td>
                                 <table style="display:<?php if ($v_autoreply == 'yes') { echo 'block';} else {echo 'none';}?> ;" id="autoreplytable">
                                     <tr>
                                         <td class="vst-text" style="padding: 12px 0 0 0;">
@@ -124,7 +124,7 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <textarea size="20" class="vst-textinput" name="v_autoreply_message"><?=htmlentities(trim($v_autoreply_message, "'"))?></textarea>
+                                            <textarea size="20" class="vst-textinput short" name="v_autoreply_message"><?=htmlentities(trim($v_autoreply_message, "'"))?></textarea>
                                         </td>
                                     </tr>
                                 </table>

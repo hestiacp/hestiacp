@@ -19,8 +19,8 @@ server {
     }
 
     location / {
-       try_files $uri $uri/ /index.php?q=$uri&$args;
-       location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
+        try_files $uri $uri/ /index.php?q=$uri&$args;
+        location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
             expires 7d;
             fastcgi_hide_header "Set-Cookie";
         }

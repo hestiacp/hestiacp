@@ -52,7 +52,6 @@ if (!empty($_POST['ok'])) {
 
     // Set domain name to lowercase and remove www prefix
     $v_domain = preg_replace("/^www./i", "", $_POST['v_domain']);
-    $v_domain = escapeshellarg($v_domain);
     $v_domain = strtolower($v_domain);
 
     // Add mail domain

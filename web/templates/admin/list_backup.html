@@ -1,8 +1,8 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a href="/schedule/backup/" class="ui-button cancel" title="<?=__('Create Backup')?>"><i class="fas fa-plus-circle status-icon-green"></i> <?=__('Create Backup')?></a>
-          <a href="/list/backup/exclusions/" class="ui-button cancel" title="<?=__('backup exclusions')?>"><i class="fas fa-folder-minus status-icon-orange"></i> <?=__('backup exclusions')?></a>
+          <a href="/schedule/backup/" class="ui-button cancel" title="<?=__('Create Backup')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=__('Create Backup')?></a>
+          <a href="/list/backup/exclusions/" class="ui-button cancel" title="<?=__('backup exclusions')?>"><i class="fas fa-folder-minus status-icon orange"></i> <?=__('backup exclusions')?></a>
         </div>
         <div class="l-sort-toolbar clearfix">
           <table>
@@ -79,11 +79,11 @@
                   <div class="clearfix l-unit__stat-col--left compact-4 text-right">
                     <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                       <div class="actions-panel clearfix">
-                        <div class="actions-panel__col actions-panel__download shortcut-d" key-action="href"><a href="/download/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-file-download status-icon-lightblue status-icon-dim"></i></a></div>
-                        <div class="actions-panel__col actions-panel__list shortcut-d" key-action="href"><a href="/list/backup/?backup=<?=$key?>"><i class="fas fa-undo status-icon-green status-icon-dim"></i></a></div>
+                        <div class="actions-panel__col actions-panel__download shortcut-d" key-action="href"><a href="/download/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-file-download status-icon lightblue status-icon dim"></i></a></div>
+                        <div class="actions-panel__col actions-panel__list shortcut-d" key-action="href"><a href="/list/backup/?backup=<?=$key?>"><i class="fas fa-undo status-icon green status-icon dim"></i></a></div>
                         <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                           <a id="delete_link_<?=$i?>" class="data-controls do_delete">
-                            <i class="fas fa-trash status-icon-red status-icon-dim do_delete"></i>
+                            <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
                             <input type="hidden" name="delete_url" value="/delete/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" />
                             <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
                               <p class="confirmation"><?=__('DELETE_BACKUP_CONFIRMATION',$key)?></p>

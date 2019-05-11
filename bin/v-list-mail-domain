@@ -34,7 +34,8 @@ json_list() {
         "SUSPENDED": "'$SUSPENDED'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'",
-        "WEBMAIL_ALIAS": "'$WEBMAIL_ALIAS.$domain'"'
+        "WEBMAIL_ALIAS": "'$WEBMAIL_ALIAS.$domain'"
+        }'
     echo '}'
 }
 

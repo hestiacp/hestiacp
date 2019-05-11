@@ -132,10 +132,10 @@ if [ ! -z "$DNS_SYSTEM" ]; then
     if [ "$dns_domain" = "$domain" ]; then
         # Replace DNS domain CAA records with Let's Encrypt values
         if [ -z "$caa_record" ]; then
-            $BIN/v-add-dns-record $user $domain '@' 'CAA' 'issue 0 "letsencrypt.org"'
+            $BIN/v-add-dns-record $user $domain '@' 'CAA' '0 issue "letsencrypt.org"'
         else
             $BIN/v-delete-dns-record $user $domain $caa_record
-            $BIN/v-add-dns-record $user $domain '@' 'CAA' 'issue 0 "letsencrypt.org"'
+            $BIN/v-add-dns-record $user $domain '@' 'CAA' '0 issue "letsencrypt.org"'
         fi
     fi
 fi

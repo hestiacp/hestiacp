@@ -45,18 +45,16 @@ if [[ $rtype =~ NS|CNAME|MX|PTR|SRV ]]; then
     fi
 fi
 
-if [ $rtype != "CAA" ]; then
-    dvalue=${dvalue//\"/}
-    # Exclude CAA records for ' enclosure
-    if [[ "$dvalue" =~ [\;[:space:]] ]]; then
-        dvalue='"'"$dvalue"'"'
-    fi
-fi
+# Cleanup quotes on dvalue
+# - [CAA] records will be left unchanged
+# - [SRV] will be  stripped of double quotes even when  containg spaces
+# - Rest of record types will be striped of quotes and the final string
+#   will be enclosed in double quotes if  containg spaces or semicolons 
 
-if [[ "$dvalue" =~ [\;[:space:]] ]]; then
+if [ "$rtype" != "CAA" ]; then
     dvalue=${dvalue//\"/}
-    # Exclude SRV records for ' enclosure
-    if [ "$rtype" != 'SRV' ]; then
+
+    if [ "$rtype" != 'SRV' ] && [[ "$dvalue" =~ [\;[:space:]] ]]; then
         dvalue='"'"$dvalue"'"'
     fi
 fi

@@ -12,6 +12,7 @@ server {
         try_files $uri $uri/ /index.php?$query_string;
         location ~* ^.+\.(jpeg|jpg|png|gif|bmp|ico|svg|css|js)$ {
             expires     max;
+            fastcgi_hide_header "Set-Cookie";
         }
 
         location ~ [^/]\.php(/|$) {

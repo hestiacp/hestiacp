@@ -22,6 +22,7 @@ server {
                 return 444;
             }
             expires     max;
+            fastcgi_hide_header "Set-Cookie";
         }
 
         location ~* ^/(?:index|piwik)\.php$ {

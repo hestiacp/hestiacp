@@ -14,6 +14,7 @@ server {
 
         location ~* ^.+\.(jpeg|jpg|png|gif|bmp|ico|svg|css|js)$ {
             expires     max;
+            fastcgi_hide_header "Set-Cookie";
         }
 
         # deny running scripts inside writable directories

@@ -47,6 +47,10 @@ elif [ "$os" = "ubuntu" ]; then
     VERSION='ubuntu'
 fi
 
+# Configure apt to retry downloading on error
+if [ ! -f /etc/apt/apt.conf.d/80-retries ]; then
+    echo "APT::Acquire::Retries \"3\";" > /etc/apt/apt.conf.d/80-retries
+fi
 
 # Clear the screen from apt output to prepare for upgrade installer experience
 clear

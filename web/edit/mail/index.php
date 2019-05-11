@@ -98,6 +98,7 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['account']))) {
     $v_quota = $data[$v_account]['QUOTA'];
     $v_autoreply = $data[$v_account]['AUTOREPLY'];
     $v_suspended = $data[$v_account]['SUSPENDED'];
+    $v_webmail_alias = $data[$v_account]['WEBMAIL_ALIAS'];
     if ( $v_suspended == 'yes' ) {
         $v_status =  'suspended';
     } else {

@@ -8,6 +8,7 @@ server {
     error_log   /var/log/nginx/domains/%domain%.error.log error;
         
     include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
+    
     location = /favicon.ico {
         log_not_found off;
         access_log off;

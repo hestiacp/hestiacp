@@ -113,8 +113,8 @@ $LANG['en'] = array(
 
     'Adding User'  => 'Add User',
     'Editing User'  => 'Edit User',
-    'Adding Domain'  => 'Add Domain',
-    'Editing Domain'  => 'Edit Domain',
+    'Adding Domain'  => 'Add Web Domain',
+    'Editing Domain'  => 'Edit Web Domain',
     'Adding DNS Domain'  => 'Add DNS Zone',
     'Editing DNS Domain'  => 'Edit DNS Zone',
     'Adding DNS Record'  => 'Add DNS Record',

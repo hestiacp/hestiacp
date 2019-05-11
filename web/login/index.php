@@ -128,7 +128,11 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
                         unset($_SESSION['request_uri']);
                         exit;
                     } else {
-                        header("Location: /list/web/");
+                        if ($v_user == 'admin') {
+                            header("Location: /list/user/");
+                        } else {
+                            header("Location: /list/web/");
+                        }
                         exit;
                     }
                 }

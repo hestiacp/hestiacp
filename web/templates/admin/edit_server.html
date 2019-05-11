@@ -1,8 +1,10 @@
-    <div class="l-center edit">
-      <div class="l-sort clearfix">
-        <div class="l-sort-toolbar clearfix float-left">
-          <span class="title edit"><b><?=__('Configuring Server')?></b></span>
-            <?php
+<div class="l-center edit">
+        <div class="l-sort clearfix">
+          <div class="l-unit-toolbar__buttonstrip">
+            <a class="ui-button cancel" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+          </div>
+          <div class="l-unit-toolbar__buttonstrip float-right">
+              <?php
               if (!empty($_SESSION['error_msg'])) {
                 echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
               } else {
@@ -11,9 +13,10 @@
                 }
               }
             ?>
+            <a href="#" class="ui-button" title="<?=__('Save')?>" onclick="document.getElementById('vstobjects').submit();"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
+          </div>
         </div>
       </div>
-    </div>
 
     <div class="l-separator"></div>
     <!-- /.l-separator -->
@@ -41,80 +44,121 @@
                     </td>
                     <td class="data-dotted">
                         <table class="data-col2" width="600px">
-                            <tr>
-                                <td class="vst-text step-top">
-                                    <?php print __('Hostname') ?>
+                          <tr>
+                            <td class="step-top">
+                                <span class="login-welcome"><?=__('Configuring Server')?></span>
+                                <br /><br />
+                            </td>
+                          </tr>
+                          <tr>
+                                <td class="vst-text input-label step-top advanced-options">
+                                    <a href="javascript:elementHideShow('basic');" class="vst-text">
+                                        <i class="fas fa-cog"></i> <b><?php print __('Basic options');?> <img src="/images/arrow.png"></b>
+                                    </a>
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                    <input type="text" size="20" class="vst-input" name="v_hostname" value="<?=htmlentities(trim($v_hostname, "'"))?>">
-                                    <br><br>
+                                <td class="vst-text input-label step-left">
+                                     <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="basic">
+                                            <td class="vst-text">
+                                                <?php print __('Hostname') ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_hostname" value="<?=htmlentities(trim($v_hostname, "'"))?>">
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print __('Time Zone');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_timezone">
+                                                    <?php
+                                                        foreach ($v_timezones as $key => $value) {
+                                                            echo "\t\t\t\t<option value=\"".$key."\"";
+                                                            if ((!empty($v_timezone)) && ( $key == $v_timezone)){
+                                                                echo ' selected' ;
+                                                            }
+                                                            if ((!empty($v_timezone)) && ( $key == $_POST['v_timezone'])){
+                                                                echo ' selected' ;
+                                                            }
+                                                            echo ">".$value."</option>\n";
+                                                        }
+                                                    ?>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print __('Default Language');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_language">
+                                                    <?php
+                                                        foreach ($languages as $key => $value) {
+                                                            echo "\t\t\t\t<option value=\"".$value."\"";
+                                                            if ((!empty($_SESSION['LANGUAGE'])) && ( $value == $_SESSION['LANGUAGE'])){
+                                                                echo ' selected' ;
+                                                            }
+                                                            if ((!empty($_SESSION['LANGUAGE'])) && ( $value == $_POST['v_language'])){
+                                                                echo ' selected' ;
+                                                            }
+                                                            echo ">".$value."</option>\n";
+                                                        }
+                                                    ?>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text input-label">
-                                    <?php print __('Time Zone');?>
+                                <td class="vst-text input-label step-top advanced-options">
+                                    <a href="javascript:elementHideShow('version');" class="vst-text">
+                                        <i class="fas fa-code-branch"></i><b><?php print __('Version');?> &amp; <?php print __('Release');?> <img src="/images/arrow.png"></b>
+                                    </a>
+                                </td>
+                            </tr>
+                            <td class="vst-text input-label step-left">
+                                    <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="version">
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print __('Version') ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_version" value="<?php echo $_SESSION['VERSION']; ?>" disabled>
+                                                <br><br>
+                                            </td>
+                                        </tr>                           
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print __('Release') ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_release_branch" value="<?php echo $_SESSION['RELEASE_BRANCH']; ?>">
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                    <select class="vst-list long-2" name="v_timezone">
-                                        <?php
-                                            foreach ($v_timezones as $key => $value) {
-                                                echo "\t\t\t\t<option value=\"".$key."\"";
-                                                if ((!empty($v_timezone)) && ( $key == $v_timezone)){
-                                                    echo ' selected' ;
-                                                }
-                                                if ((!empty($v_timezone)) && ( $key == $_POST['v_timezone'])){
-                                                    echo ' selected' ;
-                                                }
-                                                echo ">".$value."</option>\n";
-                                            }
-                                        ?>
-                                    </select>
-                                    <br><br>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text input-label">
-                                    <?php print __('Default Language');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <select class="vst-list" name="v_language">
-                                        <?php
-                                            foreach ($languages as $key => $value) {
-                                                echo "\t\t\t\t<option value=\"".$value."\"";
-                                                if ((!empty($_SESSION['LANGUAGE'])) && ( $value == $_SESSION['LANGUAGE'])){
-                                                    echo ' selected' ;
-                                                }
-                                                if ((!empty($_SESSION['LANGUAGE'])) && ( $value == $_POST['v_language'])){
-                                                    echo ' selected' ;
-                                                }
-                                                echo ">".$value."</option>\n";
-                                            }
-                                        ?>
-                                    </select>
-                                    <br><br>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text input-label">
-                                    <?php print __('Release Branch') ?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" size="20" class="vst-input" name="v_release_branch" value="<?php echo $_SESSION['RELEASE_BRANCH']; ?>">
-                                    <br><br>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text input-label step-top">
+                                <td class="vst-text input-label step-top advanced-options">
                                     <a href="javascript:elementHideShow('web');" class="vst-text">
-                                        <b><?php print __('WEB');?> <img src="/images/arrow.png"></b>
+                                        <i class="fas fa-globe-americas"></i><b><?php print __('Web Server');?> <img src="/images/arrow.png"></b>
                                     </a>
                                 </td>
                             </tr>
@@ -176,9 +220,9 @@
 
 
                             <tr>
-                                <td class="vst-text input-label step-top">
+                                <td class="vst-text input-label step-top advanced-options">
                                     <a href="javascript:elementHideShow('dns');" class="vst-text">
-                                        <b><?php print __('DNS');?> <img src="/images/arrow.png"></b>
+                                        <i class="fas fa-atlas"></i><b><?php print __('DNS Server');?> <img src="/images/arrow.png"></b>
                                     </a>
                                 </td>
                             </tr>
@@ -234,9 +278,9 @@
 
 
                             <tr>
-                                <td class="vst-text input-label step-top">
+                                <td class="vst-text input-label step-top advanced-options">
                                     <a href="javascript:elementHideShow('mail');" class="vst-text">
-                                        <b><?php print __('MAIL');?> <img src="/images/arrow.png"></b>
+                                        <i class="fas fa-mail-bulk"></i><b><?php print __('Mail Server');?> <img src="/images/arrow.png"></b>
                                     </a>
                                 </td>
                             </tr>
@@ -245,7 +289,7 @@
                                     <table style="display:<?php if (empty($v_mail_adv)) echo 'none';?> ;" id="mail">
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('MAIL Server') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['MAIL_SYSTEM'] ?>/"><?=__('configure')?></a>
+                                                <?php print __('Mail Server') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['MAIL_SYSTEM'] ?>/"><?=__('configure')?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -296,12 +340,11 @@
                                 </td>
                             </tr>
 
-
-
+                            
                             <tr>
-                                <td class="vst-text input-label step-top">
+                                <td class="vst-text input-label step-top advanced-options">
                                     <a href="javascript:elementHideShow('db');" class="vst-text">
-                                        <b><?php print __('DB');?> <img src="/images/arrow.png"></b>
+                                        <i class="fas fa-database"></i><b><?php print __('Databases');?> <img src="/images/arrow.png"></b>
                                     </a>
                                 </td>
                             </tr>
@@ -460,9 +503,9 @@
 
 
                             <tr>
-                                <td class="vst-text input-label step-top">
+                                <td class="vst-text input-label step-top advanced-options">
                                     <a href="javascript:elementHideShow('backup');" class="vst-text">
-                                        <b><?php print __('BACKUP');?> <img src="/images/arrow.png"></b>
+                                        <i class="fas fa-undo"></i><b><?php print __('Backups');?> <img src="/images/arrow.png"></b>
                                     </a>
                                 </td>
                             </tr>
@@ -589,9 +632,9 @@
                             </tr>
 
                             <tr>
-                                <td class="vst-text input-label step-top">
+                                <td class="vst-text input-label step-top advanced-options">
                                     <a href="javascript:elementHideShow('ssl');" class="vst-text">
-                                        <b><?php print __('Hestia SSL');?> <!-- span style="color:#cc3366;font-size:10px; padding:0 10px;">preview</span--><img src="/images/arrow.png"></b>
+                                        <i class="fas fa-lock"></i><b><?php print __('Hestia SSL');?><img src="/images/arrow.png"></b>
                                     </a>
                                 </td>
                             </tr>
@@ -623,7 +666,7 @@
                                                 <table class="additional-info">
                                                     <tr>
                                                         <td>
-                                                            <?=__('SUBJECT')?>:
+                                                            <b><?=__('SUBJECT')?>:</b>
                                                         </td>
                                                         <td class="details">
                                                             <?=$v_ssl_subject?>
@@ -632,7 +675,7 @@
                                                     <? if($v_ssl_aliases){?>
                                                     <tr>
                                                         <td>
-                                                            <?=__('ALIASES')?>:
+                                                            <b><?=__('ALIASES')?>:</b>
                                                         </td>
                                                         <td class="details">
                                                             <?=$v_ssl_aliases?>
@@ -641,7 +684,7 @@
                                                     <? } ?>
                                                     <tr>
                                                         <td>
-                                                            <?=__('NOT_BEFORE')?>:
+                                                            <b><?=__('NOT_BEFORE')?>:</b>
                                                         </td>
                                                         <td class="details">
                                                             <?=$v_ssl_not_before?>
@@ -649,7 +692,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <?=__('NOT_AFTER')?>:
+                                                            <b><?=__('NOT_AFTER')?>:</b>
                                                         </td>
                                                         <td class="details">
                                                             <?=$v_ssl_not_after?>
@@ -657,7 +700,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <?=__('SIGNATURE')?>:
+                                                            <b><?=__('SIGNATURE')?>:</b>
                                                         </td>
                                                         <td class="details">
                                                             <?=$v_ssl_signature?>
@@ -666,7 +709,7 @@
 
                                                     <tr>
                                                         <td>
-                                                            <?=__('PUB_KEY')?>:
+                                                            <b><?=__('PUB_KEY')?>:</b>
                                                         </td>
                                                         <td class="details">
                                                             <?=$v_ssl_pub_key?>
@@ -674,7 +717,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <?=__('ISSUER')?>:
+                                                            <b><?=__('ISSUER')?>:</b>
                                                         </td>
                                                         <td class="details">
                                                             <?=$v_ssl_issuer?>
@@ -689,26 +732,15 @@
 
 
                             <tr>
-                                <td class="vst-text input-label step-top">
+                                <td class="vst-text input-label step-top advanced-options">
                                     <a href="javascript:elementHideShow('hestia');" class="vst-text">
-                                        <b><?php print __('Hestia Control Panel Plugins');?> <!-- span style="color:#cc3366;font-size:10px; padding:0 10px;">preview</span--><img src="/images/arrow.png"></b>
+                                        <i class="fas fa-puzzle-piece"></i><b><?php print __('Hestia Control Panel Plugins');?> <img src="/images/arrow.png"></b>
                                     </a>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="vst-text input-label step-left">
                                     <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="hestia">
-                                        <tr>
-                                            <td class="vst-text">
-                                                <?php print __('Version') ?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" size="20" class="vst-input" name="v_version" value="<?php echo $_SESSION['VERSION']; ?>" disabled>
-                                                <br><br>
-                                            </td>
-                                        </tr>
                                         <tr>
                                             <td class="vst-text">
                                                 <?php print __('FileSystem Disk Quota');?>
@@ -744,14 +776,6 @@
 
 
                         <table class="data-col2">
-                            <tr>
-                                <td class="step-top" width="116px">
-                                    <input type="submit" class="button" name="save" value="<?=__('Save')?>">
-                                </td>
-                                <td class="step-top">
-                                    <input type="button" class="button cancel" value="<?=__('Back')?>" onclick="<?=$back?>">
-                                </td>
-                            </tr>
                         </table>
                     </td>
                 </tr>

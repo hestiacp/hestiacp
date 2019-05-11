@@ -737,7 +737,7 @@ $LANG['ru'] = array(
 
     'awstats' => 'awstats',
 
-    'Hestia SSL' => 'Hestia SSL',
+    'Hestia SSL' => 'SSL',
     'SUBJECT' => 'ОБЪЕКТ',
     'ALIASES' => 'АЛИАСЫ',
     'NOT_BEFORE' => 'НЕДОСТУПЕН ДО',

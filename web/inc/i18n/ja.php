@@ -734,7 +734,7 @@ $LANG['ja'] = array(
 
     'awstats' => 'awstats',
 
-    'Hestia SSL' => 'Hestia SSL',
+    'Hestia SSL' => 'SSL',
     'SUBJECT' => '所有者',
     'ALIASES' => 'エイリアス',
     'NOT_BEFORE' => '開始時刻',

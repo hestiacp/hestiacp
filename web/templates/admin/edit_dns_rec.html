@@ -1,8 +1,10 @@
-    <div class="l-center edit">
-      <div class="l-sort clearfix">
-        <div class="l-sort-toolbar clearfix float-left">
-          <span class="title edit"><b><?=__('Editing DNS Record')?></b></span>
-            <?php
+<div class="l-center edit">
+        <div class="l-sort clearfix">
+          <div class="l-unit-toolbar__buttonstrip">
+            <a class="ui-button cancel" href="/list/dns/?domain=<?=$v_domain?>&token=<?=$_SESSION['token']?>"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+          </div>
+          <div class="l-unit-toolbar__buttonstrip float-right">
+              <?php
               if (!empty($_SESSION['error_msg'])) {
                 echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
               } else {
@@ -11,9 +13,10 @@
                 }
               }
             ?>
+            <a href="#" class="ui-button" title="<?=__('Save')?>" onclick="document.getElementById('vstobjects').submit();"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
+          </div>
         </div>
       </div>
-    </div>
 
     <div class="l-separator"></div>
     <!-- /.l-separator -->
@@ -42,6 +45,11 @@
                     </td>
                     <td class="data-dotted">
                         <table class="data-col2">
+                            <tr>
+                                <td class="step-top">
+                                    <span class="login-welcome"><?=__('Editing DNS Record')?></span>
+                                </td>
+                            </tr>  
                             <tr>
                                 <td class="vst-text step-top">
                                     <?=__('Domain');?>
@@ -107,14 +115,6 @@
 
                         </table>
                         <table class="data-col2">
-                            <tr>
-                                <td class="step-top" width="116px">
-                                    <input type="submit" class="button" name="save" value="<?=__('Save')?>">
-                                </td>
-                                <td class="step-top">
-                                    <input type="button" class="button cancel" value="<?=__('Back')?>" onclick="<?=$back?>">
-                                </td>
-                            </tr>
                         </table>
 
                     </td>

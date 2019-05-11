@@ -577,7 +577,7 @@ $LANG['vi'] = array(
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
     'FileSystem Disk Quota' => 'Hạn mức dung lượng đĩa hệ thống',
-    'Hestia Control Panel Plugins' => 'Hestia Control Panel Plugins',
+    'Hestia Control Panel Plugins' => 'Plugins',
     'preview' => 'xem trước',
     'Reseller Role' => 'Vai trò đại lý',
     'Web Config Editor' => 'Chỉnh sửa cấu hình web',
@@ -736,7 +736,7 @@ $LANG['vi'] = array(
 
     'awstats' => 'awstats',
 
-    'Hestia SSL' => 'Hestia SSL',
+    'Hestia SSL' => 'SSL',
     'SUBJECT' => 'CHỦ ĐỀ',
     'ALIASES' => 'ÁNH XẠ',
     'NOT_BEFORE' => 'NOT_BEFORE',

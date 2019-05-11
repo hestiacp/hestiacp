@@ -959,14 +959,12 @@ a {
 }
 
 .l-profile__username {
-  color: #d2e2ee !important;
   font-size: 1.2rem !important;
 }
 
-.l-profile__username:hover {
-  color: #d2f0ff;
+.l-profile__help {
+  font-size: 1.2rem !important;
 }
-
 
 .l-profile__logout {
   color: #dbf94e !important;

@@ -755,7 +755,7 @@ $LANG['ru'] = array(
 
     'maximum characters length, including prefix' => 'максимальное %s количество символов, включая префикс',
 	
-    'Email Credentials' => 'Отправить доступы на Email',
+    'Email Credentials' => 'Данные для доступа Hestia',
 	'2 Factor Authentication' => 'Двухфакторная аутентификация',
     'Enable 2FA' => 'Включить двухфакторную аутентификацию',
     'Please scan the code below in your 2FA application:' => 'Чтобы закончить настройку 2FA, сканируйте QR-Code ниже <br /> в приложении на Вашем устройстве (например, <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google Authenticator</a>):',

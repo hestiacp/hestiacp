@@ -53,6 +53,10 @@ if (!empty($_POST['ok'])) {
     // Set domain name to lowercase and remove www prefix
     $v_domain = preg_replace("/^www./i", "", $_POST['v_domain']);
     $v_domain = strtolower($v_domain);
+    exec (HESTIA_CMD."v-list-mail-domain ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
+    $data = json_decode(implode('', $output), true);
+    unset($output);
+    $v_webmail_alias = $data[$v_domain]['WEBMAIL_ALIAS'];
 
     // Add mail domain
     if (empty($_SESSION['error_msg'])) {
@@ -78,9 +82,6 @@ if (!empty($_POST['ok_acc'])) {
         exit();
     }
 
-    // Set webmail alias
-    $v_webmail_alias = $data[$v_domain]['WEBMAIL_ALIAS'];
-    
     // Check empty fields
     if (empty($_POST['v_domain'])) $errors[] = __('domain');
     if (empty($_POST['v_account'])) $errors[] = __('account');

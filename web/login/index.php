@@ -25,7 +25,11 @@ if (isset($_SESSION['user'])) {
             $_SESSION['look_alert'] = 'yes';
         }
     }
-    header("Location: /list/web/");
+    if ($_SESSION['user'] == 'admin' && empty($_GET['loginas'])) {
+        header("Location: /list/user/");
+    } else {
+        header("Location: /list/web/");
+    }
     exit;
 }
 

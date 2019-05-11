@@ -79,6 +79,9 @@ if (!empty($_POST['ok_acc'])) {
         exit();
     }
 
+    // Set webmail alias
+    $v_webmail_alias = $data[$v_domain]['WEBMAIL_ALIAS'];
+    
     // Check empty fields
     if (empty($_POST['v_domain'])) $errors[] = __('domain');
     if (empty($_POST['v_account'])) $errors[] = __('account');
@@ -165,13 +168,6 @@ if (!empty($_POST['ok_acc'])) {
         exec (HESTIA_CMD."v-add-mail-account-fwd-only ".$user." ".$v_domain." ".$v_account, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
-    }
-
-    // Get webmail url
-    if (empty($_SESSION['error_msg'])) {
-        list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
-        $webmail = "http://".$hostname."/".$v_webmail_alias."/";
-        if (!empty($_SESSION['WEBMAIL_ALIAS'])) $webmail = $_SESSION['WEBMAIL_ALIAS'];
     }
 
     // Email login credentials

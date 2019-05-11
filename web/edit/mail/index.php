@@ -45,6 +45,8 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account']))) {
     $v_date = $data[$v_domain]['DATE'];
     $v_time = $data[$v_domain]['TIME'];
     $v_suspended = $data[$v_domain]['SUSPENDED'];
+    $v_webmail_alias = $data[$v_domain]['WEBMAIL_ALIAS'];
+    
     if ( $v_suspended == 'yes' ) {
         $v_status =  'suspended';
     } else {

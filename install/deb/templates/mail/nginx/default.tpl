@@ -36,16 +36,16 @@ server {
         fastcgi_param SCRIPT_FILENAME $request_filename;
     }
 
-    location @fallback {
-        proxy_pass http://%ip%:%web_port%;
-    }
-
     error_page 403 /error/404.html;
     error_page 404 /error/404.html;
     error_page 500 502 503 504 505 /error/50x.html;
 
     location /error/ {
         alias /var/www/document_errors/;
+    }
+
+    location @fallback {
+        proxy_pass http://%ip%:%web_port%;
     }
 
     include %home%/%user%/conf/mail/%root_domain%/%proxy_system%.conf_*;

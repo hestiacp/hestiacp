@@ -34,7 +34,7 @@ server {
 
     location /vstats/ {
         alias   %home%/%user%/web/%domain%/stats/;
-        include %home%/%user%/conf/web/%domain%.auth*;
+        include %home%/%user%/web/%domain%/stats/auth.conf*;
     }
 
     error_page  403 /error/404.html;

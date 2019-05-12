@@ -3,7 +3,7 @@ server {
     server_name %domain% %alias%;
     ssl_certificate     %ssl_pem%;
     ssl_certificate_key %ssl_key%;
-    root        /var/lib/roundcube;
+    root        %sdocroot%;
     index       index.php index.html index.htm;
     access_log /var/log/nginx/domains/%domain%.log combined;
     error_log  /var/log/nginx/domains/%domain%.error.log error;

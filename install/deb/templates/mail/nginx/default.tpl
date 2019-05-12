@@ -1,7 +1,7 @@
 server {
     listen      %ip%:%proxy_port%;
     server_name %domain% %alias%;
-    root        /var/lib/roundcube;
+    root        %docroot%;
     index       index.php index.html index.htm;
     access_log /var/log/nginx/domains/%domain%.log combined;
     error_log  /var/log/nginx/domains/%domain%.error.log error;

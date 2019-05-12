@@ -674,6 +674,12 @@ add_webmail_config() {
     ssl_pem="$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem"
     ssl_ca="$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.ca"
 
+    docroot="/var/lib/roundcube"
+    sdocroot="$docroot"
+    if [ "$SUSPENDED" = 'yes' ]; then
+        docroot="$HESTIA/data/templates/web/suspend"
+        sdocroot="$HESTIA/data/templates/web/suspend"
+    fi
     cat $MAILTPL/$1/$2 | \
         sed -e "s|%ip%|$local_ip|g" \
             -e "s|%domain%|$WEBMAIL_ALIAS.$domain|g" \

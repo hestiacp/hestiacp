@@ -24,9 +24,8 @@ server {
         alias /var/lib/roundcube/;
         location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
             expires 7d;
-            fastcgi_hide_header "Set-Cookie";
-        }
-    }
+            fastcgi_hide_header "Set-Cookie";}
+	    	}
 
     location ~ ^/(.*\.php)$ {
         alias /var/lib/roundcube/$1;

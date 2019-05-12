@@ -1044,6 +1044,7 @@ chmod 751 $HESTIA/data/templates/web/suspend/webfonts
 chmod 751 $HESTIA/data/templates/web/unassigned/css
 chmod 751 $HESTIA/data/templates/web/unassigned/js
 chmod 751 $HESTIA/data/templates/web/unassigned/webfonts
+chmod 644 $HESTIA/data/templates/web/unassigned/index.html
 
 mkdir -p /var/www/html
 

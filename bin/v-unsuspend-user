@@ -80,6 +80,9 @@ decrease_user_value 'admin' '$SUSPENDED_USERS'
 $BIN/v-restart-web $restart
 check_result $? "Web restart failed" >/dev/null
 
+$BIN/v-restart-proxy $restart
+check_result $? "Proxy restart failed" >/dev/null
+
 $BIN/v-restart-dns $restart
 check_result $? "DNS restart failed" >/dev/null
 

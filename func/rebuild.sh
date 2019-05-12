@@ -160,11 +160,11 @@ rebuild_web_domain_conf() {
     prepare_web_domain_values
 
     # Remove old web configuration files
-    if [ -f /etc/$PROXY_SYSTEM/conf.d/$domain.conf ]; then
-        rm -f /etc/$PROXY_SYSTEM/conf.d/$domain*.conf
-    fi
     if [ -f /etc/$WEB_SYSTEM/conf.d/$domain.conf ]; then
         rm -f /etc/$WEB_SYSTEM/conf.d/$domain*.conf
+    fi
+    if [ -f /etc/$PROXY_SYSTEM/conf.d/$domain.conf ]; then
+        rm -f /etc/$PROXY_SYSTEM/conf.d/$domain*.conf
     fi
 
     # Rebuilding domain directories
@@ -483,9 +483,10 @@ rebuild_mail_domain_conf() {
                 $HOMEDIR/$user/conf/mail/$domain/dkim.pem
         fi
 
-        # Removing symbolic link if domain is suspended
+        # Removing configuration files if domain is suspended
         if [ "$SUSPENDED" = 'yes' ]; then
             rm -f /etc/exim/domains/$domain_idn
+            rm -f /etc/dovecot/conf.d/domains/$domain_idn.conf
         fi
 
         # Adding mail directiry

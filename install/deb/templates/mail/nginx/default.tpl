@@ -26,23 +26,27 @@ server {
             expires 7d;
             fastcgi_hide_header "Set-Cookie";
         }
-
-        location ~ ^/(.*\.php)$ {
-            alias /var/lib/roundcube/$1;
-            fastcgi_pass 127.0.0.1:9000;
-            fastcgi_index index.php;
-            include fastcgi_params;
-            fastcgi_param SCRIPT_FILENAME $request_filename;
-        }
     }
 
-    error_page 403 /error/404.html;
-    error_page 404 /error/404.html;
-    error_page 500 502 503 504 505 /error/50x.html;
+    location ~ ^/(.*\.php)$ {
+        alias /var/lib/roundcube/$1;
+        fastcgi_pass 127.0.0.1:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $request_filename;
+    }
 
     location /error/ {
-        alias /var/www/document_errors/;
+        alias       /var/www/document_errors/;
     }
+
+    location /assets {
+       root /var/www/document_errors;
+    }
+	
+    error_page 403 /error/403.html;
+    error_page 404 /error/404.html;
+    error_page 500 502 503 504 505 /error/50x.html;
 
     location @fallback {
         proxy_pass http://%ip%:%web_port%;

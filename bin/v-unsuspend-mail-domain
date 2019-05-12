@@ -46,6 +46,8 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     ln -s $HOMEDIR/$user/conf/mail/$domain /etc/$MAIL_SYSTEM/domains/
 fi
 
+# Enable webmail access
+$BIN/v-add-webmail $user $domain 'yes'
 
 #----------------------------------------------------------#
 #                       Hestia                             #

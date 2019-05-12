@@ -47,6 +47,8 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     rm -f /etc/$MAIL_SYSTEM/domains/$domain
 fi
 
+# Removing webmail configuration
+$BIN/v-delete-webmail $user $domain 'yes'
 
 #----------------------------------------------------------#
 #                       Hestia                             #

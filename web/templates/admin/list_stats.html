@@ -1,19 +1,11 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
+          <div class="l-unit-toolbar__buttonstrip">
+              <a class="ui-button cancel" href='/list/stats/'><i class="fas fa-info-circle status-icon lightblue"></i> <?=__('Overall Statistics')?></a>
+          </div>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
-              <td class="l-sort-toolbar__search-box">
-                <form action="/search/" method="get">
-                  <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-                  <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
-                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
-                </form>
-              </td>
-              <td></td>
-              <td class="step-right">
-                <a class="vst" href='/list/stats/'><?=__('Overall Statistics')?></a>
-              </td>
               <td>
                 <form action="/list/stats/" method="get" id="objects">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
@@ -31,215 +23,64 @@
                           ?>
                     </select>
                   </div>
-                  <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
+                  <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
                 </form>
               </td>
             </tr>
           </table>
         </div>
       </div>
-      <!-- /.l-sort -->
     </div>
 
     <div class="l-separator"></div>
-    <!-- /.l-separator -->
 
+    <div class="l-center units narrow animated fadeIn">
+      <div class="header table-header">      
+        <div class="l-unit__col l-unit__col--right step-top">
+            <div class="clearfix l-unit__stat-col--left super-compact">&nbsp;</div>
+            <div class="clearfix l-unit__stat-col--left wide-2"><b><?php print __('Month');?></b></div>
+            <div class="clearfix l-unit__stat-col--left compact text-right"><b>&nbsp;</b></div>
+            <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><?php print __('IPs');?></b></div>
+            <div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-hdd" title="<?php print __('Disk');?>"></i></b></div>
+            <div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-exchange-alt" title="<?php print __('Bandwidth');?>"></i></b></div>
+            <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-globe-americas" title="<?php print __('Web Domains');?>"></i></b></div>
+            <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-link" title="<?php print __('Web Aliases');?>"></i></b></div>
+            <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-atlas" title="<?php print __('DNS Domains');?>"></i></b></div>
+            <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-globe" title="<?php print __('DNS Records');?>"></i></b></div>
+            <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-mail-bulk" title="<?php print __('Mail Domains');?>"></i></b></div>
+            <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-inbox" title="<?php print __('Mail Accounts');?>"></i></b></div>
+            <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-database" title="<?php print __('Databases');?>"></i></b></div>
+            <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-clock" title="<?php print __('Backups');?>"></i></b></div>
+         </div>
+        </div>
+      </div>
 
-    <div class="l-center units animated fadeIn">
+    <div class="l-center animated fadeIn">
       <?php
         foreach ($data as $key => $value) {
            ++$i;
       ?>
-
-
-      <div class="l-unit <? if($_COOKIE['stats-'.sha1($key)] == 1) echo ' l-unit--starred';?>" uniq-id="stats-<?=sha1($key)?>">
-        <div class="l-unit-toolbar clearfix">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-          </div>
-          <!-- l-unit-toolbar__col -->
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--right">
-            <div class="actions-panel clearfix">
-            </div>
-            <!-- /.actiona-panel -->
-          </div>
-          <!-- l-unit-toolbar__col -->
-        </div>
-        <!-- /.l-unit-toolbar -->
-
-        <div class="l-unit__col l-unit__col--left clearfix">
-          <div class="l-unit__date">
-            <?=translate_date($key)?>
-          </div>
-        </div>
-        <!-- /.l-unit__col -->
-        <div class="l-unit__col l-unit__col--right">
-          <div class="l-unit__name separate">
-            <?=__(strftime("%b", strtotime($key))).strftime(" %Y", strtotime($key))?>
-          </div>
-
-
-          <div class="l-unit__stats">
-            <table>
-
-               <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                  <div class="l-unit__stat-cols clearfix graph">
-                    <div class="l-unit__stat-col l-unit__stat-col--left">
-                      <?=__('Bandwidth')?>
-                    </div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right text-right volume">
-                      <b><?=humanize_usage_size($data[$key]['U_BANDWIDTH'])?></b> <?=humanize_usage_measure($data[$key]['U_BANDWIDTH'])?>
-                    </div>
-                  </div>
-                  <div class="l-percent">
-                    <div class="l-percent__fill" style="width: <?=get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH'])?>%"></div>
-                  </div>
-                  <!-- /.percent -->
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Web Domains')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['U_WEB_DOMAINS']?></b>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix last">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Mail Domains')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['U_MAIL_DOMAINS']?></b>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-
-              <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"></div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('SSL Domains')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['U_WEB_SSL']?></b>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix last">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Mail Accounts')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['U_MAIL_ACCOUNTS']?></b>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-
-              <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix graph">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Disk')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right text-right volume">
-                      <b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK'])?>
-                    </div>
-                  </div>
-                  <div class="l-percent">
-                    <div class="l-percent__fill" style="width: <?=get_percentage($data[$key]['U_DISK'],$data[$key]['DISK_QUOTA'])?>%"></div>
-                  </div>
-                  <!-- /.percent -->
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Web Aliases')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['U_WEB_ALIASES']?></b>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix last">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Databases')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['U_DATABASES']?></b>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-
-              <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix tiny">
-                    <div class="l-unit__stat-col l-unit__stat-col--left">
-                      <?=__('Web')?>: <b><?=humanize_usage_size($data[$key]['U_DISK_WEB'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK_WEB'])?>
-                    </div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <?=__('Databases')?>: <b><?=humanize_usage_size($data[$key]['U_DISK_DB'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK_DB'])?>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('DNS domains')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['U_DNS_DOMAINS']?></b>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix last">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Cron Jobs')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['U_CRON_JOBS']?></b>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-
-              <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix tiny">
-                    <div class="l-unit__stat-col l-unit__stat-col--left">
-                      <?=__('Mail')?>: <b><?=humanize_usage_size($data[$key]['U_DISK_MAIL'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK_MAIL'])?>
-                    </div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <?=__('User Directories')?>: <b><?=humanize_usage_size($data[$key]['U_DISK_DIRS'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK_DIRS'])?>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('DNS records')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['U_DNS_RECORDS']?></b>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix last">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('IP Addresses')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['IP_OWNED']?></b>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-
-            </table>
-          </div>
-          <!-- /.l-unit__stats -->
-        </div>
-        <!-- /.l-unit__col -->
-      </div>
-      <!-- /.l-unit -->
-      <!-- div class="l-separator"></div-->
-      <!-- /.l-separator -->
+        <div class="l-unit <? if($_COOKIE['stats-'.sha1($key)] == 1) echo ' l-unit--starred';?>" uniq-id="stats-<?=sha1($key)?>">
+          <div class="l-unit__col l-unit__col--right">
+            <div class="clearfix l-unit__stat-col--left super-compact"><i class="fas fa-calendar-alt status-icon dim"></i></div>
+            <div class="clearfix l-unit__stat-col--left wide-2"><b><?=__(strftime("%b", strtotime($key))).strftime(" %Y", strtotime($key))?></b></div>
+            <div class="clearfix l-unit__stat-col--left compact text-right"><b>&nbsp;</b></div>
+            <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><?=$data[$key]['IP_OWNED']?></b></div>
+            <div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
+            <div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_BANDWIDTH'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_BANDWIDTH'])?></span></div>
+            <div class="clearfix l-unit__stat-col--left text-center super-compact"><span class="jump-top badge gray raised"><b><?=$data[$key]['U_WEB_DOMAINS']?></b></span></div>
+            <div class="clearfix l-unit__stat-col--left text-center super-compact"><span class="jump-top badge gray raised"><b><?=$data[$key]['U_WEB_ALIASES']?></span></div>
+            <div class="clearfix l-unit__stat-col--left text-center super-compact"><span class="jump-top badge gray raised"><b><?=$data[$key]['U_WEB_SSL']?></b></span></div>
+            <div class="clearfix l-unit__stat-col--left text-center super-compact"><span class="jump-top badge gray raised"><b><?=$data[$key]['U_DNS_DOMAINS']?></b></span></div>
+            <div class="clearfix l-unit__stat-col--left text-center super-compact"><span class="jump-top badge gray raised"><b><?=$data[$key]['U_DNS_RECORDS']?></span></div>
+            <div class="clearfix l-unit__stat-col--left text-center super-compact"><span class="jump-top badge gray raised"><b><?=$data[$key]['U_MAIL_DOMAINS']?></b></span></div>
+            <div class="clearfix l-unit__stat-col--left text-center super-compact"><span class="jump-top badge gray raised"><b><?=$data[$key]['U_MAIL_ACCOUNTS']?></span></div>
+            <div class="clearfix l-unit__stat-col--left text-center super-compact"><span class="jump-top badge gray raised"><b><?=$data[$key]['U_DATABASES']?></b></span></div>
+            <div class="clearfix l-unit__stat-col--left text-center super-compact"><span class="jump-top badge gray raised"><b><?=$data[$key]['U_CRON_JOBS']?></b></span></div>
+           </div>
+         </div>
       <?}?>
+    </div>
 
     </div>
 
@@ -248,8 +89,6 @@
     <div class="l-center">
         <div class="l-unit-ft">
           <table class='data'></table>
-          <!-- /form -->
-          <div class="l-unit__col l-unit__col--left clearfix"></div>
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php
               if ( $i == 1) {

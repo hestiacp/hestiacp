@@ -743,7 +743,7 @@ $LANG['cn'] = array(
 
     'awstats' => 'AWStats',
 
-    'Hestia SSL' => 'Hestia SSL',
+    'Hestia SSL' => 'SSL',
     'SUBJECT' => '颁发给',
     'ALIASES' => '可选名称',
     'NOT_BEFORE' => '有效期从',

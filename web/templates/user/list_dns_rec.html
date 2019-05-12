@@ -1,6 +1,9 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
-        <a href="/add/dns/?domain=<?=htmlentities($_GET['domain'])?>" title="<?=__('Add DNS Record')?>" class="l-sort__create-btn"></a>
+        <div class="l-unit-toolbar__buttonstrip">
+          <a class="ui-button cancel" href="/list/dns/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+          <a href="/add/dns/?domain=<?=htmlentities($_GET['domain'])?>" class="ui-button cancel" title="<?=__('Add DNS Record')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=__('Add Record')?></a>
+        </div>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
@@ -8,52 +11,43 @@
                 <form action="/search/" method="get">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                   <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
-                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
+                  <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value=""><i class="fas fa-search"></i></button>
                 </form>
               </td>
-              <td class="toggle-all">
-                <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all">
-                <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
-              </td>
               <td>
-                <form action="/bulk/dns/" method="post">
+                <form action="/bulk/dns/" method="post" id="objects">
                 <input type="hidden" name="domain" value="<?=htmlentities($_GET['domain'])?>" />
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                 <div class="l-select">
                   <select name="action" id="">
                     <option value=""><?=__('apply to selected')?></option>
+                    <option value="suspend"><?php print __('suspend');?></option>
+                    <option value="unsuspend"><?php print __('unsuspend');?></option>
                     <option value="delete"><?php print __('delete');?></option>
                   </select>
                 </div>
-                <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
+                <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
               </td>
             </tr>
           </table>
         </div>
       </div>
-      <!-- /.l-sort -->
     </div>
-
 
     <div class="l-separator"></div>
-    <!-- /.l-separator -->
-
-
-
 
     <div class="l-center units animated fadeIn">
-
-    <div class="l-unit header">
-      <div class="subtitle"><?=__('Listing')?>  <?=htmlentities($_GET['domain'])?></div>
-    </div>
-
-    <div class="l-unit__col l-unit__col--right step-top table-header">
-      <div style="margin-bottom: 40px;">
-        <div class="clearfix l-unit__stat-col--left small"><b><?php print __('Record');?></b></div>
-        <div class="clearfix l-unit__stat-col--left compact"><b><?php print __('Type');?></b></div>
-        <div class="clearfix l-unit__stat-col--left compact"><b><?php print __('Priority');?></b></div>
-        <div class="clearfix l-unit__stat-col--left wide-4"><b><?php print __('IP or Value');?></b></div>
-      </div>
+      <div class="header table-header">
+        <div class="l-unit__col l-unit__col--right step-top">
+          <div class="clearfix l-unit__stat-col--left super-compact">
+            <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
+          </div>
+          <div class="clearfix l-unit__stat-col--left small"><b><?php print __('Record');?></b></div>
+          <div class="clearfix l-unit__stat-col--left compact text-right"><b>&nbsp;</b></div>
+          <div class="clearfix l-unit__stat-col--left compact text-center"><b><?php print __('Type');?></b></div>
+          <div class="clearfix l-unit__stat-col--left compact"><b><?php print __('Priority');?></b></div>
+          <div class="clearfix l-unit__stat-col--left wide-4"><b><?php print __('IP or Value');?></b></div>
+        </div>
     </div>
 
       <?php
@@ -70,57 +64,38 @@
           }
       ?>
 
-
-      <div class="l-unit<? if($status == 'suspended') echo ' l-unit--suspended';  if($_SESSION['favourites']['DNS_REC'][$key] == 1) echo ' l-unit--starred';?>"
- v_unit_id="<?=$key?>" v_section="dns_rec">
-        <div class="l-unit-toolbar clearfix">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check<?=$data[$key]['ID']?>" class="ch-toggle" type="checkbox" name="record[]" value="<?=$data[$key]['ID']?>">
-            <label for="check<?=$data[$key]['ID']?>" class="check-label"></label>
-          </div>
-          <!-- l-unit-toolbar__col -->
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-            <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=$_GET['domain']?>&record_id=<?=$data[$key]['ID']?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
-              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-                <a id="delete_link_<?=$i?>" class="data-controls do_delete">
-                  <?=__('delete')?> <i class="do_delete"></i>
-                  <input type="hidden" name="delete_url" value="/delete/dns/?domain=<?=$_GET['domain']?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" />
-                  <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
-                    <p class="confirmation"><?=__('DELETE_RECORD_CONFIRMATION',$data[$key]['RECORD'])?></p>
-                  </div>
-                </a>
-                <span class="shortcut delete">&nbsp;Del</span>
-              </div>
-
-            </div>
-            <!-- /.actiona-panel -->
-          </div>
-          <!-- l-unit-toolbar__col -->
-        </div>
-        <!-- /.l-unit-toolbar -->
-
-        <div class="l-unit__col l-unit__col--left clearfix">
-          <div class="l-unit__suspended"><?__('suspended')?></div>
-          <div class="text-center jump-small-top">
-            <i class="l-icon-star" title="<?=__('save to favorites')?>"></i>
-          </div>
-        </div>
-        <!-- /.l-unit__col -->
+      <div class="l-unit<? if($status == 'suspended') echo ' l-unit--suspended'; if($_SESSION['favourites']['DNS_REC'][$key] == 1) echo ' l-unit--starred';?>"
+v_unit_id="<?=$key?>" v_section="dns_rec">
         <div class="l-unit__col l-unit__col--right">
           <div class="l-unit__stats">
-            <div class="clearfix l-unit__stat-col--left small"><b><? echo substr($data[$key]['RECORD'], 0, 14); if(strlen($data[$key]['RECORD']) > 14 ) echo '..'; ?></b></div>
-            <div class="clearfix l-unit__stat-col--left compact"><b><?=$data[$key]['TYPE']?></b></div>
+            <div class="clearfix l-unit__stat-col--left super-compact">
+              <input id="check<?=$data[$key]['ID']?>" class="ch-toggle" type="checkbox" name="record[]" value="<?=$data[$key]['ID']?>">
+            </div>
+            <div class="clearfix l-unit__stat-col--left small"><b><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>"><? echo substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?></a></b></div>
+            <!-- START QUICK ACTION TOOLBAR AREA -->
+            <div class="clearfix l-unit__stat-col--left compact text-right">
+              <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+                <div class="actions-panel clearfix">
+                  <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+                  <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+                    <a id="delete_link_<?=$i?>" class="data-controls do_delete">
+                      <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
+                      <input type="hidden" name="delete_url" value="/delete/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" />
+                      <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
+                        <p class="confirmation"><?=__('DELETE_DOMAIN_CONFIRMATION',$key)?></p>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- END QUICK ACTION TOOLBAR AREA -->
+            <div class="clearfix l-unit__stat-col--left compact text-center"><b><?=$data[$key]['TYPE']?></b></div>
             <div class="clearfix l-unit__stat-col--left compact"><?=$data[$key]['PRIORITY']?>&nbsp;</div>
-            <div class="clearfix l-unit__stat-col--left wide-4"><b><?=htmlspecialchars($data[$key]['VALUE'], ENT_QUOTES, 'UTF-8')?></b></div>
+            <div class="clearfix l-unit__stat-col--left wide-4" style="font-family: 'Inconsolata', monospace;"><?=htmlspecialchars($data[$key]['VALUE'], ENT_QUOTES, 'UTF-8')?></div>
           </div>
-          <!-- /.l-unit__stats -->
         </div>
-        <!-- /.l-unit__col -->
       </div>
-      <!-- /.l-unit -->
-      <!--div class="l-separator"></div-->
-      <!-- /.l-separator -->
       <?}?>
 
     </div>
@@ -130,18 +105,16 @@
     <div class="l-center">
         <div class="l-unit-ft">
           <table class='data'></table>
-          <div class="l-unit__col l-unit__col--left clearfix"></div>
-          <div class="data-count l-unit__col l-unit__col--right clearfix">
+          <div class="data-count l-unit__col l-unit__col--right total clearfix">
             <?php
               if ( $i == 1) {
-                echo __('1 record');
+                echo __('1 DNS record');
               } else {
-                echo __('%s records',$i);
+                echo __('%s DNS records',$i);
               }
             ?>
           </div>
           <div class="data-count l-unit__col l-unit__col--right back clearfix">
-            <a class="button cancel" href="/list/dns/"><?=__('Back')?></a>
           </div>
       </div>
     </div>

@@ -4,9 +4,11 @@
   <meta charset="utf-8">
   <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
   <title>Hestia - <?=__('Web Log Manager')?> </title>
-  <link rel="stylesheet" href="/css/styles.min.css">
-
-  <link type="text/css" href="/css/jquery-custom-dialogs.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.min.css?1446554103">
+  <link type="text/css" href="/css/animate.css?1446554103" rel="stylesheet" />
+  <link type="text/css" href="/css/jquery-custom-dialogs.css?1446554103" rel="stylesheet" />
+  <link type="text/css" href="/css/all.min.css?1446554103" rel="stylesheet" />
+  <script src="/inc/jquery/jquery-3.3.1.min.js"></script>
   <script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
   <script type="text/javascript" src="/js/jquery.cookie.js"></script>
   <script type="text/javascript" src="/js/jquery-ui-1.8.20.custom.min.js"></script>
@@ -21,20 +23,21 @@
       <a href="/" class="l-logo"></a>
       <!-- /.l-logo -->
       <div class="l-menu clearfix">
-        <div class="l-menu__item <?php if($_GET['type'] == 'access') echo 'l-menu__item--active' ?>"><a href="/list/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=access"><?=__('AccessLog')?></a></div>
-        <div class="l-menu__item <?php if($_GET['type'] == 'error') echo 'l-menu__item--active' ?>"><a href="/list/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=error"><?=__('ErrorLog')?></a></div>
-        <div class="l-menu__item"><a href="/download/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=access"><?=__('Download AccessLog')?></a></div>
-        <div class="l-menu__item"><a href="/download/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=error"><?=__('Download ErrorLog')?></a></div>
+        <div class="l-menu__item"><a href="/list/web/"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;&nbsp;<?=__('Back')?></a></div>
+        <div class="l-menu__item <?php if($_GET['type'] == 'access') echo 'l-menu__item--active' ?>"><a href="/list/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=access"><i class="fas fa-eye"></i>&nbsp;&nbsp;&nbsp;<?=__('AccessLog')?></a><a href="/download/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=access"><i class="fas fa-download"></i></a></div>
+        <div class="l-menu__item <?php if($_GET['type'] == 'error') echo 'l-menu__item--active' ?>"><a href="/list/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=error"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;&nbsp;<?=__('ErrorLog')?></a><a href="/download/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=error"><i class="fas fa-download"></i></a></div>
+
       </div>
       <!-- /.l-menu -->
       <div class="l-profile">
+        <div class="l-menu__item"><a href="javascript:location.reload();"><i class="fas fa-redo"></i></a></div>
         <a class="l-profile__username" href="/edit/user/?user=<?php echo $user; ?>"><?=$user?></a>
-        <a class="l-profile__logout" href="/logout/"> <?=__('Log out')?> </a>
+        <a class="l-profile__logout" href="/logout/"> <?=__('Log out')?> <i class="fas fa-sign-out-alt"></i></a>
       </div>
       <!-- /.l-profile -->
     </div>
   </div>
   <!-- /.l-header -->
 
-  <div style="color: #ff6701; padding: 10px 0 20px 20px; background: #fff; "><?php echo __('Last 70 lines of %s.%s.log',htmlentities($_GET['domain']),htmlentities($_GET['type'])) ;?></div>
-  <pre style="margin-left: 20px; color: #555; font-family: arial; font-size: 14px; line-height: 30px;">
+  <div style="color: #cc3366; padding: 10px 0 20px 20px; background: #fff; "><?php echo __('Last 70 lines of %s.%s.log',htmlentities($_GET['domain']),htmlentities($_GET['type'])) ;?></div>
+  <pre class="console-output">

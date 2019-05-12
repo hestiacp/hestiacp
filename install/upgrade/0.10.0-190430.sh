@@ -6,7 +6,7 @@ HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
 hestiacp="$HESTIA/install/deb"
 
 # Add webmail alias variable to system configuration if non-existent
-webmail_alias_check=$(cat $HESTIA/conf/hestia.conf | grep WEBMAIL_ALIAS)
+WEBMAIL_ALIAS_CHECK=$(cat $HESTIA/conf/hestia.conf | grep WEBMAIL_ALIAS)
 if [ -z "$WEBMAIL_ALIAS_CHECK" ]; then
     echo "(*) Adding global webmail alias to system configuration..."
     sed -i "/WEBMAIL_ALIAS/d" $HESTIA/conf/hestia.conf
@@ -305,6 +305,8 @@ for user in `ls /usr/local/hestia/data/users/`; do
     sleep 1
 done
 
+# Adding upgrade notification
+$BIN/v-add-user-notification admin 'Upgrade complete' 'Your server has been updated to v0.10.0.<br>Please report any bugs on GitHub at<br>https://github.com/hestiacp/hestiacp/Issues<br><br>Have a great day!'
 # Restart server services
 echo "(*) Restarting services..."
 sleep 5

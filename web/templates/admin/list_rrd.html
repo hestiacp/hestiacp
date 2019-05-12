@@ -1,15 +1,12 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
-        <div class="l-sort-toolbar clearfix float-left">
-          <table class="width-100p">
+        <div class="l-unit-toolbar__buttonstrip">
+          <a class="ui-button cancel" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+          <a href="/list/server/?cpu" class="ui-button cancel" title="<?=__('show: CPU / MEM / NET / DISK');?>"><i class="fas fa-chart-pie status-icon green"></i> <?=__('show: CPU / MEM / NET / DISK');?></a>
+        </div>
+        <div class="l-sort-toolbar clearfix">
+          <table>
             <tr>
-              <td class="l-sort-toolbar__search-box">
-                <form action="/search/" method="get">
-                  <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-                  <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
-                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
-                </form>
-              </td>
               <td>
                 <a class="vst<?php if ((empty($_GET['period'])) || ($_GET['period'] == 'daily')) echo " selected" ?>" href="?period=daily"><?=__('Daily')?></a>
                 <a class="vst<?php if ((!empty($_GET['period'])) && ($_GET['period'] == 'weekly')) echo " selected" ?>" href="?period=weekly"><?=__('Weekly')?></a>
@@ -18,7 +15,7 @@
               </td>
 
               <td>
-                <div class="timer-container">
+                <div class="timer-container" style="float:right;">
                   <span class="timer-button pause"></span>
                   <span class="timer-button play hidden"></span>
 
@@ -35,18 +32,10 @@
             </tr>
           </table>
         </div>
-        <!-- div class="l-sort-toolbar clearfix">
-          <table>
-            <tr>
-            </tr>
-          </table>
-        </div -->
       </div>
-      <!-- /.l-sort -->
     </div>
 
     <div class="l-separator"></div>
-    <!-- /.l-separator -->
 
     <div class="l-center units animated fadeIn">
       <?php
@@ -59,9 +48,6 @@
         foreach ($data as $key => $value) {
       ?>
 
-
-
-
       <div class="l-unit">
         <div class="l-unit-toolbar clearfix">
          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
@@ -70,32 +56,21 @@
                 <a href="/list/rrd/image.php?/rrd/<?php echo $data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png"?>" target="_blank"><?=__('download')?> <i></i></a>
               </div>
             </div>
-            <!-- /.actiona-panel -->
           </div>
-          <!-- l-unit-toolbar__col -->
         </div>
-        <!-- /.l-unit-toolbar -->
 
-        <div class="l-unit__col l-unit__col--left clearfix">
-        </div>
-        <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
           <div class="l-unit__name separate">
             <?= __($data[$key]['TITLE'])?>
           </div>
 
-
-
          <div class="l-unit__stats">
             <img src="/list/rrd/image.php?/rrd/<?=$data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png"?>">
          </div>
-          <!-- /.l-unit__stats -->
+
         </div>
-        <!-- /.l-unit__col -->
+
       </div>
-      <!-- /.l-unit -->
-      <!-- div class="l-separator"></div -->
-      <!-- /.l-separator -->
       <?}?>
 
     </div>

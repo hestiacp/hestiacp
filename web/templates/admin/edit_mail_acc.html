@@ -1,8 +1,10 @@
-    <div class="l-center edit">
-      <div class="l-sort clearfix">
-        <div class="l-sort-toolbar clearfix float-left">
-          <span class="title edit"><b><?=__('Editing Mail Account')?></b></span>
-            <?php
+<div class="l-center edit">
+        <div class="l-sort clearfix">
+          <div class="l-unit-toolbar__buttonstrip">
+            <a class="ui-button cancel" href="/list/mail/?domain=<?=htmlentities(trim($v_domain, "'"))?>&token=<?=$_SESSION['token']?>"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+          </div>
+          <div class="l-unit-toolbar__buttonstrip float-right">
+              <?php
               if (!empty($_SESSION['error_msg'])) {
                 echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
               } else {
@@ -11,9 +13,10 @@
                 }
               }
             ?>
+            <a href="#" class="ui-button" title="<?=__('Save')?>" onclick="document.getElementById('vstobjects').submit();"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
+          </div>
         </div>
       </div>
-    </div>
 
     <div class="l-separator"></div>
     <!-- /.l-separator -->
@@ -37,15 +40,17 @@
                         <table class="data-col1">
                             <tr>
                                 <td>
-                                    <a class="data-date"><?=translate_date($v_date)?></a><br>
-                                    <a class="data-date"><?=$v_time?></a>
                                 </td>
                             </tr>
-                            <tr><td class="data-<?=$v_status?>"><b><?=__($v_status)?></b></td></tr>
                         </table>
                     </td>
                     <td class="data-dotted">
                       <table class="data-col2" width="440px">
+                        <tr>
+                            <td class="step-top">
+                                <span class="login-welcome"><?=__('Editing Mail Account')?></span>
+                            </td>
+                        </tr>  
                         <tr>
                             <td class="vst-text step-top input-label">
                                 <?php print __('Account');?>
@@ -110,7 +115,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="step-left">
+                            <td>
                                 <table style="display:<?php if ($v_autoreply == 'yes') { echo 'block';} else {echo 'none';}?> ;" id="autoreplytable">
                                     <tr>
                                         <td class="vst-text" style="padding: 12px 0 0 0;">
@@ -119,7 +124,7 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <textarea size="20" class="vst-textinput" name="v_autoreply_message"><?=htmlentities(trim($v_autoreply_message, "'"))?></textarea>
+                                            <textarea size="20" class="vst-textinput short" name="v_autoreply_message"><?=htmlentities(trim($v_autoreply_message, "'"))?></textarea>
                                         </td>
                                     </tr>
                                 </table>
@@ -138,14 +143,6 @@
                     </tr>
                     </table>
                     <table class="data-col2">
-                        <tr>
-                            <td class="step-top" width="116px">
-                                <input type="submit" name="save" value="<?=__('Save')?>" class="button">
-                            </td>
-                            <td class="step-top">
-                                <input type="button" class="button cancel" value="<?=__('Back')?>" onclick="<?=$back?>">
-                            </td>
-                        </tr>
                     </table>
                 </td>
             <td class="mail-infoblock-td">
@@ -202,13 +199,9 @@
                             <td><?=__('SMTP auth method')?>:</td>
                             <td><div><?=__('Normal password')?></div></td>
                         </tr>
-                        <?
-                            list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
-                            $webmail = "http://webmail.".$v_domain."/";
-                        ?>
                         <tr>
                             <td><?=__('Webmail URL')?>:</td>
-                            <td><div><a class="vst" href="<?=$webmail?>" target="_blank"><?=$webmail?> <i></i></a></div></td>
+                            <td><div><a class="vst" href="http://<?=$v_webmail_alias?>" target="_blank">http://<?=$v_webmail_alias?> <i></i></a></div></td>
                         </tr>
                     </table>
                 </div>

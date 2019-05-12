@@ -1,33 +1,27 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
-        <a href="/add/mail/" class="l-sort__create-btn" title="<?=__('Add Mail Domain')?>"></a>
-        <ul class="context-menu sort-order" style="display:none;">
-          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?></span><span class="up">&nbsp;</span></li>
-          <li entity="sort-name"><span class="name"><?=__('Domain')?></span><span class="up">&nbsp;</span></li>
-          <li entity="sort-accounts" sort_as_int="1"><span class="name"><?=__('Accounts')?></span><span class="up">&nbsp;</span></li>
-          <li entity="sort-disk" sort_as_int="1"><span class="name"><?=__('Disk')?></span><span class="up">&nbsp;</span></li>
-          <li entity="sort-star" sort_as_int="1"><span class="name"><?=__('Starred')?></span><span class="up">&nbsp;</span></li>
+        <div class="l-unit-toolbar__buttonstrip">
+          <a href="/add/mail/" class="ui-button cancel" title="<?=__('Add Mail Domain')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=__('Add Mail Domain')?></a>
+        </div>
+        <ul class="context-menu sort-order animated fadeIn" style="display:none;">
+          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-name"><span class="name"><?=__('Domain')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-accounts" sort_as_int="1"><span class="name"><?=__('Accounts')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-disk" sort_as_int="1"><span class="name"><?=__('Disk')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-star" sort_as_int="1"><span class="name"><?=__('Starred')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
         </ul>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
-              <td class="step-right">
-                <?
-                  list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
-                  $webmail = "http://webmail.".$http_host."/";
-                  if (!empty($_SESSION['WEBMAIL_ALIAS'])) $webmail = $_SESSION['WEBMAIL_ALIAS'];
-                ?>
+              <td class="sort-by">
+                    <?=__('sort by');?>: <span><b><?=__('Date')?> <i class="fas fa-sort-amount-down"></i></b></span>
               </td>
-              <td class="l-sort-toolbar__search-box step-left">
+              <td class="l-sort-toolbar__search-box">
                 <form action="/search/" method="get">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                   <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
-                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
+                  <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value=""><i class="fas fa-search"></i></button>
                 </form>
-              </td>
-              <td class="toggle-all">
-                <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
-                <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
               </td>
               <td>
                 <form action="/bulk/mail/" method="post" id="objects">
@@ -40,42 +34,33 @@
                     <option value="delete"><?=__('delete')?></option>
                   </select>
                 </div>
-                <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
+                <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
               </td>
-              <td class="sort-by">
-                <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
-              </td>
+
             </tr>
           </table>
-          <!--  -->
         </div>
       </div>
-      <!-- /.l-sort -->
     </div>
 
     <div class="l-separator"></div>
-    <!-- /.l-separator -->
-
-
 
     <div class="l-center units animated fadeIn">
-            <div class="l-unit header">
-                <div class="l-unit__col l-unit__col--left clearfix">
-                  <div class="text-center jump-small-top"></div>
-                </div>
-          
-                <div class="l-unit__col l-unit__col--right step-top table-header">
-                  <div style="margin-bottom: 40px;">
-                      <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print __('Domain');?></b></div>
-                      <div class="clearfix l-unit__stat-col--left text-center compact-2"><b><?php print __('Accounts');?></b></div>
-                      <div class="clearfix l-unit__stat-col--left text-center compact-2"><b><?php print __('Disk');?></b></div>
-                      <div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?php print __('Antivirus');?></b></div>
-                      <div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?php print __('AntiSpam');?></b></div>
-                      <div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?php print __('DKIM');?></b></div>
-                      <div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?php print __('SSL');?></b></div>
-                  </div>
-                </div>
-              </div>
+      <div class="header table-header">
+        <div class="l-unit__col l-unit__col--right step-top">
+            <div class="clearfix l-unit__stat-col--left super-compact">
+              <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
+            </div>
+            <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print __('Domain');?></b></div>
+            <div class="clearfix l-unit__stat-col--left text-right compact-4"><b>&nbsp;</b></div>
+            <div class="clearfix l-unit__stat-col--left text-center compact-2"><b><?php print __('Accounts');?></b></div>
+            <div class="clearfix l-unit__stat-col--left text-center compact-2"><b><?php print __('Disk');?></b></div>
+            <div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?php print __('Antivirus');?></b></div>
+            <div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?php print __('AntiSpam');?></b></div>
+            <div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?php print __('DKIM');?></b></div>
+            <div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?php print __('SSL');?></b></div>
+          </div>
+        </div>
 
       <?
         list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
@@ -102,49 +87,43 @@
       <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['MAIL'][$key] == 1) echo ' l-unit--starred'; ?>" v_unit_id="<?=$key?>" v_section="mail"
 sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?=$data[$key]['U_DISK']?>"
 sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favourites']['MAIL'][$key] == 1) echo "1"; else echo "0"; ?>">
-        <div class="l-unit-toolbar clearfix">
-
-          <!-- l-unit-toolbar__col -->
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-            <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__logs shortcut-l" key-action="href"><a href="?domain=<?=$key?>"><?=__('list accounts',$data[$key]['ACCOUNTS'])?> <i></i></a><span class="shortcut">&nbsp;L</span></div>
-              <div class="actions-panel__col actions-panel__add shortcut-n" key-action="href"><a href="/add/mail/?domain=<?=$key?>"><?=__('add account')?> <i></i></a><span class="shortcut">&nbsp;N</span></div>
-              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/mail/?domain=<?=$key?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
-              <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
-                <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
-                  <?=__($spnd_action)?> <i class="do_<?=$spnd_action?>"></i>
-                  <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
-                  <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
-                    <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
-                  </div>
-                </a>
-                <span class="shortcut">&nbsp;S</span>
-              </div>
-              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-                <a id="delete_link_<?=$i?>" class="data-controls do_delete">
-                  <?=__('delete')?> <i class="do_delete"></i>
-                  <input type="hidden" name="delete_url" value="/delete/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
-                  <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
-                    <p class="confirmation"><?=__('DELETE_DOMAIN_CONFIRMATION',$key)?></p>
-                  </div>
-                </a>
-                <span class="shortcut delete">&nbsp;Del</span>
-              </div>
-
-
-            </div>
-            <!-- /.actiona-panel -->
-          </div>
-          <!-- l-unit-toolbar__col -->
-        </div>
-        <!-- /.l-unit-toolbar -->
             <div class="l-unit__col l-unit__col--right">
-              <div style="margin-bottom: 50px;">
-                  <div class="clearfix l-unit__stat-col--left">
-                      <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?php echo $key ?>">
-                      <label for="check<?php echo $i ?>" class="check-label"></label>
-                    </div>
-                  <div class="clearfix l-unit__stat-col--left wide-3"><b><?=$key?></b></div>
+              <div>
+                  <div class="clearfix l-unit__stat-col--left super-compact">
+                    <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?php echo $key ?>">
+                  </div>
+                  <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>"><?=$key?></a></b></div>
+                  <!-- START QUICK ACTION TOOLBAR AREA -->
+                  <div class="clearfix l-unit__stat-col--left text-right compact-4">
+                      <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+                          <div class="actions-panel clearfix">
+                            <div class="actions-panel__col actions-panel__logs shortcut-n" key-action="href"><a href="/add/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-plus-circle status-icon green status-icon dim"></i></a></div>
+                            <div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-users status-icon blue status-icon dim"></i></div>
+                            <div class="actions-panel__col actions-panel__edit" key-action="href"><a href="http://webmail.<?=$key?>/" target="_blank"><i class="fas fa-paper-plane status-icon lightblue status-icon dim"></i></div>
+                            <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+
+                            <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
+                              <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
+                                <i class="fas fa-pause status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
+                                <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
+                                <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
+                                  <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
+                                </div>
+                              </a>
+                            </div>
+                            <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+                              <a id="delete_link_<?=$i?>" class="data-controls do_delete">
+                                <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
+                                <input type="hidden" name="delete_url" value="/delete/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
+                                <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
+                                  <p class="confirmation"><?=__('DELETE_DOMAIN_CONFIRMATION',$key)?></p>
+                                </div>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                  </div>
+                  <!-- END QUICK ACTION TOOLBAR AREA -->
                   <div class="clearfix l-unit__stat-col--left text-center compact-2"><b>
                     <? if($data[$key]['ACCOUNTS']) { echo '<span>'.$data[$key]['ACCOUNTS'].'</span>'; ?>
                     <? } else {?>
@@ -159,7 +138,7 @@ sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favouri
                       <? if($data[$key]['ANTIVIRUS'] == 'no'){ ?>
                         <i class="fas fa-times-circle" style="color: red;"></i>
                       <? } else {?>
-                        <i class="fas fa-check-circle status-icon-green"></i>
+                        <i class="fas fa-check-circle status-icon green"></i>
                       <? } ?>
                     </b>
                   </div>
@@ -167,7 +146,7 @@ sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favouri
                       <? if($data[$key]['ANTISPAM'] == 'no'){ ?>
                         <i class="fas fa-times-circle" style="color: red;"></i>
                       <? } else {?>
-                        <i class="fas fa-check-circle status-icon-green"></i>
+                        <i class="fas fa-check-circle status-icon green"></i>
                       <? } ?>
                     </b>
                   </div>
@@ -175,7 +154,7 @@ sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favouri
                       <? if($data[$key]['DKIM'] == 'no'){ ?>
                         <i class="fas fa-times-circle" style="color: red;"></i>
                       <? } else {?>
-                        <i class="fas fa-check-circle status-icon-green"></i>
+                        <i class="fas fa-check-circle status-icon green"></i>
                       <? } ?>
                     </b>
                   </div>
@@ -183,19 +162,14 @@ sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favouri
                       <? if($data[$key]['SSL'] == 'no'){ ?>
                         <i class="fas fa-times-circle" style="color: red;"></i>
                       <? } else {?>
-                        <i class="fas fa-check-circle status-icon-green"></i>
+                        <i class="fas fa-check-circle status-icon green"></i>
                       <? } ?>
                     </b>
                   </div>
               </div>
             </div>
-        <!-- /.l-unit__col -->
       </div>
-      <!-- /.l-unit -->
-      <!--div class="l-separator"></div-->
-      <!-- /.l-separator -->
       <?}?>
-
     </div>
 
 
@@ -204,7 +178,6 @@ sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favouri
       <div class="l-center">
         <div class="l-unit-ft">
           <table class='data'></table>
-          <div class="l-unit__col l-unit__col--left clearfix"></div>
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php
               if ( $i == 1) {

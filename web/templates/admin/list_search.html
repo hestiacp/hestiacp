@@ -7,7 +7,6 @@
       <ul class="context-menu sort-order animated fadeIn" style="display:none;">
         <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
         <li entity="sort-name"><span class="name"><?=__('Name')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
-        <li entity="sort-ip" sort_as_int="1"><span class="name"><?=__('Starred')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
       </ul>
       <div class="l-sort-toolbar clearfix">
         <table>
@@ -34,10 +33,10 @@
     <div class="l-center units animated fadeIn">
         <div class="header table-header">     
             <div class="l-unit__col l-unit__col--right step-top">
-              <div class="clearfix l-unit__stat-col--left super-compact">
-                &nbsp;
-              </div>       
-              <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print __('Result');?></b></div>
+                <div class="clearfix l-unit__stat-col--left super-compact">
+                    &nbsp;
+                </div> 
+              <div class="clearfix l-unit__stat-col--left wide-5"><b><?php print __('Search Results');?></b></div>
               <div class="clearfix l-unit__stat-col--left compact-3"><b>&nbsp;</b></div>
               <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Date');?></b></div>
               <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Type');?></b></div>
@@ -69,465 +68,124 @@
         ?>
 
 
-      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_COOKIE[$uniq_id] == 1) echo ' l-unit--starred'; ?>" id="web-unit-<?=$i?>" uniq-id="<?=$uniq_id?>" sort-date="<?=strtotime($value['DATE'].' '.$value['TIME'])?>" sort-name="<?=$value['RESULT']?>">
-      
-      
-      
-      <!-- NEW SEARCH CODE STARTS HERE -->
+        <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_COOKIE[$uniq_id] == 1) echo ' l-unit--starred'; ?>" id="web-unit-<?=$i?>" uniq-id="<?=$uniq_id?>" sort-date="<?=strtotime($value['DATE'].' '.$value['TIME'])?>" sort-name="<?=$value['RESULT']?>" sort-type="<?=__($object)?>" sort-owner="<?=$value['USER']?>" sort-status="<?=$status?>">
       
       
       <div class="l-unit__col l-unit__col--right">
-          <div>
-            <div class="clearfix l-unit__stat-col--left super-compact">
-              <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="database[]" value="<?php echo $key ?>">
+          <div class="clearfix l-unit__stat-col--left super-compact">
+              &nbsp;
             </div>
-            <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>"><?=$key?></a></b></div>
-            <!-- START QUICK ACTION TOOLBAR AREA -->
-            <div class="clearfix l-unit__stat-col--left text-right compact-2">
+            <div class="clearfix l-unit__stat-col--left wide-5">
+                <!--<?
+                if ($value['KEY'] == 'RECORD') {
+                  $edit_lnk = '/edit/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&record_id='.$value['LINK'].'&user='.$value['USER'];
+                }
+                if ($value['KEY'] == 'ACCOUNT') {
+                  $edit_lnk = '/edit/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&account='.$value['LINK'].'&user='.$value['USER'];
+                }
+                if ($value['KEY'] == 'JOB') {
+                  $edit_lnk = '/edit/'.$value['TYPE'].'/?job='.$value['LINK'].'&user='.$value['USER'];
+                }
+                if ($value['KEY'] == 'DATABASE') {
+                  $edit_lnk = '/edit/'.$value['TYPE'].'/?database='.$value['RESULT'].'&user='.$value['USER'];
+                }
+                if (($value['KEY'] != 'RECORD') && ($value['KEY'] != 'ACCOUNT') && ($value['KEY'] != 'JOB') && ($value['KEY'] != 'DATABASE') ) {
+                  $edit_lnk = '/edit/'.$value['TYPE'].'/?'.strtolower($value['KEY']).'='.$value['RESULT'].'&user='.$value['USER'];
+                }
+              ?>-->
+              <b>
+                <?=$value['RESULT']?>
+              </b>
+            </div>
+             
+            <div class="clearfix l-unit__stat-col--left text-right compact-3">
+              &nbsp;
+              <!--
                   <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                       <div class="actions-panel clearfix">
-                        <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+                        <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href">
+                          <a href="<?=$edit_lnk?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a>
+                        </div>
+                        <? if (!empty($value['STATS'])) { ?>
+                          <div class="actions-panel__col actions-panel__logs shortcut-w" key-action="href"><a href="http://<?=$value['RESULT']?>/vstats/"  target="_blank"><i class="fas fa-binoculars status-icon purple status-icon dim"></i></div>
+                        <? } ?>
                         <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
+                            <?
+                            if ($value['KEY'] == 'RECORD') {
+                              $spnd_lnk = '/'.$spnd_action.'/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&record_id='.$value['LINK'].'&user='.$value['USER'];
+                              $cnfrm = 'SUSPEND_RECORD_CONFIRMATION';
+                            }
+                            if ($value['KEY'] == 'ACCOUNT') {
+                              $spnd_lnk = '/'.$spnd_action.'/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&account='.$value['LINK'].'&user='.$value['USER'];
+                              $cnfrm = 'SUSPEND_USER_CONFIRMATION';
+                            }
+                            if ($value['KEY'] == 'JOB') {
+                              $spnd_lnk = '/'.$spnd_action.'/'.$value['TYPE'].'/?job='.$value['LINK'].'&user='.$value['USER'];
+                              $cnfrm = 'SUSPEND_CRON_CONFIRMATION';
+                            }
+                              if ($value['KEY'] == 'DATABASE') {
+                              $spnd_lnk = '/'.$spnd_action.'/'.$value['TYPE'].'/?database='.$value['RESULT'].'&user='.$value['USER'];
+                              $cnfrm = 'SUSPEND_DATABASE_CONFIRMATION';
+                            }
+                            if (($value['KEY'] != 'RECORD') && ($value['KEY'] != 'ACCOUNT') && ($value['KEY'] != 'JOB') && ($value['KEY'] != 'DATABASE') ) {
+                              $spnd_lnk = '/'.$spnd_action.'/'.$value['TYPE'].'/?'.strtolower($value['KEY']).'='.$value['RESULT'].'&user='.$value['USER'];
+                              $cnfrm = 'SUSPEND_DOMAIN_CONFIRMATION';
+                            }
+                          ?>
                           <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
                             <i class="fas fa-pause status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
-                            <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" />
+                            <input type="hidden" name="<?=$spnd_action?>_url" value="<?=$spnd_lnk?>&token=<?=$_SESSION['token']?>" />
                             <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
-                              <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
+                              <p class="confirmation"><?=__($cnfrm, $value['RESULT'])?></p>
                             </div>
                           </a>
                         </div>
                         <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+                          <?
+                            if ($value['KEY'] == 'RECORD') {
+                              $delete_lnk = '/delete/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&record_id='.$value['LINK'].'&user='.$value['USER'];
+                              $cnfrm = 'DELETE_RECORD_CONFIRMATION';
+                            }
+                            if ($value['KEY'] == 'ACCOUNT') {
+                              $delete_lnk = '/delete/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&account='.$value['LINK'].'&user='.$value['USER'];
+                              $cnfrm = 'DELETE_USER_CONFIRMATION';
+                            }
+                            if ($value['KEY'] == 'JOB') {
+                              $delete_lnk = '/delete/'.$value['TYPE'].'/?job='.$value['LINK'].'&user='.$value['USER'];
+                              $cnfrm = 'DELETE_CRON_CONFIRMATION';
+                            }
+                            if ($value['KEY'] == 'DATABASE') {
+                              $delete_lnk = '/delete/'.$value['TYPE'].'/?database='.$value['RESULT'].'&user='.$value['USER'];
+                              $cnfrm = 'DELETE_DATABASE_CONFIRMATION';
+                            }
+                            if (($value['KEY'] != 'RECORD') && ($value['KEY'] != 'ACCOUNT') && ($value['KEY'] != 'JOB') && ($value['KEY'] != 'DATABASE') ) {
+                              $delete_lnk = '/delete/'.$value['TYPE'].'/?'.strtolower($value['KEY']).'='.$value['RESULT'].'&user='.$value['USER'];
+                              $cnfrm = 'DELETE_DOMAIN_CONFIRMATION';
+                            }
+                          ?>
                           <a id="delete_link_<?=$i?>" class="data-controls do_delete">
                             <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
-                            <input type="hidden" name="delete_url" value="/delete/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" />
+                            <input type="hidden" name="delete_url" value="<?=$delete_lnk?>&token=<?=$_SESSION['token']?>" />
                             <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
-                              <p class="confirmation"><?=__('DELETE_DATABASE_CONFIRMATION',$key)?></p>
+                              <p class="confirmation"><?=__($cnfrm, $value['RESULT'])?></p>
                             </div>
                           </a>
-                        </div>
+                         </div>
           
-                      </div>
+                       </div>
                     </div>
+                    END QUICK ACTION TOOLBAR AREA -->
               </div>
-              <!-- END QUICK ACTION TOOLBAR AREA -->
-              <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Date');?></b></div>
-              <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Type');?></b></div>
-              <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Owner');?></b></div>
-              <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Status');?></b></div>
-           </div>
-        </div>
-  </div>
-      
-      
-      
-      
-    <!-- NEW SEARCH CODE ENDS HERE     -->
-      
-      
-      
-      
-        <div class="l-unit-toolbar clearfix">
-          <!--div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="check" value="check<?=$i?>">
-            <label for="check<?=$i?>" class="check-label"></label>
-          </div -->
-          <!-- l-unit-toolbar__col -->
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-            <div class="actions-panel clearfix">
-
-            <?
-              if ($value['USER'] != $user && $value['KEY'] == 'ACCOUNT') {
-                if ($key == $user) {
-            ?>
-                  <div class="actions-panel__col actions-panel__loginas shortcut-l" key-action="href"><a href="/logout"><?=__('logout')?> <i></i></a><span class="shortcut">&nbsp;L</span></div>
-<?php
-                } else {
-?>
-                  <div class="actions-panel__col actions-panel__loginas shortcut-l" key-action="href"><a href="/login/?loginas=<?=$data[$key]['USER']?>&token=<?=$_SESSION['token']?>"><?=__('login as')?> <i></i></a><span class="shortcut">&nbsp;L</span></div>
-            <?  }
-              }
-            ?>
-
-
-            <?
-              if ($value['KEY'] == 'RECORD') {
-                $edit_lnk = '/edit/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&record_id='.$value['LINK'].'&user='.$value['USER'];
-              }
-              if ($value['KEY'] == 'ACCOUNT') {
-                $edit_lnk = '/edit/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&account='.$value['LINK'].'&user='.$value['USER'];
-              }
-              if ($value['KEY'] == 'JOB') {
-                $edit_lnk = '/edit/'.$value['TYPE'].'/?job='.$value['LINK'].'&user='.$value['USER'];
-              }
-              if ($value['KEY'] == 'DATABASE') {
-                $edit_lnk = '/edit/'.$value['TYPE'].'/?database='.$value['RESULT'].'&user='.$value['USER'];
-              }
-              if (($value['KEY'] != 'RECORD') && ($value['KEY'] != 'ACCOUNT') && ($value['KEY'] != 'JOB') && ($value['KEY'] != 'DATABASE') ) {
-                $edit_lnk = '/edit/'.$value['TYPE'].'/?'.strtolower($value['KEY']).'='.$value['RESULT'].'&user='.$value['USER'];
-              }
-            ?>
-              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="<?=$edit_lnk?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
-              <? if (!empty($value['STATS'])) { ?>
-                  <div class="actions-panel__col actions-panel__logs shortcut-w" key-action="href"><a href="http://<?=$value['RESULT']?>/vstats/"  target="_blank"><?=__('open webstats')?> <i></i></a><span class="shortcut">&nbsp;w</span></div>
-              <? } ?>
-
-
-              <?
-                if ($value['KEY'] == 'RECORD') {
-                  $spnd_lnk = '/'.$spnd_action.'/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&record_id='.$value['LINK'].'&user='.$value['USER'];
-                  $cnfrm = 'SUSPEND_RECORD_CONFIRMATION';
-                }
-                if ($value['KEY'] == 'ACCOUNT') {
-                  $spnd_lnk = '/'.$spnd_action.'/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&account='.$value['LINK'].'&user='.$value['USER'];
-                  $cnfrm = 'SUSPEND_USER_CONFIRMATION';
-                }
-                if ($value['KEY'] == 'JOB') {
-                  $spnd_lnk = '/'.$spnd_action.'/'.$value['TYPE'].'/?job='.$value['LINK'].'&user='.$value['USER'];
-                  $cnfrm = 'SUSPEND_CRON_CONFIRMATION';
-                }
-                  if ($value['KEY'] == 'DATABASE') {
-                  $spnd_lnk = '/'.$spnd_action.'/'.$value['TYPE'].'/?database='.$value['RESULT'].'&user='.$value['USER'];
-                  $cnfrm = 'SUSPEND_DATABASE_CONFIRMATION';
-                }
-                if (($value['KEY'] != 'RECORD') && ($value['KEY'] != 'ACCOUNT') && ($value['KEY'] != 'JOB') && ($value['KEY'] != 'DATABASE') ) {
-                  $spnd_lnk = '/'.$spnd_action.'/'.$value['TYPE'].'/?'.strtolower($value['KEY']).'='.$value['RESULT'].'&user='.$value['USER'];
-                  $cnfrm = 'SUSPEND_DOMAIN_CONFIRMATION';
-                }
-              ?>
-              <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
-                <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
-                  <?=__($spnd_action)?> <i class="do_<?=$spnd_action?>"></i>
-                  <input type="hidden" name="<?=$spnd_action?>_url" value="<?=$spnd_lnk?>&token=<?=$_SESSION['token']?>" />
-                  <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
-                    <p class="confirmation"><?=__($cnfrm, $value['RESULT'])?></p>
-                  </div>
-                </a>
-                <span class="shortcut">&nbsp;S</span>
-              </div>
-
-              <?
-                if ($value['KEY'] == 'RECORD') {
-                  $delete_lnk = '/delete/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&record_id='.$value['LINK'].'&user='.$value['USER'];
-                  $cnfrm = 'DELETE_RECORD_CONFIRMATION';
-                }
-                if ($value['KEY'] == 'ACCOUNT') {
-                  $delete_lnk = '/delete/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&account='.$value['LINK'].'&user='.$value['USER'];
-                  $cnfrm = 'DELETE_USER_CONFIRMATION';
-                }
-                if ($value['KEY'] == 'JOB') {
-                  $delete_lnk = '/delete/'.$value['TYPE'].'/?job='.$value['LINK'].'&user='.$value['USER'];
-                  $cnfrm = 'DELETE_CRON_CONFIRMATION';
-                }
-                if ($value['KEY'] == 'DATABASE') {
-                  $delete_lnk = '/delete/'.$value['TYPE'].'/?database='.$value['RESULT'].'&user='.$value['USER'];
-                  $cnfrm = 'DELETE_DATABASE_CONFIRMATION';
-                }
-                if (($value['KEY'] != 'RECORD') && ($value['KEY'] != 'ACCOUNT') && ($value['KEY'] != 'JOB') && ($value['KEY'] != 'DATABASE') ) {
-                  $delete_lnk = '/delete/'.$value['TYPE'].'/?'.strtolower($value['KEY']).'='.$value['RESULT'].'&user='.$value['USER'];
-                  $cnfrm = 'DELETE_DOMAIN_CONFIRMATION';
-                }
-              ?>
-              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-                <a id="delete_link_<?=$i?>" class="data-controls do_delete">
-                  <?=__('delete')?> <i class="do_delete"></i>
-                  <input type="hidden" name="delete_url" value="<?=$delete_lnk?>&token=<?=$_SESSION['token']?>" />
-                  <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
-                    <p class="confirmation"><?=__($cnfrm, $value['RESULT'])?></p>
-                  </div>
-                </a>
-                <span class="shortcut delete">&nbsp;Del</span>
-              </div>
+              
+              <div class="clearfix l-unit__stat-col--left text-center"><b><?=translate_date($value['DATE'])?></b></div>
+              <div class="clearfix l-unit__stat-col--left text-center"><b><?=__($object)?></b></div>
+              <div class="clearfix l-unit__stat-col--left text-center"><b><?=$value['USER']?></b></div>
+              <div class="clearfix l-unit__stat-col--left text-center"><b><?=__($status)?></b></div>
             </div>
-            <!-- /.actiona-panel -->
-          </div>
-          <!-- l-unit-toolbar__col -->
         </div>
-        <!-- /.l-unit-toolbar -->
-
-        <div class="l-unit__col l-unit__col--left clearfix">
-          <div class="l-unit__date">
-            <?=translate_date($value['DATE'])?>
-          </div>
-          <div class="l-unit__suspended"><?__('suspended')?></div>
-          <div class="text-center">
-            <i class="l-icon-star" title="<?=__('save to favorites')?>"></i>
-          </div>
-        </div>
-        <!-- /.l-unit__col -->
-        <div class="l-unit__col l-unit__col--right">
-          <div class="l-unit__name separate">
-            <?=$value['RESULT']?> <span><?=str_replace(',', ', ', $value['ALIAS'])?></span>
-          </div>
-          <!-- /.l-unit__name -->
-          <div class="l-unit__stats">
-            <table>
-              <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?=__($object)?></div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Owner')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$value['USER']?></b>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix last">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Status')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=__($status)?></b>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            </table>
-          </div>
-          <!-- /.l-unit__stats -->
-        </div>
-        <!-- /.l-unit__col -->
-      </div>
-      <!-- /.l-unit -->
-      <!-- div class="l-separator"></div -->
-      <!-- /.l-separator -->
+    
       <?}?>
-
-    </div>
-
-
-    <div id="vstobjects">
-      <div class="l-separator"></div>
-      <div class="l-center">
-        <div class="l-unit-ft">
-          <table class='data'></table>
-          <div class="data-count l-unit__col l-unit__col--right clearfix">
-            <?php
-              if ( $i == 1) {
-                echo __('1 object');
-              } else {
-                echo __('%s objects',$i);
-              }
-            ?>
-          </div>
-        </div>
       </div>
-    </div>
-
-    <div class="l-separator"></div>
-    <!-- /.l-separator -->
-
-
-    <div class="l-center units animated fadeIn">
-        <div class="header table-header">     
-            <div class="l-unit__col l-unit__col--right step-top">
-              <div class="clearfix l-unit__stat-col--left super-compact">
-                &nbsp;
-              </div>       
-              <div class="clearfix l-unit__stat-col--left"><b><?php print __('Result');?></b></div>
-              <div class="clearfix l-unit__stat-col--left"><b><?php print __('Type');?></b></div>
-              <div class="clearfix l-unit__stat-col--left"><b><?php print __('Owner');?></b></div>
-              <div class="clearfix l-unit__stat-col--left "><b><?php print __('Status');?></b></div>
-            </div>
-          </div>
-      <?
-        foreach ($data as $key => $value) {
-          ++$i;
-          if ($value['SUSPENDED'] == 'yes') {
-            $status = 'suspended';
-            $spnd_action = 'unsuspend';
-          } else {
-            $status = 'active';
-            $spnd_action = 'suspend';
-          }
-          if ($value['TYPE'] == 'db') {
-            $object = 'database';
-          } else {
-            $object = strtolower($value['TYPE'] . ' ' . $value['KEY']);
-          }
-
-          $uniq_id = $value['TYPE'] . '-';
-          if ($value['KEY'] == 'ACCOUNT'){
-            $uniq_id .= 'acc-';
-          }
-          $uniq_id .= sha1($value['RESULT']);
-        ?>
-
-
-      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_COOKIE[$uniq_id] == 1) echo ' l-unit--starred'; ?>" id="web-unit-<?=$i?>" uniq-id="<?=$uniq_id?>" sort-date="<?=strtotime($value['DATE'].' '.$value['TIME'])?>" sort-name="<?=$value['RESULT']?>">
-        <div class="l-unit-toolbar clearfix">
-          <!--div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="check" value="check<?=$i?>">
-            <label for="check<?=$i?>" class="check-label"></label>
-          </div -->
-          <!-- l-unit-toolbar__col -->
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-            <div class="actions-panel clearfix">
-
-            <?
-              if ($value['USER'] != $user && $value['KEY'] == 'ACCOUNT') {
-                if ($key == $user) {
-            ?>
-                  <div class="actions-panel__col actions-panel__loginas shortcut-l" key-action="href"><a href="/logout"><?=__('logout')?> <i></i></a><span class="shortcut">&nbsp;L</span></div>
-<?php
-                } else {
-?>
-                  <div class="actions-panel__col actions-panel__loginas shortcut-l" key-action="href"><a href="/login/?loginas=<?=$data[$key]['USER']?>&token=<?=$_SESSION['token']?>"><?=__('login as')?> <i></i></a><span class="shortcut">&nbsp;L</span></div>
-            <?  }
-              }
-            ?>
-
-
-            <?
-              if ($value['KEY'] == 'RECORD') {
-                $edit_lnk = '/edit/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&record_id='.$value['LINK'].'&user='.$value['USER'];
-              }
-              if ($value['KEY'] == 'ACCOUNT') {
-                $edit_lnk = '/edit/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&account='.$value['LINK'].'&user='.$value['USER'];
-              }
-              if ($value['KEY'] == 'JOB') {
-                $edit_lnk = '/edit/'.$value['TYPE'].'/?job='.$value['LINK'].'&user='.$value['USER'];
-              }
-              if ($value['KEY'] == 'DATABASE') {
-                $edit_lnk = '/edit/'.$value['TYPE'].'/?database='.$value['RESULT'].'&user='.$value['USER'];
-              }
-              if (($value['KEY'] != 'RECORD') && ($value['KEY'] != 'ACCOUNT') && ($value['KEY'] != 'JOB') && ($value['KEY'] != 'DATABASE') ) {
-                $edit_lnk = '/edit/'.$value['TYPE'].'/?'.strtolower($value['KEY']).'='.$value['RESULT'].'&user='.$value['USER'];
-              }
-            ?>
-              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="<?=$edit_lnk?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
-              <? if (!empty($value['STATS'])) { ?>
-                  <div class="actions-panel__col actions-panel__logs shortcut-w" key-action="href"><a href="http://<?=$value['RESULT']?>/vstats/"  target="_blank"><?=__('open webstats')?> <i></i></a><span class="shortcut">&nbsp;w</span></div>
-              <? } ?>
-
-
-              <?
-                if ($value['KEY'] == 'RECORD') {
-                  $spnd_lnk = '/'.$spnd_action.'/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&record_id='.$value['LINK'].'&user='.$value['USER'];
-                  $cnfrm = 'SUSPEND_RECORD_CONFIRMATION';
-                }
-                if ($value['KEY'] == 'ACCOUNT') {
-                  $spnd_lnk = '/'.$spnd_action.'/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&account='.$value['LINK'].'&user='.$value['USER'];
-                  $cnfrm = 'SUSPEND_USER_CONFIRMATION';
-                }
-                if ($value['KEY'] == 'JOB') {
-                  $spnd_lnk = '/'.$spnd_action.'/'.$value['TYPE'].'/?job='.$value['LINK'].'&user='.$value['USER'];
-                  $cnfrm = 'SUSPEND_CRON_CONFIRMATION';
-                }
-                  if ($value['KEY'] == 'DATABASE') {
-                  $spnd_lnk = '/'.$spnd_action.'/'.$value['TYPE'].'/?database='.$value['RESULT'].'&user='.$value['USER'];
-                  $cnfrm = 'SUSPEND_DATABASE_CONFIRMATION';
-                }
-                if (($value['KEY'] != 'RECORD') && ($value['KEY'] != 'ACCOUNT') && ($value['KEY'] != 'JOB') && ($value['KEY'] != 'DATABASE') ) {
-                  $spnd_lnk = '/'.$spnd_action.'/'.$value['TYPE'].'/?'.strtolower($value['KEY']).'='.$value['RESULT'].'&user='.$value['USER'];
-                  $cnfrm = 'SUSPEND_DOMAIN_CONFIRMATION';
-                }
-              ?>
-              <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
-                <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
-                  <?=__($spnd_action)?> <i class="do_<?=$spnd_action?>"></i>
-                  <input type="hidden" name="<?=$spnd_action?>_url" value="<?=$spnd_lnk?>&token=<?=$_SESSION['token']?>" />
-                  <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
-                    <p class="confirmation"><?=__($cnfrm, $value['RESULT'])?></p>
-                  </div>
-                </a>
-                <span class="shortcut">&nbsp;S</span>
-              </div>
-
-              <?
-                if ($value['KEY'] == 'RECORD') {
-                  $delete_lnk = '/delete/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&record_id='.$value['LINK'].'&user='.$value['USER'];
-                  $cnfrm = 'DELETE_RECORD_CONFIRMATION';
-                }
-                if ($value['KEY'] == 'ACCOUNT') {
-                  $delete_lnk = '/delete/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&account='.$value['LINK'].'&user='.$value['USER'];
-                  $cnfrm = 'DELETE_USER_CONFIRMATION';
-                }
-                if ($value['KEY'] == 'JOB') {
-                  $delete_lnk = '/delete/'.$value['TYPE'].'/?job='.$value['LINK'].'&user='.$value['USER'];
-                  $cnfrm = 'DELETE_CRON_CONFIRMATION';
-                }
-                if ($value['KEY'] == 'DATABASE') {
-                  $delete_lnk = '/delete/'.$value['TYPE'].'/?database='.$value['RESULT'].'&user='.$value['USER'];
-                  $cnfrm = 'DELETE_DATABASE_CONFIRMATION';
-                }
-                if (($value['KEY'] != 'RECORD') && ($value['KEY'] != 'ACCOUNT') && ($value['KEY'] != 'JOB') && ($value['KEY'] != 'DATABASE') ) {
-                  $delete_lnk = '/delete/'.$value['TYPE'].'/?'.strtolower($value['KEY']).'='.$value['RESULT'].'&user='.$value['USER'];
-                  $cnfrm = 'DELETE_DOMAIN_CONFIRMATION';
-                }
-              ?>
-              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-                <a id="delete_link_<?=$i?>" class="data-controls do_delete">
-                  <?=__('delete')?> <i class="do_delete"></i>
-                  <input type="hidden" name="delete_url" value="<?=$delete_lnk?>&token=<?=$_SESSION['token']?>" />
-                  <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
-                    <p class="confirmation"><?=__($cnfrm, $value['RESULT'])?></p>
-                  </div>
-                </a>
-                <span class="shortcut delete">&nbsp;Del</span>
-              </div>
-            </div>
-            <!-- /.actiona-panel -->
-          </div>
-          <!-- l-unit-toolbar__col -->
-        </div>
-        <!-- /.l-unit-toolbar -->
-
-        <div class="l-unit__col l-unit__col--left clearfix">
-          <div class="l-unit__date">
-            <?=translate_date($value['DATE'])?>
-          </div>
-          <div class="l-unit__suspended"><?__('suspended')?></div>
-          <div class="text-center">
-            <i class="l-icon-star" title="<?=__('save to favorites')?>"></i>
-          </div>
-        </div>
-        <!-- /.l-unit__col -->
-        <div class="l-unit__col l-unit__col--right">
-          <div class="l-unit__name separate">
-            <?=$value['RESULT']?> <span><?=str_replace(',', ', ', $value['ALIAS'])?></span>
-          </div>
-          <!-- /.l-unit__name -->
-          <div class="l-unit__stats">
-            <table>
-              <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?=__($object)?></div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Owner')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$value['USER']?></b>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix last">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Status')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=__($status)?></b>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            </table>
-          </div>
-          <!-- /.l-unit__stats -->
-        </div>
-        <!-- /.l-unit__col -->
-      </div>
-      <!-- /.l-unit -->
-      <!-- div class="l-separator"></div -->
-      <!-- /.l-separator -->
-      <?}?>
-
-    </div>
-
 
     <div id="vstobjects">
       <div class="l-separator"></div>

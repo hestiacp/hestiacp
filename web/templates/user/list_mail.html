@@ -135,34 +135,66 @@ sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favouri
                     <?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span>
                   </div>
                   <div class="clearfix l-unit__stat-col--left text-center compact-3"><b>
-                      <? if($data[$key]['ANTIVIRUS'] == 'no'){ ?>
-                        <i class="fas fa-times-circle" style="color: red;"></i>
+                      <? if($data[$key]['SUSPENDED'] == 'no'){ ?>
+                        <? if($data[$key]['ANTIVIRUS'] == 'no'){ ?>
+                          <i class="fas fa-times-circle status-icon red"></i>
+                        <? } else {?>
+                          <i class="fas fa-check-circle status-icon green"></i>
+                        <? } ?>
                       <? } else {?>
-                        <i class="fas fa-check-circle status-icon green"></i>
+                        <? if($data[$key]['ANTIVIRUS'] == 'no'){ ?>
+                          <i class="fas fa-times-circle"></i>
+                        <? } else {?>
+                          <i class="fas fa-check-circle"></i>
+                        <? } ?>
                       <? } ?>
                     </b>
                   </div>
                   <div class="clearfix l-unit__stat-col--left text-center compact-3"><b>
-                      <? if($data[$key]['ANTISPAM'] == 'no'){ ?>
-                        <i class="fas fa-times-circle" style="color: red;"></i>
+                      <? if($data[$key]['SUSPENDED'] == 'no'){ ?>
+                        <? if($data[$key]['ANTISPAM'] == 'no'){ ?>
+                          <i class="fas fa-times-circle status-icon red"></i>
+                        <? } else {?>
+                          <i class="fas fa-check-circle status-icon green"></i>
+                        <? } ?>
                       <? } else {?>
-                        <i class="fas fa-check-circle status-icon green"></i>
+                        <? if($data[$key]['ANTISPAM'] == 'no'){ ?>
+                          <i class="fas fa-times-circle"></i>
+                        <? } else {?>
+                          <i class="fas fa-check-circle"></i>
+                        <? } ?>
                       <? } ?>
                     </b>
                   </div>
                   <div class="clearfix l-unit__stat-col--left text-center compact-3"><b>
-                      <? if($data[$key]['DKIM'] == 'no'){ ?>
-                        <i class="fas fa-times-circle" style="color: red;"></i>
+                      <? if($data[$key]['SUSPENDED'] == 'no'){ ?>
+                        <? if($data[$key]['DKIM'] == 'no'){ ?>
+                          <i class="fas fa-times-circle status-icon red"></i>
+                        <? } else {?>
+                          <i class="fas fa-check-circle status-icon green"></i>
+                        <? } ?>
                       <? } else {?>
-                        <i class="fas fa-check-circle status-icon green"></i>
+                        <? if($data[$key]['DKIM'] == 'no'){ ?>
+                          <i class="fas fa-times-circle"></i>
+                        <? } else {?>
+                          <i class="fas fa-check-circle"></i>
+                        <? } ?>
                       <? } ?>
                     </b>
                   </div>
                   <div class="clearfix l-unit__stat-col--left text-center compact-3"><b>
-                      <? if($data[$key]['SSL'] == 'no'){ ?>
-                        <i class="fas fa-times-circle" style="color: red;"></i>
+                      <? if($data[$key]['SUSPENDED'] == 'no'){ ?>
+                        <? if($data[$key]['SSL'] == 'no'){ ?>
+                          <i class="fas fa-times-circle status-icon red"></i>
+                        <? } else {?>
+                          <i class="fas fa-check-circle status-icon green"></i>
+                        <? } ?>
                       <? } else {?>
-                        <i class="fas fa-check-circle status-icon green"></i>
+                        <? if($data[$key]['SSL'] == 'no'){ ?>
+                          <i class="fas fa-times-circle"></i>
+                        <? } else {?>
+                          <i class="fas fa-check-circle"></i>
+                        <? } ?>
                       <? } ?>
                     </b>
                   </div>

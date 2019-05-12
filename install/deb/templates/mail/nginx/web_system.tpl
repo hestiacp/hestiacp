@@ -35,7 +35,7 @@ server {
 
 }
     location /error/ {
-        alias       /var/www/document_errors/;
+        alias /var/www/document_errors/;
     }
 
     location /assets {

@@ -69,6 +69,8 @@ if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
     fi
 fi
 
+# Rebuild global domain configuration
+$BIN/v-rebuild-web-domain $user $domain 'no'
 
 #----------------------------------------------------------#
 #                       Hestia                             #

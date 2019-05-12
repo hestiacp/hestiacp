@@ -288,14 +288,6 @@ replace_web_config() {
 
     if [ -e "$conf" ]; then
         sed -i  "s|$old|$new|g" $conf
-    else
-        # fallback to old style configs
-        conf="$HOMEDIR/$user/conf/web/$1.conf"
-        if [[ "$2" =~ stpl$ ]]; then
-            conf="$HOMEDIR/$user/conf/web/s$1.conf"
-        fi
-        get_web_config_lines $WEBTPL/$1/$WEB_BACKEND/$2 $conf
-        sed -i  "$top_line,$bottom_line s|$old|$new|g" $conf
     fi
 }
 
@@ -322,8 +314,7 @@ del_web_config() {
         if [[ "$2" =~ stpl$ ]]; then
             conf="$HOMEDIR/$user/conf/web/s$1.conf"
         fi
-        get_web_config_lines $WEBTPL/$1/$WEB_BACKEND/$2 $conf
-        sed -i "$top_line,$bottom_line d" $conf
+        rm -f $conf
 
         # Remove old global includes file
         rm -f /etc/$1/conf.d/hestia.conf

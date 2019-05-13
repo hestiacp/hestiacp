@@ -44,7 +44,7 @@ else
     user_list="$user"
 fi
 
-# Reset overal statistics
+# Reset overall statistics
 TOTAL_IP_OWNED=0
 TOTAL_U_DISK=0
 TOTAL_U_DISK_DIRS=0
@@ -92,10 +92,10 @@ for user in $user_list; do
     # Updating user stats log
     stats="$USER_DATA/stats.log"
     if [ -e "$stats" ]; then
-        # Checking dublicates
+        # Checking duplicates
         check_month=$(grep -n "DATE='$DATE'" $stats|cut -f 1 -d :)
         if [ -z "$check_month" ]; then
-            # Updating as there no dublicates
+            # Updating as there no duplicates
             echo "$s" >> $stats
             chmod 660 $stats
         else
@@ -150,10 +150,10 @@ s="$s U_CRON_JOBS='$TOTAL_U_CRON_JOBS' U_BACKUPS='$TOTAL_U_BACKUPS'"
 s="$s U_USERS='$TOTAL_USERS'"
 
 if [ -e "$stats" ]; then
-    # Checking dublicates
+    # Checking duplicates
     check_month=$(grep -n "DATE='$DATE'" $stats|cut -f 1 -d :)
     if [ -z "$check_month" ]; then
-        # Updating as there no dublicates
+        # Updating as there no duplicates
         echo "$s" >> $stats
         chmod 660 $stats
     else

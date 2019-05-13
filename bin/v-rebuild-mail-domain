@@ -1,0 +1,67 @@
+#!/bin/bash
+# info: rebuild mail domain
+# options: USER DOMAIN
+#
+# The function rebuilds configuration files for a single domain.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/func/rebuild.sh
+source $HESTIA/conf/hestia.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN'
+is_format_valid 'user'
+is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'mail' 'DOMAIN' "$domain"
+
+if [ "$MAIL_SYSTEM" = 'remote' ]; then
+    exit
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Rebuild mail domain configuration
+rebuild_mail_domain_conf
+
+# Rebuild webmail configuration
+if [ ! -z "$WEB_SYSTEM" ] || [ ! -z "$PROXY_SYSTEM" ]; then
+    $BIN/v-delete-webmail $user $domain ''
+    $BIN/v-add-webmail $user $domain ''
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Updating counters
+update_user_value "$user" '$U_MAIL_DOMAINS' "$U_MAIL_DOMAINS"
+update_user_value "$user" '$U_MAIL_DKIM' "$U_MAIL_DKIM"
+update_user_value "$user" '$U_MAIL_ACCOUNTS' "$U_MAIL_ACCOUNTS"
+update_user_value "$user" '$U_MAIL_SSL' "$U_MAIL_SSL"
+update_user_value "$user" '$SUSPENDED_MAIL' "$SUSPENDED_MAIL"
+update_user_value "$user" '$U_DISK_MAIL' "$U_DISK_MAIL"
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

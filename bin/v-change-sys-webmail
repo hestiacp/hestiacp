@@ -41,11 +41,10 @@ for user in `ls /usr/local/hestia/data/users/`; do
 done
 
 # Set new webmail alias
-sed -i "s|WEBMAIL_ALIAS='$OLD_ALIAS'|WEBMAIL_ALIAS='$NEW_ALIAS'|gI" $HESTIA/conf/hestia.conf
+$BIN/v-change-sys-config-value 'WEBMAIL_ALIAS' '$NEW_ALIAS'
 
 for user in `ls /usr/local/hestia/data/users/`; do
     for domain in $($BIN/v-list-web-domains $user plain |cut -f 1); do
-        echo "Changing webmail alias for $domain"
         $BIN/v-add-webmail $user $domain
     done
 done

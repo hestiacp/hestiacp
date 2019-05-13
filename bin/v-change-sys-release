@@ -36,8 +36,16 @@ if [ -z "$branch" ]; then
     echo ""
     exit
 else
+    # Check that requested branch exists
+    branch_check=$(curl -s --head -w %{http_code} https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/hestia/control -o /dev/null)
+    if [ $branch_check -ne "200" ]; then
+        echo "Error: invalid branch name specified."
+        exit 1
+    fi
+
     # Remove old branch variable
     sed -i "/RELEASE_BRANCH/d" $HESTIA/conf/hestia.conf
+    
     # Set new branch variable
     echo "RELEASE_BRANCH='$branch'" >> $HESTIA/conf/hestia.conf
     echo "Changed system to follow release branch: $branch"

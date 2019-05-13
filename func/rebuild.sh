@@ -451,6 +451,11 @@ rebuild_mail_domain_conf() {
         SUSPENDED_MAIL=$((SUSPENDED_MAIL +1))
     fi
 
+    if [ ! -d "$USER_DATA/mail" ]; then
+        rm -f $USER_DATA/mail
+        mkdir $USER_DATA/mail
+    fi
+
     # Rebuilding exim config structure
     if [[ "$MAIL_SYSTEM" =~ exim ]]; then
         rm -f /etc/$MAIL_SYSTEM/domains/$domain_idn
@@ -552,7 +557,6 @@ rebuild_mail_domain_conf() {
 
     # Add missing SSL configuration flags to existing domains
     # for per-domain SSL migration
-
     sslcheck=$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf | grep SSL)
     if [ -z "$sslcheck" ]; then
         sed -i "s|$domain'|$domain' SSL='no' LETSENCRYPT='no'|g" $USER_DATA/mail.conf

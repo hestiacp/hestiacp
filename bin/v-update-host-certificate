@@ -1,7 +1,6 @@
 #!/bin/bash
-# info: update hosts certificates for exim, dovecot & hestia-nginx
-# options: user
-# options: hostname
+# info: update host certificate for hestia
+# options: USER HOSTNAME
 #
 # Function updates certificates for hestia
 
@@ -12,7 +11,7 @@
 
 whoami=$(whoami)
 if [ "$whoami" != "root" ] && [ "$whoami" != "admin" ] ; then
-    echo "You must be root or admin to execute this script";
+    echo "Error: this script must be run as root or admin.";
     exit 1;
 fi
 
@@ -40,8 +39,8 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$hostname"
 is_object_unsuspended 'web' 'DOMAIN' "$hostname"
 
-if [ ! -f "/home/$user/conf/web/$hostname/ssl.$hostname.pem" ]; then
-    echo "This domain does not have certificate";
+if [ ! -f "/home/$user/conf/web/$hostname/ssl/$hostname.pem" ]; then
+    echo "Error: domain $hostname does not have an SSL certificate.";
     exit 1;
 fi
 
@@ -53,31 +52,34 @@ fi
 backup_datetime=`date '+%Y-%m-%d_%H-%M-%S'`
 
 # Copy hostnames certificates from user dir
-cp /home/$user/conf/web/$hostname/$hostname.pem $HESTIA/ssl/certificate.crt
-cp /home/$user/conf/web/$hostname/$hostname.key $HESTIA/ssl/certificate.key
+cp /home/$user/conf/web/$hostname/ssl/$hostname.pem $HESTIA/ssl/certificate.crt
+cp /home/$user/conf/web/$hostname/ssl/$hostname.key $HESTIA/ssl/certificate.key
 
-# Checking exim username for later chowning
-exim_user="exim";
-check_exim_username=$(grep -c '^Debian-exim:' /etc/passwd)
-if [ "$check_exim_username" -eq 1 ]; then
-    exim_user="Debian-exim"
+# Enable fallback support for mail domains that do not support SSL
+if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+    # Checking exim username for later chowning
+    exim_user="exim";
+    check_exim_username=$(grep -c '^Debian-exim:' /etc/passwd)
+    if [ "$check_exim_username" -eq 1 ]; then
+        exim_user="Debian-exim"
+    fi
+
+    # Assign exim permissions to certificate
+    chown $exim_user:mail $HESTIA/ssl/certificate.crt
+    chown $exim_user:mail $HESTIA/ssl/certificate.key
 fi
 
-# Assign exim permissions
-chown $exim_user:mail $HESTIA/ssl/certificate.crt
-chown $exim_user:mail $HESTIA/ssl/certificate.key
-
-# Restart exim, dovecot & hestia
-$BIN/v-restart-mail
-if [ ! -z "$IMAP_SYSTEM" ]; then
-    $BIN/v-restart-service "$IMAP_SYSTEM"
+# Restart services
+$BIN/v-restart-web
+$BIN/v-restart-proxy
+if [ ! -z "$MAIL_SYSTEM" ]; then
+    # Restart exim (and dovecot if applicable)
+    $BIN/v-restart-mail
+    if [ ! -z "$IMAP_SYSTEM" ]; then
+        $BIN/v-restart-service "$IMAP_SYSTEM"
+    fi
 fi
-if [ ! -z "$FTP_SYSTEM" ]; then
-    $BIN/v-restart-service "$FTP_SYSTEM"
-fi
-if [ -f "/var/run/hestia-nginx.pid" ]; then
-    kill -HUP $(cat /var/run/hestia-nginx.pid)
-fi
+$BIN/v-restart-service "hestia"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -51,7 +51,7 @@ if [ "$mode" = "on" ]; then
         # Enable directory listing for SSL-enforced domains
         sed -i "s/-Index/+Index/g" $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.ssl.conf
     fi
-    echo "INFO: Enabled directory browsing for $domain."
+    echo "Enabled directory browsing for $domain."
 else
     # Disable directory listing
     sed -i "s/+Index/-Index/g" $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.conf
@@ -59,7 +59,7 @@ else
         # Enable directory listing for SSL-enforced domains
         sed -i "s/+Index/-Index/g" $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.ssl.conf
     fi
-    echo "INFO: Disabled directory browsing for $domain."
+    echo "Disabled directory browsing for $domain."
 fi
 
 

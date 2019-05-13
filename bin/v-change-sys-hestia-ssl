@@ -49,10 +49,6 @@ else
     is_web_domain_cert_valid
 fi
 
-# Moving old certificate
-mv $HESTIA/ssl/certificate.crt $HESTIA/ssl/certificate.crt.back
-mv $HESTIA/ssl/certificate.key $HESTIA/ssl/certificate.key.back
-
 # Adding new certificate
 cp -f $ssl_dir/certificate.crt $HESTIA/ssl/certificate.crt
 cp -f $ssl_dir/certificate.key $HESTIA/ssl/certificate.key

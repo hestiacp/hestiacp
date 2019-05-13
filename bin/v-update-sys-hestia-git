@@ -1,8 +1,52 @@
+#!/bin/bash
+
 # Autocompile Script for HestiaCP deb Files.
 
 # Define download function
 download_file() {
-  wget $1 -q --show-progress --progress=bar:force
+  local url=$1
+  local destination=$2
+  local force=$3
+
+  # Default destination is the curent working directory
+  local dstopt=""
+
+  if [ ! -z "$(echo "$url" | grep -E "\.(gz|gzip|bz2|zip|xz)$")" ]; then
+    # When an archive file is downloaded it will be first saved localy
+    dstopt="--directory-prefix=$ARCHIVE_DIR"
+    local is_archive="true"
+    local filename="${url##*/}"
+    if [ -z "$filename" ]; then
+      >&2 echo "[!] No filename was found in url, exiting ($url)"
+      exit 1
+    fi
+    if [ ! -z "$force" ] && [ -f "$ARCHIVE_DIR/$filename" ]; then
+      rm -f $ARCHIVE_DIR/$filename
+    fi
+  elif [ ! -z "$destination" ]; then
+    # Plain files will be written to specified location
+    dstopt="-O $destination"
+  fi
+  # check for corrupted archive
+  if [ -f "$ARCHIVE_DIR/$filename" ] && [ "$is_archive" = "true" ]; then
+    tar -tzf "$ARCHIVE_DIR/$filename" > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+      >&2 echo "[!] Archive $ARCHIVE_DIR/$filename is corrupted, redownloading"
+      rm -f $ARCHIVE_DIR/$filename
+    fi
+  fi
+
+  if [ ! -f "$ARCHIVE_DIR/$filename" ]; then
+    wget $url -q $dstopt --show-progress --progress=bar:force --limit-rate=3m
+  fi
+
+  if [ ! -z "$destination" ] && [ "$is_archive" = "true" ]; then
+    if [ "$destination" = "-" ]; then
+      cat "$ARCHIVE_DIR/$filename"
+    elif [ -d "$(dirname $destination)" ]; then
+      cp "$ARCHIVE_DIR/$filename" "$destination"
+    fi
+  fi
 }
 
 # Set compiling directory
@@ -11,7 +55,9 @@ DEB_DIR="$BUILD_DIR/debs/"
 INSTALL_DIR='/usr/local/hestia'
 
 # Set Version for compiling
-HESTIA_V='0.10.0-190430_amd64'
+BUILD_VER=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/hestia/control | grep "Version:" | cut -d' ' -f2)
+BUILD_ARCH='amd64'
+HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
 NGINX_V='1.16.0'
 OPENSSL_V='1.1.1b'
 PCRE_V='8.43'
@@ -30,12 +76,18 @@ timestamp() {
     date +%s
 }
 
-branch=$2
-install=$3
+branch=$1
+install=$2
 
 # Set install flags
 if [ ! -z "$1" ]; then
-  branch=$1
+    branch_check=$(curl -s --head -w %{http_code} https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/hestia/control -o /dev/null)
+    if [ $branch_check -ne "200" ]; then
+        echo "Error: invalid branch name specified."
+        exit 1
+    else
+      branch=$1
+    fi
 else
   source /usr/local/hestia/conf/hestia.conf
   branch=$RELEASE_BRANCH
@@ -46,6 +98,7 @@ if [ ! -z "$2" ]; then
 else
   install="y"
 fi
+
 
 # Install needed software
 echo "Updating system APT repositories..."

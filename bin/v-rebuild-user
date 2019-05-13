@@ -44,6 +44,12 @@ fi
 # Rebuild user
 rebuild_user_conf
 
+# Update user counters
+$BIN/v-update-user-counters $user
+
+# Update account usage statistics
+$BIN/v-update-user-stats $user
+
 
 #----------------------------------------------------------#
 #                       Hestia                             #

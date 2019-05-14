@@ -1115,14 +1115,6 @@ if [ "$nginx" = 'yes' ]; then
         check_result $? "php$fpm_v-fpm start failed"
     fi
 
-    # Redirect unassigned hosts to default "Success" page
-    for ip in /usr/local/hestia/data/ips/*; do
-        ipaddr=${ip##*/}
-        rm -f /etc/nginx/conf.d/$ip.conf
-        cp -f $HESTIA/install/deb/nginx/unassigned.inc /etc/nginx/conf.d/$ipaddr.conf
-        sed -i 's/directIP/'$ipaddr'/g' /etc/nginx/conf.d/$ipaddr.conf
-    done
-
     # Install dhparam.
     cp -f $HESTIA/install/deb/ssl/dhparam.pem /etc/ssl
 
@@ -1172,14 +1164,6 @@ if [ "$apache" = 'yes' ]; then
         done
         chmod a+x $HESTIA/data/templates/web/apache2/*.sh
     fi
-
-    # Add unassigned hosts configuration to apache2
-    for ip in /usr/local/hestia/data/ips/*; do
-        ipaddr=${ip##*/}
-        rm -f /etc/apache2/conf.d/$ip.conf
-        cp -f $HESTIA/install/deb/apache2/unassigned.conf /etc/apache2/conf.d/$ipaddr.conf
-        sed -i 's/directIP/'$ipaddr'/g' /etc/apache2/conf.d/$ipaddr.conf
-    done
 
     update-rc.d apache2 defaults > /dev/null 2>&1
     service apache2 start >> $LOG
@@ -1605,6 +1589,22 @@ if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     ip=$pub_ip
 fi
 
+# Add unassigned hosts configuration to webserver
+for ip in $(ls /usr/local/hestia/data/ips/ 2>/dev/null); do
+
+    if [ "$apache" = 'yes' ]; then
+        rm -f /etc/apache2/conf.d/$ip.conf
+        cp -f $HESTIA/install/deb/apache2/unassigned.conf /etc/apache2/conf.d/$ip.conf
+        sed -i 's/directIP/'$ip'/g' /etc/apache2/conf.d/$ip.conf
+    fi
+
+    if [ "$nginx" = 'yes' ]; then
+        rm -f /etc/nginx/conf.d/$ip.conf
+        cp -f $HESTIA/install/deb/nginx/unassigned.inc /etc/nginx/conf.d/$ip.conf
+        sed -i 's/directIP/'$ip'/g' /etc/nginx/conf.d/$ip.conf
+    fi
+done
+
 # Configuring MariaDB host
 if [ "$mysql" = 'yes' ]; then
     $HESTIA/bin/v-add-database-host mysql localhost root $mpass
@@ -1710,11 +1710,13 @@ cat $tmpfile
 rm -f $tmpfile
 
 echo "(!) IMPORTANT: You must logout or restart the server before continuing."
-echo -n " Do you want to logout now? [Y/N] "
-read resetshell
+if [ "$interactive" = 'yes' ]; then
+    echo -n " Do you want to logout now? [Y/N] "
+    read resetshell
 
-if [ "$resetshell" = "Y" ] || [ "$resetshell" = "y" ]; then
-    logout
+    if [ "$resetshell" = "Y" ] || [ "$resetshell" = "y" ]; then
+        logout
+    fi
 fi
 
 # EOF

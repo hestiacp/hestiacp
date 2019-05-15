@@ -1589,22 +1589,6 @@ if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     ip=$pub_ip
 fi
 
-# Add unassigned hosts configuration to webserver
-for ip in $(ls /usr/local/hestia/data/ips/ 2>/dev/null); do
-
-    if [ "$apache" = 'yes' ]; then
-        rm -f /etc/apache2/conf.d/$ip.conf
-        cp -f $HESTIA/install/deb/apache2/unassigned.conf /etc/apache2/conf.d/$ip.conf
-        sed -i 's/directIP/'$ip'/g' /etc/apache2/conf.d/$ip.conf
-    fi
-
-    if [ "$nginx" = 'yes' ]; then
-        rm -f /etc/nginx/conf.d/$ip.conf
-        cp -f $HESTIA/install/deb/nginx/unassigned.inc /etc/nginx/conf.d/$ip.conf
-        sed -i 's/directIP/'$ip'/g' /etc/nginx/conf.d/$ip.conf
-    fi
-done
-
 # Configuring MariaDB host
 if [ "$mysql" = 'yes' ]; then
     $HESTIA/bin/v-add-database-host mysql localhost root $mpass

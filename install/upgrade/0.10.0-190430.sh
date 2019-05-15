@@ -288,9 +288,12 @@ if [ -z "$IMAP_SYSTEM" ]; then
 fi
 
 # Remove Webalizer and set AWStats as default
-echo "(*) Removing Webalizer and setting AWStats as default web statistics backend..."
-apt purge webalizer -y > /dev/null 2>&1
-sed -i "s/STATS_SYSTEM='webalizer,awstats'/STATS_SYSTEM='awstats'/g" $HESTIA/conf/hestia.conf
+WEBALIAZER_CHECK=$(cat $HESTIA/conf/hestia.conf | grep webalizer)
+if [ ! -z "$WEBALIZER_CHECK "]; then
+    echo "(*) Removing Webalizer and setting AWStats as default web statistics backend..."
+    apt purge webalizer -y > /dev/null 2>&1
+    sed -i "s/STATS_SYSTEM='webalizer,awstats'/STATS_SYSTEM='awstats'/g" $HESTIA/conf/hestia.conf
+fi
 
 # Run sftp jail once
 $HESTIA/bin/v-add-sys-sftp-jail

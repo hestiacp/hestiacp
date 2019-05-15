@@ -130,13 +130,21 @@ if [ ! -z "$WEB_SYSTEM" ]; then
             echo "NameVirtualHost $ip:$WEB_PORT" >  $web_conf
         fi
         echo "Listen $ip:$WEB_PORT" >> $web_conf
+        cat $HESTIA/install/deb/apache2/unassigned.conf >> $web_conf
+        sed -i 's/directIP/'$ip'/g' $web_conf
+        sed -i 's/directPORT/'$WEB_PORT'/g' $web_conf
+
+    elif [ "$WEB_SYSTEM" = 'nginx' ]; then
+        cp -f $HESTIA/install/deb/nginx/unassigned.inc $web_conf
+        sed -i 's/directIP/'$ip'/g' $web_conf
     fi
 
     if [ "$WEB_SSL" = 'mod_ssl' ]; then
         if [ -z "$(/usr/sbin/apachectl -v | grep Apache/2.4)" ]; then
-            echo "NameVirtualHost $ip:$WEB_SSL_PORT" >> $web_conf
+            sed -i "1s/^/NameVirtualHost $ip:$WEB_SSL_PORT\n/" $web_conf
         fi
-        echo "Listen $ip:$WEB_SSL_PORT" >> $web_conf
+        sed -i "1s/^/Listen $ip:$WEB_SSL_PORT\n/" $web_conf
+        sed -i 's/directSSLPORT/'$WEB_SSL_PORT'/g' $web_conf
     fi
 fi
 

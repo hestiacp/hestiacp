@@ -175,24 +175,45 @@ if [ -d "/etc/roundcube" ]; then
 fi
 
 # Add unassigned hosts configuration to Nginx and Apache
-if [ "$WEB_SYSTEM" = "apache2" ]; then
-    echo "(*) Adding unassigned hosts configuration to Apache..."
-    for ip in /usr/local/hestia/data/ips/*; do
-        ipaddr=${ip##*/}
-        rm -f /etc/apache2/conf.d/$ip.conf
-        cp -f $HESTIA/install/deb/apache2/unassigned.conf /etc/apache2/conf.d/$ipaddr.conf
-        sed -i 's/directIP/'$ipaddr'/g' /etc/apache2/conf.d/$ipaddr.conf
-    done
-fi
-if [ "$PROXY_SYSTEM" = "nginx" ]; then
-    echo "(*) Adding unassigned hosts configuration to Nginx..."
-    for ip in /usr/local/hestia/data/ips/*; do
-        ipaddr=${ip##*/}
-        rm -f /etc/nginx/conf.d/$ip.conf
-        cp -f $HESTIA/install/deb/nginx/unassigned.inc /etc/nginx/conf.d/$ipaddr.conf
-        sed -i 's/directIP/'$ipaddr'/g' /etc/nginx/conf.d/$ipaddr.conf
-    done
-fi
+for ipaddr in $(ls /usr/local/hestia/data/ips/ 2>/dev/null); do
+
+    web_conf="/etc/$WEB_SYSTEM/conf.d/$ipaddr.conf"
+    rm -f $web_conf
+
+    if [ "$WEB_SYSTEM" = "apache2" ]; then
+        echo "(*) Adding unassigned hosts configuration to Apache..."
+        if [ -z "$(/usr/sbin/apachectl -v | grep Apache/2.4)" ]; then
+            echo "NameVirtualHost $ipaddr:$WEB_PORT" >  $web_conf
+        fi
+        echo "Listen $ipaddr:$WEB_PORT" >> $web_conf
+        cat $HESTIA/install/deb/apache2/unassigned.conf >> $web_conf
+        sed -i 's/directIP/'$ipaddr'/g' $web_conf
+        sed -i 's/directPORT/'$WEB_PORT'/g' $web_conf
+
+        if [ "$WEB_SSL" = 'mod_ssl' ]; then
+            if [ -z "$(/usr/sbin/apachectl -v | grep Apache/2.4)" ]; then
+                sed -i "1s/^/NameVirtualHost $ipaddr:$WEB_SSL_PORT\n/" $web_conf
+            fi
+            sed -i "1s/^/Listen $ipaddr:$WEB_SSL_PORT\n/" $web_conf
+            sed -i 's/directSSLPORT/'$WEB_SSL_PORT'/g' $web_conf
+        fi
+    
+    elif [ "$WEB_SYSTEM" = "nginx" ]; then
+        cp -f $HESTIA/install/deb/nginx/unassigned.inc $web_conf
+        sed -i 's/directIP/'$ipaddr'/g' $web_conf
+    fi
+
+    if [ "$PROXY_SYSTEM" = "nginx" ]; then
+        echo "(*) Adding unassigned hosts configuration to Nginx..."
+        cat $WEBTPL/$PROXY_SYSTEM/proxy_ip.tpl |\
+        sed -e "s/%ip%/$ipaddr/g" \
+            -e "s/%web_port%/$WEB_PORT/g" \
+            -e "s/%proxy_port%/$PROXY_PORT/g" \
+        > /etc/$PROXY_SYSTEM/conf.d/$ipaddr.conf
+    fi
+done
+
+
 
 # Fix empty pool error message for MultiPHP
 php_versions=$(ls /etc/php/*/fpm -d 2>/dev/null |wc -l)

@@ -294,27 +294,27 @@ replace_web_config() {
 # Delete web configuration
 del_web_config() {
     conf="$HOMEDIR/$user/conf/web/$domain/$1.conf"
+    local confname="$domain.conf"
     if [[ "$2" =~ stpl$ ]]; then
         conf="$HOMEDIR/$user/conf/web/$domain/$1.ssl.conf"
+        confname="$domain.ssl.conf"
     fi
 
     # Remove domain configuration files and clean up symbolic links
-    if [ ! -z "$WEB_SYSTEM" ]; then
-        rm -f /etc/$WEB_SYSTEM/conf.d/domains/$domain.conf
-        rm -f /etc/$WEB_SYSTEM/conf.d/domains/$domain.ssl.conf
+    if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" = "$1" ]; then
+        rm -f "/etc/$WEB_SYSTEM/conf.d/domains/$confname"
     fi
-    if [ ! -z "$PROXY_SYSTEM" ]; then
-        rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$domain.conf 
-        rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$domain.ssl.conf 
+    if [ ! -z "$PROXY_SYSTEM" ] && [ "$PROXY_SYSTEM" = "$1" ]; then
+        rm -f "/etc/$PROXY_SYSTEM/conf.d/domains/$confname"
     fi
 
     # Clean up legacy configuration files
     if [ ! -e "$conf" ]; then
-        conf="$HOMEDIR/$user/conf/web/$1.conf"
+        local legacyconf="$HOMEDIR/$user/conf/web/$1.conf"
         if [[ "$2" =~ stpl$ ]]; then
-            conf="$HOMEDIR/$user/conf/web/s$1.conf"
+            legacyconf="$HOMEDIR/$user/conf/web/s$1.conf"
         fi
-        rm -f $conf
+        rm -f $legacyconf
 
         # Remove old global includes file
         rm -f /etc/$1/conf.d/hestia.conf

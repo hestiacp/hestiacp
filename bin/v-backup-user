@@ -937,6 +937,7 @@ if [ -e "$BACKUP/$user.log" ]; then
     email=$(get_user_value '$CONTACT')
     cat $BACKUP/$user.log |$SENDMAIL -s "$subj" $email $notify
     rm $BACKUP/$user.log
+    $BIN/v-add-user-notification $user "$subj" "$email"
 fi
 
 # Logging

@@ -42,7 +42,7 @@ for user in $($BIN/v-list-users plain |cut -f 1); do
             fi
             ((lecounter++))
             aliases=$(echo "$crt_data" |grep DNS:)
-            aliases=$(echo "$aliases" |sed -e "s/DNS://g" -e "s/,//")
+            aliases=$(echo "$aliases" |sed -e "s/DNS://g" -e "s/,//g")
             aliases=$(echo "$aliases" |tr ' ' '\n' |sed "/^$/d")
             aliases=$(echo "$aliases" |grep -v "^$domain$")
             aliases=$(echo "$aliases" |sed -e ':a;N;$!ba;s/\n/,/g')

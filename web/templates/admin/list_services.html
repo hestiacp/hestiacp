@@ -34,16 +34,16 @@
   
     <div class="l-center units animated fadeIn">
 
-      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended';?>">
+      <div class="">
         <div class="l-unit__col l-unit__col--right server-info">
           <div class="icon-server-info"><i class="fas fa-server"></i></div>
-          <div class="l-unit__name separate server-info-name"><?=$sys['sysinfo']['HOSTNAME']?></div>
-          <div class="l-unit__stats server-info-data">
-            <table>
+          <div class="l-unit__servername separate server-info-name"><?=$sys['sysinfo']['HOSTNAME']?></div>
+          <div class="server-info-data">
+            <table class="text-small">
                <tr>
                 <td>
                   <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left">
+                    <div class="l-unit__stat-col l-unit__stat-col--left wide">
                       <b><?=$sys['sysinfo']['OS']?>
                       <?=$sys['sysinfo']['VERSION']?></b>
                     </div>
@@ -52,13 +52,13 @@
                 </td>
                 <td>
                   <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Load Average')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--left wide"><?=__('Load Average')?>:</div>
                     <div class="l-unit__stat-col l-unit__stat-col--right"><b><?=$sys['sysinfo']['LOADAVERAGE']?></b></div>
                   </div>
                 </td>
                 <td>
                   <div class="l-unit__stat-cols clearfix last">
-                    <div class="l-unit__stat-col l-unit__stat-col--left compact"><?=__('Uptime')?>:</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--left wide"><?=__('Uptime')?>:</div>
                     <div class="l-unit__stat-col l-unit__stat-col--right"><b><?=humanize_time($sys['sysinfo']['UPTIME'])?></b></div>
                   </div>
                 </td>

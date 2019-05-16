@@ -1811,6 +1811,14 @@ div.l-content > div.l-separator:nth-of-type(4) {
   letter-spacing: -0.02em;
 }
 
+.l-unit__servername {
+  color: #414141;
+  font-size: 28px;
+  margin-bottom: 10px;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+}
+
 .l-unit__stats.separate,
 .l-unit__name.separate {
   padding-bottom: 15px;
@@ -2174,15 +2182,32 @@ body.mobile .l-icon-shortcuts {
 .to-top {
   display: inline-block;
   position: fixed;
-  top: 92%;
-  right: 1%;
+  top: 90%;
+  right: 4%;
+  border: 1px solid #ddd;
+  padding: 8px;
+  border-radius: 50%;
+  background-color: #eee;
+  text-shadow: 1px 1px #fff;
+  box-shadow: 0px 2px 4px rgba(120,120,120,0.25),
+              inset 0px 0px 1px rgba(255,255,255,0.9);
+  z-index: 200;
+
 }
 
 .to-shortcuts {
   display: inline-block;
   position: fixed;
-  top: 92%;
-  right: 4%;
+  top: 90%;
+  right: 8%;
+  border: 1px solid #ddd;
+  padding: 8px;
+  border-radius: 50%;
+  background-color: #eee;
+  text-shadow: 1px 1px #fff;
+  box-shadow: 0px 2px 4px rgba(120,120,120,0.25),
+              inset 0px 0px 1px rgba(255,255,255,0.9);
+  z-index: 200;
 }
 
 
@@ -3627,7 +3652,8 @@ form#vstobjects.suspended {
   margin-top: -20px;
 }
 .server-info-name {
-  margin-top: 10px;
+  margin-top: 5px;
+  margin-bottom: 30px;
 }
 .icon-server-info {
   font-size: 5.2em;

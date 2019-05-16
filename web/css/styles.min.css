@@ -1811,6 +1811,14 @@ div.l-content > div.l-separator:nth-of-type(4) {
   letter-spacing: -0.02em;
 }
 
+.l-unit__servername {
+  color: #414141;
+  font-size: 28px;
+  margin-bottom: 10px;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+}
+
 .l-unit__stats.separate,
 .l-unit__name.separate {
   padding-bottom: 15px;
@@ -3627,7 +3635,8 @@ form#vstobjects.suspended {
   margin-top: -20px;
 }
 .server-info-name {
-  margin-top: 10px;
+  margin-top: 5px;
+  margin-bottom: 30px;
 }
 .icon-server-info {
   font-size: 5.2em;

@@ -466,11 +466,15 @@ if [ "$USER" != '*' ]; then
     fi
     fargs=()
     for xpath in $(echo "$USER" |tr ',' '\n'); do
-        fargs+=(-not)
-        fargs+=(-path)
-        fargs+=("./$xpath*")
-        echo "$(date "+%F %T") excluding directory $xpath" |\
+        if [ -d "$xpath" ]; then
+            fargs+=(--exclude=$xpath/*)
+            echo "$(date "+%F %T") excluding directory $xpath" |\
             tee -a $BACKUP/$user.log
+        else
+            echo "$(date "+%F %T") excluding file $xpath" |\
+            tee -a $BACKUP/$user.log
+            fargs+=(--exclude=$xpath)
+        fi
     done
 
     IFS=$'\n'
@@ -487,7 +491,7 @@ if [ "$USER" != '*' ]; then
             check_backup_conditions
 
             # Backup files and dirs
-            tar -cpf- $udir |gzip -$BACKUP_GZIP - > $tmpdir/user_dir/$udir.tar.gz
+            tar --anchored -cpf- ${fargs[@]} $udir |gzip -$BACKUP_GZIP - > $tmpdir/user_dir/$udir.tar.gz
         fi
     done
     set +f

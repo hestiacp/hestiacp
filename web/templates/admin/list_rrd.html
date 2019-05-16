@@ -48,24 +48,15 @@
         foreach ($data as $key => $value) {
       ?>
 
-      <div class="l-unit">
-        <div class="l-unit-toolbar clearfix">
-         <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-            <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__edit  actions-panel__download">
-                <a href="/list/rrd/image.php?/rrd/<?php echo $data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png"?>" target="_blank"><?=__('download')?> <i></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="l-unit l-unit__stats">
 
         <div class="l-unit__col l-unit__col--right">
           <div class="l-unit__name separate">
             <?= __($data[$key]['TITLE'])?>
           </div>
 
-         <div class="l-unit__stats">
-            <img src="/list/rrd/image.php?/rrd/<?=$data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png"?>">
+         <div>
+          <a href="/list/rrd/image.php?/rrd/<?php echo $data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png"?>" target="_blank"><img src="/list/rrd/image.php?/rrd/<?=$data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png"?>"></a>
          </div>
 
         </div>

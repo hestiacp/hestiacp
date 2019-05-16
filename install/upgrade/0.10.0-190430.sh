@@ -289,7 +289,7 @@ fi
 
 # Remove Webalizer and set AWStats as default
 WEBALIAZER_CHECK=$(cat $HESTIA/conf/hestia.conf | grep webalizer)
-if [ ! -z "$WEBALIZER_CHECK "]; then
+if [ ! -z "$WEBALIZER_CHECK " ]; then
     echo "(*) Removing Webalizer and setting AWStats as default web statistics backend..."
     apt purge webalizer -y > /dev/null 2>&1
     sed -i "s/STATS_SYSTEM='webalizer,awstats'/STATS_SYSTEM='awstats'/g" $HESTIA/conf/hestia.conf

@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: adding cronjob for letsencrypt cetificate installation
-# options: USER DOMAIN [ALIASES]
+# info: rebuild databases
+# options: USER
 #
-# The function adds cronjob for letsencrypt ssl certificate installation
+# The function for rebuilding a single database for a user
 
 
 #----------------------------------------------------------#
@@ -11,12 +11,12 @@
 
 # Argument definition
 user=$1
-domain=$2
-aliases=$3
+database=$2
 
 # Includes
 source $HESTIA/func/main.sh
-source $HESTIA/func/domain.sh
+source $HESTIA/func/db.sh
+source $HESTIA/func/rebuild.sh
 source $HESTIA/conf/hestia.conf
 
 
@@ -24,33 +24,35 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN [ALIASES]'
-is_format_valid 'user' 'domain'
-is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
-is_system_enabled "$WEB_SSL" 'SSL_SUPPORT'
+check_args '2' "$#" 'USER DATABASE'
+is_format_valid 'user'
+is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
-is_object_valid 'web' 'DOMAIN' "$domain"
-is_object_unsuspended 'web' 'DOMAIN' "$domain"
+is_object_valid 'db' 'DB' "$database"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Parsing domain aliases
-if [ -z "$aliases" ]; then
-    get_domain_values 'web'
-    aliases="$ALIAS"
+# Get database values
+get_database_values
+
+# Switching on db type
+case $TYPE in
+    mysql) rebuild_mysql_database ;;
+    pgsql) rebuild_pgsql_database ;;
+esac
+
+U_DISK_DB=$((U_DISK_DB + U_DISK))
+U_DATABASES=$((U_DATABASES + 1))
+if [ "$SUSPENDED" = 'yes' ]; then
+    SUSPENDED_DB=$((SUSPENDED_DB + 1))
 fi
 
-# Adding cronjob scheduler for LE
-$BIN/v-add-cron-letsencrypt-job
-
-# Adding LE task
-echo "$BIN/v-add-letsencrypt-domain $user $domain '$aliases' no yes" \
-    >> $HESTIA/data/queue/letsencrypt.pipe
-
+update_user_value "$user" '$SUSPENDED_DB' "$SUSPENDED_DB"
+update_user_value "$user" '$U_DATABASES' "$U_DATABASES"
+update_user_value "$user" '$U_DISK_DB' "$U_DISK_DB"
 
 
 #----------------------------------------------------------#

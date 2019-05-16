@@ -45,19 +45,12 @@ U_MAIL_SSL=0
 SUSPENDED_MAIL=0
 U_DISK_MAIL=0
 
-# Checking mail folder
-if [ ! -d "$USER_DATA/mail" ]; then
-    rm -f $USER_DATA/mail
-    mkdir $USER_DATA/mail
-fi
-
 # Starting loop
 for domain in $(search_objects 'mail' 'SUSPENDED' "*" 'DOMAIN'); do
     rebuild_mail_domain_conf
     if [ ! -z "$WEB_SYSTEM" ] || [ ! -z "$PROXY_SYSTEM" ]; then
         $BIN/v-delete-webmail $user $domain ''
-        $BIN/v-add-webmail $user $domain '' 
-        sleep 0.5
+        $BIN/v-add-webmail $user $domain ''
     fi
 done
 
@@ -74,7 +67,8 @@ update_user_value "$user" '$U_MAIL_SSL' "$U_MAIL_SSL"
 update_user_value "$user" '$SUSPENDED_MAIL' "$SUSPENDED_MAIL"
 update_user_value "$user" '$U_DISK_MAIL' "$U_DISK_MAIL"
 
-recalc_user_disk_usage
+# Update disk usage statistics
+$BIN/v-update-user-disk $user
 
 # Logging
 log_event "$OK" "$ARGUMENTS"

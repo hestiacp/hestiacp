@@ -9,9 +9,6 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument definition
-WEBMAIL=$1
-
 # Includes
 source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
@@ -22,12 +19,6 @@ export $WEBMAIL_ALIAS
 # Define aliases
 OLD_ALIAS=$WEBMAIL_ALIAS
 NEW_ALIAS=$1
-
-#----------------------------------------------------------#
-#                    Verifications                         #
-#----------------------------------------------------------#
-
-check_args '1' "$#" 'WEBMAIL'
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -41,18 +32,17 @@ for user in `ls /usr/local/hestia/data/users/`; do
 done
 
 # Set new webmail alias
-sed -i "s|WEBMAIL_ALIAS='$OLD_ALIAS'|WEBMAIL_ALIAS='$NEW_ALIAS'|gI" $HESTIA/conf/hestia.conf
+$BIN/v-change-sys-config-value 'WEBMAIL_ALIAS' $NEW_ALIAS
 
 for user in `ls /usr/local/hestia/data/users/`; do
     for domain in $($BIN/v-list-web-domains $user plain |cut -f 1); do
-        echo "Changing webmail alias for $domain"
         $BIN/v-add-webmail $user $domain
     done
 done
 
-# Update alias (non-subdomain) configuration to match
-sed -i "s|Alias \/webmail|Alias \/$NEW_ALIAS|gI" /etc/apache2/conf.d/roundcube.conf
-sed -i "s|location \/webmail|location \/$NEW_ALIAS|gI" /etc/nginx/conf.d/webmail.inc
+# Update global directory alias configuration
+sed -i "s|Alias \/$OLD_ALIAS|Alias \/$NEW_ALIAS|gI" /etc/apache2/conf.d/roundcube.conf
+sed -i "s|location \/$OLD_ALIAS|location \/$NEW_ALIAS|gI" /etc/nginx/conf.d/webmail.inc
 
 #----------------------------------------------------------#
 #                       Hestia                             #
@@ -63,7 +53,7 @@ $BIN/v-restart-web $restart
 $BIN/v-restart-proxy $restart
 
 # Logging
-log_history "changed system webmail alias to $NEW_ALIAS"
+log_history "changed global webmail alias to $NEW_ALIAS"
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -1,56 +1,43 @@
 #!/bin/bash
-# info: adding cronjob for letsencrypt cetificate installation
-# options: USER DOMAIN [ALIASES]
+# info: rebuild system user
+# options: USER [RESTART]
 #
-# The function adds cronjob for letsencrypt ssl certificate installation
-
+# The function rebuilds system user accounts.
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
 # Argument definition
-user=$1
-domain=$2
-aliases=$3
+restart=$1
 
 # Includes
 source $HESTIA/func/main.sh
-source $HESTIA/func/domain.sh
+source $HESTIA/func/rebuild.sh
 source $HESTIA/conf/hestia.conf
+
+# Export sbin
+export PATH=$PATH:/usr/sbin
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN [ALIASES]'
-is_format_valid 'user' 'domain'
-is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
-is_system_enabled "$WEB_SSL" 'SSL_SUPPORT'
+check_args '1' "$#" 'USER [RESTART]'
+is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-is_object_valid 'web' 'DOMAIN' "$domain"
-is_object_unsuspended 'web' 'DOMAIN' "$domain"
 
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Parsing domain aliases
-if [ -z "$aliases" ]; then
-    get_domain_values 'web'
-    aliases="$ALIAS"
-fi
-
-# Adding cronjob scheduler for LE
-$BIN/v-add-cron-letsencrypt-job
-
-# Adding LE task
-echo "$BIN/v-add-letsencrypt-domain $user $domain '$aliases' no yes" \
-    >> $HESTIA/data/queue/letsencrypt.pipe
-
+# Rebuild loop
+for user in $($BIN/v-list-users plain |cut -f 1); do
+    $BIN/v-rebuild-user $user
+done
 
 
 #----------------------------------------------------------#

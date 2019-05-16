@@ -28,10 +28,10 @@
         <div class="l-menu__item <?php if(isset($_GET['mem'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?mem"><i class="fas fa-memory"></i>&nbsp;&nbsp;&nbsp;<?=__('RAM')?></a></div>
         <div class="l-menu__item <?php if(isset($_GET['disk'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?disk"><i class="fas fa-hdd"></i>&nbsp;&nbsp;&nbsp;<?=__('Disk')?></a></div>
         <div class="l-menu__item <?php if(isset($_GET['net'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?net"><i class="fas fa-ethernet"></i>&nbsp;&nbsp;&nbsp;<?=__('Network')?></a></div>
-        <div class="l-menu__item <?php if(isset($_GET['web'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?web"><i class="fas fa-globe-europe"></i>&nbsp;&nbsp;&nbsp;<?=__('Web')?></a></div>
-        <div class="l-menu__item <?php if(isset($_GET['dns'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?dns"><i class="fas fa-at"></i>&nbsp;&nbsp;&nbsp;<?=__('DNS')?></a></div>
-        <div class="l-menu__item <?php if(isset($_GET['mail'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?mail"><i class="fas fa-mail-bulk"></i>&nbsp;&nbsp;&nbsp;<?=__('Mail')?></a></div>
-        <div class="l-menu__item <?php if(isset($_GET['db'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?db"><i class="fas fa-database"></i>&nbsp;&nbsp;&nbsp;<?=__('DB')?></a></div>
+        <?php if ((isset($_SESSION['WEB_SYSTEM'])) && (!empty($_SESSION['WEB_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['web'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?web"><i class="fas fa-globe-europe"></i>&nbsp;&nbsp;&nbsp;<?=__('Web')?></a></div><?php }?>
+        <?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['dns'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?dns"><i class="fas fa-at"></i>&nbsp;&nbsp;&nbsp;<?=__('DNS')?></a></div><?php }?>
+        <?php if ((isset($_SESSION['MAIL_SYSTEM'])) && (!empty($_SESSION['MAIL_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['mail'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?mail"><i class="fas fa-mail-bulk"></i>&nbsp;&nbsp;&nbsp;<?=__('Mail')?></a></div><?php }?>
+        <?php if ((isset($_SESSION['DB_SYSTEM'])) && (!empty($_SESSION['DB_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['db'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?db"><i class="fas fa-database"></i>&nbsp;&nbsp;&nbsp;<?=__('DB')?></a></div><?php }?>
         
       </div>
       <!-- /.l-menu -->

@@ -178,6 +178,7 @@
                                     </select>
                                 </td>
                             </tr>
+                        <?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?>
                             <tr>
                                 <td class="vst-text input-label">
                                     <?php print __('Default Name Servers');?>
@@ -249,8 +250,7 @@
                                       <span class="add-ns-button additional-control add"><?=__('Add one more Name Server')?></span>
                                     </td>
                                 </tr>
-
-
+                            <?php } ?>
                         </table>
                         <table class="data-col2">
                         </table>

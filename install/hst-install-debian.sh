@@ -1775,7 +1775,7 @@ https://www.hestiacp.com/donate
 Sincerely yours,
 The Hestia Control Panel development team
 
-Made with love & pride from the open-source community around the world.
+Made with love & pride by the open-source community around the world.
 " > $tmpfile
 
 send_mail="$HESTIA/web/inc/mail-wrapper.php"

@@ -49,7 +49,6 @@
 
       <div class="l-unit<? if($status == 'suspended') echo ' l-unit--suspended';?>">
         <div class="l-unit__col l-unit__col--right">
-          <div class="l-unit__stats">
               <div class="clearfix l-unit__stat-col--left super-compact">
                   <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="ipchain[]" value="<?php echo $ip . ':' . $value['CHAIN'] ?>">
                 </div>
@@ -75,7 +74,6 @@
                 <div class="clearfix l-unit__stat-col--left text-center compact-5"><?=$data[$key]['TIME']?></div>
                 <div class="clearfix l-unit__stat-col--left text-center wide"><b><?=__($value['CHAIN'])?></b></div>
             </div>
-        </div>
       </div>
       <?}?>
     </div>

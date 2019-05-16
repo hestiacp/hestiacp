@@ -34,11 +34,11 @@
   
     <div class="l-center units animated fadeIn">
 
-      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended';?>">
+      <div class="l-unit l-unit__stats">
         <div class="l-unit__col l-unit__col--right server-info">
           <div class="icon-server-info"><i class="fas fa-server"></i></div>
           <div class="l-unit__name separate server-info-name"><?=$sys['sysinfo']['HOSTNAME']?></div>
-          <div class="l-unit__stats server-info-data">
+          <div class="server-info-data">
             <table>
                <tr>
                 <td>

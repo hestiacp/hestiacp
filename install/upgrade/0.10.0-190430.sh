@@ -175,22 +175,18 @@ fi
 
 # Add a general group for normal users created by Hestia
 if [ -z "$(grep ^hestia-users: /etc/group)" ]; then
-    echo "Add missing hestia-users group"
     groupadd "hestia-users"
 fi
 
 # Make sure non-admin users belong to correct Hestia group
 for user in `ls /usr/local/hestia/data/users/`; do
-    echo "[ACL] Check user $user"
     if [ "$user" != "admin" ]; then
-        echo "[ACL] Fix acl for user: $user"
         usermod -a -G "hestia-users" "$user"
         setfacl -m "u:$user:r-x" "$HOMEDIR/$user"
 
-        # fix FTP users
+        # Update FTP users groups membership
         uid=$(id -u $user)
         for ftp_user in $(cat /etc/passwd | grep -v "^$user:" | grep "^$user.*:$uid:$uid:" | cut -d ":" -f1); do
-            echo "[ACL] Fix acl for FTP user: $ftp_user"
             usermod -a -G "hestia-users" "$ftp_user"
         done
 

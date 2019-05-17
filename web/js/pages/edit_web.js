@@ -191,6 +191,15 @@ $(function() {
             $('.stats-auth').show();
         }
     });
+
+    $('#vstobjects').bind('submit', function(evt) {
+        $('input[disabled]').each(function(i, elm) {
+            var copy_elm = $(elm).clone(true);
+            $(copy_elm).attr('type', 'hidden');
+            $(copy_elm).removeAttr('disabled');
+            $(elm).after(copy_elm);
+        });
+    });
 });
 
 function WEBrandom() {
@@ -221,12 +230,3 @@ function elementHideShow(elementToHideOrShow){
     var el = document.getElementById(elementToHideOrShow);
     el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
-
-$('#vstobjects').bind('submit', function(evt) {
-    $('input[disabled]').each(function(i, elm) {
-        var copy_elm = $(elm).clone(true);
-        $(copy_elm).attr('type', 'hidden');
-        $(copy_elm).removeAttr('disabled');
-        $(elm).after(copy_elm);
-    });
-});

@@ -61,6 +61,18 @@ check_result $? "user creation failed" $E_INVALID
 # Adding password
 echo "$user:$password" | /usr/sbin/chpasswd
 
+# Add a general group for normal users created by Hestia
+if [ -z "$(grep ^hestia-users: /etc/group)" ]; then
+    groupadd "hestia-users"
+fi
+
+# Add membership to hestia-users group to non-admin users
+if [ "$user" != "admin" ]; then
+    usermod -a -G "hestia-users" "$user"
+    setfacl -m "u:$user:r-x" "$HOMEDIR/$user"
+fi
+setfacl -m "g:hestia-users:---" "$HOMEDIR/$user"
+
 # Building directory tree
 mkdir $HOMEDIR/$user/conf
 

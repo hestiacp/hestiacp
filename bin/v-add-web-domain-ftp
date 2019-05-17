@@ -85,6 +85,7 @@ fi
     -s $shell \
     -o -u $(id -u $user) \
     -g $(id -u $user) \
+    -G hestia-users \
     -M -d "$ftp_path_a"  > /dev/null 2>&1
 
 # Set ftp user password

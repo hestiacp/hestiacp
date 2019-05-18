@@ -174,8 +174,8 @@ if [ -d "/etc/roundcube" ]; then
 fi
 
 # Check if acl package is installed
+echo "(*) Verify acl package and hardening user permissions..."
 if [ ! -e '/usr/bin/setfacl' ]; then
-    echo "(*) Install acl package and hardening user permissions..."
     apt-get -qq update > /dev/null 2>&1
     apt-get -qq -y install acl > /dev/null 2>&1
 fi

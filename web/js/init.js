@@ -11,7 +11,7 @@ $(document).ready(function(){
         var selectedOption = $(this).find(":selected").text();
         $(this).next(".holder").text(selectedOption);
     }).trigger('change');
-    $('.to-top').bind('click', function(evt) {
+    $('.to-top').on('click', function(evt) {
         $("html, body").animate({ scrollTop: 0 }, "normal");
     });
 
@@ -202,7 +202,7 @@ $(document).ready(function(){
                   }
               );
 
-              $(window).bind('keypress', function(evt) {
+              $(window).on('keypress', function(evt) {
                   var tag = evt.target.tagName.toLowerCase();
                   if (evt.charCode == 97 && tag != 'input' && tag != 'textarea' && tag != 'selectbox') {
                       evt.preventDefault();
@@ -596,7 +596,7 @@ $(document).ready(function(){
             }
 
             // 
-            $('form#objects').bind('submit', function(evt) {
+            $('form#objects').on('submit', function(evt) {
                 $('.l-unit').find('.ch-toggle').prop('checked', false);
                 $('.l-unit.selected').find('.ch-toggle').prop('checked', true);
             });

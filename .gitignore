@@ -7,3 +7,11 @@
 
 .vscode
 .DS_Store
+
+.env
+composer.phar
+composer.lock
+test/vendor/
+test/node_modules/
+npm-debug.log
+.phpunit.result.cache

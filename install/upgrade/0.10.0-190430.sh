@@ -173,6 +173,13 @@ if [ -d "/etc/roundcube" ]; then
     chown root:www-data /etc/roundcube/debian-db*
 fi
 
+# Check if acl package is installed
+if [ ! -e '/usr/bin/setfacl' ]; then
+    echo "(*) Install acl package and hardening user permissions..."
+    apt-get -qq update > /dev/null 2>&1
+    apt-get -qq -y install acl > /dev/null 2>&1
+fi
+
 # Add a general group for normal users created by Hestia
 if [ -z "$(grep ^hestia-users: /etc/group)" ]; then
     groupadd "hestia-users"
@@ -189,7 +196,6 @@ for user in `ls /usr/local/hestia/data/users/`; do
         for ftp_user in $(cat /etc/passwd | grep -v "^$user:" | grep "^$user.*:$uid:$uid:" | cut -d ":" -f1); do
             usermod -a -G "hestia-users" "$ftp_user"
         done
-
     fi
     setfacl -m "g:hestia-users:---" "$HOMEDIR/$user"
 done

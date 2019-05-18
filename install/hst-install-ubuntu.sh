@@ -36,7 +36,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     ntpdate php php-cgi php-common php-curl phpmyadmin php-mysql php-imap php-ldap
     php-apcu phppgadmin php-pgsql postgresql postgresql-contrib proftpd-basic quota
     roundcube-core roundcube-mysql roundcube-plugins rrdtool rssh spamassassin
-    sudo hestia hestia-nginx hestia-php vim-common vsftpd whois zip"
+    sudo hestia hestia-nginx hestia-php vim-common vsftpd whois zip acl"
 
 # Defining help function
 help() {

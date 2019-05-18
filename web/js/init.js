@@ -15,6 +15,14 @@ $(document).ready(function(){
         $("html, body").animate({ scrollTop: 0 }, "normal");
     });
 
+    $('.ui-button').on('click',function(evt){
+        var action = $(this).data('action');
+        var id = $(this).data('id');
+        if(action=='submit' && document.getElementById(id)){
+            evt.preventDefault();
+            $(document.getElementById(id)).submit();
+        }
+    });
 
             var isMobile = false; //initiate as false
             // device detection

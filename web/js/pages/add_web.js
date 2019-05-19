@@ -211,7 +211,7 @@ function FTPrandom(elm) {
     $(elm).parents('.ftptable').find('.v-ftp-user-psw').val(ftprandomstring);
 }
 
-$('#vstobjects').bind('submit', function(evt) {
+$('#vstobjects').on('submit', function(evt) {
     $('input[disabled]').each(function(i, elm) {
         $(elm).removeAttr('disabled');
     });

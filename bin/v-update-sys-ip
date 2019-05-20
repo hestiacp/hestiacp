@@ -99,8 +99,8 @@ fi
 
 # Adding system IP
 for ip in $ips; do
-    check_ifconfig=$(/sbin/ifconfig |grep "$ip")
-    if [ ! -e "$HESTIA/data/ips/$ip" ] && [ ! -z "$check_ifconfig" ]; then
+    check_ip=$(/sbin/ip addr list |grep "$ip")
+    if [ ! -e "$HESTIA/data/ips/$ip" ] && [ ! -z "$check_ip" ]; then
         interface=$(/sbin/ip addr |grep $ip |awk '{print $NF}' |uniq)
         interface=$(echo "$interface" |cut -f 1 -d : |head -n 1)
         netmask=$(/sbin/ip addr |grep $ip |cut -f 2 -d / |cut -f 1 -d \ )

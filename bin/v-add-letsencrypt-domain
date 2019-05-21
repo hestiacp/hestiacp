@@ -15,13 +15,17 @@ domain=$2
 aliases=$3
 mail=$4
 
-# LE API
-LE_API='https://acme-v02.api.letsencrypt.org'
-
 # Includes
 source $HESTIA/func/main.sh
 source $HESTIA/func/domain.sh
 source $HESTIA/conf/hestia.conf
+
+# LE API
+LE_API='https://acme-v02.api.letsencrypt.org'
+
+if [[ "$LE_STAGING" =~ ^(YES|TRUE)$ ]]; then
+    LE_API='https://acme-staging-v02.api.letsencrypt.org'
+fi
 
 # encode base64
 encode_base64() {

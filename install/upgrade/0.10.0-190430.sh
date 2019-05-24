@@ -208,7 +208,7 @@ for ipaddr in $(ls /usr/local/hestia/data/ips/ 2>/dev/null); do
 
     if [ "$WEB_SYSTEM" = "apache2" ]; then
         echo "(*) Adding unassigned hosts configuration to Apache..."
-        if [ -z "$(/usr/sbin/apachectl -v | grep Apache/2.4)" ]; then
+        if [ -z "$(/usr/sbin/apache2 -v | grep Apache/2.4)" ]; then
             echo "NameVirtualHost $ipaddr:$WEB_PORT" >  $web_conf
         fi
         echo "Listen $ipaddr:$WEB_PORT" >> $web_conf
@@ -217,7 +217,7 @@ for ipaddr in $(ls /usr/local/hestia/data/ips/ 2>/dev/null); do
         sed -i 's/directPORT/'$WEB_PORT'/g' $web_conf
 
         if [ "$WEB_SSL" = 'mod_ssl' ]; then
-            if [ -z "$(/usr/sbin/apachectl -v | grep Apache/2.4)" ]; then
+            if [ -z "$(/usr/sbin/apache2 -v | grep Apache/2.4)" ]; then
                 sed -i "1s/^/NameVirtualHost $ipaddr:$WEB_SSL_PORT\n/" $web_conf
             fi
             sed -i "1s/^/Listen $ipaddr:$WEB_SSL_PORT\n/" $web_conf

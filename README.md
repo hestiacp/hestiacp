@@ -47,6 +47,10 @@ To begin the installation process, simply run the script and follow the on-scree
 ```bash
 bash hst-install.sh
 ```
+You may also use the scriptline generator for HestiaCP available here 
+
+https://gabizz.github.io/hestiacp-scriptline-generator/
+
 You will receive a welcome email at the address specified during installation (if applicable) and on-screen instructions after the installation is completed to log in and access your server.
 
 ## Additional installation notes:

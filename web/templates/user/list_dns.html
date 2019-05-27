@@ -82,18 +82,18 @@ sort-expire="<?=strtotime($data[$key]['EXP'])?>" sort-records="<?=(int)$data[$ke
               <div class="clearfix l-unit__stat-col--left super-compact">
                 <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?php echo $key ?>">
               </div>
-              <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/list/dns/?domain=<?=$key?>&token=<?=$_SESSION['token']?>"><?=$key?></a></b></div>
+              <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/list/dns/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('DNS records')?>"><?=$key?></a></b></div>
               <!-- START QUICK ACTION TOOLBAR AREA -->
               <div class="clearfix l-unit__stat-col--left text-right">
                   <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                   <div class="actions-panel clearfix">
 
-                    <div class="actions-panel__col actions-panel__logs shortcut-n" key-action="href"><a href="/add/dns/?domain=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-plus-circle status-icon green status-icon dim"></i></a></div>
-                    <div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="/list/dns/?domain=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-list status-icon lightblue status-icon dim"></i></div>
-                    <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+                    <div class="actions-panel__col actions-panel__logs shortcut-n" key-action="href"><a href="/add/dns/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('Add DNS Record')?>"><i class="fas fa-plus-circle status-icon green status-icon dim"></i></a></div>
+                    <div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="/list/dns/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('DNS records')?>"><i class="fas fa-list status-icon lightblue status-icon dim"></i></div>
+                    <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('Editing DNS Domain')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
 
                     <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
-                      <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
+                      <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=__($spnd_action)?>">
                         <i class="fas fa-pause status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
                         <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/dns/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
                         <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
@@ -102,7 +102,7 @@ sort-expire="<?=strtotime($data[$key]['EXP'])?>" sort-records="<?=(int)$data[$ke
                       </a>
                     </div>
                     <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-                      <a id="delete_link_<?=$i?>" class="data-controls do_delete">
+                      <a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=__('delete')?>">
                         <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
                           <input type="hidden" name="delete_url" value="/delete/dns/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
                             <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">

@@ -31,8 +31,8 @@
       <!-- /.l-menu -->
       <div class="l-profile">
         <div class="l-menu__item"><a href="javascript:location.reload();"><i class="fas fa-redo"></i></a></div>
-        <a class="l-profile__username" href="/edit/user/?user=<?php echo $user; ?>"><?=$user?></a>
-        <a class="l-profile__logout" href="/logout/"> <?=__('Log out')?> <i class="fas fa-sign-out-alt"></i></a>
+        <div class="l-menu__item"><a href="/edit/user/?user=<?php echo $user; ?>" alt="<?=$user?>" class="l-profile__username"><i class="fas fa-user-circle"></i></a></div>
+			  <div class="l-menu__item"><a href="/logout/" alt="<?=__('Log out')?>" class="l-profile__logout"><i class="fas fa-sign-out-alt"></i></a></div>
       </div>
       <!-- /.l-profile -->
     </div>

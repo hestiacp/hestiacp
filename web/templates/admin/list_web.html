@@ -129,19 +129,19 @@ sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-dis
           <div class="clearfix l-unit__stat-col--left super-compact">
               <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?=$key?>">
           </div>
-          <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" alt="<?=__('Edit')?>"><?=$key?></a></b></div>
+          <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" alt="<?=__('Edit')?>" title="<?=__('Editing Domain')?>"><?=$key?></a></b></div>
           <!-- START QUICK ACTION TOOLBAR AREA -->
           <div class="clearfix l-unit__stat-col--left compact-5 text-right">
             <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
               <div class="actions-panel clearfix">
                 <div class="actions-panel__col actions-panel__view" key-action="href"><a href="http://<?=$key?>/" target="_blank"><i class="fas fa-external-link-square-alt status-icon lightblue status-icon dim"></i></div>
-                <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></div>
-                <div class="actions-panel__col actions-panel__logs shortcut-l" key-action="href"><a href="/list/web-log/?domain=<?php echo $key ?>&type=access#"><i class="fas fa-binoculars status-icon purple status-icon dim"></i></a></div>
+                <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('Editing Domain')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></div>
+                <div class="actions-panel__col actions-panel__logs shortcut-l" key-action="href"><a href="/list/web-log/?domain=<?php echo $key ?>&type=access#" title="<?=__('AccessLog')?>"><i class="fas fa-binoculars status-icon purple status-icon dim"></i></a></div>
                 <? if (!empty($data[$key]['STATS'])) { ?>
-                  <div class="actions-panel__col actions-panel__logs shortcut-w" key-action="href"><a href="http://<?=$key?>/vstats/"  target="_blank"><i class="fas fa-chart-bar status-icon maroon status-icon dim"></i></a></div>
+                  <div class="actions-panel__col actions-panel__logs shortcut-w" key-action="href"><a href="http://<?=$key?>/vstats/"  target="_blank" title="<?=__('Statistics')?>"><i class="fas fa-chart-bar status-icon maroon status-icon dim"></i></a></div>
                 <? } ?>
                 <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
-                  <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
+                  <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=__($spnd_action)?>">
                     <i class="fas fa-pause status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
                     <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
                     <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
@@ -150,7 +150,7 @@ sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-dis
                   </a>
                 </div>
                 <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-                  <a id="delete_link_<?=$i?>" class="data-controls do_delete">
+                  <a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=__('delete')?>">
                     <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
                     <input type="hidden" name="delete_url" value="/delete/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
                     <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">

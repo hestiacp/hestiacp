@@ -92,18 +92,18 @@ sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favouri
                   <div class="clearfix l-unit__stat-col--left super-compact">
                     <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?php echo $key ?>">
                   </div>
-                  <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>"><?=$key?></a></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('mail accounts')?>"><?=$key?></a></b></div>
                   <!-- START QUICK ACTION TOOLBAR AREA -->
                   <div class="clearfix l-unit__stat-col--left text-right compact-4">
                       <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                           <div class="actions-panel clearfix">
-                            <div class="actions-panel__col actions-panel__logs shortcut-n" key-action="href"><a href="/add/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-plus-circle status-icon green status-icon dim"></i></a></div>
-                            <div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-users status-icon blue status-icon dim"></i></div>
-                            <div class="actions-panel__col actions-panel__edit" key-action="href"><a href="http://webmail.<?=$key?>/" target="_blank"><i class="fas fa-paper-plane status-icon lightblue status-icon dim"></i></div>
-                            <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+                            <div class="actions-panel__col actions-panel__logs shortcut-n" key-action="href"><a href="/add/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('Add Mail Account')?>"><i class="fas fa-plus-circle status-icon green status-icon dim"></i></a></div>
+                            <div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('mail accounts')?>"><i class="fas fa-users status-icon blue status-icon dim"></i></div>
+                            <div class="actions-panel__col actions-panel__edit" key-action="href"><a href="http://webmail.<?=$key?>/" target="_blank" title="<?=__('open webmail')?>"><i class="fas fa-paper-plane status-icon lightblue status-icon dim"></i></div>
+                            <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('Editing Mail Domain')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
 
                             <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
-                              <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
+                              <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=__($spnd_action)?>">
                                 <i class="fas fa-pause status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
                                 <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
                                 <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
@@ -112,7 +112,7 @@ sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favouri
                               </a>
                             </div>
                             <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-                              <a id="delete_link_<?=$i?>" class="data-controls do_delete">
+                              <a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=__('delete')?>">
                                 <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
                                 <input type="hidden" name="delete_url" value="/delete/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
                                 <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">

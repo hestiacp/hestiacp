@@ -100,7 +100,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
           <div class="clearfix l-unit__stat-col--left super-compact">
             <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="user[]" value="<?=$key?>">
           </div>
-              <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>"><?=$data[$key]['FNAME']?> <?=$data[$key]['LNAME']?> <span style="font-weight: normal !important;">(<?=$key?>)</span></b></a>
+              <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('login as')?>"><?=$data[$key]['FNAME']?> <?=$data[$key]['LNAME']?> <span style="font-weight: normal !important;">(<?=$key?>)</span></b></a>
                 <br />
                 <span style="font-size: 0.8rem;"><b><?=__('Email')?>:</b> <?=$data[$key]['CONTACT']?></span>
               </div>
@@ -114,11 +114,11 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                             <?php
                               } else {
                               ?>
-                              <a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-sign-in-alt status-icon green status-icon dim icon-large"></i></a>
+                              <a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('login as')?>"><i class="fas fa-sign-in-alt status-icon green status-icon dim icon-large"></i></a>
                             <?}?>
-                          <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></div>
+                          <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('Editing User')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></div>
                           <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
-                            <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
+                            <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=__($spnd_action)?>">
                               <i class="fas fa-pause status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
                               <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" />
                               <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
@@ -127,7 +127,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                             </a>
                           </div>
                           <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-                            <a id="delete_link_<?=$i?>" class="data-controls do_delete">
+                            <a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=__('delete')?>">
                               <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
                               <input type="hidden" name="delete_url" value="/delete/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" />
                               <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">

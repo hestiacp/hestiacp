@@ -43,6 +43,10 @@ server {
     location /error/ {
         alias /var/www/document_errors/;
     }
+	
+	location /assets {
+        root /var/www/document_errors;
+    }
 
     location @fallback {
         proxy_pass http://%ip%:%web_port%;

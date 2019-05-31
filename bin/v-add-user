@@ -63,7 +63,7 @@ echo "$user:$password" | /usr/sbin/chpasswd
 
 # Add a general group for normal users created by Hestia
 if [ -z "$(grep ^hestia-users: /etc/group)" ]; then
-    groupadd "hestia-users"
+    groupadd --system "hestia-users"
 fi
 
 # Add membership to hestia-users group to non-admin users

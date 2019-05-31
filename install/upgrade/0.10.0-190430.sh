@@ -182,7 +182,7 @@ fi
 
 # Add a general group for normal users created by Hestia
 if [ -z "$(grep ^hestia-users: /etc/group)" ]; then
-    groupadd "hestia-users"
+    groupadd --system "hestia-users"
 fi
 
 # Make sure non-admin users belong to correct Hestia group

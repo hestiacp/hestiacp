@@ -1199,6 +1199,11 @@ for pconf in $(find /etc/php* -name php.ini); do
     sed -i 's%_open_tag = Off%_open_tag = On%g' $pconf
 done
 
+# Cleanup php session files not changed in the last 7 days (60*24*7 mintes)
+echo '#!/bin/sh' > /etc/cron.daily/php-session-cleanup
+echo "find -O3 /home/*/tmp/ -ignore_readdir_race -depth -mindepth 1 -name 'sess_*' -type f -cmin '+10080' -delete > /dev/null 2>&1" >> /etc/cron.daily/php-session-cleanup
+chmod 644 /etc/cron.daily/php-session-cleanup
+
 
 #----------------------------------------------------------#
 #                    Configure Vsftpd                      #

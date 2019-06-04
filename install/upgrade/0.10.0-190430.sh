@@ -239,7 +239,10 @@ for ipaddr in $(ls /usr/local/hestia/data/ips/ 2>/dev/null); do
     fi
 done
 
-
+# Cleanup php session files not changed in the last 7 days (60*24*7 mintes)
+echo '#!/bin/sh' > /etc/cron.daily/php-session-cleanup
+echo "find -O3 /home/*/tmp/ -ignore_readdir_race -depth -mindepth 1 -name 'sess_*' -type f -cmin '+10080' -delete > /dev/null 2>&1" >> /etc/cron.daily/php-session-cleanup
+chmod 644 /etc/cron.daily/php-session-cleanup
 
 # Fix empty pool error message for MultiPHP
 php_versions=$(ls /etc/php/*/fpm -d 2>/dev/null |wc -l)

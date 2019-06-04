@@ -1031,25 +1031,10 @@ cp -rf $hestiacp/packages $HESTIA/data/
 # Installing templates
 cp -rf $hestiacp/templates $HESTIA/data/
 
-# Setting permissions on default page template files
-chmod 751 $HESTIA/data/templates/web/skel/document_errors/css
-chmod 751 $HESTIA/data/templates/web/skel/document_errors/js
-chmod 751 $HESTIA/data/templates/web/skel/document_errors/webfonts
-chmod 751 $HESTIA/data/templates/web/skel/public_*html/css
-chmod 751 $HESTIA/data/templates/web/skel/public_*html/js
-chmod 751 $HESTIA/data/templates/web/skel/public_*html/webfonts
-chmod 751 $HESTIA/data/templates/web/suspend/css
-chmod 751 $HESTIA/data/templates/web/suspend/js
-chmod 751 $HESTIA/data/templates/web/suspend/webfonts
-chmod 751 $HESTIA/data/templates/web/unassigned/css
-chmod 751 $HESTIA/data/templates/web/unassigned/js
-chmod 751 $HESTIA/data/templates/web/unassigned/webfonts
-chmod 644 $HESTIA/data/templates/web/unassigned/index.html
-
 mkdir -p /var/www/html
 
 # Install default success page
-cp -rf $hestiacp/templates/web/unassigned/* /var/www/html/
+cp -rf $hestiacp/templates/web/unassigned/index.html /var/www/html/
 
 # Installing firewall rules
 cp -rf $hestiacp/firewall $HESTIA/data/

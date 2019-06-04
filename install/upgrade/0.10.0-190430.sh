@@ -142,27 +142,7 @@ fi
 cp -rf $HESTIA/install/deb/templates/web/unassigned/* /var/www/html/
 cp -rf $HESTIA/install/deb/templates/web/skel/document_errors/* /var/www/document_errors/
 chmod 644 /var/www/html/*
-chmod 751 /var/www/html/css
-chmod 751 /var/www/html/js
-chmod 751 /var/www/html/webfonts
 chmod 644 /var/www/document_errors/*
-chmod 751 /var/www/document_errors/css
-chmod 751 /var/www/document_errors/js
-chmod 751 /var/www/document_errors/webfonts
-
-# Correct permissions on CSS, JavaScript, and Font dependencies for default templates
-chmod 751 $HESTIA/data/templates/web/skel/document_errors/css
-chmod 751 $HESTIA/data/templates/web/skel/document_errors/js
-chmod 751 $HESTIA/data/templates/web/skel/document_errors/webfonts
-chmod 751 $HESTIA/data/templates/web/skel/public_*html/css
-chmod 751 $HESTIA/data/templates/web/skel/public_*html/js
-chmod 751 $HESTIA/data/templates/web/skel/public_*html/webfonts
-chmod 751 $HESTIA/data/templates/web/suspend/css
-chmod 751 $HESTIA/data/templates/web/suspend/js
-chmod 751 $HESTIA/data/templates/web/suspend/webfonts
-chmod 751 $HESTIA/data/templates/web/unassigned/css
-chmod 751 $HESTIA/data/templates/web/unassigned/js
-chmod 751 $HESTIA/data/templates/web/unassigned/webfonts
 
 # Correct other permissions
 if [ -d "/var/cache/bind" ]; then

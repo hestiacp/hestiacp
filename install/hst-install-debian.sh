@@ -1070,9 +1070,11 @@ cp -rf $hestiacp/packages $HESTIA/data/
 cp -rf $hestiacp/templates $HESTIA/data/
 
 mkdir -p /var/www/html
+mkdir -p /var/www/document_errors
 
 # Install default success page
 cp -rf $hestiacp/templates/web/unassigned/index.html /var/www/html/
+cp -rf $hestiacp/templates/web/skel/document_errors/* /var/www/document_errors/
 
 # Installing firewall rules
 cp -rf $hestiacp/firewall $HESTIA/data/

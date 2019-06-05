@@ -168,6 +168,10 @@ rebuild_web_domain_conf() {
     fi
 
     # Rebuilding domain directories
+    if [ -d "$HOMEDIR/$user/web/$domain/document_errors" ]; then
+        rm -rf "$HOMEDIR/$user/web/$domain/document_errors"
+    fi
+
     mkdir -p $HOMEDIR/$user/web/$domain \
         $HOMEDIR/$user/web/$domain/public_html \
         $HOMEDIR/$user/web/$domain/public_shtml \
@@ -193,7 +197,7 @@ rebuild_web_domain_conf() {
     cd /
 
     # Propagating html skeleton
-    if [ ! -e "$WEBTPL/skel/document_errors/" ]; then
+    if [ -d "$WEBTPL/skel/document_errors/" ]; then
         cp -r $WEBTPL/skel/document_errors/ $HOMEDIR/$user/web/$domain/
     fi
 

@@ -144,6 +144,24 @@ cp -rf $HESTIA/install/deb/templates/web/skel/document_errors/* /var/www/documen
 chmod 644 /var/www/html/*
 chmod 644 /var/www/document_errors/*
 
+for user in `ls /usr/local/hestia/data/users/`; do
+    USER_DATA=$HESTIA/data/users/$user
+    for domain in $($BIN/v-list-web-domains $user plain |cut -f 1); do
+        WEBFOLDER="/home/$user/web/$domain/public_html"
+        folderchecksum=$(find "$WEBFOLDER/css" "$WEBFOLDER/js" "$WEBFOLDER/webfonts" -type f -print0 2>/dev/null |sort -z |xargs -r0 cat |md5sum |cut -d" " -f1)
+        if [ "$folderchecksum" = "926feacc51384fe13598631f9d1360c3" ]; then
+            rm -rf "$WEBFOLDER/css" "$WEBFOLDER/js" "$WEBFOLDER/webfonts"
+        fi
+        unset folderchecksum
+        unset WEBFOLDER
+    done
+done
+folderchecksum=$(find /var/www/html/css /var/www/html/js /var/www/html/webfonts -type f -print0 2>/dev/null |sort -z |xargs -r0 cat |md5sum |cut -d" " -f1)
+if [ "$folderchecksum" = "d148d5173e5e4162d7af0a60585392cb" ]; then
+    rm -rf /var/www/html/css /var/www/html/js /var/www/html/webfonts
+fi
+unset folderchecksum
+
 # Correct other permissions
 if [ -d "/var/cache/bind" ]; then
     chown bind:bind /var/cache/bind

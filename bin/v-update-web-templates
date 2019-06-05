@@ -38,6 +38,12 @@ fi
 #----------------------------------------------------------#
 
 # Update templates
+if [ -d $HESTIA/data/templates/web ]; then
+    rm -rf $HESTIA/data/templates/web/skel 2>/dev/null  
+    rm -rf $HESTIA/data/templates/web/suspend 2>/dev/null
+    rm -rf $HESTIA/data/templates/web/unassigned 2>/dev/null
+fi
+
 cp -rf $HESTIA/install/$type/templates/web $HESTIA/data/templates/
 
 # Update Multi-PHP templates

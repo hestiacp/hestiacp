@@ -42,9 +42,5 @@ server {
         alias /var/www/document_errors/;
     }
 	
-	location /assets {
-        root /var/www/document_errors;
-    }
-
     include %home%/%user%/conf/mail/%root_domain%/%web_system%.conf_*;
 }

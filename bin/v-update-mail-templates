@@ -40,10 +40,12 @@ fi
 # Update templates
 cp -rf $HESTIA/install/$type/templates/mail $HESTIA/data/templates/
 
-# Rebuilding mail domains
-for user in $($BIN/v-list-sys-users plain); do
-    $BIN/v-rebuild-mail-domains $user no
-done
+# Rebuild mail domains if mail services are enabled
+if [ ! -z $MAIL_SYSTEM ]; then
+	for user in $($BIN/v-list-sys-users plain); do
+		$BIN/v-rebuild-mail-domains $user no
+	done
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #

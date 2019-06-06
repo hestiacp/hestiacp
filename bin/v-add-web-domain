@@ -92,12 +92,6 @@ chmod 640 /var/log/$WEB_SYSTEM/domains/$domain.*
 chmod 751 $HOMEDIR/$user/web/$domain $HOMEDIR/$user/web/$domain/*
 chmod 551 $HOMEDIR/$user/web/$domain/stats $HOMEDIR/$user/web/$domain/logs
 chmod 644 $HOMEDIR/$user/web/$domain/public_*html/*
-chmod 751 $HOMEDIR/$user/web/$domain/public*_html/css
-chmod 751 $HOMEDIR/$user/web/$domain/public*_html/js
-chmod 751 $HOMEDIR/$user/web/$domain/public*_html/webfonts
-chmod 751 $HOMEDIR/$user/web/$domain/document_errors/css
-chmod 751 $HOMEDIR/$user/web/$domain/document_errors/js
-chmod 751 $HOMEDIR/$user/web/$domain/document_errors/webfonts
 
 # Addding PHP-FPM backend
 if [ ! -z "$WEB_BACKEND" ]; then

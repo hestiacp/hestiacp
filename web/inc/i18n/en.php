@@ -265,6 +265,7 @@ $LANG['en'] = array(
     'email antivirus'  => 'Anti-Virus',
     'email antispam'  => 'Spam Filter',
     'database server'  => 'Database Server',
+	'backend server' => 'Backend Server',
     'ftp server'  => 'FTP Server',
     'job scheduler'  => 'Task Scheduler',
     'firewall'  => 'Firewall',

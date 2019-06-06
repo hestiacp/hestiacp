@@ -117,7 +117,7 @@ if [ -d $HESTIA/data/templates/ ]; then
     cp -rf $HESTIA/data/templates $HESTIA_BACKUP/templates/
     $HESTIA/bin/v-update-web-templates
     $HESTIA/bin/v-update-dns-templates
-    $HESTIA/bin/v-update-mail-templates
+	$HESTIA/bin/v-update-mail-templates
 fi
 
 # Remove old Office 365 template as there is a newer version with an updated name
@@ -172,7 +172,7 @@ if [ -d "/etc/roundcube" ]; then
 fi
 
 # Check if acl package is installed
-echo "(*) Verify acl package and hardening user permissions..."
+echo "(*) Verifying ACLs and hardening user permissions..."
 if [ ! -e '/usr/bin/setfacl' ]; then
     apt-get -qq update > /dev/null 2>&1
     apt-get -qq -y install acl > /dev/null 2>&1
@@ -348,21 +348,37 @@ done
 # Rebuild user
 for user in `ls /usr/local/hestia/data/users/`; do
     echo "(*) Rebuilding domains and account for user: $user..."
-    v-rebuild-web-domains $user >/dev/null 2>&1
-    v-rebuild-dns-domains $user >/dev/null 2>&1
-    v-rebuild-mail-domains $user >/dev/null 2>&1
+    if [ ! -z $WEB_SYSTEM ]; then
+		v-rebuild-web-domains $user >/dev/null 2>&1
+	fi
+    if [ ! -z $DNS_SYSTEM ]; then
+		v-rebuild-dns-domains $user >/dev/null 2>&1
+    fi
+	if [ ! -z $MAIL_SYSTEM ]; then 
+		v-rebuild-mail-domains $user >/dev/null 2>&1
+	fi
 done
 
-# Adding upgrade notification
+# Add upgrade notification to admin user's panel
 $BIN/v-add-user-notification admin 'Upgrade complete' 'Your server has been updated to v0.10.0.<br>Please report any bugs on GitHub at<br>https://github.com/hestiacp/hestiacp/Issues<br><br>Have a great day!'
-# Restart server services
+
+# Restart services for changes to take full effect
 echo "(*) Restarting services..."
-sleep 5
-$BIN/v-restart-mail $restart
-$BIN/v-restart-service $IMAP_SYSTEM $restart
-$BIN/v-restart-web $restart
-$BIN/v-restart-proxy $restart
-$BIN/v-restart-dns $restart
+sleep 3
+if [ ! -z $MAIL_SYSTEM ]; then
+	$BIN/v-restart-mail $restart
+fi
+if [ ! -z $IMAP_SYSTEM ]; then
+	$BIN/v-restart-service $IMAP_SYSTEM $restart
+fi
+if [ ! -z $WEB_SYSTEM ]; then
+	$BIN/v-restart-web $restart
+	$BIN/v-restart-proxy $restart
+fi
+if [ ! -z $DNS_SYSTEM ]; then
+	$BIN/v-restart-dns $restart
+fi
+
 
 echo ""
 echo "    Upgrade complete! Please report any bugs or issues to"

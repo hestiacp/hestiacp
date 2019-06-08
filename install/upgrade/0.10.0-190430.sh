@@ -4,6 +4,7 @@
 HESTIA="/usr/local/hestia"
 HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
 hestiacp="$HESTIA/install/deb"
+pma_v='4.9.0.1'
 
 # Add webmail alias variable to system configuration if non-existent
 WEBMAIL_ALIAS_CHECK=$(cat $HESTIA/conf/hestia.conf | grep WEBMAIL_ALIAS)
@@ -181,7 +182,7 @@ if [ ! -e '/usr/bin/setfacl' ]; then
     mv /var/lib/dpkg/updates/ /var/lib/dpkg/updates.bak/
     mkdir -p /var/lib/dpkg/updates/
 
-	# Install missing acl package
+    # Install missing acl package
     apt-get -qq update > /dev/null 2>&1
     apt-get -qq -y install acl > /dev/null 2>&1
 
@@ -373,6 +374,38 @@ for user in `ls /usr/local/hestia/data/users/`; do
 		v-rebuild-mail-domains $user >/dev/null 2>&1
 	fi
 done
+
+# Upgrade phpMyAdmin
+if [ "$DB_SYSTEM" = 'mysql' ]; then
+    # Display upgrade information
+    echo "(*) Upgrade phpMyAdmin to v$pma_v..."
+
+    # Download latest phpMyAdmin release
+    wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
+
+    # Unpack files
+    tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
+
+    # Delete file to prevent error
+    rm -fr /usr/share/phpmyadmin/doc/html
+
+    # Overwrite old files
+    cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
+
+    # Set config and log directory
+    sed -i "s|define('CONFIG_DIR', '');|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
+    sed -i "s|define('TEMP_DIR', './tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
+
+    # Create temporary folder and change permissions
+    if [ ! -d /usr/share/phpmyadmin/tmp ]; then
+        mkdir /usr/share/phpmyadmin/tmp
+        chmod 777 /usr/share/phpmyadmin/tmp
+    fi
+
+    # Clear up
+    rm -fr phpMyAdmin-$pma_v-all-languages
+    rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
+fi
 
 # Add upgrade notification to admin user's panel
 $BIN/v-add-user-notification admin 'Upgrade complete' 'Your server has been updated to v0.10.0.<br>Please report any bugs on GitHub at<br>https://github.com/hestiacp/hestiacp/Issues<br><br>Have a great day!'

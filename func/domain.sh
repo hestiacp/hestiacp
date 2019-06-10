@@ -237,12 +237,16 @@ add_web_config() {
         rm -f $HOMEDIR/$user/conf/web/$domain.*
         rm -f $HOMEDIR/$user/conf/web/ssl.$domain.*
 
-        # Rename/Move extra SSL nginx config files
-        for f in $(ls $HOMEDIR/$user/conf/web/snginx.$domain.conf* 2>/dev/null); do
-            if [[ $f =~ .*/snginx\.$domain\.conf(.*) ]]; then
-                CustomConfigName="${BASH_REMATCH[1]}"
-                echo "Processing SSL $f $user / $PathUser $domain / $PathDomain"
-                mv "$f" "$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_old$CustomConfigName"
+        # Rename/Move extra SSL config files
+        for f in $(ls $HOMEDIR/$user/conf/web/*.$domain.conf* 2>/dev/null); do
+            if [[ $f =~ .*/s(nginx|apache2)\.$domain\.conf(.*) ]]; then
+                ServerType="${BASH_REMATCH[1]}"
+                CustomConfigName="${BASH_REMATCH[2]}"
+                if [ "$CustomConfigName" = "_letsencrypt" ]; then
+                    rm -f "$f"
+                    continue
+                fi
+                mv "$f" "$HOMEDIR/$user/conf/web/$domain/$ServerType.ssl.conf_old$CustomConfigName"
             fi
         done
     else
@@ -252,15 +256,19 @@ add_web_config() {
         # Clear old configurations
         rm -rf $HOMEDIR/$user/conf/web/$domain.*
 
-        # Rename/Move extra nginx config files
-        for f in $(ls $HOMEDIR/$user/conf/web/nginx.$domain.conf* 2>/dev/null); do
-            if [[ $f =~ .*/nginx\.$domain\.conf(.*) ]]; then
-                CustomConfigName="${BASH_REMATCH[1]}"
-                if [ "CustomConfigName" != "_letsencrypt" ]; then
-                    CustomConfigName = "_old$CustomConfigName"
+        # Rename/Move extra config files
+        for f in $(ls $HOMEDIR/$user/conf/web/*.$domain.conf* 2>/dev/null); do
+            if [[ $f =~ .*/(nginx|apache2)\.$domain\.conf(.*) ]]; then
+                ServerType="${BASH_REMATCH[1]}"
+                CustomConfigName="${BASH_REMATCH[2]}"
+                if [ "$CustomConfigName" = "_letsencrypt" ]; then
+                    rm -f "$f"
+                    continue
                 fi
-                echo "Processing SSL $f $user / $PathUser $domain / $PathDomain"
-                mv "$f" "$HOMEDIR/$user/conf/web/$domain/nginx.conf$CustomConfigName"
+                mv "$f" "$HOMEDIR/$user/conf/web/$domain/$ServerType.conf_old$CustomConfigName"
+            elif [[ $f =~ .*/forcessl\.(nginx|apache2)\.$domain\.conf ]]; then
+                ServerType="${BASH_REMATCH[1]}"
+                mv "$f" "$HOMEDIR/$user/conf/web/$domain/$ServerType.forcessl.conf"
             fi
         done
     fi

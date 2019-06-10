@@ -234,15 +234,35 @@ add_web_config() {
         ln -s $conf /etc/$1/conf.d/domains/$domain.ssl.conf
 
         # Clear old configurations
-        rm -rf $HOMEDIR/$user/conf/web/$domain.*
-        rm -rf $HOMEDIR/$user/conf/web/ssl.$domain.*
-        rm -rf $HOMEDIR/$user/conf/web/*nginx.$domain.*
+        rm -f $HOMEDIR/$user/conf/web/$domain.*
+        rm -f $HOMEDIR/$user/conf/web/ssl.$domain.*
+
+        # Rename/Move extra SSL nginx config files
+        for f in $(ls $HOMEDIR/$user/conf/web/snginx.$domain.conf* 2>/dev/null); do
+            if [[ $f =~ .*/snginx\.$domain\.conf(.*) ]]; then
+                CustomConfigName="${BASH_REMATCH[1]}"
+                echo "Processing SSL $f $user / $PathUser $domain / $PathDomain"
+                mv "$f" "$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_old$CustomConfigName"
+            fi
+        done
     else
         rm -f /etc/$1/conf.d/domains/$domain.conf
         ln -s $conf /etc/$1/conf.d/domains/$domain.conf
 
         # Clear old configurations
         rm -rf $HOMEDIR/$user/conf/web/$domain.*
+
+        # Rename/Move extra nginx config files
+        for f in $(ls $HOMEDIR/$user/conf/web/nginx.$domain.conf* 2>/dev/null); do
+            if [[ $f =~ .*/nginx\.$domain\.conf(.*) ]]; then
+                CustomConfigName="${BASH_REMATCH[1]}"
+                if [ "CustomConfigName" != "_letsencrypt" ]; then
+                    CustomConfigName = "_old$CustomConfigName"
+                fi
+                echo "Processing SSL $f $user / $PathUser $domain / $PathDomain"
+                mv "$f" "$HOMEDIR/$user/conf/web/$domain/nginx.conf$CustomConfigName"
+            fi
+        done
     fi
     
     trigger="${2/.*pl/.sh}"

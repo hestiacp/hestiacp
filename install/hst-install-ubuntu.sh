@@ -22,7 +22,7 @@ codename="$(lsb_release -s -c)"
 hestiacp="$HESTIA/install/deb"
 
 # Define software versions
-pma_v='4.8.5'
+pma_v='4.9.0.1'
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3")
 fpm_v="7.3"
 

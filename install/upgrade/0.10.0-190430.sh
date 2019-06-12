@@ -375,36 +375,40 @@ for user in `ls /usr/local/hestia/data/users/`; do
 	fi
 done
 
-# Upgrade phpMyAdmin
+# Upgrade phpMyAdmin if applicable
 if [ "$DB_SYSTEM" = 'mysql' ]; then
-    # Display upgrade information
-    echo "(*) Upgrade phpMyAdmin to v$pma_v..."
+    if [ -e "/usr/share/phpmyadmin/RELEASE-DATE-$pma_v" ]; then
+        echo "(*) phpMyAdmin $pma_v is already installed, skipping update..."
+    else
+        # Display upgrade information
+        echo "(*) Upgrade phpMyAdmin to v$pma_v..."
 
-    # Download latest phpMyAdmin release
-    wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
+        # Download latest phpMyAdmin release
+        wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
 
-    # Unpack files
-    tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
+        # Unpack files
+        tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
 
-    # Delete file to prevent error
-    rm -fr /usr/share/phpmyadmin/doc/html
+        # Delete file to prevent error
+        rm -fr /usr/share/phpmyadmin/doc/html
 
-    # Overwrite old files
-    cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
+        # Overwrite old files
+        cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
 
-    # Set config and log directory
-    sed -i "s|define('CONFIG_DIR', '');|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
-    sed -i "s|define('TEMP_DIR', './tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
+        # Set config and log directory
+        sed -i "s|define('CONFIG_DIR', '');|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
+        sed -i "s|define('TEMP_DIR', './tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
 
-    # Create temporary folder and change permissions
-    if [ ! -d /usr/share/phpmyadmin/tmp ]; then
-        mkdir /usr/share/phpmyadmin/tmp
-        chmod 777 /usr/share/phpmyadmin/tmp
+        # Create temporary folder and change permissions
+        if [ ! -d /usr/share/phpmyadmin/tmp ]; then
+            mkdir /usr/share/phpmyadmin/tmp
+            chmod 777 /usr/share/phpmyadmin/tmp
+        fi
+
+        # Clear up
+        rm -fr phpMyAdmin-$pma_v-all-languages
+        rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
     fi
-
-    # Clear up
-    rm -fr phpMyAdmin-$pma_v-all-languages
-    rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
 fi
 
 # Add upgrade notification to admin user's panel

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# define vars
+# Define vars
 HESTIA="/usr/local/hestia"
 HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
 hestiacp="$HESTIA/install/deb"
@@ -22,10 +22,10 @@ if [ -z "$release_branch_check" ]; then
     echo "RELEASE_BRANCH='develop'" >> $HESTIA/conf/hestia.conf
 fi
 
-# load hestia.conf
+# Load hestia.conf
 source $HESTIA/conf/hestia.conf
 
-# load hestia main functions
+# Load hestia main functions
 source /usr/local/hestia/func/main.sh
 
 # Initialize backup directory
@@ -88,7 +88,7 @@ if [ -f /etc/nginx/nginx.conf ]; then
     cp -f $HESTIA/install/deb/nginx/nginx.conf /etc/nginx/nginx.conf
 fi
 
-# Generating dhparam
+# Generate dhparam
 if [ ! -e /etc/ssl/dhparam.pem ]; then
     echo "(*) Enabling HTTPS Strict Transport Security (HSTS) support..."
     mv  /etc/nginx/nginx.conf $HESTIA_BACKUP/conf/
@@ -254,9 +254,12 @@ for ipaddr in $(ls /usr/local/hestia/data/ips/ 2>/dev/null); do
 done
 
 # Cleanup php session files not changed in the last 7 days (60*24*7 minutes)
-echo '#!/bin/sh' > /etc/cron.daily/php-session-cleanup
-echo "find -O3 /home/*/tmp/ -ignore_readdir_race -depth -mindepth 1 -name 'sess_*' -type f -cmin '+10080' -delete > /dev/null 2>&1" >> /etc/cron.daily/php-session-cleanup
-chmod 644 /etc/cron.daily/php-session-cleanup
+if [ ! -f /etc/cron.daily/php-session-cleanup ]; then
+    echo '#!/bin/sh' > /etc/cron.daily/php-session-cleanup
+    echo "find -O3 /home/*/tmp/ -ignore_readdir_race -depth -mindepth 1 -name 'sess_*' -type f -cmin '+10080' -delete > /dev/null 2>&1" >> /etc/cron.daily/php-session-cleanup
+    echo "find -O3 $HESTIA/data/sessions/ -ignore_readdir_race -depth -mindepth 1 -name 'sess_*' -type f -cmin '+10080' -delete > /dev/null 2>&1" >> /etc/cron.daily/php-session-cleanup
+fi
+    chmod 755 /etc/cron.daily/php-session-cleanup
 
 # Fix empty pool error message for MultiPHP
 php_versions=$(ls /etc/php/*/fpm -d 2>/dev/null |wc -l)

@@ -1045,15 +1045,14 @@ hover_menu = function() {
 
 
 function checkedAll(frmname) {
-    if ($('.l-unit.selected:not(.header)').length > 0 || !$('.l-unit').length ) {
-        $('.l-unit:not(.header)').removeClass("selected");
-        $('.ch-toggle').prop("checked", false);
-        $('.toggle-all').removeClass('clicked-on');
-    }
-    else {
+    if($('input#toggle-all').prop('checked')){
         $('.l-unit:not(.header)').addClass("selected");
         $('.ch-toggle').prop("checked", true);
         $('.toggle-all').addClass('clicked-on');
+    } else {
+        $('.l-unit:not(.header)').removeClass("selected");
+        $('.ch-toggle').prop("checked", false);
+        $('.toggle-all').removeClass('clicked-on');
     }
 }
 

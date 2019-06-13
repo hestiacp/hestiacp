@@ -344,6 +344,14 @@ fi
 # Run sftp jail once
 $HESTIA/bin/v-add-sys-sftp-jail
 
+# Enable SFTP subsystem for SSH
+sftp_subsys_enabled=$(cat /etc/ssh/sshd_config | grep "#Subsystem sftp-server")
+if [ ! -z "$sftp_subsys_enabled" ]; then
+    echo "(*) Updating SFTP subsystem configuration..."
+    sed -i "s/#Subsystem sftp-server/Subsystem sftp internal-sftp/gI" /etc/ssh/sshd_config
+    service ssh restart
+fi
+
 # Remove and migrate obsolete object keys
 for user in `ls /usr/local/hestia/data/users/`; do
     USER_DATA=$HESTIA/data/users/$user

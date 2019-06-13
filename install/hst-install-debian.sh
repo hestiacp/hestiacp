@@ -891,13 +891,20 @@ rm -f /usr/sbin/policy-rc.d
 # Enable SSH password authentication
 sed -i "s/rdAuthentication no/rdAuthentication yes/g" /etc/ssh/sshd_config
 
+# Enable SFTP subsystem for SSH
+sftp_subsys_enabled=$(grep "#Subsystem sftp-server" /etc/ssh/sshd_config)
+if [ ! -z "$sftp_subsys_enabled" ]; then
+    echo "(*) Updating SFTP subsystem configuration..."
+    sed -i "s/#Subsystem sftp-server/Subsystem sftp internal-sftp/gI" /etc/ssh/sshd_config
+fi
+
 # Disable SSH suffix broadcast
 if [ -z "$(grep "^DebianBanner no" /etc/ssh/sshd_config)" ]; then
     echo '' >> /etc/ssh/sshd_config
     echo 'DebianBanner no' >> /etc/ssh/sshd_config
-    service ssh restart
 fi
 
+# Restart SSH daemon
 service ssh restart
 
 # Disable AWStats cron

@@ -565,15 +565,9 @@ $(document).ready(function(){
                 var shift_select_ref = $('body').finderSelect({
                     children: '.l-unit', 
                     'onFinish': function(evt) {
-                        var ref = $(evt.target);
-                        $('.l-content').find('.l-unit .ch-toggle').prop('checked', false);
-                        $('.l-content').find('.l-unit.selected .ch-toggle').prop('checked', true);
-
-
                         if ($('.l-content').find('.l-unit.selected').length == $('.l-content').find('.l-unit').length) {
                             $('.toggle-all').addClass('clicked-on');
                         }
-
                     },
                     'toggleAllHook': function() {
                         if ($('.l-unit').length == $('.ch-toggle:checked').length) {

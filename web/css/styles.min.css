@@ -3528,6 +3528,11 @@ form#vstobjects.suspended {
   padding: 10px 26px 30px !important;
 }
 
+.ui-dialog .ui-dialog-title {
+  color: #121212 !important;
+  font-size: 1.2em !important;
+}
+
 .ui-dialog-buttonpane {
   border-color: #aaaaaa !important;
 }

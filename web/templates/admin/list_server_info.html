@@ -23,7 +23,7 @@
       <a href="/list/web/" class="l-logo"></a>
       <!-- /.l-logo -->
       <div class="l-menu clearfix">
-        <div class="l-menu__item"><a href="/list/rrd/"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;&nbsp;<?=__('Back')?></a></div>
+        <div class="l-menu__item"><a href="/list/rrd/"><i class="fas fa-arrow-alt-circle-left"></i></a></div>
         <div class="l-menu__item <?php if(isset($_GET['cpu'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?cpu"><i class="fas fa-microchip"></i>&nbsp;&nbsp;&nbsp;<?=__('CPU')?></a></div>
         <div class="l-menu__item <?php if(isset($_GET['mem'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?mem"><i class="fas fa-memory"></i>&nbsp;&nbsp;&nbsp;<?=__('RAM')?></a></div>
         <div class="l-menu__item <?php if(isset($_GET['disk'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?disk"><i class="fas fa-hdd"></i>&nbsp;&nbsp;&nbsp;<?=__('Disk')?></a></div>
@@ -37,7 +37,6 @@
       <!-- /.l-menu -->
       <div class="l-profile noselect">
         <div class="l-menu__item"><a href="javascript:location.reload();"><i class="fas fa-redo"></i></a></div>
-        <div class="l-menu__item"><a href="/edit/user/?user=<?php echo $user; ?>" alt="<?=$user?>" class="l-profile__username"><i class="fas fa-user-circle"></i></a></div>
         <div class="l-menu__item"><a href="/logout/" alt="<?=__('Log out')?>"> <?=__('Log out')?>&nbsp;&nbsp;&nbsp;<i class="fas fa-sign-out-alt"></i></a></div>
       </div>
       <!-- /.l-profile -->

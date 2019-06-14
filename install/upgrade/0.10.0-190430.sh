@@ -345,10 +345,10 @@ fi
 $HESTIA/bin/v-add-sys-sftp-jail
 
 # Enable SFTP subsystem for SSH
-sftp_subsys_enabled=$(cat /etc/ssh/sshd_config | grep "#Subsystem sftp-server")
+sftp_subsys_enabled=$(grep -iE "^#?.*subsystem.+(sftp )?sftp-server" /etc/ssh/sshd_config)
 if [ ! -z "$sftp_subsys_enabled" ]; then
     echo "(*) Updating SFTP subsystem configuration..."
-    sed -i "s/#Subsystem sftp-server/Subsystem sftp internal-sftp/gI" /etc/ssh/sshd_config
+    sed -i -E "s/^#?.*Subsystem.+(sftp )?sftp-server/Subsystem sftp internal-sftp/g" /etc/ssh/sshd_config
     service ssh restart
 fi
 

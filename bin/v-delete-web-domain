@@ -106,6 +106,7 @@ rm -f /var/log/$WEB_SYSTEM/domains/$domain.error*
 
 # Deleting directory
 rm -rf $HOMEDIR/$user/web/$domain
+rm -rf $HOMEDIR/$user/conf/web/$domain
 
 
 #----------------------------------------------------------#

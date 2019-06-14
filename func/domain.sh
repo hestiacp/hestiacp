@@ -328,14 +328,6 @@ del_web_config() {
         confname="$domain.ssl.conf"
     fi
 
-    # Remove domain configuration files and clean up symbolic links
-    if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" = "$1" ]; then
-        rm -f "/etc/$WEB_SYSTEM/conf.d/domains/$confname"
-    fi
-    if [ ! -z "$PROXY_SYSTEM" ] && [ "$PROXY_SYSTEM" = "$1" ]; then
-        rm -f "/etc/$PROXY_SYSTEM/conf.d/domains/$confname"
-    fi
-
     # Clean up legacy configuration files
     if [ ! -e "$conf" ]; then
         local legacyconf="$HOMEDIR/$user/conf/web/$1.conf"
@@ -348,15 +340,15 @@ del_web_config() {
         rm -f /etc/$1/conf.d/hestia.conf
     fi
 
-    # Clean up user web.conf file if no more domains exist
-    web_domain=$(grep DOMAIN $USER_DATA/web.conf |wc -l)
-    if [ "$web_domain" -eq '0' ]; then
-        sed -i "/.*\/$user\/conf\/web\//d" 
-        if [ -f "$conf" ]; then
-            rm -f $conf
-        fi
-    fi
+    # Remove domain configuration files and clean up symbolic links
+    rm -f "$conf" "${conf}"_*
 
+    if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" = "$1" ]; then
+        rm -f "/etc/$WEB_SYSTEM/conf.d/domains/$confname"
+    fi
+    if [ ! -z "$PROXY_SYSTEM" ] && [ "$PROXY_SYSTEM" = "$1" ]; then
+        rm -f "/etc/$PROXY_SYSTEM/conf.d/domains/$confname"
+    fi
 }
 
 # SSL certificate verification

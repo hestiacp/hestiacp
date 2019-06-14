@@ -92,7 +92,7 @@ sort-star="<? if($_SESSION['favourites']['CRON'][$key] == 1) echo '1'; else echo
         <div class="clearfix l-unit__stat-col--left compact-2 text-right">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__download shortcut-d" key-action="href"><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?=__('Editing Cron Job')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+              <div class="actions-panel__col actions-panel__download shortcut-enter" key-action="href"><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?=__('Editing Cron Job')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
                 <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
                   <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=__($spnd_action)?>">
                     <i class="fas fa-pause status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>

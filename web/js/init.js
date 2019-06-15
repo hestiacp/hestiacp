@@ -176,12 +176,13 @@ $(document).ready(function(){
               );
 
               shortcut.add("Ctrl+Backspace", function(){
-                if(VE.tmp.form_changed && $('form#vstobjects .button.cancel')[0]){
-                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', $('form#vstobjects input.cancel').attr('onclick').replace("location.href='", "").replace("'",""));
+                var redirect = $('a.ui-button#btn-back').attr('href')
+                if(VE.tmp.form_changed && redirect){
+                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', redirect);
                 } else if($('form#vstobjects .button.cancel')[0]){
                   location.href=$('form#vstobjects input.cancel').attr('onclick').replace("location.href='", "").replace("'","");
-                } else if($('a.ui-button.cancel')[0]){
-                  location.href=$('a.ui-button.cancel').attr('href');
+                } else if(redirect){
+                  location.href = redirect;
                 }
               }, {
                   'type':             'keydown',

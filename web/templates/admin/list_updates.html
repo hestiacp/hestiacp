@@ -1,7 +1,7 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
             <div class="l-unit-toolbar__buttonstrip">
-                <a class="ui-button cancel" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+                <a class="ui-button cancel" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
                 <? if($autoupdate == 'Enabled') {
                   echo '<a class="ui-button cancel" href="/delete/cron/autoupdate/?token='.$_SESSION['token'].'"><i class="fas fa-toggle-on status-icon green"></i>'.__('disable autoupdate').'</a>';
                 } else {

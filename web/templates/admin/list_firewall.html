@@ -1,7 +1,7 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a class="ui-button cancel" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+          <a class="ui-button cancel" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
           <a href="/add/firewall/" class="ui-button cancel" title="<?=__('Add Rule')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=__('Add Rule')?></a>
           <? if(!empty($_SESSION['FIREWALL_EXTENSION'])) {
             echo '<a class="ui-button cancel" href="/list/firewall/banlist/"><i class="fas fa-eye status-icon red"></i> '.__('list fail2ban').'</a>';

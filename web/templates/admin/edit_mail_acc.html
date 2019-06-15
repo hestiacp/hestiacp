@@ -1,7 +1,7 @@
 <div class="l-center edit">
         <div class="l-sort clearfix">
           <div class="l-unit-toolbar__buttonstrip">
-            <a class="ui-button cancel" href="/list/mail/?domain=<?=htmlentities(trim($v_domain, "'"))?>&token=<?=$_SESSION['token']?>"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+            <a class="ui-button cancel" id="btn-back" href="/list/mail/?domain=<?=htmlentities(trim($v_domain, "'"))?>&token=<?=$_SESSION['token']?>"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
               <?php

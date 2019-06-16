@@ -20,10 +20,6 @@ server {
         }
     }
 
-    error_page  403 /error/404.html;
-    error_page  404 /error/404.html;
-    error_page  500 502 503 504 /error/50x.html;
-
     location /error/ {
         alias   %home%/%user%/web/%domain%/document_errors/;
     }

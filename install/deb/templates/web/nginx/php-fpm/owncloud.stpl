@@ -27,6 +27,7 @@ server {
 
     error_page 403 = /core/templates/403.php;
     error_page 404 = /core/templates/404.php;
+    error_page 500 502 503 504 /error/50x.html;
 
     location ~ ^/(?:\.htaccess|data|config|db_structure\.xml|README){
         deny all;
@@ -58,10 +59,6 @@ fastcgi_hide_header "Set-Cookie";
         add_header Pragma public;
         add_header Cache-Control "public, must-revalidate, proxy-revalidate";
     }
-
-    #error_page  403 /error/404.html;
-    #error_page  404 /error/404.html;
-    error_page  500 502 503 504 /error/50x.html;
 
     location /error/ {
         alias   %home%/%user%/web/%domain%/document_errors/;

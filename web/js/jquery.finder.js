@@ -54,7 +54,7 @@
             ctrlClass: "selected-ctrl",
             triggerUpdate: "finderSelectUpdate",
             children: false,
-            event: "mousedown",
+            event: "mouseup",
             cursor: "pointer",
             dragEvent: "mouseenter",
             enableClickDrag: true,

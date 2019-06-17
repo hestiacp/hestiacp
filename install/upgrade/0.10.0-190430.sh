@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # Define vars
-HESTIA="/usr/local/hestia"
+if [ -z "$HESTIA" ]; then
+    export HESTIA="/usr/local/hestia"
+fi
 HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
 hestiacp="$HESTIA/install/deb"
 pma_v='4.9.0.1'
@@ -172,29 +174,8 @@ if [ -d "/etc/roundcube" ]; then
     chown root:www-data /etc/roundcube/debian-db*
 fi
 
-# Check if acl package is installed
-echo "(*) Verifying ACLs and hardening user permissions..."
-if [ ! -e '/usr/bin/setfacl' ]; then
-    # Disable apt package lock
-    mv /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock-frontend.bak
-    mv /var/lib/dpkg/lock /var/lib/dpkg/lock.bak
-    mv /var/cache/apt/archives/lock /var/cache/apt/archives/lock.bak
-    mv /var/lib/dpkg/updates/ /var/lib/dpkg/updates.bak/
-    mkdir -p /var/lib/dpkg/updates/
-
-    # Install missing acl package
-    apt-get -qq update > /dev/null 2>&1
-    apt-get -qq -y install acl > /dev/null 2>&1
-
-    # Enable apt package lock
-    mv /var/lib/dpkg/lock-frontend.bak /var/lib/dpkg/lock-frontend
-    mv /var/lib/dpkg/lock.bak /var/lib/dpkg/lock
-    mv /var/cache/apt/archives/lock.bak /var/cache/apt/archives/lock
-    rm -rf /var/lib/dpkg/updates/
-    mv /var/lib/dpkg/updates.bak/ /var/lib/dpkg/updates/
-fi
-
 # Add a general group for normal users created by Hestia
+echo "(*) Verifying ACLs and hardening user permissions..."
 if [ -z "$(grep ^hestia-users: /etc/group)" ]; then
     groupadd --system "hestia-users"
 fi

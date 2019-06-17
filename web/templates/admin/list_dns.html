@@ -89,7 +89,7 @@ sort-expire="<?=strtotime($data[$key]['EXP'])?>" sort-records="<?=(int)$data[$ke
                   <div class="actions-panel clearfix">
 
                     <div class="actions-panel__col actions-panel__logs shortcut-n" key-action="href"><a href="/add/dns/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('Add DNS Record')?>"><i class="fas fa-plus-circle status-icon green status-icon dim"></i></a></div>
-                    <div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="/list/dns/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('DNS records')?>"><i class="fas fa-list status-icon lightblue status-icon dim"></i></div>
+                    <div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="/list/dns/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('DNS records')?>"><i class="fas fa-list status-icon lightblue status-icon dim"></i></a></div>
                     <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('Editing DNS Domain')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
 
                     <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">

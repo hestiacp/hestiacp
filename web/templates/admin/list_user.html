@@ -116,7 +116,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                               ?>
                               <a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('login as')?>"><i class="fas fa-sign-in-alt status-icon green status-icon dim icon-large"></i></a>
                             <?}?>
-                          <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('Editing User')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></div>
+                          <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('Editing User')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
                           <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
                             <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=__($spnd_action)?>">
                               <i class="fas fa-pause status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>

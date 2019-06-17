@@ -1,7 +1,7 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a href="/add/cron/" class="ui-button cancel" title="<?=__('Add Cron Job')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=__('Add Cron Job')?></a>
+          <a href="/add/cron/" id="btn-create" class="ui-button cancel" title="<?=__('Add Cron Job')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=__('Add Cron Job')?></a>
           <?
             if($panel[$user]['CRON_REPORTS'] == 'yes') {
               echo '<a class="ui-button cancel" href="/delete/cron/reports/?token='.$_SESSION['token'].'"><i class="fas fa-bell status-icon orange"></i> '.__('turn off notifications').'</a>';

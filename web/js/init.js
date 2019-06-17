@@ -208,8 +208,9 @@ $(document).ready(function(){
                   if (evt.charCode == 97 && tag != 'input' && tag != 'textarea' && tag != 'selectbox') {
                       evt.preventDefault();
                       if (!evt.ctrlKey && !evt.shiftKey) {
-                          if ($('.l-sort__create-btn')[0]) {
-                              location.href=$('.l-sort__create-btn').attr('href');
+                          //if ($('.l-sort__create-btn')[0]) {
+                          if ($('.ui-button#btn-create').length) {
+                              location.href=$('.ui-button#btn-create').attr('href');
                           }
                       }
                       else {

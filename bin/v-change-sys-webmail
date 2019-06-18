@@ -9,76 +9,51 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument definition
-WEBMAIL=$1
-
 # Includes
 source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
 
+# Get existing system webmail alias
+export $WEBMAIL_ALIAS
 
-#----------------------------------------------------------#
-#                    Verifications                         #
-#----------------------------------------------------------#
-
-check_args '1' "$#" 'WEBMAIL'
-
-# Check if string has leading /
-if [[ ! ${WEBMAIL:0:1} == "/" ]]; then
-    WEBMAIL="/$WEBMAIL"
-fi
+# Define aliases
+OLD_ALIAS=$WEBMAIL_ALIAS
+NEW_ALIAS=$1
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get existing apache2 webmail alias
-if [ -f /etc/apache2/conf.d/roundcube.conf ]; then
-    apache_webmail=$(tail -n+3 /etc/apache2/conf.d/roundcube.conf | grep "Alias" | { IFS=' '; read -r -a array; echo "${array[1]}"; })
-fi
+# Delete old webmail configuration
+for user in `ls /usr/local/hestia/data/users/`; do
+    for domain in $($BIN/v-list-web-domains $user plain |cut -f 1); do
+        $BIN/v-delete-webmail $user $domain
+    done
+done
 
-# Get existing nginx webmail alias
-if [ -f /etc/nginx/conf.d/webmail.inc ]; then
-    nginx_webmail=$(cat /etc/nginx/conf.d/webmail.inc | grep "location" | { IFS=' '; read -r -a array; echo "${array[1]}"; })
-fi
+# Set new webmail alias
+$BIN/v-change-sys-config-value 'WEBMAIL_ALIAS' $NEW_ALIAS
 
-# Check if alias is different for apache2
-if [ ! -z "$apache_webmail" ]; then
-    if [ ! "$apache_webmail" = "$WEBMAIL" ]; then
-        # Replace webmail alias in config files.
-        sed -i "s|Alias $apache_webmail|Alias $WEBMAIL|" /etc/apache2/conf.d/roundcube.conf
+for user in `ls /usr/local/hestia/data/users/`; do
+    for domain in $($BIN/v-list-web-domains $user plain |cut -f 1); do
+        $BIN/v-add-webmail $user $domain
+    done
+done
 
-        # Replace in Backend UI
-        sed -i "s|$apache_webmail/|$WEBMAIL/|" /usr/local/hestia/web/templates/admin/list_mail.html
-        sed -i "s|$apache_webmail/|$WEBMAIL/|" /usr/local/hestia/web/templates/user/list_mail.html
-
-        # Restart services
-        $HESTIA/bin/v-restart-service apache2
-    fi
-fi
-
-# Check if alias is different for nginx
-if [ ! -z "$nginx_webmail" ]; then
-    if [ ! "$nginx_webmail" = "$WEBMAIL" ]; then
-        # Replace webmail alias in config files.
-        sed -i "s|$nginx_webmail|$WEBMAIL|" /etc/nginx/conf.d/webmail.inc
-        sed -i "s|/var/lib$WEBMAIL|/var/lib/roundcube|" /etc/nginx/conf.d/webmail.inc
-
-        # Replace in Backend UI
-        sed -i "s|$nginx_webmail/|$WEBMAIL/|" /usr/local/hestia/web/templates/admin/list_mail.html
-        sed -i "s|$nginx_webmail/|$WEBMAIL/|" /usr/local/hestia/web/templates/user/list_mail.html
-
-        # Restart services
-        $HESTIA/bin/v-restart-service nginx
-    fi
-fi
-
+# Update global directory alias configuration
+sed -i "s|Alias \/$OLD_ALIAS|Alias \/$NEW_ALIAS|gI" /etc/apache2/conf.d/roundcube.conf
+sed -i "s|location \/$OLD_ALIAS|location \/$NEW_ALIAS|gI" /etc/nginx/conf.d/webmail.inc
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
+# Restart services
+$BIN/v-restart-web $restart
+$BIN/v-restart-proxy $restart
+
 # Logging
-#log_event "$OK" "$ARGUMENTS"
+log_history "changed global webmail alias to $NEW_ALIAS"
+log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -21,7 +21,7 @@ source $HESTIA/func/domain.sh
 source $HESTIA/conf/hestia.conf
 
 # Defining htpasswd file
-htpasswd="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.htpasswd"
+htpasswd="$HOMEDIR/$user/conf/web/$domain/htpasswd"
 
 
 #----------------------------------------------------------#

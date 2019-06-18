@@ -1,34 +1,32 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
-        <a href="/add/cron/" class="l-sort__create-btn" title="<?=__('Add Cron Job')?>"></a>
-        <ul class="context-menu sort-order" style="display:none;">
-          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?></span><span class="up">&nbsp;</span></li>
-          <li entity="sort-name"><span class="name"><?=__('Command')?></span><span class="up">&nbsp;</span></li>
-          <li entity="sort-star" sort_as_int="1"><span class="name"><?=__('Starred')?></span><span class="up">&nbsp;</span></li>
+        <div class="l-unit-toolbar__buttonstrip">
+          <a href="/add/cron/" id="btn-create" class="ui-button cancel" title="<?=__('Add Cron Job')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=__('Add Cron Job')?></a>
+          <?
+            if($panel[$user]['CRON_REPORTS'] == 'yes') {
+              echo '<a class="ui-button cancel" href="/delete/cron/reports/?token='.$_SESSION['token'].'"><i class="fas fa-bell status-icon orange"></i> '.__('turn off notifications').'</a>';
+            } else {
+              echo '<a class="ui-button cancel" href="/add/cron/reports/?token='.$_SESSION['token'].'"><i class="fas fa-bell-slash status-icon orange"></i> '.__('turn on notifications').'</a>';
+            }
+          ?>
+        </div>
+        <ul class="context-menu sort-order animated fadeIn" style="display:none;">
+          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-name"><span class="name"><?=__('Command')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-star" sort_as_int="1"><span class="name"><?=__('Starred')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
         </ul>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
-              <td class="step-right">
-              <?
-                if($panel[$user]['CRON_REPORTS'] == 'yes') {
-                  echo '<a class="vst" href="/delete/cron/reports/?token='.$_SESSION['token'].'">'.__('turn off notifications').'</a>';
-                } else {
-                  echo '<a class="vst" href="/add/cron/reports/?token='.$_SESSION['token'].'">'.__('turn on notifications').'</a>';
-                }
-              ?>
+              <td class="sort-by">
+                <?=__('sort by');?>: <span><b><?=__('Date')?> <i class="fas fa-sort-amount-down"></i></b></span>
               </td>
-
-              <td class="l-sort-toolbar__search-box step-left">
+              <td class="l-sort-toolbar__search-box">
                 <form action="/search/" method="get">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                   <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
-                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
+                  <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value=""><i class="fas fa-search"></i></button>
                 </form>
-              </td>
-              <td class="toggle-all">
-                <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
-                <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
               </td>
               <td class="">
                 <form action="/bulk/cron/" method="post" id="objects">
@@ -38,27 +36,36 @@
                     <option value=""><?=__('apply to selected')?></option>
                     <? if($panel[$user]['CRON_REPORTS'] == 'yes') echo '<option value="delete-cron-reports">'.__('turn off notifications').'</option>'; ?>
                     <? if($panel[$user]['CRON_REPORTS'] == 'no') echo '<option value="add-cron-reports">'.__('turn on notifications').'</option>'; ?>
+                    <option value="suspend"><?=__('suspend')?></option>
+                    <option value="unsuspend"><?=__('unsuspend')?></option>
                     <option value="delete"><?=__('delete')?></option>
                   </select>
                 </div>
-                <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
-              </td>
-              <td class="sort-by">
-                <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
+                <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
               </td>
             </tr>
           </table>
         </div>
       </div>
-      <!-- /.l-sort -->
     </div>
 
     <div class="l-separator"></div>
-    <!-- /.l-separator -->
-
-
 
     <div class="l-center units animated fadeIn">
+        <div class="header table-header">
+            <div class="l-unit__col l-unit__col--right step-top">
+                  <div class="clearfix l-unit__stat-col--left super-compact">
+                      <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
+                  </div>
+                  <div class="clearfix l-unit__stat-col--left wide-5"><b><?php print __('Cron Job');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left compact-2 text-right"><b>&nbsp;</b></div>
+                  <div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?=__('Min')?></b></div>
+                  <div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?=__('Hour')?></b></div>
+                  <div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?=__('Day')?></b></div>
+                  <div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?=__('Month')?></b></div>
+                  <div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?=__('Day of week')?></b></div>
+             </div>
+          </div>
       <?
         foreach ($data as $key => $value) {
           ++$i;
@@ -73,81 +80,57 @@
           }
       ?>
 
-
-      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites'][CRON][$key] == 1) echo ' l-unit--starred'; ?>" v_unit_id="<?=$key?>" v_section="cron"
-sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?>" sort-star="<? if($_SESSION['favourites']['CRON'][$key] == 1) echo '1'; else echo '0'; ?>">
-        <div class="l-unit-toolbar clearfix">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="job[]" value="<?php echo $key ?>">
-            <label for="check<?php echo $i ?>" class="check-label"></label>
-          </div>
-          <!-- l-unit-toolbar__col -->
+      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['CRON'][$key] == 1) echo ' l-unit--starred'; ?>" v_unit_id="<?=$key?>" v_section="cron"
+sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?>"
+sort-star="<? if($_SESSION['favourites']['CRON'][$key] == 1) echo '1'; else echo '0';  ?>">
+      <div class="l-unit__col l-unit__col--right">
+        <div class="clearfix l-unit__stat-col--left super-compact">
+          <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="job[]" value="<?php echo $key ?>">
+        </div>
+        <div class="clearfix l-unit__stat-col--left wide-5"><b><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?=__('Editing Cron Job')?>"><?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?></a></b></div>
+        <!-- START QUICK ACTION TOOLBAR AREA -->
+        <div class="clearfix l-unit__stat-col--left compact-2 text-right">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
-              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-                <a id="delete_link_<?=$i?>" class="data-controls do_delete">
-                  <?=__('delete')?> <i class="do_delete"></i>
-                  <input type="hidden" name="delete_url" value="/delete/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" />
-                  <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
-                    <p class="confirmation"><?=__('DELETE_CRON_CONFIRMATION',$key)?></p>
-                  </div>
-                </a>
-                <span class="shortcut delete">&nbsp;Del</span>
+              <div class="actions-panel__col actions-panel__download shortcut-enter" key-action="href"><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?=__('Editing Cron Job')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+                <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
+                  <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=__($spnd_action)?>">
+                    <i class="fas fa-pause status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
+                    <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" />
+                    <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
+                      <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
+                    </div>
+                  </a>
+                </div>
+                <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+                  <a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=__('delete')?>">
+                    <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
+                    <input type="hidden" name="delete_url" value="/delete/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" />
+                    <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
+                      <p class="confirmation"><?=__('DELETE_CRON_CONFIRMATION',$key)?></p>
+                    </div>
+                  </a>
+                </div>
               </div>
-
+             </div>
             </div>
-            <!-- /.actiona-panel -->
-          </div>
-          <!-- l-unit-toolbar__col -->
-        </div>
-        <!-- /.l-unit-toolbar -->
-
-        <div class="l-unit__col l-unit__col--left clearfix">
-          <div class="l-unit__date">
-            <?=translate_date($data[$key]['DATE'])?>
-          </div>
-          <div class="l-unit__suspended"><?__('suspended')?></div>
-          <div class="text-center">
-            <i class="l-icon-star" title="<?=__('save to favorites')?>"></i>
+            <!-- END QUICK ACTION TOOLBAR AREA -->
+            <div class="clearfix l-unit__stat-col--left compact-3 text-center"><?=$data[$key]['MIN']?></div>
+            <div class="clearfix l-unit__stat-col--left compact-3 text-center"><?=$data[$key]['HOUR']?></div>
+            <div class="clearfix l-unit__stat-col--left compact-3 text-center"><?=$data[$key]['DAY']?></div>
+            <div class="clearfix l-unit__stat-col--left compact-3 text-center"><?=$data[$key]['MONTH']?></div>
+            <div class="clearfix l-unit__stat-col--left compact-3 text-center"><?=$data[$key]['WDAY']?></div>
           </div>
         </div>
-        <!-- /.l-unit__col -->
-        <div class="l-unit__col l-unit__col--right">
-          <div class="l-unit__name separate small-2">
-            <?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?>
-          </div>
-          <!-- /.l-unit__name -->
-          <div class="l-unit__stats separate">
-            <div class="l-unit__stat-col l-unit__stat-col--left tiny"><?=__('Min')?><br><b><?=$data[$key]['MIN']?></b></div>
-            <div class="l-unit__stat-col l-unit__stat-col--left tiny"><?=__('Hour')?><br><b><?=$data[$key]['HOUR']?></b></div>
-            <div class="l-unit__stat-col l-unit__stat-col--left tiny"><?=__('Day')?><br><b><?=$data[$key]['DAY']?></b></div>
-            <div class="l-unit__stat-col l-unit__stat-col--left tiny"><?=__('Month')?><br><b><?=$data[$key]['MONTH']?></b></div>
-            <div class="l-unit__stat-col l-unit__stat-col--left tiny"><?=__('Day of week')?><br><b><?=$data[$key]['WDAY']?></b></div>
-          </div>
+    <?}?>
+  </div>
 
-          <div class="l-unit__stats">
-          </div>
-          <!-- /.l-unit__stats -->
-
-        </div>
-        <!-- /.l-unit__col -->
-      </div>
-      <!-- /.l-unit -->
-      <!--div class="l-separator"></div-->
-      <!-- /.l-separator -->
-      <?}?>
-
-    </div>
-
-
-    <div id="vstobjects">
-      <div class="l-separator"></div>
-      <div class="l-center">
-        <div class="l-unit-ft">
-          <table class='data'></table>
-          <div class="l-unit__col l-unit__col--left clearfix"></div>
-          <div class="data-count l-unit__col l-unit__col--right clearfix">
+  <div id="vstobjects">
+    <div class="l-separator"></div>
+    <div class="l-center">
+      <div class="l-unit-ft">
+        <table class='data'></table>
+        <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php
               if ( $i == 1) {
                 echo __('1 cron job');
@@ -155,7 +138,7 @@ sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-nam
                 echo __('%s cron jobs',$i);
               }
             ?>
-          </div>
         </div>
       </div>
     </div>
+  </div>

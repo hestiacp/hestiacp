@@ -1,0 +1,99 @@
+#!/bin/bash
+# info: rebuild web domain
+# options: USER DOMAIN [RESTART]
+#
+# The function rebuilds web configuration files.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+restart=$3
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/func/ip.sh
+source $HESTIA/func/rebuild.sh
+source $HESTIA/conf/hestia.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN [RESTART]'
+is_format_valid 'user'
+is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Deleting old web configs
+if [ -e "/etc/$WEB_SYSTEM/conf.d/hestia.conf" ]; then
+    sed -i "/.*\/$user\/conf\/web\//d" /etc/$WEB_SYSTEM/conf.d/hestia.conf
+fi
+
+if [ -e "$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.conf" ]; then
+    rm -f $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.conf
+    rm -f /etc/$WEB_SYSTEM/conf.d/domains/$domain.conf
+fi
+if [ -e "$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.ssl.conf" ]; then
+    rm $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.ssl.conf
+    rm -f /etc/$WEB_SYSTEM/conf.d/domains/$domain.ssl.conf
+fi
+
+# Deleting old proxy configs
+if [ ! -z "$PROXY_SYSTEM" ]; then
+    if [ -e "/etc/$PROXY_SYSTEM/conf.d/hestia.conf" ]; then
+        sed -i "/.*\/$user\/conf\/web\//d" /etc/$PROXY_SYSTEM/conf.d/hestia.conf
+    fi
+
+    if [ -e "$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.conf" ]; then
+        rm -f $HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.conf
+        rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$domain.conf
+    fi
+
+    if [ -e "$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.ssl.conf" ]; then
+        rm -f $HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.ssl.conf
+        rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$domain.ssl.conf
+    fi
+fi
+
+# Deleting backend configs
+if [ ! -z "$WEB_BACKEND" ]; then
+    prepare_web_backend
+    delete_web_backend
+    template=$(get_object_value 'web' 'DOMAIN' "$domain" '$BACKEND')
+    $BIN/v-add-web-domain-backend $user $domain $template $restart
+fi
+
+rebuild_web_domain_conf
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Updating user counters
+$BIN/v-update-user-counters $user
+
+# Restarting web server
+$BIN/v-restart-web $restart
+check_result $? "Web restart failed" >/dev/null
+
+$BIN/v-restart-proxy $restart
+check_result $? "Proxy restart failed" >/dev/null
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

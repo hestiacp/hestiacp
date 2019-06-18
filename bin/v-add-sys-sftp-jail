@@ -9,11 +9,8 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Importing system environment  as we run this script
-# mostly by cron which do not read it by itself
-source /etc/profile
-
 # Includes
+source /etc/profile
 source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
 
@@ -21,10 +18,6 @@ source $HESTIA/conf/hestia.conf
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
-
-if [ -z "$SFTPJAIL_KEY" ]; then
-    exit
-fi
 
 
 #----------------------------------------------------------#
@@ -34,7 +27,7 @@ fi
 # Checking sshd directives
 config='/etc/ssh/sshd_config'
 sftp_n=$(grep -n "Subsystem.*sftp" $config |grep -v internal |grep -v ":#")
-sftp_i=$(grep -n "Subsystem.*sftp" $config |grep internal |grep -v ":#")
+sftp_i=$(grep -n "^# Hestia SFTP Chroot" $config)
 
 # Disabling normal sftp
 if [ ! -z "$sftp_n" ]; then
@@ -46,11 +39,11 @@ fi
 # Enabling jailed sftp
 if [ -z "$sftp_i" ]; then
     echo " " >> $config
-    echo "Subsystem sftp internal-sftp" >> $config
-    echo "Match Group sftp-only" >> $config
-    echo "ChrootDirectory /chroot/%u" >> $config
-    echo "    AllowTCPForwarding no" >> $config
+    echo "# Hestia SFTP Chroot" >> $config
+    echo "Match User sftp_dummy99" >> $config
+    echo "ChrootDirectory %h" >> $config
     echo "    X11Forwarding no" >> $config
+    echo "    AllowTCPForwarding no" >> $config
     echo "    ForceCommand internal-sftp" >> $config
     restart='yes'
 fi
@@ -70,30 +63,15 @@ if [ "$restart" = 'yes' ]; then
     fi
 fi
 
-# Adding sftp group
-groupadd sftp-only 2>/dev/null
-
 # Checking users
 shells="rssh|nologin"
 for user in $(grep "$HOMEDIR" /etc/passwd |egrep "$shells" |cut -f 1 -d:); do
     $BIN/v-add-user-sftp-jail $user
 done
 
-# Adding v-add-sys-sftp-jail to startup
-if [ -e "/etc/rc.local" ]; then
-    check_sftp=$(grep $0 /etc/rc.local)
-    check_exit=$(grep ^exit /etc/rc.local)
-    if [ -z "$check_sftp" ]; then
-        if [ -z "$check_exit" ]; then
-            echo "$BIN/v-add-sys-sftp-jail" >> /etc/rc.local
-        else
-            sed -i "s|^exit|$BIN/v-add-sys-sftp-jail\nexit|" /etc/rc.local
-        fi
-    fi
-    chmod +x /etc/rc.local
-else
-    echo "$BIN/v-add-sys-sftp-jail" > /etc/rc.local
-    chmod +x /etc/rc.local
+# Add v-add-sys-sftp-jail to startup
+if [ ! -e "/etc/cron.d/hestia-sftp" ]; then
+    echo "@reboot /usr/local/hestia/bin/v-add-sys-sftp-jail" > /etc/cron.d/hestia-sftp
 fi
 
 #----------------------------------------------------------#

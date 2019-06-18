@@ -1,0 +1,65 @@
+#!/bin/bash
+# info: rebuild databases
+# options: USER
+#
+# The function for rebuilding a single database for a user
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+database=$2
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/func/db.sh
+source $HESTIA/func/rebuild.sh
+source $HESTIA/conf/hestia.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DATABASE'
+is_format_valid 'user'
+is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_valid 'db' 'DB' "$database"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Get database values
+get_database_values
+
+# Switching on db type
+case $TYPE in
+    mysql) rebuild_mysql_database ;;
+    pgsql) rebuild_pgsql_database ;;
+esac
+
+U_DISK_DB=$((U_DISK_DB + U_DISK))
+U_DATABASES=$((U_DATABASES + 1))
+if [ "$SUSPENDED" = 'yes' ]; then
+    SUSPENDED_DB=$((SUSPENDED_DB + 1))
+fi
+
+update_user_value "$user" '$SUSPENDED_DB' "$SUSPENDED_DB"
+update_user_value "$user" '$U_DATABASES' "$U_DATABASES"
+update_user_value "$user" '$U_DISK_DB' "$U_DISK_DB"
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

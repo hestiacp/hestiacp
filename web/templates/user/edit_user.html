@@ -1,19 +1,22 @@
-    <div class="l-center edit">
-      <div class="l-sort clearfix">
-        <div class="l-sort-toolbar clearfix float-left">
-          <span class="title edit"><b><?=__('Editing User')?></b></span>
-            <?php
+<div class="l-center edit">
+        <div class="l-sort clearfix">
+          <div class="l-unit-toolbar__buttonstrip">
+            <a class="ui-button cancel" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+          </div>
+          <div class="l-unit-toolbar__buttonstrip float-right">
+              <?php
               if (!empty($_SESSION['error_msg'])) {
                 echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
               } else {
                 if (!empty($_SESSION['ok_msg'])) {
-                  echo "<span class=\"vst-ok\"> → ".htmlentities($_SESSION['ok_msg'])."</span>";
+                  echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
                 }
               }
             ?>
+            <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
+          </div>
         </div>
       </div>
-    </div>
 
     <div class="l-separator"></div>
     <!-- /.l-separator -->
@@ -27,7 +30,7 @@
           $back = "location.href='".$back."'";
         }
       ?>
-        <form id="vstobjects" method="post" name="v_edit_user"  class="<?=$v_status?>">
+        <form id="vstobjects" method="post" name="v_edit_user" class="<?=$v_status?>">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <input type="hidden" name="save" value="save" />
 
@@ -37,15 +40,17 @@
                         <table class="data-col1">
                             <tr>
                                 <td>
-                                    <a class="data-date"><?=translate_date($v_date)?></a><br>
-                                    <a class="data-date"><?=$v_time?></a>
                                 </td>
                             </tr>
-                            <tr><td class="data-<?=$v_status?>"><b><?=__($v_status)?></b></td></tr>
                         </table>
                     </td>
                     <td class="data-dotted">
                         <table class="data-col2">
+                            <tr>
+                                <td class="step-top">
+                                    <span class="login-welcome"><?=__('Editing User')?></span>
+                                </td>
+                            </tr>  
                             <tr>
                                 <td class="vst-text step-top">
                                     <?php print __('Username');?>
@@ -53,8 +58,8 @@
                             </tr>
                             <tr>
                                 <td>
-                                  <input type="text" size="20" class="vst-input" name="v_user" value="<?=htmlentities(trim($v_username, "'"))?>" disabled>
-                                  <input type="hidden" name="v_username" value="<?=htmlentities(trim($v_username, "'"))?>">
+                                    <input type="text" size="20" class="vst-input" name="v_user" value="<?=htmlentities(trim($v_username, "'"))?>" disabled>
+                                    <input type="hidden" name="v_username" value="<?=htmlentities(trim($v_username, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -62,24 +67,19 @@
                                     <?php print __('Password');?> / <a href="javascript:randomString();" class="generate"><?php print __('generate');?></a>
                                 </td>
                             </tr>
-                            </tr>
-                            <tr>
-                                <td class="vst-text input-label">
-                                    <?php print __('2 Factor Authentication');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label><input type="checkbox" class="vst-checkbox" name="v_twofa" <?php if($v_twofa == 'yes') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_twofa(this)"> <?php print __('Enable 2FA');?></label>
-                                    <?php if($v_twofa == 'yes') { ?>
-                                    <p><?php echo __('Please scan the code below in your 2FA application:'); ?></p>
-                                    <img src="<?php echo $v_qrcode; ?>">
-                                    <?php } ?>
-                                </td>
-                            </tr>
                             <tr>
                                 <td>
                                     <input type="text" size="20" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label><input type="checkbox" class="vst-checkbox password-option" name="v_twofa" <?php if(!empty($v_twofa)) echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_twofa(this)"> <?php print __('Enable 2FA');?></label>
+                                    <?php if (!empty($v_twofa)) { ?>
+                                    <p><?php echo __('2FA Reset Code:').' '.$v_twofa; ?></br></p>
+                                    <p><?php echo __('Please scan the code below in your 2FA application:'); ?></p>
+                                    <div><img class="qr-code" src="<?php echo $v_qrcode; ?>"></div>
+                                    <?php } ?>
                                 </td>
                             </tr>
                             <tr>
@@ -102,7 +102,7 @@
                                     <select class="vst-list" name="v_language">
                                         <?php
                                             foreach ($languages as $key => $value) {
-                                                echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($value)."\"";
+                                                echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".$value."\"";
                                                 $svalue = "'".$value."'";
                                                 if (( $value == $v_language ) || ( $svalue == $v_language)){
                                                     echo 'selected' ;
@@ -141,20 +141,18 @@
                                     <?php print __('Default Name Servers');?>
                                 </td>
                             </tr>
-
-                                        <tr>
-                                            <td>
-                                                <input type="text" size="20" class="vst-input" name="v_ns1" value="<?=htmlentities(trim($v_ns1, "'"))?>">
-                                                <span class="remove-ns additional-control delete"><?=__('delete')?></span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" size="20" class="vst-input" name="v_ns2" value="<?=htmlentities(trim($v_ns2, "'"))?>">
-                                                <span class="remove-ns additional-control delete"><?=__('delete')?></span>
-                                            </td>
-                                        </tr>
-
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_ns1" value="<?=htmlentities(trim($v_ns1, "'"))?>">
+                                    <span class="remove-ns additional-control delete"><?=__('delete')?></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_ns2" value="<?=htmlentities(trim($v_ns2, "'"))?>">
+                                    <span class="remove-ns additional-control delete"><?=__('delete')?></span>
+                                </td>
+                            </tr>
                             <?  if($v_ns3)
                                   echo '<tr>
                                     <td>
@@ -203,22 +201,16 @@
                                     </td>
                                 </tr>';
                             ?>
+
                                 <tr class="add-ns" <? if($v_ns8) echo 'style="display:none;"'; ?> >
                                     <td class="step-top-small">
                                       <span class="add-ns-button additional-control add"><?=__('Add one more Name Server')?></span>
                                     </td>
                                 </tr>
 
+
                         </table>
                         <table class="data-col2">
-                            <tr>
-                                <td class="step-top" width="116px">
-                                    <input type="submit" class="button" name="save" value="<?=__('Save')?>">
-                                </td>
-                                <td class="step-top">
-                                    <input type="button" class="button cancel" value="<?=__('Back')?>" onclick="<?=$back?>">
-                                </td>
-                            </tr>
                         </table>
                     </td>
                 </tr>

@@ -173,10 +173,10 @@ prepare_web_domain_values() {
     ssl_ca_str=''
     prepare_web_aliases $ALIAS
 
-    ssl_crt="$HOMEDIR/$user/conf/web/ssl.$domain.crt"
-    ssl_key="$HOMEDIR/$user/conf/web/ssl.$domain.key"
-    ssl_pem="$HOMEDIR/$user/conf/web/ssl.$domain.pem"
-    ssl_ca="$HOMEDIR/$user/conf/web/ssl.$domain.ca"
+    ssl_crt="$HOMEDIR/$user/conf/web/$domain/ssl/$domain.crt"
+    ssl_key="$HOMEDIR/$user/conf/web/$domain/ssl/$domain.key"
+    ssl_pem="$HOMEDIR/$user/conf/web/$domain/ssl/$domain.pem"
+    ssl_ca="$HOMEDIR/$user/conf/web/$domain/ssl/$domain.ca"
     if [ ! -e "$USER_DATA/ssl/$domain.ca" ]; then
         ssl_ca_str='#'
     fi
@@ -188,9 +188,10 @@ prepare_web_domain_values() {
 
 # Add web config
 add_web_config() {
-    conf="$HOMEDIR/$user/conf/web/$domain.$1.conf"
+    mkdir -p "$HOMEDIR/$user/conf/web/$domain"
+    conf="$HOMEDIR/$user/conf/web/$domain/$1.conf"
     if [[ "$2" =~ stpl$ ]]; then
-        conf="$HOMEDIR/$user/conf/web/$domain.$1.ssl.conf"
+        conf="$HOMEDIR/$user/conf/web/$domain/$1.ssl.conf"
     fi
 
     domain_idn=$domain
@@ -228,14 +229,50 @@ add_web_config() {
     chown root:$user $conf
     chmod 640 $conf
 
-    if [ -z "$(grep "$conf" /etc/$1/conf.d/hestia.conf)" ]; then
-        if [ "$1" != 'nginx' ]; then
-            echo "Include $conf" >> /etc/$1/conf.d/hestia.conf
-        else
-            echo "include $conf;" >> /etc/$1/conf.d/hestia.conf
-        fi
-    fi
+    if [[ "$2" =~ stpl$ ]]; then
+        rm -f /etc/$1/conf.d/domains/$domain.ssl.conf
+        ln -s $conf /etc/$1/conf.d/domains/$domain.ssl.conf
 
+        # Clear old configurations
+        rm -f $HOMEDIR/$user/conf/web/$domain.*
+        rm -f $HOMEDIR/$user/conf/web/ssl.$domain.*
+
+        # Rename/Move extra SSL config files
+        for f in $(ls $HOMEDIR/$user/conf/web/*.$domain.conf* 2>/dev/null); do
+            if [[ $f =~ .*/s(nginx|apache2)\.$domain\.conf(.*) ]]; then
+                ServerType="${BASH_REMATCH[1]}"
+                CustomConfigName="${BASH_REMATCH[2]}"
+                if [ "$CustomConfigName" = "_letsencrypt" ]; then
+                    rm -f "$f"
+                    continue
+                fi
+                mv "$f" "$HOMEDIR/$user/conf/web/$domain/$ServerType.ssl.conf_old$CustomConfigName"
+            fi
+        done
+    else
+        rm -f /etc/$1/conf.d/domains/$domain.conf
+        ln -s $conf /etc/$1/conf.d/domains/$domain.conf
+
+        # Clear old configurations
+        rm -rf $HOMEDIR/$user/conf/web/$domain.*
+
+        # Rename/Move extra config files
+        for f in $(ls $HOMEDIR/$user/conf/web/*.$domain.conf* 2>/dev/null); do
+            if [[ $f =~ .*/(nginx|apache2)\.$domain\.conf(.*) ]]; then
+                ServerType="${BASH_REMATCH[1]}"
+                CustomConfigName="${BASH_REMATCH[2]}"
+                if [ "$CustomConfigName" = "_letsencrypt" ]; then
+                    rm -f "$f"
+                    continue
+                fi
+                mv "$f" "$HOMEDIR/$user/conf/web/$domain/$ServerType.conf_old$CustomConfigName"
+            elif [[ $f =~ .*/forcessl\.(nginx|apache2)\.$domain\.conf ]]; then
+                ServerType="${BASH_REMATCH[1]}"
+                mv "$f" "$HOMEDIR/$user/conf/web/$domain/$ServerType.forcessl.conf"
+            fi
+        done
+    fi
+    
     trigger="${2/.*pl/.sh}"
     if [ -x "$WEBTPL/$1/$WEB_BACKEND/$trigger" ]; then
         $WEBTPL/$1/$WEB_BACKEND/$trigger \
@@ -272,50 +309,45 @@ get_web_config_lines() {
 
 # Replace web config
 replace_web_config() {
-    conf="$HOMEDIR/$user/conf/web/$domain.$1.conf"
+    conf="$HOMEDIR/$user/conf/web/$domain/$1.conf"
     if [[ "$2" =~ stpl$ ]]; then
-        conf="$HOMEDIR/$user/conf/web/$domain.$1.ssl.conf"
+        conf="$HOMEDIR/$user/conf/web/$domain/$1.ssl.conf"
     fi
 
     if [ -e "$conf" ]; then
         sed -i  "s|$old|$new|g" $conf
-    else
-        # fallback to old style configs
-        conf="$HOMEDIR/$user/conf/web/$1.conf"
-        if [[ "$2" =~ stpl$ ]]; then
-            conf="$HOMEDIR/$user/conf/web/s$1.conf"
-        fi
-        get_web_config_lines $WEBTPL/$1/$WEB_BACKEND/$2 $conf
-        sed -i  "$top_line,$bottom_line s|$old|$new|g" $conf
     fi
 }
 
 # Delete web configuration
 del_web_config() {
-    conf="$HOMEDIR/$user/conf/web/$domain.$1.conf"
+    conf="$HOMEDIR/$user/conf/web/$domain/$1.conf"
+    local confname="$domain.conf"
     if [[ "$2" =~ stpl$ ]]; then
-        conf="$HOMEDIR/$user/conf/web/$domain.$1.ssl.conf"
+        conf="$HOMEDIR/$user/conf/web/$domain/$1.ssl.conf"
+        confname="$domain.ssl.conf"
     fi
 
-    if [ -e "$conf" ]; then
-        sed -i "\|$conf|d" /etc/$1/conf.d/hestia.conf
-        rm -f $conf
-    else
-        # fallback to old style configs
-        conf="$HOMEDIR/$user/conf/web/$1.conf"
+    # Clean up legacy configuration files
+    if [ ! -e "$conf" ]; then
+        local legacyconf="$HOMEDIR/$user/conf/web/$1.conf"
         if [[ "$2" =~ stpl$ ]]; then
-            conf="$HOMEDIR/$user/conf/web/s$1.conf"
+            legacyconf="$HOMEDIR/$user/conf/web/s$1.conf"
         fi
-        get_web_config_lines $WEBTPL/$1/$WEB_BACKEND/$2 $conf
-        sed -i "$top_line,$bottom_line d" $conf
+        rm -f $legacyconf
+
+        # Remove old global includes file
+        rm -f /etc/$1/conf.d/hestia.conf
     fi
-    # clean-up for both config styles if there is no more domains
-    web_domain=$(grep DOMAIN $USER_DATA/web.conf |wc -l)
-    if [ "$web_domain" -eq '0' ]; then
-        sed -i "/.*\/$user\/conf\/web\//d" /etc/$1/conf.d/hestia.conf
-        if [ -f "$conf" ]; then
-            rm -f $conf
-        fi
+
+    # Remove domain configuration files and clean up symbolic links
+    rm -f "$conf" "${conf}"_*
+
+    if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" = "$1" ]; then
+        rm -f "/etc/$WEB_SYSTEM/conf.d/domains/$confname"
+    fi
+    if [ ! -z "$PROXY_SYSTEM" ] && [ "$PROXY_SYSTEM" = "$1" ]; then
+        rm -f "/etc/$PROXY_SYSTEM/conf.d/domains/$confname"
     fi
 }
 
@@ -561,6 +593,203 @@ is_mail_new() {
     fi
 }
 
+
+# Add mail server SSL configuration
+add_mail_ssl_config() {
+     # Ensure that SSL certificate directories exists
+    if [ ! -d $HOMEDIR/$user/conf/mail/$domain/ssl/ ]; then
+        mkdir -p $HOMEDIR/$user/conf/mail/$domain/ssl/
+    fi
+
+    if [ ! -d /usr/local/hestia/ssl/mail ]; then
+        mkdir -p /usr/local/hestia/ssl/mail
+    fi
+
+    if [ ! -d /etc/dovecot/conf.d/domains ]; then
+        mkdir -p /etc/dovecot/conf.d/domains
+    fi
+
+    # Add certificate to Hestia user configuration data directory
+    if [ -f $ssl_dir/$domain.crt ]; then
+        cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/mail.$domain.crt
+        cp -f $ssl_dir/$domain.key $USER_DATA/ssl/mail.$domain.key
+        cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/mail.$domain.pem
+        if [ -e "$ssl_dir/$domain.ca" ]; then
+            cp -f $ssl_dir/$domain.ca $USER_DATA/ssl/mail.$domain.ca
+            echo >> $USER_DATA/ssl/mail.$domain.pem
+            cat $USER_DATA/ssl/mail.$domain.ca >> $USER_DATA/ssl/mail.$domain.pem
+        fi
+    fi
+    
+    chmod 660 $USER_DATA/ssl/mail.$domain.*
+
+    # Add certificate to user home directory
+    cp -f $USER_DATA/ssl/mail.$domain.crt $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt
+    cp -f $USER_DATA/ssl/mail.$domain.key $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key
+    cp -f $USER_DATA/ssl/mail.$domain.pem $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem
+    if [ -e "$USER_DATA/ssl/mail.$domain.ca" ]; then
+        cp -f $USER_DATA/ssl/mail.$domain.ca $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.ca
+    fi
+
+    # Add domain SSL configuration to dovecot
+    if [ -f /etc/dovecot/conf.d/domains/$domain.conf ]; then
+        rm -f /etc/dovecot/conf.d/domains/$domain.conf
+    fi
+    
+    echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
+    echo "local_name mail.$domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
+    echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
+    echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
+    echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+
+    # Add domain SSL configuration to exim4
+    ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem /usr/local/hestia/ssl/mail/mail.$domain.crt
+    ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key /usr/local/hestia/ssl/mail/mail.$domain.key
+
+    # Set correct permissions on certificates
+    chmod 0644 $HOMEDIR/$user/conf/mail/$domain/ssl/*
+    chown -h $user:mail $HOMEDIR/$user/conf/mail/$domain/ssl/*
+    chmod -R 0644 /usr/local/hestia/ssl/mail/*
+    chown -h $user:mail /usr/local/hestia/ssl/mail/*
+}
+
+# Delete SSL support for mail domain
+del_mail_ssl_config() {
+    
+    # Remove old mail certificates
+    rm -f $HOMEDIR/$user/conf/mail/$domain/ssl/*
+
+    # Remove dovecot configuration
+    rm -f /etc/dovecot/conf.d/domains/$domain.conf
+
+    # Remove SSL vhost configuration
+    rm -f $HOMEDIR/$user/conf/mail/$domain/*.*ssl.conf
+    rm -f /etc/$WEB_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
+    rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
+
+    # Remove SSL certificates
+    rm -f $HOMEDIR/$user/conf/mail/$domain/ssl/*
+    rm -f /usr/local/hestia/ssl/mail/mail.$domain.*
+}
+
+# Delete generated certificates from user configuration data directory
+del_mail_ssl_certificates(){
+    rm -f $USER_DATA/ssl/mail.$domain.*
+    rm -f $HOMEDIR/$user/conf/mail/$domain/ssl/*
+}
+
+# Add webmail config
+add_webmail_config() {
+    mkdir -p "$HOMEDIR/$user/conf/mail/$domain"
+    conf="$HOMEDIR/$user/conf/mail/$domain/$1.conf"
+    if [[ "$2" =~ stpl$ ]]; then
+        conf="$HOMEDIR/$user/conf/mail/$domain/$1.ssl.conf"
+    fi
+
+    domain_idn=$domain
+    format_domain_idn
+
+    ssl_crt="$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt"
+    ssl_key="$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key"
+    ssl_pem="$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem"
+    ssl_ca="$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.ca"
+
+    cat $MAILTPL/$1/$2 | \
+        sed -e "s|%ip%|$local_ip|g" \
+            -e "s|%domain%|$WEBMAIL_ALIAS.$domain|g" \
+            -e "s|%domain_idn%|$domain_idn|g" \
+            -e "s|%root_domain%|$domain|g" \
+            -e "s|%alias%|mail.$domain|g" \
+            -e "s|%alias_idn%|${aliases_idn//,/ }|g" \
+            -e "s|%alias_string%|$alias_string|g" \
+            -e "s|%email%|info@$domain|g" \
+            -e "s|%web_system%|$WEB_SYSTEM|g" \
+            -e "s|%web_port%|$WEB_PORT|g" \
+            -e "s|%web_ssl_port%|$WEB_SSL_PORT|g" \
+            -e "s|%backend_lsnr%|$backend_lsnr|g" \
+            -e "s|%rgroups%|$WEB_RGROUPS|g" \
+            -e "s|%proxy_system%|$PROXY_SYSTEM|g" \
+            -e "s|%proxy_port%|$PROXY_PORT|g" \
+            -e "s|%proxy_ssl_port%|$PROXY_SSL_PORT|g" \
+            -e "s/%proxy_extentions%/${PROXY_EXT//,/|}/g" \
+            -e "s|%user%|$user|g" \
+            -e "s|%group%|$user|g" \
+            -e "s|%home%|$HOMEDIR|g" \
+            -e "s|%docroot%|$docroot|g" \
+            -e "s|%sdocroot%|$sdocroot|g" \
+            -e "s|%ssl_crt%|$ssl_crt|g" \
+            -e "s|%ssl_key%|$ssl_key|g" \
+            -e "s|%ssl_pem%|$ssl_pem|g" \
+            -e "s|%ssl_ca_str%|$ssl_ca_str|g" \
+            -e "s|%ssl_ca%|$ssl_ca|g" \
+    > $conf
+
+    chown root:$user $conf
+    chmod 640 $conf
+
+    if [[ "$2" =~ stpl$ ]]; then
+        if [ ! -z "$WEB_SYSTEM" ]; then
+            forcessl="$HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM.forcessl.conf"
+            rm -f /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
+            ln -s $conf /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
+        fi
+        if [ ! -z "$PROXY_SYSTEM" ]; then
+            forcessl="$HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM.forcessl.conf"
+            rm -f /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
+            ln -s $conf /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
+        fi
+
+        # Add rewrite rules to force HTTPS/SSL connections
+        if [ ! -z "$PROXY_SYSTEM" ] || [ "$WEB_SYSTEM" = 'nginx' ]; then
+            echo 'return 301 https://$server_name$request_uri;' > $forcessl
+        else
+            echo 'RewriteEngine On' > $forcessl
+            echo 'RewriteRule ^(.*)$ https://%{HTTP_HOST}$1 [R=301,L]' >> $forcessl
+        fi
+
+        # Remove old configurations
+        rm -rf $HOMEDIR/$user/conf/mail/$domain.*
+        rm -rf $HOMEDIR/$user/conf/mail/ssl.$domain.*
+        rm -rf $HOMEDIR/$user/conf/mail/*nginx.$domain.*
+    else
+        if [ ! -z "$WEB_SYSTEM" ]; then
+            rm -f /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
+            ln -s $conf /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
+        fi
+        if [ ! -z "$PROXY_SYSTEM" ]; then
+            rm -f /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
+            ln -s $conf /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
+        fi
+        # Clear old configurations
+        rm -rf $HOMEDIR/$user/conf/mail/$domain.*
+    fi
+}
+
+# Delete webmail support
+del_webmail_config() {
+    if [ ! -z "$WEB_SYSTEM" ]; then 
+        rm -f $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM.conf
+        rm -f /etc/$WEB_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
+    fi
+
+    if [ ! -z "$PROXY_SYSTEM" ]; then
+        rm -f $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM.*conf
+        rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
+    fi
+}
+
+# Delete SSL webmail support
+del_webmail_ssl_config() {
+    if [ ! -z "$WEB_SYSTEM" ]; then 
+        rm -f $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM.*ssl.conf
+        rm -f /etc/$WEB_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
+    fi
+    
+    if [ ! -z "$PROXY_SYSTEM" ]; then
+        rm -f $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM.*ssl.conf
+        rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
+    fi
+}
 
 #----------------------------------------------------------#
 #                        CMN                               #

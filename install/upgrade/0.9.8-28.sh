@@ -1,4 +1,7 @@
 #!/bin/bash
+HESTIA="/usr/local/hestia"
+HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
+spinner="/-\|"
 
 # Set version(s)
 pma_v='4.8.5'
@@ -6,7 +9,7 @@ pma_v='4.8.5'
 # Upgrade phpMyAdmin
 if [ "$DB_SYSTEM" = 'mysql' ]; then
     # Display upgrade information
-    echo "Upgrade phpMyAdmin to v$pma_v..."
+    echo "(*) Upgrading phpMyAdmin to v$pma_v..."
 
     # Download latest phpMyAdmin release
     wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
@@ -57,17 +60,6 @@ fi
 if [ ! -z "$BACKEND_PORT" ]; then
     /usr/local/hestia/bin/v-change-sys-port $BACKEND_PORT
 fi
-
-# Set Purge to false in roundcube config - https://goo.gl/3Nja3u
-if [ -f /etc/roundcube/config.inc.php ]; then
-    sed -i "s/deletion'] = 'Purge'/deletion'] = false/g" /etc/roundcube/config.inc.php
-fi
-if [ -f /etc/roundcube/main.inc.php ]; then
-    sed -i "s/deletion'] = 'Purge'/deletion'] = false/g" /etc/roundcube/main.inc.php
-fi
-
-# Copy default "Success" page for unassigned hosts
-cp -rf /usr/local/hestia/install/ubuntu/18.04/templates/web/unassigned/* /var/www/
 
 # Move clamav to proper location - https://goo.gl/zNuM11
 if [ ! -d /usr/local/hestia/web/edit/server/clamav-daemon ]; then

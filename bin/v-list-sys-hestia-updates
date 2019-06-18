@@ -61,7 +61,9 @@ shell_list() {
 #----------------------------------------------------------#
 
 # Checking official latest version
-latest=$(wget -q -T 1 -t 1 https://gpg.hestiacp.com/latest.txt -O -)
+hestia_v=$(apt-cache policy hestia | grep Candidate | cut -d ':' -f 2 | xargs)
+nginx_v=$(apt-cache policy hestia-nginx | grep Candidate | cut -d ':' -f 2 | xargs)
+php_v=$(apt-cache policy hestia-php | grep Candidate | cut -d ':' -f 2 | xargs)
 
 # Checking installed hestia version
 if [ -d "/etc/sysconfig" ]; then
@@ -82,7 +84,7 @@ else
     TIME=$(date -d @$pkg_date +"%T")
 fi
 UPDATED='yes'
-if [ ! -z "$latest" ] && [ "$latest" \> "$VERSION-$RELEASE" ]; then
+if [ ! -z "$hesta_v" ] && [ "$hestia_v" \> "$VERSION-$RELEASE" ]; then
     UPDATED='no'
 fi
 data="NAME='hestia' VERSION='$VERSION' RELEASE='$RELEASE' ARCH='$ARCH'"
@@ -102,6 +104,10 @@ else
     DATE=$(date -d @$pkg_date +"%F")
     TIME=$(date -d @$pkg_date +"%T")
 fi
+UPDATED='yes'
+if [ ! -z "$php_v" ] && [ "$php_v" \> "$VERSION-$RELEASE" ]; then
+    UPDATED='no'
+fi
 data="$data\nNAME='hestia-php' VERSION='$VERSION' RELEASE='$RELEASE'"
 data="$data ARCH='$ARCH' UPDATED='$UPDATED' DESCR='php interpreter'"
 data="$data TIME='$TIME' DATE='$DATE'"
@@ -119,6 +125,10 @@ else
     RELEASE=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 2 -d \-)
     DATE=$(date -d @$pkg_date +"%F")
     TIME=$(date -d @$pkg_date +"%T")
+fi
+UPDATED='yes'
+if [ ! -z "$nginx_v" ] && [ "$nginx_v" \> "$VERSION-$RELEASE" ]; then
+    UPDATED='no'
 fi
 data="$data\nNAME='hestia-nginx' VERSION='$VERSION' RELEASE='$RELEASE'"
 data="$data ARCH='$ARCH' UPDATED='$UPDATED' DESCR='internal web server'"

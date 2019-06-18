@@ -77,12 +77,17 @@ if [ -e "$ssl_dir/$domain.ca" ]; then
 fi
 chmod 660 $USER_DATA/ssl/$domain.*
 
+# Ensure SSL directory exists
+if [ ! -d $HOMEDIR/$user/conf/web/$domain/ssl ]; then
+    mkdir -p $HOMEDIR/$user/conf/web/$domain/ssl/
+fi
+
 # Adding certificate to user dir
-cp -f $USER_DATA/ssl/$domain.crt $HOMEDIR/$user/conf/web/ssl.$domain.crt
-cp -f $USER_DATA/ssl/$domain.key $HOMEDIR/$user/conf/web/ssl.$domain.key
-cp -f $USER_DATA/ssl/$domain.pem $HOMEDIR/$user/conf/web/ssl.$domain.pem
+cp -f $USER_DATA/ssl/$domain.crt $HOMEDIR/$user/conf/web/$domain/ssl/$domain.crt
+cp -f $USER_DATA/ssl/$domain.key $HOMEDIR/$user/conf/web/$domain/ssl/$domain.key
+cp -f $USER_DATA/ssl/$domain.pem $HOMEDIR/$user/conf/web/$domain/ssl/$domain.pem
 if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
-    cp -f $USER_DATA/ssl/$domain.ca $HOMEDIR/$user/conf/web/ssl.$domain.ca
+    cp -f $USER_DATA/ssl/$domain.ca $HOMEDIR/$user/conf/web/$domain/ssl/$domain.ca
 fi
 
 # Parsing domain values
@@ -121,7 +126,7 @@ $BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" >/dev/null
 
 if [ ! -z "$UPDATE_HOSTNAME_SSL" ] && [ "$UPDATE_HOSTNAME_SSL" = "yes" ]; then
-    hostname=$(hostname)
+    hostname=$(hostname -f)
     if [ "$hostname" = "$domain" ]; then
         $BIN/v-update-host-certificate $user $domain
     fi

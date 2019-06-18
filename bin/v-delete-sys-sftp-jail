@@ -22,24 +22,15 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-#if [ -z "$SFTPJAIL_KEY" ]; then
-#    exit
-#fi
-
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Checking users
-for user in $(grep "$HOMEDIR" /etc/passwd |cut -f 1 -d:); do
-    $BIN/v-delete-user-sftp-jail $user
-done
-
 # Checking sshd directives
 config='/etc/ssh/sshd_config'
 sftp_n=$(grep -n "Subsystem.*sftp" $config |grep -v internal |grep ":#")
-sftp_i=$(grep -n "Subsystem.*sftp" $config |grep internal |grep -v ":#")
+sftp_i=$(grep -n "^# Hestia SFTP Chroot" $config)
 
 # Backing up config
 cp $config $config.bak-$(date +%s)
@@ -74,13 +65,19 @@ if [ "$restart" = 'yes' ]; then
     fi
 fi
 
-# Deleting v-add-sys-sftp-jail from startup
-sed -i "/v-add-sys-sftp-jail/d" /etc/rc.local 2>/dev/null
+# Remove v-add-sys-sftp-jail to startup
+if [ ! -e "/etc/cron.d/hestia-sftp" ]; then
+    rm -f /etc/cron.d/hestia-sftp
+fi
 
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
+
+# Restart ssh service
+service ssh restart > /dev/null 2>&1
+service sshd restart > /dev/null 2>&1
 
 # Logging
 log_event "$OK" "$ARGUMENTS"

@@ -715,7 +715,8 @@ var App = {
         DB:      {},
         WEB:     {},
         PACKAGE: {},
-        MAIL_ACC:{}
+        MAIL_ACC:{},
+        MAIL:    {}
     },
     // Utilities
     Helpers: {},
@@ -1002,11 +1003,11 @@ hover_menu = function() {
     var st = $(window).scrollTop();
 
     if (st <= 112) {
-        sep_1.css({'margin-top': 214 - st + 'px'});
-        sep_2.css({'margin-top': 259 - st + 'px'});
+        sep_1.css({'margin-top': 178 - st + 'px'});
+        sep_2.css({'margin-top': 225 - st + 'px'});
         nav_a.css({'height': 111 - st + 'px'});
         nav_a.css({'min-height': 111 - st + 'px'});
-        nav_context.css({'margin-top': 215 - st + 'px'});
+        nav_context.css({'margin-top': 181 - st + 'px'});
         sep_2.css({'box-shadow':'none'});
         sep_2.css({'background-color': '#ddd'});
         sep_2.css({'height': '1px'});
@@ -1022,21 +1023,21 @@ hover_menu = function() {
         nav_context.css({'margin-top': '101px'});
         nav_a.find('ul').css({'visibility': 'hidden'});
         nav_main.css({'padding-top': '27px'});
-        sep_2.css({'box-shadow':'0 5px 3px 0 rgba(200, 200, 200, 0.5)'});
+        sep_2.css({'box-shadow':'0 2px 6px 0 rgba(200, 200, 200, 0.35)'});
     }
 
     if(st == 0){
-        nav_a.css({'min-height': '111px'});
-        nav_a.css({'height': '111px'});
+        nav_a.css({'min-height': '70px'});
+        nav_a.css({'height': '70px'});
     }
 
     if(st < 109 ){
         nav_a.find('ul').css({'visibility': 'visible'});
-        nav_main.css({'padding-top': 30 + 'px'});
+        nav_main.css({'padding-top': 34 + 'px'});
     }
 
     if (st <= 112 && st > 110 ) {
-        nav_main.css({'padding-top': 30 - st + 109  + 'px'});
+        nav_main.css({'padding-top': 34 - st + 109  + 'px'});
     }
 
     lastScrollTop = st;
@@ -1044,15 +1045,14 @@ hover_menu = function() {
 
 
 function checkedAll(frmname) {
-    if ($('.l-unit.selected:not(.header)').length > 0 || !$('.l-unit').length ) {
-        $('.l-unit:not(.header)').removeClass("selected");
-        $('.ch-toggle').prop("checked", false);
-        $('.toggle-all').removeClass('clicked-on');
-    }
-    else {
+    if($('input#toggle-all').prop('checked')){
         $('.l-unit:not(.header)').addClass("selected");
         $('.ch-toggle').prop("checked", true);
         $('.toggle-all').addClass('clicked-on');
+    } else {
+        $('.l-unit:not(.header)').removeClass("selected");
+        $('.ch-toggle').prop("checked", false);
+        $('.toggle-all').removeClass('clicked-on');
     }
 }
 

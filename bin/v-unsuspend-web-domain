@@ -69,6 +69,13 @@ if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
     fi
 fi
 
+# Rebuilding backend configuration
+if [ ! -z "$WEB_BACKEND" ]; then
+    prepare_web_backend
+    delete_web_backend
+    template=$(get_object_value 'web' 'DOMAIN' "$domain" '$BACKEND')
+    $BIN/v-add-web-domain-backend $user $domain $template $restart
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #
@@ -77,6 +84,9 @@ fi
 # Updating config
 update_object_value 'web' 'DOMAIN' "$domain" '$SUSPENDED' 'no'
 decrease_user_value "$user" '$SUSPENDED_WEB'
+
+# Update global configuration files
+$BIN/v-rebuild-web-domain $user $domain 'no'
 
 # Restarting web server
 $BIN/v-restart-web $restart

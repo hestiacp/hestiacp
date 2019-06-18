@@ -562,7 +562,7 @@ $LANG['th'] = array(
     'MAIL Server' => 'เซิร์ฟเวอร์เมล',
     'Antivirus' => 'ป้องกันไวรัส',
     'AntiSpam' => 'ป้องกันเมลขยะ',
-    'Webmail URL' => 'Webmail URL',
+    'Webmail URL' => 'Webmail Alias',
     'MySQL Support' => 'สนับสนุน MySQL',
     'phpMyAdmin URL' => 'phpMyAdmin URL',
     'PostgreSQL Support' => 'สนับสนุน PostgreSQL',
@@ -735,10 +735,9 @@ $LANG['th'] = array(
     'every' => 'ทุก',
     'Generate' => 'สร้าง',
 
-    'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
-    'Hestia SSL' => 'Hestia SSL',
+    'Hestia SSL' => 'SSL',
     'SUBJECT' => 'SUBJECT',
     'ALIASES' => 'ALIASES',
     'NOT_BEFORE' => 'NOT_BEFORE',

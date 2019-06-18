@@ -1,54 +1,66 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
-        <a href="/add/dns/" title="<?=__('Add DNS Domain')?>" class="l-sort__create-btn"></a>
-        <ul class="context-menu sort-order" style="display:none;">
-          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?></span><span class="up">&nbsp;</span></li>
-          <li entity="sort-expire" sort_as_int="1"><span class="name"><?=__('Expire')?></span><span class="up">&nbsp;</span></li>
-          <li entity="sort-name"><span class="name"><?=__('Domain')?></span><span class="up">&nbsp;</span></li>
-          <li entity="sort-ip"><span class="name"><?=__('IP Address')?></span><span class="up">&nbsp;</span></li>
-          <li entity="sort-records"><span class="name"><?=__('Records')?></span><span class="up">&nbsp;</span></li>
-          <li entity="sort-star" sort_as_int="1"><span class="name"><?=__('Starred')?></span><span class="up">&nbsp;</span></li>
+        <div class="l-unit-toolbar__buttonstrip">
+          <a href="/add/dns/" id="btn-create" class="ui-button cancel" title="<?=__('Add DNS Domain')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=__('Add DNS Domain')?></a>
+        </div>
+        <ul class="context-menu sort-order animated fadeIn" style="display:none;">
+          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-expire" sort_as_int="1"><span class="name"><?=__('Expire')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-name"><span class="name"><?=__('Domain')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-ip"><span class="name"><?=__('IP address')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-records"><span class="name"><?=__('Records')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-star" sort_as_int="1"><span class="name"> <i class="fas fa-sort-amount-down"></i><?=__('Starred')?></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
         </ul>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
+              <td class="sort-by">
+		            <?=__('sort by');?>: <span><b><?=__('Date')?> <i class="fas fa-sort-amount-down"></i></b></span>
+              </td>
               <td class="l-sort-toolbar__search-box">
                 <form action="/search/" method="get">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                   <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
-                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
+                  <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value=""><i class="fas fa-search"></i></button>
                 </form>
               </td>
-              <td class="toggle-all">
-                <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
-                <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
-              </td>
               <td>
-                <form action="/bulk/dns/" method="post">
+                <form action="/bulk/dns/" method="post" id="objects">
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                 <div class="l-select">
                   <select name="action" id="">
                     <option value=""><?=__('apply to selected')?></option>
+                    <option value="suspend"><?php print __('suspend');?></option>
+                    <option value="unsuspend"><?php print __('unsuspend');?></option>
                     <option value="delete"><?php print __('delete');?></option>
                   </select>
                 </div>
-                <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
-              </td>
-              <td class="sort-by">
-                <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
+                <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
               </td>
             </tr>
           </table>
         </div>
       </div>
-      <!-- /.l-sort -->
     </div>
 
     <div class="l-separator"></div>
-    <!-- /.l-separator -->
-
 
     <div class="l-center units animated fadeIn">
+        <div class="header table-header">
+            <div class="l-unit__col l-unit__col--right step-top">
+                  <div class="clearfix l-unit__stat-col--left super-compact">
+                      <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
+                  </div>
+                  <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print __('Domain');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-right"><b>&nbsp;</b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print __('Records');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Template');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print __('TTL');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center wide"><b><?php print __('SOA');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Expiration Date');?></b></div>
+             </div>
+          </div>
+
       <?
         foreach ($data as $key => $value) {
           ++$i;
@@ -63,120 +75,66 @@
           }
       ?>
 
-      <div class="l-unit<? if($status == 'suspended') echo ' l-unit--suspended'; if($_SESSION['favourites']['DNS'][$key] == 1) echo ' l-unit--starred'; ?>" v_unit_id="<?=$key?>" v_section="dns"
-sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>"
-sort-expire="<?=strtotime($data[$key]['EXP'])?>" sort-records="<?=(int)$data[$key]['RECORDS']?>" sort-star="<? if($_SESSION['favourites']['DNS'][$key] == 1) echo '1'; else echo '0';?>">
-        <div class="l-unit-toolbar clearfix">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?php echo $key ?>">
-            <label for="check<?php echo $i ?>" class="check-label"></label>
-          </div>
-          <!-- l-unit-toolbar__col -->
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-            <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__logs shortcut-l" key-action="href"><a href="/list/dns/?domain=<?=$key?>"><?=__('list records',$data[$key]['RECORDS'])?> <i></i></a><span class="shortcut">&nbsp;L</span></div>
-              <div class="actions-panel__col actions-panel__add shortcut-n" key-action="href"><a href="/add/dns/?domain=<?=$key?>"><?=__('add record')?> <i></i></a><span class="shortcut">&nbsp;N</span></div>
-              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=$key?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
-              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-                <a id="delete_link_<?=$i?>" class="data-controls do_delete">
-                  <?=__('delete')?> <i class="do_delete"></i>
-                  <input type="hidden" name="delete_url" value="/delete/dns/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
-                  <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
-                    <p class="confirmation"><?=__('DELETE_DOMAIN_CONFIRMATION',$key)?></p>
-                  </div>
-                </a>
-                <span class="shortcut delete">&nbsp;Del</span>
+      <div class="l-unit <? if($status == 'suspended') echo ' l-unit--suspended'; if($_SESSION['favourites']['DNS'][$key] == 1) echo ' l-unit--starred'; ?>" v_unit_id="<?=$key?>"
+v_section="dns" sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>"
+sort-expire="<?=strtotime($data[$key]['EXP'])?>" sort-records="<?=(int)$data[$key]['RECORDS']?>" sort-star="<?if($_SESSION['favourites']['DNS'][$key] == 1) echo '1'; else echo '0';?>">
+            <div class="l-unit__col l-unit__col--right">
+              <div class="clearfix l-unit__stat-col--left super-compact">
+                <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?php echo $key ?>">
               </div>
+              <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/list/dns/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('DNS records')?>"><?=$key?></a></b></div>
+              <!-- START QUICK ACTION TOOLBAR AREA -->
+              <div class="clearfix l-unit__stat-col--left text-right">
+                  <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+                  <div class="actions-panel clearfix">
+
+                    <div class="actions-panel__col actions-panel__logs shortcut-n" key-action="href"><a href="/add/dns/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('Add DNS Record')?>"><i class="fas fa-plus-circle status-icon green status-icon dim"></i></a></div>
+                    <div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="/list/dns/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('DNS records')?>"><i class="fas fa-list status-icon lightblue status-icon dim"></i></a></div>
+                    <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('Editing DNS Domain')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+
+                    <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
+                      <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=__($spnd_action)?>">
+                        <i class="fas fa-pause status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
+                        <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/dns/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
+                        <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
+                          <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
+                        </div>
+                      </a>
+                    </div>
+                    <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+                      <a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=__('delete')?>">
+                        <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
+                          <input type="hidden" name="delete_url" value="/delete/dns/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
+                            <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
+                              <p class="confirmation"><?=__('DELETE_DOMAIN_CONFIRMATION',$key)?></p>
+                            </div>
+                          </a>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              <!-- END QUICK ACTION TOOLBAR AREA -->
+              <div class="clearfix l-unit__stat-col--left text-center compact"><? if(!empty($data[$key]['SRC'])) echo "<span>⇢ ".$data[$key]['SRC']."</span>&nbsp; &nbsp; ";  if($data[$key]['RECORDS']) echo '<span>'.$data[$key]['RECORDS'].'</span>';?></div>
+              <div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['TPL']?></b></div>
+              <div class="clearfix l-unit__stat-col--left text-center compact"><?=$data[$key]['TTL']?></div>
+              <div class="clearfix l-unit__stat-col--left text-center wide"><?=$data[$key]['SOA']?></div>
+              <div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['EXP']?></b></div>
             </div>
-            <!-- /.actions-panel -->
-          </div>
-          <!-- l-unit-toolbar__col -->
         </div>
-        <!-- /.l-unit-toolbar -->
-
-        <div class="l-unit__col l-unit__col--left clearfix">
-          <div class="l-unit__date">
-            <?=translate_date($data[$key]['DATE'])?>
-          </div>
-          <div class="l-unit__suspended"><?__('suspended')?></div>
-          <div class="text-center">
-            <i class="l-icon-star" title="<?=__('save to favorites')?>"></i>
-          </div>
-        </div>
-        <!-- /.l-unit__col -->
-        <div class="l-unit__col l-unit__col--right">
-          <div class="l-unit__name">
-            <?=$key?> <? if(!empty($data[$key]['SRC'])) echo "<span>⇢ ".$data[$key]['SRC']."</span>&nbsp; &nbsp; ";  if($data[$key]['RECORDS']) echo '<span>/ '.$data[$key]['RECORDS'].'</span>';?>
-          </div>
-          <div class="l-unit__ip">
-            <?=str_replace('.', '<span>.</span>', $data[$key]['IP'])?>
-          </div>
-          <!-- /.l-unit__ip -->
-
-          <div class="l-unit__stats">
-            <table>
-               <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><b><?=$data[$key]['SOA']?></b></div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right"></div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left compact"><?=__('TTL')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['TTL']?></b>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix last">
-                    <div class="l-unit__stat-col l-unit__stat-col--left compact"><?=__('Template')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['TPL']?></b>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix last">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Expire')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=translate_date($data[$key]['EXP'])?></b>
-                    </div>
-                  </div>
-                </td>
-                <td>
-              </tr>
-            </table>
-          </div>
-          <!-- /.l-unit__stats -->
-        </div>
-        <!-- /.l-unit__col -->
-      </div>
-      <!-- /.l-unit -->
-      <!--div class="l-separator"></div-->
-      <!-- /.l-separator -->
-      <? } ?>
-
+      <?}?>
     </div>
-
-
 
     <div id="vstobjects">
       <div class="l-separator"></div>
       <div class="l-center">
         <div class="l-unit-ft">
           <table class='data'></table>
-          <div class="l-unit__col l-unit__col--left clearfix"></div>
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php
               if ( $i == 1) {
-                echo __('1 domain');
+                echo __('1 DNS zone');
               } else {
-                echo __('%s domains',$i);
+                echo __('%s DNS zones',$i);
               }
             ?>
           </div>

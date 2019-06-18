@@ -71,7 +71,6 @@ if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
     fi
 fi
 
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
@@ -79,6 +78,9 @@ fi
 # Updating config
 update_object_value 'web' 'DOMAIN' "$domain" '$SUSPENDED' 'yes'
 increase_user_value "$user" '$SUSPENDED_WEB'
+
+# Update global configuration files
+$BIN/v-rebuild-web-domain $user $domain 'no'
 
 # Restarting web server
 $BIN/v-restart-web $restart

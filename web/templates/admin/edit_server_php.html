@@ -1,24 +1,19 @@
     <div class="l-center edit">
       <div class="l-sort clearfix">
-        <div class="l-sort-toolbar clearfix float-left subtitle">
-            <table class="width-100p">
-                <tbody><tr>
-                  <td>
-                    <a href="/edit/server/<? print $_SESSION['WEB_SYSTEM']?>/" class="vst"><?=__('Configuring Server')?> / <? print strtoupper($_SESSION['WEB_SYSTEM']) ?></a>
-                    <a href="/edit/server/php/" class="vst selected"><?= __('Configure')." php.ini"?></a>
-                  </td>
-                    <?php
-                      if (!empty($_SESSION['error_msg'])) {
-                        echo "<td><span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span></td>";
-                      } else {
-                        if (!empty($_SESSION['ok_msg'])) {
-                          echo "<td><span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span></td>";
-                        }
-                      }
-                    ?>
-                </tr>
-              </tbody>
-            </table>
+        <div class="l-unit-toolbar__buttonstrip">
+            <a class="ui-button cancel" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+        </div>
+        <div class="l-unit-toolbar__buttonstrip float-right">
+                <?php
+                if (!empty($_SESSION['error_msg'])) {
+                  echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
+                } else {
+                  if (!empty($_SESSION['ok_msg'])) {
+                    echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                  }
+                }
+              ?>
+            <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
         </div>
       </div>
     </div>
@@ -50,6 +45,11 @@
                     </td>
                     <td class="data-dotted">
                         <table class="data-col2" width="600px"  id="basic-options">
+                            <tr>
+                                <td class="step-top">
+                                    <span class="login-welcome"><?=__('Configuring Server')?>: PHP</span>
+                                </td>
+                            </tr>
                             <tr>
                                 <td class="vst-text step-top">
                                     max_execution_time
@@ -159,14 +159,6 @@
                         </table>
 
                         <table class="data-col2">
-                            <tr>
-                                <td class="step-top" width="116px">
-                                    <input type="submit" class="button" name="save" value="<?=__('Save')?>">
-                                </td>
-                                <td class="step-top">
-                                    <input type="button" class="button cancel" value="<?=__('Back')?>" onclick="<?=$back?>">
-                                </td>
-                            </tr>
                         </table>
                     </td>
                 </tr>

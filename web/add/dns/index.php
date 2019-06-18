@@ -80,7 +80,7 @@ if (!empty($_POST['ok'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('DNS_DOMAIN_CREATED_OK',htmlentities($_POST[v_domain]),htmlentities($_POST[v_domain]));
+        $_SESSION['ok_msg'] = __('DNS_DOMAIN_CREATED_OK',htmlentities($_POST['v_domain']),htmlentities($_POST['v_domain']));
         unset($v_domain);
     }
 }
@@ -128,7 +128,7 @@ if (!empty($_POST['ok_rec'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('DNS_RECORD_CREATED_OK',htmlentities($_POST[v_rec]),htmlentities($_POST[v_domain]));
+        $_SESSION['ok_msg'] = __('DNS_RECORD_CREATED_OK',htmlentities($_POST['v_rec']),htmlentities($_POST['v_domain']));
         unset($v_domain);
         unset($v_rec);
         unset($v_val);

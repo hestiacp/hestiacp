@@ -13,7 +13,10 @@ Type here (e.g. A list of hosted web domains should appear).
 Type here (e.g. Ubuntu 18.04 LTS)
 
 ### HestiaCP Version:
-Type here (e.g. 0.9.8-28)
+Type here (e.g. 0.9.8-29)
+
+### Which branch are you using?
+Type here (e.g master, develop, etc.)
 
 ### Which branch are you using?
 Type here (e.g master, develop, etc.)

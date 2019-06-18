@@ -559,7 +559,7 @@ $LANG['sr'] = array(
     'MAIL Server' => 'MAIL Server',
     'Antivirus' => 'Antivirus',
     'AntiSpam' => 'AntiSpam',
-    'Webmail URL' => 'Webmail URL',
+    'Webmail URL' => 'Webmail Alias',
     'MySQL Support' => 'MySQL podrška',
     'phpMyAdmin URL' => 'phpMyAdmin URL',
     'PostgreSQL Support' => 'PostgreSQL podrška',
@@ -732,10 +732,9 @@ $LANG['sr'] = array(
     'every' => 'svakih',
     'Generate' => 'Generiši',
 
-    'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
-    'Hestia SSL' => 'Hestia SSL',
+    'Hestia SSL' => 'SSL',
     'SUBJECT' => 'SUBJECT',
     'ALIASES' => 'ALIASES',
     'NOT_BEFORE' => 'NOT_BEFORE',

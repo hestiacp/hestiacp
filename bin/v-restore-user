@@ -504,8 +504,19 @@ if [ "$dns" != 'no' ] && [ ! -z "$DNS_SYSTEM" ]; then
         # Restoring DNS records
         cp -f $tmpdir/dns/$domain/$backup_system/$domain.conf $USER_DATA/dns/
 
+        # Update IP in records
+        if [ ! -z "$old_ip" ]; then
+            sed -i s/$old_ip/$IP/g $USER_DATA/dns/$domain.conf
+        fi
+
         # Rebuilding DNS domain
         rebuild_dns_domain_conf
+
+        # Updating dns-cluster queue
+        if [ ! -z "$DNS_CLUSTER" ]; then
+            cmd="$BIN/v-add-remote-dns-domain $user $domain yes"
+            echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
+        fi
     done
 
     # Restarting DNS
@@ -577,7 +588,7 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
         cp -f $tmpdir/mail/$domain/$backup_system/$domain.conf $USER_DATA/mail/
 
         # Rebuilding mail config
-        rebuild_mail_domain_conf
+        v-rebuild-mail-domains $user
         
         domain_idn=$domain
         format_domain_idn
@@ -606,6 +617,14 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
             -exec chown $exim_user {} \;
 
     done
+
+    # Restarting web server
+    $BIN/v-restart-web
+    check_result $? "Web restart failed"
+    if [ ! -z "$PROXY_SYSTEM" ]; then
+        $BIN/v-restart-proxy
+        check_result $? "Proxy restart failed"
+    fi
 fi
 
 # Restoring databases

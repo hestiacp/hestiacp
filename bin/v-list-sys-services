@@ -78,6 +78,9 @@ get_srv_state() {
     srv=$1
     name=${2-$1}
     state='running'
+    mem=0
+    cpu=0
+    rtime="0"
 
     # Searching related pids
     if [ -z $3 ]; then
@@ -92,6 +95,7 @@ get_srv_state() {
     # Checking pid
     if [ ! -z "$pids" ]; then
         pid=$(echo "$pids" |cut -f 1 -d '|')
+        pids=${pids%|}
         pids=$(egrep "$pids" $tmp_file)
 
         # Calculating CPU usage

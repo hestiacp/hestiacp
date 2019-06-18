@@ -57,10 +57,10 @@ if [ -f "$HESTIA/web/inc/nginx_proxy" ]; then
       # Restart system
       sleep 15
       service $PROXY_SYSTEM restart >/dev/null 2>&1
-      if [ $? -ne 0 ]; then
-          send_email_report
-          check_result $E_RESTART "$PROXY_SYSTEM restart failed"
-      fi
+      #if [ $? -ne 0 ]; then
+      #    send_email_report
+      #    check_result $E_RESTART "$PROXY_SYSTEM restart failed"
+      #fi
 
       # Update restart queue
       if [ -e "$HESTIA/data/queue/restart.pipe" ]; then
@@ -81,10 +81,10 @@ else
   # Default behaviour
   # Restart system
   service $PROXY_SYSTEM restart >/dev/null 2>&1
-  if [ $? -ne 0 ]; then
-      send_email_report
-      check_result $E_RESTART "$PROXY_SYSTEM restart failed"
-  fi
+  #if [ $? -ne 0 ]; then
+  #    send_email_report
+  #    check_result $E_RESTART "$PROXY_SYSTEM restart failed"
+  #fi
 
   # Update restart queue
   if [ -e "$HESTIA/data/queue/restart.pipe" ]; then

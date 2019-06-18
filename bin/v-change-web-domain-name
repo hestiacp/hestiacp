@@ -80,7 +80,7 @@ if [ -e "$USER_DATA/ssl/$domain.crt" ]; then
     mv $domain.ca $new_domain.ca
     mv $domain.pem $new_domain.pem
     mv $domain.key $new_domain.key
-    rm -f $HOMEDIR/$user/conf/web/ssl.$domain.*
+    rm -f $HOMEDIR/$user/conf/web/$domain/ssl/$domain.*
 fi
 
 

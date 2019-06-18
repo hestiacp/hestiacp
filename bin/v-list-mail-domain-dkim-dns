@@ -68,7 +68,7 @@ is_object_valid 'mail' 'DOMAIN' "$domain"
 # Parsing domain keys
 if [ -e "$USER_DATA/mail/$domain.pub" ]; then
     pub=$(cat $USER_DATA/mail/$domain.pub |grep -v "KEY-----")
-    pub=$(echo "$pub" |sed ':a;N;$!ba;s/\n/\\n/g')
+    pub=$(echo "$pub" |sed ':a;N;$!ba;s/\n//g')
 else
     pub="DKIM-SUPPORT-IS-NOT-ACTIVATED"
 fi

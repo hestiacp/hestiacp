@@ -25,7 +25,11 @@ if (isset($_SESSION['user'])) {
             $_SESSION['look_alert'] = 'yes';
         }
     }
-    header("Location: /list/user/");
+    if ($_SESSION['user'] == 'admin' && empty($_GET['loginas'])) {
+        header("Location: /list/user/");
+    } else {
+        header("Location: /list/web/");
+    }
     exit;
 }
 
@@ -128,7 +132,11 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
                         unset($_SESSION['request_uri']);
                         exit;
                     } else {
-                        header("Location: /list/user/");
+                        if ($v_user == 'admin') {
+                            header("Location: /list/user/");
+                        } else {
+                            header("Location: /list/web/");
+                        }
                         exit;
                     }
                 }

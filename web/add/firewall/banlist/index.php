@@ -15,6 +15,12 @@ if ($_SESSION['user'] != 'admin') {
 // Check POST request
 if (!empty($_POST['ok'])) {
 
+    // Check token
+    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+        header('location: /login/');
+        exit();
+    }
+
     // Check empty fields
     if (empty($_POST['v_chain'])) $errors[] = __('banlist');
     if (empty($_POST['v_ip'])) $errors[] = __('ip address');
@@ -33,7 +39,7 @@ if (!empty($_POST['ok'])) {
     $v_chain = escapeshellarg($_POST['v_chain']);
     $v_ip = escapeshellarg($_POST['v_ip']);
 
-    // Add firewall ban
+    // Add firewall rule
     if (empty($_SESSION['error_msg'])) {
         exec (HESTIA_CMD."v-add-firewall-ban ".$v_ip." ".$v_chain, $output, $return_var);
         check_return_code($return_var,$output);
@@ -43,6 +49,7 @@ if (!empty($_POST['ok'])) {
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
         $_SESSION['ok_msg'] = __('BANLIST_CREATED_OK');
+        unset($v_chain);
         unset($v_ip);
     }
 }

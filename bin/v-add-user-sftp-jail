@@ -23,42 +23,47 @@ source $HESTIA/conf/hestia.conf
 
 check_args '1' "$#" 'USER'
 is_format_valid 'user'
-if [ -z "$SFTPJAIL_KEY" ]; then
-    exit
-fi
 user_str=$(grep "^$user:" /etc/passwd |egrep "rssh|nologin")
 if [ -z "$user_str" ]; then
     exit
 fi
 
+# Do not create chroot for syslog user
+if [ $user = "syslog" ]; then
+    exit
+fi
+
+# Get current users and split into array
+ssh_users=$(grep -A1 "^# Hestia SFTP Chroot" /etc/ssh/sshd_config | sed -n 2p | sed 's/Match User //')
+IFS=',' read -r -a users <<< "$ssh_users"
+
+# Check if jail is already enabled
+if [[ " ${users[@]} " =~ " ${user} " ]]; then
+    exit
+fi
+
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining user homedir
-home="$(echo $user_str |cut -f 6 -d :)"
+# Add user to array
+users+=($user)
 
-# Adding chroot directory
-if [ ! -d "/chroot/$user/$home" ]; then
-    mkdir -p /chroot/$user/$home
-    chmod 750 /chroot/$user
-    chmod 775 /chroot/$user/$home
-    chown root:sftp-only /chroot/$user
-    chown $user:sftp-only /chroot/$user/$home
-fi
+# Write new user list to config
+users=$(IFS=',';echo "${users[*]// /|}";IFS=$' \t\n')
+sed -i "s/$ssh_users/$users/g" /etc/ssh/sshd_config
 
-# Adding user to sftp group
-usermod -a -G sftp-only $user
-
-# Mouting home directory
-if [ -z "$(mount |grep /chroot/$user/$home)" ]; then
-    mount -o bind $home /chroot/$user/$home/
-fi
-
+# Set home folder permission to root
+chown root:root /home/$user
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
+
+# Restart ssh service
+service ssh restart > /dev/null 2>&1
+service sshd restart > /dev/null 2>&1
 
 # Logging
 log_event "$OK" "$ARGUMENTS"

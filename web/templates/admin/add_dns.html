@@ -1,19 +1,22 @@
-    <div class="l-center">
-      <div class="l-sort clearfix">
-        <div class="l-sort-toolbar clearfix float-left">
-                <span class="title"><b><?=__('Adding DNS Domain')?></b></span>
-                  <?php
-                    if (!empty($_SESSION['error_msg'])) {
-                      echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
-                    } else {
-                      if (!empty($_SESSION['ok_msg'])) {
-                        echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                      }
-                    }
-                  ?>
+<div class="l-center edit">
+        <div class="l-sort clearfix">
+          <div class="l-unit-toolbar__buttonstrip">
+            <a class="ui-button cancel" id="btn-back" href="/list/dns/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+          </div>
+          <div class="l-unit-toolbar__buttonstrip float-right">
+              <?php
+              if (!empty($_SESSION['error_msg'])) {
+                echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
+              } else {
+                if (!empty($_SESSION['ok_msg'])) {
+                  echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                }
+              }
+            ?>
+            <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
+          </div>
         </div>
       </div>
-    </div>
 
     <div class="l-separator"></div>
     <!-- /.l-separator -->
@@ -40,6 +43,11 @@
                     </td>
                     <td class="data-dotted">
                         <table class="data-col2" width="600px">
+                            <tr>
+                                <td class="step-top">
+                                    <span class="login-welcome"><?=__('Adding DNS Domain')?></span>
+                                </td>
+                            </tr>
                             <tr>
                                 <td class="vst-text step-top">
                                     <?php print __('Domain');?>
@@ -164,14 +172,6 @@
                             </tr>
                         </table>
                         <table class="data-col2">
-                            <tr>
-                                <td class="step-top" width="116px">
-                                    <input type="submit" name="ok" value="<?=__('Add')?>" class="button">
-                                </td>
-                                <td class="step-top">
-                                    <input type="button" class="button cancel" value="<?=__('Back')?>" onclick="<?=$back?>">
-                                </td>
-                            </tr>
                         </table>
                     </td>
                 </tr>

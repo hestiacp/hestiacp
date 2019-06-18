@@ -11,10 +11,18 @@ $(document).ready(function(){
         var selectedOption = $(this).find(":selected").text();
         $(this).next(".holder").text(selectedOption);
     }).trigger('change');
-    $('.to-top').bind('click', function(evt) {
+    $('.to-top').on('click', function(evt) {
         $("html, body").animate({ scrollTop: 0 }, "normal");
     });
 
+    $('.ui-button').on('click',function(evt){
+        var action = $(this).data('action');
+        var id = $(this).data('id');
+        if(action=='submit' && document.getElementById(id)){
+            evt.preventDefault();
+            $(document.getElementById(id)).submit();
+        }
+    });
 
             var isMobile = false; //initiate as false
             // device detection
@@ -27,7 +35,7 @@ $(document).ready(function(){
             $(window).scroll(function(){hover_menu()});
 
             $('.l-sort-toolbar .sort-by').click(function(){
-              $('.context-menu.sort-order').toggle().css({left: $(this).position().left - 10});
+              $('.context-menu.sort-order').toggle().css({left: $(this).position().left - 0});
             });
 
 
@@ -109,11 +117,11 @@ $(document).ready(function(){
               $(this).addClass('active');
               VE.tmp.sort_par = $(this).parent('li').attr('entity');
               VE.tmp.sort_as_int = $(this).parent('li').attr('sort_as_int');
-              VE.tmp.sort_direction = $(this).hasClass('up')*1 || -1;
+              VE.tmp.sort_direction = $(this).hasClass('up')*1 || -1; 
 
               $('.l-sort .sort-by span b').html($(this).parent('li').find('.name').html());
-              $('.l-sort .sort-by i').removeClass('l-icon-up-arrow l-icon-down-arrow');
-              $(this).hasClass('up') ? $('.l-sort .sort-by i').addClass('l-icon-up-arrow') : $('.l-sort .sort-by i').addClass('l-icon-down-arrow');
+              $('.l-sort .sort-by i').removeClass('fa-sort-amount-up fa-sort-amount-down');
+              $(this).hasClass('up') ? $('.l-sort .sort-by i').addClass('fa-sort-amount-up') : $('.l-sort .sort-by i').addClass('fa-sort-amount-down');
               $('.units .l-unit').sort(function (a, b) {
                 if(VE.tmp.sort_as_int)
                   return parseInt($(a).attr(VE.tmp.sort_par)) >= parseInt($(b).attr(VE.tmp.sort_par)) ? VE.tmp.sort_direction : VE.tmp.sort_direction * -1;
@@ -168,12 +176,13 @@ $(document).ready(function(){
               );
 
               shortcut.add("Ctrl+Backspace", function(){
-                if(VE.tmp.form_changed && $('form#vstobjects .button.cancel')[0]){
-                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', $('form#vstobjects input.cancel').attr('onclick').replace("location.href='", "").replace("'",""));
+                var redirect = $('a.ui-button#btn-back').attr('href')
+                if(VE.tmp.form_changed && redirect){
+                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', redirect);
                 } else if($('form#vstobjects .button.cancel')[0]){
                   location.href=$('form#vstobjects input.cancel').attr('onclick').replace("location.href='", "").replace("'","");
-                } else if($('#vstobjects a.button.cancel')[0]){
-                  location.href=$('#vstobjects a.button.cancel').attr('href');
+                } else if(redirect){
+                  location.href = redirect;
                 }
               }, {
                   'type':             'keydown',
@@ -194,13 +203,14 @@ $(document).ready(function(){
                   }
               );
 
-              $(window).bind('keypress', function(evt) {
+              $(window).on('keypress', function(evt) {
                   var tag = evt.target.tagName.toLowerCase();
                   if (evt.charCode == 97 && tag != 'input' && tag != 'textarea' && tag != 'selectbox') {
                       evt.preventDefault();
                       if (!evt.ctrlKey && !evt.shiftKey) {
-                          if ($('.l-sort__create-btn')[0]) {
-                              location.href=$('.l-sort__create-btn').attr('href');
+                          //if ($('.l-sort__create-btn')[0]) {
+                          if ($('.ui-button#btn-create').length) {
+                              location.href=$('.ui-button#btn-create').attr('href');
                           }
                       }
                       else {
@@ -217,10 +227,14 @@ $(document).ready(function(){
               });
 
               shortcut.add("1", function(){
+                var target = $('.l-stat .l-stat__col:nth-of-type(1) a')
+                if(target.length != 1){
+                  return;
+                }
                 if(VE.tmp.form_changed){
-                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', $('.l-stat .l-stat__col:nth-of-type(1) a').attr('href'));
+                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', target.attr('href'));
                 } else {
-                  location.href=$('.l-stat .l-stat__col:nth-of-type(1) a').attr('href');
+                  location.href=target.attr('href');
                 }
               }, {
                   'type':             'keydown',
@@ -231,10 +245,14 @@ $(document).ready(function(){
               );
 
               shortcut.add("2", function(){
+                var target = $('.l-stat .l-stat__col:nth-of-type(2) a')
+                if(target.length != 1){
+                  return;
+                }
                 if(VE.tmp.form_changed){
-                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', $('.l-stat .l-stat__col:nth-of-type(2) a').attr('href'));
+                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', target.attr('href'));
                 } else {
-                  location.href=$('.l-stat .l-stat__col:nth-of-type(2) a').attr('href');
+                  location.href=target.attr('href');
                 }
               }, {
                   'type':             'keydown',
@@ -245,10 +263,14 @@ $(document).ready(function(){
               );
 
               shortcut.add("3", function(){
+                var target = $('.l-stat .l-stat__col:nth-of-type(3) a')
+                if(target.length != 1){
+                  return;
+                }
                 if(VE.tmp.form_changed){
-                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', $('.l-stat .l-stat__col:nth-of-type(3) a').attr('href'));
+                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', target.attr('href'));
                 } else {
-                  location.href=$('.l-stat .l-stat__col:nth-of-type(3) a').attr('href');
+                  location.href=target.attr('href');
                 }
               }, {
                   'type':             'keydown',
@@ -259,10 +281,14 @@ $(document).ready(function(){
               );
 
               shortcut.add("4", function(){
+                var target = $('.l-stat .l-stat__col:nth-of-type(4) a')
+                if(target.length != 1){
+                  return;
+                }
                 if(VE.tmp.form_changed){
-                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', $('.l-stat .l-stat__col:nth-of-type(4) a').attr('href'));
+                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', target.attr('href'));
                 } else {
-                  location.href=$('.l-stat .l-stat__col:nth-of-type(4) a').attr('href');
+                  location.href=target.attr('href');
                 }
               }, {
                   'type':             'keydown',
@@ -273,10 +299,14 @@ $(document).ready(function(){
               );
 
               shortcut.add("5", function(){
+                var target = $('.l-stat .l-stat__col:nth-of-type(5) a')
+                if(target.length != 1){
+                  return;
+                }
                 if(VE.tmp.form_changed){
-                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', $('.l-stat .l-stat__col:nth-of-type(5) a').attr('href'));
+                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', target.attr('href'));
                 } else {
-                  location.href=$('.l-stat .l-stat__col:nth-of-type(5) a').attr('href');
+                  location.href=target.attr('href');
                 }
               }, {
                   'type':             'keydown',
@@ -287,10 +317,14 @@ $(document).ready(function(){
               );
 
               shortcut.add("6", function(){
+                var target = $('.l-stat .l-stat__col:nth-of-type(6) a')
+                if(target.length != 1){
+                  return;
+                }
                 if(VE.tmp.form_changed){
-                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', $('.l-stat .l-stat__col:nth-of-type(6) a').attr('href'));
+                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', target.attr('href'));
                 } else {
-                  location.href=$('.l-stat .l-stat__col:nth-of-type(6) a').attr('href');
+                  location.href=target.attr('href');
                 }
               }, {
                   'type':             'keydown',
@@ -301,10 +335,14 @@ $(document).ready(function(){
               );
 
               shortcut.add("7", function(){
+                var target = $('.l-stat .l-stat__col:nth-of-type(7) a')
+                if(target.length != 1){
+                  return;
+                }
                 if(VE.tmp.form_changed){
-                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', $('.l-stat .l-stat__col:nth-of-type(7) a').attr('href'));
+                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', target.attr('href'));
                 } else {
-                  location.href=$('.l-stat .l-stat__col:nth-of-type(7) a').attr('href');
+                  location.href=target.attr('href');
                 }
               }, {
                   'type':             'keydown',
@@ -482,7 +520,12 @@ $(document).ready(function(){
                   }
               );
 
-              shortcut.add("Enter", function(){
+              shortcut.add("Enter", function(evt){
+
+                if (evt.target.tagName == 'INPUT' && evt.target.form.id == 'vstobjects'){
+                  $('form#vstobjects').submit();
+                }
+
                 if(VE.tmp.form_changed){
                   if(!$('.ui-dialog').is(':visible')){
                     VE.helpers.createConfirmationDialog($('.confirmation-text-redirect')[0], '', $(VE.navigation.state.menu_selector + '.focus a').attr('href'));
@@ -503,8 +546,8 @@ $(document).ready(function(){
                 }
               }, {
                   'type':             'keydown',
-                  'propagate':        false,
-                  'disable_in_input': true,
+                  'propagate':        true,
+                  'disable_in_input': false,
                   'target':           document
                   }
               );
@@ -557,15 +600,9 @@ $(document).ready(function(){
                 var shift_select_ref = $('body').finderSelect({
                     children: '.l-unit', 
                     'onFinish': function(evt) {
-                        var ref = $(evt.target);
-                        $('.l-content').find('.l-unit .ch-toggle').prop('checked', false);
-                        $('.l-content').find('.l-unit.selected .ch-toggle').prop('checked', true);
-
-
                         if ($('.l-content').find('.l-unit.selected').length == $('.l-content').find('.l-unit').length) {
                             $('.toggle-all').addClass('clicked-on');
                         }
-
                     },
                     'toggleAllHook': function() {
                         if ($('.l-unit').length == $('.ch-toggle:checked').length) {
@@ -588,7 +625,7 @@ $(document).ready(function(){
             }
 
             // 
-            $('form#objects').bind('submit', function(evt) {
+            $('form#objects').on('submit', function(evt) {
                 $('.l-unit').find('.ch-toggle').prop('checked', false);
                 $('.l-unit.selected').find('.ch-toggle').prop('checked', true);
             });

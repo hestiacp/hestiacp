@@ -1,8 +1,10 @@
-    <div class="l-center edit">
-      <div class="l-sort clearfix">
-        <div class="l-sort-toolbar clearfix float-left">
-          <span class="title edit"><b><?=__('Editing User')?></b></span>
-            <?php
+<div class="l-center edit">
+        <div class="l-sort clearfix">
+          <div class="l-unit-toolbar__buttonstrip">
+            <a class="ui-button cancel" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+          </div>
+          <div class="l-unit-toolbar__buttonstrip float-right">
+              <?php
               if (!empty($_SESSION['error_msg'])) {
                 echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
               } else {
@@ -11,9 +13,10 @@
                 }
               }
             ?>
+            <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
+          </div>
         </div>
       </div>
-    </div>
 
     <div class="l-separator"></div>
     <!-- /.l-separator -->
@@ -37,15 +40,17 @@
                         <table class="data-col1">
                             <tr>
                                 <td>
-                                    <a class="data-date"><?=translate_date($v_date)?></a><br>
-                                    <a class="data-date"><?=$v_time?></a>
                                 </td>
                             </tr>
-                            <tr><td class="data-<?=$v_status ?>"><b><?php echo __($v_status); ?></b></td></tr>
                         </table>
                     </td>
                     <td class="data-dotted">
                         <table class="data-col2">
+                            <tr>
+                                <td class="step-top">
+                                    <span class="login-welcome"><?=__('Editing User')?></span>
+                                </td>
+                            </tr>  
                             <tr>
                                 <td class="vst-text step-top">
                                     <?php print __('Username');?>
@@ -68,16 +73,12 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text input-label">
-                                    <?php print __('2 Factor Authentication');?>
-                                </td>
-                            </tr>
-                            <tr>
                                 <td>
-                                    <label><input type="checkbox" class="vst-checkbox" name="v_twofa" <?php if(!empty($v_twofa)) echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_twofa(this)"> <?php print __('Enable 2FA');?></label>
+                                    <label><input type="checkbox" class="vst-checkbox password-option" name="v_twofa" <?php if(!empty($v_twofa)) echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_twofa(this)"> <?php print __('Enable 2FA');?></label>
                                     <?php if (!empty($v_twofa)) { ?>
+                                    <p><?php echo __('2FA Reset Code:').' '.$v_twofa; ?></br></p>
                                     <p><?php echo __('Please scan the code below in your 2FA application:'); ?></p>
-                                    <img src="<?php echo $v_qrcode; ?>">
+                                    <div><img class="qr-code" src="<?php echo $v_qrcode; ?>"></div>
                                     <?php } ?>
                                 </td>
                             </tr>
@@ -177,6 +178,7 @@
                                     </select>
                                 </td>
                             </tr>
+                        <?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?>
                             <tr>
                                 <td class="vst-text input-label">
                                     <?php print __('Default Name Servers');?>
@@ -248,18 +250,9 @@
                                       <span class="add-ns-button additional-control add"><?=__('Add one more Name Server')?></span>
                                     </td>
                                 </tr>
-
-
+                            <?php } ?>
                         </table>
                         <table class="data-col2">
-                            <tr>
-                                <td class="step-top" width="116px">
-                                    <input type="submit" class="button" name="save" value="<?=__('Save')?>">
-                                </td>
-                                <td class="step-top">
-                                    <input type="button" class="button cancel" value="<?=__('Back')?>" onclick="<?=$back?>">
-                                </td>
-                            </tr>
                         </table>
                     </td>
                 </tr>

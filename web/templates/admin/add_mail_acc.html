@@ -1,32 +1,28 @@
-    <div class="l-center">
-      <div class="l-sort clearfix">
-        <div class="l-sort-toolbar clearfix float-left">
-                <span class="title"><b><?=__('Adding Mail Account')?></b></span>
-                  <?php
-                    if (!empty($_SESSION['error_msg'])) {
-                      echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
-                    } else {
-                      if (!empty($_SESSION['ok_msg'])) {
-                        echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                      }
-                    }
-                  ?>
+<div class="l-center edit">
+        <div class="l-sort clearfix">
+          <div class="l-unit-toolbar__buttonstrip">
+            <a class="ui-button cancel" id="btn-back" href="javascript:window.history.back();"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+          </div>
+          <div class="l-unit-toolbar__buttonstrip float-right">
+              <?php
+              if (!empty($_SESSION['error_msg'])) {
+                echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
+              } else {
+                if (!empty($_SESSION['ok_msg'])) {
+                  echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                }
+              }
+            ?>
+            <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
+          </div>
         </div>
       </div>
-    </div>
 
     <div class="l-separator"></div>
     <!-- /.l-separator -->
 
     <div class="l-center animated fadeIn">
-        <?php
-          $back = $_SESSION['back'];
-          if (empty($back)) {
-            $back = "location.href='/list/mail/?domain=".$v_domain."'";
-          } else {
-            $back = "location.href='".$back."'";
-          }
-        ?>
+
         <form id="vstobjects" name="v_add_mail_acc" method="post">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <input type="hidden" name="ok_acc" value="add" />
@@ -39,7 +35,12 @@
                     </table>
                 </td>
                 <td class="data-dotted">
-                    <table class="data-col2" width="600px">
+                    <table class="data-col2" width="440px">
+                        <tr>
+                            <td class="step-top">
+                                <span class="login-welcome"><?=__('Adding Mail Account')?></span>
+                            </td>
+                        </tr>
                         <tr>
                             <td class="vst-text step-top">
                                 <?php print __('Domain');?>
@@ -97,7 +98,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <textarea size="20" class="vst-textinput" name="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
+                                        <textarea size="20" class="vst-textinput short" name="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
                                     </td>
                                 </tr>
                                 <tr>
@@ -107,7 +108,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <textarea size="20" class="vst-textinput" name="v_fwd"><?=htmlentities(trim($v_fwd, "'"))?></textarea>
+                                        <textarea size="20" class="vst-textinput short" name="v_fwd"><?=htmlentities(trim($v_fwd, "'"))?></textarea>
                                     </td>
                                 </tr>
                                 <tr>
@@ -131,24 +132,15 @@
                     </tr>
                 </table>
                 <table class="data-col2">
-                    <tr>
-                        <td class="step-top" width="116px">
-                            <input type="submit" name="ok_acc" value="<?=__('Add')?>" class="button">
-                        </td>
-                        <td class="step-top">
-                            <input type="button" class="button cancel" value="<?=__('Back')?>" onclick="<?=$back?>">
-                        </td>
-                    </tr>
                 </table>
             </td>
             <td class="mail-infoblock-td">
                 <div class="mail-infoblock">
                     <table>
-                        <?php $uname_arr=posix_uname(); $hostname=$uname_arr['nodename']; ?>
+                    <?php $uname_arr=posix_uname(); $hostname=$uname_arr['nodename']; ?>
                         <tr>
                             <td colspan="2">
                                 <select id="mail_configuration" class="vst-list flat">
-                                    <option v_type="hostname" domain="<?=$hostname?>"><?=__('Use server hostname')?></option>
                                     <option v_type="hostname" domain="<?=$v_domain?>"><?=__('Use domain hostname')?></option>
                                     <option v_type="starttls"><?=__('Use STARTTLS')?></option>
                                     <option v_type="ssl"><?=__('Use SSL / TLS')?></option>
@@ -166,7 +158,7 @@
                         </tr>
                         <tr>
                             <td><?=__('IMAP hostname')?>:</td>
-                            <td><div id="td_imap_hostname"><?=$hostname?></div></td>
+                            <td><div id="td_imap_hostname">mail.<?=$v_domain?></div></td>
                         </tr>
                         <tr>
                             <td><?=__('IMAP port')?>:</td>
@@ -182,7 +174,7 @@
                         </tr>
                         <tr>
                             <td><?=__('SMTP hostname')?>:</td>
-                            <td><div id="td_smtp_hostname"><?=$hostname?></div></td>
+                            <td><div id="td_smtp_hostname">mail.<?=$v_domain?></div></td>
                         </tr>
                         <tr>
                             <td><?=__('SMTP port')?>:</td>
@@ -196,14 +188,9 @@
                             <td><?=__('SMTP auth method')?>:</td>
                             <td><div><?=__('Normal password')?></div></td>
                         </tr>
-                        <?
-                            list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
-                            $webmail = "http://".$http_host."/webmail/";
-                            if (!empty($_SESSION['MAIL_URL'])) $webmail = $_SESSION['MAIL_URL'];
-                        ?>
                         <tr>
                             <td><?=__('Webmail URL')?>:</td>
-                            <td><div><a class="vst" href="<?=$webmail?>" target="_blank"><?=$webmail?> <i></i></a></div></td>
+                            <td><div><a class="vst" href="http://<?=$v_webmail_alias?>" target="_blank">http://<?=$v_webmail_alias?> <i></i></a></div></td>
                         </tr>
                     </table>
                 </div>

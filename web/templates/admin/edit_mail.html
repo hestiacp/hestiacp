@@ -1,8 +1,10 @@
-    <div class="l-center edit">
-      <div class="l-sort clearfix">
-        <div class="l-sort-toolbar clearfix float-left">
-          <span class="title edit"><b><?=__('Editing Mail Domain')?></b></span>
-            <?php
+<div class="l-center edit">
+        <div class="l-sort clearfix">
+          <div class="l-unit-toolbar__buttonstrip">
+            <a class="ui-button cancel" id="btn-back" href="/list/mail/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+          </div>
+          <div class="l-unit-toolbar__buttonstrip float-right">
+              <?php
               if (!empty($_SESSION['error_msg'])) {
                 echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
               } else {
@@ -11,9 +13,10 @@
                 }
               }
             ?>
+            <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
+          </div>
         </div>
       </div>
-    </div>
 
     <div class="l-separator"></div>
     <!-- /.l-separator -->
@@ -36,15 +39,17 @@
                         <table class="data-col1">
                             <tr>
                                 <td>
-                                    <a class="data-date"><?=translate_date($v_date)?></a><br>
-                                    <a class="data-date"><?=$v_time?></a>
                                 </td>
                             </tr>
-                            <tr><td class="data-<?php echo $v_status ?>"><b><?php echo __($v_status); ?></b></td></tr>
                         </table>
                     </td>
                     <td class="data-dotted">
                         <table class="data-col2">
+                            <tr>
+                                <td class="step-top">
+                                    <span class="login-welcome"><?=__('Editing Mail Domain')?></span>
+                                </td>
+                            </tr>  
                             <tr>
                                 <td class="vst-text step-top">
                                     <?php print __('Domain');?>
@@ -54,6 +59,16 @@
                                 <td>
                                   <input type="text" size="20" class="vst-input" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
                                   <input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print __('Catchall email');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_catchall" value="<?=htmlentities(trim($v_catchall, "'"))?>" > <?php /*'*/ ?>
                                 </td>
                             </tr>
                             <tr>
@@ -72,25 +87,122 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text input-label">
-                                    <?php print __('Catchall email');?>
+                                <td class="vst-text step-top">
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');"> <?php print __('SSL Support');?></label>
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                    <input type="text" size="20" class="vst-input" name="v_catchall" value="<?=htmlentities(trim($v_catchall, "'"))?>" >
+                                <td class="step-left">
+                                    <table style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;" id="ssltable">
+                                        <tr>
+                                            <td class="input-label vst-text">
+                                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letencrypt == 'on') echo "checked=yes" ?> onclick="App.Actions.MAIL.toggle_letsencrypt(this)"> <?php print __('Lets Encrypt Support');?></label>
+                                            </td>
+                                        </tr>
+                                      
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print __('SSL Certificate');?>
+                                                <span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=$v_domain?>"><?=__('Generate CSR')?></a></span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <textarea size="20" class="vst-textinput" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print __('SSL Key');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <textarea size="20" class="vst-textinput" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print __('SSL Certificate Authority / Intermediate');?> <span class="optional">(<?php print __('optional');?>)</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <textarea size="20" class="vst-textinput" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
+                                            </td>
+                                        </tr>
+                                        <?
+                                        if ($v_ssl != 'no' ) { ?>
+                                            <tr>
+                                                <td>
+                                                    <table class="additional-info">
+                                                        <tr>
+                                                            <td>
+                                                                <?=__('SUBJECT')?>:
+                                                            </td>
+                                                            <td class="details">
+                                                                <?=$v_ssl_subject?>
+                                                            </td>
+                                                        </tr>
+                                                        <? if($v_ssl_aliases){?>
+                                                            <tr>
+                                                                <td>
+                                                                    <?=__('ALIASES')?>:
+                                                                </td>
+                                                                <td class="details">
+                                                                    <?=$v_ssl_aliases?>
+                                                                </td>
+                                                            </tr>
+                                                        <? } ?>
+                                                        <tr>
+                                                            <td>
+                                                                <?=__('NOT_BEFORE')?>:
+                                                            </td>
+                                                            <td class="details">
+                                                                <?=$v_ssl_not_before?>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <?=__('NOT_AFTER')?>:
+                                                            </td>
+                                                            <td class="details">
+                                                                <?=$v_ssl_not_after?>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <?=__('SIGNATURE')?>:
+                                                            </td>
+                                                            <td class="details">
+                                                                <?=$v_ssl_signature?>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <?=__('PUB_KEY')?>:
+                                                            </td>
+                                                            <td class="details">
+                                                                <?=$v_ssl_pub_key?>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <?=__('ISSUER')?>
+                                                            </td>
+                                                            <td class="details">
+                                                                <?=$v_ssl_issuer?>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        <? } // if ssl is enabled ?>
+                                    </table>
                                 </td>
                             </tr>
                         </table>
                         <table class="data-col2">
-                            <tr>
-                                <td class="step-top" width="116px">
-                                    <input type="submit" class="button" name="save" value="<?=__('Save')?>">
-                                </td>
-                                <td class="step-top">
-                                    <input type="button" class="button cancel" value="<?=__('Back')?>" onclick="<?=$back?>">
-                                </td>
-                            </tr>
                         </table>
                     </td>
                 </tr>

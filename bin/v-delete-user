@@ -75,9 +75,7 @@ sed -i "/ $user$/d" $HESTIA/data/queue/disk.pipe
 sed -i "/ $user$/d" $HESTIA/data/queue/traffic.pipe
 
 # Deleting sftp jail
-if [ ! -z "$SFTPJAIL_KEY" ]; then
-    $BIN/v-delete-user-sftp-jail $user
-fi
+$BIN/v-delete-user-sftp-jail $user
 
 # Deleting system user
 /usr/sbin/userdel -f $user >> /dev/null 2>&1
@@ -92,7 +90,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Deleting user directories
-chattr -i $HOMEDIR/$user/conf
+chattr -i $HOMEDIR/$user/conf > /dev/null 2>&1
 rm -rf $HOMEDIR/$user
 rm -f /var/spool/mail/$user
 rm -f /var/spool/cron/$user

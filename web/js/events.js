@@ -325,7 +325,7 @@ VE.navigation.move_focus_down = function(){
 
         $('html, body').animate({
             scrollTop: $('.units .l-unit.focus').offset().top - 200
-        }, 80);
+        }, 200);
     }
 }
 
@@ -348,7 +348,7 @@ VE.navigation.move_focus_up = function(){
 
         $('html, body').animate({
             scrollTop: $('.units .l-unit.focus').offset().top - 200
-        }, 80);
+        }, 200);
     }
 }
 

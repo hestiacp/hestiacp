@@ -1,6 +1,9 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
-        <a href="/schedule/restore/?backup=<?=htmlentities($_GET['backup'])?>" class="l-sort__create-btn restore" title="<?=__('Restore All')?>"></a>
+        <div class="l-unit-toolbar__buttonstrip">
+          <a class="ui-button cancel" id="btn-back" href="/list/backup/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+          <a href="/schedule/restore/?backup=<?=htmlentities($_GET['backup'])?>" class="ui-button cancel" title="<?=__('Restore All')?>"><i class="fas fa-undo status-icon green"></i> <?=__('Restore All')?></a>
+        </div>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
@@ -8,7 +11,7 @@
                 <form action="/search/" method="get">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                   <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
-                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
+                  <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value=""><i class="fas fa-search"></i></button>
                 </form>
               </td>
               <td class="toggle-all">
@@ -25,21 +28,18 @@
                     <option value="restore"><?php print __('restore') ?></option>
                   </select>
                 </div>
-                <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
+                <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
               </td>
             </tr>
           </table>
         </div>
       </div>
-      <!-- /.l-sort -->
     </div>
 
     <div class="l-separator"></div>
-    <!-- /.l-separator -->
-
 
     <div class="l-center units animated fadeIn">
-    <div class="l-unit header">
+    <div class="header">
       <div class="subtitle"><?=__('Listing')?>  <?=htmlentities($_GET['backup'])?></div>
     </div>
 
@@ -52,49 +52,36 @@
       ?>
 
       <div class="l-unit">
-        <div class="l-unit-toolbar clearfix">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="web[]" value="<?=$key?>">
-            <label for="check<?=$i++?>" class="check-label"></label>
-          </div>
-          <!-- l-unit-toolbar__col -->
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--right">
-            <div class="actions-panel__col actions-panel__update shortcut-r" key-action="href"><a href="/schedule/restore/?backup=<?=$backup?>&type=web&object=<?=$key?>&token=<?=$_SESSION['token']?>"><?=__('restore')?> <i></i></a><span class="shortcut">&nbsp;R</span></div>
-            <!-- /.actiona-panel -->
-          </div>
-          <!-- l-unit-toolbar__col -->
-        </div>
-        <!-- /.l-unit-toolbar -->
-
-        <div class="l-unit__col l-unit__col--left clearfix"></div>
-        <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
-          <!-- div class="l-unit__name separate">
-            <?=$key?>
-          </div -->
+            <div class="clearfix l-unit__stat-col--left super-compact">
+              <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="web[]" value="<?=$key?>">
+              <label for="check<?=$i++?>" class="check-label"></label>
+            </div>
 
-          <div class="l-unit__stats">
-            <table>
-               <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?='WEB ' . __('domain')?></div>
-                    <div class="l-unit__stat-col l-unit__stat-col--left wide-3"><b><?=$key?></b></div>
+            <div class="clearfix l-unit__stat-col--left">
+                <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?='WEB ' . __('domain')?></div>
+            </div>
+            <div class="clearfix l-unit__stat-col--left wide-3">
+                <div class="l-unit__stat-col l-unit__stat-col--left wide-4"><b><?=$key?></b></div>
+            </div>
+
+            <!-- START QUICK ACTION TOOLBAR AREA -->
+            <div class="clearfix l-unit__stat-col--left compact-4 text-right">
+              <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+                <div class="actions-panel clearfix">
+                  <div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
+                    <a href="/schedule/restore/?backup=<?=$backup?>&type=web&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="Restore">
+                      <i class="fas fa-undo status-icon green status-icon dim"></i>
+                    </a>
                   </div>
-                </td>
-              </tr>
-            </table>
-          </div>
-          <!-- /.l-unit__stats -->
+                </div>
+              </div>
+            </div>
+            <!-- END QUICK ACTION TOOLBAR AREA -->
         </div>
-        <!-- /.l-unit__col -->
       </div>
-      <!-- /.l-unit -->
-      <!--div class="l-separator"></div-->
-      <!-- /.l-separator -->
+
       <? }} ?>
-
-
 
       <?
         $mail = explode(',',$data[$backup]['MAIL']);
@@ -103,46 +90,36 @@
       ?>
 
       <div class="l-unit">
-        <div class="l-unit-toolbar clearfix">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check2<?=$i?>" type="checkbox" name="mail[]" value="<?=$key?>">
-            <label for="check2<?=$i++?>" class="check-label"></label>
-          </div>
-          <!-- l-unit-toolbar__col -->
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-            <div class="actions-panel__col actions-panel__update shortcut-r" key-action="href"><a href="/schedule/restore/?backup=<?=$backup?>&type=mail&object=<?=$key?>"><?=__('restore')?> <i></i></a><span class="shortcut">&nbsp;R</span></div>
-            <!-- /.actiona-panel -->
-          </div>
-          <!-- l-unit-toolbar__col -->
-        </div>
-        <!-- /.l-unit-toolbar -->
-
-        <div class="l-unit__col l-unit__col--left clearfix"></div>
-        <!-- /.l-unit__col -->
-        <div class="l-unit__col l-unit__col--right">
-          <div class="l-unit__stats">
-            <table>
-               <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?='MAIL ' . __('domain')?></div>
-                    <div class="l-unit__stat-col l-unit__stat-col--left wide-3"><b><?=$key?></b></div>
+          <div class="l-unit__col l-unit__col--right">
+              <div class="clearfix l-unit__stat-col--left super-compact">
+                  <input id="check2<?=$i?>" class="ch-toggle" type="checkbox" name="mail[]" value="<?=$key?>">
+                  <label for="check2<?=$i++?>" class="check-label"></label>
+              </div>
+  
+              <div class="clearfix l-unit__stat-col--left">
+                  <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?='MAIL ' . __('domain')?></div>
+              </div>
+              <div class="clearfix l-unit__stat-col--left wide-3">
+                  <div class="l-unit__stat-col l-unit__stat-col--left wide-4"><b><?=$key?></b></div>
+              </div>
+  
+              <!-- START QUICK ACTION TOOLBAR AREA -->
+              <div class="clearfix l-unit__stat-col--left compact-4 text-right">
+                <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+                  <div class="actions-panel clearfix">
+                    <div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
+                      <a href="/schedule/restore/?backup=<?=$backup?>&type=mail&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="Restore">
+                        <i class="fas fa-undo status-icon green status-icon dim"></i>
+                      </a>
+                    </div>
                   </div>
-                </td>
-              </tr>
-            </table>
+                </div>
+              </div>
+              <!-- END QUICK ACTION TOOLBAR AREA -->
           </div>
-          <!-- /.l-unit__stats -->
         </div>
-        <!-- /.l-unit__col -->
-      </div>
-      <!-- /.l-unit -->
-      <!--div class="l-separator"></div-->
-      <!-- /.l-separator -->
+
       <? }} ?>
-
-
-
 
       <?
         $dns = explode(',',$data[$backup]['DNS']);
@@ -151,45 +128,36 @@
       ?>
 
       <div class="l-unit">
-        <div class="l-unit-toolbar clearfix">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check3<?=$i?>" type="checkbox" name="dns[]" value="<?=$key?>">
-            <label for="check3<?=$i++?>" class="check-label"></label>
-          </div>
-          <!-- l-unit-toolbar__col -->
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--right">
-            <div class="actions-panel__col actions-panel__update shortcut-r" key-action="href"><a href="/schedule/restore/?backup=<?=$backup?>&type=dns&object=<?=$key?>"><?=__('restore')?> <i></i></a><span class="shortcut">&nbsp;R</span></div>
-            <!-- /.actiona-panel -->
-          </div>
-          <!-- l-unit-toolbar__col -->
-        </div>
-        <!-- /.l-unit-toolbar -->
-
-        <div class="l-unit__col l-unit__col--left clearfix"></div>
-        <!-- /.l-unit__col -->
-        <div class="l-unit__col l-unit__col--right">
-          <div class="l-unit__stats">
-            <table>
-               <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?='DNS ' . __('domain')?></div>
-                    <div class="l-unit__stat-col l-unit__stat-col--left wide-3"><b><?=$key?></b></div>
+          <div class="l-unit__col l-unit__col--right">
+              <div class="clearfix l-unit__stat-col--left super-compact">
+                <input id="check3<?=$i?>" class="ch-toggle" type="checkbox" name="dns[]" value="<?=$key?>">
+                <label for="check3<?=$i++?>" class="check-label"></label>
+              </div>
+  
+              <div class="clearfix l-unit__stat-col--left">
+                  <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?='DNS ' . __('domain')?></div>
+              </div>
+              <div class="clearfix l-unit__stat-col--left wide-3">
+                  <div class="l-unit__stat-col l-unit__stat-col--left wide-4"><b><?=$key?></b></div>
+              </div>
+  
+              <!-- START QUICK ACTION TOOLBAR AREA -->
+              <div class="clearfix l-unit__stat-col--left compact-4 text-right">
+                <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+                  <div class="actions-panel clearfix">
+                    <div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
+                      <a href="/schedule/restore/?backup=<?=$backup?>&type=dns&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="Restore">
+                        <i class="fas fa-undo status-icon green status-icon dim"></i>
+                      </a>
+                    </div>
                   </div>
-                </td>
-              </tr>
-            </table>
+                </div>
+              </div>
+              <!-- END QUICK ACTION TOOLBAR AREA -->
           </div>
-          <!-- /.l-unit__stats -->
-        </div>
-        <!-- /.l-unit__col -->
       </div>
-      <!-- /.l-unit -->
-      <!--div class="l-separator"></div-->
-      <!-- /.l-separator -->
+
       <? }} ?>
-
-
 
       <?
         $db = explode(',',$data[$backup]['DB']);
@@ -198,46 +166,36 @@
       ?>
 
       <div class="l-unit">
-        <div class="l-unit-toolbar clearfix">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check4<?=$i?>" type="checkbox" name="db[]" value="<?=$key?>">
-            <label for="check4<?=$i++?>" class="check-label"></label>
-          </div>
-          <!-- l-unit-toolbar__col -->
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--right">
-            <div class="actions-panel__col actions-panel__update shortcut-r" key-action="href"><a href="/schedule/restore/?backup=<?=$backup?>&type=db&object=<?=$key?>"><?=__('restore')?> <i></i></a><span class="shortcut">&nbsp;R</span></div>
-            <!-- /.actiona-panel -->
-          </div>
-          <!-- l-unit-toolbar__col -->
-        </div>
-        <!-- /.l-unit-toolbar -->
-
-        <div class="l-unit__col l-unit__col--left clearfix"></div>
-        <!-- /.l-unit__col -->
-        <div class="l-unit__col l-unit__col--right">
-          <div class="l-unit__stats">
-            <table>
-               <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?=__('database')?></div>
-                    <div class="l-unit__stat-col l-unit__stat-col--left wide-3"><b><?=$key?></b></div>
+          <div class="l-unit__col l-unit__col--right">
+              <div class="clearfix l-unit__stat-col--left super-compact">
+                <input id="check4<?=$i?>" class="ch-toggle" type="checkbox" name="db[]" value="<?=$key?>">
+                <label for="check4<?=$i++?>" class="check-label"></label>
+              </div>
+  
+              <div class="clearfix l-unit__stat-col--left">
+                  <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?=__('database')?></div>
+              </div>
+              <div class="clearfix l-unit__stat-col--left wide-3">
+                  <div class="l-unit__stat-col l-unit__stat-col--left wide-4"><b><?=$key?></b></div>
+              </div>
+  
+              <!-- START QUICK ACTION TOOLBAR AREA -->
+              <div class="clearfix l-unit__stat-col--left compact-4 text-right">
+                <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+                  <div class="actions-panel clearfix">
+                    <div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
+                      <a href="/schedule/restore/?backup=<?=$backup?>&type=db&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="Restore">
+                        <i class="fas fa-undo status-icon green status-icon dim"></i>
+                      </a>
+                    </div>
                   </div>
-                </td>
-              </tr>
-            </table>
+                </div>
+              </div>
+              <!-- END QUICK ACTION TOOLBAR AREA -->
           </div>
-          <!-- /.l-unit__stats -->
-        </div>
-        <!-- /.l-unit__col -->
       </div>
-      <!-- /.l-unit -->
-      <!--div class="l-separator"></div-->
-      <!-- /.l-separator -->
+
       <? }} ?>
-
-
-
 
       <?
         $backup = $_GET['backup'];
@@ -246,46 +204,35 @@
       ?>
 
       <div class="l-unit">
-        <div class="l-unit-toolbar clearfix">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check5<?=$i?>" type="checkbox" name="check" value="<?=$key?>">
-            <label for="check5<?=$i++?>" class="check-label"></label>
-          </div>
-          <!-- l-unit-toolbar__col -->
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--right">
-            <div class="actions-panel__col actions-panel__update shortcut-r" key-action="href"><a href="/schedule/restore/?backup=<?=$backup?>&type=cron&object=records"><?=__('restore')?> <i></i></a><span class="shortcut">&nbsp;R</span></div>
-            <!-- /.actiona-panel -->
-          </div>
-          <!-- l-unit-toolbar__col -->
-        </div>
-        <!-- /.l-unit-toolbar -->
-
-        <div class="l-unit__col l-unit__col--left clearfix"></div>
-        <!-- /.l-unit__col -->
-        <div class="l-unit__col l-unit__col--right">
-          <div class="l-unit__stats">
-            <table>
-               <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?=__('cron')?></div>
-                    <div class="l-unit__stat-col l-unit__stat-col--left wide-3"><b><?='cron '.__('records')?></b></div>
+          <div class="l-unit__col l-unit__col--right">
+              <div class="clearfix l-unit__stat-col--left super-compact">
+                <input id="check5<?=$i?>" class="ch-toggle" type="checkbox" name="check" value="<?=$key?>">
+                <label for="check5<?=$i++?>" class="check-label"></label>
+              </div>
+  
+              <div class="clearfix l-unit__stat-col--left">
+                  <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?=__('cron')?></div>
+              </div>
+              <div class="clearfix l-unit__stat-col--left wide-3">
+                  <div class="l-unit__stat-col l-unit__stat-col--left wide-4"><b><?='cron '.__('records')?></b></div>
+              </div>
+  
+              <!-- START QUICK ACTION TOOLBAR AREA -->
+              <div class="clearfix l-unit__stat-col--left compact-4 text-right">
+                <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+                  <div class="actions-panel clearfix">
+                    <div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
+                      <a href="/schedule/restore/?backup=<?=$backup?>&type=cron&object=records&token=<?=$_SESSION['token']?>" title="Restore">
+                        <i class="fas fa-undo status-icon green status-icon dim"></i>
+                      </a>
+                    </div>
                   </div>
-                </td>
-              </tr>
-            </table>
+                </div>
+              </div>
+              <!-- END QUICK ACTION TOOLBAR AREA -->
           </div>
-          <!-- /.l-unit__stats -->
-        </div>
-        <!-- /.l-unit__col -->
       </div>
-      <!-- /.l-unit -->
-      <!--div class="l-separator"></div-->
-      <!-- /.l-separator -->
       <? }} ?>
-
-
-
 
       <?
         $udir = explode(',',$data[$backup]['UDIR']);
@@ -294,91 +241,73 @@
       ?>
 
       <div class="l-unit">
-        <div class="l-unit-toolbar clearfix">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check6<?=$i?>" type="checkbox" name="udir[]" value="<?=$key?>">
-            <label for="check6<?=$i++?>" class="check-label"></label>
-          </div>
-          <!-- l-unit-toolbar__col -->
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--right">
-            <div class="actions-panel__col actions-panel__update shortcut-r" key-action="href"><a href="/schedule/restore/?backup=<?=$backup?>&type=udir&object=<?=$key?>"><?=__('restore')?> <i></i></a><span class="shortcut">&nbsp;R</span></div>
-            <!-- /.actiona-panel -->
-          </div>
-          <!-- l-unit-toolbar__col -->
-        </div>
-        <!-- /.l-unit-toolbar -->
-
-        <div class="l-unit__col l-unit__col--left clearfix"></div>
-        <!-- /.l-unit__col -->
-        <div class="l-unit__col l-unit__col--right">
-          <div class="l-unit__stats">
-            <table>
-               <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?=__('user dir')?></div>
-                    <div class="l-unit__stat-col l-unit__stat-col--left wide-3"><b><?=$key?></b></div>
+          <div class="l-unit__col l-unit__col--right">
+              <div class="clearfix l-unit__stat-col--left super-compact">
+                <input id="check6<?=$i?>" class="ch-toggle" type="checkbox" name="udir[]" value="<?=$key?>">
+                <label for="check6<?=$i++?>" class="check-label"></label>
+              </div>
+  
+              <div class="clearfix l-unit__stat-col--left">
+                  <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?=__('user dir')?></div>
+              </div>
+              <div class="clearfix l-unit__stat-col--left wide-3">
+                  <div class="l-unit__stat-col l-unit__stat-col--left wide-4"><b><?=$key?></b></div>
+              </div>
+  
+              <!-- START QUICK ACTION TOOLBAR AREA -->
+              <div class="clearfix l-unit__stat-col--left compact-4 text-right">
+                <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+                  <div class="actions-panel clearfix">
+                    <div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
+                      <a href="/schedule/restore/?backup=<?=$backup?>&type=udir&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="Restore">
+                        <i class="fas fa-undo status-icon green status-icon dim"></i>
+                      </a>
+                    </div>
                   </div>
-                </td>
-              </tr>
-            </table>
+                </div>
+              </div>
+              <!-- END QUICK ACTION TOOLBAR AREA -->
           </div>
-          <!-- /.l-unit__stats -->
-        </div>
-        <!-- /.l-unit__col -->
       </div>
-      <!-- /.l-unit -->
-      <!-- div class="l-separator"></div-->
-      <!-- /.l-separator -->
       <? }} ?>
 
       <div class="l-unit">
-        <div class="l-unit-toolbar clearfix">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check7<?=$i?>" type="checkbox" name="cron" value="<?=$i?>">
-            <label for="check7<?=$i++?>" class="check-label"></label>
-          </div>
-          <!-- l-unit-toolbar__col -->
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--right">
-            <div class="actions-panel__col actions-panel__update shortcut-r" key-action="href"><a href="/schedule/restore/?backup=<?=$backup?>&type=cron"><?=__('restore')?> <i></i></a><span class="shortcut">&nbsp;R</span></div>
-            <!-- /.actiona-panel -->
-          </div>
-          <!-- l-unit-toolbar__col -->
-        </div>
-        <!-- /.l-unit-toolbar -->
 
-        <div class="l-unit__col l-unit__col--left clearfix"></div>
-        <!-- /.l-unit__col -->
-        <div class="l-unit__col l-unit__col--right">
-          <div class="l-unit__stats">
-            <table>
-               <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?=__('cron')?></div>
-                    <div class="l-unit__stat-col l-unit__stat-col--left wide-3"><b></b></div>
+          <div class="l-unit__col l-unit__col--right">
+              <div class="clearfix l-unit__stat-col--left super-compact">
+                <input id="check7<?=$i?>" class="ch-toggle" type="checkbox" name="cron" value="<?=$i?>">
+                <label for="check7<?=$i++?>" class="check-label"></label>
+              </div>
+  
+              <div class="clearfix l-unit__stat-col--left">
+                  <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?=__('cron')?></div>
+              </div>
+              <div class="clearfix l-unit__stat-col--left wide-3">
+                  <div class="l-unit__stat-col l-unit__stat-col--left wide-4"><b>&nbsp;</b></div>
+              </div>
+  
+              <!-- START QUICK ACTION TOOLBAR AREA -->
+              <div class="clearfix l-unit__stat-col--left compact-4 text-right">
+                <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+                  <div class="actions-panel clearfix">
+                    <div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
+                      <a href="/schedule/restore/?backup=<?=$backup?>&type=cron&token=<?=$_SESSION['token']?>" title="Restore">
+                        <i class="fas fa-undo status-icon green status-icon dim"></i>
+                      </a>
+                    </div>
                   </div>
-                </td>
-              </tr>
-            </table>
+                </div>
+              </div>
+              <!-- END QUICK ACTION TOOLBAR AREA -->
           </div>
-          <!-- /.l-unit__stats -->
-        </div>
-        <!-- /.l-unit__col -->
       </div>
-      <!-- /.l-unit -->
-      <!-- div class="l-separator"></div-->
-      <!-- /.l-separator -->
     </div>
-
-
 
     <div id="vstobjects">
       <div class="l-separator"></div>
       <div class="l-center">
         <div class="l-unit-ft">
           <table class='data'></table>
-          <div class="l-unit__col l-unit__col--left clearfix"></div>
           <div class="data-count l-unit__col l-unit__col--right total clearfix">
             <?php
               if ( $i == 1) {
@@ -389,7 +318,6 @@
             ?>
           </div>
           <div class="data-count l-unit__col l-unit__col--right back clearfix">
-            <a class="button cancel" href="/list/backup/"><?=__('Back')?></a>
           </div>
         </div>
       </div>

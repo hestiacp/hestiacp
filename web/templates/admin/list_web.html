@@ -1,27 +1,28 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
-        <a href="/add/web/" class="l-sort__create-btn" title="<?=__('Add Web Domain')?>"></a>
-        <ul class="context-menu sort-order" style="display:none;">
-          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?></span><span class="up">&nbsp;</span></li>
-          <li entity="sort-name"><span class="name"><?=__('Domain')?></span><span class="up">&nbsp;</span></li>
-          <li entity="sort-ip" sort_as_int="1"><span class="name"><?=__('IP address')?></span><span class="up">&nbsp;</span></li>
-          <li entity="sort-disk" sort_as_int="1"><span class="name"><?=__('Disk')?></span><span class="up">&nbsp;</span></li>
-          <li entity="sort-bandwidth" sort_as_int="1"><span class="name"><?=__('Bandwidth')?></span><span class="up">&nbsp;</span></li>
-          <li entity="sort-star" sort_as_int="1"><span class="name"><?=__('Starred')?></span><span class="up">&nbsp;</span></li>
+        <div class="l-unit-toolbar__buttonstrip">
+          <a href="/add/web/" id="btn-create" class="ui-button cancel" title="<?=__('Add Web Domain')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=__('Add Web Domain')?></a>
+        </div>
+        <ul class="context-menu sort-order animated fadeIn" style="display:none;">
+          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-name"><span class="name"><?=__('Domain')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-ip" sort_as_int="1"><span class="name"><?=__('IP address')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-disk" sort_as_int="1"><span class="name"><?=__('Disk')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-bandwidth" sort_as_int="1"><span class="name"><?=__('Bandwidth')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-star" sort_as_int="1"><span class="name"><?=__('Starred')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
         </ul>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
+              <td class="sort-by">
+                <?=__('sort by');?>: <span><b><?=__('Date')?> <i class="fas fa-sort-amount-down"></i></b></span>
+              </td>
               <td class="l-sort-toolbar__search-box">
                 <form action="/search/" method="get">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                   <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
-                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
+                  <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value=""><i class="fas fa-search"></i></button>
                 </form>
-              </td>
-              <td class="toggle-all">
-                <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
-                <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
               </td>
               <td>
                 <form action="/bulk/web/" method="post" id="objects">
@@ -34,28 +35,31 @@
                     <option value="delete"><?=__('delete')?></option>
                   </select>
                 </div>
-                <input type="submit" class="l-sort-toolbar__filter-apply" value=""/>
-              </td>
-              <td class="sort-by">
-                <?=__('sort by');?>: <span><b><?=__('Date')?></b></span> <i class="l-icon-down-arrow media-top"></i>
+                <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
               </td>
             </tr>
           </table>
-          <!--  -->
         </div>
-        <!-- /.l-sort -->
       </div>
     </div>
 
     <div class="l-separator"></div>
-    <!-- /.l-separator -->
-
-
-
-
-
 
     <div class="l-center units narrow animated fadeIn">
+        <div class="header table-header">      
+            <div class="l-unit__col l-unit__col--right step-top">
+                <div class="clearfix l-unit__stat-col--left super-compact">
+                  <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
+                </div>
+                <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print __('Domain');?></b></div>
+                <div class="clearfix l-unit__stat-col--left compact-5 text-right"><b>&nbsp;</b></div>
+                <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('IP address');?></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Disk');?></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print __('Bandwidth');?></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('SSL');?></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print __('Statistics');?></b></div>
+             </div>
+         </div>
                 <?php
                     foreach ($data as $key => $value) {
                         ++$i;
@@ -121,239 +125,99 @@
 id="web-unit-<?=$i?>"  sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>"
 sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
 sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DISK']?>" sort-star="<? if($_SESSION['WEB'][$key] == 1) echo '1'; else echo '0';?>">
-        <div class="l-unit-toolbar clearfix">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?=$key?>">
-            <label for="check<?=$i?>" class="check-label"></label>
+      <div class="l-unit__col l-unit__col--right">
+          <div class="clearfix l-unit__stat-col--left super-compact">
+              <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?=$key?>">
           </div>
-          <!-- l-unit-toolbar__col -->
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-            <div class="actions-panel clearfix">
-              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/web/?domain=<?=$key?>"><?=__('edit')?> <i></i></a><span class="shortcut enter">&nbsp;&#8629;</span></div>
-              <div class="actions-panel__col actions-panel__logs shortcut-l" key-action="href"><a href="/list/web-log/?domain=<?php echo $key ?>&type=access#" target="_blank"><?=__('view logs')?> <i></i></a><span class="shortcut">&nbsp;L</span></div>
-              <? if (!empty($data[$key]['STATS'])) { ?>
-                  <div class="actions-panel__col actions-panel__logs shortcut-w" key-action="href"><a href="http://<?=$key?>/vstats/"  target="_blank"><?=__('open webstats')?> <i></i></a><span class="shortcut">&nbsp;W</span></div>
-              <? } ?>
-              <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
-                <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
-                  <?=__($spnd_action)?> <i class="do_<?=$spnd_action?>"></i>
-                  <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
-                  <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
-                    <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
-                  </div>
-                </a>
-                <span class="shortcut">&nbsp;S</span>
+          <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" alt="<?=__('Edit')?>" title="<?=__('Editing Domain')?>"><?=$key?></a></b></div>
+          <!-- START QUICK ACTION TOOLBAR AREA -->
+          <div class="clearfix l-unit__stat-col--left compact-5 text-right">
+            <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+              <div class="actions-panel clearfix">
+                <div class="actions-panel__col actions-panel__view" key-action="href"><a href="http://<?=$key?>/" target="_blank"><i class="fas fa-external-link-square-alt status-icon lightblue status-icon dim"></i></a></div>
+                <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('Editing Domain')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+                <div class="actions-panel__col actions-panel__logs shortcut-l" key-action="href"><a href="/list/web-log/?domain=<?php echo $key ?>&type=access#" title="<?=__('AccessLog')?>"><i class="fas fa-binoculars status-icon purple status-icon dim"></i></a></div>
+                <? if (!empty($data[$key]['STATS'])) { ?>
+                  <div class="actions-panel__col actions-panel__logs shortcut-w" key-action="href"><a href="http://<?=$key?>/vstats/"  target="_blank" title="<?=__('Statistics')?>"><i class="fas fa-chart-bar status-icon maroon status-icon dim"></i></a></div>
+                <? } ?>
+                <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
+                  <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=__($spnd_action)?>">
+                    <i class="fas fa-pause status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
+                    <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
+                    <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
+                      <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
+                    </div>
+                  </a>
+                </div>
+                <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+                  <a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=__('delete')?>">
+                    <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
+                    <input type="hidden" name="delete_url" value="/delete/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
+                    <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
+                      <p class="confirmation"><?=__('DELETE_DOMAIN_CONFIRMATION',$key)?></p>
+                    </div>
+                  </a>
+                </div>
               </div>
-              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-                <a id="delete_link_<?=$i?>" class="data-controls do_delete">
-                  <?=__('delete')?> <i class="do_delete"></i>
-                  <input type="hidden" name="delete_url" value="/delete/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
-                  <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
-                    <p class="confirmation"><?=__('DELETE_DOMAIN_CONFIRMATION',$key)?></p>
-                  </div>
-                </a>
-                <span class="shortcut delete">&nbsp;Del</span>
-              </div>
-
             </div>
-            <!-- /.actiona-panel -->
           </div>
-          <!-- l-unit-toolbar__col -->
-        </div>
-        <!-- /.l-unit-toolbar -->
-
-        <div class="l-unit__col l-unit__col--left clearfix">
-          <div class="l-unit__date">
-            <?=translate_date($data[$key]['DATE'])?>
-          </div>
-          <div class="l-unit__suspended"><?=__('suspended')?></div>
-          <div class="text-center">
-            <i class="l-icon-star" title="<?=__('save to favorites')?>"></i>
-          </div>
-        </div>
-        <!-- /.l-unit__col -->
-        <div class="l-unit__col l-unit__col--right">
-          <div class="l-unit__name" u_name="<?=$key?>">
-            <?=$key?> <span><?=str_replace(',', ', ', $data[$key]['ALIAS'])?></span>
-          </div>
-          <!-- /.l-unit__name -->
-          <div class="l-unit__ip">
-            <?=empty($ips[$data[$key]['IP']]['NAT']) ? $data[$key]['IP'] : "{$ips[$data[$key]['IP']]['NAT']}"; ?>
-          </div>
-          <!-- /.l-unit__ip -->
-          <div class="l-unit__stats">
-            <table>
-              <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix graph">
-                    <div class="l-unit__stat-col l-unit__stat-col--left">
-                      <?=__('Bandwidth')?>
-                    </div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right text-right volume">
-                      <b><?=humanize_usage_size($data[$key]['U_BANDWIDTH'])?></b> <?=humanize_usage_measure($data[$key]['U_BANDWIDTH'])?>
-                    </div>
-                  </div>
-                  <div class="l-percent">
-                    <div class="l-percent__fill" style="width: <?=get_percentage($data[$key]['U_BANDWIDTH'],$panel[$user]['BANDWIDTH'])?>%"></div>
-                  </div>
-                  <!-- /.percent -->
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Web Template')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['TPL']?></b>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?>
-                  <? if($proxy_support == 'no'){ ?>
-                    <div class="l-unit__stat-cols clearfix disabled last"><?=__('Proxy Support')?></div>
-                  <? } else {?>
-                    <div class="l-unit__stat-cols clearfix last">
-                      <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Proxy Support')?>:</div>
-                      <div class="l-unit__stat-col l-unit__stat-col--right">
-                        <b><?=__($proxy_support)?></b>
-                      </div>
-                    </div>
-                  <? } ?>
-                  <? } ?>
-                  <?php if (!empty($_SESSION['WEB_BACKEND'])) { echo ""; ?>
-                  <? if($backend_support == 'no'){ ?>
-                    <div class="l-unit__stat-cols clearfix disabled last"><?=__('Backend Support')?></div>
-                  <? } else {?>
-                    <div class="l-unit__stat-cols clearfix last">
-                      <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Backend Support')?>:</div>
-                      <div class="l-unit__stat-col l-unit__stat-col--right">
-                        <b><?=__($backend_support)?></b>
-                      </div>
-                    </div>
-                  <? } ?>
-                  <? } ?>
-                </td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>
-                  <? if($data[$key]['SSL'] == 'no'){ ?>
-                    <div class="l-unit__stat-cols clearfix disabled"><?=__('SSL Support')?></div>
-                  <? } else {?>
-                    <div class="l-unit__stat-cols clearfix">
-                      <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('SSL Support')?>:</div>
-                      <div class="l-unit__stat-col l-unit__stat-col--right">
-                        <b>
-                            <? if($data[$key]['LETSENCRYPT'] == 'yes'){
-                                echo __('Lets Encrypt');
-                            } else {
-                                echo __($data[$key]['SSL']);
-                            }?>
-                        </b>
-                      </div>
-                    </div>
-                  <? } ?>
-                </td>
-                <td>
-                  <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?>
-                  <div class="l-unit__stat-cols clearfix last">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Proxy Template')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['PROXY']?></b>
-                    </div>
-                  </div>
-                  <? } ?>
-                  <?php if (!empty($_SESSION['WEB_BACKEND'])) { echo ""; ?>
-                  <div class="l-unit__stat-cols clearfix last">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Backend Template')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['BACKEND']?></b>
-                    </div>
-                  </div>
-                  <? } ?>
-                </td>
-              </tr>
-                <!--tr>
-                    <td></td>
-                    <td>
-                        <? if(empty($data[$key]['LETSENCRYPT']) || $data[$key]['LETSENCRYPT'] == 'no') { ?>
-                        <div class="l-unit__stat-cols clearfix disabled"><?=__('Lets Encrypt Support')?></div>
+          <!-- END QUICK ACTION TOOLBAR AREA -->
+          <div class="clearfix l-unit__stat-col--left text-center"><?=empty($ips[$data[$key]['IP']]['NAT']) ? $data[$key]['IP'] : "{$ips[$data[$key]['IP']]['NAT']}"; ?></div>
+          <div class="clearfix l-unit__stat-col--left text-center"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
+          <div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_BANDWIDTH'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_BANDWIDTH'])?></span></div>
+          <div class="clearfix l-unit__stat-col--left text-center">
+                  <b>
+                    <? if($data[$key]['SUSPENDED'] == 'no'){ ?>
+                        <? if($data[$key]['SSL'] == 'no'){ ?>
+                          <i class="fas fa-times-circle status-icon red"></i>
                         <? } else {?>
-                        <div class="l-unit__stat-cols clearfix">
-                            <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Lets Encrypt Support')?>:</div>
-                            <div class="l-unit__stat-col l-unit__stat-col--right">
-                                <b><?=__($data[$key]['LETSENCRYPT'])?></b>
-                            </div>
-                        </div>
+                          <i class="fas fa-check-circle status-icon green"></i>
                         <? } ?>
-                    </td>
-                </tr-->
-              <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix graph">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Disk')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right text-right volume">
-                      <b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK'])?>
-                    </div>
-                  </div>
-                  <div class="l-percent">
-                    <div class="l-percent__fill" style="width: <?=get_percentage($data[$key]['U_DISK'],$panel[$user]['DISK_QUOTA'])?>%"></div>
-                  </div>
-                  <!-- /.percent -->
-                </td>
-                <td>
-                  <? if($web_stats == 'no'){ ?>
-                    <div class="l-unit__stat-cols clearfix disabled"><?=__('Web Statistics')?></div>
-                  <? } else {?>
-                    <div class="l-unit__stat-cols clearfix">
-                      <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Web Statistics')?>:</div>
-                      <div class="l-unit__stat-col l-unit__stat-col--right">
-                        <b><?=__($web_stats)?></b>
-                      </div>
-                    </div>
-                  <? } ?>
-                </td>
-                <td>
-                  <? if($ftp_user == 'no'){ ?>
-                    <div class="l-unit__stat-cols clearfix last disabled"><?=__('Additional FTP Account')?></div>
-                  <? } else {?>
-                    <div class="l-unit__stat-cols clearfix last">
-                      <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Additional FTP Account')?>:</div>
-                      <div class="l-unit__stat-col l-unit__stat-col--right">
-                        <b><?=$ftp_user?></b>
-                      </div>
-                    </div>
-                  <? } ?>
-                </td>
-              </tr>
-            </table>
+                    <? } else {?>
+                        <? if($data[$key]['SSL'] == 'no'){ ?>
+                          <i class="fas fa-times-circle"></i>
+                        <? } else {?>
+                          <i class="fas fa-check-circle"></i>
+                        <? } ?>
+                    <? } ?>
+                  </b>
           </div>
-          <!-- /.l-unit__stats -->
-        </div>
-        <!-- /.l-unit__col -->
-      </div>
-      <!-- /.l-unit -->
-      <!-- div class="l-separator"></div -->
-      <!-- /.l-separator -->
-      <?}?>
-
-    </div>
-
-
-    <div id="vstobjects">
-      <div class="l-separator"></div>
-      <div class="l-center">
-        <div class="l-unit-ft">
-          <table class='data'></table>
-          <div class="l-unit__col l-unit__col--left clearfix"></div>
-          <div class="data-count l-unit__col l-unit__col--right clearfix">
-            <?php
-              if ( $i == 1) {
-                echo __('1 web domain');
-              } else {
-                echo __('%s web domains',$i);
-              }
-            ?>
+          <div class="clearfix l-unit__stat-col--left text-center compact">
+                  <b>
+                    <? if($data[$key]['SUSPENDED'] == 'no'){ ?>
+                        <? if($web_stats == 'no'){ ?>
+                          <i class="fas fa-minus-circle"></i>
+                        <? } else {?>
+                          <i class="fas fa-check-circle status-icon green"></i>
+                        <? } ?>
+                    <? } else {?>
+                      <? if($web_stats == 'no'){ ?>
+                        <i class="fas fa-minus-circle"></i>
+                      <? } else {?>
+                        <i class="fas fa-check-circle"></i>
+                      <? } ?>
+                    <? } ?>
+                  </b>
           </div>
-        </div>
       </div>
     </div>
+  <?}?>
+</div>
+
+<div id="vstobjects">
+    <div class="l-separator"></div>
+<div class="l-center">
+    <div class="l-unit-ft">
+      <table class='data'></table>
+      <div class="data-count l-unit__col l-unit__col--right clearfix">
+        <?php
+          if ( $i == 1) {
+            echo __('1 web domain');
+          } else {
+            echo __('%s web domains',$i);
+          }
+        ?>
+      </div>
+  </div>
+</div>
+</div>

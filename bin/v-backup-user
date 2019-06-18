@@ -145,7 +145,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
         else
             # old style configs
             tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.tpl"
-            conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
+            conf="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.conf"
             get_web_config_lines $tpl_file $conf
             sed -n "$top_line,$bottom_line p" $conf > conf/$WEB_SYSTEM.conf
         fi
@@ -157,7 +157,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
                 cp $conf conf/$WEB_SYSTEM.ssl.conf
             else
                 tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.stpl"
-                conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
+                conf="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.ssl.conf"
                 get_web_config_lines $tpl_file $conf
                 sed -n "$top_line,$bottom_line p" $conf > \
                     conf/s$WEB_SYSTEM.conf
@@ -171,7 +171,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
                 cp $conf conf/$PROXY_SYSTEM.conf
             else
                 tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.tpl"
-                conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
+                conf="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.conf"
                 get_web_config_lines $tpl_file $conf
                 sed -n "$top_line,$bottom_line p" $conf > \
                     conf/$PROXY_SYSTEM.conf
@@ -185,7 +185,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
                 cp $conf conf/$PROXY_SYSTEM.ssl.conf
             else
                 tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.stpl"
-                conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
+                conf="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.ssl.conf"
                 get_web_config_lines $tpl_file $conf
                 sed -n "$top_line,$bottom_line p" $conf >\
                     conf/s$PROXY_SYSTEM.conf
@@ -199,7 +199,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
 
         # Backup ssl certificates
         if [ "$SSL" = 'yes' ] ; then
-            cp $HOMEDIR/$user/conf/web/ssl.$domain.* conf/
+            cp $HOMEDIR/$user/conf/web/$domain/ssl/$domain.* conf/
             cp $USER_DATA/ssl/$domain.* hestia/
         fi
 
@@ -210,7 +210,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
         exlusion=$(echo -e "$WEB" |tr ',' '\n' |grep "^$domain:")
         set -f
         fargs=()
-        fargs+=(--exclude='logs/*')
+        fargs+=(--exclude='./logs/*')
         if [ ! -z "$exlusion" ]; then
             xdirs="$(echo -e "$exlusion" |tr ':' '\n' |grep -v $domain)"
             for xpath in $xdirs; do
@@ -466,11 +466,15 @@ if [ "$USER" != '*' ]; then
     fi
     fargs=()
     for xpath in $(echo "$USER" |tr ',' '\n'); do
-        fargs+=(-not)
-        fargs+=(-path)
-        fargs+=("./$xpath*")
-        echo "$(date "+%F %T") excluding directory $xpath" |\
+        if [ -d "$xpath" ]; then
+            fargs+=(--exclude=$xpath/*)
+            echo "$(date "+%F %T") excluding directory $xpath" |\
             tee -a $BACKUP/$user.log
+        else
+            echo "$(date "+%F %T") excluding file $xpath" |\
+            tee -a $BACKUP/$user.log
+            fargs+=(--exclude=$xpath)
+        fi
     done
 
     IFS=$'\n'
@@ -487,7 +491,7 @@ if [ "$USER" != '*' ]; then
             check_backup_conditions
 
             # Backup files and dirs
-            tar -cpf- $udir |gzip -$BACKUP_GZIP - > $tmpdir/user_dir/$udir.tar.gz
+            tar --anchored -cpf- ${fargs[@]} $udir |gzip -$BACKUP_GZIP - > $tmpdir/user_dir/$udir.tar.gz
         fi
     done
     set +f
@@ -937,6 +941,7 @@ if [ -e "$BACKUP/$user.log" ]; then
     email=$(get_user_value '$CONTACT')
     cat $BACKUP/$user.log |$SENDMAIL -s "$subj" $email $notify
     rm $BACKUP/$user.log
+    $BIN/v-add-user-notification $user "$subj" "$email"
 fi
 
 # Logging

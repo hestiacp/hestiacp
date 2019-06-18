@@ -1,19 +1,22 @@
-    <div class="l-center">
-      <div class="l-sort clearfix">
-        <div class="l-sort-toolbar clearfix float-left">
-                <span class="title"><b><?=__('Adding Domain')?></b></span>
-                  <?php
-                    if (!empty($_SESSION['error_msg'])) {
-                      echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
-                    } else {
-                      if (!empty($_SESSION['ok_msg'])) {
-                        echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                      }
-                    }
-                  ?>
+<div class="l-center edit">
+        <div class="l-sort clearfix">
+          <div class="l-unit-toolbar__buttonstrip">
+            <a class="ui-button cancel" id="btn-back" href="/list/web/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+          </div>
+          <div class="l-unit-toolbar__buttonstrip float-right">
+              <?php
+              if (!empty($_SESSION['error_msg'])) {
+                echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
+              } else {
+                if (!empty($_SESSION['ok_msg'])) {
+                  echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                }
+              }
+            ?>
+            <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
+          </div>
         </div>
       </div>
-    </div>
 
     <div class="l-separator"></div>
     <!-- /.l-separator -->
@@ -44,6 +47,11 @@
                 <td class="data-dotted">
                     <table class="data-col2">
                         <tr>
+                            <td class="step-top">
+                                <span class="login-welcome"><?=__('Add Web Domain')?></span>
+                            </td>
+                        </tr>                        
+                        <tr>
                             <td class="vst-text step-top">
                                 <?php print __('Domain');?>
                             </td>
@@ -71,16 +79,20 @@
                                 </select>
                             </td>
                         </tr>
-                        <?php if($panel[$user]['DNS_DOMAINS'] != "0") { ?><tr>
-                            <td class="vst-text input-label">
-                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_dns" <?php if (empty($v_dns)&&$panel[$user]['DNS_DOMAINS'] != "0") echo "checked=yes"; ?>> <?php print __('DNS Support');?></label>
-                            </td>
-                        </tr><?php } ?>
-                        <?php if($panel[$user]['MAIL_DOMAINS'] != "0") { ?><tr>
-                            <td class="vst-text input-label">
-                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_mail" <?php if (empty($v_mail)&&$panel[$user]['MAIL_DOMAINS'] != "0") echo "checked=yes"; ?>> <?php print __('Mail Support');?></label>
-                            </td>
-                        </tr><?php } ?>
+                        <?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?>	
+                            <?php if($panel[$user]['DNS_DOMAINS'] != "0") { ?><tr>
+                                <td class="vst-text input-label">
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_dns" <?php if (empty($v_dns)&&$panel[$user]['DNS_DOMAINS'] != "0") echo "checked=yes"; ?>> <?php print __('DNS Support');?></label>
+                                </td>
+                            </tr><?php } ?>
+                        <?php } ?>
+                        <?php if ((isset($_SESSION['IMAP_SYSTEM'])) && (!empty($_SESSION['IMAP_SYSTEM']))) {?>		
+                            <?php if($panel[$user]['MAIL_DOMAINS'] != "0") { ?><tr>
+                                <td class="vst-text input-label">
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_mail" <?php if (empty($v_mail)&&$panel[$user]['MAIL_DOMAINS'] != "0") echo "checked=yes"; ?>> <?php print __('Mail Support');?></label>
+                                </td>
+                            </tr><?php } ?>
+                        <?php } ?>
                         <tr>
                             <td class="step-top vst-text" style="/*padding: 32px 0 20px 0;*/">
                                 <a href="javascript:elementHideShow('advtable');" class="vst-advanced"><?php print __('Advanced options');?>&nbsp;<i class="fas fa-arrow-circle-right"></i></a>
@@ -95,7 +107,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <textarea size="20" class="vst-textinput" name="v_aliases" id="v_aliases" ><?=htmlentities(trim($v_aliases, "'"))?></textarea>
+                                <textarea size="20" class="vst-textinput short" name="v_aliases" id="v_aliases" ><?=htmlentities(trim($v_aliases, "'"))?></textarea>
                             </td>
                         </tr>
                         <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?>
@@ -114,13 +126,68 @@
                                     </tr>
                                     <tr>
                                         <td class="step-left">
-                                            <textarea size="20" class="vst-textinput" name="v_proxy_ext"><?php if (!empty($v_proxy_ext)) { echo htmlentities(trim($v_proxy_ext, "'"));} else { echo 'jpeg, jpg, png, gif, bmp, ico, svg, tif, tiff, css, js, htm, html, ttf, otf, webp, woff, txt, csv, rtf, doc, docx, xls, xlsx, ppt, pptx, odf, odp, ods, odt, pdf, psd, ai, eot, eps, ps, zip, tar, tgz, gz, rar, bz2, 7z, aac, m4a, mp3, mp4, ogg, wav, wma, 3gp, avi, flv, m4v, mkv, mov, mp4, mpeg, mpg, wmv, exe, iso, dmg, swf'; }  ?></textarea>
+                                            <textarea size="20" class="vst-textinput short" name="v_proxy_ext"><?php if (!empty($v_proxy_ext)) { echo htmlentities(trim($v_proxy_ext, "'"));} else { echo 'jpeg, jpg, png, gif, bmp, ico, svg, tif, tiff, css, js, htm, html, ttf, otf, webp, woff, txt, csv, rtf, doc, docx, xls, xlsx, ppt, pptx, odf, odp, ods, odt, pdf, psd, ai, eot, eps, ps, zip, tar, tgz, gz, rar, bz2, 7z, aac, m4a, mp3, mp4, ogg, wav, wma, 3gp, avi, flv, m4v, mkv, mov, mp4, mpeg, mpg, wmv, exe, iso, dmg, swf'; }  ?></textarea>
                                         </td>
                                     </tr>
                                 </table>
                             </td>
                         </tr>
                         <?php echo ""; }?>
+                        <tr>
+                                <td class="vst-text step-top">
+                                    <?php print __('Web Statistics');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_stats">
+                                        <?php
+                                            foreach ($stats as $key => $value) {
+                                                $svalue = "'".$value."'";
+                                                echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
+                                                if (empty($v_stats)) $v_stats = 'none';
+                                                if (( $value == $v_stats ) || ($svalue == $v_stats )){
+                                                    echo ' selected' ;
+                                                }
+                                                echo ">" . htmlentities(__($value)) . "</option>\n";
+                                            }
+                                        ?>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr  class="stats-auth" style="<? if (trim($v_stats, "'") == 'none') { ?>display:none<? } ?>">
+                                <td class="step-left vst-text input-label">
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_stats_auth" <?php if (!empty($v_stats_user)) echo "checked=yes" ?>
+                                        onclick="javascript:elementHideShow('statstable');"> <?=__('Statistics Authorization')?></label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="step-left">
+                                    <table style="display:<?php if (empty($v_stats_user)) { echo 'none';} else {echo 'block';}?> ;" id="statstable" name="v-add-web-domain-stats-user">
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print __('Username');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_stats_user" value="<?=htmlentities(trim($v_stats_user, "'"))?>">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print __('Password');?> / <a href="javascript:WEBrandom();" class="generate"><?php print __('generate');?></a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input password" name="v_stats_password" value="<?=htmlentities(trim($v_stats_password, "'"))?>" id="v_password">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
                         <tr>
                             <td class="step-top vst-text">
                                 <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if($v_ssl == 'yes' || $v_ssl == 'on') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');"> <?php print __('SSL Support');?></label>
@@ -164,7 +231,7 @@
                                     </tr>
                                     <tr>
                                         <td class="step-left">
-                                            <textarea size="20" class="vst-textinput" name="v_ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
+                                            <textarea size="20" class="vst-textinput short" name="v_ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
                                         </td>
                                     </tr>
                                     <tr>
@@ -174,7 +241,7 @@
                                     </tr>
                                     <tr>
                                         <td class="step-left">
-                                            <textarea size="20" class="vst-textinput" name="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
+                                            <textarea size="20" class="vst-textinput short" name="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
                                         </td>
                                     </tr>
                                     <tr>
@@ -184,61 +251,7 @@
                                     </tr>
                                     <tr>
                                         <td class="step-left">
-                                            <textarea size="20" class="vst-textinput" name="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="vst-text step-top">
-                                <?php print __('Web Statistics');?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <select class="vst-list" name="v_stats">
-                                    <?php
-                                        foreach ($stats as $key => $value) {
-                                            $svalue = "'".$value."'";
-                                            echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
-                                            if (empty($v_stats)) $v_stats = 'none';
-                                            if (( $value == $v_stats ) || ($svalue == $v_stats )){
-                                                echo ' selected' ;
-                                            }
-                                            echo ">" . htmlentities(__($value)) . "</option>\n";
-                                        }
-                                    ?>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr  class="stats-auth" style="<? if (trim($v_stats, "'") == 'none') { ?>display:none<? } ?>">
-                            <td class="step-left vst-text input-label">
-                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_stats_auth" <?php if (!empty($v_stats_user)) echo "checked=yes" ?>
-                                    onclick="javascript:elementHideShow('statstable');"> <?=__('Statistics Authorization')?></label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="step-left">
-                                <table style="display:<?php if (empty($v_stats_user)) { echo 'none';} else {echo 'block';}?> ;" id="statstable" name="v-add-web-domain-stats-user">
-                                    <tr>
-                                        <td class="vst-text input-label">
-                                            <?php print __('Username');?>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input type="text" size="20" class="vst-input" name="v_stats_user" value="<?=htmlentities(trim($v_stats_user, "'"))?>">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="vst-text input-label">
-                                            <?php print __('Password');?> / <a href="javascript:WEBrandom();" class="generate"><?php print __('generate');?></a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input type="text" size="20" class="vst-input password" name="v_stats_password" value="<?=htmlentities(trim($v_stats_password, "'"))?>" id="v_password">
+                                            <textarea size="20" class="vst-textinput short" name="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
                                         </td>
                                     </tr>
                                 </table>
@@ -324,14 +337,6 @@
                             </tr>
                         </table>
                     <table class="data-col2">
-                        <tr>
-                            <td class="step-top" width="116px">
-                                <input type="submit" name="ok" value="<?=__('Add')?>" class="button">
-                            </td>
-                            <td class="step-top">
-                                <input type="button" class="button cancel" value="<?=__('Back')?>" onclick="<?=$back?>">
-                            </td>
-                        </tr>
                     </table>
                 </td>
             </tr>

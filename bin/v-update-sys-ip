@@ -99,8 +99,8 @@ fi
 
 # Adding system IP
 for ip in $ips; do
-    check_ifconfig=$(/sbin/ifconfig |grep "$ip")
-    if [ ! -e "$HESTIA/data/ips/$ip" ] && [ ! -z "$check_ifconfig" ]; then
+    check_ip=$(/sbin/ip addr list |grep "$ip")
+    if [ ! -e "$HESTIA/data/ips/$ip" ] && [ ! -z "$check_ip" ]; then
         interface=$(/sbin/ip addr |grep $ip |awk '{print $NF}' |uniq)
         interface=$(echo "$interface" |cut -f 1 -d : |head -n 1)
         netmask=$(/sbin/ip addr |grep $ip |cut -f 2 -d / |cut -f 1 -d \ )
@@ -110,7 +110,7 @@ for ip in $ips; do
 done
 
 # Updating NAT
-pub_ip=$(curl --ipv4 -s https://www.hestiacp.com/what-is-my-ip/)
+pub_ip=$(curl --ipv4 -s https://ip.hestiacp.com/)
 if [ ! -e "$HESTIA/data/ips/$pub_ip" ]; then
     if [ -z "$(grep -R "$pub_ip" $HESTIA/data/ips/)" ]; then
         ip=$(ls -t $HESTIA/data/ips/ |head -n1)

@@ -46,7 +46,7 @@ rebuild_user_conf() {
 
     # Building directory tree
     if [ -e "$HOMEDIR/$user/conf" ]; then
-        chattr -i $HOMEDIR/$user/conf
+        chattr -i $HOMEDIR/$user/conf > /dev/null 2>&1
     fi
     mkdir -p $HOMEDIR/$user/conf
     chmod a+x $HOMEDIR/$user
@@ -74,7 +74,7 @@ rebuild_user_conf() {
         if [[ -L "$HOMEDIR/$user/web" ]]; then
             rm $HOMEDIR/$user/web
         fi
-        mkdir -p $HOMEDIR/$user/conf/web
+        mkdir -p $HOMEDIR/$user/conf/web/$domain
         mkdir -p $HOMEDIR/$user/web
         mkdir -p $HOMEDIR/$user/tmp
         chmod 751 $HOMEDIR/$user/conf/web
@@ -111,7 +111,7 @@ rebuild_user_conf() {
         if [[ -L "$HOMEDIR/$user/mail" ]]; then
             rm $HOMEDIR/$user/mail
         fi
-        mkdir -p $HOMEDIR/$user/conf/mail
+        mkdir -p $HOMEDIR/$user/conf/mail/$domain
         mkdir -p $HOMEDIR/$user/mail
         chmod 751 $HOMEDIR/$user/mail
         chmod 751 $HOMEDIR/$user/conf/mail
@@ -141,17 +141,37 @@ rebuild_user_conf() {
     fi
 
     # Set immutable flag
-    chattr +i $HOMEDIR/$user/conf
+    chattr +i $HOMEDIR/$user/conf > /dev/null 2>&1
 }
 
 # WEB domain rebuild
 rebuild_web_domain_conf() {
 
+    # Ensure that global domain folders are available
+    if [ ! -d /etc/$WEB_SYSTEM/conf.d/domains ]; then
+        mkdir -p /etc/$WEB_SYSTEM/conf.d/domains
+    fi
+    if [ ! -d /etc/$PROXY_SYSTEM/conf.d/domains ]; then
+        mkdir -p /etc/$PROXY_SYSTEM/conf.d/domains
+    fi
+
     get_domain_values 'web'
     is_ip_valid $IP
     prepare_web_domain_values
 
+    # Remove old web configuration files
+    if [ -f /etc/$WEB_SYSTEM/conf.d/$domain.conf ]; then
+        rm -f /etc/$WEB_SYSTEM/conf.d/$domain*.conf
+    fi
+    if [ -f /etc/$PROXY_SYSTEM/conf.d/$domain.conf ]; then
+        rm -f /etc/$PROXY_SYSTEM/conf.d/$domain*.conf
+    fi
+
     # Rebuilding domain directories
+    if [ -d "$HOMEDIR/$user/web/$domain/document_errors" ]; then
+        rm -rf "$HOMEDIR/$user/web/$domain/document_errors"
+    fi
+
     mkdir -p $HOMEDIR/$user/web/$domain \
         $HOMEDIR/$user/web/$domain/public_html \
         $HOMEDIR/$user/web/$domain/public_shtml \
@@ -177,7 +197,7 @@ rebuild_web_domain_conf() {
     cd /
 
     # Propagating html skeleton
-    if [ ! -e "$WEBTPL/skel/document_errors/" ]; then
+    if [ -d "$WEBTPL/skel/document_errors/" ]; then
         cp -r $WEBTPL/skel/document_errors/ $HOMEDIR/$user/web/$domain/
     fi
 
@@ -202,31 +222,35 @@ rebuild_web_domain_conf() {
     chown root:$user /var/log/$WEB_SYSTEM/domains/$domain.*
 
     # Adding vhost configuration
-    conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
+    conf="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.conf"
     add_web_config "$WEB_SYSTEM" "$TPL.tpl"
 
     # Adding SSL vhost configuration
     if [ "$SSL" = 'yes' ]; then
-        conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
+        ssl_file_dir="$HOMEDIR/$user/conf/web/$domain/ssl"
+        conf="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.ssl.conf"
+        if [ ! -d "$ssl_file_dir" ]; then
+            mkdir -p $ssl_file_dir
+        fi
         add_web_config "$WEB_SYSTEM" "$TPL.stpl"
         cp -f $USER_DATA/ssl/$domain.crt \
-            $HOMEDIR/$user/conf/web/ssl.$domain.crt
+            $HOMEDIR/$user/conf/web/$domain/ssl/$domain.crt
         cp -f $USER_DATA/ssl/$domain.key \
-            $HOMEDIR/$user/conf/web/ssl.$domain.key
+            $HOMEDIR/$user/conf/web/$domain/ssl/$domain.key
         cp -f $USER_DATA/ssl/$domain.pem \
-            $HOMEDIR/$user/conf/web/ssl.$domain.pem
+            $HOMEDIR/$user/conf/web/$domain/ssl/$domain.pem
         if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
             cp -f $USER_DATA/ssl/$domain.ca \
-                $HOMEDIR/$user/conf/web/ssl.$domain.ca
+                $HOMEDIR/$user/conf/web/$domain/ssl/$domain.ca
         fi
     fi
 
     # Adding proxy configuration
     if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
-        conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
+        conf="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.conf"
         add_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
         if [ "$SSL" = 'yes' ]; then
-            conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
+            conf="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.ssl.conf"
             add_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
         fi
     fi
@@ -244,10 +268,10 @@ rebuild_web_domain_conf() {
                 -e "s|%home%|$HOMEDIR|g" \
                 -e "s|%alias%|${aliases//,/ }|g" \
                 -e "s|%alias_idn%|${aliases_idn//,/ }|g" \
-                > $HOMEDIR/$user/conf/web/$STATS.$domain.conf
+                > $HOMEDIR/$user/conf/web/$domain/$STATS.conf
         if [ "$STATS" == 'awstats' ]; then
             if [ ! -e "/etc/awstats/$STATS.$domain_idn.conf" ]; then
-                ln -f -s $HOMEDIR/$user/conf/web/$STATS.$domain.conf \
+                ln -f -s $HOMEDIR/$user/conf/web/$domain/$STATS.conf \
                     /etc/awstats/$STATS.$domain_idn.conf
             fi
         fi
@@ -317,8 +341,8 @@ rebuild_web_domain_conf() {
     done
 
     # Adding http auth protection
-    htaccess="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.conf_htaccess"
-    htpasswd="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.$domain.htpasswd"
+    htaccess="$HOMEDIR/$user/conf/web/$domain/htaccess"
+    htpasswd="$HOMEDIR/$user/conf/web/$domain/htpasswd"
     docroot="$HOMEDIR/$user/web/$domain/public_html"
     for auth_user in ${AUTH_USER//:/ }; do
         # Parsing auth user variables
@@ -419,7 +443,6 @@ rebuild_dns_domain_conf() {
 
 # MAIL domain rebuild
 rebuild_mail_domain_conf() {
-
     get_domain_values 'mail'
 
     if [[ "$domain" = *[![:ascii:]]* ]]; then
@@ -430,6 +453,11 @@ rebuild_mail_domain_conf() {
 
     if [ "$SUSPENDED" = 'yes' ]; then
         SUSPENDED_MAIL=$((SUSPENDED_MAIL +1))
+    fi
+
+    if [ ! -d "$USER_DATA/mail" ]; then
+        rm -f $USER_DATA/mail
+        mkdir $USER_DATA/mail
     fi
 
     # Rebuilding exim config structure
@@ -464,9 +492,10 @@ rebuild_mail_domain_conf() {
                 $HOMEDIR/$user/conf/mail/$domain/dkim.pem
         fi
 
-        # Removing symbolic link if domain is suspended
+        # Removing configuration files if domain is suspended
         if [ "$SUSPENDED" = 'yes' ]; then
             rm -f /etc/exim/domains/$domain_idn
+            rm -f /etc/dovecot/conf.d/domains/$domain_idn.conf
         fi
 
         # Adding mail directiry
@@ -483,7 +512,7 @@ rebuild_mail_domain_conf() {
 
     # Rebuild domain accounts
     accs=0
-    dom_diks=0
+    dom_disk=0
     if [ -e "$USER_DATA/mail/$domain.conf" ]; then
         accounts=$(search_objects "mail/$domain" 'SUSPENDED' "no" 'ACCOUNT')
     else
@@ -491,7 +520,6 @@ rebuild_mail_domain_conf() {
     fi
     for account in $accounts; do
         (( ++accs))
-        dom_diks=$((dom_diks + U_DISK))
         object=$(grep "ACCOUNT='$account'" $USER_DATA/mail/$domain.conf)
         FWD_ONLY='no'
         eval "$object"
@@ -525,16 +553,47 @@ rebuild_mail_domain_conf() {
         chmod 771 /etc/$MAIL_SYSTEM/domains/$domain_idn
         chmod 770 $HOMEDIR/$user/mail/$domain_idn
         chown -R $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain
-        chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain/passwd
+        if [ "$IMAP_SYSTEM" = "dovecot" ]; then
+            chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain/passwd
+        fi
         chown $user:mail $HOMEDIR/$user/mail/$domain_idn
     fi
 
-    # Update counters
+    # Add missing SSL configuration flags to existing domains
+    # for per-domain SSL migration
+    sslcheck=$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf | grep SSL)
+    if [ -z "$sslcheck" ]; then
+        sed -i "s|$domain'|$domain' SSL='no' LETSENCRYPT='no'|g" $USER_DATA/mail.conf
+    fi 
+    
+    # Remove and recreate SSL configuration
+    if [ -f "$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt" ]; then
+        del_mail_ssl_config
+        add_mail_ssl_config
+        update_object_value 'mail' 'DOMAIN' "$domain" '$SSL' "yes"
+    else
+        update_object_value 'mail' 'DOMAIN' "$domain" '$SSL' "no"
+    fi
+
+    dom_disk=0
+    for account in $(search_objects "mail/$domain" 'SUSPENDED' "no" 'ACCOUNT'); do
+        home_dir=$HOMEDIR/$user/mail/$domain/$account
+        if [ -e "$home_dir" ]; then
+            udisk=$(nice -n 19 du -shm $home_dir | cut -f 1 )
+        else
+            udisk=0
+        fi
+        update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$U_DISK' "$udisk"
+        dom_disk=$((dom_disk + udisk))
+    done
+
     update_object_value 'mail' 'DOMAIN' "$domain" '$ACCOUNTS' "$accs"
-    update_object_value 'mail' 'DOMAIN' "$domain" '$U_DISK' "$dom_diks"
+    update_object_value 'mail' 'DOMAIN' "$domain" '$U_DISK' "$dom_disk"
+
+    # Update usage counters
     U_MAIL_ACCOUNTS=$((U_MAIL_ACCOUNTS + accs))
-    U_DISK_MAIL=$((U_DISK_MAIL + dom_diks))
     U_MAIL_DOMAINS=$((U_MAIL_DOMAINS + 1))
+    recalc_user_disk_usage
 }
 
 # Rebuild MySQL
@@ -617,7 +676,7 @@ rebuild_pgsql_database() {
     query="GRANT ALL PRIVILEGES ON DATABASE $DB TO $DBUSER"
     psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
 
-    query="GRANT CONNECT ON DATABASE template1 to $dbuser"
+    query="GRANT CONNECT ON DATABASE template1 to $DBUSER"
     psql -h $HOST -U $USER -c "$query" > /dev/null 2>&1
 }
 

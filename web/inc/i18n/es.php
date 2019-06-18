@@ -567,7 +567,7 @@ $LANG['es'] = array(
     'MAIL Server' => 'Servidor de Correo',
     'Antivirus' => 'Antivirus',
     'AntiSpam' => 'AntiSpam',
-    'Webmail URL' => 'Webmail URL',
+    'Webmail URL' => 'Webmail Alias',
     'MySQL Support' => 'Soportar MYSQL',
     'phpMyAdmin URL' => 'phpMyAdmin URL',
     'PostgreSQL Support' => 'Soportar PostgreSQL',
@@ -740,10 +740,9 @@ $LANG['es'] = array(
     'every' => 'cada',
     'Generate' => 'Generar',
 
-    'webalizer' => 'webalizer',
     'awstats' => 'awstats',
 
-    'Hestia SSL' => 'Hestia SSL',
+    'Hestia SSL' => 'SSL',
     'SUBJECT' => 'EMITIDO PARA',
     'ALIASES' => 'ALIAS',
     'NOT_BEFORE' => 'VÁLIDO DESDE',

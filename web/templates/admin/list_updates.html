@@ -1,26 +1,16 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
+            <div class="l-unit-toolbar__buttonstrip">
+                <a class="ui-button cancel" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+                <? if($autoupdate == 'Enabled') {
+                  echo '<a class="ui-button cancel" href="/delete/cron/autoupdate/?token='.$_SESSION['token'].'"><i class="fas fa-toggle-on status-icon green"></i>'.__('disable autoupdate').'</a>';
+                } else {
+                  echo '<a class="ui-button cancel" href="/add/cron/autoupdate/?token='.$_SESSION['token'].'"><i class="fas fa-toggle-off status-icon red"></i>'.__('enable autoupdate').'</a>';
+                } ?>
+             </div>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
-              <td class="step-right">
-                <? if($autoupdate == 'Enabled') {
-                     echo '<a class="vst" href="/delete/cron/autoupdate/?token='.$_SESSION['token'].'">'.__('disable autoupdate').'</a>';
-                   } else {
-                     echo '<a class="vst" href="/add/cron/autoupdate/?token='.$_SESSION['token'].'">'.__('enable autoupdate').'</a>';
-                   } ?>
-              </td>
-              <td class="l-sort-toolbar__search-box step-left">
-                <form action="/search/" method="get">
-                  <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-                  <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
-                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
-                </form>
-              </td>
-              <td class="toggle-all">
-                <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
-                <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
-              </td>
               <td>
                 <form action="/bulk/hestia/" method="post" id="objects">
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
@@ -30,20 +20,31 @@
                     <option value="update"><?php print __('update') ?></option>
                   </select>
                 </div>
-                <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
+                <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
               </td>
             </tr>
           </table>
         </div>
       </div>
-      <!-- /.l-sort -->
     </div>
 
     <div class="l-separator"></div>
-    <!-- /.l-separator -->
-
 
     <div class="l-center units animated fadeIn">
+        <div class="header table-header">    
+            <div class="l-unit__col l-unit__col--right step-top">
+              <div>
+                  <div class="clearfix l-unit__stat-col--left super-compact">
+                      <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
+                    </div>
+                  <div class="clearfix l-unit__stat-col--left wide"><b><?php print __('Package');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide-5"><b><?php print __('Description');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Version');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Release');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Status');?></b></div>
+              </div>
+            </div>
+          </div>
       <?php
         foreach ($data as $key => $value) {
           ++$i;
@@ -57,82 +58,39 @@
           }
 
       ?>
-
-
-
-
       <div class="l-unit<? if($status == 'suspended') echo ' l-unit--outdated';?>">
         <div class="l-unit-toolbar clearfix">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-            <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="pkg[]" value="<?php echo $key ?>">
-            <label for="check<?php echo $i ?>" class="check-label"></label>
-          </div>
-          <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-            <div class="actions-panel clearfix">
-              <? if ($data[$key]['UPDATED'] == 'no') {
-                   echo '<div class="actions-panel__col actions-panel__update shortcut-u" key-action="href"><a href="/update/hestia/?pkg='.$key.'&token='.$_SESSION['token'].'">'.__('update').'<i></i></a><span class="shortcut">&nbsp;U</span></div>';
-                 }
-              ?>
-            </div>
-            <!-- /.actiona-panel -->
           </div>
-          <!-- l-unit-toolbar__col -->
         </div>
-        <!-- /.l-unit-toolbar -->
 
-        <div class="l-unit__col l-unit__col--left clearfix">
-          <div class="l-unit__date">
-            <?=__($upd_status)?>
-          </div>
-        </div>
-        <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
-          <div class="l-unit__name separate">
-            <?=$key?>
+            <div>
+                <div class="clearfix l-unit__stat-col--left super-compact">
+                  <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="pkg[]" value="<?php echo $key ?>">
+                </div>
+              <div class="clearfix l-unit__stat-col--left wide"><b><?=$key?></b></div>
+              <div class="clearfix l-unit__stat-col--left wide-5"><b><?=__($data[$key]['DESCR'])?></b></div>
+              <div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['VERSION'] ?> (<?=$data[$key]['ARCH']?>)</div>
+              <div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['RELEASE']?></div>
+              <div class="clearfix l-unit__stat-col--left text-center">
+                  <? if ($data[$key]['UPDATED'] == 'no') {
+                    echo '
+                    <i class="fas fa-exclamation-triangle" style="color: orange;"></i>
+                    ';
+                  }
+                  ?>
+                  <? if ($data[$key]['UPDATED'] == 'yes') {
+                    echo '
+                    <i class="fas fa-check-circle status-icon green"></i></i>
+                    ';
+                  }
+                  ?>
+            </div>
           </div>
-
-
-
-          <div class="l-unit__stats">
-            <table>
-
-               <tr>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><b><?=__($data[$key]['DESCR'])?></b></div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left compact"><?=__('Version')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['VERSION'] ?></b> (<?=$data[$key]['ARCH']?>)
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="l-unit__stat-cols clearfix last">
-                    <div class="l-unit__stat-col l-unit__stat-col--left compact"><?=__('Release')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">
-                      <b><?=$data[$key]['RELEASE']?></b>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-
-            </table>
-          </div>
-          <!-- /.l-unit__stats -->
         </div>
-        <!-- /.l-unit__col -->
       </div>
-      <!-- /.l-unit -->
-      <!-- div class="l-separator"></div -->
-      <!-- /.l-separator -->
-      <?}?>
+     <?}?>
 
     </div>
 

@@ -1,0 +1,104 @@
+#!/bin/bash
+# info: add mail SSL for $domain
+# options: USER DOMAIN SSL_DIR [RESTART]
+#
+# The function turns on SSL support for a mail domain. Parameter ssl_dir
+# is a path to a directory where 2 or 3 ssl files can be found. Certificate file 
+# mail.domain.tld.crt and its key mail.domain.tld.key are mandatory. Certificate
+# authority mail.domain.tld.ca file is optional.
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+ssl_dir=$3
+restart="$3"
+
+# Additional argument formatting
+if [[ "$domain" =~ [[:upper:]] ]]; then
+    domain=$(echo "$domain" |tr '[:upper:]' '[:lower:]')
+fi
+if [[ "$domain" =~ ^www\..* ]]; then
+    domain=$(echo "$domain" |sed -e "s/^www.//")
+fi
+if [[ "$domain" =~ .*\.$ ]]; then
+    domain=$(echo "$domain" |sed -e "s/\.$//")
+fi
+
+domain=$(idn -t --quiet -u "$domain" )
+domain_idn=$(idn -t --quiet -a "$domain")
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/func/ip.sh
+source $HESTIA/conf/hestia.conf
+
+# Additional argument formatting
+format_domain
+format_domain_idn
+get_user_ip
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'USER DOMAIN SSL_DIR [RESTART]'
+is_format_valid 'user' 'domain' 'ssl_dir'
+is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'mail' 'DOMAIN' "$domain"
+is_object_unsuspended 'mail' 'DOMAIN' "$domain"
+is_object_value_empty 'mail' 'DOMAIN' "$domain" '$SSL'
+is_web_domain_cert_valid
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Call routine to add SSL configuration to mail domain
+add_mail_ssl_config
+
+# Add webmail configuration to mail domain
+WEBMAIL_TEMPLATE="default"
+if [ "$WEB_SYSTEM" = "nginx" ]; then
+    WEBMAIL_TEMPLATE="web_system"
+fi
+add_webmail_config "$WEB_SYSTEM" "${WEBMAIL_TEMPLATE}.stpl"
+
+if [ ! -z "$PROXY_SYSTEM" ]; then
+    add_webmail_config "$PROXY_SYSTEM" "default.stpl"
+fi
+
+# Increase value for domain
+increase_user_value "$user" '$U_MAIL_SSL'
+
+# Set SSL as enabled in configuration
+update_object_value 'mail' 'DOMAIN' "$domain" '$SSL' "yes"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Restarting mail server
+$BIN/v-restart-mail $restart
+$BIN/v-restart-service $IMAP_SYSTEM $restart
+check_result $? "Mail restart failed" >/dev/null
+
+# Restarting web server
+$BIN/v-restart-web $restart
+check_result $? "Web restart failed" >/dev/null
+
+# Restarting proxy server
+$BIN/v-restart-proxy $restart
+check_result $? "Proxy restart failed" >/dev/null
+
+# Logging
+log_history "enabled mail ssl support for $domain"
+log_event "$OK" "$ARGUMENTS"
+
+exit

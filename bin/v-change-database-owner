@@ -66,12 +66,7 @@ fi
 #----------------------------------------------------------#
 
 # Creating temporary directory
-tmpdir=$(mktemp -p $BACKUP -d)
-if [ "$?" -ne 0 ]; then
-    echo "Error: can't create $tmpdir"
-    log_event "$E_NOTEXIST" "$ARGUMENTS"
-    exit $E_NOTEXIST
-fi
+mkdir -p $BACKUP/tmp.$database
 
 # Suspend database
 $BIN/v-suspend-database $owner $database > /dev/null 2>&1

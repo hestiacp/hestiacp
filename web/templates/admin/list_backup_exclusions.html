@@ -1,6 +1,9 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
-        <a href="/edit/backup/exclusions/" class="l-sort__create-btn edit" title="<?=__('Configure')?>"></a>
+        <div class="l-unit-toolbar__buttonstrip">
+          <a class="ui-button cancel" id="btn-back" href="/list/backup/"><i class="fas fa-arrow-left status-icon blue"></i><?=__('Back')?></a>
+          <a href="/edit/backup/exclusions/" class="ui-button cancel" title="<?=__('Edit Backup Exclusions')?>"><i class="fas fa-pencil-alt status-icon orange"></i> <?=__('Edit Backup Exclusions')?></a>
+        </div>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
@@ -8,34 +11,16 @@
                 <form action="/search/" method="get">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                   <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
-                  <input type="submit" value="" class="l-sort-toolbar__search" onClick="return doSearch('/search/')" />
+                  <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value=""><i class="fas fa-search"></i></button>
                 </form>
               </td>
-              <!--td class="toggle-all">
-                <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all">
-                <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
-              </td>
-              <td>
-                <form action="/bulk/backup/exclusions/" method="post" id="objects">
-                <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-                <div class="l-select">
-                  <select name="" id="">
-                    <option value=""><?=__('apply to selected')?></option>
-                    <option value="delete"><?php print __('delete') ?></option>
-                  </select>
-                </div>
-                <input type="submit" value="" class="l-sort-toolbar__filter-apply" />
-              </td-->
             </tr>
           </table>
         </div>
       </div>
-      <!-- /.l-sort -->
     </div>
 
     <div class="l-separator"></div>
-    <!-- /.l-separator -->
-
 
     <div class="l-center units animated fadeIn">
       <?
@@ -46,28 +31,13 @@
         <div class="l-unit-toolbar clearfix">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--left">
           </div>
-          <!-- l-unit-toolbar__col -->
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-            <!-- div class="actions-panel__col actions-panel__delete">
-              <a id="delete_link_<?=$i?>" class="data-controls do_delete">
-                <?=__('delete')?> <i class="do_delete"></i>
-                <input type="hidden" name="delete_url" value="/delete/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" />
-                <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
-                  <p class="confirmation"><?=__('DELETE_BACKUP_CONFIRMATION',$key)?></p>
-                </div>
-              </a>
-            </div-->
-
-            <!-- /.actiona-panel -->
           </div>
-          <!-- l-unit-toolbar__col -->
         </div>
-        <!-- /.l-unit-toolbar -->
 
         <div class="l-unit__col l-unit__col--left clearfix"></div>
-        <!-- /.l-unit__col -->
         <div class="l-unit__col l-unit__col--right">
-          <div class="l-unit__stats">
+          <div>
             <table>
               <tr>
                 <td>
@@ -86,28 +56,17 @@
               </tr>
             </table>
           </div>
-          <!-- /.l-unit__stats -->
         </div>
-        <!-- /.l-unit__col -->
       </div>
-      <!-- /.l-unit -->
-      <!--div class="l-separator"></div-->
-      <!-- /.l-separator -->
       <? } ?>
-
     </div>
-
-
 
     <div id="vstobjects">
       <div class="l-separator"></div>
       <div class="l-center">
         <div class="l-unit-ft">
           <table class='data'></table>
-          <!-- /form -->
-          <div class="l-unit__col l-unit__col--left clearfix"></div>
           <div class="data-count l-unit__col l-unit__col--right total clearfix">
-            <a class="button cancel" href="/list/backup/"><?=__('Back')?></a>
           </div>
       </div>
     </div>

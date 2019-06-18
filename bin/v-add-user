@@ -61,6 +61,18 @@ check_result $? "user creation failed" $E_INVALID
 # Adding password
 echo "$user:$password" | /usr/sbin/chpasswd
 
+# Add a general group for normal users created by Hestia
+if [ -z "$(grep ^hestia-users: /etc/group)" ]; then
+    groupadd --system "hestia-users"
+fi
+
+# Add membership to hestia-users group to non-admin users
+if [ "$user" != "admin" ]; then
+    usermod -a -G "hestia-users" "$user"
+    setfacl -m "u:$user:r-x" "$HOMEDIR/$user"
+fi
+setfacl -m "g:hestia-users:---" "$HOMEDIR/$user"
+
 # Building directory tree
 mkdir $HOMEDIR/$user/conf
 
@@ -84,7 +96,7 @@ fi
 
 # Set permissions
 chmod a+x $HOMEDIR/$user
-chattr +i $HOMEDIR/$user/conf
+chattr +i $HOMEDIR/$user/conf > /dev/null 2>&1
 
 
 #----------------------------------------------------------#
@@ -179,6 +191,7 @@ U_DNS_RECORDS='0'
 U_MAIL_DOMAINS='0'
 U_MAIL_DKIM='0'
 U_MAIL_ACCOUNTS='0'
+U_MAIL_SSL='0'
 U_DATABASES='0'
 U_CRON_JOBS='0'
 U_BACKUPS='0'
@@ -204,9 +217,7 @@ if [ -x "$HESTIA/data/packages/$package.sh" ]; then
 fi
 
 # Adding jailed sftp env
-if [ ! -z "$SFTPJAIL_KEY" ]; then
-    $BIN/v-add-user-sftp-jail $user
-fi
+$BIN/v-add-user-sftp-jail $user
 
 # Logging
 log_history "added system user $user" '' 'admin'

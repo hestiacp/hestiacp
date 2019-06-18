@@ -49,7 +49,7 @@
         close();
     });
 
-    $("#iviewer").bind('fadein', function() {
+    $("#iviewer").on('fadein', function() {
         $(window).keydown(function(e) {
             if (e.which == 27) close();
         });

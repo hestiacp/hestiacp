@@ -54,7 +54,7 @@
             ctrlClass: "selected-ctrl",
             triggerUpdate: "finderSelectUpdate",
             children: false,
-            event: "mousedown",
+            event: "mouseup",
             cursor: "pointer",
             dragEvent: "mouseenter",
             enableClickDrag: true,
@@ -176,10 +176,9 @@
                         
                         var ref = $(e.target);
                         if (ref.parents('.l-unit').hasClass('selected')/* && $('.l-unit.selected').length == 1*/) {
-                            ref.parents('.l-unit').find('.ch-toggle').attr('checked', false);
-                            ref.parents('.l-unit').removeClass('selected');
-                            ref.parents('.l-unit').removeClass('selected-current');
                             $('.toggle-all').removeClass('clicked-on');
+                            f.t.toggleClick(p,c,o);
+                            o.onFinish(e);
                             return;
                         }
 

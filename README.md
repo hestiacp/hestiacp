@@ -54,10 +54,12 @@ To perform an unattended installation using the default options:
 ```bash
 bash hst-install.sh -f -y no -e <email> -p <password> -s <hostname>
 ```
-For additional installation options:
+## Custom installation:
+You may specify a number of various flags during installation to only install the features in which you need. To view a list of available options, run:
 ```bash
 bash hst-install.sh -h
 ```
+Alternatively, @gabizz has made available a command-line script generator at https://gabizz.github.io/hestiacp-scriptline-generator/ which allows you to easily generate the installation command via GUI.
 
 Installing development builds
 =============================

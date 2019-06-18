@@ -2,7 +2,7 @@
     <div class="l-sort clearfix noselect">
       <div class="l-unit-toolbar__buttonstrip">
         <a class="ui-button cancel" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
-        <a href="/add/package/" class="ui-button cancel" title="<?=__('Add Package')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=__('Add Package')?></a>
+        <a href="/add/package/" id="btn-create" class="ui-button cancel" title="<?=__('Add Package')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=__('Add Package')?></a>
     </div>
       <ul class="context-menu sort-order animated fadeIn" style="display:none;">
         <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
@@ -86,8 +86,8 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
             <div class="clearfix l-unit__stat-col--left text-right compact-3">
                   <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                       <div class="actions-panel clearfix">
-                        <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></div>
-                        <div class="actions-panel__col actions-panel__edit" key-action="href"><a href="/copy/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-clone status-icon teal status-icon dim"></i></div>
+                        <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+                        <div class="actions-panel__col actions-panel__edit" key-action="href"><a href="/copy/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-clone status-icon teal status-icon dim"></i></a></div>
                         <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                           <a id="delete_link_<?=$i?>" class="data-controls do_delete">
                             <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>

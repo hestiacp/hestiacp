@@ -3,10 +3,10 @@
         <div class="l-unit-toolbar__buttonstrip">
         <?php
           if ($user == 'admin') {
-            echo '<a href="/add/user/" class="ui-button cancel" title="'.__('Add User').'"><i class="fas fa-plus-circle status-icon green"></i>'.__('Add User').'</a>&nbsp;';
+            echo '<a href="/add/user/" id="btn-create" class="ui-button cancel" title="'.__('Add User').'"><i class="fas fa-plus-circle status-icon green"></i>'.__('Add User').'</a>&nbsp;';
             echo '<a href="/list/package/" class="ui-button cancel" title="'.__('Packages').'"><i class="fas fa-box-open status-icon orange"></i>'.__('Packages').'</a>&nbsp;';
           } else {
-            echo '<a href="/add/web/" class="ui-button cancel" title="'.__('Add Web Domain').'"><i class="fas fa-plus-circle status-icon green"></i>'.__('Add Web Domain').'</a>';
+            echo '<a href="/add/web/" id="btn-create" class="ui-button cancel" title="'.__('Add Web Domain').'"><i class="fas fa-plus-circle status-icon green"></i>'.__('Add Web Domain').'</a>';
           }
         ?>
       </div>
@@ -116,7 +116,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                               ?>
                               <a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('login as')?>"><i class="fas fa-sign-in-alt status-icon green status-icon dim icon-large"></i></a>
                             <?}?>
-                          <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('Editing User')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></div>
+                          <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('Editing User')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
                           <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
                             <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=__($spnd_action)?>">
                               <i class="fas fa-pause status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>

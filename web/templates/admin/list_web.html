@@ -1,7 +1,7 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a href="/add/web/" class="ui-button cancel" title="<?=__('Add Web Domain')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=__('Add Web Domain')?></a>
+          <a href="/add/web/" id="btn-create" class="ui-button cancel" title="<?=__('Add Web Domain')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=__('Add Web Domain')?></a>
         </div>
         <ul class="context-menu sort-order animated fadeIn" style="display:none;">
           <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
@@ -134,8 +134,8 @@ sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-dis
           <div class="clearfix l-unit__stat-col--left compact-5 text-right">
             <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
               <div class="actions-panel clearfix">
-                <div class="actions-panel__col actions-panel__view" key-action="href"><a href="http://<?=$key?>/" target="_blank"><i class="fas fa-external-link-square-alt status-icon lightblue status-icon dim"></i></div>
-                <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('Editing Domain')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></div>
+                <div class="actions-panel__col actions-panel__view" key-action="href"><a href="http://<?=$key?>/" target="_blank"><i class="fas fa-external-link-square-alt status-icon lightblue status-icon dim"></i></a></div>
+                <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('Editing Domain')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
                 <div class="actions-panel__col actions-panel__logs shortcut-l" key-action="href"><a href="/list/web-log/?domain=<?php echo $key ?>&type=access#" title="<?=__('AccessLog')?>"><i class="fas fa-binoculars status-icon purple status-icon dim"></i></a></div>
                 <? if (!empty($data[$key]['STATS'])) { ?>
                   <div class="actions-panel__col actions-panel__logs shortcut-w" key-action="href"><a href="http://<?=$key?>/vstats/"  target="_blank" title="<?=__('Statistics')?>"><i class="fas fa-chart-bar status-icon maroon status-icon dim"></i></a></div>

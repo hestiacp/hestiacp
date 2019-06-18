@@ -64,8 +64,28 @@ INSTALL_DIR='/usr/local/hestia'
 SRC_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 ARCHIVE_DIR="$SRC_DIR/src/archive/"
 
+# Set command variables
+if [ ! -z "$2" ]; then
+  branch=$2
+else
+  echo -n "Please enter the name of the branch to build from (e.g. master): "
+  read branch
+fi
+
 # Set Version for compiling
-HESTIA_V='0.10.0-190430_amd64'
+if [ -f "$SRC_DIR/src/deb/hestia/control" ] && [ "$branch" = '~localsrc' ]; then
+  BUILD_VER=$(cat $SRC_DIR/src/deb/hestia/control |grep "Version:" |cut -d' ' -f2)
+else
+  BUILD_VER=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/hestia/control |grep "Version:" |cut -d' ' -f2)
+fi
+
+if [ -z "$BUILD_VER" ]; then
+  echo "Error: Branch invalid, could not detect version"
+  exit 1
+fi
+
+BUILD_ARCH='amd64'
+HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
 NGINX_V='1.17.0'
 OPENSSL_V='1.1.1b'
 PCRE_V='8.43'
@@ -84,17 +104,6 @@ SOFTWARE='build-essential libxml2-dev libz-dev libcurl4-gnutls-dev unzip openssl
 timestamp() {
     date +%s
 }
-
-branch=$2
-install=$3
-
-# Set install flags
-if [ ! -z "$2" ]; then
-  branch=$2
-else
-  echo -n "Please enter the name of the branch to build from (e.g. master): "
-  read branch
-fi
 
 if [ ! -z "$3" ]; then
   install=$3

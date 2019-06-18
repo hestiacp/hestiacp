@@ -104,7 +104,7 @@ if [ ! -e /etc/ssl/dhparam.pem ]; then
     sed -i "s/1.0.0.1 1.1.1.1/$dns_resolver/g" /etc/nginx/nginx.conf
 
     # Restart Nginx service
-    service nginx restart >/dev/null 2>&1
+    systemctl restart nginx >/dev/null 2>&1
 fi
 
 # Update default page templates
@@ -330,7 +330,7 @@ sftp_subsys_enabled=$(grep -iE "^#?.*subsystem.+(sftp )?sftp-server" /etc/ssh/ss
 if [ ! -z "$sftp_subsys_enabled" ]; then
     echo "(*) Updating SFTP subsystem configuration..."
     sed -i -E "s/^#?.*Subsystem.+(sftp )?sftp-server/Subsystem sftp internal-sftp/g" /etc/ssh/sshd_config
-    service ssh restart
+    systemctl restart ssh
 fi
 
 # Remove and migrate obsolete object keys
@@ -423,6 +423,8 @@ if [ ! -z $DNS_SYSTEM ]; then
 	$BIN/v-restart-dns $restart
 fi
 
+# restart Hestia services (nginx,php-fpm)
+systemctl restart hestia
 
 echo ""
 echo "    Upgrade complete! Please report any bugs or issues to"

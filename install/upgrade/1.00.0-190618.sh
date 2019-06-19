@@ -1,11 +1,12 @@
 #!/bin/bash
 
-# Define vars
-if [ -z "$HESTIA" ]; then
-    export HESTIA="/usr/local/hestia"
-fi
+# Define variables
+export HESTIA="/usr/local/hestia"
+export BIN="/usr/local/hestia/bin"
 HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
 hestiacp="$HESTIA/install/deb"
+
+# Set phpMyAdmin version for upgrade
 pma_v='4.9.0.1'
 
 # Add amd64 to repositories to prevent notifications - https://goo.gl/hmsSV7

@@ -8,6 +8,14 @@ HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
 hestiacp="$HESTIA/install/deb"
 pma_v='4.9.0.1'
 
+# Add amd64 to repositories to prevent notifications - https://goo.gl/hmsSV7
+if ! grep -q 'arch=amd64' /etc/apt/sources.list.d/nginx.list; then
+    sed -i s/"deb "/"deb [arch=amd64] "/g /etc/apt/sources.list.d/nginx.list
+fi
+if ! grep -q 'arch=amd64' /etc/apt/sources.list.d/mariadb.list; then
+    sed -i s/"deb "/"deb [arch=amd64] "/g /etc/apt/sources.list.d/mariadb.list
+fi
+
 # Add webmail alias variable to system configuration if non-existent
 WEBMAIL_ALIAS_CHECK=$(cat $HESTIA/conf/hestia.conf | grep WEBMAIL_ALIAS)
 if [ -z "$WEBMAIL_ALIAS_CHECK" ]; then
@@ -239,7 +247,7 @@ if [ ! -f /etc/cron.daily/php-session-cleanup ]; then
     echo "find -O3 /home/*/tmp/ -ignore_readdir_race -depth -mindepth 1 -name 'sess_*' -type f -cmin '+10080' -delete > /dev/null 2>&1" >> /etc/cron.daily/php-session-cleanup
     echo "find -O3 $HESTIA/data/sessions/ -ignore_readdir_race -depth -mindepth 1 -name 'sess_*' -type f -cmin '+10080' -delete > /dev/null 2>&1" >> /etc/cron.daily/php-session-cleanup
 fi
-    chmod 755 /etc/cron.daily/php-session-cleanup
+chmod 755 /etc/cron.daily/php-session-cleanup
 
 # Fix empty pool error message for MultiPHP
 php_versions=$(ls /etc/php/*/fpm -d 2>/dev/null |wc -l)
@@ -321,7 +329,7 @@ if [ ! -z "$WEBALIZER_CHECK" ]; then
     sed -i "s/STATS_SYSTEM='webalizer,awstats'/STATS_SYSTEM='awstats'/g" $HESTIA/conf/hestia.conf
 fi
 
-# Run sftp jail once
+# Enable SFTP chroot jail capabilities
 $HESTIA/bin/v-add-sys-sftp-jail no
 
 # Enable SFTP subsystem for SSH
@@ -401,6 +409,26 @@ if [ "$DB_SYSTEM" = 'mysql' ]; then
     fi
 fi
 
+# Reset backend port
+if [ ! -z "$BACKEND_PORT" ]; then
+    /usr/local/hestia/bin/v-change-sys-port $BACKEND_PORT
+fi
+
+# Move clamav to proper location - https://goo.gl/zNuM11
+if [ ! -d /usr/local/hestia/web/edit/server/clamav-daemon ]; then
+    mv /usr/local/hestia/web/edit/server/clamd /usr/local/web/edit/server/clamav-daemon
+fi
+
+# Fix named rule for AppArmor - https://goo.gl/SPqHdq
+if [ "$DNS_SYSTEM" = 'bind9' ] && [ ! -f /etc/apparmor.d/local/usr.sbin.named ]; then
+        echo "/home/** rwm," >> /etc/apparmor.d/local/usr.sbin.named 2> /dev/null
+fi
+
+# Remove obsolete ports.conf if exists.
+if [ -f /usr/local/hestia/data/firewall/ports.conf ]; then
+    rm -f /usr/local/hestia/data/firewall/ports.conf
+fi
+
 # Add upgrade notification to admin user's panel
 $BIN/v-add-user-notification admin 'Upgrade complete' 'Your server has been updated to v0.10.0.<br>Please report any bugs on GitHub at<br>https://github.com/hestiacp/hestiacp/Issues<br><br>Have a great day!'
 
@@ -421,6 +449,7 @@ if [ ! -z $DNS_SYSTEM ]; then
 	$BIN/v-restart-dns $restart
 fi
 
+# Restart SSH daemon and Hestia Control Panel service
 $BIN/v-restart-service ssh $restart
 $BIN/v-restart-service hestia $restart
 

@@ -894,7 +894,6 @@ sed -i "s/rdAuthentication no/rdAuthentication yes/g" /etc/ssh/sshd_config
 # Enable SFTP subsystem for SSH
 sftp_subsys_enabled=$(grep -iE "^#?.*subsystem.+(sftp )?sftp-server" /etc/ssh/sshd_config)
 if [ ! -z "$sftp_subsys_enabled" ]; then
-    echo "(*) Updating SFTP subsystem configuration..."
     sed -i -E "s/^#?.*Subsystem.+(sftp )?sftp-server/Subsystem sftp internal-sftp/g" /etc/ssh/sshd_config
 fi
 
@@ -1067,8 +1066,8 @@ echo "BACKUP_SYSTEM='local'" >> $HESTIA/conf/hestia.conf
 echo "LANGUAGE='$lang'" >> $HESTIA/conf/hestia.conf
 
 # Version & Release Branch
-echo "VERSION='0.10.0'" >> $HESTIA/conf/hestia.conf
-echo "RELEASE='develop'" >> $HESTIA/conf/hestia.conf
+echo "VERSION='1.00.0-190618'" >> $HESTIA/conf/hestia.conf
+echo "RELEASE_BRANCH='develop'" >> $HESTIA/conf/hestia.conf
 
 # Installing hosting packages
 cp -rf $hestiacp/packages $HESTIA/data/
@@ -1117,7 +1116,6 @@ if [ "$nginx" = 'yes' ]; then
     cp -f $hestiacp/nginx/status.conf /etc/nginx/conf.d/
     cp -f $hestiacp/nginx/phpmyadmin.inc /etc/nginx/conf.d/
     cp -f $hestiacp/nginx/phppgadmin.inc /etc/nginx/conf.d/
-    cp -f $hestiacp/nginx/webmail.inc /etc/nginx/conf.d/
     cp -f $hestiacp/logrotate/nginx /etc/logrotate.d/
     mkdir -p /etc/nginx/conf.d/domains
     mkdir -p /var/log/nginx/domains
@@ -1503,10 +1501,13 @@ fi
 #                   Configure Roundcube                    #
 #----------------------------------------------------------#
 
-if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
+if [ "$dovecot" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     if [ "$apache" = 'yes' ]; then
         cp -f $hestiacp/roundcube/apache.conf /etc/roundcube/
         ln -s /etc/roundcube/apache.conf /etc/apache2/conf.d/roundcube.conf
+    fi
+    if [ "$nginx" = 'yes' ]; then
+        cp -f $hestiacp/nginx/webmail.inc /etc/nginx/conf.d/
     fi
     cp -f $hestiacp/roundcube/main.inc.php /etc/roundcube/config.inc.php
     cp -f $hestiacp/roundcube/db.inc.php /etc/roundcube/debian-db-roundcube.php
@@ -1737,9 +1738,6 @@ service hestia start
 check_result $? "hestia start failed"
 chown admin:admin $HESTIA/data/sessions
 
-# Adding cronjob for autoupdates
-$HESTIA/bin/v-add-cron-hestia-autoupdate
-
 
 #----------------------------------------------------------#
 #                   Hestia Access Info                     #
@@ -1793,7 +1791,11 @@ echo
 cat $tmpfile
 rm -f $tmpfile
 
+# Add welcome message to notification panel
+$HESTIA/bin/v-add-user-notification admin 'Welcome!' 'For more information on how to use Hestia Control Panel, click on the Help icon in the top right corner of the toolbar.<br><br>Please report any bugs or issues on GitHub at<br>https://github.com/hestiacp/hestiacp/Issues<br><br>Have a great day!'
+
 echo "(!) IMPORTANT: You must logout or restart the server before continuing."
+echo ""
 if [ "$interactive" = 'yes' ]; then
     echo -n " Do you want to logout now? [Y/N] "
     read resetshell

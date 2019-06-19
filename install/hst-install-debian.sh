@@ -1737,9 +1737,6 @@ service hestia start
 check_result $? "hestia start failed"
 chown admin:admin $HESTIA/data/sessions
 
-# Adding cronjob for autoupdates
-$HESTIA/bin/v-add-cron-hestia-autoupdate
-
 
 #----------------------------------------------------------#
 #                   Hestia Access Info                     #

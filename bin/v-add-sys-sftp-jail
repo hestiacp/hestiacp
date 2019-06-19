@@ -50,7 +50,8 @@ fi
 
 # Validating opensshd config
 if [ "$restart" = 'no' ]; then
-    # Skip restarting SSH daemon
+   # Skipping SSH Restart
+   echo "" >  /dev/null 2>&1
 else
     subj="OpenSSH restart failed"
     email=$(grep CONTACT $HESTIA/data/users/admin/user.conf |cut -f 2 -d \')

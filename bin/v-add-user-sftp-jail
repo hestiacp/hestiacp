@@ -65,6 +65,7 @@ chown root:root /home/$user
 # Restart ssh service
 if [ "$restart" = 'no' ]; then
     # Skip restart of SSH daemon
+    echo "" > /dev/null 2>&1
 else
     service ssh restart > /dev/null 2>&1
 fi

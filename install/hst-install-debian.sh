@@ -1067,8 +1067,8 @@ echo "BACKUP_SYSTEM='local'" >> $HESTIA/conf/hestia.conf
 echo "LANGUAGE='$lang'" >> $HESTIA/conf/hestia.conf
 
 # Version & Release Branch
-echo "VERSION='0.10.0'" >> $HESTIA/conf/hestia.conf
-echo "RELEASE='develop'" >> $HESTIA/conf/hestia.conf
+echo "VERSION='1.00.0-190618'" >> $HESTIA/conf/hestia.conf
+echo "RELEASE='master'" >> $HESTIA/conf/hestia.conf
 
 # Installing hosting packages
 cp -rf $hestiacp/packages $HESTIA/data/
@@ -1503,7 +1503,7 @@ fi
 #                   Configure Roundcube                    #
 #----------------------------------------------------------#
 
-if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
+if [ "$dovecot" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     if [ "$apache" = 'yes' ]; then
         cp -f $hestiacp/roundcube/apache.conf /etc/roundcube/
         ln -s /etc/roundcube/apache.conf /etc/apache2/conf.d/roundcube.conf
@@ -1736,9 +1736,6 @@ update-rc.d hestia defaults
 service hestia start
 check_result $? "hestia start failed"
 chown admin:admin $HESTIA/data/sessions
-
-# Adding cronjob for autoupdates
-$HESTIA/bin/v-add-cron-hestia-autoupdate
 
 
 #----------------------------------------------------------#

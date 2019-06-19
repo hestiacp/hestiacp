@@ -21,7 +21,7 @@ release_branch_check=$(cat $HESTIA/conf/hestia.conf | grep RELEASE_BRANCH)
 if [ -z "$release_branch_check" ]; then
     echo "(*) Adding global release branch variable to system configuration..."
     sed -i "/RELEASE_BRANCH/d" $HESTIA/conf/hestia.conf
-    echo "RELEASE_BRANCH='develop'" >> $HESTIA/conf/hestia.conf
+    echo "RELEASE_BRANCH='master'" >> $HESTIA/conf/hestia.conf
 fi
 
 # Load hestia.conf
@@ -76,7 +76,7 @@ echo ""
 # Set new version
 sed -i "/VERSION/d" $HESTIA/conf/hestia.conf
 # Set new branch variable
-echo "VERSION='0.10.0'" >> $HESTIA/conf/hestia.conf
+echo "VERSION='1.00.0-190618'" >> $HESTIA/conf/hestia.conf
 
 # Update Apache and Nginx configuration to support new file structure
 if [ -f /etc/apache2/apache.conf ]; then

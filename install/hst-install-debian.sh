@@ -1501,7 +1501,7 @@ fi
 #                   Configure Roundcube                    #
 #----------------------------------------------------------#
 
-if [ "$dovecot" = 'yes' ] && [ "$mysql" = 'yes' ]; then
+if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     if [ "$apache" = 'yes' ]; then
         cp -f $hestiacp/roundcube/apache.conf /etc/roundcube/
         ln -s /etc/roundcube/apache.conf /etc/apache2/conf.d/roundcube.conf

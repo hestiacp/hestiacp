@@ -1,9 +1,14 @@
 #!/bin/bash
 
-# Define variables
-export HESTIA="/usr/local/hestia"
-export BIN="/usr/local/hestia/bin"
+# Define global variables
+if [ -z "$HESTIA" ] || [ ! -f "${HESTIA}/conf/hestia.conf"]; then
+    export HESTIA="/usr/local/hestia"
+fi
+
+# Set backup folder
 HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
+
+# Set installation source folder
 hestiacp="$HESTIA/install/deb"
 
 # Set phpMyAdmin version for upgrade

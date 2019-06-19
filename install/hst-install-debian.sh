@@ -50,7 +50,7 @@ else
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
-        unrar-free vim-common acl sysstat"
+        unrar-free vim-common acl sysstat rsyslog"
 fi
 
 # Defining help function
@@ -1314,12 +1314,12 @@ fi
 
 
 #----------------------------------------------------------#
-#                    Update phpMyAdmin                     #
+#                    Configure phpMyAdmin                  #
 #----------------------------------------------------------#
 
 if [ "$mysql" = 'yes' ]; then
     # Display upgrade information
-    echo "Upgrade phpMyAdmin to v$pma_v..."
+    echo "Installing phpMyAdmin version v$pma_v..."
 
     # Download latest phpmyadmin release
     wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
@@ -1580,6 +1580,12 @@ if [ "$fail2ban" = 'yes' ]; then
         fline=$(echo "$fline" |grep enabled |tail -n1 |cut -f 1 -d -)
         sed -i "${fline}s/false/true/" /etc/fail2ban/jail.local
     fi 
+    if [ ! -e /var/log/auth.log ]; then
+        # Debian workaround: auth logging was moved to systemd
+        touch /var/log/auth.log
+        chmod 640 /var/log/auth.log
+        chown root:adm /var/log/auth.log
+    fi
     update-rc.d fail2ban defaults
     service fail2ban start
     check_result $? "fail2ban start failed"
@@ -1625,15 +1631,15 @@ if [ ! -z "$(grep ^admin: /etc/group)" ] && [ "$force" = 'yes' ]; then
     groupdel admin > /dev/null 2>&1
 fi
 
+# Enable sftp jail
+$HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1
+check_result $? "can't enable sftp jail"
+
 # Adding Hestia admin account
 $HESTIA/bin/v-add-user admin $vpass $email default System Administrator
 check_result $? "can't create admin user"
 $HESTIA/bin/v-change-user-shell admin nologin
 $HESTIA/bin/v-change-user-language admin $lang
-
-# Enable sftp jail
-$HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1
-check_result $? "can't enable sftp jail"
 
 # Roundcube permissions fix
 if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
@@ -1646,7 +1652,7 @@ fi
 # Configuring system IPs
 $HESTIA/bin/v-update-sys-ip > /dev/null 2>&1
 
-# Get main ip
+# Get main IP
 ip=$(ip addr|grep 'inet '|grep global|head -n1|awk '{print $2}'|cut -f1 -d/)
 local_ip=$ip
 

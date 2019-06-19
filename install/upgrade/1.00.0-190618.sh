@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define vars
-if [ -z "$HESTIA" ]; then
+if [ -z "$HESTIA" ] || [ ! -f "${HESTIA}/conf/hestia.conf"]; then
     export HESTIA="/usr/local/hestia"
 fi
 HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"

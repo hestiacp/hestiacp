@@ -1031,8 +1031,8 @@ echo "BACKUP_SYSTEM='local'" >> $HESTIA/conf/hestia.conf
 echo "LANGUAGE='$lang'" >> $HESTIA/conf/hestia.conf
 
 # Version & Release Branch
-echo "VERSION='0.10.0'" >> $HESTIA/conf/hestia.conf
-echo "RELEASE='develop'" >> $HESTIA/conf/hestia.conf
+echo "VERSION='1.00.0-190618'" >> $HESTIA/conf/hestia.conf
+echo "RELEASE='master'" >> $HESTIA/conf/hestia.conf
 
 # Installing hosting packages
 cp -rf $hestiacp/packages $HESTIA/data/
@@ -1457,7 +1457,7 @@ fi
 #                   Configure Roundcube                    #
 #----------------------------------------------------------#
 
-if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
+if [ "$dovecot" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     if [ "$apache" = 'yes' ]; then
         cp -f $hestiacp/roundcube/apache.conf /etc/roundcube/
         ln -s /etc/roundcube/apache.conf /etc/apache2/conf.d/roundcube.conf
@@ -1639,9 +1639,6 @@ service hestia start
 check_result $? "hestia start failed"
 chown admin:admin $HESTIA/data/sessions
 
-# Adding cronjob for autoupdates
-$HESTIA/bin/v-add-cron-hestia-autoupdate
-
 
 #----------------------------------------------------------#
 #                   Hestia Access Info                     #
@@ -1694,6 +1691,9 @@ cat $tmpfile | $send_mail -s "Hestia Control Panel" $email
 echo
 cat $tmpfile
 rm -f $tmpfile
+
+# Add welcome message to notification panel
+$HESTIA/bin/v-add-user-notification admin 'Welcome!' 'For more information on how to use Hestia Control Panel, click on the Help icon in the top right corner of the toolbar.<br><br>Please report any bugs or issues on GitHub at<br>https://github.com/hestiacp/hestiacp/Issues<br><br>Have a great day!'
 
 echo "(!) IMPORTANT: You must logout or restart the server before continuing."
 if [ "$interactive" = 'yes' ]; then

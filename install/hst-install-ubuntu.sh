@@ -868,7 +868,6 @@ sed -i "s/rdAuthentication no/rdAuthentication yes/g" /etc/ssh/sshd_config
 # Enable SFTP subsystem for SSH
 sftp_subsys_enabled=$(grep -iE "^#?.*subsystem.+(sftp )?sftp-server" /etc/ssh/sshd_config)
 if [ ! -z "$sftp_subsys_enabled" ]; then
-    echo "(*) Updating SFTP subsystem configuration..."
     sed -i -E "s/^#?.*Subsystem.+(sftp )?sftp-server/Subsystem sftp internal-sftp/g" /etc/ssh/sshd_config
 fi
 
@@ -1086,7 +1085,6 @@ if [ "$nginx" = 'yes' ]; then
     cp -f $hestiacp/nginx/status.conf /etc/nginx/conf.d/
     cp -f $hestiacp/nginx/phpmyadmin.inc /etc/nginx/conf.d/
     cp -f $hestiacp/nginx/phppgadmin.inc /etc/nginx/conf.d/
-    cp -f $hestiacp/nginx/webmail.inc /etc/nginx/conf.d/
     cp -f $hestiacp/logrotate/nginx /etc/logrotate.d/
     mkdir -p /etc/nginx/conf.d/domains
     mkdir -p /var/log/nginx/domains
@@ -1461,6 +1459,9 @@ if [ "$dovecot" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     if [ "$apache" = 'yes' ]; then
         cp -f $hestiacp/roundcube/apache.conf /etc/roundcube/
         ln -s /etc/roundcube/apache.conf /etc/apache2/conf.d/roundcube.conf
+    fi
+    if [ "$nginx" = 'yes' ]; then
+        cp -f $hestiacp/nginx/webmail.inc /etc/nginx/conf.d/
     fi
     cp -f $hestiacp/roundcube/main.inc.php /etc/roundcube/config.inc.php
     cp -f $hestiacp/roundcube/db.inc.php /etc/roundcube/debian-db-roundcube.php

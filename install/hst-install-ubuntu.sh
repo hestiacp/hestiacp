@@ -1692,6 +1692,9 @@ echo
 cat $tmpfile
 rm -f $tmpfile
 
+# Add welcome message to notification panel
+$HESTIA/bin/v-add-user-notification admin 'Welcome!' 'For more information on how to use Hestia Control Panel, click on the Help icon in the top right corner of the toolbar.<br><br>Please report any bugs or issues on GitHub at<br>https://github.com/hestiacp/hestiacp/Issues<br><br>Have a great day!'
+
 echo "(!) IMPORTANT: You must logout or restart the server before continuing."
 if [ "$interactive" = 'yes' ]; then
     echo -n " Do you want to logout now? [Y/N] "

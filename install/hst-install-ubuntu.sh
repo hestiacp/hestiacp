@@ -1279,12 +1279,12 @@ fi
 
 
 #----------------------------------------------------------#
-#                    Update phpMyAdmin                     #
+#                    Configure phpMyAdmin                     #
 #----------------------------------------------------------#
 
 if [ "$mysql" = 'yes' ]; then
     # Display upgrade information
-    echo "Upgrade phpMyAdmin to v$pma_v..."
+    echo "Installing phpMyAdmin version v$pma_v..."
 
     # Download latest phpmyadmin release
     wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz

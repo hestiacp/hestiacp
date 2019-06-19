@@ -323,14 +323,13 @@ if [ ! -z "$WEBALIZER_CHECK" ]; then
 fi
 
 # Run sftp jail once
-$HESTIA/bin/v-add-sys-sftp-jail
+$HESTIA/bin/v-add-sys-sftp-jail no
 
 # Enable SFTP subsystem for SSH
 sftp_subsys_enabled=$(grep -iE "^#?.*subsystem.+(sftp )?sftp-server" /etc/ssh/sshd_config)
 if [ ! -z "$sftp_subsys_enabled" ]; then
     echo "(*) Updating SFTP subsystem configuration..."
     sed -i -E "s/^#?.*Subsystem.+(sftp )?sftp-server/Subsystem sftp internal-sftp/g" /etc/ssh/sshd_config
-    systemctl restart ssh
 fi
 
 # Remove and migrate obsolete object keys
@@ -423,8 +422,9 @@ if [ ! -z $DNS_SYSTEM ]; then
 	$BIN/v-restart-dns $restart
 fi
 
-# restart Hestia services (nginx,php-fpm)
-systemctl restart hestia
+$BIN/v-restart-service ssh $restart
+$BIN/v-restart-service hestia $restart
+
 
 echo ""
 echo "    Upgrade complete! Please report any bugs or issues to"

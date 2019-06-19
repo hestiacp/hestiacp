@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add system sftp jail
-# options: NONE
+# options: [RESTART]
 #
 # The script enables sftp jailed environment
 
@@ -14,6 +14,7 @@ source /etc/profile
 source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
 
+restart=$1
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -45,11 +46,12 @@ if [ -z "$sftp_i" ]; then
     echo "    X11Forwarding no" >> $config
     echo "    AllowTCPForwarding no" >> $config
     echo "    ForceCommand internal-sftp" >> $config
-    restart='yes'
 fi
 
 # Validating opensshd config
-if [ "$restart" = 'yes' ]; then
+if [ "$restart" = 'no' ]; then
+    # Skip restarting SSH daemon
+else
     subj="OpenSSH restart failed"
     email=$(grep CONTACT $HESTIA/data/users/admin/user.conf |cut -f 2 -d \')
     /usr/sbin/sshd -t >/dev/null 2>&1
@@ -59,7 +61,6 @@ if [ "$restart" = 'yes' ]; then
         echo -e "$mail_text" |$SENDMAIL -s "$subj" $email
     else
         service ssh restart >/dev/null 2>&1
-        service sshd restart >/dev/null 2>&1
     fi
 fi
 

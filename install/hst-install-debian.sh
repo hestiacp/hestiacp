@@ -1067,7 +1067,7 @@ echo "LANGUAGE='$lang'" >> $HESTIA/conf/hestia.conf
 
 # Version & Release Branch
 echo "VERSION='1.00.0-190618'" >> $HESTIA/conf/hestia.conf
-echo "RELEASE='master'" >> $HESTIA/conf/hestia.conf
+echo "RELEASE_BRANCH='develop'" >> $HESTIA/conf/hestia.conf
 
 # Installing hosting packages
 cp -rf $hestiacp/packages $HESTIA/data/
@@ -1795,6 +1795,7 @@ rm -f $tmpfile
 $HESTIA/bin/v-add-user-notification admin 'Welcome!' 'For more information on how to use Hestia Control Panel, click on the Help icon in the top right corner of the toolbar.<br><br>Please report any bugs or issues on GitHub at<br>https://github.com/hestiacp/hestiacp/Issues<br><br>Have a great day!'
 
 echo "(!) IMPORTANT: You must logout or restart the server before continuing."
+echo ""
 if [ "$interactive" = 'yes' ]; then
     echo -n " Do you want to logout now? [Y/N] "
     read resetshell

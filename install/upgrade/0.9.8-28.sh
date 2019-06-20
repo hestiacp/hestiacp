@@ -3,6 +3,8 @@ HESTIA="/usr/local/hestia"
 HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
 spinner="/-\|"
 
+function version_ge(){ test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o ! -z "$1" -a "$1" = "$2"; }
+
 # Set version(s)
 pma_v='4.8.5'
 
@@ -11,31 +13,38 @@ if [ "$DB_SYSTEM" = 'mysql' ]; then
     # Display upgrade information
     echo "(*) Upgrading phpMyAdmin to v$pma_v..."
 
-    # Download latest phpMyAdmin release
-    wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
+    pma_release_file=$(ls /usr/share/phpmyadmin/RELEASE-DATE-* 2>/dev/null |tail -n 1)
+    if version_ge "${pma_release_file##*-}" "$pma_v"; then
+        echo "(*) phpMyAdmin $pma_v or newer is already installed: ${pma_release_file##*-}, skipping update..."
+    else
+        [ -d /usr/share/phpmyadmin ] || mkdir -p /usr/share/phpmyadmin
 
-    # Unpack files
-    tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
+        # Download latest phpMyAdmin release
+        wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
 
-    # Delete file to prevent error
-    rm -fr /usr/share/phpmyadmin/doc/html
+        # Unpack files
+        tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
 
-    # Overwrite old files
-    cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
+        # Delete file to prevent error
+        rm -fr /usr/share/phpmyadmin/doc/html
 
-    # Set config and log directory
-    sed -i "s|define('CONFIG_DIR', '');|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
-    sed -i "s|define('TEMP_DIR', './tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
+        # Overwrite old files
+        cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
 
-    # Create temporary folder and change permissions
-    if [ ! -d /usr/share/phpmyadmin/tmp ]; then
-        mkdir /usr/share/phpmyadmin/tmp
-        chmod 777 /usr/share/phpmyadmin/tmp
+        # Set config and log directory
+        sed -i "s|define('CONFIG_DIR', '');|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
+        sed -i "s|define('TEMP_DIR', './tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
+
+        # Create temporary folder and change permissions
+        if [ ! -d /usr/share/phpmyadmin/tmp ]; then
+            mkdir /usr/share/phpmyadmin/tmp
+            chmod 777 /usr/share/phpmyadmin/tmp
+        fi
+
+        # Clean up
+        rm -fr phpMyAdmin-$pma_v-all-languages
+        rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
     fi
-
-    # Clean up
-    rm -fr phpMyAdmin-$pma_v-all-languages
-    rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
 fi
 
 # Add amd64 to repositories to prevent notifications - https://goo.gl/hmsSV7

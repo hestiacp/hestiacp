@@ -12,6 +12,17 @@ HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
 # Set installation source folder
 hestiacp="$HESTIA/install/deb"
 
+# Load hestia.conf
+source /usr/local/hestia/conf/hestia.conf
+
+# Get hestia version
+version=$(dpkg -l | awk '$2=="hestia" { print $3 }')
+
+# Compare version for upgrade routine
+if [ "$version" != "0.9.8-28" ]; then
+    source $HESTIA/install/upgrade/0.9.8-28.sh
+fi
+
 # Set phpMyAdmin version for upgrade
 pma_v='4.9.0.1'
 

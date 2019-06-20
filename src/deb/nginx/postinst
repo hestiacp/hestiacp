@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
@@ -9,3 +9,16 @@ fi
 # Touch and set permisions on default log files on installation
 update-rc.d hestia defaults >/dev/null
 invoke-rc.d hestia start || true
+
+# Run triggers only on updates
+if [ ! -e "/usr/local/hestia/data/users/admin" ]; then
+    exit
+fi
+
+# Load hestia.conf
+source /usr/local/hestia/conf/hestia.conf
+
+# Reset backend port
+if [ ! -z "$BACKEND_PORT" ]; then
+    /usr/local/hestia/bin/v-change-sys-port $BACKEND_PORT
+fi

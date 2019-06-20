@@ -118,7 +118,14 @@ if [ ! -e /etc/ssl/dhparam.pem ]; then
 
     # Update DNS servers in nginx.conf
     dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
-    sed -i "s/1.0.0.1 1.1.1.1/$dns_resolver/g" /etc/nginx/nginx.conf
+    for ip in $dns_resolver; do
+        if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            resolver="$ip $resolver"
+        fi
+    done
+    if [ ! -z "$resolver" ]; then
+        sed -i "s/1.0.0.1 1.1.1.1/$dns_resolver/g" /etc/nginx/nginx.conf
+    fi
 
     # Restart Nginx service
     systemctl restart nginx >/dev/null 2>&1

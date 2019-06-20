@@ -1483,7 +1483,12 @@ if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     sed -i "s/localhost/$servername/g" /etc/roundcube/plugins/password/config.inc.php
     mysql roundcube < /usr/share/dbconfig-common/data/roundcube/install/mysql
 
+    # Configure webmail alias
+    echo "WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
+
     phpenmod mcrypt > /dev/null 2>&1
+
+    # Restart services
     if [ "$apache" = 'yes' ]; then
         service apache2 restart
     fi

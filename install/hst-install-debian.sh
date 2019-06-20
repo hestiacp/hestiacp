@@ -1031,7 +1031,6 @@ fi
 # Mail stack
 if [ "$exim" = 'yes' ]; then
     echo "MAIL_SYSTEM='exim4'" >> $HESTIA/conf/hestia.conf
-    echo "WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
     if [ "$clamd" = 'yes'  ]; then
         echo "ANTIVIRUS_SYSTEM='clamav-daemon'" >> $HESTIA/conf/hestia.conf
     fi
@@ -1501,7 +1500,7 @@ fi
 #                   Configure Roundcube                    #
 #----------------------------------------------------------#
 
-if [ "$dovecot" = 'yes' ] && [ "$mysql" = 'yes' ]; then
+if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     if [ "$apache" = 'yes' ]; then
         cp -f $hestiacp/roundcube/apache.conf /etc/roundcube/
         ln -s /etc/roundcube/apache.conf /etc/apache2/conf.d/roundcube.conf
@@ -1552,6 +1551,16 @@ if [ "$dovecot" = 'yes' ] && [ "$mysql" = 'yes' ]; then
                 fi
             fi
         fi
+    fi
+    # Configure webmail alias
+    echo "WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
+
+    # Restart services
+    if [ "$apache" = 'yes' ]; then
+        service apache2 restart
+    fi
+    if [ "$nginx" = 'yes' ]; then
+        service nginx restart
     fi
 fi
 

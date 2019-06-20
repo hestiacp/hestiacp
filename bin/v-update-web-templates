@@ -50,7 +50,7 @@ cp -rf $HESTIA/install/$type/templates/web $HESTIA/data/templates/
 php_versions=$(ls /etc/php/*/fpm -d 2>/dev/null | wc -l)
 if [ "$php_versions" -gt 1 ]; then
     if [ "$WEB_SYSTEM" = "nginx" ]; then
-        for tplname in $(ls $HESTIA/data/templates/web/$WEB_SYSTEM/ | grep -v 'default'); do
+        for tplname in $(ls $HESTIA/data/templates/web/$WEB_SYSTEM/ | grep -E 'PHP-[0-9][0-9]' ); do
             rm -fr $HESTIA/data/templates/web/$WEB_SYSTEM/$tplname
         done
     fi

@@ -135,7 +135,7 @@ if [ ! -e /etc/ssl/dhparam.pem ]; then
         fi
     done
     if [ ! -z "$resolver" ]; then
-        sed -i "s/1.0.0.1 1.1.1.1/$dns_resolver/g" /etc/nginx/nginx.conf
+        sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /etc/nginx/nginx.conf
     fi
 
     # Restart Nginx service

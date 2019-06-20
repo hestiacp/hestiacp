@@ -18,10 +18,13 @@ source /usr/local/hestia/conf/hestia.conf
 # Get hestia version
 version=$(dpkg -l | awk '$2=="hestia" { print $3 }')
 
+function version_ge(){ test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o ! -z "$1" -a "$1" = "$2"; }
+
 # Compare version for upgrade routine
 if [ "$version" != "0.9.8-28" ]; then
     source $HESTIA/install/upgrade/0.9.8-28.sh
 fi
+
 
 # Set phpMyAdmin version for upgrade
 pma_v='4.9.0.1'
@@ -135,7 +138,7 @@ if [ ! -e /etc/ssl/dhparam.pem ]; then
         fi
     done
     if [ ! -z "$resolver" ]; then
-        sed -i "s/1.0.0.1 1.1.1.1/$dns_resolver/g" /etc/nginx/nginx.conf
+        sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /etc/nginx/nginx.conf
     fi
 
     # Restart Nginx service
@@ -403,11 +406,13 @@ done
 
 # Upgrade phpMyAdmin if applicable
 if [ "$DB_SYSTEM" = 'mysql' ]; then
-    if [ -e "/usr/share/phpmyadmin/RELEASE-DATE-$pma_v" ]; then
-        echo "(*) phpMyAdmin $pma_v is already installed, skipping update..."
+    pma_release_file=$(ls /usr/share/phpmyadmin/RELEASE-DATE-* 2>/dev/null |tail -n 1)
+    if version_ge "${pma_release_file##*-}" "$pma_v"; then
+        echo "(*) phpMyAdmin $pma_v or newer is already installed: ${pma_release_file##*-}, skipping update..."
     else
         # Display upgrade information
         echo "(*) Upgrade phpMyAdmin to v$pma_v..."
+        [ -d /usr/share/phpmyadmin ] || mkdir -p /usr/share/phpmyadmin
 
         # Download latest phpMyAdmin release
         wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz

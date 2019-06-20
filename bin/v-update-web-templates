@@ -32,36 +32,53 @@ else
     exit $E_NOTEXIST
 fi
 
+if [ -z "$WEB_SYSTEM" ]; then
+    echo "Error: Missing Web System"
+    log_event "$E_ARGS"
+    exit $E_ARGS
+fi
+
+HST_WEBTEMPLATES="$HESTIA/data/templates/web"
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Update templates
-if [ -d $HESTIA/data/templates/web ]; then
-    rm -rf $HESTIA/data/templates/web/skel 2>/dev/null  
-    rm -rf $HESTIA/data/templates/web/suspend 2>/dev/null
-    rm -rf $HESTIA/data/templates/web/unassigned 2>/dev/null
+if [ -d "${HST_WEBTEMPLATES}" ]; then
+    rm -rf "${HST_WEBTEMPLATES}/skel" 2>/dev/null
+    rm -rf "${HST_WEBTEMPLATES}/suspend" 2>/dev/null
+    rm -rf "${HST_WEBTEMPLATES}/unassigned" 2>/dev/null
 fi
 
-cp -rf $HESTIA/install/$type/templates/web $HESTIA/data/templates/
+for webtpl_folder in $(ls $HESTIA/install/$type/templates/web/* -d 2>/dev/null | egrep -v '/(nginx)$' ); do
+    cp -rf "${webtpl_folder}" "${HST_WEBTEMPLATES}/"
+done
+
+[ -d "${HST_WEBTEMPLATES}/nginx" ] || mkdir -p "${HST_WEBTEMPLATES}/nginx"
 
 # Update Multi-PHP templates
 php_versions=$(ls /etc/php/*/fpm -d 2>/dev/null | wc -l)
 if [ "$php_versions" -gt 1 ]; then
-    if [ "$WEB_SYSTEM" = "nginx" ]; then
-        for tplname in $(ls $HESTIA/data/templates/web/$WEB_SYSTEM/ | grep -E 'PHP-[0-9][0-9]' ); do
-            rm -fr $HESTIA/data/templates/web/$WEB_SYSTEM/$tplname
-        done
-    fi
     for v in $(ls /etc/php/); do
         if [ ! -d "/etc/php/$v/fpm/pool.d/" ]; then
             continue
         fi
         v_tpl=$(echo "$v" | sed -e 's/[.]//')
-        cp -f $HESTIA/install/$type/multiphp/$WEB_SYSTEM/PHP-$v_tpl.* $HESTIA/data/templates/web/$WEB_SYSTEM/
+        cp -f "$HESTIA/install/$type/multiphp/${WEB_SYSTEM}/PHP-${v_tpl}".* "${HST_WEBTEMPLATES}/${WEB_SYSTEM}/"
     done
-    chmod a+x $HESTIA/data/templates/web/$WEB_SYSTEM/*.sh
+    chmod a+x "${HST_WEBTEMPLATES}/${WEB_SYSTEM}/"*.sh 2> /dev/null
+
+    # Create default TPL symlink when missing and point to the last php version found
+    if [ ! -z $v_tpl ] && [ "$WEB_SYSTEM" = "nginx" ]; then
+        [ -e "${HST_WEBTEMPLATES}/${WEB_SYSTEM}/default.sh"   ] || ln -s "${HST_WEBTEMPLATES}/${WEB_SYSTEM}/PHP-${v_tpl}.sh" "${HST_WEBTEMPLATES}/${WEB_SYSTEM}/default.sh"
+        [ -e "${HST_WEBTEMPLATES}/${WEB_SYSTEM}/default.tpl"  ] || ln -s "${HST_WEBTEMPLATES}/${WEB_SYSTEM}/PHP-${v_tpl}.tpl" "${HST_WEBTEMPLATES}/${WEB_SYSTEM}/default.tpl"
+        [ -e "${HST_WEBTEMPLATES}/${WEB_SYSTEM}/default.stpl" ] || ln -s "${HST_WEBTEMPLATES}/${WEB_SYSTEM}/PHP-${v_tpl}.stpl" "${HST_WEBTEMPLATES}/${WEB_SYSTEM}/default.stpl"
+    fi
+fi
+
+if [ "$PROXY_SYSTEM" = 'nginx' ] || [ "$php_versions" -le 1 ]; then
+    cp -rf "${HESTIA}/install/${type}/templates/web/nginx" "${HST_WEBTEMPLATES}/"
 fi
 
 # Rebuilding web domains

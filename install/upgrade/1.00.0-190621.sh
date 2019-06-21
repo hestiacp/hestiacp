@@ -24,3 +24,10 @@ if [ "$version" != "1.00.0-190618" ] && [ "$version" != "0.10.0" ] then
 fi
 
 # Place additional commands below.
+
+# Remove global options from nginx.conf to prevent conflicts with other web packages
+if [ -e /etc/nginx/nginx.conf ]; then
+    echo "(*) Updating NGINX global configuration..."
+    sed -i 's/add_header          X-Frame-Options SAMEORIGIN;/d' /etc/nginx/nginx.conf
+    sed -i 's/add_header          X-Content-Type-Options nosniff;/d' /etc/nginx/nginx.conf
+fi

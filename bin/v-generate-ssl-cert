@@ -69,6 +69,9 @@ args_usage='DOMAIN EMAIL COUNTRY STATE CITY ORG UNIT [ALIASES] [FORMAT]'
 check_args '7' "$#" "$args_usage"
 is_format_valid 'domain_alias' 'format'
 
+if [ ! -f /root/.rnd ]; then
+    touch /root/.rnd
+fi
 
 #----------------------------------------------------------#
 #                       Action                             #

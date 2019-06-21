@@ -597,7 +597,7 @@ fi
 
 # Installing Backport repo for debian 8
 if [ "$release" -eq 8 ]; then
-    echo "deb http://ftp.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
+    echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
 fi
 
 # Installing Backport repo for debian 10

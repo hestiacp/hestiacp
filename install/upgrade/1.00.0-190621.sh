@@ -19,7 +19,7 @@ source /usr/local/hestia/conf/hestia.conf
 version=$(dpkg -l | awk '$2=="hestia" { print $3 }')
 
 # Compare version for upgrade routine
-if [ "$version" != "1.00.0-190618" ]; then
+if [ "$version" != "1.00.0-190618" ] && [ "$version" != "0.10.0" ] then
     source $HESTIA/install/upgrade/1.00.0-190618.sh
 fi
 

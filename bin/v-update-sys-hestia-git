@@ -49,6 +49,9 @@ download_file() {
   fi
 }
 
+# Clear screen output before continuing
+clear
+
 # Set compiling directory
 BUILD_DIR='/tmp/hestiacp-src/'
 DEB_DIR="$BUILD_DIR/debs/"
@@ -373,4 +376,6 @@ if [ "$install" = 'yes' ] || [ "$install" = 'y' ]; then
       dpkg -i $i
     done
     unset $answer
+    # Remove temporary files
+    rm -rf $BUILD_DIR
 fi

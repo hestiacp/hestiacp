@@ -1837,7 +1837,7 @@ if [ "$interactive" = 'yes' ]; then
     read resetshell
 
     if [ "$resetshell" = "Y" ] || [ "$resetshell" = "y" ]; then
-        logout
+        exit
     fi
 fi
 

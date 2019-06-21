@@ -15,13 +15,15 @@ hestiacp="$HESTIA/install/deb"
 # Load hestia.conf
 source /usr/local/hestia/conf/hestia.conf
 
+# Compare version for upgrade routine
+if [ "$VERSION" != "1.00.0-190618" ] && [ "$VERSION" != "0.10.0" ] then
+    source $HESTIA/install/upgrade/1.00.0-190618.sh
+fi
+
 # Get hestia version
 version=$(dpkg -l | awk '$2=="hestia" { print $3 }')
 
-# Compare version for upgrade routine
-if [ "$version" != "1.00.0-190618" ] && [ "$version" != "0.10.0" ] then
-    source $HESTIA/install/upgrade/1.00.0-190618.sh
-fi
+# To Do: Write version to hestia.conf.
 
 # Place additional commands below.
 

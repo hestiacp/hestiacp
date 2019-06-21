@@ -15,13 +15,8 @@ hestiacp="$HESTIA/install/deb"
 # Load hestia.conf
 source /usr/local/hestia/conf/hestia.conf
 
-# Get hestia version
-version=$(dpkg -l | awk '$2=="hestia" { print $3 }')
-
-function version_ge(){ test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o ! -z "$1" -a "$1" = "$2"; }
-
 # Compare version for upgrade routine
-if [ "$version" != "0.9.8-28" ]; then
+if [ "$VERSION" != "0.9.8-28" ]; then
     source $HESTIA/install/upgrade/0.9.8-28.sh
 fi
 

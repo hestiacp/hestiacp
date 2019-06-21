@@ -862,6 +862,7 @@ rm -f /usr/sbin/policy-rc.d
 #                     Configure system                     #
 #----------------------------------------------------------#
 
+echo "Configure System"
 # Enable SSH password authentication
 sed -i "s/rdAuthentication no/rdAuthentication yes/g" /etc/ssh/sshd_config
 
@@ -913,6 +914,7 @@ chmod 755 /usr/bin/rssh
 #                     Configure Hestia                     #
 #----------------------------------------------------------#
 
+echo "Configure Hestia"
 # Installing sudo configuration
 mkdir -p /etc/sudoers.d
 cp -f $hestiacp/sudo/admin /etc/sudoers.d/
@@ -1053,6 +1055,7 @@ cp -rf $hestiacp/firewall $HESTIA/data/
 $HESTIA/bin/v-change-sys-hostname $servername > /dev/null 2>&1
 
 # Generating SSL certificate
+echo "Generate ssl certificate"
 $HESTIA/bin/v-generate-ssl-cert $(hostname) $email 'US' 'California' \
      'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
 
@@ -1062,6 +1065,7 @@ key_start=$(grep -n "BEGIN RSA" /tmp/hst.pem |cut -f 1 -d:)
 key_end=$(grep -n  "END RSA" /tmp/hst.pem |cut -f 1 -d:)
 
 # Adding SSL certificate
+echo "Add ssl certificate to Hestia"
 cd $HESTIA/ssl
 sed -n "1,${crt_end}p" /tmp/hst.pem > certificate.crt
 sed -n "$key_start,${key_end}p" /tmp/hst.pem > certificate.key
@@ -1080,6 +1084,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$nginx" = 'yes' ]; then
+    echo "Configure Nginx Webserver"
     rm -f /etc/nginx/conf.d/*.conf
     cp -f $hestiacp/nginx/nginx.conf /etc/nginx/
     cp -f $hestiacp/nginx/status.conf /etc/nginx/conf.d/
@@ -1089,6 +1094,7 @@ if [ "$nginx" = 'yes' ]; then
     mkdir -p /etc/nginx/conf.d/domains
     mkdir -p /var/log/nginx/domains
     if [ "$apache" = 'no' ] && [ "$multiphp" = 'yes' ]; then
+        echo "Configure Nginx MultiPHP"
         rm -fr $HESTIA/data/templates/web/nginx/*
         for v in "${multiphp_v[@]}"; do
             update-rc.d php$v-fpm defaults > /dev/null 2>&1
@@ -1114,7 +1120,14 @@ if [ "$nginx" = 'yes' ]; then
 
     # Update dns servers in nginx.conf
     dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
-    sed -i "s/1.0.0.1 1.1.1.1/$dns_resolver/g" /etc/nginx/nginx.conf
+    for ip in $dns_resolver; do
+        if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            resolver="$ip $resolver"
+        fi
+    done
+    if [ ! -z "$resolver" ]; then
+        sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /etc/nginx/nginx.conf
+    fi
 
     update-rc.d nginx defaults > /dev/null 2>&1
     service nginx start >> $LOG
@@ -1127,6 +1140,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$apache" = 'yes' ]; then
+    echo "Configure Apache Webserver"
     cp -f $hestiacp/apache2/apache2.conf /etc/apache2/
     cp -f $hestiacp/apache2/status.conf /etc/apache2/mods-enabled/
     cp -f $hestiacp/logrotate/apache2 /etc/logrotate.d/
@@ -1147,6 +1161,7 @@ if [ "$apache" = 'yes' ]; then
     chmod 640 /var/log/apache2/access.log /var/log/apache2/error.log
     chmod 751 /var/log/apache2/domains
     if [ "$multiphp" = 'yes' ] ; then
+        echo "Configure Apache MultiPHP"
         a2enmod proxy_fcgi setenvif > /dev/null 2>&1
         for v in "${multiphp_v[@]}"; do
             a2enconf php$v-fpm-fpm > /dev/null 2>&1
@@ -1173,6 +1188,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$phpfpm" = 'yes' ]; then
+    echo "Configure PHP-FPM"
     cp -f $hestiacp/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf
     update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1
     service php$fpm_v-fpm start >> $LOG
@@ -1183,7 +1199,7 @@ fi
 #----------------------------------------------------------#
 #                     Configure PHP                        #
 #----------------------------------------------------------#
-
+echo "Configure PHP Timezone"
 ZONE=$(timedatectl > /dev/null 2>&1|grep Timezone|awk '{print $2}')
 if [ -z "$ZONE" ]; then
     ZONE='UTC'
@@ -1205,6 +1221,7 @@ chmod 755 /etc/cron.daily/php-session-cleanup
 #----------------------------------------------------------#
 
 if [ "$vsftpd" = 'yes' ]; then
+    echo "Configure Vsftpd"
     cp -f $hestiacp/vsftpd/vsftpd.conf /etc/
     touch /var/log/vsftpd.log
     chown root:adm /var/log/vsftpd.log
@@ -1224,6 +1241,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$proftpd" = 'yes' ]; then
+    echo "Configure ProFTPD server"
     echo "127.0.0.1 $servername" >> /etc/hosts
     cp -f $hestiacp/proftpd/proftpd.conf /etc/proftpd/
     update-rc.d proftpd defaults > /dev/null 2>&1
@@ -1237,6 +1255,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$mysql" = 'yes' ]; then
+    echo "Configure MariaDB server"
     mycnf="my-small.cnf"
     if [ $memory -gt 1200000 ]; then
         mycnf="my-medium.cnf"
@@ -1315,6 +1334,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$postgresql" = 'yes' ]; then
+    echo "Configure PostgreSQL database server"
     ppass=$(gen_pass)
     cp -f $hestiacp/postgresql/pg_hba.conf /etc/postgresql/*/main/
     service postgresql restart
@@ -1333,6 +1353,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$named" = 'yes' ]; then
+    echo "Configure Bind DNS server"
     cp -f $hestiacp/bind/named.conf /etc/bind/
     cp -f $hestiacp/bind/named.conf.options /etc/bind/
     chown root:bind /etc/bind/named.conf
@@ -1364,6 +1385,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$exim" = 'yes' ]; then
+    echo "Configure Exim mail server"
     gpasswd -a Debian-exim mail > /dev/null 2>&1
     cp -f $hestiacp/exim/exim4.conf.template /etc/exim4/
     cp -f $hestiacp/exim/dnsbl.conf /etc/exim4/
@@ -1399,6 +1421,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$dovecot" = 'yes' ]; then
+    echo "Configure Dovecot"
     gpasswd -a dovecot mail > /dev/null 2>&1
     cp -rf $hestiacp/dovecot /etc/
     cp -f $hestiacp/logrotate/dovecot /etc/logrotate.d/
@@ -1440,6 +1463,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$spamd" = 'yes' ]; then
+    echo "Configure SpamAssassin"
     update-rc.d spamassassin defaults > /dev/null 2>&1
     sed -i "s/ENABLED=0/ENABLED=1/" /etc/default/spamassassin
     service spamassassin start >> $LOG
@@ -1456,6 +1480,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
+    echo "Configure Roundcube"
     if [ "$apache" = 'yes' ]; then
         cp -f $hestiacp/roundcube/apache.conf /etc/roundcube/
         ln -s /etc/roundcube/apache.conf /etc/apache2/conf.d/roundcube.conf
@@ -1503,6 +1528,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$fail2ban" = 'yes' ]; then
+    echo "Configure Fail2ban"
     cp -rf $hestiacp/fail2ban /etc/
     if [ "$dovecot" = 'no' ]; then
         fline=$(cat /etc/fail2ban/jail.local |grep -n dovecot-iptables -A 2)

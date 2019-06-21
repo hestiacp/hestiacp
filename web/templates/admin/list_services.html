@@ -6,7 +6,16 @@
           <a href="/list/ip/" class="ui-button cancel" title="<?=__('IP')?>"><i class="fas fa-ethernet status-icon blue"></i> <?=__('IP')?></a>
           <?php if ((isset($_SESSION['FIREWALL_SYSTEM'])) && (!empty($_SESSION['FIREWALL_SYSTEM']))) {?><a href="/list/firewall/" class="ui-button cancel" title="<?=__('Firewall')?>"><i class="fas fa-shield-alt status-icon red"></i> <?=__('Firewall')?></a><?php }?>
           <a href="/list/updates/" class="ui-button cancel" title="<?=__('Updates')?>"><i class="fas fa-sync status-icon green"></i> <?=__('Updates')?></a>
-          <a href="/restart/system/?hostname=<?php echo $sys['sysinfo']['HOSTNAME'] ?>&token=<?=$_SESSION['token']?>" class="ui-button danger cancel" title="<?=__('Restart')?>"><i class="fas fa-undo status-icon red"></i> <?=__('Restart')?></a>
+          <div class="actions-panel display-inline-block" key-action="js">
+              <a class="data-controls do_servicerestart ui-button danger cancel" title="<?=__('Restart')?>">
+                <i class="do_servicerestart fas fa-undo status-icon red"></i>
+                <?=__('Restart')?>
+                <input type="hidden" name="servicerestart_url" value="/restart/system/?hostname=<?php echo $sys['sysinfo']['HOSTNAME'] ?>&token=<?=$_SESSION['token']?>" />
+                  <div class="confirmation-text-servicerestart hidden" title="<?=__('Confirmation')?>">
+                    <p class="confirmation"><?=__('RESTART_CONFIRMATION', 'Server')?></p>
+                  </div>
+              </a>
+          </div>
         </div>
         <div class="l-sort-toolbar clearfix">
           <table>
@@ -106,12 +115,30 @@
           </div>
           <div class="clearfix l-unit__stat-col--left wide-2"><b><a href="/edit/server/<? echo $key ?>/" title="<?=__('edit')?>"><?=$key?></a></b></div>
           <div class="clearfix l-unit__stat-col--left text-center compact-2">
+            <div class="actions-panel clearfix">
               <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href">
                   <a href="/edit/server/<? echo $key ?>/" title="<?=__('edit')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim icon-large"></i></a>
               </div>
-                  <a href="/restart/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('restart')?>"><i class="data-controls fas fa-undo status-icon highlight status-icon dim icon-large"></i></a>
-                  <a href="/<?php echo $action ?>/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__($action)?>"><i class="fas fa-pause status-icon red status-icon dim icon-large"></i></a>
+              <div class="actions-panel__col actions-panel__stop shortcut-s" key-action="js">
+                  <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_servicerestart" title="<?=__('restart')?>">
+                    <i class="do_servicerestart data-controls fas fa-undo status-icon highlight status-icon dim icon-large"></i>
+                  <input type="hidden" name="servicerestart_url" value="/restart/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>" />
+                  <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-servicerestart hidden" title="<?=__('Confirmation')?>">
+                    <p class="confirmation"><?=__('RESTART_CONFIRMATION',$key)?></p>
+                  </div>
+                </a>
+              </div>
+              <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+                <a id="delete_link_<?=$i?>" class="data-controls do_servicestop" title="<?=__($action)?>">
+                  <i class="do_servicestop fas fa-pause status-icon red status-icon dim icon-large"></i>
+                  <input type="hidden" name="servicestop_url" value="/<?php echo $action ?>/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>" />
+                    <div id="delete_dialog_<?=$i?>" class="confirmation-text-servicestop hidden" title="<?=__('Confirmation')?>">
+                      <p class="confirmation"><?=__('Are you sure you want to stop service',$key)?></p>
+                    </div>
+                </a>
+              </div>
             </div>
+          </div>
           <div class="clearfix l-unit__stat-col--left wide-3"><?=__($data[$key]['SYSTEM'])?></div>
           <div class="clearfix l-unit__stat-col--left text-center"><b><?=humanize_time($data[$key]['RTIME'])?></b></div>
           <div class="clearfix l-unit__stat-col--left text-center"><b><?=$cpu?></b></div>

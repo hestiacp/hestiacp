@@ -1,28 +1,12 @@
 #!/bin/bash
 
-# Define global variables
-if [ -z "$HESTIA" ] || [ ! -f "${HESTIA}/conf/hestia.conf" ]; then
-    export HESTIA="/usr/local/hestia"
-    export BIN="/usr/local/hestia/bin"
-fi
-
-# Set backup folder
-HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
-
-# Set installation source folder
-hestiacp="$HESTIA/install/deb"
+# Define version check function
+function version_ge(){ test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o ! -z "$1" -a "$1" = "$2"; }
 
 # Load hestia.conf
 source /usr/local/hestia/conf/hestia.conf
 
-# Compare version for upgrade routine
-if [ "$VERSION" != "0.9.8-28" ]; then
-    source $HESTIA/install/upgrade/0.9.8-28.sh
-fi
-
-
-# Set phpMyAdmin version for upgrade
-pma_v='4.9.0.1'
+####### Place additional commands below. #######
 
 # Add amd64 to repositories to prevent notifications - https://goo.gl/hmsSV7
 if ! grep -q 'arch=amd64' /etc/apt/sources.list.d/nginx.list; then
@@ -82,43 +66,19 @@ if [ ! -f /etc/apt/apt.conf.d/80-retries ]; then
     echo "APT::Acquire::Retries \"3\";" > /etc/apt/apt.conf.d/80-retries
 fi
 
-# Clear the screen from apt output to prepare for upgrade installer experience
-clear
-echo
-echo '     _   _           _   _        ____ ____  '
-echo '    | | | | ___  ___| |_(_) __ _ / ___|  _ \ '
-echo '    | |_| |/ _ \/ __| __| |/ _` | |   | |_) |'
-echo '    |  _  |  __/\__ \ |_| | (_| | |___|  __/ '
-echo '    |_| |_|\___||___/\__|_|\__,_|\____|_|    '
-echo ""
-echo "       Hestia Control Panel Upgrade Script"
-echo "==================================================="
-echo ""
-echo "Existing files will be backed up to the following location:"
-echo "$HESTIA_BACKUP/"
-echo ""
-echo "This process may take a few moments, please wait..."
-echo ""
-
-# Set new version
-sed -i "/VERSION/d" $HESTIA/conf/hestia.conf
-echo "VERSION='1.00.0-190618'" >> $HESTIA/conf/hestia.conf
-
 # Update Apache and Nginx configuration to support new file structure
+echo "(*) Updating web server configuration..."
 if [ -f /etc/apache2/apache.conf ]; then
-    echo "(*) Updating Apache configuration..."
     mv  /etc/apache2/apache.conf $HESTIA_BACKUP/conf/
     cp -f $HESTIA/install/deb/apache2/apache.conf /etc/apache2/apache.conf
 fi
 if [ -f /etc/nginx/nginx.conf ]; then
-    echo "(*) Updating Nginx configuration..."
     mv  /etc/nginx/nginx.conf $HESTIA_BACKUP/conf/
     cp -f $HESTIA/install/deb/nginx/nginx.conf /etc/nginx/nginx.conf
 fi
 
 # Generate dhparam
 if [ ! -e /etc/ssl/dhparam.pem ]; then
-    echo "(*) Enabling HTTPS Strict Transport Security (HSTS) support..."
     mv  /etc/nginx/nginx.conf $HESTIA_BACKUP/conf/
     cp -f $hestiacp/nginx/nginx.conf /etc/nginx/
 
@@ -399,44 +359,6 @@ for user in `ls /usr/local/hestia/data/users/`; do
 	fi
 done
 
-# Upgrade phpMyAdmin if applicable
-if [ "$DB_SYSTEM" = 'mysql' ]; then
-    pma_release_file=$(ls /usr/share/phpmyadmin/RELEASE-DATE-* 2>/dev/null |tail -n 1)
-    if version_ge "${pma_release_file##*-}" "$pma_v"; then
-        echo "(*) phpMyAdmin $pma_v or newer is already installed: ${pma_release_file##*-}, skipping update..."
-    else
-        # Display upgrade information
-        echo "(*) Upgrade phpMyAdmin to v$pma_v..."
-        [ -d /usr/share/phpmyadmin ] || mkdir -p /usr/share/phpmyadmin
-
-        # Download latest phpMyAdmin release
-        wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
-
-        # Unpack files
-        tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
-
-        # Delete file to prevent error
-        rm -fr /usr/share/phpmyadmin/doc/html
-
-        # Overwrite old files
-        cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
-
-        # Set config and log directory
-        sed -i "s|define('CONFIG_DIR', '');|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
-        sed -i "s|define('TEMP_DIR', './tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
-
-        # Create temporary folder and change permissions
-        if [ ! -d /usr/share/phpmyadmin/tmp ]; then
-            mkdir /usr/share/phpmyadmin/tmp
-            chmod 777 /usr/share/phpmyadmin/tmp
-        fi
-
-        # Clear up
-        rm -fr phpMyAdmin-$pma_v-all-languages
-        rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
-    fi
-fi
-
 # Reset backend port
 if [ ! -z "$BACKEND_PORT" ]; then
     /usr/local/hestia/bin/v-change-sys-port $BACKEND_PORT
@@ -456,43 +378,3 @@ fi
 if [ -f /usr/local/hestia/data/firewall/ports.conf ]; then
     rm -f /usr/local/hestia/data/firewall/ports.conf
 fi
-
-# Add upgrade notification to admin user's panel
-$BIN/v-add-user-notification admin 'Upgrade complete' 'Your server has been updated to v0.10.0.<br>Please report any bugs on GitHub at<br>https://github.com/hestiacp/hestiacp/Issues<br><br>Have a great day!'
-
-# Restart services for changes to take full effect
-echo "(*) Restarting services..."
-sleep 3
-if [ ! -z $MAIL_SYSTEM ]; then
-	$BIN/v-restart-mail $restart
-fi
-if [ ! -z $IMAP_SYSTEM ]; then
-	$BIN/v-restart-service $IMAP_SYSTEM $restart
-fi
-if [ ! -z $WEB_SYSTEM ]; then
-	$BIN/v-restart-web $restart
-	$BIN/v-restart-proxy $restart
-fi
-if [ ! -z $DNS_SYSTEM ]; then
-	$BIN/v-restart-dns $restart
-fi
-
-# Restart SSH daemon and Hestia Control Panel service
-$BIN/v-restart-service ssh $restart
-$BIN/v-restart-service hestia $restart
-
-
-echo ""
-echo "    Upgrade complete! Please report any bugs or issues to"
-echo "    https://github.com/hestiacp/hestiacp/issues"
-echo ""
-echo "    We hope that you enjoy this release of Hestia Control Panel,"
-echo "    enjoy your day!"
-echo ""
-echo "    Sincerely,"
-echo "    The Hestia Control Panel development team"
-echo ""
-echo "    www.hestiacp.com"
-echo "    Made with love & pride by the open-source community around the world."
-echo ""
-echo ""

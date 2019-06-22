@@ -1,6 +1,15 @@
 [Hestia Control Panel](https://www.hestiacp.com/)
 ==================================================
 
+**Important notice regarding v1.00.0-190618 release**
+----------------------------
+On Monday, June 17th 2019 we released version 1.00.0-190618 which unfortunately has a few issues which occur on certain configurations that were not
+caught by our internal testing processes. Because automatic updates were enabled by default on new installations, this has caused instances where servers
+have become unavailable due to the upgrade failing and we sincerely apologize for any inconvenience and disruption.
+
+If you have experienced a failed upgrade, please submit an issue report via GitHub Issues. We are planning on shipping the v1.0.1 hotfix release once we
+have validated that it corrects the issues which we have been made aware of and other bugs that we've fixed between the time of the initial release and now.
+
 **Pre-Release Software Information**
 ----------------------------
 **Hestia Control Panel is undergoing rapid changes in development. As such, it is important to note that:**

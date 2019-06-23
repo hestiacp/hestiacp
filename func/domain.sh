@@ -341,7 +341,7 @@ del_web_config() {
     fi
 
     # Remove domain configuration files and clean up symbolic links
-    rm -f "$conf" "${conf}"_*
+    rm -f "$conf"
 
     if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" = "$1" ]; then
         rm -f "/etc/$WEB_SYSTEM/conf.d/domains/$confname"

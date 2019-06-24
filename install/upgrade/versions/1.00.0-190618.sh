@@ -33,11 +33,6 @@ source $HESTIA/conf/hestia.conf
 # Load hestia main functions
 source /usr/local/hestia/func/main.sh
 
-# Initialize backup directory
-mkdir -p $HESTIA_BACKUP/conf/
-mkdir -p $HESTIA_BACKUP/packages/
-mkdir -p $HESTIA_BACKUP/templates/
-
 # Detect OS
 case $(head -n1 /etc/issue | cut -f 1 -d ' ') in
     Debian)     os="debian" ;;

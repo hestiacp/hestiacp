@@ -3,6 +3,8 @@ server {
     server_name %domain_idn% %alias_idn%;
     ssl_certificate      %ssl_pem%;
     ssl_certificate_key  %ssl_key%;
+    ssl_stapling on;
+    ssl_stapling_verify on;
     error_log  /var/log/%web_system%/domains/%domain%.error.log error;
 
     location / {

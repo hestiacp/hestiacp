@@ -9,6 +9,8 @@ server {
 
     ssl_certificate      %ssl_pem%;
     ssl_certificate_key  %ssl_key%;
+    ssl_stapling on;
+    ssl_stapling_verify on;
 
     proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
     proxy_redirect          off;

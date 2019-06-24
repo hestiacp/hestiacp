@@ -9,6 +9,9 @@ server {
 
     ssl_certificate      %ssl_pem%;
     ssl_certificate_key  %ssl_key%;
+    ssl_stapling on;
+    ssl_stapling_verify on;
+
 #   if you need to rewrite www to non-www uncomment bellow
 #   if ($host != '%domain%' ) {
 #       rewrite      ^/(.*)$  https://%domain%/$1  permanent;

@@ -173,11 +173,11 @@ App.Listeners.WEB.keypress_domain_name();
 
 $(function() {
     $('#v_domain').change(function() {
-        if (((document.getElementById('v_domain').value).split(".")).length === 2) {
-            var prefix = 'www.';
-            document.getElementById('v_aliases').value = prefix + document.getElementById('v_domain').value;
-        } else {
+        var prefix = 'www.';
+        if (((document.getElementById('v_domain').value).split(".")).length > 2) {
             document.getElementById('v_aliases').value = "";
+        } else {
+            document.getElementById('v_aliases').value = prefix + document.getElementById('v_domain').value;
         }
     });
     App.Actions.WEB.toggle_letsencrypt($('input[name=v_letsencrypt]'))

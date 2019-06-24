@@ -4,7 +4,7 @@
 function version_ge(){ test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o ! -z "$1" -a "$1" = "$2"; }
 
 # Set new version number
-NEW_VERSION="1.00.0-190621"
+NEW_VERSION="1.0.1"
 
 # Set phpMyAdmin version for upgrade
 pma_v='4.9.0.1'

@@ -53,40 +53,6 @@ if [ ! -f /etc/apt/apt.conf.d/80-retries ]; then
     echo "APT::Acquire::Retries \"3\";" > /etc/apt/apt.conf.d/80-retries
 fi
 
-# Update Apache and Nginx configuration to support new file structure
-echo "(*) Updating web server configuration..."
-if [ -f /etc/apache2/apache.conf ]; then
-    mv  /etc/apache2/apache.conf $HESTIA_BACKUP/conf/
-    cp -f $HESTIA/install/deb/apache2/apache.conf /etc/apache2/apache.conf
-fi
-if [ -f /etc/nginx/nginx.conf ]; then
-    mv  /etc/nginx/nginx.conf $HESTIA_BACKUP/conf/
-    cp -f $HESTIA/install/deb/nginx/nginx.conf /etc/nginx/nginx.conf
-fi
-
-# Generate dhparam
-if [ ! -e /etc/ssl/dhparam.pem ]; then
-    mv  /etc/nginx/nginx.conf $HESTIA_BACKUP/conf/
-    cp -f $hestiacp/nginx/nginx.conf /etc/nginx/
-
-    # Copy dhparam
-    cp -f $hestiacp/ssl/dhparam.pem /etc/ssl/
-
-    # Update DNS servers in nginx.conf
-    dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
-    for ip in $dns_resolver; do
-        if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            resolver="$ip $resolver"
-        fi
-    done
-    if [ ! -z "$resolver" ]; then
-        sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /etc/nginx/nginx.conf
-    fi
-
-    # Restart Nginx service
-    systemctl restart nginx >/dev/null 2>&1
-fi
-
 # Update default page templates
 echo "(*) Replacing default templates and packages..."
 

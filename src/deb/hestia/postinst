@@ -17,7 +17,7 @@ fi
 # Set backup folder
 HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
 
-# Intiialize backup folders
+# Initialize backup folders
 mkdir -p $HESTIA_BACKUP/conf/
 mkdir -p $HESTIA_BACKUP/packages/
 mkdir -p $HESTIA_BACKUP/templates/

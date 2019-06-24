@@ -119,8 +119,13 @@ if (!empty($_POST['save'])) {
     if (!isset($_POST['v_backups'])) $errors[] = __('backups');
     if (!isset($_POST['v_disk_quota'])) $errors[] = __('quota');
     if (!isset($_POST['v_bandwidth'])) $errors[] = __('bandwidth');
-    if (empty($_POST['v_ns1'])) $errors[] = __('ns1');
-    if (empty($_POST['v_ns2'])) $errors[] = __('ns2');
+
+    // Check if name server entries are blank if DNS server is installed
+    if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {
+        if (empty($_POST['v_ns1'])) $errors[] = __('ns1');
+        if (empty($_POST['v_ns2'])) $errors[] = __('ns2');
+    }
+
     if (!empty($errors[0])) {
         foreach ($errors as $i => $error) {
             if ( $i == 0 ) {

@@ -8,7 +8,7 @@ function welcome_message() {
     echo '    |_| |_|\___||___/\__|_|\__,_|\____|_|          '
     echo ""
     echo "       Hestia Control Panel Upgrade Script"
-    echo "             Version: $version                     "
+    echo "                 Version: $version                 "
     echo "==================================================="
     echo ""
     echo "Existing files will be backed up to the following location:"

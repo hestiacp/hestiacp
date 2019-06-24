@@ -27,14 +27,6 @@ if [ ! -z "$imap_check" ]; then
     fi
 fi
 
-# Add release branch system configuration if non-existent
-release_branch_check=$(cat $HESTIA/conf/hestia.conf | grep RELEASE_BRANCH)
-if [ -z "$release_branch_check" ]; then
-    echo "(*) Adding global release branch variable to system configuration..."
-    sed -i "/RELEASE_BRANCH/d" $HESTIA/conf/hestia.conf
-    echo "RELEASE_BRANCH='develop'" >> $HESTIA/conf/hestia.conf
-fi
-
 # Load global variables
 source $HESTIA/conf/hestia.conf
 

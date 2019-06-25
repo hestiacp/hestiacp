@@ -9,6 +9,10 @@ server {
 
     ssl_certificate      %ssl_pem%;
     ssl_certificate_key  %ssl_key%;
+    ssl_stapling on;
+    ssl_stapling_verify on;
+
+    include %home%/%user%/conf/web/%domain%/nginx.hsts.conf*;
 
     location / {
         try_files $uri $uri/ /index.php;

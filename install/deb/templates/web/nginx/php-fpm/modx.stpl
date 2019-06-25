@@ -12,6 +12,8 @@ server {
     ssl_stapling on;
     ssl_stapling_verify on;
 
+    include %home%/%user%/conf/web/%domain%/nginx.hsts.conf*;
+
 #   if you need to rewrite www to non-www uncomment bellow
 #   if ($host != '%domain%' ) {
 #       rewrite      ^/(.*)$  https://%domain%/$1  permanent;

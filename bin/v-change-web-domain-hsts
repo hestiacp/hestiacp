@@ -1,0 +1,75 @@
+#!/bin/bash
+# info: add/remove HSTS support from a domain
+# options: USER DOMAIN STATUS
+#
+# This function will enable or disable HSTS (HTTP Strict Transport Security)
+# for a web domain.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+domain_idn=$2
+status=$3
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/conf/hestia.conf
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Load domain data
+eval $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
+
+# Check if SSL is enabled
+if [ "$SSL" != 'yes' ]; then
+    echo "Error: SSL is not enabled"
+    exit $E_NOTEXIST
+fi
+
+# Check for Apache/Nginx or Nginx/PHP-FPM configuration
+if [ -z $PROXY_SYSTEM ]; then
+    hstsconf="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.hsts.conf"
+else
+    hstsconf="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.hsts.conf"
+fi
+
+if [ "$status" = "on" ]; then
+    echo 'add_header Strict-Transport-Security "max-age=15768000;" always;' > $hstsconf
+    echo "HTTP Strict Transport Security (HSTS) turned on for $domain."
+elif [ "$status" = "off" ]; then
+    rm -f $hstsconf
+    nginx -s reload
+    echo "HTTP Strict Transport Security (HSTS) turned off for $domain."
+else
+    echo "Error: Invalid mode specified."
+    echo "Usage: v-change-web-domain-hsts USER DOMAIN [ON / OFF]"
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_history "Enabled HTTP Strict Transport Security on $domain."
+log_event "$OK" "$ARGUMENTS"
+
+exit

@@ -12,6 +12,8 @@ server {
     ssl_stapling on;
     ssl_stapling_verify on;
 
+    include %home%/%user%/conf/web/%domain%/nginx.hsts.conf*;
+
     location = /favicon.ico {
         try_files /favicon.ico =204;
     }

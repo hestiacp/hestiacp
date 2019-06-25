@@ -1033,7 +1033,7 @@ echo "LANGUAGE='$lang'" >> $HESTIA/conf/hestia.conf
 
 # Version & Release Branch
 echo "VERSION='1.0.1'" >> $HESTIA/conf/hestia.conf
-echo "RELEASE_BRANCH='master'" >> $HESTIA/conf/hestia.conf
+echo "RELEASE_BRANCH='release'" >> $HESTIA/conf/hestia.conf
 
 # Installing hosting packages
 cp -rf $hestiacp/packages $HESTIA/data/

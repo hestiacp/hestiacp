@@ -564,7 +564,7 @@ LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
 
 # Installing MariaDB repo
 echo "(*) MariaDB"
-echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/10.3/$VERSION $codename main" > $apt/mariadb.list
+echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/10.4/$VERSION $codename main" > $apt/mariadb.list
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8 > /dev/null 2>&1
 
 # Installing hestia repo
@@ -1032,8 +1032,8 @@ echo "BACKUP_SYSTEM='local'" >> $HESTIA/conf/hestia.conf
 echo "LANGUAGE='$lang'" >> $HESTIA/conf/hestia.conf
 
 # Version & Release Branch
-echo "VERSION='1.00.0-190618'" >> $HESTIA/conf/hestia.conf
-echo "RELEASE_BRANCH='develop'" >> $HESTIA/conf/hestia.conf
+echo "VERSION='1.0.1'" >> $HESTIA/conf/hestia.conf
+echo "RELEASE_BRANCH='master'" >> $HESTIA/conf/hestia.conf
 
 # Installing hosting packages
 cp -rf $hestiacp/packages $HESTIA/data/
@@ -1296,7 +1296,7 @@ fi
 
 
 #----------------------------------------------------------#
-#                    Configure phpMyAdmin                     #
+#                    Configure phpMyAdmin                  #
 #----------------------------------------------------------#
 
 if [ "$mysql" = 'yes' ]; then

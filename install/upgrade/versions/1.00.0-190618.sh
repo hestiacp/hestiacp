@@ -27,24 +27,11 @@ if [ ! -z "$imap_check" ]; then
     fi
 fi
 
-# Add release branch system configuration if non-existent
-release_branch_check=$(cat $HESTIA/conf/hestia.conf | grep RELEASE_BRANCH)
-if [ -z "$release_branch_check" ]; then
-    echo "(*) Adding global release branch variable to system configuration..."
-    sed -i "/RELEASE_BRANCH/d" $HESTIA/conf/hestia.conf
-    echo "RELEASE_BRANCH='develop'" >> $HESTIA/conf/hestia.conf
-fi
-
 # Load global variables
 source $HESTIA/conf/hestia.conf
 
 # Load hestia main functions
 source /usr/local/hestia/func/main.sh
-
-# Initialize backup directory
-mkdir -p $HESTIA_BACKUP/conf/
-mkdir -p $HESTIA_BACKUP/packages/
-mkdir -p $HESTIA_BACKUP/templates/
 
 # Detect OS
 case $(head -n1 /etc/issue | cut -f 1 -d ' ') in
@@ -66,54 +53,12 @@ if [ ! -f /etc/apt/apt.conf.d/80-retries ]; then
     echo "APT::Acquire::Retries \"3\";" > /etc/apt/apt.conf.d/80-retries
 fi
 
-# Update Apache and Nginx configuration to support new file structure
-echo "(*) Updating web server configuration..."
-if [ -f /etc/apache2/apache.conf ]; then
-    mv  /etc/apache2/apache.conf $HESTIA_BACKUP/conf/
-    cp -f $HESTIA/install/deb/apache2/apache.conf /etc/apache2/apache.conf
-fi
-if [ -f /etc/nginx/nginx.conf ]; then
-    mv  /etc/nginx/nginx.conf $HESTIA_BACKUP/conf/
-    cp -f $HESTIA/install/deb/nginx/nginx.conf /etc/nginx/nginx.conf
-fi
-
-# Generate dhparam
-if [ ! -e /etc/ssl/dhparam.pem ]; then
-    mv  /etc/nginx/nginx.conf $HESTIA_BACKUP/conf/
-    cp -f $hestiacp/nginx/nginx.conf /etc/nginx/
-
-    # Copy dhparam
-    cp -f $hestiacp/ssl/dhparam.pem /etc/ssl/
-
-    # Update DNS servers in nginx.conf
-    dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
-    for ip in $dns_resolver; do
-        if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            resolver="$ip $resolver"
-        fi
-    done
-    if [ ! -z "$resolver" ]; then
-        sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /etc/nginx/nginx.conf
-    fi
-
-    # Restart Nginx service
-    systemctl restart nginx >/dev/null 2>&1
-fi
-
 # Update default page templates
 echo "(*) Replacing default templates and packages..."
 
 # Back up default package and install latest version
 if [ -d $HESTIA/data/packages/ ]; then
     cp -f $HESTIA/data/packages/default.pkg $HESTIA_BACKUP/packages/
-fi
-
-# Back up old template files and install the latest versions
-if [ -d $HESTIA/data/templates/ ]; then
-    cp -rf $HESTIA/data/templates $HESTIA_BACKUP/templates/
-    $HESTIA/bin/v-update-web-templates
-    $HESTIA/bin/v-update-dns-templates
-	$HESTIA/bin/v-update-mail-templates
 fi
 
 # Remove old Office 365 template as there is a newer version with an updated name
@@ -343,20 +288,6 @@ for user in `ls /usr/local/hestia/data/users/`; do
         unset FORCESSL
     done
     sed -i "s/\sFORCESSL=''//g" $USER_DATA/web.conf
-done
-
-# Rebuild user
-for user in `ls /usr/local/hestia/data/users/`; do
-    echo "(*) Rebuilding domains and account for user: $user..."
-    if [ ! -z $WEB_SYSTEM ]; then
-		v-rebuild-web-domains $user >/dev/null 2>&1
-	fi
-    if [ ! -z $DNS_SYSTEM ]; then
-		v-rebuild-dns-domains $user >/dev/null 2>&1
-    fi
-	if [ ! -z $MAIL_SYSTEM ]; then 
-		v-rebuild-mail-domains $user >/dev/null 2>&1
-	fi
 done
 
 # Reset backend port

@@ -28,7 +28,6 @@ if [ -z "$branch" ]; then
     echo ""
     echo "Common release branches:"
     echo "(*) master:   Stable releases only"
-    echo "(*) beta:     Beta builds which are being prepared for release"
     echo "(*) develop:  Daily development builds"
     echo ""
     echo "You can also specify another branch name from the"

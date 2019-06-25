@@ -1,22 +1,6 @@
 [Hestia Control Panel](https://www.hestiacp.com/)
 ==================================================
-
-**Important notice regarding v1.00.0-190618 release**
-----------------------------
-On Monday, June 17th 2019 we released version 1.00.0-190618 which unfortunately has a few issues which occur on certain configurations that were not
-caught by our internal testing processes. Because automatic updates were enabled by default on new installations, this has caused instances where servers
-have become unavailable due to the upgrade failing and we sincerely apologize for any inconvenience and disruption.
-
-If you have experienced a failed upgrade, please submit an issue report via GitHub Issues. We are planning on shipping the v1.0.1 hotfix release once we
-have validated that it corrects the issues which we have been made aware of and other bugs that we've fixed between the time of the initial release and now.
-
-**Pre-Release Software Information**
-----------------------------
-**Hestia Control Panel is undergoing rapid changes in development. As such, it is important to note that:**
-* Current builds are released as a beta and are intended for development and testing purposes only.
-* This software should not be used on production systems without understanding the risks.
-* By using this software, you acknowledge and accept that bugs or issues could occur at any time.
-* By using this software, you acknowledge and accept that changes to the functionality or user interface are likely during the course of development.
+**Current release:** Version 1.0.1, released on June 25th, 2019.
 
 What is Hestia Control Panel?
 ----------------------------
@@ -25,8 +9,8 @@ What is Hestia Control Panel?
 
 What does Hestia Control Panel support?
 ----------------------------
-* Standard Web Server (apache2/nginx) with PHP
-* PHP Web Application Server (nginx + php-fpm)
+* Standard Web Server (Apache/NGINX) with PHP
+* PHP Web Application Server (NGINX + PHP-FPM)
 * Multiple PHP versions (5.6 - 7.3)
 * DNS Server (Bind) with clustering capabilities
 * Mail Server (Exim/Dovecot) with Anti-Virus and Anti-Spam (ClamAV and SpamAssassin)
@@ -42,14 +26,14 @@ Supported operating systems:
 Installing Hestia Control Panel
 ============================
 ## Step 1: Log in
-To install Hestia Control Panel on your server, you will need to be logged in as **root** either directly from the command line console or remotely via SSH:
+To install Hestia Control Panel on your server, you will need to be logged in as **root** or a user with super-user privileges in order to continue. You can perform the installation either directly from the command line console or remotely via SSH:
 ```bash
 ssh root@your.server
 ```
 ## Step 2: Download
 Download the installation script for the latest release:
 ```bash
-wget https://raw.githubusercontent.com/hestiacp/hestiacp/master/install/hst-install.sh
+wget https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh
 ```
 ## Step 3: Run
 To begin the installation process, simply run the script and follow the on-screen prompts:
@@ -72,29 +56,15 @@ Alternatively, @gabizz has made available a command-line script generator at htt
 
 Installing development builds
 =============================
-To install a development build based on the latest published code, you must first have an existing installation of Hestia available. If you do not have a server configured, please install the latest stable build using the instructions above before continuing.
+In order to install a development build based on the latest published code, you must first have an existing installation of Hestia Control Panel available. If you do not have a server configured, please install the latest stable build using the instructions above before continuing.
 
-**Development builds should not be installed on systems with live production data.**
+**PLEASE NOTE: Development builds should not be installed on systems with live production data without understanding the potential risks involved.**
 
-## Step 1: Download the compiler script
+To install a development build, run:
 ```bash
-wget https://raw.githubusercontent.com/hestiacp/hestiacp/develop/src/hst_autocompile.sh
+v-update-sys-hestia-git branchname
 ```
-## Step 2: Compile and install the desired build:
-```bash
-bash hst_autocompile.sh --packageset <branchname> <yes|no>
-```
-**Valid options for *packageset* flag include:**
-* all
-* hestia
-* nginx
-* php
-
-For example, to install only the Control Panel itself built from the main development branch (**develop**): 
-```bash
-bash hst_autocompile.sh --hestia develop yes
-```
-
+Replace *branchname* with the name of the branch you wish to install from, such as release, prerelease, or master (stable, beta/release candidate, and current development code respectively). 
 **Important:** Updates which have been released via the Hestia package repositories and upgraded through **apt** will replace installations which use the above method. 
 
 Reporting Issues
@@ -111,7 +81,7 @@ Donations
 =============================
 Hestia Control Panel is open source and completely free for everyone to use.
 
-If you would like to help our developers cover their time and infrastucture costs, or to support the Hestia Control Panel project as a whole, please consider making a donation via PayPal.
+If you would like to help our developers cover their time and infrastucture costs, or to support the Hestia Control Panel project as a whole, please consider making a donation via PayPal or become a sponsor.
 
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ST87LQH2CHGLA)
 

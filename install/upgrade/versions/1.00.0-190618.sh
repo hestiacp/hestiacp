@@ -298,20 +298,6 @@ for user in `ls /usr/local/hestia/data/users/`; do
     sed -i "s/\sFORCESSL=''//g" $USER_DATA/web.conf
 done
 
-# Rebuild user
-for user in `ls /usr/local/hestia/data/users/`; do
-    echo "(*) Rebuilding domains and account for user: $user..."
-    if [ ! -z $WEB_SYSTEM ]; then
-		v-rebuild-web-domains $user >/dev/null 2>&1
-	fi
-    if [ ! -z $DNS_SYSTEM ]; then
-		v-rebuild-dns-domains $user >/dev/null 2>&1
-    fi
-	if [ ! -z $MAIL_SYSTEM ]; then 
-		v-rebuild-mail-domains $user >/dev/null 2>&1
-	fi
-done
-
 # Reset backend port
 if [ ! -z "$BACKEND_PORT" ]; then
     /usr/local/hestia/bin/v-change-sys-port $BACKEND_PORT

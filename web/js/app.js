@@ -1003,7 +1003,7 @@ hover_menu = function() {
     var st = $(window).scrollTop();
 
     if (st <= 112) {
-        sep_1.css({'margin-top': 178 - st + 'px'});
+        sep_1.css({'margin-top': 180 - st + 'px'});
         sep_2.css({'margin-top': 225 - st + 'px'});
         nav_a.css({'height': 111 - st + 'px'});
         nav_a.css({'min-height': 111 - st + 'px'});
@@ -1033,11 +1033,11 @@ hover_menu = function() {
 
     if(st < 109 ){
         nav_a.find('ul').css({'visibility': 'visible'});
-        nav_main.css({'padding-top': 34 + 'px'});
+        nav_main.css({'padding-top': 36 + 'px'});
     }
 
     if (st <= 112 && st > 110 ) {
-        nav_main.css({'padding-top': 34 - st + 109  + 'px'});
+        nav_main.css({'padding-top': 36 - st + 109  + 'px'});
     }
 
     lastScrollTop = st;

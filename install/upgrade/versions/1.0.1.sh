@@ -6,14 +6,19 @@ function version_ge(){ test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1
 # Set new version number
 NEW_VERSION="1.0.1"
 
-
-
 # Load hestia.conf
 source /usr/local/hestia/conf/hestia.conf
 
 ########################################################################################################
 #######                          Place additional commands below.                                #######
 ########################################################################################################
+
+# Ensure that users from previous releases are set to the correct stable release branch
+if [ $RELEASE_BRANCH = "master" ] || [ $RELEASE_BRANCH = "develop" ]; then
+    echo "(*) Updating default release branch configuration..."
+    sed -i "/RELEASE_BRANCH/d" $HESTIA/conf/hestia.conf
+    echo "RELEASE_BRANCH='release'" >> $HESTIA/conf/hestia.conf
+fi
 
 # Add amd64 to repositories to prevent notifications - https://goo.gl/hmsSV7
 if ! grep -q 'arch=amd64' /etc/apt/sources.list.d/nginx.list; then

@@ -95,7 +95,7 @@ check_wget_curl(){
 # Check for supported operating system before proceeding with download
 # of OS-specific installer, and throw error message if unsupported OS detected.
 if [[ "$release" =~ ^(8|9|16.04|18.04)$ ]]; then
-    check_wget_curl
+    check_wget_curl $*
 else
     no_support_message
 fi

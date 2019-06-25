@@ -1,12 +1,10 @@
 #!/bin/bash
 
-# Define vars
-if [ -z "$HESTIA" ]; then
-    export HESTIA="/usr/local/hestia"
-fi
-HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
-hestiacp="$HESTIA/install/deb"
-pma_v='4.9.0.1'
+# Hestia Control Panel upgrade script for target version 1.00.0-190618
+
+#######################################################################################
+#######                      Place additional commands below.                   #######
+#######################################################################################
 
 # Add webmail alias variable to system configuration if non-existent
 WEBMAIL_ALIAS_CHECK=$(cat $HESTIA/conf/hestia.conf | grep WEBMAIL_ALIAS)
@@ -16,68 +14,6 @@ if [ -z "$WEBMAIL_ALIAS_CHECK" ]; then
     echo "WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
 fi
 
-# Add release branch system configuration if non-existent
-release_branch_check=$(cat $HESTIA/conf/hestia.conf | grep RELEASE_BRANCH)
-if [ -z "$release_branch_check" ]; then
-    echo "(*) Adding global release branch variable to system configuration..."
-    sed -i "/RELEASE_BRANCH/d" $HESTIA/conf/hestia.conf
-    echo "RELEASE_BRANCH='develop'" >> $HESTIA/conf/hestia.conf
-fi
-
-# Load hestia.conf
-source $HESTIA/conf/hestia.conf
-
-# Load hestia main functions
-source /usr/local/hestia/func/main.sh
-
-# Initialize backup directory
-mkdir -p $HESTIA_BACKUP/conf/
-mkdir -p $HESTIA_BACKUP/packages/
-mkdir -p $HESTIA_BACKUP/templates/
-
-# Detect OS
-case $(head -n1 /etc/issue | cut -f 1 -d ' ') in
-    Debian)     os="debian" ;;
-    Ubuntu)     os="ubuntu" ;;
-esac
-
-# Detect release for Debian
-if [ "$os" = "debian" ]; then
-    release=$(cat /etc/debian_version|grep -o [0-9]|head -n1)
-    VERSION='debian'
-elif [ "$os" = "ubuntu" ]; then
-    release="$(lsb_release -s -r)"
-    VERSION='ubuntu'
-fi
-
-# Configure apt to retry downloading on error
-if [ ! -f /etc/apt/apt.conf.d/80-retries ]; then
-    echo "APT::Acquire::Retries \"3\";" > /etc/apt/apt.conf.d/80-retries
-fi
-
-# Clear the screen from apt output to prepare for upgrade installer experience
-clear
-echo
-echo '     _   _           _   _        ____ ____  '
-echo '    | | | | ___  ___| |_(_) __ _ / ___|  _ \ '
-echo '    | |_| |/ _ \/ __| __| |/ _` | |   | |_) |'
-echo '    |  _  |  __/\__ \ |_| | (_| | |___|  __/ '
-echo '    |_| |_|\___||___/\__|_|\__,_|\____|_|    '
-echo ""
-echo "       Hestia Control Panel Upgrade Script"
-echo "==================================================="
-echo ""
-echo "Existing files will be backed up to the following location:"
-echo "$HESTIA_BACKUP/"
-echo ""
-echo "This process may take a few moments, please wait..."
-echo ""
-
-# Set new version
-sed -i "/VERSION/d" $HESTIA/conf/hestia.conf
-# Set new branch variable
-echo "VERSION='0.10.0'" >> $HESTIA/conf/hestia.conf
-
 # Update Apache and Nginx configuration to support new file structure
 if [ -f /etc/apache2/apache.conf ]; then
     echo "(*) Updating Apache configuration..."
@@ -85,7 +21,7 @@ if [ -f /etc/apache2/apache.conf ]; then
     cp -f $HESTIA/install/deb/apache2/apache.conf /etc/apache2/apache.conf
 fi
 if [ -f /etc/nginx/nginx.conf ]; then
-    echo "(*) Updating Nginx configuration..."
+    echo "(*) Updating NGINX configuration..."
     mv  /etc/nginx/nginx.conf $HESTIA_BACKUP/conf/
     cp -f $HESTIA/install/deb/nginx/nginx.conf /etc/nginx/nginx.conf
 fi
@@ -102,25 +38,21 @@ if [ ! -e /etc/ssl/dhparam.pem ]; then
     # Update DNS servers in nginx.conf
     dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
     sed -i "s/1.0.0.1 1.1.1.1/$dns_resolver/g" /etc/nginx/nginx.conf
-
-    # Restart Nginx service
-    systemctl restart nginx >/dev/null 2>&1
 fi
-
-# Update default page templates
-echo "(*) Replacing default templates and packages..."
 
 # Back up default package and install latest version
 if [ -d $HESTIA/data/packages/ ]; then
+    echo "(*) Replacing default packages..."
     cp -f $HESTIA/data/packages/default.pkg $HESTIA_BACKUP/packages/
 fi
 
 # Back up old template files and install the latest versions
 if [ -d $HESTIA/data/templates/ ]; then
+    echo "(*) Replacing default Web, DNS, and Mail templates..."
     cp -rf $HESTIA/data/templates $HESTIA_BACKUP/templates/
-    $HESTIA/bin/v-update-web-templates
-    $HESTIA/bin/v-update-dns-templates
-	$HESTIA/bin/v-update-mail-templates
+    $HESTIA/bin/v-update-web-templates >/dev/null 2>&1
+    $HESTIA/bin/v-update-dns-templates >/dev/null 2>&1
+	$HESTIA/bin/v-update-mail-templates >/dev/null 2>&1
 fi
 
 # Remove old Office 365 template as there is a newer version with an updated name
@@ -245,11 +177,11 @@ fi
 # Fix empty pool error message for MultiPHP
 php_versions=$(ls /etc/php/*/fpm -d 2>/dev/null |wc -l)
 if [ "$php_versions" -gt 1 ]; then
+    echo "(*) Updating Multi-PHP configuration..."
     for v in $(ls /etc/php/); do
         if [ ! -d "/etc/php/$v/fpm/pool.d/" ]; then
             continue
         fi
-        echo "(*) Updating Multi-PHP configuration..."
         cp -f $hestiacp/php-fpm/dummy.conf /etc/php/$v/fpm/pool.d/
         v1=$(echo "$v" | sed -e 's/[.]//')
         sed -i "s/9999/99$v1/g" /etc/php/$v/fpm/pool.d/dummy.conf
@@ -352,91 +284,3 @@ for user in `ls /usr/local/hestia/data/users/`; do
     done
     sed -i "s/\sFORCESSL=''//g" $USER_DATA/web.conf
 done
-
-# Rebuild user
-for user in `ls /usr/local/hestia/data/users/`; do
-    echo "(*) Rebuilding domains and account for user: $user..."
-    if [ ! -z $WEB_SYSTEM ]; then
-		v-rebuild-web-domains $user >/dev/null 2>&1
-	fi
-    if [ ! -z $DNS_SYSTEM ]; then
-		v-rebuild-dns-domains $user >/dev/null 2>&1
-    fi
-	if [ ! -z $MAIL_SYSTEM ]; then 
-		v-rebuild-mail-domains $user >/dev/null 2>&1
-	fi
-done
-
-# Upgrade phpMyAdmin if applicable
-if [ "$DB_SYSTEM" = 'mysql' ]; then
-    if [ -e "/usr/share/phpmyadmin/RELEASE-DATE-$pma_v" ]; then
-        echo "(*) phpMyAdmin $pma_v is already installed, skipping update..."
-    else
-        # Display upgrade information
-        echo "(*) Upgrade phpMyAdmin to v$pma_v..."
-
-        # Download latest phpMyAdmin release
-        wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
-
-        # Unpack files
-        tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
-
-        # Delete file to prevent error
-        rm -fr /usr/share/phpmyadmin/doc/html
-
-        # Overwrite old files
-        cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
-
-        # Set config and log directory
-        sed -i "s|define('CONFIG_DIR', '');|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
-        sed -i "s|define('TEMP_DIR', './tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
-
-        # Create temporary folder and change permissions
-        if [ ! -d /usr/share/phpmyadmin/tmp ]; then
-            mkdir /usr/share/phpmyadmin/tmp
-            chmod 777 /usr/share/phpmyadmin/tmp
-        fi
-
-        # Clear up
-        rm -fr phpMyAdmin-$pma_v-all-languages
-        rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
-    fi
-fi
-
-# Add upgrade notification to admin user's panel
-$BIN/v-add-user-notification admin 'Upgrade complete' 'Your server has been updated to v0.10.0.<br>Please report any bugs on GitHub at<br>https://github.com/hestiacp/hestiacp/Issues<br><br>Have a great day!'
-
-# Restart services for changes to take full effect
-echo "(*) Restarting services..."
-sleep 3
-if [ ! -z $MAIL_SYSTEM ]; then
-	$BIN/v-restart-mail $restart
-fi
-if [ ! -z $IMAP_SYSTEM ]; then
-	$BIN/v-restart-service $IMAP_SYSTEM $restart
-fi
-if [ ! -z $WEB_SYSTEM ]; then
-	$BIN/v-restart-web $restart
-	$BIN/v-restart-proxy $restart
-fi
-if [ ! -z $DNS_SYSTEM ]; then
-	$BIN/v-restart-dns $restart
-fi
-
-# restart Hestia services (nginx,php-fpm)
-systemctl restart hestia
-
-echo ""
-echo "    Upgrade complete! Please report any bugs or issues to"
-echo "    https://github.com/hestiacp/hestiacp/issues"
-echo ""
-echo "    We hope that you enjoy this release of Hestia Control Panel,"
-echo "    enjoy your day!"
-echo ""
-echo "    Sincerely,"
-echo "    The Hestia Control Panel development team"
-echo ""
-echo "    www.hestiacp.com"
-echo "    Made with love & pride by the open-source community around the world."
-echo ""
-echo ""

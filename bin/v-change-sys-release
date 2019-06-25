@@ -27,9 +27,9 @@ if [ -z "$branch" ]; then
     echo "Usage: v-change-sys-release branchname"
     echo ""
     echo "Common release branches:"
-    echo "(*) master:   Stable releases only"
-    echo "(*) beta:     Beta builds which are being prepared for release"
-    echo "(*) develop:  Daily development builds"
+    echo "(*) release:      The latest stable release available via APT"
+    echo "(*) prerelease:   Beta/release candidate releases"
+    echo "(*) master:       The latest development code from GitHub"
     echo ""
     echo "You can also specify another branch name from the"
     echo "GitHub repository to install the code from that branch."
@@ -49,7 +49,7 @@ else
     
     # Set new branch variable
     echo "RELEASE_BRANCH='$branch'" >> $HESTIA/conf/hestia.conf
-    echo "Changed system release to update from Git branch: $branch"
+    echo "Changed system release to update from branch: $branch"
 fi
 
 #----------------------------------------------------------#

@@ -108,7 +108,9 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
 
     # Set ownership
     chown -R $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain
-    chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain/passwd
+    if [ "$IMAP_SYSTEM" = 'dovecot' ]; then
+        chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain/passwd
+    fi
     chown $user:mail $HOMEDIR/$user/mail/$domain_idn
 fi
 
@@ -129,7 +131,9 @@ fi
 
 # Add webmail configuration to mail domain
 if [ ! -z "$WEB_SYSTEM" ] || [ ! -z "$PROXY_SYSTEM" ]; then
-    $BIN/v-add-webmail $user $domain '' 
+    if [ ! -z "$IMAP_SYSTEM" ]; then
+        $BIN/v-add-webmail $user $domain ''
+    fi
 fi
     
 #----------------------------------------------------------#

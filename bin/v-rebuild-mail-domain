@@ -45,8 +45,10 @@ rebuild_mail_domain_conf
 
 # Rebuild webmail configuration
 if [ ! -z "$WEB_SYSTEM" ] || [ ! -z "$PROXY_SYSTEM" ]; then
-    $BIN/v-delete-webmail $user $domain ''
-    $BIN/v-add-webmail $user $domain ''
+    if [ ! -z "$IMAP_SYSTEM" ]; then
+        $BIN/v-delete-webmail $user $domain ''
+        $BIN/v-add-webmail $user $domain ''
+    fi
 fi
 
 #----------------------------------------------------------#

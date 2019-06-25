@@ -45,6 +45,7 @@ check_args '2' "$#" 'USER DOMAIN [RESTART]'
 is_format_valid 'user' 'domain'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
+is_system_enabled "$IMAP_SYSTEM" 'IMAP_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
@@ -54,39 +55,44 @@ is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Ensure DNS record exists if Hestia is hosting DNS zones
-if [ ! -z "$DNS_SYSTEM" ]; then
-    dns_domain=$($BIN/v-list-dns-domains $user | grep $domain | cut -d' ' -f1)
-    webmail_record=$($BIN/v-list-dns-records $user $domain | grep -i $WEBMAIL_ALIAS | cut -d' ' -f1)
+# Verify that webmail alias variable exists
+if [ ! -z "$WEBMAIL_ALIAS" ]; then
+    # Ensure DNS record exists if Hestia is hosting DNS zones
+    if [ ! -z "$DNS_SYSTEM" ]; then
+        dns_domain=$($BIN/v-list-dns-domains $user | grep $domain | cut -d' ' -f1)
+        webmail_record=$($BIN/v-list-dns-records $user $domain | grep -i $WEBMAIL_ALIAS | cut -d' ' -f1)
 
-    if [ "$dns_domain" = "$domain" ]; then
-        if [ -z "$webmail_record" ]; then
-            $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip
-        else
-            $BIN/v-delete-dns-record $user $domain $webmail_record
-            $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip
+        if [ "$dns_domain" = "$domain" ]; then
+            if [ -z "$webmail_record" ]; then
+                $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip
+            else
+                $BIN/v-delete-dns-record $user $domain $webmail_record
+                $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip
+            fi
         fi
     fi
-fi
 
-# Add webmail configuration to mail domain
-WEBMAIL_TEMPLATE="default"
-if [ "$WEB_SYSTEM" = "nginx" ]; then
-    WEBMAIL_TEMPLATE="web_system"
-fi
-add_webmail_config "$WEB_SYSTEM" "${WEBMAIL_TEMPLATE}.tpl"
-
-if [ ! -z "$PROXY_SYSTEM" ]; then
-    add_webmail_config "$PROXY_SYSTEM" "default.tpl"
-fi
-
-# Enable SSL for webmail if available
-if [ -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt ] || [ "$SSL" = 'yes' ]; then
-    add_webmail_config "$WEB_SYSTEM" "${WEBMAIL_TEMPLATE}.stpl"
+    # Add webmail configuration to mail domain
+    WEBMAIL_TEMPLATE="default"
+    if [ "$WEB_SYSTEM" = "nginx" ]; then
+        WEBMAIL_TEMPLATE="web_system"
+    fi
+    add_webmail_config "$WEB_SYSTEM" "${WEBMAIL_TEMPLATE}.tpl"
 
     if [ ! -z "$PROXY_SYSTEM" ]; then
-        add_webmail_config "$PROXY_SYSTEM" "default.stpl"
+        add_webmail_config "$PROXY_SYSTEM" "default.tpl"
     fi
+
+    # Enable SSL for webmail if available
+    if [ -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt ] || [ "$SSL" = 'yes' ]; then
+        add_webmail_config "$WEB_SYSTEM" "${WEBMAIL_TEMPLATE}.stpl"
+
+        if [ ! -z "$PROXY_SYSTEM" ]; then
+            add_webmail_config "$PROXY_SYSTEM" "default.stpl"
+        fi
+    fi
+else
+    echo "Error: WEBMAIL_ALIAS is not defined in hestia.conf"
 fi
 
 #----------------------------------------------------------#

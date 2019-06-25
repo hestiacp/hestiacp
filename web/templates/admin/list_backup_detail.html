@@ -14,10 +14,6 @@
                   <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value=""><i class="fas fa-search"></i></button>
                 </form>
               </td>
-              <td class="toggle-all">
-                <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onchange="checkedAll('objects');">
-                <label for="toggle-all" class="check-label toggle-all"><?=__('toggle all')?></label>
-              </td>
               <td>
                 <form action="/bulk/restore/" method="post" id="objects">
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
@@ -39,10 +35,19 @@
     <div class="l-separator"></div>
 
     <div class="l-center units animated fadeIn">
-    <div class="header">
-      <div class="subtitle"><?=__('Listing')?>  <?=htmlentities($_GET['backup'])?></div>
-    </div>
-
+      <div class="header table-header">
+          <div class="l-unit__col l-unit__col--right step-top">
+            <div>
+                <div class="clearfix l-unit__stat-col--left super-compact">
+                  <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onchange="checkedAll('objects');">
+                </div>
+                <div class="clearfix l-unit__stat-col--left compact-4"><b><?php print __('Type');?></b></div>
+                <div class="clearfix l-unit__stat-col--left wide-4"><b><?php print __('Details');?></b></div>
+                <div class="clearfix l-unit__stat-col--left text-right compact-4"><b><?php print __('Restore');?></b></div>
+            </div>
+           </div>
+        </div>
+      
       <?
         $backup = $_GET['backup'];
         $web = explode(',',$data[$backup]['WEB']);
@@ -58,10 +63,10 @@
               <label for="check<?=$i++?>" class="check-label"></label>
             </div>
 
-            <div class="clearfix l-unit__stat-col--left">
-                <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?='WEB ' . __('domain')?></div>
+            <div class="clearfix l-unit__stat-col--left compact-4">
+                <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Web domain')?></div>
             </div>
-            <div class="clearfix l-unit__stat-col--left wide-3">
+            <div class="clearfix l-unit__stat-col--left wide-4">
                 <div class="l-unit__stat-col l-unit__stat-col--left wide-4"><b><?=$key?></b></div>
             </div>
 
@@ -96,10 +101,10 @@
                   <label for="check2<?=$i++?>" class="check-label"></label>
               </div>
   
-              <div class="clearfix l-unit__stat-col--left">
-                  <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?='MAIL ' . __('domain')?></div>
+              <div class="clearfix l-unit__stat-col--left compact-4">
+                  <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Mail domain')?></div>
               </div>
-              <div class="clearfix l-unit__stat-col--left wide-3">
+              <div class="clearfix l-unit__stat-col--left wide-4">
                   <div class="l-unit__stat-col l-unit__stat-col--left wide-4"><b><?=$key?></b></div>
               </div>
   
@@ -134,10 +139,10 @@
                 <label for="check3<?=$i++?>" class="check-label"></label>
               </div>
   
-              <div class="clearfix l-unit__stat-col--left">
-                  <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?='DNS ' . __('domain')?></div>
+              <div class="clearfix l-unit__stat-col--left compact-4">
+                  <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('DNS domain')?></div>
               </div>
-              <div class="clearfix l-unit__stat-col--left wide-3">
+              <div class="clearfix l-unit__stat-col--left wide-4">
                   <div class="l-unit__stat-col l-unit__stat-col--left wide-4"><b><?=$key?></b></div>
               </div>
   
@@ -172,10 +177,10 @@
                 <label for="check4<?=$i++?>" class="check-label"></label>
               </div>
   
-              <div class="clearfix l-unit__stat-col--left">
-                  <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?=__('database')?></div>
+              <div class="clearfix l-unit__stat-col--left compact-4">
+                  <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Database')?></div>
               </div>
-              <div class="clearfix l-unit__stat-col--left wide-3">
+              <div class="clearfix l-unit__stat-col--left wide-4">
                   <div class="l-unit__stat-col l-unit__stat-col--left wide-4"><b><?=$key?></b></div>
               </div>
   
@@ -210,10 +215,10 @@
                 <label for="check5<?=$i++?>" class="check-label"></label>
               </div>
   
-              <div class="clearfix l-unit__stat-col--left">
-                  <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?=__('cron')?></div>
+              <div class="clearfix l-unit__stat-col--left compact-4">
+                  <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Cron Records')?></div>
               </div>
-              <div class="clearfix l-unit__stat-col--left wide-3">
+              <div class="clearfix l-unit__stat-col--left wide-4">
                   <div class="l-unit__stat-col l-unit__stat-col--left wide-4"><b><?='cron '.__('records')?></b></div>
               </div>
   
@@ -247,10 +252,10 @@
                 <label for="check6<?=$i++?>" class="check-label"></label>
               </div>
   
-              <div class="clearfix l-unit__stat-col--left">
-                  <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?=__('user dir')?></div>
+              <div class="clearfix l-unit__stat-col--left compact-4">
+                  <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('user dir')?></div>
               </div>
-              <div class="clearfix l-unit__stat-col--left wide-3">
+              <div class="clearfix l-unit__stat-col--left wide-4">
                   <div class="l-unit__stat-col l-unit__stat-col--left wide-4"><b><?=$key?></b></div>
               </div>
   
@@ -279,10 +284,10 @@
                 <label for="check7<?=$i++?>" class="check-label"></label>
               </div>
   
-              <div class="clearfix l-unit__stat-col--left">
-                  <div class="l-unit__stat-col l-unit__stat-col--left uppercase"><?=__('cron')?></div>
+              <div class="clearfix l-unit__stat-col--left compact-4">
+                  <div class="l-unit__stat-col l-unit__stat-col--left"><?=__('Cron')?></div>
               </div>
-              <div class="clearfix l-unit__stat-col--left wide-3">
+              <div class="clearfix l-unit__stat-col--left wide-4">
                   <div class="l-unit__stat-col l-unit__stat-col--left wide-4"><b>&nbsp;</b></div>
               </div>
   

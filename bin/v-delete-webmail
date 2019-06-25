@@ -30,6 +30,7 @@ check_args '2' "$#" 'USER DOMAIN [RESTART]'
 is_format_valid 'user' 'domain'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
+is_system_enabled "$IMAP_SYSTEM" 'IMAP_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
@@ -39,20 +40,24 @@ is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Delete webmail configuration
-del_webmail_config
-del_webmail_ssl_config
+if [ ! -z "$WEBMAIL_ALIAS" ]; then
+    # Delete webmail configuration
+    del_webmail_config
+    del_webmail_ssl_config
 
-# Ensure that corresponding DNS records are removed
-if [ ! -z "$DNS_SYSTEM" ]; then
-    dns_domain=$($BIN/v-list-dns-domains $user | grep $domain | cut -d' ' -f1)
-    webmail_record=$($BIN/v-list-dns-records $user $domain | grep -i $WEBMAIL_ALIAS | cut -d' ' -f1)
+    # Ensure that corresponding DNS records are removed
+    if [ ! -z "$DNS_SYSTEM" ]; then
+        dns_domain=$($BIN/v-list-dns-domains $user | grep $domain | cut -d' ' -f1)
+        webmail_record=$($BIN/v-list-dns-records $user $domain | grep -i $WEBMAIL_ALIAS | cut -d' ' -f1)
 
-    if [ "$dns_domain" = "$domain" ]; then
-        if [ ! -z "$webmail_record" ]; then
-            $BIN/v-delete-dns-record $user $domain $webmail_record
+        if [ "$dns_domain" = "$domain" ]; then
+            if [ ! -z "$webmail_record" ]; then
+                $BIN/v-delete-dns-record $user $domain $webmail_record
+            fi
         fi
     fi
+else
+    echo "Error: WEBMAIL_ALIAS is not defined in hestia.conf."
 fi
 
 #----------------------------------------------------------#

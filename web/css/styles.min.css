@@ -768,7 +768,7 @@ body {
 
 .body-login, .body-reset {
   height: auto;
-  padding-top: 13%;
+  padding-top: 10%;
   background-color: #336699;
   background: linear-gradient(to bottom, rgba(44,92,147,1) 0%,rgba(72,136,186,1) 40%,rgba(127,186,232,1) 100%);
 }
@@ -1109,7 +1109,7 @@ a {
   position: fixed;
   background-color: #fff;
   z-index: 100;
-  padding-top: 34px;
+  padding-top: 36px;
   overflow: hidden;
   text-align: center;
   display: flex;
@@ -1223,6 +1223,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   background-color: #fff;
   z-index: 120;
   margin-top: 181px;
+  height: 44px;
 }
 
 .l-sort__create-btn {

@@ -175,7 +175,7 @@ fi
 GIT_REP='https://raw.githubusercontent.com/hestiacp/hestiacp/'$branch'/src/deb'
 
 # Generate Links for sourcecode
-HESTIA='https://github.com/hestiacp/hestiacp/archive/'$branch'.tar.gz'
+HESTIA_ARCHIVE_LINK='https://github.com/hestiacp/hestiacp/archive/'$branch'.tar.gz'
 NGINX='https://nginx.org/download/nginx-'$NGINX_V'.tar.gz'
 OPENSSL='https://www.openssl.org/source/openssl-'$OPENSSL_V'.tar.gz'
 PCRE='https://ftp.pcre.org/pub/pcre/pcre-'$PCRE_V'.tar.gz'
@@ -424,7 +424,7 @@ if [ "$HESTIA_B" = true ] ; then
 
     # Download and unpack source files
     if [ -z "$use_src_folder" ]; then
-      download_file $HESTIA '-' 'fresh' | tar xz
+      download_file $HESTIA_ARCHIVE_LINK '-' 'fresh' | tar xz
     elif [ -d $SRC_DIR ]; then
       cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch
     fi

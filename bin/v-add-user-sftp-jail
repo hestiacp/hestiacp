@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add user sftp jail
-# options: USER
+# options: USER [RESTART]
 #
 # The script enables sftp jailed environment
 
@@ -11,6 +11,7 @@
 
 # Argument definition
 user=$1
+restart=$2
 
 # Includes
 source $HESTIA/func/main.sh
@@ -62,8 +63,12 @@ chown root:root /home/$user
 #----------------------------------------------------------#
 
 # Restart ssh service
-service ssh restart > /dev/null 2>&1
-service sshd restart > /dev/null 2>&1
+if [ "$restart" = 'no' ]; then
+    # Skip restart of SSH daemon
+    echo "" > /dev/null 2>&1
+else
+    service ssh restart > /dev/null 2>&1
+fi
 
 # Logging
 log_event "$OK" "$ARGUMENTS"

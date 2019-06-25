@@ -4,49 +4,49 @@
 
 # Define download function
 download_file() {
-  local url=$1
-  local destination=$2
-  local force=$3
+    local url=$1
+    local destination=$2
+    local force=$3
 
-  # Default destination is the curent working directory
-  local dstopt=""
+    # Default destination is the curent working directory
+    local dstopt=""
 
-  if [ ! -z "$(echo "$url" | grep -E "\.(gz|gzip|bz2|zip|xz)$")" ]; then
-    # When an archive file is downloaded it will be first saved localy
-    dstopt="--directory-prefix=$ARCHIVE_DIR"
-    local is_archive="true"
-    local filename="${url##*/}"
-    if [ -z "$filename" ]; then
-      >&2 echo "[!] No filename was found in url, exiting ($url)"
-      exit 1
+    if [ ! -z "$(echo "$url" | grep -E "\.(gz|gzip|bz2|zip|xz)$")" ]; then
+        # When an archive file is downloaded it will be first saved localy
+        dstopt="--directory-prefix=$ARCHIVE_DIR"
+        local is_archive="true"
+        local filename="${url##*/}"
+        if [ -z "$filename" ]; then
+            >&2 echo "[!] No filename was found in url, exiting ($url)"
+            exit 1
+        fi
+            if [ ! -z "$force" ] && [ -f "$ARCHIVE_DIR/$filename" ]; then
+            rm -f $ARCHIVE_DIR/$filename
+        fi
+        elif [ ! -z "$destination" ]; then
+            # Plain files will be written to specified location
+            dstopt="-O $destination"
+        fi
+        # check for corrupted archive
+        if [ -f "$ARCHIVE_DIR/$filename" ] && [ "$is_archive" = "true" ]; then
+        tar -tzf "$ARCHIVE_DIR/$filename" > /dev/null 2>&1
+        if [ $? -ne 0 ]; then
+            >&2 echo "[!] Archive $ARCHIVE_DIR/$filename is corrupted, redownloading"
+            rm -f $ARCHIVE_DIR/$filename
+        fi
     fi
-    if [ ! -z "$force" ] && [ -f "$ARCHIVE_DIR/$filename" ]; then
-      rm -f $ARCHIVE_DIR/$filename
-    fi
-  elif [ ! -z "$destination" ]; then
-    # Plain files will be written to specified location
-    dstopt="-O $destination"
-  fi
-  # check for corrupted archive
-  if [ -f "$ARCHIVE_DIR/$filename" ] && [ "$is_archive" = "true" ]; then
-    tar -tzf "$ARCHIVE_DIR/$filename" > /dev/null 2>&1
-    if [ $? -ne 0 ]; then
-      >&2 echo "[!] Archive $ARCHIVE_DIR/$filename is corrupted, redownloading"
-      rm -f $ARCHIVE_DIR/$filename
-    fi
-  fi
 
-  if [ ! -f "$ARCHIVE_DIR/$filename" ]; then
-    wget $url -q $dstopt --show-progress --progress=bar:force --limit-rate=3m
-  fi
-
-  if [ ! -z "$destination" ] && [ "$is_archive" = "true" ]; then
-    if [ "$destination" = "-" ]; then
-      cat "$ARCHIVE_DIR/$filename"
-    elif [ -d "$(dirname $destination)" ]; then
-      cp "$ARCHIVE_DIR/$filename" "$destination"
+    if [ ! -f "$ARCHIVE_DIR/$filename" ]; then
+        wget $url -q $dstopt --show-progress --progress=bar:force --limit-rate=3m
     fi
-  fi
+
+    if [ ! -z "$destination" ] && [ "$is_archive" = "true" ]; then
+        if [ "$destination" = "-" ]; then
+            cat "$ARCHIVE_DIR/$filename"
+        elif [ -d "$(dirname $destination)" ]; then
+            cp "$ARCHIVE_DIR/$filename" "$destination"
+        fi
+    fi
 }
 
 # Set compiling directory
@@ -87,19 +87,23 @@ if [ ! -z "$1" ]; then
         echo "Error: invalid branch name specified."
         exit 1
     else
-      branch=$1
+        branch=$1
     fi
 else
-  source /usr/local/hestia/conf/hestia.conf
-  branch=$RELEASE_BRANCH
+    source /usr/local/hestia/conf/hestia.conf
+    branch=$RELEASE_BRANCH
 fi
 
 if [ ! -z "$2" ]; then
-  install=$2
+    install=$2
 else
-  install="y"
+    install="y"
 fi
 
+if [ -z "$branch" ]; then
+    echo "No branch detected, please provide one using: v-update-sys-hestia-git branch"
+    exit
+fi
 
 # Install needed software
 echo "Updating system APT repositories..."
@@ -122,7 +126,7 @@ HESTIA_B='true'
 GIT_REP='https://raw.githubusercontent.com/hestiacp/hestiacp/'$branch'/src/deb'
 
 # Generate Links for sourcecode
-HESTIA='https://github.com/hestiacp/hestiacp/archive/'$branch'.zip'
+HESTIA_ARCHIVE_LINK='https://github.com/hestiacp/hestiacp/archive/'$branch'.zip'
 NGINX='https://nginx.org/download/nginx-'$NGINX_V'.tar.gz'
 OPENSSL='https://www.openssl.org/source/openssl-'$OPENSSL_V'.tar.gz'
 PCRE='https://ftp.pcre.org/pub/pcre/pcre-'$PCRE_V'.tar.gz'
@@ -174,7 +178,7 @@ if [ "$NGINX_B" = true ] ; then
 
     # Check install directory and remove if exists
     if [ -d "$BUILD_DIR$INSTALL_DIR" ]; then
-          rm -r "$BUILD_DIR$INSTALL_DIR"
+        rm -r "$BUILD_DIR$INSTALL_DIR"
     fi
 
     # Create the files and install them
@@ -253,14 +257,14 @@ if [ "$PHP_B" = true ] ; then
     cd php-$PHP_V
 
     # Configure PHP
-    ./configure   --prefix=/usr/local/hestia/php \
-                --enable-fpm \
-                --with-fpm-user=admin \
-                --with-fpm-group=admin \
-                --with-libdir=lib/x86_64-linux-gnu \
-                --with-mysqli \
-                --with-curl \
-                --enable-mbstring
+    ./configure     --prefix=/usr/local/hestia/php \
+                    --enable-fpm \
+                    --with-fpm-user=admin \
+                    --with-fpm-group=admin \
+                    --with-libdir=lib/x86_64-linux-gnu \
+                    --with-mysqli \
+                    --with-curl \
+                    --enable-mbstring
 
     # Create the files and install them
     make -j $NUM_CPUS && make INSTALL_ROOT=$BUILD_DIR install
@@ -323,7 +327,7 @@ if [ "$HESTIA_B" = true ] ; then
     mkdir $BUILD_DIR/hestia_$HESTIA_V
 
     # Download and unpack source files
-    download_file $HESTIA
+    download_file $HESTIA_ARCHIVE_LINK
     unzip -q $branch.zip
     rm $branch.zip
 
@@ -369,8 +373,10 @@ fi
 if [ "$install" = 'yes' ] || [ "$install" = 'y' ]; then
     echo "Installing packages..."
     for i in $DEB_DIR/*.deb; do
-      # Install all available packages
-      dpkg -i $i
+        # Install all available packages
+        dpkg -i $i
     done
     unset $answer
+    # Remove temporary files
+    rm -rf $BUILD_DIR
 fi

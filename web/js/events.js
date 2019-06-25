@@ -99,6 +99,19 @@ VE.callbacks.click.do_delete = function(evt, elm) {
      VE.helpers.createConfirmationDialog(dialog_elm, '', url);
 }
 
+VE.callbacks.click.do_servicerestart = function(evt, elm) {
+    var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
+    var url = $('input[name="servicerestart_url"]', ref).val();
+    var dialog_elm = ref.find('.confirmation-text-servicerestart');
+    VE.helpers.createConfirmationDialog(dialog_elm, '', url);
+}
+
+VE.callbacks.click.do_servicestop = function(evt, elm) {
+    var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
+    var url = $('input[name="servicestop_url"]', ref).val();
+    var dialog_elm = ref.find('.confirmation-text-servicestop');
+    VE.helpers.createConfirmationDialog(dialog_elm, '', url);
+}
 
 /*
  * Create dialog box on the fly

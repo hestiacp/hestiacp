@@ -1,34 +1,5 @@
 #!/bin/bash
 
-# Define version check function used throughout upgrade scripts
-function version_ge(){ test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o ! -z "$1" -a "$1" = "$2"; }
-
-# Detect OS
-case $(head -n1 /etc/issue | cut -f 1 -d ' ') in
-    Debian)     os="debian" ;;
-    Ubuntu)     os="ubuntu" ;;
-esac
-
-# Detect release for Debian
-if [ "$os" = "debian" ]; then
-    release=$(cat /etc/debian_version|grep -o [0-9]|head -n1)
-    VERSION='debian'
-elif [ "$os" = "ubuntu" ]; then
-    release="$(lsb_release -s -r)"
-    VERSION='ubuntu'
-fi
-
-# Set backup folder
-HESTIA_BACKUP="/root/hst_upgrade_backups/$(date +%d%m%Y%H%M)"
-
-# Initialize backup folders
-mkdir -p $HESTIA_BACKUP/conf/
-mkdir -p $HESTIA_BACKUP/packages/
-mkdir -p $HESTIA_BACKUP/templates/
-
-# Set installation source folder
-hestiacp="$HESTIA/install/deb"
-
 # Get package version
 version=$(dpkg -l | awk '$2=="hestia" { print $3 }')
 
@@ -43,10 +14,16 @@ if [ ! -e "/usr/local/hestia/data/users/admin" ]; then
     exit
 fi
 
-# Configure apt to retry downloading on error
-if [ ! -f /etc/apt/apt.conf.d/80-retries ]; then
-    echo "APT::Acquire::Retries \"3\";" > /etc/apt/apt.conf.d/80-retries
-fi
+# Set backup folder
+HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
+
+# Initialize backup folders
+mkdir -p $HESTIA_BACKUP/conf/
+mkdir -p $HESTIA_BACKUP/packages/
+mkdir -p $HESTIA_BACKUP/templates/
+
+# Set installation source folder
+hestiacp="$HESTIA/install/deb"
 
 # Clear the screen from apt output to prepare for upgrade installer experience
 clear

@@ -23,11 +23,6 @@ if [ -f /usr/local/hestia/data/firewall/ports.conf ]; then
     rm -f /usr/local/hestia/data/firewall/ports.conf
 fi
 
-# Reset backend port
-if [ ! -z "$BACKEND_PORT" ]; then
-    /usr/local/hestia/bin/v-change-sys-port $BACKEND_PORT
-fi
-
 # Move clamav to proper location - https://goo.gl/zNuM11
 if [ ! -d /usr/local/hestia/web/edit/server/clamav-daemon ]; then
     mv /usr/local/hestia/web/edit/server/clamd /usr/local/web/edit/server/clamav-daemon

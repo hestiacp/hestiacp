@@ -24,8 +24,6 @@ source /usr/local/hestia/conf/hestia.conf
 if [ -d $HESTIA/data/templates/ ]; then
     cp -rf $HESTIA/data/templates $HESTIA_BACKUP/templates/
     $HESTIA/bin/v-update-web-templates
-    $HESTIA/bin/v-update-dns-templates
-	$HESTIA/bin/v-update-mail-templates
 fi
 
 # Update Apache and Nginx configuration to support new file structure

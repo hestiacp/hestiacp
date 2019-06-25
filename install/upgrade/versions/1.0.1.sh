@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Hestia Control Panel upgrade script for target version 1.0.1
 
@@ -7,7 +7,7 @@
 #######################################################################################
 
 # Ensure that users from previous releases are set to the correct stable release branch
-if [ $RELEASE_BRANCH = "master" ] || [ $RELEASE_BRANCH = "develop" ]; then
+if [ ! -z "$RELEASE_BRANCH" ] && [ "$RELEASE_BRANCH" = "master" ] || [ "$RELEASE_BRANCH" = "develop" ]; then
     echo "(*) Updating default release branch configuration..."
     sed -i "/RELEASE_BRANCH/d" $HESTIA/conf/hestia.conf
     echo "RELEASE_BRANCH='release'" >> $HESTIA/conf/hestia.conf

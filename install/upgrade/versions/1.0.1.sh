@@ -95,9 +95,9 @@ fi
 if [ -d $HESTIA/data/templates/ ]; then
     echo "(*) Updating default templates and packages..."
     cp -rf $HESTIA/data/templates $HESTIA_BACKUP/templates/
-    $HESTIA/bin/v-update-web-templates
-    $HESTIA/bin/v-update-dns-templates
-    $HESTIA/bin/v-update-mail-templates
+    $HESTIA/bin/v-update-web-templates > /dev/null 2>&1
+    $HESTIA/bin/v-update-dns-templates > /dev/null 2>&1
+    $HESTIA/bin/v-update-mail-templates > /dev/null 2>&1
 fi
 
 # Back up default package and install latest version
@@ -205,11 +205,12 @@ chmod 755 /etc/cron.daily/php-session-cleanup
 # Fix empty pool error message for MultiPHP
 php_versions=$(ls /etc/php/*/fpm -d 2>/dev/null |wc -l)
 if [ "$php_versions" -gt 1 ]; then
+    echo "(*) Updating Multi-PHP configuration..."
     for v in $(ls /etc/php/); do
         if [ ! -d "/etc/php/$v/fpm/pool.d/" ]; then
             continue
         fi
-        echo "(*) Updating Multi-PHP configuration..."
+        
         cp -f $hestiacp/php-fpm/dummy.conf /etc/php/$v/fpm/pool.d/
         v1=$(echo "$v" | sed -e 's/[.]//')
         sed -i "s/9999/99$v1/g" /etc/php/$v/fpm/pool.d/dummy.conf

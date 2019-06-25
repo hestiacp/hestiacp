@@ -65,7 +65,6 @@ To install a development build, run:
 v-update-sys-hestia-git branchname
 ```
 Replace *branchname* with the name of the branch you wish to install from, such as release, prerelease, or master (stable, beta/release candidate, and current development code respectively). 
-**Important:** Updates which have been released via the Hestia package repositories and upgraded through **apt** will replace installations which use the above method. 
 
 Reporting Issues
 =============================

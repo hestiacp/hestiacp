@@ -1,9 +1,11 @@
 #!/bin/bash
-HESTIA="/usr/local/hestia"
-HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
-spinner="/-\|"
 
-function version_ge(){ test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o ! -z "$1" -a "$1" = "$2"; }
+# Hestia Control Panel upgrade script for target version 0.9.8-28
+
+#######################################################################################
+#######                      Place additional commands below.                   #######
+#######################################################################################
+
 
 # Add amd64 to repositories to prevent notifications - https://goo.gl/hmsSV7
 if ! grep -q 'arch=amd64' /etc/apt/sources.list.d/nginx.list; then

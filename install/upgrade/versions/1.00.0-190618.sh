@@ -1,64 +1,58 @@
 #!/bin/bash
 
-# Define version check function
-function version_ge(){ test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o ! -z "$1" -a "$1" = "$2"; }
+# Hestia Control Panel upgrade script for target version 1.00.0-190618
 
-# Load hestia.conf
-source /usr/local/hestia/conf/hestia.conf
-
-####### Place additional commands below. #######
-
-# Add amd64 to repositories to prevent notifications - https://goo.gl/hmsSV7
-if ! grep -q 'arch=amd64' /etc/apt/sources.list.d/nginx.list; then
-    sed -i s/"deb "/"deb [arch=amd64] "/g /etc/apt/sources.list.d/nginx.list
-fi
-if ! grep -q 'arch=amd64' /etc/apt/sources.list.d/mariadb.list; then
-    sed -i s/"deb "/"deb [arch=amd64] "/g /etc/apt/sources.list.d/mariadb.list
-fi
+#######################################################################################
+#######                      Place additional commands below.                   #######
+#######################################################################################
 
 # Add webmail alias variable to system configuration if non-existent
-imap_check=$(cat $HESTIA/conf/hestia.conf | grep IMAP_SYSTEM)
-if [ ! -z "$imap_check" ]; then
-    WEBMAIL_ALIAS_CHECK=$(cat $HESTIA/conf/hestia.conf | grep WEBMAIL_ALIAS)
-    if [ -z "$WEBMAIL_ALIAS_CHECK" ]; then
-        echo "(*) Adding global webmail alias to system configuration..."
-        sed -i "/WEBMAIL_ALIAS/d" $HESTIA/conf/hestia.conf
-        echo "WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
-    fi
+WEBMAIL_ALIAS_CHECK=$(cat $HESTIA/conf/hestia.conf | grep WEBMAIL_ALIAS)
+if [ -z "$WEBMAIL_ALIAS_CHECK" ]; then
+    echo "(*) Adding global webmail alias to system configuration..."
+    sed -i "/WEBMAIL_ALIAS/d" $HESTIA/conf/hestia.conf
+    echo "WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
 fi
 
-# Load global variables
-source $HESTIA/conf/hestia.conf
-
-# Load hestia main functions
-source /usr/local/hestia/func/main.sh
-
-# Detect OS
-case $(head -n1 /etc/issue | cut -f 1 -d ' ') in
-    Debian)     os="debian" ;;
-    Ubuntu)     os="ubuntu" ;;
-esac
-
-# Detect release for Debian
-if [ "$os" = "debian" ]; then
-    release=$(cat /etc/debian_version|grep -o [0-9]|head -n1)
-    VERSION='debian'
-elif [ "$os" = "ubuntu" ]; then
-    release="$(lsb_release -s -r)"
-    VERSION='ubuntu'
+# Update Apache and Nginx configuration to support new file structure
+if [ -f /etc/apache2/apache.conf ]; then
+    echo "(*) Updating Apache configuration..."
+    mv  /etc/apache2/apache.conf $HESTIA_BACKUP/conf/
+    cp -f $HESTIA/install/deb/apache2/apache.conf /etc/apache2/apache.conf
+fi
+if [ -f /etc/nginx/nginx.conf ]; then
+    echo "(*) Updating NGINX configuration..."
+    mv  /etc/nginx/nginx.conf $HESTIA_BACKUP/conf/
+    cp -f $HESTIA/install/deb/nginx/nginx.conf /etc/nginx/nginx.conf
 fi
 
-# Configure apt to retry downloading on error
-if [ ! -f /etc/apt/apt.conf.d/80-retries ]; then
-    echo "APT::Acquire::Retries \"3\";" > /etc/apt/apt.conf.d/80-retries
-fi
+# Generate dhparam
+if [ ! -e /etc/ssl/dhparam.pem ]; then
+    echo "(*) Enabling HTTPS Strict Transport Security (HSTS) support..."
+    mv  /etc/nginx/nginx.conf $HESTIA_BACKUP/conf/
+    cp -f $hestiacp/nginx/nginx.conf /etc/nginx/
 
-# Update default page templates
-echo "(*) Replacing default templates and packages..."
+    # Copy dhparam
+    cp -f $hestiacp/ssl/dhparam.pem /etc/ssl/
+
+    # Update DNS servers in nginx.conf
+    dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
+    sed -i "s/1.0.0.1 1.1.1.1/$dns_resolver/g" /etc/nginx/nginx.conf
+fi
 
 # Back up default package and install latest version
 if [ -d $HESTIA/data/packages/ ]; then
+    echo "(*) Replacing default packages..."
     cp -f $HESTIA/data/packages/default.pkg $HESTIA_BACKUP/packages/
+fi
+
+# Back up old template files and install the latest versions
+if [ -d $HESTIA/data/templates/ ]; then
+    echo "(*) Replacing default Web, DNS, and Mail templates..."
+    cp -rf $HESTIA/data/templates $HESTIA_BACKUP/templates/
+    $HESTIA/bin/v-update-web-templates >/dev/null 2>&1
+    $HESTIA/bin/v-update-dns-templates >/dev/null 2>&1
+	$HESTIA/bin/v-update-mail-templates >/dev/null 2>&1
 fi
 
 # Remove old Office 365 template as there is a newer version with an updated name
@@ -178,16 +172,16 @@ if [ ! -f /etc/cron.daily/php-session-cleanup ]; then
     echo "find -O3 /home/*/tmp/ -ignore_readdir_race -depth -mindepth 1 -name 'sess_*' -type f -cmin '+10080' -delete > /dev/null 2>&1" >> /etc/cron.daily/php-session-cleanup
     echo "find -O3 $HESTIA/data/sessions/ -ignore_readdir_race -depth -mindepth 1 -name 'sess_*' -type f -cmin '+10080' -delete > /dev/null 2>&1" >> /etc/cron.daily/php-session-cleanup
 fi
-chmod 755 /etc/cron.daily/php-session-cleanup
+    chmod 755 /etc/cron.daily/php-session-cleanup
 
 # Fix empty pool error message for MultiPHP
 php_versions=$(ls /etc/php/*/fpm -d 2>/dev/null |wc -l)
 if [ "$php_versions" -gt 1 ]; then
+    echo "(*) Updating Multi-PHP configuration..."
     for v in $(ls /etc/php/); do
         if [ ! -d "/etc/php/$v/fpm/pool.d/" ]; then
             continue
         fi
-        echo "(*) Updating Multi-PHP configuration..."
         cp -f $hestiacp/php-fpm/dummy.conf /etc/php/$v/fpm/pool.d/
         v1=$(echo "$v" | sed -e 's/[.]//')
         sed -i "s/9999/99$v1/g" /etc/php/$v/fpm/pool.d/dummy.conf
@@ -260,14 +254,15 @@ if [ ! -z "$WEBALIZER_CHECK" ]; then
     sed -i "s/STATS_SYSTEM='webalizer,awstats'/STATS_SYSTEM='awstats'/g" $HESTIA/conf/hestia.conf
 fi
 
-# Enable SFTP chroot jail capabilities
-$HESTIA/bin/v-add-sys-sftp-jail no
+# Run sftp jail once
+$HESTIA/bin/v-add-sys-sftp-jail
 
 # Enable SFTP subsystem for SSH
 sftp_subsys_enabled=$(grep -iE "^#?.*subsystem.+(sftp )?sftp-server" /etc/ssh/sshd_config)
 if [ ! -z "$sftp_subsys_enabled" ]; then
     echo "(*) Updating SFTP subsystem configuration..."
     sed -i -E "s/^#?.*Subsystem.+(sftp )?sftp-server/Subsystem sftp internal-sftp/g" /etc/ssh/sshd_config
+    systemctl restart ssh
 fi
 
 # Remove and migrate obsolete object keys
@@ -289,23 +284,3 @@ for user in `ls /usr/local/hestia/data/users/`; do
     done
     sed -i "s/\sFORCESSL=''//g" $USER_DATA/web.conf
 done
-
-# Reset backend port
-if [ ! -z "$BACKEND_PORT" ]; then
-    /usr/local/hestia/bin/v-change-sys-port $BACKEND_PORT
-fi
-
-# Move clamav to proper location - https://goo.gl/zNuM11
-if [ ! -d /usr/local/hestia/web/edit/server/clamav-daemon ]; then
-    mv /usr/local/hestia/web/edit/server/clamd /usr/local/web/edit/server/clamav-daemon
-fi
-
-# Fix named rule for AppArmor - https://goo.gl/SPqHdq
-if [ "$DNS_SYSTEM" = 'bind9' ] && [ ! -f /etc/apparmor.d/local/usr.sbin.named ]; then
-        echo "/home/** rwm," >> /etc/apparmor.d/local/usr.sbin.named 2> /dev/null
-fi
-
-# Remove obsolete ports.conf if exists.
-if [ -f /usr/local/hestia/data/firewall/ports.conf ]; then
-    rm -f /usr/local/hestia/data/firewall/ports.conf
-fi

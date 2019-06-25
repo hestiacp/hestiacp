@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Configure apt to retry downloading on error
+if [ ! -f /etc/apt/apt.conf.d/80-retries ]; then
+    echo "APT::Acquire::Retries \"3\";" > /etc/apt/apt.conf.d/80-retries
+fi
+
+# Define version check function
+function version_ge(){ test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o ! -z "$1" -a "$1" = "$2"; }
+
 # Get package version
 version=$(dpkg -l | awk '$2=="hestia" { print $3 }')
 
@@ -9,13 +17,8 @@ source /usr/local/hestia/func/main.sh
 # Load message variables
 source /usr/local/hestia/install/upgrade/messages.sh
 
-# Run triggers only on updates
-if [ ! -e "/usr/local/hestia/data/users/admin" ]; then
-    exit
-fi
-
 # Set backup folder
-HESTIA_BACKUP="/root/hst_upgrade/$(date +%d%m%Y%H%M)"
+HESTIA_BACKUP="/root/hst_upgrade_backups/$(date +%d%m%Y%H%M)"
 
 # Initialize backup folders
 mkdir -p $HESTIA_BACKUP/conf/
@@ -24,6 +27,11 @@ mkdir -p $HESTIA_BACKUP/templates/
 
 # Set installation source folder
 hestiacp="$HESTIA/install/deb"
+
+# Run triggers only on updates
+if [ ! -e "/usr/local/hestia/data/users/admin" ]; then
+    exit
+fi
 
 # Clear the screen from apt output to prepare for upgrade installer experience
 clear
@@ -45,7 +53,7 @@ sed -i "/VERSION/d" $HESTIA/conf/hestia.conf
 echo "VERSION='$version'" >> $HESTIA/conf/hestia.conf
 
 # Add upgrade notification to admin user's panel
-$HESTIA/bin/v-add-user-notification admin 'Upgrade complete' 'Your server has been updated to '$version'.<br>Please report any bugs on GitHub at<br><a href="https://github.com/hestiacp/hestiacp/Issues" target="_new">https://github.com/hestiacp/hestiacp/Issues</a><br><br>Have a great day!'
+$HESTIA/bin/v-add-user-notification admin 'Upgrade complete' 'Your server has been updated to Hestia Control Panel version '$version'.<br>Please report any bugs on GitHub at<br><a href="https://github.com/hestiacp/hestiacp/Issues" target="_new">https://github.com/hestiacp/hestiacp/Issues</a><br><br>Have a great day!'
 
 # Restart services for changes to take full effect
 source /usr/local/hestia/install/upgrade/restart.sh

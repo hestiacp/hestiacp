@@ -1,0 +1,81 @@
+#!/bin/bash
+# info: add letsencrypt for host and backend
+# options:
+#
+# The function check and validates the backend certificate and generate
+# a new let's encrypt certificate.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user="admin"
+domain=$HOSTNAME
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/conf/hestia.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+is_format_valid 'user' 'domain' 'aliases'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Check if hostname already exists as domain
+if [ "$($BIN/v-list-web-domain $user $domain plain |cut -f 1)" != "$domain" ]; then
+    # Create web domain for hostname
+    $BIN/v-add-web-domain $user $domain
+fi
+
+# Validate web domain
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+get_domain_values 'web'
+
+# Load domain data
+eval $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
+
+# Set ssl installation to yes
+add_ssl="yes"
+
+if [ "$SSL" = "yes" ]; then
+    # Valildate SSL Certificate
+    if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
+        if openssl verify -CAfile $USER_DATA/ssl/$domain.ca $USER_DATA/ssl/$domain.pem | grep -q "$domain.pem: OK"; then
+            add_ssl="no"
+        fi
+    else
+        if openssl verify $USER_DATA/ssl/$domain.pem | grep -q "$domain.pem: OK"; then
+            add_ssl="no"
+        fi
+    fi
+fi
+
+# Add let's encrypt ssl if needed
+if [ "$add_ssl" = "yes" ]; then
+    # Add let's encrypt ssl
+    $BIN/v-add-letsencrypt-domain $user $domain
+fi
+
+# Add certificate to backend
+$BIN/v-update-host-certificate $user $domain
+
+
+#----------------------------------------------------------#
+#                        Hestia                            #
+#----------------------------------------------------------#
+
+exit

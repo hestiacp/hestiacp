@@ -22,10 +22,9 @@ source /usr/local/hestia/conf/hestia.conf
 
 # Back up old template files and install the latest versions
 if [ -d $HESTIA/data/templates/ ]; then
+    echo "(*) Updating and rebuild web templates..."
     cp -rf $HESTIA/data/templates $HESTIA_BACKUP/templates/
     $HESTIA/bin/v-update-web-templates
-    $HESTIA/bin/v-update-dns-templates
-	$HESTIA/bin/v-update-mail-templates
 fi
 
 # Update Apache and Nginx configuration to support new file structure

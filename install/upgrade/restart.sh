@@ -2,7 +2,7 @@
 
 # Rebuild users and domains
 for user in `ls /usr/local/hestia/data/users/`; do
-    echo "(*) Rebuilding domains and account for user: $user..."
+    echo "(*) Rebuilding domains and account configuration for user: $user..."
     if [ ! -z $WEB_SYSTEM ]; then
 		$BIN/v-rebuild-web-domains $user >/dev/null 2>&1
 	fi

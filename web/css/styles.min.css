@@ -768,7 +768,7 @@ body {
 
 .body-login, .body-reset {
   height: auto;
-  padding-top: 13%;
+  padding-top: 10%;
   background-color: #336699;
   background: linear-gradient(to bottom, rgba(44,92,147,1) 0%,rgba(72,136,186,1) 40%,rgba(127,186,232,1) 100%);
 }

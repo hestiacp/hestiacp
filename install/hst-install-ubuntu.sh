@@ -1662,6 +1662,9 @@ fi
 $HESTIA/bin/v-add-web-domain admin $servername
 check_result $? "can't create $servername domain"
 
+# Enable automatic updates
+$HESTIA/bin/v-add-cron-hestia-autoupdate
+
 # Adding cron jobs
 command="sudo $HESTIA/bin/v-update-sys-queue disk"
 $HESTIA/bin/v-add-cron-job 'admin' '15' '02' '*' '*' '*' "$command"
@@ -1733,8 +1736,8 @@ Web:     https://www.hestiacp.com/
 Forum:   https://forum.hestiacp.com/
 GitHub:  https://www.github.com/hestiacp/hestiacp
 
-Want to join our beta test program? Please email us at
-info@hestiacp.com or join in on GitHub to start contributing today.
+Note: Automatic updates are enabled by default. If you would like to disable them,
+please log in and navigate to Server > Updates to turn them off.
 
 Help support the Hestia Contol Panel project by donating via PayPal:
 https://www.hestiacp.com/donate

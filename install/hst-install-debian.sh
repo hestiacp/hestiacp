@@ -1324,7 +1324,7 @@ if [ "$mysql" = 'yes' ]; then
     cp -f $hestiacp/mysql/$mycnf /etc/mysql/my.cnf
     mysql_install_db >> $LOG
 
-    update-rc.d mysql defaults
+    update-rc.d mysql defaults > /dev/null 2>&1
     service mysql start >> $LOG
     check_result $? "mariadb start failed"
 

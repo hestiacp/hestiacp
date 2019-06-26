@@ -289,8 +289,14 @@ if [ ! -f /etc/apt/apt.conf.d/80-retries ]; then
     echo "APT::Acquire::Retries \"3\";" > /etc/apt/apt.conf.d/80-retries
 fi
 
+# Welcome message
+echo "Welcome to the Hestia Control Panel installer!"
+echo 
+echo "Please wait a moment while we update your system's repositories and"
+echo "install any necessary dependencies required to proceed with the installation..."
+echo 
+
 # Update apt repository
-echo "Please wait a moment while we update your systems APT repositories..."
 apt-get -qq update
 
 # Creating backup directory
@@ -298,28 +304,28 @@ mkdir -p $hst_backups
 
 # Checking ntpdate
 if [ ! -e '/usr/sbin/ntpdate' ]; then
-    echo "Install missing ntpdate..."
+    echo "(*) Installing ntpdate..."
     apt-get -y install ntpdate >> $LOG
     check_result $? "Can't install ntpdate"
 fi
 
 # Checking wget
 if [ ! -e '/usr/bin/wget' ]; then
-    echo "Install missing wget..."
+    echo "(*) Installing wget..."
     apt-get -y install wget >> $LOG
     check_result $? "Can't install wget"
 fi
 
 # Checking dirmngr
 if [ ! -e '/usr/bin/dirmngr' ]; then
-    echo "Install missing dirmngr..."
+    echo "(*) Installing dirmngr..."
     apt-get -y install dirmngr >> $LOG
     check_result $? "Can't install dirmngr"
 fi
 
 # Check if apt-transport-https is installed
 if [ ! -e '/usr/lib/apt/methods/https' ]; then
-    echo "Install missing apt-transport-https..."
+    echo "(*) Installing apt-transport-https..."
     apt-get -y install apt-transport-https >> $LOG
     check_result $? "Can't install apt-transport-https"
 fi
@@ -406,13 +412,16 @@ echo ' |  _  |  __/\__ \ |_| | (_| | |___|  __/ '
 echo ' |_| |_|\___||___/\__|_|\__,_|\____|_|    '
 echo
 echo '                      Hestia Control Panel'
-echo -e "\n\n"
-
-echo 'The following software will be installed on your system:'
+echo '                                    v1.0.1'
+echo -e "\n"
+echo "=============================================================================="
+echo -e "\n"
+echo 'The following server components will be installed on your system:'
+echo
 
 # Web stack
 if [ "$nginx" = 'yes' ]; then
-    echo '   - Nginx Web Server'
+    echo '   - NGINX Web / Proxy Server'
 fi
 if [ "$apache" = 'yes' ] && [ "$nginx" = 'no' ] ; then
     echo '   - Apache Web Server'
@@ -438,9 +447,12 @@ if [ "$exim" = 'yes' ]; then
     if [ "$clamd" = 'yes'  ] ||  [ "$spamd" = 'yes' ] ; then
         echo -n ' + '
         if [ "$clamd" = 'yes' ]; then
-            echo -n 'ClamAV'
+            echo -n 'ClamAV '
         fi
         if [ "$spamd" = 'yes' ]; then
+            if [ "$clamd" = 'yes' ]; then
+                echo -n '+ '
+            fi
             echo -n 'SpamAssassin'
         fi
     fi
@@ -471,13 +483,15 @@ if [ "$iptables" = 'yes' ]; then
     echo -n '   - Iptables Firewall'
 fi
 if [ "$iptables" = 'yes' ] && [ "$fail2ban" = 'yes' ]; then
-    echo -n ' + Fail2Ban'
+    echo -n ' + Fail2Ban Access Monitor'
 fi
-echo -e "\n\n"
+echo -e "\n"
+echo "=============================================================================="
+echo -e "\n"
 
 # Asking for confirmation to proceed
 if [ "$interactive" = 'yes' ]; then
-    read -p 'Would you like to continue? [y/n]: ' answer
+    read -p 'Would you like to continue with the installation? [Y/N]: ' answer
     if [ "$answer" != 'y' ] && [ "$answer" != 'Y'  ]; then
         echo 'Goodbye'
         exit 1
@@ -522,7 +536,7 @@ if [ -z "$email" ]; then
 fi
 
 # Defining backup directory
-echo -e "\nInstallation backup directory: $hst_backups"
+echo -e "Installation backup directory: $hst_backups"
 
 # Print Log File Path
 echo "Installation log file: $LOG"
@@ -571,10 +585,13 @@ check_result $? 'apt-get upgrade failed'
 apt=/etc/apt/sources.list.d
 
 # Updating system
-echo "Installing required repository keys... "
-
+echo "Adding required repositories to proceed with installation:"
+echo
 # Installing nginx repo
 echo "(*) NGINX"
+if [ -e $apt/nginx.list ]; then
+    rm $apt/nginx.list
+fi
 echo "deb [arch=amd64] http://nginx.org/packages/mainline/$VERSION/ $codename nginx" \
     > $apt/nginx.list
 wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
@@ -582,12 +599,18 @@ APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/nginx_signing.key > /dev
 
 # Installing sury php repo
 echo "(*) PHP"
+if [ -e $apt/php.list ]; then
+    rm $apt/php.list
+fi
 echo "deb https://packages.sury.org/php/ $codename main" > $apt/php.list
 wget --quiet https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/php_signing.key > /dev/null 2>&1
 
 # Installing MariaDB repo
 echo "(*) MariaDB"
+if [ -e $apt/mariadb.list ]; then
+    rm $apt/mariadb.list
+fi
 echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/10.4/$VERSION $codename main" > $apt/mariadb.list
 if [ "$release" -eq 8 ]; then
     APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com CBCB082A1BB943DB > /dev/null 2>&1
@@ -607,10 +630,13 @@ fi
 
 # Installing hestia repo
 echo "(*) Hestia Control Panel"
+if [ -e $apt/hestia.list ]; then
+    rm $apt/hestia.list
+fi
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
 wget --quiet https://gpg.hestiacp.com/deb_signing.key -O /tmp/deb_signing.key
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/deb_signing.key > /dev/null 2>&1
-
+echo
 
 #----------------------------------------------------------#
 #                         Backup                           #
@@ -845,8 +871,9 @@ echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod a+x /usr/sbin/policy-rc.d
 
 # Installing apt packages
-echo "Installing Hestia Control Panel and required dependencies..."
+echo "Now installing Hestia Control Panel and all required dependencies."
 echo -ne "NOTE: This process may take 10 to 15 minutes to complete, please wait... "
+echo
 apt-get -y install $software > /dev/null 2>&1 &
 BACK_PID=$!
 
@@ -888,7 +915,7 @@ rm -f /usr/sbin/policy-rc.d
 #                     Configure system                     #
 #----------------------------------------------------------#
 
-echo "Configure System"
+echo "(*) Configuring system settings..."
 # Enable SSH password authentication
 sed -i "s/rdAuthentication no/rdAuthentication yes/g" /etc/ssh/sshd_config
 
@@ -944,7 +971,7 @@ chmod 755 /usr/bin/rssh
 #                     Configure Hestia                     #
 #----------------------------------------------------------#
 
-echo "Configure Hestia"
+echo "(*) Configuring Hestia Control Panel..."
 # Installing sudo configuration
 mkdir -p /etc/sudoers.d
 cp -f $hestiacp/sudo/admin /etc/sudoers.d/
@@ -1090,7 +1117,7 @@ cp -rf $hestiacp/firewall $HESTIA/data/
 $HESTIA/bin/v-change-sys-hostname $servername > /dev/null 2>&1
 
 # Generating SSL certificate
-echo "Generate ssl certificate"
+echo "(*) Generating default self-signed SSL certificate..."
 $HESTIA/bin/v-generate-ssl-cert $(hostname) $email 'US' 'California' \
      'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
 
@@ -1114,7 +1141,7 @@ rm /tmp/hst.pem
 #----------------------------------------------------------#
 
 if [ "$nginx" = 'yes' ]; then
-    echo "Configure Nginx Webserver"
+    echo "(*) Configuring NGINX..."
     rm -f /etc/nginx/conf.d/*.conf
     cp -f $hestiacp/nginx/nginx.conf /etc/nginx/
     cp -f $hestiacp/nginx/status.conf /etc/nginx/conf.d/
@@ -1124,7 +1151,7 @@ if [ "$nginx" = 'yes' ]; then
     mkdir -p /etc/nginx/conf.d/domains
     mkdir -p /var/log/nginx/domains
     if [ "$apache" = 'no' ] && [ "$multiphp" = 'yes' ]; then
-        echo "Configure Nginx MultiPHP"
+        echo "(*) Configuring Multi-PHP for NGINX..."
         rm -fr $HESTIA/data/templates/web/nginx/*
         for v in "${multiphp_v[@]}"; do
             update-rc.d php$v-fpm defaults > /dev/null 2>&1
@@ -1170,7 +1197,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$apache" = 'yes' ]; then
-    echo "Configure Apache Webserver"
+    echo "(*) Configuring Apache Web Server..."
     cp -f $hestiacp/apache2/apache2.conf /etc/apache2/
     cp -f $hestiacp/apache2/status.conf /etc/apache2/mods-enabled/
     cp -f $hestiacp/logrotate/apache2 /etc/logrotate.d/
@@ -1191,7 +1218,7 @@ if [ "$apache" = 'yes' ]; then
     chmod 640 /var/log/apache2/access.log /var/log/apache2/error.log
     chmod 751 /var/log/apache2/domains
     if [ "$multiphp" = 'yes' ] ; then
-        echo "Configure Apache MultiPHP"
+        echo "(*) Configuring Multi-PHP for Apache..."
         a2enmod proxy_fcgi setenvif > /dev/null 2>&1
         for v in "${multiphp_v[@]}"; do
             a2enconf php$v-fpm-fpm > /dev/null 2>&1
@@ -1222,7 +1249,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$phpfpm" = 'yes' ]; then
-    echo "Configure PHP-FPM"
+    echo "(*) Configuring PHP-FPM..."
     cp -f $hestiacp/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf
     update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1
     service php$fpm_v-fpm start >> $LOG
@@ -1234,7 +1261,7 @@ fi
 #                     Configure PHP                        #
 #----------------------------------------------------------#
 
-echo "Configure PHP Timezone"
+echo "(*) Configuring PHP..."
 ZONE=$(timedatectl > /dev/null 2>&1|grep Timezone|awk '{print $2}')
 if [ -z "$ZONE" ]; then
     ZONE='UTC'
@@ -1256,7 +1283,7 @@ chmod 755 /etc/cron.daily/php-session-cleanup
 #----------------------------------------------------------#
 
 if [ "$vsftpd" = 'yes' ]; then
-    echo "Configure Vsftpd"
+    echo "(*) Configuring Vsftpd server..."
     cp -f $hestiacp/vsftpd/vsftpd.conf /etc/
     touch /var/log/vsftpd.log
     chown root:adm /var/log/vsftpd.log
@@ -1276,7 +1303,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$proftpd" = 'yes' ]; then
-    echo "Configure ProFTPD server"
+    echo "(*) Configuring ProFTPD server..."
     echo "127.0.0.1 $servername" >> /etc/hosts
     cp -f $hestiacp/proftpd/proftpd.conf /etc/proftpd/
     update-rc.d proftpd defaults > /dev/null 2>&1
@@ -1290,7 +1317,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$mysql" = 'yes' ]; then
-    echo "Configure MariaDB server"
+    echo "(*) Configuring MariaDB database server..."
     mycnf="my-small.cnf"
     if [ $memory -gt 1200000 ]; then
         mycnf="my-medium.cnf"
@@ -1303,7 +1330,7 @@ if [ "$mysql" = 'yes' ]; then
     cp -f $hestiacp/mysql/$mycnf /etc/mysql/my.cnf
     mysql_install_db >> $LOG
 
-    update-rc.d mysql defaults
+    update-rc.d mysql defaults > /dev/null 2>&1
     service mysql start >> $LOG
     check_result $? "mariadb start failed"
 
@@ -1336,7 +1363,7 @@ fi
 
 if [ "$mysql" = 'yes' ]; then
     # Display upgrade information
-    echo "Installing phpMyAdmin version v$pma_v..."
+    echo "(*) Installing phpMyAdmin version v$pma_v..."
 
     # Download latest phpmyadmin release
     wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
@@ -1369,7 +1396,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$postgresql" = 'yes' ]; then
-    echo "Configure PostgreSQL database server"
+    echo "(*) Configuring PostgreSQL database server..."
     ppass=$(gen_pass)
     cp -f $hestiacp/postgresql/pg_hba.conf /etc/postgresql/*/main/
     service postgresql restart
@@ -1388,7 +1415,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$named" = 'yes' ]; then
-    echo "Configure Bind DNS server"
+    echo "(*) Configuring Bind DNS server..."
     cp -f $hestiacp/bind/named.conf /etc/bind/
     cp -f $hestiacp/bind/named.conf.options /etc/bind/
     chown root:bind /etc/bind/named.conf
@@ -1420,7 +1447,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$exim" = 'yes' ]; then
-    echo "Configure Exim mail server"
+    echo "(*) Configuring Exim mail server..."
     gpasswd -a Debian-exim mail > /dev/null 2>&1
     cp -f $hestiacp/exim/exim4.conf.template /etc/exim4/
     cp -f $hestiacp/exim/dnsbl.conf /etc/exim4/
@@ -1456,7 +1483,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$dovecot" = 'yes' ]; then
-    echo "Configure Dovecot"
+    echo "(*) Configuring Dovecot POP/IMAP mail server..."
     gpasswd -a dovecot mail > /dev/null 2>&1
     cp -rf $hestiacp/dovecot /etc/
     cp -f $hestiacp/logrotate/dovecot /etc/logrotate.d/
@@ -1490,7 +1517,7 @@ if [ "$clamd" = 'yes' ]; then
             /lib/systemd/system/clamav-daemon.service
         systemctl daemon-reload
     fi
-    echo -ne "Installing ClamAV anti-virus definitions... "
+    echo -ne "(*) Installing ClamAV anti-virus definitions... "
     /usr/bin/freshclam >> $LOG &
     BACK_PID=$!
     spin_i=1
@@ -1509,7 +1536,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$spamd" = 'yes' ]; then
-    echo "Configure SpamAssassin"
+    echo "(*) Configuring SpamAssassin..."
     update-rc.d spamassassin defaults > /dev/null 2>&1
     sed -i "s/ENABLED=0/ENABLED=1/" /etc/default/spamassassin
     service spamassassin start >> $LOG
@@ -1526,7 +1553,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
-    echo "Configure Roundcube"
+    echo "(*) Configuring Roundcube webmail client..."
     if [ "$apache" = 'yes' ]; then
         cp -f $hestiacp/roundcube/apache.conf /etc/roundcube/
         ln -s /etc/roundcube/apache.conf /etc/apache2/conf.d/roundcube.conf
@@ -1596,7 +1623,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$fail2ban" = 'yes' ]; then
-    echo "Configure Fail2Ban"
+    echo "(*) Configuring fail2ban access monitor..."
     cp -rf $hestiacp/fail2ban /etc/
     if [ "$dovecot" = 'no' ]; then
         fline=$(cat /etc/fail2ban/jail.local |grep -n dovecot-iptables -A 2)
@@ -1740,6 +1767,9 @@ fi
 $HESTIA/bin/v-add-web-domain admin $servername
 check_result $? "can't create $servername domain"
 
+# Enable automatic updates
+$HESTIA/bin/v-add-cron-hestia-autoupdate
+
 # Adding cron jobs
 command="sudo $HESTIA/bin/v-update-sys-queue disk"
 $HESTIA/bin/v-add-cron-job 'admin' '15' '02' '*' '*' '*' "$command"
@@ -1785,6 +1815,10 @@ if [ "$host_ip" = "$ip" ]; then
     ip="$servername"
 fi
 
+echo -e "\n"
+echo "=============================================================================="
+echo -e "\n"
+
 # Sending notification to admin email
 echo -e "Congratulations!
 
@@ -1807,8 +1841,8 @@ Web:     https://www.hestiacp.com/
 Forum:   https://forum.hestiacp.com/
 GitHub:  https://www.github.com/hestiacp/hestiacp
 
-Want to join our beta test program? Please email us at
-info@hestiacp.com or join in on GitHub to start contributing today.
+Note: Automatic updates are enabled by default. If you would like to disable them,
+please log in and navigate to Server > Updates to turn them off.
 
 Help support the Hestia Contol Panel project by donating via PayPal:
 https://www.hestiacp.com/donate

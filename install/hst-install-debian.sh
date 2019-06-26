@@ -289,8 +289,14 @@ if [ ! -f /etc/apt/apt.conf.d/80-retries ]; then
     echo "APT::Acquire::Retries \"3\";" > /etc/apt/apt.conf.d/80-retries
 fi
 
+# Welcome message
+echo "Welcome to the Hestia Control Panel installer!"
+echo 
+echo "Please wait a moment while we update your system's repositories and"
+echo "install any necessary dependencies required to proceed with the installation..."
+echo 
+
 # Update apt repository
-echo "Please wait a moment while we update your systems APT repositories..."
 apt-get -qq update
 
 # Creating backup directory
@@ -298,28 +304,28 @@ mkdir -p $hst_backups
 
 # Checking ntpdate
 if [ ! -e '/usr/sbin/ntpdate' ]; then
-    echo "Install missing ntpdate..."
+    echo "(*) Installing ntpdate..."
     apt-get -y install ntpdate >> $LOG
     check_result $? "Can't install ntpdate"
 fi
 
 # Checking wget
 if [ ! -e '/usr/bin/wget' ]; then
-    echo "Install missing wget..."
+    echo "(*) Installing wget..."
     apt-get -y install wget >> $LOG
     check_result $? "Can't install wget"
 fi
 
 # Checking dirmngr
 if [ ! -e '/usr/bin/dirmngr' ]; then
-    echo "Install missing dirmngr..."
+    echo "(*) Installing dirmngr..."
     apt-get -y install dirmngr >> $LOG
     check_result $? "Can't install dirmngr"
 fi
 
 # Check if apt-transport-https is installed
 if [ ! -e '/usr/lib/apt/methods/https' ]; then
-    echo "Install missing apt-transport-https..."
+    echo "(*) Installing apt-transport-https..."
     apt-get -y install apt-transport-https >> $LOG
     check_result $? "Can't install apt-transport-https"
 fi
@@ -1145,7 +1151,7 @@ if [ "$nginx" = 'yes' ]; then
     mkdir -p /etc/nginx/conf.d/domains
     mkdir -p /var/log/nginx/domains
     if [ "$apache" = 'no' ] && [ "$multiphp" = 'yes' ]; then
-        echo "(*) Configuring Multi-PHP..."
+        echo "(*) Configuring Multi-PHP for NGINX..."
         rm -fr $HESTIA/data/templates/web/nginx/*
         for v in "${multiphp_v[@]}"; do
             update-rc.d php$v-fpm defaults > /dev/null 2>&1
@@ -1212,7 +1218,7 @@ if [ "$apache" = 'yes' ]; then
     chmod 640 /var/log/apache2/access.log /var/log/apache2/error.log
     chmod 751 /var/log/apache2/domains
     if [ "$multiphp" = 'yes' ] ; then
-        echo "Configure Apache MultiPHP"
+        echo "(*) Configuring Multi-PHP for Apache..."
         a2enmod proxy_fcgi setenvif > /dev/null 2>&1
         for v in "${multiphp_v[@]}"; do
             a2enconf php$v-fpm-fpm > /dev/null 2>&1

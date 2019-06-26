@@ -1806,6 +1806,10 @@ if [ "$host_ip" = "$ip" ]; then
     ip="$servername"
 fi
 
+echo -e "\n"
+echo "=============================================================================="
+echo -e "\n"
+
 # Sending notification to admin email
 echo -e "Congratulations!
 

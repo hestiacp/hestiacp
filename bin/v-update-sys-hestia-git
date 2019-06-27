@@ -53,6 +53,7 @@ download_file() {
 BUILD_DIR='/tmp/hestiacp-src/'
 DEB_DIR="$BUILD_DIR/debs/"
 INSTALL_DIR='/usr/local/hestia'
+ARCHIVE_DIR="${BUILD_DIR}/archive/"
 
 # Set command variables
 branch=$1
@@ -71,6 +72,7 @@ PHP_V='7.3.4'
 # Create build directories
 rm -rf $BUILD_DIR
 mkdir -p $DEB_DIR
+mkdir -p $ARCHIVE_DIR
 
 # Set package dependencies for compiling
 SOFTWARE='build-essential libxml2-dev libz-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config'
@@ -126,13 +128,15 @@ HESTIA_B='true'
 GIT_REP='https://raw.githubusercontent.com/hestiacp/hestiacp/'$branch'/src/deb'
 
 # Generate Links for sourcecode
-HESTIA_ARCHIVE_LINK='https://github.com/hestiacp/hestiacp/archive/'$branch'.zip'
+HESTIA_ARCHIVE_LINK='https://github.com/hestiacp/hestiacp/archive/'$branch'.tar.gz'
 NGINX='https://nginx.org/download/nginx-'$NGINX_V'.tar.gz'
 OPENSSL='https://www.openssl.org/source/openssl-'$OPENSSL_V'.tar.gz'
 PCRE='https://ftp.pcre.org/pub/pcre/pcre-'$PCRE_V'.tar.gz'
 ZLIB='https://www.zlib.net/zlib-'$ZLIB_V'.tar.gz'
 PHP='http://de2.php.net/distributions/php-'$PHP_V'.tar.gz'
 
+# Forward slashes in branchname are replaced with dashes to match foldername in github archive.
+branch=$(echo "$branch" |sed 's/\//-/g');
 
 #################################################################################
 #
@@ -327,9 +331,7 @@ if [ "$HESTIA_B" = true ] ; then
     mkdir $BUILD_DIR/hestia_$HESTIA_V
 
     # Download and unpack source files
-    download_file $HESTIA_ARCHIVE_LINK
-    unzip -q $branch.zip
-    rm $branch.zip
+    download_file $HESTIA_ARCHIVE_LINK '-' 'fresh' | tar xz
 
     # Prepare Deb Package Folder Structure
     cd hestia_$HESTIA_V/
@@ -345,7 +347,7 @@ if [ "$HESTIA_B" = true ] ; then
     chmod +x postinst
 
     # Move needed directories
-    cd ../../hestiacp-$branch
+    cd $BUILD_DIR/hestiacp-$branch
     mv bin func install web ../hestia_$HESTIA_V/usr/local/hestia/
 
     # Set permission

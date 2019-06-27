@@ -28,7 +28,7 @@ json_list() {
         NOTICE=$(echo "$NOTICE" |sed -e "s/%quote%/'/g")
         echo -n '    "'$NID'": {
         "TOPIC": "'$TOPIC'",
-        "NOTICE": "'$NOTICE'",
+        "NOTICE": "'${NOTICE//\"/\'}'",
         "TYPE": "'$TYPE'",
         "ACK": "'$ACK'",
         "TPL": "'$TPL'",

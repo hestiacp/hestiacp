@@ -416,6 +416,8 @@ VE.notifications.get_list = function(){
             tpl.set(':TYPE', elm.TYPE);
             tpl.set(':TOPIC', elm.TOPIC);
             tpl.set(':NOTICE', elm.NOTICE);
+            tpl.set(':TIME', elm.TIME);
+            tpl.set(':DATE', elm.DATE);
             acc.push(tpl.finalize());
         });
 

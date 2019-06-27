@@ -1008,11 +1008,12 @@ a {
 }
 
 .notification-container {
-  background-color: rgba(0,0,0,0.90);
+  background-color: rgba(255,255,255,0.95);
   box-shadow: 0 3px 30px 0 rgba(0, 0, 0, 0.5);
   list-style-type: none;
   margin: 0 27px;
-  overflow: hidden;
+  max-height: 90%;
+  overflow-y: auto;
   padding-left: 0;
   position: fixed;
   top: 34px;
@@ -1020,7 +1021,7 @@ a {
   z-index: 300;
   font-size: 0.8rem;
   padding: 0;
-  color: #e9e9e9;
+  color: #6f6f6f;
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
   border: 1px solid #fff;
@@ -1028,11 +1029,11 @@ a {
 }
 
 .notification-container .unseen {
-  color: #e7e7e7;
+  color: #6f6f6f;
 }
 
 .notification-container li {
-  border-bottom: 1px solid #4b4b4b;
+  border-bottom: 1px solid #e9e4e4;
   padding: 20px;
 }
 
@@ -1102,6 +1103,11 @@ a {
   width: 21px;
 }
 
+.notification-container .time {
+  float: right;
+  margin-top: 1rem;
+  font-size: 0.7rem;
+}
 
 
 .l-stat {

@@ -3404,6 +3404,9 @@ form#vstobjects.suspended {
 .shortcuts .close:active {
   background-color: #55c9c0;
 }
+.shortcuts .close .fas {
+  font-size: 1.3rem;
+}
 .shortcuts ul {
   list-style-type: none;
   padding: 30px 20px;

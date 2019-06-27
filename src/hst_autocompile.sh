@@ -182,6 +182,8 @@ PCRE='https://ftp.pcre.org/pub/pcre/pcre-'$PCRE_V'.tar.gz'
 ZLIB='https://www.zlib.net/zlib-'$ZLIB_V'.tar.gz'
 PHP='http://de2.php.net/distributions/php-'$PHP_V'.tar.gz'
 
+# Forward slashes in branchname are replaced with dashes to match foldername in github archive.
+branch=$(echo "$branch" |sed 's/\//-/g');
 
 #################################################################################
 #

@@ -28,6 +28,7 @@ check_args '1' "$#" 'RESTART'
 #----------------------------------------------------------#
 
 if [  "$restart" = 'yes' ]; then
+    log_history "A restart of the server was initiated."
     /sbin/reboot
 fi
 

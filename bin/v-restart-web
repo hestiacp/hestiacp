@@ -49,33 +49,17 @@ if [ -z "$WEB_SYSTEM" ] || [ "$WEB_SYSTEM" = 'remote' ]; then
     exit
 fi
 
-# Reload web system
-service $WEB_SYSTEM reload >/dev/null 2>&1
-rc=$?
 
-# Workaround for Ubuntu 12.04
-if [ "$WEB_SYSTEM" == 'apache2' ]; then
-    pid1='/var/run/apache2.pid'
-    pid2='/var/run/apache2/apache2.pid'
-    if [ ! -e "$pid1" ] && [ ! -e "$pid2" ]; then
-        rc=1
-    fi
-fi
-
-# Resart web system if reload didn't work
-if [ "$rc" -ne 0 ]; then
-    service $WEB_SYSTEM restart >/dev/null 2>&1
-    if [ $? -ne 0 ]; then
-        send_email_report
-        check_result $E_RESTART "$WEB_SYSTEM restart failed"
-    fi
-fi
+systemctl restart $WEB_SYSTEM  >/dev/null 2>&1
+if [ $? -ne 0 ]; then
+    send_email_report
+    check_result $E_RESTART "$WEB_SYSTEM restart failed"
+ fi
 
 # Update restart queue
 if [ -e "$HESTIA/data/queue/restart.pipe" ]; then
     sed -i "/$SCRIPT/d" $HESTIA/data/queue/restart.pipe
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

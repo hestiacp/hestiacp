@@ -1669,9 +1669,6 @@ fi
 $HESTIA/bin/v-add-web-domain admin $servername
 check_result $? "can't create $servername domain"
 
-# Enable automatic updates
-$HESTIA/bin/v-add-cron-hestia-autoupdate
-
 # Adding cron jobs
 command="sudo $HESTIA/bin/v-update-sys-queue disk"
 $HESTIA/bin/v-add-cron-job 'admin' '15' '02' '*' '*' '*' "$command"
@@ -1687,6 +1684,9 @@ command="sudo $HESTIA/bin/v-update-user-stats"
 $HESTIA/bin/v-add-cron-job 'admin' '20' '00' '*' '*' '*' "$command"
 command="sudo $HESTIA/bin/v-update-sys-rrd"
 $HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
+
+# Enable automatic updates
+$HESTIA/bin/v-add-cron-hestia-autoupdate
 service cron restart
 
 # Building initital rrd images

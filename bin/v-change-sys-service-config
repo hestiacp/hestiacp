@@ -101,13 +101,14 @@ if [ "$update" = 'yes' ] && [ "$restart" != 'no' ]; then
         fi
     fi
 
-    service $service restart >/dev/null 2>&1
+    $BIN/v-restart-service $service $restart >/dev/null 2>&1
+
     if [ $? -ne 0 ]; then
         for config in $dst; do
             cat $config.vst.back > $config
             rm -f $config.vst.back
         done
-        check_result $E_RESTART "$service failed to start with new config"
+        check_result $E_RESTART "ERROR: $service failed to start with new configuration."
     fi
 fi
 

@@ -1100,6 +1100,13 @@ echo "RELEASE_BRANCH='release'" >> $HESTIA/conf/hestia.conf
 # Installing hosting packages
 cp -rf $hestiacp/packages $HESTIA/data/
 
+# Update nameservers in hosting package
+IFS='.' read -r -a domain_elements <<< "$servername"
+if [ ! -z "${domain_elements[-2]}" ] && [ ! -z "${domain_elements[-1]}" ]; then
+    serverdomain="${domain_elements[-2]}.${domain_elements[-1]}"
+    sed -i s/"domain.tld"/"$serverdomain"/g $HESTIA/data/packages/*.pkg
+fi
+
 # Installing templates
 cp -rf $hestiacp/templates $HESTIA/data/
 

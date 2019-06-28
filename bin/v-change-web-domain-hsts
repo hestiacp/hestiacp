@@ -54,6 +54,7 @@ fi
 
 if [ "$status" = "on" ]; then
     echo 'add_header Strict-Transport-Security "max-age=15768000;" always;' > $hstsconf
+    nginx -s reload
     echo "HTTP Strict Transport Security (HSTS) turned on for $domain."
 elif [ "$status" = "off" ]; then
     rm -f $hstsconf
@@ -69,7 +70,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_history "Enabled HTTP Strict Transport Security on $domain."
+log_history "Turned HTTP Strict Transport Security $status for $domain."
 log_event "$OK" "$ARGUMENTS"
 
 exit

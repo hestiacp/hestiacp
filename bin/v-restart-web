@@ -49,8 +49,8 @@ if [ -z "$WEB_SYSTEM" ] || [ "$WEB_SYSTEM" = 'remote' ]; then
     exit
 fi
 
+systemctl restart $WEB_SYSTEM > /dev/null 2>&1
 
-systemctl restart $WEB_SYSTEM  >/dev/null 2>&1
 if [ $? -ne 0 ]; then
     send_email_report
     check_result $E_RESTART "$WEB_SYSTEM restart failed"

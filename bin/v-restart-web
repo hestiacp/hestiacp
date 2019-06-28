@@ -49,7 +49,7 @@ if [ -z "$WEB_SYSTEM" ] || [ "$WEB_SYSTEM" = 'remote' ]; then
     exit
 fi
 
-$BIN/v-restart-service $WEB_SYSTEM $restart > /dev/null 2>&1
+$BIN/v-restart-service $WEB_SYSTEM > /dev/null 2>&1
 
 if [ $? -ne 0 ]; then
     send_email_report

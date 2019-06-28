@@ -101,7 +101,7 @@ if [ "$update" = 'yes' ] && [ "$restart" != 'no' ]; then
         fi
     fi
 
-    $BIN/v-restart-service $service $restart > /dev/null 2>&1
+    $BIN/v-restart-service $service > /dev/null 2>&1
 
     if [ $? -ne 0 ]; then
         for config in $dst; do

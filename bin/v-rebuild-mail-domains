@@ -50,8 +50,8 @@ for domain in $(search_objects 'mail' 'SUSPENDED' "*" 'DOMAIN'); do
     rebuild_mail_domain_conf
     if [ ! -z "$WEB_SYSTEM" ] || [ ! -z "$PROXY_SYSTEM" ]; then
         if [ ! -z "$IMAP_SYSTEM" ]; then
-            $BIN/v-delete-webmail $user $domain ''
-            $BIN/v-add-webmail $user $domain ''
+            $BIN/v-delete-sys-webmail $user $domain ''
+            $BIN/v-add-sys-webmail $user $domain ''
         fi
     fi
 done

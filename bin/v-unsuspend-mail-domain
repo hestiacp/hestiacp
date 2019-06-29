@@ -57,7 +57,7 @@ decrease_user_value "$user" '$SUSPENDED_MAIL'
 
 # Enable webmail access
 if [ ! -z "$IMAP_SYSTEM" ]; then
-    $BIN/v-add-webmail $user $domain 'yes'
+    $BIN/v-add-sys-webmail $user $domain 'yes'
 fi
 # Logging
 log_event "$OK" "$ARGUMENTS"

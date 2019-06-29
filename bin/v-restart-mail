@@ -2,7 +2,7 @@
 # info: restart mail service
 # options: NONE
 #
-# The function tells Exim service to reload configuration files.
+# The function tells exim or dovecot services to reload configuration files.
 
 
 #----------------------------------------------------------#
@@ -49,8 +49,17 @@ if [ -z "$MAIL_SYSTEM" ] || [ "$MAIL_SYSTEM" = 'remote' ]; then
     exit
 fi
 
-# Restart system
-service $MAIL_SYSTEM restart >/dev/null 2>&1
+# Restart IMAP system if present
+if [ ! -z "$IMAP_SYSTEM" ]; then
+    $BIN/v-restart-service $IMAP_SYSTEM > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        send_email_report
+        check_result $E_RESTART "$IMAP_SYSTEM restart failed"
+    fi
+fi
+
+# Restart mail system
+$BIN/v-restart-service $MAIL_SYSTEM > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     send_email_report
     check_result $E_RESTART "$MAIL_SYSTEM restart failed"

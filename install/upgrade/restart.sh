@@ -15,7 +15,6 @@ for user in `ls /usr/local/hestia/data/users/`; do
 done
 
 echo "(*) Restarting services..."
-sleep 3
 if [ ! -z $MAIL_SYSTEM ]; then
     $BIN/v-restart-mail $restart
 fi
@@ -31,7 +30,6 @@ if [ ! -z $DNS_SYSTEM ]; then
 fi
 for v in `ls /etc/php/`; do
 	if [ -e /etc/php/$v/fpm ]; then
-		sleep 5
 		$BIN/v-restart-service php$v-fpm $restart
 	fi
 done

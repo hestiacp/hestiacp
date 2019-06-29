@@ -50,7 +50,7 @@ if [ -z "$FTP_SYSTEM" ] || [ "$FTP_SYSTEM" = 'remote' ]; then
 fi
 
 # Restart system
-service $FTP_SYSTEM restart >/dev/null 2>&1
+$BIN/v-restart-service $FTP_SYSTEM > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     send_email_report
     check_result $E_RESTART "$FTP_SYSTEM restart failed"

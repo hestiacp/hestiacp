@@ -50,13 +50,10 @@ if [ -z "$CRON_SYSTEM" ] || [ "$CRON_SYSTEM" = 'remote' ]; then
 fi
 
 # Restart system
-service $CRON_SYSTEM reload >/dev/null 2>&1
+$BIN/v-restart-service $CRON_SYSTEM >/dev/null 2>&1
 if [ $? -ne 0 ]; then
-    service $CRON_SYSTEM restart >/dev/null 2>&1
-    if [ $? -ne 0 ]; then
-        send_email_report
-        check_result $E_RESTART "$CRON_SYSTEM restart failed"
-    fi
+    send_email_report
+    check_result $E_RESTART "$CRON_SYSTEM restart failed"
 fi
 
 # Update restart queue

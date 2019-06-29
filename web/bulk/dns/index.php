@@ -19,6 +19,8 @@ $action = $_POST['action'];
 if ($_SESSION['user'] == 'admin') {
     if (empty($record)) {
         switch ($action) {
+            case 'rebuild': $cmd='v-rebuild-dns-domain';
+                break;
             case 'delete': $cmd='v-delete-dns-domain';
                 break;
             case 'suspend': $cmd='v-suspend-dns-domain';

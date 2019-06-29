@@ -50,47 +50,31 @@ if [ -z "$PROXY_SYSTEM" ] || [ "$PROXY_SYSTEM" = 'remote' ]; then
 fi
 
 if [ -f "$HESTIA/web/inc/nginx_proxy" ]; then
+    # if hestia is behind default nginx, restart in background with 15 sec delay
+    # background restart
+    if [ "$1" = 'background' ]; then
+        # Restart system
+        sleep 15
+        $BIN/v-restart-service $PROXY_SYSTEM > /dev/null 2>&1
 
-  # if hestia is behind default nginx, restart in background with 15 sec delay
-  # background restart
-  if [ "$1" = 'background' ]; then
-      # Restart system
-      sleep 15
-      service $PROXY_SYSTEM restart >/dev/null 2>&1
-      #if [ $? -ne 0 ]; then
-      #    send_email_report
-      #    check_result $E_RESTART "$PROXY_SYSTEM restart failed"
-      #fi
+        # Update restart queue
+        if [ -e "$HESTIA/data/queue/restart.pipe" ]; then
+            sed -i "/$SCRIPT/d" $HESTIA/data/queue/restart.pipe
+        fi
 
-      # Update restart queue
-      if [ -e "$HESTIA/data/queue/restart.pipe" ]; then
-          sed -i "/$SCRIPT/d" $HESTIA/data/queue/restart.pipe
-      fi
+        exit;
+    fi
+    # Send to background process
+        nohup $BIN/v-restart-proxy 'background' &>/dev/null &
+    else
+    # Default behaviour
+    # Restart system
+    $BIN/v-restart-service $PROXY_SYSTEM > /dev/null 2>&1
 
-      exit;
-  fi
-
-  # try to reload to get changes faster
-  service $PROXY_SYSTEM reload
-  
-  # send to background process
-  nohup $BIN/v-restart-proxy 'background' &>/dev/null &
-
-else
-
-  # Default behaviour
-  # Restart system
-  service $PROXY_SYSTEM restart >/dev/null 2>&1
-  #if [ $? -ne 0 ]; then
-  #    send_email_report
-  #    check_result $E_RESTART "$PROXY_SYSTEM restart failed"
-  #fi
-
-  # Update restart queue
-  if [ -e "$HESTIA/data/queue/restart.pipe" ]; then
-      sed -i "/$SCRIPT/d" $HESTIA/data/queue/restart.pipe
-  fi
-
+    # Update restart queue
+    if [ -e "$HESTIA/data/queue/restart.pipe" ]; then
+        sed -i "/$SCRIPT/d" $HESTIA/data/queue/restart.pipe
+    fi
 fi
 
 #----------------------------------------------------------#

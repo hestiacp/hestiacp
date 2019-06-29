@@ -609,56 +609,56 @@ mkdir nginx apache2 php vsftpd proftpd bind exim4 dovecot clamd
 mkdir spamassassin mysql postgresql hestia
 
 # Backup nginx configuration
-service nginx stop > /dev/null 2>&1
+systemctl stop nginx > /dev/null 2>&1
 cp -r /etc/nginx/* $hst_backups/nginx > /dev/null 2>&1
 
 # Backup Apache configuration
-service apache2 stop > /dev/null 2>&1
+systemctl stop apache2 > /dev/null 2>&1
 cp -r /etc/apache2/* $hst_backups/apache2 > /dev/null 2>&1
 rm -f /etc/apache2/conf.d/* > /dev/null 2>&1
 
 # Backup PHP-FPM configuration
-service php*-fpm stop > /dev/null 2>&1
+systemctl stop php*-fpm > /dev/null 2>&1
 cp -r /etc/php/* $hst_backups/php/ > /dev/null 2>&1
 
 # Backup Bind configuration
-service bind9 stop > /dev/null 2>&1
+systemctl stop bind9 > /dev/null 2>&1
 cp -r /etc/bind/* $hst_backups/bind > /dev/null 2>&1
 
 # Backup Vsftpd configuration
-service vsftpd stop > /dev/null 2>&1
+systemctl stop vsftpd > /dev/null 2>&1
 cp /etc/vsftpd.conf $hst_backups/vsftpd > /dev/null 2>&1
 
 # Backup ProFTPD configuration
-service proftpd stop > /dev/null 2>&1
+systemctl stop proftpd > /dev/null 2>&1
 cp /etc/proftpd.conf $hst_backups/proftpd > /dev/null 2>&1
 
 # Backup Exim configuration
-service exim4 stop > /dev/null 2>&1
+systemctl stop exim4 > /dev/null 2>&1
 cp -r /etc/exim4/* $hst_backups/exim4 > /dev/null 2>&1
 
 # Backup ClamAV configuration
-service clamav-daemon stop > /dev/null 2>&1
+systemctl stop clamav-daemon > /dev/null 2>&1
 cp -r /etc/clamav/* $hst_backups/clamav > /dev/null 2>&1
 
 # Backup SpamAssassin configuration
-service spamassassin stop > /dev/null 2>&1
+systemctl stop spamassassin > /dev/null 2>&1
 cp -r /etc/spamassassin/* $hst_backups/spamassassin > /dev/null 2>&1
 
 # Backup Dovecot configuration
-service dovecot stop > /dev/null 2>&1
+systemctl stop dovecot > /dev/null 2>&1
 cp /etc/dovecot.conf $hst_backups/dovecot > /dev/null 2>&1
 cp -r /etc/dovecot/* $hst_backups/dovecot > /dev/null 2>&1
 
 # Backup MySQL/MariaDB configuration and data
-service mysql stop > /dev/null 2>&1
+systemctl stop mysql > /dev/null 2>&1
 killall -9 mysqld > /dev/null 2>&1
 mv /var/lib/mysql $hst_backups/mysql/mysql_datadir > /dev/null 2>&1
 cp -r /etc/mysql/* $hst_backups/mysql > /dev/null 2>&1
 mv -f /root/.my.cnf $hst_backups/mysql > /dev/null 2>&1
 
 # Backup Hestia
-service hestia stop > /dev/null 2>&1
+systemctl stop hestia > /dev/null 2>&1
 cp -r $HESTIA/* $hst_backups/hestia > /dev/null 2>&1
 apt-get -y purge hestia hestia-nginx hestia-php > /dev/null 2>&1
 rm -rf $HESTIA > /dev/null 2>&1
@@ -904,7 +904,7 @@ if [ -z "$(grep "^DebianBanner no" /etc/ssh/sshd_config)" ]; then
 fi
 
 # Restart SSH daemon
-service ssh restart
+systemctl restart ssh
 
 # Disable AWStats cron
 rm -f /etc/cron.d/awstats
@@ -1142,7 +1142,7 @@ if [ "$nginx" = 'yes' ]; then
         ln -s $HESTIA/data/templates/web/nginx/PHP-$fpm_tpl.sh $HESTIA/data/templates/web/nginx/default.sh
         ln -s $HESTIA/data/templates/web/nginx/PHP-$fpm_tpl.tpl $HESTIA/data/templates/web/nginx/default.tpl
         ln -s $HESTIA/data/templates/web/nginx/PHP-$fpm_tpl.stpl $HESTIA/data/templates/web/nginx/default.stpl
-        service php$fpm_v-fpm start >> $LOG
+        systemctl start php$fpm_v-fpm>> $LOG
         check_result $? "php$fpm_v-fpm start failed"
     fi
 
@@ -1161,7 +1161,7 @@ if [ "$nginx" = 'yes' ]; then
     fi
 
     update-rc.d nginx defaults > /dev/null 2>&1
-    service nginx start >> $LOG
+    systemctl start nginx >> $LOG
     check_result $? "nginx start failed"
 fi
 
@@ -1206,11 +1206,11 @@ if [ "$apache" = 'yes' ]; then
     fi
 
     update-rc.d apache2 defaults > /dev/null 2>&1
-    service apache2 start >> $LOG
+    systemctl start apache2 >> $LOG
     check_result $? "apache2 start failed"
 else
     update-rc.d apache2 disable > /dev/null 2>&1
-    service apache2 stop > /dev/null 2>&1
+    systemctl stop apache2 > /dev/null 2>&1
 fi
 
 
@@ -1222,7 +1222,7 @@ if [ "$phpfpm" = 'yes' ]; then
     echo "(*) Configuring PHP-FPM..."
     cp -f $hestiacp/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf
     update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1
-    service php$fpm_v-fpm start >> $LOG
+    systemctl start php$fpm_v-fpm >> $LOG
     check_result $? "php-fpm start failed"
 fi
 
@@ -1262,7 +1262,7 @@ if [ "$vsftpd" = 'yes' ]; then
     chown root:adm /var/log/xferlog
     chmod 640 /var/log/xferlog
     update-rc.d vsftpd defaults
-    service vsftpd start
+    systemctl start vsftpd >> $LOG
     check_result $? "vsftpd start failed"
 
 fi
@@ -1277,7 +1277,7 @@ if [ "$proftpd" = 'yes' ]; then
     echo "127.0.0.1 $servername" >> /etc/hosts
     cp -f $hestiacp/proftpd/proftpd.conf /etc/proftpd/
     update-rc.d proftpd defaults > /dev/null 2>&1
-    service proftpd start >> $LOG
+    systemctl start proftpd >> $LOG
     check_result $? "proftpd start failed"
 fi
 
@@ -1301,7 +1301,7 @@ if [ "$mysql" = 'yes' ]; then
     mysql_install_db >> $LOG
 
     update-rc.d mysql defaults > /dev/null 2>&1
-    service mysql start >> $LOG
+    systemctl start mysql >> $LOG
     check_result $? "mariadb start failed"
 
     # Securing MariaDB installation
@@ -1369,7 +1369,7 @@ if [ "$postgresql" = 'yes' ]; then
     echo "(*) Configuring PostgreSQL database server..."
     ppass=$(gen_pass)
     cp -f $hestiacp/postgresql/pg_hba.conf /etc/postgresql/*/main/
-    service postgresql restart
+    systemctl restart postgresql
     sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '$ppass'"
 
     # Configuring phpPgAdmin
@@ -1398,11 +1398,11 @@ if [ "$named" = 'yes' ]; then
     if ! grep --quiet lxc /proc/1/environ; then
         service apparmor status > /dev/null 2>&1
         if [ $? -ne 0 ]; then
-            service apparmor restart
+            systemctl restart apparmor >> $LOG
         fi
     fi
     update-rc.d bind9 defaults
-    service bind9 start
+    systemctl start bind9
     check_result $? "bind9 start failed"
 
     # Workaround for OpenVZ/Virtuozzo
@@ -1438,12 +1438,12 @@ if [ "$exim" = 'yes' ]; then
     rm -f /etc/alternatives/mta
     ln -s /usr/sbin/exim4 /etc/alternatives/mta
     update-rc.d -f sendmail remove > /dev/null 2>&1
-    service sendmail stop > /dev/null 2>&1
+    systemctl stop sendmail > /dev/null 2>&1
     update-rc.d -f postfix remove > /dev/null 2>&1
-    service postfix stop > /dev/null 2>&1
+    systemctl stop postfix > /dev/null 2>&1
 
     update-rc.d exim4 defaults
-    service exim4 start
+    systemctl start exim4 >> $LOG
     check_result $? "exim4 start failed"
 fi
 
@@ -1462,7 +1462,7 @@ if [ "$dovecot" = 'yes' ]; then
     fi
     chown -R root:root /etc/dovecot*
     update-rc.d dovecot defaults
-    service dovecot start
+    systemctl start dovecot >> $LOG
     check_result $? "dovecot start failed"
 fi
 
@@ -1485,7 +1485,7 @@ if [ "$clamd" = 'yes' ]; then
         sleep 0.5
     done
     echo
-    service clamav-daemon start
+    systemctl start clamav-daemon >> $LOG
     check_result $? "clamav-daemon start failed"
 fi
 
@@ -1498,7 +1498,7 @@ if [ "$spamd" = 'yes' ]; then
     echo "(*) Configuring SpamAssassin..."
     update-rc.d spamassassin defaults > /dev/null 2>&1
     sed -i "s/ENABLED=0/ENABLED=1/" /etc/default/spamassassin
-    service spamassassin start >> $LOG
+    systemctl start spamassassin >> $LOG
     check_result $? "spamassassin start failed"
     unit_files="$(systemctl list-unit-files |grep spamassassin)"
     if [[ "$unit_files" =~ "disabled" ]]; then
@@ -1547,10 +1547,10 @@ if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
 
     # Restart services
     if [ "$apache" = 'yes' ]; then
-        service apache2 restart
+        systemctl restart apache2 >> $LOG
     fi
     if [ "$nginx" = 'yes' ]; then
-        service nginx restart
+        systemctl restart nginx >> $LOG
     fi
 fi
 
@@ -1582,7 +1582,7 @@ if [ "$fail2ban" = 'yes' ]; then
         sed -i "${fline}s/false/true/" /etc/fail2ban/jail.local
     fi
     update-rc.d fail2ban defaults
-    service fail2ban start
+    systemctl start fail2ban >> $LOG
     check_result $? "fail2ban start failed"
 fi
 
@@ -1687,7 +1687,7 @@ $HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
 
 # Enable automatic updates
 $HESTIA/bin/v-add-cron-hestia-autoupdate
-service cron restart
+systemctl restart cron
 
 # Building initital rrd images
 $HESTIA/bin/v-update-sys-rrd
@@ -1702,7 +1702,7 @@ $HESTIA/bin/v-change-sys-port $port
 
 # Starting Hestia service
 update-rc.d hestia defaults
-service hestia start
+systemctl start hestia
 check_result $? "hestia start failed"
 chown admin:admin $HESTIA/data/sessions
 

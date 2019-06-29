@@ -11,6 +11,7 @@
 
 # Argument definition
 language=$1
+update_users=$2
 
 # Includes
 source $HESTIA/func/main.sh
@@ -46,6 +47,12 @@ else
     sed -i "s/LANGUAGE=.*/LANGUAGE='$language'/g" $HESTIA/conf/hestia.conf
 fi
 
+# Update language for all existing users if specified
+if [ "$update_users" = "yes" ]; then
+    for user in $(ls $HESTIA/data/users); do
+        $BIN/v-change-user-language $user $language
+    done
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #

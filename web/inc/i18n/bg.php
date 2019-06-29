@@ -748,5 +748,7 @@ $LANG['bg'] = array(
     'maximum characters length, including prefix' => 'максималната дължина е %s символа, включително префикса',
 
     'Email Credentials' => 'Email Credentials',
+
+    'Theme' => 'Външния вид',
 );
 

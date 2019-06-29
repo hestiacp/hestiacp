@@ -755,6 +755,8 @@ $LANG['ar'] = array(
 
     'Email Credentials' => 'Email Credentials',
 
+    'Theme' => 'مظهر',
+    
 // Texts below doesn't exist in en.php
     '%s rule' => 'قواعد %s',
     'MainDomain' => 'النطاق الرئيسي',

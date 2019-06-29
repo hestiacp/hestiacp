@@ -754,6 +754,7 @@ $LANG['fr'] = array(
 
     'Email Credentials' => 'Email Credentials',
 
+    'Theme' => 'Apparence',
 
 // Texts below doesn't exist in en.php
     'disk' => 'disque',

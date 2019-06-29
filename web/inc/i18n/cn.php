@@ -762,4 +762,6 @@ $LANG['cn'] = array(
     'maximum characters length, including prefix' => '包含前缀最多 %s 个字符',
 
     'Email Credentials' => '电子邮件证书',
+
+    'Theme' => '外觀',
 );

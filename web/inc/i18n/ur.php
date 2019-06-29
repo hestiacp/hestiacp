@@ -734,4 +734,5 @@ $LANG['ur'] = array(
     'MainDomain' => 'اہم ڈومین',
     'SubDomain' => 'ذیلی ڈومین',
     'Add Sub Domain' => 'ذیلی ڈومین کا اضافہ کریں',	
+    'Theme' => 'ظہور',
 );

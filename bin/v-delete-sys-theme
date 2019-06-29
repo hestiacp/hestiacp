@@ -1,0 +1,52 @@
+#!/bin/bash
+# info: removes a theme from the custom theme library.
+# options: [RESTART]
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+theme=$1
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+if [ -z "$theme" ]; then
+    # Theme not specified, throw an error.
+    echo "ERROR: No theme specified."
+    exit 1
+else
+    if [ -e $HESTIA_THEMES/$theme.css ]; then
+        # Protect system themes from deletion
+        # Users can use the terminal to work around this if really desired.
+        echo "ERROR: Unable to delete system theme: $theme."
+        exit 1
+    fi
+    if [ -e $HESTIA_THEMES_CUSTOM/$theme.css ]; then
+        # Remove theme if it exists.
+        echo "Deleting $theme..."
+        rm -f $HESTIA_THEMES_CUSTOM/$theme.css > /dev/null 2&>1
+    else
+        # Theme doesn't exist, throw an error.
+        echo "ERROR: Theme $theme does not exist."
+    fi
+fi
+
+# Set default theme in configuration file if deleted theme was active
+if [ "$THEME" = "$theme" ]; then
+    rm -f $HESTIA/web/css/active-theme.css
+    $BIN/v-change-sys-config-value 'THEME' default
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

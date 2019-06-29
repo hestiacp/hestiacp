@@ -1,0 +1,47 @@
+#!/bin/bash
+# info: update web templates
+#
+# The function for changing the currently active system theme.
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+theme=$1
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Theme argument and file detection
+if [ -z "$theme" ]; then
+    echo "ERROR: No theme specified."
+    exit 1
+else
+    if [ -e "$HESTIA_THEMES/$theme.css" ]; then
+        theme_conf="$HESTIA_THEMES/$theme.css"
+    elif [ -e "$HESTIA_THEMES_CUSTOM/$theme.css" ]; then
+        theme_conf="$HESTIA_THEMES_CUSTOM/$theme.css"
+    else
+        echo "ERROR: Unable to locate specified theme."
+        exit 1
+    fi
+
+    # Replace theme override file
+    rm -f $HESTIA/web/css/active-theme.css
+    cp -f $theme_conf $HESTIA/web/css/active-theme.css
+
+    # Set default theme in configuration file
+    $BIN/v-change-sys-config-value 'THEME' $theme
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

@@ -753,4 +753,7 @@ $LANG['sr'] = array(
     'maximum characters length, including prefix' => 'maksimalna dužina sme biti %s karaktera, uključujući i prefix',
 
     'Email Credentials' => 'Email lozinka i podešavanja',
+
+    'Theme' => 'Izgled',
+    
 );

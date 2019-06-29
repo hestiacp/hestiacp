@@ -757,4 +757,6 @@ $LANG['hu'] = array(
     'maximum characters length, including prefix' => 'maximum %s characters length, including prefix',
 
     'Email Credentials' => 'Email Credentials',
+
+    'Theme' => 'Megjelenése',
 );

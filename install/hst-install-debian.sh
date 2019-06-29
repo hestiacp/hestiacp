@@ -412,7 +412,7 @@ echo ' |  _  |  __/\__ \ |_| | (_| | |___|  __/ '
 echo ' |_| |_|\___||___/\__|_|\__,_|\____|_|    '
 echo
 echo '                      Hestia Control Panel'
-echo '                                    v1.0.2'
+echo '                                    v1.0.5'
 echo -e "\n"
 echo "=============================================================================="
 echo -e "\n"
@@ -1094,7 +1094,7 @@ echo "BACKUP_SYSTEM='local'" >> $HESTIA/conf/hestia.conf
 echo "LANGUAGE='$lang'" >> $HESTIA/conf/hestia.conf
 
 # Version & Release Branch
-echo "VERSION='1.0.2'" >> $HESTIA/conf/hestia.conf
+echo "VERSION='1.0.5'" >> $HESTIA/conf/hestia.conf
 echo "RELEASE_BRANCH='release'" >> $HESTIA/conf/hestia.conf
 
 # Installing hosting packages

@@ -11,6 +11,7 @@
 
 # Argument definition
 service=$1
+force=$2
 
 # Includes
 source $HESTIA/func/main.sh
@@ -35,8 +36,10 @@ fi
 
 if [ "$service" = "hestia" ] || [ "$service" = "iptables" ] || [ "$service" = "mariadb" ] || [ "$service" = "mysql" ] || [ "$service" = "postgresql" ] || [ "$service" = "cron" ]; then
     systemctl restart $service > /dev/null 2>&1
-else
+elif [ -z "$force" ] || [ "$force" = "no" ]; then
     systemctl reload $service > /dev/null 2>&1
+else
+    systemctl restart $service > /dev/null 2>&1
 fi
 
 #----------------------------------------------------------#

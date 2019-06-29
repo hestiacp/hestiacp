@@ -27,7 +27,7 @@ NEW_ALIAS=$1
 # Delete old webmail configuration
 for user in `ls /usr/local/hestia/data/users/`; do
     for domain in $($BIN/v-list-web-domains $user plain |cut -f 1); do
-        $BIN/v-delete-webmail $user $domain
+        $BIN/v-delete-sys-webmail $user $domain
     done
 done
 
@@ -36,7 +36,7 @@ $BIN/v-change-sys-config-value 'WEBMAIL_ALIAS' $NEW_ALIAS
 
 for user in `ls /usr/local/hestia/data/users/`; do
     for domain in $($BIN/v-list-web-domains $user plain |cut -f 1); do
-        $BIN/v-add-webmail $user $domain
+        $BIN/v-add-sys-webmail $user $domain
     done
 done
 

@@ -1,0 +1,21 @@
+#!/bin/bash
+# The function for changing the currently active system theme.
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Store current theme name
+CURRENT_THEME=$THEME
+
+# Cycle theme to regenerate (helps if cache is stuck)
+$BIN/v-change-sys-theme default
+$BIN/v-change-sys-theme $CURRENT_THEME

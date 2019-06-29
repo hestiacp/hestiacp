@@ -41,6 +41,7 @@ if [ -d "/etc/sysconfig" ]; then
     fi
 else
     # Debian/Ubuntu
+    hostnamectl set-hostname $domain
     echo "$domain" > /etc/hostname
 fi
 

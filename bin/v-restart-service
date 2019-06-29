@@ -28,27 +28,29 @@ check_args '1' "$#" 'SERVICE'
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ "$service" != "iptables" ] || [ "$service" != "cron" ] || [ "$service" != "mysql" ] || [ "$service" != "hestia" ]; then
-    # Perform a configuration reload so that process is not terminated
-    # resulting in less server downtime.
-    systemctl reload $service > /dev/null 2>&1
-    if [ $? -ne 0 ]; then
-        check_result $E_RESTART "ERROR: Restart of $service failed."
-        log_history "Restart of $service failed."
-    fi
-else
-    if [ "$service" = "iptables" ]; then
-        # Restart rules for firewall
-        $BIN/v-stop-firewall
-        $BIN/v-update-firewall
-    fi
-    systemctl restart $service > /dev/null 2>&1
+Blacklist=("iptables","cron","mysql","mariadb","hestia")
 
-    if [ $? -ne 0 ]; then
+
+for BannedService in Blackist; do
+    if [ "$service" = "$BannedService" ]; then
+        systemctl restart $service > /dev/null 2>&1
         check_result $E_RESTART "ERROR: Restart of $service failed."
         log_history "Restart of $service failed."
     fi
+done
+
+if [ "$service" = "iptables" ]; then
+    # Restart rules for firewall
+    $BIN/v-stop-firewall
+    $BIN/v-update-firewall
 fi
+
+systemctl reload $service > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    check_result $E_RESTART "ERROR: Restart of $service failed."
+    log_history "Restart of $service failed."
+ fi
+
 
 #----------------------------------------------------------#
 #                       Hestia                             #

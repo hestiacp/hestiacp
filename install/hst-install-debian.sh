@@ -480,7 +480,7 @@ fi
 
 # Firewall stack
 if [ "$iptables" = 'yes' ]; then
-    echo -n '   - Iptables Firewall'
+    echo -n '   - Firewall (Iptables)'
 fi
 if [ "$iptables" = 'yes' ] && [ "$fail2ban" = 'yes' ]; then
     echo -n ' + Fail2Ban Access Monitor'

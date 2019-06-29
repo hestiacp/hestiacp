@@ -28,21 +28,22 @@ check_args '1' "$#" 'SERVICE'
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ "$service" != "iptables" ]; then
+if [ "$service" != "iptables" ] || [ "$service" !="cron" ]; then
     systemctl reload $service > /dev/null 2>&1
     if [ $? -ne 0 ]; then
         check_result $E_RESTART "ERROR: Restart of $service failed."
         log_history "Restart of $service failed."
     fi
-else
+elif [ "$service" = "iptables" ]; then
     $BIN/v-stop-firewall
     $BIN/v-update-firewall
     if [ $? -ne 0 ]; then
         check_result $E_RESTART "ERROR: Restart of $service failed."
         log_history "Restart of $service failed."
     fi
+else 
+    systemctl restart $service > /dev/null 2>&1
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

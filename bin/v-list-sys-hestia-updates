@@ -15,7 +15,7 @@ format=${1-shell}
 # Includes
 source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
-fields="\$NAME \$VERSION \$RELEASE \$ARCH \$UPDATED \$DESCR \$TIME \$DATE"
+fields="\$NAME \$VERSION \$ARCH \$UPDATED \$DESCR \$TIME \$DATE"
 
 # JSON list function
 json_list() {
@@ -27,7 +27,6 @@ json_list() {
         eval $str
         echo -n '    "'$NAME'": {
         "VERSION": "'$VERSION'",
-        "RELEASE": "'$RELEASE'",
         "ARCH": "'$ARCH'",
         "UPDATED": "'$UPDATED'",
         "DESCR": "'$DESCR'",
@@ -47,11 +46,11 @@ json_list() {
 # SHELL list function
 shell_list() {
     IFS=$'\n'
-    echo "PKG   VER   REL   ARCH   UPDT   DATE"
-    echo "---   ---   ---   ----   ----   ----"
+    echo "PKG   VER   ARCH   UPDT   DATE"
+    echo "---   ---   ----   ----   ----"
     for str in $(echo -e "$data"); do
         eval $str
-        echo "$NAME $VERSION $RELEASE $ARCH $UPDATED $DATE"
+        echo "$NAME $VERSION $ARCH $UPDATED $DATE"
     done
 }
 
@@ -70,16 +69,15 @@ dpkg_data=$(dpkg-query -s hestia)
 pkg_date=$(stat -c "%Y" /var/lib/dpkg/info/hestia.list)
 ARCH=$(echo "$dpkg_data"|grep Architecture |cut -f 2 -d ' ')
 VERSION=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 1 -d \-)
-RELEASE=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 2 -d \-)
 DATE=$(date -d @$pkg_date +"%F")
 TIME=$(date -d @$pkg_date +"%T")
 
 UPDATED='yes'
-if [ ! -z "$hesta_v" ] && [ "$hestia_v" \> "$VERSION-$RELEASE" ]; then
+if [ ! -z "$hesta_v" ] && [ "$hestia_v" \> "$VERSION" ]; then
     UPDATED='no'
 fi
 
-data="NAME='hestia' VERSION='$VERSION' RELEASE='$RELEASE' ARCH='$ARCH'"
+data="NAME='hestia' VERSION='$VERSION' ARCH='$ARCH'"
 data="$data UPDATED='$UPDATED' DESCR='core package' TIME='$TIME' DATE='$DATE'"
 
 # Checking installed hestia-php version
@@ -87,16 +85,15 @@ dpkg_data=$(dpkg-query -s hestia-php)
 pkg_date=$(stat -c "%Y" /var/lib/dpkg/info/hestia-php.list)
 ARCH=$(echo "$dpkg_data"|grep Architecture | cut -f 2 -d ' ')
 VERSION=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 1 -d \-)
-RELEASE=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 2 -d \-)
 DATE=$(date -d @$pkg_date +"%F")
 TIME=$(date -d @$pkg_date +"%T")
 
 UPDATED='yes'
-if [ ! -z "$php_v" ] && [ "$php_v" \> "$VERSION-$RELEASE" ]; then
+if [ ! -z "$php_v" ] && [ "$php_v" \> "$VERSION" ]; then
     UPDATED='no'
 fi
 
-data="$data\nNAME='hestia-php' VERSION='$VERSION' RELEASE='$RELEASE'"
+data="$data\nNAME='hestia-php' VERSION='$VERSION'"
 data="$data ARCH='$ARCH' UPDATED='$UPDATED' DESCR='php interpreter'"
 data="$data TIME='$TIME' DATE='$DATE'"
 
@@ -105,16 +102,15 @@ dpkg_data=$(dpkg-query -s hestia-nginx)
 pkg_date=$(stat -c "%Y" /var/lib/dpkg/info/hestia-nginx.list)
 ARCH=$(echo "$dpkg_data"|grep Architecture | cut -f 2 -d ' ')
 VERSION=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 1 -d \-)
-RELEASE=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 2 -d \-)
 DATE=$(date -d @$pkg_date +"%F")
 TIME=$(date -d @$pkg_date +"%T")
 
 UPDATED='yes'
-if [ ! -z "$nginx_v" ] && [ "$nginx_v" \> "$VERSION-$RELEASE" ]; then
+if [ ! -z "$nginx_v" ] && [ "$nginx_v" \> "$VERSION" ]; then
     UPDATED='no'
 fi
 
-data="$data\nNAME='hestia-nginx' VERSION='$VERSION' RELEASE='$RELEASE'"
+data="$data\nNAME='hestia-nginx' VERSION='$VERSION'"
 data="$data ARCH='$ARCH' UPDATED='$UPDATED' DESCR='internal web server'"
 data="$data TIME='$TIME' DATE='$DATE'"
 

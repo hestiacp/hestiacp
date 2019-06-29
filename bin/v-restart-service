@@ -29,7 +29,7 @@ check_args '1' "$#" 'SERVICE'
 #----------------------------------------------------------#
 
 if [ "$service" != "iptables" ]; then
-    systemctl restart $service > /dev/null 2>&1
+    systemctl reload $service > /dev/null 2>&1
     if [ $? -ne 0 ]; then
         check_result $E_RESTART "ERROR: Restart of $service failed."
         log_history "Restart of $service failed."

@@ -28,7 +28,7 @@ check_args '1' "$#" 'SERVICE'
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ "$service" != "iptables" ] || [ "$service" !="cron" ]; then
+if [ "$service" != "iptables" ] || [ "$service" !="cron" ] || [ "$service" !="mysql" ]; then
     systemctl reload $service > /dev/null 2>&1
     if [ $? -ne 0 ]; then
         check_result $E_RESTART "ERROR: Restart of $service failed."

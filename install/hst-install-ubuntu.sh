@@ -1142,7 +1142,7 @@ if [ "$nginx" = 'yes' ]; then
         ln -s $HESTIA/data/templates/web/nginx/PHP-$fpm_tpl.sh $HESTIA/data/templates/web/nginx/default.sh
         ln -s $HESTIA/data/templates/web/nginx/PHP-$fpm_tpl.tpl $HESTIA/data/templates/web/nginx/default.tpl
         ln -s $HESTIA/data/templates/web/nginx/PHP-$fpm_tpl.stpl $HESTIA/data/templates/web/nginx/default.stpl
-        systemctl start php$fpm_v-fpm>> $LOG
+        systemctl start php$fpm_v-fpm >> $LOG
         check_result $? "php$fpm_v-fpm start failed"
     fi
 
@@ -1396,7 +1396,7 @@ if [ "$named" = 'yes' ]; then
     aa-complain /usr/sbin/named > /dev/null 2>&1
     echo "/home/** rwm," >> /etc/apparmor.d/local/usr.sbin.named 2> /dev/null
     if ! grep --quiet lxc /proc/1/environ; then
-        service apparmor status > /dev/null 2>&1
+        systemctl status apparmor > /dev/null 2>&1
         if [ $? -ne 0 ]; then
             systemctl restart apparmor >> $LOG
         fi

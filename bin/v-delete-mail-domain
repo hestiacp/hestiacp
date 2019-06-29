@@ -69,7 +69,7 @@ fi
 
 # Delete webmail configuration if it exists
 if [ ! -z "$WEB_SYSTEM" ] || [ ! -z "$PROXY_SYSTEM" ]; then
-    $BIN/v-delete-webmail $user $domain 'yes'
+    $BIN/v-delete-sys-webmail $user $domain 'yes'
 fi
 
 #----------------------------------------------------------#

@@ -86,11 +86,11 @@ fi
 
 BUILD_ARCH='amd64'
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
-NGINX_V='1.17.1'
+NGINX_V=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/nginx/control |grep "Version:" |cut -d' ' -f2)
 OPENSSL_V='1.1.1b'
 PCRE_V='8.43'
 ZLIB_V='1.2.11'
-PHP_V='7.3.6'
+PHP_V=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/php/control |grep "Version:" |cut -d' ' -f2)
 
 # Create build directories
 rm -rf $BUILD_DIR

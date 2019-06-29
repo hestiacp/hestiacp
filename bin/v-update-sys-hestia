@@ -28,31 +28,17 @@ source $HESTIA/conf/hestia.conf
 # Checking arg number
 check_args '1' "$#" 'PACKAGE'
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ -d "/etc/sysconfig" ]; then
-    # Clean yum chache
-    yum -q clean all
+# Update repo
+apt-get update -o Dir::Etc::sourcelist="sources.list.d/hestia.list" \
+    -o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="0" -qq
 
-    # Define yum cmd
-    yum="yum -q -y --noplugins --disablerepo=* --enablerepo=hestia"
-
-    # Update hestia package
-    $yum update $package > /dev/null 2>&1
-    check_result $? "$package update failed" $E_UPDATE
-else
-    # Update repo
-    apt-get update -o Dir::Etc::sourcelist="sources.list.d/hestia.list" \
-        -o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="0" -qq
-
-    # Update hestia package
-    apt-get install $package -qq > /dev/null 2>&1
-    check_result $? "$package update failed" $E_UPDATE
-fi
-
+# Update hestia package
+apt-get install $package -qq > /dev/null 2>&1
+check_result $? "$package update failed" $E_UPDATE
 
 #----------------------------------------------------------#
 #                       Hestia                             #

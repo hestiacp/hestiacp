@@ -392,7 +392,7 @@ echo
 echo '                      Hestia Control Panel'
 echo '                                    v1.0.3'
 echo -e "\n"
-echo "=============================================================================="
+echo "===================================================================="
 echo -e "\n"
 echo 'The following server components will be installed on your system:'
 echo
@@ -458,13 +458,13 @@ fi
 
 # Firewall stack
 if [ "$iptables" = 'yes' ]; then
-    echo -n '   - Iptables Firewall'
+    echo -n '   - Firewall (Iptables)'
 fi
 if [ "$iptables" = 'yes' ] && [ "$fail2ban" = 'yes' ]; then
     echo -n ' + Fail2Ban Access Monitor'
 fi
 echo -e "\n"
-echo "=============================================================================="
+echo "===================================================================="
 echo -e "\n"
 
 # Asking for confirmation to proceed
@@ -1725,7 +1725,7 @@ if [ "$host_ip" = "$ip" ]; then
 fi
 
 echo -e "\n"
-echo "=============================================================================="
+echo "===================================================================="
 echo -e "\n"
 
 # Sending notification to admin email

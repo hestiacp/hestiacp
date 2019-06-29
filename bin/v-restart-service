@@ -23,37 +23,30 @@ PATH="$PATH:/usr/local/sbin:/sbin:/usr/sbin:/root/bin"
 
 check_args '1' "$#" 'SERVICE'
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-Blacklist=("iptables","cron","mysql","mariadb","hestia")
-
-
-for BannedService in Blackist; do
-    if [ "$service" = "$BannedService" ]; then
-        systemctl restart $service > /dev/null 2>&1
-        check_result $E_RESTART "ERROR: Restart of $service failed."
-        log_history "Restart of $service failed."
-    fi
-done
-
+# Run the restart rules for iptables firewall
 if [ "$service" = "iptables" ]; then
-    # Restart rules for firewall
     $BIN/v-stop-firewall
     $BIN/v-update-firewall
 fi
 
-systemctl reload $service > /dev/null 2>&1
-if [ $? -ne 0 ]; then
-    check_result $E_RESTART "ERROR: Restart of $service failed."
-    log_history "Restart of $service failed."
- fi
-
+if [ "$service" = "hestia" ] || [ "$service" = "iptables" ] || [ "$service" = "mariadb" ] || [ "$service" = "mysql" ] || [ "$service" = "postgresql" ] || [ "$service" = "cron" ]; then
+    systemctl restart $service > /dev/null 2>&1
+else
+    systemctl reload $service > /dev/null 2>&1
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
+
+# Check the result of the service restart and report whether it failed.
+if [ $? -ne 0 ]; then
+    check_result $E_RESTART "ERROR: Restart of $service failed."
+    log_history "Restart of $service failed."
+fi
 
 exit

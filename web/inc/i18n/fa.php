@@ -725,4 +725,5 @@ $LANG['fa'] = array(
     'Do not use encryption' => 'از رمزگذاری استفاده نشود',
     'maximum characters length, including prefix' => 'بیشینه %s کاراکتر طول, شامل پیشوند',
     'Email Credentials' => 'اعتبار پست الکترونیکی',
+    'Theme' => 'ظاهر',
 );

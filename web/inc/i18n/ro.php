@@ -755,4 +755,6 @@ $LANG['ro'] = array(
     'maximum characters length, including prefix' => 'maximum %s caractere, incluzând prefixul',
 
     'Email Credentials' => 'Email Credentials',
+
+    'Theme' => 'Aspectul',
 );

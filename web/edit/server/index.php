@@ -38,6 +38,11 @@ exec (HESTIA_CMD."v-list-sys-languages json", $output, $return_var);
 $languages = json_decode(implode('', $output), true);
 unset($output);
 
+// List themes
+exec (HESTIA_CMD."v-list-sys-themes json", $output, $return_var);
+$theme = json_decode(implode('', $output), true);
+unset($output);
+
 // List dns cluster hosts
 exec (HESTIA_CMD."v-list-remote-dns-hosts json", $output, $return_var);
 $dns_cluster = json_decode(implode('', $output), true);
@@ -140,10 +145,24 @@ if (!empty($_POST['save'])) {
     // Change default language
     if (empty($_SESSION['error_msg'])) {
         if ((!empty($_POST['v_language'])) && ($_SESSION['LANGUAGE'] != $_POST['v_language'])) {
+            if (isset($_POST['v_language_update'])) {
+                exec (HESTIA_CMD."v-change-sys-language ".escapeshellarg($_POST['v_language'])." yes", $output, $return_var);
+                if (empty($_SESSION['error_msg'])) $_SESSION['LANGUAGE'] = $_POST['v_language'];
+            }
             exec (HESTIA_CMD."v-change-sys-language ".escapeshellarg($_POST['v_language']), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
             if (empty($_SESSION['error_msg'])) $_SESSION['LANGUAGE'] = $_POST['v_language'];
+
+        }
+    }
+
+    // Update theme
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_theme'] != $_SESSION['THEME']) {
+            exec (HESTIA_CMD."v-change-sys-theme ".escapeshellarg($_POST['v_theme']), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
         }
     }
 

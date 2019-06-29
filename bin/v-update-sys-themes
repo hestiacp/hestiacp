@@ -1,0 +1,43 @@
+#!/bin/bash
+# info: Updates system theme CSS files from Hestia Control 
+#       Panel GitHub repository using the $HESTIA_GIT_REPO
+#       varible set in $HESTIA/func/main.sh.
+#
+# Usage: v-update-sys-themes
+#
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+# Set temporary directory
+HESTIA_THEMES_TEMP="/tmp/hestia-themes"
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Initialize download directory
+mkdir $HESTIA_THEMES_TEMP
+
+# Update system themes
+for theme in `ls $HESTIA_THEMES/`; do
+    echo "Downloading theme: $theme"
+    wget $HESTIA_GIT_REPO/$RELEASE_BRANCH/themes/$theme -O \ 
+        $HESTIA_THEMES_TEMP/$theme > /dev/null 2>&1
+    rm -f $HESTIA_THEMES/$theme
+    mv $HESTIA_THEMES_TEMP/$theme $HESTIA_THEMES/$theme
+done
+
+# Remove any temporary files and directories
+rm -rf $HESTIA_THEMES_TEMP
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

@@ -753,4 +753,6 @@ $LANG['ja'] = array(
     'maximum characters length, including prefix' => '接頭辞込みで最大 %s 文字',
 
     'Email Credentials' => 'Email Credentials',
+
+    'Theme' => '外観',
 );

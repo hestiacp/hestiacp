@@ -762,4 +762,5 @@ $LANG['es'] = array(
 
     'Email Credentials' => 'Datos de acceso a la cuenta de correo',
 
+    'Theme' => 'Aspecto',
 );

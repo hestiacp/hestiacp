@@ -756,4 +756,6 @@ $LANG['th'] = array(
     'maximum characters length, including prefix' => 'ความยาว charset สูงสุด %s ตัว, รวมถึงคำนำหน้า',
 
     'Email Credentials' => 'ข้อมูลการใช้อีเมล',
+
+    'Theme' => 'ลักษณะ',
 );

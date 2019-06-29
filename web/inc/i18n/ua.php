@@ -727,3 +727,6 @@ $LANG['ua'] = array(
     'Please scan the code below in your 2FA application:' => 'Щоб закінчити налаштування 2FA, скануйте QR-Code нижче <br /> за допомогою додатку на Вашому пристрої (наприклад, <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google Authenticator</a>):',
     '2FA Reset Code:' => 'Код відновлення доступу до акаунту:',
 	'Force SSL/HTTPS' => 'Примусовий редирект HTTP-на-HTTPS',
+    'Theme' => 'Зовнішній вигляд',
+    
+);

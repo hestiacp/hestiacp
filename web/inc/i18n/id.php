@@ -754,4 +754,6 @@ $LANG['id'] = array(
     'maximum characters length, including prefix' => 'maksimal jumlah karakter %s, termasuk prefix',
 
     'Email Credentials' => 'Kredensial surel',
+
+    'Theme' => 'Penampilan',
 );

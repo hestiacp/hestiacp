@@ -755,4 +755,6 @@ $LANG['vi'] = array(
     'maximum characters length, including prefix' => 'tối đa %s ký tự, bao gồm tiền tố',
 
     'Email Credentials' => 'Chứng nhận email',
+    
+    'Theme' => 'Xuất hiện',
 );

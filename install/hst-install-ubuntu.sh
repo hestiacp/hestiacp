@@ -1076,6 +1076,10 @@ cp -rf $hestiacp/templates $HESTIA/data/
 mkdir -p /var/www/html
 mkdir -p /var/www/document_errors
 
+# Installing default themes
+mkdir -p $HESTIA/themes
+cp -rf $hestiacp/themes $HESTIA/themes/
+
 # Install default success page
 cp -rf $hestiacp/templates/web/unassigned/index.html /var/www/html/
 cp -rf $hestiacp/templates/web/skel/document_errors/* /var/www/document_errors/
@@ -1699,6 +1703,9 @@ fi
 
 # Set backend port
 $HESTIA/bin/v-change-sys-port $port
+
+# Set default theme
+$HESTIA/bin/v-change-sys-theme default
 
 # Starting Hestia service
 update-rc.d hestia defaults

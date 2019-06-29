@@ -82,14 +82,14 @@
                         <?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?>	
                             <?php if($panel[$user]['DNS_DOMAINS'] != "0") { ?><tr>
                                 <td class="vst-text input-label">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_dns" <?php if (empty($v_dns)&&$panel[$user]['DNS_DOMAINS'] != "0") echo "checked=no"; ?>> <?php print __('DNS Support');?></label>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_dns" <?php if (empty($v_dns)&&$panel[$user]['DNS_DOMAINS'] != "0") ?>> <?php print __('DNS Support');?></label>
                                 </td>
                             </tr><?php } ?>
                         <?php } ?>
                         <?php if ((isset($_SESSION['IMAP_SYSTEM'])) && (!empty($_SESSION['IMAP_SYSTEM']))) {?>		
                             <?php if($panel[$user]['MAIL_DOMAINS'] != "0") { ?><tr>
                                 <td class="vst-text input-label">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_mail" <?php if (empty($v_mail)&&$panel[$user]['MAIL_DOMAINS'] != "0") echo "checked=no"; ?>> <?php print __('Mail Support');?></label>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_mail" <?php if (empty($v_mail)&&$panel[$user]['MAIL_DOMAINS'] != "0") ?>> <?php print __('Mail Support');?></label>
                                 </td>
                             </tr><?php } ?>
                         <?php } ?>

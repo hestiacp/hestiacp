@@ -1,0 +1,123 @@
+#!/bin/bash
+# info: add php fpm version
+# options: VERSION
+#
+# The function checks and delete a fpm php version if not used by any domain.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+version=$1
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'VERSION'
+
+# Set file locations
+php_fpm="/etc/init.d/php$version-fpm"
+
+# Verify php version format
+if [[ ! $version =~ ^[0-9]\.[0-9]+ ]]; then
+    echo "The php version format is invalid, it should look like [0-9].[0-9]..."
+    exit
+fi
+
+# Check if php version already exists
+if [ -f "$php_fpm" ] && [ -f "$HESTIA/data/templates/$WEB_SYSTEM/PHP-$version.sh" ]; then
+    echo "Version already installed..."
+    exit
+fi
+
+# Check if php version is supported
+if [ ! -f "$HESTIA/install/deb/multiphp/$WEB_SYSTEM/PHP-${version//.}.sh" ]; then
+    echo "Version is currently not supported or does not exist..."
+    exit
+fi
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+mph="php$version-mbstring php$version-bcmath php$version-cli php$version-curl
+     php$version-fpm php$version-gd php$version-intl php$version-mysql
+     php$version-soap php$version-xml php$version-zip php$version-mbstring
+     php$version-json php$version-bz2 php$version-pspell"
+
+# Check is version is 7.1 or below to add mcrypt
+if [[ `echo "$version 7.2" | awk '{print ($1 < $2)}'` == 1 ]]; then
+    mph="$mph php$version-mcrypt"
+fi
+
+# Install php packages
+apt-get -qq update
+apt-get -y install $mph > /dev/null 2>&1 &
+BACK_PID=$!
+
+# Check if package installation is done, print a spinner
+echo "Install PHP-$version, please wait..."
+spinner="/-\|"
+spin_i=1
+while kill -0 $BACK_PID > /dev/null 2>&1 ; do
+    printf "\b${spinner:spin_i++%${#spinner}:1}"
+    sleep 0.5
+done
+
+# Do a blank echo to get the \n back
+echo
+
+# Check if installation was sucessfully
+if [ ! -f "$php_fpm" ]; then
+    echo "Installation failed, please run the following command manualy for debuging:"
+    echo "apt-get install $mph"
+fi
+
+# Check if required modules for apache2 are enabled
+if [ "$WEB_SYSTEM" = "apache2" ]; then
+    if ! ls -l /etc/apache2/mods-enabled/ | grep --quiet "proxy_fcgi"; then
+        a2enmod proxy_fcgi > /dev/null 2>&1
+        restart_apache2="yes"
+    fi
+    if ! ls -l /etc/apache2/mods-enabled/ | grep --quiet "setenvif"; then
+        a2enmod setenvif > /dev/null 2>&1
+        restart_apache2="yes"
+    fi
+    if [ "$restart_apache2" = "yes" ]; then
+        service apache2 restart > /dev/null 2>&1
+    fi
+fi
+
+# Configure fpm
+v_tpl=$(echo "$version" | sed -e 's/[.]//')
+rm -f /etc/php/$version/fpm/pool.d/*
+cp -f $HESTIA/install/deb/php-fpm/dummy.conf /etc/php/$version/fpm/pool.d/
+sed -i "s/9999/99$v_tpl/g" /etc/php/$version/fpm/pool.d/dummy.conf
+
+# Install php templates
+cp -f $HESTIA/install/deb/multiphp/$WEB_SYSTEM/PHP-${version//.}.sh \
+    $HESTIA/data/templates/web/$WEB_SYSTEM/
+cp -f $HESTIA/install/deb/multiphp/$WEB_SYSTEM/PHP-${version//.}.tpl \
+    $HESTIA/data/templates/web/$WEB_SYSTEM/
+cp -f $HESTIA/install/deb/multiphp/$WEB_SYSTEM/PHP-${version//.}.stpl \
+    $HESTIA/data/templates/web/$WEB_SYSTEM/
+chmod a+x $HESTIA/data/templates/web/$WEB_SYSTEM/PHP-${version//.}.sh
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_history "installed php $job"
+log_event "$OK" "$ARGUMENTS"
+
+exit

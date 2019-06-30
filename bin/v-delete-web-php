@@ -1,0 +1,92 @@
+#!/bin/bash
+# info: delete php fpm version
+# options: VERSION
+#
+# The function checks and delete a fpm php version if not used by any domain.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+version=$1
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'VERSION'
+
+# Set file locations
+php_fpm="/etc/init.d/php$version-fpm"
+
+# Verify php version format
+if [[ ! $version =~ ^[0-9]\.[0-9]+ ]]; then
+    echo "The php version format is invalid, it should look like [0-9].[0-9]..."
+    exit
+fi
+
+# Check if php version exists
+if [ ! -f "$php_fpm" ] && [ ! -f "$HESTIA/data/templates/$WEB_SYSTEM/PHP-$version.sh" ]; then
+    echo "Version is not installed..."
+    exit
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+mph="php$version-mbstring php$version-bcmath php$version-cli php$version-curl
+     php$version-fpm php$version-gd php$version-intl php$version-mysql
+     php$version-soap php$version-xml php$version-zip php$version-mbstring
+     php$version-json php$version-bz2 php$version-pspell"
+
+# Check is version is 7.1 or below to add mcrypt
+if [[ `echo "$version 7.2" | awk '{print ($1 < $2)}'` == 1 ]]; then
+    mph="$mph php$version-mcrypt"
+fi
+
+# Purge php packages
+apt-get -y purge $mph > /dev/null 2>&1 &
+BACK_PID=$!
+
+# Check if package removal is done, print a spinner
+echo "Removing PHP-$version, please wait..."
+spinner="/-\|"
+spin_i=1
+while kill -0 $BACK_PID > /dev/null 2>&1 ; do
+    printf "\b${spinner:spin_i++%${#spinner}:1}"
+    sleep 0.5
+done
+
+# Do a blank echo to get the \n back
+echo
+
+# Check if installation was sucessfully
+if [ -f "$php_fpm" ]; then
+    echo "Uninstallation failed, please run the following command manualy for debuging:"
+    echo "apt-get purge $mph"
+fi
+
+# Install php templates
+rm -f $HESTIA/data/templates/web/$WEB_SYSTEM/PHP-${version//.}.sh
+rm -f $HESTIA/data/templates/web/$WEB_SYSTEM/PHP-${version//.}.tpl
+rm -f $HESTIA/data/templates/web/$WEB_SYSTEM/PHP-${version//.}.stpl
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_history "removed php $version"
+log_event "$OK" "$ARGUMENTS"
+
+exit

@@ -1101,6 +1101,7 @@ key_start=$(grep -n "BEGIN RSA" /tmp/hst.pem |cut -f 1 -d:)
 key_end=$(grep -n  "END RSA" /tmp/hst.pem |cut -f 1 -d:)
 
 # Adding SSL certificate
+echo "(*) Add ssl certificate to Hestia"
 cd $HESTIA/ssl
 sed -n "1,${crt_end}p" /tmp/hst.pem > certificate.crt
 sed -n "$key_start,${key_end}p" /tmp/hst.pem > certificate.key

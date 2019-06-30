@@ -1500,7 +1500,7 @@ if [ "$dovecot" = 'yes' ]; then
     cp -f $hestiacp/logrotate/dovecot /etc/logrotate.d/
     chown -R root:root /etc/dovecot*
     if [ "$release" -eq 9 ]; then
-        sed -i "s#namespace inbox {#namespace inbox {\n  inbox = yes#" /etc/dovecot/conf.d/15-mailboxes.conf
+        rm -f /etc/dovecot/conf.d/15-mailboxes.conf
     fi
     update-rc.d dovecot defaults
     service dovecot start

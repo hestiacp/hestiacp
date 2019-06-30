@@ -97,6 +97,7 @@ if [ "$WEB_SYSTEM" = "apache2" ]; then
 fi
 
 # Configure fpm
+update-rc.d php$version-fpm defaults > /dev/null 2>&1
 v_tpl=$(echo "$version" | sed -e 's/[.]//')
 rm -f /etc/php/$version/fpm/pool.d/*
 cp -f $HESTIA/install/deb/php-fpm/dummy.conf /etc/php/$version/fpm/pool.d/

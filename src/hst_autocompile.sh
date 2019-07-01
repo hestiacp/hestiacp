@@ -287,7 +287,7 @@ if [ "$NGINX_B" = true ] ; then
     else
       cp $BUILD_DIR/hestiacp-$branch/src/deb/nginx/nginx.conf "usr/local/hestia/nginx/conf/nginx.conf"
     fi
-
+        
     # copy binary
     cp usr/local/hestia/nginx/sbin/nginx usr/local/hestia/nginx/sbin/hestia-nginx
 

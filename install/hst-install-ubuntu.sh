@@ -1163,6 +1163,7 @@ if [ "$nginx" = 'yes' ]; then
     done
     if [ ! -z "$resolver" ]; then
         sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /etc/nginx/nginx.conf
+        sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
     fi
 
     update-rc.d nginx defaults > /dev/null 2>&1

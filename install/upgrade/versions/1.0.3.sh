@@ -18,6 +18,11 @@ mv /etc/ssl/dhparam.pem $HESTIA_BACKUP/conf/
 cp -rf $HESTIA/install/deb/ssl/dhparam.pem /etc/ssl/
 systemctl reload nginx
 
+# Enhance Vsftpd security
+echo "(*) Enhancing Vsftpd security..."
+cp -rf /etc/vsftpd.conf $HESTIA_BACKUP/conf/
+sed -i "s|ssl_tlsv1=YES|ssl_tlsv1=NO|g" /etc/vsftpd.conf
+
 # Enhance Dovecot security
 echo "(*) Enhancing Dovecot security..."
 mv /etc/dovecot/conf.d/10-ssl.conf $HESTIA_BACKUP/conf/

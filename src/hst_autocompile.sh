@@ -288,17 +288,6 @@ if [ "$NGINX_B" = true ] ; then
       cp $BUILD_DIR/hestiacp-$branch/src/deb/nginx/nginx.conf "usr/local/hestia/nginx/conf/nginx.conf"
     fi
         
-    # Update dns servers in nginx.conf
-    dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
-    for ip in $dns_resolver; do
-        if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            resolver="$ip $resolver"
-        fi
-    done
-    if [ ! -z "$resolver" ]; then
-        sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
-    fi
-
     # copy binary
     cp usr/local/hestia/nginx/sbin/nginx usr/local/hestia/nginx/sbin/hestia-nginx
 

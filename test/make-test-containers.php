@@ -15,6 +15,36 @@
 #   cd $SHARED_HOST_FOLDER && git clone https://github.com/hestiacp/hestiacp.git && cd hestiacp && git checkout ..branch..
 # 
 
+/*
+# Nginx reverse proxy config: /etc/nginx/conf.d/lxc-hestia.conf
+server {
+    listen 80;
+    server_name ~(?<lxcname>hst-.+)\.hst\.domain\.tld$;
+    location / {
+        set $backend_upstream "http://$lxcname:80";
+        proxy_pass $backend_upstream;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $remote_addr;
+    }
+}
+server {
+    listen 8083;
+    server_name ~^(?<lxcname>hst-.+)\.hst\.domain\.tld$;
+    location / {
+        set $backend_upstream "https://$lxcname:8083";
+        proxy_pass $backend_upstream;
+    }
+}
+
+# use lxc resolver /etc/nginx/nginx.conf
+# test resolver ip ex: dig +short @10.240.232.1 hst-ub1804-ngx-a2-mphp
+http {
+...
+    resolver 10.240.232.1 ipv6=off valid=5s;
+...
+}
+
+*/
 
 ##  Uncomment and configure the following vars
 # define('DOMAIN',     'hst.domain.tld');
@@ -41,7 +71,7 @@ $containers = [
 ];
 
 array_walk($containers, function(&$element) {
-    $lxc_name='hst-';
+    $lxc_name='hst-';           // hostname and lxc name prefix. Update nginx reverse proxy config after altering this value 
     $hst_args = HST_ARGS;
 
     $element['hst_installer'] = 'hst-install-ubuntu.sh';

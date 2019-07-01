@@ -22,6 +22,7 @@ systemctl reload nginx
 echo "(*) Enhancing Vsftpd security..."
 cp -rf /etc/vsftpd.conf $HESTIA_BACKUP/conf/
 sed -i "s|ssl_tlsv1=YES|ssl_tlsv1=NO|g" /etc/vsftpd.conf
+systemctl restart vsftpd
 
 # Enhance Dovecot security
 echo "(*) Enhancing Dovecot security..."

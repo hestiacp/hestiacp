@@ -19,12 +19,12 @@ cp -f $hestiacp/ssl/dhparam.pem /etc/ssl/
 chmod 600 /etc/ssl/dhparam.pem
 
 # Enhance Vsftpd security
-echo "(*) Modifying Vsftpd SSL configuration..."
+echo "(*) Hardening Vsftpd SSL configuration..."
 cp -f /etc/vsftpd.conf $HESTIA_BACKUP/conf/
 sed -i "s|ssl_tlsv1=YES|ssl_tlsv1=NO|g" /etc/vsftpd.conf
 
 # Enhance Dovecot security
-echo "(*) Modifying Dovecot SSL configuration..."
+echo "(*) Hardening Dovecot SSL configuration..."
 mv /etc/dovecot/conf.d/10-ssl.conf $HESTIA_BACKUP/conf/
 cp -f $hestiacp/dovecot/conf.d/10-ssl.conf /etc/dovecot/conf.d/
 
@@ -45,18 +45,17 @@ WEBALIZER_CHECK=$(cat $HESTIA/conf/hestia.conf | grep webalizer)
 if [ ! -z "$WEBALIZER_CHECK" ]; then
     echo "(*) Removing Webalizer and setting AWStats as default web statistics backend..."
     apt purge webalizer -y > /dev/null 2>&1
-    rm -fr $HESTIA/data/templates/web/webalizer
-    rm -fr $HESTIA/install/deb/templates/web/webalizer
-    rm -fr /var/www/webalizer
+    rm -rf $HESTIA/data/templates/web/webalizer
+    rm -rf /var/www/webalizer
     sed -i "s/STATS_SYSTEM='webalizer,awstats'/STATS_SYSTEM='awstats'/g" $HESTIA/conf/hestia.conf
 fi
 
 # Remove old hestia.conf files from Apache & NGINX if they exist
 if [ -f "/etc/nginx/conf.d/hestia.conf" ]; then
-    echo "(*) Removing old Apache configuration file..."
+    echo "(*) Removing Apache configuration file from previous version of Hestia Control Panel..."
     rm -f /etc/apache2/conf.d/hestia.conf
 fi
 if [ -f "/etc/nginx/conf.d/hestia.conf" ]; then
-    echo "(*) Removing old NGINX configuration file..."
+    echo "(*) Removing old NGINX configuration file from previous version of Hestia Control Panel..."
     rm -f /etc/nginx/conf.d/hestia.conf
 fi

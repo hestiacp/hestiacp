@@ -563,24 +563,6 @@ fi
 #                   Install repository                     #
 #----------------------------------------------------------#
 
-# Updating system
-echo -ne "Updating currently installed packages, please wait... "
-apt-get -y upgrade >> $LOG &
-BACK_PID=$!
-
-# Check if package installation is done, print a spinner
-spin_i=1
-while kill -0 $BACK_PID > /dev/null 2>&1 ; do
-    printf "\b${spinner:spin_i++%${#spinner}:1}"
-    sleep 0.5
-done
-
-# Do a blank echo to get the \n back
-echo
-
-# Check Installation result
-check_result $? 'apt-get upgrade failed'
-
 # Define apt conf location
 apt=/etc/apt/sources.list.d
 
@@ -637,6 +619,25 @@ echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
 wget --quiet https://gpg.hestiacp.com/deb_signing.key -O /tmp/deb_signing.key
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/deb_signing.key > /dev/null 2>&1
 echo
+
+# Updating system
+echo -ne "Updating currently installed packages, please wait... "
+apt-get -y upgrade >> $LOG &
+BACK_PID=$!
+
+# Check if package installation is done, print a spinner
+spin_i=1
+while kill -0 $BACK_PID > /dev/null 2>&1 ; do
+    printf "\b${spinner:spin_i++%${#spinner}:1}"
+    sleep 0.5
+done
+
+# Do a blank echo to get the \n back
+echo
+
+# Check Installation result
+check_result $? 'apt-get upgrade failed'
+
 
 #----------------------------------------------------------#
 #                         Backup                           #

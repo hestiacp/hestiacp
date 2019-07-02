@@ -16,7 +16,7 @@ fi
 echo "(*) Installing 4096-bit SSL security certificate..."
 mv /etc/ssl/dhparam.pem $HESTIA_BACKUP/conf/
 cp -f $hestiacp/ssl/dhparam.pem /etc/ssl/
-chmod 600 /etc/ssl/dhparams.pem
+chmod 600 /etc/ssl/dhparam.pem
 
 # Enhance Vsftpd security
 echo "(*) Modifying Vsftpd SSL configuration..."

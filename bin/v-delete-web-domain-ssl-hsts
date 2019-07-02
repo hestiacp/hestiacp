@@ -47,10 +47,12 @@ fi
 rm -f $hstsconf
 echo "HTTP Strict Transport Security (HSTS) turned off for $domain."
 
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
+
+# Set forcessl flag to enabled
+update_object_value 'web' 'DOMAIN' "$domain" '$SSL_HSTS' 'no'
 
 # Restart services if requested
 if [ ! -z "$restart" ]; then

@@ -20,20 +20,26 @@ We ask that you try to follow existing naming schemes and coding conventions as 
 ### Squashing commits for smaller changes:
 When submitting a pull request with multiple smaller commits which are related to the same issue (or file), we ask that you please **squash your commits** in order to keep the project's commit history clean and easy to follow for other developers.
 
+
 ### Working with branches:
-Development for this project takes place in branches to effectively develop, manage, and test manage new features and code changes, ensuring that that each release meets high quality standards. There are two main branches which have a never-ending life cycle:
+Development for this project takes place in branches to effectively develop, manage, and test manage new features and code changes, ensuring that that each release meets high quality standards. Our primary branches are as follows:
 
-* **master**:Latest stable release code (install packages align with this branch)
-* **develop**: Primary development branch containing code for the next release.
+* **master**: Active development code for the the next version of Hestia Control Panel.
+* **prerelease**: The next release of Hestia Control Panel which is undergoing testing and quality refinement.
+* **release**: The latest stable release code - installation packages generally align with this branch.
 
-If you are submitting a fix for a critical issue (such as security or broken functionality) in the current release, please create a branch with the prefix **hotfix-** starting from **master** for your work and submit a pull request with **[CRITICAL]** in the title.
+We ask that you create a new branch for your work based on **master** or **prerelease**, depending on the code you are contributing. By doing this, you can submit a pull request with only the necessary commits. Please follow the below naming conventions for your work and submit a pull request when it has been completed. Once reviewed and approved, our development team will merge your code into the primary development branch.
 
-For all other changes, we ask that you create a new branch based on **develop**. Please follow the below naming conventions for your work and submit a pull request when it has been completed. Once reviewed and approved, our development team will merge your code into the primary development branch.
+* **feature/area/name-of-feature**: New features
+* **hotfix/000**: Critical security or bug fixes
+* **bugfix/000**: Non-critical bug fixes
 
-* **feature-**: New features
-* **bugfix-**: Fixes for non-critical bugs
-* **secfix-**: Fixes for non-critical security issues
-* **webui-**: Control Panel user experience and interface changes
+**Note**: Replace **area** with Web, DNS, Mail, etc. Replace **000** with the GitHub Issue ID if available, or use a short but descriptive name.
+
+### Feature freeze:
+The general flow of our development process is that new features or work begin in a new branch derived from **master**. Once the work has been completed and reviewed, it is then submitted via Pull Request for further review and inclusion into the main code base. Once a release has reached a point where slated new features have been incorporated and the build has gone through testing and validation, it will then enter a "feature freeze" state where only fixes to the existing functionality will be merged for inclusion and be pushed to the **prerelease** branch. Once any remaining known issues have been resolved and the build is considered stable, the code is then pushed to **release** and the cycle starts all over again.
+
+**master** -> **prerelease** -> **release**
 
 **Please ensure that all pull requests meet the guidelines listed above; those that do not will be rejected and sent back for review.**
 

@@ -51,7 +51,12 @@ if [ ! -z "$WEBALIZER_CHECK" ]; then
     sed -i "s/STATS_SYSTEM='webalizer,awstats'/STATS_SYSTEM='awstats'/g" $HESTIA/conf/hestia.conf
 fi
 
-# Remove hestia.conf in nginx.d
+# Remove old hestia.conf files from Apache & NGINX if they exist
 if [ -f "/etc/nginx/conf.d/hestia.conf" ]; then
+    echo "(*) Removing old Apache configuration file..."
+    rm -f /etc/apache2/conf.d/hestia.conf
+fi
+if [ -f "/etc/nginx/conf.d/hestia.conf" ]; then
+    echo "(*) Removing old NGINX configuration file..."
     rm -f /etc/nginx/conf.d/hestia.conf
 fi

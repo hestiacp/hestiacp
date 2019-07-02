@@ -50,3 +50,8 @@ if [ ! -z "$WEBALIZER_CHECK" ]; then
     rm -fr /var/www/webalizer
     sed -i "s/STATS_SYSTEM='webalizer,awstats'/STATS_SYSTEM='awstats'/g" $HESTIA/conf/hestia.conf
 fi
+
+# Remove hestia.conf in nginx.d
+if [ -f "/etc/nginx/conf.d/hestia.conf" ]; then
+    rm -f /etc/nginx/conf.d/hestia.conf
+fi

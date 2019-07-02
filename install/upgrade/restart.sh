@@ -33,6 +33,9 @@ for v in `ls /etc/php/`; do
 		$BIN/v-restart-service php$v-fpm $restart
 	fi
 done
+if [ ! -z $FTP_SYSTEM ]; then
+    $BIN/v-restart-ftp $restart
+fi
 
 # Restart SSH daemon and Hestia Control Panel service
 $BIN/v-restart-service ssh $restart

@@ -247,7 +247,7 @@ if [ -z "$IMAP_SYSTEM" ]; then
 fi
 
 # Remove Webalizer and set AWStats as default
-WEBALIAZER_CHECK=$(cat $HESTIA/conf/hestia.conf | grep webalizer)
+WEBALIZER_CHECK=$(cat $HESTIA/conf/hestia.conf | grep webalizer)
 if [ ! -z "$WEBALIZER_CHECK" ]; then
     echo "(*) Removing Webalizer and setting AWStats as default web statistics backend..."
     apt purge webalizer -y > /dev/null 2>&1

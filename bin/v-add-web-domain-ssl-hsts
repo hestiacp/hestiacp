@@ -58,6 +58,13 @@ echo "HTTP Strict Transport Security (HSTS) turned on for $domain."
 #                       Hestia                             #
 #----------------------------------------------------------#
 
+if [ -z "$SSL_HSTS" ]; then
+    add_object_key "web" 'DOMAIN' "$domain" 'SSL_HSTS' 'SSL_FORCE'
+fi
+
+# Set forcessl flag to enabled
+update_object_value 'web' 'DOMAIN' "$domain" '$SSL_HSTS' 'yes'
+
 # Logging
 log_history "Turned HTTP Strict Transport Security $status for $domain."
 log_event "$OK" "$ARGUMENTS"

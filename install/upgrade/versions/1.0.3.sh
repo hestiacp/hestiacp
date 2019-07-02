@@ -26,7 +26,7 @@ sed -i "s|ssl_tlsv1=YES|ssl_tlsv1=NO|g" /etc/vsftpd.conf
 # Enhance Dovecot security
 echo "(*) Modifying Dovecot SSL configuration..."
 mv /etc/dovecot/conf.d/10-ssl.conf $HESTIA_BACKUP/conf/
-cp -rf $hestiacp/dovecot/10-ssl.conf /etc/dovecot/conf.d/
+cp -rf $hestiacp/dovecot/conf.d/10-ssl.conf /etc/dovecot/conf.d/
 
 # Update DNS resolvers in hestia-nginx's configuration
 echo "(*) Updating DNS resolvers for Hestia Internal Web Server..."

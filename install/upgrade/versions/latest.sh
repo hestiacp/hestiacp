@@ -70,3 +70,9 @@ if [ ! -z "$FIREWALL_EXTENSION" ]; then
         echo -e "\n\n[recidive]\nenabled  = true\nfilter   = recidive\naction   = hestia[name=HESTIA]\nlogpath  = /var/log/fail2ban.log\nmaxretry = 3\nfindtime = 86400\nbantime  = 864000" >> /etc/fail2ban/jail.local
     fi
 fi
+
+# Update webmail templates to enable OCSP/SSL stapling
+if [ ! -z "$IMAP_SYSTEM" ]; then
+    echo "(*) Enabling OCSP stapling support for webmail services..."
+    $BIN/v-update-mail-templates > /dev/null 2>&1
+fi 

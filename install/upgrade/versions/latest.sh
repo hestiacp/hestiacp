@@ -13,7 +13,7 @@ if [ -z $THEME ]; then
 fi
 
 # Replace dhparam 1024 with dhparam 4096
-echo "(*) Installing 4096-bit SSL security certificate..."
+echo "(*) Increasing Diffie-Hellman Parameter strength to 4096-bit..."
 mv /etc/ssl/dhparam.pem $HESTIA_BACKUP/conf/
 cp -f $HESTIA_INSTALL_DIR/ssl/dhparam.pem /etc/ssl/
 chmod 600 /etc/ssl/dhparam.pem

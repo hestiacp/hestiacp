@@ -8,25 +8,26 @@
 
 upgrade_welcome_message() {
     echo
-    echo '               _   _           _   _        ____ ____                 '
-    echo '              | | | | ___  ___| |_(_) __ _ / ___|  _ \                '
-    echo '              | |_| |/ _ \/ __| __| |/ _` | |   | |_) |               '
-    echo '              |  _  |  __/\__ \ |_| | (_| | |___|  __/                '
-    echo '              |_| |_|\___||___/\__|_|\__,_|\____|_|                   '
-    echo "                                                                      "
-    echo "                 Hestia Control Panel Software Update                 "
-    echo "                         Version: $new_version                        "
-    echo "======================================================================"
+    echo '                _   _           _   _        ____ ____                  '
+    echo '               | | | | ___  ___| |_(_) __ _ / ___|  _ \                 '
+    echo '               | |_| |/ _ \/ __| __| |/ _` | |   | |_) |                '
+    echo '               |  _  |  __/\__ \ |_| | (_| | |___|  __/                 '
+    echo '               |_| |_|\___||___/\__|_|\__,_|\____|_|                    '
+    echo "                                                                        "
+    echo "                  Hestia Control Panel Software Update                  "
+    echo "                            Version: $new_version                       "
+    echo "========================================================================"
     echo
-    echo "Please note that some configuration and template files may be modified"
-    echo "files may be replaced during the upgrade process."
+    echo "(!) IMPORTANT INFORMATION:                                              "
+    echo
+    echo "Default configuration files and templates may be modified or replaced   "
+    echo "during the upgrade process. You may restore these files from:           "
     echo ""
-    echo "Backups of these files will be available under:"
-    echo "$HESTIA_BACKUP/"
+    echo "Backup directory: $HESTIA_BACKUP/                                       "
     echo
-    echo "This process may take a few minutes, please wait..."
+    echo "This process may take a few minutes, please wait...                     "
     echo
-    echo "======================================================================"
+    echo "========================================================================"
     echo
 }
 
@@ -36,19 +37,24 @@ upgrade_complete_message() {
 
     # Echo message to console output
     echo
-    echo "======================================================================"
-    echo ""
-    echo "    Upgrade complete! Please report any bugs or issues to"
-    echo "    https://github.com/hestiacp/hestiacp/issues"
+    echo "========================================================================"
     echo
-    echo "    We hope that you enjoy this release of Hestia Control Panel,"
-    echo "    enjoy your day!"
+    echo "Upgrade complete! If you encounter any issues or find a bug,            "
+    echo "please take a moment to report it to us on GitHub at the URL below:     "
+    echo "https://github.com/hestiacp/hestiacp/issues                             "
     echo
-    echo "    Sincerely,"
-    echo "    The Hestia Control Panel development team"
+    echo "We hope that you enjoy using this version of Hestia Control Panel,      "
+    echo "have a wonderful day!                                                   "
     echo
-    echo "    www.hestiacp.com"
-    echo "    Made with love & pride by the open-source community around the world."
+    echo "Sincerely,                                                              "
+    echo "The Hestia Control Panel development team                               "
+    echo
+    echo "Web:      https://www.hestiacp.com/                                     "
+    echo "Forum:    https://forum.hestiacp.com/                                   "
+    echo "GitHub:   https://github.com/hestiacp/hestiacp/                        "
+    echo "E-mail:   info@hestiacp.com                                             "
+    echo 
+    echo "Made with love & pride by the open-source community around the world.   "
     echo
     echo
 }
@@ -73,9 +79,11 @@ upgrade_start_routine() {
 
     #####################################################################
     #######         Start upgrade for pre-release builds          #######
+    #######     Ensures clean upgrade path from v1.0.1 onwards    #######
+    #######             DO NOT MODIFY THIS SECTION                #######
     #####################################################################
 
-    if [ $VERSION = "0.9.8-25" ] || [ $VERSION = "0.9.8-26" ] || [ $VERSION = "0.9.8-27" ] || [ $VERSION = "0.9.8-28" ] || [ $VERSION = "0.9.8-29" ] || [ $VERSION = "0.10.0" ] || [ $VERSION = "1.00.0-190618" ] || [ $VERSION = "1.00.0-190621" ]; then
+    if [ $VERSION = "0.9.8-25" ] || [ $VERSION = "0.9.8-26" ] || [ $VERSION = "0.9.8-27" ] || [ $VERSION = "0.9.8-28" ] || [ $VERSION = "0.9.8-29" ] || [ $VERSION = "0.10.0" ] || [ $VERSION = "1.00.0-190618" ] || [ $VERSION = "1.00.0-190621" ] || [ $VERSION = "1.0.0" ]; then
         source $HESTIA/install/upgrade/versions/previous/0.9.8-29.sh
         source $HESTIA/install/upgrade/versions/previous/1.00.0-190618.sh
         source $HESTIA/install/upgrade/versions/previous/1.0.1.sh
@@ -84,11 +92,12 @@ upgrade_start_routine() {
 
     #####################################################################
     #######             Start standard upgrade process            #######
+    #######  Place instructions for all post v1.0.1 builds below  #######
     #####################################################################
 
     # Ensure that latest upgrade commands are processed if version is the same
     if [ $VERSION = "$new_version" ]; then
-        echo "(!) The latest version of Hestia Control Panel ($new_version) is already installed."
+        echo "(!) The latest version of Hestia Control Panel is already installed."
         echo "    Verifying configuration..."
         echo ""
         source $HESTIA/install/upgrade/versions/latest.sh
@@ -108,7 +117,7 @@ upgrade_start_routine() {
     fi
 
     #####################################################################
-    #######                 End upgrade process                   #######
+    #######     End version-specific upgrade instruction sets     #######
     #####################################################################
 }
 
@@ -120,10 +129,10 @@ upgrade_phpmyadmin() {
 
         pma_release_file=$(ls /usr/share/phpmyadmin/RELEASE-DATE-* 2>/dev/null |tail -n 1)
         if version_ge "${pma_release_file##*-}" "$pma_v"; then
-            echo "(*) phpMyAdmin $pma_v or newer is already installed: ${pma_release_file##*-}, skipping update..."
+            echo "(!) phpMyAdmin v${pma_release_file##*-} is already installed, skipping update..."
         else
             # Display upgrade information
-            echo "(*) Upgrade phpMyAdmin to v$pma_v..."
+            echo "(*) Upgrading phpMyAdmin to version v$pma_v..."
             [ -d /usr/share/phpmyadmin ] || mkdir -p /usr/share/phpmyadmin
 
             # Download latest phpMyAdmin release

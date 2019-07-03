@@ -193,7 +193,8 @@ $LANG['en'] = array(
     'template'  => 'Template',
     'SSL Support'  => 'Enable SSL for this domain',
     'SSL Home Directory'  => 'SSL Home Directory',
-    'Force SSL/HTTPS' => 'Enforce HTTP-to-HTTPS redirection',
+    'Force SSL/HTTPS' => 'Enable automatic HTTP-to-HTTPS redirection',
+    'Enable SSL HSTS' => 'Enable HTTP Strict Transport Security (HSTS) <a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><i class="fas fa-question-circle"></i></a>',
     'Lets Encrypt Support'  => 'Use Lets Encrypt to obtain SSL certificate',
     'Lets Encrypt'  => 'Lets Encrypt',
     'Your certificate will be automatically issued in 5 minutes' => 'Your SSL certificate will be automatically issued within 5 minutes',
@@ -753,7 +754,6 @@ $LANG['en'] = array(
     'Use SSL / TLS' => 'Use SSL / TLS',
     'No encryption' => 'No encryption',
     'Do not use encryption' => 'Do not use encryption',
-
     'maximum characters length, including prefix' => 'maximum %s characters in length (including prefix)',
 
     'Email Credentials' => 'Email Credentials',

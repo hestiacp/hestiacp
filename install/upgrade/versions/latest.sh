@@ -63,3 +63,10 @@ if [ -f "/etc/nginx/conf.d/hestia.conf" ]; then
     echo "(*) Removing old NGINX configuration file from previous version of Hestia Control Panel..."
     rm -f /etc/nginx/conf.d/hestia.conf
 fi
+
+# Implement recidive jail for fail2ban
+if [ ! -z "$FIREWALL_EXTENSION" ]; then
+    if ! cat /etc/fail2ban/jail.local | grep -q "recidive"; then
+        echo -e "\n\n[recidive]\nenabled  = true\nmaxretry = 3\nfindtime = 86400\nbantime  = 864000" >> /etc/fail2ban/jail.local
+    fi
+fi

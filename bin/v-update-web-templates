@@ -35,7 +35,7 @@ if [ -d "${HST_WEBTEMPLATES}" ]; then
     rm -rf "${HST_WEBTEMPLATES}/unassigned" 2>/dev/null
 fi
 
-for webtpl_folder in $(ls $HESTIA/install/$type/templates/web/* -d 2>/dev/null | egrep -v '/(nginx)$' ); do
+for webtpl_folder in $(ls $HESTIA/install/deb/templates/web/* -d 2>/dev/null | egrep -v '/(nginx)$' ); do
     cp -rf "${webtpl_folder}" "${HST_WEBTEMPLATES}/"
 done
 
@@ -49,7 +49,7 @@ if [ "$php_versions" -gt 1 ]; then
             continue
         fi
         v_tpl=$(echo "$v" | sed -e 's/[.]//')
-        cp -f "$HESTIA/install/$type/multiphp/${WEB_SYSTEM}/PHP-${v_tpl}".* "${HST_WEBTEMPLATES}/${WEB_SYSTEM}/"
+        cp -f "$HESTIA/install/deb/multiphp/${WEB_SYSTEM}/PHP-${v_tpl}".* "${HST_WEBTEMPLATES}/${WEB_SYSTEM}/"
     done
     chmod a+x "${HST_WEBTEMPLATES}/${WEB_SYSTEM}/"*.sh 2> /dev/null
 
@@ -62,7 +62,7 @@ if [ "$php_versions" -gt 1 ]; then
 fi
 
 if [ "$PROXY_SYSTEM" = 'nginx' ] || [ "$php_versions" -le 1 ]; then
-    cp -rf "${HESTIA}/install/${type}/templates/web/nginx" "${HST_WEBTEMPLATES}/"
+    cp -rf "${HESTIA}/install/deb/templates/web/nginx" "${HST_WEBTEMPLATES}/"
 fi
 
 # Rebuilding web domains

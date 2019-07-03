@@ -3,6 +3,8 @@ server {
     server_name %domain% %alias%;
     ssl_certificate     %ssl_pem%;
     ssl_certificate_key %ssl_key%;
+    ssl_stapling on;
+    ssl_stapling_verify on;
     root        /var/lib/roundcube;
     index       index.php index.html index.htm;
     access_log /var/log/nginx/domains/%domain%.log combined;

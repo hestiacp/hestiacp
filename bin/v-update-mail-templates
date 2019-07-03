@@ -22,7 +22,7 @@ source $HESTIA/conf/hestia.conf
 #----------------------------------------------------------#
 
 # Update templates
-cp -rf $HESTIA/install/$type/templates/mail $HESTIA/data/templates/
+cp -rf $HESTIA/install/deb/templates/mail $HESTIA/data/templates/
 
 # Rebuild mail domains if mail services are enabled
 if [ ! -z $MAIL_SYSTEM ]; then

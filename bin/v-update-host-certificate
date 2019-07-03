@@ -69,6 +69,11 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     chown $exim_user:mail $HESTIA/ssl/certificate.key
 fi
 
+# Add UPDATE_HOSTNAME_SSL if not exist
+if [ -z "$UPDATE_HOSTNAME_SSL" ]; then
+    echo "UPDATE_HOSTNAME_SSL='yes'" >> $HESTIA/conf/hestia.conf
+fi
+
 # Restart services
 $BIN/v-restart-web
 $BIN/v-restart-proxy

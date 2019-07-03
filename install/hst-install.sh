@@ -36,19 +36,17 @@ if [ ! -z "$(grep ^admin: /etc/group)" ] && [ -z "$1" ]; then
 fi
 
 # Detect OS
-case $(head -n1 /etc/issue | cut -f 1 -d ' ') in
-    Debian)     type="debian" ;;
-    Ubuntu)     type="ubuntu" ;;
-    *)          type="NoSupport" ;;
-esac
-
-# Detect release for Debian
-if [ "$type" = "debian" ]; then
-    release=$(cat /etc/debian_version|grep -o [0-9]|head -n1)
-    VERSION='debian'
-elif [ "$type" = "ubuntu" ]; then
-    release="$(lsb_release -s -r)"
-    VERSION='ubuntu'
+if [ -e "/etc/os-release" ]; then
+    type=$(grep "^ID=" /etc/os-release | cut -f 2 -d '=')
+    if [ "$type" = "ubuntu" ]; then
+        release="$(lsb_release -s -r)"
+        VERSION='ubuntu'
+    elif [ "$type" = "debian" ]; then
+        release=$(cat /etc/debian_version|grep -o [0-9]|head -n1)
+        VERSION='debian'
+    fi
+else
+    type="NoSupport"
 fi
 
 no_support_message(){

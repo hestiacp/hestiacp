@@ -5,13 +5,24 @@ if [ ! -e "/usr/local/hestia/data/users/admin" ]; then
     exit
 fi
 
+# Configure apt to retry downloading on error
+if [ ! -f /etc/apt/apt.conf.d/80-retries ]; then
+    echo "APT::Acquire::Retries \"3\";" > /etc/apt/apt.conf.d/80-retries
+fi
+
+# Add release branch system configuration if non-existent
+release_branch_check=$(cat $HESTIA/conf/hestia.conf | grep RELEASE_BRANCH)
+if [ -z "$release_branch_check" ]; then
+    echo "(*) Adding global release branch variable to system configuration..."
+    sed -i "/RELEASE_BRANCH/d" $HESTIA/conf/hestia.conf
+    echo "RELEASE_BRANCH='release'" >> $HESTIA/conf/hestia.conf
+fi
+
+# Set new version number for Hestia Control Panel
+new_version=$(dpkg -l | awk '$2=="hestia" { print $3 }')
+
+# Set new version number for phpMyAdmin
+pma_v='4.9.0.1'
+
 # Load hestia.conf
 source /usr/local/hestia/conf/hestia.conf
-
-# Get hestia version
-version=$(dpkg -l | awk '$2=="hestia" { print $3 }')
-
-# Set hestia version if different.
-if [ "$VERSION" != "$version" ]; then
-    sed -i "s/VERSION='$VERSION'/VERSION='$version'/g" /usr/local/hestia/conf/hestia.conf
-fi

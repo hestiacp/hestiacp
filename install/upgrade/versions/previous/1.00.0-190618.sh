@@ -18,22 +18,22 @@ fi
 if [ -f /etc/apache2/apache.conf ]; then
     echo "(*) Updating Apache configuration..."
     mv  /etc/apache2/apache.conf $HESTIA_BACKUP/conf/
-    cp -f $HESTIA/install/deb/apache2/apache.conf /etc/apache2/apache.conf
+    cp -f $HESTIA_INSTALL_DIR/apache2/apache.conf /etc/apache2/apache.conf
 fi
 if [ -f /etc/nginx/nginx.conf ]; then
     echo "(*) Updating NGINX configuration..."
     mv  /etc/nginx/nginx.conf $HESTIA_BACKUP/conf/
-    cp -f $HESTIA/install/deb/nginx/nginx.conf /etc/nginx/nginx.conf
+    cp -f $HESTIA_INSTALL_DIR/nginx/nginx.conf /etc/nginx/nginx.conf
 fi
 
 # Generate dhparam
 if [ ! -e /etc/ssl/dhparam.pem ]; then
     echo "(*) Enabling HTTPS Strict Transport Security (HSTS) support..."
     mv  /etc/nginx/nginx.conf $HESTIA_BACKUP/conf/
-    cp -f $hestiacp/nginx/nginx.conf /etc/nginx/
+    cp -f $HESTIA_INSTALL_DIR/nginx/nginx.conf /etc/nginx/
 
     # Copy dhparam
-    cp -f $hestiacp/ssl/dhparam.pem /etc/ssl/
+    cp -f $HESTIA_INSTALL_DIR/ssl/dhparam.pem /etc/ssl/
 
     # Update DNS servers in nginx.conf
     dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
@@ -74,8 +74,8 @@ if [ ! -d /var/www/document_errors/ ]; then
     mkdir -p /var/www/document_errors/
 fi
 
-cp -rf $HESTIA/install/deb/templates/web/unassigned/* /var/www/html/
-cp -rf $HESTIA/install/deb/templates/web/skel/document_errors/* /var/www/document_errors/
+cp -rf $HESTIA_INSTALL_DIR/templates/web/unassigned/* /var/www/html/
+cp -rf $HESTIA_INSTALL_DIR/templates/web/skel/document_errors/* /var/www/document_errors/
 chmod 644 /var/www/html/*
 chmod 644 /var/www/document_errors/*
 
@@ -139,7 +139,7 @@ for ipaddr in $(ls /usr/local/hestia/data/ips/ 2>/dev/null); do
             echo "NameVirtualHost $ipaddr:$WEB_PORT" >  $web_conf
         fi
         echo "Listen $ipaddr:$WEB_PORT" >> $web_conf
-        cat $HESTIA/install/deb/apache2/unassigned.conf >> $web_conf
+        cat $HESTIA_INSTALL_DIR/apache2/unassigned.conf >> $web_conf
         sed -i 's/directIP/'$ipaddr'/g' $web_conf
         sed -i 's/directPORT/'$WEB_PORT'/g' $web_conf
 
@@ -152,7 +152,7 @@ for ipaddr in $(ls /usr/local/hestia/data/ips/ 2>/dev/null); do
         fi
     
     elif [ "$WEB_SYSTEM" = "nginx" ]; then
-        cp -f $HESTIA/install/deb/nginx/unassigned.inc $web_conf
+        cp -f $HESTIA_INSTALL_DIR/nginx/unassigned.inc $web_conf
         sed -i 's/directIP/'$ipaddr'/g' $web_conf
     fi
 
@@ -172,7 +172,7 @@ if [ ! -f /etc/cron.daily/php-session-cleanup ]; then
     echo "find -O3 /home/*/tmp/ -ignore_readdir_race -depth -mindepth 1 -name 'sess_*' -type f -cmin '+10080' -delete > /dev/null 2>&1" >> /etc/cron.daily/php-session-cleanup
     echo "find -O3 $HESTIA/data/sessions/ -ignore_readdir_race -depth -mindepth 1 -name 'sess_*' -type f -cmin '+10080' -delete > /dev/null 2>&1" >> /etc/cron.daily/php-session-cleanup
 fi
-    chmod 755 /etc/cron.daily/php-session-cleanup
+chmod 755 /etc/cron.daily/php-session-cleanup
 
 # Fix empty pool error message for MultiPHP
 php_versions=$(ls /etc/php/*/fpm -d 2>/dev/null |wc -l)
@@ -182,7 +182,7 @@ if [ "$php_versions" -gt 1 ]; then
         if [ ! -d "/etc/php/$v/fpm/pool.d/" ]; then
             continue
         fi
-        cp -f $hestiacp/php-fpm/dummy.conf /etc/php/$v/fpm/pool.d/
+        cp -f $HESTIA_INSTALL_DIR/php-fpm/dummy.conf /etc/php/$v/fpm/pool.d/
         v1=$(echo "$v" | sed -e 's/[.]//')
         sed -i "s/9999/99$v1/g" /etc/php/$v/fpm/pool.d/dummy.conf
     done
@@ -218,7 +218,7 @@ fi
 if [ -f /etc/dovecot/dovecot.conf ]; then
     # Update Dovecot configuration and restart Dovecot service
     mv  /etc/dovecot/dovecot.conf $HESTIA_BACKUP/conf/
-    cp -f $HESTIA/install/deb/dovecot/dovecot.conf /etc/dovecot/dovecot.conf
+    cp -f $HESTIA_INSTALL_DIR/dovecot/dovecot.conf /etc/dovecot/dovecot.conf
     systemctl restart dovecot
     sleep 0.5
 fi
@@ -227,7 +227,7 @@ fi
 if [ -f /etc/exim4/exim4.conf.template ]; then
     echo "(*) Updating Exim SMTP server configuration..."
     mv  /etc/exim4/exim4.conf.template $HESTIA_BACKUP/conf/
-    cp -f $HESTIA/install/deb/exim/exim4.conf.template /etc/exim4/exim4.conf.template
+    cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.template /etc/exim4/exim4.conf.template
     # Reconfigure spam filter and virus scanning
     if [ ! -z "$ANTISPAM_SYSTEM" ]; then
         sed -i "s/#SPAM/SPAM/g" /etc/exim4/exim4.conf.template
@@ -244,14 +244,6 @@ if [ -z "$IMAP_SYSTEM" ]; then
         echo "(*) Adding missing IMAP_SYSTEM variable to hestia.conf..."
         echo "IMAP_SYSTEM = 'dovecot'" >> $HESTIA/conf/hestia.conf
     fi
-fi
-
-# Remove Webalizer and set AWStats as default
-WEBALIAZER_CHECK=$(cat $HESTIA/conf/hestia.conf | grep webalizer)
-if [ ! -z "$WEBALIZER_CHECK" ]; then
-    echo "(*) Removing Webalizer and setting AWStats as default web statistics backend..."
-    apt purge webalizer -y > /dev/null 2>&1
-    sed -i "s/STATS_SYSTEM='webalizer,awstats'/STATS_SYSTEM='awstats'/g" $HESTIA/conf/hestia.conf
 fi
 
 # Run sftp jail once

@@ -39,7 +39,7 @@ if [ -f "$php_fpm" ] && [ -f "$HESTIA/data/templates/$WEB_SYSTEM/PHP-$version.sh
 fi
 
 # Check if php version is supported
-if [ ! -f "$HESTIA/install/deb/multiphp/$WEB_SYSTEM/PHP-${version//.}.sh" ]; then
+if [ ! -f "$HESTIA_INSTALL_DIR/multiphp/$WEB_SYSTEM/PHP-${version//.}.sh" ]; then
     echo "Version is currently not supported or does not exist..."
     exit
 fi
@@ -100,15 +100,15 @@ fi
 update-rc.d php$version-fpm defaults > /dev/null 2>&1
 v_tpl=$(echo "$version" | sed -e 's/[.]//')
 rm -f /etc/php/$version/fpm/pool.d/*
-cp -f $HESTIA/install/deb/php-fpm/dummy.conf /etc/php/$version/fpm/pool.d/
+cp -f $HESTIA_INSTALL_DIR/php-fpm/dummy.conf /etc/php/$version/fpm/pool.d/
 sed -i "s/9999/99$v_tpl/g" /etc/php/$version/fpm/pool.d/dummy.conf
 
 # Install php templates
-cp -f $HESTIA/install/deb/multiphp/$WEB_SYSTEM/PHP-${version//.}.sh \
+cp -f $HESTIA_INSTALL_DIR/multiphp/$WEB_SYSTEM/PHP-${version//.}.sh \
     $HESTIA/data/templates/web/$WEB_SYSTEM/
-cp -f $HESTIA/install/deb/multiphp/$WEB_SYSTEM/PHP-${version//.}.tpl \
+cp -f $HESTIA_INSTALL_DIR/multiphp/$WEB_SYSTEM/PHP-${version//.}.tpl \
     $HESTIA/data/templates/web/$WEB_SYSTEM/
-cp -f $HESTIA/install/deb/multiphp/$WEB_SYSTEM/PHP-${version//.}.stpl \
+cp -f $HESTIA_INSTALL_DIR/multiphp/$WEB_SYSTEM/PHP-${version//.}.stpl \
     $HESTIA/data/templates/web/$WEB_SYSTEM/
 chmod a+x $HESTIA/data/templates/web/$WEB_SYSTEM/PHP-${version//.}.sh
 

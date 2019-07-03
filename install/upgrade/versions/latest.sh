@@ -67,6 +67,6 @@ fi
 # Implement recidive jail for fail2ban
 if [ ! -z "$FIREWALL_EXTENSION" ]; then
     if ! cat /etc/fail2ban/jail.local | grep -q "recidive"; then
-        echo -e "\n\n[recidive]\nenabled  = true\nmaxretry = 3\nfindtime = 86400\nbantime  = 864000" >> /etc/fail2ban/jail.local
+        echo -e "\n\n[recidive]\nenabled  = true\naction   = hestia[name=RECIDIVE]\nmaxretry = 3\nfindtime = 86400\nbantime  = 864000" >> /etc/fail2ban/jail.local
     fi
 fi

@@ -44,3 +44,10 @@ filter   = roundcube-auth
 action  = hestia[name=WEB]
 logpath  = /var/log/roundcube/errors
 maxretry = 5
+
+[recidive]
+enabled  = true
+action   = hestia[name=RECIDIVE]
+maxretry = 3
+findtime = 86400
+bantime  = 864000

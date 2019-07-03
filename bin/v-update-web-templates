@@ -16,22 +16,6 @@ restart=$1
 source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
 
-# Detect OS
-case $(head -n1 /etc/issue | cut -f 1 -d ' ') in
-    Debian)     type="debian" ;;
-    Ubuntu)     type="ubuntu" ;;
-    *)          type="NoSupport" ;;
-esac
-
-# Detect version
-if [ "$type" = "ubuntu" ] || [ "$type" = "debian" ]; then
-    type="deb"
-else
-    echo "Error: can't detect supported os"
-    log_event "$E_NOTEXIST"
-    exit $E_NOTEXIST
-fi
-
 if [ -z "$WEB_SYSTEM" ]; then
     echo "Error: Missing Web System"
     log_event "$E_ARGS"

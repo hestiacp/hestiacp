@@ -123,7 +123,7 @@ upgrade_start_routine() {
 
 upgrade_phpmyadmin() {
     # Check if MariaDB/MySQL is installed on the server before attempting to install or upgrade phpMyAdmin
-    if [ $DB_SYSTEM = "mysql" ]; then
+    if [ "$DB_SYSTEM" = "mysql" ]; then
         # Define version check function
         function version_ge(){ test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o ! -z "$1" -a "$1" = "$2"; }
 
@@ -178,13 +178,13 @@ upgrade_set_version() {
 upgrade_rebuild_users() {
     for user in `ls /usr/local/hestia/data/users/`; do
         echo "(*) Rebuilding domains and account for user: $user..."
-        if [ ! -z $WEB_SYSTEM ]; then
+        if [ ! -z "$WEB_SYSTEM" ]; then
             $BIN/v-rebuild-web-domains $user >/dev/null 2>&1
         fi
-        if [ ! -z $DNS_SYSTEM ]; then
+        if [ ! -z "$DNS_SYSTEM" ]; then
             $BIN/v-rebuild-dns-domains $user >/dev/null 2>&1
         fi
-        if [ ! -z $MAIL_SYSTEM ]; then 
+        if [ ! -z "$MAIL_SYSTEM" ]; then 
             $BIN/v-rebuild-mail-domains $user >/dev/null 2>&1
         fi
     done
@@ -192,17 +192,17 @@ upgrade_rebuild_users() {
 
 upgrade_restart_services() {
     echo "(*) Restarting services..."
-    if [ ! -z $MAIL_SYSTEM ]; then
+    if [ ! -z "$MAIL_SYSTEM" ]; then
         $BIN/v-restart-mail $restart
     fi
-    if [ ! -z $IMAP_SYSTEM ]; then
+    if [ ! -z "$IMAP_SYSTEM" ]; then
         $BIN/v-restart-service $IMAP_SYSTEM $restart
     fi
-    if [ ! -z $WEB_SYSTEM ]; then
+    if [ ! -z "$WEB_SYSTEM" ]; then
         $BIN/v-restart-web $restart
         $BIN/v-restart-proxy $restart
     fi
-    if [ ! -z $DNS_SYSTEM ]; then
+    if [ ! -z "$DNS_SYSTEM" ]; then
         $BIN/v-restart-dns $restart
     fi
     for v in `ls /etc/php/`; do
@@ -210,8 +210,11 @@ upgrade_restart_services() {
             $BIN/v-restart-service php$v-fpm $restart
         fi
     done
-    if [ ! -z $FTP_SYSTEM ]; then
+    if [ ! -z "$FTP_SYSTEM" ]; then
         $BIN/v-restart-ftp $restart
+    fi
+    if [ ! -z "$FIREWALL_EXTENSION" ]; then
+        $BIN/v-restart-service $FIREWALL_EXTENSION yes
     fi
 
     # Restart SSH daemon and Hestia Control Panel service

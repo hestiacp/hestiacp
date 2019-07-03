@@ -9,7 +9,7 @@
 # Replace dhparam 1024 with dhparam 4096
 echo "(*) Increasing Diffie-Hellman Parameter strength to 4096-bit..."
 mv /etc/ssl/dhparam.pem $HESTIA_BACKUP/conf/
-cp -f $HESTIA_INSTALL_DIR/ssl/dhparam.pem /etc/ssl/
+cp -f $HESTIA/install/deb/ssl/dhparam.pem /etc/ssl/
 chmod 600 /etc/ssl/dhparam.pem
 
 # Enhance Vsftpd security
@@ -20,7 +20,7 @@ sed -i "s|ssl_tlsv1=YES|ssl_tlsv1=NO|g" /etc/vsftpd.conf
 # Enhance Dovecot security
 echo "(*) Hardening Dovecot SSL configuration..."
 mv /etc/dovecot/conf.d/10-ssl.conf $HESTIA_BACKUP/conf/
-cp -f $HESTIA_INSTALL_DIR/dovecot/conf.d/10-ssl.conf /etc/dovecot/conf.d/
+cp -f $HESTIA/install/deb/dovecot/conf.d/10-ssl.conf /etc/dovecot/conf.d/
 
 # Update DNS resolvers in hestia-nginx's configuration
 echo "(*) Updating DNS resolvers for Hestia Internal Web Server..."

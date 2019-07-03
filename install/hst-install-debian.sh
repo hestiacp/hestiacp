@@ -19,7 +19,7 @@ spinner="/-\|"
 os='debian'
 release=$(cat /etc/debian_version|grep -o [0-9]|head -n1)
 codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
-hestiacp="$HESTIA/install/deb"
+HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 
 # Define software versions
 pma_v='4.9.0.1'
@@ -975,7 +975,7 @@ chmod 755 /usr/bin/rssh
 echo "(*) Configuring Hestia Control Panel..."
 # Installing sudo configuration
 mkdir -p /etc/sudoers.d
-cp -f $hestiacp/sudo/admin /etc/sudoers.d/
+cp -f $HESTIA_INSTALL_DIR/sudo/admin /etc/sudoers.d/
 chmod 440 /etc/sudoers.d/admin
 
 # Configuring system env
@@ -986,7 +986,7 @@ chmod 755 /etc/profile.d/hestia.sh
 source /etc/profile.d/hestia.sh
 
 # Configuring logrotate for Hestia logs
-cp -f $hestiacp/logrotate/hestia /etc/logrotate.d/hestia
+cp -f $HESTIA_INSTALL_DIR/logrotate/hestia /etc/logrotate.d/hestia
 
 # Building directory tree and creating some blank files for Hestia
 mkdir -p $HESTIA/conf $HESTIA/log $HESTIA/ssl $HESTIA/data/ips \
@@ -1099,7 +1099,7 @@ echo "VERSION='1.0.3'" >> $HESTIA/conf/hestia.conf
 echo "RELEASE_BRANCH='release'" >> $HESTIA/conf/hestia.conf
 
 # Installing hosting packages
-cp -rf $hestiacp/packages $HESTIA/data/
+cp -rf $HESTIA_INSTALL_DIR/packages $HESTIA/data/
 
 # Update nameservers in hosting package
 IFS='.' read -r -a domain_elements <<< "$servername"
@@ -1109,21 +1109,21 @@ if [ ! -z "${domain_elements[-2]}" ] && [ ! -z "${domain_elements[-1]}" ]; then
 fi
 
 # Installing templates
-cp -rf $hestiacp/templates $HESTIA/data/
+cp -rf $HESTIA_INSTALL_DIR/templates $HESTIA/data/
 
 mkdir -p /var/www/html
 mkdir -p /var/www/document_errors
 
 # Installing default themes
 mkdir -p $HESTIA/themes
-cp -rf $hestiacp/themes $HESTIA/themes/
+cp -rf $HESTIA_INSTALL_DIR/themes $HESTIA/themes/
 
 # Install default success page
-cp -rf $hestiacp/templates/web/unassigned/index.html /var/www/html/
-cp -rf $hestiacp/templates/web/skel/document_errors/* /var/www/document_errors/
+cp -rf $HESTIA_INSTALL_DIR/templates/web/unassigned/index.html /var/www/html/
+cp -rf $HESTIA_INSTALL_DIR/templates/web/skel/document_errors/* /var/www/document_errors/
 
 # Installing firewall rules
-cp -rf $hestiacp/firewall $HESTIA/data/
+cp -rf $HESTIA_INSTALL_DIR/firewall $HESTIA/data/
 
 # Configuring server hostname
 $HESTIA/bin/v-change-sys-hostname $servername > /dev/null 2>&1
@@ -1155,11 +1155,11 @@ rm /tmp/hst.pem
 if [ "$nginx" = 'yes' ]; then
     echo "(*) Configuring NGINX..."
     rm -f /etc/nginx/conf.d/*.conf
-    cp -f $hestiacp/nginx/nginx.conf /etc/nginx/
-    cp -f $hestiacp/nginx/status.conf /etc/nginx/conf.d/
-    cp -f $hestiacp/nginx/phpmyadmin.inc /etc/nginx/conf.d/
-    cp -f $hestiacp/nginx/phppgadmin.inc /etc/nginx/conf.d/
-    cp -f $hestiacp/logrotate/nginx /etc/logrotate.d/
+    cp -f $HESTIA_INSTALL_DIR/nginx/nginx.conf /etc/nginx/
+    cp -f $HESTIA_INSTALL_DIR/nginx/status.conf /etc/nginx/conf.d/
+    cp -f $HESTIA_INSTALL_DIR/nginx/phpmyadmin.inc /etc/nginx/conf.d/
+    cp -f $HESTIA_INSTALL_DIR/nginx/phppgadmin.inc /etc/nginx/conf.d/
+    cp -f $HESTIA_INSTALL_DIR/logrotate/nginx /etc/logrotate.d/
     mkdir -p /etc/nginx/conf.d/domains
     mkdir -p /var/log/nginx/domains
     if [ "$apache" = 'no' ] && [ "$multiphp" = 'yes' ]; then
@@ -1170,11 +1170,11 @@ if [ "$nginx" = 'yes' ]; then
             cp -r /etc/php/$v/ /root/hst_install_backups/php$v/
             rm -f /etc/php/$v/fpm/pool.d/*
             v_tpl=$(echo "$v" | sed -e 's/[.]//')
-            cp -f $hestiacp/multiphp/nginx/PHP-$v_tpl.* $HESTIA/data/templates/web/nginx/
-            cp -f $hestiacp/php-fpm/dummy.conf /etc/php/$v/fpm/pool.d/
+            cp -f $HESTIA_INSTALL_DIR/multiphp/nginx/PHP-$v_tpl.* $HESTIA/data/templates/web/nginx/
+            cp -f $HESTIA_INSTALL_DIR/php-fpm/dummy.conf /etc/php/$v/fpm/pool.d/
             sed -i "s/9999/99$v_tpl/g" /etc/php/$v/fpm/pool.d/dummy.conf
         done
-        cp -f $hestiacp/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/
+        cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/
         chmod a+x $HESTIA/data/templates/web/nginx/*.sh
         fpm_tpl=$(echo "$fpm_v" | sed -e 's/[.]//')
         ln -s $HESTIA/data/templates/web/nginx/PHP-$fpm_tpl.sh $HESTIA/data/templates/web/nginx/default.sh
@@ -1185,7 +1185,7 @@ if [ "$nginx" = 'yes' ]; then
     fi
 
     # Install dhparam.
-    cp -f $HESTIA/install/deb/ssl/dhparam.pem /etc/ssl
+    cp -f $HESTIA_INSTALL_DIR/ssl/dhparam.pem /etc/ssl
 
     # Update dns servers in nginx.conf
     dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
@@ -1211,9 +1211,9 @@ fi
 
 if [ "$apache" = 'yes' ]; then
     echo "(*) Configuring Apache Web Server..."
-    cp -f $hestiacp/apache2/apache2.conf /etc/apache2/
-    cp -f $hestiacp/apache2/status.conf /etc/apache2/mods-enabled/
-    cp -f $hestiacp/logrotate/apache2 /etc/logrotate.d/
+    cp -f $HESTIA_INSTALL_DIR/apache2/apache2.conf /etc/apache2/
+    cp -f $HESTIA_INSTALL_DIR/apache2/status.conf /etc/apache2/mods-enabled/
+    cp -f $HESTIA_INSTALL_DIR/logrotate/apache2 /etc/logrotate.d/
     a2enmod rewrite > /dev/null 2>&1
     a2enmod suexec > /dev/null 2>&1
     a2enmod ssl > /dev/null 2>&1
@@ -1239,7 +1239,7 @@ if [ "$apache" = 'yes' ]; then
             cp -r /etc/php/$v/ /root/hst_install_backups/php$v/
             rm -f /etc/php/$v/fpm/pool.d/*
             v_tpl=$(echo "$v" | sed -e 's/[.]//')
-            cp -f $hestiacp/multiphp/apache2/PHP-$v_tpl.* $HESTIA/data/templates/web/apache2/
+            cp -f $HESTIA_INSTALL_DIR/multiphp/apache2/PHP-$v_tpl.* $HESTIA/data/templates/web/apache2/
         done
         chmod a+x $HESTIA/data/templates/web/apache2/*.sh
         if [ "$release" = '8' ]; then
@@ -1263,7 +1263,7 @@ fi
 
 if [ "$phpfpm" = 'yes' ]; then
     echo "(*) Configuring PHP-FPM..."
-    cp -f $hestiacp/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf
+    cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf
     update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1
     systemctl start php$fpm_v-fpm >> $LOG
     check_result $? "php-fpm start failed"
@@ -1297,7 +1297,7 @@ chmod 755 /etc/cron.daily/php-session-cleanup
 
 if [ "$vsftpd" = 'yes' ]; then
     echo "(*) Configuring Vsftpd server..."
-    cp -f $hestiacp/vsftpd/vsftpd.conf /etc/
+    cp -f $HESTIA_INSTALL_DIR/vsftpd/vsftpd.conf /etc/
     touch /var/log/vsftpd.log
     chown root:adm /var/log/vsftpd.log
     chmod 640 /var/log/vsftpd.log
@@ -1318,7 +1318,7 @@ fi
 if [ "$proftpd" = 'yes' ]; then
     echo "(*) Configuring ProFTPD server..."
     echo "127.0.0.1 $servername" >> /etc/hosts
-    cp -f $hestiacp/proftpd/proftpd.conf /etc/proftpd/
+    cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/proftpd/
     update-rc.d proftpd defaults > /dev/null 2>&1
     systemctl start proftpd >> $LOG
     check_result $? "proftpd start failed"
@@ -1340,7 +1340,7 @@ if [ "$mysql" = 'yes' ]; then
     fi
 
    # Configuring MariaDB
-    cp -f $hestiacp/mysql/$mycnf /etc/mysql/my.cnf
+    cp -f $HESTIA_INSTALL_DIR/mysql/$mycnf /etc/mysql/my.cnf
     mysql_install_db >> $LOG
 
     update-rc.d mysql defaults > /dev/null 2>&1
@@ -1362,10 +1362,10 @@ if [ "$mysql" = 'yes' ]; then
 
     # Configuring phpMyAdmin
     if [ "$apache" = 'yes' ]; then
-        cp -f $hestiacp/pma/apache.conf /etc/phpmyadmin/
+        cp -f $HESTIA_INSTALL_DIR/pma/apache.conf /etc/phpmyadmin/
         ln -s /etc/phpmyadmin/apache.conf /etc/apache2/conf.d/phpmyadmin.conf
     fi
-    cp -f $hestiacp/pma/config.inc.php /etc/phpmyadmin/
+    cp -f $HESTIA_INSTALL_DIR/pma/config.inc.php /etc/phpmyadmin/
     chmod 777 /var/lib/phpmyadmin/tmp
 fi
 
@@ -1411,15 +1411,15 @@ fi
 if [ "$postgresql" = 'yes' ]; then
     echo "(*) Configuring PostgreSQL database server..."
     ppass=$(gen_pass)
-    cp -f $hestiacp/postgresql/pg_hba.conf /etc/postgresql/*/main/
+    cp -f $HESTIA_INSTALL_DIR/postgresql/pg_hba.conf /etc/postgresql/*/main/
     systemctl restart postgresql
     sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '$ppass'"
 
     # Configuring phpPgAdmin
     if [ "$apache" = 'yes' ]; then
-        cp -f $hestiacp/pga/phppgadmin.conf /etc/apache2/conf.d/
+        cp -f $HESTIA_INSTALL_DIR/pga/phppgadmin.conf /etc/apache2/conf.d/
     fi
-    cp -f $hestiacp/pga/config.inc.php /etc/phppgadmin/
+    cp -f $HESTIA_INSTALL_DIR/pga/config.inc.php /etc/phppgadmin/
 fi
 
 
@@ -1429,8 +1429,8 @@ fi
 
 if [ "$named" = 'yes' ]; then
     echo "(*) Configuring Bind DNS server..."
-    cp -f $hestiacp/bind/named.conf /etc/bind/
-    cp -f $hestiacp/bind/named.conf.options /etc/bind/
+    cp -f $HESTIA_INSTALL_DIR/bind/named.conf /etc/bind/
+    cp -f $HESTIA_INSTALL_DIR/bind/named.conf.options /etc/bind/
     chown root:bind /etc/bind/named.conf
     chown root:bind /etc/bind/named.conf.options
     chown bind:bind /var/cache/bind
@@ -1462,9 +1462,9 @@ fi
 if [ "$exim" = 'yes' ]; then
     echo "(*) Configuring Exim mail server..."
     gpasswd -a Debian-exim mail > /dev/null 2>&1
-    cp -f $hestiacp/exim/exim4.conf.template /etc/exim4/
-    cp -f $hestiacp/exim/dnsbl.conf /etc/exim4/
-    cp -f $hestiacp/exim/spam-blocks.conf /etc/exim4/
+    cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.template /etc/exim4/
+    cp -f $HESTIA_INSTALL_DIR/exim/dnsbl.conf /etc/exim4/
+    cp -f $HESTIA_INSTALL_DIR/exim/spam-blocks.conf /etc/exim4/
     touch /etc/exim4/white-blocks.conf
 
     if [ "$spamd" = 'yes' ]; then
@@ -1497,8 +1497,8 @@ fi
 if [ "$dovecot" = 'yes' ]; then
     echo "(*) Configuring Dovecot POP/IMAP mail server..."
     gpasswd -a dovecot mail > /dev/null 2>&1
-    cp -rf $hestiacp/dovecot /etc/
-    cp -f $hestiacp/logrotate/dovecot /etc/logrotate.d/
+    cp -rf $HESTIA_INSTALL_DIR/dovecot /etc/
+    cp -f $HESTIA_INSTALL_DIR/logrotate/dovecot /etc/logrotate.d/
     chown -R root:root /etc/dovecot*
     if [ "$release" -eq 9 ]; then
         rm -f /etc/dovecot/conf.d/15-mailboxes.conf
@@ -1516,7 +1516,7 @@ fi
 if [ "$clamd" = 'yes' ]; then
     gpasswd -a clamav mail > /dev/null 2>&1
     gpasswd -a clamav Debian-exim > /dev/null 2>&1
-    cp -f $hestiacp/clamav/clamd.conf /etc/clamav/
+    cp -f $HESTIA_INSTALL_DIR/clamav/clamd.conf /etc/clamav/
     update-rc.d clamav-daemon defaults
     if [ ! -d "/var/run/clamav" ]; then
         mkdir /var/run/clamav
@@ -1567,16 +1567,16 @@ fi
 if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     echo "(*) Configuring Roundcube webmail client..."
     if [ "$apache" = 'yes' ]; then
-        cp -f $hestiacp/roundcube/apache.conf /etc/roundcube/
+        cp -f $HESTIA_INSTALL_DIR/roundcube/apache.conf /etc/roundcube/
         ln -s /etc/roundcube/apache.conf /etc/apache2/conf.d/roundcube.conf
     fi
     if [ "$nginx" = 'yes' ]; then
-        cp -f $hestiacp/nginx/webmail.inc /etc/nginx/conf.d/
+        cp -f $HESTIA_INSTALL_DIR/nginx/webmail.inc /etc/nginx/conf.d/
     fi
-    cp -f $hestiacp/roundcube/main.inc.php /etc/roundcube/config.inc.php
-    cp -f $hestiacp/roundcube/db.inc.php /etc/roundcube/debian-db-roundcube.php
-    cp -f $hestiacp/roundcube/config.inc.php /etc/roundcube/plugins/password/
-    cp -f $hestiacp/roundcube/hestia.php /usr/share/roundcube/plugins/password/drivers/
+    cp -f $HESTIA_INSTALL_DIR/roundcube/main.inc.php /etc/roundcube/config.inc.php
+    cp -f $HESTIA_INSTALL_DIR/roundcube/db.inc.php /etc/roundcube/debian-db-roundcube.php
+    cp -f $HESTIA_INSTALL_DIR/roundcube/config.inc.php /etc/roundcube/plugins/password/
+    cp -f $HESTIA_INSTALL_DIR/roundcube/hestia.php /usr/share/roundcube/plugins/password/drivers/
     touch /var/log/roundcube/errors
     chmod 640 /etc/roundcube/config.inc.php
     chown root:www-data /etc/roundcube/config.inc.php
@@ -1595,7 +1595,7 @@ if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
 
     if [ "$release" -eq 8 ]; then
         # RoundCube tinyMCE fix
-        tinymceFixArchiveURL=$hestiacp/roundcube/roundcube-tinymce.tar.gz
+        tinymceFixArchiveURL=$HESTIA_INSTALL_DIR/roundcube/roundcube-tinymce.tar.gz
         tinymceParentFolder=/usr/share/roundcube/program/js
         tinymceFolder=$tinymceParentFolder/tinymce
         tinymceBadJS=$tinymceFolder/tiny_mce.js
@@ -1636,7 +1636,7 @@ fi
 
 if [ "$fail2ban" = 'yes' ]; then
     echo "(*) Configuring fail2ban access monitor..."
-    cp -rf $hestiacp/fail2ban /etc/
+    cp -rf $HESTIA_INSTALL_DIR/fail2ban /etc/
     if [ "$dovecot" = 'no' ]; then
         fline=$(cat /etc/fail2ban/jail.local |grep -n dovecot-iptables -A 2)
         fline=$(echo "$fline" |grep enabled |tail -n1 |cut -f 1 -d -)
@@ -1687,7 +1687,7 @@ fi
 # https://github.com/skurudo/phpmyadmin-fixer
 
 if [ "$mysql" = 'yes' ]; then
-    source $hestiacp/phpmyadmin/pma.sh > /dev/null 2>&1
+    source $HESTIA_INSTALL_DIR/phpmyadmin/pma.sh > /dev/null 2>&1
 fi
 
 

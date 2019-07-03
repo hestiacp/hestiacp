@@ -13,9 +13,9 @@ if [ -z $THEME ]; then
 fi
 
 # Replace dhparam 1024 with dhparam 4096
-echo "(*) Installing 4096-bit SSL security certificate..."
+echo "(*) Increasing Diffie-Hellman Parameter strength to 4096-bit..."
 mv /etc/ssl/dhparam.pem $HESTIA_BACKUP/conf/
-cp -f $hestiacp/ssl/dhparam.pem /etc/ssl/
+cp -f $HESTIA_INSTALL_DIR/ssl/dhparam.pem /etc/ssl/
 chmod 600 /etc/ssl/dhparam.pem
 
 # Enhance Vsftpd security
@@ -26,7 +26,7 @@ sed -i "s|ssl_tlsv1=YES|ssl_tlsv1=NO|g" /etc/vsftpd.conf
 # Enhance Dovecot security
 echo "(*) Hardening Dovecot SSL configuration..."
 mv /etc/dovecot/conf.d/10-ssl.conf $HESTIA_BACKUP/conf/
-cp -f $hestiacp/dovecot/conf.d/10-ssl.conf /etc/dovecot/conf.d/
+cp -f $HESTIA_INSTALL_DIR/dovecot/conf.d/10-ssl.conf /etc/dovecot/conf.d/
 
 # Update DNS resolvers in hestia-nginx's configuration
 echo "(*) Updating DNS resolvers for Hestia Internal Web Server..."
@@ -45,8 +45,12 @@ WEBALIZER_CHECK=$(cat $HESTIA/conf/hestia.conf | grep webalizer)
 if [ ! -z "$WEBALIZER_CHECK" ]; then
     echo "(*) Removing Webalizer and setting AWStats as default web statistics backend..."
     apt purge webalizer -y > /dev/null 2>&1
-    rm -rf $HESTIA/data/templates/web/webalizer
-    rm -rf /var/www/webalizer
+    if [ -d "$HESTIA/data/templates/web/webalizer" ]; then
+        rm -rf $HESTIA/data/templates/web/webalizer
+    fi
+    if [ -d "/var/www/webalizer" ]; then
+        rm -rf /var/www/webalizer
+    fi
     sed -i "s/STATS_SYSTEM='webalizer,awstats'/STATS_SYSTEM='awstats'/g" $HESTIA/conf/hestia.conf
 fi
 

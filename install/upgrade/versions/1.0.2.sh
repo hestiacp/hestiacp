@@ -65,4 +65,5 @@ if [ ! -z "$IMAP_SYSTEM" ]; then
 fi 
 
 # Enhance webmail security
+cp -f /etc/nginx/conf.d/webmail.inc $HESTIA_BACKUP/conf/
 sed -i "s/config|temp|logs/README.md|config|temp|logs|bin|SQL|INSTALL|LICENSE|CHANGELOG|UPGRADING/g" /etc/nginx/conf.d/webmail.inc

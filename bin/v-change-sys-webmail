@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change webmail alias url
-# options: WEBMAIL
+# options: USER DOMAIN
 #
 # This function changes the webmail url in apache2 or nginx configuration.
 
@@ -26,7 +26,7 @@ NEW_ALIAS=$1
 
 # Delete old webmail configuration
 for user in `ls /usr/local/hestia/data/users/`; do
-    for domain in $($BIN/v-list-web-domains $user plain |cut -f 1); do
+    for domain in $($BIN/v-list-mail-domains $user plain |cut -f 1); do
         $BIN/v-delete-sys-webmail $user $domain
     done
 done
@@ -35,13 +35,16 @@ done
 $BIN/v-change-sys-config-value 'WEBMAIL_ALIAS' $NEW_ALIAS
 
 for user in `ls /usr/local/hestia/data/users/`; do
-    for domain in $($BIN/v-list-web-domains $user plain |cut -f 1); do
+    for domain in $($BIN/v-list-mail-domains $user plain |cut -f 1); do
         $BIN/v-add-sys-webmail $user $domain
     done
 done
 
 # Update global directory alias configuration
-sed -i "s|Alias \/$OLD_ALIAS|Alias \/$NEW_ALIAS|gI" /etc/apache2/conf.d/roundcube.conf
+if [ "$WEB_SYSTEM" = "apache2" ]; then
+    sed -i "s|Alias \/$OLD_ALIAS|Alias \/$NEW_ALIAS|gI" /etc/apache2/conf.d/roundcube.conf
+fi
+
 sed -i "s|location \/$OLD_ALIAS|location \/$NEW_ALIAS|gI" /etc/nginx/conf.d/webmail.inc
 
 #----------------------------------------------------------#

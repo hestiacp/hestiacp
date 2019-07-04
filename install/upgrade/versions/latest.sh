@@ -19,6 +19,7 @@ cp -f $HESTIA_INSTALL_DIR/ssl/dhparam.pem /etc/ssl/
 chmod 600 /etc/ssl/dhparam.pem
 
 # Reduce SSH login grace time
+echo "(*) Hardening SSH daemon configuration..."
 sed -i "s/LoginGraceTime 2m/LoginGraceTime 1m/g" /etc/ssh/sshd_config
 sed -i "s/#LoginGraceTime 2m/LoginGraceTime 1m/g" /etc/ssh/sshd_config
 

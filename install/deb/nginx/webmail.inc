@@ -1,7 +1,8 @@
 location /webmail {
     alias /var/lib/roundcube/;
 
-    location ~ /(config|temp|logs) {
+    location ~ /(README.md|config|temp|logs|bin|SQL|INSTALL|LICENSE|CHANGELOG|UPGRADING) {
+        deny all;
         return 404;
     }
 

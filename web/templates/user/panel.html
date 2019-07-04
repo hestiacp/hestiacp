@@ -25,7 +25,7 @@
 				</span>
 			</div>
 			<div class="l-menu__item"><a alt="<?=__('Notifications')?>" class="l-profile__notifications <? if($panel[$user]['NOTIFICATIONS'] == 'yes') echo " updates"; ?>"><i class="fas fa-bell <?if($panel[$user]['NOTIFICATIONS'] == 'yes') echo " status-icon orange"; ?>"></i></a></div>
-			<div class="l-menu__item"><a href="https://github.com/hestiacp/hestiacp/issues/new" target="_new" alt="Submit a bug report" class="l-profile__help"><i class="fas fa-notes-medical"></i></a></div>
+			<div class="l-menu__item"><a href="https://github.com/hestiacp/hestiacp/issues/" target="_new" alt="Submit a bug report" class="l-profile__help"><i class="fas fa-flag"></i></a></div>
 			<div class="l-menu__item"><a href="https://docs.hestiacp.com/" alt="<?=__('Help')?>" class="l-profile__help" target="_blank"><i class="fas fa-question-circle"></i></a></div>
 			<div class="l-menu__item"><a href="/edit/user/?user=<?php echo $user; ?>" alt="<?=$user?>" class="l-profile__username"><i class="fas fa-user-circle"></i></a></div>
 			<div class="l-menu__item"><a href="/logout/" alt="<?=__('Log out')?>" class="l-profile__logout"><i class="fas fa-sign-out-alt"></i></a></div>

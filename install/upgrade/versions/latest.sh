@@ -18,6 +18,10 @@ mv /etc/ssl/dhparam.pem $HESTIA_BACKUP/conf/
 cp -f $HESTIA_INSTALL_DIR/ssl/dhparam.pem /etc/ssl/
 chmod 600 /etc/ssl/dhparam.pem
 
+# Reduce SSH login grace time
+sed -i "s/LoginGraceTime 2m/LoginGraceTime 1m/g" /etc/ssh/sshd_config
+sed -i "s/#LoginGraceTime 2m/LoginGraceTime 1m/g" /etc/ssh/sshd_config
+
 # Enhance Vsftpd security
 echo "(*) Hardening Vsftpd SSL configuration..."
 cp -f /etc/vsftpd.conf $HESTIA_BACKUP/conf/

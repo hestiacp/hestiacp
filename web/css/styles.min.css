@@ -1114,9 +1114,10 @@ a {
 .l-stat__col-title {
   text-transform: uppercase;
   font-weight: 600;
-  color: #474747;
+  color: #5b5b5b;
   min-height: 21px;
 }
+
 .l-stat__col--active .l-stat__col-title {
   color: #cc3366;
   font-size: 24px;

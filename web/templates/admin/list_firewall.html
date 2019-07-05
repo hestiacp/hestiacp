@@ -49,7 +49,7 @@
                       <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
                   </div>
                   <div class="clearfix l-unit__stat-col--left wide-2"><b><?php print __('Action');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left compact text-right"><b>&nbsp;</b></div>
+                  <div class="clearfix l-unit__stat-col--left compact-2 text-right"><b>&nbsp;</b></div>
                   <div class="clearfix l-unit__stat-col--left wide-1 text-center"><b><?php print __('Comment');?></b></div>   
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Protocol');?></b></div>
                   <div class="clearfix l-unit__stat-col--left wide-3 text-center"><b><?php print __('Port');?></b></div>
@@ -96,7 +96,7 @@ sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$k
               </a></b>
             </div>
             <!-- START QUICK ACTION TOOLBAR AREA -->
-            <div class="clearfix l-unit__stat-col--left compact text-right">
+            <div class="clearfix l-unit__stat-col--left compact-2 text-right">
               <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                 <div class="actions-panel clearfix">
                   <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('Editing Firewall Rule')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>

@@ -817,8 +817,8 @@ a {
 .l-menu__item a {
   color: #f7f7f7;
   position: relative;
-  line-height: 38px;
-  padding: 12px 18px;
+  line-height: 40px;
+  padding: 10px 14px;
   border-left: 1px solid transparent;
   border-right: 1px solid transparent; 
 }
@@ -3065,7 +3065,7 @@ form#vstobjects.suspended {
 
 .pill.usage{
   margin-top: 8px;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   padding: 3px;
   padding-left: 8px;
   padding-right: 8px;

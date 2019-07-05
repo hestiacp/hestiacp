@@ -2461,6 +2461,7 @@ a.vst-text:active b{
   color: #30659d !important;
   padding: 4px 0px 0px 18px;
   overflow: hidden;
+  height: 28px;
 }
 
 .advanced-options a {

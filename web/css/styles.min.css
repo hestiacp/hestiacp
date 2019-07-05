@@ -2661,7 +2661,7 @@ td.hint {
   font-size: 1.0em !important;
   font-weight: 500 !important;
   padding: 2px 16px 3px 20px !important;
-  width: 100px !important;
+  min-width: 100px !important;
   height: 28px !important;
   color: #30659d !important;
   border: 1px solid #3b9de8 !important;

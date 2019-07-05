@@ -1509,12 +1509,13 @@ div.l-content > div.l-separator:nth-of-type(4) {
   border-left: 1px solid #ddd !important;
   border-right: 1px solid #ddd !important;
   border-bottom: 1px solid #ddd !important;
+  border-top: 1px solid #ddd !important;
   text-shadow: 0px 1px rgba(255,255,255,0.95);
   box-shadow: inset 0px 0px 1px rgba(255,255,255,1), inset 0px 0px 4px rgba(255,255,255,0.8), 0px 4px 6px rgba(190,190,190,0.3) !important;
   border-top-left-radius: 0px;
   border-top-right-radius: 0px;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
   min-height: 28px;
   color: #707070;
   padding: 0 0 0 14px;

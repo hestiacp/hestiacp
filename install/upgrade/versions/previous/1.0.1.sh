@@ -9,8 +9,7 @@
 # Ensure that users from previous releases are set to the correct stable release branch
 if [ ! -z "$RELEASE_BRANCH" ] && [ "$RELEASE_BRANCH" = "master" ] || [ "$RELEASE_BRANCH" = "develop" ]; then
     echo "(*) Updating default release branch configuration..."
-    sed -i "/RELEASE_BRANCH/d" $HESTIA/conf/hestia.conf
-    echo "RELEASE_BRANCH='release'" >> $HESTIA/conf/hestia.conf
+    $BIN/v-change-sys-config-value 'RELEASE_BRANCH' "release"
 fi
 
 # Back up old template files and install the latest versions

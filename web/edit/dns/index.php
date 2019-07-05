@@ -156,15 +156,20 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['reco
     $v_record_id = escapeshellarg($_POST['v_record_id']);
 
     // Change dns record
-    if (($v_val != $_POST['v_val']) || ($v_priority != $_POST['v_priority']) && (empty($_SESSION['error_msg']))) {
+    if (($v_rec != $_POST['v_rec']) || ($v_type != $_POST['v_type']) || ($v_val != $_POST['v_val']) || ($v_priority != $_POST['v_priority']) && (empty($_SESSION['error_msg']))) {
+        $v_rec = escapeshellarg($_POST['v_rec']);
+        $v_type = escapeshellarg($_POST['v_type']);
         $v_val = escapeshellarg($_POST['v_val']);
         $v_priority = escapeshellarg($_POST['v_priority']);
-        exec (HESTIA_CMD."v-change-dns-record ".$v_username." ".$v_domain." ".$v_record_id." ".$v_val." ".$v_priority, $output, $return_var);
+        exec (HESTIA_CMD."v-change-dns-record ".$v_username." ".$v_domain." ".$v_record_id." ".$v_rec." ".$v_type." ".$v_val." ".$v_priority, $output, $return_var);
         check_return_code($return_var,$output);
+        $v_rec = $_POST['v_rec'];
+        $v_type = $_POST['v_type'];
         $v_val = $_POST['v_val'];
         unset($output);
         $restart_dns = 'yes';
     }
+
 
     // Change dns record id
     if (($_GET['record_id'] != $_POST['v_record_id']) && (empty($_SESSION['error_msg']))) {

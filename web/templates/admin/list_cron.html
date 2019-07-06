@@ -4,9 +4,9 @@
           <a href="/add/cron/" id="btn-create" class="ui-button cancel" title="<?=__('Add Cron Job')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=__('Add Cron Job')?></a>
           <?
             if($panel[$user]['CRON_REPORTS'] == 'yes') {
-              echo '<a class="ui-button cancel" href="/delete/cron/reports/?token='.$_SESSION['token'].'"><i class="fas fa-bell status-icon orange"></i> '.__('turn off notifications').'</a>';
+              echo '<a class="ui-button cancel" href="/delete/cron/reports/?token='.$_SESSION['token'].'"><i class="fas fa-toggle-off status-icon green"></i> '.__('turn off notifications').'</a>';
             } else {
-              echo '<a class="ui-button cancel" href="/add/cron/reports/?token='.$_SESSION['token'].'"><i class="fas fa-bell-slash status-icon orange"></i> '.__('turn on notifications').'</a>';
+              echo '<a class="ui-button cancel" href="/add/cron/reports/?token='.$_SESSION['token'].'"><i class="fas fa-toggle-off status-icon red"></i> '.__('turn on notifications').'</a>';
             }
           ?>
         </div>

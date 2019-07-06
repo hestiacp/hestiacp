@@ -6,7 +6,7 @@
             if($panel[$user]['CRON_REPORTS'] == 'yes') {
               echo '<a class="ui-button cancel" href="/delete/cron/reports/?token='.$_SESSION['token'].'"><i class="fas fa-toggle-off status-icon green"></i> '.__('turn off notifications').'</a>';
             } else {
-              echo '<a class="ui-button cancel" href="/add/cron/reports/?token='.$_SESSION['token'].'"><i class="fas fa-toggle-off status-icon red"></i> '.__('turn on notifications').'</a>';
+              echo '<a class="ui-button cancel" href="/add/cron/reports/?token='.$_SESSION['token'].'"><i class="fas fa-toggle-off status-icon grey"></i> '.__('turn on notifications').'</a>';
             }
           ?>
         </div>

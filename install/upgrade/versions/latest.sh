@@ -14,7 +14,9 @@ fi
 
 # Replace dhparam 1024 with dhparam 4096
 echo "(*) Increasing Diffie-Hellman Parameter strength to 4096-bit..."
-mv /etc/ssl/dhparam.pem $HESTIA_BACKUP/conf/
+if [ -e /etc/ssl/dhparam.pem ]; then
+    mv /etc/ssl/dhparam.pem $HESTIA_BACKUP/conf/
+fi
 cp -f $HESTIA_INSTALL_DIR/ssl/dhparam.pem /etc/ssl/
 chmod 600 /etc/ssl/dhparam.pem
 
@@ -24,12 +26,14 @@ sed -i "s/LoginGraceTime 2m/LoginGraceTime 1m/g" /etc/ssh/sshd_config
 sed -i "s/#LoginGraceTime 2m/LoginGraceTime 1m/g" /etc/ssh/sshd_config
 
 # Enhance Vsftpd security
-echo "(*) Hardening Vsftpd SSL configuration..."
-cp -f /etc/vsftpd.conf $HESTIA_BACKUP/conf/
-sed -i "s|ssl_tlsv1=YES|ssl_tlsv1=NO|g" /etc/vsftpd.conf
+if [ "$FTP_SYSTEM" = "vsftpd" ]; then
+    echo "(*) Hardening Vsftpd SSL configuration..."
+    cp -f /etc/vsftpd.conf $HESTIA_BACKUP/conf/
+    sed -i "s|ssl_tlsv1=YES|ssl_tlsv1=NO|g" /etc/vsftpd.conf
+fi
 
 # Enhance Dovecot security
-if [ ! -z "$IMAP_SYSTEM" ]; then
+if [ "$IMAP_SYSTEM" = "dovecot" ]; then
     echo "(*) Hardening Dovecot SSL configuration..."
     mv /etc/dovecot/conf.d/10-ssl.conf $HESTIA_BACKUP/conf/
     cp -f $HESTIA_INSTALL_DIR/dovecot/conf.d/10-ssl.conf /etc/dovecot/conf.d/

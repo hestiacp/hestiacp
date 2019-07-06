@@ -7,11 +7,9 @@
 #######################################################################################
 
 # Add webmail alias variable to system configuration if non-existent
-WEBMAIL_ALIAS_CHECK=$(cat $HESTIA/conf/hestia.conf | grep WEBMAIL_ALIAS)
-if [ -z "$WEBMAIL_ALIAS_CHECK" ]; then
-    echo "(*) Adding global webmail alias to system configuration..."
-    sed -i "/WEBMAIL_ALIAS/d" $HESTIA/conf/hestia.conf
-    echo "WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
+if [ -z "$WEBMAIL_ALIAS" ]; then
+    echo "(*) Updating webmail alias configuration..."
+    $HESTIA/bin/v-change-sys-config-value 'WEBMAIL_ALIAS' "webmail"
 fi
 
 # Update Apache and Nginx configuration to support new file structure

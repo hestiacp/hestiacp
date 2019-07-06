@@ -1027,7 +1027,6 @@ fi
 # Mail stack
 if [ "$exim" = 'yes' ]; then
     echo "MAIL_SYSTEM='exim4'" >> $HESTIA/conf/hestia.conf
-    echo "WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
     if [ "$clamd" = 'yes'  ]; then
         echo "ANTIVIRUS_SYSTEM='clamav-daemon'" >> $HESTIA/conf/hestia.conf
     fi

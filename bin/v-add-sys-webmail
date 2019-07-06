@@ -43,7 +43,6 @@ get_user_ip
 
 check_args '2' "$#" 'USER DOMAIN [RESTART]'
 is_format_valid 'user' 'domain'
-is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_system_enabled "$IMAP_SYSTEM" 'IMAP_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
@@ -55,8 +54,10 @@ is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Verify that webmail alias variable exists
-if [ ! -z "$WEBMAIL_ALIAS" ]; then
+# Verify that webmail alias variable exists and create it if it does not
+if [ -z "$WEBMAIL_ALIAS" ]; then
+    $BIN/v-change-sys-config-value 'WEBMAIL_ALIAS' "webmail"
+else
     # Ensure DNS record exists if Hestia is hosting DNS zones
     if [ ! -z "$DNS_SYSTEM" ]; then
         dns_domain=$($BIN/v-list-dns-domains $user | grep $domain | cut -d' ' -f1)
@@ -91,8 +92,6 @@ if [ ! -z "$WEBMAIL_ALIAS" ]; then
             add_webmail_config "$PROXY_SYSTEM" "default.stpl"
         fi
     fi
-else
-    echo "Error: WEBMAIL_ALIAS is not defined in hestia.conf"
 fi
 
 #----------------------------------------------------------#

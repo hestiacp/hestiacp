@@ -13,7 +13,6 @@ if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
 
 if ($_SESSION['user'] == 'admin') {
     exec (HESTIA_CMD."v-delete-cron-hestia-autoupdate", $output, $return_var);
-    $_SESSION['error_msg'] = __('Autoupdate has been successfully disabled');
     unset($output);
 }
 

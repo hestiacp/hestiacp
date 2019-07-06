@@ -1151,6 +1151,8 @@ chown root:mail $HESTIA/ssl/*
 chmod 660 $HESTIA/ssl/*
 rm /tmp/hst.pem
 
+# Install dhparam.pem
+cp -f $HESTIA_INSTALL_DIR/ssl/dhparam.pem /etc/ssl
 
 #----------------------------------------------------------#
 #                     Configure Nginx                      #
@@ -1187,9 +1189,6 @@ if [ "$nginx" = 'yes' ]; then
         systemctl start php$fpm_v-fpm >> $LOG
         check_result $? "php$fpm_v-fpm start failed"
     fi
-
-    # Install dhparam.
-    cp -f $HESTIA_INSTALL_DIR/ssl/dhparam.pem /etc/ssl
 
     # Update dns servers in nginx.conf
     dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)

@@ -2845,7 +2845,7 @@ a.button.cancel {
 
 .mail-infoblock td {
   color: #505050;
-  font-size: 11.5px;
+  font-size: 0.75rem;
   height: 20px;
   font-weight: normal;
 }

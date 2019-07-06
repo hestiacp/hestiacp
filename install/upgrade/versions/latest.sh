@@ -61,7 +61,7 @@ if [ ! -z "$WEBALIZER_CHECK" ]; then
     if [ -d "/var/www/webalizer" ]; then
         rm -rf /var/www/webalizer
     fi
-    sed -i "s/STATS_SYSTEM='webalizer,awstats'/STATS_SYSTEM='awstats'/g" $HESTIA/conf/hestia.conf
+    $HESTIA/bin/v-change-sys-config-value 'STATS_SYSTEM' 'awstats'
 fi
 
 # Remove old hestia.conf files from Apache & NGINX if they exist
@@ -83,6 +83,6 @@ fi
 
 # Update webmail templates to enable OCSP/SSL stapling
 if [ ! -z "$IMAP_SYSTEM" ]; then
-    echo "(*) Enabling OCSP stapling support for webmail services..."
+    echo "(*) Improving SSL security of Roundcube webmail..."
     $BIN/v-update-mail-templates > /dev/null 2>&1
 fi 

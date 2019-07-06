@@ -3537,9 +3537,6 @@ form#vstobjects.suspended {
   color: #cc3366;
 }
 
-.cron-helper-tabs select {
-  font-size: 0.8em !important;
-}
 .cron-helper-tabs select.short {
   background-position: -388px -604px;
   min-width: 30px;

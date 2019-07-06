@@ -1120,10 +1120,10 @@ a {
 
 .l-stat__col--active .l-stat__col-title {
   color: #cc3366;
-  font-size: 24px;
+  font-size: 22px;
   margin-top: -7px;
   letter-spacing: -1px;
-  margin-right: -8px;
+  margin-right: -4px;
 }
 
 .l-stat__col .fas {

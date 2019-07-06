@@ -66,6 +66,11 @@ upgrade_init_backup() {
     mkdir -p $HESTIA_BACKUP/templates/
 }
 
+upgrade_refresh_config() {
+    source /usr/local/hestia/conf/hestia.conf
+    source /usr/local/hestia/func/main.sh
+}
+
 upgrade_start_routine() {
     #####################################################################
     #######       Ensure that release branch variable exists      #######
@@ -88,8 +93,9 @@ upgrade_start_routine() {
         source $HESTIA/install/upgrade/versions/previous/1.00.0-190618.sh
         source $HESTIA/install/upgrade/versions/previous/1.0.1.sh
         VERSION="1.0.1"
+        upgrade_refresh_config
     fi
-
+    
     #####################################################################
     #######             Start standard upgrade process            #######
     #######  Place instructions for all post v1.0.1 builds below  #######
@@ -102,18 +108,21 @@ upgrade_start_routine() {
         echo ""
         source $HESTIA/install/upgrade/versions/latest.sh
         VERSION="$new_version"
+        upgrade_refresh_config
     fi
 
     # Upgrade to Version 1.0.2
     if [ $VERSION = "1.0.1" ]; then
         source $HESTIA/install/upgrade/versions/previous/1.0.2.sh
         VERSION="1.0.2"
+        upgrade_refresh_config
     fi
 
     # Upgrade to Version 1.0.3
     if [ $VERSION = "1.0.2" ]; then
         source $HESTIA/install/upgrade/versions/latest.sh
         VERSION="$new_version"
+        upgrade_refresh_config
     fi
 
     #####################################################################
@@ -221,3 +230,4 @@ upgrade_restart_services() {
     $BIN/v-restart-service ssh $restart
     $BIN/v-restart-service hestia $restart
 }
+

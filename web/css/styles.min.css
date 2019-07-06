@@ -939,7 +939,7 @@ a {
   background-color: rgba(255,255,255,0.95);
   box-shadow: 0 3px 30px 0 rgba(0, 0, 0, 0.5);
   list-style-type: none;
-  margin: 0 27px;
+  margin: 0 18px;
   max-height: 90%;
   overflow-y: auto;
   padding-left: 0;
@@ -967,7 +967,7 @@ a {
 
 .notification-container .mark-seen {
   background-color: #cc3366;
-  border: 2px solid #454545;
+  border: 1px solid #c41650;
   border-radius: 10px;
   cursor: pointer;
   display: none;
@@ -978,7 +978,7 @@ a {
   width: 7px;
 }
 .notification-container .mark-seen:hover {
-  background-color: #333;
+  background-color: #fff;
   border-color: #e83b75;
 }
 .notification-container .mark-seen:active {

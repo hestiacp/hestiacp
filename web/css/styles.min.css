@@ -817,8 +817,8 @@ a {
 .l-menu__item a {
   color: #f7f7f7;
   position: relative;
-  line-height: 40px;
-  padding: 10px 14px;
+  line-height: 39px;
+  padding: 11px 14px;
   border-left: 1px solid transparent;
   border-right: 1px solid transparent; 
 }

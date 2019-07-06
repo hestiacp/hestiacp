@@ -29,8 +29,8 @@ cp -f /etc/vsftpd.conf $HESTIA_BACKUP/conf/
 sed -i "s|ssl_tlsv1=YES|ssl_tlsv1=NO|g" /etc/vsftpd.conf
 
 # Enhance Dovecot security
-echo "(*) Hardening Dovecot SSL configuration..."
 if [ ! -z "$IMAP_SYSTEM" ]; then
+    echo "(*) Hardening Dovecot SSL configuration..."
     mv /etc/dovecot/conf.d/10-ssl.conf $HESTIA_BACKUP/conf/
     cp -f $HESTIA_INSTALL_DIR/dovecot/conf.d/10-ssl.conf /etc/dovecot/conf.d/
 fi

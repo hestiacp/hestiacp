@@ -13,9 +13,11 @@ if [ -z $THEME ]; then
 fi
 
 # Reduce SSH login grace time
-echo "(*) Hardening SSH daemon configuration..."
-sed -i "s/LoginGraceTime 2m/LoginGraceTime 1m/g" /etc/ssh/sshd_config
-sed -i "s/#LoginGraceTime 2m/LoginGraceTime 1m/g" /etc/ssh/sshd_config
+if [ -e /etc/ssh/sshd_config ]; then
+    echo "(*) Hardening SSH daemon configuration..."
+    sed -i "s/LoginGraceTime 2m/LoginGraceTime 1m/g" /etc/ssh/sshd_config
+    sed -i "s/#LoginGraceTime 2m/LoginGraceTime 1m/g" /etc/ssh/sshd_config
+fi
 
 # Implement recidive jail for fail2ban
 if [ ! -z "$FIREWALL_EXTENSION" ]; then

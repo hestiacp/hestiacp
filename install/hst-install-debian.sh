@@ -1076,6 +1076,9 @@ if [ "$exim" = 'yes' ]; then
     fi
 fi
 
+# Webmail alias
+echo "WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
+
 # Cron daemon
 echo "CRON_SYSTEM='cron'" >> $HESTIA/conf/hestia.conf
 
@@ -1620,8 +1623,6 @@ if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
             fi
         fi
     fi
-    # Configure webmail alias
-    echo "WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
 
     # Restart services
     if [ "$apache" = 'yes' ]; then

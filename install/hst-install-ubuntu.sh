@@ -1027,7 +1027,6 @@ fi
 # Mail stack
 if [ "$exim" = 'yes' ]; then
     echo "MAIL_SYSTEM='exim4'" >> $HESTIA/conf/hestia.conf
-    echo "WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
     if [ "$clamd" = 'yes'  ]; then
         echo "ANTIVIRUS_SYSTEM='clamav-daemon'" >> $HESTIA/conf/hestia.conf
     fi
@@ -1038,6 +1037,9 @@ if [ "$exim" = 'yes' ]; then
         echo "IMAP_SYSTEM='dovecot'" >> $HESTIA/conf/hestia.conf
     fi
 fi
+
+# Webmail alias
+echo "WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
 
 # Cron daemon
 echo "CRON_SYSTEM='cron'" >> $HESTIA/conf/hestia.conf
@@ -1549,9 +1551,6 @@ if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     sed -i "s/%password%/$r/g" /etc/roundcube/debian-db-roundcube.php
     sed -i "s/localhost/$servername/g" /etc/roundcube/plugins/password/config.inc.php
     mysql roundcube < /usr/share/dbconfig-common/data/roundcube/install/mysql
-
-    # Configure webmail alias
-    echo "WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
 
     phpenmod mcrypt > /dev/null 2>&1
 

@@ -1341,7 +1341,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .l-sort-toolbar__filter-apply {
   float: left;
   width: 32px;
-  height: 28px;
+  height: 30px;
   border: 1px solid #ddd;
   background-color: rgba(255,255,255,0.90);
   text-shadow: 0px 1px rgba(255,255,255,0.95);
@@ -1459,7 +1459,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .l-select select {
   border: 0;
   background-color: transparent;
-  height: 26px;
+  height: 28px;
   min-width: 175px;
   padding-left: 10px;
   background-image: url("/images/arrow.png");
@@ -2660,7 +2660,7 @@ td.hint {
   filter:chroma(color=#000);
   cursor: pointer;
   border-radius: 3px 3px 3px 3px !important;
-  font-size: 1.0em !important;
+  font-size: 1.05em !important;
   font-weight: 500 !important;
   padding: 2px 16px 3px 20px !important;
   min-width: 100px !important;
@@ -2672,7 +2672,7 @@ td.hint {
   box-shadow: 0px 1px 4px rgba(0,0,0,0.2),
               inset 0px 0px 1px #fff,
               inset 0px 0px 3px rgba(255,255,255,0.5) !important;
-  text-shadow: 0px 1px 1px rgba(255,255,255,0.5) !important;
+  text-shadow: 0px 1px 1px rgba(255,255,255,0.6) !important;
 }
 .ui-button:hover, .button:hover, .ui-button.cancel:hover, .button.cancel:hover {
   color: #3b9de8 !important;
@@ -3236,7 +3236,7 @@ form#vstobjects.suspended {
 .search-input {
   background-color: #fff;
   border: 1px solid #ddd;
-  height: 24px;
+  height: 26px;
   line-height: 28px;
   padding-left: 7px;
   float: left;

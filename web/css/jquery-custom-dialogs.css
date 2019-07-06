@@ -417,9 +417,9 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
  *
  * http://docs.jquery.com/UI/Dialog#theming
  */
-.ui-dialog { background: none repeat scroll 0 0 #333; border: 1px solid #333; border-radius: 3px; box-shadow: 0 2px 11px 0 rgba(0, 0, 0, 0.5); font-family: arial; overflow: hidden; padding: 27px 0 5px; position: absolute; width: 480px; }
+.ui-dialog { background: none repeat scroll 0 0 #333; border: 1px solid #333; border-radius: 3px; box-shadow: 0 2px 11px 0 rgba(0, 0, 0, 0.5); font-family: 'Exo', sans-serif; overflow: hidden; padding: 27px 0 5px; position: absolute; width: 480px; }
 .ui-dialog .ui-dialog-titlebar { padding: 2px 26px 0; position: relative;  }
-.ui-dialog .ui-dialog-title { float: left; margin: .10pt 16px .10pt 0;  font-family: Arial; color: #ebe697; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+.ui-dialog .ui-dialog-title { float: left; margin: .10pt 16px .10pt 0;  font-family: 'Exo', sans-serif; color: #ebe697; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
 .ui-dialog .ui-dialog-titlebar-close { position: absolute; right: .3em; top: 50%; width: 19px; margin: -10px 0 0 0; padding: 1px; height: 18px; }
 .ui-dialog .ui-dialog-titlebar-close span { display: block; margin: 1px; }
 .ui-dialog .ui-dialog-titlebar-close:hover, .ui-dialog .ui-dialog-titlebar-close:focus { padding: 0; }

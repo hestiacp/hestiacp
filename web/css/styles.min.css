@@ -3470,8 +3470,12 @@ form#vstobjects.suspended {
 }
 
 .ui-dialog .ui-dialog-title {
-  color: #121212 !important;
-  font-size: 1.2em !important;
+  color: #046c98 !important;
+  font-size: 1.1em !important;
+  text-transform: none !important;
+  letter-spacing: -0.01em !important;
+  text-align: center !important;
+  float: none !important;
 }
 
 .ui-dialog-buttonpane {

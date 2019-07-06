@@ -17,7 +17,7 @@ if [ $VERSION = "$version" ]; then
     source /usr/local/hestia/install/upgrade/versions/$version.sh
     VERSION="$version"
 fi
-if [ $VERSION = "0.9.8-27" ] || [ $VERSION = "0.9.8-28" ]; then
+if  [ $VERSION = "0.9.8-25" ] || [ $VERSION = "0.9.8-26" ] || [ $VERSION = "0.9.8-27" ] || [ $VERSION = "0.9.8-28" ]; then
     source /usr/local/hestia/install/upgrade/versions/0.9.8-29.sh
     VERSION="0.9.8-29"
 fi

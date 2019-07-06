@@ -50,25 +50,28 @@
           <div class="server-info-data">
             <table class="text-small">
                <tr>
-                <td>
+               <td>
                   <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left wide">
-                      <b><?=$sys['sysinfo']['OS']?>
-                      <?=$sys['sysinfo']['VERSION']?></b>
-                    </div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">(<?=$sys['sysinfo']['ARCH']?>)</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--left wide"><b><?=__('Hestia Control Panel')?>:</b></div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">v<?=$sys['sysinfo']['HESTIA']?></div>
                   </div>
                 </td>
                 <td>
                   <div class="l-unit__stat-cols clearfix">
-                    <div class="l-unit__stat-col l-unit__stat-col--left wide"><?=__('Load Average')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right"><b><?=$sys['sysinfo']['LOADAVERAGE']?></b></div>
+                    <div class="l-unit__stat-col l-unit__stat-col--left wide"><?=$sys['sysinfo']['Operating System']?></div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right"><?=$sys['sysinfo']['OS']?> <?=$sys['sysinfo']['VERSION']?> (<?=$sys['sysinfo']['ARCH']?>)</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="l-unit__stat-cols clearfix">
+                    <div class="l-unit__stat-col l-unit__stat-col--left wide"><b><?=__('Load Average')?>:</b></div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right"><?=$sys['sysinfo']['LOADAVERAGE']?></div>
                   </div>
                 </td>
                 <td>
                   <div class="l-unit__stat-cols clearfix last">
-                    <div class="l-unit__stat-col l-unit__stat-col--left wide"><?=__('Uptime')?>:</div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right"><b><?=humanize_time($sys['sysinfo']['UPTIME'])?></b></div>
+                    <div class="l-unit__stat-col l-unit__stat-col--left wide"><b><?=__('Uptime')?>:</b></div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right"><?=humanize_time($sys['sysinfo']['UPTIME'])?></div>
                   </div>
                 </td>
               </tr>

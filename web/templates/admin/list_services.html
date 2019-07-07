@@ -53,7 +53,7 @@
                <td>
                   <div class="l-unit__stat-cols clearfix">
                     <div class="l-unit__stat-col l-unit__stat-col--left wide"><b><?=__('Hestia Control Panel')?>:</b></div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">v<?=$sys['sysinfo']['HESTIA']?></div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">v<?=$sys['sysinfo']['HESTIA']?> <? if(<?php echo $_SESSION['RELEASE_BRANCH']; ?><i class="fas fa-flask icon-large status-icon orange"></i> (<?php echo $_SESSION['RELEASE_BRANCH']; ?>)</div>
                   </div>
                 </td>
                 <td>

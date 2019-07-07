@@ -13,6 +13,7 @@ MAILTPL=$HESTIA/data/templates/mail
 DNSTPL=$HESTIA/data/templates/dns
 RRD=$HESTIA/web/rrd
 SENDMAIL="$HESTIA/web/inc/mail-wrapper.php"
+SCRIPT="$(basename $0)"
 
 # Return codes
 OK=0

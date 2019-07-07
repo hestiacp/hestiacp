@@ -23,7 +23,7 @@
     <div class="l-center">
       <a href="/list/web/" class="l-logo"></a>
       <!-- /.l-logo -->
-      <div class="l-menu clearfix animated fadeIn">
+      <div class="l-menu clearfix">
         <div class="l-menu__item"><a href="/list/rrd/"><i class="fas fa-arrow-alt-circle-left"></i></a></div>
         <div class="l-menu__item <?php if(isset($_GET['cpu'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?cpu"><i class="fas fa-microchip"></i>&nbsp;&nbsp;&nbsp;<?=__('CPU')?></a></div>
         <div class="l-menu__item <?php if(isset($_GET['mem'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?mem"><i class="fas fa-memory"></i>&nbsp;&nbsp;&nbsp;<?=__('RAM')?></a></div>
@@ -45,5 +45,5 @@
   </div>
   <!-- /.l-header -->
 
-  <div style="color: #cc3366; padding: 10px 0 20px 20px; background: #fff; ">.</div><div class="l-center">
+  <div style="color: #cc3366; padding: 10px 0 20px 20px; background: #fff; " class="animated fadeIn">.</div><div class="l-center">
   <pre class="console-output">

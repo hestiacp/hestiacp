@@ -1205,7 +1205,7 @@ a {
 .l-separator.selected,
 .l-separator {
   height: 1px;
-  background-color: #ddd;
+  border-top: 1px solid #ddd;
 }
 
 div.l-content > div.l-separator:nth-of-type(2) {
@@ -1220,6 +1220,8 @@ div.l-content > div.l-separator:nth-of-type(4) {
   width: 100%;
   position: fixed;
   z-index: 110;
+  border-top: none;
+  border-bottom: 1px solid #ddd;
 }
 
 .l-sort {

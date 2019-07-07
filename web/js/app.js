@@ -1009,7 +1009,6 @@ hover_menu = function() {
         nav_a.css({'min-height': 111 - st + 'px'});
         nav_context.css({'margin-top': 181 - st + 'px'});
         sep_2.css({'box-shadow':'none'});
-        sep_2.css({'background-color': '#ddd'});
         sep_2.css({'height': '1px'});
     }
 
@@ -1017,7 +1016,6 @@ hover_menu = function() {
         sep_1.css({'margin-top': '100px'});
         sep_2.css({'margin-top': '130px'});
         sep_2.css({'height': '15px'});
-        sep_2.css({'background-color': '#fff'});
         nav_a.css({'height': '0'});
         nav_a.css({'min-height': '0'});
         nav_context.css({'margin-top': '101px'});

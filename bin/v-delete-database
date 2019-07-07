@@ -32,6 +32,8 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'db' 'DB' "$database"
 is_object_unsuspended 'db' 'DB' "$database"
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

@@ -56,6 +56,8 @@ if [ ! -z "$comment" ]; then
     is_format_valid 'comment'
 fi
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

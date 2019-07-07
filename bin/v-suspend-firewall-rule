@@ -27,6 +27,8 @@ is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 is_object_valid '../../data/firewall/rules' 'RULE' "$rule"
 is_object_unsuspended '../../data/firewall/rules' 'RULE' "$rule"
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

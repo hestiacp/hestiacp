@@ -755,5 +755,6 @@ $LANG['sr'] = array(
     'Email Credentials' => 'Email lozinka i podešavanja',
 
     'Theme' => 'Izgled',
+    'Operating System' => 'Operacijskog sustava',
     
 );

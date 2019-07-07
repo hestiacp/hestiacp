@@ -756,6 +756,8 @@ $LANG['fr'] = array(
 
     'Theme' => 'Apparence',
 
+    'Operating System' => 'Système d\'exploitation',
+
 // Texts below doesn't exist in en.php
     'disk' => 'disque',
     'traffic' => 'traffic',

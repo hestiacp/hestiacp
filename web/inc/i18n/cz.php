@@ -756,5 +756,5 @@ $LANG['cz'] = array(
     'Email Credentials' => 'Email Credentials',
 
     'Theme' => 'Vzhled',
-    
+    'Operating System' => 'Operační systém',
 );

@@ -756,5 +756,6 @@ $LANG['no'] = array(
     'Email Credentials' => 'Email Credentials',
 
     'Theme' => 'Utseende',
+    'Operating System' => 'Operativsystemet',
     
 );

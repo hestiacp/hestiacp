@@ -758,4 +758,5 @@ $LANG['th'] = array(
     'Email Credentials' => 'ข้อมูลการใช้อีเมล',
 
     'Theme' => 'ลักษณะ',
+    'Operating System' => 'ระบบปฏิบัติการ',
 );

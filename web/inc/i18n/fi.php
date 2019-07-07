@@ -757,6 +757,8 @@ $LANG['fi'] = array(
     'Email Credentials' => 'Email Credentials',
 
     'Theme' => 'Ulkonäkö',
+
+    'Operating System' => 'Käyttöjärjestelmä',
     
 // Texts below doesn't exist in en.php
     'traffic' => 'tiedonsiirto',

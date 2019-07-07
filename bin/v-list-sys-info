@@ -17,6 +17,7 @@ source $HESTIA/func/main.sh
 
 # Retrieve Hestia Control Panel version number
 HESTIA_VERSION=$(grep VERSION $HESTIA/conf/hestia.conf | cut -d '=' -f2 | sed "s|'||g")
+HESTIA_RELEASE=$(grep RELEASE_BRANCH $HESTIA/conf/hestia.conf | cut -d '=' -f2 | sed "s|'||g")
 
 # JSON list function
 json_list() {
@@ -27,6 +28,7 @@ json_list() {
         "VERSION": "'$VERSION'",
         "ARCH": "'$ARCH'",
         "HESTIA": "'$HESTIA_VERSION'",
+        "RELEASE": "'$HESTIA_RELEASE'",
         "UPTIME": "'$UPTIME'",
         "LOADAVERAGE": "'$LOADAVERAGE'"
         }'
@@ -35,20 +37,20 @@ json_list() {
 
 # SHELL list function
 shell_list() {
-    echo "HOSTNAME   OS   VER   ARCH  HESTIA  UPTIME   LA"
-    echo "--------   --   ---   ----  ------  ------   --"
-    echo "$HOSTNAME $OS $VERSION $ARCH $HESTIA_VERSION $UPTIME $LOADAVERAGE"
+    echo "HOSTNAME   OS   VER   ARCH  HESTIA  RELEASE  UPTIME   LA"
+    echo "--------   --   ---   ----  ------  -------  ------   --"
+    echo "$HOSTNAME $OS $VERSION $ARCH $HESTIA_VERSION $HESTIA_RELEASE $UPTIME $LOADAVERAGE"
 }
 
 # PLAIN list function
 plain_list() {
-    echo -e "$HOSTNAME\t$OS\t$VERSION\t$ARCH\t$HESTIA_VERSION\t$UPTIME\t$LOADAVERAGE"
+    echo -e "$HOSTNAME\t$OS\t$VERSION\t$ARCH\t$HESTIA_VERSION\t$HESTIA_RELEASE\t$UPTIME\t$LOADAVERAGE"
 }
 
 # CSV list function
 csv_list() {
-    echo "HOSTNAME,OS,VERSION,ARCH,HESTIA,UPTIME,LOADAVERAGE"
-    echo "$HOSTNAME,$OS,$VERSION,$ARCH,$HESTIA_VERSION,$UPTIME,$LOADAVERAGE"
+    echo "HOSTNAME,OS,VERSION,ARCH,HESTIA,RELEASE,UPTIME,LOADAVERAGE"
+    echo "$HOSTNAME,$OS,$VERSION,$ARCH,$HESTIA_VERSION,$HESTIA_RELEASE,$UPTIME,$LOADAVERAGE"
 }
 
 

@@ -1013,7 +1013,7 @@ download_file() {
 check_hestia_demo_mode() {
     demo_mode=$(grep DEMO_MODE /usr/local/hestia/conf/hestia.conf | cut -d '=' -f2 | sed "s|'||g")
     if [ ! -z "$demo_mode" ] && [ "$demo_mode" = "yes" ]; then
-        echo "ERROR: Unable to perform operation when demo mode is enabled."
+        echo "ERROR: Unable to perform operation due to security restrictions that are in place."
         exit 1
     fi
 }

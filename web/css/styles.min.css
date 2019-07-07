@@ -956,6 +956,16 @@ a {
   border-top: none;
 }
 
+.notification-container .empty {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: normal;
+}
+
+.notification-container .empty .status-icon {
+  color: #54a6e5;
+}
+
 .notification-container .unseen {
   color: #6f6f6f;
 }

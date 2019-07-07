@@ -33,7 +33,7 @@ upgrade_welcome_message() {
 
 upgrade_complete_message() {
     # Add notification to panel
-    $HESTIA/bin/v-add-user-notification admin 'Upgrade complete' 'Your server has been updated to Hestia Control Panel v'$new_version'.<br>Please tell us about any bugs or issues that you run into by opening an issue report at <br><a href="https://github.com/hestiacp/hestiacp/Issues" target="_new">https://github.com/hestiacp/hestiacp/Issues</a><br><br>Have a great day!'
+    $HESTIA/bin/v-add-user-notification admin 'Upgrade complete' 'Your server has been updated to Hestia Control Panel <b>v'$new_version'</b>.<br><br>Please tell us about any bugs or issues by opening an issue report on <a href="https://github.com/hestiacp/hestiacp/Issues" target="_new"><i class="fab fa-github"></i> GitHub</a> or e-mail <a href="mailto:info@hestiacp.com?Subject="['$new_version'] Bug Report: ">info@hestiacp.com</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart status-icon red"></i> The Hestia Control Panel development team'
 
     # Echo message to console output
     echo

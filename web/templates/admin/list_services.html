@@ -53,7 +53,7 @@
                <td>
                   <div class="l-unit__stat-cols clearfix">
                     <div class="l-unit__stat-col l-unit__stat-col--left wide"><b><?=__('Hestia Control Panel')?>:</b></div>
-                    <div class="l-unit__stat-col l-unit__stat-col--right">v<?=$sys['sysinfo']['HESTIA']?> <? if(($sys['sysinfo']['RELEASE'] != 'release') && ($sys['sysinfo']['RELEASE'] != 'prerelease')) { ?><i class="fas fa-flask icon-large status-icon orange" title="Development release"></i><? } ?> (<?=$sys['sysinfo']['RELEASE']?>)</div>
+                    <div class="l-unit__stat-col l-unit__stat-col--right">v<?=$sys['sysinfo']['HESTIA']?> <? if(($sys['sysinfo']['RELEASE'] != 'release') && ($sys['sysinfo']['RELEASE'] != 'prerelease')) { ?><i class="fas fa-flask icon-large status-icon orange" title="Development release"></i><? } ?><? if($sys['sysinfo']['RELEASE'] == 'prerelease') { ?><i class="fas fa-seedling icon-large status-icon green" title="Beta release"></i><? } ?> (<?=$sys['sysinfo']['RELEASE']?>)</div>
                   </div>
                 </td>
                 <td>

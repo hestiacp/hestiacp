@@ -1311,10 +1311,10 @@ div.l-content > div.l-separator:nth-of-type(4) {
   color: #4b4b4b;
 }
 .l-sort-toolbar .sort-by:active {
-  color: #55c9c0;
+  color: #3b9de8;
 }
 .l-sort-toolbar .sort-by:active b {
-  color: #55c9c0;
+  color: #3b9de8;
 }
 
 .l-sort-toolbar .sort-by b {
@@ -1327,7 +1327,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   color: #4b4b4b;
 }
 .l-sort-toolbar .toggle-all:active {
-  color: #55c9c0;
+  color: #3b9de8;
 }
 
 .l-sort-toolbar .l-select {
@@ -1411,7 +1411,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   color: #cc3366;
 }
 .l-sort-toolbar .vst:active {
-  color: #55C9C0;
+  color: #3b9de8;
 }
 .l-sort-toolbar .vst.selected {
   color: #cc3366;
@@ -1589,7 +1589,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   display: block;
 }
 .l-unit--blue {
-  border-left: 2px solid #55c9c0;
+  border-left: 2px solid #3b9de8;
 }
 
 .l-unit--suspended {
@@ -2376,7 +2376,7 @@ label:hover {
   border: 1px solid #909090;
 }
 .vst-input:focus {
-  border: 1px solid #55C9C0;
+  border: 1px solid #3b9de8;
   background-color: #D7F9FF;
   color: #333;
 }
@@ -2433,7 +2433,7 @@ label:hover {
   border: 1px solid #909090;
 }
 .vst-list:focus {
-  border: 1px solid #55C9C0;
+  border: 1px solid #3b9de8;
   color: #333;
 }
 
@@ -2505,7 +2505,7 @@ a.vst-text:active b{
   border: 1px solid #909090;
 }
 .vst-textinput:focus {
-  border: 1px solid #55C9C0;
+  border: 1px solid #3b9de8;
   background-color: #D7F9FF;
   color: #333;
 }
@@ -3064,7 +3064,7 @@ form#vstobjects.suspended {
 }
 
 .l-sort__create-btn.edit:hover #tooltip {
-  background-color: #55C9C0;
+  background-color: #3b9de8;
 }
 .l-sort__create-btn.edit:active #tooltip {
   background-color: #3BF0E6 !important;
@@ -3352,7 +3352,7 @@ form#vstobjects.suspended {
   background-color: #000;
 }
 .shortcuts .close:active {
-  background-color: #55c9c0;
+  background-color: #3b9de8;
 }
 .shortcuts .close .fas {
   font-size: 1.3rem;
@@ -3523,7 +3523,7 @@ form#vstobjects.suspended {
   float: right;
 }
 .context-helper:hover {
-  color: #55C9C0;
+  color: #3b9de8;
 }
 .context-helper:active {
   color: #cc3366;
@@ -3549,7 +3549,7 @@ form#vstobjects.suspended {
   color: #cc3366;
 }
 .cron-helper-tabs a:active {
-  color: #55C9C0;
+  color: #3b9de8;
 }
 .cron-helper-tabs .ui-tabs-selected a {
   color: #cc3366;
@@ -3578,8 +3578,8 @@ form#vstobjects.suspended {
 
 .cron-helper-tabs .button {
   width: auto;
-  background-color: #55C9C0;
-  border: 1px solid #55C9C0;
+  background-color: #3b9de8;
+  border: 1px solid #3b9de8;
   text-transform: capitalize;
 }
 .cron-helper-tabs .button:hover {

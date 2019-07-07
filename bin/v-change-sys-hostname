@@ -24,6 +24,8 @@ source $HESTIA/conf/hestia.conf
 check_args '1' "$#" 'HOSTNAME'
 is_format_valid 'domain'
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

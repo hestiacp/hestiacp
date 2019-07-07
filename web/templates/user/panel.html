@@ -112,7 +112,7 @@
 		<?php if($panel[$user]['BACKUPS'] != "0") { ?>
 					<div class="l-stat__col <?php if($TAB == 'BACKUP' ) echo 'l-stat__col--active' ?>">
 						<a href="/list/backup/">
-							<div class="l-stat__col-title <?php if($TAB == 'BACKUP' ) echo 'animated pulse' ?>"><?=__('BACKUP')?>&nbsp;&nbsp;<i class="fas fa-undo"></i></div>
+							<div class="l-stat__col-title <?php if($TAB == 'BACKUP' ) echo 'animated pulse' ?>"><?=__('BACKUP')?>&nbsp;&nbsp;<i class="fas fa-file-archive"></i></div>
 							<ul>
 								<li><?=__('backups')?>: <span><?=$panel[$user]['U_BACKUPS']?></span></li>
 							</ul>

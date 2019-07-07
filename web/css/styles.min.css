@@ -962,7 +962,11 @@ a {
 
 .notification-container li {
   border-bottom: 1px solid #e9e4e4;
-  padding: 20px;
+  padding: 30px 20px 50px 20px;
+}
+
+.notification-container  li:last-child {
+  border-bottom: none;
 }
 
 .notification-container .mark-seen {

@@ -28,15 +28,19 @@ check_args '1' "$#" 'SERVICE'
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Run the restart rules for iptables firewall
 if [ "$service" = "iptables" ]; then
+    # Run the restart rules for iptables firewall
     $BIN/v-stop-firewall
     $BIN/v-update-firewall
-fi
-
-if [ "$service" = "hestia" ] || [ "$service" = "iptables" ] || [ "$service" = "mariadb" ] || [ "$service" = "mysql" ] || [ "$service" = "postgresql" ] || [ "$service" = "cron" ]; then
-    systemctl restart $service > /dev/null 2>&1
-elif [ -z "$force" ] || [ "$force" = "no" ]; then
+elif [ -z "$force" -o "$force" = "no" ] && [ \
+        "$service" = "nginx" -o     \
+        "$service" = "apache2" -o   \
+        "$service" = "exim4" -o     \
+        "$service" = "dovecot" -o   \
+        "$service" = "bind9" -o     \
+        "$service" = "vsftpd" -o    \
+        "$service" = "ssh" -o       \
+        "$service" = "fail2ban" ]; then
     systemctl reload $service > /dev/null 2>&1
 else
     systemctl restart $service > /dev/null 2>&1

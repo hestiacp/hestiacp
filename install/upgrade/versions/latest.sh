@@ -36,7 +36,7 @@ if [ ! -z "$IMAP_SYSTEM" ]; then
     fi
 fi
 
-if [ -z "$(v-list-cron-jobs admin | grep 'v-update-sys-queue backup')" ]; then
+if [ -z "$($BIN/v-list-cron-jobs admin | grep 'v-update-sys-queue restart')" ]; then
     command="sudo $BIN/v-update-sys-queue restart"
     $BIN/v-add-cron-job 'admin' '*/2' '*' '*' '*' '*' "$command"
 fi

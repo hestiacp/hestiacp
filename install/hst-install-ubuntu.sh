@@ -1670,10 +1670,12 @@ fi
 $HESTIA/bin/v-add-web-domain admin $servername
 check_result $? "can't create $servername domain"
 
-# Enable automatic updates
-$HESTIA/bin/v-add-cron-hestia-autoupdate
-
 # Adding cron jobs
+export SCHEDULED_RESTART="yes"
+command="sudo $HESTIA/bin/v-update-sys-queue restart"
+$HESTIA/bin/v-add-cron-job 'admin' '*/2' '*' '*' '*' '*' "$command"
+systemctl restart cron
+
 command="sudo $HESTIA/bin/v-update-sys-queue disk"
 $HESTIA/bin/v-add-cron-job 'admin' '15' '02' '*' '*' '*' "$command"
 command="sudo $HESTIA/bin/v-update-sys-queue traffic"
@@ -1689,9 +1691,8 @@ $HESTIA/bin/v-add-cron-job 'admin' '20' '00' '*' '*' '*' "$command"
 command="sudo $HESTIA/bin/v-update-sys-rrd"
 $HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
 
-# Wait before restarting cron to prevent service flooding
-sleep 5
-systemctl restart cron
+# Enable automatic updates
+$HESTIA/bin/v-add-cron-hestia-autoupdate
 
 # Building initital rrd images
 $HESTIA/bin/v-update-sys-rrd

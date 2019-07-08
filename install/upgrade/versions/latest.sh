@@ -40,3 +40,8 @@ if [ -z "$(v-list-cron-jobs admin | grep 'v-update-sys-queue backup')" ]; then
     command="sudo $BIN/v-update-sys-queue restart"
     $BIN/v-add-cron-job 'admin' '*/2' '*' '*' '*' '*' "$command"
 fi
+
+# Remove deprecated configuration line
+if cat /etc/clamav/clamd.conf | grep -q "DetectBrokenExecutables"; then
+    sed -i '/DetectBrokenExecutables/d' /etc/clamav/clamd.conf
+fi

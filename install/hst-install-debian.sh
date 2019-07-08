@@ -17,7 +17,7 @@ hst_backups="/root/hst_install_backups/$(date +%d%m%Y%H%M)"
 arch=$(uname -i)
 spinner="/-\|"
 os='debian'
-release=$(cat /etc/debian_version|grep -o [0-9]|head -n1)
+release=$(cat /etc/debian_version | tr "." "\n" | head -n1)
 codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
 HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 
@@ -39,7 +39,7 @@ if [ "$release" -eq 8 ]; then
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
         unrar-free vim-common acl sysstat"
-else
+elif [ "$release" -eq 9 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
         libapache2-mod-ruid2 libapache2-mod-fcgid libapache2-mod-php php
         php-common php-cgi php-mysql php-curl php-pgsql php-imap php-ldap php-apcu
@@ -48,6 +48,18 @@ else
         roundcube-mysql roundcube-plugins mariadb-client mariadb-common
         mariadb-server postgresql postgresql-contrib phppgadmin phpmyadmin mc
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
+        e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
+        bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
+        unrar-free vim-common acl sysstat rsyslog"
+else
+    software="nginx apache2 apache2-utils apache2-suexec-custom
+        apache2-suexec-pristine libapache2-mod-fcgid libapache2-mod-php php
+        php-common php-cgi php-mysql php-curl php-pgsql php-imap php-ldap php-apcu
+        awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy 
+        clamav-daemon spamassassin dovecot-imapd dovecot-pop3d roundcube-core net-tools
+        roundcube-mysql roundcube-plugins mariadb-client mariadb-common
+        mariadb-server postgresql postgresql-contrib phpmyadmin phppgadmin mc
+        flex whois git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
         unrar-free vim-common acl sysstat rsyslog"
@@ -605,11 +617,6 @@ if [ "$release" -eq 8 ]; then
     echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
 fi
 
-# Installing Backport repo for debian 10
-if [ "$release" -eq 10 ]; then
-    echo "deb http://ftp.debian.org/debian stretch-backports main" >> /etc/apt/sources.list
-fi
-
 # Installing hestia repo
 echo "(*) Hestia Control Panel"
 if [ -e $apt/hestia.list ]; then
@@ -622,6 +629,7 @@ echo
 
 # Updating system
 echo -ne "Updating currently installed packages, please wait... "
+apt-get -qq update
 apt-get -y upgrade >> $LOG &
 BACK_PID=$!
 
@@ -864,9 +872,6 @@ fi
 #                     Install packages                     #
 #----------------------------------------------------------#
 
-# Updating system
-apt-get -qq update
-
 # Disabling daemon autostart on apt-get install
 echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod a+x /usr/sbin/policy-rc.d
@@ -963,13 +968,15 @@ chmod 755 /etc/cron.daily/ntpdate
 ntpdate -s pool.ntp.org
 
 # Setup rssh
-if [ -z "$(grep /usr/bin/rssh /etc/shells)" ]; then
-    echo /usr/bin/rssh >> /etc/shells
+if [ ! "$release" -eq 10 ]; then
+    if [ -z "$(grep /usr/bin/rssh /etc/shells)" ]; then
+        echo /usr/bin/rssh >> /etc/shells
+    fi
+    sed -i 's/#allowscp/allowscp/' /etc/rssh.conf
+    sed -i 's/#allowsftp/allowsftp/' /etc/rssh.conf
+    sed -i 's/#allowrsync/allowrsync/' /etc/rssh.conf
+    chmod 755 /usr/bin/rssh
 fi
-sed -i 's/#allowscp/allowscp/' /etc/rssh.conf
-sed -i 's/#allowsftp/allowsftp/' /etc/rssh.conf
-sed -i 's/#allowrsync/allowrsync/' /etc/rssh.conf
-chmod 755 /usr/bin/rssh
 
 
 #----------------------------------------------------------#

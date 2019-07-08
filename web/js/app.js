@@ -1023,7 +1023,7 @@ hover_menu = function() {
         nav_context.css({'margin-top': '101px'});
         nav_a.find('ul').css({'visibility': 'hidden'});
         nav_main.css({'padding-top': '27px'});
-        sep_2.css({'box-shadow':'0 2px 6px 0 rgba(200, 200, 200, 0.35)'});
+        sep_2.css({'box-shadow':'0 5px 6px 0 rgba(200, 200, 200, 0.35)'});
     }
 
     if(st == 0){

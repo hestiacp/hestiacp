@@ -19,6 +19,8 @@ if ($_SESSION['user'] == 'admin') {
     switch ($action) {
         case 'delete': $cmd='v-delete-web-domain';
             break;
+        case 'rebuild': $cmd='v-rebuild-web-domain';
+            break;
         case 'suspend': $cmd='v-suspend-web-domain';
             break;
         case 'unsuspend': $cmd='v-unsuspend-web-domain';

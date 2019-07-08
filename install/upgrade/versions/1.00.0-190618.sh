@@ -17,19 +17,19 @@ fi
 # Update Apache and Nginx configuration to support new file structure
 if [ -f /etc/apache2/apache.conf ]; then
     echo "(*) Updating Apache configuration..."
-    mv  /etc/apache2/apache.conf $HESTIA_BACKUP/conf/
+    mv /etc/apache2/apache.conf $HESTIA_BACKUP/conf/
     cp -f $HESTIA/install/deb/apache2/apache.conf /etc/apache2/apache.conf
 fi
 if [ -f /etc/nginx/nginx.conf ]; then
     echo "(*) Updating NGINX configuration..."
-    mv  /etc/nginx/nginx.conf $HESTIA_BACKUP/conf/
+    mv /etc/nginx/nginx.conf $HESTIA_BACKUP/conf/
     cp -f $HESTIA/install/deb/nginx/nginx.conf /etc/nginx/nginx.conf
 fi
 
 # Generate dhparam
 if [ ! -e /etc/ssl/dhparam.pem ]; then
     echo "(*) Enabling HTTPS Strict Transport Security (HSTS) support..."
-    mv  /etc/nginx/nginx.conf $HESTIA_BACKUP/conf/
+    mv /etc/nginx/nginx.conf $HESTIA_BACKUP/conf/
     cp -f $hestiacp/nginx/nginx.conf /etc/nginx/
 
     # Copy dhparam
@@ -50,9 +50,9 @@ fi
 if [ -d $HESTIA/data/templates/ ]; then
     echo "(*) Replacing default Web, DNS, and Mail templates..."
     cp -rf $HESTIA/data/templates $HESTIA_BACKUP/templates/
-    $HESTIA/bin/v-update-web-templates >/dev/null 2>&1
-    $HESTIA/bin/v-update-dns-templates >/dev/null 2>&1
-	$HESTIA/bin/v-update-mail-templates >/dev/null 2>&1
+    $HESTIA/bin/v-update-web-templates > /dev/null 2>&1
+    $HESTIA/bin/v-update-dns-templates > /dev/null 2>&1
+    $HESTIA/bin/v-update-mail-templates > /dev/null 2>&1
 fi
 
 # Remove old Office 365 template as there is a newer version with an updated name
@@ -213,11 +213,11 @@ fi
 # Fix Dovecot configuration
 echo "(*) Updating Dovecot IMAP/POP server configuration..."
 if [ -f /etc/dovecot/conf.d/15-mailboxes.conf ]; then
-    mv  /etc/dovecot/conf.d/15-mailboxes.conf $HESTIA_BACKUP/conf/
+    mv /etc/dovecot/conf.d/15-mailboxes.conf $HESTIA_BACKUP/conf/
 fi
 if [ -f /etc/dovecot/dovecot.conf ]; then
     # Update Dovecot configuration and restart Dovecot service
-    mv  /etc/dovecot/dovecot.conf $HESTIA_BACKUP/conf/
+    mv /etc/dovecot/dovecot.conf $HESTIA_BACKUP/conf/
     cp -f $HESTIA/install/deb/dovecot/dovecot.conf /etc/dovecot/dovecot.conf
     systemctl restart dovecot
     sleep 0.5
@@ -226,7 +226,7 @@ fi
 # Fix Exim configuration
 if [ -f /etc/exim4/exim4.conf.template ]; then
     echo "(*) Updating Exim SMTP server configuration..."
-    mv  /etc/exim4/exim4.conf.template $HESTIA_BACKUP/conf/
+    mv /etc/exim4/exim4.conf.template $HESTIA_BACKUP/conf/
     cp -f $HESTIA/install/deb/exim/exim4.conf.template /etc/exim4/exim4.conf.template
     # Reconfigure spam filter and virus scanning
     if [ ! -z "$ANTISPAM_SYSTEM" ]; then
@@ -244,14 +244,6 @@ if [ -z "$IMAP_SYSTEM" ]; then
         echo "(*) Adding missing IMAP_SYSTEM variable to hestia.conf..."
         echo "IMAP_SYSTEM = 'dovecot'" >> $HESTIA/conf/hestia.conf
     fi
-fi
-
-# Remove Webalizer and set AWStats as default
-WEBALIAZER_CHECK=$(cat $HESTIA/conf/hestia.conf | grep webalizer)
-if [ ! -z "$WEBALIZER_CHECK" ]; then
-    echo "(*) Removing Webalizer and setting AWStats as default web statistics backend..."
-    apt purge webalizer -y > /dev/null 2>&1
-    sed -i "s/STATS_SYSTEM='webalizer,awstats'/STATS_SYSTEM='awstats'/g" $HESTIA/conf/hestia.conf
 fi
 
 # Run sftp jail once

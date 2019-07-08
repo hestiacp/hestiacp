@@ -412,9 +412,9 @@ echo ' |  _  |  __/\__ \ |_| | (_| | |___|  __/ '
 echo ' |_| |_|\___||___/\__|_|\__,_|\____|_|    '
 echo
 echo '                      Hestia Control Panel'
-echo '                                    v1.0.1'
+echo '                                    v1.0.2'
 echo -e "\n"
-echo "=============================================================================="
+echo "===================================================================="
 echo -e "\n"
 echo 'The following server components will be installed on your system:'
 echo
@@ -480,13 +480,13 @@ fi
 
 # Firewall stack
 if [ "$iptables" = 'yes' ]; then
-    echo -n '   - Iptables Firewall'
+    echo -n '   - Firewall (Iptables)'
 fi
 if [ "$iptables" = 'yes' ] && [ "$fail2ban" = 'yes' ]; then
     echo -n ' + Fail2Ban Access Monitor'
 fi
 echo -e "\n"
-echo "=============================================================================="
+echo "===================================================================="
 echo -e "\n"
 
 # Asking for confirmation to proceed
@@ -563,24 +563,6 @@ fi
 #                   Install repository                     #
 #----------------------------------------------------------#
 
-# Updating system
-echo -ne "Updating currently installed packages, please wait... "
-apt-get -y upgrade >> $LOG &
-BACK_PID=$!
-
-# Check if package installation is done, print a spinner
-spin_i=1
-while kill -0 $BACK_PID > /dev/null 2>&1 ; do
-    printf "\b${spinner:spin_i++%${#spinner}:1}"
-    sleep 0.5
-done
-
-# Do a blank echo to get the \n back
-echo
-
-# Check Installation result
-check_result $? 'apt-get upgrade failed'
-
 # Define apt conf location
 apt=/etc/apt/sources.list.d
 
@@ -637,6 +619,25 @@ echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
 wget --quiet https://gpg.hestiacp.com/deb_signing.key -O /tmp/deb_signing.key
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/deb_signing.key > /dev/null 2>&1
 echo
+
+# Updating system
+echo -ne "Updating currently installed packages, please wait... "
+apt-get -y upgrade >> $LOG &
+BACK_PID=$!
+
+# Check if package installation is done, print a spinner
+spin_i=1
+while kill -0 $BACK_PID > /dev/null 2>&1 ; do
+    printf "\b${spinner:spin_i++%${#spinner}:1}"
+    sleep 0.5
+done
+
+# Do a blank echo to get the \n back
+echo
+
+# Check Installation result
+check_result $? 'apt-get upgrade failed'
+
 
 #----------------------------------------------------------#
 #                         Backup                           #
@@ -1094,11 +1095,18 @@ echo "BACKUP_SYSTEM='local'" >> $HESTIA/conf/hestia.conf
 echo "LANGUAGE='$lang'" >> $HESTIA/conf/hestia.conf
 
 # Version & Release Branch
-echo "VERSION='1.0.1'" >> $HESTIA/conf/hestia.conf
+echo "VERSION='1.0.2'" >> $HESTIA/conf/hestia.conf
 echo "RELEASE_BRANCH='release'" >> $HESTIA/conf/hestia.conf
 
 # Installing hosting packages
 cp -rf $hestiacp/packages $HESTIA/data/
+
+# Update nameservers in hosting package
+IFS='.' read -r -a domain_elements <<< "$servername"
+if [ ! -z "${domain_elements[-2]}" ] && [ ! -z "${domain_elements[-1]}" ]; then
+    serverdomain="${domain_elements[-2]}.${domain_elements[-1]}"
+    sed -i s/"domain.tld"/"$serverdomain"/g $HESTIA/data/packages/*.pkg
+fi
 
 # Installing templates
 cp -rf $hestiacp/templates $HESTIA/data/
@@ -1127,7 +1135,7 @@ key_start=$(grep -n "BEGIN RSA" /tmp/hst.pem |cut -f 1 -d:)
 key_end=$(grep -n  "END RSA" /tmp/hst.pem |cut -f 1 -d:)
 
 # Adding SSL certificate
-echo "Add ssl certificate to Hestia"
+echo "(*) Adding SSL certificate to Hestia Control Panel..."
 cd $HESTIA/ssl
 sed -n "1,${crt_end}p" /tmp/hst.pem > certificate.crt
 sed -n "$key_start,${key_end}p" /tmp/hst.pem > certificate.key
@@ -1135,6 +1143,8 @@ chown root:mail $HESTIA/ssl/*
 chmod 660 $HESTIA/ssl/*
 rm /tmp/hst.pem
 
+# Install dhparam.pem
+cp -f $HESTIA/install/deb/ssl/dhparam.pem /etc/ssl
 
 #----------------------------------------------------------#
 #                     Configure Nginx                      #
@@ -1172,9 +1182,6 @@ if [ "$nginx" = 'yes' ]; then
         check_result $? "php$fpm_v-fpm start failed"
     fi
 
-    # Install dhparam.
-    cp -f $HESTIA/install/deb/ssl/dhparam.pem /etc/ssl
-
     # Update dns servers in nginx.conf
     dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
     for ip in $dns_resolver; do
@@ -1184,6 +1191,7 @@ if [ "$nginx" = 'yes' ]; then
     done
     if [ ! -z "$resolver" ]; then
         sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /etc/nginx/nginx.conf
+        sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
     fi
 
     update-rc.d nginx defaults > /dev/null 2>&1
@@ -1767,9 +1775,6 @@ fi
 $HESTIA/bin/v-add-web-domain admin $servername
 check_result $? "can't create $servername domain"
 
-# Enable automatic updates
-$HESTIA/bin/v-add-cron-hestia-autoupdate
-
 # Adding cron jobs
 command="sudo $HESTIA/bin/v-update-sys-queue disk"
 $HESTIA/bin/v-add-cron-job 'admin' '15' '02' '*' '*' '*' "$command"
@@ -1785,6 +1790,9 @@ command="sudo $HESTIA/bin/v-update-user-stats"
 $HESTIA/bin/v-add-cron-job 'admin' '20' '00' '*' '*' '*' "$command"
 command="sudo $HESTIA/bin/v-update-sys-rrd"
 $HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
+
+# Enable automatic updates
+$HESTIA/bin/v-add-cron-hestia-autoupdate
 service cron restart
 
 # Building initital rrd images
@@ -1816,7 +1824,7 @@ if [ "$host_ip" = "$ip" ]; then
 fi
 
 echo -e "\n"
-echo "=============================================================================="
+echo "===================================================================="
 echo -e "\n"
 
 # Sending notification to admin email

@@ -11,6 +11,7 @@
 
 # Argument definition
 service=$1
+force=$2
 
 # Includes
 source $HESTIA/func/main.sh
@@ -23,27 +24,32 @@ PATH="$PATH:/usr/local/sbin:/sbin:/usr/sbin:/root/bin"
 
 check_args '1' "$#" 'SERVICE'
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ "$service" != "iptables" ]; then
-    service $service restart >/dev/null 2>&1
-    if [ $? -ne 0 ]; then
-        check_result $E_RESTART "$service restart failed"
-    fi
-else
+# Run the restart rules for iptables firewall
+if [ "$service" = "iptables" ]; then
     $BIN/v-stop-firewall
     $BIN/v-update-firewall
-    if [ $? -ne 0 ]; then
-        check_result $E_RESTART "$service restart failed"
-    fi
 fi
 
+if [ "$service" = "hestia" ] || [ "$service" = "iptables" ] || [ "$service" = "mariadb" ] || [ "$service" = "mysql" ] || [ "$service" = "postgresql" ] || [ "$service" = "cron" ]; then
+    systemctl restart $service > /dev/null 2>&1
+elif [ -z "$force" ] || [ "$force" = "no" ]; then
+    systemctl reload $service > /dev/null 2>&1
+else
+    systemctl restart $service > /dev/null 2>&1
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
+
+# Check the result of the service restart and report whether it failed.
+if [ $? -ne 0 ]; then
+    check_result $E_RESTART "ERROR: Restart of $service failed."
+    log_history "Restart of $service failed."
+fi
 
 exit

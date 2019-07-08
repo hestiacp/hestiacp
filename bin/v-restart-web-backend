@@ -54,9 +54,9 @@ php_fpm=$(ls /etc/init.d/php*-fpm* 2>/dev/null |cut -f 4 -d /)
 for back in $php_fpm
 do
     if [ -z "$php_fpm" ]; then
-        service $WEB_BACKEND restart >/dev/null 2>&1
+        $BIN/v-restart-service $WEB_BACKEND > /dev/null 2>&1
     else
-        service $back restart >/dev/null 2>&1
+        $BIN/v-restart-service $back > /dev/null 2>&1
     fi
 done
 if [ $? -ne 0 ]; then

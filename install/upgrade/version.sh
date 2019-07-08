@@ -17,7 +17,7 @@ if [ $VERSION = "$version" ]; then
     source /usr/local/hestia/install/upgrade/versions/$version.sh
     VERSION="$version"
 fi
-if [ $VERSION = "0.9.8-27" ] || [ $VERSION = "0.9.8-28" ]; then
+if  [ $VERSION = "0.9.8-25" ] || [ $VERSION = "0.9.8-26" ] || [ $VERSION = "0.9.8-27" ] || [ $VERSION = "0.9.8-28" ]; then
     source /usr/local/hestia/install/upgrade/versions/0.9.8-29.sh
     VERSION="0.9.8-29"
 fi
@@ -26,6 +26,10 @@ if [ $VERSION = "0.9.8-29" ]; then
     VERSION="1.00.0-190618"
 fi
 if [ $VERSION = "0.10.00" ] || [ $VERSION = "1.00.0-190618" ] || [ $VERSION = "1.00.0-190621" ]; then
+    source /usr/local/hestia/install/upgrade/versions/1.0.1.sh
+    VERSION="1.0.1"
+fi
+if [ $VERSION = "1.0.1" ]; then
     source /usr/local/hestia/install/upgrade/versions/$version.sh
     VERSION="$version"
 fi

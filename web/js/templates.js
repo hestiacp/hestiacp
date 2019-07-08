@@ -9,6 +9,7 @@ App.Templates.html = {
                     '<li class="~!:UNSEEN~!"><span class="unselectable mark-seen" id="notification-~!:ID~!">&nbsp;</span>\
                         <span class="title"><span class="unselectable icon ~!:TYPE~!">&nbsp;</span>~!:TOPIC~!</span>\
                         ~!:NOTICE~!\
+                        <span class="time">~!:TIME~! ~!:DATE~!</span>\
                     </li>'
         ],
         notification_empty: [

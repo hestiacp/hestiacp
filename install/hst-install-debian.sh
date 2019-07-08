@@ -1785,6 +1785,11 @@ $HESTIA/bin/v-add-web-domain admin $servername
 check_result $? "can't create $servername domain"
 
 # Adding cron jobs
+export SCHEDULED_RESTART="yes"
+command="sudo $HESTIA/bin/v-update-sys-queue restart"
+$HESTIA/bin/v-add-cron-job 'admin' '*/2' '*' '*' '*' '*' "$command"
+systemctl restart cron
+
 command="sudo $HESTIA/bin/v-update-sys-queue disk"
 $HESTIA/bin/v-add-cron-job 'admin' '15' '02' '*' '*' '*' "$command"
 command="sudo $HESTIA/bin/v-update-sys-queue traffic"
@@ -1793,8 +1798,6 @@ command="sudo $HESTIA/bin/v-update-sys-queue webstats"
 $HESTIA/bin/v-add-cron-job 'admin' '30' '03' '*' '*' '*' "$command"
 command="sudo $HESTIA/bin/v-update-sys-queue backup"
 $HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
-command="sudo $HESTIA/bin/v-update-sys-queue restart"
-$HESTIA/bin/v-add-cron-job 'admin' '*/2' '*' '*' '*' '*' "$command"
 command="sudo $HESTIA/bin/v-backup-users"
 $HESTIA/bin/v-add-cron-job 'admin' '10' '05' '*' '*' '*' "$command"
 command="sudo $HESTIA/bin/v-update-user-stats"
@@ -1804,7 +1807,6 @@ $HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
 
 # Enable automatic updates
 $HESTIA/bin/v-add-cron-hestia-autoupdate
-systemctl restart cron
 
 # Building initital rrd images
 $HESTIA/bin/v-update-sys-rrd

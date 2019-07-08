@@ -21,7 +21,7 @@ fi
 
 # Implement recidive jail for fail2ban
 if [ ! -z "$FIREWALL_EXTENSION" ]; then
-    if ! cat /etc/fail2ban/jail.local | grep -q "recidive"; then
+    if ! cat /etc/fail2ban/jail.local | grep -q "\[recidive\]"; then
         echo -e "\n\n[recidive]\nenabled  = true\nfilter   = recidive\naction   = hestia[name=HESTIA]\nlogpath  = /var/log/fail2ban.log\nmaxretry = 3\nfindtime = 86400\nbantime  = 864000" >> /etc/fail2ban/jail.local
     fi
 fi
@@ -34,4 +34,9 @@ if [ ! -z "$IMAP_SYSTEM" ]; then
         cp -f /etc/nginx/conf.d/webmail.inc $HESTIA_BACKUP/conf/
         sed -i "s/config|temp|logs/README.md|config|temp|logs|bin|SQL|INSTALL|LICENSE|CHANGELOG|UPGRADING/g" /etc/nginx/conf.d/webmail.inc
     fi
-fi 
+fi
+
+if [ -z "$(v-list-cron-jobs admin | grep 'v-update-sys-queue backup')" ]; then
+    command="sudo $BIN/v-update-sys-queue restart"
+    $BIN/v-add-cron-job 'admin' '*/2' '*' '*' '*' '*' "$command"
+fi

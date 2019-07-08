@@ -694,12 +694,17 @@ add_webmail_config() {
     ssl_pem="$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem"
     ssl_ca="$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.ca"
 
+    override_alias="";
+    if [ "$WEBMAIL_ALIAS" != "mail" ]; then
+        override_alias="mail.$domain"
+    fi
+    
     cat $MAILTPL/$1/$2 | \
         sed -e "s|%ip%|$local_ip|g" \
             -e "s|%domain%|$WEBMAIL_ALIAS.$domain|g" \
             -e "s|%domain_idn%|$domain_idn|g" \
             -e "s|%root_domain%|$domain|g" \
-            -e "s|%alias%|mail.$domain|g" \
+            -e "s|%alias%|$override_alias|g" \
             -e "s|%alias_idn%|${aliases_idn//,/ }|g" \
             -e "s|%alias_string%|$alias_string|g" \
             -e "s|%email%|info@$domain|g" \

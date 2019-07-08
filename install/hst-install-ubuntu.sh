@@ -582,6 +582,7 @@ echo
 
 # Updating system
 echo -ne "Updating currently installed packages, please wait... "
+apt-get -qq update
 apt-get -y upgrade >> $LOG &
 BACK_PID=$!
 
@@ -835,9 +836,6 @@ fi
 #----------------------------------------------------------#
 #                     Install packages                     #
 #----------------------------------------------------------#
-
-# Updating system
-apt-get -qq update
 
 # Disabling daemon autostart on apt-get install
 echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d

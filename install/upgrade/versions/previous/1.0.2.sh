@@ -59,7 +59,7 @@ if [ ! -z "$WEBALIZER_CHECK" ]; then
     if [ -d "/var/www/webalizer" ]; then
         rm -rf /var/www/webalizer
     fi
-    $HESTIA/bin/v-change-sys-config-value '$STATS_SYSTEM' 'awstats'
+    $HESTIA/bin/v-change-sys-config-value 'STATS_SYSTEM' 'awstats'
 fi
 
 # Remove old hestia.conf files from Apache & NGINX if they exist

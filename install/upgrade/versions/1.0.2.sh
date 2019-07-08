@@ -72,4 +72,12 @@ fi
 
 # Enhance webmail security
 cp -f /etc/nginx/conf.d/webmail.inc $HESTIA_BACKUP/conf/
+echo "(*) Hardening security of Roundcube webmail..."
 sed -i "s/config|temp|logs/README.md|config|temp|logs|bin|SQL|INSTALL|LICENSE|CHANGELOG|UPGRADING/g" /etc/nginx/conf.d/webmail.inc
+
+# Reduce SSH login grace time
+if [ -e /etc/ssh/sshd_config ]; then
+    echo "(*) Hardening SSH daemon configuration..."
+    sed -i "s/LoginGraceTime 2m/LoginGraceTime 1m/g" /etc/ssh/sshd_config
+    sed -i "s/#LoginGraceTime 2m/LoginGraceTime 1m/g" /etc/ssh/sshd_config
+fi

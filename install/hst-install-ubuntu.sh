@@ -1210,6 +1210,8 @@ if [ "$apache" = 'yes' ]; then
             rm -f /etc/php/$v/fpm/pool.d/*
             v_tpl=$(echo "$v" | sed -e 's/[.]//')
             cp -f $HESTIA_INSTALL_DIR/multiphp/apache2/PHP-$v_tpl.* $HESTIA/data/templates/web/apache2/
+            cp -f $HESTIA_INSTALL_DIR/php-fpm/dummy.conf /etc/php/$v/fpm/pool.d/
+            sed -i "s/9999/99$v_tpl/g" /etc/php/$v/fpm/pool.d/dummy.conf
         done
         chmod a+x $HESTIA/data/templates/web/apache2/*.sh
     fi

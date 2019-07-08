@@ -1023,7 +1023,6 @@ fi
 # Mail stack
 if [ "$exim" = 'yes' ]; then
     echo "MAIL_SYSTEM='exim4'" >> $HESTIA/conf/hestia.conf
-    echo "WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
     if [ "$clamd" = 'yes'  ]; then
         echo "ANTIVIRUS_SYSTEM='clamav-daemon'" >> $HESTIA/conf/hestia.conf
     fi
@@ -1111,6 +1110,8 @@ if [ -z "$(grep nologin /etc/shells)" ]; then
     echo "/usr/sbin/nologin" >> /etc/shells
 fi
 
+# Install dhparam.pem
+cp -f $HESTIA/install/deb/ssl/dhparam.pem /etc/ssl
 
 #----------------------------------------------------------#
 #                     Configure Nginx                      #
@@ -1147,9 +1148,6 @@ if [ "$nginx" = 'yes' ]; then
         systemctl start php$fpm_v-fpm >> $LOG
         check_result $? "php$fpm_v-fpm start failed"
     fi
-
-    # Install dhparam.
-    cp -f $HESTIA/install/deb/ssl/dhparam.pem /etc/ssl
 
     # Update dns servers in nginx.conf
     dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)

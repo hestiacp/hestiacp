@@ -694,12 +694,6 @@ add_webmail_config() {
     ssl_pem="$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem"
     ssl_ca="$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.ca"
 
-    if [ "$WEBMAIL_ALIAS" = "mail" ]; then
-        override_alias=""
-    else
-        override_alias="mail.$domain"
-    fi
-
     override_alias="";
     if [ "$WEBMAIL_ALIAS" != "mail" ]; then
         override_alias="mail.$domain"

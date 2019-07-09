@@ -19,6 +19,12 @@ source $HESTIA/func/domain.sh
 source $HESTIA/func/rebuild.sh
 source $HESTIA/conf/hestia.conf
 
+# Define mail user
+if [ "$MAIL_SYSTEM" = 'exim4' ]; then
+    MAIL_USER=Debian-exim
+else
+    MAIL_USER=exim
+fi
 
 #----------------------------------------------------------#
 #                    Verifications                         #

@@ -48,7 +48,7 @@ elif [ -z "$force" -o "$force" = "no" ] && [ \
         "$service" = "proftpd" -o    \
         "$service" = "ssh" -o       \
         "$service" = "fail2ban" ]; then
-    systemctl reload $service > /dev/null 2>&1
+    systemctl reload-or-restart $service > /dev/null 2>&1
 else
     systemctl restart $service > /dev/null 2>&1
 fi

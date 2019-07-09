@@ -23,15 +23,10 @@ PATH="$PATH:/usr/local/sbin:/sbin:/usr/sbin:/root/bin"
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'SERVICE'
-service_status=$(pgrep $service)
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-
-if [ -z "$service_status" ]; then
-    force="yes"
-fi
 
 if [ "$service" = "iptables" ]; then
     # Run the restart rules for iptables firewall
@@ -45,6 +40,11 @@ elif [ -z "$force" -o "$force" = "no" ] && [ \
         "$service" = "bind9" -o     \
         "$service" = "named" -o     \
         "$service" = "vsftpd" -o    \
+        "$service" = "php5.6-fpm" -o \
+        "$service" = "php7.0-fpm" -o \
+        "$service" = "php7.1-fpm" -o \
+        "$service" = "php7.2-fpm" -o \
+        "$service" = "php7.3-fpm" -o \
         "$service" = "proftpd" -o    \
         "$service" = "ssh" -o       \
         "$service" = "fail2ban" ]; then

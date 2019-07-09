@@ -32,7 +32,17 @@ if [ "$service" = "iptables" ]; then
     # Run the restart rules for iptables firewall
     $BIN/v-stop-firewall
     $BIN/v-update-firewall
-elif [ -z "$force" -o "$force" = "no" ]; then
+elif [ -z "$force" -o "$force" = "no" ] && [ \
+        "$service" = "nginx" -o     \
+        "$service" = "apache2" -o   \
+        "$service" = "exim4" -o     \
+        "$service" = "dovecot" -o   \
+        "$service" = "bind9" -o     \
+        "$service" = "named" -o     \
+        "$service" = "vsftpd" -o    \
+        "$service" = "proftpd" -o    \
+        "$service" = "ssh" -o       \
+        "$service" = "fail2ban" ]; then
     systemctl reload-or-restart $service > /dev/null 2>&1
 else
     systemctl restart $service > /dev/null 2>&1

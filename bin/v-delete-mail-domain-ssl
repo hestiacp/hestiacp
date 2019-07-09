@@ -54,8 +54,6 @@ decrease_user_value "$user" '$U_MAIL_SSL'
 
 # Restarting mail server
 $BIN/v-restart-mail $restart
-service dovecot restart
-service exim4 restart
 check_result $? "Mail restart failed" >/dev/null
 
 # Logging

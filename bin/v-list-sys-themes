@@ -81,13 +81,15 @@ csv_list() {
 #----------------------------------------------------------#
 
 # Parsing templates
+
+# System provided themes
 themes=$(ls -v $HESTIA_THEMES/)
 themes=$(echo "$themes" | grep '\.css' | sed 's/\.css$//')
 
-if [ ! -z "$HESTIA_THEMES_CUSTOM" ]; then
-    themes_custom=$(ls -v $HESTIA_THEMES_CUSTOM/)
-    themes_custom=$(echo "$themes_custom" | grep '\.css' | sed 's/\.css$//')
-fi
+# Custom themes
+themes_custom=$(ls -v $HESTIA_THEMES_CUSTOM/)
+themes_custom=$(echo "$themes_custom" | grep '\.css' | sed 's/\.css$//')
+
 
 # Listing data
 case $format in

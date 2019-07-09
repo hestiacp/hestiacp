@@ -18,6 +18,11 @@ source $HESTIA/conf/hestia.conf
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Initialize local directory if it does not exist
+if [ ! -d "$HESTIA_THEMES_CUSTOM" ]; then
+    mkdir -p $HESTIA_THEMES_CUSTOM
+fi
+
 # Theme argument and file detection
 if [ -z "$theme" ]; then
     echo "ERROR: No theme specified."

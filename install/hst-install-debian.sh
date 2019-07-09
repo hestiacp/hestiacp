@@ -1823,7 +1823,7 @@ fi
 $HESTIA/bin/v-change-sys-port $port
 
 # Set default theme
-$HESTIA/bin/v-change-sys-config-value 'THEME' "default"
+$HESTIA/bin/v-change-sys-theme 'default'
 
 # Starting Hestia service
 update-rc.d hestia defaults

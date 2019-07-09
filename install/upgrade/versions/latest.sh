@@ -9,7 +9,7 @@
 # Set default theme
 if [ -z $THEME ]; then
     echo "(*) Enabling support for themes..."
-    $BIN/v-change-sys-config-value 'THEME' default
+    $BIN/v-change-sys-theme 'default'
 fi
 
 # Reduce SSH login grace time

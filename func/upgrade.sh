@@ -121,7 +121,7 @@ upgrade_start_routine() {
     # Upgrade to Version 1.0.3
     if [ $VERSION = "1.0.2" ]; then
         source $HESTIA/install/upgrade/versions/previous/1.0.3.sh
-        VERSION="$new_version"
+        VERSION="1.0.3"
         upgrade_refresh_config
     fi
 

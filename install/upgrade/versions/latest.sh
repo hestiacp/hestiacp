@@ -9,7 +9,7 @@
 # Set default theme
 if [ -z $THEME ]; then
     echo "(*) Enabling support for themes..."
-    $BIN/v-change-sys-config-value 'THEME' default
+    $BIN/v-change-sys-theme 'default'
 fi
 
 # Reduce SSH login grace time
@@ -36,12 +36,17 @@ if [ ! -z "$IMAP_SYSTEM" ]; then
     fi
 fi
 
+# Fix restart queue
 if [ -z "$($BIN/v-list-cron-jobs admin | grep 'v-update-sys-queue restart')" ]; then
     command="sudo $BIN/v-update-sys-queue restart"
     $BIN/v-add-cron-job 'admin' '*/2' '*' '*' '*' '*' "$command"
 fi
 
-# Remove deprecated configuration line
-if cat /etc/clamav/clamd.conf | grep -q "DetectBrokenExecutables"; then
-    sed -i '/DetectBrokenExecutables/d' /etc/clamav/clamd.conf
+# Remove deprecated line from ClamAV configuration file
+if [ -e "/etc/clamav/clamd.conf" ]; then
+    clamd_conf_update_check=$(grep DetectBrokenExecutables /etc/clamav/clamd.conf)
+    if [ ! -z $clamd_conf_update_check ]; then
+        echo "(*) Updating ClamAV configuration..."
+        sed -i '/DetectBrokenExecutables/d' /etc/clamav/clamd.conf
+    fi
 fi

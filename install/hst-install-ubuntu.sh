@@ -1078,10 +1078,6 @@ cp -rf $HESTIA_INSTALL_DIR/templates $HESTIA/data/
 mkdir -p /var/www/html
 mkdir -p /var/www/document_errors
 
-# Installing default themes
-mkdir -p $HESTIA/themes
-cp -rf $HESTIA_INSTALL_DIR/themes $HESTIA/themes/
-
 # Install default success page
 cp -rf $HESTIA_INSTALL_DIR/templates/web/unassigned/index.html /var/www/html/
 cp -rf $HESTIA_INSTALL_DIR/templates/web/skel/document_errors/* /var/www/document_errors/
@@ -1714,7 +1710,7 @@ fi
 $HESTIA/bin/v-change-sys-port $port
 
 # Set default theme
-$HESTIA/bin/v-change-sys-theme default
+$HESTIA/bin/v-change-sys-theme 'default'
 
 # Starting Hestia service
 update-rc.d hestia defaults

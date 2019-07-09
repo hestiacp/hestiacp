@@ -23,15 +23,10 @@ PATH="$PATH:/usr/local/sbin:/sbin:/usr/sbin:/root/bin"
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'SERVICE'
-service_status=$(pgrep $service)
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-
-if [ -z "$service_status" ]; then
-    force="yes"
-fi
 
 if [ "$service" = "iptables" ]; then
     # Run the restart rules for iptables firewall

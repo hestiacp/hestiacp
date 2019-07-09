@@ -208,6 +208,7 @@ upgrade_rebuild_users() {
 
 upgrade_restart_services() {
     echo "(*) Restarting services..."
+    sleep 3
     if [ ! -z "$MAIL_SYSTEM" ]; then
         $BIN/v-restart-mail $restart
     fi

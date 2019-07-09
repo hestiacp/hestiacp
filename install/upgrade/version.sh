@@ -35,6 +35,11 @@ if [ $VERSION = "1.0.1" ]; then
 fi
 
 if [ $VERSION = "1.0.2" ]; then
+    source /usr/local/hestia/install/upgrade/versions/1.0.3.sh
+    VERSION="1.0.3"
+fi
+
+if [ $VERSION = "1.0.3" ]; then
     source /usr/local/hestia/install/upgrade/versions/$version.sh
     VERSION="$version"
 fi

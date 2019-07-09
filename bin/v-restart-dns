@@ -42,7 +42,7 @@ fi
 
 # Schedule restart
 if [ "$1" = 'scheduled' ] || [ -z "$1" -a "$SCHEDULED_RESTART" = 'yes' ]; then
-    sed -i "/$SCRIPT/d" $HESTIA/data/queue/restart.pipe
+    sed -i "/\/$SCRIPT now/d" $HESTIA/data/queue/restart.pipe
     echo "$BIN/$SCRIPT now" >> $HESTIA/data/queue/restart.pipe
     exit
 fi
@@ -60,7 +60,7 @@ fi
 
 # Update restart queue
 if [ -e "$HESTIA/data/queue/restart.pipe" ]; then
-    sed -i "/$SCRIPT/d" $HESTIA/data/queue/restart.pipe
+    sed -i "/\/$SCRIPT now/d" $HESTIA/data/queue/restart.pipe
 fi
 
 

@@ -647,13 +647,13 @@ add_mail_ssl_config() {
     ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key /usr/local/hestia/ssl/mail/mail.$domain.key
 
     # Set correct permissions on certificates
+    chmod 750 $HOMEDIR/$user/conf/mail/$domain/ssl
+    chown -R $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain/ssl
     chmod 0644 $HOMEDIR/$user/conf/mail/$domain/ssl/*
     chown -h $user:mail $HOMEDIR/$user/conf/mail/$domain/ssl/*
     chmod -R 0644 /usr/local/hestia/ssl/mail/*
     chown -h $user:mail /usr/local/hestia/ssl/mail/*
     
-    # Set correct permission on ssl folder
-    chmod 0751 $HOMEDIR/$user/conf/mail/$domain/ssl/
 }
 
 # Delete SSL support for mail domain

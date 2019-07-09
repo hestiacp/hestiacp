@@ -78,8 +78,7 @@ upgrade_start_routine() {
     release_branch_check=$(cat $HESTIA/conf/hestia.conf | grep RELEASE_BRANCH)
     if [ -z "$release_branch_check" ]; then
         echo "(*) Adding global release branch variable to system configuration..."
-        sed -i "/RELEASE_BRANCH/d" $HESTIA/conf/hestia.conf
-        echo "RELEASE_BRANCH='release'" >> $HESTIA/conf/hestia.conf
+        $BIN/v-change-sys-config-value 'RELEASE_BRANCH' 'release'
     fi
 
     #####################################################################

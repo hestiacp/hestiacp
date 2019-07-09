@@ -19,7 +19,7 @@ source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
 
 # Define themes repository URL format
-HESTIA_THEMES_REPO="$HESTIA_GIT_REPO/$RELEASE_BRANCH/themes"
+HESTIA_THEMES_REPO="$HESTIA_GIT_REPO/$RELEASE_BRANCH/install/deb/themes"
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -48,7 +48,6 @@ fi
 # Check if theme name already exists as system theme
 if [ -e $HESTIA_THEMES/$theme.css ]; then
     echo "ERROR: System theme with the same name already exists: $theme."
-    echo "       To update system themes, run v-update-sys-themes."
     exit 1
 fi
 

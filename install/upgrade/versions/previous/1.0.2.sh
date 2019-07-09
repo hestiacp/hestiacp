@@ -6,14 +6,6 @@
 #######                      Place additional commands below.                   #######
 #######################################################################################
 
-#!/bin/sh
-
-# Hestia Control Panel upgrade script for target version 1.0.2
-
-#######################################################################################
-#######                      Place additional commands below.                   #######
-#######################################################################################
-
 # Replace dhparam 1024 with dhparam 4096
 echo "(*) Increasing Diffie-Hellman Parameter strength to 4096-bit..."
 if [ -e /etc/ssl/dhparam.pem ]; then

@@ -211,9 +211,6 @@ upgrade_restart_services() {
     if [ ! -z "$MAIL_SYSTEM" ]; then
         $BIN/v-restart-mail $restart
     fi
-    if [ ! -z "$IMAP_SYSTEM" ]; then
-        $BIN/v-restart-service $IMAP_SYSTEM $restart
-    fi
     if [ ! -z "$WEB_SYSTEM" ]; then
         $BIN/v-restart-web $restart
         $BIN/v-restart-proxy $restart

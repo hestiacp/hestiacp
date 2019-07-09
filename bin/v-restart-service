@@ -23,10 +23,16 @@ PATH="$PATH:/usr/local/sbin:/sbin:/usr/sbin:/root/bin"
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'SERVICE'
+service_status=$(pgrep $service)
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+# Restart service if not running instead of trying to reload
+if [ -z "$service_status" ]; then
+    force="yes"
+fi
 
 if [ "$service" = "iptables" ]; then
     # Run the restart rules for iptables firewall
@@ -38,11 +44,15 @@ elif [ -z "$force" -o "$force" = "no" ] && [ \
         "$service" = "exim4" -o     \
         "$service" = "dovecot" -o   \
         "$service" = "bind9" -o     \
+        "$service" = "named" -o     \
         "$service" = "vsftpd" -o    \
+        "$service" = "proftpd" -o    \
         "$service" = "ssh" -o       \
         "$service" = "fail2ban" ]; then
+    sleep 1
     systemctl reload $service > /dev/null 2>&1
 else
+    sleep 1
     systemctl restart $service > /dev/null 2>&1
 fi
 

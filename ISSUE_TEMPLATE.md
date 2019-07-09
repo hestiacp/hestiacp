@@ -16,10 +16,15 @@ Please enter your response here (e.g. Ubuntu 18.04.2 LTS)
 You can find this information in $HESTIA/conf/hestia.conf by running the following command:
 `grep VERSION $HESTIA/conf/hestia.conf`
 
-Please enter your response here (e.g. 1.00.0-190618)
+Please enter your response here (e.g. 1.0.1)
 
 ### Which branch are you using?
-Please enter your response here (e.g master, develop, etc.)
+Please enter your response here (e.g release, master, etc.)
+
+### When did this issue occur? After a clean installation, or after an upgrade?
+Please enter your response here (e.g the feature stopped working after upgrading to the latest release)
+
+**Note:** If you have upgraded from an older release on an existing server, please let us know which version was previously installed if at all possible.
 
 ### Which of the following web server configurations are you using?
 - Apache + Nginx (default)

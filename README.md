@@ -2,8 +2,6 @@
 ==================================================
 **Current stable release:** Version 1.0.1, released on June 25th, 2019.
 
-**Next planned release:** Version 1.0.2 - minor bug fixes & improvements, currently available for testing in the **prerelease** branch. Please see "Installing development builds" for more information.
-
 What is Hestia Control Panel?
 ----------------------------
 * An open source web server control panel with an easy-to-use interface.

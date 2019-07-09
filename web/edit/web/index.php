@@ -349,7 +349,7 @@ if (!empty($_POST['save'])) {
     }
 
     // Delete Lets Encrypt support
-    if (( $v_letsencrypt == 'yes' ) && (empty($_POST['v_letsencrypt'])) && (empty($_SESSION['error_msg']))) {
+    if (( $v_letsencrypt == 'yes' ) && (empty($_POST['v_letsencrypt']) || empty($_POST['v_ssl'])) && (empty($_SESSION['error_msg']))) {
         exec (HESTIA_CMD."v-delete-letsencrypt-domain ".$user." ".escapeshellarg($v_domain)." ''", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);

@@ -15,7 +15,6 @@
           <li entity="sort-name"><span class="name"><?=__('Username')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
           <li entity="sort-disk" sort_as_int="1"><span class="name"><?=__('Disk')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
           <li entity="sort-bandwidth" sort_as_int="1"><span class="name"><?=__('Bandwidth')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
-          <li entity="sort-star" sort_as_int="1"><span class="name"><?=__('Starred')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
         </ul>
         <div class="l-sort-toolbar clearfix">
           <table>
@@ -75,7 +74,7 @@
                   <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-atlas" title="<?php print __('DNS Domains');?>"></i></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-database" title="<?php print __('Databases');?>"></i></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-clock" title="<?php print __('Cron Jobs');?>"></i></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-undo" title="<?php print __('Backups');?>"></i></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-file-archive" title="<?php print __('Backups');?>"></i></b></div>
              </div>
           </div>
 
@@ -100,7 +99,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
           <div class="clearfix l-unit__stat-col--left super-compact">
             <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="user[]" value="<?=$key?>">
           </div>
-              <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('login as')?>"><?=$key?> <span style="font-weight: normal !important;">(<?=$data[$key]['FNAME']?> <?=$data[$key]['LNAME']?>)</span></b></a>
+              <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('login as')?> <?=$key?>"><?=$key?> <span style="font-weight: normal !important;">(<?=$data[$key]['FNAME']?> <?=$data[$key]['LNAME']?>)</span></b></a>
                 <br />
                 <span style="font-size: 0.8rem;"><b><?=__('Email')?>:</b> <?=$data[$key]['CONTACT']?></span>
               </div>

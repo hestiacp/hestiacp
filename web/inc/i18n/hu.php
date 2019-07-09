@@ -759,4 +759,6 @@ $LANG['hu'] = array(
     'Email Credentials' => 'Email Credentials',
 
     'Theme' => 'Megjelenése',
+    'Operating System' => 'Operációs rendszer',
+    
 );

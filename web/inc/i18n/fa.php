@@ -726,4 +726,5 @@ $LANG['fa'] = array(
     'maximum characters length, including prefix' => 'بیشینه %s کاراکتر طول, شامل پیشوند',
     'Email Credentials' => 'اعتبار پست الکترونیکی',
     'Theme' => 'ظاهر',
+    'Operating System' => 'سیستم عامل',
 );

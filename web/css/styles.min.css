@@ -141,176 +141,104 @@
  */
 
 /* ==========================================================================
-   Define Exo 2 font family
+   Define Exo font family
    ========================================================================== */
-/* exo-2-100 - latin */
+/* exo-300 - latin-ext_latin */
 @font-face {
-  font-family: 'Exo 2';
-  font-style: normal;
-  font-weight: 100;
-  src: local('Exo 2 Thin'), local('Exo2-Thin'),
-       url('../webfonts/exo-2-v5-latin-100.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../webfonts/exo-2-v5-latin-100.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-}
-/* exo-2-100italic - latin */
-@font-face {
-  font-family: 'Exo 2';
-  font-style: italic;
-  font-weight: 100;
-  src: local('Exo 2 Thin Italic'), local('Exo2-ThinItalic'),
-       url('../webfonts/exo-2-v5-latin-100italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../webfonts/exo-2-v5-latin-100italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-}
-/* exo-2-200 - latin */
-@font-face {
-  font-family: 'Exo 2';
-  font-style: normal;
-  font-weight: 200;
-  src: local('Exo 2 Extra Light'), local('Exo2-ExtraLight'),
-       url('../webfonts/exo-2-v5-latin-200.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../webfonts/exo-2-v5-latin-200.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-}
-/* exo-2-200italic - latin */
-@font-face {
-  font-family: 'Exo 2';
-  font-style: italic;
-  font-weight: 200;
-  src: local('Exo 2 Extra Light Italic'), local('Exo2-ExtraLightItalic'),
-       url('../webfonts/exo-2-v5-latin-200italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../webfonts/exo-2-v5-latin-200italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-}
-/* exo-2-300 - latin */
-@font-face {
-  font-family: 'Exo 2';
+  font-family: 'Exo';
   font-style: normal;
   font-weight: 300;
-  src: local('Exo 2 Light'), local('Exo2-Light'),
-       url('../webfonts/exo-2-v5-latin-300.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../webfonts/exo-2-v5-latin-300.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  src: local('Exo Light'), local('Exo-Light'),
+       url('../webfonts/exo-v8-latin-ext_latin-300.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../webfonts/exo-v8-latin-ext_latin-300.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
-/* exo-2-300italic - latin */
+/* exo-300italic - latin-ext_latin */
 @font-face {
-  font-family: 'Exo 2';
+  font-family: 'Exo';
   font-style: italic;
   font-weight: 300;
-  src: local('Exo 2 Light Italic'), local('Exo2-LightItalic'),
-       url('../webfonts/exo-2-v5-latin-300italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../webfonts/exo-2-v5-latin-300italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  src: local('Exo Light Italic'), local('Exo-LightItalic'),
+       url('../webfonts/exo-v8-latin-ext_latin-300italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../webfonts/exo-v8-latin-ext_latin-300italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
-/* exo-2-regular - latin */
+/* exo-regular - latin-ext_latin */
 @font-face {
-  font-family: 'Exo 2';
+  font-family: 'Exo';
   font-style: normal;
   font-weight: 400;
-  src: local('Exo 2'), local('Exo2-Regular'),
-       url('../webfonts/exo-2-v5-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../webfonts/exo-2-v5-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  src: local('Exo Regular'), local('Exo-Regular'),
+       url('../webfonts/exo-v8-latin-ext_latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../webfonts/exo-v8-latin-ext_latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
-/* exo-2-italic - latin */
+/* exo-italic - latin-ext_latin */
 @font-face {
-  font-family: 'Exo 2';
+  font-family: 'Exo';
   font-style: italic;
   font-weight: 400;
-  src: local('Exo 2 Italic'), local('Exo2-Italic'),
-       url('../webfonts/exo-2-v5-latin-italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../webfonts/exo-2-v5-latin-italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  src: local('Exo Italic'), local('Exo-Italic'),
+       url('../webfonts/exo-v8-latin-ext_latin-italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../webfonts/exo-v8-latin-ext_latin-italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
-/* exo-2-500 - latin */
+/* exo-500 - latin-ext_latin */
 @font-face {
-  font-family: 'Exo 2';
+  font-family: 'Exo';
   font-style: normal;
   font-weight: 500;
-  src: local('Exo 2 Medium'), local('Exo2-Medium'),
-       url('../webfonts/exo-2-v5-latin-500.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../webfonts/exo-2-v5-latin-500.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  src: local('Exo Medium'), local('Exo-Medium'),
+       url('../webfonts/exo-v8-latin-ext_latin-500.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../webfonts/exo-v8-latin-ext_latin-500.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
-/* exo-2-500italic - latin */
+/* exo-500italic - latin-ext_latin */
 @font-face {
-  font-family: 'Exo 2';
+  font-family: 'Exo';
   font-style: italic;
   font-weight: 500;
-  src: local('Exo 2 Medium Italic'), local('Exo2-MediumItalic'),
-       url('../webfonts/exo-2-v5-latin-500italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../webfonts/exo-2-v5-latin-500italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  src: local('Exo Medium Italic'), local('Exo-MediumItalic'),
+       url('../webfonts/exo-v8-latin-ext_latin-500italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../webfonts/exo-v8-latin-ext_latin-500italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
-/* exo-2-600 - latin */
+/* exo-600 - latin-ext_latin */
 @font-face {
-  font-family: 'Exo 2';
+  font-family: 'Exo';
   font-style: normal;
   font-weight: 600;
-  src: local('Exo 2 Semi Bold'), local('Exo2-SemiBold'),
-       url('../webfonts/exo-2-v5-latin-600.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../webfonts/exo-2-v5-latin-600.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  src: local('Exo SemiBold'), local('Exo-SemiBold'),
+       url('../webfonts/exo-v8-latin-ext_latin-600.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../webfonts/exo-v8-latin-ext_latin-600.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
-/* exo-2-600italic - latin */
+/* exo-600italic - latin-ext_latin */
 @font-face {
-  font-family: 'Exo 2';
+  font-family: 'Exo';
   font-style: italic;
   font-weight: 600;
-  src: local('Exo 2 Semi Bold Italic'), local('Exo2-SemiBoldItalic'),
-       url('../webfonts/exo-2-v5-latin-600italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../webfonts/exo-2-v5-latin-600italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  src: local('Exo SemiBold Italic'), local('Exo-SemiBoldItalic'),
+       url('../webfonts/exo-v8-latin-ext_latin-600italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../webfonts/exo-v8-latin-ext_latin-600italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
-/* exo-2-700 - latin */
+/* exo-700 - latin-ext_latin */
 @font-face {
-  font-family: 'Exo 2';
+  font-family: 'Exo';
   font-style: normal;
   font-weight: 700;
-  src: local('Exo 2 Bold'), local('Exo2-Bold'),
-       url('../webfonts/exo-2-v5-latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../webfonts/exo-2-v5-latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  src: local('Exo Bold'), local('Exo-Bold'),
+       url('../webfonts/exo-v8-latin-ext_latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../webfonts/exo-v8-latin-ext_latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
-/* exo-2-700italic - latin */
+/* exo-700italic - latin-ext_latin */
 @font-face {
-  font-family: 'Exo 2';
+  font-family: 'Exo';
   font-style: italic;
   font-weight: 700;
-  src: local('Exo 2 Bold Italic'), local('Exo2-BoldItalic'),
-       url('../webfonts/exo-2-v5-latin-700italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../webfonts/exo-2-v5-latin-700italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-}
-/* exo-2-800 - latin */
-@font-face {
-  font-family: 'Exo 2';
-  font-style: normal;
-  font-weight: 800;
-  src: local('Exo 2 Extra Bold'), local('Exo2-ExtraBold'),
-       url('../webfonts/exo-2-v5-latin-800.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../webfonts/exo-2-v5-latin-800.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-}
-/* exo-2-800italic - latin */
-@font-face {
-  font-family: 'Exo 2';
-  font-style: italic;
-  font-weight: 800;
-  src: local('Exo 2 Extra Bold Italic'), local('Exo2-ExtraBoldItalic'),
-       url('../webfonts/exo-2-v5-latin-800italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../webfonts/exo-2-v5-latin-800italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-}
-/* exo-2-900 - latin */
-@font-face {
-  font-family: 'Exo 2';
-  font-style: normal;
-  font-weight: 900;
-  src: local('Exo 2 Black'), local('Exo2-Black'),
-       url('../webfonts/exo-2-v5-latin-900.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../webfonts/exo-2-v5-latin-900.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-}
-/* exo-2-900italic - latin */
-@font-face {
-  font-family: 'Exo 2';
-  font-style: italic;
-  font-weight: 900;
-  src: local('Exo 2 Black Italic'), local('Exo2-BlackItalic'),
-       url('../webfonts/exo-2-v5-latin-900italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../webfonts/exo-2-v5-latin-900italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  src: local('Exo Bold Italic'), local('Exo-BoldItalic'),
+       url('../webfonts/exo-v8-latin-ext_latin-700italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../webfonts/exo-v8-latin-ext_latin-700italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 /* inconsolata-bold - latin */
 @font-face {
   font-family: 'Inconsolata';
   src: local('Inconsolata Bold'), local('Inconsolata-Bold'),
-      url('hinted-Inconsolata-Bold.woff2') format('woff2'),
-      url('hinted-Inconsolata-Bold.woff') format('woff');
+      url('../webfonts/hinted-Inconsolata-Bold.woff2') format('woff2'),
+      url('../webfonts/hinted-Inconsolata-Bold.woff') format('woff');
   font-weight: bold;
   font-style: normal;
 }
@@ -318,8 +246,8 @@
 @font-face {
   font-family: 'Inconsolata';
   src: local('Inconsolata Regular'), local('Inconsolata-Regular'),
-      url('hinted-Inconsolata-Regular.woff2') format('woff2'),
-      url('hinted-Inconsolata-Regular.woff') format('woff');
+      url('../webfonts/hinted-Inconsolata-Regular.woff2') format('woff2'),
+      url('../webfonts/hinted-Inconsolata-Regular.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
@@ -758,7 +686,7 @@ html {
 }
 
 body {
-  font-family: 'Exo 2', Arial;
+  font-family: 'Exo', Arial;
   overflow-x: hidden;
   font-size: 0.9rem;
   height: 100%;
@@ -889,8 +817,8 @@ a {
 .l-menu__item a {
   color: #f7f7f7;
   position: relative;
-  line-height: 38px;
-  padding: 12px 18px;
+  line-height: 39px;
+  padding: 11px 14px;
   border-left: 1px solid transparent;
   border-right: 1px solid transparent; 
 }
@@ -1011,7 +939,7 @@ a {
   background-color: rgba(255,255,255,0.95);
   box-shadow: 0 3px 30px 0 rgba(0, 0, 0, 0.5);
   list-style-type: none;
-  margin: 0 27px;
+  margin: 0 18px;
   max-height: 90%;
   overflow-y: auto;
   padding-left: 0;
@@ -1028,29 +956,43 @@ a {
   border-top: none;
 }
 
+.notification-container .empty {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: normal;
+}
+
+.notification-container .empty .status-icon {
+  color: #54a6e5;
+}
+
 .notification-container .unseen {
   color: #6f6f6f;
 }
 
 .notification-container li {
   border-bottom: 1px solid #e9e4e4;
-  padding: 20px;
+  padding: 30px 20px 50px 20px;
+}
+
+.notification-container  li:last-child {
+  border-bottom: none;
 }
 
 .notification-container .mark-seen {
   background-color: #cc3366;
-  border: 2px solid #454545;
+  border: 1px solid #c41650;
   border-radius: 10px;
   cursor: pointer;
   display: none;
   float: right;
   height: 7px;
   margin-right: -5px;
-  margin-top: 10px;
+  margin-top: 9px;
   width: 7px;
 }
 .notification-container .mark-seen:hover {
-  background-color: #333;
+  background-color: #fff;
   border-color: #e83b75;
 }
 .notification-container .mark-seen:active {
@@ -1186,15 +1128,16 @@ a {
 .l-stat__col-title {
   text-transform: uppercase;
   font-weight: 600;
-  color: #474747;
+  color: #5b5b5b;
   min-height: 21px;
 }
+
 .l-stat__col--active .l-stat__col-title {
   color: #cc3366;
-  font-size: 24px;
+  font-size: 22px;
   margin-top: -7px;
   letter-spacing: -1px;
-  margin-right: -8px;
+  margin-right: -4px;
 }
 
 .l-stat__col .fas {
@@ -1370,10 +1313,10 @@ div.l-content > div.l-separator:nth-of-type(4) {
   color: #4b4b4b;
 }
 .l-sort-toolbar .sort-by:active {
-  color: #55c9c0;
+  color: #3b9de8;
 }
 .l-sort-toolbar .sort-by:active b {
-  color: #55c9c0;
+  color: #3b9de8;
 }
 
 .l-sort-toolbar .sort-by b {
@@ -1386,7 +1329,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   color: #4b4b4b;
 }
 .l-sort-toolbar .toggle-all:active {
-  color: #55c9c0;
+  color: #3b9de8;
 }
 
 .l-sort-toolbar .l-select {
@@ -1414,7 +1357,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .l-sort-toolbar__filter-apply {
   float: left;
   width: 32px;
-  height: 28px;
+  height: 30px;
   border: 1px solid #ddd;
   background-color: rgba(255,255,255,0.90);
   text-shadow: 0px 1px rgba(255,255,255,0.95);
@@ -1470,7 +1413,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   color: #cc3366;
 }
 .l-sort-toolbar .vst:active {
-  color: #55C9C0;
+  color: #3b9de8;
 }
 .l-sort-toolbar .vst.selected {
   color: #cc3366;
@@ -1532,7 +1475,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .l-select select {
   border: 0;
   background-color: transparent;
-  height: 26px;
+  height: 28px;
   min-width: 175px;
   padding-left: 10px;
   background-image: url("/images/arrow.png");
@@ -1570,7 +1513,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   color: #707070;
   padding: 0 0 0 14px;
   overflow: hidden;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   border-radius: 0;
   border-left: 1px solid transparent;
   border-right: 1px solid transparent;
@@ -1582,12 +1525,13 @@ div.l-content > div.l-separator:nth-of-type(4) {
   border-left: 1px solid #ddd !important;
   border-right: 1px solid #ddd !important;
   border-bottom: 1px solid #ddd !important;
+  border-top: 1px solid #ddd !important;
   text-shadow: 0px 1px rgba(255,255,255,0.95);
   box-shadow: inset 0px 0px 1px rgba(255,255,255,1), inset 0px 0px 4px rgba(255,255,255,0.8), 0px 4px 6px rgba(190,190,190,0.3) !important;
   border-top-left-radius: 0px;
   border-top-right-radius: 0px;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
   min-height: 28px;
   color: #707070;
   padding: 0 0 0 14px;
@@ -1647,7 +1591,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   display: block;
 }
 .l-unit--blue {
-  border-left: 2px solid #55c9c0;
+  border-left: 2px solid #3b9de8;
 }
 
 .l-unit--suspended {
@@ -2421,7 +2365,7 @@ label:hover {
   border: 1px solid #cfcfcf;
   border-radius: 4px;
   color: #4e4e4e;
-  font-family: 'Exo 2', Arial, Arial, Helvetica, sans-serif;
+  font-family: 'Exo', Arial, Arial, Helvetica, sans-serif;
   font-size: 0.8rem;
   height: 20px;
   margin: 2px 6px 0 0;
@@ -2434,7 +2378,7 @@ label:hover {
   border: 1px solid #909090;
 }
 .vst-input:focus {
-  border: 1px solid #55C9C0;
+  border: 1px solid #3b9de8;
   background-color: #D7F9FF;
   color: #333;
 }
@@ -2461,7 +2405,7 @@ label:hover {
   border: 1px solid #ccc;
   border-radius: 4px;
   color: #4e4e4e;
-  font-family: 'Exo 2', Arial, Helvetica,sans-serif;
+  font-family: 'Exo', Arial, Helvetica,sans-serif;
   font-size: 0.8rem;
   font-weight: normal;
   height: 36px;
@@ -2491,7 +2435,7 @@ label:hover {
   border: 1px solid #909090;
 }
 .vst-list:focus {
-  border: 1px solid #55C9C0;
+  border: 1px solid #3b9de8;
   color: #333;
 }
 
@@ -2533,6 +2477,7 @@ a.vst-text:active b{
   color: #30659d !important;
   padding: 4px 0px 0px 18px;
   overflow: hidden;
+  height: 28px;
 }
 
 .advanced-options a {
@@ -2553,7 +2498,7 @@ a.vst-text:active b{
   padding: 5px;
   width: 560px;
   height: 60px;
-  font-family: 'Exo 2', Arial, Helvetica, sans-serif;
+  font-family: 'Exo', Arial, Helvetica, sans-serif;
   padding: 7px 1px 3px 14px;
   font-weight: normal;
   box-shadow: 0px 1px 4px rgba(0,0,0,0.15);
@@ -2562,7 +2507,7 @@ a.vst-text:active b{
   border: 1px solid #909090;
 }
 .vst-textinput:focus {
-  border: 1px solid #55C9C0;
+  border: 1px solid #3b9de8;
   background-color: #D7F9FF;
   color: #333;
 }
@@ -2731,10 +2676,10 @@ td.hint {
   filter:chroma(color=#000);
   cursor: pointer;
   border-radius: 3px 3px 3px 3px !important;
-  font-size: 1.0em !important;
+  font-size: 1.05em !important;
   font-weight: 500 !important;
   padding: 2px 16px 3px 20px !important;
-  width: 100px !important;
+  min-width: 100px !important;
   height: 28px !important;
   color: #30659d !important;
   border: 1px solid #3b9de8 !important;
@@ -2743,7 +2688,7 @@ td.hint {
   box-shadow: 0px 1px 4px rgba(0,0,0,0.2),
               inset 0px 0px 1px #fff,
               inset 0px 0px 3px rgba(255,255,255,0.5) !important;
-  text-shadow: 0px 1px 1px rgba(255,255,255,0.5) !important;
+  text-shadow: 0px 1px 1px rgba(255,255,255,0.6) !important;
 }
 .ui-button:hover, .button:hover, .ui-button.cancel:hover, .button.cancel:hover {
   color: #3b9de8 !important;
@@ -2916,7 +2861,7 @@ a.button.cancel {
 
 .mail-infoblock td {
   color: #505050;
-  font-size: 11.5px;
+  font-size: 0.75rem;
   height: 20px;
   font-weight: normal;
 }
@@ -2954,7 +2899,7 @@ a.button.cancel {
 .login {
   background-color: #fff;
   box-shadow: 0px 8px 30px rgba(49,98,153, 0.75);
-  font-family: 'Exo 2', Tahoma, Arial, Helvetica, sans-serif;
+  font-family: 'Exo', Tahoma, Arial, Helvetica, sans-serif;
   margin: 0;
   padding: 0;
   text-align: left;
@@ -3062,7 +3007,7 @@ div.l-content.collapsed .l-sort {
 
 .console-output {
   font-family: "Inconsolata", "Lucida Console", Monaco, monospace;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   color: #202020;
   letter-spacing: -0.01em;
 }
@@ -3121,7 +3066,7 @@ form#vstobjects.suspended {
 }
 
 .l-sort__create-btn.edit:hover #tooltip {
-  background-color: #55C9C0;
+  background-color: #3b9de8;
 }
 .l-sort__create-btn.edit:active #tooltip {
   background-color: #3BF0E6 !important;
@@ -3140,13 +3085,12 @@ form#vstobjects.suspended {
 .pill.usage{
   margin-top: 8px;
   font-size: 0.75rem;
-  padding: 3px;
+  padding: 4px;
   padding-left: 8px;
   padding-right: 8px;
   margin-right: 10px;
-  line-height: 0.85rem;
-  box-shadow: 0px 1px 1px rgba(0,0,0,0.25),
-              inset 0px 0px 1px rgba(0,0,0,0.15);
+  line-height: 0.75rem;
+  box-shadow: 0px 1px 1px rgba(0,0,0,0.25), inset 0px 0px 1px rgba(0,0,0,0.15);
   background-color: rgba(255,255,255,0.75);
   font-weight: 500;
   border: 1px solid rgba(255,255,255,0.9);
@@ -3308,7 +3252,7 @@ form#vstobjects.suspended {
 .search-input {
   background-color: #fff;
   border: 1px solid #ddd;
-  height: 24px;
+  height: 26px;
   line-height: 28px;
   padding-left: 7px;
   float: left;
@@ -3410,7 +3354,7 @@ form#vstobjects.suspended {
   background-color: #000;
 }
 .shortcuts .close:active {
-  background-color: #55c9c0;
+  background-color: #3b9de8;
 }
 .shortcuts .close .fas {
   font-size: 1.3rem;
@@ -3527,7 +3471,7 @@ form#vstobjects.suspended {
 }
 
 .ui-dialog {
-  font-family: 'Exo 2', Arial, Helvetica, sans-serif !important;
+  font-family: 'Exo', Arial, Helvetica, sans-serif !important;
   font-weight: 500 !important;
   background-color: rgba(245,245,245,0.87) !important;
   box-shadow: 0 8px 50px 0 rgba(0, 0, 0, 0.55) !important;
@@ -3542,8 +3486,12 @@ form#vstobjects.suspended {
 }
 
 .ui-dialog .ui-dialog-title {
-  color: #121212 !important;
-  font-size: 1.2em !important;
+  color: #046c98 !important;
+  font-size: 1.1em !important;
+  text-transform: none !important;
+  letter-spacing: -0.01em !important;
+  text-align: center !important;
+  float: none !important;
 }
 
 .ui-dialog-buttonpane {
@@ -3558,11 +3506,13 @@ form#vstobjects.suspended {
 .helper-container {
   float: right;
   margin-bottom: -450px;
-  margin-top: 359px;
-  margin-right: 80px;
+  margin-top: 410px;
+  margin-right: 22px;
   padding-top: 3px;
   width: 563px;
   box-shadow: 0px 1px 4px rgba(0,0,0,0.15);
+  border: 1px solid #cfcfcf;
+  border-radius: 4px;
 }
 
 .context-helper {
@@ -3575,7 +3525,7 @@ form#vstobjects.suspended {
   float: right;
 }
 .context-helper:hover {
-  color: #55C9C0;
+  color: #3b9de8;
 }
 .context-helper:active {
   color: #cc3366;
@@ -3585,7 +3535,7 @@ form#vstobjects.suspended {
 .cron-helper-tabs {
 /*  margin-top: 30px;*/
   border: none !important;
-  font-family: 'Exo 2', Arial, Helvetica, sans-serif !important;
+  font-family: 'Exo', Arial, Helvetica, sans-serif !important;
 }
 
 .cron-helper-tabs a {
@@ -3601,15 +3551,12 @@ form#vstobjects.suspended {
   color: #cc3366;
 }
 .cron-helper-tabs a:active {
-  color: #55C9C0;
+  color: #3b9de8;
 }
 .cron-helper-tabs .ui-tabs-selected a {
   color: #cc3366;
 }
 
-.cron-helper-tabs select {
-  font-size: 15px !important;
-}
 .cron-helper-tabs select.short {
   background-position: -388px -604px;
   min-width: 30px;
@@ -3633,8 +3580,8 @@ form#vstobjects.suspended {
 
 .cron-helper-tabs .button {
   width: auto;
-  background-color: #55C9C0;
-  border: 1px solid #55C9C0;
+  background-color: #3b9de8;
+  border: 1px solid #3b9de8;
   text-transform: capitalize;
 }
 .cron-helper-tabs .button:hover {

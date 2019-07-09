@@ -728,5 +728,6 @@ $LANG['ua'] = array(
     '2FA Reset Code:' => 'Код відновлення доступу до акаунту:',
 	'Force SSL/HTTPS' => 'Примусовий редирект HTTP-на-HTTPS',
     'Theme' => 'Зовнішній вигляд',
+    'Operating System' => 'Операційна система',
     
 );

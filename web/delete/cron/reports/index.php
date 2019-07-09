@@ -12,7 +12,6 @@ if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
 }
 
 exec (HESTIA_CMD."v-delete-cron-reports ".$user, $output, $return_var);
-$_SESSION['error_msg'] = __('Cronjob email reporting has been successfully disabled');
 unset($output);
 
 header("Location: /list/cron/");

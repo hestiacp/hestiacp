@@ -96,6 +96,30 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text input-label">
+                                                <?php print __('Theme') ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_theme">
+                                                    <?php
+                                                        foreach ($theme as $key => $value) {
+                                                            echo "\t\t\t\t<option value=\"".$value."\"";
+                                                            if ((!empty($_SESSION['THEME'])) && ( $value == $_SESSION['THEME'])){
+                                                                echo ' selected' ;
+                                                            }
+                                                            if ((!empty($_SESSION['THEME'])) && ( $value == $_POST['v_theme'])){
+                                                                echo ' selected' ;
+                                                            }
+                                                            echo ">".$value."</option>\n";
+                                                        }
+                                                    ?>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text input-label">
                                                 <?php print __('Default Language');?>
                                             </td>
                                         </tr>
@@ -120,30 +144,6 @@
                                         <tr>
                                         <td class="vst-text input-label">
                                                 <label><input type="checkbox" size="20" class="vst-checkbox" name="v_language_update"><?php print __('update');?> <?php print __('Users');?> <?php print __('Default Language');?></label>
-                                                <br><br>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text input-label">
-                                                <?php print __('Theme') ?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <select class="vst-list" name="v_theme">
-                                                    <?php
-                                                        foreach ($theme as $key => $value) {
-                                                            echo "\t\t\t\t<option value=\"".$value."\"";
-                                                            if ((!empty($_SESSION['THEME'])) && ( $value == $_SESSION['THEME'])){
-                                                                echo ' selected' ;
-                                                            }
-                                                            if ((!empty($_SESSION['THEME'])) && ( $value == $_POST['v_theme'])){
-                                                                echo ' selected' ;
-                                                            }
-                                                            echo ">".$value."</option>\n";
-                                                        }
-                                                    ?>
-                                                </select>
                                                 <br><br>
                                             </td>
                                         </tr>
@@ -246,8 +246,6 @@
                                     </table>
                                 </td>
                             </tr>
-
-
                             <tr>
                                 <td class="vst-text input-label step-top advanced-options">
                                     <a href="javascript:elementHideShow('dns');" class="vst-text">

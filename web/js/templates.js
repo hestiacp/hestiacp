@@ -9,13 +9,12 @@ App.Templates.html = {
                     '<li class="~!:UNSEEN~!"><span class="unselectable mark-seen" id="notification-~!:ID~!">&nbsp;</span>\
                         <span class="title"><span class="unselectable icon ~!:TYPE~!">&nbsp;</span>~!:TOPIC~!</span>\
                         ~!:NOTICE~!\
-                        <span class="time">~!:TIME~! ~!:DATE~!</span>\
+                        <b><span class="time">~!:TIME~! ~!:DATE~!</span></b>\
                     </li>'
         ],
         notification_empty: [
-                    '<li class="empty">\
-                        '+App.Constants.NOTIFICATIONS_EMPTY+'\
-                    </li>'
+                    '<li class="empty"><br><br><span><i class="fas fa-bell-slash status-icon" style="font-size: 4rem;"></i><br><br>\
+                    '+App.Constants.NOTIFICATIONS_EMPTY+'\</span></li>'
         ]
     },
 

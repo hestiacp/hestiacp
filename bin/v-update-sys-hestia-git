@@ -90,6 +90,7 @@ if [ ! -z "$1" ]; then
         exit 1
     else
         branch=$1
+        /usr/local/hestia/bin/v-change-sys-config-value 'RELEASE_BRANCH' "$branch"
     fi
 else
     source /usr/local/hestia/conf/hestia.conf

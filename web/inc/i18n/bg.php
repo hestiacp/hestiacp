@@ -750,5 +750,6 @@ $LANG['bg'] = array(
     'Email Credentials' => 'Email Credentials',
 
     'Theme' => 'Външния вид',
+    'Operating System' => 'Операционна система',
 );
 

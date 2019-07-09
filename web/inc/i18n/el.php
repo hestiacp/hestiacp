@@ -757,4 +757,5 @@ $LANG['el'] = array(
     'Email Credentials' => 'Email Credentials',
 
     'Theme' => 'Εμφάνιση',
+    'Operating System' => 'Λειτουργικό σύστημα',
 );

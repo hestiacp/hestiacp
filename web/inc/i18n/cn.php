@@ -764,4 +764,5 @@ $LANG['cn'] = array(
     'Email Credentials' => '电子邮件证书',
 
     'Theme' => '外觀',
+    'Operating System' => '作業系統',
 );

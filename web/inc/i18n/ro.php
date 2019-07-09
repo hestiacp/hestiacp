@@ -757,4 +757,6 @@ $LANG['ro'] = array(
     'Email Credentials' => 'Email Credentials',
 
     'Theme' => 'Aspectul',
+    'Operating System' => 'Sistem de operare',
+    
 );

@@ -121,6 +121,11 @@ check_args '0' "$#" '[FORMAT]'
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Ensure statistics are up to date
+for user in $(ls $HESTIA/data/users); do
+    $BIN/v-update-user-stats $user
+done
+
 # Defining config
 conf=$HESTIA/data/users/admin/overall_stats.log
 if [ ! -e "$conf" ]; then

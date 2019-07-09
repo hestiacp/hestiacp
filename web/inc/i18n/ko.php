@@ -755,4 +755,5 @@ $LANG['ko'] = array(
     'Email Credentials' => '이메일 자격증명',
 
     'Theme' => '모양을',
+    'Operating System' => '운영 체제',
 );

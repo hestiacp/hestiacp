@@ -50,3 +50,8 @@ if [ -e "/etc/clamav/clamd.conf" ]; then
         sed -i '/DetectBrokenExecutables/d' /etc/clamav/clamd.conf
     fi
 fi
+
+# Remove errornous history.log file created by certain builds due to bug in v-restart-system
+if [ -e $HESTIA/data/users/history.log ]; then
+    rm -f $HESTIA/data/users/history.log
+fi

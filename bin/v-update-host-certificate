@@ -80,11 +80,8 @@ $BIN/v-restart-proxy
 if [ ! -z "$MAIL_SYSTEM" ]; then
     # Restart exim (and dovecot if applicable)
     $BIN/v-restart-mail
-    if [ ! -z "$IMAP_SYSTEM" ]; then
-        $BIN/v-restart-service "$IMAP_SYSTEM"
-    fi
 fi
-$BIN/v-restart-service "hestia"
+$BIN/v-restart-service hestia
 
 #----------------------------------------------------------#
 #                       Hestia                             #

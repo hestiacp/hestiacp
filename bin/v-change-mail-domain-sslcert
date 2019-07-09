@@ -57,7 +57,6 @@ add_mail_ssl_config
 
 # Restarting mail server
 $BIN/v-restart-mail $restart
-$BIN/v-restart-service $IMAP_SYSTEM $restart
 
 check_result $? "Mail restart failed" >/dev/null
 

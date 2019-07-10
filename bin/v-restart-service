@@ -50,6 +50,7 @@ elif [ -z "$force" -o "$force" = "no" ] && [ \
         "$service" = "fail2ban" ]; then
     systemctl reload-or-restart $service > /dev/null 2>&1
 else
+    systemctl reset-failed $service > /dev/null 2>&1
     systemctl restart $service > /dev/null 2>&1
 fi
 

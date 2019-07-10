@@ -2,6 +2,17 @@
 ==================================================
 **Current stable release:** Version 1.0.4, released on July 9th, 2019.
 
+**Wanted:** Beta testers! 
+---------------------------- 
+We're currently looking for people who would be willing to help us test development builds as we continue work on the project. If you have previous experience in software testing or development, awesome! If not, now is a great chance to get started.
+
+If you're interested, please send us an e-mail at info@hestiacp.com, or get started today by installing a development build (see the instructions below) on a test server and send us your feedback through GitHub Issues. 
+
+We look forward to your feedback, and as always we welcome all feedback and contributions!
+
+Sincerely,<br>
+The Hestia Control Panel development team
+
 What is Hestia Control Panel?
 ----------------------------
 * An open source web server control panel with an easy-to-use interface.
@@ -54,9 +65,9 @@ bash hst-install.sh -h
 ```
 Alternatively, @gabizz has made available a command-line script generator at https://gabizz.github.io/hestiacp-scriptline-generator/ which allows you to easily generate the installation command via GUI.
 
-Installing development builds
+Installing & testing development builds
 =============================
-In order to install a development build based on the latest published code, you must first have an existing installation of Hestia Control Panel available. If you do not have a server configured, please install the latest stable build using the instructions above before continuing.
+In order to install a development build based on the latest published code, you should first have an instance of Hestia Control Panel set up. If you do not have a server configured, please install the latest stable build using the instructions above before continuing.
 
 **PLEASE NOTE: Development builds should not be installed on systems with live production data without understanding the potential risks involved.**
 

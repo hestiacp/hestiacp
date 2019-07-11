@@ -6,6 +6,11 @@ $TAB = 'DNS';
 // Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
+// List ip addresses
+exec (HESTIA_CMD."v-list-user-ips ".$user." json", $output, $return_var);
+$v_ips = json_decode(implode('', $output), true);
+unset($output);
+
 // Check POST request for dns domain
 if (!empty($_POST['ok'])) {
 
@@ -33,7 +38,7 @@ if (!empty($_POST['ok'])) {
     $v_domain = preg_replace("/^www./i", "", $_POST['v_domain']);
     $v_domain = escapeshellarg($v_domain);
     $v_domain = strtolower($v_domain);
-    $v_ip = escapeshellarg($_POST['v_ip']);
+    $v_ip = $_POST['v_ip'];
     $v_ns1 = escapeshellarg($_POST['v_ns1']);
     $v_ns2 = escapeshellarg($_POST['v_ns2']);
     $v_ns3 = escapeshellarg($_POST['v_ns3']);
@@ -45,7 +50,7 @@ if (!empty($_POST['ok'])) {
 
     // Add dns domain
     if (empty($_SESSION['error_msg'])) {
-        exec (HESTIA_CMD."v-add-dns-domain ".$user." ".$v_domain." ".$v_ip." ".$v_ns1." ".$v_ns2." ".$v_ns3." ".$v_ns4." ".$v_ns5."  ".$v_ns6."  ".$v_ns7." ".$v_ns8." no", $output, $return_var);
+        exec (HESTIA_CMD."v-add-dns-domain ".$user." ".$v_domain." ".escapeshellarg($v_ip)." ".$v_ns1." ".$v_ns2." ".$v_ns3." ".$v_ns4." ".$v_ns5."  ".$v_ns6."  ".$v_ns7." ".$v_ns8." no", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }
@@ -146,6 +151,10 @@ $v_ns6 = str_replace("'", "", $v_ns6);
 $v_ns7 = str_replace("'", "", $v_ns7);
 $v_ns8 = str_replace("'", "", $v_ns8);
 
+if(empty($v_ip) && count($v_ips) > 0) {
+    $ip = array_key_first($v_ips);
+    $v_ip = (empty($v_ips[$ip]['NAT'])?$ip:$v_ips[$ip]['NAT']);
+}
 
 if (empty($_GET['domain'])) {
     // Display body for dns domain

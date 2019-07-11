@@ -17,6 +17,11 @@ if (($_SESSION['user'] == 'admin') && (!empty($_GET['user']))) {
     $user=escapeshellarg($_GET['user']);
 }
 
+// List ip addresses
+exec (HESTIA_CMD."v-list-user-ips ".$user." json", $output, $return_var);
+$v_ips = json_decode(implode('', $output), true);
+unset($output);
+
 // List dns domain
 if ((!empty($_GET['domain'])) && (empty($_GET['record_id'])))  {
     $v_domain = escapeshellarg($_GET['domain']);

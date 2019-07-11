@@ -36,15 +36,14 @@ b, strong {
     box-shadow: none;
 }
 
+.l-profile__notifications:hover,
+.l-profile__notifications.updates:hover,
 .l-profile__notifications.active.l-profile__notifications.updates:active {
-    background: none;
-    box-shadow: none;
+    background: white !important;
+    border: 1px solid transparent !important;
+    box-shadow: none !important;
 }
 
-.l-profile__notifications:hover, .l-profile__notifications.updates:hover {
-    background: none;
-    box-shadow: none;
-}
 .l-unit:hover {
     box-shadow: none;
 }

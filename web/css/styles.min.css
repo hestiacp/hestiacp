@@ -3187,41 +3187,41 @@ form#vstobjects.suspended {
   font-size: 1rem;
 }
 
-.status-icon.yellow, .status-icon.yellow:hover {
+.updates .status-icon.yellow, .updates .status-icon.yellow:hover {
   color: #f3e72c;
 }
-.status-icon.teal, .status-icon.teal:hover {
+.updates .status-icon.teal, .updates .status-icon.teal:hover {
   color: #33cccc;
 }
-.status-icon.purple, .status-icon.purple:hover {
+.updates .status-icon.purple, .updates .status-icon.purple:hover {
   color: #8e2fca;
 }
 
-.status-icon.maroon, .status-icon.maroon:hover {
+.updates .status-icon.maroon, .updates .status-icon.maroon:hover {
   color: #cc3366;
 }
 
-.status-icon.red, .status-icon.red:hover {
+.updates .status-icon.red, .updates .status-icon.red:hover {
   color: #ff3333;
 }
 
-.status-icon.green, .status-icon.green:hover {
+.updates .status-icon.green, .updates .status-icon.green:hover {
   color: #53ba55;
 }
 
-.status-icon.orange, .status-icon.orange:hover {
+.updates .status-icon.orange, .updates .status-icon.orange:hover {
   color: #ffc043;
 }
 
-.status-icon.lightblue, .status-icon.lightblue:hover {
+.updates .status-icon.lightblue, .updates .status-icon.lightblue:hover {
   color: #6eb6f0;
 }
 
-.status-icon.highlight, .status-icon.highlight:hover {
+.updates .status-icon.highlight, .updates .status-icon.highlight:hover {
   color: #323232;
 }
 
-.status-icon.blue, .status-icon.blue:hover {
+.updates .status-icon.blue, .updates .status-icon.blue:hover {
   color: #326b9b;
 }
 

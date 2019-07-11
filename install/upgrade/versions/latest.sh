@@ -45,7 +45,7 @@ fi
 # Remove deprecated line from ClamAV configuration file
 if [ -e "/etc/clamav/clamd.conf" ]; then
     clamd_conf_update_check=$(grep DetectBrokenExecutables /etc/clamav/clamd.conf)
-    if [ ! -z $clamd_conf_update_check ]; then
+    if [ ! -z "$clamd_conf_update_check" ]; then
         echo "(*) Updating ClamAV configuration..."
         sed -i '/DetectBrokenExecutables/d' /etc/clamav/clamd.conf
     fi

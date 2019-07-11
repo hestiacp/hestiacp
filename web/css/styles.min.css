@@ -2399,6 +2399,19 @@ label:hover {
 .vst-input.short {
   width: 200px;
 }
+.vst-input.vst-list-editor {
+  border: none;
+  box-shadow: none;
+  position: absolute;
+  margin-top:-34px;
+  margin-left: 1px;
+  display: block;
+  width: 340px;
+  height: 1rem;
+}
+.vst-input.vst-list-editor:focus {
+  background-color: white;
+}
 
 .vst-list {
   background-color: #fff;
@@ -2422,6 +2435,10 @@ label:hover {
   -webkit-appearance:none;
   text-shadow: 0 0 0 #4b4b4b;
   box-shadow: 0px 1px 4px rgba(0,0,0,0.15);
+}
+
+select.vst-list:-moz-focusring {
+  color:transparent;
 }
 
 .vst-list.long-2 {

@@ -75,7 +75,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_fname" value="<?=htmlentities(trim($v_fname, "'"))?>" tabindex="6" >
+                                    <input type="text" size="20" class="vst-input" name="v_fname" value="<?=htmlentities(trim($v_fname, "'"))?>" tabindex="3" >
                                 </td>
                             </tr>
                             <tr>
@@ -85,7 +85,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_lname" value="<?=htmlentities(trim($v_lname, "'"))?>" tabindex="7" >
+                                    <input type="text" size="20" class="vst-input" name="v_lname" value="<?=htmlentities(trim($v_lname, "'"))?>" tabindex="4" >
                                 </td>
                             </tr>
                             <tr>
@@ -95,7 +95,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_email" id='v_email' value="<?=htmlentities(trim($v_email, "'"))?>" tabindex="3" >
+                                    <input type="text" size="20" class="vst-input" name="v_email" id='v_email' value="<?=htmlentities(trim($v_email, "'"))?>" tabindex="5" >
                                 </td>
                             </tr>
                             <tr>
@@ -105,7 +105,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <select class="vst-list" name="v_package" tabindex="4" >
+                                    <select class="vst-list" name="v_package" tabindex="6" >
                                         <?php
                                             foreach ($data as $key => $value) {
                                                 echo "\n\t\t\t\t\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($key)."\"";
@@ -129,7 +129,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <select class="vst-list" name="v_language" tabindex="5" >
+                                    <select class="vst-list" name="v_language" tabindex="7" >
                                         <?php
                                             foreach ($languages as $key => $value) {
                                                 echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($value)."\"";

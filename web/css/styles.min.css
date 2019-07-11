@@ -960,6 +960,7 @@ a {
   text-align: center;
   font-size: 1.2rem;
   font-weight: normal;
+  padding: 4rem;
 }
 
 .notification-container .empty .status-icon {
@@ -972,7 +973,7 @@ a {
 
 .notification-container li {
   border-bottom: 1px solid #e9e4e4;
-  padding: 30px 20px 50px 20px;
+  padding: 1rem;
 }
 
 .notification-container  li:last-child {
@@ -1046,9 +1047,10 @@ a {
 }
 
 .notification-container .time {
-  float: right;
-  margin-top: 1rem;
-  font-size: 0.7rem;
+  font-size: 0.9em;
+  display: block;
+  text-align: right;
+  padding-top: 0.6rem;
 }
 
 

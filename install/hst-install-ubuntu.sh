@@ -1375,7 +1375,7 @@ if [ "$postgresql" = 'yes' ]; then
     ppass=$(gen_pass)
     cp -f $HESTIA_INSTALL_DIR/postgresql/pg_hba.conf /etc/postgresql/*/main/
     systemctl restart postgresql
-    sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '$ppass'"
+    sudo -iu postgres psql -c "ALTER USER postgres WITH PASSWORD '$ppass'"
 
     # Configuring phpPgAdmin
     if [ "$apache" = 'yes' ]; then

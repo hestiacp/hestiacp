@@ -14,6 +14,15 @@ theme=$1
 source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
 
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#

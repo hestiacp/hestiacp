@@ -66,6 +66,8 @@ sort_cron_jobs
 # Sync cronjobs with system crond
 sync_cron_jobs
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Hestia                             #

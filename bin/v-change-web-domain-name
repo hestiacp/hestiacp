@@ -44,6 +44,9 @@ if [ ! -z "$check_new_domain" ]; then
     check_result $E_EXISTS "$new_domain already exists"
 fi
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 
 #----------------------------------------------------------#
 #                       Action                             #

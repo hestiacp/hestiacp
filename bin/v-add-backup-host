@@ -104,6 +104,8 @@ if [ "$type" != 'local' ];then
     check_result $? "host connection failed" "$E_CONNECT"
 fi
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

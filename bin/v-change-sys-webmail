@@ -20,6 +20,10 @@ export $WEBMAIL_ALIAS
 OLD_ALIAS=$WEBMAIL_ALIAS
 NEW_ALIAS=$1
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#

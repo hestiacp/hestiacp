@@ -17,6 +17,7 @@ shell=$2
 source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
 
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -28,6 +29,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
 
 #----------------------------------------------------------#
 #                       Action                             #

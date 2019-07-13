@@ -27,6 +27,9 @@ source $HESTIA/conf/hestia.conf
 check_args '1' "$#" 'SSL_DIR [RESTART]'
 is_format_valid 'ssl_dir'
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 
 #----------------------------------------------------------#
 #                       Action                             #

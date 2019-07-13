@@ -36,6 +36,9 @@ if [ "$web_domains" -ne '0' ] && [ "$sys_user" != "$ip_owner" ]; then
     check_result "$E_INUSE" "ip $ip is used"
 fi
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 
 #----------------------------------------------------------#
 #                       Action                             #

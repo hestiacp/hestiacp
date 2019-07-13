@@ -764,4 +764,7 @@ $LANG['en'] = array(
     '2FA Reset Code:' => 'Account Recovery Code:',
 
     'Theme' => 'Appearance',
+
+    'Operating System' => 'Operating System',
+    
 );

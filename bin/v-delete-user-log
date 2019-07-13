@@ -31,7 +31,7 @@ else
     rm -f $HESTIA/data/users/$user/history.log
 fi
 
-log_history "======== Log for $user cleared on $date ========"
+log_history "Log for $user was cleared on $date."
 log_event "$OK" "$ARGUMENTS"
 
 exit

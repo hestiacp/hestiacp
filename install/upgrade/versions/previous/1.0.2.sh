@@ -6,14 +6,6 @@
 #######                      Place additional commands below.                   #######
 #######################################################################################
 
-#!/bin/sh
-
-# Hestia Control Panel upgrade script for target version 1.0.2
-
-#######################################################################################
-#######                      Place additional commands below.                   #######
-#######################################################################################
-
 # Replace dhparam 1024 with dhparam 4096
 echo "(*) Increasing Diffie-Hellman Parameter strength to 4096-bit..."
 if [ -e /etc/ssl/dhparam.pem ]; then
@@ -59,7 +51,7 @@ if [ ! -z "$WEBALIZER_CHECK" ]; then
     if [ -d "/var/www/webalizer" ]; then
         rm -rf /var/www/webalizer
     fi
-    $HESTIA/bin/v-change-sys-config-value '$STATS_SYSTEM' 'awstats'
+    $HESTIA/bin/v-change-sys-config-value 'STATS_SYSTEM' 'awstats'
 fi
 
 # Remove old hestia.conf files from Apache & NGINX if they exist

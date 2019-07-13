@@ -33,7 +33,7 @@ upgrade_welcome_message() {
 
 upgrade_complete_message() {
     # Add notification to panel
-    $HESTIA/bin/v-add-user-notification admin 'Upgrade complete' 'Your server has been updated to Hestia Control Panel version '$new_version'.<br>Please report any bugs on GitHub at<br><a href="https://github.com/hestiacp/hestiacp/Issues" target="_new">https://github.com/hestiacp/hestiacp/Issues</a><br><br>Have a great day!'
+    $HESTIA/bin/v-add-user-notification admin 'Upgrade complete' 'Your server has been updated to Hestia Control Panel <b>v'$new_version'</b>.<br><br>Please tell us about any bugs or issues by opening an issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a> or e-mail <a href="mailto:info@hestiacp.com?Subject="['$new_version'] Bug Report: ">info@hestiacp.com</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart status-icon red"></i> The Hestia Control Panel development team'
 
     # Echo message to console output
     echo
@@ -78,8 +78,7 @@ upgrade_start_routine() {
     release_branch_check=$(cat $HESTIA/conf/hestia.conf | grep RELEASE_BRANCH)
     if [ -z "$release_branch_check" ]; then
         echo "(*) Adding global release branch variable to system configuration..."
-        sed -i "/RELEASE_BRANCH/d" $HESTIA/conf/hestia.conf
-        echo "RELEASE_BRANCH='release'" >> $HESTIA/conf/hestia.conf
+        $BIN/v-change-sys-config-value 'RELEASE_BRANCH' 'release'
     fi
 
     #####################################################################
@@ -121,12 +120,19 @@ upgrade_start_routine() {
     # Upgrade to Version 1.0.3
     if [ $VERSION = "1.0.2" ]; then
         source $HESTIA/install/upgrade/versions/previous/1.0.3.sh
-        VERSION="$new_version"
+        VERSION="1.0.3"
+        upgrade_refresh_config
+    fi
+
+    # Upgrade to Version 1.0.4
+    if [ $VERSION = "1.0.3" ]; then
+        source $HESTIA/install/upgrade/versions/previous/1.0.4.sh
+        VERSION="1.0.4"
         upgrade_refresh_config
     fi
 
     # Upgrade to Version 1.1.0
-    if [ $VERSION = "1.0.3" ]; then
+    if [ $VERSION = "1.0.4" ]; then
         source $HESTIA/install/upgrade/versions/latest.sh
         VERSION="$new_version"
         upgrade_refresh_config
@@ -195,24 +201,22 @@ upgrade_rebuild_users() {
     for user in `ls /usr/local/hestia/data/users/`; do
         echo "(*) Rebuilding domains and account for user: $user..."
         if [ ! -z "$WEB_SYSTEM" ]; then
-            $BIN/v-rebuild-web-domains $user >/dev/null 2>&1
+            $BIN/v-rebuild-web-domains $user 'no' >/dev/null 2>&1
         fi
         if [ ! -z "$DNS_SYSTEM" ]; then
-            $BIN/v-rebuild-dns-domains $user >/dev/null 2>&1
+            $BIN/v-rebuild-dns-domains $user 'no' >/dev/null 2>&1
         fi
         if [ ! -z "$MAIL_SYSTEM" ]; then 
-            $BIN/v-rebuild-mail-domains $user >/dev/null 2>&1
+            $BIN/v-rebuild-mail-domains $user 'no' >/dev/null 2>&1
         fi
     done
 }
 
 upgrade_restart_services() {
     echo "(*) Restarting services..."
+    sleep 5
     if [ ! -z "$MAIL_SYSTEM" ]; then
         $BIN/v-restart-mail $restart
-    fi
-    if [ ! -z "$IMAP_SYSTEM" ]; then
-        $BIN/v-restart-service $IMAP_SYSTEM $restart
     fi
     if [ ! -z "$WEB_SYSTEM" ]; then
         $BIN/v-restart-web $restart

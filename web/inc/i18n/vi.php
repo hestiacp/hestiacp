@@ -757,4 +757,5 @@ $LANG['vi'] = array(
     'Email Credentials' => 'Chứng nhận email',
     
     'Theme' => 'Xuất hiện',
+    'Operating System' => 'Hệ điều hành',
 );

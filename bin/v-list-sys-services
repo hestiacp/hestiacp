@@ -263,6 +263,13 @@ if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'remote' ]; then
     data="$data CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
 
+# Checking SSH daemon
+if [ -e "/etc/ssh/sshd_config" ]; then
+    get_srv_state ssh
+    data="$data\nNAME='ssh' SYSTEM='SSH Access' STATE='$state'"
+    data="$data CPU='$cpu' MEM='$mem' RTIME='$rtime'"
+fi
+
 # Checking FIREWALL system
 if [ ! -z "$FIREWALL_SYSTEM" ] && [ "$FIREWALL_SYSTEM" != 'remote' ]; then
     state="stopped"
@@ -273,6 +280,7 @@ if [ ! -z "$FIREWALL_SYSTEM" ] && [ "$FIREWALL_SYSTEM" != 'remote' ]; then
     data="$data\nNAME='$FIREWALL_SYSTEM' SYSTEM='firewall'"
     data="$data STATE='$state' CPU='0' MEM='0' RTIME='$rtime'"
 fi
+
 
 # Checking FIREWALL Fail2ban extention
 if [ ! -z "$FIREWALL_EXTENSION" ]; then

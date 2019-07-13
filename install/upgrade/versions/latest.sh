@@ -9,7 +9,7 @@
 # Set default theme
 if [ -z $THEME ]; then
     echo "(*) Enabling support for themes..."
-    $BIN/v-change-sys-theme default
+    $BIN/v-change-sys-theme 'default'
 fi
 
 # Reduce SSH login grace time
@@ -21,7 +21,7 @@ fi
 
 # Implement recidive jail for fail2ban
 if [ ! -z "$FIREWALL_EXTENSION" ]; then
-    if ! cat /etc/fail2ban/jail.local | grep -q "recidive"; then
+    if ! cat /etc/fail2ban/jail.local | grep -q "\[recidive\]"; then
         echo -e "\n\n[recidive]\nenabled  = true\nfilter   = recidive\naction   = hestia[name=HESTIA]\nlogpath  = /var/log/fail2ban.log\nmaxretry = 3\nfindtime = 86400\nbantime  = 864000" >> /etc/fail2ban/jail.local
     fi
 fi
@@ -34,4 +34,24 @@ if [ ! -z "$IMAP_SYSTEM" ]; then
         cp -f /etc/nginx/conf.d/webmail.inc $HESTIA_BACKUP/conf/
         sed -i "s/config|temp|logs/README.md|config|temp|logs|bin|SQL|INSTALL|LICENSE|CHANGELOG|UPGRADING/g" /etc/nginx/conf.d/webmail.inc
     fi
-fi 
+fi
+
+# Fix restart queue
+if [ -z "$($BIN/v-list-cron-jobs admin | grep 'v-update-sys-queue restart')" ]; then
+    command="sudo $BIN/v-update-sys-queue restart"
+    $BIN/v-add-cron-job 'admin' '*/2' '*' '*' '*' '*' "$command"
+fi
+
+# Remove deprecated line from ClamAV configuration file
+if [ -e "/etc/clamav/clamd.conf" ]; then
+    clamd_conf_update_check=$(grep DetectBrokenExecutables /etc/clamav/clamd.conf)
+    if [ ! -z "$clamd_conf_update_check" ]; then
+        echo "(*) Updating ClamAV configuration..."
+        sed -i '/DetectBrokenExecutables/d' /etc/clamav/clamd.conf
+    fi
+fi
+
+# Remove errornous history.log file created by certain builds due to bug in v-restart-system
+if [ -e $HESTIA/data/users/history.log ]; then
+    rm -f $HESTIA/data/users/history.log
+fi

@@ -755,4 +755,6 @@ $LANG['ja'] = array(
     'Email Credentials' => 'Email Credentials',
 
     'Theme' => '外観',
+    'Operating System' => 'オペレーティング システム',
+    
 );

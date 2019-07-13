@@ -582,6 +582,7 @@ echo
 
 # Updating system
 echo -ne "Updating currently installed packages, please wait... "
+apt-get -qq update
 apt-get -y upgrade >> $LOG &
 BACK_PID=$!
 
@@ -836,9 +837,6 @@ fi
 #                     Install packages                     #
 #----------------------------------------------------------#
 
-# Updating system
-apt-get -qq update
-
 # Disabling daemon autostart on apt-get install
 echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod a+x /usr/sbin/policy-rc.d
@@ -1080,10 +1078,6 @@ cp -rf $HESTIA_INSTALL_DIR/templates $HESTIA/data/
 mkdir -p /var/www/html
 mkdir -p /var/www/document_errors
 
-# Installing default themes
-mkdir -p $HESTIA/themes
-cp -rf $HESTIA_INSTALL_DIR/themes $HESTIA/themes/
-
 # Install default success page
 cp -rf $HESTIA_INSTALL_DIR/templates/web/unassigned/index.html /var/www/html/
 cp -rf $HESTIA_INSTALL_DIR/templates/web/skel/document_errors/* /var/www/document_errors/
@@ -1210,6 +1204,8 @@ if [ "$apache" = 'yes' ]; then
             rm -f /etc/php/$v/fpm/pool.d/*
             v_tpl=$(echo "$v" | sed -e 's/[.]//')
             cp -f $HESTIA_INSTALL_DIR/multiphp/apache2/PHP-$v_tpl.* $HESTIA/data/templates/web/apache2/
+            cp -f $HESTIA_INSTALL_DIR/php-fpm/dummy.conf /etc/php/$v/fpm/pool.d/
+            sed -i "s/9999/99$v_tpl/g" /etc/php/$v/fpm/pool.d/dummy.conf
         done
         chmod a+x $HESTIA/data/templates/web/apache2/*.sh
     fi
@@ -1379,7 +1375,7 @@ if [ "$postgresql" = 'yes' ]; then
     ppass=$(gen_pass)
     cp -f $HESTIA_INSTALL_DIR/postgresql/pg_hba.conf /etc/postgresql/*/main/
     systemctl restart postgresql
-    sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '$ppass'"
+    sudo -iu postgres psql -c "ALTER USER postgres WITH PASSWORD '$ppass'"
 
     # Configuring phpPgAdmin
     if [ "$apache" = 'yes' ]; then
@@ -1679,6 +1675,11 @@ $HESTIA/bin/v-add-web-domain admin $servername
 check_result $? "can't create $servername domain"
 
 # Adding cron jobs
+export SCHEDULED_RESTART="yes"
+command="sudo $HESTIA/bin/v-update-sys-queue restart"
+$HESTIA/bin/v-add-cron-job 'admin' '*/2' '*' '*' '*' '*' "$command"
+systemctl restart cron
+
 command="sudo $HESTIA/bin/v-update-sys-queue disk"
 $HESTIA/bin/v-add-cron-job 'admin' '15' '02' '*' '*' '*' "$command"
 command="sudo $HESTIA/bin/v-update-sys-queue traffic"
@@ -1696,7 +1697,6 @@ $HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
 
 # Enable automatic updates
 $HESTIA/bin/v-add-cron-hestia-autoupdate
-systemctl restart cron
 
 # Building initital rrd images
 $HESTIA/bin/v-update-sys-rrd
@@ -1710,7 +1710,7 @@ fi
 $HESTIA/bin/v-change-sys-port $port
 
 # Set default theme
-$HESTIA/bin/v-change-sys-theme default
+$HESTIA/bin/v-change-sys-theme 'default'
 
 # Starting Hestia service
 update-rc.d hestia defaults

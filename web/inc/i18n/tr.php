@@ -756,5 +756,5 @@ $LANG['tr'] = array(
     'Email Credentials' => 'Email Credentials',
 
     'Theme' => 'Görünüm',
-    
+    'Operating System' => 'İşletim Sistemi',
 );

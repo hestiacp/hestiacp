@@ -756,4 +756,5 @@ $LANG['id'] = array(
     'Email Credentials' => 'Kredensial surel',
 
     'Theme' => 'Penampilan',
+    'Operating System' => 'Sistem operasi',
 );

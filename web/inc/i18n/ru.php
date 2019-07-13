@@ -763,4 +763,5 @@ $LANG['ru'] = array(
     'Force SSL/HTTPS' => 'Принудительный редирект HTTP-на-HTTPS',
     
     'Theme' => 'Внешний вид',
+    'Operating System' => 'Операционная система',
 );

@@ -757,4 +757,5 @@ $LANG['da'] = array(
     'Email Credentials' => 'Email Credentials',
 
     'Theme' => 'Udseende',
+    'Operating System' => 'Operativsystem',
 );

@@ -12,7 +12,6 @@ if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
 }
 
 exec (HESTIA_CMD."v-add-cron-reports ".$user, $output, $return_var);
-$_SESSION['error_msg'] = __('Cronjob email reporting has been successfully enabled');
 unset($output);
 
 header("Location: /list/cron/");

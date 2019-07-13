@@ -1,0 +1,56 @@
+/* Flat theme */
+
+body {
+    letter-spacing: 0;
+}
+
+b, strong {
+    font-weight: 600;
+}
+
+.table-header {
+    box-shadow: none !important;
+}
+
+.l-header {
+    box-shadow: none;
+    background: #5070a6;
+}
+
+.l-menu__item--active {
+    background-color: #fff;
+}
+
+.l-menu__item.l-menu__item--active a {
+    background: none;
+}
+
+.l-menu__item a:hover {
+    background: #FFFFFF !important;
+    box-shadow: none;
+}
+
+.l-menu__item a:active {
+    background: none;
+    box-shadow: none;
+}
+
+.l-profile__notifications:hover,
+.l-profile__notifications.updates:hover,
+.l-profile__notifications.active.l-profile__notifications.updates:active {
+    background: white !important;
+    border: 1px solid transparent !important;
+    box-shadow: none !important;
+}
+
+.l-unit:hover {
+    box-shadow: none;
+}
+
+.l-unit__stat-col--left a, .l-unit__stat-col--left a:visited {
+    color: #5f7eb3;
+}
+
+.l-unit__stat-col--left a:hover {
+    color: #474747;
+}

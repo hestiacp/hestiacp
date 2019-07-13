@@ -90,6 +90,7 @@ if [ ! -z "$1" ]; then
         exit 1
     else
         branch=$1
+        /usr/local/hestia/bin/v-change-sys-config-value 'RELEASE_BRANCH' "$branch"
     fi
 else
     source /usr/local/hestia/conf/hestia.conf
@@ -348,7 +349,7 @@ if [ "$HESTIA_B" = true ] ; then
 
     # Move needed directories
     cd $BUILD_DIR/hestiacp-$branch
-    mv bin func install themes web ../hestia_$HESTIA_V/usr/local/hestia/
+    mv bin func install web ../hestia_$HESTIA_V/usr/local/hestia/
 
     # Set permission
     cd ../hestia_$HESTIA_V/usr/local/hestia/bin

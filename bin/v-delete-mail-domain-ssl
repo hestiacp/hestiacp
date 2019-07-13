@@ -33,6 +33,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
 is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 is_object_value_exist 'mail' 'DOMAIN' "$domain" '$SSL'
+is_object_value_exist 'mail' 'DOMAIN' "$domain" '$LETSENCRYPT'
 
 
 #----------------------------------------------------------#
@@ -50,12 +51,11 @@ del_webmail_ssl_config
 
 # Updating config
 update_object_value 'mail' 'DOMAIN' "$domain" '$SSL' 'no'
+update_object_value 'mail' 'DOMAIN' "$domain" '$LETSENCRYPT' 'no'
 decrease_user_value "$user" '$U_MAIL_SSL'
 
 # Restarting mail server
 $BIN/v-restart-mail $restart
-service dovecot restart
-service exim4 restart
 check_result $? "Mail restart failed" >/dev/null
 
 # Logging

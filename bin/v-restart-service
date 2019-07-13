@@ -28,17 +28,29 @@ check_args '1' "$#" 'SERVICE'
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Run the restart rules for iptables firewall
 if [ "$service" = "iptables" ]; then
+    # Run the restart rules for iptables firewall
     $BIN/v-stop-firewall
     $BIN/v-update-firewall
-fi
-
-if [ "$service" = "hestia" ] || [ "$service" = "iptables" ] || [ "$service" = "mariadb" ] || [ "$service" = "mysql" ] || [ "$service" = "postgresql" ] || [ "$service" = "cron" ]; then
-    systemctl restart $service > /dev/null 2>&1
-elif [ -z "$force" ] || [ "$force" = "no" ]; then
-    systemctl reload $service > /dev/null 2>&1
+elif [ -z "$force" -o "$force" = "no" ] && [ \
+        "$service" = "nginx" -o     \
+        "$service" = "apache2" -o   \
+        "$service" = "exim4" -o     \
+        "$service" = "dovecot" -o   \
+        "$service" = "bind9" -o     \
+        "$service" = "named" -o     \
+        "$service" = "vsftpd" -o    \
+        "$service" = "php5.6-fpm" -o \
+        "$service" = "php7.0-fpm" -o \
+        "$service" = "php7.1-fpm" -o \
+        "$service" = "php7.2-fpm" -o \
+        "$service" = "php7.3-fpm" -o \
+        "$service" = "proftpd" -o    \
+        "$service" = "ssh" -o       \
+        "$service" = "fail2ban" ]; then
+    systemctl reload-or-restart $service > /dev/null 2>&1
 else
+    systemctl reset-failed $service > /dev/null 2>&1
     systemctl restart $service > /dev/null 2>&1
 fi
 

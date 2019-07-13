@@ -31,7 +31,6 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 if [  "$restart" = 'yes' ]; then
-    log_history "A restart of the server was initiated."
     /sbin/reboot
 fi
 

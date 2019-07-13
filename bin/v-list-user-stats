@@ -122,6 +122,10 @@ is_object_valid 'user' 'USER' "$user"
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Ensure statistics are up to date
+$BIN/v-update-user-stats $user
+
+
 # Defining config
 conf=$USER_DATA/stats.log
 if [ ! -e "$conf" ]; then

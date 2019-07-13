@@ -65,12 +65,21 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
+                                    <select class="vst-list" onchange="this.nextElementSibling.value=this.value">
+                                        <option value="">clear</option>
+                                        <?php
+                                            foreach ($v_ips as $ip => $value) {
+                                                $display_ip = empty($value['NAT']) ? $ip : "{$value['NAT']}";
+                                                echo "<option value='{$display_ip}'>" . htmlentities($display_ip) . "</option>\n";
+                                            }
+                                        ?>
+                                    </select>
+                                    <input type="text" size="20" class="vst-input vst-list-editor" name="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <a href="javascript:elementHideShow('advtable');" class="vst-advanced"><?php print __('Advanced options');?></a>
+                                    <a href="javascript:elementHideShow('advtable');" class="vst-advanced"><?php print __('Advanced options');?>&nbsp;<i class="fas fa-arrow-circle-right"></i></a>
                                 </td>
                             </tr>
                             <tr>

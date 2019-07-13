@@ -735,4 +735,5 @@ $LANG['ur'] = array(
     'SubDomain' => 'ذیلی ڈومین',
     'Add Sub Domain' => 'ذیلی ڈومین کا اضافہ کریں',	
     'Theme' => 'ظہور',
+    'Operating System' => 'اشتغالی نظام',
 );

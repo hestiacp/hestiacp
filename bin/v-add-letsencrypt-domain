@@ -411,6 +411,11 @@ else
     update_object_value 'mail' 'DOMAIN' "$root_domain" '$LETSENCRYPT' 'yes'
 fi
 
+# Remove challenge folder if exist
+if [ ! -z "$well_known" ]; then
+    rm -fr $well_known
+fi
+
 #----------------------------------------------------------#
 #                        Hestia                            #
 #----------------------------------------------------------#

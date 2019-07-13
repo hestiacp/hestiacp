@@ -756,4 +756,5 @@ $LANG['it'] = array(
     'Email Credentials' => 'Email Credentials',
 
     'Theme' => 'Apparenza',
+    'Operating System' => 'Sistema operativo',
 );

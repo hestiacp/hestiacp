@@ -59,5 +59,5 @@ All notable changes to this project will be documented in this file.
 [1.0.4]: https://github.com/hestiacp/hestiacp/releases/tag/1.0.4
 [1.0.3]: https://github.com/hestiacp/hestiacp/releases/tag/1.0.3
 [1.0.1]: https://github.com/hestiacp/hestiacp/releases/tag/1.0.1
-[1.00.0-190618]: https://github.com/hestiacp/hestiacp/releases/tag/1.00.0-190618
+[1.0.0-190618]: https://github.com/hestiacp/hestiacp/releases/tag/1.0.0-190618
 [0.9.8-28]: https://github.com/hestiacp/hestiacp/releases/tag/0.9.8-28

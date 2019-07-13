@@ -45,6 +45,9 @@ is_package_full 'MAIL_ACCOUNTS'
 is_mail_new "$account"
 is_password_valid
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 
 #----------------------------------------------------------#
 #                       Action                             #

@@ -40,6 +40,9 @@ is_object_unsuspended 'mail' 'DOMAIN' "$domain_idn"
 is_object_value_empty 'mail' 'DOMAIN' "$domain_idn" '$SSL'
 is_web_domain_cert_valid
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 
 #----------------------------------------------------------#
 #                       Action                             #

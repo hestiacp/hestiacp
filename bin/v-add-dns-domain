@@ -36,7 +36,6 @@ source $HESTIA/conf/hestia.conf
 format_domain
 format_domain_idn
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -83,6 +82,9 @@ if [ ! -z "$ns8" ]; then
     ns8=$(echo ${11} |sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns8'
 fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 
 #----------------------------------------------------------#

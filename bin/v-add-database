@@ -30,7 +30,6 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/db.sh
 source $HESTIA/conf/hestia.conf
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -49,6 +48,9 @@ is_object_unsuspended "../../../conf/$type" 'DBHOST' "$host"
 is_package_full 'DATABASES'
 is_password_valid
 dbpass="$password"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 
 #----------------------------------------------------------#

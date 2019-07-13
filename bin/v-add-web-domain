@@ -35,7 +35,6 @@ format_domain
 format_domain_idn
 format_aliases
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -53,6 +52,9 @@ if [ ! -z "$ip" ]; then
 else
     get_user_ip
 fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 
 #----------------------------------------------------------#

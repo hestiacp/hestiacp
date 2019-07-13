@@ -43,6 +43,9 @@ if [ -z $template ]; then
 fi
 is_proxy_template_valid $template
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 
 #----------------------------------------------------------#
 #                       Action                             #

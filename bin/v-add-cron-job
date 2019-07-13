@@ -27,7 +27,6 @@ source $HESTIA/conf/hestia.conf
 
 HIDE=7
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -41,6 +40,9 @@ is_package_full 'CRON_JOBS'
 get_next_cronjob
 is_format_valid 'job'
 is_object_new 'cron' 'JOB' "$job"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 
 #----------------------------------------------------------#

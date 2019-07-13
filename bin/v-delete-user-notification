@@ -26,6 +26,9 @@ check_args '2' "$#" 'USER NOTIFICATION'
 is_format_valid 'user' 'nid'
 is_object_valid 'user' 'USER' "$user"
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 
 #----------------------------------------------------------#
 #                       Action                             #

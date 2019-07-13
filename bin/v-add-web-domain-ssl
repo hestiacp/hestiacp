@@ -45,6 +45,9 @@ source $HESTIA/conf/hestia.conf
 format_domain
 format_domain_idn
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #

@@ -27,6 +27,9 @@ if [ -z "$check_cron" ]; then
     exit
 fi
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 
 #----------------------------------------------------------#
 #                       Action                             #

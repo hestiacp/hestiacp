@@ -52,6 +52,9 @@ case $system in
     *)      check_args '2' '0' 'USER SYSTEM OBJECT'
 esac
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 
 #----------------------------------------------------------#
 #                       Action                             #

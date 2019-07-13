@@ -83,6 +83,9 @@ if [ ! -z "$ns8" ]; then
     is_format_valid 'ns8'
 fi
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 
 #----------------------------------------------------------#
 #                       Action                             #

@@ -36,9 +36,9 @@ is_format_valid 'package'
 is_package_valid
 is_package_in_use
 
-
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
 
 #----------------------------------------------------------#
 #                       Action                             #

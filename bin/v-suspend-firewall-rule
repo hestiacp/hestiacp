@@ -30,6 +30,7 @@ is_object_unsuspended '../../data/firewall/rules' 'RULE' "$rule"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#

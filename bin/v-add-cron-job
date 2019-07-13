@@ -44,6 +44,7 @@ is_object_new 'cron' 'JOB' "$job"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#

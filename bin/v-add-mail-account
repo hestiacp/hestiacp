@@ -26,6 +26,7 @@ if [[ "$account" =~ [[:upper:]] ]]; then
     account=$(echo "$account" |tr '[:upper:]' '[:lower:]')
 fi
 
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -43,6 +44,10 @@ is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 is_package_full 'MAIL_ACCOUNTS'
 is_mail_new "$account"
 is_password_valid
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 
 #----------------------------------------------------------#
 #                       Action                             #

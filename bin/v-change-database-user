@@ -36,6 +36,9 @@ is_object_unsuspended 'db' 'DB' "$database"
 is_password_valid
 dbpass="$password"
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 
 #----------------------------------------------------------#
 #                       Action                             #

@@ -49,6 +49,9 @@ if [ ! -z "$nat_ip" ] ; then
     is_format_valid 'nat_ip'
 fi
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 
 #----------------------------------------------------------#
 #                       Action                             #

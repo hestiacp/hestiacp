@@ -44,6 +44,9 @@ is_object_valid 'dns' 'DOMAIN' "$domain"
 is_object_unsuspended 'dns' 'DOMAIN' "$domain"
 is_object_valid "dns/$domain" 'ID' "$id"
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 
 #----------------------------------------------------------#
 #                       Action                             #

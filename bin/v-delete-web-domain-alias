@@ -39,6 +39,9 @@ if [ -z "$(echo $ALIAS |tr ',' '\n' |grep ^$dom_alias$)" ]; then
     check_result $E_NOTEXIST "alias $dom_alias doesn't exist"
 fi
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 
 #----------------------------------------------------------#
 #                       Action                             #

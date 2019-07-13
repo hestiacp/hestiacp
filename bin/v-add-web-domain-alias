@@ -48,6 +48,9 @@ is_object_unsuspended 'web' 'DOMAIN' "$domain"
 is_domain_new 'web' "$aliases"
 is_package_full 'WEB_ALIASES'
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 
 #----------------------------------------------------------#
 #                       Action                             #

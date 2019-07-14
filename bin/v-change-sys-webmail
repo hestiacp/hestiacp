@@ -29,7 +29,7 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Delete old webmail configuration
-for user in `ls /usr/local/hestia/data/users/`; do
+for user in $($HESTIA/bin/v-list-sys-users plain); do
     for domain in $($BIN/v-list-mail-domains $user plain |cut -f 1); do
         $BIN/v-delete-sys-webmail $user $domain
     done
@@ -39,7 +39,7 @@ done
 $BIN/v-change-sys-config-value 'WEBMAIL_ALIAS' $NEW_ALIAS
 
 # Add new webmail configuration
-for user in `ls /usr/local/hestia/data/users/`; do
+for user in $($HESTIA/bin/v-list-sys-users plain); do
     for domain in $($BIN/v-list-mail-domains $user plain |cut -f 1); do
         $BIN/v-add-sys-webmail $user $domain
     done
@@ -63,7 +63,7 @@ $BIN/v-restart-web $restart
 $BIN/v-restart-proxy $restart
 
 # Logging
-log_history "changed global webmail alias to $NEW_ALIAS"
+log_history "changed global webmail alias to $NEW_ALIAS" '' 'admin'
 log_event "$OK" "$ARGUMENTS"
 
 exit

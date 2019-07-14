@@ -30,7 +30,7 @@ is_package_valid
 #                       Action                             #
 #----------------------------------------------------------#
 
-for user in $(ls $HESTIA/data/users); do
+for user in $($HESTIA/bin/v-list-sys-users plain); do
     check_package=$(grep "PACKAGE='$package'" $USER_DATA/$user/user.conf)
     if [ ! -z "$check_package" ]; then
         $BIN/v-change-user-package $user $package 'yes'

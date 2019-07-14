@@ -47,7 +47,7 @@ if [ "$ip_owner" != "$user" ]; then
     decrease_user_value "$ip_owner" '$IP_OWNED'
     if [ "$ip_owner" = 'admin' ]; then
         if [ "$ip_status" = 'shared' ]; then
-            for hestia_user in $(ls $HESTIA/data/users); do
+            for hestia_user in $($HESTIA/bin/v-list-sys-users plain); do
                 decrease_user_value "$hestia_user" '$IP_AVAIL'
             done
         else
@@ -61,8 +61,8 @@ if [ "$ip_owner" != "$user" ]; then
     increase_user_value "$user" '$IP_OWNED'
     if [ "$user" = 'admin' ]; then
         if [ "$ip_status" = 'shared' ]; then
-            for user in $(ls $HESTIA/data/users); do
-                increase_user_value "$user" '$IP_AVAIL'
+            for hestia_user in $($HESTIA/bin/v-list-sys-users plain); do
+                increase_user_value "$hestia_user" '$IP_AVAIL'
             done
         else
             increase_user_value 'admin' '$IP_AVAIL'

@@ -128,9 +128,11 @@ fi
 
 if [ "$OWNER" = 'admin' ]; then
     if [ "$STATUS" = 'shared' ]; then
-        for user in $(ls $HESTIA/data/users/); do
-            decrease_user_value "$user" '$IP_AVAIL'
+        for hestia_user in $($HESTIA/bin/v-list-sys-users plain); do
+            decrease_user_value "$hestia_user" '$IP_AVAIL'
         done
+    else
+        decrease_user_value "$OWNER" '$IP_AVAIL'
     fi
 else
     decrease_user_value "$OWNER" '$IP_AVAIL'
@@ -152,7 +154,7 @@ if [ ! -z "$FIREWALL_SYSTEM" ]; then
 fi
 
 # Logging
-log_history "deleted system ip address $ip"
+log_history "deleted system ip address $ip" '' 'admin'
 log_event "$OK" "$ARGUMENTS"
 
 exit

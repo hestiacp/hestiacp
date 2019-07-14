@@ -84,7 +84,7 @@ OLD_IFS=$IFS
 IFS=$'\n'
 
 # User loop
-for user in $(ls $HESTIA/data/users/); do
+for user in $($HESTIA/bin/v-list-sys-users plain); do
     # Search query
     search=$(grep "$object" \
         $HESTIA/data/users/$user/web.conf \
@@ -242,7 +242,7 @@ case $format in
     json)   json_list_search ;;
     plain)  nohead=1; shell_list_search ;;
     shell)  fields='$USER~$TYPE~$KEY~$RESULT~$ALIAS';
-            shell_list |column -t -s '~' ;;
+            shell_list_search |column -t -s '~' ;;
     *)      check_args '1' '0' 'OBJECT [FORMAT]'
 esac
 

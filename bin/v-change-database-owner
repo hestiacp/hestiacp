@@ -32,7 +32,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 
 # Check owner existance
 owner=$(echo $database | cut -f 1 -d '_')
-if [ ! -e "$HESTIA/data/users/$owner" ]; then
+if [ ! -d "$HESTIA/data/users/$owner" ]; then
     echo "Error: database owner doesn't exist"
     log_event "$E_NOTEXIST" "$ARGUMENTS"
     exit $E_NOTEXIST

@@ -75,7 +75,7 @@ else
 fi
 
 # Rebuilding user quota
-for user in $(ls $HESTIA/data/users); do
+for user in $($HESTIA/bin/v-list-sys-users plain); do
     $BIN/v-update-user-quota $user
 done
 

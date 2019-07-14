@@ -34,7 +34,7 @@ fi
 
 # Creating user_list
 if [ -z "$user" ]; then
-    user_list=$(ls $HESTIA/data/users)
+    user_list=$($HESTIA/bin/v-list-sys-users plain)
 else
     user_list="$user"
 fi
@@ -82,7 +82,7 @@ for user in $user_list; do
     if [ "$user" = 'admin' ]; then
         spnd=$(grep "SUSPENDED='yes'" $HESTIA/data/users/*/user.conf | wc -l)
         SUSPENDED_USERS=$spnd
-        U_USERS=$(ls $HESTIA/data/users/|wc -l)
+        U_USERS=$($HESTIA/bin/v-list-sys-users plain|wc -l)
     fi
 
     # Checking ip

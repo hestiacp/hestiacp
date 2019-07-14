@@ -63,7 +63,7 @@ if [ ! -z "$new" ]; then
             mv $old.conf $new.conf
             sed -i "s/$old/$new/g" $new.conf
         fi
-        for user in $(ls $HESTIA/data/users/); do
+        for user in $($HESTIA/bin/v-list-sys-users plain); do
             sed -i "s/$old/$new/g" $HESTIA/data/users/$user/web.conf
             $BIN/v-rebuild-web-domains $user no
         done
@@ -73,7 +73,7 @@ if [ ! -z "$new" ]; then
 
     # Updating DNS
     if [ ! -z "$DNS_SYSTEM" ]; then
-        for user in `ls /usr/local/hestia/data/users/`; do
+        for user in $($HESTIA/bin/v-list-sys-users plain); do
             sed -i "s/$old/$new/g" $HESTIA/data/users/$user/dns.conf
             sed -i "s/$old/$new/g" $HESTIA/data/users/$user/dns/*.conf
             $BIN/v-rebuild-dns-domains $user no

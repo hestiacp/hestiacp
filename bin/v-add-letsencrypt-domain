@@ -251,7 +251,16 @@ for auth in $authz; do
                 check_result $? "Proxy restart failed" > /dev/null
 
             else
-                well_known="$HOMEDIR/$user/web/$domain/public_html/.well-known"
+                # Get root directory from configuration
+                if [ ! -z "$domain_config/nginx.conf" ]; then
+                    well_known="$(cat $domain_config/nginx.conf | grep root | \
+                                awk '{split($0, a, " "); print a[2]}' | \
+                                sed 's/;$//')/.well-known"
+                else
+                    well_known="$(cat $domain_config/apache2.conf | grep root | \
+                                awk '{split($0, a, " "); print a[2]}' | \
+                                sed 's/;$//')/.well-known"
+                fi
                 acme_challenge="$well_known/acme-challenge"
                 mkdir -p $acme_challenge
                 echo "$token.$THUMB" > $acme_challenge/$token

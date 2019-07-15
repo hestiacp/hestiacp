@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [CURRENT] - Development
 ### Features
 - Add read only/demo mode function if DEMO_MODE is set to yes in hestia.conf
+- Add php-imagick module to installer and upgrade scripts
 
 ### Bugfixes
 - 

@@ -252,7 +252,7 @@ for auth in $authz; do
 
             else
                 # Get root directory from configuration
-                if [ ! -z "$domain_config/nginx.conf" ]; then
+                if [ -f "$domain_config/nginx.conf" ]; then
                     well_known="$(cat $domain_config/nginx.conf | grep root | \
                                 awk '{split($0, a, " "); print a[2]}' | \
                                 sed 's/;$//')/.well-known"

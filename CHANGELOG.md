@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 - Add php-imagick module to installer and upgrade scripts
 
 ### Bugfixes
-- 
+- Add a detection of web root for add .well-known acme challenge.
 
 ## [1.0.4] - 2019-07-09 - Hotfix
 ### Bugfixes

@@ -75,11 +75,8 @@ if [ -f "$php_fpm" ]; then
     echo "apt-get purge $mph"
 fi
 
-# Install php templates
-rm -f $HESTIA/data/templates/web/$WEB_SYSTEM/PHP-${version//.}.sh
-rm -f $HESTIA/data/templates/web/$WEB_SYSTEM/PHP-${version//.}.tpl
-rm -f $HESTIA/data/templates/web/$WEB_SYSTEM/PHP-${version//.}.stpl
-
+# Remove php templates
+rm -f $HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl
 
 #----------------------------------------------------------#
 #                       Hestia                             #

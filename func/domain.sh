@@ -84,20 +84,14 @@ is_web_alias_new() {
 
 # Prepare web backend
 prepare_web_backend() {
-    pool=$(find -L /etc/php/ -name "$domain.conf" -exec dirname {} \;)
-
     # Check if multiple-PHP installed
     regex="socket-(\d+)_(\d+)"
-    if [[ $template =~ ^socket-([0-9])\_([0-9])$ ]]
-    then
+    if [[ $template =~ ^PHP-([0-9])\_([0-9])$ ]]; then
         version="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
         pool=$(find -L /etc/php/$version -type d \( -name "pool.d" -o -name "*fpm.d" \))
     else
-        if [ "$pool" == "" ]
-        then
-            version=`echo "<?php echo (float)phpversion();" | php`
-            pool=$(find -L /etc/php/$version -type d \( -name "pool.d" -o -name "*fpm.d" \))
-        fi
+        version=$(php -r "echo (float)phpversion();")
+        pool=$(find -L /etc/php/$version -type d \( -name "pool.d" -o -name "*fpm.d" \))
     fi
  
     if [ ! -e "$pool" ]; then

@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.5] - 2019-08-06 - Hotfix
 ### Bugfixes
 - Fix several security issues, thanks to Andrea Cardaci (https://cardaci.xyz/)
+- Rework Let's Encrypt acme staging to use hestia conform standard.
 
 ## [1.0.4] - 2019-07-09 - Hotfix
 ### Bugfixes

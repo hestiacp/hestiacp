@@ -19,7 +19,7 @@ source $HESTIA/conf/hestia.conf
 # LE API
 LE_API='https://acme-v02.api.letsencrypt.org'
 
-if [[ "$LE_STAGING" =~ ^(YES|TRUE)$ ]]; then
+if [[ "$LE_STAGING" = 'yes' ]]; then
     LE_API='https://acme-staging-v02.api.letsencrypt.org'
 fi
 

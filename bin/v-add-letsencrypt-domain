@@ -253,12 +253,12 @@ for auth in $authz; do
             else
                 # Get root directory from configuration
                 domain_config="$HOMEDIR/$user/conf/web/$domain"
-                if [ -f "$domain_config/nginx.conf" ]; then
-                    well_known="$(cat $domain_config/nginx.conf | egrep '^\s+root'| \
+                if [ -f "$domain_config/apache2.conf" ]; then
+                    well_known="$(cat $domain_config/apache2.conf | egrep '^\s+root'| \
                                 awk '{split($0, a, " "); print a[2]}' | \
                                 sed 's/;$//')/.well-known"
                 else
-                    well_known="$(cat $domain_config/apache2.conf | egrep '^\s+root'| \
+                    well_known="$(cat $domain_config/nginx.conf | egrep '^\s+root'| \
                                 awk '{split($0, a, " "); print a[2]}' | \
                                 sed 's/;$//')/.well-known"
                 fi

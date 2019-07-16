@@ -267,8 +267,10 @@ for auth in $authz; do
             echo "$token.$THUMB" > $acme_challenge/$token
             chown -R $user:$user $well_known
         fi
-        $BIN/v-restart-web
-        check_result $? "Web restart failed" > /dev/null
+        if [ "$WEB_SYSTEM" = 'nginx' ]; then
+            $BIN/v-restart-web
+            check_result $? "Web restart failed" > /dev/null
+        fi
     fi
 
     # Requesting ACME validation / STEP 5

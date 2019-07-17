@@ -84,20 +84,22 @@ is_web_alias_new() {
 
 # Prepare web backend
 prepare_web_backend() {
+    pool=$(find -L /etc/php/ -name "$domain.conf" -exec dirname {} \;)
     # Check if multiple-PHP installed
     regex="socket-(\d+)_(\d+)"
     if [[ $template =~ ^PHP-([0-9])\_([0-9])$ ]]; then
-        version="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
-        pool=$(find -L /etc/php/$version -type d \( -name "pool.d" -o -name "*fpm.d" \))
+        backend_version="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
+        pool=$(find -L /etc/php/$backend_version -type d \( -name "pool.d" -o -name "*fpm.d" \))
     else
-        version=$(php -r "echo (float)phpversion();")
-        pool=$(find -L /etc/php/$version -type d \( -name "pool.d" -o -name "*fpm.d" \))
+        if [ -z "$pool" ] || [ -z "$BACKEND" ]; then 
+            backend_version=$(php -r "echo (float)phpversion();")
+            pool=$(find -L /etc/php/$backend_version -type d \( -name "pool.d" -o -name "*fpm.d" \))
+        fi
     fi
  
     if [ ! -e "$pool" ]; then
         check_result $E_NOTEXIST "php-fpm pool doesn't exist"
     fi
-
     backend_type="$domain"
     if [ "$WEB_BACKEND_POOL" = 'user' ]; then
         backend_type="$user"

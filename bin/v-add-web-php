@@ -33,7 +33,7 @@ if [[ ! $version =~ ^[0-9]\.[0-9]+ ]]; then
 fi
 
 # Check if php version already exists
-if [ -f "$php_fpm" ] && [ -f "$HESTIA/data/templates/$WEB_SYSTEM/PHP-$version.sh" ]; then
+if [ -f "$php_fpm" ] && [ -f "$HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl" ]; then
     echo "Version already installed..."
     exit
 fi
@@ -100,7 +100,7 @@ cp -f $HESTIA_INSTALL_DIR/php-fpm/dummy.conf /etc/php/$version/fpm/pool.d/
 sed -i "s/9999/99$v_tpl/g" /etc/php/$version/fpm/pool.d/dummy.conf
 
 # Install backend template
-cp -f $HESTIA_INSTALL_DIR/multiphp/php-fpm/default.tpl \
+cp -f $HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl \
     $HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl
 
 #----------------------------------------------------------#

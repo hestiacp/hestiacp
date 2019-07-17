@@ -75,7 +75,7 @@ if [ -f "$php_fpm" ]; then
     echo "apt-get purge $mph"
 fi
 
-# Remove php templates
+# Remove backend template
 rm -f $HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl
 
 #----------------------------------------------------------#

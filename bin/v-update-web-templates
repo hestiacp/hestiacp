@@ -27,6 +27,11 @@ if [ -d "${WEBTPL}" ]; then
     rm -rf "${WEBTPL}/unassigned" 2>/dev/null
 fi
 
+for php_ver in $(ls /etc/php/); do
+    [ ! -d "/etc/php/$php_ver/fpm/pool.d/" ] && continue
+    cp -f "$HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl"  ${WEBTPL}/php-fpm/PHP-${php_ver/\./_}.tpl
+done
+
 for webtpl_folder in $(ls $HESTIA_INSTALL_DIR/templates/web/* -d 2>/dev/null | egrep -v '/(nginx)$' ); do
     cp -rf "${webtpl_folder}" "${WEBTPL}/"
 done
@@ -35,7 +40,7 @@ done
 
 # Update Multi-PHP templates
 php_versions=$(ls /etc/php/*/fpm -d 2>/dev/null | wc -l)
-if [ "$php_versions" -gt 1 ]; then
+if [ "$php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
     for v in $(ls /etc/php/); do
         if [ ! -d "/etc/php/$v/fpm/pool.d/" ]; then
             continue
@@ -53,7 +58,7 @@ if [ "$php_versions" -gt 1 ]; then
     fi
 fi
 
-if [ "$PROXY_SYSTEM" = 'nginx' ] || [ "$php_versions" -le 1 ]; then
+if [ "$PROXY_SYSTEM" = 'nginx' ] || [ "$WEB_BACKEND" = "php-fpm" ]; then
     cp -rf "${HESTIA_INSTALL_DIR}/templates/web/nginx" "${WEBTPL}/"
 fi
 

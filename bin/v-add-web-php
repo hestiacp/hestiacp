@@ -51,11 +51,19 @@ fi
 mph="php$version-mbstring php$version-bcmath php$version-cli php$version-curl
      php$version-fpm php$version-gd php$version-intl php$version-mysql
      php$version-soap php$version-xml php$version-zip php$version-mbstring
-     php$version-json php$version-bz2 php$version-pspell php$version-imagick"
+     php$version-json php$version-bz2 php$version-pspell php$version-imagick php$version-pgsql"
 
 # Check is version is 7.1 or below to add mcrypt
 if [[ `echo "$version 7.2" | awk '{print ($1 < $2)}'` == 1 ]]; then
     mph="$mph php$version-mcrypt"
+fi
+
+if [ -z "$DB_SYSTEM" -o "$DB_SYSTEM" = "mysql" ]; then
+    mph=$(echo "$mph" | sed -e "s/php$version-pgsql//")
+fi
+
+if [ -z "$DB_SYSTEM" -o "$DB_SYSTEM" = "pgsql" ]; then
+    mph=$(echo "$mph" | sed -e "s/php$version-mysql//")
 fi
 
 # Install php packages

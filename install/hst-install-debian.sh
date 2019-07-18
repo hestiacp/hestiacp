@@ -261,12 +261,8 @@ set_default_port '8083'
 set_default_lang 'en'
 
 # Checking software conflicts
-if [ "$phpfpm" = 'yes' ]; then
-    apache='no'
-    nginx='yes'
-fi
 if [ "$multiphp" = 'yes' ]; then
-    phpfpm='no'
+    phpfpm='yes'
 fi
 if [ "$proftpd" = 'yes' ]; then
     vsftpd='no'
@@ -717,31 +713,6 @@ rm -rf $HESTIA > /dev/null 2>&1
 #                     Package Includes                     #
 #----------------------------------------------------------#
 
-if [ "$multiphp" = 'yes' ]; then
-    fpm_added=false
-    for v in "${multiphp_v[@]}"; do
-        if [ "$v" = "$fpm_v" ]; then
-            fpm_added=true
-        fi
-        mph="php$v-mbstring php$v-bcmath php$v-cli php$v-curl php$v-fpm
-             php$v-gd php$v-intl php$v-mysql php$v-soap php$v-xml php$v-zip
-             php$v-mbstring php$v-json php$v-bz2 php$v-pspell"
-        # Check is version is 7.1 or below to add mcrypt
-        if [[ `echo "$v 7.2" | awk '{print ($1 < $2)}'` == 1 ]]; then 
-            mph="$mph php$v-mcrypt"
-        fi
-        software="$software $mph"
-    done
-    if [ "$fpm_added" = false ]; then
-        fpm="php$fpm_v php$fpm_v-common php$fpm_v-bcmath php$fpm_v-cli
-             php$fpm_v-curl php$fpm_v-fpm php$fpm_v-gd php$fpm_v-intl
-             php$fpm_v-mysql php$fpm_v-soap php$fpm_v-xml php$fpm_v-zip
-             php$fpm_v-mbstring php$fpm_v-json php$fpm_v-bz2 php$fpm_v-pspell"
-        software="$software $fpm"
-        multiphp+=("$fpm_v")
-    fi
-fi
-
 if [ "$phpfpm" = 'yes' ]; then
     fpm="php$fpm_v php$fpm_v-common php$fpm_v-bcmath php$fpm_v-cli
          php$fpm_v-curl php$fpm_v-fpm php$fpm_v-gd php$fpm_v-intl
@@ -810,12 +781,6 @@ if [ "$mysql" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/mariadb-client//')
     software=$(echo "$software" | sed -e 's/mariadb-common//')
     software=$(echo "$software" | sed -e 's/php-mysql//')
-    if [ "$multiphp" = 'yes' ]; then
-        for v in "${multiphp_v[@]}"; do
-            software=$(echo "$software" | sed -e "s/php$v-mysql//")
-            software=$(echo "$software" | sed -e "s/php$v-bz2//")
-        done
-    fi
     if [ "$phpfpm" = 'yes' ]; then
         software=$(echo "$software" | sed -e "s/php$fpm_v-mysql//")
     fi
@@ -825,11 +790,6 @@ if [ "$postgresql" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/postgresql-contrib//')
     software=$(echo "$software" | sed -e 's/postgresql//')
     software=$(echo "$software" | sed -e 's/php-pgsql//')
-    if [ "$multiphp" = 'yes' ]; then
-        for v in "${multiphp_v[@]}"; do
-            software=$(echo "$software" | sed -e "s/php$v-pgsql//")
-        done
-    fi
     if [ "$phpfpm" = 'yes' ]; then
         software=$(echo "$software" | sed -e "s/php$v-pgsql//")
     fi
@@ -1044,7 +1004,7 @@ if [ "$apache" = 'no' ] && [ "$nginx"  = 'yes' ]; then
     echo "WEB_PORT='80'" >> $HESTIA/conf/hestia.conf
     echo "WEB_SSL_PORT='443'" >> $HESTIA/conf/hestia.conf
     echo "WEB_SSL='openssl'"  >> $HESTIA/conf/hestia.conf
-    if [ "$release" -eq 9 ]; then
+    if [ "$release" -ge 9 ] || [ "$multiphp" = 'yes' ]; then
         if [ "$phpfpm" = 'yes' ]; then
             echo "WEB_BACKEND='php-fpm'" >> $HESTIA/conf/hestia.conf
         fi
@@ -1171,27 +1131,6 @@ if [ "$nginx" = 'yes' ]; then
     cp -f $HESTIA_INSTALL_DIR/logrotate/nginx /etc/logrotate.d/
     mkdir -p /etc/nginx/conf.d/domains
     mkdir -p /var/log/nginx/domains
-    if [ "$apache" = 'no' ] && [ "$multiphp" = 'yes' ]; then
-        echo "(*) Configuring Multi-PHP for NGINX..."
-        rm -fr $HESTIA/data/templates/web/nginx/*
-        for v in "${multiphp_v[@]}"; do
-            update-rc.d php$v-fpm defaults > /dev/null 2>&1
-            cp -r /etc/php/$v/ /root/hst_install_backups/php$v/
-            rm -f /etc/php/$v/fpm/pool.d/*
-            v_tpl=$(echo "$v" | sed -e 's/[.]//')
-            cp -f $HESTIA_INSTALL_DIR/multiphp/nginx/PHP-$v_tpl.* $HESTIA/data/templates/web/nginx/
-            cp -f $HESTIA_INSTALL_DIR/php-fpm/dummy.conf /etc/php/$v/fpm/pool.d/
-            sed -i "s/9999/99$v_tpl/g" /etc/php/$v/fpm/pool.d/dummy.conf
-        done
-        cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/
-        chmod a+x $HESTIA/data/templates/web/nginx/*.sh
-        fpm_tpl=$(echo "$fpm_v" | sed -e 's/[.]//')
-        ln -s $HESTIA/data/templates/web/nginx/PHP-$fpm_tpl.sh $HESTIA/data/templates/web/nginx/default.sh
-        ln -s $HESTIA/data/templates/web/nginx/PHP-$fpm_tpl.tpl $HESTIA/data/templates/web/nginx/default.tpl
-        ln -s $HESTIA/data/templates/web/nginx/PHP-$fpm_tpl.stpl $HESTIA/data/templates/web/nginx/default.stpl
-        systemctl start php$fpm_v-fpm >> $LOG
-        check_result $? "php$fpm_v-fpm start failed"
-    fi
 
     # Update dns servers in nginx.conf
     dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
@@ -1236,25 +1175,6 @@ if [ "$apache" = 'yes' ]; then
     chmod a+x /var/log/apache2
     chmod 640 /var/log/apache2/access.log /var/log/apache2/error.log
     chmod 751 /var/log/apache2/domains
-    if [ "$multiphp" = 'yes' ] ; then
-        echo "(*) Configuring Multi-PHP for Apache..."
-        a2enmod proxy_fcgi setenvif > /dev/null 2>&1
-        for v in "${multiphp_v[@]}"; do
-            a2enconf php$v-fpm-fpm > /dev/null 2>&1
-            update-rc.d php$v-fpm defaults > /dev/null 2>&1
-            cp -r /etc/php/$v/ /root/hst_install_backups/php$v/
-            rm -f /etc/php/$v/fpm/pool.d/*
-            v_tpl=$(echo "$v" | sed -e 's/[.]//')
-            cp -f $HESTIA_INSTALL_DIR/multiphp/apache2/PHP-$v_tpl.* $HESTIA/data/templates/web/apache2/
-            cp -f $HESTIA_INSTALL_DIR/php-fpm/dummy.conf /etc/php/$v/fpm/pool.d/
-            sed -i "s/9999/99$v_tpl/g" /etc/php/$v/fpm/pool.d/dummy.conf
-        done
-        chmod a+x $HESTIA/data/templates/web/apache2/*.sh
-        if [ "$release" = '8' ]; then
-            sed -i 's/#//g' $HESTIA/data/templates/web/apache2/*.tpl
-            sed -i 's/#//g' $HESTIA/data/templates/web/apache2/*.stpl
-        fi
-    fi
 
     update-rc.d apache2 defaults > /dev/null 2>&1
     systemctl start apache2 >> $LOG
@@ -1269,8 +1189,18 @@ fi
 #                     Configure PHP-FPM                    #
 #----------------------------------------------------------#
 
+if [ "$multiphp" = 'yes' ] ; then
+    for v in "${multiphp_v[@]}"; do
+        cp -r /etc/php/$v/ /root/hst_install_backups/php$v/
+        rm -f /etc/php/$v/fpm/pool.d/*
+
+        $HESTIA/bin/v-add-web-php "$v"
+    done
+fi
+
 if [ "$phpfpm" = 'yes' ]; then
     echo "(*) Configuring PHP-FPM..."
+    $HESTIA/bin/v-add-web-php "$fpm_v"
     cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf
     update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1
     systemctl start php$fpm_v-fpm >> $LOG

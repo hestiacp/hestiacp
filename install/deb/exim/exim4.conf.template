@@ -324,7 +324,7 @@ begin transports
 
 remote_smtp:
   driver = smtp
-  helo_data = mail.${sender_address_domain}
+  helo_data = ${sender_address_domain}
   dkim_domain = DKIM_DOMAIN
   dkim_selector = mail
   dkim_private_key = DKIM_PRIVATE_KEY

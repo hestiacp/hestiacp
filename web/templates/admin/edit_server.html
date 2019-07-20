@@ -243,6 +243,25 @@
                                         </tr>
 
                                         <?php } ?>
+                                        <?php if(count($v_php_versions)): ?>
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print __('Enabled multi PHP versions') ?>
+                                            </td>
+                                        </tr>
+                                        <?php foreach($v_php_versions as $php_version): ?>
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <input type="checkbox" size="20" class="vst-checkbox"
+                                                    <?=$php_version->installed?'checked':''; ?>
+                                                    <?=$php_version->protected?'disabled':''; ?>
+                                                    id="<?=$php_version->name?>"
+                                                    name="v_php_versions[<?=$php_version->tpl?>]">
+                                                <label for="<?=$php_version->name?>"><?=$php_version->name?></label>
+                                            </td>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                        <?php endif; ?>
                                     </table>
                                 </td>
                             </tr>

@@ -33,6 +33,44 @@ if ($v_timezone == 'EST5EDT' ) $v_timezone = 'EDT';
 if ($v_timezone == 'America/Puerto_Rico' ) $v_timezone = 'AST';
 if ($v_timezone == 'America/Halifax' ) $v_timezone = 'ADT';
 
+// List supported php versions
+exec (HESTIA_CMD."v-list-web-templates-backend json", $output, $return_var);
+$backend_templates = json_decode(implode('', $output), true);
+unset($output);
+
+$v_php_versions = [
+    'php-5.6',
+    'php-7.0',
+    'php-7.1',
+    'php-7.2',
+    'php-7.3',
+];
+sort($v_php_versions);
+
+$v_php_versions = array_map(function($php_version) use ($backend_templates, $v_php_versions) {
+    // Mark installed php versions
+
+    if(stripos($php_version,'php') !== 0)
+        return false;
+
+    $phpinfo = (object) [
+        "name" => $php_version,
+        "tpl" => strtoupper(str_replace('.', '_', $php_version)),
+        "version" => str_ireplace('php-', '', $php_version)
+    ];
+
+    if(in_array($phpinfo->tpl, $backend_templates)) {
+        $phpinfo->installed = true;
+    }
+
+    if(array_search($phpinfo->name, array_reverse($v_php_versions, true)) == array_key_last($v_php_versions)) {
+        // Prevent default php version to be removed
+        $phpinfo->protected = true;
+    }
+
+    return $phpinfo;
+}, $v_php_versions);
+
 // List supported languages
 exec (HESTIA_CMD."v-list-sys-languages json", $output, $return_var);
 $languages = json_decode(implode('', $output), true);
@@ -113,6 +151,36 @@ if (!empty($_POST['save'])) {
         check_return_code($return_var,$output);
         unset($output);
         $v_hostname = $_POST['v_hostname'];
+    }
+
+    // Install/remove php versions
+    if (empty($_SESSION['error_msg'])) {
+        if(!empty($v_php_versions) && count($_POST['v_php_versions'] != count($v_php_versions))) {
+            $post_php = $_POST['v_php_versions'];
+
+            array_map(function($php_version) use ($post_php) {
+
+                if(array_key_exists($php_version->tpl, $post_php)) {
+                    if(!$php_version->installed) {
+                        exec (HESTIA_CMD . "v-add-web-php " . escapeshellarg($php_version->version), $output, $return_var);
+                        check_return_code($return_var, $output);
+                        unset($output);
+                        if(empty($_SESSION['error_msg']))
+                            $php_version->installed = true;
+                    }
+                } else {
+                    if($php_version->installed && !$php_version->protected) {
+                        exec (HESTIA_CMD . "v-delete-web-php " . escapeshellarg($php_version->version), $output, $return_var);
+                        check_return_code($return_var, $output);
+                        unset($output);
+                        if(empty($_SESSION['error_msg']))
+                            $php_version->installed = false;
+                    }
+                }
+
+                return $php_version;
+            }, $v_php_versions);
+        }
     }
 
     // Change timezone

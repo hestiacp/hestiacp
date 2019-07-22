@@ -84,7 +84,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_history "removed php $version"
+log_history "removed php $version" '' 'admin'
 log_event "$OK" "$ARGUMENTS"
 
 exit

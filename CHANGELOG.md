@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - Enable hsts and force ssl on v-add-letsencrypt-host.
 - Prevent login action for webmail in list user view.
 - Remove hardcoded mail in helo data (cosmetic fix).
+- Fix sftp server validation check, thanks to @dbannik!
 
 ## [1.0.4] - 2019-07-09 - Hotfix
 ### Bugfixes

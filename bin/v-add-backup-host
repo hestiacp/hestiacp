@@ -38,8 +38,7 @@ EOF
 sftpc() {
     expect -f "-" <<EOF "$@"
         set count 0
-        spawn "/usr/bin/sftp -o StrictHostKeyChecking=no -o \
-            Port=$port '$user@$host'"
+        spawn /usr/bin/sftp -o StrictHostKeyChecking=no -o Port=$port $user@$host
         expect {
             "password:" {
                 send "$password\r"

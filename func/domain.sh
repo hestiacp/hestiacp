@@ -193,7 +193,15 @@ add_web_config() {
     domain_idn=$domain
     format_domain_idn
 
-    cat $WEBTPL/$1/$WEB_BACKEND/$2 | \
+    WEBTPL_LOCATION="$WEBTPL/$1"
+    if [ ! -z "$WEB_BACKEND" ] && [ -d "$WEBTPL_LOCATION/$WEB_BACKEND" ]; then
+        if [ -f "$WEBTPL_LOCATION/$WEB_BACKEND/$2" ]; then
+            # check for backend specific template
+            WEBTPL_LOCATION="$WEBTPL/$1/$WEB_BACKEND"
+        fi
+    fi
+
+    cat "${WEBTPL_LOCATION}/$2" | \
         sed -e "s|%ip%|$local_ip|g" \
             -e "s|%domain%|$domain|g" \
             -e "s|%domain_idn%|$domain_idn|g" \
@@ -270,8 +278,8 @@ add_web_config() {
     fi
     
     trigger="${2/.*pl/.sh}"
-    if [ -x "$WEBTPL/$1/$WEB_BACKEND/$trigger" ]; then
-        $WEBTPL/$1/$WEB_BACKEND/$trigger \
+    if [ -x "${WEBTPL_LOCATION}/$trigger" ]; then
+        $WEBTPL_LOCATION/$trigger \
             $user $domain $local_ip $HOMEDIR \
             $HOMEDIR/$user/web/$domain/public_html
     fi

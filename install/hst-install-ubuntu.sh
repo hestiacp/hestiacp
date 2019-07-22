@@ -964,10 +964,11 @@ if [ "$apache" = 'no' ] && [ "$nginx"  = 'yes' ]; then
     echo "WEB_PORT='80'" >> $HESTIA/conf/hestia.conf
     echo "WEB_SSL_PORT='443'" >> $HESTIA/conf/hestia.conf
     echo "WEB_SSL='openssl'"  >> $HESTIA/conf/hestia.conf
-    if [ "$phpfpm" = 'yes' ] || [ "$multiphp" = 'yes' ]; then
-        echo "WEB_BACKEND='php-fpm'" >> $HESTIA/conf/hestia.conf
-    fi
     echo "STATS_SYSTEM='awstats'" >> $HESTIA/conf/hestia.conf
+fi
+
+if [ "$phpfpm" = 'yes' ] || [ "$multiphp" = 'yes' ]; then
+    echo "WEB_BACKEND='php-fpm'" >> $HESTIA/conf/hestia.conf
 fi
 
 # FTP stack

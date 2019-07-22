@@ -55,3 +55,10 @@ fi
 if [ -e $HESTIA/data/users/history.log ]; then
     rm -f $HESTIA/data/users/history.log
 fi
+
+# Use exim4 hostname without hardcoded mailprefix
+if [ ! -z "$MAIL_SYSTEM" ]; then
+    if cat /etc/exim4/exim4.conf.template | grep -q 'helo_data = mail.${sender_address_domain}'; then
+        sed -i 's/helo_data = mail.${sender_address_domain}/helo_data = ${sender_address_domain}/g' /etc/exim4/exim4.conf.template
+    fi
+fi

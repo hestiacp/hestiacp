@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file.
 - Fix if condition, use nginx for Let's Encrypt acme request if present.
 - Rework v-add-sys-ip, remove centos/redhat support and rework conditions.
 - Enable hsts and force ssl on v-add-letsencrypt-host.
+- Prevent login action for webmail in list user view.
+- Remove hardcoded mail in helo data (cosmetic fix).
 
 ## [1.0.4] - 2019-07-09 - Hotfix
 ### Bugfixes

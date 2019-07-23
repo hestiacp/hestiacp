@@ -47,6 +47,9 @@ $v_php_versions = [
 ];
 sort($v_php_versions);
 
+if(empty($backend_templates))
+    $v_php_versions=[];
+
 $v_php_versions = array_map(function($php_version) use ($backend_templates, $v_php_versions) {
     // Mark installed php versions
 
@@ -65,7 +68,8 @@ $v_php_versions = array_map(function($php_version) use ($backend_templates, $v_p
 
     if(array_search($phpinfo->name, array_reverse($v_php_versions, true)) == array_key_last($v_php_versions)) {
         // Prevent default php version to be removed
-        $phpinfo->protected = true;
+        if($phpinfo->installed)
+            $phpinfo->protected = true;
     }
 
     return $phpinfo;

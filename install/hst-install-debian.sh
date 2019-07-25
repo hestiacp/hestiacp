@@ -289,6 +289,11 @@ if [ ! -z "$(grep ^admin: /etc/passwd /etc/group)" ] && [ -z "$force" ]; then
     check_result 1 "User admin exists"
 fi
 
+# Check if a default webserver was set
+if [ $apache = 'no' ] && [ $nginx = 'no' ]; then
+    check_result 1 "No web server was selected"
+fi
+
 # Clear the screen once launch permissions have been verified
 clear
 

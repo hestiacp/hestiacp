@@ -56,3 +56,7 @@ if [ -e $HESTIA/data/users/history.log ]; then
     rm -f $HESTIA/data/users/history.log
 fi
 
+# Members of admin group should be permitted to enter admin folder
+if [ -d /home/admin ]; then
+    setfacl -m "g:admin:r-x" /home/admin
+fi

@@ -3,8 +3,9 @@ All notable changes to this project will be documented in this file.
 
 ## [CURRENT] - Development
 ### Features
-- Add read only/demo mode function if DEMO_MODE is set to yes in hestia.conf
-- Add php-imagick module to installer and upgrade scripts
+- Add read only/demo mode function if DEMO_MODE is set to yes in hestia.conf.
+- Add php-imagick module to installer and upgrade scripts.
+- Add recidive filter function to fail2ban.
 
 ### Bugfixes
 - Add a detection of web root for add .well-known acme challenge.
@@ -15,6 +16,7 @@ All notable changes to this project will be documented in this file.
 - Prevent login action for webmail in list user view.
 - Remove hardcoded mail in helo data (cosmetic fix).
 - Fix sftp server validation check, thanks to @dbannik!
+- Implement warning message for creating web domains under admin user.
 
 ## [1.0.4] - 2019-07-09 - Hotfix
 ### Bugfixes

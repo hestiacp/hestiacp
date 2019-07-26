@@ -691,7 +691,6 @@ body {
   font-size: 0.9rem;
   height: 100%;
   color: #929292;
-  letter-spacing: -0.02em;
 }
 
 .body-login, .body-reset {
@@ -1053,6 +1052,65 @@ a {
   padding-top: 0.6rem;
 }
 
+.alert {
+  border-radius: 3px;
+  box-sizing: border-box;
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-top: 1rem;
+  padding: 0.7rem;
+  position: relative;
+  text-align: justify;
+}
+
+.alert i.fas {
+  border-radius: 1rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  height: 2rem;
+  left: 0.5rem;
+  line-height: 2rem;
+  position: absolute;
+  text-align: center;
+  top: 0.75rem;
+  width: 2rem;
+}
+
+.alert.alert-with-icon {
+  padding-left: 3rem;
+  min-height: 3.5rem;
+}
+.alert.alert-info {
+  color: #fff;
+  background-color: #618ecc;
+}
+.alert.alert-info i.fas {
+  color: #618ecc;
+  background-color: white;
+}
+
+.alert.alert-danger {
+  color: #fff;
+  background-color: #ec6c6c;
+}
+.alert.alert-danger i.fas {
+  color: #ec6c6c;
+  background-color: white;
+}
+
+.alert.alert-success {
+  color: #fff;
+  background-color: #5ea64c;
+}
+.alert.alert-success i.fas {
+  color: #5ea64c;
+  background-color: white;
+}
+
+form#vstobjects .alert {
+  width: 380px;
+}
 
 .l-stat {
   margin: 34px auto;

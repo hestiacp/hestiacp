@@ -51,6 +51,8 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+# Deleting sftp jail
+$BIN/v-delete-user-sftp-jail $ftp_user
 
 # Deleting ftp user
 /usr/sbin/userdel $ftp_user >> /dev/null 2>&1
@@ -58,10 +60,6 @@ if [ "$?" != 0 ]; then
     sed -i "/^$ftp_user:/d" /etc/passwd
     sed -i "/^$ftp_user:/d" /etc/shadow
 fi
-
-# Deleting sftp jail
-$BINv-delete-user-sftp-jail $ftp_user
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

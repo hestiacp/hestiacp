@@ -68,7 +68,7 @@ fi
 
 # Install php packages
 apt-get -qq update
-apt-get -y install $mph > /dev/null 2>&1 &
+apt-get -y -qq -o Dpkg::Options::="--force-confold" install $mph > /dev/null 2>&1 &
 BACK_PID=$!
 
 # Check if package installation is done, print a spinner

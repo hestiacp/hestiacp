@@ -4,6 +4,9 @@
 #  
 # Auto create multiple Hesia containers with various features enabled/disabled
 # lxc/lxd should be allready configured
+#   echo "root:1000:1" | sudo tee -a /etc/subuid
+#   echo "root:1000:1" | sudo tee -a /etc/subgid
+#
 # - container name will be generated depending on enabled features (os,proxy,webserver and php)
 # - 'SHARED_HOST_FOLDER' will be mounted in the (guest lxc) container at '/home/ubuntu/source/' and hestiacp src folder is expected to be there
 # - wildcard dns *.hst.domain.tld can be used to point to vm host
@@ -53,7 +56,7 @@ http {
 # define('HST_EMAIL',  'user@domain.tld');
 define('HST_BRANCH', '~localsrc');
 define('HST_ARGS',   '--force --interactive no --clamav no -p ' . HST_PASS . ' --email ' . HST_EMAIL);
-define('LXC_TIMEOUT', 15);
+define('LXC_TIMEOUT', 30);
 
 if( !defined('SHARED_HOST_FOLDER') || !defined('HST_PASS') || !defined('HST_EMAIL') || !defined('HST_BRANCH') || !defined('DOMAIN') ) {
     die("Error: missing variables".PHP_EOL);
@@ -65,7 +68,9 @@ $containers = [
     ['description'=>'ub1804 ngx fpm',       'os'=>'ubuntu18.04', 'nginx'=>true,  'apache2'=>false,   'php'=>'fpm',       'dns'=>'auto', 'exim'=>'auto'],
     ['description'=>'ub1804 ngx a2',        'os'=>'ubuntu18.04', 'nginx'=>true,  'apache2'=>true,    'php'=>'auto',      'dns'=>'auto', 'exim'=>'auto'],
     ['description'=>'ub1804 ngx a2 mphp',   'os'=>'ubuntu18.04', 'nginx'=>true,  'apache2'=>true,    'php'=>'multiphp',  'dns'=>'auto', 'exim'=>'auto'],
+    ['description'=>'ub1804 ngx a2 fpm',    'os'=>'ubuntu18.04', 'nginx'=>true,  'apache2'=>true,    'php'=>'fpm',       'dns'=>'auto', 'exim'=>'auto'],
     ['description'=>'ub1804 a2 mphp',       'os'=>'ubuntu18.04', 'nginx'=>false, 'apache2'=>true,    'php'=>'multiphp',  'dns'=>'auto', 'exim'=>'auto'],
+    ['description'=>'ub1804 a2 fpm',        'os'=>'ubuntu18.04', 'nginx'=>false, 'apache2'=>true,    'php'=>'fpm',       'dns'=>'auto', 'exim'=>'auto'],
     ['description'=>'ub1804 a2',            'os'=>'ubuntu18.04', 'nginx'=>false, 'apache2'=>true,    'php'=>'auto',      'dns'=>'auto'],
     ['description'=>'ub1604 a2 mphp',       'os'=>'ubuntu16.04', 'nginx'=>false, 'apache2'=>true,    'php'=>'multiphp',  'dns'=>'auto', 'exim'=>'auto'],
 ];
@@ -211,7 +216,11 @@ function check_lxc_container($container) {
     lxc_run(['info', $container['lxc_name']], $rc);
     if(isset($rc) && $rc === 0)
         return;
-    
+
+    $pid = pcntl_fork();
+    if($pid > 0)
+        return $pid;
+
     echo "Creating container ".$container['lxc_name'] . PHP_EOL;
     lxc_run(['init', $container['lxc_image'], $container['lxc_name']], $rc);
     exec('lxc config set '.escapeshellarg($container['lxc_name']).' raw.idmap "both 1000 1000" 2>/dev/null', $devnull, $rc);
@@ -223,12 +232,14 @@ function check_lxc_container($container) {
         $lxc_retry++;
         $cip = get_lxc_ip($container['lxc_name']);
         if($cip)
-            echo "container ip: $cip" . PHP_EOL;
+            echo "Container ".$container['lxc_name']." IP: $cip" . PHP_EOL;
         sleep(1);
     } while ($lxc_retry <= LXC_TIMEOUT && filter_var($cip, FILTER_VALIDATE_IP) === false);
 
     echo "Updating container: " . $container['lxc_name'] . PHP_EOL;
     exec('lxc exec ' . $container['lxc_name'] . ' -- apt update', $devnull, $rc);
+
+    exit(0);
 }
 
 function hst_installer_worker($container) {
@@ -248,10 +259,29 @@ function hst_installer_worker($container) {
     exit(0);
 }
 
+
+// Create and update containers
 $worker_pool = [];
 foreach ($containers as $container) {
-    check_lxc_container($container);
+    $worker_pid = check_lxc_container($container);
+    if($worker_pid > 0)
+        $worker_pool[] = $worker_pid;
+}
 
+echo count($worker_pool) . " LXC workers started" . PHP_EOL;
+# waiting for workers to finish
+while(count($worker_pool)) {
+    echo "Wait for LXC workers to finish".PHP_EOL;
+    $child_pid = pcntl_wait($status);
+    if($child_pid) {
+        $worker_pos = array_search($child_pid, $worker_pool);
+        unset($worker_pool[$worker_pos]);
+    }
+}
+
+// Install Hestia
+$worker_pool = [];
+foreach ($containers as $container) {
     # Is hestia installed?
     lxc_run('exec '.$container['lxc_name'].' -- sudo --login "v-list-sys-config"', $rc);
     if(isset($rc) && $rc===0)
@@ -263,7 +293,6 @@ foreach ($containers as $container) {
 }
 
 echo count($worker_pool) . " background workers started" . PHP_EOL;
-
 # waiting for workers to finish
 while(count($worker_pool)) {
     echo "Wait for workers to finish".PHP_EOL;
@@ -274,6 +303,7 @@ while(count($worker_pool)) {
     }
 }
 
+// Custom config
 foreach ($containers as $container) {
     echo "Apply custom config on: ".$container['lxc_name'].PHP_EOL;
     

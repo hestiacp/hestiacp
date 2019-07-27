@@ -51,8 +51,8 @@
                 <div class="clearfix l-unit__stat-col--left super-compact">
                   <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
                 </div>
-                <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print __('Domain');?></b></div>
-                <div class="clearfix l-unit__stat-col--left compact-5 text-right"><b>&nbsp;</b></div>
+                <div class="clearfix l-unit__stat-col--left wide-4"><b><?php print __('Domain');?></b></div>
+                <div class="clearfix l-unit__stat-col--left compact-4 text-right"><b>&nbsp;</b></div>
                 <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('IP address');?></b></div>
                 <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Disk');?></b></div>
                 <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print __('Bandwidth');?></b></div>
@@ -129,9 +129,9 @@ sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-dis
           <div class="clearfix l-unit__stat-col--left super-compact">
               <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?=$key?>">
           </div>
-          <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" alt="<?=__('Edit')?>" title="<?=__('Editing Domain')?>"><?=$key?></a></b></div>
+          <div class="clearfix l-unit__stat-col--left wide-4"><b><a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" alt="<?=__('Edit')?>" title="<?=__('Editing Domain')?>"><?=$key?></a></b></div>
           <!-- START QUICK ACTION TOOLBAR AREA -->
-          <div class="clearfix l-unit__stat-col--left compact-5 text-right">
+          <div class="clearfix l-unit__stat-col--left compact-4 text-right">
             <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
               <div class="actions-panel clearfix">
                 <div class="actions-panel__col actions-panel__view" key-action="href"><a href="http://<?=$key?>/" target="_blank"><i class="fas fa-external-link-square-alt status-icon lightblue status-icon dim"></i></a></div>

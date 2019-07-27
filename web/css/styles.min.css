@@ -1947,13 +1947,16 @@ div.l-content > div.l-separator:nth-of-type(4) {
   width: 250px;
 }
 .l-unit__stat-col--left.wide-4 {
-  width: 550px;
+  width: 320px;
 }
 .l-unit__stat-col--left.wide-5 {
   width: 350px;
 }
 .l-unit__stat-col--left.wide-6 {
   width: 440px;
+}
+.l-unit__stat-col--left.wide-7 {
+  width: 550px;
 }
 
 .l-unit__stat-col--left.small-2 {

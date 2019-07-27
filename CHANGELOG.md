@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 - Add read only/demo mode function if DEMO_MODE is set to yes in hestia.conf.
 - Add php-imagick module to installer and upgrade scripts.
 - Add recidive filter function to fail2ban.
+- Refactored multiphp functionality. Multiphp will be enabled by default on new installations.
+- Allow admin user to add or remove php versions from webui ( edit/server->"Web Server" page).
 
 ### Bugfixes
 - Add a detection of web root for add .well-known acme challenge.
@@ -17,6 +19,8 @@ All notable changes to this project will be documented in this file.
 - Remove hardcoded mail in helo data (cosmetic fix).
 - Fix sftp server validation check, thanks to @dbannik!
 - Implement warning message for creating web domains under admin user.
+- v-generate-api-key: Fix wrong quotes used for default keys folder location.
+- Fix permissions to allow acces for ftp users created in web domains under admin account.
 
 ## [1.0.4] - 2019-07-09 - Hotfix
 ### Bugfixes

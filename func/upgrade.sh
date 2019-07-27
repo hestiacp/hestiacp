@@ -198,7 +198,7 @@ upgrade_set_version() {
 }
 
 upgrade_rebuild_users() {
-    for user in `ls /usr/local/hestia/data/users/`; do
+    for user in $($HESTIA/bin/v-list-sys-users plain); do
         echo "(*) Rebuilding domains and account for user: $user..."
         if [ ! -z "$WEB_SYSTEM" ]; then
             $BIN/v-rebuild-web-domains $user 'no' >/dev/null 2>&1

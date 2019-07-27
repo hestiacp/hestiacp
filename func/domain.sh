@@ -85,25 +85,21 @@ is_web_alias_new() {
 # Prepare web backend
 prepare_web_backend() {
     pool=$(find -L /etc/php/ -name "$domain.conf" -exec dirname {} \;)
-
     # Check if multiple-PHP installed
     regex="socket-(\d+)_(\d+)"
-    if [[ $template =~ ^socket-([0-9])\_([0-9])$ ]]
-    then
-        version="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
-        pool=$(find -L /etc/php/$version -type d \( -name "pool.d" -o -name "*fpm.d" \))
+    if [[ $template =~ ^PHP-([0-9])\_([0-9])$ ]]; then
+        backend_version="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
+        pool=$(find -L /etc/php/$backend_version -type d \( -name "pool.d" -o -name "*fpm.d" \))
     else
-        if [ "$pool" == "" ]
-        then
-            version=`echo "<?php echo (float)phpversion();" | php`
-            pool=$(find -L /etc/php/$version -type d \( -name "pool.d" -o -name "*fpm.d" \))
+        if [ -z "$pool" ] || [ -z "$BACKEND" ]; then 
+            backend_version=$(php -r "echo (float)phpversion();")
+            pool=$(find -L /etc/php/$backend_version -type d \( -name "pool.d" -o -name "*fpm.d" \))
         fi
     fi
  
     if [ ! -e "$pool" ]; then
         check_result $E_NOTEXIST "php-fpm pool doesn't exist"
     fi
-
     backend_type="$domain"
     if [ "$WEB_BACKEND_POOL" = 'user' ]; then
         backend_type="$user"
@@ -197,7 +193,15 @@ add_web_config() {
     domain_idn=$domain
     format_domain_idn
 
-    cat $WEBTPL/$1/$WEB_BACKEND/$2 | \
+    WEBTPL_LOCATION="$WEBTPL/$1"
+    if [ ! -z "$WEB_BACKEND" ] && [ -d "$WEBTPL_LOCATION/$WEB_BACKEND" ]; then
+        if [ -f "$WEBTPL_LOCATION/$WEB_BACKEND/$2" ]; then
+            # check for backend specific template
+            WEBTPL_LOCATION="$WEBTPL/$1/$WEB_BACKEND"
+        fi
+    fi
+
+    cat "${WEBTPL_LOCATION}/$2" | \
         sed -e "s|%ip%|$local_ip|g" \
             -e "s|%domain%|$domain|g" \
             -e "s|%domain_idn%|$domain_idn|g" \
@@ -274,8 +278,8 @@ add_web_config() {
     fi
     
     trigger="${2/.*pl/.sh}"
-    if [ -x "$WEBTPL/$1/$WEB_BACKEND/$trigger" ]; then
-        $WEBTPL/$1/$WEB_BACKEND/$trigger \
+    if [ -x "${WEBTPL_LOCATION}/$trigger" ]; then
+        $WEBTPL_LOCATION/$trigger \
             $user $domain $local_ip $HOMEDIR \
             $HOMEDIR/$user/web/$domain/public_html
     fi

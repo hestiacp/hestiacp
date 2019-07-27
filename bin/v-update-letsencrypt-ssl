@@ -26,7 +26,7 @@ source $HESTIA/conf/hestia.conf
 lecounter=0
 
 # Checking user certificates
-for user in $($BIN/v-list-users plain |cut -f 1); do
+for user in $($HESTIA/bin/v-list-sys-users plain); do
     USER_DATA=$HESTIA/data/users/$user
 
     for domain in $(search_objects 'web' 'LETSENCRYPT' 'yes' 'DOMAIN'); do

@@ -14,7 +14,7 @@ if [ -z "$user" ]; then
 fi
 
 # Checking hestia user
-if [ ! -e "$HESTIA/data/users/$user" ]; then
+if [ ! -d "$HESTIA/data/users/$user" ]; then
     echo "Error: hestia user $user doesn't exist"
     exit 3
 fi

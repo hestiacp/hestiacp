@@ -62,3 +62,8 @@ if [ ! -z "$MAIL_SYSTEM" ]; then
         sed -i 's/helo_data = mail.${sender_address_domain}/helo_data = ${sender_address_domain}/g' /etc/exim4/exim4.conf.template
     fi
 fi
+
+# Members of admin group should be permitted to enter admin folder
+if [ -d /home/admin ]; then
+    setfacl -m "g:admin:r-x" /home/admin
+fi

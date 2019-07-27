@@ -35,7 +35,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 #----------------------------------------------------------#
 
 # Rebuild loop
-for user in $($BIN/v-list-users plain |cut -f 1); do
+for user in $($HESTIA/bin/v-list-sys-users plain); do
     $BIN/v-rebuild-user $user
 done
 

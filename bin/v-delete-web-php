@@ -32,6 +32,9 @@ if [[ ! $version =~ ^[0-9]\.[0-9]+ ]]; then
     exit
 fi
 
+# Remove backend template
+[ -f $HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl ] && rm -f $HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl
+
 # Check if php version exists
 if [ ! -f "$php_fpm" ] && [ ! -f "$HESTIA/data/templates/$WEB_SYSTEM/PHP-$version.sh" ]; then
     echo "Version is not installed..."
@@ -75,18 +78,13 @@ if [ -f "$php_fpm" ]; then
     echo "apt-get purge $mph"
 fi
 
-# Install php templates
-rm -f $HESTIA/data/templates/web/$WEB_SYSTEM/PHP-${version//.}.sh
-rm -f $HESTIA/data/templates/web/$WEB_SYSTEM/PHP-${version//.}.tpl
-rm -f $HESTIA/data/templates/web/$WEB_SYSTEM/PHP-${version//.}.stpl
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging
-log_history "removed php $version"
+log_history "removed php $version" '' 'admin'
 log_event "$OK" "$ARGUMENTS"
 
 exit

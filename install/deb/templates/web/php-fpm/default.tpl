@@ -1,6 +1,9 @@
 [%backend%]
-listen = 127.0.0.1:%backend_port%
-listen.allowed_clients = 127.0.0.1
+
+listen = /run/php/php%backend_version%-fpm-%domain%.sock
+listen.owner = %user%
+listen.group = www-data
+listen.mode = 0660
 
 user = %user%
 group = %user%

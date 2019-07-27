@@ -766,5 +766,9 @@ $LANG['en'] = array(
     'Theme' => 'Appearance',
 
     'Operating System' => 'Operating System',
+    'Please wait while php is installed or removed' => 'Installing or removing php versions will take cca 1 min for every php version which will be changed,
+    please be patient until the process is finished.',
+    'Avoid adding web domains on admin account' => 'Due to the increased access rights, we strongly advise against using the admin account for direct hosting of web domains.
+    Always use a separate unprivileged user account instead.',
     
 );

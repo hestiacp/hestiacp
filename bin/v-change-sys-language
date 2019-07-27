@@ -52,7 +52,7 @@ fi
 
 # Update language for all existing users if specified
 if [ "$update_users" = "yes" ]; then
-    for user in $(ls $HESTIA/data/users); do
+    for user in $($HESTIA/bin/v-list-sys-users plain); do
         $BIN/v-change-user-language $user $language
     done
 fi

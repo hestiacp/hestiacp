@@ -78,6 +78,11 @@ log_history() {
     cmd=$1
     undo=${2-no}
     log_user=${3-$user}
+
+    if ! $BIN/v-list-user "$log_user" >/dev/null; then
+        return $E_NOTEXIST
+    fi
+
     log=$HESTIA/data/users/$log_user/history.log
     touch $log
     if [ '99' -lt "$(wc -l $log |cut -f 1 -d ' ')" ]; then

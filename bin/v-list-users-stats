@@ -122,7 +122,7 @@ check_args '0' "$#" '[FORMAT]'
 #----------------------------------------------------------#
 
 # Ensure statistics are up to date
-for user in $(ls $HESTIA/data/users); do
+for user in $($HESTIA/bin/v-list-sys-users plain); do
     $BIN/v-update-user-stats $user
 done
 

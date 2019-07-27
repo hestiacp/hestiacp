@@ -442,17 +442,20 @@ VE.notifications.delete = function(id){
     $.ajax({
         url: "/delete/notification/?delete=1&notification_id="+id+"&token="+$('#token').attr('token')
     });
-    if($('.notification-container li:visible').length == 0)
+    if($('.notification-container li:visible').length == 0) {
+        $('.l-profile__notifications .status-icon').removeClass('status-icon');
         $('.l-profile__notifications').removeClass('updates').removeClass('active');
+    }
 }
-
 VE.notifications.mark_seen = function(id){
     $('#notification-'+id).parents('li').removeClass('unseen');
     $.ajax({
         url: "/delete/notification/?notification_id="+id+"&token="+$('#token').attr('token')
     });
-    if($('.notification-container .unseen').length == 0)
+    if($('.notification-container .unseen').length == 0) {
+        $('.l-profile__notifications .status-icon').removeClass('status-icon');
         $('.l-profile__notifications').removeClass('updates');
+    }
 }
 
 

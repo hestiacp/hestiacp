@@ -50,7 +50,14 @@
                             <td class="step-top">
                                 <span class="login-welcome"><?=__('Add Web Domain')?></span>
                             </td>
-                        </tr>                        
+                        </tr>
+                        <?php if ($user == 'admin') { ?>
+                        <tr>
+                            <td class="vst-text" style="width:390px;">
+                                <?php print __('Due to the increased access rights, we strongly advise against using the admin account for direct hosting of web domains. Always use a separate unprivileged user account instead.');?>
+                            </td>
+                        </tr>
+                        <?php } ?>
                         <tr>
                             <td class="vst-text step-top">
                                 <?php print __('Domain');?>

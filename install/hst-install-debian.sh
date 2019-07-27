@@ -31,7 +31,7 @@ if [ "$release" -eq 8 ]; then
         apache2-suexec-custom libapache2-mod-ruid2
         libapache2-mod-fcgid libapache2-mod-php5 php5 php5-common php5-cgi
         php5-mysql php5-curl php5-pgsql awstats vsftpd net-tools
-        proftpd-basic bind9 exim4 exim4-daemon-heavy clamav-daemon
+        php5-imagick proftpd-basic bind9 exim4 exim4-daemon-heavy clamav-daemon
         spamassassin dovecot-imapd dovecot-pop3d roundcube-core
         roundcube-mysql roundcube-plugins mariadb-client mariadb-common
         mariadb-server postgresql postgresql-contrib phppgadmin phpMyAdmin mc
@@ -43,7 +43,7 @@ elif [ "$release" -eq 9 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
         libapache2-mod-ruid2 libapache2-mod-fcgid libapache2-mod-php php
         php-common php-cgi php-mysql php-curl php-pgsql php-imap php-ldap php-apcu
-        awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy 
+        php-imagick awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy 
         clamav-daemon spamassassin dovecot-imapd dovecot-pop3d roundcube-core net-tools
         roundcube-mysql roundcube-plugins mariadb-client mariadb-common
         mariadb-server postgresql postgresql-contrib phppgadmin phpmyadmin mc
@@ -55,7 +55,7 @@ else
     software="nginx apache2 apache2-utils apache2-suexec-custom
         apache2-suexec-pristine libapache2-mod-fcgid libapache2-mod-php php
         php-common php-cgi php-mysql php-curl php-pgsql php-imap php-ldap php-apcu
-        awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy 
+        php-imagick awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy 
         clamav-daemon spamassassin dovecot-imapd dovecot-pop3d roundcube-core net-tools
         roundcube-mysql roundcube-plugins mariadb-client mariadb-common
         mariadb-server postgresql postgresql-contrib phpmyadmin phppgadmin mc
@@ -722,7 +722,8 @@ if [ "$phpfpm" = 'yes' ]; then
     fpm="php$fpm_v php$fpm_v-common php$fpm_v-bcmath php$fpm_v-cli
          php$fpm_v-curl php$fpm_v-fpm php$fpm_v-gd php$fpm_v-intl
          php$fpm_v-mysql php$fpm_v-soap php$fpm_v-xml php$fpm_v-zip
-         php$fpm_v-mbstring php$fpm_v-json php$fpm_v-bz2 php$fpm_v-pspell"
+         php$fpm_v-mbstring php$fpm_v-json php$fpm_v-bz2 php$fpm_v-pspell
+         php$fpm_v-imagick"
     software="$software $fpm"
 fi
 

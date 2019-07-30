@@ -21,6 +21,7 @@ All notable changes to this project will be documented in this file.
 - Implement warning message for creating web domains under admin user.
 - v-generate-api-key: Fix wrong quotes used for default keys folder location.
 - Fix permissions to allow acces for ftp users created in web domains under admin account.
+- Remove old Vesta Filemanager files completly
 
 ## [1.0.4] - 2019-07-09 - Hotfix
 ### Bugfixes

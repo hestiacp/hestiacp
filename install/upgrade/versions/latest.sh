@@ -52,7 +52,7 @@ if [ -e "/etc/clamav/clamd.conf" ]; then
 fi
 
 # Remove errornous history.log file created by certain builds due to bug in v-restart-system
-if [ -e $HESTIA/data/users/history.log ]; then
+if [ -e "$HESTIA/data/users/history.log" ]; then
     rm -f $HESTIA/data/users/history.log
 fi
 
@@ -64,6 +64,32 @@ if [ ! -z "$MAIL_SYSTEM" ]; then
 fi
 
 # Members of admin group should be permitted to enter admin folder
-if [ -d /home/admin ]; then
+if [ -d "/home/admin" ]; then
     setfacl -m "g:admin:r-x" /home/admin
 fi
+
+# Remove old Vesta Filemanager files completly
+if [ ! -d "$HESTIA_BACKUP/bin" ]; then
+    mkdir -p $HESTIA_BACKUP/bin
+fi
+mv $HESTIA/bin/v-add-fs-archive $HESTIA_BACKUP/bin/
+mv $HESTIA/bin/v-add-fs-directory $HESTIA_BACKUP/bin/
+mv $HESTIA/bin/v-add-fs-file $HESTIA_BACKUP/bin/
+mv $HESTIA/bin/v-change-fs-file-permission $HESTIA_BACKUP/bin/
+mv $HESTIA/bin/v-check-fs-permission $HESTIA_BACKUP/bin/
+mv $HESTIA/bin/v-copy-fs-directory $HESTIA_BACKUP/bin/
+mv $HESTIA/bin/v-copy-fs-file $HESTIA_BACKUP/bin/
+mv $HESTIA/bin/v-delete-fs-directory $HESTIA_BACKUP/bin/
+mv $HESTIA/bin/v-delete-fs-file $HESTIA_BACKUP/bin/
+mv $HESTIA/bin/v-extract-fs-archive $HESTIA_BACKUP/bin/
+mv $HESTIA/bin/v-get-fs-file-type $HESTIA_BACKUP/bin/
+mv $HESTIA/bin/v-list-fs-directory $HESTIA_BACKUP/bin/
+mv $HESTIA/bin/v-move-fs-directory $HESTIA_BACKUP/bin/
+mv $HESTIA/bin/v-move-fs-file $HESTIA_BACKUP/bin/
+mv $HESTIA/bin/v-open-fs-config $HESTIA_BACKUP/bin/
+mv $HESTIA/bin/v-open-fs-file $HESTIA_BACKUP/bin/
+mv $HESTIA/bin/v-search-fs-object $HESTIA_BACKUP/bin/
+if [ ! -d "$HESTIA_BACKUP/web" ]; then
+    mkdir -p $HESTIA_BACKUP/web
+fi
+mv $HESTIA/web/upload $HESTIA_BACKUP/web/

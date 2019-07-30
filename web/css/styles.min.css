@@ -1114,6 +1114,74 @@ form#vstobjects .alert {
   width: 380px;
 }
 
+.app-list.cards {
+  xdisplay: flex;
+  xflex-wrap: wrap;
+  align-content: center;
+  margin-bottom: 10rem;
+
+}
+
+
+.card {
+  float:left;
+  overflow: hidden;
+  border:1px solid #e6e6e6;
+  box-sizing: border-box;
+  width:200px;
+  min-height:260px;
+  margin-top:3em;
+  margin-right:3em;
+  box-shadow: 0px 0px 3px rgba(0,0,0,0.1);
+  color: #353535;
+
+}
+
+.card:nth-child(4n+1) {
+  clear:left;
+}
+.card:nth-child(4n) {
+  margin-right:0;
+}
+
+.card .card-details {
+  font-size: 0.8rem;
+  background-color: #f5f5f5;
+  padding: 0.5em 0.8em;
+  border-top: 1px solid #e6e6e6;
+  text-align: center;
+
+}
+.card .card-details p {
+  margin: 0 0 0.3em 0;
+  font-size: 1em;
+  text-align: left;
+}
+
+.card p.card-title {
+  font-size: 1.2em;
+  font-weight: 500;
+}
+
+.card .card-thumb {
+  background-color: #fff;
+  display: block;
+  height: 180px;
+  width: 200px;
+  text-align: center;
+}
+.card .card-thumb img {
+  max-height: 180px;
+  max-width: 200px;
+  height: auto;
+  width: auto;
+
+}
+
+.card button {
+  margin:0.3em;
+}
+
 .l-stat {
   margin: 34px auto;
   position: fixed;

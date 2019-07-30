@@ -1,0 +1,45 @@
+<div class="l-center edit">
+        <div class="l-sort clearfix">
+          <div class="l-unit-toolbar__buttonstrip">
+            <a class="ui-button cancel" id="btn-back" href="/list/web/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+          </div>
+          <div class="l-unit-toolbar__buttonstrip float-right">
+              <?php
+              if (!empty($_SESSION['error_msg'])) {
+                echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
+              } else {
+                if (!empty($_SESSION['ok_msg'])) {
+                  echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                }
+              }
+            ?>
+          </div>
+        </div>
+      </div>
+
+    <div class="l-separator"></div>
+    <!-- /.l-separator -->
+
+    <div class="l-center animated fadeIn" style="padding-top:240px;">
+        <?php
+            $back = $_SESSION['back'];
+            if (empty($back)) {
+            $back = "location.href='/list/web/'";
+            } else {
+            $back = "location.href='".$back."'";
+            }
+        ?>
+
+        <div class="app-list cards" >
+            <?php foreach($v_web_apps as $webapp):?>
+                <div class="card">
+                    <span class="card-thumb"><img src="<?=$webapp['thumbnail']?>"></span>
+                    <div class="card-details">
+                        <p class="card-title"><?=$webapp['name']?></p>
+                        <p>version: <?=$webapp['version']?></p>
+                        <button class="ui-buttdon cancel">Setup</button>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>

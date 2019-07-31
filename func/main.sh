@@ -231,7 +231,8 @@ is_object_new() {
 # Check if object is valid
 is_object_valid() {
     if [ $2 = 'USER' ]; then
-        if [ ! -d "$HESTIA/data/users/$3" ]; then
+        tstpath="$(readlink -f "$HESTIA/data/users/$3")"
+        if [ "$(dirname "$tstpath")" != "$(readlink -f "$HESTIA/data/users")" ] || [ ! -d "$HESTIA/data/users/$3" ]; then
             check_result $E_NOTEXIST "$1 $3 doesn't exist"
         fi
     else

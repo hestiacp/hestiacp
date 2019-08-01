@@ -194,7 +194,7 @@ add_web_config() {
     format_domain_idn
 
     WEBTPL_LOCATION="$WEBTPL/$1"
-    if [ ! -z "$WEB_BACKEND" ] && [ -d "$WEBTPL_LOCATION/$WEB_BACKEND" ]; then
+    if [ "$1" != "$PROXY_SYSTEM" ] && [ ! -z "$WEB_BACKEND" ] && [ -d "$WEBTPL_LOCATION/$WEB_BACKEND" ]; then
         if [ -f "$WEBTPL_LOCATION/$WEB_BACKEND/$2" ]; then
             # check for backend specific template
             WEBTPL_LOCATION="$WEBTPL/$1/$WEB_BACKEND"

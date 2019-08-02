@@ -24,5 +24,3 @@ if ($return_var == 0 ) {
         echo $file . "\n";
     }
 }
-
-?>

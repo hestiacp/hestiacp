@@ -115,6 +115,7 @@ csv_list() {
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'USER [FORMAT]'
+is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 
 

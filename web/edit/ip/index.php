@@ -51,6 +51,13 @@ unset($output);
 
 // Check POST request
 if (!empty($_POST['save'])) {
+
+    // Check token
+    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+        header('Location: /login/');
+        exit();
+    }
+
     $v_ip = escapeshellarg($_POST['v_ip']);
 
     // Change Status

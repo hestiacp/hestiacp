@@ -26,6 +26,7 @@ source $HESTIA/conf/hestia.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER DOMAIN [TEMPLATE] [RESTART]'
+is_format_valid 'user' 'domain'
 is_system_enabled "$WEB_BACKEND" 'WEB_BACKEND'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"

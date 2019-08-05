@@ -86,7 +86,6 @@ mv $HESTIA/bin/v-get-fs-file-type $HESTIA_BACKUP/bin/
 mv $HESTIA/bin/v-list-fs-directory $HESTIA_BACKUP/bin/
 mv $HESTIA/bin/v-move-fs-directory $HESTIA_BACKUP/bin/
 mv $HESTIA/bin/v-move-fs-file $HESTIA_BACKUP/bin/
-mv $HESTIA/bin/v-open-fs-config $HESTIA_BACKUP/bin/
 mv $HESTIA/bin/v-open-fs-file $HESTIA_BACKUP/bin/
 mv $HESTIA/bin/v-search-fs-object $HESTIA_BACKUP/bin/
 if [ ! -d "$HESTIA_BACKUP/web" ]; then

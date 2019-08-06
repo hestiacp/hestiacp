@@ -92,6 +92,14 @@ class UploadHandler
                 'Content-Range',
                 'Content-Disposition'
             ),
+            // By default, allow redirects to the referer protocol+host:
+            'redirect_allow_target' => '/^'.preg_quote(
+                parse_url($_SERVER['HTTP_REFERER'], PHP_URL_SCHEME)
+                .'://'
+                .parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST)
+                .'/', // Trailing slash to not match subdomains by mistake
+                '/' // preg_quote delimiter param
+            ).'/',
             // Enable to provide file downloads via GET requests to the PHP script:
             //     1. Set to 1 to download files via readfile method through PHP
             //     2. Set to 2 to send a X-Sendfile header for lighttpd/Apache
@@ -1118,7 +1126,7 @@ class UploadHandler
                 $file->size > $this->get_file_size($file_path);
             if ($uploaded_file && is_uploaded_file($uploaded_file)) {
                 chmod($uploaded_file, 0644);
-                exec (HESTIA_CMD . "v-copy-fs-file ". USERNAME ." {$uploaded_file} '{$file_path}'", $output, $return_var);
+                exec (HESTIA_CMD . "v-copy-fs-file ".escapeshellarg(USERNAME)." ".escapeshellarg($uploaded_file)." ".escapeshellarg($file_path), $output, $return_var);
                 $error = check_return_code($return_var, $output);
                 if ($return_var != 0) {
                     $file->error = 'Error while saving file ';
@@ -1177,7 +1185,7 @@ class UploadHandler
             $json = json_encode($content);
             $redirect = isset($_REQUEST['redirect']) ?
                 stripslashes($_REQUEST['redirect']) : null;
-            if ($redirect) {
+            if ($redirect && preg_match($this->options['redirect_allow_target'], $redirect)) {
                 $this->header('Location: '.sprintf($redirect, rawurlencode($json)));
                 return;
             }
@@ -1377,6 +1385,14 @@ class UploadHandler
         );
     }
 
+    private function _cmd_v_delete_fs_file($file) {
+        if (empty($file)) {
+            return false;
+        }
+        exec (HESTIA_CMD . "v-delete-fs-file ".escapeshellarg(USERNAME)." ".escapeshellarg($file), $output, $return_var);
+        return ($return_var === 0);
+    }
+
     public function delete($print_response = true) {
         $file_names = $this->get_file_names_params();
         if (empty($file_names)) {
@@ -1385,13 +1401,13 @@ class UploadHandler
         $response = array();
         foreach($file_names as $file_name) {
             $file_path = $this->get_upload_path($file_name);
-            $success = is_file($file_path) && $file_name[0] !== '.' && unlink($file_path);
+            $success = is_file($file_path) && $file_name[0] !== '.' && $this->_cmd_v_delete_fs_file($file_path);
             if ($success) {
                 foreach($this->options['image_versions'] as $version => $options) {
                     if (!empty($version)) {
                         $file = $this->get_upload_path($file_name, $version);
                         if (is_file($file)) {
-                            unlink($file);
+                            $this->_cmd_v_delete_fs_file($file);
                         }
                     }
                 }

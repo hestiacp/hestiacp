@@ -75,6 +75,7 @@ csv_list() {
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER BACKUP [FORMAT]'
+is_format_valid 'user' 'backup'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'backup' 'BACKUP' "$backup"
 

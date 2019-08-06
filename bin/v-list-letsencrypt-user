@@ -56,6 +56,7 @@ csv_list() {
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'USER [FORMAT]'
+is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 if [ ! -e "$USER_DATA/ssl/le.conf" ]; then
     check_result $E_NOTEXIST "LetsEncrypt user account doesn't exist"

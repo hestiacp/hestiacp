@@ -56,7 +56,9 @@ users=$(IFS=',';echo "${users[*]// /|}";IFS=$' \t\n')
 sed -i "s/$ssh_users/$users/g" /etc/ssh/sshd_config
 
 # Set home folder permission to root
-chown root:root /home/$user
+if [ -d "/home/$user" ]; then
+    chown root:root /home/$user
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #

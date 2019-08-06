@@ -23,6 +23,7 @@ All notable changes to this project will be documented in this file.
 - Fixed permissions to allow access for FTP users created in web domains under admin account.
 - Removed obsolete Vesta Filemanager files completely.
 - Check if user home exists before set permission on sftp jail.
+- Fix several security issues, thanks to Andrea Cardaci (https://cardaci.xyz/)
 
 ## [1.0.4] - 2019-07-09 - Hotfix
 ### Bugfixes

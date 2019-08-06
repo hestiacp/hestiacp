@@ -12,6 +12,12 @@ if [ -z "$src_file" ]; then
     exit 1
 fi
 
+# Checking hestia user
+if [ ! -d "$HESTIA/data/users/$user" ]; then
+    echo "Error: hestia user $user doesn't exist"
+    exit 3
+fi
+
 # Checking file on fs
 if [ ! -e "$src_file" ]; then
     echo "Error: $src_file file doesn't exist"

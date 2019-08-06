@@ -27,6 +27,12 @@ if (!isset($_POST['generate'])) {
     exit;
 }
 
+// Check token
+if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+    header('Location: /login/');
+    exit();
+}
+
 // Check input
 if (empty($_POST['v_domain'])) $errors[] = __('Domain');
 if (empty($_POST['v_country'])) $errors[] = __('Country');

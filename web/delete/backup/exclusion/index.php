@@ -9,6 +9,12 @@ if (($_SESSION['user'] == 'admin') && (!empty($_GET['user']))) {
     $user=$_GET['user'];
 }
 
+// Check token
+if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
+    header('Location: /login/');
+    exit();
+}
+
 if (!empty($_GET['system'])) {
     $v_username = escapeshellarg($user);
     $v_system = escapeshellarg($_GET['system']);

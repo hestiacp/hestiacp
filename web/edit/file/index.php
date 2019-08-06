@@ -29,6 +29,20 @@ if (($_SESSION['user'] == 'admin') && (!empty($_SESSION['look']))) {
         $content = '';
         $path = $_REQUEST['path'];
         if (!empty($_POST['save'])) {
+
+            // Check token
+            if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
+                header('Location: /login/');
+                exit();
+            }
+
+            exec (HESTIA_CMD . "v-open-fs-file ".escapeshellarg($user)." ".escapeshellarg($path), $devnull, $return_var);
+            if ($return_var != 0) {
+                print 'Error while opening file';
+                exit;
+            }
+            $devnull=null;
+
             $fn = tempnam ('/tmp', 'vst-save-file-');
             if ($fn) {
                 $contents = $_POST['contents'];
@@ -39,7 +53,7 @@ if (($_SESSION['user'] == 'admin') && (!empty($_SESSION['look']))) {
                 chmod($fn, 0644);
 
                 if ($f) {
-                    exec (HESTIA_CMD . "v-copy-fs-file {$user} {$fn} ".escapeshellarg($path), $output, $return_var);
+                    exec (HESTIA_CMD . "v-copy-fs-file ".escapeshellarg($user)." ".escapeshellarg($fn)." ".escapeshellarg($path), $output, $return_var);
                     $error = check_return_code($return_var, $output);
                     if ($return_var != 0) {
                         print('<p style="color: white">Error while saving file</p>');
@@ -50,7 +64,7 @@ if (($_SESSION['user'] == 'admin') && (!empty($_SESSION['look']))) {
             }
         }
 
-        exec (HESTIA_CMD . "v-open-fs-file {$user} ".escapeshellarg($path), $content, $return_var);
+        exec (HESTIA_CMD . "v-open-fs-file ".escapeshellarg($user)." ".escapeshellarg($path), $content, $return_var);
         if ($return_var != 0) {
             print 'Error while opening file'; // todo: handle this more styled
             exit;
@@ -64,6 +78,7 @@ if (($_SESSION['user'] == 'admin') && (!empty($_SESSION['look']))) {
 <form id="edit-file-form" method="post">
 <!-- input id="do-backup" type="button" onClick="javascript:void(0);" name="save" value="backup (ctrl+F2)" class="backup" / -->
 <input type="submit" name="save" value="Save" class="save" />
+<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
 
 
 <textarea name="contents" class="editor" id="editor" rows="4" style="display:none;width: 100%; height: 100%;"><?=htmlentities($content)?></textarea>

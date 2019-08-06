@@ -91,8 +91,8 @@ prepare_web_backend() {
         backend_version="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
         pool=$(find -L /etc/php/$backend_version -type d \( -name "pool.d" -o -name "*fpm.d" \))
     else
+        backend_version=$(php -r "echo (float)phpversion();")
         if [ -z "$pool" ] || [ -z "$BACKEND" ]; then 
-            backend_version=$(php -r "echo (float)phpversion();")
             pool=$(find -L /etc/php/$backend_version -type d \( -name "pool.d" -o -name "*fpm.d" \))
         fi
     fi
@@ -194,7 +194,7 @@ add_web_config() {
     format_domain_idn
 
     WEBTPL_LOCATION="$WEBTPL/$1"
-    if [ ! -z "$WEB_BACKEND" ] && [ -d "$WEBTPL_LOCATION/$WEB_BACKEND" ]; then
+    if [ "$1" != "$PROXY_SYSTEM" ] && [ ! -z "$WEB_BACKEND" ] && [ -d "$WEBTPL_LOCATION/$WEB_BACKEND" ]; then
         if [ -f "$WEBTPL_LOCATION/$WEB_BACKEND/$2" ]; then
             # check for backend specific template
             WEBTPL_LOCATION="$WEBTPL/$1/$WEB_BACKEND"

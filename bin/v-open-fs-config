@@ -12,10 +12,10 @@ if [ -z "$src_file" ]; then
     exit 1
 fi
 
-# Checking hestia user
-if [ ! -d "$HESTIA/data/users/$user" ]; then
-    echo "Error: hestia user $user doesn't exist"
-    exit 3
+# Checking root permissions
+if [ "$(id -u)" != '0' ]; then
+    echo "Error: Script can be run executed only by root"
+    exit 10
 fi
 
 # Checking file on fs

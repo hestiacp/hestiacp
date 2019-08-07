@@ -62,7 +62,8 @@ csv_list() {
 config_path=$(find /etc/php* -name php.ini)
 config_count=$(echo "$config_path" |wc -l)
 if [ "$config_count" -gt 1  ]; then
-    if [ "$WEB_SYSTEM" = "nginx" ]; then
+    multiphp_versions=$(ls -d /etc/php/*/fpm/pool.d 2>/dev/null |wc -l)
+    if [ "$WEB_BACKEND" = 'php-fpm' ] || [ "$multiphp_versions" -gt 0 ] ; then
         config_path=$(echo "$config_path"| grep fpm)
     else
         config_path=$(echo "$config_path"| grep apache)

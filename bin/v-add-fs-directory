@@ -7,17 +7,16 @@
 user=$1
 dst_dir=$2
 
-# Checking arguments
-if [ -z "$dst_dir" ]; then
-    echo "Usage: USER DIRECTORY"
-    exit 1
-fi
+# Includes
+source $HESTIA/func/main.sh
 
-# Checking hestia user
-if [ ! -d "$HESTIA/data/users/$user" ]; then
-    echo "Error: hestia user $user doesn't exist"
-    exit 3
-fi
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DIR'
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
 
 # Checking user homedir
 homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
@@ -34,11 +33,11 @@ if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
 fi
 
 # Adding directory
-sudo -u $user mkdir -p "$dst_dir" >/dev/null 2>&1
+sudo -u $user -- mkdir -p "$dst_dir" >/dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "Error: directory $dst_dir was not created"
     exit 3
 fi
 
-# Extiging
+# Exiting
 exit

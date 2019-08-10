@@ -8,17 +8,16 @@ user=$1
 src_file=$2
 permissions=$3
 
-# Checking arguments
-if [ -z "$permissions" ]; then
-    echo "Usage: USER FILE PERMISSIONS"
-    exit 1
-fi
+# Includes
+source $HESTIA/func/main.sh
 
-# Checking hestia user
-if [ ! -d "$HESTIA/data/users/$user" ]; then
-    echo "Error: hestia user $user doesn't exist"
-    exit 3
-fi
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'USER FILE PERMISSIONS'
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
 
 # Checking user homedir
 homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
@@ -41,7 +40,7 @@ if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
 fi
 
 # Changing file permissions
-sudo -u $user chmod -R $permissions "$src_file" >/dev/null 2>&1
+sudo -u $user -- chmod -R $permissions "$src_file" >/dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "Error: access permission on $src_file was not changed"
     exit 3

@@ -7,17 +7,16 @@
 user=$1
 path=$2
 
-# Checking arguments
-if [ -z "$path" ]; then
-    echo "Usage: USER FILE"
-    exit 1
-fi
+# Includes
+source $HESTIA/func/main.sh
 
-# Checking hestia user
-if [ ! -d "$HESTIA/data/users/$user" ]; then
-    echo "Error: hestia user $user doesn't exist"
-    exit 3
-fi
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER FILE'
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
 
 # Checking user homedir
 homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
@@ -34,7 +33,7 @@ if [ -z "$(echo $rpath |grep $homedir)" ]; then
 fi
 
 # Listing file type
-sudo -u $user file -i -b "$path" 2>/dev/null
+sudo -u $user -- file -i -b "$path" 2>/dev/null
 
 # Exiting
 exit $?

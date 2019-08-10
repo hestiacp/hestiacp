@@ -9,17 +9,16 @@ user=$1
 src_dir=$2
 dst_dir=$3
 
-# Checking arguments
-if [ -z "$dst_dir" ]; then
-    echo "Usage: USER SRC_DIRECTORY DST_DIRECTORY"
-    exit 1
-fi
+# Includes
+source $HESTIA/func/main.sh
 
-# Checking hestia user
-if [ ! -d "$HESTIA/data/users/$user" ]; then
-    echo "Error: hestia user $user doesn't exist"
-    exit 3
-fi
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'USER SRC_DIRECTORY DST_DIRECTORY'
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
 
 # Checking user homedir
 homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
@@ -49,7 +48,7 @@ if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
 fi
 
 # Moving directory
-sudo -u $user mv "$src_dir" "$dst_dir" >/dev/null 2>&1
+sudo -u $user -- mv "$src_dir" "$dst_dir" >/dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "Error: directory $src_dir was not moved"
     exit 3

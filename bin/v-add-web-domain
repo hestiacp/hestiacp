@@ -46,7 +46,8 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_package_full 'WEB_DOMAINS' 'WEB_ALIASES'
 is_domain_new 'web' "$domain,$aliases"
-is_dir_symlink $HOMEDIR/$user/web
+is_dir_symlink "$HOMEDIR/$user/web"
+is_dir_symlink "$HOMEDIR/$user/web/$domain"
 if [ ! -z "$ip" ]; then
     is_ip_valid "$ip" "$user"
 else
@@ -65,14 +66,14 @@ check_hestia_demo_mode
 source $USER_DATA/user.conf
 
 # Creating domain directories
-mkdir -p $HOMEDIR/$user/web/$domain \
-      $HOMEDIR/$user/web/$domain/public_html \
-      $HOMEDIR/$user/web/$domain/public_shtml \
-      $HOMEDIR/$user/web/$domain/document_errors \
-      $HOMEDIR/$user/web/$domain/cgi-bin \
-      $HOMEDIR/$user/web/$domain/private \
-      $HOMEDIR/$user/web/$domain/stats \
-      $HOMEDIR/$user/web/$domain/logs
+$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain"
+$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/public_html"
+$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/public_shtml"
+$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/document_errors"
+$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/cgi-bin"
+$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/private"
+$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/stats"
+$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/logs"
 
 # Creating domain logs
 touch /var/log/$WEB_SYSTEM/domains/$domain.bytes \
@@ -82,7 +83,7 @@ ln -f -s /var/log/$WEB_SYSTEM/domains/$domain.*log \
     $HOMEDIR/$user/web/$domain/logs/
 
 # Adding domain skeleton
-cp -r $WEBTPL/skel/* $HOMEDIR/$user/web/$domain/ >/dev/null 2>&1
+sudo -u $user -- cp -r $WEBTPL/skel/* "$HOMEDIR/$user/web/$domain/" >/dev/null 2>&1
 for file in $(find "$HOMEDIR/$user/web/$domain/" -type f); do
     sed -i "s/%domain%/$domain/g" $file
 done

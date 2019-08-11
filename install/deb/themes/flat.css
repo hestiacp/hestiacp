@@ -114,5 +114,11 @@ b, strong {
 }
 
 .notification-container {
-    box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.3);
+    box-shadow: none;
+    border: 1px solid #dadada;
+}
+
+.context-menu.sort-order {
+    box-shadow: none;
+    border: 1px solid #dadada;
 }

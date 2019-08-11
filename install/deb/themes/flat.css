@@ -84,6 +84,16 @@ b, strong {
     background: linear-gradient(to bottom, rgba(250,250,250,1) 0%,rgba(241,241,241,1) 100%) !important;
 }
 
+.ui-button:hover, .button:hover, .ui-button.cancel:hover, .button.cancel:hover {
+    background: linear-gradient(to bottom, rgba(241,248,253,1) 0%,rgba(227,240,251,1) 100%) !important;
+}
+
+.ui-button:focus,.ui-button:active,
+.button:active,.button:focus,.ui-button.cancel:focus,.ui-button.cancel:active,
+.button.cancel:active,.button.cancel:focus {
+    background: linear-gradient(to bottom, rgba(210,232,250,1) 0%,rgba(194,224,248,1) 100%) !important;
+}
+
 .alert {
     text-shadow: none !important;
     box-shadow: none !important;

@@ -1062,6 +1062,8 @@ a {
   padding: 0.8rem;
   position: relative;
   text-align: left;
+  box-shadow: 0px 2px 4px rgba(0,0,0,0.2);
+  border: 1px solid #fff;
 }
 
 .alert i.fas {

@@ -1597,6 +1597,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   padding: 0 0 0 14px;
   overflow: hidden;
   line-height: 1rem;
+  margin-top: 1px;
 }
 
 .table-header:hover {

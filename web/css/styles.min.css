@@ -2757,7 +2757,7 @@ td.hint {
   filter:chroma(color=#000);
   cursor: pointer;
   border-radius: 3px 3px 3px 3px !important;
-  font-size: 1.05em !important;
+  font-size: 1.0em !important;
   font-weight: 500 !important;
   padding: 2px 16px 3px 20px !important;
   min-width: 100px !important;

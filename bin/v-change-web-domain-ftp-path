@@ -61,7 +61,7 @@ check_hestia_demo_mode
 
 # MKDIR if path doesn't exist
 if [ ! -e "$ftp_path_a" ]; then
-    mkdir -p "$ftp_path_a"
+    $BIN/v-add-fs-directory "$user" "$ftp_path_a"
     chown $user:$user "$ftp_path_a"
     chmod 751 "$ftp_path_a"
 fi

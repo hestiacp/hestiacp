@@ -24,24 +24,26 @@ rebuild_user_conf() {
     /usr/sbin/useradd "$user" -s "$shell" -c "$CONTACT" \
         -m -d "$HOMEDIR/$user" > /dev/null 2>&1
 
+    # Add a general group for normal users created by Hestia
+    if [ -z "$(grep "^hestia-users:" /etc/group)" ]; then
+        groupadd --system "hestia-users"
+    fi
+
+    # Add membership to hestia-users group to non-admin users
+    if [ "$user" = "admin" ]; then
+        setfacl -m "g:admin:r-x" "$HOMEDIR/$user"
+    else
+        usermod -a -G "hestia-users" "$user"
+        setfacl -m "u:$user:r-x" "$HOMEDIR/$user"
+    fi
+    setfacl -m "g:hestia-users:---" "$HOMEDIR/$user"
+
     # Update user shell
     /usr/bin/chsh -s "$shell" "$user" &>/dev/null
 
     # Update password
-    shadow=$(grep ^$user: /etc/shadow)
-    shdw3=$(echo "$shadow" | cut -f3 -d :)
-    shdw4=$(echo "$shadow" | cut -f4 -d :)
-    shdw5=$(echo "$shadow" | cut -f5 -d :)
-    shdw6=$(echo "$shadow" | cut -f6 -d :)
-    shdw7=$(echo "$shadow" | cut -f7 -d :)
-    shdw8=$(echo "$shadow" | cut -f8 -d :)
-    shdw9=$(echo "$shadow" | cut -f9 -d :)
-    shadow_str="$user:$MD5:$shdw3:$shdw4:$shdw5:$shdw6"
-    shadow_str="$shadow_str:$shdw7:$shdw8:$shdw9"
-
     chmod u+w /etc/shadow
-    sed -i "/^$user:*/d" /etc/shadow
-    echo "$shadow_str" >> /etc/shadow
+    sed -i 's/^$user:[^:]*:/$user:$MD5:/' /etc/shadow
     chmod u-w /etc/shadow
 
     # Building directory tree
@@ -169,17 +171,17 @@ rebuild_web_domain_conf() {
 
     # Rebuilding domain directories
     if [ -d "$HOMEDIR/$user/web/$domain/document_errors" ]; then
-        rm -rf "$HOMEDIR/$user/web/$domain/document_errors"
+        $BIN/v-delete-fs-directory "$user" "$HOMEDIR/$user/web/$domain/document_errors"
     fi
 
-    mkdir -p $HOMEDIR/$user/web/$domain \
-        $HOMEDIR/$user/web/$domain/public_html \
-        $HOMEDIR/$user/web/$domain/public_shtml \
-        $HOMEDIR/$user/web/$domain/document_errors \
-        $HOMEDIR/$user/web/$domain/cgi-bin \
-        $HOMEDIR/$user/web/$domain/private \
-        $HOMEDIR/$user/web/$domain/stats \
-        $HOMEDIR/$user/web/$domain/logs
+    $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain"
+    $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/public_html"
+    $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/public_shtml"
+    $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/document_errors"
+    $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/cgi-bin"
+    $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/private"
+    $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/stats"
+    $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/logs"
 
     # Creating domain logs
     if [ ! -e "/var/log/$WEB_SYSTEM/domains" ]; then
@@ -198,22 +200,23 @@ rebuild_web_domain_conf() {
 
     # Propagating html skeleton
     if [ -d "$WEBTPL/skel/document_errors/" ]; then
-        cp -r $WEBTPL/skel/document_errors/ $HOMEDIR/$user/web/$domain/
+        sudo -u $user -- cp -r "$WEBTPL/skel/document_errors/" "$HOMEDIR/$user/web/$domain/"
     fi
 
     # Set folder permissions
-    chmod 551 $HOMEDIR/$user/web/$domain \
-        $HOMEDIR/$user/web/$domain/stats \
-        $HOMEDIR/$user/web/$domain/logs
-    chmod 751 $HOMEDIR/$user/web/$domain/private \
-        $HOMEDIR/$user/web/$domain/cgi-bin \
-        $HOMEDIR/$user/web/$domain/public_html \
-        $HOMEDIR/$user/web/$domain/public_shtml \
-        $HOMEDIR/$user/web/$domain/document_errors
+    chmod 551   $HOMEDIR/$user/web/$domain \
+                $HOMEDIR/$user/web/$domain/stats \
+                $HOMEDIR/$user/web/$domain/logs
+    chmod 751   $HOMEDIR/$user/web/$domain/private \
+                $HOMEDIR/$user/web/$domain/cgi-bin \
+                $HOMEDIR/$user/web/$domain/public_html \
+                $HOMEDIR/$user/web/$domain/public_shtml \
+                $HOMEDIR/$user/web/$domain/document_errors
     chmod 640 /var/log/$WEB_SYSTEM/domains/$domain.*
 
     # Set ownership
-    chown $user:$user $HOMEDIR/$user/web/$domain \
+    chown $user:$user \
+        $HOMEDIR/$user/web/$domain \
         $HOMEDIR/$user/web/$domain/private \
         $HOMEDIR/$user/web/$domain/cgi-bin \
         $HOMEDIR/$user/web/$domain/public_html \
@@ -285,16 +288,15 @@ rebuild_web_domain_conf() {
         if [ ! -z "$STATS_USER" ]; then
             stats_dir="$HOMEDIR/$user/web/$domain/stats"
             if [ "$WEB_SYSTEM" = 'nginx' ]; then
-                echo "auth_basic \"Web Statistics\";" > $stats_dir/auth.conf
-                echo "auth_basic_user_file $stats_dir/.htpasswd;" >> \
-                    $stats_dir/auth.conf
+                echo "auth_basic \"Web Statistics\";"               |sudo -u $user -- tee    $stats_dir/auth.conf
+                echo "auth_basic_user_file $stats_dir/.htpasswd;"   |sudo -u $user -- tee -a $stats_dir/auth.conf
             else
-                echo "AuthUserFile $stats_dir/.htpasswd" > $stats_dir/.htaccess
-                echo "AuthName \"Web Statistics\"" >> $stats_dir/.htaccess
-                echo "AuthType Basic" >> $stats_dir/.htaccess
-                echo "Require valid-user" >> $stats_dir/.htaccess
+                echo "AuthUserFile $stats_dir/.htpasswd"    |sudo -u $user -- tee    $stats_dir/.htaccess
+                echo "AuthName \"Web Statistics\""          |sudo -u $user -- tee -a $stats_dir/.htaccess
+                echo "AuthType Basic"                       |sudo -u $user -- tee -a $stats_dir/.htaccess
+                echo "Require valid-user"                   |sudo -u $user -- tee -a $stats_dir/.htaccess
             fi
-            echo "$STATS_USER:$STATS_CRYPT" > $stats_dir/.htpasswd
+            echo "$STATS_USER:$STATS_CRYPT" |sudo -u $user -- tee $stats_dir/.htpasswd
         fi
     fi
 
@@ -316,26 +318,13 @@ rebuild_web_domain_conf() {
             ftp_md5=$(echo $FTP_MD5 | tr ':' '\n' |grep -n '' |\
                 grep "^$position:" |cut -f 2 -d :)
 
-            /usr/sbin/useradd $ftp_user \
-                -s $shell \
-                -o -u $(id -u $user) \
-                -g $(id -u $user) \
-                -M -d "$HOMEDIR/$user/web/$domain${ftp_path}" >/dev/null 2>&1
+            # rebuild S/FTP users
+            $BIN/v-delete-web-domain-ftp "$user" "$domain" "$ftp_user"
+            $BIN/v-add-web-domain-ftp "$user" "$domain" "${ftp_user#*_}" "!xplaceholder$FTP_MD5" "$ftp_path"
 
             # Updating ftp user password
-            shadow=$(grep "^$ftp_user:" /etc/shadow)
-            shdw3=$(echo "$shadow" |cut -f3 -d :)
-            shdw4=$(echo "$shadow" |cut -f4 -d :)
-            shdw5=$(echo "$shadow" |cut -f5 -d :)
-            shdw6=$(echo "$shadow" |cut -f6 -d :)
-            shdw7=$(echo "$shadow" |cut -f7 -d :)
-            shdw8=$(echo "$shadow" |cut -f8 -d :)
-            shdw9=$(echo "$shadow" |cut -f9 -d :)
-            shadow_str="$ftp_user:$ftp_md5:$shdw3:$shdw4:$shdw5:$shdw6"
-            shadow_str="$shadow_str:$shdw7:$shdw8:$shdw9"
             chmod u+w /etc/shadow
-            sed -i "/^$ftp_user:*/d" /etc/shadow
-            echo "$shadow_str" >> /etc/shadow
+            sed -i 's/^$ftp_user:[^:]*:/$ftp_user:$ftp_md5:/' /etc/shadow
             chmod u-w /etc/shadow
         fi
     done
@@ -500,7 +489,7 @@ rebuild_mail_domain_conf() {
 
         # Adding mail directiry
         if [ ! -e $HOMEDIR/$user/mail/$domain_idn ]; then
-            mkdir $HOMEDIR/$user/mail/$domain_idn
+            $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/mail/$domain_idn"
         fi
 
         # Adding catchall email

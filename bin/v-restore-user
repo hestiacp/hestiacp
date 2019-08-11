@@ -230,7 +230,7 @@ fi
 backup_system="hestia"
 
 # Check if it is a Vesta backup
-if tar -tf $BACKUP/$backup ./vesta >/dev/null 2>&1; then
+if tar -tf "$BACKUP/$backup" ./vesta >/dev/null 2>&1; then
     backup_system="vesta"
 fi
 
@@ -240,7 +240,7 @@ if [ "$create_user" = 'yes' ]; then
     echo -e "$(date "+%F %T") $user" |tee -a $tmpdir/restore.log
 
     # Unpacking user container
-    tar xf $BACKUP/$backup -C $tmpdir ./$backup_system 2>/dev/null
+    tar xf "$BACKUP/$backup" -C "$tmpdir" --no-wildcards "./$backup_system" 2>/dev/null
     if [ "$?" -ne 0 ]; then
         rm -rf $tmpdir
         echo "Can't unpack user container" |$SENDMAIL -s "$subj" $email $notify
@@ -259,6 +259,7 @@ if [ "$create_user" = 'yes' ]; then
 fi
 
 # Unpacking pam container
+chown "$user" "$tmpdir"
 tar xf $BACKUP/$backup -C $tmpdir ./pam
 if [ "$?" -ne 0 ]; then
     rm -rf $tmpdir
@@ -402,8 +403,10 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
         if [ -d "$HOMEDIR/$user/web/$domain/public_html" ]; then
             rm -rf $HOMEDIR/$user/web/$domain/public_html/*
         fi
-        tar -xzpf $tmpdir/web/$domain/domain_data.tar.gz \
-            -C $HOMEDIR/$user/web/$domain/
+        chmod u+w "$HOMEDIR/$user/web/$domain"
+        sudo -u $user -- tar -xzpf $tmpdir/web/$domain/domain_data.tar.gz \
+            -C "$HOMEDIR/$user/web/$domain/" \
+            --exclude='logs/*'
         if [ "$?" -ne 0 ]; then
             rm -rf $tmpdir
             error="Can't unpack $domain data tarball"
@@ -595,8 +598,8 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
 
         # Restoring emails
         if [ -e "$tmpdir/mail/$domain/accounts.tar.gz" ]; then
-            tar -xzpf $tmpdir/mail/$domain/accounts.tar.gz \
-                -C $HOMEDIR/$user/mail/$domain_idn/
+            chmod u+w "$HOMEDIR/$user/mail/$domain_idn"
+            $BIN/v-extract-fs-archive "$user" "$tmpdir/mail/$domain/accounts.tar.gz" "$HOMEDIR/$user/mail/$domain_idn/"
             if [ "$?" -ne 0 ]; then
                 rm -rf $tmpdir
                 error="Can't unpack $domain mail account container"
@@ -746,7 +749,7 @@ if [ "$udir" != 'no' ]; then
 
         for user_dir in $user_dirs; do
             echo -e "$(date "+%F %T") $user_dir" |tee -a $tmpdir/restore.log
-            tar xf $BACKUP/$backup -C $tmpdir ./user_dir/$user_dir.tar.gz
+            tar xf "$BACKUP/$backup" -C "$tmpdir" --no-wildcards "./user_dir/$user_dir.tar.gz"
             if [ "$?" -ne 0 ]; then
                 error="Can't unpack $user_dir user dir container"
                 echo "$error" |$SENDMAIL -s "$subj" $email $notify
@@ -754,7 +757,7 @@ if [ "$udir" != 'no' ]; then
                 check_result "$E_PARSING" "$error"
             fi
 
-            tar xzf $tmpdir/user_dir/$user_dir.tar.gz -C $HOMEDIR/$user
+            $BIN/v-extract-fs-archive "$user" "$tmpdir/user_dir/$user_dir.tar.gz" "$HOMEDIR/$user"
             if [ "$?" -ne 0 ]; then
                 error="Can't unpack $user_dir user dir container"
                 echo "$error" |$SENDMAIL -s "$subj" $email $notify

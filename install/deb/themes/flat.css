@@ -59,6 +59,9 @@ b, strong {
     color: #474747;
 }
 
+.l-unit:hover, .units .l-unit:hover {
+    box-shadow: none;
+}
 .vst-input {
     box-shadow: none;
 }
@@ -97,4 +100,12 @@ b, strong {
 .alert {
     text-shadow: none !important;
     box-shadow: none !important;
+}
+
+.pill.usage {
+    box-shadow: none;
+}
+
+.badge {
+    box-shadow: none;
 }

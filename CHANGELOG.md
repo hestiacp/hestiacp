@@ -29,6 +29,7 @@ All notable changes to this project will be documented in this file.
 - Fixed: Removing web domains would let sftp accounts still configured in sshd
 - SecImprove: File operations in user home folder will be executed as the real user
 - Added a confirmation dialog when deleting user logs (/list/log/)
+- Fixed issue with sftp-jail not working for users restored from backups
 
 ## [1.0.5] - 2019-08-06 - Hotfix
 ### Bugfixes

@@ -8,6 +8,10 @@ b, strong {
     font-weight: 600;
 }
 
+.body-login, .body-reset {
+    background: #5f7eb3 !important;
+}
+
 .table-header {
     box-shadow: none !important;
 }

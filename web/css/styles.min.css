@@ -2981,7 +2981,7 @@ a.button.cancel {
 
 .login {
   background-color: #fff;
-  box-shadow: 0px 8px 30px rgba(49,98,153, 0.75);
+  box-shadow: 0px 8px 25px rgba(0,0,0, 0.3);
   font-family: 'Exo', Tahoma, Arial, Helvetica, sans-serif;
   margin: 0;
   padding: 0;

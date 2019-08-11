@@ -486,6 +486,7 @@ $LANG['en'] = array(
     'DELETE_PACKAGE_CONFIRMATION'  => 'Are you sure you want to delete package %s?',
     'DELETE_IP_CONFIRMATION'  => 'Are you sure you want to delete IP address %s?',
     'DELETE_RULE_CONFIRMATION' => 'Are you sure you want to delete rule #%s?',
+    'DELETE_LOGS_CONFIRMATION'  => 'Are you sure you want to delete the logs?',
     'SUSPEND_RULE_CONFIRMATION' => 'Are you sure you want to suspend rule  #%s?',
     'UNSUSPEND_RULE_CONFIRMATION' => 'Are you sure you want to unsuspend rule #%s?',
     'Are you sure you want to stop service' => 'Are you sure you want to stop service %s?',

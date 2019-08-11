@@ -51,9 +51,10 @@ new_timestamp() {
 }
 
 # Event string for logger
+ARGS=("$@")
 for ((I=1; I <= $# ; I++)); do
     if [[ "$HIDE" != $I ]]; then
-        ARGUMENTS="$ARGUMENTS '$(eval echo \$${I})'"
+        ARGUMENTS="$ARGUMENTS '${ARGS[${I}-1]}'"
     else
         ARGUMENTS="$ARGUMENTS '******'"
     fi

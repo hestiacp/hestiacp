@@ -28,6 +28,7 @@ All notable changes to this project will be documented in this file.
 - SecImprove: Cli arguments were glob expanded when written to log file
 - Fixed: Removing web domains would let sftp accounts still configured in sshd
 - SecImprove: File operations in user home folder will be executed as the real user
+- Added a confirmation dialog when deleting user logs (/list/log/)
 
 ## [1.0.5] - 2019-08-06 - Hotfix
 ### Bugfixes

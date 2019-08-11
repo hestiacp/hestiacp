@@ -1052,7 +1052,7 @@ a {
 }
 
 .alert {
-  border-radius: 3px;
+  border-radius: 4px;
   box-sizing: border-box;
   display: block;
   font-size: 0.75rem;

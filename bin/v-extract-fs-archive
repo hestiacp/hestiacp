@@ -7,6 +7,8 @@
 user=$1
 src_file=$2
 dst_dir=$3
+selected_dir=$4
+test=$5
 
 # Includes
 source $HESTIA/func/main.sh
@@ -15,7 +17,7 @@ source $HESTIA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'USER ARCHIVE DIRECTORY'
+check_args '3' "$#" 'USER ARCHIVE DIRECTORY [SELECTED_DIR] [TEST]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 
@@ -34,7 +36,7 @@ fi
 
 # Checking source path
 rpath=$(readlink -f "$src_file")
-if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
+if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir|^$BACKUP/$user\.|^$BACKUP/tmp\.")" ]; then
     echo "Error: invalid source path $src_file"
     exit 2
 fi
@@ -49,17 +51,28 @@ fi
 # Extracting gziped archive
 if [ ! -z "$(echo $src_file |egrep -i  '.tgz|.tar.gz')" ]; then
     x='yes'
-    sudo -u $user -- mkdir -p "$dst_dir" >/dev/null 2>&1
-    sudo -u $user -- tar -xzf "$src_file" -C "$dst_dir" >/dev/null 2>&1
-    rc=$?
+    if [ -z "$test" ] || [ "$test" = "no" ]; then
+        sudo -u $user -- mkdir -p "$dst_dir" >/dev/null 2>&1
+        sudo -u $user -- tar -xzf "$src_file" -C "$dst_dir" --no-wildcards "$selected_dir" >/dev/null 2>&1
+        rc=$?
+    else
+        sudo -u $user -- tar -tf "$src_file" --no-wildcards "$selected_dir" >/dev/null 2>&1
+        rc=$?
+    fi
+
 fi
 
 # Extracting bziped archive
 if [ ! -z "$(echo $src_file |egrep -i  '.tbz|.tar.bz')" ]; then
     x='yes'
-    sudo -u $user -- mkdir -p "$dst_dir" >/dev/null 2>&1
-    sudo -u $user -- tar -xjf "$src_file" -C "$dst_dir" >/dev/null 2>&1
-    rc=$?
+    if [ -z "$test" ] || [ "$test" = "no" ]; then
+        sudo -u $user -- mkdir -p "$dst_dir" >/dev/null 2>&1
+        sudo -u $user -- tar -xjf "$src_file" -C "$dst_dir" --no-wildcards "$selected_dir" >/dev/null 2>&1
+        rc=$?
+    else
+        sudo -u $user -- tar -tf "$src_file" --no-wildcards "$selected_dir" >/dev/null 2>&1
+        rc=$?
+    fi
 fi
 
 # Extracting gziped file
@@ -96,9 +109,14 @@ fi
 # Extracting tared archive
 if [ ! -z "$(echo $src_file |grep -i '.tar')" ] && [ -z "$x" ]; then
     x='yes'
-    sudo -u $user -- mkdir -p "$dst_dir" >/dev/null 2>&1
-    sudo -u $user -- tar -xf "$src_file" -C "$dst_dir" >/dev/null 2>&1
-    rc=$?
+    if [ -z "$test" ] || [ "$test" = "no" ]; then
+        sudo -u $user -- mkdir -p "$dst_dir" >/dev/null 2>&1
+        sudo -u $user -- tar -xf "$src_file" -C "$dst_dir" --no-wildcards "$selected_dir" >/dev/null 2>&1
+        rc=$?
+    else
+        sudo -u $user -- tar -tf "$src_file" --no-wildcards "$selected_dir" >/dev/null 2>&1
+        rc=$?
+    fi
 fi
 
 # Extracting rared archive

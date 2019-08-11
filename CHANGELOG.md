@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 - Added recidive filter function to fail2ban.
 - Refactored MultiPHP functionality. MultiPHP will be enabled by default on new installations.
 - Allowed admin user to add or remove PHP versions from webui (edit/server->"Web Server" page).
+- Extended v-extract-fs-archive to allow archive testing and extracting only specific paths (for tar)
 
 ### Bugfixes
 - Added a detection of web root for add .well-known ACME challenge.
@@ -23,7 +24,16 @@ All notable changes to this project will be documented in this file.
 - Fixed permissions to allow access for FTP users created in web domains under admin account.
 - Check if user home exists before set permission on sftp jail.
 - Fix several security issues, thanks to Andrea Cardaci (https://cardaci.xyz/)
+- Improved input validation on File System operations scripts
+- SecImprove: Cli arguments were glob expanded when written to log file
+- Fixed: Removing web domains would let sftp accounts still configured in sshd
+- SecImprove: File operations in user home folder will be executed as the real user
 
+## [1.0.5] - 2019-08-06 - Hotfix
+### Bugfixes
+- Fix several security issues, thanks to Andrea Cardaci (https://cardaci.xyz/)
+- Rework Let's Encrypt acme staging to use hestia conform standard.
+- Fix if condition, use nginx for Let's Encrypt acme request if present.
 
 ## [1.0.4] - 2019-07-09 - Hotfix
 ### Bugfixes

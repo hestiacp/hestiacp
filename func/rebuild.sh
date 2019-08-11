@@ -56,6 +56,8 @@ rebuild_user_conf() {
     chown $user:$user $HOMEDIR/$user
     chown root:root $HOMEDIR/$user/conf
 
+    $BIN/v-add-user-sftp-jail "$user"
+
     # Update disk pipe
     sed -i "/ $user$/d" $HESTIA/data/queue/disk.pipe
     echo "$BIN/v-update-user-disk $user" >> $HESTIA/data/queue/disk.pipe

@@ -757,8 +757,11 @@ if [ "$udir" != 'no' ]; then
                 check_result "$E_PARSING" "$error"
             fi
 
+            chown "$user" "$HOMEDIR/$user"
             $BIN/v-extract-fs-archive "$user" "$tmpdir/user_dir/$user_dir.tar.gz" "$HOMEDIR/$user"
-            if [ "$?" -ne 0 ]; then
+            cmdstatus="$?"
+            chown root:root "$HOMEDIR/$user"
+            if [ "$cmdstatus" -ne 0 ]; then
                 error="Can't unpack $user_dir user dir container"
                 echo "$error" |$SENDMAIL -s "$subj" $email $notify
                 sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe

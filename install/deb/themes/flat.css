@@ -54,3 +54,19 @@ b, strong {
 .l-unit__stat-col--left a:hover {
     color: #474747;
 }
+
+.vst-input {
+    box-shadow: none;
+}
+
+.vst-list {
+    box-shadow: none;
+}
+
+.advanced-options {
+    box-shadow: none !important;
+}
+
+.vst-textinput {
+    box-shadow: none;
+}

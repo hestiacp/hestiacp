@@ -83,3 +83,8 @@ b, strong {
 .ui-button.cancel, .button.cancel {
     background: linear-gradient(to bottom, rgba(250,250,250,1) 0%,rgba(241,241,241,1) 100%) !important;
 }
+
+.alert {
+    text-shadow: none !important;
+    box-shadow: none !important;
+}

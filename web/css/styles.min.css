@@ -1126,6 +1126,7 @@ form#vstobjects .alert {
 .card {
   float:left;
   overflow: hidden;
+  background-color: #f5f5f5;
   border:1px solid #e6e6e6;
   box-sizing: border-box;
   width:200px;
@@ -1146,7 +1147,6 @@ form#vstobjects .alert {
 
 .card .card-details {
   font-size: 0.8rem;
-  background-color: #f5f5f5;
   padding: 0.5em 0.8em;
   border-top: 1px solid #e6e6e6;
   text-align: center;

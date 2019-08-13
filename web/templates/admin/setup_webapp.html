@@ -42,7 +42,7 @@
                         $f_name = $WebappInstaller->formNs() . '_' . $form_name;
                         $f_type = $form_control;
                         $f_value = '';
-                        $f_label = ucwords(str_replace('.', ' ', $form_name));
+                        $f_label = ucwords(str_replace(['.','_'], ' ', $form_name));
                         if (is_array($form_control)) {
                             $f_type = (!empty($form_control['type']))?$form_control['type']:'text';
                             $f_value = (!empty($form_control['value']))?$form_control['value']:'';
@@ -51,25 +51,32 @@
                         $f_value = htmlentities($f_value);
                         $f_label = htmlentities($f_label);
                     ?>
-                    <div class="form-control">
-                        <label for="<?=$f_name?>"><?=$f_label?>
+                    <div class="form-group">
+                        <label style="padding-bottom: 2px;" for="<?=$f_name?>"><?=$f_label?>
                         <?php if ($f_type === 'password'):?>
                             / <a href="javascript:randomString('<?=$f_name?>');" class="generate" ><?php print __('generate')?></a>
                         <?php endif?>
                         </label>
-                        <p>
+                        
                         <?php if (in_array($f_type, ['select']) && count($form_control['options']) ):?>
+                          <p style="margin-top:0;"></p>
                             <select class="vst-list" name="<?=$f_name?>">
                                 <?foreach ($form_control['options'] as $option):?>
                                     <?php $selected = (!empty($form_control['value']) && $option === $form_control['value'])?'selected':''?>
                                     <option value="<?=$option?>" <?=$selected?>  ><?=htmlentities($option)?></option>
                                 <?endforeach?>
                             </select>
-                        <?php else:?>
-                            <input type="text" size="20" class="vst-input" name="<?=$f_name?>" id="<?=$f_name?>" value="<?=$f_value?>">
-                        <?php endif?>
-
+                          </p>
+                        <?php elseif (in_array($f_type, ['boolean'])):?>
+                        <p>
+                            <?php $checked = (!empty($f_value))?'checked':''?>
+                          <input style="width:auto;" type="checkbox" class="vst-input" name="<?=$f_name?>" id="<?=$f_name?>" <?=$checked?> value="true">
                         </p>
+                        <?php else:?>
+                          <p style="margin-top:0;"></p>
+                            <input type="text" size="20" class="vst-input" name="<?=$f_name?>" id="<?=$f_name?>" value="<?=$f_value?>">
+                          </p>
+                        <?php endif?>
                     </div>
                 <?php endforeach; ?>
 

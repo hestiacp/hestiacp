@@ -1138,6 +1138,15 @@ form#vstobjects .alert {
 
 }
 
+.card.disable {
+  color: #b6b6b6;
+}
+
+.card.disable .card-thumb {
+  filter: grayscale(100%);
+  opacity: 0.3;
+}
+
 .card:nth-child(4n+1) {
   clear:left;
 }

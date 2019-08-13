@@ -32,7 +32,7 @@
 
         <div class="app-list cards" >
             <?php foreach($v_web_apps as $webapp):?>
-                <div class="card">
+                <div class="card <?=($webapp['enabled']?'':'disable')?>" >
                     <span class="card-thumb"><img src="<?=$webapp['thumbnail']?>"></span>
                     <div class="card-details">
                         <p class="card-title"><?=$webapp['name']?></p>

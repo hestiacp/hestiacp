@@ -31,16 +31,16 @@ if(!in_array($v_domain, $user_domains)) {
 }
 
 $v_web_apps = [
-    [ 'name'=>'Wordpress', 'group'=>'cms','version'=>'5.2.2', 'thumbnail'=>'/images/webapps/wp-thumb.png' ],
-    [ 'name'=>'Drupal', 'group'=>'cms', 'version'=>'1.2.3', 'thumbnail'=>'/images/webapps/drupal-thumb.png' ],
-    [ 'name'=>'Joomla', 'group'=>'cms', 'version'=>'1.2.3', 'thumbnail'=>'/images/webapps/joomla-thumb.png' ],
+    [ 'name'=>'Wordpress', 'group'=>'cms', 'enabled'=>true, 'version'=>'5.2.2', 'thumbnail'=>'/images/webapps/wp-thumb.png' ],
+    [ 'name'=>'Drupal',    'group'=>'cms', 'enabled'=>false,'version'=>'1.2.3', 'thumbnail'=>'/images/webapps/drupal-thumb.png' ],
+    [ 'name'=>'Joomla',    'group'=>'cms', 'enabled'=>false,'version'=>'1.2.3', 'thumbnail'=>'/images/webapps/joomla-thumb.png' ],
 
-    [ 'name'=>'Opencart', 'group'=>'ecommerce', 'version'=>'1.2.3', 'thumbnail'=>'/images/webapps/opencart-thumb.png' ],
-    [ 'name'=>'Prestashop', 'group'=>'ecommerce', 'version'=>'1.2.3', 'thumbnail'=>'/images/webapps/prestashop-thumb.png' ],
-    [ 'name'=>'Magento', 'group'=>'ecommerce', 'version'=>'1.2.3', 'thumbnail'=>'/images/webapps/magento-thumb.png' ],
+    [ 'name'=>'Opencart',   'group'=>'ecommerce', 'enabled'=>true,  'version'=>'1.2.3', 'thumbnail'=>'/images/webapps/opencart-thumb.png' ],
+    [ 'name'=>'Prestashop', 'group'=>'ecommerce', 'enabled'=>false, 'version'=>'1.2.3', 'thumbnail'=>'/images/webapps/prestashop-thumb.png' ],
+    [ 'name'=>'Magento',    'group'=>'ecommerce', 'enabled'=>false, 'version'=>'1.2.3', 'thumbnail'=>'/images/webapps/magento-thumb.png' ],
 
-    [ 'name'=>'Laravel', 'group'=>'starter', 'version'=>'1.2.3', 'thumbnail'=>'/images/webapps/laravel-thumb.png' ],
-    [ 'name'=>'Symfony', 'group'=>'starter', 'version'=>'1.2.3', 'thumbnail'=>'/images/webapps/symfony-thumb.png' ],
+    [ 'name'=>'Laravel', 'group'=>'starter', 'enabled'=>false, 'version'=>'1.2.3', 'thumbnail'=>'/images/webapps/laravel-thumb.png' ],
+    [ 'name'=>'Symfony', 'group'=>'starter', 'enabled'=>false, 'version'=>'1.2.3', 'thumbnail'=>'/images/webapps/symfony-thumb.png' ],
 ];
 
 // Check GET request
@@ -58,7 +58,7 @@ if (!empty($_GET['app'])) {
 }
 
 // Check POST request
-if (!empty($_POST['ok'])) {
+if (!empty($_POST['ok']) && !empty($_GET['app']) ) {
 
     // Check token
     if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
@@ -67,9 +67,19 @@ if (!empty($_POST['ok'])) {
     }
 
     if ($installer) {
-        if (!$installer->execute($_POST)){
-            $result = $installer->getStatus();
-            $_SESSION['error_msg'] = implode(PHP_EOL, $result);
+        try{
+            if (!$installer->execute($_POST)){
+                $result = $installer->getStatus();
+                $_SESSION['error_msg'] = implode(PHP_EOL, $result);
+            } else {
+                $_SESSION['ok_msg'] = htmlspecialchars($_GET['app']) . " App was installed succesfully !";
+                header('Location: /add/webapp/?domain=' . $v_domain);
+                exit();
+            }
+        } catch (Exception $e) {
+            $_SESSION['error_msg'] = $e->getMessage();
+            header('Location: /add/webapp/?app='.rawurlencode($_GET['app']).'&domain=' . $v_domain);
+            exit();
         }
     }
 }

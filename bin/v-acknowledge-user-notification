@@ -11,7 +11,7 @@
 
 # Argument definition
 user=$1
-nid=$2
+id=$2
 
 # Includes
 source $HESTIA/func/main.sh
@@ -23,7 +23,7 @@ source $HESTIA/conf/hestia.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER NOTIFICATION'
-is_format_valid 'user' 'nid'
+is_format_valid 'user' 'id'
 is_object_valid 'user' 'USER' "$user"
 
 # Perform verification if read-only mode is enabled
@@ -35,7 +35,7 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Updating notification
-update_object_value 'notifications' 'NID' "$nid" '$ACK' 'yes' 2>/dev/null
+update_object_value 'notifications' 'NID' "$id" '$ACK' 'yes' 2>/dev/null
 
 # Checking last notification
 if [ -e "$USER_DATA/notifications.conf" ]; then

@@ -13,7 +13,6 @@
 src=$1
 service=$2
 restart=$3
-echo "$0 $*" >/tmp/t.log
 
 # Includes
 source $HESTIA/func/main.sh
@@ -25,6 +24,8 @@ source $HESTIA/conf/hestia.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'CONFIG SERVICE [RESTART]'
+is_format_valid 'service' 'restart'
+
 if [ ! -e "$src" ]; then
     check_result "$E_NOTEXIST" "$src config doesn't exist"
 fi
@@ -82,11 +83,11 @@ done
 
 # Checking diff between src and dst configs
 for config in $dst; do
-    diff -q $src $config >/dev/null
+    diff -q "$src" "$config" >/dev/null
 
     if [ $? -ne 0 ]; then
-        cp $config $config.vst.back
-        cp $src $config
+        cp "$config" "$config.vst.back"
+        cp "$src" "$config"
         update="yes"
     fi
 done
@@ -101,16 +102,16 @@ if [ "$update" = 'yes' ] && [ "$restart" != 'no' ]; then
         if [ "$WEB_SYSTEM" = "nginx" ]; then
             service=$(ls /etc/init.d/php*fpm* |cut -f 4 -d / |sed -n 1p)
         else
-            service=$WEB_SYSTEM
+            service="$WEB_SYSTEM"
         fi
     fi
 
-    $BIN/v-restart-service $service > /dev/null 2>&1
+    $BIN/v-restart-service "$service" > /dev/null 2>&1
 
     if [ $? -ne 0 ]; then
         for config in $dst; do
-            cat $config.vst.back > $config
-            rm -f $config.vst.back
+            cat "$config.vst.back" > "$config"
+            rm -f "$config.vst.back"
         done
         check_result $E_RESTART "ERROR: $service failed to start with new configuration."
     fi

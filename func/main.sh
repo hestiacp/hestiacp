@@ -870,6 +870,7 @@ is_format_valid() {
                 domain)         is_domain_format_valid "$arg" ;;
                 dvalue)         is_dns_record_format_valid "$arg";;
                 email)          is_email_format_valid "$arg" ;;
+                email_forward)  is_email_format_valid "$arg" ;;
                 exp)            is_date_format_valid "$arg" ;;
                 extentions)     is_common_format_valid "$arg" 'extentions' ;;
                 fname)          is_name_format_valid "$arg" "first name" ;;

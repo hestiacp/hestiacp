@@ -836,6 +836,14 @@ is_format_valid_shell() {
         exit $E_INVALID	
     fi	
 }
+
+# Service name validator
+is_service_format_valid() {
+    if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,64}$ ]]; then
+        check_result $E_INVALID "invalid $2 format :: $1"
+    fi
+}
+
 # Format validation controller
 is_format_valid() {
     for arg_name in $*; do
@@ -902,6 +910,7 @@ is_format_valid() {
                 restart)        is_boolean_format_valid "$arg" 'restart' ;;
                 rtype)          is_dns_type_format_valid "$arg" ;;
                 rule)           is_int_format_valid "$arg" "rule id" ;;
+                service)        is_service_format_valid "$arg" "$arg_name" ;;
                 soa)            is_domain_format_valid "$arg" 'SOA' ;;	
                 #missing command: is_format_valid_shell
                 shell)          is_format_valid_shell "$arg" ;;

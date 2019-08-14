@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: enable or disable demo mode
-#
+# options: ACTIVE
 # This function will set the demo mode variable,
 # which will prevent usage of certain v-scripts in the backend
 # and prevent modification of objects in the control panel.
@@ -13,32 +13,29 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-mode=$1
+active=$1
 
 # Includes
 source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
 
 #----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'ACTIVE'
+is_format_valid 'active'
+
+#----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ -z "$mode" ]; then
-    echo "ERROR: No mode specified."
-    echo "Usage: v-change-sys-demo-mode [no|yes]"
-    exit 1
-elif [ "$mode" = "yes" ]; then
+if [ "$active" = "yes" ]; then
     #TO-DO: Instructions for disabling vhosts
-    $BIN/v-change-sys-config-value 'DEMO_MODE' "$mode"
-elif [ "$mode" = "no" ]; then
+    $BIN/v-change-sys-config-value 'DEMO_MODE' "$active"
+elif [ "$active" = "no" ]; then
     #TODO: Instructions for enabling vhosts
-    $BIN/v-change-sys-config-value 'DEMO_MODE' "$mode"
-else
-    echo "ERROR: Invalid mode specified."
-    echo "Valid modes:"
-    echo "no:    Disables read only / demo mode."
-    echo "yes:   Enables read only / demo mode."
-    exit 1
+    $BIN/v-change-sys-config-value 'DEMO_MODE' "$active"
 fi
 
 #----------------------------------------------------------#
@@ -51,5 +48,8 @@ check_result $? "restart" >/dev/null 2>&1
 
 $BIN/v-restart-proxy $restart
 check_result $? "restart" >/dev/null 2>&1
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
 
 exit

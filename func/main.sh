@@ -852,6 +852,7 @@ is_format_valid() {
             case $arg_name in
                 account)        is_user_format_valid "$arg" "$arg_name";;
                 action)         is_fw_action_format_valid "$arg";;
+                active)         is_boolean_format_valid "$arg" 'active' ;;
                 aliases)        is_alias_format_valid "$arg" ;;
                 antispam)       is_boolean_format_valid "$arg" 'antispam' ;;
                 antivirus)      is_boolean_format_valid "$arg" 'antivirus' ;;

@@ -75,7 +75,7 @@ is_object_valid 'db' 'DB' "$database"
 #----------------------------------------------------------#
 
 # Parsing database
-eval $(grep "DB='$database'" $USER_DATA/db.conf)
+parse_object_kv_list $(grep "DB='$database'" $USER_DATA/db.conf)
 
 # Listing data
 case $format in

@@ -81,7 +81,7 @@ is_object_valid 'dns' 'DOMAIN' "$domain"
 #----------------------------------------------------------#
 
 # Parsing domain
-eval $(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
+parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
 
 # Listing data
 case $format in

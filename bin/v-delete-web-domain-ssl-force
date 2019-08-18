@@ -39,7 +39,7 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Load domain data
-eval $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
+parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 
 # Remove forcessl configs
 if [ -f $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.forcessl.conf ]; then

@@ -47,7 +47,7 @@ echo "$iptables -X hestia" >> $tmp
 chains=$(cat $HESTIA/data/firewall/chains.conf 2>/dev/null)
 IFS=$'\n'
 for chain in $chains; do
-    eval $chain
+    parse_object_kv_list "$chain"
     echo "$iptables -F fail2ban-$CHAIN" >> $tmp
     echo "$iptables -X fail2ban-$CHAIN" >> $tmp
 done

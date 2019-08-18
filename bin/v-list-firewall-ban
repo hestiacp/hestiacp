@@ -22,7 +22,7 @@ json_list() {
     objects=$(grep IP $HESTIA/data/firewall/banlist.conf |wc -l)
     echo "{"
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         echo -n '    "'$IP'": {
         "IP": "'$IP'",
         "CHAIN": "'$CHAIN'",
@@ -45,7 +45,7 @@ shell_list() {
     echo "IP   CHAIN   TIME   DATE"
     echo "--   -----   ----   ----"
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         echo "$IP $CHAIN $TIME $DATE"
     done < <(cat $HESTIA/data/firewall/banlist.conf)
 }
@@ -54,7 +54,7 @@ shell_list() {
 plain_list() {
     IFS=$'\n'
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         echo -e "$IP\t$CHAIN\t$TIME\t$DATE"
     done < <(cat $HESTIA/data/firewall/banlist.conf)
 }
@@ -64,7 +64,7 @@ csv_list() {
     IFS=$'\n'
     echo "IP,CHAIN,TIME,DATE"
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         echo "$IP,$CHAIN,$TIME,$DATE"
     done < <(cat $HESTIA/data/firewall/banlist.conf)
 }

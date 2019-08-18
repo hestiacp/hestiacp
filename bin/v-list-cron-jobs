@@ -23,7 +23,7 @@ json_list() {
     objects=$(grep JOB $USER_DATA/cron.conf |wc -l)
     echo "{"
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         CMD=$(echo "$CMD" |sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
         echo -n '    "'$JOB'": {
         "MIN": "'$MIN'",
@@ -54,7 +54,7 @@ shell_list() {
     echo "JOB^MIN^HOUR^MONTH^WDAY^COMMAND"
     echo "---^---^----^-----^----^-------"
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         CMD=$(echo "$CMD" |sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
         echo "$JOB^$MIN^$HOUR^$MONTH^$WDAY^$CMD"
     done < <(cat $USER_DATA/cron.conf)
@@ -64,7 +64,7 @@ shell_list() {
 plain_list() {
     IFS=$'\n'
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         CMD=$(echo "$CMD" |sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
         echo -ne "$JOB\t$MIN\t$HOUR\t$MONTH\t$WDAY\t$CMD\t"
         echo -e "$SUSPENDED\t$TIME\t$DATE"
@@ -76,7 +76,7 @@ csv_list() {
     IFS=$'\n'
     echo  "MIN,HOUR,DAY,WDAY,CMD,SUSPENDED,TIME,DATE"
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         CMD=$(echo "$CMD" |sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
         echo -n "$JOB,$MIN,$HOUR,$MONTH,$WDAY,\"$CMD\","
         echo "$SUSPENDED,$TIME,$DATE"

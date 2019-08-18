@@ -35,7 +35,7 @@ for db in $(echo $DB_SYSTEM| tr ',' '\n'); do
 
         # Checking server status
         for host_str in $(cat $HESTIA/conf/$db.conf); do
-            eval $host_str
+            parse_object_kv_list "$host_str"
 
             # Checking MySQL
             if [ "$db" = 'mysql' ]; then

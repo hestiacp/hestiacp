@@ -40,7 +40,7 @@ IFS=$'\n'
 for cluster in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
 
     # Parsing remote host parameters
-    eval $cluster
+    parse_object_kv_list "$cluster"
 
     # Syncing domain
     str=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)

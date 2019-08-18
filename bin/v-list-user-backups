@@ -23,7 +23,7 @@ json_list() {
     objects=$(grep BACKUP $USER_DATA/backup.conf |wc -l)
     echo "{"
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         echo -n '    "'$BACKUP'": {
         "TYPE": "'$TYPE'",
         "SIZE": "'$SIZE'",
@@ -53,7 +53,7 @@ shell_list() {
     echo "BACKUP   TYPE   SIZE  TIME  DATE"
     echo "------   ----   ---   ----  ----"
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         echo "$BACKUP $TYPE $SIZE $RUNTIME $DATE"
     done < <(cat $USER_DATA/backup.conf)
 }
@@ -62,7 +62,7 @@ shell_list() {
 plain_list() {
     IFS=$'\n'
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         echo -ne "$BACKUP\t$TYPE\t$SIZE\t$WEB\t$DNS\t$MAIL\t$CRON\t$UDIR\t"
         echo -e "$RUNTIME\t$TIME\t$DATE"
     done < <(cat $USER_DATA/backup.conf)
@@ -73,7 +73,7 @@ csv_list() {
     IFS=$'\n'
     echo "BACKUP,TYPE,SIZE,WEB,DNS,MAIL,CRON,UDIR,RUNTIME,TIME,DATE"
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         echo -n "$BACKUP,$TYPE,$SIZE,\"$WEB\",\"$DNS\",\"$MAIL\",\"$CRON\","
         echo "\"$UDIR\",$RUNTIME,$TIME,$DATE"
     done < <(cat $USER_DATA/backup.conf)

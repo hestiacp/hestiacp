@@ -18,8 +18,9 @@ source $HESTIA/conf/hestia.conf
 
 # JSON list function
 json_list() {
-    eval $(echo "$config"|egrep "$keys"|\
+    str=$(echo "$config"|egrep "$keys"|\
         sed -e "s/[ ]*=/=/" -e "s/=[ ]*/=\'/" -e "s/$/'/")
+    parse_object_kv_list "$str"
     echo '{
     "CONFIG": {
         "max_user_connections": "'$max_user_connections'",

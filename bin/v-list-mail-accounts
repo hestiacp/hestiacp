@@ -24,7 +24,7 @@ json_list() {
     objects=$(grep ACCOUNT $USER_DATA/mail/$domain.conf |wc -l)
     echo "{"
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         echo -n '    "'$ACCOUNT'": {
         "ALIAS": "'$ALIAS'",
         "FWD": "'$FWD'",
@@ -52,7 +52,7 @@ shell_list() {
     echo "ACCOUNT   ALIAS   FWD   DISK  DATE"
     echo "-------   -----   ---   ----  ----"
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         if [ -z "$ALIAS" ]; then
             ALIAS='no'
         else
@@ -76,7 +76,7 @@ shell_list() {
 plain_list() {
     IFS=$'\n'
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         echo -ne "$ACCOUNT\t$ALIAS\t$FWD\t$FWD_ONLY\t$AUTOREPLY\t"
         echo -e "$QUOTA\t$U_DISK\t$SUSPENDED\t$TIME\t$DATE"
     done < <(cat $USER_DATA/mail/$domain.conf)
@@ -88,7 +88,7 @@ csv_list() {
     echo -n "ACCOUNT,ALIAS,FWD,FWD_ONLY,AUTOREPLY,QUOTA,U_DISK,"
     echo "SUSPENDED,TIME,DATE"
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         echo -n "$ACCOUNT,\"$ALIAS\",\"$FWD\",$FWD_ONLY,$AUTOREPLY,"
         echo "$QUOTA,$U_DISK,$SUSPENDED,$TIME,$DATE"
     done < <(cat $USER_DATA/mail/$domain.conf)

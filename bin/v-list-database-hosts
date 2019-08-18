@@ -32,7 +32,7 @@ json_list() {
     for type in $(echo $DB_SYSTEM |sed -e 's/,/\n/'); do
         if [ -e "$HESTIA/conf/$type.conf" ]; then
             for str in $(cat $HESTIA/conf/$type.conf); do
-                eval $str
+                parse_object_kv_list "$str"
         echo -n '    {
         "HOST": "'$HOST'",
         "TYPE": "'$type'",
@@ -65,7 +65,7 @@ shell_list() {
     for type in $(echo $DB_SYSTEM |sed -e 's/,/\n/'); do
         if [ -e "$HESTIA/conf/$type.conf" ]; then
             for str in $(cat $HESTIA/conf/$type.conf); do
-                eval $str
+                parse_object_kv_list "$str"
                 echo "$HOST $type $MAX_DB $U_DB_BASES $SUSPENDED $TIME $DATE"
             done
         fi
@@ -78,7 +78,7 @@ plain_list() {
     for type in $(echo $DB_SYSTEM |sed -e 's/,/\n/'); do
         if [ -e "$HESTIA/conf/$type.conf" ]; then
             for str in $(cat $HESTIA/conf/$type.conf); do
-                eval $str
+                parse_object_kv_list "$str"
                 echo -ne "$HOST\t$type\t$CHARSETS\t$MAX_DB\t$U_SYS_USERS\t"
                 echo -e "$U_DB_BASES\t$TPL\t$SUSPENDED\t$TIME\t$DATE"
             done
@@ -94,7 +94,7 @@ csv_list() {
     for type in $(echo $DB_SYSTEM |sed -e 's/,/\n/'); do
         if [ -e "$HESTIA/conf/$type.conf" ]; then
             for str in $(cat $HESTIA/conf/$type.conf); do
-                eval $str
+                parse_object_kv_list "$str"
                 echo -n "$HOST,$type,\"$CHARSETS\",$MAX_DB,\"$U_SYS_USERS\","
                 echo "$U_DB_BASES,$TPL,$SUSPENDED,$TIME,$DATE"
             done

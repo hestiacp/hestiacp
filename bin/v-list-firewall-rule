@@ -70,7 +70,7 @@ is_object_valid '../../data/firewall/rules' 'RULE' "$rule"
 #----------------------------------------------------------#
 
 # Parsing rules
-eval $(grep "RULE='$rule'" $HESTIA/data/firewall/rules.conf)
+parse_object_kv_list $(grep "RULE='$rule'" $HESTIA/data/firewall/rules.conf)
 
 # Listing data
 case $format in

@@ -23,7 +23,7 @@ json_list() {
     objects=$(grep DOMAIN $USER_DATA/mail.conf |wc -l)
     echo "{"
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         echo -n '    "'$DOMAIN'": {
         "ANTIVIRUS": "'$ANTIVIRUS'",
         "ANTISPAM": "'$ANTISPAM'",
@@ -52,7 +52,7 @@ shell_list() {
     echo "DOMAIN   ANTIVIRUS   ANTISPAM   DKIM  SSL   ACC   DISK   SPND   DATE"
     echo "------   ---------   --------   ----  ---   ---   ----   ---   ----"
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         echo -n "$DOMAIN $ANTIVIRUS $ANTISPAM $DKIM $SSL $ACCOUNTS $U_DISK "
         echo "$SUSPENDED $DATE"
     done < <(cat $USER_DATA/mail.conf)
@@ -62,7 +62,7 @@ shell_list() {
 plain_list() {
     IFS=$'\n'
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         echo -ne "$DOMAIN\t$ANTIVIRUS\t$ANTISPAM\t$DKIM\t$SSL\$CATCHALL\t"
         echo -e "$ACCOUNTS\t$U_DISK\t$SUSPENDED\t$TIME\t$DATE"
     done < <(cat $USER_DATA/mail.conf)
@@ -74,7 +74,7 @@ csv_list() {
     echo -n "DOMAIN,ANTIVIRUS,ANTISPAM,DKIM,SSL,CATCHALL,ACCOUNTS,U_DISK,"
     echo "SUSPENDED,TIME,DATE"
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         echo -n "$DOMAIN,$ANTIVIRUS,$ANTISPAM,$DKIM,$SSL,$CATCHALL,$ACCOUNTS,"
         echo "'$U_DISK,$SUSPENDED,$TIME,$DATE"
         echo

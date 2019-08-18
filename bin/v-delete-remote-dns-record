@@ -41,7 +41,7 @@ IFS=$'\n'
 for cluster in $(cat $HESTIA/conf/dns-cluster.conf); do
 
     # Parsing remote host parameters
-    eval $cluster
+    parse_object_kv_list "$cluster"
 
     # Syncing serial
     str=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)

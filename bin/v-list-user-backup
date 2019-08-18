@@ -85,7 +85,7 @@ is_object_valid 'backup' 'BACKUP' "$backup"
 #----------------------------------------------------------#
 
 # Parsing backup config
-eval $(grep "BACKUP='$backup'" $USER_DATA/backup.conf)
+parse_object_kv_list $(grep "BACKUP='$backup'" $USER_DATA/backup.conf)
 
 # Listing data
 case $format in

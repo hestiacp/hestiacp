@@ -22,7 +22,7 @@ json_list() {
     objects=$(grep RULE $HESTIA/data/firewall/rules.conf |wc -l)
     echo "{"
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         echo -n '    "'$RULE'": {
         "ACTION": "'$ACTION'",
         "PROTOCOL": "'$PROTOCOL'",
@@ -49,7 +49,7 @@ shell_list() {
     echo "RULE^ACTION^PROTO^PORT^IP^SPND^DATE"
     echo "----^------^-----^----^--^----^----"
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         echo "$RULE^$ACTION^$PROTOCOL^$PORT^$IP^$SUSPENDED^$DATE"
     done < <(cat $HESTIA/data/firewall/rules.conf)
 }
@@ -58,7 +58,7 @@ shell_list() {
 plain_list() {
     IFS=$'\n'
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         echo -ne "$RULE\t$ACTION\t$PROTOCOL\t$PORT\t$IP\t$COMMENT\t"
         echo -e "$SUSPENDED\t$TIME\t$DATE"
     done < <(cat $HESTIA/data/firewall/rules.conf)
@@ -69,7 +69,7 @@ csv_list() {
     IFS=$'\n'
     echo "RULE,ACTION,PROTOCOL,PORT,IP,COMMENT,SUSPENDED,TIME,DATE"
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         echo -n "$RULE,$ACTION,$PROTOCOL,$PORT,$IP,\"$COMMENT\","
         echo "$SUSPENDED,$TIME,$DATE"
     done < <(cat $HESTIA/data/firewall/rules.conf)

@@ -79,7 +79,7 @@ echo "$iptables -A INPUT -s 127.0.0.1 -j ACCEPT" >> $tmp
 # Pasring iptables rules
 IFS=$'\n'
 for line in $(sort -r -n -k 2 -t \' $rules); do
-    eval $line
+    parse_object_kv_list "$line"
     if [ "$SUSPENDED" = 'no' ]; then
         proto="-p $PROTOCOL"
         port="--dport $PORT"
@@ -132,7 +132,7 @@ fi
 # Checking fail2ban support
 if [ ! -z "$FIREWALL_EXTENSION" ]; then
     for chain in $(cat $HESTIA/data/firewall/chains.conf 2>/dev/null); do
-        eval $chain
+        parse_object_kv_list "$chain"
         if [[ "$PORT" =~ ,|-|: ]] ; then
             port="-m multiport --dports $PORT"
         else
@@ -147,7 +147,7 @@ if [ ! -z "$FIREWALL_EXTENSION" ]; then
     rm -f $tmp
 
     for ban in $(cat $HESTIA/data/firewall/banlist.conf 2>/dev/null); do
-        eval $ban
+        parse_object_kv_list "$ban"
         echo -n "$iptables -I fail2ban-$CHAIN 1 -s $IP" >> $tmp
         echo " -j REJECT --reject-with icmp-port-unreachable" >> $tmp
     done

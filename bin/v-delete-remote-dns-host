@@ -48,7 +48,7 @@ if [ "$check_cluster" -eq '0' ]; then
     cmd="sudo $HESTIA/bin/v-update-sys-queue dns-cluster"
     check_cron=$(grep "$cmd" $HESTIA/data/users/admin/cron.conf 2> /dev/null)
     if [ ! -z "$check_cron" ]; then
-        eval $check_cron
+        parse_object_kv_list "$check_cron"
         $BIN/v-delete-cron-job admin "$JOB"
     fi
 fi

@@ -23,7 +23,7 @@ json_list() {
     objects=$(grep NID $USER_DATA/notifications.conf |wc -l)
     echo "{"
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         TOPIC=$(echo "$TOPIC" |sed -e "s/%quote%/'/g")
         NOTICE=$(echo "$NOTICE" |sed -e "s/%quote%/'/g")
         echo -n '    "'$NID'": {
@@ -49,7 +49,7 @@ json_list() {
 shell_list() {
     IFS=$'\n'
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         echo "$TOPIC" |sed -e "s/%quote%/'/g"
         echo "$NOTICE" |sed -e "s/%quote%/'/g"
         echo "$DATE $TIME"
@@ -62,7 +62,7 @@ shell_list() {
 plain_list() {
     IFS=$'\n'
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         TOPIC=$(echo "$TOPIC" |sed -e "s/%quote%/'/g")
         NOTICE=$(echo "$NOTICE" |sed -e "s/%quote%/'/g")
         echo -e "$NID\t$TOPIC\t$NOTICE\t$TIME\t$DATE"
@@ -74,7 +74,7 @@ csv_list() {
     IFS=$'\n'
     echo "NID,TOPIC,NOTICE,TIME,DATE"
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         TOPIC=$(echo "$TOPIC" |sed -e "s/%quote%/'/g")
         NOTICE=$(echo "$NOTICE" |sed -e "s/%quote%/'/g")
         echo "$NID,\"$TOPIC\",\"$NOTICE\",$TIME,$DATE"

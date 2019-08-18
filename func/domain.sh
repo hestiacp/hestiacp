@@ -432,7 +432,7 @@ is_dns_domain_new() {
 # Update domain zone
 update_domain_zone() {
     domain_param=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
-    eval $domain_param
+    parse_object_kv_list "$domain_param"
     SOA=$(idn --quiet -a -t "$SOA")
     if [ -z "$SERIAL" ]; then
         SERIAL=$(date +'%Y%m%d01')
@@ -513,7 +513,7 @@ sort_dns_records() {
 # Check if this is a last record
 is_dns_record_critical() {
     str=$(grep "ID='$id'" $USER_DATA/dns/$domain.conf)
-    eval $str
+    parse_object_kv_list "$str"
     if [ "$TYPE" = 'A' ] || [ "$TYPE" = 'NS' ]; then
         records=$(grep "TYPE='$TYPE'" $USER_DATA/dns/$domain.conf| wc -l)
         if [ $records -le 1 ]; then
@@ -825,5 +825,5 @@ is_domain_new() {
 
 # Get domain variables
 get_domain_values() {
-    eval $(grep "DOMAIN='$domain'" $USER_DATA/$1.conf)
+    parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/$1.conf)
 }

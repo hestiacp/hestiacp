@@ -75,7 +75,7 @@ mkdir -p $BACKUP/tmp.$database
 $BIN/v-suspend-database $owner $database > /dev/null 2>&1
 
 # Dump database
-eval $db_data
+parse_object_kv_list "$db_data"
 dump="$tmpdir/$database.$TYPE.sql"
 grants="$tmpdir/$database.$TYPE.$DBUSER"
 case $TYPE in
@@ -86,7 +86,7 @@ esac
 # Import configuration
 db_data=$(echo "$db_data" | sed "s/'${owner}_/'${user}_/g")
 echo "$db_data" >> $HESTIA/data/users/$user/db.conf
-eval $db_data
+parse_object_kv_list "$db_data"
 
 # Unsuspend db
 $BIN/v-unsuspend-database $user $new_db > /dev/null 2>&1

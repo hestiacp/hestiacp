@@ -316,7 +316,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
 
         # Restoring web.conf
         if [ -z "$check_config" ]; then
-            eval $(cat $tmpdir/web/$domain/$backup_system/web.conf)
+            parse_object_kv_list $(cat $tmpdir/web/$domain/$backup_system/web.conf)
 
             # Deleting conflicting aliases
             for dom_alias in ${ALIAS//,/ }; do
@@ -480,7 +480,7 @@ if [ "$dns" != 'no' ] && [ ! -z "$DNS_SYSTEM" ]; then
 
         # Restoring dns.conf
         if [ -z "$check_config" ]; then
-            eval $(cat $tmpdir/dns/$domain/$backup_system/dns.conf)
+            parse_object_kv_list $(cat $tmpdir/dns/$domain/$backup_system/dns.conf)
 
             # Checking IP address
             check_ip=$(is_ip_valid $IP $user)
@@ -664,7 +664,7 @@ if [ "$db" != 'no' ] && [ ! -z "$DB_SYSTEM" ]; then
 
         # Restore database config
         if [ -z "$check_config" ]; then
-            eval $(cat $tmpdir/db/$database/$backup_system/db.conf)
+            parse_object_kv_list $(cat $tmpdir/db/$database/$backup_system/db.conf)
             DB=$(echo "$DB"  |sed -e "s/${old_user}_//")
             DB="${user}_${DB}"
             DBUSER=$(echo "$DBUSER" |sed -e "s/${old_user}_//")
@@ -674,7 +674,7 @@ if [ "$db" != 'no' ] && [ ! -z "$DB_SYSTEM" ]; then
             str="$str SUSPENDED='no' TIME='$(date +%T)' DATE='$(date +%F)'"
             echo $str >> $USER_DATA/db.conf
         else
-            eval $(grep "DB='$database'" $USER_DATA/db.conf)
+            parse_object_kv_list $(grep "DB='$database'" $USER_DATA/db.conf)
         fi
 
         # Unzipping database dump

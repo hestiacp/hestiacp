@@ -23,7 +23,7 @@ json_list() {
     objects=$(grep DATE $USER_DATA/stats.log |wc -l)
     echo "{"
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         echo -n '    "'$DATE'": {
         "TIME": "'$TIME'",
         "PACKAGE": "'$PACKAGE'",
@@ -64,7 +64,7 @@ shell_list() {
     echo "DATE   WEB   DNS   MAIL   DB   BACKUPS   IP   DISK   BW"
     echo "----   ---   ---   ----   --   -------   --   ----   --"
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         if [ -z "$U_USERS" ]; then
             U_USERS=1
         fi
@@ -78,7 +78,7 @@ shell_list() {
 plain_list() {
     IFS=$'\n'
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         echo -ne "$DATE\t$TIME\t$PACKAGE\t$IP_OWNED\t$DISK_QUOTA\t$U_DISK\t"
         echo -ne "$U_DISK_DIRS\t$U_DISK_WEB\t$U_DISK_MAIL\t$U_DISK_DB\t"
         echo -ne "$BANDWIDTH\t$U_BANDWIDTH\t$U_WEB_DOMAINS\t$U_WEB_SSL\t"
@@ -99,7 +99,7 @@ csv_list() {
     echo "U_DATABASES,U_CRON_JOBS,U_BACKUPS"
 
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         echo -n "$DATE,$TIME,$PACKAGE,$IP_OWNED,$DISK_QUOTA,$U_DISK,"
         echo -n "$U_DISK_DIRS,$U_DISK_WEB,$U_DISK_MAIL,$U_DISK_DB,"
         echo -n "$BANDWIDTH,$U_BANDWIDTH,$U_WEB_DOMAINS,$U_WEB_SSL,"

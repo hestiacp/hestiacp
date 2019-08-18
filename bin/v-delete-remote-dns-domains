@@ -21,6 +21,7 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
+is_format_valid 'host'
 is_system_enabled "$DNS_CLUSTER" 'DNS_CLUSTER'
 is_procces_running
 remote_dns_health_check
@@ -42,7 +43,7 @@ fi
 for cluster in $hosts; do
 
     # Parsing remote host parameters
-    eval $cluster
+    parse_object_kv_list "$cluster"
 
     # Deleting source records
     cluster_cmd v-delete-dns-domains-src $DNS_USER $HOSTNAME 'no'

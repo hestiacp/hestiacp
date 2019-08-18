@@ -246,6 +246,35 @@ is_object_valid() {
     fi
 }
 
+# Check if a object string with key values pairs has the correct format and load it afterwards
+parse_object_kv_list() {
+    local str
+    local objkv
+    local suboutput
+    local OLD_IFS="$IFS"
+
+    str=${@//$'\n'/ }
+    str=${str//\"/\\\"}
+    IFS=$'\n'
+
+    suboutput=$(sudo -u nobody bash -c "PS4=''; set -xe; eval \"${str}\"" 2>&1)
+    check_result $? "Invalid object format: ${str}" $E_INVALID
+
+    for objkv in $suboutput; do
+
+        if [[ "$objkv" =~ ^'eval ' ]]; then
+          continue
+        fi
+
+        if ! [[ "$objkv" =~ ^([[:alnum:]][_[:alnum:]]{0,64}[[:alnum:]])=(\'?[^\']+?\'?)?$ ]]; then
+            check_result $E_INVALID "Invalid key value format [$objkv]"
+        fi
+
+        eval "$objkv"
+    done
+    IFS="$OLD_IFS"
+}
+
 # Check if object is supended
 is_object_suspended() {
     if [ $2 = 'USER' ]; then

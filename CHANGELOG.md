@@ -30,6 +30,7 @@ All notable changes to this project will be documented in this file.
 - SecImprove: File operations in user home folder will be executed as the real user
 - Added a confirmation dialog when deleting user logs (/list/log/)
 - Fixed issue with sftp-jail not working for users restored from backups
+- SecImprove: Improved input validation in multiple cli scripts
 
 ## [1.0.5] - 2019-08-06 - Hotfix
 ### Bugfixes

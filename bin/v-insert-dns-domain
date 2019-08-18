@@ -31,8 +31,14 @@ is_format_valid 'user' 'data'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-eval $data
+parse_object_kv_list "$data"
+
 domain="$DOMAIN"
+if [ -z "$domain" ]; then
+    check_result $E_ARGS "Domain name missing from DATA"
+fi
+is_format_valid 'domain'
+
 if [ "$flush" = 'no' ]; then
     is_domain_new 'dns' $domain
 fi

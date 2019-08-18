@@ -77,6 +77,7 @@ is_type_format_valid() {
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'TYPE HOST [FORMAT]'
+is_format_valid 'host'
 is_type_format_valid "$type"
 is_object_valid "../../conf/$type" 'HOST' "$host"
 
@@ -86,7 +87,7 @@ is_object_valid "../../conf/$type" 'HOST' "$host"
 #----------------------------------------------------------#
 
 # Parsing hosts
-eval $(grep "HOST='$host'" $HESTIA/conf/$type.conf)
+parse_object_kv_list $(grep "HOST='$host'" $HESTIA/conf/$type.conf)
 
 # Listing data
 case $format in

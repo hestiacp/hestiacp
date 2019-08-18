@@ -21,6 +21,7 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
+is_format_valid 'host'
 is_system_enabled "$DNS_CLUSTER" 'DNS_CLUSTER'
 is_procces_running
 remote_dns_health_check 'no_email'
@@ -42,7 +43,7 @@ fi
 for cluster in $hosts; do
 
     # Parsing host values
-    eval $cluster
+    parse_object_kv_list "$cluster"
 
     # Wiping remote domains
     cluster_cmd v-delete-dns-domains-src $DNS_USER $HOSTNAME no
@@ -54,7 +55,7 @@ for cluster in $hosts; do
         for str in $(cat $HESTIA/data/users/$user/dns.conf); do
 
             # Syncing domain index
-            eval $str
+            parse_object_kv_list "$str"
             cluster_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME ' ' no
             check_result $? "$HOST connection failed" $E_CONNECT
 

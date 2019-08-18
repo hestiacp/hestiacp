@@ -84,7 +84,7 @@ is_object_valid "mail/$domain" 'ACCOUNT' "$account"
 #----------------------------------------------------------#
 
 # Parsing mail account
-eval $(grep "ACCOUNT='$account'" $USER_DATA/mail/$domain.conf)
+parse_object_kv_list $(grep "ACCOUNT='$account'" $USER_DATA/mail/$domain.conf)
 
 # Listing data
 case $format in

@@ -20,7 +20,7 @@ source $HESTIA/conf/hestia.conf
 
 # JSON list function
 json_list() {
-    eval $(grep "DOMAIN='$domain'" $USER_DATA/mail.conf)
+    parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/mail.conf)
     echo '{'
     echo '    "'$DOMAIN'": {
         "ANTIVIRUS": "'$ANTIVIRUS'",
@@ -86,7 +86,7 @@ is_object_valid 'mail' 'DOMAIN' "$domain"
 #----------------------------------------------------------#
 
 # Parsing mail domain
-eval $(grep "DOMAIN='$domain'" $USER_DATA/mail.conf)
+parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/mail.conf)
 
 # Listing data
 case $format in

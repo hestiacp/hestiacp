@@ -24,7 +24,7 @@ json_list() {
     objects=$(echo -e "$data" |grep NAME |wc -l)
     echo "{"
     for str in $(echo -e "$data"); do
-        eval $str
+        parse_object_kv_list "$str"
         echo -n '    "'$NAME'": {
         "VERSION": "'$VERSION'",
         "ARCH": "'$ARCH'",
@@ -49,7 +49,7 @@ shell_list() {
     echo "PKG   VER   ARCH   UPDT   DATE"
     echo "---   ---   ----   ----   ----"
     for str in $(echo -e "$data"); do
-        eval $str
+        parse_object_kv_list "$str"
         echo "$NAME $VERSION $ARCH $UPDATED $DATE"
     done
 }

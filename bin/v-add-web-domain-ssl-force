@@ -38,7 +38,7 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Load domain data
-eval $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
+parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 
 # Check if SSL is enabled
 if [ "$SSL" != 'yes' ]; then

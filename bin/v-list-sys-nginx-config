@@ -17,7 +17,7 @@ source $HESTIA/func/main.sh
 
 # JSON list function
 json_list() {
-    eval $(echo "$config" |egrep "$keys" |tr -d ';'| awk '{print $1"="$2}')
+    parse_object_kv_list $(echo "$config" |egrep "$keys" |tr -d ';'| awk '{print $1"="$2}')
     echo '{
     "CONFIG": {
         "worker_processes": "'$worker_processes'",

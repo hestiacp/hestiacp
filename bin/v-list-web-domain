@@ -128,7 +128,7 @@ is_object_valid 'web' 'DOMAIN' "$domain"
 #----------------------------------------------------------#
 
 # Parsing domain
-eval $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
+parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 
 # Listing data
 case $format in

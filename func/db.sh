@@ -1,7 +1,7 @@
 # MySQL
 mysql_connect() {
     host_str=$(grep "HOST='$1'" $HESTIA/conf/mysql.conf)
-    eval $host_str
+    parse_object_kv_list "$host_str"
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
         echo "Error: mysql config parsing failed"
         log_event "$E_PARSING" "$ARGUMENTS"
@@ -71,7 +71,7 @@ mysql_dump() {
 # PostgreSQL
 psql_connect() {
     host_str=$(grep "HOST='$1'" $HESTIA/conf/pgsql.conf)
-    eval $host_str
+    parse_object_kv_list "$host_str"
     export PGPASSWORD="$PASSWORD"
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
         echo "Error: postgresql config parsing failed"
@@ -124,7 +124,7 @@ get_next_dbhost() {
         if [ 0 -lt "$check_row" ]; then
             if [ 1 -eq "$check_row" ]; then
                 for db in $host_str; do
-                    eval $db
+                    parse_object_kv_list "$db"
                     if [ "$MAX_DB" -gt "$U_DB_BASES" ]; then
                         host=$HOST
                     fi
@@ -132,7 +132,7 @@ get_next_dbhost() {
             else
                 old_weight='100'
                 for db in $host_str; do
-                    eval $db
+                    parse_object_kv_list "$db"
                     let weight="$U_DB_BASES * 100 / $MAX_DB" >/dev/null 2>&1
                     if [ "$old_weight" -gt "$weight" ]; then
                         host="$HOST"
@@ -147,7 +147,7 @@ get_next_dbhost() {
 # Database charset validation
 is_charset_valid() {
     host_str=$(grep "HOST='$host'" $HESTIA/conf/$type.conf)
-    eval $host_str
+    parse_object_kv_list "$host_str"
 
     if [ -z "$(echo $CHARSETS | grep -wi $charset )" ]; then
         echo "Error: charset $charset not exist"
@@ -159,7 +159,7 @@ is_charset_valid() {
 # Increase database host value
 increase_dbhost_values() {
     host_str=$(grep "HOST='$host'" $HESTIA/conf/$type.conf)
-    eval $host_str
+    parse_object_kv_list "$host_str"
 
     old_dbbases="U_DB_BASES='$U_DB_BASES'"
     new_dbbases="U_DB_BASES='$((U_DB_BASES + 1))'"
@@ -182,7 +182,7 @@ increase_dbhost_values() {
 # Decrease database host value
 decrease_dbhost_values() {
     host_str=$(grep "HOST='$HOST'" $HESTIA/conf/$TYPE.conf)
-    eval $host_str
+    parse_object_kv_list "$host_str"
 
     old_dbbases="U_DB_BASES='$U_DB_BASES'"
     new_dbbases="U_DB_BASES='$((U_DB_BASES - 1))'"
@@ -261,7 +261,7 @@ is_dbhost_new() {
 
 # Get database values
 get_database_values() {
-    eval $(grep "DB='$database'" $USER_DATA/db.conf)
+    parse_object_kv_list $(grep "DB='$database'" $USER_DATA/db.conf)
 }
 
 # Change MySQL database password
@@ -364,7 +364,7 @@ dump_pgsql_database() {
 # Check if database server is in use
 is_dbhost_free() {
     host_str=$(grep "HOST='$host'" $HESTIA/conf/$type.conf)
-    eval $host_str
+    parse_object_kv_list "$host_str"
     if [ 0 -ne "$U_DB_BASES" ]; then
         echo "Error: host $HOST is used"
         log_event "$E_INUSE" "$ARGUMENTS"

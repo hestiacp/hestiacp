@@ -44,7 +44,7 @@ chains=$HESTIA/data/firewall/chains.conf
 banlist=$HESTIA/data/firewall/banlist.conf
 chain_param=$(grep "CHAIN='$chain'" $chains 2>/dev/null)
 if [ ! -z "$chain_param" ]; then
-    eval $chain_param
+    parse_object_kv_list "$chain_param"
     sed -i "/CHAIN='$chain'/d" $chains
     sed -i "/CHAIN='$chain'/d" $banlist
     $iptables -D INPUT -p $PROTOCOL \

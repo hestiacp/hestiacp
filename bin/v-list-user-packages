@@ -64,7 +64,7 @@ shell_list() {
         PACKAGE=${package/.pkg/}
         package_data=$(cat $HESTIA/data/packages/$package)
         package_data=$(echo "$package_data" |sed -e 's/unlimited/unlim/g')
-        eval $package_data
+        parse_object_kv_list "$package_data"
         echo -n "$PACKAGE $WEB_TEMPLATE $WEB_DOMAINS $DNS_DOMAINS "
         echo "$MAIL_DOMAINS $DATABASES $SHELL $DISK_QUOTA $BANDWIDTH"
     done

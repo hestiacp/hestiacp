@@ -47,7 +47,7 @@ check_hestia_demo_mode
 web_data=$(grep "DOMAIN='$domain'" $HESTIA/data/users/$owner/web.conf)
 if [ ! -z "$web_data" ]; then
     $BIN/v-suspend-web-domain $owner $domain >> /dev/null 2>&1
-    eval $web_data
+    parse_object_kv_list "$web_data"
 
     # Change IP
     if [ ! -z "$ip" ]; then
@@ -95,7 +95,7 @@ fi
 # DNS domain
 dns_data=$(grep "DOMAIN='$domain'" $HESTIA/data/users/$owner/dns.conf)
 if [ ! -z "$dns_data" ]; then
-    eval $dns_data
+    parse_object_kv_list "$dns_data"
 
     # Change IP
     if [ ! -z "$ip" ]; then

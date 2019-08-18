@@ -513,7 +513,7 @@ rebuild_mail_domain_conf() {
         (( ++accs))
         object=$(grep "ACCOUNT='$account'" $USER_DATA/mail/$domain.conf)
         FWD_ONLY='no'
-        eval "$object"
+        parse_object_kv_list "$object"
         if [ "$SUSPENDED" = 'yes' ]; then
             MD5='SUSPENDED'
         fi
@@ -627,7 +627,7 @@ rebuild_mysql_database() {
 rebuild_pgsql_database() {
 
     host_str=$(grep "HOST='$HOST'" $HESTIA/conf/pgsql.conf)
-    eval $host_str
+    parse_object_kv_list "$host_str"
     export PGPASSWORD="$PASSWORD"
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
         echo "Error: postgresql config parsing failed"
@@ -676,7 +676,7 @@ rebuild_pgsql_database() {
 import_mysql_database() {
 
     host_str=$(grep "HOST='$HOST'" $HESTIA/conf/mysql.conf)
-    eval $host_str
+    parse_object_kv_list "$host_str"
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
         echo "Error: mysql config parsing failed"
         log_event "$E_PARSING" "$ARGUMENTS"
@@ -691,7 +691,7 @@ import_mysql_database() {
 import_pgsql_database() {
 
     host_str=$(grep "HOST='$HOST'" $HESTIA/conf/pgsql.conf)
-    eval $host_str
+    parse_object_kv_list "$host_str"
     export PGPASSWORD="$PASSWORD"
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
         echo "Error: postgresql config parsing failed"

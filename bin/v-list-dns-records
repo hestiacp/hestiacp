@@ -24,7 +24,7 @@ json_list() {
     objects=$(grep ID $USER_DATA/dns/$domain.conf |wc -l)
     echo "{"
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         VALUE=$(echo "$VALUE" |sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
         echo -n '    "'$ID'": {
         "RECORD": "'$RECORD'",
@@ -52,7 +52,7 @@ shell_list() {
     echo "ID^RECORD^TYPE^VALUE^DATE"
     echo "--^------^----^-----^----"
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         echo "$ID^$RECORD^$TYPE^${VALUE:0:30}^$DATE"
     done < <(cat $USER_DATA/dns/$domain.conf)
 }
@@ -61,7 +61,7 @@ shell_list() {
 plain_list() {
     IFS=$'\n'
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         VALUE=$(echo "$VALUE" |sed -e "s/%quote%/\\'/g")
         echo -ne "$ID\t$RECORD\t$TYPE\t$PRIORITY\t$VALUE\t"
         echo -e "$SUSPENDED\t$TIME\t$DATE"
@@ -73,7 +73,7 @@ csv_list() {
     IFS=$'\n'
     echo "ID,RECORD,TYPE,PRIORITY,VALUE,SUSPENDED,TIME,DATE"
     while read str; do
-        eval $str
+        parse_object_kv_list "$str"
         VALUE=$(echo "$VALUE" |sed -e "s/%quote%/\\'/g")
         echo -n "$ID,$RECORD,$TYPE,$PRIORITY,\"$VALUE\","
         echo "$SUSPENDED,$TIME,$DATE"

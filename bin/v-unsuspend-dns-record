@@ -45,7 +45,7 @@ is_object_valid "dns/$domain" 'ID' "$id"
 #----------------------------------------------------------#
 
 line=$(grep "ID='$id'" $USER_DATA/dns/$domain.conf)
-eval $line
+parse_object_kv_list "$line"
 sed -i "/^ID='$id'/d" $USER_DATA/dns/$domain.conf
 
 # Adding record

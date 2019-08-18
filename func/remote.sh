@@ -94,7 +94,7 @@ remote_dns_health_check() {
 
     # Starting health-check
     for str in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
-        eval $str
+        parse_object_kv_list "$str"
 
         # Checking host connection
         cluster_cmd v-list-user $DNS_USER

@@ -302,7 +302,7 @@ is_object_unsuspended() {
 # Check if object value is empty
 is_object_value_empty() {
     str=$(grep "$2='$3'" $USER_DATA/$1.conf)
-    eval $str
+    parse_object_kv_list "$str"
     eval value=$4
     if [ ! -z "$value" ] && [ "$value" != 'no' ]; then
         check_result $E_EXISTS "${4//$}=$value is already exists"
@@ -312,7 +312,7 @@ is_object_value_empty() {
 # Check if object value is empty
 is_object_value_exist() {
     str=$(grep "$2='$3'" $USER_DATA/$1.conf)
-    eval $str
+    parse_object_kv_list "$str"
     eval value=$4
     if [ -z "$value" ] || [ "$value" = 'no' ]; then
         check_result $E_NOTEXIST "${4//$}=$value doesn't exist"
@@ -347,7 +347,7 @@ is_dir_symlink() {
 # Get object value
 get_object_value() {
     object=$(grep "$2='$3'" $USER_DATA/$1.conf)
-    eval "$object"
+    parse_object_kv_list "$object"
     eval echo $4
 }
 
@@ -356,7 +356,7 @@ update_object_value() {
     row=$(grep -nF "$2='$3'" $USER_DATA/$1.conf)
     lnr=$(echo $row | cut -f 1 -d ':')
     object=$(echo $row | sed "s/^$lnr://")
-    eval "$object"
+    parse_object_kv_list "$object"
     eval old="$4"
     old=$(echo "$old" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
     new=$(echo "$5" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
@@ -380,7 +380,7 @@ search_objects() {
     OLD_IFS="$IFS"
     IFS=$'\n'
     for line in $(grep $2=\'$3\' $USER_DATA/$1.conf); do
-        eval $line
+        parse_object_kv_list "$line"
         eval echo \$$4
     done
     IFS="$OLD_IFS"
@@ -553,7 +553,7 @@ sync_cron_jobs() {
         echo 'CONTENT_TYPE="text/plain; charset=utf-8"' >> $crontab
     fi
     while read line; do
-        eval $line
+        parse_object_kv_list "$line"
         if [ "$SUSPENDED" = 'no' ]; then
             echo "$MIN $HOUR $DAY $MONTH $WDAY $CMD" |\
                 sed -e "s/%quote%/'/g" -e "s/%dots%/:/g" \

@@ -70,7 +70,7 @@ else
             rec=$(grep -w "RECORD='$sub'" $USER_DATA/dns/$root.conf)
         fi
         if [ ! -z "$rec" ]; then
-            eval "$rec"
+            parse_object_kv_list "$rec"
             $BIN/v-delete-dns-record $user "$root" "$ID" $restart
         fi
     fi

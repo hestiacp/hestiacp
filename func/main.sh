@@ -1065,3 +1065,17 @@ check_hestia_demo_mode() {
         exit 1
     fi
 }
+
+multiphp_count() {
+    echo $(ls -d /etc/php/*/fpm/pool.d 2>/dev/null |wc -l)
+}
+
+multiphp_versions() {
+    if [ "$(multiphp_count)" -gt 0 ] ; then
+        for php_ver in $(ls /etc/php/); do
+            [ ! -d "/etc/php/$php_ver/fpm/pool.d/" ] && continue
+            echo -n "$php_ver "
+        done
+        echo -en '\n'
+    fi
+}

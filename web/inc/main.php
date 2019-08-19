@@ -167,7 +167,7 @@ function render_page($user, $TAB, $page) {
 
 function top_panel($user, $TAB) {
     global $panel;
-    $command = HESTIA_CMD."v-list-user '".$user."' 'json'";
+    $command = HESTIA_CMD."v-list-user ".escapeshellarg($user)." 'json'";
     exec ($command, $output, $return_var);
     if ( $return_var > 0 ) {
         header("Location: /error/");
@@ -175,20 +175,6 @@ function top_panel($user, $TAB) {
     }
     $panel = json_decode(implode('', $output), true);
     unset($output);
-
-
-    // getting notifications
-    $command = HESTIA_CMD."v-list-user-notifications '".$user."' 'json'";
-    exec ($command, $output, $return_var);
-    $notifications = json_decode(implode('', $output), true);
-    foreach($notifications as $message){
-        if($message['ACK'] == 'no'){
-            $panel[$user]['NOTIFICATIONS'] = 'yes';
-            break;
-        }
-    }
-    unset($output);
-
 
     if ( $user == 'admin' ) {
         include(dirname(__FILE__).'/../templates/admin/panel.html');

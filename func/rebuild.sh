@@ -173,7 +173,7 @@ rebuild_web_domain_conf() {
 
     # Rebuilding domain directories
     if [ -d "$HOMEDIR/$user/web/$domain/document_errors" ]; then
-        $BIN/v-delete-fs-directory "$user" "$HOMEDIR/$user/web/$domain/document_errors"
+        rm -rf "$HOMEDIR/$user/web/$domain/document_errors"
     fi
 
     $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain"

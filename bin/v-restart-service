@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: restart service
-# options: service
+# options: service [RESTART]
 #
 # The function restarts system service.
 
@@ -22,7 +22,7 @@ PATH="$PATH:/usr/local/sbin:/sbin:/usr/sbin:/root/bin"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'SERVICE'
+check_args '1' "$#" 'SERVICE [RESTART]'
 is_format_valid 'service' 'restart'
 
 #----------------------------------------------------------#
@@ -71,6 +71,11 @@ for service in $service_list; do
         log_history "Restart of $service failed."
     fi
 done
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
 
 # Logging
 log_event "$OK" "$ARGUMENTS"

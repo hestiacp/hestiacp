@@ -21,6 +21,7 @@ source $HESTIA/func/main.sh
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'SERVICE'
+is_format_valid 'service'
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -30,17 +31,29 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ "$service" != 'iptables' ]; then
-    systemctl stop $service >/dev/null 2>&1
-    check_result $? "ERROR: $service stop failed" $E_RESTART
+if [ "$service" = "php-fpm" ];then
+    for php_ver in $(multiphp_versions); do
+        service_list="${service_list} php${php_ver}-fpm"
+    done
 else
-    $BIN/v-stop-firewall
-    check_result $? "ERROR: $service stop failed" $E_RESTART
+    service_list="$service"
 fi
+
+for service in $service_list; do
+    if [ "$service" = "iptables" ]; then
+        $BIN/v-stop-firewall
+    else
+        systemctl stop $service >/dev/null 2>&1
+    fi
+    check_result $? "ERROR: $service stop failed" $E_RESTART
+done
 
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
 
 exit

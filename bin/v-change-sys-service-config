@@ -99,9 +99,9 @@ if [ "$update" = 'yes' ] && [ "$restart" != 'no' ]; then
     fi
 
     if [ "$service" = 'php' ]; then
-        if [ "$WEB_SYSTEM" = "nginx" ]; then
-            service=$(ls /etc/init.d/php*fpm* |cut -f 4 -d / |sed -n 1p)
-        else
+        if [ "$(multiphp_count)" -gt 0 ]; then
+            service="php-fpm"
+        elif [ "$WEB_SYSTEM" = 'apache2' ]; then
             service="$WEB_SYSTEM"
         fi
     fi

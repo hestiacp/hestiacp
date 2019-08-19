@@ -29,41 +29,48 @@ is_format_valid 'service' 'restart'
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ "$service" = "iptables" ]; then
-    # Run the restart rules for iptables firewall
-    $BIN/v-stop-firewall
-    $BIN/v-update-firewall
-elif [ -z "$restart" -o "$restart" = "no" ] && [ \
-        "$service" = "nginx" -o     \
-        "$service" = "apache2" -o   \
-        "$service" = "exim4" -o     \
-        "$service" = "dovecot" -o   \
-        "$service" = "bind9" -o     \
-        "$service" = "named" -o     \
-        "$service" = "vsftpd" -o    \
-        "$service" = "php5.6-fpm" -o \
-        "$service" = "php7.0-fpm" -o \
-        "$service" = "php7.1-fpm" -o \
-        "$service" = "php7.2-fpm" -o \
-        "$service" = "php7.3-fpm" -o \
-        "$service" = "proftpd" -o    \
-        "$service" = "ssh" -o       \
-        "$service" = "fail2ban" ]; then
-    systemctl reload-or-restart $service > /dev/null 2>&1
+if [ "$service" = "php-fpm" ];then
+    for php_ver in $(multiphp_versions); do
+        service_list="${service_list} php${php_ver}-fpm"
+    done
 else
-    systemctl reset-failed $service > /dev/null 2>&1
-    systemctl restart $service > /dev/null 2>&1
+    service_list="$service"
 fi
 
-#----------------------------------------------------------#
-#                       Hestia                             #
-#----------------------------------------------------------#
+for service in $service_list; do
 
-# Check the result of the service restart and report whether it failed.
-if [ $? -ne 0 ]; then
-    check_result $E_RESTART "ERROR: Restart of $service failed."
-    log_history "Restart of $service failed."
-fi
+    if [ "$service" = "iptables" ]; then
+        # Run the restart rules for iptables firewall
+        $BIN/v-stop-firewall
+        $BIN/v-update-firewall
+    elif [ -z "$restart" -o "$restart" = "no" ] && [ \
+            "$service" = "nginx" -o     \
+            "$service" = "apache2" -o   \
+            "$service" = "exim4" -o     \
+            "$service" = "dovecot" -o   \
+            "$service" = "bind9" -o     \
+            "$service" = "named" -o     \
+            "$service" = "vsftpd" -o    \
+            "$service" = "php5.6-fpm" -o \
+            "$service" = "php7.0-fpm" -o \
+            "$service" = "php7.1-fpm" -o \
+            "$service" = "php7.2-fpm" -o \
+            "$service" = "php7.3-fpm" -o \
+            "$service" = "proftpd" -o    \
+            "$service" = "ssh" -o       \
+            "$service" = "fail2ban" ]; then
+        systemctl reload-or-restart $service > /dev/null 2>&1
+    else
+        systemctl reset-failed $service > /dev/null 2>&1
+        systemctl restart $service > /dev/null 2>&1
+    fi
+
+    # Check the result of the service restart and report whether it failed.
+    if [ $? -ne 0 ]; then
+        check_result $E_RESTART "ERROR: Restart of $service failed."
+        log_history "Restart of $service failed."
+    fi
+done
 
 # Logging
 log_event "$OK" "$ARGUMENTS"

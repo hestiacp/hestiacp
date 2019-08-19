@@ -273,7 +273,7 @@ fi
 # Checking FIREWALL system
 if [ ! -z "$FIREWALL_SYSTEM" ] && [ "$FIREWALL_SYSTEM" != 'remote' ]; then
     state="stopped"
-    /sbin/iptables -L fail2ban-HESTIA >/dev/null 2>&1
+    /sbin/iptables -n -L fail2ban-HESTIA >/dev/null 2>&1
     if [ "$?" -eq 0 ]; then
         state="running"
     fi

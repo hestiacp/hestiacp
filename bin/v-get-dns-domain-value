@@ -13,7 +13,7 @@
 user=$1
 domain=$2
 domain_idn=$2
-key=$(echo "$3"| tr '[:lower:]' '[:upper:]' | sed "s/^/$/")
+key=$3
 
 # Includes
 source $HESTIA/func/main.sh
@@ -29,10 +29,11 @@ format_domain_idn
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'USER DOMAIN KEY'
-is_format_valid 'user' 'domain'
+is_format_valid 'user' 'domain' 'key'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"
 
+key=$(echo "$key"| tr '[:lower:]' '[:upper:]' | sed "s/^/$/")
 
 #----------------------------------------------------------#
 #                       Action                             #

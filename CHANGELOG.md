@@ -31,6 +31,7 @@ All notable changes to this project will be documented in this file.
 - Added a confirmation dialog when deleting user logs (/list/log/)
 - Fixed issue with sftp-jail not working for users restored from backups
 - SecImprove: Improved input validation in multiple cli scripts
+- Performance: Do not load complete notifications list on every page load, reduced load time from over 1sec to under 100ms
 
 ## [1.0.5] - 2019-08-06 - Hotfix
 ### Bugfixes

@@ -67,3 +67,10 @@ fi
 if [ -d /home/admin ]; then
     setfacl -m "g:admin:r-x" /home/admin
 fi
+
+# Fix sftp jail cronjob
+if [ -e "/etc/cron.d/hestia-sftp" ]; then
+    if ! cat /etc/cron.d/hestia-sftp | grep -q 'admin'; then
+        echo "@reboot admin /usr/local/hestia/bin/v-add-sys-sftp-jail" > /etc/cron.d/hestia-sftp
+    fi
+fi

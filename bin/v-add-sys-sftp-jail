@@ -73,7 +73,7 @@ done
 
 # Add v-add-sys-sftp-jail to startup
 if [ ! -e "/etc/cron.d/hestia-sftp" ]; then
-    echo "@reboot /usr/local/hestia/bin/v-add-sys-sftp-jail" > /etc/cron.d/hestia-sftp
+    echo "@reboot admin /usr/local/hestia/bin/v-add-sys-sftp-jail" > /etc/cron.d/hestia-sftp
 fi
 
 #----------------------------------------------------------#

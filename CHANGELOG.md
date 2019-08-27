@@ -35,6 +35,7 @@ All notable changes to this project will be documented in this file.
 - Performance: Do not resolve ip when listing iptables rules. Server tab could take multiple minutes to load in some cases.
 - Update jQuery to 3.4.1 and adjust includes.
 - Fixed cronjob issue with sftp jail due to missing user.
+- Fixed issue #569 Remote backup hostname would reject ip addr without reverse dns (PTR record)
 
 ## [1.0.5] - 2019-08-06 - Hotfix
 ### Bugfixes

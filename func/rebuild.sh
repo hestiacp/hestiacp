@@ -171,9 +171,12 @@ rebuild_web_domain_conf() {
         rm -f /etc/$PROXY_SYSTEM/conf.d/$domain*.conf
     fi
 
+    # Temporary allow write permissions to owner
+    [ -d "$HOMEDIR/$user/web/$domain" ] && chmod 751 "$HOMEDIR/$user/web/$domain"
+
     # Rebuilding domain directories
     if [ -d "$HOMEDIR/$user/web/$domain/document_errors" ]; then
-        rm -rf "$HOMEDIR/$user/web/$domain/document_errors"
+        $BIN/v-delete-fs-directory "$user" "$HOMEDIR/$user/web/$domain/document_errors"
     fi
 
     $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain"

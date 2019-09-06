@@ -74,3 +74,10 @@ if [ -e "/etc/cron.d/hestia-sftp" ]; then
         echo "@reboot admin /usr/local/hestia/bin/v-add-sys-sftp-jail" > /etc/cron.d/hestia-sftp
     fi
 fi
+
+# Create default writeable folders for all users
+for user in $($HESTIA/bin/v-list-sys-users plain); do
+    mkdir -p $HOMEDIR/$user/.config $HOMEDIR/$user/.local $HOMEDIR/$user/.composer
+    chown $user:$user $HOMEDIR/$user/.config $HOMEDIR/$user/.local \
+                      $HOMEDIR/$user/.composer
+done

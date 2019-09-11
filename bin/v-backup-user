@@ -315,7 +315,7 @@ if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
         # Backup exim config
         if [[ "$MAIL_SYSTEM" =~ exim ]]; then
             cd $tmpdir/mail/$domain/
-            cp $HOMEDIR/$user/conf/mail/$domain/* conf/
+            cp -r $HOMEDIR/$user/conf/mail/$domain/* conf/
         fi
 
         # Backup mail.conf

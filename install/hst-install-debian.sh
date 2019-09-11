@@ -597,6 +597,7 @@ echo "(*) PHP"
 if [ -e $apt/php.list ]; then
     rm $apt/php.list
 fi
+apt-mark hold libidn2-0 > /dev/null 2>&1
 echo "deb https://packages.sury.org/php/ $codename main" > $apt/php.list
 wget --quiet https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/php_signing.key > /dev/null 2>&1

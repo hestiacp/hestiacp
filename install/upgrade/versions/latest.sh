@@ -56,10 +56,11 @@ if [ -e $HESTIA/data/users/history.log ]; then
     rm -f $HESTIA/data/users/history.log
 fi
 
-# Use exim4 hostname without hardcoded mailprefix
+# Use exim4 server hostname instead of mail domain and remove hardcoded mail prefix
 if [ ! -z "$MAIL_SYSTEM" ]; then
     if cat /etc/exim4/exim4.conf.template | grep -q 'helo_data = mail.${sender_address_domain}'; then
-        sed -i 's/helo_data = mail.${sender_address_domain}/helo_data = ${sender_address_domain}/g' /etc/exim4/exim4.conf.template
+        echo "(*) Updating exim configuration..."
+        sed -i 's/helo_data = mail.${sender_address_domain}/helo_data = ${primary_hostname}/g' /etc/exim4/exim4.conf.template
     fi
 fi
 
@@ -76,6 +77,7 @@ if [ -e "/etc/cron.d/hestia-sftp" ]; then
 fi
 
 # Create default writeable folders for all users
+echo "(*) Updating default writable folders for all users..."
 for user in $($HESTIA/bin/v-list-sys-users plain); do
     mkdir -p $HOMEDIR/$user/.config $HOMEDIR/$user/.local $HOMEDIR/$user/.composer
     chown $user:$user $HOMEDIR/$user/.config $HOMEDIR/$user/.local \

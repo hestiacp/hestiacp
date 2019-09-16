@@ -38,6 +38,7 @@ All notable changes to this project will be documented in this file.
 - Fixed issue #569 Remote backup hostname would reject ip addr without reverse dns (PTR record).
 - Create a couple of writeable folders in each user home directory (#580).
 - Added gnupg2 check to prevent issues with pubkey installation.
+- Fixed nameserver validation on add new user packages.
 
 ## [1.0.5] - 2019-08-06 - Hotfix
 ### Bugfixes

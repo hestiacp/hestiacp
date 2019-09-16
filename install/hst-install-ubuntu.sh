@@ -317,6 +317,13 @@ if [ ! -e '/usr/bin/apt-add-repository' ]; then
     check_result $? "Can't install software-properties-common"
 fi
 
+# Check if gnupg2 is installed
+if [ ! -e '/usr/bin/gnupg2' ]; then
+    echo "(*) Installing gnupg2..."
+    apt-get -y install gnupg2 >> $LOG
+    check_result $? "Can't install gnupg2"
+fi
+
 # Check repository availability
 wget --quiet "https://$GPG/deb_signing.key" -O /dev/null
 check_result $? "Unable to connect to the Hestia APT repository"

@@ -317,8 +317,8 @@ if [ ! -e '/usr/bin/apt-add-repository' ]; then
     check_result $? "Can't install software-properties-common"
 fi
 
-# Check if gnupg2 is installed
-if [ ! -e '/usr/bin/gnupg2' ]; then
+# Check if gnupg or gnupg2 is installed
+if [ ! -e '/usr/lib/gnupg2' ] || [ ! -e '/usr/lib/gnupg' ]; then
     echo "(*) Installing gnupg2..."
     apt-get -y install gnupg2 >> $LOG
     check_result $? "Can't install gnupg2"

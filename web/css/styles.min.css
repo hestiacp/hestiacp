@@ -2894,7 +2894,6 @@ a.button.cancel {
 
 .unlim-trigger {
   cursor: pointer;
-  margin-left: -40px;
   padding-left: 4px;
   margin-bottom: -2px;
   z-index: 1;

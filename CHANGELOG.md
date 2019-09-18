@@ -39,6 +39,7 @@ All notable changes to this project will be documented in this file.
 - Create a couple of writeable folders in each user home directory (#580).
 - Added gnupg2 check to prevent issues with pubkey installation.
 - Fixed nameserver validation on add new user packages.
+- Implement additional debug informations for LE validation, thanks to @shakaran
 
 ## [1.0.5] - 2019-08-06 - Hotfix
 ### Bugfixes

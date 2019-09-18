@@ -292,6 +292,7 @@ for auth in $authz; do
         validation=$(echo "$answer"|grep -A1 $proto |tail -n1|cut -f4 -d \")
         nonce=$(echo "$answer" |grep Nonce |cut -f2 -d \ |tr -d '\r\n')
         status=$(echo "$answer"|grep HTTP/1.1 |tail -n1 |cut -f 2 -d ' ')
+        details=$(echo "$answer"| grep detail | cut -f 2 -d ',' | cut -f 2-4 -d ':')
         if [[ "$status" -ne 200 ]]; then
             # Delete DNS CAA record
             if [ ! -z "$DNS_SYSTEM" ]; then
@@ -304,7 +305,7 @@ for auth in $authz; do
                     fi
                 fi
             fi
-            check_result $E_CONNECT "Let's Encrypt validation status $status"
+            check_result $E_CONNECT "Let's Encrypt validation status $status. Details: $details"
         fi
 
         i=$((i + 1))

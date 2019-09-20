@@ -935,7 +935,7 @@ U_BACKUPS=$(grep BACKUP $USER_DATA/backup.conf |wc -l)
 update_user_value "$user" '$U_BACKUPS' "$U_BACKUPS"
 
 # Send notification
-if [ -e "$BACKUP/$user.log" ]; then
+if [ -e "$BACKUP/$user.log" ] && [ "$notify" = "yes" ]; then
     cd $BACKUP
     subj="$user → backup has been completed"
     email=$(get_user_value '$CONTACT')

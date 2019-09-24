@@ -42,6 +42,10 @@ All notable changes to this project will be documented in this file.
 - Implement additional debug informations for LE validation, thanks to @shakaran.
 - Do not notify user if the backups are triggered from cronjob.
 
+## [1.0.6] - 2019-09-24 - Hotfix
+### Bugfixes
+- Add support for HTTP/2 Let's Encrypt Server.
+
 ## [1.0.5] - 2019-08-06 - Hotfix
 ### Bugfixes
 - Fix several security issues, thanks to Andrea Cardaci (https://cardaci.xyz/)

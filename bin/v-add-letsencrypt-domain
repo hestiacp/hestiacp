@@ -153,8 +153,8 @@ fi
 
 # Requesting nonce / STEP 1
 answer=$(curl -s -I "$LE_API/directory")
-nonce=$(echo "$answer" |grep Nonce |cut -f2 -d \ |tr -d '\r\n')
-status=$(echo "$answer"|grep HTTP/1.1 |tail -n1 |cut -f 2 -d ' ')
+nonce=$(echo "$answer" |grep -i nonce |cut -f2 -d \ |tr -d '\r\n')
+status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
 if [[ "$status" -ne 200 ]]; then
     # Delete DNS CAA record
     if [ ! -z "$DNS_SYSTEM" ]; then
@@ -179,10 +179,10 @@ done
 payload=$(echo "$payload"|sed "s/,$//")
 payload=$payload']}'
 answer=$(query_le_v2 "$url" "$payload" "$nonce")
-nonce=$(echo "$answer" |grep Nonce |cut -f2 -d \ |tr -d '\r\n')
+nonce=$(echo "$answer" |grep -i nonce |cut -f2 -d \ |tr -d '\r\n')
 authz=$(echo "$answer" |grep "acme/authz" |cut -f2 -d '"')
 finalize=$(echo "$answer" |grep 'finalize":' |cut -f4 -d '"')
-status=$(echo "$answer" |grep HTTP/1.1 |tail -n1 |cut -f2 -d ' ')
+status=$(echo "$answer" |grep HTTP/ |tail -n1 |cut -f2 -d ' ')
 if [[ "$status" -ne 201 ]]; then
     # Delete DNS CAA record
     if [ ! -z "$DNS_SYSTEM" ]; then
@@ -201,8 +201,8 @@ for auth in $authz; do
     answer=$(query_le_v2 "$auth" "$payload" "$nonce")
     url=$(echo "$answer" |grep -A3 $proto |grep url |cut -f 4 -d \")
     token=$(echo "$answer" |grep -A3 $proto |grep token |cut -f 4 -d \")
-    nonce=$(echo "$answer" |grep Nonce |cut -f2 -d \ |tr -d '\r\n')
-    status=$(echo "$answer"|grep HTTP/1.1 |tail -n1 |cut -f 2 -d ' ')
+    nonce=$(echo "$answer" |grep -i nonce |cut -f2 -d \ |tr -d '\r\n')
+    status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
     if [[ "$status" -ne 200 ]]; then
         # Delete DNS CAA record
         if [ ! -z "$DNS_SYSTEM" ]; then
@@ -290,8 +290,8 @@ for auth in $authz; do
         payload='{}'
         answer=$(query_le_v2 "$url" "$payload" "$nonce")
         validation=$(echo "$answer"|grep -A1 $proto |tail -n1|cut -f4 -d \")
-        nonce=$(echo "$answer" |grep Nonce |cut -f2 -d \ |tr -d '\r\n')
-        status=$(echo "$answer"|grep HTTP/1.1 |tail -n1 |cut -f 2 -d ' ')
+        nonce=$(echo "$answer" |grep -i nonce |cut -f2 -d \ |tr -d '\r\n')
+        status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
         details=$(echo "$answer"| grep detail | cut -f 2 -d ',' | cut -f 2-4 -d ':')
         if [[ "$status" -ne 200 ]]; then
             # Delete DNS CAA record
@@ -349,8 +349,8 @@ ssl_dir=$($BIN/v-generate-ssl-cert "$domain" "info@$domain" "US" "California"\
 csr=$(openssl req -in $ssl_dir/$domain.csr -outform DER |encode_base64)
 payload='{"csr":"'$csr'"}'
 answer=$(query_le_v2 "$finalize" "$payload" "$nonce")
-nonce=$(echo "$answer" |grep Nonce |cut -f2 -d \ |tr -d '\r\n')
-status=$(echo "$answer"|grep HTTP/1.1 |tail -n1 |cut -f 2 -d ' ')
+nonce=$(echo "$answer" |grep -i nonce |cut -f2 -d \ |tr -d '\r\n')
+status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
 certificate=$(echo "$answer"|grep 'certificate":' |cut -f4 -d '"')
 if [[ "$status" -ne 200 ]]; then
     check_result $E_CONNECT "Let's Encrypt finalize bad status $status"

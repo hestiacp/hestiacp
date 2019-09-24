@@ -19,7 +19,7 @@ class HestiaApp {
             $cli_arguments = escapeshellarg($args);
         }
 
-        exec ($cli_script . ' ' . $cli_arguments, $output, $exit_code);
+        exec ($cli_script . ' ' . $cli_arguments . ' 2>&1', $output, $exit_code);
 
         $result['code'] = $exit_code;
         $result['args'] = $cli_arguments;
@@ -34,11 +34,57 @@ class HestiaApp {
     public function runUser(string $cmd, $args, &$cmd_result=null) : bool {
         if (!empty($args) && is_array($args)) {
             array_unshift($args, $this->user());
-        }
-        else {
+        } else {
             $args = [$this->user(), $args];
         }
         return $this->run($cmd, $args, $cmd_result);
+    }
+
+    public function installComposer() {
+
+        exec("curl https://composer.github.io/installer.sig", $output);
+
+        $signature = implode(PHP_EOL, $output);
+        if (empty($signature)) {
+           throw new Exception("Error reading composer signature");
+        }
+
+        $composer_setup = self::TMPDIR_DOWNLOADS . DIRECTORY_SEPARATOR . 'composer-setup-' . $signature . '.php';
+
+        exec("wget https://getcomposer.org/installer --quiet -O " . escapeshellarg($composer_setup), $output, $return_code);
+        if ($return_code !== 0 ) {
+            throw new Exception("Error downloading composer");
+        }
+
+        if ($signature !== hash_file('sha384', $composer_setup)) {
+            unlink($composer_setup);
+            throw new Exception("Invalid composer signature");
+        }
+
+        $install_folder = $this->getUserHomeDir() . DIRECTORY_SEPARATOR . '.composer';
+        $this->runUser('v-run-cli-cmd', ["/usr/bin/php", $composer_setup, "--quiet", "--install-dir=".$install_folder, "--filename=composer" ], $status);
+
+        unlink($composer_setup);
+
+        if ($status->code !== 0 ) {
+            throw new Exception("Error installing composer");
+        }
+    }
+
+    public function runComposer($args, &$cmd_result=null) : bool {
+
+        $composer = $this->getUserHomeDir() . DIRECTORY_SEPARATOR . '.composer' . DIRECTORY_SEPARATOR . 'composer';
+        if(!is_file($composer)) {
+            $this->installComposer();
+        }
+
+        if (!empty($args) && is_array($args)) {
+            array_unshift($args, 'composer');
+        } else {
+            $args = ['composer', $args];
+        }
+
+        return $this->runUser('v-run-cli-cmd', $args, $cmd_result);
     }
 
     // Logged in user
@@ -57,6 +103,11 @@ class HestiaApp {
             throw new Exception("illegal characters in username");
         }
         return $user;
+    }
+
+    public function getUserHomeDir() {
+        $info = posix_getpwnam($this->user());
+        return $info['dir'];
     }
 
     public function userOwnsDomain(string $domain) : bool {

@@ -40,6 +40,7 @@ server {
 
         location ~ [^/]\.php(/|$) {
             fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            fastcgi_param PHP_ADMIN_VALUE "sendmail_path = /usr/sbin/sendmail -t -i -f admin@%domain%";
             try_files $uri =404;
             fastcgi_pass %backend_lsnr%;
             fastcgi_index index.php;

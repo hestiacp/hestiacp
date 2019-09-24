@@ -39,6 +39,7 @@ server {
         fastcgi_pass %backend_lsnr%;
         fastcgi_index index.php;
         fastcgi_param SCRIPT_FILENAME $request_filename;
+        fastcgi_param PHP_ADMIN_VALUE "sendmail_path = /usr/sbin/sendmail -t -i -f admin@%domain%";
         include /etc/nginx/fastcgi_params;
     }
 

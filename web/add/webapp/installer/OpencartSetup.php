@@ -8,16 +8,14 @@ class OpencartSetup extends BaseSetup {
 
     protected $config = [
         'form' => [
-            'protocol' => [
-                'type' => 'select',
-                'options' => ['http','https'],
-            ],
             'opencart_account_username' => ['value'=>'ocadmin'],
             'opencart_account_email' => 'text',
             'opencart_account_password' => 'password',
             ],
         'database' => true,
-        'url' => 'https://github.com/opencart/opencart/releases/download/3.0.3.2/opencart-3.0.3.2.zip'
+        'resources' => [
+            'archive'  => [ 'src' => 'https://github.com/opencart/opencart/releases/download/3.0.3.2/opencart-3.0.3.2.zip' ],
+        ],
     ];
 
     public function install(array $options) : bool {

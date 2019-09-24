@@ -1,5 +1,7 @@
 <?php
 
+require_once("Resources.php");
+
 function join_paths() {
     $paths = array();
 
@@ -56,9 +58,22 @@ abstract class BaseSetup {
     }
 
     public function retrieveResources() {
-        return $this->appcontext->archiveExtract(
-            $this->getConfig('url'),
-            $this->getDocRoot($this->extractsubdir), 1);
+
+        foreach ($this->getConfig('resources') as $res_type => $res_data) {
+
+            if (!empty($res_data['dst']) && is_string($res_data['dst'])) {
+                $resource_destination = $this->getDocRoot($res_data['dst']);
+            } else {
+                $resource_destination = $this->getDocRoot($this->extractsubdir);
+            }
+
+            if ($res_type === 'composer') {
+                new ComposerResource($this->appcontext, $res_data, $resource_destination);
+            } else {
+                $this->appcontext->archiveExtract($res_data['src'], $resource_destination, 1); 
+            }
+        }
+        return true;
     }
 
     public function install($options) {

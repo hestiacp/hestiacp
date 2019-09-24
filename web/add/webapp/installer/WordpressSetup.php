@@ -6,10 +6,10 @@ class WordpressSetup extends BaseSetup {
     protected $appname = 'wordpress';
     protected $config = [
         'form' => [
-            'protocol' => [ 
-                'type' => 'select',
-                'options' => ['http','https'],
-            ],
+            //'protocol' => [ 
+            //    'type' => 'select',
+            //    'options' => ['http','https'],
+            //],
             'site_name' => ['type'=>'text', 'value'=>'Wordpress Blog'],
             'site_description' => ['value'=>'Another wordpresss site'],
             'wordpress_account_username' => ['value'=>'wpadmin'],
@@ -17,7 +17,10 @@ class WordpressSetup extends BaseSetup {
             'wordpress_account_password' => 'password',
             ],
         'database' => true,
-        'url' => 'https://wordpress.org/wordpress-5.2.2.tar.gz'
+        'resources' => [
+            'archive'  => [ 'src' => 'https://wordpress.org/wordpress-5.2.2.tar.gz' ],
+        ],
+        
     ];
 
     public function install(array $options) : bool {

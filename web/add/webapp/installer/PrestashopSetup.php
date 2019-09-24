@@ -8,17 +8,16 @@ class PrestashopSetup extends BaseSetup {
 
     protected $config = [
         'form' => [
-            'protocol' => [
-                'type' => 'select',
-                'options' => ['http','https'],
-            ],
             'prestashop_account_first_name' => ['value'=>'John'],
             'prestashop_account_last_name' => ['value'=>'Doe'],
             'prestashop_account_email' => 'text',
             'prestashop_account_password' => 'password',
             ],
         'database' => true,
-        'url' => 'https://github.com/PrestaShop/PrestaShop/releases/download/1.7.6.0/prestashop_1.7.6.0.zip'
+        'resources' => [
+            'archive'  => [ 'src' => 'https://github.com/PrestaShop/PrestaShop/releases/download/1.7.6.0/prestashop_1.7.6.0.zip' ],
+        ],
+
     ];
 
     public function install(array $options) : bool {

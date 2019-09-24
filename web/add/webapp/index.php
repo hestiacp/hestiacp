@@ -39,8 +39,8 @@ $v_web_apps = [
     [ 'name'=>'Prestashop', 'group'=>'ecommerce', 'enabled'=>true, 'version'=>'1.7.6.0', 'thumbnail'=>'/images/webapps/prestashop-thumb.png' ],
     [ 'name'=>'Magento',    'group'=>'ecommerce', 'enabled'=>false, 'version'=>'1.2.3', 'thumbnail'=>'/images/webapps/magento-thumb.png' ],
 
-    [ 'name'=>'Laravel', 'group'=>'starter', 'enabled'=>false, 'version'=>'1.2.3', 'thumbnail'=>'/images/webapps/laravel-thumb.png' ],
-    [ 'name'=>'Symfony', 'group'=>'starter', 'enabled'=>false, 'version'=>'1.2.3', 'thumbnail'=>'/images/webapps/symfony-thumb.png' ],
+    [ 'name'=>'Laravel', 'group'=>'starter', 'enabled'=>true, 'version'=>'6.x', 'thumbnail'=>'/images/webapps/laravel-thumb.png' ],
+    [ 'name'=>'Symfony', 'group'=>'starter', 'enabled'=>true, 'version'=>'4.3.x', 'thumbnail'=>'/images/webapps/symfony-thumb.png' ],
 ];
 
 // Check GET request

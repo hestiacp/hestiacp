@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.0.6] - 2019-09-26 - Hotfix
+### Bugfixes
+- Add support for HTTP/2 Let's Encrypt Server
+- Backup would fail for email domains with SSL enabled
+- Fixed renewing of Let's Encrypt SSL certs for email domains
+
 ## [1.0.5] - 2019-08-06 - Hotfix
 ### Bugfixes
 - Fix several security issues, thanks to Andrea Cardaci (https://cardaci.xyz/)
@@ -55,7 +61,8 @@ All notable changes to this project will be documented in this file.
 
 
 [CURRENT]: https://github.com/hestiacp/hestiacp
-[1.0.4]: https://github.com/hestiacp/hestiacp/releases/tag/1.0.5
+[1.0.6]: https://github.com/hestiacp/hestiacp/releases/tag/1.0.6
+[1.0.5]: https://github.com/hestiacp/hestiacp/releases/tag/1.0.5
 [1.0.4]: https://github.com/hestiacp/hestiacp/releases/tag/1.0.4
 [1.0.3]: https://github.com/hestiacp/hestiacp/releases/tag/1.0.3
 [1.0.1]: https://github.com/hestiacp/hestiacp/releases/tag/1.0.1

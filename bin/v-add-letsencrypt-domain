@@ -53,11 +53,6 @@ query_le_v2() {
     curl -s -i -d "$post_data" "$1" -H "$content"
 }
 
-# Set DNS CAA record retrieval commands
-if [ ! -z "$DNS_SYSTEM" ]; then
-    dns_domain=$($BIN/v-list-dns-domains $user | grep $domain | cut -d' ' -f1)
-    caa_record=$($BIN/v-list-dns-records $user $domain | grep -i "CAA" | cut -d' ' -f1)
-fi
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -69,6 +64,12 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 if [ ! -z "$mail" ]; then
     is_boolean_format_valid "$mail" 'mail'
+fi
+
+# Set DNS CAA record retrieval commands
+if [ ! -z "$DNS_SYSTEM" ]; then
+    dns_domain=$($BIN/v-list-dns-domains $user | grep $domain | cut -d' ' -f1)
+    caa_record=$($BIN/v-list-dns-records $user $domain | grep -i "CAA" | cut -d' ' -f1)
 fi
 
 if [ -z "$mail" ] || [ "$mail" = 'no' ]; then

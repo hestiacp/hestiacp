@@ -17,12 +17,9 @@ PATH="$PATH:/usr/local/sbin:/sbin:/usr/sbin:/root/bin"
 send_email_report() {
     email=$(grep CONTACT $HESTIA/data/users/admin/user.conf)
     email=$(echo "$email" | cut -f 2 -d "'")
-    tmpfile=$(mktemp)
     subj="$(hostname): $WEB_BACKEND restart failed"
-    service $WEB_BACKEND configtest >> $tmpfile 2>&1
-    service $WEB_BACKEND restart >> $tmpfile 2>&1
     cat $tmpfile |$SENDMAIL -s "$subj" $email
-    rm -f $tmpfile
+    [[ -f "$tmpfile" ]] && rm -f $tmpfile
 }
 
 
@@ -46,20 +43,24 @@ if [ -z "$WEB_BACKEND" ] || [ "$WEB_BACKEND" = 'remote' ]; then
     exit
 fi
 
-# Restart system
-php_fpm=$(ls /etc/init.d/php*-fpm* 2>/dev/null |cut -f 4 -d /)
-for back in $php_fpm
-do
-    if [ -z "$php_fpm" ]; then
-        $BIN/v-restart-service $WEB_BACKEND > /dev/null 2>&1
-    else
-        $BIN/v-restart-service $back > /dev/null 2>&1
+tmpfile=$(mktemp)
+for php_folder in /etc/php/*; do
+    [ ! -d "${php_folder}/fpm/pool.d/" ] && continue
+
+    v_php="$(basename $php_folder)"
+    v_phpfpm="php${v_php}-fpm"
+
+    if [ ! -f "/etc/php/${v_php}/fpm/pool.d/dummy.conf" ]; then
+        cp -f "$HESTIA_INSTALL_DIR/php-fpm/dummy.conf" "/etc/php/${v_php}/fpm/pool.d/"
+        sed -i "s/9999/99${v_php//.}/g" "/etc/php/${v_php}/fpm/pool.d/dummy.conf"
+    fi
+
+    $BIN/v-restart-service "$v_phpfpm" >> $tmpfile 2>&1
+    if [ $? -ne 0 ]; then
+        send_email_report
+        check_result $E_RESTART "$v_phpfpm restart failed"
     fi
 done
-if [ $? -ne 0 ]; then
-    send_email_report
-    check_result $E_RESTART "$WEB_BACKEND restart failed"
-fi
 
 # Update restart queue
 if [ -e "$HESTIA/data/queue/restart.pipe" ]; then
@@ -71,4 +72,5 @@ fi
 #                       Hestia                             #
 #----------------------------------------------------------#
 
+[[ -f "$tmpfile" ]] && rm -f $tmpfile
 exit

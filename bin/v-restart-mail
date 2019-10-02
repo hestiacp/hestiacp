@@ -15,14 +15,13 @@ source $HESTIA/conf/hestia.conf
 PATH="$PATH:/usr/local/sbin:/sbin:/usr/sbin:/root/bin"
 
 send_email_report() {
+    local mail_service="$1"
+    journalctl --no-pager --reverse --since=-1m --unit "$mail_service" >> "$tmpfile" 2>&1
     email=$(grep CONTACT $HESTIA/data/users/admin/user.conf)
     email=$(echo "$email" | cut -f 2 -d "'")
-    tmpfile=$(mktemp)
-    subj="$(hostname): $MAIL_SYSTEM restart failed"
-    service $MAIL_SYSTEM configtest >> $tmpfile 2>&1
-    service $MAIL_SYSTEM restart >> $tmpfile 2>&1
-    cat $tmpfile |$SENDMAIL -s "$subj" $email
-    rm -f $tmpfile
+    subj="$(hostname): $mail_service restart failed"
+    cat "$tmpfile" |$SENDMAIL -s "$subj" $email
+    [[ -f "$tmpfile" ]] && rm -f $tmpfile
 }
 
 
@@ -46,19 +45,20 @@ if [ -z "$MAIL_SYSTEM" ] || [ "$MAIL_SYSTEM" = 'remote' ]; then
     exit
 fi
 
+tmpfile=$(mktemp)
 # Restart IMAP system if present
 if [ ! -z "$IMAP_SYSTEM" ]; then
-    $BIN/v-restart-service $IMAP_SYSTEM > /dev/null 2>&1
+    $BIN/v-restart-service $IMAP_SYSTEM >> $tmpfile 2>&1
     if [ $? -ne 0 ]; then
-        send_email_report
+        send_email_report "$IMAP_SYSTEM"
         check_result $E_RESTART "$IMAP_SYSTEM restart failed"
     fi
 fi
 
 # Restart mail system
-$BIN/v-restart-service $MAIL_SYSTEM > /dev/null 2>&1
+$BIN/v-restart-service $MAIL_SYSTEM >> $tmpfile 2>&1
 if [ $? -ne 0 ]; then
-    send_email_report
+    send_email_report "$MAIL_SYSTEM"
     check_result $E_RESTART "$MAIL_SYSTEM restart failed"
 fi
 
@@ -72,4 +72,5 @@ fi
 #                       Hestia                             #
 #----------------------------------------------------------#
 
+[[ -f "$tmpfile" ]] && rm -f $tmpfile
 exit

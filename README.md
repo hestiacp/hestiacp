@@ -46,6 +46,11 @@ Download the installation script for the latest release:
 ```bash
 wget https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh
 ```
+If the download fails due to ssl validation, please be sure you've installed the requirement ca-certificate package - you can do this with the following command:
+```bash
+apt-get update && apt-get install ca-certificates
+```
+
 ## Step 3: Run
 To begin the installation process, simply run the script and follow the on-screen prompts:
 ```bash

@@ -39,8 +39,14 @@ fi
 if [ -e "/etc/os-release" ]; then
     type=$(grep "^ID=" /etc/os-release | cut -f 2 -d '=')
     if [ "$type" = "ubuntu" ]; then
-        release="$(lsb_release -s -r)"
-        VERSION='ubuntu'
+        # Check if lsb_release is installed
+        if [ -e '/usr/bin/lsb_release' ]; then
+            release="$(lsb_release -s -r)"
+            VERSION='ubuntu'            
+        else
+            echo "lsb_release is currently not installed, please install it:"
+            echo "apt-get update && apt-get install lsb_release"
+        fi
     elif [ "$type" = "debian" ]; then
         release=$(cat /etc/debian_version|grep -o [0-9]|head -n1)
         VERSION='debian'

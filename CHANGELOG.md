@@ -41,6 +41,7 @@ All notable changes to this project will be documented in this file.
 - Fixed nameserver validation on add new user packages.
 - Implement additional debug informations for LE validation, thanks to @shakaran.
 - Do not notify user if the backups are triggered from cronjob.
+- Fixed issue with suspending resources when logged directly as a normal user.
 
 ## [1.0.6] - 2019-09-24 - Hotfix
 ### Bugfixes

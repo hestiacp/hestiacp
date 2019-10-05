@@ -35,7 +35,7 @@ for i; do
 done
 
 if [ -z "$SearchResults" ]; then
-    echo "No available commands were found matching the specified critera."
+    echo "No available commands were found matching the specified criteria."
     echo "There are a total of $TotalItems commands available."
 else
     echo "Command Search Results"

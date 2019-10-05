@@ -11,17 +11,6 @@ if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
     exit();
 }
 
-// Check user
-if ($_SESSION['user'] != 'admin') {
-    header("Location: /list/user");
-    exit;
-}
-
-if (!empty($_GET['user'])) {
-    $user=$_GET['user'];
-}
-
-
 if (!empty($_GET['domain'])) {
     $v_username = escapeshellarg($user);
     $v_domain = escapeshellarg($_GET['domain']);

@@ -43,7 +43,7 @@ if [ "$num_php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
         cp -f "$HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl"  ${WEBTPL}/php-fpm/PHP-${php_ver/\./_}.tpl
     done
 
-    if [ "$WEB_SYSTEM" = 'nginx' ] ]; then
+    if [ "$WEB_SYSTEM" = 'nginx' ]; then
         cp -rf "${HESTIA_INSTALL_DIR}/templates/web/nginx" "${WEBTPL}/"
     fi
 

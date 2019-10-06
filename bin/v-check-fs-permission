@@ -35,7 +35,7 @@ if [ ! -z "$src" ]; then
 fi
 
 # Checking if file has readable permission
-sudo -u $user -- ls "$src" > /dev/null 2>&1
+setpriv --init-groups --reuid "$user" --regid "$user" -- ls "$src" > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "Error: can't read $src"
     exit 1

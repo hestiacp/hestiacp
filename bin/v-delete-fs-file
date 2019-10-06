@@ -34,7 +34,7 @@ if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
 fi
 
 # Deleting file
-sudo -u $user -- rm -f "$dst_file" >/dev/null 2>&1
+setpriv --init-groups --reuid "$user" --regid "$user" -- rm -f "$dst_file" >/dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "Error: file $dst_file was not deleted"
     exit 3

@@ -47,7 +47,7 @@ if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
 fi
 
 # Copying directory
-sudo -u $user -- cp -rf "$src_dir" "$dst_dir" >/dev/null 2>&1
+setpriv --init-groups --reuid "$user" --regid "$user" -- cp -rf "$src_dir" "$dst_dir" >/dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "Error: directory $src_dir was not copied"
     exit 3

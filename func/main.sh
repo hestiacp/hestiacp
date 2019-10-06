@@ -257,7 +257,7 @@ parse_object_kv_list() {
     str=${str//\"/\\\"}
     IFS=$'\n'
 
-    suboutput=$(sudo -u nobody bash -c "PS4=''; set -xe; eval \"${str}\"" 2>&1)
+    suboutput=$(setpriv --init-groups --reuid nobody --regid nogroup bash -c "PS4=''; set -xe; eval \"${str}\"" 2>&1)
     check_result $? "Invalid object format: ${str}" $E_INVALID
 
     for objkv in $suboutput; do

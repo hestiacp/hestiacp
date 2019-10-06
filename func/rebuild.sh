@@ -205,7 +205,7 @@ rebuild_web_domain_conf() {
 
     # Propagating html skeleton
     if [ -d "$WEBTPL/skel/document_errors/" ]; then
-        sudo -u $user -- cp -r "$WEBTPL/skel/document_errors/" "$HOMEDIR/$user/web/$domain/"
+        setpriv --init-groups --reuid "$user" --regid "$user" -- cp -r "$WEBTPL/skel/document_errors/" "$HOMEDIR/$user/web/$domain/"
     fi
 
     # Set folder permissions
@@ -293,15 +293,15 @@ rebuild_web_domain_conf() {
         if [ ! -z "$STATS_USER" ]; then
             stats_dir="$HOMEDIR/$user/web/$domain/stats"
             if [ "$WEB_SYSTEM" = 'nginx' ]; then
-                echo "auth_basic \"Web Statistics\";"               |sudo -u $user -- tee    $stats_dir/auth.conf
-                echo "auth_basic_user_file $stats_dir/.htpasswd;"   |sudo -u $user -- tee -a $stats_dir/auth.conf
+                echo "auth_basic \"Web Statistics\";"               |setpriv --init-groups --reuid "$user" --regid "$user" -- tee    $stats_dir/auth.conf
+                echo "auth_basic_user_file $stats_dir/.htpasswd;"   |setpriv --init-groups --reuid "$user" --regid "$user" -- tee -a $stats_dir/auth.conf
             else
-                echo "AuthUserFile $stats_dir/.htpasswd"    |sudo -u $user -- tee    $stats_dir/.htaccess
-                echo "AuthName \"Web Statistics\""          |sudo -u $user -- tee -a $stats_dir/.htaccess
-                echo "AuthType Basic"                       |sudo -u $user -- tee -a $stats_dir/.htaccess
-                echo "Require valid-user"                   |sudo -u $user -- tee -a $stats_dir/.htaccess
+                echo "AuthUserFile $stats_dir/.htpasswd"    |setpriv --init-groups --reuid "$user" --regid "$user" -- tee    $stats_dir/.htaccess
+                echo "AuthName \"Web Statistics\""          |setpriv --init-groups --reuid "$user" --regid "$user" -- tee -a $stats_dir/.htaccess
+                echo "AuthType Basic"                       |setpriv --init-groups --reuid "$user" --regid "$user" -- tee -a $stats_dir/.htaccess
+                echo "Require valid-user"                   |setpriv --init-groups --reuid "$user" --regid "$user" -- tee -a $stats_dir/.htaccess
             fi
-            echo "$STATS_USER:$STATS_CRYPT" |sudo -u $user -- tee $stats_dir/.htpasswd
+            echo "$STATS_USER:$STATS_CRYPT" |setpriv --init-groups --reuid "$user" --regid "$user" -- tee $stats_dir/.htpasswd
         fi
     fi
 

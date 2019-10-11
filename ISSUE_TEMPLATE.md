@@ -16,7 +16,7 @@ Please enter your response here (e.g. Ubuntu 18.04.2 LTS)
 You can find this information in $HESTIA/conf/hestia.conf by running the following command:
 `grep VERSION $HESTIA/conf/hestia.conf`
 
-Please enter your response here (e.g. 1.0.1)
+Please enter your response here (e.g. 1.0.6)
 
 ### Which branch are you using?
 Please enter your response here (e.g release, master, etc.)

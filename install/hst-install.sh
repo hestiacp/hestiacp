@@ -49,7 +49,7 @@ if [ -e "/etc/os-release" ]; then
             exit 1
         fi
     elif [ "$type" = "debian" ]; then
-        release=$(cat /etc/debian_version|grep -o [0-9]|head -n1)
+        release=$(cat /etc/debian_version|grep -o "[0-9]\{1,2\}"|head -n1)
         VERSION='debian'
     fi
 else

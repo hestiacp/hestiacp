@@ -79,7 +79,15 @@ fi
 # Create default writeable folders for all users
 echo "(*) Updating default writable folders for all users..."
 for user in $($HESTIA/bin/v-list-sys-users plain); do
-    mkdir -p $HOMEDIR/$user/.config $HOMEDIR/$user/.local $HOMEDIR/$user/.composer
-    chown $user:$user $HOMEDIR/$user/.config $HOMEDIR/$user/.local \
-                      $HOMEDIR/$user/.composer
+    mkdir -p \
+        $HOMEDIR/$user/.config \
+        $HOMEDIR/$user/.local \
+        $HOMEDIR/$user/.composer \
+        $HOMEDIR/$user/.ssh
+
+    chown $user:$user \
+        $HOMEDIR/$user/.config \
+        $HOMEDIR/$user/.local \
+        $HOMEDIR/$user/.composer \
+        $HOMEDIR/$user/.ssh
 done

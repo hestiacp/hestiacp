@@ -263,6 +263,7 @@ set_default_lang 'en'
 # Checking software conflicts
 if [ "$multiphp" = 'yes' ]; then
     phpfpm='yes'
+    apache = 'no'
 fi
 if [ "$proftpd" = 'yes' ]; then
     vsftpd='no'

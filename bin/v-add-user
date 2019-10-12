@@ -98,9 +98,16 @@ if [ ! -z "$DNS_SYSTEM" ]; then
 fi 
 
 # Create default writeable folders
-mkdir $HOMEDIR/$user/.config $HOMEDIR/$user/.local $HOMEDIR/$user/.composer
-chown $user:$user $HOMEDIR/$user/.config $HOMEDIR/$user/.local \
-                  $HOMEDIR/$user/.composer
+mkdir $HOMEDIR/$user/.config \
+      $HOMEDIR/$user/.local \
+      $HOMEDIR/$user/.composer \
+      $HOMEDIR/$user/.ssh
+
+chown $user:$user \
+      $HOMEDIR/$user/.config \
+      $HOMEDIR/$user/.local \
+      $HOMEDIR/$user/.composer \
+      $HOMEDIR/$user/.ssh
 
 # Set permissions
 chmod a+x $HOMEDIR/$user

@@ -50,7 +50,7 @@ fi
 # Deleting ip from banlist
 sip=$(echo "$ip"| sed "s|/|\\\/|g")
 sed -i "/IP='$sip' CHAIN='$chain'/d" $conf
-b=$($iptables -L fail2ban-$chain --line-number -n|grep $ip|awk '{print $1}')
+b=$($iptables -L fail2ban-$chain --line-number -n|grep -w $ip|awk '{print $1}')
 $iptables -D fail2ban-$chain $b 2>/dev/null
 
 # Changing permissions

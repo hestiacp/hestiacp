@@ -1614,6 +1614,9 @@ if [ "$fail2ban" = 'yes' ]; then
         chmod 640 /var/log/auth.log
         chown root:adm /var/log/auth.log
     fi
+    if [ -f /etc/fail2ban/jail.d/defaults-debian.conf ]; then
+        rm -f /etc/fail2ban/jail.d/defaults-debian.conf
+    fi
     update-rc.d fail2ban defaults
     systemctl start fail2ban
     check_result $? "fail2ban start failed"

@@ -91,3 +91,12 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
         $HOMEDIR/$user/.composer \
         $HOMEDIR/$user/.ssh
 done
+
+# Remove redundant fail2ban jail
+if fail2ban-client status sshd > /dev/null 2>&1 ; then
+    fail2ban-client stop sshd
+    if [ -f /etc/fail2ban/jail.d/defaults-debian.conf ]; then
+        mkdir -p $HESTIA_BACKUP/conf/fail2ban/jail.d
+        mv /etc/fail2ban/jail.d/defaults-debian.conf $HESTIA_BACKUP/conf/fail2ban/jail.d/
+    fi
+fi

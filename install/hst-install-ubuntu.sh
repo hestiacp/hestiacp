@@ -1535,6 +1535,10 @@ if [ "$fail2ban" = 'yes' ]; then
         fline=$(echo "$fline" |grep enabled |tail -n1 |cut -f 1 -d -)
         sed -i "${fline}s/false/true/" /etc/fail2ban/jail.local
     fi
+    if [ -f /etc/fail2ban/jail.d/defaults-debian.conf ]; then
+        rm -f /etc/fail2ban/jail.d/defaults-debian.conf
+    fi
+
     update-rc.d fail2ban defaults
     systemctl start fail2ban >> $LOG
     check_result $? "fail2ban start failed"

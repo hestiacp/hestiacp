@@ -73,7 +73,7 @@ for user in $user_list; do
     fi
     USER_DATA=$HESTIA/data/users/$user
     source $USER_DATA/user.conf
-    next_month=$(date +'%m/01/%y' -d '+ 1 month')
+    next_month=$(date +'%m/01/%y' -d "$(date +%Y-%m-%d) 1 month")
     DATE=$(date -d "$next_month -1day" +%F)
 
     # Compiling report string

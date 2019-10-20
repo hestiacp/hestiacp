@@ -67,7 +67,10 @@ if [ -z "$mail" ]; then
 else
     $BIN/v-delete-mail-domain-ssl $user $domain $restart >/dev/null 2>&1
 fi
-check_result $? "SSL delete" >/dev/null
+cmdstatus="$?"
+if [ "$cmdstatus" -ne E_NOTEXIST ]; then
+    check_result "$cmdstatus" "SSL delete" >/dev/null
+fi
 
 
 #----------------------------------------------------------#

@@ -291,6 +291,9 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
     for domain in $domains; do
         echo -e "$(date "+%F %T") $domain" |tee -a $tmpdir/restore.log
 
+        # Cleanup previous domain keys
+        unset -v DOMAIN IP IP6 ALIAS TPL SSL SSL_HOME LETSENCRYPT FTP_USER FTP_MD5 BACKEND PROXY PROXY_EXT STATS STATS_USER STATS_CRYPT U_DISK
+
         # Checking domain existance
         check_config=$(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
         if [ -z "$check_config" ]; then
@@ -454,6 +457,9 @@ if [ "$dns" != 'no' ] && [ ! -z "$DNS_SYSTEM" ]; then
     # Restoring DNS domain
     for domain in $domains; do
         echo -e "$(date "+%F %T") $domain" |tee -a $tmpdir/restore.log
+
+        # Cleanup previous config keys
+        unset -v DOMAIN IP TPL TTL EXP SOA RECORDS
 
         # Checking domain existance
         check_config=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
@@ -649,6 +655,9 @@ if [ "$db" != 'no' ] && [ ! -z "$DB_SYSTEM" ]; then
     for database in $databases; do
         echo -e "$(date "+%F %T") $database" |tee -a $tmpdir/restore.log
 
+        # Cleanup previous config keys
+        unset -v DB DBUSER MD5 HOST TYPE CHARSET U_DISK
+
         # Checking database existance
         check_config=$(grep "DB='$database'" $USER_DATA/db.conf)
 
@@ -665,6 +674,12 @@ if [ "$db" != 'no' ] && [ ! -z "$DB_SYSTEM" ]; then
         # Restore database config
         if [ -z "$check_config" ]; then
             parse_object_kv_list $(cat $tmpdir/db/$database/$backup_system/db.conf)
+
+            if [ -z "$MD5" ]; then
+                echo "Warning!: Database ${DB} backup does not contain a password for user ${DBUSER}."
+                echo "- Please use the web interface to set a password after the restore process finishes."
+            fi
+
             DB=$(echo "$DB"  |sed -e "s/${old_user}_//")
             DB="${user}_${DB}"
             DBUSER=$(echo "$DBUSER" |sed -e "s/${old_user}_//")

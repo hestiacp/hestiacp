@@ -807,6 +807,24 @@ rm -rf $tmpdir
 # Cleaning restore queue
 sed -i "/v-restore-user $user /d" $HESTIA/data/queue/backup.pipe
 
+# Add a general group for normal users created by Hestia
+if [ -z "$(grep ^hestia-users: /etc/group)" ]; then
+    groupadd --system "hestia-users"
+fi
+
+# Add membership to hestia-users group to non-admin users
+if [ "$user" != "admin" ]; then
+    usermod -a -G "hestia-users" "$user"
+    setfacl -m "u:$user:r-x" "$HOMEDIR/$user"
+
+    # Update FTP users groups membership
+    uid=$(id -u $user)
+    for ftp_user in $(cat /etc/passwd | grep -v "^$user:" | grep "^$user.*:$uid:$uid:" | cut -d ":" -f1); do
+        usermod -a -G "hestia-users" "$ftp_user"
+    done
+    setfacl -m "g:hestia-users:---" "$HOMEDIR/$user"
+fi
+
 
 #----------------------------------------------------------#
 #                       Hestia                             #

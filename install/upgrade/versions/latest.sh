@@ -100,3 +100,18 @@ if fail2ban-client status sshd > /dev/null 2>&1 ; then
         mv /etc/fail2ban/jail.d/defaults-debian.conf $HESTIA_BACKUP/conf/fail2ban/jail.d/
     fi
 fi
+
+# Make sure non-admin users belong to correct Hestia group (required for versions > 1.00.0-190618)
+for user in `ls /usr/local/hestia/data/users/`; do
+    if [ "$user" != "admin" ]; then
+        usermod -a -G "hestia-users" "$user"
+        setfacl -m "u:$user:r-x" "$HOMEDIR/$user"
+
+        # Update FTP users groups membership
+        uid=$(id -u $user)
+        for ftp_user in $(cat /etc/passwd | grep -v "^$user:" | grep "^$user.*:$uid:$uid:" | cut -d ":" -f1); do
+            usermod -a -G "hestia-users" "$ftp_user"
+        done
+    fi
+    setfacl -m "g:hestia-users:---" "$HOMEDIR/$user"
+done

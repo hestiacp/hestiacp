@@ -63,7 +63,7 @@ for ((I=3; I <= $# ; I++)); do
     cmdArgs="$cmdArgs ${all_scriptargs[${I}-1]}"
 done
 
-sudo -u $user -- $realcmd $cmdArgs
+setpriv --init-groups --reuid "$user" --regid "$user" -- $realcmd $cmdArgs
 if [ $? -ne 0 ]; then 
     echo "Error: cmd exited with errors"
     exit 3

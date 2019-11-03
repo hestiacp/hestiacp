@@ -1,0 +1,10 @@
+{
+    "autoload": {
+        "psr-4": {
+            "Hestia\\": "app/"
+        }
+    },
+    "require-dev": {
+        "filp/whoops": "^2.5"
+    }
+}

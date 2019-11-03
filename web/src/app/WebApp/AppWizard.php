@@ -1,7 +1,11 @@
 <?php
-// declare(strict_types=1);
-require_once("Hestia.php");
-class AppInstaller {
+declare(strict_types=1);
+
+namespace Hestia\WebApp;
+
+use Hestia\System\HestiaApp;
+
+class AppWizard {
     private $domain;
     private $appsetup;
     private $appcontext;
@@ -15,38 +19,30 @@ class AppInstaller {
         'database_password' => 'password',
     ];
 
-    public function __construct(string $app, string $domain, HestiaApp $context) {
+    public function __construct(InstallerInterface $app, string $domain, HestiaApp $context)
+    {
         $this->domain = $domain;
         $this->appcontext = $context;
 
         if (!$this->appcontext->userOwnsDomain($domain)) {
-            throw new Exception("User does not have access to domain [$domain]");
+            throw new \Exception("User does not have access to domain [$domain]");
         }
 
-        $appclass = ucfirst($app).'Setup';
-        if(file_exists('installer/' . $appclass.".php"))
-            require_once('installer/' . $appclass.".php");
-
-        if (class_exists($appclass)) {
-            $this->appsetup = new $appclass($domain, $this->appcontext);
-        }
-
-        if (!$this->appsetup) {
-            throw new Exception( "Application [".ucfirst($app)."] does not have a installer" );
-        }
+        $this->appsetup = $app;
     }
 
-    public function getStatus() {
+    public function getStatus()
+    {
         return $this->errors;
     }
 
-    public function formNs() {
+    public function formNs()
+    {
         return $this->formNamespace;
     }
 
-    public function getOptions() {
-        if(!$this->appsetup) return;
-
+    public function getOptions()
+    {
         $options = $this->appsetup->getOptions();
         if ($this->appsetup->withDatabase()) {
             $options = array_merge($options, $this->database_config);
@@ -66,12 +62,12 @@ class AppInstaller {
         return $filteredoptions;
     }
 
-    public function execute(array $options) {
-        if (!$this->appsetup) return;
+    public function execute(array $options)
+    {
 
         $options = $this->filterOptions($options);
 
-        $random_num = random_int(10000, 99999);
+        $random_num = (string)random_int(10000, 99999);
         if ($this->appsetup->withDatabase() && !empty($options['database_create'])) {
             if(empty($options['database_name'])) {
                 $options['database_name'] = $random_num;
@@ -97,4 +93,3 @@ class AppInstaller {
     }
 }
 
-// TO DO : create a WebDomain model class, hidrate from v-list-web-domain(json)

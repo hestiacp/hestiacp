@@ -1,10 +1,10 @@
 <?php
-error_reporting(NULL);
 ob_start();
 $TAB = 'WEB';
 
 // Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
+require_once $_SERVER['DOCUMENT_ROOT']."/src/init.php";
 
 // Check domain argument
 if (empty($_GET['domain'])) {
@@ -45,10 +45,13 @@ $v_web_apps = [
 
 // Check GET request
 if (!empty($_GET['app'])) {
-    require 'installer.php';
+    $app = basename($_GET['app']);
+    
     try {
-        $hestia = new HestiaApp();
-        $installer = new AppInstaller($_GET['app'], $v_domain, $hestia);
+        $hestia = new \Hestia\System\HestiaApp();
+        $app_installer_class = '\Hestia\WebApp\Installers\\' . $app . 'Setup';
+        $app_installer = new $app_installer_class($v_domain, $hestia);
+        $installer = new \Hestia\WebApp\AppWizard($app_installer, $v_domain, $hestia);
     } catch (Exception $e) {
         $_SESSION['error_msg'] = $e->getMessage();
         header('Location: /add/webapp/?domain=' . $v_domain);
@@ -58,7 +61,7 @@ if (!empty($_GET['app'])) {
 }
 
 // Check POST request
-if (!empty($_POST['ok']) && !empty($_GET['app']) ) {
+if (!empty($_POST['ok']) && !empty($app) ) {
 
     // Check token
     if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
@@ -70,21 +73,22 @@ if (!empty($_POST['ok']) && !empty($_GET['app']) ) {
         try{
             if (!$installer->execute($_POST)){
                 $result = $installer->getStatus();
-                $_SESSION['error_msg'] = implode(PHP_EOL, $result);
+                if(!empty($result))
+                    $_SESSION['error_msg'] = implode(PHP_EOL, $result);
             } else {
-                $_SESSION['ok_msg'] = htmlspecialchars($_GET['app']) . " App was installed succesfully !";
+                $_SESSION['ok_msg'] = htmlspecialchars($app) . " App was installed succesfully !";
                 header('Location: /add/webapp/?domain=' . $v_domain);
                 exit();
             }
         } catch (Exception $e) {
-            $_SESSION['error_msg'] = $e->getMessage();
-            header('Location: /add/webapp/?app='.rawurlencode($_GET['app']).'&domain=' . $v_domain);
-            exit();
+           $_SESSION['error_msg'] = $e->getMessage();
+           header('Location: /add/webapp/?app='.rawurlencode($app).'&domain=' . $v_domain);
+           exit();
         }
     }
 }
 
-if($installer) {
+if(!empty($installer)) {
     render_page($user, $TAB, 'setup_webapp');
 } else {
     render_page($user, $TAB, 'add_webapp');

@@ -1,5 +1,6 @@
 <?php
-require_once("BaseSetup.php");
+
+namespace Hestia\WebApp\Installers;
 
 class OpencartSetup extends BaseSetup {
 
@@ -18,7 +19,8 @@ class OpencartSetup extends BaseSetup {
         ],
     ];
 
-    public function install(array $options) : bool {
+    public function install(array $options = null) : bool
+    {
         parent::install($options);
 
         $this->appcontext->runUser('v-copy-fs-directory',[

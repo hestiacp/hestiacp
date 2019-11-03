@@ -1,5 +1,6 @@
 <?php
-require_once("BaseSetup.php");
+
+namespace Hestia\WebApp\Installers;
 
 class LaravelSetup extends BaseSetup {
 

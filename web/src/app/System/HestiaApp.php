@@ -1,19 +1,25 @@
 <?php
+
+declare(strict_types=1);
+
+namespace Hestia\System;
+
 class HestiaApp {
 
     protected const TMPDIR_DOWNLOADS="/tmp/hestia-webapp";
 
     public function __construct() {
-        mkdir(self::TMPDIR_DOWNLOADS);
+        @mkdir(self::TMPDIR_DOWNLOADS);
     }
 
-    public function run(string $cmd, $args, &$cmd_result=null) : bool {
+    public function run(string $cmd, $args, &$cmd_result=null) : bool
+    {
         $cli_script = HESTIA_CMD . '/' . basename($cmd);
         $cli_arguments = '';
 
         if (!empty($args) && is_array($args)) {
             foreach ($args as $arg) {
-                $cli_arguments .= escapeshellarg($arg) . ' ';
+                $cli_arguments .= escapeshellarg((string)$arg) . ' ';
             }
         } else {
             $cli_arguments = escapeshellarg($args);
@@ -31,7 +37,8 @@ class HestiaApp {
         return ($exit_code === 0);
     }
 
-    public function runUser(string $cmd, $args, &$cmd_result=null) : bool {
+    public function runUser(string $cmd, $args, &$cmd_result=null) : bool
+    {
         if (!empty($args) && is_array($args)) {
             array_unshift($args, $this->user());
         } else {
@@ -40,25 +47,25 @@ class HestiaApp {
         return $this->run($cmd, $args, $cmd_result);
     }
 
-    public function installComposer() {
-
+    public function installComposer()
+    {
         exec("curl https://composer.github.io/installer.sig", $output);
 
         $signature = implode(PHP_EOL, $output);
         if (empty($signature)) {
-           throw new Exception("Error reading composer signature");
+           throw new \Exception("Error reading composer signature");
         }
 
         $composer_setup = self::TMPDIR_DOWNLOADS . DIRECTORY_SEPARATOR . 'composer-setup-' . $signature . '.php';
 
         exec("wget https://getcomposer.org/installer --quiet -O " . escapeshellarg($composer_setup), $output, $return_code);
         if ($return_code !== 0 ) {
-            throw new Exception("Error downloading composer");
+            throw new \Exception("Error downloading composer");
         }
 
         if ($signature !== hash_file('sha384', $composer_setup)) {
             unlink($composer_setup);
-            throw new Exception("Invalid composer signature");
+            throw new \Exception("Invalid composer signature");
         }
 
         $install_folder = $this->getUserHomeDir() . DIRECTORY_SEPARATOR . '.composer';
@@ -67,12 +74,12 @@ class HestiaApp {
         unlink($composer_setup);
 
         if ($status->code !== 0 ) {
-            throw new Exception("Error installing composer");
+            throw new \Exception("Error installing composer");
         }
     }
 
-    public function runComposer($args, &$cmd_result=null) : bool {
-
+    public function runComposer($args, &$cmd_result=null) : bool
+    {
         $composer = $this->getUserHomeDir() . DIRECTORY_SEPARATOR . '.composer' . DIRECTORY_SEPARATOR . 'composer';
         if(!is_file($composer)) {
             $this->installComposer();
@@ -88,33 +95,38 @@ class HestiaApp {
     }
 
     // Logged in user
-    public function realuser() : string {
+    public function realuser() : string
+    {
         return $_SESSION['user'];
     }
 
     // Effective user
-    public function user() : string {
+    public function user() : string
+    {
         $user = $this->realuser();
         if ($user == 'admin' && !empty($_SESSION['look'])) {
             $user = $_SESSION['look'];
         }
 
         if(strpos($user, DIRECTORY_SEPARATOR) !== false) {
-            throw new Exception("illegal characters in username");
+            throw new \Exception("illegal characters in username");
         }
         return $user;
     }
 
-    public function getUserHomeDir() {
+    public function getUserHomeDir()
+    {
         $info = posix_getpwnam($this->user());
         return $info['dir'];
     }
 
-    public function userOwnsDomain(string $domain) : bool {
+    public function userOwnsDomain(string $domain) : bool
+    {
         return $this->runUser('v-list-web-domain', [$domain, 'json']);
     }
 
-    public function databaseAdd(string $dbname, string $dbuser, string $dbpass) {
+    public function databaseAdd(string $dbname, string $dbuser, string $dbpass)
+    {
         $v_password = tempnam("/tmp","hst");
         $fp = fopen($v_password, "w");
         fwrite($fp, $dbpass."\n");
@@ -124,17 +136,20 @@ class HestiaApp {
         return $status;
     }
 
-    public function getWebDomainIp(string $domain) {
+    public function getWebDomainIp(string $domain)
+    {
         $this->runUser('v-list-web-domain', [$domain, 'json'], $result);
         $ip = $result->json[$domain]['IP'];
         return filter_var($ip, FILTER_VALIDATE_IP);
     }
 
-    public function getWebDomainPath(string $domain) {
-        return join_paths("/home", $this->user() , "/web", $domain);
+    public function getWebDomainPath(string $domain)
+    {
+        return Util::join_paths( $this->getUserHomeDir() , "web", $domain);
     }
 
-    public function downloadUrl(string $src, $path=null, &$result=null) {
+    public function downloadUrl(string $src, $path=null, &$result=null)
+    {
         if (strpos($src,'http://') !== 0 &&
             strpos($src,'https://')!== 0 ) {
             return false;
@@ -159,32 +174,21 @@ class HestiaApp {
         return true;
     }
 
-    public function archiveExtract(string $src, string $path, $skip_components=null) {
-
+    public function archiveExtract(string $src, string $path, $skip_components=null)
+    {
         if (empty($path)) {
-            throw new Exception("Error extracting archive: missing target folder");
+            throw new \Exception("Error extracting archive: missing target folder");
         }
 
-        if (file_exists($src)) {
+        if (realpath($src)) {
             $archive_file = $src;
         } else  {
             if( !$this->downloadUrl($src, null, $download_result) ) {
-                throw new Exception("Error downloading archive");
+                throw new \Exception("Error downloading archive");
             }
             $archive_file = $download_result->file;
         }
-        $status = $this->runUser('v-extract-fs-archive', [ $archive_file, $path, null, $skip_components]);
-        unlink($download_result->file);
-        return $status;
-    }
 
-    public function saveTempFile(string $data) {
-        $tmp_file = tempnam("/tmp","hst");
-        chmod($tmp_file, 0644);
-
-        if (file_put_contents($tmp_file, $data) > 0) {
-            return $tmp_file;
-        }
-        return false;
+        return $this->runUser('v-extract-fs-archive', [$archive_file, $path, null, $skip_components]);
     }
 }

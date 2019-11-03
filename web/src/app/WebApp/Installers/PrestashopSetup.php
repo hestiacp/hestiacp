@@ -1,5 +1,6 @@
 <?php
-require_once("BaseSetup.php");
+
+namespace Hestia\WebApp\Installers;
 
 class PrestashopSetup extends BaseSetup {
 
@@ -20,7 +21,8 @@ class PrestashopSetup extends BaseSetup {
 
     ];
 
-    public function install(array $options) : bool {
+    public function install(array $options=null) : bool
+    {
         parent::install($options);
 
         $this->appcontext->archiveExtract($this->getDocRoot($this->extractsubdir . '/prestashop.zip'), $this->getDocRoot());

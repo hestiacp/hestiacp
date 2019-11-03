@@ -1,5 +1,8 @@
 <?php
-require_once("BaseSetup.php");
+
+namespace Hestia\WebApp\Installers;
+
+use Hestia\System\Util;
 
 class WordpressSetup extends BaseSetup {
 
@@ -23,7 +26,8 @@ class WordpressSetup extends BaseSetup {
         
     ];
 
-    public function install(array $options) : bool {
+    public function install(array $options = null)
+    {
         parent::install($options);
 
         $this->appcontext->runUser('v-open-fs-file',[$this->getDocRoot("wp-config-sample.php")], $result);
@@ -38,13 +42,13 @@ class WordpressSetup extends BaseSetup {
             $result->text);
 
         while (strpos($distconfig, 'put your unique phrase here') !== false) {
-            $distconfig = preg_replace( '/put your unique phrase here/', generate_string(64), $distconfig, 1);
+            $distconfig = preg_replace( '/put your unique phrase here/', Util::generate_string(64), $distconfig, 1);
         }
 
-        $tmp_configpath = $this->appcontext->saveTempFile($distconfig);
+        $tmp_configpath = $this->saveTempFile($distconfig);
 
-        if(!$this->appcontext->runUser('v-copy-fs-file',[$tmp_configpath, $this->getDocRoot("wp-config.php")], $result)) {
-            return false;
+        if(!$this->appcontext->runUser('v-move-fs-file',[$tmp_configpath, $this->getDocRoot("wp-config.php")], $result)) {
+            throw new \Exception("Error installing config file in: " . $tmp_configpath . " to:" . $this->getDocRoot("wp-config.php") . $result->text );
         }
 
         exec("/usr/bin/curl --post301 --insecure --resolve ".$this->domain.":80:".$this->appcontext->getWebDomainIp($this->domain)." " 

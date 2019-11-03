@@ -31,6 +31,11 @@ server {
         rewrite ^/(.+)$ /index.php?_route_=$1 last;
     }
 
+    location /storage/ {
+        deny    all;
+        return  404;
+    }
+
     location /vstats/ {
         alias   %home%/%user%/web/%domain%/stats/;
         include %home%/%user%/web/%domain%/stats/auth.conf*;

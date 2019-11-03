@@ -29,6 +29,7 @@ class OpencartSetup extends BaseSetup {
 
         $this->appcontext->runUser('v-copy-fs-file',[$this->getDocRoot("config-dist.php"), $this->getDocRoot("config.php")]);
         $this->appcontext->runUser('v-copy-fs-file',[$this->getDocRoot("admin/config-dist.php"), $this->getDocRoot("admin/config.php")]);
+        $this->appcontext->runUser('v-copy-fs-file',[$this->getDocRoot(".htaccess.txt"), $this->getDocRoot(".htaccess")]);
         $this->appcontext->runUser('v-run-cli-cmd', [
             "/usr/bin/php",
             $this->getDocRoot("/install/cli_install.php"),
@@ -40,6 +41,13 @@ class OpencartSetup extends BaseSetup {
             "--password "    . $options['opencart_account_password'],
             "--email "       . $options['opencart_account_email'],
             "--http_server " . "http://" . $this->domain . "/"], $status);
+
+        // After install, 'storage' folder must be moved to a location where the web server is not allowed to serve file
+        // - Opencart Nginx template and Apache ".htaccess" forbids acces to /storage folder
+        $this->appcontext->runUser('v-move-fs-directory', [$this->getDocRoot("system/storage"), $this->getDocRoot()], $result);
+        $this->appcontext->runUser('v-run-cli-cmd', [ "sed", "-i", "s/'storage\//'..\/storage\// ", $this->getDocRoot("config.php") ], $status);
+        $this->appcontext->runUser('v-run-cli-cmd', [ "sed", "-i", "s/'storage\//'..\/storage\// ", $this->getDocRoot("admin/config.php") ], $status);
+        $this->appcontext->runUser('v-run-cli-cmd', [ "sed", "-i", "s/\^system\/storage\//^\/storage\// ", $this->getDocRoot(".htaccess") ], $status);
 
         $this->appcontext->runUser('v-change-fs-file-permission',[$this->getDocRoot("config.php"), '640']);
         $this->appcontext->runUser('v-change-fs-file-permission',[$this->getDocRoot("admin/config.php"), '640']);

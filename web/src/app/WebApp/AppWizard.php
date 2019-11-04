@@ -14,9 +14,9 @@ class AppWizard {
 
     private $database_config = [
         'database_create' => ['type'=>'boolean', 'value'=>false],
-        'database_name' => 'text',
-        'database_user' => 'text',
-        'database_password' => 'password',
+        'database_name' => ['type'=>'text', 'placeholder' => 'auto'],
+        'database_user' => ['type'=>'text', 'placeholder' => 'auto'],
+        'database_password' => ['type'=>'password', 'placeholder' => 'auto'],
     ];
 
     public function __construct(InstallerInterface $app, string $domain, HestiaApp $context)
@@ -34,6 +34,26 @@ class AppWizard {
     public function getStatus()
     {
         return $this->errors;
+    }
+
+    public function isDomainRootClean()
+    {
+        $this->appcontext->runUser('v-run-cli-cmd', [ "ls", $this->appsetup->getDocRoot() ], $status);
+        if($status->code !== 0) {
+            throw new \Exception("Cannot list domain files");
+        }
+
+        $files = $status->raw;
+        if( count($files) > 2) {
+            return false;
+        }
+
+        foreach($files as $file) {
+            if ( !in_array($file,['index.html','robots.txt']) ) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public function formNs()

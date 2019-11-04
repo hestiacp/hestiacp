@@ -6,16 +6,18 @@ namespace Hestia\System;
 
 class Util
 {
+    /*
+     * Method from: https://stackoverflow.com/a/15575293
+     * https://stackoverflow.com/questions/1091107/how-to-join-filesystem-path-strings-in-php
+     */
     public static function join_paths()
     {
         $paths = array();
-
         foreach (func_get_args() as $arg) {
             if ($arg !== '') {
                 $paths[] = $arg;
             }
         }
-
         return preg_replace('#/+#', '/', join('/', $paths));
     }
 

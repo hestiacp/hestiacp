@@ -53,6 +53,7 @@ if [ "$realcmd" != '/bin/ps'            -a \
      "$realcmd" != '/usr/bin/php7.1'    -a \
      "$realcmd" != '/usr/bin/php7.2'    -a \
      "$realcmd" != '/usr/bin/php7.3'    -a \
+     "$realcmd" != '/usr/bin/php7.4'    -a \
      "$realcmd" != '/usr/bin/php'       -a \
      "$clicmd"  != 'composer' ]; then
     check_result $E_FORBIDEN "Error: Cli command not enabled"

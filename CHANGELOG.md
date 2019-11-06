@@ -12,37 +12,37 @@ All notable changes to this project will be documented in this file.
 
 ### Bugfixes
 - Added a detection of web root for add .well-known ACME challenge.
-- Reworked Let's Encrypt ACME staging to use hestia conform standard.
-- Fixed if condition, use Nginx for Let's Encrypt ACME request if present.
+- Reworked Let's Encrypt ACME staging to use Hestia code standards.
+- Fixed issues with Let's Encrupt - use Nginx for Let's Encrypt ACME request if present.
 - Reworked v-add-sys-ip, removed CentOS/Red Hat support and reworked conditions.
 - Enabled HSTS and force SSL on v-add-letsencrypt-host.
 - Prevented login action for webmail in list user view.
 - Removed hardcoded mail in HELO data (cosmetic fix).
-- Fixed SFTP server validation check, thanks to @dbannik!
-- Implemented warning message for creating web domains under admin user.
-- v-generate-api-key: Fixed wrong quotes used for default keys folder location.
+- Fixed SFTP server validation check - thanks @dbannik.
+- Implemented security warning message when creating web domains with the default admin account.
+- Fixed wrong quotes used for default keys folder location in v-generate-api-key backend script.
 - Fixed permissions to allow access for FTP users created in web domains under admin account.
-- Check if user home exists before set permission on sftp jail.
-- Fix several security issues, thanks to Andrea Cardaci (https://cardaci.xyz/)
-- Improved input validation on File System operations scripts
-- SecImprove: Cli arguments were glob expanded when written to log file
-- Fixed: Removing web domains would let sftp accounts still configured in sshd
-- SecImprove: File operations in user home folder will be executed as the real user
-- Added a confirmation dialog when deleting user logs (/list/log/)
-- Fixed issue with sftp-jail not working for users restored from backups
-- SecImprove: Improved input validation in multiple cli scripts
-- Performance: Do not load complete notifications list on every page load, reduced load time from over 1sec to under 100ms
-- Performance: Do not resolve ip when listing iptables rules. Server tab could take multiple minutes to load in some cases.
-- Update jQuery to 3.4.1 and adjust includes.
-- Fixed cronjob issue with sftp jail due to missing user.
-- Fixed issue #569 Remote backup hostname would reject ip addr without reverse dns (PTR record).
-- Create a couple of writeable folders in each user home directory (#580).
+- Check if user home directory exists before setting permissions on SFTP fail2ban jail.
+- Fixed several reported security issues, thanks to Andrea Cardaci (https://cardaci.xyz/)
+- Security fix: Command line arguments arguments were glob expanded when written to log file.
+- Ensure that SFTP accounts remain configured in sshd when removing web domains/
+- Improved security by ensuring that file operations in user home folder will be executed as the real user.
+- Added a confirmation dialog when deleting user logs.
+- Fixed an issue where the SFTP fail2ban jail was not working correctly for user accounts which were restored from backup archives.
+- Enhanced input validation in backend command line scripts.
+- Improved page load performance by optimizing how the notifications list is loaded (in some cases, improvement measured from 1sec to under 100ms).
+- Improved page load performance when loading IP ban rules in the Control Panel.
+- Updated panel framework to use jQuery to 3.4.1.
+- Fixed an issue with SFTP fail2ban jail due to missing user.
+- Fixed an issue where temote backup hostname would reject an IP address without reverse DNS (PTR record). (#569)
+- Create default writable folders in user home directory (#580).
 - Added gnupg/gnupg2 check to prevent issues with pubkey installation.
-- Fixed nameserver validation on add new user packages.
-- Implement additional debug informations for LE validation, thanks to @shakaran.
-- Do not notify user if the backups are triggered from cronjob.
-- Fixed issue with suspending resources when logged directly as a normal user.
-- Fixed issue with unsuspending a user, PHP-FPM website pool configuration was being deleted.
+- Fixed DNS nameserver validation when adding new packages.
+- Implemented additional debug information for Let's Encrupt validation - thanks @shakaran.
+- Disabled alerts for successful cronjob backups.
+- Fixed an issue with suspending resources when logged in as a normal (non admin) user.
+- Fixed an issue with unsuspending a user, PHP-FPM website pool configuration was being deleted.
+- Fixed potential upgrade issue when using v-update-sys-hestia-git
 
 ## [1.0.6] - 2019-09-24 - Hotfix
 ### Bugfixes

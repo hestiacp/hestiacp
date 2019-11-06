@@ -75,7 +75,7 @@ mkdir -p $DEB_DIR
 mkdir -p $ARCHIVE_DIR
 
 # Set package dependencies for compiling
-SOFTWARE='build-essential libxml2-dev libz-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config'
+SOFTWARE='build-essential libxml2-dev libz-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config setpriv'
 
 # Define a timestamp function
 timestamp() {

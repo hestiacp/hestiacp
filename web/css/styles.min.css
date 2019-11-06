@@ -2973,6 +2973,7 @@ a.button.cancel {
   cursor: pointer;
   padding-left: 4px;
   margin-bottom: -2px;
+  margin-left: -42px;
   z-index: 1;
 }
 .optional {

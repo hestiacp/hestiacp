@@ -1,4 +1,4 @@
-### The content below is a template below. Please delete any unnecessary sections from your issue reports.
+### The content below is simply a template. Please delete any unnecessary sections from your issue reports.
 
 ### In a few words, please describe the issue that you're experiencing:
 Please enter your response here (e.g. When I click on the Web tab, a blank page is displayed).

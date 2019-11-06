@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - Refactored MultiPHP functionality. MultiPHP will be enabled by default on new installations.
 - Allowed admin user to add or remove PHP versions from webui (edit/server->"Web Server" page).
 - Extended v-extract-fs-archive to allow archive testing and extracting only specific paths (for tar)
+- Added file manager (Tiny File Manager).
 
 ### Bugfixes
 - Added a detection of web root for add .well-known ACME challenge.

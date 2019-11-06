@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: archive to directory
-# options: USER ARCHIVE DIRECTORY
+# options: USER ARCHIVE DIRECTORY [SELECTED_DIR] [STRIP] [TEST]
 #
 # The function extracts archive into directory on the file system
 
@@ -8,7 +8,8 @@ user=$1
 src_file=$2
 dst_dir=$3
 selected_dir=$4
-test=$5
+strip=$5
+test=$6
 
 # Includes
 source $HESTIA/func/main.sh
@@ -17,7 +18,7 @@ source $HESTIA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'USER ARCHIVE DIRECTORY [SELECTED_DIR] [TEST]'
+check_args '3' "$#" 'USER ARCHIVE DIRECTORY [SELECTED_DIR] [STRIP] [TEST]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 
@@ -48,12 +49,16 @@ if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
     exit 2
 fi
 
+if [ ! -z "$strip" ]; then
+    is_int_format_valid "$strip" 'strip-components'
+    tar_strip_level="--strip-components $strip"
+fi
 # Extracting gziped archive
 if [ ! -z "$(echo $src_file |egrep -i  '.tgz|.tar.gz')" ]; then
     x='yes'
     if [ -z "$test" ] || [ "$test" = "no" ]; then
         setpriv --init-groups --reuid "$user" --regid "$user" -- mkdir -p "$dst_dir" >/dev/null 2>&1
-        setpriv --init-groups --reuid "$user" --regid "$user" -- tar -xzf "$src_file" -C "$dst_dir" --no-wildcards "$selected_dir" >/dev/null 2>&1
+        setpriv --init-groups --reuid "$user" --regid "$user" -- tar -xzf "$src_file" -C "$dst_dir" --no-wildcards "$selected_dir" $tar_strip_level >/dev/null 2>&1
         rc=$?
     else
         setpriv --init-groups --reuid "$user" --regid "$user" -- tar -tf "$src_file" --no-wildcards "$selected_dir" >/dev/null 2>&1
@@ -67,7 +72,7 @@ if [ ! -z "$(echo $src_file |egrep -i  '.tbz|.tar.bz')" ]; then
     x='yes'
     if [ -z "$test" ] || [ "$test" = "no" ]; then
         setpriv --init-groups --reuid "$user" --regid "$user" -- mkdir -p "$dst_dir" >/dev/null 2>&1
-        setpriv --init-groups --reuid "$user" --regid "$user" -- tar -xjf "$src_file" -C "$dst_dir" --no-wildcards "$selected_dir" >/dev/null 2>&1
+        setpriv --init-groups --reuid "$user" --regid "$user" -- tar -xjf "$src_file" -C "$dst_dir" --no-wildcards "$selected_dir" $tar_strip_level >/dev/null 2>&1
         rc=$?
     else
         setpriv --init-groups --reuid "$user" --regid "$user" -- tar -tf "$src_file" --no-wildcards "$selected_dir" >/dev/null 2>&1
@@ -111,7 +116,7 @@ if [ ! -z "$(echo $src_file |grep -i '.tar')" ] && [ -z "$x" ]; then
     x='yes'
     if [ -z "$test" ] || [ "$test" = "no" ]; then
         setpriv --init-groups --reuid "$user" --regid "$user" -- mkdir -p "$dst_dir" >/dev/null 2>&1
-        setpriv --init-groups --reuid "$user" --regid "$user" -- tar -xf "$src_file" -C "$dst_dir" --no-wildcards "$selected_dir" >/dev/null 2>&1
+        setpriv --init-groups --reuid "$user" --regid "$user" -- tar -xf "$src_file" -C "$dst_dir" --no-wildcards "$selected_dir" $tar_strip_level >/dev/null 2>&1
         rc=$?
     else
         setpriv --init-groups --reuid "$user" --regid "$user" -- tar -tf "$src_file" --no-wildcards "$selected_dir" >/dev/null 2>&1

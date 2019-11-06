@@ -1,0 +1,76 @@
+#!/bin/bash
+# info: run cli command
+# options: USER FILE
+#
+# The function runs a limited list of cli commands with dropped privileges as the specific hestia user
+
+user=$1
+clicmd=$2
+
+# Includes
+source $HESTIA/func/main.sh
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER CMD [ARGS]'
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+
+# Checking user homedir
+homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
+if [ -z $homedir ]; then
+    check_result $E_NOTEXIST "Error: user home directory doesn't exist"
+fi
+
+if [ "$clicmd" = "composer" ]; then
+    realcmd="$homedir/.composer/composer"
+else
+    realcmd="$(which "$clicmd")"
+    check_result $? "Unknown cli command" $E_NOTEXIST
+fi
+
+if [ ! -x "$realcmd" ]; then
+    check_result $E_NOTEXIST "Error: Cli command does not exist"
+fi
+
+if [ "$realcmd" != '/bin/ps'            -a \
+     "$realcmd" != '/bin/ls'            -a \
+     "$realcmd" != '/bin/tar'           -a \
+     "$realcmd" != '/bin/zip'           -a \
+     "$realcmd" != '/usr/bin/unzip'     -a \
+     "$realcmd" != '/bin/gzip'          -a \
+     "$realcmd" != '/bin/gunzip'        -a \
+     "$realcmd" != '/bin/mkdir'         -a \
+     "$realcmd" != '/usr/bin/find'      -a \
+     "$realcmd" != '/bin/grep'          -a \
+     "$realcmd" != '/bin/egrep'         -a \
+     "$realcmd" != '/bin/sed'           -a \
+     "$realcmd" != '/bin/cat'           -a \
+     "$realcmd" != '/usr/bin/php5.6'    -a \
+     "$realcmd" != '/usr/bin/php7.0'    -a \
+     "$realcmd" != '/usr/bin/php7.1'    -a \
+     "$realcmd" != '/usr/bin/php7.2'    -a \
+     "$realcmd" != '/usr/bin/php7.3'    -a \
+     "$realcmd" != '/usr/bin/php7.4'    -a \
+     "$realcmd" != '/usr/bin/php'       -a \
+     "$clicmd"  != 'composer' ]; then
+    check_result $E_FORBIDEN "Error: Cli command not enabled"
+fi
+
+all_scriptargs=("$@")
+for ((I=3; I <= $# ; I++)); do
+    cmdArgs="$cmdArgs ${all_scriptargs[${I}-1]}"
+done
+
+setpriv --init-groups --reuid "$user" --regid "$user" -- $realcmd $cmdArgs
+if [ $? -ne 0 ]; then 
+    echo "Error: cmd exited with errors"
+    exit 3
+fi
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

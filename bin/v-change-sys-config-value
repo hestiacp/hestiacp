@@ -42,7 +42,9 @@ else
 fi
 
 if [ "$key" = "BACKUP" ] && [ "$value" != '/backup' ]; then
-    rm /backup
+    if [ -d /backup ]; then
+        rm -rf /backup
+    fi
     ln -s $value /backup
 fi
 

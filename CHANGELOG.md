@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 ## [CURRENT] - Development
 ### Features
+- Added support for custom user interface themes.
+- Fixed issues with incorrect font rendering on Windows and Linux.
+- Adjusted default font size for improved readability.
 - Added read only/demo mode function if DEMO_MODE is set to yes in hestia.conf.
 - Added php-imagick module to installer and upgrade scripts.
 - Added recidive filter function to fail2ban.

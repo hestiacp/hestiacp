@@ -1,14 +1,13 @@
 [Hestia Control Panel](https://www.hestiacp.com/)
 ==================================================
-**Current stable release:** Version 1.0.6, released on September 26th, 2019.
+**Current stable release:** Version 1.0.6, released on September 26th, 2019.<br>
+**Current development release:** Version 1.1.0, release date yet to be determined.
 
-**Wanted:** Beta testers! 
+**We're looking for some extra hands on deck!**
 ---------------------------- 
-We're currently looking for people who would be willing to help us test development builds as we continue work on the project. If you have previous experience in software testing or development, awesome! If not, now is a great chance to get started.
+Are you a software developer, tester, or have experience in writing documentation or guides? Do you have some spare time to contribute and want to help further the development of Hestia Control Panel?<br><br>Please send an email to info@hestiacp.com with a quick outline of your previous experience in any of these areas or where you think you could help on the project and we'll reach out to discuss with you further. 
 
-If you're interested, please send us an e-mail at info@hestiacp.com, or get started today by installing a development build (see the instructions below) on a test server and send us your feedback through GitHub Issues. 
-
-We look forward to your feedback, and as always we welcome all feedback and contributions!
+As always we welcome all feedback and contributions!
 
 Sincerely,<br>
 The Hestia Control Panel development team
@@ -31,7 +30,7 @@ What does Hestia Control Panel support?
 Supported operating systems:
 ----------------------------
 * Debian 8 or 9
-* Ubuntu 16.04 LTS or Ubuntu 18.04 LTS
+* Ubuntu 16.04 LTS or Ubuntu 18.04 LTS (the latest LTS release is recommended)
 * **NOTE:** Hestia Control Panel must be installed on top of a fresh operating system installation to ensure proper functionality.
 
 Installing Hestia Control Panel
@@ -46,7 +45,7 @@ Download the installation script for the latest release:
 ```bash
 wget https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh
 ```
-If the download fails due to ssl validation, please be sure you've installed the requirement ca-certificate package - you can do this with the following command:
+If the download fails due to an SSL validation error, please be sure you've installed the ca-certificate package on your system - you can do this with the following command:
 ```bash
 apt-get update && apt-get install ca-certificates
 ```

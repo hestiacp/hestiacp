@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - Extended v-extract-fs-archive to allow archive testing and extracting only specific paths (for tar)
 - Added file manager (Tiny File Manager).
 - Allow renaming of existing packages from console (v-rename-package).
+- Webmail ip address is now inherited from web domain when using multiple IPs.
 
 ### Bugfixes
 - Added a detection of web root for add .well-known ACME challenge.

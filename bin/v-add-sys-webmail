@@ -35,7 +35,7 @@ source $HESTIA/conf/hestia.conf
 # Additional argument formatting
 format_domain
 format_domain_idn
-get_user_ip
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -53,6 +53,15 @@ is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+# Inherit web domain local ip address
+domain_ip=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP')
+local_ip=$(get_real_ip "$domain_ip")
+if [ ! -z "$local_ip" ]; then
+    is_ip_valid "$local_ip" "$user"
+else
+    get_user_ip
+fi
 
 # Verify that webmail alias variable exists and create it if it does not
 if [ -z "$WEBMAIL_ALIAS" ]; then

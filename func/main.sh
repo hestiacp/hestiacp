@@ -255,6 +255,7 @@ parse_object_kv_list() {
 
     str=${@//$'\n'/ }
     str=${str//\"/\\\"}
+    str=${str//$/\\$}
     IFS=$'\n'
 
     suboutput=$(setpriv --init-groups --reuid nobody --regid nogroup bash -c "PS4=''; set -xe; eval \"${str}\"" 2>&1)

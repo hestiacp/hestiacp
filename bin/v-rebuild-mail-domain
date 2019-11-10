@@ -62,14 +62,6 @@ fi
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-# Updating counters
-update_user_value "$user" '$U_MAIL_DOMAINS' "$U_MAIL_DOMAINS"
-update_user_value "$user" '$U_MAIL_DKIM' "$U_MAIL_DKIM"
-update_user_value "$user" '$U_MAIL_ACCOUNTS' "$U_MAIL_ACCOUNTS"
-update_user_value "$user" '$U_MAIL_SSL' "$U_MAIL_SSL"
-update_user_value "$user" '$SUSPENDED_MAIL' "$SUSPENDED_MAIL"
-update_user_value "$user" '$U_DISK_MAIL' "$U_DISK_MAIL"
-
 # Update disk usage statistics
 $BIN/v-update-user-disk $user
 

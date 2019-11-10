@@ -445,6 +445,15 @@ rebuild_mail_domain_conf() {
         domain_idn=$domain
     fi
 
+    # Inherit web domain local ip address
+    local domain_ip=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP')
+    local local_ip=$(get_real_ip "$domain_ip")
+    if [ ! -z "$local_ip" ]; then
+        is_ip_valid "$local_ip" "$user"
+    else
+        get_user_ip
+    fi
+
     if [ "$SUSPENDED" = 'yes' ]; then
         SUSPENDED_MAIL=$((SUSPENDED_MAIL +1))
     fi
@@ -466,9 +475,15 @@ rebuild_mail_domain_conf() {
         rm -f $HOMEDIR/$user/conf/mail/$domain/protection
         rm -f $HOMEDIR/$user/conf/mail/$domain/passwd
         rm -f $HOMEDIR/$user/conf/mail/$domain/fwd_only
+        rm -f $HOMEDIR/$user/conf/mail/$domain/ip
         touch $HOMEDIR/$user/conf/mail/$domain/aliases
         touch $HOMEDIR/$user/conf/mail/$domain/passwd
         touch $HOMEDIR/$user/conf/mail/$domain/fwd_only
+
+        # Seeting outgoing ip address
+        if [ ! -z "$local_ip" ]; then
+            echo "$local_ip" > $HOMEDIR/$user/conf/mail/$domain/ip
+        fi
 
         # Adding antispam protection
         if [ "$ANTISPAM" = 'yes' ]; then

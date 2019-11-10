@@ -33,7 +33,6 @@ fi
 # Additional argument formatting
 format_domain
 format_domain_idn
-get_user_ip
 
 
 #----------------------------------------------------------#
@@ -56,6 +55,15 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+# Inherit web domain local ip address
+domain_ip=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP')
+local_ip=$(get_real_ip "$domain_ip")
+if [ ! -z "$local_ip" ]; then
+    is_ip_valid "$local_ip" "$user"
+else
+    get_user_ip
+fi
 
 # Generating timestamp
 new_timestamp
@@ -87,6 +95,11 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     touch $HOMEDIR/$user/conf/mail/$domain/fwd_only
     ln -s $HOMEDIR/$user/conf/mail/$domain \
         /etc/$MAIL_SYSTEM/domains/$domain_idn
+
+    # Seeting outgoing ip address
+    if [ ! -z "$local_ip" ]; then
+        echo "$local_ip" > $HOMEDIR/$user/conf/mail/$domain/ip
+    fi
 
     # Adding antispam protection
     if [ "$antispam" = 'yes' ]; then

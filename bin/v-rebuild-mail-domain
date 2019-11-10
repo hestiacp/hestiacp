@@ -17,6 +17,7 @@ domain=$2
 source $HESTIA/func/main.sh
 source $HESTIA/func/domain.sh
 source $HESTIA/func/rebuild.sh
+source $HESTIA/func/ip.sh
 source $HESTIA/conf/hestia.conf
 
 # Define mail user

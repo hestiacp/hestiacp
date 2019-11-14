@@ -47,17 +47,21 @@ $v_web_apps = [
 if (!empty($_GET['app'])) {
     $app = basename($_GET['app']);
     
-    try {
-        $hestia = new \Hestia\System\HestiaApp();
-        $app_installer_class = '\Hestia\WebApp\Installers\\' . $app . 'Setup';
-        $app_installer = new $app_installer_class($v_domain, $hestia);
-        $installer = new \Hestia\WebApp\AppWizard($app_installer, $v_domain, $hestia);
-    } catch (Exception $e) {
-        $_SESSION['error_msg'] = $e->getMessage();
-        header('Location: /add/webapp/?domain=' . $v_domain);
-        exit();
+    $hestia = new \Hestia\System\HestiaApp();
+    $app_installer_class = '\Hestia\WebApp\Installers\\' . $app . 'Setup';
+    if(class_exists($app_installer_class)) {
+        try {
+            $app_installer = new $app_installer_class($v_domain, $hestia);
+            $installer = new \Hestia\WebApp\AppWizard($app_installer, $v_domain, $hestia);
+            $GLOBALS['WebappInstaller'] = $installer;
+        } catch (Exception $e) {
+            $_SESSION['error_msg'] = $e->getMessage();
+            header('Location: /add/webapp/?domain=' . $v_domain);
+            exit();
+        }
+    } else {
+        $_SESSION['error_msg'] = "${app} installer missing";
     }
-    $GLOBALS['WebappInstaller'] = $installer;
 }
 
 // Check POST request

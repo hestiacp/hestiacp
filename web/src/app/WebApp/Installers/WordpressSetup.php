@@ -21,7 +21,7 @@ class WordpressSetup extends BaseSetup {
             ],
         'database' => true,
         'resources' => [
-            'archive'  => [ 'src' => 'https://wordpress.org/wordpress-5.2.2.tar.gz' ],
+            'archive'  => [ 'src' => 'https://wordpress.org/wordpress-5.2.4.tar.gz' ],
         ],
         
     ];

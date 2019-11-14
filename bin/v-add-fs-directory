@@ -33,7 +33,7 @@ if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
 fi
 
 # Adding directory
-setpriv --init-groups --reuid "$user" --regid "$user" -- mkdir -p "$dst_dir" >/dev/null 2>&1
+user_exec mkdir -p "$dst_dir" >/dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "Error: directory $dst_dir was not created"
     exit 3

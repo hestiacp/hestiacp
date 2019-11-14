@@ -40,7 +40,7 @@ if [ ! -z "$src_file" ]; then
 fi
 
 # Reading file
-setpriv --init-groups --reuid "$user" --regid "$user" -- cat "$src_file" 2>/dev/null
+user_exec cat "$src_file" 2>/dev/null
 if [ $? -ne 0 ]; then
     echo "Error: file $src_file was not opened"
     exit 3

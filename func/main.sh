@@ -258,7 +258,7 @@ parse_object_kv_list() {
     str=${str//$/\\$}
     IFS=$'\n'
 
-    suboutput=$(setpriv --init-groups --reuid nobody --regid nogroup bash -c "PS4=''; set -xe; eval \"${str}\"" 2>&1)
+    suboutput=$(setpriv --clear-groups --reuid nobody --regid nogroup bash -c "PS4=''; set -xe; eval \"${str}\"" 2>&1)
     check_result $? "Invalid object format: ${str}" $E_INVALID
 
     for objkv in $suboutput; do
@@ -1079,4 +1079,17 @@ multiphp_versions() {
         done
         echo -en '\n'
     fi
+}
+
+# Run arbitrary cli commands with dropped privileges
+# Note: setpriv --init-groups is not available on debian9 (util-linux 2.29.2)
+# Input:
+#     - $user : Vaild hestia user
+user_exec() {
+    is_object_valid 'user' 'USER' "$user"
+
+    local user_groups=$(id -G "$user")
+    user_groups=${user_groups//\ /,}
+
+    setpriv --groups "$user_groups" --reuid "$user" --regid "$user" -- $@
 }

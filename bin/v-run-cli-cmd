@@ -44,6 +44,7 @@ if [ "$realcmd" != '/bin/ps'            -a \
      "$realcmd" != '/bin/gunzip'        -a \
      "$realcmd" != '/bin/mkdir'         -a \
      "$realcmd" != '/usr/bin/find'      -a \
+     "$realcmd" != '/usr/bin/id'        -a \
      "$realcmd" != '/bin/grep'          -a \
      "$realcmd" != '/bin/egrep'         -a \
      "$realcmd" != '/bin/sed'           -a \
@@ -64,7 +65,7 @@ for ((I=3; I <= $# ; I++)); do
     cmdArgs="$cmdArgs ${all_scriptargs[${I}-1]}"
 done
 
-setpriv --init-groups --reuid "$user" --regid "$user" -- $realcmd $cmdArgs
+runuser -u "$user" -- $realcmd $cmdArgs
 if [ $? -ne 0 ]; then 
     echo "Error: cmd exited with errors"
     exit 3

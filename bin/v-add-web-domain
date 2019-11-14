@@ -83,7 +83,7 @@ ln -f -s /var/log/$WEB_SYSTEM/domains/$domain.*log \
     $HOMEDIR/$user/web/$domain/logs/
 
 # Adding domain skeleton
-setpriv --init-groups --reuid "$user" --regid "$user" -- cp -r $WEBTPL/skel/* "$HOMEDIR/$user/web/$domain/" >/dev/null 2>&1
+user_exec cp -r $WEBTPL/skel/* "$HOMEDIR/$user/web/$domain/" >/dev/null 2>&1
 for file in $(find "$HOMEDIR/$user/web/$domain/" -type f); do
     sed -i "s/%domain%/$domain/g" $file
 done

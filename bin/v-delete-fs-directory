@@ -34,7 +34,7 @@ if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
 fi
 
 # Deleting directory
-setpriv --init-groups --reuid "$user" --regid "$user" -- rm -rf "$dst_dir" # >/dev/null 2>&1
+user_exec rm -rf "$dst_dir" # >/dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "Error: directory $dst_dir was not deleted"
     exit 3

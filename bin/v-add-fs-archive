@@ -52,7 +52,7 @@ for src in $*; do
         src=$(echo "$src"| sed -e "s|/home/$user/||")
 
         # Creating tar.gz archive
-        setpriv --init-groups --reuid "$user" --regid "$user" -- tar -rf "${archive/.gz/}" -C /home/$user $src >/dev/null 2>&1
+        user_exec tar -rf "${archive/.gz/}" -C /home/$user $src >/dev/null 2>&1
         if [ "$?" -ne 0 ]; then
             echo "Error: archive $archive was not created"
             exit 3
@@ -63,7 +63,7 @@ done
 
 # Checking gzip
 if [[ "$archive" =~ \.gz$ ]]; then
-    setpriv --init-groups --reuid "$user" --regid "$user" -- gzip "${archive/.gz/}" >/dev/null 2>&1
+    user_exec gzip "${archive/.gz/}" >/dev/null 2>&1
     if [ "$?" -ne 0 ]; then
         echo "Error: archive $archive was not gziped"
         exit 3

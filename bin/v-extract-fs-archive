@@ -57,11 +57,11 @@ fi
 if [ ! -z "$(echo $src_file |egrep -i  '.tgz|.tar.gz')" ]; then
     x='yes'
     if [ -z "$test" ] || [ "$test" = "no" ]; then
-        setpriv --init-groups --reuid "$user" --regid "$user" -- mkdir -p "$dst_dir" >/dev/null 2>&1
-        setpriv --init-groups --reuid "$user" --regid "$user" -- tar -xzf "$src_file" -C "$dst_dir" --no-wildcards "$selected_dir" $tar_strip_level >/dev/null 2>&1
+        user_exec mkdir -p "$dst_dir" >/dev/null 2>&1
+        user_exec tar -xzf "$src_file" -C "$dst_dir" --no-wildcards "$selected_dir" $tar_strip_level >/dev/null 2>&1
         rc=$?
     else
-        setpriv --init-groups --reuid "$user" --regid "$user" -- tar -tf "$src_file" --no-wildcards "$selected_dir" >/dev/null 2>&1
+        user_exec tar -tf "$src_file" --no-wildcards "$selected_dir" >/dev/null 2>&1
         rc=$?
     fi
 
@@ -71,43 +71,43 @@ fi
 if [ ! -z "$(echo $src_file |egrep -i  '.tbz|.tar.bz')" ]; then
     x='yes'
     if [ -z "$test" ] || [ "$test" = "no" ]; then
-        setpriv --init-groups --reuid "$user" --regid "$user" -- mkdir -p "$dst_dir" >/dev/null 2>&1
-        setpriv --init-groups --reuid "$user" --regid "$user" -- tar -xjf "$src_file" -C "$dst_dir" --no-wildcards "$selected_dir" $tar_strip_level >/dev/null 2>&1
+        user_exec mkdir -p "$dst_dir" >/dev/null 2>&1
+        user_exec tar -xjf "$src_file" -C "$dst_dir" --no-wildcards "$selected_dir" $tar_strip_level >/dev/null 2>&1
         rc=$?
     else
-        setpriv --init-groups --reuid "$user" --regid "$user" -- tar -tf "$src_file" --no-wildcards "$selected_dir" >/dev/null 2>&1
+        user_exec tar -tf "$src_file" --no-wildcards "$selected_dir" >/dev/null 2>&1
         rc=$?
     fi
 fi
 
 # Extracting gziped file
 if [ ! -z "$(echo $src_file |grep -i  '.gz')" ] && [ -z "$x" ]; then
-    setpriv --init-groups --reuid "$user" --regid "$user" -- mkdir -p "$dst_dir" >/dev/null 2>&1
-    setpriv --init-groups --reuid "$user" --regid "$user" -- mv "$src_file" "$dst_dir" >/dev/null 2>&1
-    setpriv --init-groups --reuid "$user" --regid "$user" -- gzip -d "$dst_dir/$(basename $src_file)" >/dev/null 2>&1
+    user_exec mkdir -p "$dst_dir" >/dev/null 2>&1
+    user_exec mv "$src_file" "$dst_dir" >/dev/null 2>&1
+    user_exec gzip -d "$dst_dir/$(basename $src_file)" >/dev/null 2>&1
     rc=$?
 fi
 
 # Extracting bziped file
 if [ ! -z "$(echo $src_file |grep -i  '.bz')" ] && [ -z "$x" ]; then
-    setpriv --init-groups --reuid "$user" --regid "$user" -- mkdir -p "$dst_dir" >/dev/null 2>&1
-    setpriv --init-groups --reuid "$user" --regid "$user" -- mv "$src_file" "$dst_dir"# >/dev/null 2>&1
-    setpriv --init-groups --reuid "$user" --regid "$user" -- bzip2 -d "$dst_dir/$(basename $src_file)" >/dev/null 2>&1
+    user_exec mkdir -p "$dst_dir" >/dev/null 2>&1
+    user_exec mv "$src_file" "$dst_dir"# >/dev/null 2>&1
+    user_exec bzip2 -d "$dst_dir/$(basename $src_file)" >/dev/null 2>&1
     rc=$?
 fi
 
 # Extracting ziped archive
 if [ ! -z "$(echo $src_file |grep -i  '.zip')" ]; then
-    setpriv --init-groups --reuid "$user" --regid "$user" -- mkdir -p "$dst_dir" >/dev/null 2>&1
-    setpriv --init-groups --reuid "$user" --regid "$user" -- unzip "$src_file" -d "$dst_dir" >/dev/null 2>&1
+    user_exec mkdir -p "$dst_dir" >/dev/null 2>&1
+    user_exec unzip "$src_file" -d "$dst_dir" >/dev/null 2>&1
     rc=$?
 fi
 
 # Extracting ziped archive
 if [ ! -z "$(echo $src_file |grep -i  '.7z')" ]; then
-    setpriv --init-groups --reuid "$user" --regid "$user" -- mkdir -p "$dst_dir" >/dev/null 2>&1
-    setpriv --init-groups --reuid "$user" --regid "$user" -- mv "$src_file" "$dst_dir" >/dev/null 2>&1
-    setpriv --init-groups --reuid "$user" --regid "$user" -- p7zip -d "$src_file" >/dev/null 2>&1
+    user_exec mkdir -p "$dst_dir" >/dev/null 2>&1
+    user_exec mv "$src_file" "$dst_dir" >/dev/null 2>&1
+    user_exec p7zip -d "$src_file" >/dev/null 2>&1
     rc=$?
 fi
 
@@ -115,19 +115,19 @@ fi
 if [ ! -z "$(echo $src_file |grep -i '.tar')" ] && [ -z "$x" ]; then
     x='yes'
     if [ -z "$test" ] || [ "$test" = "no" ]; then
-        setpriv --init-groups --reuid "$user" --regid "$user" -- mkdir -p "$dst_dir" >/dev/null 2>&1
-        setpriv --init-groups --reuid "$user" --regid "$user" -- tar -xf "$src_file" -C "$dst_dir" --no-wildcards "$selected_dir" $tar_strip_level >/dev/null 2>&1
+        user_exec mkdir -p "$dst_dir" >/dev/null 2>&1
+        user_exec tar -xf "$src_file" -C "$dst_dir" --no-wildcards "$selected_dir" $tar_strip_level >/dev/null 2>&1
         rc=$?
     else
-        setpriv --init-groups --reuid "$user" --regid "$user" -- tar -tf "$src_file" --no-wildcards "$selected_dir" >/dev/null 2>&1
+        user_exec tar -tf "$src_file" --no-wildcards "$selected_dir" >/dev/null 2>&1
         rc=$?
     fi
 fi
 
 # Extracting rared archive
 if [ ! -z "$(echo $src_file |grep -i  '.rar')" ]; then
-    setpriv --init-groups --reuid "$user" --regid "$user" -- mkdir -p "$dst_dir" >/dev/null 2>&1
-    setpriv --init-groups --reuid "$user" --regid "$user" -- unrar "$src_file"  "$dst_dir" >/dev/null 2>&1
+    user_exec mkdir -p "$dst_dir" >/dev/null 2>&1
+    user_exec unrar "$src_file"  "$dst_dir" >/dev/null 2>&1
     rc=$?
 fi
 

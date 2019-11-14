@@ -407,7 +407,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
             rm -rf $HOMEDIR/$user/web/$domain/public_html/*
         fi
         chmod u+w "$HOMEDIR/$user/web/$domain"
-        setpriv --init-groups --reuid "$user" --regid "$user" -- tar -xzpf $tmpdir/web/$domain/domain_data.tar.gz \
+        user_exec tar -xzpf $tmpdir/web/$domain/domain_data.tar.gz \
             -C "$HOMEDIR/$user/web/$domain/" \
             --exclude='logs/*'
         if [ "$?" -ne 0 ]; then

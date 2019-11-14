@@ -56,9 +56,15 @@ is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 
 # Inherit web domain local ip address
 domain_ip=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP')
-local_ip=$(get_real_ip "$domain_ip")
-if [ ! -z "$local_ip" ]; then
+if [ ! -z "$domain_ip" ]; then
+    local_ip=$(get_real_ip "$domain_ip")
     is_ip_valid "$local_ip" "$user"
+
+    ip=$local_ip
+    nat_ip=$(get_ip_value '$NAT')
+    if [ ! -z "$nat_ip" ]; then
+        ip=$nat_ip
+    fi
 else
     get_user_ip
 fi

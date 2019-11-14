@@ -58,8 +58,8 @@ check_hestia_demo_mode
 
 # Inherit web domain local ip address
 domain_ip=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP')
-local_ip=$(get_real_ip "$domain_ip")
-if [ ! -z "$local_ip" ]; then
+if [ ! -z "$domain_ip" ]; then
+    local_ip=$(get_real_ip "$domain_ip")
     is_ip_valid "$local_ip" "$user"
 else
     get_user_ip

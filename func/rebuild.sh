@@ -446,9 +446,10 @@ rebuild_mail_domain_conf() {
     fi
 
     # Inherit web domain local ip address
+    unset -v nat ip local_ip domain_ip
     local domain_ip=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP')
-    local local_ip=$(get_real_ip "$domain_ip")
-    if [ ! -z "$local_ip" ]; then
+    if [ ! -z "$domain_ip" ]; then
+        local local_ip=$(get_real_ip "$domain_ip")
         is_ip_valid "$local_ip" "$user"
     else
         get_user_ip

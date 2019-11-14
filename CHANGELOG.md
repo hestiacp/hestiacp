@@ -19,7 +19,7 @@ All notable changes to this project will be documented in this file.
 ### Bugfixes
 - Added a detection of web root for add .well-known ACME challenge.
 - Reworked Let's Encrypt ACME staging to use Hestia code standards.
-- Fixed issues with Let's Encrupt - use Nginx for Let's Encrypt ACME request if present.
+- Fixed issues with Let's Encrypt - use Nginx for Let's Encrypt ACME request if present.
 - Reworked v-add-sys-ip, removed CentOS/Red Hat support and reworked conditions.
 - Enabled HSTS and force SSL on v-add-letsencrypt-host.
 - Prevented login action for webmail in list user view.
@@ -40,11 +40,11 @@ All notable changes to this project will be documented in this file.
 - Improved page load performance when loading IP ban rules in the Control Panel.
 - Updated panel framework to use jQuery to 3.4.1.
 - Fixed an issue with SFTP fail2ban jail due to missing user.
-- Fixed an issue where temote backup hostname would reject an IP address without reverse DNS (PTR record). (#569)
+- Fixed an issue where remote backup hostname would reject an IP address without reverse DNS (PTR record). (#569)
 - Create default writable folders in user home directory (#580).
 - Added gnupg/gnupg2 check to prevent issues with pubkey installation.
 - Fixed DNS nameserver validation when adding new packages.
-- Implemented additional debug information for Let's Encrupt validation - thanks @shakaran.
+- Implemented additional debug information for Let's Encrypt validation - thanks @shakaran.
 - Disabled alerts for successful cronjob backups.
 - Fixed an issue with suspending resources when logged in as a normal (non admin) user.
 - Fixed an issue with unsuspending a user, PHP-FPM website pool configuration was being deleted.
@@ -57,8 +57,8 @@ All notable changes to this project will be documented in this file.
 ## [1.0.5] - 2019-08-06 - Hotfix
 ### Bugfixes
 - Fix several security issues, thanks to Andrea Cardaci (https://cardaci.xyz/)
-- Rework Let's Encrypt acme staging to use hestia conform standard.
-- Fix if condition, use nginx for Let's Encrypt acme request if present.
+- Rework Let's Encrypt ACME staging to use hestia conform standard.
+- Fix if condition, use nginx for Let's Encrypt ACME request if present.
 
 ## [1.0.4] - 2019-07-09 - Hotfix
 ### Bugfixes

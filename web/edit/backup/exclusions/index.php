@@ -21,7 +21,7 @@ unset($output);
 $v_username = $user;
 foreach ($data['WEB'] as $key => $value) {
     if (!empty($value)){
-        $v_web .= $key . ":" . $value. "\n";
+        $v_web .= $key . ":" . str_replace(",", ":", $value) . "\n";
     } else {
         $v_web .= $key . "\n";
     }

@@ -29,12 +29,11 @@ source $HESTIA/conf/hestia.conf
 
 DEFAULT_BTPL="PHP-7_3"
 num_php_versions=$(ls -d /etc/php/*/fpm/pool.d 2>/dev/null |wc -l)
-echo $num_php_versions
+echo "Found $num_php_versions php versions"
 
 if [ "$num_php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
     # Legacy multiphp
 
-    echo $num_php_versions
     sed -i "/^WEB_BACKEND=/d" $HESTIA/conf/hestia.conf
     echo "WEB_BACKEND='php-fpm'" >> $HESTIA/conf/hestia.conf
 
@@ -43,8 +42,8 @@ if [ "$num_php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
         cp -f "$HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl"  ${WEBTPL}/php-fpm/PHP-${php_ver/\./_}.tpl
     done
 
-    if [ "$WEB_SYSTEM" = 'nginx' ]; then
-        cp -rf "${HESTIA_INSTALL_DIR}/templates/web/nginx" "${WEBTPL}/"
+    if [ ! -z "$WEB_SYSTEM" ]; then
+        cp -rf "${HESTIA_INSTALL_DIR}/templates/web/$WEB_SYSTEM" "${WEBTPL}/"
     fi
 
     # Migrate domains

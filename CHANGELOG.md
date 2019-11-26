@@ -4,7 +4,6 @@ All notable changes to this project will be documented in this file.
 ## [CURRENT] - Development
 ### Features
 - Added support for custom user interface themes.
-- Fixed issues with incorrect font rendering on Windows and Linux.
 - Adjusted default font size for improved readability.
 - Added read only/demo mode function if DEMO_MODE is set to yes in hestia.conf.
 - Added php-imagick module to installer and upgrade scripts.
@@ -14,11 +13,14 @@ All notable changes to this project will be documented in this file.
 - Extended v-extract-fs-archive to allow archive testing and extracting only specific paths (for tar)
 - Added file manager (Tiny File Manager).
 - Allow renaming of existing packages from console (v-rename-package).
-- Webmail ip address is now inherited from web domain when using multiple IPs.
+- Webmail IP address is now inherited from web domain when using multiple IPs.
+- Exim now uses the web domain IP if it exists.
+- Public IP is now used when updating webmail DNS record.
 
 ### Bugfixes
 - Added a detection of web root for add .well-known ACME challenge.
 - Reworked Let's Encrypt ACME staging to use Hestia code standards.
+- Fixed issues with incorrect font rendering on Windows and Linux.
 - Fixed issues with Let's Encrypt - use Nginx for Let's Encrypt ACME request if present.
 - Reworked v-add-sys-ip, removed CentOS/Red Hat support and reworked conditions.
 - Enabled HSTS and force SSL on v-add-letsencrypt-host.
@@ -48,7 +50,10 @@ All notable changes to this project will be documented in this file.
 - Disabled alerts for successful cronjob backups.
 - Fixed an issue with suspending resources when logged in as a normal (non admin) user.
 - Fixed an issue with unsuspending a user, PHP-FPM website pool configuration was being deleted.
-- Fixed potential upgrade issue when using v-update-sys-hestia-git
+- Fixed potential upgrade issue when using v-update-sys-hestia-git.
+- Fixed corruption of global user stats when rebuilding a mail domain.
+- Fixed formatting of backup exclusions textbox.
+- Fixed MultiPHP upgrade script to update all web templates.
 
 ## [1.0.6] - 2019-09-24 - Hotfix
 ### Bugfixes

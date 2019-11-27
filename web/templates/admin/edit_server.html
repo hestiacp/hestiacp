@@ -265,6 +265,19 @@
                                                 <label for="<?=$php_version->name?>"><?=$php_version->name?></label>
                                             </td>
                                         </tr>
+                                            <?php foreach($php_version->usedby as $wd_user => $wd_domains ): ?>
+                                                <?php foreach($wd_domains as $wd_domain ): ?>
+                                                <tr>
+                                                    <td class="vst-text" style="border: 1px lightgrey; padding:0 10px;">
+                                                        <span>
+                                                            <i class="fas fa-user"></i>
+                                                            <?=$wd_user;?>
+                                                        </span>
+                                                        <span class="optional" style="float:right"><?=$wd_domain;?></span>
+                                                    </td>
+                                                </tr>
+                                                <?php endforeach; ?>
+                                            <?php endforeach; ?>
                                         <?php endforeach; ?>
                                         <?php endif; ?>
                                     </table>

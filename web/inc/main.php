@@ -4,6 +4,7 @@ session_start();
 
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
 define('JS_LATEST_UPDATE', '1491697868');
+define('DEFAULT_PHP_VERSION', 'php-7.3');
 
 $i = 0;
 
@@ -372,4 +373,30 @@ function load_hestia_config() {
     foreach ($sys_arr as $key => $value) {
         $_SESSION[$key] = $value;
     }
+}
+
+/**
+ * Returns the list of all web domains from all users grouped by Backend Template used and owner
+ *
+ * @return array
+ */
+function backendtpl_with_webdomains() {
+    exec (HESTIA_CMD . "v-list-users json", $output, $return_var);
+    $users = json_decode(implode('', $output), true);
+    unset($output);
+
+    $backend_list=[];
+    foreach ($users as $user => $user_details) {
+        exec (HESTIA_CMD . "v-list-web-domains ". escapeshellarg($user) . " json", $output, $return_var);
+        $domains = json_decode(implode('', $output), true);
+        unset($output);
+
+        foreach ($domains as $domain => $domain_details) {
+            if (!empty($domain_details['BACKEND'])) {
+                $backend = $domain_details['BACKEND'];
+                $backend_list[$backend][$user][] = $domain;
+            }
+        }
+    }
+    return $backend_list;
 }

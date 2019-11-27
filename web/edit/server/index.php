@@ -50,7 +50,8 @@ sort($v_php_versions);
 if(empty($backend_templates))
     $v_php_versions=[];
 
-$v_php_versions = array_map(function($php_version) use ($backend_templates, $v_php_versions) {
+$backends_active = backendtpl_with_webdomains();
+$v_php_versions = array_map(function($php_version) use ($backend_templates, $backends_active) {
     // Mark installed php versions
 
     if(stripos($php_version,'php') !== 0)
@@ -59,17 +60,29 @@ $v_php_versions = array_map(function($php_version) use ($backend_templates, $v_p
     $phpinfo = (object) [
         "name" => $php_version,
         "tpl" => strtoupper(str_replace('.', '_', $php_version)),
-        "version" => str_ireplace('php-', '', $php_version)
+        "version" => str_ireplace('php-', '', $php_version),
+        "usedby" => [],
     ];
 
     if(in_array($phpinfo->tpl, $backend_templates)) {
         $phpinfo->installed = true;
     }
 
-    if(array_search($phpinfo->name, array_reverse($v_php_versions, true)) == array_key_last($v_php_versions)) {
+    if (array_key_exists($phpinfo->tpl, $backends_active)) {
+        // Prevent used php version to be removed
+        if($phpinfo->installed)
+            $phpinfo->protected = true;
+        $phpinfo->usedby = $backends_active[$phpinfo->tpl];
+    }
+
+    if ($phpinfo->name == DEFAULT_PHP_VERSION) {
         // Prevent default php version to be removed
         if($phpinfo->installed)
             $phpinfo->protected = true;
+
+        if (!empty($backends_active['default'])) {
+            $phpinfo->usedby = array_merge_recursive($phpinfo->usedby,$backends_active['default'] );
+        }
     }
 
     return $phpinfo;

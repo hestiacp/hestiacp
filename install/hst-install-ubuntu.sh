@@ -1608,7 +1608,9 @@ fi
 # Get public IP
 pub_ip=$(curl --ipv4 -s https://ip.hestiacp.com/)
 if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
+    sed -i '/exit 0/d' /etc/rc.local
     echo "$HESTIA/bin/v-update-sys-ip" >> /etc/rc.local
+    echo "exit 0" >> /etc/rc.local
     $HESTIA/bin/v-change-sys-ip-nat $ip $pub_ip > /dev/null 2>&1
     ip=$pub_ip
 fi

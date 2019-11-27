@@ -184,7 +184,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
         fi
 
         # Backup ssl proxy config
-        if [ ! -z "$PROXY_SYSTEM" ] && [ "$SSL" = 'yes' ]; then
+        if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ] && [ "$SSL" = 'yes' ]; then
             if [ -e "$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.ssl.conf" ]; then
                 cp $HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.ssl.conf* conf/
             elif [ -e "$HOMEDIR/$user/conf/web/$domain.$PROXY_SYSTEM.ssl.conf" ]; then

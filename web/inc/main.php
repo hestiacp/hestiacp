@@ -90,6 +90,7 @@ if (isset($_SESSION['language'])) {
 
 if (isset($_SESSION['user'])) {
     $user = $_SESSION['user'];
+    load_hestia_config();
 }
 
 if (isset($_SESSION['look']) && ( $_SESSION['look'] != 'admin' )) {
@@ -361,4 +362,14 @@ function is_it_mysql_or_mariadb() {
     $mysqltype='mysql';
     if (isset($data['mariadb'])) $mysqltype='mariadb';
     return $mysqltype;
+}
+
+function load_hestia_config() {
+    // Check system configuration
+    exec (HESTIA_CMD . "v-list-sys-config json", $output, $return_var);
+    $data = json_decode(implode('', $output), true);
+    $sys_arr = $data['config'];
+    foreach ($sys_arr as $key => $value) {
+        $_SESSION[$key] = $value;
+    }
 }

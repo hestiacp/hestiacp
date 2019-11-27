@@ -148,12 +148,7 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
 }
 
 // Check system configuration
-exec (HESTIA_CMD . "v-list-sys-config json", $output, $return_var);
-$data = json_decode(implode('', $output), true);
-$sys_arr = $data['config'];
-foreach ($sys_arr as $key => $value) {
-    $_SESSION[$key] = $value;
-}
+load_hestia_config();
 
 // Detect language
 if (empty($_SESSION['language'])) {

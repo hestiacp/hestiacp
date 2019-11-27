@@ -78,6 +78,9 @@ if [ -f "$php_fpm" ]; then
     echo "apt-get purge $mph"
 fi
 
+# Cleanup php folder
+[[ -d /etc/php/$version ]] && rm -rf "/etc/php/$version"
+
 
 #----------------------------------------------------------#
 #                       Hestia                             #

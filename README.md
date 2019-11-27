@@ -75,11 +75,17 @@ In order to install a development build based on the latest published code, you 
 
 **PLEASE NOTE: Development builds should not be installed on systems with live production data without understanding the potential risks involved.**
 
-To install a development build, run:
+To install a development build, first ensure that you have the latest Git upgrade script installed which handles new dependencies added after the 1.0.x branch:
+```bash
+wget -O $HESTIA/bin/v-update-sys-hestia-git https://raw.githubusercontent.com/hestiacp/hestiacp/master/bin/v-update-sys-hestia-git
+chmod +x $HESTIA/bin/v-update-sys-hestia-git
+```
+
+Then run the following command:
 ```bash
 v-update-sys-hestia-git branchname
 ```
-Replace *branchname* with the name of the branch you wish to install from, such as release or master (stable and current development branches, respectively). 
+Replace *branchname* with the name of the branch you wish to install from, such as **release** or **master** (stable and current development branches, respectively). 
 
 Reporting Issues
 =============================

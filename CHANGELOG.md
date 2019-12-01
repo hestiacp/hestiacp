@@ -54,6 +54,7 @@ All notable changes to this project will be documented in this file.
 - Fixed corruption of global user stats when rebuilding a mail domain.
 - Fixed formatting of backup exclusions textbox.
 - Fixed MultiPHP upgrade script to update all web templates.
+- Fixed report issue link in installer scripts.
 
 ## [1.0.6] - 2019-09-24 - Hotfix
 ### Bugfixes

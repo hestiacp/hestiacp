@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 - Webmail IP address is now inherited from web domain when using multiple IPs.
 - Exim now uses the web domain IP if it exists.
 - Public IP is now used when updating webmail DNS record.
+- Added PHP 7.4 to MultiPHP.
 
 ### Bugfixes
 - Added a detection of web root for add .well-known ACME challenge.

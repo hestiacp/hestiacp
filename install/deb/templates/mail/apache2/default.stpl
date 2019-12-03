@@ -1,6 +1,6 @@
 <VirtualHost %ip%:%web_ssl_port%>
     ServerName %domain%
-    ServerAlias %alias
+    ServerAlias %alias%
     Alias / /var/lib/roundcube/
     Alias /error/ %home%/%user%/web/%root_domain%/document_errors/
     #SuexecUserGroup %user% %group%

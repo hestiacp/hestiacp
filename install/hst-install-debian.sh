@@ -1452,7 +1452,7 @@ if [ "$dovecot" = 'yes' ]; then
     cp -rf $HESTIA_INSTALL_DIR/dovecot /etc/
     cp -f $HESTIA_INSTALL_DIR/logrotate/dovecot /etc/logrotate.d/
     chown -R root:root /etc/dovecot*
-    if [ "$release" -eq 9 ]; then
+    if [ "$release" -eq 9 ] || [ "$release" -eq 10 ]; then
         rm -f /etc/dovecot/conf.d/15-mailboxes.conf
     fi
     update-rc.d dovecot defaults

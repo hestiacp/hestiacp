@@ -1615,6 +1615,26 @@ if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     ip=$pub_ip
 fi
 
+# Configuring libapache2-mod-remoteip
+if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
+    cd /etc/apache2/mods-available
+    echo "<IfModule mod_remoteip.c>" > remoteip.conf
+    echo "  RemoteIPHeader X-Real-IP" >> remoteip.conf
+    if [ "$local_ip" != "127.0.0.1" ] && [ "$pub_ip" != "127.0.0.1" ]; then
+        echo "  RemoteIPInternalProxy 127.0.0.1" >> remoteip.conf
+    fi
+    if [ ! -z "$local_ip" ] && [ "$local_ip" != "$pub_ip" ]; then
+        echo "  RemoteIPInternalProxy $local_ip" >> remoteip.conf
+    fi
+    if [ ! -z "$pub_ip" ]; then
+        echo "  RemoteIPInternalProxy $pub_ip" >> remoteip.conf
+    fi
+    echo "</IfModule>" >> remoteip.conf
+    sed -i "s/LogFormat \"%h/LogFormat \"%a/g" /etc/apache2/apache2.conf
+    a2enmod remoteip >> $LOG
+    systemctl restart apache2
+fi
+
 # Configuring MariaDB host
 if [ "$mysql" = 'yes' ]; then
     $HESTIA/bin/v-add-database-host mysql localhost root $mpass

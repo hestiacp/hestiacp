@@ -106,3 +106,10 @@ if [ -e "$HESTIA/data/templates/dns/office365.tpl" ]; then
     echo "(*) Updating DNS template for Office 365..."
     cp -f $HESTIA/install/deb/templates/dns/office365.tpl $HESTIA/data/templates/dns/office365.tpl
 fi
+
+# Ensure that backup compression level is correctly set
+GZIP_LVL_CHECK=$(cat $HESTIA/conf/hestia.conf | grep BACKUP_GZIP)
+if [ -z "$GZIP_LVL_CHECK" ]; then
+    echo "(*) Updating backup compression level variable..."
+    $BIN/v-change-sys-config-value "BACKUP_GZIP" '9'
+fi

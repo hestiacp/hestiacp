@@ -690,18 +690,19 @@ body {
   overflow-x: hidden;
   font-size: 0.9rem;
   height: 100%;
-  color: #929292;
+  color: #7c7c7c;
 }
 
 .body-login, .body-reset {
   height: auto;
   padding-top: 10%;
-  background: #5f7eb3 !important;
+  background: rgb(102,158,231) !important;
+  background: radial-gradient(circle, rgba(102,158,231,1) 0%, rgba(43,86,177,1) 100%) !important;
 }
 
 a {
   text-decoration: none;
-  color: #929292;
+  color: #7c7c7c;
 }
 
 .disabled {
@@ -1026,13 +1027,14 @@ a {
 }
 
 .notification-container a {
-  color: #5ABDB5;/* #eee;*/
+  font-weight: 600;
+  color: #1a4492;/* #eee;*/
 }
 .notification-container a:hover {
-  color: #2CA99B;
+  color: #4a87fb;
 }
 .notification-container a:active {
-  color: #00C0C0;
+  color: #1a4492;
 }
 
 .notification-container .icon {
@@ -1127,15 +1129,17 @@ form#vstobjects .alert {
   float:left;
   overflow: hidden;
   background-color: #f5f5f5;
-  border:1px solid #e6e6e6;
+  border:1px solid #d3d3d3;
   box-sizing: border-box;
   width:200px;
   min-height:260px;
   margin-top:3em;
-  margin-right:3em;
-  box-shadow: 0px 0px 3px rgba(0,0,0,0.1);
+  margin-right:4em;
+  padding-bottom: 0.5em;
+  box-shadow: 0px 1px 4px rgba(0,0,0,0.2);
   color: #353535;
-
+  border-radius: 4px;
+  text-align: center;
 }
 
 .card.disable {
@@ -1164,12 +1168,11 @@ form#vstobjects .alert {
 .card .card-details p {
   margin: 0 0 0.3em 0;
   font-size: 1em;
-  text-align: left;
 }
 
 .card p.card-title {
-  font-size: 1.2em;
-  font-weight: 500;
+  font-size: 1.1em;
+  font-weight: 600;
 }
 
 .card .card-thumb {
@@ -1184,10 +1187,10 @@ form#vstobjects .alert {
   max-width: 200px;
   height: auto;
   width: auto;
-
 }
 
 .card button {
+  margin-top: 0.5em;
   margin:0.3em;
 }
 
@@ -1723,7 +1726,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 
 .l-unit-ft {
-  color: #929292;
+  color: #7c7c7c;
   padding: 0 0 0 15px;
 }
 
@@ -2850,7 +2853,8 @@ td.hint {
               inset 0px 0px 3px rgba(255,255,255,0.5) !important;
   text-shadow: 0px 1px 1px rgba(255,255,255,0.6) !important;
 }
-.ui-button:hover, .button:hover, .ui-button.cancel:hover, .button.cancel:hover {
+.ui-button:hover, .button:hover, .ui-button.cancel:hover, .button.cancel:hover,
+.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit:hover {
   color: #3b9de8 !important;
   text-shadow: 1px 1px rgba(255,255,255,0.5) !important;
   border: 1px solid #54a6e5 !important;
@@ -2862,7 +2866,8 @@ td.hint {
 }
 .ui-button:focus,.ui-button:active,
 .button:active,.button:focus,.ui-button.cancel:focus,.ui-button.cancel:active,
-.button.cancel:active,.button.cancel:focus {
+.button.cancel:active,.button.cancel:focus, .ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit,
+.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit:active {
   border: 1px solid #378ccd !important;
   background: linear-gradient(to bottom, rgba(210,232,250,1) 0%,rgba(187,220,247,1) 50%,rgba(162,207,244,1) 51%,rgba(194,224,248,1) 100%) !important;
   color: #046c98 !important;
@@ -2877,6 +2882,10 @@ td.hint {
   background: transparent !important;
   box-shadow: none !important;
   text-shadow: 0px 1px rgba(255,255,255,0.5);
+}
+
+.ui-dialog .ui-dialog-buttonpane button span.ui-button-text {
+  padding: 2px !important;
 }
 
 .ui-button-text-only .selected {
@@ -3237,7 +3246,7 @@ form#vstobjects.suspended {
 }
 
 .pill {
-  border-radius: 18px;
+  border-radius: 12px;
   display: inline-block;
   text-shadow: 0px 1px 2px rgba(0,0,0,0.4);
 }
@@ -3267,7 +3276,7 @@ form#vstobjects.suspended {
   line-height: 24px;
   border-radius: 50%;
   font-weight: 600;
-  box-shadow: 0px 1px 3px rgba(120,120,120,0.6);
+  box-shadow: 0px 0px 3px rgba(120,120,120,0.6);
   text-shadow: 0px 1px 2px rgba(0,0,0,0.5);
 }
 
@@ -3289,7 +3298,7 @@ form#vstobjects.suspended {
 }
 
 .pill.gray, .badge.gray {
-  border: 1px solid #ddd;
+  border: 1px solid #fff;
   background-color: #eaeaea;
   color: #6c6c6c;
   text-shadow: 0px 1px #fafafa !important;
@@ -3633,10 +3642,10 @@ form#vstobjects.suspended {
 .ui-dialog {
   font-family: 'Exo', Arial, Helvetica, sans-serif !important;
   font-weight: 500 !important;
-  background-color: rgba(245,245,245,0.87) !important;
-  box-shadow: 0 8px 50px 0 rgba(0, 0, 0, 0.55) !important;
+  background-color: rgba(255,255,255,0.9) !important;
+  box-shadow: 0 8px 40px 0 rgba(0, 0, 0, 0.35) !important;
   border-radius: 6px !important;
-  border: 1px solid rgba(255,255,255,0.9) !important;
+  border: 2px solid rgba(255,255,255,0.95) !important;
   text-align: center !important;
 }
 
@@ -3646,8 +3655,9 @@ form#vstobjects.suspended {
 }
 
 .ui-dialog .ui-dialog-title {
-  color: #046c98 !important;
-  font-size: 1.1em !important;
+  margin: 0px !important;
+  color: #305ba9 !important;
+  font-size: 1.2em !important;
   text-transform: none !important;
   letter-spacing: -0.01em !important;
   text-align: center !important;

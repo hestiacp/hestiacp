@@ -1027,13 +1027,14 @@ a {
 }
 
 .notification-container a {
-  color: #5ABDB5;/* #eee;*/
+  font-weight: 600;
+  color: #1a4492;/* #eee;*/
 }
 .notification-container a:hover {
-  color: #2CA99B;
+  color: #4a87fb;
 }
 .notification-container a:active {
-  color: #00C0C0;
+  color: #1a4492;
 }
 
 .notification-container .icon {

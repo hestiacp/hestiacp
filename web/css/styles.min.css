@@ -3639,10 +3639,10 @@ form#vstobjects.suspended {
 .ui-dialog {
   font-family: 'Exo', Arial, Helvetica, sans-serif !important;
   font-weight: 500 !important;
-  background-color: rgba(245,245,245,0.87) !important;
-  box-shadow: 0 8px 50px 0 rgba(0, 0, 0, 0.55) !important;
+  background-color: rgba(255,255,255,0.9) !important;
+  box-shadow: 0 8px 40px 0 rgba(0, 0, 0, 0.35) !important;
   border-radius: 6px !important;
-  border: 1px solid rgba(255,255,255,0.9) !important;
+  border: 2px solid rgba(255,255,255,0.95) !important;
   text-align: center !important;
 }
 

@@ -2879,6 +2879,10 @@ td.hint {
   text-shadow: 0px 1px rgba(255,255,255,0.5);
 }
 
+.ui-dialog .ui-dialog-buttonpane button span.ui-button-text {
+  padding: 2px !important;
+}
+
 .ui-button-text-only .selected {
   font-weight: 600 !important;
 }

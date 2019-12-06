@@ -3650,8 +3650,9 @@ form#vstobjects.suspended {
 }
 
 .ui-dialog .ui-dialog-title {
-  color: #046c98 !important;
-  font-size: 1.1em !important;
+  margin: 0px !important;
+  color: #305ba9 !important;
+  font-size: 1.2em !important;
   text-transform: none !important;
   letter-spacing: -0.01em !important;
   text-align: center !important;

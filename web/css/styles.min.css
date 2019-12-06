@@ -690,7 +690,7 @@ body {
   overflow-x: hidden;
   font-size: 0.9rem;
   height: 100%;
-  color: #929292;
+  color: #7c7c7c;
 }
 
 .body-login, .body-reset {
@@ -702,7 +702,7 @@ body {
 
 a {
   text-decoration: none;
-  color: #929292;
+  color: #7c7c7c;
 }
 
 .disabled {
@@ -1726,7 +1726,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 
 .l-unit-ft {
-  color: #929292;
+  color: #7c7c7c;
   padding: 0 0 0 15px;
 }
 

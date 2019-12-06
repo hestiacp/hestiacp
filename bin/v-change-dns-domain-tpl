@@ -115,6 +115,16 @@ if [ "$template" = "default" ] || [ "$template" = "child-ns" ]; then
     fi
 fi
 
+# Set correct domain name formatting for Office 365/Microsoft 365 MX records
+if [ "$template" = "office365" ]; then
+    check_dns_domain=$(is_object_valid 'dns' 'DOMAIN' "$domain")
+    if [ "$?" -eq 0 ]; then
+        record='@'
+        formatted_domain=$(echo "$domain" | sed 's/\./-/g')
+        $BIN/v-add-dns-record $user $domain $record MX "${formatted_domain}.mail.protection.outlook.com." '0'
+    fi
+fi
+
 # Updating zone
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
     update_domain_serial

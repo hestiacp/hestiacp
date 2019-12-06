@@ -100,3 +100,9 @@ if fail2ban-client status sshd > /dev/null 2>&1 ; then
         mv /etc/fail2ban/jail.d/defaults-debian.conf $HESTIA_BACKUP/conf/fail2ban/jail.d/
     fi
 fi
+
+# Update Office 365/Microsoft 365 DNS template
+if [ -e "$HESTIA/data/templates/dns/office365.tpl" ]; then
+    echo "(*) Updating DNS template for Office 365..."
+    cp -f $HESTIA/install/deb/templates/dns/office365.tpl $HESTIA/data/templates/dns/office365.tpl
+fi

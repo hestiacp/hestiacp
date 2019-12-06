@@ -3245,7 +3245,7 @@ form#vstobjects.suspended {
 }
 
 .pill {
-  border-radius: 18px;
+  border-radius: 12px;
   display: inline-block;
   text-shadow: 0px 1px 2px rgba(0,0,0,0.4);
 }

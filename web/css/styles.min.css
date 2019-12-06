@@ -1117,13 +1117,14 @@ form#vstobjects .alert {
 }
 
 .app-list.cards {
-  xdisplay: flex;
-  xflex-wrap: wrap;
-  align-content: center;
-  margin-bottom: 10rem;
-
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
+.app-form {
+  padding:2em 1em 2em 1em;
+}
 
 .card {
   float:left;
@@ -1133,8 +1134,7 @@ form#vstobjects .alert {
   box-sizing: border-box;
   width:200px;
   min-height:260px;
-  margin-top:3em;
-  margin-right:4em;
+  margin:1em;
   padding-bottom: 0.5em;
   box-shadow: 0px 1px 4px rgba(0,0,0,0.2);
   color: #353535;
@@ -1149,13 +1149,6 @@ form#vstobjects .alert {
 .card.disable .card-thumb {
   filter: grayscale(100%);
   opacity: 0.3;
-}
-
-.card:nth-child(4n+1) {
-  clear:left;
-}
-.card:nth-child(4n) {
-  margin-right:0;
 }
 
 .card .card-details {

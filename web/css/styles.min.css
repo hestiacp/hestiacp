@@ -696,7 +696,8 @@ body {
 .body-login, .body-reset {
   height: auto;
   padding-top: 10%;
-  background: #5f7eb3 !important;
+  background: rgb(102,158,231) !important;
+  background: radial-gradient(circle, rgba(102,158,231,1) 0%, rgba(43,86,177,1) 100%) !important;
 }
 
 a {

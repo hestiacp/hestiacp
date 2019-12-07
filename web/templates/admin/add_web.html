@@ -203,30 +203,13 @@
                             <td>
                                 <table style="display:<?php if (empty($v_ssl)) { echo 'none';} else {echo 'block';}?>;" id="ssltable">
                                     <tr>
-                                      <td class="step-left input-label vst-text">
-                                          <label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_letsencrypt(this)"> <?php print __('Lets Encrypt Support');?></label>
-                                      </td>
-                                  </tr>
-                                  <tr>
-                                      <td class="vst-text input-label lets-encrypt-note step-left" >
-                                          <?= __('Your certificate will be automatically issued in 5 minutes')?>
-                                      </td>
-                                  </tr>
-                                  <tr>
-                                        <td class="vst-text input-label step-left">
-                                            <?php print __('SSL Home Directory');?>
+                                        <td class="step-left input-label vst-text">
+                                            <label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_letsencrypt(this)"> <?php print __('Lets Encrypt Support');?></label>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="step-left">
-                                            <select class="vst-list" name="v_ssl_home">
-                                                <option value='same' <?php if ($v_ssl_home == 'same') echo "selected";?>>
-                                                     public_html
-                                                </option>
-                                                <option value='single' <?php if ($v_ssl_home == 'single') echo "selected";?>>
-                                                    public_shtml
-                                                </option>
-                                            </select>
+                                        <td class="vst-text input-label lets-encrypt-note step-left" >
+                                            <?= __('Your certificate will be automatically issued in 5 minutes')?>
                                         </td>
                                     </tr>
                                     <tr>

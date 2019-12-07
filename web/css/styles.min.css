@@ -237,8 +237,8 @@
 @font-face {
   font-family: 'Inconsolata';
   src: local('Inconsolata Bold'), local('Inconsolata-Bold'),
-      url('../webfonts/hinted-Inconsolata-Bold.woff2') format('woff2'),
-      url('../webfonts/hinted-Inconsolata-Bold.woff') format('woff');
+      url('../webfonts/Inconsolata-Bold.woff2') format('woff2'),
+      url('../webfonts/Inconsolata-Bold.woff') format('woff');
   font-weight: bold;
   font-style: normal;
 }
@@ -246,8 +246,8 @@
 @font-face {
   font-family: 'Inconsolata';
   src: local('Inconsolata Regular'), local('Inconsolata-Regular'),
-      url('../webfonts/hinted-Inconsolata-Regular.woff2') format('woff2'),
-      url('../webfonts/hinted-Inconsolata-Regular.woff') format('woff');
+      url('../webfonts/Inconsolata-Regular.woff2') format('woff2'),
+      url('../webfonts/Inconsolata-Regular.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }

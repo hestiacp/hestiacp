@@ -2303,6 +2303,9 @@ body.mobile .l-icon-shortcuts {
   box-shadow: 0px 2px 4px rgba(120,120,120,0.25),
               inset 0px 0px 1px rgba(255,255,255,0.9);
   z-index: 200;
+  height: 16px;
+  width: 16px;
+  text-align: center;
 }
 
 

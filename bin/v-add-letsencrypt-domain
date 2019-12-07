@@ -386,10 +386,12 @@ fi
 # Adding SSL
 if [ -z "$mail" ]; then
     ssl_home=$(search_objects 'web' 'LETSENCRYPT' 'yes' 'SSL_HOME')
-    $BIN/v-delete-web-domain-ssl $user $domain > /dev/null 2>&1
+    ssl_enabled="$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL')"
+    [[ "$ssl_enabled" = "yes" ]] && $BIN/v-delete-web-domain-ssl $user $domain > /dev/null 2>&1
     $BIN/v-add-web-domain-ssl $user $domain $ssl_dir $ssl_home
 else
-    $BIN/v-delete-mail-domain-ssl $user $root_domain >/dev/null 2>&1
+    ssl_enabled="$(get_object_value 'mail' 'DOMAIN' "$root_domain" '$SSL')"
+    [[ "$ssl_enabled" = "yes" ]] && $BIN/v-delete-mail-domain-ssl $user $root_domain >/dev/null 2>&1
     $BIN/v-add-mail-domain-ssl $user $root_domain $ssl_dir
 fi
 

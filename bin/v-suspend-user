@@ -51,14 +51,14 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
     $BIN/v-suspend-web-domains $user $restart
 fi
 
-# Suspending dns domains
-if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
-    $BIN/v-suspend-dns-domains $user $restart
-fi
-
 # Suspending mail domains
 if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
     $BIN/v-suspend-mail-domains $user
+fi
+
+# Suspending dns domains
+if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
+    $BIN/v-suspend-dns-domains $user $restart
 fi
 
 # Suspending datbabases

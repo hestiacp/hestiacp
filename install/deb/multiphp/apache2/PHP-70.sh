@@ -29,7 +29,7 @@ php_admin_value[upload_max_filesize] = 80M
 php_admin_value[max_execution_time] = 20
 php_admin_value[post_max_size] = 80M
 php_admin_value[memory_limit] = 256M
-php_admin_value[sendmail_path] = \"/usr/sbin/sendmail -t -i -f info@$2\"
+php_admin_value[sendmail_path] = /usr/sbin/sendmail -t -i -f info@$2
 php_admin_flag[mysql.allow_persistent] = off
 php_admin_flag[safe_mode] = off
 

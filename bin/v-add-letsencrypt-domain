@@ -34,7 +34,6 @@ encode_base64() {
 
 # Let's Encrypt v2 curl function
 query_le_v2() {
-
     protected='{"nonce": "'$3'",'
     protected=''$protected' "url": "'$1'",'
     protected=''$protected' "alg": "RS256", "kid": "'$KID'"}'
@@ -50,7 +49,10 @@ query_le_v2() {
     post_data=$post_data'"payload":"'"$payload_"'",'
     post_data=$post_data'"signature":"'"$signature_"'"}'
 
-    curl -s -i -d "$post_data" "$1" -H "$content"
+    # Save http response to file passed as "$4" arg or print to stdout if not provided
+    # http response headers are always sent to stdout
+    local save_to_file=${4:-"/dev/stdout"}
+    curl --silent --dump-header /dev/stdout --data "$post_data" "$1" --header "$content" --output "$save_to_file"
 }
 
 
@@ -358,7 +360,11 @@ if [[ "$status" -ne 200 ]]; then
 fi
 
 # Downloading signed certificate / STEP 7
-curl -s "$certificate" -o $ssl_dir/$domain.pem
+answer=$(query_le_v2 "$certificate" "" "$nonce" "$ssl_dir/$domain.pem")
+status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
+if [[ "$status" -ne 200 ]]; then
+    check_result $E_NOTEXIST "Let's Encrypt downloading signed cert failed status:$status"
+fi
 
 # Splitting up downloaded pem
 crt_end=$(grep -n END $ssl_dir/$domain.pem |head -n1 |cut -f1 -d:)

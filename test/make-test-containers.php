@@ -315,7 +315,7 @@ foreach ($containers as $container) {
 
     # Use LE sandbox server, prevents hitting rate limits
     system( 'lxc exec '.$container['lxc_name'].' -- bash -c "sed -i \'/LE_STAGING/d\' /usr/local/hestia/conf/hestia.conf"');
-    system( 'lxc exec '.$container['lxc_name'].' -- bash -c "echo \'LE_STAGING=\"YES\"\' >> /usr/local/hestia/conf/hestia.conf"');
+    system( 'lxc exec '.$container['lxc_name'].' -- bash -c "echo \'LE_STAGING=\"yes\"\' >> /usr/local/hestia/conf/hestia.conf"');
 
     system( 'lxc exec '.$container['lxc_name'].' -- bash -c "service hestia restart"');
 }

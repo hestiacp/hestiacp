@@ -1542,8 +1542,8 @@ if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     mysql -e "CREATE DATABASE roundcube"
     mysql -e "GRANT ALL ON roundcube.*
         TO roundcube@localhost IDENTIFIED BY '$r'"
-    sed -i "s/vtIOjLZo9kffJoqzpSbm5r1r/$rcDesKey/g" /etc/roundcube/config.inc.php
     sed -i "s/%password%/$r/g" /etc/roundcube/debian-db-roundcube.php
+    sed -i "s/%des_key%/$rcDesKey/g" /etc/roundcube/config.inc.php
     sed -i "s/localhost/$servername/g" /etc/roundcube/plugins/password/config.inc.php
     mysql roundcube < /usr/share/dbconfig-common/data/roundcube/install/mysql
 

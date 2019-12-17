@@ -113,3 +113,9 @@ if [ -z "$GZIP_LVL_CHECK" ]; then
     echo "(*) Updating backup compression level variable..."
     $BIN/v-change-sys-config-value "BACKUP_GZIP" '9'
 fi
+
+# Randomize Rouncube des_key for better security
+if [ -f "/etc/roundcube/config.inc.php" ]; then
+    rcDesKey="$(openssl rand -base64 30 | tr -d "/" | cut -c1-24)"
+    sed -i "s/vtIOjLZo9kffJoqzpSbm5r1r/$rcDesKey/g" /etc/roundcube/config.inc.php
+fi

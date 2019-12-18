@@ -23,7 +23,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 
 # Define software versions
 pma_v='4.9.2'
-multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3")
+multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
 fpm_v="7.3"
 
 # Defining software pack for all distros

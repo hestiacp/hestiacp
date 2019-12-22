@@ -828,22 +828,6 @@ if [ "$phpfpm" = 'yes' ]; then
     software=$(echo "$software" | sed -e "s/php$fpm_v-cgi//")
     software=$(echo "$software" | sed -e "s/php$fpm_v-mysql//")
 fi
-if [ "$multiphp" = 'yes' ]; then
-    software=$(echo "$software" | sed -e "s/ php$fpm_v //")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-auth-sasl//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-cgi//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-common//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-curl//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-mail-mime//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-mysql//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-net-sieve//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-net-smtp//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-net-socket//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-pear//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-php-gettext//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-phpseclib//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-pgsql//")
-fi
 if [ -d "$withdebs" ]; then
     software=$(echo "$software" | sed -e "s/hestia-nginx//")
     software=$(echo "$software" | sed -e "s/hestia-php//")

@@ -17,7 +17,7 @@ source $HESTIA/conf/hestia.conf
 #   Change Hestia WEB_BACKEND from null to php-fpm
 #   Create backend templates ex: PHP-7_3, PHP-5_6 (in $HESTIA/data/templates/web/php-fpm/)
 #   v-update-web-templates
-#   Loop trough all web domains
+#   Loop through all web domains
 #   If official multiphp tpl is used ex: PHP-72, then change backend tpl and set app web template to default
 #       ( old default.tpl backend maps to PHP-7_3 )
 #   If not, parse php version from tpl file , fallback to latest version,
@@ -65,6 +65,8 @@ if [ "$num_php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
                 backend_tpl="PHP-7_2"
             elif [ "$domain_tpl" = "PHP-73" ] || [ "$domain_tpl" = "default" ] || [ -z "$domain_tpl" ]; then
                 backend_tpl="PHP-7_3"
+            elif [ "$domain_tpl" = "PHP-74"]; then
+                backend_tpl="PHP-7_4"
             else
                 # Custom domain template used
                 echo "Domain is using a custom multiphp template (or non-multiphp one)"

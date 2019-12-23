@@ -67,7 +67,7 @@ if [ -f "$pool_file_72" ]; then
 fi
 
 if [ -f "$pool_file_73" ]; then
-    rm $pool_file_72
+    rm $pool_file_73
     service php7.3-fpm restart
 fi
 

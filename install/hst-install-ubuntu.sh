@@ -1608,6 +1608,8 @@ if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     fi
     echo "$HESTIA/bin/v-update-sys-ip" >> /etc/rc.local
     echo "exit 0" >> /etc/rc.local
+    chmod +x /etc/rc.local
+    systemctl enable rc-local
     $HESTIA/bin/v-change-sys-ip-nat $ip $pub_ip > /dev/null 2>&1
     ip=$pub_ip
 fi

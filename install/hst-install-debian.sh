@@ -1836,11 +1836,11 @@ $HESTIA/bin/v-add-user-notification admin 'Welcome!' 'For more information on ho
 echo "(!) IMPORTANT: You must logout or restart the server before continuing."
 echo ""
 if [ "$interactive" = 'yes' ]; then
-    echo -n " Do you want to logout now? [Y/N] "
+    echo -n " Do you want to reboot now? [Y/N] "
     read resetshell
 
     if [ "$resetshell" = "Y" ] || [ "$resetshell" = "y" ]; then
-        exit
+        reboot
     fi
 fi
 

@@ -31,14 +31,10 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     apparmor-utils awstats bc bind9 bsdmainutils bsdutils clamav-daemon
     cron curl dnsutils dovecot-imapd dovecot-pop3d e2fslibs e2fsprogs exim4
     exim4-daemon-heavy expect fail2ban flex ftp git idn imagemagick
-    libapache2-mod-fcgid libapache2-mod-php$fpm_v libapache2-mod-rpaf
-    libapache2-mod-ruid2 lsof mc mariadb-client mariadb-common mariadb-server
-    nginx  ntpdate php$fpm_v php$fpm_v-cgi php$fpm_v-common php$fpm_v-curl
-    phpmyadmin php$fpm_v-mysql php$fpm_v-imap php$fpm_v-ldap php$fpm_v-apcu 
-    phppgadmin php$fpm_v-pgsql php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli
-    php$fpm_v-common php$fpm_v-gd php$fpm_v-intl php$fpm_v-json php$fpm_v-zip 
-    php$fpm_v-mbstring php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline
-    php$fpm_v-xml postgresql postgresql-contrib proftpd-basic quota
+    libapache2-mod-fcgid libapache2-mod-php libapache2-mod-rpaf
+    libapache2-mod-ruid2 lsof mc mariadb-client mariadb-common mariadb-server nginx
+    ntpdate php php-cgi php-common php-curl phpmyadmin php-mysql php-imap php-ldap
+    php-apcu phppgadmin php-pgsql postgresql postgresql-contrib proftpd-basic quota
     roundcube-core roundcube-mysql roundcube-plugins rrdtool rssh spamassassin
     sudo hestia hestia-nginx hestia-php vim-common vsftpd whois zip acl sysstat setpriv"
 
@@ -711,7 +707,7 @@ if [ "$apache" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/libapache2-mod-ruid2//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-rpaf//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-fcgid//")
-    software=$(echo "$software" | sed -e "s/libapache2-mod-php$fpm_v//")
+    software=$(echo "$software" | sed -e "s/libapache2-mod-php//")
 fi
 if [ "$vsftpd" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/vsftpd//")
@@ -748,60 +744,66 @@ if [ "$dovecot" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/roundcube-plugins//")
 fi
 if [ "$mysql" = 'no' ]; then
-    software=$(echo "$software" | sed -e "s/mariadb-server//")
-    software=$(echo "$software" | sed -e "s/mariadb-client//")
-    software=$(echo "$software" | sed -e "s/mariadb-common//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-mysql//")
+    software=$(echo "$software" | sed -e 's/mariadb-server//')
+    software=$(echo "$software" | sed -e 's/mariadb-client//')
+    software=$(echo "$software" | sed -e 's/mariadb-common//')
+    software=$(echo "$software" | sed -e 's/php-mysql//')
     if [ "$multiphp" = 'yes' ]; then
         for v in "${multiphp_v[@]}"; do
             software=$(echo "$software" | sed -e "s/php$v-mysql//")
             software=$(echo "$software" | sed -e "s/php$v-bz2//")
         done
     fi
-    software=$(echo "$software" | sed -e "s/phpmyadmin//")
+    if [ "$phpfpm" = 'yes' ]; then
+        software=$(echo "$software" | sed -e "s/php$fpm_v-mysql//")
+    fi
+    software=$(echo "$software" | sed -e 's/phpmyadmin//')
 fi
 if [ "$postgresql" = 'no' ]; then
-    software=$(echo "$software" | sed -e "s/postgresql-contrib//")
-    software=$(echo "$software" | sed -e "s/postgresql//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-pgsql//")
+    software=$(echo "$software" | sed -e 's/postgresql-contrib//')
+    software=$(echo "$software" | sed -e 's/postgresql//')
+    software=$(echo "$software" | sed -e 's/php-pgsql//')
     if [ "$multiphp" = 'yes' ]; then
         for v in "${multiphp_v[@]}"; do
             software=$(echo "$software" | sed -e "s/php$v-pgsql//")
         done
     fi
-    software=$(echo "$software" | sed -e "s/phppgadmin//")
+    if [ "$phpfpm" = 'yes' ]; then
+        software=$(echo "$software" | sed -e "s/php$v-pgsql//")
+    fi
+    software=$(echo "$software" | sed -e 's/phppgadmin//')
 fi
 if [ "$iptables" = 'no' ] || [ "$fail2ban" = 'no' ]; then
-    software=$(echo "$software" | sed -e "s/fail2ban//")
+    software=$(echo "$software" | sed -e 's/fail2ban//')
 fi
 if [ "$phpfpm" = 'yes' ]; then
-    software=$(echo "$software" | sed -e "s/ php$fpm_v //")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-pgsql//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-curl//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-common//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-cgi//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-mysql//")
+    software=$(echo "$software" | sed -e 's/ php //')
+    software=$(echo "$software" | sed -e 's/php-pgsql//')
+    software=$(echo "$software" | sed -e 's/php-curl//')
+    software=$(echo "$software" | sed -e 's/php-common//')
+    software=$(echo "$software" | sed -e 's/php-cgi//')
+    software=$(echo "$software" | sed -e 's/php-mysql//')
 fi
 if [ "$multiphp" = 'yes' ]; then
-    software=$(echo "$software" | sed -e "s/ php$fpm_v //")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-auth-sasl//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-cgi//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-common//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-curl//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-mail-mime//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-mysql//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-net-sieve//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-net-smtp//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-net-socket//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-pear//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-php-gettext//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-phpseclib//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-pgsql//")
+    software=$(echo "$software" | sed -e 's/ php //')
+    software=$(echo "$software" | sed -e 's/php-auth-sasl//')
+    software=$(echo "$software" | sed -e 's/php-cgi//')
+    software=$(echo "$software" | sed -e 's/php-common//')
+    software=$(echo "$software" | sed -e 's/php-curl//')
+    software=$(echo "$software" | sed -e 's/php-mail-mime//')
+    software=$(echo "$software" | sed -e 's/php-mysql//')
+    software=$(echo "$software" | sed -e 's/php-net-sieve//')
+    software=$(echo "$software" | sed -e 's/php-net-smtp//')
+    software=$(echo "$software" | sed -e 's/php-net-socket//')
+    software=$(echo "$software" | sed -e 's/php-pear//')
+    software=$(echo "$software" | sed -e 's/php-php-gettext//')
+    software=$(echo "$software" | sed -e 's/php-phpseclib//')
+    software=$(echo "$software" | sed -e 's/php-pgsql//')
 fi
 if [ -d "$withdebs" ]; then
-    software=$(echo "$software" | sed -e "s/hestia-nginx//")
-    software=$(echo "$software" | sed -e "s/hestia-php//")
-    software=$(echo "$software" | sed -e "s/hestia//")
+    software=$(echo "$software" | sed -e 's/hestia-nginx//')
+    software=$(echo "$software" | sed -e 's/hestia-php//')
+    software=$(echo "$software" | sed -e 's/hestia//')
 fi
 
 #----------------------------------------------------------#

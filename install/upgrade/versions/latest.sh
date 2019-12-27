@@ -119,3 +119,9 @@ if [ -f "/etc/roundcube/config.inc.php" ]; then
     rcDesKey="$(openssl rand -base64 30 | tr -d "/" | cut -c1-24)"
     sed -i "s/vtIOjLZo9kffJoqzpSbm5r1r/$rcDesKey/g" /etc/roundcube/config.inc.php
 fi
+
+# Place robots.txt to prevent webmail crawling by search engine bots.
+if [ ! -f "/var/lib/roundcube/robots.txt" ]; then
+    echo "User-agent: *" > /var/lib/roundcube/robots.txt
+    echo "Disallow: /" >> /var/lib/roundcube/robots.txt
+fi

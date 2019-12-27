@@ -1559,6 +1559,10 @@ if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     # Configure webmail alias
     echo "WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
 
+    # Add robots.txt
+    echo "User-agent: *" > /var/lib/roundcube/robots.txt
+    echo "Disallow: /" >> /var/lib/roundcube/robots.txt
+
     # Restart services
     if [ "$apache" = 'yes' ]; then
         systemctl restart apache2

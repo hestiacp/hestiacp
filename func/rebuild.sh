@@ -631,8 +631,8 @@ rebuild_mysql_database() {
             mysql_query "CREATE USER \`$DBUSER\`@localhost" > /dev/null
         else
             # mariadb = 10
-            mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\`" > /dev/null
-            mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\`@localhost" > /dev/null
+            mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\` IDENTIFIED BY PASSWORD '$MD5'" > /dev/null
+            mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\`@localhost IDENTIFIED BY PASSWORD '$MD5'" > /dev/null
         fi
         # mariadb any version
         query="UPDATE mysql.user SET Password='$MD5' WHERE User='$DBUSER'"

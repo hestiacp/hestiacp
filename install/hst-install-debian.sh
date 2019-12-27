@@ -1860,9 +1860,9 @@ echo "(!) IMPORTANT: You must logout or restart the server before continuing."
 echo ""
 if [ "$interactive" = 'yes' ]; then
     echo -n " Do you want to reboot now? [Y/N] "
-    read resetshell
+    read rebootserver
 
-    if [ "$resetshell" = "Y" ] || [ "$resetshell" = "y" ]; then
+    if [ "$rebootserver" = "Y" ] || [ "$rebootserver" = "y" ]; then
         reboot
     fi
 fi

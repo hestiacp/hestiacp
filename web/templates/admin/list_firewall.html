@@ -61,11 +61,13 @@
           ++$i;
           if ($data[$key]['SUSPENDED'] == 'yes') {
             $status = 'suspended';
-            $spnd_action = 'unsuspend' ;
+            $spnd_action = 'unsuspend';
+            $spnd_icon = 'fa-play';
             $spnd_confirmation = 'UNSUSPEND_RULE_CONFIRMATION' ;
           } else {
             $status = 'active';
-            $spnd_action = 'suspend' ;
+            $spnd_action = 'suspend';
+            $spnd_icon = 'fa-pause';
             $spnd_confirmation = 'SUSPEND_RULE_CONFIRMATION' ;
           }
       ?>
@@ -102,7 +104,7 @@ sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$k
                         
                   <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
                     <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=__($spnd_action)?>">
-                      <i class="fas fa-pause status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
+                      <i class="fas <?=$spnd_icon?> status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
                       <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>" />
                       <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
                         <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>

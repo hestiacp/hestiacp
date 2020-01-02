@@ -757,7 +757,7 @@ if [ "$apache" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/libapache2-mod-ruid2//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-rpaf//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-fcgid//")
-    software=$(echo "$software" | sed -e "s/libapache2-mod-php//")
+    software=$(echo "$software" | sed -e "s/libapache2-mod-php$fpm_v//")
 fi
 if [ "$vsftpd" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/vsftpd//")
@@ -798,23 +798,12 @@ if [ "$mysql" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/mariadb-client//")
     software=$(echo "$software" | sed -e "s/mariadb-common//")
     software=$(echo "$software" | sed -e "s/php$fpm_v-mysql//")
-    if [ "$multiphp" = 'yes' ]; then
-        for v in "${multiphp_v[@]}"; do
-            software=$(echo "$software" | sed -e "s/php$v-mysql//")
-            software=$(echo "$software" | sed -e "s/php$v-bz2//")
-        done
-    fi
     software=$(echo "$software" | sed -e "s/phpmyadmin//")
 fi
 if [ "$postgresql" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/postgresql-contrib//")
     software=$(echo "$software" | sed -e "s/postgresql//")
     software=$(echo "$software" | sed -e "s/php$fpm_v-pgsql//")
-    if [ "$multiphp" = 'yes' ]; then
-        for v in "${multiphp_v[@]}"; do
-            software=$(echo "$software" | sed -e "s/php$v-pgsql//")
-        done
-    fi
     software=$(echo "$software" | sed -e "s/phppgadmin//")
 fi
 if [ "$iptables" = 'no' ] || [ "$fail2ban" = 'no' ]; then

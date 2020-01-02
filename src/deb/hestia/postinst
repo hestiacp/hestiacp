@@ -19,7 +19,7 @@ upgrade_refresh_config
 new_version=$(dpkg -l | awk '$2=="hestia" { print $3 }')
 
 # phpMyAdmin
-pma_v='4.9.2'
+pma_v='4.9.3'
 
 ###############################################################
 #               Begin standard upgrade routines               #

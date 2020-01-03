@@ -36,7 +36,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     nginx ntpdate php$fpm_v php$fpm_v-cgi php$fpm_v-common php$fpm_v-curl
     phpmyadmin php$fpm_v-mysql php$fpm_v-imap php$fpm_v-ldap php$fpm_v-apcu
     phppgadmin php$fpm_v-pgsql php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli
-    php$fpm_v-gd php$fpm_v-intl php$fpm_v-json
+    php$fpm_v-gd php$fpm_v-imagick php$fpm_v-intl php$fpm_v-json
     php$fpm_v-mbstring php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline
     php$fpm_v-xml postgresql postgresql-contrib proftpd-basic quota
     roundcube-core roundcube-mysql roundcube-plugins rrdtool rssh spamassassin

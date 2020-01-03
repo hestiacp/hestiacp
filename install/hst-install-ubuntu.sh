@@ -774,6 +774,9 @@ fi
 if [ "$iptables" = 'no' ] || [ "$fail2ban" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/fail2ban//")
 fi
+if [ "$phpfpm" = 'yes' ]; then
+    software=$(echo "$software" | sed -e 's/php$fpm_v-cgi//')
+fi
 if [ -d "$withdebs" ]; then
     software=$(echo "$software" | sed -e "s/hestia-nginx//")
     software=$(echo "$software" | sed -e "s/hestia-php//")

@@ -59,6 +59,7 @@ All notable changes to this project will be documented in this file.
 - Fixed database user authentification on backup restore.
 - Added robots.txt for roundcube webmail to prevent search bot crawling.
 - Re-Enable force ssl function on let's encrypt certification renew.
+- Added official postgresql repository to be up to date.
 
 ## [1.0.6] - 2019-09-24 - Hotfix
 ### Bugfixes

@@ -127,3 +127,17 @@ if [ -e "/var/lib/roundcube/" ]; then
         echo "Disallow: /" >> /var/lib/roundcube/robots.txt
     fi
 fi
+
+# Installing postgresql repo
+if [ -e "/etc/postgresql" ]; then
+    osname="$(cat /etc/os-release | grep "^ID\=" | sed "s/ID\=//g")"
+    if [ "$osname" = "ubuntu" ]; then
+        codename="$(lsb_release -s -c)"
+    else
+        codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
+    fi
+    echo "deb http://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > /etc/apt/sources.list.d/postgresql.list
+    wget --quiet https://www.postgresql.org/media/keys/ACCC4CF8.asc -O /tmp/psql_signing.key
+    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/psql_signing.key > /dev/null 2>&1
+    rm /tmp/psql_signing.key
+fi

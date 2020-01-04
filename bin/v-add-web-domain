@@ -115,7 +115,18 @@ fi
 if [ "$aliases" = 'none' ]; then
     ALIAS=''
 else
-    ALIAS="$aliases"
+    ALIAS="www.$domain"
+    if [ -z "$aliases" ]; then
+        # Check and skip www alias for subdomains.
+        IFS='.' read -r -a domain_elements <<< "$domain"
+        if [ "${#domain_elements[@]}" -gt 2 ]; then
+            ALIAS=""
+        else
+            ALIAS="www.$domain"
+        fi
+    else
+        ALIAS="$aliases"
+    fi
 
     ip_alias=$(get_ip_alias $domain)
     if [ ! -z "$ip_alias" ]; then

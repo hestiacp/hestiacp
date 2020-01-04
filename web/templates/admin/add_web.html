@@ -69,16 +69,6 @@
                         </tr>
                         <tr>
                             <td class="vst-text input-label">
-                                <?php print __('Aliases');?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <textarea size="20" class="vst-textinput short" name="v_aliases" id="v_aliases" ><?=htmlentities(trim($v_aliases, "'"))?></textarea>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="vst-text input-label">
                                 <?php print __('IP address');?>
                             </td>
                         </tr>
@@ -116,6 +106,16 @@
                         </tr>
                     </table>
                     <table class="data-col2" width="600px" style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
+                        <tr>
+                            <td class="vst-text input-label">
+                                <?php print __('Aliases');?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <textarea size="20" class="vst-textinput short" name="v_aliases" id="v_aliases" ><?=htmlentities(trim($v_aliases, "'"))?></textarea>
+                            </td>
+                        </tr>
                         <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?>
                         <tr>
                             <td class="vst-text step-top" >

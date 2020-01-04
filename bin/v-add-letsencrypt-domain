@@ -393,8 +393,10 @@ fi
 if [ -z "$mail" ]; then
     ssl_home=$(search_objects 'web' 'LETSENCRYPT' 'yes' 'SSL_HOME')
     ssl_enabled="$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL')"
+    ssl_force="$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL_FORCE')"
     [[ "$ssl_enabled" = "yes" ]] && $BIN/v-delete-web-domain-ssl $user $domain > /dev/null 2>&1
     $BIN/v-add-web-domain-ssl $user $domain $ssl_dir $ssl_home
+    [[ "$ssl_force" = "yes" ]] && $BIN/v-add-web-domain-ssl-force $user $domain > /dev/null 2>&1
 else
     ssl_enabled="$(get_object_value 'mail' 'DOMAIN' "$root_domain" '$SSL')"
     [[ "$ssl_enabled" = "yes" ]] && $BIN/v-delete-mail-domain-ssl $user $root_domain >/dev/null 2>&1

@@ -595,28 +595,18 @@ echo "Adding required repositories to proceed with installation:"
 echo
 # Installing nginx repo
 echo "(*) NGINX"
-if [ -e $apt/nginx.list ]; then
-    rm $apt/nginx.list
-fi
-echo "deb [arch=amd64] http://nginx.org/packages/mainline/$VERSION/ $codename nginx" \
-    > $apt/nginx.list
+echo "deb [arch=amd64] http://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
 wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/nginx_signing.key > /dev/null 2>&1
 
 # Installing sury php repo
 echo "(*) PHP"
-if [ -e $apt/php.list ]; then
-    rm $apt/php.list
-fi
 echo "deb https://packages.sury.org/php/ $codename main" > $apt/php.list
 wget --quiet https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/php_signing.key > /dev/null 2>&1
 
 # Installing MariaDB repo
 echo "(*) MariaDB"
-if [ -e $apt/mariadb.list ]; then
-    rm $apt/mariadb.list
-fi
 echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/10.4/$VERSION $codename main" > $apt/mariadb.list
 if [ "$release" -eq 8 ]; then
     APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com CBCB082A1BB943DB > /dev/null 2>&1
@@ -631,9 +621,6 @@ fi
 
 # Installing hestia repo
 echo "(*) Hestia Control Panel"
-if [ -e $apt/hestia.list ]; then
-    rm $apt/hestia.list
-fi
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
 wget --quiet https://gpg.hestiacp.com/deb_signing.key -O /tmp/deb_signing.key
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/deb_signing.key > /dev/null 2>&1

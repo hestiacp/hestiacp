@@ -1354,7 +1354,7 @@ if [ "$named" = 'yes' ]; then
     check_result $? "bind9 start failed"
 
     # Workaround for OpenVZ/Virtuozzo
-    if [ -e "/proc/vz/veinfo" ]; then
+    if [ -e "/proc/vz/veinfo" ] && [ -e "/etc/rc.local" ]; then
         sed -i "s/^exit 0/service bind9 restart\nexit 0/" /etc/rc.local
     fi
 fi

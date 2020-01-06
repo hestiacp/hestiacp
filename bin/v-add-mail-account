@@ -62,7 +62,7 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     if [ "$quota" = 'unlimited' ]; then
         quota='0'
     fi
-    str="$account:$md5:$user:mail::$HOMEDIR/$user:$quota"
+    str="$account:$md5:$user:mail::$HOMEDIR/$user::userdb_quota_rule=*:storage=${quota}M"
     echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
 fi
 

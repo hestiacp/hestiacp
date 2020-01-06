@@ -141,3 +141,12 @@ if [ -e "/etc/postgresql" ]; then
     APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/psql_signing.key > /dev/null 2>&1
     rm /tmp/psql_signing.key
 fi
+
+# Hardening MySQL configuration, prevent local infile.
+if [ -e "/etc/mysql/my.cnf" ]; then
+    mysql_local_infile_check=$(grep local-infile /etc/mysql/my.cnf)
+    if [ -z "$mysql_local_infile_check" ]; then
+        echo "(*) Hardening MySQL configuration..."
+        sed -i '/symbolic-links\=0/a\local-infile=0' /etc/mysql/my.cnf
+    fi
+fi

@@ -395,7 +395,7 @@ if [ ! -z "$conflicts" ] && [ -z "$force" ]; then
 fi
 
 # Check network configuration
-if [ -d /etc/netplan ] && [ -z "$force" ]; then
+if [ -d /etc/netplan ] && [ -z "$force" ] && [ $(systemd-detect-virt) == lxc ]; then
     if [ -z "$(ls -A /etc/netplan)" ]; then
         echo '!!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!!'
         echo

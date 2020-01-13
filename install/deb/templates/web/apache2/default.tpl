@@ -30,7 +30,7 @@
         RUidGid %user% %group%
         RGroups www-data
     </IfModule>
-    <IfModule itk.c>
+    <IfModule mpm_itk.c>
         AssignUserID %user% %group%
     </IfModule>
 

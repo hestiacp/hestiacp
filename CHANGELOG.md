@@ -63,6 +63,8 @@ All notable changes to this project will be documented in this file.
 - Added official postgresql repository to be up to date.
 - Hardening MySQL configuration, prevent local infile.
 - Fixed lograte bug and cleans up the messed up nginx/apache2 log permissions.
+- Fixed IfModule mpm_itk.c for apache2 templates.
+- Added mpm_itk for Deb10 single php installation only.
 
 ## [1.0.6] - 2019-09-24 - Hotfix
 ### Bugfixes

@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - Exim now uses the web domain IP if it exists.
 - Public IP is now used when updating webmail DNS record.
 - Added PHP 7.4 to MultiPHP.
+- Add Support for Debian 10 (Buster).
 
 ### Bugfixes
 - Added a detection of web root for add .well-known ACME challenge.
@@ -61,6 +62,7 @@ All notable changes to this project will be documented in this file.
 - Re-Enable force ssl function on let's encrypt certification renew.
 - Added official postgresql repository to be up to date.
 - Hardening MySQL configuration, prevent local infile.
+- Fixed lograte bug and cleans up the messed up nginx/apache2 log permissions.
 
 ## [1.0.6] - 2019-09-24 - Hotfix
 ### Bugfixes

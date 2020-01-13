@@ -5,7 +5,7 @@
     notifempty
     compress
     delaycompress
-    create 640 root adm
+    create 640
     sharedscripts
     postrotate
         /etc/init.d/apache2 reload > /dev/null || true

@@ -150,3 +150,25 @@ if [ -e "/etc/mysql/my.cnf" ]; then
         sed -i '/symbolic-links\=0/a\local-infile=0' /etc/mysql/my.cnf
     fi
 fi
+
+# Fix logrotate permission bug for nginx
+if [-e "/etc/logrotate/nginx" ]; then
+    sed -i "s/create 640 nginx adm/create 640/g" /etc/logrotate.d/nginx
+fi
+
+# Fix logrotate permission bug for apache
+if [-e "/etc/logrotate/apache2" ]; then
+    sed -i "s/create 640 root adm/create 640/g" /etc/logrotate.d/apache2
+fi
+
+# Repair messed up user log permissions from the logrotate bug. Ignoring errors
+for user in $($HESTIA/bin/v-list-users plain | cut -f1); do
+    for domain in $($HESTIA/bin/v-list-web-domains $user plain | cut -f1); do
+        chown root:$user /var/log/$WEB_SYSTEM/domains/$domain.* > /dev/null 2>&1
+        for sub_domain in $($HESTIA/bin/v-list-web-domain $user $domain plain | cut -f7 | tr ',' '\n'); do
+            chown root:$user /var/log/$WEB_SYSTEM/domains/$sub_domain.* > /dev/null 2>&1
+        done
+    done
+done
+
+chown root:root /var/log/$WEB_SYSTEM/domains/$WEBMAIL_ALIAS* > /dev/null 2>&1

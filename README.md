@@ -3,6 +3,10 @@
 **Current stable release:** Version 1.0.6, released on September 26th, 2019.<br>
 **Current development release:** Version 1.1.0, release date yet to be determined.
 
+**Please read this, before you start!**
+---------------------------- 
+HestiaCP is not an autopilot for your server. Hestia is a tool to enable various hosting related settings via a web interface. We assume that you are familiar with the basics of server administration, as well as knowledge about setting up and managing hosting applications. This means we assume that even without Hestia you would be able to set up a LAMP stack and manage your email, but are looking for a tool to simplify these tasks. We cannot provide support for requests that do not describe in detail the troubleshooting you have already done or that clearly show a lack of will and knowledge to solve the problem.
+
 **We're looking for some extra hands on deck!**
 ---------------------------- 
 Are you a software developer, tester, or have experience in writing documentation or guides? Do you have some spare time to contribute and want to help further the development of Hestia Control Panel?<br><br>Please send an email to info@hestiacp.com with a quick outline of your previous experience in any of these areas or where you think you could help on the project and we'll reach out to discuss with you further. 

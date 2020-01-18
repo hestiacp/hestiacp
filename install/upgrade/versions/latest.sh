@@ -172,3 +172,17 @@ for user in $($HESTIA/bin/v-list-users plain | cut -f1); do
 done
 
 chown root:root /var/log/$WEB_SYSTEM/domains/$WEBMAIL_ALIAS* > /dev/null 2>&1
+
+# Enable IMAP/POP3 quota information
+if [ -z "$IMAP_SYSTEM" ]; then
+    echo "(*) Enabling IMAP quota information reporting ..."
+    if [ -e /etc/dovecot/conf.d/20-pop3.conf ]; then
+        cp -f $HESTIA/install/deb/dovecot/conf.d/20-pop3.conf /etc/dovecot/conf.d/20-pop3.conf
+    fi
+    if [ -e /etc/dovecot/conf.d/20-imap.conf ]; then
+        cp -f $HESTIA/install/deb/dovecot/conf.d/20-imap.conf /etc/dovecot/conf.d/20-imap.conf
+    fi
+    if [ -e /etc/dovecot/conf.d/90-quota.conf ]; then
+        cp -f $HESTIA/install/deb/dovecot/conf.d/90-quota.conf /etc/dovecot/conf.d/90-quota.conf
+    fi
+fi

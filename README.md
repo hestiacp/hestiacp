@@ -5,7 +5,11 @@
 
 **Please read this, before you start!**
 ---------------------------- 
-HestiaCP is not an autopilot for your server. Hestia is a tool to enable various hosting related settings via a web interface. We assume that you are familiar with the basics of server administration, as well as knowledge about setting up and managing hosting applications. This means we assume that even without Hestia you would be able to set up a LAMP stack and manage your email, but are looking for a tool to simplify these tasks. We cannot provide support for requests that do not describe in detail the troubleshooting you have already done or that clearly show a lack of will and knowledge to solve the problem.
+HestiaCP is not an autopilot for your server. Hestia is a tool to enable various hosting related settings via a web interface.
+
+We assume that you are familiar with the basics of server administration, as well as knowledge about setting up and managing hosting applications. This means we assume that even without Hestia you would be able to set up a LAMP stack and manage your email, but are looking for a tool to simplify these tasks.
+
+**We cannot provide support for requests that do not describe in detail the troubleshooting you have already done or that clearly show a lack of will and knowledge to solve the problem.**
 
 **We're looking for some extra hands on deck!**
 ---------------------------- 

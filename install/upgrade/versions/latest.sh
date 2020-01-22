@@ -152,12 +152,12 @@ if [ -e "/etc/mysql/my.cnf" ]; then
 fi
 
 # Fix logrotate permission bug for nginx
-if [-e "/etc/logrotate/nginx" ]; then
+if [ -e "/etc/logrotate/nginx" ]; then
     sed -i "s/create 640 nginx adm/create 640/g" /etc/logrotate.d/nginx
 fi
 
 # Fix logrotate permission bug for apache
-if [-e "/etc/logrotate/apache2" ]; then
+if [ -e "/etc/logrotate/apache2" ]; then
     sed -i "s/create 640 root adm/create 640/g" /etc/logrotate.d/apache2
 fi
 

@@ -75,8 +75,8 @@ fi
 $BIN/v-update-host-certificate $user $domain
 
 # Enable automatic ssl forward and hsts
-$BIN/v-add-web-domain-ssl-force $user $domain
-$BIN/v-add-web-domain-ssl-hsts $user $domain
+$BIN/v-add-web-domain-ssl-force $user $domain > /dev/null 2>&1
+$BIN/v-add-web-domain-ssl-hsts $user $domain > /dev/null 2>&1
 
 
 #----------------------------------------------------------#

@@ -1172,6 +1172,7 @@ if [ "$phpfpm" = 'yes' ]; then
     update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1
     systemctl start php$fpm_v-fpm >> $LOG
     check_result $? "php-fpm start failed"
+    update-alternatives --set php /usr/bin/php$fpm_v > /dev/null 2>&1
 fi
 
 

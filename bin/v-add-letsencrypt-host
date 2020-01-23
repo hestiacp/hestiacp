@@ -68,6 +68,7 @@ fi
 if [ "$add_ssl" = "yes" ]; then
     # Add let's encrypt ssl
     $BIN/v-add-letsencrypt-domain $user $domain
+    check_result $? "Let's Encrypt SSL creation failed"  $E_UPDATE
 fi
 
 # Add certificate to backend

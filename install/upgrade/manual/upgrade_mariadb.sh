@@ -20,7 +20,7 @@ fi
 # Detect operating system and load codename
 if [ "$ID" = "ubuntu" ]; then
     codename="$(lsb_release -s -c)"
-else if [ "$ID" = "debian" ]; then
+elseif [ "$ID" = "debian" ]; then
     codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
 else
     echo "Can't detect the os version, cancelling."

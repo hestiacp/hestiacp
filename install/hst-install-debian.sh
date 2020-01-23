@@ -457,7 +457,7 @@ fi
 if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
     echo '   - Apache Web Server (as backend)'
 fi
-if [ "$phpfpm"  = 'yes' ]; then
+if [ "$phpfpm"  = 'yes' ] && [ "$multiphp" = 'no' ]; then
     echo '   - PHP-FPM Application Server'
 fi
 if [ "$multiphp"  = 'yes' ]; then

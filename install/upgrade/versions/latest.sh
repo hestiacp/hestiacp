@@ -186,3 +186,10 @@ if [ -z "$IMAP_SYSTEM" ]; then
         cp -f $HESTIA/install/deb/dovecot/conf.d/90-quota.conf /etc/dovecot/conf.d/90-quota.conf
     fi
 fi
+
+# Trigger multiphp legacy migration script
+num_php_versions=$(ls -d /etc/php/*/fpm/pool.d 2>/dev/null |wc -l)
+if [ "$num_php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
+    echo "(*) Migrate to new multiphp backend system..."
+    $HESTIA/install/upgrade/manual/migrate-190718-multiphp.sh > /dev/null 2>&1
+fi

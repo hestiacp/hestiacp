@@ -20,7 +20,7 @@ fi
 # Detect operating system and load codename
 if [ "$ID" = "ubuntu" ]; then
     codename="$(lsb_release -s -c)"
-elseif [ "$ID" = "debian" ]; then
+elif [ "$ID" = "debian" ]; then
     codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
 else
     echo "Can't detect the os version, cancelling."
@@ -29,12 +29,13 @@ fi
 
 # Installing MariaDB repo
 echo "Add new MariaDB repository..."
+apt="/etc/apt/sources.list.d/"
 if [ "$id" = "ubuntu" ]; then
     echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/$mariadb_v/$ID $codename main" > $apt/mariadb.list
     APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8 > /dev/null 2>&1
 else
     echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/$mariadb_v/$ID $codename main" > $apt/mariadb.list
-    if [ "$release" -eq 8 ]; then
+    if [ "$codename" -eq "jessie" ]; then
         APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com CBCB082A1BB943DB > /dev/null 2>&1
     else
         APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com F1656F24C74CD1D8 > /dev/null 2>&1
@@ -43,15 +44,15 @@ fi
 
 # Update repository
 echo "Update apt repository..."
-apt update -qq
+apt update -qq  > /dev/null 2>&1
 
 # Stop and uninstall mysql server
 echo "Stop and remove old MariaDB server..."
 systemctl stop mysql > /dev/null 2>&1
-apt remove -qq mariadb-server
+apt remove -qq mariadb-server -y  > /dev/null 2>&1
 
 # Install new version and run upgrader
 echo "Installing new MariaDB Server, start and run upgrade..."
-apt install -qq mariadb-server
+apt install -qq mariadb-server -y  > /dev/null 2>&1
 systemctl start mysql > /dev/null 2>&1
 mysql_upgrade

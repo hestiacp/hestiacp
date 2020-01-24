@@ -84,10 +84,13 @@ is_web_alias_new() {
 
 # Prepare web backend
 prepare_web_backend() {
+    # Accept first function argument as backend template otherwise fallback to $template global variable
+    local backend_template=${1:-$template}
+
     pool=$(find -L /etc/php/ -name "$domain.conf" -exec dirname {} \;)
     # Check if multiple-PHP installed
     regex="socket-(\d+)_(\d+)"
-    if [[ $template =~ ^PHP-([0-9])\_([0-9])$ ]]; then
+    if [[ $backend_template =~ ^PHP-([0-9])\_([0-9])$ ]]; then
         backend_version="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
         pool=$(find -L /etc/php/$backend_version -type d \( -name "pool.d" -o -name "*fpm.d" \))
     else
@@ -160,7 +163,7 @@ prepare_web_domain_values() {
     fi
 
     if [ ! -z "$WEB_BACKEND" ]; then
-        prepare_web_backend
+        prepare_web_backend "$BACKEND"
     fi
 
     server_alias=''

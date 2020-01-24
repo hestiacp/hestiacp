@@ -65,7 +65,7 @@ if [ "$num_php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
                 backend_tpl="PHP-7_2"
             elif [ "$domain_tpl" = "PHP-73" ] || [ "$domain_tpl" = "default" ] || [ -z "$domain_tpl" ]; then
                 backend_tpl="PHP-7_3"
-            elif [ "$domain_tpl" = "PHP-74"]; then
+            elif [ "$domain_tpl" = "PHP-74" ]; then
                 backend_tpl="PHP-7_4"
             else
                 # Custom domain template used

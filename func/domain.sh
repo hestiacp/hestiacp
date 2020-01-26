@@ -94,7 +94,7 @@ prepare_web_backend() {
         backend_version="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
         pool=$(find -L /etc/php/$backend_version -type d \( -name "pool.d" -o -name "*fpm.d" \))
     else
-        backend_version=$(php -r "echo (float)phpversion();")
+        backend_version=$(multiphp_default_version)
         if [ -z "$pool" ] || [ -z "$BACKEND" ]; then 
             pool=$(find -L /etc/php/$backend_version -type d \( -name "pool.d" -o -name "*fpm.d" \))
         fi

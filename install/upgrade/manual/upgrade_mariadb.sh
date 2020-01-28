@@ -35,7 +35,7 @@ if [ "$id" = "ubuntu" ]; then
     APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8 > /dev/null 2>&1
 else
     echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/$mariadb_v/$ID $codename main" > $apt/mariadb.list
-    if [ "$codename" -eq "jessie" ]; then
+    if [ "$id" -eq "jessie" ]; then
         APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com CBCB082A1BB943DB > /dev/null 2>&1
     else
         APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com F1656F24C74CD1D8 > /dev/null 2>&1

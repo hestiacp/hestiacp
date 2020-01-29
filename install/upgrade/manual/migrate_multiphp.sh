@@ -63,7 +63,7 @@ if [ "$num_php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
             # Check if web domain is suspended
             if [ "$SUSPENDED_WEB" = "yes" ]; then
                 suspended_web="yes"
-                $BIN/v-unsuspend-web-domain $domain
+                $BIN/v-unsuspend-web-domain $user $domain
             fi
             echo "Processing domain: $domain"
             web_tpl="default"
@@ -125,7 +125,7 @@ if [ "$num_php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
             # Suspend domain again, if it was suspended
             if [ "$suspended_web" = "yes" ]; then
                 unset suspended_web
-                $BIN/v-suspend-web-domain $domain
+                $BIN/v-suspend-web-domain $user $domain
             fi
         done
 

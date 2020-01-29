@@ -191,5 +191,5 @@ fi
 num_php_versions=$(ls -d /etc/php/*/fpm/pool.d 2>/dev/null |wc -l)
 if [ "$num_php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
     echo "(*) Migrate to new multiphp backend system..."
-    $HESTIA/install/upgrade/manual/migrate-190718-multiphp.sh > /dev/null 2>&1
+    bash $HESTIA/install/upgrade/manual/migrate_multiphp.sh > /dev/null 2>&1
 fi

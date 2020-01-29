@@ -48,8 +48,18 @@ if [ "$num_php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
 
     # Migrate domains
     for user in $($BIN/v-list-sys-users plain); do
+        # Check if user is suspended
+        if [ "$SUSPENDED" = "yes" ]; then
+            suspended="yes"
+            $BIN/v-unsuspend-user $user
+        fi
         echo "Migrating legacy multiphp domains for user: $user"
         for domain in $($BIN/v-list-web-domains $user plain |cut -f1); do
+            # Check if web domain is suspended
+            if [ "$SUSPENDED" = "yes" ]; then
+                domain_suspended="yes"
+                $BIN/v-unsuspend-web-domain $domain
+            fi
             echo "Processing domain: $domain"
             web_tpl="default"
             backend_tpl="$DEFAULT_BTPL"
@@ -106,7 +116,19 @@ if [ "$num_php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
             $BIN/v-change-web-domain-tpl "$user" "$domain" "$web_tpl" "no"
             $BIN/v-change-web-domain-backend-tpl "$user" "$domain" "$backend_tpl" "no"
             echo -e "--done--\n"
+
+            # Suspend domain again, if it was suspended
+            if [ "$domain_suspended" = "yes" ]; then
+                unset domain_suspended
+                $BIN/v-suspend-web-domain $domain
+            fi
         done
+
+        # Suspend user again, if he was suspended
+        if [ "$suspended" = "yes" ]; then
+            unset suspended
+            $BIN/v-suspend-user $user
+        fi
     done
 
     # cleanup legacy multiphp templates

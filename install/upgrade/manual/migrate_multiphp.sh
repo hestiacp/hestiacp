@@ -48,6 +48,10 @@ if [ "$num_php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
 
     # Migrate domains
     for user in $($BIN/v-list-sys-users plain); do
+        # Define user data and get suspended status
+        USER_DATA=$HESTIA/data/users/$user
+        SUSPENDED=$(get_user_value '$SUSPENDED')
+
         # Check if user is suspended
         if [ "$SUSPENDED" = "yes" ]; then
             suspended="yes"
@@ -55,9 +59,10 @@ if [ "$num_php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
         fi
         echo "Migrating legacy multiphp domains for user: $user"
         for domain in $($BIN/v-list-web-domains $user plain |cut -f1); do
+            SUSPENDED_WEB=$(get_object_value 'web' 'DOMAIN' "$domain" '$SUSPENDED')
             # Check if web domain is suspended
-            if [ "$SUSPENDED" = "yes" ]; then
-                domain_suspended="yes"
+            if [ "$SUSPENDED_WEB" = "yes" ]; then
+                suspended_web="yes"
                 $BIN/v-unsuspend-web-domain $domain
             fi
             echo "Processing domain: $domain"
@@ -118,8 +123,8 @@ if [ "$num_php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
             echo -e "--done--\n"
 
             # Suspend domain again, if it was suspended
-            if [ "$domain_suspended" = "yes" ]; then
-                unset domain_suspended
+            if [ "$suspended_web" = "yes" ]; then
+                unset suspended_web
                 $BIN/v-suspend-web-domain $domain
             fi
         done

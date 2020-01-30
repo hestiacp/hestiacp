@@ -151,6 +151,15 @@ if [ -e "/etc/mysql/my.cnf" ]; then
     fi
 fi
 
+# Hardening nginx configuration, drop TLSv1.1 support.
+if [ -e "/etc/nginx/nginx.conf" ]; then
+    nginx_tls_check=$(grep TLSv1.1 /etc/nginx/nginx.conf)
+    if [ ! -z "$nginx_tls_check" ]; then
+        echo "(*) Hardening nginx configuration, drop TLSv1.1 support..."
+        sed -i 's/TLSv1.1 //g' /etc/nginx/nginx.conf
+    fi
+fi
+
 # Fix logrotate permission bug for nginx
 if [ -e "/etc/logrotate/nginx" ]; then
     sed -i "s/create 640 nginx adm/create 640/g" /etc/logrotate.d/nginx

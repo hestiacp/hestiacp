@@ -65,6 +65,7 @@ All notable changes to this project will be documented in this file.
 - Fixed lograte bug and cleans up the messed up nginx/apache2 log permissions.
 - Fixed IfModule mpm_itk.c for apache2 templates.
 - Added mpm_itk for Deb10 single php installation only.
+- Hardening nginx configuration, drop TLSv1.1 support.
 
 ## [1.0.6] - 2019-09-24 - Hotfix
 ### Bugfixes

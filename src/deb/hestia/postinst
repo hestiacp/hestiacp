@@ -29,7 +29,6 @@ pma_v='4.9.3'
 upgrade_init_backup
 
 # Set up console display and welcome message
-clear
 upgrade_welcome_message
 
 # Execute version-specific upgrade scripts

@@ -118,6 +118,7 @@ else
     # Parsing domain values
     get_domain_values 'web'
     local_ip=$(get_real_ip $IP)
+    BACKEND="$template"
     prepare_web_domain_values
 
     # Rebuilding vhost

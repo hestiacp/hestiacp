@@ -859,7 +859,7 @@ echo "(*) Configuring system settings..."
 sed -i "s/rdAuthentication no/rdAuthentication yes/g" /etc/ssh/sshd_config
 
 # Allow SSH only on IPv4
-sed -i "s/^[#.]AddressFamily.*/AddressFamily ipv4/" /etc/ssh/sshd_config
+sed -i "s/^[#.]AddressFamily.*/AddressFamily inet/" /etc/ssh/sshd_config
 
 # Enable SFTP subsystem for SSH
 sftp_subsys_enabled=$(grep -iE "^#?.*subsystem.+(sftp )?sftp-server" /etc/ssh/sshd_config)

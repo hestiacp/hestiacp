@@ -282,10 +282,10 @@ fi
 
 # Welcome message
 echo "Welcome to the Hestia Control Panel installer!"
-echo 
+echo
 echo "Please wait a moment while we update your system's repositories and"
 echo "install any necessary dependencies required to proceed with the installation..."
-echo 
+echo
 
 # Update apt repository
 apt-get -qq update
@@ -857,6 +857,9 @@ rm -f /usr/sbin/policy-rc.d
 echo "(*) Configuring system settings..."
 # Enable SSH password authentication
 sed -i "s/rdAuthentication no/rdAuthentication yes/g" /etc/ssh/sshd_config
+
+# Allow SSH only on IPv4
+sed -i "s/^[#.]AddressFamily.*/AddressFamily ipv4/" /etc/ssh/sshd_config
 
 # Enable SFTP subsystem for SSH
 sftp_subsys_enabled=$(grep -iE "^#?.*subsystem.+(sftp )?sftp-server" /etc/ssh/sshd_config)

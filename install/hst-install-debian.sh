@@ -41,7 +41,7 @@ if [ "$release" -eq 8 ]; then
         unrar-free vim-common acl sysstat setpriv"
 elif [ "$release" -eq 9 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
-        libapache2-mod-ruid2 libapache2-mod-fcgid libapache2-mod-php$fpm_v 
+        libapache2-mod-ruid2 libapache2-mod-fcgid libapache2-mod-php$fpm_v
         php$fpm_v php$fpm_v-common php$fpm_v-cgi php$fpm_v-mysql php$fpm_v-curl
         php$fpm_v-pgsql php$fpm_v-imagick php$fpm_v-imap php$fpm_v-ldap
         php$fpm_v-apcu awstats php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli
@@ -57,13 +57,13 @@ elif [ "$release" -eq 9 ]; then
         unrar-free vim-common acl sysstat rsyslog setpriv"
 elif [ "$release" -eq 10 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
-        apache2-suexec-pristine libapache2-mod-fcgid libapache2-mpm-itk 
+        apache2-suexec-pristine libapache2-mod-fcgid libapache2-mpm-itk
         libapache2-mod-php$fpm_v php$fpm_v php$fpm_v-common php$fpm_v-cgi
-        php$fpm_v-mysql php$fpm_v-curl php$fpm_v-pgsql php$fpm_v-imagick 
+        php$fpm_v-mysql php$fpm_v-curl php$fpm_v-pgsql php$fpm_v-imagick
         php$fpm_v-imap php$fpm_v-ldap php$fpm_v-apcu awstats php$fpm_v-zip
         php$fpm_v-bz2 php$fpm_v-cli php$fpm_v-gd php$fpm_v-intl php$fpm_v-json
         php$fpm_v-mbstring php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline
-        php$fpm_v-xml awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy 
+        php$fpm_v-xml awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy
         clamav-daemon spamassassin dovecot-imapd dovecot-pop3d roundcube-core
         net-tools roundcube-mysql roundcube-plugins mariadb-client mariadb-common
         mariadb-server postgresql postgresql-contrib phpmyadmin phppgadmin mc
@@ -312,10 +312,10 @@ fi
 
 # Welcome message
 echo "Welcome to the Hestia Control Panel installer!"
-echo 
+echo
 echo "Please wait a moment while we update your system's repositories and"
 echo "install any necessary dependencies required to proceed with the installation..."
-echo 
+echo
 
 # Update apt repository
 apt-get -qq update
@@ -421,7 +421,7 @@ if [ -d /etc/netplan ] && [ -z "$force" ]; then
         echo
         echo '!!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!!'
         echo
-        check_result 1 "Unable to detect netplan configuration."    
+        check_result 1 "Unable to detect netplan configuration."
     fi
 fi
 
@@ -879,6 +879,9 @@ rm -f /usr/sbin/policy-rc.d
 echo "(*) Configuring system settings..."
 # Enable SSH password authentication
 sed -i "s/rdAuthentication no/rdAuthentication yes/g" /etc/ssh/sshd_config
+
+# Allow SSH only on IPv4
+sed -i "s/^[#.]AddressFamily.*/AddressFamily ipv4/" /etc/ssh/sshd_config
 
 # Enable SFTP subsystem for SSH
 sftp_subsys_enabled=$(grep -iE "^#?.*subsystem.+(sftp )?sftp-server" /etc/ssh/sshd_config)
@@ -1600,7 +1603,7 @@ if [ "$fail2ban" = 'yes' ]; then
         fline=$(cat /etc/fail2ban/jail.local |grep -n vsftpd-iptables -A 2)
         fline=$(echo "$fline" |grep enabled |tail -n1 |cut -f 1 -d -)
         sed -i "${fline}s/false/true/" /etc/fail2ban/jail.local
-    fi 
+    fi
     if [ ! -e /var/log/auth.log ]; then
         # Debian workaround: auth logging was moved to systemd
         touch /var/log/auth.log
@@ -1789,7 +1792,7 @@ echo -e "\n"
 # Sending notification to admin email
 echo -e "Congratulations!
 
-You have successfully installed Hestia Control Panel on your server. 
+You have successfully installed Hestia Control Panel on your server.
 
 Ready to get started? Log in using the following credentials:
 

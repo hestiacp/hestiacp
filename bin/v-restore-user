@@ -408,8 +408,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
         fi
         chmod u+w "$HOMEDIR/$user/web/$domain"
         user_exec tar -xzpf $tmpdir/web/$domain/domain_data.tar.gz \
-            -C "$HOMEDIR/$user/web/$domain/" \
-            --exclude='logs/*'
+            -C "$HOMEDIR/$user/web/$domain/" --exclude='./logs/*'
         if [ "$?" -ne 0 ]; then
             rm -rf $tmpdir
             error="Can't unpack $domain data tarball"

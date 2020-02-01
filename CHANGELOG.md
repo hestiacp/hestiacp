@@ -66,6 +66,7 @@ All notable changes to this project will be documented in this file.
 - Added mpm_itk for Deb10 single php installation only.
 - Hardening nginx configuration, drop TLSv1.1 support.
 - Fixed excluding folders named "logs" from restore backup, thanks to @davidgolsen.
+- Fixed typo in delete psql database part, thanks to @joshbmarshall.
 
 ## [1.0.6] - 2019-09-24 - Hotfix
 ### Bugfixes

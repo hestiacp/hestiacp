@@ -466,6 +466,10 @@ update_domain_zone() {
             VALUE=$(idn --quiet -a -t "$VALUE")
         fi
 
+        if [ "$TYPE" = 'TXT' ] && [[ ${VALUE:0:1} != '"' ]]; then
+            VALUE=$(echo $VALUE | fold -w 255 | xargs -I '$' echo -n '"$"')
+        fi
+
         if [ "$SUSPENDED" != 'yes' ]; then
             eval echo -e "\"$fields\""|sed "s/%quote%/'/g" >> $zn_conf
         fi

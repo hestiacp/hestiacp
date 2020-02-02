@@ -84,8 +84,11 @@ for user in $($BIN/v-list-sys-users plain); do
     fi
 done
 
-$BIN/v-update-web-templates "no"
+$BIN/v-update-web-templates "yes"
 
+# Restarting backend
+$BIN/v-restart-web-backend "yes"
+check_result $? "Backend restart" >/dev/null 2>&1
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -41,6 +41,9 @@ if [ ! -f "$php_fpm" ] && [ ! -f "$HESTIA/data/templates/$WEB_SYSTEM/PHP-$versio
     exit
 fi
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 
 #----------------------------------------------------------#
 #                       Action                             #

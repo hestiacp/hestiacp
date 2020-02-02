@@ -44,6 +44,10 @@ if [ ! -f "$HESTIA_INSTALL_DIR/multiphp/$WEB_SYSTEM/PHP-${version//.}.sh" ]; the
     exit
 fi
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#

@@ -40,7 +40,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     php$fpm_v-mbstring php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline
     php$fpm_v-xml postgresql postgresql-contrib proftpd-basic quota
     roundcube-core roundcube-mysql roundcube-plugins rrdtool rssh spamassassin
-    sudo hestia hestia-nginx hestia-php vim-common vsftpd whois zip acl sysstat setpriv"
+    sudo hestia hestia-nginx hestia-php vim-common vsftpd whois zip acl sysstat util-linux"
 
 # Defining help function
 help() {

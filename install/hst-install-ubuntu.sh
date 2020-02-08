@@ -789,6 +789,10 @@ if [ -d "$withdebs" ]; then
     software=$(echo "$software" | sed -e "s/hestia//")
 fi
 
+if [ "$release" = '16.04' ]; then
+    software=$(echo "$software" | sed -e "s/setpriv/util-linux/")
+fi
+
 #----------------------------------------------------------#
 #                 Disable Apparmor on LXC                  #
 #----------------------------------------------------------#

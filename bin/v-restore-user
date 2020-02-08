@@ -407,8 +407,11 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
             rm -rf $HOMEDIR/$user/web/$domain/public_html/*
         fi
         chmod u+w "$HOMEDIR/$user/web/$domain"
+        [[ -d $HOMEDIR/$user/web/$domain/stats ]] && chmod u+w "$HOMEDIR/$user/web/$domain/stats"
         user_exec tar -xzpf $tmpdir/web/$domain/domain_data.tar.gz \
-            -C "$HOMEDIR/$user/web/$domain/" --exclude='./logs/*'
+            -C "$HOMEDIR/$user/web/$domain/" \
+            --anchored \
+            --exclude='logs/*'
         if [ "$?" -ne 0 ]; then
             rm -rf $tmpdir
             error="Can't unpack $domain data tarball"
@@ -771,7 +774,9 @@ if [ "$udir" != 'no' ]; then
                 check_result "$E_PARSING" "$error"
             fi
 
+            chown "$user" "$tmpdir/user_dir"
             chown "$user" "$HOMEDIR/$user"
+            chown "$user" "$HOMEDIR/$user/$user_dir"
             $BIN/v-extract-fs-archive "$user" "$tmpdir/user_dir/$user_dir.tar.gz" "$HOMEDIR/$user"
             cmdstatus="$?"
             chown root:root "$HOMEDIR/$user"

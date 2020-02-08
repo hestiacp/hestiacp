@@ -165,10 +165,16 @@ rebuild_web_domain_conf() {
 
     # Remove old web configuration files
     if [ -f /etc/$WEB_SYSTEM/conf.d/$domain.conf ]; then
-        rm -f /etc/$WEB_SYSTEM/conf.d/$domain*.conf
+        rm -f /etc/$WEB_SYSTEM/conf.d/$domain.conf
+    fi
+    if [ -f /etc/$WEB_SYSTEM/conf.d/$domain.ssl.conf ]; then
+        rm -f /etc/$WEB_SYSTEM/conf.d/$domain.ssl.conf
     fi
     if [ -f /etc/$PROXY_SYSTEM/conf.d/$domain.conf ]; then
-        rm -f /etc/$PROXY_SYSTEM/conf.d/$domain*.conf
+        rm -f /etc/$PROXY_SYSTEM/conf.d/$domain.conf
+    fi
+    if [ -f /etc/$PROXY_SYSTEM/conf.d/$domain.ssl.conf ]; then
+        rm -f /etc/$PROXY_SYSTEM/conf.d/$domain.ssl.conf
     fi
 
     # Temporary allow write permissions to owner

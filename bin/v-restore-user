@@ -768,6 +768,7 @@ if [ "$udir" != 'no' ]; then
             echo -e "$(date "+%F %T") $user_dir" |tee -a $tmpdir/restore.log
             tar xf "$BACKUP/$backup" -C "$tmpdir" --no-wildcards "./user_dir/$user_dir.tar.gz"
             if [ "$?" -ne 0 ]; then
+                rm -rf $tmpdir
                 error="Can't unpack $user_dir user dir container"
                 echo "$error" |$SENDMAIL -s "$subj" $email $notify
                 sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
@@ -781,6 +782,7 @@ if [ "$udir" != 'no' ]; then
             cmdstatus="$?"
             chown root:root "$HOMEDIR/$user"
             if [ "$cmdstatus" -ne 0 ]; then
+                rm -rf $tmpdir
                 error="Can't unpack $user_dir user dir container"
                 echo "$error" |$SENDMAIL -s "$subj" $email $notify
                 sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe

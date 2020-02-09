@@ -3,17 +3,17 @@
 **Current stable release:** Version 1.0.6, released on September 26th, 2019.<br>
 **Current development release:** Version 1.1.0, release date yet to be determined.
 
-**Please read this, before you start!**
+**Welcome!**
 ---------------------------- 
-HestiaCP is not an autopilot for your server. Hestia is a tool to enable various hosting related settings via a web interface.
+Hestia Control Panel offers easy to use web and command line interfaces, enabling web server administrators to quickly deploy and manage web domains, mail accounts, and DNS zones from one central location without the hassle of manually deploying and configuring individual components. 
 
-We assume that you are familiar with the basics of server administration, as well as knowledge about setting up and managing hosting applications. This means we assume that even without Hestia you would be able to set up a LAMP stack and manage your email, but are looking for a tool to simplify these tasks.
+While we have taken every effort to make the interface as friendly as possible (even for new users), it is assumed that you will have some prior knowledge and understanding in the basics how to set up a Linux server and managing web applications.
 
-**We cannot provide support for requests that do not describe in detail the troubleshooting you have already done or that clearly show a lack of will and knowledge to solve the problem.**
+**We cannot provide support for requests that do not describe in detail the troubleshooting that has already been performed, or for third-party applications which do not directly relate to Hestia Control Panel. Please make sure that you fill in the necessary details in your issue reports, and remove any sections that do not apply to your issue or use case.**
 
-**We're looking for some extra hands on deck!**
+Interested in helping shape the future of Hestia Control Panel?
 ---------------------------- 
-Are you a software developer, tester, or have experience in writing documentation or guides? Do you have some spare time to contribute and want to help further the development of Hestia Control Panel?<br><br>Please send an email to info@hestiacp.com with a quick outline of your previous experience in any of these areas or where you think you could help on the project and we'll reach out to discuss with you further. 
+Are you a software developer, tester, or have experience in writing documentation or guides and have some time to contibute to the project?<br><br>Please send an email to info@hestiacp.com with a quick outline of your previous experience in any of these areas or where you think you could help on the project and we'll reach out to discuss the next steps.
 
 As always we welcome all feedback and contributions!
 

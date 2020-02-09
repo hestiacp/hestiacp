@@ -70,6 +70,8 @@ abstract class BaseSetup implements InstallerInterface {
 
     public function install(array $options=null)
     {
+        $this->appcontext->runUser('v-delete-fs-file', [$this->getDocRoot('robots.txt')]);
+        $this->appcontext->runUser('v-delete-fs-file', [$this->getDocRoot('index.html')]);
         return $this->retrieveResources($options);
     }
 

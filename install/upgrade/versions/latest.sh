@@ -58,9 +58,17 @@ fi
 
 # Use exim4 server hostname instead of mail domain and remove hardcoded mail prefix
 if [ ! -z "$MAIL_SYSTEM" ]; then
+    echo "(*) Updating exim configuration..."
     if cat /etc/exim4/exim4.conf.template | grep -q 'helo_data = mail.${sender_address_domain}'; then
-        echo "(*) Updating exim configuration..."
         sed -i 's/helo_data = mail.${sender_address_domain}/helo_data = ${primary_hostname}/g' /etc/exim4/exim4.conf.template
+    fi
+    if ! grep -q '^OUTGOING_IP = /' /etc/exim4/exim4.conf.template; then
+        sed -i '/^OUTGOING_IP/d' /etc/exim4/exim4.conf.template
+        sed -i 's|^begin acl|OUTGOING_IP = /etc/exim4/domains/$sender_address_domain/ip\nbegin acl|' /etc/exim4/exim4.conf.template
+    fi
+    if ! grep -q 'interface =' /etc/exim4/exim4.conf.template; then
+        sed -i '/interface =/d' /etc/exim4/exim4.conf.template
+        sed -i 's|dkim_strict = 0|dkim_strict = 0\n  interface = ${if exists{OUTGOING_IP}{${readfile{OUTGOING_IP}}}}|' /etc/exim4/exim4.conf.template
     fi
 fi
 

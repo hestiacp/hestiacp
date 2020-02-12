@@ -51,7 +51,7 @@ class WordpressSetup extends BaseSetup {
             throw new \Exception("Error installing config file in: " . $tmp_configpath . " to:" . $this->getDocRoot("wp-config.php") . $result->text );
         }
 
-        exec("/usr/bin/curl --post301 --insecure --resolve ".$this->domain.":80:".$this->appcontext->getWebDomainIp($this->domain)." " 
+        exec("/usr/bin/curl --location --post301 --insecure --resolve ".$this->domain.":80:".$this->appcontext->getWebDomainIp($this->domain)." "
             . escapeshellarg("http://".$this->domain."/wp-admin/install.php?step=2")
             . " -d " . escapeshellarg(
                 "weblog_title=" . rawurlencode($options['site_name'])

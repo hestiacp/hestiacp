@@ -241,8 +241,8 @@ add_web_config() {
         ln -s $conf /etc/$1/conf.d/domains/$domain.ssl.conf
 
         # Clear old configurations
-        rm -f $HOMEDIR/$user/conf/web/$domain.*
-        rm -f $HOMEDIR/$user/conf/web/ssl.$domain.*
+        rm -f $HOMEDIR/$user/conf/web/$domain
+        rm -f $HOMEDIR/$user/conf/web/ssl.$domain
 
         # Rename/Move extra SSL config files
         for f in $(ls $HOMEDIR/$user/conf/web/*.$domain.conf* 2>/dev/null); do
@@ -261,7 +261,7 @@ add_web_config() {
         ln -s $conf /etc/$1/conf.d/domains/$domain.conf
 
         # Clear old configurations
-        rm -rf $HOMEDIR/$user/conf/web/$domain.*
+        rm -rf $HOMEDIR/$user/conf/web/$domain
 
         # Rename/Move extra config files
         for f in $(ls $HOMEDIR/$user/conf/web/*.$domain.conf* 2>/dev/null); do

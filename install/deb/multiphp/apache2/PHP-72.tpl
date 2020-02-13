@@ -23,7 +23,7 @@
     </Directory>
 
     <FilesMatch \.php$>
-        SetHandler "proxy:unix:/run/php/php7.2-fpm-%domain%.sock|fcgi://localhost/"
+        SetHandler "proxy:unix:/run/php/php7.2-fpm-%domain%.sock|fcgi://localhost"
     </FilesMatch>
     SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0
 

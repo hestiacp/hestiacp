@@ -26,7 +26,7 @@
     %ssl_ca_str%SSLCertificateChainFile %ssl_ca%
 
     <FilesMatch \.php$>
-        SetHandler "proxy:%backend_lsnr%|fcgi://localhost/"
+        SetHandler "proxy:%backend_lsnr%|fcgi://localhost"
     </FilesMatch>
     SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0
 

@@ -23,7 +23,7 @@
     </Directory>
 
     <FilesMatch \.php$>
-        SetHandler "proxy:%backend_lsnr%|fcgi://localhost/"
+        SetHandler "proxy:%backend_lsnr%|fcgi://localhost"
     </FilesMatch>
     SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0
 

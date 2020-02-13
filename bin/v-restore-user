@@ -284,7 +284,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
         domains="$backup_domains"
     else
         echo "$web" |tr ',' '\n' > $tmpdir/selected.txt
-        domains=$(echo "$backup_domains" |egrep -f $tmpdir/selected.txt)
+        domains=$(echo "$backup_domains" |egrep -x -f $tmpdir/selected.txt)
     fi
 
     # Restoring web domain
@@ -453,7 +453,7 @@ if [ "$dns" != 'no' ] && [ ! -z "$DNS_SYSTEM" ]; then
         domains="$backup_domains"
     else
         echo "$dns" |tr ',' '\n' > $tmpdir/selected.txt
-        domains=$(echo "$backup_domains" |egrep -f $tmpdir/selected.txt)
+        domains=$(echo "$backup_domains" |egrep -x -f $tmpdir/selected.txt)
     fi
 
     # Restoring DNS domain
@@ -547,7 +547,7 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
         domains="$backup_domains"
     else
         echo "$mail" |tr ',' '\n' > $tmpdir/selected.txt
-        domains=$(echo "$backup_domains" |egrep -f $tmpdir/selected.txt)
+        domains=$(echo "$backup_domains" |egrep -x -f $tmpdir/selected.txt)
     fi
 
     # Checking exim username for later chowning
@@ -650,7 +650,7 @@ if [ "$db" != 'no' ] && [ ! -z "$DB_SYSTEM" ]; then
         databases="$backup_databases"
     else
         echo "$db" |tr ',' '\n' > $tmpdir/selected.txt
-        databases=$(echo "$backup_databases" |egrep -f $tmpdir/selected.txt)
+        databases=$(echo "$backup_databases" |egrep -x -f $tmpdir/selected.txt)
     fi
 
     # Restoring database
@@ -761,7 +761,7 @@ if [ "$udir" != 'no' ]; then
             user_dirs="$backup_dirs"
         else
             echo "$udir" |tr ',' '\n' > $tmpdir/selected.txt
-            user_dirs=$(echo "$backup_dirs" |egrep -f $tmpdir/selected.txt)
+            user_dirs=$(echo "$backup_dirs" |egrep -x -f $tmpdir/selected.txt)
         fi
 
         for user_dir in $user_dirs; do

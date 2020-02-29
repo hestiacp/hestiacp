@@ -68,6 +68,7 @@ All notable changes to this project will be documented in this file.
 - Fixed excluding folders named "logs" from restore backup, thanks to @davidgolsen.
 - Fixed typo in delete psql database part, thanks to @joshbmarshall.
 - Split long txt records to 255 chunks to prevent bind issues, thanks to @setiseta.
+- Fixed missing restart routine for vsftp on v-add-letsencrypt-host.
 
 ## [1.0.6] - 2019-09-24 - Hotfix
 ### Bugfixes

@@ -1,18 +1,23 @@
-### The content below is simply a template. Please delete any unnecessary sections from your issue reports.
+### The content below is simply a template. 
+
+**To better assist in troubleshooting and aid with our debugging processes, we ask that you please delete any unnecessary sections below when filling out your issue report.**
+
+**Important: Please DO NOT include any personal or sensitive information in your issue reports, including usernames, passwords, or email addresses.**
 
 ### In a few words, please describe the issue that you're experiencing:
-Please enter your response here (e.g. When I click on the Web tab, a blank page is displayed).
+Please enter your response here (e.g. When I try adding a web domain, an error message appeared stating that the php-fpm pool did not exist).
 
 ### What steps did you take when the issue occured? 
 1. Ex.: Log into the Hestia Control Panel using Firefox
 2. Ex.: Click on the Web tab
-3. ...
+3. Ex.: Click on Add Web Domain
+4. Ex.: Attempted to add a domain and received an error.
 
 ### Expected behavior:
-Please enter your response here (e.g. A list of hosted web domains should appear).
+Please enter your response here (e.g. the web domain should have been added successfully).
 
 ### Operating system distribution and release:
-Please enter your response here (e.g. Ubuntu 18.04.2 LTS)
+Please enter your response here (e.g. Ubuntu 18.04.3 LTS)
 
 ### Which version of Hestia Control Panel is currently installed?
 You can find this information in $HESTIA/conf/hestia.conf by running the following command:

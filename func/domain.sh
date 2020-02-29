@@ -84,14 +84,17 @@ is_web_alias_new() {
 
 # Prepare web backend
 prepare_web_backend() {
+    # Accept first function argument as backend template otherwise fallback to $template global variable
+    local backend_template=${1:-$template}
+
     pool=$(find -L /etc/php/ -name "$domain.conf" -exec dirname {} \;)
     # Check if multiple-PHP installed
     regex="socket-(\d+)_(\d+)"
-    if [[ $template =~ ^PHP-([0-9])\_([0-9])$ ]]; then
+    if [[ $backend_template =~ ^PHP-([0-9])\_([0-9])$ ]]; then
         backend_version="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
         pool=$(find -L /etc/php/$backend_version -type d \( -name "pool.d" -o -name "*fpm.d" \))
     else
-        backend_version=$(php -r "echo (float)phpversion();")
+        backend_version=$(multiphp_default_version)
         if [ -z "$pool" ] || [ -z "$BACKEND" ]; then 
             pool=$(find -L /etc/php/$backend_version -type d \( -name "pool.d" -o -name "*fpm.d" \))
         fi
@@ -160,7 +163,7 @@ prepare_web_domain_values() {
     fi
 
     if [ ! -z "$WEB_BACKEND" ]; then
-        prepare_web_backend
+        prepare_web_backend "$BACKEND"
     fi
 
     server_alias=''
@@ -461,6 +464,10 @@ update_domain_zone() {
         RECORD=$(idn --quiet -a -t "$RECORD")
         if [ "$TYPE" = 'CNAME' ] || [ "$TYPE" = 'MX' ]; then
             VALUE=$(idn --quiet -a -t "$VALUE")
+        fi
+
+        if [ "$TYPE" = 'TXT' ] && [[ ${VALUE:0:1} != '"' ]]; then
+            VALUE=$(echo $VALUE | fold -w 255 | xargs -I '$' echo -n '"$"')
         fi
 
         if [ "$SUSPENDED" != 'yes' ]; then

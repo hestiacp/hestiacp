@@ -68,14 +68,15 @@ fi
 if [ "$add_ssl" = "yes" ]; then
     # Add let's encrypt ssl
     $BIN/v-add-letsencrypt-domain $user $domain
+    check_result $? "Let's Encrypt SSL creation failed"  $E_UPDATE
 fi
 
 # Add certificate to backend
 $BIN/v-update-host-certificate $user $domain
 
 # Enable automatic ssl forward and hsts
-$BIN/v-add-web-domain-ssl-force $user $domain
-$BIN/v-add-web-domain-ssl-hsts $user $domain
+$BIN/v-add-web-domain-ssl-force $user $domain > /dev/null 2>&1
+$BIN/v-add-web-domain-ssl-hsts $user $domain > /dev/null 2>&1
 
 
 #----------------------------------------------------------#

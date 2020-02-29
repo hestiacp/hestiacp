@@ -11,12 +11,12 @@ All notable changes to this project will be documented in this file.
 - Refactored MultiPHP functionality. MultiPHP will be enabled by default on new installations.
 - Allowed admin user to add or remove PHP versions from webui (edit/server->"Web Server" page).
 - Extended v-extract-fs-archive to allow archive testing and extracting only specific paths (for tar)
-- Added file manager (Tiny File Manager).
 - Allow renaming of existing packages from console (v-rename-package).
 - Webmail IP address is now inherited from web domain when using multiple IPs.
 - Exim now uses the web domain IP if it exists.
 - Public IP is now used when updating webmail DNS record.
 - Added PHP 7.4 to MultiPHP.
+- Add Support for Debian 10 (Buster).
 
 ### Bugfixes
 - Added a detection of web root for add .well-known ACME challenge.
@@ -61,6 +61,14 @@ All notable changes to this project will be documented in this file.
 - Re-Enable force ssl function on let's encrypt certification renew.
 - Added official postgresql repository to be up to date.
 - Hardening MySQL configuration, prevent local infile.
+- Fixed lograte bug and cleans up the messed up nginx/apache2 log permissions.
+- Fixed IfModule mpm_itk.c for apache2 templates.
+- Added mpm_itk for Deb10 single php installation only.
+- Hardening nginx configuration, drop TLSv1.1 support.
+- Fixed excluding folders named "logs" from restore backup, thanks to @davidgolsen.
+- Fixed typo in delete psql database part, thanks to @joshbmarshall.
+- Split long txt records to 255 chunks to prevent bind issues, thanks to @setiseta.
+- Fixed missing restart routine for vsftp on v-add-letsencrypt-host.
 
 ## [1.0.6] - 2019-09-24 - Hotfix
 ### Bugfixes

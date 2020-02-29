@@ -50,10 +50,25 @@ rebuild_user_conf() {
     if [ -e "$HOMEDIR/$user/conf" ]; then
         chattr -i $HOMEDIR/$user/conf > /dev/null 2>&1
     fi
-    mkdir -p $HOMEDIR/$user/conf
+
+    # Create default writeable folders
+    mkdir -p \
+        $HOMEDIR/$user/conf \
+        $HOMEDIR/$user/.config \
+        $HOMEDIR/$user/.cache \
+        $HOMEDIR/$user/.local \
+        $HOMEDIR/$user/.composer \
+        $HOMEDIR/$user/.ssh
+
     chmod a+x $HOMEDIR/$user
     chmod a+x $HOMEDIR/$user/conf
-    chown $user:$user $HOMEDIR/$user
+    chown $user:$user \
+        $HOMEDIR/$user \
+        $HOMEDIR/$user/.config \
+        $HOMEDIR/$user/.cache \
+        $HOMEDIR/$user/.local \
+        $HOMEDIR/$user/.composer \
+        $HOMEDIR/$user/.ssh
     chown root:root $HOMEDIR/$user/conf
 
     $BIN/v-add-user-sftp-jail "$user"
@@ -511,7 +526,7 @@ rebuild_mail_domain_conf() {
 
         # Adding mail directiry
         if [ ! -e $HOMEDIR/$user/mail/$domain_idn ]; then
-            $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/mail/$domain_idn"
+            mkdir "$HOMEDIR/$user/mail/$domain_idn"
         fi
 
         # Adding catchall email

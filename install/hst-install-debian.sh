@@ -22,7 +22,7 @@ codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
 HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 
 # Define software versions
-pma_v='4.9.3'
+pma_v='4.9.4'
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
 fpm_v="7.3"
 
@@ -43,9 +43,9 @@ elif [ "$release" -eq 9 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
         libapache2-mod-ruid2 libapache2-mod-fcgid libapache2-mod-php$fpm_v 
         php$fpm_v php$fpm_v-common php$fpm_v-cgi php$fpm_v-mysql php$fpm_v-curl
-        php$fpm_v-pgsql php$fpm_v-imagick php$fpm_v-imap php$fpm_v-ldap php$fpm_v-apcu awstats
-        php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli php$fpm_v-gd
-        php$fpm_v-intl php$fpm_v-json php$fpm_v-mbstring
+        php$fpm_v-pgsql php$fpm_v-imagick php$fpm_v-imap php$fpm_v-ldap
+        php$fpm_v-apcu awstats php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli
+        php$fpm_v-gd php$fpm_v-intl php$fpm_v-json php$fpm_v-mbstring
         php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
         vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy clamav-daemon
         spamassassin dovecot-imapd dovecot-pop3d roundcube-core net-tools
@@ -57,16 +57,20 @@ elif [ "$release" -eq 9 ]; then
         unrar-free vim-common acl sysstat rsyslog setpriv"
 elif [ "$release" -eq 10 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
-        apache2-suexec-pristine libapache2-mod-fcgid libapache2-mod-php php
-        php-common php-cgi php-mysql php-curl php-pgsql php-imap php-ldap php-apcu
-        php-imagick awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy 
-        clamav-daemon spamassassin dovecot-imapd dovecot-pop3d roundcube-core net-tools
-        roundcube-mysql roundcube-plugins mariadb-client mariadb-common
+        apache2-suexec-pristine libapache2-mod-fcgid libapache2-mpm-itk 
+        libapache2-mod-php$fpm_v php$fpm_v php$fpm_v-common php$fpm_v-cgi
+        php$fpm_v-mysql php$fpm_v-curl php$fpm_v-pgsql php$fpm_v-imagick 
+        php$fpm_v-imap php$fpm_v-ldap php$fpm_v-apcu awstats php$fpm_v-zip
+        php$fpm_v-bz2 php$fpm_v-cli php$fpm_v-gd php$fpm_v-intl php$fpm_v-json
+        php$fpm_v-mbstring php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline
+        php$fpm_v-xml awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy 
+        clamav-daemon spamassassin dovecot-imapd dovecot-pop3d roundcube-core
+        net-tools roundcube-mysql roundcube-plugins mariadb-client mariadb-common
         mariadb-server postgresql postgresql-contrib phpmyadmin phppgadmin mc
-        flex whois git idn zip sudo bc ftp lsof ntpdate rrdtool quota
-        e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
-        unrar-free vim-common acl sysstat rsyslog util-linux"
+        flex whois git idn zip sudo bc ftp lsof ntpdate rrdtool quota e2fslibs
+        bsdutils e2fsprogs curl imagemagick fail2ban dnsutils bsdmainutils cron
+        hestia hestia-nginx hestia-php expect libmail-dkim-perl unrar-free
+        vim-common acl sysstat rsyslog util-linux"
 fi
 
 # Defining help function
@@ -453,7 +457,7 @@ fi
 if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
     echo '   - Apache Web Server (as backend)'
 fi
-if [ "$phpfpm"  = 'yes' ]; then
+if [ "$phpfpm"  = 'yes' ] && [ "$multiphp" = 'no' ]; then
     echo '   - PHP-FPM Application Server'
 fi
 if [ "$multiphp"  = 'yes' ]; then
@@ -757,6 +761,7 @@ if [ "$apache" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/libapache2-mod-rpaf//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-fcgid//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-php$fpm_v//")
+    software=$(echo "$software" | sed -e "s/libapache2-mpm-itk//")
 fi
 if [ "$vsftpd" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/vsftpd//")
@@ -810,6 +815,7 @@ if [ "$iptables" = 'no' ] || [ "$fail2ban" = 'no' ]; then
 fi
 if [ "$phpfpm" = 'yes' ]; then
     software=$(echo "$software" | sed -e "s/php$fpm_v-cgi//")
+    software=$(echo "$software" | sed -e "s/libapache2-mpm-itk//")
 fi
 if [ -d "$withdebs" ]; then
     software=$(echo "$software" | sed -e "s/hestia-nginx//")
@@ -1153,7 +1159,11 @@ if [ "$apache" = 'yes' ]; then
     a2enmod suexec > /dev/null 2>&1
     a2enmod ssl > /dev/null 2>&1
     a2enmod actions > /dev/null 2>&1
-    a2enmod ruid2 > /dev/null 2>&1
+    if [ "$release" -eq 10 ]; then
+        a2enmod mpm_itk > /dev/null 2>&1
+    else
+        a2enmod ruid2 > /dev/null 2>&1
+    fi
     mkdir -p /etc/apache2/conf.d
     mkdir -p /etc/apache2/conf.d/domains
     echo "# Powered by hestia" > /etc/apache2/sites-available/default
@@ -1183,18 +1193,19 @@ if [ "$multiphp" = 'yes' ] ; then
     for v in "${multiphp_v[@]}"; do
         cp -r /etc/php/$v/ /root/hst_install_backups/php$v/
         rm -f /etc/php/$v/fpm/pool.d/*
-
-        $HESTIA/bin/v-add-web-php "$v"
+        echo "(*) Install PHP version $v..."
+        $HESTIA/bin/v-add-web-php "$v" > /dev/null 2>&1
     done
 fi
 
 if [ "$phpfpm" = 'yes' ]; then
     echo "(*) Configuring PHP-FPM..."
-    $HESTIA/bin/v-add-web-php "$fpm_v"
+    $HESTIA/bin/v-add-web-php "$fpm_v" > /dev/null 2>&1
     cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf
     update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1
     systemctl start php$fpm_v-fpm >> $LOG
     check_result $? "php-fpm start failed"
+    update-alternatives --set php /usr/bin/php$fpm_v > /dev/null 2>&1
 fi
 
 
@@ -1823,11 +1834,11 @@ $HESTIA/bin/v-add-user-notification admin 'Welcome!' 'For more information on ho
 echo "(!) IMPORTANT: You must logout or restart the server before continuing."
 echo ""
 if [ "$interactive" = 'yes' ]; then
-    echo -n " Do you want to logout now? [Y/N] "
-    read resetshell
+    echo -n " Do you want to reboot now? [Y/N] "
+    read reboot
 
-    if [ "$resetshell" = "Y" ] || [ "$resetshell" = "y" ]; then
-        exit
+    if [ "$reboot" = "Y" ] || [ "$reboot" = "y" ]; then
+        reboot
     fi
 fi
 

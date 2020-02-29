@@ -48,8 +48,23 @@ if [ "$num_php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
 
     # Migrate domains
     for user in $($BIN/v-list-sys-users plain); do
+        # Define user data and get suspended status
+        USER_DATA=$HESTIA/data/users/$user
+        SUSPENDED=$(get_user_value '$SUSPENDED')
+
+        # Check if user is suspended
+        if [ "$SUSPENDED" = "yes" ]; then
+            suspended="yes"
+            $BIN/v-unsuspend-user $user
+        fi
         echo "Migrating legacy multiphp domains for user: $user"
         for domain in $($BIN/v-list-web-domains $user plain |cut -f1); do
+            SUSPENDED_WEB=$(get_object_value 'web' 'DOMAIN' "$domain" '$SUSPENDED')
+            # Check if web domain is suspended
+            if [ "$SUSPENDED_WEB" = "yes" ]; then
+                suspended_web="yes"
+                $BIN/v-unsuspend-web-domain $user $domain
+            fi
             echo "Processing domain: $domain"
             web_tpl="default"
             backend_tpl="$DEFAULT_BTPL"
@@ -65,7 +80,7 @@ if [ "$num_php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
                 backend_tpl="PHP-7_2"
             elif [ "$domain_tpl" = "PHP-73" ] || [ "$domain_tpl" = "default" ] || [ -z "$domain_tpl" ]; then
                 backend_tpl="PHP-7_3"
-            elif [ "$domain_tpl" = "PHP-74"]; then
+            elif [ "$domain_tpl" = "PHP-74" ]; then
                 backend_tpl="PHP-7_4"
             else
                 # Custom domain template used
@@ -106,7 +121,19 @@ if [ "$num_php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
             $BIN/v-change-web-domain-tpl "$user" "$domain" "$web_tpl" "no"
             $BIN/v-change-web-domain-backend-tpl "$user" "$domain" "$backend_tpl" "no"
             echo -e "--done--\n"
+
+            # Suspend domain again, if it was suspended
+            if [ "$suspended_web" = "yes" ]; then
+                unset suspended_web
+                $BIN/v-suspend-web-domain $user $domain
+            fi
         done
+
+        # Suspend user again, if he was suspended
+        if [ "$suspended" = "yes" ]; then
+            unset suspended
+            $BIN/v-suspend-user $user
+        fi
     done
 
     # cleanup legacy multiphp templates

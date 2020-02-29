@@ -3,9 +3,17 @@
 **Current stable release:** Version 1.0.6, released on September 26th, 2019.<br>
 **Current development release:** Version 1.1.0, release date yet to be determined.
 
-**We're looking for some extra hands on deck!**
+**Welcome!**
 ---------------------------- 
-Are you a software developer, tester, or have experience in writing documentation or guides? Do you have some spare time to contribute and want to help further the development of Hestia Control Panel?<br><br>Please send an email to info@hestiacp.com with a quick outline of your previous experience in any of these areas or where you think you could help on the project and we'll reach out to discuss with you further. 
+Hestia Control Panel offers easy to use web and command line interfaces, enabling web server administrators to quickly deploy and manage web domains, mail accounts, and DNS zones from one central location without the hassle of manually deploying and configuring individual components. 
+
+While we have taken every effort to make the interface as friendly as possible (even for new users), it is assumed that you will have some prior knowledge and understanding in the basics how to set up a Linux server and managing web applications.
+
+**We cannot provide support for requests that do not describe in detail the troubleshooting that has already been performed, or for third-party applications which do not directly relate to Hestia Control Panel. Please make sure that you fill in the necessary details in your issue reports, and remove any sections that do not apply to your issue or use case.**
+
+Interested in helping shape the future of Hestia Control Panel?
+---------------------------- 
+Are you a software developer, tester, or have experience in writing documentation or guides and have some time to contibute to the project?<br><br>Please send an email to info@hestiacp.com with a quick outline of your previous experience in any of these areas or where you think you could help on the project and we'll reach out to discuss the next steps.
 
 As always we welcome all feedback and contributions!
 
@@ -67,7 +75,7 @@ You may specify a number of various flags during installation to only install th
 ```bash
 bash hst-install.sh -h
 ```
-Alternatively, @gabizz has made available a command-line script generator at https://gabizz.github.io/hestiacp-scriptline-generator/ which allows you to easily generate the installation command via GUI.
+Alternatively, @gabizz has made available a command-line script generator at https://gabizz.github.io/hestiacp-scriptline-generator/ which allows you to easily generate the installation command via GUI. (Please note that this generator still references the master branch, which is not intended for production use - see development builds below.)
 
 Installing & testing development builds
 =============================

@@ -1072,13 +1072,31 @@ multiphp_count() {
 }
 
 multiphp_versions() {
+    local -a php_versions_list;
+    local php_ver;
     if [ "$(multiphp_count)" -gt 0 ] ; then
-        for php_ver in $(ls /etc/php/); do
+        for php_ver in $(ls -v /etc/php/); do
             [ ! -d "/etc/php/$php_ver/fpm/pool.d/" ] && continue
-            echo -n "$php_ver "
+            php_versions_list+=($php_ver)
         done
-        echo -en '\n'
+        echo "${php_versions_list[@]}"
     fi
+}
+
+multiphp_default_version() {
+    # Get system wide default php version (set by update-alternatives)
+    local sys_phpversion=$(php -r "echo (float)phpversion();")
+
+    # Check if the system php also has php-fpm enabled, otherwise return
+    # the most recent php version which does have it installed.
+    if [ ! -d "/etc/php/$sys_phpversion/fpm/pool.d/" ]; then
+        local all_versions="$(multiphp_versions)"
+        if [ ! -z "$all_versions" ]; then
+            sys_phpversion="${all_versions##*\ }";
+        fi
+    fi
+
+    echo "$sys_phpversion"
 }
 
 # Run arbitrary cli commands with dropped privileges

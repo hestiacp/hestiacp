@@ -322,7 +322,7 @@ delete_pgsql_database() {
     psql_connect $HOST
 
     query="REVOKE ALL PRIVILEGES ON DATABASE $database FROM $DBUSER"
-    psql_qyery "$query" > /dev/null
+    psql_query "$query" > /dev/null
 
     query="DROP DATABASE $database"
     psql_query "$query" > /dev/null

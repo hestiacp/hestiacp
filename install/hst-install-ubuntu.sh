@@ -22,7 +22,7 @@ codename="$(lsb_release -s -c)"
 HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 
 # Define software versions
-pma_v='4.9.3'
+pma_v='4.9.4'
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
 fpm_v="7.3"
 
@@ -420,7 +420,7 @@ fi
 if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
     echo '   - Apache Web Server (as backend)'
 fi
-if [ "$phpfpm"  = 'yes' ]; then
+if [ "$phpfpm"  = 'yes' ] && [ "$multiphp" = 'no' ]; then
     echo '   - PHP-FPM Application Server'
 fi
 if [ "$multiphp"  = 'yes' ]; then
@@ -787,6 +787,10 @@ if [ -d "$withdebs" ]; then
     software=$(echo "$software" | sed -e "s/hestia-nginx//")
     software=$(echo "$software" | sed -e "s/hestia-php//")
     software=$(echo "$software" | sed -e "s/hestia//")
+fi
+
+if [ "$release" = '16.04' ]; then
+    software=$(echo "$software" | sed -e "s/setpriv/util-linux/")
 fi
 
 #----------------------------------------------------------#
@@ -1160,18 +1164,19 @@ if [ "$multiphp" = 'yes' ] ; then
     for v in "${multiphp_v[@]}"; do
         cp -r /etc/php/$v/ /root/hst_install_backups/php$v/
         rm -f /etc/php/$v/fpm/pool.d/*
-
-        $HESTIA/bin/v-add-web-php "$v"
+        echo "(*) Install PHP version $v..."
+        $HESTIA/bin/v-add-web-php "$v" > /dev/null 2>&1
     done
 fi
 
 if [ "$phpfpm" = 'yes' ]; then
     echo "(*) Configuring PHP-FPM..."
-    $HESTIA/bin/v-add-web-php "$fpm_v"
+    $HESTIA/bin/v-add-web-php "$fpm_v" > /dev/null 2>&1
     cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf
     update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1
     systemctl start php$fpm_v-fpm >> $LOG
     check_result $? "php-fpm start failed"
+    update-alternatives --set php /usr/bin/php$fpm_v > /dev/null 2>&1
 fi
 
 
@@ -1760,11 +1765,11 @@ $HESTIA/bin/v-add-user-notification admin 'Welcome!' 'For more information on ho
 echo "(!) IMPORTANT: You must logout or restart the server before continuing."
 echo ""
 if [ "$interactive" = 'yes' ]; then
-    echo -n " Do you want to logout now? [Y/N] "
-    read resetshell
+    echo -n " Do you want to reboot now? [Y/N] "
+    read reboot
 
-    if [ "$resetshell" = "Y" ] || [ "$resetshell" = "y" ]; then
-        exit
+    if [ "$reboot" = "Y" ] || [ "$reboot" = "y" ]; then
+        reboot
     fi
 fi
 

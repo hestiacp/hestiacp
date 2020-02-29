@@ -85,6 +85,7 @@ if [ ! -z "$WEB_BACKEND" ]; then
         delete_web_backend
     else
         for domain in $($BIN/v-list-web-domains $user plain |cut -f 1); do
+            template=$(get_object_value 'web' 'DOMAIN' "$domain" '$BACKEND')
             prepare_web_backend
             delete_web_backend
         done

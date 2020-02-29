@@ -58,9 +58,17 @@ fi
 
 # Use exim4 server hostname instead of mail domain and remove hardcoded mail prefix
 if [ ! -z "$MAIL_SYSTEM" ]; then
+    echo "(*) Updating exim configuration..."
     if cat /etc/exim4/exim4.conf.template | grep -q 'helo_data = mail.${sender_address_domain}'; then
-        echo "(*) Updating exim configuration..."
         sed -i 's/helo_data = mail.${sender_address_domain}/helo_data = ${primary_hostname}/g' /etc/exim4/exim4.conf.template
+    fi
+    if ! grep -q '^OUTGOING_IP = /' /etc/exim4/exim4.conf.template; then
+        sed -i '/^OUTGOING_IP/d' /etc/exim4/exim4.conf.template
+        sed -i 's|^begin acl|OUTGOING_IP = /etc/exim4/domains/$sender_address_domain/ip\nbegin acl|' /etc/exim4/exim4.conf.template
+    fi
+    if ! grep -q 'interface =' /etc/exim4/exim4.conf.template; then
+        sed -i '/interface =/d' /etc/exim4/exim4.conf.template
+        sed -i 's|dkim_strict = 0|dkim_strict = 0\n  interface = ${if exists{OUTGOING_IP}{${readfile{OUTGOING_IP}}}}|' /etc/exim4/exim4.conf.template
     fi
 fi
 
@@ -71,8 +79,8 @@ fi
 
 # Fix sftp jail cronjob
 if [ -e "/etc/cron.d/hestia-sftp" ]; then
-    if ! cat /etc/cron.d/hestia-sftp | grep -q 'admin'; then
-        echo "@reboot admin /usr/local/hestia/bin/v-add-sys-sftp-jail" > /etc/cron.d/hestia-sftp
+    if ! cat /etc/cron.d/hestia-sftp | grep -q 'root'; then
+        echo "@reboot root /usr/local/hestia/bin/v-add-sys-sftp-jail" > /etc/cron.d/hestia-sftp
     fi
 fi
 
@@ -80,12 +88,14 @@ fi
 echo "(*) Updating default writable folders for all users..."
 for user in $($HESTIA/bin/v-list-sys-users plain); do
     mkdir -p \
+        $HOMEDIR/$user/.cache \
         $HOMEDIR/$user/.config \
         $HOMEDIR/$user/.local \
         $HOMEDIR/$user/.composer \
         $HOMEDIR/$user/.ssh
 
     chown $user:$user \
+        $HOMEDIR/$user/.cache \
         $HOMEDIR/$user/.config \
         $HOMEDIR/$user/.local \
         $HOMEDIR/$user/.composer \
@@ -149,4 +159,57 @@ if [ -e "/etc/mysql/my.cnf" ]; then
         echo "(*) Hardening MySQL configuration..."
         sed -i '/symbolic-links\=0/a\local-infile=0' /etc/mysql/my.cnf
     fi
+fi
+
+# Hardening nginx configuration, drop TLSv1.1 support.
+if [ -e "/etc/nginx/nginx.conf" ]; then
+    nginx_tls_check=$(grep TLSv1.1 /etc/nginx/nginx.conf)
+    if [ ! -z "$nginx_tls_check" ]; then
+        echo "(*) Hardening nginx configuration, drop TLSv1.1 support..."
+        sed -i 's/TLSv1.1 //g' /etc/nginx/nginx.conf
+    fi
+fi
+
+# Fix logrotate permission bug for nginx
+if [ -e "/etc/logrotate/nginx" ]; then
+    sed -i "s/create 640 nginx adm/create 640/g" /etc/logrotate.d/nginx
+fi
+
+# Fix logrotate permission bug for apache
+if [ -e "/etc/logrotate/apache2" ]; then
+    sed -i "s/create 640 root adm/create 640/g" /etc/logrotate.d/apache2
+fi
+
+# Repair messed up user log permissions from the logrotate bug. Ignoring errors
+for user in $($HESTIA/bin/v-list-users plain | cut -f1); do
+    for domain in $($HESTIA/bin/v-list-web-domains $user plain | cut -f1); do
+        chown root:$user /var/log/$WEB_SYSTEM/domains/$domain.* > /dev/null 2>&1
+        for sub_domain in $($HESTIA/bin/v-list-web-domain $user $domain plain | cut -f7 | tr ',' '\n'); do
+            chown root:$user /var/log/$WEB_SYSTEM/domains/$sub_domain.* > /dev/null 2>&1
+        done
+    done
+done
+
+chown root:root /var/log/$WEB_SYSTEM/domains/$WEBMAIL_ALIAS* > /dev/null 2>&1
+
+# Enable IMAP/POP3 quota information
+if [ -z "$IMAP_SYSTEM" ]; then
+    echo "(*) Enabling IMAP quota information reporting ..."
+    if [ -e /etc/dovecot/conf.d/20-pop3.conf ]; then
+        cp -f $HESTIA/install/deb/dovecot/conf.d/20-pop3.conf /etc/dovecot/conf.d/20-pop3.conf
+    fi
+    if [ -e /etc/dovecot/conf.d/20-imap.conf ]; then
+        cp -f $HESTIA/install/deb/dovecot/conf.d/20-imap.conf /etc/dovecot/conf.d/20-imap.conf
+    fi
+    if [ -e /etc/dovecot/conf.d/90-quota.conf ]; then
+        cp -f $HESTIA/install/deb/dovecot/conf.d/90-quota.conf /etc/dovecot/conf.d/90-quota.conf
+    fi
+fi
+
+# Trigger multiphp legacy migration script
+num_php_versions=$(ls -d /etc/php/*/fpm/pool.d 2>/dev/null |wc -l)
+if [ "$num_php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
+    echo "(*) Migrate to new multiphp backend system..."
+    cp -rf $HESTIA/data/templates/web $HESTIA_BACKUP/templates/web
+    bash $HESTIA/install/upgrade/manual/migrate_multiphp.sh > /dev/null 2>&1
 fi

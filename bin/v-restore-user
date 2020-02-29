@@ -284,7 +284,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
         domains="$backup_domains"
     else
         echo "$web" |tr ',' '\n' > $tmpdir/selected.txt
-        domains=$(echo "$backup_domains" |egrep -f $tmpdir/selected.txt)
+        domains=$(echo "$backup_domains" |egrep -x -f $tmpdir/selected.txt)
     fi
 
     # Restoring web domain
@@ -407,8 +407,10 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
             rm -rf $HOMEDIR/$user/web/$domain/public_html/*
         fi
         chmod u+w "$HOMEDIR/$user/web/$domain"
+        [[ -d $HOMEDIR/$user/web/$domain/stats ]] && chmod u+w "$HOMEDIR/$user/web/$domain/stats"
         user_exec tar -xzpf $tmpdir/web/$domain/domain_data.tar.gz \
             -C "$HOMEDIR/$user/web/$domain/" \
+            --anchored \
             --exclude='logs/*'
         if [ "$?" -ne 0 ]; then
             rm -rf $tmpdir
@@ -451,7 +453,7 @@ if [ "$dns" != 'no' ] && [ ! -z "$DNS_SYSTEM" ]; then
         domains="$backup_domains"
     else
         echo "$dns" |tr ',' '\n' > $tmpdir/selected.txt
-        domains=$(echo "$backup_domains" |egrep -f $tmpdir/selected.txt)
+        domains=$(echo "$backup_domains" |egrep -x -f $tmpdir/selected.txt)
     fi
 
     # Restoring DNS domain
@@ -545,7 +547,7 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
         domains="$backup_domains"
     else
         echo "$mail" |tr ',' '\n' > $tmpdir/selected.txt
-        domains=$(echo "$backup_domains" |egrep -f $tmpdir/selected.txt)
+        domains=$(echo "$backup_domains" |egrep -x -f $tmpdir/selected.txt)
     fi
 
     # Checking exim username for later chowning
@@ -648,7 +650,7 @@ if [ "$db" != 'no' ] && [ ! -z "$DB_SYSTEM" ]; then
         databases="$backup_databases"
     else
         echo "$db" |tr ',' '\n' > $tmpdir/selected.txt
-        databases=$(echo "$backup_databases" |egrep -f $tmpdir/selected.txt)
+        databases=$(echo "$backup_databases" |egrep -x -f $tmpdir/selected.txt)
     fi
 
     # Restoring database
@@ -759,24 +761,28 @@ if [ "$udir" != 'no' ]; then
             user_dirs="$backup_dirs"
         else
             echo "$udir" |tr ',' '\n' > $tmpdir/selected.txt
-            user_dirs=$(echo "$backup_dirs" |egrep -f $tmpdir/selected.txt)
+            user_dirs=$(echo "$backup_dirs" |egrep -x -f $tmpdir/selected.txt)
         fi
 
         for user_dir in $user_dirs; do
             echo -e "$(date "+%F %T") $user_dir" |tee -a $tmpdir/restore.log
             tar xf "$BACKUP/$backup" -C "$tmpdir" --no-wildcards "./user_dir/$user_dir.tar.gz"
             if [ "$?" -ne 0 ]; then
+                rm -rf $tmpdir
                 error="Can't unpack $user_dir user dir container"
                 echo "$error" |$SENDMAIL -s "$subj" $email $notify
                 sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
                 check_result "$E_PARSING" "$error"
             fi
 
+            chown "$user" "$tmpdir/user_dir"
             chown "$user" "$HOMEDIR/$user"
+            chown "$user" "$HOMEDIR/$user/$user_dir"
             $BIN/v-extract-fs-archive "$user" "$tmpdir/user_dir/$user_dir.tar.gz" "$HOMEDIR/$user"
             cmdstatus="$?"
             chown root:root "$HOMEDIR/$user"
             if [ "$cmdstatus" -ne 0 ]; then
+                rm -rf $tmpdir
                 error="Can't unpack $user_dir user dir container"
                 echo "$error" |$SENDMAIL -s "$subj" $email $notify
                 sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe

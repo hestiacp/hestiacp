@@ -374,12 +374,18 @@ fi
 #################################################################################
 
 if [ "$install" = 'yes' ] || [ "$install" = 'y' ]; then
-    echo "Installing packages..."
-    for i in $DEB_DIR/*.deb; do
-        # Install all available packages
-        dpkg -i $i
-    done
-    unset $answer
-    # Remove temporary files
-    rm -rf $BUILD_DIR
+    echo "!!! Development builds should not be installed on systems with live production data without understanding the potential risks involved. !!!"
+    read -p 'Do you want to proceed the package installation? [y/n] ' answer
+    if [ "$answer" = 'y' ] || [ "$answer" = 'Y'  ]; then
+        echo "Installing packages..."
+        for i in $DEB_DIR/*.deb; do
+            # Install all available packages
+            dpkg -i $i
+        done
+        unset $answer
+        # Remove temporary files
+        rm -rf $BUILD_DIR
+    else
+        check_result 1 "Package installation cancelled..."
+    fi
 fi

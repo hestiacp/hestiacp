@@ -81,6 +81,9 @@ if [ ! -z "$MAIL_SYSTEM" ]; then
     # Restart exim (and dovecot if applicable)
     $BIN/v-restart-mail
 fi
+if [ "$FTP_SYSTEM" = "vsftpd" ]; then
+    $BIN/v-restart-ftp
+fi
 $BIN/v-restart-service hestia
 
 #----------------------------------------------------------#

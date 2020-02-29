@@ -63,6 +63,8 @@ $v_php_versions = array_map(function($php_version) use ($backend_templates, $bac
         "tpl" => strtoupper(str_replace('.', '_', $php_version)),
         "version" => str_ireplace('php-', '', $php_version),
         "usedby" => [],
+        "installed" => false,
+        "protected" => false,
     ];
 
     if(in_array($phpinfo->tpl, $backend_templates)) {
@@ -173,7 +175,7 @@ if (!empty($_POST['save'])) {
 
     // Install/remove php versions
     if (empty($_SESSION['error_msg'])) {
-        if(!empty($v_php_versions) && count($_POST['v_php_versions'] != count($v_php_versions))) {
+        if(!empty($v_php_versions)) {
             $post_php = $_POST['v_php_versions'];
 
             array_map(function($php_version) use ($post_php) {

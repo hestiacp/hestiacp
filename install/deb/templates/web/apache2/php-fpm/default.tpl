@@ -21,17 +21,9 @@
         AllowOverride All
         Options +Includes -Indexes +ExecCGI
     </Directory>
-#    <IfModule mod_ruid2.c>
-#        RMode config
-#        RUidGid %user% %group%
-#        RGroups www-data
-#    </IfModule>
-#    <IfModule itk.c>
-#        AssignUserID %user% %group%
-#    </IfModule>
 
     <FilesMatch \.php$>
-        SetHandler "proxy:%backend_lsnr%|fcgi://localhost/"
+        SetHandler "proxy:%backend_lsnr%|fcgi://localhost"
     </FilesMatch>
     SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0
 

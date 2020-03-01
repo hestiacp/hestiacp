@@ -1012,6 +1012,24 @@ else
     fi
 fi
 
+# Database stack
+if [ "$mysql" = 'yes' ]; then
+    installed_db_types='mysql'
+fi
+
+if [ "$pgsql" = 'yes' ]; then
+    installed_db_types="$installed_db_type,pgsql"
+fi
+
+if [ ! -z "$installed_db_types" ]; then
+    db=$(echo "$installed_db_types" |\
+        sed "s/,/\n/g"|\
+        sort -r -u |\
+        sed "/^$/d"|\
+        sed ':a;N;$!ba;s/\n/,/g')
+    echo "DB_SYSTEM='$db'" >> $HESTIA/conf/hestia.conf
+fi
+
 # FTP stack
 if [ "$vsftpd" = 'yes' ]; then
     echo "FTP_SYSTEM='vsftpd'" >> $HESTIA/conf/hestia.conf

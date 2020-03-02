@@ -95,7 +95,7 @@ if (!empty($_POST['ok']) && !empty($app) ) {
 if(!empty($installer)) {
     render_page($user, $TAB, 'setup_webapp');
 } else {
-    render_page($user, $TAB, 'add_webapp');
+    render_page($user, $TAB, 'list_webapps');
 }
 
 

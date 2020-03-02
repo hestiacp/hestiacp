@@ -8,10 +8,6 @@ class LaravelSetup extends BaseSetup {
 
     protected $config = [
         'form' => [
-            'protocol' => [
-                'type' => 'select',
-                'options' => ['http','https'],
-            ],
         ],
         'database' => true,
         'resources' => [

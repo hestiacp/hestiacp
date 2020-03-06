@@ -1523,13 +1523,6 @@ fi
 
 if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     echo "(*) Configuring Roundcube webmail client..."
-    if [ "$apache" = 'yes' ]; then
-        cp -f $HESTIA_INSTALL_DIR/roundcube/apache.conf /etc/roundcube/
-        ln -s /etc/roundcube/apache.conf /etc/apache2/conf.d/roundcube.conf
-    fi
-    if [ "$nginx" = 'yes' ]; then
-        cp -f $HESTIA_INSTALL_DIR/nginx/webmail.inc /etc/nginx/conf.d/
-    fi
     cp -f $HESTIA_INSTALL_DIR/roundcube/main.inc.php /etc/roundcube/config.inc.php
     cp -f $HESTIA_INSTALL_DIR/roundcube/db.inc.php /etc/roundcube/debian-db-roundcube.php
     cp -f $HESTIA_INSTALL_DIR/roundcube/config.inc.php /etc/roundcube/plugins/password/

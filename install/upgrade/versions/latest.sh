@@ -193,7 +193,7 @@ done
 chown root:root /var/log/$WEB_SYSTEM/domains/$WEBMAIL_ALIAS* > /dev/null 2>&1
 
 # Enable IMAP/POP3 quota information
-if [ -z "$IMAP_SYSTEM" ]; then
+if [ "$IMAP_SYSTEM" = "dovecot" ]; then
     echo "(*) Enabling IMAP quota information reporting ..."
     if [ -e /etc/dovecot/conf.d/20-pop3.conf ]; then
         cp -f $HESTIA/install/deb/dovecot/conf.d/20-pop3.conf /etc/dovecot/conf.d/20-pop3.conf
@@ -209,7 +209,7 @@ fi
 # Trigger multiphp legacy migration script
 num_php_versions=$(ls -d /etc/php/*/fpm/pool.d 2>/dev/null |wc -l)
 if [ "$num_php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
-    echo "(*) Migrate to new multiphp backend system..."
+    echo "(*) Enabling modular Multi-PHP backend ..."
     cp -rf $HESTIA/data/templates/web $HESTIA_BACKUP/templates/web
     bash $HESTIA/install/upgrade/manual/migrate_multiphp.sh > /dev/null 2>&1
 fi

@@ -214,3 +214,11 @@ if [ "$num_php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
     cp -rf $HESTIA/data/templates/web $HESTIA_BACKUP/templates/web
     bash $HESTIA/install/upgrade/manual/migrate_multiphp.sh > /dev/null 2>&1
 fi
+
+# Disable global subfolder alias for webmail in favor of subdomain
+if [ -e /etc/nginx/conf.d/webmail.inc ]; then
+    rm -f /etc/nginx/conf.d/webmail.inc
+fi
+if [ -e /etc/apache2/conf.d/roundcube.conf ]; then
+    rm -f /etc/apache2/conf.d/roundcube.conf
+fi

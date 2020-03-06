@@ -90,17 +90,11 @@ if [ ! -z "$1" ]; then
         exit 1
     else
         /usr/local/hestia/bin/v-change-sys-config-value 'RELEASE_BRANCH' "$branch"
-        echo "Changed update release branch to $branch from GitHub repository."
+        echo "Changed release branch to $branch."
     fi
 else
     source /usr/local/hestia/conf/hestia.conf
     branch=$RELEASE_BRANCH
-fi
-
-if [ ! -z "$2" ]; then
-    install=$2
-else
-    install="y"
 fi
 
 if [ -z "$branch" ]; then
@@ -373,19 +367,42 @@ fi
 #
 #################################################################################
 
-if [ "$install" = 'yes' ] || [ "$install" = 'y' ]; then
-    echo "!!! Development builds should not be installed on systems with live production data without understanding the potential risks involved. !!!"
-    read -p 'Do you want to proceed the package installation? [y/n] ' answer
+# Define package installation functions
+warning_message() {
+    echo ""
+    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    echo "WARNING - Development builds should not be installed on"
+    echo "systems with live production data without understanding"
+    echo "the potential risks that are involved!"
+    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    echo ""
+}
+
+install_build() {
+    echo "Installing packages..."
+    for i in $DEB_DIR/*.deb; do
+        # Install all available packages
+        dpkg -i $i
+    done
+    # Remove temporary files
+    rm -rf $BUILD_DIR
+}
+
+# Define installation routine
+
+if [ "$install" = "yes" ]; then 
+    install_build
+else
+    warning_message
+    read -p "Do you wish to proceed with the installation? [y/n] " answer
     if [ "$answer" = 'y' ] || [ "$answer" = 'Y'  ]; then
-        echo "Installing packages..."
-        for i in $DEB_DIR/*.deb; do
-            # Install all available packages
-            dpkg -i $i
-        done
+        install_build
         unset $answer
-        # Remove temporary files
-        rm -rf $BUILD_DIR
     else
-        check_result 1 "Package installation cancelled..."
+        echo "Installation of development build aborted."
+        echo "Removing temporary files..."
+        rm -rf $BUILD_DIR
+        unset $answer
+        echo ""
     fi
 fi

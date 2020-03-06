@@ -11,6 +11,7 @@
 
 # Argument definition
 restart=$1
+delay=$2
 
 # Includes
 source $HESTIA/func/main.sh
@@ -20,7 +21,7 @@ source $HESTIA/func/main.sh
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'RESTART'
+check_args '1' "$#" 'RESTART [DELAY]'
 
 
 # Perform verification if read-only mode is enabled
@@ -31,6 +32,10 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 if [  "$restart" = 'yes' ]; then
+    if [ "$delay" ]; then
+        echo "The server will restart in $delay seconds..."
+        sleep $delay
+    fi
     /sbin/reboot
 fi
 

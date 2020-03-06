@@ -140,6 +140,7 @@ fi
 
 # Installing postgresql repo
 if [ -e "/etc/postgresql" ]; then
+    echo "(*) Enabling native PostgreSQL APT repository..."
     osname="$(cat /etc/os-release | grep "^ID\=" | sed "s/ID\=//g")"
     if [ "$osname" = "ubuntu" ]; then
         codename="$(lsb_release -s -c)"
@@ -165,7 +166,7 @@ fi
 if [ -e "/etc/nginx/nginx.conf" ]; then
     nginx_tls_check=$(grep TLSv1.1 /etc/nginx/nginx.conf)
     if [ ! -z "$nginx_tls_check" ]; then
-        echo "(*) Hardening nginx configuration, drop TLSv1.1 support..."
+        echo "(*) Updating nginx security settings - disabling TLS v1.1..."
         sed -i 's/TLSv1.1 //g' /etc/nginx/nginx.conf
     fi
 fi
@@ -193,8 +194,8 @@ done
 chown root:root /var/log/$WEB_SYSTEM/domains/$WEBMAIL_ALIAS* > /dev/null 2>&1
 
 # Enable IMAP/POP3 quota information
-if [ -z "$IMAP_SYSTEM" ]; then
-    echo "(*) Enabling IMAP quota information reporting ..."
+if [ "$IMAP_SYSTEM" = "dovecot" ]; then
+    echo "(*) Enabling IMAP quota information reporting..."
     if [ -e /etc/dovecot/conf.d/20-pop3.conf ]; then
         cp -f $HESTIA/install/deb/dovecot/conf.d/20-pop3.conf /etc/dovecot/conf.d/20-pop3.conf
     fi
@@ -209,7 +210,7 @@ fi
 # Trigger multiphp legacy migration script
 num_php_versions=$(ls -d /etc/php/*/fpm/pool.d 2>/dev/null |wc -l)
 if [ "$num_php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
-    echo "(*) Migrate to new multiphp backend system..."
+    echo "(*) Enabling modular Multi-PHP backend..."
     cp -rf $HESTIA/data/templates/web $HESTIA_BACKUP/templates/web
     bash $HESTIA/install/upgrade/manual/migrate_multiphp.sh > /dev/null 2>&1
 fi

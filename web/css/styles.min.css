@@ -2840,7 +2840,7 @@ td.hint {
   filter:chroma(color=#000);
   cursor: pointer;
   border-radius: 3px 3px 3px 3px !important;
-  font-size: 1.0em !important;
+  font-size: 1.05em !important;
   font-weight: 500 !important;
   padding: 2px 16px 3px 20px !important;
   min-width: 100px !important;
@@ -2924,26 +2924,6 @@ a.button.cancel {
   border: 1px solid #4b4b4b;
   background-color: #4b4b4b;
 }
-/*
-.ui-dialog button.cancel:hover {
-  color: #fff;
-  border: 1px solid #999;
-  background-color: #999;
-}
-.ui-dialog button.cancel:active {
-  border: 1px solid #54a6e5;
-  background-color: #54a6e5;
-}
-*/
-
-/*
-.ui-button.danger, .button.danger {
-  background: linear-gradient(to bottom, #fbf1ef 0%,#f7c5bf 50%,#f5ada5 51%,#fde2df 100%) !important;
-  color: #F4301A !important;
-  text-shadow: 0px 1px rgba(255,255,255,0.5) !important;
-  border: 1px solid #F4968B !important;
-}
-*/
 
 .ui-button.danger:hover, .button.danger:hover {
   background: linear-gradient(to bottom, #fbf2f1 0%,#f7cac5 50%,#f6b4ac 51%,#fde6e3 100%) !important;

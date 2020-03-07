@@ -2517,7 +2517,7 @@ label:hover {
   box-shadow: 0px 1px 4px rgba(0,0,0,0.15);
 }
 .vst-input:hover {
-  border: 1px solid #909090;
+  border: 1px solid #94c8f0;
 }
 .vst-input:focus {
   border: 1px solid #3b9de8;
@@ -3118,7 +3118,7 @@ a.button.cancel {
 }
 
 .l-unit.selected:hover {
-  background-color: #fefccd;
+  background-color: #f0bccd;
   color: #4b4b4b;
   box-shadow: 0px 2px 14px rgba(150,150,150,0.25);
   text-shadow: 0px 1px rgba(255,255,255,0.6);

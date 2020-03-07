@@ -2963,6 +2963,7 @@ a.button.cancel {
 .ui-button:active span {
   color: #4b4b4b;
 }
+
 .ui-button.cancel span {
   color: #777;
 }
@@ -2974,9 +2975,8 @@ a.button.cancel {
 }
 
 .ui-dialog button.cancel span {
-  color: #ccc;
+  color: #777 !important;
 }
-
 
 .unlim-trigger {
   cursor: pointer;

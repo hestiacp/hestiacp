@@ -53,7 +53,7 @@
 
 /* Component containers
 ----------------------------------*/
-.ui-widget { font-family: 'Exo'; font-size: 0.9rem; }
+.ui-widget { font-family: 'Exo'; font-size: 0.85rem; }
 .ui-widget .ui-widget { font-size: 10pt; }
 .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { font-family: 'Exo'; }
 .ui-widget-content { border: 1px solid #aaaaaa; color: #ccc; }

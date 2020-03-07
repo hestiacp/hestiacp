@@ -3661,15 +3661,20 @@ form#vstobjects.suspended {
 .ui-dialog .ui-dialog-title {
   margin: 0px !important;
   color: #305ba9 !important;
-  font-size: 1.2em !important;
+  font-size: 1.1em !important;
   text-transform: none !important;
   letter-spacing: -0.01em !important;
   text-align: center !important;
   float: none !important;
+  font-weight: 500;
 }
 
 .ui-dialog-buttonpane {
   border-color: #aaaaaa !important;
+}
+
+.ui-widget {
+  font-size: 0.85rem !important;
 }
 
 .ui-widget-overlay {

@@ -2884,6 +2884,10 @@ td.hint {
   padding: 2px !important;
 }
 
+.ui-dialog .ui-button:hover span {
+  color: #046c98 !important;
+}
+
 .ui-button-text-only .selected {
   font-weight: 600 !important;
 }

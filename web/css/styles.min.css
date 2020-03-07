@@ -3068,6 +3068,12 @@ a.button.cancel {
   padding-bottom: 30px !important;
 }
 
+.page-title {
+  font-size: 1.2rem !important;
+  font-weight: 400 !important;
+  padding-bottom: 30px !important;
+}
+
 .qr-code {
   border: 1px solid #cfcfcf;
   border-radius: 4px;

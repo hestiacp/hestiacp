@@ -101,7 +101,7 @@ b, strong {
 }
 
 .ui-button.danger:hover, .button.danger:hover {
-    background: #f1968b !important;
+    background: #fcd3cf !important;
     color: #F4301A !important;
     border: 1px solid #F27E71 !important;
 }

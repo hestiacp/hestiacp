@@ -1,4 +1,16 @@
-/* Flat theme */
+/*
+Theme Name: Flat Theme
+Theme URI: https://github.com/hestiacp/hestiacp/blob/master/install/deb/themes/flat.css
+Author: HestiaCP
+Author URI: https://hestiacp.com/
+Description: Flat Theme
+Version: 1.0
+License: GNU General Public License v3.0
+License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
+Text Domain: flat
+Tags:
+FooterText:
+*/
 
 body {
     letter-spacing: 0;

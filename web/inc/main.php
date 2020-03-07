@@ -348,10 +348,10 @@ function list_timezones() {
  * Explaination:
  * $_SESSION['DB_SYSTEM'] has 'mysql' value even if MariaDB is installed, so you can't figure out is it really MySQL or it's MariaDB.
  * So, this function will make it clear.
- * 
+ *
  * If MySQL is installed, function will return 'mysql' as a string.
  * If MariaDB is installed, function will return 'mariadb' as a string.
- * 
+ *
  * Hint: if you want to check if PostgreSQL is installed - check value of $_SESSION['DB_SYSTEM']
  *
  * @return string
@@ -399,4 +399,56 @@ function backendtpl_with_webdomains() {
         }
     }
     return $backend_list;
+}
+
+/* Searches for metadata in the first 8 KB of a file */
+function hst_get_file_data($file, $default_headers, $context = '') {
+    $fp = fopen($file, 'r');
+    $file_data = fread( $fp, '8192' );
+    fclose($fp);
+    $file_data = str_replace("\r", "\n", $file_data);
+    $extra_headers = $context ? apply_filters( "extra_{$context}_headers", array()) : array();
+      if ($extra_headers) {
+          $extra_headers = array_combine($extra_headers, $extra_headers);
+          $all_headers   = array_merge($extra_headers, (array) $default_headers);
+    } else {
+          $all_headers = $default_headers;
+    }
+      foreach ($all_headers as $field => $regex) {
+          if (preg_match( '/^[ \t\/*#@]*' . preg_quote( $regex, '/' ) . ':(.*)$/mi', $file_data, $match) && $match[1]) {
+              $all_headers[$field] = trim(preg_replace( '/\s*(?:\*\/|\?>).*/', '', $match[1]));
+          } else {
+              $all_headers[$field] = '';
+          }
+      }
+    return $all_headers;
+}
+/* Returns default theme headers for metadata */
+function hst_get_default_theme_headers(){
+    $default_headers = array(
+        'Name'        => 'Theme Name',
+        'ThemeURI'    => 'Theme URI',
+        'Description' => 'Description',
+        'Author'      => 'Author',
+        'AuthorURI'   => 'Author URI',
+        'Version'     => 'Version',
+        'Template'    => 'Template',
+        'Status'      => 'Status',
+        'Tags'        => 'Tags',
+        'FooterText'  => 'FooterText',
+        'TextDomain'  => 'Text Domain',
+        'DomainPath'  => 'Domain Path',
+    );
+    return $default_headers;
+}
+/* Returns active theme's header metadata */
+function hst_get_theme_header($theme){
+    $file='/usr/local/hestia/web/css/'.$theme.'.css';
+    return hst_get_file_data($file, hst_get_default_theme_headers());
+}
+/* Returns system info */
+function hst_get_system_info(){
+    exec (HESTIA_CMD."v-list-sys-info json", $output, $return_var);
+    $system_info = json_decode(implode('', $output));
+    return $system_info;
 }

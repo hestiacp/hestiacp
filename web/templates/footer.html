@@ -1,40 +1,46 @@
-  </div>
+</div>
 
-  <div title="<?=__('Confirmation')?>" class="confirmation-text-redirect hidden">
-    <p class="confirmation"><?=__('LEAVE_PAGE_CONFIRMATION')?></p>
-  </div>
+<div title="<?=__('Confirmation')?>" class="confirmation-text-redirect hidden">
+  <p class="confirmation"><?=__('LEAVE_PAGE_CONFIRMATION')?></p>
+</div>
 
-  <div class="shortcuts animated fadeIn" style="display:none">
-    <div class="header">
-      <div class="title"><?=__('Shortcuts')?></div>
-      <div class="close text-center">
-        <i class="fas fa-times"></i>
-      </div>
-
+<div class="shortcuts animated fadeIn" style="display:none">
+  <div class="header">
+    <div class="title"><?=__('Shortcuts')?></div>
+    <div class="close text-center">
+      <i class="fas fa-times"></i>
     </div>
-    <ul>
-      <li><span class="key">a</span><?=__('Add New object')?></li>
-      <li><span class="key">Ctrl + Enter</span><?=__('Save Form')?></li>
-      <li><span class="key">Ctrl + Backspace</span><?=__('Cancel saving form')?></li>
 
-      <li class="step-top"><span class="key">1</span><?=__('Go to WEB list')?></li>
-      <li><span class="key">2</span><?=__('Go to DNS list')?></li>
-      <li><span class="key">3</span><?=__('Go to MAIL list')?></li>
-      <li><span class="key">4</span><?=__('Go to DB list')?></li>
-      <li><span class="key">5</span><?=__('Go to CRON list')?></li>
-      <li><span class="key">6</span><?=__('Go to BACKUP list')?></li>
-    </ul>
-    <ul>
-      <li><span class="key">f</span><?=__('Focus on search')?></li>
-      <li class="step-top"><span class="key">h</span><?=__('Display/Close shortcuts')?></li>
-
-      <li class="step-top"><span class="key bigger">&larr;</span><?=__('Move backward through top menu')?></li>
-      <li><span class="key bigger">&rarr;</span><?=__('Move forward through top menu')?></li>
-      <li><span class="key">Enter</span><?=__('Enter focused element')?></li>
-
-      <li class="step-top"><span class="key bigger">&uarr;</span><?=__('Move up through elements list')?></li>
-      <li><span class="key bigger">&darr;</span><?=__('Move down through elements list')?></li>
-    </ul>
   </div>
+  <ul>
+    <li><span class="key">a</span><?=__('Add New object')?></li>
+    <li><span class="key">Ctrl + Enter</span><?=__('Save Form')?></li>
+    <li><span class="key">Ctrl + Backspace</span><?=__('Cancel saving form')?></li>
+
+    <li class="step-top"><span class="key">1</span><?=__('Go to WEB list')?></li>
+    <li><span class="key">2</span><?=__('Go to DNS list')?></li>
+    <li><span class="key">3</span><?=__('Go to MAIL list')?></li>
+    <li><span class="key">4</span><?=__('Go to DB list')?></li>
+    <li><span class="key">5</span><?=__('Go to CRON list')?></li>
+    <li><span class="key">6</span><?=__('Go to BACKUP list')?></li>
+  </ul>
+  <ul>
+    <li><span class="key">f</span><?=__('Focus on search')?></li>
+    <li class="step-top"><span class="key">h</span><?=__('Display/Close shortcuts')?></li>
+
+    <li class="step-top"><span class="key bigger">&larr;</span><?=__('Move backward through top menu')?></li>
+    <li><span class="key bigger">&rarr;</span><?=__('Move forward through top menu')?></li>
+    <li><span class="key">Enter</span><?=__('Enter focused element')?></li>
+
+    <li class="step-top"><span class="key bigger">&uarr;</span><?=__('Move up through elements list')?></li>
+    <li><span class="key bigger">&darr;</span><?=__('Move down through elements list')?></li>
+  </ul>
+</div>
+<div class="footer">
+  <div class="footer_text">
+    <h4>&copy; 2019-<?=date('Y'); ?>&nbsp;<a href="https://hestiacp.com">HestiaCP</a><? $system_info=hst_get_system_info(); echo '&nbsp;V'.$system_info->sysinfo->HESTIA; $theme_header=hst_get_theme_header('active-theme'); if(!empty($theme_header['ThemeURI'] && $theme_header['Name'])){echo '&nbsp;Running&nbsp;'.'<a href="'.$theme_header['ThemeURI'].'">'.$theme_header['Name'].'</a>';} if(!empty($theme_header['AuthorURI']) && !empty($theme_header['Author'])){echo '&nbsp;By&nbsp;'.'<a href="'.$theme_header['AuthorURI'].'">'.$theme_header['Author'].'</a>';} ?></h4>
+    <? if(!empty($theme_header['FooterText'])){echo '<span class="theme_footer_text">'.$theme_header['FooterText'].'</span>';} ?>
+    </div>
+</div>
 </body>
 </html>

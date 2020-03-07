@@ -125,7 +125,7 @@ sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$k
             </div>
             <!-- END QUICK ACTION TOOLBAR AREA -->
             <div class="clearfix l-unit__stat-col--left wide-1 text-center"><b><? if(!empty($data[$key]['COMMENT'])) echo '' . $data[$key]['COMMENT']; else echo "&nbsp;"; ?></b></div>
-            <div class="clearfix l-unit__stat-col--left text-center"><b><?=__($data[$key]['PROTOCOL'])?></b></div>
+            <div class="clearfix l-unit__stat-col--left text-center"><?=__($data[$key]['PROTOCOL'])?></div>
             <div class="clearfix l-unit__stat-col--left wide-3 text-center"><b><?=$data[$key]['PORT']?></b></div>
             <div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['IP']?></div>
           </div>

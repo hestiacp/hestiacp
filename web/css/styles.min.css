@@ -1365,7 +1365,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   top: 42px;
   background-color: rgba(255,255,255,0.95);
   list-style-type: none;
-  box-shadow: 0 2px 12px 0 rgba(20, 20, 20, 0.45);
+  box-shadow: 0 4px 10px 0 rgba(20, 20, 20, 0.3);
   border-radius: 8px;
   border: 1px solid rgba(255,255,255,1);
   padding: 0px;

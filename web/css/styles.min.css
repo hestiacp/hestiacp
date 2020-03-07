@@ -3797,6 +3797,14 @@ form#vstobjects.suspended {
   margin-right: 32px;
 }
 
+.userlist-email {
+  font-size: 0.75rem;
+}
+
+.userlist-username {
+  font-size: 1.05em;
+}
+
 @media screen and (max-width: 950px) {
   .helper-container {
     display: none;

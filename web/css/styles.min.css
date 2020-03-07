@@ -3172,9 +3172,8 @@ div.l-content.collapsed .l-sort {
 
 .console-output {
   font-family: "Inconsolata", "Lucida Console", Monaco, monospace;
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   color: #202020;
-  letter-spacing: -0.02em;
 }
 
 form#vstobjects {

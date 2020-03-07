@@ -2591,7 +2591,7 @@ select.vst-list:-moz-focusring {
   padding: 6px 1px 6px 15px;
 }
 .vst-list:hover {
-  border: 1px solid #909090;
+  border: 1px solid #94c8f0;
 }
 .vst-list:focus {
   border: 1px solid #3b9de8;

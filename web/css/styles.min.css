@@ -3064,7 +3064,7 @@ a.button.cancel {
 
 .login-welcome {
   font-size: 1.05rem !important;
-  font-weight: 400 !important;
+  font-weight: 500 !important;
   padding-bottom: 30px !important;
 }
 
@@ -3072,6 +3072,7 @@ a.button.cancel {
   font-size: 1.2rem !important;
   font-weight: 400 !important;
   padding-bottom: 30px !important;
+  letter-spacing: -0.01em;
 }
 
 .qr-code {

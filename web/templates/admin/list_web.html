@@ -136,12 +136,12 @@ sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-dis
           <div class="clearfix l-unit__stat-col--left compact-4 text-right">
             <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
               <div class="actions-panel clearfix">
-                <div class="actions-panel__col actions-panel__view" key-action="href"><a href="http://<?=$key?>/" target="_blank"><i class="fas fa-external-link-square-alt status-icon lightblue status-icon dim"></i></a></div>
-                <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('Editing Domain')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
-                <div class="actions-panel__col actions-panel__logs shortcut-l" key-action="href"><a href="/list/web-log/?domain=<?php echo $key ?>&type=access#" title="<?=__('AccessLog')?>"><i class="fas fa-binoculars status-icon purple status-icon dim"></i></a></div>
                 <? if (!empty($data[$key]['STATS'])) { ?>
                   <div class="actions-panel__col actions-panel__logs shortcut-w" key-action="href"><a href="http://<?=$key?>/vstats/"  target="_blank" title="<?=__('Statistics')?>"><i class="fas fa-chart-bar status-icon maroon status-icon dim"></i></a></div>
                 <? } ?>
+                <div class="actions-panel__col actions-panel__view" key-action="href"><a href="http://<?=$key?>/" target="_blank"><i class="fas fa-external-link-square-alt status-icon lightblue status-icon dim"></i></a></div>
+                <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('Editing Domain')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+                <div class="actions-panel__col actions-panel__logs shortcut-l" key-action="href"><a href="/list/web-log/?domain=<?php echo $key ?>&type=access#" title="<?=__('AccessLog')?>"><i class="fas fa-binoculars status-icon purple status-icon dim"></i></a></div>
                 <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
                   <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=__($spnd_action)?>">
                     <i class="fas <?=$spnd_icon?> status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>

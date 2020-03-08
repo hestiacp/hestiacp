@@ -1064,6 +1064,7 @@ a {
   position: relative;
   text-align: left;
   box-shadow: 0px 2px 4px rgba(0,0,0,0.2);
+  text-shadow: 0px 1px rgba(0,0,0,0.45);
   border: 1px solid #fff;
 }
 
@@ -1086,7 +1087,6 @@ a {
 }
 .alert.alert-info {
   color: #fff;
-  text-shadow: 0px 1px rgba(0,0,0,0.45);
   background-color: #618ecc;
 }
 .alert.alert-info i.fas {

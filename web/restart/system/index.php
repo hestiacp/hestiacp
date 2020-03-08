@@ -11,9 +11,9 @@ if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
     exit();
 }
 
-// If the session has the same reset token as the current request prevent restarting again.
-// This happens when the server is restarted, the admin panel goes down and the browser reloads
-// the /restart/index.php page once the server goes online causing restart loop.
+// If the stored reset token matches the current request one it means that we need 
+// to prevent the action because the browser automatically reloaded the page when 
+// the server turned on. This will prevent duplicate restarts.
 $reset_token_dir = '/var/tmp/';
 if (isset($_GET['system_reset_token']) && is_numeric($_GET['system_reset_token'])) {
     clearstatcache();
@@ -28,7 +28,6 @@ if (isset($_GET['system_reset_token']) && is_numeric($_GET['system_reset_token']
         if (!empty($_GET['hostname'])) {
             touch($reset_token_file);
             $_SESSION['error_msg'] = 'The system is going down for reboot NOW!';
-            touch($reset_token_file . '_persistent');
             exec(HESTIA_CMD . "v-restart-system yes", $output, $return_var);
         }
         unset($output);

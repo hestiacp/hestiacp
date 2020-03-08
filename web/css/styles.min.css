@@ -3122,7 +3122,7 @@ a.button.cancel {
 }
 
 .l-unit.selected:hover {
-  background-color: #f0bccd;
+  background-color: #fff5ce;
   color: #4b4b4b;
   box-shadow: 0px 2px 14px rgba(150,150,150,0.25);
   text-shadow: 0px 1px rgba(255,255,255,0.6);

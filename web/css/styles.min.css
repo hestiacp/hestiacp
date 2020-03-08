@@ -1265,13 +1265,12 @@ form#vstobjects .alert {
   font-weight: 600;
   color: #5b5b5b;
   min-height: 21px;
+  font-size: 16px;
 }
 
 .l-stat__col--active .l-stat__col-title {
   color: #cc3366;
-  font-size: 22px;
-  margin-top: -7px;
-  letter-spacing: -1px;
+  font-size: 16px;
   margin-right: -4px;
 }
 

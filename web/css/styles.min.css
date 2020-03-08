@@ -2669,7 +2669,7 @@ a.vst-text:active b{
   box-shadow: 0px 1px 4px rgba(0,0,0,0.15);
 }
 .vst-textinput:hover {
-  border: 1px solid #909090;
+  border: 1px solid #94c8f0;
 }
 .vst-textinput:focus {
   border: 1px solid #3b9de8;

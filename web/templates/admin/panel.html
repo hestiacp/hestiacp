@@ -58,7 +58,7 @@
 		<?php if($panel[$user]['WEB_DOMAINS'] != "0") { ?>
 					<div class="l-stat__col <?php if($TAB == 'WEB' ) echo 'l-stat__col--active' ?>">
 						<a href="/list/web/">
-							<div class="l-stat__col-title <?php if($TAB == 'WEB' ) echo 'animated pulse' ?>"><?=__('WEB')?>&nbsp;&nbsp;<i class="fas fa-globe-americas"></i></div>
+							<div class="l-stat__col-title"><?=__('WEB')?>&nbsp;&nbsp;<i class="fas fa-globe-americas"></i></div>
 							<ul>
 								<li><?=__('domains')?>: <span><?=$panel[$user]['U_WEB_DOMAINS']?> / <?=$panel[$user]['SUSPENDED_WEB']?></span></li>
 								<li><?=__('aliases')?>: <span><?=$panel[$user]['U_WEB_ALIASES']?></span></li>
@@ -72,7 +72,7 @@
 		<?php if($panel[$user]['DNS_DOMAINS'] != "0") { ?>
 					<div class="l-stat__col <?php if($TAB == 'DNS' ) echo 'l-stat__col--active' ?>">
 						<a href="/list/dns/">
-							<div class="l-stat__col-title <?php if($TAB == 'DNS' ) echo 'animated pulse' ?>"><?=__('DNS')?>&nbsp;&nbsp;<i class="fas fa-atlas"></i></div>
+							<div class="l-stat__col-title"><?=__('DNS')?>&nbsp;&nbsp;<i class="fas fa-atlas"></i></div>
 							<ul>
 								<li><?=__('zones')?>: <span><?=$panel[$user]['U_DNS_DOMAINS']?> / <?=$panel[$user]['SUSPENDED_DNS']?></span></li>
 								<li><?=__('records')?>: <span><?=$panel[$user]['U_DNS_RECORDS']?></span></li>
@@ -86,7 +86,7 @@
 		<?php if($panel[$user]['MAIL_DOMAINS'] != "0") { ?>
 					<div class="l-stat__col <?php if($TAB == 'MAIL' ) echo 'l-stat__col--active' ?>">
 						<a href="/list/mail/">
-							<div class="l-stat__col-title <?php if($TAB == 'MAIL' ) echo 'animated pulse' ?>"><?=__('MAIL')?>&nbsp;&nbsp;<i class="fas fa-mail-bulk"></i></div>
+							<div class="l-stat__col-title"><?=__('MAIL')?>&nbsp;&nbsp;<i class="fas fa-mail-bulk"></i></div>
 							<ul>
 								<li><?=__('domains')?>: <span><?=$panel[$user]['U_MAIL_DOMAINS']?> / <?=$panel[$user]['SUSPENDED_MAIL']?></span></li>
 								<li><?=__('accounts')?>: <span><?=$panel[$user]['U_MAIL_ACCOUNTS']?></span></li>
@@ -100,7 +100,7 @@
 		<?php if($panel[$user]['DATABASES'] != "0") { ?>
 					<div class="l-stat__col <?php if($TAB == 'DB' ) echo 'l-stat__col--active' ?>">
 						<a href="/list/db/">
-							<div class="l-stat__col-title <?php if($TAB == 'DB' ) echo 'animated pulse' ?>"><?=__('DB')?>&nbsp;&nbsp;<i class="fas fa-database"></i></div>
+							<div class="l-stat__col-title"><?=__('DB')?>&nbsp;&nbsp;<i class="fas fa-database"></i></div>
 							<ul>
 								<li><?=__('databases')?>: <span><?=$panel[$user]['U_DATABASES']?> / <?=$panel[$user]['SUSPENDED_DB']?></span></li>
 							</ul>
@@ -113,7 +113,7 @@
 		<?php if($panel[$user]['CRON_JOBS'] != "0") { ?>
 					<div class="l-stat__col <?php if($TAB == 'CRON' ) echo 'l-stat__col--active' ?>">
 						<a href="/list/cron/">
-							<div class="l-stat__col-title <?php if($TAB == 'CRON' ) echo 'animated pulse' ?>"><?=__('CRON')?>&nbsp;&nbsp;<i class="fas fa-clock"></i></div>
+							<div class="l-stat__col-title"><?=__('CRON')?>&nbsp;&nbsp;<i class="fas fa-clock"></i></div>
 							<ul>
 								<li><?=__('jobs')?>: <span><?=$panel[$user]['U_CRON_JOBS']?> / <?=$panel[$user]['SUSPENDED_CRON']?></span></li>
 							</ul>
@@ -126,7 +126,7 @@
 		<?php if($panel[$user]['BACKUPS'] != "0") { ?>
 					<div class="l-stat__col <?php if($TAB == 'BACKUP' ) echo 'l-stat__col--active' ?>">
 						<a href="/list/backup/">
-							<div class="l-stat__col-title <?php if($TAB == 'BACKUP' ) echo 'animated pulse' ?>"><?=__('BACKUP')?>&nbsp;&nbsp;<i class="fas fa-file-archive"></i></div>
+							<div class="l-stat__col-title"><?=__('BACKUP')?>&nbsp;&nbsp;<i class="fas fa-file-archive"></i></div>
 							<ul>
 								<li><?=__('backups')?>: <span><?=$panel[$user]['U_BACKUPS']?></span></li>
 							</ul>

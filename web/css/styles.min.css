@@ -1893,7 +1893,8 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .l-unit__name {
   color: #414141;
-  font-size: 28px;
+  font-size: 22px;
+  margin-top: 10px;
   margin-bottom: 10px;
   font-weight: 500;
   letter-spacing: -0.02em;

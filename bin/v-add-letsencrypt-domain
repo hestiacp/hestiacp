@@ -285,6 +285,7 @@ for auth in $authz; do
         validation='valid'
     else
         validation='pending'
+        sleep 5
     fi
 
     # Doing pol check on status

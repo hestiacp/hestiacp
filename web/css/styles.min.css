@@ -1057,13 +1057,14 @@ a {
   border-radius: 4px;
   box-sizing: border-box;
   display: block;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 400;
   margin-top: 1rem;
   padding: 0.8rem;
   position: relative;
   text-align: left;
   box-shadow: 0px 2px 4px rgba(0,0,0,0.2);
+  text-shadow: 0px 1px rgba(0,0,0,0.45);
   border: 1px solid #fff;
 }
 
@@ -1086,7 +1087,6 @@ a {
 }
 .alert.alert-info {
   color: #fff;
-  text-shadow: 0px 1px rgba(0,0,0,0.45);
   background-color: #618ecc;
 }
 .alert.alert-info i.fas {
@@ -1265,14 +1265,12 @@ form#vstobjects .alert {
   font-weight: 600;
   color: #5b5b5b;
   min-height: 21px;
+  font-size: 16px;
 }
 
 .l-stat__col--active .l-stat__col-title {
   color: #cc3366;
-  font-size: 22px;
-  margin-top: -7px;
-  letter-spacing: -1px;
-  margin-right: -4px;
+  font-size: 16px;
 }
 
 .l-stat__col .fas {
@@ -1365,8 +1363,8 @@ div.l-content > div.l-separator:nth-of-type(4) {
   top: 42px;
   background-color: rgba(255,255,255,0.95);
   list-style-type: none;
-  box-shadow: 0 2px 12px 0 rgba(20, 20, 20, 0.45);
-  border-radius: 8px;
+  box-shadow: 0 2px 12px 0 rgba(20, 20, 20, 0.25);
+  border-radius: 4px;
   border: 1px solid rgba(255,255,255,1);
   padding: 0px;
 }
@@ -1895,7 +1893,8 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .l-unit__name {
   color: #414141;
-  font-size: 28px;
+  font-size: 22px;
+  margin-top: 10px;
   margin-bottom: 10px;
   font-weight: 500;
   letter-spacing: -0.02em;
@@ -2517,7 +2516,7 @@ label:hover {
   box-shadow: 0px 1px 4px rgba(0,0,0,0.15);
 }
 .vst-input:hover {
-  border: 1px solid #909090;
+  border: 1px solid #94c8f0;
 }
 .vst-input:focus {
   border: 1px solid #3b9de8;
@@ -2535,6 +2534,12 @@ label:hover {
   border-color: #f1f1f1;
   background-color: #f1f1f1;
 }
+
+.vst-input:disabled:hover,
+.vst-list:disabled:hover {
+  border-color: inherit !important;
+}
+
 .vst-input.long {
   width: 832px;
 }
@@ -2591,7 +2596,7 @@ select.vst-list:-moz-focusring {
   padding: 6px 1px 6px 15px;
 }
 .vst-list:hover {
-  border: 1px solid #909090;
+  border: 1px solid #94c8f0;
 }
 .vst-list:focus {
   border: 1px solid #3b9de8;
@@ -2663,7 +2668,7 @@ a.vst-text:active b{
   box-shadow: 0px 1px 4px rgba(0,0,0,0.15);
 }
 .vst-textinput:hover {
-  border: 1px solid #909090;
+  border: 1px solid #94c8f0;
 }
 .vst-textinput:focus {
   border: 1px solid #3b9de8;
@@ -2830,12 +2835,17 @@ td.hint {
 }
 .ftp-path-prefix { padding-top: 12px; font-size: 0.8rem; color: #555; }
 
+.ui-dialog .ui-dialog-buttonpane button {
+  box-shadow: 0px 1px 4px rgba(0,0,0,0.2),
+  inset 0px 0px 1px #fff,
+  inset 0px 0px 3px rgba(255,255,255,0.5) !important;
+}
 
 .ui-button, .button {
   filter:chroma(color=#000);
   cursor: pointer;
   border-radius: 3px 3px 3px 3px !important;
-  font-size: 1.0em !important;
+  font-size: 1.05em !important;
   font-weight: 500 !important;
   padding: 2px 16px 3px 20px !important;
   min-width: 100px !important;
@@ -2884,6 +2894,10 @@ td.hint {
   padding: 2px !important;
 }
 
+.ui-dialog .ui-button:hover span {
+  color: #046c98 !important;
+}
+
 .ui-button-text-only .selected {
   font-weight: 600 !important;
 }
@@ -2915,26 +2929,6 @@ a.button.cancel {
   border: 1px solid #4b4b4b;
   background-color: #4b4b4b;
 }
-/*
-.ui-dialog button.cancel:hover {
-  color: #fff;
-  border: 1px solid #999;
-  background-color: #999;
-}
-.ui-dialog button.cancel:active {
-  border: 1px solid #54a6e5;
-  background-color: #54a6e5;
-}
-*/
-
-/*
-.ui-button.danger, .button.danger {
-  background: linear-gradient(to bottom, #fbf1ef 0%,#f7c5bf 50%,#f5ada5 51%,#fde2df 100%) !important;
-  color: #F4301A !important;
-  text-shadow: 0px 1px rgba(255,255,255,0.5) !important;
-  border: 1px solid #F4968B !important;
-}
-*/
 
 .ui-button.danger:hover, .button.danger:hover {
   background: linear-gradient(to bottom, #fbf2f1 0%,#f7cac5 50%,#f6b4ac 51%,#fde6e3 100%) !important;
@@ -2959,6 +2953,7 @@ a.button.cancel {
 .ui-button:active span {
   color: #4b4b4b;
 }
+
 .ui-button.cancel span {
   color: #777;
 }
@@ -2970,9 +2965,8 @@ a.button.cancel {
 }
 
 .ui-dialog button.cancel span {
-  color: #ccc;
+  color: #777 !important;
 }
-
 
 .unlim-trigger {
   cursor: pointer;
@@ -3075,8 +3069,15 @@ a.button.cancel {
 
 .login-welcome {
   font-size: 1.05rem !important;
+  font-weight: 500 !important;
+  padding-bottom: 30px !important;
+}
+
+.page-title {
+  font-size: 1.2rem !important;
   font-weight: 400 !important;
   padding-bottom: 30px !important;
+  letter-spacing: -0.01em;
 }
 
 .qr-code {
@@ -3113,9 +3114,8 @@ a.button.cancel {
 }
 
 .l-unit.selected {
-  background-color: #fefba7;
+  background-color: #f8f8f8;
   color: #4b4b4b;
-  border-bottom: 1px solid #c0b990;
   box-shadow: 0px 2px 10px rgba(150,150,150,0.20);
   text-shadow: 0px 1px rgba(255,255,255,0.5);
   border-left: 1px solid #ddd;
@@ -3123,7 +3123,7 @@ a.button.cancel {
 }
 
 .l-unit.selected:hover {
-  background-color: #fefccd;
+  background-color: #fff5ce;
   color: #4b4b4b;
   box-shadow: 0px 2px 14px rgba(150,150,150,0.25);
   text-shadow: 0px 1px rgba(255,255,255,0.6);
@@ -3172,9 +3172,8 @@ div.l-content.collapsed .l-sort {
 
 .console-output {
   font-family: "Inconsolata", "Lucida Console", Monaco, monospace;
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   color: #202020;
-  letter-spacing: -0.02em;
 }
 
 form#vstobjects {
@@ -3271,9 +3270,12 @@ form#vstobjects.suspended {
   min-height: 24px;
   line-height: 24px;
   border-radius: 50%;
-  font-weight: 600;
-  box-shadow: 0px 0px 3px rgba(120,120,120,0.6);
+  font-weight: 700;
+  font-size: 0.75rem;
+  box-shadow: 0px 1px 2px rgba(70,70,70,0.5), 
+              inset 0px 2px 2px #fff;
   text-shadow: 0px 1px 2px rgba(0,0,0,0.5);
+  border: 1px solid #b8b8b8 !important;
 }
 
 .badge.large {
@@ -3646,7 +3648,7 @@ form#vstobjects.suspended {
 }
 
 .ui-dialog .ui-dialog-content {
-  color: #121212 !important;
+  color: #535353 !important;
   padding: 10px 26px 30px !important;
 }
 
@@ -3658,10 +3660,15 @@ form#vstobjects.suspended {
   letter-spacing: -0.01em !important;
   text-align: center !important;
   float: none !important;
+  font-weight: 500;
 }
 
 .ui-dialog-buttonpane {
   border-color: #aaaaaa !important;
+}
+
+.ui-widget {
+  font-size: 0.85rem !important;
 }
 
 .ui-widget-overlay {
@@ -3781,6 +3788,12 @@ form#vstobjects.suspended {
 
 }
 
+.server-info-output {
+  color: #cc3366; 
+  padding: 10px 0 20px 20px; 
+  background: #fff;
+}
+
 .server-info-data {
   margin-left: 100px; 
   margin-top: -20px;
@@ -3793,6 +3806,14 @@ form#vstobjects.suspended {
   font-size: 5.2em;
   float: left;
   margin-right: 32px;
+}
+
+.userlist-email {
+  font-size: 0.75rem;
+}
+
+.userlist-username {
+  font-size: 1.05em;
 }
 
 @media screen and (max-width: 950px) {

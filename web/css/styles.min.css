@@ -3798,10 +3798,18 @@ form#vstobjects.suspended {
   margin-left: 100px; 
   margin-top: -20px;
 }
+
 .server-info-name {
   margin-top: 5px;
   margin-bottom: 30px;
 }
+
+.server-info-output {
+  color: #cc3366; 
+  padding: 10px 0 20px 20px; 
+  background: #fff;
+}
+
 .icon-server-info {
   font-size: 5.2em;
   float: left;

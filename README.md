@@ -1,7 +1,7 @@
 [Hestia Control Panel](https://www.hestiacp.com/)
 ==================================================
 **Current stable release:** Version 1.0.6, released on September 26th, 2019.<br>
-**Current development release:** Version 1.1.0, release date yet to be determined.
+**Current development release:** Version 1.1.0, release candidate in final testing - to be released by end of March 10, 2020.
 
 **Welcome!**
 ---------------------------- 

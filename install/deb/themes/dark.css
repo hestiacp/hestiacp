@@ -1973,7 +1973,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   border-left: 1px solid transparent !important;
   border-right: 1px solid transparent !important;
   box-shadow: none !important;
-  background: none !important;
+  background: transparent !important;
 }
 
 .l-unit__stats table {
@@ -3859,6 +3859,12 @@ form#vstobjects.suspended {
 
 .ui-widget-header a {
   color: #cacaca !important; 
+}
+
+.body-rrd .units .l-unit {
+  background-color: #282828 !important;
+  border-left: 1px solid transparent !important;
+  border-right: 1px solid transparent !important;
 }
 
 @media screen and (max-width: 950px) {

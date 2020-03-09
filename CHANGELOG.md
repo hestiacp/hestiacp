@@ -3,7 +3,13 @@ All notable changes to this project will be documented in this file.
 
 ## [CURRENT] - Development
 ### Features
+### Bugfixes
+
+## [1.1.0] - 2020-03-09 - Major Release (Feature / Quality Update)
+### Features
 - Added support for custom user interface themes.
+- Changed default font to improve readability on Windows and Linux.
+- Introduced official Dark and Flat themes.
 - Adjusted default font size for improved readability.
 - Added read only/demo mode function if DEMO_MODE is set to yes in hestia.conf.
 - Added php-imagick module to installer and upgrade scripts.
@@ -57,9 +63,9 @@ All notable changes to this project will be documented in this file.
 - Fixed MultiPHP upgrade script to update all web templates.
 - Fixed report issue link in installer scripts.
 - Fixed database user authentification on backup restore.
-- Added robots.txt for roundcube webmail to prevent search bot crawling.
+- Added robots.txt for Roundcube webmail to prevent search bot crawling.
 - Re-Enable force ssl function on let's encrypt certification renew.
-- Added official postgresql repository to be up to date.
+- Added official PostgreSQL repository so system stays up-to-date with latest available upstream packages.
 - Hardening MySQL configuration, prevent local infile.
 - Fixed lograte bug and cleans up the messed up nginx/apache2 log permissions.
 - Fixed IfModule mpm_itk.c for apache2 templates.
@@ -69,6 +75,8 @@ All notable changes to this project will be documented in this file.
 - Fixed typo in delete psql database part, thanks to @joshbmarshall.
 - Split long txt records to 255 chunks to prevent bind issues, thanks to @setiseta.
 - Fixed missing restart routine for vsftp on v-add-letsencrypt-host.
+- Show amount of disk space consumed by /home when running v-list-sys-info.
+- Remove broken /webmail alias from previous versions.
 
 ## [1.0.6] - 2019-09-24 - Hotfix
 ### Bugfixes

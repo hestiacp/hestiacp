@@ -326,7 +326,7 @@ for auth in $authz; do
             fi
             check_result $E_CONNECT "Let's Encrypt domain validation timeout"
         fi
-        sleep 1
+        sleep 2
     done
     if [ "$validation" = 'invalid' ]; then
         # Delete DNS CAA record

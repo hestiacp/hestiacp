@@ -3788,6 +3788,12 @@ form#vstobjects.suspended {
 
 }
 
+.server-info-output {
+  color: #cc3366; 
+  padding: 10px 0 20px 20px; 
+  background: #fff;
+}
+
 .server-info-data {
   margin-left: 100px; 
   margin-top: -20px;

@@ -2647,10 +2647,9 @@ a.vst-text:active b{
 
 .advanced-options {
   background: #454545 !important;
-  border: 1px solid #707070 !important;
-  text-shadow: 0px 1px rgba(0,0,0,0.35);
+  border: 1px solid #505050 !important;
+  text-shadow: 0px 1px rgba(0,0,0,0.4);
   box-shadow: 0px 2px 6px rgba(0,0,0,0.4) !important;
-  box-shadow: none !important;
   color: #fff !important;
   padding: 4px 0px 0px 18px;
   overflow: hidden;

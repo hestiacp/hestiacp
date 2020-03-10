@@ -2548,7 +2548,7 @@ label:hover {
 
 .vst-input:disabled:hover,
 .vst-list:disabled:hover {
-  border-color: inherit !important;
+  border-color: #606060 !important;
 }
 
 .vst-input.long {

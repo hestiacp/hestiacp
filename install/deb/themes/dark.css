@@ -3513,6 +3513,10 @@ form#vstobjects.suspended {
   -background-color: #dfdedd;
 }
 
+.ui-dialog .ui-dialog-buttonpane {
+  border-color: #404040 !important;
+}
+
 .shortcuts {
   background: rgba(45,45,45 0.95);
   display: inline-block;

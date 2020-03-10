@@ -1701,7 +1701,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .l-unit:hover, .units .l-unit:hover {
   box-shadow: 0px 2px 10px rgba(20,20,20,0.20);
-  background-color: #404040;
+  background-color: #353535;
   text-shadow: 0px 1px rgba(0,0,0,0.5);
   border-left: 1px solid #212121;
   border-right: 1px solid #212121;

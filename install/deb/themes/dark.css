@@ -3529,6 +3529,8 @@ form#vstobjects.suspended {
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
   box-shadow: 0px 3px 40px rgba(0,0,0,0.6);
+  line-height: 1rem;
+  cursor: default;
 }
 
 .shortcuts .header {
@@ -3538,7 +3540,7 @@ form#vstobjects.suspended {
 
 .shortcuts .title {
   text-transform: uppercase;
-  color: #ffcc00;
+  color: #ff3478;
   padding: 7px 0 7px 14px;
   display: inline-block;
   float: left;
@@ -3555,13 +3557,15 @@ form#vstobjects.suspended {
   width: 46px;
 }
 .shortcuts .close:hover {
-  background-color: #000;
+
 }
 .shortcuts .close:active {
-  background-color: #3b9de8;
+
 }
+
 .shortcuts .close .fas {
-  font-size: 1.3rem;
+  font-size: 0.8rem;
+  line-height: 1.4rem;
 }
 .shortcuts ul {
   list-style-type: none;
@@ -3577,7 +3581,7 @@ form#vstobjects.suspended {
   padding-top: 30px;
 }
 .shortcuts ul li span {
-  color: #48F4EF;
+  color: #ff3478;
   display: inline-block;
   font-weight: 600;
   padding: 0 20px 0 0;

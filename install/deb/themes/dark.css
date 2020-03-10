@@ -1682,7 +1682,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 
 .table-header:hover {
-  background-color: #424242 !important;
+  background-color: #404040 !important;
   border-left: 1px solid #212121 !important;
   border-right: 1px solid #212121  !important;
   box-shadow: inset 0px 1px 1px rgba(0,0,0,0.3) !important;

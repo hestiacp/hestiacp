@@ -227,6 +227,14 @@ upgrade_rebuild_users() {
 }
 
 upgrade_restart_services() {
+    # Refresh user interface theme
+    if [ "$THEME" ]; then
+        if [ "$THEME" != "default" ]; then
+            echo "(*) Applying user interface updates..."
+            $BIN/v-change-sys-theme $THEME
+        fi
+    fi
+
     echo "(*) Restarting services..."
     sleep 5
     if [ ! -z "$MAIL_SYSTEM" ]; then

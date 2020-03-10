@@ -2899,7 +2899,7 @@ td.hint {
   background-color: #454545;
   box-shadow: 0px 1px 3px rgba(0,0,0,0.35),
               inset 0px 0px 1px rgba(0,0,0,1),
-              inset 0px 0px 6px rgba(0,0,0,0.6) !important;
+              inset 0px 0px 3px rgba(0,0,0,0.65) !important;
   transition: 0.2s;
 }
 .ui-button:focus,.ui-button:active,

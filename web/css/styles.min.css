@@ -1821,7 +1821,9 @@ div.l-content > div.l-separator:nth-of-type(4) {
   padding-top: 15px;
   vertical-align: top;
   padding-bottom: 15px;
+  cursor: default;
 }
+
 .l-unit__col--left {
   width: 100px;
   padding-right: 10px;
@@ -2620,6 +2622,10 @@ select.vst-list:-moz-focusring {
   color: #4e4e4e;
 }
 
+.vst-text {
+  cursor: default;
+}
+
 a.vst-text,
 a.vst-text b{
   color: #326b9b;
@@ -3078,6 +3084,7 @@ a.button.cancel {
   font-weight: 400 !important;
   padding-bottom: 30px !important;
   letter-spacing: -0.01em;
+  cursor: default;
 }
 
 .qr-code {

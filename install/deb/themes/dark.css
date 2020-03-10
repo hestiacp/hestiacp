@@ -3158,14 +3158,15 @@ a.button.cancel {
   color: #d4d4d4;
   box-shadow: 0px 2px 10px rgba(30,30,30,0.35);
   text-shadow: 0px 1px rgba(0,0,0,0.5);
-  border-left: 1px solid #454545;
-  border-right: 1px solid #454545;
+  border-left: 1px solid #212121;
+  border-right: 1px solid #212121;
+  
 }
 
 .l-unit.selected:hover {
   background-color: #555555;
   color: #d4d4d4;
-  box-shadow: 0px 2px 14px rgba(150,150,150,0.25);
+  box-shadow: none !important;
   text-shadow: 0px 1px rgba(0,0,0,0.4);
 }
 

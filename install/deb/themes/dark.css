@@ -3104,6 +3104,7 @@ a.button.cancel {
   vertical-align: top;
   width: 500px;
   border-radius: 6px;
+  cursor: default;
 }
 
 .login-welcome {

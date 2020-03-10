@@ -2539,7 +2539,7 @@ label:hover {
 
 .vst-input:disabled:hover,
 .vst-list:disabled:hover {
-  border-color: inherit !important;
+  border-color: #cfcfcf;
 }
 
 .vst-input.long {

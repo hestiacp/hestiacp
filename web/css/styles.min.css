@@ -3188,7 +3188,7 @@ form#vstobjects {
 }
 
 form#vstobjects.suspended {
-  background-color: #EAEAEA;
+  background-color: #fff;
   padding-bottom: 30px;
 }
 

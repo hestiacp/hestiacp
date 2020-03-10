@@ -784,7 +784,7 @@ a {
   z-index: 900;
   height: 38px;
   text-shadow: 1px 1px rgba(0,0,0,0.5);
-  box-shadow: 0px 8px 20px rgba(0,0,0,0.35);
+  box-shadow: 0px 8px 15px rgba(0,0,0,0.25);
 }
 
 .l-header a {
@@ -2647,10 +2647,9 @@ a.vst-text:active b{
 
 .advanced-options {
   background: #454545 !important;
-  border: 1px solid #707070 !important;
-  text-shadow: 0px 1px rgba(0,0,0,0.35);
+  border: 1px solid #505050 !important;
+  text-shadow: 0px 1px rgba(0,0,0,0.4);
   box-shadow: 0px 2px 6px rgba(0,0,0,0.4) !important;
-  box-shadow: none !important;
   color: #fff !important;
   padding: 4px 0px 0px 18px;
   overflow: hidden;
@@ -3104,6 +3103,7 @@ a.button.cancel {
   vertical-align: top;
   width: 500px;
   border-radius: 6px;
+  cursor: default;
 }
 
 .login-welcome {
@@ -3294,8 +3294,8 @@ form#vstobjects.suspended {
   padding-right: 8px;
   margin-right: 10px;
   line-height: 0.75rem;
-  box-shadow: inset 0px 0px 1px rgba(0,0,0,0.25), 0px 1px 1px rgba(0,0,0,0.25);
-  background-color: rgba(15,15,15,0.45);
+  box-shadow: inset 0px 1px 1px rgba(0,0,0,0.85), 0px 1px 1px rgba(0,0,0,0.2);
+  background-color: rgba(15,15,15,0.5);
   font-weight: 500;
   border: 1px solid rgba(120,120,120,0.95);
   text-shadow: 0px 1px 1px rgba(0,0,0,0.5);
@@ -3529,6 +3529,8 @@ form#vstobjects.suspended {
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
   box-shadow: 0px 3px 40px rgba(0,0,0,0.6);
+  line-height: 1rem;
+  cursor: default;
 }
 
 .shortcuts .header {
@@ -3538,7 +3540,7 @@ form#vstobjects.suspended {
 
 .shortcuts .title {
   text-transform: uppercase;
-  color: #ffcc00;
+  color: #ff3478;
   padding: 7px 0 7px 14px;
   display: inline-block;
   float: left;
@@ -3555,13 +3557,15 @@ form#vstobjects.suspended {
   width: 46px;
 }
 .shortcuts .close:hover {
-  background-color: #000;
+
 }
 .shortcuts .close:active {
-  background-color: #3b9de8;
+
 }
+
 .shortcuts .close .fas {
-  font-size: 1.3rem;
+  font-size: 0.8rem;
+  line-height: 1.4rem;
 }
 .shortcuts ul {
   list-style-type: none;
@@ -3577,7 +3581,7 @@ form#vstobjects.suspended {
   padding-top: 30px;
 }
 .shortcuts ul li span {
-  color: #48F4EF;
+  color: #ff3478;
   display: inline-block;
   font-weight: 600;
   padding: 0 20px 0 0;

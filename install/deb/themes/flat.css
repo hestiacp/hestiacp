@@ -14,6 +14,10 @@ b, strong {
 
 .table-header {
     box-shadow: none !important;
+    background: #fafafa !important;
+}
+.advanced-options {
+    background: #fafafa !important;
 }
 
 .l-header {

@@ -2908,7 +2908,7 @@ td.hint {
 .button.cancel:active,.button.cancel:focus, .ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit,
 .ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit:active, .vst-advanced:active {
   border: 1px solid #0066b4 !important;
-  background: linear-gradient(0deg, rgba(48,48,48,1) 0%, rgba(53,53,53,1) 35%, rgba(69,69,69,1) 100%) !important;
+  background: linear-gradient(0deg, rgba(69,69,69,1) 0%, rgba(53,53,53,1) 35%, rgba(48,48,48,1) 100%) !important;
   color: #d4d4d4 !important;
   text-shadow: 0px -1px 1px rgba(0,0,0,0.55) !important;
   box-shadow: 0px 1px 3px rgba(0,0,0,0.3),

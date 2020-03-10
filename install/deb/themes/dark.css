@@ -2568,7 +2568,7 @@ label:hover {
   height: 1rem;
 }
 .vst-input.vst-list-editor:focus {
-  background-color: white;
+  background-color: #505050;
 }
 
 .vst-list {

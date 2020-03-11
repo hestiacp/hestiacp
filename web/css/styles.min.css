@@ -1123,7 +1123,13 @@ form#vstobjects .alert {
 }
 
 .app-form {
-  padding:2em 1em 2em 1em;
+  padding: 2em 1em 2em 9em;
+}
+
+.app-form label {
+  font-size: 0.85rem;
+  padding-bottom: 3px;
+  font-weight: 600;
 }
 
 .card {

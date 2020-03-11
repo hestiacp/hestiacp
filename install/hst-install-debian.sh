@@ -78,7 +78,7 @@ help() {
     echo "Usage: $0 [OPTIONS]
   -a, --apache            Install Apache        [yes|no]  default: yes
   -n, --nginx             Install Nginx         [yes|no]  default: yes
-  -w, --phpfpm            Install PHP-FPM       [yes|no]  default: no
+  -w, --phpfpm            Install PHP-FPM       [yes|no]  default: yes
   -o, --multiphp          Install Multi-PHP     [yes|no]  default: no
   -v, --vsftpd            Install Vsftpd        [yes|no]  default: yes
   -j, --proftpd           Install ProFTPD       [yes|no]  default: no
@@ -103,7 +103,7 @@ help() {
   -f, --force             Force installation
   -h, --help              Print this help
 
-  Example: bash $0 -e demo@hestiacp.com -p p4ssw0rd --apache no --phpfpm yes"
+  Example: bash $0 -e demo@hestiacp.com -p p4ssw0rd --multiphp yes"
     exit 1
 }
 
@@ -244,7 +244,7 @@ done
 # Defining default software stack
 set_default_value 'nginx' 'yes'
 set_default_value 'apache' 'yes'
-set_default_value 'phpfpm' 'no'
+set_default_value 'phpfpm' 'yes'
 set_default_value 'multiphp' 'no'
 set_default_value 'vsftpd' 'yes'
 set_default_value 'proftpd' 'no'
@@ -269,9 +269,6 @@ set_default_port '8083'
 set_default_lang 'en'
 
 # Checking software conflicts
-if [ "$multiphp" = 'yes' ]; then
-    phpfpm='yes'
-fi
 if [ "$proftpd" = 'yes' ]; then
     vsftpd='no'
 fi

@@ -5,33 +5,28 @@ All notable changes to this project will be documented in this file.
 ### Features
 ### Bugfixes
 
-## [1.1.0] - 2020-03-09 - Major Release (Feature / Quality Update)
+## [1.1.0] - 2020-03-11 - Major Release (Feature / Quality Update)
 ### Features
 - Added support for custom user interface themes.
-- Changed default font to improve readability on Windows and Linux.
 - Introduced official Dark and Flat themes.
-- Adjusted default font size for improved readability.
-- Added read only/demo mode function if DEMO_MODE is set to yes in hestia.conf.
+- Added read-only/demo mode - DEMO_MODE must be set to yes in hestia.conf to enable.
 - Added php-imagick module to installer and upgrade scripts.
 - Added recidive filter function to fail2ban.
-- Refactored MultiPHP functionality. MultiPHP will be enabled by default on new installations.
-- Allowed admin user to add or remove PHP versions from webui (edit/server->"Web Server" page).
+- Improved and refactored Multi-PHP functionality. 
+- Multi-PHP will be enabled by default on new installations.
+- Allow admin user to add/remove PHP versions from Web UI (Server -> Configure -> Web Server).
 - Extended v-extract-fs-archive to allow archive testing and extracting only specific paths (for tar)
 - Allow renaming of existing packages from console (v-rename-package).
-- Webmail IP address is now inherited from web domain when using multiple IPs.
-- Exim now uses the web domain IP if it exists.
-- Public IP is now used when updating webmail DNS record.
-- Added PHP 7.4 to MultiPHP.
-- Add Support for Debian 10 (Buster).
+- Added PHP 7.4 to Multi-PHP.
+- Addded official support for Debian 10 (Buster).
 
 ### Bugfixes
 - Added a detection of web root for add .well-known ACME challenge.
 - Reworked Let's Encrypt ACME staging to use Hestia code standards.
 - Fixed issues with incorrect font rendering on Windows and Linux.
 - Fixed issues with Let's Encrypt - use Nginx for Let's Encrypt ACME request if present.
-- Reworked v-add-sys-ip, removed CentOS/Red Hat support and reworked conditions.
+- Reworked v-add-sys-ip, removed deprecated CentOS/Red Hat code and reworked conditions.
 - Enabled HSTS and force SSL on v-add-letsencrypt-host.
-- Prevented login action for webmail in list user view.
 - Removed hardcoded mail in HELO data (cosmetic fix).
 - Fixed SFTP server validation check - thanks @dbannik.
 - Implemented security warning message when creating web domains with the default admin account.
@@ -69,14 +64,17 @@ All notable changes to this project will be documented in this file.
 - Hardening MySQL configuration, prevent local infile.
 - Fixed lograte bug and cleans up the messed up nginx/apache2 log permissions.
 - Fixed IfModule mpm_itk.c for apache2 templates.
-- Added mpm_itk for Deb10 single php installation only.
-- Hardening nginx configuration, drop TLSv1.1 support.
+- Added mpm_itk for Debian 10 (non Multi-PHP installations only.)
+- Hardening nginx configuration, dropped support for TLSv1.1.
 - Fixed excluding folders named "logs" from restore backup, thanks to @davidgolsen.
 - Fixed typo in delete psql database part, thanks to @joshbmarshall.
 - Split long txt records to 255 chunks to prevent bind issues, thanks to @setiseta.
 - Fixed missing restart routine for vsftp on v-add-letsencrypt-host.
 - Show amount of disk space consumed by /home when running v-list-sys-info.
 - Remove broken /webmail alias from previous versions.
+- Webmail IP address is now inherited from web domain when using multiple IPs.
+- Exim now uses the web domain IP if it exists.
+- Fix incorrect MX record for DNS domains using the Office 365 template.
 
 ## [1.0.6] - 2019-09-24 - Hotfix
 ### Bugfixes

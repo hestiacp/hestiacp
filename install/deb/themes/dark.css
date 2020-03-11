@@ -1712,7 +1712,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 .units.active .l-unit.focus {
   border-left: 2px solid #5edad0;
-  background-color: #eff5fc;
+  background-color: #353535;
 }
 .units.active .l-unit.focus .l-unit__name {
   color: #36b3a9;

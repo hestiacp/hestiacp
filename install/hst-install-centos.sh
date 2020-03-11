@@ -497,17 +497,15 @@ yum install epel-release -y
 check_result $? "Can't install EPEL repository"
 
 # Installing Remi repository
-if [ "$remi" = 'yes' ] && [ ! -e "/etc/yum.repos.d/remi.repo" ]; then
-    rpm -Uvh http://rpms.remirepo.net/enterprise/remi-release-$release.rpm
-    check_result $? "Can't install REMI repository"
-    sed -i "s/enabled=0/enabled=1/g" /etc/yum.repos.d/remi.repo
-fi
+rpm -Uvh http://rpms.remirepo.net/enterprise/remi-release-$release.rpm
+check_result $? "Can't install REMI repository"
+sed -i "s/enabled=0/enabled=1/g" /etc/yum.repos.d/remi.repo
 
 # Installing Nginx repository
 nrepo="/etc/yum.repos.d/nginx.repo"
 echo "[nginx]" > $nrepo
 echo "name=nginx repo" >> $nrepo
-echo "baseurl=http://nginx.org/packages/centos/$release/\$basearch/" >> $nrepo
+echo "baseurl=https://nginx.org/packages/centos/$release/\$basearch/" >> $nrepo
 echo "gpgcheck=0" >> $nrepo
 echo "enabled=1" >> $nrepo
 
@@ -618,7 +616,7 @@ fi
 
 # Excluding packages
 if [ "$nginx" = 'no'  ]; then
-    software=$(echo "$software" | sed -e "s/^nginx//")
+    software=$(echo "$software" | sed -e "s/\bnginx\b/ /")
 fi
 if [ "$apache" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/httpd//")
@@ -706,14 +704,9 @@ fi
 # Installing rpm packages
 yum install -y $software
 if [ $? -ne 0 ]; then
-    if [ "$remi" = 'yes' ]; then
-        yum -y --disablerepo=* \
-            --enablerepo="*base,*updates,nginx,epel,hestia,remi*" \
-            install $software
-    else
-        yum -y --disablerepo=* --enablerepo="*base,*updates,nginx,epel,hestia" \
-            install $software
-    fi
+    yum -y --disablerepo=* \
+        --enablerepo="*base,*updates,nginx,epel,hestia,remi*" \
+        install $software
 fi
 check_result $? "yum install failed"
 
@@ -813,7 +806,7 @@ ln -s $HESTIA/log /var/log/hestia
 chmod 770 $HESTIA/data/sessions
 
 # Generating Hestia configuration
-rm -f $HESTIA/conf/hestia.conf 2>/dev/null
+rm -f $HESTIA/conf/hestia.conf > /dev/null 2>&1
 touch $HESTIA/conf/hestia.conf
 chmod 660 $HESTIA/conf/hestia.conf
 
@@ -824,7 +817,7 @@ if [ "$apache" = 'yes' ] && [ "$nginx" = 'no' ] ; then
     echo "WEB_PORT='80'" >> $HESTIA/conf/hestia.conf
     echo "WEB_SSL_PORT='443'" >> $HESTIA/conf/hestia.conf
     echo "WEB_SSL='mod_ssl'"  >> $HESTIA/conf/hestia.conf
-    echo "STATS_SYSTEM='webalizer,awstats'" >> $HESTIA/conf/hestia.conf
+    echo "STATS_SYSTEM='awstats'" >> $HESTIA/conf/hestia.conf
 fi
 if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
     echo "WEB_SYSTEM='httpd'" >> $HESTIA/conf/hestia.conf
@@ -835,17 +828,36 @@ if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
     echo "PROXY_SYSTEM='nginx'" >> $HESTIA/conf/hestia.conf
     echo "PROXY_PORT='80'" >> $HESTIA/conf/hestia.conf
     echo "PROXY_SSL_PORT='443'" >> $HESTIA/conf/hestia.conf
-    echo "STATS_SYSTEM='webalizer,awstats'" >> $HESTIA/conf/hestia.conf
+    echo "STATS_SYSTEM='awstats'" >> $HESTIA/conf/hestia.conf
 fi
 if [ "$apache" = 'no' ] && [ "$nginx"  = 'yes' ]; then
     echo "WEB_SYSTEM='nginx'" >> $HESTIA/conf/hestia.conf
     echo "WEB_PORT='80'" >> $HESTIA/conf/hestia.conf
     echo "WEB_SSL_PORT='443'" >> $HESTIA/conf/hestia.conf
     echo "WEB_SSL='openssl'"  >> $HESTIA/conf/hestia.conf
-    if [ "$phpfpm" = 'yes' ]; then
+    echo "STATS_SYSTEM='awstats'" >> $HESTIA/conf/hestia.conf
+fi
+
+if [ "$phpfpm" = 'yes' ] || [ "$multiphp" = 'yes' ]; then
         echo "WEB_BACKEND='php-fpm'" >> $HESTIA/conf/hestia.conf
-    fi
-    echo "STATS_SYSTEM='webalizer,awstats'" >> $HESTIA/conf/hestia.conf
+fi
+
+# Database stack
+if [ "$mysql" = 'yes' ]; then
+    installed_db_types='mysql'
+fi
+
+if [ "$pgsql" = 'yes' ]; then
+    installed_db_types="$installed_db_type,pgsql"
+fi
+
+if [ ! -z "$installed_db_types" ]; then
+    db=$(echo "$installed_db_types" |\
+        sed "s/,/\n/g"|\
+        sort -r -u |\
+        sed "/^$/d"|\
+        sed ':a;N;$!ba;s/\n/,/g')
+    echo "DB_SYSTEM='$db'" >> $HESTIA/conf/hestia.conf
 fi
 
 # FTP stack
@@ -865,7 +877,7 @@ fi
 if [ "$exim" = 'yes' ]; then
     echo "MAIL_SYSTEM='exim'" >> $HESTIA/conf/hestia.conf
     if [ "$clamd" = 'yes'  ]; then
-        echo "ANTIVIRUS_SYSTEM='clamav'" >> $HESTIA/conf/hestia.conf
+        echo "ANTIVIRUS_SYSTEM='clamav-daemon'" >> $HESTIA/conf/hestia.conf
     fi
     if [ "$spamd" = 'yes' ]; then
         echo "ANTISPAM_SYSTEM='spamassassin'" >> $HESTIA/conf/hestia.conf
@@ -897,26 +909,38 @@ echo "BACKUP_SYSTEM='local'" >> $HESTIA/conf/hestia.conf
 # Language
 echo "LANGUAGE='$lang'" >> $HESTIA/conf/hestia.conf
 
-# Version
-echo "VERSION='0.9.8'" >> $HESTIA/conf/hestia.conf
+# Version & Release Branch
+echo "VERSION='1.1.0'" >> $HESTIA/conf/hestia.conf
+echo "RELEASE_BRANCH='release'" >> $HESTIA/conf/hestia.conf
 
 # Installing hosting packages
-cp -rf $hestiacp/packages $HESTIA/data/
+cp -rf $HESTIA_INSTALL_DIR/packages $HESTIA/data/
+
+# Update nameservers in hosting package
+IFS='.' read -r -a domain_elements <<< "$servername"
+if [ ! -z "${domain_elements[-2]}" ] && [ ! -z "${domain_elements[-1]}" ]; then
+    serverdomain="${domain_elements[-2]}.${domain_elements[-1]}"
+    sed -i s/"domain.tld"/"$serverdomain"/g $HESTIA/data/packages/*.pkg
+fi
 
 # Installing templates
-cp -rf $hestiacp/templates $HESTIA/data/
+cp -rf $HESTIA_INSTALL_DIR/templates $HESTIA/data/
 
-# Copying index.html to default documentroot
-cp $HESTIA/data/templates/web/skel/public_html/index.html /var/www/html/
-sed -i 's/%domain%/It worked!/g' /var/www/html/index.html
+mkdir -p /var/www/html
+mkdir -p /var/www/document_errors
+
+# Install default success page
+cp -rf $HESTIA_INSTALL_DIR/templates/web/unassigned/index.html /var/www/html/
+cp -rf $HESTIA_INSTALL_DIR/templates/web/skel/document_errors/* /var/www/document_errors/
 
 # Installing firewall rules
-cp -rf $hestiacp/firewall $HESTIA/data/
+cp -rf $HESTIA_INSTALL_DIR/firewall $HESTIA/data/
 
 # Configuring server hostname
-$HESTIA/bin/v-change-sys-hostname $servername 2>/dev/null
+$HESTIA/bin/v-change-sys-hostname $servername > /dev/null 2>&1
 
 # Generating SSL certificate
+echo "(*) Generating default self-signed SSL certificate..."
 $HESTIA/bin/v-generate-ssl-cert $(hostname) $email 'US' 'California' \
      'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
 
@@ -926,6 +950,7 @@ key_start=$(grep -n "BEGIN RSA" /tmp/hst.pem |cut -f 1 -d:)
 key_end=$(grep -n  "END RSA" /tmp/hst.pem |cut -f 1 -d:)
 
 # Adding SSL certificate
+echo "(*) Adding SSL certificate to Hestia Control Panel..."
 cd $HESTIA/ssl
 sed -n "1,${crt_end}p" /tmp/hst.pem > certificate.crt
 sed -n "$key_start,${key_end}p" /tmp/hst.pem > certificate.key
@@ -933,27 +958,45 @@ chown root:mail $HESTIA/ssl/*
 chmod 660 $HESTIA/ssl/*
 rm /tmp/hst.pem
 
+# Adding nologin as a valid system shell
+if [ -z "$(grep nologin /etc/shells)" ]; then
+    echo "/usr/sbin/nologin" >> /etc/shells
+fi
+
+# Install dhparam.pem
+cp -f $HESTIA_INSTALL_DIR/ssl/dhparam.pem /etc/ssl
 
 #----------------------------------------------------------#
 #                     Configure Nginx                      #
 #----------------------------------------------------------#
 
 if [ "$nginx" = 'yes' ]; then
+    echo "(*) Configuring NGINX..."
     rm -f /etc/nginx/conf.d/*.conf
-    cp -f $hestiacp/nginx/nginx.conf /etc/nginx/
-    cp -f $hestiacp/nginx/status.conf /etc/nginx/conf.d/
-    cp -f $hestiacp/nginx/phpmyadmin.inc /etc/nginx/conf.d/
-    cp -f $hestiacp/nginx/phppgadmin.inc /etc/nginx/conf.d/
-    cp -f $hestiacp/nginx/webmail.inc /etc/nginx/conf.d/
-    cp -f $hestiacp/logrotate/nginx /etc/logrotate.d/
-    echo > /etc/nginx/conf.d/hestia.conf
+    cp -f $HESTIA_INSTALL_DIR/nginx/nginx.conf /etc/nginx/
+    cp -f $HESTIA_INSTALL_DIR/nginx/status.conf /etc/nginx/conf.d/
+    cp -f $HESTIA_INSTALL_DIR/nginx/phpmyadmin.inc /etc/nginx/conf.d/
+    cp -f $HESTIA_INSTALL_DIR/nginx/phppgadmin.inc /etc/nginx/conf.d/
+    cp -f $HESTIA_INSTALL_DIR/logrotate/nginx /etc/logrotate.d/
+    mkdir -p /etc/nginx/conf.d/domains
     mkdir -p /var/log/nginx/domains
-    if [ "$release" -ge 7 ]; then
-        mkdir -p /etc/systemd/system/nginx.service.d
-        cd /etc/systemd/system/nginx.service.d
-        echo "[Service]" > limits.conf
-        echo "LimitNOFILE=500000" >> limits.conf
+    mkdir -p /etc/systemd/system/nginx.service.d
+    cd /etc/systemd/system/nginx.service.d
+    echo "[Service]" > limits.conf
+    echo "LimitNOFILE=500000" >> limits.conf
+
+    # Update dns servers in nginx.conf
+    dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
+    for ip in $dns_resolver; do
+        if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            resolver="$ip $resolver"
+        fi
+    done
+    if [ ! -z "$resolver" ]; then
+        sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /etc/nginx/nginx.conf
+        sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
     fi
+
     chkconfig nginx on
     service nginx start
     check_result $? "nginx start failed"
@@ -1015,11 +1058,23 @@ fi
 #                     Configure PHP-FPM                    #
 #----------------------------------------------------------#
 
+if [ "$multiphp" = 'yes' ] ; then
+    for v in "${multiphp_v[@]}"; do
+        cp -r /etc/php/$v/ /root/hst_install_backups/php$v/
+        rm -f /etc/php/$v/fpm/pool.d/*
+        echo "(*) Install PHP version $v..."
+        $HESTIA/bin/v-add-web-php "$v" > /dev/null 2>&1
+    done
+fi
+
 if [ "$phpfpm" = 'yes' ]; then
-    cp -f $hestiacp/php-fpm/www.conf /etc/php-fpm.d/
-    chkconfig php-fpm on
-    service php-fpm start
+    echo "(*) Configuring PHP-FPM..."
+    $HESTIA/bin/v-add-web-php "$fpm_v" > /dev/null 2>&1
+    cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf
+    update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1
+    systemctl start php$fpm_v-fpm >> $LOG
     check_result $? "php-fpm start failed"
+    update-alternatives --set php /usr/bin/php$fpm_v > /dev/null 2>&1
 fi
 
 

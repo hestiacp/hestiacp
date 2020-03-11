@@ -1289,6 +1289,11 @@ form#vstobjects .alert {
   padding: 4px;
 }
 
+.l-stat__col--active .fas {
+  color: #aaaaaa;
+  padding: 4px;
+}
+
 .l-separator.selected,
 .l-separator {
   height: 1px;

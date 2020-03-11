@@ -1,6 +1,10 @@
 [Hestia Control Panel](https://www.hestiacp.com/)
 ==================================================
-**Current stable release:** Version 1.1.0, released on March 11th, 2020.<br>
+**Current stable release:** Version 1.1.0, released on March 11th, 2020.<br><br>
+Due to a change of the repository infrastructure, please install the new key before you upgrade your existing installations:
+```bash
+wget -qO - https://gpg.hestiacp.com/deb_signing.key | sudo apt-key add -
+```
 
 **Welcome!**
 ---------------------------- 

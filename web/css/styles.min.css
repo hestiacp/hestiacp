@@ -1123,7 +1123,14 @@ form#vstobjects .alert {
 }
 
 .app-form {
-  padding:2em 1em 2em 1em;
+  padding: 2em 1em 2em 9rem;
+}
+
+.app-form label {
+  font-size: 0.85rem;
+  padding-bottom: 3px;
+  font-weight: 600;
+  cursor: default;
 }
 
 .card {
@@ -2847,7 +2854,7 @@ td.hint {
   inset 0px 0px 3px rgba(255,255,255,0.5) !important;
 }
 
-.ui-button, .button {
+.ui-button, .button, .ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit {
   filter:chroma(color=#000);
   cursor: pointer;
   border-radius: 3px 3px 3px 3px !important;
@@ -2878,7 +2885,7 @@ td.hint {
 }
 .ui-button:focus,.ui-button:active,
 .button:active,.button:focus,.ui-button.cancel:focus,.ui-button.cancel:active,
-.button.cancel:active,.button.cancel:focus, .ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit,
+.button.cancel:active,.button.cancel:focus,
 .ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit:active {
   border: 1px solid #378ccd !important;
   background: linear-gradient(to bottom, rgba(210,232,250,1) 0%,rgba(187,220,247,1) 50%,rgba(162,207,244,1) 51%,rgba(194,224,248,1) 100%) !important;
@@ -3486,7 +3493,7 @@ form#vstobjects.suspended {
 }
 
 .shortcuts {
-  background: rgba(20, 20, 20, 0.92);
+  background: rgba(50,50,50,0.93);
   display: inline-block;
   position: fixed;
   left: 50%;
@@ -3500,13 +3507,13 @@ form#vstobjects.suspended {
   transform: translate(-50%, 0);
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
-  box-shadow: 0px 3px 40px rgba(0,0,0,0.6);
-  line-height: 1rem;
+  box-shadow: 0px 4px 30px rgba(0,0,0,0.5);
+  line-height: 0.9rem;
   cursor: default;
 }
 
 .shortcuts .header {
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid #606060;
   height: 43px;
 }
 

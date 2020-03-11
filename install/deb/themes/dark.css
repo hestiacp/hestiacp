@@ -1121,7 +1121,14 @@ form#vstobjects .alert {
 }
 
 .app-form {
-  padding:2em 1em 2em 1em;
+  padding: 2em 1em 2em 9rem;
+}
+
+.app-form label {
+  font-size: 0.85rem;
+  padding-bottom: 3px;
+  font-weight: 600;
+  cursor: default;
 }
 
 .card {
@@ -3519,7 +3526,7 @@ form#vstobjects.suspended {
 }
 
 .shortcuts {
-  background: rgba(45,45,45 0.95);
+  background: rgba(30,30,30,0.95);
   display: inline-block;
   position: fixed;
   left: 50%;
@@ -3533,13 +3540,13 @@ form#vstobjects.suspended {
   transform: translate(-50%, 0);
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
-  box-shadow: 0px 3px 40px rgba(0,0,0,0.6);
-  line-height: 1rem;
+  box-shadow: 0px 0px 20px rgba(0,0,0,0.5);
+  line-height: 0.9rem;
   cursor: default;
 }
 
 .shortcuts .header {
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid #353535;
   height: 43px;
 }
 

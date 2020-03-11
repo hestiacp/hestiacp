@@ -2854,7 +2854,7 @@ td.hint {
   inset 0px 0px 3px rgba(255,255,255,0.5) !important;
 }
 
-.ui-button, .button {
+.ui-button, .button, .ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit {
   filter:chroma(color=#000);
   cursor: pointer;
   border-radius: 3px 3px 3px 3px !important;
@@ -2885,7 +2885,7 @@ td.hint {
 }
 .ui-button:focus,.ui-button:active,
 .button:active,.button:focus,.ui-button.cancel:focus,.ui-button.cancel:active,
-.button.cancel:active,.button.cancel:focus, .ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit,
+.button.cancel:active,.button.cancel:focus,
 .ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit:active {
   border: 1px solid #378ccd !important;
   background: linear-gradient(to bottom, rgba(210,232,250,1) 0%,rgba(187,220,247,1) 50%,rgba(162,207,244,1) 51%,rgba(194,224,248,1) 100%) !important;

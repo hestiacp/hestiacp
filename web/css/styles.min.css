@@ -2738,6 +2738,10 @@ a.vst-text:active b{
   color: #cc3366;
   background-color: transparent;
   border-color: transparent;
+  font-size: 0.85em !important;
+  box-shadow: none !important;
+  background: none !important;
+  border: none !important
 }
 
 .vst-advanced:hover {
@@ -2753,6 +2757,10 @@ a.vst-text:active b{
   background-color: #F7D616;
   border-color: #F7D616;
   text-decoration: none;
+  font-size: 0.85em !important;
+  box-shadow: none !important;
+  background: none !important;
+  border: none !important
 }
 
 .login-box .vst-advanced {
@@ -2762,6 +2770,10 @@ a.vst-text:active b{
   padding: 2px 2px 0;
   text-decoration: none;
   text-transform: uppercase;
+  font-size: 0.85em !important;
+  box-shadow: none !important;
+  background: none !important;
+  border: none !important
 }
 .vst-checkbox {
   font-size: 0.85rem;

@@ -1,0 +1,87 @@
+#!/bin/bash
+
+# v-update-sys-themes
+# info: update system themes
+# options: quiet
+#
+# The function is for updating system theme css files from
+# Hestia Control Panel's GitHub repository
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+branch=$1
+quiet=$2
+
+# Import main functions and variables for release branch
+# and system theme currently in use
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+# Check for release branch override
+if [ -z "$branch" ]; then
+    theme_branch="$RELEASE_BRANCH"
+else
+    if [ "$RELEASE_BRANCH" != "$branch" ]; then
+        theme_branch="$branch"
+    else
+        theme_branch="$RELEASE_BRANCH"
+    fi
+fi
+
+# Catch in the event that v-update-sys-themes yes is specified
+if [ "$branch" = "yes" ] || [ "$branch" = "y" ]; then
+    answer_set="y"
+    theme_branch="$RELEASE_BRANCH"
+fi
+
+# Check for presence of quiet flag and skip the
+# welcomwe/warning prompt that is displayed when running
+# without any switches/flags.
+if [ -z "$answer_set" ]; then
+    if [ "$quiet" ]; then 
+        answer="y"
+    else
+        read -p "Proceed with theme update installation? [Y/n] " answer
+    fi
+else
+    answer="y"
+fi
+
+# Download the base system theme and update each CSS file present in the themes folder
+if [ "$answer" = "y" ] || [ "$answer" = "Y" ] || [ "$answer" = "yes" ]; then
+    echo ""
+    echo "Hestia Control Panel UI Theme Updater"
+    echo "============================================"
+    echo "Version:          $VERSION"
+    echo "Release Branch:   $RELEASE_BRANCH"
+    echo "Theme Branch:     $theme_branch"
+    echo "============================================"
+    echo ""
+    echo "(*) Updating system base theme..."
+    if [ -e "$HESTIA/web/css/styles.min.css" ]; then
+        rm -f "$HESTIA/web/css/styles.min.css"
+    fi
+
+    wget $HESTIA_GIT_REPO/$theme_branch/web/css/styles.min.css -q -O $HESTIA/web/css/styles.min.css --show-progress --progress=bar:force --limit-rate=3m
+    echo ""
+    echo "(*) Updating included themes..."
+    for themefile in `ls $HESTIA/install/deb/themes`; do
+
+    if [ -e $themefile ]; then
+        rm -f $themefile
+    fi
+    echo "(-) Downloading $themefile..."
+    wget $HESTIA_GIT_REPO/$theme_branch/install/deb/themes/$themefile -q -O $HESTIA_INSTALL_DIR/themes/$themefile --show-progress --progress=bar:force --limit-rate=3m
+    done
+
+    # If the system theme is not the default, run v-change-sys-theme to delete the old CSS file and replace it with the new one which was just downloaded.
+    if [ "$THEME" != "default" ]; then
+        echo "(*) Applying updated system interface theme..."
+        $BIN/v-change-sys-theme $THEME
+    fi
+else
+    echo "Update process aborted."
+fi

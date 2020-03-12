@@ -1,0 +1,25 @@
+#!/bin/bash
+
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+echo "Updating system base theme..."
+if [ -e "$HESTIA/web/css/styles.min.css" ]; then
+    rm -f "$HESTIA/web/css/styles.min.css"
+fi
+wget -qO $HESTIA/web/css/styles.min.css $HESTIA_GIT_REPO/$RELEASE_BRANCH/web/css/styles.min.css
+
+echo "Updating included themes..."
+for themefile in `ls $HESTIA/install/deb/themes`; do
+
+if [ -e $themefile ]; then
+    rm -f $themefile
+fi
+
+wget -qO $HESTIA_INSTALL_DIR/themes/$themefile $HESTIA_GIT_REPO/$RELEASE_BRANCH/install/deb/themes/$themefile
+done
+
+if [ "$THEME" != "default" ]; then
+    echo "Applying updated system interface theme..."
+    $BIN/v-change-sys-theme $THEME
+fi

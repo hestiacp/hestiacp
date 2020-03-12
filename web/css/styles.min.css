@@ -3278,11 +3278,11 @@ form#vstobjects.suspended {
   padding-right: 8px;
   margin-right: 10px;
   line-height: 0.75rem;
-  box-shadow: 0px 1px 1px rgba(0,0,0,0.25), inset 0px 0px 1px rgba(0,0,0,0.15);
-  background-color: rgba(255,255,255,0.75);
+  box-shadow: 0px 1px 1px rgba(0,0,0,0.35), inset 0px 1px 0px rgba(0,0,0,0.1);
+  background-color: rgba(255,255,255,0.65);
   font-weight: 500;
-  border: 1px solid rgba(255,255,255,0.9);
-  text-shadow: 0px 1px 1px rgba(255,255,255,0.5);
+  border: 1px solid rgba(255,255,255,0.75);
+  text-shadow: 0px 1px 1px rgba(255,255,255,0.6);
   color: #30659d;
 }
 

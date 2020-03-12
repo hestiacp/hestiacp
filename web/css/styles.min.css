@@ -784,8 +784,8 @@ a {
   width: 100%;
   z-index: 900;
   height: 38px;
-  text-shadow: 1px 1px rgba(0,0,0,0.5);
-  box-shadow: 0px 8px 20px rgba(120,120,120,0.35);
+  text-shadow: 1px 1px rgba(0,0,0,0.65);
+  box-shadow: 0px 8px 16px rgba(140,140,140,0.5);
   border-bottom: 1px solid #fff;
 }
 
@@ -936,7 +936,7 @@ a {
 
 .notification-container {
   background-color: rgba(255,255,255,0.95);
-  box-shadow: 0 3px 30px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 0 3px 20px 0 rgba(0, 0, 0, 0.4);
   list-style-type: none;
   margin: 0 18px;
   max-height: 90%;
@@ -1285,6 +1285,10 @@ form#vstobjects .alert {
   padding: 4px;
 }
 
+.l-stat__col--active .fas {
+  color: #cc3366;
+}
+
 .l-separator.selected,
 .l-separator {
   height: 1px;
@@ -1370,7 +1374,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   top: 42px;
   background-color: rgba(255,255,255,0.95);
   list-style-type: none;
-  box-shadow: 0 2px 12px 0 rgba(20, 20, 20, 0.25);
+  box-shadow: 0 2px 14px 0 rgba(20, 20, 20, 0.35);
   border-radius: 4px;
   border: 1px solid rgba(255,255,255,1);
   padding: 0px;
@@ -1662,12 +1666,12 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .table-header {
   font-size: 0.95em !important;
   background: linear-gradient(to bottom, rgba(247,247,247,1) 0%,rgba(255,255,255,1) 100%) !important;
-  border-left: 1px solid #ddd !important;
-  border-right: 1px solid #ddd !important;
-  border-bottom: 1px solid #ddd !important;
-  border-top: 1px solid #ddd !important;
-  text-shadow: 0px 1px rgba(255,255,255,0.95);
-  box-shadow: inset 0px 0px 1px rgba(255,255,255,1), inset 0px 0px 4px rgba(255,255,255,0.8), 0px 4px 6px rgba(190,190,190,0.3) !important;
+  border-left: 1px solid #d0d0d0 !important;
+  border-right: 1px solid #d0d0d0 !important;
+  border-bottom: 1px solid #d0d0d0 !important;
+  border-top: 1px solid #d0d0d0 !important;
+  text-shadow: 0px 1px rgba(255,255,255,1);
+  box-shadow: inset 0px 1px 1px rgba(255,255,255,1), inset 0px 0px 1px rgba(255,255,255,1), inset 0px 0px 4px rgba(255,255,255,0.8), 0px 2px 6px rgba(140,140,140,0.35) !important;
   border-top-left-radius: 0px;
   border-top-right-radius: 0px;
   border-bottom-left-radius: 6px;
@@ -1682,8 +1686,8 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .table-header:hover {
   background-color: linear-gradient(to bottom, rgba(247,247,247,1) 0%,rgba(255,255,255,1) 100%) !important;
-  border-left: 1px solid #ddd !important;
-  border-right: 1px solid #ddd !important;
+  border-left: 1px solid #d0d0d0 !important;
+  border-right: 1px solid #d0d0d0 !important;
 }
 
 .table-header .fas {
@@ -2528,7 +2532,7 @@ label:hover {
   border: 1px solid #94c8f0;
 }
 .vst-input:focus {
-  border: 1px solid #3b9de8;
+  border: 1px solid #008fee;
   background-color: #D7F9FF;
   color: #333;
 }
@@ -2608,7 +2612,7 @@ select.vst-list:-moz-focusring {
   border: 1px solid #94c8f0;
 }
 .vst-list:focus {
-  border: 1px solid #3b9de8;
+  border: 1px solid #008fee;
   color: #333;
 }
 
@@ -2684,7 +2688,7 @@ a.vst-text:active b{
   border: 1px solid #94c8f0;
 }
 .vst-textinput:focus {
-  border: 1px solid #3b9de8;
+  border: 1px solid #008fee;
   background-color: #D7F9FF;
   color: #333;
 }
@@ -2728,7 +2732,7 @@ a.vst-text:active b{
   font-size: 0.8rem;
   padding: 2px 2px 0;
   text-decoration: none;
-  text-transform: uppercase;
+  text-transform: none;
 }
 .login-box .vst-advanced:hover {
   color: #cc3366;
@@ -2854,7 +2858,7 @@ td.hint {
   inset 0px 0px 3px rgba(255,255,255,0.5) !important;
 }
 
-.ui-button, .button, .ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit {
+.ui-button, .button, .ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit, .vst-advanced {
   filter:chroma(color=#000);
   cursor: pointer;
   border-radius: 3px 3px 3px 3px !important;
@@ -2864,21 +2868,22 @@ td.hint {
   min-width: 100px !important;
   height: 28px !important;
   color: #30659d !important;
-  border: 1px solid #3b9de8 !important;
+  border: 1px solid #0083db !important;
   background-color: #3b9de8 !important;
   background: linear-gradient(to bottom, rgba(235,243,249,1) 0%,rgba(215,230,243,1) 50%,rgba(192,216,236,1) 51%,rgba(223,235,245,1) 100%) !important;
-  box-shadow: 0px 1px 4px rgba(0,0,0,0.2),
+  box-shadow: 0px 1px 3px rgba(0,0,0,0.25),
               inset 0px 0px 1px #fff,
               inset 0px 0px 3px rgba(255,255,255,0.5) !important;
-  text-shadow: 0px 1px 1px rgba(255,255,255,0.6) !important;
+  text-shadow: 0px 1px 1px rgba(255,255,255,0.85) !important;
 }
 .ui-button:hover, .button:hover, .ui-button.cancel:hover, .button.cancel:hover,
-.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit:hover {
-  color: #3b9de8 !important;
+.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit:hover,
+.vst-advanced:hover {
+  color: #0099ff !important;
   text-shadow: 1px 1px rgba(255,255,255,0.5) !important;
   border: 1px solid #54a6e5 !important;
   background: linear-gradient(to bottom, rgba(241,248,253,1) 0%,rgba(218,236,250,1) 50%,rgba(190,221,246,1) 51%,rgba(227,240,251,1) 100%) !important;
-  box-shadow: 0px 1px 3px rgba(0,0,0,0.15),
+  box-shadow: 0px 1px 3px rgba(0,0,0,0.25),
               inset 0px 0px 1px #fff,
               inset 0px 0px 6px rgba(255,255,255,0.6) !important;
   transition: 0.2s;
@@ -2886,12 +2891,13 @@ td.hint {
 .ui-button:focus,.ui-button:active,
 .button:active,.button:focus,.ui-button.cancel:focus,.ui-button.cancel:active,
 .button.cancel:active,.button.cancel:focus,
-.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit:active {
-  border: 1px solid #378ccd !important;
+.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit:active,
+.vst-advanced:active,.vst-advanced:focus {
+  border: 1px solid #0066b4 !important;
   background: linear-gradient(to bottom, rgba(210,232,250,1) 0%,rgba(187,220,247,1) 50%,rgba(162,207,244,1) 51%,rgba(194,224,248,1) 100%) !important;
   color: #046c98 !important;
   text-shadow: 0px -1px 1px rgba(255,255,255,0.5) !important;
-  box-shadow: 0px 1px 3px rgba(0,0,0,0.15),
+  box-shadow: 0px 1px 2px rgba(0,0,0,0.2),
               inset 0px 0px 1px #fff,
               inset -1px -1px 4px rgba(220,220,220,0.4) !important;
 }
@@ -2916,7 +2922,8 @@ td.hint {
 }
 
 .ui-button.cancel,
-.button.cancel {
+.button.cancel,
+.to-top, .to-shortcuts {
   color: #717171 !important;
   border: 1px solid #aaaaaa !important;
   background: linear-gradient(to bottom, rgba(250,250,250,1) 0%,rgba(236,236,236,1) 50%,rgba(221,221,221,1) 51%,rgba(241,241,241,1) 100%) !important;
@@ -2927,7 +2934,8 @@ td.hint {
   color: #30659d !important;
 }
 .ui-button.cancel:active,
-.button.cancel:active {
+.button.cancel:active,
+.to-top:active, .to-shortcuts:active {
   border: 1px solid #378ccd;
   background-color: #378ccd;
 }
@@ -2952,8 +2960,9 @@ a.button.cancel {
 
 .ui-button.danger:active, .button.danger:active, .ui-button.danger:focus, .button.danger:focus {
   background: linear-gradient(to bottom, #f9e3df 0%,#f5a69d 50%,#f48578 51%,#fcd0ca 100%) !important; 
-  color: #fff !important;
-  text-shadow: 0px -1px 1px rgba(0,0,0,0.3) !important;
+  color: #ce1500 !important;
+  text-shadow: 0px 1px 1px rgba(255,255,255,0.2),
+               0px -1px 1px rgba(255,255,255,0.6) !important;
   border: 1px solid #F4301A !important;
 }
 

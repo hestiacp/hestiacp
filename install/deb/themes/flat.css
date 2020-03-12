@@ -20,6 +20,14 @@ b, strong {
     background: #fafafa !important;
 }
 
+.to-top, .to-shortcuts, 
+.to-top:hover, .to-shortcuts:hover,
+.to-top:active, .to-shortcuts:active {
+    box-shadow: none !important;
+    background: none !important;
+    background-color: #eee !important;
+} 
+
 .l-header {
     box-shadow: none;
     background: #5070a6;

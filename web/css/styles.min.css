@@ -3090,7 +3090,7 @@ a.button.cancel {
 ::-moz-focus-inner {border:0;}
 
 .login {
-  background-color: #fff;
+  background-color: rgba(255,255,255,0.65);
   box-shadow: 0px 8px 25px rgba(0,0,0, 0.3);
   font-family: 'Exo', Tahoma, Arial, Helvetica, sans-serif;
   margin: 0;
@@ -3102,10 +3102,15 @@ a.button.cancel {
   cursor: default;
 }
 
+.login .vst-input {
+  border-color: #5787c8;
+}
+
 .login-welcome {
   font-size: 1.05rem !important;
   font-weight: 500 !important;
   padding-bottom: 30px !important;
+  font-weight: 600;
 }
 
 .page-title {

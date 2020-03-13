@@ -64,7 +64,7 @@ tls_on_connect_ports = 465
 never_users = root
 host_lookup = *
 rfc1413_hosts = *
-rfc1413_query_timeout = 5s
+rfc1413_query_timeout = 0s
 ignore_bounce_errors_after = 2d
 timeout_frozen_after = 7d
 

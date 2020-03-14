@@ -119,3 +119,15 @@ If you would like to help our developers cover their time and infrastucture cost
 License
 =============================
 Hestia Control Panel is licensed under [GPL v3](https://github.com/hestiacp/hestiacp/blob/master/LICENSE) license, and is based on the [VestaCP](https://www.vestacp.com/) project.<br>
+
+Copyright
+=============================
+"Hestia Control Panel", "HestiaCP", and the Hestia logo are original copyright of hestiacp.com and the following restrictions apply:
+
+**You are allowed to:**
+- use the names "Hestia Control Panel", "HestiaCP", or the Hestia logo in any context directly related to the application or the project. This includes the application itself, local communities and news or blog posts.
+
+**You are not allowed to:**
+- sell or redistribute the application under the name "Hestia Control Panel", "HestiaCP", or similar derivatives, including the use of the Hestia logo in any brand or marketing materials related to revenue generating activities,
+- use the names "Hestia Control Panel", "HestiaCP", or the Hestia logo in any context that is not related to the project,
+- alter the name "Hestia Control Panel", "HestiaCP", or the Hestia logo in any way.

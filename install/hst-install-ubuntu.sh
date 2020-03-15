@@ -1441,9 +1441,7 @@ fi
 
 if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ]; then
     echo "(*) Configuring Z-Push ActiveSync & AutoDiscover service..."
-    cp -rf $HESTIA_INSTALL_DIR/zpush/autodiscover.conf.php /etc/z-push/
-    cp -rf $HESTIA_INSTALL_DIR/zpush/imap.conf.php /etc/z-push/
-    cp -rf $HESTIA_INSTALL_DIR/zpush/z-push.conf.php /etc/z-push/
+    cp -f $HESTIA_INSTALL_DIR/zpush/zpush_params /etc/nginx/conf.d/
 fi
 
 

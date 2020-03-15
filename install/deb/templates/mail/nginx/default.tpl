@@ -36,6 +36,19 @@ server {
         }
     }
 
+    location /AutoDiscover/AutoDiscover.xml {
+        alias /usr/share/z-push/autodiscover/autodiscover.php;
+        include zpush_params;
+    }
+    location /Autodiscover/Autodiscover.xml {
+        alias /usr/share/z-push/autodiscover/autodiscover.php;
+        include zpush_params;
+    }
+    location /autodiscover/autodiscover.xml {
+        alias /usr/share/z-push/autodiscover/autodiscover.php;
+        include zpush_params;
+    }
+    
     location /error/ {
         alias /var/www/document_errors/;
     }

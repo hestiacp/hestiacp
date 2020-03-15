@@ -40,7 +40,8 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     php$fpm_v-mbstring php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline
     php$fpm_v-xml postgresql postgresql-contrib proftpd-basic quota
     roundcube-core roundcube-mysql roundcube-plugins rrdtool rssh spamassassin
-    sudo hestia hestia-nginx hestia-php vim-common vsftpd whois zip acl sysstat setpriv"
+    sudo hestia hestia-nginx hestia-php hestia-zpush vim-common vsftpd whois
+    zip acl sysstat setpriv"
 
 # Defining help function
 help() {
@@ -733,6 +734,7 @@ if [ "$exim" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/roundcube-core//")
     software=$(echo "$software" | sed -e "s/roundcube-mysql//")
     software=$(echo "$software" | sed -e "s/roundcube-plugins//")
+    software=$(echo "$software" | sed -e "s/hestia-zpush//")
 fi
 if [ "$clamd" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/clamav-daemon//")
@@ -746,6 +748,7 @@ if [ "$dovecot" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/roundcube-core//")
     software=$(echo "$software" | sed -e "s/roundcube-mysql//")
     software=$(echo "$software" | sed -e "s/roundcube-plugins//")
+    software=$(echo "$software" | sed -e "s/hestia-zpush//")
 fi
 if [ "$mysql" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/mariadb-server//")
@@ -1429,6 +1432,18 @@ if [ "$dovecot" = 'yes' ]; then
     update-rc.d dovecot defaults
     systemctl start dovecot >> $LOG
     check_result $? "dovecot start failed"
+fi
+
+
+#----------------------------------------------------------#
+#                     Configure Z-Push                     #
+#----------------------------------------------------------#
+
+if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ]; then
+    echo "(*) Configuring Z-Push ActiveSync & AutoDiscover service..."
+    cp -rf $HESTIA_INSTALL_DIR/zpush/autodiscover.conf.php /etc/z-push/
+    cp -rf $HESTIA_INSTALL_DIR/zpush/imap.conf.php /etc/z-push/
+    cp -rf $HESTIA_INSTALL_DIR/zpush/z-push.conf.php /etc/z-push/
 fi
 
 

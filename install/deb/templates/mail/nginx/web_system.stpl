@@ -22,24 +22,13 @@ server {
     }
 
     location /Microsoft-Server-ActiveSync {
-        alias       /usr/share/z-push/index.php;
-
-        access_log  /var/log/nginx/z-push-access.log;
-        error_log   /var/log/nginx/z-push-error.log;
+        alias /usr/share/z-push/index.php;
 
         # Attachments ca 15MB max (since binary data needs to be base64 encoded in mine, which results in in about 33% overhead)
         client_max_body_size 20m;
         client_body_buffer_size 128k;
 
-        # FastCGI params for z-push integration
-        include         fastcgi_params;
-        fastcgi_index   index.php;
-        fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        fastcgi_param   REQUEST_URI $1;
-        fastcgi_param   PHP_FLAG "magic_quotes_gpc=off \n register_globals=off \n magic_quotes_runtime=off \n short_open_tag=on";
-        fastcgi_param   PHP_VALUE "post_max_size=20M \n upload_max_filesize=20M \n max_execution_time=3660";
-        fastcgi_read_timeout 3660; # Z-Push Ping might run 3600s, but to be safe
-        fastcgi_pass 127.0.0.1:9000;
+        include zpush_params;
     }
 
     location / {

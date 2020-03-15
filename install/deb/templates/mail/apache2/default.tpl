@@ -3,6 +3,9 @@
     ServerAlias %alias%
     Alias / /var/lib/roundcube/
     Alias /error/ %home%/%user%/web/%root_domain%/document_errors/
+    Alias /AutoDiscover/AutoDiscover.xml /usr/share/z-push/autodiscover/autodiscover.php
+    Alias /Autodiscover/Autodiscover.xml /usr/share/z-push/autodiscover/autodiscover.php
+    Alias /autodiscover/autodiscover.xml /usr/share/z-push/autodiscover/autodiscover.php
     #SuexecUserGroup %user% %group%
         
     IncludeOptional %home%/%user%/conf/mail/%root_domain%/apache2.forcessl.conf*

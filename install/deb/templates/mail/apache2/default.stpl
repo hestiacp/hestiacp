@@ -4,6 +4,9 @@
     Alias / /var/lib/roundcube/
     Alias /error/ %home%/%user%/web/%root_domain%/document_errors/
     Alias /Microsoft-Server-ActiveSync /usr/share/z-push/index.php
+    Alias /AutoDiscover/AutoDiscover.xml /usr/share/z-push/autodiscover/autodiscover.php
+    Alias /Autodiscover/Autodiscover.xml /usr/share/z-push/autodiscover/autodiscover.php
+    Alias /autodiscover/autodiscover.xml /usr/share/z-push/autodiscover/autodiscover.php
     #SuexecUserGroup %user% %group%
     
     SSLEngine on

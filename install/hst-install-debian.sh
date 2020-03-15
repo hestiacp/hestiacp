@@ -37,8 +37,8 @@ if [ "$release" -eq 8 ]; then
         mariadb-server postgresql postgresql-contrib phppgadmin phpMyAdmin mc
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
-        unrar-free vim-common acl sysstat setpriv"
+        bsdmainutils cron hestia hestia-nginx hestia-php hestia-zpush expect
+        libmail-dkim-perl unrar-free vim-common acl sysstat setpriv"
 elif [ "$release" -eq 9 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
         libapache2-mod-ruid2 libapache2-mod-fcgid libapache2-mod-php$fpm_v 
@@ -53,8 +53,8 @@ elif [ "$release" -eq 9 ]; then
         mariadb-server postgresql postgresql-contrib phppgadmin phpmyadmin mc
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
-        unrar-free vim-common acl sysstat rsyslog setpriv"
+        bsdmainutils cron hestia hestia-nginx hestia-php hestia-zpush expect
+        libmail-dkim-perl unrar-free vim-common acl sysstat rsyslog setpriv"
 elif [ "$release" -eq 10 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
         apache2-suexec-pristine libapache2-mod-fcgid libapache2-mpm-itk 
@@ -69,8 +69,8 @@ elif [ "$release" -eq 10 ]; then
         mariadb-server postgresql postgresql-contrib phpmyadmin phppgadmin mc
         flex whois git idn zip sudo bc ftp lsof ntpdate rrdtool quota e2fslibs
         bsdutils e2fsprogs curl imagemagick fail2ban dnsutils bsdmainutils cron
-        hestia hestia-nginx hestia-php expect libmail-dkim-perl unrar-free
-        vim-common acl sysstat rsyslog util-linux"
+        hestia hestia-nginx hestia-php hestia-zpush expect libmail-dkim-perl
+        unrar-free vim-common acl sysstat rsyslog util-linux"
 fi
 
 # Defining help function
@@ -778,6 +778,7 @@ if [ "$exim" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/roundcube-core//")
     software=$(echo "$software" | sed -e "s/roundcube-mysql//")
     software=$(echo "$software" | sed -e "s/roundcube-plugins//")
+    software=$(echo "$software" | sed -e "s/hestia-zpush//")
 fi
 if [ "$clamd" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/clamav-daemon//")
@@ -791,6 +792,7 @@ if [ "$dovecot" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/roundcube-core//")
     software=$(echo "$software" | sed -e "s/roundcube-mysql//")
     software=$(echo "$software" | sed -e "s/roundcube-plugins//")
+    software=$(echo "$software" | sed -e "s/hestia-zpush//")
 fi
 if [ "$mysql" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/mariadb-server//")
@@ -1458,6 +1460,16 @@ if [ "$dovecot" = 'yes' ]; then
     update-rc.d dovecot defaults
     systemctl start dovecot
     check_result $? "dovecot start failed"
+fi
+
+
+#----------------------------------------------------------#
+#                     Configure Z-Push                     #
+#----------------------------------------------------------#
+
+if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ]; then
+    echo "(*) Configuring Z-Push ActiveSync & AutoDiscover service..."
+    cp -rf $HESTIA_INSTALL_DIR/zpush/zpush_params /etc/nginx/conf.d/
 fi
 
 

@@ -1,0 +1,2 @@
+chown www-data /var/log/z-push -R
+chown www-data /var/lib/z-push -R

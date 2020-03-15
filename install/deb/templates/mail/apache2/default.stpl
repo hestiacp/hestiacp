@@ -3,6 +3,7 @@
     ServerAlias %alias%
     Alias / /var/lib/roundcube/
     Alias /error/ %home%/%user%/web/%root_domain%/document_errors/
+    Alias /Microsoft-Server-ActiveSync /usr/share/z-push/index.php
     #SuexecUserGroup %user% %group%
     
     SSLEngine on

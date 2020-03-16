@@ -134,7 +134,7 @@ fi
 # Check if dns records exist for requested domain/aliases
 if [ "$proto" = "http-01" ]; then
     for identifier in $(echo $domain,$aliases |tr ',' '\n' |sort -u); do
-        if ! nslookup "${identifier}" >/dev/null 2>&1 ; then
+        if ! nslookup "${identifier}" > /dev/null 2>&1 ; then
             check_result $E_NOTEXIST "DNS record for $identifier doesn't exist"
         fi
     done
@@ -340,7 +340,7 @@ for auth in $authz; do
                     $BIN/v-delete-dns-record $user $domain $caa_record
                 fi
             fi
-        fi    
+        fi
         check_result $E_CONNECT "Let's Encrypt domain verification failed"
     fi
 done
@@ -400,7 +400,7 @@ if [ -z "$mail" ]; then
     [[ "$ssl_force" = "yes" ]] && $BIN/v-add-web-domain-ssl-force $user $domain > /dev/null 2>&1
 else
     ssl_enabled="$(get_object_value 'mail' 'DOMAIN' "$root_domain" '$SSL')"
-    [[ "$ssl_enabled" = "yes" ]] && $BIN/v-delete-mail-domain-ssl $user $root_domain >/dev/null 2>&1
+    [[ "$ssl_enabled" = "yes" ]] && $BIN/v-delete-mail-domain-ssl $user $root_domain > /dev/null 2>&1
     $BIN/v-add-mail-domain-ssl $user $root_domain $ssl_dir
 fi
 

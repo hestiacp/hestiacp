@@ -173,7 +173,7 @@ upgrade_phpmyadmin() {
 
             # Download latest phpMyAdmin release
             wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
-        
+
             # Unpack files
             tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
 
@@ -184,8 +184,8 @@ upgrade_phpmyadmin() {
             cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
 
             # Set config and log directory
-            sed -i "s|define('CONFIG_DIR', '');|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
-            sed -i "s|define('TEMP_DIR', './tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
+            sed -i "s|define('CONFIG_DIR', ROOT_PATH);|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
+            sed -i "s|define('TEMP_DIR', ROOT_PATH . 'tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
 
             # Create temporary folder and change permissions
             if [ ! -d /usr/share/phpmyadmin/tmp ]; then

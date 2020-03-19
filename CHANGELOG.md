@@ -3,7 +3,9 @@ All notable changes to this project will be documented in this file.
 
 ## [CURRENT] - Development
 ### Features
+
 ### Bugfixes
+- Fixed phpMyAdmin blowfish and tmp directory issues.
 
 ## [1.1.0] - 2020-03-11 - Major Release (Feature / Quality Update)
 ### Features

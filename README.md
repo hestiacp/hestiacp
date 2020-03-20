@@ -1,7 +1,9 @@
 [Hestia Control Panel](https://www.hestiacp.com/)
 ==================================================
-**Current stable release:** Version 1.1.0, released on March 11th, 2020.<br><br>
-Due to a change of the repository infrastructure, please install the new key before you upgrade your existing installations:
+**Current stable release:** Version 1.1.0, released on March 11th, 2020.<br>
+**Current development release:** Version 1.1.1.
+<br><br>
+**Due to a change of the repository infrastructure, please install the new key before you upgrade your existing installations:**
 ```bash
 wget -qO - https://gpg.hestiacp.com/deb_signing.key | sudo apt-key add -
 ```
@@ -32,7 +34,7 @@ What does Hestia Control Panel support?
 ----------------------------
 * Standard Web Server (Apache/NGINX) with PHP
 * PHP Web Application Server (NGINX + PHP-FPM)
-* Multiple PHP versions (5.6 - 7.3)
+* Multiple PHP versions (5.6 - 7.4, with 7.3 currently as default for optimal compatibility)
 * DNS Server (Bind) with clustering capabilities
 * Mail Server (Exim/Dovecot) with Anti-Virus and Anti-Spam (ClamAV and SpamAssassin)
 * Database functionality (MariaDB/PostgreSQL)

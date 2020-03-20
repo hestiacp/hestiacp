@@ -1422,7 +1422,7 @@ if [ "$dovecot" = 'yes' ]; then
     gpasswd -a dovecot mail > /dev/null 2>&1
     cp -rf $HESTIA_INSTALL_DIR/dovecot /etc/
     cp -f $HESTIA_INSTALL_DIR/logrotate/dovecot /etc/logrotate.d/
-    if [ "$release" = '18.04' ]; then
+    if [ "$release" = '18.04' ] || [ "$release" = '20.04' ]; then
         rm -f /etc/dovecot/conf.d/15-mailboxes.conf
     fi
     chown -R root:root /etc/dovecot*

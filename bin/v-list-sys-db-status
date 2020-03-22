@@ -13,7 +13,7 @@
 #format=${1-shell}
 
 # Includes
-#source $HESTIA/func/main.sh
+source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
 
 #----------------------------------------------------------#

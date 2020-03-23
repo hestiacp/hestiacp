@@ -7,6 +7,11 @@ All notable changes to this project will be documented in this file.
 ### Bugfixes
 - Fixed phpMyAdmin blowfish and tmp directory issues.
 - Added additional verification of host domain in password reset. Thanks to @FalzoMAD and @mmetince!
+- Fixed issue with rc.local not executing properly.
+- Rework of Let's Encrypt routine to use progressive delay between validation retries.
+- Fixed syntax issue in v-list-sys-db-status which prevented main functions from loading.
+- Removed /home size reporting when running v-list-sys-info due to performance issues.
+- Updated installer to use Ubuntu key server for Hestia APT repository.
 
 ## [1.1.0] - 2020-03-11 - Major Release (Feature / Quality Update)
 ### Features

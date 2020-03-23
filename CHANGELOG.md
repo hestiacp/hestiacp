@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bugfixes
 - Fixed phpMyAdmin blowfish and tmp directory issues.
+- Added additional verification of host domain in password reset. Thanks to @FalzoMAD and @mmetince!
 
 ## [1.1.0] - 2020-03-11 - Major Release (Feature / Quality Update)
 ### Features

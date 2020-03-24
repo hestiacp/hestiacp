@@ -1,8 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [CURRENT] - Development
+## [1.1.1] - 2020-03-24 - Hotfix
 ### Features
+- No new features introduced with v1.1.1, this is strictly a security/bug fix release.
 
 ### Bugfixes
 - Fixed phpMyAdmin blowfish and tmp directory issues.
@@ -12,6 +13,7 @@ All notable changes to this project will be documented in this file.
 - Fixed syntax issue in v-list-sys-db-status which prevented main functions from loading.
 - Removed /home size reporting when running v-list-sys-info due to performance issues.
 - Updated installer to use Ubuntu key server for Hestia APT repository.
+- Fixed duplicate demo mode check in v-change-user-password.
 
 ## [1.1.0] - 2020-03-11 - Major Release (Feature / Quality Update)
 ### Features

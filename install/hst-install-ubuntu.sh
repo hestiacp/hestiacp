@@ -579,9 +579,7 @@ APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyse
 # Installing hestia repo
 echo "(*) Hestia Control Panel"
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
-wget --quiet https://gpg.hestiacp.com/deb_signing.key -O /tmp/deb_signing.key
-APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/deb_signing.key > /dev/null 2>&1
-rm /tmp/deb_signing.key
+APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
 
 # Installing postgresql repo
 if [ "$postgresql" = 'yes' ]; then
@@ -1623,6 +1621,12 @@ if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     if [ -e /etc/rc.local ]; then
         sed -i '/exit 0/d' /etc/rc.local
     fi
+
+    check_rclocal=$(cat /etc/rc.local | grep "#!")
+    if [ -z "$check_rclocal" ]; then
+        echo "#!/bin/sh" >> /etc/rc.local
+    fi
+
     echo "$HESTIA/bin/v-update-sys-ip" >> /etc/rc.local
     echo "exit 0" >> /etc/rc.local
     chmod +x /etc/rc.local

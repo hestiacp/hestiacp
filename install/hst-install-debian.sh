@@ -623,9 +623,7 @@ fi
 # Installing hestia repo
 echo "(*) Hestia Control Panel"
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
-wget --quiet https://gpg.hestiacp.com/deb_signing.key -O /tmp/deb_signing.key
-APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/deb_signing.key > /dev/null 2>&1
-rm /tmp/deb_signing.key
+APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
 
 # Installing postgresql repo
 if [ "$postgresql" = 'yes' ]; then

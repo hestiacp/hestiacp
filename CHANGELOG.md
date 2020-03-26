@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [CURRENT] - Development
+### Features
+
+### Bugfixes
+
 ## [1.1.1] - 2020-03-24 - Hotfix
 ### Features
 - No new features introduced with v1.1.1, this is strictly a security/bug fix release.

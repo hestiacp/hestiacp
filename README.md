@@ -1,7 +1,7 @@
 [Hestia Control Panel](https://www.hestiacp.com/)
 ==================================================
-**Current stable release:** Version 1.1.0, released on March 11th, 2020.<br>
-**Current development release:** Version 1.1.1.
+**Current stable release:** Version 1.1.1, released on March 26th, 2020.<br>
+**Current development release:** Version 1.1.2.
 <br><br>
 **Due to a change of the repository infrastructure, please install the new key before you upgrade your existing installations:**
 ```bash

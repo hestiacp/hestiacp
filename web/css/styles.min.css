@@ -784,8 +784,8 @@ a {
   width: 100%;
   z-index: 900;
   height: 38px;
-  text-shadow: 1px 1px rgba(0,0,0,0.65);
-  box-shadow: 0px 8px 16px rgba(140,140,140,0.5);
+  text-shadow: 1px 1px rgba(0,0,0,0.25);
+  box-shadow: 0px 4px 10px rgba(100,100,100,0.4);
   border-bottom: 1px solid #fff;
 }
 
@@ -802,6 +802,12 @@ a {
   font-size: 0.8rem;
   background: linear-gradient(to bottom, rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.75) 30%,rgba(255,255,255,1) 95%);
   text-shadow: 0px 1px rgba(255,255,255,0.8);
+  border-left: 1px solid rgba(255,255,255,0.98);
+  border-right: 1px solid rgba(255,255,255,0.98);
+}
+
+.l-menu__item.l-menu__item--active:hover {
+  box-shadow: none;
 }
 
 .l-menu {
@@ -824,18 +830,19 @@ a {
 
 .l-menu__item a:hover {
   color: #3b9de8 !important;
-  text-shadow: 1px 1px rgba(255,255,255,0.5) !important;
   border: 0;
-  background: linear-gradient(to bottom, rgba(241,248,253,1) 0%,rgba(218,236,250,1) 50%,rgba(190,221,246,1) 51%,rgba(227,240,251,1) 100%) !important;
-  box-shadow: inset 0px 0px 1px #fff,
-              inset 0px 0px 6px rgba(255,255,255,0.6) !important;
+  box-shadow: inset 0px 0px 6px rgba(255,255,255,0.6) !important;
   transition: 0.2s;
   border-left: 1px solid rgba(0,0,0,0.1);
   border-right: 1px solid rgba(0,0,0,0.1);
+  color: #4686b8 !important;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.75) 30%,rgba(255,255,255,1) 95%);
+  text-shadow: 0px 1px rgba(255,255,255,0.8);
 }
+
 .l-menu__item a:active {
   border: 0;
-  background: linear-gradient(to bottom, rgba(210,232,250,1) 0%,rgba(187,220,247,1) 50%,rgba(162,207,244,1) 51%,rgba(194,224,248,1) 100%) !important;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.5) 0%,rgba(255,255,255,0.6) 30%,rgba(255,255,255,0.95) 95%);
   color: #046c98 !important;
   text-shadow: 0px -1px 1px rgba(255,255,255,0.5) !important;
   box-shadow: inset 0px 0px 1px #fff,
@@ -914,8 +921,7 @@ a {
 }
 
 .l-profile__notifications.active.l-profile__notifications.updates:active {
-  border: 1px solid #378ccd !important;
-  background: linear-gradient(to bottom, rgba(210,232,250,1) 0%,rgba(187,220,247,1) 50%,rgba(162,207,244,1) 51%,rgba(194,224,248,1) 100%) !important;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.75) 30%,rgba(255,255,255,1) 95%) !important;
   color: #046c98 !important;
   text-shadow: 0px -1px 1px rgba(255,255,255,0.5) !important;
   box-shadow: 0px 1px 3px rgba(0,0,0,0.15),
@@ -926,11 +932,7 @@ a {
 .l-profile__notifications:hover,.l-profile__notifications.updates:hover {
   color: #3b9de8 !important;
   text-shadow: 1px 1px rgba(255,255,255,0.5) !important;
-  border: 1px solid #54a6e5 !important;
-  background: linear-gradient(to bottom, rgba(241,248,253,1) 0%,rgba(218,236,250,1) 50%,rgba(190,221,246,1) 51%,rgba(227,240,251,1) 100%) !important;
-  box-shadow: 0px 1px 3px rgba(0,0,0,0.15),
-              inset 0px 0px 1px #fff,
-              inset 0px 0px 6px rgba(255,255,255,0.6) !important;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.75) 0%,rgba(255,255,255,0.87) 30%,rgba(255,255,255,1) 95%) !important;
   transition: 0.2s;
 }
 
@@ -2424,7 +2426,7 @@ body.mobile .l-icon-shortcuts {
 
 
 .vst-error {
-  color: #BE5ABF;
+  color: #ff3333;
   font-weight: 600;
   overflow: hidden;
   max-width: 500px;
@@ -2433,11 +2435,12 @@ body.mobile .l-icon-shortcuts {
 }
 
 .vst-ok {
-  color: #3b9de8;
+  color: #53ba55;
   overflow: hidden;
   max-width: 500px;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: 0.8rem;
 }
 
 .l-unit-toolbar__buttonstrip .vst-ok, .l-unit-toolbar__buttonstrip .vst-error {
@@ -2751,8 +2754,7 @@ a.vst-text:active b{
   text-decoration: none;
 }
 
-.login-box .vst-advanced:active,
-.vst-advanced:active {
+.login-box .vst-advanced:active {
   color: #fff;
   background-color: #F7D616;
   border-color: #F7D616;
@@ -2761,6 +2763,10 @@ a.vst-text:active b{
   box-shadow: none !important;
   background: none !important;
   border: none !important
+}
+
+.vst-advanced:active {
+  font-size: unset;
 }
 
 .login-box .vst-advanced {
@@ -2870,6 +2876,11 @@ td.hint {
   inset 0px 0px 3px rgba(255,255,255,0.5) !important;
 }
 
+.ui-dialog .ui-dialog-buttonpane {
+  margin-bottom: -6px !important;
+  padding: 0 !important;
+}
+
 .ui-button, .button, .ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit, .vst-advanced {
   filter:chroma(color=#000);
   cursor: pointer;
@@ -2890,8 +2901,8 @@ td.hint {
 }
 .ui-button:hover, .button:hover, .ui-button.cancel:hover, .button.cancel:hover,
 .ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit:hover,
-.vst-advanced:hover {
-  color: #0099ff !important;
+.vst-advanced:hover, .to-top:hover, .to-shortcuts:hover {
+  color: #0077c6 !important;
   text-shadow: 1px 1px rgba(255,255,255,0.5) !important;
   border: 1px solid #54a6e5 !important;
   background: linear-gradient(to bottom, rgba(241,248,253,1) 0%,rgba(218,236,250,1) 50%,rgba(190,221,246,1) 51%,rgba(227,240,251,1) 100%) !important;
@@ -2904,11 +2915,11 @@ td.hint {
 .button:active,.button:focus,.ui-button.cancel:focus,.ui-button.cancel:active,
 .button.cancel:active,.button.cancel:focus,
 .ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit:active,
-.vst-advanced:active,.vst-advanced:focus {
+.vst-advanced:active,.to-top:focus, .to-shortcuts:focus {
   border: 1px solid #0066b4 !important;
-  background: linear-gradient(to bottom, rgba(210,232,250,1) 0%,rgba(187,220,247,1) 50%,rgba(162,207,244,1) 51%,rgba(194,224,248,1) 100%) !important;
-  color: #046c98 !important;
-  text-shadow: 0px -1px 1px rgba(255,255,255,0.5) !important;
+  background: linear-gradient(to bottom, rgba(194,224,248,1) 0%,  rgba(162,207,244,1) 51%, rgba(210,232,250,1) 100%) !important;
+  color: #517bab !important;
+  text-shadow: 0px -1px 2px rgba(255,255,255,0.85) !important;
   box-shadow: 0px 1px 2px rgba(0,0,0,0.2),
               inset 0px 0px 1px #fff,
               inset -1px -1px 4px rgba(220,220,220,0.4) !important;
@@ -2923,6 +2934,7 @@ td.hint {
 
 .ui-dialog .ui-dialog-buttonpane button span.ui-button-text {
   padding: 2px !important;
+  font-size: 0.85rem !important;
 }
 
 .ui-dialog .ui-button:hover span {
@@ -2971,7 +2983,7 @@ a.button.cancel {
 }
 
 .ui-button.danger:active, .button.danger:active, .ui-button.danger:focus, .button.danger:focus {
-  background: linear-gradient(to bottom, #f9e3df 0%,#f5a69d 50%,#f48578 51%,#fcd0ca 100%) !important; 
+  background: linear-gradient(to bottom, #fcd0ca 0%,#f5a69d 50%,#f9e3df 100%) !important;
   color: #ce1500 !important;
   text-shadow: 0px 1px 1px rgba(255,255,255,0.2),
                0px -1px 1px rgba(255,255,255,0.6) !important;
@@ -3090,8 +3102,9 @@ a.button.cancel {
 ::-moz-focus-inner {border:0;}
 
 .login {
-  background-color: rgba(255,255,255,0.65);
-  box-shadow: 0px 8px 25px rgba(0,0,0, 0.3);
+  background-color: rgba(255,255,255,0.7);
+  box-shadow: 0px 8px 25px rgba(0,0,0, 0.3),
+              inset 0px 0px 2px rgba(255,255,255,1);
   font-family: 'Exo', Tahoma, Arial, Helvetica, sans-serif;
   margin: 0;
   padding: 0;
@@ -3106,6 +3119,10 @@ a.button.cancel {
   border-color: #5787c8;
 }
 
+.login .button {
+  font-size: 0.8rem !important;
+}
+
 .login-welcome {
   font-size: 1.05rem !important;
   font-weight: 500 !important;
@@ -3114,7 +3131,7 @@ a.button.cancel {
 }
 
 .page-title {
-  font-size: 1.2rem !important;
+  font-size: 1.3rem !important;
   font-weight: 400 !important;
   padding-bottom: 30px !important;
   letter-spacing: -0.01em;
@@ -3296,7 +3313,7 @@ form#vstobjects.suspended {
   margin-right: 10px;
   line-height: 0.75rem;
   box-shadow: 0px 1px 1px rgba(0,0,0,0.35), inset 0px 1px 0px rgba(0,0,0,0.1);
-  background-color: rgba(255,255,255,0.65);
+  background-color: rgba(255,255,255,0.75);
   font-weight: 500;
   border: 1px solid rgba(255,255,255,0.75);
   text-shadow: 0px 1px 1px rgba(255,255,255,0.6);
@@ -3687,9 +3704,10 @@ form#vstobjects.suspended {
   font-family: 'Exo', Arial, Helvetica, sans-serif !important;
   font-weight: 500 !important;
   background-color: rgba(255,255,255,0.9) !important;
-  box-shadow: 0 8px 40px 0 rgba(0, 0, 0, 0.35) !important;
+  box-shadow: inset 0px 1px 3px rgba(0,0,0,0.25), 
+              0 8px 40px 0 rgba(0, 0, 0, 0.35) !important;
   border-radius: 6px !important;
-  border: 2px solid rgba(255,255,255,0.95) !important;
+  border: 1px solid rgba(255,255,255,0.98) !important;
   text-align: center !important;
 }
 
@@ -3710,7 +3728,12 @@ form#vstobjects.suspended {
 }
 
 .ui-dialog-buttonpane {
-  border-color: #aaaaaa !important;
+  border-color: #fff!important;
+  box-shadow: inset 0px 0px 2px rgba(0,0,0,0.25);
+  border-bottom: 1px solid #fff !important;
+  background: #e0e0e0;
+  margin-top: 0px !important;
+  padding-top: 0px !important;
 }
 
 .ui-widget {

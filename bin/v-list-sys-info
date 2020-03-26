@@ -30,28 +30,27 @@ json_list() {
         "HESTIA": "'$HESTIA_VERSION'",
         "RELEASE": "'$HESTIA_RELEASE'",
         "UPTIME": "'$UPTIME'",
-        "LOADAVERAGE": "'$LOADAVERAGE'",
-        "HOME_USAGE": "'$HOME_USAGE'"
+        "LOADAVERAGE": "'$LOADAVERAGE'"
         }'
     echo '}'
 }
 
 # SHELL list function
 shell_list() {
-    echo "HOSTNAME   OS   VER   ARCH  HESTIA  RELEASE  UPTIME   LA   HOME"
-    echo "--------   --   ---   ----  ------  -------  ------   --   ----"
-    echo "$HOSTNAME $OS $VERSION $ARCH $HESTIA_VERSION $HESTIA_RELEASE $UPTIME $LOADAVERAGE $HOME_USAGE"
+    echo "HOSTNAME   OS   VER   ARCH  HESTIA  RELEASE  UPTIME   LA"
+    echo "--------   --   ---   ----  ------  -------  ------   --"
+    echo "$HOSTNAME $OS $VERSION $ARCH $HESTIA_VERSION $HESTIA_RELEASE $UPTIME $LOADAVERAGE"
 }
 
 # PLAIN list function
 plain_list() {
-    echo -e "$HOSTNAME\t$OS\t$VERSION\t$ARCH\t$HESTIA_VERSION\t$HESTIA_RELEASE\t$UPTIME\t$LOADAVERAGE\t$HOME_USAGE"
+    echo -e "$HOSTNAME\t$OS\t$VERSION\t$ARCH\t$HESTIA_VERSION\t$HESTIA_RELEASE\t$UPTIME\t$LOADAVERAGE"
 }
 
 # CSV list function
 csv_list() {
-    echo "HOSTNAME,OS,VERSION,ARCH,HESTIA,RELEASE,UPTIME,LOADAVERAGE,HOMEUSAGE"
-    echo "$HOSTNAME,$OS,$VERSION,$ARCH,$HESTIA_VERSION,$HESTIA_RELEASE,$UPTIME,$LOADAVERAGE,$HOME_USAGE"
+    echo "HOSTNAME,OS,VERSION,ARCH,HESTIA,RELEASE,UPTIME,LOADAVERAGE"
+    echo "$HOSTNAME,$OS,$VERSION,$ARCH,$HESTIA_VERSION,$HESTIA_RELEASE,$UPTIME,$LOADAVERAGE"
 }
 
 

@@ -30,13 +30,16 @@ if ((!empty($_POST['user'])) && (empty($_POST['code']))) {
         } else {
             $mailtext = __('GREETINGS');
         }
-        $mailtext .= __('PASSWORD_RESET_REQUEST',$_SERVER['HTTP_HOST'],$user,$rkey,$_SERVER['HTTP_HOST'],$user,$rkey);
-        if (!empty($rkey)) send_email($to, $subject, $mailtext, $from);
+        if (in_array(str_replace(':'.$_SERVER['SERVER_PORT'],'.conf',$_SERVER['HTTP_HOST']), array_merge(scandir('/etc/nginx/conf.d'),scandir('/etc/nginx/conf.d/domains'),scandir('/etc/apache2/conf.d/domains'),scandir('/etc/apache2/conf.d')))){
+            $mailtext .= __('PASSWORD_RESET_REQUEST',$_SERVER['HTTP_HOST'],$user,$rkey,$_SERVER['HTTP_HOST'],$user,$rkey);
+            if (!empty($rkey)) send_email($to, $subject, $mailtext, $from);
+            header("Location: /reset/?action=code&user=".$_POST['user']);
+            exit;
+        } else {
+            $ERROR = "<a class=\"error\">".__('Invalid host domain')."</a>";
+        }
         unset($output);
     }
-
-    header("Location: /reset/?action=code&user=".$_POST['user']);
-    exit;
 }
 
 if ((!empty($_POST['user'])) && (!empty($_POST['code'])) && (!empty($_POST['password'])) ) {

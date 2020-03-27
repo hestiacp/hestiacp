@@ -1,0 +1,109 @@
+#!/bin/bash
+# info: Enabling Z-Push AutoDiscover for mail domain.
+# options: USER DOMAIN
+#
+# The function enables Z-Push AutoDiscover for the requested domain.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'mail' 'DOMAIN' "$domain"
+is_object_unsuspended 'mail' 'DOMAIN' "$domain"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Load domain data
+parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/mail.conf)
+
+# Check if SSL is enabled
+if [ "$SSL" != 'yes' ]; then
+    echo "Error: SSL is not enabled"
+    exit $E_NOTEXIST
+fi
+
+# Check for Apache/Nginx or Nginx/PHP-FPM configuration
+if [ -z $PROXY_SYSTEM ]; then
+    activesyncconf="$HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM.activesync.conf"
+else
+    activesyncconf="$HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM.activesync.conf"
+fi
+
+echo '# Z-Push Active Sync and AutoDiscover configuration
+location /Microsoft-Server-ActiveSync {
+    alias       /usr/share/z-push/index.php;
+
+    # Attachments ca 15MB max (since binary data needs to be base64 encoded in mine, which results in in about 33% overhead)
+    client_max_body_size 20m;
+    client_body_buffer_size 128k;
+
+    include zpush_params;
+}
+
+location /AutoDiscover/AutoDiscover.xml {
+    alias /usr/share/z-push/autodiscover/autodiscover.php;
+    include zpush_params;
+}
+
+location /Autodiscover/Autodiscover.xml {
+    alias /usr/share/z-push/autodiscover/autodiscover.php;
+    include zpush_params;
+}
+
+location /autodiscover/autodiscover.xml {
+    alias /usr/share/z-push/autodiscover/autodiscover.php;
+    include zpush_params;
+}
+' > $activesyncconf
+
+echo "ActiveSync is turned on for $domain."
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+if [ -z "$MAIL_ACTIVESYNC" ]; then
+    add_object_key "web" 'DOMAIN' "$domain" 'MAIL_ACTIVESYNC' 'LETSENCRYPT'
+fi
+
+# Set autodiscover flag to enabled
+update_object_value 'web' 'DOMAIN' "$domain" '$MAIL_ACTIVESYNC' 'yes'
+
+# Logging
+log_history "Turned ActiveSync $status for $domain."
+log_event "$OK" "$ARGUMENTS"
+
+# Restart web server
+$BIN/v-restart-web
+check_result $? "Web restart failed" > /dev/null
+
+# Restart proxy
+$BIN/v-restart-proxy
+check_result $? "Proxy restart failed" > /dev/null
+
+exit

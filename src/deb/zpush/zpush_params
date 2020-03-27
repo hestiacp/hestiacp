@@ -1,0 +1,8 @@
+include         fastcgi_params;
+fastcgi_index   index.php;
+fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
+fastcgi_param   REQUEST_URI $1;
+fastcgi_param   PHP_FLAG "magic_quotes_gpc=off \n register_globals=off \n magic_quotes_runtime=off \n short_open_tag=on";
+fastcgi_param   PHP_VALUE "post_max_size=20M \n upload_max_filesize=20M \n max_execution_time=3660";
+fastcgi_read_timeout 3660; # Z-Push Ping might run 3600s, but to be safe
+fastcgi_pass 127.0.0.1:9000;

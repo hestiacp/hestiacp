@@ -1,0 +1,3 @@
+    location /AutoDiscover/AutoDiscover.xml {
+		alias /usr/share/z-push/autodiscover/autodiscover.php;
+    }

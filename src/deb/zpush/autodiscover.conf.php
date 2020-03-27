@@ -43,7 +43,7 @@
      * false - use the username only (default).
      * true - use the complete email address.
      */
-    define('USE_FULLEMAIL_FOR_LOGIN', false);
+    define('USE_FULLEMAIL_FOR_LOGIN', yes);
 
     /*
      * AutoDiscover requires the username to match either the email address

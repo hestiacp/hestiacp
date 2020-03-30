@@ -1147,6 +1147,7 @@ if [ "$apache" = 'yes' ]; then
     a2enmod ssl > /dev/null 2>&1
     a2enmod actions > /dev/null 2>&1
     a2enmod ruid2 > /dev/null 2>&1
+    a2dismod status > /dev/null 2>&1
     mkdir -p /etc/apache2/conf.d
     mkdir -p /etc/apache2/conf.d/domains
     echo "# Powered by hestia" > /etc/apache2/sites-available/default

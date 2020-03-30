@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 ### Bugfixes
+- Disable Apache2 Server Status Module by default.
 
 ## [1.1.1] - 2020-03-24 - Hotfix
 ### Features

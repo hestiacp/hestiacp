@@ -1172,6 +1172,7 @@ if [ "$apache" = 'yes' ]; then
     a2enmod suexec > /dev/null 2>&1
     a2enmod ssl > /dev/null 2>&1
     a2enmod actions > /dev/null 2>&1
+    a2dismod status > /dev/null 2>&1
     if [ "$release" -eq 10 ]; then
         a2enmod mpm_itk > /dev/null 2>&1
     else

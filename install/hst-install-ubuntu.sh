@@ -25,6 +25,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 pma_v='5.0.2'
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
 fpm_v="7.3"
+mariadb_v="10.4"
 
 # Defining software pack for all distros
 software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
@@ -573,7 +574,7 @@ LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
 
 # Installing MariaDB repo
 echo "(*) MariaDB"
-echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/10.4/$VERSION $codename main" > $apt/mariadb.list
+echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8 > /dev/null 2>&1
 
 # Installing hestia repo

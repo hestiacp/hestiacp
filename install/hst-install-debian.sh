@@ -25,6 +25,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 pma_v='5.0.2'
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
 fpm_v="7.3"
+mariadb_v="10.4"
 
 if [ "$release" -eq 8 ]; then
     software="nginx apache2 apache2-utils apache2.2-common
@@ -608,7 +609,7 @@ APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/php_signing.key > /dev/n
 
 # Installing MariaDB repo
 echo "(*) MariaDB"
-echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/10.4/$VERSION $codename main" > $apt/mariadb.list
+echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
 if [ "$release" -eq 8 ]; then
     APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com CBCB082A1BB943DB > /dev/null 2>&1
 else

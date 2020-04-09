@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bugfixes
 - Disable Apache2 Server Status Module by default.
+- Do not allow to change the password of a non-hestia user. Thanks to Alexandre Zanni!
 
 ## [1.1.1] - 2020-03-24 - Hotfix
 ### Features

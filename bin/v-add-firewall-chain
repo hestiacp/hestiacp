@@ -62,6 +62,7 @@ case $chain in
     WEB)        port='80,443'; protocol=TCP  ;;
     DB)         port='3306,5432'; protocol=TCP  ;;
     HESTIA)     port=$hestiaport; protocol=TCP  ;;
+    RECIDIVE)   port='1:65535'; protocol=TCP  ;;
     *)          check_args '2' "$#" 'CHAIN PORT' ;;
 esac
 

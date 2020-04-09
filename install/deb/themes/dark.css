@@ -90,6 +90,8 @@ a {
   color: #dadada;
   background: linear-gradient(to bottom, rgba(15,15,15,0.6) 0%,rgba(45,45,45,0.75) 30%,rgba(60,60,60,1) 95%);
   text-shadow: 0px 1px rgba(0,0,0,0.5);
+  border-left-color: #353535;
+  border-right-color: #353535;
 }
 
 .l-menu {
@@ -111,9 +113,13 @@ a {
   box-shadow: none !important;
 }
 .l-menu__item a:active {
-  background: linear-gradient(to bottom, rgba(15,15,15,0.6) 0%,rgba(45,45,45,0.75) 30%,rgba(60,60,60,1) 95%) !important;
+  background: linear-gradient(to bottom, rgba(15,15,15,0.7) 0%,rgba(45,45,45,0.85) 30%,rgba(50,50,50,1) 95%) !important;
   color: #fff !important;
   text-shadow: 0px -1px 1px rgba(0,0,0,0.5) !important;
+}
+
+.l-menu__item.l-menu__item--active:hover {
+  background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%,rgba(255,255,255,0.15) 30%,rgba(255,255,255,0.15) 95%) !important;
 }
 
 .l-menu.active .l-menu__item.focus a {
@@ -250,7 +256,7 @@ a {
 
 .notification-container .unseen .title a,
 .notification-container .unseen .title {
-
+  color: #fff !important;
 }
 .notification-container .unseen .title a:hover {
 
@@ -1268,12 +1274,12 @@ body.mobile .l-icon-shortcuts {
 
 
 .vst-error {
-  color: #f864fa;
+  color: #ff3333;
 
 }
 
 .vst-ok {
-
+  color: #53ba55;
 }
 
 .l-unit-toolbar__buttonstrip .vst-ok, .l-unit-toolbar__buttonstrip .vst-error {
@@ -1351,7 +1357,9 @@ label:hover {
 }
 .vst-input:hover {
   border-color: #0090ff;
+  background-color: #494949;
 }
+
 .vst-input:focus {
   background-color: #222222;
   border-color: #0080df;
@@ -1385,7 +1393,7 @@ label:hover {
 
 }
 .vst-input.vst-list-editor:focus {
-  background-color: #505050;
+  background-color: #222222;
   box-shadow: none !important;
 }
 
@@ -1409,6 +1417,7 @@ select.vst-list:-moz-focusring {
 }
 .vst-list:hover {
   border-color: #0090ff;
+  background-color: #494949;
 }
 .vst-list:focus {
   background-color: #222222;
@@ -1445,7 +1454,8 @@ a.vst-text:active b{
   background: #454545 !important;
   border: 1px solid #505050 !important;
   text-shadow: 0px 1px rgba(0,0,0,0.4);
-  box-shadow: 0px 2px 6px rgba(0,0,0,0.4) !important;
+  box-shadow: inset 0px 0px 2px rgba(0,0,0,0.5), 
+              0px 2px 6px rgba(0,0,0,0.4) !important;
   color: #fff !important;
   padding: 4px 0px 0px 18px;
   overflow: hidden;
@@ -1468,6 +1478,7 @@ a.vst-text:active b{
 }
 .vst-textinput:hover {
   border: 1px solid #0090ff;
+  background-color: #494949;
 }
 .vst-textinput:focus {
   background-color: #222222;
@@ -1810,10 +1821,11 @@ a.button.cancel {
 
 .login {
   background-color: #282828;
+  box-shadow: 0px 8px 25px rgba(0,0,0, 0.3), inset 0px 0px 2px rgba(0,0,0,0.25) !important;
 }
 
 .login-welcome {
-
+  color: #fff !important;
 }
 
 .page-title {
@@ -2032,7 +2044,7 @@ form#vstobjects.suspended {
   color: #33cccc;
 }
 .status-icon.purple, .status-icon.purple:hover {
-  color: #8e2fca;
+  color: #c364ff;
 }
 
 .status-icon.maroon, .status-icon.maroon:hover {
@@ -2121,12 +2133,14 @@ form#vstobjects.suspended {
 
 .ui-dialog .ui-dialog-buttonpane {
   border-color: #404040 !important;
+  background-color: #252525 !important;
 }
 
 .shortcuts {
   background: rgba(30,30,30,0.95);
   border: 1px solid rgba(255,255,255,0.25);
   box-shadow: 0px 0px 20px rgba(0,0,0,0.5);
+  border-bottom: none !important;
 }
 
 .shortcuts .header {
@@ -2222,6 +2236,8 @@ form#vstobjects.suspended {
 .ui-dialog {
   background-color: rgba(45,45,45,0.95) !important;
   border: 1px solid rgba(80,80,80,0.97) !important;
+  box-shadow: inset 0px 1px 3px rgba(0,0,0,0.25), 
+              0px 8px 25px rgba(0,0,0,0.9) !important;
 }
 
 .ui-dialog .ui-dialog-content {

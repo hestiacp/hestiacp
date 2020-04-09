@@ -4,15 +4,6 @@
             <a class="ui-button cancel" id="btn-back" href="/list/package/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-              <?php
-              if (!empty($_SESSION['error_msg'])) {
-                echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
-              } else {
-                if (!empty($_SESSION['ok_msg'])) {
-                  echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                }
-              }
-            ?>
             <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
           </div>
         </div>
@@ -44,7 +35,20 @@
                                 <td class="step-top">
                                     <span class="page-title"><?=__('Editing Package')?></span>
                                 </td>
-                            </tr>  
+                            </tr>
+                            <tr>
+                                <td>
+                                    <?php
+                                        if (!empty($_SESSION['error_msg'])) {
+                                            echo "<span class=\"vst-error\"> <i class=\"fas fa-exclamation-circle status-icon red\"></i> ".htmlentities($_SESSION['error_msg'])."</span>";
+                                        } else {
+                                            if (!empty($_SESSION['ok_msg'])) {
+                                                echo "<span class=\"vst-ok\"> <i class=\"fas fa-check-circle status-icon green\"></i> ".$_SESSION['ok_msg']."</span>";
+                                            }
+                                        }
+                                    ?>
+                                </td>
+                            </tr>
                             <tr>
                                 <td class="vst-text step-top">
                                     <?php print __('Package Name');?>

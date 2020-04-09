@@ -13,13 +13,13 @@
               if ($data[$key]['TYPE'] == 'mysql'){
                 $mysql = 1;
 
-                $db_myadmin_link = "https://".$http_host."/phpmyadmin/";
+                $db_myadmin_link = "//".$http_host."/phpmyadmin/";
                 if (!empty($_SESSION['DB_PMA_URL']))
                   $db_myadmin_link = $_SESSION['DB_PMA_URL'];
               }
               if ($data[$key]['TYPE'] == 'pgsql'){
                 $pgsql = 1;
-                $db_pgadmin_link = "https://".$http_host."/phppgadmin/";
+                $db_pgadmin_link = "//".$http_host."/phppgadmin/";
                 if (!empty($_SESSION['DB_PGA_URL']))
                   $db_pgadmin_link = $_SESSION['DB_PGA_URL'];
               }

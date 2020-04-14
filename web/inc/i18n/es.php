@@ -232,7 +232,7 @@ $LANG['es'] = array(
     'SMTP security'  => 'Seguridad STMP',
     'SMTP auth method'  => 'Método de Autentificación STMP',
     'STARTTLS'  => 'STARTTLS',
-    'Normal password'  => 'Normal password',
+    'Normal password'  => 'Contraseña normal',
     'database'  => 'base de datos',
     'User'  => 'Usuario',
     'Host'  => 'Host',
@@ -763,5 +763,5 @@ $LANG['es'] = array(
     'Email Credentials' => 'Datos de acceso a la cuenta de correo',
 
     'Theme' => 'Aspecto',
-    'Operating System' => 'Operatsioonisüsteemi',
+    'Operating System' => 'Sistema operativo',
 );

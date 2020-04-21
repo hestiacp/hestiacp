@@ -1,0 +1,57 @@
+#!/bin/bash
+# info: add ssh key
+# options: USER key
+#
+# Function check if $user/.ssh/authorized_keys exists and create it
+# After that it append the new key(s)
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+
+# Argument definition
+user=$1
+key=$2
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+# Additional argument formatting
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Reading user values
+source $USER_DATA/user.conf
+#check if file exits
+FILE=$HOMEDIR/$user/.ssh/authorized_keys
+if [ ! -f "$FILE" ]; then
+   touch "$FILE"
+fi
+#append key to file
+echo "$key" >> "$FILE"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_history "added ssh-key $user"
+log_event "$OK" "$ARGUMENTS"
+
+exit

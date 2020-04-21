@@ -43,6 +43,15 @@ FILE=$HOMEDIR/$user/.ssh/authorized_keys
 if [ ! -f "$FILE" ]; then
    touch "$FILE"
 fi
+TEMP=$(mktemp)
+echo "$key" >> "$TEMP"
+ssh-keygen -l -f "$TEMP"
+if [ ! $? -eq 0 ]; then
+	cat "$TEMP"
+	rm "$TEMP"
+	exit
+fi
+rm "$TEMP"
 #append key to file
 echo "$key" >> "$FILE"
 

@@ -51,7 +51,7 @@ sed -i "/${keyid}/d" "$FILE"
 #----------------------------------------------------------#
 
 # Logging
-log_history "added ssh-key $user"
+log_history "DELETE ssh-key $user"
 log_event "$OK" "$ARGUMENTS"
 
 exit

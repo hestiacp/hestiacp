@@ -47,7 +47,6 @@ TEMP=$(mktemp)
 echo "$key" >> "$TEMP"
 ssh-keygen -l -f "$TEMP"
 if [ ! $? -eq 0 ]; then
-	cat "$TEMP"
 	rm "$TEMP"
 	exit
 fi

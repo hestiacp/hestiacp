@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 - Disable Apache2 Server Status Module by default.
 - Do not allow to change the password of a non-hestia user. Thanks to Alexandre Zanni!
 - Remove duplicated set-cookie line in default fpm config.
+- Adjust let's encrypt validation check for idn domains, thanks to @zanami!
 
 ## [1.1.1] - 2020-03-24 - Hotfix
 ### Features

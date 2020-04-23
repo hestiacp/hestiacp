@@ -109,7 +109,6 @@ if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
     add_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
 fi
 
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
@@ -120,6 +119,9 @@ increase_user_value "$user" '$U_WEB_SSL'
 # Adding ssl values
 update_object_value 'web' 'DOMAIN' "$domain" '$SSL_HOME' "$SSL_HOME"
 update_object_value 'web' 'DOMAIN' "$domain" '$SSL' "yes"
+
+# Enabling automatic SSL redirection
+$BIN/v-add-web-domain-ssl-force "$user" "$domain"
 
 # Restarting web server
 $BIN/v-restart-web $restart

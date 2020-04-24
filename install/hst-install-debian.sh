@@ -607,6 +607,12 @@ echo "deb https://packages.sury.org/php/ $codename main" > $apt/php.list
 wget --quiet https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/php_signing.key > /dev/null 2>&1
 
+# Installing sury apache2 repo
+echo "(*) Apache2"
+echo "deb https://packages.sury.org/apache2/ $codename main" > $apt/apache2.list
+wget --quiet https://packages.sury.org/apache2/apt.gpg -O /tmp/apache2_signing.key
+APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/apache2_signing.key > /dev/null 2>&1
+
 # Installing MariaDB repo
 echo "(*) MariaDB"
 echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list

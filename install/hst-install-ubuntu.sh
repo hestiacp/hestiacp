@@ -559,7 +559,7 @@ echo "Adding required repositories to proceed with installation:"
 echo
 
 # Installing Nginx repo
-if [ "$nginx" = 'yes' ]
+if [ "$nginx" = 'yes' ]; then
     echo "(*) NGINX"
     if [ -e $apt/nginx.list ]; then
         rm $apt/nginx.list

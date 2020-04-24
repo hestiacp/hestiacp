@@ -558,35 +558,41 @@ apt=/etc/apt/sources.list.d
 echo "Adding required repositories to proceed with installation:"
 echo
 
-# Installing nginx repo
-echo "(*) NGINX"
-if [ -e $apt/nginx.list ]; then
-    rm $apt/nginx.list
-fi
-echo "deb [arch=amd64] http://nginx.org/packages/mainline/$VERSION/ $codename nginx" \
+# Installing Nginx repo
+if [ "$nginx" = 'yes' ]
+    echo "(*) NGINX"
+    if [ -e $apt/nginx.list ]; then
+        rm $apt/nginx.list
+    fi
+    echo "deb [arch=amd64] http://nginx.org/packages/mainline/$VERSION/ $codename nginx" \
     > $apt/nginx.list
-wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
-APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/nginx_signing.key > /dev/null 2>&1
+    wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
+    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/nginx_signing.key > /dev/null 2>&1
+fi
 
-# Installing sury php repo
+# Installing sury PHP repo
 echo "(*) PHP"
 LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
 
-# Installing sury apache2 repo
-echo "(*) Apache2"
-echo "deb http://ppa.launchpad.net/ondrej/apache2/ubuntu $codename main" > $apt/apache2.list
+# Installing sury Apache2 repo
+if [ "$apache" = 'yes' ]
+    echo "(*) Apache2"
+    echo "deb http://ppa.launchpad.net/ondrej/apache2/ubuntu $codename main" > $apt/apache2.list
+fi
 
 # Installing MariaDB repo
-echo "(*) MariaDB"
-echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
-APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8 > /dev/null 2>&1
+if [ "$mysql" = 'yes' ]
+    echo "(*) MariaDB"
+    echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
+    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8 > /dev/null 2>&1
+fi
 
-# Installing hestia repo
+# Installing HestiaCP repo
 echo "(*) Hestia Control Panel"
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
 
-# Installing postgresql repo
+# Installing PostgreSQL repo
 if [ "$postgresql" = 'yes' ]; then
     echo "(*) PostgreSQL"
     echo "deb http://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list

@@ -7,7 +7,8 @@ All notable changes to this project will be documented in this file.
 ### Bugfixes
 - Disable Apache2 Server Status Module by default.
 - Do not allow to change the password of a non-hestia user. Thanks to Alexandre Zanni!
-- Use sury repository for apache2 packages.
+- Use sury repository for Apache2 packages.
+- Check whether Nginx, Apache2 and MariaDB are selected for installation prior to adding third party repositories.
 - Remove duplicated set-cookie line in default fpm config.
 - Adjust let's encrypt validation check for idn domains, thanks to @zanami!
 

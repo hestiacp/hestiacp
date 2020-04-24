@@ -575,13 +575,13 @@ echo "(*) PHP"
 LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
 
 # Installing sury Apache2 repo
-if [ "$apache" = 'yes' ]
+if [ "$apache" = 'yes' ]; then
     echo "(*) Apache2"
     echo "deb http://ppa.launchpad.net/ondrej/apache2/ubuntu $codename main" > $apt/apache2.list
 fi
 
 # Installing MariaDB repo
-if [ "$mysql" = 'yes' ]
+if [ "$mysql" = 'yes' ]; then
     echo "(*) MariaDB"
     echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
     APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8 > /dev/null 2>&1

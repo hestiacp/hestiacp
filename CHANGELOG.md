@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - Check whether Nginx, Apache2 and MariaDB are selected for installation prior to adding third party repositories.
 - Remove duplicated set-cookie line in default fpm config.
 - Adjust let's encrypt validation check for idn domains, thanks to @zanami!
+- Set backup download location on restore for ftp/sftp, thanks to @Daniyal-Javani!
 
 ## [1.1.1] - 2020-03-24 - Hotfix
 ### Features

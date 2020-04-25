@@ -22,7 +22,6 @@ if (!empty($_GET['key'])) {
     check_return_code($return_var,$output);
 }
 
-//var_dump($return_var,$v_key);
 unset($output);
 
 //die();

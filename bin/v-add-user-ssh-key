@@ -20,7 +20,6 @@ source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -41,14 +40,14 @@ source $USER_DATA/user.conf
 #check if file exits
 FILE=$HOMEDIR/$user/.ssh/authorized_keys
 if [ ! -f "$FILE" ]; then
-   touch "$FILE"
+    touch "$FILE"
 fi
 TEMP=$(mktemp)
 echo "$key" >> "$TEMP"
 ssh-keygen -l -f "$TEMP"
 if [ ! $? -eq 0 ]; then
-	rm "$TEMP"
-	exit
+    rm "$TEMP"
+    exit
 fi
 rm "$TEMP"
 #append key to file

@@ -19,27 +19,27 @@ source $HESTIA/func/main.sh
 
 # JSON list function
 json_list() {
-	IFS=$'\n'
+    IFS=$'\n'
     i=1
     objects=$(echo "$keys" |wc -l)
     echo "{"
-       for str in $keys; do
-	   METHOD=$(echo $str | cut -d' ' -f1)
-	   KEY=$(echo $str | cut -d' ' -f2)
-	   ID=$(echo $str | cut -d' ' -f3)
-	   echo -n '		"'$ID'": {
+        for str in $keys; do
+        METHOD=$(echo $str | cut -d' ' -f1)
+        KEY=$(echo $str | cut -d' ' -f2)
+        ID=$(echo $str | cut -d' ' -f3)
+        echo -n '		"'$ID'": {
         "ID": "'$ID'",
         "KEY": "'$KEY'",
         "METHOD": "'$METHOD'"
-		}'
-		if [ "$i" -lt "$objects" ]; then
+        }'
+        if [ "$i" -lt "$objects" ]; then
             echo ','
         else
             echo
         fi
         ((i++))
-		done		
-    echo "}"   
+        done		
+        echo "}"   
 }
 
 shell_list() {
@@ -47,20 +47,20 @@ shell_list() {
     echo "ID~KEY~METHOD"
     echo "----~----~---"
     for str in $keys; do
-	   METHOD=$(echo $str | cut -d' ' -f1)
-	   KEY=$(echo $str | cut -d' ' -f2)
-	   ID=$(echo $str | cut -d' ' -f3)
+        METHOD=$(echo $str | cut -d' ' -f1)
+        KEY=$(echo $str | cut -d' ' -f2)
+        ID=$(echo $str | cut -d' ' -f3)
         echo "$ID~$KEY~$METHOD"
-    done
+        done
 }
 
 # PLAIN list function
 plain_list() {
     IFS=$'\n'
     for str in $keys; do
-	   METHOD=$(echo $str | cut -d' ' -f1)
-	   KEY=$(echo $str | cut -d' ' -f2)
-	   ID=$(echo $str | cut -d' ' -f3)
+        METHOD=$(echo $str | cut -d' ' -f1)
+        KEY=$(echo $str | cut -d' ' -f2)
+        ID=$(echo $str | cut -d' ' -f3)
         echo -e "$ID\t$KEY\t$METHOD"
     done
 }
@@ -70,9 +70,9 @@ csv_list() {
     IFS=$'\n'
     echo "ID,KEY,METHOD"
     for str in $keys; do
-	   METHOD=$(echo $str | cut -d' ' -f1)
-	   KEY=$(echo $str | cut -d' ' -f2)
-	   ID=$(echo $str | cut -d' ' -f3)
+        METHOD=$(echo $str | cut -d' ' -f1)
+        KEY=$(echo $str | cut -d' ' -f2)
+        ID=$(echo $str | cut -d' ' -f3)
         echo "\"$ID\",\"$KEY\",\"$METHOD\""
     done
 }
@@ -91,7 +91,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 #check if file exsists
 
 if [ ! -f "$HOMEDIR/$user/.ssh/authorized_keys" ]; then
-  exit
+    exit
 fi
 # Parsing backup config
 #cat "$HOMEDIR/$user/.ssh/authorized_keys"
@@ -99,10 +99,10 @@ keys=$(cat "$HOMEDIR/$user/.ssh/authorized_keys")
 
 # Listing data
 case $format in
-     json)   json_list ;;
-     plain)  plain_list ;;
-     csv)    csv_list ;;
-     shell)  shell_list |column -t ;;
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t ;;
 esac
 
 

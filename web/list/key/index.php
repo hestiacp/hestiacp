@@ -7,10 +7,8 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 exec (HESTIA_CMD . "v-list-user-ssh-key ".escapeshellarg($user)." json", $output, $return_var);
 
-
 $data = json_decode(implode('', $output), true);
 
-//$data = array_reverse($data,true);
 // Render page\
 render_page($user, $TAB, 'list_key');
 

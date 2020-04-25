@@ -9,7 +9,6 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-
 # Argument definition
 user=$1
 keyid=$2
@@ -19,7 +18,6 @@ source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -33,7 +31,7 @@ source $USER_DATA/user.conf
 
 FILE=$HOMEDIR/$user/.ssh/authorized_keys
 if [ ! -f "$FILE" ]; then
-   exit;
+    exit;
 fi
 
 # Perform verification if read-only mode is enabled
@@ -44,7 +42,6 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 sed -i "/${keyid}/d" "$FILE"
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

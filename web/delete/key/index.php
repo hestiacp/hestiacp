@@ -18,9 +18,8 @@ if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
 if (!empty($_GET['key'])) {
     $v_key = escapeshellarg(trim($_GET['key']));
     $v_key = str_replace('/','\\/', $v_key);
-    echo HESTIA_CMD."v-delete-user-ssh-key ".$user." ".$v_key;
-	exec (HESTIA_CMD."v-delete-user-ssh-key ".$user." ".$v_key);
-	check_return_code($return_var,$output);
+    exec (HESTIA_CMD."v-delete-user-ssh-key ".$user." ".$v_key);
+    check_return_code($return_var,$output);
 }
 
 //var_dump($return_var,$v_key);

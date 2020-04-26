@@ -561,9 +561,6 @@ echo
 # Installing Nginx repo
 if [ "$nginx" = 'yes' ]; then
     echo "(*) NGINX"
-    if [ -e $apt/nginx.list ]; then
-        rm $apt/nginx.list
-    fi
     echo "deb [arch=amd64] http://nginx.org/packages/mainline/$VERSION/ $codename nginx" \
     > $apt/nginx.list
     wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
@@ -581,7 +578,7 @@ if [ "$apache" = 'yes' ]; then
 fi
 
 # Installing MariaDB repo
-if [ "$mysql" = 'yes' ]; then
+if [ "$mysql" = 'yes' ] && [ "$release" != "20.04" ]; then
     echo "(*) MariaDB"
     echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
     APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8 > /dev/null 2>&1

@@ -41,6 +41,7 @@ ftpc() {
     /usr/bin/ftp -n $HOST $PORT <<EOF
     quote USER $USERNAME
     quote PASS $PASSWORD
+    lcd $BACKUP
     binary
     $1
     $2

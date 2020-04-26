@@ -22,9 +22,10 @@ codename="$(lsb_release -s -c)"
 HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 
 # Define software versions
-pma_v='5.0.1'
+pma_v='5.0.2'
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
 fpm_v="7.3"
+mariadb_v="10.4"
 
 # Defining software pack for all distros
 software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
@@ -557,31 +558,41 @@ apt=/etc/apt/sources.list.d
 echo "Adding required repositories to proceed with installation:"
 echo
 
-# Installing nginx repo
-echo "(*) NGINX"
-if [ -e $apt/nginx.list ]; then
-    rm $apt/nginx.list
-fi
-echo "deb [arch=amd64] http://nginx.org/packages/mainline/$VERSION/ $codename nginx" \
+# Installing Nginx repo
+if [ "$nginx" = 'yes' ]; then
+    echo "(*) NGINX"
+    if [ -e $apt/nginx.list ]; then
+        rm $apt/nginx.list
+    fi
+    echo "deb [arch=amd64] http://nginx.org/packages/mainline/$VERSION/ $codename nginx" \
     > $apt/nginx.list
-wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
-APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/nginx_signing.key > /dev/null 2>&1
+    wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
+    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/nginx_signing.key > /dev/null 2>&1
+fi
 
-# Installing sury php repo
+# Installing sury PHP repo
 echo "(*) PHP"
 LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
 
-# Installing MariaDB repo
-echo "(*) MariaDB"
-echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/10.4/$VERSION $codename main" > $apt/mariadb.list
-APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8 > /dev/null 2>&1
+# Installing sury Apache2 repo
+if [ "$apache" = 'yes' ]; then
+    echo "(*) Apache2"
+    echo "deb http://ppa.launchpad.net/ondrej/apache2/ubuntu $codename main" > $apt/apache2.list
+fi
 
-# Installing hestia repo
+# Installing MariaDB repo
+if [ "$mysql" = 'yes' ]; then
+    echo "(*) MariaDB"
+    echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
+    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8 > /dev/null 2>&1
+fi
+
+# Installing HestiaCP repo
 echo "(*) Hestia Control Panel"
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
 
-# Installing postgresql repo
+# Installing PostgreSQL repo
 if [ "$postgresql" = 'yes' ]; then
     echo "(*) PostgreSQL"
     echo "deb http://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
@@ -1147,6 +1158,7 @@ if [ "$apache" = 'yes' ]; then
     a2enmod ssl > /dev/null 2>&1
     a2enmod actions > /dev/null 2>&1
     a2enmod ruid2 > /dev/null 2>&1
+    a2dismod status > /dev/null 2>&1
     mkdir -p /etc/apache2/conf.d
     mkdir -p /etc/apache2/conf.d/domains
     echo "# Powered by hestia" > /etc/apache2/sites-available/default

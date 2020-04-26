@@ -22,9 +22,10 @@ codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
 HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 
 # Define software versions
-pma_v='5.0.1'
+pma_v='5.0.2'
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
 fpm_v="7.3"
+mariadb_v="10.4"
 
 if [ "$release" -eq 8 ]; then
     software="nginx apache2 apache2-utils apache2.2-common
@@ -594,38 +595,51 @@ apt=/etc/apt/sources.list.d
 # Updating system
 echo "Adding required repositories to proceed with installation:"
 echo
-# Installing nginx repo
-echo "(*) NGINX"
-echo "deb [arch=amd64] http://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
-wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
-APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/nginx_signing.key > /dev/null 2>&1
 
-# Installing sury php repo
+# Installing Nginx repo
+if [ "$nginx" = 'yes' ]; then
+    echo "(*) NGINX"
+    echo "deb [arch=amd64] http://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
+    wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
+    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/nginx_signing.key > /dev/null 2>&1
+fi
+
+# Installing sury PHP repo
 echo "(*) PHP"
 echo "deb https://packages.sury.org/php/ $codename main" > $apt/php.list
 wget --quiet https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/php_signing.key > /dev/null 2>&1
 
-# Installing MariaDB repo
-echo "(*) MariaDB"
-echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/10.4/$VERSION $codename main" > $apt/mariadb.list
-if [ "$release" -eq 8 ]; then
-    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com CBCB082A1BB943DB > /dev/null 2>&1
-else
-    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com F1656F24C74CD1D8 > /dev/null 2>&1
+# Installing sury Apache2 repo
+if [ "$apache" = 'yes' ]; then
+    echo "(*) Apache2"
+    echo "deb https://packages.sury.org/apache2/ $codename main" > $apt/apache2.list
+    wget --quiet https://packages.sury.org/apache2/apt.gpg -O /tmp/apache2_signing.key
+    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/apache2_signing.key > /dev/null 2>&1
 fi
 
-# Installing Backport repo for debian 8
+# Installing MariaDB repo
+if [ "$mysql" = 'yes' ]; then
+    echo "(*) MariaDB"
+    echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
+    if [ "$release" -eq 8 ]; then
+        APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com CBCB082A1BB943DB > /dev/null 2>&1
+    else
+        APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com F1656F24C74CD1D8 > /dev/null 2>&1
+    fi
+fi
+
+# Installing Backport repo for Debian 8
 if [ "$release" -eq 8 ]; then
     echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
 fi
 
-# Installing hestia repo
+# Installing HestiaCP repo
 echo "(*) Hestia Control Panel"
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
 
-# Installing postgresql repo
+# Installing PostgreSQL repo
 if [ "$postgresql" = 'yes' ]; then
     echo "(*) PostgreSQL"
     echo "deb http://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
@@ -1172,6 +1186,7 @@ if [ "$apache" = 'yes' ]; then
     a2enmod suexec > /dev/null 2>&1
     a2enmod ssl > /dev/null 2>&1
     a2enmod actions > /dev/null 2>&1
+    a2dismod status > /dev/null 2>&1
     if [ "$release" -eq 10 ]; then
         a2enmod mpm_itk > /dev/null 2>&1
     else

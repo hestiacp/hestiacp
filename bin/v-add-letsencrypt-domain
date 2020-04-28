@@ -360,6 +360,7 @@ nonce=$(echo "$answer" |grep -i nonce |cut -f2 -d \ |tr -d '\r\n')
 status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
 certificate=$(echo "$answer"|grep 'certificate":' |cut -f4 -d '"')
 if [[ "$status" -ne 200 ]]; then
+    [ -d "$ssl_dir" ] && rm -rf "$ssl_dir"
     check_result $E_CONNECT "Let's Encrypt finalize bad status $status"
 fi
 
@@ -367,6 +368,7 @@ fi
 answer=$(query_le_v2 "$certificate" "" "$nonce" "$ssl_dir/$domain.pem")
 status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
 if [[ "$status" -ne 200 ]]; then
+    [ -d "$ssl_dir" ] && rm -rf "$ssl_dir"
     check_result $E_NOTEXIST "Let's Encrypt downloading signed cert failed status:$status"
 fi
 
@@ -408,6 +410,7 @@ else
 fi
 
 if [ "$?" -ne '0' ]; then
+    [ -d "$ssl_dir" ] && rm -rf "$ssl_dir"
     touch $HESTIA/data/queue/letsencrypt.pipe
     sed -i "/ $domain /d" $HESTIA/data/queue/letsencrypt.pipe
     send_notice 'LETSENCRYPT' "$domain certificate installation failed"
@@ -439,6 +442,9 @@ fi
 if [ ! -z "$well_known" ]; then
     rm -fr $well_known
 fi
+
+# Remove temporary SSL folder
+[ -d "$ssl_dir" ] && rm -rf "$ssl_dir"
 
 #----------------------------------------------------------#
 #                        Hestia                            #

@@ -79,7 +79,6 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['record_id'])))  {
     $v_date = $data[$v_record_id]['DATE'];
     $v_time = $data[$v_record_id]['TIME'];
     $v_ttl = $data[$v_record_id]['TTL'];
-    
 }
 
 // Check POST request for dns domain

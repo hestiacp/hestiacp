@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [CURRENT] - Development
 ### Features
+- Add the possibility to manage ssh keys in the backend.
 
 ### Bugfixes
 - Disable Apache2 Server Status Module by default.

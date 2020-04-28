@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change dns domain record
-# options: USER DOMAIN ID VALUE [PRIORITY] [RESTART]
+# options: USER DOMAIN ID VALUE [PRIORITY] [RESTART] [TTL]
 #
 # The function for changing DNS record.
 
@@ -19,6 +19,7 @@ type=$5
 dvalue=$(idn -t --quiet -u "$6" )
 priority=$7
 restart=$8
+ttl=$9
 
 # Includes
 source $HESTIA/func/main.sh
@@ -83,7 +84,7 @@ date=$(echo "$time_n_date" |cut -f 2 -d \ )
 
 # Adding record
 dns_rec="ID='$id' RECORD='$record' TYPE='$type' PRIORITY='$priority'"
-dns_rec="$dns_rec VALUE='$dvalue' SUSPENDED='no' TIME='$time' DATE='$date'"
+dns_rec="$dns_rec VALUE='$dvalue' SUSPENDED='no' TIME='$time' DATE='$date' TTL='$ttl'"
 echo "$dns_rec" >> $USER_DATA/dns/$domain.conf
 
 # Sorting records

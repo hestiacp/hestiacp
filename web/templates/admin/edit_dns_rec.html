@@ -132,6 +132,16 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
+                                    <?php print __('TTL');?> <span class="optional">(<?=__('optional');?>)</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_ttl" value="<?=htmlentities(trim($v_ttl, "'"))?>">
+                                </td>
+                            </tr>                            
+                            <tr>
+                                <td class="vst-text input-label">
                                     <?php print __('Record Number');?> <span class="optional">(<?=__('internal');?>)</span>
                                 </td>
                             </tr>

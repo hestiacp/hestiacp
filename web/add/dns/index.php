@@ -115,6 +115,7 @@ if (!empty($_POST['ok_rec'])) {
         }
         $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
     }
+    
 
     // Protect input
     $v_domain = escapeshellarg($_POST['v_domain']);
@@ -122,10 +123,12 @@ if (!empty($_POST['ok_rec'])) {
     $v_type = escapeshellarg($_POST['v_type']);
     $v_val = escapeshellarg($_POST['v_val']);
     $v_priority = escapeshellarg($_POST['v_priority']);
+    $v_ttl = escapeshellarg($_POST['v_ttl']);
+    
 
     // Add dns record
     if (empty($_SESSION['error_msg'])) {
-        exec (HESTIA_CMD."v-add-dns-record ".$user." ".$v_domain." ".$v_rec." ".$v_type." ".$v_val." ".$v_priority, $output, $return_var);
+        exec (HESTIA_CMD."v-add-dns-record ".$user." ".$v_domain." ".$v_rec." ".$v_type." ".$v_val." ".$v_priority." '' false ".$v_ttl, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
         $v_type = $_POST['v_type'];

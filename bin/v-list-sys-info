@@ -96,9 +96,6 @@ UPTIME="$(echo $UPTIME / 60 |bc)"
 # Check LoadAverage
 LOADAVERAGE=$(cat /proc/loadavg |cut -f 1 -d ' ')
 
-# Check Home Partition usage
-HOME_USAGE=$(du -sh /home | cut -f1)
-
 # Listing data
 case $format in
     json)   json_list ;;

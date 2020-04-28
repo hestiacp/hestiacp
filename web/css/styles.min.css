@@ -861,32 +861,6 @@ a {
   color: #fff;
 }
 
-
-.lang-ua .l-menu__item a,
-.lang-nl .l-menu__item a,
-.lang-fr .l-menu__item a,
-.lang-ru .l-menu__item a {
-  padding: 11px 18px;
-}
-.lang-el .l-menu__item a,
-.lang-tr .l-menu__item a {
-  padding: 11px 15px;
-}
-.lang-ar .l-menu__item a {
-  padding: 11px 11px;
-}
-.lang-ar .l-menu__item a {
-  line-height: 35px;
-}
-
-.lang-de .l-menu__item a {
-  padding: 11px 12px;
-}
-
-.lang-tw .l-menu__item a {
-  padding: 13px 18px;
-}
-
 .l-profile {
   overflow: hidden;
   float: right;

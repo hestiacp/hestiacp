@@ -115,7 +115,6 @@ if (!empty($_POST['ok_rec'])) {
         }
         $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
     }
-    
 
     // Protect input
     $v_domain = escapeshellarg($_POST['v_domain']);
@@ -124,7 +123,6 @@ if (!empty($_POST['ok_rec'])) {
     $v_val = escapeshellarg($_POST['v_val']);
     $v_priority = escapeshellarg($_POST['v_priority']);
     $v_ttl = escapeshellarg($_POST['v_ttl']);
-    
 
     // Add dns record
     if (empty($_SESSION['error_msg'])) {

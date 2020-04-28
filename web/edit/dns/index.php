@@ -169,7 +169,6 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['reco
         $v_val = escapeshellarg($_POST['v_val']);
         $v_priority = escapeshellarg($_POST['v_priority']);
         $v_ttl = escapeshellarg($_POST['v_ttl']);
-        
         exec (HESTIA_CMD."v-change-dns-record ".$v_username." ".$v_domain." ".$v_record_id." ".$v_rec." ".$v_type." ".$v_val." ".$v_priority." false ".$v_ttl, $output, $return_var);
         check_return_code($return_var,$output);
         $v_rec = $_POST['v_rec'];

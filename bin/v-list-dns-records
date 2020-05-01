@@ -24,7 +24,9 @@ json_list() {
     objects=$(grep ID $USER_DATA/dns/$domain.conf |wc -l)
     echo "{"
     while read str; do
+        unset TTL
         parse_object_kv_list "$str"
+        [ -z "$TTL" ] && TTL="$zone_ttl"
         VALUE=$(echo "$VALUE" |sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
         echo -n '    "'$ID'": {
         "RECORD": "'$RECORD'",
@@ -53,7 +55,9 @@ shell_list() {
     echo "ID^RECORD^TYPE^VALUE^DATE^TTL"
     echo "--^------^----^-----^----^----"
     while read str; do
+        unset TTL
         parse_object_kv_list "$str"
+        [ -z "$TTL" ] && TTL="$zone_ttl"
         echo "$ID^$RECORD^$TYPE^${VALUE:0:30}^$DATE^$TTL"
     done < <(cat $USER_DATA/dns/$domain.conf)
 }
@@ -62,7 +66,9 @@ shell_list() {
 plain_list() {
     IFS=$'\n'
     while read str; do
+        unset TTL
         parse_object_kv_list "$str"
+        [ -z "$TTL" ] && TTL="$zone_ttl"
         VALUE=$(echo "$VALUE" |sed -e "s/%quote%/\\'/g")
         echo -ne "$ID\t$RECORD\t$TYPE\t$PRIORITY\t$VALUE\t"
         echo -e "$SUSPENDED\t$TIME\t$DATE\t$TTL"
@@ -74,7 +80,9 @@ csv_list() {
     IFS=$'\n'
     echo "ID,RECORD,TYPE,PRIORITY,VALUE,SUSPENDED,TIME,DATE,TTL"
     while read str; do
+        unset TTL
         parse_object_kv_list "$str"
+        [ -z "$TTL" ] && TTL="$zone_ttl"
         VALUE=$(echo "$VALUE" |sed -e "s/%quote%/\\'/g")
         echo -n "$ID,$RECORD,$TYPE,$PRIORITY,\"$VALUE\","
         echo "$SUSPENDED,$TIME,$DATE,$TTL"
@@ -95,6 +103,8 @@ is_object_valid 'dns' 'DOMAIN' "$domain"
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+zone_ttl="$(get_object_value 'dns' 'DOMAIN' "$domain" '$TTL')"
 
 # Listing data
 case $format in

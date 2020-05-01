@@ -436,6 +436,7 @@ is_dns_domain_new() {
 update_domain_zone() {
     domain_param=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
     parse_object_kv_list "$domain_param"
+    local zone_ttl="$TTL"
     SOA=$(idn --quiet -a -t "$SOA")
     if [ -z "$SERIAL" ]; then
         SERIAL=$(date +'%Y%m%d01')
@@ -456,10 +457,14 @@ update_domain_zone() {
 " > $zn_conf
     fields='$RECORD\t$TTL\tIN\t$TYPE\t$PRIORITY\t$VALUE'
     while read line ; do
+        unset TTL
         IFS=$'\n'
         for key in $(echo $line|sed "s/' /'\n/g"); do
             eval ${key%%=*}="${key#*=}"
         done
+
+        # inherit zone TTL if record lacks explicit TTL value
+        [ -z "$TTL" ] && TTL="$zone_ttl"
 
         RECORD=$(idn --quiet -a -t "$RECORD")
         if [ "$TYPE" = 'CNAME' ] || [ "$TYPE" = 'MX' ]; then

@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [CURRENT] - Development
 ### Features
+- Added support for configuring individual TTL per DNS record. Thanks to @jaapmarcus
 
 ### Bugfixes
 - Disable Apache2 Server Status Module by default.

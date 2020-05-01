@@ -44,17 +44,7 @@ is_object_valid "dns/$domain" 'ID' "$id"
 #                       Action                             #
 #----------------------------------------------------------#
 
-line=$(grep "ID='$id'" $USER_DATA/dns/$domain.conf)
-parse_object_kv_list "$line"
-sed -i "/^ID='$id'/d" $USER_DATA/dns/$domain.conf
-
-# Adding record
-dns_rec="ID='$id' RECORD='$RECORD' TYPE='$TYPE' PRIORITY='$PRIORITY'"
-dns_rec="$dns_rec VALUE='$VALUE' SUSPENDED='no' TIME='$TIME' DATE='$DATE'"
-echo "$dns_rec" >> $USER_DATA/dns/$domain.conf
-
-# Sorting records
-sort_dns_records
+update_object_value "dns/$domain" 'ID' "$id"  '$SUSPENDED' "no"
 
 # Updating zone
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change dns domain record
-# options: USER DOMAIN ID VALUE [PRIORITY] [RESTART]
+# options: USER DOMAIN ID VALUE [PRIORITY] [RESTART] [TTL]
 #
 # The function for changing DNS record.
 
@@ -19,6 +19,7 @@ type=$5
 dvalue=$(idn -t --quiet -u "$6" )
 priority=$7
 restart=$8
+ttl=$9
 
 # Includes
 source $HESTIA/func/main.sh
@@ -35,7 +36,7 @@ format_domain_idn
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '6' "$#" 'USER DOMAIN ID RECORD TYPE VALUE [PRIORITY] [RESTART]'
+check_args '6' "$#" 'USER DOMAIN ID RECORD TYPE VALUE [PRIORITY] [RESTART] [TTL]'
 is_format_valid 'user' 'domain' 'id' 'record' 'type' 'dvalue'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
@@ -43,6 +44,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"
 is_object_unsuspended 'dns' 'DOMAIN' "$domain"
 is_object_valid "dns/$domain" 'ID' "$id"
+is_format_valid 'ttl'
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -82,9 +84,16 @@ time=$(echo "$time_n_date" |cut -f 1 -d \ )
 date=$(echo "$time_n_date" |cut -f 2 -d \ )
 
 # Adding record
-dns_rec="ID='$id' RECORD='$record' TYPE='$type' PRIORITY='$priority'"
-dns_rec="$dns_rec VALUE='$dvalue' SUSPENDED='no' TIME='$time' DATE='$date'"
-echo "$dns_rec" >> $USER_DATA/dns/$domain.conf
+zone="$USER_DATA/dns/$domain.conf"
+if [ "$ttl" == '' ]; then
+    dns_rec="ID='$id' RECORD='$record' TYPE='$rtype' PRIORITY='$priority'"
+    dns_rec="$dns_rec VALUE='$dvalue' SUSPENDED='no' TIME='$time' DATE='$date'"
+    echo "$dns_rec" >> $zone;
+    else
+    dns_rec="ID='$id' RECORD='$record' TYPE='$rtype' PRIORITY='$priority'"
+    dns_rec="$dns_rec VALUE='$dvalue' SUSPENDED='no' TIME='$time' DATE='$date' TTL='$ttl'"
+    echo "$dns_rec" >> $zone
+fi 
 
 # Sorting records
 sort_dns_records

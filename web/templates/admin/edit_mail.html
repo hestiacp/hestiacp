@@ -4,15 +4,6 @@
             <a class="ui-button cancel" id="btn-back" href="/list/mail/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-              <?php
-              if (!empty($_SESSION['error_msg'])) {
-                echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
-              } else {
-                if (!empty($_SESSION['ok_msg'])) {
-                  echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                }
-              }
-            ?>
             <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
           </div>
         </div>
@@ -47,9 +38,22 @@
                         <table class="data-col2">
                             <tr>
                                 <td class="step-top">
-                                    <span class="login-welcome"><?=__('Editing Mail Domain')?></span>
+                                    <span class="page-title"><?=__('Editing Mail Domain')?></span>
                                 </td>
-                            </tr>  
+                            </tr>
+                            <tr>
+                                <td>
+                                    <?php
+                                        if (!empty($_SESSION['error_msg'])) {
+                                            echo "<span class=\"vst-error\"> <i class=\"fas fa-exclamation-circle status-icon red\"></i> ".htmlentities($_SESSION['error_msg'])."</span>";
+                                        } else {
+                                            if (!empty($_SESSION['ok_msg'])) {
+                                                echo "<span class=\"vst-ok\"> <i class=\"fas fa-check-circle status-icon green\"></i> ".$_SESSION['ok_msg']."</span>";
+                                            }
+                                        }
+                                    ?>
+                                </td>
+                            </tr>
                             <tr>
                                 <td class="vst-text step-top">
                                     <?php print __('Domain');?>
@@ -96,14 +100,17 @@
                                     <table style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;" id="ssltable">
                                         <tr>
                                             <td class="input-label vst-text">
-                                                <span class="alert alert-info alert-with-icon">
-                                                    <i class="fas fa-exclamation"></i>
-                                                    <?=__("Let's Encrypt for mail needs a dns record for mail.$v_domain and $v_webmail_alias!")?><br/>
-                                                </span>
                                                 <label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letencrypt == 'on') echo "checked=yes" ?> onclick="App.Actions.MAIL.toggle_letsencrypt(this)"> <?php print __('Lets Encrypt Support');?></label>
                                             </td>
                                         </tr>
-                                      
+                                        <tr>
+                                            <td>
+                                                <span class="alert alert-info alert-with-icon">
+                                                    <i class="fas fa-exclamation"></i>
+                                                    <?=__("To enable Let's Encrypt SSL, ensure that DNS records exist for mail.$v_domain and $v_webmail_alias!")?><br/>
+                                                </span>
+                                            </td>
+                                        </tr>
                                         <tr>
                                             <td class="vst-text input-label">
                                                 <?php print __('SSL Certificate');?>

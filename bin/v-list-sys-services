@@ -297,6 +297,9 @@ case $format in
     shell)  shell_list |column -t ;;
 esac
 
+if [ -f "$tmp_file" ]; then
+    rm -f "$tmp_file"
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #

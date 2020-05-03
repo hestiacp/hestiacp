@@ -148,6 +148,20 @@ upgrade_start_routine() {
     # Upgrade to Version 1.1.0
     if [ $VERSION = "1.0.6" ]; then
         source $HESTIA/install/upgrade/versions/latest.sh
+        VERSION="1.1.0"
+        upgrade_refresh_config
+    fi
+
+    # Upgrade to Version 1.1.1
+    if [ $VERSION = "1.1.0" ]; then
+        source $HESTIA/install/upgrade/versions/latest.sh
+        VERSION="1.1.1"
+        upgrade_refresh_config
+    fi
+
+    # Upgrade to Version 1.1.2
+    if [ $VERSION = "1.1.1" ]; then
+        source $HESTIA/install/upgrade/versions/latest.sh
         VERSION="$new_version"
         upgrade_refresh_config
     fi
@@ -173,7 +187,7 @@ upgrade_phpmyadmin() {
 
             # Download latest phpMyAdmin release
             wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
-        
+
             # Unpack files
             tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
 
@@ -184,8 +198,8 @@ upgrade_phpmyadmin() {
             cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
 
             # Set config and log directory
-            sed -i "s|define('CONFIG_DIR', '');|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
-            sed -i "s|define('TEMP_DIR', './tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
+            sed -i "s|define('CONFIG_DIR', ROOT_PATH);|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
+            sed -i "s|define('TEMP_DIR', ROOT_PATH . 'tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
 
             # Create temporary folder and change permissions
             if [ ! -d /usr/share/phpmyadmin/tmp ]; then
@@ -227,6 +241,14 @@ upgrade_rebuild_users() {
 }
 
 upgrade_restart_services() {
+    # Refresh user interface theme
+    if [ "$THEME" ]; then
+        if [ "$THEME" != "default" ]; then
+            echo "(*) Applying user interface updates..."
+            $BIN/v-change-sys-theme $THEME
+        fi
+    fi
+
     echo "(*) Restarting services..."
     sleep 5
     if [ ! -z "$MAIL_SYSTEM" ]; then

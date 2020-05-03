@@ -55,19 +55,20 @@ check_hestia_demo_mode
 mph="php$version-mbstring php$version-bcmath php$version-cli php$version-curl
      php$version-fpm php$version-gd php$version-intl php$version-mysql
      php$version-soap php$version-xml php$version-zip php$version-mbstring
-     php$version-json php$version-bz2 php$version-pspell php$version-imagick php$version-pgsql"
+     php$version-json php$version-bz2 php$version-pspell php$version-imagick php$version-pgsql
+     php$version-imap php$version-ldap"
 
 # Check is version is 7.1 or below to add mcrypt
 if [[ `echo "$version 7.2" | awk '{print ($1 < $2)}'` == 1 ]]; then
     mph="$mph php$version-mcrypt"
 fi
 
-if [ -z "$DB_SYSTEM" -o "$DB_SYSTEM" = "mysql" ]; then
-    mph=$(echo "$mph" | sed -e "s/php$version-pgsql//")
+if ! echo "$DB_SYSTEM" | grep -w 'mysql' >/dev/null; then
+    mph=$(echo "$mph" | sed -e "s/php$version-mysql//")
 fi
 
-if [ -z "$DB_SYSTEM" -o "$DB_SYSTEM" = "pgsql" ]; then
-    mph=$(echo "$mph" | sed -e "s/php$version-mysql//")
+if ! echo "$DB_SYSTEM" | grep -w 'pgsql' >/dev/null; then
+    mph=$(echo "$mph" | sed -e "s/php$version-pgsql//")
 fi
 
 # Install php packages

@@ -24,12 +24,24 @@ source $HESTIA/conf/hestia.conf
 
 # Set LE counter
 lecounter=0
+max_LE_failures=30
 
 # Checking user certificates
 for user in $($HESTIA/bin/v-list-sys-users plain); do
     USER_DATA=$HESTIA/data/users/$user
 
     for domain in $(search_objects 'web' 'LETSENCRYPT' 'yes' 'DOMAIN'); do
+
+        domain_suspended="$(get_object_value 'web' 'DOMAIN' "$domain" '$SUSPENDED')"
+        if [ "$domain_suspended" = "yes" ]; then
+            continue
+        fi
+
+        fail_counter="$(get_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT')"
+        if [[ "$fail_counter" -gt "$max_LE_failures" ]]; then
+            continue
+        fi
+
         crt_data=$(openssl x509 -text -in $USER_DATA/ssl/$domain.crt)
         not_after=$(echo "$crt_data" |grep "Not After" |cut -f 2,3,4 -d :)
         expiration=$(date -d "$not_after" +%s)
@@ -48,12 +60,28 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
             aliases=$(echo "$aliases" |sed -e ':a;N;$!ba;s/\n/,/g')
             msg=$($BIN/v-add-letsencrypt-domain $user $domain $aliases)
             if [ $? -ne 0 ]; then
-                echo "$domain $msg"
+                log_event $E_INVALID "$domain $msg"
+                if [ -z "$fail_counter" ]; then
+                    add_object_key "web" 'DOMAIN' "$domain" 'LETSENCRYPT_FAIL_COUNT' 'LETSENCRYPT'
+                fi
+                ((fail_counter++))
+                update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT' "$fail_counter"
             fi
         fi
     done
 
     for domain in $(search_objects 'mail' 'LETSENCRYPT' 'yes' 'DOMAIN'); do
+
+        domain_suspended="$(get_object_value 'mail' 'DOMAIN' "$domain" '$SUSPENDED')"
+        if [ "$domain_suspended" = "yes" ]; then
+            continue
+        fi
+
+        fail_counter="$(get_object_value 'mail' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT')"
+        if [[ "$fail_counter" -gt "$max_LE_failures" ]]; then
+            continue
+        fi
+
         crt_data=$(openssl x509 -text -in $USER_DATA/ssl/mail.$domain.crt)
         not_after=$(echo "$crt_data" |grep "Not After" |cut -f 2,3,4 -d :)
         expiration=$(date -d "$not_after" +%s)
@@ -67,7 +95,12 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
             ((lecounter++))
             msg=$($BIN/v-add-letsencrypt-domain $user $domain ' ' yes)
             if [ $? -ne 0 ]; then
-                echo "$domain $msg"
+                log_event $E_INVALID "$domain $msg"
+                if [ -z "$fail_counter" ]; then
+                    add_object_key "mail" 'DOMAIN' "$domain" 'LETSENCRYPT_FAIL_COUNT' 'LETSENCRYPT'
+                fi
+                ((fail_counter++))
+                update_object_value 'mail' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT' "$fail_counter"
             fi
         fi
     done

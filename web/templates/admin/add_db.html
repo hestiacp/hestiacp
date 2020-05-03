@@ -4,15 +4,6 @@
             <a class="ui-button cancel" id="btn-back" href="/list/db/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-              <?php
-              if (!empty($_SESSION['error_msg'])) {
-                echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
-              } else {
-                if (!empty($_SESSION['ok_msg'])) {
-                  echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                }
-              }
-            ?>
             <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
           </div>
         </div>
@@ -44,11 +35,24 @@
                         <table class="data-col2" width="600px">
                             <tr>
                                 <td class="step-top">
-                                    <span class="login-welcome"><?=__('Adding database')?></span>
+                                    <span class="page-title"><?=__('Adding database')?></span>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="step-top hint" style="color:#777;" >
+                                <td>
+                                    <?php
+                                        if (!empty($_SESSION['error_msg'])) {
+                                            echo "<span class=\"vst-error\"> <i class=\"fas fa-exclamation-circle status-icon red\"></i> ".htmlentities($_SESSION['error_msg'])."</span>";
+                                        } else {
+                                            if (!empty($_SESSION['ok_msg'])) {
+                                            echo "<span class=\"vst-ok\"> <i class=\"fas fa-check-circle status-icon green\"></i> ".$_SESSION['ok_msg']."</span>";
+                                            }
+                                        }
+                                    ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="step-top hint">
                                     <?php print __('Prefix will be automaticaly added to database name and database user',"<b>".$user."_</b>");?>
                                 </td>
                             </tr>

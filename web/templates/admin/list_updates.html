@@ -69,7 +69,7 @@
                   <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="pkg[]" value="<?php echo $key ?>">
                 </div>
               <div class="clearfix l-unit__stat-col--left wide"><b><?=$key?></b></div>
-              <div class="clearfix l-unit__stat-col--left wide-5"><b><?=__($data[$key]['DESCR'])?></b></div>
+              <div class="clearfix l-unit__stat-col--left wide-5"><?=__($data[$key]['DESCR'])?></div>
               <div class="clearfix l-unit__stat-col--left text-center wide"><?=$data[$key]['VERSION'] ?> (<?=$data[$key]['ARCH']?>)</div>
               <div class="clearfix l-unit__stat-col--left text-center">
                   <? if ($data[$key]['UPDATED'] == 'no') {

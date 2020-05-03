@@ -55,7 +55,7 @@ mysql_query() {
 
 mysql_dump() {
     err="/tmp/e.mysql"
-    mysqldump --defaults-file=$mycnf --single-transaction -r $1 $2 2> $err
+    mysqldump --defaults-file=$mycnf --single-transaction --routines -r $1 $2 2> $err
     if [ '0' -ne "$?" ]; then
         rm -rf $tmpdir
         if [ "$notify" != 'no' ]; then

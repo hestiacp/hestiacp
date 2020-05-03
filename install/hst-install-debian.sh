@@ -22,9 +22,10 @@ codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
 HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 
 # Define software versions
-pma_v='4.9.4'
+pma_v='5.0.2'
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
 fpm_v="7.3"
+mariadb_v="10.4"
 
 if [ "$release" -eq 8 ]; then
     software="nginx apache2 apache2-utils apache2.2-common
@@ -78,7 +79,7 @@ help() {
     echo "Usage: $0 [OPTIONS]
   -a, --apache            Install Apache        [yes|no]  default: yes
   -n, --nginx             Install Nginx         [yes|no]  default: yes
-  -w, --phpfpm            Install PHP-FPM       [yes|no]  default: no
+  -w, --phpfpm            Install PHP-FPM       [yes|no]  default: yes
   -o, --multiphp          Install Multi-PHP     [yes|no]  default: no
   -v, --vsftpd            Install Vsftpd        [yes|no]  default: yes
   -j, --proftpd           Install ProFTPD       [yes|no]  default: no
@@ -103,7 +104,7 @@ help() {
   -f, --force             Force installation
   -h, --help              Print this help
 
-  Example: bash $0 -e demo@hestiacp.com -p p4ssw0rd --apache no --phpfpm yes"
+  Example: bash $0 -e demo@hestiacp.com -p p4ssw0rd --multiphp yes"
     exit 1
 }
 
@@ -244,7 +245,7 @@ done
 # Defining default software stack
 set_default_value 'nginx' 'yes'
 set_default_value 'apache' 'yes'
-set_default_value 'phpfpm' 'no'
+set_default_value 'phpfpm' 'yes'
 set_default_value 'multiphp' 'no'
 set_default_value 'vsftpd' 'yes'
 set_default_value 'proftpd' 'no'
@@ -269,9 +270,6 @@ set_default_port '8083'
 set_default_lang 'en'
 
 # Checking software conflicts
-if [ "$multiphp" = 'yes' ]; then
-    phpfpm='yes'
-fi
 if [ "$proftpd" = 'yes' ]; then
     vsftpd='no'
 fi
@@ -440,7 +438,7 @@ echo ' |  _  |  __/\__ \ |_| | (_| | |___|  __/ '
 echo ' |_| |_|\___||___/\__|_|\__,_|\____|_|    '
 echo
 echo '                      Hestia Control Panel'
-echo '                                    v1.1.0'
+echo '                                    v1.1.2'
 echo -e "\n"
 echo "===================================================================="
 echo -e "\n"
@@ -597,40 +595,51 @@ apt=/etc/apt/sources.list.d
 # Updating system
 echo "Adding required repositories to proceed with installation:"
 echo
-# Installing nginx repo
-echo "(*) NGINX"
-echo "deb [arch=amd64] http://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
-wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
-APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/nginx_signing.key > /dev/null 2>&1
 
-# Installing sury php repo
+# Installing Nginx repo
+if [ "$nginx" = 'yes' ]; then
+    echo "(*) NGINX"
+    echo "deb [arch=amd64] http://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
+    wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
+    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/nginx_signing.key > /dev/null 2>&1
+fi
+
+# Installing sury PHP repo
 echo "(*) PHP"
 echo "deb https://packages.sury.org/php/ $codename main" > $apt/php.list
 wget --quiet https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key
 APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/php_signing.key > /dev/null 2>&1
 
-# Installing MariaDB repo
-echo "(*) MariaDB"
-echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/10.4/$VERSION $codename main" > $apt/mariadb.list
-if [ "$release" -eq 8 ]; then
-    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com CBCB082A1BB943DB > /dev/null 2>&1
-else
-    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com F1656F24C74CD1D8 > /dev/null 2>&1
+# Installing sury Apache2 repo
+if [ "$apache" = 'yes' ]; then
+    echo "(*) Apache2"
+    echo "deb https://packages.sury.org/apache2/ $codename main" > $apt/apache2.list
+    wget --quiet https://packages.sury.org/apache2/apt.gpg -O /tmp/apache2_signing.key
+    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/apache2_signing.key > /dev/null 2>&1
 fi
 
-# Installing Backport repo for debian 8
+# Installing MariaDB repo
+if [ "$mysql" = 'yes' ]; then
+    echo "(*) MariaDB"
+    echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
+    if [ "$release" -eq 8 ]; then
+        APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com CBCB082A1BB943DB > /dev/null 2>&1
+    else
+        APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com F1656F24C74CD1D8 > /dev/null 2>&1
+    fi
+fi
+
+# Installing Backport repo for Debian 8
 if [ "$release" -eq 8 ]; then
     echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
 fi
 
-# Installing hestia repo
+# Installing HestiaCP repo
 echo "(*) Hestia Control Panel"
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
-wget --quiet https://gpg.hestiacp.com/deb_signing.key -O /tmp/deb_signing.key
-APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/deb_signing.key > /dev/null 2>&1
-rm /tmp/deb_signing.key
+APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
 
-# Installing postgresql repo
+# Installing PostgreSQL repo
 if [ "$postgresql" = 'yes' ]; then
     echo "(*) PostgreSQL"
     echo "deb http://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
@@ -1012,6 +1021,24 @@ else
     fi
 fi
 
+# Database stack
+if [ "$mysql" = 'yes' ]; then
+    installed_db_types='mysql'
+fi
+
+if [ "$pgsql" = 'yes' ]; then
+    installed_db_types="$installed_db_type,pgsql"
+fi
+
+if [ ! -z "$installed_db_types" ]; then
+    db=$(echo "$installed_db_types" |\
+        sed "s/,/\n/g"|\
+        sort -r -u |\
+        sed "/^$/d"|\
+        sed ':a;N;$!ba;s/\n/,/g')
+    echo "DB_SYSTEM='$db'" >> $HESTIA/conf/hestia.conf
+fi
+
 # FTP stack
 if [ "$vsftpd" = 'yes' ]; then
     echo "FTP_SYSTEM='vsftpd'" >> $HESTIA/conf/hestia.conf
@@ -1062,7 +1089,7 @@ echo "BACKUP_SYSTEM='local'" >> $HESTIA/conf/hestia.conf
 echo "LANGUAGE='$lang'" >> $HESTIA/conf/hestia.conf
 
 # Version & Release Branch
-echo "VERSION='1.1.0'" >> $HESTIA/conf/hestia.conf
+echo "VERSION='1.1.2'" >> $HESTIA/conf/hestia.conf
 echo "RELEASE_BRANCH='release'" >> $HESTIA/conf/hestia.conf
 
 # Installing hosting packages
@@ -1159,6 +1186,7 @@ if [ "$apache" = 'yes' ]; then
     a2enmod suexec > /dev/null 2>&1
     a2enmod ssl > /dev/null 2>&1
     a2enmod actions > /dev/null 2>&1
+    a2dismod status > /dev/null 2>&1
     if [ "$release" -eq 10 ]; then
         a2enmod mpm_itk > /dev/null 2>&1
     else
@@ -1330,8 +1358,8 @@ if [ "$mysql" = 'yes' ]; then
     cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
 
     # Set config and log directory
-    sed -i "s|define('CONFIG_DIR', '');|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
-    sed -i "s|define('TEMP_DIR', './tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
+    sed -i "s|define('CONFIG_DIR', ROOT_PATH);|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
+    sed -i "s|define('TEMP_DIR', ROOT_PATH . 'tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
 
     # Create temporary folder and change permission
     mkdir /usr/share/phpmyadmin/tmp
@@ -1505,13 +1533,6 @@ fi
 
 if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     echo "(*) Configuring Roundcube webmail client..."
-    if [ "$apache" = 'yes' ]; then
-        cp -f $HESTIA_INSTALL_DIR/roundcube/apache.conf /etc/roundcube/
-        ln -s /etc/roundcube/apache.conf /etc/apache2/conf.d/roundcube.conf
-    fi
-    if [ "$nginx" = 'yes' ]; then
-        cp -f $HESTIA_INSTALL_DIR/nginx/webmail.inc /etc/nginx/conf.d/
-    fi
     cp -f $HESTIA_INSTALL_DIR/roundcube/main.inc.php /etc/roundcube/config.inc.php
     cp -f $HESTIA_INSTALL_DIR/roundcube/db.inc.php /etc/roundcube/debian-db-roundcube.php
     cp -f $HESTIA_INSTALL_DIR/roundcube/config.inc.php /etc/roundcube/plugins/password/

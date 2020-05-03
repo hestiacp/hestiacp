@@ -509,6 +509,11 @@ if (!empty($_POST['save'])) {
             $v_ssl_signature = $ssl_str['HESTIA']['SIGNATURE'];
             $v_ssl_pub_key = $ssl_str['HESTIA']['PUB_KEY'];
             $v_ssl_issuer = $ssl_str['HESTIA']['ISSUER'];
+
+            // Cleanup certificate tempfiles
+            if (file_exists($tmpdir . '/certificate.crt')) unlink($tmpdir . '/certificate.crt');
+            if (file_exists($tmpdir . '/certificate.key')) unlink($tmpdir . '/certificate.key');
+            rmdir($tmpdir);
         }
     }
 

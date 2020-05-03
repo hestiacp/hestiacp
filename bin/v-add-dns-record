@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add dns record
-# options: USER DOMAIN RECORD TYPE VALUE [PRIORITY] [ID] [RESTART]
+# options: USER DOMAIN RECORD TYPE VALUE [PRIORITY] [ID] [RESTART] [TTL]
 #
 # The call is used for adding new DNS record. Complex records of TXT, MX and
 # SRV types can be used by a filling in the 'value' argument. The function also
@@ -23,6 +23,8 @@ dvalue=$(idn -t --quiet -u "$5" )
 priority=$6
 id=$7
 restart=$8
+ttl=$9
+
 if [ -z "$priority" ]; then
     priority=10
 fi
@@ -69,7 +71,7 @@ format_domain_idn
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '5' "$#" 'USER DOMAIN RECORD TYPE VALUE [PRIORITY] [ID] [RESTART]'
+check_args '5' "$#" 'USER DOMAIN RECORD TYPE VALUE [PRIORITY] [ID] [RESTART] [TTL]'
 is_format_valid 'user' 'domain' 'record' 'rtype' 'dvalue'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
@@ -82,6 +84,7 @@ is_format_valid 'id'
 is_object_new "dns/$domain" 'ID' "$id"
 is_dns_fqnd "$rtype" "$dvalue"
 is_dns_nameserver_valid "$domain" "$rtype" "$dvalue"
+is_format_valid 'ttl'
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -100,7 +103,8 @@ date=$(echo "$time_n_date" |cut -f 2 -d \ )
 zone="$USER_DATA/dns/$domain.conf"
 dns_rec="ID='$id' RECORD='$record' TYPE='$rtype' PRIORITY='$priority'"
 dns_rec="$dns_rec VALUE='$dvalue' SUSPENDED='no' TIME='$time' DATE='$date'"
-echo "$dns_rec" >> $zone
+[ ! -z "$ttl" ] && dns_rec="$dns_rec TTL='$ttl'"
+echo "$dns_rec" >> $zone;
 chmod 660 $zone
 
 # Sorting records

@@ -223,17 +223,6 @@ rebuild_web_domain_conf() {
         user_exec cp -r "$WEBTPL/skel/document_errors/" "$HOMEDIR/$user/web/$domain/"
     fi
 
-    # Set folder permissions
-    chmod 551   $HOMEDIR/$user/web/$domain \
-                $HOMEDIR/$user/web/$domain/stats \
-                $HOMEDIR/$user/web/$domain/logs
-    chmod 751   $HOMEDIR/$user/web/$domain/private \
-                $HOMEDIR/$user/web/$domain/cgi-bin \
-                $HOMEDIR/$user/web/$domain/public_html \
-                $HOMEDIR/$user/web/$domain/public_shtml \
-                $HOMEDIR/$user/web/$domain/document_errors
-    chmod 640 /var/log/$WEB_SYSTEM/domains/$domain.*
-
     # Set ownership
     chown $user:$user \
         $HOMEDIR/$user/web/$domain \
@@ -382,6 +371,17 @@ rebuild_web_domain_conf() {
             chmod 640 $htpasswd $htaccess >/dev/null 2>&1
         fi
     done
+
+    # Set folder permissions
+    chmod 551   $HOMEDIR/$user/web/$domain \
+                $HOMEDIR/$user/web/$domain/stats \
+                $HOMEDIR/$user/web/$domain/logs
+    chmod 751   $HOMEDIR/$user/web/$domain/private \
+                $HOMEDIR/$user/web/$domain/cgi-bin \
+                $HOMEDIR/$user/web/$domain/public_html \
+                $HOMEDIR/$user/web/$domain/public_shtml \
+                $HOMEDIR/$user/web/$domain/document_errors
+    chmod 640 /var/log/$WEB_SYSTEM/domains/$domain.*
 }
 
 # DNS domain rebuild

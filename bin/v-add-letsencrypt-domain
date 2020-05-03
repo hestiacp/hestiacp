@@ -429,13 +429,17 @@ fi
 if [ -z "$mail" ]; then
     if [ -z "$LETSENCRYPT" ]; then
         add_object_key "web" 'DOMAIN' "$domain" 'LETSENCRYPT' 'FTP_USER'
+        add_object_key "web" 'DOMAIN' "$domain" 'LETSENCRYPT_FAIL_COUNT' 'LETSENCRYPT'
     fi
     update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'yes'
+    update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT' "0"
 else
     if [ -z "$LETSENCRYPT" ]; then
         add_object_key "mail" 'DOMAIN' "$root_domain" 'LETSENCRYPT'
+        add_object_key "mail" 'DOMAIN' "$root_domain" 'LETSENCRYPT_FAIL_COUNT' 'LETSENCRYPT'
     fi
     update_object_value 'mail' 'DOMAIN' "$root_domain" '$LETSENCRYPT' 'yes'
+    update_object_value 'mail' 'DOMAIN' "$root_domain" '$LETSENCRYPT_FAIL_COUNT' "0"
 fi
 
 # Remove challenge folder if exist

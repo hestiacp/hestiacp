@@ -778,8 +778,8 @@ if [ "$udir" != 'no' ]; then
 
             chown "$user" "$tmpdir/user_dir"
             chown "$user" "$HOMEDIR/$user"
+            [ -e "$HOMEDIR/$user/$user_dir" ] && chown "$user" "$HOMEDIR/$user/$user_dir"
             $BIN/v-extract-fs-archive "$user" "$tmpdir/user_dir/$user_dir.tar.gz" "$HOMEDIR/$user"
-            chown "$user" "$HOMEDIR/$user/$user_dir"
             cmdstatus="$?"
             chown root:root "$HOMEDIR/$user"
             if [ "$cmdstatus" -ne 0 ]; then

@@ -4,6 +4,15 @@
             <a class="ui-button cancel" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
+              <?php
+              if (!empty($_SESSION['error_msg'])) {
+                echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
+              } else {
+                if (!empty($_SESSION['ok_msg'])) {
+                  echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+                }
+              }
+            ?>
             <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
           </div>
         </div>
@@ -41,20 +50,7 @@
                                 <td class="step-top">
                                     <span class="page-title"><?=__('Editing User')?></span>
                                 </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <?php
-                                        if (!empty($_SESSION['error_msg'])) {
-                                            echo "<span class=\"vst-error\"> <i class=\"fas fa-exclamation-circle status-icon red\"></i> ".htmlentities($_SESSION['error_msg'])."</span>";
-                                        } else {
-                                            if (!empty($_SESSION['ok_msg'])) {
-                                                echo "<span class=\"vst-ok\"> <i class=\"fas fa-check-circle status-icon green\"></i> ".$_SESSION['ok_msg']."</span>";
-                                            }
-                                        }
-                                    ?>
-                                </td>
-                            </tr>
+                            </tr>  
                             <tr>
                                 <td class="vst-text step-top">
                                     <?php print __('Username');?>
@@ -78,7 +74,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <label><input type="checkbox" class="vst-checkbox password-option" name="v_twofa" <?php if(!empty($v_twofa)) echo "checked=yes" ?>> <?php print __('Enable 2FA');?></label>
+                                    <label><input type="checkbox" class="vst-checkbox password-option" name="v_twofa" <?php if(!empty($v_twofa)) echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_twofa(this)"> <?php print __('Enable 2FA');?></label>
                                     <?php if (!empty($v_twofa)) { ?>
                                     <p><?php echo __('2FA Reset Code:').' '.$v_twofa; ?></br></p>
                                     <p><?php echo __('Please scan the code below in your 2FA application:'); ?></p>
@@ -132,6 +128,31 @@
                                                     echo 'selected' ;
                                                 }
                                                 echo ">".htmlentities($key)."</option>\n";
+                                            }
+                                        ?>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print __('PHP_CLI');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_phpcli">
+                                        <?php
+                                            foreach ($php_versions as $key => $value) {
+                                                $php = explode('-',$value);
+                                                echo "\t\t\t\t<option value=\"".$value."\"";
+                                                $svalue = "'".$value."'";
+                                                if ((!empty($v_phpcli)) && ( $value == $v_phpcli ) || ($svalue == $v_phpcli)){
+                                                    echo ' selected' ;
+                                                }
+                                                if ((empty($v_phpcli)) && ($value == DEFAULT_PHP_VERSION)){
+                                                    echo ' selected' ;
+                                                }
+                                                echo ">".htmlentities($value)."</option>\n";
                                             }
                                         ?>
                                     </select>

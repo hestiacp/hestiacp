@@ -791,9 +791,14 @@ if [ -d "$withdebs" ]; then
     software=$(echo "$software" | sed -e "s/hestia//")
 fi
 
-if [ "$release" = '16.04' ]; then
+if [ "$release" = '16.04' ] || [ "$release" = '20.04' ]; then
     software=$(echo "$software" | sed -e "s/setpriv/util-linux/")
 fi
+
+if [ "$release" = '20.04' ]; then
+    software=$(echo "$software" | sed -e "s/rssh//")
+fi
+
 
 #----------------------------------------------------------#
 #                 Disable Apparmor on LXC                  #
@@ -903,13 +908,15 @@ chmod 755 /etc/cron.daily/ntpdate
 ntpdate -s pool.ntp.org
 
 # Setup rssh
-if [ -z "$(grep /usr/bin/rssh /etc/shells)" ]; then
-    echo /usr/bin/rssh >> /etc/shells
+if [ "$release" != '20.04' ]; then
+    if [ -z "$(grep /usr/bin/rssh /etc/shells)" ]; then
+        echo /usr/bin/rssh >> /etc/shells
+    fi
+    sed -i 's/#allowscp/allowscp/' /etc/rssh.conf
+    sed -i 's/#allowsftp/allowsftp/' /etc/rssh.conf
+    sed -i 's/#allowrsync/allowrsync/' /etc/rssh.conf
+    chmod 755 /usr/bin/rssh
 fi
-sed -i 's/#allowscp/allowscp/' /etc/rssh.conf
-sed -i 's/#allowsftp/allowsftp/' /etc/rssh.conf
-sed -i 's/#allowrsync/allowrsync/' /etc/rssh.conf
-chmod 755 /usr/bin/rssh
 
 
 #----------------------------------------------------------#

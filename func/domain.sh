@@ -90,7 +90,7 @@ prepare_web_backend() {
     pool=$(find -L /etc/php/ -name "$domain.conf" -exec dirname {} \;)
     # Check if multiple-PHP installed
     regex="socket-(\d+)_(\d+)"
-    if [[ $backend_template =~ ^PHP-([0-9])\_([0-9])$ ]]; then
+    if [[ $backend_template =~ ^.*PHP-([0-9])\_([0-9])$ ]]; then
         backend_version="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
         pool=$(find -L /etc/php/$backend_version -type d \( -name "pool.d" -o -name "*fpm.d" \))
     else

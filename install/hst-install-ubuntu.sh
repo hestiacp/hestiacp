@@ -41,7 +41,8 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     php$fpm_v-mbstring php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline
     php$fpm_v-xml postgresql postgresql-contrib proftpd-basic quota
     roundcube-core roundcube-mysql roundcube-plugins rrdtool rssh spamassassin
-    sudo hestia hestia-nginx hestia-php vim-common vsftpd whois zip acl sysstat setpriv"
+    sudo hestia hestia-nginx hestia-php vim-common vsftpd whois zip acl sysstat
+    setpriv libonig5"
 
 # Defining help function
 help() {
@@ -790,15 +791,15 @@ if [ -d "$withdebs" ]; then
     software=$(echo "$software" | sed -e "s/hestia-php//")
     software=$(echo "$software" | sed -e "s/hestia//")
 fi
-
 if [ "$release" = '16.04' ] || [ "$release" = '20.04' ]; then
     software=$(echo "$software" | sed -e "s/setpriv/util-linux/")
 fi
-
 if [ "$release" = '20.04' ]; then
     software=$(echo "$software" | sed -e "s/rssh//")
 fi
-
+if [ "$release" != '20.04' ]; then
+    software=$(echo "$software" | sed -e "s/libonig5//")
+fi
 
 #----------------------------------------------------------#
 #                 Disable Apparmor on LXC                  #
@@ -1175,7 +1176,9 @@ if [ "$apache" = 'yes' ]; then
     chmod 640 /var/log/apache2/access.log /var/log/apache2/error.log
     chmod 751 /var/log/apache2/domains
 
-    update-rc.d apache2 defaults > /dev/null 2>&1
+    if [ "$release" != '20.04' ]; then
+        update-rc.d apache2 defaults > /dev/null 2>&1
+    fi
     systemctl start apache2 >> $LOG
     check_result $? "apache2 start failed"
 else
@@ -1322,8 +1325,9 @@ if [ "$mysql" = 'yes' ]; then
     # Unpack files
     tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
 
-    # Delete file to prevent error
+    # Delete files to prevent error
     rm -fr /usr/share/phpmyadmin/doc/html
+    rm -fr /usr/share/phpmyadmin/js/vendor/openlayers
 
     # Overwrite old files
     cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
@@ -1333,7 +1337,7 @@ if [ "$mysql" = 'yes' ]; then
     sed -i "s|define('TEMP_DIR', ROOT_PATH . 'tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
 
     # Create temporary folder and change permission
-    mkdir /usr/share/phpmyadmin/tmp
+    [ ! -d "/usr/share/phpmyadmin/tmp" ] && mkdir /usr/share/phpmyadmin/tmp
     chmod 777 /usr/share/phpmyadmin/tmp
 
     # Clear Up
@@ -1366,7 +1370,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$named" = 'yes' ]; then
-    echo "(*) Configuring Bind DNS server..."
+    echo "(*) Configuring Bind DNS server..."    
     cp -f $HESTIA_INSTALL_DIR/bind/named.conf /etc/bind/
     cp -f $HESTIA_INSTALL_DIR/bind/named.conf.options /etc/bind/
     chown root:bind /etc/bind/named.conf
@@ -1382,8 +1386,13 @@ if [ "$named" = 'yes' ]; then
             systemctl restart apparmor >> $LOG
         fi
     fi
-    update-rc.d bind9 defaults
-    systemctl start bind9
+    if [ "$release" = '20.04' ]; then
+        update-rc.d named defaults
+        systemctl start named
+    else
+        update-rc.d bind9 defaults
+        systemctl start bind9
+    fi
     check_result $? "bind9 start failed"
 
     # Workaround for OpenVZ/Virtuozzo
@@ -1668,7 +1677,7 @@ if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
     echo "</IfModule>" >> remoteip.conf
     sed -i "s/LogFormat \"%h/LogFormat \"%a/g" /etc/apache2/apache2.conf
     a2enmod remoteip >> $LOG
-    systemctl restart apache2
+    systemctl start apache2
 fi
 
 # Configuring MariaDB host

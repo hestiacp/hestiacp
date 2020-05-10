@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [CURRENT] - Development
 ### Features
 - Added support for configuring individual TTL per DNS record. Thanks to @jaapmarcus
+- Added support for Ubuntu Server 20.04 LTS
 
 ### Bugfixes
 - Disable Apache2 Server Status Module by default.
@@ -20,6 +21,7 @@ All notable changes to this project will be documented in this file.
 - Don't calculate /home folder size in v-list-sys-info.
 - Cleanup temporary files when uploading custom SSL cert from WebUi.
 - Cleanup temporary files when adding/renewing letsencrypt SSL cert.
+- Adjust v-list-sys-services to honor the changed fail2ban service name.
 
 ## [1.1.1] - 2020-03-24 - Hotfix
 ### Features

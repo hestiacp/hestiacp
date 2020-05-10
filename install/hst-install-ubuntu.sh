@@ -1355,7 +1355,7 @@ if [ "$postgresql" = 'yes' ]; then
     ppass=$(gen_pass)
     cp -f $HESTIA_INSTALL_DIR/postgresql/pg_hba.conf /etc/postgresql/*/main/
     systemctl restart postgresql
-    sudo -iu postgres psql -c "ALTER USER postgres WITH PASSWORD '$ppass'"
+    sudo -iu postgres psql -c "ALTER USER postgres WITH PASSWORD '$ppass'" > /dev/null 2>&1
 
     # Configuring phpPgAdmin
     if [ "$apache" = 'yes' ]; then
@@ -1535,7 +1535,7 @@ if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     phpenmod mcrypt > /dev/null 2>&1
 
     # Restart services
-    if [ "$apache" = 'yes' ]; then
+    if [ "$apache" = 'yes' ] && [ "$release" != '20.04' ]; then
         systemctl restart apache2 >> $LOG
     fi
     if [ "$nginx" = 'yes' ]; then

@@ -4,7 +4,8 @@ All notable changes to this project will be documented in this file.
 ## [CURRENT] - Development
 ### Features
 - Added support for configuring individual TTL per DNS record. Thanks to @jaapmarcus
-- Added support for Ubuntu Server 20.04 LTS
+- Added support for Ubuntu Server 20.04 LTS.
+- Added the ability to set the php cli version per user (using alias).
 
 ### Bugfixes
 - Disable Apache2 Server Status Module by default.
@@ -22,6 +23,10 @@ All notable changes to this project will be documented in this file.
 - Cleanup temporary files when uploading custom SSL cert from WebUi.
 - Cleanup temporary files when adding/renewing letsencrypt SSL cert.
 - Adjust v-list-sys-services to honor the changed fail2ban service name.
+- Rework busy port validation in v-change-sys-port.
+- Fixed ssh config save bug when edit the over interface.
+- Fixed different permission issues on user restore.
+- Stop trying to renew LE certs after multiple consecutive failed attempts. Thanks @dpeca
 
 ## [1.1.1] - 2020-03-24 - Hotfix
 ### Features

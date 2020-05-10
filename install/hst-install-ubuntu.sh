@@ -1645,6 +1645,8 @@ pub_ip=$(curl --ipv4 -s https://ip.hestiacp.com/)
 if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     if [ -e /etc/rc.local ]; then
         sed -i '/exit 0/d' /etc/rc.local
+    else
+        touch /etc/rc.local
     fi
 
     check_rclocal=$(cat /etc/rc.local | grep "#!")

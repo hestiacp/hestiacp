@@ -102,12 +102,6 @@ if [ -z "$branch" ]; then
     exit
 fi
 
-# Ask the user for a final confirmation
-read -p 'The update to a development branch should only be performed on test systems, as this can lead to instabilities and problems. Continue with the installation? [Y/N]: ' answer
-if [ "$answer" != 'y' ] && [ "$answer" != 'Y'  ]; then
-    echo 'Goodbye'
-    exit 1
-fi
 
 # Install needed software
 echo "Updating system APT repositories..."

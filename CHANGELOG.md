@@ -27,6 +27,7 @@ All notable changes to this project will be documented in this file.
 - Fixed ssh config save bug when edit the over interface.
 - Fixed different permission issues on user restore.
 - Stop trying to renew LE certs after multiple consecutive failed attempts. Thanks @dpeca
+- Implement a validation function to verify the correct version in hestia.conf prior to install a new one.
 
 ## [1.1.1] - 2020-03-24 - Hotfix
 ### Features

@@ -43,7 +43,7 @@ What does Hestia Control Panel support?
 Supported operating systems:
 ----------------------------
 * Debian 8, 9, 10
-* Ubuntu 16.04 LTS or Ubuntu 18.04 LTS (the latest LTS release is recommended)
+* Ubuntu 16.04 LTS, Ubuntu 18.04 LTS, or Ubuntu 20.04 LTS (the latest LTS release is generally recommended)
 * **NOTE:** Hestia Control Panel must be installed on top of a fresh operating system installation to ensure proper functionality.
 
 Installing Hestia Control Panel

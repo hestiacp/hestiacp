@@ -28,6 +28,7 @@ All notable changes to this project will be documented in this file.
 - Fixed different permission issues on user restore.
 - Stop trying to renew LE certs after multiple consecutive failed attempts. Thanks to @dpeca!
 - Implement a validation function to verify the correct version in hestia.conf prior to install a new one.
+- Fix autologout issue on cloudflare proxy and rearange 2FA authentification part. Thanks to @rmj-s!
 - Roundcube fixes for PHP 7.4 compatibility.
 
 ## [1.1.1] - 2020-03-24 - Hotfix

@@ -38,6 +38,11 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
     if(isset($_SESSION['token']) && isset($_POST['token']) && $_POST['token'] == $_SESSION['token']) {
         $v_user = escapeshellarg($_POST['user']);
         $v_ip = escapeshellarg($_SERVER['REMOTE_ADDR']);
+        if(isset($_SERVER['HTTP_CF_CONNECTING_IP'])){
+            if(!empty($_SERVER['HTTP_CF_CONNECTING_IP'])){
+                $v_ip = escapeshellarg($_SERVER['HTTP_CF_CONNECTING_IP']);
+            }
+        }
         if (isset($_POST['twofa'])) {
             $v_twofa = escapeshellarg($_POST['twofa']);
         }

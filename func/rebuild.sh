@@ -497,10 +497,14 @@ rebuild_mail_domain_conf() {
         touch $HOMEDIR/$user/conf/mail/$domain/passwd
         touch $HOMEDIR/$user/conf/mail/$domain/fwd_only
 
-        # Seeting outgoing ip address
+        # Setting outgoing ip address
         if [ ! -z "$local_ip" ]; then
             echo "$local_ip" > $HOMEDIR/$user/conf/mail/$domain/ip
         fi
+
+        # Generating list of mail domains for HELO
+        ls /etc/exim4/domains > /etc/exim4/mailhelo.conf
+        sed -i "s \(.*\) \1:\1 " /etc/exim4/mailhelo.conf
 
         # Adding antispam protection
         if [ "$ANTISPAM" = 'yes' ]; then
@@ -524,7 +528,7 @@ rebuild_mail_domain_conf() {
             rm -f /etc/dovecot/conf.d/domains/$domain_idn.conf
         fi
 
-        # Adding mail directiry
+        # Adding mail directory
         if [ ! -e $HOMEDIR/$user/mail/$domain_idn ]; then
             mkdir "$HOMEDIR/$user/mail/$domain_idn"
         fi
@@ -590,8 +594,8 @@ rebuild_mail_domain_conf() {
     sslcheck=$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf | grep SSL)
     if [ -z "$sslcheck" ]; then
         sed -i "s|$domain'|$domain' SSL='no' LETSENCRYPT='no'|g" $USER_DATA/mail.conf
-    fi 
-    
+    fi
+
     # Remove and recreate SSL configuration
     if [ -f "$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt" ]; then
         del_mail_ssl_config

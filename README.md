@@ -80,7 +80,7 @@ You may specify a number of various flags during installation to only install th
 ```bash
 bash hst-install.sh -h
 ```
-Alternatively, @gabizz has made available a command-line script generator at https://gabizz.github.io/hestiacp-scriptline-generator/ which allows you to easily generate the installation command via GUI.
+Alternatively, @gabizz has made available a command-line script generator at https://gabizz.github.io/hestiacp-scriptline-generator/ (one more option http://d95868g8.beget.tech/) which allows you to easily generate the installation command via GUI.
 
 Installing & testing development builds
 =============================

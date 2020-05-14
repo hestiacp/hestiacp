@@ -377,7 +377,7 @@ $rcmail_config['email_dns_check'] = false;
 // ----------------------------------
 
 // List of active plugins (in plugins/ directory)
-$rcmail_config['plugins'] = array('password');
+$rcmail_config['plugins'] = array('password','newmail_notifier','zipdownload');
 
 // ----------------------------------
 // USER INTERFACE
@@ -715,11 +715,11 @@ $rcmail_config['prefer_html'] = true;
 // 0 - Never, always ask
 // 1 - Ask if sender is not in address book
 // 2 - Always show inline images
-$rcmail_config['show_images'] = 0;
+$rcmail_config['show_images'] = 1;
 
 // compose html formatted messages by default
 // 0 - never, 1 - always, 2 - on reply to HTML message only 
-$rcmail_config['htmleditor'] = 0;
+$rcmail_config['htmleditor'] = 1;
 
 // show pretty dates as standard
 $rcmail_config['prettydate'] = true;

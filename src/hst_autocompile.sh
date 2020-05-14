@@ -87,7 +87,7 @@ fi
 BUILD_ARCH='amd64'
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
 NGINX_V=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/nginx/control |grep "Version:" |cut -d' ' -f2)
-OPENSSL_V='1.1.1d'
+OPENSSL_V='1.1.1g'
 PCRE_V='8.44'
 ZLIB_V='1.2.11'
 PHP_V=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/php/control |grep "Version:" |cut -d' ' -f2)

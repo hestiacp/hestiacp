@@ -325,7 +325,7 @@ begin transports
 
 remote_smtp:
   driver = smtp
-  helo_data = ${primary_hostname}
+  helo_data = ${if exists {/etc/exim4/mailhelo.conf}{${lookup{$sender_address_domain}lsearch*{/etc/exim4/mailhelo.conf}{$value}{$primary_hostname}}}{$primary_hostname}}
   dkim_domain = DKIM_DOMAIN
   dkim_selector = mail
   dkim_private_key = DKIM_PRIVATE_KEY

@@ -28,3 +28,13 @@ if [ "$WEB_SYSTEM" = "apache2" ] && [ ! -e "/etc/apt/sources.list.d/apache2.list
         fi
     fi
 fi
+
+# Roundcube fixes for PHP 7.4 compatibility
+if [ -d /usr/share/roundcube ]; then
+    sed -i 's/\"\\n\", $identities/$identities, \"\\n\"/g' /usr/share/roundcube/plugins/enigma/lib/enigma_ui.php
+    sed -i 's/(array_keys($post_search), \x27|\x27)/(\x27|\x27, array_keys($post_search))/g' /usr/share/roundcube/program/lib/Roundcube/rcube_contacts.php
+    sed -i 's/implode($name, \x27.\x27)/implode(\x27.\x27, $name)/g' /usr/share/roundcube/program/lib/Roundcube/rcube_db.php
+    sed -i 's/$fields, \x27,\x27/',', $fields/g' /usr/share/roundcube/program/steps/addressbook/search.inc
+    sed -i 's/implode($fields, \x27,\x27)/implode(\x27,\x27, $fields)/g' /usr/share/roundcube/program/steps/addressbook/search.inc
+    sed -i 's/implode($bstyle, \x27; \x27)/implode(\x27; \x27, $bstyle)/g' /usr/share/roundcube/program/steps/mail/sendmail.inc
+fi

@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [CURRENT] - Development
 ### Features
-- Added support for configuring individual TTL per DNS record. Thanks to @jaapmarcus
+- Added support for configuring individual TTL per DNS record. Thanks to @jaapmarcus!
 - Added support for Ubuntu Server 20.04 LTS.
 - Added the ability to set the php cli version per user (using alias).
 
@@ -26,8 +26,9 @@ All notable changes to this project will be documented in this file.
 - Rework busy port validation in v-change-sys-port.
 - Fixed ssh config save bug when edit the over interface.
 - Fixed different permission issues on user restore.
-- Stop trying to renew LE certs after multiple consecutive failed attempts. Thanks @dpeca
+- Stop trying to renew LE certs after multiple consecutive failed attempts. Thanks to @dpeca!
 - Implement a validation function to verify the correct version in hestia.conf prior to install a new one.
+- Roundcube fixes for PHP 7.4 compatibility.
 
 ## [1.1.1] - 2020-03-24 - Hotfix
 ### Features

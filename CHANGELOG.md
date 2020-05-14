@@ -29,6 +29,7 @@ All notable changes to this project will be documented in this file.
 - Stop trying to renew LE certs after multiple consecutive failed attempts. Thanks to @dpeca!
 - Implement a validation function to verify the correct version in hestia.conf prior to install a new one.
 - Roundcube fixes for PHP 7.4 compatibility.
+- Enable Roundcube plugins newmail_notifier and zipdownload.
 
 ## [1.1.1] - 2020-03-24 - Hotfix
 ### Features

@@ -579,7 +579,7 @@ if [ "$apache" = 'yes' ]; then
 fi
 
 # Installing MariaDB repo
-if [ "$mysql" = 'yes' ] && [ "$release" != "20.04" ]; then
+if [ "$mysql" = 'yes' ]; then
     echo "(*) MariaDB"
     echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
     APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8 > /dev/null 2>&1
@@ -1370,7 +1370,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$named" = 'yes' ]; then
-    echo "(*) Configuring Bind DNS server..."    
+    echo "(*) Configuring Bind DNS server..."
     cp -f $HESTIA_INSTALL_DIR/bind/named.conf /etc/bind/
     cp -f $HESTIA_INSTALL_DIR/bind/named.conf.options /etc/bind/
     chown root:bind /etc/bind/named.conf

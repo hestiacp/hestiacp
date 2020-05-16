@@ -33,7 +33,7 @@ All notable changes to this project will be documented in this file.
 - Fix autologout issue on cloudflare proxy and rearange 2FA authentification part. Thanks to @rmj-s!
 - Roundcube fixes for PHP 7.4 compatibility.
 - Added delay when entering wrong username/password/2fa
-- Improved "Forgot password" function preventing brute forcing
+- Improved "Forgot password" function prevent brute forcing
 
 ## [1.1.1] - 2020-03-24 - Hotfix
 ### Features

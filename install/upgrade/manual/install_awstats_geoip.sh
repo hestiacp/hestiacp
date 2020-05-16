@@ -30,8 +30,8 @@ fi
 if [ -d /etc/awstats ]; then
     perl -MCPAN -f -e "install Geo::IP::PurePerl"
     perl -MCPAN -f -e "install Geo::IP"
-    sed -i '/LoadPlugin=\"geoip GEOIP_STANDARD \/usr\/share\/GeoIP\/GeoIP.dat\"/s/^#//g' /etc/awstats.conf
-    echo "LoadPlugin=\"geoip GEOIP_STANDARD /usr/share/GeoIP/GeoIP.dat\"" >> $HESTIA/data/templates/web/awstats/awstats.conf
+    sed -i '/LoadPlugin=\"geoip GEOIP_STANDARD \/usr\/share\/GeoIP\/GeoIP.dat\"/s/^#//g' /etc/awstats/awstats.conf
+    echo "LoadPlugin=\"geoip GEOIP_STANDARD /usr/share/GeoIP/GeoIP.dat\"" >> $HESTIA/data/templates/web/awstats/awstats.tpl
     $HESTIA/bin/v-update-web-templates "yes"
 fi
 

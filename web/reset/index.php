@@ -60,7 +60,9 @@ if ((!empty($_POST['user'])) && (!empty($_POST['code'])) && (!empty($_POST['pass
             $data = json_decode(implode('', $output), true);
             $rkey = $data[$user]['RKEY'];
             if (hash_equals($rkey, $_POST['code'])) {
-                if(filemtime('/usr/local/hestia/data/user/'.$v_user.'/user.conf') > time() - 900){
+                unset($output);
+                exec('/usr/bin/sudo /usr/local/hestia/bin/v-get-user-value '.$v_user.' RKEYEXP', $output,$return_var);
+                if($output[0] > time() - 900){
                     $v_password = tempnam("/tmp","vst");
                     $fp = fopen($v_password, "w");
                     fwrite($fp, $_POST['password']."\n");

@@ -37,7 +37,7 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-
+d=$(date +%s)
 
 #----------------------------------------------------------#
 #                       Hestia                             #
@@ -45,6 +45,13 @@ check_hestia_demo_mode
 
 # Changing RKEY value
 update_user_value "$user" '$RKEY' "$(generate_password)"
+
+#check if RKEYEXP exists
+if [ -z "$(grep RKEYEXP $USER_DATA/user.conf)" ]; then
+    sed -i "s/^RKEY/RKEYEXP='$d'\nRKEY/g" $USER_DATA/user.conf
+else
+    update_user_value "$user" '$RKEYEXP' "$d"
+fi
 
 # Logging
 log_history "forgot password request"

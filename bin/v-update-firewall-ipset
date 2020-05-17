@@ -1,0 +1,62 @@
+#!/bin/bash
+# info: update firewall ipset
+# options: [REFRESH]
+#
+# The function creates ipset lists and updates the lists if they are expired or ondemand
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Force refresh
+force=${1-no}
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+is_boolean_format_valid "$force" 'bool (yes/no)'
+is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+
+ipset_hstobject='../../data/firewall/ipset'
+
+for ipset_name in $(search_objects "$ipset_hstobject" 'SUSPENDED' 'no' 'LISTNAME'); do
+
+    ipset_time="$(get_object_value "$ipset_hstobject" 'LISTNAME' "$ipset_name" '$TIME')"
+    ipset_date="$(get_object_value "$ipset_hstobject" 'LISTNAME' "$ipset_name" '$DATE')"
+    ipset_au="$(get_object_value "$ipset_hstobject" 'LISTNAME' "$ipset_name" '$AUTOUPDATE')"
+
+    if [ "$ipset_au" = 'no' ] ; then
+        # load existing ip list files in the kernel but don't auto update them
+        $BIN/v-add-firewall-ipset "$ipset_name"
+        continue
+    fi
+
+    last_updated_ts=$(date -d "$ipset_date $ipset_time" +%s)
+    now=$(date +%s)
+    hours_since_update=$(( (now - last_updated_ts) / 60 ))
+
+    if [[ "$hours_since_update" -lt 70 ]] && [ "$force" = 'no' ]; then
+        # load existing ip list files in the kernel but don't auto update them
+        $BIN/v-add-firewall-ipset "$ipset_name"
+        continue
+    fi
+
+    $BIN/v-add-firewall-ipset "$ipset_name" '' '' '' 'yes'
+done
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

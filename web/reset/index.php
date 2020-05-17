@@ -61,7 +61,7 @@ if ((!empty($_POST['user'])) && (!empty($_POST['code'])) && (!empty($_POST['pass
             $rkey = $data[$user]['RKEY'];
             if (hash_equals($rkey, $_POST['code'])) {
                 unset($output);
-                exec('/usr/bin/sudo /usr/local/hestia/bin/v-get-user-value '.$v_user.' RKEYEXP', $output,$return_var);
+                exec("/usr/bin/sudo /usr/local/hestia/bin/v-get-user-value ".$v_user." RKEYEXP", $output,$return_var);
                 if($output[0] > time() - 900){
                     $v_password = tempnam("/tmp","vst");
                     $fp = fopen($v_password, "w");

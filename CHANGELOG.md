@@ -6,7 +6,8 @@ All notable changes to this project will be documented in this file.
 - Added support for configuring individual TTL per DNS record. Thanks to @jaapmarcus!
 - Added support for Ubuntu Server 20.04 LTS.
 - Added the ability to set the php cli version per user (using alias).
-- Added support for resolving ip addresses based on geoip database for Awstats 
+- Added support for resolving ip addresses based on geoip database for Awstats
+
 
 ### Bugfixes
 - Disable Apache2 Server Status Module by default.
@@ -31,6 +32,8 @@ All notable changes to this project will be documented in this file.
 - Implement a validation function to verify the correct version in hestia.conf prior to install a new one.
 - Fix autologout issue on cloudflare proxy and rearange 2FA authentification part. Thanks to @rmj-s!
 - Roundcube fixes for PHP 7.4 compatibility.
+- Added delay when entering wrong username/password/2fa
+- Improved "Forgot password" function prevent brute forcing
 
 ## [1.1.1] - 2020-03-24 - Hotfix
 ### Features

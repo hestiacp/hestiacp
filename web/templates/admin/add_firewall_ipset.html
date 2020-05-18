@@ -140,12 +140,36 @@
         */
     ];
 
+    var blacklist_iplists = [
+        {name: "[ipv4] Blacklist Script",       source:"script:/usr/local/hestia/install/deb/firewall/ipset/blacklist.sh"},
+        /*
+        {name: "[ipv6] Blacklist Script",       source:"script:/usr/local/hestia/install/deb/firewall/ipset/blacklist.ipv6.sh"},
+        */
+    ];
+
     country_iplists.sort(function (a, b) {
+        return a.name > b.name;
+    });
+
+    blacklist_iplists.sort(function (a, b) {
         return a.name > b.name;
     });
 
     $(function() {
         var targetelement = document.getElementById('datasource_list');
+
+        // Blacklist
+        var newEl = document.createElement("option");
+        newEl.text="BLACKLIST";
+        newEl.disabled=true;
+        targetelement.appendChild(newEl);
+
+        blacklist_iplists.forEach(iplist => {
+            var newEl = document.createElement("option");
+            newEl.text=iplist.name;
+            newEl.value=iplist.source;
+            targetelement.appendChild(newEl);
+        });
 
         // IPVERSE
         var newEl = document.createElement("option");

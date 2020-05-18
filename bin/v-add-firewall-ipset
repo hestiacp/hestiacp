@@ -125,14 +125,15 @@ inet_ver="inet"
 [ "$ip_version" == "v6" ] && inet_ver="inet6"
 
 $IPSET_BIN create "$ip_name" -exist hash:net family $inet_ver
-$IPSET_BIN create "${ip_name}-tmp" -exist hash:net family $inet_ver
+$IPSET_BIN -quiet destroy "${ip_name}-tmp"
+$IPSET_BIN create "${ip_name}-tmp" -exist hash:net family $inet_ver maxelem 1048576
 $IPSET_BIN flush "${ip_name}-tmp"
 
 sed -rn -e '/^#|^$/d'  -e "s/^(.*)/add ${ip_name}-tmp \\1/p" "${IPSET_PATH}/${IPSET_FILE}.iplist" | $IPSET_BIN -quiet restore
 check_result $? "Populating ipset table"
 
 $IPSET_BIN swap "${ip_name}-tmp" "${ip_name}"
-$IPSET_BIN --quiet destroy "${ip_name}-tmp"
+$IPSET_BIN -quiet destroy "${ip_name}-tmp"
 
 
 # Generating timestamp

@@ -50,11 +50,11 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
-if $IPSET_BIN --quiet list "${ip_name}-tmp"; then
+if $IPSET_BIN --quiet list "${ip_name}-tmp" >/dev/null; then
     $IPSET_BIN --quiet destroy "${ip_name}-tmp"
 fi
 
-if $IPSET_BIN --quiet list "${ip_name}"; then
+if $IPSET_BIN --quiet list "${ip_name}" >/dev/null; then
     $IPSET_BIN --quiet destroy "${ip_name}"
     check_result $? "ipset ${ip_name} still used by iptables. Cannot remove"
 fi

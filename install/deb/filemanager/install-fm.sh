@@ -25,6 +25,7 @@ if [ ! -f "$COMPOSER_BIN" ]; then
 
     COMPOSER_SETUP_FILE=$(mktemp)
     check_result $? "Create temp file"
+    chown $user: "$COMPOSER_SETUP_FILE"
 
     signature="$(curl https://composer.github.io/installer.sig)"
     check_result $? "Download signature"
@@ -35,7 +36,7 @@ if [ ! -f "$COMPOSER_BIN" ]; then
     [[ "$signature" = $(sha384sum $COMPOSER_SETUP_FILE | cut -f 1 -d " ") ]] || check_result $E_INVALID "Composer signature does not match"
 
     COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php "$COMPOSER_SETUP_FILE"  --install-dir="$COMPOSER_DIR" --filename=composer
-    check_result $? "Composer instal failed"
+    check_result $? "Composer install failed"
 
     [ -f "$COMPOSER_SETUP_FILE" ] && rm -f "$COMPOSER_SETUP_FILE"
 fi

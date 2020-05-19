@@ -1,0 +1,83 @@
+#!/bin/bash
+# info: add user sftp key
+# options: USER 
+#
+# The script creates and updates ssh key for filemanager usage
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER'
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+PRVKEY_FILE="$HOMEDIR/$user/.ssh/hst-filemanager-key"
+PUBKEY_FILE="$HOMEDIR/$user/.ssh/hst-filemanager-key.pub"
+AUTHKEY_FILE="$HOMEDIR/$user/.ssh/authorized_keys"
+
+[ -L "$PRVKEY_FILE" ]  && check_result $E_FORBIDEN "Private key file cannot be a symlink"
+[ -L "$PUBKEY_FILE" ]  && check_result $E_FORBIDEN "Public key file cannot be a symlink"
+[ -L "$AUTHKEY_FILE" ] && check_result $E_FORBIDEN "Authorized keys file cannot be a symlink"
+
+if [ ! -f "${PRVKEY_FILE}" ]; then
+
+    ssh-keygen -q -b 1024 -t rsa -f "${PRVKEY_FILE}" -N ""
+    new_privkey=true
+
+fi
+
+if [ ! -f "${PUBKEY_FILE}" ] || [ "$new_privkey" = true ]; then
+
+    ssh-keygen -y -f "${PRVKEY_FILE}" > "${PUBKEY_FILE}"
+    new_pubkey=true
+
+fi
+
+if [ ! -f "${AUTHKEY_FILE}" ] || [ "$new_pubkey" = true ]; then
+
+    now=$(date +%s)
+    pubkey_str=$(cat "${PUBKEY_FILE}")
+    pubkey_desc="[${user}]filemanager.ssh.key"
+
+    if grep --quiet -F "[${user}]filemanager.ssh.key" "${AUTHKEY_FILE}"; then
+        echo "remove old pub key from authkeys file"
+        sed -i "/ \[${user}\]filemanager\.ssh\.key\$/d" "${AUTHKEY_FILE}"
+    fi
+
+    echo "from=\"127.0.0.1\",command=\"internal-sftp\",restrict ${pubkey_str} TS:${now} ${pubkey_desc}" >> "${AUTHKEY_FILE}"
+
+fi
+
+# 
+chown ${user}: "${AUTHKEY_FILE}"
+chown ${user}: "${PUBKEY_FILE}"
+chown admin: "${PRVKEY_FILE}"
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

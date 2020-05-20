@@ -422,6 +422,7 @@ if [ "$phpfpm"  = 'yes' ] && [ "$multiphp" = 'no' ]; then
     echo '   - PHP-FPM Application Server'
 fi
 if [ "$multiphp"  = 'yes' ]; then
+    phpfpm='yes'
     echo '   - Multi-PHP Environment'
 fi
 

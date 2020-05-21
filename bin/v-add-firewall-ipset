@@ -10,9 +10,9 @@
 
 ip_name=${1}
 data_source=${2}
-ip_version=${3-v4}
-autoupdate=${4-yes}
-force=${5-no}
+ip_version=${3:-v4}
+autoupdate=${4:-yes}
+force=${5:-no}
 
 # Includes
 source $HESTIA/func/main.sh
@@ -124,7 +124,7 @@ fi
 inet_ver="inet"
 [ "$ip_version" == "v6" ] && inet_ver="inet6"
 
-$IPSET_BIN create "$ip_name" -exist hash:net family $inet_ver
+$IPSET_BIN -quiet create -exist "$ip_name" hash:net family $inet_ver
 $IPSET_BIN -quiet destroy "${ip_name}-tmp"
 $IPSET_BIN create "${ip_name}-tmp" -exist hash:net family $inet_ver maxelem 1048576
 $IPSET_BIN flush "${ip_name}-tmp"

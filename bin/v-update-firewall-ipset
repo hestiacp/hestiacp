@@ -10,7 +10,7 @@
 #----------------------------------------------------------#
 
 # Force refresh
-force=${1-no}
+force=${1:-no}
 
 # Includes
 source $HESTIA/func/main.sh

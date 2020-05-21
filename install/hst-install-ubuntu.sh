@@ -1685,7 +1685,7 @@ if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
     echo "</IfModule>" >> remoteip.conf
     sed -i "s/LogFormat \"%h/LogFormat \"%a/g" /etc/apache2/apache2.conf
     a2enmod remoteip >> $LOG
-    systemctl start apache2
+    systemctl restart apache2
 fi
 
 # Configuring MariaDB host

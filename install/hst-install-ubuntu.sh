@@ -1546,7 +1546,7 @@ if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     phpenmod mcrypt > /dev/null 2>&1
 
     # Restart services
-    if [ "$apache" = 'yes' ] && [ "$release" != '20.04' ]; then
+    if [ "$apache" = 'yes' ]; then
         systemctl restart apache2 >> $LOG
     fi
     if [ "$nginx" = 'yes' ]; then

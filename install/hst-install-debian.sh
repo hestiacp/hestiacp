@@ -39,7 +39,7 @@ if [ "$release" -eq 8 ]; then
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
-        unrar-free vim-common acl sysstat setpriv"
+        unrar-free vim-common acl sysstat setpriv ipset"
 elif [ "$release" -eq 9 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
         libapache2-mod-ruid2 libapache2-mod-fcgid libapache2-mod-php$fpm_v 
@@ -55,7 +55,7 @@ elif [ "$release" -eq 9 ]; then
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
-        unrar-free vim-common acl sysstat rsyslog setpriv"
+        unrar-free vim-common acl sysstat rsyslog setpriv ipset"
 elif [ "$release" -eq 10 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
         apache2-suexec-pristine libapache2-mod-fcgid libapache2-mpm-itk 
@@ -71,7 +71,7 @@ elif [ "$release" -eq 10 ]; then
         flex whois git idn zip sudo bc ftp lsof ntpdate rrdtool quota e2fslibs
         bsdutils e2fsprogs curl imagemagick fail2ban dnsutils bsdmainutils cron
         hestia hestia-nginx hestia-php expect libmail-dkim-perl unrar-free
-        vim-common acl sysstat rsyslog util-linux"
+        vim-common acl sysstat rsyslog util-linux ipset"
 fi
 
 # Defining help function
@@ -822,6 +822,7 @@ if [ "$postgresql" = 'no' ]; then
 fi
 if [ "$iptables" = 'no' ] || [ "$fail2ban" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/fail2ban//")
+    software=$(echo "$software" | sed -e "s/ipset//")
 fi
 if [ "$phpfpm" = 'yes' ]; then
     software=$(echo "$software" | sed -e "s/php$fpm_v-cgi//")

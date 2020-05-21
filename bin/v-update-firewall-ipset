@@ -13,6 +13,7 @@
 force=${1:-no}
 
 # Includes
+source /etc/profile.d/hestia.sh
 source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
 

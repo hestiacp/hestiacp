@@ -38,3 +38,14 @@ if [ -d /usr/share/roundcube ]; then
     sed -i 's/implode($fields, \x27,\x27)/implode(\x27,\x27, $fields)/g' /usr/share/roundcube/program/steps/addressbook/search.inc
     sed -i 's/implode($bstyle, \x27; \x27)/implode(\x27; \x27, $bstyle)/g' /usr/share/roundcube/program/steps/mail/sendmail.inc
 fi
+
+# Remove existing network-up hooks so they get regenerated when updating the firewall
+# - network hook will also restore ipset config during start-up
+if [ -f "/usr/lib/networkd-dispatcher/routable.d/50-ifup-hooks" ]; then
+    rm "/usr/lib/networkd-dispatcher/routable.d/50-ifup-hooks"
+    $BIN/v-update-firewall
+fi
+if [ -f "/etc/network/if-pre-up.d/iptables" ];then
+    rm "/etc/network/if-pre-up.d/iptables"
+    $BIN/v-update-firewall
+fi

@@ -40,12 +40,20 @@ sort_fw_rules() {
 #----------------------------------------------------------#
 
 check_args '5' "$#" 'RULE ACTION IP  PORT [PROTOCOL] [COMMENT]'
-is_format_valid 'rule' 'action' 'protocol' 'port_ext' 'ip'
+is_format_valid 'rule' 'action' 'protocol' 'port_ext'
 if [ ! -z "$comment" ]; then
     is_format_valid 'comment'
 fi
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 is_object_valid '../../data/firewall/rules' 'RULE' "$rule"
+
+if [[ "$ip" =~ ^ipset: ]]; then
+    ipset_name="${ip#ipset:}"
+    v-list-firewall-ipset plain | grep "^$ipset_name\s" >/dev/null
+    check_result $? 'ipset object not found' $E_NOTEXIST
+else
+    is_format_valid 'ip'
+fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode

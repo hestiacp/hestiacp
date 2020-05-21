@@ -56,6 +56,9 @@ if [[ "$sshport" =~ ^[0-9]+$ ]] && [ "$sshport" -ne "22"  ]; then
     sed -i "s/PORT='22'/PORT=\'$sshport\'/" $rules
 fi
 
+# Load ipset lists before adding Hestia iptables rules
+$BIN/v-update-firewall-ipset
+
 # Creating temporary file
 tmp=$(mktemp)
 
@@ -83,9 +86,16 @@ for line in $(sort -r -n -k 2 -t \' $rules); do
     if [ "$SUSPENDED" = 'no' ]; then
         proto="-p $PROTOCOL"
         port="--dport $PORT"
-        ip="-s $IP"
         state=""
         action="-j $ACTION"
+
+        if [[ "$IP" =~ ^ipset: ]]; then
+            ipset_name="${IP#ipset:}"
+            $(v-list-firewall-ipset plain | grep "^$ipset_name\s" >/dev/null) || log_event $E_NOTEXIST "ipset object ($ipset_name) not found"
+            ip="-m set --match-set '${ipset_name}' src"
+        else
+            ip="-s $IP"
+        fi
 
         # Adding multiport module
         if [[ "$PORT" =~ ,|-|: ]] ; then

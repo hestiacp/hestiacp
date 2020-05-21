@@ -1118,6 +1118,7 @@ fi
 # Install dhparam.pem
 cp -f $HESTIA_INSTALL_DIR/ssl/dhparam.pem /etc/ssl
 
+
 #----------------------------------------------------------#
 #                     Configure Nginx                      #
 #----------------------------------------------------------#
@@ -1183,6 +1184,9 @@ if [ "$apache" = 'yes' ]; then
     update-rc.d apache2 defaults > /dev/null 2>&1
     systemctl start apache2 >> $LOG
     check_result $? "apache2 start failed"
+else
+    update-rc.d apache2 disable > /dev/null 2>&1
+    systemctl stop apache2 > /dev/null 2>&1
 fi
 
 

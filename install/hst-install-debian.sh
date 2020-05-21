@@ -1188,7 +1188,6 @@ if [ "$apache" = 'yes' ]; then
     a2enmod suexec > /dev/null 2>&1
     a2enmod ssl > /dev/null 2>&1
     a2enmod actions > /dev/null 2>&1
-    a2dismod status > /dev/null 2>&1
     if [ "$release" -eq 10 ]; then
         a2enmod mpm_itk > /dev/null 2>&1
     else
@@ -1205,6 +1204,9 @@ if [ "$apache" = 'yes' ]; then
     chmod a+x /var/log/apache2
     chmod 640 /var/log/apache2/access.log /var/log/apache2/error.log
     chmod 751 /var/log/apache2/domains
+
+    # Prevent remote access to server-status page
+    sed -i '/Allow from all/d' /etc/apache2/mods-enabled/status.conf
 
     update-rc.d apache2 defaults > /dev/null 2>&1
     systemctl start apache2 >> $LOG

@@ -7,8 +7,8 @@
 #######################################################################################
 
 if [ -e "/etc/apache2/mods-enabled/status.conf" ]; then
-    echo "(*) Disable Apache2 Server Status Module..."
-    a2dismod status > /dev/null 2>&1
+    echo "(*) Hardening Apache2 Server Status Module..."
+    sed -i '/Allow from all/d' /etc/apache2/mods-enabled/status.conf
 fi
 
 # Add sury apache2 repository

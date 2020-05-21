@@ -8,9 +8,8 @@ All notable changes to this project will be documented in this file.
 - Added the ability to set the php cli version per user (using alias).
 - Added support for resolving ip addresses based on geoip database for Awstats
 
-
 ### Bugfixes
-- Disable Apache2 Server Status Module by default.
+- Do not allow to show apache2 server-status page from public.
 - Do not allow to change the password of a non-hestia user. Thanks to Alexandre Zanni!
 - Use sury repository for Apache2 packages.
 - Check whether Nginx, Apache2 and MariaDB are selected for installation prior to adding third party repositories.

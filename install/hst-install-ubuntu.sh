@@ -1165,7 +1165,6 @@ if [ "$apache" = 'yes' ]; then
     a2enmod ssl > /dev/null 2>&1
     a2enmod actions > /dev/null 2>&1
     a2enmod ruid2 > /dev/null 2>&1
-    a2dismod status > /dev/null 2>&1
     mkdir -p /etc/apache2/conf.d
     mkdir -p /etc/apache2/conf.d/domains
     echo "# Powered by hestia" > /etc/apache2/sites-available/default
@@ -1178,15 +1177,12 @@ if [ "$apache" = 'yes' ]; then
     chmod 640 /var/log/apache2/access.log /var/log/apache2/error.log
     chmod 751 /var/log/apache2/domains
 
-    if [ "$release" != '20.04' ]; then
-        update-rc.d apache2 defaults > /dev/null 2>&1
-        systemctl start apache2 >> $LOG
-        check_result $? "apache2 start failed"
-    fi
-else
-    update-rc.d apache2 disable > /dev/null 2>&1
-    systemctl stop apache2 > /dev/null 2>&1
-fi
+    # Prevent remote access to server-status page
+    sed -i '/Allow from all/d' /etc/apache2/mods-enabled/status.conf
+
+    update-rc.d apache2 defaults > /dev/null 2>&1
+    systemctl start apache2 >> $LOG
+    check_result $? "apache2 start failed"
 
 
 #----------------------------------------------------------#

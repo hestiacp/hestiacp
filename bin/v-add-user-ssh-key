@@ -38,9 +38,10 @@ check_hestia_demo_mode
 # Reading user values
 source $USER_DATA/user.conf
 #check if file exits
-FILE=$HOMEDIR/$user/.ssh/authorized_keys
-if [ ! -f "$FILE" ]; then
-    touch "$FILE"
+AUTHKEY_FILE=$HOMEDIR/$user/.ssh/authorized_keys
+if [ ! -f "$AUTHKEY_FILE" ]; then
+    touch "$AUTHKEY_FILE"
+    chown ${user}: "${AUTHKEY_FILE}"
 fi
 TEMP=$(mktemp)
 echo "$key" >> "$TEMP"
@@ -51,7 +52,7 @@ if [ ! $? -eq 0 ]; then
 fi
 rm "$TEMP"
 #append key to file
-echo "$key" >> "$FILE"
+echo "$key" >> "$AUTHKEY_FILE"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

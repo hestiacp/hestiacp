@@ -86,6 +86,8 @@ csv_list() {
     done < <(cat $HESTIA/data/firewall/ipset.conf)
 }
 
+[ ! -f "$HESTIA/data/firewall/ipset.conf" ] && touch "$HESTIA/data/firewall/ipset.conf"
+
 # Listing data
 case $format in
     json)   json_list ;;

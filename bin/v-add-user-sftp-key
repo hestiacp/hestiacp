@@ -58,8 +58,7 @@ if [ ! -f "${AUTHKEY_FILE}" ] || [ "$new_pubkey" = true ]; then
     pubkey_str=$(cat "${PUBKEY_FILE}")
     pubkey_desc="[${user}]filemanager.ssh.key"
 
-    if grep --quiet -F "[${user}]filemanager.ssh.key" "${AUTHKEY_FILE}"; then
-        echo "remove old pub key from authkeys file"
+    if grep --quiet --no-messages -F "[${user}]filemanager.ssh.key" "${AUTHKEY_FILE}"; then
         sed -i "/ \[${user}\]filemanager\.ssh\.key\$/d" "${AUTHKEY_FILE}"
     fi
 

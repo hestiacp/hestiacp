@@ -20,8 +20,10 @@ os='ubuntu'
 release="$(lsb_release -s -r)"
 codename="$(lsb_release -s -c)"
 HESTIA_INSTALL_DIR="$HESTIA/install/deb"
+VERBOSE='no'
 
 # Define software versions
+HESTIA_INSTALL_VER='1.1.2'
 pma_v='5.0.2'
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
 fpm_v="7.3"
@@ -401,7 +403,7 @@ echo ' |  _  |  __/\__ \ |_| | (_| | |___|  __/ '
 echo ' |_| |_|\___||___/\__|_|\__,_|\____|_|    '
 echo
 echo '                      Hestia Control Panel'
-echo '                                    v1.1.2'
+echo "                                    v${HESTIA_INSTALL_VER}"
 echo -e "\n"
 echo "===================================================================="
 echo -e "\n"
@@ -620,6 +622,7 @@ done
 echo
 
 # Check Installation result
+wait $BACK_PID
 check_result $? 'apt-get upgrade failed'
 
 
@@ -819,6 +822,22 @@ fi
 #                     Install packages                     #
 #----------------------------------------------------------#
 
+if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
+    release_branch_ver=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/release/src/deb/hestia/control |grep "Version:" |awk '{print $2}')
+    if [ "$HESTIA_INSTALL_VER" != "$release_branch_ver" ]; then
+        echo
+        echo -e "\e[91mInstallation Aborted\e[0m"
+        echo "===================================================================="
+        echo -e "\e[33mInstall script does not match Hestia release version\e[0m"
+        echo -e "\e[33mPlease use the installer from the release branch\e[0m"
+        echo ""
+        echo -e "\e[33mTo test the beta version you need to build the hestia deb packages and re-run the installer\e[0m"
+        echo -e "  \e[33m./hst_autocompile.sh \e[1m--hestia no\e[21m\e[0m"
+        echo -e "  \e[33m./hst-install.sh .. \e[1m--with-debs /tmp/hestiacp-src/debs\e[21m\e[0m"
+        check_result 1 "Installation aborted"
+    fi
+fi
+
 # Disabling daemon autostart on apt-get install
 echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod a+x /usr/sbin/policy-rc.d
@@ -841,6 +860,7 @@ done
 echo
 
 # Check Installation result
+wait $BACK_PID
 check_result $? "apt-get install failed"
 
 # Install Hestia packages from local folder
@@ -1062,7 +1082,7 @@ echo "BACKUP_SYSTEM='local'" >> $HESTIA/conf/hestia.conf
 echo "LANGUAGE='$lang'" >> $HESTIA/conf/hestia.conf
 
 # Version & Release Branch
-echo "VERSION='1.1.2'" >> $HESTIA/conf/hestia.conf
+echo "VERSION='${HESTIA_INSTALL_VER}'" >> $HESTIA/conf/hestia.conf
 echo "RELEASE_BRANCH='release'" >> $HESTIA/conf/hestia.conf
 
 # Installing hosting packages

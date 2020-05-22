@@ -33,6 +33,7 @@ All notable changes to this project will be documented in this file.
 - Roundcube fixes for PHP 7.4 compatibility.
 - Added delay when entering wrong username/password/2fa
 - Improved "Forgot password" function prevent brute forcing
+- Update Backup counter propperly when v-delete-user-backup ran
 
 ## [1.1.1] - 2020-03-24 - Hotfix
 ### Features

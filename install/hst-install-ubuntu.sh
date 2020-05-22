@@ -713,7 +713,8 @@ fi
 # Excluding packages
 software=$(echo "$software" | sed -e "s/apache2.2-common//")
 if [ "$nginx" = 'no'  ]; then
-    software=$(echo "$software" | sed -e "s/\bnginx\b/ /")
+    software=$(echo "$software" | sed -r -e 's/(\s|^)nginx(\s|$)/ /')
+
 fi
 if [ "$apache" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/apache2 //")

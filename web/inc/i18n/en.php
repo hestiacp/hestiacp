@@ -771,7 +771,7 @@ $LANG['en'] = array(
     'Avoid adding web domains on admin account' => 'It is strongly advised to create a standard user account before adding web domains to the server due to the increased privileges the admin account possesses and potential security risks involved.',
     
     //Header 
-    'Fm' => 'Filemanager',
+    'Fm' => 'Files',
     //PHP Cli
     'PHP CLI Version' => 'PHP CLI Version',
     //Ipset Firewall rules

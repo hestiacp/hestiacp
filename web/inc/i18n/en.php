@@ -770,4 +770,33 @@ $LANG['en'] = array(
     'Please wait while php is installed or removed' => 'Adding or removing a version of PHP will take around 1 minute per version. Please wait until the process has completed and do not refresh the page.',
     'Avoid adding web domains on admin account' => 'It is strongly advised to create a standard user account before adding web domains to the server due to the increased privileges the admin account possesses and potential security risks involved.',
     
+    //Header 
+    'Fm' => 'Files',
+    //PHP Cli
+    'PHP CLI Version' => 'PHP CLI Version',
+    //Ipset Firewall rules
+    'Adding Firewall Ipset List' => 'Adding Firewall Ipset List',
+    'Ip List Name' => 'Ip List Name',
+    'Data Source' => 'Data Source',
+    'Ip Version' => 'Ip Version',
+    'Autoupdate' => 'Autoupdate',
+    'BLACKLIST' => 'BLACKLIST',
+    'IPVERSE' => 'IPVERSE',
+    'IPSET_CREATED_OK' => 'Ipset created',
+    'DELETE_IPSET_CONFIRMATION' => 'Are you sure you want to delete Ipset %2',
+    '1 Ipset list' => '1 Ipset list',
+    '%s Ipset lists' => '%s Ipset lists'
+    'There are currently no Ipset lists defined.' => 'There are currently no Ipset lists defined.',
+    'list ipset' => 'Ipset',
+    
+    //Backup
+    'File Name' => 'File Name',
+    'Size' => 'Size',
+    'Runtime' => 'Runtime',
+    //Logs
+    'Refresh' => 'Refresh',
+    //DNS 
+    'default' => 'default',
+    //rrd
+    'Bandwidth Usage' => 'Bandwidth Usage',
 );

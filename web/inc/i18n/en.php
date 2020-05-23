@@ -785,7 +785,7 @@ $LANG['en'] = array(
     'IPSET_CREATED_OK' => 'Ipset created',
     'DELETE_IPSET_CONFIRMATION' => 'Are you sure you want to delete Ipset %2',
     '1 Ipset list' => '1 Ipset list',
-    '%s Ipset lists' => '%s Ipset lists'
+    '%s Ipset lists' => '%s Ipset lists',
     'There are currently no Ipset lists defined.' => 'There are currently no Ipset lists defined.',
     'list ipset' => 'Ipset',
     
@@ -795,8 +795,44 @@ $LANG['en'] = array(
     'Runtime' => 'Runtime',
     //Logs
     'Refresh' => 'Refresh',
+    'Time' => 'Time',
+    'Value' => 'Value',
+    
     //DNS 
     'default' => 'default',
+    '1 DNS zone' => '1 DNS zone',
+    '%s DNS zones' => '%s DNS zones',
+    'Add Record' => 'Add Record',
+    //user
+    '1 user account' => '1 user account',
+    '%s user accounts' => '%s user accounts',
+    //database
+    '1 SQL database' => '1 SQL database',
+    '%s SQL databases' => '%s SQL databases',
+    //mail
+    '1 mail domain' => '1 mail domain',
+    '%s mail domains' => '%s mail domains',
+    //web
+    '1 web domain' => '1 web domain',
+    '%s web domains' => '%s web domains',
+    
     //rrd
     'Bandwidth Usage' => 'Bandwidth Usage',
+    
+    //reset
+    'Forgot Password' => 'Forgot Password',
+    //web
+    'Quick Install App' => 'Quick Install App',
+    //webapp 
+    'version' => 'version',
+    'Setup' => 'Setup',
+    //Server
+    'Restart' => 'Restart',
+    'Mail Server' => 'Mail Server',
+    'Enabled multi PHP versions' => 'Enabled multi PHP versions',
+    'Please wait while php is installed or removed' => 'Please wait while php is installed or removed',
+    //header
+    'Hestia Control Panel' => 'Hestia Control Panel',
+    
+    
 );

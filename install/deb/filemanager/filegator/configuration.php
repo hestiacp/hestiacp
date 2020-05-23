@@ -40,5 +40,19 @@ $dist_config['services']['Filegator\Services\View\ViewInterface']['config'] = [
         'add_to_body' => '',
 ];
 
+$dist_config['services']['Filegator\Services\View\ViewInterface']['config'] = [
+    'add_to_head' => '',
+    'add_to_body' => '
+<script>
+    var checkVueLoaded = setInterval(function() {
+        if (document.getElementsByClassName("navbar-item").length) {
+            clearInterval(checkVueLoaded);
+            var navProfile = document.getElementsByClassName("navbar-item profile")[0]; navProfile.replaceWith(navProfile.cloneNode(true))
+            document.getElementsByClassName("navbar-item logout")[0].text="Back to Hestia";
+        }
+    }, 200);
+</script>',
+];
+
 
 return $dist_config;

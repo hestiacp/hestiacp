@@ -831,6 +831,9 @@ $LANG['en'] = array(
     'Mail Server' => 'Mail Server',
     'Enabled multi PHP versions' => 'Enabled multi PHP versions',
     'Please wait while php is installed or removed' => 'Please wait while php is installed or removed',
+    'Service' => 'Service',
+    'Description' => 'Description',
+    
     //header
     'Hestia Control Panel' => 'Hestia Control Panel',
     

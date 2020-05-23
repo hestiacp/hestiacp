@@ -43,7 +43,7 @@ rebuild_user_conf() {
 
     # Update password
     chmod u+w /etc/shadow
-    sed -i 's/^$user:[^:]*:/$user:$MD5:/' /etc/shadow
+    sed -i "s|^$user:[^:]*:|$user:$MD5:|" /etc/shadow
     chmod u-w /etc/shadow
 
     # Building directory tree
@@ -334,7 +334,7 @@ rebuild_web_domain_conf() {
 
             # Updating ftp user password
             chmod u+w /etc/shadow
-            sed -i 's/^$ftp_user:[^:]*:/$ftp_user:$ftp_md5:/' /etc/shadow
+            sed -i "s|^$ftp_user:[^:]*:|$ftp_user:$ftp_md5:|" /etc/shadow
             chmod u-w /etc/shadow
         fi
     done

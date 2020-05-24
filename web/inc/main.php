@@ -154,16 +154,12 @@ function render_page($user, $TAB, $page) {
     extract($GLOBALS, EXTR_SKIP);
 
     // Body
-    if ($_SESSION['user'] == 'admin' && !isset($_SESSION['look'])) {
-        $AdminTemplate = $__template_dir . 'admin/' . $page . '.html';
-        include($AdminTemplate);
-    } elseif (($_SESSION['user'] == 'admin' && isset($_SESSION['look'])) || $_SESSION['user'] != 'admin' && !isset($_SESSION['look'])) {
-        $UserTemplate = $__template_dir . 'user/' . $page . '.html';
-        if (file_exists($UserTemplate) && is_readable($UserTemplate)) {
-            include($UserTemplate);
-        } else {
-            include($AdminTemplate);
-        }
+    if (($_SESSION['user'] !== 'admin') && (@include($__template_dir . "user/$page.html"))) {
+        // User page loaded
+    } else {
+        // Not admin or user page doesn't exist
+        // Load admin page
+        @include($__template_dir . "admin/$page.html");
     }
 
     // Including common js files

@@ -27,6 +27,7 @@ function setup() {
 
     source /tmp/hestia-test-env.sh
     source $HESTIA/func/main.sh
+    source $HESTIA/conf/hestia.conf
 }
 
 #----------------------------------------------------------#
@@ -156,28 +157,114 @@ function setup() {
     interface=$(v-list-sys-interfaces plain | head -n 1)
     run ip link show dev $interface
     assert_success
-    echo "interface=${interface}" >> /tmp/hestia-test-env.sh
 
-    run v-add-sys-ip 198.18.0.123 255.255.255.255 $interface $user
+    local a2_rpaf="/etc/$WEB_SYSTEM/mods-enabled/rpaf.conf"
+    local a2_remoteip="/etc/$WEB_SYSTEM/mods-enabled/remoteip.conf"
+
+    # Save initial state
+    echo "interface=${interface}" >> /tmp/hestia-test-env.sh
+    [ -f "$a2_rpaf" ]     && file_hash1=$(cat $a2_rpaf     |md5sum |cut -d" " -f1) && echo "a2_rpaf_hash='${file_hash1}'"     >> /tmp/hestia-test-env.sh
+    [ -f "$a2_remoteip" ] && file_hash2=$(cat $a2_remoteip |md5sum |cut -d" " -f1) && echo "a2_remoteip_hash='${file_hash2}'" >> /tmp/hestia-test-env.sh
+
+
+    local ip="198.18.0.12"
+    run v-add-sys-ip $ip 255.255.255.255 $interface $user
     assert_success
     refute_output
+
+    assert_file_exist /etc/$WEB_SYSTEM/conf.d/$ip.conf
+    assert_file_exist $HESTIA/data/ips/$ip
+    assert_file_contains $HESTIA/data/ips/$ip "OWNER='$user'"
+    assert_file_contains $HESTIA/data/ips/$ip "INTERFACE='$interface'"
+
+    if [ -n "$PROXY_SYSTEM" ]; then
+        assert_file_exist /etc/$PROXY_SYSTEM/conf.d/$ip.conf
+        [ -f "$a2_rpaf" ] && assert_file_contains "$a2_rpaf" "RPAFproxy_ips.*$ip\b"
+        [ -f "$a2_remoteip" ] && assert_file_contains "$a2_remoteip" "RemoteIPInternalProxy $ip\$"
+    fi
+
 }
 
-@test "Ip: Add duplicate (duplicat)" {
-    run v-add-sys-ip 198.18.0.123 255.255.255.255 $interface $user
+@test "Ip: Add ip (duplicate)" {
+    run v-add-sys-ip 198.18.0.12 255.255.255.255 $interface $user
     assert_failure $E_EXISTS
 }
 
-@test "Ip: Delete ip" {
-    run v-delete-sys-ip 198.18.0.123
+@test "Ip: Add extra ip" {
+    local ip="198.18.0.121"
+    run v-add-sys-ip $ip 255.255.255.255 $interface $user
     assert_success
     refute_output
+
+    assert_file_exist /etc/$WEB_SYSTEM/conf.d/$ip.conf
+    assert_file_exist $HESTIA/data/ips/$ip
+    assert_file_contains $HESTIA/data/ips/$ip "OWNER='$user'"
+    assert_file_contains $HESTIA/data/ips/$ip "INTERFACE='$interface'"
+
+    if [ -n "$PROXY_SYSTEM" ]; then
+        assert_file_exist /etc/$PROXY_SYSTEM/conf.d/$ip.conf
+        local a2_rpaf="/etc/$WEB_SYSTEM/mods-enabled/rpaf.conf"
+        [ -f "$a2_rpaf" ] && assert_file_contains "$a2_rpaf" "RPAFproxy_ips.*$ip\b"
+
+        local a2_remoteip="/etc/$WEB_SYSTEM/mods-enabled/remoteip.conf"
+        [ -f "$a2_remoteip" ] && assert_file_contains "$a2_remoteip" "RemoteIPInternalProxy $ip\$"
+    fi
+}
+
+@test "Ip: Delete ips" {
+    local ip="198.18.0.12"
+    run v-delete-sys-ip $ip
+    assert_success
+    refute_output
+
+    assert_file_not_exist /etc/$WEB_SYSTEM/conf.d/$ip.conf
+    assert_file_not_exist $HESTIA/data/ips/$ip
+
+
+    ip="198.18.0.121"
+    run v-delete-sys-ip $ip
+    assert_success
+    refute_output
+
+    assert_file_not_exist /etc/$WEB_SYSTEM/conf.d/$ip.conf
+    assert_file_not_exist $HESTIA/data/ips/$ip
+
+    if [ -n "$PROXY_SYSTEM" ]; then
+        assert_file_not_exist /etc/$PROXY_SYSTEM/conf.d/$ip.conf
+    fi
+
+    # remoteip and rpaf config hashes must match the initial one
+    if [ ! -z "$a2_rpaf_hash" ]; then
+        local a2_rpaf="/etc/$WEB_SYSTEM/mods-enabled/rpaf.conf"
+        file_hash=$(cat $a2_rpaf |md5sum |cut -d" " -f1)
+        assert_equal "$file_hash" "$a2_rpaf_hash"
+    fi
+    if [ ! -z "$a2_remoteip_hash" ]; then
+        local a2_remoteip="/etc/$WEB_SYSTEM/mods-enabled/remoteip.conf"
+        file_hash=$(cat $a2_remoteip |md5sum |cut -d" " -f1)
+        assert_equal "$file_hash" "$a2_remoteip_hash"
+    fi
 }
 
 @test "Ip: Add IP for rest of the test" {
-    run v-add-sys-ip 198.18.0.125 255.255.255.255 $interface $user
+    local ip="198.18.0.125"
+    run v-add-sys-ip $ip 255.255.255.255 $interface $user
     assert_success
     refute_output
+
+    assert_file_exist /etc/$WEB_SYSTEM/conf.d/$ip.conf
+    assert_file_exist $HESTIA/data/ips/$ip
+    assert_file_contains $HESTIA/data/ips/$ip "OWNER='$user'"
+    assert_file_contains $HESTIA/data/ips/$ip "INTERFACE='$interface'"
+
+    if [ -n "$PROXY_SYSTEM" ]; then
+        assert_file_exist /etc/$PROXY_SYSTEM/conf.d/$ip.conf
+        local a2_rpaf="/etc/$WEB_SYSTEM/mods-enabled/rpaf.conf"
+        [ -f "$a2_rpaf" ] && assert_file_contains "$a2_rpaf" "RPAFproxy_ips.*$ip\b"
+
+        local a2_remoteip="/etc/$WEB_SYSTEM/mods-enabled/remoteip.conf"
+        [ -f "$a2_remoteip" ] && assert_file_contains "$a2_remoteip" "RemoteIPInternalProxy $ip\$"
+    fi
 }
 
 

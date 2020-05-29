@@ -1,13 +1,22 @@
 #!/bin/bash
 
+# Checking root permissions
+if [ "x$(id -u)" != 'x0' ]; then
+    echo "Error: Script can be run executed only by root"
+    exit 10
+fi
+
 if [ -z "$HESTIA" ]; then
     HESTIA="/usr/local/hestia"
 fi
 
-# Hestia php-fpm pool user
 user='admin'
-
 source $HESTIA/func/main.sh
+
+if [ -z "$HOMEDIR" ] || [ -z "$HESTIA_INSTALL_DIR" ]; then
+    echo "Error: Hestia environment vars not present"
+    exit 2
+fi
 
 FM_INSTALL_DIR="$HESTIA/web/fm"
 
@@ -27,7 +36,7 @@ if [ ! -f "$COMPOSER_BIN" ]; then
     check_result $? "Create temp file"
     chown $user: "$COMPOSER_SETUP_FILE"
 
-    signature="$(curl https://composer.github.io/installer.sig)"
+    signature="$(curl --silent --show-error https://composer.github.io/installer.sig)"
     check_result $? "Download signature"
 
     user_exec wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache https://getcomposer.org/installer --quiet -O "$COMPOSER_SETUP_FILE"
@@ -35,7 +44,7 @@ if [ ! -f "$COMPOSER_BIN" ]; then
 
     [[ "$signature" = $(sha384sum $COMPOSER_SETUP_FILE | cut -f 1 -d " ") ]] || check_result $E_INVALID "Composer signature does not match"
 
-    COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php "$COMPOSER_SETUP_FILE"  --install-dir="$COMPOSER_DIR" --filename=composer
+    COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php "$COMPOSER_SETUP_FILE" --quiet --install-dir="$COMPOSER_DIR" --filename=composer
     check_result $? "Composer install failed"
 
     [ -f "$COMPOSER_SETUP_FILE" ] && rm -f "$COMPOSER_SETUP_FILE"
@@ -50,12 +59,14 @@ cd "$FM_INSTALL_DIR"
 unzip -qq "${FM_INSTALL_DIR}/${FM_FILE}"
 mv --force ${FM_INSTALL_DIR}/filegator/* "${FM_INSTALL_DIR}"
 rm --recursive --force ${FM_INSTALL_DIR}/filegator
-chown root: "${FM_INSTALL_DIR}"
 
 cp --recursive --force ${HESTIA_INSTALL_DIR}/filemanager/filegator/* "${FM_INSTALL_DIR}"
 
-COMPOSER_HOME="$HOMEDIR/$user/.config/composer" $COMPOSER_BIN require league/flysystem-sftp
+chown $user: -R "${FM_INSTALL_DIR}"
+COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php $COMPOSER_BIN --quiet require league/flysystem-sftp
+check_result $? "Install filemanager dependency"
 
+chown root: -R "${FM_INSTALL_DIR}"
 chown $user: "${FM_INSTALL_DIR}/private"
 chown $user: "${FM_INSTALL_DIR}/private/logs"
 chown $user: "${FM_INSTALL_DIR}/repository"

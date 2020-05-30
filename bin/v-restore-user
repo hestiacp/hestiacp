@@ -375,12 +375,19 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
 
             # Copying SSL certificates
             if [ "$SSL" = 'yes' ]; then
-                certificates=$(ls $tmpdir/web/$domain/conf| grep ssl)
-                certificates=$(echo "$certificates" |grep $domain)
-                for crt in $certificates; do
-                    crt=$(echo $crt|sed -e "s/ssl.//")
-                    cp -f $tmpdir/web/$domain/conf/ssl.$crt $USER_DATA/ssl/$crt
-                done
+
+                if [ -f "$tmpdir/web/$domain/$backup_system/$domain.crt" ]; then
+                    for crt in $(ls $tmpdir/web/$domain/$backup_system | grep -E '^'$domain'\.(crt|key|ca|pem)$'); do
+                        cp -f "$tmpdir/web/$domain/$backup_system/$crt" "$USER_DATA/ssl/"
+                    done
+                elif [ -f "$tmpdir/web/$domain/conf/ssl.$domain.crt" ]; then
+                    certificates=$(ls $tmpdir/web/$domain/conf| grep ssl)
+                    certificates=$(echo "$certificates" |grep $domain)
+                    for crt in $certificates; do
+                        crt=$(echo $crt|sed -e "s/ssl.//")
+                        cp -f $tmpdir/web/$domain/conf/ssl.$crt $USER_DATA/ssl/$crt
+                    done
+                fi
             fi
 
             # Merging web.conf keys

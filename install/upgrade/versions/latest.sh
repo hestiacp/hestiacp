@@ -39,6 +39,14 @@ if [ -d /usr/share/roundcube ]; then
     sed -i 's/implode($bstyle, \x27; \x27)/implode(\x27; \x27, $bstyle)/g' /usr/share/roundcube/program/steps/mail/sendmail.inc
 fi
 
+
+# Add daily midnight cron
+if [ -z "$($BIN/v-list-cron-jobs admin | grep 'v-update-sys-queue daily')" ]; then
+    command="sudo $BIN/v-update-sys-queue daily"
+    $BIN/v-add-cron-job 'admin' '01' '00' '*' '*' '*' "$command"
+fi
+[ ! -f "touch $HESTIA/data/queue/daily.pipe" ] && touch $HESTIA/data/queue/daily.pipe
+
 # Remove existing network-up hooks so they get regenerated when updating the firewall
 # - network hook will also restore ipset config during start-up
 if [ -f "/usr/lib/networkd-dispatcher/routable.d/50-ifup-hooks" ]; then

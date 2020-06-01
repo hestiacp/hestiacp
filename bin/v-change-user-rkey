@@ -1,0 +1,60 @@
+#!/bin/bash
+# info: change user password
+# options: USER
+#
+# The function changes user's password and updates RKEY value.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+
+
+# Importing system enviroment  as we run this script
+# mostly by cron wich not read it by itself
+source /etc/profile
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER'
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+d=$(date +%s)
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Changing RKEY value
+update_user_value "$user" '$RKEY' "$(generate_password)"
+
+#check if RKEYEXP exists
+if [ -z "$(grep RKEYEXP $USER_DATA/user.conf)" ]; then
+    sed -i "s/^RKEY/RKEYEXP='$d'\nRKEY/g" $USER_DATA/user.conf
+else
+    update_user_value "$user" '$RKEYEXP' "$d"
+fi
+
+# Logging
+log_history "forgot password request"
+log_event "$OK" "$ARGUMENTS"
+
+exit

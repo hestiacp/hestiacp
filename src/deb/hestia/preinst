@@ -5,8 +5,17 @@ if [ ! -e "/usr/local/hestia/data/users/admin" ]; then
     exit
 fi
 
+# Load hestia.conf
+source /usr/local/hestia/conf/hestia.conf
+
 # Configure apt to retry downloading on error
 if [ ! -f /etc/apt/apt.conf.d/80-retries ]; then
     echo "APT::Acquire::Retries \"3\";" > /etc/apt/apt.conf.d/80-retries
 fi
 
+# Validate version number and replace if different
+HESTIA_V=$(dpkg -s hestia | grep -i version | awk '{ print $2 }')
+
+if [ ! "$HESTIA_V" = "$VERSION" ]; then
+    sed -i "s/VERSION=.*/VERSION='$HESTIA_V'/g" /usr/local/hestia/conf/hestia.conf
+fi

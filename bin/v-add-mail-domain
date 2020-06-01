@@ -65,6 +65,10 @@ else
     get_user_ip
 fi
 
+# Generating list of mail domains for HELO
+ls /etc/exim4/domains > /etc/exim4/mailhelo.conf
+sed -i "s \(.*\) \1:\1 " /etc/exim4/mailhelo.conf
+        
 # Generating timestamp
 new_timestamp
 

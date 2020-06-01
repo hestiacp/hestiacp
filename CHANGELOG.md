@@ -3,10 +3,16 @@ All notable changes to this project will be documented in this file.
 
 ## [CURRENT] - Development
 ### Features
+- Added support for configuring individual TTL per DNS record. Thanks to @jaapmarcus!
+- Added support for Ubuntu Server 20.04 LTS.
+- Added the ability to set the php cli version per user (using alias).
+- Added support for resolving ip addresses based on geoip database for Awstats
+- Added Roundcube plugins newmail_notifier and zipdownload.
+- Added HELO support for multiple domains and IPs.
 - Add the possibility to manage ssh keys in the backend.
 
 ### Bugfixes
-- Disable Apache2 Server Status Module by default.
+- Do not allow to show apache2 server-status page from public.
 - Do not allow to change the password of a non-hestia user. Thanks to Alexandre Zanni!
 - Use sury repository for Apache2 packages.
 - Check whether Nginx, Apache2 and MariaDB are selected for installation prior to adding third party repositories.
@@ -20,6 +26,17 @@ All notable changes to this project will be documented in this file.
 - Don't calculate /home folder size in v-list-sys-info.
 - Cleanup temporary files when uploading custom SSL cert from WebUi.
 - Cleanup temporary files when adding/renewing letsencrypt SSL cert.
+- Adjust v-list-sys-services to honor the changed fail2ban service name.
+- Rework busy port validation in v-change-sys-port.
+- Fixed ssh config save bug when edit the over interface.
+- Fixed different permission issues on user restore.
+- Stop trying to renew LE certs after multiple consecutive failed attempts. Thanks to @dpeca!
+- Implement a validation function to verify the correct version in hestia.conf prior to install a new one.
+- Fix autologout issue on cloudflare proxy and rearange 2FA authentification part. Thanks to @rmj-s!
+- Roundcube fixes for PHP 7.4 compatibility.
+- Added delay when entering wrong username/password/2fa
+- Improved "Forgot password" function prevent brute forcing
+- Update Backup counter propperly when v-delete-user-backup ran
 
 ## [1.1.1] - 2020-03-24 - Hotfix
 ### Features

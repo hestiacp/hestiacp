@@ -155,7 +155,7 @@ class HestiaApp {
             return false;
         }
 
-        exec("/usr/bin/wget --tries 3 -nv " . escapeshellarg($src). " -P " . escapeshellarg(self::TMPDIR_DOWNLOADS) . ' 2>&1', $output, $return_var);
+        exec("/usr/bin/wget --tries 3 --timeout=30 --no-dns-cache -nv " . escapeshellarg($src). " -P " . escapeshellarg(self::TMPDIR_DOWNLOADS) . ' 2>&1', $output, $return_var);
         if ($return_var !== 0) {
             return false;
         }

@@ -1,3 +1,5 @@
+![Hestia screenshot](https://hestiacp.com/img/screen_HestiaServer-dark.png)
+
 [Hestia Control Panel](https://www.hestiacp.com/)
 ==================================================
 **Current stable release:** Version 1.1.1, released on March 26th, 2020.<br>
@@ -43,7 +45,7 @@ What does Hestia Control Panel support?
 Supported operating systems:
 ----------------------------
 * Debian 8, 9, 10
-* Ubuntu 16.04 LTS or Ubuntu 18.04 LTS (the latest LTS release is recommended)
+* Ubuntu 16.04 LTS, Ubuntu 18.04 LTS, or Ubuntu 20.04 LTS (the latest LTS release is generally recommended)
 * **NOTE:** Hestia Control Panel must be installed on top of a fresh operating system installation to ensure proper functionality.
 
 Installing Hestia Control Panel
@@ -80,7 +82,7 @@ You may specify a number of various flags during installation to only install th
 ```bash
 bash hst-install.sh -h
 ```
-Alternatively, @gabizz has made available a command-line script generator at https://gabizz.github.io/hestiacp-scriptline-generator/ which allows you to easily generate the installation command via GUI. (Please note that this generator still references the master branch, which is not intended for production use - see development builds below.)
+Alternatively, @gabizz has made available a command-line script generator at https://gabizz.github.io/hestiacp-scriptline-generator/ which allows you to easily generate the installation command via GUI.
 
 Installing & testing development builds
 =============================

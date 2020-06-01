@@ -38,6 +38,7 @@ $v_lname = $data[$v_username]['LNAME'];
 $v_shell = $data[$v_username]['SHELL'];
 $v_twofa = $data[$v_username]['TWOFA'];
 $v_qrcode = $data[$v_username]['QRCODE'];
+$v_phpcli = $data[$v_username]['PHPCLI'];
 $v_ns = $data[$v_username]['NS'];
 $nameservers = explode(",", $v_ns);
 $v_ns1 = $nameservers[0];
@@ -72,6 +73,14 @@ unset($output);
 exec (HESTIA_CMD."v-list-sys-shells json", $output, $return_var);
 $shells = json_decode(implode('', $output), true);
 unset($output);
+
+//List PHP Versions
+// List supported php versions
+exec (HESTIA_CMD."v-list-sys-php json", $output, $return_var);
+$php_versions = json_decode(implode('', $output), true);
+unset($output);
+
+
 
 // Are you admin?
 
@@ -127,6 +136,14 @@ if (!empty($_POST['save'])) {
     if (($v_package != $_POST['v_package']) && ($_SESSION['user'] == 'admin') && (empty($_SESSION['error_msg']))) {
         $v_package = escapeshellarg($_POST['v_package']);
         exec (HESTIA_CMD."v-change-user-package ".escapeshellarg($v_username)." ".$v_package, $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
+    }
+
+    // Change phpcli (admin only)
+    if (($v_phpcli != $_POST['v_phpcli']) && ($_SESSION['user'] == 'admin') && (empty($_SESSION['error_msg']))) {
+        $v_phpcli = escapeshellarg($_POST['v_phpcli']);
+        exec (HESTIA_CMD."v-change-user-php-cli ".escapeshellarg($v_username)." ".$v_phpcli, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }

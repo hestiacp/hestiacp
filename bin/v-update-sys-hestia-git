@@ -102,6 +102,7 @@ if [ -z "$branch" ]; then
     exit
 fi
 
+
 # Install needed software
 echo "Updating system APT repositories..."
 apt-get -qq update > /dev/null 2>&1
@@ -109,9 +110,7 @@ echo "Installing dependencies for compilation..."
 apt-get -qq install -y $SOFTWARE > /dev/null 2>&1
 
 # Fix for Debian PHP Envroiment
-if [ ! -e /usr/local/include/curl ]; then
-    ln -s /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl
-fi
+ln -s /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl > /dev/null 2>&1
 
 # Get system cpu cores
 NUM_CPUS=$(grep "^cpu cores" /proc/cpuinfo | uniq |  awk '{print $4}')

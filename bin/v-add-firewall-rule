@@ -47,13 +47,20 @@ sort_fw_rules() {
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'ACTION IP PORT [PROTOCOL] [COMMENT] [RULE]'
-is_format_valid 'action' 'protocol' 'port_ext' 'ip'
+is_format_valid 'action' 'protocol' 'port_ext'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 get_next_fw_rule
 is_format_valid 'rule'
 is_object_new '../../data/firewall/rules' 'RULE' "$rule"
 if [ ! -z "$comment" ]; then
     is_format_valid 'comment'
+fi
+if [[ "$ip" =~ ^ipset: ]]; then
+    ipset_name="${ip#ipset:}"
+    v-list-firewall-ipset plain | grep "^$ipset_name\s" >/dev/null
+    check_result $? 'ipset object not found' $E_NOTEXIST
+else
+    is_format_valid 'ip'
 fi
 
 # Perform verification if read-only mode is enabled

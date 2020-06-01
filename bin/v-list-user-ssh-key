@@ -1,0 +1,111 @@
+#!/bin/bash
+# info: add ssh key
+# options: USER 
+#
+# Lists $user/.ssh/authorized_keys
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+
+# Argument definition
+user=$1
+
+format=${2-shell}
+
+# Includes
+source $HESTIA/func/main.sh
+
+# JSON list function
+json_list() {
+    IFS=$'\n'
+    i=1
+    objects=$(echo "$keys" |wc -l)
+    echo "{"
+        for str in $keys; do
+        KEY=$(echo $str | awk '{print $(NF-1)}')
+        ID=$(echo $str | awk '{print $NF}')
+        echo -n '    "'$ID'": {
+        "ID": "'$ID'",
+        "KEY": "'$KEY'"
+        }'
+        if [ "$i" -lt "$objects" ]; then
+            echo ','
+        else
+            echo
+        fi
+        ((i++))
+        done		
+        echo "}"   
+}
+
+shell_list() {
+    IFS=$'\n'
+    echo "ID~KEY"
+    echo "----~----~---"
+    for str in $keys; do
+        KEY=$(echo $str | awk '{print $(NF-1)}')
+        ID=$(echo $str | awk '{print $NF}')
+        echo "$ID~$KEY"
+        done
+}
+
+# PLAIN list function
+plain_list() {
+    IFS=$'\n'
+    for str in $keys; do
+        KEY=$(echo $str | awk '{print $(NF-1)}')
+        ID=$(echo $str | awk '{print $NF}')
+        echo -e "$ID\t$KEY"
+    done
+}
+
+# CSV list function
+csv_list() {
+    IFS=$'\n'
+    echo "ID,KEY"
+    for str in $keys; do
+        KEY=$(echo $str | awk '{print $(NF-1)}')
+        ID=$(echo $str | awk '{print $NF}')
+        echo "\"$ID\",\"$KEY\""
+    done
+}
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+#check if file exsists
+
+if [ ! -f "$HOMEDIR/$user/.ssh/authorized_keys" ]; then
+    exit
+fi
+# Parsing backup config
+#cat "$HOMEDIR/$user/.ssh/authorized_keys"
+keys=$(cat "$HOMEDIR/$user/.ssh/authorized_keys")
+
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t ;;
+esac
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+
+exit

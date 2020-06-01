@@ -770,6 +770,16 @@ $LANG['en'] = array(
     'Please wait while php is installed or removed' => 'Adding or removing a version of PHP will take around 1 minute per version. Please wait until the process has completed and do not refresh the page.',
     'Avoid adding web domains on admin account' => 'It is strongly advised to create a standard user account before adding web domains to the server due to the increased privileges the admin account possesses and potential security risks involved.',
     
+    //SSH Key
+    'Field SSH_KEY can not be blank.' => 'Field SSH Key may not be blank',
+    'SSH KEY is invalid' => 'SSH key is invalid',
+    'SSH KEY already exists' => 'SSH key already exsits',
+    'SSH KEY Added' => 'SSH key has been added',
+    'Add SSH Key' => 'Add SSH key',
+    'SSH KEY' => 'SSH Key',    
+    'DELETE_KEY_CONFIRM' => 'Are you sure you want to delete key %s?',
+    'SSH_ID' => 'SSH Id',
+ 
     //Header 
     'Fm' => 'Files',
     //PHP Cli
@@ -836,6 +846,5 @@ $LANG['en'] = array(
     
     //header
     'Hestia Control Panel' => 'Hestia Control Panel',
-    
-    
+
 );

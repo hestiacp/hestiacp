@@ -1604,6 +1604,10 @@ if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
         fi
     fi
     
+    # Enable Roundcube plugins
+    cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_newmail_notifier.inc.php /etc/roundcube/plugins/newmail_notifier/config.inc.php
+    cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_zipdownload.inc.php /etc/roundcube/plugins/zipdownload/config.inc.php
+    
     # Fixes for PHP 7.4 compatibility
     sed -i 's/\"\\n\", $identities/$identities, \"\\n\"/g' /usr/share/roundcube/plugins/enigma/lib/enigma_ui.php
     sed -i 's/(array_keys($post_search), \x27|\x27)/(\x27|\x27, array_keys($post_search))/g' /usr/share/roundcube/program/lib/Roundcube/rcube_contacts.php

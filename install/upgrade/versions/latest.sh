@@ -31,6 +31,7 @@ fi
 
 # Roundcube fixes for PHP 7.4 compatibility
 if [ -d /usr/share/roundcube ]; then
+    echo "(*) Updating Roundcube configuration..."
     sed -i 's/\"\\n\", $identities/$identities, \"\\n\"/g' /usr/share/roundcube/plugins/enigma/lib/enigma_ui.php
     sed -i 's/(array_keys($post_search), \x27|\x27)/(\x27|\x27, array_keys($post_search))/g' /usr/share/roundcube/program/lib/Roundcube/rcube_contacts.php
     sed -i 's/implode($name, \x27.\x27)/implode(\x27.\x27, $name)/g' /usr/share/roundcube/program/lib/Roundcube/rcube_db.php
@@ -39,6 +40,18 @@ if [ -d /usr/share/roundcube ]; then
     sed -i 's/implode($bstyle, \x27; \x27)/implode(\x27; \x27, $bstyle)/g' /usr/share/roundcube/program/steps/mail/sendmail.inc
 fi
 
+# Enable Roundcube plugins
+if [ -d /usr/share/roundcube ]; then
+    cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_newmail_notifier.inc.php /etc/roundcube/plugins/newmail_notifier/config.inc.php
+    cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_zipdownload.inc.php /etc/roundcube/plugins/zipdownload/config.inc.php
+    sed -i "s/array('password')/array('password','newmail_notifier','zipdownload')/g" /etc/roundcube/config.inc.php
+fi
+
+# HELO support for multiple domains and IPs
+if [ -e "/etc/exim4/exim4.conf.template" ]; then
+    echo "(*) Updating exim4 configuration..."
+    sed -i 's|helo_data = ${primary_hostname}|helo_data = ${if exists {\/etc\/exim4\/mailhelo.conf}{${lookup{$sender_address_domain}lsearch*{\/etc\/exim4\/mailhelo.conf}{$value}{$primary_hostname}}}{$primary_hostname}}|g' /etc/exim4/exim4.conf.template
+fi
 
 # Add daily midnight cron
 if [ -z "$($BIN/v-list-cron-jobs admin | grep 'v-update-sys-queue daily')" ]; then

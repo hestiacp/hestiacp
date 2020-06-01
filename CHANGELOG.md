@@ -7,6 +7,8 @@ All notable changes to this project will be documented in this file.
 - Added support for Ubuntu Server 20.04 LTS.
 - Added the ability to set the php cli version per user (using alias).
 - Added support for resolving ip addresses based on geoip database for Awstats
+- Added Roundcube plugins newmail_notifier and zipdownload.
+- Added HELO support for multiple domains and IPs.
 
 ### Bugfixes
 - Do not allow to show apache2 server-status page from public.

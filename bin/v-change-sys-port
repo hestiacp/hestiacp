@@ -27,7 +27,7 @@ is_port_valid() {
 
     # Check if PORT is already used
     BUSY_PORT=$(lsof -i:$PORT)
-    if [ ! -z "$BUSY_PORT" ]; then
+    if [ ! -z "$BUSY_PORT" ] && [ "$PORT" != "$BACKEND_PORT" ]; then
         echo "Port is already used by Hestia, please set anotherone!"
         log_event $E_INUSE "$ARGUMENTS"
         exit $E_INUSE

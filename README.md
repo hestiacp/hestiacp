@@ -1,3 +1,5 @@
+![Hestia screenshot](https://hestiacp.com/img/screen_HestiaServer-dark.png)
+
 [Hestia Control Panel](https://www.hestiacp.com/)
 ==================================================
 **Current stable release:** Version 1.1.1, released on March 26th, 2020.<br>

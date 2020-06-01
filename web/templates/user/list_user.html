@@ -6,7 +6,11 @@
             echo '<a href="/add/user/" id="btn-create" class="ui-button cancel" title="'.__('Add User').'"><i class="fas fa-plus-circle status-icon green"></i>'.__('Add User').'</a>&nbsp;';
             echo '<a href="/list/package/" class="ui-button cancel" title="'.__('Packages').'"><i class="fas fa-box-open status-icon orange"></i>'.__('Packages').'</a>&nbsp;';
           } else {
-            echo '<a href="/add/web/" id="btn-create" class="ui-button cancel" title="'.__('Add Web Domain').'"><i class="fas fa-plus-circle status-icon green"></i>'.__('Add Web Domain').'</a>';
+              if ((isset($_SESSION['WEB_SYSTEM'])) && (!empty($_SESSION['WEB_SYSTEM']))) {
+                  if (intval($panel[$user]['WEB_DOMAINS']) > 0 || $panel[$user]['WEB_DOMAINS'] == 'unlimited') {
+                      echo '<a href="/add/web/" id="btn-create" class="ui-button cancel" title="'.__('Add Web Domain').'"><i class="fas fa-plus-circle status-icon green"></i>'.__('Add Web Domain').'</a>';
+                  }
+              }
           }
         ?>
       </div>

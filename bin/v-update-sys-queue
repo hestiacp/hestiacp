@@ -52,6 +52,7 @@ case $queue in
     webstats)       bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
     backup)         bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
     disk)           bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1;;
+    daily)          bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1;;
     traffic)        bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1;;
     dns-cluster)    bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
     letsencrypt)    bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1 ;;

@@ -7,8 +7,8 @@
 #######################################################################################
 
 if [ -e "/etc/apache2/mods-enabled/status.conf" ]; then
-    echo "(*) Disable Apache2 Server Status Module..."
-    a2dismod status > /dev/null 2>&1
+    echo "(*) Hardening Apache2 Server Status Module..."
+    sed -i '/Allow from all/d' /etc/apache2/mods-enabled/status.conf
 fi
 
 # Add sury apache2 repository
@@ -51,4 +51,22 @@ fi
 if [ -e "/etc/exim4/exim4.conf.template" ]; then
     echo "(*) Updating exim4 configuration..."
     sed -i 's|helo_data = ${primary_hostname}|helo_data = ${if exists {\/etc\/exim4\/mailhelo.conf}{${lookup{$sender_address_domain}lsearch*{\/etc\/exim4\/mailhelo.conf}{$value}{$primary_hostname}}}{$primary_hostname}}|g' /etc/exim4/exim4.conf.template
+fi
+
+# Add daily midnight cron
+if [ -z "$($BIN/v-list-cron-jobs admin | grep 'v-update-sys-queue daily')" ]; then
+    command="sudo $BIN/v-update-sys-queue daily"
+    $BIN/v-add-cron-job 'admin' '01' '00' '*' '*' '*' "$command"
+fi
+[ ! -f "touch $HESTIA/data/queue/daily.pipe" ] && touch $HESTIA/data/queue/daily.pipe
+
+# Remove existing network-up hooks so they get regenerated when updating the firewall
+# - network hook will also restore ipset config during start-up
+if [ -f "/usr/lib/networkd-dispatcher/routable.d/50-ifup-hooks" ]; then
+    rm "/usr/lib/networkd-dispatcher/routable.d/50-ifup-hooks"
+    $BIN/v-update-firewall
+fi
+if [ -f "/etc/network/if-pre-up.d/iptables" ];then
+    rm "/etc/network/if-pre-up.d/iptables"
+    $BIN/v-update-firewall
 fi

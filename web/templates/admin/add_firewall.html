@@ -98,7 +98,10 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
+                                    <select class="vst-list" id="quickips_list" onchange="this.nextElementSibling.value=this.value">
+                                        <option value="">clear</option>
+                                    </select>
+                                    <input type="text" size="20" class="vst-input vst-list-editor" name="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -121,3 +124,26 @@
         </from>
 
     </div>
+
+    <script>
+        var iplists = JSON.parse('<?=$ipset_lists_json?>');
+        iplists.sort(function (a, b) {
+            return a.name > b.name;
+        });
+
+        $(function() {
+            var targetelement = document.getElementById('quickips_list');
+
+            var newEl = document.createElement("option");
+            newEl.text = "Ipset Lists";
+            newEl.disabled = true;
+            targetelement.appendChild(newEl);
+
+            iplists.forEach(iplist => {
+                var newEl = document.createElement("option");
+                newEl.text = iplist.name;
+                newEl.value = "ipset:" + iplist.name;
+                targetelement.appendChild(newEl);
+            });
+        });
+    </script>

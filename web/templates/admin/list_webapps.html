@@ -44,8 +44,8 @@
                     <span class="card-thumb"><img src="<?=$webapp['thumbnail']?>"></span>
                     <div class="card-details">
                         <p class="card-title"><?=$webapp['name']?></p>
-                        <p>version: <?=$webapp['version']?></p>
-                        <a href="/add/webapp/?app=<?=$webapp['name']?>&domain=<?=$v_domain?>" class="ui-button cancel">Setup</a>
+                        <p><?=__('version')?>: <?=$webapp['version']?></p>
+                        <a href="/add/webapp/?app=<?=$webapp['name']?>&domain=<?=$v_domain?>" class="ui-button cancel"><?=__('Setup')?></a>
                     </div>
                 </div>
             <?php endforeach; ?>

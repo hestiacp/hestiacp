@@ -105,14 +105,17 @@ if [ ! -z "$PROXY_SYSTEM" ]; then
     rpaf_conf="/etc/$WEB_SYSTEM/mods-enabled/rpaf.conf"
     if [ -e "$rpaf_conf" ]; then
         ips=$(grep RPAFproxy_ips $rpaf_conf)
-        new_ips=$(echo "$rpaf_str" | sed "s/$ip//")
+        new_ips=$(echo "$ips" | sed "s/ $ip//")
         sed -i "s/$ips/$new_ips/g" $rpaf_conf
+
+        # Remove RPAFproxy_ips line when ip list is empty
+        [ "$(grep RPAFproxy_ips $rpaf_conf | sed 's/^[[:space:]]*//g')" = "RPAFproxy_ips" ] && sed -i "/RPAFproxy_ips/d" $rpaf_conf
     fi
     
     #mod_remoteip
     remoteip_conf="/etc/$WEB_SYSTEM/mods-enabled/remoteip.conf"
     if [ -e "$remoteip_conf" ]; then
-        sed -i "s/RemoteIPInternalProxy $ip//g" $remoteip_conf
+        sed -i "/RemoteIPInternalProxy $ip\$/d" $remoteip_conf
     fi
 fi
 

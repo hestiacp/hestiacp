@@ -20,8 +20,10 @@ os='debian'
 release=$(cat /etc/debian_version | tr "." "\n" | head -n1)
 codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
 HESTIA_INSTALL_DIR="$HESTIA/install/deb"
+VERBOSE='no'
 
 # Define software versions
+HESTIA_INSTALL_VER='1.1.2'
 pma_v='5.0.2'
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
 fpm_v="7.3"
@@ -39,7 +41,7 @@ if [ "$release" -eq 8 ]; then
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
-        unrar-free vim-common acl sysstat setpriv"
+        unrar-free vim-common acl sysstat setpriv ipset"
 elif [ "$release" -eq 9 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
         libapache2-mod-ruid2 libapache2-mod-fcgid libapache2-mod-php$fpm_v 
@@ -55,7 +57,7 @@ elif [ "$release" -eq 9 ]; then
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
-        unrar-free vim-common acl sysstat rsyslog setpriv"
+        unrar-free vim-common acl sysstat rsyslog setpriv ipset"
 elif [ "$release" -eq 10 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
         apache2-suexec-pristine libapache2-mod-fcgid libapache2-mpm-itk 
@@ -71,7 +73,7 @@ elif [ "$release" -eq 10 ]; then
         flex whois git idn zip sudo bc ftp lsof ntpdate rrdtool quota e2fslibs
         bsdutils e2fsprogs curl imagemagick fail2ban dnsutils bsdmainutils cron
         hestia hestia-nginx hestia-php expect libmail-dkim-perl unrar-free
-        vim-common acl sysstat rsyslog util-linux"
+        vim-common acl sysstat rsyslog util-linux ipset"
 fi
 
 # Defining help function
@@ -210,7 +212,7 @@ done
 eval set -- "$args"
 
 # Parsing arguments
-while getopts "a:n:w:v:j:k:m:g:d:x:z:c:t:i:b:r:o:q:l:y:s:e:p:D:f:h" Option; do
+while getopts "a:n:w:v:j:k:m:g:d:x:z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
     case $Option in
         a) apache=$OPTARG ;;            # Apache
         n) nginx=$OPTARG ;;             # Nginx
@@ -438,7 +440,7 @@ echo ' |  _  |  __/\__ \ |_| | (_| | |___|  __/ '
 echo ' |_| |_|\___||___/\__|_|\__,_|\____|_|    '
 echo
 echo '                      Hestia Control Panel'
-echo '                                    v1.1.2'
+echo "                                    v${HESTIA_INSTALL_VER}"
 echo -e "\n"
 echo "===================================================================="
 echo -e "\n"
@@ -459,6 +461,7 @@ if [ "$phpfpm"  = 'yes' ] && [ "$multiphp" = 'no' ]; then
     echo '   - PHP-FPM Application Server'
 fi
 if [ "$multiphp"  = 'yes' ]; then
+    phpfpm='yes'
     echo '   - Multi-PHP Environment'
 fi
 
@@ -668,6 +671,7 @@ done
 echo
 
 # Check Installation result
+wait $BACK_PID
 check_result $? 'apt-get upgrade failed'
 
 
@@ -758,7 +762,7 @@ fi
 # Excluding packages
 software=$(echo "$software" | sed -e "s/apache2.2-common//")
 if [ "$nginx" = 'no'  ]; then
-    software=$(echo "$software" | sed -e "s/\bnginx\b/ /")
+    software=$(echo "$software" | sed -r -e 's/(\s|^)nginx(\s|$)/ /')
 fi
 if [ "$apache" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/apache2 //")
@@ -821,6 +825,7 @@ if [ "$postgresql" = 'no' ]; then
 fi
 if [ "$iptables" = 'no' ] || [ "$fail2ban" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/fail2ban//")
+    software=$(echo "$software" | sed -e "s/ipset//")
 fi
 if [ "$phpfpm" = 'yes' ]; then
     software=$(echo "$software" | sed -e "s/php$fpm_v-cgi//")
@@ -835,6 +840,22 @@ fi
 #----------------------------------------------------------#
 #                     Install packages                     #
 #----------------------------------------------------------#
+
+if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
+    release_branch_ver=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/release/src/deb/hestia/control |grep "Version:" |awk '{print $2}')
+    if [ "$HESTIA_INSTALL_VER" != "$release_branch_ver" ]; then
+        echo
+        echo -e "\e[91mInstallation Aborted\e[0m"
+        echo "===================================================================="
+        echo -e "\e[33mInstall script does not match Hestia release version\e[0m"
+        echo -e "\e[33mPlease use the installer from the release branch\e[0m"
+        echo ""
+        echo -e "\e[33mTo test the beta version you need to build the hestia deb packages and re-run the installer\e[0m"
+        echo -e "  \e[33m./hst_autocompile.sh \e[1m--hestia no\e[21m\e[0m"
+        echo -e "  \e[33m./hst-install.sh .. \e[1m--with-debs /tmp/hestiacp-src/debs\e[21m\e[0m"
+        check_result 1 "Installation aborted"
+    fi
+fi
 
 # Disabling daemon autostart on apt-get install
 echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
@@ -858,6 +879,7 @@ done
 echo
 
 # Check Installation result
+wait $BACK_PID
 check_result $? "apt-get install failed"
 
 # Install Hestia packages from local folder
@@ -969,7 +991,7 @@ mkdir -p $HESTIA/conf $HESTIA/log $HESTIA/ssl $HESTIA/data/ips \
     $HESTIA/data/sessions
 touch $HESTIA/data/queue/backup.pipe $HESTIA/data/queue/disk.pipe \
     $HESTIA/data/queue/webstats.pipe $HESTIA/data/queue/restart.pipe \
-    $HESTIA/data/queue/traffic.pipe $HESTIA/log/system.log \
+    $HESTIA/data/queue/traffic.pipe $HESTIA/data/queue/daily.pipe $HESTIA/log/system.log \
     $HESTIA/log/nginx-error.log $HESTIA/log/auth.log
 chmod 750 $HESTIA/conf $HESTIA/data/users $HESTIA/data/ips $HESTIA/log
 chmod -R 750 $HESTIA/data/queue
@@ -1089,7 +1111,7 @@ echo "BACKUP_SYSTEM='local'" >> $HESTIA/conf/hestia.conf
 echo "LANGUAGE='$lang'" >> $HESTIA/conf/hestia.conf
 
 # Version & Release Branch
-echo "VERSION='1.1.2'" >> $HESTIA/conf/hestia.conf
+echo "VERSION='${HESTIA_INSTALL_VER}'" >> $HESTIA/conf/hestia.conf
 echo "RELEASE_BRANCH='release'" >> $HESTIA/conf/hestia.conf
 
 # Installing hosting packages
@@ -1186,7 +1208,6 @@ if [ "$apache" = 'yes' ]; then
     a2enmod suexec > /dev/null 2>&1
     a2enmod ssl > /dev/null 2>&1
     a2enmod actions > /dev/null 2>&1
-    a2dismod status > /dev/null 2>&1
     if [ "$release" -eq 10 ]; then
         a2enmod mpm_itk > /dev/null 2>&1
     else
@@ -1204,12 +1225,15 @@ if [ "$apache" = 'yes' ]; then
     chmod 640 /var/log/apache2/access.log /var/log/apache2/error.log
     chmod 751 /var/log/apache2/domains
 
+    # Prevent remote access to server-status page
+    sed -i '/Allow from all/d' /etc/apache2/mods-enabled/status.conf
+
     update-rc.d apache2 defaults > /dev/null 2>&1
     systemctl start apache2 >> $LOG
     check_result $? "apache2 start failed"
 else
     update-rc.d apache2 disable > /dev/null 2>&1
-    systemctl start apache2 > /dev/null 2>&1
+    systemctl stop apache2 > /dev/null 2>&1
 fi
 
 
@@ -1767,6 +1791,8 @@ command="sudo $HESTIA/bin/v-update-sys-queue restart"
 $HESTIA/bin/v-add-cron-job 'admin' '*/2' '*' '*' '*' '*' "$command"
 systemctl restart cron
 
+command="sudo $HESTIA/bin/v-update-sys-queue daily"
+$HESTIA/bin/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "$command"
 command="sudo $HESTIA/bin/v-update-sys-queue disk"
 $HESTIA/bin/v-add-cron-job 'admin' '15' '02' '*' '*' '*' "$command"
 command="sudo $HESTIA/bin/v-update-sys-queue traffic"

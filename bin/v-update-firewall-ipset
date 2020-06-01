@@ -41,9 +41,9 @@ for ipset_name in $(search_objects "$ipset_hstobject" 'SUSPENDED' 'no' 'LISTNAME
 
     last_updated_ts=$(date -d "$ipset_date $ipset_time" +%s)
     now=$(date +%s)
-    hours_since_update=$(( (now - last_updated_ts) / 60 ))
+    hours_since_update=$(( (now - last_updated_ts) / (60*60) ))
 
-    if [[ "$hours_since_update" -lt 70 ]] && [ "$force" = 'no' ]; then
+    if [[ "$hours_since_update" -lt 24 ]] && [ "$force" = 'no' ]; then
         # load existing ip list files in the kernel but don't auto update them
         $BIN/v-add-firewall-ipset "$ipset_name"
         continue

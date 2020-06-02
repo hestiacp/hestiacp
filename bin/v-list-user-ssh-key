@@ -24,16 +24,14 @@ json_list() {
     objects=$(echo "$keys" |wc -l)
     echo "{"
         for str in $keys; do
-        KEY=$(echo $str | awk '{print $(NF-1)}')
-        ID=$(echo $str | awk '{print $NF}')
+        KEY=$(echo $str | awk '{print $(NF-2)}')
+        ID=$(echo $str | awk '{print $(NF-1)}')
         echo -n '    "'$ID'": {
         "ID": "'$ID'",
         "KEY": "'$KEY'"
         }'
         if [ "$i" -lt "$objects" ]; then
             echo ','
-        else
-            echo
         fi
         ((i++))
         done		
@@ -45,9 +43,11 @@ shell_list() {
     echo "ID~KEY"
     echo "----~----~---"
     for str in $keys; do
-        KEY=$(echo $str | awk '{print $(NF-1)}')
-        ID=$(echo $str | awk '{print $NF}')
-        echo "$ID~$KEY"
+        KEY=$(echo $str | awk '{print $(NF-2)}')
+        ID=$(echo $str | awk '{print $(NF-1)}')
+        if [[ $ID != *"filemanager.ssh.key"* ]] ;then
+            echo "$ID~$KEY"
+        fi
         done
 }
 
@@ -57,7 +57,9 @@ plain_list() {
     for str in $keys; do
         KEY=$(echo $str | awk '{print $(NF-1)}')
         ID=$(echo $str | awk '{print $NF}')
-        echo -e "$ID\t$KEY"
+        if [[ $ID != *"filemanager.ssh.key"* ]] ;then
+            echo -e "$ID\t$KEY"
+        fi
     done
 }
 
@@ -68,7 +70,9 @@ csv_list() {
     for str in $keys; do
         KEY=$(echo $str | awk '{print $(NF-1)}')
         ID=$(echo $str | awk '{print $NF}')
-        echo "\"$ID\",\"$KEY\""
+        if [[ $ID != *"filemanager.ssh.key"* ]] ;then
+            echo "\"$ID\",\"$KEY\""
+        fi
     done
 }
 
@@ -89,9 +93,17 @@ is_object_unsuspended 'user' 'USER' "$user"
 if [ ! -f "$HOMEDIR/$user/.ssh/authorized_keys" ]; then
     exit
 fi
-# Parsing backup config
-#cat "$HOMEDIR/$user/.ssh/authorized_keys"
-keys=$(cat "$HOMEDIR/$user/.ssh/authorized_keys")
+
+first_loop=1
+while read l; do
+    sshkey=$([[ -n $l && ${l###} = $l ]] && ssh-keygen -l -f <(echo $l));
+    if [ ! -z "$sshkey" ]
+    then
+        (( $first_loop )) && keys="$sshkey"  || keys="$keys"$'\n'"$sshkey"
+        unset first_loop
+    fi
+done < "$HOMEDIR/$user/.ssh/authorized_keys"
+
 
 # Listing data
 case $format in

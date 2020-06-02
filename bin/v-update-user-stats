@@ -40,6 +40,7 @@ fi
 # Creating user_list
 if [ -z "$user" ]; then
     user_list=$($HESTIA/bin/v-list-sys-users plain)
+    update_overall_stats='true'
 else
     user_list="$user"
 fi
@@ -91,22 +92,17 @@ for user in $user_list; do
 
     # Updating user stats log
     stats="$USER_DATA/stats.log"
-    if [ -e "$stats" ]; then
-        # Checking duplicates
-        check_month=$(grep -n "DATE='$DATE'" $stats|cut -f 1 -d :)
-        if [ -z "$check_month" ]; then
-            # Updating as there no duplicates
-            echo "$s" >> $stats
-            chmod 660 $stats
-        else
-            # Replacing string with new data
-            sed -i "$check_month s/.*/$s/" $stats
-        fi
+
+    # Checking duplicates
+    check_month=$(grep --no-messages -n "DATE='$DATE'" $stats|cut -f 1 -d :)
+    if [ -z "$check_month" ]; then
+        # Updating as there no duplicates
+        echo "$s" >> $stats
     else
-        # Creating stats log
-        echo "$s" >$stats
-        chmod 660 $stats
+        # Replacing string with new data
+        sed -i "$check_month s/.*/$s/" $stats
     fi
+    chmod 660 $stats
 
     # Increase overall counters
     TOTAL_IP_OWNED=$((TOTAL_IP_OWNED + IP_OWNED))
@@ -131,41 +127,36 @@ for user in $user_list; do
 
 done
 
-# Updating overall stats
-stats="$HESTIA/data/users/admin/overall_stats.log"
+if [ "$update_overall_stats" = 'yes' ]; then
+    # Updating overall stats
+    stats="$HESTIA/data/users/admin/overall_stats.log"
 
-s="DATE='$DATE' TIME='$TIME' PACKAGE='default' IP_OWNED='$TOTAL_IP_OWNED'"
-s="$s DISK_QUOTA='0' U_DISK='$TOTAL_U_DISK' U_DISK_DIRS='$TOTAL_U_DISK_DIRS'"
-s="$s U_DISK_WEB='$TOTAL_U_DISK_WEB' U_DISK_MAIL='$TOTAL_U_DISK_MAIL'"
-s="$s U_DISK_DB='$TOTAL_U_DISK_DB' BANDWIDTH='0'"
-s="$s U_BANDWIDTH='$TOTAL_U_BANDWIDTH' U_WEB_DOMAINS='$TOTAL_U_WEB_DOMAINS'"
-s="$s U_WEB_SSL='$TOTAL_U_WEB_SSL' U_WEB_ALIASES='$TOTAL_U_WEB_ALIASES'"
-s="$s U_DNS_DOMAINS='$TOTAL_U_DNS_DOMAINS'"
-s="$s U_DNS_RECORDS='$TOTAL_U_DNS_RECORDS'"
-s="$s U_MAIL_DOMAINS='$TOTAL_U_MAIL_DOMAINS'"
-s="$s U_MAIL_DKIM='$TOTAL_U_MAIL_DKIM'"
-s="$s U_MAIL_ACCOUNTS='$TOTAL_U_MAIL_ACCOUNTS'"
-s="$s U_DATABASES='$TOTAL_U_DATABASES'"
-s="$s U_CRON_JOBS='$TOTAL_U_CRON_JOBS' U_BACKUPS='$TOTAL_U_BACKUPS'"
-s="$s U_USERS='$TOTAL_USERS'"
+    s="DATE='$DATE' TIME='$TIME' PACKAGE='default' IP_OWNED='$TOTAL_IP_OWNED'"
+    s="$s DISK_QUOTA='0' U_DISK='$TOTAL_U_DISK' U_DISK_DIRS='$TOTAL_U_DISK_DIRS'"
+    s="$s U_DISK_WEB='$TOTAL_U_DISK_WEB' U_DISK_MAIL='$TOTAL_U_DISK_MAIL'"
+    s="$s U_DISK_DB='$TOTAL_U_DISK_DB' BANDWIDTH='0'"
+    s="$s U_BANDWIDTH='$TOTAL_U_BANDWIDTH' U_WEB_DOMAINS='$TOTAL_U_WEB_DOMAINS'"
+    s="$s U_WEB_SSL='$TOTAL_U_WEB_SSL' U_WEB_ALIASES='$TOTAL_U_WEB_ALIASES'"
+    s="$s U_DNS_DOMAINS='$TOTAL_U_DNS_DOMAINS'"
+    s="$s U_DNS_RECORDS='$TOTAL_U_DNS_RECORDS'"
+    s="$s U_MAIL_DOMAINS='$TOTAL_U_MAIL_DOMAINS'"
+    s="$s U_MAIL_DKIM='$TOTAL_U_MAIL_DKIM'"
+    s="$s U_MAIL_ACCOUNTS='$TOTAL_U_MAIL_ACCOUNTS'"
+    s="$s U_DATABASES='$TOTAL_U_DATABASES'"
+    s="$s U_CRON_JOBS='$TOTAL_U_CRON_JOBS' U_BACKUPS='$TOTAL_U_BACKUPS'"
+    s="$s U_USERS='$TOTAL_USERS'"
 
-if [ -e "$stats" ]; then
     # Checking duplicates
-    check_month=$(grep -n "DATE='$DATE'" $stats|cut -f 1 -d :)
+    check_month=$(grep --no-messages -n "DATE='$DATE'" $stats|cut -f 1 -d :)
     if [ -z "$check_month" ]; then
         # Updating as there no duplicates
         echo "$s" >> $stats
-        chmod 660 $stats
     else
         # Replacing string with new data
         sed -i "$check_month s/.*/$s/" $stats
     fi
-else
-    # Creating stats log
-    echo "$s" >$stats
     chmod 660 $stats
 fi
-
 
 
 #----------------------------------------------------------#

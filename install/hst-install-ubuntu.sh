@@ -790,6 +790,8 @@ if [ "$iptables" = 'no' ] || [ "$fail2ban" = 'no' ]; then
 fi
 if [ "$phpfpm" = 'yes' ]; then
     software=$(echo "$software" | sed -e "s/php$fpm_v-cgi//")
+    software=$(echo "$software" | sed -e "s/libapache2-mod-ruid2//")
+    software=$(echo "$software" | sed -e "s/libapache2-mod-php$fpm_v//")
 fi
 if [ -d "$withdebs" ]; then
     software=$(echo "$software" | sed -e "s/hestia-nginx//")
@@ -1190,11 +1192,14 @@ if [ "$apache" = 'yes' ]; then
     a2enmod ssl > /dev/null 2>&1
     a2enmod actions > /dev/null 2>&1
 
-    # Disable prefork and php, enable event
+    # Enable mod_ruid/mpm_itk or mpm_event
     if [ "$phpfpm" = 'yes' ]; then
+        # Disable prefork and php, enable event
         a2dismod php$fpm_v > /dev/null 2>&1
         a2dismod mpm_prefork > /dev/null 2>&1
         a2enmod mpm_event > /dev/null 2>&1
+    else
+        a2enmod ruid2 > /dev/null 2>&1
     fi
 
     mkdir -p /etc/apache2/conf.d

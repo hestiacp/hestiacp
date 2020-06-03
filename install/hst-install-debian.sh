@@ -44,7 +44,7 @@ if [ "$release" -eq 9 ]; then
         sudo bc ftp lsof ntpdate rrdtool quota e2fslibs bsdutils e2fsprogs curl
         imagemagick fail2ban dnsutils bsdmainutils cron hestia hestia-nginx
         hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat
-        rsyslog setpriv ipset"
+        rsyslog setpriv ipset libapache2-mod-ruid2"
 elif [ "$release" -eq 10 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
         apache2-suexec-pristine libapache2-mod-fcgid libapache2-mod-php$fpm_v
@@ -61,7 +61,7 @@ elif [ "$release" -eq 10 ]; then
         quota e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron hestia hestia-nginx hestia-php expect
         libmail-dkim-perl unrar-free vim-common acl sysstat rsyslog util-linux
-        ipset"
+        ipset libapache2-mpm-itk"
 fi
 
 # Defining help function
@@ -815,7 +815,10 @@ if [ "$iptables" = 'no' ] || [ "$fail2ban" = 'no' ]; then
 fi
 if [ "$phpfpm" = 'yes' ]; then
     software=$(echo "$software" | sed -e "s/php$fpm_v-cgi//")
+    software=$(echo "$software" | sed -e "s/libapache2-mpm-itk//")
+    software=$(echo "$software" | sed -e "s/libapache2-mod-ruid2//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-php$fpm_v//")
+
 fi
 if [ -d "$withdebs" ]; then
     software=$(echo "$software" | sed -e "s/hestia-nginx//")
@@ -1204,6 +1207,12 @@ if [ "$apache" = 'yes' ]; then
         a2dismod php$fpm_v > /dev/null 2>&1
         a2dismod mpm_prefork > /dev/null 2>&1
         a2enmod mpm_event > /dev/null 2>&1
+    else
+        if [ "$release" -eq 10 ]; then
+            a2enmod mpm_itk > /dev/null 2>&1
+        else
+            a2enmod ruid2 > /dev/null 2>&1
+        fi
     fi
 
     mkdir -p /etc/apache2/conf.d

@@ -62,6 +62,9 @@ if [ ! -f "${AUTHKEY_FILE}" ] || [ "$new_pubkey" = true ]; then
         sed -i "/ \[${user}\]filemanager\.ssh\.key\$/d" "${AUTHKEY_FILE}"
     fi
 
+    # make sure authorized_keys is ending with EOL
+    sed -i '$a\' "${AUTHKEY_FILE}"
+
     echo "from=\"127.0.0.1\",command=\"internal-sftp\",restrict ${pubkey_str} TS:${now} ${pubkey_desc}" >> "${AUTHKEY_FILE}"
 
 fi

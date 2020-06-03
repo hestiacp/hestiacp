@@ -44,7 +44,7 @@
                     </div>
                 </div>
             </div>
-        <div class="clearfix l-unit__stat-col--left wide-7"><b><?=htmlspecialchars(substr($data[$key]['KEY'],0,50).'.....'.substr($data[$key]['ID'], -10,10), ENT_QUOTES);?></b></div>
+        <div class="clearfix l-unit__stat-col--left wide-7"><b><?=htmlspecialchars($data[$key]['KEY'], ENT_QUOTES);?></b></div>
       </div>
     </div>
   <?}?>

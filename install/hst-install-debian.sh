@@ -875,13 +875,13 @@ check_result $? "apt-get install failed"
 if [ ! -z "$withdebs" ] && [ -d "$withdebs" ]; then
     dpkg -i $withdebs/hestia_*.deb
 
-    if [ -z $(ls "$withdebs/hestia-php_*.deb" 2>/dev/null) ]; then
+    if [ -z $(ls $withdebs/hestia-php_*.deb 2>/dev/null) ]; then
         apt-get -y install hestia-php > /dev/null 2>&1
     else
         dpkg -i $withdebs/hestia-php_*.deb
     fi
 
-    if [ -z $(ls "$withdebs/hestia-nginx_*.deb" 2>/dev/null) ]; then
+    if [ -z $(ls $withdebs/hestia-nginx_*.deb 2>/dev/null) ]; then
         apt-get -y install hestia-nginx > /dev/null 2>&1
     else
         dpkg -i $withdebs/hestia-nginx_*.deb

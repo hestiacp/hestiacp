@@ -45,9 +45,7 @@ shell_list() {
     for str in $keys; do
         KEY=$(echo $str | awk '{print $(NF-2)}')
         ID=$(echo $str | awk '{print $(NF-1)}')
-        if [[ $ID != *"filemanager.ssh.key"* ]] ;then
-            echo "$ID~$KEY"
-        fi
+        echo "$ID~$KEY"
         done
 }
 
@@ -55,11 +53,9 @@ shell_list() {
 plain_list() {
     IFS=$'\n'
     for str in $keys; do
-        KEY=$(echo $str | awk '{print $(NF-1)}')
-        ID=$(echo $str | awk '{print $NF}')
-        if [[ $ID != *"filemanager.ssh.key"* ]] ;then
-            echo -e "$ID\t$KEY"
-        fi
+        KEY=$(echo $str | awk '{print $(NF-2)}')
+        ID=$(echo $str | awk '{print $(NF-1)}')
+        echo -e "$ID\t$KEY"
     done
 }
 
@@ -68,11 +64,9 @@ csv_list() {
     IFS=$'\n'
     echo "ID,KEY"
     for str in $keys; do
-        KEY=$(echo $str | awk '{print $(NF-1)}')
-        ID=$(echo $str | awk '{print $NF}')
-        if [[ $ID != *"filemanager.ssh.key"* ]] ;then
-            echo "\"$ID\",\"$KEY\""
-        fi
+        KEY=$(echo $str | awk '{print $(NF-2)}')
+        ID=$(echo $str | awk '{print $(NF-1)}')
+        echo "\"$ID\",\"$KEY\""
     done
 }
 

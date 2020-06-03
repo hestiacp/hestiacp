@@ -1190,7 +1190,8 @@ if [ "$apache" = 'yes' ]; then
     a2enmod ssl > /dev/null 2>&1
     a2enmod actions > /dev/null 2>&1
 
-    # Disable prefork, enable event
+    # Disable prefork and php, enable event
+    a2dismod php$fpm_v > /dev/null 2>&1
     a2dismod mpm_prefork > /dev/null 2>&1
     a2enmod mpm_event > /dev/null 2>&1
 

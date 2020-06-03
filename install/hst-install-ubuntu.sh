@@ -35,16 +35,16 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     cron curl dnsutils dovecot-imapd dovecot-pop3d e2fslibs e2fsprogs exim4
     exim4-daemon-heavy expect fail2ban flex ftp git idn imagemagick
     libapache2-mod-fcgid libapache2-mod-php$fpm_v libapache2-mod-rpaf
-    libapache2-mod-ruid2 lsof mc mariadb-client mariadb-common mariadb-server
-    nginx ntpdate php$fpm_v php$fpm_v-cgi php$fpm_v-common php$fpm_v-curl
-    phpmyadmin php$fpm_v-mysql php$fpm_v-imap php$fpm_v-ldap php$fpm_v-apcu
-    phppgadmin php$fpm_v-pgsql php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli
-    php$fpm_v-gd php$fpm_v-imagick php$fpm_v-intl php$fpm_v-json
-    php$fpm_v-mbstring php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline
-    php$fpm_v-xml postgresql postgresql-contrib proftpd-basic quota
-    roundcube-core roundcube-mysql roundcube-plugins rrdtool rssh spamassassin
-    sudo hestia hestia-nginx hestia-php vim-common vsftpd whois zip acl sysstat
-    setpriv libonig5 ipset"
+    lsof mc mariadb-client mariadb-common mariadb-server nginx ntpdate
+    php$fpm_v php$fpm_v-cgi php$fpm_v-common php$fpm_v-curl phpmyadmin
+    php$fpm_v-mysql php$fpm_v-imap php$fpm_v-ldap php$fpm_v-apcu phppgadmin
+    php$fpm_v-pgsql php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli php$fpm_v-gd
+    php$fpm_v-imagick php$fpm_v-intl php$fpm_v-json php$fpm_v-mbstring
+    php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
+    postgresql postgresql-contrib proftpd-basic quota roundcube-core
+    roundcube-mysql roundcube-plugins rrdtool rssh spamassassin sudo hestia
+    hestia-nginx hestia-php vim-common vsftpd whois zip acl sysstat setpriv
+    libonig5 ipset"
 
 # Defining help function
 help() {
@@ -722,7 +722,6 @@ if [ "$apache" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/apache2-utils//")
     software=$(echo "$software" | sed -e "s/apache2-suexec-custom//")
     software=$(echo "$software" | sed -e "s/apache2.2-common//")
-    software=$(echo "$software" | sed -e "s/libapache2-mod-ruid2//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-rpaf//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-fcgid//")
     software=$(echo "$software" | sed -e "s/libapache2-mod-php$fpm_v//")
@@ -1179,14 +1178,22 @@ fi
 
 if [ "$apache" = 'yes' ]; then
     echo "(*) Configuring Apache Web Server..."
+
+    # Copy configuration files
     cp -f $HESTIA_INSTALL_DIR/apache2/apache2.conf /etc/apache2/
     cp -f $HESTIA_INSTALL_DIR/apache2/status.conf /etc/apache2/mods-enabled/
     cp -f $HESTIA_INSTALL_DIR/logrotate/apache2 /etc/logrotate.d/
+    
+    # Enable needed modules
     a2enmod rewrite > /dev/null 2>&1
     a2enmod suexec > /dev/null 2>&1
     a2enmod ssl > /dev/null 2>&1
     a2enmod actions > /dev/null 2>&1
-    a2enmod ruid2 > /dev/null 2>&1
+
+    # Disable prefork, enable event
+    a2dismod mpm_prefork > /dev/null 2>&1
+    a2enmod mpm_event > /dev/null 2>&1
+
     mkdir -p /etc/apache2/conf.d
     mkdir -p /etc/apache2/conf.d/domains
     echo "# Powered by hestia" > /etc/apache2/sites-available/default

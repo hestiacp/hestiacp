@@ -29,51 +29,39 @@ multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
 fpm_v="7.3"
 mariadb_v="10.4"
 
-if [ "$release" -eq 8 ]; then
-    software="nginx apache2 apache2-utils apache2.2-common
-        apache2-suexec-custom libapache2-mod-ruid2
-        libapache2-mod-fcgid libapache2-mod-php5 php5 php5-common php5-cgi
-        php5-mysql php5-curl php5-pgsql awstats vsftpd net-tools
-        php5-imagick proftpd-basic bind9 exim4 exim4-daemon-heavy clamav-daemon
-        spamassassin dovecot-imapd dovecot-pop3d roundcube-core
-        roundcube-mysql roundcube-plugins mariadb-client mariadb-common
-        mariadb-server postgresql postgresql-contrib phppgadmin phpMyAdmin mc
-        flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
-        e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
-        unrar-free vim-common acl sysstat setpriv ipset"
-elif [ "$release" -eq 9 ]; then
+if [ "$release" -eq 9 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
-        libapache2-mod-ruid2 libapache2-mod-fcgid libapache2-mod-php$fpm_v 
+        libapache2-mod-fcgid libapache2-mod-php$fpm_v php$fpm_v php$fpm_v-common
+        php$fpm_v-cgi php$fpm_v-mysql php$fpm_v-curl php$fpm_v-pgsql
+        php$fpm_v-imagick php$fpm_v-imap php$fpm_v-ldap php$fpm_v-apcu awstats
+        php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli php$fpm_v-gd php$fpm_v-intl
+        php$fpm_v-json php$fpm_v-mbstring php$fpm_v-opcache php$fpm_v-pspell
+        php$fpm_v-readline php$fpm_v-xml vsftpd proftpd-basic bind9 exim4
+        exim4-daemon-heavy clamav-daemon spamassassin dovecot-imapd
+        dovecot-pop3d roundcube-core net-tools roundcube-mysql roundcube-plugins
+        mariadb-client mariadb-common mariadb-server postgresql
+        postgresql-contrib phppgadmin phpmyadmin mc flex whois rssh git idn zip
+        sudo bc ftp lsof ntpdate rrdtool quota e2fslibs bsdutils e2fsprogs curl
+        imagemagick fail2ban dnsutils bsdmainutils cron hestia hestia-nginx
+        hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat
+        rsyslog setpriv ipset"
+elif [ "$release" -eq 10 ]; then
+    software="nginx apache2 apache2-utils apache2-suexec-custom
+        apache2-suexec-pristine libapache2-mod-fcgid libapache2-mod-php$fpm_v
         php$fpm_v php$fpm_v-common php$fpm_v-cgi php$fpm_v-mysql php$fpm_v-curl
         php$fpm_v-pgsql php$fpm_v-imagick php$fpm_v-imap php$fpm_v-ldap
         php$fpm_v-apcu awstats php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli
         php$fpm_v-gd php$fpm_v-intl php$fpm_v-json php$fpm_v-mbstring
         php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
-        vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy clamav-daemon
-        spamassassin dovecot-imapd dovecot-pop3d roundcube-core net-tools
-        roundcube-mysql roundcube-plugins mariadb-client mariadb-common
-        mariadb-server postgresql postgresql-contrib phppgadmin phpmyadmin mc
-        flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
-        e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
-        unrar-free vim-common acl sysstat rsyslog setpriv ipset"
-elif [ "$release" -eq 10 ]; then
-    software="nginx apache2 apache2-utils apache2-suexec-custom
-        apache2-suexec-pristine libapache2-mod-fcgid libapache2-mpm-itk 
-        libapache2-mod-php$fpm_v php$fpm_v php$fpm_v-common php$fpm_v-cgi
-        php$fpm_v-mysql php$fpm_v-curl php$fpm_v-pgsql php$fpm_v-imagick 
-        php$fpm_v-imap php$fpm_v-ldap php$fpm_v-apcu awstats php$fpm_v-zip
-        php$fpm_v-bz2 php$fpm_v-cli php$fpm_v-gd php$fpm_v-intl php$fpm_v-json
-        php$fpm_v-mbstring php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline
-        php$fpm_v-xml awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy 
+        awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy
         clamav-daemon spamassassin dovecot-imapd dovecot-pop3d roundcube-core
-        net-tools roundcube-mysql roundcube-plugins mariadb-client mariadb-common
-        mariadb-server postgresql postgresql-contrib phpmyadmin phppgadmin mc
-        flex whois git idn zip sudo bc ftp lsof ntpdate rrdtool quota e2fslibs
-        bsdutils e2fsprogs curl imagemagick fail2ban dnsutils bsdmainutils cron
-        hestia hestia-nginx hestia-php expect libmail-dkim-perl unrar-free
-        vim-common acl sysstat rsyslog util-linux ipset"
+        net-tools roundcube-mysql roundcube-plugins mariadb-client
+        mariadb-common mariadb-server postgresql postgresql-contrib phpmyadmin
+        phppgadmin mc flex whois git idn zip sudo bc ftp lsof ntpdate rrdtool
+        quota e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
+        bsdmainutils cron hestia hestia-nginx hestia-php expect
+        libmail-dkim-perl unrar-free vim-common acl sysstat rsyslog util-linux
+        ipset"
 fi
 
 # Defining help function

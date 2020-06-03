@@ -51,6 +51,9 @@ if [ ! $? -eq 0 ]; then
     exit
 fi
 rm "$TEMP"
+# make sure authorized_keys is ending with EOL
+sed -i '$a\' "${AUTHKEY_FILE}"
+
 #append key to file
 echo "$key" >> "$AUTHKEY_FILE"
 

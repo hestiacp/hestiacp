@@ -1191,9 +1191,11 @@ if [ "$apache" = 'yes' ]; then
     a2enmod actions > /dev/null 2>&1
 
     # Disable prefork and php, enable event
-    a2dismod php$fpm_v > /dev/null 2>&1
-    a2dismod mpm_prefork > /dev/null 2>&1
-    a2enmod mpm_event > /dev/null 2>&1
+    if [ "$phpfpm" = 'yes' ]; then
+        a2dismod php$fpm_v > /dev/null 2>&1
+        a2dismod mpm_prefork > /dev/null 2>&1
+        a2enmod mpm_event > /dev/null 2>&1
+    fi
 
     mkdir -p /etc/apache2/conf.d
     mkdir -p /etc/apache2/conf.d/domains

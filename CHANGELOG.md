@@ -9,7 +9,8 @@ All notable changes to this project will be documented in this file.
 - Added support for resolving ip addresses based on geoip database for Awstats
 - Added Roundcube plugins newmail_notifier and zipdownload.
 - Added HELO support for multiple domains and IPs.
-- Add the possibility to manage ssh keys in the backend.
+- Added the possibility to manage ssh keys in the backend.
+- Switched to mod_event instead mod_prefork for apache2.
 
 ### Bugfixes
 - Do not allow to show apache2 server-status page from public.
@@ -33,10 +34,11 @@ All notable changes to this project will be documented in this file.
 - Stop trying to renew LE certs after multiple consecutive failed attempts. Thanks to @dpeca!
 - Implement a validation function to verify the correct version in hestia.conf prior to install a new one.
 - Fix autologout issue on cloudflare proxy and rearange 2FA authentification part. Thanks to @rmj-s!
-- Roundcube fixes for PHP 7.4 compatibility.
-- Added delay when entering wrong username/password/2fa
-- Improved "Forgot password" function prevent brute forcing
-- Update Backup counter propperly when v-delete-user-backup ran
+- Roundcube fixes for PHP 7.4 compatibility..
+- Added delay when entering wrong username/password/2fa.
+- Improved "Forgot password" function prevent brute forcing.
+- Update Backup counter propperly when v-delete-user-backup ran.
+- Dropped support for Debian 8 according to EOL.
 
 ## [1.1.1] - 2020-03-24 - Hotfix
 ### Features

@@ -10,7 +10,8 @@ All notable changes to this project will be documented in this file.
 - Added Roundcube plugins newmail_notifier and zipdownload.
 - Added HELO support for multiple domains and IPs.
 - Added the possibility to manage ssh keys in the backend.
-- Switched to mod_event instead mod_prefork for apache2.
+- Switched to mpm_event instead mod_prefork for apache2 on fresh installs.
+- Added a manual migration script for apache2 mpm_event ($HESTIA/install/upgrade/manual/migrate_mpm_event.sh).
 
 ### Bugfixes
 - Do not allow to show apache2 server-status page from public.

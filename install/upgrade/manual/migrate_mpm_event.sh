@@ -25,6 +25,8 @@ a2dismod php7.2 > /dev/null 2>&1
 a2dismod php7.3 > /dev/null 2>&1
 a2dismod php7.4 > /dev/null 2>&1
 a2dismod mpm_prefork > /dev/null 2>&1
+a2dismod mpm_itk > /dev/null 2>&1
+a2dismod ruid2 > /dev/null 2>&1
 a2enmod mpm_event > /dev/null 2>&1
 
 # Restart apache2 service

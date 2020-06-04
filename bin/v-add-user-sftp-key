@@ -34,9 +34,9 @@ PRVKEY_FILE="$HOMEDIR/$user/.ssh/hst-filemanager-key"
 PUBKEY_FILE="$HOMEDIR/$user/.ssh/hst-filemanager-key.pub"
 AUTHKEY_FILE="$HOMEDIR/$user/.ssh/authorized_keys"
 
-[ -L "$PRVKEY_FILE" ]  && check_result $E_FORBIDEN "Private key file cannot be a symlink"
-[ -L "$PUBKEY_FILE" ]  && check_result $E_FORBIDEN "Public key file cannot be a symlink"
-[ -L "$AUTHKEY_FILE" ] && check_result $E_FORBIDEN "Authorized keys file cannot be a symlink"
+[ -z "$(readlink -f "$PRVKEY_FILE"  | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result $E_FORBIDEN "Invalid private key file path"
+[ -z "$(readlink -f "$PUBKEY_FILE"  | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result $E_FORBIDEN "Invalid public key file path"
+[ -z "$(readlink -f "$AUTHKEY_FILE" | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result $E_FORBIDEN "Invalid authorized keys path"
 
 if [ ! -f "${PRVKEY_FILE}" ]; then
 
@@ -63,7 +63,7 @@ if [ ! -f "${AUTHKEY_FILE}" ] || [ "$new_pubkey" = true ]; then
     fi
 
     # make sure authorized_keys is ending with EOL
-    sed -i '$a\' "${AUTHKEY_FILE}"
+    [ -f "${AUTHKEY_FILE}" ] && sed -i '$a\' "${AUTHKEY_FILE}"
 
     echo "from=\"127.0.0.1\",command=\"internal-sftp\",restrict ${pubkey_str} TS:${now} ${pubkey_desc}" >> "${AUTHKEY_FILE}"
 

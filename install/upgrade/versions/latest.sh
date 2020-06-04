@@ -70,3 +70,10 @@ if [ -f "/etc/network/if-pre-up.d/iptables" ];then
     rm "/etc/network/if-pre-up.d/iptables"
     $BIN/v-update-firewall
 fi
+
+# Add hestia-event.conf, if the server is running apache2
+if [ "$WEB_SYSTEM" = "apache2" ]; then
+    if [ ! -e "/etc/apache2/mods-enabled/hestia-event.conf" ]; then
+        cp -f $HESTIA_INSTALL_DIR/apache2/hestia-event.conf /etc/apache2/mods-enabled/
+    fi
+fi

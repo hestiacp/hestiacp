@@ -1184,6 +1184,7 @@ if [ "$apache" = 'yes' ]; then
     # Copy configuration files
     cp -f $HESTIA_INSTALL_DIR/apache2/apache2.conf /etc/apache2/
     cp -f $HESTIA_INSTALL_DIR/apache2/status.conf /etc/apache2/mods-enabled/
+    cp -f $HESTIA_INSTALL_DIR/apache2/hestia-event.conf /etc/apache2/mods-enabled/
     cp -f $HESTIA_INSTALL_DIR/logrotate/apache2 /etc/logrotate.d/
     
     # Enable needed modules

@@ -7,34 +7,37 @@ source $HESTIA/conf/hestia.conf
 
 # Check if apache2 is in use
 if [ "$WEB_SYSTEM" != "apache2" ]; then
-    echo "Apache2 isnt installed on your system, canceling migration..."
-    exit
+    echo "Apache2 isn't installed on your system, canceling migration..." && exit 1
 fi
 
 # Check if mod_event is already enabled
-if apache2ctl -M | grep -q mpm_event_module; then
-    echo "mod_event is already enabled, canceling migration..."
-    exit
+if [ $(a2query -M) = 'event' ]; then
+    echo "mod_event is already enabled, canceling migration..." && exit 1
 fi
 
-# Disable prefork and php, enable event
-a2dismod php5.6 > /dev/null 2>&1
-a2dismod php7.0 > /dev/null 2>&1
-a2dismod php7.1 > /dev/null 2>&1
-a2dismod php7.2 > /dev/null 2>&1
-a2dismod php7.3 > /dev/null 2>&1
-a2dismod php7.4 > /dev/null 2>&1
-a2dismod mpm_prefork > /dev/null 2>&1
-a2dismod mpm_itk > /dev/null 2>&1
-a2dismod ruid2 > /dev/null 2>&1
-a2enmod mpm_event > /dev/null 2>&1
+if ! apache2ctl configtest > /dev/null 2>&1; then
+    echo "Apache2 configtest failed" && exit 1
+fi
 
-# Restart apache2 service
-systemctl restart apache2
+a2modules="php5.6 php7.0 php7.1 php7.2 php7.3 php7.4 mpm_prefork mpm_itk ruid2"
+changed_a2modules=""
+
+for module in $a2modules; do
+    a2query -q -m "$module" || continue
+    a2dismod "$module"
+    changed_a2modules="${changed_a2modules} ${module}"
+done
+
+a2enmod --quiet mpm_event
 
 # Check if all went well
-if apache2ctl -M | grep -q mpm_event_module; then
-    echo "mpm_event module was successfully activated."
-else
-    echo "Something went wrong, please try to migrate manualy to mpm_event."
+if ! apache2ctl configtest >/dev/null 2>&1; then
+    echo "Something went wrong, rolling back. Please try to migrate manually to mpm_event."
+    for module in $changed_a2modules; do
+        a2enmod "$module"
+    done
+    exit 1
 fi
+
+echo "mpm_event module was successfully activated."
+systemctl restart apache2

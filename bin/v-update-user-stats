@@ -40,7 +40,7 @@ fi
 # Creating user_list
 if [ -z "$user" ]; then
     user_list=$($HESTIA/bin/v-list-sys-users plain)
-    update_overall_stats='true'
+    update_overall_stats='yes'
 else
     user_list="$user"
 fi

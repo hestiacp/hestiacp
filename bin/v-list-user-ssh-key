@@ -74,6 +74,7 @@ csv_list() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
+check_args '1' "$#" 'USER'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -82,9 +83,11 @@ is_object_unsuspended 'user' 'USER' "$user"
 #                       Action                             #
 #----------------------------------------------------------#
 
-#check if file exsists
+AUTHKEY_FILE="$HOMEDIR/$user/.ssh/authorized_keys"
+[ -z "$(readlink -f "$AUTHKEY_FILE" | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result $E_FORBIDEN "Invalid authorized keys path"
 
-if [ ! -f "$HOMEDIR/$user/.ssh/authorized_keys" ]; then
+#check if file exsists
+if [ ! -f "$AUTHKEY_FILE" ]; then
     exit
 fi
 
@@ -96,7 +99,7 @@ while read l; do
         (( $first_loop )) && keys="$sshkey"  || keys="$keys"$'\n'"$sshkey"
         unset first_loop
     fi
-done < "$HOMEDIR/$user/.ssh/authorized_keys"
+done < "$AUTHKEY_FILE"
 
 
 # Listing data

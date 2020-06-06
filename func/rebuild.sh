@@ -502,9 +502,16 @@ rebuild_mail_domain_conf() {
             echo "$local_ip" > $HOMEDIR/$user/conf/mail/$domain/ip
         fi
 
-        # Generating list of mail domains for HELO
-        ls /etc/exim4/domains > /etc/exim4/mailhelo.conf
-        sed -i "s \(.*\) \1:\1 " /etc/exim4/mailhelo.conf
+        
+        # Setting HELO for mail domain
+        if [ ! -z "$local_ip" ]; then
+            IP_RDNS=$( dig +short -x $local_ip | sed 's/.$//' )
+            if [ $(grep -s "^${domain}:" /etc/exim4/mailhelo.conf) ]; then
+                sed -i "/^${domain}:/c\\$domain:$IP_RDNS" /etc/exim4/mailhelo.conf
+            else
+                echo $domain:$IP_RDNS >> /etc/exim4/mailhelo.conf
+            fi
+        fi
 
         # Adding antispam protection
         if [ "$ANTISPAM" = 'yes' ]; then

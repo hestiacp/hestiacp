@@ -643,7 +643,7 @@
                                                         <td>
                                                             <select class="vst-list" name="v_backup_type">
                                                                 <option value='ftp'><?php print __('ftp'); ?></option>
-                                                                <option value='sftp' <?php if((!empty($v_backup_type)) && ($v_backup_type  == 'sftp')) echo 'selected' ?> ><?php print __('sftp'); ?></option>
+                                                                <option value='sftp' <?php if((!empty($v_backup_type)) && (trim($v_backup_type,"'")  == 'sftp' )) echo 'selected="selected"'; ?>><?php print __('sftp'); ?></option>
                                                             </select>
                                                             <br><br>
                                                         </td>
@@ -656,6 +656,17 @@
                                                     <tr>
                                                         <td>
                                                             <input type="text" size="20" class="vst-input" name="v_backup_host" value="<?=trim($v_backup_host, "'")?>">
+                                                            <br><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="vst-text">
+                                                            <?php print __('Port') ?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text" size="20" class="vst-input" name="v_backup_port" value="<?=trim($v_backup_port, "'")?>">
                                                             <br><br>
                                                         </td>
                                                     </tr>

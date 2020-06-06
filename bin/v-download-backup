@@ -162,23 +162,22 @@ if [ ! -e "$BACKUP/$backup" ]; then
     if [ -z "$downloaded" ]; then
         check_result $E_NOTEXIST "backup file $backup doesn't exist in '${BACKUP}' folder"
     else
+        if [ -e "$BACKUP/$backup" ]; then
         chmod 0640 $BACKUP/$backup
         chown admin:admin $BACKUP/$backup
-    fi
-fi
-
-echo "
-#!/bin/bash
+        echo "#!/bin/bash 
 # Reset at timer every 15 min after 1st hour if the file is still downloading / Check if hestia-ng is still accessing $BACKUP/$backup
 
 if lsof $BACKUP/$backup | grep hestia-ng; then
-at -f /$BACKUP/$backup.sh now + 15 minutes
+    at -f /$BACKUP/$backup.sh now + 15 minutes
 else 
-    rm $BACKUP/$backup;
-    rm $BACKUP/$backup.sh;
+rm $BACKUP/$backup;
+rm $BACKUP/$backup.sh;
 fi" >  $BACKUP/$backup.sh;
-
-at -f /$BACKUP/$backup.sh now + 60 minutes
+        at -f /$BACKUP/$backup.sh now + 60 minutes
+        fi
+    fi
+fi
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

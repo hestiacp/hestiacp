@@ -1,0 +1,187 @@
+#!/bin/bash
+# info: Download backup
+# options: BACKUP 
+#
+# The function download back-up from remote server
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Import Hestia variable for cron launch
+source /etc/profile
+
+# Argument definition
+backup=$1
+
+# Define backup dir
+if [ -z "$BACKUP" ]; then
+    BACKUP=/backup
+fi
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/func/ip.sh
+source $HESTIA/func/db.sh
+source $HESTIA/func/rebuild.sh
+source $HESTIA/conf/hestia.conf
+
+# Defining FTP command function
+ftpc() {
+    /usr/bin/ftp -n $HOST $PORT <<EOF
+    quote USER $USERNAME
+    quote PASS $PASSWORD
+    lcd $BACKUP
+    binary
+    $1
+    $2
+    $3
+    quit
+EOF
+}
+
+# FTP backup download function
+ftp_download() {
+    source $HESTIA/conf/ftp.backup.conf
+    if [ -z "$PORT" ]; then
+        PORT='21'
+    fi
+    if [ -z $BPATH ]; then
+        ftpc "get $1"
+    else
+        ftpc "cd $BPATH" "get $1"
+    fi
+}
+
+# SFTP command function
+sftpc() {
+    expect -f "-" <<EOF "$@"
+        set timeout 60
+        set count 0
+        spawn /usr/bin/sftp -o StrictHostKeyChecking=no \
+            -o Port=$PORT $USERNAME@$HOST
+        expect {
+            "password:" {
+                send "$PASSWORD\r"
+                exp_continue
+            }
+            -re "Couldn't|(.*)disconnect|(.*)stalled|(.*)not found" {
+                set count \$argc
+                set output "Disconnected."
+                set rc $E_FTP
+                exp_continue
+            }
+            -re ".*denied.*(publickey|password)." {
+                set output "Permission denied, wrong publickey or password."
+                set rc $E_CONNECT
+            }
+            -re "\[0-9]*%" {
+                exp_continue
+            }
+            "sftp>" {
+                if {\$count < \$argc} {
+                    set arg [lindex \$argv \$count]
+                    send "\$arg\r"
+                    incr count
+                } else {
+                    send "exit\r"
+                    set output "Disconnected."
+                    if {[info exists rc] != 1} {
+                        set rc $OK
+                    }
+                }
+                exp_continue
+            }
+            timeout {
+                set output "Connection timeout."
+                set rc $E_CONNECT
+            }
+        }
+        if {[info exists output] == 1} {
+            puts "\$output"
+        }
+    exit \$rc
+EOF
+}
+
+# SFTP backup download function
+sftp_download() {
+    source $HESTIA/conf/sftp.backup.conf
+    if [ -z "$PORT" ]; then
+        PORT='22'
+    fi
+    cd $BACKUP
+    if [ -z $BPATH ]; then
+        sftpc "get $1" > /dev/null 2>&1
+    else
+        sftpc "cd $BPATH" "get $1" > /dev/null 2>&1
+    fi
+
+}
+
+# Google backup download function
+google_download() {
+    source $HESTIA/conf/google.backup.conf
+    gsutil="$HESTIA/3rdparty/gsutil/gsutil"
+    export BOTO_CONFIG="$HESTIA/conf/.google.backup.boto"
+    ${gsutil} cp gs://$BUCKET/$BPATH/$1 $BACKUP/ > /dev/null 2>&1
+    if [ "$?" -ne 0 ]; then
+        check_result "$E_CONNECT" "gsutil failed to download $1"
+    fi
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+args_usage='BACKUP'
+check_args '1' "$#" "$args_usage"
+is_format_valid 'backup'
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking local backup
+if [ ! -e "$BACKUP/$backup" ]; then
+    if [[ "$BACKUP_SYSTEM" =~ "google" ]]; then
+        google_download $backup
+        downloaded='yes'
+    fi
+    if [[ "$BACKUP_SYSTEM" =~ "sftp" ]] && [ -z "$downloaded" ]; then
+        sftp_download $backup
+        downloaded='yes'
+    fi
+    if [[ "$BACKUP_SYSTEM" =~ "ftp" ]] && [ -z "$downloaded" ]; then
+        ftp_download $backup
+        downloaded='yes'
+    fi
+    if [ -z "$downloaded" ]; then
+        check_result $E_NOTEXIST "backup file $backup doesn't exist in '${BACKUP}' folder"
+    else
+        chmod 0640 $BACKUP/$backup
+        chown admin:admin $BACKUP/$backup
+    fi
+fi
+
+echo "
+#!/bin/bash
+# Reset at timer every 15 min after 1st hour if the file is still downloading / Check if hestia-ng is still accessing $BACKUP/$backup
+
+if lsof $BACKUP/$backup | grep hestia-ng; then
+at -f /$BACKUP/$backup.sh now + 15 minutes
+else 
+    rm $BACKUP/$backup;
+    rm $BACKUP/$backup.sh;
+fi" >  $BACKUP/$backup.sh;
+
+at -f /$BACKUP/$backup.sh now + 60 minutes
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+
+exit

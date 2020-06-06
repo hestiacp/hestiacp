@@ -40,6 +40,7 @@ All notable changes to this project will be documented in this file.
 - Improved "Forgot password" function prevent brute forcing.
 - Update Backup counter propperly when v-delete-user-backup ran.
 - Dropped support for Debian 8 according to EOL.
+- Improved Backup function. 
 
 ## [1.1.1] - 2020-03-24 - Hotfix
 ### Features

@@ -25,6 +25,18 @@ is_ip_key_empty() {
     fi
 }
 
+is_ip_rdns_valid() {
+    ip="$1"
+    network_ip=$(echo $ip | cut -d"." -f1-3)
+    awk_ip=$(echo $network_ip | sed 's|\.|/\&\&/|g')
+    rev_awk_ip=$(echo $awk_ip | rev)
+    rdns=$(dig +short -x $ip | sed 's/.$//')
+
+    if [ ! -z $rdns ] && [ ! $(echo $rdns | awk "/$awk_ip/ || /$rev_awk_ip/") ]; then
+        echo $rdns
+    fi
+}
+
 # Update ip address value
 update_ip_value() {
     key="$1"

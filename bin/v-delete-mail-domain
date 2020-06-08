@@ -85,9 +85,8 @@ rm -f $USER_DATA/mail/$domain.pem
 rm -f $USER_DATA/mail/$domain.pub
 rm -f $USER_DATA/mail/*@$domain.msg
 
-# Generating list of mail domains for HELO
-ls /etc/exim4/domains > /etc/exim4/mailhelo.conf
-sed -i "s \(.*\) \1:\1 " /etc/exim4/mailhelo.conf
+# Unsetting HELO for mail domain
+sed -i "/^${domain}:/d" /etc/exim4/mailhelo.conf
 
 # Decreasing domain value
 decrease_user_value "$user" '$U_MAIL_DOMAINS'

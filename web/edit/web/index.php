@@ -93,6 +93,8 @@ exec (HESTIA_CMD."v-list-user-ips ".$user." json", $output, $return_var);
 $ips = json_decode(implode('', $output), true);
 unset($output);
 
+$v_ip_public = empty($ips[$v_ip]['NAT']) ? $v_ip : $ips[$v_ip]['NAT'];
+
 // List web templates
 exec (HESTIA_CMD."v-list-web-templates json", $output, $return_var);
 $templates = json_decode(implode('', $output), true);
@@ -130,7 +132,14 @@ if (!empty($_POST['save'])) {
     }
 
     // Change web domain IP
-    
+    $v_newip='';
+    $v_newip_public='';
+
+    if(!empty($_POST['v_ip'])) {
+        $v_newip = $_POST['v_ip'];
+        $v_newip_public = empty($ips[$v_newip]['NAT']) ? $v_newip : $ips[$v_newip]['NAT'];
+    }
+
     if (($v_ip != $_POST['v_ip']) && (empty($_SESSION['error_msg']))) {
         exec (HESTIA_CMD."v-change-web-domain-ip ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($_POST['v_ip'])." 'no'", $output, $return_var);
         check_return_code($return_var,$output);
@@ -144,7 +153,7 @@ if (!empty($_POST['save'])) {
         exec (HESTIA_CMD."v-list-dns-domain ".$v_username." ".escapeshellarg($v_domain)." json", $output, $return_var);
         unset($output);
         if ($return_var == 0 ) {
-            exec (HESTIA_CMD."v-change-dns-domain-ip ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($_POST['v_ip'])." 'no'", $output, $return_var);
+            exec (HESTIA_CMD."v-change-dns-domain-ip ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_newip_public)." 'no'", $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
             $restart_dns = 'yes';
@@ -157,7 +166,7 @@ if (!empty($_POST['save'])) {
             exec (HESTIA_CMD."v-list-dns-domain ".$v_username." ".escapeshellarg($v_alias)." json", $output, $return_var);
             unset($output);
             if ($return_var == 0 ) {
-                exec (HESTIA_CMD."v-change-dns-domain-ip ".$v_username." ".escapeshellarg($v_alias)." ".escapeshellarg($_POST['v_ip']), $output, $return_var);
+                exec (HESTIA_CMD."v-change-dns-domain-ip ".$v_username." ".escapeshellarg($v_alias)." ".escapeshellarg($v_newip_public), $output, $return_var);
                 check_return_code($return_var,$output);
                 unset($output);
                 $restart_dns = 'yes';
@@ -215,7 +224,7 @@ if (!empty($_POST['save'])) {
                     exec (HESTIA_CMD."v-list-dns-domain ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
                     unset($output);
                     if ($return_var == 0) {
-                        exec (HESTIA_CMD."v-add-dns-on-web-alias ".$v_username." ".escapeshellarg($alias)." ".$v_ip." no", $output, $return_var);
+                        exec (HESTIA_CMD."v-add-dns-on-web-alias ".$v_username." ".escapeshellarg($alias)." ".escapeshellarg($v_newip_public ?: $v_ip_public)." no", $output, $return_var);
                         check_return_code($return_var,$output);
                     unset($output);
                         $restart_dns = 'yes';

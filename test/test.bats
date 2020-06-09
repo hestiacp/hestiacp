@@ -82,50 +82,54 @@ function validate_web_domain() {
     refute_output
 }
 
+#----------------------------------------------------------#
+#                           IP                             #
+#----------------------------------------------------------#
+
 @test "Check reverse Dns validation" {
-    skip
 
     # 1. PTR record for a IP should return a hostname(reverse) which in turn must resolve to the same IP addr(forward). (Full circle)
+    #  `-> not implemented in `is_ip_rdns_valid` yet and also not tested here
     # 2. Reject rPTR records that match generic dynamic IP pool patterns
 
     local ip="54.200.1.22"
     local rdns="ec2-54-200-1-22.us-west-2.compute.amazonaws.com"
-    run is_ip_rdns_valid "$ip" "$rdns"
+    run is_ip_rdns_valid "$ip"
     assert_failure
     refute_output
 
     local rdns="ec2.54.200.1.22.us-west-2.compute.amazonaws.com"
-    run is_ip_rdns_valid "$ip" "$rdns"
+    run is_ip_rdns_valid "$ip"
     assert_failure
     refute_output
 
     local rdns="ec2-22-1-200-54.us-west-2.compute.amazonaws.com"
-    run is_ip_rdns_valid "$ip" "$rdns"
+    run is_ip_rdns_valid "$ip"
     assert_failure
     refute_output
 
     local rdns="ec2.22.1.200.54.us-west-2.compute.amazonaws.com"
-    run is_ip_rdns_valid "$ip" "$rdns"
+    run is_ip_rdns_valid "$ip"
     assert_failure
     refute_output
 
     local rdns="ec2-200-54-1-22.us-west-2.compute.amazonaws.com"
-    run is_ip_rdns_valid "$ip" "$rdns"
+    run is_ip_rdns_valid "$ip"
     assert_failure
     refute_output
 
     local rdns="panel-22.mydomain.tld"
-    run is_ip_rdns_valid "$ip" "$rdns"
+    run is_ip_rdns_valid "$ip"
     assert_success
     assert_output "$rdns"
 
     local rdns="mail.mydomain.tld"
-    run is_ip_rdns_valid "$ip" "$rdns"
+    run is_ip_rdns_valid "$ip"
     assert_success
     assert_output "$rdns"
 
     local rdns="mydomain.tld"
-    run is_ip_rdns_valid "$ip" "$rdns"
+    run is_ip_rdns_valid "$ip"
     assert_success
     assert_output "$rdns"
 

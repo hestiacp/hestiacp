@@ -174,6 +174,18 @@ if (!empty($_POST['save'])) {
         }
     }
 
+    // Change mail domain IP
+    if (($v_ip != $_POST['v_ip']) && (empty($_SESSION['error_msg'])))  {
+        exec (HESTIA_CMD."v-list-mail-domain ".$v_username." ".escapeshellarg($v_domain)." json", $output, $return_var);
+        unset($output);
+        if ($return_var == 0 ) {
+            exec (HESTIA_CMD."v-rebuild-mail-domain ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            $restart_email = 'yes';
+        }
+    }
+
     // Change template
     if (($v_template != $_POST['v_template']) && (empty($_SESSION['error_msg']))) {
         exec (HESTIA_CMD."v-change-web-domain-tpl ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($_POST['v_template'])." 'no'", $output, $return_var);

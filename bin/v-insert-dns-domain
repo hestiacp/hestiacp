@@ -56,7 +56,7 @@ if [ "$flush" = 'records' ]; then
 fi
 
 # Flush domain
-if [ "$flush" ! = 'no' ]; then
+if [ "$flush" != 'no' ]; then
     sed -i "/DOMAIN='$DOMAIN'/d" $USER_DATA/dns.conf 2> /dev/null
 fi
 

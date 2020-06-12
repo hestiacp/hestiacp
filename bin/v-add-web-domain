@@ -107,6 +107,7 @@ if [ ! -z "$WEB_BACKEND" ]; then
             update_user_value "$user" '$BACKEND_TEMPLATE' "default"
         fi
     fi
+    BACKEND="$BACKEND_TEMPLATE"
     $BIN/v-add-web-domain-backend "$user" "$domain" $BACKEND_TEMPLATE
     check_result $? "Backend error" >/dev/null
 fi

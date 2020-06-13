@@ -33,9 +33,6 @@ is_ip_key_empty '$U_SYS_USERS'
 
 ip_status="$(get_ip_value '$STATUS')"
 
-if [ "$user" != "admin" ] && [ "$ip_status" == "shared" ]; then
-        check_result "$E_INVALID" "Only the 'admin' user can have a shared ip"
-fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -78,6 +75,11 @@ if [ "$ip_owner" != "$user" ]; then
     fi
 fi
 
+# Set status to dedicated if owner is not admin
+ip_status="$(get_ip_value '$STATUS')"
+if [ "$user" != 'admin' ] && [ "$ip_status" == 'shared' ]; then
+    $HESTIA/bin/v-change-sys-ip-status "$ip" 'dedicated'
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #

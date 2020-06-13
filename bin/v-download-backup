@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: Download backup
-# options: BACKUP 
+# options: USER BACKUP 
 #
 # The function download back-up from remote server
 
@@ -13,7 +13,8 @@
 source /etc/profile
 
 # Argument definition
-backup=$1
+user=$1
+backup=$2
 
 # Define backup dir
 if [ -z "$BACKUP" ]; then
@@ -137,13 +138,21 @@ google_download() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-args_usage='BACKUP'
-check_args '1' "$#" "$args_usage"
-is_format_valid 'backup'
+check_args '2' "$#" 'USER BACKUP'
+is_format_valid 'user' 'backup'
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+
+# Checking available disk space
+disk_usage=$(df $BACKUP |tail -n1 |tr ' ' '\n' |grep % |cut -f 1 -d %)
+if [ "$disk_usage" -ge "$BACKUP_DISK_LIMIT" ]; then
+    echo "Error: Not enough disk space" |$SENDMAIL -s "$subj" $email $notify
+    sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
+    check_result $E_DISK "Not enough disk space"
+fi
 
 # Checking local backup
 if [ ! -e "$BACKUP/$backup" ]; then
@@ -165,22 +174,29 @@ if [ ! -e "$BACKUP/$backup" ]; then
         if [ -e "$BACKUP/$backup" ]; then
         chmod 0640 $BACKUP/$backup
         chown admin:admin $BACKUP/$backup
-        echo "#!/bin/bash 
-# Reset at timer every 15 min after 1st hour if the file is still downloading / Check if hestia-ng is still accessing $BACKUP/$backup
-
-if lsof $BACKUP/$backup | grep hestia-ng; then
-    at -f /$BACKUP/$backup.sh now + 15 minutes
-else 
-rm $BACKUP/$backup;
-rm $BACKUP/$backup.sh;
-fi" >  $BACKUP/$backup.sh;
-        at -f /$BACKUP/$backup.sh now + 60 minutes
+        echo "rm $BACKUP/$backup" | at now + 1 day
         fi
     fi
 fi
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
+# Send notification
+if [ -e "$BACKUP/$backup" ]; then
+    cd $BACKUP
+    subj="$user → Download of $backup has been completed"
+    email=$(get_user_value '$CONTACT')
+    echo "Download of $backup has been completed you are able to download it for 12 hours" |$SENDMAIL -s "$subj" $email $notify
+    $BIN/v-add-user-notification $user "$subj" "Download of $backup has been completed you are able to download it for 12 hours"
+    
+fi
+
+# Cleaning restore queue
+sed -i "/v-download-backup $user /d" $HESTIA/data/queue/backup.pipe
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
 
 exit

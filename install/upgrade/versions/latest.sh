@@ -81,6 +81,14 @@ fi
 # Install Filegator FileManager during upgrade
 if [ ! -e "$HESTIA/web/fm/configuration.php" ]; then
     echo "(*) Configuring Filegator FileManager..."
+
+    # Validate if unzip is installed
+    if [ ! -e "/usr/bin/unzip" ]; then
+        apt -qq update > /dev/null 2>&1
+        apt -qq install unzip > /dev/null 2>&1
+    fi
+
+    # Install the FileManager
     source $HESTIA_INSTALL_DIR/filemanager/install-fm.sh > /dev/null 2>&1
 
     # Add sftp key for every user

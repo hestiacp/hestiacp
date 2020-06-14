@@ -79,7 +79,7 @@ if [ "$WEB_SYSTEM" = "apache2" ]; then
 fi
 
 # Install Filegator FileManager during upgrade
-if [ -e "/etc/nginx/nginx.conf" ]; then
+if [ ! -e "$HESTIA/web/fm/configuration.php" ]; then
     echo "(*) Configuring Filegator FileManager..."
     source HESTIA_INSTALL_DIR/filemanager/install-fm.sh > /dev/null 2>&1
 fi

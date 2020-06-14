@@ -1633,6 +1633,16 @@ fi
 
 
 #----------------------------------------------------------#
+#                  Configure FileManager                   #
+#----------------------------------------------------------#
+
+if [ "$nginx" = 'yes' ]; then
+    echo "(*) Configuring Filegator FileManager..."
+    source HESTIA_INSTALL_DIR/filemanager/install-fm.sh > /dev/null 2>&1
+fi
+
+
+#----------------------------------------------------------#
 #                       Configure API                      #
 #----------------------------------------------------------#
 

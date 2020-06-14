@@ -77,3 +77,9 @@ if [ "$WEB_SYSTEM" = "apache2" ]; then
         cp -f $HESTIA_INSTALL_DIR/apache2/hestia-event.conf /etc/apache2/mods-enabled/
     fi
 fi
+
+# Install Filegator FileManager during upgrade
+if [ -e "/etc/nginx/nginx.conf" ]; then
+    echo "(*) Configuring Filegator FileManager..."
+    source HESTIA_INSTALL_DIR/filemanager/install-fm.sh > /dev/null 2>&1
+fi

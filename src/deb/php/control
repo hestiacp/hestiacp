@@ -6,7 +6,7 @@ Section: admin
 Maintainer: HestaCP <info@hestiacp.com>
 Homepage: https://www.hestiacp.com
 Architecture: amd64
-Depends: hestia
+Depends: hestia, libzip5 | libzip4, unzip
 Description: hestia php-fpm
  hestia is an open source hosting control panel.
  hestia has a clean and focused interface without the clutter.

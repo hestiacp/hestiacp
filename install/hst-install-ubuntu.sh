@@ -1800,7 +1800,7 @@ chown admin:admin $HESTIA/data/sessions
 #----------------------------------------------------------#
 
 echo "(*) Configuring Filegator FileManager..."
-source HESTIA_INSTALL_DIR/filemanager/install-fm.sh > /dev/null 2>&1
+source $HESTIA_INSTALL_DIR/filemanager/install-fm.sh > /dev/null 2>&1
 
 
 #----------------------------------------------------------#

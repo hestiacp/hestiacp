@@ -81,7 +81,7 @@ fi
 # Install Filegator FileManager during upgrade
 if [ ! -e "$HESTIA/web/fm/configuration.php" ]; then
     echo "(*) Configuring Filegator FileManager..."
-    source HESTIA_INSTALL_DIR/filemanager/install-fm.sh > /dev/null 2>&1
+    source $HESTIA_INSTALL_DIR/filemanager/install-fm.sh > /dev/null 2>&1
 
     # Add sftp key for every user
     for user in $(v-list-sys-users plain); do

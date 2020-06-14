@@ -87,7 +87,7 @@ if [ ! -e "$HESTIA/web/fm/configuration.php" ]; then
 
     # Add sftp key for every user
     for user in $(v-list-sys-users plain); do
-        v-add-user-sftp-key "$user"
+        [[ -f "/home/${user}/.ssh/hst-filemanager-key" ]] && rm "/home/${user}/.ssh/hst-filemanager-key"
     done
 fi
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add user sftp key
-# options: USER 
+# options: USER [TTL]
 #
 # The script creates and updates ssh key for filemanager usage
 
@@ -11,6 +11,7 @@
 
 # Argument definition
 user=$1
+ttl=$2
 
 # Includes
 source $HESTIA/func/main.sh
@@ -21,8 +22,8 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'USER'
-is_format_valid 'user'
+check_args '1' "$#" 'USER [TTL]'
+is_format_valid 'user' 'ttl'
 is_object_valid 'user' 'USER' "$user"
 
 
@@ -41,37 +42,34 @@ AUTHKEY_FILE="$HOMEDIR/$user/.ssh/authorized_keys"
 if [ ! -f "${PRVKEY_FILE}" ]; then
 
     ssh-keygen -q -b 1024 -t rsa -f "${PRVKEY_FILE}" -N ""
+    rm "${PUBKEY_FILE}"
     new_privkey=true
 
 fi
 
-if [ ! -f "${PUBKEY_FILE}" ] || [ "$new_privkey" = true ]; then
+if [ ! -f "${AUTHKEY_FILE}" ] || [ "$new_privkey" = true ]; then
 
-    ssh-keygen -y -f "${PRVKEY_FILE}" > "${PUBKEY_FILE}"
-    new_pubkey=true
+    pubkey_str="$(ssh-keygen -y -f ${PRVKEY_FILE})"
+    pubkey_desc="filemanager.ssh.key"
 
-fi
-
-if [ ! -f "${AUTHKEY_FILE}" ] || [ "$new_pubkey" = true ]; then
-
-    now=$(date +%s)
-    pubkey_str=$(cat "${PUBKEY_FILE}")
-    pubkey_desc="[${user}]filemanager.ssh.key"
-
-    if grep --quiet --no-messages -F "[${user}]filemanager.ssh.key" "${AUTHKEY_FILE}"; then
-        sed -i "/ \[${user}\]filemanager\.ssh\.key\$/d" "${AUTHKEY_FILE}"
+    if grep --quiet --no-messages -F "$pubkey_desc" "${AUTHKEY_FILE}"; then
+        sed -i "/filemanager\.ssh\.key\$/d" "${AUTHKEY_FILE}"
     fi
 
     # make sure authorized_keys is ending with EOL
     [ -f "${AUTHKEY_FILE}" ] && sed -i '$a\' "${AUTHKEY_FILE}"
 
-    echo "from=\"127.0.0.1\",command=\"internal-sftp\",restrict ${pubkey_str} TS:${now} ${pubkey_desc}" >> "${AUTHKEY_FILE}"
+    expire=0
+    if [[ "$ttl" -gt 0 ]]; then
+        expire=$(date +%s -d "+${ttl} min")
+        echo "rm ${PRVKEY_FILE}" | at "now +${ttl} minute" > /dev/null 2>&1
+    fi
+    echo "from=\"127.0.0.1\",command=\"internal-sftp\",restrict ${pubkey_str} TS:${expire} ${pubkey_desc}" >> "${AUTHKEY_FILE}"
 
 fi
 
 # 
 chown ${user}: "${AUTHKEY_FILE}"
-chown ${user}: "${PUBKEY_FILE}"
 chown admin: "${PRVKEY_FILE}"
 
 

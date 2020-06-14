@@ -236,9 +236,6 @@ fi
 # Adding jailed sftp env
 $BIN/v-add-user-sftp-jail $user
 
-# Adding sftp ssh key
-$BIN/v-add-user-sftp-key $user
-
 # Logging
 log_history "added system user $user" '' 'admin'
 log_event "$OK" "$ARGUMENTS"

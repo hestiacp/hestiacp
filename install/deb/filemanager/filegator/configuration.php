@@ -16,6 +16,10 @@ $dist_config['services']['Filegator\Services\Storage\Filesystem']['config']['ada
         if (isset($_SESSION['look']) && $_SESSION['look'] != 'admin' && $v_user === 'admin') {
             $v_user = $_SESSION['look'];
         }
+        # Create filemanager sftp key if missing and trash it after 30 min
+        if (! file_exists('/home/'.basename($v_user).'/.ssh/hst-filemanager-key')) {
+            exec ("sudo /usr/local/hestia/bin/v-add-user-sftp-key " . escapeshellarg(basename($v_user)) . " 30", $output, $return_var);
+        }
 
         return new \League\Flysystem\Sftp\SftpAdapter([
             'host' => '127.0.0.1',
@@ -34,11 +38,6 @@ $dist_config['services']['Filegator\Services\Auth\AuthInterface'] = [
             'private_repos' => false,
         ],
     ];
-
-$dist_config['services']['Filegator\Services\View\ViewInterface']['config'] = [
-        'add_to_head' => '',
-        'add_to_body' => '',
-];
 
 $dist_config['services']['Filegator\Services\View\ViewInterface']['config'] = [
     'add_to_head' => '',

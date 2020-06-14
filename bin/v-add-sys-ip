@@ -48,6 +48,9 @@ fi
 if [ ! -z "$nat_ip" ] ; then
     is_format_valid 'nat_ip'
 fi
+if [ "$user" != "admin" ]; then
+    ip_status="dedicated"
+fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode

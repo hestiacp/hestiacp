@@ -44,7 +44,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     postgresql postgresql-contrib proftpd-basic quota roundcube-core
     roundcube-mysql roundcube-plugins rrdtool rssh spamassassin sudo hestia
     hestia-nginx hestia-php vim-common vsftpd whois zip acl sysstat setpriv
-    libonig5 ipset"
+    ipset"
 
 # Defining help function
 help() {
@@ -804,9 +804,7 @@ fi
 if [ "$release" = '20.04' ]; then
     software=$(echo "$software" | sed -e "s/rssh//")
 fi
-if [ "$release" != '20.04' ]; then
-    software=$(echo "$software" | sed -e "s/libonig5//")
-fi
+
 
 #----------------------------------------------------------#
 #                 Disable Apparmor on LXC                  #

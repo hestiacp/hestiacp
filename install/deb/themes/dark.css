@@ -1369,7 +1369,7 @@ label:hover {
 
 .vst-input:disabled,
 .vst-list:disabled {
-  background-color: #454545;
+  background-color: #303030;
   text-shadow: 1px 1px rgba(0,0,0,0.3);
   color: #acacac;
   border-color: #606060;

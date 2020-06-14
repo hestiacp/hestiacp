@@ -1678,14 +1678,6 @@ fi
 
 
 #----------------------------------------------------------#
-#                  Configure FileManager                   #
-#----------------------------------------------------------#
-
-echo "(*) Configuring Filegator FileManager..."
-source HESTIA_INSTALL_DIR/filemanager/install-fm.sh > /dev/null 2>&1
-
-
-#----------------------------------------------------------#
 #                       Configure API                      #
 #----------------------------------------------------------#
 
@@ -1841,6 +1833,14 @@ update-rc.d hestia defaults
 systemctl start hestia
 check_result $? "hestia start failed"
 chown admin:admin $HESTIA/data/sessions
+
+
+#----------------------------------------------------------#
+#                  Configure FileManager                   #
+#----------------------------------------------------------#
+
+echo "(*) Configuring Filegator FileManager..."
+source HESTIA_INSTALL_DIR/filemanager/install-fm.sh > /dev/null 2>&1
 
 
 #----------------------------------------------------------#

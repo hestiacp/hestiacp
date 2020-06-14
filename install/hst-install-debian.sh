@@ -44,7 +44,7 @@ if [ "$release" -eq 9 ]; then
         sudo bc ftp lsof ntpdate rrdtool quota e2fslibs bsdutils e2fsprogs curl
         imagemagick fail2ban dnsutils bsdmainutils cron hestia hestia-nginx
         hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat
-        rsyslog setpriv ipset libapache2-mod-ruid2 unzip"
+        rsyslog setpriv ipset libapache2-mod-ruid2"
 elif [ "$release" -eq 10 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
         apache2-suexec-pristine libapache2-mod-fcgid libapache2-mod-php$fpm_v
@@ -61,7 +61,7 @@ elif [ "$release" -eq 10 ]; then
         quota e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron hestia hestia-nginx hestia-php expect
         libmail-dkim-perl unrar-free vim-common acl sysstat rsyslog util-linux
-        ipset libapache2-mpm-itk unzip"
+        ipset libapache2-mpm-itk"
 fi
 
 # Defining help function

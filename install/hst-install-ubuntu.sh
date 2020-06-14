@@ -44,7 +44,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     postgresql postgresql-contrib proftpd-basic quota roundcube-core
     roundcube-mysql roundcube-plugins rrdtool rssh spamassassin sudo hestia
     hestia-nginx hestia-php vim-common vsftpd whois zip acl sysstat setpriv
-    libonig5 ipset unzip"
+    libonig5 ipset"
 
 # Defining help function
 help() {

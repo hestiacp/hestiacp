@@ -90,3 +90,12 @@ if [ ! -e "$HESTIA/web/fm/configuration.php" ]; then
         v-add-user-sftp-key "$user"
     done
 fi
+
+# Enable nginx module loading
+if [ ! -d "/etc/nginx/modules-enabled" ]; then
+    mkdir -p "/etc/nginx/modules-enabled"
+fi
+
+if ! grep --silent "include /etc/nginx/modules-enabled" /etc/nginx/nginx.conf; then
+    sed -i '/^pid/ a include /etc/nginx/modules-enabled/*.conf;' /etc/nginx/nginx.conf
+fi

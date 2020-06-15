@@ -21,9 +21,17 @@ $dist_config['services']['Filegator\Services\Storage\Filesystem']['config']['ada
             exec ("sudo /usr/local/hestia/bin/v-add-user-sftp-key " . escapeshellarg(basename($v_user)) . " 30", $output, $return_var);
         }
 
+        if ( !isset($_SESSION['SFTP_PORT']) ) {
+            if( preg_match('/^\s*Port\s+(\d+)$/im', file_get_contents('/etc/ssh/sshd_config'), $matches) ) {
+                $_SESSION['SFTP_PORT'] = $matches[1] ?? 22;
+            } else {
+                $_SESSION['SFTP_PORT'] = 22;
+            }
+        }
+
         return new \League\Flysystem\Sftp\SftpAdapter([
             'host' => '127.0.0.1',
-            'port' => 22,
+            'port' => intval($_SESSION['SFTP_PORT']),
             'username' => basename($v_user),
             'privateKey' => '/home/'.basename($v_user).'/.ssh/hst-filemanager-key',
             'root' => '/',

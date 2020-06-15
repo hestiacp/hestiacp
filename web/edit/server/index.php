@@ -393,7 +393,7 @@ if (!empty($_POST['save'])) {
             $v_backup_username = escapeshellarg($_POST['v_backup_username']);
             $v_backup_password = escapeshellcmd($_POST['v_backup_password']);
             $v_backup_bpath = escapeshellarg($_POST['v_backup_bpath']);
-            exec (HESTIA_CMD."v-add-backup-host ". $v_backup_type ." ". $v_backup_host ." ". $v_backup_username ." '". $v_backup_password ."' ". $v_backup_bpath." ".$v_backup_port, $output, $return_var);
+            exec (HESTIA_CMD."v-add-backup-host ". $v_backup_type ." ". $v_backup_host ." ". $v_backup_username ." ". $v_backup_password ." ". $v_backup_bpath." ".$v_backup_port, $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
             if (empty($_SESSION['error_msg'])) $v_backup_host = $_POST['v_backup_host'];
@@ -411,7 +411,7 @@ if (!empty($_POST['save'])) {
     // Change remote backup host type
     if (empty($_SESSION['error_msg'])) {
         if ((!empty($_POST['v_backup_host'])) && ($_POST['v_backup_type'] != $v_backup_type)) {
-            exec (HESTIA_CMD."v-delete-backup-host '". $v_backup_type ."'", $output, $return_var);
+            exec (HESTIA_CMD."v-delete-backup-host " . escapeshellarg($v_backup_type) , $output, $return_var);
             unset($output);
             $v_backup_host = escapeshellarg($_POST['v_backup_host']);
             $v_backup_port = escapeshellarg($_POST['v_backup_port']);
@@ -419,7 +419,7 @@ if (!empty($_POST['save'])) {
             $v_backup_username = escapeshellarg($_POST['v_backup_username']);
             $v_backup_password = escapeshellcmd($_POST['v_backup_password']);
             $v_backup_bpath = escapeshellarg($_POST['v_backup_bpath']);
-            exec (HESTIA_CMD."v-add-backup-host ". $v_backup_type ." ". $v_backup_host ." ". $v_backup_username ." '". $v_backup_password ."' ". $v_backup_bpath." ".$v_backup_port, $output, $return_var);
+            exec (HESTIA_CMD."v-add-backup-host ". $v_backup_type ." ". $v_backup_host ." ". $v_backup_username ." ". $v_backup_password ." ". $v_backup_bpath." ".$v_backup_port, $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
             if (empty($_SESSION['error_msg'])) $v_backup_host = $_POST['v_backup_host'];
@@ -443,7 +443,7 @@ if (!empty($_POST['save'])) {
                 $v_backup_username = escapeshellarg($_POST['v_backup_username']);
                 $v_backup_password = escapeshellcmd($_POST['v_backup_password']);
                 $v_backup_bpath = escapeshellarg($_POST['v_backup_bpath']);
-                exec (HESTIA_CMD."v-add-backup-host ". $v_backup_type ." ". $v_backup_host ." ". $v_backup_username ." '". $v_backup_password ."' ". $v_backup_bpath." ".$v_backup_port, $output, $return_var);
+                exec (HESTIA_CMD."v-add-backup-host ". $v_backup_type ." ". $v_backup_host ." ". $v_backup_username ." ". $v_backup_password ." ". $v_backup_bpath." ".$v_backup_port, $output, $return_var);
                 check_return_code($return_var,$output);
                 unset($output);
                 if (empty($_SESSION['error_msg'])) $v_backup_host = $_POST['v_backup_host'];

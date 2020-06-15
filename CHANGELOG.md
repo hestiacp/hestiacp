@@ -12,6 +12,10 @@ All notable changes to this project will be documented in this file.
 - Added the possibility to manage ssh keys in the backend.
 - Switched to mpm_event instead mod_prefork for apache2 on fresh installs.
 - Added a manual migration script for apache2 mpm_event ($HESTIA/install/upgrade/manual/migrate_mpm_event.sh).
+- Added support for Linux ipset for a efficient way to handle large blocklists or country wide ip lists.
+- Extended Hestia Firewall to support allowing or blocking traffic from ipset lists.
+- Added Filemanager integration (Filegator).
+- Added BATS system for testing the functionality of Bash scripts (WIP).
 
 ### Bugfixes
 - Do not allow to show apache2 server-status page from public.

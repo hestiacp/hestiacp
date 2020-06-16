@@ -1823,7 +1823,7 @@ if [ "$quota" = 'yes' ]; then
 fi
 
 # Set backend port
-$HESTIA/bin/v-change-sys-port $port
+$HESTIA/bin/v-change-sys-port $port > /dev/null 2>&1
 
 # Set default theme
 $HESTIA/bin/v-change-sys-theme 'default'

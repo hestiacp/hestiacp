@@ -84,11 +84,6 @@ if [ ! -e "$HESTIA/web/fm/configuration.php" ]; then
 
     # Install the FileManager
     source $HESTIA_INSTALL_DIR/filemanager/install-fm.sh > /dev/null 2>&1
-
-    # Add sftp key for every user
-    for user in $(v-list-sys-users plain); do
-        [[ -f "/home/${user}/.ssh/hst-filemanager-key" ]] && rm "/home/${user}/.ssh/hst-filemanager-key"
-    done
 fi
 
 # Enable nginx module loading

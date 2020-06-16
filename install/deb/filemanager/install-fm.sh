@@ -46,7 +46,7 @@ rm --recursive --force ${FM_INSTALL_DIR}/filegator
 cp --recursive --force ${HESTIA_INSTALL_DIR}/filemanager/filegator/* "${FM_INSTALL_DIR}"
 
 chown $user: -R "${FM_INSTALL_DIR}"
-COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php $COMPOSER_BIN --quiet require league/flysystem-sftp
+COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php $COMPOSER_BIN --quiet --no-dev install
 check_result $? "Install filemanager dependency"
 
 chown root: -R "${FM_INSTALL_DIR}"

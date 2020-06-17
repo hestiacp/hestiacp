@@ -44,7 +44,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     postgresql postgresql-contrib proftpd-basic quota roundcube-core
     roundcube-mysql roundcube-plugins rrdtool rssh spamassassin sudo hestia
     hestia-nginx hestia-php vim-common vsftpd whois zip acl sysstat setpriv
-    ipset libonig4"
+    ipset libonig5"
 
 # Defining help function
 help() {
@@ -798,12 +798,15 @@ if [ -d "$withdebs" ]; then
     software=$(echo "$software" | sed -e "s/hestia-php//")
     software=$(echo "$software" | sed -e "s/hestia//")
 fi
-if [ "$release" = '16.04' ] || [ "$release" = '20.04' ]; then
-    software=$(echo "$software" | sed -e "s/setpriv/util-linux/")
+if [ "$release" = '16.04' ]; then
+    software=$(echo "$software" | sed -e "s/libonig5/libonig2/")
+fi
+if [ "$release" = '18.04' ]; then
+    software=$(echo "$software" | sed -e "s/libonig5/libonig4/")
 fi
 if [ "$release" = '20.04' ]; then
+    software=$(echo "$software" | sed -e "s/setpriv/util-linux/")
     software=$(echo "$software" | sed -e "s/rssh//")
-    software=$(echo "$software" | sed -e "s/libonig4/libonig5/")
 fi
 
 

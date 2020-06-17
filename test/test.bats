@@ -36,6 +36,7 @@ function validate_web_domain() {
     local user=$1
     local domain=$2
     local webproof=$3
+    local webpath=${4}
 
     refute [ -z "$user" ]
     refute [ -z "$domain" ]
@@ -51,12 +52,14 @@ function validate_web_domain() {
     SSL=$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL')
     domain_ip=$(get_real_ip "$domain_ip")
 
-    assert_file_exist $HOMEDIR/$user/web/$domain/public_html/index.php
+    if [ ! -z $webpath ]; then
+        assert_file_exist $HOMEDIR/$user/web/$domain/public_html/$webpath
+    fi
 
     refute [ -z "$webproof" ]
 
     # Test HTTP
-    run curl --location --silent --show-error --insecure --resolve "${domain}:80:${domain_ip}" "http://${domain}/index.php"
+    run curl --location --silent --show-error --insecure --resolve "${domain}:80:${domain_ip}" "http://${domain}/${webpath}"
     assert_success
     assert_output --partial "$webproof"
 
@@ -65,7 +68,7 @@ function validate_web_domain() {
         run v-list-web-domain-ssl $user $domain
         assert_success
 
-        run curl --location --silent --show-error --insecure --resolve "${domain}:443:${domain_ip}" "https://${domain}/index.php"
+        run curl --location --silent --show-error --insecure --resolve "${domain}:443:${domain_ip}" "https://${domain}/${webpath}"
         assert_success
         assert_output --partial "$webproof"
     fi
@@ -369,6 +372,10 @@ function validate_web_domain() {
     run v-add-web-domain $user $domain 198.18.0.125
     assert_success
     refute_output
+
+    echo -e "<?php\necho 'Hestia Test:'.(4*3);" > $HOMEDIR/$user/web/$domain/public_html/php-test.php
+    validate_web_domain $user $domain 'Hestia Test:12' 'php-test.php'
+    rm $HOMEDIR/$user/web/$domain/public_html/php-test.php
 }
 
 @test "WEB: Add web domain (duplicate)" {
@@ -404,12 +411,18 @@ function validate_web_domain() {
     run v-suspend-web-domain $user $domain
     assert_success
     refute_output
+
+    validate_web_domain $user $domain 'This site is currently suspended'
 }
 
 @test "WEB: Unsuspend web domain" {
     run v-unsuspend-web-domain $user $domain
     assert_success
     refute_output
+
+    echo -e "<?php\necho 'Hestia Test:'.(4*3);" > $HOMEDIR/$user/web/$domain/public_html/php-test.php
+    validate_web_domain $user $domain 'Hestia Test:12' 'php-test.php'
+    rm $HOMEDIR/$user/web/$domain/public_html/php-test.php
 }
 
 @test "WEB: Add ssl" {

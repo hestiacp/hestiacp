@@ -10,6 +10,11 @@ if [ "$WEB_SYSTEM" != "apache2" ]; then
     echo "Apache2 isn't installed on your system, canceling migration..." && exit 1
 fi
 
+#Check if PHP-FPM is instaled 
+if [ "$WEB_BACKEND" != "php-fpm"]; then
+    echo "PHP-FPM not yet installed please run migrate_apache.sh first"  && exit 1
+fi
+
 # Check if mod_event is already enabled
 if [ $(a2query -M) = 'event' ]; then
     echo "mod_event is already enabled, canceling migration..." && exit 1

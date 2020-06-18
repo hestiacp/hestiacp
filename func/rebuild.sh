@@ -379,9 +379,9 @@ rebuild_web_domain_conf() {
                 $HOMEDIR/$user/web/$domain/logs
     chmod 751   $HOMEDIR/$user/web/$domain/private \
                 $HOMEDIR/$user/web/$domain/cgi-bin \
-                $HOMEDIR/$user/web/$domain/public_html \
-                $HOMEDIR/$user/web/$domain/public_shtml \
                 $HOMEDIR/$user/web/$domain/document_errors
+    chmod 755   $HOMEDIR/$user/web/$domain/public_html \
+                $HOMEDIR/$user/web/$domain/public_shtml
     chmod 640 /var/log/$WEB_SYSTEM/domains/$domain.*
 }
 

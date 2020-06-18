@@ -98,6 +98,7 @@ rebuild_user_conf() {
         mkdir -p $HOMEDIR/$user/tmp
         chmod 751 $HOMEDIR/$user/conf/web
         chmod 751 $HOMEDIR/$user/web
+        chmod 755 $HOMEDIR/$user/web/public_*html
         chmod 771 $HOMEDIR/$user/tmp
         chown $user:$user $HOMEDIR/$user/web
         if [ -z "$create_user" ]; then

@@ -1164,6 +1164,7 @@ if [ "$nginx" = 'yes' ]; then
     cp -f $HESTIA_INSTALL_DIR/nginx/phppgadmin.inc /etc/nginx/conf.d/
     cp -f $HESTIA_INSTALL_DIR/logrotate/nginx /etc/logrotate.d/
     mkdir -p /etc/nginx/conf.d/domains
+    mkdir -p /etc/nginx/modules-enabled
     mkdir -p /var/log/nginx/domains
 
     # Update dns servers in nginx.conf

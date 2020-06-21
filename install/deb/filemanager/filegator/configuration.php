@@ -5,7 +5,8 @@ $dist_config = require __DIR__.'/configuration_sample.php';
 $dist_config['public_path'] = '/fm/';
 $dist_config['frontend_config']['app_name'] = 'Hestia FM';
 $dist_config['frontend_config']['logo'] = 'https://raw.githubusercontent.com/filegator/filegator/master/dist/img/logo.png';
-$dist_config['frontend_config']['editable'] = ['.txt', '.css', '.js', '.ts', '.html', '.php', '.py' ];
+$dist_config['frontend_config']['editable'] = ['.txt', '.css', '.js', '.ts', '.html', '.php', '.py',
+        '.yml', '.xml', '.md', '.log', '.csv', '.conf', '.config', '.ini', '.scss', '.sh', '.env', '.example' ];
 $dist_config['frontend_config']['guest_redirection'] = '/login/' ;
 
 $dist_config['services']['Filegator\Services\Storage\Filesystem']['config']['adapter'] = function () {

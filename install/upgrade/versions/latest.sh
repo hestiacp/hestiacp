@@ -22,7 +22,8 @@ if [ "$WEB_SYSTEM" = "apache2" ] && [ ! -e "/etc/apt/sources.list.d/apache2.list
             codename="$(lsb_release -s -c)"
             echo "deb http://ppa.launchpad.net/ondrej/apache2/ubuntu $codename main" > /etc/apt/sources.list.d/apache2.list
         elif [ "$type" = "debian" ]; then
-            echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/apache2.list
+            codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
+            echo "deb https://packages.sury.org/php/ $codename main" > /etc/apt/sources.list.d/apache2.list
             wget --quiet https://packages.sury.org/apache2/apt.gpg -O /tmp/apache2_signing.key
             APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/apache2_signing.key > /dev/null 2>&1
         fi

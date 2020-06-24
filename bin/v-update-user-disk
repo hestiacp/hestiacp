@@ -34,16 +34,11 @@ is_object_valid 'user' 'USER' "$user"
 OLDIFS=$IFS
 IFS=$(echo -en "\n\b")
 
-# Defining directory list
-dir_list=$(ls $HOMEDIR/$user/ |grep -v '^web$' | grep -v '^mail$' |\
-    grep -v '^conf$')
 
-# Starting update disk loop
+#Starting update disk space excluding web, mail, conf directory
 disk_usage='0'
-for dir in $dir_list; do
-    dir_disk=$(du -shm "$HOMEDIR/$user/$dir"|cut -f 1 )
-    disk_usage=$((disk_usage + dir_disk))
-done
+disk_usage=$(du -shm $HOMEDIR/$user --exclude $HOMEDIR/$user/web --exclude $HOMEDIR/$user/mail --exclude $HOMEDIR/$user/conf |cut -f 1 )
+
 
 # Restoring old IFS
 IFS=$OLDIFS

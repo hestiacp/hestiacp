@@ -4,28 +4,25 @@ error_reporting(NULL);
 ob_start();
 session_start();
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
-
 // Check token
 if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
     header('Location: /login/');
     exit();
 }
 
+$backup = $_GET['backup'];  
+   
 if(!file_exists('/backup/'.$backup)){
     $v_username = escapeshellarg($user);
-    exec (HESTIA_CMD."v-schedule-user-backup ".$v_username, $output, $return_var);
+    $backup = escapeshellarg($_GET['backup']);
+    exec (HESTIA_CMD."v-schedule-user-backup-download ".$v_username." ".$backup , $output, $return_var);
     if ($return_var == 0) {
-        $_SESSION['error_msg'] = __('BACKUP_SCHEDULED');
+        $_SESSION['error_msg'] = __('BACKUP_DOWNLOAD_SCHEDULED');
     } else {
         $_SESSION['error_msg'] = implode('<br>', $output);
         if (empty($_SESSION['error_msg'])) {
             $_SESSION['error_msg'] = __('Error: hestia did not return any output.');
-        }
-    
-        if ($return_var == 4) {
-            $_SESSION['error_msg'] = __('BACKUP_EXISTS');
-        }
-    
+        }    
     }
     unset($output);
     header("Location: /list/backup/");

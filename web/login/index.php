@@ -38,6 +38,11 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
     if(isset($_SESSION['token']) && isset($_POST['token']) && $_POST['token'] == $_SESSION['token']) {
         $v_user = escapeshellarg($_POST['user']);
         $v_ip = escapeshellarg($_SERVER['REMOTE_ADDR']);
+        if(isset($_SERVER['HTTP_CF_CONNECTING_IP'])){
+            if(!empty($_SERVER['HTTP_CF_CONNECTING_IP'])){
+                $v_ip = escapeshellarg($_SERVER['HTTP_CF_CONNECTING_IP']);
+            }
+        }
         if (isset($_POST['twofa'])) {
             $v_twofa = escapeshellarg($_POST['twofa']);
         }
@@ -47,6 +52,7 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
         exec (HESTIA_CMD."v-get-user-salt ".$v_user." ".$v_ip." json" , $output, $return_var);
         $pam = json_decode(implode('', $output), true);
         if ( $return_var > 0 ) {
+            sleep(5);
             $ERROR = "<a class=\"error\">".__('Invalid username or password')."</a>";
         } else {
             $user = $_POST['user'];
@@ -80,6 +86,7 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
 
             // Check API answer
             if ( $return_var > 0 ) {
+                sleep(5);
                 $ERROR = "<a class=\"error\">".__('Invalid username or password')."</a>";
             } else {
 
@@ -97,9 +104,11 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
                         exec(HESTIA_CMD ."v-check-user-2fa ".$v_user." ".$v_twofa, $output, $return_var);
                         unset($output);
                         if ( $return_var > 0 ) {
+                            sleep(1);
                             $ERROR = "<a class=\"error\">".__('Invalid or missing 2FA token')."</a>";
                         }
                     } else {
+                        sleep(1);
                         $ERROR = "<a class=\"error\">".__('Invalid or missing 2FA token')."</a>";
                     }
                 }
@@ -143,6 +152,7 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
             }
         }
     } else {
+        sleep(1);
         $ERROR = "<a class=\"error\">".__('Invalid or missing token')."</a>";
     }
 }

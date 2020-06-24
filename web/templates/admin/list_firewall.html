@@ -3,9 +3,10 @@
         <div class="l-unit-toolbar__buttonstrip">
           <a class="ui-button cancel" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
           <a href="/add/firewall/" id="btn-create" class="ui-button cancel" title="<?=__('Add Rule')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=__('Add Rule')?></a>
-          <? if(!empty($_SESSION['FIREWALL_EXTENSION'])) {
-            echo '<a class="ui-button cancel" href="/list/firewall/banlist/"><i class="fas fa-eye status-icon red"></i> '.__('list fail2ban').'</a>';
-          } ?>
+          <?php if(!empty($_SESSION['FIREWALL_EXTENSION'])): ?>
+            <a class="ui-button cancel" href="/list/firewall/banlist/"><i class="fas fa-eye status-icon red"></i> <?=__('list fail2ban')?></a>
+            <a class="ui-button cancel" href="/list/firewall/ipset/"><i class="fas fa-list status-icon green"></i> <?=__('list ipset')?></a>
+          <?php endif; ?>
         </div>
         <ul class="context-menu sort-order animated fadeIn" style="display:none;">
           <li entity="sort-action"><span class="name"><?=__('Action')?> <i class="fas fa-sort-amount-down"></i></span><span class="up active"><i class="fas fa-sort-amount-up"></i></span></li>
@@ -125,7 +126,7 @@ sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$k
             </div>
             <!-- END QUICK ACTION TOOLBAR AREA -->
             <div class="clearfix l-unit__stat-col--left wide-1 text-center"><b><? if(!empty($data[$key]['COMMENT'])) echo '' . $data[$key]['COMMENT']; else echo "&nbsp;"; ?></b></div>
-            <div class="clearfix l-unit__stat-col--left text-center"><b><?=__($data[$key]['PROTOCOL'])?></b></div>
+            <div class="clearfix l-unit__stat-col--left text-center"><?=__($data[$key]['PROTOCOL'])?></div>
             <div class="clearfix l-unit__stat-col--left wide-3 text-center"><b><?=$data[$key]['PORT']?></b></div>
             <div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['IP']?></div>
           </div>

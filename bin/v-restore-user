@@ -41,6 +41,7 @@ ftpc() {
     /usr/bin/ftp -n $HOST $PORT <<EOF
     quote USER $USERNAME
     quote PASS $PASSWORD
+    lcd $BACKUP
     binary
     $1
     $2
@@ -174,7 +175,7 @@ if [ ! -e "$BACKUP/$backup" ]; then
         downloaded='yes'
     fi
     if [ -z "$downloaded" ]; then
-        check_result $E_NOTEXIST "backup $backup doesn't exist"
+        check_result $E_NOTEXIST "backup file $backup doesn't exist in '${BACKUP}' folder"
     fi
 fi
 
@@ -374,12 +375,19 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
 
             # Copying SSL certificates
             if [ "$SSL" = 'yes' ]; then
-                certificates=$(ls $tmpdir/web/$domain/conf| grep ssl)
-                certificates=$(echo "$certificates" |grep $domain)
-                for crt in $certificates; do
-                    crt=$(echo $crt|sed -e "s/ssl.//")
-                    cp -f $tmpdir/web/$domain/conf/ssl.$crt $USER_DATA/ssl/$crt
-                done
+
+                if [ -f "$tmpdir/web/$domain/$backup_system/$domain.crt" ]; then
+                    for crt in $(ls $tmpdir/web/$domain/$backup_system | grep -E '^'$domain'\.(crt|key|ca|pem)$'); do
+                        cp -f "$tmpdir/web/$domain/$backup_system/$crt" "$USER_DATA/ssl/"
+                    done
+                elif [ -f "$tmpdir/web/$domain/conf/ssl.$domain.crt" ]; then
+                    certificates=$(ls $tmpdir/web/$domain/conf| grep ssl)
+                    certificates=$(echo "$certificates" |grep $domain)
+                    for crt in $certificates; do
+                        crt=$(echo $crt|sed -e "s/ssl.//")
+                        cp -f $tmpdir/web/$domain/conf/ssl.$crt $USER_DATA/ssl/$crt
+                    done
+                fi
             fi
 
             # Merging web.conf keys
@@ -777,7 +785,7 @@ if [ "$udir" != 'no' ]; then
 
             chown "$user" "$tmpdir/user_dir"
             chown "$user" "$HOMEDIR/$user"
-            chown "$user" "$HOMEDIR/$user/$user_dir"
+            [ -e "$HOMEDIR/$user/$user_dir" ] && chown "$user" "$HOMEDIR/$user/$user_dir"
             $BIN/v-extract-fs-archive "$user" "$tmpdir/user_dir/$user_dir.tar.gz" "$HOMEDIR/$user"
             cmdstatus="$?"
             chown root:root "$HOMEDIR/$user"

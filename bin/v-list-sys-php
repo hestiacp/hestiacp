@@ -1,0 +1,88 @@
+#!/bin/bash
+# info: listing availble PHP versions installed
+# options: [FORMAT]
+#
+# List /etc/php/* version check if folder fpm is avalible
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+format=${1-shell}
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+# JSON list function
+json_list() {
+    i=1
+    objects=$(echo "$versions" |wc -w)
+    echo '['
+    for version in $versions; do
+        if [ "$i" -lt "$objects" ]; then
+            echo -e  "\t\"$version\","
+        else
+            echo -e  "\t\"$version\""
+        fi
+        (( ++i))
+    done
+    echo "]"
+}
+
+# SHELL list function
+shell_list() {
+    echo "VERSION"
+    echo "--------"
+    for version in $versions; do
+        echo "$version"
+    done
+}
+
+# PLAIN list function
+plain_list() {
+    for version in $versions; do
+        echo "$version"
+    done
+}
+
+# CSV list function
+csv_list() {
+    echo "VERSION"
+    for version in $versions; do
+        echo "$version"
+    done
+}
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# List trough /etc/php
+versions_list=$(ls -d /etc/php/*)
+versions=()
+for version in $versions_list; do
+    if [ -d "$version/fpm" ] 
+    then
+    version=$(echo $version | cut -d'/' -f4);
+    versions+=" $version"
+    fi
+done
+
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list ;;
+esac
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

@@ -68,9 +68,8 @@ case $service in
     spamd)          dst=$($BIN/v-list-sys-spamd-config plain);;
     spamassassin)   dst=$($BIN/v-list-sys-spamd-config plain);;
     clamd)          dst=$($BIN/v-list-sys-clamd-config plain);;
-    cron)           dst='/etc/crontab';;
-    crond)          dst='/etc/crontab';;
     fail2ban)       dst='/etc/fail2ban/jail.local';;
+    ssh)            dst='/etc/ssh/sshd_config';;
     *)              check_result $E_NOTEXIST "service $service doesn't exist"
 esac
 

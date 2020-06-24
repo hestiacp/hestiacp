@@ -47,7 +47,8 @@
           <div class="clearfix l-unit__stat-col--left compact text-right"><b>&nbsp;</b></div>
           <div class="clearfix l-unit__stat-col--left compact text-center"><b><?php print __('Type');?></b></div>
           <div class="clearfix l-unit__stat-col--left compact"><b><?php print __('Priority');?></b></div>
-          <div class="clearfix l-unit__stat-col--left wide-7"><b><?php print __('IP or Value');?></b></div>
+          <div class="clearfix l-unit__stat-col--left compact"><b><?php print __('TTL');?></b></div>
+          <div class="clearfix l-unit__stat-col--left wide-6"><b><?php print __('IP or Value');?></b></div>
         </div>
     </div>
 
@@ -92,7 +93,9 @@ v_unit_id="<?=$key?>" v_section="dns_rec">
             <!-- END QUICK ACTION TOOLBAR AREA -->
             <div class="clearfix l-unit__stat-col--left compact text-center"><b><?=$data[$key]['TYPE']?></b></div>
             <div class="clearfix l-unit__stat-col--left compact"><?=$data[$key]['PRIORITY']?>&nbsp;</div>
-            <div class="clearfix l-unit__stat-col--left wide-7" style="font-family: 'Inconsolata', monospace;"><?=htmlspecialchars($data[$key]['VALUE'], ENT_QUOTES, 'UTF-8')?></div>
+            <div class="clearfix l-unit__stat-col--left compact"><?php if($data[$key]['TTL'] == ''){ echo __('Default'); }else{ echo $data[$key]['TTL'];} ?></div>
+            
+            <div class="clearfix l-unit__stat-col--left wide-6"><?=htmlspecialchars($data[$key]['VALUE'], ENT_QUOTES, 'UTF-8')?></div>
           </div>
         </div>
       <?}?>

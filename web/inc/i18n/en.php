@@ -132,7 +132,7 @@ $LANG['en'] = array(
     'Adding IP address'  => 'Add IP Address',
     'Editing IP Address'  => 'Edit IP Address',
     'Editing Backup Exclusions' => 'Edit Backup Exclusions',
-    'Generating CSR' => 'Generate New Self-Signed SSL Certificate',
+    'Generating CSR' => 'New Self-Signed SSL Certificate',
     'Listing'  => 'Listing',
     'Search Results'  => 'Search Results',
     'Adding Firewall Rule' => 'Add Firewall Rule',
@@ -770,4 +770,80 @@ $LANG['en'] = array(
     'Please wait while php is installed or removed' => 'Adding or removing a version of PHP will take around 1 minute per version. Please wait until the process has completed and do not refresh the page.',
     'Avoid adding web domains on admin account' => 'It is strongly advised to create a standard user account before adding web domains to the server due to the increased privileges the admin account possesses and potential security risks involved.',
     
+    //SSH Key
+    'Field SSH_KEY can not be blank.' => 'Field SSH Key may not be blank',
+    'SSH KEY is invalid' => 'SSH key is invalid',
+    'SSH KEY already exists' => 'SSH key already exsits',
+    'SSH KEY Added' => 'SSH key has been added',
+    'Add SSH Key' => 'Add SSH key',
+    'SSH KEY' => 'SSH Key',    
+    'DELETE_KEY_CONFIRM' => 'Are you sure you want to delete key %s?',
+    'SSH_ID' => 'SSH Id',
+ 
+    //Header 
+    'Fm' => 'Files',
+    //PHP Cli
+    'PHP CLI Version' => 'PHP CLI Version',
+    //Ipset Firewall rules
+    'Adding Firewall Ipset List' => 'Adding Firewall Ipset List',
+    'Ip List Name' => 'Ip List Name',
+    'Data Source' => 'Data Source',
+    'Ip Version' => 'Ip Version',
+    'Autoupdate' => 'Autoupdate',
+    'BLACKLIST' => 'BLACKLIST',
+    'IPVERSE' => 'IPVERSE',
+    'IPSET_CREATED_OK' => 'Ipset created',
+    'DELETE_IPSET_CONFIRMATION' => 'Are you sure you want to delete Ipset %2',
+    '1 Ipset list' => '1 Ipset list',
+    '%s Ipset lists' => '%s Ipset lists',
+    'There are currently no Ipset lists defined.' => 'There are currently no Ipset lists defined.',
+    'list ipset' => 'Ipset',
+    
+    //Backup
+    'File Name' => 'File Name',
+    'Size' => 'Size',
+    'Runtime' => 'Runtime',
+    //Logs
+    'Refresh' => 'Refresh',
+    'Time' => 'Time',
+    'Value' => 'Value',
+    
+    //DNS 
+    'default' => 'default',
+    '1 DNS zone' => '1 DNS zone',
+    '%s DNS zones' => '%s DNS zones',
+    'Add Record' => 'Add Record',
+    //user
+    '1 user account' => '1 user account',
+    '%s user accounts' => '%s user accounts',
+    //database
+    '1 SQL database' => '1 SQL database',
+    '%s SQL databases' => '%s SQL databases',
+    //mail
+    '1 mail domain' => '1 mail domain',
+    '%s mail domains' => '%s mail domains',
+    //web
+    '1 web domain' => '1 web domain',
+    '%s web domains' => '%s web domains',
+    
+    //rrd
+    'Bandwidth Usage' => 'Bandwidth Usage',
+    
+    //reset
+    'Forgot Password' => 'Forgot Password',
+    //web
+    'Quick Install App' => 'Quick Install App',
+    //webapp 
+    'version' => 'version',
+    'Setup' => 'Setup',
+    //Server
+    'Restart' => 'Restart',
+    'Mail Server' => 'Mail Server',
+    'Enabled multi PHP versions' => 'Enabled multi PHP versions',
+    'Service' => 'Service',
+    'Description' => 'Description',
+    
+    //header
+    'Hestia Control Panel' => 'Hestia Control Panel',
+
 );

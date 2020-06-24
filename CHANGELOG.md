@@ -3,29 +3,85 @@ All notable changes to this project will be documented in this file.
 
 ## [CURRENT] - Development
 ### Features
+- Added support for configuring individual TTL per DNS record. Thanks to @jaapmarcus!
+- Added support for Ubuntu Server 20.04 LTS.
+- Added the ability to set the php cli version per user (using alias).
+- Added support for resolving ip addresses based on geoip database for Awstats
+- Added Roundcube plugins newmail_notifier and zipdownload.
+- Added HELO support for multiple domains and IPs.
+- Added the possibility to manage ssh keys in the backend.
+- Switched to mpm_event instead mod_prefork for apache2 on fresh installs.
+- Added a manual migration script for apache2 mpm_event ($HESTIA/install/upgrade/manual/migrate_mpm_event.sh).
+- Added support for Linux ipset for a efficient way to handle large blocklists or country wide ip lists.
+- Extended Hestia Firewall to support allowing or blocking traffic from ipset lists.
+- Added Filemanager integration (Filegator).
+- Added BATS system for testing the functionality of Bash scripts (WIP).
+
+### Bugfixes
+- Do not allow to show apache2 server-status page from public.
+- Do not allow to change the password of a non-hestia user. Thanks to Alexandre Zanni!
+- Use sury repository for Apache2 packages.
+- Check whether Nginx, Apache2 and MariaDB are selected for installation prior to adding third party repositories.
+- Remove duplicated set-cookie line in default fpm config.
+- Adjust let's encrypt validation check for idn domains, thanks to @zanami!
+- Set backup download location on restore for ftp/sftp, thanks to @Daniyal-Javani!
+- Ignore empty lines when listing firewall rules.
+- Changing email account password would fail when similar account names are found.
+- Preserve email quota when (un)suspending and rebuilding mail account.
+- Cleanup temporary file after running v-list-sys-services.
+- Don't calculate /home folder size in v-list-sys-info.
+- Cleanup temporary files when uploading custom SSL cert from WebUi.
+- Cleanup temporary files when adding/renewing letsencrypt SSL cert.
+- Adjust v-list-sys-services to honor the changed fail2ban service name.
+- Rework busy port validation in v-change-sys-port.
+- Fixed ssh config save bug when edit the over interface.
+- Fixed different permission issues on user restore.
+- Stop trying to renew LE certs after multiple consecutive failed attempts. Thanks to @dpeca!
+- Implement a validation function to verify the correct version in hestia.conf prior to install a new one.
+- Fix autologout issue on cloudflare proxy and rearange 2FA authentification part. Thanks to @rmj-s!
+- Roundcube fixes for PHP 7.4 compatibility..
+- Added delay when entering wrong username/password/2fa.
+- Improved "Forgot password" function prevent brute forcing.
+- Update Backup counter propperly when v-delete-user-backup ran.
+- Dropped support for Debian 8 according to EOL.
+- Improved Backup function. 
+
+## [1.1.1] - 2020-03-24 - Hotfix
+### Features
+- No new features introduced with v1.1.1, this is strictly a security/bug fix release.
+
+### Bugfixes
+- Fixed phpMyAdmin blowfish and tmp directory issues.
+- Added additional verification of host domain in password reset. Thanks to @FalzoMAD and @mmetince!
+- Fixed issue with rc.local not executing properly.
+- Rework of Let's Encrypt routine to use progressive delay between validation retries.
+- Fixed syntax issue in v-list-sys-db-status which prevented main functions from loading.
+- Removed /home size reporting when running v-list-sys-info due to performance issues.
+- Updated installer to use Ubuntu key server for Hestia APT repository.
+- Fixed duplicate demo mode check in v-change-user-password.
+
+## [1.1.0] - 2020-03-11 - Major Release (Feature / Quality Update)
+### Features
 - Added support for custom user interface themes.
-- Adjusted default font size for improved readability.
-- Added read only/demo mode function if DEMO_MODE is set to yes in hestia.conf.
+- Introduced official Dark and Flat themes.
+- Added read-only/demo mode - DEMO_MODE must be set to yes in hestia.conf to enable.
 - Added php-imagick module to installer and upgrade scripts.
 - Added recidive filter function to fail2ban.
-- Refactored MultiPHP functionality. MultiPHP will be enabled by default on new installations.
-- Allowed admin user to add or remove PHP versions from webui (edit/server->"Web Server" page).
+- Improved and refactored Multi-PHP functionality. 
+- Multi-PHP will be enabled by default on new installations.
+- Allow admin user to add/remove PHP versions from Web UI (Server -> Configure -> Web Server).
 - Extended v-extract-fs-archive to allow archive testing and extracting only specific paths (for tar)
 - Allow renaming of existing packages from console (v-rename-package).
-- Webmail IP address is now inherited from web domain when using multiple IPs.
-- Exim now uses the web domain IP if it exists.
-- Public IP is now used when updating webmail DNS record.
-- Added PHP 7.4 to MultiPHP.
-- Add Support for Debian 10 (Buster).
+- Added PHP 7.4 to Multi-PHP.
+- Addded official support for Debian 10 (Buster).
 
 ### Bugfixes
 - Added a detection of web root for add .well-known ACME challenge.
 - Reworked Let's Encrypt ACME staging to use Hestia code standards.
 - Fixed issues with incorrect font rendering on Windows and Linux.
 - Fixed issues with Let's Encrypt - use Nginx for Let's Encrypt ACME request if present.
-- Reworked v-add-sys-ip, removed CentOS/Red Hat support and reworked conditions.
+- Reworked v-add-sys-ip, removed deprecated CentOS/Red Hat code and reworked conditions.
 - Enabled HSTS and force SSL on v-add-letsencrypt-host.
-- Prevented login action for webmail in list user view.
 - Removed hardcoded mail in HELO data (cosmetic fix).
 - Fixed SFTP server validation check - thanks @dbannik.
 - Implemented security warning message when creating web domains with the default admin account.
@@ -57,18 +113,23 @@ All notable changes to this project will be documented in this file.
 - Fixed MultiPHP upgrade script to update all web templates.
 - Fixed report issue link in installer scripts.
 - Fixed database user authentification on backup restore.
-- Added robots.txt for roundcube webmail to prevent search bot crawling.
+- Added robots.txt for Roundcube webmail to prevent search bot crawling.
 - Re-Enable force ssl function on let's encrypt certification renew.
-- Added official postgresql repository to be up to date.
+- Added official PostgreSQL repository so system stays up-to-date with latest available upstream packages.
 - Hardening MySQL configuration, prevent local infile.
 - Fixed lograte bug and cleans up the messed up nginx/apache2 log permissions.
 - Fixed IfModule mpm_itk.c for apache2 templates.
-- Added mpm_itk for Deb10 single php installation only.
-- Hardening nginx configuration, drop TLSv1.1 support.
+- Added mpm_itk for Debian 10 (non Multi-PHP installations only.)
+- Hardening nginx configuration, dropped support for TLSv1.1.
 - Fixed excluding folders named "logs" from restore backup, thanks to @davidgolsen.
 - Fixed typo in delete psql database part, thanks to @joshbmarshall.
 - Split long txt records to 255 chunks to prevent bind issues, thanks to @setiseta.
 - Fixed missing restart routine for vsftp on v-add-letsencrypt-host.
+- Show amount of disk space consumed by /home when running v-list-sys-info.
+- Remove broken /webmail alias from previous versions.
+- Webmail IP address is now inherited from web domain when using multiple IPs.
+- Exim now uses the web domain IP if it exists.
+- Fix incorrect MX record for DNS domains using the Office 365 template.
 
 ## [1.0.6] - 2019-09-24 - Hotfix
 ### Bugfixes

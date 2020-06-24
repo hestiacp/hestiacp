@@ -16,7 +16,7 @@ class PrestashopSetup extends BaseSetup {
             ],
         'database' => true,
         'resources' => [
-            'archive'  => [ 'src' => 'https://github.com/PrestaShop/PrestaShop/releases/download/1.7.6.3/prestashop_1.7.6.3.zip' ],
+            'archive'  => [ 'src' => 'https://github.com/PrestaShop/PrestaShop/releases/download/1.7.6.5/prestashop_1.7.6.5.zip' ],
         ],
 
     ];

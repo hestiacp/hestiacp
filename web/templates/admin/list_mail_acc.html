@@ -93,7 +93,7 @@ sort-star="<? if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] =
               <div class="clearfix l-unit__stat-col--left text-right compact-4">
                 <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                   <div class="actions-panel clearfix">
-                    <div class="actions-panel__col actions-panel__edit" key-action="href"><a href="http://webmail.<?=htmlspecialchars($_GET['domain'])?>/?_user=<?=$key?>@<?=htmlspecialchars($_GET['domain'])?>" target="_blank" title="<?=__('open webmail')?>"><i class="fas fa-envelope-open-text status-icon maroon status-icon dim"></i></a></div>
+                    <div class="actions-panel__col actions-panel__edit" key-action="href"><a href="http://mail.<?=htmlspecialchars($_GET['domain'])?>/?_user=<?=$key?>@<?=htmlspecialchars($_GET['domain'])?>" target="_blank" title="<?=__('open webmail')?>"><i class="fas fa-envelope-open-text status-icon maroon status-icon dim"></i></a></div>
                     <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('Editing Mail Account')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
 
                     <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">

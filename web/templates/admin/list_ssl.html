@@ -1,16 +1,7 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-sort-toolbar clearfix float-left">
-                <span class="title"><b><?=__('Generating CSR')?></b></span>
-                  <?php
-                    if (!empty($_SESSION['error_msg'])) {
-                      echo "<span class=\"vst-error\"> → ".$_SESSION['error_msg']."</span>";
-                    } else {
-                      if (!empty($_SESSION['ok_msg'])) {
-                        echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                      }
-                    }
-                  ?>
+
         </div>
       </div>
     </div>
@@ -41,6 +32,25 @@
                     </td>
                     <td class="data-dotted">
                         <table class="data-col2">
+                            <tr>
+                                <td class="step-top">
+                                    <span class="page-title"><?=__('Generating CSR')?></span>
+                                </td>
+                            <tr>
+                                <td>
+                                    <?php
+                                        if (!empty($_SESSION['error_msg'])) {
+                                          echo "<span class=\"vst-error\"><i class=\"fas fa-exclamation-circle status-icon red\"></i> ".$_SESSION['error_msg']."</span>";
+                                        } else {
+                                          if (!empty($_SESSION['ok_msg'])) {
+                                            echo "<span class=\"vst-ok\"><i class=\"fas fa-check-circle status-icon green\"></i> ".$_SESSION['ok_msg']."</span>";
+                                          }
+                                        }
+                                    ?>
+                                </td>
+
+                            </tr>
+                            </tr>
                             <tr>
                                 <td class="vst-text" style="padding: 12px 0 0 0;"><?php print __('SSL Certificate');?>
                                 </td>

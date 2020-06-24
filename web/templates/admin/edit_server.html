@@ -4,15 +4,6 @@
             <a class="ui-button cancel" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-              <?php
-              if (!empty($_SESSION['error_msg'])) {
-                echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
-              } else {
-                if (!empty($_SESSION['ok_msg'])) {
-                  echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                }
-              }
-            ?>
             <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
           </div>
         </div>
@@ -46,10 +37,23 @@
                         <table class="data-col2" width="600px">
                           <tr>
                             <td class="step-top">
-                                <span class="login-welcome"><?=__('Configuring Server')?></span>
-                                <br /><br />
+                                <span class="page-title"><?=__('Configuring Server')?></span>
                             </td>
                           </tr>
+                        <tr>
+                            <td>
+                                <?php
+                                    if (!empty($_SESSION['error_msg'])) {
+                                        echo "<span class=\"vst-error\"> <i class=\"fas fa-exclamation-circle status-icon red\"></i> ".htmlentities($_SESSION['error_msg'])."</span>";
+                                    } else {
+                                        if (!empty($_SESSION['ok_msg'])) {
+                                            echo "<span class=\"vst-ok\"> <i class=\"fas fa-check-circle status-icon green\"></i> ".$_SESSION['ok_msg']."</span>";
+                                        }
+                                    }
+                                ?>
+                                <br /><br />
+                            </td>
+                        </tr>
                           <tr>
                                 <td class="vst-text input-label step-top advanced-options">
                                     <a href="javascript:elementHideShow('basic');" class="vst-text">
@@ -639,7 +643,7 @@
                                                         <td>
                                                             <select class="vst-list" name="v_backup_type">
                                                                 <option value='ftp'><?php print __('ftp'); ?></option>
-                                                                <option value='sftp' <?php if((!empty($v_backup_type)) && ($v_backup_type  == 'sftp')) echo 'selected' ?> ><?php print __('sftp'); ?></option>
+                                                                <option value='sftp' <?php if((!empty($v_backup_type)) && (trim($v_backup_type,"'")  == 'sftp' )) echo 'selected="selected"'; ?>><?php print __('sftp'); ?></option>
                                                             </select>
                                                             <br><br>
                                                         </td>
@@ -652,6 +656,17 @@
                                                     <tr>
                                                         <td>
                                                             <input type="text" size="20" class="vst-input" name="v_backup_host" value="<?=trim($v_backup_host, "'")?>">
+                                                            <br><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="vst-text">
+                                                            <?php print __('Port') ?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text" size="20" class="vst-input" name="v_backup_port" value="<?=trim($v_backup_port, "'")?>">
                                                             <br><br>
                                                         </td>
                                                     </tr>

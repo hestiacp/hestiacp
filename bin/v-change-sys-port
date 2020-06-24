@@ -16,26 +16,22 @@ PORT=$1
 source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
 
-# Define not usable ports
-BUSY_PORTS=('80' '443' '8080' '8443')
-
+# Functions
 is_port_valid() {
-
     # Check if PORT is numeric
     if [[ ! $PORT =~ ^[0-9]+$ ]]; then
-        echo 'Port should contains a numeric value only!'
-        log_event $E_NOTEXIST "$ARGUMENTS"
-        exit $E_NOTEXIST
+        echo "Port should contains a numeric value only!"
+        log_event $E_INVALID "$ARGUMENTS"
+        exit $E_INVALID
     fi
 
     # Check if PORT is already used
-    for BUSY_PORT in ${BUSY_PORTS[@]}; do
-        if [ "$BUSY_PORT" = "$PORT" ]; then
-            echo 'Port is already used by Hestia, please set anotherone!'
-            log_event $E_NOTEXIST "$ARGUMENTS"
-            exit $E_NOTEXIST
-        fi
-    done
+    BUSY_PORT=$(lsof -i:$PORT)
+    if [ ! -z "$BUSY_PORT" ] && [ "$PORT" != "$BACKEND_PORT" ]; then
+        echo "Port is already used by Hestia, please set anotherone!"
+        log_event $E_INUSE "$ARGUMENTS"
+        exit $E_INUSE
+    fi
 }
 
 

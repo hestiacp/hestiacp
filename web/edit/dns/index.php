@@ -78,6 +78,7 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['record_id'])))  {
     }
     $v_date = $data[$v_record_id]['DATE'];
     $v_time = $data[$v_record_id]['TIME'];
+    $v_ttl = $data[$v_record_id]['TTL'];
 }
 
 // Check POST request for dns domain
@@ -161,12 +162,13 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['reco
     $v_record_id = escapeshellarg($_POST['v_record_id']);
 
     // Change dns record
-    if (($v_rec != $_POST['v_rec']) || ($v_type != $_POST['v_type']) || ($v_val != $_POST['v_val']) || ($v_priority != $_POST['v_priority']) && (empty($_SESSION['error_msg']))) {
+    if (($v_rec != $_POST['v_rec']) || ($v_type != $_POST['v_type']) || ($v_val != $_POST['v_val']) || ($v_priority != $_POST['v_priority']) || ($v_ttl != $_POST['v_ttl']) && (empty($_SESSION['error_msg']))) {
         $v_rec = escapeshellarg($_POST['v_rec']);
         $v_type = escapeshellarg($_POST['v_type']);
         $v_val = escapeshellarg($_POST['v_val']);
         $v_priority = escapeshellarg($_POST['v_priority']);
-        exec (HESTIA_CMD."v-change-dns-record ".$v_username." ".$v_domain." ".$v_record_id." ".$v_rec." ".$v_type." ".$v_val." ".$v_priority, $output, $return_var);
+        $v_ttl = escapeshellarg($_POST['v_ttl']);
+        exec (HESTIA_CMD."v-change-dns-record ".$v_username." ".$v_domain." ".$v_record_id." ".$v_rec." ".$v_type." ".$v_val." ".$v_priority." false ".$v_ttl, $output, $return_var);
         check_return_code($return_var,$output);
         $v_rec = $_POST['v_rec'];
         $v_type = $_POST['v_type'];

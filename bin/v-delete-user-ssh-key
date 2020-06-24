@@ -1,0 +1,57 @@
+#!/bin/bash
+# info: add ssh key
+# options: USER key
+#
+# Function check if $user/.ssh/authorized_keys exists and create it
+# After that it append the new key(s)
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+keyid=$2
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+# Additional argument formatting
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER KEYID'
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+
+source $USER_DATA/user.conf
+
+AUTHKEY_FILE="$HOMEDIR/$user/.ssh/authorized_keys"
+[ -z "$(readlink -f "$AUTHKEY_FILE" | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result $E_FORBIDEN "Invalid authorized keys path"
+
+if [ ! -f "$AUTHKEY_FILE" ]; then
+    exit
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+sed -i "/${keyid}/d" "$AUTHKEY_FILE"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_history "Deleted ssh-key $user"
+log_event "$OK" "$ARGUMENTS"
+
+exit

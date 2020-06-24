@@ -784,8 +784,10 @@ if [ "$postgresql" = 'no' ]; then
     fi
     software=$(echo "$software" | sed -e "s/phppgadmin//")
 fi
-if [ "$iptables" = 'no' ] || [ "$fail2ban" = 'no' ]; then
+if [ "$fail2ban" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/fail2ban//")
+fi
+if [ "$iptables" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/ipset//")
 fi
 if [ "$phpfpm" = 'yes' ]; then

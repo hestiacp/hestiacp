@@ -814,6 +814,7 @@ if [ "$fail2ban" = 'no' ]; then
 fi
 if [ "$iptables" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/ipset//")
+    software=$(echo "$software" | sed -e "s/fail2ban//")
 fi
 if [ "$phpfpm" = 'yes' ]; then
     software=$(echo "$software" | sed -e "s/php$fpm_v-cgi//")

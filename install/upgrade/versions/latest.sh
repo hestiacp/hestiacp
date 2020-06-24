@@ -74,8 +74,10 @@ fi
 
 # Add hestia-event.conf, if the server is running apache2
 if [ "$WEB_SYSTEM" = "apache2" ]; then
-    if [ ! -e "/etc/apache2/mods-enabled/hestia-event.conf" ]; then
-        cp -f $HESTIA_INSTALL_DIR/apache2/hestia-event.conf /etc/apache2/mods-enabled/
+    if [ ! -e "/etc/apache2/conf-enabled/hestia-event.conf" ]; then
+        cp -f $HESTIA_INSTALL_DIR/apache2/hestia-event.conf /etc/apache2/conf-available/
+        rm --force /etc/apache2/mods-enabled/hestia-event.conf # cleanup
+        a2enconf --quiet hestia-event
     fi
 fi
 

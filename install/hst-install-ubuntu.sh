@@ -1190,7 +1190,7 @@ if [ "$apache" = 'yes' ]; then
     # Copy configuration files
     cp -f $HESTIA_INSTALL_DIR/apache2/apache2.conf /etc/apache2/
     cp -f $HESTIA_INSTALL_DIR/apache2/status.conf /etc/apache2/mods-enabled/
-    cp -f $HESTIA_INSTALL_DIR/apache2/hestia-event.conf /etc/apache2/mods-enabled/
+    cp -f $HESTIA_INSTALL_DIR/apache2/hestia-event.conf /etc/apache2/conf-available/
     cp -f $HESTIA_INSTALL_DIR/logrotate/apache2 /etc/logrotate.d/
     
     # Enable needed modules
@@ -1198,6 +1198,7 @@ if [ "$apache" = 'yes' ]; then
     a2enmod suexec > /dev/null 2>&1
     a2enmod ssl > /dev/null 2>&1
     a2enmod actions > /dev/null 2>&1
+    a2enconf --quiet hestia-event
 
     # Enable mod_ruid/mpm_itk or mpm_event
     if [ "$phpfpm" = 'yes' ]; then

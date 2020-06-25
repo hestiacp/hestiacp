@@ -19,22 +19,28 @@ This package contains internal PHP for Hestia Control Panel web interface.
 
 %install
 cp -rfa %{sourcedir}/usr %{buildroot}
+mkdir -p %{buildroot}%{_unitdir}
+%{__install} -m644 %{sourcedir}/hestia-php.service %{buildroot}%{_unitdir}/hestia-php.service
 
 %clean
 
 %pre
 
 %post
+%systemd_post hestia-php.service
 
 %preun
+%systemd_preun hestia-php.service
 
 %postun
+%systemd_postun_with_restart hestia-php.service
 
 %files
 %defattr(-,root,root)
 %attr(755,root,root) /usr/local/hestia/php
 %config(noreplace) /usr/local/hestia/php/etc/php-fpm.conf
 %config(noreplace) /usr/local/hestia/php/lib/php.ini
+%{_unitdir}/hestia-php.service
 
 %changelog
 * Thu Jun 25 2020 Ernesto Nicolás Carrea <equistango@gmail.com> - 7.4.6

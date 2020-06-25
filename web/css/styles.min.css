@@ -2990,9 +2990,9 @@ a.button.cancel {
 
 .unlim-trigger {
   cursor: pointer;
-  padding-left: 4px;
-  margin-bottom: -2px;
-  margin-left: -42px;
+  position: absolute;
+  margin-left: -38px;
+  margin-top: 13px;
   z-index: 1;
 }
 .optional {

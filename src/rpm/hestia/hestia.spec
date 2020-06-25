@@ -1,6 +1,6 @@
 Name:           hestia
 Version:        1.2.0
-Release:        0%{?dist}
+Release:        0
 Summary:        Hestia Control Panel
 Group:          System Environment/Base
 License:        GPLv3

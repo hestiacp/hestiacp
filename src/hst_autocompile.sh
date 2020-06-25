@@ -487,6 +487,7 @@ if [ "$PHP_B" = true ] ; then
     if [ "$BUILD_RPM" = true ]; then
         # Get RHEL package files
         get_branch_file 'src/rpm/php/hestia-php.spec' "${BUILD_DIR_HESTIAPHP}/hestia-php.spec"
+        get_branch_file 'src/rpm/php/hestia-php.service' "${BUILD_DIR_HESTIAPHP}/hestia-php.service"
 
         # Get custom config
         get_branch_file 'src/rpm/php/php-fpm.conf' "${BUILD_DIR_HESTIAPHP}/usr/local/hestia/php/etc/php-fpm.conf"

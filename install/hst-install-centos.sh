@@ -276,10 +276,19 @@ echo
 mkdir -p $hst_backups
 
 # Checking ntpdate
-if [ ! -e '/usr/sbin/ntpdate' ]; then
-    echo "(*) Installing ntpdate..."
-    yum -y install ntpdate >> $LOG
-    check_result $? "Can't install ntpdate"
+if [ "$release" -eq '7' ]; then
+    if [ ! -e '/usr/sbin/ntpdate' ]; then
+        echo "(*) Installing ntpdate..."
+        yum -y install ntpdate >> $LOG
+        check_result $? "Can't install ntpdate"
+    fi
+else
+    # 8 and up
+    if [ ! -e '/usr/sbin/chronyd' ]; then
+        echo "(*) Installing chrony..."
+        yum -y install chrony >> $LOG
+        check_result $? "Can't install chrony"
+    fi
 fi
 
 # Checking wget

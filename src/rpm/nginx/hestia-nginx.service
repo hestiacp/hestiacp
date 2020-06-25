@@ -2,7 +2,8 @@
 Description=Hestia nginx - administration web server
 Documentation=https://www.hestiacp.com
 After=network-online.target remote-fs.target nss-lookup.target
-Wants=network-online.target
+Wants=network-online.target hestia-php.service
+After=hestia-php.service
 
 [Service]
 Type=forking

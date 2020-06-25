@@ -1,18 +1,17 @@
 Name:           hestia-nginx
 Version:        1.17.8
-Release:        0
-Summary:        hestia Nginx
+Release:        0%{?dist}
+Summary:        Hestia internal nginx web server
 Group:          System Environment/Base
-License:        BSD-like
 URL:            https://www.hestiacp.com
+License:        BSD
 Vendor:         hestiacp.com
-Requires:       redhat-release >= 8
-Provides:       hestia-nginx
+Requires:       redhat-release >= 7
+Provides:       hestia-nginx = %{version}
 BuildRequires:  systemd-rpm-macros
-#BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description
-This package contains nginx webserver for Hestia Control Panel web interface.
+This package contains internal nginx webserver for Hestia Control Panel web interface.
 
 %prep
 
@@ -24,7 +23,6 @@ mkdir -p %{buildroot}%{_unitdir}
 %{__install} -m644 %{sourcedir}/hestia-nginx.service %{buildroot}%{_unitdir}/hestia-nginx.service
 
 %clean
-#rm -rf %{buildroot}
 
 %pre      
 

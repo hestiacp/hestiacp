@@ -704,6 +704,19 @@ elif [ "$codename" = "CentOS_8" ]; then
     # Enable Perl 5.26
     dnf module disable -y perl:*
     dnf module enable -y perl:5.26
+    
+    dnf config-manager --set-enabled BaseOS
+    dnf config-manager --set-enabled epel
+    dnf config-manager --set-enabled epel-modular
+    dnf config-manager --set-enabled extras
+    dnf config-manager --set-enabled nginx
+    dnf config-manager --set-enabled remi
+    dnf config-manager --set-enabled remi-modular
+    dnf config-manager --set-enabled PowerTools
+
+    # Raven-extras repo for mod_ruid2
+    dnf config-manager --set-enabled raven
+    dnf config-manager --set-enabled raven-extras
 
     # No webalizer, phpPgAdmin on CentOS 8 yet
     software=$(echo "$software" | sed -e "s/\bwebalizer\b/ /")
@@ -711,16 +724,20 @@ elif [ "$codename" = "CentOS_8" ]; then
 
     enabled_repos="BaseOS AppStream Stream-AppStream Stream-BaseOS \
         Stream-extras epel epel-modular extras nginx PowerTools \
-        raven raven-extras remi remi-modular hestia "
+        raven raven-extras remi remi-modular"
+fi
+
+if [ ! -z "$withrpms" ]; then
+    enabled_repos="$enabled_repos hestia "
 fi
 
 # Installing rpm packages
 yum install -y $software
 if [ $? -ne 0 ]; then
-    echo yum -y --disablerepo=* \
+    echo yum -y --disablerepo=\* \
         --enablerepo="$enabled_repos" \
         install $software
-    yum -y --disablerepo=* \
+    yum -y --disablerepo=\* \
         --enablerepo="$enabled_repos" \
         install $software
 fi
@@ -776,12 +793,15 @@ fi
 service iptables stop
 service firewalld stop >/dev/null 2>&1
 
-
 # Configuring NTP synchronization
-echo '#!/bin/sh' > /etc/cron.daily/ntpdate
-echo "$(which ntpdate) -s pool.ntp.org" >> /etc/cron.daily/ntpdate
-chmod 775 /etc/cron.daily/ntpdate
-ntpdate -s pool.ntp.org
+if [ "$codename" = "CentOS_7" ]; then
+    echo '#!/bin/sh' > /etc/cron.daily/ntpdate
+    echo "$(which ntpdate) -s pool.ntp.org" >> /etc/cron.daily/ntpdate
+    chmod 775 /etc/cron.daily/ntpdate
+    ntpdate -s pool.ntp.org
+elif [ "$codename" = "CentOS_8" ]; then
+    systemctl enable --now chronyd
+fi
 
 # Disabling webalizer routine
 rm -f /etc/cron.daily/00webalizer
@@ -813,7 +833,7 @@ fi
 
 # Installing sudo configuration
 mkdir -p /etc/sudoers.d
-cp -f $hestiacp/sudo/admin /etc/sudoers.d/
+cp -f $HESTIA_INSTALL_DIR/sudo/admin /etc/sudoers.d/
 chmod 440 /etc/sudoers.d/admin
 
 # Configuring system env
@@ -825,7 +845,7 @@ echo 'export PATH' >> /root/.bash_profile
 source /root/.bash_profile
 
 # Configuring logrotate for hestia logs
-cp -f $hestiacp/logrotate/hestia /etc/logrotate.d/
+cp -f $HESTIA_INSTALL_DIR/logrotate/hestia /etc/logrotate.d/
 
 # Building directory tree and creating some blank files for Hestia
 mkdir -p $HESTIA/conf $HESTIA/log $HESTIA/ssl $HESTIA/data/ips \
@@ -1051,11 +1071,11 @@ fi
 #----------------------------------------------------------#
 
 if [ "$apache" = 'yes'  ]; then
-    cp -f $hestiacp/httpd/httpd.conf /etc/httpd/conf/
-    cp -f $hestiacp/httpd/status.conf /etc/httpd/conf.d/
-    cp -f $hestiacp/httpd/ssl.conf /etc/httpd/conf.d/
-    cp -f $hestiacp/httpd/ruid2.conf /etc/httpd/conf.d/
-    cp -f $hestiacp/logrotate/httpd /etc/logrotate.d/
+    cp -f $HESTIA_INSTALL_DIR/httpd/httpd.conf /etc/httpd/conf/
+    cp -f $HESTIA_INSTALL_DIR/httpd/status.conf /etc/httpd/conf.d/
+    cp -f $HESTIA_INSTALL_DIR/httpd/ssl.conf /etc/httpd/conf.d/
+    cp -f $HESTIA_INSTALL_DIR/httpd/ruid2.conf /etc/httpd/conf.d/
+    cp -f $HESTIA_INSTALL_DIR/logrotate/httpd /etc/logrotate.d/
     if [ $release -lt 7 ]; then
         cd /etc/httpd/conf.d
         echo "MEFaccept 127.0.0.1" >> mod_extract_forwarded.conf
@@ -1137,7 +1157,7 @@ done
 #----------------------------------------------------------#
 
 if [ "$vsftpd" = 'yes' ]; then
-    cp -f $hestiacp/vsftpd/vsftpd.conf /etc/vsftpd/
+    cp -f $HESTIA_INSTALL_DIR/vsftpd/vsftpd.conf /etc/vsftpd/
     chkconfig vsftpd on
     service vsftpd start
     check_result $? "vsftpd start failed"
@@ -1149,7 +1169,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$proftpd" = 'yes' ]; then
-    cp -f $hestiacp/proftpd/proftpd.conf /etc/
+    cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/
     chkconfig proftpd on
     service proftpd start
     check_result $? "proftpd start failed"
@@ -1180,7 +1200,7 @@ if [ "$mysql" = 'yes' ]; then
         service='mariadb'
     fi
 
-    cp -f $hestiacp/$service/$mycnf /etc/my.cnf
+    cp -f $HESTIA_INSTALL_DIR/$service/$mycnf /etc/my.cnf
     chkconfig $service on
     service $service start
     if [ "$?" -ne 0 ]; then
@@ -1205,13 +1225,13 @@ if [ "$mysql" = 'yes' ]; then
 
     # Configuring phpMyAdmin
     if [ "$apache" = 'yes' ]; then
-        cp -f $hestiacp/pma/phpMyAdmin.conf /etc/httpd/conf.d/
+        cp -f $HESTIA_INSTALL_DIR/pma/phpMyAdmin.conf /etc/httpd/conf.d/
     fi
     mysql < /usr/share/phpMyAdmin/sql/create_tables.sql
     p=$(gen_pass)
     mysql -e "GRANT ALL ON phpmyadmin.*
         TO phpmyadmin@localhost IDENTIFIED BY '$p'"
-    cp -f $hestiacp/pma/config.inc.conf /etc/phpMyAdmin/config.inc.php
+    cp -f $HESTIA_INSTALL_DIR/pma/config.inc.conf /etc/phpMyAdmin/config.inc.php
     sed -i "s/%blowfish_secret%/$(gen_pass 32)/g" /etc/phpMyAdmin/config.inc.php
     sed -i "s/%phpmyadmin_pass%/$p/g" /etc/phpMyAdmin/config.inc.php
     chmod 777 /var/lib/phpMyAdmin/temp
@@ -1229,19 +1249,19 @@ if [ "$postgresql" = 'yes' ]; then
         service postgresql start
         sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '$ppass'"
         service postgresql stop
-        cp -f $hestiacp/postgresql/pg_hba.conf /var/lib/pgsql/data/
+        cp -f $HESTIA_INSTALL_DIR/postgresql/pg_hba.conf /var/lib/pgsql/data/
         service postgresql start
     else
         service postgresql initdb
-        cp -f $hestiacp/postgresql/pg_hba.conf /var/lib/pgsql/data/
+        cp -f $HESTIA_INSTALL_DIR/postgresql/pg_hba.conf /var/lib/pgsql/data/
         service postgresql start
         sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '$ppass'"
     fi
     # Configuring phpPgAdmin
     if [ "$apache" = 'yes' ]; then
-        cp -f $hestiacp/pga/phpPgAdmin.conf /etc/httpd/conf.d/
+        cp -f $HESTIA_INSTALL_DIR/pga/phpPgAdmin.conf /etc/httpd/conf.d/
     fi
-    cp -f $hestiacp/pga/config.inc.php /etc/phpPgAdmin/
+    cp -f $HESTIA_INSTALL_DIR/pga/config.inc.php /etc/phpPgAdmin/
 fi
 
 
@@ -1250,7 +1270,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$named" = 'yes' ]; then
-    cp -f $hestiacp/named/named.conf /etc/
+    cp -f $HESTIA_INSTALL_DIR/named/named.conf /etc/
     chown root:named /etc/named.conf
     chmod 640 /etc/named.conf
     chkconfig named on
@@ -1265,9 +1285,9 @@ fi
 
 if [ "$exim" = 'yes' ]; then
     gpasswd -a exim mail
-    cp -f $hestiacp/exim/exim.conf /etc/exim/
-    cp -f $hestiacp/exim/dnsbl.conf /etc/exim/
-    cp -f $hestiacp/exim/spam-blocks.conf /etc/exim/
+    cp -f $HESTIA_INSTALL_DIR/exim/exim.conf /etc/exim/
+    cp -f $HESTIA_INSTALL_DIR/exim/dnsbl.conf /etc/exim/
+    cp -f $HESTIA_INSTALL_DIR/exim/spam-blocks.conf /etc/exim/
     touch /etc/exim/white-blocks.conf
 
     if [ "$spamd" = 'yes' ]; then
@@ -1300,8 +1320,8 @@ fi
 
 if [ "$dovecot" = 'yes' ]; then
     gpasswd -a dovecot mail
-    cp -rf $hestiacp/dovecot /etc/
-    cp -f $hestiacp/logrotate/dovecot /etc/logrotate.d/
+    cp -rf $HESTIA_INSTALL_DIR/dovecot /etc/
+    cp -f $HESTIA_INSTALL_DIR/logrotate/dovecot /etc/logrotate.d/
     chown -R root:root /etc/dovecot*
     if [ "$release" -eq 7 ]; then
         sed -i "s#namespace inbox {#namespace inbox {\n  inbox = yes#" /etc/dovecot/conf.d/15-mailboxes.conf
@@ -1320,13 +1340,13 @@ if [ "$clamd" = 'yes' ]; then
     useradd clam -s /sbin/nologin -d /var/lib/clamav 2>/dev/null
     gpasswd -a clam exim
     gpasswd -a clam mail
-    cp -f $hestiacp/clamav/clamd.conf /etc/
-    cp -f $hestiacp/clamav/freshclam.conf /etc/
+    cp -f $HESTIA_INSTALL_DIR/clamav/clamd.conf /etc/
+    cp -f $HESTIA_INSTALL_DIR/clamav/freshclam.conf /etc/
     mkdir -p /var/log/clamav /var/run/clamav
     chown clam:clam /var/log/clamav /var/run/clamav
     chown -R clam:clam /var/lib/clamav
     if [ "$release" -ge '7' ]; then
-        cp -f $hestiacp/clamav/clamd.service /usr/lib/systemd/system/
+        cp -f $HESTIA_INSTALL_DIR/clamav/clamd.service /usr/lib/systemd/system/
         systemctl --system daemon-reload
     fi
     /usr/bin/freshclam
@@ -1364,12 +1384,12 @@ fi
 
 if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     if [ "$apache" = 'yes' ]; then
-        cp -f $hestiacp/roundcube/roundcubemail.conf /etc/httpd/conf.d/
+        cp -f $HESTIA_INSTALL_DIR/roundcube/roundcubemail.conf /etc/httpd/conf.d/
     fi
-    cp -f $hestiacp/roundcube/main.inc.php /etc/roundcubemail/config.inc.php
+    cp -f $HESTIA_INSTALL_DIR/roundcube/main.inc.php /etc/roundcubemail/config.inc.php
     cd /usr/share/roundcubemail/plugins/password
-    cp -f $hestiacp/roundcube/hestia.php drivers/hestia.php
-    cp -f $hestiacp/roundcube/config.inc.php config.inc.php
+    cp -f $HESTIA_INSTALL_DIR/roundcube/hestia.php drivers/hestia.php
+    cp -f $HESTIA_INSTALL_DIR/roundcube/config.inc.php config.inc.php
     sed -i "s/localhost/$servername/g" config.inc.php
     chmod a+r /etc/roundcubemail/*
     chmod -f 777 /var/log/roundcubemail

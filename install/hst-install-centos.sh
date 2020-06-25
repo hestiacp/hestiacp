@@ -21,16 +21,16 @@ codename="${os}_$release"
 HESTIA_INSTALL_DIR="$HESTIA/install/rhel"
 
 # Defining software pack for all distros
-software="nginx awstats bc bind bind-libs bind-utils clamav-server clamav-update
+software=" nginx awstats bc bind bind-libs bind-utils clamav-server clamav-update
     curl dovecot e2fsprogs exim expect fail2ban flex freetype ftp GeoIP httpd
-    ImageMagick iptables-services jwhois lsof mailx mariadb mariadb-server mc
-    mod_fcgid mod_ruid2 mod_ssl net-tools ntp openssh-clients pcre php
+    ImageMagick iptables-services lsof mailx mariadb mariadb-server mc
+    mod_fcgid mod_ruid2 mod_ssl net-tools openssh-clients pcre php
     php-bcmath php-cli php-common php-fpm php-gd php-imap php-mbstring
     php-mcrypt phpMyAdmin php-mysql php-pdo phpPgAdmin php-pgsql php-soap
     php-tidy php-xml php-xmlrpc postgresql postgresql-contrib
     postgresql-server proftpd roundcubemail rrdtool rsyslog screen
-    spamassassin sqlite sudo tar telnet unzip hestia hestia-ioncube hestia-nginx
-    hestia-php hestia-softaculous vim-common vsftpd webalizer which zip"
+    spamassassin sqlite sudo tar telnet unzip hestia hestia-nginx
+    hestia-php vim-common vsftpd webalizer which zip "
 
 # Defining help function
 help() {
@@ -298,10 +298,6 @@ if [ ! -e '/usr/bin/wget' ]; then
     check_result $? "Can't install wget"
 fi
 
-# Check repository availability
-wget --quiet "https://$GPG/rhel_signing.key" -O /dev/null
-check_result $? "Unable to connect to the Hestia RHEL repository"
-
 # Checking installed packages
 tmpfile=$(mktemp -p /tmp)
 rpm -qa > $tmpfile
@@ -346,7 +342,7 @@ echo ' |  _  |  __/\__ \ |_| | (_| | |___|  __/ '
 echo ' |_| |_|\___||___/\__|_|\__,_|\____|_|    '
 echo
 echo '                      Hestia Control Panel'
-echo '                                    v1.1.0'
+echo '                                    v1.2.0'
 echo -e "\n"
 echo "===================================================================="
 echo -e "\n"
@@ -506,7 +502,7 @@ yum install epel-release -y
 check_result $? "Can't install EPEL repository"
 
 # Installing Remi repository
-rpm -Uvh http://rpms.remirepo.net/enterprise/remi-release-$release.rpm
+yum -y install http://rpms.remirepo.net/enterprise/remi-release-$release.rpm
 check_result $? "Can't install REMI repository"
 sed -i "s/enabled=0/enabled=1/g" /etc/yum.repos.d/remi.repo
 
@@ -517,17 +513,6 @@ echo "name=nginx repo" >> $nrepo
 echo "baseurl=https://nginx.org/packages/centos/$release/\$basearch/" >> $nrepo
 echo "gpgcheck=0" >> $nrepo
 echo "enabled=1" >> $nrepo
-
-# Installing Hestia repository
-vrepo='/etc/yum.repos.d/hestia.repo'
-echo "[hestia]" > $vrepo
-echo "name=Hestia - $REPO" >> $vrepo
-echo "baseurl=http://$RHOST/$REPO/$release/\$basearch/" >> $vrepo
-echo "enabled=1" >> $vrepo
-echo "gpgcheck=1" >> $vrepo
-echo "gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-HESTIA" >> $vrepo
-wget c.hestiacp.com/GPG.txt -O /etc/pki/rpm-gpg/RPM-GPG-KEY-HESTIA
-
 
 #----------------------------------------------------------#
 #                         Backup                           #
@@ -615,7 +600,7 @@ if [ "$phpfpm" = 'yes' ]; then
          php$fpm_v-mysql php$fpm_v-soap php$fpm_v-xml php$fpm_v-zip
          php$fpm_v-mbstring php$fpm_v-json php$fpm_v-bz2 php$fpm_v-pspell
          php$fpm_v-imagick"
-    software="$software $fpm"
+    software="$software $fpm "
 fi
 
 
@@ -628,96 +613,139 @@ if [ "$nginx" = 'no'  ]; then
     software=$(echo "$software" | sed -e "s/\bnginx\b/ /")
 fi
 if [ "$apache" = 'no' ]; then
-    software=$(echo "$software" | sed -e "s/httpd//")
-    software=$(echo "$software" | sed -e "s/mod_ssl//")
-    software=$(echo "$software" | sed -e "s/mod_fcgid//")
-    software=$(echo "$software" | sed -e "s/mod_ruid2//")
+    software=$(echo "$software" | sed -e "s/\bhttpd\b/ /")
+    software=$(echo "$software" | sed -e "s/\bm\od_ssl\b/ /")
+    software=$(echo "$software" | sed -e "s/\bmod_fcgid\b/ /")
+    software=$(echo "$software" | sed -e "s/\bmod_ruid2\b/ /")
 fi
 if [ "$phpfpm" = 'no' ]; then
-    software=$(echo "$software" | sed -e "s/php-fpm//")
+    software=$(echo "$software" | sed -e "s/\bphp-fpm\b/ /")
 fi
 if [ "$vsftpd" = 'no' ]; then
-    software=$(echo "$software" | sed -e "s/vsftpd//")
+    software=$(echo "$software" | sed -e "s/\bvsftpd\b/ /")
 fi
 if [ "$proftpd" = 'no' ]; then
-    software=$(echo "$software" | sed -e "s/proftpd//")
+    software=$(echo "$software" | sed -e "s/\bproftpd\b/ /")
 fi
 if [ "$named" = 'no' ]; then
-    software=$(echo "$software" | sed -e "s/bind //")
+    software=$(echo "$software" | sed -e "s/\bbind\b/ /")
 fi
 if [ "$exim" = 'no' ]; then
-    software=$(echo "$software" | sed -e "s/exim//")
-    software=$(echo "$software" | sed -e "s/dovecot//")
-    software=$(echo "$software" | sed -e "s/clamd//")
-    software=$(echo "$software" | sed -e "s/clamav-server//")
-    software=$(echo "$software" | sed -e "s/clamav-update//")
-    software=$(echo "$software" | sed -e "s/spamassassin//")
-    software=$(echo "$software" | sed -e "s/roundcube-core//")
-    software=$(echo "$software" | sed -e "s/roundcube-mysql//")
-    software=$(echo "$software" | sed -e "s/roundcube-plugins//")
+    software=$(echo "$software" | sed -e "s/\bexim\b/ /")
+    software=$(echo "$software" | sed -e "s/\bdovecot\b/ /")
+    software=$(echo "$software" | sed -e "s/\bclamd\b/ /")
+    software=$(echo "$software" | sed -e "s/\bclamav-server\b/ /")
+    software=$(echo "$software" | sed -e "s/\bclamav-update\b/ /")
+    software=$(echo "$software" | sed -e "s/\bspamassassin\b/ /")
+    software=$(echo "$software" | sed -e "s/\broundcube-core\b/ /")
+    software=$(echo "$software" | sed -e "s/\broundcube-mysql\b/ /")
+    software=$(echo "$software" | sed -e "s/\broundcube-plugins\b/ /")
 fi
 if [ "$clamd" = 'no' ]; then
-    software=$(echo "$software" | sed -e "s/clamav-daemon//")
+    software=$(echo "$software" | sed -e "s/\bclamav-daemon\b/ /")
 fi
 if [ "$spamd" = 'no' ]; then
-    software=$(echo "$software" | sed -e 's/spamassassin//')
+    software=$(echo "$software" | sed -e 's/\bspamassassin\b/ /')
 fi
 if [ "$dovecot" = 'no' ]; then
-    software=$(echo "$software" | sed -e "s/dovecot-imapd//")
-    software=$(echo "$software" | sed -e "s/dovecot-pop3d//")
-    software=$(echo "$software" | sed -e "s/roundcube-core//")
-    software=$(echo "$software" | sed -e "s/roundcube-mysql//")
-    software=$(echo "$software" | sed -e "s/roundcube-plugins//")
+    software=$(echo "$software" | sed -e "s/\bdovecot-imapd\b/ /")
+    software=$(echo "$software" | sed -e "s/\bdovecot-pop3d\b/ /")
+    software=$(echo "$software" | sed -e "s/\broundcube-core\b/ /")
+    software=$(echo "$software" | sed -e "s/\broundcube-mysql\b/ /")
+    software=$(echo "$software" | sed -e "s/\broundcube-plugins\b/ /")
 fi
 if [ "$mysql" = 'no' ]; then
-    software=$(echo "$software" | sed -e "s/mariadb-server//")
-    software=$(echo "$software" | sed -e "s/mariadb-client//")
-    software=$(echo "$software" | sed -e "s/mariadb-common//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-mysql//")
+    software=$(echo "$software" | sed -e "s/\bmariadb-server\b/ /")
+    software=$(echo "$software" | sed -e "s/\bmariadb-client\b/ /")
+    software=$(echo "$software" | sed -e "s/\bmariadb-common\b/ /")
+    software=$(echo "$software" | sed -e "s/\bphp$fpm_v-mysql\b/ /")
     if [ "$multiphp" = 'yes' ]; then
         for v in "${multiphp_v[@]}"; do
-            software=$(echo "$software" | sed -e "s/php$v-mysql//")
-            software=$(echo "$software" | sed -e "s/php$v-bz2//")
+            software=$(echo "$software" | sed -e "s/\bphp$v-mysql\b/ /")
+            software=$(echo "$software" | sed -e "s/\bphp$v-bz2\b/ /")
         done
 fi
-    software=$(echo "$software" | sed -e "s/phpmyadmin//")
+    software=$(echo "$software" | sed -e "s/\bphpmyadmin\b/ /")
 fi
 if [ "$postgresql" = 'no' ]; then
-    software=$(echo "$software" | sed -e "s/postgresql-contrib//")
-    software=$(echo "$software" | sed -e "s/postgresql//")
-    software=$(echo "$software" | sed -e "s/php$fpm_v-pgsql//")
+    software=$(echo "$software" | sed -e "s/\bpostgresql-contrib\b/ /")
+    software=$(echo "$software" | sed -e "s/\bpostgresql-server\b/ /")
+    software=$(echo "$software" | sed -e "s/\bphp$fpm_v-pgsql\b/ /")
     if [ "$multiphp" = 'yes' ]; then
         for v in "${multiphp_v[@]}"; do
-            software=$(echo "$software" | sed -e "s/php$v-pgsql//")
+            software=$(echo "$software" | sed -e "s/\bphp$v-pgsql\b/ /")
         done
 fi
-    software=$(echo "$software" | sed -e "s/phppgadmin//")
+    software=$(echo "$software" | sed -e "s/\bphppgadmin\b/ /")
 fi
 if [ "$iptables" = 'no' ] || [ "$fail2ban" = 'no' ]; then
-    software=$(echo "$software" | sed -e "s/fail2ban//")
+    software=$(echo "$software" | sed -e "s/\bfail2ban\b/ /")
 fi
 if [ "$phpfpm" = 'yes' ]; then
-    software=$(echo "$software" | sed -e "s/php$fpm_v-cgi//")
+    software=$(echo "$software" | sed -e "s/\bphp$fpm_v-cgi\b/ /")
 fi
-if [ -d "$withdebs" ]; then
-    software=$(echo "$software" | sed -e "s/hestia-nginx//")
-    software=$(echo "$software" | sed -e "s/hestia-php//")
-    software=$(echo "$software" | sed -e "s/hestia//")
+if [ -d "$withrpms" ]; then
+    software=$(echo "$software" | sed -e "s/\bhestia-nginx\b/ /")
+    software=$(echo "$software" | sed -e "s/\bhestia-php\b/ /")
+    software=$(echo "$software" | sed -e "s/\bhestia\b/ /")
 fi
-
 
 #----------------------------------------------------------#
 #                     Install packages                     #
 #----------------------------------------------------------#
 
+if [ "$codename" = "CentOS_7" ]; then
+    enabled_repos="*base *updates,nginx,epel,hestia,remi*"
+elif [ "$codename" = "CentOS_8" ]; then
+    # Enable Remi PHP stream
+    dnf module disable -y php:*
+    dnf module enable -y php:remi-7.4
+
+    # Enable Perl 5.26
+    dnf module disable -y perl:*
+    dnf module enable -y perl:5.26
+
+    # No webalizer, phpPgAdmin on CentOS 8 yet
+    software=$(echo "$software" | sed -e "s/\bwebalizer\b/ /")
+    software=$(echo "$software" | sed -e "s/\bphpPgAdmin\b/ /")
+
+    enabled_repos="BaseOS AppStream Stream-AppStream Stream-BaseOS \
+        Stream-extras epel epel-modular extras nginx PowerTools \
+        raven raven-extras remi remi-modular hestia "
+fi
+
 # Installing rpm packages
 yum install -y $software
 if [ $? -ne 0 ]; then
+    echo yum -y --disablerepo=* \
+        --enablerepo="$enabled_repos" \
+        install $software
     yum -y --disablerepo=* \
-        --enablerepo="*base,*updates,nginx,epel,hestia,remi*" \
+        --enablerepo="$enabled_repos" \
         install $software
 fi
 check_result $? "yum install failed"
+
+if [ -d "$withrpms" ]; then
+    yum install -y $withrpms/hestia-*.rpm
+else
+    # Check repository availability
+    wget --quiet "https://$GPG/rhel_signing.key" -O /dev/null
+    check_result $? "Unable to connect to the Hestia RHEL repository"
+
+    # Installing Hestia repository
+    vrepo='/etc/yum.repos.d/hestia.repo'
+    echo "[hestia]" > $vrepo
+    echo "name=Hestia - $REPO" >> $vrepo
+    echo "baseurl=http://$RHOST/$REPO/$release/\$basearch/" >> $vrepo
+    echo "enabled=1" >> $vrepo
+    echo "gpgcheck=1" >> $vrepo
+    echo "gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-HESTIA" >> $vrepo
+    wget c.hestiacp.com/GPG.txt -O /etc/pki/rpm-gpg/RPM-GPG-KEY-HESTIA
+
+    yum install -y hestia hestia-nginx hestia-php
+fi
+
 
 
 #----------------------------------------------------------#

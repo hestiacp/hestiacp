@@ -1,6 +1,6 @@
 Name:           hestia-php
 Version:        7.4.6
-Release:        0%{?dist}
+Release:        0
 Summary:        Hestia internal PHP
 Group:          System Environment/Base
 URL:            https://www.hestiacp.com

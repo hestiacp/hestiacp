@@ -1,6 +1,6 @@
 Name:           hestia-nginx
 Version:        1.17.8
-Release:        0%{?dist}
+Release:        0
 Summary:        Hestia internal nginx web server
 Group:          System Environment/Base
 URL:            https://www.hestiacp.com

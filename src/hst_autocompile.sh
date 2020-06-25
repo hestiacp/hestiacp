@@ -586,7 +586,7 @@ if [ "$HESTIA_B" = true ]; then
 
     # clear up the source folder
     if [ "$KEEPBUILD" != 'true' ]; then
-        rm -r $BUILD_DIR_HESTIAPHP
+        rm -r $BUILD_DIR_HESTIA
         rm -rf hestiacp-$branch
     fi
     cd $BUILD_DIR/hestiacp-$branch

@@ -27,21 +27,19 @@ mkdir -p %{buildroot}%{_unitdir}
 #rm -rf %{buildroot}
 
 %pre      
-%systemd_pre %{name}.service
 
 %post
-%systemd_post %{name}.service
+%systemd_post hestia-nginx.service
 
 %preun
-%systemd_preun %{name}.service
+%systemd_preun hestia-nginx.service
 
 %postun
-%systemd_postun_with_restart %{name}.service
+%systemd_postun_with_restart hestia-nginx.service
 
 %files
 %defattr(-,root,root)
 %attr(755,root,root) /usr/local/hestia/nginx
-#%{_initrddir}/hestia
 %config(noreplace) /usr/local/hestia/nginx/conf/nginx.conf
 %{_unitdir}/hestia-nginx.service
 

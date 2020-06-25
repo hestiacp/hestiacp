@@ -1197,7 +1197,8 @@ if [ "$apache" = 'yes' ]; then
     
     # Copy configuration files
     cp -f $HESTIA_INSTALL_DIR/apache2/apache2.conf /etc/apache2/
-    cp -f $HESTIA_INSTALL_DIR/apache2/status.conf /etc/apache2/mods-enabled/
+    cp -f $HESTIA_INSTALL_DIR/apache2/status.conf /etc/apache2/mods-available/hestia-status.conf
+    cp -f /etc/apache2/mods-available/status.load /etc/apache2/mods-available/hestia-status.load
     cp -f $HESTIA_INSTALL_DIR/apache2/hestia-event.conf /etc/apache2/conf-available/
     cp -f $HESTIA_INSTALL_DIR/logrotate/apache2 /etc/logrotate.d/
     
@@ -1207,6 +1208,8 @@ if [ "$apache" = 'yes' ]; then
     a2enmod ssl > /dev/null 2>&1
     a2enmod actions > /dev/null 2>&1
     a2enconf --quiet hestia-event
+    a2dismod --quiet status > /dev/null 2>&1
+    a2enmod --quiet hestia-status
 
     if [ "$phpfpm" = 'yes' ]; then
         # Disable prefork and php, enable event

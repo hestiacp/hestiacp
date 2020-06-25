@@ -1,4 +1,8 @@
 2020-06-24 Ernesto Nicolás Carrea <equistango@gmail.com>
+* Can build Hestia, nginx and PHP
+* (internal) 4 spaces indentation (was mixed)
+
+2020-06-24 Ernesto Nicolás Carrea <equistango@gmail.com>
 * Fixed branch ~localsrc (was broken)
 * Added RPM support
 * Added support for --install and --noinstall parameters

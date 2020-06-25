@@ -8,11 +8,12 @@ URL:            https://www.hestiacp.com
 Vendor:         hestiacp.com
 Requires:       redhat-release >= 7
 Requires:       bash
-Requires:       awk
+Requires:       gawk
 Requires:       sed
 Requires:       acl
 Requires:       sysstat
-Requires:       setpriv
+Requires:       (setpriv or util-linux)
+Conflicts:      vesta
 Provides:       hestia = %{version}
 BuildRequires:  systemd-rpm-macros
 

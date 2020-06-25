@@ -102,7 +102,7 @@ RPM_DIR="$BUILD_DIR/rpm/"
 DEB_DIR="$BUILD_DIR/deb/"
 if [ -f '/etc/redhat-release' ]; then
     BUILD_RPM=true
-    BUILD_DEB=true
+    BUILD_DEB=false
     OSTYPE='rhel'
 else
     BUILD_RPM=false
@@ -217,9 +217,9 @@ if [ "$OSTYPE" = 'rhel' ]; then
     SOFTWARE='gcc gcc-c++ make libxml2-devel zlib-devel libzip-devel gmp-devel libcurl-devel gnutls-devel unzip openssl openssl-devel pkg-config sqlite-devel oniguruma-devel dpkg rpm-build'
 
     echo "Updating system DNF repositories..."
-    #FIXME: dnf upgrade -y > /dev/null 2>&1
+    yum update -y > /dev/null 2>&1
     echo "Installing dependencies for compilation..."
-    #FIXME: dnf install -y $SOFTWARE > /dev/null 2>&1
+    yum install -y $SOFTWARE > /dev/null 2>&1
 else
     # Set package dependencies for compiling
     SOFTWARE='build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config libsqlite3-dev libonig-dev rpm'

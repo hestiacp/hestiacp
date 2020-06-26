@@ -38,6 +38,8 @@ mkdir -p %{buildroot}%{_unitdir}
 %files
 %defattr(-,root,root)
 %attr(755,root,root) /usr/local/hestia/php
+%attr(775,admin,admin) /usr/local/hestia/php/var/log
+%attr(775,admin,admin) /usr/local/hestia/php/var/run
 %config(noreplace) /usr/local/hestia/php/etc/php-fpm.conf
 %config(noreplace) /usr/local/hestia/php/lib/php.ini
 %{_unitdir}/hestia-php.service

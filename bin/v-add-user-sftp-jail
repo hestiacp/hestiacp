@@ -40,7 +40,10 @@ IFS=',' read -r -a users <<< "$ssh_users"
 
 # Check if jail is already enabled
 if [[ " ${users[@]} " =~ " ${user} " ]]; then
-    exit
+    if [ ! -n "$(find /home/$user -user root -print -prune -o -prune)" ]; then
+      chown root:root /home/$user
+    fi
+    exit;
 fi
 
 

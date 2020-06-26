@@ -1106,11 +1106,14 @@ if [ "$apache" = 'yes'  ]; then
     if [ "$phpfpm" = 'yes' ]; then
         # Disable prefork and php, enable event
         # FIXME: a2dismod php$fpm_v > /dev/null 2>&1
-        sed -i "/LoadModule mpm_prefork_module/ s/^/#/" /etc/httpd/conf.modules.d/00-mpm.conf
-        sed -i "/LoadModule mpm_event_module/ s/#*//" /etc/httpd/conf.modules.d/00-mpm.conf
-    #else
+        sed -i "/LoadModule mpm_prefork_module/ s/^/#/" /etc/httpd/conf.modules.d/*.conf
+        sed -i "/LoadModule mpm_event_module/ s/#*//" /etc/httpd/conf.modules.d/*.conf
+    else
         # apache_module_enable 'ruid2'
+        sed -i "/LoadModule ruid2_module/ s/#*//" /etc/httpd/conf.modules.d/*.conf
     fi
+
+    sed -i "/LoadModule proxy_http2_module/ s/^/#/" /etc/httpd/conf.modules.d/*.conf
 
     mkdir -p /etc/httpd/conf.d/domains
     echo "# Powered by hestia" > /etc/httpd/conf.d/welcome.conf

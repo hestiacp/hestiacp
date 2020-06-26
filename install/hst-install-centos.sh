@@ -1399,6 +1399,7 @@ if [ "$clamd" = 'yes' ]; then
     mkdir -p /var/log/clamav /var/run/clamav
     chown clamav:clamupdate /var/log/clamav /var/run/clamav
     chown -R clamav:clamupdate /var/lib/clamav
+    chmod 0775 /var/lib/clamav /var/log/clamav
 
     cp -f $HESTIA_INSTALL_DIR/clamav/clamd.service /usr/lib/systemd/system/
     systemctl daemon-reload
@@ -1436,10 +1437,10 @@ fi
 
 if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     echo "(*) Configuring Roundcube webmail client..."
-    cp -f $HESTIA_INSTALL_DIR/roundcubemail/main.inc.php /etc/roundcube/config.inc.php
-    cp -f $HESTIA_INSTALL_DIR/roundcubemail/db.inc.php /etc/roundcube/db.inc.php
-    cp -f $HESTIA_INSTALL_DIR/roundcubemail/config.inc.php /etc/roundcube/plugins/password/
-    cp -f $HESTIA_INSTALL_DIR/roundcubemail/hestia.php /usr/share/roundcube/plugins/password/drivers/
+    cp -f $HESTIA_INSTALL_DIR/roundcube/main.inc.php /etc/roundcubemail/config.inc.php
+    cp -f $HESTIA_INSTALL_DIR/roundcube/db.inc.php /etc/roundcubemail/db.inc.php
+    cp -f $HESTIA_INSTALL_DIR/roundcube/config.inc.php /etc/roundcubemail/plugins/password/
+    cp -f $HESTIA_INSTALL_DIR/roundcube/hestia.php /usr/share/roundcubemail/plugins/password/drivers/
     touch /var/log/roundcubemail/errors
     chmod 640 /etc/roundcubemail/config.inc.php
     chown root:apache /etc/roundcubemail/config.inc.php

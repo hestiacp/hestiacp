@@ -5,7 +5,9 @@
 # For building from local source folder use "~localsrc" keyword as hesia branch name,
 #   and the script will not try to download the arhive from github, since '~' char is 
 #   not accepted in branch name.
-# -> ./hst_autocompile.sh --hestia '~localsrc' 'n'
+# Examples:
+#   ./hst_autocompile.sh --hestia '~localsrc' 'N'
+#   ./hst_autocompile.sh --all --noinstall master
 
 # Define download function
 download_file() {
@@ -214,9 +216,10 @@ timestamp() {
 # Install needed software
 if [ "$OSTYPE" = 'rhel' ]; then
     # Set package dependencies for compiling
-    SOFTWARE='gcc gcc-c++ make libxml2-devel zlib-devel libzip-devel gmp-devel libcurl-devel gnutls-devel unzip openssl openssl-devel pkg-config sqlite-devel oniguruma-devel dpkg rpm-build'
+    SOFTWARE='gcc gcc-c++ make libxml2-devel zlib-devel libzip-devel gmp-devel libcurl-devel gnutls-devel unzip openssl openssl-devel pkg-config sqlite-devel oniguruma-devel rpm-build'
 
     echo "Updating system DNF repositories..."
+    yum config-manager --set-enabled PowerTools > /dev/null 2>&1
     yum update -y > /dev/null 2>&1
     echo "Installing dependencies for compilation..."
     yum install -y $SOFTWARE > /dev/null 2>&1

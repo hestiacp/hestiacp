@@ -3,7 +3,7 @@
 [%backend%]
 listen = /var/run/php/%backend%.sock
 listen.owner = %user%
-listen.group = www-data
+listen.group = apache
 listen.mode = 0660
 
 user = %user%

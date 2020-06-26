@@ -34,7 +34,7 @@
     <IfModule mod_ruid2.c>
         RMode config
         RUidGid %user% %group%
-        RGroups www-data
+        RGroups apache
     </IfModule>
     <IfModule mpm_itk.c>
         AssignUserID %user% %group%

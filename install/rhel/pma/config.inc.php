@@ -24,7 +24,7 @@ function check_file_access($path)
     } else {
         error_log(
             'phpmyadmin: Failed to load ' . $path
-            . ' Check group www-data has read access and open_basedir restrictions.'
+            . ' Check group apache has read access and open_basedir restrictions.'
         );
         return false;
     }

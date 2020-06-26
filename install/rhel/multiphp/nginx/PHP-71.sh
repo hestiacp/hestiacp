@@ -10,7 +10,7 @@ pool_conf="[$2]
 
 listen = /run/php/php7.1-fpm-$2.sock
 listen.owner = $1
-listen.group = www-data
+listen.group = apache
 listen.mode = 0660
 
 user = $1

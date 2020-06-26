@@ -1083,29 +1083,47 @@ fi
 if [ "$apache" = 'yes'  ]; then
     echo "(*) Configuring Apache Web Server..."
 
-    cp -f $HESTIA_INSTALL_DIR/httpd/httpd.conf /etc/httpd/conf/
-    cp -f $HESTIA_INSTALL_DIR/httpd/status.conf /etc/httpd/conf.d/
-    cp -f $HESTIA_INSTALL_DIR/httpd/ssl.conf /etc/httpd/conf.d/
-    cp -f $HESTIA_INSTALL_DIR/httpd/ruid2.conf /etc/httpd/conf.d/
-    cp -f $HESTIA_INSTALL_DIR/logrotate/httpd /etc/logrotate.d/
+    # Copy configuration files
+    cp -f $HESTIA_INSTALL_DIR/apache2/apache2.conf /etc/httpd/conf/httpd.conf
+    cp -f $HESTIA_INSTALL_DIR/apache2/status.conf /etc/httpd/conf.d/
+    cp -f $HESTIA_INSTALL_DIR/apache2/hestia-event.conf /etc/httpd/conf.modules.d/
+    cp -f $HESTIA_INSTALL_DIR/logrotate/apache2z /etc/logrotate.d/httpd
+
+    # Disable modules
     if [ -e "/etc/httpd/conf.modules.d/00-dav.conf" ]; then
         cd /etc/httpd/conf.modules.d
-        sed -i "s/^/#/" 00-dav.conf 00-lua.conf 00-proxy.conf
+        sed -i "s/^/#/" 00-dav.conf
     fi
-    echo > /etc/httpd/conf.d/hestia.conf
-    cd /var/log/httpd
-    touch access_log error_log suexec.log
-    chmod 640 access_log error_log suexec.log
-    chmod -f 777 /var/lib/php/session
-    chmod a+x /var/log/httpd
+    if [ -e "/etc/httpd/conf.modules.d/00-lua.conf" ]; then
+        cd /etc/httpd/conf.modules.d
+        sed -i "s/^/#/" 00-lua.conf 00-proxy.conf
+    fi
+    if [ -e "/etc/httpd/conf.modules.d/00-proxy.conf" ]; then
+        cd /etc/httpd/conf.modules.d
+        sed -i "s/^/#/" 00-proxy.conf
+    fi
+
+    if [ "$phpfpm" = 'yes' ]; then
+        # Disable prefork and php, enable event
+        # FIXME: a2dismod php$fpm_v > /dev/null 2>&1
+        sed -i "/LoadModule mpm_prefork_module/ s/^/#/" /etc/httpd/conf.modules.d/00-mpm.conf
+        sed -i "/LoadModule mpm_event_module/ s/#*//" /etc/httpd/conf.modules.d/00-mpm.conf
+    else
+        # apache_module_enable 'ruid2'
+    fi
+
+    mkdir -p /etc/httpd/conf.d/domains
+    echo "# Powered by hestia" > /etc/httpd/conf.d/welcome.conf
+
     mkdir -p /var/log/httpd/domains
+    chmod a+x /var/log/httpd
+    chmod 640 /var/log/httpd/access.log /var/log/httpd/error.log
     chmod 751 /var/log/httpd/domains
-    if [ "$release" -ge 7 ]; then
-        mkdir -p /etc/systemd/system/httpd.service.d
-        cd /etc/systemd/system/httpd.service.d
-        echo "[Service]" > limits.conf
-        echo "LimitNOFILE=500000" >> limits.conf
-    fi
+    chmod -f 777 /var/lib/php/session
+
+    # Not needed. status.conf is fixed.
+    # sed -i '/Allow from all/d' /etc/apache2/mods-enabled/status.conf
+
     systemctl enable httpd
     systemctl start httpd >> $LOG
     check_result $? "httpd start failed"

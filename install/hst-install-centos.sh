@@ -1316,13 +1316,13 @@ fi
 
 if [ "$named" = 'yes' ]; then
     echo "(*) Configuring Bind DNS server..."
-    cp -f $HESTIA_INSTALL_DIR/bind/named.conf /etc/bind/
-    cp -f $HESTIA_INSTALL_DIR/bind/named.conf.options /etc/bind/
-    chown root:bind /etc/bind/named.conf
-    chown root:bind /etc/bind/named.conf.options
-    chown bind:bind /var/cache/bind
-    chmod 640 /etc/bind/named.conf
-    chmod 640 /etc/bind/named.conf.options
+    cp -f $HESTIA_INSTALL_DIR/bind/named.conf /etc/
+    cp -f $HESTIA_INSTALL_DIR/bind/named.conf.options /etc/
+    chown root:named /etc/named.conf
+    chown root:named /etc/named.conf.options
+    chown named:named /var/named
+    chmod 640 /etc/named.conf
+    chmod 640 /etc/named.conf.options
 
     systemctl enable named
     systemctl restart named

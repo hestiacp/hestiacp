@@ -785,20 +785,22 @@ $LANG['en'] = array(
     'Fm' => 'Files',
     //PHP Cli
     'PHP CLI Version' => 'PHP CLI Version',
+
     //Ipset Firewall rules
-    'Adding Firewall Ipset List' => 'Adding Firewall Ipset List',
-    'Ip List Name' => 'Ip List Name',
+    'Adding Firewall Ipset List' => 'Add New IP list',
+    'Ip List Name' => 'IP List Name',
     'Data Source' => 'Data Source',
-    'Ip Version' => 'Ip Version',
-    'Autoupdate' => 'Autoupdate',
+    'Ip Version' => 'IP Version',
+    'Autoupdate' => 'Auto Update',
+    'Add IP list' => 'Add IP list',
     'BLACKLIST' => 'BLACKLIST',
     'IPVERSE' => 'IPVERSE',
-    'IPSET_CREATED_OK' => 'Ipset created',
-    'DELETE_IPSET_CONFIRMATION' => 'Are you sure you want to delete Ipset %2',
-    '1 Ipset list' => '1 Ipset list',
-    '%s Ipset lists' => '%s Ipset lists',
-    'There are currently no Ipset lists defined.' => 'There are currently no Ipset lists defined.',
-    'list ipset' => 'Ipset',
+    'IPSET_CREATED_OK' => 'IP list created successfully',
+    'DELETE_IPSET_CONFIRMATION' => 'Are you sure you want to delete IP list %2',
+    '1 Ipset list' => '1 IP list',
+    '%s Ipset lists' => '%s IP lists',
+    'There are currently no IP lists defined.' => 'There are currently no IP lists defined.',
+    'list ipset' => 'Manage IP lists',
     
     //Backup
     'File Name' => 'File Name',

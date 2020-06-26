@@ -393,6 +393,9 @@ rebuild_web_domain_conf() {
                 $HOMEDIR/$user/web/$domain/public_shtml \
                 $HOMEDIR/$user/web/$domain/document_errors
     chmod 640 /var/log/$WEB_SYSTEM/domains/$domain.*
+
+    chown $user:www-data $HOMEDIR/$user/web/$domain/public_html \
+                $HOMEDIR/$user/web/$domain/public_shtml
 }
 
 # DNS domain rebuild

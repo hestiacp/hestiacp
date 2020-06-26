@@ -106,3 +106,15 @@ if [ -f "/etc/nginx/nginx.conf" ]; then
         sed -i '/^pid/ a include /etc/nginx/modules-enabled/*.conf;' /etc/nginx/nginx.conf
     fi
 fi
+
+# Fix public_(s)html group ownership
+echo "(*) Updating public_(s)html ownership..."
+for user in $($HESTIA/bin/v-list-sys-users plain); do
+    # skip users with missing home folder
+    [[ -d /home/${user}/ ]] || continue
+
+    # skip users without web domains
+    [[ ls /home/${user}/web/*/public_*html >/dev/null 2>&1 ]] || continue
+
+    chown --silent --no-dereference :www-data /home/$user/web/*/public_*html
+done

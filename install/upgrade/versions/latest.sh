@@ -114,7 +114,7 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
     [[ -d /home/${user}/ ]] || continue
 
     # skip users without web domains
-    [[ ls /home/${user}/web/*/public_*html >/dev/null 2>&1 ]] || continue
+    ls /home/${user}/web/*/public_*html >/dev/null 2>&1 || continue
 
     chown --silent --no-dereference :www-data /home/$user/web/*/public_*html
 done

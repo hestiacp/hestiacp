@@ -771,33 +771,36 @@ $LANG['en'] = array(
     'Avoid adding web domains on admin account' => 'It is strongly advised to create a standard user account before adding web domains to the server due to the increased privileges the admin account possesses and potential security risks involved.',
     
     //SSH Key
-    'Field SSH_KEY can not be blank.' => 'Field SSH Key may not be blank',
+    'Field SSH_KEY can not be blank.' => 'Field SSH Key must not be blank',
     'SSH KEY is invalid' => 'SSH key is invalid',
-    'SSH KEY already exists' => 'SSH key already exsits',
+    'SSH KEY already exists' => 'SSH key already exists',
     'SSH KEY Added' => 'SSH key has been added',
     'Add SSH Key' => 'Add SSH key',
     'SSH KEY' => 'SSH Key',    
-    'DELETE_KEY_CONFIRM' => 'Are you sure you want to delete key %s?',
-    'SSH_ID' => 'SSH Id',
+    'DELETE_KEY_CONFIRM' => 'Are you sure you want to delete SSH key %s?',
+    'SSH_ID' => 'SSH ID',
+    'Manage SSH keys' => 'Manage SSH keys',
  
     //Header 
     'Fm' => 'Files',
     //PHP Cli
     'PHP CLI Version' => 'PHP CLI Version',
+
     //Ipset Firewall rules
-    'Adding Firewall Ipset List' => 'Adding Firewall Ipset List',
-    'Ip List Name' => 'Ip List Name',
+    'Adding Firewall Ipset List' => 'Add New IP list',
+    'Ip List Name' => 'IP List Name',
     'Data Source' => 'Data Source',
-    'Ip Version' => 'Ip Version',
-    'Autoupdate' => 'Autoupdate',
+    'Ip Version' => 'IP Version',
+    'Autoupdate' => 'Auto Update',
+    'Add IP list' => 'Add IP list',
     'BLACKLIST' => 'BLACKLIST',
     'IPVERSE' => 'IPVERSE',
-    'IPSET_CREATED_OK' => 'Ipset created',
-    'DELETE_IPSET_CONFIRMATION' => 'Are you sure you want to delete Ipset %2',
-    '1 Ipset list' => '1 Ipset list',
-    '%s Ipset lists' => '%s Ipset lists',
-    'There are currently no Ipset lists defined.' => 'There are currently no Ipset lists defined.',
-    'list ipset' => 'Ipset',
+    'IPSET_CREATED_OK' => 'IP list created successfully',
+    'DELETE_IPSET_CONFIRMATION' => 'Are you sure you want to delete IP list %2',
+    '1 Ipset list' => '1 IP list',
+    '%s Ipset lists' => '%s IP lists',
+    'There are currently no IP lists defined.' => 'There are currently no IP lists defined.',
+    'list ipset' => 'Manage IP lists',
     
     //Backup
     'File Name' => 'File Name',

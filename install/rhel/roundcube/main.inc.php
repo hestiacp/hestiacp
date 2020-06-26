@@ -175,7 +175,7 @@ $rcmail_config['smtp_timeout'] = 0;
 // ----------------------------------
 // SYSTEM
 // ----------------------------------
-include_once("/etc/roundcube/debian-db-roundcube.php");
+include_once("/etc/roundcube/db.inc.php");
 
 
 // THIS OPTION WILL ALLOW THE INSTALLER TO RUN AND CAN EXPOSE SENSITIVE CONFIG DATA.

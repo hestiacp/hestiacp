@@ -6,6 +6,7 @@
 #                  Variables&Functions                     #
 #----------------------------------------------------------#
 export PATH=$PATH:/sbin
+#export DEBIAN_FRONTEND=noninteractive
 RHOST='rhel.hestiacp.com'
 GPG='gpg.hestiacp.com'
 VERSION='rhel'
@@ -15,13 +16,21 @@ memory=$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])
 hst_backups="/root/hst_install_backups/$(date +%d%m%Y%H%M)"
 arch=$(uname -i)
 spinner="/-\|"
-os=$(cut -f 1 -d ' ' /etc/redhat-release)
+os='rhel'
 release=$(grep -o "[0-9]" /etc/redhat-release |head -n1)
 codename="${os}_$release"
 HESTIA_INSTALL_DIR="$HESTIA/install/rhel"
+VERBOSE='no'
+
+# Define software versions
+HESTIA_INSTALL_VER='1.2.0'
+pma_v='5.0.2'
+multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
+fpm_v="7.3"
+mariadb_v="5.6"
 
 # Defining software pack for all distros
-software=" nginx awstats bc bind bind-libs bind-utils clamav-server clamav-update
+software=" nginx awstats bc bind bind-libs bind-utils clamav clamav-update
     curl dovecot e2fsprogs exim expect fail2ban flex freetype ftp GeoIP httpd
     ImageMagick iptables-services lsof mailx mariadb mariadb-server mc
     mod_fcgid mod_ruid2 mod_ssl net-tools openssh-clients pcre php
@@ -30,7 +39,7 @@ software=" nginx awstats bc bind bind-libs bind-utils clamav-server clamav-updat
     php-tidy php-xml php-xmlrpc postgresql postgresql-contrib
     postgresql-server proftpd roundcubemail rrdtool rsyslog screen
     spamassassin sqlite sudo tar telnet unzip hestia hestia-nginx
-    hestia-php vim-common vsftpd webalizer which zip "
+    hestia-php vim-common vsftpd webalizer which zip wget tar "
 
 # Defining help function
 help() {
@@ -301,7 +310,7 @@ fi
 # Checking installed packages
 tmpfile=$(mktemp -p /tmp)
 rpm -qa > $tmpfile
-for pkg in exim mariadb-server httpd nginx hestia postfix; do
+for pkg in exim mariadb-server MariaDB-server mysql-server httpd nginx hestia postfix; do
     if [ ! -z "$(grep $pkg $tmpfile)" ]; then
         conflicts="$pkg* $conflicts"
     fi
@@ -342,7 +351,7 @@ echo ' |  _  |  __/\__ \ |_| | (_| | |___|  __/ '
 echo ' |_| |_|\___||___/\__|_|\__,_|\____|_|    '
 echo
 echo '                      Hestia Control Panel'
-echo '                                    v1.2.0'
+echo "                                    v${HESTIA_INSTALL_VER}"
 echo -e "\n"
 echo "===================================================================="
 echo -e "\n"
@@ -634,7 +643,7 @@ if [ "$exim" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/\bexim\b/ /")
     software=$(echo "$software" | sed -e "s/\bdovecot\b/ /")
     software=$(echo "$software" | sed -e "s/\bclamd\b/ /")
-    software=$(echo "$software" | sed -e "s/\bclamav-server\b/ /")
+    software=$(echo "$software" | sed -e "s/\bclamav\b/ /")
     software=$(echo "$software" | sed -e "s/\bclamav-update\b/ /")
     software=$(echo "$software" | sed -e "s/\bspamassassin\b/ /")
     software=$(echo "$software" | sed -e "s/\broundcube-core\b/ /")
@@ -642,7 +651,9 @@ if [ "$exim" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/\broundcube-plugins\b/ /")
 fi
 if [ "$clamd" = 'no' ]; then
-    software=$(echo "$software" | sed -e "s/\bclamav-daemon\b/ /")
+    software=$(echo "$software" | sed -e "s/\bclamd\b/ /")
+    software=$(echo "$software" | sed -e "s/\bclamav\b/ /")
+    software=$(echo "$software" | sed -e "s/\bclamav-update\b/ /")
 fi
 if [ "$spamd" = 'no' ]; then
     software=$(echo "$software" | sed -e 's/\bspamassassin\b/ /')
@@ -694,9 +705,9 @@ fi
 #                     Install packages                     #
 #----------------------------------------------------------#
 
-if [ "$codename" = "CentOS_7" ]; then
+if [ "$codename" = "rhel_7" ]; then
     enabled_repos="*base *updates,nginx,epel,hestia,remi*"
-elif [ "$codename" = "CentOS_8" ]; then
+elif [ "$codename" = "rhel_8" ]; then
     # Enable Remi PHP stream
     dnf module disable -y php:*
     dnf module enable -y php:remi-7.4
@@ -725,10 +736,6 @@ elif [ "$codename" = "CentOS_8" ]; then
     enabled_repos="BaseOS AppStream Stream-AppStream Stream-BaseOS \
         Stream-extras epel epel-modular extras nginx PowerTools \
         raven raven-extras remi remi-modular"
-fi
-
-if [ ! -z "$withrpms" ]; then
-    enabled_repos="$enabled_repos hestia "
 fi
 
 # Installing rpm packages
@@ -769,6 +776,7 @@ fi
 #                     Configure system                     #
 #----------------------------------------------------------#
 
+echo "(*) Configuring system settings..."
 # Restarting rsyslog
 service rsyslog restart > /dev/null 2>&1
 
@@ -812,11 +820,18 @@ ln -sf /home/backup /backup
 chmod a+x /backup
 
 # Set directory color
-echo 'LS_COLORS="$LS_COLORS:di=00;33"' >> /etc/profile
+if [ -z "$(grep 'LS_COLORS="$LS_COLORS:di=00;33"' /etc/profile)" ]; then
+    echo 'LS_COLORS="$LS_COLORS:di=00;33"' >> /etc/profile
+fi
 
 # Register /sbin/nologin and /usr/sbin/nologin
-echo "/sbin/nologin" >> /etc/shells
-echo "/usr/sbin/nologin" >> /etc/shells
+if [ -z "$(grep ^/sbin/nologin /etc/shells)" ]; then
+    echo "/sbin/nologin" >> /etc/shells
+fi
+
+if [ -z "$(grep ^/usr/sbin/nologin /etc/shells)" ]; then
+    echo "/usr/sbin/nologin" >> /etc/shells
+fi
 
 # Changing default systemd interval
 if [ "$release" -eq '7' ]; then
@@ -828,9 +843,10 @@ fi
 
 
 #----------------------------------------------------------#
-#                     Configure HESTIA                      #
+#                     Configure Hestia                     #
 #----------------------------------------------------------#
 
+echo "(*) Configuring Hestia Control Panel..."
 # Installing sudo configuration
 mkdir -p /etc/sudoers.d
 cp -f $HESTIA_INSTALL_DIR/sudo/admin /etc/sudoers.d/
@@ -838,11 +854,10 @@ chmod 440 /etc/sudoers.d/admin
 
 # Configuring system env
 echo "export HESTIA='$HESTIA'" > /etc/profile.d/hestia.sh
+echo 'PATH=$PATH:'$HESTIA'/bin' >> /etc/profile.d/hestia.sh
+echo 'export PATH' >> /etc/profile.d/hestia.sh
 chmod 755 /etc/profile.d/hestia.sh
 source /etc/profile.d/hestia.sh
-echo 'PATH=$PATH:'$HESTIA'/bin' >> /root/.bash_profile
-echo 'export PATH' >> /root/.bash_profile
-source /root/.bash_profile
 
 # Configuring logrotate for hestia logs
 cp -f $HESTIA_INSTALL_DIR/logrotate/hestia /etc/logrotate.d/
@@ -967,7 +982,7 @@ echo "BACKUP_SYSTEM='local'" >> $HESTIA/conf/hestia.conf
 echo "LANGUAGE='$lang'" >> $HESTIA/conf/hestia.conf
 
 # Version & Release Branch
-echo "VERSION='1.1.0'" >> $HESTIA/conf/hestia.conf
+echo "VERSION='${HESTIA_INSTALL_VER}'" >> $HESTIA/conf/hestia.conf
 echo "RELEASE_BRANCH='release'" >> $HESTIA/conf/hestia.conf
 
 # Installing hosting packages
@@ -1054,15 +1069,9 @@ if [ "$nginx" = 'yes' ]; then
         sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
     fi
 
-    chkconfig nginx on
-    service nginx start
+    systemctl enable nginx.service
+    systemctl start nginx.service >> $LOG
     check_result $? "nginx start failed"
-
-    # Workaround for OpenVZ/Virtuozzo
-    if [ "$release" -ge '7' ] && [ -e "/proc/vz/veinfo" ]; then
-        echo "#Hestia: workraround for networkmanager" >> /etc/rc.local
-        echo "sleep 3 && service nginx restart" >> /etc/rc.local
-    fi
 fi
 
 
@@ -1071,16 +1080,13 @@ fi
 #----------------------------------------------------------#
 
 if [ "$apache" = 'yes'  ]; then
+    echo "(*) Configuring Apache Web Server..."
+
     cp -f $HESTIA_INSTALL_DIR/httpd/httpd.conf /etc/httpd/conf/
     cp -f $HESTIA_INSTALL_DIR/httpd/status.conf /etc/httpd/conf.d/
     cp -f $HESTIA_INSTALL_DIR/httpd/ssl.conf /etc/httpd/conf.d/
     cp -f $HESTIA_INSTALL_DIR/httpd/ruid2.conf /etc/httpd/conf.d/
     cp -f $HESTIA_INSTALL_DIR/logrotate/httpd /etc/logrotate.d/
-    if [ $release -lt 7 ]; then
-        cd /etc/httpd/conf.d
-        echo "MEFaccept 127.0.0.1" >> mod_extract_forwarded.conf
-        echo > proxy_ajp.conf
-    fi
     if [ -e "/etc/httpd/conf.modules.d/00-dav.conf" ]; then
         cd /etc/httpd/conf.modules.d
         sed -i "s/^/#/" 00-dav.conf 00-lua.conf 00-proxy.conf
@@ -1099,15 +1105,12 @@ if [ "$apache" = 'yes'  ]; then
         echo "[Service]" > limits.conf
         echo "LimitNOFILE=500000" >> limits.conf
     fi
-    chkconfig httpd on
-    service httpd start
+    systemctl enable httpd
+    systemctl start httpd >> $LOG
     check_result $? "httpd start failed"
-
-    # Workaround for OpenVZ/Virtuozzo
-    if [ "$release" -ge '7' ] && [ -e "/proc/vz/veinfo" ]; then
-        echo "#Hestia: workraround for networkmanager" >> /etc/rc.local
-        echo "sleep 2 && service httpd restart" >> /etc/rc.local
-    fi
+else
+    systemctl disable httpd > /dev/null 2>&1
+    systemctl stop httpd > /dev/null 2>&1
 fi
 
 
@@ -1128,7 +1131,7 @@ if [ "$phpfpm" = 'yes' ]; then
     echo "(*) Configuring PHP-FPM..."
     $HESTIA/bin/v-add-web-php "$fpm_v" > /dev/null 2>&1
     cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf
-    update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1
+    systemctl enable php$fpm_v-fpm > /dev/null 2>&1
     systemctl start php$fpm_v-fpm >> $LOG
     check_result $? "php-fpm start failed"
     update-alternatives --set php /usr/bin/php$fpm_v > /dev/null 2>&1
@@ -1139,10 +1142,8 @@ fi
 #                     Configure PHP                        #
 #----------------------------------------------------------#
 
+echo "(*) Configuring PHP..."
 ZONE=$(timedatectl 2>/dev/null|grep Timezone|awk '{print $2}')
-if [ -e '/etc/sysconfig/clock' ]; then
-    source /etc/sysconfig/clock
-fi
 if [ -z "$ZONE" ]; then
     ZONE='UTC'
 fi
@@ -1151,16 +1152,29 @@ for pconf in $(find /etc/php* -name php.ini); do
     sed -i 's%_open_tag = Off%_open_tag = On%g' $pconf
 done
 
+# Cleanup php session files not changed in the last 7 days (60*24*7 minutes)
+echo '#!/bin/sh' > /etc/cron.daily/php-session-cleanup
+echo "find -O3 /home/*/tmp/ -ignore_readdir_race -depth -mindepth 1 -name 'sess_*' -type f -cmin '+10080' -delete > /dev/null 2>&1" >> /etc/cron.daily/php-session-cleanup
+echo "find -O3 $HESTIA/data/sessions/ -ignore_readdir_race -depth -mindepth 1 -name 'sess_*' -type f -cmin '+10080' -delete > /dev/null 2>&1" >> /etc/cron.daily/php-session-cleanup
+chmod 755 /etc/cron.daily/php-session-cleanup
 
 #----------------------------------------------------------#
 #                    Configure Vsftpd                      #
 #----------------------------------------------------------#
 
 if [ "$vsftpd" = 'yes' ]; then
-    cp -f $HESTIA_INSTALL_DIR/vsftpd/vsftpd.conf /etc/vsftpd/
-    chkconfig vsftpd on
-    service vsftpd start
+        echo "(*) Configuring Vsftpd server..."
+    cp -f $HESTIA_INSTALL_DIR/vsftpd/vsftpd.conf /etc/
+    touch /var/log/vsftpd.log
+    chown root:adm /var/log/vsftpd.log
+    chmod 640 /var/log/vsftpd.log
+    touch /var/log/xferlog
+    chown root:adm /var/log/xferlog
+    chmod 640 /var/log/xferlog
+    systemctl enable vsftpd
+    systemctl start vsftpd
     check_result $? "vsftpd start failed"
+
 fi
 
 
@@ -1169,9 +1183,11 @@ fi
 #----------------------------------------------------------#
 
 if [ "$proftpd" = 'yes' ]; then
-    cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/
-    chkconfig proftpd on
-    service proftpd start
+    echo "(*) Configuring ProFTPD server..."
+    echo "127.0.0.1 $servername" >> /etc/hosts
+    cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/proftpd/
+    systemctl enable proftpd > /dev/null 2>&1
+    systemctl start proftpd >> $LOG
     check_result $? "proftpd start failed"
 fi
 
@@ -1181,7 +1197,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$mysql" = 'yes' ]; then
-
+    echo "(*) Configuring MariaDB database server..."
     mycnf="my-small.cnf"
     if [ $memory -gt 1200000 ]; then
         mycnf="my-medium.cnf"
@@ -1190,52 +1206,68 @@ if [ "$mysql" = 'yes' ]; then
         mycnf="my-large.cnf"
     fi
 
-    mkdir -p /var/lib/mysql
-    chown mysql:mysql /var/lib/mysql
-    mkdir -p /etc/my.cnf.d
+    # Configuring MariaDB
+    cp -f $HESTIA_INSTALL_DIR/mysql/$mycnf /etc/my.cnf
+    mysql_install_db >> $LOG
 
-    if [ $release -lt 7 ]; then
-        service='mysqld'
-    else
-        service='mariadb'
-    fi
-
-    cp -f $HESTIA_INSTALL_DIR/$service/$mycnf /etc/my.cnf
-    chkconfig $service on
-    service $service start
-    if [ "$?" -ne 0 ]; then
-        if [ -e "/proc/user_beancounters" ]; then
-            # Fix for aio on OpenVZ
-            sed -i "s/#innodb_use_native/innodb_use_native/g" /etc/my.cnf
-        fi
-        service $service start
-        check_result $? "$service start failed"
-    fi
+    systemctl enable mariadb > /dev/null 2>&1
+    systemctl start mariadb >> $LOG
+    check_result $? "mariadb start failed"
 
     # Securing MySQL installation
     mpass=$(gen_pass)
     mysqladmin -u root password $mpass
     echo -e "[client]\npassword='$mpass'\n" > /root/.my.cnf
     chmod 600 /root/.my.cnf
+
+    # Clear MariaDB Test Users and Databases
     mysql -e "DELETE FROM mysql.user WHERE User=''"
-    mysql -e "DROP DATABASE test" >/dev/null 2>&1
+    mysql -e "DROP DATABASE test" > /dev/null 2>&1
     mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
-    mysql -e "DELETE FROM mysql.user WHERE user='' or password='';"
-    mysql -e "FLUSH PRIVILEGES"
+    mysql -e "DELETE FROM mysql.user WHERE user='';"
+    mysql -e "DELETE FROM mysql.user WHERE password='' AND authentication_string='';"
 
     # Configuring phpMyAdmin
     if [ "$apache" = 'yes' ]; then
-        cp -f $HESTIA_INSTALL_DIR/pma/phpMyAdmin.conf /etc/httpd/conf.d/
+        cp -f $HESTIA_INSTALL_DIR/pma/apache.conf /etc/phpmyadmin/
+        ln -s /etc/phpmyadmin/apache.conf /etc/httpd/conf.d/phpmyadmin.conf
     fi
-    mysql < /usr/share/phpMyAdmin/sql/create_tables.sql
-    p=$(gen_pass)
-    mysql -e "GRANT ALL ON phpmyadmin.*
-        TO phpmyadmin@localhost IDENTIFIED BY '$p'"
-    cp -f $HESTIA_INSTALL_DIR/pma/config.inc.conf /etc/phpMyAdmin/config.inc.php
-    sed -i "s/%blowfish_secret%/$(gen_pass 32)/g" /etc/phpMyAdmin/config.inc.php
-    sed -i "s/%phpmyadmin_pass%/$p/g" /etc/phpMyAdmin/config.inc.php
-    chmod 777 /var/lib/phpMyAdmin/temp
-    chmod 777 /var/lib/phpMyAdmin/save
+    cp -f $HESTIA_INSTALL_DIR/pma/config.inc.php /etc/phpmyadmin/
+    chmod 777 /var/lib/phpmyadmin/tmp
+fi
+
+
+#----------------------------------------------------------#
+#                    Configure phpMyAdmin                  #
+#----------------------------------------------------------#
+
+if [ "$mysql" = 'yes' ]; then
+    # Display upgrade information
+    echo "(*) Installing phpMyAdmin version v$pma_v..."
+
+    # Download latest phpmyadmin release
+    wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
+
+    # Unpack files
+    tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
+
+    # Delete file to prevent error
+    rm -fr /usr/share/phpmyadmin/doc/html
+
+    # Overwrite old files
+    cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
+
+    # Set config and log directory
+    sed -i "s|define('CONFIG_DIR', ROOT_PATH);|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
+    sed -i "s|define('TEMP_DIR', ROOT_PATH . 'tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
+
+    # Create temporary folder and change permission
+    mkdir /usr/share/phpmyadmin/tmp
+    chmod 777 /usr/share/phpmyadmin/tmp
+
+    # Clear Up
+    rm -fr phpMyAdmin-$pma_v-all-languages
+    rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
 fi
 
 
@@ -1244,19 +1276,12 @@ fi
 #----------------------------------------------------------#
 
 if [ "$postgresql" = 'yes' ]; then
+    echo "(*) Configuring PostgreSQL database server..."
     ppass=$(gen_pass)
-    if [ $release -eq 5 ]; then
-        service postgresql start
-        sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '$ppass'"
-        service postgresql stop
-        cp -f $HESTIA_INSTALL_DIR/postgresql/pg_hba.conf /var/lib/pgsql/data/
-        service postgresql start
-    else
-        service postgresql initdb
-        cp -f $HESTIA_INSTALL_DIR/postgresql/pg_hba.conf /var/lib/pgsql/data/
-        service postgresql start
-        sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '$ppass'"
-    fi
+    cp -f $HESTIA_INSTALL_DIR/postgresql/pg_hba.conf /var/lib/pgsql/data/
+    systemctl restart postgresql
+    sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '$ppass'"
+
     # Configuring phpPgAdmin
     if [ "$apache" = 'yes' ]; then
         cp -f $HESTIA_INSTALL_DIR/pga/phpPgAdmin.conf /etc/httpd/conf.d/
@@ -1270,11 +1295,17 @@ fi
 #----------------------------------------------------------#
 
 if [ "$named" = 'yes' ]; then
-    cp -f $HESTIA_INSTALL_DIR/named/named.conf /etc/
-    chown root:named /etc/named.conf
-    chmod 640 /etc/named.conf
-    chkconfig named on
-    service named start
+    echo "(*) Configuring Bind DNS server..."
+    cp -f $HESTIA_INSTALL_DIR/bind/named.conf /etc/bind/
+    cp -f $HESTIA_INSTALL_DIR/bind/named.conf.options /etc/bind/
+    chown root:bind /etc/bind/named.conf
+    chown root:bind /etc/bind/named.conf.options
+    chown bind:bind /var/cache/bind
+    chmod 640 /etc/bind/named.conf
+    chmod 640 /etc/bind/named.conf.options
+
+    systemctl enable named
+    systemctl restart named
     check_result $? "named start failed"
 fi
 
@@ -1284,32 +1315,32 @@ fi
 #----------------------------------------------------------#
 
 if [ "$exim" = 'yes' ]; then
-    gpasswd -a exim mail
-    cp -f $HESTIA_INSTALL_DIR/exim/exim.conf /etc/exim/
+    echo "(*) Configuring Exim mail server..."
+    gpasswd -a exim mail > /dev/null 2>&1
+    cp -f $HESTIA_INSTALL_DIR/exim/exim.conf.template /etc/exim/
     cp -f $HESTIA_INSTALL_DIR/exim/dnsbl.conf /etc/exim/
     cp -f $HESTIA_INSTALL_DIR/exim/spam-blocks.conf /etc/exim/
     touch /etc/exim/white-blocks.conf
 
     if [ "$spamd" = 'yes' ]; then
-        sed -i "s/#SPAM/SPAM/g" /etc/exim/exim.conf
+        sed -i "s/#SPAM/SPAM/g" /etc/exim/exim.conf.template
     fi
     if [ "$clamd" = 'yes' ]; then
-        sed -i "s/#CLAMD/CLAMD/g" /etc/exim/exim.conf
+        sed -i "s/#CLAMD/CLAMD/g" /etc/exim/exim.conf.template
     fi
 
-    chmod 640 /etc/exim/exim.conf
+    chmod 640 /etc/exim/exim.conf.template
     rm -rf /etc/exim/domains
     mkdir -p /etc/exim/domains
 
     rm -f /etc/alternatives/mta
     ln -s /usr/sbin/sendmail.exim /etc/alternatives/mta
-    chkconfig sendmail off 2>/dev/null
-    service sendmail stop 2>/dev/null
-    chkconfig postfix off 2>/dev/null
-    service postfix stop 2>/dev/null
-
-    chkconfig exim on
-    service exim start
+    systemctl disable sendmail 2>/dev/null
+    systemctl stop sendmail 2>/dev/null
+    systemctl disable postfix 2>/dev/null
+    systemctl stop postfix 2>/dev/null
+    systemctl enable exim
+    systemctl start exim
     check_result $? "exim start failed"
 fi
 
@@ -1319,15 +1350,16 @@ fi
 #----------------------------------------------------------#
 
 if [ "$dovecot" = 'yes' ]; then
-    gpasswd -a dovecot mail
+    echo "(*) Configuring Dovecot POP/IMAP mail server..."
+    gpasswd -a dovecot mail > /dev/null 2>&1
     cp -rf $HESTIA_INSTALL_DIR/dovecot /etc/
     cp -f $HESTIA_INSTALL_DIR/logrotate/dovecot /etc/logrotate.d/
     chown -R root:root /etc/dovecot*
     if [ "$release" -eq 7 ]; then
         sed -i "s#namespace inbox {#namespace inbox {\n  inbox = yes#" /etc/dovecot/conf.d/15-mailboxes.conf
     fi
-    chkconfig dovecot on
-    service dovecot start
+    systemctl enable dovecot
+    systemctl start dovecot
     check_result $? "dovecot start failed"
 fi
 
@@ -1337,26 +1369,30 @@ fi
 #----------------------------------------------------------#
 
 if [ "$clamd" = 'yes' ]; then
-    useradd clam -s /sbin/nologin -d /var/lib/clamav 2>/dev/null
-    gpasswd -a clam exim
-    gpasswd -a clam mail
+    useradd clamav -g clamupdate -s /sbin/nologin -d /var/lib/clamav 2>/dev/null
+    gpasswd -a clamupdate exim
+    gpasswd -a clamupdate mail
     cp -f $HESTIA_INSTALL_DIR/clamav/clamd.conf /etc/
     cp -f $HESTIA_INSTALL_DIR/clamav/freshclam.conf /etc/
     mkdir -p /var/log/clamav /var/run/clamav
-    chown clam:clam /var/log/clamav /var/run/clamav
-    chown -R clam:clam /var/lib/clamav
-    if [ "$release" -ge '7' ]; then
-        cp -f $HESTIA_INSTALL_DIR/clamav/clamd.service /usr/lib/systemd/system/
-        systemctl --system daemon-reload
-    fi
-    /usr/bin/freshclam
-    if [ "$release" -ge '7' ]; then
-        sed -i "s/nofork/foreground/" /usr/lib/systemd/system/clamd.service
-        systemctl daemon-reload
-    fi
-    chkconfig clamd on
-    service clamd start
-    #check_result $? "clamd start failed"
+    chown clamav:clamupdate /var/log/clamav /var/run/clamav
+    chown -R clamav:clamupdate /var/lib/clamav
+
+    cp -f $HESTIA_INSTALL_DIR/clamav/clamd.service /usr/lib/systemd/system/
+    systemctl daemon-reload
+    systemctl enable clamd
+
+    echo -ne "(*) Installing ClamAV anti-virus definitions... "
+    /usr/bin/freshclam >> $LOG &
+    BACK_PID=$!
+    spin_i=1
+    while kill -0 $BACK_PID > /dev/null 2>&1 ; do
+        printf "\b${spinner:spin_i++%${#spinner}:1}"
+        sleep 0.5
+    done
+    echo
+    systemctl start clamd
+    check_result $? "clamav-daemon start failed"
 fi
 
 
@@ -1365,16 +1401,10 @@ fi
 #----------------------------------------------------------#
 
 if [ "$spamd" = 'yes' ]; then
-    chkconfig spamassassin on
-    service spamassassin start
+    echo "(*) Configuring SpamAssassin..."
+    systemctl enable spamassassin
+    systemctl start spamassassin
     check_result $? "spamassassin start failed"
-    if [ "$release" -ge '7' ]; then
-        groupadd -g 1001 spamd
-        useradd -u 1001 -g spamd -s /sbin/nologin -d \
-            /var/lib/spamassassin spamd
-        mkdir /var/lib/spamassassin
-        chown spamd:spamd /var/lib/spamassassin
-    fi
 fi
 
 
@@ -1382,28 +1412,55 @@ fi
 #                   Configure RoundCube                    #
 #----------------------------------------------------------#
 
-if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
-    if [ "$apache" = 'yes' ]; then
-        cp -f $HESTIA_INSTALL_DIR/roundcube/roundcubemail.conf /etc/httpd/conf.d/
-    fi
-    cp -f $HESTIA_INSTALL_DIR/roundcube/main.inc.php /etc/roundcubemail/config.inc.php
-    cd /usr/share/roundcubemail/plugins/password
-    cp -f $HESTIA_INSTALL_DIR/roundcube/hestia.php drivers/hestia.php
-    cp -f $HESTIA_INSTALL_DIR/roundcube/config.inc.php config.inc.php
-    sed -i "s/localhost/$servername/g" config.inc.php
-    chmod a+r /etc/roundcubemail/*
-    chmod -f 777 /var/log/roundcubemail
+if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
+    echo "(*) Configuring Roundcube webmail client..."
+    cp -f $HESTIA_INSTALL_DIR/roundcube/main.inc.php /etc/roundcube/config.inc.php
+    cp -f $HESTIA_INSTALL_DIR/roundcube/db.inc.php /etc/roundcube/db.inc.php
+    cp -f $HESTIA_INSTALL_DIR/roundcube/config.inc.php /etc/roundcube/plugins/password/
+    cp -f $HESTIA_INSTALL_DIR/roundcube/hestia.php /usr/share/roundcube/plugins/password/drivers/
+    touch /var/log/roundcube/errors
+    chmod 640 /etc/roundcube/config.inc.php
+    chown root:apache /etc/roundcube/config.inc.php
+    chmod 640 /etc/roundcube/debian-db-roundcube.php
+    chown root:apache /etc/roundcube/debian-db-roundcube.php
+    chmod 640 /var/log/roundcube/errors
+    chown apache:adm /var/log/roundcube/errors
+
     r="$(gen_pass)"
+    rcDesKey="$(openssl rand -base64 30 | tr -d "/" | cut -c1-24)"
     mysql -e "CREATE DATABASE roundcube"
-    mysql -e "GRANT ALL ON roundcube.* TO 
-            roundcube@localhost IDENTIFIED BY '$r'"
-    sed -i "s/%password%/$r/g" /etc/roundcubemail/config.inc.php
-    chmod 640 /etc/roundcubemail/config.inc.php
-    chown root:apache /etc/roundcubemail/config.inc.php
-    if [ -e "/usr/share/roundcubemail/SQL/mysql.initial.sql" ]; then
-        mysql roundcube < /usr/share/roundcubemail/SQL/mysql.initial.sql
-    else
-        mysql roundcube < /usr/share/doc/roundcubemail-*/SQL/mysql.initial.sql
+    mysql -e "GRANT ALL ON roundcube.*
+        TO roundcube@localhost IDENTIFIED BY '$r'"
+    sed -i "s/%password%/$r/g" /etc/roundcube/db.inc.php
+    sed -i "s/%des_key%/$rcDesKey/g" /etc/roundcube/config.inc.php
+    sed -i "s/localhost/$servername/g" /etc/roundcube/plugins/password/config.inc.php
+    mysql roundcube < /usr/share/dbconfig-common/data/roundcube/install/mysql
+
+    # Enable Roundcube plugins
+    cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_newmail_notifier.inc.php /etc/roundcube/plugins/newmail_notifier/config.inc.php
+    cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_zipdownload.inc.php /etc/roundcube/plugins/zipdownload/config.inc.php
+    
+    # Fixes for PHP 7.4 compatibility
+    sed -i 's/$identities, "\\n"/"\\n", $identities/g' /usr/share/roundcube/plugins/enigma/lib/enigma_ui.php
+    sed -i 's/(array_keys($post_search), \x27|\x27)/(\x27|\x27, array_keys($post_search))/g' /usr/share/roundcube/program/lib/Roundcube/rcube_contacts.php
+    sed -i 's/implode($name, \x27.\x27)/implode(\x27.\x27, $name)/g' /usr/share/roundcube/program/lib/Roundcube/rcube_db.php
+    sed -i 's/$fields, \x27,\x27/\x27,\x27, $fields/g' /usr/share/roundcube/program/steps/addressbook/search.inc
+    sed -i 's/implode($fields, \x27,\x27)/implode(\x27,\x27, $fields)/g' /usr/share/roundcube/program/steps/addressbook/search.inc
+    sed -i 's/implode($bstyle, \x27; \x27)/implode(\x27; \x27, $bstyle)/g' /usr/share/roundcube/program/steps/mail/sendmail.inc
+
+    # Configure webmail alias
+    echo "WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
+
+    # Add robots.txt
+    echo "User-agent: *" > /var/lib/roundcube/robots.txt
+    echo "Disallow: /" >> /var/lib/roundcube/robots.txt
+
+    # Restart services
+    if [ "$apache" = 'yes' ]; then
+        systemctl restart httpd
+    fi
+    if [ "$nginx" = 'yes' ]; then
+        systemctl restart nginx
     fi
 fi
 
@@ -1433,16 +1490,18 @@ if [ "$fail2ban" = 'yes' ]; then
         fline=$(cat /etc/fail2ban/jail.local |grep -n vsftpd-iptables -A 2)
         fline=$(echo "$fline" |grep enabled |tail -n1 |cut -f 1 -d -)
         sed -i "${fline}s/false/true/" /etc/fail2ban/jail.local
-    fi
-    chkconfig fail2ban on
-    mkdir -p /var/run/fail2ban
-    if [ -e "/usr/lib/systemd/system/fail2ban.service" ]; then
-        exec_pre='ExecStartPre=/bin/mkdir -p /var/run/fail2ban'
-        sed -i "s|\[Service\]|[Service]\n$exec_pre|g" \
-            /usr/lib/systemd/system/fail2ban.service
-        systemctl daemon-reload
-    fi
-    service fail2ban start
+    fi 
+
+
+
+
+
+
+
+
+
+    systemctl enable fail2ban
+    systemctl start fail2ban
     check_result $? "fail2ban start failed"
 fi
 
@@ -1496,6 +1555,14 @@ check_result $? "can't create admin user"
 $HESTIA/bin/v-change-user-shell admin nologin
 $HESTIA/bin/v-change-user-language admin $lang
 
+# Roundcube permissions fix
+if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
+    if [ ! -d "/var/log/roundcube" ]; then
+        mkdir /var/log/roundcube
+    fi
+    chown admin:admin /var/log/roundcube
+fi
+
 # Configuring system IPs
 $HESTIA/bin/v-update-sys-ip > /dev/null 2>&1
 
@@ -1509,16 +1576,30 @@ fi
 
 # Get public IP
 pub_ip=$(curl --ipv4 -s https://ip.hestiacp.com/)
+
 if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
-    if [ -e /etc/rc.local ]; then
-        sed -i '/exit 0/d' /etc/rc.local
-    fi
-    echo "$HESTIA/bin/v-update-sys-ip" >> /etc/rc.local
-    echo "exit 0" >> /etc/rc.local
-    chmod +x /etc/rc.local
-    systemctl enable rc-local
     $HESTIA/bin/v-change-sys-ip-nat $ip $pub_ip > /dev/null 2>&1
     ip=$pub_ip
+fi
+
+# Configuring libapache2-mod-remoteip
+if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
+    cd /etc/httpd/conf.modules.d
+    echo "<IfModule mod_remoteip.c>" > remoteip.conf
+    echo "  RemoteIPHeader X-Real-IP" >> remoteip.conf
+    if [ "$local_ip" != "127.0.0.1" ] && [ "$pub_ip" != "127.0.0.1" ]; then
+        echo "  RemoteIPInternalProxy 127.0.0.1" >> remoteip.conf
+    fi
+    if [ ! -z "$local_ip" ] && [ "$local_ip" != "$pub_ip" ]; then
+        echo "  RemoteIPInternalProxy $local_ip" >> remoteip.conf
+    fi
+    if [ ! -z "$pub_ip" ]; then
+        echo "  RemoteIPInternalProxy $pub_ip" >> remoteip.conf
+    fi
+    echo "</IfModule>" >> remoteip.conf
+    #sed -i "s/LogFormat \"%h/LogFormat \"%a/g" /etc/apache2/apache2.conf
+    #a2enmod remoteip >> $LOG
+    systemctl restart httpd
 fi
 
 # Configuring MySQL/MariaDB host
@@ -1539,8 +1620,10 @@ check_result $? "can't create $servername domain"
 export SCHEDULED_RESTART="yes"
 command="sudo $HESTIA/bin/v-update-sys-queue restart"
 $HESTIA/bin/v-add-cron-job 'admin' '*/2' '*' '*' '*' '*' "$command"
-systemctl restart cron
+systemctl restart crond
 
+command="sudo $HESTIA/bin/v-update-sys-queue daily"
+$HESTIA/bin/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "$command"
 command="sudo $HESTIA/bin/v-update-sys-queue disk"
 $HESTIA/bin/v-add-cron-job 'admin' '15' '02' '*' '*' '*' "$command"
 command="sudo $HESTIA/bin/v-update-sys-queue traffic"
@@ -1574,16 +1657,18 @@ $HESTIA/bin/v-change-sys-port $port
 $HESTIA/bin/v-change-sys-theme 'default'
 
 # Starting Hestia service
-chkconfig hestia on
-service hestia start
+systemctl enable hestia
+systemctl start hestia
 check_result $? "hestia start failed"
 chown admin:admin $HESTIA/data/sessions
 
-# Adding notifications
-$HESTIA/upd/add_notifications.sh
 
-# Adding cronjob for autoupdates
-$HESTIA/bin/v-add-cron-hestia-autoupdate
+#----------------------------------------------------------#
+#                  Configure FileManager                   #
+#----------------------------------------------------------#
+
+echo "(*) Configuring Filegator FileManager..."
+source $HESTIA_INSTALL_DIR/filemanager/install-fm.sh > /dev/null 2>&1
 
 
 #----------------------------------------------------------#

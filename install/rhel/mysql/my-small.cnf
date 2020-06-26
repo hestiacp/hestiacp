@@ -38,4 +38,4 @@ wait_timeout=10
 interactive_timeout=50
 long_query_time=5
 
-!includedir /etc/mysql/conf.d/
+!includedir /etc/my.cnf.d/

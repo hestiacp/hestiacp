@@ -1249,14 +1249,6 @@ if [ "$mysql" = 'yes' ]; then
     mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
     mysql -e "DELETE FROM mysql.user WHERE user='';"
     mysql -e "DELETE FROM mysql.user WHERE password='' AND authentication_string='';"
-
-    # Configuring phpMyAdmin
-    if [ "$apache" = 'yes' ]; then
-        cp -f $HESTIA_INSTALL_DIR/pma/apache.conf /etc/phpmyadmin/
-        ln -s /etc/phpmyadmin/apache.conf /etc/httpd/conf.d/phpmyadmin.conf
-    fi
-    cp -f $HESTIA_INSTALL_DIR/pma/config.inc.php /etc/phpmyadmin/
-    chmod 777 /var/lib/phpmyadmin/tmp
 fi
 
 
@@ -1275,18 +1267,25 @@ if [ "$mysql" = 'yes' ]; then
     tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
 
     # Delete file to prevent error
-    rm -fr /usr/share/phpmyadmin/doc/html
+    rm -fr /usr/share/phpMyAdmin/doc/html
 
     # Overwrite old files
-    cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
+    cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpMyAdmin
 
     # Set config and log directory
-    sed -i "s|define('CONFIG_DIR', ROOT_PATH);|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
-    sed -i "s|define('TEMP_DIR', ROOT_PATH . 'tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
+    sed -i "s|define('CONFIG_DIR', ROOT_PATH);|define('CONFIG_DIR', '/etc/phpMyAdmin/');|" /usr/share/phpMyAdmin/libraries/vendor_config.php
+    sed -i "s|define('TEMP_DIR', ROOT_PATH . 'tmp/');|define('TEMP_DIR', '/var/lib/phpMyAdmin/temp/');|" /usr/share/phpMyAdmin/libraries/vendor_config.php
 
     # Create temporary folder and change permission
-    mkdir /usr/share/phpmyadmin/tmp
-    chmod 777 /usr/share/phpmyadmin/tmp
+    mkdir -p /var/lib/phpMyAdmin/temp
+    chmod 777 /var/lib/phpMyAdmin/temp
+
+    # Configuring phpMyAdmin
+    if [ "$apache" = 'yes' ]; then
+        cp -f $HESTIA_INSTALL_DIR/pma/apache.conf /etc/phpMyAdmin/
+        ln -s /etc/phpMyAdmin/apache.conf /etc/httpd/conf.d/phpmyadmin.conf
+    fi
+    cp -f $HESTIA_INSTALL_DIR/pma/config.inc.php /etc/phpMyAdmin/
 
     # Clear Up
     rm -fr phpMyAdmin-$pma_v-all-languages

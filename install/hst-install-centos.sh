@@ -1084,10 +1084,10 @@ if [ "$apache" = 'yes'  ]; then
     echo "(*) Configuring Apache Web Server..."
 
     # Copy configuration files
-    cp -f $HESTIA_INSTALL_DIR/apache2/apache2.conf /etc/httpd/conf/httpd.conf
+    cp -f $HESTIA_INSTALL_DIR/apache2/httpd.conf /etc/httpd/conf/
     cp -f $HESTIA_INSTALL_DIR/apache2/status.conf /etc/httpd/conf.d/
     cp -f $HESTIA_INSTALL_DIR/apache2/hestia-event.conf /etc/httpd/conf.modules.d/
-    cp -f $HESTIA_INSTALL_DIR/logrotate/apache2z /etc/logrotate.d/httpd
+    cp -f $HESTIA_INSTALL_DIR/logrotate/httpd /etc/logrotate.d/
 
     # Disable modules
     if [ -e "/etc/httpd/conf.modules.d/00-dav.conf" ]; then

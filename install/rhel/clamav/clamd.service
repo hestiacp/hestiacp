@@ -7,3 +7,6 @@ Type = simple
 ExecStart = /usr/sbin/clamd -c /etc/clamd.conf
 Restart = on-failure
 PrivateTmp = true
+
+[Install]
+WantedBy=multi-user.target

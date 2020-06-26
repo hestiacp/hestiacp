@@ -726,15 +726,16 @@ elif [ "$codename" = "rhel_8" ]; then
     dnf config-manager --set-enabled PowerTools
 
     # Raven-extras repo for mod_ruid2
-    dnf config-manager --set-enabled raven
+    dnf install -y https://pkgs.dyn.su/el8/base/x86_64/raven-release-1.0-1.el8.noarch.rpm
     dnf config-manager --set-enabled raven-extras
+    
 
     # No webalizer, phpPgAdmin on CentOS 8 yet
     software=$(echo "$software" | sed -e "s/\bwebalizer\b/ /")
     software=$(echo "$software" | sed -e "s/\bphpPgAdmin\b/ /")
 
-    enabled_repos="BaseOS AppStream Stream-AppStream Stream-BaseOS \
-        Stream-extras epel epel-modular extras nginx PowerTools \
+    enabled_repos="BaseOS AppStream \
+        epel epel-modular extras nginx PowerTools \
         raven raven-extras remi remi-modular"
 fi
 

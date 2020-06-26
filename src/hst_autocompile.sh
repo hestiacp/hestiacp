@@ -216,7 +216,7 @@ timestamp() {
 # Install needed software
 if [ "$OSTYPE" = 'rhel' ]; then
     # Set package dependencies for compiling
-    SOFTWARE='gcc gcc-c++ make libxml2-devel zlib-devel libzip-devel gmp-devel libcurl-devel gnutls-devel unzip openssl openssl-devel pkg-config sqlite-devel oniguruma-devel rpm-build'
+    SOFTWARE='gcc gcc-c++ make libxml2-devel zlib-devel libzip-devel gmp-devel libcurl-devel gnutls-devel unzip openssl openssl-devel pkg-config sqlite-devel oniguruma-devel rpm-build wget tar'
 
     echo "Updating system DNF repositories..."
     yum config-manager --set-enabled PowerTools > /dev/null 2>&1

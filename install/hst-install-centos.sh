@@ -877,6 +877,7 @@ chmod 660 $HESTIA/log/*
 rm -f /var/log/hestia
 ln -s $HESTIA/log /var/log/hestia
 chmod 770 $HESTIA/data/sessions
+chown admin:admin $HESTIA/data/sessions
 
 # Generating Hestia configuration
 rm -f $HESTIA/conf/hestia.conf > /dev/null 2>&1
@@ -1680,10 +1681,10 @@ $HESTIA/bin/v-change-sys-port $port
 $HESTIA/bin/v-change-sys-theme 'default'
 
 # Starting Hestia service
-systemctl enable hestia
-systemctl start hestia
+systemctl enable hestia-php
+systemctl enable hestia-nginx
+systemctl start hestia-php && systemctl start hestia-nginx
 check_result $? "hestia start failed"
-chown admin:admin $HESTIA/data/sessions
 
 
 #----------------------------------------------------------#

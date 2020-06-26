@@ -802,12 +802,12 @@ service iptables stop
 service firewalld stop >/dev/null 2>&1
 
 # Configuring NTP synchronization
-if [ "$codename" = "CentOS_7" ]; then
+if [ "$codename" = "rhel_7" ]; then
     echo '#!/bin/sh' > /etc/cron.daily/ntpdate
     echo "$(which ntpdate) -s pool.ntp.org" >> /etc/cron.daily/ntpdate
     chmod 775 /etc/cron.daily/ntpdate
     ntpdate -s pool.ntp.org
-elif [ "$codename" = "CentOS_8" ]; then
+elif [ "$codename" = "rhel_7" ]; then
     systemctl enable --now chronyd
 fi
 

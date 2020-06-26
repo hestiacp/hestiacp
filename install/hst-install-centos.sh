@@ -1108,7 +1108,7 @@ if [ "$apache" = 'yes'  ]; then
         # FIXME: a2dismod php$fpm_v > /dev/null 2>&1
         sed -i "/LoadModule mpm_prefork_module/ s/^/#/" /etc/httpd/conf.modules.d/00-mpm.conf
         sed -i "/LoadModule mpm_event_module/ s/#*//" /etc/httpd/conf.modules.d/00-mpm.conf
-    else
+    #else
         # apache_module_enable 'ruid2'
     fi
 

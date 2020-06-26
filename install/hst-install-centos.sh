@@ -1227,6 +1227,7 @@ if [ "$mysql" = 'yes' ]; then
 
     # Configuring MariaDB
     cp -f $HESTIA_INSTALL_DIR/mysql/$mycnf /etc/my.cnf
+    rm -f /etc/my.cnf.d/*.cnf
     mysql_install_db >> $LOG
 
     systemctl enable mariadb > /dev/null 2>&1

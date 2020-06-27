@@ -8,6 +8,7 @@ URL:            https://www.hestiacp.com
 Vendor:         hestiacp.com
 Requires:       redhat-release >= 7
 Requires:       bash
+Requires:       chkconfig
 Requires:       gawk
 Requires:       sed
 Requires:       acl

@@ -247,6 +247,32 @@ is_object_valid() {
 }
 
 # Check if a object string with key values pairs has the correct format and load it afterwards
+parse_object_kv_list_non_eval() {
+    local str
+    local objkv obj_key obj_val
+    local OLD_IFS="$IFS"
+
+    str=${@//$'\n'/ }
+    str=${str//\"/\\\"}
+    str=${str//$/\\$}
+    IFS=$'\n'
+
+    # Extract and loop trough each key-value pair. (Regex test: https://regex101.com/r/eiMufk/5)
+    for objkv in $( echo "$str" | perl -n -e "while(/\b([a-zA-Z]+[\w]*)='(.*?)'(\s|\$)/g) {print \$1.'='.\$2 . \"\n\" }" ); do
+
+        if ! [[ "$objkv" =~ ^([[:alnum:]][_[:alnum:]]{0,64}[[:alnum:]])=(\'?[^\']+?\'?)?$ ]]; then
+            check_result $E_INVALID "Invalid key value format [$objkv]"
+        fi
+
+        obj_key=${objkv%%=*}    # strip everything after first  '=' char
+        obj_val=${objkv#*=}     # strip everything before first '=' char
+        declare -g $obj_key="$obj_val"
+
+    done
+    IFS="$OLD_IFS"
+}
+
+# Check if a object string with key values pairs has the correct format and load it afterwards
 parse_object_kv_list() {
     local str
     local objkv

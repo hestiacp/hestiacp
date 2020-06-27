@@ -534,15 +534,15 @@ mkdir nginx httpd php vsftpd proftpd bind exim4 dovecot clamd
 mkdir spamassassin mysql postgresql hestia
 
 # Backup nginx configuration
-service nginx stop > /dev/null 2>&1
+systemctl stop nginx > /dev/null 2>&1
 cp -r /etc/nginx/* $hst_backups/nginx > /dev/null 2>&1
 
 # Backup Apache configuration
-service httpd stop > /dev/null 2>&1
+systemctl stop httpd > /dev/null 2>&1
 cp -r /etc/httpd/* $hst_backups/httpd > /dev/null 2>&1
 
 # Backup PHP-FPM configuration
-service php-fpm stop >/dev/null 2>&1
+systemctl stop php-fpm >/dev/null 2>&1
 cp /etc/php.ini $hst_backups/php > /dev/null 2>&1
 cp -r /etc/php.d  $hst_backups/php > /dev/null 2>&1
 cp /etc/php-fpm.conf $hst_backups/php-fpm > /dev/null 2>&1
@@ -550,50 +550,51 @@ mv -f /etc/php-fpm.d/* $hst_backups/php-fpm/ > /dev/null 2>&1
 
 # Backup Bind configuration
 yum remove bind-chroot > /dev/null 2>&1
-service named stop > /dev/null 2>&1
+systemctl stop named > /dev/null 2>&1
 cp /etc/named.conf $hst_backups/named >/dev/null 2>&1
 
 # Backup Vsftpd configuration
-service vsftpd stop > /dev/null 2>&1
+systemctl stop vsftpd > /dev/null 2>&1
 cp /etc/vsftpd/vsftpd.conf $hst_backups/vsftpd >/dev/null 2>&1
 
 # Backup ProFTPD configuration
-service proftpd stop > /dev/null 2>&1
+systemctl stop proftpd > /dev/null 2>&1
 cp /etc/proftpd.conf $hst_backups/proftpd >/dev/null 2>&1
 
 # Backup Exim configuration
-service exim stop > /dev/null 2>&1
+systemctl stop exim > /dev/null 2>&1
 cp -r /etc/exim/* $hst_backups/exim >/dev/null 2>&1
 
 # Backup ClamAV configuration
-service clamd stop > /dev/null 2>&1
+systemctl stop clamd > /dev/null 2>&1
 cp /etc/clamd.conf $hst_backups/clamd >/dev/null 2>&1
 cp -r /etc/clamd.d $hst_backups/clamd >/dev/null 2>&1
 
 # Backup SpamAssassin configuration
-service spamassassin stop > /dev/null 2>&1
+systemctl stop spamassassin > /dev/null 2>&1
 cp -r /etc/mail/spamassassin/* $hst_backups/spamassassin >/dev/null 2>&1
 
 # Backup Dovecot configuration
-service dovecot stop > /dev/null 2>&1
+systemctl stop dovecot > /dev/null 2>&1
 cp /etc/dovecot.conf $hst_backups/dovecot > /dev/null 2>&1
 cp -r /etc/dovecot/* $hst_backups/dovecot > /dev/null 2>&1
 
 # Backup MySQL/MariaDB configuration and data
-service mysql stop > /dev/null 2>&1
-service mysqld stop > /dev/null 2>&1
-service mariadb stop > /dev/null 2>&1
+systemctl stop mysql > /dev/null 2>&1
+systemctl stop mysqld > /dev/null 2>&1
+systemctl stop mariadb > /dev/null 2>&1
 mv /var/lib/mysql $hst_backups/mysql/mysql_datadir >/dev/null 2>&1
 cp /etc/my.cnf $hst_backups/mysql > /dev/null 2>&1
 cp /etc/my.cnf.d $hst_backups/mysql > /dev/null 2>&1
 mv /root/.my.cnf  $hst_backups/mysql > /dev/null 2>&1
 
 # Backup PostgreSQL configuration and data
-service postgresql stop > /dev/null 2>&1
+systemctl stop postgresql > /dev/null 2>&1
 mv /var/lib/pgsql/data $hst_backups/postgresql/  >/dev/null 2>&1
 
 # Backup Hestia
-service hestia stop > /dev/null 2>&1
+systemctl stop hestia-nginx > /dev/null 2>&1
+systemctl stop hestia-php > /dev/null 2>&1
 cp -r $HESTIA* $hst_backups/hestia > /dev/null 2>&1
 yum -y remove hestia hestia-nginx hestia-php > /dev/null 2>&1
 rm -rf $HESTIA > /dev/null 2>&1
@@ -779,7 +780,7 @@ fi
 
 echo "(*) Configuring system settings..."
 # Restarting rsyslog
-service rsyslog restart > /dev/null 2>&1
+systemctl restart rsyslog > /dev/null 2>&1
 
 # Checking ipv6 on loopback interface
 check_lo_ipv6=$(/sbin/ip addr | grep 'inet6')
@@ -799,8 +800,8 @@ if [ -e '/etc/sysconfig/selinux' ]; then
 fi
 
 # Disabling iptables
-service iptables stop
-service firewalld stop >/dev/null 2>&1
+systemctl stop iptables
+systemctl stop firewalld >/dev/null 2>&1
 
 # Configuring NTP synchronization
 if [ "$codename" = "rhel_7" ]; then
@@ -1071,8 +1072,8 @@ if [ "$nginx" = 'yes' ]; then
         sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
     fi
 
-    systemctl enable nginx.service
-    systemctl start nginx.service >> $LOG
+    systemctl enable nginx
+    systemctl start nginx >> $LOG
     check_result $? "nginx start failed"
 fi
 

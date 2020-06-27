@@ -1445,8 +1445,8 @@ if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     touch /var/log/roundcubemail/errors
     chmod 640 /etc/roundcubemail/config.inc.php
     chown root:apache /etc/roundcubemail/config.inc.php
-    chmod 640 /etc/roundcubemail/debian-db-roundcube.php
-    chown root:apache /etc/roundcubemail/debian-db-roundcube.php
+    chmod 640 /etc/roundcubemail/db.inc.php
+    chown root:apache /etc/roundcubemail/db.inc.php
     chmod 640 /var/log/roundcubemail/errors
     chown apache:adm /var/log/roundcubemail/errors
 
@@ -1457,7 +1457,7 @@ if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
         TO roundcube@localhost IDENTIFIED BY '$r'"
     sed -i "s/%password%/$r/g" /etc/roundcubemail/db.inc.php
     sed -i "s/%des_key%/$rcDesKey/g" /etc/roundcubemail/config.inc.php
-    sed -i "s/localhost/$servername/g" /etc/roundcubemail/plugins/password/config.inc.php
+    sed -i "s/localhost/$servername/g" /usr/share/roundcubemail/plugins/password/config.inc.php
     mysql roundcube < /usr/share/roundcubemail/SQL/mysql
 
     # Enable Roundcube plugins

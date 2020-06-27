@@ -13,6 +13,8 @@ Requires:       sed
 Requires:       acl
 Requires:       sysstat
 Requires:       (setpriv or util-linux)
+Requires:       hestia-nginx
+Requires:       hestia-php
 Conflicts:      vesta
 Provides:       hestia = %{version}
 BuildRequires:  systemd-rpm-macros
@@ -26,6 +28,7 @@ This package contains the Hestia Control Panel.
 
 %install
 cp -rfa %{sourcedir}/usr %{buildroot}
+%{__install} -m644 %{sourcedir}/hestia.service %{buildroot}%{_unitdir}/hestia.service
 
 %clean
 
@@ -40,7 +43,8 @@ if [ -e "/usr/local/hestia/data/users/admin" ]; then
 fi
 
 %post
-%systemd_post hestia-nginx.service
+%systemd_post hestia.service
+
 if [ -e "/usr/local/hestia/data/users/admin" ]; then
     ###############################################################
     #                Initialize functions/variables               #
@@ -89,12 +93,15 @@ if [ -e "/usr/local/hestia/data/users/admin" ]; then
 fi
 
 %preun
+%systemd_preun hestia.service
 
 %postun
+%systemd_postun_with_restart hestia.service
 
 %files
 %defattr(-,root,root)
 %attr(755,root,root) /usr/local/hestia
+%{_unitdir}/hestia.service
 
 %changelog
 * Thu Jun 25 2020 Ernesto Nicolás Carrea <equistango@gmail.com> - 1.2.0

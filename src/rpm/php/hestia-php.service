@@ -1,8 +1,8 @@
 [Unit]
 Description=Hestia PHP daemon
 Documentation=https://www.hestiacp.com
-After=network-online.target remote-fs.target nss-lookup.target
-Wants=network-online.target
+PartOf=hestia.service
+After=hestia.service
 
 [Service]
 Type=forking
@@ -14,4 +14,4 @@ ExecStartPre=/bin/bash -c "/bin/systemctl set-environment HOSTNAME=$(/usr/bin/ho
 Environment="HESTIA=/usr/local/hestia"
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=hestia.service

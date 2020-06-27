@@ -7,6 +7,7 @@ URL:            https://www.hestiacp.com
 License:        BSD
 Vendor:         hestiacp.com
 Requires:       redhat-release >= 7
+Requires:       hestia-php
 Provides:       hestia-nginx = %{version}
 BuildRequires:  systemd-rpm-macros
 

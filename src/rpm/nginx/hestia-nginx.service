@@ -1,8 +1,8 @@
 [Unit]
 Description=Hestia nginx - administration web server
 Documentation=https://www.hestiacp.com
-After=network-online.target remote-fs.target nss-lookup.target
-Wants=network-online.target hestia-php.service
+PartOf=hestia.service
+After=hestia.service
 After=hestia-php.service
 
 [Service]
@@ -13,4 +13,4 @@ ExecReload=/bin/sh -c "/bin/kill -s HUP $(/bin/cat /var/run/hestia-nginx.pid)"
 ExecStop=/bin/sh -c "/bin/kill -s TERM $(/bin/cat /var/run/hestia-nginx.pid)"
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=hestia.service

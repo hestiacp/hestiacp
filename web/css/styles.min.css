@@ -3857,6 +3857,7 @@ form#vstobjects.suspended {
   font-size: 5.2em;
   float: left;
   margin-right: 32px;
+  margin-left: 2px;
 }
 
 .userlist-email {

@@ -13,8 +13,6 @@ Requires:       sed
 Requires:       acl
 Requires:       sysstat
 Requires:       (setpriv or util-linux)
-Requires:       hestia-nginx
-Requires:       hestia-php
 Conflicts:      vesta
 Provides:       hestia = %{version}
 BuildRequires:  systemd-rpm-macros

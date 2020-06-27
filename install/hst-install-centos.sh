@@ -821,6 +821,9 @@ adduser backup 2>/dev/null
 ln -sf /home/backup /backup
 chmod a+x /backup
 
+# Fix for nonexistent Debian-style "nogroup" on RHEL-based systems
+groupadd -o -g $(id -g nobody) nogroup
+
 # Set directory color
 if [ -z "$(grep 'LS_COLORS="$LS_COLORS:di=00;33"' /etc/profile)" ]; then
     echo 'LS_COLORS="$LS_COLORS:di=00;33"' >> /etc/profile

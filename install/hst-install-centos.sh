@@ -26,8 +26,8 @@ VERBOSE='no'
 HESTIA_INSTALL_VER='1.2.0'
 pma_v='5.0.2'
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
-fpm_v="7.3"
-mariadb_v="5.6"
+fpm_v="73"
+mariadb_v="10.3"
 
 # Defining software pack for all distros
 software=" nginx awstats bc bind bind-libs bind-utils clamav clamav-update
@@ -212,7 +212,7 @@ done
 # Defining default software stack
 set_default_value 'nginx' 'yes'
 set_default_value 'apache' 'yes'
-set_default_value 'phpfpm' 'no'
+set_default_value 'phpfpm' 'yes'
 set_default_value 'multiphp' 'no'
 set_default_value 'vsftpd' 'yes'
 set_default_value 'proftpd' 'no'
@@ -605,11 +605,12 @@ rm -rf $HESTIA > /dev/null 2>&1
 #----------------------------------------------------------#
 
 if [ "$phpfpm" = 'yes' ]; then
-    fpm="php$fpm_v php$fpm_v-common php$fpm_v-bcmath php$fpm_v-cli
-         php$fpm_v-curl php$fpm_v-fpm php$fpm_v-gd php$fpm_v-intl
-         php$fpm_v-mysql php$fpm_v-soap php$fpm_v-xml php$fpm_v-zip
-         php$fpm_v-mbstring php$fpm_v-json php$fpm_v-bz2 php$fpm_v-pspell
-         php$fpm_v-imagick"
+    phpfpm_prefix="$fpm_v-php"  # phpfpm_prefix="$fpm_v" for Debian
+    fpm="php$phpfpm_prefix php$phpfpm_prefix-common php$phpfpm_prefix-bcmath php$phpfpm_prefix-cli
+         php$phpfpm_prefix-curl php$phpfpm_prefix-fpm php$phpfpm_prefix-gd php$phpfpm_prefix-intl
+         php$phpfpm_prefix-mysql php$phpfpm_prefix-soap php$phpfpm_prefix-xml php$phpfpm_prefix-zip
+         php$phpfpm_prefix-mbstring php$phpfpm_prefix-json php$phpfpm_prefix-bz2 php$phpfpm_prefix-pspell
+         php$phpfpm_prefix-imagick"
     software="$software $fpm "
 fi
 
@@ -670,7 +671,7 @@ if [ "$mysql" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/\bmariadb-server\b/ /")
     software=$(echo "$software" | sed -e "s/\bmariadb-client\b/ /")
     software=$(echo "$software" | sed -e "s/\bmariadb-common\b/ /")
-    software=$(echo "$software" | sed -e "s/\bphp$fpm_v-mysql\b/ /")
+    software=$(echo "$software" | sed -e "s/\bphp$phpfpm_prefix-mysql\b/ /")
     if [ "$multiphp" = 'yes' ]; then
         for v in "${multiphp_v[@]}"; do
             software=$(echo "$software" | sed -e "s/\bphp$v-mysql\b/ /")
@@ -682,7 +683,7 @@ fi
 if [ "$postgresql" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/\bpostgresql-contrib\b/ /")
     software=$(echo "$software" | sed -e "s/\bpostgresql-server\b/ /")
-    software=$(echo "$software" | sed -e "s/\bphp$fpm_v-pgsql\b/ /")
+    software=$(echo "$software" | sed -e "s/\bphp$phpfpm_prefix-pgsql\b/ /")
     if [ "$multiphp" = 'yes' ]; then
         for v in "${multiphp_v[@]}"; do
             software=$(echo "$software" | sed -e "s/\bphp$v-pgsql\b/ /")
@@ -694,7 +695,7 @@ if [ "$iptables" = 'no' ] || [ "$fail2ban" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/\bfail2ban\b/ /")
 fi
 if [ "$phpfpm" = 'yes' ]; then
-    software=$(echo "$software" | sed -e "s/\bphp$fpm_v-cgi\b/ /")
+    software=$(echo "$software" | sed -e "s/\bphp$phpfpm_prefix-cgi\b/ /")
 fi
 if [ -d "$withrpms" ]; then
     software=$(echo "$software" | sed -e "s/\bhestia-nginx\b/ /")
@@ -1110,8 +1111,13 @@ if [ "$apache" = 'yes'  ]; then
 
     if [ "$phpfpm" = 'yes' ]; then
         # Disable prefork and php, enable event
-        # FIXME: a2dismod php$fpm_v > /dev/null 2>&1
+        # apache_module_disable 'php5'
+        sed -i "/LoadModule php5_module/ s/^/#/" /etc/httpd/conf.modules.d/*.conf
+        # apache_module_disable 'php7'
+        sed -i "/LoadModule php7_module/ s/^/#/" /etc/httpd/conf.modules.d/*.conf
+        # apache_module_disable 'mpm_prefork'
         sed -i "/LoadModule mpm_prefork_module/ s/^/#/" /etc/httpd/conf.modules.d/*.conf
+        # apache_module_enable 'mpm_event'
         sed -i "/LoadModule mpm_event_module/ s/#*//" /etc/httpd/conf.modules.d/*.conf
     else
         # apache_module_enable 'ruid2'
@@ -1158,8 +1164,8 @@ if [ "$phpfpm" = 'yes' ]; then
     echo "(*) Configuring PHP-FPM..."
     $HESTIA/bin/v-add-web-php "$fpm_v" > /dev/null 2>&1
     cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf
-    systemctl enable php$fpm_v-fpm > /dev/null 2>&1
-    systemctl start php$fpm_v-fpm >> $LOG
+    systemctl enable php$phpfpm_prefix-fpm > /dev/null 2>&1
+    systemctl start php$phpfpm_prefix-fpm >> $LOG
     check_result $? "php-fpm start failed"
     update-alternatives --set php /usr/bin/php$fpm_v > /dev/null 2>&1
 fi

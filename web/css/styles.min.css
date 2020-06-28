@@ -823,7 +823,7 @@ a {
   color: #f7f7f7;
   position: relative;
   line-height: 39px;
-  padding: 11px 14px;
+  padding: 11px 10px;
   border-left: 1px solid transparent;
   border-right: 1px solid transparent; 
 }
@@ -861,22 +861,24 @@ a {
   color: #fff;
 }
 
+.panel-icon {
+  font-size: 1rem;
+  vertical-align: middle;
+  margin-top: -4px;
+}
+
 .l-profile {
   overflow: hidden;
   float: right;
 }
 
-.l-profile__username {
-  font-size: 1.2rem !important;
-}
-
-.l-profile__help {
-  font-size: 1.2rem !important;
+.l-profile__username, .l-profile__logout,
+.l-profile__help, .l-profile__serversettings {
+  font-size: 1.1rem !important;
 }
 
 .l-profile__logout {
   color: #dbf94e !important;
-  font-size: 1.2rem !important;
 }
 
 .l-profile__server {
@@ -920,7 +922,7 @@ a {
   padding-left: 0;
   position: fixed;
   top: 34px;
-  width: 393px;
+  width: 390px;
   z-index: 300;
   font-size: 0.8rem;
   padding: 0;

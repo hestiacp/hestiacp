@@ -56,8 +56,6 @@ function validate_web_domain() {
         assert_file_exist $HOMEDIR/$user/web/$domain/public_html/$webpath
     fi
 
-    refute [ -z "$webproof" ]
-
     # Test HTTP
     run curl --location --silent --show-error --insecure --resolve "${domain}:80:${domain_ip}" "http://${domain}/${webpath}"
     assert_success
@@ -69,6 +67,73 @@ function validate_web_domain() {
         assert_success
 
         run curl --location --silent --show-error --insecure --resolve "${domain}:443:${domain_ip}" "https://${domain}/${webpath}"
+        assert_success
+        assert_output --partial "$webproof"
+    fi
+}
+
+function validate_mail_domain() {
+    local user=$1
+    local domain=$2
+
+    refute [ -z "$user" ]
+    refute [ -z "$domain" ]
+
+    run v-list-mail-domain $user $domain
+    assert_success
+
+    assert_dir_exist $HOMEDIR/$user/mail/$domain
+    assert_dir_exist $HOMEDIR/$user/conf/mail/$domain
+
+    assert_file_exist $HOMEDIR/$user/conf/mail/$domain/aliases
+    assert_file_exist $HOMEDIR/$user/conf/mail/$domain/antispam
+    assert_file_exist $HOMEDIR/$user/conf/mail/$domain/antivirus
+    assert_file_exist $HOMEDIR/$user/conf/mail/$domain/fwd_only
+    assert_file_exist $HOMEDIR/$user/conf/mail/$domain/ip
+    assert_file_exist $HOMEDIR/$user/conf/mail/$domain/passwd
+}
+
+function validate_webmail_domain() {
+    local user=$1
+    local domain=$2
+    local webproof=$3
+    local webpath=${4}
+
+    refute [ -z "$user" ]
+    refute [ -z "$domain" ]
+    refute [ -z "$webproof" ]
+
+    source $HESTIA/func/ip.sh
+
+    USER_DATA=$HESTIA/data/users/$user
+    local domain_ip=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP')
+    SSL=$(get_object_value 'mail' 'DOMAIN' "$domain" '$SSL')
+    domain_ip=$(get_real_ip "$domain_ip")
+
+    if [ ! -z "$webpath" ]; then
+        assert_file_exist /var/lib/roundcube/$webpath
+    fi
+
+    # Test HTTP
+    run curl --location --silent --show-error --insecure --resolve "webmail.${domain}:80:${domain_ip}" "http://webmail.${domain}/${webpath}"
+    assert_success
+    assert_output --partial "$webproof"
+
+    # Test HTTP
+    run curl --location --silent --show-error --insecure --resolve "mail.${domain}:80:${domain_ip}" "http://mail.${domain}/${webpath}"
+    assert_success
+    assert_output --partial "$webproof"
+
+    # Test HTTPS
+    if [ "$SSL" = "yes" ]; then
+        run v-list-mail-domain-ssl $user $domain
+        assert_success
+
+        run curl --location --silent --show-error --insecure --resolve "webmail.${domain}:443:${domain_ip}" "https://webmail.${domain}/${webpath}"
+        assert_success
+        assert_output --partial "$webproof"
+
+        run curl --location --silent --show-error --insecure --resolve "mail.${domain}:443:${domain_ip}" "https://mail.${domain}/${webpath}"
         assert_success
         assert_output --partial "$webproof"
     fi
@@ -511,6 +576,12 @@ function validate_web_domain() {
     run v-add-mail-domain $user $domain
     assert_success
     refute_output
+
+    validate_mail_domain $user $domain
+
+    # echo -e "<?php\necho 'Server: ' . \$_SERVER['SERVER_SOFTWARE'];" > /var/lib/roundcube/check_server.php
+    validate_webmail_domain $user $domain 'Welcome to Roundcube Webmail'
+    # rm /var/lib/roundcube/check_server.php
 }
 
 @test "MAIL: Add domain (duplicate)" {

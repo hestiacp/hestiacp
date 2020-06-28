@@ -1,4 +1,4 @@
-fmul<?php
+<?php
 /**
  * Hestia language file
  * drMacFaulty (wsanders@outlook.com, wsanders.eu)

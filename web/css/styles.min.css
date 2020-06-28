@@ -776,7 +776,7 @@ a {
 }
 
 .l-header {
-  background: linear-gradient(to bottom, rgba(104,145,196,1) 0%,rgba(87,130,187,1) 50%,rgba(69,114,181,1) 51%,rgba(65,90,149,1) 100%); 
+  background: linear-gradient(to bottom, rgba(104,145,196,1) 0%,rgba(69,114,181,1) 50%,rgba(65,90,149,1) 100%); 
   background-color: #5070a6;
   border-bottom: 1px solid rgba(255,255,255,0.95);
   overflow: hidden;
@@ -1088,6 +1088,10 @@ a {
 .alert.alert-success i.fas {
   color: #5ea64c;
   background-color: white;
+}
+.alert a {
+  font-weight: bold;
+  color: #fff;
 }
 
 form#vstobjects .alert {
@@ -2869,7 +2873,7 @@ td.hint {
   color: #30659d !important;
   border: 1px solid #0083db !important;
   background-color: #3b9de8 !important;
-  background: linear-gradient(to bottom, rgba(235,243,249,1) 0%,rgba(215,230,243,1) 50%,rgba(192,216,236,1) 51%,rgba(223,235,245,1) 100%) !important;
+  background: linear-gradient(to bottom, rgba(235,243,249,1) 0%,rgba(192,216,236,1) 51%,rgba(223,235,245,1) 100%) !important;
   box-shadow: 0px 1px 3px rgba(0,0,0,0.25),
               inset 0px 0px 1px #fff,
               inset 0px 0px 3px rgba(255,255,255,0.5) !important;
@@ -2881,7 +2885,7 @@ td.hint {
   color: #0077c6 !important;
   text-shadow: 1px 1px rgba(255,255,255,0.5) !important;
   border: 1px solid #54a6e5 !important;
-  background: linear-gradient(to bottom, rgba(241,248,253,1) 0%,rgba(218,236,250,1) 50%,rgba(190,221,246,1) 51%,rgba(227,240,251,1) 100%) !important;
+  background: linear-gradient(to bottom, rgba(241,248,253,1) 0%,rgba(190,221,246,1) 51%,rgba(227,240,251,1) 100%) !important;
   box-shadow: 0px 1px 3px rgba(0,0,0,0.25),
               inset 0px 0px 1px #fff,
               inset 0px 0px 6px rgba(255,255,255,0.6) !important;
@@ -2893,7 +2897,7 @@ td.hint {
 .ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit:active,
 .vst-advanced:active,.to-top:focus, .to-shortcuts:focus {
   border: 1px solid #0066b4 !important;
-  background: linear-gradient(to bottom, rgba(194,224,248,1) 0%,  rgba(162,207,244,1) 51%, rgba(210,232,250,1) 100%) !important;
+  background: linear-gradient(to bottom, rgba(194,224,248,1) 0%, rgba(162,207,244,1) 51%, rgba(210,232,250,1) 100%) !important;
   color: #517bab !important;
   text-shadow: 0px -1px 2px rgba(255,255,255,0.85) !important;
   box-shadow: 0px 1px 2px rgba(0,0,0,0.2),
@@ -2926,7 +2930,7 @@ td.hint {
 .to-top, .to-shortcuts {
   color: #717171 !important;
   border: 1px solid #aaaaaa !important;
-  background: linear-gradient(to bottom, rgba(250,250,250,1) 0%,rgba(236,236,236,1) 50%,rgba(221,221,221,1) 51%,rgba(241,241,241,1) 100%) !important;
+  background: linear-gradient(to bottom, rgba(250,250,250,1) 0%,rgba(230,230,230,1) 51%,rgba(242,242,242,1) 100%) !important;
 }
 
 .ui-button-text {
@@ -3280,7 +3284,7 @@ form#vstobjects.suspended {
   text-shadow: 0px 1px 2px rgba(0,0,0,0.4);
 }
 
-.pill.usage{
+.pill.usage {
   margin-top: 8px;
   font-size: 0.75rem;
   padding: 4px;
@@ -3288,7 +3292,7 @@ form#vstobjects.suspended {
   padding-right: 8px;
   margin-right: 10px;
   line-height: 0.75rem;
-  box-shadow: 0px 1px 1px rgba(0,0,0,0.35), inset 0px 1px 0px rgba(0,0,0,0.1);
+  box-shadow: 0px 1px 1px rgba(0,0,0,0.2), inset 0px 1px 0px rgba(0,0,0,0.08); 
   background-color: rgba(255,255,255,0.75);
   font-weight: 500;
   border: 1px solid rgba(255,255,255,0.75);

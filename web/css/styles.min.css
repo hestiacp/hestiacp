@@ -1089,6 +1089,10 @@ a {
   color: #5ea64c;
   background-color: white;
 }
+.alert a {
+  font-weight: bold;
+  color: #fff;
+}
 
 form#vstobjects .alert {
   width: 380px;
@@ -3280,7 +3284,7 @@ form#vstobjects.suspended {
   text-shadow: 0px 1px 2px rgba(0,0,0,0.4);
 }
 
-.pill.usage{
+.pill.usage {
   margin-top: 8px;
   font-size: 0.75rem;
   padding: 4px;
@@ -3288,7 +3292,7 @@ form#vstobjects.suspended {
   padding-right: 8px;
   margin-right: 10px;
   line-height: 0.75rem;
-  box-shadow: 0px 1px 1px rgba(0,0,0,0.2), inset 0px 1px 0px rgba(0,0,0,0.08)
+  box-shadow: 0px 1px 1px rgba(0,0,0,0.2), inset 0px 1px 0px rgba(0,0,0,0.08); 
   background-color: rgba(255,255,255,0.75);
   font-weight: 500;
   border: 1px solid rgba(255,255,255,0.75);

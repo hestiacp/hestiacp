@@ -2956,7 +2956,7 @@ a.button.cancel {
 }
 
 .ui-button.danger:hover, .button.danger:hover {
-  background: linear-gradient(to bottom, #fbf2f1 0%,#f7cac5 50%,#f6b4ac 51%,#fde6e3 100%) !important;
+  background: linear-gradient(to bottom, #fbf2f1 0%,#f6b4ac 51%,#fde6e3 100%) !important;
   color: #F4301A !important;
   text-shadow: 0px 1px rgba(255,255,255,0.5) !important;
   border: 1px solid #F27E71 !important;

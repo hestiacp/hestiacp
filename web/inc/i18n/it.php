@@ -7,7 +7,7 @@
 
 $LANG['it'] = array(
     'Packages'  => 'Pacchetti',
-    'IP'  => 'IP',
+    'IP'  => 'Rete',
     'Graphs'  => 'Grafici',
     'Statistics'  => 'Statistiche',
     'Log'  => 'Log',
@@ -41,7 +41,7 @@ $LANG['it'] = array(
     'NETWORK'  => 'NETWORK',
     'Web Log Manager'  => 'Web Log Manager',
 
-    'no notifications'  => 'no notifications',
+    'no notifications'  => 'Nessuna notifica',
 
     'Add User'  => 'Nuovo Utente',
     'Add Domain'  => 'Nuovo Dominio',
@@ -94,7 +94,7 @@ $LANG['it'] = array(
     'list accounts'  => 'mostra %s account',
     'add account'  => 'aggiungi account',
     'open webmail'  => 'apri webmail',
-    'list fail2ban' => 'mostra fail2ban',
+    'list fail2ban' => 'Gestisci IP vietati',
     'open %s'  => 'apri %s',
     'download'  => 'download',
     'restore'  => 'ripristina',
@@ -190,13 +190,15 @@ $LANG['it'] = array(
     'IP Addresses'  => 'Indirizzi IP',
     'Backups'  => 'Backups',
     'Backup System'  => 'Sistema Backup',
-    'backup exclusions' => 'esclusioni backup',
+    'backup exclusions' => 'Esclusioni di backup',
     'template'  => 'template',
-    'SSL Support'  => 'Supporto SSL',
+    'SSL Support'  => 'Abilita SSL per questo dominio',
     'SSL Home Directory'  => 'SSL Home',
-    'Lets Encrypt Support'  => 'Lets Encrypt Support',
+    'Force SSL/HTTPS' => 'Abilita il reindirizzamento automatico da HTTP a HTTPS',
+    'Enable SSL HSTS' => 'Abilita la Sicurezza di trasporto rigorosa HTTP (HSTS) <a href="https://it.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><i class="fas fa-question-circle"></i></a>',
+    'Lets Encrypt Support'  => 'Usa Lets Encrypt per ottenere il certificato SSL',
     'Lets Encrypt'  => 'Lets Encrypt',
-    'Your certificate will be automatically issued in 5 minutes' => 'Your certificate will be automatically issued in 5 minutes',
+    'Your certificate will be automatically issued in 5 minutes' => 'Il certificato verrà rilasciato automaticamente entro 5 minuti',
     'Proxy Support'  => 'Supporto Proxy',
     'Proxy Extensions'  => 'Estensioni Proxy',
     'Web Statistics'  => 'Statistiche Web',
@@ -208,9 +210,9 @@ $LANG['it'] = array(
     'Records'  => 'Record',
     'Serial'  => 'Serial',
     'Catchall email'  => 'Catchall email',
-    'AntiVirus Support'  => 'Supporto AntiVirus',
-    'AntiSpam Support'  => 'Supporto AntiSpam',
-    'DKIM Support'  => 'Supporto DKIM',
+    'AntiVirus Support'  => 'Abilita AntiVirus',
+    'AntiSpam Support'  => 'Abilita AntiSpam',
+    'DKIM Support'  => 'Abilita DKIM',
     'Accounts'  => 'Account',
     'Quota'  => 'Quota',
     'Autoreply'  => 'Autorisposta',
@@ -288,12 +290,12 @@ $LANG['it'] = array(
     'Last Name'  => 'Cognome',
     'Send login credentials to email address'  => 'Invia le credenziali di login per email',
     'Default Template'  => 'Default Template',
-    'Default Name Servers'  => 'Default Name Servers',
+    'Default Name Servers'  => 'Server dei nomi predefiniti',
     'Domain'  => 'Dominio',
-    'DNS Support'  => 'Supporto DNS',
-    'Mail Support'  => 'Supporto Mail',
+    'DNS Support'  => 'Crea una nuova zona DNS',
+    'Mail Support'  => 'Abilita la posta elettronica per questo dominio',
     'Advanced options'  => 'Opzioni Avanzate',
-    'Basic options'  => 'Basic options',
+    'Basic options'  => 'Opzioni di base',
     'Aliases'  => 'Alias Dominio',
     'SSL Certificate'  => 'Certificato SSL',
     'SSL Key'  => 'SSL Key',
@@ -397,7 +399,7 @@ $LANG['it'] = array(
     'SSH' => 'SSH',
     'FTP' => 'FTP',
     'HESTIA' => 'HESTIA',
-    'Add one more Name Server' => 'Add one more Name Server',
+    'Add one more Name Server' => 'Aggiungi un altro server dei nomi',
 
     'web domain' => 'web domain',
     'dns domain' => 'dns domain',
@@ -483,6 +485,7 @@ $LANG['it'] = array(
     'DELETE_PACKAGE_CONFIRMATION'  => 'Sei sicuro di voler cancellare il pacchetto %s?',
     'DELETE_IP_CONFIRMATION'  => "Sei sicuro di voler l'indirizoz IP %s?",
     'DELETE_RULE_CONFIRMATION' => 'Sei sicuro di voler cancellare il regola #%s?',
+    'DELETE_LOGS_CONFIRMATION'  => 'Sei sicuro di voler eliminare i registri?',
     'SUSPEND_RULE_CONFIRMATION' => 'Sei sicuro di voler disabilitare il regola #%s?',
     'UNSUSPEND_RULE_CONFIRMATION' => 'Sei sicuro di voler riabilitare il regola #%s?',
     'LEAVE_PAGE_CONFIRMATION' => 'Leave Page?',
@@ -567,10 +570,10 @@ $LANG['it'] = array(
     'phpPgAdmin URL' => 'phpPgAdmin URL',
     'Maximum Number Of Databases' => 'Maximum Number Of Databases',
     'Current Number Of Databases' => 'Current Number Of Databases',
-    'Local backup' => 'Local backup',
-    'Compression level' => 'Compression level',
+    'Local backup' => 'Backup locale',
+    'Compression level' => 'Livello di compressione',
     'Directory' => 'Directory',
-    'Remote backup' => 'Remote backup',
+    'Remote backup' => 'Backup remoto',
     'ftp' => 'FTP',
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
@@ -582,19 +585,19 @@ $LANG['it'] = array(
     'Template Manager' => 'Template Manager',
     'Backup Migration Manager' => 'Backup Migration Manager',
     'FileManager' => 'FileManager',
-    'show: CPU / MEM / NET / DISK' => 'show: CPU / MEM / NET / DISK',
+    'show: CPU / MEM / NET / DISK' => 'Visualizza i dettagli avanzati',
 
     'sort by' => 'sort by',
     'Date' => 'Data',
     'Starred' => 'Starred',
-    'Name' => 'Name',
+    'Name' => 'Nome',
 
     'save to favorites' => 'save to favorites',
 
     'File Manager' => 'File Manager',
     'size' => 'size',
     'date' => 'date',
-    'name' => 'name',
+    'name' => 'nome',
     'Initializing' => 'Initializing',
     'UPLOAD' => 'UPLOAD',
     'NEW FILE' => 'NEW FILE',
@@ -624,7 +627,7 @@ $LANG['it'] = array(
     'Rename' => 'Rename',
     'Move' => 'Move',
     'Change Rights' => 'Change Rights',
-    'Delete' => 'Delete',
+    'Delete' => 'Elimina',
     'Extract' => 'Extract',
     'Create' => 'Create',
     'Compress' => 'Compress',
@@ -744,17 +747,105 @@ $LANG['it'] = array(
     'PUB_KEY' => 'PUB_KEY',
     'ISSUER' => 'ISSUER',
 
-    'Use server hostname' => 'Use server hostname',
-    'Use domain hostname' => 'Use domain hostname',
-    'Use STARTTLS' => 'Use STARTTLS',
-    'Use SSL / TLS' => 'Use SSL / TLS',
-    'No encryption' => 'No encryption',
-    'Do not use encryption' => 'Do not use encryption',
+    'Use server hostname' => 'Usa il nome host del server',
+    'Use domain hostname' => 'Usa il nome host del dominio',
+    'Use STARTTLS' => 'Usa STARTTLS',
+    'Use SSL / TLS' => 'Usa SSL / TLS',
+    'No encryption' => 'Nessuna crittografia',
+    'Do not use encryption' => 'Non utilizzare la crittografia',
 
-    'maximum characters length, including prefix' => 'maximum %s characters length, including prefix',
+    'maximum characters length, including prefix' => 'lunghezza massima di %s caratteri, incluso prefisso',
 
     'Email Credentials' => 'Email Credentials',
 
     'Theme' => 'Apparenza',
     'Operating System' => 'Sistema operativo',
+
+    '2 Factor Authentication' => 'Autenticazione a due fattori',
+    'Enable 2FA' => 'Abilita autenticazione a due fattori',
+    'Please scan the code below in your 2FA application:' => 'Per completare la configurazione dell\'autenticazione a due fattori, scansiona il codice QR di seguito <br /> utilizzando un\'app di autenticazione (come <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2"> Google Authenticator</a>):',
+    '2FA Reset Code:' => 'Codice di recupero dell\'account:',
+
+    'Please wait while php is installed or removed' => 'Attendere il completamento del processo e non aggiornare la pagina.',
+    'Avoid adding web domains on admin account' => 'Si consiglia vivamente di <a href="/add/user/">creare un account utente standard</a> prima di aggiungere domini Web al server a causa dei maggiori privilegi dell\'account amministratore e dei potenziali rischi per la sicurezza.',
+    
+    //SSH Key
+    'Field SSH_KEY can not be blank.' => 'Il campo chiave SSH non deve essere vuoto',
+    'SSH KEY is invalid' => 'La chiave SSH non è valida',
+    'SSH KEY already exists' => 'La chiave SSH esiste già',
+    'SSH KEY Added' => 'La chiave SSH è stata aggiunta',
+    'Add SSH Key' => 'Aggiungi chiave SSH',
+    'SSH KEY' => 'SSH Key',    
+    'DELETE_KEY_CONFIRM' => 'Sei sicuro di voler eliminare la chiave SSH %s?',
+    'SSH_ID' => 'SSH ID',
+    'Manage SSH keys' => 'Gestisci chiavi SSH',
+ 
+    //Header 
+    'Fm' => 'Files',
+    //PHP Cli
+    'PHP CLI Version' => 'Versione da riga di comando PHP',
+
+    //Ipset Firewall rules
+    'Adding Firewall Ipset List' => 'Nuovo elenco IP',
+    'Ip List Name' => 'Nome elenco IP',
+    'Data Source' => 'Fonte di dati',
+    'Ip Version' => 'Versione IP',
+    'Autoupdate' => 'Aggiornamento automatico',
+    'Add IP list' => 'Aggiungi elenco IP',
+    'BLACKLIST' => 'BLACKLIST',
+    'IPVERSE' => 'IPVERSE',
+    'IPSET_CREATED_OK' => 'Elenco IP creato correttamente',
+    'DELETE_IPSET_CONFIRMATION' => 'Sei sicuro di voler cancellare la lista IP %2',
+    '1 Ipset list' => '1 Elenco IP',
+    '%s Ipset lists' => '%s Elenchi IP',
+    'There are currently no IP lists defined.' => 'Al momento non sono stati definiti elenchi IP.',
+    'list ipset' => 'Gestisci elenchi IP',
+    
+    //Backup
+    'File Name' => 'Nome del file',
+    'Size' => 'Dimensione',
+    'Runtime' => 'Durata',
+    //Logs
+    'Refresh' => 'Ricaricare',
+    'Time' => 'Tempo',
+    'Value' => 'Iscrizione',
+    
+    //DNS 
+    'default' => 'default',
+    '1 DNS zone' => '1 DNS zone',
+    '%s DNS zones' => '%s DNS zones',
+    'Add Record' => 'Add Record',
+    //user
+    '1 user account' => '1 user account',
+    '%s user accounts' => '%s user accounts',
+    //database
+    '1 SQL database' => '1 SQL database',
+    '%s SQL databases' => '%s SQL databases',
+    //mail
+    '1 mail domain' => '1 mail domain',
+    '%s mail domains' => '%s mail domains',
+    //web
+    '1 web domain' => '1 web domain',
+    '%s web domains' => '%s web domains',
+    
+    //rrd
+    'Bandwidth Usage' => 'Utilizzo della larghezza di banda',
+    
+    //reset
+    'Forgot Password' => 'Ha dimenticato la password',
+    //web
+    'Quick Install App' => 'Installa l\'applicazione',
+    //webapp 
+    'version' => 'versione',
+    'Setup' => 'Installare',
+    //Server
+    'Restart' => 'Ricomincia',
+    'Mail Server' => 'Server email',
+    'Enabled multi PHP versions' => 'Versioni PHP abilitate',
+    'Service' => 'Nome di Servizio',
+    'Description' => 'Descrizione',
+    
+    //header
+    'Hestia Control Panel' => 'Hestia Control Panel',
+
 );

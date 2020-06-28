@@ -767,8 +767,8 @@ $LANG['en'] = array(
     'Theme' => 'Appearance',
 
     'Operating System' => 'Operating System',
-    'Please wait while php is installed or removed' => 'Adding or removing a version of PHP will take around 1 minute per version. Please wait until the process has completed and do not refresh the page.',
-    'Avoid adding web domains on admin account' => 'It is strongly advised to create a standard user account before adding web domains to the server due to the increased privileges the admin account possesses and potential security risks involved.',
+    'Please wait while php is installed or removed' => 'Please wait until the process has completed and do not refresh the page.',
+    'Avoid adding web domains on admin account' => 'It is strongly advised to <a href="/add/user/">create a standard user account</a> before adding web domains to the server due to the increased privileges the admin account possesses and potential security risks.',
     
     //SSH Key
     'Field SSH_KEY can not be blank.' => 'Field SSH Key must not be blank',
@@ -787,7 +787,7 @@ $LANG['en'] = array(
     'PHP CLI Version' => 'PHP CLI Version',
 
     //Ipset Firewall rules
-    'Adding Firewall Ipset List' => 'Add New IP list',
+    'Adding Firewall Ipset List' => 'New IP list',
     'Ip List Name' => 'IP List Name',
     'Data Source' => 'Data Source',
     'Ip Version' => 'IP Version',
@@ -842,7 +842,7 @@ $LANG['en'] = array(
     //Server
     'Restart' => 'Restart',
     'Mail Server' => 'Mail Server',
-    'Enabled multi PHP versions' => 'Enabled multi PHP versions',
+    'Enabled multi PHP versions' => 'Enabled PHP versions',
     'Service' => 'Service',
     'Description' => 'Description',
     

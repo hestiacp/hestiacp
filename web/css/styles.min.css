@@ -3490,6 +3490,10 @@ form#vstobjects.suspended {
 */
 }
 
+.lang-fr .search-input, .lang-de .search-input, .lang-nl .search-input {
+  width: 100px;
+}
+
 .float-left {
   float: left;
 }

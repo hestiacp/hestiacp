@@ -776,7 +776,7 @@ a {
 }
 
 .l-header {
-  background: linear-gradient(to bottom, rgba(104,145,196,1) 0%,rgba(87,130,187,1) 50%,rgba(69,114,181,1) 51%,rgba(65,90,149,1) 100%); 
+  background: linear-gradient(to bottom, rgba(104,145,196,1) 0%,rgba(69,114,181,1) 50%,rgba(65,90,149,1) 100%); 
   background-color: #5070a6;
   border-bottom: 1px solid rgba(255,255,255,0.95);
   overflow: hidden;

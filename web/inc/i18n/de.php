@@ -6,7 +6,7 @@
 
 $LANG['de'] = array(
     'Packages'  => 'Hosting-Pakete',
-    'IP'  => 'IPs',
+    'IP'  => 'Netzwerk',
     'Graphs'  => 'Leistungsgrafiken',
     'Statistics'  => 'Statistiken',
     'Log'  => 'Logs',
@@ -40,7 +40,7 @@ $LANG['de'] = array(
     'NETWORK'  => 'NETWORK',
     'Web Log Manager'  => 'Web Log Manager',
 
-    'no notifications'  => 'no notifications',
+    'no notifications'  => 'keine Benachrichtigungen',
 
     'Add User'  => 'Benutzer anlegen',
     'Add Domain'  => 'Domain hinzufügen',
@@ -70,7 +70,7 @@ $LANG['de'] = array(
     'Save'  => 'Speichern',
     'Submit'  => 'Übermitteln',
 
-    'toggle all'  => 'alle',    // please make it as short as "toggle all" 'Alle wählen/abwählen',
+    'toggle all'  => 'alle umschalten',
     'apply to selected'  => 'Auswählen',
     'rebuild'  => 'Erneuern',
     'rebuild web'  => 'Web erneuern',
@@ -93,7 +93,7 @@ $LANG['de'] = array(
     'list accounts'  => '%s Konten auflisten',
     'add account'  => 'Konto hinzufügen',
     'open webmail'  => 'Webmail öffnen',
-    'list fail2ban' => 'fail2ban',
+    'list fail2ban' => 'Blockierte IP Adressen verwalten',
     'open %s'  => '%s öffnen',
     'download'  => 'Herunterladen',
     'restore'  => 'Wiederherstellen',
@@ -107,9 +107,9 @@ $LANG['de'] = array(
     'reread IP' => 'IP aktualisieren',
     'enable autoupdate' => 'Autoupdate aktivieren',
     'disable autoupdate' => 'Autoupdate deaktivieren',
-    'turn on notifications' => 'turn on notifications',    // please make it as short as "turn on notifications" 'Benachrichtigungen aktivieren',
-    'turn off notifications' => 'turn off notifications',    // please make it as short as "turn off notifications" 'Benachrichtigungen deaktivieren',
-    'configure' => 'configure',
+    'turn on notifications' => 'Benachrichtigungen aktivieren',
+    'turn off notifications' => 'Benachrichtigungen deaktivieren',
+    'configure' => 'konfigurieren',
 
     'Adding User'  => 'Benutzer anlegen',
     'Editing User'  => 'Benutzer bearbeiten',
@@ -193,9 +193,11 @@ $LANG['de'] = array(
     'template'  => 'Template',
     'SSL Support'  => 'SSL Unterstützung',
     'SSL Home Directory'  => 'SSL Homeverzeichnis',
-    'Lets Encrypt Support'  => 'Lets Encrypt Support',
+    'Force SSL/HTTPS' => 'Aktivieren Sie die automatische Umleitung von HTTP zu HTTPS',
+    'Enable SSL HSTS' => 'Aktivieren Sie die strikte HTTP-Transportsicherheit (HSTS) <a href="https://de.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><i class="fas fa-question-circle"></i></a>',
+    'Lets Encrypt Support'  => 'Verwenden Sie Lets Encrypt',
     'Lets Encrypt'  => 'Lets Encrypt',
-    'Your certificate will be automatically issued in 5 minutes' => 'Your certificate will be automatically issued in 5 minutes',
+    'Your certificate will be automatically issued in 5 minutes' => 'Ihr Zertifikat wird automatisch in 5 Minuten ausgestellt',
     'Proxy Support'  => 'Proxy Unterstützung',
     'Proxy Extensions'  => 'Proxy Erweiterungen',
     'Web Statistics'  => 'Web Statistiken',
@@ -274,8 +276,8 @@ $LANG['de'] = array(
     'core package'  => 'Kern Paket',
     'php interpreter'  => 'PHP Interpreter',
     'internal web server'  => 'Interner Web Server',
-    'Version'  => 'Version',
-    'Release'  => 'Release',
+    'Version'  => 'Ausführung',
+    'Release'  => 'Freisetzung',
     'Architecture'  => 'Architektur',
     'Object'  => 'Objekt',
     'Username'  => 'Benutzername',
@@ -292,7 +294,7 @@ $LANG['de'] = array(
     'DNS Support'  => 'DNS Unterstützung',
     'Mail Support'  => 'Mail Unterstützung',
     'Advanced options'  => 'Erweiterte Optionen',
-    'Basic options'  => 'Basic options',
+    'Basic options'  => 'Grundlegende Optionen',
     'Aliases'  => 'Aliase',
     'SSL Certificate'  => 'SSL Zertifikat',
     'SSL Key'  => 'SSL Schlüssel',
@@ -396,7 +398,7 @@ $LANG['de'] = array(
     'SSH' => 'SSH',
     'FTP' => 'FTP',
     'HESTIA' => 'HESTIA',
-    'Add one more Name Server' => 'Add one more Name Server',
+    'Add one more Name Server' => 'Nameserver hinzufügen',
 
     'web domain' => 'web domain',
     'dns domain' => 'dns domain',
@@ -482,6 +484,7 @@ $LANG['de'] = array(
     'DELETE_PACKAGE_CONFIRMATION'  => 'Packet %s wirklich löschen?',
     'DELETE_IP_CONFIRMATION'  => '%s wirklich löschen?',
     'DELETE_RULE_CONFIRMATION' => 'Regel #%s wirklich löschen?',
+    'DELETE_LOGS_CONFIRMATION'  => 'Möchten Sie die Protokolle wirklich löschen?',
     'SUSPEND_RULE_CONFIRMATION' => 'Regel #%s wirklich sperren?',
     'UNSUSPEND_RULE_CONFIRMATION' => 'Regel #%s wirklich entsperren?',
     'LEAVE_PAGE_CONFIRMATION' => 'Leave Page?',
@@ -581,7 +584,7 @@ $LANG['de'] = array(
     'Template Manager' => 'Template Manager',
     'Backup Migration Manager' => 'Backup Migration Manager',
     'FileManager' => 'Datei-Manager',
-    'show: CPU / MEM / NET / DISK' => 'show: CPU / MEM / NET / DISK',
+    'show: CPU / MEM / NET / DISK' => 'Erweiterte Details anzeigen',
 
     'sort by' => 'sortieren',
     'Date' => 'Datum',
@@ -623,19 +626,19 @@ $LANG['de'] = array(
     'Rename' => 'Rename',
     'Move' => 'Move',
     'Change Rights' => 'Change Rights',
-    'Delete' => 'Delete',
+    'Delete' => 'Löschen',
     'Extract' => 'Extract',
     'Create' => 'Create',
     'Compress' => 'Compress',
     'OK' => 'OK',
     'YOU ARE COPYING' => 'YOU ARE COPYING',
     'YOU ARE REMOVING' => 'YOU ARE REMOVING',
-    'Delete items' => 'Delete items',
+    'Delete items' => 'Elemente löschen',
     'Copy files' => 'Copy files',
     'Move files' => 'Move files',
     'Are you sure you want to copy' => 'Are you sure you want to copy',
     'Are you sure you want to move' => 'Are you sure you want to move',
-    'Are you sure you want to delete' => 'Are you sure you want to delete',
+    'Are you sure you want to delete' => 'Sind Sie sicher, dass Sie löschen möchten',
     'into' => 'into',
     'existing files will be replaced' => 'existing files will be replaced',
     'Original name' => 'Original name',
@@ -754,6 +757,93 @@ $LANG['de'] = array(
 
     'Email Credentials' => 'Email Credentials',
 
+    '2 Factor Authentication' => 'Zwei-Faktor-Authentifizierung',
+    'Enable 2FA' => 'Zwei-Faktor-Authentifizierung aktiviert',
+    'Please scan the code below in your 2FA application:' => 'Um die Einrichtung der Zwei-Faktor-Authentifizierung abzuschließen, scannen Sie den folgenden QR-Code <br /> mit einer Authentifizierungs-App (z. B. <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google Authenticator</a>):',
+    '2FA Reset Code:' => 'Kontowiederherstellungscode:',
+
     'Theme' => 'aussehen',
     'Operating System' => 'Betriebssystem',
+
+    'Please wait while php is installed or removed' => 'Bitte warten Sie, bis der Vorgang abgeschlossen ist, und aktualisieren Sie die Seite nicht.',
+    'Avoid adding web domains on admin account' => 'Es wird dringend empfohlen, <a href="/add/user/">ein normales Benutzerkonto</a> zu erstellen, bevor Sie dem Server Webdomänen hinzufügen, da das Administratorkonto über erhöhte Berechtigungen und potenzielle Sicherheitsrisiken verfügt.',
+    
+    //SSH Key
+    'Field SSH_KEY can not be blank.' => 'Das SSH-Schlüsselfeld darf nicht leer sein',
+    'SSH KEY is invalid' => 'SSH-Schlüssel ist ungültig',
+    'SSH KEY already exists' => 'SSH-Schlüssel existiert bereits',
+    'SSH KEY Added' => 'SSH-Schlüssel wurde erfolgreich hinzugefügt',
+    'Add SSH Key' => 'SSH-Schlüssel hinzufügen',
+    'SSH KEY' => 'SSH Key',    
+    'DELETE_KEY_CONFIRM' => 'Möchten Sie den SSH-Schlüssel wirklich löschen %s?',
+    'SSH_ID' => 'SSH ID',
+    'Manage SSH keys' => 'SSH-Schlüssel verwalten',
+ 
+    //Header 
+    'Fm' => 'Dateien',
+    //PHP Cli
+    'PHP CLI Version' => 'PHP-Befehlszeilenversion',
+
+    //Ipset Firewall rules
+    'Adding Firewall Ipset List' => 'Neue IP-Liste',
+    'Ip List Name' => 'IP-Listenname',
+    'Data Source' => 'Datenquelle',
+    'Ip Version' => 'IP-Version',
+    'Autoupdate' => 'Automatisches Update',
+    'Add IP list' => 'IP-Liste hinzufügen',
+    'BLACKLIST' => 'BLACKLIST',
+    'IPVERSE' => 'IPVERSE',
+    'IPSET_CREATED_OK' => 'IP-Liste erfolgreich erstellt',
+    'DELETE_IPSET_CONFIRMATION' => 'Möchten Sie die IP-Liste wirklich löschen %2?',
+    '1 Ipset list' => '1 IP-Liste',
+    '%s Ipset lists' => '%s IP-Listeen',
+    'There are currently no IP lists defined.' => 'Derzeit sind keine IP-Listen definiert.',
+    'list ipset' => 'IP-Listen verwalten',
+    
+    //Backup
+    'File Name' => 'Dateiname',
+    'Size' => 'Größe',
+    'Runtime' => 'Laufzeit',
+    //Logs
+    'Refresh' => 'Aktualisierung',
+    'Time' => 'Zeit',
+    'Value' => 'Wert',
+    
+    //DNS 
+    'default' => 'Standard',
+    '1 DNS zone' => '1 DNS zone',
+    '%s DNS zones' => '%s DNS zones',
+    'Add Record' => 'Datensatz hinzufügen',
+    //user
+    '1 user account' => '1 Benutzerkonto',
+    '%s user accounts' => '%s Benutzerkonto',
+    //database
+    '1 SQL database' => '1 SQL-Datenbank',
+    '%s SQL databases' => '%s SQL-Datenbanken',
+    //mail
+    '1 mail domain' => '1 mail domain',
+    '%s mail domains' => '%s mail domains',
+    //web
+    '1 web domain' => '1 web domain',
+    '%s web domains' => '%s web domains',
+    
+    //rrd
+    'Bandwidth Usage' => 'Bandbreitennutzung',
+    
+    //reset
+    'Forgot Password' => 'Passwort vergessen',
+    //web
+    'Quick Install App' => 'App installieren',
+    //webapp 
+    'version' => 'version',
+    'Setup' => 'Konfiguration',
+    //Server
+    'Restart' => 'Neustart',
+    'Mail Server' => 'Mail-Server',
+    'Enabled multi PHP versions' => 'Aktivierte PHP-Versionen',
+    'Service' => 'Bedienung',
+    'Description' => 'Beschreibung',
+    
+    //header
+    'Hestia Control Panel' => 'Hestia Control Panel',
 );

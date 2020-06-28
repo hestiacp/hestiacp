@@ -114,10 +114,14 @@ fi
 
 # Add hestia-event.conf, if the server is running apache2
 if [ "$WEB_SYSTEM" = "apache2" ]; then
-    if [ ! -e "/etc/apache2/conf-enabled/hestia-event.conf" ]; then
-        cp -f $HESTIA_INSTALL_DIR/apache2/hestia-event.conf /etc/apache2/conf-available/
-        rm --force /etc/apache2/mods-enabled/hestia-event.conf # cleanup
-        a2enconf --quiet hestia-event
+    # Cleanup
+    rm --force /etc/apache2/mods-available/hestia-event.conf
+    rm --force /etc/apache2/mods-enabled/hestia-event.conf
+    rm --force /etc/apache2/conf-available/hestia-event.conf
+    rm --force /etc/apache2/conf-enabled/hestia-event.conf
+
+    if [ ! -e "/etc/apache2/conf.d/hestia-event.conf" ]; then
+        cp -f $HESTIA_INSTALL_DIR/apache2/hestia-event.conf /etc/apache2/conf.d/
     fi
 
     # Move apache mod_status config to /mods-available and rename it to prevent losing changes on upgrade

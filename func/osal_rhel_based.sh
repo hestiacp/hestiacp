@@ -111,7 +111,7 @@ multiphp_etc_folder() {
     echo /etc/opt/remi/php${1//.}
 }
 
-# multiphp_fpm_pool_d '7.3' = /etc/php/7.3/fpm/pool.d
+# multiphp_fpm_pool_d '7.3' = /etc/opt/remi/php$73/php-fpm.d
 multiphp_fpm_pool_d() {
     echo /etc/opt/remi/php${1//.}/php-fpm.d
 }

@@ -27,6 +27,7 @@ This package contains the Hestia Control Panel.
 
 %install
 cp -rfa %{sourcedir}/usr %{buildroot}
+mkdir -p %{buildroot}%{_unitdir}
 %{__install} -m644 %{sourcedir}/hestia.service %{buildroot}%{_unitdir}/hestia.service
 
 %clean

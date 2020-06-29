@@ -61,6 +61,8 @@ csv_list() {
 #                       Action                             #
 #----------------------------------------------------------#
 
+# FIXME: we need to keep our own list of properly installed
+# PHP versions, despite what's in /etc/php
 # List trough /etc/php
 versions_list=$(ls -d /etc/php/*)
 versions=()

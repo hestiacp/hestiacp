@@ -1199,7 +1199,6 @@ if [ "$apache" = 'yes' ]; then
     cp -f $HESTIA_INSTALL_DIR/apache2/apache2.conf /etc/apache2/
     cp -f $HESTIA_INSTALL_DIR/apache2/status.conf /etc/apache2/mods-available/hestia-status.conf
     cp -f /etc/apache2/mods-available/status.load /etc/apache2/mods-available/hestia-status.load
-    cp -f $HESTIA_INSTALL_DIR/apache2/hestia-event.conf /etc/apache2/conf-available/
     cp -f $HESTIA_INSTALL_DIR/logrotate/apache2 /etc/logrotate.d/
     
     # Enable needed modules
@@ -1207,7 +1206,6 @@ if [ "$apache" = 'yes' ]; then
     a2enmod suexec > /dev/null 2>&1
     a2enmod ssl > /dev/null 2>&1
     a2enmod actions > /dev/null 2>&1
-    a2enconf --quiet hestia-event
     a2dismod --quiet status > /dev/null 2>&1
     a2enmod --quiet hestia-status
 
@@ -1216,6 +1214,7 @@ if [ "$apache" = 'yes' ]; then
         a2dismod php$fpm_v > /dev/null 2>&1
         a2dismod mpm_prefork > /dev/null 2>&1
         a2enmod mpm_event > /dev/null 2>&1
+        cp -f $HESTIA_INSTALL_DIR/apache2/hestia-event.conf /etc/apache2/conf.d/
     else
         if [ "$release" -eq 10 ]; then
             a2enmod mpm_itk > /dev/null 2>&1

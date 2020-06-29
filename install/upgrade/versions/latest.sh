@@ -120,7 +120,7 @@ if [ "$WEB_SYSTEM" = "apache2" ]; then
     rm --force /etc/apache2/conf-available/hestia-event.conf
     rm --force /etc/apache2/conf-enabled/hestia-event.conf
 
-    if [ ! -e "/etc/apache2/conf.d/hestia-event.conf" ]; then
+    if [ $(a2query -M) = 'event' ] && [ ! -e "/etc/apache2/conf.d/hestia-event.conf" ]; then
         cp -f $HESTIA_INSTALL_DIR/apache2/hestia-event.conf /etc/apache2/conf.d/
     fi
 

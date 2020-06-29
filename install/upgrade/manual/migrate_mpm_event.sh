@@ -34,6 +34,7 @@ for module in $a2modules; do
 done
 
 a2enmod --quiet mpm_event
+cp -f $HESTIA_INSTALL_DIR/apache2/hestia-event.conf /etc/apache2/conf.d/
 
 # Check if all went well
 if ! apache2ctl configtest >/dev/null 2>&1; then
@@ -41,6 +42,8 @@ if ! apache2ctl configtest >/dev/null 2>&1; then
     for module in $changed_a2modules; do
         a2enmod "$module"
     done
+    rm --force /etc/apache2/conf.d/hestia-event.conf
+
     exit 1
 fi
 

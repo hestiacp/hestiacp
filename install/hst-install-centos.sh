@@ -882,7 +882,6 @@ chmod 660 $HESTIA/log/*
 rm -f /var/log/hestia
 ln -s $HESTIA/log /var/log/hestia
 chmod 770 $HESTIA/data/sessions
-chown admin:admin $HESTIA/data/sessions
 
 # Generating Hestia configuration
 rm -f $HESTIA/conf/hestia.conf > /dev/null 2>&1
@@ -1294,7 +1293,8 @@ if [ "$mysql" = 'yes' ]; then
     # Configuring phpMyAdmin
     if [ "$apache" = 'yes' ]; then
         cp -f $HESTIA_INSTALL_DIR/pma/apache.conf /etc/phpMyAdmin/
-        ln -s /etc/phpMyAdmin/apache.conf /etc/httpd/conf.d/phpmyadmin.conf
+        rm -f /etc/httpd/conf.d/phpMyAdmin.conf
+        ln -s /etc/phpMyAdmin/apache.conf /etc/httpd/conf.d/phpMyAdmin.conf
     fi
     cp -f $HESTIA_INSTALL_DIR/pma/config.inc.php /etc/phpMyAdmin/
 
@@ -1588,6 +1588,9 @@ $HESTIA/bin/v-add-user admin $vpass $email default System Administrator
 check_result $? "can't create admin user"
 $HESTIA/bin/v-change-user-shell admin nologin
 $HESTIA/bin/v-change-user-language admin $lang
+chown admin:admin $HESTIA/data/sessions
+chown admin:admin $HESTIA/php/var/log
+chown admin:admin $HESTIA/php/var/run
 
 # Roundcube permissions fix
 if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then

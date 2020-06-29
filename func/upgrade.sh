@@ -159,7 +159,7 @@ upgrade_start_routine() {
         upgrade_refresh_config
     fi
 
-    # Upgrade to Version 1.2.0
+    # Upgrade to Version 1.1.2
     if [ $VERSION = "1.1.1" ]; then
         source $HESTIA/install/upgrade/versions/latest.sh
         VERSION="$new_version"
@@ -211,13 +211,6 @@ upgrade_phpmyadmin() {
             rm -fr phpMyAdmin-$pma_v-all-languages
             rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
         fi
-    fi
-}
-
-upgrade_fm_configuration() {
-    if [ -e "$HESTIA/web/fm/configuration.php" ]; then
-        echo "(*) Updating File Manager Configuration..."
-        cp -f $HESTIA_INSTALL_DIR/filemanager/filegator/configuration.php $HESTIA/web/fm/configuration.php
     fi
 }
 

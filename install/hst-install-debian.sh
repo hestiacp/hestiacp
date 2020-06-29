@@ -1236,7 +1236,7 @@ if [ "$apache" = 'yes' ]; then
     chmod 751 /var/log/apache2/domains
 
     # Prevent remote access to server-status page
-    sed -i '/Allow from all/d' /etc/apache2/mods-enabled/status.conf
+    sed -i '/Allow from all/d' /etc/apache2/mods-available/hestia-status.conf
 
     update-rc.d apache2 defaults > /dev/null 2>&1
     systemctl start apache2 >> $LOG

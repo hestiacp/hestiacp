@@ -2,49 +2,56 @@
 All notable changes to this project will be documented in this file.
 
 ## [CURRENT] - Development
+
+## [1.2.0] - 2020-06-29 - Major Release (Feature / Quality Update)
 ### Features
-- Added support for configuring individual TTL per DNS record. Thanks to @jaapmarcus!
 - Added support for Ubuntu Server 20.04 LTS.
-- Added the ability to set the php cli version per user (using alias).
-- Added support for resolving ip addresses based on geoip database for Awstats
-- Added Roundcube plugins newmail_notifier and zipdownload.
+- Added File Manager functionality (Filegator).
+- Extended built-in firewall to support allowing or blocking traffic using IP lists.
+- Improved Apache2 performance by switching to mpm_event instead mod_prefork by default for new installations.
+- Added support for configuring individual TTL per DNS record. Thanks to @jaapmarcus!
+- Updated translations for Polish (thanks to @RejectPL!), Dutch, French, German, and Italian (WIP).
+- Added the ability to set the default PHP command line version per-user.
+- Added geolocation support to awstats to improve traffic reports.
+- Enabled Roundcube plugins newmail_notifier and zipdownload by default.
 - Added HELO support for multiple domains and IPs.
-- Added the possibility to manage ssh keys in the backend.
-- Switched to mpm_event instead mod_prefork for apache2 on fresh installs.
-- Added a manual migration script for apache2 mpm_event ($HESTIA/install/upgrade/manual/migrate_mpm_event.sh).
-- Added support for Linux ipset for a efficient way to handle large blocklists or country wide ip lists.
-- Extended Hestia Firewall to support allowing or blocking traffic from ipset lists.
-- Added Filemanager integration (Filegator).
+- Added the ability to manage SSH keys from CLI and web interface.
+- Added a manual migration script for apache2 mpm_event for existing installations/upgrades (`$HESTIA/install/upgrade/manual/migrate_mpm_event.sh`).
 - Added BATS system for testing the functionality of Bash scripts (WIP).
+- **NOTE:** Debian 8 is no longer supported as it has reached EOL status.
 
 ### Bugfixes
-- Do not allow to show apache2 server-status page from public.
-- Do not allow to change the password of a non-hestia user. Thanks to Alexandre Zanni!
-- Use sury repository for Apache2 packages.
+- Prevent ability to change the password of a non-Hestia user account. Thanks to Alexandre Zanni!
+- Adjust Let's Encrypt validation check for IDN domains, thanks to @zanami!
+- Set backup download location on FTP/SFTP restore, thanks to @Daniyal-Javani!
+- Stop trying to renew Let's Encrypt certificates after multiple consecutive failed attempts. Thanks to @dpeca!
+- Fixed an issue with auto-logout when used behind Cloudflare proxy and reworked 2FA authentication part. Thanks to @rmj-s!
+- Fixed an issue where changing an email account password would fail if similar account names were present.
+- Fixed an issue where e-mail quota was not preserved when (un)suspending or rebuilding a mail account.
+- Fixed an issue where SSH configuration was not saved currently when edited from the Web interface.
+- Fixed an issue where DNS IP did not use NAT/Public IP when available after changing web domain IP.
+- Fixed permission issues that were presented when restoring a user backup.
+- Use Sury.org repository for Apache2 packages.
+- Improved compatibility with Roundcube and PHP 7.4.
+- Restrict the ability to edit crontab service via Web UI.
 - Check whether Nginx, Apache2 and MariaDB are selected for installation prior to adding third party repositories.
+- Restrict public access to Apache2 server-status page.
 - Remove duplicated set-cookie line in default fpm config.
-- Adjust let's encrypt validation check for idn domains, thanks to @zanami!
-- Set backup download location on restore for ftp/sftp, thanks to @Daniyal-Javani!
 - Ignore empty lines when listing firewall rules.
-- Changing email account password would fail when similar account names are found.
-- Preserve email quota when (un)suspending and rebuilding mail account.
-- Cleanup temporary file after running v-list-sys-services.
+- Improved top-level navigation in the Control Panel web interface (Server tab has been moved next to the Notification icon).
+- Corrected various minor user interface and theme issues.
+- Cleanup temporary files when uploading custom SSL certificate from Web interface.
+- Cleanup temporary files when adding/renewing Let's Encrypt SSL certificate.
+- Cleanup temporary files after running v-list-sys-services.
 - Don't calculate /home folder size in v-list-sys-info.
-- Cleanup temporary files when uploading custom SSL cert from WebUi.
-- Cleanup temporary files when adding/renewing letsencrypt SSL cert.
 - Adjust v-list-sys-services to honor the changed fail2ban service name.
 - Rework busy port validation in v-change-sys-port.
-- Fixed ssh config save bug when edit the over interface.
-- Fixed different permission issues on user restore.
-- Stop trying to renew LE certs after multiple consecutive failed attempts. Thanks to @dpeca!
-- Implement a validation function to verify the correct version in hestia.conf prior to install a new one.
-- Fix autologout issue on cloudflare proxy and rearange 2FA authentification part. Thanks to @rmj-s!
-- Roundcube fixes for PHP 7.4 compatibility..
-- Added delay when entering wrong username/password/2fa.
-- Improved "Forgot password" function prevent brute forcing.
-- Update Backup counter propperly when v-delete-user-backup ran.
-- Dropped support for Debian 8 according to EOL.
-- Improved Backup function. 
+- Implement a validation function to verify the correct version in hestia.conf prior to installation.
+- Introduced a delay when an incorrect username, password, or 2FA code has been entered repeatedly.
+- Improved "Forgot password" function prevent brute force attacks.
+- Fixed an issue where the backup update counter was not updated properly when v-delete-user-backup was executed.
+- Fixed an issue with public_(s)html file ownership.
+- Fixed an issue with phpPgAdmin access.
 
 ## [1.1.1] - 2020-03-24 - Hotfix
 ### Features

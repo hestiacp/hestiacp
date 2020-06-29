@@ -2,56 +2,40 @@
 
 [Hestia Control Panel](https://www.hestiacp.com/)
 ==================================================
-**Current stable release:** Version 1.1.1, released on March 26th, 2020.<br>
-**Current development release:** Version 1.2.0.
-<br><br>
-**Due to a change of the repository infrastructure, please install the new key before you upgrade your existing installations:**
-```bash
-wget -qO - https://gpg.hestiacp.com/deb_signing.key | sudo apt-key add -
-```
+**Latest stable release:** Version 1.2.0 - June 29, 2020 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/master/CHANGELOG.md)<br>
+
+**Web:** [www.hestiacp.com](https://www.hestiacp.com/)<br>
+**Documentation:** [docs.hestiacp.com](https://docs.hestiacp.com/)<br>
+**Forums:** [forum.hestiacp.com](https://forum.hestiacp.com/)<br><br>
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ST87LQH2CHGLA)
+<br>
 
 **Welcome!**
 ---------------------------- 
-Hestia Control Panel offers easy to use web and command line interfaces, enabling web server administrators to quickly deploy and manage web domains, mail accounts, and DNS zones from one central location without the hassle of manually deploying and configuring individual components. 
+Hestia Control Panel is designed to provide administrators an easy to use web and command line interface, enabling them to quickly deploy and manage web domains, mail accounts, DNS zones, and databases from one central dashboard without the hassle of manually deploying and configuring individual components or services. 
 
-While we have taken every effort to make the interface as friendly as possible (even for new users), it is assumed that you will have some prior knowledge and understanding in the basics how to set up a Linux server and managing web applications.
-
-**We cannot provide support for requests that do not describe in detail the troubleshooting that has already been performed, or for third-party applications which do not directly relate to Hestia Control Panel. Please make sure that you fill in the necessary details in your issue reports, and remove any sections that do not apply to your issue or use case.**
-
-Interested in helping shape the future of Hestia Control Panel?
----------------------------- 
-Are you a software developer, tester, or have experience in writing documentation or guides and have some time to contibute to the project?<br><br>Please send an email to info@hestiacp.com with a quick outline of your previous experience in any of these areas or where you think you could help on the project and we'll reach out to discuss the next steps.
-
-As always we welcome all feedback and contributions!
-
-Sincerely,<br>
-The Hestia Control Panel development team
-
-What is Hestia Control Panel?
+Features and Services
 ----------------------------
-* An open source web server control panel with an easy-to-use interface.
-* A lightweight alternative to cPanel, Plesk, etc.
-
-What does Hestia Control Panel support?
-----------------------------
-* Standard Web Server (Apache/NGINX) with PHP
-* PHP Web Application Server (NGINX + PHP-FPM)
-* Multiple PHP versions (5.6 - 7.4, with 7.3 currently as default for optimal compatibility)
+* Apache2 and NGINX with PHP-FPM
+* Multiple PHP versions (5.6 - 7.4, 7.3 as default for optimal compatibility)
 * DNS Server (Bind) with clustering capabilities
-* Mail Server (Exim/Dovecot) with Anti-Virus and Anti-Spam (ClamAV and SpamAssassin)
-* Database functionality (MariaDB/PostgreSQL)
-* Let's Encrypt SSL with wildcard certificates
+* POP/IMAP/SMTP mail services with Anti-Virus, Anti-Spam, and Webmail (ClamAV, SpamAssassin, and Roundcube)
+* MariaDB or PostgreSQL databases
+* Let's Encrypt SSL support with wildcard certificates
+* Firewall with brute-force attack detection and IP lists (iptables, fail2ban, and ipset).
 
-Supported operating systems:
+Supported operating systems
 ----------------------------
-* Debian 8, 9, 10
-* Ubuntu 16.04 LTS or Ubuntu 18.04 LTS (the latest LTS release is generally recommended)
+* Debian 10, 9
+* Ubuntu 20.04 LTS, 18.04 LTS, or 16.04 LTS
 * **NOTE:** Hestia Control Panel must be installed on top of a fresh operating system installation to ensure proper functionality.
 
 Installing Hestia Control Panel
 ============================
+While we have taken every effort to make the installation process and the control panel interface as friendly as possible (even for new users), it is assumed that you will have some prior knowledge and understanding in the basics how to set up a Linux server before continuing.
+
 ## Step 1: Log in
-To install Hestia Control Panel on your server, you will need to be logged in as **root** or a user with super-user privileges in order to continue. You can perform the installation either directly from the command line console or remotely via SSH:
+To start the installation process on your server, you will need to be logged in as **root** or a user with super-user privileges in order to continue. You can perform the installation either directly from the command line console or remotely via SSH:
 ```bash
 ssh root@your.server
 ```
@@ -72,11 +56,6 @@ bash hst-install.sh
 ```
 You will receive a welcome email at the address specified during installation (if applicable) and on-screen instructions after the installation is completed to log in and access your server.
 
-## Additional installation notes:
-To perform an unattended installation using the default options:
-```bash
-bash hst-install.sh -f -y no -e <email> -p <password> -s <hostname>
-```
 ## Custom installation:
 You may specify a number of various flags during installation to only install the features in which you need. To view a list of available options, run:
 ```bash
@@ -84,45 +63,15 @@ bash hst-install.sh -h
 ```
 Alternatively, @gabizz has made available a command-line script generator at https://gabizz.github.io/hestiacp-scriptline-generator/ which allows you to easily generate the installation command via GUI.
 
-Installing & testing development builds
+Issues
 =============================
-In order to install a development build based on the latest published code, you should first have an instance of Hestia Control Panel set up. If you do not have a server configured, please install the latest stable build using the instructions above before continuing.
+If you've run into a problem, [file a new issue report via GitHub](https://github.com/hestiacp/hestiacp/issues) so that we may investigate further.
 
-**PLEASE NOTE: Development builds should not be installed on systems with live production data without understanding the potential risks involved.**
-
-To install a development build, first ensure that you have the latest Git upgrade script installed which handles new dependencies added after the 1.0.x branch:
-```bash
-wget -O $HESTIA/bin/v-update-sys-hestia-git https://raw.githubusercontent.com/hestiacp/hestiacp/master/bin/v-update-sys-hestia-git
-chmod +x $HESTIA/bin/v-update-sys-hestia-git
-```
-
-Then run the following command:
-```bash
-v-update-sys-hestia-git branchname
-```
-Replace *branchname* with the name of the branch you wish to install from, such as **release** or **master** (stable and current development branches, respectively). 
-
-Reporting Issues
-=============================
-If you've run into an issue with Hestia Control Panel, please let us know as soon as possible so that we may investigate further and resolve any issues in a timely manner.
-
-Bug reports can be filed using GitHub's [Issues](https://github.com/hestiacp/hestiacp/issues) feature.
+**We cannot provide support for requests that do not describe the troubleshooting steps that have already been performed, or for third-party applications which do not relate to Hestia Control Panel. Please make sure that you fill in the necessary details in your issue reports!**
 
 Contributions
 =============================
-If you would like to contribute to the project, please [read our submission guidelines](https://github.com/hestiacp/hestiacp/blob/master/CONTRIBUTING.md) for a brief overview of our development processes and standards.
-
-Donations
-=============================
-Hestia Control Panel is open source and completely free for everyone to use.
-
-If you would like to help our developers cover their time and infrastucture costs, or to support the Hestia Control Panel project as a whole, please consider making a donation via PayPal or become a sponsor.
-
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ST87LQH2CHGLA)
-
-License
-=============================
-Hestia Control Panel is licensed under [GPL v3](https://github.com/hestiacp/hestiacp/blob/master/LICENSE) license, and is based on the [VestaCP](https://www.vestacp.com/) project.<br>
+If you would like to contribute to the project, please [read our Contribution Guidelines](https://github.com/hestiacp/hestiacp/blob/master/CONTRIBUTING.md) for a brief overview of our development process and standards.
 
 Copyright
 =============================
@@ -135,3 +84,7 @@ Copyright
 - sell or redistribute the application under the name "Hestia Control Panel", "HestiaCP", or similar derivatives, including the use of the Hestia logo in any brand or marketing materials related to revenue generating activities,
 - use the names "Hestia Control Panel", "HestiaCP", or the Hestia logo in any context that is not related to the project,
 - alter the name "Hestia Control Panel", "HestiaCP", or the Hestia logo in any way.
+
+License
+=============================
+Hestia Control Panel is licensed under [GPL v3](https://github.com/hestiacp/hestiacp/blob/master/LICENSE) license, and is based on the [VestaCP](https://www.vestacp.com/) project.<br>

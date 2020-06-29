@@ -7,7 +7,11 @@ BACKUP_DISK_LIMIT=95
 BACKUP_LA_LIMIT=`cat /proc/cpuinfo | grep processor | wc -l`
 RRD_STEP=300
 BIN=$HESTIA/bin
-HESTIA_INSTALL_DIR=$HESTIA/install/deb
+if [ "$OS_BASE" = 'rhel' ]; then
+    HESTIA_INSTALL_DIR=$HESTIA/install/rhel
+else
+    HESTIA_INSTALL_DIR=$HESTIA/install/deb
+fi
 HESTIA_BACKUP="/root/hst_backups/$(date +%d%m%Y%H%M)"
 USER_DATA=$HESTIA/data/users/$user
 WEBTPL=$HESTIA/data/templates/web

@@ -685,7 +685,7 @@ $rcmail_config['addressbook_search_mode'] = 0;
 $rcmail_config['default_charset'] = 'UTF-8';
 
 // skin name: folder from skins/
-$rcmail_config['skin'] = 'larry';
+$rcmail_config['skin'] = 'elastic';
 
 // show up to X items in messages list view
 $rcmail_config['mail_pagesize'] = 200;

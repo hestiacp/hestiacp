@@ -134,14 +134,9 @@ fi
 
 # Install Filegator FileManager during upgrade
 if [ ! -e "$HESTIA/web/fm/configuration.php" ]; then
-    echo "(*) Configuring Filegator FileManager..."
-
+    echo "(*) Installing File Manager..."
     # Install the FileManager
     source $HESTIA_INSTALL_DIR/filemanager/install-fm.sh > /dev/null 2>&1
-else 
-    echo "(*) Update Filegator Configuration..."
-    # Update configuration.php
-    cp -f $HESTIA_INSTALL_DIR/filemanager/filegator/configuration.php $HESTIA/web/fm/configuration.php
 fi
 
 # Enable nginx module loading

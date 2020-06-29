@@ -1194,6 +1194,9 @@ fi
 
 if [ "$apache" = 'yes' ]; then
     echo "(*) Configuring Apache Web Server..."
+
+    mkdir -p /etc/apache2/conf.d
+    mkdir -p /etc/apache2/conf.d/domains
     
     # Copy configuration files
     cp -f $HESTIA_INSTALL_DIR/apache2/apache2.conf /etc/apache2/
@@ -1223,8 +1226,6 @@ if [ "$apache" = 'yes' ]; then
         fi
     fi
 
-    mkdir -p /etc/apache2/conf.d
-    mkdir -p /etc/apache2/conf.d/domains
     echo "# Powered by hestia" > /etc/apache2/sites-available/default
     echo "# Powered by hestia" > /etc/apache2/sites-available/default-ssl
     echo "# Powered by hestia" > /etc/apache2/ports.conf

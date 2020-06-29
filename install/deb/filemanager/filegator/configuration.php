@@ -3,8 +3,8 @@
 $dist_config = require __DIR__.'/configuration_sample.php';
 
 $dist_config['public_path'] = '/fm/';
-$dist_config['frontend_config']['app_name'] = 'Hestia FM';
-$dist_config['frontend_config']['logo'] = 'https://raw.githubusercontent.com/filegator/filegator/master/dist/img/logo.png';
+$dist_config['frontend_config']['app_name'] = 'File Manager - Hestia Control Panel';
+$dist_config['frontend_config']['logo'] = '../images/logo.png';
 $dist_config['frontend_config']['editable'] = ['.txt', '.css', '.js', '.ts', '.html', '.php', '.py',
         '.yml', '.xml', '.md', '.log', '.csv', '.conf', '.config', '.ini', '.scss', '.sh', '.env', '.example' ];
 $dist_config['frontend_config']['guest_redirection'] = '/login/' ;
@@ -57,7 +57,7 @@ $dist_config['services']['Filegator\Services\View\ViewInterface']['config'] = [
         if (document.getElementsByClassName("navbar-item").length) {
             clearInterval(checkVueLoaded);
             var navProfile = document.getElementsByClassName("navbar-item profile")[0]; navProfile.replaceWith(navProfile.cloneNode(true))
-            document.getElementsByClassName("navbar-item logout")[0].text="Back to Hestia";
+            document.getElementsByClassName("navbar-item logout")[0].text="Exit to Control Panel \u00BB";
         }
     }, 200);
 </script>',

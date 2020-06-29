@@ -46,8 +46,14 @@ if [ -f "$COMPOSER_BIN" ]; then
     exit
 fi
 
+[ -z "$(readlink -f "$COMPOSER_DIR" | egrep "^$HOMEDIR/$user/")" ] && check_result $E_FORBIDEN "Path outside of user homedir (Composer dir)"
+[ -z "$(readlink -f "$COMPOSER_BIN" | egrep "^$HOMEDIR/$user/")" ] && check_result $E_FORBIDEN "Path outside of user homedir (Composer bin)"
+[ -z "$(readlink -f "$HOMEDIR/$user/.config/" | egrep "^$HOMEDIR/$user/")" ] && check_result $E_FORBIDEN "Path outside of user homedir (.conf)"
+
 mkdir -p "$COMPOSER_DIR"
 chown $user: "$COMPOSER_DIR"
+mkdir -p "$HOMEDIR/$user/.config"
+chown $user: "$HOMEDIR/$user/.config"
 
 COMPOSER_SETUP_FILE=$(mktemp)
 check_result $? "Create temp file"

@@ -1,24 +1,13 @@
-How to Contribute
-==================================================
-
-Do you want to contribute to the Hestia Control Panel project? The easiest way to get started is to [submit an issue report](https://github.com/hestiacp/hestia/issues) if you come across a bug or issue. If you are a developer, please feel free to submit your code via pull request for review.
-
-**We appreciate and welcome all contributions to our project; it is with the help of the open-source community that we are able to build a product that meets our users needs.**
-
 Code Contributions & Pull Requests - Guidelines
 -----------------------
 
-**All pull requests must include:**
-1. A brief but descriptive title, such as **Fixed syntax error in php.ini** or **Updated rebuild_mail_conf function in rebuild.sh**.
-2. A detailed description of the changes that you've made.
-   1. Example: "Apache subdomain configuration was incorrect, modified variables in templates to point to the correct files."
-3. Only commits which are related to the pull request or issue itself.
+All pull requests must include a brief but descriptive title, and a description of the changes that you've made with as much detail as possible. **Only include commits that are related to your feature, bug fix, or patch in your pull request.**
 
 ### Code formatting and comments:
-We ask that you please try to follow existing naming schemes and coding conventions as much as possible, and that you add brief but descriptive comments in your source code to aid other developers in debugging and understanding your code in the future.
+We ask that you follow existing naming schemes and coding conventions where possible, and that you add comments in your source code where appropriate to aid other developers in debugging and understanding your code in the future.
 
 ### Squashing commits for smaller changes:
-When submitting a pull request with multiple smaller commits which are related to the same issue (or file), we ask that you please **squash your commits** in order to keep the project's commit history clean and easy to follow for other developers. For example, if you are submitting a fix for two files which contain the same code change, merge those changes into one commit before submitting your request.
+When submitting a pull request with multiple smaller commits which are related to the same issue (or file), we ask that you please **squash your commits** in order to keep the project's commit history clean and easy to follow for other developers.
 
 ### Working with branches:
 Development for this project takes place in branches to effectively develop, manage, and test new features and code changes, helping to ensure that each release meets high quality standards. Our primary branches are as follows:

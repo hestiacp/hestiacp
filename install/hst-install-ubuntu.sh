@@ -948,6 +948,46 @@ if [ "$release" != '20.04' ]; then
     chmod 755 /usr/bin/rssh
 fi
 
+# Check iptables paths and add symlinks when necessary
+if [ ! -e "/sbin/iptables" ]; then
+    if which iptables; then
+        ln -s "$(which iptables)" /sbin/iptables
+    elif [ -e "/usr/sbin/iptables" ]; then
+        ln -s /usr/sbin/iptables /sbin/iptables
+    elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables; then
+        autoiptables=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables | cut -d '' -f 2)
+        if [ -x "$autoiptables" ]; then
+            ln -s "$autoiptables" /sbin/iptables
+        fi
+    fi
+fi
+
+if [ ! -e "/sbin/iptables-save" ]; then
+    if which iptables-save; then
+        ln -s "$(which iptables-save)" /sbin/iptables-save
+    elif [ -e "/usr/sbin/iptables-save" ]; then
+        ln -s /usr/sbin/iptables-save /sbin/iptables-save
+    elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-save; then
+        autoiptables_save=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-save | cut -d '' -f 2)
+        if [ -x "$autoiptables_save" ]; then
+            ln -s "$autoiptables_save" /sbin/iptables-save
+        fi
+    fi
+fi
+
+if [ ! -e "/sbin/iptables-restore" ]; then
+    if which iptables-restore; then
+        ln -s "$(which iptables-restore)" /sbin/iptables-restore
+    elif [ -e "/usr/sbin/iptables-restore" ]; then
+        ln -s /usr/sbin/iptables-restore /sbin/iptables-restore
+    elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-restore; then
+        autoiptables_restore=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-restore | cut -d '' -f 2)
+        if [ -x "$autoiptables_restore" ]; then
+            ln -s "$autoiptables_restore" /sbin/iptables-restore
+        fi
+    fi
+fi
+
 
 #----------------------------------------------------------#
 #                     Configure Hestia                     #

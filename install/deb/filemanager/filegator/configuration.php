@@ -8,6 +8,7 @@ $dist_config['frontend_config']['logo'] = 'https://raw.githubusercontent.com/fil
 $dist_config['frontend_config']['editable'] = ['.txt', '.css', '.js', '.ts', '.html', '.php', '.py',
         '.yml', '.xml', '.md', '.log', '.csv', '.conf', '.config', '.ini', '.scss', '.sh', '.env', '.example' ];
 $dist_config['frontend_config']['guest_redirection'] = '/login/' ;
+$dist_config['frontend_config']['upload_max_size'] = 1024 * 1024 * 1024;
 
 $dist_config['services']['Filegator\Services\Storage\Filesystem']['config']['adapter'] = function () {
 

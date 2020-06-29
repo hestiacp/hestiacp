@@ -577,6 +577,7 @@ if [ "$HESTIA_B" = true ]; then
     if [ "$BUILD_RPM" = true ]; then
         # Get RHEL package files
         get_branch_file 'src/rpm/hestia/hestia.spec' "${BUILD_DIR_HESTIA}/hestia.spec"
+        get_branch_file 'src/rpm/hestia/hestia.service' "${BUILD_DIR_HESTIA}/hestia.service"
 
         # Build RPM package
         mkdir -p $BUILD_DIR/rpmbuild

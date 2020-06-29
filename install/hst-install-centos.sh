@@ -1088,6 +1088,8 @@ fi
 if [ "$apache" = 'yes'  ]; then
     echo "(*) Configuring Apache Web Server..."
 
+    mkdir -p /etc/httpd/conf.d/domains
+
     # Copy configuration files
     cp -f $HESTIA_INSTALL_DIR/httpd/httpd.conf /etc/httpd/conf/
     cp -f $HESTIA_INSTALL_DIR/httpd/status.conf /etc/httpd/conf.d/
@@ -1125,7 +1127,6 @@ if [ "$apache" = 'yes'  ]; then
 
     sed -i "/LoadModule proxy_http2_module/ s/^/#/" /etc/httpd/conf.modules.d/*.conf
 
-    mkdir -p /etc/httpd/conf.d/domains
     echo "# Powered by hestia" > /etc/httpd/conf.d/welcome.conf
 
     mkdir -p /var/log/httpd/domains

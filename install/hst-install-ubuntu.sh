@@ -1850,10 +1850,10 @@ chown admin:admin $HESTIA/data/sessions
 
 
 #----------------------------------------------------------#
-#                  Configure FileManager                   #
+#                  Configure File Manager                   #
 #----------------------------------------------------------#
 
-echo "(*) Configuring Filegator FileManager..."
+echo "(*) Configuring File Manager..."
 source $HESTIA_INSTALL_DIR/filemanager/install-fm.sh > /dev/null 2>&1
 
 
@@ -1914,7 +1914,7 @@ cat $tmpfile
 rm -f $tmpfile
 
 # Add welcome message to notification panel
-$HESTIA/bin/v-add-user-notification admin 'Welcome!' 'For more information on how to use Hestia Control Panel, click on the Help icon in the top right corner of the toolbar.<br><br>Please report any bugs or issues on GitHub at<br>https://github.com/hestiacp/hestiacp/issues<br><br>Have a great day!'
+$HESTIA/bin/v-add-user-notification admin 'Welcome to Hestia Control Panel!' 'Please report any bugs or issues via <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a> or e-mail <a href="mailto:info@hestiacp.com?Subject="['$new_version'] Bug Report: ">info@hestiacp.com</a><br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart status-icon red"></i> The Hestia Control Panel development team'
 
 echo "(!) IMPORTANT: You must logout or restart the server before continuing."
 echo ""

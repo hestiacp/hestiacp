@@ -803,7 +803,7 @@ if [ -d "$withdebs" ]; then
 fi
 if [ "$release" = '16.04' ]; then
     software=$(echo "$software" | sed -e "s/libonig5/libonig2/")
-    software=$(echo "$software" | sed -e "s/libzip5/libonig4/")
+    software=$(echo "$software" | sed -e "s/libzip5/libzip4/")
 fi
 if [ "$release" = '18.04' ]; then
     software=$(echo "$software" | sed -e "s/libonig5/libonig4/")

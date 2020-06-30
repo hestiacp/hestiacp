@@ -301,8 +301,7 @@ fi
 # Welcome message
 echo "Welcome to the Hestia Control Panel installer!"
 echo 
-echo "Please wait a moment while we update your system's repositories and"
-echo "install any necessary dependencies required to proceed with the installation..."
+echo "Please wait, the installer is now checking for missing dependencies..."
 echo 
 
 # Update apt repository
@@ -413,6 +412,25 @@ if [ -d /etc/netplan ] && [ -z "$force" ]; then
     fi
 fi
 
+# Validate whether installation script matches release version before continuing with install
+if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
+    release_branch_ver=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/release/src/deb/hestia/control |grep "Version:" |awk '{print $2}')
+    if [ "$HESTIA_INSTALL_VER" != "$release_branch_ver" ]; then
+        echo
+        echo -e "\e[91mInstallation aborted\e[0m"
+        echo "===================================================================="
+        echo -e "\e[33mERROR: Install script version does not match package version!\e[0m"
+        echo -e "\e[33mPlease download the installer from the release branch in order to continue:\e[0m"
+        echo ""
+        echo -e "\e[33mhttps://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh\e[0m"
+        echo ""
+        echo -e "\e[33mTo test pre-release versions, build the .deb packages and re-run the installer:\e[0m"
+        echo -e "  \e[33m./hst_autocompile.sh \e[1m--hestia no\e[21m\e[0m"
+        echo -e "  \e[33m./hst-install.sh .. \e[1m--with-debs /tmp/hestiacp-src/debs\e[21m\e[0m"
+        echo ""
+        check_result 1 "Installation aborted"
+    fi
+fi
 
 #----------------------------------------------------------#
 #                       Brief Info                         #
@@ -432,7 +450,7 @@ echo "                                    v${HESTIA_INSTALL_VER}"
 echo -e "\n"
 echo "===================================================================="
 echo -e "\n"
-echo 'The following server components will be installed on your system:'
+echo 'The following components will be installed on your server:'
 echo
 
 # Web stack
@@ -832,22 +850,6 @@ fi
 #----------------------------------------------------------#
 #                     Install packages                     #
 #----------------------------------------------------------#
-
-if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
-    release_branch_ver=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/release/src/deb/hestia/control |grep "Version:" |awk '{print $2}')
-    if [ "$HESTIA_INSTALL_VER" != "$release_branch_ver" ]; then
-        echo
-        echo -e "\e[91mInstallation Aborted\e[0m"
-        echo "===================================================================="
-        echo -e "\e[33mInstall script does not match Hestia release version\e[0m"
-        echo -e "\e[33mPlease use the installer from the release branch\e[0m"
-        echo ""
-        echo -e "\e[33mTo test the beta version you need to build the hestia deb packages and re-run the installer\e[0m"
-        echo -e "  \e[33m./hst_autocompile.sh \e[1m--hestia no\e[21m\e[0m"
-        echo -e "  \e[33m./hst-install.sh .. \e[1m--with-debs /tmp/hestiacp-src/debs\e[21m\e[0m"
-        check_result 1 "Installation aborted"
-    fi
-fi
 
 # Disabling daemon autostart on apt-get install
 echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d

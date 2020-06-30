@@ -47,5 +47,24 @@ if ! apache2ctl configtest >/dev/null 2>&1; then
     exit 1
 fi
 
-echo "mpm_event module was successfully activated."
+# Validate if www.conf is existent and port 9000 is active
+if ! lsof -Pi :9000 -sTCP:LISTEN -t >/dev/null; then
+    if [ $(ls /etc/php/7.3/fpm/pool.d/www.conf) ]; then
+        # Replace listen port to 9000
+        sed -i "s/listen = 127.0.0.1:.*/listen = 127.0.0.1:9000/g" /etc/php/7.3/fpm/pool.d/www.conf
+    else
+        # Copy www.conf file
+        cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/7.3/fpm/pool.d/
+    fi
+    # Restart php7.3 fpm service.
+    systemctl restart php7.3-fpm
+fi
+
+# Check again if port 9000 is now in use.
+if lsof -Pi :9000 -sTCP:LISTEN -t >/dev/null; then
+    echo "mpm_event module was successfully activated."
+else
+    echo "There went something wrong with your php-fpm configuration - port 9000 isnt active. Please check if webmail and phpmyadmin (if installed) are working properly."
+fi
+
 systemctl restart apache2

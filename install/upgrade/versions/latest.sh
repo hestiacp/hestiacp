@@ -7,6 +7,7 @@
 #######################################################################################
 
 # Check iptables paths and add symlinks when necessary
+
 if [ ! -e "/sbin/iptables" ]; then
     if which iptables; then
         ln -s "$(which iptables)" /sbin/iptables
@@ -47,13 +48,12 @@ if [ ! -e "/sbin/iptables-restore" ]; then
 fi
 
 if [ -e "/etc/apache2/mods-enabled/status.conf" ]; then
-    echo "(*) Hardening Apache2 Server Status Module..."
     sed -i '/Allow from all/d' /etc/apache2/mods-enabled/status.conf
 fi
 
 # Add sury apache2 repository
 if [ "$WEB_SYSTEM" = "apache2" ] && [ ! -e "/etc/apt/sources.list.d/apache2.list" ]; then
-    echo "(*) Install sury.org Apache2 repository..."
+    echo "(*) Configuring sury.org Apache2 repository..."
 
     # Check OS and install related repository
     if [ -e "/etc/os-release" ]; then
@@ -96,6 +96,7 @@ fi
 
 # Add daily midnight cron
 if [ -z "$($BIN/v-list-cron-jobs admin | grep 'v-update-sys-queue daily')" ]; then
+    echo "(*) Updating cron jobs..."
     command="sudo $BIN/v-update-sys-queue daily"
     $BIN/v-add-cron-job 'admin' '01' '00' '*' '*' '*' "$command"
 fi
@@ -114,6 +115,7 @@ fi
 
 # Add hestia-event.conf, if the server is running apache2
 if [ "$WEB_SYSTEM" = "apache2" ]; then
+    echo "(*) Updating Apache2 configuration..."
     # Cleanup
     rm --force /etc/apache2/mods-available/hestia-event.conf
     rm --force /etc/apache2/mods-enabled/hestia-event.conf
@@ -134,18 +136,18 @@ fi
 
 # Install Filegator FileManager during upgrade
 if [ ! -e "$HESTIA/web/fm/configuration.php" ]; then
-    echo "(*) Configuring Filegator FileManager..."
-
+    echo "(*) Configuring File Manager..."
     # Install the FileManager
     source $HESTIA_INSTALL_DIR/filemanager/install-fm.sh > /dev/null 2>&1
 else 
-    echo "(*) Update Filegator Configuration..."
+    echo "(*) Updating File Manager configuration..."
     # Update configuration.php
     cp -f $HESTIA_INSTALL_DIR/filemanager/filegator/configuration.php $HESTIA/web/fm/configuration.php
 fi
 
 # Enable nginx module loading
 if [ -f "/etc/nginx/nginx.conf" ]; then
+    echo "(*) Updating NGINX configuration..."
     if [ ! -d "/etc/nginx/modules-enabled" ]; then
         mkdir -p "/etc/nginx/modules-enabled"
     fi

@@ -2,7 +2,7 @@
 
 [Hestia Control Panel](https://www.hestiacp.com/)
 ==================================================
-**Latest stable release:** Version 1.2.0 - June 29, 2020 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/master/CHANGELOG.md)<br>
+**Latest stable release:** Version 1.2.0 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/master/CHANGELOG.md)<br>
 
 **Web:** [www.hestiacp.com](https://www.hestiacp.com/)<br>
 **Documentation:** [docs.hestiacp.com](https://docs.hestiacp.com/)<br>
@@ -35,7 +35,7 @@ Installing Hestia Control Panel
 While we have taken every effort to make the installation process and the control panel interface as friendly as possible (even for new users), it is assumed that you will have some prior knowledge and understanding in the basics how to set up a Linux server before continuing.
 
 ## Step 1: Log in
-To start the installation process on your server, you will need to be logged in as **root** or a user with super-user privileges in order to continue. You can perform the installation either directly from the command line console or remotely via SSH:
+To start the installation, you will need to be logged in as **root** or a user with super-user privileges. You can perform the installation either directly from the command line console or remotely via SSH:
 ```bash
 ssh root@your.server
 ```

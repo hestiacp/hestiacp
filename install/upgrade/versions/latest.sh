@@ -168,3 +168,10 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
 
     chown --silent --no-dereference :www-data /home/$user/web/*/public_*html
 done
+
+# Install IPset if iptables is installed
+IPTABLES_CHECK=$(cat $HESTIA/conf/hestia.conf | grep iptables)
+if [ ! -z "$IPTABLES_CHECK" ]; then
+    echo "(*) Installing IPset..."
+    apt-get -y install ipset > /dev/null 2>&1
+fi

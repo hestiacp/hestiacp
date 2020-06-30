@@ -128,7 +128,7 @@ if [ "$WEB_SYSTEM" = "apache2" ]; then
     cp -f $HESTIA_INSTALL_DIR/apache2/status.conf /etc/apache2/mods-available/hestia-status.conf
     cp -f /etc/apache2/mods-available/status.load /etc/apache2/mods-available/hestia-status.load
     a2dismod --quiet status > /dev/null 2>&1
-    a2enmod --quiet hestia-status
+    a2enmod --quiet hestia-status > /dev/null 2>&1
     rm --force /etc/apache2/mods-enabled/status.conf # a2dismod will not remove the file if it isn't a symlink
 fi
 

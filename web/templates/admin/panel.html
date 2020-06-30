@@ -30,7 +30,7 @@
 					<i class="fas fa-bell <?if($panel[$user]['NOTIFICATIONS'] == 'yes') echo " animated extended swing status-icon orange"; ?>"></i>
 				</a>
 			</div>
-			<div class="l-menu__item"><a href="/list/server/" class="l-profile__serversettings"><i class="fas fa-cog"></i></a></div>
+			<div class="l-menu__item <?php if($TAB == 'SERVER' ) echo 'l-menu__item--active' ?>"><a href="/list/server/" class="l-profile__serversettings"><i class="fas fa-cog"></i></a></div>
 			<div class="l-menu__item"><a href="/edit/user/?user=<?php echo $user; ?>" alt="<?=$user?>" class="l-profile__username"><i class="fas fa-user-edit"></i></a></div>
 			<div class="l-menu__item"><a href="https://github.com/hestiacp/hestiacp/issues/" target="_new" alt="Submit a bug report" class="l-profile__help"><i class="fas fa-exclamation-triangle"></i></a></div>
 			<div class="l-menu__item"><a href="https://docs.hestiacp.com/" alt="<?=__('Help')?>" class="l-profile__help" target="_blank"><i class="fas fa-question-circle"></i></a></div>

@@ -1,0 +1,103 @@
+#!/bin/sh
+
+HESTIA_BIN=$HESTIA/bin
+
+# Search for command file
+cmd_name=''
+cmd_file=''
+for arg in "$@"
+do
+    # FIXME: secutirity (what is $arg is something like ../../../malicious_code)
+    if [ -f "$HESTIA_BIN/$cmd_file/${arg}.inc" ]; then
+        # Look for a hestia-cli include file (.inc)
+        if [ $cmd_name ]; then
+            cmd_name="${cmd_name}_${arg}"
+            cmd_file=$HESTIA_BIN/$cmd_file/${arg}.inc
+        else
+            cmd_name=$arg
+            cmd_file=$HESTIA_BIN/${arg}.inc
+        fi
+        cmd_type='include'
+        shift
+        break
+    elif [ -d "$HESTIA_BIN/$cmd_file/${arg}" ]; then
+        # Keep looking inside dirs
+        if [ $cmd_name ]; then
+            cmd_name="${cmd_name}_${arg}"
+            cmd_file="${cmd_file}/${arg}"
+        else
+            cmd_name=$arg
+            cmd_file=$arg
+        fi
+        shift
+    elif [ -x "$HESTIA_BIN/$cmd_file/${arg}" ]; then
+        # Look for regular executable file
+        if [ $cmd_name ]; then
+            cmd_name="${cmd_name}_${arg}"
+            cmd_file=$HESTIA_BIN/$cmd_file/${arg}
+        else
+            cmd_name=$arg
+            cmd_file=$HESTIA_BIN/${arg}
+        fi
+        cmd_type='executable'
+        shift
+        break
+    fi
+done
+
+# Process the rest of the arguments as --arg or --arg value
+# https://brianchildress.co/named-parameters-in-bash/
+params=''
+for param in "$@"
+do
+    if [[ $param == *"--"* ]]; then
+        # It's a --parameter
+        if [ "$param_name" ] && [ ! "${!param_name}" ]; then
+            # Previous --arg is empty, so set it to true before continuing
+            declare $param_name=true
+        fi
+        param_name="param_${param:2}"     # trim --
+        # Add param_name to the list of used params (unless it's there already)
+        [[ $params =~ (^|[[:space:]])$param_name($|[[:space:]]) ]] || params="$params $param_name"
+    else
+        # Not a --parameter, so it's a value
+        if [ "$param_name" ]; then
+            if [ "${!param_name}" ]; then
+                # Already has value... add to it
+                declare $param_name="${!param_name} $param"
+            else
+                # Doesn't have value... initialize
+                declare $param_name="$param"
+            fi
+        fi
+    fi
+done
+
+# Trim leading space
+[ "$params" ] && params="${params:1}"
+
+if [ $cmd_file ]; then
+    echo "Command file          : $cmd_file"
+    echo "Command type          : $cmd_type"
+    echo "Command function name : hestia_${cmd_name}()"
+    echo "Remaining arguments   : $@"
+    echo "Parameters used       : $params"
+    echo "Parameter values      : "
+    for param in $params
+    do
+        echo "    --$param ${!param}"
+    done
+    echo ""
+    echo "*** Now the command itself:"
+    echo ""
+
+    if [ "$cmd_type" = 'include' ]; then
+        source $cmd_file
+        hestia_$cmd_name $@
+    else
+        $cmd_file $@
+    fi
+else
+    echo "Unrecognized Hestia command: $@"
+    exit 1
+fi

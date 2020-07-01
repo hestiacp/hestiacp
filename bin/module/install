@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo "Hestia module install $@"
+echo "Demo of 2-level commands"

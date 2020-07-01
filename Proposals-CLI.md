@@ -30,22 +30,7 @@ bin/web/domain/list
 ```
 
 * If found, Hesia CLI will execute the file and pass the remaining parameters as arguments for it.
-* Additionally, Hestia CLI will parse named parameters and fill a set of variables for easier access.
-
-##### Further elaboration
-
-Alternatively, if `bin/web/domain/list` does not exist, but `bin/web/domain/list.inc` does, Hesia CLI will source the file and expect a function named hestia_web_domain_list() to defined. This function will be called passing all the remaining arguments as parameters.
-
-This has the theoretical advantage that the function can start running immediately, instead of having to initialize again (source main.sh again, etc.).
-
-Note that it's possible and easy to make a file like `bin/web/domain/list.inc` work as both include file and executable file, so this two commands are equivalent:
-
-```bash
-hestia web domain list arg1 arg2
-bin/web/domain/list.inc arg1 arg2
-```
-
-It's left to decide wether either of this aproaches is best or both. Look at bin/web/domain/list.inc for an example of how this can be implemented.
+* Additionally, Hestia CLI will parse named parameters and set some variables for easier access.
 
 ##### Example
 
@@ -53,13 +38,28 @@ It's left to decide wether either of this aproaches is best or both. Look at bin
 hestia user create --realname 'John Doe' --email john@hestiacp.com --force
 ```
 
-will search for `bin/user/create` or `bin/user/create.sh.inc` and -if found- execute it or call `hestia_user_create()` with the following variables defined:
+will search for `bin/user/create` and -if found- execute it with the following variables defined:
 
 Variable | Value
 -------- | -----
 param_realname | John Doe
 param_email | john@hestiacp.com
 param_force | 1
+
+##### Further elaboration
+
+Alternatively, if `bin/user/create` does not exist, but `bin/user/create.inc` does, Hesia CLI will source the file and expect a function named hestia_user_create() to defined. This function will be called passing all the remaining arguments as parameters.
+
+This has the theoretical advantage that the function can start running immediately, instead of having to initialize again (source main.sh again, etc.).
+
+Note that it's possible and easy to make a file like `bin/user/create.inc` work as both include file and executable file, so this two commands are equivalent:
+
+```bash
+hestia user create arg1 arg2
+bin/user/create.inc arg1 arg2
+```
+
+It's left to decide wether either of this aproaches is best or both. Look at bin/web/domain/list.inc for an example of how this can be implemented.
 
 ##### Modularity and extensibility
 

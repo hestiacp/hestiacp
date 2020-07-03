@@ -147,20 +147,20 @@ upgrade_start_routine() {
 
     # Upgrade to Version 1.1.0
     if [ $VERSION = "1.0.6" ]; then
-        source $HESTIA/install/upgrade/versions/latest.sh
+        source $HESTIA/install/upgrade/versions/previous/1.1.0.sh
         VERSION="1.1.0"
         upgrade_refresh_config
     fi
 
     # Upgrade to Version 1.1.1
     if [ $VERSION = "1.1.0" ]; then
-        source $HESTIA/install/upgrade/versions/latest.sh
+        source $HESTIA/install/upgrade/versions/previous/1.1.1.sh
         VERSION="1.1.1"
         upgrade_refresh_config
     fi
 
     # Upgrade to Version 1.2.0
-    if [ $VERSION = "1.1.1" ]; then
+    if [ $VERSION = "1.1.1" || $VERSION = "1.1.2" ]; then
         source $HESTIA/install/upgrade/versions/latest.sh
         VERSION="$new_version"
         upgrade_refresh_config

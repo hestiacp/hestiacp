@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8">
   <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
-  <title><?php echo $_SERVER['HTTP_HOST']; ?> - <?=__($TAB)?> - Hestia Task Viewer</title>
+  <title><?php echo $_SERVER['HTTP_HOST']; ?> - <?=__($TAB)?> - <?=__('Hestia Control Panel');?></title>
   <link rel="stylesheet" href="/css/styles.min.css?1446554103">
-  <link rel="stylesheet" href="/css/active-theme.css?1446554103">
-  <link type="text/css" href="/css/animate.css?1446554103" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/active-theme.css?<?php echo rand(); ?>">
+  <link type="text/css" href="/css/animate.min.css?1446554103" rel="stylesheet" />
   <link type="text/css" href="/css/jquery-custom-dialogs.css?1446554103" rel="stylesheet" />
   <link type="text/css" href="/css/all.min.css?1446554103" rel="stylesheet" />
   <script src="/inc/jquery/jquery-3.4.1.min.js"></script>
-  <script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
-  <script type="text/javascript" src="/js/jquery.cookie.js"></script>
-  <script type="text/javascript" src="/js/jquery-ui-1.8.20.custom.min.js"></script>
+  <script type="text/javascript" src="/js/jquery/jquery-1.7.2.min.js"></script>
+  <script type="text/javascript" src="/js/jquery/jquery.cookie.js"></script>
+  <script type="text/javascript" src="/js/jquery/jquery-ui-1.8.20.custom.min.js"></script>
   <script type="text/javascript" src="/js/events.js"></script>
 </head>
 <body>
@@ -22,7 +22,6 @@
   <div class="l-header">
     <div class="l-center">
       <a href="/list/web/" class="l-logo"></a>
-      <!-- /.l-logo -->
       <div class="l-menu clearfix">
         <div class="l-menu__item"><a href="/list/rrd/"><i class="fas fa-arrow-alt-circle-left"></i></a></div>
         <div class="l-menu__item <?php if(isset($_GET['cpu'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?cpu"><i class="fas fa-microchip"></i>&nbsp;&nbsp;&nbsp;<?=__('CPU')?></a></div>
@@ -33,17 +32,13 @@
         <?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['dns'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?dns"><i class="fas fa-atlas"></i>&nbsp;&nbsp;&nbsp;<?=__('DNS')?></a></div><?php }?>
         <?php if ((isset($_SESSION['MAIL_SYSTEM'])) && (!empty($_SESSION['MAIL_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['mail'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?mail"><i class="fas fa-mail-bulk"></i>&nbsp;&nbsp;&nbsp;<?=__('Mail')?></a></div><?php }?>
         <?php if ((isset($_SESSION['DB_SYSTEM'])) && (!empty($_SESSION['DB_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['db'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?db"><i class="fas fa-database"></i>&nbsp;&nbsp;&nbsp;<?=__('DB')?></a></div><?php }?>
-        
       </div>
-      <!-- /.l-menu -->
       <div class="l-profile noselect">
         <div class="l-menu__item"><a href="javascript:location.reload();"><i class="fas fa-redo"></i></a></div>
         <div class="l-menu__item"><a href="/logout/" alt="<?=__('Log out')?>" class="l-profile__logout"><i class="fas fa-sign-out-alt"></i></a></div>
       </div>
-      <!-- /.l-profile -->
     </div>
   </div>
-  <!-- /.l-header -->
 
   <div class="server-info-output">.</div><div class="l-center">
   <pre class="console-output animated fadeIn">

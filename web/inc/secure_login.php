@@ -1,10 +1,4 @@
 <?php
-if (file_exists('/usr/local/hestia/web/inc/nginx_proxy')==true) {
-    if (isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI']=="/") {
-        header("Location: /webmail/");
-        exit;
-    }
-}
 
 $login_url_skip=0;
 if ($_SERVER['SCRIPT_FILENAME']=='/usr/local/hestia/web/reset/mail/index.php') $login_url_skip=1;

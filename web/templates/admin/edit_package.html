@@ -10,12 +10,11 @@
       </div>
 
     <div class="l-separator"></div>
-    <!-- /.l-separator -->
-
+ 
     <div class="l-center animated fadeIn">
-      <?php
-        $back = "location.href='/list/package/'";
-      ?>
+        <?php
+            $back = "location.href='/list/package/'";
+        ?>
         <form id="vstobjects" name="v_edit_package" method="post"  class="<?=$v_status?>">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <input type="hidden" name="save" value="save" />
@@ -317,7 +316,6 @@
                                     <span class="remove-ns additional-control delete"><?=__('delete')?></span>
                                 </td>
                             </tr>
-
                             <?  if($v_ns3)
                                   echo '<tr>
                                     <td>
@@ -374,8 +372,7 @@
                                 </tr>
                             <?php } ?>
                         </table>
-                        <table class="data-col2">
-                        </table>
+                        <table class="data-col2"></table>
                     </td>
                 </tr>
             </table>

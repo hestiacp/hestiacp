@@ -515,7 +515,7 @@ $LANG['nl'] = array(
     'USER_EXCLUSIONS' => 'Type mapnaam, één per mijn. Om alle mappen uit te sluiten gebruik *',
 
 
-    'Welcome to Hestia Control Panel'  => 'Welkom bij het Hestia Controlepaneel',
+    'Welcome to Hestia Control Panel'  => 'Welkom bij HestiaCP',
     'MAIL_FROM'  => 'Hestia Controlepaneel <noreply@%s>',
     'GREETINGS_GORDON_FREEMAN' => "Hallo %s %s,\n",
     'GREETINGS' => "Hallo,\n",
@@ -527,7 +527,7 @@ $LANG['nl'] = array(
     'Database Credentials'  => 'Database gegevens',
     'DATABASE_READY' => "De database is succesvol aangemaakt en klaar voor gebruik.\n\nDatabase: %s\nGebruiker: %s\nWachtwoord: %s\n%s\n\n--\nHestia Controlepaneel\n",
 
-    'forgot password'  => 'Wachtwoord vergeten',
+    'forgot password'  => 'Vergeten',
     'Confirm'  => 'Bevestig',
     'New Password'  => 'Nieuw wachtwoord',
     'Confirm Password'  => 'Bevestig wachtwoord',
@@ -834,7 +834,7 @@ $LANG['nl'] = array(
     'Bandwidth Usage' => 'Dataverkeer verbuik',
     
     //reset
-    'Forgot Password' => 'Wachtwoord vergeten',
+    'Forgot Password' => 'Wachtwoord Vergeten',
     //web
     'Quick Install App' => 'Quick Install App',
     //webapp 
@@ -849,4 +849,15 @@ $LANG['nl'] = array(
     
     //header
     'Hestia Control Panel' => 'Hestia Control Panel',
+    
+    // Set default language
+    'SYSTEM_SET_DEFAULT_LANGUAGE' => 'Stel standaard taal in voor alle gebruikers',
+    
+        //2FA 
+    'Forgot token' => 'Token vergeten',
+    '2FA Token' => '2FA Token',
+    '2FA Reset successfully' => '2FA is met success gereset. Je kunt nu normaal inloggen.',
+    'Reset 2FA' => 'Herstel 2FA Code',
+    '2FA Reset Code' => 'Account Herstel Code',
+    'Invalid or missing token' => 'Ongeldige of geen token',
 );

@@ -51,20 +51,20 @@
     <div class="l-separator"></div>
 
     <div class="l-center units animated fadeIn">
-        <div class="header table-header">
-            <div class="l-unit__col l-unit__col--right">
-                  <div class="clearfix l-unit__stat-col--left super-compact">
-                      <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
-                  </div>
-                  <div class="clearfix l-unit__stat-col--left wide-5"><b><?php print __('Cron Job');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left compact-2 text-right"><b>&nbsp;</b></div>
-                  <div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?=__('Min')?></b></div>
-                  <div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?=__('Hour')?></b></div>
-                  <div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?=__('Day')?></b></div>
-                  <div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?=__('Month')?></b></div>
-                  <div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?=__('Day of week')?></b></div>
-             </div>
+      <div class="header table-header">
+        <div class="l-unit__col l-unit__col--right">
+          <div class="clearfix l-unit__stat-col--left super-compact">
+            <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
           </div>
+          <div class="clearfix l-unit__stat-col--left wide-5"><b><?php print __('Cron Job');?></b></div>
+          <div class="clearfix l-unit__stat-col--left compact-2 text-right"><b>&nbsp;</b></div>
+          <div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?=__('Min')?></b></div>
+          <div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?=__('Hour')?></b></div>
+          <div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?=__('Day')?></b></div>
+          <div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?=__('Month')?></b></div>
+          <div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?=__('Day of week')?></b></div>
+        </div>
+      </div>
       <?
         foreach ($data as $key => $value) {
           ++$i;

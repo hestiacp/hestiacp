@@ -11,17 +11,16 @@
       </div>
 
     <div class="l-separator"></div>
-    <!-- /.l-separator -->
 
     <div class="l-center animated fadeIn">
-      <?php
-        $back = $_SESSION['back'];
-        if (empty($back)) {
-          $back = "location.href='/list/user/'";
-        } else {
-          $back = "location.href='".$back."'";
-        }
-      ?>
+        <?php
+            $back = $_SESSION['back'];
+            if (empty($back)) {
+                $back = "location.href='/list/user/'";
+            } else {
+                $back = "location.href='".$back."'";
+            }
+        ?>
         <form id="vstobjects" method="post" name="v_edit_user" class="<?=$v_status?>">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <input type="hidden" name="save" value="save" />
@@ -206,17 +205,13 @@
                                     </td>
                                 </tr>';
                             ?>
-
                                 <tr class="add-ns" <? if($v_ns8) echo 'style="display:none;"'; ?> >
                                     <td class="step-top-small">
                                       <span class="add-ns-button additional-control add"><?=__('Add one more Name Server')?></span>
                                     </td>
                                 </tr>
-
-
                         </table>
-                        <table class="data-col2">
-                        </table>
+                        <table class="data-col2"></table>
                     </td>
                 </tr>
             </table>

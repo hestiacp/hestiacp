@@ -50,10 +50,10 @@ download_file() {
 }
 
 # Set compiling directory
-BUILD_DIR='/tmp/hestiacp-src/'
-DEB_DIR="$BUILD_DIR/debs/"
+BUILD_DIR='/tmp/hestiacp-src'
+DEB_DIR="$BUILD_DIR/debs"
 INSTALL_DIR='/usr/local/hestia'
-ARCHIVE_DIR="${BUILD_DIR}/archive/"
+ARCHIVE_DIR="${BUILD_DIR}/archive"
 
 # Set command variables
 branch=$1

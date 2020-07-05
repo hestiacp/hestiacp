@@ -67,4 +67,8 @@ if [ ! -z "$restart" ]; then
     check_result $? "Proxy restart failed" >/dev/null
 fi
 
+# Logging
+log_history "disabled HTTP Strict Transport Security (HSTS) for $domain"
+log_event "$OK" "$ARGUMENTS"
+
 exit

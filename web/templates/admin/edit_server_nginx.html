@@ -11,19 +11,16 @@
     </div>
 
     <div class="l-separator"></div>
-    <!-- /.l-separator -->
-
 
     <div class="l-center animated fadeIn">
-      <?php
-        $back = $_SESSION['back'];
-        if (empty($back)) {
-          $back = "location.href='/list/server/'";
-        } else {
-          $back = "location.href='".$back."'";
-        }
-      ?>
-
+        <?php
+            $back = $_SESSION['back'];
+            if (empty($back)) {
+                $back = "location.href='/list/server/'";
+            } else {
+                $back = "location.href='".$back."'";
+            }
+        ?>
         <form id="vstobjects" name="v_configure_server" method="post">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <input type="hidden" name="save" value="save" />
@@ -166,8 +163,6 @@
                                     <br><br>
                                 </td>
                             </tr>
-
-
                             <tr>
                                 <td class="vst-text input-label">
                                     <a href="javascript:toggleOptions();" class="vst-advanced"><?php print __('Advanced options');?>&nbsp;<i class="fas fa-arrow-circle-right"></i></a>
@@ -197,12 +192,9 @@
                                     <label><input type="checkbox" size="20" class="vst-checkbox" name="v_restart" checked="yes"> <?php print __('restart');?></label>
                                 </td>
                             </tr>
-
                         </table>
 
-
-                        <table class="data-col2">
-                        </table>
+                        <table class="data-col2"></table>
                     </td>
                 </tr>
             </table>

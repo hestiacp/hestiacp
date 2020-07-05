@@ -37,9 +37,6 @@ upgrade_start_routine
 # Upgrade phpMyAdmin if applicable
 upgrade_phpmyadmin
 
-# Ensure that File Manager configuration is up-to-date
-upgrade_fm_configuration
-
 # Set new version number in hestia.conf
 upgrade_set_version
 

@@ -855,5 +855,11 @@ $LANG['fr'] = array(
     // Set default language
     'SYSTEM_SET_DEFAULT_LANGUAGE' => 'Définir comme langue par défaut pour tous les utilisateurs',
     
-
+    //2FA 
+    'Forgot token' => 'Jeton oublié',
+    '2FA Token' => 'Jeton 2FA',
+    '2FA Reset successfully' => 'Le jeton 2FA a été réinitialisé avec succès. Vous pouvez maintenant vous reconnecter',
+    'Reset 2FA' => 'Réinitialiser le jeton 2FA',
+    '2FA Reset Code' => 'Code de récupération de compte',
+    'Invalid or missing token' => 'Jeton non valide ou manquant',
 );

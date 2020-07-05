@@ -852,4 +852,11 @@ $LANG['en'] = array(
     // Set default language
     'SYSTEM_SET_DEFAULT_LANGUAGE' => 'Set as default language for all users',
     
+    //2FA 
+    'Forgot token' => 'Forgot token',
+    '2FA Token' => '2FA Token',
+    '2FA Reset successfully' => '2FA Token has been reset with success. You are now able to login again',
+    'Reset 2FA' => 'Reset 2FA',
+    '2FA Reset Code' => 'Account Recovery Code',
+    'Invalid or missing token' => 'Invalid or missing token',
 );

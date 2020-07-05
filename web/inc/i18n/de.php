@@ -850,4 +850,11 @@ $LANG['de'] = array(
     // Set default language
     'SYSTEM_SET_DEFAULT_LANGUAGE' => 'Als Standardsprache für alle Benutzer festlegen',
     
+        //2FA 
+    'Forgot token' => 'Token vergessen',
+    '2FA Token' => '2FA Token',
+    '2FA Reset successfully' => '2FA Token wurde mit Erfolg zurückgesetzt. Sie können sich jetzt erneut anmelden',
+    'Reset 2FA' => '2FA zurücksetzen',
+    '2FA Reset Code' => 'Kontowiederherstellungscode',
+    'Invalid or missing token' => 'Ungültiger oder fehlender Kontowiederherstellungscode',  
 );

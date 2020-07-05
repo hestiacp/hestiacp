@@ -846,4 +846,8 @@ $LANG['de'] = array(
     
     //header
     'Hestia Control Panel' => 'Hestia Control Panel',
+
+    // Set default language
+    'SYSTEM_SET_DEFAULT_LANGUAGE' => 'Als Standardsprache für alle Benutzer festlegen',
+    
 );

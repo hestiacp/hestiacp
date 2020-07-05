@@ -848,4 +848,14 @@ $LANG['it'] = array(
     //header
     'Hestia Control Panel' => 'Hestia Control Panel',
 
+    // Set default language
+    'SYSTEM_SET_DEFAULT_LANGUAGE' => 'Imposta come lingua predefinita per tutti gli utenti',
+    
+        //2FA 
+    'Forgot token' => 'Codice dimenticato',
+    '2FA Token' => 'Codice 2fa',
+    '2FA Reset successfully' => 'Il codice 2FA è stato ripristinato correttamente. Ora puoi accedere di nuovo',
+    'Reset 2FA' => 'Reimposta il codice 2FA',
+    '2FA Reset Code' => 'Codice di recupero dell\'account',
+    'Invalid or missing token' => 'Codice non valido o mancante',
 );

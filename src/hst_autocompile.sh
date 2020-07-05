@@ -58,11 +58,11 @@ download_file() {
 }
 
 # Set compiling directory
-BUILD_DIR='/tmp/hestiacp-src/'
-DEB_DIR="$BUILD_DIR/debs/"
+BUILD_DIR='/tmp/hestiacp-src'
+DEB_DIR="$BUILD_DIR/debs"
 INSTALL_DIR='/usr/local/hestia'
 SRC_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-ARCHIVE_DIR="$SRC_DIR/src/archive/"
+ARCHIVE_DIR="$SRC_DIR/src/archive"
 
 # Set command variables
 if [ ! -z "$2" ]; then

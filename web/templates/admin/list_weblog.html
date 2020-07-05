@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
-  <title>Hestia - <?=__('Web Log Manager')?> </title>
+  <title><?=__('Web Log Manager')?> - <?=__('Hestia Control Panel');?></title>
   <link rel="stylesheet" href="/css/styles.min.css?1446554103">
   <link rel="stylesheet" href="/css/active-theme.css?1446554103">
   <link type="text/css" href="/css/animate.css?1446554103" rel="stylesheet" />
@@ -22,23 +22,18 @@
   <div class="l-header">
     <div class="l-center">
       <a href="/" class="l-logo"></a>
-      <!-- /.l-logo -->
       <div class="l-menu clearfix">
         <div class="l-menu__item"><a href="/list/web/"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;&nbsp;<?=__('Back')?></a></div>
         <div class="l-menu__item <?php if($_GET['type'] == 'access') echo 'l-menu__item--active' ?>"><a href="/list/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=access"><i class="fas fa-eye"></i>&nbsp;&nbsp;&nbsp;<?=__('AccessLog')?></a><a href="/download/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=access"><i class="fas fa-download"></i></a></div>
         <div class="l-menu__item <?php if($_GET['type'] == 'error') echo 'l-menu__item--active' ?>"><a href="/list/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=error"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;&nbsp;<?=__('ErrorLog')?></a><a href="/download/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=error"><i class="fas fa-download"></i></a></div>
-
       </div>
-      <!-- /.l-menu -->
       <div class="l-profile">
         <div class="l-menu__item"><a href="javascript:location.reload();"><i class="fas fa-redo"></i></a></div>
         <div class="l-menu__item"><a href="/edit/user/?user=<?php echo $user; ?>" alt="<?=$user?>" class="l-profile__username"><i class="fas fa-user-circle"></i></a></div>
 			  <div class="l-menu__item"><a href="/logout/" alt="<?=__('Log out')?>" class="l-profile__logout"><i class="fas fa-sign-out-alt"></i></a></div>
       </div>
-      <!-- /.l-profile -->
     </div>
   </div>
-  <!-- /.l-header -->
 
   <div style="color: #cc3366; padding: 10px 0 20px 20px; background: #fff; "><?php echo __('Last 70 lines of %s.%s.log',htmlentities($_GET['domain']),htmlentities($_GET['type'])) ;?></div>
   <pre class="console-output">

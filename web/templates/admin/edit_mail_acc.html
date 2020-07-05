@@ -10,15 +10,14 @@
       </div>
 
     <div class="l-separator"></div>
-    <!-- /.l-separator -->
 
     <div class="l-center animated fadeIn">
       <?php
         $back = $_SESSION['back'];
         if (empty($back)) {
-          $back = "location.href='/list/mail/?domain=".$_GET['domain']."'";
+            $back = "location.href='/list/mail/?domain=".$_GET['domain']."'";
         } else {
-          $back = "location.href='".$back."'";
+            $back = "location.href='".$back."'";
         }
       ?>
       <form id="vstobjects" name="v_edit_mail_acc" method="post"  class="<?=$v_status?>">
@@ -149,67 +148,67 @@
                     <table class="data-col2">
                     </table>
                 </td>
-            <td class="mail-infoblock-td">
-                <div class="mail-infoblock">
-                    <table>
-                    <?php $uname_arr=posix_uname(); $hostname=$uname_arr['nodename']; ?>
-                        <tr>
-                            <td colspan="2">
-                                <select id="mail_configuration" class="vst-list flat">
-                                    <option v_type="hostname" domain="<?=$v_domain?>"><?=__('Use domain hostname')?></option>
-                                    <option v_type="starttls"><?=__('Use STARTTLS')?></option>
-                                    <option v_type="ssl"><?=__('Use SSL / TLS')?></option>
-                                    <option v_type="no_encryption" domain="<?=htmlentities(trim($v_domain, "'"))?>" no_encryption="<?=__('No encryption')?>"><?=__('No encryption')?></option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><?=__('Username')?>:</td>
-                            <td><div><span id="v_account">example</span>@<?=htmlentities(trim($v_domain, "'"))?></div></td>
-                        </tr>
-                        <tr>
-                            <td><?=__('Password')?>:</td>
-                            <td><div id="v_password">******</div></td>
-                        </tr>
-                        <tr>
-                            <td><?=__('IMAP hostname')?>:</td>
-                            <td><div id="td_imap_hostname">mail.<?=$v_domain?></div></td>
-                        </tr>
-                        <tr>
-                            <td><?=__('IMAP port')?>:</td>
-                            <td><div id="td_imap_port">143</div></td>
-                        </tr>
-                        <tr>
-                            <td><?=__('IMAP security')?>:</td>
-                            <td><div id="td_imap_encryption"><?=__('STARTTLS')?></div></td>
-                        </tr>
-                        <tr>
-                            <td><?=__('IMAP auth method')?>:</td>
-                            <td><div><?=__('Normal password')?></div></td>
-                        </tr>
-                        <tr>
-                            <td><?=__('SMTP hostname')?>:</td>
-                            <td><div id="td_smtp_hostname">mail.<?=$v_domain?></div></td>
-                        </tr>
-                        <tr>
-                            <td><?=__('SMTP port')?>:</td>
-                            <td><div id="td_smtp_port">587</div></td>
-                        </tr>
-                        <tr>
-                            <td><?=__('SMTP security')?>:</td>
-                            <td><div id="td_smtp_encryption"><?=__('STARTTLS')?></div></td>
-                        </tr>
-                        <tr>
-                            <td><?=__('SMTP auth method')?>:</td>
-                            <td><div><?=__('Normal password')?></div></td>
-                        </tr>
-                        <tr>
-                            <td><?=__('Webmail URL')?>:</td>
-                            <td><div><a class="vst" href="http://<?=$v_webmail_alias?>" target="_blank">http://<?=$v_webmail_alias?> <i></i></a></div></td>
-                        </tr>
-                    </table>
-                </div>
-            </td>
+                <td class="mail-infoblock-td">
+                    <div class="mail-infoblock">
+                        <table>
+                        <?php $uname_arr=posix_uname(); $hostname=$uname_arr['nodename']; ?>
+                            <tr>
+                                <td colspan="2">
+                                    <select id="mail_configuration" class="vst-list flat">
+                                        <option v_type="hostname" domain="<?=$v_domain?>"><?=__('Use domain hostname')?></option>
+                                        <option v_type="starttls"><?=__('Use STARTTLS')?></option>
+                                        <option v_type="ssl"><?=__('Use SSL / TLS')?></option>
+                                        <option v_type="no_encryption" domain="<?=htmlentities(trim($v_domain, "'"))?>" no_encryption="<?=__('No encryption')?>"><?=__('No encryption')?></option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><?=__('Username')?>:</td>
+                                <td><div><span id="v_account">example</span>@<?=htmlentities(trim($v_domain, "'"))?></div></td>
+                            </tr>
+                            <tr>
+                                <td><?=__('Password')?>:</td>
+                                <td><div id="v_password">******</div></td>
+                            </tr>
+                            <tr>
+                                <td><?=__('IMAP hostname')?>:</td>
+                                <td><div id="td_imap_hostname">mail.<?=$v_domain?></div></td>
+                            </tr>
+                            <tr>
+                                <td><?=__('IMAP port')?>:</td>
+                                <td><div id="td_imap_port">143</div></td>
+                            </tr>
+                            <tr>
+                                <td><?=__('IMAP security')?>:</td>
+                                <td><div id="td_imap_encryption"><?=__('STARTTLS')?></div></td>
+                            </tr>
+                            <tr>
+                                <td><?=__('IMAP auth method')?>:</td>
+                                <td><div><?=__('Normal password')?></div></td>
+                            </tr>
+                            <tr>
+                                <td><?=__('SMTP hostname')?>:</td>
+                                <td><div id="td_smtp_hostname">mail.<?=$v_domain?></div></td>
+                            </tr>
+                            <tr>
+                                <td><?=__('SMTP port')?>:</td>
+                                <td><div id="td_smtp_port">587</div></td>
+                            </tr>
+                            <tr>
+                                <td><?=__('SMTP security')?>:</td>
+                                <td><div id="td_smtp_encryption"><?=__('STARTTLS')?></div></td>
+                            </tr>
+                            <tr>
+                                <td><?=__('SMTP auth method')?>:</td>
+                                <td><div><?=__('Normal password')?></div></td>
+                            </tr>
+                            <tr>
+                                <td><?=__('Webmail URL')?>:</td>
+                                <td><div><a class="vst" href="http://<?=$v_webmail_alias?>" target="_blank">http://<?=$v_webmail_alias?> <i></i></a></div></td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
             </tr>
         </table>
     </form>

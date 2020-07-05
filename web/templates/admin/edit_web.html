@@ -1,30 +1,28 @@
 <div class="l-center edit">
-        <div class="l-sort clearfix">
-          <div class="l-unit-toolbar__buttonstrip">
+    <div class="l-sort clearfix">
+        <div class="l-unit-toolbar__buttonstrip">
             <a class="ui-button cancel" id="btn-back" href="/list/web/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
-          </div>
-          <div class="l-unit-toolbar__buttonstrip float-right">
+        </div>
+        <div class="l-unit-toolbar__buttonstrip float-right">
             <a href="/add/webapp/?domain=<?=$v_domain?>" class="ui-button cancel">
                 <i class="fas fa-magic status-icon blue"></i> <?=__('Quick Install App')?>
             </a>
             <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
-          </div>
         </div>
-      </div>
-
+    </div>
+    </div>
 
     <div class="l-separator"></div>
-    <!-- /.l-separator -->
 
     <div class="l-center animated fadeIn">
-      <?php
-        $back = $_SESSION['back'];
-        if (empty($back)) {
-          $back = "location.href='/list/web/'";
-        } else {
-          $back = "location.href='".$back."'";
-        }
-      ?>
+        <?php
+            $back = $_SESSION['back'];
+            if (empty($back)) {
+                $back = "location.href='/list/web/'";
+            } else {
+                $back = "location.href='".$back."'";
+            }
+        ?>
         <form id="vstobjects" name="v_edit_web" method="post"  class="<?=$v_status?>">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <input type="hidden" name="save" value="save" />

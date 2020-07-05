@@ -10,17 +10,16 @@
       </div>
 
     <div class="l-separator"></div>
-    <!-- /.l-separator -->
 
     <div class="l-center animated fadeIn">
-      <?php
-        $back = $_SESSION['back'];
-        if (empty($back)) {
-          $back = "location.href='/list/firewall/'";
-        } else {
-          $back = "location.href='".$back."'";
-        }
-      ?>
+        <?php
+            $back = $_SESSION['back'];
+            if (empty($back)) {
+                $back = "location.href='/list/firewall/'";
+            } else {
+                $back = "location.href='".$back."'";
+            }
+        ?>
         <form id="vstobjects" name="v_edit_firewall" method="post"  class="<?=$v_status?>">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <input type="hidden" name="save" value="save" />

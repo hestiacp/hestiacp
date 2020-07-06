@@ -214,10 +214,22 @@ upgrade_phpmyadmin() {
     fi
 }
 
-update_multiphp_templates() {
-    # Update Multi-PHP default templates
+update_php_templates() {
+    echo "(*) Updating default PHP templates..."
+    # Update default template
+    cp -f $HESTIA_INSTALL_DIR/templates/web/php-fpm/default.tpl \
+        $HESTIA/data/templates/web/php-fpm/default.tpl
+
+    # Update no-php template
+    cp -f $HESTIA_INSTALL_DIR/templates/web/php-fpm/no-php.tpl \
+        $HESTIA/data/templates/web/php-fpm/no-php.tpl
+
+    # Update  socket template
+    cp -f $HESTIA_INSTALL_DIR/templates/web/php-fpm/socket.tpl \
+        $HESTIA/data/templates/web/php-fpm/socket.tpl
+
     for version in $(v-list-sys-php plain); do 
-        echo "(*) Updating default templates for PHP ${version}..."
+        echo "(*) Updating templates for PHP ${version}..."
         cp -f $HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl \
             $HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl; 
     done

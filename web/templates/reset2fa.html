@@ -15,6 +15,11 @@
                                             <?php print __('2FA Reset successfully'); ?>
                                             </td>
                                             </tr>
+                                            <tr>
+                                                <td style="padding: 20px 0 12px 0;">
+                                                    <input type="button" class="button cancel" value="<?php print __('Log in');?>" onclick="location.href='/login/'">
+                                                </td>
+                                            </tr>
                                         </table>
                                         <?php }else{ ?>
                                         <form method="post" action="/reset2fa/">

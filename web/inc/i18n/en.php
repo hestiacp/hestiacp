@@ -853,10 +853,10 @@ $LANG['en'] = array(
     'SYSTEM_SET_DEFAULT_LANGUAGE' => 'Set as default language for all users',
     
     //2FA 
-    'Forgot token' => 'Forgot token',
-    '2FA Token' => '2FA Token',
-    '2FA Reset successfully' => '2FA Token has been reset with success. You are now able to login again',
-    'Reset 2FA' => 'Reset 2FA',
+    'Forgot token' => 'Unlock Account',
+    '2FA Token' => 'OTP PIN',
+    '2FA Reset successfully' => 'Two-factor authentication is now turned off for your account.<br><br>You may now proceed to log in.',
+    'Reset 2FA' => 'Unlock Account',
     '2FA Reset Code' => 'Account Recovery Code',
     'Invalid or missing token' => 'Invalid or missing token',
 );

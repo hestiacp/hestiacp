@@ -228,7 +228,7 @@ update_php_templates() {
     cp -f $HESTIA_INSTALL_DIR/templates/web/php-fpm/socket.tpl \
         $HESTIA/data/templates/web/php-fpm/socket.tpl
 
-    for version in $(v-list-sys-php plain); do 
+    for version in $($HESTIA/bin/v-list-sys-php plain); do 
         echo "(*) Updating templates for PHP ${version}..."
         cp -f $HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl \
             $HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl; 

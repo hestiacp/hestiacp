@@ -29,7 +29,7 @@ COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"
 if [ ! -f "$COMPOSER_BIN" ]; then
     $BIN/v-add-user-composer "$user"
     if [ $? -ne 0 ]; then
-        $BIN/v-add-user-notification admin 'Composer installation failed!' '<b>The File Manager will not work without Composer.</b><br><br>Please try running the installer from a shell session:<br>bash $HESTIA/install/deb/filemanager/install-fm.sh<br><br>If this issue continues, please open an issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a> or e-mail <a href="mailto:info@hestiacp.com?Subject="['$new_version'] Bug Report: Composer Install Failure">info@hestiacp.com</a>.'
+        $BIN/v-add-user-notification admin 'Composer installation failed!' '<b>The File Manager will not work without Composer.</b><br><br>Please try running the installer from a shell session:<br>bash $HESTIA/install/deb/filemanager/install-fm.sh<br><br>If this issue continues, please open an issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.'
         exit 0
     fi
 fi

@@ -168,3 +168,9 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
 
     chown --silent --no-dereference :www-data /home/$user/web/*/public_*html
 done
+
+# Fix phpMyAdmin blowfish_secret error message due to incorrect permissions
+if [ -e /var/lib/phpmyadmin/blowfish_secret.inc.php ]; then
+    echo "(*) Updating phpMyAdmin permissions..."
+    chmod 0644 /var/lib/phpmyadmin/blowfish_secret.inc.php
+fi

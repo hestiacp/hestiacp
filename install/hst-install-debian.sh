@@ -1402,6 +1402,10 @@ if [ "$mysql" = 'yes' ]; then
     mkdir /usr/share/phpmyadmin/tmp
     chmod 777 /usr/share/phpmyadmin/tmp
 
+    if [ -e /var/lib/phpmyadmin/blowfish_secret.inc.php ]; then
+        chmod 0644 /var/lib/phpmyadmin/blowfish_secret.inc.php
+    fi
+    
     # Clear Up
     rm -fr phpMyAdmin-$pma_v-all-languages
     rm -f phpMyAdmin-$pma_v-all-languages.tar.gz

@@ -51,6 +51,66 @@ osal_ini_set() {
     /usr/bin/crudini --set $@
 }
 
+# For use in osal_kv_*
+sed_escape() {
+    sed -e 's/[]\/$*.^[]/\\&/g'
+}
+
+# osal_kv_write path key value
+osal_kv_write() { 
+    osal_kv_delete "$1" "$2"
+    echo "$2=$3" >> "$1"
+}
+
+# value=$(osal_kv_read path key defaultvalue)
+osal_kv_read() {
+    kv_keyname=$(echo "$2" | sed_escape)
+    if [ -f "$1" ]; then
+        retval=$(grep "^$kv_keyname\s*=" "$1" | sed "s/^$kv_keyname\s*=\s*//" | tail -1)
+        if [ "$retval" ]; then
+            echo $retval
+        else
+            echo $3
+        fi
+    else
+        echo $3
+    fi
+}
+
+osal_kv_delete() { # path, key
+    kv_keyname=$(echo "$2" | sed_escape)
+    test -f "$1" && sed -i "/^${kv_keyname}\s*=.*$/d" "$1"
+}
+
+osal_kv_haskey() { # path, key
+    kv_keyname=$(echo "$2" | sed_escape)
+    test -f "$1" && grep "^${kv_keyname}\s*=" "$1" > /dev/null
+    if [ $? -eq 0 ]; then
+        echo 1
+    fi
+}
+
+osal_kv_read_bool() {
+    retval=$(osal_kv_read $@)
+    if [ "${retval,,}" == "yes" ] \
+        || [ "${retval,,}" == "true" ] \
+        || [ "${retval,,}" == "on" ] \
+        || [ "$retval" == "1" ]; then
+        echo 1
+    fi
+}
+
+osal_bool_yes() {
+    if [ "${1,,}" == "yes" ] \
+        || [ "${1,,}" == "true" ] \
+        || [ "${1,,}" == "on" ] \
+        || [ "$1" == "1" ]; then
+        echo 'yes'
+    else
+        echo 'no'
+    fi
+}
+
 osal_execute_with_spinner() {
     if [ "$OSAL_DEBUG" ]; then
         echo "$@"

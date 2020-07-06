@@ -29,12 +29,13 @@ hestia_module_vsftpd_install() {
 
     check_result $? "vsftpd start failed"
 
-    osal_ini_set $HESTIA/conf/hestia.conf '' 'FTP_SYSTEM' 'vsftpd'
-    osal_ini_set $HESTIA/conf/modules.conf 'ftp' 'installed' '1'
-    osal_ini_set $HESTIA/conf/modules.conf 'ftp' 'enabled' '1'
-    osal_ini_set $HESTIA/conf/modules.conf 'ftp' 'variant' 'vsftpd'
-    osal_ini_set $HESTIA/conf/modules.conf 'ftp' 'version' '1'
-    osal_ini_set $HESTIA/conf/modules.conf 'ftp' 'service_name' 'vsftpd'
+    osal_kv_write $HESTIA/conf/hestia.conf 'FTP_SYSTEM' 'vsftpd'
+    osal_kv_write $HESTIA_CONF_MODULES/ftp.conf 'installed' '1'
+    osal_kv_write $HESTIA_CONF_MODULES/ftp.conf 'description' 'Hestia FTP (Vsftpd) module'
+    osal_kv_write $HESTIA_CONF_MODULES/ftp.conf 'enabled' '1'
+    osal_kv_write $HESTIA_CONF_MODULES/ftp.conf 'variant' 'vsftpd'
+    osal_kv_write $HESTIA_CONF_MODULES/ftp.conf 'version' '1'
+    osal_kv_write $HESTIA_CONF_MODULES/ftp.conf 'service_name' 'vsftpd'
 
     exit 0
 }

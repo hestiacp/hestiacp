@@ -58,11 +58,12 @@ do
         # It's a --parameter
         if [ "$param_name" ] && [ ! "${!param_name}" ]; then
             # Previous --arg is empty, so set it to true before continuing
-            declare $param_name=true
+            declare $param_name=1
         fi
         param_name="param_${param:2}"     # trim --
         # Add param_name to the list of used params (unless it's there already)
         [[ $params =~ (^|[[:space:]])$param_name($|[[:space:]]) ]] || params="$params $param_name"
+        last_was='name'
     else
         # Not a --parameter, so it's a value
         if [ "$param_name" ]; then
@@ -74,26 +75,30 @@ do
                 declare $param_name="$param"
             fi
         fi
+        last_was='value'
     fi
 done
+# Process trailing --boolean_param
+if [ "$last_was" == 'name' ]; then
+    declare $param_name=1
+fi
 
 # Trim leading space
 [ "$params" ] && params="${params:1}"
 
 if [ $cmd_file ]; then
-    echo "Command file          : $cmd_file"
-    echo "Command type          : $cmd_type"
-    echo "Command function name : hestia_${cmd_name}()"
-    echo "Remaining arguments   : $@"
-    echo "Parameters used       : $params"
-    echo "Parameter values      : "
-    for param in $params
-    do
-        echo "    --$param ${!param}"
-    done
-    echo ""
-    echo "*** Now the command itself:"
-    echo ""
+    #echo "Command file          : $cmd_file"
+    #echo "Command type          : $cmd_type"
+    #echo "Command function name : hestia_${cmd_name}()"
+    #echo "Remaining arguments   : $@"
+    #echo "Parameters used       : $params"
+    #echo "Parameter values      : "
+    #for param in $params; do
+    #    echo "    --$param ${!param}"
+    #done
+    #echo ""
+    #echo "*** Now the command itself:"
+    #echo ""
 
     if [ "$cmd_type" = 'include' ]; then
         source $cmd_file

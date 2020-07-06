@@ -35,16 +35,16 @@ do
 done
 
 # VAR = $(ini_get 'file' 'section' 'param' 'newvalue')
-ini_get() {
+osal_ini_get() {
     /usr/bin/crudini --get "$@"
 }
 
 # ini_set 'file' 'section' 'param' 'newvalue'
-ini_set() {
+osal_ini_set() {
     /usr/bin/crudini --set "$@"
 }
 
-execute_with_spinner() {
+osal_execute_with_spinner() {
     if [ "$OSAL_DEBUG" ]; then
         echo "$@"
         $@

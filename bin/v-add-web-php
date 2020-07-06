@@ -24,7 +24,7 @@ source $HESTIA/conf/hestia.conf
 
 check_args '1' "$#" 'VERSION'
 
-php_prefix=$(multiphp_php_package_prefix $version)
+php_prefix=$(osal_multiphp_php_package_prefix $version)
 
 # Verify php version format
 if [[ ! $version =~ ^[0-9]\.[0-9]+ ]]; then
@@ -33,7 +33,7 @@ if [[ ! $version =~ ^[0-9]\.[0-9]+ ]]; then
 fi
 
 # Check if php version already exists
-if [ $(multiphp_fpm_isinstalled $version) ] && [ -f "$HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl" ]; then
+if [ $(osal_multiphp_fpm_isinstalled $version) ] && [ -f "$HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl" ]; then
     echo "Version already installed..."
     exit
 fi
@@ -72,29 +72,29 @@ if ! echo "$DB_SYSTEM" | grep -w 'pgsql' >/dev/null; then
 fi
 
 # Install php packages
-package_preinstall
-execute_with_spinner package_install $mph
+osal_package_preinstall
+osal_execute_with_spinner osal_package_install $mph
 
 # Check if installation was sucessfully
-if [ ! $(multiphp_fpm_isinstalled $version) ]; then
+if [ ! $(osal_multiphp_fpm_isinstalled $version) ]; then
     echo "Installation failed, please run the following command manualy for debuging:"
-    echo "$CMD_PACKAGE_MANAGER install ${mph//\\n/ \\}"
+    echo "$OSAL_CMD_PACKAGE_MANAGER install ${mph//\\n/ \\}"
 fi
 
 # Check if required modules for apache2 are enabled
 if [ "$WEB_SYSTEM" = "apache2" ] || [ "$WEB_SYSTEM" = "httpd" ]; then
-    if [ ! $(apache_module_isenabled 'proxy_fcgi') ]; then
-        apache_module_enable 'proxy_fcgi'
+    if [ ! $(osal_apache_module_isenabled 'proxy_fcgi') ]; then
+        osal_apache_module_enable 'proxy_fcgi'
     fi
-    if [ ! $(apache_module_isenabled 'setenvif') ]; then
-        apache_module_enable 'setenvif'
+    if [ ! $(osal_apache_module_isenabled 'setenvif') ]; then
+        osal_apache_module_enable 'setenvif'
     fi
     $BIN/v-restart-web
 fi
 
 # Configure fpm
-service_enable $php_prefix-fpm > /dev/null 2>&1
-pool_d=$(multiphp_fpm_pool_d $version)
+osal_service_enable $php_prefix-fpm > /dev/null 2>&1
+pool_d=$(osal_multiphp_fpm_pool_d $version)
 if [ $pool_d ]; then
     v_tpl=${version//.}
     rm -f $pool_d/*

@@ -24,7 +24,7 @@ source $HESTIA/conf/hestia.conf
 
 check_args '1' "$#" 'VERSION'
 
-php_prefix=$(multiphp_php_package_prefix $version)
+php_prefix=$(osal_multiphp_php_package_prefix $version)
 
 # Verify php version format
 if [[ ! $version =~ ^[0-9]\.[0-9]+ ]]; then
@@ -36,7 +36,7 @@ fi
 [ -f $HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl ] && rm -f $HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl
 
 # Check if php version exists
-if [ ! $(multiphp_fpm_isinstalled $version) ] && [ ! -f "$HESTIA/data/templates/$WEB_SYSTEM/PHP-$version.sh" ]; then
+if [ ! $(osal_multiphp_fpm_isinstalled $version) ] && [ ! -f "$HESTIA/data/templates/$WEB_SYSTEM/PHP-$version.sh" ]; then
     echo "Version is not installed..."
     exit
 fi
@@ -60,16 +60,16 @@ if [[ `echo "$version 7.2" | awk '{print ($1 < $2)}'` == 1 ]]; then
 fi
 
 # Purge php packages
-execute_with_spinner package_remove $mph
+osal_execute_with_spinner osal_package_remove $mph
 
 # Check if uninstallation was sucessfully
 if [ $(multiphp_fpm_isinstalled $version) ]; then
     echo "Uninstallation failed, please run the following command manualy for debuging:"
-    echo "$CMD_PACKAGE_MANAGER (remove or purge) ${mph//\\n/ \\}"
+    echo "$OSAL_CMD_PACKAGE_MANAGER (remove or purge) ${mph//\\n/ \\}"
 fi
 
 # Cleanup php folder
-etc_folder=$(multiphp_etc_folder $version)
+etc_folder=$(osal_multiphp_etc_folder $version)
 [[ -d "$etc_folder" ]] && rm -rf "$etc_folder"
 
 

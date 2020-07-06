@@ -56,11 +56,11 @@ if [ "$fm_error" != "yes" ]; then
     if [ -f "/usr/bin/php7.3" ]; then
         COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php7.3 $COMPOSER_BIN --quiet --no-dev install
         if [ $? -ne 0 ]; then
-            $BIN/v-add-user-notification admin 'FM installation failed' 'The FileManager installation had to been aborted, please try to run the installation manualy: bash $HESTIA/install/deb/filemanager/install-fm.sh'
+            $BIN/v-add-user-notification admin 'File Manager installation failed!' 'Please try running the installer from a shell session:<br>bash $HESTIA/install/deb/filemanager/install-fm.sh<br><br>If this issue continues, please open an issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.'
             fm_error="yes"
         fi
     else
-        $BIN/v-add-user-notification admin 'FM installation failed' 'php7.3-cli is missing on your system, the FileManager installation had to been aborted - please check your php environment.'
+        $BIN/v-add-user-notification admin 'File Manager installation failed!' '<b>Unable to proceed with installation of File Manager.</b><br><br>Package <b>php7.3-cli</b> is missing from your system. Please check your PHP installation and environment settings.'
         fm_error="yes"
     fi
 

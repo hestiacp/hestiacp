@@ -1464,6 +1464,10 @@ form#vstobjects.suspended {
   color: #cacaca !important; 
 }
 
+.graph-rounded {
+  border-radius: 8px;
+}
+
 .body-rrd .units .l-unit {
   background-color: #282828 !important;
   border-left: 1px solid transparent !important;

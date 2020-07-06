@@ -1,4 +1,4 @@
-location /phpmyadmin {
+location /%pma_alias% {
     alias /usr/share/phpmyadmin/;
 
     location ~ /(libraries|setup) {

@@ -79,10 +79,10 @@ if (!empty($_POST['ok'])) {
         if ($_POST['v_host'] != 'localhost' ) $http_host = $_POST['v_host'];
         if ($_POST['v_type'] == 'mysql') $db_admin = "phpMyAdmin";
         if ($_POST['v_type'] == 'mysql') $db_admin_link = "http://".$http_host."/phpmyadmin/";
-        if (($_POST['v_type'] == 'mysql') && (!empty($_SESSION['DB_PMA_URL']))) $db_admin_link = $_SESSION['DB_PMA_URL'];
+        if (($_POST['v_type'] == 'mysql') && (!empty($_SESSION['DB_PMA_ALIAS']))) $db_admin_link = "http://".$http_host."/".$_SESSION['DB_PMA_ALIAS'];
         if ($_POST['v_type'] == 'pgsql') $db_admin = "phpPgAdmin";
         if ($_POST['v_type'] == 'pgsql') $db_admin_link = "http://".$http_host."/phppgadmin/";
-        if (($_POST['v_type'] == 'pgsql') && (!empty($_SESSION['DB_PGA_URL']))) $db_admin_link = $_SESSION['DB_PGA_URL'];
+        if (($_POST['v_type'] == 'pgsql') && (!empty($_SESSION['DB_PGA_ALIAS']))) $db_admin_link = "http://".$http_host."/".$_SESSION['DB_PGA_ALIAS'];
     }
 
     // Email login credentials

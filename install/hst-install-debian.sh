@@ -1218,7 +1218,7 @@ if [ "$apache" = 'yes' ]; then
     a2enmod ssl > /dev/null 2>&1
     a2enmod actions > /dev/null 2>&1
     a2dismod --quiet status > /dev/null 2>&1
-    a2enmod --quiet hestia-status
+    a2enmod --quiet hestia-status > /dev/null 2>&1
 
     if [ "$phpfpm" = 'yes' ]; then
         # Disable prefork and php, enable event

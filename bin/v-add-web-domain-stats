@@ -55,6 +55,13 @@ get_domain_values 'web'
 
 # Adding statistic config
 prepare_web_domain_values
+
+if [ -z "${aliases//,/ }" ]; then
+    stats_alias="localhost"
+else
+    stats_alias=${aliases_idn//,/ }
+fi
+
 cat $WEBTPL/$type/$type.tpl |\
     sed -e "s|%ip%|$ip|g" \
         -e "s|%web_port%|$WEB_PORT|g" \
@@ -69,7 +76,7 @@ cat $WEBTPL/$type/$type.tpl |\
         -e "s|%user%|$user|g" \
         -e "s|%home%|$HOMEDIR|g" \
         -e "s|%alias%|${aliases//,/ }|g" \
-        -e "s|%alias_idn%|${aliases_idn//,/ }|g" \
+        -e "s|%alias_idn%|$stats_alias|g" \
     > $HOMEDIR/$user/conf/web/$domain/$type.conf
 
 if [ "$type" == 'awstats' ]; then

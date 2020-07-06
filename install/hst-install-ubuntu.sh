@@ -411,22 +411,28 @@ fi
 #                       Brief Info                         #
 #----------------------------------------------------------#
 
+install_welcome_message() {
+    echo
+    echo '                _   _           _   _        ____ ____                  '
+    echo '               | | | | ___  ___| |_(_) __ _ / ___|  _ \                 '
+    echo '               | |_| |/ _ \/ __| __| |/ _` | |   | |_) |                '
+    echo '               |  _  |  __/\__ \ |_| | (_| | |___|  __/                 '
+    echo '               |_| |_|\___||___/\__|_|\__,_|\____|_|                    '
+    echo "                                                                        "
+    echo "                          Hestia Control Panel                          "
+    echo "                                  ${HESTIA_INSTALL_VER}                 "
+    echo "                            www.hestiacp.com                            "
+    echo
+    echo "========================================================================"
+    echo 
+    echo "Thank you for downloading Hestia Control Panel! In a few moments,"
+    echo "we will begin installing the following components on your server:"          
+    echo
+}
+
 # Printing nice ASCII logo
 clear
-echo
-echo '  _   _           _   _        ____ ____  '
-echo ' | | | | ___  ___| |_(_) __ _ / ___|  _ \ '
-echo ' | |_| |/ _ \/ __| __| |/ _` | |   | |_) |'
-echo ' |  _  |  __/\__ \ |_| | (_| | |___|  __/ '
-echo ' |_| |_|\___||___/\__|_|\__,_|\____|_|    '
-echo
-echo '                      Hestia Control Panel'
-echo "                                    v${HESTIA_INSTALL_VER}"
-echo -e "\n"
-echo "===================================================================="
-echo -e "\n"
-echo 'The following components will be installed on your server:'
-echo
+install_welcome_message
 
 # Web stack
 if [ "$nginx" = 'yes' ]; then
@@ -496,7 +502,7 @@ if [ "$iptables" = 'yes' ] && [ "$fail2ban" = 'yes' ]; then
     echo -n ' + Fail2Ban Access Monitor'
 fi
 echo -e "\n"
-echo "===================================================================="
+echo "========================================================================"
 echo -e "\n"
 
 # Asking for confirmation to proceed

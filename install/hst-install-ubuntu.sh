@@ -860,7 +860,7 @@ echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod a+x /usr/sbin/policy-rc.d
 
 # Installing apt packages
-echo "Now installing Hestia Control Panel and all required dependencies."
+echo "The installer is now downloading and installing all required packages."
 echo -ne "NOTE: This process may take 10 to 15 minutes to complete, please wait... "
 echo
 apt-get -y install $software > /dev/null 2>&1 &
@@ -879,6 +879,10 @@ echo
 # Check Installation result
 wait $BACK_PID
 check_result $? "apt-get install failed"
+
+echo
+echo "========================================================================"
+echo
 
 # Install Hestia packages from local folder
 if [ ! -z "$withdebs" ] && [ -d "$withdebs" ]; then

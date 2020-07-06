@@ -948,7 +948,7 @@ if [ -e "$BACKUP/$user.log" ] && [ "$notify" = "yes" ]; then
     email=$(get_user_value '$CONTACT')
     cat $BACKUP/$user.log |$SENDMAIL -s "$subj" $email $notify
     rm $BACKUP/$user.log
-    $BIN/v-add-user-notification $user "$subj" "$email"
+    $BIN/v-add-user-notification "$user" "Backup created successfully" "<b>Archive:</b> $user.$backup_new_date.tar"
 fi
 
 # Logging

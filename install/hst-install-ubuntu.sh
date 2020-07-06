@@ -411,22 +411,28 @@ fi
 #                       Brief Info                         #
 #----------------------------------------------------------#
 
+install_welcome_message() {
+    echo
+    echo '                _   _           _   _        ____ ____                  '
+    echo '               | | | | ___  ___| |_(_) __ _ / ___|  _ \                 '
+    echo '               | |_| |/ _ \/ __| __| |/ _` | |   | |_) |                '
+    echo '               |  _  |  __/\__ \ |_| | (_| | |___|  __/                 '
+    echo '               |_| |_|\___||___/\__|_|\__,_|\____|_|                    '
+    echo "                                                                        "
+    echo "                          Hestia Control Panel                          "
+    echo "                                  ${HESTIA_INSTALL_VER}                 "
+    echo "                            www.hestiacp.com                            "
+    echo
+    echo "========================================================================"
+    echo 
+    echo "Thank you for downloading Hestia Control Panel! In a few moments,"
+    echo "we will begin installing the following components on your server:"          
+    echo
+}
+
 # Printing nice ASCII logo
 clear
-echo
-echo '  _   _           _   _        ____ ____  '
-echo ' | | | | ___  ___| |_(_) __ _ / ___|  _ \ '
-echo ' | |_| |/ _ \/ __| __| |/ _` | |   | |_) |'
-echo ' |  _  |  __/\__ \ |_| | (_| | |___|  __/ '
-echo ' |_| |_|\___||___/\__|_|\__,_|\____|_|    '
-echo
-echo '                      Hestia Control Panel'
-echo "                                    v${HESTIA_INSTALL_VER}"
-echo -e "\n"
-echo "===================================================================="
-echo -e "\n"
-echo 'The following components will be installed on your server:'
-echo
+install_welcome_message
 
 # Web stack
 if [ "$nginx" = 'yes' ]; then
@@ -496,7 +502,7 @@ if [ "$iptables" = 'yes' ] && [ "$fail2ban" = 'yes' ]; then
     echo -n ' + Fail2Ban Access Monitor'
 fi
 echo -e "\n"
-echo "===================================================================="
+echo "========================================================================"
 echo -e "\n"
 
 # Asking for confirmation to proceed
@@ -854,7 +860,7 @@ echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod a+x /usr/sbin/policy-rc.d
 
 # Installing apt packages
-echo "Now installing Hestia Control Panel and all required dependencies."
+echo "The installer is now downloading and installing all required packages."
 echo -ne "NOTE: This process may take 10 to 15 minutes to complete, please wait... "
 echo
 apt-get -y install $software > /dev/null 2>&1 &
@@ -874,20 +880,30 @@ echo
 wait $BACK_PID
 check_result $? "apt-get install failed"
 
+echo
+echo "========================================================================"
+echo
+
 # Install Hestia packages from local folder
 if [ ! -z "$withdebs" ] && [ -d "$withdebs" ]; then
-    dpkg -i $withdebs/hestia_*.deb
+    echo "(*) Installing local package files..."
+    echo "    - hestia core package"
+    dpkg -i $withdebs/hestia_*.deb > /dev/null 2>&1
 
     if [ -z $(ls $withdebs/hestia-php_*.deb 2>/dev/null) ]; then
+        echo "    - hestia-php backend package (from apt)"
         apt-get -y install hestia-php > /dev/null 2>&1
     else
-        dpkg -i $withdebs/hestia-php_*.deb
+        echo "    - hestia-php backend package"
+        dpkg -i $withdebs/hestia-php_*.deb > /dev/null 2>&1
     fi
 
     if [ -z $(ls $withdebs/hestia-nginx_*.deb 2>/dev/null) ]; then
+        echo "    - hestia-nginx backend package (from apt)"
         apt-get -y install hestia-nginx > /dev/null 2>&1
     else
-        dpkg -i $withdebs/hestia-nginx_*.deb
+        echo "    - hestia-nginx backend package"
+        dpkg -i $withdebs/hestia-nginx_*.deb > /dev/null 2>&1
     fi
 fi
 
@@ -1246,7 +1262,7 @@ if [ "$apache" = 'yes' ]; then
     a2enmod ssl > /dev/null 2>&1
     a2enmod actions > /dev/null 2>&1
     a2dismod --quiet status > /dev/null 2>&1
-    a2enmod --quiet hestia-status
+    a2enmod --quiet hestia-status > /dev/null 2>&1
 
     # Enable mod_ruid/mpm_itk or mpm_event
     if [ "$phpfpm" = 'yes' ]; then
@@ -1767,7 +1783,7 @@ if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     echo "$HESTIA/bin/v-update-sys-ip" >> /etc/rc.local
     echo "exit 0" >> /etc/rc.local
     chmod +x /etc/rc.local
-    systemctl enable rc-local
+    systemctl enable rc-local > /dev/null 2>&1
     $HESTIA/bin/v-change-sys-ip-nat $ip $pub_ip > /dev/null 2>&1
     ip=$pub_ip
 fi
@@ -1846,6 +1862,13 @@ $HESTIA/bin/v-change-sys-port $port > /dev/null 2>&1
 # Set default theme
 $HESTIA/bin/v-change-sys-theme 'default'
 
+# Update remaining packages since repositories have changed
+echo -ne "(*) Installing remaining software updates..."
+apt-get -qq update
+apt-get -y upgrade >> $LOG &
+BACK_PID=$!
+echo
+
 # Starting Hestia service
 update-rc.d hestia defaults
 systemctl start hestia
@@ -1918,7 +1941,7 @@ cat $tmpfile
 rm -f $tmpfile
 
 # Add welcome message to notification panel
-$HESTIA/bin/v-add-user-notification admin 'Welcome to Hestia Control Panel!' 'Please report any bugs or issues via <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a> or e-mail <a href="mailto:info@hestiacp.com?Subject="['$new_version'] Bug Report: ">info@hestiacp.com</a><br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart status-icon red"></i> The Hestia Control Panel development team'
+$HESTIA/bin/v-add-user-notification admin 'Welcome to Hestia Control Panel!' '<br>You are now ready to begin <a href="/add/user/">adding user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, view the <a href="https://docs.hestiacp.com/" target="_new">documentation</a> or visit our <a href="https://forum.hestiacp.com/" target="_new">user forum</a>.<br><br>Please report any bugs or issues via <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a> or e-mail <a href="mailto:info@hestiacp.com?Subject="['$new_version'] Bug Report: ">info@hestiacp.com</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart status-icon red"></i> The Hestia Control Panel development team'
 
 echo "(!) IMPORTANT: You must logout or restart the server before continuing."
 echo ""

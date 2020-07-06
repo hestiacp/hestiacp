@@ -214,9 +214,10 @@ upgrade_phpmyadmin() {
     fi
 }
 
-update_multiphp_conf() {
-    #Update multiphp con
+update_multiphp_templates() {
+    # Update Multi-PHP default templates
     for version in $(v-list-sys-php plain); do 
+        echo "(*) Updating default templates for PHP ${version}..."
         cp -f $HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl \
             $HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl; 
     done

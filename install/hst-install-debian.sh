@@ -1844,6 +1844,13 @@ $HESTIA/bin/v-change-sys-port $port > /dev/null 2>&1
 # Set default theme
 $HESTIA/bin/v-change-sys-theme 'default'
 
+# Update remaining packages since repositories have changed
+echo -ne "(*) Installing remaining software updates..."
+apt-get -qq update
+apt-get -y upgrade >> $LOG &
+BACK_PID=$!
+echo
+
 # Starting Hestia service
 update-rc.d hestia defaults
 systemctl start hestia
@@ -1916,7 +1923,7 @@ cat $tmpfile
 rm -f $tmpfile
 
 # Add welcome message to notification panel
-$HESTIA/bin/v-add-user-notification admin 'Welcome to Hestia Control Panel!' 'Please report any bugs or issues via <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a> or e-mail <a href="mailto:info@hestiacp.com?Subject="['$new_version'] Bug Report: ">info@hestiacp.com</a><br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart status-icon red"></i> The Hestia Control Panel development team'
+$HESTIA/bin/v-add-user-notification admin 'Welcome to Hestia Control Panel!' '<br>You are now ready to begin <a href="/add/user/">adding user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, view the <a href="https://docs.hestiacp.com/" target="_new">documentation</a> or visit our <a href="https://forum.hestiacp.com/" target="_new">user forum</a>.<br><br>Please report any bugs or issues via <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a> or e-mail <a href="mailto:info@hestiacp.com?Subject="['$new_version'] Bug Report: ">info@hestiacp.com</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart status-icon red"></i> The Hestia Control Panel development team'
 
 echo "(!) IMPORTANT: You must logout or restart the server before continuing."
 echo ""

@@ -50,8 +50,8 @@ json_list() {
         "BACKUP_GZIP": "'$BACKUP_GZIP'",
         "BACKUP": "'$BACKUP'",
         "WEBMAIL_ALIAS": "'$WEBMAIL_ALIAS'",
-        "DB_PMA_URL": "'$DB_PMA_URL'",
-        "DB_PGA_URL": "'$DB_PGA_URL'",
+        "DB_PMA_ALIAS": "'$DB_PMA_ALIAS'",
+        "DB_PGA_ALIAS": "'$DB_PGA_ALIAS'",
         "SOFTACULOUS": "'$SOFTACULOUS'"
     }
 }'
@@ -94,11 +94,11 @@ shell_list() {
     fi
     if [ ! -z "$DB_SYSTEM" ]; then
         echo "Database:         ${DB_SYSTEM//,/, }"
-        if [ ! -z "$DB_PMA_URL" ]; then
-            echo "PMA URL:          $DB_PMA_URL"
+        if [ ! -z "$DB_PMA_ALIAS" ]; then
+            echo "PMA ALIAS:          $DB_PMA_ALIAS"
         fi
-        if [ ! -z "$DB_PGA_URL" ]; then
-            echo "PGA URL:          $DB_PGA_URL"
+        if [ ! -z "$DB_PGA_ALIAS" ]; then
+            echo "PGA ALIAS:          $DB_PGA_ALIAS"
         fi
     fi
     if [ ! -z "$DNS_SYSTEM" ]; then
@@ -147,7 +147,7 @@ plain_list() {
     echo -ne "$DNS_SYSTEM\t$DNS_CLUSTER\t$STATS_SYSTEM\t$BACKUP_SYSTEM\t"
     echo -ne "$CRON_SYSTEM\t$DISK_QUOTA\t$FIREWALL_SYSTEM\t$FIREWALL_EXTENSION\t"
     echo -ne "$REPOSITORY\t$VERSION\t$DEMO_MODE\t$RELEASE_BRANCH\t$THEME\t$LANGUAGE\t"
-    echo -e "$BACKUP_GZIP\t$BACKUP\t$WEBMAIL_ALIAS\t$DB_PMA_URL\t$DB_PGA_URL"
+    echo -e "$BACKUP_GZIP\t$BACKUP\t$WEBMAIL_ALIAS\t$DB_PMA_ALIAS\t$DB_PGA_ALIAS"
 }
 
 
@@ -161,7 +161,7 @@ csv_list() {
     echo -n "'CRON_SYSTEM','DISK_QUOTA','FIREWALL_SYSTEM',"
     echo -n "'FIREWALL_EXTENSION','REPOSITORY',"
     echo -n "'VERSION','LANGUAGE','BACKUP_GZIP','BACKUP','WEBMAIL_ALIAS',"
-    echo -n "'DB_PMA_URL','DB_PGA_URL'"
+    echo -n "'DB_PMA_ALIAS','DB_PGA_ALIAS'"
     echo
     echo -n "'$WEB_SYSTEM','$WEB_RGROUPS','$WEB_PORT','$WEB_SSL',"
     echo -n "'$WEB_SSL_PORT','$WEB_BACKEND','$PROXY_SYSTEM','$PROXY_PORT',"
@@ -170,7 +170,7 @@ csv_list() {
     echo -n "'$DNS_CLUSTER','$STATS_SYSTEM','$BACKUP_SYSTEM','$CRON_SYSTEM',"
     echo -n "'$DISK_QUOTA','$FIREWALL_SYSTEM','$REPOSITORY','$FIREWALL_EXTENSION',"
     echo -n "'$VERSION','$DEMO_MODE','$RELEASE_BRANCH','$THEME','$LANGUAGE',"
-    echo -n "'$BACKUP_GZIP','$BACKUP','$WEBMAIL_ALIAS','$DB_PMA_URL','$DB_PGA_URL'"
+    echo -n "'$BACKUP_GZIP','$BACKUP','$WEBMAIL_ALIAS','$DB_PMA_ALIAS','$DB_PGA_ALIAS'"
     echo
 }
 

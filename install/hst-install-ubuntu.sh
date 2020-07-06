@@ -1457,6 +1457,9 @@ if [ "$mysql" = 'yes' ]; then
     # Clear Up
     rm -fr phpMyAdmin-$pma_v-all-languages
     rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
+
+    echo "DB_PMA_ALIAS='phpmyadmin'" >> $HESTIA/conf/hestia.conf
+    $HESTIA/bin/v-change-sys-db-alias 'pma' "phpmyadmin"
 fi
 
 
@@ -1476,6 +1479,9 @@ if [ "$postgresql" = 'yes' ]; then
         cp -f $HESTIA_INSTALL_DIR/pga/phppgadmin.conf /etc/apache2/conf.d/
     fi
     cp -f $HESTIA_INSTALL_DIR/pga/config.inc.php /etc/phppgadmin/
+
+    echo "DB_PMA_ALIAS='phppgadmin'" >> $HESTIA/conf/hestia.conf
+    $HESTIA/bin/v-change-sys-db-alias 'pga' "phppgadmin"
 fi
 
 

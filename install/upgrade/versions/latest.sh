@@ -174,3 +174,21 @@ if [ -e /var/lib/phpmyadmin/blowfish_secret.inc.php ]; then
     echo "(*) Updating phpMyAdmin permissions..."
     chmod 0644 /var/lib/phpmyadmin/blowfish_secret.inc.php
 fi
+
+# Add phpMyAdmin/phpPgAdmin aliases to hestia.conf and correct configuration/templates
+if [ -e "/var/lib/phpmyadmin" ]; then
+PMA_ALIAS_CHECK=$(cat $HESTIA/conf/hestia.conf | grep DB_PMA_ALIAS)
+    if [ -z "$PMA_ALIAS_CHECK" ]; then
+        echo "(*) Updating phpMyAdmin alias..."
+        $HESTIA/bin/v-change-sys-db-alias "pma" "phpmyadmin"
+    fi
+fi
+
+if [ -e "/var/lib/phppgadmin" ]; then
+PGA_ALIAS_CHECK=$(cat $HESTIA/conf/hestia.conf | grep DB_PGA_ALIAS)
+    if [ -z "$PGA_ALIAS_CHECK" ]; then
+        echo "(*) Updating phpPgAdmin alias..."
+        $HESTIA/bin/v-change-sys-db-alias "pga" "phppgadmin"
+    fi
+fi
+

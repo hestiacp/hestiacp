@@ -214,6 +214,15 @@ upgrade_phpmyadmin() {
     fi
 }
 
+update_multiphp_templates() {
+    # Update Multi-PHP default templates
+    for version in $(v-list-sys-php plain); do 
+        echo "(*) Updating default templates for PHP ${version}..."
+        cp -f $HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl \
+            $HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl; 
+    done
+}
+
 upgrade_get_version() {
     # Retrieve new version number for Hestia Control Panel from .deb package
     new_version=$(dpkg -l | awk '$2=="hestia" { print $3 }')

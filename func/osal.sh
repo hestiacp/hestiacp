@@ -34,14 +34,21 @@ do
     fi
 done
 
-# VAR = $(ini_get 'file' 'section' 'param' 'newvalue')
+# VAR=$(ini_get 'file' 'section' 'param' 'value')
 osal_ini_get() {
-    /usr/bin/crudini --get "$@"
+    #echo /usr/bin/crudini --get $@
+    retval=$(/usr/bin/crudini --get $@ 2>1)
+    if [ $? -eq 0 ]; then
+        echo $retval
+    fi
 }
 
 # ini_set 'file' 'section' 'param' 'newvalue'
 osal_ini_set() {
-    /usr/bin/crudini --set "$@"
+    if [ "$OSAL_DEBUG" ]; then
+        echo /usr/bin/crudini --set $@
+    fi
+    /usr/bin/crudini --set $@
 }
 
 osal_execute_with_spinner() {

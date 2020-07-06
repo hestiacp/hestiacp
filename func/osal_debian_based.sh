@@ -31,6 +31,7 @@ OSAL_PKG_ROUNDCUBE=roundcube
 OSAL_PATH_APACHE_CONF=/etc/apache2
 OSAL_PATH_BIND_DATA=/var/cache/bind
 OSAL_PATH_ROUNDCUBE_INSTALL_MYSQL=/usr/share/dbconfig-common/data/roundcubemail/install/mysql
+OSAL_PATH_VSFTPD_CONF=/etc
 
 #-------------------------------------------------------------------#
 # Functions                                                         #

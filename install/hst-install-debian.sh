@@ -1844,6 +1844,13 @@ $HESTIA/bin/v-change-sys-port $port > /dev/null 2>&1
 # Set default theme
 $HESTIA/bin/v-change-sys-theme 'default'
 
+# Update remaining packages since repositories have changed
+echo -ne "(*) Installing remaining software updates..."
+apt-get -qq update
+apt-get -y upgrade >> $LOG &
+BACK_PID=$!
+echo
+
 # Starting Hestia service
 update-rc.d hestia defaults
 systemctl start hestia

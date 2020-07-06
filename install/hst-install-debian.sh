@@ -884,18 +884,24 @@ check_result $? "apt-get install failed"
 
 # Install Hestia packages from local folder
 if [ ! -z "$withdebs" ] && [ -d "$withdebs" ]; then
-    dpkg -i $withdebs/hestia_*.deb
+    echo "(*) Installing local package files..."
+    echo "    - hestia core package"
+    dpkg -i $withdebs/hestia_*.deb > /dev/null 2>&1
 
     if [ -z $(ls $withdebs/hestia-php_*.deb 2>/dev/null) ]; then
+        echo "    - hestia-php backend package (from apt)"
         apt-get -y install hestia-php > /dev/null 2>&1
     else
-        dpkg -i $withdebs/hestia-php_*.deb
+        echo "    - hestia-php backend package"
+        dpkg -i $withdebs/hestia-php_*.deb > /dev/null 2>&1
     fi
 
     if [ -z $(ls $withdebs/hestia-nginx_*.deb 2>/dev/null) ]; then
+        echo "    - hestia-nginx backend package (from apt)"
         apt-get -y install hestia-nginx > /dev/null 2>&1
     else
-        dpkg -i $withdebs/hestia-nginx_*.deb
+        echo "    - hestia-nginx backend package"
+        dpkg -i $withdebs/hestia-nginx_*.deb > /dev/null 2>&1
     fi
 fi
 

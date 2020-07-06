@@ -28,7 +28,10 @@ FM_URL="https://github.com/filegator/filegator/releases/download/v${FM_V}/${FM_F
 COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"
 if [ ! -f "$COMPOSER_BIN" ]; then
     $BIN/v-add-user-composer "$user"
-    check_result $? "Install composer failed"
+    if [ $? -ne 0 ]; then
+        $BIN/v-add-user-notification admin 'Composer installation failed' 'The FileManager installation had to been aborted, please try to run the installation manualy: bash $HESTIA/install/deb/filemanager/install-fm.sh'
+        exit 0
+    fi
 fi
 
 rm --recursive --force "$FM_INSTALL_DIR"
@@ -46,8 +49,18 @@ rm --recursive --force ${FM_INSTALL_DIR}/filegator
 cp --recursive --force ${HESTIA_INSTALL_DIR}/filemanager/filegator/* "${FM_INSTALL_DIR}"
 
 chown $user: -R "${FM_INSTALL_DIR}"
-COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php $COMPOSER_BIN --quiet --no-dev install
-check_result $? "Install filemanager dependency"
+
+# Check if php7.3 is available and run the installer
+if [ -f "/usr/bin/php7.3" ]; then
+    COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php7.3 $COMPOSER_BIN --quiet --no-dev install
+    if [ $? -ne 0 ]; then
+        $BIN/v-add-user-notification admin 'FM installation failed' 'The FileManager installation had to been aborted, please try to run the installation manualy: bash $HESTIA/install/deb/filemanager/install-fm.sh'
+        exit 0
+    fi
+else
+    $BIN/v-add-user-notification admin 'FM installation failed' 'php7.3-cli is missing on your system, the FileManager installation had to been aborted - please check your php environment.'
+    exit 0
+fi
 
 chown root: -R "${FM_INSTALL_DIR}"
 chown $user: "${FM_INSTALL_DIR}/private"

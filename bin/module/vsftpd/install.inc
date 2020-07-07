@@ -39,7 +39,3 @@ hestia_module_vsftpd_install() {
 
     exit 0
 }
-
-# If this files is _not_ being sourced, act immediately
-# (otherise, wait for hestia cli to call the main function)
-[[ $_ == $0 ]] && hestia_module_vsftpd_install $@

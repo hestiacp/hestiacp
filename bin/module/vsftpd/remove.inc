@@ -19,9 +19,11 @@ hestia_module_vsftpd_remove() {
 
     osal_service_stop vsftpd
     osal_service_disable vsftpd
-    osal_package_remove vsftpd
 
     hestia_config_backup 'vsftpd-remove' $OSAL_PATH_VSFTPD_CONF/vsftpd.conf
+
+    osal_package_remove vsftpd
+   
     rm -f $OSAL_PATH_VSFTPD_CONF/vsftpd.conf
 
     osal_kv_write $HESTIA/conf/hestia.conf 'FTP_SYSTEM' 'no'
@@ -33,7 +35,3 @@ hestia_module_vsftpd_remove() {
 
     exit 0
 }
-
-# If this files is _not_ being sourced, act immediately
-# (otherise, wait for hestia cli to call the main function)
-[[ $_ == $0 ]] && hestia_module_vsftpd_remove $@

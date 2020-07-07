@@ -13,7 +13,6 @@
 version=$1
 
 # Includes
-source $HESTIA/func/osal.sh
 source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
 
@@ -24,7 +23,8 @@ source $HESTIA/conf/hestia.conf
 
 check_args '1' "$#" 'VERSION'
 
-php_prefix=$(osal_multiphp_php_package_prefix $version)
+# Set file locations
+php_fpm="/etc/init.d/php$version-fpm"
 
 # Verify php version format
 if [[ ! $version =~ ^[0-9]\.[0-9]+ ]]; then
@@ -33,7 +33,7 @@ if [[ ! $version =~ ^[0-9]\.[0-9]+ ]]; then
 fi
 
 # Check if php version already exists
-if [ $(osal_multiphp_fpm_isinstalled $version) ] && [ -f "$HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl" ]; then
+if [ -f "$php_fpm" ] && [ -f "$HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl" ]; then
     echo "Version already installed..."
     exit
 fi
@@ -52,55 +52,65 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-mph="$php_prefix-mbstring $php_prefix-bcmath $php_prefix-cli $php_prefix-curl
-     $php_prefix-fpm $php_prefix-gd $php_prefix-intl $php_prefix-mysql
-     $php_prefix-soap $php_prefix-xml $php_prefix-zip $php_prefix-mbstring
-     $php_prefix-json $php_prefix-bz2 $php_prefix-pspell $php_prefix-imagick $php_prefix-pgsql
-     $php_prefix-imap $php_prefix-ldap"
+mph="php$version-mbstring php$version-bcmath php$version-cli php$version-curl
+     php$version-fpm php$version-gd php$version-intl php$version-mysql
+     php$version-soap php$version-xml php$version-zip php$version-mbstring
+     php$version-json php$version-bz2 php$version-pspell php$version-imagick php$version-pgsql
+     php$version-imap php$version-ldap"
 
 # Check is version is 7.1 or below to add mcrypt
 if [[ `echo "$version 7.2" | awk '{print ($1 < $2)}'` == 1 ]]; then
-    mph="$mph $php_prefix-mcrypt"
+    mph="$mph php$version-mcrypt"
 fi
 
 if ! echo "$DB_SYSTEM" | grep -w 'mysql' >/dev/null; then
-    mph=$(echo "$mph" | sed -e "s/$php_prefix-mysql//")
+    mph=$(echo "$mph" | sed -e "s/php$version-mysql//")
 fi
 
 if ! echo "$DB_SYSTEM" | grep -w 'pgsql' >/dev/null; then
-    mph=$(echo "$mph" | sed -e "s/$php_prefix-pgsql//")
+    mph=$(echo "$mph" | sed -e "s/php$version-pgsql//")
 fi
 
 # Install php packages
-osal_package_preinstall
-osal_execute_with_spinner osal_package_install $mph
+apt-get -qq update
+apt-get -y -qq -o Dpkg::Options::="--force-confold" install $mph > /dev/null 2>&1 &
+BACK_PID=$!
+
+# Check if package installation is done, print a spinner
+echo "Install PHP-$version, please wait..."
+spinner="/-\|"
+spin_i=1
+while kill -0 $BACK_PID > /dev/null 2>&1 ; do
+    printf "\b${spinner:spin_i++%${#spinner}:1}"
+    sleep 0.5
+done
+
+# Do a blank echo to get the \n back
+echo
 
 # Check if installation was sucessfully
-if [ ! $(osal_multiphp_fpm_isinstalled $version) ]; then
+if [ ! -f "$php_fpm" ]; then
     echo "Installation failed, please run the following command manualy for debuging:"
-    echo "$OSAL_CMD_PACKAGE_MANAGER install ${mph//\\n/ \\}"
+    echo "apt-get install $mph"
 fi
 
 # Check if required modules for apache2 are enabled
-if [ "$WEB_SYSTEM" = "apache2" ] || [ "$WEB_SYSTEM" = "httpd" ]; then
-    if [ ! $(osal_apache_module_isenabled 'proxy_fcgi') ]; then
-        osal_apache_module_enable 'proxy_fcgi'
+if [ "$WEB_SYSTEM" = "apache2" ]; then
+    if ! a2query -q -m proxy_fcgi; then
+        a2enmod -q proxy_fcgi
     fi
-    if [ ! $(osal_apache_module_isenabled 'setenvif') ]; then
-        osal_apache_module_enable 'setenvif'
+    if ! a2query -q -m setenvif; then
+        a2enmod -q setenvif
     fi
     $BIN/v-restart-web
 fi
 
 # Configure fpm
-osal_service_enable $php_prefix-fpm > /dev/null 2>&1
-pool_d=$(osal_multiphp_fpm_pool_d $version)
-if [ $pool_d ]; then
-    v_tpl=${version//.}
-    rm -f $pool_d/*
-    cp -f $HESTIA_INSTALL_DIR/php-fpm/dummy.conf $pool_d/
-    sed -i "s/9999/99$v_tpl/g" $pool_d/dummy.conf       # FIXME: this'll break with PHP 10.0
-fi
+update-rc.d php$version-fpm defaults > /dev/null 2>&1
+v_tpl=${version//.}
+rm -f /etc/php/$version/fpm/pool.d/*
+cp -f $HESTIA_INSTALL_DIR/php-fpm/dummy.conf /etc/php/$version/fpm/pool.d/
+sed -i "s/9999/99$v_tpl/g" /etc/php/$version/fpm/pool.d/dummy.conf
 
 # Install backend template
 cp -f $HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl \

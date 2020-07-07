@@ -13,7 +13,6 @@
 version=$1
 
 # Includes
-source $HESTIA/func/osal.sh
 source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
 
@@ -24,7 +23,8 @@ source $HESTIA/conf/hestia.conf
 
 check_args '1' "$#" 'VERSION'
 
-php_prefix=$(osal_multiphp_php_package_prefix $version)
+# Set file locations
+php_fpm="/etc/init.d/php$version-fpm"
 
 # Verify php version format
 if [[ ! $version =~ ^[0-9]\.[0-9]+ ]]; then
@@ -36,7 +36,7 @@ fi
 [ -f $HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl ] && rm -f $HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl
 
 # Check if php version exists
-if [ ! $(osal_multiphp_fpm_isinstalled $version) ] && [ ! -f "$HESTIA/data/templates/$WEB_SYSTEM/PHP-$version.sh" ]; then
+if [ ! -f "$php_fpm" ] && [ ! -f "$HESTIA/data/templates/$WEB_SYSTEM/PHP-$version.sh" ]; then
     echo "Version is not installed..."
     exit
 fi
@@ -49,28 +49,40 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-mph="$php_prefix-mbstring $php_prefix-bcmath $php_prefix-cli $php_prefix-curl
-     $php_prefix-fpm $php_prefix-gd $php_prefix-intl $php_prefix-mysql
-     $php_prefix-soap $php_prefix-xml $php_prefix-zip $php_prefix-mbstring
-     $php_prefix-json $php_prefix-bz2 $php_prefix-pspell"
+mph="php$version-mbstring php$version-bcmath php$version-cli php$version-curl
+     php$version-fpm php$version-gd php$version-intl php$version-mysql
+     php$version-soap php$version-xml php$version-zip php$version-mbstring
+     php$version-json php$version-bz2 php$version-pspell"
 
 # Check is version is 7.1 or below to add mcrypt
 if [[ `echo "$version 7.2" | awk '{print ($1 < $2)}'` == 1 ]]; then
-    mph="$mph $php_prefix-mcrypt"
+    mph="$mph php$version-mcrypt"
 fi
 
 # Purge php packages
-osal_execute_with_spinner osal_package_remove $mph
+apt-get -y purge $mph > /dev/null 2>&1 &
+BACK_PID=$!
 
-# Check if uninstallation was sucessfully
-if [ $(multiphp_fpm_isinstalled $version) ]; then
+# Check if package removal is done, print a spinner
+echo "Removing PHP-$version, please wait..."
+spinner="/-\|"
+spin_i=1
+while kill -0 $BACK_PID > /dev/null 2>&1 ; do
+    printf "\b${spinner:spin_i++%${#spinner}:1}"
+    sleep 0.5
+done
+
+# Do a blank echo to get the \n back
+echo
+
+# Check if installation was sucessfully
+if [ -f "$php_fpm" ]; then
     echo "Uninstallation failed, please run the following command manualy for debuging:"
-    echo "$OSAL_CMD_PACKAGE_MANAGER (remove or purge) ${mph//\\n/ \\}"
+    echo "apt-get purge $mph"
 fi
 
 # Cleanup php folder
-etc_folder=$(osal_multiphp_etc_folder $version)
-[[ -d "$etc_folder" ]] && rm -rf "$etc_folder"
+[[ -d /etc/php/$version ]] && rm -rf "/etc/php/$version"
 
 
 #----------------------------------------------------------#

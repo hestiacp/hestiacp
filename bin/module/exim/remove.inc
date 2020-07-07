@@ -5,7 +5,7 @@ hestia_module_exim_remove() {
 
     module_installed=$(hestia_module_isinstalled mta)
     if [ ! "$module_installed" ] && [ ! "$param_force" ]; then
-        echo "MTA (Exim) module is not installed. See 'hestia module info mta'."
+        echo "MTA module is not installed. See 'hestia module info mta'."
         exit 1
     fi
 

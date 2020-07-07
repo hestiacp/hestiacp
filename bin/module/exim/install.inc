@@ -23,12 +23,13 @@ hestia_module_exim_install() {
     cp -f $HESTIA_INSTALL_DIR/exim/spam-blocks.conf $OSAL_PATH_EXIM_CONF/
     touch $OSAL_PATH_EXIM_CONF/white-blocks.conf
 
-    if [ "$spamd" = 'yes' ]; then
-        sed -i "s/#SPAM/SPAM/g" /etc/exim4/exim4.conf.template
-    fi
-    if [ "$clamd" = 'yes' ]; then
-        sed -i "s/#CLAMD/CLAMD/g" /etc/exim4/exim4.conf.template
-    fi
+    // TODO: move to clamd and spamd installers
+    #if [ "$spamd" = 'yes' ]; then
+    #    sed -i "s/#SPAM/SPAM/g" /etc/exim4/exim4.conf.template
+    #fi
+    #if [ "$clamd" = 'yes' ]; then
+    #    sed -i "s/#CLAMD/CLAMD/g" /etc/exim4/exim4.conf.template
+    #fi
 
     chmod 640 $OSAL_PATH_EXIM_CONF/${OSAL_PKG_EXIM}.conf.template
     rm -rf $OSAL_PATH_EXIM_CONF/domains

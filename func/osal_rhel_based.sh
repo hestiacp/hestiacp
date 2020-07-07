@@ -89,13 +89,16 @@ osal_apache_module_isenabled() {
 
 # apache_module_enable 'module_name'
 osal_apache_module_enable() {
-    // TODO: better way; what if LoadModule line does not exist or starts with more than one #?
     /usr/bin/sed -i "/LoadModule ${1}_module/ s/#*//" $OSAL_PATH_APACHE_CONF/conf.modules.d/*.conf
+    grep "^$LoadModule\s*${1}_module" $OSAL_PATH_APACHE_CONF/conf.modules.d/*.conf > /dev/null
+    if [ $? -gt 0 ]; then
+        echo "LoadModule ${1}_module modules/mod_${1}.so" > $OSAL_PATH_APACHE_CONF/conf.modules.d/hestia-${1}.conf
+    fi
 }
 
 # apache_module_disable 'module_name'
 osal_apache_module_disable() {
-    /usr/bin/sed -i "/LoadModule ${1}_module/ s/^/#/" $OSAL_PATH_APACHE_CONF/conf.modules.d/*.conf
+    /usr/bin/sed -i "/LoadModule\s*${1}_module/ s/^/#/" $OSAL_PATH_APACHE_CONF/conf.modules.d/*.conf
 }
 
 # multiphp_php_package_prefix 7.3 = 'php73-php'

@@ -3,8 +3,8 @@
 hestia_module_vsftpd_install() {
     source $HESTIA/bin/module/func.inc
 
-    ftp_installed=$(hestia_module_isinstalled ftp)
-    if [ "$ftp_installed" ]; then
+    module_installed=$(hestia_module_isinstalled ftp)
+    if [ "$module_installed" ] && [ ! "$param_force" ]; then
         echo "FTP module is already installed. See 'hestia module info ftp'."
         exit 1
     fi
@@ -12,7 +12,7 @@ hestia_module_vsftpd_install() {
     echo "Installing FTP (vsftpd) module..."
 
     osal_service_stop vsftpd
-    hestia_config_backup 'vsftpd' $OSAL_PATH_VSFTPD_CONF/vsftpd.conf
+    hestia_config_backup 'vsftpd-install' $OSAL_PATH_VSFTPD_CONF/vsftpd.conf
 
     osal_package_preinstall
     osal_package_install vsftpd

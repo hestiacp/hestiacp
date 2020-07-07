@@ -3,8 +3,8 @@
 hestia_module_vsftpd_remove() {
     source $HESTIA/bin/module/func.inc
 
-    ftp_installed=$(hestia_module_isinstalled ftp)
-    if [ ! "$ftp_installed" ]; then
+    module_installed=$(hestia_module_isinstalled ftp)
+    if [ ! "$module_installed"] || [ "$param_force" ]; then
         echo "FTP module is not installed. See 'hestia module info ftp'."
         exit 1
     fi
@@ -21,6 +21,7 @@ hestia_module_vsftpd_remove() {
     osal_service_disable vsftpd
     osal_package_remove vsftpd
 
+    hestia_config_backup 'vsftpd-remove' $OSAL_PATH_VSFTPD_CONF/vsftpd.conf
     rm -f $OSAL_PATH_VSFTPD_CONF/vsftpd.conf
 
     osal_kv_write $HESTIA/conf/hestia.conf 'FTP_SYSTEM' 'no'

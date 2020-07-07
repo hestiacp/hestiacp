@@ -13,6 +13,7 @@ OSAL_SERVICE_CRON=crond
 # Users
 OSAL_USER_APACHE_DATA=apache
 OSAL_USER_BIND=named
+OSAL_USER_EXIM=exim
 OSAL_USER_NOBODY=nobody
 OSAL_USER_NOGROUP=nobody
 
@@ -24,12 +25,14 @@ OSAL_PKG_APACHE=httpd
 OSAL_PKG_APACHE_MOD_RUID2=mod_ruid2
 OSAL_PKG_BIND=bind
 OSAL_PKG_EXIM=exim
+OSAL_PKG_EXIM_DAEMON=
 OSAL_PKG_PHPMYADMIN=phpMyAdmin
 OSAL_PKG_ROUNDCUBE=roundcubemail
 
 # Paths
 OSAL_PATH_APACHE_CONF=/etc/httpd
 OSAL_PATH_BIND_DATA=/var/named
+OSAL_PATH_EXIM_CONF=/etc/exim4
 OSAL_PATH_ROUNDCUBE_INSTALL_MYSQL=/usr/share/roundcubemail/SQL/mysql
 OSAL_PATH_VSFTPD_CONF=/etc/vsftpd
 
@@ -71,12 +74,12 @@ osal_service_restart() {
 
 # service_enable 'service-name'
 osal_service_enable() {
-    /usr/bin/systemctl enable ${1}.service
+    /usr/bin/systemctl enable ${1}.service > /dev/null
 }
 
 # service_disable 'service-name'
 osal_service_disable() {
-    /usr/bin/systemctl disable ${1}.service
+    /usr/bin/systemctl disable ${1}.service /dev/null
 }
 
 # Software-specific

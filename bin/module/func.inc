@@ -26,11 +26,12 @@ hestia_module_getvariant() {
 }
 
 # Backup config files (usually prior to module install)
+# hestia_config_backup 'prefix' file1 file2 file3 ...
 hestia_config_backup() {
     dest=$HESTIA/data/backup/
     filename=${1}-$(date +%Y%m%d%H%M%S)
     shift
 
     mkdir -p $dest
-    tar -zcf ${filename}.tar.gz $@
+    tar -zc --warning=none --ignore-failed-read -f $dest/${filename}.tar.gz $@
 }

@@ -33,5 +33,5 @@ hestia_config_backup() {
     shift
 
     mkdir -p $dest
-    tar -zc --warning=none --ignore-failed-read -f $dest/${filename}.tar.gz $@
+    tar -zc --warning=none --ignore-failed-read -f $dest/${filename}.tar.gz $@ > /dev/null 2>&1
 }

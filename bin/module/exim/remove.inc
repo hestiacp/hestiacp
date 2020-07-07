@@ -4,13 +4,13 @@ hestia_module_exim_remove() {
     source $HESTIA/bin/module/func.inc
 
     module_installed=$(hestia_module_isinstalled mta)
-    if [ ! "$module_installed" ] || [ "$param_force" ]; then
+    if [ ! "$module_installed" ] && [ ! "$param_force" ]; then
         echo "MTA (Exim) module is not installed. See 'hestia module info mta'."
         exit 1
     fi
 
     module_variant=$(hestia_module_getvariant mta)
-    if [ "$module_variant" != 'exim' ]; then
+    if [ "$module_variant" != 'exim' ] && [ ! "$param_force" ]; then
         echo "The installed MTA module is not Exim. See 'hestia module info mta'."
         exit 1
     fi

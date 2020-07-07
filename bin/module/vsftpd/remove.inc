@@ -4,13 +4,13 @@ hestia_module_vsftpd_remove() {
     source $HESTIA/bin/module/func.inc
 
     module_installed=$(hestia_module_isinstalled ftp)
-    if [ ! "$module_installed" ] || [ "$param_force" ]; then
+    if [ ! "$module_installed" ] && [ ! "$param_force" ]; then
         echo "FTP module is not installed. See 'hestia module info ftp'."
         exit 1
     fi
 
     module_variant=$(hestia_module_getvariant ftp)
-    if [ "$module_variant" != 'vsftpd' ]; then
+    if [ "$module_variant" != 'vsftpd' ] && [ ! "$param_force" ]; then
         echo "The installed FTP module is not vsftpd. See 'hestia module info ftp'."
         exit 1
     fi

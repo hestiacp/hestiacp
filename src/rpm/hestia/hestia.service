@@ -1,0 +1,13 @@
+[Unit]
+Description=Hestia web console
+Documentation=https://www.hestiacp.com
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/true
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+2020-06-24 Ernesto Nicolás Carrea <equistango@gmail.com>
+* Can build Hestia, nginx and PHP
+* (internal) 4 spaces indentation (was mixed)
+
+2020-06-24 Ernesto Nicolás Carrea <equistango@gmail.com>
+* Fixed branch ~localsrc (was broken)
+* Added RPM support
+* Added support for --install and --noinstall parameters
+* Added support for --debug parameter and HESTIA_DEBUG envinronment variable
+* Added support for --keepbuild parameter
+* Added support for different order in arguments (still backwards
+    compatible: can use Y or N as argument instead of --install or --noinstall)
+* (internal) Implemented get_branch_file to simplify getting files from ~localsrc / git repo
+* (internal) Use absolute paths when possible
+* Can build nginx only (for now)

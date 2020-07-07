@@ -1,0 +1,38 @@
+[client]
+port=3306
+
+[mysqld_safe]
+
+[mysqld]
+user=mysql
+port=3306
+tmpdir=/tmp
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+log-error=/var/log/mariadb/mariadb.log
+pid-file=/run/mariadb/mariadb.pid
+
+
+symbolic-links=0
+local-infile=0
+
+skip-external-locking
+key_buffer_size = 16K
+max_allowed_packet = 1M
+table_open_cache = 10
+sort_buffer_size = 64K
+read_buffer_size = 256K
+read_rnd_buffer_size = 256K
+net_buffer_length = 2K
+thread_stack = 240K
+
+#innodb_use_native_aio = 0
+innodb_file_per_table
+
+max_connections=30
+max_user_connections=20
+wait_timeout=10
+interactive_timeout=50
+long_query_time=5
+
+!includedir /etc/my.cnf.d/

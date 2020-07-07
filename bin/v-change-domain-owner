@@ -127,7 +127,7 @@ mail_data=$(grep "DOMAIN='$domain'" $HESTIA/data/users/$owner/mail.conf)
 if [ ! -z "$mail_data" ]; then
 
     parse_object_kv_list "$mail_data"
-    
+
     # Move config
     sed -i "/DOMAIN='$domain'/d" $HESTIA/data/users/$owner/mail.conf
     echo "$mail_data" >> $HESTIA/data/users/$user/mail.conf
@@ -140,6 +140,18 @@ if [ ! -z "$mail_data" ]; then
             $HESTIA/data/users/$user/mail/
         mv -f $HESTIA/data/users/$owner/mail/$domain.pub \
             $HESTIA/data/users/$user/mail/
+    fi
+
+    # Check SSL
+    if [ "$SSL" = 'yes' ]; then
+        ssl_crt=$HESTIA/data/users/$owner/ssl/$domain.crt
+        ssl_key=$HESTIA/data/users/$owner/ssl/$domain.key
+        ssl_ca=$HESTIA/data/users/$owner/ssl/$domain.ca
+        ssl_pem=$HESTIA/data/users/$owner/ssl/$domain.pem
+        mv $ssl_crt $HESTIA/data/users/$user/ssl/
+        mv $ssl_key $HESTIA/data/users/$user/ssl/
+        mv $ssl_ca $HESTIA/data/users/$user/ssl/ >> /dev/null 2>&1
+        mv $ssl_pem $HESTIA/data/users/$user/ssl/ >> /dev/null 2>&1
     fi
 
     # Move data

@@ -9,8 +9,8 @@ hestia_module_vsftpd_remove() {
         exit 1
     fi
 
-    ftp_variant=$(hestia_module_getvariant ftp)
-    if [ "$ftp_variant" != 'vsftpd' ]; then
+    module_variant=$(hestia_module_getvariant ftp)
+    if [ "$module_variant" != 'vsftpd' ]; then
         echo "The installed FTP module is not vsftpd. See 'hestia module info ftp'."
         exit 1
     fi

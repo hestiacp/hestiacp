@@ -31,7 +31,7 @@ hestia_module_vsftpd_install() {
 
     osal_kv_write $HESTIA/conf/hestia.conf 'FTP_SYSTEM' 'vsftpd'
     osal_kv_write $HESTIA_CONF_MODULES/ftp.conf 'installed' '1'
-    osal_kv_write $HESTIA_CONF_MODULES/ftp.conf 'description' 'Hestia FTP (Vsftpd) module'
+    osal_kv_write $HESTIA_CONF_MODULES/ftp.conf 'description' 'Hestia FTP (vsftpd) module'
     osal_kv_write $HESTIA_CONF_MODULES/ftp.conf 'enabled' '1'
     osal_kv_write $HESTIA_CONF_MODULES/ftp.conf 'variant' 'vsftpd'
     osal_kv_write $HESTIA_CONF_MODULES/ftp.conf 'version' '1'

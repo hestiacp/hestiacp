@@ -1,6 +1,6 @@
 #!/bin/sh
 
-hestia_module_php_remove() {
+hestia_module_php_list() {
     source $HESTIA/bin/module/func.inc
     source $HESTIA/bin/module/php/func.inc
 
@@ -16,16 +16,12 @@ hestia_module_php_remove() {
         exit 1
     fi
 
-    echo "Removing PHP (FPM) module..."
-
-    # TODO: Remove all added versions
-
-    osal_kv_write $HESTIA/conf/hestia.conf 'WEB_BACKEND' 'no'
-    osal_kv_write $HESTIA_CONF_MODULES/php.conf 'installed' '0'
-    osal_kv_write $HESTIA_CONF_MODULES/php.conf 'description' ''
-    osal_kv_write $HESTIA_CONF_MODULES/php.conf 'enabled' '0'
-    osal_kv_write $HESTIA_CONF_MODULES/php.conf 'variant' ''
-    osal_kv_write $HESTIA_CONF_MODULES/php.conf 'version' '0'
+    echo "Present PHP (FPM) versions"
+    for php_version in $PHP_SUPPORTED_VERSIONS; do
+        php_withoutdot=${php_version//.}
+        php_version_present=$(osal_kv_read_bool $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_present")
+        echo PHP ${php_version}: $(osal_bool_yes $php_version_present 'present' 'not present')
+    done
 
     exit 0
 }

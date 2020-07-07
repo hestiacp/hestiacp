@@ -2,6 +2,7 @@
 
 hestia_module_php_del() {
     source $HESTIA/bin/module/func.inc
+    source $HESTIA/bin/module/php/func.inc
 
     module_installed=$(hestia_module_isinstalled php)
     if [ ! "$module_installed" ] && [ ! "$param_force" ]; then
@@ -15,6 +16,11 @@ hestia_module_php_del() {
         exit 1
     fi
 
+    if [ ! $param_ver ]; then
+        echo "You must specify --ver [php_version]"
+        exit 1
+    fi
+
     # Verify php version format
     if [[ ! $param_ver =~ ^[0-9]\.[0-9]+ ]]; then
         echo "The PHP version format is invalid, it should look like [0-9].[0-9]..."
@@ -22,14 +28,17 @@ hestia_module_php_del() {
     fi
 
     # Check version is supported
-    case $param_ver in
-        5.6|7.0|7.1|7.2|7.3|7.4)
+    php_version=''
+    for ver in $PHP_SUPPORTED_VERSIONS; do
+        if [ "$param_ver" == "$ver" ]; then
             php_version=$param_ver
-            ;;
-        *)
-            echo "PHP version $param_ver is not supported."
-            exit 1
-    esac
+            break;
+        fi
+    done
+    if [ ! "$php_version" ]; then
+        echo "PHP version $param_ver is not supported."
+        exit 1
+    fi
 
     php_withoutdot=${php_version//.}
 

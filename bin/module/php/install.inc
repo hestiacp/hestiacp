@@ -2,8 +2,7 @@
 
 hestia_module_php_install() {
     source $HESTIA/bin/module/func.inc
-
-    PHP_DEFAULT_VERSION=7.3
+    source $HESTIA/bin/module/php/func.inc
 
     module_installed=$(hestia_module_isinstalled php)
     if [ "$module_installed" ] && [ ! "$param_force" ]; then
@@ -23,7 +22,7 @@ hestia_module_php_install() {
 
     # Add default version
     echo "Adding default PHP version..."
-    hestia module php add --ver 7.3
+    hestia module php add --ver $PHP_DEFAULT_VERSION
 
     exit 0
 }

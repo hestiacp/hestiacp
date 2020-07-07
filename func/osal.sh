@@ -66,7 +66,7 @@ osal_kv_write() {
 osal_kv_read() {
     kv_keyname=$(echo "$2" | sed_escape)
     if [ -f "$1" ]; then
-        retval=$(grep "^$kv_keyname\s*=" "$1" | sed "s/^$kv_keyname\s*=\s*//" | tail -1)
+        retval=$(grep "^$kv_keyname\s*=" "$1" | sed "s/^$kv_keyname\s*=\s*//" | tail -1 | sed "s/^\([\"']\)\(.*\)\1\$/\2/g")
         if [ "$retval" ]; then
             echo $retval
         else

@@ -258,10 +258,6 @@ if [ "$HESTIA_DEBUG" = 'true' ]; then
     echo "Source directory : $SRC_DIR"
 fi
 
-# Set git repository raw path
-GIT_REP_DEB='https://raw.githubusercontent.com/'$REPO'/'$branch'/src/deb'
-GIT_REP_RPM='https://raw.githubusercontent.com/'$REPO'/'$branch'/src/rpm'
-
 # Generate Links for sourcecode
 HESTIA_ARCHIVE_LINK='https://github.com/'$REPO'/archive/'$branch'.tar.gz'
 NGINX='https://nginx.org/download/nginx-'$NGINX_V'.tar.gz'

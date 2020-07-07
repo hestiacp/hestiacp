@@ -3,6 +3,7 @@
  * Hestia language file
  * HestiaCP (info@hestiacp.com)
  * orwah
+ * Arabian
  */
 
 $LANG['ar'] = array(
@@ -851,8 +852,8 @@ $LANG['ar'] = array(
     'Force SSL/HTTPS' => 'تمكين إعادة التوجيه التلقائي من HTTP إلى HTTPS',
     'Enable SSL HSTS' => 'تمكين أمان النقل الصارم HTTP (HSTS) <a href="https://ar.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><i class="fas fa-question-circle"></i></a>',
 
-    '2 Factor Authentication' => 'Two-factor Authentication',
-    'Enable 2FA' => 'Enable two-factor authentication',
-    'Please scan the code below in your 2FA application:' => 'To finish setting up two-factor authentication, scan the QR code below<br />using an authentication app (such as <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google Authenticator</a>):',
-    '2FA Reset Code:' => 'Account Recovery Code:',
+    '2 Factor Authentication' => 'توثيق ذو عاملين',
+    'Enable 2FA' => 'تمكين المصادقة الثنائية',
+    'Please scan the code below in your 2FA application:' => 'لإنهاء إعداد المصادقة ذات العاملين ، امسح رمز الاستجابة السريعة أدناه <br /> باستخدام تطبيق المصادقة (مثل <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google Authenticator</a>):',
+    '2FA Reset Code:' => 'رمز استرداد الحساب:',
 );

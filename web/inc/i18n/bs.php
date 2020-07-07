@@ -746,106 +746,106 @@ $LANG['bs'] = array(
     'Theme' => 'Izgled',
     'Operating System' => 'Operativni sistem',
 
-    'Please wait while php is installed or removed' => 'Please wait until the process has completed and do not refresh the page.',
-    'Avoid adding web domains on admin account' => 'It is strongly advised to <a href="/add/user/">create a standard user account</a> before adding web domains to the server due to the increased privileges the admin account possesses and potential security risks.',
+    'Please wait while php is installed or removed' => 'Pričekajte dok se postupak ne završi i ne osvježite stranicu.',
+    'Avoid adding web domains on admin account' => 'Preporučuje se <a href="/add/user/"> kreiranje standardnog korisničkog naloga </a> prije dodavanja web domena na poslužitelj zbog povećanih privilegija koje administrativni račun posjeduje i potencijalnih sigurnosnih rizika.',
     
     //SSH Key
-    'Field SSH_KEY can not be blank.' => 'Field SSH Key must not be blank',
-    'SSH KEY is invalid' => 'SSH key is invalid',
-    'SSH KEY already exists' => 'SSH key already exists',
-    'SSH KEY Added' => 'SSH key has been added',
-    'Add SSH Key' => 'Add SSH key',
-    'SSH KEY' => 'SSH Key',    
-    'DELETE_KEY_CONFIRM' => 'Are you sure you want to delete SSH key %s?',
+    'Field SSH_KEY can not be blank.' => 'Polje SSH ključ ne smije biti prazno',
+    'SSH KEY is invalid' => 'SSH ključ nije važeći',
+    'SSH KEY already exists' => 'SSH ključ već postoji',
+    'SSH KEY Added' => 'SSH ključ je dodan',
+    'Add SSH Key' => 'Dodajte SSH ključ',
+    'SSH KEY' => 'SSH ključ',    
+    'DELETE_KEY_CONFIRM' => 'Jeste li sigurni da želite izbrisati SSH ključ %s?',
     'SSH_ID' => 'SSH ID',
-    'Manage SSH keys' => 'Manage SSH keys',
+    'Manage SSH keys' => 'Upravljajte SSH ključevima',
  
     //Header 
-    'Fm' => 'Files',
+    'Fm' => 'Datoteke',
     //PHP Cli
-    'PHP CLI Version' => 'PHP CLI Version',
+    'PHP CLI Version' => 'PHP CLI verzija',
 
     //Ipset Firewall rules
-    'Adding Firewall Ipset List' => 'New IP list',
-    'Ip List Name' => 'IP List Name',
-    'Data Source' => 'Data Source',
-    'Ip Version' => 'IP Version',
-    'Autoupdate' => 'Auto Update',
-    'Add IP list' => 'Add IP list',
+    'Adding Firewall Ipset List' => 'Nova IP lista',
+    'Ip List Name' => 'Naziv IP liste',
+    'Data Source' => 'Izvor podataka',
+    'Ip Version' => 'IP verzija',
+    'Autoupdate' => 'Automatsko ažuriranje',
+    'Add IP list' => 'Dodajte IP listu',
     'BLACKLIST' => 'BLACKLIST',
     'IPVERSE' => 'IPVERSE',
-    'IPSET_CREATED_OK' => 'IP list created successfully',
-    'DELETE_IPSET_CONFIRMATION' => 'Are you sure you want to delete IP list %s?',
-    '1 Ipset list' => '1 IP list',
-    '%s Ipset lists' => '%s IP lists',
-    'There are currently no IP lists defined.' => 'There are currently no IP lists defined.',
-    'list ipset' => 'Manage IP lists',
+    'IPSET_CREATED_OK' => 'IP lista je kreirana uspješno',
+    'DELETE_IPSET_CONFIRMATION' => 'Jeste li sigurni da želite izbrisati IP listu %s?',
+    '1 Ipset list' => '1 IP lista',
+    '%s Ipset lists' => '%s IP liste',
+    'There are currently no IP lists defined.' => 'Trenutno nisu definisane IP liste.',
+    'list ipset' => 'Upravljanje IP spiskovima',
     
     //Backup
-    'File Name' => 'File Name',
-    'Size' => 'Size',
+    'File Name' => 'Ime dokumenta',
+    'Size' => 'Veličina',
     'Runtime' => 'Runtime',
     //Logs
-    'Refresh' => 'Refresh',
-    'Time' => 'Time',
-    'Value' => 'Value',
+    'Refresh' => 'Osvježiti',
+    'Time' => 'Vreme',
+    'Value' => 'Vrijednost',
     
     //DNS 
-    'default' => 'default',
-    '1 DNS zone' => '1 DNS zone',
-    '%s DNS zones' => '%s DNS zones',
-    'Add Record' => 'Add Record',
+    'default' => 'zadani',
+    '1 DNS zone' => '1 DNS zona',
+    '%s DNS zones' => '%s DNS zone',
+    'Add Record' => 'Dodaj zapis',
     //user
-    '1 user account' => '1 user account',
-    '%s user accounts' => '%s user accounts',
+    '1 user account' => '1 korisnički račun',
+    '%s user accounts' => '%s korisnički računi',
     //database
-    '1 SQL database' => '1 SQL database',
-    '%s SQL databases' => '%s SQL databases',
+    '1 SQL database' => '1 SQL baza podataka',
+    '%s SQL databases' => '%s SQL baze podataka',
     //mail
-    '1 mail domain' => '1 mail domain',
-    '%s mail domains' => '%s mail domains',
+    '1 mail domain' => '1 domenu pošte',
+    '%s mail domains' => '%s domene pošte',
     //web
-    '1 web domain' => '1 web domain',
-    '%s web domains' => '%s web domains',
+    '1 web domain' => '1 web domena',
+    '%s web domains' => '%s web domene',
     
     //rrd
-    'Bandwidth Usage' => 'Bandwidth Usage',
+    'Bandwidth Usage' => 'Upotreba propusne širine',
     
     //reset
-    'Forgot Password' => 'Forgot Password',
+    'Forgot Password' => 'Zaboravili ste lozinku',
     //web
-    'Quick Install App' => 'Quick Install App',
+    'Quick Install App' => 'Brza instalacija aplikacije',
     //webapp 
-    'version' => 'version',
-    'Setup' => 'Setup',
+    'version' => 'verzija',
+    'Setup' => 'Postaviti',
     //Server
-    'Restart' => 'Restart',
-    'Mail Server' => 'Mail Server',
-    'Enabled multi PHP versions' => 'Enabled PHP versions',
-    'Service' => 'Service',
-    'Description' => 'Description',
+    'Restart' => 'Ponovo pokreni',
+    'Mail Server' => 'server za poštu',
+    'Enabled multi PHP versions' => 'Omogućene verzije PHP-a',
+    'Service' => 'Usluga',
+    'Description' => 'Opis',
     
     //header
     'Hestia Control Panel' => 'Hestia Control Panel',
 
     // Set default language
-    'SYSTEM_SET_DEFAULT_LANGUAGE' => 'Set as default language for all users',
+    'SYSTEM_SET_DEFAULT_LANGUAGE' => 'Postavite kao zadani jezik za sve korisnike',
     
     //2FA 
-    'Forgot token' => 'Unlock Account',
+    'Forgot token' => 'Otključaj račun',
     '2FA Token' => 'OTP PIN',
-    '2FA Reset successfully' => 'Two-factor authentication is now turned off for your account.<br><br>You may now proceed to log in.',
-    'Reset 2FA' => 'Unlock Account',
-    '2FA Reset Code' => 'Account Recovery Code',
-    'Invalid or missing token' => 'Invalid or missing token',
+    '2FA Reset successfully' => 'Dvofaktorska provjera autentičnosti sada je isključena za vaš račun. <br> <br> Sada možete nastaviti s prijavom.',
+    'Reset 2FA' => 'Otključaj račun',
+    '2FA Reset Code' => 'Kôd za povrat računa',
+    'Invalid or missing token' => 'Nevažeći ili nedostajući token',
 
-    'DELETE_LOGS_CONFIRMATION'  => 'Are you sure you want to delete the logs?',
+    'DELETE_LOGS_CONFIRMATION'  => 'Jeste li sigurni da želite izbrisati zapisnike?',
 
-    'Force SSL/HTTPS' => 'Enable automatic HTTP-to-HTTPS redirection',
-    'Enable SSL HSTS' => 'Enable HTTP Strict Transport Security (HSTS) <a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><i class="fas fa-question-circle"></i></a>',
+    'Force SSL/HTTPS' => 'Omogući automatsko preusmjeravanje s HTTP na HTTPS',
+    'Enable SSL HSTS' => 'Omogući HTTP strogu sigurnost prijevoza (HSTS) <a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"> <i class = "fas fa-pitanje-krug"> </i> </a>',
 
-    '2 Factor Authentication' => 'Two-factor Authentication',
-    'Enable 2FA' => 'Enable two-factor authentication',
-    'Please scan the code below in your 2FA application:' => 'To finish setting up two-factor authentication, scan the QR code below<br />using an authentication app (such as <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google Authenticator</a>):',
-    '2FA Reset Code:' => 'Account Recovery Code:',
+    '2 Factor Authentication' => 'Dvofaktorska provjera autentičnosti',
+    'Enable 2FA' => 'Omogući dvofaktorsku provjeru identiteta',
+    'Please scan the code below in your 2FA application:' => 'Da biste dovršili postavljanje dvofaktorske provjere autentičnosti, skenirajte QR kôd ispod <br /> pomoću autentifikacijske aplikacije (poput <a href = "https://play.google.com/store/apps/details?id=com" google.android.apps.authenticator2 "> Google Autentičar </a>):',
+    '2FA Reset Code:' => 'Kôd za povrat računa:',
 );

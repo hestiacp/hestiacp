@@ -2,6 +2,7 @@
 /**
  * Hestia language file
  * Kronz (apaunovski@gmail.com) and loderx
+ * Bulgarian
  */
 
 $LANG['bg'] = array(
@@ -743,107 +744,107 @@ $LANG['bg'] = array(
     'Theme' => 'Външния вид',
     'Operating System' => 'Операционна система',
 
-    'Please wait while php is installed or removed' => 'Please wait until the process has completed and do not refresh the page.',
-    'Avoid adding web domains on admin account' => 'It is strongly advised to <a href="/add/user/">create a standard user account</a> before adding web domains to the server due to the increased privileges the admin account possesses and potential security risks.',
+    'Please wait while php is installed or removed' => 'Моля, изчакайте, докато процесът приключи и не опреснявайте страницата.',
+    'Avoid adding web domains on admin account' => 'Препоръчително е <a href="/add/user/"> да създадете стандартен потребителски акаунт </a> преди да добавите уеб домейни към сървъра поради увеличените привилегии, които администраторският акаунт притежава и потенциалните рискове за сигурността.',
     
     //SSH Key
-    'Field SSH_KEY can not be blank.' => 'Field SSH Key must not be blank',
-    'SSH KEY is invalid' => 'SSH key is invalid',
-    'SSH KEY already exists' => 'SSH key already exists',
-    'SSH KEY Added' => 'SSH key has been added',
-    'Add SSH Key' => 'Add SSH key',
-    'SSH KEY' => 'SSH Key',    
-    'DELETE_KEY_CONFIRM' => 'Are you sure you want to delete SSH key %s?',
+    'Field SSH_KEY can not be blank.' => 'Полето SSH ключ не трябва да бъде празно',
+    'SSH KEY is invalid' => 'SSH ключът е невалиден',
+    'SSH KEY already exists' => 'SSH ключ вече съществува',
+    'SSH KEY Added' => 'SSH ключът е добавен',
+    'Add SSH Key' => 'Добавете SSH ключ',
+    'SSH KEY' => 'SSH ключ',    
+    'DELETE_KEY_CONFIRM' => 'Сигурни ли сте, че искате да изтриете SSH ключ %s?',
     'SSH_ID' => 'SSH ID',
-    'Manage SSH keys' => 'Manage SSH keys',
+    'Manage SSH keys' => 'Управление на SSH ключовете',
  
     //Header 
-    'Fm' => 'Files',
+    'Fm' => 'файлове',
     //PHP Cli
-    'PHP CLI Version' => 'PHP CLI Version',
+    'PHP CLI Version' => 'PHP CLI версия',
 
     //Ipset Firewall rules
-    'Adding Firewall Ipset List' => 'New IP list',
-    'Ip List Name' => 'IP List Name',
-    'Data Source' => 'Data Source',
-    'Ip Version' => 'IP Version',
-    'Autoupdate' => 'Auto Update',
-    'Add IP list' => 'Add IP list',
-    'BLACKLIST' => 'BLACKLIST',
+    'Adding Firewall Ipset List' => 'Нов IP списък',
+    'Ip List Name' => 'Име на IP списъка',
+    'Data Source' => 'Източник на данни',
+    'Ip Version' => 'IP версия',
+    'Autoupdate' => 'Автоматично актуализиране',
+    'Add IP list' => 'Добавяне на IP списък',
+    'BLACKLIST' => 'черен списък',
     'IPVERSE' => 'IPVERSE',
-    'IPSET_CREATED_OK' => 'IP list created successfully',
-    'DELETE_IPSET_CONFIRMATION' => 'Are you sure you want to delete IP list %s?',
-    '1 Ipset list' => '1 IP list',
-    '%s Ipset lists' => '%s IP lists',
-    'There are currently no IP lists defined.' => 'There are currently no IP lists defined.',
-    'list ipset' => 'Manage IP lists',
+    'IPSET_CREATED_OK' => 'IP списъкът е създаден успешно',
+    'DELETE_IPSET_CONFIRMATION' => 'Сигурни ли сте, че искате да изтриете IP списъка %s?',
+    '1 Ipset list' => '1 IP списък',
+    '%s Ipset lists' => '%s IP списъци',
+    'There are currently no IP lists defined.' => 'В момента няма дефинирани IP списъци.',
+    'list ipset' => 'Управление на IP списъци',
     
     //Backup
-    'File Name' => 'File Name',
-    'Size' => 'Size',
-    'Runtime' => 'Runtime',
+    'File Name' => 'Име на файл',
+    'Size' => 'размер',
+    'Runtime' => 'Времетраене',
     //Logs
-    'Refresh' => 'Refresh',
-    'Time' => 'Time',
-    'Value' => 'Value',
+    'Refresh' => 'Обновяване',
+    'Time' => 'път',
+    'Value' => 'стойност',
     
     //DNS 
-    'default' => 'default',
-    '1 DNS zone' => '1 DNS zone',
-    '%s DNS zones' => '%s DNS zones',
-    'Add Record' => 'Add Record',
+    'default' => 'отменянето',
+    '1 DNS zone' => '1 DNS зона',
+    '%s DNS zones' => '%s DNS зони',
+    'Add Record' => 'Добавяне на запис',
     //user
-    '1 user account' => '1 user account',
-    '%s user accounts' => '%s user accounts',
+    '1 user account' => '1 потребителски акаунт',
+    '%s user accounts' => '%s потребителски акаунти',
     //database
-    '1 SQL database' => '1 SQL database',
-    '%s SQL databases' => '%s SQL databases',
+    '1 SQL database' => '1 SQL база данни',
+    '%s SQL databases' => '%s SQL бази данни',
     //mail
-    '1 mail domain' => '1 mail domain',
-    '%s mail domains' => '%s mail domains',
+    '1 mail domain' => '1 домейн по пощата',
+    '%s mail domains' => '%s имейли за поща',
     //web
-    '1 web domain' => '1 web domain',
+    '1 web domain' => '1 уеб домейн',
     '%s web domains' => '%s web domains',
     
     //rrd
-    'Bandwidth Usage' => 'Bandwidth Usage',
+    'Bandwidth Usage' => 'Използване на лентата',
     
     //reset
-    'Forgot Password' => 'Forgot Password',
+    'Forgot Password' => 'Забравена парола',
     //web
-    'Quick Install App' => 'Quick Install App',
+    'Quick Install App' => 'Приложение за бързо инсталиране',
     //webapp 
-    'version' => 'version',
-    'Setup' => 'Setup',
+    'version' => 'версия',
+    'Setup' => 'Настройвам',
     //Server
-    'Restart' => 'Restart',
-    'Mail Server' => 'Mail Server',
-    'Enabled multi PHP versions' => 'Enabled PHP versions',
-    'Service' => 'Service',
-    'Description' => 'Description',
+    'Restart' => 'Рестартирам',
+    'Mail Server' => 'Сървър за електронна поща',
+    'Enabled multi PHP versions' => 'Активирани PHP версии',
+    'Service' => 'Обслужване',
+    'Description' => 'описание',
     
     //header
     'Hestia Control Panel' => 'Hestia Control Panel',
 
     // Set default language
-    'SYSTEM_SET_DEFAULT_LANGUAGE' => 'Set as default language for all users',
+    'SYSTEM_SET_DEFAULT_LANGUAGE' => 'Задаване като език по подразбиране за всички потребители',
     
     //2FA 
-    'Forgot token' => 'Unlock Account',
-    '2FA Token' => 'OTP PIN',
-    '2FA Reset successfully' => 'Two-factor authentication is now turned off for your account.<br><br>You may now proceed to log in.',
-    'Reset 2FA' => 'Unlock Account',
-    '2FA Reset Code' => 'Account Recovery Code',
-    'Invalid or missing token' => 'Invalid or missing token',
+    'Forgot token' => 'Отключи акаунта',
+    '2FA Token' => 'OTP ПИН',
+    '2FA Reset successfully' => 'Двуфакторното удостоверяване вече е изключено за вашия акаунт. <br> <br> Вече можете да продължите да влизате.',
+    'Reset 2FA' => 'Отключи акаунта',
+    '2FA Reset Code' => 'Код за възстановяване на акаунта',
+    'Invalid or missing token' => 'Невалиден или липсващ маркер',
 
-    'DELETE_LOGS_CONFIRMATION'  => 'Are you sure you want to delete the logs?',
+    'DELETE_LOGS_CONFIRMATION'  => 'Сигурни ли сте, че искате да изтриете дневниците?',
 
-    'Force SSL/HTTPS' => 'Enable automatic HTTP-to-HTTPS redirection',
-    'Enable SSL HSTS' => 'Enable HTTP Strict Transport Security (HSTS) <a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><i class="fas fa-question-circle"></i></a>',
+    'Force SSL/HTTPS' => 'Активиране на автоматично пренасочване от HTTP към HTTPS',
+    'Enable SSL HSTS' => 'Активиране на HTTP стриктна транспортна сигурност (HSTS) <a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><i class="fas fa-question-circle"></i></a>',
 
-    '2 Factor Authentication' => 'Two-factor Authentication',
-    'Enable 2FA' => 'Enable two-factor authentication',
-    'Please scan the code below in your 2FA application:' => 'To finish setting up two-factor authentication, scan the QR code below<br />using an authentication app (such as <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google Authenticator</a>):',
-    '2FA Reset Code:' => 'Account Recovery Code:',
+    '2 Factor Authentication' => 'Двуфакторна автентификация',
+    'Enable 2FA' => 'Активиране на двуфакторна автентификация',
+    'Please scan the code below in your 2FA application:' => 'за да завършите настройката на двуфакторната автентификация, сканирайте QR кода по-долу <br /> с помощта на приложение за удостоверяване (като <a href = "https://play.google.com/store/apps/details?id=com"). google.android.apps.authenticator2 "> Google Удостоверител </a>):',
+    '2FA Reset Code:' => 'Код за възстановяване на акаунта:',
 );
 

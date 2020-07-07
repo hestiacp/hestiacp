@@ -144,10 +144,10 @@ if [ ! -z "$mail_data" ]; then
 
     # Check SSL
     if [ "$SSL" = 'yes' ]; then
-        ssl_crt=$HESTIA/data/users/$owner/ssl/$domain.crt
-        ssl_key=$HESTIA/data/users/$owner/ssl/$domain.key
-        ssl_ca=$HESTIA/data/users/$owner/ssl/$domain.ca
-        ssl_pem=$HESTIA/data/users/$owner/ssl/$domain.pem
+        ssl_crt=$HESTIA/data/users/$owner/ssl/mail.$domain.crt
+        ssl_key=$HESTIA/data/users/$owner/ssl/mail.$domain.key
+        ssl_ca=$HESTIA/data/users/$owner/ssl/mail.$domain.ca
+        ssl_pem=$HESTIA/data/users/$owner/ssl/mail.$domain.pem
         mv $ssl_crt $HESTIA/data/users/$user/ssl/
         mv $ssl_key $HESTIA/data/users/$user/ssl/
         mv $ssl_ca $HESTIA/data/users/$user/ssl/ >> /dev/null 2>&1

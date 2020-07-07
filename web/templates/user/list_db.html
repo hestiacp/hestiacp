@@ -6,22 +6,20 @@
             $mysql = 0;
             $pgsql = 0;
 
-
             list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
 
             foreach ($data as $key => $value) {
               if ($data[$key]['TYPE'] == 'mysql'){
                 $mysql = 1;
-
-                $db_myadmin_link = "https://".$http_host."/phpmyadmin/";
-                if (!empty($_SESSION['DB_PMA_URL']))
-                  $db_myadmin_link = $_SESSION['DB_PMA_URL'];
+                $db_myadmin_link = "//".$http_host."/phpmyadmin/";
+                if (!empty($_SESSION['DB_PMA_ALIAS']))
+                  $db_myadmin_link = "//".$http_host."/".$_SESSION['DB_PMA_ALIAS'];
               }
               if ($data[$key]['TYPE'] == 'pgsql'){
                 $pgsql = 1;
-                $db_pgadmin_link = "https://".$http_host."/phppgadmin/";
-                if (!empty($_SESSION['DB_PGA_URL']))
-                  $db_pgadmin_link = $_SESSION['DB_PGA_URL'];
+                $db_pgadmin_link = "//".$http_host."/phppgadmin/";
+                if (!empty($_SESSION['DB_PGA_ALIAS']))
+                  $db_pgadmin_link = "//".$http_host."/".$_SESSION['DB_PGA_ALIAS'];
               }
             }
             if($mysql){
@@ -107,10 +105,10 @@
           if ($data[$key]['HOST'] != 'localhost' ) $http_host = $data[$key]['HOST'];
           if ($data[$key]['TYPE'] == 'mysql') $db_admin = "phpMyAdmin";
           if ($data[$key]['TYPE'] == 'mysql') $db_admin_link = "https://".$http_host."/phpmyadmin/";
-          if (($data[$key]['TYPE'] == 'mysql') && (!empty($_SESSION['DB_PMA_URL']))) $db_admin_link = $_SESSION['DB_PMA_URL'];
+          if (($data[$key]['TYPE'] == 'mysql') && (!empty($_SESSION['DB_PMA_ALIAS']))) $db_admin_link = $_SESSION['DB_PMA_ALIAS'];
           if ($data[$key]['TYPE'] == 'pgsql') $db_admin = "phpPgAdmin";
           if ($data[$key]['TYPE'] == 'pgsql') $db_admin_link = "https://".$http_host."/phppgadmin/";
-          if (($data[$key]['TYPE'] == 'pgsql') && (!empty($_SESSION['DB_PGA_URL']))) $db_admin_link = $_SESSION['DB_PGA_URL'];
+          if (($data[$key]['TYPE'] == 'pgsql') && (!empty($_SESSION['DB_PGA_ALIAS']))) $db_admin_link = $_SESSION['DB_PGA_ALIAS'];
       ?>
 
 

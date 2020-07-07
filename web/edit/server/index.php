@@ -312,8 +312,8 @@ if (!empty($_POST['save'])) {
 
     // Update phpMyAdmin url
     if (empty($_SESSION['error_msg'])) {
-        if ($_POST['v_mysql_url'] != $_SESSION['DB_PMA_URL']) {
-            exec (HESTIA_CMD."v-change-sys-config-value DB_PMA_URL ".escapeshellarg($_POST['v_mysql_url']), $output, $return_var);
+        if ($_POST['v_mysql_url'] != $_SESSION['DB_PMA_ALIAS']) {
+            exec (HESTIA_CMD."v-change-sys-db-alias pma ".escapeshellarg($_POST['v_mysql_url']), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
             $v_db_adv = 'yes';
@@ -322,8 +322,8 @@ if (!empty($_POST['save'])) {
 
     // Update phpPgAdmin url
     if (empty($_SESSION['error_msg'])) {
-        if ($_POST['v_pgsql_url'] != $_SESSION['DB_PGA_URL']) {
-            exec (HESTIA_CMD."v-change-sys-config-value DB_PGA_URL ".escapeshellarg($_POST['v_pgsql_url']), $output, $return_var);
+        if ($_POST['v_pgsql_url'] != $_SESSION['DB_PGA_ALIAS']) {
+            exec (HESTIA_CMD."v-change-sys-db-alias pga ".escapeshellarg($_POST['v_pgsql_url']), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
             $v_db_adv = 'yes';

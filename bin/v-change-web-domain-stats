@@ -38,7 +38,6 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
-is_object_value_exist 'web' 'DOMAIN' "$domain" '$STATS'
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -48,49 +47,43 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining statistic type
+# Parse aliases
 get_domain_values 'web'
 
-# Comparing stats types
-if [ "$STATS" == $type ]; then
-    log_event "$OK" "$ARGUMENTS"
-    exit 0
-fi
-
-# Defining statistic dir
-stats_dir="$HOMEDIR/$user/web/$domain/stats"
-
-# Deleting dir content
-rm -rf $stats_dir/*
-
 # Deleting config
-rm -f $HOMEDIR/$user/conf/web/$domain/$STATS.conf
+rm -f $HOMEDIR/$user/conf/web/$domain/$type.conf
 
 # Adding statistic config
 prepare_web_domain_values
+
+if [ -z "${aliases//,/ }" ]; then
+    stats_alias="localhost"
+else
+    stats_alias=${aliases_idn//,/ }
+fi
+
 cat $WEBTPL/$type/$type.tpl |\
-    sed -e "s/%ip%/$ip/g" \
-        -e "s/%web_port%/$WEB_PORT/g" \
-        -e "s/%web_system%/$WEB_SYSTEM/g" \
-        -e "s/%web_ssl_port%/$WEB_SSL_PORT/g" \
-        -e "s/%rgroups%/$WEB_RGROUPS/g" \
-        -e "s/%proxy_system%/$PROXY_SYSTEM/g" \
-        -e "s/%proxy_port%/$PROXY_PORT/g" \
-        -e "s/%proxy_ssl_port%/$PROXY_SSL_PORT/g" \
-        -e "s/%domain_idn%/$domain_idn/g" \
-        -e "s/%domain%/$domain/g" \
-        -e "s/%user%/$user/g" \
-        -e "s/%home%/${HOMEDIR////\/}/g" \
-        -e "s/%alias%/${aliases//,/ }/g" \
-        -e "s/%alias_idn%/${aliases_idn//,/ }/g" \
-    > $HOMEDIR/$user/conf/web/$type.$domain.conf
+    sed -e "s|%ip%|$ip|g" \
+        -e "s|%web_port%|$WEB_PORT|g" \
+        -e "s|%web_system%|$WEB_SYSTEM|g" \
+        -e "s|%web_ssl_port%|$WEB_SSL_PORT|g" \
+        -e "s|%rgroups%|$WEB_RGROUPs|g" \
+        -e "s|%proxy_system%|$PROXY_SYSTEM|g" \
+        -e "s|%proxy_port%|$PROXY_PORT|g" \
+        -e "s|%proxy_ssl_port%|$PROXY_SSL_PORT|g" \
+        -e "s|%domain_idn%|$domain_idn|g" \
+        -e "s|%domain%|$domain|g" \
+        -e "s|%user%|$user|g" \
+        -e "s|%home%|$HOMEDIR|g" \
+        -e "s|%alias%|${aliases//,/ }|g" \
+        -e "s|%alias_idn%|$stats_alias|g" \
+    > $HOMEDIR/$user/conf/web/$domain/$type.conf
 
 if [ "$type" == 'awstats' ]; then
     rm -f /etc/awstats/$type.$domain_idn.conf
-    ln -s $HOMEDIR/$user/conf/web/$type.$domain.conf \
+    ln -s $HOMEDIR/$user/conf/web/$domain/$type.conf \
         /etc/awstats/$type.$domain_idn.conf
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

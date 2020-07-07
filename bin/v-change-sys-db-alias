@@ -1,0 +1,106 @@
+#!/bin/bash
+# info: change phpmyadmin/phppgadmin alias url
+# options: type alias
+# example:  v-change-sys-db-alias pma phpmyadmin
+#           Sets phpMyAdmin alias to phpmyadmin
+#
+# example:  v-change-sys-db-alias pga phppgadmin
+#           Sets phpPgAdmin alias to phppgadmin
+#
+# This function changes the database editor url in
+# apache2 or nginx configuration.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+type=$1
+alias=$2
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'type alias'
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Detect common allowed entries for phpMyAdmin
+if [ "$type" = "pma" ] || [ "$type" = "PMA" ] || [ "$type" = "phpmyadmin" ]; then
+    # Set database editor friendly name
+    db_editor="phpMyAdmin"
+
+    # Set new alias value
+    $BIN/v-change-sys-config-value 'DB_PMA_ALIAS' "$alias"
+
+    # Replace old configuration files and update alias
+    if [ -e "/etc/apache2/conf.d/phpmyadmin.conf" ]; then
+        rm -f /etc/apache2/conf.d/phpmyadmin.conf
+        cp -f $HESTIA_INSTALL_DIR/pma/apache.conf /etc/apache2/conf.d/phpmyadmin.conf
+        sed -i "s|%pma_alias%|$alias|g" /etc/apache2/conf.d/phpmyadmin.conf
+        
+        # Restart services
+        $HESTIA/bin/v-restart-service apache2
+    fi
+
+    if [ -e "/etc/nginx/conf.d/phpmyadmin.inc" ]; then
+        rm -f /etc/nginx/conf.d/phpmyadmin.inc
+        cp -f $HESTIA_INSTALL_DIR/nginx/phpmyadmin.inc /etc/nginx/conf.d/phpmyadmin.inc
+        sed -i "s|%pma_alias%|$alias|g" /etc/nginx/conf.d/phpmyadmin.inc
+        
+        # Restart services
+        $HESTIA/bin/v-restart-service nginx
+    fi
+fi
+
+# Detect common allowed entries for phpPgAdmin
+if [ "$type" = "pga" ] || [ "$type" = "PGA" ] || [ "$type" = "phppgadmin" ]; then
+    # Set database editor friendly name
+    db_editor="phpPgAdmin"
+
+    # Set new alias value
+    $BIN/v-change-sys-config-value 'DB_PGA_ALIAS' "$alias"
+
+    # Replace old configuration files and update alias
+    if [ -e "/etc/apache2/conf.d/phppgadmin.conf" ]; then
+        rm -f /etc/apache2/conf.d/phppgadmin.conf
+        cp -f $HESTIA_INSTALL_DIR/pga/phppgadmin.conf /etc/apache2/conf.d/phppgadmin.conf
+        sed -i "s|%pga_alias%|$alias|g" /etc/apache2/conf.d/phppgadmin.conf 
+        
+        # Restart services
+        $HESTIA/bin/v-restart-service apache2
+    fi
+
+    if [ -e "/etc/nginx/conf.d/phppgadmin.inc" ]; then
+        rm -f /etc/nginx/conf.d/phppgadmin.inc
+        cp -f $HESTIA_INSTALL_DIR/nginx/phppgadmin.inc /etc/nginx/conf.d/phppgadmin.inc
+        sed -i "s|%pga_alias%|$alias|g" /etc/nginx/conf.d/phppgadmin.inc
+        
+        # Restart services
+        $HESTIA/bin/v-restart-service nginx
+    fi
+fi
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_history "changed $db_editor alias to $alias"
+log_event "$OK" "$ARGUMENTS"
+
+exit

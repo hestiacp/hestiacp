@@ -815,6 +815,9 @@ chown -R $user:$user $HOMEDIR/$user/tmp
 subj="$user → restore has been completed"
 cat $tmpdir/restore.log |$SENDMAIL -s "$subj" $email $notify
 
+# Send notification to panel
+$HESTIA/bin/v-add-user-notification "$user" "Backup restored successfully" "<b>Archive:</b> $backup"
+
 # Deleting temporary data
 rm -rf $tmpdir
 
@@ -832,6 +835,7 @@ $BIN/v-update-user-counters admin
 $BIN/v-update-sys-ip-counters
 
 # Logging
+log_history "restored contents from backup archive $backup"
 log_event "$OK" "$ARGUMENTS"
 
 exit

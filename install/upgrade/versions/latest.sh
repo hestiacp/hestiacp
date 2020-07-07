@@ -73,19 +73,19 @@ fi
 # Roundcube fixes for PHP 7.4 compatibility
 if [ -d /usr/share/roundcube ]; then
     echo "(*) Updating Roundcube configuration..."
-    sed -i 's/$identities, "\\n"/"\\n", $identities/g' /usr/share/roundcube/plugins/enigma/lib/enigma_ui.php
-    sed -i 's/(array_keys($post_search), \x27|\x27)/(\x27|\x27, array_keys($post_search))/g' /usr/share/roundcube/program/lib/Roundcube/rcube_contacts.php
-    sed -i 's/implode($name, \x27.\x27)/implode(\x27.\x27, $name)/g' /usr/share/roundcube/program/lib/Roundcube/rcube_db.php
-    sed -i 's/$fields, \x27,\x27/\x27,\x27, $fields/g' /usr/share/roundcube/program/steps/addressbook/search.inc
-    sed -i 's/implode($fields, \x27,\x27)/implode(\x27,\x27, $fields)/g' /usr/share/roundcube/program/steps/addressbook/search.inc
-    sed -i 's/implode($bstyle, \x27; \x27)/implode(\x27; \x27, $bstyle)/g' /usr/share/roundcube/program/steps/mail/sendmail.inc
+    [ -f "/usr/share/roundcube/plugins/enigma/lib/enigma_ui.php" ] && sed -i 's/$identities, "\\n"/"\\n", $identities/g' /usr/share/roundcube/plugins/enigma/lib/enigma_ui.php
+    [ -f "/usr/share/roundcube/program/lib/Roundcube/rcube_contacts.php" ] && sed -i 's/(array_keys($post_search), \x27|\x27)/(\x27|\x27, array_keys($post_search))/g' /usr/share/roundcube/program/lib/Roundcube/rcube_contacts.php
+    [ -f "/usr/share/roundcube/program/lib/Roundcube/rcube_db.php" ] && sed -i 's/implode($name, \x27.\x27)/implode(\x27.\x27, $name)/g' /usr/share/roundcube/program/lib/Roundcube/rcube_db.php
+    [ -f "/usr/share/roundcube/program/steps/addressbook/search.inc" ] && sed -i 's/$fields, \x27,\x27/\x27,\x27, $fields/g' /usr/share/roundcube/program/steps/addressbook/search.inc
+    [ -f "/usr/share/roundcube/program/steps/addressbook/search.inc" ] && sed -i 's/implode($fields, \x27,\x27)/implode(\x27,\x27, $fields)/g' /usr/share/roundcube/program/steps/addressbook/search.inc
+    [ -f "/usr/share/roundcube/program/steps/mail/sendmail.inc" ] && sed -i 's/implode($bstyle, \x27; \x27)/implode(\x27; \x27, $bstyle)/g' /usr/share/roundcube/program/steps/mail/sendmail.inc
 fi
 
 # Enable Roundcube plugins
 if [ -d /usr/share/roundcube ]; then
     cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_newmail_notifier.inc.php /etc/roundcube/plugins/newmail_notifier/config.inc.php
     cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_zipdownload.inc.php /etc/roundcube/plugins/zipdownload/config.inc.php
-    sed -i "s/array('password')/array('password','newmail_notifier','zipdownload')/g" /etc/roundcube/config.inc.php
+    [ -f "/etc/roundcube/config.inc.php" ] && sed -i "s/array('password')/array('password','newmail_notifier','zipdownload')/g" /etc/roundcube/config.inc.php
 fi
 
 # HELO support for multiple domains and IPs
@@ -168,3 +168,27 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
 
     chown --silent --no-dereference :www-data /home/$user/web/*/public_*html
 done
+
+# Fix phpMyAdmin blowfish_secret error message due to incorrect permissions
+if [ -e /var/lib/phpmyadmin/blowfish_secret.inc.php ]; then
+    echo "(*) Updating phpMyAdmin permissions..."
+    chmod 0644 /var/lib/phpmyadmin/blowfish_secret.inc.php
+fi
+
+# Add phpMyAdmin/phpPgAdmin aliases to hestia.conf and correct configuration/templates
+if [ -e "/var/lib/phpmyadmin" ]; then
+PMA_ALIAS_CHECK=$(cat $HESTIA/conf/hestia.conf | grep DB_PMA_ALIAS)
+    if [ -z "$PMA_ALIAS_CHECK" ]; then
+        echo "(*) Updating phpMyAdmin alias..."
+        $HESTIA/bin/v-change-sys-db-alias "pma" "phpmyadmin"
+    fi
+fi
+
+if [ -e "/var/lib/phppgadmin" ]; then
+PGA_ALIAS_CHECK=$(cat $HESTIA/conf/hestia.conf | grep DB_PGA_ALIAS)
+    if [ -z "$PGA_ALIAS_CHECK" ]; then
+        echo "(*) Updating phpPgAdmin alias..."
+        $HESTIA/bin/v-change-sys-db-alias "pga" "phppgadmin"
+    fi
+fi
+

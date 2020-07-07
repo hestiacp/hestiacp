@@ -244,6 +244,13 @@ if (!empty($_POST['save'])) {
                 }
             }
         }
+        if ((!empty($v_stats)) && ($_POST['v_stats'] == $v_stats) && (empty($_SESSION['error_msg']))) {
+            // Update statistics configuration when changing domain aliases
+            $v_stats = escapeshellarg($_POST['v_stats']);
+            exec (HESTIA_CMD."v-change-web-domain-stats ".$v_username." ".escapeshellarg($v_domain)." ".$v_stats, $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+        }
     }
     
     // Change backend template

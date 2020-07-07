@@ -126,6 +126,8 @@ fi
 mail_data=$(grep "DOMAIN='$domain'" $HESTIA/data/users/$owner/mail.conf)
 if [ ! -z "$mail_data" ]; then
 
+    parse_object_kv_list "$mail_data"
+    
     # Move config
     sed -i "/DOMAIN='$domain'/d" $HESTIA/data/users/$owner/mail.conf
     echo "$mail_data" >> $HESTIA/data/users/$user/mail.conf

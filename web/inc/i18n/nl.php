@@ -527,7 +527,7 @@ $LANG['nl'] = array(
     'Database Credentials'  => 'Database gegevens',
     'DATABASE_READY' => "De database is succesvol aangemaakt en klaar voor gebruik.\n\nDatabase: %s\nGebruiker: %s\nWachtwoord: %s\n%s\n\n--\nHestia Controlepaneel\n",
 
-    'forgot password'  => 'Vergeten',
+    'forgot password'  => 'Wachtwoord vergeten',
     'Confirm'  => 'Bevestig',
     'New Password'  => 'Nieuw wachtwoord',
     'Confirm Password'  => 'Bevestig wachtwoord',

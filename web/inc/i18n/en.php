@@ -702,17 +702,6 @@ $LANG['en'] = array(
     'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' =>
     'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager',
 
-    'Licence Key' => 'License Key',
-    'Enter License Key' => 'Enter License Key',
-    'Buy Licence' => 'Buy License',
-    'Buy Lifetime License' => 'Buy Lifetime License',
-    'Disable and Cancel Licence' => 'Disable and Cancel License',
-    'Licence Activated' => 'License Activated',
-    'Licence Deactivated' => 'License Deactivated',
-    'Restrict users so that they cannot use SSH and access only their home directory.' => 'Restrict users so that they cannot use SSH and access only their home directory.',
-    'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.' => 'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.',
-    'This is a commercial module, you would need to purchace license key to enable it.' => 'This is a commercial module, you would need to purchace license key to enable it.',
-
     'Minutes' => 'Minutes',
     'Hourly' => 'Hourly',
     'Run Command' => 'Run Command',
@@ -767,7 +756,7 @@ $LANG['en'] = array(
     'Theme' => 'Appearance',
 
     'Operating System' => 'Operating System',
-    'Please wait while php is installed or removed' => 'Please wait until the process has completed and do not refresh the page.',
+    'Please wait while php is installed or removed' => 'It may take a few minutes to save your changes. Please wait until the process has completed and do not refresh the page.',
     'Avoid adding web domains on admin account' => 'It is strongly advised to <a href="/add/user/">create a standard user account</a> before adding web domains to the server due to the increased privileges the admin account possesses and potential security risks.',
     
     //SSH Key
@@ -796,7 +785,7 @@ $LANG['en'] = array(
     'BLACKLIST' => 'BLACKLIST',
     'IPVERSE' => 'IPVERSE',
     'IPSET_CREATED_OK' => 'IP list created successfully',
-    'DELETE_IPSET_CONFIRMATION' => 'Are you sure you want to delete IP list %s',
+    'DELETE_IPSET_CONFIRMATION' => 'Are you sure you want to delete IP list %s?',
     '1 Ipset list' => '1 IP list',
     '%s Ipset lists' => '%s IP lists',
     'There are currently no IP lists defined.' => 'There are currently no IP lists defined.',

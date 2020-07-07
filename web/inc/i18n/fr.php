@@ -699,17 +699,6 @@ $LANG['fr'] = array(
     'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' =>
         'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager',
 
-    'Licence Key' => 'Clé de License',
-    'Enter License Key' => 'Entrez la clé de License',
-    'Buy Licence' => 'Acheter une License',
-    'Buy Lifetime License' => 'Acheter une License Unlimited',
-    'Disable and Cancel Licence' => 'Désactiver ou Annuler la License',
-    'Licence Activated' => 'License activée',
-    'Licence Deactivated' => 'Licence désactivée',
-    'Restrict users so that they cannot use SSH and access only their home directory.' => 'Restrict users so that they cannot use SSH and access only their home directory.',
-    'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.' => 'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.',
-    'This is a commercial module, you would need to purchace license key to enable it.' => 'This is a commercial module, you would need to purchace license key to enable it.',
-
     'Minutes' => 'Minutes',
     'Hourly' => 'Horaire',
     'Run Command' => 'Exécuter la commande',
@@ -764,7 +753,7 @@ $LANG['fr'] = array(
 
     'Theme' => 'Apparence',
 
-    'Please wait while php is installed or removed' => 'Veuillez attendre la fin du processus et ne pas actualiser la page.',
+    'Please wait while php is installed or removed' => 'L\'enregistrement des modifications peut prendre quelques minutes. Veuillez attendre la fin du processus et ne pas actualiser la page.',
     'Avoid adding web domains on admin account' => 'Il est fortement conseillé de <a href="/add/user/">créer un compte utilisateur standard</a> avant d\'ajouter des domaines Web au serveur en raison des privilèges accrus du compte administrateur et des risques de sécurité potentiels.',
     
     'Operating System' => 'Système d\'exploitation',

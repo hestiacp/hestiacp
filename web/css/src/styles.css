@@ -1511,7 +1511,19 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 
 .lang-ru .l-select {
-  width: 199px;
+  width: 170px;
+}
+
+.body-firewall.lang-ru .l-select {
+  max-width: 125px;
+}
+
+.body-firewall.lang-ru .l-select {
+  max-width: 125px;
+}
+
+.body-firewall.lang-es .l-select {
+  max-width: 135px;
 }
 
 .l-select:after {
@@ -2003,7 +2015,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .l-unit__stat-col--right {
   float: left;
-  max-width: 152px;
+  max-width: 165px;
 }
 
 .l-unit-toolbar__col--left {
@@ -2755,7 +2767,7 @@ a.vst-text:active b{
   border-bottom: none;
   color: #326b9b;
   font-size: 10px;
-  padding: 2px 2px 0;
+  padding: 2px !important;
   text-decoration: none;
   text-transform: uppercase;
   font-size: 0.85em !important;
@@ -3913,6 +3925,10 @@ form#vstobjects.suspended {
 
 .userlist-username {
   font-size: 1.05em;
+}
+
+.lang-es .userlist-email {
+  width: 270px;
 }
 
 @media screen and (max-width: 950px) {

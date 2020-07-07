@@ -14,7 +14,7 @@ hestia_module_info() {
 
         echo "Installed       : yes"
         echo "Description     : $(osal_kv_read $HESTIA_CONF_MODULES/${1}.conf 'description')"
-        echo "Enabled         : $(osal_bool_yes $module_enabled)"
+        echo "Enabled         : $(osal_bool_tostring $module_enabled)"
         echo "Variant         : $module_variant"
         echo "Version         : $module_version"
     else

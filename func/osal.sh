@@ -100,14 +100,15 @@ osal_kv_read_bool() {
     fi
 }
 
-osal_bool_yes() {
+# answer=$(osal_bool_tostring boolean_value yes_value no_value)
+osal_bool_tostring() {
     if [ "${1,,}" == "yes" ] \
         || [ "${1,,}" == "true" ] \
         || [ "${1,,}" == "on" ] \
         || [ "$1" == "1" ]; then
-        echo 'yes'
+        if [ -n "$2" ]; then echo "$2"; else echo 'yes'; fi
     else
-        echo 'no'
+        if [ -n "$3" ]; then echo "$3"; else echo 'no'; fi
     fi
 }
 

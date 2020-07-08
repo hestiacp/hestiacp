@@ -43,14 +43,7 @@ fi
 # Remove Webalizer and set AWStats as default
 WEBALIZER_CHECK=$(cat $HESTIA/conf/hestia.conf | grep webalizer)
 if [ ! -z "$WEBALIZER_CHECK" ]; then
-    echo "[ * ] Removing Webalizer and setting AWStats as default web statistics backend..."
-    apt purge webalizer -y > /dev/null 2>&1
-    if [ -d "$HESTIA/data/templates/web/webalizer" ]; then
-        rm -rf $HESTIA/data/templates/web/webalizer
-    fi
-    if [ -d "/var/www/webalizer" ]; then
-        rm -rf /var/www/webalizer
-    fi
+    echo "[ * ] Set awstats as default web statistics backend..."
     $HESTIA/bin/v-change-sys-config-value 'STATS_SYSTEM' 'awstats'
 fi
 
@@ -71,5 +64,7 @@ if [ ! -z "$IMAP_SYSTEM" ]; then
 fi 
 
 # Enhance webmail security
-cp -f /etc/nginx/conf.d/webmail.inc $HESTIA_BACKUP/conf/
-sed -i "s/config|temp|logs/README.md|config|temp|logs|bin|SQL|INSTALL|LICENSE|CHANGELOG|UPGRADING/g" /etc/nginx/conf.d/webmail.inc
+if [ -e "/etc/nginx/conf.d/webmail.inc" ]; then
+    cp -f /etc/nginx/conf.d/webmail.inc $HESTIA_BACKUP/conf/
+    sed -i "s/config|temp|logs/README.md|config|temp|logs|bin|SQL|INSTALL|LICENSE|CHANGELOG|UPGRADING/g" /etc/nginx/conf.d/webmail.inc
+fi

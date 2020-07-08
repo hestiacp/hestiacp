@@ -80,20 +80,6 @@ upgrade_start_routine() {
         echo "[ * ] Adding global release branch variable to system configuration..."
         $BIN/v-change-sys-config-value 'RELEASE_BRANCH' 'release'
     fi
-
-    #####################################################################
-    #######         Start upgrade for pre-release builds          #######
-    #######     Ensures clean upgrade path from v1.0.1 onwards    #######
-    #######             DO NOT MODIFY THIS SECTION                #######
-    #####################################################################
-
-    if [ $VERSION = "0.9.8-25" ] || [ $VERSION = "0.9.8-26" ] || [ $VERSION = "0.9.8-27" ] || [ $VERSION = "0.9.8-28" ] || [ $VERSION = "0.9.8-29" ] || [ $VERSION = "0.10.0" ] || [ $VERSION = "1.00.0-190618" ] || [ $VERSION = "1.00.0-190621" ] || [ $VERSION = "1.0.0" ]; then
-        source $HESTIA/install/upgrade/versions/previous/0.9.8-29.sh
-        source $HESTIA/install/upgrade/versions/previous/1.00.0-190618.sh
-        source $HESTIA/install/upgrade/versions/previous/1.0.1.sh
-        VERSION="1.0.1"
-        upgrade_refresh_config
-    fi
     
     #####################################################################
     #######             Start standard upgrade process            #######
@@ -107,6 +93,16 @@ upgrade_start_routine() {
         echo ""
         source $HESTIA/install/upgrade/versions/latest.sh
         VERSION="$new_version"
+        upgrade_set_version $VERSION
+        upgrade_refresh_config
+    fi
+
+    if [ $VERSION = "0.9.8-25" ] || [ $VERSION = "0.9.8-26" ] || [ $VERSION = "0.9.8-27" ] || [ $VERSION = "0.9.8-28" ] || [ $VERSION = "0.9.8-29" ] || [ $VERSION = "0.10.0" ] || [ $VERSION = "1.00.0-190618" ] || [ $VERSION = "1.00.0-190621" ] || [ $VERSION = "1.0.0" ]; then
+        source $HESTIA/install/upgrade/versions/previous/0.9.8-29.sh
+        source $HESTIA/install/upgrade/versions/previous/1.00.0-190618.sh
+        source $HESTIA/install/upgrade/versions/previous/1.0.1.sh
+        VERSION="1.0.1"
+        upgrade_set_version $VERSION
         upgrade_refresh_config
     fi
 
@@ -114,6 +110,7 @@ upgrade_start_routine() {
     if [ $VERSION = "1.0.1" ]; then
         source $HESTIA/install/upgrade/versions/previous/1.0.2.sh
         VERSION="1.0.2"
+        upgrade_set_version $VERSION
         upgrade_refresh_config
     fi
 
@@ -121,6 +118,7 @@ upgrade_start_routine() {
     if [ $VERSION = "1.0.2" ]; then
         source $HESTIA/install/upgrade/versions/previous/1.0.3.sh
         VERSION="1.0.3"
+        upgrade_set_version $VERSION
         upgrade_refresh_config
     fi
 
@@ -128,6 +126,7 @@ upgrade_start_routine() {
     if [ $VERSION = "1.0.3" ]; then
         source $HESTIA/install/upgrade/versions/previous/1.0.4.sh
         VERSION="1.0.4"
+        upgrade_set_version $VERSION
         upgrade_refresh_config
     fi
 
@@ -135,6 +134,7 @@ upgrade_start_routine() {
     if [ $VERSION = "1.0.4" ]; then
         source $HESTIA/install/upgrade/versions/previous/1.0.5.sh
         VERSION="1.0.5"
+        upgrade_set_version $VERSION
         upgrade_refresh_config
     fi
 
@@ -142,6 +142,7 @@ upgrade_start_routine() {
     if [ $VERSION = "1.0.5" ]; then
         source $HESTIA/install/upgrade/versions/previous/1.0.6.sh
         VERSION="1.0.6"
+        upgrade_set_version $VERSION
         upgrade_refresh_config
     fi
 
@@ -149,6 +150,7 @@ upgrade_start_routine() {
     if [ $VERSION = "1.0.6" ]; then
         source $HESTIA/install/upgrade/versions/previous/1.1.0.sh
         VERSION="1.1.0"
+        upgrade_set_version $VERSION
         upgrade_refresh_config
     fi
 
@@ -156,6 +158,7 @@ upgrade_start_routine() {
     if [ $VERSION = "1.1.0" ]; then
         source $HESTIA/install/upgrade/versions/previous/1.1.1.sh
         VERSION="1.1.1"
+        upgrade_set_version $VERSION
         upgrade_refresh_config
     fi
 
@@ -243,7 +246,7 @@ upgrade_get_version() {
 upgrade_set_version() {
     # Set new version number in hestia.conf
     sed -i "/VERSION/d" $HESTIA/conf/hestia.conf
-    echo "VERSION='$new_version'" >> $HESTIA/conf/hestia.conf
+    echo "VERSION='$@'" >> $HESTIA/conf/hestia.conf
 }
 
 upgrade_rebuild_users() {

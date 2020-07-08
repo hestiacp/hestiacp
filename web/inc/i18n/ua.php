@@ -670,7 +670,7 @@ $LANG['ua'] = array(
     'Add File to the Current Selection' => 'Додати файли до поточного виділення',
     'Select All Files' => 'Виділити всі файли',
     'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' =>
-        'скорочення позичені у файлогово менеджера GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a>',
+        'скорочення позичені у файловогово менеджера GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a>',
     'Minutes' => 'Щохвилини',
     'Hourly' => 'Щогодини',
     'Run Command' => 'Виконати команду',
@@ -719,49 +719,49 @@ $LANG['ua'] = array(
 	'Force SSL/HTTPS' => 'Примусовий редирект HTTP-на-HTTPS',
     'Theme' => 'Зовнішній вигляд',
     'Operating System' => 'Операційна система',
-    'Please wait while php is installed or removed' => 'Please wait until the process has completed and do not refresh the page.',
-    'Avoid adding web domains on admin account' => 'It is strongly advised to <a href="/add/user/">create a standard user account</a> before adding web domains to the server due to the increased privileges the admin account possesses and potential security risks.',
+    'Please wait while php is installed or removed' => 'Будь ласка, зачекайте поки PHP інсталюється чи видаляється.',
+    'Avoid adding web domains on admin account' => 'Переконливо рекомендується <a href="/add/user/">створити звичайний акаунт</a> перш ніж створювати веб домени з міркувань безпеки.',
     
     //SSH Key
-    'Field SSH_KEY can not be blank.' => 'Field SSH Key must not be blank',
-    'SSH KEY is invalid' => 'SSH key is invalid',
-    'SSH KEY already exists' => 'SSH key already exists',
-    'SSH KEY Added' => 'SSH key has been added',
-    'Add SSH Key' => 'Add SSH key',
+    'Field SSH_KEY can not be blank.' => 'Поле SSH Key не може бути пустим',
+    'SSH KEY is invalid' => 'Неправильний SSH key ',
+    'SSH KEY already exists' => 'SSH вже існує',
+    'SSH KEY Added' => 'SSH key додано',
+    'Add SSH Key' => 'Додати SSH key',
     'SSH KEY' => 'SSH Key',    
-    'DELETE_KEY_CONFIRM' => 'Are you sure you want to delete SSH key %s?',
+    'DELETE_KEY_CONFIRM' => 'Ви впевнені, що хочете видалити SSH key %s?',
     'SSH_ID' => 'SSH ID',
-    'Manage SSH keys' => 'Manage SSH keys',
+    'Manage SSH keys' => 'Керування SSH keys',
  
     //Header 
-    'Fm' => 'Files',
+    'Fm' => 'Файли',
     //PHP Cli
-    'PHP CLI Version' => 'PHP CLI Version',
+    'PHP CLI Version' => ' Версія PHP CLI ',
 
     //Ipset Firewall rules
-    'Adding Firewall Ipset List' => 'New IP list',
-    'Ip List Name' => 'IP List Name',
-    'Data Source' => 'Data Source',
-    'Ip Version' => 'IP Version',
-    'Autoupdate' => 'Auto Update',
-    'Add IP list' => 'Add IP list',
+    'Adding Firewall Ipset List' => 'Новий список IP ',
+    'Ip List Name' => 'Назва списку IP ',
+    'Data Source' => 'Джерело даних',
+    'Ip Version' => ' Версія IP',
+    'Autoupdate' => 'Автооновлення',
+    'Add IP list' => 'Додати список IP ',
     'BLACKLIST' => 'BLACKLIST',
     'IPVERSE' => 'IPVERSE',
-    'IPSET_CREATED_OK' => 'IP list created successfully',
-    'DELETE_IPSET_CONFIRMATION' => 'Are you sure you want to delete IP list %s',
-    '1 Ipset list' => '1 IP list',
-    '%s Ipset lists' => '%s IP lists',
-    'There are currently no IP lists defined.' => 'There are currently no IP lists defined.',
-    'list ipset' => 'Manage IP lists',
+    'IPSET_CREATED_OK' => 'Список IP створено успішно',
+    'DELETE_IPSET_CONFIRMATION' => 'Ви впевнені, що хочете видалити список IP %s',
+    '1 Ipset list' => '1 список Ipset',
+    '%s Ipset lists' => '%s списків Ipset ',
+    'There are currently no IP lists defined.' => 'Не задано жодного списку IP.',
+    'list ipset' => 'Керування списками IP',
     
     //Backup
-    'File Name' => 'File Name',
-    'Size' => 'Size',
-    'Runtime' => 'Runtime',
+    'File Name' => 'Ім`я файлу ',
+    'Size' => 'Розмір',
+    'Runtime' => 'Витрачено часу',
     //Logs
-    'Refresh' => 'Refresh',
-    'Time' => 'Time',
-    'Value' => 'Value',
+    'Refresh' => 'Оновити',
+    'Time' => 'Час',
+    'Value' => 'Значення',
     
     //DNS 
     'default' => 'default',
@@ -772,53 +772,53 @@ $LANG['ua'] = array(
     '1 user account' => '1 user account',
     '%s user accounts' => '%s user accounts',
     //database
-    '1 SQL database' => '1 SQL database',
-    '%s SQL databases' => '%s SQL databases',
+    '1 SQL database' => '1 БД SQL ',
+    '%s SQL databases' => '%s БД SQL ',
     //mail
-    '1 mail domain' => '1 mail domain',
-    '%s mail domains' => '%s mail domains',
+    '1 mail domain' => '1 поштовий домен',
+    '%s mail domains' => '%s поштових доменів',
     //web
-    '1 web domain' => '1 web domain',
-    '%s web domains' => '%s web domains',
+    '1 web domain' => '1 веб домен',
+    '%s web domains' => '%s веб доменів',
     
     //rrd
-    'Bandwidth Usage' => 'Bandwidth Usage',
+    'Bandwidth Usage' => 'Використання трафіку',
     
     //reset
-    'Forgot Password' => 'Forgot Password',
+    'Forgot Password' => 'Забули пароль?',
     //web
-    'Quick Install App' => 'Quick Install App',
+    'Quick Install App' => 'Встановити додаток',
     //webapp 
-    'version' => 'version',
-    'Setup' => 'Setup',
+    'version' => 'версія',
+    'Setup' => 'Установка',
     //Server
-    'Restart' => 'Restart',
-    'Mail Server' => 'Mail Server',
-    'Enabled multi PHP versions' => 'Enabled PHP versions',
-    'Service' => 'Service',
-    'Description' => 'Description',
+    'Restart' => 'Рестарт',
+    'Mail Server' => 'Поштовий сервер',
+    'Enabled multi PHP versions' => 'Кілька версій PHP',
+    'Service' => 'Сервіс',
+    'Description' => 'Опис',
     
     //header
     'Hestia Control Panel' => 'Hestia Control Panel',
 
     // Set default language
-    'SYSTEM_SET_DEFAULT_LANGUAGE' => 'Set as default language for all users',
+    'SYSTEM_SET_DEFAULT_LANGUAGE' => 'Встановити мовою за замовчуванням для всіх користувачів',
     
     //2FA 
-    'Forgot token' => 'Unlock Account',
+    'Forgot token' => 'Забули токен?',
     '2FA Token' => 'OTP PIN',
-    '2FA Reset successfully' => 'Two-factor authentication is now turned off for your account.<br><br>You may now proceed to log in.',
-    'Reset 2FA' => 'Unlock Account',
-    '2FA Reset Code' => 'Account Recovery Code',
-    'Invalid or missing token' => 'Invalid or missing token',
+    '2FA Reset successfully' => 'ДФА успішно вимкнено.<br><br>Ви можете увійти в панель.',
+    'Reset 2FA' => 'Скинути ДФА',
+    '2FA Reset Code' => 'Код скидання ДФА',
+    'Invalid or missing token' => 'Неправильний або відсутній токен',
 
-    'DELETE_LOGS_CONFIRMATION'  => 'Are you sure you want to delete the logs?',
+    'DELETE_LOGS_CONFIRMATION'  => 'Ви впевнені, що хочете видалити логи?',
 
-    'Force SSL/HTTPS' => 'Enable automatic HTTP-to-HTTPS redirection',
-    'Enable SSL HSTS' => 'Enable HTTP Strict Transport Security (HSTS) <a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><i class="fas fa-question-circle"></i></a>',
+    'Force SSL/HTTPS' => 'Включити редирект HTTP-на-HTTPS',
+    'Enable SSL HSTS' => 'Включити HTTP Strict Transport Security (HSTS) <a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><i class="fas fa-question-circle"></i></a>',
 
-    '2 Factor Authentication' => 'Two-factor Authentication',
-    'Enable 2FA' => 'Enable two-factor authentication',
-    'Please scan the code below in your 2FA application:' => 'To finish setting up two-factor authentication, scan the QR code below<br />using an authentication app (such as <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google Authenticator</a>):',
-    '2FA Reset Code:' => 'Account Recovery Code:',
+    '2 Factor Authentication' => 'ДФА',
+    'Enable 2FA' => 'Включити ДФА',
+    'Please scan the code below in your 2FA application:' => 'Щоб завершити налаштування ДФА, скануйте the QR код нижче<br />використовуючи відповідний додаток (наприклад <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google Authenticator</a>):',
+    '2FA Reset Code:' => 'Код скидання ДФА:',
 );

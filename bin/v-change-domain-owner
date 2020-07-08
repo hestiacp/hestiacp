@@ -144,6 +144,7 @@ if [ ! -z "$mail_data" ]; then
 
     # Check SSL
     if [ "$SSL" = 'yes' ]; then
+        mkdir -p $HESTIA/data/users/$user/ssl/
         ssl_crt=$HESTIA/data/users/$owner/ssl/mail.$domain.crt
         ssl_key=$HESTIA/data/users/$owner/ssl/mail.$domain.key
         ssl_ca=$HESTIA/data/users/$owner/ssl/mail.$domain.ca

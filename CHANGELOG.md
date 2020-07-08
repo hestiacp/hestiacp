@@ -72,6 +72,7 @@ All notable changes to this project will be documented in this file.
 - Improved the functionality of `v-update-sys-hestia-git` to allow user to specify GitHub repository and whether to build only core package or core and dependencies.
 - Corrected the behavior of phpMyAdmin and phpPgAdmin so that alias dialogs accept custom word only and not full URL, aligns with webmail alias behavior.
 - Corrected the behavior of the installer so that APT repositories are not added if installation is aborted due to version mismatch.
+- Fixed an issue where upgrade procedures were not executed correctly when skipping between versions (e.g. 1.0.6 > 1.2.0).
 
 ### Known issues and notes
 - **NOTE:** Custom phpMyAdmin and phpPgAdmin URL's will be reset once during this upgrade to correct a legacy code issue.

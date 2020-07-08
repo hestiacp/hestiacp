@@ -8,7 +8,7 @@
 
 $LANG['pl'] = array(
     'Packages'  => 'Pakiety',
-    'IP'  => 'IP',
+    'IP'  => 'Sieć',
     'Graphs'  => 'Wykresy',
     'Statistics'  => 'Statystyki',
     'Log'  => 'Log',
@@ -704,17 +704,6 @@ $LANG['pl'] = array(
     'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' =>
         'skróty klawiszowe są zainspirowane wspaniałym managerem plików GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a>',
 
-    'Licence Key' => 'Klucz licencyjny',
-    'Enter License Key' => 'Wpisz klucz licencyjny',
-    'Buy Licence' => 'Kup licencję',
-    'Buy Lifetime License' => 'Kup wieczystą licencję',
-    'Disable and Cancel Licence' => 'Wyłącz i anuluj licencję',
-    'Licence Activated' => 'Aktywowano licencję',
-    'Licence Deactivated' => 'Zdezaktywowano licencję',
-    'Restrict users so that they cannot use SSH and access only their home directory.' => 'Daj użytkownikowi dostęp tylko do jego katalogu domowego przez SSH.',
-    'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.' => 'Przeglądaj, kopiuj, edytuj i zarządzaj wszystkimi plikami należącymi do twojej domeny przy użyciu kompletnego Menedżera Plików.',
-    'This is a commercial module, you would need to purchace license key to enable it.' => 'To jest moduł komercyjny. Żeby go aktywować trzeba zakupić klucz licencyjny.',
-
     'Minutes' => 'Minuty',
     'Hourly' => 'Godziny',
     'Run Command' => 'Komenda',
@@ -849,4 +838,17 @@ $LANG['pl'] = array(
     //header
     'Hestia Control Panel' => 'Hestia Control Panel',
 
+    // Set default language
+    'SYSTEM_SET_DEFAULT_LANGUAGE' => 'Ustaw jako domyślny język dla wszystkich użytkowników',
+    
+    //2FA 
+    'Forgot token' => 'Odblokować konto',
+    '2FA Token' => 'PIN OTP',
+    '2FA Reset successfully' => 'Uwierzytelnianie dwuskładnikowe jest teraz wyłączone dla Twojego konta.<br><br>Możesz teraz przejść do logowania.',
+    'Reset 2FA' => 'Odblokować konto',
+    '2FA Reset Code' => 'Kod odzyskiwania konta',
+    'Invalid or missing token' => 'Nieprawidłowy lub brakujący token',
+
+    'Force SSL/HTTPS' => 'Włącz automatyczne przekierowanie HTTP na HTTPS',
+    'Enable SSL HSTS' => 'Włącz zabezpieczenia ścisłego transportu HTTP (HSTS) <a href="https://pl.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><i class="fas fa-question-circle"></i></a>',
 );

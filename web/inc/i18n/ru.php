@@ -8,7 +8,7 @@
 
 $LANG['ru'] = array(
     'Packages' => 'Пакеты',
-    'IP' => 'IP',
+    'IP' => 'сеть',
     'Graphs' => 'Графики',
     'Statistics' => 'Статистика',
     'Log' => 'Журнал',
@@ -95,7 +95,7 @@ $LANG['ru'] = array(
     'list accounts' => 'показать аккаунты: %s',
     'add account' => 'добавить аккаунт',
     'open webmail' => 'открыть веб-почту',
-    'list fail2ban' => 'показать fail2ban',
+    'list fail2ban' => 'Забаненные IP-адреса',
     'open %s' => 'открыть %s',
     'download' => 'скачать',
     'restore' => 'восстановить',
@@ -680,7 +680,7 @@ $LANG['ru'] = array(
     'New Folder' => 'Создать  Папку',
     'Download' => 'Скачать',
     'Archive' => 'Заархивировать',
-    'Save File (in text editor)' => 'Сохранить Файл (в рамках текстового редактора)',
+    'Save File (in text editor)' => 'Сохранить Файл (в текстовом редакторе)',
     'Close Popup / Cancel' => 'Закрыть Попап / Отмена',
     'Move Cursor Up' => 'Переместить курсор вверх',
     'Move Cursor Down' => 'Переместить курсор вниз',
@@ -698,17 +698,6 @@ $LANG['ru'] = array(
     'Select All Files' => 'Выбрать все файлы',
     'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' =>
         'горячие клавиши заимствованы из великолепного файл менеджера GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a>',
-
-    'Licence Key' => 'Лицензионный Ключ',
-    'Enter License Key' => 'Внесите Лицензионный Ключ',
-    'Buy Licence' => 'Купить Лицензионный Ключ',
-    'Buy Lifetime License' => 'Купить Бесконечный Лицензионный Ключ ',
-    'Disable and Cancel Licence' => 'Отключить и Закрыть Лицензию',
-    'Licence Activated' => 'Лицензия Активирована',
-    'Licence Deactivated' => 'Лицензия Отключена',
-    'Restrict users so that they cannot use SSH and access only their home directory.' => 'Ограничить пользователей, так что они не могут использовать SSH и имеют доступ только к домашней папке.',
-    'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.' => 'Просмотр, копирование, редактирование, просмотр и использование всех файлов веб-доменов с помощью полнофункционального Файлового менеджера.',
-    'This is a commercial module, you would need to purchace license key to enable it.' => 'Это коммерческий модуль, чтобы включить его, вам необходимо приобрести лицензию.',
 
     'Minutes' => 'по минутам',
     'Hourly' => 'по часам',
@@ -764,4 +753,102 @@ $LANG['ru'] = array(
     
     'Theme' => 'Внешний вид',
     'Operating System' => 'Операционная система',
+
+    'Please wait while php is installed or removed' => 'Сохранение ваших изменений может занять несколько минут. Пожалуйста, дождитесь завершения процесса и не обновляйте страницу.',
+    'Avoid adding web domains on admin account' => 'Настоятельно рекомендуется <a href="/add/user/">создать стандартную учетную запись пользователя</a> перед добавлением веб-доменов на сервер из-за расширенных привилегий, которыми обладает учетная запись администратора, и потенциальных угроз безопасности.',
+    
+    //SSH Key
+    'Field SSH_KEY can not be blank.' => 'Поле SSH Key не должно быть пустым',
+    'SSH KEY is invalid' => 'SSH ключ недействителен',
+    'SSH KEY already exists' => 'Ключ SSH уже существует',
+    'SSH KEY Added' => 'SSH ключ был добавлен',
+    'Add SSH Key' => 'Добавить ключ SSH',
+    'SSH KEY' => 'Ключ SSH',    
+    'DELETE_KEY_CONFIRM' => 'Вы уверены, что хотите удалить ключ SSH %s?',
+    'SSH_ID' => 'SSH ID',
+    'Manage SSH keys' => 'Управление ключами SSH',
+ 
+    //Header 
+    'Fm' => 'файлы',
+    //PHP Cli
+    'PHP CLI Version' => 'Версия PHP для CLI',
+
+    //Ipset Firewall rules
+    'Adding Firewall Ipset List' => 'Новый список IP',
+    'Ip List Name' => 'Имя списка IP',
+    'Data Source' => 'Источник данных',
+    'Ip Version' => 'IP версия',
+    'Autoupdate' => 'Автоматическое обновление',
+    'Add IP list' => 'Добавить список IP',
+    'BLACKLIST' => 'BLACKLIST',
+    'IPVERSE' => 'IPVERSE',
+    'IPSET_CREATED_OK' => 'Список IP успешно создан',
+    'DELETE_IPSET_CONFIRMATION' => 'Вы уверены, что хотите удалить список IP %s?',
+    '1 Ipset list' => '1 Список IP',
+    '%s Ipset lists' => '%s Списки IP',
+    'There are currently no IP lists defined.' => 'В настоящее время списки IP-адресов не заданы.',
+    'list ipset' => 'Посмотреть списки IP',
+    
+    //Backup
+    'File Name' => 'Имя файла',
+    'Size' => 'Размер',
+    'Runtime' => 'Время выполенения',
+    //Logs
+    'Refresh' => 'обновление',
+    'Time' => 'Время',
+    'Value' => 'Стоимость',
+    
+    //DNS 
+    'default' => 'дефолт',
+    '1 DNS zone' => '1 DNS зона',
+    '%s DNS zones' => '%s DNS-зоны',
+    'Add Record' => 'Добавить запись',
+    //user
+    '1 user account' => '1 учетная запись пользователя',
+    '%s user accounts' => '%s учетные записи пользователей',
+    //database
+    '1 SQL database' => '1 База данных SQL',
+    '%s SQL databases' => '%s Базы данных SQL',
+    //mail
+    '1 mail domain' => '1 почтовый домен',
+    '%s mail domains' => '%s почтовые домены',
+    //web
+    '1 web domain' => '1 веб-домен',
+    '%s web domains' => '%s веб-домены',
+    
+    //rrd
+    'Bandwidth Usage' => 'Использование трафика',
+    
+    //reset
+    'Forgot Password' => 'Забыли пароль',
+    //web
+    'Quick Install App' => 'Установить приложение',
+    //webapp 
+    'version' => 'версия',
+    'Setup' => 'Настроить',
+    //Server
+    'Restart' => 'Перезапуск',
+    'Mail Server' => 'Почтовый сервер',
+    'Enabled multi PHP versions' => 'Включенные версии PHP',
+    'Service' => 'обслуживание',
+    'Description' => 'Описание',
+    
+    //header
+    'Hestia Control Panel' => 'Панель управления Hestia',
+
+    // Set default language
+    'SYSTEM_SET_DEFAULT_LANGUAGE' => 'Установить язык по умолчанию для всех пользователей',
+    
+    //2FA 
+    'Forgot token' => 'Забыли токен?',
+    '2FA Token' => 'ДФА ПИН',
+    '2FA Reset successfully' => 'Двухфакторная аутентификация теперь отключена для вашей учетной записи.<br><br>Теперь вы можете войти в систему.',
+    'Reset 2FA' => 'Сбросить ДФА',
+    '2FA Reset Code' => 'Код сброса ДФА',
+    'Invalid or missing token' => 'Неверный или отсутствующий токен',
+
+    'DELETE_LOGS_CONFIRMATION'  => 'Вы уверены, что хотите удалить логи?',
+
+    'Force SSL/HTTPS' => 'Включить автоматическое перенаправление HTTP-HTTPS',
+    'Enable SSL HSTS' => 'Включить HTTP Strict Transport Security (HSTS) <a href="https://ru.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><i class="fas fa-question-circle"></i></a>',
 );

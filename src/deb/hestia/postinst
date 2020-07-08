@@ -41,7 +41,7 @@ update_php_templates
 upgrade_phpmyadmin
 
 # Set new version number in hestia.conf
-upgrade_set_version
+upgrade_set_version $new_version
 
 # Perform account and domain rebuild to ensure configuration files are correct
 upgrade_rebuild_users

@@ -8,13 +8,13 @@
 
 # Ensure that users from previous releases are set to the correct stable release branch
 if [ ! -z "$RELEASE_BRANCH" ] && [ "$RELEASE_BRANCH" = "master" ] || [ "$RELEASE_BRANCH" = "develop" ]; then
-    echo "(*) Updating default release branch configuration..."
+    echo "[ * ] Updating default release branch configuration..."
     $HESTIA/bin/v-change-sys-config-value 'RELEASE_BRANCH' 'release'
 fi
 
 # Back up old template files and install the latest versions
 if [ -d $HESTIA/data/templates/ ]; then
-    echo "(*) Updating web templates to enable per-domain HSTS/OCSP SSL support..."
+    echo "[ * ] Updating web templates to enable per-domain HSTS/OCSP SSL support..."
     cp -rf $HESTIA/data/templates $HESTIA_BACKUP/templates/
     $HESTIA/bin/v-update-web-templates >/dev/null 2>&1
 fi

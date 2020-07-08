@@ -700,17 +700,6 @@ $LANG['it'] = array(
     'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' =>
         'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager',
 
-    'Licence Key' => 'Licence Key',
-    'Enter License Key' => 'Enter License Key',
-    'Buy Licence' => 'Buy Licence',
-    'Buy Lifetime License' => 'Buy Lifetime License',
-    'Disable and Cancel Licence' => 'Disable and Cancel Licence',
-    'Licence Activated' => 'Licence Activated',
-    'Licence Deactivated' => 'Licence Deactivated',
-    'Restrict users so that they cannot use SSH and access only their home directory.' => 'Restrict users so that they cannot use SSH and access only their home directory.',
-    'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.' => 'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.',
-    'This is a commercial module, you would need to purchace license key to enable it.' => 'This is a commercial module, you would need to purchace license key to enable it.',
-
     'Minutes' => 'Minutes',
     'Hourly' => 'Hourly',
     'Run Command' => 'Run Command',
@@ -766,7 +755,7 @@ $LANG['it'] = array(
     'Please scan the code below in your 2FA application:' => 'Per completare la configurazione dell\'autenticazione a due fattori, scansiona il codice QR di seguito <br /> utilizzando un\'app di autenticazione (come <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2"> Google Authenticator</a>):',
     '2FA Reset Code:' => 'Codice di recupero dell\'account:',
 
-    'Please wait while php is installed or removed' => 'Attendere il completamento del processo e non aggiornare la pagina.',
+    'Please wait while php is installed or removed' => 'Potrebbero essere necessari alcuni minuti per salvare le modifiche. Attendere il completamento del processo e non aggiornare la pagina.',
     'Avoid adding web domains on admin account' => 'Si consiglia vivamente di <a href="/add/user/">creare un account utente standard</a> prima di aggiungere domini Web al server a causa dei maggiori privilegi dell\'account amministratore e dei potenziali rischi per la sicurezza.',
     
     //SSH Key

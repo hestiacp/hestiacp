@@ -6,7 +6,7 @@ $dist_config['public_path'] = '/fm/';
 $dist_config['frontend_config']['app_name'] = 'File Manager - Hestia Control Panel';
 $dist_config['frontend_config']['logo'] = '../images/logo.png';
 $dist_config['frontend_config']['editable'] = ['.txt', '.css', '.js', '.ts', '.html', '.php', '.py',
-        '.yml', '.xml', '.md', '.log', '.csv', '.conf', '.config', '.ini', '.scss', '.sh', '.env', '.example' ];
+        '.yml', '.xml', '.md', '.log', '.csv', '.conf', '.config', '.ini', '.scss', '.sh', '.env', '.example', '.htaccess'];
 $dist_config['frontend_config']['guest_redirection'] = '/login/' ;
 $dist_config['frontend_config']['upload_max_size'] = 1024 * 1024 * 1024;
 

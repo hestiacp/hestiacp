@@ -603,6 +603,10 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
             cp -f $tmpdir/mail/$domain/$backup_system/$domain.pub $USER_DATA/mail/
         fi
 
+        rebuild_mail_domain_conf
+        
+        fi
+
         # Restoring email accounts
         cp -f $tmpdir/mail/$domain/$backup_system/$domain.conf $USER_DATA/mail/
 

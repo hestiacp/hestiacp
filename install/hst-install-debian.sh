@@ -1883,7 +1883,7 @@ chown admin:admin $HESTIA/data/sessions
 #----------------------------------------------------------#
 
 echo "(*) Configuring File Manager..."
-source $HESTIA_INSTALL_DIR/filemanager/install-fm.sh > /dev/null 2>&1
+$HESTIA/bin/v-add-sys-filemanager > /dev/null 2>&1
 
 
 #----------------------------------------------------------#

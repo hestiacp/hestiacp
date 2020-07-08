@@ -197,3 +197,10 @@ PGA_ALIAS_CHECK=$(cat $HESTIA/conf/hestia.conf | grep DB_PGA_ALIAS)
         $HESTIA/bin/v-change-sys-db-alias "pga" "phppgadmin"
     fi
 fi
+
+# Ensure that backup compression level is correctly set
+GZIP_LVL_CHECK=$(cat $HESTIA/conf/hestia.conf | grep BACKUP_GZIP)
+if [ -z "$GZIP_LVL_CHECK" ]; then
+    echo "[ * ] Updating backup compression level variable..."
+    $BIN/v-change-sys-config-value "BACKUP_GZIP" '9'
+fi

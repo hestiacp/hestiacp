@@ -680,7 +680,7 @@ $LANG['ru'] = array(
     'New Folder' => 'Создать  Папку',
     'Download' => 'Скачать',
     'Archive' => 'Заархивировать',
-    'Save File (in text editor)' => 'Сохранить Файл (в рамках текстового редактора)',
+    'Save File (in text editor)' => 'Сохранить Файл (в текстовом редакторе)',
     'Close Popup / Cancel' => 'Закрыть Попап / Отмена',
     'Move Cursor Up' => 'Переместить курсор вверх',
     'Move Cursor Down' => 'Переместить курсор вниз',
@@ -771,7 +771,7 @@ $LANG['ru'] = array(
     //Header 
     'Fm' => 'файлы',
     //PHP Cli
-    'PHP CLI Version' => 'Версия командной строки PHP',
+    'PHP CLI Version' => 'Версия PHP для CLI',
 
     //Ipset Firewall rules
     'Adding Firewall Ipset List' => 'Новый список IP',
@@ -786,13 +786,13 @@ $LANG['ru'] = array(
     'DELETE_IPSET_CONFIRMATION' => 'Вы уверены, что хотите удалить список IP %s?',
     '1 Ipset list' => '1 Список IP',
     '%s Ipset lists' => '%s Списки IP',
-    'There are currently no IP lists defined.' => 'В настоящее время списки IP-адресов не определены.',
+    'There are currently no IP lists defined.' => 'В настоящее время списки IP-адресов не заданы.',
     'list ipset' => 'Посмотреть списки IP',
     
     //Backup
     'File Name' => 'Имя файла',
     'Size' => 'Размер',
-    'Runtime' => 'Время для завершения',
+    'Runtime' => 'Время выполенения',
     //Logs
     'Refresh' => 'обновление',
     'Time' => 'Время',
@@ -817,7 +817,7 @@ $LANG['ru'] = array(
     '%s web domains' => '%s веб-домены',
     
     //rrd
-    'Bandwidth Usage' => 'Использование полосы пропускания',
+    'Bandwidth Usage' => 'Использование трафика',
     
     //reset
     'Forgot Password' => 'Забыли пароль',
@@ -827,7 +827,7 @@ $LANG['ru'] = array(
     'version' => 'версия',
     'Setup' => 'Настроить',
     //Server
-    'Restart' => 'Начать сначала',
+    'Restart' => 'Перезапуск',
     'Mail Server' => 'Почтовый сервер',
     'Enabled multi PHP versions' => 'Включенные версии PHP',
     'Service' => 'обслуживание',
@@ -840,11 +840,11 @@ $LANG['ru'] = array(
     'SYSTEM_SET_DEFAULT_LANGUAGE' => 'Установить язык по умолчанию для всех пользователей',
     
     //2FA 
-    'Forgot token' => 'Разблокировать аккаунт',
-    '2FA Token' => 'ОТП ПИН',
+    'Forgot token' => 'Забыли токен?',
+    '2FA Token' => 'ДФА ПИН',
     '2FA Reset successfully' => 'Двухфакторная аутентификация теперь отключена для вашей учетной записи.<br><br>Теперь вы можете войти в систему.',
-    'Reset 2FA' => 'Разблокировать аккаунт',
-    '2FA Reset Code' => 'Код восстановления аккаунта',
+    'Reset 2FA' => 'Сбросить ДФА',
+    '2FA Reset Code' => 'Код сброса ДФА',
     'Invalid or missing token' => 'Неверный или отсутствующий токен',
 
     'DELETE_LOGS_CONFIRMATION'  => 'Вы уверены, что хотите удалить логи?',

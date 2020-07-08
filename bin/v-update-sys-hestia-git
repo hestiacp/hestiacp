@@ -1,6 +1,16 @@
 #!/bin/bash
 
-# Autocompile Script for HestiaCP deb Files.
+# v-update-sys-hestia-git
+# Downloads and compiles/installs packages from GitHub repositories
+# Options:  REPOSITORY BRANCH INSTALL [PACKAGES]
+# Example:  v-update-sys-hestia-git hestiacp staging/beta install all
+#           - Will download from the hestiacp repository
+#           - Pulls code from staging/beta branch
+#           - install: installs package immediately
+#           - install-auto: installs package and schedules automatic updates from Git
+#           - 'all': (optional) - compiles nginx and php alongside panel.
+#                                 this option takes a long time, only use when needed
+
 
 # Define download function
 download_file() {
@@ -56,18 +66,20 @@ INSTALL_DIR='/usr/local/hestia'
 ARCHIVE_DIR="${BUILD_DIR}/archive"
 
 # Set command variables
-branch=$1
-install=$2
+fork=$1
+branch=$2
+install=$3
+flags=$4
 
 # Set Version for compiling
-BUILD_VER=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/hestia/control | grep "Version:" | cut -d' ' -f2)
+BUILD_VER=$(curl -s https://raw.githubusercontent.com/$fork/hestiacp/$branch/src/deb/hestia/control | grep "Version:" | cut -d' ' -f2)
 BUILD_ARCH='amd64'
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
-NGINX_V=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/nginx/control |grep "Version:" |cut -d' ' -f2)
-OPENSSL_V='1.1.1c'
+NGINX_V=$(curl -s https://raw.githubusercontent.com/$fork/hestiacp/$branch/src/deb/nginx/control |grep "Version:" |cut -d' ' -f2)
+OPENSSL_V='1.1.1g'
 PCRE_V='8.43'
 ZLIB_V='1.2.11'
-PHP_V=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/php/control |grep "Version:" |cut -d' ' -f2)
+PHP_V=$(curl -s https://raw.githubusercontent.com/$fork/hestiacp/$branch/src/deb/php/control |grep "Version:" |cut -d' ' -f2)
 
 # Create build directories
 rm -rf $BUILD_DIR
@@ -84,13 +96,26 @@ timestamp() {
 
 # Set install flags
 if [ ! -z "$1" ]; then
+    fork_check=$(curl -s --head -w %{http_code} https://raw.githubusercontent.com/$fork/hestiacp/release/src/deb/hestia/control -o /dev/null)
+    if [ $fork_check -ne "200" ]; then
+        echo "ERROR: invalid repository name specified."
+        exit 1
+    else
+        echo "[!] Download code from GitHub repository: $fork"
+        fork="$1"
+    fi
+else
+    fork="hestiacp"
+fi
+
+if [ ! -z "$2" ]; then
     branch_check=$(curl -s --head -w %{http_code} https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/hestia/control -o /dev/null)
     if [ $branch_check -ne "200" ]; then
-        echo "Error: invalid branch name specified."
+        echo "ERROR: invalid branch name specified."
         exit 1
     else
         /usr/local/hestia/bin/v-change-sys-config-value 'RELEASE_BRANCH' "$branch"
-        echo "Changed release branch to $branch."
+        echo "[!] Changed system release branch to: $branch."
     fi
 else
     source /usr/local/hestia/conf/hestia.conf
@@ -98,15 +123,15 @@ else
 fi
 
 if [ -z "$branch" ]; then
-    echo "No branch detected, please provide one using: v-update-sys-hestia-git branch"
+    echo "ERROR: No branch detected."
     exit
 fi
 
 
 # Install needed software
-echo "Updating system APT repositories..."
+echo "[*] Updating APT package cache..."
 apt-get -qq update > /dev/null 2>&1
-echo "Installing dependencies for compilation..."
+echo "[*] Checking for missing dependencies and installing required libraries..."
 apt-get -qq install -y $SOFTWARE > /dev/null 2>&1
 
 # Fix for Debian PHP Envroiment
@@ -115,14 +140,22 @@ ln -s /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl > /dev/null 2>&
 # Get system cpu cores
 NUM_CPUS=$(grep "^cpu cores" /proc/cpuinfo | uniq |  awk '{print $4}')
 
-# Set packages to compile
-HESTIA_B='true'
+# Check for existence of flags argument and set packages to build
+if [ ! -z "$flags" ]; then
+    if [ "$flags" = "all" ]; then
+        HESTIA_B='true'
+        NGINX_B='true'
+        PHP_B='true'
+    fi
+else
+    HESTIA_B='true'
+fi
 
 # Set git repository raw path
-GIT_REP='https://raw.githubusercontent.com/hestiacp/hestiacp/'$branch'/src/deb'
+GIT_REP='https://raw.githubusercontent.com/'$fork'/hestiacp/'$branch'/src/deb'
 
 # Generate Links for sourcecode
-HESTIA_ARCHIVE_LINK='https://github.com/hestiacp/hestiacp/archive/'$branch'.tar.gz'
+HESTIA_ARCHIVE_LINK='https://github.com/'$fork'/hestiacp/archive/'$branch'.tar.gz'
 NGINX='https://nginx.org/download/nginx-'$NGINX_V'.tar.gz'
 OPENSSL='https://www.openssl.org/source/openssl-'$OPENSSL_V'.tar.gz'
 PCRE='https://ftp.pcre.org/pub/pcre/pcre-'$PCRE_V'.tar.gz'
@@ -140,7 +173,7 @@ branch=$(echo "$branch" |sed 's/\//-/g');
 
 if [ "$NGINX_B" = true ] ; then
 
-    echo "Building hestia-nginx package..."
+    echo "[*] Building Package: hestia-nginx (backend web server)..."
     # Change to build directory
     cd $BUILD_DIR
 
@@ -235,7 +268,7 @@ fi
 #################################################################################
 
 if [ "$PHP_B" = true ] ; then
-    echo "Building hestia-php package..."
+    echo "[*] Building Package: hestia-php (backend engine)..."
     # Change to build directory
     cd $BUILD_DIR
 
@@ -311,7 +344,7 @@ fi
 #################################################################################
 
 if [ "$HESTIA_B" = true ] ; then
-    echo "Building Hestia Control Panel package..."
+    echo "[*] Building Package: hestia (Control Panel)..."
     # Change to build directory
     cd $BUILD_DIR
 
@@ -389,8 +422,11 @@ install_build() {
 
 # Define installation routine
 
-if [ "$install" = "yes" ]; then 
+if [ "$install" = "install" ] || [ "$install" = "yes" ] || [ "$install" = "install-auto" ]; then 
     install_build
+    if [ "$install" = "install-auto" ]; then
+        $HESTIA/bin/v-add-cron-hestia-autoupdate git
+    fi
 else
     warning_message
     read -p "Do you wish to proceed with the installation? [y/n] " answer

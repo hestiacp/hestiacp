@@ -53,7 +53,7 @@ fi
 
 # Add sury apache2 repository
 if [ "$WEB_SYSTEM" = "apache2" ] && [ ! -e "/etc/apt/sources.list.d/apache2.list" ]; then
-    echo "(*) Configuring sury.org Apache2 repository..."
+    echo "[ * ] Configuring sury.org Apache2 repository..."
 
     # Check OS and install related repository
     if [ -e "/etc/os-release" ]; then
@@ -72,7 +72,7 @@ fi
 
 # Roundcube fixes for PHP 7.4 compatibility
 if [ -d /usr/share/roundcube ]; then
-    echo "(*) Updating Roundcube configuration..."
+    echo "[ * ] Updating Roundcube configuration..."
     [ -f "/usr/share/roundcube/plugins/enigma/lib/enigma_ui.php" ] && sed -i 's/$identities, "\\n"/"\\n", $identities/g' /usr/share/roundcube/plugins/enigma/lib/enigma_ui.php
     [ -f "/usr/share/roundcube/program/lib/Roundcube/rcube_contacts.php" ] && sed -i 's/(array_keys($post_search), \x27|\x27)/(\x27|\x27, array_keys($post_search))/g' /usr/share/roundcube/program/lib/Roundcube/rcube_contacts.php
     [ -f "/usr/share/roundcube/program/lib/Roundcube/rcube_db.php" ] && sed -i 's/implode($name, \x27.\x27)/implode(\x27.\x27, $name)/g' /usr/share/roundcube/program/lib/Roundcube/rcube_db.php
@@ -90,13 +90,13 @@ fi
 
 # HELO support for multiple domains and IPs
 if [ -e "/etc/exim4/exim4.conf.template" ]; then
-    echo "(*) Updating exim4 configuration..."
+    echo "[ * ] Updating exim4 configuration..."
     sed -i 's|helo_data = ${primary_hostname}|helo_data = ${if exists {\/etc\/exim4\/mailhelo.conf}{${lookup{$sender_address_domain}lsearch*{\/etc\/exim4\/mailhelo.conf}{$value}{$primary_hostname}}}{$primary_hostname}}|g' /etc/exim4/exim4.conf.template
 fi
 
 # Add daily midnight cron
 if [ -z "$($BIN/v-list-cron-jobs admin | grep 'v-update-sys-queue daily')" ]; then
-    echo "(*) Updating cron jobs..."
+    echo "[ * ] Updating cron jobs..."
     command="sudo $BIN/v-update-sys-queue daily"
     $BIN/v-add-cron-job 'admin' '01' '00' '*' '*' '*' "$command"
 fi
@@ -115,7 +115,7 @@ fi
 
 # Add hestia-event.conf, if the server is running apache2
 if [ "$WEB_SYSTEM" = "apache2" ]; then
-    echo "(*) Updating Apache2 configuration..."
+    echo "[ * ] Updating Apache2 configuration..."
     # Cleanup
     rm --force /etc/apache2/mods-available/hestia-event.conf
     rm --force /etc/apache2/mods-enabled/hestia-event.conf
@@ -134,20 +134,26 @@ if [ "$WEB_SYSTEM" = "apache2" ]; then
     rm --force /etc/apache2/mods-enabled/status.conf # a2dismod will not remove the file if it isn't a symlink
 fi
 
-# Install Filegator FileManager during upgrade
-if [ ! -e "$HESTIA/web/fm/configuration.php" ]; then
-    echo "(*) Configuring File Manager..."
-    # Install the FileManager
-    source $HESTIA_INSTALL_DIR/filemanager/install-fm.sh > /dev/null 2>&1
-else 
-    echo "(*) Updating File Manager configuration..."
-    # Update configuration.php
-    cp -f $HESTIA_INSTALL_DIR/filemanager/filegator/configuration.php $HESTIA/web/fm/configuration.php
+# Install File Manager during upgrade if environment variable oesn't already exist and isn't set to false
+# so that we don't override preference
+FILE_MANAGER_CHECK=$(cat $HESTIA/conf/hestia.conf | grep "FILE_MANAGER='false'")
+if [ -z "$FILE_MANAGER_CHECK" ]; then
+    if [ ! -e "$HESTIA/web/fm/configuration.php" ]; then
+        echo "[ ! ] Installing File Manager..."
+        # Install the File Manager
+        $HESTIA/bin/v-add-sys-filemanager quiet
+    else 
+        echo "[ * ] Updating File Manager configuration..."
+        # Update configuration.php
+        cp -f $HESTIA_INSTALL_DIR/filemanager/filegator/configuration.php $HESTIA/web/fm/configuration.php
+        # Set environment variable for interface
+        $HESTIA/bin/v-change-sys-config-value 'FILE_MANAGER' 'true'
+    fi
 fi
 
 # Enable nginx module loading
 if [ -f "/etc/nginx/nginx.conf" ]; then
-    echo "(*) Updating NGINX configuration..."
+    echo "[ * ] Updating NGINX configuration..."
     if [ ! -d "/etc/nginx/modules-enabled" ]; then
         mkdir -p "/etc/nginx/modules-enabled"
     fi
@@ -158,7 +164,7 @@ if [ -f "/etc/nginx/nginx.conf" ]; then
 fi
 
 # Fix public_(s)html group ownership
-echo "(*) Updating public_(s)html ownership..."
+echo "[ * ] Updating public_(s)html ownership..."
 for user in $($HESTIA/bin/v-list-sys-users plain); do
     # skip users with missing home folder
     [[ -d /home/${user}/ ]] || continue
@@ -171,7 +177,7 @@ done
 
 # Fix phpMyAdmin blowfish_secret error message due to incorrect permissions
 if [ -e /var/lib/phpmyadmin/blowfish_secret.inc.php ]; then
-    echo "(*) Updating phpMyAdmin permissions..."
+    echo "[ * ] Updating phpMyAdmin permissions..."
     chmod 0644 /var/lib/phpmyadmin/blowfish_secret.inc.php
 fi
 
@@ -179,7 +185,7 @@ fi
 if [ -e "/var/lib/phpmyadmin" ]; then
 PMA_ALIAS_CHECK=$(cat $HESTIA/conf/hestia.conf | grep DB_PMA_ALIAS)
     if [ -z "$PMA_ALIAS_CHECK" ]; then
-        echo "(*) Updating phpMyAdmin alias..."
+        echo "[ * ] Updating phpMyAdmin alias..."
         $HESTIA/bin/v-change-sys-db-alias "pma" "phpmyadmin"
     fi
 fi
@@ -187,8 +193,7 @@ fi
 if [ -e "/var/lib/phppgadmin" ]; then
 PGA_ALIAS_CHECK=$(cat $HESTIA/conf/hestia.conf | grep DB_PGA_ALIAS)
     if [ -z "$PGA_ALIAS_CHECK" ]; then
-        echo "(*) Updating phpPgAdmin alias..."
+        echo "[ * ] Updating phpPgAdmin alias..."
         $HESTIA/bin/v-change-sys-db-alias "pga" "phppgadmin"
     fi
 fi
-

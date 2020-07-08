@@ -18,7 +18,7 @@ upgrade_welcome_message() {
     echo "                            Version: $new_version                       "
     echo "========================================================================"
     echo
-    echo "(!) IMPORTANT INFORMATION:                                              "
+    echo "[ ! ] IMPORTANT INFORMATION:                                              "
     echo
     echo "Default configuration files and templates may be modified or replaced   "
     echo "during the upgrade process. You may restore these files from:           "
@@ -77,7 +77,7 @@ upgrade_start_routine() {
     #####################################################################
     release_branch_check=$(cat $HESTIA/conf/hestia.conf | grep RELEASE_BRANCH)
     if [ -z "$release_branch_check" ]; then
-        echo "(*) Adding global release branch variable to system configuration..."
+        echo "[ * ] Adding global release branch variable to system configuration..."
         $BIN/v-change-sys-config-value 'RELEASE_BRANCH' 'release'
     fi
 
@@ -102,8 +102,8 @@ upgrade_start_routine() {
 
     # Ensure that latest upgrade commands are processed if version is the same
     if [ $VERSION = "$new_version" ]; then
-        echo "(!) The latest version of Hestia Control Panel is already installed."
-        echo "    Verifying configuration..."
+        echo "[ ! ] The latest version of Hestia Control Panel is already installed."
+        echo "      Verifying configuration..."
         echo ""
         source $HESTIA/install/upgrade/versions/latest.sh
         VERSION="$new_version"
@@ -179,10 +179,10 @@ upgrade_phpmyadmin() {
 
         pma_release_file=$(ls /usr/share/phpmyadmin/RELEASE-DATE-* 2>/dev/null |tail -n 1)
         if version_ge "${pma_release_file##*-}" "$pma_v"; then
-            echo "(!) phpMyAdmin v${pma_release_file##*-} is already installed, skipping update..."
+            echo "[ ! ] phpMyAdmin v${pma_release_file##*-} is already installed, skipping update..."
         else
             # Display upgrade information
-            echo "(*) Upgrading phpMyAdmin to version v$pma_v..."
+            echo "[ * ] Upgrading phpMyAdmin to version v$pma_v..."
             [ -d /usr/share/phpmyadmin ] || mkdir -p /usr/share/phpmyadmin
 
             # Download latest phpMyAdmin release
@@ -215,7 +215,7 @@ upgrade_phpmyadmin() {
 }
 
 update_php_templates() {
-    echo "(*) Updating default PHP templates..."
+    echo "[ * ] Updating default PHP templates..."
     # Update default template
     cp -f $HESTIA_INSTALL_DIR/templates/web/php-fpm/default.tpl \
         $HESTIA/data/templates/web/php-fpm/default.tpl
@@ -229,7 +229,7 @@ update_php_templates() {
         $HESTIA/data/templates/web/php-fpm/socket.tpl
 
     for version in $($HESTIA/bin/v-list-sys-php plain); do 
-        echo "(*) Updating templates for PHP ${version}..."
+        echo "[ * ] Updating templates for PHP ${version}..."
         cp -f $HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl \
             $HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl; 
     done
@@ -248,7 +248,7 @@ upgrade_set_version() {
 
 upgrade_rebuild_users() {
     for user in $($HESTIA/bin/v-list-sys-users plain); do
-        echo "(*) Rebuilding domains and account for user: $user..."
+        echo "[ * ] Rebuilding domains and account for user: $user..."
         if [ ! -z "$WEB_SYSTEM" ]; then
             $BIN/v-rebuild-web-domains $user 'no' >/dev/null 2>&1
         fi
@@ -265,12 +265,12 @@ upgrade_restart_services() {
     # Refresh user interface theme
     if [ "$THEME" ]; then
         if [ "$THEME" != "default" ]; then
-            echo "(*) Applying user interface updates..."
+            echo "[ * ] Applying user interface updates..."
             $BIN/v-change-sys-theme $THEME
         fi
     fi
 
-    echo "(*) Restarting services..."
+    echo "[ * ] Restarting services..."
     sleep 5
     if [ ! -z "$MAIL_SYSTEM" ]; then
         $BIN/v-restart-mail $restart

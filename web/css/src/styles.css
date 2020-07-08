@@ -2849,7 +2849,7 @@ a.vst-text:active b{
 }
 
 .hide-password {
-  color: #2361a1;
+  color: #aaa;
   margin-left: -36px;
   padding-left: 3px;
   z-index: 1;
@@ -3031,8 +3031,9 @@ a.button.cancel {
   cursor: pointer;
   position: absolute;
   margin-left: -32px;
-  margin-top: 13px;
+  margin-top: 16px;
   z-index: 1;
+  font-size: 0.8rem;
 }
 
 .optional {

@@ -18,6 +18,17 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
+# Ensure that quota kernel modules are installed
+kernel_module_check=$(find /lib/modules/`uname -r` -type f -name '*quota_v*.ko*' | egrep '.*' && [ $? -eq 0 ])
+if [ -z "$kernel_module_check" ]; then
+    # Install kernel modules for quota support. 
+    # Requires reboot to activate updated kernel.
+    echo "Installing required kernel modules for quota support..."
+    reboot_req="Y"
+    apt-get -qq install linux-image-extra-virtual -y
+    check_result $? "kernel module installation failed" $E_UPDATE
+fi
+
 # Checking quota package
 quota=$(which --skip-alias --skip-functions quota 2>/dev/null)
 if [ $? -ne 0 ]; then
@@ -85,6 +96,7 @@ done
 #----------------------------------------------------------#
 
 # Logging
+log_history "system quota enforcement enabled"
 log_event "$OK" "$ARGUMENTS"
 
 exit

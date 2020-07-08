@@ -670,17 +670,7 @@ $LANG['ua'] = array(
     'Add File to the Current Selection' => 'Додати файли до поточного виділення',
     'Select All Files' => 'Виділити всі файли',
     'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' =>
-        'скорочення позичені у файлогово менеджера GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a>',
-    'Licence Key' => 'Ліцензійний ключ',
-    'Enter License Key' => 'Введіть ліцензійний ключ',
-    'Buy Licence' => 'Придбати ліцензію',
-    'Buy Lifetime License' => 'Придбати довічну ліцензію',
-    'Disable and Cancel Licence' => 'Відключити та скасувати всі ліцензії',
-    'Licence Activated' => 'Ліцензію активовано',
-    'Licence Deactivated' => 'Ліцензію деактивовано',
-    'Restrict users so that they cannot use SSH and access only their home directory.' => 'Обмежити користувачів, так що вони не можуть використовувати SSH і мають доступ тільки до домашньої теки.',
-    'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.' => 'Перегляд, копіювання, редагування, переглядання та використання всіх файлів веб-доменів за допомогою повнофункціонального Файлового менеджеру.',
-    'This is a commercial module, you would need to purchace license key to enable it.' => 'Це коммерційний модуль, ви повинні придбати ліцензіний ключ для увімкнення.',
+        'скорочення позичені у файловогово менеджера GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a>',
     'Minutes' => 'Щохвилини',
     'Hourly' => 'Щогодини',
     'Run Command' => 'Виконати команду',
@@ -729,5 +719,106 @@ $LANG['ua'] = array(
 	'Force SSL/HTTPS' => 'Примусовий редирект HTTP-на-HTTPS',
     'Theme' => 'Зовнішній вигляд',
     'Operating System' => 'Операційна система',
+    'Please wait while php is installed or removed' => 'Будь ласка, зачекайте поки PHP інсталюється чи видаляється.',
+    'Avoid adding web domains on admin account' => 'Переконливо рекомендується <a href="/add/user/">створити звичайний акаунт</a> перш ніж створювати веб домени з міркувань безпеки.',
     
+    //SSH Key
+    'Field SSH_KEY can not be blank.' => 'Поле SSH Key не може бути пустим',
+    'SSH KEY is invalid' => 'Неправильний SSH key ',
+    'SSH KEY already exists' => 'SSH вже існує',
+    'SSH KEY Added' => 'SSH key додано',
+    'Add SSH Key' => 'Додати SSH key',
+    'SSH KEY' => 'SSH Key',    
+    'DELETE_KEY_CONFIRM' => 'Ви впевнені, що хочете видалити SSH key %s?',
+    'SSH_ID' => 'SSH ID',
+    'Manage SSH keys' => 'Керування SSH keys',
+ 
+    //Header 
+    'Fm' => 'Файли',
+    //PHP Cli
+    'PHP CLI Version' => ' Версія PHP CLI ',
+
+    //Ipset Firewall rules
+    'Adding Firewall Ipset List' => 'Новий список IP ',
+    'Ip List Name' => 'Назва списку IP ',
+    'Data Source' => 'Джерело даних',
+    'Ip Version' => ' Версія IP',
+    'Autoupdate' => 'Автооновлення',
+    'Add IP list' => 'Додати список IP ',
+    'BLACKLIST' => 'BLACKLIST',
+    'IPVERSE' => 'IPVERSE',
+    'IPSET_CREATED_OK' => 'Список IP створено успішно',
+    'DELETE_IPSET_CONFIRMATION' => 'Ви впевнені, що хочете видалити список IP %s',
+    '1 Ipset list' => '1 список Ipset',
+    '%s Ipset lists' => '%s списків Ipset ',
+    'There are currently no IP lists defined.' => 'Не задано жодного списку IP.',
+    'list ipset' => 'Керування списками IP',
+    
+    //Backup
+    'File Name' => 'Ім`я файлу ',
+    'Size' => 'Розмір',
+    'Runtime' => 'Витрачено часу',
+    //Logs
+    'Refresh' => 'Оновити',
+    'Time' => 'Час',
+    'Value' => 'Значення',
+    
+    //DNS 
+    'default' => 'default',
+    '1 DNS zone' => '1 DNS zone',
+    '%s DNS zones' => '%s DNS zones',
+    'Add Record' => 'Add Record',
+    //user
+    '1 user account' => '1 user account',
+    '%s user accounts' => '%s user accounts',
+    //database
+    '1 SQL database' => '1 БД SQL ',
+    '%s SQL databases' => '%s БД SQL ',
+    //mail
+    '1 mail domain' => '1 поштовий домен',
+    '%s mail domains' => '%s поштових доменів',
+    //web
+    '1 web domain' => '1 веб домен',
+    '%s web domains' => '%s веб доменів',
+    
+    //rrd
+    'Bandwidth Usage' => 'Використання трафіку',
+    
+    //reset
+    'Forgot Password' => 'Забули пароль?',
+    //web
+    'Quick Install App' => 'Встановити додаток',
+    //webapp 
+    'version' => 'версія',
+    'Setup' => 'Установка',
+    //Server
+    'Restart' => 'Рестарт',
+    'Mail Server' => 'Поштовий сервер',
+    'Enabled multi PHP versions' => 'Кілька версій PHP',
+    'Service' => 'Сервіс',
+    'Description' => 'Опис',
+    
+    //header
+    'Hestia Control Panel' => 'Hestia Control Panel',
+
+    // Set default language
+    'SYSTEM_SET_DEFAULT_LANGUAGE' => 'Встановити мовою за замовчуванням для всіх користувачів',
+    
+    //2FA 
+    'Forgot token' => 'Забули токен?',
+    '2FA Token' => 'OTP PIN',
+    '2FA Reset successfully' => 'ДФА успішно вимкнено.<br><br>Ви можете увійти в панель.',
+    'Reset 2FA' => 'Скинути ДФА',
+    '2FA Reset Code' => 'Код скидання ДФА',
+    'Invalid or missing token' => 'Неправильний або відсутній токен',
+
+    'DELETE_LOGS_CONFIRMATION'  => 'Ви впевнені, що хочете видалити логи?',
+
+    'Force SSL/HTTPS' => 'Включити редирект HTTP-на-HTTPS',
+    'Enable SSL HSTS' => 'Включити HTTP Strict Transport Security (HSTS) <a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><i class="fas fa-question-circle"></i></a>',
+
+    '2 Factor Authentication' => 'ДФА',
+    'Enable 2FA' => 'Включити ДФА',
+    'Please scan the code below in your 2FA application:' => 'Щоб завершити налаштування ДФА, скануйте the QR код нижче<br />використовуючи відповідний додаток (наприклад <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google Authenticator</a>):',
+    '2FA Reset Code:' => 'Код скидання ДФА:',
 );

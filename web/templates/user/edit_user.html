@@ -2,34 +2,25 @@
         <div class="l-sort clearfix">
           <div class="l-unit-toolbar__buttonstrip">
             <a class="ui-button cancel" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+            <a href="/list/key/" id="btn-create" class="ui-button cancel" title="<?=__('SSH_KEY');?>"><i class="fas fa-key status-icon green"></i><?=__('SSH KEY')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-              <?php
-              if (!empty($_SESSION['error_msg'])) {
-                echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
-              } else {
-                if (!empty($_SESSION['ok_msg'])) {
-                  echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                }
-              }
-            ?>
             <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
           </div>
         </div>
       </div>
 
     <div class="l-separator"></div>
-    <!-- /.l-separator -->
 
     <div class="l-center animated fadeIn">
-      <?php
-        $back = $_SESSION['back'];
-        if (empty($back)) {
-          $back = "location.href='/list/user/'";
-        } else {
-          $back = "location.href='".$back."'";
-        }
-      ?>
+        <?php
+            $back = $_SESSION['back'];
+            if (empty($back)) {
+                $back = "location.href='/list/user/'";
+            } else {
+                $back = "location.href='".$back."'";
+            }
+        ?>
         <form id="vstobjects" method="post" name="v_edit_user" class="<?=$v_status?>">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <input type="hidden" name="save" value="save" />
@@ -50,7 +41,20 @@
                                 <td class="step-top">
                                     <span class="page-title"><?=__('Editing User')?></span>
                                 </td>
-                            </tr>  
+                            </tr>
+                            <tr>
+                                <td>
+                                    <?php
+                                        if (!empty($_SESSION['error_msg'])) {
+                                            echo "<span class=\"vst-error\"> <i class=\"fas fa-exclamation-circle status-icon red\"></i> ".htmlentities($_SESSION['error_msg'])."</span>";
+                                        } else {
+                                            if (!empty($_SESSION['ok_msg'])) {
+                                                echo "<span class=\"vst-ok\"> <i class=\"fas fa-check-circle status-icon green\"></i> ".$_SESSION['ok_msg']."</span>";
+                                            }
+                                        }
+                                    ?>
+                                </td>
+                            </tr>
                             <tr>
                                 <td class="vst-text step-top">
                                     <?php print __('Username');?>
@@ -74,7 +78,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <label><input type="checkbox" class="vst-checkbox password-option" name="v_twofa" <?php if(!empty($v_twofa)) echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_twofa(this)"> <?php print __('Enable 2FA');?></label>
+                                    <label><input type="checkbox" class="vst-checkbox password-option" name="v_twofa" <?php if(!empty($v_twofa)) echo "checked=yes" ?>> <?php print __('Enable 2FA');?></label>
                                     <?php if (!empty($v_twofa)) { ?>
                                     <p><?php echo __('2FA Reset Code:').' '.$v_twofa; ?></br></p>
                                     <p><?php echo __('Please scan the code below in your 2FA application:'); ?></p>
@@ -201,17 +205,13 @@
                                     </td>
                                 </tr>';
                             ?>
-
                                 <tr class="add-ns" <? if($v_ns8) echo 'style="display:none;"'; ?> >
                                     <td class="step-top-small">
                                       <span class="add-ns-button additional-control add"><?=__('Add one more Name Server')?></span>
                                     </td>
                                 </tr>
-
-
                         </table>
-                        <table class="data-col2">
-                        </table>
+                        <table class="data-col2"></table>
                     </td>
                 </tr>
             </table>

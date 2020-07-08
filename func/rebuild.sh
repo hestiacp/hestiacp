@@ -43,7 +43,7 @@ rebuild_user_conf() {
 
     # Update password
     chmod u+w /etc/shadow
-    sed -i 's/^$user:[^:]*:/$user:$MD5:/' /etc/shadow
+    sed -i "s|^$user:[^:]*:|$user:$MD5:|" /etc/shadow
     chmod u-w /etc/shadow
 
     # Building directory tree
@@ -223,17 +223,6 @@ rebuild_web_domain_conf() {
         user_exec cp -r "$WEBTPL/skel/document_errors/" "$HOMEDIR/$user/web/$domain/"
     fi
 
-    # Set folder permissions
-    chmod 551   $HOMEDIR/$user/web/$domain \
-                $HOMEDIR/$user/web/$domain/stats \
-                $HOMEDIR/$user/web/$domain/logs
-    chmod 751   $HOMEDIR/$user/web/$domain/private \
-                $HOMEDIR/$user/web/$domain/cgi-bin \
-                $HOMEDIR/$user/web/$domain/public_html \
-                $HOMEDIR/$user/web/$domain/public_shtml \
-                $HOMEDIR/$user/web/$domain/document_errors
-    chmod 640 /var/log/$WEB_SYSTEM/domains/$domain.*
-
     # Set ownership
     chown $user:$user \
         $HOMEDIR/$user/web/$domain \
@@ -266,6 +255,17 @@ rebuild_web_domain_conf() {
             cp -f $USER_DATA/ssl/$domain.ca \
                 $HOMEDIR/$user/conf/web/$domain/ssl/$domain.ca
         fi
+    fi
+
+    # Refresh HTTPS redirection if previously enabled
+    if [ "$SSL_FORCE" = 'yes' ]; then
+        $BIN/v-delete-web-domain-ssl-force $user $domain no
+        $BIN/v-add-web-domain-ssl-force $user $domain yes
+    fi
+
+    if [ "$SSL_HSTS" = 'yes' ]; then
+        $BIN/v-delete-web-domain-ssl-hsts $user $domain no
+        $BIN/v-add-web-domain-ssl-hsts $user $domain yes
     fi
 
     # Adding proxy configuration
@@ -309,15 +309,15 @@ rebuild_web_domain_conf() {
         if [ ! -z "$STATS_USER" ]; then
             stats_dir="$HOMEDIR/$user/web/$domain/stats"
             if [ "$WEB_SYSTEM" = 'nginx' ]; then
-                echo "auth_basic \"Web Statistics\";"               |user_exec tee    $stats_dir/auth.conf
-                echo "auth_basic_user_file $stats_dir/.htpasswd;"   |user_exec tee -a $stats_dir/auth.conf
+                echo "auth_basic \"Web Statistics\";"               |user_exec tee    $stats_dir/auth.conf > /dev/null
+                echo "auth_basic_user_file $stats_dir/.htpasswd;"   |user_exec tee -a $stats_dir/auth.conf > /dev/null
             else
-                echo "AuthUserFile $stats_dir/.htpasswd"    |user_exec tee    $stats_dir/.htaccess
-                echo "AuthName \"Web Statistics\""          |user_exec tee -a $stats_dir/.htaccess
-                echo "AuthType Basic"                       |user_exec tee -a $stats_dir/.htaccess
-                echo "Require valid-user"                   |user_exec tee -a $stats_dir/.htaccess
+                echo "AuthUserFile $stats_dir/.htpasswd"    |user_exec tee    $stats_dir/.htaccess > /dev/null
+                echo "AuthName \"Web Statistics\""          |user_exec tee -a $stats_dir/.htaccess > /dev/null
+                echo "AuthType Basic"                       |user_exec tee -a $stats_dir/.htaccess > /dev/null
+                echo "Require valid-user"                   |user_exec tee -a $stats_dir/.htaccess > /dev/null
             fi
-            echo "$STATS_USER:$STATS_CRYPT" |user_exec tee $stats_dir/.htpasswd
+            echo "$STATS_USER:$STATS_CRYPT" |user_exec tee $stats_dir/.htpasswd > /dev/null
         fi
     fi
 
@@ -345,7 +345,7 @@ rebuild_web_domain_conf() {
 
             # Updating ftp user password
             chmod u+w /etc/shadow
-            sed -i 's/^$ftp_user:[^:]*:/$ftp_user:$ftp_md5:/' /etc/shadow
+            sed -i "s|^$ftp_user:[^:]*:|$ftp_user:$ftp_md5:|" /etc/shadow
             chmod u-w /etc/shadow
         fi
     done
@@ -382,6 +382,20 @@ rebuild_web_domain_conf() {
             chmod 640 $htpasswd $htaccess >/dev/null 2>&1
         fi
     done
+
+    # Set folder permissions
+    chmod 551   $HOMEDIR/$user/web/$domain \
+                $HOMEDIR/$user/web/$domain/stats \
+                $HOMEDIR/$user/web/$domain/logs
+    chmod 751   $HOMEDIR/$user/web/$domain/private \
+                $HOMEDIR/$user/web/$domain/cgi-bin \
+                $HOMEDIR/$user/web/$domain/public_html \
+                $HOMEDIR/$user/web/$domain/public_shtml \
+                $HOMEDIR/$user/web/$domain/document_errors
+    chmod 640 /var/log/$WEB_SYSTEM/domains/$domain.*
+
+    chown $user:www-data $HOMEDIR/$user/web/$domain/public_html \
+                $HOMEDIR/$user/web/$domain/public_shtml
 }
 
 # DNS domain rebuild
@@ -497,9 +511,24 @@ rebuild_mail_domain_conf() {
         touch $HOMEDIR/$user/conf/mail/$domain/passwd
         touch $HOMEDIR/$user/conf/mail/$domain/fwd_only
 
-        # Seeting outgoing ip address
+        # Setting outgoing ip address
         if [ ! -z "$local_ip" ]; then
             echo "$local_ip" > $HOMEDIR/$user/conf/mail/$domain/ip
+        fi
+
+        
+        # Setting HELO for mail domain
+        if [ ! -z "$local_ip" ]; then
+            IP_RDNS=$(is_ip_rdns_valid "$local_ip")
+            if [ ! -z "$IP_RDNS" ]; then
+                if [ $(grep -s "^${domain}:" /etc/exim4/mailhelo.conf) ]; then
+                    sed -i "/^${domain}:/c\\${domain}:${IP_RDNS}" /etc/exim4/mailhelo.conf
+                else
+                    echo ${domain}:${IP_RDNS} >> /etc/exim4/mailhelo.conf
+                fi
+            else
+                sed -i "/^${domain}:/d" /etc/exim4/mailhelo.conf
+            fi
         fi
 
         # Adding antispam protection
@@ -524,7 +553,7 @@ rebuild_mail_domain_conf() {
             rm -f /etc/dovecot/conf.d/domains/$domain_idn.conf
         fi
 
-        # Adding mail directiry
+        # Adding mail directory
         if [ ! -e $HOMEDIR/$user/mail/$domain_idn ]; then
             mkdir "$HOMEDIR/$user/mail/$domain_idn"
         fi
@@ -557,7 +586,7 @@ rebuild_mail_domain_conf() {
             if [ "$QUOTA" = 'unlimited' ]; then
                 QUOTA=0
             fi
-            str="$account:$MD5:$user:mail::$HOMEDIR/$user:$QUOTA"
+            str="$account:$MD5:$user:mail::$HOMEDIR/$user::userdb_quota_rule=*:storage=${QUOTA}M"
             echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
             for malias in ${ALIAS//,/ }; do
                 echo "$malias@$domain_idn:$account@$domain_idn" >> $dom_aliases
@@ -590,8 +619,8 @@ rebuild_mail_domain_conf() {
     sslcheck=$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf | grep SSL)
     if [ -z "$sslcheck" ]; then
         sed -i "s|$domain'|$domain' SSL='no' LETSENCRYPT='no'|g" $USER_DATA/mail.conf
-    fi 
-    
+    fi
+
     # Remove and recreate SSL configuration
     if [ -f "$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt" ]; then
         del_mail_ssl_config

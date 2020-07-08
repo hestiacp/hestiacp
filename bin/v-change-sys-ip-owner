@@ -31,6 +31,9 @@ is_ip_valid "$ip"
 is_ip_key_empty '$U_WEB_DOMAINS'
 is_ip_key_empty '$U_SYS_USERS'
 
+ip_status="$(get_ip_value '$STATUS')"
+
+
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
@@ -42,7 +45,6 @@ check_hestia_demo_mode
 # Changing ip owner
 ip_owner=$(get_ip_value '$OWNER')
 if [ "$ip_owner" != "$user" ]; then
-    ip_status="$(get_ip_value '$STATUS')"
     update_ip_value '$OWNER' "$user"
     decrease_user_value "$ip_owner" '$IP_OWNED'
     if [ "$ip_owner" = 'admin' ]; then
@@ -73,6 +75,11 @@ if [ "$ip_owner" != "$user" ]; then
     fi
 fi
 
+# Set status to dedicated if owner is not admin
+ip_status="$(get_ip_value '$STATUS')"
+if [ "$user" != 'admin' ] && [ "$ip_status" == 'shared' ]; then
+    $HESTIA/bin/v-change-sys-ip-status "$ip" 'dedicated'
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #

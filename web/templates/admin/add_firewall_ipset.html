@@ -1,0 +1,190 @@
+<div class="l-center edit">
+        <div class="l-sort clearfix">
+          <div class="l-unit-toolbar__buttonstrip">
+            <a class="ui-button cancel" id="btn-back" href="/list/firewall/ipset/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+          </div>
+          <div class="l-unit-toolbar__buttonstrip float-right">
+            <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
+          </div>
+        </div>
+      </div>
+
+    <div class="l-separator"></div>
+
+    <div class="l-center animated fadeIn">
+        <?php
+          $back = $_SESSION['back'];
+          if (empty($back)) {
+            $back = "location.href='/list/firewall/ipset/'";
+          } else {
+            $back = "location.href='".$back."'";
+          }
+        ?>
+        <form id="vstobjects" name="v_add_ipset" method="post">
+            <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+            <input type="hidden" name="ok" value="Add" />
+
+            <table class="data mode-add">
+                <tr class="data-add">
+                    <td class="data-dotted">
+                        <table class="data-col1">
+                            <tr><td></td></tr>
+                        </table>
+                    </td>
+                    <td class="data-dotted">
+                        <table class="data-col2" width="600px">
+                            <tr>
+                                <td class="step-top">
+                                    <span class="page-title"><?=__('Adding Firewall Ipset List')?></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <?php
+                                        if (!empty($_SESSION['error_msg'])) {
+                                            echo "<span class=\"vst-error\"> <i class=\"fas fa-exclamation-circle status-icon red\"></i> ".htmlentities($_SESSION['error_msg'])."</span>";
+                                        } else {
+                                            if (!empty($_SESSION['ok_msg'])) {
+                                                echo "<span class=\"vst-ok\"> <i class=\"fas fa-check-circle status-icon green\"></i> ".$_SESSION['ok_msg']."</span>";
+                                            }
+                                        }
+                                    ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text step-top">
+                                    <?php print __('Ip List Name') ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_ipname" maxlength="255" value="<?=htmlentities(trim($v_ipname, "'"))?>">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text step-top">
+                                    <?php print __('Data Source') ?> <span class="optional">(<?php print __('url, script or file');?>)</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" id="datasource_list" onchange="this.nextElementSibling.value=this.value">
+                                        <option value="">clear</option>
+                                    </select>
+                                    <input type="text" size="20" class="vst-input vst-list-editor" name="v_datasource" maxlength="255" value="<?=htmlentities(trim($v_datasource, "'"))?>">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text step-top">
+                                    <?php print __('Ip Version') ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_ipver">
+                                        <option value="v4" <?php if ((!empty($v_ipver)) && ( $v_ipver == "'v4'" )) echo 'selected'?>><?=__('ip v4')?></option>
+                                        <option value="v6" <?php if ((!empty($v_ipver)) && ( $v_ipver == "'v6'" )) echo 'selected'?>><?=__('ip v6')?></option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text step-top">
+                                    <?php print __('Autoupdate') ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_autoupdate">
+                                        <option value="yes" <?php if ((!empty($v_autoupdate)) && ( $v_autoupdate == "'yes'" )) echo 'selected'?>><?=__('yes')?></option>
+                                        <option value="no" <?php if ((!empty($v_autoupdate)) && ( $v_autoupdate == "'no'" )) echo 'selected'?>><?=__('no')?></option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                        <table class="data-col2"></table>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+    <script>
+        var country_iplists = [
+            // Define IPv4 country lists
+            {name: "[IPv4] Country - Canada",         source:"http://ipverse.net/ipblocks/data/countries/ca.zone"},
+            {name: "[IPv4] Country - China",          source:"http://ipverse.net/ipblocks/data/countries/cn.zone"},
+            {name: "[IPv4] Country - France",         source:"http://ipverse.net/ipblocks/data/countries/fr.zone"},
+            {name: "[IPv4] Country - Germany",        source:"http://ipverse.net/ipblocks/data/countries/de.zone"},
+            {name: "[IPv4] Country - India",          source:"http://ipverse.net/ipblocks/data/countries/in.zone"},
+            {name: "[IPv4] Country - Netherlands",    source:"http://ipverse.net/ipblocks/data/countries/nl.zone"},
+            {name: "[IPv4] Country - Romania",        source:"http://ipverse.net/ipblocks/data/countries/ro.zone"},
+            {name: "[IPv4] Country - Russia",         source:"http://ipverse.net/ipblocks/data/countries/ru.zone"},
+            {name: "[IPv4] Country - Spain",          source:"http://ipverse.net/ipblocks/data/countries/es.zone"},
+            {name: "[IPv4] Country - Switzerland",    source:"http://ipverse.net/ipblocks/data/countries/ch.zone"},
+            {name: "[IPv4] Country - Ukraine",        source:"http://ipverse.net/ipblocks/data/countries/ua.zone"},
+            {name: "[IPv4] Country - United Kingdom", source:"http://ipverse.net/ipblocks/data/countries/gb.zone"},
+            {name: "[IPv4] Country - United States",  source:"http://ipverse.net/ipblocks/data/countries/us.zone"},
+
+            // Define IPv6 country lists
+            /*
+            {name: "[IPv6] Country - China",          source:"http://ipverse.net/ipblocks/data/countries/cn-ipv6.zone"},
+            {name: "[IPv6] Country - Canada",         source:"http://ipverse.net/ipblocks/data/countries/ca-ipv6.zone"},
+            {name: "[IPv6] Country - France",         source:"http://ipverse.net/ipblocks/data/countries/fr-ipv6.zone"},
+            {name: "[IPv6] Country - Germany",        source:"http://ipverse.net/ipblocks/data/countries/de-ipv6.zone"},
+            {name: "[IPv6] Country - India",          source:"http://ipverse.net/ipblocks/data/countries/in-ipv6.zone"},
+            {name: "[IPv6] Country - Netherlands",    source:"http://ipverse.net/ipblocks/data/countries/nl-ipv6.zone"},
+            {name: "[IPv6] Country - Romania",        source:"http://ipverse.net/ipblocks/data/countries/ro-ipv6.zone"},
+            {name: "[IPv6] Country - Russia",         source:"http://ipverse.net/ipblocks/data/countries/ru-ipv6.zone"},
+            {name: "[IPv6] Country - Spain",          source:"http://ipverse.net/ipblocks/data/countries/es-ipv6.zone"},
+            {name: "[IPv6] Country - Switzerland",    source:"http://ipverse.net/ipblocks/data/countries/ch-ipv6.zone"},
+            {name: "[IPv6] Country - Ukraine",        source:"http://ipverse.net/ipblocks/data/countries/ua-ipv6.zone"},
+            {name: "[IPv6] Country - United Kingdom", source:"http://ipverse.net/ipblocks/data/countries/gb-ipv6.zone"},
+            {name: "[IPv6] Country - United States",  source:"http://ipverse.net/ipblocks/data/countries/us-ipv6.zone"},
+            */
+        ];
+
+        var blacklist_iplists = [
+            {name: "[IPv4] Block Malicious IPs",       source:"script:/usr/local/hestia/install/deb/firewall/ipset/blacklist.sh"},
+            /*
+            {name: "[IPv6] Block Malicious IPs",       source:"script:/usr/local/hestia/install/deb/firewall/ipset/blacklist.ipv6.sh"},
+            */
+        ];
+
+        country_iplists.sort(function (a, b) {
+            return a.name > b.name;
+        });
+
+        blacklist_iplists.sort(function (a, b) {
+            return a.name > b.name;
+        });
+
+        $(function() {
+            var targetelement = document.getElementById('datasource_list');
+
+            // Blacklist
+            var newEl = document.createElement("option");
+            newEl.text="<?php print __('BLACKLIST') ?>";
+            newEl.disabled=true;
+            targetelement.appendChild(newEl);
+
+            blacklist_iplists.forEach(iplist => {
+                var newEl = document.createElement("option");
+                newEl.text=iplist.name;
+                newEl.value=iplist.source;
+                targetelement.appendChild(newEl);
+            });
+
+            // IPVERSE
+            var newEl = document.createElement("option");
+            newEl.text="<?php print __('IPVERSE') ?>";
+            newEl.disabled=true;
+            targetelement.appendChild(newEl);
+
+            country_iplists.forEach(iplist => {
+                var newEl = document.createElement("option");
+                newEl.text=iplist.name;
+                newEl.value=iplist.source;
+                targetelement.appendChild(newEl);
+            });
+        });
+    </script>

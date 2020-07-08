@@ -46,13 +46,11 @@ if [ -z "$sftp_i" ]; then
     echo "    X11Forwarding no" >> $config
     echo "    AllowTCPForwarding no" >> $config
     echo "    ForceCommand internal-sftp" >> $config
+    restart='yes'
 fi
 
 # Validating opensshd config
-if [ "$restart" = 'no' ]; then
-   # Skipping SSH Restart
-   echo "" >  /dev/null 2>&1
-else
+if [ "$restart" = 'yes' ]; then
     subj="OpenSSH restart failed"
     email=$(grep CONTACT $HESTIA/data/users/admin/user.conf |cut -f 2 -d \')
     /usr/sbin/sshd -t >/dev/null 2>&1
@@ -68,12 +66,12 @@ fi
 # Checking users
 shells="rssh|nologin"
 for user in $(grep "$HOMEDIR" /etc/passwd |egrep "$shells" |cut -f 1 -d:); do
-    $BIN/v-add-user-sftp-jail $user
+    $BIN/v-add-user-sftp-jail $user $restart
 done
 
 # Add v-add-sys-sftp-jail to startup
 if [ ! -e "/etc/cron.d/hestia-sftp" ]; then
-    echo "@reboot root /usr/local/hestia/bin/v-add-sys-sftp-jail" > /etc/cron.d/hestia-sftp
+    echo "@reboot root sleep 60 && /usr/local/hestia/bin/v-add-sys-sftp-jail" > /etc/cron.d/hestia-sftp
 fi
 
 #----------------------------------------------------------#

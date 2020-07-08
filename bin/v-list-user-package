@@ -48,7 +48,7 @@ json_list() {
 shell_list() {
     echo "PACKAGE:          $PACKAGE"
     echo "WEB TEMPLATE:     $WEB_TEMPLATE"
-    echo "BACKEND_TEMPLATE: $BACKEND_TEMPLATE"
+    echo "BACKEND TEMPLATE: $BACKEND_TEMPLATE"
     echo "PROXY TEMPLATE:   $PROXY_TEMPLATE"
     echo "DNS TEMPLATE:     $DNS_TEMPLATE"
     echo "WEB DOMAINS:      $WEB_DOMAINS"

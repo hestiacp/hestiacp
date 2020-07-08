@@ -38,7 +38,7 @@ source $USER_DATA/user.conf
 
 # Check if 2FA is enabled
 if [ -z "$TWOFA" ]; then
-    echo "Error: 2FA is not enabled"
+    echo "Error: two-factor authentication is not enabled"
     exit $E_NOTEXIST
 fi
 
@@ -49,5 +49,8 @@ sed -i '/QRCODE=/d' $USER_DATA/user.conf
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
+
+log_history "[WARNING] two-factor authentication disabled for $user"
+log_event "$OK" "$ARGUMENTS"
 
 exit

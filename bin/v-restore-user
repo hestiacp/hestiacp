@@ -41,6 +41,7 @@ ftpc() {
     /usr/bin/ftp -n $HOST $PORT <<EOF
     quote USER $USERNAME
     quote PASS $PASSWORD
+    lcd $BACKUP
     binary
     $1
     $2
@@ -174,7 +175,7 @@ if [ ! -e "$BACKUP/$backup" ]; then
         downloaded='yes'
     fi
     if [ -z "$downloaded" ]; then
-        check_result $E_NOTEXIST "backup $backup doesn't exist"
+        check_result $E_NOTEXIST "backup file $backup doesn't exist in '${BACKUP}' folder"
     fi
 fi
 
@@ -374,12 +375,19 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
 
             # Copying SSL certificates
             if [ "$SSL" = 'yes' ]; then
-                certificates=$(ls $tmpdir/web/$domain/conf| grep ssl)
-                certificates=$(echo "$certificates" |grep $domain)
-                for crt in $certificates; do
-                    crt=$(echo $crt|sed -e "s/ssl.//")
-                    cp -f $tmpdir/web/$domain/conf/ssl.$crt $USER_DATA/ssl/$crt
-                done
+
+                if [ -f "$tmpdir/web/$domain/$backup_system/$domain.crt" ]; then
+                    for crt in $(ls $tmpdir/web/$domain/$backup_system | grep -E '^'$domain'\.(crt|key|ca|pem)$'); do
+                        cp -f "$tmpdir/web/$domain/$backup_system/$crt" "$USER_DATA/ssl/"
+                    done
+                elif [ -f "$tmpdir/web/$domain/conf/ssl.$domain.crt" ]; then
+                    certificates=$(ls $tmpdir/web/$domain/conf| grep ssl)
+                    certificates=$(echo "$certificates" |grep $domain)
+                    for crt in $certificates; do
+                        crt=$(echo $crt|sed -e "s/ssl.//")
+                        cp -f $tmpdir/web/$domain/conf/ssl.$crt $USER_DATA/ssl/$crt
+                    done
+                fi
             fi
 
             # Merging web.conf keys
@@ -595,6 +603,67 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
             cp -f $tmpdir/mail/$domain/$backup_system/$domain.pub $USER_DATA/mail/
         fi
 
+        # Restore SSL
+        check_config=$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf | grep -o "SSL='yes'")
+        if [ ! -z "$check_config" ]; then
+            if [ ! -e "$HESTIA/data/users/$user/ssl/" ]; then
+                mkdir -p $HESTIA/data/users/$user/ssl/
+            fi
+            
+            if [ ! -e "$HOMEDIR/$user/conf/mail/$domain/ssl/" ]; then
+                mkdir -p $HOMEDIR/$user/conf/mail/$domain/ssl/
+            fi
+
+            # Add certificate to Hestia user configuration data directory
+            if [ -f $tmpdir/mail/$domain/$backup_system/ssl/$domain.crt ]; then
+                echo "path found"
+                cp -f $tmpdir/mail/$domain/$backup_system/ssl/$domain.crt $USER_DATA/ssl/mail.$domain.crt
+                cp -f $tmpdir/mail/$domain/$backup_system/ssl/$domain.key $USER_DATA/ssl/mail.$domain.key
+                cp -f $tmpdir/mail/$domain/$backup_system/ssl/$domain.crt $USER_DATA/ssl/mail.$domain.pem
+                if [ -e "$tmpdir/mail/$domain/$backup_system/ssl//$domain.ca" ]; then
+                    cp -f $tmpdir/mail/$domain/$backup_system/ssl//$domain.ca $USER_DATA/ssl/mail.$domain.ca
+                    echo >> $USER_DATA/ssl/mail.$domain.pem
+                    cat $USER_DATA/ssl/mail.$domain.ca >> $USER_DATA/ssl/mail.$domain.pem
+                fi
+            fi
+            
+            chmod 660 $USER_DATA/ssl/mail.$domain.*
+
+            # Add certificate to user home directory
+            cp -f $USER_DATA/ssl/mail.$domain.crt $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt
+            cp -f $USER_DATA/ssl/mail.$domain.key $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key
+            cp -f $USER_DATA/ssl/mail.$domain.pem $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem
+            if [ -e "$USER_DATA/ssl/mail.$domain.ca" ]; then
+                cp -f $USER_DATA/ssl/mail.$domain.ca $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.ca
+            fi
+
+            # Add domain SSL configuration to dovecot
+            if [ -f /etc/dovecot/conf.d/domains/$domain.conf ]; then
+                rm -f /etc/dovecot/conf.d/domains/$domain.conf
+            fi
+                
+            echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
+            echo "local_name mail.$domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
+            echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
+            echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
+            echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+
+            # Add domain SSL configuration to exim4
+            # Cleanup broken symlinks
+            find /usr/local/hestia/ssl/mail -xtype l -delete
+
+            ln -s -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem /usr/local/hestia/ssl/mail/mail.$domain.crt
+            ln -s -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key /usr/local/hestia/ssl/mail/mail.$domain.key
+
+            # Set correct permissions on certificates
+            chmod 750 $HOMEDIR/$user/conf/mail/$domain/ssl
+            chown -R $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain/ssl
+            chmod 0644 $HOMEDIR/$user/conf/mail/$domain/ssl/*
+            chown -h $user:mail $HOMEDIR/$user/conf/mail/$domain/ssl/*
+            chmod -R 0644 /usr/local/hestia/ssl/mail/*
+            chown -h $user:mail /usr/local/hestia/ssl/mail/*
+        fi
+
         # Restoring email accounts
         cp -f $tmpdir/mail/$domain/$backup_system/$domain.conf $USER_DATA/mail/
 
@@ -777,7 +846,7 @@ if [ "$udir" != 'no' ]; then
 
             chown "$user" "$tmpdir/user_dir"
             chown "$user" "$HOMEDIR/$user"
-            chown "$user" "$HOMEDIR/$user/$user_dir"
+            [ -e "$HOMEDIR/$user/$user_dir" ] && chown "$user" "$HOMEDIR/$user/$user_dir"
             $BIN/v-extract-fs-archive "$user" "$tmpdir/user_dir/$user_dir.tar.gz" "$HOMEDIR/$user"
             cmdstatus="$?"
             chown root:root "$HOMEDIR/$user"
@@ -807,6 +876,9 @@ chown -R $user:$user $HOMEDIR/$user/tmp
 subj="$user → restore has been completed"
 cat $tmpdir/restore.log |$SENDMAIL -s "$subj" $email $notify
 
+# Send notification to panel
+$HESTIA/bin/v-add-user-notification "$user" "Backup restored successfully" "<b>Archive:</b> $backup"
+
 # Deleting temporary data
 rm -rf $tmpdir
 
@@ -824,6 +896,7 @@ $BIN/v-update-user-counters admin
 $BIN/v-update-sys-ip-counters
 
 # Logging
+log_history "restored contents from backup archive $backup"
 log_event "$OK" "$ARGUMENTS"
 
 exit

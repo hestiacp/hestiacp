@@ -1,0 +1,70 @@
+#!/bin/bash
+# info: add ssh key
+# options: USER key
+#
+# Function check if $user/.ssh/authorized_keys exists and create it
+# After that it append the new key(s)
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+
+# Argument definition
+user=$1
+key=$2
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+# Additional argument formatting
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER SSH_PUBLIC_KEY'
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Reading user values
+source $USER_DATA/user.conf
+
+AUTHKEY_FILE="$HOMEDIR/$user/.ssh/authorized_keys"
+[ -z "$(readlink -f "$AUTHKEY_FILE" | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result $E_FORBIDEN "Invalid authorized keys path"
+
+#check if file exits
+if [ ! -f "$AUTHKEY_FILE" ]; then
+    v-add-fs-file "$user" "${AUTHKEY_FILE}"
+fi
+
+[ -z "$key" ] && check_result $E_NOTEXIST "Empty ssh public key"
+
+if ! echo "$key" | ssh-keygen -l -f - > /dev/null 2>&1; then
+    check_result $E_PARSING "Validating user private key"
+fi
+
+# make sure authorized_keys is ending with EOL
+[ -f "${AUTHKEY_FILE}" ] && sed -i '$a\' "${AUTHKEY_FILE}"
+
+#append key to file
+echo "$key" >> "$AUTHKEY_FILE"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_history "Added ssh-key $user"
+log_event "$OK" "$ARGUMENTS"
+
+exit

@@ -4,22 +4,12 @@
             <a class="ui-button cancel" id="btn-back" href="/list/dns/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-              <?php
-              if (!empty($_SESSION['error_msg'])) {
-                echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
-              } else {
-                if (!empty($_SESSION['ok_msg'])) {
-                  echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                }
-              }
-            ?>
             <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
           </div>
         </div>
       </div>
 
     <div class="l-separator"></div>
-    <!-- /.l-separator -->
 
     <div class="l-center animated fadeIn">
         <?php
@@ -46,6 +36,19 @@
                             <tr>
                                 <td class="step-top">
                                     <span class="page-title"><?=__('Adding DNS Domain')?></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <?php
+                                        if (!empty($_SESSION['error_msg'])) {
+                                            echo "<span class=\"vst-error\"> <i class=\"fas fa-exclamation-circle status-icon red\"></i> ".htmlentities($_SESSION['error_msg'])."</span>";
+                                        } else {
+                                            if (!empty($_SESSION['ok_msg'])) {
+                                                echo "<span class=\"vst-ok\"> <i class=\"fas fa-check-circle status-icon green\"></i> ".$_SESSION['ok_msg']."</span>";
+                                            }
+                                        }
+                                    ?>
                                 </td>
                             </tr>
                             <tr>
@@ -122,66 +125,64 @@
                                                 <span class="remove-ns additional-control delete"><?=__('delete')?></span>
                                             </td>
                                         </tr>
-                            <?  if($v_ns3)
+                                <?  if($v_ns3)
                                   echo '<tr>
-                                    <td>
-                                        <input type="text" size="20" class="vst-input" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
-                                        <span class="remove-ns additional-control delete">'.__('delete').'</span>
-                                    </td>
-                                </tr>';
+                                        <td>
+                                            <input type="text" size="20" class="vst-input" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
+                                            <span class="remove-ns additional-control delete">'.__('delete').'</span>
+                                        </td>
+                                    </tr>';
 
-                                if($v_ns4)
-                                  echo '<tr>
-                                    <td>
-                                        <input type="text" size="20" class="vst-input" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
-                                        <span class="remove-ns additional-control delete">'.__('delete').'</span>
-                                    </td>
-                                </tr>';
+                                    if($v_ns4)
+                                    echo '<tr>
+                                        <td>
+                                            <input type="text" size="20" class="vst-input" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
+                                            <span class="remove-ns additional-control delete">'.__('delete').'</span>
+                                        </td>
+                                    </tr>';
 
-                                if($v_ns5)
-                                  echo '<tr>
-                                    <td>
-                                        <input type="text" size="20" class="vst-input" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
-                                        <span class="remove-ns additional-control delete">'.__('delete').'</span>
-                                    </td>
-                                </tr>';
+                                    if($v_ns5)
+                                    echo '<tr>
+                                        <td>
+                                            <input type="text" size="20" class="vst-input" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
+                                            <span class="remove-ns additional-control delete">'.__('delete').'</span>
+                                        </td>
+                                    </tr>';
 
-                                if($v_ns6)
-                                  echo '<tr>
-                                    <td>
-                                        <input type="text" size="20" class="vst-input" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
-                                        <span class="remove-ns additional-control delete">'.__('delete').'</span>
-                                    </td>
-                                </tr>';
+                                    if($v_ns6)
+                                    echo '<tr>
+                                        <td>
+                                            <input type="text" size="20" class="vst-input" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
+                                            <span class="remove-ns additional-control delete">'.__('delete').'</span>
+                                        </td>
+                                    </tr>';
 
-                                if($v_ns7)
-                                  echo '<tr>
-                                    <td>
-                                        <input type="text" size="20" class="vst-input" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
-                                        <span class="remove-ns additional-control delete">'.__('delete').'</span>
-                                    </td>
-                                </tr>';
+                                    if($v_ns7)
+                                    echo '<tr>
+                                        <td>
+                                            <input type="text" size="20" class="vst-input" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
+                                            <span class="remove-ns additional-control delete">'.__('delete').'</span>
+                                        </td>
+                                    </tr>';
 
-                                if($v_ns8)
-                                  echo '<tr>
-                                    <td>
-                                        <input type="text" size="20" class="vst-input" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
-                                        <span class="remove-ns additional-control delete">'.__('delete').'</span>
-                                    </td>
-                                </tr>';
-                            ?>
+                                    if($v_ns8)
+                                    echo '<tr>
+                                        <td>
+                                            <input type="text" size="20" class="vst-input" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
+                                            <span class="remove-ns additional-control delete">'.__('delete').'</span>
+                                        </td>
+                                    </tr>';
+                                ?>
                                 <tr class="add-ns" <? if($v_ns8) echo 'style="display:none;"'; ?> >
                                     <td class="step-top-small">
                                       <span class="add-ns-button additional-control add"><?=__('Add one more Name Server')?></span>
                                     </td>
                                 </tr>
-
                                     </table>
                                 </td>
                             </tr>
                         </table>
-                        <table class="data-col2">
-                        </table>
+                        <table class="data-col2"></table>
                     </td>
                 </tr>
             </table>

@@ -5,55 +5,35 @@
                         <table>
                             <tr>
                                 <td style="padding: 22px 30px 0 42px; height: 280px; width: 170px;">
-                                    <a href="/"><img border=0 src="/images/logo.png" alt="Hestia Control Panel" style="margin: 20px; margin-top: 40px;" /></a>
+                                    <a href="/"><img border=0 src="/images/logo.png" alt="<?=__('Hestia Control Panel');?>" style="margin: 20px; margin-top: 64px;" /></a>
                                 </td>
                                 <td style="padding: 40px 60px 0 0;">
-                                    <form method="post" action="/login/" >
+                                    <form method="post" action="/login/" id="form_login">
                                     <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
-                                    <script>
-                                    function show2FA(str) {
-                                        if (str.length == 0) {
-                                            $('.twofa').fadeOut();
-                                            return;
-                                        } else {
-                                            var xmlhttp = new XMLHttpRequest();
-                                            xmlhttp.onreadystatechange = function() {
-                                                if (this.readyState == 4 && this.status == 200) {
-                                                    var x = document.getElementById("twofa");
-                                                    $('.twofa').fadeIn();
-                                                } else {
-                                                    $('.twofa').fadeOut();
-                                                }
-                                            };
-                                            xmlhttp.open("GET", "/inc/2fa/active.php?user=" + str, true);
-                                            xmlhttp.send();
-                                        }
-                                    }
-                                    </script>
                                     <table class="login-box">
                                         <tr>
-                                            <td syle="padding: 12px 0 0 2px;" class="login-welcome">
+                                            <td style="padding: 12px 0 0 2px;" class="login-welcome">
                                                 <?php print __('Welcome to Hestia Control Panel');?>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td syle="padding: 12px 0 0 2px;">
+                                            <td style="padding: 12px 0 0 2px;">
                                                 <?php print __('Username');?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input tabindex="1" type="text" size="20px" style="width:240px;" name="user" class="vst-input" onfocusout="show2FA(this.value)">
+                                                <input tabindex="1" type="text" size="20px" style="width:240px;" name="user" class="vst-input">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td style="padding: 12px 0 0 2px;">
                                                 <?php print __('Password');?>
-                                                <span style="padding:0 0 0 14px;">
+                                                <div style="padding:0 6px 0px 14px; float:right;">
                                                     <a tabindex="5" class="vst-advanced" href="/reset/">
                                                         <?php print __('forgot password');?>
                                                     </a>
-                                                </span>
+                                                </div>
                                             </td>
                                         </tr>
                                         <tr>
@@ -64,11 +44,11 @@
                                         <tr class="twofa" style="display:none;">
                                             <td style="padding-top: 12px; padding-left:2px;">
                                                 <?php print __('2FA Token');?>
-                                                <span style="padding:0 0 0 10px;">
+                                                <div style="padding:0 6px 0px 14px; float:right;">
                                                     <a tabindex="5" class="vst-advanced" href="/reset2fa/">
-                                                        <?php print __('forgot token');?>
+                                                        <?php print __('Forgot token');?>
                                                     </a>
-                                                </span>
+                                                </div>
                                             </td>
                                         </tr>
                                         <tr class="twofa" style="display:none;">
@@ -100,5 +80,23 @@
                 </tr>
             </table>
         </center>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#form_login').on('input', 'input[name="user"]', function() {
+                    var username = this.value;
+                    $.ajax({
+                        type: 'GET',
+                        url: '/inc/2fa/active.php?user=' + username,
+                        complete: function(xhr) {
+                            if(xhr.status == '200'){
+                                $('.twofa').show();
+                            }else if(xhr.status == '404'){
+                                $('.twofa').hide();
+                            }
+                        }
+                    });
+                });
+            });
+        </script>
     </body>
 </html>

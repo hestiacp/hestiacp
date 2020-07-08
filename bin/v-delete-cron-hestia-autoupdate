@@ -22,10 +22,8 @@ source $HESTIA/conf/hestia.conf
 #----------------------------------------------------------#
 
 is_system_enabled "$CRON_SYSTEM" 'CRON_SYSTEM'
-check_cron=$(grep 'v-update-sys-hestia-all' $USER_DATA/cron.conf)
-if [ -z "$check_cron" ]; then
-    exit
-fi
+check_cron_apt=$(grep 'v-update-sys-hestia-all' $USER_DATA/cron.conf)
+check_cron_git=$(grep 'v-update-sys-hestia-git' $USER_DATA/cron.conf)
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -37,7 +35,13 @@ check_hestia_demo_mode
 
 
 # Deleting job
-job=$(echo $check_cron|tr ' ' "\n"|grep JOB|cut -f 2 -d "'")
+if [ ! -z "$check_cron_apt" ]; then
+    job=$(echo $check_cron_apt|tr ' ' "\n"|grep JOB|cut -f 2 -d "'")
+fi
+if [ ! -z "$check_cron_git" ]; then
+    job=$(echo $check_cron_git|tr ' ' "\n"|grep JOB|cut -f 2 -d "'")
+fi
+
 sed -i "/JOB='$job' /d" $USER_DATA/cron.conf
 
 # Sorting jobs by id

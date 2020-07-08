@@ -135,7 +135,7 @@ if ((!empty($_POST['email'])) && (!empty($_POST['password'])) && (!empty($_POST[
 
     // Get current md5 hash
     if (!empty($v_user)) {
-        exec (HESTIA_CMD."v-get-mail-account-value '".$v_user."' ".$v_domain." ".$v_account." 'md5'", $output, $return_var);
+        exec (HESTIA_CMD."v-get-mail-account-value ".escapeshellarg($v_user)." ".$v_domain." ".$v_account." 'md5'", $output, $return_var);
         if ($return_var == 0) {
             $v_hash = $output[0];
         }
@@ -154,7 +154,7 @@ if ((!empty($_POST['email'])) && (!empty($_POST['password'])) && (!empty($_POST[
             $fp = fopen($v_new_password, "w");
             fwrite($fp, $_POST['new']."\n");
             fclose($fp);
-            exec (HESTIA_CMD."v-change-mail-account-password '".$v_user."' ".$v_domain." ".$v_account." ".$v_new_password, $output, $return_var);
+            exec (HESTIA_CMD."v-change-mail-account-password ".escapeshellarg($v_user)." ".$v_domain." ".$v_account." ".$v_new_password, $output, $return_var);
             if ($return_var == 0) {
                 echo "==ok==";
                 exit;

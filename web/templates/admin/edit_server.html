@@ -4,32 +4,22 @@
             <a class="ui-button cancel" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-              <?php
-              if (!empty($_SESSION['error_msg'])) {
-                echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
-              } else {
-                if (!empty($_SESSION['ok_msg'])) {
-                  echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                }
-              }
-            ?>
             <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
           </div>
         </div>
       </div>
 
     <div class="l-separator"></div>
-    <!-- /.l-separator -->
 
     <div class="l-center animated fadeIn">
-      <?php
-        $back = $_SESSION['back'];
-        if (empty($back)) {
-          $back = "location.href='/list/server/'";
-        } else {
-          $back = "location.href='".$back."'";
-        }
-      ?>
+        <?php
+            $back = $_SESSION['back'];
+            if (empty($back)) {
+                $back = "location.href='/list/server/'";
+            } else {
+                $back = "location.href='".$back."'";
+            }
+        ?>
 
         <form id="vstobjects" name="v_configure_server" method="post">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
@@ -47,9 +37,22 @@
                           <tr>
                             <td class="step-top">
                                 <span class="page-title"><?=__('Configuring Server')?></span>
-                                <br /><br />
                             </td>
                           </tr>
+                        <tr>
+                            <td>
+                                <?php
+                                    if (!empty($_SESSION['error_msg'])) {
+                                        echo "<span class=\"vst-error\"> <i class=\"fas fa-exclamation-circle status-icon red\"></i> ".htmlentities($_SESSION['error_msg'])."</span>";
+                                    } else {
+                                        if (!empty($_SESSION['ok_msg'])) {
+                                            echo "<span class=\"vst-ok\"> <i class=\"fas fa-check-circle status-icon green\"></i> ".$_SESSION['ok_msg']."</span>";
+                                        }
+                                    }
+                                ?>
+                                <br /><br />
+                            </td>
+                        </tr>
                           <tr>
                                 <td class="vst-text input-label step-top advanced-options">
                                     <a href="javascript:elementHideShow('basic');" class="vst-text">
@@ -143,7 +146,7 @@
                                         </tr>
                                         <tr>
                                         <td class="vst-text input-label">
-                                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_language_update"><?php print __('update');?> <?php print __('Users');?> <?php print __('Default Language');?></label>
+                                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_language_update"><?php print __('SYSTEM_SET_DEFAULT_LANGUAGE');?></label>
                                                 <br><br>
                                             </td>
                                         </tr>
@@ -437,7 +440,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="vst-input" name="v_mysql_url" value="<?php echo $_SESSION['DB_PMA_URL']; ?>">
+                                                <input type="text" size="20" class="vst-input" name="v_mysql_url" value="<?php echo $_SESSION['DB_PMA_ALIAS']; ?>">
                                                 <br><br>
                                             </td>
                                         </tr>
@@ -517,7 +520,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="vst-input" name="v_pgsql_url" value="<?php echo $_SESSION['DB_PGA_URL']; ?>">
+                                                <input type="text" size="20" class="vst-input" name="v_pgsql_url" value="<?php echo $_SESSION['DB_PGA_ALIAS']; ?>">
                                                 <br><br>
                                             </td>
                                         </tr>
@@ -639,7 +642,7 @@
                                                         <td>
                                                             <select class="vst-list" name="v_backup_type">
                                                                 <option value='ftp'><?php print __('ftp'); ?></option>
-                                                                <option value='sftp' <?php if((!empty($v_backup_type)) && ($v_backup_type  == 'sftp')) echo 'selected' ?> ><?php print __('sftp'); ?></option>
+                                                                <option value='sftp' <?php if((!empty($v_backup_type)) && (trim($v_backup_type,"'")  == 'sftp' )) echo 'selected="selected"'; ?>><?php print __('sftp'); ?></option>
                                                             </select>
                                                             <br><br>
                                                         </td>
@@ -652,6 +655,17 @@
                                                     <tr>
                                                         <td>
                                                             <input type="text" size="20" class="vst-input" name="v_backup_host" value="<?=trim($v_backup_host, "'")?>">
+                                                            <br><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="vst-text">
+                                                            <?php print __('Port') ?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text" size="20" class="vst-input" name="v_backup_port" value="<?=trim($v_backup_port, "'")?>">
                                                             <br><br>
                                                         </td>
                                                     </tr>
@@ -838,10 +852,7 @@
                                 </td>
                             </tr>
                         </table>
-
-
-                        <table class="data-col2">
-                        </table>
+                        <table class="data-col2"></table>
                     </td>
                 </tr>
             </table>

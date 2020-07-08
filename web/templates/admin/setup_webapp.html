@@ -19,7 +19,6 @@
       </div>
 
     <div class="l-separator"></div>
-    <!-- /.l-separator -->
 
     <div class="l-center animated fadeIn" style="padding-top:240px;">
         <?php
@@ -37,15 +36,14 @@
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <input type="hidden" name="ok" value="true" />
 
-            <?php if( !$WebappInstaller->isDomainRootClean()): ?>
-                <span class="alert alert-info alert-with-icon">
-                    <i class="fas fa-info"></i>
-                    <?=__('Data loss warning!<br>Your web domain already has files uploaded, the installer will overwrite your files and/or the installation might fail.<br/><br/> Please use the installer only for empty web domains')?>
-                </span>
-                <br/>
-            <?php endif ?>
-
             <div class="app-form" >
+                <?php if( !$WebappInstaller->isDomainRootClean()): ?>
+                  <span class="alert alert-info alert-with-icon">
+                      <i class="fas fa-info"></i>
+                      <?=__('Data loss warning!<br>Your web domain already has files uploaded, the installer will overwrite your files and/or the installation might fail.<br/><br/> Please use the installer only for empty web domains')?>
+                  </span>
+                  <br/>
+                <?php endif ?>
                 <?php foreach ($WebappInstaller->getOptions() as $form_name => $form_control):?>
                     <?php
                         $f_name = $WebappInstaller->formNs() . '_' . $form_name;

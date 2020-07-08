@@ -134,6 +134,9 @@ fi
 # Check if dns records exist for requested domain/aliases
 if [ "$proto" = "http-01" ]; then
     for identifier in $(echo $domain,$aliases |tr ',' '\n' |sort -u); do
+        if [[ "$identifier" = *[![:ascii:]]* ]]; then
+            identifier=$(idn -t --quiet -a $identifier)
+        fi
         if ! nslookup "${identifier}" > /dev/null 2>&1 ; then
             check_result $E_NOTEXIST "DNS record for $identifier doesn't exist"
         fi
@@ -296,7 +299,7 @@ for auth in $authz; do
         validation=$(echo "$answer"|grep -A1 $proto |tail -n1|cut -f4 -d \")
         nonce=$(echo "$answer" |grep -i nonce |cut -f2 -d \ |tr -d '\r\n')
         status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
-        details=$(echo "$answer"| grep detail | cut -f 2 -d ',' | cut -f 2-4 -d ':')
+        details=$(echo "$answer"| grep detail | cut -f 1 -d ',' | cut -f 2-4 -d ':' | cut -f 2 -d '"')
         if [[ "$status" -ne 200 ]]; then
             # Delete DNS CAA record
             if [ ! -z "$DNS_SYSTEM" ]; then
@@ -357,6 +360,7 @@ nonce=$(echo "$answer" |grep -i nonce |cut -f2 -d \ |tr -d '\r\n')
 status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
 certificate=$(echo "$answer"|grep 'certificate":' |cut -f4 -d '"')
 if [[ "$status" -ne 200 ]]; then
+    [ -d "$ssl_dir" ] && rm -rf "$ssl_dir"
     check_result $E_CONNECT "Let's Encrypt finalize bad status $status"
 fi
 
@@ -364,6 +368,7 @@ fi
 answer=$(query_le_v2 "$certificate" "" "$nonce" "$ssl_dir/$domain.pem")
 status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
 if [[ "$status" -ne 200 ]]; then
+    [ -d "$ssl_dir" ] && rm -rf "$ssl_dir"
     check_result $E_NOTEXIST "Let's Encrypt downloading signed cert failed status:$status"
 fi
 
@@ -405,6 +410,7 @@ else
 fi
 
 if [ "$?" -ne '0' ]; then
+    [ -d "$ssl_dir" ] && rm -rf "$ssl_dir"
     touch $HESTIA/data/queue/letsencrypt.pipe
     sed -i "/ $domain /d" $HESTIA/data/queue/letsencrypt.pipe
     send_notice 'LETSENCRYPT' "$domain certificate installation failed"
@@ -423,19 +429,26 @@ fi
 if [ -z "$mail" ]; then
     if [ -z "$LETSENCRYPT" ]; then
         add_object_key "web" 'DOMAIN' "$domain" 'LETSENCRYPT' 'FTP_USER'
+        add_object_key "web" 'DOMAIN' "$domain" 'LETSENCRYPT_FAIL_COUNT' 'LETSENCRYPT'
     fi
     update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'yes'
+    update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT' "0"
 else
     if [ -z "$LETSENCRYPT" ]; then
         add_object_key "mail" 'DOMAIN' "$root_domain" 'LETSENCRYPT'
+        add_object_key "mail" 'DOMAIN' "$root_domain" 'LETSENCRYPT_FAIL_COUNT' 'LETSENCRYPT'
     fi
     update_object_value 'mail' 'DOMAIN' "$root_domain" '$LETSENCRYPT' 'yes'
+    update_object_value 'mail' 'DOMAIN' "$root_domain" '$LETSENCRYPT_FAIL_COUNT' "0"
 fi
 
 # Remove challenge folder if exist
 if [ ! -z "$well_known" ]; then
     rm -fr $well_known
 fi
+
+# Remove temporary SSL folder
+[ -d "$ssl_dir" ] && rm -rf "$ssl_dir"
 
 #----------------------------------------------------------#
 #                        Hestia                            #

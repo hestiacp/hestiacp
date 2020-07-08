@@ -58,8 +58,7 @@ fi
 
 # Deleting dkim dns record
 if [ "$DKIM" = 'yes' ] && [ -e "$USER_DATA/dns/$domain.conf" ]; then
-    records=$($BIN/v-list-dns-records $user $domain plain)
-    dkim_records=$(echo "$records" |grep -w '_domainkey' | cut -f 1 -d ' ')
+    dkim_records=$($BIN/v-list-dns-records $user $domain plain | awk '{print $1,$2}' | grep -w '_domainkey' | cut -f 1 -d ' ')
     for id in $dkim_records; do
         $BIN/v-delete-dns-record $user $domain $id
     done
@@ -85,6 +84,9 @@ rm -f $USER_DATA/mail/$domain.conf
 rm -f $USER_DATA/mail/$domain.pem
 rm -f $USER_DATA/mail/$domain.pub
 rm -f $USER_DATA/mail/*@$domain.msg
+
+# Unsetting HELO for mail domain
+sed -i "/^${domain}:/d" /etc/exim4/mailhelo.conf
 
 # Decreasing domain value
 decrease_user_value "$user" '$U_MAIL_DOMAINS'

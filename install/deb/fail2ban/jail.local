@@ -48,7 +48,7 @@ maxretry = 5
 [recidive]
 enabled  = true
 filter   = recidive
-action   = hestia[name=HESTIA]
+action   = hestia[name=RECIDIVE]
 logpath  = /var/log/fail2ban.log
 maxretry = 5
 findtime = 86400

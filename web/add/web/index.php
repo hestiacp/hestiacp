@@ -197,6 +197,12 @@ if (!empty($_POST['ok'])) {
              exec (HESTIA_CMD."v-add-web-domain-ssl ".$user." ".escapeshellarg($v_domain)." ".$tmpdir." ".$v_ssl_home." 'no'", $output, $return_var);
              check_return_code($return_var,$output);
              unset($output);
+
+            // Cleanup certificate tempfiles
+            if (!empty($_POST['v_ssl_crt'])) unlink($tmpdir."/".$v_domain.".crt");
+            if (!empty($_POST['v_ssl_key'])) unlink($tmpdir."/".$v_domain.".key");
+            if (!empty($_POST['v_ssl_ca']))  unlink($tmpdir."/".$v_domain.".ca");
+            rmdir($tmpdir);
          }
      }
 

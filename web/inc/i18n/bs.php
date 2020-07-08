@@ -696,17 +696,6 @@ $LANG['bs'] = array(
     'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' =>
         'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager',
 
-    'Licence Key' => 'Licencni ključ',
-    'Enter License Key' => 'Unesi ključ licence',
-    'Buy Licence' => 'Kupi licencu',
-    'Buy Lifetime License' => 'Buy Lifetime License',
-    'Disable and Cancel Licence' => 'Disable and Cancel Licence',
-    'Licence Activated' => 'Licenca je aktivirana',
-    'Licence Deactivated' => 'Licence Deactivated',
-    'Restrict users so that they cannot use SSH and access only their home directory.' => 'Restrict users so that they cannot use SSH and access only their home directory.',
-    'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.' => 'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.',
-    'This is a commercial module, you would need to purchace license key to enable it.' => 'This is a commercial module, you would need to purchace license key to enable it.',
-
     'Minutes' => 'Minuta',
     'Hourly' => 'Sahati',
     'Run Command' => 'Pokreni komandu',
@@ -756,4 +745,107 @@ $LANG['bs'] = array(
 
     'Theme' => 'Izgled',
     'Operating System' => 'Operativni sistem',
+
+    'Please wait while php is installed or removed' => 'Pričekajte dok se postupak ne završi i ne osvježite stranicu.',
+    'Avoid adding web domains on admin account' => 'Preporučuje se <a href="/add/user/"> kreiranje standardnog korisničkog naloga </a> prije dodavanja web domena na poslužitelj zbog povećanih privilegija koje administrativni račun posjeduje i potencijalnih sigurnosnih rizika.',
+    
+    //SSH Key
+    'Field SSH_KEY can not be blank.' => 'Polje SSH ključ ne smije biti prazno',
+    'SSH KEY is invalid' => 'SSH ključ nije važeći',
+    'SSH KEY already exists' => 'SSH ključ već postoji',
+    'SSH KEY Added' => 'SSH ključ je dodan',
+    'Add SSH Key' => 'Dodajte SSH ključ',
+    'SSH KEY' => 'SSH ključ',    
+    'DELETE_KEY_CONFIRM' => 'Jeste li sigurni da želite izbrisati SSH ključ %s?',
+    'SSH_ID' => 'SSH ID',
+    'Manage SSH keys' => 'Upravljajte SSH ključevima',
+ 
+    //Header 
+    'Fm' => 'Datoteke',
+    //PHP Cli
+    'PHP CLI Version' => 'PHP CLI verzija',
+
+    //Ipset Firewall rules
+    'Adding Firewall Ipset List' => 'Nova IP lista',
+    'Ip List Name' => 'Naziv IP liste',
+    'Data Source' => 'Izvor podataka',
+    'Ip Version' => 'IP verzija',
+    'Autoupdate' => 'Automatsko ažuriranje',
+    'Add IP list' => 'Dodajte IP listu',
+    'BLACKLIST' => 'BLACKLIST',
+    'IPVERSE' => 'IPVERSE',
+    'IPSET_CREATED_OK' => 'IP lista je kreirana uspješno',
+    'DELETE_IPSET_CONFIRMATION' => 'Jeste li sigurni da želite izbrisati IP listu %s?',
+    '1 Ipset list' => '1 IP lista',
+    '%s Ipset lists' => '%s IP liste',
+    'There are currently no IP lists defined.' => 'Trenutno nisu definisane IP liste.',
+    'list ipset' => 'Upravljanje IP spiskovima',
+    
+    //Backup
+    'File Name' => 'Ime dokumenta',
+    'Size' => 'Veličina',
+    'Runtime' => 'Runtime',
+    //Logs
+    'Refresh' => 'Osvježiti',
+    'Time' => 'Vreme',
+    'Value' => 'Vrijednost',
+    
+    //DNS 
+    'default' => 'zadani',
+    '1 DNS zone' => '1 DNS zona',
+    '%s DNS zones' => '%s DNS zone',
+    'Add Record' => 'Dodaj zapis',
+    //user
+    '1 user account' => '1 korisnički račun',
+    '%s user accounts' => '%s korisnički računi',
+    //database
+    '1 SQL database' => '1 SQL baza podataka',
+    '%s SQL databases' => '%s SQL baze podataka',
+    //mail
+    '1 mail domain' => '1 domenu pošte',
+    '%s mail domains' => '%s domene pošte',
+    //web
+    '1 web domain' => '1 web domena',
+    '%s web domains' => '%s web domene',
+    
+    //rrd
+    'Bandwidth Usage' => 'Upotreba propusne širine',
+    
+    //reset
+    'Forgot Password' => 'Zaboravili ste lozinku',
+    //web
+    'Quick Install App' => 'Brza instalacija aplikacije',
+    //webapp 
+    'version' => 'verzija',
+    'Setup' => 'Postaviti',
+    //Server
+    'Restart' => 'Ponovo pokreni',
+    'Mail Server' => 'server za poštu',
+    'Enabled multi PHP versions' => 'Omogućene verzije PHP-a',
+    'Service' => 'Usluga',
+    'Description' => 'Opis',
+    
+    //header
+    'Hestia Control Panel' => 'Hestia Control Panel',
+
+    // Set default language
+    'SYSTEM_SET_DEFAULT_LANGUAGE' => 'Postavite kao zadani jezik za sve korisnike',
+    
+    //2FA 
+    'Forgot token' => 'Otključaj račun',
+    '2FA Token' => 'OTP PIN',
+    '2FA Reset successfully' => 'Dvofaktorska provjera autentičnosti sada je isključena za vaš račun. <br> <br> Sada možete nastaviti s prijavom.',
+    'Reset 2FA' => 'Otključaj račun',
+    '2FA Reset Code' => 'Kôd za povrat računa',
+    'Invalid or missing token' => 'Nevažeći ili nedostajući token',
+
+    'DELETE_LOGS_CONFIRMATION'  => 'Jeste li sigurni da želite izbrisati zapisnike?',
+
+    'Force SSL/HTTPS' => 'Omogući automatsko preusmjeravanje s HTTP na HTTPS',
+    'Enable SSL HSTS' => 'Omogući HTTP strogu sigurnost prijevoza (HSTS) <a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"> <i class = "fas fa-pitanje-krug"> </i> </a>',
+
+    '2 Factor Authentication' => 'Dvofaktorska provjera autentičnosti',
+    'Enable 2FA' => 'Omogući dvofaktorsku provjeru identiteta',
+    'Please scan the code below in your 2FA application:' => 'Da biste dovršili postavljanje dvofaktorske provjere autentičnosti, skenirajte QR kôd ispod <br /> pomoću autentifikacijske aplikacije (poput <a href = "https://play.google.com/store/apps/details?id=com" google.android.apps.authenticator2 "> Google Autentičar </a>):',
+    '2FA Reset Code:' => 'Kôd za povrat računa:',
 );

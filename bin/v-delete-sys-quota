@@ -63,6 +63,8 @@ fi
 #----------------------------------------------------------#
 
 # Logging
+log_history 
+log_history "system quota enforcement disabled"
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -5,34 +5,22 @@
             <a href="/edit/server/php/" class="ui-button cancel" title="<?=__('Configure')?> PHP"><i class="fas fa-pencil-alt status-icon orange"></i> <?=__('Configure')?> PHP</a>
         </div>
         <div class="l-unit-toolbar__buttonstrip float-right">
-                <?php
-                if (!empty($_SESSION['error_msg'])) {
-                  echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
-                } else {
-                  if (!empty($_SESSION['ok_msg'])) {
-                    echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                  }
-                }
-              ?>
                 <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
         </div>
       </div>
     </div>
 
     <div class="l-separator"></div>
-    <!-- /.l-separator -->
-
 
     <div class="l-center animated fadeIn">
-      <?php
-        $back = $_SESSION['back'];
-        if (empty($back)) {
-          $back = "location.href='/list/server/'";
-        } else {
-          $back = "location.href='".$back."'";
-        }
-      ?>
-
+        <?php
+            $back = $_SESSION['back'];
+            if (empty($back)) {
+                $back = "location.href='/list/server/'";
+            } else {
+                $back = "location.href='".$back."'";
+            }
+        ?>
         <form id="vstobjects" name="v_configure_server" method="post">
             <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
             <input type="hidden" name="save" value="save" />
@@ -49,6 +37,19 @@
                             <tr>
                                 <td class="step-top">
                                     <span class="page-title"><?=__('Configuring Server')?>: <?php print $v_service_name ?></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <?php
+                                        if (!empty($_SESSION['error_msg'])) {
+                                            echo "<span class=\"vst-error\"> <i class=\"fas fa-exclamation-circle status-icon red\"></i> ".htmlentities($_SESSION['error_msg'])."</span>";
+                                        } else {
+                                            if (!empty($_SESSION['ok_msg'])) {
+                                                echo "<span class=\"vst-ok\"> <i class=\"fas fa-check-circle status-icon green\"></i> ".$_SESSION['ok_msg']."</span>";
+                                            }
+                                        }
+                                    ?>
                                 </td>
                             </tr>
                             <tr>
@@ -162,8 +163,6 @@
                                     <br><br>
                                 </td>
                             </tr>
-
-
                             <tr>
                                 <td class="vst-text input-label">
                                     <a href="javascript:toggleOptions();" class="vst-advanced"><?php print __('Advanced options');?>&nbsp;<i class="fas fa-arrow-circle-right"></i></a>
@@ -193,12 +192,9 @@
                                     <label><input type="checkbox" size="20" class="vst-checkbox" name="v_restart" checked="yes"> <?php print __('restart');?></label>
                                 </td>
                             </tr>
-
                         </table>
 
-
-                        <table class="data-col2">
-                        </table>
+                        <table class="data-col2"></table>
                     </td>
                 </tr>
             </table>

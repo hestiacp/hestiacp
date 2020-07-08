@@ -4,21 +4,11 @@
             <a class="ui-button cancel" id="btn-back" href="/edit/web/?domain=<?=$v_domain?>"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-              <?php
-              if (!empty($_SESSION['error_msg'])) {
-                echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
-              } else {
-                if (!empty($_SESSION['ok_msg'])) {
-                  echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
-                }
-              }
-            ?>
           </div>
         </div>
       </div>
 
     <div class="l-separator"></div>
-    <!-- /.l-separator -->
 
     <div class="l-center animated fadeIn" style="padding-top:240px;">
         <?php
@@ -28,16 +18,33 @@
             } else {
             $back = "location.href='".$back."'";
             }
-        ?>
-
-        <div class="app-list cards" >
+        ?>       
+        <div style="margin-left:68px; margin-top: 20px">
+          <div class="page-title">
+              <span><?=__('Quick Install App')?></span><br>
+          </div>
+          <div>
+              <span>
+                  <?php
+                  if (!empty($_SESSION['error_msg'])) {
+                      echo "<span class=\"vst-error\"> <i class=\"fas fa-exclamation-circle status-icon red\"></i> ".htmlentities($_SESSION['error_msg'])."</span>";
+                  } else {
+                      if (!empty($_SESSION['ok_msg'])) {
+                          echo "<span class=\"vst-ok\"> <i class=\"fas fa-check-circle status-icon green\"></i> ".$_SESSION['ok_msg']."</span>";
+                      }
+                  }
+              ?>
+            </span>
+          </div>
+        </div>
+        <div class="app-list cards">
             <?php foreach($v_web_apps as $webapp):?>
                 <div class="card <?=($webapp['enabled']?'':'disable')?>" >
                     <span class="card-thumb"><img src="<?=$webapp['thumbnail']?>"></span>
                     <div class="card-details">
                         <p class="card-title"><?=$webapp['name']?></p>
-                        <p>version: <?=$webapp['version']?></p>
-                        <a href="/add/webapp/?app=<?=$webapp['name']?>&domain=<?=$v_domain?>" class="ui-button cancel">Setup</a>
+                        <p><?=__('version')?>: <?=$webapp['version']?></p>
+                        <a href="/add/webapp/?app=<?=$webapp['name']?>&domain=<?=$v_domain?>" class="ui-button cancel"><?=__('Setup')?></a>
                     </div>
                 </div>
             <?php endforeach; ?>

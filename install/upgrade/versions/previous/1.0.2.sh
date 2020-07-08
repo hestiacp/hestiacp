@@ -7,7 +7,7 @@
 #######################################################################################
 
 # Replace dhparam 1024 with dhparam 4096
-echo "(*) Increasing Diffie-Hellman Parameter strength to 4096-bit..."
+echo "[ * ] Increasing Diffie-Hellman Parameter strength to 4096-bit..."
 if [ -e /etc/ssl/dhparam.pem ]; then
     mv /etc/ssl/dhparam.pem $HESTIA_BACKUP/conf/
 fi
@@ -16,20 +16,20 @@ chmod 600 /etc/ssl/dhparam.pem
 
 # Enhance Vsftpd security
 if [ "$FTP_SYSTEM" = "vsftpd" ]; then
-    echo "(*) Hardening Vsftpd SSL configuration..."
+    echo "[ * ] Hardening Vsftpd SSL configuration..."
     cp -f /etc/vsftpd.conf $HESTIA_BACKUP/conf/
     sed -i "s|ssl_tlsv1=YES|ssl_tlsv1=NO|g" /etc/vsftpd.conf
 fi
 
 # Enhance Dovecot security
 if [ "$IMAP_SYSTEM" = "dovecot" ]; then
-    echo "(*) Hardening Dovecot SSL configuration..."
+    echo "[ * ] Hardening Dovecot SSL configuration..."
     mv /etc/dovecot/conf.d/10-ssl.conf $HESTIA_BACKUP/conf/
     cp -f $HESTIA/install/deb/dovecot/conf.d/10-ssl.conf /etc/dovecot/conf.d/
 fi
 
 # Update DNS resolvers in hestia-nginx's configuration
-echo "(*) Updating DNS resolvers for Hestia Internal Web Server..."
+echo "[ * ] Updating DNS resolvers for Hestia Internal Web Server..."
 dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
 for ip in $dns_resolver; do
     if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
@@ -43,7 +43,7 @@ fi
 # Remove Webalizer and set AWStats as default
 WEBALIZER_CHECK=$(cat $HESTIA/conf/hestia.conf | grep webalizer)
 if [ ! -z "$WEBALIZER_CHECK" ]; then
-    echo "(*) Removing Webalizer and setting AWStats as default web statistics backend..."
+    echo "[ * ] Removing Webalizer and setting AWStats as default web statistics backend..."
     apt purge webalizer -y > /dev/null 2>&1
     if [ -d "$HESTIA/data/templates/web/webalizer" ]; then
         rm -rf $HESTIA/data/templates/web/webalizer
@@ -56,17 +56,17 @@ fi
 
 # Remove old hestia.conf files from Apache & NGINX if they exist
 if [ -f "/etc/apache2/conf.d/hestia.conf" ]; then
-    echo "(*) Removing old Apache configuration file from previous version of Hestia Control Panel..."
+    echo "[ * ] Removing old Apache configuration file from previous version of Hestia Control Panel..."
     rm -f /etc/apache2/conf.d/hestia.conf
 fi
 if [ -f "/etc/nginx/conf.d/hestia.conf" ]; then
-    echo "(*) Removing old NGINX configuration file from previous version of Hestia Control Panel..."
+    echo "[ * ] Removing old NGINX configuration file from previous version of Hestia Control Panel..."
     rm -f /etc/nginx/conf.d/hestia.conf
 fi
 
 # Update webmail templates to enable OCSP/SSL stapling
 if [ ! -z "$IMAP_SYSTEM" ]; then
-    echo "(*) Enabling OCSP stapling support for webmail services..."
+    echo "[ * ] Enabling OCSP stapling support for webmail services..."
     $BIN/v-update-mail-templates > /dev/null 2>&1
 fi 
 

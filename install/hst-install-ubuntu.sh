@@ -1852,7 +1852,7 @@ command="sudo $HESTIA/bin/v-update-sys-rrd"
 $HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
 
 # Enable automatic updates
-$HESTIA/bin/v-add-cron-hestia-autoupdate
+$HESTIA/bin/v-add-cron-hestia-autoupdate apt
 
 # Building initital rrd images
 $HESTIA/bin/v-update-sys-rrd

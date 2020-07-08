@@ -7,6 +7,7 @@
 #           - Will download from the hestiacp repository
 #           - Pulls code from staging/beta branch
 #           - install: installs package immediately
+#           - install-auto: installs package and schedules automatic updates from Git
 #           - 'all': (optional) - compiles nginx and php alongside panel.
 #                                 this option takes a long time, only use when needed
 
@@ -421,8 +422,11 @@ install_build() {
 
 # Define installation routine
 
-if [ "$install" = "install" ] || [ "$install" = "yes" ]; then 
+if [ "$install" = "install" ] || [ "$install" = "yes" ] || [ "$install" = "install-auto" ]; then 
     install_build
+    if [ "$install" = "install-auto" ]; then
+        $HESTIA/bin/v-add-cron-hestia-autoupdate git
+    fi
 else
     warning_message
     read -p "Do you wish to proceed with the installation? [y/n] " answer

@@ -9,7 +9,7 @@ $LANG['de'] = array(
     'IP'  => 'Netzwerk',
     'Graphs'  => 'Leistungsgrafiken',
     'Statistics'  => 'Statistiken',
-    'Log'  => 'Logs',
+    'Log'  => 'Protokoll',
     'Server'  => 'Server',
     'Services'  => 'Dienste',
     'Firewall' => 'Firewall',
@@ -699,17 +699,6 @@ $LANG['de'] = array(
     'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' =>
         'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager',
 
-    'Licence Key' => 'Licence Key',
-    'Enter License Key' => 'Enter License Key',
-    'Buy Licence' => 'Buy Licence',
-    'Buy Lifetime License' => 'Buy Lifetime License',
-    'Disable and Cancel Licence' => 'Disable and Cancel Licence',
-    'Licence Activated' => 'Licence Activated',
-    'Licence Deactivated' => 'Licence Deactivated',
-    'Restrict users so that they cannot use SSH and access only their home directory.' => 'Restrict users so that they cannot use SSH and access only their home directory.',
-    'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.' => 'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.',
-    'This is a commercial module, you would need to purchace license key to enable it.' => 'This is a commercial module, you would need to purchace license key to enable it.',
-
     'Minutes' => 'Minuten',
     'Hourly' => 'Stunden',
     'Run Command' => 'Ausführen',
@@ -765,7 +754,7 @@ $LANG['de'] = array(
     'Theme' => 'aussehen',
     'Operating System' => 'Betriebssystem',
 
-    'Please wait while php is installed or removed' => 'Bitte warten Sie, bis der Vorgang abgeschlossen ist, und aktualisieren Sie die Seite nicht.',
+    'Please wait while php is installed or removed' => 'Das Speichern von Änderungen kann einige Minuten dauern. Bitte warten Sie, bis der Vorgang abgeschlossen ist, und aktualisieren Sie die Seite nicht.',
     'Avoid adding web domains on admin account' => 'Es wird dringend empfohlen, <a href="/add/user/">ein normales Benutzerkonto</a> zu erstellen, bevor Sie dem Server Webdomänen hinzufügen, da das Administratorkonto über erhöhte Berechtigungen und potenzielle Sicherheitsrisiken verfügt.',
     
     //SSH Key
@@ -851,10 +840,10 @@ $LANG['de'] = array(
     'SYSTEM_SET_DEFAULT_LANGUAGE' => 'Als Standardsprache für alle Benutzer festlegen',
     
     //2FA 
-    'Forgot token' => 'Token vergessen',
+    'Forgot token' => 'Konto entsperren',
     '2FA Token' => 'OTP PIN',
-    '2FA Reset successfully' => '2FA Token wurde mit Erfolg zurückgesetzt. Sie können sich jetzt erneut anmelden',
-    'Reset 2FA' => '2FA zurücksetzen',
+    '2FA Reset successfully' => 'Die Zwei-Faktor-Authentifizierung ist jetzt für Ihr Konto deaktiviert.<br><br>Sie können sich jetzt erneut anmelden',
+    'Reset 2FA' => 'Konto entsperren',
     '2FA Reset Code' => 'Kontowiederherstellungscode',
     'Invalid or missing token' => 'Ungültiger oder fehlender Kontowiederherstellungscode',  
 );

@@ -696,17 +696,6 @@ $LANG['ja'] = array(
     'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' =>
         'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager',
 
-    'Licence Key' => 'ライセンスキー',
-    'Enter License Key' => 'ライセンスキーを入力',
-    'Buy Licence' => 'ライセンスを購入',
-    'Buy Lifetime License' => '永久ライセンスを購入',
-    'Disable and Cancel Licence' => 'ライセンスをキャンセルして無効化する',
-    'Licence Activated' => 'ライセンスが有効化されました',
-    'Licence Deactivated' => 'ライセンスが無効化されました',
-    'Restrict users so that they cannot use SSH and access only their home directory.' => 'ユーザーによるSSHの使用を禁止し、各自のホームディレクトリにのみアクセスできるように制限します',
-    'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.' => '高機能なファイルマネージャーを用いてウェブ上のファイルを閲覧、コピー、編集、表示、復旧できます',
-    'This is a commercial module, you would need to purchace license key to enable it.' => 'この機能は有償で、有効化するにはライセンスキーを購入する必要があります',
-
     'Minutes' => '分毎',
     'Hourly' => '時間毎',
     'Run Command' => '実行時',
@@ -756,5 +745,107 @@ $LANG['ja'] = array(
 
     'Theme' => '外観',
     'Operating System' => 'オペレーティング システム',
+
+    'Please wait while php is installed or removed' => '変更を保存するには数分かかる場合があります。 プロセスが完了するまで待ち、ページを更新しないでください。',
+    'Avoid adding web domains on admin account' => '管理者アカウントが持つ権限の増加と潜在的なセキュリティリスクのため、サーバーにWebドメインを追加する前に、<a href="/add/user/">標準ユーザーアカウントを作成</a>することを強くお勧めします。',
     
+    //SSH Key
+    'Field SSH_KEY can not be blank.' => 'フィールドSSHキーは空白にできません',
+    'SSH KEY is invalid' => 'SSHキーが無効です',
+    'SSH KEY already exists' => 'SSHキーはすでに存在します',
+    'SSH KEY Added' => 'SSHキーが追加されました',
+    'Add SSH Key' => 'SSHキーを追加',
+    'SSH KEY' => 'SSHキー',    
+    'DELETE_KEY_CONFIRM' => 'SSHキーを削除してもよろしいですか %s?',
+    'SSH_ID' => 'SSH ID',
+    'Manage SSH keys' => 'SSHキーを管理する',
+ 
+    //Header 
+    'Fm' => 'ファイル',
+    //PHP Cli
+    'PHP CLI Version' => 'PHPコマンドラインバージョン',
+
+    //Ipset Firewall rules
+    'Adding Firewall Ipset List' => '新しいIPリスト',
+    'Ip List Name' => 'IPリスト名',
+    'Data Source' => '情報源',
+    'Ip Version' => 'IPバージョン',
+    'Autoupdate' => '自動更新',
+    'Add IP list' => 'IPリストを追加',
+    'BLACKLIST' => 'BLACKLIST',
+    'IPVERSE' => 'IPVERSE',
+    'IPSET_CREATED_OK' => 'IPリストが正常に作成されました',
+    'DELETE_IPSET_CONFIRMATION' => 'IPリストを削除してもよろしいですか %s?',
+    '1 Ipset list' => '1 IPリスト',
+    '%s Ipset lists' => '%s IPリスト',
+    'There are currently no IP lists defined.' => '現在、定義されているIPリストはありません。',
+    'list ipset' => 'IPリストを管理する',
+    
+    //Backup
+    'File Name' => 'ファイル名',
+    'Size' => 'サイズ',
+    'Runtime' => 'ランタイム',
+    //Logs
+    'Refresh' => 'リフレッシュ',
+    'Time' => '時間',
+    'Value' => '値',
+    
+    //DNS 
+    'default' => 'デフォルト',
+    '1 DNS zone' => '1 DNSゾーン',
+    '%s DNS zones' => '%s DNSゾーン',
+    'Add Record' => 'レコードを追加',
+    //user
+    '1 user account' => '1 ユーザーアカウント',
+    '%s user accounts' => '%s ユーザーアカウント',
+    //database
+    '1 SQL database' => '1 SQLデータベース',
+    '%s SQL databases' => '%s SQLデータベース',
+    //mail
+    '1 mail domain' => '1 メールドメイン',
+    '%s mail domains' => '%s メールドメイン',
+    //web
+    '1 web domain' => '1 Webドメイン',
+    '%s web domains' => '%s Webドメイン',
+    
+    //rrd
+    'Bandwidth Usage' => '帯域幅の使用',
+    
+    //reset
+    'Forgot Password' => 'パスワードを再設定する',
+    //web
+    'Quick Install App' => 'アプリをインストール',
+    //webapp 
+    'version' => 'バージョン',
+    'Setup' => 'セットアップ',
+    //Server
+    'Restart' => '再起動',
+    'Mail Server' => 'メールサーバー',
+    'Enabled multi PHP versions' => '有効なPHPバージョン',
+    'Service' => 'サービス',
+    'Description' => '説明文',
+    
+    //header
+    'Hestia Control Panel' => 'ヘスティアコントロールパネル',
+
+    // Set default language
+    'SYSTEM_SET_DEFAULT_LANGUAGE' => 'すべてのユーザーのデフォルト言語として設定',
+    
+    //2FA 
+    'Forgot token' => 'アカウントのロックを解除',
+    '2FA Token' => 'OTP PIN',
+    '2FA Reset successfully' => 'アカウントの二要素認証が無効になりました。<br><br>ログインに進むことができます。',
+    'Reset 2FA' => 'アカウントのロックを解除',
+    '2FA Reset Code' => 'アカウント復旧コード',
+    'Invalid or missing token' => '無効または不足しているトークン',
+
+    'DELETE_LOGS_CONFIRMATION'  => 'ログを削除してもよろしいですか？',
+
+    'Force SSL/HTTPS' => 'HTTPからHTTPSへの自動リダイレクトを有効にする',
+    'Enable SSL HSTS' => 'HTTP Strict Transport Security（HSTS）を有効にする <a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><i class="fas fa-question-circle"></i></a>',
+
+    '2 Factor Authentication' => 'Two-factor Authentication',
+    'Enable 2FA' => 'Enable two-factor authentication',
+    'Please scan the code below in your 2FA application:' => 'To finish setting up two-factor authentication, scan the QR code below<br />using an authentication app (such as <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google Authenticator</a>):',
+    '2FA Reset Code:' => 'Account Recovery Code:',
 );

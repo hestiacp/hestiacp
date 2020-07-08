@@ -698,17 +698,6 @@ $LANG['ro'] = array(
     'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' =>
     'scurtăturile sunt inspirate de magnificul GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager',
 
-    'Licence Key' => 'Licență',
-    'Enter License Key' => 'Introduceți licența',
-    'Buy Licence' => 'Cumpărați licență',
-    'Buy Lifetime License' => 'Cumpărați licență pe viață',
-    'Disable and Cancel Licence' => 'Dezactivare si anulare licență',
-    'Licence Activated' => 'Licență activată',
-    'Licence Deactivated' => 'Licență dezactivată',
-    'Restrict users so that they cannot use SSH and access only their home directory.' => 'Restricționați utilizatorii astfel încât să nu poată folosi SSH și să aibă acces numai la directorul lor.',
-    'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.' => 'Navigați, copiați, editați, vizualizați și recuperați toate fișierele sitului dvs. web folosind managerul de fișiere complet echipat.',
-    'This is a commercial module, you would need to purchace license key to enable it.' => 'Acesta este un modul comercial, va trebui să achiziționați o licență pentru a-l activa.',
-
     'Minutes' => 'Minute',
     'Hourly' => 'Oral',
     'Run Command' => 'Execută comanda',
@@ -758,5 +747,106 @@ $LANG['ro'] = array(
 
     'Theme' => 'Aspectul',
     'Operating System' => 'Sistem de operare',
+    'Please wait while php is installed or removed' => 'Please wait until the process has completed and do not refresh the page.',
+    'Avoid adding web domains on admin account' => 'It is strongly advised to <a href="/add/user/">create a standard user account</a> before adding web domains to the server due to the increased privileges the admin account possesses and potential security risks.',
     
+    //SSH Key
+    'Field SSH_KEY can not be blank.' => 'Field SSH Key must not be blank',
+    'SSH KEY is invalid' => 'SSH key is invalid',
+    'SSH KEY already exists' => 'SSH key already exists',
+    'SSH KEY Added' => 'SSH key has been added',
+    'Add SSH Key' => 'Add SSH key',
+    'SSH KEY' => 'SSH Key',    
+    'DELETE_KEY_CONFIRM' => 'Are you sure you want to delete SSH key %s?',
+    'SSH_ID' => 'SSH ID',
+    'Manage SSH keys' => 'Manage SSH keys',
+ 
+    //Header 
+    'Fm' => 'Files',
+    //PHP Cli
+    'PHP CLI Version' => 'PHP CLI Version',
+
+    //Ipset Firewall rules
+    'Adding Firewall Ipset List' => 'New IP list',
+    'Ip List Name' => 'IP List Name',
+    'Data Source' => 'Data Source',
+    'Ip Version' => 'IP Version',
+    'Autoupdate' => 'Auto Update',
+    'Add IP list' => 'Add IP list',
+    'BLACKLIST' => 'BLACKLIST',
+    'IPVERSE' => 'IPVERSE',
+    'IPSET_CREATED_OK' => 'IP list created successfully',
+    'DELETE_IPSET_CONFIRMATION' => 'Are you sure you want to delete IP list %s',
+    '1 Ipset list' => '1 IP list',
+    '%s Ipset lists' => '%s IP lists',
+    'There are currently no IP lists defined.' => 'There are currently no IP lists defined.',
+    'list ipset' => 'Manage IP lists',
+    
+    //Backup
+    'File Name' => 'File Name',
+    'Size' => 'Size',
+    'Runtime' => 'Runtime',
+    //Logs
+    'Refresh' => 'Refresh',
+    'Time' => 'Time',
+    'Value' => 'Value',
+    
+    //DNS 
+    'default' => 'default',
+    '1 DNS zone' => '1 DNS zone',
+    '%s DNS zones' => '%s DNS zones',
+    'Add Record' => 'Add Record',
+    //user
+    '1 user account' => '1 user account',
+    '%s user accounts' => '%s user accounts',
+    //database
+    '1 SQL database' => '1 SQL database',
+    '%s SQL databases' => '%s SQL databases',
+    //mail
+    '1 mail domain' => '1 mail domain',
+    '%s mail domains' => '%s mail domains',
+    //web
+    '1 web domain' => '1 web domain',
+    '%s web domains' => '%s web domains',
+    
+    //rrd
+    'Bandwidth Usage' => 'Bandwidth Usage',
+    
+    //reset
+    'Forgot Password' => 'Forgot Password',
+    //web
+    'Quick Install App' => 'Quick Install App',
+    //webapp 
+    'version' => 'version',
+    'Setup' => 'Setup',
+    //Server
+    'Restart' => 'Restart',
+    'Mail Server' => 'Mail Server',
+    'Enabled multi PHP versions' => 'Enabled PHP versions',
+    'Service' => 'Service',
+    'Description' => 'Description',
+    
+    //header
+    'Hestia Control Panel' => 'Hestia Control Panel',
+
+    // Set default language
+    'SYSTEM_SET_DEFAULT_LANGUAGE' => 'Set as default language for all users',
+    
+    //2FA 
+    'Forgot token' => 'Unlock Account',
+    '2FA Token' => 'OTP PIN',
+    '2FA Reset successfully' => 'Two-factor authentication is now turned off for your account.<br><br>You may now proceed to log in.',
+    'Reset 2FA' => 'Unlock Account',
+    '2FA Reset Code' => 'Account Recovery Code',
+    'Invalid or missing token' => 'Invalid or missing token',
+
+    'DELETE_LOGS_CONFIRMATION'  => 'Are you sure you want to delete the logs?',
+
+    'Force SSL/HTTPS' => 'Enable automatic HTTP-to-HTTPS redirection',
+    'Enable SSL HSTS' => 'Enable HTTP Strict Transport Security (HSTS) <a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><i class="fas fa-question-circle"></i></a>',
+
+    '2 Factor Authentication' => 'Two-factor Authentication',
+    'Enable 2FA' => 'Enable two-factor authentication',
+    'Please scan the code below in your 2FA application:' => 'To finish setting up two-factor authentication, scan the QR code below<br />using an authentication app (such as <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google Authenticator</a>):',
+    '2FA Reset Code:' => 'Account Recovery Code:',
 );

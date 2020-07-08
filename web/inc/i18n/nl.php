@@ -8,10 +8,10 @@
 
 $LANG['nl'] = array(
     'Packages'  => 'Pakketten',
-    'IP'  => 'IP',
+    'IP'  => 'Netwerk',
     'Graphs'  => 'Grafieken',
     'Statistics'  => 'Statistieken',
-    'Log'  => 'Logs',
+    'Log'  => 'Logboeken',
     'Server'  => 'Server',
     'Services'  => 'Processen',
     'Firewall' => 'Firewall',
@@ -527,7 +527,7 @@ $LANG['nl'] = array(
     'Database Credentials'  => 'Database gegevens',
     'DATABASE_READY' => "De database is succesvol aangemaakt en klaar voor gebruik.\n\nDatabase: %s\nGebruiker: %s\nWachtwoord: %s\n%s\n\n--\nHestia Controlepaneel\n",
 
-    'forgot password'  => 'Vergeten',
+    'forgot password'  => 'Wachtwoord vergeten',
     'Confirm'  => 'Bevestig',
     'New Password'  => 'Nieuw wachtwoord',
     'Confirm Password'  => 'Bevestig wachtwoord',
@@ -701,17 +701,6 @@ $LANG['nl'] = array(
     'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' =>
     'snelkoppelingen zijn geïnspireerd door magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager',
 
-    'Licence Key' => 'Licentiecode',
-    'Enter License Key' => 'Voer de licentiecode in',
-    'Buy Licence' => 'Koop Licentie',
-    'Buy Lifetime License' => 'Kopen Levenslange licentie',
-    'Disable and Cancel Licence' => 'Activeer en Annuleren licentie',
-    'Licence Activated' => 'Licentie geactiveerde',
-    'Licence Deactivated' => 'Licentie gedeactiveerd',
-    'Restrict users so that they cannot use SSH and access only their home directory.' => 'Gebruikers beperken zodat zij niet SSH kunnen gebruiken en enkel hun home map kunnen gebruiken.',
-    'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.' => 'Blader, kopieer, wijzig, bekijk, en verkrijg al uw webbestanden met een volledige bestandsbeheerder.',
-    'This is a commercial module, you would need to purchace license key to enable it.' => 'Dit is een commerciële module, u moet een licentiesleutel kopen om het te kunnen gebruiken.',
-
     'Minutes' => 'Minuten',
     'Hourly' => 'Ieder uur',
     'Run Command' => 'Voer commando uit',
@@ -759,7 +748,7 @@ $LANG['nl'] = array(
 
     'Email Credentials' => 'E-mail gegevens',
     
-        '2 Factor Authentication' => 'Two factor Authenticatie',
+    '2 Factor Authentication' => 'Two factor Authenticatie',
     'Enable 2FA' => 'Schakel two factor Authenticatie in',
     'Please scan the code below in your 2FA application:' => 'Scan de QR-code hieronder om het instellen van two factor authenticatie te voltooien.<br />
     Maak gebruik van een App (Bijvoorbeeld <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google Authenticator</a>):',
@@ -853,11 +842,21 @@ $LANG['nl'] = array(
     // Set default language
     'SYSTEM_SET_DEFAULT_LANGUAGE' => 'Stel standaard taal in voor alle gebruikers',
     
-        //2FA 
-    'Forgot token' => 'Token vergeten',
-    '2FA Token' => '2FA Token',
-    '2FA Reset successfully' => '2FA is met success gereset. Je kunt nu normaal inloggen.',
-    'Reset 2FA' => 'Herstel 2FA Code',
+    //2FA 
+    'Forgot token' => 'Deblokeer Account',
+    '2FA Token' => 'OTP Pincode',
+    '2FA Reset successfully' => 'Two-factor verificatie is nu uitgeschakeld voor uw account. <br> <br> U kunt nu doorgaan met inloggen',
+    'Reset 2FA' => 'Deblokeer Account',
     '2FA Reset Code' => 'Account Herstel Code',
     'Invalid or missing token' => 'Ongeldige of geen token',
+
+    'DELETE_LOGS_CONFIRMATION'  => 'Weet u zeker dat u de logboeken wilt verwijderen?',
+
+    'Force SSL/HTTPS' => 'Schakel automatische HTTP-naar-HTTPS-omleiding in',
+    'Enable SSL HSTS' => 'HTTP Strict Transport Security (HSTS) inschakelen <a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><i class="fas fa-question-circle"></i></a>',
+
+    '2 Factor Authentication' => 'Twee-factor-authenticatie',
+    'Enable 2FA' => 'Schakel tweefactorauthenticatie in',
+    'Please scan the code below in your 2FA application:' => 'Scan de QR-code hieronder om het instellen van tweefactorauthenticatie te voltooien<br />met behulp van een authenticatie-app (zoals <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google Authenticator</a>):',
+    '2FA Reset Code:' => 'Accountherstelcode:',
 );

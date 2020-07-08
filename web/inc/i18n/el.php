@@ -8,7 +8,7 @@
 
 $LANG['el'] = array(
     'Packages'  => 'Πακέτα',
-    'IP'  => 'IP',
+    'IP'  => 'Δίκτυο',
     'Graphs'  => 'Γραφήματα',
     'Statistics'  => 'Στατιστικά',
     'Log'  =>  'Αρχείο',
@@ -45,11 +45,11 @@ $LANG['el'] = array(
     'no notifications'  => 'Δεν υπάρχουν ειδοποιήσεις',
 
     'Add User'  => 'Προσθέστε χρήστη',
-    'Add Domain'  => 'Προσθέστε domain',
-    'Add Web Domain'  => 'Προσθέστε Web Domain',
-    'Add DNS Domain'  => 'Προσθέστε DNS Domain',
+    'Add Domain'  => 'Προσθέστε πεδίο ορισμού',
+    'Add Web Domain'  => 'Προσθέστε Web πεδίο ορισμού',
+    'Add DNS Domain'  => 'Προσθέστε DNS πεδίο ορισμού',
     'Add DNS Record'  => 'Προσθέστε Εγγραφή DNS',
-    'Add Mail Domain'  => 'Προσθέστε Mail Domain',
+    'Add Mail Domain'  => 'Προσθέστε Mail πεδίο ορισμού',
     'Add Mail Account'  => 'Προσθέστε Λογαριασμό Mail',
     'Add Database'  => 'Προσθέστε Βάση Δεδομένων',
     'Add Cron Job'  => 'Προσθέστε Cron Job',
@@ -95,7 +95,7 @@ $LANG['el'] = array(
     'list accounts'  => 'εμφάνιση %s λογαριασμών',
     'add account'  => 'προσθήκη λογαριασμού',
     'open webmail'  => 'άνοιγμα webmail',
-    'list fail2ban' => 'εμφάνιση fail2ban',
+    'list fail2ban' => 'Διαχείριση αποκλεισμένων IP',
     'open %s'  => 'άνοιγμα %s',
     'download'  => 'λήψη',
     'restore'  => 'επαναφορά',
@@ -115,14 +115,14 @@ $LANG['el'] = array(
 
     'Adding User'  => 'Προσθήκη Χρήστη',
     'Editing User'  => 'Επεξεργασία Χρήστη',
-    'Adding Domain'  => 'Προσθήκη Domain',
-    'Editing Domain'  => 'Επεξεργασία Domain',
-    'Adding DNS Domain'  => 'Προσθήκη DNS Domain',
-    'Editing DNS Domain'  => 'Επεξεργασία DNS Domain',
+    'Adding Domain'  => 'Προσθήκη πεδίο ορισμού',
+    'Editing Domain'  => 'Επεξεργασία πεδίο ορισμού',
+    'Adding DNS Domain'  => 'Προσθήκη DNS πεδίο ορισμού',
+    'Editing DNS Domain'  => 'Επεξεργασία DNS πεδίο ορισμού',
     'Adding DNS Record'  => 'Προσθήκη Εγγραφής DNS',
     'Editing DNS Record'  => 'Επεξεργασία Εγγραφής DNS',
-    'Adding Mail Domain'  => 'Προσθήκη Mail Domain',
-    'Editing Mail Domain'  => 'Επεξεργασία Mail Domain',
+    'Adding Mail Domain'  => 'Προσθήκη Mail πεδίο ορισμού',
+    'Editing Mail Domain'  => 'Επεξεργασία Mail πεδίο ορισμού',
     'Adding Mail Account'  => 'Προσθήκη Λογαριασμού Mail',
     'Editing Mail Account'  => 'Επεξεργασία Λογαριασμού Mail',
     'Adding database'  => 'Προσθήκη database',
@@ -164,7 +164,7 @@ $LANG['el'] = array(
     'minutes'  => 'λεπτά',
     'month'  => 'μήνας',
     'package'  => 'πακέτο',
-    'Bandwidth'  => 'Bandwidth',
+    'Bandwidth'  => 'εύρος ζώνης',
     'Disk'  => 'Δίσκος',
     'Web'  => 'Web',
     'Mail'  => 'Mail',
@@ -290,7 +290,7 @@ $LANG['el'] = array(
     'Send login credentials to email address'  => 'αποστολή των διαπιστευτηρίων εισόδου στην διεύθυνση ηλεκτρονικού ταχυδρομείου',
     'Default Template'  => 'Προεπιλεγμένο Template',
     'Default Name Servers'  => 'Προεπιλεγμένοι Name Servers',
-    'Domain'  => 'Domain',
+    'Domain'  => 'πεδίο ορισμού',
     'DNS Support'  => 'Υποστήριξη DNS',
     'Mail Support'  => 'Υποστήριξη Mail',
     'Advanced options'  => 'Προχωρημένες επιλογές',
@@ -582,8 +582,8 @@ $LANG['el'] = array(
     'Web Config Editor' => 'Web Config Editor',
     'Template Manager' => 'Template Manager',
     'Backup Migration Manager' => 'Backup Migration Manager',
-    'FileManager' => 'FileManager',
-    'show: CPU / MEM / NET / DISK' => 'show: CPU / MEM / NET / DISK',
+    'FileManager' => 'Αρχεία',
+    'show: CPU / MEM / NET / DISK' => 'Προβολή πρόσθετων λεπτομερειών',
 
     'sort by' => 'ταξινόμηση κατά',
     'Date' => 'Ημερομηνία',
@@ -592,7 +592,7 @@ $LANG['el'] = array(
 
     'save to favorites' => 'Αποθηκεύστε στα αγαπημένα',
 
-    'File Manager' => 'File Manager',
+    'File Manager' => 'Αρχεία',
     'size' => 'size',
     'date' => 'date',
     'name' => 'name',
@@ -698,21 +698,10 @@ $LANG['el'] = array(
     'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' =>
         'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager',
 
-    'Licence Key' => 'Licence Key',
-    'Enter License Key' => 'Enter License Key',
-    'Buy Licence' => 'Buy Licence',
-    'Buy Lifetime License' => 'Buy Lifetime License',
-    'Disable and Cancel Licence' => 'Disable and Cancel Licence',
-    'Licence Activated' => 'Licence Activated',
-    'Licence Deactivated' => 'Licence Deactivated',
-    'Restrict users so that they cannot use SSH and access only their home directory.' => 'Restrict users so that they cannot use SSH and access only their home directory.',
-    'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.' => 'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.',
-    'This is a commercial module, you would need to purchace license key to enable it.' => 'This is a commercial module, you would need to purchace license key to enable it.',
-
     'Minutes' => 'Λεπτά',
     'Hourly' => 'Hourly',
-    'Run Command' => 'Run Command',
-    'every month' => 'every month',
+    'Run Command' => 'Εκτελέστε την εντολή',
+    'every month' => 'κάθε μήνα',
     'every odd month' => 'every odd month',
     'every even month' => 'every even month',
     'every day' => 'κάθε μέρα',
@@ -732,7 +721,7 @@ $LANG['el'] = array(
     'every minute' => 'κάθε λεπτό',
     'every two minutes' => 'κάθε δύο λεπτά',
     'every' => 'κάθε',
-    'Generate' => 'Generate',
+    'Generate' => 'δημιουργήσει',
 
     'awstats' => 'awstats',
 
@@ -745,17 +734,120 @@ $LANG['el'] = array(
     'PUB_KEY' => 'PUB_KEY',
     'ISSUER' => 'ISSUER',
 
-    'Use server hostname' => 'Use server hostname',
-    'Use domain hostname' => 'Use domain hostname',
-    'Use STARTTLS' => 'Use STARTTLS',
-    'Use SSL / TLS' => 'Use SSL / TLS',
-    'No encryption' => 'No encryption',
-    'Do not use encryption' => 'Do not use encryption',
+    'Use server hostname' => 'Χρήση ονόματος κεντρικού υπολογιστή διακομιστή',
+    'Use domain hostname' => 'Χρήση ονόματος κεντρικού υπολογιστή τομέα',
+    'Use STARTTLS' => 'Χρήση STARTTLS',
+    'Use SSL / TLS' => 'Χρήση SSL / TLS',
+    'No encryption' => 'Χωρίς κρυπτογράφηση',
+    'Do not use encryption' => 'Να μην χρησιμοποιείται κρυπτογράφηση',
 
-    'maximum characters length, including prefix' => 'maximum %s characters length, including prefix',
+    'maximum characters length, including prefix' => 'μέγιστο μήκος χαρακτήρων %s, συμπεριλαμβανομένου του προθέματος',
 
-    'Email Credentials' => 'Email Credentials',
+    'Email Credentials' => 'Διαπιστευτήρια ηλεκτρονικού ταχυδρομείου',
 
     'Theme' => 'Εμφάνιση',
     'Operating System' => 'Λειτουργικό σύστημα',
+
+    'Please wait while php is installed or removed' => 'Περιμένετε μέχρι να ολοκληρωθεί η διαδικασία και μην ανανεώσετε τη σελίδα.',
+    'Avoid adding web domains on admin account' => '<a href="/add/user/"> Δημιουργήστε έναν τυπικό λογαριασμό χρήστη </a> προτού προσθέσετε ενότητες ιστού στον διακομιστή λόγω αυξημένων δικαιωμάτων λογαριασμού διαχειριστή και πιθανών κινδύνων ασφαλείας.',
+    
+    //SSH Key
+    'Field SSH_KEY can not be blank.' => 'Το κλειδί πεδίου SSH δεν πρέπει να είναι κενό',
+    'SSH KEY is invalid' => 'Το κλειδί SSH δεν είναι έγκυρο',
+    'SSH KEY already exists' => 'Το κλειδί SSH υπάρχει ήδη',
+    'SSH KEY Added' => 'Προστέθηκε κλειδί SSH',
+    'Add SSH Key' => 'Προσθήκη κλειδιού SSH',
+    'SSH KEY' => 'Κλειδί SSH',    
+    'DELETE_KEY_CONFIRM' => 'Είστε βέβαιοι ότι θέλετε να διαγράψετε το κλειδί SSH%s?',
+    'SSH_ID' => 'Αναγνωριστικό SSH',
+    'Manage SSH keys' => 'Προβολή κλειδιών SSH',
+ 
+    //Header 
+    'Fm' => 'Αρχεία',
+    //PHP Cli
+    'PHP CLI Version' => 'Έκδοση γραμμής εντολών PHP',
+
+    //Ipset Firewall rules
+    'Adding Firewall Ipset List' => 'Νέα λίστα IP',
+    'Ip List Name' => 'Όνομα λίστας IP',
+    'Data Source' => 'Πηγή δεδομένων',
+    'Ip Version' => 'Έκδοση IP',
+    'Autoupdate' => 'Αυτόματη ενημέρωση',
+    'Add IP list' => 'Προσθήκη λίστας IP',
+    'BLACKLIST' => 'BLACKLIST',
+    'IPVERSE' => 'IPVERSE',
+    'IPSET_CREATED_OK' => 'Η λίστα IP δημιουργήθηκε με επιτυχία',
+    'DELETE_IPSET_CONFIRMATION' => 'Είστε βέβαιοι ότι θέλετε να διαγράψετε τη λίστα IP %s?',
+    '1 Ipset list' => '1 λίστα IP',
+    '%s Ipset lists' => '%s Λίστες IP',
+    'There are currently no IP lists defined.' => 'Προς το παρόν δεν έχουν καθοριστεί λίστες IP.',
+    'list ipset' => 'Διαχείριση λιστών IP',
+    
+    //Backup
+    'File Name' => 'Ονομα αρχείου',
+    'Size' => 'Μέγεθος',
+    'Runtime' => 'Χρόνος εκτέλεσης',
+    //Logs
+    'Refresh' => 'Φρεσκάρω',
+    'Time' => 'χρόνος',
+    'Value' => 'Ρεκόρ',
+    
+    //DNS 
+    'default' => 'Προκαθορισμένο',
+    '1 DNS zone' => '1 Ζώνη DNS',
+    '%s DNS zones' => '%s Ζώνες DNS',
+    'Add Record' => 'Προσθήκη εγγραφής',
+    //user
+    '1 user account' => '1 λογαριασμός χρήστη',
+    '%s user accounts' => '%s λογαριασμοί χρηστών',
+    //database
+    '1 SQL database' => '1 Βάση δεδομένων SQL',
+    '%s SQL databases' => '%s Βάσεις δεδομένων SQL',
+    //mail
+    '1 mail domain' => '1 τομέας αλληλογραφίας',
+    '%s mail domains' => '%s τομείς αλληλογραφίας',
+    //web
+    '1 web domain' => '1 τομέας web',
+    '%s web domains' => '%s τομείς web',
+    
+    //rrd
+    'Bandwidth Usage' => 'Χρήση εύρους ζώνης',
+    
+    //reset
+    'Forgot Password' => 'Ξεχάσατε τον κωδικό πρόσβασης',
+    //web
+    'Quick Install App' => 'Εγκατάσταση εφαρμογής',
+    //webapp 
+    'version' => 'Έκδοση',
+    'Setup' => 'στήσετε',
+    //Server
+    'Restart' => 'επανεκκίνηση',
+    'Mail Server' => 'Διακομιστής αλληλογραφίας',
+    'Enabled multi PHP versions' => 'Ενεργοποιημένες εκδόσεις PHP',
+    'Service' => 'Υπηρεσία',
+    'Description' => 'περιγραφή',
+    
+    //header
+    'Hestia Control Panel' => 'Πίνακας Ελέγχου Hestia',
+
+    // Set default language
+    'SYSTEM_SET_DEFAULT_LANGUAGE' => 'Ορισμός ως προεπιλεγμένης γλώσσας για όλους τους χρήστες',
+    
+    //2FA 
+    'Forgot token' => 'Ξεκλείδωμα λογαριασμού',
+    '2FA Token' => 'OTP PIN',
+    '2FA Reset successfully' => 'Ο έλεγχος ταυτότητας δύο παραγόντων είναι τώρα απενεργοποιημένος για το λογαριασμό σας.<br><br>Μπορείτε τώρα να συνεχίσετε να συνδέεστε.',
+    'Reset 2FA' => 'Ξεκλείδωμα λογαριασμού',
+    '2FA Reset Code' => 'Κωδικός ανάκτησης λογαριασμού',
+    'Invalid or missing token' => 'Το διακριτικό ή λείπει δεν είναι έγκυρο',
+
+    'DELETE_LOGS_CONFIRMATION'  => 'Είστε βέβαιοι ότι θέλετε να διαγράψετε τα αρχεία καταγραφής;',
+
+    'Force SSL/HTTPS' => 'Ενεργοποίηση αυτόματης ανακατεύθυνσης HTTP-to-HTTPS',
+    'Enable SSL HSTS' => 'Ενεργοποίηση αυστηρής ασφάλειας μεταφοράς HTTP (HSTS) <a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><i class="fas fa-question-circle"></i></a>',
+
+    '2 Factor Authentication' => 'Έλεγχος ταυτότητας δύο παραγόντων',
+    'Enable 2FA' => 'Ενεργοποίηση ελέγχου ταυτότητας δύο παραγόντων',
+    'Please scan the code below in your 2FA application:' => 'Για να ολοκληρώσετε τη ρύθμιση ελέγχου ταυτότητας δύο παραγόντων, σαρώστε τον κωδικό QR παρακάτω<br />χρησιμοποιώντας μια εφαρμογή ελέγχου ταυτότητας (όπως <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Επαληθευτής Google</a>):',
+    '2FA Reset Code:' => 'Κωδικός ανάκτησης λογαριασμού:',
 );

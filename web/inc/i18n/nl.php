@@ -843,10 +843,10 @@ $LANG['nl'] = array(
     'SYSTEM_SET_DEFAULT_LANGUAGE' => 'Stel standaard taal in voor alle gebruikers',
     
     //2FA 
-    'Forgot token' => 'Token vergeten',
-    '2FA Token' => '2FA Token',
-    '2FA Reset successfully' => '2FA is met success gereset. Je kunt nu normaal inloggen.',
-    'Reset 2FA' => 'Herstel 2FA Code',
+    'Forgot token' => 'Deblokeer Account',
+    '2FA Token' => 'OTP Pincode',
+    '2FA Reset successfully' => 'Two-factor verificatie is nu uitgeschakeld voor uw account. <br> <br> U kunt nu doorgaan met inloggen',
+    'Reset 2FA' => 'Deblokeer Account',
     '2FA Reset Code' => 'Account Herstel Code',
     'Invalid or missing token' => 'Ongeldige of geen token',
 

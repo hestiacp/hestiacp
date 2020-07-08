@@ -32,6 +32,7 @@ if [ -z "$owner" ]; then
     check_result $E_NOTEXIST "domain $domain doesn't exist"
 fi
 if [ "$owner" = "$user" ]; then
+    echo "ERROR: $domain is already owned by $user."
     exit
 fi
 
@@ -43,9 +44,12 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
+echo "Moving $domain from $owner to $user, please wait..."
+
 # WEB domain
 web_data=$(grep "DOMAIN='$domain'" $HESTIA/data/users/$owner/web.conf)
 if [ ! -z "$web_data" ]; then
+    echo "[*] Moving web domain..."
     $BIN/v-suspend-web-domain $owner $domain >> /dev/null 2>&1
     parse_object_kv_list "$web_data"
 
@@ -95,6 +99,7 @@ fi
 # DNS domain
 dns_data=$(grep "DOMAIN='$domain'" $HESTIA/data/users/$owner/dns.conf)
 if [ ! -z "$dns_data" ]; then
+    echo "[*] Moving DNS zone and records..."
     parse_object_kv_list "$dns_data"
 
     # Change IP
@@ -125,8 +130,14 @@ fi
 # MAIL domain
 mail_data=$(grep "DOMAIN='$domain'" $HESTIA/data/users/$owner/mail.conf)
 if [ ! -z "$mail_data" ]; then
+    echo "[*] Moving mail domain and accounts..."
 
     parse_object_kv_list "$mail_data"
+
+    # Ensure mail configuration directory exists for receiving user
+    if [ ! -e "$HOMEDIR/$user/conf/mail/$domain/" ]; then
+        mkdir -p $HOMEDIR/$user/conf/mail/$domain/
+    fi
 
     # Move config
     sed -i "/DOMAIN='$domain'/d" $HESTIA/data/users/$owner/mail.conf
@@ -142,9 +153,12 @@ if [ ! -z "$mail_data" ]; then
             $HESTIA/data/users/$user/mail/
     fi
 
-    # Check SSL
+    # Move SSL certificates
     if [ "$SSL" = 'yes' ]; then
+         # Ensure that SSL directory exists and move certificates
         mkdir -p $HESTIA/data/users/$user/ssl/
+        mkdir -p $HOMEDIR/$user/conf/mail/$domain/ssl/
+        
         ssl_crt=$HESTIA/data/users/$owner/ssl/mail.$domain.crt
         ssl_key=$HESTIA/data/users/$owner/ssl/mail.$domain.key
         ssl_ca=$HESTIA/data/users/$owner/ssl/mail.$domain.ca
@@ -152,7 +166,41 @@ if [ ! -z "$mail_data" ]; then
         mv $ssl_crt $HESTIA/data/users/$user/ssl/
         mv $ssl_key $HESTIA/data/users/$user/ssl/
         mv $ssl_ca $HESTIA/data/users/$user/ssl/ >> /dev/null 2>&1
-        mv $ssl_pem $HESTIA/data/users/$user/ssl/ >> /dev/null 2>&1
+        mv $ssl_pem $HESTIA/data/users/$user/ssl/ >> /dev/null 2>&1     
+        
+        # Add certificate to user home directory
+        cp -f $HESTIA/data/users/$user/ssl/mail.$domain.crt $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt
+        cp -f $HESTIA/data/users/$user/ssl/mail.$domain.key $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key
+        cp -f $HESTIA/data/users/$user/ssl/mail.$domain.pem $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem
+        if [ -e "$HESTIA/data/users/$user/ssl/mail.$domain.ca" ]; then
+            cp -f $HESTIA/data/users/$user/ssl/mail.$domain.ca $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.ca
+        fi
+
+        # Add domain SSL configuration to dovecot
+        if [ -f /etc/dovecot/conf.d/domains/$domain.conf ]; then
+            rm -f /etc/dovecot/conf.d/domains/$domain.conf
+        fi
+        
+        echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
+        echo "local_name mail.$domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
+        echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
+        echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
+        echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+
+        # Add domain SSL configuration to exim4
+        # Cleanup symlinks
+        find /usr/local/hestia/ssl/mail -xtype l -delete
+
+        ln -s -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem /usr/local/hestia/ssl/mail/mail.$domain.crt
+        ln -s -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key /usr/local/hestia/ssl/mail/mail.$domain.key
+
+        # Set correct permissions on certificates
+        chmod 750 $HOMEDIR/$user/conf/mail/$domain/ssl
+        chown -R $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain/ssl
+        chmod 0644 $HOMEDIR/$user/conf/mail/$domain/ssl/*
+        chown -h $user:mail $HOMEDIR/$user/conf/mail/$domain/ssl/*
+        chmod -R 0644 /usr/local/hestia/ssl/mail/*
+        chown -h $user:mail /usr/local/hestia/ssl/mail/*
     fi
 
     # Move data
@@ -161,11 +209,6 @@ if [ ! -z "$mail_data" ]; then
     # Change ownership
     find $HOMEDIR/$user/mail/$domain -user $owner \
         -exec chown -h $user {} \;
-
-    # Rebuild config
-    $BIN/v-unsuspend-mail-domain $user $domain no >> /dev/null 2>&1
-    $BIN/v-rebuild-mail-domains $owner no
-    $BIN/v-rebuild-mail-domains $user
 
     # Checking exim username for later chowning
     exim_user="exim";
@@ -178,18 +221,43 @@ if [ ! -z "$mail_data" ]; then
         find $HOMEDIR/$user/conf/mail/$domain -user root \
             -exec chown $exim_user {} \;
     fi
+
+    # Remove old mail directory from original owner
+    if [ -e "$HOMEDIR/$owner/mail/$domain" ]; then
+        rm -rf "$HOMEDIR/$owner/mail/$domain"
+    fi
+
+    # Remove old mail configuration directory from original owner
+    if [ -e "$HOMEDIR/$owner/conf/mail/$domain" ]; then
+        rm -rf "$HOMEDIR/$owner/conf/mail/$domain"
+    fi
+    if [ -e "$HESTIA/data/users/$owner/mail/$domain.conf" ]; then
+        rm -f "$HESTIA/data/users/$owner/mail/$domain.conf"
+    fi
+
+    # Rebuild config
+    $BIN/v-unsuspend-mail-domain $user $domain no >> /dev/null 2>&1
+    $BIN/v-rebuild-mail-domains $owner no
+    $BIN/v-rebuild-mail-domains $user
 fi
 
 # Update counters
 $BIN/v-update-user-counters $owner
 $BIN/v-update-user-counters $user
 
+# Send notification to panel
+if [ ! -z "$web_data" ] || [ ! -z "$dns_data" ] || [ ! -z "$mail_data" ]; then
+    $HESTIA/bin/v-add-user-notification "$user" "$domain has been added to your account" ''
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging
+log_history "moved domain $domain from $owner to $user" '' "admin"
+log_history "$domain was added to your account" '' "$user"
+log_history "$domain was removed from your account" '' "$owner"
 log_event "$OK" "$ARGUMENTS"
 
 exit

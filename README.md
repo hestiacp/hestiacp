@@ -2,7 +2,7 @@
 
 [Hestia Control Panel](https://www.hestiacp.com/)
 ==================================================
-**Latest stable release:** Version 1.2.0 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/master/CHANGELOG.md)<br>
+**Latest stable release:** Version 1.2.0 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md)<br>
 
 **Web:** [www.hestiacp.com](https://www.hestiacp.com/)<br>
 **Documentation:** [docs.hestiacp.com](https://docs.hestiacp.com/)<br>

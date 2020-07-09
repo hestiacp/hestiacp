@@ -18,9 +18,10 @@ type=$1
 host=$2
 dbuser=$3
 password=$4; HIDE=4
-max_db=${6-500}
-charsets=${7-UTF8,LATIN1,WIN1250,WIN1251,WIN1252,WIN1256,WIN1258,KOI8}
-template=${8-template1}
+max_db=${5-500}
+charsets=${6}
+template=${7}
+port=${8}
 
 # Includes
 source $HESTIA/func/main.sh
@@ -33,6 +34,8 @@ is_mysql_host_alive() {
     echo "host='$HOST'" >> $mycnf
     echo "user='$USER'" >> $mycnf
     echo "password='$PASSWORD'" >> $mycnf
+    echo "port='$PORT'" >> $mycnf
+    
     chmod 600 $mycnf
     mysql --defaults-file=$mycnf -e 'SELECT VERSION()' >/dev/null 2>&1
     rm $mycnf
@@ -45,7 +48,7 @@ is_mysql_host_alive() {
 
 is_pgsql_host_alive() {
     export PGPASSWORD="$dbpass"
-    psql -h $host -U $dbuser -c "SELECT VERSION()" > /dev/null 2>&1
+    psql -h $host -U $dbuser -p $port -c "SELECT VERSION()" > /dev/null 2>&1
     if [ '0' -ne "$?" ]; then
         echo "Error: PostgreSQL connection to $host failed"
         log_event "$E_CONNECT" "$ARGUMENTS"
@@ -58,14 +61,23 @@ is_pgsql_host_alive() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-args_usage='TYPE HOST DBUSER DBPASS [MAX_DB] [CHARSETS] [TPL]'
+args_usage='TYPE HOST DBUSER DBPASS [MAX_DB] [CHARSETS] [TPL] [PORT]'
 check_args '4' "$#" "$args_usage"
-is_format_valid 'host' 'dbuser' 'max_db' 'charsets' 'template'
+
+if [ -z $charsets ]; then charsets="UTF8,LATIN1,WIN1250,WIN1251,WIN1252,WIN1256,WIN1258,KOI8"; fi
+if [ -z $template ]; then template="template1"; fi
+if [ -z $port ]; then 
+    if [ $type = 'mysql' ]; then port="3306"; fi
+    if [ $type = 'pgsql' ]; then port="5432"; fi
+fi
+
+is_format_valid 'host' 'dbuser' 'max_db' 'charsets' 'template' 'port'
 #is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
 #is_type_valid "$DB_SYSTEM" "$type"
 is_dbhost_new
 is_password_valid
 dbpass="$password"
+
 case $type in
     mysql) is_mysql_host_alive ;;
     pgsql) is_pgsql_host_alive ;;
@@ -85,11 +97,11 @@ date=$(echo "$time_n_date" |cut -f 2 -d \ )
 case $type in
     mysql) str="HOST='$host' USER='$dbuser' PASSWORD='$dbpass'";
            str="$str CHARSETS='$charsets' MAX_DB='$max_db' U_SYS_USERS=''";
-           str="$str U_DB_BASES='0' SUSPENDED='no' TIME='$time' DATE='$date'";;
+           str="$str U_DB_BASES='0' SUSPENDED='no' TIME='$time' DATE='$date' PORT='$port'";;
     pgsql) str="HOST='$host' USER='$dbuser' PASSWORD='$dbpass'";
            str="$str CHARSETS='$charsets' TPL='$template' MAX_DB='$max_db'";
            str="$str U_SYS_USERS='' U_DB_BASES='0' SUSPENDED='no'";
-           str="$str TIME='$time' DATE='$date'";;
+           str="$str TIME='$time' DATE='$date' PORT='$port";;
 esac
 
 

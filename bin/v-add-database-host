@@ -66,10 +66,8 @@ check_args '4' "$#" "$args_usage"
 
 if [ -z $charsets ]; then charsets="UTF8,LATIN1,WIN1250,WIN1251,WIN1252,WIN1256,WIN1258,KOI8"; fi
 if [ -z $template ]; then template="template1"; fi
-if [ -z $port ]; then 
-    if [ $type = 'mysql' ]; then port="3306"; fi
-    if [ $type = 'pgsql' ]; then port="5432"; fi
-fi
+
+database_set_default_ports
 
 is_format_valid 'host' 'dbuser' 'max_db' 'charsets' 'template' 'port'
 #is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'

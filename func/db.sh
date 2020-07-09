@@ -1,3 +1,31 @@
+# Global
+database_set_default_ports() {
+
+    # Set default ports for MySQL and PostgreSQL
+    mysql_default="3306"
+    pgsql_default="5432"
+
+    # Handle missing values for both $PORT and $port
+    # however don't override both at once or custom ports will be overridden.
+
+    if [ -z "$PORT" ]; then 
+        if [ "$type" = 'mysql' ]; then 
+            PORT="$mysql_default"
+        fi
+        if [ "$type" = 'pgsql' ]; then
+            PORT="$pgsql_default"
+        fi
+    fi
+    if [ -z "$port" ]; then 
+        if [ "$type" = 'mysql' ]; then 
+            port="$mysql_default"
+        fi
+        if [ "$type" = 'pgsql' ]; then
+            port="$pgsql_default"
+        fi
+    fi
+}
+
 # MySQL
 mysql_connect() {
     host_str=$(grep "HOST='$1'" $HESTIA/conf/mysql.conf)

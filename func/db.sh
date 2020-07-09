@@ -103,7 +103,7 @@ psql_connect() {
     host_str=$(grep "HOST='$1'" $HESTIA/conf/pgsql.conf)
     parse_object_kv_list "$host_str"
     export PGPASSWORD="$PASSWORD"
-    if [ -z $PORT ]; then $PORT="5432"; fi
+    if [ -z $PORT ]; then PORT=5432; fi
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
         echo "Error: postgresql config parsing failed"
         log_event "$E_PARSING" "$ARGUMENTS"

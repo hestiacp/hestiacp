@@ -109,8 +109,8 @@ psql_connect() {
         log_event "$E_PARSING" "$ARGUMENTS"
         exit $E_PARSING
     fi
-
-    psql -h $HOST -U $USER -c "SELECT VERSION()" > /dev/null 2>/tmp/e.psql
+    
+    psql -h $HOST -U $USER -p $PORT -c "SELECT VERSION()" > /dev/null 2>/tmp/e.psql
     if [ '0' -ne "$?" ]; then
         if [ "$notify" != 'no' ]; then
             echo -e "Can't connect to PostgreSQL $HOST\n$(cat /tmp/e.psql)" |\

@@ -99,7 +99,7 @@ case $type in
     pgsql) str="HOST='$host' USER='$dbuser' PASSWORD='$dbpass'";
            str="$str CHARSETS='$charsets' TPL='$template' MAX_DB='$max_db'";
            str="$str U_SYS_USERS='' U_DB_BASES='0' SUSPENDED='no'";
-           str="$str TIME='$time' DATE='$date' PORT='$port";;
+           str="$str TIME='$time' DATE='$date' PORT='$port'";;
 esac
 
 

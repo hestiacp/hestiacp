@@ -16,7 +16,7 @@ rebuild_user_conf() {
     
     # Update FNAME LNAME to NAME
     if [ -z $NAME ]; then 
-        NAME="$(sed -e 's/[[:space:]]*$//' <<<$FNAME $LNAME)"
+        NAME="$FNAME $LNAME"
         sed -i "s/FNAME='$FNAME'/NAME='$NAME'/g" $USER_DATA/user.conf
         sed -i "/LNAME='$LNAME'/d" $USER_DATA/user.conf  
     fi

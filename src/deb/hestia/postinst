@@ -34,9 +34,6 @@ upgrade_welcome_message
 # Execute version-specific upgrade scripts
 upgrade_start_routine
 
-# Update PHP templates
-update_php_templates
-
 # Upgrade phpMyAdmin if applicable
 upgrade_phpmyadmin
 

@@ -217,27 +217,6 @@ upgrade_phpmyadmin() {
     fi
 }
 
-update_php_templates() {
-    echo "[ * ] Updating default PHP templates..."
-    # Update default template
-    cp -f $HESTIA_INSTALL_DIR/templates/web/php-fpm/default.tpl \
-        $HESTIA/data/templates/web/php-fpm/default.tpl
-
-    # Update no-php template
-    cp -f $HESTIA_INSTALL_DIR/templates/web/php-fpm/no-php.tpl \
-        $HESTIA/data/templates/web/php-fpm/no-php.tpl
-
-    # Update  socket template
-    cp -f $HESTIA_INSTALL_DIR/templates/web/php-fpm/socket.tpl \
-        $HESTIA/data/templates/web/php-fpm/socket.tpl
-
-    for version in $($HESTIA/bin/v-list-sys-php plain); do 
-        echo "[ * ] Updating templates for PHP ${version}..."
-        cp -f $HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl \
-            $HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl; 
-    done
-}
-
 upgrade_get_version() {
     # Retrieve new version number for Hestia Control Panel from .deb package
     new_version=$(dpkg -l | awk '$2=="hestia" { print $3 }')

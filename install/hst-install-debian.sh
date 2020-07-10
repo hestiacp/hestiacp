@@ -1765,7 +1765,7 @@ $HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1
 check_result $? "can't enable sftp jail"
 
 # Adding Hestia admin account
-$HESTIA/bin/v-add-user admin $vpass $email default System Administrator
+$HESTIA/bin/v-add-user admin $vpass $email default "System Administrator"
 check_result $? "can't create admin user"
 $HESTIA/bin/v-change-user-shell admin nologin
 $HESTIA/bin/v-change-user-language admin $lang

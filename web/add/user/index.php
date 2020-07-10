@@ -87,7 +87,7 @@ if (!empty($_POST['ok'])) {
         $from = _translate($_POST['v_language'],'MAIL_FROM',$hostname);
         
         if (!empty($_POST['v_name'])) {
-            $mailtext = _translate($_POST['v_language'],'GREETINGS_GORDON',$_POST['fname']);
+            $mailtext = _translate($_POST['v_language'],'GREETINGS_GORDON',$_POST['v_name']);
         } else {
             $mailtext = _translate($_POST['v_language'],'GREETINGS');
         }

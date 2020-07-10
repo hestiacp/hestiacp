@@ -35,8 +35,12 @@ is_user_free() {
 check_args '3' "$#" 'USER PASSWORD EMAIL [PACKAGE] [FNAME] [LNAME]'
 is_format_valid 'user' 'email' 'package'
 if [ ! -z "$fname" ]; then
-    is_format_valid 'fname' 'lname'
+    is_format_valid 'fname' 
 fi
+if [ ! -z "$lname" ]; then
+    is_format_valid 'lname' 
+fi
+
 is_user_free "$user"
 is_password_valid
 is_package_valid

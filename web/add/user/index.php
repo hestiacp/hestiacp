@@ -26,8 +26,7 @@ if (!empty($_POST['ok'])) {
     if (empty($_POST['v_password'])) $errors[] = __('password');
     if (empty($_POST['v_package'])) $errrors[] = __('package');
     if (empty($_POST['v_email'])) $errors[] = __('email');
-    if (empty($_POST['v_fname'])) $errors[] = __('first name');
-    if (empty($_POST['v_lname'])) $errors[] = __('last name');
+    if (empty($_POST['v_name'])) $errors[] = __('name');
     if (!empty($errors[0])) {
         foreach ($errors as $i => $error) {
             if ( $i == 0 ) {
@@ -55,8 +54,7 @@ if (!empty($_POST['ok'])) {
     $v_email = escapeshellarg($_POST['v_email']);
     $v_package = escapeshellarg($_POST['v_package']);
     $v_language = escapeshellarg($_POST['v_language']);
-    $v_fname = escapeshellarg($_POST['v_fname']);
-    $v_lname = escapeshellarg($_POST['v_lname']);
+    $v_name = escapeshellarg($_POST['v_name']);
     $v_notify = $_POST['v_notify'];
 
 
@@ -66,7 +64,7 @@ if (!empty($_POST['ok'])) {
         $fp = fopen($v_password, "w");
         fwrite($fp, $_POST['v_password']."\n");
         fclose($fp);
-        exec (HESTIA_CMD."v-add-user ".$v_username." ".$v_password." ".$v_email." ".$v_package." ".$v_fname." ".$v_lname, $output, $return_var);
+        exec (HESTIA_CMD."v-add-user ".$v_username." ".$v_password." ".$v_email." ".$v_package." ".$v_name, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
         unlink($v_password);
@@ -87,8 +85,9 @@ if (!empty($_POST['ok'])) {
         $hostname = exec('hostname');
         unset($output);
         $from = _translate($_POST['v_language'],'MAIL_FROM',$hostname);
-        if (!empty($_POST['v_fname'])) {
-            $mailtext = _translate($_POST['v_language'],'GREETINGS_GORDON_FREEMAN',$_POST['v_fname'],$_POST['v_lname']);
+        
+        if (!empty($_POST['v_name'])) {
+            $mailtext = _translate($_POST['v_language'],'GREETINGS_GORDON',$_POST['fname']);
         } else {
             $mailtext = _translate($_POST['v_language'],'GREETINGS');
         }
@@ -103,8 +102,7 @@ if (!empty($_POST['ok'])) {
         unset($v_username);
         unset($v_password);
         unset($v_email);
-        unset($v_fname);
-        unset($v_lname);
+        unset($v_name);
         unset($v_notify);
     }
 }

@@ -180,6 +180,15 @@ if (!empty($_POST['save'])) {
     }
 
     // Change full name
+    if ($v_fname != $_POST['v_fname']){
+        $v_fname = escapeshellarg($_POST['v_fname']);
+        exec (HESTIA_CMD."v-change-user-name ".escapeshellarg($v_username)." ".$v_fname, $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
+        $v_name = $_POST['v_fname'];
+    }
+
+    // Change full name
     if (($v_fname != $_POST['v_fname']) || ($v_lname != $_POST['v_lname']) && (empty($_SESSION['error_msg']))) {
         $v_fname = escapeshellarg($_POST['v_fname']);
         $v_lname = escapeshellarg($_POST['v_lname']);

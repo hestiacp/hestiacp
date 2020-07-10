@@ -519,6 +519,8 @@ $LANG['en'] = array(
     'Welcome to Hestia Control Panel'  => 'Welcome to Hestia Control Panel',
     'MAIL_FROM'  => 'Hestia Control Panel <noreply@%s>',
     'GREETINGS_GORDON_FREEMAN' => "Hello, %s %s,\n",
+    'GREETINGS_GORDON' => "Hello, %s,\n",
+    
     'GREETINGS' => "Hello,\n",
     'ACCOUNT_READY' => "Your account has been created and is ready for use.\n\nhttps://%s/login/\nUsername: %s\nPassword: %s\n\n--\nHestia Control Panel\n",
 
@@ -848,4 +850,10 @@ $LANG['en'] = array(
     'Reset 2FA' => 'Unlock Account',
     '2FA Reset Code' => 'Account Recovery Code',
     'Invalid or missing token' => 'Invalid or missing token',
+    
+    //list user 
+    'Name' => 'Name',
+    //Add / Edit user
+    'Contact' => 'Name',
+    'GREETINGS_GORDON' => "Hello, %s,\n",
 );

@@ -47,7 +47,7 @@ update_user_value "$user" '$NAME' "$name"
 #----------------------------------------------------------#
 
 # Logging
-log_history "changed user name to $name"
+log_history "Changed user name to $name"
 log_event "$OK" "$ARGUMENTS"
 
 exit

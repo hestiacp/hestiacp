@@ -324,6 +324,13 @@ if [ ! -e '/usr/bin/wget' ]; then
     check_result $? "Can't install wget"
 fi
 
+# Checking curl
+if [ ! -e '/usr/bin/curl' ]; then
+    echo "[ * ] Installing curl..."
+    apt-get -y install curl >> $LOG
+    check_result $? "Can't install curl"
+fi
+
 # Checking dirmngr
 if [ ! -e '/usr/bin/dirmngr' ]; then
     echo "[ * ] Installing dirmngr..."

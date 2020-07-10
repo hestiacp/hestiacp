@@ -240,6 +240,7 @@ upgrade_rebuild_users() {
         if [ ! -z "$MAIL_SYSTEM" ]; then 
             $BIN/v-rebuild-mail-domains $user 'no' >/dev/null 2>&1
         fi
+        $BIN/v-rebuild-user $user 'no' >/dev/null 2>&1
     done
 }
 

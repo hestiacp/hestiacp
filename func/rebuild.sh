@@ -13,10 +13,17 @@ rebuild_user_conf() {
     chmod 660 $USER_DATA/history.log
     touch $USER_DATA/stats.log
     chmod 660 $USER_DATA/stats.log
+    
+    # Update FNAME LNAME to NAME
+    if [ -z $NAME ]; then 
+        NAME="$(sed -e 's/[[:space:]]*$//' <<<$FNAME $LNAME)"
+        sed -i "s/FNAME='$FNAME'/NAME='$NAME'/g" $USER_DATA/user.conf
+        sed -i "/LNAME='$LNAME'/d" $USER_DATA/user.conf  
+    fi
 
     # Run template trigger
     if [ -x "$HESTIA/data/packages/$PACKAGE.sh" ]; then
-        $HESTIA/data/packages/$PACKAGE.sh "$user" "$CONTACT" "$FNAME" "$LNAME"
+        $HESTIA/data/packages/$PACKAGE.sh "$user" "$CONTACT" "$NAME"
     fi
 
     # Rebuild user

@@ -1,7 +1,7 @@
 server {
     listen      %ip%:%web_port%;
     server_name %domain_idn% %alias_idn%;
-    root        %docroot%;
+    root        %docroot%/docroot;
     index       index.php index.html index.htm;
     access_log  /var/log/nginx/domains/%domain%.log combined;
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;
@@ -20,11 +20,6 @@ server {
         access_log off;
     }
 
-    location ~ /(changelog.txt|copyright.txt|install.mysql.txt|install.pgsql.txt|install.sqlite.txt|install.txt|license.txt|maintainers.txt|license|license.txt|readme.txt|readme.md|upgrade.txt) {
-        deny all;
-        return 404;
-    }
-
     location ~ \..*/.*\.php$ {
         deny all;
         return 404;
@@ -36,11 +31,6 @@ server {
     }
 
     location ~ ^/sites/[^/]+/files/.*\.php$ {
-        deny all;
-        return 404;
-    }
-
-    location ~ /vendor/.*\.php$ {
         deny all;
         return 404;
     }

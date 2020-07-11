@@ -159,7 +159,7 @@ prepare_web_domain_values() {
     docroot="$HOMEDIR/$user/web/$domain/public_html"
     sdocroot="$docroot"
     if [ "$SSL_HOME" = 'single' ]; then
-        sdocroot="$HOMEDIR/$user/web/$domain/public_shtml" ;
+        sdocroot="$HOMEDIR/$user/web/$domain/public_shtml"
     fi
 
     if [ ! -z "$WEB_BACKEND" ]; then
@@ -179,6 +179,31 @@ prepare_web_domain_values() {
     if [ ! -e "$USER_DATA/ssl/$domain.ca" ]; then
         ssl_ca_str='#'
     fi
+
+    # Set correct document root
+    if [ ! -z "$CUSTOM_DOCROOT" ]; then
+        # Custom document root has been set by the user, import from configuration
+        custom_docroot="$CUSTOM_DOCROOT"
+        docroot="$custom_docroot"
+        sdocroot="$docroot"
+    elif [ ! -z "$CUSTOM_DOCROOT" ] && [ ! -z "$target_directory" ]; then
+        # Custom document root has been specified with a different target than public_html
+        if [ -d "$HOMEDIR/$user/web/$target_domain/public_html/$target_directory/" ]; then
+            custom_docroot="$HOMEDIR/$user/web/$target_domain/public_html/$target_directory"
+            docroot="$custom_docroot"
+            sdocroot="$docroot"
+        fi
+    elif [ ! -z "$CUSTOM_DOCROOT" ] && [ -z "$target_directory" ]; then
+        # Set custom document root to target domain's public_html folder
+        custom_docroot="$HOMEDIR/$user/web/$target_domain/public_html"
+        docroot="$custom_docroot"
+        sdocroot="$docroot"
+    else
+        # No custom document root specified, use default
+        docroot="$HOMEDIR/$user/web/$domain/public_html"
+        sdocroot="$docroot"
+    fi
+
     if [ "$SUSPENDED" = 'yes' ]; then
         docroot="$HESTIA/data/templates/web/suspend"
         sdocroot="$HESTIA/data/templates/web/suspend"

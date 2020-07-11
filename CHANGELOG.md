@@ -3,9 +3,11 @@ All notable changes to this project will be documented in this file.
 
 ## [CURRENT] - Development
 ### Features
+- Added support for parking domains (specifying a custom document root folder). See `v-change-web-domain-docroot` for details.
 
 ### Bugfixes
 - Create mailhelo.conf if it doesnt exist to prevent a error message during grep.
+- Fixed an issue where document root value was not displayed when running `v-list-web-domains`.
  
 ## [1.2.1] - Service Release 1 (beta)
 ### Features
@@ -27,6 +29,7 @@ All notable changes to this project will be documented in this file.
 - Improved Spanish translations (thanks **@Wibol**)
 - Improved German translations (thanks **@ronald-at**)
 - Improved Russian translations (thanks **@Pleskan**)
+
 
 ## [1.2.0] - Major Release (Feature / Quality Update)
 ### Features

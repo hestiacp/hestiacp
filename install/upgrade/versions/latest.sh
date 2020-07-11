@@ -181,20 +181,33 @@ if [ -e /var/lib/phpmyadmin/blowfish_secret.inc.php ]; then
     chmod 0644 /var/lib/phpmyadmin/blowfish_secret.inc.php
 fi
 
-# Add phpMyAdmin/phpPgAdmin aliases to hestia.conf and correct configuration/templates
+# Ensure that backup compression level is correctly set
+GZIP_LVL_CHECK=$(cat $HESTIA/conf/hestia.conf | grep BACKUP_GZIP)
+if [ -z "$GZIP_LVL_CHECK" ]; then
+    echo "[ * ] Updating backup compression level variable..."
+    $BIN/v-change-sys-config-value "BACKUP_GZIP" '9'
+fi
+
+# Update phpMyAdmin/phpPgAdmin templates and set missing alias variables if necessary
 if [ -e "/var/lib/phpmyadmin" ]; then
-PMA_ALIAS_CHECK=$(cat $HESTIA/conf/hestia.conf | grep DB_PMA_ALIAS)
+    PMA_ALIAS_CHECK=$(cat $HESTIA/conf/hestia.conf | grep DB_PMA_ALIAS)
     if [ -z "$PMA_ALIAS_CHECK" ]; then
         echo "[ * ] Updating phpMyAdmin alias..."
-        $HESTIA/bin/v-change-sys-db-alias "pma" "phpmyadmin"
+        $HESTIA/bin/v-change-sys-db-alias "pma" "phpMyAdmin"
+    else
+        echo "[ * ] Updating phpMyAdmin configuration..."
+        $HESTIA/bin/v-change-sys-db-alias "pma" "$DB_PMA_ALIAS"
     fi
 fi
 
 if [ -e "/var/lib/phppgadmin" ]; then
-PGA_ALIAS_CHECK=$(cat $HESTIA/conf/hestia.conf | grep DB_PGA_ALIAS)
+    PGA_ALIAS_CHECK=$(cat $HESTIA/conf/hestia.conf | grep DB_PGA_ALIAS)
     if [ -z "$PGA_ALIAS_CHECK" ]; then
         echo "[ * ] Updating phpPgAdmin alias..."
-        $HESTIA/bin/v-change-sys-db-alias "pga" "phppgadmin"
+        $HESTIA/bin/v-change-sys-db-alias "pga" "phpPgAdmin"
+    else
+        echo "[ * ] Updating phpPgAdmin configuration..."
+        $HESTIA/bin/v-change-sys-db-alias "pga" "$DB_PGA_ALIAS"
     fi
 fi
 

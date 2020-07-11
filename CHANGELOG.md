@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 
 ## [CURRENT] - Development
+### Features
+- Added support for parking domains (specifying a custom document root folder). See `v-change-web-domain-docroot` for details.
+
+### Bugfixes
+- Fixed an issue where document root value was not displayed when running `v-list-web-domains`.
 
 ## [1.2.0] - Major Release (Feature / Quality Update)
 ### Features

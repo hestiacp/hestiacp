@@ -1,17 +1,12 @@
-#=======================================================================#
-# Default Web Domain Template                                           #
-# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS #
-#=======================================================================#
-
 server {
     listen      %ip%:%web_port%;
     server_name %domain_idn% %alias_idn%;
-    root        %docroot%;
+    root        %docroot%/html;
     index       index.php index.html index.htm;
     access_log  /var/log/nginx/domains/%domain%.log combined;
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;
     error_log   /var/log/nginx/domains/%domain%.error.log error;
-        
+
     include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
 
     location = /favicon.ico {
@@ -23,11 +18,6 @@ server {
         allow all;
         log_not_found off;
         access_log off;
-    }
-
-    location ~ /(changelog.txt|copyright.txt|install.mysql.txt|install.pgsql.txt|install.sqlite.txt|install.txt|license.txt|maintainers.txt|license|license.txt|readme.txt|readme.md|upgrade.txt) {
-        deny all;
-        return 404;
     }
 
     location ~ \..*/.*\.php$ {
@@ -45,11 +35,6 @@ server {
         return 404;
     }
 
-    location ~ /vendor/.*\.php$ {
-        deny all;
-        return 404;
-    }
-
     location ~ /\.(?!well-known\/) {
         deny all;
         return 404;
@@ -57,6 +42,7 @@ server {
 
     location / {
         try_files $uri $uri/ /index.php?$query_string;
+
         location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
             try_files $uri @rewrite;
             expires 30d;

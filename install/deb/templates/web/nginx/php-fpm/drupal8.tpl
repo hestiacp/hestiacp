@@ -11,7 +11,7 @@ server {
     access_log  /var/log/nginx/domains/%domain%.log combined;
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;
     error_log   /var/log/nginx/domains/%domain%.error.log error;
-        
+
     include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
 
     location = /favicon.ico {
@@ -25,60 +25,68 @@ server {
         access_log off;
     }
 
-    location ~* \.(txt|log)$ {
-        allow 192.168.0.0/16;
+    location ~ /(changelog.txt|copyright.txt|install.mysql.txt|install.pgsql.txt|install.sqlite.txt|install.txt|license.txt|maintainers.txt|license|license.txt|readme.txt|readme.md|upgrade.txt) {
         deny all;
+        return 404;
     }
 
     location ~ \..*/.*\.php$ {
-        return 403;
-        }
+        deny all;
+        return 404;
+    }
 
     location ~ ^/sites/.*/private/ {
-        return 403;
+        deny all;
+        return 404;
     }
-    
+
     location ~ ^/sites/[^/]+/files/.*\.php$ {
         deny all;
-    }
-    
-    location / {
-        try_files $uri /index.php?$query_string;
+        return 404;
     }
 
     location ~ /vendor/.*\.php$ {
         deny all;
         return 404;
-    }        
-
-    location ~ ^/sites/.*/files/styles/ {
-        try_files $uri @rewrite;
     }
 
-    location ~ ^(/[a-z\-]+)?/system/files/ {
-        try_files $uri /index.php?$query_string;
+    location ~ /\.(?!well-known\/) {
+        deny all;
+        return 404;
     }
 
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ {
-        try_files $uri @rewrite;
-        expires max;
-        log_not_found off;
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+
+        location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
+            try_files $uri @rewrite;
+            expires 30d;
+            fastcgi_hide_header "Set-Cookie";
+        }
+
+        location ~ [^/]\.php(/|$)|^/update.php {
+            fastcgi_split_path_info ^(.+?\.php)(|/.*)$;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            try_files $uri =404;
+            fastcgi_pass %backend_lsnr%;
+            fastcgi_index index.php;
+            fastcgi_param SCRIPT_FILENAME $request_filename;
+            include /etc/nginx/fastcgi_params;
+        }
+
+        location ~ ^/sites/.*/files/styles/ {
+            try_files $uri @rewrite;
+        }
     }
 
-    location ~ '\.php$|^/update.php' {
-        fastcgi_split_path_info ^(.+?\.php)(|/.*)$;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        fastcgi_pass %backend_lsnr%;
-        include         /etc/nginx/fastcgi_params;
+    location @rewrite {
+        rewrite ^/(.*)$ /index.php?q=$1;
     }
+
+    rewrite ^/index.php/(.*) /$1 permanent;
 
     location /error/ {
         alias   %home%/%user%/web/%domain%/document_errors/;
-    }
-
-    location ~* "/\.(htaccess|htpasswd)$" {
-        deny    all;
-        return  404;
     }
 
     location /vstats/ {
@@ -90,3 +98,4 @@ server {
     include     /etc/nginx/conf.d/phppgadmin.inc*;
     include     %home%/%user%/conf/web/%domain%/nginx.conf_*;
 }
+

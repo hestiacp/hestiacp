@@ -179,9 +179,9 @@ if (!empty($_POST['save'])) {
     }
 
     // Change full name
-    if ($v_fname != $_POST['v_name']){
-        $v_fname = escapeshellarg($_POST['v_name']);
-        exec (HESTIA_CMD."v-change-user-name ".escapeshellarg($v_username)." ".$v_name, $output, $return_var);
+    if ($v_name != $_POST['v_name']){
+        $v_name = escapeshellarg($_POST['v_name']);
+        exec (HESTIA_CMD."v-change-user-name ".escapeshellarg($v_username). " ". "$v_name", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
         $v_name = $_POST['v_name'];

@@ -12,6 +12,7 @@
 # Argument definition
 user=$1
 name=$2
+lname=$3
 
 # Includes
 source $HESTIA/func/main.sh
@@ -38,16 +39,19 @@ check_hestia_demo_mode
 # Get old values
 old_name=$(get_user_value '$NAME')
 
-
 # Changing ns values
-update_user_value "$user" '$NAME' "$name"
+if [ ! -z "$lname" ]; then
+    update_user_value "$user" '$NAME' "$name $lname"
+else
+    update_user_value "$user" '$NAME' "$name"
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging
-log_history "Changed user name to $name"
+log_history "changed user display name to $name"
 log_event "$OK" "$ARGUMENTS"
 
 exit

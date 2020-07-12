@@ -31,7 +31,9 @@ is_ip_rdns_valid() {
     local awk_ip=$(echo $network_ip | sed 's|\.|/\&\&/|g')
     local rev_awk_ip=$(echo $awk_ip | rev)
 
-    [ -z "$rdns" ] && local rdns=$(dig +short -x $ip | head -n 1 | sed 's/.$//')
+    if [ -z "$rdns" ]; then
+        local rdns=$(dig +short -x "$ip" | head -n 1 | sed 's/.$//') || unset rdns
+    fi
 
     if [ ! -z "$rdns" ] && [ ! $(echo $rdns | awk "/$awk_ip/ || /$rev_awk_ip/") ]; then
         echo $rdns

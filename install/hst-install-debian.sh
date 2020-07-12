@@ -41,7 +41,7 @@ if [ "$release" -eq 9 ]; then
         dovecot-pop3d roundcube-core net-tools roundcube-mysql roundcube-plugins
         mariadb-client mariadb-common mariadb-server postgresql
         postgresql-contrib phppgadmin phpmyadmin mc flex whois rssh git idn zip
-        sudo bc ftp lsof ntpdate rrdtool quota e2fslibs bsdutils e2fsprogs curl
+        sudo bc ftp lsof rrdtool quota e2fslibs bsdutils e2fsprogs curl
         imagemagick fail2ban dnsutils bsdmainutils cron hestia hestia-nginx
         hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat
         rsyslog ssh setpriv ipset libapache2-mod-ruid2"
@@ -57,7 +57,7 @@ elif [ "$release" -eq 10 ]; then
         clamav-daemon spamassassin dovecot-imapd dovecot-pop3d roundcube-core
         net-tools roundcube-mysql roundcube-plugins mariadb-client
         mariadb-common mariadb-server postgresql postgresql-contrib phpmyadmin
-        phppgadmin mc flex whois git idn zip sudo bc ftp lsof ntpdate rrdtool
+        phppgadmin mc flex whois git idn zip sudo bc ftp lsof rrdtool
         quota e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron hestia hestia-nginx hestia-php expect
         libmail-dkim-perl unrar-free vim-common acl sysstat rsyslog ssh util-linux
@@ -309,13 +309,6 @@ apt-get -qq update
 
 # Creating backup directory
 mkdir -p $hst_backups
-
-# Checking ntpdate
-if [ ! -e '/usr/sbin/ntpdate' ]; then
-    echo "[ * ] Installing ntpdate..."
-    apt-get -y install ntpdate >> $LOG
-    check_result $? "Can't install ntpdate"
-fi
 
 # Checking wget
 if [ ! -e '/usr/bin/wget' ]; then
@@ -965,10 +958,9 @@ if [ -z "$(grep ^/usr/sbin/nologin /etc/shells)" ]; then
 fi
 
 # Configuring NTP
-echo '#!/bin/sh' > /etc/cron.daily/ntpdate
-echo "$(which ntpdate) -s pool.ntp.org" >> /etc/cron.daily/ntpdate
-chmod 755 /etc/cron.daily/ntpdate
-ntpdate -s pool.ntp.org
+sed -i 's/#NTP=/NTP=pool.ntp.org/' /etc/systemd/timesyncd.conf
+systemctl enable systemd-timesyncd
+systemctl start systemd-timesyncd
 
 # Setup rssh
 if [ ! "$release" -eq 10 ]; then

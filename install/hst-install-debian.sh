@@ -37,7 +37,7 @@ if [ "$release" -eq 8 ]; then
         mariadb-server postgresql postgresql-contrib phppgadmin phpMyAdmin mc
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
+        bsdmainutils cron hestia=1.1.1 hestia-nginx hestia-php expect libmail-dkim-perl
         unrar-free vim-common acl sysstat setpriv"
 elif [ "$release" -eq 9 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
@@ -53,7 +53,7 @@ elif [ "$release" -eq 9 ]; then
         mariadb-server postgresql postgresql-contrib phppgadmin phpmyadmin mc
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
+        bsdmainutils cron hestia=1.1.1 hestia-nginx hestia-php expect libmail-dkim-perl
         unrar-free vim-common acl sysstat rsyslog setpriv"
 elif [ "$release" -eq 10 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
@@ -69,7 +69,7 @@ elif [ "$release" -eq 10 ]; then
         mariadb-server postgresql postgresql-contrib phpmyadmin phppgadmin mc
         flex whois git idn zip sudo bc ftp lsof ntpdate rrdtool quota e2fslibs
         bsdutils e2fsprogs curl imagemagick fail2ban dnsutils bsdmainutils cron
-        hestia hestia-nginx hestia-php expect libmail-dkim-perl unrar-free
+        hestia=1.1.1 hestia-nginx hestia-php expect libmail-dkim-perl unrar-free
         vim-common acl sysstat rsyslog util-linux"
 fi
 

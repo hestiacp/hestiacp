@@ -37,7 +37,7 @@ if [ "$release" -eq 8 ]; then
         mariadb-server postgresql postgresql-contrib phppgadmin phpMyAdmin mc
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
+        bsdmainutils cron hestia=1.0.6 hestia-nginx hestia-php expect libmail-dkim-perl
         unrar-free vim-common acl sysstat"
 else
     software="nginx apache2 apache2-utils apache2-suexec-custom
@@ -49,7 +49,7 @@ else
         mariadb-server postgresql postgresql-contrib phppgadmin phpmyadmin mc
         flex whois rssh git idn zip sudo bc ftp lsof ntpdate rrdtool quota
         e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron hestia hestia-nginx hestia-php expect libmail-dkim-perl
+        bsdmainutils cron hestia=1.0.6 hestia-nginx hestia-php expect libmail-dkim-perl
         unrar-free vim-common acl sysstat rsyslog"
 fi
 

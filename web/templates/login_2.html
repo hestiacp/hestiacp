@@ -10,6 +10,8 @@
                                 <td style="padding: 40px 60px 0 0;">
                                     <form method="post" action="/login/" id="form_login">
                                     <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
+                                    <input type="hidden" name="user" value="<?php echo $_POST['user']; ?>">
+                                    <input type="hidden" name="password" value="<?php echo $_POST['password']; ?>">
                                     <table class="login-box">
                                         <tr>
                                             <td style="padding: 12px 0 0 2px;" class="login-welcome">
@@ -18,12 +20,12 @@
                                         </tr>
                                         <tr>
                                             <td style="padding: 12px 0 5px 2px;">
-                                                <?php print __('Please login with your username');?>
+                                                <?php print __('Please enter your 2FA token');?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input tabindex="1" type="text" size="20px" style="width:240px;" name="user" class="vst-input" placeholder="<?php print __('Username');?>">
+                                                <input tabindex="2" type="" size="20px"  style="width:240px;" name="twofa" class="vst-input" placeholder="<?php print __('2FA Token');?>">
                                             </td>
                                         </tr>
                                         <tr>
@@ -32,7 +34,7 @@
                                         </tr>
                                         <tr>
                                             <td style="padding: 0 0 5px 0;">
-                                                <button tabindex="3" type="submit" class="button"><?php print __('Next');?>&nbsp;&nbsp;&nbsp;<i class="fas fa-sign-in-alt"></i></button>
+                                                <button tabindex="3" type="submit" class="button"><?php print __('Login');?>&nbsp;&nbsp;&nbsp;<i class="fas fa-sign-in-alt"></i></button>
                                             </td>
                                         </tr>
                                     </table>
@@ -50,6 +52,5 @@
                 </tr>
             </table>
         </center>
-
     </body>
 </html>

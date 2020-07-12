@@ -17,7 +17,7 @@ $action = $_POST['action'];
 
 if ($_SESSION['user'] == 'admin') {
     switch ($action) {
-        case 'rebuild': $cmd='v-rebuild-web-domain';
+        case 'rebuild': $cmd='v-rebuild-database';
             break;
         case 'delete': $cmd='v-delete-database';
             break;

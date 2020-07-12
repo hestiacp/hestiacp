@@ -25,7 +25,7 @@ if ($_SESSION['user'] == 'admin') {
             break;
         case 'update counters': $cmd='v-update-user-counters';
             break;
-        case 'rebuild': $cmd='v-rebuild-user'; $restart = 'no';
+        case 'rebuild': $cmd='v-rebuild-all'; $restart = 'no';
             break;
         case 'rebuild web': $cmd='v-rebuild-web-domains'; $restart = 'no';
             break;

@@ -145,7 +145,7 @@ function validate_webmail_domain() {
 
 @test "Add new userXXX" {
     skip
-    run v-add-user $user $user $user@hestiacp.com default Super Test
+    run v-add-user $user $user $user@hestiacp.com default "Super Test"
     assert_success
     refute_output
 }
@@ -208,7 +208,7 @@ function validate_webmail_domain() {
 #----------------------------------------------------------#
 
 @test "Add new user" {
-    run v-add-user $user $user $user@hestiacp.com default Super Test
+    run v-add-user $user $user $user@hestiacp.com default "Super Test"
     assert_success
     refute_output
 }
@@ -229,6 +229,12 @@ function validate_webmail_domain() {
     run v-change-user-contact "$user" testerhestiacp.com
     assert_failure $E_INVALID
     assert_output --partial 'Error: invalid email format'
+}
+
+@test "Change user name" {
+    run v-change-user-name "$user" "New name"
+    assert_success
+    refute_output
 }
 
 @test "Change user shell" {

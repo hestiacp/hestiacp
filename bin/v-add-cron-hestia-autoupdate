@@ -44,9 +44,6 @@ time_n_date=$(date +'%T %F')
 time=$(echo "$time_n_date" |cut -f 1 -d \ )
 date=$(echo "$time_n_date" |cut -f 2 -d \ )
 
-# Remove existing cron job
-$BIN/v-delete-cron-hestia-autoupdate
-
 # Define time somewhere at night
 if [ -z "$mode" ] || [ "$mode" = "apt" ]; then
     min=$(generate_password '012345' '2')
@@ -82,9 +79,6 @@ sort_cron_jobs
 # Sync cronjobs with system crond
 sync_cron_jobs
 
-# Perform verification if read-only mode is enabled
-check_hestia_demo_mode
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
@@ -97,7 +91,7 @@ $BIN/v-restart-cron
 check_result $? "Cron restart failed" >/dev/null
 
 # Logging
-log_history "added cron job $job"
+log_history "enabled automatic updates"
 log_event "$OK" "$ARGUMENTS"
 
 exit

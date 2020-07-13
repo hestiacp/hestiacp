@@ -20,8 +20,7 @@ source $HESTIA/func/main.sh
 json_list() {
         echo '{
     "'$USER'": {
-        "FNAME": "'$FNAME'",
-        "LNAME": "'$LNAME'",
+        "NAME": "'$NAME'",
         "PACKAGE": "'$PACKAGE'",
         "WEB_TEMPLATE": "'$WEB_TEMPLATE'",
         "BACKEND_TEMPLATE": "'$BACKEND_TEMPLATE'",
@@ -85,7 +84,7 @@ json_list() {
 # SHELL list function
 shell_list() {
     echo "USERNAME:       $USER"
-    echo "FULL NAME:      $FNAME $LNAME"
+    echo "FULL NAME:      $NAME"
     echo "EMAIL:          $CONTACT"
     echo "LANGUAGE:       $LANGUAGE"
     echo "SUSPENDED:      $SUSPENDED"
@@ -109,7 +108,7 @@ shell_list() {
 
 # PLAIN list function
 plain_list() {
-    echo -ne "$USER\t$FNAME\t$LNAME\t$PACKAGE\t$WEB_TEMPLATE\t"
+    echo -ne "$USER\t$NAME\t$PACKAGE\t$WEB_TEMPLATE\t"
     echo -ne "$BACKEND_TEMPLATE\t$PROXY_TEMPLATE\t$DNS_TEMPLATE\t"
     echo -ne "$WEB_DOMAINS\t$WEB_ALIASES\t$DNS_DOMAINS\t$DNS_RECORDS\t"
     echo -ne "$MAIL_DOMAINS\t$MAIL_ACCOUNTS\t$DATABASES\t$CRON_JOBS\t"
@@ -127,7 +126,7 @@ plain_list() {
 
 # CSV list function
 csv_list() {
-    echo -n "USER,FNAME,LNAME,PACKAGE,WEB_TEMPLATE,BACKEND_TEMPLATE,"
+    echo -n "USER,NAME,PACKAGE,WEB_TEMPLATE,BACKEND_TEMPLATE,"
     echo -n "PROXY_TEMPLATE,DNS_TEMPLATE,WEB_DOMAINS,WEB_ALIASES,"
     echo -n "DNS_DOMAINS,DNS_RECORDS,MAIL_DOMAINS,MAIL_ACCOUNTS,"
     echo -n "DATABASES,CRON_JOBS,DISK_QUOTA,BANDWIDTH,NS,HOME,SHELL,"
@@ -138,7 +137,7 @@ csv_list() {
     echo -n "U_WEB_SSL,U_WEB_ALIASES,U_DNS_DOMAINS,U_DNS_RECORDS,"
     echo -n "U_MAIL_DOMAINS,U_MAIL_DKIM,U_MAIL_ACCOUNTS,U_DATABASES"
     echo "U_CRON_JOBS,U_BACKUPS,LANGUAGE,NOTIFICATIONS,TIME,DATE"
-    echo -n "$USER,\"$FNAME\",\"$LNAME\",$PACKAGE,$WEB_TEMPLATE,"
+    echo -n "$USER,\"$NAME\",$PACKAGE,$WEB_TEMPLATE,"
     echo -n "$BACKEND_TEMPLATE,$PROXY_TEMPLATE,$DNS_TEMPLATE,$WEB_DOMAINS,"
     echo -n "$WEB_ALIASES,$DNS_DOMAINS,$DNS_RECORDS,$MAIL_DOMAINS,"
     echo -n "$MAIL_ACCOUNTS,$DATABASES,$CRON_JOBS,$DISK_QUOTA,$BANDWIDTH,"

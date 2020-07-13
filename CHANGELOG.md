@@ -2,7 +2,11 @@
 All notable changes to this project will be documented in this file.
 
 ## [CURRENT] - Development
+### Features
 
+### Bugfixes
+- Improved quality of default web domain templates for Drupal.
+ 
 ## [1.2.0] - Major Release (Feature / Quality Update)
 ### Features
 - **NOTE:** Debian 8 is no longer supported as it has reached EOL (end-of-life) status.

@@ -18,9 +18,14 @@
                                                 <?php print __('Welcome to Hestia Control Panel');?>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td style="padding: 12px 0 5px 2px;">
-                                                <?php print __('Please enter your 2FA token');?>
+                                        <tr class="twofa">
+                                            <td style="padding-top: 12px; padding-left:2px;">
+                                                <?php print __('2FA Token');?>
+                                                <div style="padding:0 6px 0px 14px; float:right;">
+                                                    <a tabindex="5" class="vst-advanced" href="/reset2fa/">
+                                                        <?php print __('Forgot token');?>
+                                                    </a>
+                                                </div>
                                             </td>
                                         </tr>
                                         <tr>

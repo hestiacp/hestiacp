@@ -107,6 +107,7 @@ function authenticate_user(){
                         unset($output);
                         if ( $return_var > 0 ) {
                             sleep(2);
+                            unset($_POST['twofa']);
                             $error = "<a class=\"error\">".__('Invalid or missing 2FA token')."</a>";
                             return $error;
                         }
@@ -183,5 +184,7 @@ if (empty($_POST['user'])) {
     require_once('../templates/login_1.html');
 }else if (empty($_POST['twofa'])) {
     require_once('../templates/login_2.html');    
+} else {
+    require_once('../templates/login.html');
 }
 ?>

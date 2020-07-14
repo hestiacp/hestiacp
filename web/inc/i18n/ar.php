@@ -3,6 +3,7 @@
  * Hestia language file
  * HestiaCP (info@hestiacp.com)
  * orwah
+ * Arabian
  */
 
 $LANG['ar'] = array(
@@ -697,17 +698,6 @@ $LANG['ar'] = array(
     'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' =>
         'الاختصارات الهمت من قبل ال GNU الرائعة<a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager',
 
-    'Licence Key' => 'مفتاح الترخيص',
-    'Enter License Key' => 'أدخل مفتاح الترخيص',
-    'Buy Licence' => 'شراء ترخيص',
-    'Buy Lifetime License' => 'شراء ترخيص مدى الحياة',
-    'Disable and Cancel Licence' => 'تعطيل وإلغاء الترخيص',
-    'Licence Activated' => 'الترخيص تم تفعيله',
-    'Licence Deactivated' => 'الترخيص تم تعطيله',
-    'Restrict users so that they cannot use SSH and access only their home directory.' => 'تقييد المستخدمين بحيث لايتمكنون من استخدام SSH ولايستطيعون الدخول ٍوى إلى الملفات الخاصة بهم.',
-    'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.' => 'استعراض, نسخ, تحرير, فتح, واسترجاع كل ملفات موقعك باستخدام مدير الملفات.',
-    'This is a commercial module, you would need to purchace license key to enable it.' => 'هذا البرنامج تجاري وليس مجاني, تحتاج لشراء مفتاح ترخيص لتفعيله.',
-
     'Minutes' => 'دقائق',
     'Hourly' => 'ساعي',
     'Run Command' => 'أمر التنفيذ',
@@ -763,4 +753,107 @@ $LANG['ar'] = array(
     'MainDomain' => 'النطاق الرئيسي',
     'SubDomain' => 'النطاق الفرعي (الجزء الاول الذي يضاف إلى النطاق الرئيسي)',
     'Add Sub Domain' => 'إضافة نطاق فرعي',
+
+    'Please wait while php is installed or removed' => 'يرجى الانتظار حتى تكتمل العملية ولا تقم بتحديث الصفحة.',
+    'Avoid adding web domains on admin account' => 'يُنصح بشدة <a href="/add/user/"> بإنشاء حساب مستخدم قياسي </a> قبل إضافة نطاقات الويب إلى الخادم بسبب الامتيازات المتزايدة التي يمتلكها حساب المشرف ومخاطر الأمان المحتملة.',
+    
+    //SSH Key
+    'Field SSH_KEY can not be blank.' => 'يجب ألا يكون حقل SSH فارغًا',
+    'SSH KEY is invalid' => 'مفتاح SSH غير صالح',
+    'SSH KEY already exists' => 'مفتاح SSH موجود بالفعل',
+    'SSH KEY Added' => 'تمت إضافة مفتاح SSH',
+    'Add SSH Key' => 'تمت إضافة مفتاح SSH',
+    'SSH KEY' => 'مفتاح SSH',    
+    'DELETE_KEY_CONFIRM' => 'هل أنت متأكد أنك تريد حذف مفتاح SSH %s?',
+    'SSH_ID' => 'معرف SSH',
+    'Manage SSH keys' => 'إدارة مفاتيح SSH',
+ 
+    //Header 
+    'Fm' => 'الملفات',
+    //PHP Cli
+    'PHP CLI Version' => 'إصدار سطر أوامر PHP',
+
+    //Ipset Firewall rules
+    'Adding Firewall Ipset List' => 'قائمة IP جديدة',
+    'Ip List Name' => 'اسم قائمة IP',
+    'Data Source' => 'مصدر البيانات',
+    'Ip Version' => 'إصدار IP',
+    'Autoupdate' => 'التحديث التلقائي',
+    'Add IP list' => 'أضف قائمة IP',
+    'BLACKLIST' => 'BLACKLIST',
+    'IPVERSE' => 'IPVERSE',
+    'IPSET_CREATED_OK' => 'تم إنشاء قائمة IP بنجاح',
+    'DELETE_IPSET_CONFIRMATION' => 'هل أنت متأكد أنك تريد حذف قائمة IP %s?',
+    '1 Ipset list' => '1 قائمة IP',
+    '%s Ipset lists' => '%s قوائم IP',
+    'There are currently no IP lists defined.' => 'لا توجد قوائم IP محددة حاليًا.',
+    'list ipset' => 'إدارة قوائم IP',
+    
+    //Backup
+    'File Name' => 'اسم الملف',
+    'Size' => 'بحجم',
+    'Runtime' => 'المدة الزمنية',
+    //Logs
+    'Refresh' => 'تحديث',
+    'Time' => 'زمن',
+    'Value' => 'القيمة',
+    
+    //DNS 
+    'default' => 'إفتراضي',
+    '1 DNS zone' => '1 منطقة DNS',
+    '%s DNS zones' => '%s مناطق DNS',
+    'Add Record' => 'قم بإضافة سجل',
+    //user
+    '1 user account' => 'حساب مستخدم واحد',
+    '%s user accounts' => '%s حسابات المستخدمين',
+    //database
+    '1 SQL database' => '1 قاعدة بيانات SQL',
+    '%s SQL databases' => '%s قواعد بيانات SQL',
+    //mail
+    '1 mail domain' => '1 مجال البريد',
+    '%s mail domains' => '%s مجالات البريد',
+    //web
+    '1 web domain' => '1 مجال الويب',
+    '%s web domains' => '%s مجالات الويب',
+    
+    //rrd
+    'Bandwidth Usage' => 'استخدام عرض النطاق الترددي',
+    
+    //reset
+    'Forgot Password' => 'لقد نسيت كلمة المرور',
+    //web
+    'Quick Install App' => 'ثبّت تطبيقًا',
+    //webapp 
+    'version' => 'الإصدار',
+    'Setup' => 'اقامة',
+    //Server
+    'Restart' => 'اعادة البدء',
+    'Mail Server' => 'خادم البريد',
+    'Enabled multi PHP versions' => 'إصدارات PHP الممكنة',
+    'Service' => 'اسم الخدمة',
+    'Description' => 'وصف',
+    
+    //header
+    'Hestia Control Panel' => 'Hestia Control Panel',
+
+    // Set default language
+    'SYSTEM_SET_DEFAULT_LANGUAGE' => 'تعيين كلغة افتراضية لجميع المستخدمين',
+    
+    //2FA 
+    'Forgot token' => 'فتح الحساب',
+    '2FA Token' => 'PIN OTP',
+    '2FA Reset successfully' => 'تم إيقاف المصادقة الثنائية لحسابك الآن.<br><br>يمكنك الآن المتابعة لتسجيل الدخول.',
+    'Reset 2FA' => 'فتح الحساب',
+    '2FA Reset Code' => 'رمز استعادة الحساب',
+    'Invalid or missing token' => 'رمز تالف أو مفقود',
+
+    'DELETE_LOGS_CONFIRMATION'  => 'هل أنت متأكد أنك تريد حذف السجلات؟',
+
+    'Force SSL/HTTPS' => 'تمكين إعادة التوجيه التلقائي من HTTP إلى HTTPS',
+    'Enable SSL HSTS' => 'تمكين أمان النقل الصارم HTTP (HSTS) <a href="https://ar.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><i class="fas fa-question-circle"></i></a>',
+
+    '2 Factor Authentication' => 'توثيق ذو عاملين',
+    'Enable 2FA' => 'تمكين المصادقة الثنائية',
+    'Please scan the code below in your 2FA application:' => 'لإنهاء إعداد المصادقة ذات العاملين ، امسح رمز الاستجابة السريعة أدناه <br /> باستخدام تطبيق المصادقة (مثل <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google Authenticator</a>):',
+    '2FA Reset Code:' => 'رمز استرداد الحساب:',
 );

@@ -708,17 +708,6 @@ $LANG['cn'] = array(
     'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' =>
     '快捷键的灵感来自华丽的 GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> 文件管理器',
 
-    'Licence Key' => '许可密匙',
-    'Enter License Key' => '输入许可密匙',
-    'Buy Licence' => '购买许可',
-    'Buy Lifetime License' => '购买终身许可',
-    'Disable and Cancel Licence' => '停用并取消许可',
-    'Licence Activated' => '许可已激活',
-    'Licence Deactivated' => '许可已停用',
-    'Restrict users so that they cannot use SSH and access only their home directory.' => '限制用户，对他们禁用 SSH 且只能访问自己的主目录。',
-    'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.' => '功能全面的文件管理器，浏览，复制，编辑，查看和检索你的 Web 文件。',
-    'This is a commercial module, you would need to purchace license key to enable it.' => '这是商业模块，请购买许可密匙来启用它。',
-
     'Minutes' => '分钟',
     'Hourly' => '小时',
     'Run Command' => '运行指令于',
@@ -769,4 +758,107 @@ $LANG['cn'] = array(
 
     'Theme' => '主题',
     'Operating System' => '操作系统',
+
+    'Please wait while php is installed or removed' => '请等待该过程完成，并且不要刷新页面。',
+    'Avoid adding web domains on admin account' => '强烈建议在将Web域添加到服务器之前，先<a href="/add/user/">创建标准用户帐户</a>，因为管理员帐户拥有的特权增加，并且存在潜在的安全风险。',
+    
+    //SSH Key
+    'Field SSH_KEY can not be blank.' => '字段SSH密钥不能为空',
+    'SSH KEY is invalid' => 'SSH密钥无效',
+    'SSH KEY already exists' => 'SSH密钥已存在',
+    'SSH KEY Added' => 'SSH密钥已添加',
+    'Add SSH Key' => '添加SSH密钥',
+    'SSH KEY' => 'SSH密钥',    
+    'DELETE_KEY_CONFIRM' => '确定要删除SSH密钥 %s?',
+    'SSH_ID' => 'SSH帐号',
+    'Manage SSH keys' => '管理SSH密钥',
+ 
+    //Header 
+    'Fm' => '档案',
+    //PHP Cli
+    'PHP CLI Version' => 'PHP命令行版本',
+
+    //Ipset Firewall rules
+    'Adding Firewall Ipset List' => '新IP清单',
+    'Ip List Name' => 'IP列表名称',
+    'Data Source' => '数据源e',
+    'Ip Version' => 'IP版本',
+    'Autoupdate' => '自动更新',
+    'Add IP list' => '添加IP列表',
+    'BLACKLIST' => 'BLACKLIST',
+    'IPVERSE' => 'IPVERSE',
+    'IPSET_CREATED_OK' => 'IP列表创建成功',
+    'DELETE_IPSET_CONFIRMATION' => '您确定要删除IP列表吗 %s?',
+    '1 Ipset list' => '1个IP清单',
+    '%s Ipset lists' => '%s IP清单',
+    'There are currently no IP lists defined.' => '当前没有定义IP列表。',
+    'list ipset' => '管理IP清单',
+    
+    //Backup
+    'File Name' => '文档名称',
+    'Size' => '尺寸',
+    'Runtime' => '持续时间',
+    //Logs
+    'Refresh' => '刷新',
+    'Time' => '时间',
+    'Value' => '值',
+    
+    //DNS 
+    'default' => '默认',
+    '1 DNS zone' => '1 DNS区域',
+    '%s DNS zones' => '%s DNS区域',
+    'Add Record' => '添加记录',
+    //user
+    '1 user account' => '1 用户帐号',
+    '%s user accounts' => '%s 用户帐号',
+    //database
+    '1 SQL database' => '1 SQL数据库',
+    '%s SQL databases' => '%s SQL数据库',
+    //mail
+    '1 mail domain' => '1 邮件域',
+    '%s mail domains' => '%s 邮件域',
+    //web
+    '1 web domain' => '1 网络域',
+    '%s web domains' => '%s 网络域',
+    
+    //rrd
+    'Bandwidth Usage' => '带宽使用',
+    
+    //reset
+    'Forgot Password' => '忘记密码',
+    //web
+    'Quick Install App' => '安装软件',
+    //webapp 
+    'version' => '版',
+    'Setup' => '建立',
+    //Server
+    'Restart' => '建立',
+    'Mail Server' => '邮件服务器',
+    'Enabled multi PHP versions' => '启用的PHP版本',
+    'Service' => '服务',
+    'Description' => '描述',
+    
+    //header
+    'Hestia Control Panel' => 'Hestia控制面板',
+
+    // Set default language
+    'SYSTEM_SET_DEFAULT_LANGUAGE' => '设置为所有用户的默认语言',
+    
+    //2FA 
+    'Forgot token' => '解锁账户',
+    '2FA Token' => 'OTP密码',
+    '2FA Reset successfully' => '您的帐户的两因素身份验证已关闭。<br><br>您现在可以继续登录。',
+    'Reset 2FA' => '解锁账户',
+    '2FA Reset Code' => '帐户恢复码',
+    'Invalid or missing token' => '令牌无效或丢失',
+
+    'DELETE_LOGS_CONFIRMATION'  => '您确定要删除日志吗？',
+
+    'Force SSL/HTTPS' => '启用自动HTTP到HTTPS重定向',
+    'Enable SSL HSTS' => '启用HTTP严格传输安全性（HSTS） <a href="https://cn.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><i class="fas fa-question-circle"></i></a>',
+
+    '2 Factor Authentication' => '两因素验证',
+    'Enable 2FA' => '启用两因素身份验证',
+    'Please scan the code below in your 2FA application:' => '要完成两因素身份验证的设置，请扫描以下QR码<br />使用身份验证应用程序，例如 <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google身份验证器</a>):',
+    '2FA Reset Code:' => '帐户恢复代码：',
 );

@@ -2,8 +2,9 @@
 /**
  * Hestia Azerbaijani language file
  * 21.05.2018 Orkhan Oder (orkhan@our.az)
-
+ * Azerbaijani / Azerbaijan
  */
+ 
 $LANG['az'] = array(
     'Packages'  => 'Paketlər',
     'IP'  => 'IP',
@@ -671,16 +672,6 @@ $LANG['az'] = array(
     'Select All Files' => 'Bütün faylları seçin',
     'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' =>
         'qısayollar mükəmməl fayl idarəçisi <a href="https://www.midnight-commander.org/">Midnight Commander</a> fayl idarəçisindən alınmışdır',
-    'Licence Key' => 'Lisenziya açarı',
-    'Enter License Key' => 'Lisenziya açarını daxil edin',
-    'Buy Licence' => 'Lisenziya alın',
-    'Buy Lifetime License' => 'Ömür boyu lisenziyası alın',
-    'Disable and Cancel Licence' => 'Lisenziyanı söndürün və ləğv edin',
-    'Licence Activated' => 'Lisenziya aktivdir',
-    'Licence Deactivated' => 'Lisenziya ləğv edilib',
-    'Restrict users so that they cannot use SSH and access only their home directory.' => 'İstifadəçilə SSH yalnız öz əsas kataloqlarına daxil ola bilərlər.',
-    'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.' => 'Baxış, kopyalama, redaktə, tamfunksional fayl meneceri vasitəsilə veb domendə olan faylların baxışı və ixracı.',
-    'This is a commercial module, you would need to purchace license key to enable it.' => 'Bu kommersiya moduludur. Ondan istifadə etmək üçün lisenziya açarını əldə etməlisiniz',
     'Minutes' => 'Dəqiqəlik',
     'Hourly' => 'Saatlıq',
     'Run Command' => 'Əmri aktivləşdir',
@@ -722,4 +713,111 @@ $LANG['az'] = array(
     'Do not use encryption' => 'Şifrələnməni istifadə etmə',
     'maximum characters length, including prefix' => 'Simvolların maksimal uzunlu %s, prfiks daxil',
     'Email Credentials' => 'E-poçt hüquqları',
+
+
+    'Theme' => 'Görünüş',
+
+    'Operating System' => 'Əməliyyat sistemi',
+    'Please wait while php is installed or removed' => 'Xahiş edirəm proses başa çatana qədər gözləyin və səhifəni yeniləməyin.',
+    'Avoid adding web domains on admin account' => 'Qəti şəkildə tövsiyə olunur <a href="/add/user/">standart istifadəçi hesabı yaratmaq</a> İdarəetmə hesabının sahib olduğu üstünlüklər və potensial təhlükəsizlik riskləri səbəbiylə veb domenləri serverə əlavə etməzdən əvvəl.',
+    
+    //SSH Key
+    'Field SSH_KEY can not be blank.' => 'Sahə SSH Açarı boş olmamalıdır',
+    'SSH KEY is invalid' => 'SSH açarı etibarsızdır',
+    'SSH KEY already exists' => 'SSH açarı artıq mövcuddur',
+    'SSH KEY Added' => 'SSH açarı əlavə edildi',
+    'Add SSH Key' => 'SSH düyməsini əlavə edin',
+    'SSH KEY' => 'SSH açarı',    
+    'DELETE_KEY_CONFIRM' => 'SSH düyməsini silmək istədiyinizə əminsiniz %s?',
+    'SSH_ID' => 'SSH şəxsiyyəti',
+    'Manage SSH keys' => 'SSH düymələrini idarə edin',
+ 
+    //Header 
+    'Fm' => 'Fayllar',
+    //PHP Cli
+    'PHP CLI Version' => 'PHP CLI versiyası',
+
+    //Ipset Firewall rules
+    'Adding Firewall Ipset List' => 'Yeni IP siyahısı',
+    'Ip List Name' => 'IP siyahısı adı',
+    'Data Source' => 'Verilənlər mənbəyi',
+    'Ip Version' => 'IP versiyası',
+    'Autoupdate' => 'Avtomatik yeniləmə',
+    'Add IP list' => 'IP siyahısını əlavə edin',
+    'BLACKLIST' => 'QARABAQ',
+    'IPVERSE' => 'IPVERSE',
+    'IPSET_CREATED_OK' => 'IP siyahısı uğurla yaradılmışdır',
+    'DELETE_IPSET_CONFIRMATION' => 'IP siyahısını silmək istədiyinizə əminsiniz %s?',
+    '1 Ipset list' => '1 IP siyahısı',
+    '%s Ipset lists' => '%s IP siyahıları',
+    'There are currently no IP lists defined.' => 'Hal-hazırda müəyyən edilmiş IP siyahıları yoxdur.',
+    'list ipset' => 'IP siyahılarını idarə et',
+    
+    //Backup
+    'File Name' => 'Fayl adı',
+    'Size' => 'Ölçüsü',
+    'Runtime' => 'İş vaxtı',
+    //Logs
+    'Refresh' => 'təzələmək',
+    'Time' => 'Vaxt',
+    'Value' => 'Dəyər',
+    
+    //DNS 
+    'default' => 'defolt',
+    '1 DNS zone' => '1 DNS zonası',
+    '%s DNS zones' => '%s DNS zonaları',
+    'Add Record' => 'Qeyd əlavə edin',
+    //user
+    '1 user account' => '1 istifadəçi hesabı',
+    '%s user accounts' => '%s istifadəçi hesabları',
+    //database
+    '1 SQL database' => '1 SQL verilənlər bazası',
+    '%s SQL databases' => '%s SQL verilənlər bazası',
+    //mail
+    '1 mail domain' => '1 poçt domeni',
+    '%s mail domains' => '%s poçt sahələri',
+    //web
+    '1 web domain' => '1 veb domeni',
+    '%s web domains' => '%s veb domenləri',
+    
+    //rrd
+    'Bandwidth Usage' => 'Bant genişliyi istifadəsi',
+    
+    //reset
+    'Forgot Password' => 'Şifrəni unutmusunuz',
+    //web
+    'Quick Install App' => 'Tez Quraşdırma Tətbiqi',
+    //webapp 
+    'version' => 'versiya',
+    'Setup' => 'Qurmaq',
+    //Server
+    'Restart' => 'Yenidən başlamaq',
+    'Mail Server' => 'e-poçt serveri',
+    'Enabled multi PHP versions' => 'Effektiv PHP versiyaları',
+    'Service' => 'Xidmət',
+    'Description' => 'Təsvir',
+    
+    //header
+    'Hestia Control Panel' => 'Hestia Control Panel',
+
+    // Set default language
+    'SYSTEM_SET_DEFAULT_LANGUAGE' => 'Bütün istifadəçilər üçün standart dil olaraq təyin edin',
+    
+    //2FA 
+    'Forgot token' => 'Hesabı açın',
+    '2FA Token' => 'OTP PIN',
+    '2FA Reset successfully' => 'Hesabınız üçün iki amil identifikasiyası artıq söndürüldü. <br> <br> İndi girməyə davam edə bilərsiniz.',
+    'Reset 2FA' => 'Hesabı açın',
+    '2FA Reset Code' => 'Hesabın bərpası koduHesab bərpa proqramı',
+    'Invalid or missing token' => 'Etibarsız və ya çatışmayan işarədir',
+
+    'DELETE_LOGS_CONFIRMATION'  => 'Günlükləri silmək istədiyinizə əminsiniz?',
+
+    'Force SSL/HTTPS' => 'Avtomatik HTTP-dən HTTPS yönləndirməsini aktiv edin',
+    'Enable SSL HSTS' => 'HTTP sərt nəqliyyat təhlükəsizliyini (HSTS) aktivləşdirin <a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><i class="fas fa-question-circle"></i></a>',
+
+    '2 Factor Authentication' => 'İki faktorlu Doğrulama',
+    'Enable 2FA' => 'İki faktorlu identifikasiyanı aktivləşdirin',
+    'Please scan the code below in your 2FA application:' => 'İki faktorlu identifikasiyanı qurmağı başa çatdırmaq üçün aşağıdakı qr kodu yoxlayın <br /> bir identifikasiya tətbiqindən istifadə edərəkp (kimi <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google Authenticator</a>):',
+    '2FA Reset Code:' => 'Hesab bərpa kodu:',
 );

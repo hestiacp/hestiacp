@@ -15,7 +15,7 @@ wget https://raw.githubusercontent.com/$fork/hestiacp/$branch/src/hst_autocompil
 
 # Execute compiler and build hestia core package
 chmod +x hst_autocompile.sh
-./hst_autocompile.sh --hestia master no
+./hst_autocompile.sh --hestia $branch no
 
 # Execute Hestia Control Panel installer with default dummy options for testing
-bash hst-install-$os.sh -f -y no -e admin@test.local -p P@ssw0rd -s hestia-$branch-$os.test.local --with-debs /tmp/hestiacp-src/debs
+bash hst-install-$os.sh -f -y no -e admin@test.local -p P@ssw0rd -s hestia-$os.test.local --with-debs /tmp/hestiacp-src/debs

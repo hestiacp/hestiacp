@@ -107,9 +107,9 @@ function authenticate_user(){
                         unset($output);
                         if ( $return_var > 0 ) {
                             sleep(2);
-                            unset($_POST['twofa']);
                             $error = "<a class=\"error\">".__('Invalid or missing 2FA token')."</a>";
                             return $error;
+                            unset($_POST['twofa']);
                         }
                    }
                 }

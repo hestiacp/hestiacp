@@ -42,7 +42,7 @@ $LANG['ru'] = array(
     'NETWORK'  => 'СЕТЬ',
     'Web Log Manager'  => 'Менеджер Web журнала',
 
-    'no notifications'  => 'без оповещений',
+    'no notifications'  => 'нет оповещений',
 
     'Add User' => 'Добавить аккаунт',
     'Add Domain' => 'Добавить домен',
@@ -769,7 +769,7 @@ $LANG['ru'] = array(
     'Manage SSH keys' => 'Управление ключами SSH',
  
     //Header 
-    'Fm' => 'файлы',
+    'Fm' => 'Файлы',
     //PHP Cli
     'PHP CLI Version' => 'Версия PHP для CLI',
 
@@ -830,7 +830,7 @@ $LANG['ru'] = array(
     'Restart' => 'Перезапуск',
     'Mail Server' => 'Почтовый сервер',
     'Enabled multi PHP versions' => 'Включенные версии PHP',
-    'Service' => 'обслуживание',
+    'Service' => 'Службы',
     'Description' => 'Описание',
     
     //header

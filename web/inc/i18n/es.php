@@ -12,6 +12,7 @@
  */
 
 $LANG['es'] = array(
+    'Records'  => 'Gestión',
     'Packages'  => 'Planes',
     'IP'  => 'Red',
     'Graphs'  => 'Monitor',
@@ -212,7 +213,6 @@ $LANG['es'] = array(
     'SOA'  => 'SOA',
     'TTL'  => 'TTL',
     'Expire'  => 'Expira',
-    'Records'  => 'Registros',
     'Serial'  => 'Serie',
     'Catchall email'  => 'Correo Catch-All',
     'AntiVirus Support'  => 'Soporte AntiVirus',
@@ -235,7 +235,6 @@ $LANG['es'] = array(
     'Normal password'  => 'Contraseña normal',
     'database'  => 'base de datos',
     'User'  => 'Usuario',
-    'Host'  => 'Host',
     'Charset'  => 'Codificación de caracteres',
     'Min'  => 'Minuto',
     'Hour'  => 'Hora',
@@ -581,7 +580,7 @@ $LANG['es'] = array(
     'ftp' => 'FTP',
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
-    'FileSystem Disk Quota' => 'FileSystem - Cuota de disco',
+    'FileSystem Disk Quota' => 'Cuota de disco',
     'Hestia Control Panel Plugins' => 'Plugins de Hestia Control Panel',
     'preview' => 'previsualizar',
     'Reseller Role' => 'Rol de Revendedor',
@@ -594,7 +593,6 @@ $LANG['es'] = array(
     'sort by' => 'ordenar por',
     'Date' => 'Fecha',
     'Starred' => 'Favorito',
-    'Name' => 'Nombre',
 
     'save to favorites' => 'guardar en favoritos',
 
@@ -751,7 +749,7 @@ $LANG['es'] = array(
 
     'Email Credentials' => 'Enviar credenciales al correo',
 
-    'Theme' => 'Aspecto',
+    'Theme' => 'Tema',
     'Operating System' => 'Sistema operativo',
 
     'Please wait while php is installed or removed' => 'Los cambios pueden tardar unos minutos en guardarse. Espere hasta que se complete el proceso y no actualice la página.',
@@ -829,7 +827,7 @@ $LANG['es'] = array(
     //Server
     'Restart' => 'Reiniciar',
     'Mail Server' => 'Servidor de correo',
-    'Enabled multi PHP versions' => 'Versiones PHP habilitadas',
+    'Enabled multi PHP versions' => 'Habilitar múltiples versiones de PHP',
     'Service' => 'Servicio',
     'Description' => 'Descripción',
     
@@ -856,4 +854,30 @@ $LANG['es'] = array(
     'Enable 2FA' => 'Habilitar autenticación de dos factores',
     'Please scan the code below in your 2FA application:' => 'Para terminar de configurar la autenticación de dos factores, escanee el código QR a continuación<br />usando una aplicación de autenticación (como <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Autenticador de Google</a>):',
     '2FA Reset Code:' => 'Código de recuperación de cuenta:',
+
+    //list user 
+    'Name' => 'Nombre',
+    //Add / Edit user
+    'Contact' => 'Contacto',
+    'GREETINGS_GORDON' => "Hola, %s,\n",
+    //List Mail Accounts
+    'Forwarding' => 'Reenvío',
+    //Cron Jobs
+    'Cron Job' => 'Tarea Programada',
+    //Edit server
+    'backend server' => 'Servidor de Backend',
+    'Host' => 'Anfitrión',
+    //list Backups
+    '1 backups' => '1 respaldo',
+    '%s backups' => '%s respaldos',
+    //list Firewall Rules
+    '1 firewall rule' => '1 regla de cortafuegos',
+    '%s firewall rules' => '%s reglas de cortafuegos',
+    //list ip
+    '1 banned IP address' => '1 dirección IP bloqueada',
+    '%s banned IP addresses' => '%s direcciones IP bloqueadas', 
+    //list DNS
+    'Records_DNS' => 'Registros',
+    //Dowload Backup
+    'BACKUP_DOWNLOAD_SCHEDULED' => 'La descarga del respaldo ha sido programada.',
 );

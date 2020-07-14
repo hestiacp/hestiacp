@@ -42,7 +42,7 @@ $LANG['ru'] = array(
     'NETWORK'  => 'СЕТЬ',
     'Web Log Manager'  => 'Менеджер Web журнала',
 
-    'no notifications'  => 'без оповещений',
+    'no notifications'  => 'нет оповещений',
 
     'Add User' => 'Добавить аккаунт',
     'Add Domain' => 'Добавить домен',

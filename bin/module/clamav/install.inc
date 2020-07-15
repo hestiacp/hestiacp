@@ -23,6 +23,7 @@ hestia_module_clamav_install() {
     chown -R clamav:clamav /var/log/clamav /var/run/clamav
 
     if [ $OS_BASE = 'debian' ]; then
+        # FIXME: Why do we do this?
         if [ -e "/lib/systemd/system/clamav-daemon.service" ]; then
             exec_pre1='ExecStartPre=-/bin/mkdir -p /var/run/clamav'
             exec_pre2='ExecStartPre=-/bin/chown -R clamav:clamav /var/run/clamav'
@@ -31,6 +32,7 @@ hestia_module_clamav_install() {
             systemctl daemon-reload
         fi
     elif [ $OS_BASE = 'rhel' ]; then
+        # Setup freshclam
         useradd clamav -g clamupdate -s /sbin/nologin -d /var/lib/clamav 2>/dev/null
         cp -f $HESTIA_INSTALL_DIR/clamav/freshclam.conf /etc/
         chown clamav:clamupdate /var/log/clamav /var/run/clamav

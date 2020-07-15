@@ -19,6 +19,7 @@ source $HESTIA/func/domain.sh
 source $HESTIA/func/rebuild.sh
 source $HESTIA/func/ip.sh
 source $HESTIA/conf/hestia.conf
+source $HESTIA/func/osal.sh
 
 # Define mail user
 if [ "$MAIL_SYSTEM" = 'exim4' ]; then

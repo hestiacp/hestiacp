@@ -19,6 +19,7 @@ domain_idn=$2
 source $HESTIA/func/main.sh
 source $HESTIA/func/domain.sh
 source $HESTIA/conf/hestia.conf
+source $HESTIA/func/osal.sh
 
 # Additional argument formatting
 format_domain
@@ -86,7 +87,7 @@ rm -f $USER_DATA/mail/$domain.pub
 rm -f $USER_DATA/mail/*@$domain.msg
 
 # Unsetting HELO for mail domain
-sed -i "/^${domain}:/d" /etc/exim4/mailhelo.conf
+sed -i "/^${domain}:/d" $OSAL_PATH_EXIM_CONF/mailhelo.conf
 
 # Decreasing domain value
 decrease_user_value "$user" '$U_MAIL_DOMAINS'

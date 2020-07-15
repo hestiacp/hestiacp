@@ -67,5 +67,5 @@ hestia_module_nginx_install() {
     osal_kv_write $HESTIA_CONF_MODULES/nginx.conf 'service_name' $OSAL_PKG_NGINX
 
     # Setup web module (depending on Nginx and/or Apache config)
-    hestia module web setup
+    $BIN/hestia module web setup
 }

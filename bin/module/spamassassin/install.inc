@@ -39,6 +39,6 @@ hestia_module_spamassassin_install() {
 
     exim_installed=$(hestia_module_variant_installed 'mta' 'exim')
     if [ "$exim_installed" ]; then
-        hestia module spamassassin exim-integration enable
+        $BIN/hestia module spamassassin exim-integration enable
     fi
 }

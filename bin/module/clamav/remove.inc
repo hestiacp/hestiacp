@@ -19,7 +19,7 @@ hestia_module_clamav_remove() {
 
     exim_installed=$(hestia_module_variant_installed 'mta' 'exim')
     if [ "$exim_installed" ]; then
-        hestia module clamav exim-integration disable
+        $BIN/hestia module clamav exim-integration disable
     fi
 
     osal_service_stop $OSAL_SERVICE_CLAMAV > /dev/null 2>&1

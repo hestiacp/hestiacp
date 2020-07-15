@@ -22,7 +22,7 @@ hestia_module_php_install() {
 
     # Add default version
     echo "Adding default PHP version..."
-    hestia module php add --ver $PHP_DEFAULT_VERSION
+    $BIN/hestia module php add --ver $PHP_DEFAULT_VERSION
 
     exit 0
 }

@@ -19,7 +19,7 @@ hestia_module_spamassassin_remove() {
 
     exim_installed=$(hestia_module_variant_installed 'mta' 'exim')
     if [ "$exim_installed" ]; then
-        hestia module spamassassin exim-integration disable
+        $BIN/hestia module spamassassin exim-integration disable
     fi
 
     osal_service_stop $OSAL_SERVICE_SPAMASSASSIN > /dev/null 2>&1

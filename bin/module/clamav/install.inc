@@ -57,6 +57,6 @@ hestia_module_clamav_install() {
 
     exim_installed=$(hestia_module_variant_installed 'mta' 'exim')
     if [ "$exim_installed" ]; then
-        hestia module clamav exim-integration enable
+        $BIN/hestia module clamav exim-integration enable
     fi
 }

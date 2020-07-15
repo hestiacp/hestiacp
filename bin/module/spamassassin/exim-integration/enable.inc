@@ -23,5 +23,6 @@ hestia_module_spamassassin_exim-integration_enable() {
         /usr/bin/sed -i "/SPAMASSASSIN/ s/#*//" $OSAL_PATH_EXIM_CONF/${OSAL_PKG_EXIM}.conf
     fi
 
-    # FIXME: how do we rebuild exim.conf? 
+    osal_service_restart $OSAL_SERVICE_EXIM
+    check_result $? "Exim restart failed"
 }

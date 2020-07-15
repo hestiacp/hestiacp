@@ -26,5 +26,6 @@ hestia_module_clamav_exim-integration_enable() {
     gpasswd -a clamav mail > /dev/null 2>&1
     gpasswd -a clamav $OSAL_USER_EXIM > /dev/null 2>&1
 
-    # FIXME: how do we rebuild exim.conf? 
+    osal_service_restart $OSAL_SERVICE_EXIM
+    check_result $? "Exim restart failed"
 }

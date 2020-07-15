@@ -8,6 +8,7 @@
 # Services
 OSAL_SERVICE_APACHE=apache2
 OSAL_SERVICE_BIND=bind9
+OSAL_SERVICE_CLAMAV=clamav-daemon
 OSAL_SERVICE_CRON=cron
 
 # Users
@@ -24,17 +25,18 @@ OSAL_CMD_PACKAGE_MANAGER=/usr/bin/apt-get
 OSAL_PKG_APACHE=apache2
 OSAL_PKG_APACHE_MOD_RUID2=libapache2-mod-ruid2
 OSAL_PKG_BIND=bind9
-OSAL_PKG_EXIM=exim4
-OSAL_PKG_EXIM_DAEMON=exim4-daemon-heavy
+OSAL_PKG_CLAMAV=clamav-daemon
+OSAL_PKG_EXIM=exim4 exim4-daemon-heavy
 OSAL_PKG_PHPMYADMIN=phpmyadmin
 OSAL_PKG_ROUNDCUBE=roundcube
 
 # Paths
 OSAL_PATH_APACHE_CONF=/etc/apache2
 OSAL_PATH_BIND_DATA=/var/cache/bind
+OSAL_PATH_CLAMAV_CONF=/etc/clamav
 OSAL_PATH_EXIM_CONF=/etc/exim4
 OSAL_PATH_ROUNDCUBE_INSTALL_MYSQL=/usr/share/dbconfig-common/data/roundcubemail/install/mysql
-OSAL_PATH_VSFTPD_CONF=/etc
+OSAL_PATH_VSFTPD_CONF=/etc/vsftpd.conf
 
 #-------------------------------------------------------------------#
 # Functions                                                         #

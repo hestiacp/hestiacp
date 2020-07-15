@@ -1,6 +1,6 @@
 #!/bin/sh
 
-hestia_module_exim_remove() {
+hestia_module_clamav_remove() {
     source $HESTIA/bin/module/func.inc
 
     module_installed=$(hestia_module_isinstalled mta)
@@ -10,19 +10,24 @@ hestia_module_exim_remove() {
     fi
 
     module_variant=$(hestia_module_getvariant mta)
-    if [ "$module_variant" != 'exim' ] && [ ! "$param_force" ]; then
-        echo "The installed MTA module is not Exim. See 'hestia module info mta'."
+    if [ "$module_variant" != 'clamav' ] && [ ! "$param_force" ]; then
+        echo "The installed MTA module is not ClamAV. See 'hestia module info mta'."
         exit 1
     fi
 
-    echo "Removing MTA (Exim) module..."
+    echo "Removing MTA (ClamAV) module..."
 
     osal_service_stop $OSAL_PKG_EXIM
     osal_service_disable $OSAL_PKG_EXIM
 
-    hestia_config_backup 'exim-remove' $OSAL_PATH_EXIM_CONF
+    hestia_config_backup 'clamav-remove' $OSAL_PATH_CLAMAV_CONF
 
-    osal_package_remove $OSAL_PKG_EXIM
+    exim_installed=$(hestia_module_variant_installed 'mta' 'exim')
+    if [ "$exim_installed" ]; then
+        hestia module clamav exim-integration disable
+    fi
+
+    osal_package_remove $OSAL_PKG_EXIM $OSAL_PKG_EXIM_DAEMON
 
     osal_kv_write $HESTIA/conf/hestia.conf 'MAIL_SYSTEM' 'no'
     osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'installed' '0'

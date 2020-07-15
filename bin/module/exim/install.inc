@@ -15,7 +15,7 @@ hestia_module_exim_install() {
     hestia_config_backup 'exim-install' $OSAL_PATH_EXIM_CONF
 
     osal_package_preinstall
-    osal_package_install $OSAL_PKG_EXIM $OSAL_PKG_EXIM_DAEMON
+    osal_package_install $OSAL_PKG_EXIM
 
     gpasswd -a $OSAL_USER_EXIM mail > /dev/null 2>&1
     cp -f $HESTIA_INSTALL_DIR/exim/${OSAL_PKG_EXIM}.conf.template $OSAL_PATH_EXIM_CONF/
@@ -46,6 +46,11 @@ hestia_module_exim_install() {
     osal_service_enable $OSAL_PKG_EXIM
     osal_service_start $OSAL_PKG_EXIM
     check_result $? "Exim start failed"
+
+    clamav_installed=$(hestia_module_variant_installed 'antivirus' 'clamav')
+    if [ "$clamav_installed" ]; then
+        hestia module clamav exim-integration enable
+    fi
 
     osal_kv_write $HESTIA/conf/hestia.conf 'MAIL_SYSTEM' 'exim'
     osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'installed' '1'

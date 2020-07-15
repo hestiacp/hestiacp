@@ -17,7 +17,11 @@ hestia_module_spamassassin_exim-integration_disable() {
 
     echo "Disabling SpamAssassin-Exim integration..."
 
-    /usr/bin/sed -i "/SPAMASSASSIN/ s/^/#/" $OSAL_PATH_EXIM_CONF/${OSAL_PKG_EXIM}.conf.template
+    if [ "$OS_BASE" = 'debian' ]; then
+        /usr/bin/sed -i "/SPAMASSASSIN/ s/^/#/" $OSAL_PATH_EXIM_CONF/${OSAL_PKG_EXIM}.conf.template
+    else
+        /usr/bin/sed -i "/SPAMASSASSIN/ s/^/#/" $OSAL_PATH_EXIM_CONF/${OSAL_PKG_EXIM}.conf
+    fi
 
     # FIXME: how do we rebuild exim.conf? 
 }

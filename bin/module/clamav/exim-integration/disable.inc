@@ -17,7 +17,13 @@ hestia_module_clamav_exim-integration_disable() {
 
     echo "Disabling Exim-ClamAV integration..."
 
-    /usr/bin/sed -i "/CLAMD/ s/^/#/" $OSAL_PATH_EXIM_CONF/${OSAL_PKG_EXIM}.conf.template
+
+    if [ "$OS_BASE" = 'debian' ]; then
+        /usr/bin/sed -i "/CLAMD/ s/^/#/" $OSAL_PATH_EXIM_CONF/${OSAL_PKG_EXIM}.conf.template
+    else
+        /usr/bin/sed -i "/CLAMD/ s/^/#/" $OSAL_PATH_EXIM_CONF/${OSAL_PKG_EXIM}.conf
+    fi
+    
 
     # FIXME: how do we rebuild exim.conf? 
 }

@@ -223,6 +223,7 @@ add_web_config() {
             -e "s/%proxy_extentions%/${PROXY_EXT//,/|}/g" \
             -e "s|%user%|$user|g" \
             -e "s|%group%|$user|g" \
+            -e "s|%apache_group%|$WEB_RGROUPS|g"\
             -e "s|%home%|$HOMEDIR|g" \
             -e "s|%docroot%|$docroot|g" \
             -e "s|%sdocroot%|$sdocroot|g" \
@@ -737,6 +738,7 @@ add_webmail_config() {
             -e "s/%proxy_extentions%/${PROXY_EXT//,/|}/g" \
             -e "s|%user%|$user|g" \
             -e "s|%group%|$user|g" \
+            -e "s|%apache_group%|$WEB_RGROUPS|g"\
             -e "s|%home%|$HOMEDIR|g" \
             -e "s|%docroot%|$docroot|g" \
             -e "s|%sdocroot%|$sdocroot|g" \

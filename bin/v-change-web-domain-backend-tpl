@@ -67,6 +67,7 @@ done
 cat $WEBTPL/$WEB_BACKEND/$template.tpl |\
     sed -e "s|%backend_port%|$backend_port|" \
         -e "s|%user%|$user|g"\
+        -e "s|%apache_group%|$WEB_RGROUPS|g"\
         -e "s|%domain%|$domain|g"\
         -e "s|%domain_idn%|$domain_idn|"\
         -e "s|%backend%|$backend_type|g"\

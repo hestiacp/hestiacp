@@ -1037,6 +1037,7 @@ if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
 fi
 if [ "$apache" = 'no' ] && [ "$nginx"  = 'yes' ]; then
     echo "WEB_SYSTEM='nginx'" >> $HESTIA/conf/hestia.conf
+    echo "WEB_RGROUPS='www-data'" >> $HESTIA/conf/hestia.conf
     echo "WEB_PORT='80'" >> $HESTIA/conf/hestia.conf
     echo "WEB_SSL_PORT='443'" >> $HESTIA/conf/hestia.conf
     echo "WEB_SSL='openssl'"  >> $HESTIA/conf/hestia.conf

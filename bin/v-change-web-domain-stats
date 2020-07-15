@@ -74,6 +74,7 @@ cat $WEBTPL/$type/$type.tpl |\
         -e "s|%domain_idn%|$domain_idn|g" \
         -e "s|%domain%|$domain|g" \
         -e "s|%user%|$user|g" \
+        -e "s|%apache_group%|$WEB_RGROUPS|g"\
         -e "s|%home%|$HOMEDIR|g" \
         -e "s|%alias%|${aliases//,/ }|g" \
         -e "s|%alias_idn%|$stats_alias|g" \

@@ -288,6 +288,7 @@ rebuild_web_domain_conf() {
                 -e "s|%domain_idn%|$domain_idn|g" \
                 -e "s|%domain%|$domain|g" \
                 -e "s|%user%|$user|g" \
+                -e "s|%apache_group%|$WEB_RGROUPS|g"\
                 -e "s|%home%|$HOMEDIR|g" \
                 -e "s|%alias%|${aliases//,/ }|g" \
                 -e "s|%alias_idn%|${aliases_idn//,/ }|g" \
@@ -394,7 +395,7 @@ rebuild_web_domain_conf() {
                 $HOMEDIR/$user/web/$domain/document_errors
     chmod 640 /var/log/$WEB_SYSTEM/domains/$domain.*
 
-    chown $user:www-data $HOMEDIR/$user/web/$domain/public_html \
+    chown $user:$WEB_RGROUPS $HOMEDIR/$user/web/$domain/public_html \
                 $HOMEDIR/$user/web/$domain/public_shtml
 }
 

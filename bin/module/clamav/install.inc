@@ -40,14 +40,14 @@ hestia_module_clamav_install() {
 
     osal_execute_with_spinner /usr/bin/freshclam
 
+    osal_service_enable $OSAL_SERVICE_CLAMAV
+    osal_service_start $OSAL_SERVICE_CLAMAV
+    check_result $? "ClamAV start failed"
+
     exim_installed=$(hestia_module_variant_installed 'mta' 'exim')
     if [ "$exim_installed" ]; then
         hestia module clamav exim-integration enable
     fi
-
-    osal_service_enable $OSAL_SERVICE_CLAMAV
-    osal_service_start $OSAL_SERVICE_CLAMAV
-    check_result $? "ClamAV start failed"
 
     osal_kv_write $HESTIA/conf/hestia.conf 'ANTIVIRUS_SYSTEM' 'clamav-daemon'
     osal_kv_write $HESTIA_CONF_MODULES/antivirus.conf 'installed' '1'

@@ -18,12 +18,19 @@ hestia_module_exim_install() {
     osal_package_install $OSAL_PKG_EXIM
 
     gpasswd -a $OSAL_USER_EXIM mail > /dev/null 2>&1
-    cp -f $HESTIA_INSTALL_DIR/exim/${OSAL_PKG_EXIM}.conf.template $OSAL_PATH_EXIM_CONF/
+
+    if [ "$OS_BASE" = 'debian' ]; then
+        cp -f $HESTIA_INSTALL_DIR/exim/${OSAL_PKG_EXIM}.conf.template $OSAL_PATH_EXIM_CONF/
+        chmod 640 $OSAL_PATH_EXIM_CONF/${OSAL_PKG_EXIM}.conf.template
+    else
+        cp -f $HESTIA_INSTALL_DIR/exim/${OSAL_PKG_EXIM}.conf $OSAL_PATH_EXIM_CONF/
+        chmod 640 $OSAL_PATH_EXIM_CONF/${OSAL_PKG_EXIM}.conf
+    fi
+
     cp -f $HESTIA_INSTALL_DIR/exim/dnsbl.conf $OSAL_PATH_EXIM_CONF/
     cp -f $HESTIA_INSTALL_DIR/exim/spam-blocks.conf $OSAL_PATH_EXIM_CONF/
     touch $OSAL_PATH_EXIM_CONF/white-blocks.conf
 
-    chmod 640 $OSAL_PATH_EXIM_CONF/${OSAL_PKG_EXIM}.conf.template
     rm -rf $OSAL_PATH_EXIM_CONF/domains
     mkdir -p $OSAL_PATH_EXIM_CONF/domains
 

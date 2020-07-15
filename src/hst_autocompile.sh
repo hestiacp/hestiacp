@@ -145,6 +145,9 @@ for i in $*; do
           usage
           exit 1
           ;;
+        --dontinstalldeps)
+          dontinstalldeps='true'
+          ;;
         *)
           branch="$i"
           ;;
@@ -193,6 +196,8 @@ if [ -z "$BUILD_VER" ]; then
     exit 1
 fi
 
+echo "Build version $BUILD_VER, with Nginx version $NGINX_V and PHP version $PHP_V"
+
 BUILD_ARCH='amd64'
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
 OPENSSL_V='1.1.1g'
@@ -213,28 +218,30 @@ timestamp() {
     date +%s
 }
 
-# Install needed software
-if [ "$OSTYPE" = 'rhel' ]; then
-    # Set package dependencies for compiling
-    SOFTWARE='gcc gcc-c++ make libxml2-devel zlib-devel libzip-devel gmp-devel libcurl-devel gnutls-devel unzip openssl openssl-devel pkg-config sqlite-devel oniguruma-devel rpm-build wget tar'
+if [ "$dontinstalldeps" != 'true' ]; then
+    # Install needed software
+    if [ "$OSTYPE" = 'rhel' ]; then
+        # Set package dependencies for compiling
+        SOFTWARE='gcc gcc-c++ make libxml2-devel zlib-devel libzip-devel gmp-devel libcurl-devel gnutls-devel unzip openssl openssl-devel pkg-config sqlite-devel oniguruma-devel rpm-build wget tar'
 
-    echo "Updating system DNF repositories..."
-    yum config-manager --set-enabled PowerTools > /dev/null 2>&1
-    yum update -y > /dev/null 2>&1
-    echo "Installing dependencies for compilation..."
-    yum install -y $SOFTWARE > /dev/null 2>&1
-else
-    # Set package dependencies for compiling
-    SOFTWARE='build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config libsqlite3-dev libonig-dev rpm'
+        echo "Updating system DNF repositories..."
+        yum config-manager --set-enabled PowerTools > /dev/null 2>&1
+        yum update -y > /dev/null 2>&1
+        echo "Installing dependencies for compilation..."
+        yum install -y $SOFTWARE > /dev/null 2>&1
+    else
+        # Set package dependencies for compiling
+        SOFTWARE='build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config libsqlite3-dev libonig-dev rpm'
 
-    echo "Updating system APT repositories..."
-    apt-get -qq update > /dev/null 2>&1
-    echo "Installing dependencies for compilation..."
-    apt-get -qq install -y $SOFTWARE > /dev/null 2>&1
+        echo "Updating system APT repositories..."
+        apt-get -qq update > /dev/null 2>&1
+        echo "Installing dependencies for compilation..."
+        apt-get -qq install -y $SOFTWARE > /dev/null 2>&1
 
-    # Fix for Debian PHP Envroiment
-    if [ ! -e /usr/local/include/curl ]; then
-        ln -s /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl
+        # Fix for Debian PHP Envroiment
+        if [ ! -e /usr/local/include/curl ]; then
+            ln -s /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl
+        fi
     fi
 fi
 

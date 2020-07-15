@@ -17,13 +17,6 @@ hestia_module_exim_remove() {
 
     echo "Removing MTA (Exim) module..."
 
-    osal_service_stop $OSAL_SERVICE_EXIM > /dev/null 2>&1
-    osal_service_disable $OSAL_SERVICE_EXIM > /dev/null 2>&1
-
-    hestia_config_backup 'exim-remove' $OSAL_PATH_EXIM_CONF
-
-    osal_package_remove $OSAL_PKG_EXIM
-
     clamav_installed=$(hestia_module_variant_installed 'antivirus' 'clamav')
     if [ "$clamav_installed" ]; then
         $BIN/hestia module clamav exim-integration disable
@@ -33,6 +26,13 @@ hestia_module_exim_remove() {
     if [ "$spamassassin_installed" ]; then
         $BIN/hestia module spamassassin exim-integration disable
     fi
+
+    osal_service_stop $OSAL_SERVICE_EXIM > /dev/null 2>&1
+    osal_service_disable $OSAL_SERVICE_EXIM > /dev/null 2>&1
+
+    hestia_config_backup 'exim-remove' $OSAL_PATH_EXIM_CONF
+
+    osal_package_remove $OSAL_PKG_EXIM
 
     osal_kv_write $HESTIA/conf/hestia.conf 'MAIL_SYSTEM' 'no'
     osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'installed' '0'

@@ -54,7 +54,7 @@ if ! lsof -Pi :9000 -sTCP:LISTEN -t >/dev/null; then
         sed -i "s/listen = 127.0.0.1:.*/listen = 127.0.0.1:9000/g" /etc/php/7.3/fpm/pool.d/www.conf
     else
         # Copy www.conf file
-        cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/7.3/fpm/pool.d/
+        cp -f /usr/local/hestia/install/deb/php-fpm/www.conf /etc/php/7.3/fpm/pool.d/
     fi
     # Restart php7.3 fpm service.
     systemctl restart php7.3-fpm

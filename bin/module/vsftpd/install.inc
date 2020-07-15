@@ -12,11 +12,11 @@ hestia_module_vsftpd_install() {
     echo "Installing FTP (vsftpd) module..."
 
     osal_service_stop vsftpd
-    hestia_config_backup 'vsftpd-install' $OSAL_PATH_VSFTPD_CONF/vsftpd.conf
+    hestia_config_backup 'vsftpd-install' $OSAL_PATH_VSFTPD_CONF
 
     osal_package_preinstall
     osal_package_install vsftpd
-    cp -f $HESTIA_INSTALL_DIR/vsftpd/vsftpd.conf $OSAL_PATH_VSFTPD_CONF/
+    cp -f $HESTIA_INSTALL_DIR/vsftpd/vsftpd.conf $OSAL_PATH_VSFTPD_CONF
     touch /var/log/vsftpd.log
     chown root:adm /var/log/vsftpd.log
     chmod 640 /var/log/vsftpd.log

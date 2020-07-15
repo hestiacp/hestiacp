@@ -1,0 +1,71 @@
+#!/bin/bash
+
+hestia_module_nginx_install() {
+    source $HESTIA/bin/module/func.inc
+
+    module_installed=$(hestia_module_isinstalled nginx)
+    if [ "$module_installed" ] && [ ! "$param_force" ]; then
+        echo "Nginx module is already installed. See 'hestia module info nginx'."
+        exit 1
+    fi
+
+    echo "Installing Nginx module..."
+
+    osal_service_stop $OSAL_SERVICE_NGINX > /dev/null 2>&1
+    hestia_config_backup 'nginx-install' $OSAL_PATH_NGINX_CONF
+
+    if [ "$OS_BASE" = 'debian' ]; then
+        # Add Nginx repo
+        echo "deb [arch=amd64] http://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
+        wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
+        APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/nginx_signing.key > /dev/null 2>&1
+    elif [ "$OS_BASE" = 'rhel' ]; then
+        nrepo="/etc/yum.repos.d/nginx.repo"
+        echo "[nginx]" > $nrepo
+        echo "name=nginx repo" >> $nrepo
+        echo "baseurl=https://nginx.org/packages/centos/$release/\$basearch/" >> $nrepo
+        echo "gpgcheck=0" >> $nrepo
+        echo "enabled=1" >> $nrepo
+    fi
+
+    osal_package_preinstall
+    osal_package_install $OSAL_PKG_NGINX
+
+    rm -f $OSAL_PATH_NGINX_CONF_D/*.conf
+    cp -f $HESTIA_INSTALL_DIR/nginx/nginx.conf $OSAL_PATH_NGINX_CONF/
+    cp -f $HESTIA_INSTALL_DIR/nginx/status.conf $OSAL_PATH_NGINX_CONF_D/
+    #FIXME: move the following to *admin install
+    #cp -f $HESTIA_INSTALL_DIR/nginx/phpmyadmin.inc $OSAL_PATH_NGINX_CONF_D/
+    #cp -f $HESTIA_INSTALL_DIR/nginx/phppgadmin.inc $OSAL_PATH_NGINX_CONF_D/
+    cp -f $HESTIA_INSTALL_DIR/logrotate/nginx $OSAL_PATH_LOGROTATE_CONF_D/
+    mkdir -p $OSAL_PATH_NGINX_CONF_D/domains
+    mkdir -p $OSAL_PATH_NGINX_CONF/modules-enabled
+    mkdir -p /var/log/nginx/domains
+
+    # Update dns servers in nginx.conf
+    dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
+    for ip in $dns_resolver; do
+        if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            resolver="$ip $resolver"
+        fi
+    done
+    if [ ! -z "$resolver" ]; then
+        sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" $OSAL_PATH_NGINX_CONF/nginx.conf
+        # FIXME: the following should be done on hestia-nginx install, not on nginx install
+        sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" $HESTIA/nginx/conf/nginx.conf
+    fi
+
+    osal_service_enable $OSAL_SERVICE_NGINX
+    osal_service_start $OSAL_SERVICE_NGINX
+    check_result $? "Nginx start failed"
+
+    osal_kv_write $HESTIA_CONF_MODULES/nginx.conf 'installed' '1'
+    osal_kv_write $HESTIA_CONF_MODULES/nginx.conf 'description' 'Hestia Nginx module'
+    osal_kv_write $HESTIA_CONF_MODULES/nginx.conf 'enabled' '1'
+    osal_kv_write $HESTIA_CONF_MODULES/nginx.conf 'variant' 'nginx'
+    osal_kv_write $HESTIA_CONF_MODULES/nginx.conf 'version' '1'
+    osal_kv_write $HESTIA_CONF_MODULES/nginx.conf 'service_name' $OSAL_PKG_NGINX
+
+    # Setup web module (depending on Nginx and/or Apache config)
+    hestia module web setup
+}

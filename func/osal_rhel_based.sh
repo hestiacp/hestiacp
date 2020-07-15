@@ -5,48 +5,71 @@
 # Variables                                                         #
 #-------------------------------------------------------------------#
 
-# Services
+# Apache
 OSAL_SERVICE_APACHE=httpd
-OSAL_SERVICE_BIND=named
-OSAL_SERVICE_CLAMAV=clamd
-OSAL_SERVICE_CRON=crond
-OSAL_SERVICE_DOVECOT=dovecot
-OSAL_SERVICE_EXIM=exim
-OSAL_SERVICE_SPAMASSASSIN=spamassassin
-
-# Users
 OSAL_USER_APACHE_DATA=apache
+OSAL_PKG_APACHE=httpd
+OSAL_PKG_APACHE_MOD_RUID2=mod_ruid2
+OSAL_PATH_APACHE_CONF=/etc/httpd
+
+# Bind
+OSAL_SERVICE_BIND=named
 OSAL_USER_BIND=named
+OSAL_PKG_BIND=bind
+OSAL_PATH_BIND_DATA=/var/named
+
+# ClamAV
+OSAL_SERVICE_CLAMAV=clamd
 OSAL_USER_CLAMAV=clamav
+OSAL_PKG_CLAMAV='clamav clamav-update'
+OSAL_PATH_CLAMAV_CONF=/etc/clamd.conf
+OSAL_PATH_CLAMAV_CONF_D=/etc/clamd.d
+
+# Cron
+OSAL_SERVICE_CRON=crond
+
+# Dovecot
+OSAL_SERVICE_DOVECOT=dovecot
+OSAL_PKG_DOVECOT=dovecot
+OSAL_PATH_DOVECOT_CONF=/etc/dovecot
+
+# Exim
+OSAL_SERVICE_EXIM=exim
 OSAL_USER_EXIM=exim
+OSAL_PKG_EXIM=exim
+OSAL_PATH_EXIM_CONF=/etc/exim
+
+# Nginx
+OSAL_SERVICE_NGINX=nginx
+OSAL_USER_NGINX=nginx
+OSAL_PKG_NGINX=nginx
+OSAL_PATH_NGINX_CONF=/etc/nginx
+OSAL_PATH_NGINX_CONF_D=/etc/nginx/conf.d
+
+# phpMyAdmin
+OSAL_PKG_PHPMYADMIN=phpMyAdmin
+
+# RoundCube
+OSAL_PKG_ROUNDCUBE=roundcubemail
+OSAL_PATH_ROUNDCUBE_INSTALL_MYSQL=/usr/share/roundcubemail/SQL/mysql
+
+# SpamAssassin
+OSAL_SERVICE_SPAMASSASSIN=spamassassin
+OSAL_PKG_SPAMASSASSIN=spamassassin
+OSAL_PATH_SPAMASSASSIN_CONF=/etc/mail/spamassassin
+
+# vsftpd
+OSAL_PATH_VSFTPD_CONF=/etc/vsftpd
+
+# Misc. users
 OSAL_USER_NOBODY=nobody
 OSAL_USER_NOGROUP=nobody
 
-# Commands
+# Misc. commands
 OSAL_CMD_PACKAGE_MANAGER=/usr/bin/dnf
 
-# Packages
-OSAL_PKG_APACHE=httpd
-OSAL_PKG_APACHE_MOD_RUID2=mod_ruid2
-OSAL_PKG_BIND=bind
-OSAL_PKG_CLAMAV='clamav clamav-update'
-OSAL_PKG_DOVECOT=dovecot
-OSAL_PKG_EXIM=exim
-OSAL_PKG_PHPMYADMIN=phpMyAdmin
-OSAL_PKG_ROUNDCUBE=roundcubemail
-OSAL_PKG_SPAMASSASSIN=spamassassin
-
-# Paths
-OSAL_PATH_APACHE_CONF=/etc/httpd
-OSAL_PATH_BIND_DATA=/var/named
-OSAL_PATH_CLAMAV_CONF=/etc/clamd.conf
-OSAL_PATH_CLAMAV_CONF_D=/etc/clamd.d
-OSAL_PATH_DOVECOT_CONF=/etc/dovecot
-OSAL_PATH_EXIM_CONF=/etc/exim
-OSAL_PATH_LOGROTATE_CONF=/etc/logrotate.d
-OSAL_PATH_ROUNDCUBE_INSTALL_MYSQL=/usr/share/roundcubemail/SQL/mysql
-OSAL_PATH_SPAMASSASSIN_CONF=/etc/mail/spamassassin
-OSAL_PATH_VSFTPD_CONF=/etc/vsftpd
+# Misc. paths
+OSAL_PATH_LOGROTATE_CONF_D=/etc/logrotate.d
 
 #-------------------------------------------------------------------#
 # Functions                                                         #

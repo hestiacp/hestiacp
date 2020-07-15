@@ -5,48 +5,71 @@
 # Variables                                                         #
 #-------------------------------------------------------------------#
 
-# Services
+# Apache
 OSAL_SERVICE_APACHE=apache2
-OSAL_SERVICE_BIND=bind9
-OSAL_SERVICE_CLAMAV=clamav-daemon
-OSAL_SERVICE_CRON=cron
-OSAL_SERVICE_DOVECOT=dovecot
-OSAL_SERVICE_EXIM=exim4
-OSAL_SERVICE_SPAMASSASSIN=spamassassin
-
-# Users
 OSAL_USER_APACHE_DATA=www-data
+OSAL_PKG_APACHE=apache2
+OSAL_PKG_APACHE_MOD_RUID2=libapache2-mod-ruid2
+OSAL_PATH_APACHE_CONF=/etc/apache2
+
+# Bind
+OSAL_SERVICE_BIND=bind9
 OSAL_USER_BIND=bind
+OSAL_PKG_BIND=bind9
+OSAL_PATH_BIND_DATA=/var/cache/bind
+
+# ClamAV
+OSAL_SERVICE_CLAMAV=clamav-daemon
 OSAL_USER_CLAMAV=clamav
+OSAL_PKG_CLAMAV=clamav-daemon
+OSAL_PATH_CLAMAV_CONF=/etc/clamav/clamd.conf
+OSAL_PATH_CLAMAV_CONF_D=/etc/clamd.d
+
+# Cron
+OSAL_SERVICE_CRON=cron
+
+# Dovecot
+OSAL_SERVICE_DOVECOT=dovecot
+OSAL_PKG_DOVECOT='dovecot-imapd dovecot-pop3d'
+OSAL_PATH_DOVECOT_CONF=/etc/dovecot
+
+# Exim
+OSAL_SERVICE_EXIM=exim4
 OSAL_USER_EXIM=Debian-exim
+OSAL_PKG_EXIM='exim4 exim4-daemon-heavy'
+OSAL_PATH_EXIM_CONF=/etc/exim4
+
+# Nginx
+OSAL_SERVICE_NGINX=nginx
+OSAL_USER_NGINX=nginx
+OSAL_PKG_NGINX=nginx
+OSAL_PATH_NGINX_CONF=/etc/nginx
+OSAL_PATH_NGINX_CONF_D=/etc/nginx/conf.d
+
+# phpMyAdmin
+OSAL_PKG_PHPMYADMIN=phpmyadmin
+
+# RoundCube
+OSAL_PKG_ROUNDCUBE=roundcube
+OSAL_PATH_ROUNDCUBE_INSTALL_MYSQL=/usr/share/dbconfig-common/data/roundcubemail/install/mysql
+
+# SpamAssassin
+OSAL_SERVICE_SPAMASSASSIN=spamassassin
+OSAL_PKG_SPAMASSASSIN=spamassassin
+OSAL_PATH_SPAMASSASSIN_CONF=/etc/spamassassin
+
+# vsftp
+OSAL_PATH_VSFTPD_CONF=/etc/vsftpd.conf
+
+# Misc. users
 OSAL_USER_NOBODY=nobody
 OSAL_USER_NOGROUP=nogroup
 
-# Commands
+# Misc. commands
 OSAL_CMD_PACKAGE_MANAGER=/usr/bin/apt-get
 
-# Packages
-OSAL_PKG_APACHE=apache2
-OSAL_PKG_APACHE_MOD_RUID2=libapache2-mod-ruid2
-OSAL_PKG_BIND=bind9
-OSAL_PKG_CLAMAV=clamav-daemon
-OSAL_PKG_DOVECOT='dovecot-imapd dovecot-pop3d'
-OSAL_PKG_EXIM='exim4 exim4-daemon-heavy'
-OSAL_PKG_PHPMYADMIN=phpmyadmin
-OSAL_PKG_ROUNDCUBE=roundcube
-OSAL_PKG_SPAMASSASSIN=spamassassin
-
-# Paths
-OSAL_PATH_APACHE_CONF=/etc/apache2
-OSAL_PATH_BIND_DATA=/var/cache/bind
-OSAL_PATH_CLAMAV_CONF=/etc/clamav/clamd.conf
-OSAL_PATH_CLAMAV_CONF_D=/etc/clamd.d
-OSAL_PATH_DOVECOT_CONF=/etc/dovecot
-OSAL_PATH_EXIM_CONF=/etc/exim4
-OSAL_PATH_LOGROTATE_CONF=/etc/logrotate.d
-OSAL_PATH_ROUNDCUBE_INSTALL_MYSQL=/usr/share/dbconfig-common/data/roundcubemail/install/mysql
-OSAL_PATH_SPAMASSASSIN_CONF=/etc/spamassassin
-OSAL_PATH_VSFTPD_CONF=/etc/vsftpd.conf
+# Misc. paths
+OSAL_PATH_LOGROTATE_CONF_D=/etc/logrotate.d
 
 #-------------------------------------------------------------------#
 # Functions                                                         #

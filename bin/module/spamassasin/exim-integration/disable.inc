@@ -15,9 +15,9 @@ hestia_module_clamav_setup-exim() {
         exit 1
     fi
 
-    echo "Disabling Exim-ClamAV integration..."
+    echo "Disabling SpamAssassin-ClamAV integration..."
 
-    /usr/bin/sed -i "/CLAMD/ s/^/#/" $OSAL_PATH_EXIM_CONF/exim4.conf.template
+    /usr/bin/sed -i "/SPAMASSASSIN/ s/^/#/" $OSAL_PATH_EXIM_CONF/exim4.conf.template
 
     # FIXME: how do we rebuild exim.conf? 
 }

@@ -1695,9 +1695,8 @@ $HESTIA/bin/v-change-sys-port $port
 $HESTIA/bin/v-change-sys-theme 'default'
 
 # Starting Hestia service
-systemctl enable hestia-php
-systemctl enable hestia-nginx
-systemctl start hestia-php && systemctl start hestia-nginx
+systemctl enable hestia
+systemctl start hestia
 check_result $? "hestia start failed"
 
 

@@ -21,7 +21,7 @@ OSAL_PATH_BIND_DATA=/var/named
 # ClamAV
 OSAL_SERVICE_CLAMAV=clamd
 OSAL_USER_CLAMAV=clamav
-OSAL_PKG_CLAMAV='clamav clamav-update'
+OSAL_PKG_CLAMAV='clamd clamav-update'
 OSAL_PATH_CLAMAV_CONF=/etc/clamd.conf
 OSAL_PATH_CLAMAV_CONF_D=/etc/clamd.d
 

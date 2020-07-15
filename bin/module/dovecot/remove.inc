@@ -17,8 +17,8 @@ hestia_module_dovecot_remove() {
 
     echo "Removing IMAP (Dovecot) module..."
 
-    osal_service_stop $OSAL_SERVICE_DOVECOT
-    osal_service_disable $OSAL_SERVICE_DOVECOT
+    osal_service_stop $OSAL_SERVICE_DOVECOT > /dev/null 2>&1
+    osal_service_disable $OSAL_SERVICE_DOVECOT > /dev/null 2>&1
 
     hestia_config_backup 'dovecot-remove' $OSAL_PATH_DOVECOT_CONF
     rm -rf $OSAL_PATH_DOVECOT_CONF

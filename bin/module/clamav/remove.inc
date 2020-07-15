@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 hestia_module_clamav_remove() {
     source $HESTIA/bin/module/func.inc
@@ -17,19 +17,19 @@ hestia_module_clamav_remove() {
 
     echo "Removing antivirus (ClamAV) module..."
 
-    osal_service_stop $OSAL_SERVICE_CLAMAV
-    osal_service_disable $OSAL_SERVICE_CLAMAV
-
-    hestia_config_backup 'clamav-remove' $OSAL_PATH_CLAMAV_CONF
-
-    rm -rf $OSAL_PATH_CLAMAV_CONF
-
-    exim_installed=$(hestia_module_variant_installed 'antivirus' 'exim')
+    exim_installed=$(hestia_module_variant_installed 'mta' 'exim')
     if [ "$exim_installed" ]; then
         hestia module clamav exim-integration disable
     fi
 
-    osal_package_remove $OSAL_PKG_EXIM
+    osal_service_stop $OSAL_SERVICE_CLAMAV > /dev/null 2>&1
+    osal_service_disable $OSAL_SERVICE_CLAMAV > /dev/null 2>&1
+
+    hestia_config_backup 'clamav-remove' $OSAL_PATH_CLAMAV_CONF $OSAL_PATH_CLAMAV_CONF_D
+
+    rm -rf $OSAL_PATH_CLAMAV_CONF $OSAL_PATH_CLAMAV_CONF_D
+
+    osal_package_remove $OSAL_PKG_CLAMAV
 
     osal_kv_write $HESTIA/conf/hestia.conf 'ANTIVIRUS_SYSTEM' 'no'
     osal_kv_write $HESTIA_CONF_MODULES/antivirus.conf 'installed' '0'
@@ -37,6 +37,4 @@ hestia_module_clamav_remove() {
     osal_kv_write $HESTIA_CONF_MODULES/antivirus.conf 'enabled' '0'
     osal_kv_write $HESTIA_CONF_MODULES/antivirus.conf 'variant' ''
     osal_kv_write $HESTIA_CONF_MODULES/antivirus.conf 'version' '0'
-
-    exit 0
 }

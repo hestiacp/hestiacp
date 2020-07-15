@@ -17,6 +17,7 @@ OSAL_SERVICE_SPAMASSASSIN=spamassassin
 # Users
 OSAL_USER_APACHE_DATA=www-data
 OSAL_USER_BIND=bind
+OSAL_USER_CLAMAV=clamav
 OSAL_USER_EXIM=Debian-exim
 OSAL_USER_NOBODY=nobody
 OSAL_USER_NOGROUP=nogroup
@@ -29,8 +30,8 @@ OSAL_PKG_APACHE=apache2
 OSAL_PKG_APACHE_MOD_RUID2=libapache2-mod-ruid2
 OSAL_PKG_BIND=bind9
 OSAL_PKG_CLAMAV=clamav-daemon
-OSAL_PKG_DOVECOT=dovecot-imapd dovecot-pop3d
-OSAL_PKG_EXIM=exim4 exim4-daemon-heavy
+OSAL_PKG_DOVECOT='dovecot-imapd dovecot-pop3d'
+OSAL_PKG_EXIM='exim4 exim4-daemon-heavy'
 OSAL_PKG_PHPMYADMIN=phpmyadmin
 OSAL_PKG_ROUNDCUBE=roundcube
 OSAL_PKG_SPAMASSASSIN=spamassassin
@@ -38,7 +39,8 @@ OSAL_PKG_SPAMASSASSIN=spamassassin
 # Paths
 OSAL_PATH_APACHE_CONF=/etc/apache2
 OSAL_PATH_BIND_DATA=/var/cache/bind
-OSAL_PATH_CLAMAV_CONF=/etc/clamav
+OSAL_PATH_CLAMAV_CONF=/etc/clamav/clamd.conf
+OSAL_PATH_CLAMAV_CONF_D=/etc/clamd.d
 OSAL_PATH_DOVECOT_CONF=/etc/dovecot
 OSAL_PATH_EXIM_CONF=/etc/exim4
 OSAL_PATH_LOGROTATE_CONF=/etc/logrotate.d
@@ -64,7 +66,7 @@ osal_package_install() {
 
 # package_remoev 'package' 'package' ...
 osal_package_remove() {
-    $OSAL_CMD_PACKAGE_MANAGER -y purge "$@"
+    $OSAL_CMD_PACKAGE_MANAGER -y -qq purge "$@"
 }
 
 # service_start 'service-name'

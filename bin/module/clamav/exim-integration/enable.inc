@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
-hestia_module_clamav_setup-exim() {
+hestia_module_clamav_exim-integration_enable() {
     source $HESTIA/bin/module/func.inc
 
     module_installed=$(hestia_module_isinstalled mta)
@@ -17,7 +17,7 @@ hestia_module_clamav_setup-exim() {
 
     echo "Enabling Exim-ClamAV integration..."
 
-    /usr/bin/sed -i "/CLAMD/ s/#*//" $OSAL_PATH_EXIM_CONF/exim4.conf.template
+    /usr/bin/sed -i "/CLAMD/ s/#*//" $OSAL_PATH_EXIM_CONF/${OSAL_PKG_EXIM}.conf.template
 
     gpasswd -a clamav mail > /dev/null 2>&1
     gpasswd -a clamav $OSAL_USER_EXIM > /dev/null 2>&1

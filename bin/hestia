@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 HESTIA_BIN=$HESTIA/bin
 [ "$HESTIA_DEBUG" ] && OSAL_DEBUG=1

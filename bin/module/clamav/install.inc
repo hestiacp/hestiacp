@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 hestia_module_clamav_install() {
     source $HESTIA/bin/module/func.inc
@@ -9,18 +9,15 @@ hestia_module_clamav_install() {
         exit 1
     fi
 
-    echo "Installing Antivirus (ClamAV) module..."
+    echo "Installing antivirus (ClamAV) module..."
 
-    osal_service_stop $OSAL_SERVICE_CLAMAV
-    hestia_config_backup 'clamav-install' $OSAL_PATH_CLAMAV_CONF
+    osal_service_stop $OSAL_SERVICE_CLAMAV > /dev/null 2>&1
+    hestia_config_backup 'clamav-install' $OSAL_PATH_CLAMAV_CONF $OSAL_PATH_CLAMAV_CONF_D
 
     osal_package_preinstall
     osal_package_install $OSAL_PKG_CLAMAV
 
     cp -f $HESTIA_INSTALL_DIR/clamav/clamd.conf $OSAL_PATH_CLAMAV_CONF
-
-    mkdir -p /var/log/clamav /var/run/clamav
-    chown -R clamav:clamav /var/log/clamav /var/run/clamav
 
     if [ $OS_BASE = 'debian' ]; then
         # FIXME: Why do we do this?
@@ -33,23 +30,20 @@ hestia_module_clamav_install() {
         fi
     elif [ $OS_BASE = 'rhel' ]; then
         # Setup freshclam
-        useradd clamav -g clamupdate -s /sbin/nologin -d /var/lib/clamav 2>/dev/null
+        groupadd clamav 2>/dev/null
+        useradd clamav -g clamav -s /sbin/nologin -d /var/lib/clamav 2>/dev/null
         cp -f $HESTIA_INSTALL_DIR/clamav/freshclam.conf /etc/
-        chown clamav:clamupdate /var/log/clamav /var/run/clamav
-        chown -R clamav:clamupdate /var/lib/clamav
-        chmod 0775 /var/lib/clamav /var/log/clamav
     fi
 
+    mkdir -p /var/log/clamav /var/run/clamav
+    chown -R $OSAL_USER_CLAMAV:$OSAL_USER_CLAMAV /var/log/clamav /var/run/clamav
+
+    echo "Updating virus database..."
     osal_execute_with_spinner /usr/bin/freshclam
 
     osal_service_enable $OSAL_SERVICE_CLAMAV
     osal_service_start $OSAL_SERVICE_CLAMAV
     check_result $? "ClamAV start failed"
-
-    exim_installed=$(hestia_module_variant_installed 'mta' 'exim')
-    if [ "$exim_installed" ]; then
-        hestia module clamav exim-integration enable
-    fi
 
     osal_kv_write $HESTIA/conf/hestia.conf 'ANTIVIRUS_SYSTEM' 'clamav-daemon'
     osal_kv_write $HESTIA_CONF_MODULES/antivirus.conf 'installed' '1'
@@ -58,4 +52,9 @@ hestia_module_clamav_install() {
     osal_kv_write $HESTIA_CONF_MODULES/antivirus.conf 'variant' 'clamav'
     osal_kv_write $HESTIA_CONF_MODULES/antivirus.conf 'version' '1'
     osal_kv_write $HESTIA_CONF_MODULES/antivirus.conf 'service_name' $OSAL_SERVICE_CLAMAV
+
+    exim_installed=$(hestia_module_variant_installed 'mta' 'exim')
+    if [ "$exim_installed" ]; then
+        hestia module clamav exim-integration enable
+    fi
 }

@@ -39,7 +39,7 @@ software=" nginx awstats bc bind bind-libs bind-utils clamav clamav-update
     php-tidy php-xml php-xmlrpc postgresql postgresql-contrib
     postgresql-server proftpd roundcubemail rrdtool rsyslog screen
     spamassassin sqlite sudo tar telnet unzip hestia hestia-nginx
-    hestia-php vim-common vsftpd webalizer which zip wget tar "
+    hestia-php vim-common vsftpd webalizer which zip wget tar langpacks-en glibc-all-langpacks"
 
 # Defining help function
 help() {

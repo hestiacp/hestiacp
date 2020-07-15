@@ -17,6 +17,7 @@ OSAL_SERVICE_SPAMASSASSIN=spamassassin
 # Users
 OSAL_USER_APACHE_DATA=apache
 OSAL_USER_BIND=named
+OSAL_USER_CLAMAV=clamav
 OSAL_USER_EXIM=exim
 OSAL_USER_NOBODY=nobody
 OSAL_USER_NOGROUP=nobody
@@ -28,7 +29,7 @@ OSAL_CMD_PACKAGE_MANAGER=/usr/bin/dnf
 OSAL_PKG_APACHE=httpd
 OSAL_PKG_APACHE_MOD_RUID2=mod_ruid2
 OSAL_PKG_BIND=bind
-OSAL_PKG_CLAMAV=clamav clamav-update
+OSAL_PKG_CLAMAV='clamav clamav-update'
 OSAL_PKG_DOVECOT=dovecot
 OSAL_PKG_EXIM=exim
 OSAL_PKG_PHPMYADMIN=phpMyAdmin
@@ -38,7 +39,8 @@ OSAL_PKG_SPAMASSASSIN=spamassassin
 # Paths
 OSAL_PATH_APACHE_CONF=/etc/httpd
 OSAL_PATH_BIND_DATA=/var/named
-OSAL_PATH_CLAMAV_CONF=/etc/clamd.conf /etc/clamd.d
+OSAL_PATH_CLAMAV_CONF=/etc/clamd.conf
+OSAL_PATH_CLAMAV_CONF_D=/etc/clamd.d
 OSAL_PATH_DOVECOT_CONF=/etc/dovecot
 OSAL_PATH_EXIM_CONF=/etc/exim
 OSAL_PATH_LOGROTATE_CONF=/etc/logrotate.d
@@ -64,7 +66,7 @@ osal_package_install() {
 
 # package_remoev 'package' 'package' ...
 osal_package_remove() {
-    $OSAL_CMD_PACKAGE_MANAGER -y remove "$@"
+    $OSAL_CMD_PACKAGE_MANAGER -q -y remove "$@"
 }
 
 # service_start 'service-name'

@@ -11,7 +11,7 @@ hestia_module_vsftpd_install() {
 
     echo "Installing FTP (vsftpd) module..."
 
-    osal_service_stop vsftpd
+    osal_service_stop vsftpd > /dev/null 2>&1
     hestia_config_backup 'vsftpd-install' $OSAL_PATH_VSFTPD_CONF
 
     osal_package_preinstall

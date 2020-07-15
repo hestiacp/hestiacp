@@ -11,7 +11,7 @@ hestia_module_dovecot_install() {
 
     echo "Installing IMAP (Dovecot) module..."
 
-    osal_service_stop $OSAL_SERVICE_DOVECOT
+    osal_service_stop $OSAL_SERVICE_DOVECOT > /dev/null 2>&1
     hestia_config_backup 'dovecot-install' $OSAL_PATH_DOVECOT_CONF
 
     osal_package_preinstall

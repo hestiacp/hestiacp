@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 hestia_module_spamassassin_install() {
     source $HESTIA/bin/module/func.inc
@@ -11,7 +11,7 @@ hestia_module_spamassassin_install() {
 
     echo "Installing Antispam (SpamAssassin) module..."
 
-    osal_service_stop $OSAL_SERVICE_SPAMASSASSIN
+    osal_service_stop $OSAL_SERVICE_SPAMASSASSIN > /dev/null 2>&1
     hestia_config_backup 'spamassassin-install' $OSAL_PATH_SPAMASSASSIN_CONF
 
     osal_package_preinstall
@@ -25,14 +25,9 @@ hestia_module_spamassassin_install() {
         fi
     fi
 
-    osal_service_enable $OSAL_SERVICE_SPAMASSASSIN
-    osal_service_start $OSAL_SERVICE_SPAMASSASSIN
+    osal_service_enable $OSAL_SERVICE_SPAMASSASSIN > /dev/null 2>&1
+    osal_service_start $OSAL_SERVICE_SPAMASSASSIN > /dev/null 2>&1
     check_result $? "SpamAssassin start failed"
-
-    exim_installed=$(hestia_module_variant_installed 'mta' 'exim')
-    if [ "$exim_installed" ]; then
-        hestia module spamassassin exim-integration enable
-    fi
 
     osal_kv_write $HESTIA/conf/hestia.conf 'ANTISPAM_SYSTEM' 'spamassassin'
     osal_kv_write $HESTIA_CONF_MODULES/antispam.conf 'installed' '1'
@@ -41,4 +36,9 @@ hestia_module_spamassassin_install() {
     osal_kv_write $HESTIA_CONF_MODULES/antispam.conf 'variant' 'spamassassin'
     osal_kv_write $HESTIA_CONF_MODULES/antispam.conf 'version' '1'
     osal_kv_write $HESTIA_CONF_MODULES/antispam.conf 'service_name' $OSAL_SERVICE_SPAMASSASSIN
+
+    exim_installed=$(hestia_module_variant_installed 'mta' 'exim')
+    if [ "$exim_installed" ]; then
+        hestia module spamassassin exim-integration enable
+    fi
 }

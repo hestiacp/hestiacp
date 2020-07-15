@@ -19,7 +19,7 @@ hestia_module_dovecot_install() {
 
     gpasswd -a dovecot mail > /dev/null 2>&1
     cp -rf $HESTIA_INSTALL_DIR/dovecot/* $OSAL_PATH_DOVECOT_CONF/
-    cp -f $HESTIA_INSTALL_DIR/logrotate/dovecot $OSAL_PATH_LOGROTATE_CONF/
+    cp -f $HESTIA_INSTALL_DIR/logrotate/dovecot $OSAL_PATH_LOGROTATE_CONF_D/
     chown -R root:root $OSAL_PATH_DOVECOT_CONF
     
     # FIXME: Why do we do this?

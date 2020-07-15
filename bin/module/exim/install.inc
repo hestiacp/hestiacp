@@ -11,7 +11,7 @@ hestia_module_exim_install() {
 
     echo "Installing MTA (Exim) module..."
 
-    osal_service_stop $OSAL_PKG_EXIM
+    osal_service_stop $OSAL_SERVICE_EXIM
     hestia_config_backup 'exim-install' $OSAL_PATH_EXIM_CONF
 
     osal_package_preinstall
@@ -43,8 +43,8 @@ hestia_module_exim_install() {
     osal_service_stop postfix
     osal_service_disable postfix
 
-    osal_service_enable $OSAL_PKG_EXIM
-    osal_service_start $OSAL_PKG_EXIM
+    osal_service_enable $OSAL_SERVICE_EXIM
+    osal_service_start $OSAL_SERVICE_EXIM
     check_result $? "Exim start failed"
 
     clamav_installed=$(hestia_module_variant_installed 'antivirus' 'clamav')

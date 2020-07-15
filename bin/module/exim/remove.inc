@@ -17,8 +17,8 @@ hestia_module_exim_remove() {
 
     echo "Removing MTA (Exim) module..."
 
-    osal_service_stop $OSAL_PKG_EXIM
-    osal_service_disable $OSAL_PKG_EXIM
+    osal_service_stop $OSAL_SERVICE_EXIM
+    osal_service_disable $OSAL_SERVICE_EXIM
 
     hestia_config_backup 'exim-remove' $OSAL_PATH_EXIM_CONF
 

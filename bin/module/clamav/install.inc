@@ -33,6 +33,9 @@ hestia_module_clamav_install() {
         groupadd clamav 2>/dev/null
         useradd clamav -g clamav -s /sbin/nologin -d /var/lib/clamav 2>/dev/null
         cp -f $HESTIA_INSTALL_DIR/clamav/freshclam.conf /etc/
+        chown -R clamav:clamav /var/lib/clamav
+        chown root:clamav /etc/freshclam.conf
+        chmod 0664 /etc/freshclam.conf
         cp -f $HESTIA_INSTALL_DIR/clamav/clamd.service /etc/systemd/system/
         systemctl daemon-reload
     fi

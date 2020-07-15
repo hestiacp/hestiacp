@@ -95,7 +95,7 @@ usage() {
 }
 
 # Set compiling directory
-REPO='EquisTango/hestiacp'
+REPO='hestia/hestiacp'
 BUILD_DIR='/tmp/hestiacp-src'
 INSTALL_DIR='/usr/local/hestia'
 SRC_DIR="$(cd "$(dirname "$0")/.." && pwd)"

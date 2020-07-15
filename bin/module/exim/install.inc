@@ -54,19 +54,21 @@ hestia_module_exim_install() {
     osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'version' '1'
     osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'service_name' $OSAL_PKG_EXIM
 
-    clamav_installed=$(hestia_module_variant_installed 'antivirus' 'clamav')
-    if [ "$clamav_installed" ]; then
-        $BIN/hestia module clamav exim-integration enable
-    fi
-
-    spamassassin_installed=$(hestia_module_variant_installed 'antispam' 'spamassassin')
-    if [ "$spamassassin_installed" ]; then
-        $BIN/hestia module spamassassin exim-integration enable
-    fi
-
     # Rebuild mail
     for user in $($HESTIA/bin/v-list-sys-users plain); do
         echo "Rebuilding mail domains for user $user"
         $BIN/v-rebuild-mail-domains $user 'no' >/dev/null 2>&1
     done
+
+    # Setup ClamAv integration
+    clamav_installed=$(hestia_module_variant_installed 'antivirus' 'clamav')
+    if [ "$clamav_installed" ]; then
+        $BIN/hestia module clamav exim-integration enable
+    fi
+
+    # Setup SpamAssassin integration
+    spamassassin_installed=$(hestia_module_variant_installed 'antispam' 'spamassassin')
+    if [ "$spamassassin_installed" ]; then
+        $BIN/hestia module spamassassin exim-integration enable
+    fi
 }

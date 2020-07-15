@@ -52,6 +52,11 @@ hestia_module_exim_install() {
         hestia module clamav exim-integration enable
     fi
 
+    spamassassin_installed=$(hestia_module_variant_installed 'antispam' 'spamassassin')
+    if [ "$spamassassin_installed" ]; then
+        hestia module spamassassin exim-integration enable
+    fi
+
     osal_kv_write $HESTIA/conf/hestia.conf 'MAIL_SYSTEM' 'exim'
     osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'installed' '1'
     osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'description' 'Hestia MTA (Exim) module'

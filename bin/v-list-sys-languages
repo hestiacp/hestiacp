@@ -62,7 +62,7 @@ csv_list() {
 #----------------------------------------------------------#
 
 # Defining language list
-languages=$(ls $HESTIA/web/inc/i18n/ |cut -f 1 -d .)
+languages=$(ls $HESTIA/web/locale |cut -f 1 -d .)
 
 # Listing data
 case $format in

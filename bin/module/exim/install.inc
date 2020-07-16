@@ -30,6 +30,7 @@ hestia_module_exim_install() {
     cp -f $HESTIA_INSTALL_DIR/exim/dnsbl.conf $OSAL_PATH_EXIM_CONF/
     cp -f $HESTIA_INSTALL_DIR/exim/spam-blocks.conf $OSAL_PATH_EXIM_CONF/
     touch $OSAL_PATH_EXIM_CONF/white-blocks.conf
+    touch $OSAL_PATH_EXIM_CONF/mailhelo.conf
 
     rm -rf $OSAL_PATH_EXIM_CONF/domains
     mkdir -p $OSAL_PATH_EXIM_CONF/domains

@@ -25,11 +25,12 @@ pma_v='5.0.2'
 #               Begin standard upgrade routines               #
 ###############################################################
 
-# Initialize backup directories
-upgrade_init_backup
 
 # Set up console display and welcome message
 upgrade_welcome_message
+
+# Initialize backup directories
+upgrade_init_backup
 
 # Execute version-specific upgrade scripts
 upgrade_start_routine

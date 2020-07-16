@@ -18,6 +18,7 @@ hestia_module_dovecot_install() {
     osal_package_install $OSAL_PKG_DOVECOT
 
     gpasswd -a dovecot mail > /dev/null 2>&1
+    rm -rf $OSAL_PATH_DOVECOT_CONF_D
     cp -rf $HESTIA_INSTALL_DIR/dovecot/* $OSAL_PATH_DOVECOT_CONF/
     cp -f $HESTIA_INSTALL_DIR/logrotate/dovecot $OSAL_PATH_LOGROTATE_CONF_D/
     chown -R root:root $OSAL_PATH_DOVECOT_CONF

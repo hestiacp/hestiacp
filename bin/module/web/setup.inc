@@ -99,4 +99,10 @@ hestia_module_web_setup() {
 
     # FIXME: move the following to awstats install
     osal_kv_write $HESTIA/conf/hestia.conf 'STATS_SYSTEM' 'awstats'
+
+    # Rebuild mail
+    for user in $($HESTIA/bin/v-list-sys-users plain); do
+        echo "Rebuilding web domains for user $user"
+        $BIN/v-rebuild-web-domains $user 'no' >/dev/null 2>&1
+    done
 }

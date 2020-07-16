@@ -1352,19 +1352,19 @@ fi
 if [ "$exim" = 'yes' ]; then
     echo "(*) Configuring Exim mail server..."
     gpasswd -a exim mail > /dev/null 2>&1
-    cp -f $HESTIA_INSTALL_DIR/exim/exim.conf.template /etc/exim/
+    cp -f $HESTIA_INSTALL_DIR/exim/exim.conf.template /etc/exim/exim.conf
     cp -f $HESTIA_INSTALL_DIR/exim/dnsbl.conf /etc/exim/
     cp -f $HESTIA_INSTALL_DIR/exim/spam-blocks.conf /etc/exim/
     touch /etc/exim/white-blocks.conf
 
     if [ "$spamd" = 'yes' ]; then
-        sed -i "s/#SPAM/SPAM/g" /etc/exim/exim.conf.template
+        sed -i "s/#SPAM/SPAM/g" /etc/exim/exim.conf
     fi
     if [ "$clamd" = 'yes' ]; then
-        sed -i "s/#CLAMD/CLAMD/g" /etc/exim/exim.conf.template
+        sed -i "s/#CLAMD/CLAMD/g" /etc/exim/exim.conf
     fi
 
-    chmod 640 /etc/exim/exim.conf.template
+    chmod 640 /etc/exim/exim.conf
     rm -rf /etc/exim/domains
     mkdir -p /etc/exim/domains
 

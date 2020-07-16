@@ -130,7 +130,7 @@ osal_apache_module_enable() {
     /usr/bin/sed -i "/LoadModule ${1}_module/ s/#*//" $OSAL_PATH_APACHE_CONF/conf.modules.d/*.conf
     grep "^$LoadModule\s*${1}_module" $OSAL_PATH_APACHE_CONF/conf.modules.d/*.conf > /dev/null
     if [ $? -gt 0 ]; then
-        echo "LoadModule ${1}_module modules/mod_${1}.so" > $OSAL_PATH_APACHE_CONF/conf.modules.d/hestia-${1}.conf
+        echo "LoadModule ${1}_module modules/mod_${1}.so" >> $OSAL_PATH_APACHE_CONF/conf.modules.d/${1}.conf
     fi
 }
 

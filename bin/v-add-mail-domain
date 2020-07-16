@@ -102,7 +102,7 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     fi
 
     # Touch mailhelo.conf if it doesnt exist
-    if [ ! -f "/etc/exim4/mailhelo.conf" }; then
+    if [ ! -f "/etc/exim4/mailhelo.conf" ]; then
         touch /etc/exim4/mailhelo.conf
     fi
 

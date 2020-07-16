@@ -569,9 +569,9 @@ $LANG['pl'] = array(
     'AntiSpam' => 'AntySpam',
     'Webmail URL' => 'Webmail Alias',
     'MySQL Support' => 'Wsparcie MySQL',
-    'phpMyAdmin URL' => 'phpMyAdmin URL',
+    'phpMyAdmin URL' => 'phpMyAdmin Alias',
     'PostgreSQL Support' => 'Wsparcie PostgreSQL',
-    'phpPgAdmin URL' => 'phpPgAdmin URL',
+    'phpPgAdmin URL' => 'phpPgAdmin Alias',
     'Maximum Number Of Databases' => 'Maksymalna Liczba Baz Danych',
     'Current Number Of Databases' => 'Aktualna Liczba Baz Danych',
     'Local backup' => 'Kopie Lokalne',
@@ -851,4 +851,35 @@ $LANG['pl'] = array(
 
     'Force SSL/HTTPS' => 'Włącz automatyczne przekierowanie HTTP na HTTPS',
     'Enable SSL HSTS' => 'Włącz zabezpieczenia ścisłego transportu HTTP (HSTS) <a href="https://pl.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><i class="fas fa-question-circle"></i></a>',
+    
+    //list user 
+    'Name' => 'Name',
+    //Add / Edit user
+    'Contact' => 'Name',
+    'GREETINGS_GORDON' => "Hello, %s,\n",
+    
+    //List Mail Accounts
+    'Forwarding' => 'Forwarding',
+
+    //Cron Jobs
+    'Cron Job' => 'Cron Job',
+    //Edit server 
+    'Host' => 'Host',
+  
+      //list Backups
+    '1 backups' => '1 backups',
+    '%s backups' => '%s backups',
+    //list Firewall Rules
+    '1 firewall rule' => '1 firewall rule',
+    '%s firewall rules' => '%s firewall rules',
+    //list ip
+    '1 banned IP address' => '1 banned IP address',
+    '%s banned IP addresses' => '%s banned IP addresses', 
+    //list DNS
+    'Records_DNS' => 'Records',
+    //Dowload Backup
+    'BACKUP_DOWNLOAD_SCHEDULED' => 'Download for Backup has been scheduled.',
+    'backend server' =>  'Backend Server',
+    'traffic' => 'Traffic',
+    'disk' => 'Disk',
 );

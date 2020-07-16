@@ -929,7 +929,6 @@ is_format_valid() {
                 email_forward)  is_email_format_valid "$arg" ;;
                 exp)            is_date_format_valid "$arg" ;;
                 extentions)     is_common_format_valid "$arg" 'extentions' ;;
-                fname)          is_name_format_valid "$arg" "first name" ;;
                 ftp_password)   is_password_format_valid "$arg" ;;
                 ftp_user)       is_user_format_valid "$arg" "$arg_name" ;;
                 host)           is_object_format_valid "$arg" "$arg_name" ;;
@@ -940,11 +939,11 @@ is_format_valid() {
                 ip_status)      is_ip_status_format_valid "$arg" ;;
                 job)            is_int_format_valid "$arg" 'job' ;;
                 key)            is_user_format_valid "$arg" "$arg_name" ;;
-                lname)          is_name_format_valid "$arg" "last name" ;;
                 malias)         is_user_format_valid "$arg" "$arg_name" ;;
                 max_db)         is_int_format_valid "$arg" 'max db';;
                 min)            is_cron_format_valid "$arg" $arg_name ;;
                 month)          is_cron_format_valid "$arg" $arg_name ;;
+                name)           is_name_format_valid "$arg" "name" ;;
                 nat_ip)         is_ip_format_valid "$arg" ;;
                 netmask)        is_ip_format_valid "$arg" 'netmask' ;;
                 newid)          is_int_format_valid "$arg" 'id' ;;

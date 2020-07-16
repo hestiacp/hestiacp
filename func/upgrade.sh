@@ -87,7 +87,12 @@ upgrade_init_backup() {
         mkdir -p $HESTIA_BACKUP/conf/$PROXY_SYSTEM/
     fi
     if [ ! -z "$DB_SYSTEM" ]; then
-        mkdir -p $HESTIA_BACKUP/conf/$DB_SYSTEM/
+        if [[  "$DB_SYSTEM" =~ "mysql" ]]; then 
+            mkdir -p $HESTIA_BACKUP/conf/mysql/        
+        fi
+        if [[  "$DB_SYSTEM" =~ "pgsql" ]]; then 
+            mkdir -p $HESTIA_BACKUP/conf/pgsql/        
+        fi       
     fi
     if [ ! -z "$FTP_SYSTEM" ]; then
         mkdir -p $HESTIA_BACKUP/conf/$FTP_SYSTEM/
@@ -133,9 +138,15 @@ upgrade_init_backup() {
             cp -f /etc/bind/*.conf $HESTIA_BACKUP/conf/$DNS_SYSTEM/
         fi
     fi
-    if [ ! -z "$DB_SYSTEM" ]; then
-        cp -f /etc/$DB_SYSTEM/*.cnf $HESTIA_BACKUP/conf/$DB_SYSTEM/
-        cp -f /etc/$DB_SYSTEM/conf.d/*.cnf $HESTIA_BACKUP/conf/$DB_SYSTEM/
+    if [ ! -z "$DB_SYSTEM" ]; then    
+        if [[  "$DB_SYSTEM" =~ "mysql" ]]; then 
+            cp -f /etc/mysql/*.cnf $HESTIA_BACKUP/conf/mysql/
+            cp -f /etc/mysql/conf.d/*.cnf $HESTIA_BACKUP/conf/mysql/      
+        fi
+        if [[  "$DB_SYSTEM" =~ "pgsql" ]]; then 
+            cp -f /etc/mysql/*.cnf $HESTIA_BACKUP/conf/pgsql/
+            cp -f /etc/mysql/conf.d/*.cnf $HESTIA_BACKUP/conf/pgsql/         
+        fi
     fi
     if [ ! -z "$FTP_SYSTEM" ]; then
         cp -f /etc/$FTP_SYSTEM.conf $HESTIA_BACKUP/conf/$FTP_SYSTEM/

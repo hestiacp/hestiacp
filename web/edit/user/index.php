@@ -58,6 +58,10 @@ if ( $v_suspended == 'yes' ) {
 $v_time = $data[$v_username]['TIME'];
 $v_date = $data[$v_username]['DATE'];
 
+if(empty($v_phpcli)){
+   $v_phpcli = substr(DEFAULT_PHP_VERSION,4);
+}
+
 // List packages
 exec (HESTIA_CMD."v-list-user-packages json", $output, $return_var);
 $packages = json_decode(implode('', $output), true);

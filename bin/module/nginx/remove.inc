@@ -11,8 +11,8 @@ hestia_module_nginx_remove() {
 
     echo "Removing Nginx module..."
 
-    osal_service_stop $OSAL_SERVICE_NGINX
-    osal_service_disable $OSAL_SERVICE_NGINX
+    osal_service_stop $OSAL_SERVICE_NGINX > /dev/null 2>&1
+    osal_service_disable $OSAL_SERVICE_NGINX > /dev/null 2>&1
 
     hestia_config_backup 'nginx-remove' $OSAL_PATH_NGINX_CONF
 

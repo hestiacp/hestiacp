@@ -61,9 +61,92 @@ upgrade_complete_message() {
 
 upgrade_init_backup() {
     # Ensure that backup directories are created
-    mkdir -p $HESTIA_BACKUP/conf/
+    # Hestia Control Panel configuration files
+    mkdir -p $HESTIA_BACKUP/conf/hestia/
+    
+    # Hosting Packages
     mkdir -p $HESTIA_BACKUP/packages/
+
+    # Domain template files
     mkdir -p $HESTIA_BACKUP/templates/
+
+    # System services (apache2, nginx, bind9, vsftpd, etc).
+    if [ ! -z "$WEB_SYSTEM" ]; then
+        mkdir -p $HESTIA_BACKUP/conf/$WEB_SYSTEM/
+    fi
+    if [ ! -z "$IMAP_SYSTEM" ]; then
+        mkdir -p $HESTIA_BACKUP/conf/$IMAP_SYSTEM/
+    fi
+    if [ ! -z "$MAIL_SYSTEM" ]; then
+        mkdir -p $HESTIA_BACKUP/conf/$MAIL_SYSTEM/
+    fi
+    if [ ! -z "$DNS_SYSTEM" ]; then
+        mkdir -p $HESTIA_BACKUP/conf/$DNS_SYSTEM/
+    fi
+    if [ ! -z "$PROXY_SYSTEM" ]; then
+        mkdir -p $HESTIA_BACKUP/conf/$PROXY_SYSTEM/
+    fi
+    if [ ! -z "$DB_SYSTEM" ]; then
+        mkdir -p $HESTIA_BACKUP/conf/$DB_SYSTEM/
+    fi
+    if [ ! -z "$FTP_SYSTEM" ]; then
+        mkdir -p $HESTIA_BACKUP/conf/$FTP_SYSTEM/
+    fi
+    if [ ! -z "$FIREWALL_SYSTEM" ]; then
+        mkdir -p $HESTIA_BACKUP/conf/$FIREWALL_SYSTEM/
+    fi
+    if [ ! -z "$FIREWALL_EXTENSION" ]; then
+        mkdir -p $HESTIA_BACKUP/conf/$FIREWALL_EXTENSION/
+    fi
+    if [ -e "/etc/ssh/sshd_config" ]; then
+        mkdir -p $HESTIA_BACKUP/conf/ssh/
+    fi
+
+    echo "[ * ] Backing up existing templates and configuration files..."
+
+    cp -rf $HESTIA/data/packages/* $HESTIA_BACKUP/packages/
+
+    cp -rf $HESTIA/data/templates/* $HESTIA_BACKUP/templates/
+
+    # Hestia Control Panel configuration files
+    cp -rf $HESTIA/conf/* $HESTIA_BACKUP/conf/hestia/
+
+    # System service configuration files (apache2, nginx, bind9, vsftpd, etc).
+    if [ ! -z "$WEB_SYSTEM" ]; then
+        cp -f /etc/$WEB_SYSTEM/*.conf $HESTIA_BACKUP/conf/$WEB_SYSTEM/
+        cp -f /etc/$WEB_SYSTEM/conf.d/*.conf $HESTIA_BACKUP/conf/$WEB_SYSTEM/
+    fi
+    if [ ! -z "$PROXY_SYSTEM" ]; then
+        cp -f /etc/$PROXY_SYSTEM/*.conf $HESTIA_BACKUP/conf/$PROXY_SYSTEM/
+        cp -f /etc/$PROXY_SYSTEM/conf.d/*.conf $HESTIA_BACKUP/conf/$PROXY_SYSTEM/
+        cp -f /etc/$PROXY_SYSTEM/conf.d/*.inc $HESTIA_BACKUP/conf/$PROXY_SYSTEM/
+    fi
+    if [ ! -z "$IMAP_SYSTEM" ]; then
+        cp -f /etc/$IMAP_SYSTEM/*.conf $HESTIA_BACKUP/conf/$IMAP_SYSTEM/
+        cp -f /etc/$IMAP_SYSTEM/conf.d/*.conf $HESTIA_BACKUP/conf/$IMAP_SYSTEM/
+    fi
+    if [ ! -z "$MAIL_SYSTEM" ]; then
+        cp -f /etc/$MAIL_SYSTEM/*.conf $HESTIA_BACKUP/conf/$MAIL_SYSTEM/
+    fi
+    if [ ! -z "$DNS_SYSTEM" ]; then
+        if [ "$DNS_SYSTEM" = "bind9" ]; then
+            cp -f /etc/bind/*.conf $HESTIA_BACKUP/conf/$DNS_SYSTEM/
+        fi
+    fi
+    if [ ! -z "$DB_SYSTEM" ]; then
+        cp -f /etc/$DB_SYSTEM/*.cnf $HESTIA_BACKUP/conf/$DB_SYSTEM/
+        cp -f /etc/$DB_SYSTEM/conf.d/*.cnf $HESTIA_BACKUP/conf/$DB_SYSTEM/
+    fi
+    if [ ! -z "$FTP_SYSTEM" ]; then
+        cp -f /etc/$FTP_SYSTEM.conf $HESTIA_BACKUP/conf/$FTP_SYSTEM/
+    fi
+    if [ ! -z "$FIREWALL_EXTENSION" ]; then
+        cp -f /etc/$FIREWALL_EXTENSION/*.conf $HESTIA_BACKUP/conf/$FIREWALL_EXTENSION/
+        cp -f /etc/$FIREWALL_EXTENSION/*.local $HESTIA_BACKUP/conf/$FIREWALL_EXTENSION/
+    fi
+    if [ -e "/etc/ssh/sshd_config" ]; then
+        cp -f /etc/ssh/sshd_config $HESTIA_BACKUP/conf/ssh/sshd_config
+    fi
 }
 
 upgrade_refresh_config() {
@@ -164,10 +247,33 @@ upgrade_start_routine() {
 
     # Upgrade to Version 1.2.0
     if [ $VERSION = "1.1.1" ] || [ $VERSION = "1.1.2" ]; then
+        source $HESTIA/install/upgrade/versions/previous/1.2.0.sh
+        VERSION="1.2.1"
+        upgrade_set_version $VERSION
+        upgrade_refresh_config
+    fi
+
+
+    # Upgrade to Version 1.2.1
+    if [ $VERSION = "1.2.0" ]; then
+        # Process steps which may not have correctly executed from v1.1.0.
+        echo
+        echo "[ ! ] Reprocessing steps from v1.1.0 due to a previous installer bug..."
+        echo
+        source $HESTIA/install/upgrade/versions/previous/1.1.0.sh
+        source $HESTIA/install/upgrade/versions/previous/1.2.0.sh
+        VERSION="1.2.1"
+        upgrade_refresh_config
+    fi
+
+
+    # Upgrade to Version 1.2.2
+    if [ $VERSION = "1.2.1" ]; then
         source $HESTIA/install/upgrade/versions/latest.sh
         VERSION="$new_version"
         upgrade_refresh_config
     fi
+
 
     #####################################################################
     #######     End version-specific upgrade instruction sets     #######

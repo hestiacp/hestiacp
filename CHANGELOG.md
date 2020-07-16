@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 ### Bugfixes
-- Improved quality of default web domain templates for Drupal.
+
  
 ## [1.2.1] - Service Release 1 (beta)
 ### Features

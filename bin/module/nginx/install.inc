@@ -60,10 +60,6 @@ EOL
         sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" $HESTIA/nginx/conf/nginx.conf
     fi
 
-    osal_service_enable $OSAL_SERVICE_NGINX
-    osal_service_start $OSAL_SERVICE_NGINX
-    check_result $? "Nginx start failed"
-
     osal_kv_write $HESTIA_CONF_MODULES/nginx.conf 'installed' '1'
     osal_kv_write $HESTIA_CONF_MODULES/nginx.conf 'description' 'Hestia Nginx module'
     osal_kv_write $HESTIA_CONF_MODULES/nginx.conf 'enabled' '1'

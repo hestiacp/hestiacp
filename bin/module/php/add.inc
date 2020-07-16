@@ -84,12 +84,8 @@ hestia_module_php_add() {
 
     # Check if required modules for apache2 are enabled
     if [ "$WEB_SYSTEM" = "apache2" ] || [ "$WEB_SYSTEM" = "httpd" ]; then
-        if [ ! $(osal_apache_module_isenabled 'proxy_fcgi') ]; then
-            osal_apache_module_enable 'proxy_fcgi'
-        fi
-        if [ ! $(osal_apache_module_isenabled 'setenvif') ]; then
-            osal_apache_module_enable 'setenvif'
-        fi
+        osal_apache_module_enable 'proxy_fcgi'
+        osal_apache_module_enable 'setenvif'
         $BIN/v-restart-web
     fi
 

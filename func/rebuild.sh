@@ -15,7 +15,7 @@ rebuild_user_conf() {
     chmod 660 $USER_DATA/stats.log
     
     # Update FNAME LNAME to NAME
-    if [ -z $NAME ]; then 
+    if [ -z "$NAME" ]; then 
         NAME="$FNAME $LNAME"
         sed -i "s/FNAME='$FNAME'/NAME='$NAME'/g" $USER_DATA/user.conf
         sed -i "/LNAME='$LNAME'/d" $USER_DATA/user.conf  

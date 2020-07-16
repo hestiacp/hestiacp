@@ -12,6 +12,9 @@ OSAL_PKG_APACHE=apache2
 OSAL_PKG_APACHE_EXTRA=
 OSAL_PKG_APACHE_MOD_RUID2=libapache2-mod-ruid2
 OSAL_PATH_APACHE_CONF=/etc/apache2
+OSAL_PATH_APACHE_CONF_D=/etc/apache2/conf.d
+OSAL_PATH_APACHE_MODS_ENABLED=/etc/apache2/mods-enabled
+OSAL_PATH_APACHE_MODS_AVAILABLE=/etc/apache2/mods-available
 
 # Bind
 OSAL_SERVICE_BIND=bind9

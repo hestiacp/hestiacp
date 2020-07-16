@@ -21,7 +21,3 @@ hestia_module_info() {
         echo "Installed       : no"
     fi
 }
-
-# If this files is _not_ being sourced, act immediately
-# (otherise, wait for hestia cli to call the main function)
-[[ $_ == $0 ]] && hestia_module_info $@

@@ -17,7 +17,3 @@ hestia_module_list() {
         fi
     done
 }
-
-# If this files is _not_ being sourced, act immediately
-# (otherise, wait for hestia cli to call the main function)
-[[ $_ == $0 ]] && hestia_module_list $@

@@ -59,7 +59,7 @@ class HestiaAuth implements Service, AuthInterface
     {
         $user = new User();
         $user->setUsername($this->hestia_user);
-        $user->setName($this->hestia_user . " (" . $hstuser['FNAME'] . " " . $hstuser['LNAME'] . ")");
+        $user->setName($this->hestia_user . " (" . $hstuser['NAME']. ")");
         $user->setRole('user');
         $user->setPermissions($this->permissions);
         $user->setHomedir('/');

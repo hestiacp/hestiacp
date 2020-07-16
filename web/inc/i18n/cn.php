@@ -573,9 +573,9 @@ $LANG['cn'] = array(
     'Use Web Domain SSL Certificate' => '采用网站域名SSL证书',
     'Webmail URL' => '网页邮箱网址',
     'MySQL Support' => 'MySQL 支持',
-    'phpMyAdmin URL' => '设置 phpMyAdmin 网址',
+    'phpMyAdmin URL' => 'phpMyAdmin别名',
     'PostgreSQL Support' => 'PostgreSQL 支持',
-    'phpPgAdmin URL' => '设置 phpPgAdmin 网址',
+    'phpPgAdmin URL' => 'phpPgAdmin别名',
     'Maximum Number Of Databases' => '数据库最大数量',
     'Current Number Of Databases' => '数据库当前数量',
     'Local backup' => '本地备份',
@@ -861,4 +861,36 @@ $LANG['cn'] = array(
     'Enable 2FA' => '启用两因素身份验证',
     'Please scan the code below in your 2FA application:' => '要完成两因素身份验证的设置，请扫描以下QR码<br />使用身份验证应用程序，例如 <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google身份验证器</a>):',
     '2FA Reset Code:' => '帐户恢复代码：',
+    
+        //list user 
+    'Name' => 'Name',
+    //Add / Edit user
+    'Contact' => 'Name',
+    'GREETINGS_GORDON' => "Hello, %s,\n",
+    
+    //List Mail Accounts
+    'Forwarding' => 'Forwarding',
+
+    //Cron Jobs
+    'Cron Job' => 'Cron Job',
+    //Edit server 
+    'Host' => 'Host',
+  
+      //list Backups
+    '1 backups' => '1 backups',
+    '%s backups' => '%s backups',
+    //list Firewall Rules
+    '1 firewall rule' => '1 firewall rule',
+    '%s firewall rules' => '%s firewall rules',
+    //list ip
+    '1 banned IP address' => '1 banned IP address',
+    '%s banned IP addresses' => '%s banned IP addresses', 
+    //list DNS
+    'Records_DNS' => 'Records',
+    //Dowload Backup
+    'BACKUP_DOWNLOAD_SCHEDULED' => 'Download for Backup has been scheduled.',
+    
+    'backend server' =>  'Backend Server',
+    'traffic' => 'Traffic',
+    'disk' => 'Disk',
 );

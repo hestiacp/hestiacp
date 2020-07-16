@@ -25,15 +25,14 @@ if ((!empty($_POST['user'])) && (empty($_POST['code']))) {
             exec ($cmd." ".$v_user." json", $output, $return_var);
             $data = json_decode(implode('', $output), true);
             $rkey = $data[$user]['RKEY'];
-            $fname = $data[$user]['FNAME'];
-            $lname = $data[$user]['LNAME'];
+            $name = $data[$user]['NAME'];
             $contact = $data[$user]['CONTACT'];
             $to = $data[$user]['CONTACT'];
             $subject = __('MAIL_RESET_SUBJECT',date("Y-m-d H:i:s"));
             $hostname = exec('hostname');
             $from = __('MAIL_FROM',$hostname);
-            if (!empty($fname)) {
-                $mailtext = __('GREETINGS_GORDON_FREEMAN',$fname,$lname);
+            if (!empty($name)) {
+                $mailtext = __('GREETINGS_GORDON',$name);
             } else {
                 $mailtext = __('GREETINGS');
             }

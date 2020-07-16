@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add system user
-# options: USER PASSWORD EMAIL [PACKAGE] [FNAME] [LNAME]
+# options: USER PASSWORD EMAIL [PACKAGE] [NAME]
 #
 # The function creates new user account.
 
@@ -14,8 +14,7 @@ user=$1
 password=$2; HIDE=2
 email=$3
 package=${4-default}
-fname=$5
-lname=$6
+name=$5
 
 # Includes
 source $HESTIA/func/main.sh
@@ -32,11 +31,12 @@ is_user_free() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'USER PASSWORD EMAIL [PACKAGE] [FNAME] [LNAME]'
+check_args '3' "$#" 'USER PASSWORD EMAIL [PACKAGE] [NAME] '
 is_format_valid 'user' 'email' 'package'
-if [ ! -z "$fname" ]; then
-    is_format_valid 'fname' 'lname'
+if [ ! -z "$name" ]; then
+    is_format_valid 'name' 
 fi
+
 is_user_free "$user"
 is_password_valid
 is_package_valid
@@ -176,8 +176,7 @@ else
     u_users=1
 fi
 
-echo "FNAME='$fname'
-LNAME='$lname'
+echo "NAME='$name'
 PACKAGE='$package'
 $pkg_data
 CONTACT='$email'
@@ -230,7 +229,7 @@ fi
 
 # Run template trigger
 if [ -x "$HESTIA/data/packages/$package.sh" ]; then
-    $HESTIA/data/packages/$package.sh "$user" "$email" "$fname" "$lname"
+    $HESTIA/data/packages/$package.sh "$user" "$email" "$name"
 fi
 
 # Adding jailed sftp env

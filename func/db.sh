@@ -1,19 +1,48 @@
+# Global
+database_set_default_ports() {
+
+    # Set default ports for MySQL and PostgreSQL
+    mysql_default="3306"
+    pgsql_default="5432"
+
+    # Handle missing values for both $PORT and $port
+    # however don't override both at once or custom ports will be overridden.
+
+    if [ -z "$PORT" ]; then 
+        if [ "$type" = 'mysql' ]; then 
+            PORT="$mysql_default"
+        fi
+        if [ "$type" = 'pgsql' ]; then
+            PORT="$pgsql_default"
+        fi
+    fi
+    if [ -z "$port" ]; then 
+        if [ "$type" = 'mysql' ]; then 
+            port="$mysql_default"
+        fi
+        if [ "$type" = 'pgsql' ]; then
+            port="$pgsql_default"
+        fi
+    fi
+}
+
 # MySQL
 mysql_connect() {
     host_str=$(grep "HOST='$1'" $HESTIA/conf/mysql.conf)
     parse_object_kv_list "$host_str"
+    if [ -z $PORT ]; then PORT=3306; fi
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
         echo "Error: mysql config parsing failed"
         log_event "$E_PARSING" "$ARGUMENTS"
         exit $E_PARSING
     fi
-
     mycnf="$HESTIA/conf/.mysql.$HOST"
     if [ ! -e "$mycnf" ]; then
         echo "[client]">$mycnf
         echo "host='$HOST'" >> $mycnf
         echo "user='$USER'" >> $mycnf
         echo "password='$PASSWORD'" >> $mycnf
+        echo "port='$PORT'" >> $mycnf
         chmod 600 $mycnf
     else
         mypw=$(grep password $mycnf|cut -f 2 -d \')
@@ -22,6 +51,7 @@ mysql_connect() {
             echo "host='$HOST'" >> $mycnf
             echo "user='$USER'" >> $mycnf
             echo "password='$PASSWORD'" >> $mycnf
+            echo "port='$PORT'" >> $mycnf
             chmod 660 $mycnf
         fi
     fi
@@ -73,13 +103,14 @@ psql_connect() {
     host_str=$(grep "HOST='$1'" $HESTIA/conf/pgsql.conf)
     parse_object_kv_list "$host_str"
     export PGPASSWORD="$PASSWORD"
+    if [ -z $PORT ]; then PORT=5432; fi
     if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ] || [ -z $TPL ]; then
         echo "Error: postgresql config parsing failed"
         log_event "$E_PARSING" "$ARGUMENTS"
         exit $E_PARSING
     fi
-
-    psql -h $HOST -U $USER -c "SELECT VERSION()" > /dev/null 2>/tmp/e.psql
+    
+    psql -h $HOST -U $USER -p $PORT -c "SELECT VERSION()" > /dev/null 2>/tmp/e.psql
     if [ '0' -ne "$?" ]; then
         if [ "$notify" != 'no' ]; then
             echo -e "Can't connect to PostgreSQL $HOST\n$(cat /tmp/e.psql)" |\

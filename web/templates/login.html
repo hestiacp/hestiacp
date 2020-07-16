@@ -17,52 +17,22 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="padding: 12px 0 0 2px;">
+                                            <td style="padding: 12px 0 5px 2px;">
                                                 <?php print __('Username');?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input tabindex="1" type="text" size="20px" style="width:240px;" name="user" class="vst-input">
+                                                <input tabindex="1" type="text" size="20px" style="width:240px;" name="user" class="vst-input" autofocus />
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="padding: 12px 0 0 2px;">
-                                                <?php print __('Password');?>
-                                                <div style="padding:0 6px 0px 14px; float:right;">
-                                                    <a tabindex="5" class="vst-advanced" href="/reset/">
-                                                        <?php print __('forgot password');?>
-                                                    </a>
-                                                </div>
+                                            <td height="10px">
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>
-                                                <input tabindex="2" type="password" size="20px"  style="width:240px;" name="password" class="vst-input">
-                                            </td>
-                                        </tr>
-                                        <tr class="twofa" style="display:none;">
-                                            <td style="padding-top: 12px; padding-left:2px;">
-                                                <?php print __('2FA Token');?>
-                                                <div style="padding:0 6px 0px 14px; float:right;">
-                                                    <a tabindex="5" class="vst-advanced" href="/reset2fa/">
-                                                        <?php print __('Forgot token');?>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr class="twofa" style="display:none;">
-                                            <td>
-                                                <input tabindex="3" type="text" size="20px" style="width:240px;" name="twofa" class="vst-input">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td height="28px">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="padding: 0 0 12px 0;">
-                                                    <button tabindex="3" type="submit" class="button"><?php print __('Log in');?>&nbsp;&nbsp;&nbsp;<i class="fas fa-sign-in-alt"></i></button>
+                                            <td style="padding: 0 0 5px 0;">
+                                                <button tabindex="3" type="submit" class="button"><?php print __('Next');?>&nbsp;&nbsp;&nbsp;<i class="fas fa-sign-in-alt"></i></button>
                                             </td>
                                         </tr>
                                     </table>
@@ -72,7 +42,7 @@
                         <tr>
                             <td colspan=2>
                                 <div class="login-bottom">
-                                    <div style="height:20px"><?php if (isset($ERROR)) echo $ERROR ?></div>
+                                    <div style="height:20px"><?php if (isset($error)) echo $error ?></div>
                                 </div>
                             </td>
                         </tr>
@@ -80,23 +50,6 @@
                 </tr>
             </table>
         </center>
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('#form_login').on('input', 'input[name="user"]', function() {
-                    var username = this.value;
-                    $.ajax({
-                        type: 'GET',
-                        url: '/inc/2fa/active.php?user=' + username,
-                        complete: function(xhr) {
-                            if(xhr.status == '200'){
-                                $('.twofa').show();
-                            }else if(xhr.status == '404'){
-                                $('.twofa').hide();
-                            }
-                        }
-                    });
-                });
-            });
-        </script>
+
     </body>
 </html>

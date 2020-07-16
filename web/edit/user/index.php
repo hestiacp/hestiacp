@@ -33,8 +33,7 @@ $v_password = "";
 $v_email = $data[$v_username]['CONTACT'];
 $v_package = $data[$v_username]['PACKAGE'];
 $v_language = $data[$v_username]['LANGUAGE'];
-$v_fname = $data[$v_username]['FNAME'];
-$v_lname = $data[$v_username]['LNAME'];
+$v_name = $data[$v_username]['NAME'];
 $v_shell = $data[$v_username]['SHELL'];
 $v_twofa = $data[$v_username]['TWOFA'];
 $v_qrcode = $data[$v_username]['QRCODE'];
@@ -58,6 +57,10 @@ if ( $v_suspended == 'yes' ) {
 }
 $v_time = $data[$v_username]['TIME'];
 $v_date = $data[$v_username]['DATE'];
+
+if(empty($v_phpcli)){
+   $v_phpcli = substr(DEFAULT_PHP_VERSION,4);
+}
 
 // List packages
 exec (HESTIA_CMD."v-list-user-packages json", $output, $return_var);
@@ -180,14 +183,12 @@ if (!empty($_POST['save'])) {
     }
 
     // Change full name
-    if (($v_fname != $_POST['v_fname']) || ($v_lname != $_POST['v_lname']) && (empty($_SESSION['error_msg']))) {
-        $v_fname = escapeshellarg($_POST['v_fname']);
-        $v_lname = escapeshellarg($_POST['v_lname']);
-        exec (HESTIA_CMD."v-change-user-name ".escapeshellarg($v_username)." ".$v_fname." ".$v_lname, $output, $return_var);
+    if ($v_name != $_POST['v_name']){
+        $v_name = escapeshellarg($_POST['v_name']);
+        exec (HESTIA_CMD."v-change-user-name ".escapeshellarg($v_username). " ". "$v_name", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
-        $v_fname = $_POST['v_fname'];
-        $v_lname = $_POST['v_lname'];
+        $v_name = $_POST['v_name'];
     }
 
     // Change NameServers

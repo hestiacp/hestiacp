@@ -859,4 +859,35 @@ $LANG['nl'] = array(
     'Enable 2FA' => 'Schakel tweefactorauthenticatie in',
     'Please scan the code below in your 2FA application:' => 'Scan de QR-code hieronder om het instellen van tweefactorauthenticatie te voltooien<br />met behulp van een authenticatie-app (zoals <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google Authenticator</a>):',
     '2FA Reset Code:' => 'Accountherstelcode:',
+    
+        //list user 
+    'Name' => 'Naam',
+    //Add / Edit user
+    'Contact' => 'Naam',
+    'GREETINGS_GORDON' => "Hallo, %s,\n",
+    
+    //List Mail Accounts
+    'Forwarding' => 'Doorsturen',
+
+    //Cron Jobs
+    'Cron Job' => 'Cron Job',
+    //Edit server 
+    'Host' => 'Host',
+  
+      //list Backups
+    '1 backups' => '1 backup',
+    '%s backups' => '%s backups',
+    //list Firewall Rules
+    '1 firewall rule' => '1 firewall regel',
+    '%s firewall rules' => '%s firewall regels',
+    //list ip
+    '1 banned IP address' => '1 geblokeerde IP address',
+    '%s banned IP addresses' => '%s geblokeerde IP addresses', 
+    //list DNS
+    'Records_DNS' => 'Records',
+    //Dowload Backup
+    'BACKUP_DOWNLOAD_SCHEDULED' => 'Downloaden van Backup is in geplaned',
+
+    'traffic' => 'Traffic',
+    'disk' => 'Disk',
 );

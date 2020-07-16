@@ -856,4 +856,40 @@ $LANG['es'] = array(
     'Enable 2FA' => 'Habilitar autenticación de dos factores',
     'Please scan the code below in your 2FA application:' => 'Para terminar de configurar la autenticación de dos factores, escanee el código QR a continuación<br />usando una aplicación de autenticación (como <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Autenticador de Google</a>):',
     '2FA Reset Code:' => 'Código de recuperación de cuenta:',
+    
+    'Records_DNS' => 'Registros',
+    'backend server' => 'Backend Server',
+    
+    //list user 
+    'Name' => 'Name',
+    //Add / Edit user
+    'Contact' => 'Name',
+    'GREETINGS_GORDON' => "Hello, %s,\n",
+    
+    //List Mail Accounts
+    'Forwarding' => 'Reenvío',
+
+    //Cron Jobs
+    'Cron Job' => 'Tarea Programada',
+    //Edit server 
+    'Host' => 'Host',
+  
+      //list Backups
+    '1 backups' => '1 copia de seguridad',
+    '%s backups' => '%s copias de seguridad',
+    //list Firewall Rules
+    '1 firewall rule' => '1 regla de firewall',
+    '%s firewall rules' => '%s reglas de firewall',
+    //list ip
+    '1 banned IP address' => '1 dirección IP prohibida',
+    '%s banned IP addresses' => '%s direcciones IP prohibidas', 
+    //list DNS
+    'Records_DNS' => 'Registros',
+    //Dowload Backup
+    'BACKUP_DOWNLOAD_SCHEDULED' => 'La descarga para copia de seguridad ha sido programada.',
+    
+    'backend server' =>  'Servidor de Backend',
+
+    'traffic' => 'Traffic',
+    'disk' => 'Disk',
 );

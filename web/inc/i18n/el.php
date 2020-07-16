@@ -850,4 +850,36 @@ $LANG['el'] = array(
     'Enable 2FA' => 'Ενεργοποίηση ελέγχου ταυτότητας δύο παραγόντων',
     'Please scan the code below in your 2FA application:' => 'Για να ολοκληρώσετε τη ρύθμιση ελέγχου ταυτότητας δύο παραγόντων, σαρώστε τον κωδικό QR παρακάτω<br />χρησιμοποιώντας μια εφαρμογή ελέγχου ταυτότητας (όπως <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Επαληθευτής Google</a>):',
     '2FA Reset Code:' => 'Κωδικός ανάκτησης λογαριασμού:',
+    
+    
+            //list user 
+    'Name' => 'Name',
+    //Add / Edit user
+    'Contact' => 'Name',
+    'GREETINGS_GORDON' => "Hello, %s,\n",
+    
+    //List Mail Accounts
+    'Forwarding' => 'Forwarding',
+
+    //Cron Jobs
+    'Cron Job' => 'Cron Job',
+    //Edit server 
+    'Host' => 'Host',
+  
+      //list Backups
+    '1 backups' => '1 backups',
+    '%s backups' => '%s backups',
+    //list Firewall Rules
+    '1 firewall rule' => '1 firewall rule',
+    '%s firewall rules' => '%s firewall rules',
+    //list ip
+    '1 banned IP address' => '1 banned IP address',
+    '%s banned IP addresses' => '%s banned IP addresses', 
+    //list DNS
+    'Records_DNS' => 'Records',
+    //Dowload Backup
+    'BACKUP_DOWNLOAD_SCHEDULED' => 'Download for Backup has been scheduled.',
+    'backend server' =>  'Backend Server',
+    'traffic' => 'Traffic',
+    'disk' => 'Disk',
 );

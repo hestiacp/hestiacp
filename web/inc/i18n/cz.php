@@ -849,4 +849,35 @@ $LANG['cz'] = array(
     'Enable 2FA' => 'Enable two-factor authentication',
     'Please scan the code below in your 2FA application:' => 'To finish setting up two-factor authentication, scan the QR code below<br />using an authentication app (such as <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google Authenticator</a>):',
     '2FA Reset Code:' => 'Account Recovery Code:',
+        //list user 
+    'Name' => 'Name',
+    //Add / Edit user
+    'Contact' => 'Name',
+    'GREETINGS_GORDON' => "Hello, %s,\n",
+    
+    //List Mail Accounts
+    'Forwarding' => 'Forwarding',
+
+    //Cron Jobs
+    'Cron Job' => 'Cron Job',
+    //Edit server 
+    'Host' => 'Host',
+  
+      //list Backups
+    '1 backups' => '1 backups',
+    '%s backups' => '%s backups',
+    //list Firewall Rules
+    '1 firewall rule' => '1 firewall rule',
+    '%s firewall rules' => '%s firewall rules',
+    //list ip
+    '1 banned IP address' => '1 banned IP address',
+    '%s banned IP addresses' => '%s banned IP addresses', 
+    //list DNS
+    'Records_DNS' => 'Records',
+    //Dowload Backup
+    'BACKUP_DOWNLOAD_SCHEDULED' => 'Download for Backup has been scheduled.',
+    
+    'backend server' =>  'Backend Server',
+    'traffic' => 'Traffic',
+    'disk' => 'Disk',
 );

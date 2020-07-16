@@ -101,6 +101,11 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
         echo "$local_ip" > $HOMEDIR/$user/conf/mail/$domain/ip
     fi
 
+    # Touch mailhelo.conf if it doesnt exist
+    if [ ! -f "/etc/exim4/mailhelo.conf" }; then
+        touch /etc/exim4/mailhelo.conf
+    fi
+
     # Setting HELO for mail domain
     if [ ! -z "$local_ip" ]; then
         IP_RDNS=$(is_ip_rdns_valid "$local_ip")

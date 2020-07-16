@@ -15,7 +15,7 @@ if ($_SESSION['user'] != 'admin') {
 if (!empty($_POST['save'])) {
 
     // Set success message
-    $_SESSION['ok_msg'] = __('Info (Read-only mode): Crontab can be edited only trough ssh');
+    $_SESSION['ok_msg'] = _('Info (Read-only mode): Crontab can be edited only trough ssh');
 
 }
 

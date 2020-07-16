@@ -3,28 +3,28 @@
         <div class="l-unit-toolbar__buttonstrip">
         <?php
           if ($user == 'admin') {
-            echo '<a href="/add/user/" id="btn-create" class="ui-button cancel" title="'.__('Add User').'"><i class="fas fa-plus-circle status-icon green"></i>'.__('Add User').'</a>&nbsp;';
-            echo '<a href="/list/package/" class="ui-button cancel" title="'.__('Packages').'"><i class="fas fa-box-open status-icon orange"></i>'.__('Packages').'</a>&nbsp;';
+            echo '<a href="/add/user/" id="btn-create" class="ui-button cancel" title="'._('Add User').'"><i class="fas fa-plus-circle status-icon green"></i>'._('Add User').'</a>&nbsp;';
+            echo '<a href="/list/package/" class="ui-button cancel" title="'._('Packages').'"><i class="fas fa-box-open status-icon orange"></i>'._('Packages').'</a>&nbsp;';
           } else {
               if ((isset($_SESSION['WEB_SYSTEM'])) && (!empty($_SESSION['WEB_SYSTEM']))) {
                   if (intval($panel[$user]['WEB_DOMAINS']) > 0 || $panel[$user]['WEB_DOMAINS'] == 'unlimited') {
-                      echo '<a href="/add/web/" id="btn-create" class="ui-button cancel" title="'.__('Add Web Domain').'"><i class="fas fa-plus-circle status-icon green"></i>'.__('Add Web Domain').'</a>';
+                      echo '<a href="/add/web/" id="btn-create" class="ui-button cancel" title="'._('Add Web Domain').'"><i class="fas fa-plus-circle status-icon green"></i>'._('Add Web Domain').'</a>';
                   }
               }
           }
         ?>
       </div>
         <ul class="context-menu sort-order animated fadeIn" style="display:none;">
-          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
-          <li entity="sort-name"><span class="name"><?=__('Username')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
-          <li entity="sort-disk" sort_as_int="1"><span class="name"><?=__('Disk')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
-          <li entity="sort-bandwidth" sort_as_int="1"><span class="name"><?=__('Bandwidth')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=_('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-name"><span class="name"><?=_('Username')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-disk" sort_as_int="1"><span class="name"><?=_('Disk')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-bandwidth" sort_as_int="1"><span class="name"><?=_('Bandwidth')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
         </ul>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
               <td class="sort-by">
-                  <?=__('sort by');?>: <span><b><?=__('Date')?> <i class="fas fa-sort-amount-down"></i></b></span>
+                  <?=_('sort by');?>: <span><b><?=_('Date')?> <i class="fas fa-sort-amount-down"></i></b></span>
               </td>
               <td class="l-sort-toolbar__search-box">
                   <form action="/search/" method="get">
@@ -38,17 +38,17 @@
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                   <div class="l-select">
                     <select class="" name="action">
-                      <option value=""><?=__('apply to selected')?></option>
-                      <option value="rebuild"><?=__('rebuild')?></option>
-                      <option value="rebuild web"><?=__('rebuild web')?></option>
-                      <option value="rebuild dns"><?=__('rebuild dns')?></option>
-                      <option value="rebuild mail"><?=__('rebuild mail')?></option>
-                      <option value="rebuild db"><?=__('rebuild db')?></option>
-                      <option value="rebuild cron"><?=__('rebuild cron')?></option>
-                      <option value="update counters"><?=__('update counters')?></option>
-                      <option value="suspend"><?= __('suspend')?></option>
-                      <option value="unsuspend"><?=__('unsuspend')?></option>
-                      <option value="delete"><?=__('delete')?></option>
+                      <option value=""><?=_('apply to selected')?></option>
+                      <option value="rebuild"><?=_('rebuild')?></option>
+                      <option value="rebuild web"><?=_('rebuild web')?></option>
+                      <option value="rebuild dns"><?=_('rebuild dns')?></option>
+                      <option value="rebuild mail"><?=_('rebuild mail')?></option>
+                      <option value="rebuild db"><?=_('rebuild db')?></option>
+                      <option value="rebuild cron"><?=_('rebuild cron')?></option>
+                      <option value="update counters"><?=_('update counters')?></option>
+                      <option value="suspend"><?= _('suspend')?></option>
+                      <option value="unsuspend"><?=_('unsuspend')?></option>
+                      <option value="delete"><?=_('delete')?></option>
                     </select>
                   </div>
                   <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
@@ -67,18 +67,18 @@
                   <div class="clearfix l-unit__stat-col--left super-compact">
                     <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
                   </div>
-                  <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print __('Name');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print _('Name');?></b></div>
                   <div class="clearfix l-unit__stat-col--left compact-3"><b>&nbsp;</b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Package');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><?php print __('IPs');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-hdd" title="<?php print __('Disk');?>"></i></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-exchange-alt" title="<?php print __('Bandwidth');?>"></i></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-globe-americas" title="<?php print __('Web Domains');?>"></i></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-mail-bulk" title="<?php print __('Mail Domains');?>"></i></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-atlas" title="<?php print __('DNS Domains');?>"></i></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-database" title="<?php print __('Databases');?>"></i></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-clock" title="<?php print __('Cron Jobs');?>"></i></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-file-archive" title="<?php print __('Backups');?>"></i></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print _('Package');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><?php print _('IPs');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-hdd" title="<?php print _('Disk');?>"></i></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-exchange-alt" title="<?php print _('Bandwidth');?>"></i></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-globe-americas" title="<?php print _('Web Domains');?>"></i></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-mail-bulk" title="<?php print _('Mail Domains');?>"></i></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-atlas" title="<?php print _('DNS Domains');?>"></i></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-database" title="<?php print _('Databases');?>"></i></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-clock" title="<?php print _('Cron Jobs');?>"></i></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-file-archive" title="<?php print _('Backups');?>"></i></b></div>
              </div>
           </div>
 
@@ -103,15 +103,15 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
           <div class="clearfix l-unit__stat-col--left super-compact">
             <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="user[]" value="<?=$key?>">
           </div>
-              <div class="clearfix l-unit__stat-col--left wide-3 userlist-username"><b><a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('login as')?>"><?php echo $data[$key]['FNAME'];?> <span style="font-weight: normal !important;">(<?=$key?>)</span></b></a>
+              <div class="clearfix l-unit__stat-col--left wide-3 userlist-username"><b><a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('login as')?>"><?php echo $data[$key]['FNAME'];?> <span style="font-weight: normal !important;">(<?=$key?>)</span></b></a>
                 <br />
-                <span class="userlist-email"><b><?=__('Email')?>:</b> <?=$data[$key]['CONTACT']?></span>
+                <span class="userlist-email"><b><?=_('Email')?>:</b> <?=$data[$key]['CONTACT']?></span>
               </div>
               <!-- START QUICK ACTION TOOLBAR AREA -->
               <div class="clearfix l-unit__stat-col--left text-right compact-3">
                     <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                         <div class="actions-panel clearfix">
-                          <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('Editing User')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+                          <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing User')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
                         </div>
                       </div>
               </div>
@@ -139,9 +139,9 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php
               if ( $i == 1) {
-                echo __('1 user account');
+                echo _('1 user account');
               } else {
-                echo __('%s user accounts',$i);
+                echo _('%s user accounts',$i);
               }
             ?>
           </div>

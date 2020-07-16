@@ -16,12 +16,12 @@ if (!empty($_POST['ok'])) {
     }
 
     // Check empty fields
-    if ((!isset($_POST['v_min'])) || ($_POST['v_min'] == '')) $errors[] = __('minute');
-    if ((!isset($_POST['v_hour'])) || ($_POST['v_hour'] == '')) $errors[] = __('hour');
-    if ((!isset($_POST['v_day'])) || ($_POST['v_day'] == '')) $errors[] = __('day');
-    if ((!isset($_POST['v_month'])) || ($_POST['v_month'] == '')) $errors[] = __('month');
-    if ((!isset($_POST['v_wday'])) || ($_POST['v_wday'] == '')) $errors[] = __('day of week');
-    if ((!isset($_POST['v_cmd'])) || ($_POST['v_cmd'] == '')) $errors[] = __('cmd');
+    if ((!isset($_POST['v_min'])) || ($_POST['v_min'] == '')) $errors[] = _('minute');
+    if ((!isset($_POST['v_hour'])) || ($_POST['v_hour'] == '')) $errors[] = _('hour');
+    if ((!isset($_POST['v_day'])) || ($_POST['v_day'] == '')) $errors[] = _('day');
+    if ((!isset($_POST['v_month'])) || ($_POST['v_month'] == '')) $errors[] = _('month');
+    if ((!isset($_POST['v_wday'])) || ($_POST['v_wday'] == '')) $errors[] = _('day of week');
+    if ((!isset($_POST['v_cmd'])) || ($_POST['v_cmd'] == '')) $errors[] = _('cmd');
     if (!empty($errors[0])) {
         foreach ($errors as $i => $error) {
             if ( $i == 0 ) {
@@ -30,7 +30,7 @@ if (!empty($_POST['ok'])) {
                 $error_msg = $error_msg.", ".$error;
             }
         }
-        $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
+        $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
     }
 
     // Protect input
@@ -50,7 +50,7 @@ if (!empty($_POST['ok'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('CRON_CREATED_OK');
+        $_SESSION['ok_msg'] = _('CRON_CREATED_OK');
         unset($v_min);
         unset($v_hour);
         unset($v_day);

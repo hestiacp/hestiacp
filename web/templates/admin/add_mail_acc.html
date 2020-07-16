@@ -1,10 +1,10 @@
 <div class="l-center edit">
         <div class="l-sort clearfix">
           <div class="l-unit-toolbar__buttonstrip">
-            <a class="ui-button cancel" id="btn-back" href="javascript:window.history.back();"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+            <a class="ui-button cancel" id="btn-back" href="javascript:window.history.back();"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
+            <a href="#" class="ui-button" title="<?=_('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
           </div>
         </div>
       </div>
@@ -28,7 +28,7 @@
                     <table class="data-col2" width="440px">
                         <tr>
                             <td class="step-top">
-                                <span class="page-title"><?=__('Adding Mail Account')?></span>
+                                <span class="page-title"><?=_('Adding Mail Account')?></span>
                             </td>
                         </tr>
                         <tr>
@@ -46,7 +46,7 @@
                         </tr>
                         <tr>
                             <td class="vst-text step-top">
-                                <?php print __('Domain');?>
+                                <?php print _('Domain');?>
                             </td>
                         </tr>
                         <tr>
@@ -57,7 +57,7 @@
                         </tr>
                         <tr>
                             <td class="vst-text input-label">
-                                <?php print __('Account');?>
+                                <?php print _('Account');?>
                             </td>
                         </tr>
                         <tr>
@@ -67,7 +67,7 @@
                         </tr>
                         <tr>
                             <td class="vst-text input-label">
-                                <?php print __('Password');?> / <a href="javascript:randomString();" class="generate"><?php print __('generate');?></a>
+                                <?php print _('Password');?> / <a href="javascript:randomString();" class="generate"><?php print _('generate');?></a>
                             </td>
                         </tr>
                         <tr>
@@ -77,7 +77,7 @@
                         </tr>
                         <tr>
                             <td class="vst-text input-label">
-                                <a href="javascript:elementHideShow('advtable');" class="vst-advanced"> <?php print __('Advanced options');?>&nbsp;<i class="fas fa-arrow-circle-right"></i></a>
+                                <a href="javascript:elementHideShow('advtable');" class="vst-advanced"> <?php print _('Advanced options');?>&nbsp;<i class="fas fa-arrow-circle-right"></i></a>
                             </td>
                         </tr>
                         <tr>
@@ -85,7 +85,7 @@
                                 <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
                                     <tr>
                                         <td class="vst-text input-label">
-                                            <?php print __('Quota');?> <span class="optional">(<?=__('in megabytes')?>)</span>
+                                            <?php print _('Quota');?> <span class="optional">(<?=_('in megabytes')?>)</span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -96,7 +96,7 @@
                                     </tr>
                                 <tr>
                                     <td class="vst-text input-label">
-                                        <?php print __('Aliases');?> <span class="optional">(<?=__('use local-part')?>)</span>
+                                        <?php print _('Aliases');?> <span class="optional">(<?=_('use local-part')?>)</span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -106,7 +106,7 @@
                                 </tr>
                                 <tr>
                                     <td class="vst-text input-label">
-                                        <?php print __('Forward to');?> <span class="optional">(<?=__('one or more email addresses')?>)</span>
+                                        <?php print _('Forward to');?> <span class="optional">(<?=_('one or more email addresses')?>)</span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -116,7 +116,7 @@
                                 </tr>
                                 <tr>
                                     <td class="vst-text input-label">
-                                        <label><input type="checkbox" size="20" class="vst-checkbox" name="v_fwd_only" <?php if ($v_fwd_only == 'yes') echo "checked=yes" ?>> <?php print __('Do not store forwarded mail');?></label>
+                                        <label><input type="checkbox" size="20" class="vst-checkbox" name="v_fwd_only" <?php if ($v_fwd_only == 'yes') echo "checked=yes" ?>> <?php print _('Do not store forwarded mail');?></label>
                                     </td>
                                 </tr>
                             </table>
@@ -124,7 +124,7 @@
                     </tr>
                     <tr>
                         <td class="vst-text input-label">
-                            <?php print __('Send login credentials to email address') ?>
+                            <?php print _('Send login credentials to email address') ?>
                         </td>
                     </tr>
                     <tr>
@@ -144,55 +144,55 @@
                         <tr>
                             <td colspan="2">
                                 <select id="mail_configuration" class="vst-list flat">
-                                    <option v_type="hostname" domain="<?=$v_domain?>"><?=__('Use domain hostname')?></option>
-                                    <option v_type="starttls"><?=__('Use STARTTLS')?></option>
-                                    <option v_type="ssl"><?=__('Use SSL / TLS')?></option>
-                                    <option v_type="no_encryption" domain="<?=htmlentities(trim($v_domain, "'"))?>" no_encryption="<?=__('No encryption')?>"><?=__('No encryption')?></option>
+                                    <option v_type="hostname" domain="<?=$v_domain?>"><?=_('Use domain hostname')?></option>
+                                    <option v_type="starttls"><?=_('Use STARTTLS')?></option>
+                                    <option v_type="ssl"><?=_('Use SSL / TLS')?></option>
+                                    <option v_type="no_encryption" domain="<?=htmlentities(trim($v_domain, "'"))?>" no_encryption="<?=_('No encryption')?>"><?=_('No encryption')?></option>
                                 </select>
                             </td>
                         </tr>
                         <tr>
-                            <td><?=__('Username')?>:</td>
+                            <td><?=_('Username')?>:</td>
                             <td><div><span id="v_account">example</span>@<?=htmlentities(trim($v_domain, "'"))?></div></td>
                         </tr>
                         <tr>
-                            <td><?=__('Password')?>:</td>
+                            <td><?=_('Password')?>:</td>
                             <td><div id="v_password">******</div></td>
                         </tr>
                         <tr>
-                            <td><?=__('IMAP hostname')?>:</td>
+                            <td><?=_('IMAP hostname')?>:</td>
                             <td><div id="td_imap_hostname">mail.<?=$v_domain?></div></td>
                         </tr>
                         <tr>
-                            <td><?=__('IMAP port')?>:</td>
+                            <td><?=_('IMAP port')?>:</td>
                             <td><div id="td_imap_port">143</div></td>
                         </tr>
                         <tr>
-                            <td><?=__('IMAP security')?>:</td>
-                            <td><div id="td_imap_encryption"><?=__('STARTTLS')?></div></td>
+                            <td><?=_('IMAP security')?>:</td>
+                            <td><div id="td_imap_encryption"><?=_('STARTTLS')?></div></td>
                         </tr>
                         <tr>
-                            <td><?=__('IMAP auth method')?>:</td>
-                            <td><div><?=__('Normal password')?></div></td>
+                            <td><?=_('IMAP auth method')?>:</td>
+                            <td><div><?=_('Normal password')?></div></td>
                         </tr>
                         <tr>
-                            <td><?=__('SMTP hostname')?>:</td>
+                            <td><?=_('SMTP hostname')?>:</td>
                             <td><div id="td_smtp_hostname">mail.<?=$v_domain?></div></td>
                         </tr>
                         <tr>
-                            <td><?=__('SMTP port')?>:</td>
+                            <td><?=_('SMTP port')?>:</td>
                             <td><div id="td_smtp_port">587</div></td>
                         </tr>
                         <tr>
-                            <td><?=__('SMTP security')?>:</td>
-                            <td><div id="td_smtp_encryption"><?=__('STARTTLS')?></div></td>
+                            <td><?=_('SMTP security')?>:</td>
+                            <td><div id="td_smtp_encryption"><?=_('STARTTLS')?></div></td>
                         </tr>
                         <tr>
-                            <td><?=__('SMTP auth method')?>:</td>
-                            <td><div><?=__('Normal password')?></div></td>
+                            <td><?=_('SMTP auth method')?>:</td>
+                            <td><div><?=_('Normal password')?></div></td>
                         </tr>
                         <tr>
-                            <td><?=__('Webmail URL')?>:</td>
+                            <td><?=_('Webmail URL')?>:</td>
                             <td><div><a class="vst" href="http://<?=$v_webmail_alias?>" target="_blank">http://<?=$v_webmail_alias?> <i></i></a></div></td>
                         </tr>
                     </table>

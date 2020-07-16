@@ -173,7 +173,7 @@ if (!empty($_POST['save'])) {
     // Change contact email
     if (($v_email != $_POST['v_email']) && (empty($_SESSION['error_msg']))) {
         if (!filter_var($_POST['v_email'], FILTER_VALIDATE_EMAIL)) {
-            $_SESSION['error_msg'] = __('Please enter valid email address.');
+            $_SESSION['error_msg'] = _('Please enter valid email address.');
         } else {
             $v_email = escapeshellarg($_POST['v_email']);
             exec (HESTIA_CMD."v-change-user-contact ".escapeshellarg($v_username)." ".$v_email, $output, $return_var);
@@ -225,7 +225,7 @@ if (!empty($_POST['save'])) {
 
     // Set success message
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('Changes has been saved.');
+        $_SESSION['ok_msg'] = _('Changes has been saved.');
     }
 }
 

@@ -16,10 +16,10 @@ if (!empty($_POST['ok'])) {
     }
 
     // Check for empty fields
-    if (empty($_POST['v_domain'])) $errors[] = __('domain');
-    if (empty($_POST['v_ip'])) $errors[] = __('ip');
-    if ((!empty($_POST['v_ssl'])) && (empty($_POST['v_ssl_crt']))&& (empty($_POST['v_letsencrypt']))) $errors[] = __('ssl certificate');
-    if ((!empty($_POST['v_ssl'])) && (empty($_POST['v_ssl_key']))&& (empty($_POST['v_letsencrypt']))) $errors[] = __('ssl key');
+    if (empty($_POST['v_domain'])) $errors[] = _('domain');
+    if (empty($_POST['v_ip'])) $errors[] = _('ip');
+    if ((!empty($_POST['v_ssl'])) && (empty($_POST['v_ssl_crt']))&& (empty($_POST['v_letsencrypt']))) $errors[] = _('ssl certificate');
+    if ((!empty($_POST['v_ssl'])) && (empty($_POST['v_ssl_key']))&& (empty($_POST['v_letsencrypt']))) $errors[] = _('ssl key');
     if (!empty($errors[0])) {
         foreach ($errors as $i => $error) {
             if ( $i == 0 ) {
@@ -28,14 +28,14 @@ if (!empty($_POST['ok'])) {
                 $error_msg = $error_msg.", ".$error;
             }
         }
-        $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
+        $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
     }
 
     // Check stats password length
     if ((!empty($v_stats)) && (empty($_SESSION['error_msg']))) {
         if (!empty($_POST['v_stats_user'])) {
             $pw_len = strlen($_POST['v_stats_password']);
-            if ($pw_len < 6 ) $_SESSION['error_msg'] = __('Password is too short.',$error_msg);
+            if ($pw_len < 6 ) $_SESSION['error_msg'] = _('Password is too short.',$error_msg);
         }
     }
 
@@ -254,7 +254,7 @@ if (!empty($_POST['ok'])) {
         $v_ftp_users_updated = array();
         foreach ($_POST['v_ftp_user'] as $i => $v_ftp_user_data) {
             if ($v_ftp_user_data['is_new'] == 1) {
-                if ((!empty($v_ftp_user_data['v_ftp_email'])) && (!filter_var($v_ftp_user_data['v_ftp_email'], FILTER_VALIDATE_EMAIL))) $_SESSION['error_msg'] = __('Please enter valid email address.');
+                if ((!empty($v_ftp_user_data['v_ftp_email'])) && (!filter_var($v_ftp_user_data['v_ftp_email'], FILTER_VALIDATE_EMAIL))) $_SESSION['error_msg'] = _('Please enter valid email address.');
                 if (empty($v_ftp_user_data['v_ftp_user'])) $errors[] = 'ftp user';
                 if (empty($v_ftp_user_data['v_ftp_password'])) $errors[] = 'ftp user password';
                 if (!empty($errors[0])) {
@@ -265,19 +265,19 @@ if (!empty($_POST['ok'])) {
                             $error_msg = $error_msg.", ".$error;
                         }
                     }
-                    $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
+                    $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
                 }
 
                 // Validate email
                 if ((!empty($v_ftp_user_data['v_ftp_email'])) && (!filter_var($v_ftp_user_data['v_ftp_email'], FILTER_VALIDATE_EMAIL))) {
-                    $_SESSION['error_msg'] = __('Please enter valid email address.');
+                    $_SESSION['error_msg'] = _('Please enter valid email address.');
                 }
 
                 // Check ftp password length
                 if ((!empty($v_ftp_user_data['v_ftp']))) {
                     if (!empty($v_ftp_user_data['v_ftp_user'])) {
                         $pw_len = strlen($v_ftp_user_data['v_ftp_password']);
-                        if ($pw_len < 6 ) $_SESSION['error_msg'] = __('Password is too short.',$error_msg);
+                        if ($pw_len < 6 ) $_SESSION['error_msg'] = _('Password is too short.',$error_msg);
                     }
                 }
 
@@ -297,9 +297,9 @@ if (!empty($_POST['ok'])) {
                     unlink($v_ftp_password);
                     if ((!empty($v_ftp_user_data['v_ftp_email'])) && (empty($_SESSION['error_msg']))) {
                         $to = $v_ftp_user_data['v_ftp_email'];
-                        $subject = __("FTP login credentials");
-                        $from = __('MAIL_FROM', $v_domain );
-                        $mailtext = __('FTP_ACCOUNT_READY',$v_domain,$user,$v_ftp_user_data['v_ftp_user'],$v_ftp_user_data['v_ftp_password']);
+                        $subject = _("FTP login credentials");
+                        $from = _('MAIL_FROM', $v_domain );
+                        $mailtext = _('FTP_ACCOUNT_READY',$v_domain,$user,$v_ftp_user_data['v_ftp_user'],$v_ftp_user_data['v_ftp_password']);
                         send_email($to, $subject, $mailtext, $from);
                         unset($v_ftp_email);
                     }
@@ -328,7 +328,7 @@ if (!empty($_POST['ok'])) {
         }
 
         if (!empty($_SESSION['error_msg']) && $domain_added) {
-            $_SESSION['ok_msg'] = __('WEB_DOMAIN_CREATED_OK',htmlentities($v_domain),htmlentities($v_domain));
+            $_SESSION['ok_msg'] = _('WEB_DOMAIN_CREATED_OK',htmlentities($v_domain),htmlentities($v_domain));
             $_SESSION['flash_error_msg'] = $_SESSION['error_msg'];
             $url = '/edit/web/?domain='.strtolower(preg_replace("/^www\./i", "", $v_domain));
             header('Location: ' . $url);
@@ -338,7 +338,7 @@ if (!empty($_POST['ok'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('WEB_DOMAIN_CREATED_OK',htmlentities($v_domain),htmlentities($v_domain));
+        $_SESSION['ok_msg'] = _('WEB_DOMAIN_CREATED_OK',htmlentities($v_domain),htmlentities($v_domain));
         unset($v_domain);
         unset($v_aliases);
         unset($v_ssl);

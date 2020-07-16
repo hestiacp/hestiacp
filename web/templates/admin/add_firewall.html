@@ -1,10 +1,10 @@
 <div class="l-center edit">
         <div class="l-sort clearfix">
           <div class="l-unit-toolbar__buttonstrip">
-            <a class="ui-button cancel" id="btn-back" href="/list/firewall/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+            <a class="ui-button cancel" id="btn-back" href="/list/firewall/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
+            <a href="#" class="ui-button" title="<?=_('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
           </div>
         </div>
       </div>
@@ -35,7 +35,7 @@
                         <table class="data-col2" width="600px">
                             <tr>
                                 <td class="step-top">
-                                    <span class="page-title"><?=__('Adding Firewall Rule')?></span>
+                                    <span class="page-title"><?=_('Adding Firewall Rule')?></span>
                                 </td>
                             </tr>
                             <tr>
@@ -53,34 +53,34 @@
                             </tr>
                             <tr>
                                 <td class="vst-text step-top">
-                                    <?php print __('Action') ?>
+                                    <?php print _('Action') ?>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <select class="vst-list" name="v_action">
-                                        <option value="DROP" <?php if ((!empty($v_action)) && ( $v_action == "'DROP'" )) echo 'selected'?>><?=__('DROP')?></option>
-                                        <option value="ACCEPT" <?php if ((!empty($v_action)) && ( $v_action == "'ACCEPT'" )) echo 'selected'?>><?=__('ACCEPT')?></option>
+                                        <option value="DROP" <?php if ((!empty($v_action)) && ( $v_action == "'DROP'" )) echo 'selected'?>><?=_('DROP')?></option>
+                                        <option value="ACCEPT" <?php if ((!empty($v_action)) && ( $v_action == "'ACCEPT'" )) echo 'selected'?>><?=_('ACCEPT')?></option>
                                     </select>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Protocol') ?>
+                                    <?php print _('Protocol') ?>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <select class="vst-list" name="v_protocol">
-                                        <option value="TCP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "'TCP'" )) echo 'selected'?>><?=__('TCP')?></option>
-                                        <option value="UDP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "'UDP'" )) echo 'selected'?>><?=__('UDP')?></option>
-                                        <option value="ICMP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "'ICMP'" )) echo 'selected'?>><?=__('ICMP')?></option>
+                                        <option value="TCP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "'TCP'" )) echo 'selected'?>><?=_('TCP')?></option>
+                                        <option value="UDP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "'UDP'" )) echo 'selected'?>><?=_('UDP')?></option>
+                                        <option value="ICMP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "'ICMP'" )) echo 'selected'?>><?=_('ICMP')?></option>
                                     </select>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Port');?> <span class="optional">(<?php print __('ranges are acceptable');?>)</span>
+                                    <?php print _('Port');?> <span class="optional">(<?php print _('ranges are acceptable');?>)</span>
                                 </td>
                             </tr>
                             <tr>
@@ -90,7 +90,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('IP address');?> <span class="optional">(<?php print __('CIDR format is supported');?>)</span>
+                                    <?php print _('IP address');?> <span class="optional">(<?php print _('CIDR format is supported');?>)</span>
                                 </td>
                             </tr>
                             <tr>
@@ -103,7 +103,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Comment');?> <span class="optional">(<?php print __('optional');?>)</span>
+                                    <?php print _('Comment');?> <span class="optional">(<?php print _('optional');?>)</span>
                                 </td>
                             </tr>
                             <tr>

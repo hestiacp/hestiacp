@@ -1,17 +1,17 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a class="ui-button cancel" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
-          <a href="/list/server/?cpu" class="ui-button cancel" title="<?=__('show: CPU / MEM / NET / DISK');?>"><i class="fas fa-chart-pie status-icon green"></i> <?=__('show: CPU / MEM / NET / DISK');?></a>
+          <a class="ui-button cancel" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
+          <a href="/list/server/?cpu" class="ui-button cancel" title="<?=_('show: CPU / MEM / NET / DISK');?>"><i class="fas fa-chart-pie status-icon green"></i> <?=_('show: CPU / MEM / NET / DISK');?></a>
         </div>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
               <td>
-                <a class="vst<?php if ((empty($_GET['period'])) || ($_GET['period'] == 'daily')) echo " selected" ?>" href="?period=daily"><?=__('Daily')?></a>
-                <a class="vst<?php if ((!empty($_GET['period'])) && ($_GET['period'] == 'weekly')) echo " selected" ?>" href="?period=weekly"><?=__('Weekly')?></a>
-                <a class="vst<?php if ((!empty($_GET['period'])) && ($_GET['period'] == 'monthly')) echo " selected" ?>" href="?period=monthly"><?=__('Monthly')?></a>
-                <a class="vst<?php if ((!empty($_GET['period'])) && ($_GET['period'] == 'yearly')) echo " selected" ?>" href="?period=yearly"><?=__('Yearly')?></a>
+                <a class="vst<?php if ((empty($_GET['period'])) || ($_GET['period'] == 'daily')) echo " selected" ?>" href="?period=daily"><?=_('Daily')?></a>
+                <a class="vst<?php if ((!empty($_GET['period'])) && ($_GET['period'] == 'weekly')) echo " selected" ?>" href="?period=weekly"><?=_('Weekly')?></a>
+                <a class="vst<?php if ((!empty($_GET['period'])) && ($_GET['period'] == 'monthly')) echo " selected" ?>" href="?period=monthly"><?=_('Monthly')?></a>
+                <a class="vst<?php if ((!empty($_GET['period'])) && ($_GET['period'] == 'yearly')) echo " selected" ?>" href="?period=yearly"><?=_('Yearly')?></a>
               </td>
 
               <td>
@@ -52,7 +52,7 @@
 
         <div class="l-unit__col l-unit__col--right">
           <div class="l-unit__name separate">
-            <?= __($data[$key]['TITLE'])?>
+            <?= _($data[$key]['TITLE'])?>
           </div>
 
          <div>

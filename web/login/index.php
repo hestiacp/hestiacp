@@ -50,7 +50,7 @@ function authenticate_user(){
         sleep(2);
         unset($_POST['password']);
         unset($_POST['user']);
-        $error = "<a class=\"error\">".__('Invalid username or password')."</a>";
+        $error = "<a class=\"error\">"._('Invalid username or password')."</a>";
         return $error;
         } else {
             $user = $_POST['user'];
@@ -86,7 +86,7 @@ function authenticate_user(){
             if ( $return_var > 0 ) {
                 sleep(2);
                 unset($_POST['password']);
-                $error = "<a class=\"error\">".__('Invalid username or password')."</a>";
+                $error = "<a class=\"error\">"._('Invalid username or password')."</a>";
                 return $error;
             } else {
 
@@ -107,7 +107,7 @@ function authenticate_user(){
                         unset($output);
                         if ( $return_var > 0 ) {
                             sleep(2);
-                            $error = "<a class=\"error\">".__('Invalid or missing 2FA token')."</a>";
+                            $error = "<a class=\"error\">"._('Invalid or missing 2FA token')."</a>";
                             return $error;
                             unset($_POST['twofa']);
                         }

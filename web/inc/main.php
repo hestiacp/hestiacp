@@ -114,7 +114,7 @@ function check_error($return_var) {
 function check_return_code($return_var,$output) {
     if ($return_var != 0) {
         $error = implode('<br>', $output);
-        if (empty($error)) $error = __('Error code:',$return_var);
+        if (empty($error)) $error = _('Error code:',$return_var);
         $_SESSION['error_msg'] = $error;
     }
 }
@@ -172,7 +172,7 @@ function top_panel($user, $TAB) {
 
 function translate_date($date){
   $date = strtotime($date);
-  return strftime("%d &nbsp;", $date).__(strftime("%b", $date)).strftime(" &nbsp;%Y", $date);
+  return strftime("%d &nbsp;", $date)._(strftime("%b", $date)).strftime(" &nbsp;%Y", $date);
 }
 
 function humanize_time($usage) {
@@ -183,23 +183,23 @@ function humanize_time($usage) {
 
             $usage = number_format($usage);
             if ( $usage == 1 ) {
-                $usage = $usage." ".__('day');
+                $usage = $usage." "._('day');
             } else {
-                $usage = $usage." ".__('days');
+                $usage = $usage." "._('days');
             }
         } else {
             $usage = number_format($usage);
             if ( $usage == 1 ) {
-                $usage = $usage." ".__('hour');
+                $usage = $usage." "._('hour');
             } else {
-                $usage = $usage." ".__('hours');
+                $usage = $usage." "._('hours');
             }
         }
     } else {
         if ( $usage == 1 ) {
-            $usage = $usage." ".__('minute');
+            $usage = $usage." "._('minute');
         } else {
-            $usage = $usage." ".__('minutes');
+            $usage = $usage." "._('minutes');
         }
     }
     return $usage;
@@ -243,7 +243,7 @@ function humanize_usage_measure($usage) {
         $measure = 'mb';
     }
 
-    return __($measure);
+    return _($measure);
 }
 
 

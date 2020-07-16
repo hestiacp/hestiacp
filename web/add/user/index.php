@@ -22,11 +22,11 @@ if (!empty($_POST['ok'])) {
     }
 
     // Check empty fields
-    if (empty($_POST['v_username'])) $errors[] = __('user');
-    if (empty($_POST['v_password'])) $errors[] = __('password');
-    if (empty($_POST['v_package'])) $errrors[] = __('package');
-    if (empty($_POST['v_email'])) $errors[] = __('email');
-    if (empty($_POST['v_name'])) $errors[] = __('name');
+    if (empty($_POST['v_username'])) $errors[] = _('user');
+    if (empty($_POST['v_password'])) $errors[] = _('password');
+    if (empty($_POST['v_package'])) $errrors[] = _('package');
+    if (empty($_POST['v_email'])) $errors[] = _('email');
+    if (empty($_POST['v_name'])) $errors[] = _('name');
     if (!empty($errors[0])) {
         foreach ($errors as $i => $error) {
             if ( $i == 0 ) {
@@ -35,18 +35,18 @@ if (!empty($_POST['ok'])) {
                 $error_msg = $error_msg.", ".$error;
             }
         }
-        $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
+        $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
     }
 
     // Validate email
     if ((empty($_SESSION['error_msg'])) && (!filter_var($_POST['v_email'], FILTER_VALIDATE_EMAIL))) {
-        $_SESSION['error_msg'] = __('Please enter valid email address.');
+        $_SESSION['error_msg'] = _('Please enter valid email address.');
     }
 
     // Check password length
     if (empty($_SESSION['error_msg'])) {
         $pw_len = strlen($_POST['v_password']);
-        if ($pw_len < 6 ) $_SESSION['error_msg'] = __('Password is too short.',$error_msg);
+        if ($pw_len < 6 ) $_SESSION['error_msg'] = _('Password is too short.',$error_msg);
     }
 
     // Protect input
@@ -97,8 +97,8 @@ if (!empty($_POST['ok'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('USER_CREATED_OK',htmlentities($_POST['v_username']),htmlentities($_POST['v_username']));
-        $_SESSION['ok_msg'] .= " / <a href=/login/?loginas=".htmlentities($_POST['v_username']).">" . __('login as') ." ".htmlentities($_POST['v_username']). "</a>";
+        $_SESSION['ok_msg'] = _('USER_CREATED_OK',htmlentities($_POST['v_username']),htmlentities($_POST['v_username']));
+        $_SESSION['ok_msg'] .= " / <a href=/login/?loginas=".htmlentities($_POST['v_username']).">" . _('login as') ." ".htmlentities($_POST['v_username']). "</a>";
         unset($v_username);
         unset($v_password);
         unset($v_email);

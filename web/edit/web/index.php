@@ -432,7 +432,7 @@ if (!empty($_POST['save'])) {
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
+            $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
         } else {
             exec ('mktemp -d', $mktemp_output, $return_var);
             $tmpdir = $mktemp_output[0];
@@ -553,7 +553,7 @@ if (!empty($_POST['save'])) {
 
     // Change web stats user or password
     if ((empty($v_stats_user)) && (!empty($_POST['v_stats_auth'])) && (empty($_SESSION['error_msg']))) {
-        if (empty($_POST['v_stats_user'])) $errors[] = __('stats username');
+        if (empty($_POST['v_stats_user'])) $errors[] = _('stats username');
         if (!empty($errors[0])) {
             foreach ($errors as $i => $error) {
                 if ( $i == 0 ) {
@@ -562,7 +562,7 @@ if (!empty($_POST['save'])) {
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
+            $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
         } else {
             $v_stats_user = escapeshellarg($_POST['v_stats_user']);
             $v_stats_password = tempnam("/tmp","vst");
@@ -579,7 +579,7 @@ if (!empty($_POST['save'])) {
 
     // Add web stats authorization
     if ((!empty($v_stats_user)) && (!empty($_POST['v_stats_auth'])) && (empty($_SESSION['error_msg']))) {
-        if (empty($_POST['v_stats_user'])) $errors[] = __('stats user');
+        if (empty($_POST['v_stats_user'])) $errors[] = _('stats user');
         if (!empty($errors[0])) {
             foreach ($errors as $i => $error) {
                 if ( $i == 0 ) {
@@ -588,7 +588,7 @@ if (!empty($_POST['save'])) {
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
+            $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
         }
         if (($v_stats_user != $_POST['v_stats_user']) || (!empty($_POST['v_stats_password'])) && (empty($_SESSION['error_msg']))) {
             $v_stats_user = escapeshellarg($_POST['v_stats_user']);
@@ -614,7 +614,7 @@ if (!empty($_POST['save'])) {
 
             $v_ftp_user_data['v_ftp_user'] = preg_replace("/^".$user."_/i", "", $v_ftp_user_data['v_ftp_user']);
             if ($v_ftp_user_data['is_new'] == 1 && !empty($_POST['v_ftp'])) {
-                if ((!empty($v_ftp_user_data['v_ftp_email'])) && (!filter_var($v_ftp_user_data['v_ftp_email'], FILTER_VALIDATE_EMAIL))) $_SESSION['error_msg'] = __('Please enter valid email address.');
+                if ((!empty($v_ftp_user_data['v_ftp_email'])) && (!filter_var($v_ftp_user_data['v_ftp_email'], FILTER_VALIDATE_EMAIL))) $_SESSION['error_msg'] = _('Please enter valid email address.');
                 if (empty($v_ftp_user_data['v_ftp_user'])) $errors[] = 'ftp user';
                 if (!empty($errors[0])) {
                     foreach ($errors as $i => $error) {
@@ -624,7 +624,7 @@ if (!empty($_POST['save'])) {
                             $error_msg = $error_msg.", ".$error;
                         }
                     }
-                    $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
+                    $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
                 }
 
                 // Add ftp account
@@ -641,10 +641,10 @@ if (!empty($_POST['save'])) {
                     check_return_code($return_var,$output);
                     if ((!empty($v_ftp_user_data['v_ftp_email'])) && (empty($_SESSION['error_msg']))) {
                         $to = $v_ftp_user_data['v_ftp_email'];
-                        $subject = __("FTP login credentials");
+                        $subject = _("FTP login credentials");
                         $hostname = exec('hostname');
-                        $from = __('MAIL_FROM',$hostname);
-                        $mailtext = __('FTP_ACCOUNT_READY',escapeshellarg($_GET['domain']),$user,$v_ftp_username,$v_ftp_user_data['v_ftp_password']);
+                        $from = _('MAIL_FROM',$hostname);
+                        $mailtext = _('FTP_ACCOUNT_READY',escapeshellarg($_GET['domain']),$user,$v_ftp_username,$v_ftp_user_data['v_ftp_password']);
                         send_email($to, $subject, $mailtext, $from);
                         unset($v_ftp_email);
                     }
@@ -684,7 +684,7 @@ if (!empty($_POST['save'])) {
             }
 
             if (!empty($_POST['v_ftp'])) {
-                if (empty($v_ftp_user_data['v_ftp_user'])) $errors[] = __('ftp user');
+                if (empty($v_ftp_user_data['v_ftp_user'])) $errors[] = _('ftp user');
                 if (!empty($errors[0])) {
                     foreach ($errors as $i => $error) {
                         if ( $i == 0 ) {
@@ -693,7 +693,7 @@ if (!empty($_POST['save'])) {
                             $error_msg = $error_msg.", ".$error;
                         }
                     }
-                    $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
+                    $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
                 }
 
                 // Change FTP account path
@@ -715,10 +715,10 @@ if (!empty($_POST['save'])) {
                     unlink($v_ftp_password);
 
                     $to = $v_ftp_user_data['v_ftp_email'];
-                    $subject = __("FTP login credentials");
+                    $subject = _("FTP login credentials");
                     $hostname = exec('hostname');
-                    $from = __('MAIL_FROM',$hostname);
-                    $mailtext = __('FTP_ACCOUNT_READY',escapeshellarg($_GET['domain']),$user,$v_ftp_username_for_emailing,$v_ftp_user_data['v_ftp_password']);
+                    $from = _('MAIL_FROM',$hostname);
+                    $mailtext = _('FTP_ACCOUNT_READY',escapeshellarg($_GET['domain']),$user,$v_ftp_username_for_emailing,$v_ftp_user_data['v_ftp_password']);
                     send_email($to, $subject, $mailtext, $from);
                     unset($v_ftp_email);
                 }
@@ -760,7 +760,7 @@ if (!empty($_POST['save'])) {
 
     // Set success message
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('Changes has been saved.');
+        $_SESSION['ok_msg'] = _('Changes has been saved.');
         header("Location: /edit/web/?domain=" . $v_domain);
     }
 

@@ -1,11 +1,11 @@
 <div class="l-center edit">
         <div class="l-sort clearfix">
           <div class="l-unit-toolbar__buttonstrip">
-            <a class="ui-button cancel" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
-            <a href="/list/key/" id="btn-create" class="ui-button cancel" title="<?=__('SSH_KEY');?>"><i class="fas fa-key status-icon green"></i><?=__('SSH KEY')?></a>
+            <a class="ui-button cancel" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
+            <a href="/list/key/" id="btn-create" class="ui-button cancel" title="<?=_('SSH_KEY');?>"><i class="fas fa-key status-icon green"></i><?=_('SSH KEY')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
+            <a href="#" class="ui-button" title="<?=_('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
           </div>
         </div>
       </div>
@@ -39,7 +39,7 @@
                         <table class="data-col2">
                             <tr>
                                 <td class="step-top">
-                                    <span class="page-title"><?=__('Editing User')?></span>
+                                    <span class="page-title"><?=_('Editing User')?></span>
                                 </td>
                             </tr>
                             <tr>
@@ -57,7 +57,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text step-top">
-                                    <?php print __('Username');?>
+                                    <?php print _('Username');?>
                                 </td>
                             </tr>
                             <tr>
@@ -68,7 +68,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Password');?> / <a href="javascript:randomString();" class="generate"><?php print __('generate');?></a>
+                                    <?php print _('Password');?> / <a href="javascript:randomString();" class="generate"><?php print _('generate');?></a>
                                 </td>
                             </tr>
                             <tr>
@@ -78,17 +78,17 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <label><input type="checkbox" class="vst-checkbox password-option" name="v_twofa" <?php if(!empty($v_twofa)) echo "checked=yes" ?>> <?php print __('Enable 2FA');?></label>
+                                    <label><input type="checkbox" class="vst-checkbox password-option" name="v_twofa" <?php if(!empty($v_twofa)) echo "checked=yes" ?>> <?php print _('Enable 2FA');?></label>
                                     <?php if (!empty($v_twofa)) { ?>
-                                    <p><?php echo __('2FA Reset Code:').' '.$v_twofa; ?></br></p>
-                                    <p><?php echo __('Please scan the code below in your 2FA application:'); ?></p>
+                                    <p><?php echo _('2FA Reset Code:').' '.$v_twofa; ?></br></p>
+                                    <p><?php echo _('Please scan the code below in your 2FA application:'); ?></p>
                                     <div><img class="qr-code" src="<?php echo $v_qrcode; ?>"></div>
                                     <?php } ?>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Contact');?>
+                                    <?php print _('Contact');?>
                                 </td>
                             </tr>
                             <tr>
@@ -98,7 +98,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Email');?>
+                                    <?php print _('Email');?>
                                 </td>
                             </tr>
                             <tr>
@@ -108,7 +108,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Language');?>
+                                    <?php print _('Language');?>
                                 </td>
                             </tr>
                             <tr>
@@ -132,26 +132,26 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Default Name Servers');?>
+                                    <?php print _('Default Name Servers');?>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <input type="text" size="20" class="vst-input" name="v_ns1" value="<?=htmlentities(trim($v_ns1, "'"))?>">
-                                    <span class="remove-ns additional-control delete"><?=__('delete')?></span>
+                                    <span class="remove-ns additional-control delete"><?=_('delete')?></span>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <input type="text" size="20" class="vst-input" name="v_ns2" value="<?=htmlentities(trim($v_ns2, "'"))?>">
-                                    <span class="remove-ns additional-control delete"><?=__('delete')?></span>
+                                    <span class="remove-ns additional-control delete"><?=_('delete')?></span>
                                 </td>
                             </tr>
                             <?  if($v_ns3)
                                   echo '<tr>
                                     <td>
                                         <input type="text" size="20" class="vst-input" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
-                                        <span class="remove-ns additional-control delete">'.__('delete').'</span>
+                                        <span class="remove-ns additional-control delete">'._('delete').'</span>
                                     </td>
                                 </tr>';
 
@@ -159,7 +159,7 @@
                                   echo '<tr>
                                     <td>
                                         <input type="text" size="20" class="vst-input" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
-                                        <span class="remove-ns additional-control delete">'.__('delete').'</span>
+                                        <span class="remove-ns additional-control delete">'._('delete').'</span>
                                     </td>
                                 </tr>';
 
@@ -167,7 +167,7 @@
                                   echo '<tr>
                                     <td>
                                         <input type="text" size="20" class="vst-input" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
-                                        <span class="remove-ns additional-control delete">'.__('delete').'</span>
+                                        <span class="remove-ns additional-control delete">'._('delete').'</span>
                                     </td>
                                 </tr>';
 
@@ -175,7 +175,7 @@
                                   echo '<tr>
                                     <td>
                                         <input type="text" size="20" class="vst-input" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
-                                        <span class="remove-ns additional-control delete">'.__('delete').'</span>
+                                        <span class="remove-ns additional-control delete">'._('delete').'</span>
                                     </td>
                                 </tr>';
 
@@ -183,7 +183,7 @@
                                   echo '<tr>
                                     <td>
                                         <input type="text" size="20" class="vst-input" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
-                                        <span class="remove-ns additional-control delete">'.__('delete').'</span>
+                                        <span class="remove-ns additional-control delete">'._('delete').'</span>
                                     </td>
                                 </tr>';
 
@@ -191,13 +191,13 @@
                                   echo '<tr>
                                     <td>
                                         <input type="text" size="20" class="vst-input" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
-                                        <span class="remove-ns additional-control delete">'.__('delete').'</span>
+                                        <span class="remove-ns additional-control delete">'._('delete').'</span>
                                     </td>
                                 </tr>';
                             ?>
                                 <tr class="add-ns" <? if($v_ns8) echo 'style="display:none;"'; ?> >
                                     <td class="step-top-small">
-                                      <span class="add-ns-button additional-control add"><?=__('Add one more Name Server')?></span>
+                                      <span class="add-ns-button additional-control add"><?=_('Add one more Name Server')?></span>
                                     </td>
                                 </tr>
                         </table>

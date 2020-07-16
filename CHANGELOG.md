@@ -15,12 +15,12 @@ All notable changes to this project will be documented in this file.
 ### Bugfixes
 - Corrected an issue where two-factor authentication validation was causing high CPU load during the login process. The login screen has been re-designed as a multi-step process (Username > Password > OTP PIN).
 - Corrected an issue where text entry fields on the login screen were not automatically focused by default.
-- Fixed an issue where icons where pushed down in the header when using Bulgarian as the display language. (#932)
+- Fixed an issue where icons were pushed down in the header when using Bulgarian as the display language. (#932)
 - Fixed an issue where new backups were not created when running v-schedule-user-backup-download. (#918)
 - Fixed an issue where default configuration files and templates were not backed up correctly.
 - Improved quality of default web domain templates for Drupal. (#916)
 - Added missing strings to translation files (translations to follow).
-- Corrected an issue where toolbars were out of place on the Mail and Firewall pages when using Bulgarian and Greek languages due to string length.
+- Corrected an issue where toolbars were out of place on the Mail and Firewall pages when using Bulgarian or Greek languages due to string length.
 
 ## [1.2.0] - Major Release (Feature / Quality Update)
 ### Features

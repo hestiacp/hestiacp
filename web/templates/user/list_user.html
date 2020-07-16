@@ -103,7 +103,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
           <div class="clearfix l-unit__stat-col--left super-compact">
             <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="user[]" value="<?=$key?>">
           </div>
-              <div class="clearfix l-unit__stat-col--left wide-3 userlist-username"><b><a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('login as')?>"><?=$data[$key]['FNAME']?> <?=$data[$key]['LNAME']?> <span style="font-weight: normal !important;">(<?=$key?>)</span></b></a>
+              <div class="clearfix l-unit__stat-col--left wide-3 userlist-username"><b><a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('login as')?>"><?php echo $data[$key]['FNAME'];?> <span style="font-weight: normal !important;">(<?=$key?>)</span></b></a>
                 <br />
                 <span class="userlist-email"><b><?=__('Email')?>:</b> <?=$data[$key]['CONTACT']?></span>
               </div>

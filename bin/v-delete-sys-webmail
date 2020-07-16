@@ -1,8 +1,9 @@
 #!/bin/bash
 # info: delete webmail support for a domain
-# options: USER DOMAIN [RESTART]
+# options: USER DOMAIN [RESTART] [QUIET]
 #
-# The function delete ssl certificates.
+# this function removes support for webmail from
+# a specified mail domain.
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -12,6 +13,7 @@
 user=$1
 domain=$2
 restart="$3"
+quiet=$4
 
 # Includes
 source $HESTIA/func/main.sh
@@ -74,7 +76,9 @@ if [ ! -z "$3" ]; then
 fi
 
 # Logging
-log_history "disabled webmail support for $domain"
+if [ "$quiet" != 'yes' ]; then
+    log_history "disabled webmail support for $domain"
+fi
 log_event "$OK" "$ARGUMENTS"
 
 exit

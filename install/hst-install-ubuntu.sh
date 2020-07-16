@@ -23,7 +23,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.2.0'
+HESTIA_INSTALL_VER='1.2.2'
 pma_v='5.0.2'
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
 fpm_v="7.3"
@@ -35,7 +35,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     cron curl dnsutils dovecot-imapd dovecot-pop3d e2fslibs e2fsprogs exim4
     exim4-daemon-heavy expect fail2ban flex ftp git idn imagemagick
     libapache2-mod-fcgid libapache2-mod-php$fpm_v libapache2-mod-rpaf
-    lsof mc mariadb-client mariadb-common mariadb-server nginx ntpdate
+    lsof mc mariadb-client mariadb-common mariadb-server nginx
     php$fpm_v php$fpm_v-cgi php$fpm_v-common php$fpm_v-curl phpmyadmin
     php$fpm_v-mysql php$fpm_v-imap php$fpm_v-ldap php$fpm_v-apcu phppgadmin
     php$fpm_v-pgsql php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli php$fpm_v-gd
@@ -292,18 +292,18 @@ apt-get -qq update
 # Creating backup directory
 mkdir -p $hst_backups
 
-# Checking ntpdate
-if [ ! -e '/usr/sbin/ntpdate' ]; then
-    echo "[ * ] Installing ntpdate..."
-    apt-get -y install ntpdate >> $LOG
-    check_result $? "Can't install ntpdate"
-fi
-
 # Checking wget
 if [ ! -e '/usr/bin/wget' ]; then
     echo "[ * ] Installing wget..."
     apt-get -y install wget >> $LOG
     check_result $? "Can't install wget"
+fi
+
+# Checking curl
+if [ ! -e '/usr/bin/curl' ]; then
+    echo "[ * ] Installing curl..."
+    apt-get -y install curl >> $LOG
+    check_result $? "Can't install curl"
 fi
 
 # Check if apt-transport-https is installed
@@ -952,10 +952,9 @@ if [ -z "$(grep nologin /etc/shells)" ]; then
 fi
 
 # Configuring NTP
-echo '#!/bin/sh' > /etc/cron.daily/ntpdate
-echo "$(which ntpdate) -s pool.ntp.org" >> /etc/cron.daily/ntpdate
-chmod 755 /etc/cron.daily/ntpdate
-ntpdate -s pool.ntp.org
+sed -i 's/#NTP=/NTP=pool.ntp.org/' /etc/systemd/timesyncd.conf
+systemctl enable systemd-timesyncd
+systemctl start systemd-timesyncd
 
 # Setup rssh
 if [ "$release" != '20.04' ]; then
@@ -1757,7 +1756,7 @@ $HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1
 check_result $? "can't enable sftp jail"
 
 # Adding Hestia admin account
-$HESTIA/bin/v-add-user admin $vpass $email default System Administrator
+$HESTIA/bin/v-add-user admin $vpass $email default "System Administrator"
 check_result $? "can't create admin user"
 $HESTIA/bin/v-change-user-shell admin nologin
 $HESTIA/bin/v-change-user-language admin $lang

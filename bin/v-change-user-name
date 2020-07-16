@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change user full name
-# options: USER FNAME LNAME
+# options: USER NAME
 #
 # The function allow to change user's full name.
 
@@ -11,7 +11,7 @@
 
 # Argument definition
 user=$1
-fname=$2
+name=$2
 lname=$3
 
 # Includes
@@ -23,8 +23,8 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'USER FNAME LNAME'
-is_format_valid 'user' 'fname' 'lname'
+check_args '2' "$#" 'USER NAME'
+is_format_valid 'user' 'name'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 
@@ -37,20 +37,21 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Get old values
-old_fname=$(get_user_value '$FNAME')
-old_lname=$(get_user_value '$LNAME')
+old_name=$(get_user_value '$NAME')
 
 # Changing ns values
-update_user_value "$user" '$FNAME' "$fname"
-update_user_value "$user" '$LNAME' "$lname"
-
+if [ ! -z "$lname" ]; then
+    update_user_value "$user" '$NAME' "$name $lname"
+else
+    update_user_value "$user" '$NAME' "$name"
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging
-log_history "changed user name to $fname $lname"
+log_history "changed user display name to $name"
 log_event "$OK" "$ARGUMENTS"
 
 exit

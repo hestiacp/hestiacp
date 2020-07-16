@@ -12,7 +12,6 @@
  */
 
 $LANG['es'] = array(
-    'Records'  => 'Gestión',
     'Packages'  => 'Planes',
     'IP'  => 'Red',
     'Graphs'  => 'Monitor',
@@ -213,6 +212,7 @@ $LANG['es'] = array(
     'SOA'  => 'SOA',
     'TTL'  => 'TTL',
     'Expire'  => 'Expira',
+    'Records'  => 'Registros',
     'Serial'  => 'Serie',
     'Catchall email'  => 'Correo Catch-All',
     'AntiVirus Support'  => 'Soporte AntiVirus',
@@ -855,7 +855,7 @@ $LANG['es'] = array(
     'Please scan the code below in your 2FA application:' => 'Para terminar de configurar la autenticación de dos factores, escanee el código QR a continuación<br />usando una aplicación de autenticación (como <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Autenticador de Google</a>):',
     '2FA Reset Code:' => 'Código de recuperación de cuenta:',
 
-    //list user 
+  //list user 
     'Name' => 'Nombre',
     //Add / Edit user
     'Contact' => 'Contacto',
@@ -880,4 +880,8 @@ $LANG['es'] = array(
     'Records_DNS' => 'Registros',
     //Dowload Backup
     'BACKUP_DOWNLOAD_SCHEDULED' => 'La descarga del respaldo ha sido programada.',
+  
+    'traffic' => 'Tráfico',
+    'disk' => 'Disco',
+
 );

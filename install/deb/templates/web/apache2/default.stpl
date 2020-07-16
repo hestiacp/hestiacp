@@ -1,3 +1,8 @@
+#=======================================================================#
+# Default Web Domain Template                                           #
+# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS #
+#=======================================================================#
+
 <VirtualHost %ip%:%web_ssl_port%>
 
     ServerName %domain_idn%

@@ -1,3 +1,8 @@
+#=======================================================================#
+# Default Web Domain Template                                           #
+# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS #
+#=======================================================================#
+
 server {
     listen      %ip%:%proxy_port%;
     server_name %domain_idn% %alias_idn%;

@@ -822,6 +822,20 @@
                                     <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="hestia">
                                         <tr>
                                             <td class="vst-text">
+                                                <?php print __('Fm');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_filemanager">
+                                                    <option value='no'><?php print __('no'); ?></option>
+                                                    <option value='yes' <?php if($_SESSION['FILE_MANAGER'] == 'true') echo 'selected' ?> ><?php print __('yes'); ?></option>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text">
                                                 <?php print __('FileSystem Disk Quota');?>
                                             </td>
                                         </tr>

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 HESTIA_CONF_MODULES=$HESTIA/conf/modules
 mkdir -p $HESTIA_CONF_MODULES

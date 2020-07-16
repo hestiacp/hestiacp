@@ -4,7 +4,7 @@
 ==================================================
 **Latest stable release:** Version 1.2.0 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md)<br>
 **Latest beta release:** Version 1.2.1 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/beta/CHANGELOG.md)<br>
-**Latest unstable development snapshot:** Version 1.2.2 | [View Changelog](https://github.com/hestiacp/hestiacp/main/release/CHANGELOG.md)<br>
+**Latest unstable development snapshot:** Version 1.2.2 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/main/CHANGELOG.md)<br>
 
 **Web:** [www.hestiacp.com](https://www.hestiacp.com/)<br>
 **Documentation:** [docs.hestiacp.com](https://docs.hestiacp.com/)<br>

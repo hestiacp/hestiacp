@@ -23,6 +23,11 @@ hestia_module_spamassassin_install() {
         if [[ "$unit_files" =~ "disabled" ]]; then
             systemctl enable spamassassin > /dev/null 2>&1
         fi
+    elif [ $OS_BASE = 'rhel' ]; then
+        # Set SpamAssassin to listen on IPv4 localhost
+        spamd_options=$(osal_kv_read '/etc/sysconfig/spamassassin' 'SPAMDOPTIONS')
+        spamd_options="$spamd_options --listen-ip=127.0.0.1"
+        osal_kv_write '/etc/sysconfig/spamassassin' 'SPAMDOPTIONS' "$spamd_options"
     fi
 
     osal_service_enable $OSAL_SERVICE_SPAMASSASSIN > /dev/null 2>&1

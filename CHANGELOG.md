@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 ### Bugfixes
-
+- Create mailhelo.conf if it doesnt exist to prevent a error message during grep.
  
 ## [1.2.1] - Service Release 1 (beta)
 ### Features

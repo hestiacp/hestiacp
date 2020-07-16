@@ -10,10 +10,6 @@ if (isset($_SESSION['user'])) {
 // Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
-// Detect language
-if (empty($_SESSION['language'])){ 
-    $_SESSION['language'] = detect_user_language();
-}
 //Check values
 if(!empty($_POST['user']) && !empty($_POST['twofa'])){
     $error = true;

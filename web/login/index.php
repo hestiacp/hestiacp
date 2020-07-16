@@ -170,13 +170,13 @@ if (empty($_SESSION['language'])) {
         $_SESSION['language'] = $lang;
     }
     else {
-        $_SESSION['language'] = 'en';
+        $_SESSION['language'] = 'en_US';
     }
 }
 
 // Generate CSRF token
 $_SESSION['token'] = md5(uniqid(mt_rand(), true));
-require_once($_SERVER['DOCUMENT_ROOT'].'/inc/i18n/'.$_SESSION['language'].'.php');
+
 require_once('../templates/header.html');
 if (empty($_POST['user'])) {
     require_once('../templates/login.html');

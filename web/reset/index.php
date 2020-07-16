@@ -94,9 +94,6 @@ if ((!empty($_POST['user'])) && (!empty($_POST['code'])) && (!empty($_POST['pass
     }
 }
 
-// Detect language
-if (empty($_SESSION['language'])) $_SESSION['language'] = detect_user_language();
-
 if (empty($_GET['action'])) {
     require_once '../templates/header.html';
     require_once '../templates/reset_1.html';

@@ -81,17 +81,17 @@ if (!empty($_POST['ok'])) {
     // Send email to the new user
     if ((empty($_SESSION['error_msg'])) && (!empty($v_notify))) {
         $to = $_POST['v_notify'];
-        $subject = _translate($_POST['v_language'],"Welcome to Hestia Control Panel");
+        $subject = _("Welcome to Hestia Control Panel"); //currently not supported to use the account language
         $hostname = exec('hostname');
         unset($output);
-        $from = _translate($_POST['v_language'],'MAIL_FROM',$hostname);
+        $from = _('MAIL_FROM',$hostname); //currently not supported to use the account language
         
         if (!empty($_POST['v_name'])) {
-            $mailtext = _translate($_POST['v_language'],'GREETINGS_GORDON',$_POST['v_name']);
+            $mailtext = _('GREETINGS_GORDON',$_POST['v_name']);
         } else {
-            $mailtext = _translate($_POST['v_language'],'GREETINGS');
+            $mailtext = _('GREETINGS');
         }
-        $mailtext .= _translate($_POST['v_language'],'ACCOUNT_READY',$_SERVER['HTTP_HOST'],$_POST['v_username'],$_POST['v_password']);
+        $mailtext .= _($_POST['v_language'],'ACCOUNT_READY',$_SERVER['HTTP_HOST'],$_POST['v_username'],$_POST['v_password']);
         send_email($to, $subject, $mailtext, $from);
     }
 

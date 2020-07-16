@@ -8,9 +8,6 @@ define('DEFAULT_PHP_VERSION', "php-" . exec('php -r "echo (float)phpversion();"'
 
 $i = 0;
 
-require_once(dirname(__FILE__).'/i18n.php');
-
-
 // Saving user IPs to the session for preventing session hijacking
 $user_combined_ip = $_SERVER['REMOTE_ADDR'];
 
@@ -47,6 +44,8 @@ if($_SESSION['user_combined_ip'] != $user_combined_ip && $_SERVER['REMOTE_ADDR']
     header("Location: /login/");
     exit;
 }
+// Load Hestia Config directly
+    load_hestia_config();
 
 // Check system settings
 if ((!isset($_SESSION['VERSION'])) && (!defined('NO_AUTH_REQUIRED'))) {
@@ -72,37 +71,15 @@ if (isset($_SESSION['user'])) {
     }
 }
 
-if (isset($_SESSION['language'])) {
-    switch ($_SESSION['language']) {
-        case 'ro':
-            setlocale(LC_ALL, 'ro_RO.utf8');
-            break;
-        case 'ru':
-            setlocale(LC_ALL, 'ru_RU.utf8');
-            break;
-        case 'ua':
-            setlocale(LC_ALL, 'uk_UA.utf8');
-            break;
-        case 'es':
-            setlocale(LC_ALL, 'es_ES.utf8');
-            break;
-        case 'ja':
-            setlocale(LC_ALL, 'ja_JP.utf8');
-            break;
-        default:
-            setlocale(LC_ALL, 'en_US.utf8');
-    }
-}
-
 if (isset($_SESSION['user'])) {
     $user = $_SESSION['user'];
-    load_hestia_config();
 }
 
 if (isset($_SESSION['look']) && ( $_SESSION['look'] != 'admin' )) {
     $user = $_SESSION['look'];
 }
 
+require_once(dirname(__FILE__).'/i18n.php');
 
 function check_error($return_var) {
     if ( $return_var > 0 ) {

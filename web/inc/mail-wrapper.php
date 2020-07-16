@@ -23,9 +23,8 @@ $data = json_decode(implode('', $output), true);
 if (!empty( $data['config']['LANGUAGE'])) {
     $_SESSION['language'] = $data['config']['LANGUAGE'];
 } else {
-    $_SESSION['language'] = 'en';
+    $_SESSION['language'] = 'en_US';
 }
-require_once('/usr/local/hestia/web/inc/i18n/'.$_SESSION['language'].'.php');
 
 // Define vars
 $from = 'Hestia Control Panel <hestia@'.gethostname().'>';

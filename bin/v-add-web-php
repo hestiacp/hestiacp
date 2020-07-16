@@ -95,7 +95,7 @@ if [ ! -f "$php_fpm" ]; then
 fi
 
 # Check if required modules for apache2 are enabled
-if [ "$WEB_SYSTEM" = "apache2" ]; then
+if [ "$WEB_SYSTEM" = "apache2" ] || [ "$WEB_SYSTEM" = "httpd" ]; then
     if ! a2query -q -m proxy_fcgi; then
         a2enmod -q proxy_fcgi
     fi

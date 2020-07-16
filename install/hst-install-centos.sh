@@ -883,8 +883,9 @@ rm -f /var/log/hestia
 ln -s $HESTIA/log /var/log/hestia
 chmod 770 $HESTIA/data/sessions
 
-# Fix for some Debian-only scripts
+# Fixes for some Debian-only scripts
 ln -s /usr/local/hestia/data/templates/web/httpd /usr/local/hestia/data/templates/web/apache2
+ln -s /usr/sbin/ip /bin/ip
 
 # Generating Hestia configuration
 rm -f $HESTIA/conf/hestia.conf > /dev/null 2>&1

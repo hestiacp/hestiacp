@@ -13,7 +13,7 @@ OSAL_PKG_APACHE_EXTRA=mod_ssl
 OSAL_PKG_APACHE_MOD_RUID2=mod_ruid2
 OSAL_PATH_APACHE_CONF=/etc/httpd/conf
 OSAL_PATH_APACHE_CONF_D=/etc/httpd/conf.d
-OSAL_PATH_APACHE_MODS_ENABLED=/etc/httpd/conf.d
+OSAL_PATH_APACHE_MODS_ENABLED=/etc/httpd/conf.modules.d
 
 # Bind
 OSAL_SERVICE_BIND=named

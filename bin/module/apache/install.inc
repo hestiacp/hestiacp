@@ -12,13 +12,13 @@ hestia_module_apache_install() {
     echo "Installing Apache module..."
 
     osal_service_stop $OSAL_SERVICE_APACHE > /dev/null 2>&1
-    hestia_config_backup 'apache-install' $OSAL_PATH_APACHE_CONF
+    hestia_config_backup 'apache-install' $OSAL_PATH_APACHE_CONF $OSAL_PATH_APACHE_CONF_D
 
     osal_package_preinstall
     osal_package_install $OSAL_PKG_APACHE $OSAL_PKG_APACHE_EXTRA $OSAL_PKG_APACHE_MOD_RUID2
 
-    mkdir -p $OSAL_PATH_APACHE_CONF/conf.d
-    mkdir -p $OSAL_PATH_APACHE_CONF/conf.d/domains
+    mkdir -p $OSAL_PATH_APACHE_CONF_D
+    mkdir -p $OSAL_PATH_APACHE_CONF_D/domains
 
     # Enable/disable required modules
     osal_apache_module_enable rewrite > /dev/null 2>&1
@@ -45,11 +45,11 @@ hestia_module_apache_install() {
         # Prevent remote access to server-status page
         sed -i '/Allow from all/d' $OSAL_PATH_APACHE_CONF/mods-available/hestia-status.conf
     elif [ "$OS_BASE" = 'rhel' ]; then
-        echo "# Powered by Hestia" > $OSAL_PATH_APACHE_CONF/conf.d/welcome.conf
-        echo "# Powered by Hestia" > $OSAL_PATH_APACHE_CONF/conf.d/userdir.conf
+        echo "# Powered by Hestia" > $OSAL_PATH_APACHE_CONF_D/welcome.conf
+        echo "# Powered by Hestia" > $OSAL_PATH_APACHE_CONF_D/userdir.conf
 
         # Copy configuration files
-        cp -f $HESTIA_INSTALL_DIR/$OSAL_PKG_APACHE/status.conf $OSAL_PATH_APACHE_CONF/conf.d/hestia-status.conf
+        cp -f $HESTIA_INSTALL_DIR/$OSAL_PKG_APACHE/status.conf $OSAL_PATH_APACHE_CONF_D/hestia-status.conf
         osal_apache_module_enable status > /dev/null 2>&1
     fi
 
@@ -58,6 +58,9 @@ hestia_module_apache_install() {
     chmod a+x /var/log/$OSAL_PKG_APACHE
     chmod 640 /var/log/$OSAL_PKG_APACHE/access.log /var/log/$OSAL_PKG_APACHE/error.log
     chmod 751 /var/log/$OSAL_PKG_APACHE/domains
+
+    # Mitigation for some Debian-only scripts
+    ln -s /etc/httpd/conf.modules.d /etc/httpd/mods-enabled
 
     osal_kv_write $HESTIA_CONF_MODULES/apache.conf 'installed' '1'
     osal_kv_write $HESTIA_CONF_MODULES/apache.conf 'description' 'Hestia Apache module'

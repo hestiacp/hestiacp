@@ -622,7 +622,7 @@ echo
 if [ "$nginx" = 'yes' ]; then
     echo "[ * ] NGINX"
     echo "deb [arch=amd64] http://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
-    wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
+    wget --quiet https://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
     APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/nginx_signing.key > /dev/null 2>&1
 fi
 

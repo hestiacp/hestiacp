@@ -12,6 +12,15 @@ hestia_module_php_install() {
 
     echo "Installing PHP (FPM) module..."
 
+    $BIN/hestia module php add --ver $PHP_DEFAULT_VERSION
+
+    pool_d=$(osal_multiphp_fpm_pool_d $PHP_DEFAULT_VERSION)
+    cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf $pool_d/www.conf
+
+    if [ "$OS_BASE" = 'debian' ]; then    
+        update-alternatives --set php /usr/bin/php$PHP_DEFAULT_VERSION > /dev/null 2>&1
+    fi
+
     osal_kv_write $HESTIA/conf/hestia.conf 'WEB_BACKEND' 'php-fpm'
     osal_kv_write $HESTIA_CONF_MODULES/php.conf 'installed' '1'
     osal_kv_write $HESTIA_CONF_MODULES/php.conf 'description' 'Hestia PHP (FPM) module'
@@ -19,10 +28,10 @@ hestia_module_php_install() {
     osal_kv_write $HESTIA_CONF_MODULES/php.conf 'variant' 'php-fpm'
     osal_kv_write $HESTIA_CONF_MODULES/php.conf 'version' '1'
     osal_kv_write $HESTIA_CONF_MODULES/php.conf 'service_name' ''
-
+    
     # Add default version
     echo "Adding default PHP version..."
-    $BIN/hestia module php add --ver $PHP_DEFAULT_VERSION
+    $BIN/hestia module php add $PHP_DEFAULT_VERSION
 
     exit 0
 }

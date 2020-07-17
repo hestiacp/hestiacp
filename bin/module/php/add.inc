@@ -16,13 +16,16 @@ hestia_module_php_add() {
         exit 1
     fi
 
-    if [ ! $param_ver ]; then
-        echo "You must specify --ver [php_version]"
+    # PHP version is first parameter
+    param_ver="$1"
+
+    if [ ! "$param_ver" ]; then
+        echo "You must specify PHP version"
         exit 1
     fi
 
     # Verify php version format
-    if [[ ! $param_ver =~ ^[0-9]\.[0-9]+ ]]; then
+    if [[ ! "$param_ver" =~ ^[0-9]\.[0-9]+ ]]; then
         echo "The PHP version format is invalid, it should look like [0-9].[0-9]."
         exit
     fi
@@ -31,7 +34,7 @@ hestia_module_php_add() {
     php_version=''
     for ver in $PHP_SUPPORTED_VERSIONS; do
         if [ "$param_ver" == "$ver" ]; then
-            php_version=$param_ver
+            php_version="$param_ver"
             break;
         fi
     done
@@ -62,10 +65,10 @@ hestia_module_php_add() {
     php_prefix=$(osal_multiphp_php_package_prefix $php_version)
 
     mph="$php_prefix-mbstring $php_prefix-bcmath $php_prefix-cli $php_prefix-curl
-     $php_prefix-fpm $php_prefix-gd $php_prefix-intl $php_prefix-mysql
-     $php_prefix-soap $php_prefix-xml $php_prefix-zip $php_prefix-mbstring
-     $php_prefix-json $php_prefix-bz2 $php_prefix-pspell $php_prefix-imagick $php_prefix-pgsql
-     $php_prefix-imap $php_prefix-ldap"
+        $php_prefix-fpm $php_prefix-gd $php_prefix-intl $php_prefix-mysql
+        $php_prefix-soap $php_prefix-xml $php_prefix-zip $php_prefix-mbstring
+        $php_prefix-json $php_prefix-bz2 $php_prefix-pspell $php_prefix-imagick $php_prefix-pgsql
+        $php_prefix-imap $php_prefix-ldap"
 
     # Check is version is 7.1 or below to add mcrypt
     if [[ `echo "$php_version 7.2" | awk '{print ($1 < $2)}'` == 1 ]]; then
@@ -86,13 +89,13 @@ hestia_module_php_add() {
     if [ "$WEB_SYSTEM" = "apache2" ] || [ "$WEB_SYSTEM" = "httpd" ]; then
         osal_apache_module_enable 'proxy_fcgi'
         osal_apache_module_enable 'setenvif'
-        $BIN/v-restart-web
     fi
 
-    # Configure fpm
+    # Configure FPM
     osal_service_enable $php_prefix-fpm > /dev/null 2>&1
     pool_d=$(osal_multiphp_fpm_pool_d $php_version)
-    if [ $pool_d ]; then
+    if [ "$pool_d" ]; then
+        mkdir -p $pool_d
         rm -f $pool_d/*
         cp -f $HESTIA_INSTALL_DIR/php-fpm/dummy.conf $pool_d/
         sed -i "s/9999/99$php_withoutdot/g" $pool_d/dummy.conf       # FIXME: this'll break with PHP 10.0
@@ -110,5 +113,5 @@ hestia_module_php_add() {
 
     log_history "installed php $php_version" '' 'admin'
 
-    exit 0
+    $BIN/v-restart-web
 }

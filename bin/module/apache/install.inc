@@ -18,7 +18,6 @@ hestia_module_apache_install() {
     osal_package_install $OSAL_PKG_APACHE $OSAL_PKG_APACHE_EXTRA $OSAL_PKG_APACHE_MOD_RUID2
 
     mkdir -p $OSAL_PATH_APACHE_CONF_D/domains
-    rm -f $OSAL_PATH_APACHE_CONF_D/ssl.conf
 
     # Enable/disable required modules
     osal_apache_module_enable rewrite > /dev/null 2>&1
@@ -37,7 +36,7 @@ hestia_module_apache_install() {
         echo -e "/home\npublic_html/cgi-bin" > /etc/apache2/suexec/www-data
 
         # Copy configuration files
-        # FIXME: why don't we just overwrite status.conf?
+        # FIXME: why don't we just overwrite status.conf? That will be more portable
         a2dismod status > /dev/null 2>&1
         mv -f $HESTIA_INSTALL_DIR/$OSAL_PKG_APACHE/status.conf $OSAL_PATH_APACHE_CONF/mods-available/hestia-status.conf
         mv -f /etc/apache2/mods-available/status.load $OSAL_PATH_APACHE_CONF/mods-available/hestia-status.load
@@ -45,6 +44,7 @@ hestia_module_apache_install() {
         # Prevent remote access to server-status page
         sed -i '/Allow from all/d' $OSAL_PATH_APACHE_CONF/mods-available/hestia-status.conf
     elif [ "$OS_BASE" = 'rhel' ]; then
+        echo "# Powered by Hestia" > $OSAL_PATH_APACHE_CONF_D/ssl.conf
         echo "# Powered by Hestia" > $OSAL_PATH_APACHE_CONF_D/welcome.conf
         echo "# Powered by Hestia" > $OSAL_PATH_APACHE_CONF_D/userdir.conf
 
@@ -58,6 +58,10 @@ hestia_module_apache_install() {
     chmod a+x /var/log/$OSAL_PKG_APACHE
     chmod 640 /var/log/$OSAL_PKG_APACHE/access.log /var/log/$OSAL_PKG_APACHE/error.log
     chmod 751 /var/log/$OSAL_PKG_APACHE/domains
+
+    # Delete CentOS style apache logs if present (Hestia will use error.log and access.log)
+    [ -f /var/log/$OSAL_PKG_APACHE/access_log ] && rm /var/log/$OSAL_PKG_APACHE/access_log
+    [ -f /var/log/$OSAL_PKG_APACHE/error_log ] && rm /var/log/$OSAL_PKG_APACHE/error_log
 
     # Mitigation for some Debian-only scripts
     ln -s /etc/httpd/conf.modules.d /etc/httpd/mods-enabled

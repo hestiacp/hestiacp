@@ -636,7 +636,7 @@ APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/php_signing.key > /dev/n
 if [ "$apache" = 'yes' ]; then
   echo "[ * ] Apache2"
   if [ "$release" -eq 10 ]; then
-     echo "deb https://deb.debian.org/debian buster-backports main" > $apt/apache2.list
+     echo "deb https://deb.debian.org/debian $codename-backports main" > $apt/apache2.list
   else
     echo "deb https://packages.sury.org/apache2/ $codename main" > $apt/apache2.list
     wget --quiet https://packages.sury.org/apache2/apt.gpg -O /tmp/apache2_signing.key

@@ -634,10 +634,10 @@ APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/php_signing.key > /dev/n
 
 # Installing sury Apache2 repo
 if [ "$apache" = 'yes' ]; then
+  echo "[ * ] Apache2"
   if [ "$release" -eq 10 ]; then
-    add-apt-repository "deb http://deb.debian.org/debian buser-backports main"
+     echo "deb http://deb.debian.org/debian buster-backports main" > $apt/apache2.list
   else
-    echo "[ * ] Apache2"
     echo "deb https://packages.sury.org/apache2/ $codename main" > $apt/apache2.list
     wget --quiet https://packages.sury.org/apache2/apt.gpg -O /tmp/apache2_signing.key
     APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/apache2_signing.key > /dev/null 2>&1

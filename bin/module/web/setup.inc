@@ -74,40 +74,42 @@ hestia_module_web_setup() {
 
     osal_kv_write $HESTIA_CONF_MODULES/web.conf 'description' 'Hestia Web module'
 
+    if [ "$apache_installed" ] || [ "$nginx_installed" ] ; then
     $BIN/hestia module web setup-ips
 
     # FIXME: setup PHP support
-    php_variant=$(hestia_module_variant_installed php)
-    if [ "$apache_installed" ]; then
-        # Enable mod_ruid/mpm_itk or mpm_event
-        if [ "$php_variant" = 'php-fpm' ]; then
-            # Disable prefork and php, enable event
-            osal_apache_module_disable php$fpm_v > /dev/null 2>&1
-            osal_apache_module_disable mpm_prefork > /dev/null 2>&1
-            osal_apache_module_enable mpm_event > /dev/null 2>&1
-            cp -f $HESTIA_INSTALL_DIR/apache2/hestia-event.conf /etc/apache2/conf.d/
-        else
-            osal_apache_module_enable ruid2 > /dev/null 2>&1
+        php_variant=$(hestia_module_variant_installed php)
+        if [ "$apache_installed" ]; then
+            # Enable mod_ruid/mpm_itk or mpm_event
+            if [ "$php_variant" = 'php-fpm' ]; then
+                # Disable prefork and php, enable event
+                osal_apache_module_disable php$fpm_v > /dev/null 2>&1
+                osal_apache_module_disable mpm_prefork > /dev/null 2>&1
+                osal_apache_module_enable mpm_event > /dev/null 2>&1
+                cp -f $HESTIA_INSTALL_DIR/apache2/hestia-event.conf /etc/apache2/conf.d/
+            else
+                osal_apache_module_enable ruid2 > /dev/null 2>&1
+            fi
         fi
+
+        # Rebuild domains
+        for user in $($HESTIA/bin/v-list-sys-users plain); do
+            echo "Rebuilding web domains for user $user"
+            $BIN/v-rebuild-web-domains $user 'no' > /dev/null 2>&1
+        done
+
+        osal_service_stop $OSAL_SERVICE_NGINX > /dev/null 2>&1
+        osal_service_stop $OSAL_SERVICE_APACHE > /dev/null 2>&1
+
+        if [ "$apache_installed" ]; then
+            osal_service_enable $OSAL_SERVICE_APACHE
+            osal_service_start $OSAL_SERVICE_APACHE
+        fi
+
+        if [ "$nginx_installed" ]; then
+            osal_service_enable $OSAL_SERVICE_NGINX
+            osal_service_start $OSAL_SERVICE_NGINX
+        fi
+        check_result $? "Nginx start failed"
     fi
-
-    # Rebuild mail
-    for user in $($HESTIA/bin/v-list-sys-users plain); do
-        echo "Rebuilding web domains for user $user"
-        $BIN/v-rebuild-web-domains $user 'no' > /dev/null 2>&1
-    done
-
-    osal_service_stop $OSAL_SERVICE_NGINX > /dev/null 2>&1
-    osal_service_stop $OSAL_SERVICE_APACHE > /dev/null 2>&1
-
-    if [ "$apache_installed" ]; then
-        osal_service_enable $OSAL_SERVICE_APACHE
-        osal_service_start $OSAL_SERVICE_APACHE
-    fi
-
-    if [ "$nginx_installed" ]; then
-        osal_service_enable $OSAL_SERVICE_NGINX
-        osal_service_start $OSAL_SERVICE_NGINX
-    fi
-    check_result $? "Nginx start failed"
 }

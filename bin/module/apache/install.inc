@@ -29,10 +29,11 @@ hestia_module_apache_install() {
     cp -f $HESTIA_INSTALL_DIR/$OSAL_PKG_APACHE/${OSAL_PKG_APACHE}.conf $OSAL_PATH_APACHE_CONF/
     cp -f $HESTIA_INSTALL_DIR/logrotate/${OSAL_PKG_APACHE} $OSAL_PATH_LOGROTATE_CONF_D/
 
+    echo "# Powered by Hestia" > $OSAL_PATH_APACHE_CONF/ports.conf
+
     if [ "$OS_BASE" = 'debian' ]; then
         echo "# Powered by Hestia" > $OSAL_PATH_APACHE_CONF/sites-available/default
         echo "# Powered by Hestia" > $OSAL_PATH_APACHE_CONF/sites-available/default-ssl
-        echo "# Powered by Hestia" > $OSAL_PATH_APACHE_CONF/ports.conf
         echo -e "/home\npublic_html/cgi-bin" > /etc/apache2/suexec/www-data
 
         # Copy configuration files
@@ -51,6 +52,13 @@ hestia_module_apache_install() {
         # Copy configuration files
         cp -f $HESTIA_INSTALL_DIR/$OSAL_PKG_APACHE/status.conf $OSAL_PATH_APACHE_CONF_D/hestia-status.conf
         osal_apache_module_enable status > /dev/null 2>&1
+
+        # Delete CentOS style apache logs if present (Hestia will use error.log and access.log)
+        [ -f /var/log/$OSAL_PKG_APACHE/access_log ] && rm /var/log/$OSAL_PKG_APACHE/access_log
+        [ -f /var/log/$OSAL_PKG_APACHE/error_log ] && rm /var/log/$OSAL_PKG_APACHE/error_log
+
+        # Mitigation for some Debian-only scripts
+        ln -s /etc/httpd/conf.modules.d/ /etc/httpd/mods-enabled
     fi
 
     touch /var/log/$OSAL_PKG_APACHE/access.log /var/log/$OSAL_PKG_APACHE/error.log
@@ -58,13 +66,6 @@ hestia_module_apache_install() {
     chmod a+x /var/log/$OSAL_PKG_APACHE
     chmod 640 /var/log/$OSAL_PKG_APACHE/access.log /var/log/$OSAL_PKG_APACHE/error.log
     chmod 751 /var/log/$OSAL_PKG_APACHE/domains
-
-    # Delete CentOS style apache logs if present (Hestia will use error.log and access.log)
-    [ -f /var/log/$OSAL_PKG_APACHE/access_log ] && rm /var/log/$OSAL_PKG_APACHE/access_log
-    [ -f /var/log/$OSAL_PKG_APACHE/error_log ] && rm /var/log/$OSAL_PKG_APACHE/error_log
-
-    # Mitigation for some Debian-only scripts
-    ln -s /etc/httpd/conf.modules.d /etc/httpd/mods-enabled
 
     osal_kv_write $HESTIA_CONF_MODULES/apache.conf 'installed' '1'
     osal_kv_write $HESTIA_CONF_MODULES/apache.conf 'description' 'Hestia Apache module'

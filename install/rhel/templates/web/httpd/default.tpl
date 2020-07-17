@@ -1,3 +1,8 @@
+#=======================================================================#
+# Default Web Domain Template                                           #
+# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS #
+#=======================================================================#
+
 <VirtualHost %ip%:%web_port%>
 
     ServerName %domain_idn%
@@ -37,7 +42,7 @@
     <IfModule mod_ruid2.c>
         RMode config
         RUidGid %user% %group%
-        RGroups apache
+        RGroups %apache_group%
     </IfModule>
     <IfModule mpm_itk.c>
         AssignUserID %user% %group%

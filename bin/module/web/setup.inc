@@ -74,28 +74,7 @@ hestia_module_web_setup() {
 
     osal_kv_write $HESTIA_CONF_MODULES/web.conf 'description' 'Hestia Web module'
 
-    if [ "$OS_BASE" = 'debian' ]; then
-        # Configuring libapache2-mod-remoteip
-        if [ "$apache_installed" = 'yes' ] && [ "$nginx_installed"  = 'yes' ] ; then
-            # FIXME: RHEL version
-            cd /etc/apache2/mods-available
-            echo "<IfModule mod_remoteip.c>" > remoteip.conf
-            echo "  RemoteIPHeader X-Real-IP" >> remoteip.conf
-            if [ "$local_ip" != "127.0.0.1" ] && [ "$pub_ip" != "127.0.0.1" ]; then
-                echo "  RemoteIPInternalProxy 127.0.0.1" >> remoteip.conf
-            fi
-            if [ ! -z "$local_ip" ] && [ "$local_ip" != "$pub_ip" ]; then
-                echo "  RemoteIPInternalProxy $local_ip" >> remoteip.conf
-            fi
-            if [ ! -z "$pub_ip" ]; then
-                echo "  RemoteIPInternalProxy $pub_ip" >> remoteip.conf
-            fi
-            echo "</IfModule>" >> remoteip.conf
-            sed -i "s/LogFormat \"%h/LogFormat \"%a/g" /etc/apache2/apache2.conf
-            a2enmod remoteip >> $LOG
-            systemctl restart apache2
-        fi
-    fi
+    $BIN/hestia module web setup-ips
 
     # FIXME: setup PHP support
     php_variant=$(hestia_module_variant_installed php)
@@ -111,9 +90,6 @@ hestia_module_web_setup() {
             osal_apache_module_enable ruid2 > /dev/null 2>&1
         fi
     fi
-
-    # FIXME: move the following to awstats install
-    osal_kv_write $HESTIA/conf/hestia.conf 'STATS_SYSTEM' 'awstats'
 
     # Rebuild mail
     for user in $($HESTIA/bin/v-list-sys-users plain); do
@@ -134,5 +110,4 @@ hestia_module_web_setup() {
         osal_service_start $OSAL_SERVICE_NGINX
     fi
     check_result $? "Nginx start failed"
-
 }

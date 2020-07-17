@@ -17,8 +17,8 @@ hestia_module_apache_install() {
     osal_package_preinstall
     osal_package_install $OSAL_PKG_APACHE $OSAL_PKG_APACHE_EXTRA $OSAL_PKG_APACHE_MOD_RUID2
 
-    mkdir -p $OSAL_PATH_APACHE_CONF_D
     mkdir -p $OSAL_PATH_APACHE_CONF_D/domains
+    rm -f $OSAL_PATH_APACHE_CONF_D/ssl.conf
 
     # Enable/disable required modules
     osal_apache_module_enable rewrite > /dev/null 2>&1

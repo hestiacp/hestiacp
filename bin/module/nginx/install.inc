@@ -56,8 +56,6 @@ EOL
     done
     if [ ! -z "$resolver" ]; then
         sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" $OSAL_PATH_NGINX_CONF/nginx.conf
-        # FIXME: the following should be done on hestia-nginx install, not on nginx install
-        sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" $HESTIA/nginx/conf/nginx.conf
     fi
 
     osal_kv_write $HESTIA_CONF_MODULES/nginx.conf 'installed' '1'

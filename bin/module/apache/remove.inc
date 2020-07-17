@@ -14,7 +14,7 @@ hestia_module_apache_remove() {
     osal_service_stop $OSAL_SERVICE_APACHE > /dev/null 2>&1
     osal_service_disable $OSAL_SERVICE_APACHE > /dev/null 2>&1
 
-    hestia_config_backup 'apache-remove' $OSAL_PATH_APACHE_CONF
+    hestia_config_backup 'apache-remove' $OSAL_PATH_APACHE_CONF $OSAL_PATH_APACHE_CONF_D
 
     osal_package_remove $OSAL_PKG_APACHE
 

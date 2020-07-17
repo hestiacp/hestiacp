@@ -3,7 +3,7 @@
 hestia_module_web_setup-ip() {
     source $HESTIA/bin/module/func.inc
 
-    ip=$param_ip
+    ip=$1
 
     echo "Configuring web for IP address $ip"
 

@@ -75,9 +75,9 @@ hestia_module_web_setup() {
     osal_kv_write $HESTIA_CONF_MODULES/web.conf 'description' 'Hestia Web module'
 
     if [ "$apache_installed" ] || [ "$nginx_installed" ] ; then
-    $BIN/hestia module web setup-ips
+        $BIN/hestia module web setup-ips
 
-    # FIXME: setup PHP support
+        # FIXME: setup PHP support
         php_variant=$(hestia_module_variant_installed php)
         if [ "$apache_installed" ]; then
             # Enable mod_ruid/mpm_itk or mpm_event
@@ -88,6 +88,7 @@ hestia_module_web_setup() {
                 osal_apache_module_enable mpm_event > /dev/null 2>&1
                 cp -f $HESTIA_INSTALL_DIR/apache2/hestia-event.conf /etc/apache2/conf.d/
             else
+                # FIXME: enable only if needed
                 osal_apache_module_enable ruid2 > /dev/null 2>&1
             fi
         fi

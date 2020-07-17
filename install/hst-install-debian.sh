@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -x
 # Hestia Debian installer v1.0
 
 #----------------------------------------------------------#
@@ -621,8 +621,8 @@ echo
 # Installing Nginx repo
 if [ "$nginx" = 'yes' ]; then
     echo "[ * ] NGINX"
-    echo "deb [arch=amd64] http://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
-    wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
+    echo "deb [arch=amd64] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
+    wget --quiet https://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
     APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/nginx_signing.key > /dev/null 2>&1
 fi
 
@@ -643,7 +643,7 @@ fi
 # Installing MariaDB repo
 if [ "$mysql" = 'yes' ]; then
     echo "[ * ] MariaDB"
-    echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
+    echo "deb [arch=amd64] https://ams2.mirrors.digitalocean.com/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
     if [ "$release" -eq 8 ]; then
         APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com CBCB082A1BB943DB > /dev/null 2>&1
     else
@@ -653,7 +653,7 @@ fi
 
 # Installing Backport repo for Debian 8
 if [ "$release" -eq 8 ]; then
-    echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
+    echo "deb [check-valid-until=no] https://archive.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
 fi
 
 # Installing HestiaCP repo
@@ -664,7 +664,7 @@ APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --keyserver keyserver.ubuntu.
 # Installing PostgreSQL repo
 if [ "$postgresql" = 'yes' ]; then
     echo "[ * ] PostgreSQL"
-    echo "deb http://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
+    echo "deb https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
     wget --quiet https://www.postgresql.org/media/keys/ACCC4CF8.asc -O /tmp/psql_signing.key
     APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/psql_signing.key > /dev/null 2>&1
     rm /tmp/psql_signing.key

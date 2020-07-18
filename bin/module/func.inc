@@ -35,6 +35,25 @@ hestia_module_variant_installed() {
     fi
 }
 
+# Schedules a service restart (when doing multiple actions)
+hestia_module_service_restart_schedule() {
+    if [ ! "$hestia_module_service_restart_list" ]; then
+        hestia_module_service_restart_list=$1
+    else
+        # FIXME: don't add services twice
+        hestia_module_service_restart_list="hestia_module_service_restart_list $1"
+    fi
+}
+
+# Restart services scheduled for restart
+hestia_module_service_restart_restart() {
+    if [ ! "$hestia_module_service_restart_list" ]; then
+        for svc in $hestia_module_service_restart_list; do
+            osal_service_restart $svc
+        done
+    fi
+}
+
 # Backup config files (usually prior to module install)
 # hestia_config_backup 'prefix' file1 file2 file3 ...
 hestia_config_backup() {

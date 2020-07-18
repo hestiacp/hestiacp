@@ -21,6 +21,8 @@ release=$(cat /etc/debian_version | tr "." "\n" | head -n1)
 codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
 HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
+APT_SOURCES='/etc/apt/sources.list'
+APT_SOURCES_D='/etc/apt/sources.list.d'
 
 # Define software versions
 HESTIA_INSTALL_VER='1.2.0'
@@ -87,6 +89,8 @@ help() {
   -r, --port              Change Backend Port             default: 8083
   -l, --lang              Default language                default: en
   -y, --interactive       Interactive install   [yes|no]  default: yes
+  -S, --strict            Strict distro repo    [yes|no]  default: no
+  -T, --tor               Tor security          [yes|no]  default: no
   -s, --hostname          Set hostname
   -e, --email             Set admin email
   -p, --password          Set admin password
@@ -99,9 +103,10 @@ help() {
 }
 
 # Defining file download function
-download_file() {
-    wget $1 -q --show-progress --progress=bar:force
-}
+# This is not used anywhere!???
+#download_file() {
+#    ${TORIFY}wget $1 -q --show-progress --progress=bar:force
+#}
 
 # Defining password-gen function
 gen_pass() {
@@ -186,6 +191,8 @@ for arg; do
         --port)                 args="${args}-r " ;;
         --lang)                 args="${args}-l " ;;
         --interactive)          args="${args}-y " ;;
+        --strict)               args="${args}-S " ;;
+        --tor)                  args="${args}-T " ;;
         --api)                  args="${args}-d " ;;
         --hostname)             args="${args}-s " ;;
         --email)                args="${args}-e " ;;
@@ -200,7 +207,7 @@ done
 eval set -- "$args"
 
 # Parsing arguments
-while getopts "a:n:w:v:j:k:m:g:d:x:z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
+while getopts "a:n:w:v:j:k:m:g:d:x:z:c:t:i:b:r:o:q:l:y:S:T:s:e:p:D:fh" Option; do
     case $Option in
         a) apache=$OPTARG ;;            # Apache
         n) nginx=$OPTARG ;;             # Nginx
@@ -222,6 +229,8 @@ while getopts "a:n:w:v:j:k:m:g:d:x:z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
         l) lang=$OPTARG ;;              # Language
         d) api=$OPTARG ;;               # Activate API
         y) interactive=$OPTARG ;;       # Interactive install
+        S) strict=$OPTARG ;;            # Strict distro repos
+        T) tor=$OPTARG ;;               # Tor security setup
         s) servername=$OPTARG ;;        # Hostname
         e) email=$OPTARG ;;             # Admin email
         p) vpass=$OPTARG ;;             # Admin password
@@ -256,6 +265,8 @@ set_default_value 'fail2ban' 'yes'
 set_default_value 'quota' 'no'
 set_default_value 'interactive' 'yes'
 set_default_value 'api' 'yes'
+set_default_value 'strict' 'no'
+set_default_value 'tor' 'no'
 set_default_port '8083'
 set_default_lang 'en'
 
@@ -270,6 +281,9 @@ if [ "$exim" = 'no' ]; then
 fi
 if [ "$iptables" = 'no' ]; then
     fail2ban='no'
+fi
+if [ "$release" -lt 10 ]; then
+    strict='no'
 fi
 
 # Checking root permissions
@@ -310,6 +324,47 @@ apt-get -qq update
 # Creating backup directory
 mkdir -p $hst_backups
 
+# Check if gnupg or gnupg2 is installed
+if [ ! -e '/usr/lib/gnupg2' ] || [ ! -e '/usr/lib/gnupg' ]; then
+    echo "[ * ] Installing gnupg2..."
+    apt-get -y install gnupg2 >> $LOG
+    check_result $? "Can't install gnupg2"
+fi
+
+# Checking tor, use tor as soon as possible
+if [ "$tor" = 'yes' ]; then
+    TORIFY="torify "
+    TORP="tor+"
+    echo "[ * ] Installing tor..."
+    apt-get -y install apt-transport-tor >> $LOG
+    check_result $? "Can't install tor"
+    
+    # Setup TOR onion Repositories
+    # Reference https://wiki.debian.org/SourcesList#Using_Tor_with_Apt
+    echo "deb     tor://vwakviie2ienjx6t.onion/debian          buster           main" > $APT_SOURCES
+    echo "deb-src tor://vwakviie2ienjx6t.onion/debian          buster           main" >> $APT_SOURCES
+    echo "deb     tor://vwakviie2ienjx6t.onion/debian          buster-updates   main" >> $APT_SOURCES
+    echo "deb-src tor://vwakviie2ienjx6t.onion/debian          buster-updates   main" >> $APT_SOURCES
+    #echo "deb     tor://vwakviie2ienjx6t.onion/debian          buster-backports main" >> $APT_SOURCES
+    #echo "deb-src tor://vwakviie2ienjx6t.onion/debian          buster-backports main" >> $APT_SOURCES
+    echo "deb     tor://sgvtcaew4bxjd7ln.onion/debian-security buster/updates   main" >> $APT_SOURCES
+    echo "deb-src tor://sgvtcaew4bxjd7ln.onion/debian-security buster/updates   main" >> $APT_SOURCES
+    echo "deb     tor://sdscoq7snqtznauu.onion/torproject.org  buster           main" >> $APT_SOURCES
+    ${TORIFY}wget -qO- http://sdscoq7snqtznauu.onion/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | apt-key add -
+    #${TORIFY}apt-key adv --fetch-keys 'http://sdscoq7snqtznauu.onion/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc' > /dev/null 2>&1 
+    # Update Tor using torproject repository
+    apt-get -qq update
+    apt-get -y upgrade >> $LOG
+    
+    TORRC=/etc/tor/torrc
+    mv --backup $TORRC ${TORRC}.bak 
+    echo "HiddenServiceDir /var/lib/tor/sshd/" > /etc/tor/torrc
+    echo "HiddenServicePort 22 localhost:22" >> /etc/tor/torrc
+    echo "HiddenServiceDir /var/lib/tor/hestiacp/" >> /etc/tor/torrc
+    echo "HiddenServicePort 8083 localhost:8083" >> /etc/tor/torrc
+    systemctl restart tor
+fi
+
 # Checking ntpdate
 if [ ! -e '/usr/sbin/ntpdate' ]; then
     echo "[ * ] Installing ntpdate..."
@@ -345,13 +400,6 @@ if [ ! -e '/usr/lib/apt/methods/https' ]; then
     check_result $? "Can't install apt-transport-https"
 fi
 
-# Check if gnupg or gnupg2 is installed
-if [ ! -e '/usr/lib/gnupg2' ] || [ ! -e '/usr/lib/gnupg' ]; then
-    echo "[ * ] Installing gnupg2..."
-    apt-get -y install gnupg2 >> $LOG
-    check_result $? "Can't install gnupg2"
-fi
-
 # Check if apparmor is installed
 if [ $(dpkg-query -W -f='${Status}' apparmor 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
     apparmor='no'
@@ -360,6 +408,8 @@ else
 fi
 
 # Checking repository availability
+# hestiacp.com is blocking tor!
+#${TORIFY}wget --quiet "https://$GPG/deb_signing.key" -O /dev/null
 wget --quiet "https://$GPG/deb_signing.key" -O /dev/null
 check_result $? "Unable to connect to the Hestia APT repository"
 
@@ -421,7 +471,7 @@ fi
 
 # Validate whether installation script matches release version before continuing with install
 if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
-    release_branch_ver=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/release/src/deb/hestia/control |grep "Version:" |awk '{print $2}')
+    release_branch_ver=$(${TORIFY}curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/release/src/deb/hestia/control |grep "Version:" |awk '{print $2}')
     if [ "$HESTIA_INSTALL_VER" != "$release_branch_ver" ]; then
         echo
         echo -e "\e[91mInstallation aborted\e[0m"
@@ -438,6 +488,9 @@ if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
         check_result 1 "Installation aborted"
     fi
 fi
+
+# Temporary for analysis
+read -p "Press Enter to continue..."
 
 #----------------------------------------------------------#
 #                       Brief Info                         #
@@ -466,6 +519,11 @@ install_welcome_message() {
 clear
 install_welcome_message
 
+# Repos
+if [ "$strict" = 'yes' ]; then
+    echo '   - Strict Distro Repos'
+fi
+
 # Web stack
 if [ "$nginx" = 'yes' ]; then
     echo '   - NGINX Web / Proxy Server'
@@ -481,6 +539,8 @@ if [ "$phpfpm"  = 'yes' ] && [ "$multiphp" = 'no' ]; then
 fi
 if [ "$multiphp"  = 'yes' ]; then
     phpfpm='yes'
+    # The following two default are sssumed from Github Issue discussion
+    strict='no'
     echo '   - Multi-PHP Environment'
 fi
 
@@ -611,68 +671,75 @@ fi
 #                   Install repository                     #
 #----------------------------------------------------------#
 
-# Define apt conf location
-apt=/etc/apt/sources.list.d
-
 # Updating system
 echo "Adding required repositories to proceed with installation:"
 echo
 
-# Installing Nginx repo
-if [ "$nginx" = 'yes' ]; then
+if [ "$strict" = 'yes' ]; then
+  echo "[ * ] Strict Distro Repos Only"
+  # Might need backports
+  # deb https://deb.debian.org/debian $codename-backports main" >> $APT_SOURCES
+else
+  # Installing Nginx repo
+  if [ "$nginx" = 'yes' ]; then
     echo "[ * ] NGINX"
-    echo "deb [arch=amd64] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
-    wget --quiet https://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
-    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/nginx_signing.key > /dev/null 2>&1
-fi
-
-# Installing sury PHP repo
-echo "[ * ] PHP"
-echo "deb https://packages.sury.org/php/ $codename main" > $apt/php.list
-wget --quiet https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key
-APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/php_signing.key > /dev/null 2>&1
-
-# Installing sury Apache2 repo
-if [ "$apache" = 'yes' ]; then
-  echo "[ * ] Apache2"
-  if [ "$release" -eq 10 ]; then
-     echo "deb https://deb.debian.org/debian $codename-backports main" > $apt/apache2.list
-  else
-    echo "deb https://packages.sury.org/apache2/ $codename main" > $apt/apache2.list
-    wget --quiet https://packages.sury.org/apache2/apt.gpg -O /tmp/apache2_signing.key
-    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/apache2_signing.key > /dev/null 2>&1
+    echo "deb https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $APT_SOURCES_D/nginx.list
+    ${TORIFY}wget -qO- "https://nginx.org/keys/nginx_signing.key" | apt-key add -  > /dev/null 2>&1
+    #${TORIFY}apt-key adv --fetch-keys 'https://nginx.org/keys/nginx_signing.key' > /dev/null 2>&1
   fi
-fi
 
-# Installing MariaDB repo
-if [ "$mysql" = 'yes' ]; then
+  # Installing sury PHP repo
+  echo "[ * ] PHP"
+  echo "deb https://packages.sury.org/php/ $codename main" > $APT_SOURCES_D/php.list
+  ${TORIFY}wget -qO- "https://packages.sury.org/php/apt.gpg" | apt-key add -  > /dev/null 2>&1
+  #${TORIFY}apt-key adv --fetch-keys 'https://packages.sury.org/php/apt.gpg' > /dev/null 2>&1
+
+  # Installing sury Apache2 repo
+  if [ "$apache" = 'yes' ]; then
+    echo "[ * ] Apache2"
+    echo "deb https://packages.sury.org/apache2/ $codename main" > $APT_SOURCES_D/apache2.list
+    ${TORIFY}wget -qO- "https://packages.sury.org/apache2/apt.gpg" | apt-key add -  > /dev/null 2>&1
+    #${TORIFY}apt-key adv --fetch-keys 'https://packages.sury.org/apache2/apt.gpg' > /dev/null 2>&1
+  fi
+
+  # Installing MariaDB repo
+  if [ "$mysql" = 'yes' ]; then
     echo "[ * ] MariaDB"
-    echo "deb https://mirrors.ukfast.co.uk/sites/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
-    if [ "$release" -eq 8 ]; then
-        APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com CBCB082A1BB943DB > /dev/null 2>&1
-    else
-        APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc' > /dev/null 2>&1
-    fi
+    echo "deb https://mirrors.ukfast.co.uk/sites/mariadb/repo/$mariadb_v/$VERSION $codename main" > $APT_SOURCES_D/mariadb.list
+    #if [ "$release" -eq 8 ]; then
+      # As per https://mariadb.com/kb/en/gpg/ and 
+      #        https://downloads.mariadb.org/mariadb/repositories/#distro=Debian&distro_release=jessie--jessie&mirror=ukfast&version=10.1
+      #        Old key probably no longer relevant
+      #APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com CBCB082A1BB943DB > /dev/null 2>&1
+    #else
+      ${TORIFY}wget -qO- "https://mariadb.org/mariadb_release_signing_key.asc" | apt-key add -  > /dev/null 2>&1
+      #${TORIFY}apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc' > /dev/null 2>&1
+    #fi
+  fi
+  
+  # Installing PostgreSQL repo
+  if [ "$postgresql" = 'yes' ]; then
+    echo "[ * ] PostgreSQL"
+    echo "deb ${TOR}https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $APT_SOURCES_D/postgresql.list
+    ${TORIFY}wget -qO- "https://www.postgresql.org/media/keys/ACCC4CF8.asc" | apt-key add -  > /dev/null 2>&1
+    #${TORIFY}apt-key adv --fetch-keys 'https://www.postgresql.org/media/keys/ACCC4CF8.asc' > /dev/null 2>&1
+  fi
+  
 fi
 
 # Installing Backport repo for Debian 8
 if [ "$release" -eq 8 ]; then
-    echo "deb [check-valid-until=no] https://archive.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
+    echo "deb [check-valid-until=no] https://archive.debian.org/debian jessie-backports main" >> $APT_SOURCES
 fi
 
 # Installing HestiaCP repo
 echo "[ * ] Hestia Control Panel"
-echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
-APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
-
-# Installing PostgreSQL repo
-if [ "$postgresql" = 'yes' ]; then
-    echo "[ * ] PostgreSQL"
-    echo "deb https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
-    wget --quiet https://www.postgresql.org/media/keys/ACCC4CF8.asc -O /tmp/psql_signing.key
-    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/psql_signing.key > /dev/null 2>&1
-    rm /tmp/psql_signing.key
-fi
+# hestiacp.com is blocking tor!
+#echo "${TOR}deb https://$RHOST/ $codename main" > $APT_SOURCES_D/hestia.list
+#${TORIFY}wget -qO- "https://$GPG/deb_signing.key" | apt-key add -  > /dev/null 2>&1
+#${TORIFY}apt-key adv --fetch-keys "https://$GPG/deb_signing.key" > /dev/null 2>&1
+echo "deb https://$RHOST/ $codename main" > $APT_SOURCES_D/hestia.list
+wget -qO- "https://$GPG/deb_signing.key" | apt-key add -  > /dev/null 2>&1
 
 # Echo for a new line
 echo
@@ -1411,7 +1478,7 @@ if [ "$mysql" = 'yes' ]; then
     echo "[ * ] Installing phpMyAdmin version v$pma_v..."
 
     # Download latest phpmyadmin release
-    wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
+    ${TORIFY}wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
 
     # Unpack files
     tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
@@ -1795,6 +1862,8 @@ if [ "$iptables" = 'yes' ]; then
 fi
 
 # Get public IP
+# TODO: Review, this might be a privacy issue for certain installs
+#               and might be incorrect if behind a reverse proxy
 pub_ip=$(curl --ipv4 -s https://ip.hestiacp.com/)
 
 if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
@@ -1872,7 +1941,7 @@ fi
 
 # Set backend port
 $HESTIA/bin/v-change-sys-port $port > /dev/null 2>&1
-
+f
 # Set default theme
 $HESTIA/bin/v-change-sys-theme 'default'
 
@@ -1908,12 +1977,13 @@ if [ "$host_ip" = "$ip" ]; then
     ip="$servername"
 fi
 
-echo -e "\n"
-echo "===================================================================="
-echo -e "\n"
+# Generate all host key types
+ssh-keygen -A
 
-# Sending notification to admin email
-echo -e "Congratulations!
+echo -e "
+====================================================================
+
+Congratulations!
 
 You have successfully installed Hestia Control Panel on your server. 
 
@@ -1921,8 +1991,30 @@ Ready to get started? Log in using the following credentials:
 
     Admin URL:  https://$ip:$port
     Username:   admin
-    Password:   $vpass
+    Password:   $vpass"
+    
+if [ "$tor" = "yes" ]; then
+  tor_ssh=$(cat /var/lib/tor/sshd/hostname)
+  tor_cp=$(cat /var/lib/tor/hestiacp/hostname)
+  host_key=$(cat /etc/ssh/ssh_host_ed25519_key.pub)
+  host_key_part=($host_key)
+  
+  echo -e "
+    Hidden Tor Services. Ports 22 and 8083 can now be firewalled off.
+    Tor CP:     Tor Browser: http://${tor_cp}:8083/
+    Tor SSH:    ${TORIFY}ssh root@${tor_ssh}
+    
+    Host Key for use on ssh client side (~/.ssh/known_hosts), see commands below.
+    ${host_key_part[0]} ${host_key_part[1]}
+    
+echo \"${tor_ssh} ${host_key_part[0]} ${host_key_part[1]}\" >> ~/.ssh/known_hosts
+ssh-keygen -H -f ~/.ssh/known_hosts
+    
+    "
+fi
 
+echo -e "
+    
 Thank you for choosing Hestia Control Panel to power your full stack web server,
 we hope that you enjoy using it as much as we do!
 
@@ -1944,15 +2036,14 @@ Sincerely yours,
 The Hestia Control Panel development team
 
 Made with love & pride by the open-source community around the world.
-" > $tmpfile
+"
 
-send_mail="$HESTIA/web/inc/mail-wrapper.php"
-cat $tmpfile | $send_mail -s "Hestia Control Panel" $email
+# Too risky to send by email and often reverse DNS and other parts 
+# won't be fully working yet and the email will get rejected as spam
+# The user should copy paste from the ssh terminal and always ensure secure transmission
+#send_mail="$HESTIA/web/inc/mail-wrapper.php"
+#cat $tmpfile | $send_mail -s "Hestia Control Panel" $email
 
-# Congrats
-echo
-cat $tmpfile
-rm -f $tmpfile
 
 # Add welcome message to notification panel
 $HESTIA/bin/v-add-user-notification admin 'Welcome to Hestia Control Panel!' '<br>You are now ready to begin <a href="/add/user/">adding user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, view the <a href="https://docs.hestiacp.com/" target="_new">documentation</a> or visit our <a href="https://forum.hestiacp.com/" target="_new">user forum</a>.<br><br>Please report any bugs or issues via <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a> or e-mail <a href="mailto:info@hestiacp.com?Subject="['$new_version'] Bug Report: ">info@hestiacp.com</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart status-icon red"></i> The Hestia Control Panel development team'

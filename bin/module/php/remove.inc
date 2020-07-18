@@ -19,6 +19,8 @@ hestia_module_php_remove() {
     echo "Removing PHP (FPM) module..."
 
     # Remove all added versions
+    # FIXME: this will not remove unsupported but installed PHP versions
+    # (i.e. supported by an older version of Hestia)
     for php_version in $PHP_SUPPORTED_VERSIONS; do
         $BIN/hestia module php del $php_version
     done

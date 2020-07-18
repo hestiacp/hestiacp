@@ -15,6 +15,10 @@ OSAL_PATH_APACHE_CONF=/etc/httpd/conf
 OSAL_PATH_APACHE_CONF_D=/etc/httpd/conf.d
 OSAL_PATH_APACHE_MODS_ENABLED=/etc/httpd/conf.modules.d
 
+# Awstats
+OSAL_PKG_AWSTATS=awstats
+OSAL_PATH_AWSTATS_CONF=/etc/awstats
+
 # Bind
 OSAL_SERVICE_BIND=named
 OSAL_USER_BIND=named

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 hestia_package_remove() {
-    echo "Installing mail server package..."
+    echo "Removing mail server package..."
 
     $BIN/hestia module remove exim
     $BIN/hestia module remove dovecot

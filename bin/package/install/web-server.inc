@@ -11,6 +11,7 @@ hestia_package_install_mail-server() {
     echo "Installing web server package..."
 
     $BIN/hestia module install apache
+    $BIN/hestia module install awstats
     if [ $memory -ge 1572864 ] || [ "$param_withproxy" ]; then
         if [ ! "$param_withoutproxy" ]; then
             $BIN/hestia module install nginx

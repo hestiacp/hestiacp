@@ -6,4 +6,5 @@ hestia_package_remove() {
     $BIN/hestia module remove nginx
     $BIN/hestia module remove apache
     $BIN/hestia module remove php
+    $BIN/hestia module remove awstats
 }

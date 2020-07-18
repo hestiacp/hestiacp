@@ -8,14 +8,17 @@ case "$OS_TYPE" in
 debian)
     OS_BASE='debian'
     OS_VERSION=$(cat /etc/debian_version|grep -o "[0-9]\{1,2\}"|head -n1)
+    OS_CODENAME="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
     ;;
 ubuntu)
     OS_BASE='debian'
-    OS_VERSION="$(lsb_release -s -r)"
+    OS_VERSION="$(lsb_release -s -r)".
+    OS_CODENAME="$(lsb_release -s -c)"
     ;;
 centos|rhel|fedora|redhat)
     OS_BASE='rhel'
     OS_VERSION=$(cat /etc/os-release | grep VERSION_ID | sed -e "s/VERSION_ID=//" | sed -e 's/^"//' -e 's/"$//')
+    OS_CODENAME=''
     ;;
 *)
     OS_BASE='unknown'

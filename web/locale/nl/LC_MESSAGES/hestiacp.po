@@ -1,22 +1,21 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Copyright (C) 2020 HestiaCP <https://hestiacp.com>
+# This file is distributed under the same license as the HestiaCP package.
+# HestiaCP <info@hestiacp.com>, 2020.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-14 22:05+0200\n"
-"PO-Revision-Date: 2020-07-15 08:16+0200\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2020-07-15 06:56+0200\n"
+"Last-Translator: \n"
+"Language-Team: Dutch\n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.3.1\n"
-"Last-Translator: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Language: nl\n"
 
 #: ../web/schedule/backup/index.php:17
 msgid "BACKUP_SCHEDULED"
@@ -27,7 +26,7 @@ msgstr "De taak is toegevoegd aan de wachtrij. U ontvangt een e-mailbericht zodr
 #: ../web/unsuspend/mail/index.php:21 ../web/unsuspend/mail/index.php:42
 #: ../web/unsuspend/dns/index.php:21 ../web/unsuspend/dns/index.php:42
 msgid "Error: hestia did not return any output."
-msgstr ""
+msgstr "Foutmelding: Hestia geen uitvoer geretourneerd"
 
 #: ../web/schedule/backup/index.php:25
 msgid "BACKUP_EXISTS"
@@ -102,27 +101,27 @@ msgstr "Hestia Controlepaneel <noreply@%s>"
 
 #: ../web/reset/index.php:35
 msgid "GREETINGS_GORDON"
-msgstr ""
+msgstr "Hallo %s"
 
 #: ../web/reset/index.php:37
-msgid "GREETINGS"
+msgid "Hallo"
 msgstr ""
 
 #: ../web/reset/index.php:40
 msgid "PASSWORD_RESET_REQUEST"
-msgstr ""
+msgstr "Wachtwoord reset aanvraag"
 
 #: ../web/reset/index.php:45
 msgid "Invalid host domain"
-msgstr ""
+msgstr "Ongeldige host domein"
 
 #: ../web/reset/index.php:74
 msgid "An internal error occurred"
-msgstr ""
+msgstr "Een interne foutmelding voort gekomen"
 
 #: ../web/reset/index.php:82
 msgid "Code has been expired"
-msgstr ""
+msgstr "Code is verlopen"
 
 #: ../web/reset/index.php:86 ../web/reset/index.php:90
 msgid "Invalid username or code"
@@ -174,7 +173,7 @@ msgstr "Herstart"
 #: ../web/add/cron/index.php:33 ../web/generate/ssl/index.php:59
 #, php-format
 msgid "Field \"%s\" can not be blank."
-msgstr ""
+msgstr "Veld %s mag niet leeg zijn"
 
 #: ../web/edit/mail/index.php:370 ../web/edit/mail/index.php:526
 #: ../web/edit/web/index.php:763 ../web/edit/server/postgresql/index.php:55
@@ -218,7 +217,7 @@ msgstr "stats gebruikersnaam"
 
 #: ../web/edit/web/index.php:582
 msgid "stats user"
-msgstr ""
+msgstr "statistieken gebruiker"
 
 #: ../web/edit/web/index.php:644 ../web/edit/web/index.php:718
 #: ../web/add/web/index.php:300
@@ -228,7 +227,7 @@ msgstr "FTP inloggegevens"
 #: ../web/edit/web/index.php:647 ../web/edit/web/index.php:721
 #: ../web/add/web/index.php:302
 msgid "FTP_ACCOUNT_READY"
-msgstr ""
+msgstr "FTP Account is klaar"
 
 #: ../web/edit/web/index.php:687
 msgid "ftp user"
@@ -236,7 +235,7 @@ msgstr "FTP gebruiker"
 
 #: ../web/edit/server/crond/index.php:18 ../web/edit/server/cron/index.php:18
 msgid "Info (Read-only mode): Crontab can be edited only trough ssh"
-msgstr ""
+msgstr "Info (Read-only mode): Crontab kan alleen aangepast worden via SSH"
 
 #: ../web/edit/package/index.php:101 ../web/add/user/index.php:27
 #: ../web/add/package/index.php:25
@@ -245,19 +244,19 @@ msgstr "Pakket"
 
 #: ../web/edit/package/index.php:102 ../web/add/package/index.php:26
 msgid "web template"
-msgstr ""
+msgstr "web template"
 
 #: ../web/edit/package/index.php:104 ../web/add/package/index.php:28
 msgid "backend template"
-msgstr ""
+msgstr "backend template"
 
 #: ../web/edit/package/index.php:107 ../web/add/package/index.php:31
 msgid "proxy template"
-msgstr ""
+msgstr "proxy template"
 
 #: ../web/edit/package/index.php:109 ../web/add/package/index.php:33
 msgid "dns template"
-msgstr ""
+msgstr "dns template"
 
 #: ../web/edit/package/index.php:110 ../web/add/package/index.php:34
 msgid "shell"
@@ -273,7 +272,7 @@ msgstr "web aliassen"
 
 #: ../web/edit/package/index.php:113 ../web/add/package/index.php:37
 msgid "dns domains"
-msgstr ""
+msgstr "dns domein"
 
 #: ../web/edit/package/index.php:114 ../web/add/package/index.php:38
 msgid "dns records"
@@ -311,7 +310,7 @@ msgstr "quotum"
 
 #: ../web/edit/package/index.php:121 ../web/add/package/index.php:45
 msgid "bandwidth"
-msgstr ""
+msgstr "bandbreedte"
 
 #: ../web/edit/package/index.php:125 ../web/add/package/index.php:49
 msgid "ns1"
@@ -401,7 +400,7 @@ msgstr "SSH sleutel bestaal al"
 
 #: ../web/add/key/index.php:100
 msgid "SSH KEY created"
-msgstr ""
+msgstr "SSH Sleutel aangemaakt"
 
 #: ../web/add/firewall/ipset/index.php:25
 #: ../web/templates/admin/list_search.html:9
@@ -434,15 +433,15 @@ msgstr "IP lijst met success toegevoegd"
 
 #: ../web/add/firewall/index.php:42
 msgid "action"
-msgstr ""
+msgstr "Actie"
 
 #: ../web/add/firewall/index.php:43
 msgid "protocol"
-msgstr ""
+msgstr "protocol"
 
 #: ../web/add/firewall/index.php:44
 msgid "port"
-msgstr ""
+msgstr "Port"
 
 #: ../web/add/firewall/index.php:45 ../web/add/firewall/banlist/index.php:26
 #: ../web/add/ip/index.php:25
@@ -455,7 +454,7 @@ msgstr "Regel is succesvol aangemaakt."
 
 #: ../web/add/firewall/banlist/index.php:25
 msgid "banlist"
-msgstr ""
+msgstr "ban lijst"
 
 #: ../web/add/firewall/banlist/index.php:51
 msgid "BANLIST_CREATED_OK"
@@ -475,7 +474,7 @@ msgstr "type"
 
 #: ../web/add/db/index.php:23
 msgid "host"
-msgstr ""
+msgstr "Host"
 
 #: ../web/add/db/index.php:24
 msgid "charset"
@@ -487,7 +486,7 @@ msgstr "Database gegevens"
 
 #: ../web/add/db/index.php:94
 msgid "DATABASE_READY"
-msgstr ""
+msgstr "Database klaar"
 
 #: ../web/add/db/index.php:100
 msgid "DATABASE_CREATED_OK"
@@ -578,11 +577,11 @@ msgstr "Land"
 
 #: ../web/generate/ssl/index.php:39
 msgid "State"
-msgstr ""
+msgstr "Staat"
 
 #: ../web/generate/ssl/index.php:40
 msgid "City"
-msgstr ""
+msgstr "Plaats"
 
 #: ../web/generate/ssl/index.php:41
 #: ../web/templates/admin/generate_ssl.html:101
@@ -701,7 +700,7 @@ msgstr "Voeg SSH sleutel toe"
 
 #: ../web/templates/admin/list_key.html:17
 msgid "SSH_ID"
-msgstr "SSH ID"
+msgstr "SSH id"
 
 #: ../web/templates/admin/list_key.html:21
 #: ../web/templates/admin/add_key.html:57
@@ -851,12 +850,12 @@ msgstr "Weet je zeker dat SSH sleutel %s wilt verwijderen?"
 
 #: ../web/templates/admin/list_key.html:61
 msgid "1 SSH Key"
-msgstr ""
+msgstr "1 SSH sleutel"
 
 #: ../web/templates/admin/list_key.html:63
 #, php-format
 msgid "%s SSH Keys"
-msgstr ""
+msgstr "%s SSH sleutels"
 
 #: ../web/templates/admin/generate_ssl.html:45
 #: ../web/templates/admin/list_ssl.html:36
@@ -869,15 +868,15 @@ msgstr "2 letterige landcode"
 
 #: ../web/templates/admin/generate_ssl.html:81
 msgid "State / Province"
-msgstr ""
+msgstr "Staat / Provincie"
 
 #: ../web/templates/admin/generate_ssl.html:91
 msgid "City / Locality"
-msgstr ""
+msgstr "Plaats"
 
 #: ../web/templates/admin/generate_ssl.html:113
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 #: ../web/templates/admin/list_firewall_ipset.html:5
 msgid "Add IP list"
@@ -971,7 +970,7 @@ msgstr "weet je zeker dat IP lijst %s wilt veranderen"
 
 #: ../web/templates/admin/list_firewall_ipset.html:105
 msgid "There are currently no IP lists defined."
-msgstr ""
+msgstr "Er zijn op dit moment geen IP lijsten gedifineerd"
 
 #: ../web/templates/admin/list_firewall_ipset.html:108
 msgid "1 Ipset list"
@@ -1435,7 +1434,7 @@ msgstr "Maand"
 #: ../web/templates/user/list_stats.html:30
 #: ../web/templates/user/list_user.html:73
 msgid "IPs"
-msgstr ""
+msgstr "IPs"
 
 #: ../web/templates/admin/list_stats.html:45
 #: ../web/templates/admin/list_mail_acc.html:11
@@ -1510,7 +1509,7 @@ msgstr "DNS Domeinen"
 #: ../web/templates/admin/list_packages.html:50
 #: ../web/templates/user/list_stats.html:36
 msgid "DNS Records"
-msgstr ""
+msgstr "DNS Records"
 
 #: ../web/templates/admin/list_stats.html:51
 #: ../web/templates/admin/edit_backup_exclusions.html:68
@@ -1668,18 +1667,18 @@ msgstr "Weet u zeker dat u record %s wilt verwijderen?"
 
 #: ../web/templates/admin/list_dns_rec.html:96
 msgid "Default"
-msgstr ""
+msgstr "Standaard"
 
 #: ../web/templates/admin/list_dns_rec.html:112
 #: ../web/templates/user/list_dns_rec.html:110
 msgid "1 DNS record"
-msgstr ""
+msgstr "1 DNS record"
 
 #: ../web/templates/admin/list_dns_rec.html:114
 #: ../web/templates/user/list_dns_rec.html:112
 #, php-format
 msgid "%s DNS records"
-msgstr ""
+msgstr "%s DNS records"
 
 #: ../web/templates/admin/list_backup_exclusions.html:5
 #: ../web/templates/admin/edit_backup_exclusions.html:40
@@ -1993,7 +1992,7 @@ msgstr "Lets Encrypt Ondersteuning"
 #: ../web/templates/admin/edit_web.html:261
 #: ../web/templates/user/edit_web.html:274
 msgid "Force SSL/HTTPS"
-msgstr ""
+msgstr "Verplicht SSL/HTTPS"
 
 #: ../web/templates/admin/edit_web.html:266
 #: ../web/templates/user/edit_web.html:279
@@ -2003,14 +2002,14 @@ msgstr "HTTP Strict Transport Security (HSTS) inschakelen <a href=\"https://en.w
 #: ../web/templates/admin/edit_web.html:271
 #: ../web/templates/user/edit_web.html:285
 msgid "Home Directory"
-msgstr ""
+msgstr "Home map"
 
 #: ../web/templates/admin/edit_web.html:306
 #: ../web/templates/admin/add_web.html:240
 #: ../web/templates/admin/edit_mail.html:136
 #: ../web/templates/user/edit_web.html:320
 msgid "SSL Certificate Authority / Intermediate"
-msgstr ""
+msgstr "SSL Certificate Authority / Intermediate"
 
 #: ../web/templates/admin/edit_web.html:306
 #: ../web/templates/admin/add_firewall.html:106
@@ -2496,15 +2495,15 @@ msgstr "Nieuwe IP lijst"
 
 #: ../web/templates/admin/add_firewall_ipset.html:66
 msgid "url, script or file"
-msgstr ""
+msgstr "url, script of bestand"
 
 #: ../web/templates/admin/add_firewall_ipset.html:85
 msgid "ip v4"
-msgstr ""
+msgstr "ip v4"
 
 #: ../web/templates/admin/add_firewall_ipset.html:86
 msgid "ip v6"
-msgstr ""
+msgstr "ip v6"
 
 #: ../web/templates/admin/add_firewall_ipset.html:166
 msgid "BLACKLIST"
@@ -2556,14 +2555,14 @@ msgstr "Laatste 70 lijnen van %s.%s.log"
 
 #: ../web/templates/admin/setup_webapp.html:16
 msgid "Install"
-msgstr ""
+msgstr "Installeer"
 
 #: ../web/templates/admin/setup_webapp.html:43
 msgid ""
 "Data loss warning!<br>Your web domain already has files uploaded, the "
 "installer will overwrite your files and/or the installation might fail.<br/"
 "><br/> Please use the installer only for empty web domains"
-msgstr ""
+msgstr "Waarschuwing voor gegevensverlies! <br> Uw webdomein heeft al bestanden geüpload, de  installatieprogramma overschrijft uw bestanden en / of de installatie kan mislukken. <br /> <br/> Gebruik het installatieprogramma alleen voor lege webdomeinen"
 
 #: ../web/templates/admin/add_ip.html:38
 msgid "Adding IP address"
@@ -2612,27 +2611,27 @@ msgstr "Herstel"
 
 #: ../web/templates/admin/list_backup_detail.html:45
 msgid "Details"
-msgstr ""
+msgstr "Details"
 
 #: ../web/templates/admin/list_backup_detail.html:46
 msgid "Restore"
-msgstr ""
+msgstr "Herstel"
 
 #: ../web/templates/admin/list_backup_detail.html:67
 msgid "Web domain"
-msgstr ""
+msgstr "Web domein"
 
 #: ../web/templates/admin/list_backup_detail.html:105
 msgid "Mail domain"
-msgstr ""
+msgstr "Mail domein"
 
 #: ../web/templates/admin/list_backup_detail.html:143
 msgid "DNS domain"
-msgstr ""
+msgstr "DNS domein"
 
 #: ../web/templates/admin/list_backup_detail.html:219
 msgid "Cron Records"
-msgstr ""
+msgstr "Cron Records"
 
 #: ../web/templates/admin/list_backup_detail.html:222
 #: ../web/templates/admin/panel.html:76 ../web/templates/user/panel.html:62
@@ -2645,7 +2644,7 @@ msgstr "user dir"
 
 #: ../web/templates/admin/list_backup_detail.html:288
 msgid "Cron"
-msgstr ""
+msgstr "Cron"
 
 #: ../web/templates/admin/list_backup_detail.html:319
 msgid "1 item"
@@ -2794,7 +2793,7 @@ msgstr "Bewerken"
 
 #: ../web/templates/admin/list_services.html:148
 msgid "Are you sure you want to stop service"
-msgstr ""
+msgstr "Weet je zeker dat je %s wilt stoppen"
 
 #: ../web/templates/admin/list_services.html:157
 msgid "mb"
@@ -3155,7 +3154,7 @@ msgstr "Weet u zeker dat u de reservekopie %s wilt verwijderen?"
 
 #: ../web/templates/admin/list_backup.html:116
 msgid "1 backup"
-msgstr ""
+msgstr "1 backup"
 
 #: ../web/templates/admin/list_backup.html:118
 #, php-format
@@ -3173,7 +3172,7 @@ msgstr "Weet u zeker dat u het IP-adres %s wilt verwijderen?"
 
 #: ../web/templates/admin/list_firewall_banlist.html:89
 msgid "There are currently no banned IP addresses."
-msgstr ""
+msgstr "Er zijn op dit moment geen geblokeerde IP adressen"
 
 #: ../web/templates/admin/list_firewall_banlist.html:92
 msgid "1 banned IP address"
@@ -3214,11 +3213,11 @@ msgstr "Update"
 
 #: ../web/templates/admin/list_server_info.html:28
 msgid "RAM"
-msgstr ""
+msgstr "RAM"
 
 #: ../web/templates/admin/list_server_info.html:30
 msgid "Network"
-msgstr ""
+msgstr "Netwerk"
 
 #: ../web/templates/admin/list_server_info.html:31
 msgid "Web"
@@ -3285,11 +3284,11 @@ msgstr "Statistieken"
 
 #: ../web/templates/admin/panel.html:29 ../web/templates/user/panel.html:28
 msgid "Notifications"
-msgstr ""
+msgstr "Meldingen"
 
 #: ../web/templates/admin/panel.html:36 ../web/templates/user/panel.html:31
 msgid "Help"
-msgstr ""
+msgstr "Help"
 
 #: ../web/templates/admin/panel.html:48
 msgid "USER"
@@ -3314,7 +3313,7 @@ msgstr "aliassen"
 
 #: ../web/templates/admin/panel.html:75 ../web/templates/user/panel.html:61
 msgid "zones"
-msgstr ""
+msgstr "zones"
 
 #: ../web/templates/admin/panel.html:90 ../web/templates/user/panel.html:76
 msgid "accounts"
@@ -3357,12 +3356,12 @@ msgstr "Type mapnaam, één per mijn. Om alle mappen uit te sluiten gebruik *"
 #: ../web/templates/user/list_web.html:64
 #: ../web/templates/user/list_mail.html:60
 msgid "SSL"
-msgstr ""
+msgstr "SSL"
 
 #: ../web/templates/admin/list_web.html:134
 #: ../web/templates/user/list_web.html:139
 msgid "Edit"
-msgstr ""
+msgstr "Wijzig"
 
 #: ../web/templates/admin/list_web.html:217
 #: ../web/templates/user/list_web.html:222
@@ -3432,7 +3431,7 @@ msgstr "Accounts"
 #: ../web/templates/admin/list_mail.html:60
 #: ../web/templates/user/list_mail.html:59
 msgid "DKIM"
-msgstr ""
+msgstr "DKIM"
 
 #: ../web/templates/admin/list_mail.html:218
 #: ../web/templates/user/list_mail.html:217
@@ -3506,7 +3505,7 @@ msgstr "Pakket toevoegen"
 
 #: ../web/templates/admin/list_packages.html:44
 msgid "Shell"
-msgstr ""
+msgstr "Shell"
 
 #: ../web/templates/admin/list_packages.html:92
 msgid "DELETE_PACKAGE_CONFIRMATION"
@@ -3537,7 +3536,7 @@ msgstr "DD-MM-YYYY"
 
 #: ../web/templates/admin/list_rrd.html:5
 msgid "show: CPU / MEM / NET / DISK"
-msgstr ""
+msgstr "Geavanceerde statistieken"
 
 #: ../web/templates/admin/list_rrd.html:14
 msgid "Yearly"
@@ -3573,7 +3572,7 @@ msgstr "Inloggen"
 
 #: ../web/templates/user/edit_user.html:5
 msgid "SSH_KEY"
-msgstr ""
+msgstr "SSH Sleutel"
 
 #: ../web/templates/reset2fa.html:15
 msgid "2FA Reset successfully"
@@ -3673,7 +3672,7 @@ msgstr "Verkeerde gebruikersnaam en/of wachtwoord"
 
 #: ../web/login/index.php:108 ../web/login/index.php:112
 msgid "Invalid or missing 2FA token"
-msgstr ""
+msgstr "Ongeldige of geen token"
 
 #: ../web/login/index.php:156
 msgid "Invalid or missing token"

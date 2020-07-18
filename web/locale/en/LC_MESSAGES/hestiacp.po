@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Copyright (C) 2020 HestiaCP <https://hestiacp.com>
+# This file is distributed under the same license as the HestiaCP package.
+# HestiaCP <info@hestiacp.com>, 2020.
 #
 msgid ""
 msgstr ""
@@ -16,9 +16,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Loco-Source-Locale: en_NL\n"
-"X-Generator: Poedit 2.3.1\n"
-"X-Loco-Parser: loco_parse_po\n"
 
 #: ../web/schedule/backup/index.php:17
 msgid "BACKUP_SCHEDULED"
@@ -111,11 +108,11 @@ msgstr "Hestia Control Panel <noreply@%s>"
 
 #: ../web/reset/index.php:35
 msgid "GREETINGS_GORDON"
-msgstr "\"Hello %s,\\n"
+msgstr "Hello %s,\\n"
 
 #: ../web/reset/index.php:37
 msgid "GREETINGS"
-msgstr "\"Hello,\\n"
+msgstr "Hello,\\n"
 
 #: ../web/reset/index.php:40
 msgid "PASSWORD_RESET_REQUEST"
@@ -149,7 +146,7 @@ msgstr "Start"
 #: ../web/start/service/index.php:25 ../web/stop/service/index.php:27
 #: ../web/restart/service/index.php:25
 msgid "SERVICE_ACTION_FAILED"
-msgstr "\"%s\" \"%s\" failed"
+msgstr "%s %s failed"
 
 #: ../web/stop/service/index.php:27
 #: ../web/templates/admin/list_services.html:29
@@ -183,7 +180,7 @@ msgstr "Restart"
 #: ../web/add/cron/index.php:33 ../web/generate/ssl/index.php:59
 #, php-format
 msgid "Field \"%s\" can not be blank."
-msgstr "Field \"%s\" can not be blank."
+msgstr "Field %s can not be blank."
 
 #: ../web/edit/mail/index.php:370 ../web/edit/mail/index.php:526
 #: ../web/edit/web/index.php:763 ../web/edit/server/postgresql/index.php:55

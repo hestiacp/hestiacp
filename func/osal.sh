@@ -3,17 +3,17 @@
 # Identifies OS type and variant
 # Setups variables and provides OS-agnostic wrapper functions
 
-OS_TYPE=$(grep "^ID=" /etc/os-release | cut -f 2 -d '=' | sed -e 's/^"//' -e 's/"$//')
+OS_TYPE=$(grep "^ID=" /etc/os-release | cut -f 2 -d '=' | sed -e 's/^"//' -e 's/"$//' | sed -e 's/\(.*\)/\L\1/')
 case "$OS_TYPE" in
-debian|Debian)
+debian)
     OS_BASE='debian'
     OS_VERSION=$(cat /etc/debian_version|grep -o "[0-9]\{1,2\}"|head -n1)
     ;;
-ubuntu|Ubuntu)
+ubuntu)
     OS_BASE='debian'
     OS_VERSION="$(lsb_release -s -r)"
     ;;
-centos|CentOS|rhel|RHEL|fedora|Fedora|RedHat)
+centos|rhel|fedora|redhat)
     OS_BASE='rhel'
     OS_VERSION=$(cat /etc/os-release | grep VERSION_ID | sed -e "s/VERSION_ID=//" | sed -e 's/^"//' -e 's/"$//')
     ;;

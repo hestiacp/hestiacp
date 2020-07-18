@@ -18,7 +18,10 @@ hestia_module_php_remove() {
 
     echo "Removing PHP (FPM) module..."
 
-    # TODO: Remove all added versions
+    # Remove all added versions
+    for php_version in $PHP_SUPPORTED_VERSIONS; do
+        $BIN/hestia module php del $php_version
+    done
 
     osal_kv_write $HESTIA/conf/hestia.conf 'WEB_BACKEND' 'no'
     osal_kv_write $HESTIA_CONF_MODULES/php.conf 'installed' '0'

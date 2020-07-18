@@ -12,9 +12,10 @@ hestia_module_php_install() {
 
     echo "Installing PHP (FPM) module..."
 
-    $BIN/hestia module php add --ver $PHP_DEFAULT_VERSION
+    $BIN/hestia module php add $PHP_DEFAULT_VERSION
 
     pool_d=$(osal_multiphp_fpm_pool_d $PHP_DEFAULT_VERSION)
+    mkdir -p $pool_d
     cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf $pool_d/www.conf
 
     if [ "$OS_BASE" = 'debian' ]; then    

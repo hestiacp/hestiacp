@@ -22,7 +22,11 @@ hestia_module_php_remove() {
     # FIXME: this will not remove unsupported but installed PHP versions
     # (i.e. supported by an older version of Hestia)
     for php_version in $PHP_SUPPORTED_VERSIONS; do
-        $BIN/hestia module php del $php_version
+        php_withoutdot=${php_version//.}
+        php_version_present=$(osal_kv_read $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_present" '')
+        if [ "$php_version_present" ]; then
+            $BIN/hestia module php del $php_version
+        fi
     done
 
     osal_kv_write $HESTIA/conf/hestia.conf 'WEB_BACKEND' 'no'

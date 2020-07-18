@@ -16,8 +16,11 @@ hestia_module_php_del() {
         exit 1
     fi
 
+    # PHP version is first parameter
+    param_ver="$1"
+
     if [ ! $param_ver ]; then
-        echo "You must specify --ver [php_version]"
+        echo "You must specify PHP version"
         exit 1
     fi
 

@@ -1766,6 +1766,7 @@ $HESTIA/bin/v-update-sys-ip > /dev/null 2>&1
 
 # Get main IP
 ip=$(ip addr|grep 'inet '|grep global|head -n1|awk '{print $2}'|cut -f1 -d/)
+local_ip=$ip
 
 # Configuring firewall
 if [ "$iptables" = 'yes' ]; then

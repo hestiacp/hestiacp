@@ -31,7 +31,7 @@ hestia_module_exim_install() {
     mkdir -p $OSAL_DIR_EXIM_CONF/domains
 
     rm -f /etc/alternatives/mta
-    ln -s /usr/sbin/$OSAL_PKG_EXIM /etc/alternatives/mta
+    ln -s /usr/sbin/$OSAL_SERVICE_EXIM /etc/alternatives/mta
     
     osal_service_stop sendmail > /dev/nul 2>&1
     osal_service_disable sendmail > /dev/nul 2>&1
@@ -48,7 +48,7 @@ hestia_module_exim_install() {
     osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'enabled' '1'
     osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'variant' 'exim'
     osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'version' '1'
-    osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'service_name' $OSAL_PKG_EXIM
+    osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'service_name' "$OSAL_SERVICE_EXIM"
 
     # Rebuild mail
     for user in $($HESTIA/bin/v-list-sys-users plain); do

@@ -31,7 +31,7 @@ hestia_module_clamav_remove() {
 
     osal_package_remove $OSAL_PKG_CLAMAV
 
-    osal_kv_write $HESTIA/conf/hestia.conf 'ANTIVIRUS_SYSTEM' 'no'
+    osal_kv_write $HESTIA/conf/hestia.conf 'ANTIVIRUS_SYSTEM' ''
     osal_kv_write $HESTIA_CONF_MODULES/antivirus.conf 'installed' '0'
     osal_kv_write $HESTIA_CONF_MODULES/antivirus.conf 'description' ''
     osal_kv_write $HESTIA_CONF_MODULES/antivirus.conf 'enabled' '0'

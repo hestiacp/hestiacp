@@ -25,7 +25,7 @@ hestia_module_dovecot_remove() {
 
     osal_package_remove $OSAL_PKG_DOVECOT
 
-    osal_kv_write $HESTIA/conf/hestia.conf 'IMAP_SYSTEM' 'no'
+    osal_kv_write $HESTIA/conf/hestia.conf 'IMAP_SYSTEM' ''
     osal_kv_write $HESTIA_CONF_MODULES/imap.conf 'installed' '0'
     osal_kv_write $HESTIA_CONF_MODULES/imap.conf 'description' ''
     osal_kv_write $HESTIA_CONF_MODULES/imap.conf 'enabled' '0'

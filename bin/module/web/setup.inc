@@ -56,7 +56,7 @@ hestia_module_web_setup() {
         osal_kv_write $HESTIA_CONF_MODULES/web.conf 'service_name' $OSAL_SERVICE_NGINX
     else
         echo "Remove Web module setup..."
-        osal_kv_write $HESTIA/conf/hestia.conf  'WEB_SYSTEM' 'no'
+        osal_kv_write $HESTIA/conf/hestia.conf  'WEB_SYSTEM' ''
         osal_kv_delete $HESTIA/conf/hestia.conf 'WEB_RGROUPS'
         osal_kv_delete $HESTIA/conf/hestia.conf 'WEB_PORT' '80'
         osal_kv_delete $HESTIA/conf/hestia.conf 'WEB_SSL_PORT' '443'

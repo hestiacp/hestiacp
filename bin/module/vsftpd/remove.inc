@@ -26,7 +26,7 @@ hestia_module_vsftpd_remove() {
    
     rm -rf $OSAL_PATH_VSFTPD_CONF
 
-    osal_kv_write $HESTIA/conf/hestia.conf 'FTP_SYSTEM' 'no'
+    osal_kv_write $HESTIA/conf/hestia.conf 'FTP_SYSTEM' ''
     osal_kv_write $HESTIA_CONF_MODULES/ftp.conf 'installed' '0'
     osal_kv_write $HESTIA_CONF_MODULES/ftp.conf 'description' ''
     osal_kv_write $HESTIA_CONF_MODULES/ftp.conf 'enabled' '0'

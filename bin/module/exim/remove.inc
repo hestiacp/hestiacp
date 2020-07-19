@@ -34,7 +34,7 @@ hestia_module_exim_remove() {
 
     osal_package_remove $OSAL_PKG_EXIM
 
-    osal_kv_write $HESTIA/conf/hestia.conf 'MAIL_SYSTEM' 'no'
+    osal_kv_write $HESTIA/conf/hestia.conf 'MAIL_SYSTEM' ''
     osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'installed' '0'
     osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'description' ''
     osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'enabled' '0'

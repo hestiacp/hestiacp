@@ -16,14 +16,8 @@ hestia_module_spamassassin_exim-integration_enable() {
     fi
 
     echo "Enabling SpamAssassin-Exim integration..."
-
-    if [ "$OS_BASE" = 'debian' ]; then
-        /usr/bin/sed -i "/^#SPAMASSASSIN\s*=\s*/ s/#*//" $OSAL_PATH_EXIM_CONF/${OSAL_PKG_EXIM}.conf.template
-        /usr/bin/sed -i "/^#SPAM_SCORE\s*=\s*/ s/#*//" $OSAL_PATH_EXIM_CONF/${OSAL_PKG_EXIM}.conf.template
-    else
-        /usr/bin/sed -i "/^#SPAMASSASSIN\s*=\s*/ s/#*//" $OSAL_PATH_EXIM_CONF/${OSAL_PKG_EXIM}.conf
-        /usr/bin/sed -i "/^#SPAM_SCORE\s*=\s*/ s/#*//" $OSAL_PATH_EXIM_CONF/${OSAL_PKG_EXIM}.conf
-    fi
+    /usr/bin/sed -i "/^#SPAMASSASSIN\s*=\s*/ s/#*//" "$OSAL_PATH_EXIM_CONF"
+    /usr/bin/sed -i "/^#SPAM_SCORE\s*=\s*/ s/#*//" "$OSAL_PATH_EXIM_CONF"
 
     osal_service_restart $OSAL_SERVICE_EXIM
     check_result $? "Exim restart failed"

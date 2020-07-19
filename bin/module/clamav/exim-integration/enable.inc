@@ -16,12 +16,7 @@ hestia_module_clamav_exim-integration_enable() {
     fi
 
     echo "Enabling Exim-ClamAV integration..."
-
-    if [ "$OS_BASE" = 'debian' ]; then
-        /usr/bin/sed -i "/^#CLAMD\s*=\s*/ s/#*//" $OSAL_PATH_EXIM_CONF/${OSAL_PKG_EXIM}.conf.template
-    else
-        /usr/bin/sed -i "/^#CLAMD\s*=\s*/ s/#*//" $OSAL_PATH_EXIM_CONF/${OSAL_PKG_EXIM}.conf
-    fi
+    /usr/bin/sed -i "/^#CLAMD\s*=\s*/ s/#*//" "${OSAL_PATH_EXIM_CONF}"
 
     gpasswd -a clamav mail > /dev/null 2>&1
     gpasswd -a clamav $OSAL_USER_EXIM > /dev/null 2>&1

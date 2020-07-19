@@ -12,31 +12,26 @@ hestia_module_exim_install() {
     echo "Installing MTA (Exim) module..."
 
     osal_service_stop $OSAL_SERVICE_EXIM > /dev/null 2>&1
-    hestia_config_backup 'exim-install' $OSAL_PATH_EXIM_CONF
+    hestia_config_backup 'exim-install' $OSAL_DIR_EXIM_CONF
 
     osal_package_preinstall
     osal_package_install $OSAL_PKG_EXIM
 
     gpasswd -a $OSAL_USER_EXIM mail > /dev/null 2>&1
 
-    if [ "$OS_BASE" = 'debian' ]; then
-        cp -f $HESTIA_INSTALL_DIR/exim/${OSAL_PKG_EXIM}.conf.template $OSAL_PATH_EXIM_CONF/
-        chmod 640 $OSAL_PATH_EXIM_CONF/${OSAL_PKG_EXIM}.conf.template
-    else
-        cp -f $HESTIA_INSTALL_DIR/exim/${OSAL_PKG_EXIM}.conf $OSAL_PATH_EXIM_CONF/
-        chmod 640 $OSAL_PATH_EXIM_CONF/${OSAL_PKG_EXIM}.conf
-    fi
+    cp -f $HESTIA_INSTALL_DIR/exim/${OSAL_FILENAME_EXIM_CONF} "$OSAL_PATH_EXIM_CONF"
+    chmod 640 "$OSAL_PATH_EXIM_CONF"
 
-    cp -f $HESTIA_INSTALL_DIR/exim/dnsbl.conf $OSAL_PATH_EXIM_CONF/
-    cp -f $HESTIA_INSTALL_DIR/exim/spam-blocks.conf $OSAL_PATH_EXIM_CONF/
-    touch $OSAL_PATH_EXIM_CONF/white-blocks.conf
-    touch $OSAL_PATH_EXIM_CONF/mailhelo.conf
+    cp -f $HESTIA_INSTALL_DIR/exim/dnsbl.conf $OSAL_DIR_EXIM_CONF/
+    cp -f $HESTIA_INSTALL_DIR/exim/spam-blocks.conf $OSAL_DIR_EXIM_CONF/
+    touch $OSAL_DIR_EXIM_CONF/white-blocks.conf
+    touch $OSAL_DIR_EXIM_CONF/mailhelo.conf
 
-    rm -rf $OSAL_PATH_EXIM_CONF/domains
-    mkdir -p $OSAL_PATH_EXIM_CONF/domains
+    rm -rf $OSAL_DIR_EXIM_CONF/domains
+    mkdir -p $OSAL_DIR_EXIM_CONF/domains
 
     rm -f /etc/alternatives/mta
-    ln -s /usr/sbin/$OSAL_PKG_EXIM /etc/alternatives/mta
+    ln -s /usr/sbin/$OSAL_SERVICE_EXIM /etc/alternatives/mta
     
     osal_service_stop sendmail > /dev/nul 2>&1
     osal_service_disable sendmail > /dev/nul 2>&1
@@ -53,7 +48,7 @@ hestia_module_exim_install() {
     osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'enabled' '1'
     osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'variant' 'exim'
     osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'version' '1'
-    osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'service_name' $OSAL_PKG_EXIM
+    osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'service_name' "$OSAL_SERVICE_EXIM"
 
     # Rebuild mail
     for user in $($HESTIA/bin/v-list-sys-users plain); do

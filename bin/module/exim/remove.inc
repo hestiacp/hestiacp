@@ -30,7 +30,7 @@ hestia_module_exim_remove() {
     osal_service_stop $OSAL_SERVICE_EXIM > /dev/null 2>&1
     osal_service_disable $OSAL_SERVICE_EXIM > /dev/null 2>&1
 
-    hestia_config_backup 'exim-remove' $OSAL_PATH_EXIM_CONF
+    hestia_config_backup 'exim-remove' "$OSAL_DIR_EXIM_CONF"
 
     osal_package_remove $OSAL_PKG_EXIM
 

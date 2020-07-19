@@ -529,13 +529,13 @@ rebuild_mail_domain_conf() {
         if [ ! -z "$local_ip" ]; then
             IP_RDNS=$(is_ip_rdns_valid "$local_ip")
             if [ ! -z "$IP_RDNS" ]; then
-                if [ $(grep -s "^${domain}:" $OSAL_PATH_EXIM_CONF/mailhelo.conf) ]; then
-                    sed -i "/^${domain}:/c\\${domain}:${IP_RDNS}" $OSAL_PATH_EXIM_CONF/mailhelo.conf
+                if [ $(grep -s "^${domain}:" $OSAL_DIR_EXIM_CONF/mailhelo.conf) ]; then
+                    sed -i "/^${domain}:/c\\${domain}:${IP_RDNS}" $OSAL_DIR_EXIM_CONF/mailhelo.conf
                 else
-                    echo ${domain}:${IP_RDNS} >> $OSAL_PATH_EXIM_CONF/mailhelo.conf
+                    echo ${domain}:${IP_RDNS} >> $OSAL_DIR_EXIM_CONF/mailhelo.conf
                 fi
             else
-                sed -i "/^${domain}:/d" $OSAL_PATH_EXIM_CONF/mailhelo.conf
+                sed -i "/^${domain}:/d" $OSAL_DIR_EXIM_CONF/mailhelo.conf
             fi
         fi
 

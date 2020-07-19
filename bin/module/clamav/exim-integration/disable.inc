@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 hestia_module_clamav_exim-integration_disable() {
     source $HESTIA/bin/module/func.inc
@@ -16,13 +16,7 @@ hestia_module_clamav_exim-integration_disable() {
     fi
 
     echo "Disabling Exim-ClamAV integration..."
-
-
-    if [ "$OS_BASE" = 'debian' ]; then
-        /usr/bin/sed -i "/^CLAMD\s*=\s*/ s/^/#/" $OSAL_PATH_EXIM_CONF/${OSAL_PKG_EXIM}.conf.template
-    else
-        /usr/bin/sed -i "/^CLAMD\s*=\s*/ s/^/#/" $OSAL_PATH_EXIM_CONF/${OSAL_PKG_EXIM}.conf
-    fi
+    /usr/bin/sed -i "/^CLAMD\s*=\s*/ s/^/#/" "${OSAL_PATH_EXIM_CONF}"
     
     osal_service_restart $OSAL_SERVICE_EXIM
     check_result $? "Exim restart failed"

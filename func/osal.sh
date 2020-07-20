@@ -59,13 +59,15 @@ sed_escape() {
     sed -e 's/[]\/$*.^[]/\\&/g'
 }
 
-# osal_kv_write path key value
+# Writes a value to a key-value file.
+# osal_kv_write 'path' 'key' 'value'
 osal_kv_write() { 
     osal_kv_delete "$1" "$2"
     echo "$2=$3" >> "$1"
 }
 
-# value=$(osal_kv_read path key defaultvalue)
+# Reads a value from a key-value file.
+# Exits successfully if it does.# value=$(osal_kv_read path key defaultvalue)
 osal_kv_read() {
     local kv_keyname=$(echo "$2" | sed_escape)
     if [ -f "$1" ]; then
@@ -80,11 +82,14 @@ osal_kv_read() {
     fi
 }
 
+# Deletes a value in a key-value file.
 osal_kv_delete() { # path, key
     local kv_keyname=$(echo "$2" | sed_escape)
     test -f "$1" && sed -i "/^${kv_keyname}\s*=.*$/d" "$1"
 }
 
+# Tests if a value exists in a key-value file.
+# Exits successfully if it does.
 osal_kv_haskey() { # path, key
     local kv_keyname=$(echo "$2" | sed_escape)
     test -f "$1" && grep "^${kv_keyname}\s*=" "$1" > /dev/null
@@ -95,6 +100,8 @@ osal_kv_haskey() { # path, key
     fi
 }
 
+# Tests if a boolean value is true in a key-value file.
+# Exits successfully if it does.
 osal_kv_read_bool() {
     local retval=$(osal_kv_read $@)
     if [ "${retval,,}" == "yes" ] \
@@ -107,6 +114,7 @@ osal_kv_read_bool() {
     fi
 }
 
+# Converts a boolean value to 'yes'/'no' (or two terms provided as second and third argument)
 # answer=$(osal_bool_tostring boolean_value yes_value no_value)
 osal_bool_tostring() {
     if [ "${1,,}" == "yes" ] \
@@ -119,6 +127,7 @@ osal_bool_tostring() {
     fi
 }
 
+# Executes a process silently in the background while showing a spinner
 osal_execute_with_spinner() {
     if [ "$OSAL_DEBUG" ]; then
         echo "$@"

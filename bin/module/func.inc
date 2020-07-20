@@ -3,12 +3,12 @@
 HESTIA_CONF_MODULES=$HESTIA/conf/modules
 mkdir -p $HESTIA_CONF_MODULES
 
-# Tests if module is installed
+# Tests if module is installed, exits successfully if it does.
 hestia_module_isinstalled() {
     osal_kv_read_bool $HESTIA_CONF_MODULES/${1}.conf 'installed'
 }
 
-# Returns module version
+# Returns a module version
 hestia_module_getversion() {
     osal_kv_read $HESTIA_CONF_MODULES/${1}.conf 'version'
 }
@@ -18,7 +18,8 @@ hestia_module_getvariant() {
     osal_kv_read $HESTIA_CONF_MODULES/${1}.conf 'variant'
 }
 
-# Tests if a specific variant of a module is installed
+# Tests if a specific variant of a module is installed,
+# exits successfully if it does.
 hestia_module_variant_installed() {
     local module_installed=$(hestia_module_isinstalled $1 && echo 1)
     if [ "$module_installed" ]; then

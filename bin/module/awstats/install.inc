@@ -17,7 +17,7 @@ hestia_module_awstats_install() {
     osal_package_install $OSAL_PKG_AWSTATS
 
     # Disable AWStats cron
-    rm -f /etc/cron.d/awstats
+    hestia_safe_rm /etc/cron.d/awstats
 
     osal_kv_write $HESTIA/conf/hestia.conf 'STATS_SYSTEM' 'awstats'
     osal_kv_write $HESTIA_CONF_MODULES/webstats.conf 'installed' '1'

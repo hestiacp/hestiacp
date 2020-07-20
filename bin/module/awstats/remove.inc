@@ -18,7 +18,7 @@ hestia_module_awstats_remove() {
 
     hestia_config_backup 'awstats-remove' $OSAL_PATH_AWSTATS_CONF
     osal_package_remove $OSAL_PKG_AWSTATS
-    rm -rf $OSAL_PATH_AWSTATS_CONF
+    hestia_safe_rm $OSAL_PATH_AWSTATS_CONF
 
     osal_kv_write $HESTIA/conf/hestia.conf 'WEBSTATS_SYSTEM' ''
     osal_kv_write $HESTIA_CONF_MODULES/webstats.conf 'installed' '0'

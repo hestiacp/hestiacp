@@ -10,7 +10,7 @@ hestia_module_web_setup-ip() {
     # Web support
     if [ ! -z "$WEB_SYSTEM" ]; then
         web_conf="/etc/$WEB_SYSTEM/conf.d/$ip.conf"
-        rm -f $web_conf
+        hestia_safe_rm $web_conf
 
         if [ "$WEB_SYSTEM" = 'httpd' ] || [ "$WEB_SYSTEM" = 'apache2' ]; then
             if [ -z "$(/usr/sbin/apachectl -v | grep Apache/2.4)" ]; then

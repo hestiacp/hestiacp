@@ -53,8 +53,8 @@ hestia_module_apache_install() {
         osal_apache_module_enable status > /dev/null 2>&1
 
         # Delete CentOS style apache logs if present (Hestia will use error.log and access.log)
-        [ -f /var/log/$OSAL_PKG_APACHE/access_log ] && rm /var/log/$OSAL_PKG_APACHE/access_log
-        [ -f /var/log/$OSAL_PKG_APACHE/error_log ] && rm /var/log/$OSAL_PKG_APACHE/error_log
+        [ -f /var/log/$OSAL_PKG_APACHE/access_log ] && hestia_safe_rm /var/log/$OSAL_PKG_APACHE/access_log
+        [ -f /var/log/$OSAL_PKG_APACHE/error_log ] && hestia_safe_rm /var/log/$OSAL_PKG_APACHE/error_log
 
         # Mitigation for some Debian-only scripts
         ln -s /etc/httpd/conf.modules.d/ /etc/httpd/mods-enabled

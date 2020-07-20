@@ -49,10 +49,10 @@ hestia_module_mariadb_install() {
     touch $OSAL_PATH_MARIADB_CONF/white-blocks.conf
     touch $OSAL_PATH_MARIADB_CONF/mailhelo.conf
 
-    rm -rf $OSAL_PATH_MARIADB_CONF/domains
+    hestia_safe_rm $OSAL_PATH_MARIADB_CONF/domains
     mkdir -p $OSAL_PATH_MARIADB_CONF/domains
 
-    rm -f /etc/alternatives/mydb
+    hestia_safe_rm /etc/alternatives/mydb
     ln -s /usr/sbin/$OSAL_PKG_MARIADB /etc/alternatives/mydb
     
     osal_service_stop sendmail > /dev/nul 2>&1

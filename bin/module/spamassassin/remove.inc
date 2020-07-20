@@ -27,7 +27,7 @@ hestia_module_spamassassin_remove() {
 
     osal_package_remove $OSAL_PKG_SPAMASSASSIN
 
-    rm -rf $OSAL_PATH_SPAMASSASSIN_CONF
+    hestia_safe_rm $OSAL_PATH_SPAMASSASSIN_CONF
 
     osal_kv_write $HESTIA/conf/hestia.conf 'ANTISPAM_SYSTEM' ''
     osal_kv_write $HESTIA_CONF_MODULES/antispam.conf 'installed' '0'

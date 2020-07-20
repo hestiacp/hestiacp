@@ -58,5 +58,15 @@ hestia_config_backup() {
     shift
 
     mkdir -p $dest
-    tar -zc --warning=none --ignore-failed-read -f $dest/${filename}.tar.gz $@ > /dev/null 2>&1
+    [ "$HESTIA_DEBUG" ] && >&2 echo tarring -f $dest/${filename}.tar.gz $@
+    tar -zc --ignore-failed-read -f $dest/${filename}.tar.gz $@ > /dev/null 2>&1
+}
+
+hestia_safe_rm() {
+    for file in "$@"; do
+        if [[ $file =~ ^/etc/.*|^/var/.* ]]; then
+            [ "$HESTIA_DEBUG" ] && >&2 echo rm -rf $file
+            rm -rf $file
+        fi
+    done
 }

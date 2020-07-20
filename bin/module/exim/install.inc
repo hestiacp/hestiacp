@@ -26,10 +26,10 @@ hestia_module_exim_install() {
     touch $OSAL_DIR_EXIM_CONF/white-blocks.conf
     touch $OSAL_DIR_EXIM_CONF/mailhelo.conf
 
-    rm -rf $OSAL_DIR_EXIM_CONF/domains
+    hestia_safe_rm $OSAL_DIR_EXIM_CONF/domains
     mkdir -p $OSAL_DIR_EXIM_CONF/domains
 
-    rm -f /etc/alternatives/mta
+    hestia_safe_rm /etc/alternatives/mta
     ln -s /usr/sbin/$OSAL_SERVICE_EXIM /etc/alternatives/mta
     
     osal_service_stop sendmail > /dev/nul 2>&1

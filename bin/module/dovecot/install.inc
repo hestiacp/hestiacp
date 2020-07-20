@@ -22,7 +22,7 @@ hestia_module_dovecot_install() {
     chown -R root:root $OSAL_PATH_DOVECOT_CONF
     
     # Why do we do this?
-    rm -f /etc/dovecot/conf.d/15-mailboxes.conf
+    hestia_safe_rm /etc/dovecot/conf.d/15-mailboxes.conf
 
     osal_service_enable $OSAL_SERVICE_DOVECOT
     osal_service_start $OSAL_SERVICE_DOVECOT

@@ -83,8 +83,8 @@ hestia_module_php_del() {
     fi
 
     # Cleanup files and folders
-    [ -f $HESTIA/data/templates/web/php-fpm/PHP-${php_version/\./_}.tpl ] && rm -f $HESTIA/data/templates/web/php-fpm/PHP-${php_version/\./_}.tpl
-    [[ -d "$php_etc_folder" ]] && rm -rf "$php_etc_folder"
+    [ -f $HESTIA/data/templates/web/php-fpm/PHP-${php_version/\./_}.tpl ] && hestia_safe_rm $HESTIA/data/templates/web/php-fpm/PHP-${php_version/\./_}.tpl
+    [[ -d "$php_etc_folder" ]] && hestia_safe_rm "$php_etc_folder"
 
     osal_kv_write $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_present" '0'
 

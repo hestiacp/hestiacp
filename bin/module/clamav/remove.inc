@@ -25,7 +25,7 @@ hestia_module_clamav_remove() {
 
     hestia_config_backup 'clamav-remove' $OSAL_PATH_CLAMAV_CONF $OSAL_PATH_CLAMAV_CONF_D
 
-    rm -rf $OSAL_PATH_CLAMAV_CONF $OSAL_PATH_CLAMAV_CONF_D
+    hestia_safe_rm $OSAL_PATH_CLAMAV_CONF $OSAL_PATH_CLAMAV_CONF_D
 
     osal_package_remove $OSAL_PKG_CLAMAV
 

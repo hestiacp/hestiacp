@@ -95,7 +95,7 @@ hestia_module_php_add() {
     pool_d=$(osal_multiphp_fpm_pool_d $php_version)
     if [ "$pool_d" ]; then
         mkdir -p $pool_d
-        rm -f $pool_d/*
+        hestia_safe_rm $pool_d/*
         cp -f $HESTIA_INSTALL_DIR/php-fpm/dummy.conf $pool_d/
         sed -i "s/9999/99$php_withoutdot/g" $pool_d/dummy.conf       # FIXME: this'll break with PHP 10.0
     fi

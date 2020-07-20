@@ -20,7 +20,7 @@ hestia_module_dovecot_remove() {
     osal_service_disable $OSAL_SERVICE_DOVECOT > /dev/null 2>&1
 
     hestia_config_backup 'dovecot-remove' $OSAL_PATH_DOVECOT_CONF
-    rm -rf $OSAL_PATH_DOVECOT_CONF
+    hestia_safe_rm $OSAL_PATH_DOVECOT_CONF
 
     osal_package_remove $OSAL_PKG_DOVECOT
 

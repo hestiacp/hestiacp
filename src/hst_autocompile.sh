@@ -15,6 +15,8 @@ download_file() {
     local destination=$2
     local force=$3
 
+    [ "$HESTIA_DEBUG" ] && >&2 echo DEBUG: Downloading file "$url" to "$destination"
+
     # Default destination is the curent working directory
     local dstopt=""
 
@@ -24,11 +26,11 @@ download_file() {
         local is_archive="true"
         local filename="${url##*/}"
         if [ -z "$filename" ]; then
-        >&2 echo "[!] No filename was found in url, exiting ($url)"
-        exit 1
+            >&2 echo "[!] No filename was found in url, exiting ($url)"
+            exit 1
         fi
         if [ ! -z "$force" ] && [ -f "$ARCHIVE_DIR/$filename" ]; then
-        rm -f $ARCHIVE_DIR/$filename
+            rm -f $ARCHIVE_DIR/$filename
         fi
     elif [ ! -z "$destination" ]; then
         # Plain files will be written to specified location
@@ -38,12 +40,13 @@ download_file() {
     if [ -f "$ARCHIVE_DIR/$filename" ] && [ "$is_archive" = "true" ]; then
         tar -tzf "$ARCHIVE_DIR/$filename" > /dev/null 2>&1
         if [ $? -ne 0 ]; then
-        >&2 echo "[!] Archive $ARCHIVE_DIR/$filename is corrupted, redownloading"
-        rm -f $ARCHIVE_DIR/$filename
+            >&2 echo "[!] Archive $ARCHIVE_DIR/$filename is corrupted, redownloading"
+            rm -f $ARCHIVE_DIR/$filename
         fi
     fi
 
     if [ ! -f "$ARCHIVE_DIR/$filename" ]; then
+        [ "$HESTIA_DEBUG" ] && >&2 echo DEBUG: wget $url -q $dstopt --show-progress --progress=bar:force --limit-rate=3m
         wget $url -q $dstopt --show-progress --progress=bar:force --limit-rate=3m
     fi
 
@@ -57,19 +60,20 @@ download_file() {
 }
 
 get_branch_file() {
-  local filename=$1
-  local destination=$2
-  if [ "$use_src_folder" = 'true' ]; then
-      if [ -z "$destination" ]; then
-        #if [ "$HESTIA_DEBUG" = 'true' ]; then echo cp "$SRC_DIR/$filename" ./ ; fi
-        cp -f "$SRC_DIR/$filename" ./
-      else
-        #if [ "$HESTIA_DEBUG" = 'true' ]; then echo cp "$SRC_DIR/$filename" "$destination" ; fi
-        cp -f "$SRC_DIR/$filename" "$destination"
-      fi
-  else
-      download_file "https://raw.githubusercontent.com/$REPO/$branch/$filename" "$destination" $3
-  fi
+    local filename=$1
+    local destination=$2
+    [ "$HESTIA_DEBUG" ] && >&2 echo DEBUG: Get branch file "$filename" to "$destination"
+    if [ "$use_src_folder" = 'true' ]; then
+        if [ -z "$destination" ]; then
+            [ "$HESTIA_DEBUG" ] && >&2 echo DEBUG: cp -f "$SRC_DIR/$filename" ./
+            cp -f "$SRC_DIR/$filename" ./
+        else
+            [ "$HESTIA_DEBUG" ] && >&2 echo DEBUG: cp -f "$SRC_DIR/$filename" "$destination"
+            cp -f "$SRC_DIR/$filename" "$destination"
+        fi
+    else
+        download_file "https://raw.githubusercontent.com/$REPO/$branch/$filename" "$destination" $3
+    fi
 }
 
 usage() {
@@ -248,7 +252,7 @@ fi
 # Get system cpu cores
 NUM_CPUS=$(grep "^cpu cores" /proc/cpuinfo | uniq |  awk '{print $4}')
 
-if [ "$HESTIA_DEBUG" = 'true' ]; then
+if [ "$HESTIA_DEBUG" ]; then
     if [ "$OSTYPE" = 'rhel' ]; then
         echo "OS type          : RHEL / CentOS / Fedora"
     else
@@ -274,7 +278,7 @@ ZLIB='https://www.zlib.net/zlib-'$ZLIB_V'.tar.gz'
 PHP='http://de2.php.net/distributions/php-'$PHP_V'.tar.gz'
 
 # Forward slashes in branchname are replaced with dashes to match foldername in github archive.
-branch=$(echo "$branch" |sed 's/\//-/g');
+branch_dash=$(echo "$branch" |sed 's/\//-/g');
 
 #################################################################################
 #
@@ -332,14 +336,13 @@ if [ "$NGINX_B" = true ] ; then
 
     # Copy local hestia source files
     if [ ! -z "$use_src_folder" ] && [ -d $SRC_DIR ]; then
-        cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch
+        cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch_dash
     fi
 
     # Create the files and install them
     make -j $NUM_CPUS && make DESTDIR=$BUILD_DIR install
 
-    # Cleare up unused files
-    cd $BUILD_DIR
+    # Clear up unused files
     if [ "$KEEPBUILD" != 'true' ]; then
         rm -r $BUILD_DIR_NGINX $BUILD_DIR/openssl-$OPENSSL_V $BUILD_DIR/pcre-$PCRE_V $BUILD_DIR/zlib-$ZLIB_V
     fi
@@ -406,8 +409,8 @@ if [ "$NGINX_B" = true ] ; then
         # Clean up the source folder
         rm -r hestia-nginx_$NGINX_V
         rm -rf $BUILD_DIR/rpmbuild
-        if [ ! -z "$use_src_folder" ] && [ -d $$BUILD_DIR/hestiacp-$branch ]; then
-            rm -r $BUILD_DIR/hestiacp-$branch
+        if [ ! -z "$use_src_folder" ] && [ -d $$BUILD_DIR/hestiacp-$branch_dash ]; then
+            rm -r $BUILD_DIR/hestiacp-$branch_dash
         fi
     fi
 fi
@@ -461,15 +464,22 @@ if [ "$PHP_B" = true ] ; then
 
     # Copy local hestia source files
     if [ ! -z "$use_src_folder" ] && [ -d $SRC_DIR ]; then
-      cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch
+        [ "$HESTIA_DEBUG" ] && echo DEBUG: cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch_dash
+        cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch_dash
     fi
 
     # Move php directory
+    [ "$HESTIA_DEBUG" ] && echo DEBUG: mkdir -p $BUILD_DIR_HESTIAPHP/usr/local/hestia
     mkdir -p $BUILD_DIR_HESTIAPHP/usr/local/hestia
+    
+    [ "$HESTIA_DEBUG" ] && echo DEBUG: rm -r $BUILD_DIR_HESTIAPHP/usr/local/hestia/php
     rm -r $BUILD_DIR_HESTIAPHP/usr/local/hestia/php
+
+    [ "$HESTIA_DEBUG" ] && echo DEBUG: mv ${BUILD_DIR}/usr/local/hestia/php ${BUILD_DIR_HESTIAPHP}/usr/local/hestia/
     mv ${BUILD_DIR}/usr/local/hestia/php ${BUILD_DIR_HESTIAPHP}/usr/local/hestia/
 
     # copy binary
+    [ "$HESTIA_DEBUG" ] && echo DEBUG: cp $BUILD_DIR_HESTIAPHP/usr/local/hestia/php/sbin/php-fpm $BUILD_DIR_HESTIAPHP/usr/local/hestia/php/sbin/hestia-php
     cp $BUILD_DIR_HESTIAPHP/usr/local/hestia/php/sbin/php-fpm $BUILD_DIR_HESTIAPHP/usr/local/hestia/php/sbin/hestia-php
 
     # Change permissions and build the package
@@ -477,6 +487,7 @@ if [ "$PHP_B" = true ] ; then
 
     if [ "$BUILD_DEB" = true ]; then
         # Get Debian package files
+        [ "$HESTIA_DEBUG" ] && echo DEBUG: mkdir -p $BUILD_DIR_HESTIAPHP/DEBIAN
         mkdir -p $BUILD_DIR_HESTIAPHP/DEBIAN
         get_branch_file 'src/deb/php/control' "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
         get_branch_file 'src/deb/php/copyright' "$BUILD_DIR_HESTIAPHP/DEBIAN/copyright"
@@ -487,6 +498,7 @@ if [ "$PHP_B" = true ] ; then
 
         # Build the package
         echo Building PHP DEB
+        [ "$HESTIA_DEBUG" ] && echo DEBUG: dpkg-deb --build $BUILD_DIR_HESTIAPHP $DEB_DIR
         dpkg-deb --build $BUILD_DIR_HESTIAPHP $DEB_DIR
     fi
 
@@ -514,8 +526,8 @@ if [ "$PHP_B" = true ] ; then
     if [ "$KEEPBUILD" != 'true' ]; then
         rm -r $BUILD_DIR/php-$PHP_V
         rm -r $BUILD_DIR_HESTIAPHP
-        if [ ! -z "$use_src_folder" ] && [ -d $BUILD_DIR/hestiacp-$branch ]; then
-            rm -r $BUILD_DIR/hestiacp-$branch
+        if [ ! -z "$use_src_folder" ] && [ -d $BUILD_DIR/hestiacp-$branch_dash ]; then
+            rm -r $BUILD_DIR/hestiacp-$branch_dash
         fi
     fi
 fi
@@ -546,18 +558,18 @@ if [ "$HESTIA_B" = true ]; then
     fi
 
     cd $BUILD_DIR
-    rm -rf $BUILD_DIR/hestiacp-$branch
+    rm -rf $BUILD_DIR/hestiacp-$branch_dash
     # Download and unpack source files
     if [ -z "$use_src_folder" ]; then
         download_file $HESTIA_ARCHIVE_LINK '-' 'fresh' | tar xz
     elif [ -d $SRC_DIR ]; then
-        cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch
+        cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch_dash
     fi
 
     mkdir -p $BUILD_DIR_HESTIA/usr/local/hestia
 
     # Move needed directories
-    cd $BUILD_DIR/hestiacp-$branch
+    cd $BUILD_DIR/hestiacp-$branch_dash
     cp -rf bin func install web $BUILD_DIR_HESTIA/usr/local/hestia/
 
     # Set permissions
@@ -594,9 +606,9 @@ if [ "$HESTIA_B" = true ]; then
     # clear up the source folder
     if [ "$KEEPBUILD" != 'true' ]; then
         rm -r $BUILD_DIR_HESTIA
-        rm -rf hestiacp-$branch
+        rm -rf hestiacp-$branch_dash
     fi
-    cd $BUILD_DIR/hestiacp-$branch
+    cd $BUILD_DIR/hestiacp-$branch_dash
 fi
 
 

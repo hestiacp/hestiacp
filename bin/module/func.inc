@@ -57,9 +57,11 @@ hestia_config_backup() {
     local filename=${1}-$(date +%Y%m%d%H%M%S)
     shift
 
-    mkdir -p $dest
-    [ "$HESTIA_DEBUG" ] && >&2 echo tarring -f $dest/${filename}.tar.gz $@
-    tar -zc --ignore-failed-read -f $dest/${filename}.tar.gz $@ > /dev/null 2>&1
+    if [ "$1" ]; then
+        mkdir -p $dest
+        [ "$HESTIA_DEBUG" ] && >&2 echo tarring -f $dest/${filename}.tar.gz $@
+        tar -zc --ignore-failed-read -f $dest/${filename}.tar.gz $@ > /dev/null 2>&1
+    fi
 }
 
 hestia_safe_rm() {

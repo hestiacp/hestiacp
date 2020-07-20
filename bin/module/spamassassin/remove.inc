@@ -3,22 +3,20 @@
 hestia_module_spamassassin_remove() {
     source $HESTIA/bin/module/func.inc
 
-    module_installed=$(hestia_module_isinstalled antispam)
-    if [ ! "$module_installed" ] && [ ! "$param_force" ]; then
+    if ! hestia_module_isinstalled 'antispam' && [ ! "$param_force" ]; then
         echo "Antispam module is not installed. See 'hestia module info antispam'."
-        exit 1
+        return 1
     fi
 
     module_variant=$(hestia_module_getvariant antispam)
     if [ "$module_variant" != 'spamassassin' ] && [ ! "$param_force" ]; then
         echo "The installed antispam module is not SpamAssassin. See 'hestia module info antispam'."
-        exit 1
+        return 1
     fi
 
     echo "Removing antispam (SpamAssassin) module..."
 
-    exim_installed=$(hestia_module_variant_installed 'mta' 'exim')
-    if [ "$exim_installed" ]; then
+    if hestia_module_variant_installed 'mta' 'exim'; then
         $BIN/hestia module spamassassin exim-integration disable
     fi
 
@@ -38,5 +36,5 @@ hestia_module_spamassassin_remove() {
     osal_kv_write $HESTIA_CONF_MODULES/antispam.conf 'variant' ''
     osal_kv_write $HESTIA_CONF_MODULES/antispam.conf 'version' '0'
 
-    exit 0
+    return 0
 }

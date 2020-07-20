@@ -3,16 +3,15 @@
 hestia_module_dovecot_remove() {
     source $HESTIA/bin/module/func.inc
 
-    module_installed=$(hestia_module_isinstalled imap)
-    if [ ! "$module_installed" ] && [ ! "$param_force" ]; then
+    if ! hestia_module_isinstalled 'imap' && [ ! "$param_force" ]; then
         echo "IMAP module is not installed. See 'hestia module info imap'."
-        exit 1
+        return 1
     fi
 
     module_variant=$(hestia_module_getvariant imap)
     if [ "$module_variant" != 'dovecot' ] && [ ! "$param_force" ]; then
         echo "The installed IMAP module is not Dovecot. See 'hestia module info imap'."
-        exit 1
+        return 1
     fi
 
     echo "Removing IMAP (Dovecot) module..."
@@ -32,5 +31,5 @@ hestia_module_dovecot_remove() {
     osal_kv_write $HESTIA_CONF_MODULES/imap.conf 'variant' ''
     osal_kv_write $HESTIA_CONF_MODULES/imap.conf 'version' '0'
 
-    exit 0
+    return 0
 }

@@ -4,24 +4,23 @@ hestia_module_php_del() {
     source $HESTIA/bin/module/func.inc
     source $HESTIA/bin/module/php/func.inc
 
-    module_installed=$(hestia_module_isinstalled php)
-    if [ ! "$module_installed" ] && [ ! "$param_force" ]; then
+    if ! hestia_module_isinstalled 'php' && [ ! "$param_force" ]; then
         echo "PHP module is not installed. See 'hestia module info php'."
-        exit 1
+        return 1
     fi
 
     module_variant=$(hestia_module_getvariant php)
     if [ "$module_variant" != 'php-fpm' ] && [ ! "$param_force" ]; then
         echo "The installed PHP module is not FPM. See 'hestia module info php'."
-        exit 1
+        return 1
     fi
 
     # PHP version is first parameter
-    param_ver="$1"
+    local param_ver="$1"
 
     if [ ! $param_ver ]; then
         echo "You must specify PHP version"
-        exit 1
+        return 1
     fi
 
     # Verify php version format
@@ -40,15 +39,15 @@ hestia_module_php_del() {
     done
     if [ ! "$php_version" ]; then
         echo "PHP version $param_ver is not supported."
-        exit 1
+        return 1
     fi
 
     php_withoutdot=${php_version//.}
 
-    php_version_present=$(osal_kv_read_bool $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_present")
+    php_version_present=$(osal_kv_read_bool $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_present" && echo 1)
     if [ ! "$php_version_present" ] && [ ! "$param_force" ]; then
         echo "PHP version ${php_version} is not present. See 'hestia module php list'."
-        exit 1
+        return 1
     fi
 
     # Perform verification if read-only mode is enabled
@@ -91,5 +90,5 @@ hestia_module_php_del() {
 
     log_history "removed php $phpversion" '' 'admin'
 
-    exit 0
+    return 0
 }

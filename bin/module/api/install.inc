@@ -3,10 +3,9 @@
 hestia_module_api_install() {
     source $HESTIA/bin/module/func.inc
 
-    module_installed=$(hestia_module_isinstalled api)
-    if [ "$module_installed" ] && [ ! "$param_force" ]; then
+    if hestia_module_isinstalled 'api' && [ ! "$param_force" ]; then
         echo "API module is already installed. See 'hestia module info api'."
-        exit 1
+        return 1
     fi
 
     echo "Installing API module..."
@@ -18,5 +17,5 @@ hestia_module_api_install() {
     osal_kv_write $HESTIA_CONF_MODULES/api.conf 'variant' 'api'
     osal_kv_write $HESTIA_CONF_MODULES/api.conf 'version' '1'
 
-    exit 0
+    return 0
 }

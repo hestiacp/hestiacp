@@ -3,10 +3,9 @@
 hestia_module_exim_install() {
     source $HESTIA/bin/module/func.inc
 
-    module_installed=$(hestia_module_isinstalled mta)
-    if [ "$module_installed" ] && [ ! "$param_force" ]; then
+    if hestia_module_isinstalled 'mta' && [ ! "$param_force" ]; then
         echo "MTA module is already installed. See 'hestia module info mta'."
-        exit 1
+        return 1
     fi
 
     echo "Installing MTA (Exim) module..."
@@ -57,14 +56,12 @@ hestia_module_exim_install() {
     done
 
     # Setup ClamAv integration
-    clamav_installed=$(hestia_module_variant_installed 'antivirus' 'clamav')
-    if [ "$clamav_installed" ]; then
+    if hestia_module_variant_installed 'antivirus' 'clamav'; then
         $BIN/hestia module clamav exim-integration enable
     fi
 
     # Setup SpamAssassin integration
-    spamassassin_installed=$(hestia_module_variant_installed 'antispam' 'spamassassin')
-    if [ "$spamassassin_installed" ]; then
+    if hestia_module_variant_installed 'antispam' 'spamassassin'; then
         $BIN/hestia module spamassassin exim-integration enable
     fi
 }

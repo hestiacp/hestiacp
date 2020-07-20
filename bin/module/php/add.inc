@@ -4,16 +4,15 @@ hestia_module_php_add() {
     source $HESTIA/bin/module/func.inc
     source $HESTIA/bin/module/php/func.inc
 
-    module_installed=$(hestia_module_isinstalled php)
-    if [ ! "$module_installed" ] && [ ! "$param_force" ]; then
+    if ! hestia_module_isinstalled 'php' && [ ! "$param_force" ]; then
         echo "PHP module is not installed. See 'hestia module info php'."
-        exit 1
+        return 1
     fi
 
-    module_variant=$(hestia_module_getvariant php)
+    module_variant=$(hestia_module_getvariant 'php')
     if [ "$module_variant" != 'php-fpm' ] && [ ! "$param_force" ]; then
         echo "The installed PHP module is not FPM. See 'hestia module info php'."
-        exit 1
+        return 1
     fi
 
     # PHP version is first parameter
@@ -21,7 +20,7 @@ hestia_module_php_add() {
 
     if [ ! "$param_ver" ]; then
         echo "You must specify PHP version"
-        exit 1
+        return 1
     fi
 
     # Verify php version format
@@ -40,21 +39,21 @@ hestia_module_php_add() {
     done
     if [ ! "$php_version" ]; then
         echo "PHP version $param_ver is not supported."
-        exit 1
+        return 1
     fi
 
-    php_withoutdot=${php_version//.}
-    php_version_present=$(osal_kv_read_bool $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_present")
+    local php_withoutdot=${php_version//.}
+    local php_version_present=$(osal_kv_read_bool $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_present" && echo 1)
 
     if [ "$php_version_present" ] && [ ! "$param_force" ]; then
         echo "PHP version ${php_version} is already present. See 'hestia module php list'."
-        exit 1
+        return 1
     fi
 
     # Check if php version is supported
     if [ ! -f "$HESTIA_INSTALL_DIR/multiphp/$WEB_SYSTEM/PHP-${php_withoutdot}.sh" ]; then
         echo "PHP version ${php_version} is currently not supported or does not exist."
-        exit
+        return 1
     fi
 
     # Perform verification if read-only mode is enabled
@@ -62,7 +61,7 @@ hestia_module_php_add() {
 
     echo "Adding PHP version ${php_version}..."
 
-    php_prefix=$(osal_multiphp_php_package_prefix $php_version)
+    local php_prefix=$(osal_multiphp_php_package_prefix $php_version)
 
     mph="$php_prefix-mbstring $php_prefix-bcmath $php_prefix-cli $php_prefix-curl
         $php_prefix-fpm $php_prefix-gd $php_prefix-intl $php_prefix-mysql

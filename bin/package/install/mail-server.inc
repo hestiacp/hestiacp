@@ -5,7 +5,7 @@ hestia_package_install_mail-server() {
 
     if [ "$param_help" ]; then
         usage
-        exit 0
+        return 0
     fi
 
     echo "Installing mail server package..."

@@ -3,10 +3,9 @@
 hestia_module_dummy_install() {
     source $HESTIA/bin/module/func.inc
 
-    module_installed=$(hestia_module_isinstalled dummy)
-    if [ "$module_installed" ]; then
+    if hestia_module_isinstalled 'dummy'; then
         echo "Dummy module is already installed. See 'hestia module info dummy'."
-        exit 1
+        return 1
     fi
 
     echo "Installing Dummy module..."
@@ -17,7 +16,7 @@ hestia_module_dummy_install() {
     osal_kv_write $HESTIA_CONF_MODULES/dummy.conf 'variant' 'crash-test-dummy'
     osal_kv_write $HESTIA_CONF_MODULES/dummy.conf 'version' '4'
 
-    exit 0
+    return 0
 }
 
 # If this files is _not_ being sourced, act immediately

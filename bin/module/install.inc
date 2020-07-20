@@ -7,6 +7,6 @@ hestia_module_install() {
         $BIN/hestia module $module_name install "$@"
     else
         echo "Usage: module install module_name"
-        exit 0
+        return 0
     fi
 }

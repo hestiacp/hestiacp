@@ -3,22 +3,20 @@
 hestia_module_clamav_remove() {
     source $HESTIA/bin/module/func.inc
 
-    module_installed=$(hestia_module_isinstalled antivirus)
-    if [ ! "$module_installed" ] && [ ! "$param_force" ]; then
+    if ! hestia_module_isinstalled 'antivirus' && [ ! "$param_force" ]; then
         echo "antivirus module is not installed. See 'hestia module info antivirus'."
-        exit 1
+        return 1
     fi
 
     module_variant=$(hestia_module_getvariant antivirus)
     if [ "$module_variant" != 'clamav' ] && [ ! "$param_force" ]; then
         echo "The installed antivirus module is not ClamAV. See 'hestia module info antivirus'."
-        exit 1
+        return 1
     fi
 
     echo "Removing antivirus (ClamAV) module..."
 
-    exim_installed=$(hestia_module_variant_installed 'mta' 'exim')
-    if [ "$exim_installed" ]; then
+    if hestia_module_variant_installed 'mta' 'exim'; then
         $BIN/hestia module clamav exim-integration disable
     fi
 

@@ -3,10 +3,9 @@
 hestia_module_apache_remove() {
     source $HESTIA/bin/module/func.inc
 
-    module_installed=$(hestia_module_isinstalled apache)
-    if [ ! "$module_installed" ] && [ ! "$param_force" ]; then
+    if ! hestia_module_isinstalled 'apache' && [ ! "$param_force" ]; then
         echo "Apache module is not installed. See 'hestia module info apache'."
-        exit 1
+        return 1
     fi
 
     echo "Removing Apache module..."

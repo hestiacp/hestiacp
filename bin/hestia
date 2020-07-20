@@ -8,8 +8,8 @@ source $HESTIA/conf/hestia.conf
 
 hestia() {
     # Search for command file
-    cmd_name=''
-    cmd_file=''
+    local cmd_name=''
+    local cmd_file=''
     for arg in "$@"
     do
         # FIXME: secutirity (what is $arg is something like ../../../malicious_code)
@@ -88,18 +88,20 @@ hestia() {
     [ "$params" ] && params="${params:1}"
 
     if [ $cmd_file ]; then
-        #echo "Command file          : $cmd_file"
-        #echo "Command type          : $cmd_type"
-        #echo "Command function name : hestia_${cmd_name}()"
-        #echo "Remaining arguments   : $@"
-        #echo "Parameters used       : $params"
-        #echo "Parameter values      : "
-        #for param in $params; do
-        #    echo "    --$param ${!param}"
-        #done
-        #echo ""
-        #echo "*** Now the command itself:"
-        #echo ""
+        if [ "$HESTIA_DEBUG" ]; then
+            echo "Command file          : $cmd_file"
+            echo "Command type          : $cmd_type"
+            echo "Command function name : hestia_${cmd_name}()"
+            echo "Remaining arguments   : $@"
+            echo "Parameters used       : $params"
+            echo "Parameter values      : "
+            for param in $params; do
+                echo "    --$param ${!param}"
+            done
+            echo ""
+            echo "*** Now the command itself:"
+            echo ""
+        fi
 
         if [ "$cmd_type" = 'include' ]; then
             source $cmd_file
@@ -109,7 +111,7 @@ hestia() {
         fi
     else
         echo "Hestia: Unrecognized command: $@"
-        exit 1
+        return 1
     fi
 }
 

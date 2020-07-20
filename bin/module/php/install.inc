@@ -4,17 +4,16 @@ hestia_module_php_install() {
     source $HESTIA/bin/module/func.inc
     source $HESTIA/bin/module/php/func.inc
 
-    module_installed=$(hestia_module_isinstalled php)
-    if [ "$module_installed" ] && [ ! "$param_force" ]; then
+    if hestia_module_isinstalled 'php' && [ ! "$param_force" ]; then
         echo "PHP module is already installed. See 'hestia module info php'."
-        exit 1
+        return 1
     fi
 
     echo "Installing PHP (FPM) module..."
 
     $BIN/hestia module php add $PHP_DEFAULT_VERSION
 
-    pool_d=$(osal_multiphp_fpm_pool_d $PHP_DEFAULT_VERSION)
+    local pool_d=$(osal_multiphp_fpm_pool_d $PHP_DEFAULT_VERSION)
     mkdir -p $pool_d
     cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf $pool_d/www.conf
 
@@ -34,5 +33,5 @@ hestia_module_php_install() {
     echo "Adding default PHP version..."
     $BIN/hestia module php add $PHP_DEFAULT_VERSION
 
-    exit 0
+    return 0
 }

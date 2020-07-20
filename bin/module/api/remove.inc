@@ -3,10 +3,9 @@
 hestia_module_api_remove() {
     source $HESTIA/bin/module/func.inc
 
-    module_installed=$(hestia_module_isinstalled api)
-    if [ ! "$module_installed" ] && [ ! "$param_force" ]; then
+    if ! hestia_module_isinstalled 'api' && [ ! "$param_force" ]; then
         echo "API module is not installed. See 'hestia module info api'."
-        exit 1
+        return 1
     fi
 
     echo "Removing API module..."
@@ -18,5 +17,5 @@ hestia_module_api_remove() {
     osal_kv_write $HESTIA_CONF_MODULES/api.conf 'variant' ''
     osal_kv_write $HESTIA_CONF_MODULES/api.conf 'version' '0'
 
-    exit 0
+    return 0
 }

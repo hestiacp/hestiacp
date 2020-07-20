@@ -40,7 +40,7 @@ done
 # VAR=$(ini_get 'file' 'section' 'param' 'value')
 osal_ini_get() {
     #echo /usr/bin/crudini --get $@
-    retval=$(/usr/bin/crudini --get $@ 2>1)
+    local retval=$(/usr/bin/crudini --get $@ 2>1)
     if [ $? -eq 0 ]; then
         echo $retval
     fi
@@ -67,9 +67,9 @@ osal_kv_write() {
 
 # value=$(osal_kv_read path key defaultvalue)
 osal_kv_read() {
-    kv_keyname=$(echo "$2" | sed_escape)
+    local kv_keyname=$(echo "$2" | sed_escape)
     if [ -f "$1" ]; then
-        retval=$(grep "^$kv_keyname\s*=" "$1" | sed "s/^$kv_keyname\s*=\s*//" | tail -1 | sed "s/^\([\"']\)\(.*\)\1\$/\2/g")
+        local retval=$(grep "^$kv_keyname\s*=" "$1" | sed "s/^$kv_keyname\s*=\s*//" | tail -1 | sed "s/^\([\"']\)\(.*\)\1\$/\2/g")
         if [ "$retval" ]; then
             echo $retval
         else
@@ -81,25 +81,29 @@ osal_kv_read() {
 }
 
 osal_kv_delete() { # path, key
-    kv_keyname=$(echo "$2" | sed_escape)
+    local kv_keyname=$(echo "$2" | sed_escape)
     test -f "$1" && sed -i "/^${kv_keyname}\s*=.*$/d" "$1"
 }
 
 osal_kv_haskey() { # path, key
-    kv_keyname=$(echo "$2" | sed_escape)
+    local kv_keyname=$(echo "$2" | sed_escape)
     test -f "$1" && grep "^${kv_keyname}\s*=" "$1" > /dev/null
     if [ $? -eq 0 ]; then
-        echo 1
+        return 0
+    else
+        return 1
     fi
 }
 
 osal_kv_read_bool() {
-    retval=$(osal_kv_read $@)
+    local retval=$(osal_kv_read $@)
     if [ "${retval,,}" == "yes" ] \
         || [ "${retval,,}" == "true" ] \
         || [ "${retval,,}" == "on" ] \
         || [ "$retval" == "1" ]; then
-        echo 1
+        return 0
+    else
+        return 1
     fi
 }
 
@@ -121,10 +125,10 @@ osal_execute_with_spinner() {
         $@
     else
         $@ > /dev/null 2>&1 &
-        BACK_PID=$!
+        local BACK_PID=$!
 
-        spinner="/-\|"
-        spin_i=1
+        local spinner="/-\|"
+        local spin_i=1
         while kill -0 $BACK_PID > /dev/null 2>&1 ; do
             printf "\b${spinner:spin_i++%${#spinner}:1}"
             sleep 0.5

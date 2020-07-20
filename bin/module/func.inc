@@ -3,36 +3,31 @@
 HESTIA_CONF_MODULES=$HESTIA/conf/modules
 mkdir -p $HESTIA_CONF_MODULES
 
-# Returns 1 if module is installed
+# Tests if module is installed
 hestia_module_isinstalled() {
     osal_kv_read_bool $HESTIA_CONF_MODULES/${1}.conf 'installed'
 }
 
-# Returns 1 if module is installed and enabled
-hestia_module_isenabled() {
-    is_installed=$(osal_kv_read_bool $HESTIA_CONF_MODULES/${1}.conf 'installed')
-    is_enabled=$(osal_kv_read_bool $HESTIA_CONF_MODULES/${1}.conf 'enabled')
-    if [ "$is_installed" ] && [ "$is_enabled" ]; then
-        echo 1
-    fi
-}
-
+# Returns module version
 hestia_module_getversion() {
     osal_kv_read $HESTIA_CONF_MODULES/${1}.conf 'version'
 }
 
+# Returns module installed variant
 hestia_module_getvariant() {
     osal_kv_read $HESTIA_CONF_MODULES/${1}.conf 'variant'
 }
 
+# Tests if a specific variant of a module is installed
 hestia_module_variant_installed() {
-    module_installed=$(hestia_module_isinstalled $1)
+    local module_installed=$(hestia_module_isinstalled $1 && echo 1)
     if [ "$module_installed" ]; then
-        module_variant=$(hestia_module_getvariant $1)
+        local module_variant=$(hestia_module_getvariant $1)
         if [ "$module_variant" = "$2" ]; then
-            echo 1
+            return 0
         fi
     fi
+    return 1
 }
 
 # Schedules a service restart (when doing multiple actions)
@@ -57,8 +52,8 @@ hestia_module_service_restart_restart() {
 # Backup config files (usually prior to module install)
 # hestia_config_backup 'prefix' file1 file2 file3 ...
 hestia_config_backup() {
-    dest=$HESTIA/data/backup/
-    filename=${1}-$(date +%Y%m%d%H%M%S)
+    local dest=$HESTIA/data/backup/
+    local filename=${1}-$(date +%Y%m%d%H%M%S)
     shift
 
     mkdir -p $dest

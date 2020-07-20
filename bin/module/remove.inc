@@ -7,6 +7,6 @@ hestia_module_remove() {
         $BIN/hestia module $module_name remove "$@"
     else
         echo "Usage: module install module_name"
-        exit 0
+        return 0
     fi
 }

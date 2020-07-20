@@ -3,8 +3,8 @@
 hestia_module_web_setup() {
     source $HESTIA/bin/module/func.inc
 
-    apache_installed=$(hestia_module_isinstalled apache)
-    nginx_installed=$(hestia_module_isinstalled nginx)
+    local apache_installed=$(hestia_module_isinstalled apache && echo 1)
+    local nginx_installed=$(hestia_module_isinstalled nginx && echo 1)
 
     if [ "$apache_installed" ] && [ ! "$nginx_installed" ] ; then
         echo "Setup Web module (Apache only)..."
@@ -76,10 +76,9 @@ hestia_module_web_setup() {
 
     if [ "$apache_installed" ] || [ "$nginx_installed" ] ; then
         $BIN/hestia module web setup-ips
-
         # FIXME: setup PHP support
-        php_variant=$(hestia_module_variant_installed php)
         if [ "$apache_installed" ]; then
+            local php_variant=$(hestia_module_variant_installed 'php')
             # Enable mod_ruid/mpm_itk or mpm_event
             if [ "$php_variant" = 'php-fpm' ]; then
                 # Disable prefork and php, enable event

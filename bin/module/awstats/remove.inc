@@ -3,16 +3,15 @@
 hestia_module_awstats_remove() {
     source $HESTIA/bin/module/func.inc
 
-    module_installed=$(hestia_module_isinstalled webstats)
-    if [ ! "$module_installed" ] && [ ! "$param_force" ]; then
+    if ! hestia_module_isinstalled 'webstats' && [ ! "$param_force" ]; then
         echo "Web stats module is not installed. See 'hestia module info webstats'."
-        exit 1
+        return 1
     fi
 
-    module_variant=$(hestia_module_getvariant webstats)
+    module_variant=$(hestia_module_getvariant 'webstats')
     if [ "$module_variant" != 'awstats' ] && [ ! "$param_force" ]; then
         echo "The installed web stats module is not Awstats. See 'hestia module info webstats'."
-        exit 1
+        return 1
     fi
 
     echo "Removing web stats (Awstats) module..."
@@ -28,5 +27,5 @@ hestia_module_awstats_remove() {
     osal_kv_write $HESTIA_CONF_MODULES/webstats.conf 'variant' ''
     osal_kv_write $HESTIA_CONF_MODULES/webstats.conf 'version' '0'
 
-    exit 0
+    return 0
 }

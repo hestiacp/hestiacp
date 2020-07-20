@@ -3,10 +3,9 @@
 hestia_module_clamav_install() {
     source $HESTIA/bin/module/func.inc
 
-    module_installed=$(hestia_module_isinstalled antivirus)
-    if [ "$module_installed" ] && [ ! "$param_force" ]; then
+    if hestia_module_isinstalled 'antivirus' && [ ! "$param_force" ]; then
         echo "Antivirus module is already installed. See 'hestia module info antivirus'."
-        exit 1
+        return 1
     fi
 
     echo "Installing antivirus (ClamAV) module..."
@@ -58,8 +57,7 @@ hestia_module_clamav_install() {
     osal_kv_write $HESTIA_CONF_MODULES/antivirus.conf 'version' '1'
     osal_kv_write $HESTIA_CONF_MODULES/antivirus.conf 'service_name' $OSAL_SERVICE_CLAMAV
 
-    exim_installed=$(hestia_module_variant_installed 'mta' 'exim')
-    if [ "$exim_installed" ]; then
+    if hestia_module_variant_installed 'mta' 'exim'; then
         $BIN/hestia module clamav exim-integration enable
     fi
 }

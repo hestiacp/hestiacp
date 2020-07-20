@@ -3,27 +3,24 @@
 hestia_module_exim_remove() {
     source $HESTIA/bin/module/func.inc
 
-    module_installed=$(hestia_module_isinstalled mta)
-    if [ ! "$module_installed" ] && [ ! "$param_force" ]; then
+    if ! hestia_module_isinstalled 'mta' && [ ! "$param_force" ]; then
         echo "MTA module is not installed. See 'hestia module info mta'."
-        exit 1
+        return 1
     fi
 
     module_variant=$(hestia_module_getvariant mta)
     if [ "$module_variant" != 'exim' ] && [ ! "$param_force" ]; then
         echo "The installed MTA module is not Exim. See 'hestia module info mta'."
-        exit 1
+        return 1
     fi
 
     echo "Removing MTA (Exim) module..."
 
-    clamav_installed=$(hestia_module_variant_installed 'antivirus' 'clamav')
-    if [ "$clamav_installed" ]; then
+    if hestia_module_variant_installed 'antivirus' 'clamav'; then
         $BIN/hestia module clamav exim-integration disable
     fi
 
-    spamassassin_installed=$(hestia_module_variant_installed 'antispam' 'spamassassin')
-    if [ "$spamassassin_installed" ]; then
+    if hestia_module_variant_installed 'antispam' 'spamassassin'; then
         $BIN/hestia module spamassassin exim-integration disable
     fi
 

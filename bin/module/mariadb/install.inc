@@ -3,10 +3,9 @@
 hestia_module_mariadb_install() {
     source $HESTIA/bin/module/func.inc
 
-    module_installed=$(hestia_module_isinstalled mydb)
-    if [ "$module_installed" ] && [ ! "$param_force" ]; then
+    if hestia_module_isinstalled 'mydb' && [ ! "$param_force" ]; then
         echo "MySQL/MariaDB database module is already installed. See 'hestia module info mydb'."
-        exit 1
+        return 1
     fi
 
     echo "Installing database (MariaDB) module..."

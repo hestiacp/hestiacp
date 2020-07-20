@@ -3,10 +3,9 @@
 hestia_module_awstats_install() {
     source $HESTIA/bin/module/func.inc
 
-    module_installed=$(hestia_module_isinstalled webstats)
-    if [ "$module_installed" ] && [ ! "$param_force" ]; then
+    if hestia_module_isinstalled 'webstats' && [ ! "$param_force" ]; then
         echo "Stats module is already installed. See 'hestia module info webstats'."
-        exit 1
+        return 1
     fi
 
     echo "Installing web stats (Awstats) module..."
@@ -27,5 +26,5 @@ hestia_module_awstats_install() {
     osal_kv_write $HESTIA_CONF_MODULES/webstats.conf 'variant' 'awstats'
     osal_kv_write $HESTIA_CONF_MODULES/webstats.conf 'version' '1'
 
-    exit 0
+    return 0
 }

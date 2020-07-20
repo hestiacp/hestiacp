@@ -65,6 +65,9 @@ OSAL_PKG_NGINX=nginx
 OSAL_PATH_NGINX_CONF=/etc/nginx
 OSAL_PATH_NGINX_CONF_D=/etc/nginx/conf.d
 
+# PHP
+PHP_DIR_POOL_D_BASE=/etc/php
+
 # phpMyAdmin
 OSAL_PKG_PHPMYADMIN=phpmyadmin
 
@@ -145,7 +148,8 @@ multiphp_etc_folder() {
     echo /etc/php/php${1}
 }
 
+# Returns PHP-FPM directory for a given PHP version
 # multiphp_fpm_pool_d '7.3' = /etc/php/7.3/fpm/pool.d
 osal_multiphp_fpm_pool_d() {
-    echo /etc/php/$1/fpm/pool.d
+    echo $PHP_DIR_POOL_D_BASE/$1/fpm/pool.d
 }

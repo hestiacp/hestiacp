@@ -64,6 +64,9 @@ OSAL_PKG_NGINX=nginx
 OSAL_PATH_NGINX_CONF=/etc/nginx
 OSAL_PATH_NGINX_CONF_D=/etc/nginx/conf.d
 
+# PHP
+PHP_DIR_POOL_D_BASE=/etc/opt/remi
+
 # phpMyAdmin
 OSAL_PKG_PHPMYADMIN=phpMyAdmin
 
@@ -150,7 +153,10 @@ osal_multiphp_etc_folder() {
     echo /etc/opt/remi/php${1//.}
 }
 
-# multiphp_fpm_pool_d '7.3' = /etc/opt/remi/php$73/php-fpm.d
+# Returns PHP-FPM directory for a given PHP version
+# multiphp_fpm_pool_d '7.3' = /etc/opt/remi/php73/php-fpm.d
 osal_multiphp_fpm_pool_d() {
-    echo /etc/opt/remi/php${1//.}/php-fpm.d
+    local numbersonly=${1//.}       # Remove . in 7.3
+    numbersonly=${numbersonly#php}  # Remove php in php73
+    echo $PHP_DIR_POOL_D_BASE/php${numbersonly}/php-fpm.d
 }

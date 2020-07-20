@@ -30,6 +30,7 @@ hestia_module_phpmyadmin_install() {
 
     # Delete file to prevent error. FIXME: prevent what error?
     mkdir -p /usr/share/phpmyadmin
+    cd - > /dev/null
     hestia_safe_rm /usr/share/phpmyadmin/doc/html
 
     cp -rf phpMyAdmin-$pma_version-all-languages/* /usr/share/phpmyadmin

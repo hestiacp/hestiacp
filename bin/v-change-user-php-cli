@@ -44,6 +44,11 @@ if [ ! -f "$HESTIA_INSTALL_DIR/multiphp/$WEB_SYSTEM/PHP-${version//.}.sh" ]; the
     exit
 fi
 
+#create .bash_aliases is not exsists
+if [ ! -f "$FILE" ]; then
+    touch "$FILE"
+fi
+
 if grep -q "alias php='env php$version'" "$FILE"; then
   echo "PHP CLI Already defined"
   exit;
@@ -52,11 +57,6 @@ fi
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-
-#create .bash_aliases is not exsists
-if [ ! -f "$FILE" ]; then
-    touch "$FILE"
-fi
 
 sed -i "/alias php='env/d" "$FILE"
 

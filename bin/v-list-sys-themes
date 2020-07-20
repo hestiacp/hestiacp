@@ -27,7 +27,11 @@ json_list() {
         if [ "$i" -lt "$object1" ]; then
             echo -e  "\t\"$theme\","
         else
-            echo -e  "\t\"$theme\""
+            if [ $object2 -gt 0 ]; then
+                echo -e  "\t\"$theme\","
+            else
+                echo -e  "\t\"$theme\""            
+            fi
         fi
         (( ++i))
     done

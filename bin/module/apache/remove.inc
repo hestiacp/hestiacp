@@ -17,6 +17,13 @@ hestia_module_apache_remove() {
 
     osal_package_remove $OSAL_PKG_APACHE
 
+    if [ "$OS_BASE" = 'debian' ]; then  
+        hestia_safe_rm $OSAL_PATH_APACHE_CONF/mods-available/hestia-status.conf
+        hestia_safe_rm $OSAL_PATH_APACHE_CONF/mods-available/hestia-status.load
+    elif [ "$OS_BASE" = 'rhel' ]; then
+        hestia_safe_rm  /etc/httpd/mods-enabled
+    fi
+
     osal_kv_write $HESTIA_CONF_MODULES/apache.conf 'installed' '0'
     osal_kv_write $HESTIA_CONF_MODULES/apache.conf 'description' ''
     osal_kv_write $HESTIA_CONF_MODULES/apache.conf 'enabled' '0'

@@ -14,7 +14,9 @@ hestia_module_apache_install() {
     hestia_config_backup 'apache-install' $OSAL_PATH_APACHE_CONF $OSAL_PATH_APACHE_CONF_D
 
     osal_package_preinstall
-    osal_package_install $OSAL_PKG_APACHE $OSAL_PKG_APACHE_EXTRA $OSAL_PKG_APACHE_MOD_RUID2
+    osal_package_install $OSAL_PKG_APACHE $OSAL_PKG_APACHE_EXTRA
+    # Install ruid2 separately, in case it fails (i.e. not available)
+    osal_package_install $OSAL_PKG_APACHE_MOD_RUID2
 
     mkdir -p $OSAL_PATH_APACHE_CONF_D/domains
 
@@ -35,21 +37,24 @@ hestia_module_apache_install() {
         echo "# Powered by Hestia" > $OSAL_PATH_APACHE_CONF/sites-available/default-ssl
         echo -e "/home\npublic_html/cgi-bin" > /etc/apache2/suexec/www-data
 
+        hestia_safe_rm $OSAL_PATH_APACHE_CONF/mods-available/hestia-status.load
+        hestia_safe_rm $OSAL_PATH_APACHE_CONF/mods-available/hestia-status.conf
+
         # Copy configuration files
-        # FIXME: why don't we just overwrite status.conf? That will be more portable
-        a2dismod status > /dev/null 2>&1
-        mv -f $HESTIA_INSTALL_DIR/$OSAL_PKG_APACHE/status.conf $OSAL_PATH_APACHE_CONF/mods-available/hestia-status.conf
-        mv -f /etc/apache2/mods-available/status.load $OSAL_PATH_APACHE_CONF/mods-available/hestia-status.load
-        a2enmod hestia-status > /dev/null 2>&1
+        cp -f $HESTIA_INSTALL_DIR/$OSAL_PKG_APACHE/status.conf $OSAL_PATH_APACHE_MODS_AVAILABLE/
+        cp -f /etc/apache2/mods-available/status.load $OSAL_PATH_APACHE_MODS_AVAILABLE/
         # Prevent remote access to server-status page
-        sed -i '/Allow from all/d' $OSAL_PATH_APACHE_CONF/mods-available/hestia-status.conf
+        sed -i '/Allow from all/d' $OSAL_PATH_APACHE_MODS_AVAILABLE/status.conf
+        osal_apache_module_enable status > /dev/null 2>&1
     elif [ "$OS_BASE" = 'rhel' ]; then
         echo "# Powered by Hestia" > $OSAL_PATH_APACHE_CONF_D/ssl.conf
         echo "# Powered by Hestia" > $OSAL_PATH_APACHE_CONF_D/welcome.conf
         echo "# Powered by Hestia" > $OSAL_PATH_APACHE_CONF_D/userdir.conf
 
         # Copy configuration files
-        cp -f $HESTIA_INSTALL_DIR/$OSAL_PKG_APACHE/status.conf $OSAL_PATH_APACHE_CONF_D/hestia-status.conf
+        cp -f $HESTIA_INSTALL_DIR/$OSAL_PKG_APACHE/status.conf $OSAL_PATH_APACHE_CONF_D/
+        # Prevent remote access to server-status page
+        sed -i '/Allow from all/d' $OSAL_PATH_APACHE_CONF_D/status.conf
         osal_apache_module_enable status > /dev/null 2>&1
 
         # Delete CentOS style apache logs if present (Hestia will use error.log and access.log)

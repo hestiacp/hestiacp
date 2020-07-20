@@ -22,6 +22,7 @@ alias=$2
 # Includes
 source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
+source $HESTIA/func/osal.sh
 
 
 #----------------------------------------------------------#
@@ -47,22 +48,22 @@ if [ "$type" = "pma" ] || [ "$type" = "PMA" ] || [ "$type" = "phpmyadmin" ]; the
     $BIN/v-change-sys-config-value 'DB_PMA_ALIAS' "$alias"
 
     # Replace old configuration files and update alias
-    if [ -e "/etc/apache2/conf.d/phpmyadmin.conf" ]; then
-        rm -f /etc/apache2/conf.d/phpmyadmin.conf
-        cp -f $HESTIA_INSTALL_DIR/pma/apache.conf /etc/apache2/conf.d/phpmyadmin.conf
-        sed -i "s|%pma_alias%|$alias|g" /etc/apache2/conf.d/phpmyadmin.conf
+    if [ -e "$OSAL_PATH_APACHE_CONF_D/phpmyadmin.conf" ]; then
+        rm -f $OSAL_PATH_APACHE_CONF_D/phpmyadmin.conf
+        cp -f $HESTIA_INSTALL_DIR/pma/apache.conf $OSAL_PATH_APACHE_CONF_D/phpmyadmin.conf
+        sed -i "s|%pma_alias%|$alias|g" $OSAL_PATH_APACHE_CONF_D/phpmyadmin.conf
         
         # Restart services
-        $HESTIA/bin/v-restart-service apache2
+        $HESTIA/bin/v-restart-service $OSAL_SERVICE_APACHE
     fi
 
-    if [ -e "/etc/nginx/conf.d/phpmyadmin.inc" ]; then
-        rm -f /etc/nginx/conf.d/phpmyadmin.inc
-        cp -f $HESTIA_INSTALL_DIR/nginx/phpmyadmin.inc /etc/nginx/conf.d/phpmyadmin.inc
-        sed -i "s|%pma_alias%|$alias|g" /etc/nginx/conf.d/phpmyadmin.inc
+    if [ -e "$OSAL_PATH_NGINX_CONF_D/phpmyadmin.inc" ]; then
+        rm -f $OSAL_PATH_NGINX_CONF_D/phpmyadmin.inc
+        cp -f $HESTIA_INSTALL_DIR/nginx/phpmyadmin.inc $OSAL_PATH_NGINX_CONF_D/phpmyadmin.inc
+        sed -i "s|%pma_alias%|$alias|g" $OSAL_PATH_NGINX_CONF_D/phpmyadmin.inc
         
         # Restart services
-        $HESTIA/bin/v-restart-service nginx
+        $HESTIA/bin/v-restart-service $OSAL_SERVICE_NGINX
     fi
 fi
 
@@ -75,22 +76,22 @@ if [ "$type" = "pga" ] || [ "$type" = "PGA" ] || [ "$type" = "phppgadmin" ]; the
     $BIN/v-change-sys-config-value 'DB_PGA_ALIAS' "$alias"
 
     # Replace old configuration files and update alias
-    if [ -e "/etc/apache2/conf.d/phppgadmin.conf" ]; then
-        rm -f /etc/apache2/conf.d/phppgadmin.conf
-        cp -f $HESTIA_INSTALL_DIR/pga/phppgadmin.conf /etc/apache2/conf.d/phppgadmin.conf
-        sed -i "s|%pga_alias%|$alias|g" /etc/apache2/conf.d/phppgadmin.conf 
+    if [ -e "$OSAL_PATH_NGINX_CONF_D/phppgadmin.conf" ]; then
+        rm -f $OSAL_PATH_NGINX_CONF_D/phppgadmin.conf
+        cp -f $HESTIA_INSTALL_DIR/pga/phppgadmin.conf $OSAL_PATH_NGINX_CONF_D/phppgadmin.conf
+        sed -i "s|%pga_alias%|$alias|g" $OSAL_PATH_NGINX_CONF_D/phppgadmin.conf 
         
         # Restart services
-        $HESTIA/bin/v-restart-service apache2
+        $HESTIA/bin/v-restart-service $OSAL_SERVICE_APACHE
     fi
 
-    if [ -e "/etc/nginx/conf.d/phppgadmin.inc" ]; then
-        rm -f /etc/nginx/conf.d/phppgadmin.inc
-        cp -f $HESTIA_INSTALL_DIR/nginx/phppgadmin.inc /etc/nginx/conf.d/phppgadmin.inc
-        sed -i "s|%pga_alias%|$alias|g" /etc/nginx/conf.d/phppgadmin.inc
+    if [ -e "$OSAL_PATH_NGINX_CONF_D/phppgadmin.inc" ]; then
+        rm -f $OSAL_PATH_NGINX_CONF_D/phppgadmin.inc
+        cp -f $HESTIA_INSTALL_DIR/nginx/phppgadmin.inc $OSAL_PATH_NGINX_CONF_D/phppgadmin.inc
+        sed -i "s|%pga_alias%|$alias|g" $OSAL_PATH_NGINX_CONF_D/phppgadmin.inc
         
         # Restart services
-        $HESTIA/bin/v-restart-service nginx
+        $HESTIA/bin/v-restart-service $OSAL_SERVICE_NGINX
     fi
 fi
 

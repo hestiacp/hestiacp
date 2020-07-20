@@ -37,6 +37,37 @@ do
     fi
 done
 
+# service_start 'service-name'
+osal_service_start() {
+    [ "$HESTIA_DEBUG" ] && >&2 echo Start service $1
+    /usr/bin/systemctl start ${1}.service
+}
+
+# service_stop 'service-name'
+osal_service_stop() {
+    [ "$HESTIA_DEBUG" ] && >&2 echo Stop service $1
+    /usr/bin/systemctl stop ${1}.service
+}
+
+# service_restart 'service-name'
+osal_service_restart() {
+    [ "$HESTIA_DEBUG" ] && >&2 echo Restart service $1
+    /usr/bin/systemctl restart ${1}.service
+}
+
+# service_enable 'service-name'
+osal_service_enable() {
+    [ "$HESTIA_DEBUG" ] && >&2 echo Enable service $1
+    /usr/bin/systemctl enable ${1}.service
+}
+
+# service_disable 'service-name'
+osal_service_disable() {
+    [ "$HESTIA_DEBUG" ] && >&2 echo Disable service $1
+    /usr/bin/systemctl disable ${1}.service
+}
+
+
 # VAR=$(ini_get 'file' 'section' 'param' 'value')
 osal_ini_get() {
     #echo /usr/bin/crudini --get $@
@@ -146,4 +177,15 @@ osal_execute_with_spinner() {
         # Do a blank echo to get the \n back
         echo
     fi
+}
+
+# Generates a random password
+osal_gen_pass() {
+    local MATRIX='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+    local LENGTH=16
+    while [ ${n:=1} -le $LENGTH ]; do
+        PASS="$PASS${MATRIX:$(($RANDOM%${#MATRIX})):1}"
+        let n+=1
+    done
+    echo "$PASS"
 }

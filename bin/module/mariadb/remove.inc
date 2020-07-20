@@ -1,40 +1,32 @@
 #!/bin/bash
 
-hestia_module_exim_remove() {
+hestia_module_mariadb_remove() {
     source $HESTIA/bin/module/func.inc
 
-    if ! hestia_module_isinstalled 'mta' && [ ! "$param_force" ]; then
-        echo "MTA module is not installed. See 'hestia module info mta'."
+    if ! hestia_module_isinstalled 'mydb' && [ ! "$param_force" ]; then
+        echo "MySQL/MariaDB database module is not installed. See 'hestia module info mydb'."
         return 1
     fi
 
-    module_variant=$(hestia_module_getvariant mta)
-    if [ "$module_variant" != 'exim' ] && [ ! "$param_force" ]; then
-        echo "The installed MTA module is not Exim. See 'hestia module info mta'."
+    module_variant=$(hestia_module_getvariant mydb)
+    if [ "$module_variant" != 'mariadb' ] && [ ! "$param_force" ]; then
+        echo "The installed database module is not MariaDB. See 'hestia module info mydb'."
         return 1
     fi
 
-    echo "Removing MTA (Exim) module..."
+    echo "Removing database (MariaDB) module..."
 
-    if hestia_module_variant_installed 'antivirus' 'clamav'; then
-        $BIN/hestia module clamav exim-integration disable
-    fi
+    osal_service_stop $OSAL_SERVICE_MARIADB > /dev/null 2>&1
+    osal_service_disable $OSAL_SERVICE_MARIADB > /dev/null 2>&1
 
-    if hestia_module_variant_installed 'antispam' 'spamassassin'; then
-        $BIN/hestia module spamassassin exim-integration disable
-    fi
+    hestia_config_backup 'mariadb-remove' $OSAL_PATH_MARIADB_CONF $OSAL_DIR_MARIADB_CONF_D
 
-    osal_service_stop $OSAL_SERVICE_EXIM > /dev/null 2>&1
-    osal_service_disable $OSAL_SERVICE_EXIM > /dev/null 2>&1
+    osal_package_remove ${OSAL_PKG_MARIADB}-server
 
-    hestia_config_backup 'exim-remove' "$OSAL_DIR_EXIM_CONF"
-
-    osal_package_remove $OSAL_PKG_EXIM
-
-    osal_kv_write $HESTIA/conf/hestia.conf 'MAIL_SYSTEM' ''
-    osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'installed' '0'
-    osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'description' ''
-    osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'enabled' '0'
-    osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'variant' ''
-    osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'version' '0'
+    osal_kv_write $HESTIA/conf/hestia.conf 'DB_SYSTEM' ''
+    osal_kv_write $HESTIA_CONF_MODULES/mydb.conf 'installed' '0'
+    osal_kv_write $HESTIA_CONF_MODULES/mydb.conf 'description' ''
+    osal_kv_write $HESTIA_CONF_MODULES/mydb.conf 'enabled' '0'
+    osal_kv_write $HESTIA_CONF_MODULES/mydb.conf 'variant' ''
+    osal_kv_write $HESTIA_CONF_MODULES/mydb.conf 'version' '0'
 }

@@ -48,6 +48,15 @@ OSAL_FILENAME_EXIM_CONF="${OSAL_PKG_EXIM}.conf"
 OSAL_DIR_EXIM_CONF=/etc/exim
 OSAL_PATH_EXIM_CONF="${OSAL_DIR_EXIM_CONF}/${OSAL_FILENAME_EXIM_CONF}"
 
+# MariaDB
+OSAL_PKG_MARIADB=MariaDB
+OSAL_SERVICE_MARIADB=mariadb
+OSAL_DIR_MARIADB_CONF=/etc
+OSAL_DIR_MARIADB_CONF_D=/etc/my.cnf.d
+OSAL_FILENAME_MARIADB_CONF=my.cnf
+OSAL_PATH_MARIADB_CONF="$OSAL_DIR_MARIADB_CONF/$OSAL_FILENAME_MARIADB_CONF"
+OSAL_PATH_MARIADB_DATA=/var/lib/mysql
+
 # Nginx
 OSAL_SERVICE_NGINX=nginx
 OSAL_USER_NGINX=nginx
@@ -93,37 +102,14 @@ osal_package_preinstall() {
 
 # package_install 'package' 'package' ...
 osal_package_install() {
+    [ "$HESTIA_DEBUG" ] && >&2 echo $OSAL_CMD_PACKAGE_MANAGER -q -y install "$@"
     $OSAL_CMD_PACKAGE_MANAGER -q -y install "$@"
 }
 
 # package_remoev 'package' 'package' ...
 osal_package_remove() {
+    [ "$HESTIA_DEBUG" ] && >&2 $OSAL_CMD_PACKAGE_MANAGER -q -y remove "$@"
     $OSAL_CMD_PACKAGE_MANAGER -q -y remove "$@"
-}
-
-# service_start 'service-name'
-osal_service_start() {
-    /usr/bin/systemctl start ${1}.service
-}
-
-# service_stop 'service-name'
-osal_service_stop() {
-    /usr/bin/systemctl stop ${1}.service
-}
-
-# service_restart 'service-name'
-osal_service_restart() {
-    /usr/bin/systemctl restart ${1}.service
-}
-
-# service_enable 'service-name'
-osal_service_enable() {
-    /usr/bin/systemctl enable ${1}.service > /dev/null
-}
-
-# service_disable 'service-name'
-osal_service_disable() {
-    /usr/bin/systemctl disable ${1}.service /dev/null
 }
 
 # Software-specific

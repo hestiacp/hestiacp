@@ -20,9 +20,9 @@ type=$1
 alias=$2
 
 # Includes
+source $HESTIA/func/osal.sh
 source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
-source $HESTIA/func/osal.sh
 
 
 #----------------------------------------------------------#

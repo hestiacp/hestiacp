@@ -18,11 +18,11 @@ dkim=${5-yes}
 dkim_size=${6-1024}
 
 # Includes
+source $HESTIA/func/osal.sh
 source $HESTIA/func/main.sh
 source $HESTIA/func/domain.sh
 source $HESTIA/conf/hestia.conf
 source $HESTIA/func/ip.sh
-source $HESTIA/func/osal.sh
 
 # Define mail user
 if [ "$MAIL_SYSTEM" = 'exim4' ]; then

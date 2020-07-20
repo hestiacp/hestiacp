@@ -16,10 +16,10 @@ template=${3-default}
 restart=$4
 
 # Includes
+source $HESTIA/func/osal.sh
 source $HESTIA/func/main.sh
 source $HESTIA/func/domain.sh
 source $HESTIA/conf/hestia.conf
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #

@@ -16,10 +16,10 @@ domain=$2
 domain_idn=$2
 
 # Includes
+source $HESTIA/func/osal.sh
 source $HESTIA/func/main.sh
 source $HESTIA/func/domain.sh
 source $HESTIA/conf/hestia.conf
-source $HESTIA/func/osal.sh
 
 # Additional argument formatting
 format_domain

@@ -8,7 +8,7 @@ hestia_module_web_setup() {
 
     if [ "$apache_installed" ] && [ ! "$nginx_installed" ] ; then
         echo "Setup Web module (Apache only)..."
-        osal_kv_write $HESTIA/conf/hestia.conf  'WEB_SYSTEM' 'httpd'
+        osal_kv_write $HESTIA/conf/hestia.conf  'WEB_SYSTEM' $OSAL_PKG_APACHE
         osal_kv_write $HESTIA/conf/hestia.conf  'WEB_RGROUPS' $OSAL_USER_APACHE_DATA
         osal_kv_write $HESTIA/conf/hestia.conf  'WEB_PORT' '80'
         osal_kv_write $HESTIA/conf/hestia.conf  'WEB_SSL_PORT' '443'
@@ -24,7 +24,7 @@ hestia_module_web_setup() {
         osal_kv_write $HESTIA_CONF_MODULES/web.conf 'service_name' $OSAL_SERVICE_APACHE
     elif [ "$apache_installed" ] && [ "$nginx_installed" ] ; then
         echo "Setup Web module (Apache + Nginx)..."
-        osal_kv_write $HESTIA/conf/hestia.conf  'WEB_SYSTEM' 'httpd'
+        osal_kv_write $HESTIA/conf/hestia.conf  'WEB_SYSTEM' $OSAL_PKG_APACHE
         osal_kv_write $HESTIA/conf/hestia.conf  'WEB_RGROUPS' $OSAL_USER_APACHE_DATA
         osal_kv_write $HESTIA/conf/hestia.conf  'WEB_PORT' '8080'
         osal_kv_write $HESTIA/conf/hestia.conf  'WEB_SSL_PORT' '8443'

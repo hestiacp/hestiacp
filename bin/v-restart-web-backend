@@ -44,15 +44,16 @@ if [ -z "$WEB_BACKEND" ] || [ "$WEB_BACKEND" = 'remote' ]; then
 fi
 
 tmpfile=$(mktemp)
-for php_folder in /etc/php/*; do
-    [ ! -d "${php_folder}/fpm/pool.d/" ] && continue
+for php_folder in $PHP_DIR_POOL_D_BASE/*; do
+    pool_d=$(osal_multiphp_fpm_pool_d ${php_folder})
+    [ ! -d "$pool_d" ] && continue
 
     v_php="$(basename $php_folder)"
     v_phpfpm="php${v_php}-fpm"
 
-    if [ ! -f "/etc/php/${v_php}/fpm/pool.d/dummy.conf" ]; then
-        cp -f "$HESTIA_INSTALL_DIR/php-fpm/dummy.conf" "/etc/php/${v_php}/fpm/pool.d/"
-        sed -i "s/9999/99${v_php//.}/g" "/etc/php/${v_php}/fpm/pool.d/dummy.conf"
+    if [ ! -f "$pool_d/dummy.conf" ]; then
+        cp -f "$HESTIA_INSTALL_DIR/php-fpm/dummy.conf" "$pool_d/"
+        sed -i "s/9999/99${v_php//.}/g" "$pool_d/dummy.conf"
     fi
 
     $BIN/v-restart-service "$v_phpfpm" >> $tmpfile 2>&1

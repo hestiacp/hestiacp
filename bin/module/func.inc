@@ -66,7 +66,7 @@ hestia_config_backup() {
 
 hestia_safe_rm() {
     for file in "$@"; do
-        if [[ $file =~ ^/etc/.*|^/var/.* ]]; then
+        if [[ $file =~ ^/etc/.*|^/var/.*|^/usr/share/.* ]]; then
             [ "$HESTIA_DEBUG" ] && >&2 echo rm -rf $file
             rm -rf $file
         fi

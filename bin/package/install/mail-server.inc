@@ -1,7 +1,7 @@
 #!/bin/bash
 
 hestia_package_install_mail-server() {
-    memory=$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])
+    local memory=$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])
 
     if [ "$param_help" ]; then
         usage

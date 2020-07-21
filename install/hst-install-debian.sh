@@ -105,13 +105,7 @@ download_file() {
 
 # Defining password-gen function
 gen_pass() {
-    MATRIX='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
-    LENGTH=16
-    while [ ${n:=1} -le $LENGTH ]; do
-        PASS="$PASS${MATRIX:$(($RANDOM%${#MATRIX})):1}"
-        let n+=1
-    done
-    echo "$PASS"
+    cat /dev/urandom | tr -dc [:alnum:] | head -c16
 }
 
 # Defining return code check function

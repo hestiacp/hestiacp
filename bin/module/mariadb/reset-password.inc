@@ -21,17 +21,24 @@ hestia_module_mariadb_reset-password() {
 
     local mariadb_root_password=$(osal_gen_pass)
 
-    mysqld_safe --skip-grant-tables --skip-networking &
+    # Start MariaDB in safe mode, without grant tables
+    mysqld_safe --skip-grant-tables --skip-networking & > /dev/null
     sleep 2
-    mysql -e "FLUSH PRIVILEGES;"
-    mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$mariadb_root_password';"
-    mysql -e "FLUSH PRIVILEGES;"
 
+    # Reset root password
+    mysql -e "FLUSH PRIVILEGES;" > /dev/null
+    mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$mariadb_root_password';" > /dev/null
+    mysql -e "FLUSH PRIVILEGES;" > /dev/null
+
+    # Update MariaDB client config file
     echo -e "[client]\npassword='$mariadb_root_password'\n" > /root/.my.cnf
     chmod 600 /root/.my.cnf
 
-    kill `cat /var/run/mysqld/mysqld.pid`
+    # Update Hestia server config file
+    sed -i "/HOST='localhost'/ s/\s*PASSWORD='[^']*'\s*/ PASSWORD='$mariadb_root_password' /g" $HESTIA/conf/mysql.conf
 
+    # Kill mysqld_safe and restart MariaDB service
+    kill `cat /var/run/mysqld/mysqld.pid`
     osal_service_start $OSAL_SERVICE_MARIADB
 
     echo "The root password for the MariaDB server is now '$mariadb_root_password'"

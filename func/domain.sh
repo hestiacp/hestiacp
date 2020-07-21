@@ -96,12 +96,10 @@ prepare_web_backend() {
         #pool=$(find -L /etc/php/$backend_version -type d \( -name "pool.d" -o -name "*fpm.d" \))
         pool=$(osal_multiphp_fpm_pool_d $backend_version)
     else
-    echo 2
         backend_version=$(multiphp_default_version)
         if [ -z "$pool" ] || [ -z "$BACKEND" ]; then
             #pool=$(find -L /etc/php/$backend_version -type d \( -name "pool.d" -o -name "*fpm.d" \))
             pool=$(osal_multiphp_fpm_pool_d $backend_version)
-            echo 3
         fi
     fi
  

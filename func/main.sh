@@ -165,19 +165,14 @@ get_user_owner() {
 # Random password generator
 generate_password() {
     matrix=$1
-    lenght=$2
+    length=$2
     if [ -z "$matrix" ]; then
-        matrix=0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
+        matrix=[:alnum:]
     fi
-    if [ -z "$lenght" ]; then
-        lenght=10
+    if [ -z "$length" ]; then
+        length=10
     fi
-    i=1
-    while [ $i -le $lenght ]; do
-        pass="$pass${matrix:$(($RANDOM%${#matrix})):1}"
-       ((i++))
-    done
-    echo "$pass"
+    cat /dev/urandom | tr -dc $matrix | head -c$lenght
 }
 
 # Package existence check

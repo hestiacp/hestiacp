@@ -6,7 +6,7 @@ load 'test_helper/bats-file/load'
 
 
 function random() {
-    cat /dev/urandom | tr -dc [:num:] | head -c$1
+    cat /dev/urandom | tr -dc [:digit:] | head -c$1
 }
 
 function setup() {

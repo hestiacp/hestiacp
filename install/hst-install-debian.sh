@@ -622,33 +622,26 @@ echo
 if [ "$nginx" = 'yes' ]; then
     echo "[ * ] NGINX"
     echo "deb [arch=amd64] http://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
-    wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
-    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/nginx_signing.key > /dev/null 2>&1
+    apt-key adv --fetch-keys 'https://nginx.org/keys/nginx_signing.key' > /dev/null 2>&1
 fi
 
 # Installing sury PHP repo
 echo "[ * ] PHP"
 echo "deb https://packages.sury.org/php/ $codename main" > $apt/php.list
-wget --quiet https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key
-APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/php_signing.key > /dev/null 2>&1
+apt-key adv --fetch-keys 'https://packages.sury.org/php/apt.gpg' > /dev/null 2>&1
 
 # Installing sury Apache2 repo
 if [ "$apache" = 'yes' ]; then
     echo "[ * ] Apache2"
     echo "deb https://packages.sury.org/apache2/ $codename main" > $apt/apache2.list
-    wget --quiet https://packages.sury.org/apache2/apt.gpg -O /tmp/apache2_signing.key
-    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/apache2_signing.key > /dev/null 2>&1
+    apt-key adv --fetch-keys 'https://packages.sury.org/apache2/apt.gpg' > /dev/null 2>&1
 fi
 
 # Installing MariaDB repo
 if [ "$mysql" = 'yes' ]; then
     echo "[ * ] MariaDB"
-    echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
-    if [ "$release" -eq 8 ]; then
-        APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com CBCB082A1BB943DB > /dev/null 2>&1
-    else
-        APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com F1656F24C74CD1D8 > /dev/null 2>&1
-    fi
+    echo "deb [arch=amd64] https://mirrors.ukfast.co.uk/sites/mariadb/repo/$mariadb_v/$VERSION $codename main" > $APT_SOURCES_D/mariadb.list
+    apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc' > /dev/null 2>&1
 fi
 
 # Installing Backport repo for Debian 8
@@ -659,15 +652,13 @@ fi
 # Installing HestiaCP repo
 echo "[ * ] Hestia Control Panel"
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
-APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
+apt-key adv --fetch-keys "https://$GPG/deb_signing.key" > /dev/null 2>&1
 
 # Installing PostgreSQL repo
 if [ "$postgresql" = 'yes' ]; then
     echo "[ * ] PostgreSQL"
-    echo "deb http://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
-    wget --quiet https://www.postgresql.org/media/keys/ACCC4CF8.asc -O /tmp/psql_signing.key
-    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/psql_signing.key > /dev/null 2>&1
-    rm /tmp/psql_signing.key
+    echo "deb https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
+    apt-key adv --fetch-keys 'https://www.postgresql.org/media/keys/ACCC4CF8.asc' > /dev/null 2>&1
 fi
 
 # Echo for a new line

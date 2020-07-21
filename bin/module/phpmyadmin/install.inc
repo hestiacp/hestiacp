@@ -19,22 +19,38 @@ hestia_module_phpmyadmin_install() {
     hestia_config_backup 'phpmyadmin-remove' $OSAL_PATH_NGINX_CONF_D/phpmyadmin.inc \
         $OSAL_PATH_APACHE_CONF_D/phpmyadmin.conf /usr/share/phpmyadmin /etc/phpmyadmin
 
+    # Create and change to a temporal directory
     local tmp_dir=$(mktemp -d -t hestia-XXXXXXXXXX)
+    if [ ! -d "$tmp_dir" ]; then
+        echo Unable to create temporary directory
+        exit 1
+    fi
     cd $tmp_dir
 
     # Download and unpack
     [[ "$HESTIA_DEBUG" ]] && echo $tmp_dir
-    [[ "$HESTIA_DEBUG" ]] && echo https://files.phpmyadmin.net/phpMyAdmin/$pma_version/phpMyAdmin-$pma_version-all-languages.tar.gz
-    wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_version/phpMyAdmin-$pma_version-all-languages.tar.gz
-    tar xzf phpMyAdmin-$pma_version-all-languages.tar.gz
+    local pma_archive_name="phpMyAdmin-$pma_version-all-languages.tar.gz"
+    local pma_download_url="https://files.phpmyadmin.net/phpMyAdmin/$pma_version/$pma_archive_name"
+    [[ "$HESTIA_DEBUG" ]] && echo wget --quiet $pma_download_url
+    wget --quiet $pma_download_url
+    if [ ! -f "$pma_archive_name" ]; then
+        echo Error downloading phpMyAdmin from $pma_download_url
+        rm -rf $tmp_dir
+        exit 1
+    fi
+
+    mkdir -p /usr/share/phpmyadmin
+
+    [[ "$HESTIA_DEBUG" ]] && echo tar --strip-components=1 -xz -f $pma_archive_name -C /usr/share/phpmyadmin
+    tar --strip-components=1 -xz -f $pma_archive_name -C /usr/share/phpmyadmin
+
+
+    cd - > /dev/null
+    [[ "$HESTIA_DEBUG" ]] || rm -rf $tmp_dir
+    rm -rf $tmp_dir
 
     # Delete file to prevent error. FIXME: prevent what error?
-    mkdir -p /usr/share/phpmyadmin
-    cd - > /dev/null
     hestia_safe_rm /usr/share/phpmyadmin/doc/html
-
-    cp -rf phpMyAdmin-$pma_version-all-languages/* /usr/share/phpmyadmin
-    [[ "$HESTIA_DEBUG" ]] || rm -rf $tmp_dir
 
     # Set config and log directory
     sed -i "s|define('CONFIG_DIR', ROOT_PATH);|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
@@ -51,15 +67,15 @@ hestia_module_phpmyadmin_install() {
 
     cp -f $HESTIA_INSTALL_DIR/pma/config.inc.php /etc/phpmyadmin/
 
-    osal_kv_write $HESTIA/conf/hestia.conf 'DB_PMA_ALIAS' 'phpmyadmin'
-    $HESTIA/bin/v-change-sys-db-alias 'pma' 'phpmyadmin'
-
     if [ "$WEB_SYSTEM" = 'nginx' ]; then
         cp -f $HESTIA_INSTALL_DIR/nginx/phpmyadmin.inc $OSAL_PATH_NGINX_CONF_D/
     else
         cp -f $HESTIA_INSTALL_DIR/pma/apache.conf /etc/phpmyadmin/
         ln -s /etc/phpmyadmin/apache.conf $OSAL_PATH_APACHE_CONF_D/phpmyadmin.conf
     fi
+
+    osal_kv_write $HESTIA/conf/hestia.conf 'DB_PMA_ALIAS' 'phpmyadmin'
+    $HESTIA/bin/v-change-sys-db-alias 'pma' 'phpmyadmin'
 
     osal_kv_write $HESTIA_CONF_MODULES/phpmyadmin.conf 'installed' '1'
     osal_kv_write $HESTIA_CONF_MODULES/phpmyadmin.conf 'description' 'Hestia phpMyAdmin module'

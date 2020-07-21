@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bugfixes
 - Create mailhelo.conf if it doesnt exist to prevent a error message during grep.
+- Improve key and ssl connection handling of the used repositories.
  
 ## [1.2.1] - Service Release 1 (beta)
 ### Features

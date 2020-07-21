@@ -172,7 +172,7 @@ generate_password() {
     if [ -z "$length" ]; then
         length=10
     fi
-    cat /dev/urandom | tr -dc $matrix | head -c$lenght
+    cat /dev/urandom | tr -dc $matrix | head -c$length
 }
 
 # Package existence check

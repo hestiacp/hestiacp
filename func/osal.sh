@@ -97,8 +97,8 @@ osal_kv_write() {
     echo "$2=$3" >> "$1"
 }
 
-# Reads a value from a key-value file.
-# Exits successfully if it does.# value=$(osal_kv_read path key defaultvalue)
+# Reads a value from a key-value file. # Exits successfully if it does.
+# value=$(osal_kv_read path key defaultvalue)
 osal_kv_read() {
     local kv_keyname=$(echo "$2" | sed_escape)
     if [ -f "$1" ]; then
@@ -114,14 +114,16 @@ osal_kv_read() {
 }
 
 # Deletes a value in a key-value file.
-osal_kv_delete() { # path, key
+# osal_kv_delete 'filename' 'key'
+osal_kv_delete() {
     local kv_keyname=$(echo "$2" | sed_escape)
     test -f "$1" && sed -i "/^${kv_keyname}\s*=.*$/d" "$1"
 }
 
 # Tests if a value exists in a key-value file.
 # Exits successfully if it does.
-osal_kv_haskey() { # path, key
+# osal_kv_haskey 'filename' 'key'
+osal_kv_haskey() {
     local kv_keyname=$(echo "$2" | sed_escape)
     test -f "$1" && grep "^${kv_keyname}\s*=" "$1" > /dev/null
     if [ $? -eq 0 ]; then
@@ -133,6 +135,7 @@ osal_kv_haskey() { # path, key
 
 # Tests if a boolean value is true in a key-value file.
 # Exits successfully if it does.
+# osal_kv_read_bool 'filename' 'keyname'
 osal_kv_read_bool() {
     local retval=$(osal_kv_read $@)
     if [ "${retval,,}" == "yes" ] \

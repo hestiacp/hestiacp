@@ -8,8 +8,13 @@ hestia_module_phpmyadmin_install() {
         return 1
     fi
 
-    if [ -z "$WEB_SYSTEM" ] && [ ! "$param_force" ]; then
-        echo "phpMyAdmin needs a web server."
+    if ! hestia_module_isinstalled 'web' && [ ! "$param_force" ]; then
+        echo "phpMyAdmin needs a web server. Use 'hestia package install web-server'."
+        return 1
+    fi
+
+    if ! hestia_module_isinstalled 'php' && [ ! "$param_force" ]; then
+        echo "phpMyAdmin needs PHP. Use 'hestia module install php'."
         return 1
     fi
 

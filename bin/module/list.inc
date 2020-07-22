@@ -3,12 +3,19 @@
 hestia_module_list() {
     source $HESTIA/bin/module/func.inc
 
-    for conf_file in $HESTIA_CONF_MODULES/*.conf; do
-        local mod_name=$(basename $conf_file .conf)
-        local mod_descr=$(osal_kv_read ${conf_file} 'description')
+    printf "%-16s %-12s %-4s %s\n" "Module" "Provides" "Inst" "Description"
+    for hmd in $HESTIA/data/modules/*.hmd; do
+        local mod_name=$(osal_kv_read $hmd 'name')
+        local mod_provides=$(osal_kv_read $hmd 'provides')
+        local mod_descr=$(osal_kv_read $hmd 'description')
 
-        if hestia_module_isinstalled $mod_name; then
-            echo "$mod_name: $mod_descr"
+        local mod_varinstalled=$(hestia_module_variant_installed $mod_provides)
+        if [ "$mod_varinstalled" == "$mod_name" ]; then
+            local mod_installed='Yes'
+        else
+            local mod_installed='No'
         fi
+
+        printf "%-16s %-12s %-4s %s\n" "$mod_name" "$mod_provides" "$mod_installed" "$mod_descr"
     done
 }

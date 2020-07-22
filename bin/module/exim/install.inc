@@ -56,12 +56,12 @@ hestia_module_exim_install() {
     done
 
     # Setup ClamAv integration
-    if hestia_module_variant_installed 'antivirus' 'clamav'; then
+    if [[ $(hestia_module_variant_installed 'antivirus') == 'clamav' ]]; then
         $BIN/hestia module clamav exim-integration enable
     fi
 
     # Setup SpamAssassin integration
-    if hestia_module_variant_installed 'antispam' 'spamassassin'; then
+    if [[ $(hestia_module_variant_installed 'antispam') == 'spamassassin' ]]; then
         $BIN/hestia module spamassassin exim-integration enable
     fi
 }

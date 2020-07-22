@@ -41,7 +41,7 @@ hestia_module_spamassassin_install() {
     osal_kv_write $HESTIA_CONF_MODULES/antispam.conf 'version' '1'
     osal_kv_write $HESTIA_CONF_MODULES/antispam.conf 'service_name' $OSAL_SERVICE_SPAMASSASSIN
 
-    if hestia_module_variant_installed 'mta' 'exim'; then
+    if [[ $(hestia_module_variant_installed 'mta') == 'exim' ]]; then
         $BIN/hestia module spamassassin exim-integration enable
     fi
 }

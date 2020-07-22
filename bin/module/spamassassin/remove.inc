@@ -16,7 +16,7 @@ hestia_module_spamassassin_remove() {
 
     echo "Removing antispam (SpamAssassin) module..."
 
-    if hestia_module_variant_installed 'mta' 'exim'; then
+    if [[ $(hestia_module_variant_installed 'mta') == 'exim' ]]; then
         $BIN/hestia module spamassassin exim-integration disable
     fi
 

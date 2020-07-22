@@ -21,14 +21,10 @@ hestia_module_getvariant() {
 # Tests if a specific variant of a module is installed,
 # exits successfully if it does.
 hestia_module_variant_installed() {
-    local module_installed=$(hestia_module_isinstalled $1 && echo 1)
-    if [ "$module_installed" ]; then
+    if hestia_module_isinstalled $1; then
         local module_variant=$(hestia_module_getvariant $1)
-        if [ "$module_variant" = "$2" ]; then
-            return 0
-        fi
+        echo $module_variant
     fi
-    return 1
 }
 
 # Schedules a service restart (when doing multiple actions)

@@ -1,0 +1,5 @@
+name=spamassassin
+provides=antispam
+requires=exim
+conflicts=
+description=SpamAssassin antispam

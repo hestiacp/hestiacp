@@ -1,0 +1,5 @@
+name=php-fpm
+provides=php
+requires=
+conflicts=
+description=PHP language FPM

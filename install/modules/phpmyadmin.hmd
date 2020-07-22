@@ -1,0 +1,5 @@
+name=phpmyadmin
+provides=phpmyadmin
+requires=web php
+conflicts=
+description=phpMyAdmin MariaDB/MySQL web admin

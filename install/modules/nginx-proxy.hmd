@@ -1,0 +1,5 @@
+name=nginx-proxy
+provides=rproxy
+requires=apache
+conflicts=nginx-web
+description=Nginx reverse proxy

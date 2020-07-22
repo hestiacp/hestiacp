@@ -1,0 +1,5 @@
+name=php-ruid2
+provides=php
+requires=
+conflicts=
+description=PHP language ruid2

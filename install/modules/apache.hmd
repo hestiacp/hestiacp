@@ -1,0 +1,5 @@
+name=apache
+provides=web
+requires=
+conflicts=
+description=Apache web server

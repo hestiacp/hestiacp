@@ -1,0 +1,5 @@
+name=nginx-web
+provides=web
+requires=
+conflicts=web
+description=Nginx web server

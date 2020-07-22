@@ -1,0 +1,5 @@
+name=vsftpd
+provides=ftp
+requires=
+conflicts=ftp
+description=Vsftpd FTP server

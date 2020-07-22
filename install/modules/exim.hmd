@@ -1,0 +1,5 @@
+name=exim
+provides=mta
+requires=
+conflicts=
+description=Exim mail transport agent

@@ -1,0 +1,5 @@
+name=dovecot
+provides=imap
+requires=
+conflicts=
+description=Dovecot IMAP/POP3 server

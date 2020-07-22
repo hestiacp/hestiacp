@@ -1,0 +1,5 @@
+name=clamav
+provides=antivirus
+requires=exim
+conflicts=
+description=ClamAV antivirus

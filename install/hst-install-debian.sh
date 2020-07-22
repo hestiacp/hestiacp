@@ -918,8 +918,6 @@ rm -f /usr/sbin/policy-rc.d
 
 
 echo "[ * ] Configuring system settings..."
-# Enable SSH password authentication
-sed -i "s/rdAuthentication no/rdAuthentication yes/g" /etc/ssh/sshd_config
 
 # Enable SFTP subsystem for SSH
 sftp_subsys_enabled=$(grep -iE "^#?.*subsystem.+(sftp )?sftp-server" /etc/ssh/sshd_config)

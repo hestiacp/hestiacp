@@ -104,8 +104,8 @@ msgid "GREETINGS_GORDON"
 msgstr "Hallo %s"
 
 #: ../web/reset/index.php:37
-msgid "Hallo"
-msgstr ""
+msgid "GREETINGS"
+msgstr "Hallo"
 
 #: ../web/reset/index.php:40
 msgid "PASSWORD_RESET_REQUEST"
@@ -1846,7 +1846,7 @@ msgstr "Gebruik STARTTLS"
 #: ../web/templates/admin/add_mail_acc.html:149
 #: ../web/templates/admin/edit_mail_acc.html:160
 msgid "Use SSL / TLS"
-msgstr ""
+msgstr "Gebruik SSL / TLS"
 
 #: ../web/templates/admin/add_mail_acc.html:150
 #: ../web/templates/admin/edit_mail_acc.html:161

@@ -55,12 +55,12 @@
                     <div class="l-unit__stat-col l-unit__stat-col--left wide"><b><?=__('Hestia Control Panel')?>:</b></div>
                     <div class="l-unit__stat-col l-unit__stat-col--right">
                       <? if($sys['sysinfo']['RELEASE'] != 'release') { ?>
-                        <i class="fas fa-flask icon-large status-icon red" title="Development release"></i>
+                        <i class="fas fa-flask icon-large status-icon red" title="<?php echo $sys['sysinfo']['RELEASE'];?>"></i>
                       <? } ?>
                       <? if($sys['sysinfo']['RELEASE'] == 'release') { ?>
-                        <i class="fas fa-cube icon-large status-icon" title="Official release"></i>
+                        <i class="fas fa-cube icon-large status-icon" title="<?=__('Production release')?>"></i>
                       <? } ?>
-                      &nbsp;v<?=$sys['sysinfo']['HESTIA']?>&nbsp;&nbsp;<? if($sys['sysinfo']['RELEASE'] != 'release') { ?><i class="fas fa-code-branch"></i> <?=$sys['sysinfo']['RELEASE']?><? } ?></div>
+                      &nbsp;v<?=$sys['sysinfo']['HESTIA']?></div>
                   </div>
                 </td>
                 <td>

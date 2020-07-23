@@ -925,16 +925,6 @@ if [ ! -z "$sftp_subsys_enabled" ]; then
     sed -i -E "s/^#?.*Subsystem.+(sftp )?sftp-server/Subsystem sftp internal-sftp/g" /etc/ssh/sshd_config
 fi
 
-# Reduce SSH login grace time
-sed -i "s/LoginGraceTime 2m/LoginGraceTime 1m/g" /etc/ssh/sshd_config
-sed -i "s/#LoginGraceTime 2m/LoginGraceTime 1m/g" /etc/ssh/sshd_config
-
-# Disable SSH suffix broadcast
-if [ -z "$(grep "^DebianBanner no" /etc/ssh/sshd_config)" ]; then
-    echo '' >> /etc/ssh/sshd_config
-    echo 'DebianBanner no' >> /etc/ssh/sshd_config
-fi
-
 # Restart SSH daemon
 systemctl restart ssh
 

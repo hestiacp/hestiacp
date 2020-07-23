@@ -876,5 +876,13 @@ $LANG['de'] = array(
     'BACKUP_DOWNLOAD_SCHEDULED' => 'Download for Backup has been scheduled.',
     
     'backend server' =>  'Backend Server',
+
+    // Notifications
+    'Notifications' => 'Notifications',
     
+    // Help
+    'Help' => 'Help',
+    'Documentation' => 'Documentation',
+    'Support' => 'Support',
+    'Submit an issue report' => 'Submit an issue report',
 );

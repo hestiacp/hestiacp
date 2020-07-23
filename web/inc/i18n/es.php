@@ -884,4 +884,12 @@ $LANG['es'] = array(
     'traffic' => 'Tráfico',
     'disk' => 'Disco',
 
+    // Notifications
+    'Notifications' => 'Notifications',
+    
+    // Help
+    'Help' => 'Help',
+    'Documentation' => 'Documentation',
+    'Support' => 'Support',
+    'Submit an issue report' => 'Submit an issue report',
 );

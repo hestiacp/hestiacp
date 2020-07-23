@@ -16,7 +16,7 @@ textdomain($domain);
  * @param string Fallback language (default: 'en')
  * @return string Language code (such as 'en' and 'ja')
  */
-function detect_user_language($fallback='en_US') {
+function detect_user_language($fallback='en') {
     
 }
 

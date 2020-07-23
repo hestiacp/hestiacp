@@ -23,7 +23,7 @@ $data = json_decode(implode('', $output), true);
 if (!empty( $data['config']['LANGUAGE'])) {
     $_SESSION['language'] = $data['config']['LANGUAGE'];
 } else {
-    $_SESSION['language'] = 'en_US';
+    $_SESSION['language'] = 'en';
 }
 
 // Define vars

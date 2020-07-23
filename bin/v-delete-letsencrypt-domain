@@ -68,7 +68,7 @@ else
     $BIN/v-delete-mail-domain-ssl $user $domain $restart >/dev/null 2>&1
 fi
 cmdstatus="$?"
-if [ "$cmdstatus" -ne E_NOTEXIST ]; then
+if [ "$cmdstatus" -ne "$E_NOTEXIST" ]; then
     check_result "$cmdstatus" "SSL delete" >/dev/null
 fi
 

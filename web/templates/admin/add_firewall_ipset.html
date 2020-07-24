@@ -68,7 +68,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <select class="vst-list" id="datasource_list" onchange="this.nextElementSibling.value=this.value">
+                                    <select class="vst-list" tabindex="-1" id="datasource_list" onchange="this.nextElementSibling.value=this.value">
                                         <option value="">clear</option>
                                     </select>
                                     <input type="text" size="20" class="vst-input vst-list-editor" name="v_datasource" maxlength="255" value="<?=htmlentities(trim($v_datasource, "'"))?>">

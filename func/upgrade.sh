@@ -149,7 +149,13 @@ upgrade_init_backup() {
         fi
     fi
     if [ ! -z "$FTP_SYSTEM" ]; then
-        cp -f /etc/$FTP_SYSTEM.conf $HESTIA_BACKUP/conf/$FTP_SYSTEM/
+        if [ "$FTP_SYSTEM" = "vsftpd" ]; then
+            cp -f /etc/$FTP_SYSTEM.conf $HESTIA_BACKUP/conf/$FTP_SYSTEM/
+        fi
+
+        if [ "$FTP_SYSTEM" = "proftpd" ]; then
+            cp -f /etc/proftpd/proftpd.conf $HESTIA_BACKUP/conf/$FTP_SYSTEM/
+        fi
     fi
     if [ ! -z "$FIREWALL_EXTENSION" ]; then
         cp -f /etc/$FIREWALL_EXTENSION/*.conf $HESTIA_BACKUP/conf/$FIREWALL_EXTENSION/

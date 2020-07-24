@@ -22,7 +22,4 @@ hestia_module_nginx_remove() {
     osal_kv_write $HESTIA_CONF_MODULES/nginx.conf 'enabled' '0'
     osal_kv_write $HESTIA_CONF_MODULES/nginx.conf 'variant' ''
     osal_kv_write $HESTIA_CONF_MODULES/nginx.conf 'version' '0'
-
-    # Setup web module (depending on Nginx and/or Apache config)
-    $BIN/hestia module web setup
 }

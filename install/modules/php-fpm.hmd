@@ -1,6 +1,6 @@
 name=php-fpm
 provides=php
-requires=web
+requires=
 conflicts=
 preference=100
 description=PHP language FPM

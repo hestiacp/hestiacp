@@ -18,12 +18,12 @@ hestia_module_exim_remove() {
 
     clamav_installed=$(hestia_module_variant_installed 'antivirus' 'clamav')
     if [ "$clamav_installed" ]; then
-        $BIN/hestia module clamav exim-integration disable
+        hestia module clamav exim-integration disable
     fi
 
     spamassassin_installed=$(hestia_module_variant_installed 'antispam' 'spamassassin')
     if [ "$spamassassin_installed" ]; then
-        $BIN/hestia module spamassassin exim-integration disable
+        hestia module spamassassin exim-integration disable
     fi
 
     osal_service_stop $OSAL_SERVICE_EXIM > /dev/null 2>&1

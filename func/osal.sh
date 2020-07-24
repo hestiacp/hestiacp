@@ -67,6 +67,18 @@ osal_service_disable() {
     /usr/bin/systemctl disable ${1}.service
 }
 
+osal_value_in_list() {
+    local needle=$1
+    shift
+
+    if [[ -z "$@" ]]; then
+        # Empty list. Return not found.
+        return 1;
+    fi
+
+    [[ $@ =~ (^|[[:space:]])$needle($|[[:space:]]) ]] && return 0
+    return 1
+}
 
 # VAR=$(ini_get 'file' 'section' 'param' 'value')
 osal_ini_get() {

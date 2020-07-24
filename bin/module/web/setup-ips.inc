@@ -45,6 +45,6 @@ hestia_module_web_setup-ips() {
     
     for ip_conf in $HESTIA/data/ips/*; do
         ip=$(basename $ip_conf)
-        $BIN/hestia module web setup-ip "$ip"
+        hestia module web setup-ip "$ip"
     done
 }

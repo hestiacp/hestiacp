@@ -62,7 +62,7 @@ hestia_module_apache_install() {
         [ -f /var/log/$OSAL_PKG_APACHE/error_log ] && hestia_safe_rm /var/log/$OSAL_PKG_APACHE/error_log
 
         # Mitigation for some Debian-only scripts
-        ln -s /etc/httpd/conf.modules.d/ /etc/httpd/mods-enabled
+        [ ! -e /etc/httpd/mods-enabled ] && ln -s /etc/httpd/conf.modules.d/ /etc/httpd/mods-enabled
     fi
 
     touch /var/log/$OSAL_PKG_APACHE/access.log /var/log/$OSAL_PKG_APACHE/error.log
@@ -71,13 +71,5 @@ hestia_module_apache_install() {
     chmod 640 /var/log/$OSAL_PKG_APACHE/access.log /var/log/$OSAL_PKG_APACHE/error.log
     chmod 751 /var/log/$OSAL_PKG_APACHE/domains
 
-    osal_kv_write $HESTIA_CONF_MODULES/apache.conf 'installed' '1'
-    osal_kv_write $HESTIA_CONF_MODULES/apache.conf 'description' 'Hestia Apache module'
-    osal_kv_write $HESTIA_CONF_MODULES/apache.conf 'enabled' '1'
-    osal_kv_write $HESTIA_CONF_MODULES/apache.conf 'variant' 'apache'
-    osal_kv_write $HESTIA_CONF_MODULES/apache.conf 'version' '1'
-    osal_kv_write $HESTIA_CONF_MODULES/apache.conf 'service_name' $OSAL_PKG_APACHE
-
-    # Setup web module (depending on Nginx and/or Apache config)
-    $BIN/hestia module web setup
+    osal_kv_write $HESTIA_CONF_MODULES/apache.conf 'service_name' $OSAL_SERVICE_APACHE
 }

@@ -8,16 +8,6 @@ hestia_module_phpmyadmin_install() {
         return 1
     fi
 
-    if ! hestia_module_isinstalled 'web' && [ ! "$param_force" ]; then
-        echo "phpMyAdmin needs a web server. Use 'hestia package install web-server'."
-        return 1
-    fi
-
-    if ! hestia_module_isinstalled 'php' && [ ! "$param_force" ]; then
-        echo "phpMyAdmin needs PHP. Use 'hestia module install php'."
-        return 1
-    fi
-
     local pma_version='5.0.2'
     echo "Installing phpMyAdmin module..."
     
@@ -72,19 +62,6 @@ hestia_module_phpmyadmin_install() {
 
     cp -f $HESTIA_INSTALL_DIR/pma/config.inc.php /etc/phpmyadmin/
 
-    if [ "$WEB_SYSTEM" = 'nginx' ]; then
-        cp -f $HESTIA_INSTALL_DIR/nginx/phpmyadmin.inc $OSAL_PATH_NGINX_CONF_D/
-    else
-        cp -f $HESTIA_INSTALL_DIR/pma/apache.conf /etc/phpmyadmin/
-        ln -s /etc/phpmyadmin/apache.conf $OSAL_PATH_APACHE_CONF_D/phpmyadmin.conf
-    fi
-
     osal_kv_write $HESTIA/conf/hestia.conf 'DB_PMA_ALIAS' 'phpmyadmin'
     $HESTIA/bin/v-change-sys-db-alias 'pma' 'phpmyadmin'
-
-    osal_kv_write $HESTIA_CONF_MODULES/phpmyadmin.conf 'installed' '1'
-    osal_kv_write $HESTIA_CONF_MODULES/phpmyadmin.conf 'description' 'Hestia phpMyAdmin module'
-    osal_kv_write $HESTIA_CONF_MODULES/phpmyadmin.conf 'enabled' '1'
-    osal_kv_write $HESTIA_CONF_MODULES/phpmyadmin.conf 'variant' 'phpmyadmin'
-    osal_kv_write $HESTIA_CONF_MODULES/phpmyadmin.conf 'version' '1'
 }

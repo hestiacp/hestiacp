@@ -1,17 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 
-hestia_module_php_add() {
+hestia_module_php-fpm_add() {
     source $HESTIA/bin/module/func.inc
-    source $HESTIA/bin/module/php/func.inc
+    source $HESTIA/bin/module/php-fpm/func.inc
 
-    if ! hestia_module_isinstalled 'php' && [ ! "$param_force" ]; then
-        echo "PHP module is not installed. See 'hestia module info php'."
-        return 1
-    fi
-
-    module_variant=$(hestia_module_getvariant 'php')
-    if [ "$module_variant" != 'php-fpm' ] && [ ! "$param_force" ]; then
-        echo "The installed PHP module is not FPM. See 'hestia module info php'."
+    if ! hestia_module_isinstalled 'php-fpm' && [ ! "$param_force" ]; then
+        echo "PHP (FPM) module is not installed. See 'hestia module info php-fpm'."
         return 1
     fi
 
@@ -38,28 +32,30 @@ hestia_module_php_add() {
         fi
     done
     if [ ! "$php_version" ]; then
-        echo "PHP version $param_ver is not supported."
+        echo "PHP (FPM) version $param_ver is not supported."
         return 1
     fi
 
     local php_withoutdot=${php_version//.}
-    local php_version_present=$(osal_kv_read_bool $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_present" && echo 1)
+    local php_version_present=$(osal_kv_read_bool $HESTIA_CONF_MODULES/php-fpm.conf "php${php_withoutdot}_present" && echo 1)
 
     if [ "$php_version_present" ] && [ ! "$param_force" ]; then
-        echo "PHP version ${php_version} is already present. See 'hestia module php list'."
+        echo "PHP version ${php_version} is already present. See 'hestia module php-fpm list'."
         return 1
     fi
 
     # Check if php version is supported
+    # TODO:
     if [ ! -f "$HESTIA_INSTALL_DIR/multiphp/$WEB_SYSTEM/PHP-${php_withoutdot}.sh" ]; then
-        echo "PHP version ${php_version} is currently not supported or does not exist."
+        echo "$HESTIA_INSTALL_DIR/multiphp/$WEB_SYSTEM/PHP-${php_withoutdot}.sh"
+        echo "PHP (FPM) version ${php_version} is currently not supported or does not exist."
         return 1
     fi
 
     # Perform verification if read-only mode is enabled
     check_hestia_demo_mode
 
-    echo "Adding PHP version ${php_version}..."
+    echo "Adding PHP (FPM) version ${php_version}..."
 
     local php_prefix=$(osal_multiphp_php_package_prefix $php_version)
 
@@ -108,7 +104,7 @@ hestia_module_php_add() {
     #                       Hestia                             #
     #----------------------------------------------------------#
 
-    osal_kv_write $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_present" '1'
+    osal_kv_write $HESTIA_CONF_MODULES/php-fpm.conf "php${php_withoutdot}_present" '1'
 
     log_history "installed php $php_version" '' 'admin'
 

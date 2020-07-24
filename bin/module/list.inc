@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 hestia_module_list() {
     source $HESTIA/bin/module/func.inc

@@ -10,17 +10,17 @@ hestia_package_install_mail-server() {
 
     echo "Installing mail server package..."
 
-    $BIN/hestia module install exim
-    $BIN/hestia module install dovecot
+    hestia module install exim
+    hestia module install dovecot
     if [ $memory -ge 1572864 ] || [ "$param_withantivirus" ]; then
         if [ ! "$param_withoutantivirus" ]; then
-            $BIN/hestia module install clamav
+            hestia module install clamav
         fi
     fi
 
     if [ $memory -ge 1572864 ] || [ "$param_withantispam" ]; then
         if [ ! "$param_withoutantispam" ]; then
-            $BIN/hestia module install spamassassin
+            hestia module install spamassassin
         fi
     fi
 }

@@ -1,10 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 
 hestia_package_remove() {
     echo "Removing web server package..."
 
-    $BIN/hestia module remove nginx
-    $BIN/hestia module remove apache
-    $BIN/hestia module remove php
-    $BIN/hestia module remove awstats
+    hestia module remove nginx
+    hestia module remove apache
+    hestia module remove php
+    hestia module remove awstats
 }

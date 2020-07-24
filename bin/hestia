@@ -47,7 +47,10 @@ hestia() {
             cmd_type='executable'
             shift
             break
-        else
+        elif [ "$cmd_file" ]; then
+            # We have a partial path, but component not found
+            echo "Unrecognized command: $@ ('$arg' not found in $cmd_file)"
+            return 1
             break
         fi
     done
@@ -112,7 +115,7 @@ hestia() {
             $cmd_file $@
         fi
     else
-        echo "Hestia: Unrecognized command: $@"
+        echo "Unrecognized command: $@"
         return 1
     fi
 }

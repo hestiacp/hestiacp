@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bashh
 
 hestia_module_awstats_install() {
     source $HESTIA/bin/module/func.inc

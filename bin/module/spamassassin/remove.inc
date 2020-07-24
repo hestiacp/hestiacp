@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 hestia_module_spamassassin_remove() {
     source $HESTIA/bin/module/func.inc
@@ -17,7 +17,7 @@ hestia_module_spamassassin_remove() {
     echo "Removing antispam (SpamAssassin) module..."
 
     if [[ $(hestia_module_variant_installed 'mta') == 'exim' ]]; then
-        $BIN/hestia module spamassassin exim-integration disable
+        hestia module spamassassin exim-integration disable
     fi
 
     osal_service_stop $OSAL_SERVICE_SPAMASSASSIN > /dev/null 2>&1

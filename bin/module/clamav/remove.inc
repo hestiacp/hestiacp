@@ -17,7 +17,7 @@ hestia_module_clamav_remove() {
     echo "Removing antivirus (ClamAV) module..."
 
     if [[ $(hestia_module_variant_installed 'mta') == 'exim' ]]; then
-        $BIN/hestia module clamav exim-integration disable
+        hestia module clamav exim-integration disable
     fi
 
     osal_service_stop $OSAL_SERVICE_CLAMAV > /dev/null 2>&1

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 hestia_ver() {
     ver=$(osal_kv_read $HESTIA/conf/hestia.conf 'VERSION' 'unknown')

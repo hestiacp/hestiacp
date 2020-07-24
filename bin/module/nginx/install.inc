@@ -57,13 +57,5 @@ EOL
         sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" $OSAL_PATH_NGINX_CONF/nginx.conf
     fi
 
-    osal_kv_write $HESTIA_CONF_MODULES/nginx.conf 'installed' '1'
-    osal_kv_write $HESTIA_CONF_MODULES/nginx.conf 'description' 'Hestia Nginx module'
-    osal_kv_write $HESTIA_CONF_MODULES/nginx.conf 'enabled' '1'
-    osal_kv_write $HESTIA_CONF_MODULES/nginx.conf 'variant' 'nginx'
-    osal_kv_write $HESTIA_CONF_MODULES/nginx.conf 'version' '1'
-    osal_kv_write $HESTIA_CONF_MODULES/nginx.conf 'service_name' $OSAL_PKG_NGINX
-
-    # Setup web module (depending on Nginx and/or Apache config)
-    $BIN/hestia module web setup
+    osal_kv_write $HESTIA_CONF_MODULES/nginx.conf 'service_name' $OSAL_SERVICE_NGINX
 }

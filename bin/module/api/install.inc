@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 hestia_module_api_install() {
     source $HESTIA/bin/module/func.inc

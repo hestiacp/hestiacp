@@ -127,7 +127,8 @@ if (!empty($_POST['ok_rec'])) {
     if (empty($_SESSION['error_msg'])) {
         exec (HESTIA_CMD."v-add-dns-record ".$user." ".$v_domain." ".$v_rec." ".$v_type." ".$v_val." ".$v_priority." '' false ".$v_ttl, $output, $return_var);
         check_return_code($return_var,$output);
-        unset($output);   
+        unset($output);
+        
     }
     $v_type = $_POST['v_type'];
     
@@ -179,6 +180,9 @@ if (empty($_GET['domain'])) {
 } else {
     // Display body for dns record
     $v_domain = $_GET['domain'];
+    if (empty($v_rec)){
+      $v_rec = '@';  
+    }
     render_page($user, $TAB, 'add_dns_rec');
 }
 

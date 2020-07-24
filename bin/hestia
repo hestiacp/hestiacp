@@ -47,6 +47,8 @@ hestia() {
             cmd_type='executable'
             shift
             break
+        else
+            break
         fi
     done
 

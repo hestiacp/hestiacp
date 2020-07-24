@@ -1,5 +1,5 @@
 name=nginx-proxy
 provides=rproxy
 requires=apache
-conflicts=nginx-web
+conflicts=nginx
 description=Nginx reverse proxy

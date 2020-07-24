@@ -1,4 +1,4 @@
-name=nginx-web
+name=nginx
 provides=web
 requires=
 conflicts=web

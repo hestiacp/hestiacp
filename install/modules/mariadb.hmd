@@ -1,0 +1,6 @@
+name=mariadb
+provides=mysqldb
+requires=
+conflicts=mysql
+preference=100
+description=MariaDB database

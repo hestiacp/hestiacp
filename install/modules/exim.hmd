@@ -1,5 +1,5 @@
 name=exim
 provides=mta
 requires=
-conflicts=
+conflicts=mta
 description=Exim mail transport agent

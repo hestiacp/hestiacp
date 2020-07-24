@@ -2,4 +2,5 @@ name=vsftpd
 provides=ftp
 requires=
 conflicts=ftp
+preference=100
 description=Vsftpd FTP server

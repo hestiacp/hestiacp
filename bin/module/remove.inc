@@ -1,12 +1,13 @@
 #!/bin/sh
 
 hestia_module_remove() {
-    if [ "$1" ] && [ "$1" != 'install' ] && [ "$1" != 'remove' ]; then
-        module_name=$1
+    if [ "$1" ]; then
+        local mod_name=$1
         shift
-        $BIN/hestia module $module_name remove "$@"
+
+        $BIN/hestia module $mod_name remove "$@"
     else
-        echo "Usage: module install module_name"
+        echo "Usage: module remove module_name"
         return 0
     fi
 }

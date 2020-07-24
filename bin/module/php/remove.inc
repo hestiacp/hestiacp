@@ -4,8 +4,7 @@ hestia_module_php_remove() {
     source $HESTIA/bin/module/func.inc
     source $HESTIA/bin/module/php/func.inc
 
-    module_installed=$(hestia_module_isinstalled php)
-    if [ ! "$module_installed" ] && [ ! "$param_force" ]; then
+    if ! hestia_module_isinstalled 'php' && [ ! "$param_force" ]; then
         echo "PHP module is not installed. See 'hestia module info php'."
         return 1
     fi

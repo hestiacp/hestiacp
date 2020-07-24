@@ -1,5 +1,6 @@
 name=apache
 provides=web
 requires=
-conflicts=
+conflicts=web
+preference=100
 description=Apache web server

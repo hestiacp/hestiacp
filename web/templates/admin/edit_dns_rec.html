@@ -141,13 +141,8 @@
                                 </td>
                             </tr>                            
                             <tr>
-                                <td class="vst-text input-label">
-                                    <?php print __('Record Number');?> <span class="optional">(<?=__('internal');?>)</span>
-                                </td>
-                            </tr>
-                            <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_record_id" value="<?=htmlentities(trim($v_record_id, "'"))?>">
+                                    <input type="hidden" size="20" class="vst-input" name="v_record_id" value="<?=htmlentities(trim($v_record_id, "'"))?>">
                                 </td>
                             </tr>
                         </table>

@@ -292,40 +292,10 @@ apt-get -qq update
 # Creating backup directory
 mkdir -p $hst_backups
 
-# Checking wget
-if [ ! -e '/usr/bin/wget' ]; then
-    echo "[ * ] Installing wget..."
-    apt-get -y install wget >> $LOG
-    check_result $? "Can't install wget"
-fi
-
-# Checking curl
-if [ ! -e '/usr/bin/curl' ]; then
-    echo "[ * ] Installing curl..."
-    apt-get -y install curl >> $LOG
-    check_result $? "Can't install curl"
-fi
-
-# Check if apt-transport-https is installed
-if [ ! -e '/usr/lib/apt/methods/https' ]; then
-    echo "[ * ] Installing apt-transport-https..."
-    apt-get -y install apt-transport-https >> $LOG
-    check_result $? "Can't install apt-transport-https"
-fi
-
-# Check if apt-add-repository is installed
-if [ ! -e '/usr/bin/apt-add-repository' ]; then
-    echo "[ * ] Installing apt-add-repository..."
-    apt-get -y install software-properties-common >> $LOG
-    check_result $? "Can't install software-properties-common"
-fi
-
-# Check if gnupg or gnupg2 is installed
-if [ ! -e '/usr/lib/gnupg2' ] || [ ! -e '/usr/lib/gnupg' ]; then
-    echo "[ * ] Installing gnupg2..."
-    apt-get -y install gnupg2 >> $LOG
-    check_result $? "Can't install gnupg2"
-fi
+# Pre-install packages
+echo "[ * ] Enforcing pre-install packages requirements..."
+apt-get -y install apt-transport-https curl dirmngr gnupg ntpdate software-properties-common wget >> $LOG
+check_result $? "Pre-install packages failed, check logs"
 
 # Check repository availability
 wget --quiet "https://$GPG/deb_signing.key" -O /dev/null

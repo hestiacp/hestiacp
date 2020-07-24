@@ -46,6 +46,8 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     hestia-nginx hestia-php vim-common vsftpd whois zip acl sysstat setpriv
     ipset libonig5 libzip5"
 
+installer_dependencies="apt-transport-https curl dirmngr gnupg wget"
+
 # Defining help function
 help() {
     echo "Usage: $0 [OPTIONS]
@@ -292,40 +294,10 @@ apt-get -qq update
 # Creating backup directory
 mkdir -p $hst_backups
 
-# Checking wget
-if [ ! -e '/usr/bin/wget' ]; then
-    echo "[ * ] Installing wget..."
-    apt-get -y install wget >> $LOG
-    check_result $? "Can't install wget"
-fi
-
-# Checking curl
-if [ ! -e '/usr/bin/curl' ]; then
-    echo "[ * ] Installing curl..."
-    apt-get -y install curl >> $LOG
-    check_result $? "Can't install curl"
-fi
-
-# Check if apt-transport-https is installed
-if [ ! -e '/usr/lib/apt/methods/https' ]; then
-    echo "[ * ] Installing apt-transport-https..."
-    apt-get -y install apt-transport-https >> $LOG
-    check_result $? "Can't install apt-transport-https"
-fi
-
-# Check if apt-add-repository is installed
-if [ ! -e '/usr/bin/apt-add-repository' ]; then
-    echo "[ * ] Installing apt-add-repository..."
-    apt-get -y install software-properties-common >> $LOG
-    check_result $? "Can't install software-properties-common"
-fi
-
-# Check if gnupg or gnupg2 is installed
-if [ ! -e '/usr/lib/gnupg2' ] || [ ! -e '/usr/lib/gnupg' ]; then
-    echo "[ * ] Installing gnupg2..."
-    apt-get -y install gnupg2 >> $LOG
-    check_result $? "Can't install gnupg2"
-fi
+# Pre-install packages
+echo "[ * ] Installing dependencies..."
+apt-get -y install $installer_dependencies >> $LOG
+check_result $? "Package installation failed, check log file for more details."
 
 # Check repository availability
 wget --quiet "https://$GPG/deb_signing.key" -O /dev/null

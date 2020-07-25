@@ -258,6 +258,63 @@
                             <?php } ?>
                             <tr>
                                 <td class="vst-text step-top">
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_custom_doc_root_check" <?php if (!empty($v_costum_doc_root)) echo "checked=yes" ?> onclick="javascript:elementHideShow('v_custom_doc_root');"> <?php print __('Custom document root');?></label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="step-left">
+                                    <table style="display:<?php if (empty($v_costum_doc_root)) { echo 'none';} else {echo 'block';}?> ;" id="v_custom_doc_root">
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print __('Point to');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="hidden" name="v-costum-doc-root_prepath"" value="<?php echo $v_custom_doc_root_prepath;?>">
+                                                <select class="vst-list" name="v-costum-doc-domain">
+                                                    <option value="<?php echo $v_domain;?>"><?php echo $v_domain;?></option>
+                                                    <?php
+                                                    foreach ($domains as $key => $d) {
+                                                        if($key != $v_domain ){
+                                                        if($v_costum_doc_domain == $key){
+                                                    ?>
+                                                            <option value="<?php echo $key;?>" selected="selected"><?php echo $key;?></option> 
+                                                    <?php
+                                                        }else{
+                                                     ?>
+                                                            <option value="<?php echo $key;?>"><?php echo $key;?></option> 
+                                                    <?php                                                           
+                                                        }
+                                                        }
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print( __('Folder'));?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input"
+                                                name="v-costum-doc-folder" value="<?=htmlentities(trim($v_costum_doc_folder, "'"))?>">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <small class="custom_docroot_hint"></small>
+                                            </td>
+                                        </tr>
+                                        
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="vst-text step-top">
                                     <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');"> <?php print __('SSL Support');?></label>
                                 </td>
                             </tr>

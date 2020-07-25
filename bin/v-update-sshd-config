@@ -1,0 +1,52 @@
+#!/bin/bash
+# info: update sshd config
+# options: NONE
+#
+# The functions updates the sshd config file
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+sshd_config=/etc/ssh/sshd_config
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Keep the following actions maintained in sync with the current install scripts
+
+# Enable SFTP subsystem for SSH
+sftp_subsys_enabled=$(grep -iE "^#?.*subsystem.+(sftp )?sftp-server" $sshd_config)
+if [ ! -z "$sftp_subsys_enabled" ]; then
+    sed -i -E "s/^#?.*Subsystem.+(sftp )?sftp-server/Subsystem sftp internal-sftp/g" $sshd_config
+fi
+
+# Comment out "DebianBanner no" if it exists, previous versions of HestiaCP where imposing this setting
+sed -i "s/^\s*DebianBanner no/#DebianBanner no # Changed by HestiaCP Script/gm" $sshd_config
+
+# Change LoginGraceTime from default 2m to 1m.   Not robust, but re-using the same as in the install script
+# Robust code would check for a non-commented "LoginGraceTime 1m",
+#   If nothing found, it would add it, if a LoginGraceTime other than 1m is found, comment it out with HestiaCP marking
+#   and add new line with "LoginGraceTime 1m"
+sed -i "s/LoginGraceTime 2m/LoginGraceTime 1m/g" $sshd_config
+sed -i "s/#LoginGraceTime 2m/LoginGraceTime 1m/g" $sshd_config
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+# Maybe add this to the log?
+#log_event "$OK" "$ARGUMENTS"
+
+exit

@@ -15,3 +15,7 @@ echo "[ ! ] Updating default mail domain templates..."
 $BIN/v-update-mail-templates
 echo "[ ! ] Updating default DNS zone templates..."
 $BIN/v-update-dns-templates
+
+# Update sshd_config file
+echo "[ ! ] Updating sshd config..."
+$BIN/v-update-sshd-config

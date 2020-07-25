@@ -639,6 +639,7 @@ a {
 .l-center {
   margin: 0 auto;
   max-width: 1020px;
+  min-width: 1020px;
 }
 
 .l-logo {

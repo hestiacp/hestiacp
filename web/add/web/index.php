@@ -94,6 +94,9 @@ if (!empty($_POST['ok'])) {
     $v_stats = escapeshellarg($_POST['v_stats']);
     $v_stats_user = $data[$v_domain]['STATS_USER'];
     $v_stats_password = $data[$v_domain]['STATS_PASSWORD'];
+    $v_custom_doc_domain = $_POST['v-custom-doc-domain'];
+    $v_custom_doc_folder = $_POST['v-custom-doc-folder'];
+    
     $v_ftp = $_POST['v_ftp'];
     $v_ftp_user = $_POST['v_ftp_user'];
     $v_ftp_password = $_POST['v_ftp_password'];
@@ -109,7 +112,8 @@ if (!empty($_POST['ok'])) {
     if ((!empty($_POST['v_ssl_crt'])) || (!empty($_POST['v_ssl_key']))) $v_adv = 'yes';
     if ((!empty($_POST['v_ssl_ca'])) || ($_POST['v_stats'] != 'none')) $v_adv = 'yes';
     if ((!empty($_POST['v_letsencrypt']))) $v_adv = 'yes';
-
+    if (!empty($_POST['v_custom_doc_root_check'])){$v_adv = 'yes'; $v_custom_doc_root = 1; }
+    
     // Check advanced features
     if (empty($_POST['v_dns'])) $v_dns = 'off';
     if (empty($_POST['v_mail'])) $v_mail = 'off';
@@ -227,6 +231,23 @@ if (!empty($_POST['ok'])) {
         unlink($v_stats_password);
         $v_stats_password = escapeshellarg($_POST['v_stats_password']);
     }
+     if ( !empty($_POST['v-custom-doc-domain']) && !empty($_POST['v_custom_doc_root_check']) && $v_custom_doc_root_prepath.$v_custom_doc_domain.'/public_html'.$v_custom_doc_folder != $v_custom_doc_root){
+        if($_POST['v-custom-doc-domain'] == $v_domain && empty($_POST['v-custom-doc-folder'])){
+
+        }else{
+            $v_custom_doc_domain = escapeshellarg($_POST['v-custom-doc-domain']);
+            $v_custom_doc_folder = escapeshellarg($_POST['v-custom-doc-folder']);
+            $v_domain = escapeshellarg(trim($_POST['v_domain']));
+            
+            exec(HESTIA_CMD."v-change-web-domain-docroot ".$user." ".$v_domain." ".$v_custom_doc_domain." ".$v_custom_doc_folder,  $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);  
+            $v_custom_doc_root = 1; 
+        }
+    }else{
+        unset($v_custom_doc_root);
+    }   
+    
 
     // Restart DNS server
     if (($_POST['v_dns'] == 'on') && (empty($_SESSION['error_msg']))) {
@@ -363,6 +384,12 @@ unset($output);
 // List web stat engines
 exec (HESTIA_CMD."v-list-web-stats json", $output, $return_var);
 $stats = json_decode(implode('', $output), true);
+unset($output);
+
+// Get all user domains 
+exec (HESTIA_CMD."v-list-web-domains ".escapeshellarg($user)." json", $output, $return_var);
+$user_domains = json_decode(implode('', $output), true);
+$user_domains = array_keys($user_domains);
 unset($output);
 
 // Render page

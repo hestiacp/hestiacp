@@ -1,12 +1,12 @@
 App.Actions.WEB.update_custom_doc_root = function(elm, hint) {
-    var prepath = $('input[name="v-costum-doc-root_prepath"]').val();
-    var domain = $('select[name="v-costum-doc-domain"]').val();
-    var folder = $('input[name="v-costum-doc-folder"]').val();
+    var prepath = $('input[name="v-custom-doc-root_prepath"]').val();
+    var domain = $('select[name="v-custom-doc-domain"]').val();
+    var folder = $('input[name="v-custom-doc-folder"]').val();
     console.log(domain, folder);
     $('.custom_docroot_hint').html(prepath+domain+'/public_html/'+folder);
 }
 App.Listeners.DB.keypress_custom_folder = function() {
-    var ref = $('input[name="v-costum-doc-folder"]');
+    var ref = $('input[name="v-custom-doc-folder"]');
     var current_rec = ref.val();
     App.Actions.WEB.update_custom_doc_root(ref, current_rec);
 
@@ -21,7 +21,7 @@ App.Listeners.DB.keypress_custom_folder = function() {
 }
 
 App.Listeners.DB.change_custom_doc = function() {
-    var ref = $('select[name="v-costum-doc-domain"]');
+    var ref = $('select[name="v-custom-doc-domain"]');
     var current_rec = ref.val();
     ref.bind('change select', function(evt) {
         clearTimeout(window.frp_usr_tmt);

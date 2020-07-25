@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [CURRENT] - Development
 ### Features
+- Use stronger ciphers and Disable TLS v1.1 for vsftpd.
 
 ### Bugfixes
 - Create mailhelo.conf if it doesnt exist to prevent a error message during grep.

@@ -1,3 +1,42 @@
+App.Actions.WEB.update_custom_doc_root = function(elm, hint) {
+    var prepath = $('input[name="v-costum-doc-root_prepath"]').val();
+    var domain = $('select[name="v-costum-doc-domain"]').val();
+    var folder = $('input[name="v-costum-doc-folder"]').val();
+    console.log(domain, folder);
+    $('.custom_docroot_hint').html(prepath+domain+'/public_html/'+folder);
+}
+App.Listeners.DB.keypress_custom_folder = function() {
+    var ref = $('input[name="v-costum-doc-folder"]');
+    var current_rec = ref.val();
+    App.Actions.WEB.update_custom_doc_root(ref, current_rec);
+
+
+    ref.bind('keypress input', function(evt) {
+        clearTimeout(window.frp_usr_tmt);
+        window.frp_usr_tmt = setTimeout(function() {
+            var elm = $(evt.target);
+            App.Actions.WEB.update_custom_doc_root(elm, $(elm).val());
+        });
+    });
+}
+
+App.Listeners.DB.change_custom_doc = function() {
+    var ref = $('select[name="v-custom-domain"]');
+    var current_rec = ref.val();
+    ref.bind('change select', function(evt) {
+        clearTimeout(window.frp_usr_tmt);
+        window.frp_usr_tmt = setTimeout(function() {
+            var elm = $(evt.target);
+            App.Actions.WEB.update_custom_doc_root(elm, $(elm).val());
+        });
+    });
+}
+
+// Page entry point
+// Trigger listeners
+App.Listeners.DB.keypress_custom_folder();
+App.Listeners.DB.change_custom_doc();
+
 App.Actions.WEB.update_ftp_username_hint = function(elm, hint) {
     if (hint.trim() == '') {
         $(elm).parent().find('.hint').html('');

@@ -73,11 +73,17 @@ $v_proxy_ext = str_replace(',', ', ', $data[$v_domain]['PROXY_EXT']);
 $v_stats = $data[$v_domain]['STATS'];
 $v_stats_user = $data[$v_domain]['STATS_USER'];
 if (!empty($v_stats_user)) $v_stats_password = "";
+$v_custom_doc_root_prepath = '/home/'.$v_username.'/web/';
+$v_costum_doc_root = $data[$v_domain]['CUSTOM_DOCROOT'];
+
+$m = preg_match('/\/home\/'.$v_username.'\/web\/([A-Za-z0-9.-].*)\/([A-Za-z0-9.-\/].*)/', $v_costum_doc_root, $matches);
+$v_costum_doc_domain = $matches[1];
+$v_costum_doc_folder = str_replace('public_html/','',$matches[2]);
+
 $v_ftp_user = $data[$v_domain]['FTP_USER'];
 $v_ftp_path = $data[$v_domain]['FTP_PATH'];
 if (!empty($v_ftp_user)) $v_ftp_password = "";
-$v_ftp_user_prepath = $data[$v_domain]['DOCUMENT_ROOT'];
-$v_ftp_user_prepath = str_replace('/public_html', '', $v_ftp_user_prepath, $occurance = 1);
+$v_ftp_user_prepath = '/home/'.$v_username.'/web/'.$v_domain;
 $v_ftp_email = $panel[$user]['CONTACT'];
 $v_suspended = $data[$v_domain]['SUSPENDED'];
 if ( $v_suspended == 'yes' ) {
@@ -117,6 +123,11 @@ if (!empty($_SESSION['PROXY_SYSTEM'])) {
 // List web stat engines
 exec (HESTIA_CMD."v-list-web-stats json", $output, $return_var);
 $stats = json_decode(implode('', $output), true);
+unset($output);
+
+//List web doamins 
+exec (HESTIA_CMD."v-list-web-domains ".$user." json", $output, $return_var);
+$domains = json_decode(implode('', $output), true);
 unset($output);
 
 // Check POST request
@@ -736,6 +747,27 @@ if (!empty($_POST['save'])) {
             }
         }
     }
+    //custom docoot with check box disabled      
+    if( !empty($v_costum_doc_root) && empty($_POST['v_custom_doc_root_check']) ){
+        exec(HESTIA_CMD."v-change-web-domain-docroot ".$v_username." ".escapeshellarg($v_domain)." default",  $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);    
+        unset($_POST['v-costum-doc-domain'], $_POST['v-costum-doc-folder']);    
+    }
+
+    if ( !empty($_POST['v-costum-doc-domain']) && $v_custom_doc_root_prepath.$v_costum_doc_domain.'/public_html'.$v_costum_doc_folder != $v_costum_doc_root){
+        
+        $v_costum_doc_domain = escapeshellarg($_POST['v-costum-doc-domain']);
+        $v_costum_doc_folder = escapeshellarg($_POST['v-costum-doc-folder']);
+        
+        exec(HESTIA_CMD."v-change-web-domain-docroot ".$v_username." ".escapeshellarg($v_domain)." ".$v_costum_doc_domain." ".$v_costum_doc_folder,  $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);  
+        $v_costum_doc_root = 1;        
+        
+        
+    }    
+    
 
     // Restart web server
     if (!empty($restart_web) && (empty($_SESSION['error_msg']))) {

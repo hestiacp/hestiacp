@@ -755,7 +755,7 @@ if (!empty($_POST['save'])) {
         unset($_POST['v-costum-doc-domain'], $_POST['v-costum-doc-folder']);    
     }
 
-    if ( !empty($_POST['v-costum-doc-domain']) && $v_custom_doc_root_prepath.$v_costum_doc_domain.'/public_html'.$v_costum_doc_folder != $v_costum_doc_root){
+    if ( !empty($_POST['v-costum-doc-domain']) && !empty($_POST['v_custom_doc_root_check']) && $v_custom_doc_root_prepath.$v_costum_doc_domain.'/public_html'.$v_costum_doc_folder != $v_costum_doc_root){
         
         $v_costum_doc_domain = escapeshellarg($_POST['v-costum-doc-domain']);
         $v_costum_doc_folder = escapeshellarg($_POST['v-costum-doc-folder']);

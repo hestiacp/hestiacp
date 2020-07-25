@@ -96,6 +96,7 @@ if (!empty($_POST['ok'])) {
     $v_stats_password = $data[$v_domain]['STATS_PASSWORD'];
     $v_custom_doc_domain = $_POST['v-custom-doc-domain'];
     $v_custom_doc_folder = $_POST['v-custom-doc-folder'];
+    $v_custom_doc_root_prepath = '/home/'.$user.'/web/';
     
     $v_ftp = $_POST['v_ftp'];
     $v_ftp_user = $_POST['v_ftp_user'];
@@ -231,7 +232,8 @@ if (!empty($_POST['ok'])) {
         unlink($v_stats_password);
         $v_stats_password = escapeshellarg($_POST['v_stats_password']);
     }
-     if ( !empty($_POST['v-custom-doc-domain']) && !empty($_POST['v_custom_doc_root_check']) && $v_custom_doc_root_prepath.$v_custom_doc_domain.'/public_html'.$v_custom_doc_folder != $v_custom_doc_root){
+    
+    if ( !empty($_POST['v-custom-doc-domain']) && !empty($_POST['v_custom_doc_root_check']) && $v_custom_doc_root_prepath.$v_custom_doc_domain.'/public_html'.$v_custom_doc_folder != $v_custom_doc_root){
         if($_POST['v-custom-doc-domain'] == $v_domain && empty($_POST['v-custom-doc-folder'])){
 
         }else{
@@ -375,6 +377,7 @@ if (!empty($_POST['ok'])) {
 // Define user variables
 $v_ftp_user_prepath = $panel[$user]['HOME'] . "/web";
 $v_ftp_email = $panel[$user]['CONTACT'];
+$v_custom_doc_root_prepath = '/home/'.$user.'/web/';
 
 // List IP addresses
 exec (HESTIA_CMD."v-list-user-ips ".$user." json", $output, $return_var);

@@ -33,6 +33,11 @@ App.Listeners.DB.change_custom_doc = function() {
     });
 }
 
+// Page entry point
+// Trigger listeners
+App.Listeners.DB.keypress_custom_folder();
+App.Listeners.DB.change_custom_doc();
+
 App.Actions.WEB.update_ftp_username_hint = function(elm, hint) {
     if (hint.trim() == '') {
         $(elm).parent().find('.hint').html('');
@@ -75,6 +80,7 @@ App.Listeners.WEB.keypress_domain_name = function() {
             var domain = $('.ftp-path-prefix').text(GLOBAL.FTP_USER_PREPATH + '/' + $('#v_domain').val());
             $('#v-custom-doc-domain-main').text($('#v_domain').val());
             $('#v-custom-doc-domain-main').val($('#v_domain').val());
+            App.Actions.WEB.update_custom_doc_root(13, 12);
             
         }, 100);
     });

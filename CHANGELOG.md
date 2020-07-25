@@ -16,7 +16,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an error that would occur when running `v-change-user-php-cli` for the first time if .bash_aliases did not exist. (#960)
 - Corrected an issue where tooltips were not displayed when hovering over the top level menu items.
  
-## [1.2.1] - Service Release 1
+## [1.2.1] - Service Release
 ### Features
 - Consolidated First and Last Name fields to a singular name field to simply input.
     - v-change-user-name will now accept both "First Last" (single argument) and First Last (two arguments) for backward compatibility.

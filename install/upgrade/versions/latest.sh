@@ -8,7 +8,6 @@
 
 # Update template files to add warnings
 # Backup current templates
-cp -r -f $HESTIA/data/templates/* $HESTIA_BACKUP/templates/
 echo "[ ! ] Updating default web domain templates..."
 $BIN/v-update-web-templates
 echo "[ ! ] Updating default mail domain templates..."
@@ -18,32 +17,31 @@ $BIN/v-update-dns-templates
 
 # Rework apt repositories
 apt="/etc/apt/sources.list.d"
-echo "[*] Hardening apt repositories..."
-
+echo "[ * ] Hardening APT repositories..."
 if [ -f "$apt/nginx.list" ]; then
     if grep -q "http://nginx.org/packages/mainline/" $apt/nginx.list; then
-        echo "    [ * ] NGINX"
+        echo "  ----- NGINX"
         sed -i "s/http\:\/\/nginx.org/https\:\/\/nginx.org/g" $apt/nginx.list
     fi
 fi
 
 if [ -f "$apt/php.list" ]; then
     if grep -q "http://packages.sury.org/" $apt/php.list; then
-        echo "    [ * ] PHP"
+        echo "  ----- PHP"
         sed -i "s/http\:\/\/packages.sury.org/https\:\/\/packages.sury.org/g" $apt/php.list
     fi
 fi
 
 if [ -f "$apt/mariadb.list" ]; then
     if grep -q "http://ams2.mirrors.digitalocean.com" $apt/mariadb.list; then
-        echo "    [ * ] MariaDB"
+        echo "  ----- MariaDB"
         sed -i "s/http\:\/\/ams2.mirrors.digitalocean.com/https\:\/\/mirror.mva-n.net/g" $apt/mariadb.list
     fi
 fi
 
 if [ -f "$apt/postgresql.list" ]; then
     if grep -q "http://apt.postgresql.org" $apt/postgresql.list; then
-        echo "    [ * ] PostgreSQL"
+        echo "  ----- PostgreSQL"
         sed -i "s/http\:\/\/apt.postgresql.org/https\:\/\/apt.postgresql.org/g" $apt/postgresql.list
     fi
 fi

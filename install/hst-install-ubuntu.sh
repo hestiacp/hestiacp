@@ -1683,6 +1683,11 @@ else
     echo "API='no'" >> $HESTIA/conf/hestia.conf
 fi
 
+#----------------------------------------------------------#
+#                     Limit PHP SESSIONS                   #
+#----------------------------------------------------------#
+
+echo "INACTIVE_SESSION_TIMEOUT='60'" >> $HESTIA/conf/hestia.conf
 
 #----------------------------------------------------------#
 #                      Fix phpmyadmin                      #

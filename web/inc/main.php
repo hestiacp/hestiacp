@@ -72,6 +72,18 @@ if (isset($_SESSION['user'])) {
     }
 }
 
+if( NO_AUTH_REQUIRED !== true){
+    if(empty($_SESSION['LAST_ACTIVITY']) || empty($_SESSION['INACTIVE_SESSION_TIMEOUT'])){
+        session_destroy();
+        header("Location: /login/"); 
+    }else if ($_SESSION['INACTIVE_SESSION_TIMEOUT'] * 60 + $_SESSION['LAST_ACTIVITY'] < time()) {
+        session_destroy();
+        header("Location: /login/"); 
+    }else{
+        $_SESSION['LAST_ACTIVITY'] = time();
+    }
+}
+
 if (isset($_SESSION['language'])) {
     switch ($_SESSION['language']) {
         case 'ro':

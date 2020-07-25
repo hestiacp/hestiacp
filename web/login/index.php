@@ -1,7 +1,6 @@
 <?php
 
 define('NO_AUTH_REQUIRED',true);
-
 // Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
@@ -11,8 +10,6 @@ $TAB = 'login';
 if (isset($_GET['logout'])) {
     session_destroy();
 }
-
-
 
 // Login as someone else
 if (isset($_SESSION['user'])) {
@@ -116,7 +113,7 @@ function authenticate_user(){
                 // Define session user
                 $_SESSION['user'] = key($data);
                 $v_user = $_SESSION['user'];
-
+                $_SESSION['LAST_ACTIVITY'] = time();
                 // Define language
                 $output = '';
                 exec (HESTIA_CMD."v-list-sys-languages json", $output, $return_var);

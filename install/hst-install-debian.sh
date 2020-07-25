@@ -1660,6 +1660,11 @@ if [ "$mysql" = 'yes' ]; then
     source $HESTIA_INSTALL_DIR/phpmyadmin/pma.sh > /dev/null 2>&1
 fi
 
+#----------------------------------------------------------#
+#                     Limit PHP SESSIONS                   #
+#----------------------------------------------------------#
+
+echo "INACTIVE_SESSION_TIMEOUT='60'" >> $HESTIA/conf/hestia.conf
 
 #----------------------------------------------------------#
 #                   Configure Admin User                   #

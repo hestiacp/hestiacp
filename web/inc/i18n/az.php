@@ -821,43 +821,43 @@ $LANG['az'] = array(
     'Please scan the code below in your 2FA application:' => 'İki faktorlu identifikasiyanı qurmağı başa çatdırmaq üçün aşağıdakı qr kodu yoxlayın <br /> bir identifikasiya tətbiqindən istifadə edərəkp (kimi <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google Authenticator</a>):',
     '2FA Reset Code:' => 'Hesab bərpa kodu:',
     
-        //list user 
-    'Name' => 'Name',
+    //list user 
+    'Name' => 'Adı',
     //Add / Edit user
-    'Contact' => 'Name',
+    'Contact' => 'Adı',
     'GREETINGS_GORDON' => "Hello, %s,\n",
     
     //List Mail Accounts
-    'Forwarding' => 'Forwarding',
+    'Forwarding' => 'İstiqamətləndirmə',
 
     //Cron Jobs
     'Cron Job' => 'Cron Job',
     //Edit server 
-    'Host' => 'Host',
+    'Host' => 'Ev sahibi',
   
       //list Backups
-    '1 backups' => '1 backups',
-    '%s backups' => '%s backups',
+    '1 backups' => '1 ehtiyat nüsxələri',
+    '%s backups' => '%s ehtiyat nüsxələri',
     //list Firewall Rules
-    '1 firewall rule' => '1 firewall rule',
-    '%s firewall rules' => '%s firewall rules',
+    '1 firewall rule' => '1 firewall qaydası',
+    '%s firewall rules' => '%s firewall qaydaları',
     //list ip
-    '1 banned IP address' => '1 banned IP address',
-    '%s banned IP addresses' => '%s banned IP addresses', 
+    '1 banned IP address' => '1 qadağan olunmuş IP ünvanı',
+    '%s banned IP addresses' => '%s qadağan edilmiş IP ünvanları', 
     //list DNS
-    'Records_DNS' => 'Records',
+    'Records_DNS' => 'Qeydlər',
     //Dowload Backup
-    'BACKUP_DOWNLOAD_SCHEDULED' => 'Download for Backup has been scheduled.',
+    'BACKUP_DOWNLOAD_SCHEDULED' => 'Uzaqdan yedek faylının yüklənməsi planlaşdırıldı.',
     'backend server' =>  'Backend Server',    
-    'traffic' => 'Traffic',
+    'traffic' => 'Trafik',
     'disk' => 'Disk',
 
     // Notifications
-    'Notifications' => 'Notifications',
+    'Notifications' => 'Bildirişlər',
 
     // Help
-    'Help' => 'Help',
-    'Documentation' => 'Documentation',
-    'Support' => 'Support',
-    'Submit an issue report' => 'Submit an issue report',
+    'Help' => 'Kömək edin',
+    'Documentation' => 'Sənədlər',
+    'Support' => 'Dəstək',
+    'Submit an issue report' => 'Bir problem hesabatı təqdim edin',
 );

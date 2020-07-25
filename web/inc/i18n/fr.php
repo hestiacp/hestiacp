@@ -852,44 +852,44 @@ $LANG['fr'] = array(
     '2FA Reset Code' => 'Code de récupération de compte',
     'Invalid or missing token' => 'Jeton non valide ou manquant',
     
-        //list user 
-    'Name' => 'Name',
+    //list user 
+    'Name' => 'Nom',
     //Add / Edit user
-    'Contact' => 'Name',
-    'GREETINGS_GORDON' => "Hello, %s,\n",
+    'Contact' => 'Nom',
+    'GREETINGS_GORDON' => "Bonjour, %s,\n",
     
     //List Mail Accounts
-    'Forwarding' => 'Forwarding',
+    'Forwarding' => 'Expéditeur',
 
     //Cron Jobs
     'Cron Job' => 'Cron Job',
     //Edit server 
-    'Host' => 'Host',
+    'Host' => 'Hôte',
   
       //list Backups
-    '1 backups' => '1 backups',
-    '%s backups' => '%s backups',
+    '1 backups' => '1 sauvegardes',
+    '%s backups' => '%s sauvegardes',
     //list Firewall Rules
-    '1 firewall rule' => '1 firewall rule',
-    '%s firewall rules' => '%s firewall rules',
+    '1 firewall rule' => '1 règle de pare-feu',
+    '%s firewall rules' => '%s règles de pare-feu',
     //list ip
-    '1 banned IP address' => '1 banned IP address',
-    '%s banned IP addresses' => '%s banned IP addresses', 
+    '1 banned IP address' => '1 adresse IP interdite',
+    '%s banned IP addresses' => '%s adresses IP interdites', 
     //list DNS
-    'Records_DNS' => 'Records',
+    'Records_DNS' => 'Registres',
     //Dowload Backup
-    'BACKUP_DOWNLOAD_SCHEDULED' => 'Download for Backup has been scheduled.',
-    'backend server' =>  'Backend Server',
+    'BACKUP_DOWNLOAD_SCHEDULED' => 'Le téléchargement du fichier de sauvegarde à distance a été planifié.',
+    'backend server' =>  'Serveur backend',
 
-    'traffic' => 'Traffic',
-    'disk' => 'Disk',
+    'traffic' => 'Circulation',
+    'disk' => 'Disque',
 
     // Notifications
     'Notifications' => 'Notifications',
     
     // Help
-    'Help' => 'Help',
+    'Help' => 'Aidez-moi',
     'Documentation' => 'Documentation',
-    'Support' => 'Support',
-    'Submit an issue report' => 'Submit an issue report',
+    'Support' => 'Soutien',
+    'Submit an issue report' => 'Soumettre un rapport de problème',
 );

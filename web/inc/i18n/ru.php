@@ -851,73 +851,44 @@ $LANG['ru'] = array(
 
     'Force SSL/HTTPS' => 'Включить автоматическое перенаправление HTTP-HTTPS',
     'Enable SSL HSTS' => 'Включить HTTP Strict Transport Security (HSTS) <a href="https://ru.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><i class="fas fa-question-circle"></i></a>',
-    
-        //list user 
-    'Name' => 'Name',
-    //Add / Edit user
-    'Contact' => 'Name',
-    'GREETINGS_GORDON' => "Hello, %s,\n",
-    
-    //List Mail Accounts
-    'Forwarding' => 'Forwarding',
 
-    //Cron Jobs
-    'Cron Job' => 'Cron Job',
-    //Edit server 
-    'Host' => 'Host',
-  
-      //list Backups
-    '1 backups' => '1 backups',
-    '%s backups' => '%s backups',
-    //list Firewall Rules
-    '1 firewall rule' => '1 firewall rule',
-    '%s firewall rules' => '%s firewall rules',
-    //list ip
-    '1 banned IP address' => '1 banned IP address',
-    '%s banned IP addresses' => '%s banned IP addresses', 
-    //list DNS
-    'Records_DNS' => 'Records',
-    //Dowload Backup
-    'BACKUP_DOWNLOAD_SCHEDULED' => 'Download for Backup has been scheduled.',
-    'backend server' =>  'Backend Server',
-    
     //list user 
-    'Name' => 'Name',
+    'Name' => 'название',
     //Add / Edit user
-    'Contact' => 'Name',
-    'GREETINGS_GORDON' => "Hello, %s,\n",
+    'Contact' => 'название',
+    'GREETINGS_GORDON' => "Привет, %s,\n",
     
     //List Mail Accounts
-    'Forwarding' => 'Forwarding',
+    'Forwarding' => 'пересылка',
 
     //Cron Jobs
     'Cron Job' => 'Cron Job',
     //Edit server 
-    'Host' => 'Host',
+    'Host' => 'хозяин',
   
       //list Backups
-    '1 backups' => '1 backups',
-    '%s backups' => '%s backups',
+    '1 backups' => '1 резервное копирование',
+    '%s backups' => '%s резервное копирование',
     //list Firewall Rules
-    '1 firewall rule' => '1 firewall rule',
-    '%s firewall rules' => '%s firewall rules',
+    '1 firewall rule' => '1 правило брандмауэра',
+    '%s firewall rules' => '%s правила брандмауэра',
     //list ip
-    '1 banned IP address' => '1 banned IP address',
-    '%s banned IP addresses' => '%s banned IP addresses', 
+    '1 banned IP address' => '1 забаненный IP-адрес',
+    '%s banned IP addresses' => '%s запрещенные IP-адреса', 
     //list DNS
-    'Records_DNS' => 'Records',
+    'Records_DNS' => 'документация',
     //Dowload Backup
-    'BACKUP_DOWNLOAD_SCHEDULED' => 'Download for Backup has been scheduled.',
-    'backend server' =>  'Backend Server',
-    'traffic' => 'Traffic',
-    'disk' => 'Disk',
+    'BACKUP_DOWNLOAD_SCHEDULED' => 'Загрузка файла удаленной резервной копии запланирована.',
+    'backend server' =>  'Бэкэнд-сервер',
+    'traffic' => 'Трафик',
+    'disk' => 'диск',
 
     // Notifications
-    'Notifications' => 'Notifications',
+    'Notifications' => 'Уведомления',
     
     // Help
-    'Help' => 'Help',
-    'Documentation' => 'Documentation',
-    'Support' => 'Support',
-    'Submit an issue report' => 'Submit an issue report',
+    'Help' => 'Помогите',
+    'Documentation' => 'Документация',
+    'Support' => 'Служба поддержки',
+    'Submit an issue report' => 'Отправить отчет о проблеме',
 );

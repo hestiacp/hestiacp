@@ -849,42 +849,42 @@ $LANG['it'] = array(
     'Invalid or missing token' => 'Codice non valido o mancante',
     
     //list user 
-    'Name' => 'Name',
+    'Name' => 'Nome',
     //Add / Edit user
-    'Contact' => 'Name',
-    'GREETINGS_GORDON' => "Hello, %s,\n",
+    'Contact' => 'Nome',
+    'GREETINGS_GORDON' => "Ciao, %s,\n",
     
     //List Mail Accounts
-    'Forwarding' => 'Forwarding',
+    'Forwarding' => 'Inoltro',
 
     //Cron Jobs
     'Cron Job' => 'Cron Job',
     //Edit server 
-    'Host' => 'Host',
+    'Host' => 'Ospite',
   
       //list Backups
-    '1 backups' => '1 backups',
-    '%s backups' => '%s backups',
+    '1 backups' => '1 backup',
+    '%s backups' => '%s backup',
     //list Firewall Rules
-    '1 firewall rule' => '1 firewall rule',
-    '%s firewall rules' => '%s firewall rules',
+    '1 firewall rule' => '1 regola del firewall',
+    '%s firewall rules' => '%s regole del firewall',
     //list ip
-    '1 banned IP address' => '1 banned IP address',
-    '%s banned IP addresses' => '%s banned IP addresses', 
+    '1 banned IP address' => '1 indirizzo IP vietato',
+    '%s banned IP addresses' => '%s indirizzi IP vietati', 
     //list DNS
     'Records_DNS' => 'Records',
     //Dowload Backup
-    'BACKUP_DOWNLOAD_SCHEDULED' => 'Download for Backup has been scheduled.',
-    'backend server' =>  'Backend Server',
-    'traffic' => 'Traffic',
-    'disk' => 'Disk',
+    'BACKUP_DOWNLOAD_SCHEDULED' => 'Il download del file di backup remoto è stato programmato.',
+    'backend server' =>  'Server back-end',
+    'traffic' => 'Traffico',
+    'disk' => 'Disco',
 
     // Notifications
-    'Notifications' => 'Notifications',
+    'Notifications' => 'Notifiche',
     
     // Help
-    'Help' => 'Help',
-    'Documentation' => 'Documentation',
-    'Support' => 'Support',
-    'Submit an issue report' => 'Submit an issue report',
+    'Help' => 'Aiuto',
+    'Documentation' => 'Documentazione',
+    'Support' => 'Supporto',
+    'Submit an issue report' => 'Invia una segnalazione di problemi',
 );

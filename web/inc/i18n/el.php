@@ -851,44 +851,43 @@ $LANG['el'] = array(
     'Please scan the code below in your 2FA application:' => 'Για να ολοκληρώσετε τη ρύθμιση ελέγχου ταυτότητας δύο παραγόντων, σαρώστε τον κωδικό QR παρακάτω<br />χρησιμοποιώντας μια εφαρμογή ελέγχου ταυτότητας (όπως <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Επαληθευτής Google</a>):',
     '2FA Reset Code:' => 'Κωδικός ανάκτησης λογαριασμού:',
     
-    
-            //list user 
-    'Name' => 'Name',
+    //list user 
+    'Name' => 'Ονομα',
     //Add / Edit user
-    'Contact' => 'Name',
-    'GREETINGS_GORDON' => "Hello, %s,\n",
+    'Contact' => 'Ονομα',
+    'GREETINGS_GORDON' => "Χαίρετε, %s,\n",
     
     //List Mail Accounts
-    'Forwarding' => 'Forwarding',
+    'Forwarding' => 'Προώθηση',
 
     //Cron Jobs
     'Cron Job' => 'Cron Job',
     //Edit server 
-    'Host' => 'Host',
+    'Host' => 'Πλήθος',
   
       //list Backups
-    '1 backups' => '1 backups',
-    '%s backups' => '%s backups',
+    '1 backups' => '1 αντίγραφα ασφαλείας',
+    '%s backups' => '%s αντίγραφα ασφαλείας',
     //list Firewall Rules
-    '1 firewall rule' => '1 firewall rule',
-    '%s firewall rules' => '%s firewall rules',
+    '1 firewall rule' => '1 κανόνας τείχους προστασίας',
+    '%s firewall rules' => '%s κανόνες τείχους προστασίας',
     //list ip
-    '1 banned IP address' => '1 banned IP address',
-    '%s banned IP addresses' => '%s banned IP addresses', 
+    '1 banned IP address' => '1 απαγορευμένη διεύθυνση IP',
+    '%s banned IP addresses' => '%s απαγορευμένες διευθύνσεις IP', 
     //list DNS
-    'Records_DNS' => 'Records',
+    'Records_DNS' => 'Εγγραφές',
     //Dowload Backup
-    'BACKUP_DOWNLOAD_SCHEDULED' => 'Download for Backup has been scheduled.',
-    'backend server' =>  'Backend Server',
-    'traffic' => 'Traffic',
-    'disk' => 'Disk',
+    'BACKUP_DOWNLOAD_SCHEDULED' => 'Έχει προγραμματιστεί η λήψη του απομακρυσμένου εφεδρικού αρχείου.',
+    'backend server' =>  'Διακομιστής Backend',
+    'traffic' => 'κυκλοφορία',
+    'disk' => 'Δίσκος',
 
     // Notifications
-        'Notifications' => 'Notifications',
+    'Notifications' => 'Ειδοποιήσεις',
     
     // Help
-    'Help' => 'Help',
-    'Documentation' => 'Documentation',
-    'Support' => 'Support',
-    'Submit an issue report' => 'Submit an issue report',
+    'Help' => 'Βοήθεια',
+    'Documentation' => 'Τεκμηρίωση',
+    'Support' => 'Υποστήριξη',
+    'Submit an issue report' => 'Υποβολή αναφοράς προβλήματος',
 );

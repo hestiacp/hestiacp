@@ -847,10 +847,10 @@ $LANG['bg'] = array(
     'Please scan the code below in your 2FA application:' => 'за да завършите настройката на двуфакторната автентификация, сканирайте QR кода по-долу <br /> с помощта на приложение за удостоверяване (като <a href = "https://play.google.com/store/apps/details?id=com"). google.android.apps.authenticator2 "> Google Удостоверител </a>):',
     '2FA Reset Code:' => 'Код за възстановяване на акаунта:',
     
-        //list user 
-    'Name' => 'Name',
+    //list user 
+    'Name' => 'име',
     //Add / Edit user
-    'Contact' => 'Name',
+    'Contact' => 'име',
     'GREETINGS_GORDON' => "Hello, %s,\n",
     
     //List Mail Accounts
@@ -859,32 +859,32 @@ $LANG['bg'] = array(
     //Cron Jobs
     'Cron Job' => 'Cron Job',
     //Edit server 
-    'Host' => 'Host',
+    'Host' => 'домакин',
   
       //list Backups
-    '1 backups' => '1 backups',
-    '%s backups' => '%s backups',
+    '1 backups' => '1 архивиране',
+    '%s backups' => '%s архивиране',
     //list Firewall Rules
-    '1 firewall rule' => '1 firewall rule',
-    '%s firewall rules' => '%s firewall rules',
+    '1 firewall rule' => '1 правило за защитна стена',
+    '%s firewall rules' => '%s правила за защитна стена',
     //list ip
-    '1 banned IP address' => '1 banned IP address',
-    '%s banned IP addresses' => '%s banned IP addresses', 
+    '1 banned IP address' => '1 забранен IP адрес',
+    '%s banned IP addresses' => '%s забранени IP адреси', 
     //list DNS
     'Records_DNS' => 'Records',
     //Dowload Backup
-    'BACKUP_DOWNLOAD_SCHEDULED' => 'Download for Backup has been scheduled.',
-    'backend server' =>  'Backend Server',
-    'traffic' => 'Traffic',
-    'disk' => 'Disk',
+    'BACKUP_DOWNLOAD_SCHEDULED' => 'Изтеглянето на отдалечен архивен файл е насрочено.',
+    'backend server' =>  'Бекенд сървър',
+    'traffic' => 'Трафик',
+    'disk' => 'диск',
 
     // Notifications
-    'Notifications' => 'Notifications',
+    'Notifications' => 'Известия',
     
     // Help
-    'Help' => 'Help',
-    'Documentation' => 'Documentation',
-    'Support' => 'Support',
-    'Submit an issue report' => 'Submit an issue report',
+    'Help' => 'Помогне',
+    'Documentation' => 'документация',
+    'Support' => 'поддържа',
+    'Submit an issue report' => 'Изпратете доклад за проблем',
 );
 

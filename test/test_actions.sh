@@ -7,13 +7,7 @@ V_TEST="$HESTIA/test"
 
 # Define functions
 random() {
-    MATRIX='0123456789'
-    LENGTH=$1
-    while [ ${n:=1} -le $LENGTH ]; do
-        rand="$rand${MATRIX:$(($RANDOM%${#MATRIX})):1}"
-        let n+=1
-    done
-    echo "$rand"
+    cat /dev/urandom | tr -dc [:digit:] | head -c$1
 }
 
 echo_result() {

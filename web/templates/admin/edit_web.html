@@ -262,15 +262,15 @@
                                                 <select class="vst-list" name="v-costum-doc-domain">
                                                     <option value="<?php echo $v_domain;?>"><?php echo $v_domain;?></option>
                                                     <?php
-                                                    foreach ($domains as $key => $d) {
-                                                        if($key != $v_domain ){
-                                                        if($v_costum_doc_domain == $key){
+                                                    foreach ($user_domains as $domain) {
+                                                        if($domain != $v_domain ){
+                                                        if($v_costum_doc_domain == $domain){
                                                     ?>
-                                                            <option value="<?php echo $key;?>" selected="selected"><?php echo $key;?></option> 
+                                                            <option value="<?php echo $domain;?>" selected="selected"><?php echo $domain;?></option> 
                                                     <?php
                                                         }else{
                                                      ?>
-                                                            <option value="<?php echo $key;?>"><?php echo $key;?></option> 
+                                                            <option value="<?php echo $domain;?>"><?php echo $domain;?></option> 
                                                     <?php                                                           
                                                         }
                                                         }

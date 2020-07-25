@@ -21,7 +21,7 @@ App.Listeners.DB.keypress_custom_folder = function() {
 }
 
 App.Listeners.DB.change_custom_doc = function() {
-    var ref = $('select[name="v-custom-domain"]');
+    var ref = $('select[name="v-costum-doc-domain"]');
     var current_rec = ref.val();
     ref.bind('change select', function(evt) {
         clearTimeout(window.frp_usr_tmt);

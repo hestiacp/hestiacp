@@ -125,11 +125,6 @@ exec (HESTIA_CMD."v-list-web-stats json", $output, $return_var);
 $stats = json_decode(implode('', $output), true);
 unset($output);
 
-//List web doamins 
-exec (HESTIA_CMD."v-list-web-domains ".$user." json", $output, $return_var);
-$domains = json_decode(implode('', $output), true);
-unset($output);
-
 // Check POST request
 if (!empty($_POST['save'])) {
     $v_domain = $_POST['v_domain'];

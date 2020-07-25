@@ -1603,31 +1603,6 @@ if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     sed -i "s/%des_key%/$rcDesKey/g" /etc/roundcube/config.inc.php
     sed -i "s/localhost/$servername/g" /etc/roundcube/plugins/password/config.inc.php
     mysql roundcube < /usr/share/dbconfig-common/data/roundcube/install/mysql
-
-    if [ "$release" -eq 8 ]; then
-        # RoundCube tinyMCE fix
-        tinymceFixArchiveURL=$HESTIA_INSTALL_DIR/roundcube/roundcube-tinymce.tar.gz
-        tinymceParentFolder=/usr/share/roundcube/program/js
-        tinymceFolder=$tinymceParentFolder/tinymce
-        tinymceBadJS=$tinymceFolder/tiny_mce.js
-        tinymceFixArchive=$tinymceParentFolder/roundcube-tinymce.tar.gz
-        if [[ -L "$tinymceFolder" && -d "$tinymceFolder" ]]; then
-            if [ -f "$tinymceBadJS" ]; then
-                wget $tinymceFixArchiveURL -O $tinymceFixArchive
-                if [[ -f "$tinymceFixArchive" && -s "$tinymceFixArchive" ]]
-                then
-                    rm $tinymceFolder
-                    tar -xzf $tinymceFixArchive -C $tinymceParentFolder
-                    rm $tinymceFixArchive
-                    chown -R root:root $tinymceFolder
-                else
-                    echo -n "File roundcube-tinymce.tar.gz is not downloaded,"
-                    echo "RoundCube tinyMCE fix is not applied"
-                    rm $tinymceFixArchive
-                fi
-            fi
-        fi
-    fi
     
     # Enable Roundcube plugins
     cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_newmail_notifier.inc.php /etc/roundcube/plugins/newmail_notifier/config.inc.php

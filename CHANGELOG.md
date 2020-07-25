@@ -15,7 +15,8 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue where malformed JSON output was returned when custom theme files are present. (#967)
 - Fixed an error that would occur when running `v-change-user-php-cli` for the first time if .bash_aliases did not exist. (#960)
 - Corrected an issue where tooltips were not displayed when hovering over the top level menu items.
- 
+- Improved handling of APT repository keys during installation.
+
 ## [1.2.1] - Service Release 1
 ### Features
 - Consolidated First and Last Name fields to a singular name field to simply input.

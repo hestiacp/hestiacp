@@ -878,7 +878,7 @@ $LANG['pl'] = array(
     //list DNS
     'Records_DNS' => 'Records',
     //Dowload Backup
-    'BACKUP_DOWNLOAD_SCHEDULED' => 'Download for Backup has been scheduled.',
+    'BACKUP_DOWNLOAD_SCHEDULED' => 'Download of remote backup file has been scheduled.',
     'backend server' =>  'Backend Server',
     'traffic' => 'Traffic',
     'disk' => 'Disk',

@@ -850,69 +850,42 @@ $LANG['bs'] = array(
     '2FA Reset Code:' => 'Kôd za povrat računa:',
     
     //list user 
-    'Name' => 'Name',
+    'Name' => 'Ime',
     //Add / Edit user
-    'Contact' => 'Name',
+    'Contact' => 'Ime',
     'GREETINGS_GORDON' => "Hello, %s,\n",
     
     //List Mail Accounts
-    'Forwarding' => 'Forwarding',
+    'Forwarding' => 'Prosleđivanje',
 
     //Cron Jobs
     'Cron Job' => 'Cron Job',
     //Edit server 
-    'Host' => 'Host',
+    'Host' => 'Domaćin',
   
       //list Backups
-    '1 backups' => '1 backups',
-    '%s backups' => '%s backups',
+    '1 backups' => '1 sigurnosne kopije',
+    '%s backups' => '%s sigurnosne kopije',
     //list Firewall Rules
-    '1 firewall rule' => '1 firewall rule',
-    '%s firewall rules' => '%s firewall rules',
+    '1 firewall rule' => '1 pravilo vatrozida',
+    '%s firewall rules' => '%s pravila zaštitnog zida',
     //list ip
-    '1 banned IP address' => '1 banned IP address',
-    '%s banned IP addresses' => '%s banned IP addresses', 
+    '1 banned IP address' => '1 zabranjena IP adresa',
+    '%s banned IP addresses' => '%s zabranjene IP adrese', 
     //list DNS
-    'Records_DNS' => 'Records',
+    'Records_DNS' => 'Zapisi',
     //Dowload Backup
-    'BACKUP_DOWNLOAD_SCHEDULED' => 'Download for Backup has been scheduled.',
-        //list user 
-    'Name' => 'Name',
-    //Add / Edit user
-    'Contact' => 'Name',
-    'GREETINGS_GORDON' => "Hello, %s,\n",
-    
-    //List Mail Accounts
-    'Forwarding' => 'Forwarding',
-
-    //Cron Jobs
-    'Cron Job' => 'Cron Job',
-    //Edit server 
-    'Host' => 'Host',
-  
-      //list Backups
-    '1 backups' => '1 backups',
-    '%s backups' => '%s backups',
-    //list Firewall Rules
-    '1 firewall rule' => '1 firewall rule',
-    '%s firewall rules' => '%s firewall rules',
-    //list ip
-    '1 banned IP address' => '1 banned IP address',
-    '%s banned IP addresses' => '%s banned IP addresses', 
-    //list DNS
-    'Records_DNS' => 'Records',
-    //Dowload Backup
-    'BACKUP_DOWNLOAD_SCHEDULED' => 'Download for Backup has been scheduled.';
+    'BACKUP_DOWNLOAD_SCHEDULED' => 'Zakazano je preuzimanje udaljene datoteke sigurnosne kopije.',
     'backend server' =>  'Backend Server',
-    'traffic' => 'Traffic',
+    'traffic' => 'Saobraćaj',
     'disk' => 'Disk',
   
     // Notifications
-    'Notifications' => 'Notifications',
+    'Notifications' => 'Obavijesti',
     
     // Help
-    'Help' => 'Help',
-    'Documentation' => 'Documentation',
-    'Support' => 'Support',
-    'Submit an issue report' => 'Submit an issue report',
+    'Help' => 'Pomoć',
+    'Documentation' => 'Dokumentacija',
+    'Support' => 'Podrška',
+    'Submit an issue report' => 'Pošaljite prijavu problema',
 );

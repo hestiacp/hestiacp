@@ -83,7 +83,14 @@ $v_custom_doc_folder = str_replace('public_html/','',$matches[2]);
 $v_ftp_user = $data[$v_domain]['FTP_USER'];
 $v_ftp_path = $data[$v_domain]['FTP_PATH'];
 if (!empty($v_ftp_user)) $v_ftp_password = "";
-$v_ftp_user_prepath = '/home/'.$v_username.'/web/'.$v_domain;
+
+if($v_custom_doc_domain != ''){
+    $v_ftp_user_prepath = '/home/'.$v_username.'/web/'.$v_custom_doc_domain;
+}else{
+    $v_ftp_user_prepath = '/home/'.$v_username.'/web/'.$v_domain;
+}
+
+
 $v_ftp_email = $panel[$user]['CONTACT'];
 $v_suspended = $data[$v_domain]['SUSPENDED'];
 if ( $v_suspended == 'yes' ) {
@@ -750,7 +757,7 @@ if (!empty($_POST['save'])) {
         unset($_POST['v-custom-doc-domain'], $_POST['v-custom-doc-folder']);    
     }
 
-    if ( !empty($_POST['v-custom-doc-domain']) && !empty($_POST['v_custom_doc_root_check']) && $v_custom_doc_root_prepath.$v_custom_doc_domain.'/public_html'.$v_custom_doc_folder != $v_custom_doc_root){
+    if ( !empty($_POST['v-custom-doc-domain']) && !empty($_POST['v_custom_doc_root_check']) && $v_custom_doc_root_prepath.$v_custom_doc_domain.'/public_html'.$v_custom_doc_folder != $v_custom_doc_root || ($_POST['v-custom-doc-domain'] == $v_domain && !empty($_POST['v-custom-doc-folder']))){
         
         $v_custom_doc_domain = escapeshellarg($_POST['v-custom-doc-domain']);
         $v_custom_doc_folder = escapeshellarg($_POST['v-custom-doc-folder']);

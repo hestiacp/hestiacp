@@ -893,4 +893,13 @@ $LANG['cn'] = array(
     'backend server' =>  '后端服务',
     'traffic' => '流量',
     'disk' => '磁盘',
+
+    // Notifications
+    'Notifications' => 'Notifications',
+    
+    // Help
+    'Help' => 'Help',
+    'Documentation' => 'Documentation',
+    'Support' => 'Support',
+    'Submit an issue report' => 'Submit an issue report',
 );

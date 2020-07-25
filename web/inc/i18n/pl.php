@@ -882,4 +882,13 @@ $LANG['pl'] = array(
     'backend server' =>  'Backend Server',
     'traffic' => 'Traffic',
     'disk' => 'Disk',
+
+    // Notifications
+    'Notifications' => 'Notifications',
+    
+    // Help
+    'Help' => 'Help',
+    'Documentation' => 'Documentation',
+    'Support' => 'Support',
+    'Submit an issue report' => 'Submit an issue report',
 );

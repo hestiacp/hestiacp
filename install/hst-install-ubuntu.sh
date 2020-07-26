@@ -46,7 +46,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     hestia-nginx hestia-php vim-common vsftpd whois zip acl sysstat setpriv
     ipset libonig5 libzip5"
 
-installer_dependencies="apt-transport-https curl dirmngr gnupg wget"
+installer_dependencies="apt-transport-https augeas-tools curl dirmngr gnupg wget"
 
 # Defining help function
 help() {

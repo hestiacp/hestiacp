@@ -64,7 +64,7 @@ elif [ "$release" -eq 10 ]; then
         ipset libapache2-mpm-itk"
 fi
 
-installer_dependencies="apt-transport-https curl dirmngr gnupg wget"
+installer_dependencies="apt-transport-https augeas-tools curl dirmngr gnupg wget"
 
 # Defining help function
 help() {

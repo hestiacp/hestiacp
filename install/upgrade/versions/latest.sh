@@ -59,3 +59,4 @@ fi
 
 # Limit PHP Session Live time 
 echo "INACTIVE_SESSION_TIMEOUT='60'" >> $HESTIA/conf/hestia.conf
+echo "TWOFA_VALID_LENGTH='1'" >> $HESTIA/conf/hestia.conf

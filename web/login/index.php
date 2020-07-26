@@ -8,6 +8,7 @@ $TAB = 'login';
 
 // Logout
 if (isset($_GET['logout'])) {
+    setcookie('limit2fa','',time() - 3600,"/");
     session_destroy();
 }
 
@@ -86,33 +87,38 @@ function authenticate_user(){
                 $error = "<a class=\"error\">".__('Invalid username or password')."</a>";
                 return $error;
             } else {
-
                 // Make root admin user
                 if ($_POST['user'] == 'root') $v_user = 'admin';
-
                 // Get user speciefic parameters
                 exec (HESTIA_CMD . "v-list-user ".$v_user." json", $output, $return_var);
                 $data = json_decode(implode('', $output), true);
+                if ($data[$user]['TWOFA'] != '') {
+                    if(password_hash($data[$user]['TWOFA'].$_POST['murmur'],PASSWORD_BCRYPT) == $_COOKIE['limit2fa']){
 
-                // Check if 2FA is active
-                if ($data[$_POST['user']]['TWOFA'] != '') {
-                   if (empty($_POST['twofa'])){
-                       return false;
-                   }else{
-                        $v_twofa = $_POST['twofa'];
-                        exec(HESTIA_CMD ."v-check-user-2fa ".$v_user." ".$v_twofa, $output, $return_var);
-                        unset($output);
-                        if ( $return_var > 0 ) {
-                            sleep(2);
-                            $error = "<a class=\"error\">".__('Invalid or missing 2FA token')."</a>";
-                            return $error;
-                            unset($_POST['twofa']);
+                    }else{                        
+                       setcookie('limit2fa','',time() - 3600,"/");
+                        if(empty($_POST['twofa'])){
+                            return false;
+                        }else{
+                            $v_twofa = $_POST['twofa'];
+                            exec(HESTIA_CMD ."v-check-user-2fa ".$v_user." ".$v_twofa, $output, $return_var);
+                            unset($output);
+                            if ( $return_var > 0 ) {
+                                sleep(2);
+                                $error = "<a class=\"error\">".__('Invalid or missing 2FA token')."</a>";
+                                return $error;
+                                unset($_POST['twofa']);
+                            }   
                         }
-                   }
+                        
+                    }
                 }
                 // Define session user
                 $_SESSION['user'] = key($data);
                 $v_user = $_SESSION['user'];
+                if(empty($_COOKIE['limit2fa'])){
+                    setcookie('limit2fa',password_hash($data[$user]['TWOFA'].$_POST['murmur'],PASSWORD_BCRYPT),time()+60*60*24*$_SESSION['TWOFA_VALID_LENGTH'],"/");
+                };
                 $_SESSION['LAST_ACTIVITY'] = time();
                 // Define language
                 $output = '';
@@ -123,7 +129,6 @@ function authenticate_user(){
                 } else {
                     $_SESSION['language'] = 'en';
                 }
-
                 // Regenerate session id to prevent session fixation
                 session_regenerate_id();
 

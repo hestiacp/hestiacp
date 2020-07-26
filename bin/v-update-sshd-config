@@ -23,6 +23,16 @@ sshd_config=/etc/ssh/sshd_config
 #----------------------------------------------------------#
 
 # Keep the following actions maintained in sync with the current install scripts
+sshd_config_augtool = /files/etc/ssh/sshd_config
+
+# Alaways save a backup copy of the config file if it has changed directly in the same directory
+# to permit fast audit, diff and recovery if required
+# cp options: "-u" only copy if newer, "--backup=t" numbered backup, destination is hidden and has .bak extension.
+cp -u --backup=t /etc/ssh/sshd_config /etc/ssh/.sshd_config.bak
+
+# Important PasswordAuthentication: Previous versions of HestiaCP and VestaCP had imposed 'PasswordAuthentication yes'
+# However, this would be risky to change during an update as it is probable that installs have changed this setting
+# and changing it could completely lock out all sshd access.
 
 # Enable SFTP subsystem for SSH
 sftp_subsys_enabled=$(grep -iE "^#?.*subsystem.+(sftp )?sftp-server" $sshd_config)
@@ -30,15 +40,11 @@ if [ ! -z "$sftp_subsys_enabled" ]; then
     sed -i -E "s/^#?.*Subsystem.+(sftp )?sftp-server/Subsystem sftp internal-sftp/g" $sshd_config
 fi
 
-# Comment out "DebianBanner no" if it exists, previous versions of HestiaCP where imposing this setting
-sed -i "s/^\s*DebianBanner no/#DebianBanner no # Changed by HestiaCP Script/gm" $sshd_config
+# Remove DebianBanner setting.  Previous versions of HestiaCP had imposed this to 'DebianBanner no'
+augtool -s rm $sshd_config_augtool/DebianBanner 
 
-# Change LoginGraceTime from default 2m to 1m.   Not robust, but re-using the same as in the install script
-# Robust code would check for a non-commented "LoginGraceTime 1m",
-#   If nothing found, it would add it, if a LoginGraceTime other than 1m is found, comment it out with HestiaCP marking
-#   and add new line with "LoginGraceTime 1m"
-sed -i "s/LoginGraceTime 2m/LoginGraceTime 1m/g" $sshd_config
-sed -i "s/#LoginGraceTime 2m/LoginGraceTime 1m/g" $sshd_config
+# Reduce SSH login grace time
+augtool -s set $sshd_config_augtool/LoginGraceTime 1m 
 
 
 #----------------------------------------------------------#

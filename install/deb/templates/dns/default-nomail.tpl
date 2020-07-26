@@ -9,3 +9,7 @@ ID='8' RECORD='@' TYPE='NS' PRIORITY='' VALUE='%ns8%.' SUSPENDED='no' TIME='%tim
 ID='9' RECORD='@' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='10' RECORD='www' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='11' RECORD='ftp' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='12' RECORD='@' TYPE='SSHFP' PRIORITY='' VALUE='%sshfp1%' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='13' RECORD='@' TYPE='SSHFP' PRIORITY='' VALUE='%sshfp2%' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='14' RECORD='@' TYPE='SSHFP' PRIORITY='' VALUE='%sshfp3%' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='15' RECORD='@' TYPE='SSHFP' PRIORITY='' VALUE='%sshfp4%' SUSPENDED='no' TIME='%time%' DATE='%date%'

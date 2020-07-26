@@ -48,12 +48,12 @@ if [[ $rtype =~ NS|CNAME|MX|PTR|SRV ]]; then
 fi
 
 # Cleanup quotes on dvalue
-# - [CAA] records will be left unchanged
+# - [CAA] and [SSHFP] records will be left unchanged
 # - [SRV] will be  stripped of double quotes even when  containg spaces
 # - Rest of record types will be striped of quotes and the final string
 #   will be enclosed in double quotes if  containg spaces or semicolons 
 
-if [ "$rtype" != "CAA" ]; then
+if [ "$rtype" != "CAA" -a "$rtype" != "SSHFP" ]; then
     dvalue=${dvalue//\"/}
 
     if [ "$rtype" != 'SRV' ] && [[ "$dvalue" =~ [\;[:space:]] ]]; then

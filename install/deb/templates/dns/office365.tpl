@@ -14,3 +14,7 @@ ID='14' RECORD='_sip._tls' TYPE='SRV' PRIORITY='100' VALUE='1 443 sipdir.online.
 ID='15' RECORD='_sipfederationtls._tcp' TYPE='SRV' PRIORITY='100' VALUE='1 5061 sipfed.online.lync.com.' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='16' RECORD='login' TYPE='CNAME' PRIORITY='' VALUE='login.microsoftonline.com.' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='17' RECORD='mail' TYPE='CNAME' PRIORITY='' VALUE='mail.office365.com.' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='18' RECORD='@' TYPE='SSHFP' PRIORITY='' VALUE='%sshfp1%' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='19' RECORD='@' TYPE='SSHFP' PRIORITY='' VALUE='%sshfp2%' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='20' RECORD='@' TYPE='SSHFP' PRIORITY='' VALUE='%sshfp3%' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='21' RECORD='@' TYPE='SSHFP' PRIORITY='' VALUE='%sshfp4%' SUSPENDED='no' TIME='%time%' DATE='%date%'

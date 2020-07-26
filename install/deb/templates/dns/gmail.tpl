@@ -10,3 +10,7 @@ ID='9' RECORD='@' TYPE='MX' PRIORITY='5' VALUE='ALT2.ASPMX.L.GOOGLE.COM.' SUSPEN
 ID='10' RECORD='@' TYPE='MX' PRIORITY='10' VALUE='ALT3.ASPMX.L.GOOGLE.COM.' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='11' RECORD='@' TYPE='MX' PRIORITY='10' VALUE='ALT4.ASPMX.L.GOOGLE.COM.' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='12' RECORD='@' TYPE='TXT' PRIORITY='' VALUE='"v=spf1 a mx ip4:%ip% include:_spf.google.com -all"' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='13' RECORD='@' TYPE='SSHFP' PRIORITY='' VALUE='%sshfp1%' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='14' RECORD='@' TYPE='SSHFP' PRIORITY='' VALUE='%sshfp2%' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='15' RECORD='@' TYPE='SSHFP' PRIORITY='' VALUE='%sshfp3%' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='16' RECORD='@' TYPE='SSHFP' PRIORITY='' VALUE='%sshfp4%' SUSPENDED='no' TIME='%time%' DATE='%date%'

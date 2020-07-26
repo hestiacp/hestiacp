@@ -7,3 +7,7 @@ ID='7' RECORD='@' TYPE='MX' PRIORITY='10' VALUE='mx.zoho.com.' SUSPENDED='no' TI
 ID='8' RECORD='@' TYPE='MX' PRIORITY='20' VALUE='mx2.zoho.com.' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='9' RECORD='@' TYPE='MX' PRIORITY='50' VALUE='mx3.zoho.com.' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='10' RECORD='@' TYPE='TXT' PRIORITY='' VALUE='"v=spf1 a mx ip4:%ip% include:zoho.com -all"' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='11' RECORD='@' TYPE='SSHFP' PRIORITY='' VALUE='%sshfp1%' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='12' RECORD='@' TYPE='SSHFP' PRIORITY='' VALUE='%sshfp2%' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='13' RECORD='@' TYPE='SSHFP' PRIORITY='' VALUE='%sshfp3%' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='14' RECORD='@' TYPE='SSHFP' PRIORITY='' VALUE='%sshfp4%' SUSPENDED='no' TIME='%time%' DATE='%date%'

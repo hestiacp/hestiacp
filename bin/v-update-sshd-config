@@ -10,7 +10,7 @@
 #----------------------------------------------------------#
 
 # Argument definition
-sshd_config=/etc/ssh/sshd_config
+sshd_config_augtool=/files/etc/ssh/sshd_config
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -23,7 +23,6 @@ sshd_config=/etc/ssh/sshd_config
 #----------------------------------------------------------#
 
 # Keep the following actions maintained in sync with the current install scripts
-sshd_config_augtool = /files/etc/ssh/sshd_config
 
 # Alaways save a backup copy of the config file if it has changed directly in the same directory
 # to permit fast audit, diff and recovery if required

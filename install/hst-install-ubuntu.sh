@@ -889,6 +889,11 @@ rm -f /usr/sbin/policy-rc.d
 
 echo "[ * ] Configuring system settings..."
 
+# Alaways save a backup copy of the config file if it has changed directly in the same directory
+# to permit fast audit, diff and recovery if required
+# cp options: "-u" only copy if newer, "--backup=t" numbered backup, destination is hidden and has .bak extension.
+cp -u --backup=t /etc/ssh/sshd_config /etc/ssh/.sshd_config.bak
+
 # Enable SFTP subsystem for SSH
 sftp_subsys_enabled=$(grep -iE "^#?.*subsystem.+(sftp )?sftp-server" /etc/ssh/sshd_config)
 if [ ! -z "$sftp_subsys_enabled" ]; then
@@ -896,8 +901,7 @@ if [ ! -z "$sftp_subsys_enabled" ]; then
 fi
 
 # Reduce SSH login grace time
-sed -i "s/LoginGraceTime 2m/LoginGraceTime 1m/g" /etc/ssh/sshd_config
-sed -i "s/#LoginGraceTime 2m/LoginGraceTime 1m/g" /etc/ssh/sshd_config
+augtool -s set /files/etc/ssh/sshd_config/LoginGraceTime 1m 
 
 # Restart SSH daemon
 systemctl restart ssh

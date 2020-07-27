@@ -44,9 +44,9 @@ prepare_web_backend
 get_domain_values 'web'
 
 # Checking backend configuration
-if [ -e "$pool/$backend_type.conf" ]; then
-    exit
-fi
+#if [ -e "$pool/$backend_type.conf" ]; then
+#    exit
+#fi
 
 # Allocating backend port
 backend_port=9000

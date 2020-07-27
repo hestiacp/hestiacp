@@ -117,13 +117,17 @@ function authenticate_user(){
                 // Define session user
                 $_SESSION['user'] = key($data);
                 $v_user = $_SESSION['user'];
-
+                //log successfull login attempt
+                $v_murmur = escapeshellarg($_POST['murmur']);
+                exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." ".$v_murmur, $output, $return_var);
+                
                 //rename $_SESSION['TWOFA_VALID_LENGTH'] still to be done!
                 if(empty($_COOKIE['limit2fa'] && $_SESSION['TWOFA_VALID_LENGTH'] == 1 && $data[$user]['TWOFA'] != "")){
                     setcookie('limit2fa',password_hash($data[$user]['TWOFA'].$ip.$_POST['murmur'],PASSWORD_BCRYPT),time()+60*60*24,"/");
                 };
                 $_SESSION['LAST_ACTIVITY'] = time();
-                
+                $_SESSION['MURMUR'] = $_POST['murmur'];
+                                
                 // Define language
                 $output = '';
                 exec (HESTIA_CMD."v-list-sys-languages json", $output, $return_var);

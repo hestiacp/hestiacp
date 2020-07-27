@@ -561,9 +561,9 @@ $LANG['bs'] = array(
     'AntiSpam' => 'AntiSpam',
     'Webmail URL' => 'Webmail Alias',
     'MySQL Support' => 'MySQL Support',
-    'phpMyAdmin URL' => 'phpMyAdmin URL',
+    'phpMyAdmin URL' => 'phpMyAdmin Alias',
     'PostgreSQL Support' => 'PostgreSQL Support',
-    'phpPgAdmin URL' => 'phpPgAdmin URL',
+    'phpPgAdmin URL' => 'phpPgAdmin Alias',
     'Maximum Number Of Databases' => 'Maksimalan broj baza',
     'Current Number Of Databases' => 'Trenutačan broj baza',
     'Local backup' => 'Lokalni backup',
@@ -848,4 +848,62 @@ $LANG['bs'] = array(
     'Enable 2FA' => 'Omogući dvofaktorsku provjeru identiteta',
     'Please scan the code below in your 2FA application:' => 'Da biste dovršili postavljanje dvofaktorske provjere autentičnosti, skenirajte QR kôd ispod <br /> pomoću autentifikacijske aplikacije (poput <a href = "https://play.google.com/store/apps/details?id=com" google.android.apps.authenticator2 "> Google Autentičar </a>):',
     '2FA Reset Code:' => 'Kôd za povrat računa:',
+    
+    //list user 
+    'Name' => 'Name',
+    //Add / Edit user
+    'Contact' => 'Name',
+    'GREETINGS_GORDON' => "Hello, %s,\n",
+    
+    //List Mail Accounts
+    'Forwarding' => 'Forwarding',
+
+    //Cron Jobs
+    'Cron Job' => 'Cron Job',
+    //Edit server 
+    'Host' => 'Host',
+  
+      //list Backups
+    '1 backups' => '1 backups',
+    '%s backups' => '%s backups',
+    //list Firewall Rules
+    '1 firewall rule' => '1 firewall rule',
+    '%s firewall rules' => '%s firewall rules',
+    //list ip
+    '1 banned IP address' => '1 banned IP address',
+    '%s banned IP addresses' => '%s banned IP addresses', 
+    //list DNS
+    'Records_DNS' => 'Records',
+    //Dowload Backup
+    'BACKUP_DOWNLOAD_SCHEDULED' => 'Download for Backup has been scheduled.',
+        //list user 
+    'Name' => 'Name',
+    //Add / Edit user
+    'Contact' => 'Name',
+    'GREETINGS_GORDON' => "Hello, %s,\n",
+    
+    //List Mail Accounts
+    'Forwarding' => 'Forwarding',
+
+    //Cron Jobs
+    'Cron Job' => 'Cron Job',
+    //Edit server 
+    'Host' => 'Host',
+  
+      //list Backups
+    '1 backups' => '1 backups',
+    '%s backups' => '%s backups',
+    //list Firewall Rules
+    '1 firewall rule' => '1 firewall rule',
+    '%s firewall rules' => '%s firewall rules',
+    //list ip
+    '1 banned IP address' => '1 banned IP address',
+    '%s banned IP addresses' => '%s banned IP addresses', 
+    //list DNS
+    'Records_DNS' => 'Records',
+    //Dowload Backup
+    'BACKUP_DOWNLOAD_SCHEDULED' => 'Download for Backup has been scheduled.';
+    'backend server' =>  'Backend Server',
+    'traffic' => 'Traffic',
+    'disk' => 'Disk',    
 );

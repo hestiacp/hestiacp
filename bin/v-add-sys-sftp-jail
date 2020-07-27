@@ -59,7 +59,7 @@ if [ "$restart" = 'yes' ]; then
             \n\n$(/usr/sbin/sshd -t)"
         echo -e "$mail_text" |$SENDMAIL -s "$subj" $email
     else
-        service ssh restart >/dev/null 2>&1
+        service sshd restart >/dev/null 2>&1
     fi
 fi
 

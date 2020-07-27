@@ -59,7 +59,6 @@ sed -i "s/$ssh_users/$users/g" /etc/ssh/sshd_config
 #----------------------------------------------------------#
 
 # Restart ssh service
-service ssh restart > /dev/null 2>&1
 service sshd restart > /dev/null 2>&1
 
 # Logging

@@ -54,7 +54,6 @@ else
 fi
 
 echo 'add_header Strict-Transport-Security "max-age=15768000;" always;' > $hstsconf
-echo "HTTP Strict Transport Security (HSTS) turned on for $domain."
 
 
 #----------------------------------------------------------#

@@ -1,0 +1,120 @@
+#!/bin/bash
+# info: list user log
+# options: USER [FORMAT]
+#
+# The function of obtaining the list of 10 last users commands.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+format=${2-shell}
+
+# Includes
+source $HESTIA/func/main.sh
+
+# JSON list function
+json_list() {
+    IFS=$'\n'
+    i=1
+    objects=$(echo "$logs" |wc -l)
+    echo "{"
+    for str in $logs; do
+        IP=$(echo "$str" |cut -f 2 -d \')
+        FINGERPRINT=$(echo "$str" |cut -f 4 -d \')
+        DATE=$(echo "$str" |cut -f 6 -d \')
+        TIME=$(echo "$str" |cut -f 8 -d \')
+        ACTIVE=$(echo "$str" |cut -f 10 -d \')
+        CMD=${CMD//\"/\\\"}
+        echo -n '    {
+        "DATE": "'$DATE'",
+        "TIME": "'$TIME'",
+        "IP": "'$IP'",
+        "FINGERPRINT": "'$FINGERPRINT'",
+        "ACTIVE": "'$ACTIVE'",
+        
+    }'
+        if [ "$i" -lt "$objects" ]; then
+            echo ','
+        else
+            echo
+        fi
+        ((i++))
+    done
+    echo '}'
+}
+
+shell_list() {
+    IFS=$'\n'
+    echo "DATE~TIME~IP~FINGERPRINT~ACTIVE"
+    echo "----~----~--~-----------~------"
+    for str in $logs; do
+        IP=$(echo "$str" |cut -f 2 -d \')
+        FINGERPRINT=$(echo "$str" |cut -f 4 -d \')
+        DATE=$(echo "$str" |cut -f 6 -d \')
+        TIME=$(echo "$str" |cut -f 8 -d \')
+        ACTIVE=$(echo "$str" |cut -f 10 -d \')
+        echo "$DATE~$TIME~$IP~$FINGERPRINT~$ACTIVE"
+    done
+}
+
+# PLAIN list function
+plain_list() {
+    IFS=$'\n'
+    for str in $logs; do
+        IP=$(echo "$str" |cut -f 2 -d \')
+        FINGERPRINT=$(echo "$str" |cut -f 4 -d \')
+        DATE=$(echo "$str" |cut -f 6 -d \')
+        TIME=$(echo "$str" |cut -f 8 -d \')
+        ACTIVE=$(echo "$str" |cut -f 10 -d \')
+        echo -e "$DATE\t$TIME\t$IP\t$FINGERPRINT\t$ACTIVE"
+    done
+}
+
+# CSV list function
+csv_list() {
+    IFS=$'\n'
+    echo "ID,CMD,UNDO,TIME,DATE"
+    for str in $logs; do
+        IP=$(echo "$str" |cut -f 2 -d \')
+        FINGERPRINT=$(echo "$str" |cut -f 4 -d \')
+        DATE=$(echo "$str" |cut -f 6 -d \')
+        TIME=$(echo "$str" |cut -f 8 -d \')
+        ACTIVE=$(echo "$str" |cut -f 10 -d \')
+        echo "$DATE,$TIME,$IP,$FINGERPRINT,$ACTIVE"
+
+    done
+}
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER [FORMAT]'
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Parsing history log
+logs=$(tail -n 10 $USER_DATA/auth.log 2>/dev/null)
+
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t -s '~';;
+esac
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

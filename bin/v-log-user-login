@@ -26,17 +26,17 @@ time_n_date=$(date +'%T %F')
 time=$(echo "$time_n_date" |cut -f 1 -d \ )
 date=$(echo "$time_n_date" |cut -f 2 -d \ )
 
-if [ ! -f $HESTIA/data/users/$user/auth.log ]; then
-    touch  $HESTIA/data/users/$user/auth.log
+if [ ! -f $USER_DATA/auth.log ]; then
+    touch  $USER_DATA/auth.log
 fi
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-awk -i inplace -v finger="FINGERPRINT='$fingerprint'" -v active="active='no'" '$2 == finger {$5=active}1' $HESTIA/data/users/$user/auth.log   
+awk -i inplace -v finger="FINGERPRINT='$fingerprint'" -v active="active='no'" '$2 == finger {$5=active}1' $USER_DATA/auth.log   
 
-echo "IP='$ip' FINGERPRINT='$fingerprint' DATE='$date' TIME='$time' active='yes'" >> $HESTIA/data/users/$user/auth.log
+echo "IP='$ip' FINGERPRINT='$fingerprint' DATE='$date' TIME='$time' active='yes'" >> $USER_DATA/auth.log
 
 #----------------------------------------------------------#
 #                       Hestia                             #

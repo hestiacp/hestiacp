@@ -53,7 +53,9 @@ json_list() {
         "WEBMAIL_ALIAS": "'$WEBMAIL_ALIAS'",
         "DB_PMA_ALIAS": "'$DB_PMA_ALIAS'",
         "DB_PGA_ALIAS": "'$DB_PGA_ALIAS'",
-        "SOFTACULOUS": "'$SOFTACULOUS'"
+        "SOFTACULOUS": "'$SOFTACULOUS'",
+        "INACTIVE_SESSION_TIMEOUT": "'$INACTIVE_SESSION_TIMEOUT'",
+        "TWOFA_VALID_LENGTH": "'$TWOFA_VALID_LENGTH'",
     }
 }'
 }

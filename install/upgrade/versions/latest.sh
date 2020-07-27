@@ -25,6 +25,21 @@ if [ "$FTP_SYSTEM" = "vsftpd" ]; then
     chmod 644 /etc/vsftpd.conf
 fi
 
+# Migrate the system SFTP jail
+echo "[ ! ] Migrating SFTP Chroot Jail..."
+if grep -q '^# Hestia SFTP Chroot' /etc/ssh/sshd_config; then
+    $BIN/v-delete-sys-sftp-jail
+    $BIN/v-add-sys-sftp-jail
+else
+    rm -f /etc/cron.d/hestia-sftp
+fi
+
+# Migrate existing users to SFTP / FTP jail
+echo "[ ! ] Migrating users to SFTP / FTP Jail..."
+add_chroot_jail admin
+for user in $(getent group hestia-users | cut -f 4 -d : | tr ',' ' '); do
+    add_chroot_jail $user
+done
 
 # Rework apt repositories
 apt="/etc/apt/sources.list.d"

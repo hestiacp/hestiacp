@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [1.2.1] - Service Release 1 (beta)
+## [1.2.1] - Service Release
 ### Features
 - Consolidated First and Last Name fields to a singular name field to simply input.
     - v-change-user-name will now accept both "First Last" (single argument) and First Last (two arguments) for backward compatibility.

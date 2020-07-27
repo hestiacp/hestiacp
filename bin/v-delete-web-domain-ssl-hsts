@@ -49,7 +49,7 @@ else
 fi
 
 rm -f $hstsconf
-echo "HTTP Strict Transport Security (HSTS) turned off for $domain."
+
 
 #----------------------------------------------------------#
 #                       Hestia                             #

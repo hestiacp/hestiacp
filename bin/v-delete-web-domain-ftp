@@ -56,6 +56,9 @@ check_hestia_demo_mode
 # Deleting sftp jail
 $BIN/v-delete-user-sftp-jail "$ftp_user"
 
+# Deleting chroot jail for SFTP and FTP
+delete_chroot_jail $ftp_user
+
 # Deleting ftp user
 /usr/sbin/userdel $ftp_user >> /dev/null 2>&1
 if [ "$?" != 0 ]; then

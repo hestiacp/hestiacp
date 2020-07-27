@@ -76,6 +76,10 @@ str=$(echo "$pw_str" | cut -f 1 -d :)
 old_path=$(echo "$pw_str" | cut -f 7 -d :)
 sed -i "$str s%$old_path%$ftp_path_a%g" /etc/passwd
 
+# Updating chroot jail for SFTP and FTP
+delete_chroot_jail $ftp_user
+add_chroot_jail $ftp_user
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

@@ -274,6 +274,9 @@ fi
 # Adding jailed sftp env
 $BIN/v-add-user-sftp-jail $user
 
+# Adding chroot jail for SFTP and FTP
+add_chroot_jail $user
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

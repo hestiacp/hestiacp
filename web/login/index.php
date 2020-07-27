@@ -34,12 +34,13 @@ if (isset($_SESSION['user'])) {
 function authenticate_user(){
     if(isset($_SESSION['token']) && isset($_POST['token']) && $_POST['token'] == $_SESSION['token']) {
     $v_user = escapeshellarg($_POST['user']);
-    $v_ip = escapeshellarg($_SERVER['REMOTE_ADDR']);
+    $ip = $_SERVER['REMOTE_ADDR'];
     if(isset($_SERVER['HTTP_CF_CONNECTING_IP'])){
         if(!empty($_SERVER['HTTP_CF_CONNECTING_IP'])){
-            $v_ip = escapeshellarg($_SERVER['HTTP_CF_CONNECTING_IP']);
+            $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
         }
     } 
+    $v_ip = escapeshellarg($ip);
      // Get user's salt
     $output = '';
     exec (HESTIA_CMD."v-get-user-salt ".$v_user." ".$v_ip." json" , $output, $return_var);
@@ -93,7 +94,7 @@ function authenticate_user(){
                 exec (HESTIA_CMD . "v-list-user ".$v_user." json", $output, $return_var);
                 $data = json_decode(implode('', $output), true);
                 if ($data[$user]['TWOFA'] != '') {
-                    if(password_hash($data[$user]['TWOFA'].$_POST['murmur'],PASSWORD_BCRYPT) == $_COOKIE['limit2fa']){
+                    if(password_verify($data[$user]['TWOFA'].$ip.$_POST['murmur'],$_COOKIE['limit2fa'])){
 
                     }else{                        
                        setcookie('limit2fa','',time() - 3600,"/");
@@ -116,10 +117,13 @@ function authenticate_user(){
                 // Define session user
                 $_SESSION['user'] = key($data);
                 $v_user = $_SESSION['user'];
-                if(empty($_COOKIE['limit2fa'])){
-                    setcookie('limit2fa',password_hash($data[$user]['TWOFA'].$_POST['murmur'],PASSWORD_BCRYPT),time()+60*60*24*$_SESSION['TWOFA_VALID_LENGTH'],"/");
+
+                //rename $_SESSION['TWOFA_VALID_LENGTH'] still to be done!
+                if(empty($_COOKIE['limit2fa'] && $_SESSION['TWOFA_VALID_LENGTH'] == 1 && $data[$user]['TWOFA'] != "")){
+                    setcookie('limit2fa',password_hash($data[$user]['TWOFA'].$ip.$_POST['murmur'],PASSWORD_BCRYPT),time()+60*60*24,"/");
                 };
                 $_SESSION['LAST_ACTIVITY'] = time();
+                
                 // Define language
                 $output = '';
                 exec (HESTIA_CMD."v-list-sys-languages json", $output, $return_var);

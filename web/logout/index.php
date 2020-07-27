@@ -7,7 +7,7 @@ if (!empty($_SESSION['look'])) {
 } else {
     session_destroy();
 }
-
+setcookie('limit2fa','',time() - 3600,"/");
 header("Location: /login/");
 exit;
 ?>

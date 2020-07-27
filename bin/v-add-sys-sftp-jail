@@ -42,10 +42,10 @@ if [ -z "$sftp_i" ]; then
     echo " " >> $config
     echo "# Hestia SFTP Chroot" >> $config
     echo "Match User sftp_dummy99" >> $config
-    echo "ChrootDirectory %h" >> $config
+    echo "    ChrootDirectory /srv/jail/%u" >> $config
     echo "    X11Forwarding no" >> $config
     echo "    AllowTCPForwarding no" >> $config
-    echo "    ForceCommand internal-sftp" >> $config
+    echo "    ForceCommand internal-sftp -d /home" >> $config
     restart='yes'
 fi
 

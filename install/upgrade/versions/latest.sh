@@ -7,8 +7,6 @@
 #######################################################################################
 
 # Update template files to add warnings
-# Backup current templates
-cp -r -f $HESTIA/data/templates/* $HESTIA_BACKUP/templates/
 echo "[ ! ] Updating default web domain templates..."
 $BIN/v-update-web-templates
 echo "[ ! ] Updating default mail domain templates..."

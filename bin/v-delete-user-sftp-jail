@@ -73,7 +73,6 @@ fi
 #----------------------------------------------------------#
 
 # Restart ssh service
-service ssh restart > /dev/null 2>&1
 service sshd restart > /dev/null 2>&1
 
 # Logging

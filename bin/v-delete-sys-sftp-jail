@@ -61,11 +61,10 @@ if [ "$restart" = 'yes' ]; then
 	if [ "$?" -ne 0 ]; then
 		mail_text="OpenSSH can not be restarted. Please check config:
             \n\n$(/usr/sbin/sshd -t)"
-		echo -e "$mail_text" | $SENDMAIL -s "$subj" "$email"
-	else
-		service ssh restart > /dev/null 2>&1
-		service sshd restart > /dev/null 2>&1
-	fi
+        echo -e "$mail_text" |$SENDMAIL -s "$subj" $email
+    else
+        service sshd restart >/dev/null 2>&1
+    fi
 fi
 
 # Remove v-add-sys-sftp-jail to startup
@@ -76,10 +75,6 @@ fi
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
-
-# Restart ssh service
-service ssh restart > /dev/null 2>&1
-service sshd restart > /dev/null 2>&1
 
 # Logging
 $BIN/v-log-action "system" "Warning" "Plugins" "SFTP Chroot Jail disabled."

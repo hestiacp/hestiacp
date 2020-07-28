@@ -44,7 +44,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     postgresql postgresql-contrib proftpd-basic quota roundcube-core
     roundcube-mysql roundcube-plugins rrdtool rssh spamassassin sudo hestia
     hestia-nginx hestia-php vim-common vsftpd whois zip acl sysstat setpriv
-    ipset libonig5 libzip5"
+    ipset libonig5 libzip5 openssh-server ssh"
 
 installer_dependencies="apt-transport-https curl dirmngr gnupg wget"
 

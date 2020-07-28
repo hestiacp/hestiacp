@@ -1172,4 +1172,5 @@ delete_chroot_jail() {
     systemctl disable srv-jail-$user-home.mount > /dev/null 2>&1
     rm -f /etc/systemd/system/srv-jail-$user-home.mount
     systemctl daemon-reload > /dev/null 2>&1
+    rmdir -p /srv/jail/$user > /dev/null 2>&1
 }

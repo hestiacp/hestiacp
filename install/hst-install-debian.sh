@@ -42,7 +42,7 @@ if [ "$release" -eq 9 ]; then
         mariadb-client mariadb-common mariadb-server postgresql
         postgresql-contrib phppgadmin phpmyadmin mc flex whois rssh git idn zip
         sudo bc ftp lsof rrdtool quota e2fslibs bsdutils e2fsprogs curl
-        imagemagick fail2ban dnsutils bsdmainutils cron hestia hestia-nginx
+        imagemagick fail2ban dnsutils bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx
         hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat
         rsyslog openssh-server ssh setpriv ipset libapache2-mod-ruid2"
 elif [ "$release" -eq 10 ]; then

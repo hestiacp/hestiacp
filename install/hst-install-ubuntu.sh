@@ -42,7 +42,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     php$fpm_v-imagick php$fpm_v-intl php$fpm_v-json php$fpm_v-mbstring
     php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
     postgresql postgresql-contrib proftpd-basic quota roundcube-core
-    roundcube-mysql roundcube-plugins rrdtool rssh spamassassin sudo hestia
+    roundcube-mysql roundcube-plugins rrdtool rssh spamassassin sudo hestia=${HESTIA_INSTALL_VER}
     hestia-nginx hestia-php vim-common vsftpd whois zip acl sysstat setpriv
     ipset libonig5 libzip5 openssh-server ssh"
 

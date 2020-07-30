@@ -68,7 +68,18 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>" tabindex="2" >
+                                    <input type="text" size="20" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>" tabindex="2" /><br />
+                                    <meter max="4" id="meter"></meter>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text">
+                                    <p><?php print('Your password must have at least');?></p>
+                                    <ul>
+                                        <li><?php print('8 characters long');?></li>
+                                        <li><?php print('1 uppercase & 1 lowercase character');?></li>
+                                        <li><?php print('1 number');?></li>
+                                    </ul>
                                 </td>
                             </tr>
                             <tr>
@@ -89,6 +100,11 @@
                             <tr>
                                 <td>
                                     <input type="text" size="20" class="vst-input" name="v_email" id='v_email' value="<?=htmlentities(trim($v_email, "'"))?>" tabindex="5" >
+                                </td>
+                            </tr>
+                             <tr>
+                                <td>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_email_notice" id='v_email_notify' value="" tabindex="5" /> <?php print __('Send welcome email');?></label>
                                 </td>
                             </tr>
                             <tr>

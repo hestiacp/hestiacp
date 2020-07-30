@@ -96,6 +96,8 @@ if (!empty($_POST['ok_acc'])) {
         header('location: /login/');
         exit();
     }
+    
+    
 
     // Check empty fields
     if (empty($_POST['v_domain'])) $errors[] = __('domain');
@@ -117,6 +119,11 @@ if (!empty($_POST['ok_acc'])) {
         if (!filter_var($_POST['v_send_email'], FILTER_VALIDATE_EMAIL)) {
             $_SESSION['error_msg'] = __('Please enter valid email address.');
         }
+    }
+    
+    // Check password length
+    if (empty($_SESSION['error_msg']) && !empty($_POST['v_fwd_only']) ) {
+        if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/', $_POST['v_password'])) { $_SESSION['error_msg'] = __('Password does not match the minimum requirements'); }
     }
 
     // Protect input

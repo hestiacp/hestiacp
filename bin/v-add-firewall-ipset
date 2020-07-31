@@ -89,7 +89,9 @@ if [ ! -f "${IPSET_PATH}/${IPSET_FILE}.iplist" ] || [ "$force" = "yes" ]; then
         # Advanced: execute script with the same basename for aditional pre-processing
         # ex: 
         if [ -x "${IPSET_PATH}/${IPSET_FILE}.sh" ]; then 
-            setpriv --clear-groups --reuid nobody --regid nogroup -- ${IPSET_PATH}/${IPSET_FILE}.sh "$ip_name" "$iplist_tempfile"
+            preprocess_output="$(cat "$iplist_tempfile" | setpriv --clear-groups --reuid nobody --regid nogroup -- ${IPSET_PATH}/${IPSET_FILE}.sh "$ip_name" "$iplist_tempfile")"
+            check_result $? "Preprocessing script failed (${IPSET_FILE}.sh)"
+            [[ "$preprocess_output" ]] && echo "$preprocess_output" > "$iplist_tempfile"
         fi
 
     elif [[ "$data_source" =~ ^script:/ ]]; then

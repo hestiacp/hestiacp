@@ -21,6 +21,7 @@ All notable changes to this project will be documented in this file.
 - Improved reliability of list handling when using IP lists.
 - Enforce minimum password requirements with visual indication of password strength.
 - Improved installer version detection.
+- Fix MariaDB service detection.
  
 ## [1.2.1] - Service Release
 ### Features

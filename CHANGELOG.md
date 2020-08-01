@@ -18,6 +18,9 @@ All notable changes to this project will be documented in this file.
 - Corrected an issue where tooltips were not displayed when hovering over the top level menu items.
 - Improved handling of APT repository keys during installation.
 - Reworked the Let's Encrypt renew functionality to skip removed aliases.
+- Improved reliability of list handling when using IP lists.
+- Enforce minimum password requirements with visual indication of password strength.
+- Improved installer version detection.
  
 ## [1.2.1] - Service Release
 ### Features

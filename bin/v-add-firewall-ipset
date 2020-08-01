@@ -115,6 +115,13 @@ if [ ! -f "${IPSET_PATH}/${IPSET_FILE}.iplist" ] || [ "$force" = "yes" ]; then
 
     fi
 
+    # Cleanup ip list
+    if [[ $ip_version == 'v4' ]]; then
+        sed -i -r -n -e '/^((1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])\.){3}(1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])/p' "$iplist_tempfile"
+    elif [[ $ip_version == 'v6' ]]; then
+        sed -i -r -n -e '/^([0-9a-fA-F]{0,4}:){1,7}[0-9a-fA-F]{0,4}/p' "$iplist_tempfile"
+    fi
+
     # Validate iplist file size
     iplist_size=$(sed -r -e '/^#|^$/d' "$iplist_tempfile" | wc -l)
     [[ "$iplist_size" -le $IPSET_MIN_SIZE ]] && check_result $E_INVALID "iplist file too small (<${IPSET_MIN_SIZE}), ignoring"

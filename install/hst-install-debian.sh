@@ -42,9 +42,9 @@ if [ "$release" -eq 9 ]; then
         mariadb-client mariadb-common mariadb-server postgresql
         postgresql-contrib phppgadmin phpmyadmin mc flex whois rssh git idn zip
         sudo bc ftp lsof rrdtool quota e2fslibs bsdutils e2fsprogs curl
-        imagemagick fail2ban dnsutils bsdmainutils cron hestia hestia-nginx
+        imagemagick fail2ban dnsutils bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx
         hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat
-        rsyslog ssh setpriv ipset libapache2-mod-ruid2"
+        rsyslog openssh-server ssh setpriv ipset libapache2-mod-ruid2"
 elif [ "$release" -eq 10 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
         apache2-suexec-pristine libapache2-mod-fcgid libapache2-mod-php$fpm_v
@@ -60,8 +60,8 @@ elif [ "$release" -eq 10 ]; then
         phppgadmin mc flex whois git idn zip sudo bc ftp lsof rrdtool
         quota e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron hestia hestia-nginx hestia-php expect
-        libmail-dkim-perl unrar-free vim-common acl sysstat rsyslog ssh util-linux
-        ipset libapache2-mpm-itk"
+        libmail-dkim-perl unrar-free vim-common acl sysstat rsyslog openssh-server
+        ssh util-linux ipset libapache2-mpm-itk"
 fi
 
 installer_dependencies="apt-transport-https curl dirmngr gnupg wget"

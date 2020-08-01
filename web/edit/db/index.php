@@ -63,15 +63,19 @@ if (!empty($_POST['save'])) {
 
     // Change database password
     if ((!empty($_POST['v_password'])) && (empty($_SESSION['error_msg']))) {
-        $v_password = tempnam("/tmp","vst");
-        $fp = fopen($v_password, "w");
-        fwrite($fp, $_POST['v_password']."\n");
-        fclose($fp);
-        exec (HESTIA_CMD."v-change-database-password ".$v_username." ".escapeshellarg($v_database)." ".$v_password, $output, $return_var);
-        check_return_code($return_var,$output);
-        unset($output);
-        unlink($v_password);
-        $v_password = escapeshellarg($_POST['v_password']);
+        if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/', $_POST['v_password'])) { 
+            $_SESSION['error_msg'] = __('Password does not match the minimum requirements'); 
+        }else{ 
+            $v_password = tempnam("/tmp","vst");
+            $fp = fopen($v_password, "w");
+            fwrite($fp, $_POST['v_password']."\n");
+            fclose($fp);
+            exec (HESTIA_CMD."v-change-database-password ".$v_username." ".escapeshellarg($v_database)." ".$v_password, $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            unlink($v_password);
+            $v_password = escapeshellarg($_POST['v_password']);
+        }
     }
 
     // Set success message

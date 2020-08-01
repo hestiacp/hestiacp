@@ -3973,3 +3973,35 @@ form#vstobjects.suspended {
     display: none;
   }
 }
+
+meter {
+  /* Reset the default appearance */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0 auto 1em;
+  width: 373px;
+  background-color: #e7e7e7;
+  height: 3px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  margin-left: 3px;
+  box-shadow: 0px 1px 2px rgba(0,0,0,0.25);
+}
+
+meter[value="1"] { background: red; }
+meter[value="2"] { background: orange; }
+meter[value="3"] { background: yellow; }
+meter[value="4"] { background: green; }
+
+/* Webkit based browsers */
+meter[value="1"]::-webkit-meter-optimum-value { background: red; }
+meter[value="2"]::-webkit-meter-optimum-value { background: orange; }
+meter[value="3"]::-webkit-meter-optimum-value { background: yellow; }
+meter[value="4"]::-webkit-meter-optimum-value { background: green; }
+
+/* Gecko based browsers */
+meter[value="1"]::-moz-meter-bar { background: red; }
+meter[value="2"]::-moz-meter-bar { background: orange; }
+meter[value="3"]::-moz-meter-bar { background: yellow; }
+meter[value="4"]::-moz-meter-bar { background: green; }

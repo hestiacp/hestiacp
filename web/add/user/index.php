@@ -45,8 +45,7 @@ if (!empty($_POST['ok'])) {
 
     // Check password length
     if (empty($_SESSION['error_msg'])) {
-        $pw_len = strlen($_POST['v_password']);
-        if ($pw_len < 6 ) $_SESSION['error_msg'] = __('Password is too short.',$error_msg);
+        if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/', $_POST['v_password'])) { $_SESSION['error_msg'] = __('Password does not match the minimum requirements'); }
     }
 
     // Protect input

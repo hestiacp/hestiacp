@@ -53,47 +53,57 @@ App.Listeners.MAIL_ACC.init = function() {
     });
 }
 
-App.Helpers.isUnlimitedValue = function(value) {
-    var value = value.trim();
-    if (value == App.Constants.UNLIM_VALUE || value == App.Constants.UNLIM_TRANSLATED_VALUE) {
-        return true;
-    }
-
-    return false;
+App.Actions.MAIL_ACC.update_v_password = function (){
+    var password = $('input[name="v_password"]').val();
+    var min_small = new RegExp(/^(?=.*[a-z]).+$/);
+    var min_cap = new RegExp(/^(?=.*[A-Z]).+$/);
+    var min_num = new RegExp(/^(?=.*\d).+$/); 
+    var min_length = 8;
+    var score = 0;
+    
+    if(password.length >= min_length) { score = score + 1; }
+    if(min_small.test(password)) { score = score + 1;}
+    if(min_cap.test(password)) { score = score + 1;}
+    if(min_num.test(password)) { score = score+ 1; }
+    $('#meter').val(score);   
 }
 
-//
-// Page entry point
-// Trigger listeners
-App.Listeners.MAIL_ACC.init();
-App.Listeners.MAIL_ACC.checkbox_unlimited_feature();
-$('form[name="v_quota"]').on('submit', function(evt) {
-    $('input:disabled').each(function(i, elm) {
-        $(elm).attr('disabled', false);
-        if (App.Helpers.isUnlimitedValue($(elm).val())) {
-            $(elm).val(App.Constants.UNLIM_VALUE);
-        }
+App.Listeners.MAIL_ACC.keypress_v_password = function() {
+    var ref = $('input[name="v_password"]');
+    ref.bind('keypress input', function(evt) {
+        clearTimeout(window.frp_usr_tmt);
+        window.frp_usr_tmt = setTimeout(function() {
+            var elm = $(evt.target);
+            App.Actions.MAIL_ACC.update_v_password(elm, $(elm).val());
+        }, 100);
     });
-});
+}
+
+App.Listeners.MAIL_ACC.keypress_v_password();
 
 
-randomString = function() {
+randomString = function(min_length = 16) {
     var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
-    var string_length = 16;
+    var string_length = min_length;
     var randomstring = '';
     for (var i = 0; i < string_length; i++) {
         var rnum = Math.floor(Math.random() * chars.length);
         randomstring += chars.substr(rnum, 1);
     }
-    document.v_edit_mail_acc.v_password.value = randomstring;
-
-    if($('input[name=v_password]').attr('type') == 'text')
-        $('#v_password').text(randomstring);
-    else
-        $('#v_password').text(Array(randomstring.length+1).join('*'));
-    generate_mail_credentials();
+    var regex = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\d)[a-zA-Z\d]{8,}$/);
+    if(!regex.test(randomstring)){
+        randomString();
+    }else{
+        $('input[name=v_password]').val(randomstring);
+        if($('input[name=v_password]').attr('type') == 'text')
+            $('#v_password').text(randomstring);
+        else
+            $('#v_password').text(Array(randomstring.length+1).join('*'));
+        
+        App.Actions.MAIL_ACC.update_v_password();
+        generate_mail_credentials();
+    }    
 }
-
 generate_mail_credentials = function() {
     var div = $('.mail-infoblock').clone();
     div.find('#mail_configuration').remove();

@@ -73,9 +73,20 @@
                         </tr>
                         <tr>
                             <td>
-                                <input type="text" size="20" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>">
+                                <input type="text" size="20" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>"><br />
+                                <meter max="4" id="meter"></meter>
                             </td>
-                         </tr>
+                        </tr>
+                        <tr>
+                            <td class="vst-text">
+                                <?php print('Your password must have at least');?>
+                                <ul>
+                                    <li><?php print('8 characters long');?></li>
+                                    <li><?php print('1 uppercase & 1 lowercase character');?></li>
+                                    <li><?php print('1 number');?></li>
+                                    </ul>
+                            </td>
+                        </tr>
                         <tr>
                             <td class="vst-text input-type input-label">
                                 <?php print __('Quota');?> <span class="optional">(<?=__('in megabytes')?>)</span>
@@ -84,7 +95,7 @@
                         <tr>
                           <td>
                                 <input type="text" size="20" class="vst-input" name="v_quota" value="<? if (!empty($v_quota)) {echo htmlentities(trim($v_quota, "'"));} else { echo "0"; } ?>">
-                                <img class="fas fa-infinity unlim-trigger" id="unlim-quota"/>
+                                <i class="unlim-trigger fas fa-infinity" id="unlim-quota"></i>
                             </td>
                         </tr>
                         <tr>

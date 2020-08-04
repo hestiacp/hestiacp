@@ -78,8 +78,7 @@ is_package_avalable() {
 change_user_package() {
     eval $(cat $USER_DATA/user.conf)
     eval $(cat $HESTIA/data/packages/$package.pkg |egrep -v "TIME|DATE")
-    echo "FNAME='$FNAME'
-LNAME='$LNAME'
+    echo "NAME='$NAME'
 PACKAGE='$package'
 WEB_TEMPLATE='$WEB_TEMPLATE'
 BACKEND_TEMPLATE='$BACKEND_TEMPLATE'
@@ -166,7 +165,7 @@ shell=$(grep -w "$shell_conf" /etc/shells |head -n1)
 
 # Run template trigger
 if [ -x "$HESTIA/data/packages/$package.sh" ]; then
-    $HESTIA/data/packages/$package.sh "$user" "$CONTACT" "$FNAME" "$LNAME"
+    $HESTIA/data/packages/$package.sh "$user" "$CONTACT" "$NAME"
 fi
 
 # Update disk quota

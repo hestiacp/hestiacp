@@ -230,6 +230,7 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'remote' ]; then
             fi
             if [ -e "/usr/lib/systemd/system/mariadb.service" ]; then
                 service='mariadb'
+                proc_name='mysqld'
             fi
         fi
         if [ "$service" == 'pgsql' ]; then

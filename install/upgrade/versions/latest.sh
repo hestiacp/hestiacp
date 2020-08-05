@@ -6,6 +6,10 @@
 #######                      Place additional commands below.                   #######
 #######################################################################################
 
+# Update awstats templates
+echo "[ ! ] Updating default web domain templates..."
+$BIN/v-update-web-templates
+
 # Enhance Vsftpd security
 if [ "$FTP_SYSTEM" = "vsftpd" ]; then
     echo "[ ! ] Hardening Vsftpd TLS configuration..."

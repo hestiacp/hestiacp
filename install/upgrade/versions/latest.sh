@@ -5,3 +5,7 @@
 #######################################################################################
 #######                      Place additional commands below.                   #######
 #######################################################################################
+
+# Update web templates for awstats
+echo "[ ! ] Updating default web domain templates..."
+$BIN/v-update-web-templates

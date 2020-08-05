@@ -22,7 +22,7 @@ All notable changes to this project will be documented in this file.
 - Enforce minimum password requirements with visual indication of password strength.
 - Fixed an issue where user display name value was incorrectly set when changing packages.
 - Improved installer version detection.
-- Fix MariaDB service detection.
+- Improved detection of MariaDB and MySQL services.
  
 ## [1.2.1] - Service Release
 ### Features

@@ -221,15 +221,22 @@ fi
 # Checking DB system
 if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'remote' ]; then
     for db in ${DB_SYSTEM//,/ }; do
-        proc_name=''
         service="$db"
+        proc_name=''
         if [ "$service" = 'mysql' ]; then
-            if [ -d "/etc/sysconfig" ]; then
-                service='mysqld'
+            if [ -e "/lib/systemd/system/mariadb.service" ]; then
+                service='mariadb'
                 proc_name='mysqld'
             fi
-            if [ -e "/usr/lib/systemd/system/mariadb.service" ]; then
-                service='mariadb'
+            if [ -f /usr/bin/mysqladmin ]; then
+                mariadb_v=`mysqladmin --version | awk 'NR==1{print $5}' | head -c 4`
+                if [ $mariadb_v = "10.5" ]; then
+                    service='mariadb'
+                    proc_name='mariadbd'
+                fi
+            fi
+            if [ -d "/etc/sysconfig" ]; then
+                service='mysqld'
                 proc_name='mysqld'
             fi
         fi

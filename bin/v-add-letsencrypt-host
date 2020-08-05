@@ -11,8 +11,9 @@
 #----------------------------------------------------------#
 
 # Argument definition
-user="admin"
 domain=$HOSTNAME
+user="$($HESTIA/bin/v-search-domain-owner "$domain" web)"
+[[ -z "$user" ]] && user="admin"
 
 # Includes
 source $HESTIA/func/main.sh

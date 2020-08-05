@@ -254,10 +254,29 @@ if (!empty($_POST['save'])) {
         }
     }
 
+   // Set File Manager support
+    if (empty($_SESSION['error_msg'])) {
+        if ((!empty($_POST['v_filemanager'])) && ($_SESSION['FILE_MANAGER'] != $_POST['v_filemanager'])) {
+            if ($_POST['v_filemanager'] == 'yes') {
+                $_POST['v_filemanager'] == 'true';
+                exec (HESTIA_CMD."v-add-sys-filemanager", $output, $return_var);
+                check_return_code($return_var,$output);
+                unset($output);
+                if (empty($_SESSION['error_msg'])) $_SESSION['FILE_MANAGER'] = 'yes';
+            } else {
+                $_POST['v_filemanager'] == 'false';
+                exec (HESTIA_CMD."v-delete-sys-filemanager", $output, $return_var);
+                check_return_code($return_var,$output);
+                unset($output);
+                if (empty($_SESSION['error_msg'])) $_SESSION['FILE_MANAGER'] = 'no';
+            }
+        }
+    }
+
     // Set disk_quota support
     if (empty($_SESSION['error_msg'])) {
         if ((!empty($_POST['v_quota'])) && ($_SESSION['DISK_QUOTA'] != $_POST['v_quota'])) {
-            if($_POST['v_quota'] == 'yes') {
+            if ($_POST['v_quota'] == 'yes') {
                 exec (HESTIA_CMD."v-add-sys-quota", $output, $return_var);
                 check_return_code($return_var,$output);
                 unset($output);
@@ -276,7 +295,7 @@ if (!empty($_POST['save'])) {
         if ($_SESSION['FIREWALL_SYSTEM'] == 'iptables') $v_firewall = 'yes';
         if ($_SESSION['FIREWALL_SYSTEM'] != 'iptables') $v_firewall = 'no';
         if ((!empty($_POST['v_firewall'])) && ($v_firewall != $_POST['v_firewall'])) {
-            if($_POST['v_firewall'] == 'yes') {
+            if ($_POST['v_firewall'] == 'yes') {
                 exec (HESTIA_CMD."v-add-sys-firewall", $output, $return_var);
                 check_return_code($return_var,$output);
                 unset($output);

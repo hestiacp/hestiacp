@@ -264,12 +264,9 @@ upgrade_start_routine() {
 
     # Upgrade to Version 1.2.0
     if [ $VERSION = "1.1.1" ] || [ $VERSION = "1.1.2" ]; then
-        echo
-        echo "[ ! ] Reprocessing steps from v1.1.0 due to a previous installer bug..."
-        echo
-        source $HESTIA/install/upgrade/versions/previous/1.1.0.sh
         source $HESTIA/install/upgrade/versions/previous/1.2.0.sh
-        VERSION="$new_version"
+        VERSION="1.2.0"
+        upgrade_set_version $VERSION
         upgrade_refresh_config
     fi
 
@@ -280,10 +277,19 @@ upgrade_start_routine() {
         echo "[ ! ] Reprocessing steps from v1.1.0 due to a previous installer bug..."
         echo
         source $HESTIA/install/upgrade/versions/previous/1.1.0.sh
+        source $HESTIA/install/upgrade/versions/previous/1.2.1.sh
+        VERSION="1.2.1"
+        upgrade_set_version $VERSION
+        upgrade_refresh_config
+    fi
+
+    # Upgrade to Version 1.2.2
+    if [ $VERSION = "1.2.1" ]; then
         source $HESTIA/install/upgrade/versions/latest.sh
         VERSION="$new_version"
         upgrade_refresh_config
     fi
+
 
     #####################################################################
     #######     End version-specific upgrade instruction sets     #######

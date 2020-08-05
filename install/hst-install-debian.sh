@@ -23,7 +23,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.2.1'
+HESTIA_INSTALL_VER='1.2.2'
 pma_v='5.0.2'
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
 fpm_v="7.3"
@@ -42,9 +42,9 @@ if [ "$release" -eq 9 ]; then
         mariadb-client mariadb-common mariadb-server postgresql
         postgresql-contrib phppgadmin phpmyadmin mc flex whois rssh git idn zip
         sudo bc ftp lsof rrdtool quota e2fslibs bsdutils e2fsprogs curl
-        imagemagick fail2ban dnsutils bsdmainutils cron hestia hestia-nginx
+        imagemagick fail2ban dnsutils bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx
         hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat
-        rsyslog ssh setpriv ipset libapache2-mod-ruid2"
+        rsyslog openssh-server ssh setpriv ipset libapache2-mod-ruid2"
 elif [ "$release" -eq 10 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
         apache2-suexec-pristine libapache2-mod-fcgid libapache2-mod-php$fpm_v
@@ -60,9 +60,11 @@ elif [ "$release" -eq 10 ]; then
         phppgadmin mc flex whois git idn zip sudo bc ftp lsof rrdtool
         quota e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron hestia hestia-nginx hestia-php expect
-        libmail-dkim-perl unrar-free vim-common acl sysstat rsyslog ssh util-linux
-        ipset libapache2-mpm-itk"
+        libmail-dkim-perl unrar-free vim-common acl sysstat rsyslog openssh-server
+        ssh util-linux ipset libapache2-mpm-itk"
 fi
+
+installer_dependencies="apt-transport-https curl dirmngr gnupg wget"
 
 # Defining help function
 help() {
@@ -105,13 +107,7 @@ download_file() {
 
 # Defining password-gen function
 gen_pass() {
-    MATRIX='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
-    LENGTH=16
-    while [ ${n:=1} -le $LENGTH ]; do
-        PASS="$PASS${MATRIX:$(($RANDOM%${#MATRIX})):1}"
-        let n+=1
-    done
-    echo "$PASS"
+    cat /dev/urandom | tr -dc [:alnum:] | head -c16
 }
 
 # Defining return code check function
@@ -310,40 +306,10 @@ apt-get -qq update
 # Creating backup directory
 mkdir -p $hst_backups
 
-# Checking wget
-if [ ! -e '/usr/bin/wget' ]; then
-    echo "[ * ] Installing wget..."
-    apt-get -y install wget >> $LOG
-    check_result $? "Can't install wget"
-fi
-
-# Checking curl
-if [ ! -e '/usr/bin/curl' ]; then
-    echo "[ * ] Installing curl..."
-    apt-get -y install curl >> $LOG
-    check_result $? "Can't install curl"
-fi
-
-# Checking dirmngr
-if [ ! -e '/usr/bin/dirmngr' ]; then
-    echo "[ * ] Installing dirmngr..."
-    apt-get -y install dirmngr >> $LOG
-    check_result $? "Can't install dirmngr"
-fi
-
-# Check if apt-transport-https is installed
-if [ ! -e '/usr/lib/apt/methods/https' ]; then
-    echo "[ * ] Installing apt-transport-https..."
-    apt-get -y install apt-transport-https >> $LOG
-    check_result $? "Can't install apt-transport-https"
-fi
-
-# Check if gnupg or gnupg2 is installed
-if [ ! -e '/usr/lib/gnupg2' ] || [ ! -e '/usr/lib/gnupg' ]; then
-    echo "[ * ] Installing gnupg2..."
-    apt-get -y install gnupg2 >> $LOG
-    check_result $? "Can't install gnupg2"
-fi
+# Pre-install packages
+echo "[ * ] Installing dependencies..."
+apt-get -y install $installer_dependencies >> $LOG
+check_result $? "Package installation failed, check log file for more details."
 
 # Check if apparmor is installed
 if [ $(dpkg-query -W -f='${Status}' apparmor 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
@@ -614,53 +580,39 @@ echo
 # Installing Nginx repo
 if [ "$nginx" = 'yes' ]; then
     echo "[ * ] NGINX"
-    echo "deb [arch=amd64] http://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
-    wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
-    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/nginx_signing.key > /dev/null 2>&1
+    echo "deb [arch=amd64] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
+    apt-key adv --fetch-keys 'https://nginx.org/keys/nginx_signing.key' > /dev/null 2>&1
 fi
 
 # Installing sury PHP repo
 echo "[ * ] PHP"
 echo "deb https://packages.sury.org/php/ $codename main" > $apt/php.list
-wget --quiet https://packages.sury.org/php/apt.gpg -O /tmp/php_signing.key
-APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/php_signing.key > /dev/null 2>&1
+apt-key adv --fetch-keys 'https://packages.sury.org/php/apt.gpg' > /dev/null 2>&1
 
 # Installing sury Apache2 repo
 if [ "$apache" = 'yes' ]; then
     echo "[ * ] Apache2"
     echo "deb https://packages.sury.org/apache2/ $codename main" > $apt/apache2.list
-    wget --quiet https://packages.sury.org/apache2/apt.gpg -O /tmp/apache2_signing.key
-    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/apache2_signing.key > /dev/null 2>&1
+    apt-key adv --fetch-keys 'https://packages.sury.org/apache2/apt.gpg' > /dev/null 2>&1
 fi
 
 # Installing MariaDB repo
 if [ "$mysql" = 'yes' ]; then
     echo "[ * ] MariaDB"
-    echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
-    if [ "$release" -eq 8 ]; then
-        APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com CBCB082A1BB943DB > /dev/null 2>&1
-    else
-        APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com F1656F24C74CD1D8 > /dev/null 2>&1
-    fi
-fi
-
-# Installing Backport repo for Debian 8
-if [ "$release" -eq 8 ]; then
-    echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
+    echo "deb [arch=amd64] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
+    apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc' > /dev/null 2>&1
 fi
 
 # Installing HestiaCP repo
 echo "[ * ] Hestia Control Panel"
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
-APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
 
 # Installing PostgreSQL repo
 if [ "$postgresql" = 'yes' ]; then
     echo "[ * ] PostgreSQL"
-    echo "deb http://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
-    wget --quiet https://www.postgresql.org/media/keys/ACCC4CF8.asc -O /tmp/psql_signing.key
-    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/psql_signing.key > /dev/null 2>&1
-    rm /tmp/psql_signing.key
+    echo "deb https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
+    apt-key adv --fetch-keys 'https://www.postgresql.org/media/keys/ACCC4CF8.asc' > /dev/null 2>&1
 fi
 
 # Echo for a new line
@@ -918,8 +870,6 @@ rm -f /usr/sbin/policy-rc.d
 
 
 echo "[ * ] Configuring system settings..."
-# Enable SSH password authentication
-sed -i "s/rdAuthentication no/rdAuthentication yes/g" /etc/ssh/sshd_config
 
 # Enable SFTP subsystem for SSH
 sftp_subsys_enabled=$(grep -iE "^#?.*subsystem.+(sftp )?sftp-server" /etc/ssh/sshd_config)
@@ -1617,31 +1567,6 @@ if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
     sed -i "s/%des_key%/$rcDesKey/g" /etc/roundcube/config.inc.php
     sed -i "s/localhost/$servername/g" /etc/roundcube/plugins/password/config.inc.php
     mysql roundcube < /usr/share/dbconfig-common/data/roundcube/install/mysql
-
-    if [ "$release" -eq 8 ]; then
-        # RoundCube tinyMCE fix
-        tinymceFixArchiveURL=$HESTIA_INSTALL_DIR/roundcube/roundcube-tinymce.tar.gz
-        tinymceParentFolder=/usr/share/roundcube/program/js
-        tinymceFolder=$tinymceParentFolder/tinymce
-        tinymceBadJS=$tinymceFolder/tiny_mce.js
-        tinymceFixArchive=$tinymceParentFolder/roundcube-tinymce.tar.gz
-        if [[ -L "$tinymceFolder" && -d "$tinymceFolder" ]]; then
-            if [ -f "$tinymceBadJS" ]; then
-                wget $tinymceFixArchiveURL -O $tinymceFixArchive
-                if [[ -f "$tinymceFixArchive" && -s "$tinymceFixArchive" ]]
-                then
-                    rm $tinymceFolder
-                    tar -xzf $tinymceFixArchive -C $tinymceParentFolder
-                    rm $tinymceFixArchive
-                    chown -R root:root $tinymceFolder
-                else
-                    echo -n "File roundcube-tinymce.tar.gz is not downloaded,"
-                    echo "RoundCube tinyMCE fix is not applied"
-                    rm $tinymceFixArchive
-                fi
-            fi
-        fi
-    fi
     
     # Enable Roundcube plugins
     cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_newmail_notifier.inc.php /etc/roundcube/plugins/newmail_notifier/config.inc.php

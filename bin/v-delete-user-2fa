@@ -43,8 +43,8 @@ if [ -z "$TWOFA" ]; then
 fi
 
 # Remove 2FA from user config
-sed -i '/TWOFA=/d' $USER_DATA/user.conf
-sed -i '/QRCODE=/d' $USER_DATA/user.conf
+update_user_value "$user" '$TWOFA' ""
+update_user_value "$user" '$QRCODE' ""
 
 #----------------------------------------------------------#
 #                       Hestia                             #

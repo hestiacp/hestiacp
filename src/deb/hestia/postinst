@@ -25,6 +25,7 @@ pma_v='5.0.2'
 #               Begin standard upgrade routines               #
 ###############################################################
 
+
 # Set up console display and welcome message
 upgrade_welcome_message
 

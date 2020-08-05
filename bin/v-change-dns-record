@@ -58,13 +58,17 @@ check_hestia_demo_mode
 line=$(grep "ID='$id'" $USER_DATA/dns/$domain.conf)
 parse_object_kv_list "$line"
 
+if [ -z $type ]; then
+    type=$TYPE
+fi
+
 # Null priority for none MX/SRV records
-if [ "$TYPE" != 'MX' ] && [ "$TYPE" != 'SRV' ]; then
+if [ "$type" != 'MX' ] && [ "$TYPE" != 'SRV' ]; then
     priority=''
 fi
 
 # Add trailing dot at the end of NS/CNAME/MX/PTR/SRV record
-if [[ $TYPE =~ NS|CNAME|MX|PTR|SRV ]]; then
+if [[ $type =~ NS|CNAME|MX|PTR|SRV ]]; then
     trailing_dot=$(echo $dvalue | grep "\.$")
     if [ -z $trailing_dot ]; then
         dvalue="$dvalue."

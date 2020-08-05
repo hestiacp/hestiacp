@@ -75,7 +75,7 @@ cat $WEBTPL/$type/$type.tpl |\
         -e "s|%domain%|$domain|g" \
         -e "s|%user%|$user|g" \
         -e "s|%home%|$HOMEDIR|g" \
-        -e "s|%alias%|${aliases//,/ }|g" \
+        -e "s|%alias%|$stats_alias|g" \
         -e "s|%alias_idn%|$stats_alias|g" \
     > $HOMEDIR/$user/conf/web/$domain/$type.conf
 

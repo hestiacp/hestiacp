@@ -359,6 +359,28 @@ if (!empty($_POST['save'])) {
         }
     }
 
+    // Update send notification setting
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_upgrade_send_notification_email'] != $_SESSION['UPGRADE_SEND_EMAIL']) {
+            if ($_POST['v_upgrade_send_notification_email'] == 'on'){ $_POST['v_upgrade_send_notification_email'] = 'true'; } else { $_POST['v_upgrade_send_notification_email'] = 'false'; }
+            exec (HESTIA_CMD."v-change-sys-config-value UPGRADE_SEND_EMAIL ".escapeshellarg($_POST['v_upgrade_send_notification_email']), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            $v_upgrade_notification_adv = 'yes';
+        }
+    }
+
+    // Update send log by email setting
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_upgrade_send_email_log'] != $_SESSION['UPGRADE_SEND_EMAIL_LOG']) {
+            if ($_POST['v_upgrade_send_email_log'] == 'on') { $_POST['v_upgrade_send_email_log'] = 'true'; } else { $_POST['v_upgrade_send_email_log'] = 'false'; }
+            exec (HESTIA_CMD."v-change-sys-config-value UPGRADE_SEND_EMAIL_LOG ".escapeshellarg($_POST['v_upgrade_send_email_log']), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            $v_upgrade_send_log_adv = 'yes';
+        }
+    }
+
     // Disable local backup
     if (empty($_SESSION['error_msg'])) {
         if (($_POST['v_backup'] == 'no') && ($v_backup == 'yes' )) {

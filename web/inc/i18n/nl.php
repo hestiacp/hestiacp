@@ -899,4 +899,8 @@ $LANG['nl'] = array(
     'Documentation' => 'Documentation',
     'Support' => 'Support',
     'Submit an issue report' => 'Submit an issue report',
+
+    'SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL' => 'Stuur een e-mailmelding wanneer een update is geïnstalleerd',
+    'SYSTEM_UPGRADE_SAVE_LOG' => 'Sla het updatelogboek op',
+    'SYSTEM_UPGRADE_SEND_EMAIL_LOG' => 'Stuur het updatelogboek per e-mail',
 );

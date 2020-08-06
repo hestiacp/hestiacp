@@ -528,14 +528,9 @@ rebuild_mail_domain_conf() {
         # Setting HELO for mail domain
         if [ ! -z "$local_ip" ]; then
             IP_RDNS=$(is_ip_rdns_valid "$local_ip")
+            sed -i "/^${domain}:/d" /etc/exim4/mailhelo.conf >/dev/null 2>&1
             if [ ! -z "$IP_RDNS" ]; then
-                if [ $(grep -s "^${domain}:" $OSAL_DIR_EXIM_CONF/mailhelo.conf) ]; then
-                    sed -i "/^${domain}:/c\\${domain}:${IP_RDNS}" $OSAL_DIR_EXIM_CONF/mailhelo.conf
-                else
-                    echo ${domain}:${IP_RDNS} >> $OSAL_DIR_EXIM_CONF/mailhelo.conf
-                fi
-            else
-                sed -i "/^${domain}:/d" $OSAL_DIR_EXIM_CONF/mailhelo.conf
+                echo ${domain}:${IP_RDNS} >> /etc/exim4/mailhelo.conf
             fi
         fi
 

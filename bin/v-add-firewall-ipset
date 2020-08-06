@@ -89,7 +89,9 @@ if [ ! -f "${IPSET_PATH}/${IPSET_FILE}.iplist" ] || [ "$force" = "yes" ]; then
         # Advanced: execute script with the same basename for aditional pre-processing
         # ex: 
         if [ -x "${IPSET_PATH}/${IPSET_FILE}.sh" ]; then 
-            setpriv --clear-groups --reuid nobody --regid nogroup -- ${IPSET_PATH}/${IPSET_FILE}.sh "$ip_name" "$iplist_tempfile"
+            preprocess_output="$(cat "$iplist_tempfile" | setpriv --clear-groups --reuid nobody --regid nogroup -- ${IPSET_PATH}/${IPSET_FILE}.sh "$ip_name" "$iplist_tempfile")"
+            check_result $? "Preprocessing script failed (${IPSET_FILE}.sh)"
+            [[ "$preprocess_output" ]] && echo "$preprocess_output" > "$iplist_tempfile"
         fi
 
     elif [[ "$data_source" =~ ^script:/ ]]; then
@@ -111,6 +113,14 @@ if [ ! -f "${IPSET_PATH}/${IPSET_FILE}.iplist" ] || [ "$force" = "yes" ]; then
 
         [ -f "${data_source#file:}" ] && cp -f "${data_source#file:}" "$iplist_tempfile"
 
+    fi
+
+    # Cleanup ip list
+    sed -r -i -e 's/[;#].*$//' -e 's/[ \t]*$//' -e '/^$/d' "$iplist_tempfile"
+    if [[ $ip_version == 'v4' ]]; then
+        sed -i -r -n -e '/^((1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])\.){3}(1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])/p' "$iplist_tempfile"
+    elif [[ $ip_version == 'v6' ]]; then
+        sed -i -r -n -e '/^([0-9a-fA-F]{0,4}:){1,7}[0-9a-fA-F]{0,4}/p' "$iplist_tempfile"
     fi
 
     # Validate iplist file size

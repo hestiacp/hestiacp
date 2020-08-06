@@ -73,9 +73,20 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>">
+                                    <input type="text" size="20" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>"><br />
+                                    <meter max="4" id="meter"></meter>       
                                 </td>
                             </tr>
+                            <tr>
+                                <td class="vst-text">
+                                    <?php print('Your password must have at least');?>
+                                    <ul>
+                                        <li><?php print('8 characters long');?></li>
+                                        <li><?php print('1 uppercase & 1 lowercase character');?></li>
+                                        <li><?php print('1 number');?></li>
+                                    </ul>
+                                </td>
+                            </tr>                            
                             <tr>
                                 <td>
                                     <label><input type="checkbox" class="vst-checkbox password-option" name="v_twofa" <?php if(!empty($v_twofa)) echo "checked=yes" ?>> <?php print __('Enable 2FA');?></label>

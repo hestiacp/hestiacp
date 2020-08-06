@@ -862,7 +862,7 @@ $LANG['cn'] = array(
     'Please scan the code below in your 2FA application:' => '要完成两因素身份验证的设置，请扫描以下QR码<br />使用身份验证应用程序，例如 <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google身份验证器</a>):',
     '2FA Reset Code:' => '帐户恢复代码：',
     
-        //list user 
+    //list user 
     'Name' => '名称',
     //Add / Edit user
     'Contact' => '联系',
@@ -893,4 +893,13 @@ $LANG['cn'] = array(
     'backend server' =>  '后端服务',
     'traffic' => '流量',
     'disk' => '磁盘',
+
+    // Notifications
+    'Notifications' => '通知事项',
+    
+    // Help
+    'Help' => '救命',
+    'Documentation' => '文献资料',
+    'Support' => '支持',
+    'Submit an issue report' => '提交问题报告',
 );

@@ -3,11 +3,26 @@ All notable changes to this project will be documented in this file.
 
 ## [CURRENT] - Development
 ### Features
+- Use stronger ciphers and Disable TLS v1.1 for vsftpd.
 
 ### Bugfixes
 - Create mailhelo.conf if it doesnt exist to prevent a error message during grep.
+- Corrected the display of DNS record types to appear in alphabetical order.
+- Fixed an issue where the DNS record type field would reset if an error occurred while adding a new DNS record. (#992)
+- Fixed an issue where the DNS domain hint would not appear correctly when editing a DNS record. (#993)
+- Fixed an issue where a DNS record would become malformed if changed from A to CNAME. (#988)
+- Fixed an issue with the back button on the DNS records page. (#989)
+- Fixed an issue where phpMyAdmin/phpPgAdmin would not load correctly due to an incorrect vhost configuration. (#970)
+- Fixed an issue where malformed JSON output was returned when custom theme files are present. (#967)
+- Fixed an error that would occur when running `v-change-user-php-cli` for the first time if .bash_aliases did not exist. (#960)
+- Corrected an issue where tooltips were not displayed when hovering over the top level menu items.
+- Improved handling of APT repository keys during installation.
+- Reworked the Let's Encrypt renew functionality to skip removed aliases.
+- Improved reliability of list handling when using IP lists.
+- Enforce minimum password requirements with visual indication of password strength.
+- Improved installer version detection.
  
-## [1.2.1] - Service Release 1 (beta)
+## [1.2.1] - Service Release
 ### Features
 - Consolidated First and Last Name fields to a singular name field to simply input.
     - v-change-user-name will now accept both "First Last" (single argument) and First Last (two arguments) for backward compatibility.

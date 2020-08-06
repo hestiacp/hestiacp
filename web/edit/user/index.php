@@ -98,15 +98,20 @@ if (!empty($_POST['save'])) {
 
     // Change password
     if ((!empty($_POST['v_password'])) && (empty($_SESSION['error_msg']))) {
-        $v_password = tempnam("/tmp","vst");
-        $fp = fopen($v_password, "w");
-        fwrite($fp, $_POST['v_password']."\n");
-        fclose($fp);
-        exec (HESTIA_CMD."v-change-user-password ".escapeshellarg($v_username)." ".$v_password, $output, $return_var);
-        check_return_code($return_var,$output);
-        unset($output);
-        unlink($v_password);
-        $v_password = escapeshellarg($_POST['v_password']);
+        // Check password length
+        $pw_len = strlen($_POST['v_password']);
+        if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/', $_POST['v_password'])) { $_SESSION['error_msg'] = __('Password does not match the minimum requirements'); }
+        if (empty($_SESSION['error_msg'])) {
+            $v_password = tempnam("/tmp","vst");
+            $fp = fopen($v_password, "w");
+            fwrite($fp, $_POST['v_password']."\n");
+            fclose($fp);
+            exec (HESTIA_CMD."v-change-user-password ".escapeshellarg($v_username)." ".$v_password, $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            unlink($v_password);
+            $v_password = escapeshellarg($_POST['v_password']);
+        }
     }
 
     // Enable twofa
@@ -184,11 +189,15 @@ if (!empty($_POST['save'])) {
 
     // Change full name
     if ($v_name != $_POST['v_name']){
-        $v_name = escapeshellarg($_POST['v_name']);
-        exec (HESTIA_CMD."v-change-user-name ".escapeshellarg($v_username). " ". "$v_name", $output, $return_var);
-        check_return_code($return_var,$output);
-        unset($output);
-        $v_name = $_POST['v_name'];
+            if (empty($_POST['v_name'])) {
+                 $_SESSION['error_msg'] = __('Please enter a valid name');
+            }else{
+                $v_name = escapeshellarg($_POST['v_name']);
+                exec (HESTIA_CMD."v-change-user-name ".escapeshellarg($v_username). " ".$v_name, $output, $return_var);
+                check_return_code($return_var,$output);
+                unset($output);
+                $v_name = $_POST['v_name'];
+            }
     }
 
     // Change NameServers

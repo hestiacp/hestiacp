@@ -1,7 +1,7 @@
 <div class="l-center edit">
         <div class="l-sort clearfix">
           <div class="l-unit-toolbar__buttonstrip">
-            <a class="ui-button cancel" id="btn-back" href="javascript:window.history.back();"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+            <a class="ui-button cancel" id="btn-back" href="/list/dns/?domain=<?=htmlentities(trim($v_domain, "'"))?>&token=<?=$_SESSION['token']?>"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
             <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
@@ -75,18 +75,18 @@
                                     <select class="vst-list" name="v_type">
                                         <option value="A" <?php if ($v_type == 'A') echo selected; ?>>A</option>
                                         <option value="AAAA" <?php if ($v_type == 'AAAA') echo selected; ?>>AAAA</option>
-                                        <option value="NS" <?php if ($v_type == 'NS') echo selected; ?>>NS</option>
+                                        <option value="CAA" <?php if ($v_type == 'CAA') echo selected; ?>>CAA</option>
                                         <option value="CNAME" <?php if ($v_type == 'CNAME') echo selected; ?>>CNAME</option>
-                                        <option value="MX" <?php if ($v_type == 'MX') echo selected; ?>>MX</option>
-                                        <option value="TXT" <?php if ($v_type == 'TXT') echo selected; ?>>TXT</option>
-                                        <option value="SRV" <?php if ($v_type == 'SRV') echo selected; ?>>SRV</option>
                                         <option value="DNSKEY" <?php if ($v_type == 'DNSKEY') echo selected; ?>>DNSKEY</option>
-                                        <option value="KEY" <?php if ($v_type == 'KEY') echo selected; ?>>KEY</option>
                                         <option value="IPSECKEY" <?php if ($v_type == 'IPSECKEY') echo selected; ?>>IPSECKEY</option>
+                                        <option value="KEY" <?php if ($v_type == 'KEY') echo selected; ?>>KEY</option>
+                                        <option value="MX" <?php if ($v_type == 'MX') echo selected; ?>>MX</option>
+                                        <option value="NS" <?php if ($v_type == 'NS') echo selected; ?>>NS</option>
                                         <option value="PTR" <?php if ($v_type == 'PTR') echo selected; ?>>PTR</option>
                                         <option value="SPF" <?php if ($v_type == 'SPF') echo selected; ?>>SPF</option>
+                                        <option value="SRV" <?php if ($v_type == 'SRV') echo selected; ?>>SRV</option>
                                         <option value="TLSA" <?php if ($v_type == 'TLSA') echo selected; ?>>TLSA</option>
-                                        <option value="CAA" <?php if ($v_type == 'CAA') echo selected; ?>>CAA</option>
+                                        <option value="TXT" <?php if ($v_type == 'TXT') echo selected; ?>>TXT</option>
                                     </select>
                                 </td>
                             </tr>
@@ -97,7 +97,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <select class="vst-list" onchange="this.nextElementSibling.value=this.value">
+                                    <select class="vst-list" tabindex="-1" onchange="this.nextElementSibling.value=this.value">
                                         <option value="">clear</option>
                                         <?php
                                             foreach ($v_ips as $ip => $value) {

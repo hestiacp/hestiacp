@@ -643,7 +643,7 @@ a {
 }
 
 .l-logo {
-  background-image: url("/images/logo-header.png");
+  background-image: url("/images/logo-header.svg");
   background-repeat: no-repeat;
   float: left;
   height: 28px;

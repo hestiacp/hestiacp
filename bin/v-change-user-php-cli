@@ -44,6 +44,11 @@ if [ ! -f "$HESTIA_INSTALL_DIR/multiphp/$WEB_SYSTEM/PHP-${version//.}.sh" ]; the
     exit
 fi
 
+#create .bash_aliases is not exsists
+if [ ! -f "$FILE" ]; then
+    touch "$FILE"
+fi
+
 if grep -q "alias php='env php$version'" "$FILE"; then
   echo "PHP CLI Already defined"
   exit;
@@ -53,21 +58,12 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
-#create .bash_aliases is not exsists
-if [ ! -f "$FILE" ]; then
-    touch "$FILE"
-fi
-
 sed -i "/alias php='env/d" "$FILE"
 
 echo "alias php='env php$version'" >> $FILE
 
-# Change language
-if [ -z "$(grep PHPCLI $USER_DATA/user.conf)" ]; then
-    sed -i "s/^TIME/PHPCLI='$version'\nTIME/g" $USER_DATA/user.conf
-else
-    update_user_value "$user" '$PHPCLI' "$version"
-fi
+update_user_value "$user" '$PHPCLI' "$version"
+
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -1,9 +1,14 @@
 #!/bin/bash
-# info: change user password
-# options: USER PASSWORD
+# info: rebuild all assets for a specified user
+# options: USER [RESTART]
 #
-# The function changes user's password and updates RKEY value.
-
+# The function rebuilds all assets for a user account:
+# - Web domains
+# - DNS zones
+# - Mail domains
+# - Databases
+# - Cron Jobs
+# - User account configuration
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -11,59 +16,47 @@
 
 # Argument definition
 user=$1
-password=$2; HIDE=2
-
-# Importing system enviroment  as we run this script
-# mostly by cron wich not read it by itself
-source /etc/profile
+restart=$2
 
 # Includes
 source $HESTIA/func/main.sh
+source $HESTIA/func/rebuild.sh
 source $HESTIA/conf/hestia.conf
+
+# Export sbin
+export PATH=$PATH:/usr/sbin
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'USER [PASSWORD]'
+check_args '1' "$#" 'USER [RESTART]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 
-# Non-interactive (stdin not opened)
-[[ -z "$password" && ! -t 0 ]] && read -r password
-
-# Password prompt
-[[ -z "$password" ]] && read -r -s -p "Password:" password
-
-is_password_valid
-
-# Perform verification if read-only mode is enabled
-check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Changing user password
-echo "$user:$password" | /usr/sbin/chpasswd
-md5=$(awk -v user=$user -F : 'user == $1 {print $2}' /etc/shadow)
-
-if [ "$user" = 'admin' ] && [ -e "$HESTIA/web/reset.admin" ]; then
-    rm -f $HESTIA/web/reset.admin
-fi
+# Rebuild loop
+for user in $($HESTIA/bin/v-list-sys-users plain); do
+    $BIN/v-rebuild-web-domains $user $restart
+    $BIN/v-rebuild-dns-domains $user $restart
+    $BIN/v-rebuild-mail-domains $user $restart
+    $BIN/v-rebuild-databases $user $restart
+    $BIN/v-rebuild-cron-jobs $user $restart
+    $BIN/v-rebuild-user $user $restart
+done
 
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-# Changing RKEY value
-update_user_value "$user" '$RKEY' "$(generate_password)"
-update_user_value "$user" '$MD5' "$md5"
-
 # Logging
-log_history "changed password"
 log_event "$OK" "$ARGUMENTS"
 
 exit

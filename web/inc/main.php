@@ -103,26 +103,6 @@ if (isset($_SESSION['look']) && ( $_SESSION['look'] != 'admin' )) {
     $user = $_SESSION['look'];
 }
 
-function get_favourites(){
-    exec (HESTIA_CMD."v-list-user-favourites ".$_SESSION['user']." json", $output, $return_var);
-//    $data = json_decode(implode('', $output).'}', true);
-    $data = json_decode(implode('', $output), true);
-    $data = array_reverse($data,true);
-    $favourites = array();
-
-    foreach($data['Favourites'] as $key => $favourite){
-        $favourites[$key] = array();
-
-        $items = explode(',', $favourite);
-        foreach($items as $item){
-            if($item)
-                $favourites[$key][trim($item)] = 1;
-        }
-    }
-
-    $_SESSION['favourites'] = $favourites;
-}
-
 
 function check_error($return_var) {
     if ( $return_var > 0 ) {

@@ -862,35 +862,44 @@ $LANG['cn'] = array(
     'Please scan the code below in your 2FA application:' => '要完成两因素身份验证的设置，请扫描以下QR码<br />使用身份验证应用程序，例如 <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google身份验证器</a>):',
     '2FA Reset Code:' => '帐户恢复代码：',
     
-        //list user 
-    'Name' => 'Name',
+    //list user 
+    'Name' => '名称',
     //Add / Edit user
-    'Contact' => 'Name',
-    'GREETINGS_GORDON' => "Hello, %s,\n",
+    'Contact' => '联系',
+    'GREETINGS_GORDON' => "您好，%s，\n",
     
     //List Mail Accounts
-    'Forwarding' => 'Forwarding',
+    'Forwarding' => '转发',
 
     //Cron Jobs
-    'Cron Job' => 'Cron Job',
+    'Cron Job' => '定时任务',
     //Edit server 
-    'Host' => 'Host',
+    'Host' => '主机',
   
       //list Backups
-    '1 backups' => '1 backups',
-    '%s backups' => '%s backups',
+    '1 backups' => '1 数据备份',
+    '%s backups' => '%s 数据备份',
     //list Firewall Rules
-    '1 firewall rule' => '1 firewall rule',
-    '%s firewall rules' => '%s firewall rules',
+    '1 firewall rule' => '1 防火墙规则',
+    '%s firewall rules' => '%s 防火墙规则',
     //list ip
-    '1 banned IP address' => '1 banned IP address',
-    '%s banned IP addresses' => '%s banned IP addresses', 
+    '1 banned IP address' => '1 黑名单IP',
+    '%s banned IP addresses' => '%s 黑名单IP', 
     //list DNS
-    'Records_DNS' => 'Records',
+    'Records_DNS' => '记录',
     //Dowload Backup
-    'BACKUP_DOWNLOAD_SCHEDULED' => 'Download for Backup has been scheduled.',
+    'BACKUP_DOWNLOAD_SCHEDULED' => '已安排备份下载。',
     
-    'backend server' =>  'Backend Server',
-    'traffic' => 'Traffic',
-    'disk' => 'Disk',
+    'backend server' =>  '后端服务',
+    'traffic' => '流量',
+    'disk' => '磁盘',
+
+    // Notifications
+    'Notifications' => '通知事项',
+    
+    // Help
+    'Help' => '救命',
+    'Documentation' => '文献资料',
+    'Support' => '支持',
+    'Submit an issue report' => '提交问题报告',
 );

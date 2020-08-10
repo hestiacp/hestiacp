@@ -23,7 +23,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.2.1'
+HESTIA_INSTALL_VER='1.2.2'
 pma_v='5.0.2'
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
 fpm_v="7.3"
@@ -42,9 +42,11 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     php$fpm_v-imagick php$fpm_v-intl php$fpm_v-json php$fpm_v-mbstring
     php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
     postgresql postgresql-contrib proftpd-basic quota roundcube-core
-    roundcube-mysql roundcube-plugins rrdtool rssh spamassassin sudo hestia
+    roundcube-mysql roundcube-plugins rrdtool rssh spamassassin sudo hestia=${HESTIA_INSTALL_VER}
     hestia-nginx hestia-php vim-common vsftpd whois zip acl sysstat setpriv
-    ipset libonig5 libzip5"
+    ipset libonig5 libzip5 openssh-server ssh"
+
+installer_dependencies="apt-transport-https curl dirmngr gnupg wget"
 
 # Defining help function
 help() {
@@ -87,13 +89,7 @@ download_file() {
 
 # Defining password-gen function
 gen_pass() {
-    MATRIX='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
-    LENGTH=16
-    while [ ${n:=1} -le $LENGTH ]; do
-        PASS="$PASS${MATRIX:$(($RANDOM%${#MATRIX})):1}"
-        let n+=1
-    done
-    echo "$PASS"
+    cat /dev/urandom | tr -dc [:alnum:] | head -c16
 }
 
 # Defining return code check function
@@ -292,40 +288,10 @@ apt-get -qq update
 # Creating backup directory
 mkdir -p $hst_backups
 
-# Checking wget
-if [ ! -e '/usr/bin/wget' ]; then
-    echo "[ * ] Installing wget..."
-    apt-get -y install wget >> $LOG
-    check_result $? "Can't install wget"
-fi
-
-# Checking curl
-if [ ! -e '/usr/bin/curl' ]; then
-    echo "[ * ] Installing curl..."
-    apt-get -y install curl >> $LOG
-    check_result $? "Can't install curl"
-fi
-
-# Check if apt-transport-https is installed
-if [ ! -e '/usr/lib/apt/methods/https' ]; then
-    echo "[ * ] Installing apt-transport-https..."
-    apt-get -y install apt-transport-https >> $LOG
-    check_result $? "Can't install apt-transport-https"
-fi
-
-# Check if apt-add-repository is installed
-if [ ! -e '/usr/bin/apt-add-repository' ]; then
-    echo "[ * ] Installing apt-add-repository..."
-    apt-get -y install software-properties-common >> $LOG
-    check_result $? "Can't install software-properties-common"
-fi
-
-# Check if gnupg or gnupg2 is installed
-if [ ! -e '/usr/lib/gnupg2' ] || [ ! -e '/usr/lib/gnupg' ]; then
-    echo "[ * ] Installing gnupg2..."
-    apt-get -y install gnupg2 >> $LOG
-    check_result $? "Can't install gnupg2"
-fi
+# Pre-install packages
+echo "[ * ] Installing dependencies..."
+apt-get -y install $installer_dependencies >> $LOG
+check_result $? "Package installation failed, check log file for more details."
 
 # Check repository availability
 wget --quiet "https://$GPG/deb_signing.key" -O /dev/null
@@ -589,10 +555,8 @@ echo
 # Installing Nginx repo
 if [ "$nginx" = 'yes' ]; then
     echo "[ * ] NGINX"
-    echo "deb [arch=amd64] http://nginx.org/packages/mainline/$VERSION/ $codename nginx" \
-    > $apt/nginx.list
-    wget --quiet http://nginx.org/keys/nginx_signing.key -O /tmp/nginx_signing.key
-    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/nginx_signing.key > /dev/null 2>&1
+    echo "deb [arch=amd64] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
+    apt-key adv --fetch-keys 'https://nginx.org/keys/nginx_signing.key' > /dev/null 2>&1
 fi
 
 # Installing sury PHP repo
@@ -608,22 +572,20 @@ fi
 # Installing MariaDB repo
 if [ "$mysql" = 'yes' ]; then
     echo "[ * ] MariaDB"
-    echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
-    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8 > /dev/null 2>&1
+    echo "deb [arch=amd64] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
+    apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc' > /dev/null 2>&1
 fi
 
 # Installing HestiaCP repo
 echo "[ * ] Hestia Control Panel"
 echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
-APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
 
 # Installing PostgreSQL repo
 if [ "$postgresql" = 'yes' ]; then
     echo "[ * ] PostgreSQL"
-    echo "deb http://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
-    wget --quiet https://www.postgresql.org/media/keys/ACCC4CF8.asc -O /tmp/psql_signing.key
-    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add /tmp/psql_signing.key > /dev/null 2>&1
-    rm /tmp/psql_signing.key
+    echo "deb https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
+    apt-key adv --fetch-keys 'https://www.postgresql.org/media/keys/ACCC4CF8.asc' > /dev/null 2>&1
 fi
 
 # Echo for a new line
@@ -916,8 +878,6 @@ rm -f /usr/sbin/policy-rc.d
 #----------------------------------------------------------#
 
 echo "[ * ] Configuring system settings..."
-# Enable SSH password authentication
-sed -i "s/rdAuthentication no/rdAuthentication yes/g" /etc/ssh/sshd_config
 
 # Enable SFTP subsystem for SSH
 sftp_subsys_enabled=$(grep -iE "^#?.*subsystem.+(sftp )?sftp-server" /etc/ssh/sshd_config)

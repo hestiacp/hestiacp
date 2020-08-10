@@ -130,39 +130,6 @@ $(document).ready(function(){
                 }).appendTo(".l-center.units");
               });
 
-
-
-            // STARS
-
-              $('.l-unit .l-icon-star').click(function(){
-                var l_unit = $(this).parents('.l-unit');
-
-                if(l_unit.hasClass('l-unit--starred')){
-                  // removing star
-
-                  $.ajax({
-                    method: "POST",
-                    url: "/delete/favorite/index.php",
-                    data: { v_section: l_unit.attr('v_section'), v_unit_id: l_unit.attr('v_unit_id') }
-                  });
-
-                  l_unit.attr({'sort-star': 0});
-                  l_unit.removeClass('l-unit--starred');
-                }
-                else{
-                  $.ajax({
-                    method: "POST",
-                    url: "/add/favorite/index.php",
-                    data: { v_unit_id: l_unit.attr('v_unit_id'), v_section: l_unit.attr('v_section') }
-                  });
-
-                  l_unit.attr({'sort-star': 1});
-                  l_unit.addClass('l-unit--starred');
-                }
-              });
-
-
-
               // Shortcuts
 
               shortcut.add("Ctrl+Enter", function(){

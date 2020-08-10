@@ -28,7 +28,6 @@ if [[ "$domain" =~ .*\.$ ]]; then
     domain=$(echo "$domain" |sed -e "s/\.$//")
 fi
 
-domain=$(idn -t --quiet -u "$domain" )
 domain_idn=$(idn -t --quiet -a "$domain")
 
 # Includes

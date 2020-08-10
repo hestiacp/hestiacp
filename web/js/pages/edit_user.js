@@ -11,6 +11,7 @@ randomString = function(min_length = 16) {
         randomString();
     }else{
         $('input[name=v_password]').val(randomstring);
+        App.Actions.WEB.update_v_password();
     }    
 }
 

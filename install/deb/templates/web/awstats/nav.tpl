@@ -12,9 +12,9 @@
 <tr>
     <td><img src="logo.svg" alt="hestia"></td>
     <td><form name="period" action="" method="get">
-        <select name="select" ONCHANGE="change()">
+    <select name="select" ONCHANGE="change()">
 %select_month%
-        </select>
+    </select>
     </form>
     </td>
 </tr>

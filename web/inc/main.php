@@ -385,3 +385,11 @@ function backendtpl_with_webdomains() {
     }
     return $backend_list;
 }
+/**
+ * Check if password is valid
+ *
+ * @return int; 1 / 0
+ */
+function validate_password($password){
+    return preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(.){8,}$/', $password);
+}

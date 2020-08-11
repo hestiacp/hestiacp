@@ -45,7 +45,7 @@ if (!empty($_POST['ok'])) {
 
     // Check password length
     if (empty($_SESSION['error_msg'])) {
-        if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/', $_POST['v_password'])) { $_SESSION['error_msg'] = __('Password does not match the minimum requirements'); }
+        if (!validate_password($_POST['v_password'])) { $_SESSION['error_msg'] = __('Password does not match the minimum requirements'); }
     }
 
     // Protect input

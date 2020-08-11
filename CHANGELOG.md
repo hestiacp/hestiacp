@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.2.3] - Service Release
+### Features
+- No new features have been introduced in this release.
+
+### Bugfixes
+- Fixes an issue where non-ASCII characters were rejected in the password field.
+
 ## [1.2.2] - Service Release
 ### Features
 - No new features have been introduced in this release.

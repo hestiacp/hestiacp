@@ -513,7 +513,9 @@ upgrade_start_routine() {
         echo "[ ! ] The latest version of Hestia Control Panel is already installed."
         echo "      Verifying configuration..."
         echo ""
-        source $HESTIA/install/upgrade/versions/$VERSION.sh
+        if [ -e "$HESTIA/install/upgrade/versions/$VERSION.sh" ]; then
+            source $HESTIA/install/upgrade/versions/$VERSION.sh
+        fi
         VERSION="$new_version"
         upgrade_set_version $VERSION
         upgrade_refresh_config

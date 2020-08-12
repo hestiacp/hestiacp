@@ -1,17 +1,27 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [CURRENT] - Development
+## [1.3.0] - Major Release (Feature / Quality Update)
 ### Features
+- Users can now choose to point a domain to a different document root (similar to domain parking).
 - The software update procedure will now perform a system health check prior to installation and repair missing environment variables.
-- Installs from branches/versions other than those from `release` will provide verbose output and logging to aid in debugging and development.
-- Administrators now have control over software update notifications through the following settings in `$HESTIA/conf/hestia.conf`:
+- Administrators now have control over software update notifications through the following settings in `$HESTIA/conf/hestia.conf` and through the Control Panel web interface:
     - `UPGRADE_SEND_EMAIL` = Sends an email notification to admin email address
     - `UPGRADE_SEND_EMAIL_LOG` = Sends installation log output to admin email address
+- Upgrade process will now save logs to the `hst_backups` directory.
+
+## Bugfixes
+
+## [1.2.3] - Service Release
+### Features
+- No new features have been introduced in this release.
 
 ### Bugfixes
-- Fixed an issue where template files were not correctly backed up during upgrades.
-- Improved version detection during upgrades.
+- Fixes an issue where non-ASCII characters were rejected in the password field.
+
+## [1.2.2] - Service Release
+### Features
+- No new features have been introduced in this release.
 
 ### Bugfixes
 - Create mailhelo.conf if it doesnt exist to prevent a error message during grep.
@@ -28,9 +38,10 @@ All notable changes to this project will be documented in this file.
 - Reworked the Let's Encrypt renew functionality to skip removed aliases.
 - Improved reliability of list handling when using IP lists.
 - Enforce minimum password requirements with visual indication of password strength.
+- Fixed an issue where user display name value was incorrectly set when changing packages.
 - Improved installer version detection.
-- Fix MariaDB service detection.
- 
+- Improved detection of MariaDB and MySQL services.
+
 ## [1.2.1] - Service Release
 ### Features
 - Consolidated First and Last Name fields to a singular name field to simply input.

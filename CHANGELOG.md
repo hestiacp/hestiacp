@@ -63,6 +63,7 @@ All notable changes to this project will be documented in this file.
 - Improved German translations (thanks **@ronald-at**)
 - Improved Russian translations (thanks **@Pleskan**)
 
+
 ## [1.2.0] - Major Release (Feature / Quality Update)
 ### Features
 - **NOTE:** Debian 8 is no longer supported as it has reached EOL (end-of-life) status.

@@ -17,8 +17,7 @@
 
 # Argument definition
 user=$1
-domain=$2
-domain_idn=$2
+domain=$(idn -t --quiet -u "$2" )
 ip=$3
 restart=$4      # will be moved to the end soon
 aliases=$5
@@ -127,6 +126,16 @@ else
             ALIAS="www.$domain"
         fi
     else
+        aliases_list=$(echo $aliases | tr "," "\n")
+        aliases=''
+        for alias in $aliases_list
+        do
+            if [ -e $aliases ]; then
+                aliases=$(idn -t --quiet -u "$alias" )
+            else
+                aliases=$aliases,$(idn -t --quiet -u "$alias" )
+            fi
+        done
         ALIAS="$aliases"
     fi
 

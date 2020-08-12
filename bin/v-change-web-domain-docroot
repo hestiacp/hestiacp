@@ -19,11 +19,11 @@
 
 # Argument definition
 user=$1
-domain=$2
+domain=$(idn -t --quiet -u "$2" )
 
 # Export target domain and directory
 # so they are correctly passed through to domain.sh
-export target_domain=$3
+export target_domain=$(idn -t --quiet -u "$3" )
 export target_directory=$4
 
 # Includes
@@ -33,6 +33,7 @@ source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
 format_domain
+format_domain_idn
 
 #----------------------------------------------------------#
 #                    Verifications                         #

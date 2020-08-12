@@ -11,7 +11,7 @@
 #----------------------------------------------------------#
 
 # Argument definition
-domain=$HOSTNAME
+domain=$(idn -t --quiet -u "$HOSTNAME")
 user="$($HESTIA/bin/v-search-domain-owner "$domain" web)"
 [[ -z "$user" ]] && user="admin"
 

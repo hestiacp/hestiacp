@@ -599,7 +599,7 @@ fi
 # Installing MariaDB repo
 if [ "$mysql" = 'yes' ]; then
     echo "[ * ] MariaDB"
-    echo "deb [arch=amd64] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
+    echo "deb [arch=amd64] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/debian $codename main" > $apt/mariadb.list
     apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc' > /dev/null 2>&1
 fi
 

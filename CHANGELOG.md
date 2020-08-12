@@ -63,7 +63,6 @@ All notable changes to this project will be documented in this file.
 - Improved German translations (thanks **@ronald-at**)
 - Improved Russian translations (thanks **@Pleskan**)
 
-
 ## [1.2.0] - Major Release (Feature / Quality Update)
 ### Features
 - **NOTE:** Debian 8 is no longer supported as it has reached EOL (end-of-life) status.
@@ -81,7 +80,6 @@ All notable changes to this project will be documented in this file.
 - Added a manual migration script for apache2 mpm_event for existing installations/upgrades (`$HESTIA/install/upgrade/manual/migrate_mpm_event.sh`).
 - Added BATS system for testing the functionality of Bash scripts (WIP).
 - Added **v-change-sys-db-alias** to change phpMyAdmin and phpPgAdmin access points (`v-change-sys-db-alias pma/pga myCustomURL`).
-
 
 ### Bugfixes
 - Prevent ability to change the password of a non-Hestia user account. Thanks to **Alexandre Zanni**!

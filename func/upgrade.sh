@@ -146,7 +146,6 @@ upgrade_welcome_message() {
     echo ""
     echo "Backup directory: $HESTIA_BACKUP/                                             "
     echo "Installation log: $LOG                                                        "
-    echo
 }
 
 upgrade_welcome_message_log() {

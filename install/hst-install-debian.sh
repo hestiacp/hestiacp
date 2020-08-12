@@ -403,6 +403,7 @@ fi
 #----------------------------------------------------------#
 
 install_welcome_message() {
+    DISPLAY_VER=$(echo $HESTIA_INSTALL_VER | sed "s|~alpha||g" | sed "s|~beta||g")
     echo
     echo '                _   _           _   _        ____ ____                  '
     echo '               | | | | ___  ___| |_(_) __ _ / ___|  _ \                 '
@@ -411,7 +412,15 @@ install_welcome_message() {
     echo '               |_| |_|\___||___/\__|_|\__,_|\____|_|                    '
     echo "                                                                        "
     echo "                          Hestia Control Panel                          "
-    echo "                                  ${HESTIA_INSTALL_VER}                 "
+    if [[ "$HESTIA_INSTALL_VER" =~ "beta" ]]; then
+        echo "                              BETA RELEASE                          "
+    fi
+    if [[ "$HESTIA_INSTALL_VER" =~ "alpha" ]]; then
+        echo "                          DEVELOPMENT SNAPSHOT                      "
+        echo "                    NOT INTENDED FOR PRODUCTION USE                 "
+        echo "                          USE AT YOUR OWN RISK                      "
+    fi
+    echo "                                  ${DISPLAY_VER}                        "
     echo "                            www.hestiacp.com                            "
     echo
     echo "========================================================================"

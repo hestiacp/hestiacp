@@ -889,4 +889,8 @@ $LANG['tr'] = array(
     'Documentation' => 'Documentation',
     'Support' => 'Support',
     'Submit an issue report' => 'Submit an issue report',
+
+    'SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL' => 'Bir güncelleme yüklendiğinde e-posta bildirimi gönder',
+    'SYSTEM_UPGRADE_SAVE_LOG' => 'Güncelleme yükleme günlüğünü kaydet',
+    'SYSTEM_UPGRADE_SEND_EMAIL_LOG' => 'Güncelleme kurulum günlüğünü e-posta ile gönder',
 );

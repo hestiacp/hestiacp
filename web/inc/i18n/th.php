@@ -891,4 +891,8 @@ $LANG['th'] = array(
     'Documentation' => 'Documentation',
     'Support' => 'Support',
     'Submit an issue report' => 'Submit an issue report',
+
+    'SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL' => 'ส่งอีเมลแจ้งเตือนเมื่อมีการติดตั้งการอัปเดต',
+    'SYSTEM_UPGRADE_SAVE_LOG' => 'บันทึกบันทึกการติดตั้งการอัพเดท',
+    'SYSTEM_UPGRADE_SEND_EMAIL_LOG' => 'ส่งบันทึกการติดตั้งการอัปเดตทางอีเมล',
 );

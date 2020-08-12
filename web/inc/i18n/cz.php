@@ -890,4 +890,8 @@ $LANG['cz'] = array(
     'Documentation' => 'Documentation',
     'Support' => 'Support',
     'Submit an issue report' => 'Submit an issue report',
+
+    'SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL' => 'Po instalaci aktualizace odešlete e-mailové upozornění',
+    'SYSTEM_UPGRADE_SAVE_LOG' => 'Uložte instalační protokol aktualizace',
+    'SYSTEM_UPGRADE_SEND_EMAIL_LOG' => 'Pošlete instalační protokol aktualizace e-mailem',
 );

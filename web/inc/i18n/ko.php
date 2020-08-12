@@ -888,4 +888,8 @@ $LANG['ko'] = array(
     'Documentation' => 'Documentation',
     'Support' => 'Support',
     'Submit an issue report' => 'Submit an issue report',
+
+    'SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL' => '업데이트가 설치되면 이메일 알림 보내기',
+    'SYSTEM_UPGRADE_SAVE_LOG' => '업데이트 설치 로그 저장',
+    'SYSTEM_UPGRADE_SEND_EMAIL_LOG' => '이메일로 업데이트 설치 로그 보내기',
 );

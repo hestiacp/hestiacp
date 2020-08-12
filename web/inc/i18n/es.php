@@ -892,4 +892,10 @@ $LANG['es'] = array(
     'Documentation' => 'Documentation',
     'Support' => 'Support',
     'Submit an issue report' => 'Submit an issue report',
+    'traffic' => 'Traffic',
+    'disk' => 'Disk',
+
+    'SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL' => 'Enviar notificación por correo electrónico cuando se haya instalado una actualización',
+    'SYSTEM_UPGRADE_SAVE_LOG' => 'Guardar registro de instalación de actualizaciones',
+    'SYSTEM_UPGRADE_SEND_EMAIL_LOG' => 'Enviar el registro de instalación de actualizaciones por correo electrónico',
 );

@@ -884,4 +884,8 @@ $LANG['pt-BR'] = array(
     'Documentation' => 'Documentation',
     'Support' => 'Support',
     'Submit an issue report' => 'Submit an issue report',
+
+    'SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL' => 'Enviar notificação por email quando uma atualização estiver instalada',
+    'SYSTEM_UPGRADE_SAVE_LOG' => 'Salvar log de instalação da atualização',
+    'SYSTEM_UPGRADE_SEND_EMAIL_LOG' => 'Enviar log de instalação da atualização por email',
 );

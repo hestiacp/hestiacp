@@ -891,4 +891,8 @@ $LANG['hr'] = array(
     'Documentation' => 'Documentation',
     'Support' => 'Support',
     'Submit an issue report' => 'Submit an issue report',
+
+    'SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL' => 'Pošaljite obavijest e-poštom kada je ažuriranje instalirano',
+    'SYSTEM_UPGRADE_SAVE_LOG' => 'Spremi dnevnik instalacije ažuriranja',
+    'SYSTEM_UPGRADE_SEND_EMAIL_LOG' => 'Pošaljite dnevnik instalacije ažuriranja e-poštom',
 );

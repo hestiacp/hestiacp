@@ -130,7 +130,7 @@ else
         aliases=''
         for alias in $aliases_list
         do
-            if [ -e $aliases ]; then
+            if [ -z "$aliases" ]; then
                 aliases=$(idn -t --quiet -u "$alias" )
             else
                 aliases=$aliases,$(idn -t --quiet -u "$alias" )

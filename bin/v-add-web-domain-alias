@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add web domain alias
-# options: USER DOMAIN ALIASES [RESTART]
+# options: USER DOMAIN ALIAS [RESTART]
 #
 # The call is intended for adding aliases to a domain (it is also called
 # "domain parking"). The function supports wildcards *.domain.tpl.
@@ -13,7 +13,7 @@
 # Argument definition
 user=$1
 domain=$(idn -t --quiet -u "$2" )
-aliases=$(idn -t --quiet -u "$3" )
+alias=$(idn -t --quiet -u "$3" )
 restart="$4"
 
 # Includes
@@ -32,12 +32,12 @@ format_aliases
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-if [ -z "$aliases" ]; then
+if [ -z "$alias" ]; then
     check_result $E_INVALID "invalid alias format: empty"
 fi
 
 check_args '3' "$#" 'USER DOMAIN ALIASES [RESTART]'
-is_format_valid 'user' 'domain' 'aliases'
+is_format_valid 'user' 'domain' 'alias'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -60,9 +60,9 @@ get_domain_values 'web'
 # Preparing domain values for the template substitution
 local_ip=$(get_real_ip $IP)
 if [ -z "$ALIAS" ]; then
-    ALIAS="$aliases"
+    ALIAS="$alias"
 else
-    ALIAS="$ALIAS,$aliases"
+    ALIAS="$ALIAS,$alias"
 fi
 prepare_web_domain_values
 

@@ -12,7 +12,7 @@ is_debug_build() {
     fi
 
     # Remove pre-release designation tags from display version
-    DISPLAY_VER=$(echo $new_version | sed "s|-alpha||g" | sed "s|-beta||g")
+    DISPLAY_VER=$(echo $new_version | sed "s|~alpha||g" | sed "s|~beta||g")
 }
 
 upgrade_health_check() {
@@ -483,7 +483,7 @@ upgrade_start_routine() {
     function check_version { echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'; }
 
     # Remove pre-release designation from version number for upgrade scripts
-    VERSION=$(echo $VERSION | sed "s|-alpha||g" | sed "s|-beta||g")
+    VERSION=$(echo $VERSION | sed "s|~alpha||g" | sed "s|~beta||g")
 
     # Get list of all available version steps and create array
     upgrade_steps=$(ls $HESTIA/install/upgrade/versions/*.sh)

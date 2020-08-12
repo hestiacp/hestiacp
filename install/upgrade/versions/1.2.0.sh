@@ -217,13 +217,3 @@ if [ -z "$GZIP_LVL_CHECK" ]; then
     echo "[ * ] Updating backup compression level variable..."
     $BIN/v-change-sys-config-value "BACKUP_GZIP" '9'
 fi
-
-# Update template files to add warnings
-# Backup current templates
-cp -r -f $HESTIA/data/templates/* $HESTIA_BACKUP/templates/
-echo "[ ! ] Updating default web domain templates..."
-$BIN/v-update-web-templates
-echo "[ ! ] Updating default mail domain templates..."
-$BIN/v-update-mail-templates
-echo "[ ! ] Updating default DNS zone templates..."
-$BIN/v-update-dns-templates

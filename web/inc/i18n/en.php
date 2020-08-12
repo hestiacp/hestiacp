@@ -889,4 +889,8 @@ $LANG['en'] = array(
     'Documentation' => 'Documentation',
     'Support' => 'Support',
     'Submit an issue report' => 'Submit an issue report',
+
+    'SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL' => 'Send email notification when an update has been installed',
+    'SYSTEM_UPGRADE_SAVE_LOG' => 'Save update installation log',
+    'SYSTEM_UPGRADE_SEND_EMAIL_LOG' => 'Send update installation log by email',
 );

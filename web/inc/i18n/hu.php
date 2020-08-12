@@ -892,4 +892,8 @@ $LANG['hu'] = array(
     'Documentation' => 'Documentation',
     'Support' => 'Support',
     'Submit an issue report' => 'Submit an issue report',
+
+    'SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL' => 'Küldjön e-mail értesítést, ha telepítve van egy frissítés',
+    'SYSTEM_UPGRADE_SAVE_LOG' => 'Mentse a frissítési telepítési naplót',
+    'SYSTEM_UPGRADE_SEND_EMAIL_LOG' => 'Küldje el a frissítési telepítési naplót e-mailben',
 );

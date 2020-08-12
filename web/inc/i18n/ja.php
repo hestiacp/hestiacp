@@ -888,4 +888,8 @@ $LANG['ja'] = array(
     'Documentation' => 'Documentation',
     'Support' => 'Support',
     'Submit an issue report' => 'Submit an issue report',
+
+    'SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL' => '更新がインストールされたときにメール通知を送信する',
+    'SYSTEM_UPGRADE_SAVE_LOG' => '更新インストールログを保存する',
+    'SYSTEM_UPGRADE_SEND_EMAIL_LOG' => 'メールで更新インストールログを送信する',
 );

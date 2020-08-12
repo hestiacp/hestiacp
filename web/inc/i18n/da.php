@@ -889,4 +889,9 @@ $LANG['da'] = array(
     'Documentation' => 'Documentation',
     'Support' => 'Support',
     'Submit an issue report' => 'Submit an issue report',
+    'disk' => 'Disk',    
+
+    'SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL' => 'Send e-mail-meddelelse, når en opdatering er installeret',
+    'SYSTEM_UPGRADE_SAVE_LOG' => 'Gem opdateringsinstallationslog',
+    'SYSTEM_UPGRADE_SEND_EMAIL_LOG' => 'Send opdateringsinstallationslogg via e-mail',
 );

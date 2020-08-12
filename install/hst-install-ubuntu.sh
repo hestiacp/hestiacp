@@ -23,7 +23,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.2.3-alpha'
+HESTIA_INSTALL_VER='1.3.0~alpha'
 pma_v='5.0.2'
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
 fpm_v="7.3"
@@ -378,6 +378,7 @@ fi
 #----------------------------------------------------------#
 
 install_welcome_message() {
+    DISPLAY_VER=$(echo $HESTIA_INSTALL_VER | sed "s|~alpha||g" | sed "s|~beta||g")
     echo
     echo '                _   _           _   _        ____ ____                  '
     echo '               | | | | ___  ___| |_(_) __ _ / ___|  _ \                 '
@@ -386,7 +387,15 @@ install_welcome_message() {
     echo '               |_| |_|\___||___/\__|_|\__,_|\____|_|                    '
     echo "                                                                        "
     echo "                          Hestia Control Panel                          "
-    echo "                                  ${HESTIA_INSTALL_VER}                 "
+    if [[ "$HESTIA_INSTALL_VER" =~ "beta" ]]; then
+        echo "                              BETA RELEASE                          "
+    fi
+    if [[ "$HESTIA_INSTALL_VER" =~ "alpha" ]]; then
+        echo "                          DEVELOPMENT SNAPSHOT                      "
+        echo "                    NOT INTENDED FOR PRODUCTION USE                 "
+        echo "                          USE AT YOUR OWN RISK                      "
+    fi
+    echo "                                  ${DISPLAY_VER}                        "
     echo "                            www.hestiacp.com                            "
     echo
     echo "========================================================================"

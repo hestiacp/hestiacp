@@ -156,7 +156,7 @@
                             <tr>
                                 <td class="vst-text input-label step-top advanced-options">
                                     <a href="javascript:elementHideShow('version');" class="vst-text">
-                                        <i class="fas fa-code-branch"></i><b><?php print __('Version');?> &amp; <?php print __('Release');?> <img src="/images/arrow.png"></b>
+                                        <i class="fas fa-code-branch"></i><b><?php print __('Updates');?> <img src="/images/arrow.png"></b>
                                     </a>
                                 </td>
                             </tr>
@@ -164,7 +164,7 @@
                                     <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="version">
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Version') ?>
+                                                <?php print __('Version'); ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -175,13 +175,33 @@
                                         </tr>                           
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('Release') ?>
+                                                <?php print __('Release'); ?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <input type="text" size="20" class="vst-input" name="v_release_branch" value="<?php echo $_SESSION['RELEASE_BRANCH']; ?>">
                                                 <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print __('Options'); ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_upgrade_send_notification_email" <?php if ((isset($_SESSION['UPGRADE_SEND_EMAIL'])) && (!empty($_SESSION['UPGRADE_SEND_EMAIL'])) && ($_SESSION['UPGRADE_SEND_EMAIL'] == "true")) echo "checked=yes" ?>><?php print __('SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL');?></label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_upgrade_send_email_log" <?php if ((isset($_SESSION['UPGRADE_SEND_EMAIL_LOG'])) && (!empty($_SESSION['UPGRADE_SEND_EMAIL_LOG'])) && ($_SESSION['UPGRADE_SEND_EMAIL_LOG'] == "true")) echo "checked=yes" ?>><?php print __('SYSTEM_UPGRADE_SEND_EMAIL_LOG');?></label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <br />
                                             </td>
                                         </tr>
                                     </table>

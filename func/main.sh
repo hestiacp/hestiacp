@@ -43,6 +43,25 @@ E_RRD=18
 E_UPDATE=19
 E_RESTART=20
 
+# Detect operating system
+detect_os() {
+    if [ -e "/etc/os-release" ]; then
+        get_os_type=$(grep "^ID=" /etc/os-release | cut -f 2 -d '=')
+        if [ "$get_os_type" = "ubuntu" ]; then
+            if [ -e '/usr/bin/lsb_release' ]; then
+                OS_VERSION="$(lsb_release -s -r)"
+                OS_TYPE='Ubuntu'            
+            fi
+        elif [ "$get_os_type" = "debian" ]; then
+            OS_TYPE='Debian'
+            OS_VERSION=$(cat /etc/debian_version|grep -o "[0-9]\{1,2\}"|head -n1)
+        fi
+    else
+        OS_TYPE="Unsupported OS"
+        OS_VERSION="Unknown"
+    fi
+}
+
 # Generate time stamp
 new_timestamp() {
     time_n_date=$(date +'%T %F')

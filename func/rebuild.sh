@@ -17,10 +17,20 @@ rebuild_user_conf() {
     # Update FNAME LNAME to NAME
     if [ -z "$NAME" ]; then 
         NAME="$FNAME $LNAME"
+        if [ -z $FNAME ]; then NAME=""; fi
+        
         sed -i "s/FNAME='$FNAME'/NAME='$NAME'/g" $USER_DATA/user.conf
         sed -i "/LNAME='$LNAME'/d" $USER_DATA/user.conf  
     fi
-
+    if [ -z "${TWOFA+x}" ]; then 
+        sed -i "/RKEY/a TWOFA=''" $USER_DATA/user.conf 
+    fi
+    if [ -z "${QRCODE+x}" ]; then
+        sed -i "/TWOFA/a QRCODE=''" $USER_DATA/user.conf 
+    fi
+    if [ -z "${PHPCLI+x}" ]; then 
+        sed -i "/QRCODE/a PHPCLI=''" $USER_DATA/user.conf 
+    fi
     # Run template trigger
     if [ -x "$HESTIA/data/packages/$PACKAGE.sh" ]; then
         $HESTIA/data/packages/$PACKAGE.sh "$user" "$CONTACT" "$NAME"

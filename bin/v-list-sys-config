@@ -12,6 +12,7 @@
 # Argument definition
 format=${1-shell}
 
+source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
 
 # JSON list function
@@ -45,6 +46,8 @@ json_list() {
         "REPOSITORY": "'$REPOSITORY'",
         "VERSION": "'$VERSION'",
         "RELEASE_BRANCH": "'$RELEASE_BRANCH'",
+        "UPGRADE_SEND_EMAIL": "'$UPGRADE_SEND_EMAIL'",
+        "UPGRADE_SEND_EMAIL_LOG": "'$UPGRADE_SEND_EMAIL_LOG'",
         "DEMO_MODE": "'$DEMO_MODE'",
         "THEME": "'$THEME'",
         "LANGUAGE": "'$LANGUAGE'",
@@ -61,24 +64,24 @@ json_list() {
 # Shell list
 shell_list() {
     if [ ! -z "$WEB_SYSTEM" ]; then
-        echo "WEB Server:       $WEB_SYSTEM:$WEB_PORT ($WEB_RGROUPS)"
-        echo "SSL Support:      $WEB_SSL:$WEB_SSL_PORT"
+        echo "Web Server:                       $WEB_SYSTEM:$WEB_PORT ($WEB_RGROUPS)"
+        echo "SSL Support:                      $WEB_SSL:$WEB_SSL_PORT"
     fi
     if [ ! -z "$WEB_BACKEND" ]; then
-        echo "WEB Backend:      $WEB_BACKEND"
+        echo "Web Backend:                      $WEB_BACKEND"
     fi
     if [ ! -z "$PROXY_SYSTEM" ]; then
-        echo "Proxy Server:     $PROXY_SYSTEM:$PROXY_PORT"
-        echo "Proxy SSL:        $PROXY_SYSTEM:$PROXY_SSL_PORT"
+        echo "Proxy Server:                     $PROXY_SYSTEM:$PROXY_PORT"
+        echo "Proxy SSL:                        $PROXY_SYSTEM:$PROXY_SSL_PORT"
     fi
     if [ ! -z "$STATS_SYSTEM" ]; then
-        echo "Web Stats:        ${STATS_SYSTEM//,/, }"
+        echo "Statistics Engine:                ${STATS_SYSTEM//,/, }"
     fi
     if [ ! -z "$FTP_SYSTEM" ]; then
-        echo "FTP Server:       $FTP_SYSTEM"
+        echo "FTP Server:                       $FTP_SYSTEM"
     fi
     if [ ! -z "$MAIL_SYSTEM" ]; then
-        echo -n "Mail Server:      $MAIL_SYSTEM"
+        echo -n "Mail Server:                      $MAIL_SYSTEM"
         if [ ! -z "$IMAP_SYSTEM" ]; then
             echo -n " + $IMAP_SYSTEM"
         fi
@@ -90,56 +93,56 @@ shell_list() {
         fi
         echo
         if [ ! -z "$WEBMAIL_ALIAS" ]; then
-            echo "Webmail alias:    $WEBMAIL_ALIAS"
+            echo "Webmail alias:                    $WEBMAIL_ALIAS"
         fi
     fi
     if [ ! -z "$DB_SYSTEM" ]; then
-        echo "Database:         ${DB_SYSTEM//,/, }"
+        echo "Database:                         ${DB_SYSTEM//,/, }"
         if [ ! -z "$DB_PMA_ALIAS" ]; then
-            echo "PMA ALIAS:          $DB_PMA_ALIAS"
+            echo "phpMyAdmin Alias:                 $DB_PMA_ALIAS"
         fi
         if [ ! -z "$DB_PGA_ALIAS" ]; then
-            echo "PGA ALIAS:          $DB_PGA_ALIAS"
+            echo "phpPgAdmin Alias:                 $DB_PGA_ALIAS"
         fi
     fi
     if [ ! -z "$DNS_SYSTEM" ]; then
-        echo -n "DNS server:       $DNS_SYSTEM"
+        echo -n "DNS Server:                       $DNS_SYSTEM"
         if [ ! -z "$DNS_CLUSTER" ]; then
             echo -n " (cluster)"
         fi
         echo
     fi
     if [ ! -z "$CRON_SYSTEM" ]; then
-        echo "CRON:             $CRON_SYSTEM"
+        echo "CRON daemon:                      $CRON_SYSTEM"
     fi
     if [ ! -z "$FIREWALL_SYSTEM" ]; then
-        echo -n "Firewall:         $FIREWALL_SYSTEM"
+        echo -n "Firewall:                         $FIREWALL_SYSTEM"
         if [ ! -z "$FIREWALL_EXTENSION" ]; then
             echo -n "+ $FIREWALL_EXTENSION"
         fi
         echo
     fi
     if [ ! -z "$BACKUP_SYSTEM" ]; then
-        echo "Backups:          ${BACKUP_SYSTEM//,/, }"
-        if [ ! -z "$BACKUP" ]; then
-            echo "Backup Dir:         $BACKUP"
-        fi
+        echo "Backups:                          ${BACKUP_SYSTEM//,/, }"
+        echo "Backup Directory:                 $BACKUP"
     fi
     if [ ! -z "$DISK_QUOTA" ]; then
-        echo "Disk Quota:       $DISK_QUOTA"
+        echo "Disk Quota enabled:               $DISK_QUOTA"
     fi
     if [ ! -z "$LANGUAGE" ] && [ "$LANGUAGE" != 'en' ]; then
-        echo "Language:         $LANGUAGE"
+        echo "System Language:                  $LANGUAGE"
     fi
-    echo "Version:          $VERSION"
+    echo "Version:                          $VERSION"
     if [ ! -z "$DEMO_MODE" ]; then
-        echo "Demo Mode:        $DEMO_MODE"
+        echo "Demo Mode:                        $DEMO_MODE"
     fi
     if [ ! -z "$FILE_MANAGER" ]; then
-        echo "File Manager:        $FILE_MANAGER"
+        echo "File Manager enabled:             $FILE_MANAGER"
     fi
-    echo "Release Branch:   $RELEASE_BRANCH"
-    echo "Theme:            $THEME"
+    echo "Release Branch:                   $RELEASE_BRANCH"
+    echo "Theme:                            $THEME"
+    echo "Updates: Notify by email:         $UPGRADE_SEND_EMAIL"
+    echo "Updates: Email install log:       $UPGRADE_SEND_EMAIL_LOG"
 }
 
 # PLAIN list function
@@ -150,8 +153,9 @@ plain_list() {
     echo -ne "$ANTIVIRUS_SYSTEM\t$ANTISPAM_SYSTEM\t$DB_SYSTEM\t"
     echo -ne "$DNS_SYSTEM\t$DNS_CLUSTER\t$STATS_SYSTEM\t$BACKUP_SYSTEM\t"
     echo -ne "$CRON_SYSTEM\t$DISK_QUOTA\t$FIREWALL_SYSTEM\t$FIREWALL_EXTENSION\t"
-    echo -ne "$FILE_MANAGER\t$REPOSITORY\t$VERSION\t$DEMO_MODE\t$RELEASE_BRANCH\t$THEME\t"
-    echo -e "$LANGUAGE\t$BACKUP_GZIP\t$BACKUP\t$WEBMAIL_ALIAS\t$DB_PMA_URL\t$DB_PGA_URL"
+    echo -ne "$FILE_MANAGER\t$REPOSITORY\t$VERSION\t$DEMO_MODE\t$RELEASE_BRANCH\t"
+    echo -ne "$UPGRADE_SEND_EMAIL\t$UPGRADE_SEND_EMAIL_LOG\t$THEME\t$LANGUAGE\t$BACKUP_GZIP\t"
+    echo -e  "$BACKUP\t$WEBMAIL_ALIAS\t$DB_PMA_URL\t$DB_PGA_URL"
 }
 
 
@@ -164,7 +168,9 @@ csv_list() {
     echo -n "'DNS_SYSTEM','DNS_CLUSTER','STATS_SYSTEM','BACKUP_SYSTEM',"
     echo -n "'CRON_SYSTEM','DISK_QUOTA','FIREWALL_SYSTEM',"
     echo -n "'FIREWALL_EXTENSION','FILE_MANAGER','REPOSITORY',"
-    echo -n "'VERSION','LANGUAGE','BACKUP_GZIP','BACKUP','WEBMAIL_ALIAS',"
+    echo -n "'VERSION','DEMO_MODE','RELEASE_BRANCH',"
+    echo -n "'UPGRADE_SEND_EMAIL','UPGRADE_SEND_EMAIL_LOG',"
+    echo -n "'THEME', 'LANGUAGE','BACKUP_GZIP','BACKUP','WEBMAIL_ALIAS',"
     echo -n "'DB_PMA_ALIAS','DB_PGA_ALIAS'"
     echo
     echo -n "'$WEB_SYSTEM','$WEB_RGROUPS','$WEB_PORT','$WEB_SSL',"
@@ -173,7 +179,8 @@ csv_list() {
     echo -n "'$ANTIVIRUS_SYSTEM','$ANTISPAM_SYSTEM','$DB_SYSTEM','$DNS_SYSTEM',"
     echo -n "'$DNS_CLUSTER','$STATS_SYSTEM','$BACKUP_SYSTEM','$CRON_SYSTEM',"
     echo -n "'$DISK_QUOTA','$FIREWALL_SYSTEM','$FIREWALL_EXTENSION','$FILE_MANAGER',"
-    echo -n "'$REPOSITORY', '$VERSION','$DEMO_MODE','$RELEASE_BRANCH','$THEME','$LANGUAGE',"
+    echo -n "'$REPOSITORY', '$VERSION','$DEMO_MODE','$RELEASE_BRANCH',"
+    echo -n "'$UPGRADE_SEND_EMAIL','$UPGRADE_SEND_EMAIL_LOG','$THEME','$LANGUAGE',"
     echo -n "'$BACKUP_GZIP','$BACKUP','$WEBMAIL_ALIAS','$DB_PMA_URL','$DB_PGA_URL'"
     echo
 }

@@ -898,8 +898,15 @@ $LANG['cn'] = array(
     'Notifications' => '通知事项',
     
     // Help
-    'Help' => '救命',
-    'Documentation' => '文献资料',
-    'Support' => '支持',
-    'Submit an issue report' => '提交问题报告',
+    'Help' => 'Help',
+    'Documentation' => 'Documentation',
+    'Support' => 'Support',
+    'Submit an issue report' => 'Submit an issue report',
+    'backend server' =>  'Backend Server',
+    'traffic' => 'Traffic',
+    'disk' => 'Disk',
+
+    'SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL' => '安装更新后发送电子邮件通知',
+    'SYSTEM_UPGRADE_SAVE_LOG' => '保存更新安装日志',
+    'SYSTEM_UPGRADE_SEND_EMAIL_LOG' => '通过电子邮件发送更新安装日志',
 );

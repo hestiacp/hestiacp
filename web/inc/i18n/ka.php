@@ -886,4 +886,8 @@ $LANG['ka'] = array(
     'Documentation' => 'Documentation',
     'Support' => 'Support',
     'Submit an issue report' => 'Submit an issue report',
+
+    'SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL' => 'ელ.ფოსტის გაგზავნის გაგზავნა გაგზავნისთანავე',
+    'SYSTEM_UPGRADE_SAVE_LOG' => 'შეინახეთ განახლების ინსტალაციის ჟურნალი',
+    'SYSTEM_UPGRADE_SEND_EMAIL_LOG' => 'გაგზავნის განახლების ინსტალაციის ჟურნალი ელ.ფოსტით',
 );

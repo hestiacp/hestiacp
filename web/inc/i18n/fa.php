@@ -858,4 +858,9 @@ $LANG['fa'] = array(
     'Documentation' => 'Documentation',
     'Support' => 'Support',
     'Submit an issue report' => 'Submit an issue report',
+    'disk' => 'Disk',    
+
+    'SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL' => 'اعلان ایمیل را هنگام نصب به روزرسانی ارسال کنید',
+    'SYSTEM_UPGRADE_SAVE_LOG' => 'ذخیره سیاهههای مربوط به نصب',
+    'SYSTEM_UPGRADE_SEND_EMAIL_LOG' => 'گزارش های نصب را از طریق ایمیل ارسال کنید',
 );

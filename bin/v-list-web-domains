@@ -24,9 +24,16 @@ json_list() {
     echo "{"
     while read str; do
         parse_object_kv_list "$str"
+        # Set correct document root path
+        if [ ! -z "$CUSTOM_DOCROOT" ]; then
+            DOCROOT="$CUSTOM_DOCROOT"
+        else
+            DOCROOT="$HOMEDIR/$user/web/$DOMAIN/public_html/"
+        fi
         echo -n '    "'$DOMAIN'": {
         "IP": "'$IP'",
         "IP6": "'$IP6'",
+        "DOCUMENT_ROOT": "'$DOCROOT'",
         "U_DISK": "'$U_DISK'",
         "U_BANDWIDTH": "'$U_BANDWIDTH'",
         "TPL": "'$TPL'",
@@ -72,7 +79,13 @@ plain_list() {
     IFS=$'\n'
     while read str; do
         parse_object_kv_list "$str"
-        echo -ne "$DOMAIN\t$IP\t$IP6\t$U_DISK\t$U_BANDWIDTH\t$TPL\t"
+        # Set correct document root path
+        if [ ! -z "$CUSTOM_DOCROOT" ]; then
+            DOCROOT="$CUSTOM_DOCROOT"
+        else
+            DOCROOT="$HOMEDIR/$user/web/$DOMAIN/public_html/"
+        fi
+        echo -ne "$DOMAIN\t$IP\t$IP6\t$DOCROOT\t$U_DISK\t$U_BANDWIDTH\t$TPL\t"
         echo -ne "$ALIAS\t$STATS\t$STATS_USER\t$SSL\t$SSL_HOME\t$LETSENCRYPT\t"
         echo -ne "$FTP_USER\t$FTP_PATH\t$AUTH_USER\t$BACKEND\t$PROXY\t"
         echo -e "$PROXY_EXT\t$SUSPENDED\t$TIME\t$DATE"
@@ -82,12 +95,18 @@ plain_list() {
 # CSV list function
 csv_list() {
     IFS=$'\n'
-    echo -n "DOMAIN,IP,IP6,U_DISK,U_BANDWIDTH,TPL,ALIAS,STATS,STATS_USER,"
+    echo -n "DOMAIN,IP,IP6,DOCROOT,U_DISK,U_BANDWIDTH,TPL,ALIAS,STATS,STATS_USER,"
     echo -n "SSL,SSL_HOME,LETSENCRYPT,FTP_USER,FTP_PATH,AUTH_USER,BACKEND,PROXY,"
     echo "PROXY_EXT,SUSPENDED,TIME,DATE"
     while read str; do
         parse_object_kv_list "$str"
-        echo -n "$DOMAIN,$IP,$IP6,$U_DISK,$U_BANDWIDTH,$TPL,"
+        # Set correct document root path
+        if [ ! -z "$CUSTOM_DOCROOT" ]; then
+            DOCROOT="$CUSTOM_DOCROOT"
+        else
+            DOCROOT="$HOMEDIR/$user/web/$DOMAIN/public_html/"
+        fi
+        echo -n "$DOMAIN,$IP,$IP6,$DOCROOT,$U_DISK,$U_BANDWIDTH,$TPL,"
         echo -n "\"$ALIAS\",$STATS,\"$STATS_USER\",$SSL,$SSL_HOME,$LETSENCRYPT,"
         echo -n "\"$FTP_USER\",\"$FTP_PATH\",\"$AUTH_USER\",$BACKEND,$PROXY,"
         echo "\"$PROXY_EXT\",$SUSPENDED,$TIME,$DATE"
@@ -113,8 +132,10 @@ case $format in
     json)   json_list ;;
     plain)  plain_list ;;
     csv)    csv_list ;;
-    shell)  shell_list |column -t ;;
+    shell)  shell_list ;;
 esac
+
+unset docroot
 
 
 #----------------------------------------------------------#

@@ -81,8 +81,8 @@ build_awstats() {
     fi
 
     # Logo check
-    if [ ! -e "$dir/logo.png" ]; then
-        cp -r $HESTIA/web/images/logo.png $dir/
+    if [ ! -e "$dir/logo.svg" ]; then
+        cp -r $HESTIA/web/images/logo.svg $dir/
     fi
 
     # Icon directory check

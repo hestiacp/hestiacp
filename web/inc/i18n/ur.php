@@ -868,4 +868,8 @@ $LANG['ur'] = array(
     'Documentation' => 'Documentation',
     'Support' => 'Support',
     'Submit an issue report' => 'Submit an issue report',
+
+    'SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL' => 'جب اپ ڈیٹ انسٹال ہوجائے تو ای میل کی اطلاع بھیجیں',
+    'SYSTEM_UPGRADE_SAVE_LOG' => 'اپ ڈیٹ انسٹالیشن لاگ محفوظ کریں',
+    'SYSTEM_UPGRADE_SEND_EMAIL_LOG' => 'ای میل کے ذریعہ اپ ڈیٹ انسٹالیشن لاگ ارسال کریں',
 );

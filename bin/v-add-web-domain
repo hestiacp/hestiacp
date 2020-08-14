@@ -109,7 +109,7 @@ if [ ! -z "$WEB_BACKEND" ]; then
         fi
     fi
     BACKEND="$BACKEND_TEMPLATE"
-    $BIN/v-add-web-domain-backend "$user" "$domain" $BACKEND_TEMPLATE
+    $BIN/v-add-web-domain-backend "$user" "$domain" $BACKEND_TEMPLATE $restart
     check_result $? "Backend error" >/dev/null
 fi
 

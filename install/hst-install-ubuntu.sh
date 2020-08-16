@@ -1449,7 +1449,7 @@ if [ "$postgresql" = 'yes' ]; then
     fi
     cp -f $HESTIA_INSTALL_DIR/pga/config.inc.php /etc/phppgadmin/
 
-    echo "DB_PMA_ALIAS='phppgadmin'" >> $HESTIA/conf/hestia.conf
+    echo "DB_PGA_ALIAS='phppgadmin'" >> $HESTIA/conf/hestia.conf
     $HESTIA/bin/v-change-sys-db-alias 'pga' "phppgadmin"
 fi
 

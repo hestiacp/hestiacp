@@ -47,7 +47,7 @@ if [[ "$TYPE" =~ "sftp" ]]; then
     sftp_delete "$backup"
 fi
 if [[ "$TYPE" =~ "ftp" ]] && [ "$deleted" == "0" ]; then
-    fto_delete "backup"
+    ftp_delete "backup"
 fi
 if [[ "$TYPE" =~ "local" ]]; then
     rm -f $BACKUP/$2

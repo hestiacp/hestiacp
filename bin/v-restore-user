@@ -527,7 +527,11 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
             if [ -e "$USER_DATA/ssl/mail.$domain.ca" ]; then
                 cp -f $USER_DATA/ssl/mail.$domain.ca $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.ca
             fi
-
+            
+            if [ ! -d  /etc/dovecot/conf.d/domains ]; then
+                mkdir /etc/dovecot/conf.d/domains
+            fi
+            
             # Add domain SSL configuration to dovecot
             if [ -f /etc/dovecot/conf.d/domains/$domain.conf ]; then
                 rm -f /etc/dovecot/conf.d/domains/$domain.conf
@@ -538,6 +542,10 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
             echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
             echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
             echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+            
+            if [ ! -d /usr/local/hestia/ssl/mail ]; then
+                mkdir /usr/local/hestia/ssl/mail
+            fi
 
             # Add domain SSL configuration to exim4
             # Cleanup broken symlinks

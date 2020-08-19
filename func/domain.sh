@@ -696,6 +696,65 @@ add_mail_ssl_config() {
     chown -h $user:mail /usr/local/hestia/ssl/mail/*
 }
 
+# Copy the domain ssl to be used as mail ssl
+copy_domain_ssl_to_mail() {
+        # Ensure that SSL certificate directories exists
+        if [ ! -d $HOMEDIR/$user/conf/mail/$domain/ssl/ ]; then
+                mkdir -p $HOMEDIR/$user/conf/mail/$domain/ssl/
+        fi
+
+        if [ ! -d /usr/local/hestia/ssl/mail ]; then
+                mkdir -p /usr/local/hestia/ssl/mail
+        fi
+
+        if [ ! -d /etc/dovecot/conf.d/domains ]; then
+                mkdir -p /etc/dovecot/conf.d/domains
+        fi
+
+        # copy original certificate from Hestia user configuration data directory to it
+        # ignore the $ssl_dir var since wont be used here...
+        if [ -f $USER_DATA/ssl/$domain.crt ]; then
+                cp -f $USER_DATA/ssl/$domain.crt $USER_DATA/ssl/mail.$domain.crt
+                cp -f $USER_DATA/ssl/$domain.key $USER_DATA/ssl/mail.$domain.key
+                cp -f $USER_DATA/ssl/$domain.pem $USER_DATA/ssl/mail.$domain.pem
+                if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
+                        cp -f $USER_DATA/ssl/$domain.ca $USER_DATA/ssl/mail.$domain.ca
+                fi
+        fi
+        chmod 660 $USER_DATA/ssl/mail.$domain.*
+
+        # Add certificate to user home directory
+        cp -f $USER_DATA/ssl/mail.$domain.crt $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt
+        cp -f $USER_DATA/ssl/mail.$domain.key $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key
+        cp -f $USER_DATA/ssl/mail.$domain.pem $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem
+        if [ -e "$USER_DATA/ssl/mail.$domain.ca" ]; then
+                cp -f $USER_DATA/ssl/mail.$domain.ca $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.ca
+        fi
+
+        # Add domain SSL configuration to dovecot
+        if [ -f /etc/dovecot/conf.d/domains/$domain.conf ]; then
+                rm -f /etc/dovecot/conf.d/domains/$domain.conf
+        fi
+
+        echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
+        echo "local_name mail.$domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
+        echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
+        echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
+        echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+
+        # Add domain SSL configuration to exim4
+        ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem /usr/local/hestia/ssl/mail/mail.$domain.crt
+        ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key /usr/local/hestia/ssl/mail/mail.$domain.key
+
+        # Set correct permissions on certificates
+        chmod 750 $HOMEDIR/$user/conf/mail/$domain/ssl
+        chown -R $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain/ssl
+        chmod 0644 $HOMEDIR/$user/conf/mail/$domain/ssl/*
+        chown -h $user:mail $HOMEDIR/$user/conf/mail/$domain/ssl/*
+        chmod -R 0644 /usr/local/hestia/ssl/mail/*
+        chown -h $user:mail /usr/local/hestia/ssl/mail/*
+}
+
 # Delete SSL support for mail domain
 del_mail_ssl_config() {
     

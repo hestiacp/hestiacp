@@ -24,7 +24,7 @@ if ! apache2ctl configtest > /dev/null 2>&1; then
     echo "Apache2 configtest failed" && exit 1
 fi
 
-a2modules="php5.6 php7.0 php7.1 php7.2 php7.3 php7.4 mpm_prefork mpm_itk ruid2"
+a2modules="php5.6 php7.0 php7.1 php7.2 php7.3 php7.4 ruid2 mpm_itk mpm_prefork"
 changed_a2modules=""
 
 for module in $a2modules; do
@@ -39,6 +39,7 @@ cp -f /usr/local/hestia/install/deb/apache2/hestia-event.conf /etc/apache2/conf.
 # Check if all went well
 if ! apache2ctl configtest >/dev/null 2>&1; then
     echo "Something went wrong, rolling back. Please try to migrate manually to mpm_event."
+    a2dismod -q mpm_event
     for module in $changed_a2modules; do
         a2enmod "$module"
     done

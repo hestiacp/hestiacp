@@ -11,10 +11,12 @@
 
 # Argument definition
 user=$1
-backup=$(echo $2| cut -f 2 -d \.)
+backup=$2
 
 # Includes
 source $HESTIA/func/main.sh
+source $HESTIA/func/backup.sh
+
 source $HESTIA/conf/hestia.conf
 
 
@@ -37,8 +39,21 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
+line=$(grep "BACKUP='$backup'" $USER_DATA/backup.conf)
+parse_object_kv_list "$line"
+
+
+if [[ "$TYPE" =~ "sftp" ]]; then
+    sftp_delete "$backup"
+fi
+if [[ "$TYPE" =~ "ftp" ]] && [ "$deleted" == "0" ]; then
+    ftp_delete "backup"
+fi
+if [[ "$TYPE" =~ "local" ]]; then
+    rm -f $BACKUP/$2
+fi
+
 # Deleting backup
-rm -f $BACKUP/$2
 sed -i "/BACKUP='$2' /d" $USER_DATA/backup.conf
 
 

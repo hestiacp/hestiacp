@@ -50,7 +50,23 @@ if (!empty($_POST['save'])) {
         header('location: /login/');
         exit();
     }
-
+    
+    if (empty($_SESSION['error_msg'])) {
+        if($_POST['v_type'] == 'mysql'){  
+            if (strlen($user.'_'.$_POST['v_dbuser']) > 32){
+                $_SESSION['error_msg'] = __('Maximum length of database is %s characters', 32);
+            }else if (!preg_match('/^[0-9a-zA-Z_]{1,32}$/',$user.'_'.$_POST['v_dbuser'])){
+                $_SESSION['error_msg'] = __('Username may only contain lowercase/uppercase letters, numbers or a _');
+            } 
+        }else{
+            if (strlen($user.'_'.$_POST['v_dbuser']) > 63){
+                $_SESSION['error_msg'] = __('Maximum length of database is %s characters', 63);
+            }else if (!preg_match('/^[0-9a-z_]{1,63}$/',$user.'_'.$_POST['v_dbuser'])){
+                $_SESSION['error_msg'] = __('Username may only contain lowercase letters, numbers or a _');
+            }  
+        }         
+    }  
+    
     // Change database user
     if (($v_dbuser != $_POST['v_dbuser']) && (empty($_SESSION['error_msg']))) {
         $v_dbuser = preg_replace("/^".$user."_/", "", $_POST['v_dbuser']);

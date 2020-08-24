@@ -724,14 +724,14 @@ is_common_format_valid() {
 
 # Database format validator
 is_database_format_valid() {
-    if [ "$3" == "mysql" ]; then
-        if ! [[ "$1" =~ ^[0-9a-zA-Z_]{1,64}$ ]]; then
-            check_result $E_INVALID "invalid $2 format :: $1"
-        fi
-    else
+    if [ "$3" == "pgsql" ]; then
         if ! [[ "$1" =~ ^[0-9a-z_]{1,63}$ ]]; then
             check_result $E_INVALID "invalid $2 format :: $1"
-        fi    
+        fi  
+    else
+        if ! [[ "$1" =~ ^[0-9a-zA-Z_]{1,64}$ ]]; then
+            check_result $E_INVALID "invalid $2 format :: $1"
+        fi  
     fi
 }
 
@@ -744,17 +744,17 @@ is_date_format_valid() {
 
 # Database user validator
 is_dbuser_format_valid() {
-    if [ "$3" == "mysql" ]; then
+    if [ "$3" == "pgsql" ]; then
+        if ! [[ "$1" =~ ^[0-9a-z_]{1,63}$ ]]; then
+            check_result $E_INVALID "invalid $2 format :: $1"
+        fi 
+    else
         if [ 33 -le ${#1} ]; then
             check_result $E_INVALID "mysql username can be up to 32 characters long"
         fi
         if ! [[ "$1" =~ ^[0-9a-zA-Z_]{1,64}$ ]]; then
             check_result $E_INVALID "invalid $2 format :: $1"
-        fi
-    else
-        if ! [[ "$1" =~ ^[0-9a-z_]{1,63}$ ]]; then
-            check_result $E_INVALID "invalid $2 format :: $1"
-        fi    
+        fi           
     fi
 }
 

@@ -135,8 +135,12 @@
             </table>
         </form>
     </div>
-
+    <?php if ($v_type == 'pgsql'){
+        $user=strtolower($user);
+    }
+    ?>
     <script>
         GLOBAL.DB_USER_PREFIX = <?=json_encode($user.'_')?>;
         GLOBAL.DB_DBNAME_PREFIX = <?=json_encode($user.'_')?>;
     </script>
+

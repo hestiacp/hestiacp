@@ -38,39 +38,6 @@ if (!empty($_POST['ok'])) {
         if (!filter_var($_POST['v_db_email'], FILTER_VALIDATE_EMAIL)) {
             $_SESSION['error_msg'] = __('Please enter valid email address.');
         }
-    }
-
-    if (empty($_SESSION['error_msg'])) {
-        if($_POST['v_type'] == 'mysql'){  
-            if (strlen($user.'_'.$_POST['v_database']) > 64){
-                $_SESSION['error_msg'] = __('Maximum length of database is %s characters', 64);
-            }else if (!preg_match('/^[0-9a-zA-Z_]{1,64}$/',$user.'_'.$_POST['v_database'])){
-                $_SESSION['error_msg'] = __('Database name may only contain lowercase/uppercase letters, numbers or a _');
-            } 
-        }else{
-            if (strlen($user.'_'.$_POST['v_database']) > 63){
-                $_SESSION['error_msg'] = __('Maximum length of database is %s characters', 63);
-            }else if (!preg_match('/^[0-9a-z_]{1,63}$/',$user.'_'.$_POST['v_database'])){
-                var_dump(preg_match('/^[0-9a-z_]{1,63}$/',$user.'_'.$_POST['v_database']));
-                $_SESSION['error_msg'] = __('Database name may only contain lowercase letters, numbers or a _');
-            }           
-        }
-    }
-
-    if (empty($_SESSION['error_msg'])) {
-        if($_POST['v_type'] == 'mysql'){  
-            if (strlen($user.'_'.$_POST['v_dbuser']) > 32){
-                $_SESSION['error_msg'] = __('Maximum length of database is %s characters', 32);
-            }else if (!preg_match('/^[0-9a-zA-Z_]{1,32}$/',$user.'_'.$_POST['v_dbuser'])){
-                $_SESSION['error_msg'] = __('Username may only contain lowercase/uppercase letters, numbers or a _');
-            } 
-        }else{
-            if (strlen($user.'_'.$_POST['v_dbuser']) > 63){
-                $_SESSION['error_msg'] = __('Maximum length of database is %s characters', 63);
-            }else if (!preg_match('/^[0-9a-z_]{1,63}$/',$user.'_'.$_POST['v_dbuser'])){
-                $_SESSION['error_msg'] = __('Username may only contain lowercase letters, numbers or a _');
-            }  
-        }         
     }   
 
     // Check password length

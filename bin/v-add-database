@@ -30,6 +30,11 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/db.sh
 source $HESTIA/conf/hestia.conf
 
+if [ "$type" = "pgsql" ]; then
+   database=$(echo "$user"_"$2" | tr '[:upper:]' '[:lower:]');
+   dbuser=$(echo "$user"_"$3" | tr '[:upper:]' '[:lower:]'); 
+fi
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#

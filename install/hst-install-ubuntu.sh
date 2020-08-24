@@ -1553,6 +1553,17 @@ if [ "$exim" = 'yes' ]; then
     update-rc.d -f postfix remove > /dev/null 2>&1
     systemctl stop postfix > /dev/null 2>&1
 
+    if [ -f /etc/aliases ]; then
+        sed -ie "s/^root:*/#root:/" /etc/aliases;
+        if [ "$(tail -c 1 /etc/aliases)" == "" ]; then
+            echo "root: $email" >> /etc/aliases;
+        else
+            { echo "" ; echo "root: $email" ; } >> /etc/aliases;
+        fi
+    else
+        { echo "# /etc/aliases" ; echo "root: $email" ; } >> /etc/aliases;
+    fi
+
     update-rc.d exim4 defaults
     systemctl start exim4 >> $LOG
     check_result $? "exim4 start failed"

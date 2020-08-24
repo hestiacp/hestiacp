@@ -13,7 +13,7 @@ add_environment = <; PATH=/bin:/usr/bin
 keep_environment =
 disable_ipv6 = true
 
-domainlist local_domains = dsearch;/etc/exim4/domains/
+domainlist local_domains = @ : localhost : $primary_hostname : dsearch;/etc/exim4/domains/
 domainlist relay_to_domains = dsearch;/etc/exim4/domains/
 hostlist relay_from_hosts = 127.0.0.1
 hostlist whitelist = net-iplsearch;/etc/exim4/white-blocks.conf
@@ -252,6 +252,15 @@ dnslookup:
   transport = remote_smtp
   no_more
 
+system_aliases:
+  driver = redirect
+  domains = $primary_hostname
+  allow_fail
+  allow_defer
+  data = ${lookup{$local_part}lsearch{/etc/aliases}}
+  file_transport = address_file
+  pipe_transport = address_pipe
+
 userforward:
   driver = redirect
   check_local_user
@@ -263,6 +272,12 @@ userforward:
   file_transport = address_file
   pipe_transport = address_pipe
   reply_transport = address_reply
+
+system_user:
+  driver = accept
+  domains = $primary_hostname
+  check_local_user
+  transport = system_user_delivery
 
 procmail:
   driver = accept
@@ -322,6 +337,15 @@ terminate_alias:
 #                      TRANSPORTS CONFIGURATION                      #
 ######################################################################
 begin transports
+
+system_user_delivery:
+  driver = appendfile
+  file = /var/mail/$local_part
+  delivery_date_add
+  envelope_to_add
+  return_path_add
+  group = mail
+  mode = 0660
 
 remote_smtp:
   driver = smtp

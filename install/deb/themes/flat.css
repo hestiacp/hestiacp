@@ -1,4 +1,8 @@
-/* Flat theme */
+/*  
+    Theme Name:  Flat
+    Author:      Robert Zollner (@Lupul)
+    Website:     www.hestiacp.com 
+*/
 
 body {
     letter-spacing: 0;
@@ -76,6 +80,7 @@ b, strong {
 .l-unit:hover, .units .l-unit:hover {
     box-shadow: none;
 }
+
 .vst-input {
     box-shadow: none;
 }

@@ -1,0 +1,119 @@
+#!/bin/bash
+# info: add file manager functionality to Hestia Control Panel
+# options: none
+#
+# The function installs the File Manager on the server
+# for access through the Web interface.
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+MODE=$1
+user="admin"
+
+FM_INSTALL_DIR="$HESTIA/web/fm"
+FM_V="7.4.1"
+FM_FILE="filegator_v${FM_V}.zip"
+FM_URL="https://github.com/filegator/filegator/releases/download/v${FM_V}/${FM_FILE}"
+COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking root permissions
+if [ "x$(id -u)" != 'x0' ]; then
+    echo "ERROR: v-add-sys-filemanager can be run executed only by root user"
+    exit 10
+fi
+
+# Ensure that $HESTIA (/usr/local/hestia/) and other variables are valid.
+if [ -z "$HESTIA" ]; then
+    HESTIA="/usr/local/hestia"
+fi
+
+if [ -z "$HOMEDIR" ] || [ -z "$HESTIA_INSTALL_DIR" ]; then
+    echo "ERROR: Environment variables not present, installation aborted."
+    exit 2
+fi
+
+# Ensure that Composer is installed for the user before continuing as it is a dependency of the File Manager.
+if [ ! -f "$COMPOSER_BIN" ]; then
+    $BIN/v-add-user-composer "$user"
+    if [ $? -ne 0 ]; then
+        $BIN/v-add-user-notification admin 'Composer installation failed!' '<b>The File Manager will not work without Composer.</b><br><br>Please try running the installer manually from a shell session:<br>v-add-sys-filemanager<br><br>If this continues, open an issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.'
+        exit 1
+    fi
+fi
+
+# Ensure PHP 7.3 is installed before continuing
+if [ ! -f "/usr/bin/php7.3" ]; then
+    $BIN/v-add-user-notification admin 'File Manager installation failed!' '<b>Unable to proceed with installation of File Manager.</b><br><br>Package <b>php7.3-cli</b> is missing from your system. Please check your PHP installation and environment settings.'
+    echo "ERROR: PHP 7.3 not installed on your system, aborting."
+    exit 1
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+rm --recursive --force "$FM_INSTALL_DIR"
+mkdir -p "$FM_INSTALL_DIR"
+cd "$FM_INSTALL_DIR"
+
+[ ! -f "${FM_INSTALL_DIR}/${FM_FILE}" ] && wget "$FM_URL" --quiet -O "${FM_INSTALL_DIR}/${FM_FILE}"
+
+unzip -qq "${FM_INSTALL_DIR}/${FM_FILE}"
+mv --force ${FM_INSTALL_DIR}/filegator/* "${FM_INSTALL_DIR}"
+rm --recursive --force ${FM_INSTALL_DIR}/filegator
+[[ -f "${FM_INSTALL_DIR}/${FM_FILE}" ]] && rm "${FM_INSTALL_DIR}/${FM_FILE}"
+
+cp --recursive --force ${HESTIA_INSTALL_DIR}/filemanager/filegator/* "${FM_INSTALL_DIR}"
+
+chown $user: -R "${FM_INSTALL_DIR}"
+
+COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php7.3 $COMPOSER_BIN --quiet --no-dev install
+
+# Check if installation was successful, if not abort script and throw error message notification and clean-up
+if [ $? -ne 0 ]; then
+    echo "ERROR: File Manager installation failed!"
+    echo "Please report this to our development team:"
+    echo "https://github.com/hestiacp/hestiacp/issues"
+    $BIN/v-add-user-notification admin 'File Manager installation failed!' 'Please report this to our development team on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.'
+    # Installation failed, clean up files
+    rm --recursive --force ${FM_INSTALL_DIR}
+    $BIN/v-change-sys-config-value 'FILE_MANAGER' 'false'
+    exit 1
+fi
+
+# Add configuration file
+cp -f $HESTIA_INSTALL_DIR/filemanager/filegator/configuration.php $HESTIA/web/fm/configuration.php
+
+
+# Set permissions
+chown root: -R "${FM_INSTALL_DIR}"
+chown $user: "${FM_INSTALL_DIR}/private"
+chown $user: "${FM_INSTALL_DIR}/private/logs"
+chown $user: "${FM_INSTALL_DIR}/repository"
+
+$BIN/v-change-sys-config-value 'FILE_MANAGER' 'true'
+
+if [ "$MODE" != "quiet" ]; then
+    echo "File Manager is now installed and ready for use."  
+fi
+
+#----------------------------------------------------------#
+#                       Logging                            #
+#----------------------------------------------------------#
+
+log_history "file manager installed" '' 'admin'
+log_event "$OK" "$ARGUMENTS"

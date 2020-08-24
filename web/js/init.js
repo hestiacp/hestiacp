@@ -580,7 +580,7 @@ $(document).ready(function(){
                 if(!$('.l-profile__notifications').hasClass('active')){
                   VE.notifications.get_list();
                   $('.l-profile__notifications').addClass('active');
-                  left = $('.l-profile__notifications').offset().left - $('.notification-container').outerWidth() + 28;
+                  left = $('.l-profile__notifications').offset().left - $('.notification-container').outerWidth() + 22;
                   $('.notification-container').css({left: left+'px'});
 
                 } else {

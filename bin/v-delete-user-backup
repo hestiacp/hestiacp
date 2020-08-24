@@ -47,7 +47,7 @@ sed -i "/BACKUP='$2' /d" $USER_DATA/backup.conf
 #----------------------------------------------------------#
 
 # Update counter
-U_BACKUPS=$(ls $BACKUP/|grep "^$user."|wc -l)
+U_BACKUPS=$(grep BACKUP $USER_DATA/backup.conf |wc -l)
 update_user_value "$user" '$U_BACKUPS' "$U_BACKUPS"
 
 # Logging

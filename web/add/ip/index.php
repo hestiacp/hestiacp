@@ -57,7 +57,7 @@ if (!empty($_POST['ok'])) {
 
     // Add IP
     if (empty($_SESSION['error_msg'])) {
-        exec (HESTIA_CMD."v-add-sys-ip ".$v_ip." ".$v_netmask." ".$v_interface."  ".$v_owner." '".$ip_status."' ".$v_name." ".$v_nat, $output, $return_var);
+        exec (HESTIA_CMD."v-add-sys-ip ".$v_ip." ".$v_netmask." ".$v_interface."  ".$v_owner." ".escapeshellarg($ip_status)." ".$v_name." ".$v_nat, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
         $v_owner = $_POST['v_owner'];

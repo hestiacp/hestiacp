@@ -1,0 +1,72 @@
+#!/bin/bash
+# info: remove file manager functionality from Hestia Control Panel
+# options: [FULL]
+#
+# The function removes the File Manager and its entry points
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+MODE=$1
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+user='admin'
+FM_INSTALL_DIR="$HESTIA/web/fm"
+FM_V="7.4.1"
+COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking root permissions
+if [ "x$(id -u)" != 'x0' ]; then
+    echo "Error: Script can be run executed only by root"
+    exit 10
+fi
+
+# Ensure that $HESTIA (/usr/local/hestia/) and other variables are valid.
+if [ -z "$HESTIA" ]; then
+    HESTIA="/usr/local/hestia"
+fi
+
+if [ -z "$HOMEDIR" ] || [ -z "$HESTIA_INSTALL_DIR" ]; then
+    echo "Error: Hestia environment vars not present"
+    exit 2
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+# Check if File Manager components are installed
+if [ "$MODE" != "force" ] && [ ! -e "$FM_INSTALL_DIR" ]; then
+    echo "ERROR: File Manager components are not installed."
+    exit 1
+fi
+
+if [ "$MODE" != "force" ] && [ "$FILE_MANGER" = "false" ]; then
+    echo "ERROR: File Manager is not enabled."
+    exit 1
+fi
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+rm --recursive --force "$FM_INSTALL_DIR"
+$BIN/v-change-sys-config-value 'FILE_MANAGER' 'false'
+
+if [ "$MODE" != "quiet" ]; then
+    echo "File Manager has been removed from the system."
+fi
+
+#----------------------------------------------------------#
+#                       Logging                            #
+#----------------------------------------------------------#
+
+log_history "file manager uninstalled" '' 'admin'
+log_event "$OK" "$ARGUMENTS"

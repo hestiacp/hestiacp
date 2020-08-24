@@ -58,11 +58,11 @@ download_file() {
 }
 
 # Set compiling directory
-BUILD_DIR='/tmp/hestiacp-src/'
-DEB_DIR="$BUILD_DIR/debs/"
+BUILD_DIR='/tmp/hestiacp-src'
+DEB_DIR="$BUILD_DIR/debs"
 INSTALL_DIR='/usr/local/hestia'
 SRC_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-ARCHIVE_DIR="$SRC_DIR/src/archive/"
+ARCHIVE_DIR="$SRC_DIR/src/archive"
 
 # Set command variables
 if [ ! -z "$2" ]; then
@@ -87,7 +87,7 @@ fi
 BUILD_ARCH='amd64'
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
 NGINX_V=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/nginx/control |grep "Version:" |cut -d' ' -f2)
-OPENSSL_V='1.1.1d'
+OPENSSL_V='1.1.1g'
 PCRE_V='8.44'
 ZLIB_V='1.2.11'
 PHP_V=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/php/control |grep "Version:" |cut -d' ' -f2)
@@ -98,7 +98,7 @@ mkdir -p $DEB_DIR
 mkdir -p $ARCHIVE_DIR
 
 # Set package dependencies for compiling
-SOFTWARE='build-essential libxml2-dev libz-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config'
+SOFTWARE='build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config libsqlite3-dev libonig-dev'
 
 # Define a timestamp function
 timestamp() {
@@ -340,6 +340,8 @@ if [ "$PHP_B" = true ] ; then
                 --with-libdir=lib/x86_64-linux-gnu \
                 --with-mysqli \
                 --with-curl \
+                --with-zip \
+                --with-gmp \
                 --enable-mbstring
 
     # Create the files and install them
@@ -397,7 +399,7 @@ if [ "$PHP_B" = true ] ; then
     # clear up the source folder
     rm -r hestia-php_$PHP_V
     rm -rf usr/
-    if [ ! -z "$use_src_folder" ] && [ -d $$BUILD_DIR/hestiacp-$branch ]; then
+    if [ ! -z "$use_src_folder" ] && [ -d $BUILD_DIR/hestiacp-$branch ]; then
       rm -r $BUILD_DIR/hestiacp-$branch
     fi
 fi
@@ -409,7 +411,7 @@ fi
 #
 #################################################################################
 
-if [ "$HESTIA_B" = true ] ; then
+if [ "$HESTIA_B" = true ]; then
     echo "Building Hestia Control Panel package..."
     # Change to build directory
     cd $BUILD_DIR

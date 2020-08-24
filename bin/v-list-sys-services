@@ -284,7 +284,11 @@ fi
 
 # Checking FIREWALL Fail2ban extention
 if [ ! -z "$FIREWALL_EXTENSION" ]; then
-    get_srv_state $FIREWALL_EXTENSION fail2ban-server script
+    if [ "$(lsb_release -s -r)" = "20.04" ]; then
+        get_srv_state $FIREWALL_EXTENSION f2b/server script
+    else
+        get_srv_state $FIREWALL_EXTENSION fail2ban-server script
+    fi
     data="$data\nNAME='$FIREWALL_EXTENSION' SYSTEM='brute-force monitor'"
     data="$data STATE='$state' CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi

@@ -8,13 +8,13 @@
 
 # Set default theme
 if [ -z $THEME ]; then
-    echo "(*) Enabling support for themes..."
+    echo "[ * ] Enabling support for themes..."
     $BIN/v-change-sys-theme 'default'
 fi
 
 # Reduce SSH login grace time
 if [ -e /etc/ssh/sshd_config ]; then
-    echo "(*) Hardening SSH daemon configuration..."
+    echo "[ * ] Hardening SSH daemon configuration..."
     sed -i "s/LoginGraceTime 2m/LoginGraceTime 1m/g" /etc/ssh/sshd_config
     sed -i "s/#LoginGraceTime 2m/LoginGraceTime 1m/g" /etc/ssh/sshd_config
 fi
@@ -28,7 +28,7 @@ fi
 
 # Enable OCSP SSL stapling and harden nginx configuration for roundcube
 if [ ! -z "$IMAP_SYSTEM" ]; then
-    echo "(*) Hardening security of Roundcube webmail..."
+    echo "[ * ] Hardening security of Roundcube webmail..."
     $BIN/v-update-mail-templates > /dev/null 2>&1
     if [ -e /etc/nginx/conf.d/webmail.inc ]; then
         cp -f /etc/nginx/conf.d/webmail.inc $HESTIA_BACKUP/conf/
@@ -46,7 +46,7 @@ fi
 if [ -e "/etc/clamav/clamd.conf" ]; then
     clamd_conf_update_check=$(grep DetectBrokenExecutables /etc/clamav/clamd.conf)
     if [ ! -z "$clamd_conf_update_check" ]; then
-        echo "(*) Updating ClamAV configuration..."
+        echo "[ * ] Updating ClamAV configuration..."
         sed -i '/DetectBrokenExecutables/d' /etc/clamav/clamd.conf
     fi
 fi
@@ -58,7 +58,7 @@ fi
 
 # Use exim4 server hostname instead of mail domain and remove hardcoded mail prefix
 if [ ! -z "$MAIL_SYSTEM" ]; then
-    echo "(*) Updating exim configuration..."
+    echo "[ * ] Updating exim configuration..."
     if cat /etc/exim4/exim4.conf.template | grep -q 'helo_data = mail.${sender_address_domain}'; then
         sed -i 's/helo_data = mail.${sender_address_domain}/helo_data = ${primary_hostname}/g' /etc/exim4/exim4.conf.template
     fi
@@ -85,7 +85,7 @@ if [ -e "/etc/cron.d/hestia-sftp" ]; then
 fi
 
 # Create default writeable folders for all users
-echo "(*) Updating default writable folders for all users..."
+echo "[ * ] Updating default writable folders for all users..."
 for user in $($HESTIA/bin/v-list-sys-users plain); do
     mkdir -p \
         $HOMEDIR/$user/.cache \
@@ -113,14 +113,14 @@ fi
 
 # Update Office 365/Microsoft 365 DNS template
 if [ -e "$HESTIA/data/templates/dns/office365.tpl" ]; then
-    echo "(*) Updating DNS template for Office 365..."
+    echo "[ * ] Updating DNS template for Office 365..."
     cp -f $HESTIA/install/deb/templates/dns/office365.tpl $HESTIA/data/templates/dns/office365.tpl
 fi
 
 # Ensure that backup compression level is correctly set
 GZIP_LVL_CHECK=$(cat $HESTIA/conf/hestia.conf | grep BACKUP_GZIP)
 if [ -z "$GZIP_LVL_CHECK" ]; then
-    echo "(*) Updating backup compression level variable..."
+    echo "[ * ] Updating backup compression level variable..."
     $BIN/v-change-sys-config-value "BACKUP_GZIP" '9'
 fi
 
@@ -140,7 +140,7 @@ fi
 
 # Installing postgresql repo
 if [ -e "/etc/postgresql" ]; then
-    echo "(*) Enabling native PostgreSQL APT repository..."
+    echo "[ * ] Enabling native PostgreSQL APT repository..."
     osname="$(cat /etc/os-release | grep "^ID\=" | sed "s/ID\=//g")"
     if [ "$osname" = "ubuntu" ]; then
         codename="$(lsb_release -s -c)"
@@ -157,7 +157,7 @@ fi
 if [ -e "/etc/mysql/my.cnf" ]; then
     mysql_local_infile_check=$(grep local-infile /etc/mysql/my.cnf)
     if [ -z "$mysql_local_infile_check" ]; then
-        echo "(*) Hardening MySQL configuration..."
+        echo "[ * ] Hardening MySQL configuration..."
         sed -i '/symbolic-links\=0/a\local-infile=0' /etc/mysql/my.cnf
     fi
 fi
@@ -166,7 +166,7 @@ fi
 if [ -e "/etc/nginx/nginx.conf" ]; then
     nginx_tls_check=$(grep TLSv1.1 /etc/nginx/nginx.conf)
     if [ ! -z "$nginx_tls_check" ]; then
-        echo "(*) Updating nginx security settings - disabling TLS v1.1..."
+        echo "[ * ] Updating nginx security settings - disabling TLS v1.1..."
         sed -i 's/TLSv1.1 //g' /etc/nginx/nginx.conf
     fi
 fi
@@ -195,7 +195,7 @@ chown root:root /var/log/$WEB_SYSTEM/domains/$WEBMAIL_ALIAS* > /dev/null 2>&1
 
 # Enable IMAP/POP3 quota information
 if [ "$IMAP_SYSTEM" = "dovecot" ]; then
-    echo "(*) Enabling IMAP quota information reporting..."
+    echo "[ * ] Enabling IMAP quota information reporting..."
     if [ -e /etc/dovecot/conf.d/20-pop3.conf ]; then
         cp -f $HESTIA/install/deb/dovecot/conf.d/20-pop3.conf /etc/dovecot/conf.d/20-pop3.conf
     fi
@@ -210,7 +210,7 @@ fi
 # Trigger multiphp legacy migration script
 num_php_versions=$(ls -d /etc/php/*/fpm/pool.d 2>/dev/null |wc -l)
 if [ "$num_php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
-    echo "(*) Enabling modular Multi-PHP backend..."
+    echo "[ * ] Enabling modular Multi-PHP backend..."
     cp -rf $HESTIA/data/templates/web $HESTIA_BACKUP/templates/web
     bash $HESTIA/install/upgrade/manual/migrate_multiphp.sh > /dev/null 2>&1
 fi

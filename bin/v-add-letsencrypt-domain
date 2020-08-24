@@ -299,7 +299,7 @@ for auth in $authz; do
         validation=$(echo "$answer"|grep -A1 $proto |tail -n1|cut -f4 -d \")
         nonce=$(echo "$answer" |grep -i nonce |cut -f2 -d \ |tr -d '\r\n')
         status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
-        details=$(echo "$answer"| grep detail | cut -f 2 -d ',' | cut -f 2-4 -d ':')
+        details=$(echo "$answer"| grep detail | cut -f 1 -d ',' | cut -f 2-4 -d ':' | cut -f 2 -d '"')
         if [[ "$status" -ne 200 ]]; then
             # Delete DNS CAA record
             if [ ! -z "$DNS_SYSTEM" ]; then

@@ -18,7 +18,7 @@ upgrade_welcome_message() {
     echo "                            Version: $new_version                       "
     echo "========================================================================"
     echo
-    echo "(!) IMPORTANT INFORMATION:                                              "
+    echo "[ ! ] IMPORTANT INFORMATION:                                              "
     echo
     echo "Default configuration files and templates may be modified or replaced   "
     echo "during the upgrade process. You may restore these files from:           "
@@ -77,22 +77,8 @@ upgrade_start_routine() {
     #####################################################################
     release_branch_check=$(cat $HESTIA/conf/hestia.conf | grep RELEASE_BRANCH)
     if [ -z "$release_branch_check" ]; then
-        echo "(*) Adding global release branch variable to system configuration..."
+        echo "[ * ] Adding global release branch variable to system configuration..."
         $BIN/v-change-sys-config-value 'RELEASE_BRANCH' 'release'
-    fi
-
-    #####################################################################
-    #######         Start upgrade for pre-release builds          #######
-    #######     Ensures clean upgrade path from v1.0.1 onwards    #######
-    #######             DO NOT MODIFY THIS SECTION                #######
-    #####################################################################
-
-    if [ $VERSION = "0.9.8-25" ] || [ $VERSION = "0.9.8-26" ] || [ $VERSION = "0.9.8-27" ] || [ $VERSION = "0.9.8-28" ] || [ $VERSION = "0.9.8-29" ] || [ $VERSION = "0.10.0" ] || [ $VERSION = "1.00.0-190618" ] || [ $VERSION = "1.00.0-190621" ] || [ $VERSION = "1.0.0" ]; then
-        source $HESTIA/install/upgrade/versions/previous/0.9.8-29.sh
-        source $HESTIA/install/upgrade/versions/previous/1.00.0-190618.sh
-        source $HESTIA/install/upgrade/versions/previous/1.0.1.sh
-        VERSION="1.0.1"
-        upgrade_refresh_config
     fi
     
     #####################################################################
@@ -102,11 +88,21 @@ upgrade_start_routine() {
 
     # Ensure that latest upgrade commands are processed if version is the same
     if [ $VERSION = "$new_version" ]; then
-        echo "(!) The latest version of Hestia Control Panel is already installed."
-        echo "    Verifying configuration..."
+        echo "[ ! ] The latest version of Hestia Control Panel is already installed."
+        echo "      Verifying configuration..."
         echo ""
         source $HESTIA/install/upgrade/versions/latest.sh
         VERSION="$new_version"
+        upgrade_set_version $VERSION
+        upgrade_refresh_config
+    fi
+
+    if [ $VERSION = "0.9.8-25" ] || [ $VERSION = "0.9.8-26" ] || [ $VERSION = "0.9.8-27" ] || [ $VERSION = "0.9.8-28" ] || [ $VERSION = "0.9.8-29" ] || [ $VERSION = "0.10.0" ] || [ $VERSION = "1.00.0-190618" ] || [ $VERSION = "1.00.0-190621" ] || [ $VERSION = "1.0.0" ]; then
+        source $HESTIA/install/upgrade/versions/previous/0.9.8-29.sh
+        source $HESTIA/install/upgrade/versions/previous/1.00.0-190618.sh
+        source $HESTIA/install/upgrade/versions/previous/1.0.1.sh
+        VERSION="1.0.1"
+        upgrade_set_version $VERSION
         upgrade_refresh_config
     fi
 
@@ -114,6 +110,7 @@ upgrade_start_routine() {
     if [ $VERSION = "1.0.1" ]; then
         source $HESTIA/install/upgrade/versions/previous/1.0.2.sh
         VERSION="1.0.2"
+        upgrade_set_version $VERSION
         upgrade_refresh_config
     fi
 
@@ -121,6 +118,7 @@ upgrade_start_routine() {
     if [ $VERSION = "1.0.2" ]; then
         source $HESTIA/install/upgrade/versions/previous/1.0.3.sh
         VERSION="1.0.3"
+        upgrade_set_version $VERSION
         upgrade_refresh_config
     fi
 
@@ -128,6 +126,7 @@ upgrade_start_routine() {
     if [ $VERSION = "1.0.3" ]; then
         source $HESTIA/install/upgrade/versions/previous/1.0.4.sh
         VERSION="1.0.4"
+        upgrade_set_version $VERSION
         upgrade_refresh_config
     fi
 
@@ -135,6 +134,7 @@ upgrade_start_routine() {
     if [ $VERSION = "1.0.4" ]; then
         source $HESTIA/install/upgrade/versions/previous/1.0.5.sh
         VERSION="1.0.5"
+        upgrade_set_version $VERSION
         upgrade_refresh_config
     fi
 
@@ -142,25 +142,28 @@ upgrade_start_routine() {
     if [ $VERSION = "1.0.5" ]; then
         source $HESTIA/install/upgrade/versions/previous/1.0.6.sh
         VERSION="1.0.6"
+        upgrade_set_version $VERSION
         upgrade_refresh_config
     fi
 
     # Upgrade to Version 1.1.0
     if [ $VERSION = "1.0.6" ]; then
-        source $HESTIA/install/upgrade/versions/latest.sh
+        source $HESTIA/install/upgrade/versions/previous/1.1.0.sh
         VERSION="1.1.0"
+        upgrade_set_version $VERSION
         upgrade_refresh_config
     fi
 
     # Upgrade to Version 1.1.1
     if [ $VERSION = "1.1.0" ]; then
-        source $HESTIA/install/upgrade/versions/latest.sh
+        source $HESTIA/install/upgrade/versions/previous/1.1.1.sh
         VERSION="1.1.1"
+        upgrade_set_version $VERSION
         upgrade_refresh_config
     fi
 
-    # Upgrade to Version 1.1.2
-    if [ $VERSION = "1.1.1" ]; then
+    # Upgrade to Version 1.2.0
+    if [ $VERSION = "1.1.1" ] || [ $VERSION = "1.1.2" ]; then
         source $HESTIA/install/upgrade/versions/latest.sh
         VERSION="$new_version"
         upgrade_refresh_config
@@ -179,10 +182,10 @@ upgrade_phpmyadmin() {
 
         pma_release_file=$(ls /usr/share/phpmyadmin/RELEASE-DATE-* 2>/dev/null |tail -n 1)
         if version_ge "${pma_release_file##*-}" "$pma_v"; then
-            echo "(!) phpMyAdmin v${pma_release_file##*-} is already installed, skipping update..."
+            echo "[ ! ] phpMyAdmin v${pma_release_file##*-} is already installed, skipping update..."
         else
             # Display upgrade information
-            echo "(*) Upgrading phpMyAdmin to version v$pma_v..."
+            echo "[ * ] Upgrading phpMyAdmin to version v$pma_v..."
             [ -d /usr/share/phpmyadmin ] || mkdir -p /usr/share/phpmyadmin
 
             # Download latest phpMyAdmin release
@@ -214,6 +217,27 @@ upgrade_phpmyadmin() {
     fi
 }
 
+update_php_templates() {
+    echo "[ * ] Updating default PHP templates..."
+    # Update default template
+    cp -f $HESTIA_INSTALL_DIR/templates/web/php-fpm/default.tpl \
+        $HESTIA/data/templates/web/php-fpm/default.tpl
+
+    # Update no-php template
+    cp -f $HESTIA_INSTALL_DIR/templates/web/php-fpm/no-php.tpl \
+        $HESTIA/data/templates/web/php-fpm/no-php.tpl
+
+    # Update  socket template
+    cp -f $HESTIA_INSTALL_DIR/templates/web/php-fpm/socket.tpl \
+        $HESTIA/data/templates/web/php-fpm/socket.tpl
+
+    for version in $($HESTIA/bin/v-list-sys-php plain); do 
+        echo "[ * ] Updating templates for PHP ${version}..."
+        cp -f $HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl \
+            $HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl; 
+    done
+}
+
 upgrade_get_version() {
     # Retrieve new version number for Hestia Control Panel from .deb package
     new_version=$(dpkg -l | awk '$2=="hestia" { print $3 }')
@@ -222,12 +246,12 @@ upgrade_get_version() {
 upgrade_set_version() {
     # Set new version number in hestia.conf
     sed -i "/VERSION/d" $HESTIA/conf/hestia.conf
-    echo "VERSION='$new_version'" >> $HESTIA/conf/hestia.conf
+    echo "VERSION='$@'" >> $HESTIA/conf/hestia.conf
 }
 
 upgrade_rebuild_users() {
     for user in $($HESTIA/bin/v-list-sys-users plain); do
-        echo "(*) Rebuilding domains and account for user: $user..."
+        echo "[ * ] Rebuilding domains and account for user: $user..."
         if [ ! -z "$WEB_SYSTEM" ]; then
             $BIN/v-rebuild-web-domains $user 'no' >/dev/null 2>&1
         fi
@@ -244,12 +268,12 @@ upgrade_restart_services() {
     # Refresh user interface theme
     if [ "$THEME" ]; then
         if [ "$THEME" != "default" ]; then
-            echo "(*) Applying user interface updates..."
+            echo "[ * ] Applying user interface updates..."
             $BIN/v-change-sys-theme $THEME
         fi
     fi
 
-    echo "(*) Restarting services..."
+    echo "[ * ] Restarting services..."
     sleep 5
     if [ ! -z "$MAIL_SYSTEM" ]; then
         $BIN/v-restart-mail $restart

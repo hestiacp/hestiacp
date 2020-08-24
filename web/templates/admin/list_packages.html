@@ -52,6 +52,7 @@
                 <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-inbox" title="<?php print __('Mail Accounts');?>"></i></b></div>
                 <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-database" title="<?php print __('Databases');?>"></i></b></div>
                 <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-clock" title="<?php print __('Cron Jobs');?>"></i></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-file-archive" title="<?php print __('Backups');?>"></i></b></div>
            </div>
         </div>
 
@@ -186,6 +187,15 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                       <b>&infin;</b>
                     <? } else {?>
                      <b><?=$data[$key]['CRON_JOBS']?></b>
+                    <? } ?>
+                  </span>
+                </div>
+                <div class="clearfix l-unit__stat-col--left text-center super-compact">
+                  <span class="jump-top badge gray raised">
+                    <? if($data[$key]['BACKUPS'] == 'unlimited'){ ?>
+                      <b>&infin;</b>
+                    <? } else {?>
+                     <b><?=$data[$key]['BACKUPS']?></b>
                     <? } ?>
                   </span>
                 </div>

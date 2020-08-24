@@ -8,25 +8,25 @@
 
 # Add webmail alias variable to system configuration if non-existent
 if [ -z "$WEBMAIL_ALIAS" ]; then
-    echo "(*) Updating webmail alias configuration..."
+    echo "[ * ] Updating webmail alias configuration..."
     $HESTIA/bin/v-change-sys-config-value 'WEBMAIL_ALIAS' "webmail"
 fi
 
 # Update Apache and Nginx configuration to support new file structure
 if [ -f /etc/apache2/apache.conf ]; then
-    echo "(*) Updating Apache configuration..."
+    echo "[ * ] Updating Apache configuration..."
     mv  /etc/apache2/apache.conf $HESTIA_BACKUP/conf/
     cp -f $HESTIA_INSTALL_DIR/apache2/apache.conf /etc/apache2/apache.conf
 fi
 if [ -f /etc/nginx/nginx.conf ]; then
-    echo "(*) Updating NGINX configuration..."
+    echo "[ * ] Updating NGINX configuration..."
     mv  /etc/nginx/nginx.conf $HESTIA_BACKUP/conf/
     cp -f $HESTIA_INSTALL_DIR/nginx/nginx.conf /etc/nginx/nginx.conf
 fi
 
 # Generate dhparam
 if [ ! -e /etc/ssl/dhparam.pem ]; then
-    echo "(*) Enabling HTTPS Strict Transport Security (HSTS) support..."
+    echo "[ * ] Enabling HTTPS Strict Transport Security (HSTS) support..."
     mv  /etc/nginx/nginx.conf $HESTIA_BACKUP/conf/
     cp -f $HESTIA_INSTALL_DIR/nginx/nginx.conf /etc/nginx/
 
@@ -40,13 +40,13 @@ fi
 
 # Back up default package and install latest version
 if [ -d $HESTIA/data/packages/ ]; then
-    echo "(*) Replacing default packages..."
+    echo "[ * ] Replacing default packages..."
     cp -f $HESTIA/data/packages/default.pkg $HESTIA_BACKUP/packages/
 fi
 
 # Back up old template files and install the latest versions
 if [ -d $HESTIA/data/templates/ ]; then
-    echo "(*) Replacing default Web, DNS, and Mail templates..."
+    echo "[ * ] Replacing default Web, DNS, and Mail templates..."
     cp -rf $HESTIA/data/templates $HESTIA_BACKUP/templates/
     $HESTIA/bin/v-update-web-templates >/dev/null 2>&1
     $HESTIA/bin/v-update-dns-templates >/dev/null 2>&1
@@ -105,7 +105,7 @@ if [ -d "/etc/roundcube" ]; then
 fi
 
 # Add a general group for normal users created by Hestia
-echo "(*) Verifying ACLs and hardening user permissions..."
+echo "[ * ] Verifying ACLs and hardening user permissions..."
 if [ -z "$(grep ^hestia-users: /etc/group)" ]; then
     groupadd --system "hestia-users"
 fi
@@ -132,7 +132,7 @@ for ipaddr in $(ls /usr/local/hestia/data/ips/ 2>/dev/null); do
     rm -f $web_conf
 
     if [ "$WEB_SYSTEM" = "apache2" ]; then
-        echo "(*) Adding unassigned hosts configuration to Apache..."
+        echo "[ * ] Adding unassigned hosts configuration to Apache..."
         if [ -z "$(/usr/sbin/apache2 -v | grep Apache/2.4)" ]; then
             echo "NameVirtualHost $ipaddr:$WEB_PORT" >  $web_conf
         fi
@@ -155,7 +155,7 @@ for ipaddr in $(ls /usr/local/hestia/data/ips/ 2>/dev/null); do
     fi
 
     if [ "$PROXY_SYSTEM" = "nginx" ]; then
-        echo "(*) Adding unassigned hosts configuration to Nginx..."
+        echo "[ * ] Adding unassigned hosts configuration to Nginx..."
         cat $WEBTPL/$PROXY_SYSTEM/proxy_ip.tpl |\
         sed -e "s/%ip%/$ipaddr/g" \
             -e "s/%web_port%/$WEB_PORT/g" \
@@ -175,7 +175,7 @@ chmod 755 /etc/cron.daily/php-session-cleanup
 # Fix empty pool error message for MultiPHP
 php_versions=$(ls /etc/php/*/fpm -d 2>/dev/null |wc -l)
 if [ "$php_versions" -gt 1 ]; then
-    echo "(*) Updating Multi-PHP configuration..."
+    echo "[ * ] Updating Multi-PHP configuration..."
     for v in $(ls /etc/php/); do
         if [ ! -d "/etc/php/$v/fpm/pool.d/" ]; then
             continue
@@ -187,7 +187,7 @@ if [ "$php_versions" -gt 1 ]; then
 fi
 
 # Set Purge to false in Roundcube configuration - https://goo.gl/3Nja3u
-echo "(*) Updating Roundcube configuration..."
+echo "[ * ] Updating Roundcube configuration..."
 if [ -f /etc/roundcube/config.inc.php ]; then
     sed -i "s/\['flag_for_deletion'] = 'Purge';/\['flag_for_deletion'] = false;/gI" /etc/roundcube/config.inc.php
 fi
@@ -200,16 +200,16 @@ fi
 
 # Remove old OS-specific installation files if they exist to free up space
 if [ -d $HESTIA/install/ubuntu ]; then
-    echo "(*) Removing old HestiaCP installation files for Ubuntu..."
+    echo "[ * ] Removing old HestiaCP installation files for Ubuntu..."
     rm -rf $HESTIA/install/ubuntu
 fi
 if [ -d $HESTIA/install/debian ]; then
-    echo "(*) Removing old HestiaCP installation files for Debian..."
+    echo "[ * ] Removing old HestiaCP installation files for Debian..."
     rm -rf $HESTIA/install/debian
 fi
 
 # Fix Dovecot configuration
-echo "(*) Updating Dovecot IMAP/POP server configuration..."
+echo "[ * ] Updating Dovecot IMAP/POP server configuration..."
 if [ -f /etc/dovecot/conf.d/15-mailboxes.conf ]; then
     mv  /etc/dovecot/conf.d/15-mailboxes.conf $HESTIA_BACKUP/conf/
 fi
@@ -223,7 +223,7 @@ fi
 
 # Fix Exim configuration
 if [ -f /etc/exim4/exim4.conf.template ]; then
-    echo "(*) Updating Exim SMTP server configuration..."
+    echo "[ * ] Updating Exim SMTP server configuration..."
     mv  /etc/exim4/exim4.conf.template $HESTIA_BACKUP/conf/
     cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.template /etc/exim4/exim4.conf.template
     # Reconfigure spam filter and virus scanning
@@ -239,7 +239,7 @@ fi
 # Add IMAP system variable to configuration if Dovecot is installed
 if [ -z "$IMAP_SYSTEM" ]; then
     if [ -f /usr/bin/dovecot ]; then
-        echo "(*) Adding missing IMAP_SYSTEM variable to hestia.conf..."
+        echo "[ * ] Adding missing IMAP_SYSTEM variable to hestia.conf..."
         echo "IMAP_SYSTEM = 'dovecot'" >> $HESTIA/conf/hestia.conf
     fi
 fi
@@ -250,7 +250,7 @@ $HESTIA/bin/v-add-sys-sftp-jail
 # Enable SFTP subsystem for SSH
 sftp_subsys_enabled=$(grep -iE "^#?.*subsystem.+(sftp )?sftp-server" /etc/ssh/sshd_config)
 if [ ! -z "$sftp_subsys_enabled" ]; then
-    echo "(*) Updating SFTP subsystem configuration..."
+    echo "[ * ] Updating SFTP subsystem configuration..."
     sed -i -E "s/^#?.*Subsystem.+(sftp )?sftp-server/Subsystem sftp internal-sftp/g" /etc/ssh/sshd_config
     systemctl restart ssh
 fi
@@ -263,7 +263,7 @@ for user in `ls /usr/local/hestia/data/users/`; do
     for domain in $($BIN/v-list-web-domains $user plain |cut -f 1); do
         obskey=$(get_object_value 'web' 'DOMAIN' "$domain" '$FORCESSL')
         if [ ! -z "$obskey" ]; then
-            echo "(*) Fixing HTTP-to-HTTPS redirection for $domain"
+            echo "[ * ] Fixing HTTP-to-HTTPS redirection for $domain"
             update_object_value 'web' 'DOMAIN' "$domain" '$FORCESSL' ''
 
             # copy value under new key name

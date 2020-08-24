@@ -1,0 +1,72 @@
+#!/bin/bash
+# info: delete firewall ipset
+# options: NAME
+#
+# The function removes ipset from system and from hestia
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+ip_name=${1}
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+ipset_hstobject='../../data/firewall/ipset'
+
+check_args '1' "$#" 'NAME'
+is_format_valid 'ip_name'
+is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+is_object_valid "$ipset_hstobject" 'LISTNAME' "$ip_name"
+
+ip_version="$(get_object_value "$ipset_hstobject" 'LISTNAME' "$ip_name" '$IP_VERSION')"
+
+IPSET_BIN="$(which ipset)"
+IPSET_PATH="$HESTIA/data/firewall/ipset"
+IPSET_FILE="${ip_name}.${ip_version}"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+# Install ipset package if missing
+if [ -z "$IPSET_BIN" ]; then
+    apt-get --quiet --yes install ipset > /dev/null
+    check_result $? "Installing ipset package"
+
+    IPSET_BIN="$(which ipset)"
+    check_result $? "ipset binary not found"
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+if $IPSET_BIN --quiet list "${ip_name}-tmp" >/dev/null; then
+    $IPSET_BIN --quiet destroy "${ip_name}-tmp"
+fi
+
+if $IPSET_BIN --quiet list "${ip_name}" >/dev/null; then
+    $IPSET_BIN --quiet destroy "${ip_name}"
+    check_result $? "ipset ${ip_name} still used by iptables. Cannot remove"
+fi
+
+sed -i "/LISTNAME='$ip_name'/d" "${IPSET_PATH}.conf"
+rm -f "${IPSET_PATH}/${IPSET_FILE}.iplist"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

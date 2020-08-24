@@ -35,6 +35,9 @@ ip_owner=$(get_ip_value '$OWNER')
 if [ "$web_domains" -ne '0' ] && [ "$sys_user" != "$ip_owner" ]; then
     check_result "$E_INUSE" "ip $ip is used"
 fi
+if [ "$ip_owner" != "admin" ] && [ "$ip_status" == "shared" ]; then
+    check_result "$E_INVALID" "Only the 'admin' user can have a shared ip"
+fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode

@@ -27,40 +27,20 @@ if [ -d "${WEBTPL}" ]; then
     rm -rf "${WEBTPL}/unassigned" 2>/dev/null
 fi
 
-for php_ver in $(ls /etc/php/); do
-    [ ! -d "/etc/php/$php_ver/fpm/pool.d/" ] && continue
-    cp -f "$HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl"  ${WEBTPL}/php-fpm/PHP-${php_ver/\./_}.tpl
-done
+[ -d "${WEBTPL}/nginx" ] || mkdir -p "${WEBTPL}/nginx"
+
+if [ "$PROXY_SYSTEM" = 'nginx' ] || [ "$WEB_BACKEND" = "php-fpm" ]; then
+    cp -rf "${HESTIA_INSTALL_DIR}/templates/web/nginx" "${WEBTPL}/"
+fi
 
 for webtpl_folder in $(ls $HESTIA_INSTALL_DIR/templates/web/* -d 2>/dev/null | egrep -v '/(nginx)$' ); do
     cp -rf "${webtpl_folder}" "${WEBTPL}/"
 done
 
-[ -d "${WEBTPL}/nginx" ] || mkdir -p "${WEBTPL}/nginx"
-
-# Update Multi-PHP templates
-php_versions=$(ls /etc/php/*/fpm -d 2>/dev/null | wc -l)
-if [ "$php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
-    for v in $(ls /etc/php/); do
-        if [ ! -d "/etc/php/$v/fpm/pool.d/" ]; then
-            continue
-        fi
-        v_tpl=$(echo "$v" | sed -e 's/[.]//')
-        cp -f "$HESTIA_INSTALL_DIR/multiphp/${WEB_SYSTEM}/PHP-${v_tpl}".* "${WEBTPL}/${WEB_SYSTEM}/"
-    done
-    chmod a+x "${WEBTPL}/${WEB_SYSTEM}/"*.sh 2> /dev/null
-
-    # Create default TPL symlink when missing and point to the last php version found
-    if [ ! -z $v_tpl ] && [ "$WEB_SYSTEM" = "nginx" ]; then
-        [ -e "${WEBTPL}/${WEB_SYSTEM}/default.sh"   ] || ln -s "${WEBTPL}/${WEB_SYSTEM}/PHP-${v_tpl}.sh" "${WEBTPL}/${WEB_SYSTEM}/default.sh"
-        [ -e "${WEBTPL}/${WEB_SYSTEM}/default.tpl"  ] || ln -s "${WEBTPL}/${WEB_SYSTEM}/PHP-${v_tpl}.tpl" "${WEBTPL}/${WEB_SYSTEM}/default.tpl"
-        [ -e "${WEBTPL}/${WEB_SYSTEM}/default.stpl" ] || ln -s "${WEBTPL}/${WEB_SYSTEM}/PHP-${v_tpl}.stpl" "${WEBTPL}/${WEB_SYSTEM}/default.stpl"
-    fi
-fi
-
-if [ "$PROXY_SYSTEM" = 'nginx' ] || [ "$WEB_BACKEND" = "php-fpm" ]; then
-    cp -rf "${HESTIA_INSTALL_DIR}/templates/web/nginx" "${WEBTPL}/"
-fi
+for php_ver in $(ls /etc/php/); do
+    [ ! -d "/etc/php/$php_ver/fpm/pool.d/" ] && continue
+    cp -f "$HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl"  ${WEBTPL}/php-fpm/PHP-${php_ver/\./_}.tpl
+done
 
 # Rebuilding web domains
 for user in $($BIN/v-list-sys-users plain); do

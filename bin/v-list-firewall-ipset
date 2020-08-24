@@ -1,0 +1,104 @@
+#!/bin/bash
+# info: List firewall ipset
+# options: [FORMAT]
+#
+# The function prints defined ipset lists
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+format=${1-shell}
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# JSON list function
+json_list() {
+    IFS=$'\n'
+    i=1
+    objects=$(grep LISTNAME $HESTIA/data/firewall/ipset.conf |wc -l)
+    echo "{"
+    while read str; do
+        [[ -z "$str" ]] && continue;
+        parse_object_kv_list "$str"
+        echo -n '    "'$LISTNAME'": {
+        "IP_VERSION": "'$IP_VERSION'",
+        "AUTOUPDATE": "'$AUTOUPDATE'",
+        "SUSPENDED": "'$SUSPENDED'",
+        "SOURCE": "'$SOURCE'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+    [[ "$i" -lt "$objects" ]] && echo ',' || echo
+    ((i++))
+    done < <(cat $HESTIA/data/firewall/ipset.conf)
+    echo '}'
+}
+
+# SHELL list function
+shell_list() {
+    IFS=$'\n'
+    echo "LISTNAME^IP_VERSION^AUTOUPDATE^SUSPENDED^SOURCE^TIME^DATE"
+    echo "----^------^-----^----^--^----^----"
+    while read str; do
+        [[ -z "$str" ]] && continue;
+        parse_object_kv_list "$str"
+        echo "$LISTNAME^$IP_VERSION^$AUTOUPDATE^$SUSPENDED^$SOURCE^$TIME^$DATE"
+    done < <(cat $HESTIA/data/firewall/ipset.conf)
+}
+
+# PLAIN list function
+plain_list() {
+    IFS=$'\n'
+    while read str; do
+        [[ -z "$str" ]] && continue;
+        parse_object_kv_list "$str"
+        echo -ne "$LISTNAME\t$IP_VERSION\t$AUTOUPDATE\t$SUSPENDED\t$SOURCE\t"
+        echo -e "$TIME\t$DATE"
+    done < <(cat $HESTIA/data/firewall/ipset.conf)
+}
+
+# CSV list function
+csv_list() {
+    IFS=$'\n'
+    echo "LISTNAME,IP_VERSION,AUTOUPDATE,SUSPENDED,SOURCE,SUSPENDED,TIME,DATE"
+    while read str; do
+        [[ -z "$str" ]] && continue;
+        parse_object_kv_list "$str"
+        echo -n "$LISTNAME,$IP_VERSION,$AUTOUPDATE,$SUSPENDED,\"$SOURCE\","
+        echo "$TIME,$DATE"
+    done < <(cat $HESTIA/data/firewall/ipset.conf)
+}
+
+[ ! -f "$HESTIA/data/firewall/ipset.conf" ] && touch "$HESTIA/data/firewall/ipset.conf"
+
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list |column -t -s '^' ;;
+esac
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

@@ -1,4 +1,4 @@
-location /phppgadmin {
+location /%pga_alias% {
     alias /usr/share/phppgadmin/;
 
     location ~ ^/phppgadmin/(.*\.php)$ {

@@ -12,6 +12,23 @@ if ($_SESSION['user'] != 'admin') {
     exit;
 }
 
+// Get ipset lists
+exec (HESTIA_CMD."v-list-firewall-ipset 'json'", $output, $return_var);
+check_return_code($return_var,$output);
+$data = json_decode(implode('', $output), true);
+
+$ipset_lists=[];
+foreach($data as $key => $value) {
+    if(isset($value['SUSPENDED']) && $value['SUSPENDED'] === 'yes') {
+        continue;
+    }
+    if(isset($value['IP_VERSION']) && $value['IP_VERSION'] !== 'v4') {
+        continue;
+    }
+    array_push($ipset_lists, ['name'=>$key]);
+}
+$ipset_lists_json=json_encode($ipset_lists);
+
 // Check POST request
 if (!empty($_POST['ok'])) {
 

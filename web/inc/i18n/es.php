@@ -101,11 +101,11 @@ $LANG['es'] = array(
     'list accounts'  => 'listar %s cuentas',
     'add account'  => 'añadir cuenta',
     'open webmail'  => 'abrir webmail',
-    'list fail2ban' => 'listar fail2ban',
+    'list fail2ban' => 'Administrar IP prohibidas',
     'open %s'  => 'abrir %s',
     'download'  => 'descargar',
     'restore'  => 'restaurar',
-    'configure restore settings'  => 'configurar las opciones de restauración',
+    'configure restore settings'  => 'Configurar las opciones de restauración',
     'stop'  => 'detener',
     'start'  => 'iniciar',
     'restart'  => 'reiniciar',
@@ -113,11 +113,11 @@ $LANG['es'] = array(
     'generate'  => 'generar',
     'Generate CSR' => 'Generar CSR',
     'reread IP' => 'releer IP',
-    'enable autoupdate' => 'activar actualizaciones automáticas',
-    'disable autoupdate' => 'desactivar actualizaciones automáticas',
-    'turn on notifications' => 'activar notificaciones',
-    'turn off notifications' => 'desactivar notificaciones',
-    'configure' => 'configurar',
+    'enable autoupdate' => 'Dctivar actualizaciones automáticas',
+    'disable autoupdate' => 'Desactivar actualizaciones automáticas',
+    'turn on notifications' => 'Activar notificaciones',
+    'turn off notifications' => 'Desactivar notificaciones',
+    'configure' => 'Configurar',
 
     'Adding User'  => 'Añadiendo Usuario',
     'Editing User'  => 'Editando Usuario',
@@ -704,17 +704,6 @@ $LANG['es'] = array(
     'shortcuts are inspired by magnificent GNU <a href="https://www.midnight-commander.org/">Midnight Commander</a> file manager' =>
         'Atajos inspirados en el editor de archivos <a href="https://www.midnight-commander.org/">Midnight Commander</a>',
 
-    'Licence Key' => 'Clave de licencia',
-    'Enter License Key' => 'Inserta la clave de licencia',
-    'Buy Licence' => 'Comprar Licencia',
-    'Buy Lifetime License' => 'Comprar Licencia de por vida',
-    'Disable and Cancel Licence' => 'Deshabilitar y Cancelar Licencia',
-    'Licence Activated' => 'Licencia Activada',
-    'Licence Deactivated' => 'Licencia Desactivada',
-    'Restrict users so that they cannot use SSH and access only their home directory.' => 'Restringe a los usuarios para que sólo puedan ingresar a su directorio local y prohíbe el acceso a SSH.',
-    'Browse, copy, edit, view, and retrieve all of your web domain files using fully featured File Manager.' => 'Navegar, copiar, editar, ver y descargar todos los archivos de tu página web utilizando el Administrador de Archivos.',
-    'This is a commercial module, you would need to purchace license key to enable it.' => 'Este es un módulo comercial, tendrás que adquirir una licencia para poder activarlo.',
-
     'Minutes' => 'Minutos',
     'Hourly' => 'Cada hora',
     'Run Command' => 'Ejecutar Comando',
@@ -764,4 +753,107 @@ $LANG['es'] = array(
 
     'Theme' => 'Aspecto',
     'Operating System' => 'Sistema operativo',
+
+    'Please wait while php is installed or removed' => 'Los cambios pueden tardar unos minutos en guardarse. Espere hasta que se complete el proceso y no actualice la página.',
+    'Avoid adding web domains on admin account' => 'Se recomienda encarecidamente que <a href="/add/user/">cree una cuenta de usuario estándar</a> antes de agregar dominios web al servidor debido a los mayores privilegios que posee la cuenta de administrador y los posibles riesgos de seguridad.',
+    
+    //SSH Key
+    'Field SSH_KEY can not be blank.' => 'La clave SSH de campo no debe estar en blanco',
+    'SSH KEY is invalid' => 'La clave SSH no es válida',
+    'SSH KEY already exists' => 'La clave SSH ya existe',
+    'SSH KEY Added' => 'Se ha agregado la clave SSH',
+    'Add SSH Key' => 'Añadir clave SSH',
+    'SSH KEY' => 'Clave SSH',    
+    'DELETE_KEY_CONFIRM' => '¿Estás seguro de que quieres eliminar la clave SSH %s?',
+    'SSH_ID' => 'ID de SSH',
+    'Manage SSH keys' => 'Administrar claves SSH',
+ 
+    //Header 
+    'Fm' => 'Archivos',
+    //PHP Cli
+    'PHP CLI Version' => 'Versión de línea de comando PHP',
+
+    //Ipset Firewall rules
+    'Adding Firewall Ipset List' => 'Nueva lista de IP',
+    'Ip List Name' => 'Nombre de la lista de IP',
+    'Data Source' => 'Fuente de datos',
+    'Ip Version' => 'Versión IP',
+    'Autoupdate' => 'Auto actualización',
+    'Add IP list' => 'Agregar lista de IP',
+    'BLACKLIST' => 'BLACKLIST',
+    'IPVERSE' => 'IPVERSE',
+    'IPSET_CREATED_OK' => 'Lista de IP creada con éxito',
+    'DELETE_IPSET_CONFIRMATION' => '¿Está seguro de que desea eliminar la lista de IP %s?',
+    '1 Ipset list' => '1 Lista de IP',
+    '%s Ipset lists' => '%s Listas de IP',
+    'There are currently no IP lists defined.' => 'Actualmente no hay listas de IP definidas.',
+    'list ipset' => 'Administrar listas de IP',
+    
+    //Backup
+    'File Name' => 'Nombre del archivo',
+    'Size' => 'Talla',
+    'Runtime' => 'Tiempo de ejecución',
+    //Logs
+    'Refresh' => 'Actualizar',
+    'Time' => 'Hora',
+    'Value' => 'Valor',
+    
+    //DNS 
+    'default' => 'defecto',
+    '1 DNS zone' => '1 Zona DNS',
+    '%s DNS zones' => '%s Zonas DNS',
+    'Add Record' => 'Agregar registro',
+    //user
+    '1 user account' => '1 cuenta de usuario',
+    '%s user accounts' => '%s cuentas de usuario',
+    //database
+    '1 SQL database' => '1 Base de datos SQL',
+    '%s SQL databases' => '%s Bases de datos SQL',
+    //mail
+    '1 mail domain' => '1 dominio de correo',
+    '%s mail domains' => '%s dominios de correo',
+    //web
+    '1 web domain' => '1 dominio web',
+    '%s web domains' => '%s dominios web',
+    
+    //rrd
+    'Bandwidth Usage' => 'Uso de Ancho de Banda',
+    
+    //reset
+    'Forgot Password' => 'Se te olvidó tu contraseña',
+    //web
+    'Quick Install App' => 'Instalar aplicación',
+    //webapp 
+    'version' => 'versión',
+    'Setup' => 'Preparar',
+    //Server
+    'Restart' => 'Reiniciar',
+    'Mail Server' => 'Servidor de correo',
+    'Enabled multi PHP versions' => 'Versiones PHP habilitadas',
+    'Service' => 'Servicio',
+    'Description' => 'Descripción',
+    
+    //header
+    'Hestia Control Panel' => 'Panel de control de Hestia',
+
+    // Set default language
+    'SYSTEM_SET_DEFAULT_LANGUAGE' => 'Establecer como idioma predeterminado para todos los usuarios',
+    
+    //2FA 
+    'Forgot token' => 'Desbloquear cuenta',
+    '2FA Token' => 'PIN OTP',
+    '2FA Reset successfully' => 'La autenticación de dos factores ahora está desactivada para su cuenta.<br><br>Ahora puede proceder a iniciar sesión.',
+    'Reset 2FA' => 'Desbloquear cuenta',
+    '2FA Reset Code' => 'Código de recuperación de cuenta',
+    'Invalid or missing token' => 'Token inválido o faltante',
+
+    'DELETE_LOGS_CONFIRMATION'  => '¿Estás seguro de que quieres eliminar los registros',
+
+    'Force SSL/HTTPS' => 'Habilitar la redirección automática de HTTP a HTTPS',
+    'Enable SSL HSTS' => 'Habilitar HTTP Strict Transport Security (HSTS) <a href="https://es.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><i class="fas fa-question-circle"></i></a>',
+
+    '2 Factor Authentication' => 'Autenticación de dos factores',
+    'Enable 2FA' => 'Habilitar autenticación de dos factores',
+    'Please scan the code below in your 2FA application:' => 'Para terminar de configurar la autenticación de dos factores, escanee el código QR a continuación<br />usando una aplicación de autenticación (como <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Autenticador de Google</a>):',
+    '2FA Reset Code:' => 'Código de recuperación de cuenta:',
 );

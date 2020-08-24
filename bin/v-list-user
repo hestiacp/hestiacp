@@ -75,6 +75,7 @@ json_list() {
         "U_BACKUPS": "'$U_BACKUPS'",
         "LANGUAGE": "'$LANGUAGE'",
         "NOTIFICATIONS": "'$NOTIFICATIONS'",
+        "PHPCLI": "'$PHPCLI'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
         }

@@ -68,4 +68,8 @@ if [ ! -z "$restart" ]; then
     check_result $? "Proxy restart failed" >/dev/null
 fi
 
+# Logging
+log_history "disabled automatic HTTP-to-HTTPS redirection for $domain"
+log_event "$OK" "$ARGUMENTS"
+
 exit

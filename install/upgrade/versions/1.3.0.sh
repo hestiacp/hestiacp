@@ -6,7 +6,7 @@
 #######                      Place additional commands below.                   #######
 #######################################################################################
 
-# Add default SSL Certificate config when ip is visisted
+# Add default SSL Certificate config when ip is visited
 if [ "$PROXY_SYSTEM" = "nginx" ]; then
     echo "[ ! ] Update IP.conf"
     while read IP; do

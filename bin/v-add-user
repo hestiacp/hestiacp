@@ -102,14 +102,16 @@ mkdir $HOMEDIR/$user/.config \
       $HOMEDIR/$user/.cache \
       $HOMEDIR/$user/.local \
       $HOMEDIR/$user/.composer \
-      $HOMEDIR/$user/.ssh
+      $HOMEDIR/$user/.ssh \
+      $HOMEDIR/$user/.npm
 
 chown $user:$user \
       $HOMEDIR/$user/.config \
       $HOMEDIR/$user/.cache \
       $HOMEDIR/$user/.local \
       $HOMEDIR/$user/.composer \
-      $HOMEDIR/$user/.ssh
+      $HOMEDIR/$user/.ssh \
+      $HOMEDIR/$user/.npm
 
 # Set permissions
 chmod a+x $HOMEDIR/$user

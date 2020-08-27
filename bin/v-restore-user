@@ -585,7 +585,7 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
             fi
 
             # Chowning as owner needs to be user:mail instead of user:user
-            find $HOMEDIR/$user/mail/$domain_idn -user $old_uid \
+            find $HOMEDIR/$user/mail/$domain_idn -user $user \
                -exec chown -h $user:mail {} \;
         fi
 

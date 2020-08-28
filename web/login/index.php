@@ -45,7 +45,7 @@ function authenticate_user(){
     if($_POST['user'] == 'root'){
         unset($_POST['password']);
         unset($_POST['user']);
-        $error = "<a class=\"error\">".__('Login with <strong>root</strong> has been disabled')."</a>";
+        $error = "<a class=\"error\">".__('Login with <strong>root</strong> account has been disabled')."</a>";
         return $error;                  
     }    
     

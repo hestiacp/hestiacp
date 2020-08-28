@@ -41,7 +41,15 @@ function authenticate_user(){
         if(!empty($_SERVER['HTTP_CF_CONNECTING_IP'])){
             $v_ip = escapeshellarg($_SERVER['HTTP_CF_CONNECTING_IP']);
         }
-    } 
+    }
+    if($_POST['user'] == 'root'){
+        unset($_POST['password']);
+        unset($_POST['user']);
+        $error = "<a class=\"error\">".__('Login with <strong>root</strong> has been disabled')."</a>";
+        return $error;                  
+    }    
+    
+     
      // Get user's salt
     $output = '';
     exec (HESTIA_CMD."v-get-user-salt ".$v_user." ".$v_ip." json" , $output, $return_var);
@@ -89,10 +97,6 @@ function authenticate_user(){
                 $error = "<a class=\"error\">".__('Invalid username or password')."</a>";
                 return $error;
             } else {
-
-                // Make root admin user
-                if ($_POST['user'] == 'root') $v_user = 'admin';
-
                 // Get user speciefic parameters
                 exec (HESTIA_CMD . "v-list-user ".$v_user." json", $output, $return_var);
                 $data = json_decode(implode('', $output), true);

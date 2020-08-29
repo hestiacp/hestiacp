@@ -654,7 +654,7 @@ cp /etc/vsftpd.conf $hst_backups/vsftpd > /dev/null 2>&1
 
 # Backup ProFTPD configuration
 systemctl stop proftpd > /dev/null 2>&1
-cp /etc/proftpd.conf $hst_backups/proftpd > /dev/null 2>&1
+cp /etc/proftpd/* $hst_backups/proftpd > /dev/null 2>&1
 
 # Backup Exim configuration
 systemctl stop exim4 > /dev/null 2>&1
@@ -1339,6 +1339,7 @@ if [ "$proftpd" = 'yes' ]; then
     echo "[ * ] Configuring ProFTPD server..."
     echo "127.0.0.1 $servername" >> /etc/hosts
     cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/proftpd/
+    cp -f $HESTIA_INSTALL_DIR/proftpd/tls.conf /etc/proftpd/
     update-rc.d proftpd defaults > /dev/null 2>&1
     systemctl start proftpd >> $LOG
     check_result $? "proftpd start failed"

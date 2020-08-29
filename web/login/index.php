@@ -41,16 +41,9 @@ function authenticate_user(){
         if(!empty($_SERVER['HTTP_CF_CONNECTING_IP'])){
             $v_ip = escapeshellarg($_SERVER['HTTP_CF_CONNECTING_IP']);
         }
-    }
-    if($_POST['user'] == 'root'){
-        unset($_POST['password']);
-        unset($_POST['user']);
-        $error = "<a class=\"error\">".__('Login with <strong>root</strong> account has been disabled')."</a>";
-        return $error;                  
     }    
     
-     
-     // Get user's salt
+    // Get user's salt
     $output = '';
     exec (HESTIA_CMD."v-get-user-salt ".$v_user." ".$v_ip." json" , $output, $return_var);
     $pam = json_decode(implode('', $output), true);
@@ -100,7 +93,7 @@ function authenticate_user(){
                 // Get user speciefic parameters
                 exec (HESTIA_CMD . "v-list-user ".$v_user." json", $output, $return_var);
                 $data = json_decode(implode('', $output), true);
-
+                unset($output);
                 // Check if 2FA is active
                 if ($data[$_POST['user']]['TWOFA'] != '') {
                    if (empty($_POST['twofa'])){
@@ -116,6 +109,12 @@ function authenticate_user(){
                             unset($_POST['twofa']);
                         }
                    }
+                }
+                
+                if ($data[$_POST['user']]['ROLE'] == 'admin'){
+                    exec (HESTIA_CMD . "v-list-user admin json", $output, $return_var);
+                    $data = json_decode(implode('', $output), true);
+                    unset($output);
                 }
                 // Define session user
                 $_SESSION['user'] = key($data);

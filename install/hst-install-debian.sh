@@ -64,7 +64,7 @@ elif [ "$release" -eq 10 ]; then
         ssh util-linux ipset libapache2-mpm-itk"
 fi
 
-installer_dependencies="apt-transport-https curl dirmngr gnupg wget"
+installer_dependencies="apt-transport-https curl dirmngr gnupg wget ca-certificates"
 
 # Defining help function
 help() {

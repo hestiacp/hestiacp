@@ -890,6 +890,13 @@ is_object_format_valid() {
     fi
 }
 
+# Role validator 
+is_role_valid (){
+    if ! [[ "$1" =~ ^admin|user$ ]]; then
+        check_result $E_INVALID "invalid $2 format :: $1"
+    fi
+}
+
 # Password validator
 is_password_format_valid() {
     if [ "${#1}" -lt '6' ]; then
@@ -979,6 +986,7 @@ is_format_valid() {
                 quota)          is_int_format_valid "$arg" 'quota' ;;
                 record)         is_common_format_valid "$arg" 'record';;
                 restart)        is_boolean_format_valid "$arg" 'restart' ;;
+                role)           is_role_valid "$arg" 'role' ;;
                 rtype)          is_dns_type_format_valid "$arg" ;;
                 rule)           is_int_format_valid "$arg" "rule id" ;;
                 service)        is_service_format_valid "$arg" "$arg_name" ;;

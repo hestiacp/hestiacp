@@ -49,8 +49,8 @@ if (!empty($_POST['save'])) {
     if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
         header('location: /login/');
         exit();
-    }
-
+    } 
+    
     // Change database user
     if (($v_dbuser != $_POST['v_dbuser']) && (empty($_SESSION['error_msg']))) {
         $v_dbuser = preg_replace("/^".$user."_/", "", $_POST['v_dbuser']);

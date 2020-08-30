@@ -38,7 +38,7 @@ if (!empty($_POST['ok'])) {
         if (!filter_var($_POST['v_db_email'], FILTER_VALIDATE_EMAIL)) {
             $_SESSION['error_msg'] = __('Please enter valid email address.');
         }
-    }
+    }   
 
     // Check password length
     if (empty($_SESSION['error_msg'])) {

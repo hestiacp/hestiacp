@@ -584,17 +584,15 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
                 check_result "$E_PARSING" "$error"
             fi
 
-            # Re-chowning files if uid differs
-            if [ "$old_uid" -ne "$new_uid" ]; then
-                find $HOMEDIR/$user/mail/$domain_idn -user $old_uid \
-                    -exec chown -h $user:mail {} \;
-            fi
+            # Chowning as owner needs to be user:mail instead of user:user
+            find $HOMEDIR/$user/mail/$domain_idn -user $user \
+               -exec chown -h $user:mail {} \;
         fi
 
         # Chowning mail conf files to exim user
         find $HOMEDIR/$user/conf/mail/$domain_idn -user root \
             -exec chown $exim_user {} \;
-
+            
     done
 
     # Restarting web server

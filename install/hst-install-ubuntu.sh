@@ -794,7 +794,7 @@ fi
 if [ -d "$withdebs" ]; then
     software=$(echo "$software" | sed -e "s/hestia-nginx//")
     software=$(echo "$software" | sed -e "s/hestia-php//")
-    software=$(echo "$software" | sed -e "s/hestia//")
+    software=$(echo "$software" | sed -e "s/hestia=${HESTIA_INSTALL_VER}//")        
 fi
 if [ "$release" = '16.04' ]; then
     software=$(echo "$software" | sed -e "s/libonig5/libonig2/")

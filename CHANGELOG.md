@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
     - `UPGRADE_SEND_EMAIL` = Sends an email notification to admin email address
     - `UPGRADE_SEND_EMAIL_LOG` = Sends installation log output to admin email address
 - Upgrade process will now save logs to the `hst_backups` directory.
+- Add support Proftpd TLS Support
 
 ## Bugfixes
 

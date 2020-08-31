@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - Upgrade process will now save logs to the `hst_backups` directory.
 
 ## Bugfixes
+- Update apache2.conf replace Include with IncludeOptional (#1072)
 
 ## [1.2.3] - Service Release
 ### Features

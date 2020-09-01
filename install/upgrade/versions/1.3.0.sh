@@ -34,7 +34,7 @@ if [ "$FTP_SYSTEM" == "proftpd" ]; then
     if [ -e  /etc/proftpd/proftpd.conf ]; then
         rm /etc/proftpd/proftpd.conf
     fi
-    if [ -e  /etc/proftpd/tlss.conf ]; then
+    if [ -e  /etc/proftpd/tls.conf ]; then
         rm /etc/proftpd/tls.conf
     fi
     

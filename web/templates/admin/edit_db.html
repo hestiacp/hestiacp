@@ -67,9 +67,10 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-
-                                    <?php print __('Username');?>
-                                    <?php echo "&nbsp;&nbsp;&nbsp;&nbsp;<em><small>(".__('maximum characters length, including prefix', 32).")</small></em>"; ?>
+                                    <?php
+                                        print _('Username');
+                                        echo "&nbsp;&nbsp;&nbsp;&nbsp;<em><small>(".sprintf(_('maximum characters length, including prefix'), 32).")</small></em>";
+                                    ?>
                                 </td>
                             </tr>
                             <tr>

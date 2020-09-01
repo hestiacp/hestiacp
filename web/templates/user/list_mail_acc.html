@@ -69,12 +69,12 @@
             $status = 'suspended';
             $spnd_action = 'unsuspend';
             $spnd_icon = 'fa-play';
-            $spnd_confirmation = 'UNSUSPEND_MAIL_ACCOUNT_CONFIRMATION' ;
+            $spnd_confirmation = _('UNSUSPEND_MAIL_ACCOUNT_CONFIRMATION') ;
           } else {
             $status = 'active';
             $spnd_action = 'suspend';
             $spnd_icon = 'fa-pause';
-            $spnd_confirmation = 'SUSPEND_MAIL_ACCOUNT_CONFIRMATION' ;
+            $spnd_confirmation = _('SUSPEND_MAIL_ACCOUNT_CONFIRMATION') ;
           }
       ?>
 
@@ -101,7 +101,7 @@ sort-star="<? if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] =
                         <i class="fas <?=$spnd_icon?> status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
                         <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?php echo $key ?>&token=<?=$_SESSION['token']?>" />
                         <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=_('Confirmation')?>">
-                          <p class="confirmation"><?=_($spnd_confirmation,$key)?></p>
+                          <p class="confirmation"><?=sprintf($spnd_confirmation,$key)?></p>
                         </div>
                       </a>
                     </div>
@@ -110,7 +110,7 @@ sort-star="<? if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] =
                       <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
                         <input type="hidden" name="delete_url" value="/delete/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" />
                         <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=_('Confirmation')?>">
-                          <p class="confirmation"><?=_('DELETE_MAIL_ACCOUNT_CONFIRMATION',$key)?></p>
+                          <p class="confirmation"><?=sprintf(_('DELETE_MAIL_ACCOUNT_CONFIRMATION'),$key)?></p>
                         </div>
                       </a>
                     </div>

@@ -62,12 +62,12 @@
             $status = 'suspended';
             $spnd_action = 'unsuspend';
             $spnd_icon = 'fa-play';
-            $spnd_confirmation = 'UNSUSPEND_RULE_CONFIRMATION' ;
+            $spnd_confirmation = _('UNSUSPEND_RULE_CONFIRMATION') ;
           } else {
             $status = 'active';
             $spnd_action = 'suspend';
             $spnd_icon = 'fa-pause';
-            $spnd_confirmation = 'SUSPEND_RULE_CONFIRMATION' ;
+            $spnd_confirmation = _('SUSPEND_RULE_CONFIRMATION') ;
           }
       ?>
 
@@ -106,7 +106,7 @@ sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$k
                       <i class="fas <?=$spnd_icon?> status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
                       <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>" />
                       <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=_('Confirmation')?>">
-                        <p class="confirmation"><?=_($spnd_confirmation,$key)?></p>
+                        <p class="confirmation"><?=sprintf($spnd_confirmation,$key)?></p>
                       </div>
                     </a>
                   </div>
@@ -115,7 +115,7 @@ sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$k
                       <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
                       <input type="hidden" name="delete_url" value="/delete/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>" />
                       <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=_('Confirmation')?>">
-                        <p class="confirmation"><?=_('DELETE_RULE_CONFIRMATION',$key)?></p>
+                        <p class="confirmation"><?=sprintf(_('DELETE_RULE_CONFIRMATION'),$key)?></p>
                       </div>
                     </a>
                   </div>

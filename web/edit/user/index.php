@@ -200,7 +200,7 @@ if (!empty($_POST['save'])) {
     // Change full name
     if ($v_name != $_POST['v_name']){
             if (empty($_POST['v_name'])) {
-                 $_SESSION['error_msg'] = __('Please enter a valid name');
+                 $_SESSION['error_msg'] = _('Please enter a valid name');
             }else{
                 $v_name = escapeshellarg($_POST['v_name']);
                 exec (HESTIA_CMD."v-change-user-name ".escapeshellarg($v_username). " ".$v_name, $output, $return_var);

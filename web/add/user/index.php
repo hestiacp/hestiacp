@@ -27,7 +27,7 @@ if (!empty($_POST['ok'])) {
     if (empty($_POST['v_package'])) $errrors[] = _('package');
     if (empty($_POST['v_email'])) $errors[] = _('email');
     if (empty($_POST['v_name'])) $errors[] = _('name');
-    if (!empty($errors[0])) {
+    if (!empty($errors)) {
         foreach ($errors as $i => $error) {
             if ( $i == 0 ) {
                 $error_msg = $error;
@@ -35,7 +35,7 @@ if (!empty($_POST['ok'])) {
                 $error_msg = $error_msg.", ".$error;
             }
         }
-        $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
+        $_SESSION['error_msg'] = sprintf(_('Field "%s" can not be blank.'),$error_msg);
     }
 
     // Validate email
@@ -91,20 +91,20 @@ if (!empty($_POST['ok'])) {
         $subject = _("Welcome to Hestia Control Panel"); //currently not supported to use the account language
         $hostname = exec('hostname');
         unset($output);
-        $from = _('MAIL_FROM',$hostname); //currently not supported to use the account language
+        $from = sprintf(_('MAIL_FROM'),$hostname); //currently not supported to use the account language
 
         if (!empty($_POST['v_name'])) {
-            $mailtext = _('GREETINGS_GORDON',$_POST['v_name']);
+            $mailtext = sprintf(_('GREETINGS_GORDON'),$_POST['v_name'])."\r\n";
         } else {
-            $mailtext = _('GREETINGS');
+            $mailtext = _('GREETINGS')."\r\n";
         }
-        $mailtext .= _($_POST['v_language'],'ACCOUNT_READY',$_SERVER['HTTP_HOST'],$_POST['v_username'],$_POST['v_password']);
+        $mailtext .= sprintf(_('ACCOUNT_READY'),$_SERVER['HTTP_HOST'],$_POST['v_username'],$_POST['v_password']);
         send_email($to, $subject, $mailtext, $from);
     }
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = _('USER_CREATED_OK',htmlentities($_POST['v_username']),htmlentities($_POST['v_username']));
+        $_SESSION['ok_msg'] = sprintf(_('USER_CREATED_OK'),htmlentities($_POST['v_username']),htmlentities($_POST['v_username']));
         $_SESSION['ok_msg'] .= " / <a href=/login/?loginas=".htmlentities($_POST['v_username']).">" . _('login as') ." ".htmlentities($_POST['v_username']). "</a>";
         unset($v_username);
         unset($v_password);

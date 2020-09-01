@@ -59,15 +59,6 @@
     <?php
       foreach ($data as $key => $value) {
         ++$i;
-        if ($data[$key]['SUSPENDED'] == 'yes') {
-          $status = 'suspended';
-          $spnd_action = 'unsuspend' ;
-          $spnd_confirmation = 'UNSUSPEND_USER_CONFIRMATION' ;
-        } else {
-          $status = 'active';
-          $spnd_action = 'suspend' ;
-          $spnd_confirmation = 'SUSPEND_USER_CONFIRMATION' ;
-        }
     ?>
 
     <div class="l-unit  <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['USER'][$key] == 1) echo ' l-unit--starred';?>" v_section="user"
@@ -89,7 +80,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                             <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
                             <input type="hidden" name="delete_url" value="/delete/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" />
                             <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=_('Confirmation')?>">
-                              <p class="confirmation"><?=_('DELETE_PACKAGE_CONFIRMATION',$key)?></p>
+                              <p class="confirmation"><?=sprintf(_('DELETE_PACKAGE_CONFIRMATION'),$key)?></p>
                             </div>
                           </a>
                         </div>

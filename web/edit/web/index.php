@@ -656,8 +656,8 @@ if (!empty($_POST['save'])) {
                         $to = $v_ftp_user_data['v_ftp_email'];
                         $subject = _("FTP login credentials");
                         $hostname = exec('hostname');
-                        $from = _('MAIL_FROM',$hostname);
-                        $mailtext = _('FTP_ACCOUNT_READY',escapeshellarg($_GET['domain']),$user,$v_ftp_username,$v_ftp_user_data['v_ftp_password']);
+                        $from = sprintf(_('MAIL_FROM'),$hostname);
+                        $mailtext = sprintf(_('FTP_ACCOUNT_READY'),escapeshellarg($_GET['domain']),$user,$v_ftp_username,$v_ftp_user_data['v_ftp_password']);
                         send_email($to, $subject, $mailtext, $from);
                         unset($v_ftp_email);
                     }

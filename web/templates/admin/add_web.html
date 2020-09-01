@@ -197,7 +197,7 @@
                             </tr>
                              <tr>
                                 <td class="vst-text step-top">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_custom_doc_root_check" <?php if (!empty($v_custom_doc_root)) echo "checked=yes" ?> onclick="javascript:elementHideShow('v_custom_doc_root');"> <?php print __('Custom document root');?></label>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_custom_doc_root_check" <?php if (!empty($v_custom_doc_root)) echo "checked=yes" ?> onclick="javascript:elementHideShow('v_custom_doc_root');"><?php print _('Custom document root');?></label>
                                 </td>
                             </tr>
                             <tr>
@@ -205,7 +205,7 @@
                                     <table style="display:<?php if (empty($v_custom_doc_root)) { echo 'none';} else {echo 'block';}?> ;" id="v_custom_doc_root">
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('Point to');?>
+                                                <?php print _('Point to');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -233,7 +233,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print( __('Directory'));?> <span class="optional">(<?php print __('optional');?>)</span>
+                                                <?php print( _('Directory'));?> <span class="optional">(<?php print _('optional');?>)</span>
                                             </td>
                                         </tr>
                                         <tr>
@@ -330,7 +330,7 @@
                                         <tr>
                                             <td class="vst-text step-left input-label">
                                                 <?php print _('Username');?><br>
-                                                <span style="font-size: 10pt; color:#777;"><?php print _('Prefix will be automaticaly added to username',$user."_");?></span>
+                                                <span style="font-size: 10pt; color:#777;"><?php print sprintf(_('Prefix %s will be added to username automatically'),$user."_");?></span>
                                             </td>
                                         </tr>
                                         <tr>
@@ -402,7 +402,7 @@
                 <tr>
                     <td class="vst-text step-left input-label">
                         <?php print _('Username');?><br>
-                        <span style="font-size: 10pt; color:#777;"><?php print _('Prefix will be automaticaly added to username',$user."_");?></span>
+                        <span style="font-size: 10pt; color:#777;"><?php print sprintf(_('Prefix %s will be added to username automatically'),$user."_");?></span>
                     </td>
                 </tr>
                 <tr>

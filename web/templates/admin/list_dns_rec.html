@@ -56,15 +56,6 @@
       <?php
         foreach ($data as $key => $value) {
           ++$i;
-          if ($data[$key]['SUSPENDED'] == 'yes') {
-            $status = 'suspended';
-            $spnd_action = 'unsuspend' ;
-            $spnd_confirmation = 'UNSUSPEND_RECORD_CONFIRMATION' ;
-          } else {
-            $status = 'active';
-            $spnd_action = 'suspend' ;
-            $spnd_confirmation = 'UNSUSPEND_RECORD_CONFIRMATION' ;
-          }
       ?>
 
       <div class="l-unit<? if($status == 'suspended') echo ' l-unit--suspended'; if($_SESSION['favourites']['DNS_REC'][$key] == 1) echo ' l-unit--starred';?>"
@@ -84,7 +75,7 @@ v_unit_id="<?=$key?>" v_section="dns_rec">
                       <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
                       <input type="hidden" name="delete_url" value="/delete/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" />
                       <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=_('Confirmation')?>">
-                        <p class="confirmation"><?=_('DELETE_RECORD_CONFIRMATION',$key)?></p>
+                        <p class="confirmation"><?=sprintf(_('DELETE_RECORD_CONFIRMATION'),$key)?></p>
                       </div>
                     </a>
                   </div>

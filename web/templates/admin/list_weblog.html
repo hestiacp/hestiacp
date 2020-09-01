@@ -24,8 +24,8 @@
       <a href="/" class="l-logo"></a>
       <div class="l-menu clearfix">
         <div class="l-menu__item"><a href="/list/web/" title="<?=_('Back')?>"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;&nbsp;<?=_('Back')?></a></div>
-        <div class="l-menu__item <?php if($_GET['type'] == 'access') echo 'l-menu__item--active' ?>"><a href="/list/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=access" title="<?=_('AccessLog')?>"><i class="fas fa-eye"></i>&nbsp;&nbsp;&nbsp;<?=_('AccessLog')?></a><a href="/download/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=access"><i class="fas fa-download"></i></a></div>
-        <div class="l-menu__item <?php if($_GET['type'] == 'error') echo 'l-menu__item--active' ?>"><a href="/list/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=error" title="<?=_('ErrorLog')?>"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;&nbsp;<?=_('ErrorLog')?></a><a href="/download/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=error"><i class="fas fa-download"></i></a></div>
+        <div class="l-menu__item <?php if($_GET['type'] == 'access') echo 'l-menu__item--active' ?>"><a href="/list/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=access" title="<?=_('Access Log')?>"><i class="fas fa-eye"></i>&nbsp;&nbsp;&nbsp;<?=_('Access Log')?></a><a href="/download/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=access"><i class="fas fa-download"></i></a></div>
+        <div class="l-menu__item <?php if($_GET['type'] == 'error') echo 'l-menu__item--active' ?>"><a href="/list/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=error" title="<?=_('Error Log')?>"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;&nbsp;<?=_('Error Log')?></a><a href="/download/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=error"><i class="fas fa-download"></i></a></div>
       </div>
       <div class="l-profile">
         <div class="l-menu__item"><a href="javascript:location.reload();" title="<?=_('Refresh')?>"><i class="fas fa-redo"></i></a></div>

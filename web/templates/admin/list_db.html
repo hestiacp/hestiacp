@@ -96,12 +96,12 @@
             $status = 'suspended';
             $spnd_action = 'unsuspend';
             $spnd_icon = 'fa-play';
-            $spnd_confirmation = 'UNSUSPEND_DATABASE_CONFIRMATION' ;
+            $spnd_confirmation = _('UNSUSPEND_DATABASE_CONFIRMATION') ;
           } else {
             $status = 'active';
             $spnd_action = 'suspend';
             $spnd_icon = 'fa-pause';
-            $spnd_confirmation = 'SUSPEND_DATABASE_CONFIRMATION' ;
+            $spnd_confirmation = _('SUSPEND_DATABASE_CONFIRMATION') ;
           }
           if ($data[$key]['HOST'] != 'localhost' ) $http_host = $data[$key]['HOST'];
           if ($data[$key]['TYPE'] == 'mysql') $db_admin = "phpMyAdmin";
@@ -132,7 +132,7 @@ sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" so
                                 <i class="fas <?=$spnd_icon?> status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
                                 <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" />
                                 <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=_('Confirmation')?>">
-                                  <p class="confirmation"><?=_($spnd_confirmation,$key)?></p>
+                                  <p class="confirmation"><?=sprintf($spnd_confirmation,$key)?></p>
                                 </div>
                               </a>
                             </div>
@@ -141,7 +141,7 @@ sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" so
                                 <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
                                 <input type="hidden" name="delete_url" value="/delete/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" />
                                 <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=_('Confirmation')?>">
-                                  <p class="confirmation"><?=_('DELETE_DATABASE_CONFIRMATION',$key)?></p>
+                                  <p class="confirmation"><?=sprintf(_('DELETE_DATABASE_CONFIRMATION'),$key)?></p>
                                 </div>
                               </a>
                             </div>

@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - Support for removing backup remote location (#1083)
 
 ## Bugfixes
+- Update apache2.conf replace Include with IncludeOptional (#1072)
 
 - Add ca-certificates, software-properties-common to the dependencies (#1073 + [Forum](https://forum.hestiacp.com/t/hestiscp-fails-on-new-debian-9-vps/1623/8) ) @daniel-eder
 - Fixed issues with database port during backup when port was missing (#1068)

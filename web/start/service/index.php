@@ -22,7 +22,7 @@ if ($_SESSION['user'] == 'admin') {
     }
     if ($return_var != 0) {
         $error = implode('<br>', $output);
-        if (empty($error)) $error =  __('SERVICE_ACTION_FAILED',__('start'),$v_service);;
+        if (empty($error)) $error =  __('Start "%s" failed',$v_service);;
             $_SESSION['error_srv'] = $error;
     }
     unset($output);

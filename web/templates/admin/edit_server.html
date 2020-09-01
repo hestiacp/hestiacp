@@ -842,14 +842,14 @@
                                     <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="hestia">
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('Fm');?>
+                                                <?php print __('Filemanager');?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <select class="vst-list" name="v_filemanager">
-                                                    <option value='no'><?php print __('no'); ?></option>
-                                                    <option value='yes' <?php if($_SESSION['FILE_MANAGER'] == 'true') echo 'selected' ?> ><?php print __('yes'); ?></option>
+                                                    <option value='false'><?php print __('no'); ?></option>
+                                                    <option value='true' <?php if($_SESSION['FILE_MANAGER'] == 'true') echo 'selected' ?> ><?php print __('yes'); ?></option>
                                                 </select>
                                                 <br><br>
                                             </td>

@@ -67,7 +67,9 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
+
                                     <?php print __('Username');?>
+                                    <?php echo "&nbsp;&nbsp;&nbsp;&nbsp;<em><small>(".__('maximum characters length, including prefix', 32).")</small></em>"; ?>
                                 </td>
                             </tr>
                             <tr>
@@ -134,8 +136,12 @@
             </table>
         </form>
     </div>
-
+    <?php if ($v_type == 'pgsql'){
+        $user=strtolower($user);
+    }
+    ?>
     <script>
         GLOBAL.DB_USER_PREFIX = <?=json_encode($user.'_')?>;
         GLOBAL.DB_DBNAME_PREFIX = <?=json_encode($user.'_')?>;
     </script>
+

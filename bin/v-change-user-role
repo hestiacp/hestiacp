@@ -1,14 +1,6 @@
 #!/bin/bash
-# info: rebuild all assets for a specified user
-# options: USER [RESTART]
-#
-# The function rebuilds all assets for a user account:
-# - Web domains
-# - DNS zones
-# - Mail domains
-# - Databases
-# - Cron Jobs
-# - User account configuration
+# info: updates user role
+# options: USER ROLE
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -16,44 +8,35 @@
 
 # Argument definition
 user=$1
-restart=$2
+role=$2
+
 
 # Includes
 source $HESTIA/func/main.sh
-source $HESTIA/func/rebuild.sh
 source $HESTIA/conf/hestia.conf
-
-# Export sbin
-export PATH=$PATH:/usr/sbin
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'USER [RESTART]'
-is_format_valid 'user'
-is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
+# Reading user values
+source $USER_DATA/user.conf
 
+is_format_valid 'user' 'role'
+is_object_valid 'user' 'USER' "$user"
+
+is_object_unsuspended 'user' 'USER' "$user"
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Rebuild loop
-$BIN/v-rebuild-web-domains $user $restart
-$BIN/v-rebuild-dns-domains $user $restart
-$BIN/v-rebuild-mail-domains $user $restart
-$BIN/v-rebuild-databases $user $restart
-$BIN/v-rebuild-cron-jobs $user $restart
-$BIN/v-rebuild-user $user $restart
+update_user_value "$user" '$ROLE' "$role"
+
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
-
-# Logging
-log_event "$OK" "$ARGUMENTS"
 
 exit

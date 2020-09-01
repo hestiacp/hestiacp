@@ -38,6 +38,7 @@ $dist_config['services']['Filegator\Services\Storage\Filesystem']['config']['ada
             'privateKey' => '/home/'.basename($v_user).'/.ssh/hst-filemanager-key',
             'root' => '/',
             'timeout' => 10,
+            'directoryPerm' => 0755,
         ]);
     };
 

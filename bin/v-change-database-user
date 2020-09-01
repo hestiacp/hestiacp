@@ -15,6 +15,10 @@ database=$2
 dbuser="$user"_"$3"
 password=$4; HIDE=4
 
+if [ "$type" = "pgsql" ]; then
+   dbuser=$(echo "$user"_"$3" | tr '[:upper:]' '[:lower:]'); 
+fi
+
 # Includes
 source $HESTIA/func/main.sh
 source $HESTIA/func/db.sh

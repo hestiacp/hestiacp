@@ -46,7 +46,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     hestia-nginx hestia-php vim-common vsftpd whois zip acl sysstat setpriv
     ipset libonig5 libzip5 openssh-server ssh"
 
-installer_dependencies="apt-transport-https curl dirmngr gnupg wget"
+installer_dependencies="apt-transport-https curl dirmngr gnupg wget software-properties-common ca-certificates"
 
 # Defining help function
 help() {
@@ -366,7 +366,7 @@ if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
         echo -e "\e[33mhttps://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh\e[0m"
         echo ""
         echo -e "\e[33mTo test pre-release versions, build the .deb packages and re-run the installer:\e[0m"
-        echo -e "  \e[33m./hst_autocompile.sh \e[1m--hestia no\e[21m\e[0m"
+        echo -e "  \e[33m./hst_autocompile.sh \e[1m--hestia branchname no\e[21m\e[0m"
         echo -e "  \e[33m./hst-install.sh .. \e[1m--with-debs /tmp/hestiacp-src/debs\e[21m\e[0m"
         echo ""
         check_result 1 "Installation aborted"
@@ -654,7 +654,7 @@ cp /etc/vsftpd.conf $hst_backups/vsftpd > /dev/null 2>&1
 
 # Backup ProFTPD configuration
 systemctl stop proftpd > /dev/null 2>&1
-cp /etc/proftpd.conf $hst_backups/proftpd > /dev/null 2>&1
+cp /etc/proftpd/* $hst_backups/proftpd > /dev/null 2>&1
 
 # Backup Exim configuration
 systemctl stop exim4 > /dev/null 2>&1
@@ -794,7 +794,7 @@ fi
 if [ -d "$withdebs" ]; then
     software=$(echo "$software" | sed -e "s/hestia-nginx//")
     software=$(echo "$software" | sed -e "s/hestia-php//")
-    software=$(echo "$software" | sed -e "s/hestia//")
+    software=$(echo "$software" | sed -e "s/hestia=${HESTIA_INSTALL_VER}//")        
 fi
 if [ "$release" = '16.04' ]; then
     software=$(echo "$software" | sed -e "s/libonig5/libonig2/")
@@ -1339,6 +1339,7 @@ if [ "$proftpd" = 'yes' ]; then
     echo "[ * ] Configuring ProFTPD server..."
     echo "127.0.0.1 $servername" >> /etc/hosts
     cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/proftpd/
+    cp -f $HESTIA_INSTALL_DIR/proftpd/tls.conf /etc/proftpd/
     update-rc.d proftpd defaults > /dev/null 2>&1
     systemctl start proftpd >> $LOG
     check_result $? "proftpd start failed"
@@ -1449,7 +1450,7 @@ if [ "$postgresql" = 'yes' ]; then
     fi
     cp -f $HESTIA_INSTALL_DIR/pga/config.inc.php /etc/phppgadmin/
 
-    echo "DB_PMA_ALIAS='phppgadmin'" >> $HESTIA/conf/hestia.conf
+    echo "DB_PGA_ALIAS='phppgadmin'" >> $HESTIA/conf/hestia.conf
     $HESTIA/bin/v-change-sys-db-alias 'pga' "phppgadmin"
 fi
 

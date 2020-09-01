@@ -77,6 +77,14 @@ if (!empty($_POST['ok'])) {
         unset($output);
     }
 
+    // Set Role
+    if (empty($_SESSION['error_msg'])) {
+        $v_role = escapeshellarg($_POST['v_role']);
+        exec (HESTIA_CMD."v-change-user-role ".$v_username." ".$v_role, $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
+    }
+
     // Send email to the new user
     if ((empty($_SESSION['error_msg'])) && (!empty($v_notify))) {
         $to = $_POST['v_notify'];

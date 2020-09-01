@@ -28,6 +28,7 @@ database_set_default_ports() {
 
 # MySQL
 mysql_connect() {
+    unset PORT
     host_str=$(grep "HOST='$1'" $HESTIA/conf/mysql.conf)
     parse_object_kv_list "$host_str"
     if [ -z $PORT ]; then PORT=3306; fi
@@ -100,6 +101,7 @@ mysql_dump() {
 
 # PostgreSQL
 psql_connect() {
+    unset PORT
     host_str=$(grep "HOST='$1'" $HESTIA/conf/pgsql.conf)
     parse_object_kv_list "$host_str"
     export PGPASSWORD="$PASSWORD"

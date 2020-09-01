@@ -724,9 +724,14 @@ is_common_format_valid() {
 
 # Database format validator
 is_database_format_valid() {
-    exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|/|\|\"|'|;|%|\`| ]"
-    if [[ "$1" =~ $exclude ]] || [ 65 -le ${#1} ]; then
-        check_result $E_INVALID "invalid $2 format :: $1"
+    if [ "$3" == "pgsql" ]; then
+        if ! [[ "$1" =~ ^[0-9a-z_]{1,63}$ ]]; then
+            check_result $E_INVALID "invalid $2 format :: $1"
+        fi  
+    else
+        if ! [[ "$1" =~ ^[0-9a-zA-Z_]{1,64}$ ]]; then
+            check_result $E_INVALID "invalid $2 format :: $1"
+        fi  
     fi
 }
 
@@ -739,12 +744,17 @@ is_date_format_valid() {
 
 # Database user validator
 is_dbuser_format_valid() {
-    exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|/|\|\"|'|;|%|\`| ]"
-    if [ 31 -le ${#1} ]; then
-        check_result $E_INVALID "mysql username can be up to 30 characters long"
-    fi
-    if [[ "$1" =~ $exclude ]]; then
-        check_result $E_INVALID "invalid $2 format :: $1"
+    if [ "$3" == "pgsql" ]; then
+        if ! [[ "$1" =~ ^[0-9a-z_]{1,63}$ ]]; then
+            check_result $E_INVALID "invalid $2 format :: $1"
+        fi 
+    else
+        if [ 33 -le ${#1} ]; then
+            check_result $E_INVALID "mysql username can be up to 32 characters long"
+        fi
+        if ! [[ "$1" =~ ^[0-9a-zA-Z_]{1,64}$ ]]; then
+            check_result $E_INVALID "invalid $2 format :: $1"
+        fi           
     fi
 }
 
@@ -890,6 +900,13 @@ is_object_format_valid() {
     fi
 }
 
+# Role validator 
+is_role_valid (){
+    if ! [[ "$1" =~ ^admin|user$ ]]; then
+        check_result $E_INVALID "invalid $2 format :: $1"
+    fi
+}
+
 # Password validator
 is_password_format_valid() {
     if [ "${#1}" -lt '6' ]; then
@@ -931,10 +948,10 @@ is_format_valid() {
                 charset)        is_object_format_valid "$arg" "$arg_name" ;;
                 charsets)       is_common_format_valid "$arg" 'charsets' ;;
                 comment)        is_object_format_valid "$arg" 'comment' ;;
-                database)       is_database_format_valid "$arg" 'database';;
+                database)       is_database_format_valid "$arg" 'database' $type;;
                 day)            is_cron_format_valid "$arg" $arg_name ;;
                 dbpass)         is_password_format_valid "$arg" ;;
-                dbuser)         is_dbuser_format_valid "$arg" 'dbuser';;
+                dbuser)         is_dbuser_format_valid "$arg" 'dbuser' $type;;
                 dkim)           is_boolean_format_valid "$arg" 'dkim' ;;
                 dkim_size)      is_int_format_valid "$arg" ;;
                 domain)         is_domain_format_valid "$arg" ;;
@@ -979,6 +996,7 @@ is_format_valid() {
                 quota)          is_int_format_valid "$arg" 'quota' ;;
                 record)         is_common_format_valid "$arg" 'record';;
                 restart)        is_boolean_format_valid "$arg" 'restart' ;;
+                role)           is_role_valid "$arg" 'role' ;;
                 rtype)          is_dns_type_format_valid "$arg" ;;
                 rule)           is_int_format_valid "$arg" "rule id" ;;
                 service)        is_service_format_valid "$arg" "$arg_name" ;;

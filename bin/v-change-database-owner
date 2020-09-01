@@ -13,6 +13,7 @@
 database=$1
 user=$2
 
+
 # Includes
 source $HESTIA/func/main.sh
 source $HESTIA/func/db.sh
@@ -51,8 +52,15 @@ if [ -z "$db_data" ]; then
     exit $E_NOTEXIST
 fi
 
-# Check if datbase name is uniq
-new_db=$(echo $database | sed "s/^${owner}_/${user}_/")
+#Fix issue #1084 with "Upper case not allowed with PGSQL"
+if [ "$TYPE" == "pgsql" ]; then
+   usersmall=$(echo "$user" | tr '[:upper:]' '[:lower:]');
+else
+   usersmall=$user
+fi
+
+# Check if database name is uniqe
+new_db=$(echo $database | sed "s/^${owner}_/${usersmall}_/")
 check_db=$(grep "DB='$new_db'" $HESTIA/data/users/$user/db.conf)
 if [ ! -z "$check_db" ]; then
     echo "Error: $new_db database exists"
@@ -84,7 +92,7 @@ case $TYPE in
 esac
 
 # Import configuration
-db_data=$(echo "$db_data" | sed "s/'${owner}_/'${user}_/g")
+db_data=$(echo "$db_data" | sed "s/'${owner}_/'${usersmall}_/g")
 echo "$db_data" >> $HESTIA/data/users/$user/db.conf
 parse_object_kv_list "$db_data"
 

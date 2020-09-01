@@ -1,7 +1,7 @@
 <?php
 /**
  * Hestia language file
- * 浩浩 (github#myrevery.com) Feedback: https://myrevery.com/tag/vestacp
+ * 浩浩 (github#myrevery.com) Feedback: https://myrevery.com/tag/hestiacp
  * Kevin (kevin#kvm.la)
  * Tips:
  * 欢迎大家参与完善此翻译档，但请慎重选择最终中文字词
@@ -47,8 +47,8 @@ $LANG['cn'] = array(
 
     'no notifications' => '没有通知',
 
-    'Add User' => '添加用户',
-    'Add Domain' => '添加域名',
+    'Add User' => '添加用户账户',
+    'Add Domain' => '添加网站域名',
     'Add Web Domain' => '添加网站域名',
     'Add DNS Domain' => '添加DNS域名',
     'Add DNS Record' => '添加DNS记录',
@@ -56,12 +56,12 @@ $LANG['cn'] = array(
     'Add Mail Account' => '添加邮箱账户',
     'Add Database' => '添加数据库',
     'Add Cron Job' => '添加定时任务',
-    'Create Backup' => '创建备份',
+    'Create Backup' => '创建数据备份',
     'Configure' => '配置',
     'Restore All' => '全部恢复',
-    'Add Package' => '添加方案',
+    'Add Package' => '添加用户方案',
     'Add IP' => '添加IP地址',
-    'Add Rule' => '添加规则',
+    'Add Rule' => '添加防火墙规则',
     'Ban IP Address' => '封锁IP地址',
     'Search' => '搜索',
     'Add one more FTP Account' => '增加一个FTP账户',
@@ -83,15 +83,15 @@ $LANG['cn'] = array(
     'rebuild mail' => '重建邮箱',
     'rebuild db' => '重建数据库',
     'rebuild cron' => '重建定时任务',
-    'update counters' => '更新计数器',
+    'update counters' => '更新使用情况',
     'suspend' => '暂停',
     'unsuspend' => '解除暂停',
     'delete' => '删除',
-    'show per user' => '按用户显示',
-    'login as' => '登录至账户',
+    'show per user' => '选中指定的用户显示',
+    'login as' => '切换登录至账户',
     'logout' => '登出',
     'edit' => '编辑',
-    'open webstats' => '打开网站统计',
+    'open webstats' => '查看网站统计',
     'view logs' => '查看日志',
     'list records' => '列出 %s 条记录',
     'add record' => '添加记录',
@@ -109,17 +109,17 @@ $LANG['cn'] = array(
     'update' => '更新',
     'generate' => '生成',
     'Generate CSR' => '生成CSR',
-    'reread IP' => '重新读取IP',
-    'enable autoupdate' => '启用自动更新',
-    'disable autoupdate' => '停用自动更新',
-    'turn on notifications' => '启用通知',
-    'turn off notifications' => '停用通知',
+    'reread IP' => '重新读取IP地址',
+    'enable autoupdate' => '点击启用自动更新',
+    'disable autoupdate' => '点击停用自动更新',
+    'turn on notifications' => '点击启用通知',
+    'turn off notifications' => '点击停用通知',
     'configure' => '配置',
 
-    'Adding User' => '添加用户',
-    'Editing User' => '编辑用户',
-    'Adding Domain' => '添加域名',
-    'Editing Domain' => '编辑域名',
+    'Adding User' => '添加用户账户',
+    'Editing User' => '编辑用户账户',
+    'Adding Domain' => '添加网站域名',
+    'Editing Domain' => '编辑网站域名',
     'Adding DNS Domain' => '添加DNS域名',
     'Editing DNS Domain' => '编辑DNS域名',
     'Adding DNS Record' => '添加DNS记录',
@@ -132,17 +132,17 @@ $LANG['cn'] = array(
     'Editing Cron Job' => '编辑定时任务',
     'Adding Cron Job' => '添加定时任务',
     'Editing Database' => '编辑数据库',
-    'Adding Package' => '添加方案',
-    'Editing Package' => '编辑方案',
+    'Adding Package' => '添加用户方案',
+    'Editing Package' => '编辑用户方案',
     'Adding IP address' => '添加IP地址',
     'Editing IP Address' => '编辑IP地址',
-    'Editing Backup Exclusions' => '配置需排除备份的项目',
+    'Editing Backup Exclusions' => '配置数据备份的排除项',
     'Generating CSR' => '生成CSR',
     'Listing' => '列出',
     'Search Results' => '搜索结果',
     'Adding Firewall Rule' => '添加防火墙规则',
     'Editing Firewall Rule' => '编辑防火墙规则',
-    'Adding IP Address to Banlist' => '添加IP至封锁列表',
+    'Adding IP Address to Banlist' => '添加IP地址以封锁',
 
     'active' => '正常',
     'spnd' => '暂停',
@@ -168,7 +168,7 @@ $LANG['cn'] = array(
     'month' => '月',
     'package' => '方案',
     'Bandwidth' => '流量',
-    'Disk' => '磁盘空间',
+    'Disk' => '磁盘',
     'Web' => '网站',
     'Mail' => '邮箱',
     'Databases' => '数据库',
@@ -182,7 +182,7 @@ $LANG['cn'] = array(
     'Web Domains' => '网站域名',
     'SSL Domains' => 'SSL域名',
     'Web Aliases' => '网站别名',
-    'per domain' => '每域名',
+    'per domain' => '每个域名',
     'DNS Domains' => 'DNS域名',
     'DNS domains' => 'DNS域名',
     'DNS records' => 'DNS记录',
@@ -195,10 +195,12 @@ $LANG['cn'] = array(
     'IP Addresses' => 'IP地址',
     'Backups' => '备份',
     'Backup System' => '备份系统',
-    'backup exclusions' => '需排除备份的项目',
+    'backup exclusions' => '数据备份的排除项',
     'template' => '模板',
     'SSL Support' => '启用SSL',
-    'SSL Home Directory' => 'SSL站点主目录',
+    'SSL Home Directory' => 'SSL主目录',
+    'Force SSL/HTTPS' => '启用HTTP到HTTPS自动重定向',
+    'Enable SSL HSTS' => '启用HTTP严格传输安全 (HSTS) <a href="https://zh.wikipedia.org/zh-cn/HTTP_Strict_Transport_Security" target="_blank"><i class="fas fa-question-circle"></i></a>',
     'Lets Encrypt Support' => '采用 Let&#39s Encrypt',
     'Lets Encrypt' => 'Let&#39s Encrypt',
     'Your certificate will be automatically issued in 5 minutes' => '证书将在5分钟内自动完成签发',
@@ -210,10 +212,10 @@ $LANG['cn'] = array(
     'SOA' => 'SOA',
     'TTL' => 'TTL',
     'Expire' => '过期',
-    'Records' => '记录',
+    'Records' => '服务管理',
     'Serial' => '序号',
     'Catchall email' => '未知收件人聚合邮箱',
-    'AntiVirus Support' => '防病毒支持',
+    'AntiVirus Support' => '邮件防病毒支持',
     'AntiSpam Support' => '防垃圾邮件支持',
     'DKIM Support' => 'DKIM支持',
     'Accounts' => '账户',
@@ -255,8 +257,8 @@ $LANG['cn'] = array(
     'APACHE2 Usage' => 'Apache2 使用情况',
     'HTTPD Usage' => 'HTTPD 使用情况',
     'NGINX Usage' => 'NGINX 使用情况',
-    'MySQL Usage on localhost' => 'MySQL 使用情况 (localhost)',
-    'PostgreSQL Usage on localhost' => 'PostgreSQL 使用情况 (localhost)',
+    'MySQL Usage on localhost' => '数据库使用情况 MariaDB (localhost)',
+    'PostgreSQL Usage on localhost' => '数据库使用情况 PostgreSQL (localhost)',
     'Bandwidth Usage eth0' => '网络使用情况 (eth0)',
     'Bandwidth Usage eth1' => '网络使用情况 (eth1)',
     'Bandwidth Usage venet0' => '网络使用情况 (venet0)',
@@ -268,30 +270,30 @@ $LANG['cn'] = array(
     'SSH Usage' => 'SSH 使用情况',
     'reverse proxy' => '反向代理',
     'web server' => 'Web服务',
-    'backend server' => '后端服务', //New Keyword for PHP-FPM in SERVER page.
     'dns server' => 'DNS服务',
     'mail server' => '邮箱服务',
     'pop/imap server' => 'POP/IMAP服务',
-    'email antivirus' => '邮箱防病毒',
+    'email antivirus' => '邮件防病毒',
     'email antispam' => '防垃圾邮件',
     'database server' => '数据库服务',
+    'backend server' => '后端服务', //New Keyword for PHP-FPM in SERVER page.
     'ftp server' => 'FTP服务',
     'job scheduler' => '执行定时任务',
     'firewall' => '防火墙服务',
-    'brute-force monitor' => '防范暴力攻击',
+    'brute-force monitor' => '防暴力攻击',
     'CPU' => 'CPU',
     'Memory' => '内存',
     'Uptime' => '已运行时间',
-    'core package' => '核心系统',
-    'php interpreter' => 'PHP解释器',
-    'internal web server' => '内部Web服务',
+    'core package' => 'Hestia 核心系统',
+    'php interpreter' => 'Hestia PHP解释器',
+    'internal web server' => 'Hestia Web服务器',
     'Version' => '版本',
-    'Release' => '发布号',
+    'Release' => '发行版本',
     'Architecture' => '架构',
     'Object' => '对象',
     'Username' => '用户名称',
     'Password' => '密码',
-    'Email' => '电子邮箱',
+    'Email' => '邮箱',
     'Package' => '方案',
     'Language' => '语言',
     'First Name' => '名字',
@@ -354,6 +356,7 @@ $LANG['cn'] = array(
     'cmd' => '指令',
     'users' => '用户',
     'domains' => '域名',
+    'zones' => '域名',
     'aliases' => '别名',
     'records' => '记录',
     'jobs' => '任务',
@@ -382,13 +385,13 @@ $LANG['cn'] = array(
     'stats password' => '统计密码',
     'ftp user password' => 'FTP用户账户密码',
     'ftp user' => 'FTP用户',
-    'Last 70 lines of %s.%s.log' => '%s.%s.log 的最后 70 行',
+    'Last 70 lines of %s.%s.log' => '%s.%s.log 的最新 70 条日志记录',
     'AccessLog' => '访问日志',
     'ErrorLog' => '错误日志',
     'Download AccessLog' => '下载访问日志',
     'Download ErrorLog' => '下载错误日志',
     'Country' => '国家地区',
-    '2 letter code' => '采用 ISO 3166-1 α-2 二位代码 如: 中国CN / 美国US',
+    '2 letter code' => 'ISO 3166-1 α-2 二位字母代码 如: 中国CN / 美国US',
     'State / Province' => '州 / 省级',
     'City / Locality' => '市 / 地区',
     'Organization' => '组织名称',
@@ -399,14 +402,14 @@ $LANG['cn'] = array(
     'Banlist' => '需封锁',
     'ranges are acceptable' => '可使用范围 如: 21-22',
     'CIDR format is supported' => '支持CIDR格式',
-    'ACCEPT' => '接受',
-    'DROP' => '拒绝',
+    'ACCEPT' => '放行',
+    'DROP' => '阻止',
     'TCP' => 'TCP',
     'UDP' => 'UDP',
     'ICMP' => 'ICMP',
     'SSH' => 'SSH',
     'FTP' => 'FTP',
-    'HESTIA' => 'HESTIA',
+    'HESTIA' => 'Hestia',
     'Add one more Name Server' => '增加一个DNS服务器',
 
     'web domain' => '网站域名',
@@ -416,7 +419,7 @@ $LANG['cn'] = array(
     'mail account' => '邮箱账户',
     'cron job' => '定时任务',
 
-    'cron' => '任务',
+    'cron' => '定时任务',
     'user dir' => '用户目录',
 
     'unlimited' => '无限',
@@ -430,14 +433,14 @@ $LANG['cn'] = array(
     '%s mail accounts' => '%s 个邮箱账户',
     '1 database' => '1 个数据库',
     '%s databases' => '%s 个数据库',
-    '1 cron job' => '1 个任务',
-    '%s cron jobs' => '%s 个任务',
+    '1 cron job' => '1 个定时任务',
+    '%s cron jobs' => '%s 个定时任务',
     '1 archive' => '1 个存档',
     '%s archives' => '%s 个存档',
     '1 item' => '1 个项目',
     '%s items' => '%s 个项目',
-    '1 package' => '1 个方案',
-    '%s packages' => '%s 个方案',
+    '1 package' => '1 个用户方案',
+    '%s packages' => '%s 个用户方案',
     '1 IP address' => '1 个IP地址',
     '%s IP addresses' => '%s 个IP地址',
     '1 month' => '1 个月',
@@ -460,14 +463,14 @@ $LANG['cn'] = array(
     'DATABASE_CREATED_OK' => '数据库 <a href="/edit/db/?database=%s"><b>%s</b></a> 已添加成功',
     'CRON_CREATED_OK' => '定时任务已添加成功',
     'IP_CREATED_OK' => 'IP地址 <a href="/edit/ip/?ip=%s"><b>%s</b></a> 已添加成功',
-    'PACKAGE_CREATED_OK' => '方案 <a href="/edit/package/?package=%s"><b>%s</b></a> 已添加成功',
+    'PACKAGE_CREATED_OK' => '用户方案 <a href="/edit/package/?package=%s"><b>%s</b></a> 已添加成功',
     'SSL_GENERATED_OK' => 'SSL证书已生成成功',
-    'RULE_CREATED_OK' => '规则已创建成功',
+    'RULE_CREATED_OK' => '防火墙规则已创建成功',
     'BANLIST_CREATED_OK' => 'IP地址已封锁成功',
-    'Autoupdate has been successfully enabled' => '自动更新已成功启用',
-    'Autoupdate has been successfully disabled' => '自动更新已成功关闭',
-    'Cronjob email reporting has been successfully enabled' => '定时任务的电子邮件报告已成功启用',
-    'Cronjob email reporting has been successfully disabled' => '定时任务的电子邮件报告已成功关闭',
+    'Autoupdate has been successfully enabled' => '自动更新已启用成功',
+    'Autoupdate has been successfully disabled' => '自动更新已停用成功',
+    'Cronjob email reporting has been successfully enabled' => '定时任务的电子邮件通知已启用成功',
+    'Cronjob email reporting has been successfully disabled' => '定时任务的电子邮件通知已停用成功',
     'Changes has been saved.' => '已保存更改',
     'Confirmation' => '确认',
     'DELETE_USER_CONFIRMATION' => '确定要删除用户 %s 吗？',
@@ -488,31 +491,33 @@ $LANG['cn'] = array(
     'DELETE_CRON_CONFIRMATION' => '确定要删除定时任务吗？',
     'SUSPEND_CRON_CONFIRMATION' => '确定要暂停定时任务吗？',
     'UNSUSPEND_CRON_CONFIRMATION' => '确定要解除暂停定时任务吗？',
-    'DELETE_BACKUP_CONFIRMATION' => '确定要删除 %s 备份吗？',
-    'DELETE_EXCLUSION_CONFIRMATION' => '确定要删除 %s 例外吗？',
-    'DELETE_PACKAGE_CONFIRMATION' => '确定要删除方案 %s 吗？',
+    'DELETE_BACKUP_CONFIRMATION' => '确定要删除 %s 数据备份吗？',
+    'DELETE_EXCLUSION_CONFIRMATION' => '确定要删除 %s 排除项吗？',
+    'DELETE_PACKAGE_CONFIRMATION' => '确定要删除用户方案 %s 吗？',
     'DELETE_IP_CONFIRMATION' => '确定要删除IP地址 %s 吗？',
-    'DELETE_RULE_CONFIRMATION' => '确定要删除规则 #%s 吗？',
-    'SUSPEND_RULE_CONFIRMATION' => '确定要暂停规则 #%s 吗？',
-    'UNSUSPEND_RULE_CONFIRMATION' => '确定要解除暂停规则 #%s 吗？',
-    'LEAVE_PAGE_CONFIRMATION' => '确定要离开当前页吗？',
+    'DELETE_RULE_CONFIRMATION' => '确定要删除防火墙规则 #%s 吗？',
+    'DELETE_LOGS_CONFIRMATION' => '确定要删除系统日志吗？',
+    'SUSPEND_RULE_CONFIRMATION' => '确定要暂停防火墙规则 #%s 吗？',
+    'UNSUSPEND_RULE_CONFIRMATION' => '确定要解除暂停防火墙规则 #%s 吗？',
+    'Are you sure you want to stop service' => '确定要启动或停止 %s 服务吗？',
+    'LEAVE_PAGE_CONFIRMATION' => '确定要离开当前页面吗？',
     'RESTART_CONFIRMATION' => '确定要重新启动 %s 吗？',
-    'Welcome' => '欢迎',
+    'Welcome' => '欢迎您',
     'LOGGED_IN_AS' => '以 %s 的身份登录',
     'Error' => '错误',
     'Invalid username or password' => '无效的用户名称或密码',
-    'Invalid username or code' => '无效的用户名称或验证码.',
+    'Invalid username or code' => '无效的用户名称或重置代码',
     'Passwords not match' => '密码错误',
     'Please enter valid email address.' => '请输入正确的邮箱',
     'Field "%s" can not be blank.' => '"%s" 不能为空',
-    'Password is too short.' => '密码太短 (至少为6个数字+字母)',
+    'Password is too short.' => '密码太短 (字符至少6个)',
     'Error code:' => '错误代码: %s',
     'SERVICE_ACTION_FAILED' => '"%s" "%s" 失败',
     'IP address is in use' => 'IP地址在使用中',
-    'BACKUP_SCHEDULED' => '您的要求已加入队列中，备份完成后会以电子邮件通知您 ',
-    'BACKUP_EXISTS' => '已经有一个备份正在执行，请等待备份完成后再操作',
+    'BACKUP_SCHEDULED' => '您的要求已加入队列中，备份完成后会以电子邮件通知您',
+    'BACKUP_EXISTS' => '已经有数据备份正在执行，请等待备份完成后再操作',
     'RESTORE_SCHEDULED' => '您的要求已加入队列中，恢复完成后会以电子邮件通知您',
-    'RESTORE_EXISTS' => '已经有一个恢复正在执行，请等待恢复完成后再操作',
+    'RESTORE_EXISTS' => '已经有数据恢复正在执行，请等待恢复完成后再操作',
 
     'WEB_EXCLUSIONS' => '输入域名，每行一个。要排除所有域名请使用 *。要排除特定目录使用以下格式: domain.com:public_html/cache:public_html/tmp',
     'DNS_EXCLUSIONS' => '输入域名，每行一个。要排除所有域名请使用 *',
@@ -523,15 +528,17 @@ $LANG['cn'] = array(
 
     'Welcome to Hestia Control Panel' => '欢迎来到 Hestia 管理系统',
     'MAIL_FROM' => 'Hestia 管理系统 <noreply@%s>',
-    'GREETINGS_GORDON_FREEMAN' => "您好, %s %s,\n",
-    'GREETINGS' => "您好,\n",
-    'ACCOUNT_READY' => "您的账户已创建成功，并可以开始使用了！\n\nhttps://%s/login/\n用户名称: %s\n密码: %s\n\n--\nHestia Control Panel\n",
+    'GREETINGS_GORDON_FREEMAN' => "您好，%s %s，\n\n",
+    'GREETINGS_GORDON' => "您好，%s，\n\n",
+
+    'GREETINGS' => "您好，\n\n",
+    'ACCOUNT_READY' => "您的账户已创建成功，并可以开始使用了！\n\nhttps://%s/login/\n用户名称: %s\n密码: %s\n\n--\nHestia 管理系统\n",
 
     'FTP login credentials' => 'FTP 登录信息',
-    'FTP_ACCOUNT_READY' => "FTP账户已创建成功，并可以开始使用了！\n\n主机名称: %s\n用户名称: %s_%s\n密码: %s\n\n--\nHestia Control Panel\n",
+    'FTP_ACCOUNT_READY' => "FTP 账户已创建成功，并可以开始使用了！\n\n主机名称: %s\n用户名称: %s_%s\n密码: %s\n\n--\nHestia 管理系统\n",
 
     'Database Credentials' => '数据库登录信息',
-    'DATABASE_READY' => "数据库已添加成功！\n\n数据库名称: %s\n用户名称: %s\n密码: %s\n%s\n\n--\nHestia Control Panel\n",
+    'DATABASE_READY' => "数据库已添加成功！\n\n数据库名称: %s\n用户名称: %s\n密码: %s\n%s\n\n--\nHestia 管理系统\n",
 
     'forgot password' => '忘记密码',
     'Confirm' => '确认',
@@ -540,9 +547,9 @@ $LANG['cn'] = array(
     'Reset' => '重置',
     'Reset Code' => '重置代码',
     'RESET_NOTICE' => '',
-    'RESET_CODE_SENT' => '密码重置代码已发送到您的邮箱<br>',
-    'MAIL_RESET_SUBJECT' => '密码重置在 %s',
-    'PASSWORD_RESET_REQUEST' => '重置密码请点击链接:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\n或者您可以到 https://%s/reset/?action=code&user=%s 输入密码重置代码:\n%s\n\n如果您没有要求重置密码，请忽略此邮件\n\n--\nHestia Control Panel\n',
+    'RESET_CODE_SENT' => '重置代码已发送到您的邮箱<br>',
+    'MAIL_RESET_SUBJECT' => '重置密码在 %s',
+    'PASSWORD_RESET_REQUEST' => '重置密码请点击链接:\nhttps://%s/reset/?action=confirm&user=%s&code=%s\n\n或者您可以到 https://%s/reset/?action=code&user=%s\n输入重置代码:\n%s\n\n如果您没有要求重置密码，请忽略此邮件\n\n--\nHestia 管理系统\n',
 
     'Jan' => '01月',
     'Feb' => '02月',
@@ -559,7 +566,7 @@ $LANG['cn'] = array(
 
     'Configuring Server' => '配置服务器',
     'Hostname' => '主机名称',
-    'Time Zone' => '时区',
+    'Time Zone' => '系统时区',
     'Default Language' => '默认语言',
     'Proxy Server' => '代理服务器',
     'Web Server' => 'Web 服务器',
@@ -568,14 +575,13 @@ $LANG['cn'] = array(
     'DNS Server' => 'DNS 服务器',
     'DNS Cluster' => 'DNS 集群',
     'MAIL Server' => '邮箱服务器',
-    'Antivirus' => '防病毒引擎',
+    'Antivirus' => '邮件防病毒',
     'AntiSpam' => '防垃圾邮件',
-    'Use Web Domain SSL Certificate' => '采用网站域名SSL证书',
-    'Webmail URL' => '网页邮箱网址',
+    'Webmail URL' => '网页邮箱网址别名',
     'MySQL Support' => 'MySQL 支持',
-    'phpMyAdmin URL' => 'phpMyAdmin别名',
+    'phpMyAdmin URL' => 'phpMyAdmin 别名',
     'PostgreSQL Support' => 'PostgreSQL 支持',
-    'phpPgAdmin URL' => 'phpPgAdmin别名',
+    'phpPgAdmin URL' => 'phpPgAdmin 别名',
     'Maximum Number Of Databases' => '数据库最大数量',
     'Current Number Of Databases' => '数据库当前数量',
     'Local backup' => '本地备份',
@@ -585,15 +591,15 @@ $LANG['cn'] = array(
     'ftp' => 'FTP',
     'sftp' => 'SFTP',
     'SFTP Chroot' => 'SFTP Chroot',
-    'FileSystem Disk Quota' => '文件系统磁盘配额',
-    'Hestia Control Panel Plugins' => 'Hestia 管理系统的插件',
+    'FileSystem Disk Quota' => '磁盘配额',
+    'Hestia Control Panel Plugins' => 'Hestia 插件',
     'preview' => '预览',
     'Reseller Role' => '作为经销商',
     'Web Config Editor' => '网络配置编辑器',
     'Template Manager' => '模板管理',
     'Backup Migration Manager' => '备份迁移管理',
     'FileManager' => '文件管理',
-    'show: CPU / MEM / NET / DISK' => '查看: CPU / 内存 / 网络 / 磁盘',
+    'show: CPU / MEM / NET / DISK' => '资源详细信息',
 
     'sort by' => '排序方式',
     'Date' => '日期',
@@ -696,11 +702,11 @@ $LANG['cn'] = array(
     'Switch to Left Tab' => '切换到左标签',
     'Switch to Right Tab' => '切换到右标签',
     'Switch Tab' => '切换标签',
-    'Go to the Top of the File List' => '转至文件列表顶部',
-    'Go to the Last File' => '转至最后一个文件',
+    'Go to the Top of the File List' => '转到文件列表顶部',
+    'Go to the Last File' => '转到最后一个文件',
     'Open File / Enter Directory' => '打开文件 / 进入目录',
     'Edit File' => '编辑文件',
-    'Go to Parent Directory' => '转至父目录',
+    'Go to Parent Directory' => '转到父目录',
     'Select Current File' => '选中当前文件',
     'Select Bunch of Files' => '选择多个文件',
     'Add File to the Current Selection' => '将文件添加到当前选中区内',
@@ -733,7 +739,6 @@ $LANG['cn'] = array(
     'every' => '每隔',
     'Generate' => '生成',
 
-    'webalizer' => 'Webalizer',
     'awstats' => 'AWStats',
 
     'Hestia SSL' => 'Hestia SSL',
@@ -751,162 +756,195 @@ $LANG['cn'] = array(
     'Use SSL / TLS' => '采用 SSL / TLS 加密',
     'No encryption' => '不加密',
     'Do not use encryption' => '不使用加密',
-
     'maximum characters length, including prefix' => '包含前缀最多 %s 个字符',
 
     'Email Credentials' => '电子邮件凭据',
 
-    'Theme' => '主题',
-    'Operating System' => '操作系统',
+    '2 Factor Authentication' => '双因素认证',
+    'Enable 2FA' => '启用双因素认证',
+    'Please scan the code below in your 2FA application:' => '要完成双因素认证的设置，请使用身份验证应用扫描以下QR码:<br><br>需要先获取身份验证应用，例如: Google Authenticator<br>点击获取: <a href="https://apps.apple.com/cn/app/id388497605" target="_blank" style="color:#29a9ff">Apple App Store</a> or <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=zh" target="_blank" style="color:#29a9ff">Google Play Store</a><br><br>中国大陆可使用替代应用，例如: Microsoft Authenticator<br>点击访问: <a href="https://docs.microsoft.com/zh-cn/azure/active-directory/user-help/auth-app-android-china" target="_blank" style="color:#29a9ff">在中国获取 Microsoft Authenticator 的解决方案</a>', // Google not available in mainland China, so add the solution provided by Microsoft.
+    '2FA Reset Code:' => '<font style="color:#F00">妥善保存</font>恢复代码:',
 
-    'Please wait while php is installed or removed' => '请等待该过程完成，并且不要刷新页面。',
-    'Avoid adding web domains on admin account' => '强烈建议在将Web域添加到服务器之前，先<a href="/add/user/">创建标准用户帐户</a>，因为管理员帐户拥有的特权增加，并且存在潜在的安全风险。',
-    
-    //SSH Key
-    'Field SSH_KEY can not be blank.' => '字段SSH密钥不能为空',
+    'Theme' => '界面风格',
+
+    'Operating System' => '操作系统',
+    'Please wait while php is installed or removed' => '添加或删除PHP版本需要几分钟。请等待该过程完成，并且不要刷新页面。',
+    'Avoid adding web domains on admin account' => '<center>强烈建议在将网站域名添加到服务器之前进行以下操作<br><a href="/add/user/">点此创建标准用户账户</a><br>因管理员账户拥有特权，避免使用以规避潜在安全风险</center>',
+
+    // SSH Key
+    'Field SSH_KEY can not be blank.' => 'SSH密钥不能为空',
     'SSH KEY is invalid' => 'SSH密钥无效',
-    'SSH KEY already exists' => 'SSH密钥已存在',
-    'SSH KEY Added' => 'SSH密钥已添加',
+    'SSH KEY already exists' => 'SSH密钥已经存在',
+    'SSH KEY Added' => 'SSH密钥已添加成功',
     'Add SSH Key' => '添加SSH密钥',
     'SSH KEY' => 'SSH密钥',    
-    'DELETE_KEY_CONFIRM' => '确定要删除SSH密钥 %s?',
-    'SSH_ID' => 'SSH帐号',
+    'DELETE_KEY_CONFIRM' => '确定要删除SSH密钥 %s 吗？',
+    'SSH_ID' => 'SSH ID',
     'Manage SSH keys' => '管理SSH密钥',
- 
-    //Header 
-    'Fm' => '档案',
-    //PHP Cli
-    'PHP CLI Version' => 'PHP命令行版本',
 
-    //Ipset Firewall rules
-    'Adding Firewall Ipset List' => '新IP清单',
+    // Header
+    'Fm' => '文件管理',
+
+    // PHP CLI
+    'PHP CLI Version' => '默认PHP-CLI版本',
+
+    // IPset Firewall rules
+    'Adding Firewall Ipset List' => '添加IP列表以封锁',
     'Ip List Name' => 'IP列表名称',
-    'Data Source' => '数据源e',
+    'Data Source' => '数据来源',
     'Ip Version' => 'IP版本',
     'Autoupdate' => '自动更新',
-    'Add IP list' => '添加IP列表',
+    'Add IP list' => '封锁IP列表',
     'BLACKLIST' => 'BLACKLIST',
     'IPVERSE' => 'IPVERSE',
-    'IPSET_CREATED_OK' => 'IP列表创建成功',
-    'DELETE_IPSET_CONFIRMATION' => '您确定要删除IP列表吗 %s?',
-    '1 Ipset list' => '1个IP清单',
-    '%s Ipset lists' => '%s IP清单',
-    'There are currently no IP lists defined.' => '当前没有定义IP列表。',
-    'list ipset' => '管理IP清单',
-    
-    //Backup
-    'File Name' => '文档名称',
-    'Size' => '尺寸',
-    'Runtime' => '持续时间',
-    //Logs
+    'IPSET_CREATED_OK' => 'IP列表已创建成功',
+    'DELETE_IPSET_CONFIRMATION' => '确定要删除IP列表 %s 吗？',
+    '1 Ipset list' => '1 个IP列表被封锁',
+    '%s Ipset lists' => '%s 个IP列表被封锁',
+    'There are currently no IP lists defined.' => '目前没有定义封锁IP列表',
+    'list ipset' => 'IPset 封锁列表',
+
+    // Backup
+    'File Name' => '文件名称',
+    'Size' => '大小',
+    'Runtime' => '运行时间',
+
+    // Logs
     'Refresh' => '刷新',
     'Time' => '时间',
-    'Value' => '值',
-    
-    //DNS 
+    'Value' => '记录值',
+
+    // DNS
     'default' => '默认',
-    '1 DNS zone' => '1 DNS区域',
-    '%s DNS zones' => '%s DNS区域',
-    'Add Record' => '添加记录',
-    //user
-    '1 user account' => '1 用户帐号',
-    '%s user accounts' => '%s 用户帐号',
-    //database
-    '1 SQL database' => '1 SQL数据库',
-    '%s SQL databases' => '%s SQL数据库',
-    //mail
-    '1 mail domain' => '1 邮件域',
-    '%s mail domains' => '%s 邮件域',
-    //web
-    '1 web domain' => '1 网络域',
-    '%s web domains' => '%s 网络域',
-    
-    //rrd
-    'Bandwidth Usage' => '带宽使用',
-    
-    //reset
+    '1 DNS zone' => '1 个DNS域名',
+    '%s DNS zones' => '%s 个DNS域名',
+    'Add Record' => 'Add Record',
+
+    // User
+    '1 user account' => '1 个用户账户',
+    '%s user accounts' => '%s 个用户账户',
+
+    // Database
+    '1 SQL database' => '1 个数据库',
+    '%s SQL databases' => '%s 个数据库',
+
+    // Mail
+    '1 mail domain' => '1 个邮箱域名',
+    '%s mail domains' => '%s 个邮箱域名',
+
+    // Web
+    '1 web domain' => '1 个网站域名',
+    '%s web domains' => '%s 个网站域名',
+
+    // RRD
+    'Bandwidth Usage' => '网络使用情况',
+
+    // Reset
     'Forgot Password' => '忘记密码',
-    //web
-    'Quick Install App' => '安装软件',
-    //webapp 
-    'version' => '版',
-    'Setup' => '建立',
-    //Server
-    'Restart' => '建立',
-    'Mail Server' => '邮件服务器',
-    'Enabled multi PHP versions' => '启用的PHP版本',
+
+    // Web
+    'Quick Install App' => '快捷安装应用',
+
+    // WebApp
+    'version' => '版本',
+    'Setup' => '安装',
+
+    // Server
+    'Restart' => '系统重启',
+    'Mail Server' => '邮箱服务器',
+    'Enabled multi PHP versions' => '需启用的PHP版本',
     'Service' => '服务',
     'Description' => '描述',
-    
-    //header
-    'Hestia Control Panel' => 'Hestia控制面板',
+
+    // Header
+    'Hestia Control Panel' => 'Hestia 管理系统',
 
     // Set default language
     'SYSTEM_SET_DEFAULT_LANGUAGE' => '设置为所有用户的默认语言',
-    
-    //2FA 
-    'Forgot token' => '解锁账户',
-    '2FA Token' => 'OTP密码',
-    '2FA Reset successfully' => '您的帐户的两因素身份验证已关闭。<br><br>您现在可以继续登录。',
-    'Reset 2FA' => '解锁账户',
-    '2FA Reset Code' => '帐户恢复码',
-    'Invalid or missing token' => '令牌无效或丢失',
 
-    'DELETE_LOGS_CONFIRMATION'  => '您确定要删除日志吗？',
+    // 2FA
+    'Forgot token' => '凭据丢失',
+    '2FA Token' => 'OTP 验证码',
+    '2FA Reset successfully' => '此账户的双因素认证已停用成功<br><br>现在可以重新登录',
+    'Reset 2FA' => '恢复账户',
+    '2FA Reset Code' => '恢复代码',
+    //---'Invalid or missing token' => 'Invalid or missing token', // Missing "2FA"
+    'Invalid or missing 2FA token' => '无效或缺少 OTP 验证码',
 
-    'Force SSL/HTTPS' => '启用自动HTTP到HTTPS重定向',
-    'Enable SSL HSTS' => '启用HTTP严格传输安全性（HSTS） <a href="https://cn.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><i class="fas fa-question-circle"></i></a>',
+    // List User
+    //---'Name' => 'Name', // Duplicate keyword -- L607
 
-    '2 Factor Authentication' => '两因素验证',
-    'Enable 2FA' => '启用两因素身份验证',
-    'Please scan the code below in your 2FA application:' => '要完成两因素身份验证的设置，请扫描以下QR码<br />使用身份验证应用程序，例如 <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google身份验证器</a>):',
-    '2FA Reset Code:' => '帐户恢复代码：',
-    
-    //list user 
-    'Name' => '名称',
-    //Add / Edit user
-    'Contact' => '联系',
-    'GREETINGS_GORDON' => "您好，%s，\n",
-    
-    //List Mail Accounts
+    // Add / Edit User
+    'Contact' => '联络姓名',
+    //---'GREETINGS_GORDON' => "Hello, %s,\n", // Duplicate keyword -- L532
+
+    // List Mail Accounts
     'Forwarding' => '转发',
 
-    //Cron Jobs
+    // Cron Jobs
     'Cron Job' => '定时任务',
-    //Edit server 
-    'Host' => '主机',
-  
-      //list Backups
-    '1 backups' => '1 数据备份',
-    '%s backups' => '%s 数据备份',
-    //list Firewall Rules
-    '1 firewall rule' => '1 防火墙规则',
-    '%s firewall rules' => '%s 防火墙规则',
-    //list ip
-    '1 banned IP address' => '1 黑名单IP',
-    '%s banned IP addresses' => '%s 黑名单IP', 
-    //list DNS
+
+    // Edit Server 
+    'Host' => '主机名称',
+
+    // List Backups
+    //---'1 backups' => '1 backups', //Remove plural
+    '1 backup' => '1 个数据备份',
+    '%s backups' => '%s 个数据备份',
+
+    // List Firewall Rules
+    '1 firewall rule' => '1 条防火墙规则',
+    '%s firewall rules' => '%s 条防火墙规则',
+
+    // List IP
+    '1 banned IP address' => '1 个IP地址被封锁',
+    '%s banned IP addresses' => '%s 个IP地址被封锁', 
+
+    // List DNS
     'Records_DNS' => '记录',
-    //Dowload Backup
-    'BACKUP_DOWNLOAD_SCHEDULED' => '已安排备份下载。',
-    
-    'backend server' =>  '后端服务',
+
+    // Download Backup
+    'BACKUP_DOWNLOAD_SCHEDULED' => '已安排下载远程备份文件',
     'traffic' => '流量',
     'disk' => '磁盘',
 
     // Notifications
-    'Notifications' => '通知事项',
-    
-    // Help
-    'Help' => 'Help',
-    'Documentation' => 'Documentation',
-    'Support' => 'Support',
-    'Submit an issue report' => 'Submit an issue report',
-    'backend server' =>  'Backend Server',
-    'traffic' => 'Traffic',
-    'disk' => 'Disk',
+    'Notifications' => '系统通知',
 
-    'SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL' => '安装更新后发送电子邮件通知',
+    // Help
+    'Help' => '寻求帮助',
+    'Documentation' => '文档',
+    'Support' => '支持',
+    'Submit an issue report' => '报告问题',
+
+    'SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL' => '更新安装完成发送电子邮件通知',
     'SYSTEM_UPGRADE_SAVE_LOG' => '保存更新安装日志',
     'SYSTEM_UPGRADE_SEND_EMAIL_LOG' => '通过电子邮件发送更新安装日志',
+
+    // Missing keywords
+    'There are currently no banned IP addresses.' => '目前没有被封锁的IP地址',  // Fail2ban page keyword has changed -- L455
+    'Password does not match the minimum requirements' => '密码不符合最低要求', // Prepared keyword for password strength testing
+    'Your password must have at least' => '你的密码必须包含',                   // Ditto
+    '8 characters long' => '字符至少8个',                                       // Ditto
+    '1 uppercase & 1 lowercase character' => '大小写字母至少各1个',             // Ditto
+    '1 number' => '数字至少1个',                                                // Ditto
+    'Invalid host domain' => '无效的主机名称',  // Password Reset page
+    'Send welcome email' => '发送欢迎电子邮件', // Add User page
+    'Add Record' => '添加DNS记录',              // Edit DNS record page
+    '1 DNS records' => '1 条DNS记录',           // Ditto
+    '%s DNS records' => '%s 条DNS记录',         // Ditto
+    '1 SSH Key' => '1 个SSH密钥',               // SSH Key page
+    '%s SSH Key' => '%s 个SSH密钥',             // Ditto
+    'DNS Records' => 'DNS记录',  // Package page
+    'RAM' => '内存',             // View Advanced Details page
+    'Network' => '网络',         // Ditto
+    'login' => '登录',           // Login page browser title
+    'Login' => '登录',           // Login page button
+    'Next' => '下一步',          // Ditto
+    'Details' => '详细信息',     // Backup Restore page
+    'Restore' => '恢复',         // Ditto
+    'Cron' => '定时任务',        // Ditto
+    'DNS domain' => 'DNS域名',   // Ditto
+    'Web domain' => '网站域名',  // Ditto
+    'Mail domain' => '邮箱域名', // Ditto
 );

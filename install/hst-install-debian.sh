@@ -64,7 +64,7 @@ elif [ "$release" -eq 10 ]; then
         ssh util-linux ipset libapache2-mpm-itk"
 fi
 
-installer_dependencies="apt-transport-https curl dirmngr gnupg wget"
+installer_dependencies="apt-transport-https curl dirmngr gnupg wget ca-certificates"
 
 # Defining help function
 help() {
@@ -391,7 +391,7 @@ if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
         echo -e "\e[33mhttps://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh\e[0m"
         echo ""
         echo -e "\e[33mTo test pre-release versions, build the .deb packages and re-run the installer:\e[0m"
-        echo -e "  \e[33m./hst_autocompile.sh \e[1m--hestia no\e[21m\e[0m"
+        echo -e "  \e[33m./hst_autocompile.sh \e[1m--hestia branchname no\e[21m\e[0m"
         echo -e "  \e[33m./hst-install.sh .. \e[1m--with-debs /tmp/hestiacp-src/debs\e[21m\e[0m"
         echo ""
         check_result 1 "Installation aborted"
@@ -811,7 +811,7 @@ fi
 if [ -d "$withdebs" ]; then
     software=$(echo "$software" | sed -e "s/hestia-nginx//")
     software=$(echo "$software" | sed -e "s/hestia-php//")
-    software=$(echo "$software" | sed -e "s/hestia//")
+    software=$(echo "$software" | sed -e "s/hestia=${HESTIA_INSTALL_VER}//")
 fi
 
 #----------------------------------------------------------#

@@ -6,7 +6,9 @@
 
 **Web:** [www.hestiacp.com](https://www.hestiacp.com/)<br>
 **Documentation:** [docs.hestiacp.com](https://docs.hestiacp.com/)<br>
-**Forums:** [forum.hestiacp.com](https://forum.hestiacp.com/)<br><br>
+**Forums:** [forum.hestiacp.com](https://forum.hestiacp.com/)<br>
+**Discord:** [Join HestiaCP Discord channel](https://discord.gg/nXRUZch)<br />
+<br>
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ST87LQH2CHGLA)
 <br>
 

@@ -29,3 +29,16 @@ if [ "$PROXY_SYSTEM" = "nginx" ]; then
         > /etc/$PROXY_SYSTEM/conf.d/$IP.conf
     done < <(ls $HESTIA/data/ips/)
 fi
+
+if [ "$FTP_SYSTEM" == "proftpd" ]; then
+    if [ -e  /etc/proftpd/proftpd.conf ]; then
+        rm /etc/proftpd/proftpd.conf
+    fi
+    if [ -e  /etc/proftpd/tlss.conf ]; then
+        rm /etc/proftpd/tls.conf
+    fi
+    
+    cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/proftpd/
+    cp -f $HESTIA_INSTALL_DIR/proftpd/tls.conf /etc/proftpd/
+    
+fi

@@ -1,10 +1,10 @@
 <div class="l-center edit">
         <div class="l-sort clearfix">
           <div class="l-unit-toolbar__buttonstrip">
-            <a class="ui-button cancel" id="btn-back" href="/list/package/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+            <a class="ui-button cancel" id="btn-back" href="/list/package/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
+            <a href="#" class="ui-button" title="<?=_('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
           </div>
         </div>
       </div>
@@ -32,7 +32,7 @@
                         <table class="data-col2">
                             <tr>
                                 <td class="step-top">
-                                    <span class="page-title"><?=__('Editing Package')?></span>
+                                    <span class="page-title"><?=_('Editing Package')?></span>
                                 </td>
                             </tr>
                             <tr>
@@ -50,7 +50,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text step-top">
-                                    <?php print __('Package Name');?>
+                                    <?php print _('Package Name');?>
                                 </td>
                             </tr>
                             <tr>
@@ -61,7 +61,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Web Template')  . " <span class='optional'> " .strtoupper($_SESSION['WEB_SYSTEM']) . "</span>";?>
+                                    <?php print _('Web Template')  . " <span class='optional'> " .strtoupper($_SESSION['WEB_SYSTEM']) . "</span>";?>
                                 </td>
                             </tr>
                             <tr>
@@ -85,7 +85,7 @@
                             <?php if (!empty($_SESSION['WEB_BACKEND'])) { echo ""; ?>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Backend Template')  . "<span class='optional'>" .strtoupper($_SESSION['WEB_BACKEND']) . "</span>";?>
+                                    <?php print _('Backend Template')  . "<span class='optional'>" .strtoupper($_SESSION['WEB_BACKEND']) . "</span>";?>
                                 </td>
                             </tr>
                             <tr>
@@ -110,7 +110,7 @@
                             <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Proxy Template')  . "<span class='optional'>" .strtoupper($_SESSION['PROXY_SYSTEM']) . "</span>";?>
+                                    <?php print _('Proxy Template')  . "<span class='optional'>" .strtoupper($_SESSION['PROXY_SYSTEM']) . "</span>";?>
                                 </td>
                             </tr>
                             <tr>
@@ -134,7 +134,7 @@
                             <?php echo ""; }?>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('DNS Template')  . "<span class='optional'>" .strtoupper($_SESSION['DNS_SYSTEM']) . "</span>";?>
+                                    <?php print _('DNS Template')  . "<span class='optional'>" .strtoupper($_SESSION['DNS_SYSTEM']) . "</span>";?>
                                 </td>
                             </tr>
                             <tr>
@@ -157,7 +157,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('SSH Access');?>
+                                    <?php print _('SSH Access');?>
                                 </td>
                             </tr>
                             <tr>
@@ -180,7 +180,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Web Domains');?>
+                                    <?php print _('Web Domains');?>
                                 </td>
                             </tr>
                             <tr>
@@ -191,7 +191,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Web Aliases');?> <span class="optional">(<?=__('per domain')?>)</span>
+                                    <?php print _('Web Aliases');?> <span class="optional">(<?=_('per domain')?>)</span>
                                 </td>
                             </tr>
                             <tr>
@@ -202,7 +202,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('DNS domains');?>
+                                    <?php print _('DNS domains');?>
                                 </td>
                             </tr>
                             <tr>
@@ -213,7 +213,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('DNS records');?> <span class="optional">(<?=__('per domain')?>)</span>
+                                    <?php print _('DNS records');?> <span class="optional">(<?=_('per domain')?>)</span>
                                 </td>
                             </tr>
                             <tr>
@@ -224,7 +224,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Mail Domains');?>
+                                    <?php print _('Mail Domains');?>
                                 </td>
                             </tr>
                             <tr>
@@ -235,7 +235,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Mail Accounts');?> <span class="optional">(<?=__('per domain')?>)</span>
+                                    <?php print _('Mail Accounts');?> <span class="optional">(<?=_('per domain')?>)</span>
                                 </td>
                             </tr>
                             <tr>
@@ -246,7 +246,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Databases');?>
+                                    <?php print _('Databases');?>
                                 </td>
                             </tr>
                             <tr>
@@ -257,7 +257,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Cron Jobs');?>
+                                    <?php print _('Cron Jobs');?>
                                 </td>
                             </tr>
                             <tr>
@@ -268,7 +268,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Backups');?>
+                                    <?php print _('Backups');?>
                                 </td>
                             </tr>
                             <tr>
@@ -278,7 +278,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Quota');?> <span class="optional">(<?=__('in megabytes')?>)</span>
+                                    <?php print _('Quota');?> <span class="optional">(<?=_('in megabytes')?>)</span>
                                 </td>
                             </tr>
                             <tr>
@@ -289,7 +289,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Bandwidth');?> <span class="optional">(<?=__('in megabytes')?>)</span>
+                                    <?php print _('Bandwidth');?> <span class="optional">(<?=_('in megabytes')?>)</span>
                                 </td>
                             </tr>
                             <tr>
@@ -301,26 +301,26 @@
                         <?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Name Servers');?>
+                                    <?php print _('Name Servers');?>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <input type="text" size="20" class="vst-input" name="v_ns1" value="<?=htmlentities(trim($v_ns1, "'"))?>">
-                                    <span class="remove-ns additional-control delete"><?=__('delete')?></span>
+                                    <span class="remove-ns additional-control delete"><?=_('delete')?></span>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <input type="text" size="20" class="vst-input" name="v_ns2" value="<?=htmlentities(trim($v_ns2, "'"))?>">
-                                    <span class="remove-ns additional-control delete"><?=__('delete')?></span>
+                                    <span class="remove-ns additional-control delete"><?=_('delete')?></span>
                                 </td>
                             </tr>
                             <?  if($v_ns3)
                                   echo '<tr>
                                     <td>
                                         <input type="text" size="20" class="vst-input" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
-                                        <span class="remove-ns additional-control delete">'.__('delete').'</span>
+                                        <span class="remove-ns additional-control delete">'._('delete').'</span>
                                     </td>
                                 </tr>';
 
@@ -328,7 +328,7 @@
                                   echo '<tr>
                                     <td>
                                         <input type="text" size="20" class="vst-input" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
-                                        <span class="remove-ns additional-control delete">'.__('delete').'</span>
+                                        <span class="remove-ns additional-control delete">'._('delete').'</span>
                                     </td>
                                 </tr>';
 
@@ -336,7 +336,7 @@
                                   echo '<tr>
                                     <td>
                                         <input type="text" size="20" class="vst-input" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
-                                        <span class="remove-ns additional-control delete">'.__('delete').'</span>
+                                        <span class="remove-ns additional-control delete">'._('delete').'</span>
                                     </td>
                                 </tr>';
 
@@ -344,7 +344,7 @@
                                   echo '<tr>
                                     <td>
                                         <input type="text" size="20" class="vst-input" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
-                                        <span class="remove-ns additional-control delete">'.__('delete').'</span>
+                                        <span class="remove-ns additional-control delete">'._('delete').'</span>
                                     </td>
                                 </tr>';
 
@@ -352,7 +352,7 @@
                                   echo '<tr>
                                     <td>
                                         <input type="text" size="20" class="vst-input" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
-                                        <span class="remove-ns additional-control delete">'.__('delete').'</span>
+                                        <span class="remove-ns additional-control delete">'._('delete').'</span>
                                     </td>
                                 </tr>';
 
@@ -360,14 +360,14 @@
                                   echo '<tr>
                                     <td>
                                         <input type="text" size="20" class="vst-input" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
-                                        <span class="remove-ns additional-control delete">'.__('delete').'</span>
+                                        <span class="remove-ns additional-control delete">'._('delete').'</span>
                                     </td>
                                 </tr>';
                                 ?>
 
                                 <tr class="add-ns" <? if($v_ns8) echo 'style="display:none;"'; ?> >
                                     <td class="step-top-small">
-                                      <span class="add-ns-button additional-control add"><?=__('Add one more Name Server')?></span>
+                                      <span class="add-ns-button additional-control add"><?=_('Add one more Name Server')?></span>
                                     </td>
                                 </tr>
                             <?php } ?>

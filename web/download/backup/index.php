@@ -17,11 +17,11 @@ if(!file_exists('/backup/'.$backup)){
     $backup = escapeshellarg($_GET['backup']);
     exec (HESTIA_CMD."v-schedule-user-backup-download ".$v_username." ".$backup , $output, $return_var);
     if ($return_var == 0) {
-        $_SESSION['error_msg'] = __('BACKUP_DOWNLOAD_SCHEDULED');
+        $_SESSION['error_msg'] = _('BACKUP_DOWNLOAD_SCHEDULED');
     } else {
         $_SESSION['error_msg'] = implode('<br>', $output);
         if (empty($_SESSION['error_msg'])) {
-            $_SESSION['error_msg'] = __('Error: hestia did not return any output.');
+            $_SESSION['error_msg'] = _('Error: hestia did not return any output.');
         }    
     }
     unset($output);

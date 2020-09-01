@@ -47,7 +47,7 @@ if (!empty($_POST['ok'])) {
     }
     
     if (empty($_POST['v_key'])){ 
-        $_SESSION['error_msg'] = __('Field SSH_KEY can not be blank.');
+        $_SESSION['error_msg'] = _('Field SSH_KEY can not be blank.');
     }
     
     if(!$_SESSION['error_msg']){
@@ -63,25 +63,25 @@ if (!empty($_POST['ok'])) {
             }
         
             if(!validateKey($_POST['v_key'])){
-                $_SESSION['error_msg']  = __('SSH KEY is invalid');
+                $_SESSION['error_msg']  = _('SSH KEY is invalid');
                 break;
             }
     
             $v_key_parts = explode(' ',$_POST['v_key']);
             $key_id = trim($v_key_parts[2]);
             if($v_key_parts[2] == ''){
-                $_SESSION['error_msg']  = __('SSH KEY is invalid');
+                $_SESSION['error_msg']  = _('SSH KEY is invalid');
                 break;
             }
     
             //for deleting / revoking key the last part user@domain is used therefore needs to be unique
             //maybe consider adding random generated message or even an human read able string set by user?
             if(in_array($v_key_parts[2], $idlist)){
-                $_SESSION['error_msg']  =  __('SSH KEY already exists');
+                $_SESSION['error_msg']  =  _('SSH KEY already exists');
                 break;
             }
             if(in_array($v_key_parts[1], $keylist)){
-                $_SESSION['error_msg']  =  __('SSH KEY already exists');
+                $_SESSION['error_msg']  =  _('SSH KEY already exists');
                 break;
             }
             $v_key = escapeshellarg(trim($_POST['v_key']));
@@ -97,7 +97,7 @@ if (!empty($_POST['ok'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-    $_SESSION['ok_msg'] = __('SSH KEY created');
+    $_SESSION['ok_msg'] = _('SSH KEY created');
     }
 
 }

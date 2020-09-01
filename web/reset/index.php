@@ -28,21 +28,21 @@ if ((!empty($_POST['user'])) && (empty($_POST['code']))) {
             $name = $data[$user]['NAME'];
             $contact = $data[$user]['CONTACT'];
             $to = $data[$user]['CONTACT'];
-            $subject = __('MAIL_RESET_SUBJECT',date("Y-m-d H:i:s"));
+            $subject = _('MAIL_RESET_SUBJECT',date("Y-m-d H:i:s"));
             $hostname = exec('hostname');
-            $from = __('MAIL_FROM',$hostname);
+            $from = _('MAIL_FROM',$hostname);
             if (!empty($name)) {
-                $mailtext = __('GREETINGS_GORDON',$name);
+                $mailtext = _('GREETINGS_GORDON',$name);
             } else {
-                $mailtext = __('GREETINGS');
+                $mailtext = _('GREETINGS');
             }
             if (in_array(str_replace(':'.$_SERVER['SERVER_PORT'],'.conf',$_SERVER['HTTP_HOST']), array_merge(scandir('/etc/nginx/conf.d'),scandir('/etc/nginx/conf.d/domains'),scandir('/etc/apache2/conf.d/domains'),scandir('/etc/apache2/conf.d')))){
-                $mailtext .= __('PASSWORD_RESET_REQUEST',$_SERVER['HTTP_HOST'],$user,$rkey,$_SERVER['HTTP_HOST'],$user,$rkey);
+                $mailtext .= _('PASSWORD_RESET_REQUEST',$_SERVER['HTTP_HOST'],$user,$rkey,$_SERVER['HTTP_HOST'],$user,$rkey);
                 if (!empty($rkey)) send_email($to, $subject, $mailtext, $from);
                 header("Location: /reset/?action=code&user=".$_POST['user']);
                 exit;
             } else {
-                $ERROR = "<a class=\"error\">".__('Invalid host domain')."</a>";
+                $ERROR = "<a class=\"error\">"._('Invalid host domain')."</a>";
             }
         }     
     }
@@ -71,7 +71,7 @@ if ((!empty($_POST['user'])) && (!empty($_POST['code'])) && (!empty($_POST['pass
                     unlink($v_password);
                     if ( $return_var > 0 ) {
                         sleep(5);
-                        $ERROR = "<a class=\"error\">".__('An internal error occurred')."</a>";
+                        $ERROR = "<a class=\"error\">"._('An internal error occurred')."</a>";
                     } else {
                         $_SESSION['user'] = $_POST['user'];
                         header("Location: /");
@@ -79,23 +79,20 @@ if ((!empty($_POST['user'])) && (!empty($_POST['code'])) && (!empty($_POST['pass
                     }
                 }else{
                     sleep(5);
-                    $ERROR = "<a class=\"error\">".__('Code has been expired')."</a>";
+                    $ERROR = "<a class=\"error\">"._('Code has been expired')."</a>";
                 }
             } else {
                 sleep(5);
-                $ERROR = "<a class=\"error\">".__('Invalid username or code')."</a>";
+                $ERROR = "<a class=\"error\">"._('Invalid username or code')."</a>";
             }
         } else {
             sleep(5);
-            $ERROR = "<a class=\"error\">".__('Invalid username or code')."</a>";
+            $ERROR = "<a class=\"error\">"._('Invalid username or code')."</a>";
         }
     } else {
-        $ERROR = "<a class=\"error\">".__('Passwords not match')."</a>";
+        $ERROR = "<a class=\"error\">"._('Passwords not match')."</a>";
     }
 }
-
-// Detect language
-if (empty($_SESSION['language'])) $_SESSION['language'] = detect_user_language();
 
 if (empty($_GET['action'])) {
     require_once '../templates/header.html';

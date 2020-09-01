@@ -20,13 +20,13 @@ if ($_SESSION['user'] == 'admin') {
             exec (HESTIA_CMD."v-stop-service ".$v_service, $output, $return_var);
         }
     }
-    
+
     if ($return_var != 0) {
         $error = implode('<br>', $output);
         if (empty($error)) {
-            $error = __('Stop "%s" failed', $v_service);
+            $error = _('Stop "%s" failed', $v_service);
         }
-        
+
         $_SESSION['error_srv'] = $error;
     }
     unset($output);

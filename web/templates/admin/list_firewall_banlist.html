@@ -1,8 +1,8 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a class="ui-button cancel" id="btn-back" href="/list/firewall/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
-          <a href="/add/firewall/banlist/" id="btn-create" class="ui-button cancel" title="<?=__('Ban IP Address')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=__('Ban IP Address')?></a>
+          <a class="ui-button cancel" id="btn-back" href="/list/firewall/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
+          <a href="/add/firewall/banlist/" id="btn-create" class="ui-button cancel" title="<?=_('Ban IP Address')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Ban IP Address')?></a>
         </div>
         <div class="l-sort-toolbar clearfix">
           <table>
@@ -12,8 +12,8 @@
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                 <div class="l-select">
                   <select name="action" id="">
-                    <option value=""><?=__('apply to selected')?></option>
-                    <option value="delete"><?php print __('delete') ?></option>
+                    <option value=""><?=_('apply to selected')?></option>
+                    <option value="delete"><?php print _('delete') ?></option>
                   </select>
                 </div>
                 <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
@@ -32,11 +32,11 @@
                     <div class="clearfix l-unit__stat-col--left super-compact">
                         <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
                     </div>
-                    <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print __('IP address');?></b></div>
+                    <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print _('IP address');?></b></div>
                     <div class="clearfix l-unit__stat-col--left compact-4"><b>&nbsp;</b></div>  
-                    <div class="clearfix l-unit__stat-col--left text-center compact-5"><b><?php print __('Date');?></b></div>
-                    <div class="clearfix l-unit__stat-col--left text-center compact-5"><b><?php print __('Time');?></b></div>
-                    <div class="clearfix l-unit__stat-col--left wide text-center"><b><?php print __('Comment');?></b></div> 
+                    <div class="clearfix l-unit__stat-col--left text-center compact-5"><b><?php print _('Date');?></b></div>
+                    <div class="clearfix l-unit__stat-col--left text-center compact-5"><b><?php print _('Time');?></b></div>
+                    <div class="clearfix l-unit__stat-col--left wide text-center"><b><?php print _('Comment');?></b></div> 
                </div>
             </div>
 
@@ -61,8 +61,8 @@
                         <a id="delete_link_<?=$i?>" class="data-controls do_delete">
                           <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
                           <input type="hidden" name="delete_url" value="/delete/firewall/banlist/?ip=<?=$ip?>&chain=<?=$value['CHAIN']?>&token=<?=$_SESSION['token']?>" />
-                          <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
-                            <p class="confirmation"><?=__('DELETE_IP_CONFIRMATION',$key)?></p>
+                          <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=_('Confirmation')?>">
+                            <p class="confirmation"><?=_('DELETE_IP_CONFIRMATION',$key)?></p>
                           </div>
                         </a>
                       </div>
@@ -70,9 +70,9 @@
                   </div>
                 </div>
                 <!-- END QUICK ACTION TOOLBAR AREA -->
-                <div class="clearfix l-unit__stat-col--left text-center compact-5"><?=__($data[$key]['DATE'])?></div>
+                <div class="clearfix l-unit__stat-col--left text-center compact-5"><?=_($data[$key]['DATE'])?></div>
                 <div class="clearfix l-unit__stat-col--left text-center compact-5"><?=$data[$key]['TIME']?></div>
-                <div class="clearfix l-unit__stat-col--left text-center wide"><b><?=__($value['CHAIN'])?></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center wide"><b><?=_($value['CHAIN'])?></b></div>
             </div>
       </div>
       <?}?>
@@ -86,13 +86,13 @@
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php
               if ( $i == 0) {
-                echo __('There are currently no banned IP addresses.');
+                echo _('There are currently no banned IP addresses.');
               }
               if ( $i == 1) {
-                echo __('1 banned IP address');
+                echo _('1 banned IP address');
               }
               if ( $i > 1) {
-                echo __('%s banned IP addresses',$i);
+                echo _('%s banned IP addresses',$i);
               }
             ?>
           </div>

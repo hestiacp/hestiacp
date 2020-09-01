@@ -1,10 +1,10 @@
 <div class="l-center edit">
         <div class="l-sort clearfix">
           <div class="l-unit-toolbar__buttonstrip">
-            <a class="ui-button cancel" id="btn-back" href="/list/ip/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+            <a class="ui-button cancel" id="btn-back" href="/list/ip/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
+            <a href="#" class="ui-button" title="<?=_('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
           </div>
         </div>
       </div>
@@ -35,7 +35,7 @@
                         <table class="data-col2" width="600px">
                             <tr>
                                 <td class="step-top">
-                                    <span class="page-title"><?=__('Adding IP address')?></span>
+                                    <span class="page-title"><?=_('Adding IP address')?></span>
                                 </td>
                             </tr>
                             <tr>
@@ -53,7 +53,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text step-top">
-                                    <?php print __('IP address') ?>
+                                    <?php print _('IP address') ?>
                                 </td>
                             </tr>
                             <tr>
@@ -63,7 +63,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Netmask');?>
+                                    <?php print _('Netmask');?>
                                 </td>
                             </tr>
                             <tr>
@@ -73,7 +73,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Interface');?>
+                                    <?php print _('Interface');?>
                                 </td>
                             </tr>
                             <tr>
@@ -91,7 +91,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_shared" <?php if (empty($v_dedicated)) echo "checked=yes" ?> onclick="javascript:elementHideShow('usrtable');"> <?php print __('Shared');?></label>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_shared" <?php if (empty($v_dedicated)) echo "checked=yes" ?> onclick="javascript:elementHideShow('usrtable');"> <?php print _('Shared');?></label>
                                 </td>
                             </tr>
                             <tr>
@@ -99,7 +99,7 @@
                                     <table style="display:<?php if (empty($v_dedicated)) { echo 'none';} else {echo 'block';}?> ;" id="usrtable">
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('Assigned user');?>
+                                                <?php print _('Assigned user');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -120,7 +120,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Assigned domain');?> <span class="optional">(<?php print __('optional');?>)</span>
+                                    <?php print _('Assigned domain');?> <span class="optional">(<?php print _('optional');?>)</span>
                                 </td>
                             </tr>
                             <tr>
@@ -130,7 +130,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('NAT IP association');?> <span class="optional">(<?php print __('optional');?>)</span>
+                                    <?php print _('NAT IP association');?> <span class="optional">(<?php print _('optional');?>)</span>
                                 </td>
                             </tr>
                             <tr>

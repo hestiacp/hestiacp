@@ -19,7 +19,7 @@ source $HESTIA/conf/hestia.conf
 
 
 is_language_valid() {
-    if [ ! -e "$HESTIA/web/inc/i18n/$language.php" ]; then
+    if [ ! -d "$HESTIA/web/locale/$language" ]; then
         echo "Error: language file $language doesn't exist"
         log_event "$E_NOTEXIST $ARGUMENTS"
         exit $E_NOTEXIST

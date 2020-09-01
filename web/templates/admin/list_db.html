@@ -1,7 +1,7 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a href="/add/db/" id="btn-create" class="ui-button cancel" title="<?=__('Add Database')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=__('Add Database')?></a>
+          <a href="/add/db/" id="btn-create" class="ui-button cancel" title="<?=_('Add Database')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Add Database')?></a>
           <?
             $mysql = 0;
             $pgsql = 0;
@@ -31,17 +31,17 @@
           ?>
         </div>
         <ul class="context-menu sort-order animated fadeIn" style="display:none;">
-          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
-          <li entity="sort-name"><span class="name"><?=__('Database')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
-          <li entity="sort-disk" sort_as_int="1"><span class="name"><?=__('Disk')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
-          <li entity="sort-user"><span class="name"><?=__('Username')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
-          <li entity="sort-server"><span class="name"><?=__('Host')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li> 
+          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=_('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-name"><span class="name"><?=_('Database')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-disk" sort_as_int="1"><span class="name"><?=_('Disk')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-user"><span class="name"><?=_('Username')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-server"><span class="name"><?=_('Host')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
         </ul>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
               <td class="sort-by">
-                <?=__('sort by');?>: <span><b><?=__('Date')?> <i class="fas fa-sort-amount-down"></i></b></span>
+                <?=_('sort by');?>: <span><b><?=_('Date')?> <i class="fas fa-sort-amount-down"></i></b></span>
               </td>
               <td class="l-sort-toolbar__search-box">
                 <form action="/search/" method="get">
@@ -55,11 +55,11 @@
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                 <div class="l-select">
                   <select name="action" id="">
-                    <option value=""><?=__('apply to selected')?></option>
-                    <option value="rebuild"><?=__('rebuild')?></option>
-                    <option value="suspend"><?=__('suspend')?></option>
-                    <option value="unsuspend"><?=__('unsuspend')?></option>
-                    <option value="delete"><?=__('delete')?></option>
+                    <option value=""><?=_('apply to selected')?></option>
+                    <option value="rebuild"><?=_('rebuild')?></option>
+                    <option value="suspend"><?=_('suspend')?></option>
+                    <option value="unsuspend"><?=_('unsuspend')?></option>
+                    <option value="delete"><?=_('delete')?></option>
                   </select>
                 </div>
                 <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
@@ -78,16 +78,16 @@
                   <div class="clearfix l-unit__stat-col--left super-compact">
                       <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
                   </div>
-                  <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print __('Database');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print _('Database');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-right compact-2"><b>&nbsp;</b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print __('Type');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center wide"><b><?php print __('Username');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Hostname');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Disk');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Charset');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print _('Type');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center wide"><b><?php print _('Username');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print _('Hostname');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print _('Disk');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print _('Charset');?></b></div>
              </div>
           </div>
-          
+
       <?
         list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
         foreach ($data as $key => $value) {
@@ -121,31 +121,31 @@ sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" so
                 <div class="clearfix l-unit__stat-col--left super-compact">
                   <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="database[]" value="<?php echo $key ?>">
                 </div>
-                <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('Editing Database')?>"><?=$key?></a></b></div>
+                <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Database')?>"><?=$key?></a></b></div>
                 <!-- START QUICK ACTION TOOLBAR AREA -->
                 <div class="clearfix l-unit__stat-col--left text-right compact-2">
                       <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                           <div class="actions-panel clearfix">
-                            <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=__('Editing Database')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+                            <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Database')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
                             <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
-                              <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=__($spnd_action)?>">
+                              <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=_($spnd_action)?>">
                                 <i class="fas <?=$spnd_icon?> status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
                                 <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" />
-                                <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
-                                  <p class="confirmation"><?=__($spnd_confirmation,$key)?></p>
+                                <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=_('Confirmation')?>">
+                                  <p class="confirmation"><?=_($spnd_confirmation,$key)?></p>
                                 </div>
                               </a>
                             </div>
                             <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-                              <a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=__('delete')?>">
+                              <a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('delete')?>">
                                 <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
                                 <input type="hidden" name="delete_url" value="/delete/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" />
-                                <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
-                                  <p class="confirmation"><?=__('DELETE_DATABASE_CONFIRMATION',$key)?></p>
+                                <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=_('Confirmation')?>">
+                                  <p class="confirmation"><?=_('DELETE_DATABASE_CONFIRMATION',$key)?></p>
                                 </div>
                               </a>
                             </div>
-              
+
                           </div>
                         </div>
                   </div>
@@ -169,9 +169,9 @@ sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" so
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php
               if ( $i == 1) {
-                echo __('1 SQL database');
+                echo _('1 SQL database');
               } else {
-                echo __('%s SQL databases',$i);
+                echo _('%s SQL databases',$i);
               }
             ?>
           </div>

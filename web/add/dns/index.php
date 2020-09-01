@@ -21,8 +21,8 @@ if (!empty($_POST['ok'])) {
     }
 
     // Check empty fields
-    if (empty($_POST['v_domain'])) $errors[] = __('domain');
-    if (empty($_POST['v_ip'])) $errors[] = __('ip');
+    if (empty($_POST['v_domain'])) $errors[] = _('domain');
+    if (empty($_POST['v_ip'])) $errors[] = _('ip');
     if (!empty($errors[0])) {
         foreach ($errors as $i => $error) {
             if ( $i == 0 ) {
@@ -31,7 +31,7 @@ if (!empty($_POST['ok'])) {
                 $error_msg = $error_msg.", ".$error;
             }
         }
-        $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
+        $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
     }
 
     // Protect input
@@ -85,7 +85,7 @@ if (!empty($_POST['ok'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('DNS_DOMAIN_CREATED_OK',htmlentities($_POST['v_domain']),htmlentities($_POST['v_domain']));
+        $_SESSION['ok_msg'] = _('DNS_DOMAIN_CREATED_OK',htmlentities($_POST['v_domain']),htmlentities($_POST['v_domain']));
         unset($v_domain);
     }
 }
@@ -113,7 +113,7 @@ if (!empty($_POST['ok_rec'])) {
                 $error_msg = $error_msg.", ".$error;
             }
         }
-        $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
+        $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
     }
 
     // Protect input
@@ -134,7 +134,7 @@ if (!empty($_POST['ok_rec'])) {
     
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('DNS_RECORD_CREATED_OK',htmlentities($_POST['v_rec']),htmlentities($_POST['v_domain']));
+        $_SESSION['ok_msg'] = _('DNS_RECORD_CREATED_OK',htmlentities($_POST['v_rec']),htmlentities($_POST['v_domain']));
         unset($v_domain);
         unset($v_rec);
         unset($v_val);

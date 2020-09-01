@@ -311,7 +311,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
+            $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
         } else {
             exec ('mktemp -d', $mktemp_output, $return_var);
             $tmpdir = $mktemp_output[0];
@@ -367,7 +367,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
 
     // Set success message
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('Changes has been saved.');
+        $_SESSION['ok_msg'] = _('Changes has been saved.');
     }
 }
 
@@ -383,7 +383,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['acco
     // Validate email
     if ((!empty($_POST['v_send_email'])) && (empty($_SESSION['error_msg']))) {
         if (!filter_var($_POST['v_send_email'], FILTER_VALIDATE_EMAIL)) {
-            $_SESSION['error_msg'] = __('Please enter valid email address.');
+            $_SESSION['error_msg'] = _('Please enter valid email address.');
         }
     }
 
@@ -518,16 +518,16 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['acco
     // Email login credentials
     if ((!empty($v_send_email)) && (empty($_SESSION['error_msg']))) {
         $to = $v_send_email;
-        $subject = __("Email Credentials");
+        $subject = _("Email Credentials");
         $hostname = exec('hostname');
-        $from = __('MAIL_FROM', $hostname);
+        $from = _('MAIL_FROM', $hostname);
         $mailtext = $v_credentials;
         send_email($to, $subject, $mailtext, $from);
     }
 
     // Set success message
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('Changes has been saved.');
+        $_SESSION['ok_msg'] = _('Changes has been saved.');
     }
 }
 

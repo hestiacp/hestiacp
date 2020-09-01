@@ -1,10 +1,10 @@
 <div class="l-center edit">
         <div class="l-sort clearfix">
           <div class="l-unit-toolbar__buttonstrip">
-            <a class="ui-button cancel" id="btn-back" href="/list/db/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+            <a class="ui-button cancel" id="btn-back" href="/list/db/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
+            <a href="#" class="ui-button" title="<?=_('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
           </div>
         </div>
       </div>
@@ -38,7 +38,7 @@
                         <table class="data-col2" width="600px">
                              <tr>
                                 <td class="step-top">
-                                    <span class="page-title"><?=__('Editing Database')?></span>
+                                    <span class="page-title"><?=_('Editing Database')?></span>
                                 </td>
                             </tr>
                             <tr>
@@ -56,7 +56,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text step-top">
-                                    <?php print __('Database');?>
+                                    <?php print _('Database');?>
                                 </td>
                             </tr>
                             <tr>
@@ -80,7 +80,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Password');?> / <a href="javascript:randomString();" class="generate"><?=__('generate')?></a>
+                                    <?php print _('Password');?> / <a href="javascript:randomString();" class="generate"><?=_('generate')?></a>
                                 </td>
                             </tr>
                             <tr>
@@ -91,17 +91,17 @@
                             </tr>
                             <tr>
                                 <td class="vst-text">
-                                    <?php print __('Your password must have at least');?>
+                                    <?php print _('Your password must have at least');?>
                                     <ul>
-                                        <li><?php print __('8 characters long');?></li>
-                                        <li><?php print __('1 uppercase & 1 lowercase character');?></li>
-                                        <li><?php print __('1 number');?></li>
+                                        <li><?php print _('8 characters long');?></li>
+                                        <li><?php print _('1 uppercase & 1 lowercase character');?></li>
+                                        <li><?php print _('1 number');?></li>
                                     </ul>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Type');?>
+                                    <?php print _('Type');?>
                                 </td>
                             </tr>
                             <tr>
@@ -111,7 +111,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Host');?>
+                                    <?php print _('Host');?>
                                 </td>
                             </tr>
                             <tr>
@@ -121,7 +121,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Charset');?>
+                                    <?php print _('Charset');?>
                                 </td>
                             </tr>
                             <tr>
@@ -144,4 +144,3 @@
         GLOBAL.DB_USER_PREFIX = <?=json_encode($user.'_')?>;
         GLOBAL.DB_DBNAME_PREFIX = <?=json_encode($user.'_')?>;
     </script>
-

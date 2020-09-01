@@ -22,7 +22,7 @@ if ($_SESSION['user'] == 'admin') {
     }
     if ($return_var != 0) {
         $error = implode('<br>', $output);
-        if (empty($error)) $error =  __('Restart "%s" failed',$v_service);
+        if (empty($error)) $error =  _('Restart "%s" failed',$v_service);
             $_SESSION['error_msg'] = $error;
     }
     unset($output);

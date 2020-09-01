@@ -46,7 +46,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     hestia-nginx hestia-php vim-common vsftpd whois zip acl sysstat setpriv
     ipset libonig5 libzip5 openssh-server ssh"
 
-installer_dependencies="apt-transport-https curl dirmngr gnupg wget software-properties-common"
+installer_dependencies="apt-transport-https curl dirmngr gnupg wget software-properties-common ca-certificates"
 
 # Defining help function
 help() {
@@ -794,7 +794,7 @@ fi
 if [ -d "$withdebs" ]; then
     software=$(echo "$software" | sed -e "s/hestia-nginx//")
     software=$(echo "$software" | sed -e "s/hestia-php//")
-    software=$(echo "$software" | sed -e "s/hestia//")
+    software=$(echo "$software" | sed -e "s/hestia=${HESTIA_INSTALL_VER}//")        
 fi
 if [ "$release" = '16.04' ]; then
     software=$(echo "$software" | sed -e "s/libonig5/libonig2/")

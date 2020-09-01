@@ -64,7 +64,7 @@ elif [ "$release" -eq 10 ]; then
         ssh util-linux ipset libapache2-mpm-itk"
 fi
 
-installer_dependencies="apt-transport-https curl dirmngr gnupg wget"
+installer_dependencies="apt-transport-https curl dirmngr gnupg wget ca-certificates"
 
 # Defining help function
 help() {
@@ -811,7 +811,7 @@ fi
 if [ -d "$withdebs" ]; then
     software=$(echo "$software" | sed -e "s/hestia-nginx//")
     software=$(echo "$software" | sed -e "s/hestia-php//")
-    software=$(echo "$software" | sed -e "s/hestia//")
+    software=$(echo "$software" | sed -e "s/hestia=${HESTIA_INSTALL_VER}//")
 fi
 
 #----------------------------------------------------------#

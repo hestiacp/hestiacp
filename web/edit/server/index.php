@@ -257,18 +257,16 @@ if (!empty($_POST['save'])) {
    // Set File Manager support
     if (empty($_SESSION['error_msg'])) {
         if ((!empty($_POST['v_filemanager'])) && ($_SESSION['FILE_MANAGER'] != $_POST['v_filemanager'])) {
-            if ($_POST['v_filemanager'] == 'yes') {
-                $_POST['v_filemanager'] == 'true';
+            if ($_POST['v_filemanager'] == 'true') {
                 exec (HESTIA_CMD."v-add-sys-filemanager", $output, $return_var);
                 check_return_code($return_var,$output);
                 unset($output);
-                if (empty($_SESSION['error_msg'])) $_SESSION['FILE_MANAGER'] = 'yes';
+                if (empty($_SESSION['error_msg'])) $_SESSION['FILE_MANAGER'] = 'true';
             } else {
-                $_POST['v_filemanager'] == 'false';
                 exec (HESTIA_CMD."v-delete-sys-filemanager", $output, $return_var);
                 check_return_code($return_var,$output);
                 unset($output);
-                if (empty($_SESSION['error_msg'])) $_SESSION['FILE_MANAGER'] = 'no';
+                if (empty($_SESSION['error_msg'])) $_SESSION['FILE_MANAGER'] = 'false';
             }
         }
     }

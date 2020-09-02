@@ -12,8 +12,6 @@ if (isset($_GET['logout'])) {
     session_destroy();
 }
 
-
-
 // Login as someone else
 if (isset($_SESSION['user'])) {
     if ($_SESSION['user'] == 'admin' && !empty($_GET['loginas'])) {
@@ -41,8 +39,9 @@ function authenticate_user(){
         if(!empty($_SERVER['HTTP_CF_CONNECTING_IP'])){
             $v_ip = escapeshellarg($_SERVER['HTTP_CF_CONNECTING_IP']);
         }
-    } 
-     // Get user's salt
+    }    
+    
+    // Get user's salt
     $output = '';
     exec (HESTIA_CMD."v-get-user-salt ".$v_user." ".$v_ip." json" , $output, $return_var);
     $pam = json_decode(implode('', $output), true);
@@ -50,7 +49,7 @@ function authenticate_user(){
         sleep(2);
         unset($_POST['password']);
         unset($_POST['user']);
-        $error = "<a class=\"error\">".__('Invalid username or password')."</a>";
+        $error = "<a class=\"error\">"._('Invalid username or password')."</a>";
         return $error;
         } else {
             $user = $_POST['user'];
@@ -86,17 +85,13 @@ function authenticate_user(){
             if ( $return_var > 0 ) {
                 sleep(2);
                 unset($_POST['password']);
-                $error = "<a class=\"error\">".__('Invalid username or password')."</a>";
+                $error = "<a class=\"error\">"._('Invalid username or password')."</a>";
                 return $error;
             } else {
-
-                // Make root admin user
-                if ($_POST['user'] == 'root') $v_user = 'admin';
-
                 // Get user speciefic parameters
                 exec (HESTIA_CMD . "v-list-user ".$v_user." json", $output, $return_var);
                 $data = json_decode(implode('', $output), true);
-
+                unset($output);
                 // Check if 2FA is active
                 if ($data[$_POST['user']]['TWOFA'] != '') {
                    if (empty($_POST['twofa'])){
@@ -107,11 +102,17 @@ function authenticate_user(){
                         unset($output);
                         if ( $return_var > 0 ) {
                             sleep(2);
-                            $error = "<a class=\"error\">".__('Invalid or missing 2FA token')."</a>";
+                            $error = "<a class=\"error\">"._('Invalid or missing 2FA token')."</a>";
                             return $error;
                             unset($_POST['twofa']);
                         }
                    }
+                }
+                
+                if ($data[$_POST['user']]['ROLE'] == 'admin'){
+                    exec (HESTIA_CMD . "v-list-user admin json", $output, $return_var);
+                    $data = json_decode(implode('', $output), true);
+                    unset($output);
                 }
                 // Define session user
                 $_SESSION['user'] = key($data);
@@ -145,6 +146,14 @@ function authenticate_user(){
                 }
             }
         }
+    
+    }else{
+        unset($_POST);
+        unset($_GET);
+        unset($_SESSION);
+        session_destroy();
+        session_start();
+        return false;
     }
 }
 
@@ -176,7 +185,7 @@ if (empty($_SESSION['language'])) {
 
 // Generate CSRF token
 $_SESSION['token'] = md5(uniqid(mt_rand(), true));
-require_once($_SERVER['DOCUMENT_ROOT'].'/inc/i18n/'.$_SESSION['language'].'.php');
+
 require_once('../templates/header.html');
 if (empty($_POST['user'])) {
     require_once('../templates/login.html');

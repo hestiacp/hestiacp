@@ -520,7 +520,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['acco
         $to = $v_send_email;
         $subject = _("Email Credentials");
         $hostname = exec('hostname');
-        $from = _('MAIL_FROM', $hostname);
+        $from = sprintf(_('MAIL_FROM'), $hostname);
         $mailtext = $v_credentials;
         send_email($to, $subject, $mailtext, $from);
     }

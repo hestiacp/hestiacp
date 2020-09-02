@@ -52,7 +52,8 @@
                             </tr>
                             <tr>
                                 <td class="step-top hint">
-                                    <?php print _('Prefix will be automaticaly added to database name and database user',"<b>".$user."_</b>");?>
+                                    <?php print sprintf(_('Prefix %s will be automatically added to database name and database user'),'<b>'.$user.'_</b>'); ?>
+                                </td>
                                 </td>
                             </tr>
                             <tr>
@@ -70,8 +71,7 @@
                                 <td class="vst-text input-label">
                                     <?php
                                         print _('Username');
-                                        // if (is_it_mysql_or_mariadb()=='mysql')
-                                        echo "&nbsp;&nbsp;&nbsp;&nbsp;<em><small>("._('maximum characters length, including prefix', 32).")</small></em>";
+                                        echo "&nbsp;&nbsp;&nbsp;&nbsp;<em><small>(".sprintf(_('maximum characters length, including prefix'), 32).")</small></em>";
                                     ?>
                                 </td>
                             </tr>

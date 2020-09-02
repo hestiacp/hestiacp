@@ -12,7 +12,7 @@
 		<div class="l-menu clearfix noselect">
 			<div class="l-menu__item <?php if($TAB == 'WEB' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'DNS' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'MAIL' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'DB' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'BACKUP' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'CRON' ) echo 'l-menu__item--active' ?><?php if($TAB == 'PACKAGE' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'USER' ) echo 'l-menu__item--active' ?>"><a href="/list/user/" title="<?=_('Records')?>"><i class="fas fa-tasks panel-icon"></i>&nbsp;&nbsp;&nbsp;<?=_('Records')?></a></div>
 			<?php if ((isset($_SESSION['FILE_MANAGER'])) && (!empty($_SESSION['FILE_MANAGER'])) && ($_SESSION['FILE_MANAGER'] == "true")) {?>
-				<div class="l-menu__item <?php if($TAB == 'FM' ) echo 'l-menu__item--active' ?>"><a href="/fm/" title="<?=_('Fm')?>"><i class="fas fa-folder-open panel-icon"></i>&nbsp;&nbsp;&nbsp;<?=_('Fm')?></a></div>
+				<div class="l-menu__item <?php if($TAB == 'FM' ) echo 'l-menu__item--active' ?>"><a href="/fm/" title="<?=_('Files')?>"><i class="fas fa-folder-open panel-icon"></i>&nbsp;&nbsp;&nbsp;<?=_('Files')?></a></div>
 			<?php } ?>
 			<div class="l-menu__item <?php if($TAB == 'LOG' ) echo 'l-menu__item--active' ?>"><a href="/list/log/" title="<?=_('Log')?>"><i class="fas fa-history panel-icon"></i>&nbsp;&nbsp;&nbsp;<?=_('Log')?></a></div>
 			<div class="l-menu__item <?php if($TAB == 'STATS' ) echo 'l-menu__item--active' ?>"><a href="/list/stats/" title="<?=_('Statistics')?>"><i class="fas fa-chart-line panel-icon"></i>&nbsp;&nbsp;&nbsp;<?=_('Statistics')?></a></div>

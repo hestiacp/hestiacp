@@ -56,7 +56,7 @@ if (!empty($errors[0])) {
             $error_msg = $error_msg.", ".$error;
         }
     }
-    $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
+    $_SESSION['error_msg'] = sprintf(_('Field "%s" can not be blank.'),$error_msg);
     render_page($user, $TAB, 'generate_ssl');
     unset($_SESSION['error_msg']);
     exit;
@@ -83,7 +83,7 @@ $v_org = $_POST['v_org'];
 // Check return code
 if ($return_var != 0) {
     $error = implode('<br>', $output);
-    if (empty($error)) $error = _('Error code:',$return_var);
+    if (empty($error)) $error = sprintf(_('Error code:'),$return_var);
     $_SESSION['error_msg'] = $error;
     render_page($user, $TAB, 'generate_ssl');
     unset($_SESSION['error_msg']);

@@ -30,7 +30,7 @@ if (!empty($_POST['ok'])) {
                 $error_msg = $error_msg.", ".$error;
             }
         }
-        $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
+        $_SESSION['error_msg'] = sprintf(_('Field "%s" can not be blank.'),$error_msg);
     }
 
     // Validate email
@@ -89,15 +89,15 @@ if (!empty($_POST['ok'])) {
         $to = $v_db_email;
         $subject = _("Database Credentials");
         $hostname = exec('hostname');
-        $from = _('MAIL_FROM',$hostname);
-        $mailtext = _('DATABASE_READY',$user."_".$_POST['v_database'],$user."_".$_POST['v_dbuser'],$_POST['v_password'],$db_admin_link);
+        $from = sprintf(_('MAIL_FROM'),$hostname);
+        $mailtext = sprintf(_('DATABASE_READY'),$user."_".$_POST['v_database'],$user."_".$_POST['v_dbuser'],$_POST['v_password'],$db_admin_link);
         send_email($to, $subject, $mailtext, $from);
     }
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = _('DATABASE_CREATED_OK',htmlentities($user)."_".htmlentities($_POST['v_database']),htmlentities($user)."_".htmlentities($_POST['v_database']));
-        $_SESSION['ok_msg'] .= " / <a href=".$db_admin_link." target='_blank'>" . _('open %s',$db_admin) . "</a>";
+        $_SESSION['ok_msg'] = sprintf(_('DATABASE_CREATED_OK'),htmlentities($user)."_".htmlentities($_POST['v_database']),htmlentities($user)."_".htmlentities($_POST['v_database']));
+        $_SESSION['ok_msg'] .= " / <a href=".$db_admin_link." target='_blank'>" . sprintf(_('open %s'),$db_admin) . "</a>";
         unset($v_database);
         unset($v_dbuser);
         unset($v_password);

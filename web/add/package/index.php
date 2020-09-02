@@ -57,7 +57,7 @@ if (!empty($_POST['ok'])) {
                 $error_msg = $error_msg.", ".$error;
             }
         }
-        $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
+        $_SESSION['error_msg'] = sprintf(_('Field "%s" can not be blank.'),$error_msg);
     }
 
     // Protect input
@@ -149,7 +149,7 @@ if (!empty($_POST['ok'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = _('PACKAGE_CREATED_OK',htmlentities($_POST['v_package']),htmlentities($_POST['v_package']));
+        $_SESSION['ok_msg'] = sprintf(_('PACKAGE_CREATED_OK'),htmlentities($_POST['v_package']),htmlentities($_POST['v_package']));
         unset($v_package);
     }
 

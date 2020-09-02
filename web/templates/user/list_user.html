@@ -85,15 +85,6 @@
       <?php
         foreach ($data as $key => $value) {
           ++$i;
-          if ($data[$key]['SUSPENDED'] == 'yes') {
-            $status = 'suspended';
-            $spnd_action = 'unsuspend' ;
-            $spnd_confirmation = 'UNSUSPEND_USER_CONFIRMATION' ;
-          } else {
-            $status = 'active';
-            $spnd_action = 'suspend' ;
-            $spnd_confirmation = 'SUSPEND_USER_CONFIRMATION' ;
-          }
       ?>
 
       <div class="l-unit  <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['USER'][$key] == 1) echo ' l-unit--starred';?>" v_section="user"

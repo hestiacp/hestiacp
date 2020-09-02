@@ -91,7 +91,7 @@ function check_error($return_var) {
 function check_return_code($return_var,$output) {
     if ($return_var != 0) {
         $error = implode('<br>', $output);
-        if (empty($error)) $error = _('Error code:',$return_var);
+        if (empty($error)) $error = sprintf(_('Error code:'),$return_var);
         $_SESSION['error_msg'] = $error;
     }
 }

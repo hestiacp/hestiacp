@@ -44,7 +44,7 @@ if (!empty($_POST['ok'])) {
                 $error_msg = $error_msg.", ".$error;
             }
         }
-        $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
+        $_SESSION['error_msg'] = sprintf(_('Field "%s" can not be blank.'),$error_msg);
     }
 
     // Check antispam option
@@ -82,7 +82,7 @@ if (!empty($_POST['ok'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = _('MAIL_DOMAIN_CREATED_OK',htmlentities($_POST['v_domain']),htmlentities($_POST['v_domain']));
+        $_SESSION['ok_msg'] = sprintf(_('MAIL_DOMAIN_CREATED_OK'),htmlentities($_POST['v_domain']),htmlentities($_POST['v_domain']));
         unset($v_domain);
     }
 }
@@ -111,7 +111,7 @@ if (!empty($_POST['ok_acc'])) {
                 $error_msg = $error_msg.", ".$error;
             }
         }
-        $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
+        $_SESSION['error_msg'] = sprintf(_('Field "%s" can not be blank.'),$error_msg);
     }
 
     // Validate email
@@ -204,14 +204,14 @@ if (!empty($_POST['ok_acc'])) {
         $to = $v_send_email;
         $subject = _("Email Credentials");
         $hostname = exec('hostname');
-        $from = _('MAIL_FROM', $hostname);
+        $from = sprintf(_('MAIL_FROM'), $hostname);
         $mailtext = $v_credentials;
         send_email($to, $subject, $mailtext, $from);
     }
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = _('MAIL_ACCOUNT_CREATED_OK',htmlentities(strtolower($_POST['v_account'])),htmlentities($_POST[v_domain]),htmlentities(strtolower($_POST['v_account'])),htmlentities($_POST[v_domain]));
+        $_SESSION['ok_msg'] = sprintf(_('MAIL_ACCOUNT_CREATED_OK'),htmlentities(strtolower($_POST['v_account'])),htmlentities($_POST[v_domain]),htmlentities(strtolower($_POST['v_account'])),htmlentities($_POST[v_domain]));
         unset($v_account);
         unset($v_password);
         unset($v_password);

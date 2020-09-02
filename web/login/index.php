@@ -145,6 +145,13 @@ function authenticate_user(){
                 }
             }
         }
+    }else{
+        unset($_POST);
+        unset($_GET);
+        unset($_SESSION);
+        session_destroy();
+        session_start();
+        return false;
     }
 }
 

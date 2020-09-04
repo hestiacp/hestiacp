@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Hestia CP package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-09-02 07:42:43+0000\n"
+"PO-Revision-Date: 2020-09-02 23:12:13+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,137 +13,145 @@ msgstr ""
 
 #: ../../web/restart/service/index.php:25
 msgid "Restart \"%s\" failed"
-msgstr ""
+msgstr "Herstart \"%s\" mislukt"
 
 #: ../../web/start/service/index.php:25
 msgid "Start \"%s\" failed"
-msgstr ""
+msgstr "Start \"%s\" mislukt"
 
 #: ../../web/copy/package/index.php:34
 msgid "Error: unable to copy package."
-msgstr ""
+msgstr "Foutmelding: niet in staat om pakket te kopiëren"
 
 #: ../../web/add/user/index.php:101
 msgid "ACCOUNT_READY"
 msgstr ""
+"Uw account is aangemaakt en klaar voor gebruik.\n"
+"\n"
+"https://%s/login/\n"
+"Gebruikersnaam: %s\n"
+"Wachtwoord: %s\n"
+"\n"
+"--\n"
+"Hestia Controlepaneel"
 
 #: ../../web/download/backup/index.php:24
 msgid "Error: Hestia did not return any output."
-msgstr ""
+msgstr "Foutmelding: Hestia gaf geen melding"
 
 #: ../../web/templates/user/edit_web.html:261
 #: ../../web/templates/admin/edit_web.html:248
 #: ../../web/templates/admin/add_web.html:200
 msgid "Custom document root"
-msgstr ""
+msgstr "Aangepast document root"
 
 #: ../../web/templates/user/edit_web.html:269
 #: ../../web/templates/admin/edit_web.html:256
 #: ../../web/templates/admin/add_web.html:208
 msgid "Point to"
-msgstr ""
+msgstr "Wijs naar"
 
 #: ../../web/templates/user/panel.html:15
 #: ../../web/templates/admin/panel.html:15
 msgid "Files"
-msgstr ""
+msgstr "Bestand beheer"
 
 #: ../../web/templates/admin/edit_user.html:143
 #: ../../web/templates/admin/add_user.html:136
 msgid "Role"
-msgstr ""
+msgstr "Rol"
 
 #: ../../web/templates/admin/edit_user.html:150
 #: ../../web/templates/admin/add_user.html:143
 msgid "Administrator"
-msgstr ""
+msgstr "Administrator"
 
 #: ../../web/templates/admin/list_dns.html:71
 #: ../../web/templates/admin/list_web.html:70
 msgid "UNSUSPEND_DOMAIN_CONFIRMATION"
-msgstr ""
+msgstr "Weet u zeker dat u het domein %s weer wilt inschakelen?"
 
 #: ../../web/templates/admin/list_dns.html:76
 #: ../../web/templates/admin/list_web.html:75
 #: ../../web/templates/admin/list_mail.html:76
 #: ../../web/templates/admin/list_mail.html:81
 msgid "SUSPEND_DOMAIN_CONFIRMATION"
-msgstr ""
+msgstr "Weet u zeker dat u het domein %s weer wilt uitschakelen?"
 
 #: ../../web/templates/admin/edit_web.html:468
 #: ../../web/templates/admin/edit_web.html:544
 #: ../../web/templates/admin/add_web.html:333
 #: ../../web/templates/admin/add_web.html:405
 msgid "Prefix %s will be added to username automatically"
-msgstr ""
+msgstr "Voorvoegsel %s wordt automatisch toegevoegd aan gebruikersnaam"
 
 #: ../../web/templates/admin/edit_server.html:189
 msgid "Options"
-msgstr ""
+msgstr "Opties"
 
 #: ../../web/templates/admin/edit_server.html:194
 msgid "SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL"
-msgstr ""
+msgstr "Stuur een e-mailmelding wanneer een update is geïnstalleerd"
 
 #: ../../web/templates/admin/edit_server.html:199
 msgid "SYSTEM_UPGRADE_SEND_EMAIL_LOG"
-msgstr ""
+msgstr "Stuur het updatelogboek per e-mail"
 
 #: ../../web/templates/admin/edit_server.html:845
 msgid "Filemanager"
-msgstr ""
+msgstr "Bestands beheer"
 
 #: ../../web/templates/admin/list_cron.html:75
 msgid "UNSUSPEND_CRON_CONFIRMATION"
-msgstr ""
+msgstr "Weet u zeker dat u deze geplande taak weer wilt inschakelen?"
 
 #: ../../web/templates/admin/list_cron.html:80
 msgid "SUSPEND_CRON_CONFIRMATION"
-msgstr ""
+msgstr "Weet u zeker dat u deze geplande taak weer wilt uitschakelen?"
 
 #: ../../web/templates/admin/list_services.html:148
 msgid "Are you sure you want to start service"
-msgstr ""
+msgstr "Weet je het zerk dat je deze %s wilt stoppen?"
 
 #: ../../web/templates/admin/list_weblog.html:27
 msgid "Access Log"
-msgstr ""
+msgstr "Toegangs log"
 
 #: ../../web/templates/admin/list_user.html:88
 msgid "UNSUSPEND_USER_CONFIRMATION"
-msgstr ""
+msgstr "Weet u zeker dat u gebruiker %s weer wilt inschakelen?"
 
 #: ../../web/templates/admin/list_user.html:93
 msgid "SUSPEND_USER_CONFIRMATION"
-msgstr ""
+msgstr "Weet u zeker dat u gebruiker %s weer wilt uitschakelen?"
 
 #: ../../web/templates/admin/list_firewall.html:65
 msgid "UNSUSPEND_RULE_CONFIRMATION"
-msgstr ""
+msgstr "Weet u zeker dat u regel #%s weer wilt inschakelen?"
 
 #: ../../web/templates/admin/list_firewall.html:70
 msgid "SUSPEND_RULE_CONFIRMATION"
-msgstr ""
+msgstr "Weet u zeker dat u regel #%s weer wilt uitschakelen?"
 
 #: ../../web/templates/admin/list_db.html:99
 msgid "UNSUSPEND_DATABASE_CONFIRMATION"
-msgstr ""
+msgstr "Weet u zeker dat u database %s weer wilt inschakelen?"
 
 #: ../../web/templates/admin/list_db.html:104
 msgid "SUSPEND_DATABASE_CONFIRMATION"
-msgstr ""
+msgstr "Weet u zeker dat u database %s weer wilt uitschakelen?"
 
 #: ../../web/templates/admin/list_mail_acc.html:72
 msgid "UNSUSPEND_MAIL_ACCOUNT_CONFIRMATION"
-msgstr ""
+msgstr "Weet u zeker dat u het account %s wilt inschakelen?"
 
 #: ../../web/templates/admin/list_mail_acc.html:77
 msgid "SUSPEND_MAIL_ACCOUNT_CONFIRMATION"
-msgstr ""
+msgstr "'Weet u zeker dat u het account %s wilt uitschakelen?"
 
 #: ../../web/stop/service/index.php:27
 msgid "Stop \"%s\" failed"
-msgstr ""
+msgstr "Stop %s mislukt"
 
 #: ../../web/templates/admin/edit_db.html:95
 #: ../../web/templates/admin/edit_user.html:82
@@ -2944,7 +2952,18 @@ msgstr "Hallo,"
 
 #: ../../web/reset/index.php:40
 msgid "PASSWORD_RESET_REQUEST"
-msgstr "Om uw wachtwoord te herstellen klikt u op de link hieronder.\\nhttps://%s/reset/?action=confirm&user=%s&code=%s\\n\\nWanneer bovenstaande link niet werkt kunt u ook naar de volgende pagina gaan https://%s/reset/?action=code&user=%s en hier uw wachtwoord herstelcode invullen:\\n%s\\n\\nAls u geen wachtwoord herstelcode heeft aangevraagd, kunt u dit bericht negeren.\\n\\n--\\nHestia Controlepaneel\\n"
+msgstr ""
+"Om uw wachtwoord te herstellen klikt u op de link hieronder.\n"
+"\n"
+"https://%s/reset/?action=confirm&user=%s&code=%s\n"
+"\n"
+"Wanneer bovenstaande link niet werkt kunt u ook naar de volgende pagina gaan https://%s/reset/?action=code&user=%s en hier uw wachtwoord herstelcode invullen:\n"
+"%s\n"
+"\n"
+"Als u geen wachtwoord herstelcode heeft aangevraagd, kunt u dit bericht negeren.\n"
+"\n"
+"--\n"
+"Hestia Controlepaneel\\n"
 
 #: ../../web/reset/index.php:45
 msgid "Invalid host domain"
@@ -3062,7 +3081,15 @@ msgstr "FTP inloggegevens"
 #: ../../web/add/web/index.php:325 ../../web/edit/web/index.php:660
 #: ../../web/edit/web/index.php:734
 msgid "FTP_ACCOUNT_READY"
-msgstr "Het FTP account is aangemaakt en klaar voor gebruik.\\n\\nHostnaam: %s\\nGebruikersnaam: %s_%s\\nWachtwoord: %s\\n\\n--\\nHestia Controlepaneel\\n"
+msgstr ""
+"Het FTP account is aangemaakt en klaar voor gebruik.\n"
+"\n"
+"Hostnaam: %s\n"
+"Gebruikersnaam: %s_%s\n"
+"Wachtwoord: %s\n"
+"\n"
+"--\n"
+"Hestia Controlepaneel\\n"
 
 #: ../../web/edit/web/index.php:700
 msgid "ftp user"
@@ -3324,7 +3351,15 @@ msgstr "Database gegevens"
 
 #: ../../web/add/db/index.php:93
 msgid "DATABASE_READY"
-msgstr "De database is succesvol aangemaakt en klaar voor gebruik.\\n\\nDatabase: %s\\nGebruiker: %s\\nWachtwoord: %s\\n%s\\n\\n--\\nHestia Controlepaneel\\n"
+msgstr ""
+"De database is succesvol aangemaakt en klaar voor gebruik.\n"
+"Database: %s\n"
+"Gebruiker: %s\n"
+"Wachtwoord: %s\n"
+"%s\n"
+"\n"
+"--\n"
+"Hestia Controlepaneel\\n"
 
 #: ../../web/add/db/index.php:99
 msgid "DATABASE_CREATED_OK"

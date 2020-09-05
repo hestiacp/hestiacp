@@ -1,10 +1,10 @@
 <div class="l-center edit">
         <div class="l-sort clearfix">
           <div class="l-unit-toolbar__buttonstrip">
-            <a class="ui-button cancel" id="btn-back" href="/list/dns/?domain=<?=htmlentities(trim($v_domain, "'"))?>&token=<?=$_SESSION['token']?>"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+            <a class="ui-button cancel" id="btn-back" href="/list/dns/?domain=<?=htmlentities(trim($v_domain, "'"))?>&token=<?=$_SESSION['token']?>"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
+            <a href="#" class="ui-button" title="<?=_('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
           </div>
         </div>
       </div>
@@ -37,7 +37,7 @@
                         <table class="data-col2">
                             <tr>
                                 <td class="step-top">
-                                    <span class="page-title"><?=__('Editing DNS Record')?></span>
+                                    <span class="page-title"><?=_('Editing DNS Record')?></span>
                                 </td>
                             </tr>
                             <tr>
@@ -55,7 +55,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text step-top">
-                                    <?=__('Domain');?>
+                                    <?=_('Domain');?>
                                 </td>
                             </tr>
                             <tr>
@@ -66,7 +66,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Record');?>
+                                    <?php print _('Record');?>
                                 </td>
                             </tr>
                             <tr>
@@ -78,7 +78,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Type');?>
+                                    <?php print _('Type');?>
                                 </td>
                             </tr>
                             <tr>
@@ -103,7 +103,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('IP or Value');?>
+                                    <?php print _('IP or Value');?>
                                 </td>
                             </tr>
                             <tr>
@@ -122,7 +122,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Priority');?> <span class="optional">(<?=__('optional');?>)</span>
+                                    <?php print _('Priority');?> <span class="optional">(<?=_('optional');?>)</span>
                                 </td>
                             </tr>
                             <tr>
@@ -132,14 +132,14 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('TTL');?> <span class="optional">(<?=__('optional');?>)</span>
+                                    <?php print _('TTL');?> <span class="optional">(<?=_('optional');?>)</span>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <input type="text" size="20" class="vst-input" name="v_ttl" value="<?=htmlentities(trim($v_ttl, "'"))?>">
                                 </td>
-                            </tr>                            
+                            </tr>
                             <tr>
                                 <td>
                                     <input type="hidden" size="20" class="vst-input" name="v_record_id" value="<?=htmlentities(trim($v_record_id, "'"))?>">
@@ -154,4 +154,4 @@
     </div>
     <script>
         GLOBAL.DNS_REC_PREFIX = <?=json_encode($_GET['domain'])?>;
-    </script>    
+    </script>

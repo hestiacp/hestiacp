@@ -1,10 +1,10 @@
 <div class="l-center edit">
         <div class="l-sort clearfix">
           <div class="l-unit-toolbar__buttonstrip">
-            <a class="ui-button cancel" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+            <a class="ui-button cancel" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
+            <a href="#" class="ui-button" title="<?=_('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
           </div>
         </div>
       </div>
@@ -36,7 +36,7 @@
                         <table class="data-col2" width="600px">
                           <tr>
                             <td class="step-top">
-                                <span class="page-title"><?=__('Configuring Server')?></span>
+                                <span class="page-title"><?=_('Configuring Server')?></span>
                             </td>
                           </tr>
                         <tr>
@@ -56,7 +56,7 @@
                           <tr>
                                 <td class="vst-text input-label step-top advanced-options">
                                     <a href="javascript:elementHideShow('basic');" class="vst-text">
-                                        <i class="fas fa-cog"></i><b><?php print __('Basic options');?> <img src="/images/arrow.png"></b>
+                                        <i class="fas fa-cog"></i><b><?php print _('Basic options');?> <img src="/images/arrow.png"></b>
                                     </a>
                                 </td>
                             </tr>
@@ -64,7 +64,7 @@
                                 <td class="vst-text input-label step-left">
                                      <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="basic">
                                             <td class="vst-text">
-                                                <?php print __('Hostname') ?>
+                                                <?php print _('Hostname') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -75,7 +75,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('Time Zone');?>
+                                                <?php print _('Time Zone');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -99,7 +99,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('Theme') ?>
+                                                <?php print _('Theme') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -123,7 +123,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('Default Language');?>
+                                                <?php print _('Default Language');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -146,7 +146,7 @@
                                         </tr>
                                         <tr>
                                         <td class="vst-text input-label">
-                                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_language_update"><?php print __('SYSTEM_SET_DEFAULT_LANGUAGE');?></label>
+                                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_language_update"><?php print _('SYSTEM_SET_DEFAULT_LANGUAGE');?></label>
                                                 <br><br>
                                             </td>
                                         </tr>
@@ -156,7 +156,7 @@
                             <tr>
                                 <td class="vst-text input-label step-top advanced-options">
                                     <a href="javascript:elementHideShow('version');" class="vst-text">
-                                        <i class="fas fa-code-branch"></i><b><?php print __('Updates');?> <img src="/images/arrow.png"></b>
+                                        <i class="fas fa-code-branch"></i><b><?php print _('Updates');?> <img src="/images/arrow.png"></b>
                                     </a>
                                 </td>
                             </tr>
@@ -164,7 +164,7 @@
                                     <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="version">
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Version'); ?>
+                                                <?php print _('Version'); ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -172,10 +172,10 @@
                                                 <input type="text" size="20" class="vst-input" name="v_version" value="<?php echo $_SESSION['VERSION']; ?>" disabled>
                                                 <br><br>
                                             </td>
-                                        </tr>                           
+                                        </tr>
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('Release'); ?>
+                                                <?php print _('Release'); ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -186,17 +186,17 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('Options'); ?>
+                                                <?php print _('Options'); ?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_upgrade_send_notification_email" <?php if ((isset($_SESSION['UPGRADE_SEND_EMAIL'])) && (!empty($_SESSION['UPGRADE_SEND_EMAIL'])) && ($_SESSION['UPGRADE_SEND_EMAIL'] == "true")) echo "checked=yes" ?>><?php print __('SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL');?></label>
+                                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_upgrade_send_notification_email" <?php if ((isset($_SESSION['UPGRADE_SEND_EMAIL'])) && (!empty($_SESSION['UPGRADE_SEND_EMAIL'])) && ($_SESSION['UPGRADE_SEND_EMAIL'] == "true")) echo "checked=yes" ?>><?php print _('SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL');?></label>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_upgrade_send_email_log" <?php if ((isset($_SESSION['UPGRADE_SEND_EMAIL_LOG'])) && (!empty($_SESSION['UPGRADE_SEND_EMAIL_LOG'])) && ($_SESSION['UPGRADE_SEND_EMAIL_LOG'] == "true")) echo "checked=yes" ?>><?php print __('SYSTEM_UPGRADE_SEND_EMAIL_LOG');?></label>
+                                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_upgrade_send_email_log" <?php if ((isset($_SESSION['UPGRADE_SEND_EMAIL_LOG'])) && (!empty($_SESSION['UPGRADE_SEND_EMAIL_LOG'])) && ($_SESSION['UPGRADE_SEND_EMAIL_LOG'] == "true")) echo "checked=yes" ?>><?php print _('SYSTEM_UPGRADE_SEND_EMAIL_LOG');?></label>
                                             </td>
                                         </tr>
                                         <tr>
@@ -210,7 +210,7 @@
                             <tr>
                                 <td class="vst-text input-label step-top advanced-options">
                                     <a href="javascript:elementHideShow('web');" class="vst-text">
-                                        <i class="fas fa-globe-americas"></i><b><?php print __('Web Server');?> <img src="/images/arrow.png"></b>
+                                        <i class="fas fa-globe-americas"></i><b><?php print _('Web Server');?> <img src="/images/arrow.png"></b>
                                     </a>
                                 </td>
                             </tr>
@@ -220,7 +220,7 @@
                                         <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Proxy Server') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['PROXY_SYSTEM'] ?>/"><?=__('configure')?></a>
+                                                <?php print _('Proxy Server') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['PROXY_SYSTEM'] ?>/"><?=_('configure')?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -232,7 +232,7 @@
                                         <?php } ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Web Server') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['WEB_SYSTEM'] ?>/"><?=__('configure')?></a>
+                                                <?php print _('Web Server') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['WEB_SYSTEM'] ?>/"><?=_('configure')?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -244,7 +244,7 @@
                                         <?php if (!empty($_SESSION['WEB_BACKEND'])) { ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Backend Server') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['WEB_BACKEND'] ?>/"><?=__('configure')?></a>
+                                                <?php print _('Backend Server') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['WEB_BACKEND'] ?>/"><?=_('configure')?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -255,7 +255,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Backend Pool Mode') ?>
+                                                <?php print _('Backend Pool Mode') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -269,11 +269,11 @@
                                         <?php if(count($v_php_versions)): ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Enabled multi PHP versions') ?>
+                                                <?php print _('Enabled multi PHP versions') ?>
 
                                                 <span class="alert alert-info alert-with-icon">
                                                     <i class="fas fa-info"></i>
-                                                    <?=__('Please wait while php is installed or removed')?>
+                                                    <?=_('Please wait while php is installed or removed')?>
                                                 </span>
                                             </td>
                                         </tr>
@@ -309,7 +309,7 @@
                             <tr>
                                 <td class="vst-text input-label step-top advanced-options">
                                     <a href="javascript:elementHideShow('dns');" class="vst-text">
-                                        <i class="fas fa-atlas"></i><b><?php print __('DNS Server');?> <img src="/images/arrow.png"></b>
+                                        <i class="fas fa-atlas"></i><b><?php print _('DNS Server');?> <img src="/images/arrow.png"></b>
                                     </a>
                                 </td>
                             </tr>
@@ -318,7 +318,7 @@
                                     <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="dns">
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('DNS Server') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['DNS_SYSTEM'] ?>/"><?=__('configure')?></a>
+                                                <?php print _('DNS Server') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['DNS_SYSTEM'] ?>/"><?=_('configure')?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -330,14 +330,14 @@
 
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('DNS Cluster');?>
+                                                <?php print _('DNS Cluster');?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <select class="vst-list" name="v_dns_cluster" disabled>
-                                                    <option value='no'><?php print __('no'); ?></option>
-                                                    <option value='yes' <?php if($v_dns_cluster == 'yes') echo 'selected' ?> ><?php print __('yes'); ?></option>
+                                                    <option value='no'><?php print _('no'); ?></option>
+                                                    <option value='yes' <?php if($v_dns_cluster == 'yes') echo 'selected' ?> ><?php print _('yes'); ?></option>
                                                 </select>
                                                 <br><br><br>
                                             </td>
@@ -349,7 +349,7 @@
                                          ?>
                                         <tr>
                                             <td class="vst-text step-left">
-                                                <?php print __('Host'). ' #'.$i  ?>
+                                                <?php print _('Host'). ' #'.$i  ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -367,7 +367,7 @@
                             <tr>
                                 <td class="vst-text input-label step-top advanced-options">
                                     <a href="javascript:elementHideShow('mail');" class="vst-text">
-                                        <i class="fas fa-mail-bulk"></i><b><?php print __('Mail Server');?> <img src="/images/arrow.png"></b>
+                                        <i class="fas fa-mail-bulk"></i><b><?php print _('Mail Server');?> <img src="/images/arrow.png"></b>
                                     </a>
                                 </td>
                             </tr>
@@ -376,7 +376,7 @@
                                     <table style="display:<?php if (empty($v_mail_adv)) echo 'none';?> ;" id="mail">
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Mail Server') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['MAIL_SYSTEM'] ?>/"><?=__('configure')?></a>
+                                                <?php print _('Mail Server') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['MAIL_SYSTEM'] ?>/"><?=_('configure')?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -388,7 +388,7 @@
                                         <?php if (!empty($_SESSION['ANTIVIRUS_SYSTEM'])) { ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Antivirus') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['ANTIVIRUS_SYSTEM'] ?>/"><?=__('configure')?></a>
+                                                <?php print _('Antivirus') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['ANTIVIRUS_SYSTEM'] ?>/"><?=_('configure')?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -401,7 +401,7 @@
                                         <?php if (!empty($_SESSION['ANTISPAM_SYSTEM'])) { ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('AntiSpam') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['ANTISPAM_SYSTEM'] ?>/"><?=__('configure')?></a>
+                                                <?php print _('AntiSpam') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['ANTISPAM_SYSTEM'] ?>/"><?=_('configure')?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -413,7 +413,7 @@
                                         <?php } ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Webmail URL') ?>
+                                                <?php print _('Webmail URL') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -427,11 +427,11 @@
                                 </td>
                             </tr>
 
-                            
+
                             <tr>
                                 <td class="vst-text input-label step-top advanced-options">
                                     <a href="javascript:elementHideShow('db');" class="vst-text">
-                                        <i class="fas fa-database"></i><b><?php print __('Databases');?> <img src="/images/arrow.png"></b>
+                                        <i class="fas fa-database"></i><b><?php print _('Databases');?> <img src="/images/arrow.png"></b>
                                     </a>
                                 </td>
                             </tr>
@@ -440,14 +440,14 @@
                                     <table style="display:<?php if (empty($v_db_adv)) echo 'none';?> ;" id="db">
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('MySQL Support');?> / <a class="generate" href="/edit/server/mysql/"><?=__('configure')?></a>
+                                                <?php print _('MySQL Support');?> / <a class="generate" href="/edit/server/mysql/"><?=_('configure')?></a>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <select class="vst-list" name="v_mysql" disabled>
-                                                    <option value='no'><?php print __('no'); ?></option>
-                                                    <option value='yes' <?php if($v_mysql == 'yes') echo 'selected' ?> ><?php print __('yes'); ?></option>
+                                                    <option value='no'><?php print _('no'); ?></option>
+                                                    <option value='yes' <?php if($v_mysql == 'yes') echo 'selected' ?> ><?php print _('yes'); ?></option>
                                                 </select>
                                                 <br><br>
                                             </td>
@@ -455,7 +455,7 @@
                                         <?php if ($v_mysql == 'yes') { ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('phpMyAdmin URL') ?>
+                                                <?php print _('phpMyAdmin URL') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -472,7 +472,7 @@
                                          ?>
                                         <tr>
                                             <td class="vst-text step-left">
-                                                <?php print __('Host'). ' #'.$i  ?>
+                                                <?php print _('Host'). ' #'.$i  ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -483,7 +483,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text step-left">
-                                                <?php print __('Password') ?>
+                                                <?php print _('Password') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -495,7 +495,7 @@
 
                                         <tr>
                                             <td class="vst-text step-left">
-                                                <?php print __('Maximum Number Of Databases') ?>
+                                                <?php print _('Maximum Number Of Databases') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -506,7 +506,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text step-left">
-                                                <?php print __('Current Number Of Databases') ?>
+                                                <?php print _('Current Number Of Databases') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -520,14 +520,14 @@
 
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('PostgreSQL Support');?> / <a class="generate" href="/edit/server/postgresql/"><?=__('configure')?></a>
+                                                <?php print _('PostgreSQL Support');?> / <a class="generate" href="/edit/server/postgresql/"><?=_('configure')?></a>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <select class="vst-list" name="v_pgsql" disabled>
-                                                    <option value='no'><?php print __('no'); ?></option>
-                                                    <option value='yes' <?php if($v_pgsql == 'yes') echo 'selected' ?> ><?php print __('yes'); ?></option>
+                                                    <option value='no'><?php print _('no'); ?></option>
+                                                    <option value='yes' <?php if($v_pgsql == 'yes') echo 'selected' ?> ><?php print _('yes'); ?></option>
                                                 </select>
                                                 <br><br>
                                             </td>
@@ -535,7 +535,7 @@
                                         <?php if ($v_pgsql == 'yes') { ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('phpPgAdmin URL') ?>
+                                                <?php print _('phpPgAdmin URL') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -552,7 +552,7 @@
                                          ?>
                                         <tr>
                                             <td class="vst-text step-left">
-                                                <?php print __('Host'). ' #'.$i  ?>
+                                                <?php print _('Host'). ' #'.$i  ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -563,7 +563,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text step-left">
-                                                <?php print __('Maximum Number Of Databases') ?>
+                                                <?php print _('Maximum Number Of Databases') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -574,7 +574,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text step-left">
-                                                <?php print __('Current Number Of Databases') ?>
+                                                <?php print _('Current Number Of Databases') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -592,7 +592,7 @@
                             <tr>
                                 <td class="vst-text input-label step-top advanced-options">
                                     <a href="javascript:elementHideShow('backup');" class="vst-text">
-                                        <i class="fas fa-undo"></i><b><?php print __('Backups');?> <img src="/images/arrow.png"></b>
+                                        <i class="fas fa-undo"></i><b><?php print _('Backups');?> <img src="/images/arrow.png"></b>
                                     </a>
                                 </td>
                             </tr>
@@ -601,21 +601,21 @@
                                     <table style="display:<?php if (empty($v_backup_adv)) echo 'none';?> ;" id="backup">
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Local backup') ?>
+                                                <?php print _('Local backup') ?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <select class="vst-list" name="v_backup">
-                                                    <option value='no'><?php print __('no'); ?></option>
-                                                    <option value='yes' <?php if($v_backup == 'yes') echo 'selected' ?> ><?php print __('yes'); ?></option>
+                                                    <option value='no'><?php print _('no'); ?></option>
+                                                    <option value='yes' <?php if($v_backup == 'yes') echo 'selected' ?> ><?php print _('yes'); ?></option>
                                                 </select>
                                                 <br><br>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Compression level') ?>
+                                                <?php print _('Compression level') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -636,7 +636,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print __('Directory') ?>
+                                                <?php print _('Directory') ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -647,7 +647,7 @@
                                         </tr>                                        <tr>
                                             <td class="vst-text input-label step-top">
                                                 <a href="javascript:elementHideShow('remote_backup');" class="vst-text">
-                                                <?php print __('Remote backup');?> <img src="/images/arrow.png">
+                                                <?php print _('Remote backup');?> <img src="/images/arrow.png">
                                                 </a>
                                             </td>
                                         </tr>
@@ -655,21 +655,21 @@
                                             <td class="vst-text input-label step-left">
                                                 <table style="display:<?php if (empty($v_backup_remote_adv)) echo 'none';?> ;" id="remote_backup">
                                                     <td class="vst-text">
-                                                        <?php print __('Protocol') ?>
+                                                        <?php print _('Protocol') ?>
                                                     </td>
                                                     </tr>
                                                     <tr>
                                                         <td>
                                                             <select class="vst-list" name="v_backup_type">
-                                                                <option value='ftp'><?php print __('ftp'); ?></option>
-                                                                <option value='sftp' <?php if((!empty($v_backup_type)) && (trim($v_backup_type,"'")  == 'sftp' )) echo 'selected="selected"'; ?>><?php print __('sftp'); ?></option>
+                                                                <option value='ftp'><?php print _('ftp'); ?></option>
+                                                                <option value='sftp' <?php if((!empty($v_backup_type)) && (trim($v_backup_type,"'")  == 'sftp' )) echo 'selected="selected"'; ?>><?php print _('sftp'); ?></option>
                                                             </select>
                                                             <br><br>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="vst-text">
-                                                            <?php print __('Host') ?>
+                                                            <?php print _('Host') ?>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -680,7 +680,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="vst-text">
-                                                            <?php print __('Port') ?>
+                                                            <?php print _('Port') ?>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -691,7 +691,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="vst-text">
-                                                            <?php print __('Username') ?>
+                                                            <?php print _('Username') ?>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -702,7 +702,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="vst-text">
-                                                            <?php print __('Password') ?>
+                                                            <?php print _('Password') ?>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -713,7 +713,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="vst-text">
-                                                            <?php print __('Directory') ?>
+                                                            <?php print _('Directory') ?>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -732,7 +732,7 @@
                             <tr>
                                 <td class="vst-text input-label step-top advanced-options">
                                     <a href="javascript:elementHideShow('ssl');" class="vst-text">
-                                        <i class="fas fa-lock"></i><b><?php print __('Hestia SSL');?><img src="/images/arrow.png"></b>
+                                        <i class="fas fa-lock"></i><b><?php print _('Hestia SSL');?><img src="/images/arrow.png"></b>
                                     </a>
                                 </td>
                             </tr>
@@ -741,8 +741,8 @@
                                     <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="ssl">
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('SSL Certificate');?>
-                                                <span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=$v_hostname?>"><?=__('Generate CSR')?></a></span>
+                                                <?php print _('SSL Certificate');?>
+                                                <span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=$v_hostname?>"><?=_('Generate CSR')?></a></span>
                                             </td>
                                         </tr>
                                         <tr>
@@ -752,7 +752,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('SSL Key');?>
+                                                <?php print _('SSL Key');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -765,7 +765,7 @@
                                                 <table class="additional-info">
                                                     <tr>
                                                         <td>
-                                                            <b><?=__('SUBJECT')?>:</b>
+                                                            <b><?=_('SUBJECT')?>:</b>
                                                         </td>
                                                         <td class="details">
                                                             <?=$v_ssl_subject?>
@@ -774,7 +774,7 @@
                                                     <? if($v_ssl_aliases){?>
                                                     <tr>
                                                         <td>
-                                                            <b><?=__('ALIASES')?>:</b>
+                                                            <b><?=_('ALIASES')?>:</b>
                                                         </td>
                                                         <td class="details">
                                                             <?=$v_ssl_aliases?>
@@ -783,7 +783,7 @@
                                                     <? } ?>
                                                     <tr>
                                                         <td>
-                                                            <b><?=__('NOT_BEFORE')?>:</b>
+                                                            <b><?=_('NOT_BEFORE')?>:</b>
                                                         </td>
                                                         <td class="details">
                                                             <?=$v_ssl_not_before?>
@@ -791,7 +791,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <b><?=__('NOT_AFTER')?>:</b>
+                                                            <b><?=_('NOT_AFTER')?>:</b>
                                                         </td>
                                                         <td class="details">
                                                             <?=$v_ssl_not_after?>
@@ -799,7 +799,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <b><?=__('SIGNATURE')?>:</b>
+                                                            <b><?=_('SIGNATURE')?>:</b>
                                                         </td>
                                                         <td class="details">
                                                             <?=$v_ssl_signature?>
@@ -808,7 +808,7 @@
 
                                                     <tr>
                                                         <td>
-                                                            <b><?=__('PUB_KEY')?>:</b>
+                                                            <b><?=_('PUB_KEY')?>:</b>
                                                         </td>
                                                         <td class="details">
                                                             <?=$v_ssl_pub_key?>
@@ -816,7 +816,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <b><?=__('ISSUER')?>:</b>
+                                                            <b><?=_('ISSUER')?>:</b>
                                                         </td>
                                                         <td class="details">
                                                             <?=$v_ssl_issuer?>
@@ -833,7 +833,7 @@
                             <tr>
                                 <td class="vst-text input-label step-top advanced-options">
                                     <a href="javascript:elementHideShow('hestia');" class="vst-text">
-                                        <i class="fas fa-puzzle-piece"></i><b><?php print __('Hestia Control Panel Plugins');?> <img src="/images/arrow.png"></b>
+                                        <i class="fas fa-puzzle-piece"></i><b><?php print _('Hestia Control Panel Plugins');?> <img src="/images/arrow.png"></b>
                                     </a>
                                 </td>
                             </tr>
@@ -842,42 +842,42 @@
                                     <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="hestia">
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('Filemanager');?>
+                                                <?php print _('Filemanager');?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <select class="vst-list" name="v_filemanager">
-                                                    <option value='false'><?php print __('no'); ?></option>
-                                                    <option value='true' <?php if($_SESSION['FILE_MANAGER'] == 'true') echo 'selected' ?> ><?php print __('yes'); ?></option>
+                                                    <option value='false'><?php print _('no'); ?></option>
+                                                    <option value='true' <?php if($_SESSION['FILE_MANAGER'] == 'true') echo 'selected' ?> ><?php print _('yes'); ?></option>
                                                 </select>
                                                 <br><br>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('FileSystem Disk Quota');?>
+                                                <?php print _('FileSystem Disk Quota');?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <select class="vst-list" name="v_quota">
-                                                    <option value='no'><?php print __('no'); ?></option>
-                                                    <option value='yes' <?php if($_SESSION['DISK_QUOTA'] == 'yes') echo 'selected' ?> ><?php print __('yes'); ?></option>
+                                                    <option value='no'><?php print _('no'); ?></option>
+                                                    <option value='yes' <?php if($_SESSION['DISK_QUOTA'] == 'yes') echo 'selected' ?> ><?php print _('yes'); ?></option>
                                                 </select>
                                                 <br><br>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('Firewall');?>
+                                                <?php print _('Firewall');?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <select class="vst-list" name="v_firewall">
-                                                    <option value='no'><?php print __('no'); ?></option>
-                                                    <option value='yes' <?php if($_SESSION['FIREWALL_SYSTEM'] == 'iptables') echo 'selected' ?> ><?php print __('yes'); ?></option>
+                                                    <option value='no'><?php print _('no'); ?></option>
+                                                    <option value='yes' <?php if($_SESSION['FIREWALL_SYSTEM'] == 'iptables') echo 'selected' ?> ><?php print _('yes'); ?></option>
                                                 </select>
                                                 <br><br>
                                             </td>

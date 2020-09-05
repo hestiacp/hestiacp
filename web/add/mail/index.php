@@ -35,7 +35,7 @@ if (!empty($_POST['ok'])) {
     }
 
     // Check empty fields
-    if (empty($_POST['v_domain'])) $errors[] = __('domain');
+    if (empty($_POST['v_domain'])) $errors[] = _('domain');
     if (!empty($errors[0])) {
         foreach ($errors as $i => $error) {
             if ( $i == 0 ) {
@@ -44,7 +44,7 @@ if (!empty($_POST['ok'])) {
                 $error_msg = $error_msg.", ".$error;
             }
         }
-        $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
+        $_SESSION['error_msg'] = sprintf(_('Field "%s" can not be blank.'),$error_msg);
     }
 
     // Check antispam option
@@ -82,7 +82,7 @@ if (!empty($_POST['ok'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('MAIL_DOMAIN_CREATED_OK',htmlentities($_POST['v_domain']),htmlentities($_POST['v_domain']));
+        $_SESSION['ok_msg'] = sprintf(_('MAIL_DOMAIN_CREATED_OK'),htmlentities($_POST['v_domain']),htmlentities($_POST['v_domain']));
         unset($v_domain);
     }
 }
@@ -100,9 +100,9 @@ if (!empty($_POST['ok_acc'])) {
     
 
     // Check empty fields
-    if (empty($_POST['v_domain'])) $errors[] = __('domain');
-    if (empty($_POST['v_account'])) $errors[] = __('account');
-    if (empty($_POST['v_password'])) $errors[] = __('password');
+    if (empty($_POST['v_domain'])) $errors[] = _('domain');
+    if (empty($_POST['v_account'])) $errors[] = _('account');
+    if (empty($_POST['v_password'])) $errors[] = _('password');
     if (!empty($errors[0])) {
         foreach ($errors as $i => $error) {
             if ( $i == 0 ) {
@@ -111,13 +111,13 @@ if (!empty($_POST['ok_acc'])) {
                 $error_msg = $error_msg.", ".$error;
             }
         }
-        $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
+        $_SESSION['error_msg'] = sprintf(_('Field "%s" can not be blank.'),$error_msg);
     }
 
     // Validate email
     if ((!empty($_POST['v_send_email'])) && (empty($_SESSION['error_msg']))) {
         if (!filter_var($_POST['v_send_email'], FILTER_VALIDATE_EMAIL)) {
-            $_SESSION['error_msg'] = __('Please enter valid email address.');
+            $_SESSION['error_msg'] = _('Please enter valid email address.');
         }
     }
     
@@ -202,16 +202,16 @@ if (!empty($_POST['ok_acc'])) {
     // Email login credentials
     if ((!empty($v_send_email)) && (empty($_SESSION['error_msg']))) {
         $to = $v_send_email;
-        $subject = __("Email Credentials");
+        $subject = _("Email Credentials");
         $hostname = exec('hostname');
-        $from = __('MAIL_FROM', $hostname);
+        $from = sprintf(_('MAIL_FROM'), $hostname);
         $mailtext = $v_credentials;
         send_email($to, $subject, $mailtext, $from);
     }
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('MAIL_ACCOUNT_CREATED_OK',htmlentities(strtolower($_POST['v_account'])),htmlentities($_POST[v_domain]),htmlentities(strtolower($_POST['v_account'])),htmlentities($_POST[v_domain]));
+        $_SESSION['ok_msg'] = sprintf(_('MAIL_ACCOUNT_CREATED_OK'),htmlentities(strtolower($_POST['v_account'])),htmlentities($_POST[v_domain]),htmlentities(strtolower($_POST['v_account'])),htmlentities($_POST[v_domain]));
         unset($v_account);
         unset($v_password);
         unset($v_password);

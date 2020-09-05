@@ -1,10 +1,10 @@
     <div class="l-center edit">
       <div class="l-sort clearfix">
         <div class="l-unit-toolbar__buttonstrip">
-            <a class="ui-button cancel" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+            <a class="ui-button cancel" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
         </div>
         <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
+            <a href="#" class="ui-button" title="<?=_('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
         </div>
       </div>
     </div>
@@ -35,7 +35,7 @@
                         <table class="data-col2" width="600px"  id="basic-options">
                             <tr>
                                 <td class="step-top">
-                                    <span class="page-title"><?=__('Configuring Server')?>: PHP</span>
+                                    <span class="page-title"><?=_('Configuring Server')?>: PHP</span>
                                 </td>
                             </tr>
                             <tr>
@@ -132,14 +132,14 @@
 
                             <tr>
                                 <td class="vst-text input-label">
-                                    <a href="javascript:toggleOptions();" class="vst-advanced"><?=__('Advanced options')?></a>
+                                    <a href="javascript:toggleOptions();" class="vst-advanced"><?=_('Advanced options')?></a>
                                 </td>
                             </tr>
                         </table>
                         <table class="data-col2" width="600px" style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advanced-options">
                             <tr>
                                 <td class="vst-text input-label">
-                                    <a href="javascript:toggleOptions();" class="vst-advanced"><?=__('Basic options')?></a>
+                                    <a href="javascript:toggleOptions();" class="vst-advanced"><?=_('Basic options')?></a>
                                 </td>
                             </tr>
 
@@ -154,7 +154,7 @@
                                 </td>
                             </tr>
                             <td class="vst-text input-label" style="text-transform: capitalize;">
-                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_restart" checked="yes"> <?php print __('restart');?></label>
+                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_restart" checked="yes"> <?php print _('restart');?></label>
                             </td>
                         </table>
                         <table class="data-col2"></table>

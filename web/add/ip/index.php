@@ -22,10 +22,10 @@ if (!empty($_POST['ok'])) {
     }
 
     // Check empty fields
-    if (empty($_POST['v_ip'])) $errors[] = __('ip address');
-    if (empty($_POST['v_netmask'])) $errors[] = __('netmask');
-    if (empty($_POST['v_interface'])) $errors[] = __('interface');
-    if (empty($_POST['v_owner'])) $errors[] = __('assigned user');
+    if (empty($_POST['v_ip'])) $errors[] = _('ip address');
+    if (empty($_POST['v_netmask'])) $errors[] = _('netmask');
+    if (empty($_POST['v_interface'])) $errors[] = _('interface');
+    if (empty($_POST['v_owner'])) $errors[] = _('assigned user');
     if (!empty($errors[0])) {
         foreach ($errors as $i => $error) {
             if ( $i == 0 ) {
@@ -34,7 +34,7 @@ if (!empty($_POST['ok'])) {
                 $error_msg = $error_msg.", ".$error;
             }
         }
-        $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
+        $_SESSION['error_msg'] = sprintf(_('Field "%s" can not be blank.'),$error_msg);
     }
 
     // Protect input
@@ -66,7 +66,7 @@ if (!empty($_POST['ok'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('IP_CREATED_OK',htmlentities($_POST['v_ip']),htmlentities($_POST['v_ip']));
+        $_SESSION['ok_msg'] = sprintf(_('IP_CREATED_OK'),htmlentities($_POST['v_ip']),htmlentities($_POST['v_ip']));
         unset($v_ip);
         unset($v_netmask);
         unset($v_name);

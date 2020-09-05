@@ -101,7 +101,7 @@ if (!empty($_POST['save'])) {
 
     // Set success message
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('Changes has been saved.');
+        $_SESSION['ok_msg'] = _('Changes has been saved.');
     }
 }
 

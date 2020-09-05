@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Hestia CP package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-09-04 09:01:18+0000\n"
+"PO-Revision-Date: 2020-09-04 23:27:43+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,15 +13,15 @@ msgstr ""
 
 #: ../../web/restart/service/index.php:25
 msgid "Restart \"%s\" failed"
-msgstr ""
+msgstr "Reinicio \"%s\" falhou"
 
 #: ../../web/start/service/index.php:25
 msgid "Start \"%s\" failed"
-msgstr ""
+msgstr "Iniciar \"%s\" falhou"
 
 #: ../../web/copy/package/index.php:34
 msgid "Error: unable to copy package."
-msgstr ""
+msgstr "Erro: não foi possivel copiar o novo pacote"
 
 #: ../../web/add/user/index.php:101
 msgid "ACCOUNT_READY"
@@ -37,34 +37,34 @@ msgstr ""
 
 #: ../../web/download/backup/index.php:24
 msgid "Error: Hestia did not return any output."
-msgstr ""
+msgstr "Erro: O painel não retornou nenhum resultado de saída"
 
 #: ../../web/templates/user/edit_web.html:261
 #: ../../web/templates/admin/edit_web.html:248
 #: ../../web/templates/admin/add_web.html:200
 msgid "Custom document root"
-msgstr ""
+msgstr "Raiz do documento personalizado"
 
 #: ../../web/templates/user/edit_web.html:269
 #: ../../web/templates/admin/edit_web.html:256
 #: ../../web/templates/admin/add_web.html:208
 msgid "Point to"
-msgstr ""
+msgstr "Apontar para"
 
 #: ../../web/templates/user/panel.html:15
 #: ../../web/templates/admin/panel.html:15
 msgid "Files"
-msgstr ""
+msgstr "Ficheiros"
 
 #: ../../web/templates/admin/edit_user.html:143
 #: ../../web/templates/admin/add_user.html:136
 msgid "Role"
-msgstr ""
+msgstr "Regra"
 
 #: ../../web/templates/admin/edit_user.html:150
 #: ../../web/templates/admin/add_user.html:143
 msgid "Administrator"
-msgstr ""
+msgstr "Administrador"
 
 #: ../../web/templates/admin/list_dns.html:71
 #: ../../web/templates/admin/list_web.html:70
@@ -83,11 +83,11 @@ msgstr "Tem certeza que deseja suspender o domínio %s?"
 #: ../../web/templates/admin/add_web.html:333
 #: ../../web/templates/admin/add_web.html:405
 msgid "Prefix %s will be added to username automatically"
-msgstr ""
+msgstr "Prefixo %s sera adicionado ao usuario automaticamente"
 
 #: ../../web/templates/admin/edit_server.html:189
 msgid "Options"
-msgstr ""
+msgstr "Opções"
 
 #: ../../web/templates/admin/edit_server.html:194
 msgid "SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL"
@@ -99,7 +99,7 @@ msgstr "Enviar log de instalação da atualização por email"
 
 #: ../../web/templates/admin/edit_server.html:845
 msgid "Filemanager"
-msgstr ""
+msgstr "Gestor de arquivos"
 
 #: ../../web/templates/admin/list_cron.html:75
 msgid "UNSUSPEND_CRON_CONFIRMATION"
@@ -111,11 +111,11 @@ msgstr "Tem certeza que deseja suspender a tarefa do cron?"
 
 #: ../../web/templates/admin/list_services.html:148
 msgid "Are you sure you want to start service"
-msgstr ""
+msgstr "Tem a certeza que deseja iniciar o serviço"
 
 #: ../../web/templates/admin/list_weblog.html:27
 msgid "Access Log"
-msgstr ""
+msgstr "Log's de acesso"
 
 #: ../../web/templates/admin/list_user.html:88
 msgid "UNSUSPEND_USER_CONFIRMATION"
@@ -151,7 +151,7 @@ msgstr "Tem certeza que deseja suspender %s?"
 
 #: ../../web/stop/service/index.php:27
 msgid "Stop \"%s\" failed"
-msgstr ""
+msgstr "Parar \"%s\" falhou"
 
 #: ../../web/templates/admin/edit_db.html:95
 #: ../../web/templates/admin/edit_user.html:82
@@ -160,7 +160,7 @@ msgstr ""
 #: ../../web/templates/admin/edit_mail_acc.html:82
 #: ../../web/templates/admin/add_user.html:77
 msgid "Your password must have at least"
-msgstr ""
+msgstr "A sua senha deve ter pelo menos"
 
 #: ../../web/templates/admin/edit_db.html:97
 #: ../../web/templates/admin/edit_user.html:84
@@ -169,7 +169,7 @@ msgstr ""
 #: ../../web/templates/admin/edit_mail_acc.html:84
 #: ../../web/templates/admin/add_user.html:79
 msgid "8 characters long"
-msgstr ""
+msgstr "8 caracteres de comprimento"
 
 #: ../../web/templates/admin/edit_db.html:98
 #: ../../web/templates/admin/edit_user.html:85
@@ -178,7 +178,7 @@ msgstr ""
 #: ../../web/templates/admin/edit_mail_acc.html:85
 #: ../../web/templates/admin/add_user.html:80
 msgid "1 uppercase & 1 lowercase character"
-msgstr ""
+msgstr "e os caracteres devem ter 1 maiúsculo e 1 minúsculo"
 
 #: ../../web/templates/admin/edit_db.html:99
 #: ../../web/templates/admin/edit_user.html:86
@@ -187,15 +187,15 @@ msgstr ""
 #: ../../web/templates/admin/edit_mail_acc.html:86
 #: ../../web/templates/admin/add_user.html:81
 msgid "1 number"
-msgstr ""
+msgstr "1 número"
 
 #: ../../web/add/user/index.php:48 ../../web/add/db/index.php:45
 msgid "Password does not match the minimum requirements"
-msgstr ""
+msgstr "Lamentamos, mas a senha não atende aos requisitos mínimos"
 
 #: ../../web/edit/user/index.php:203
 msgid "Please enter a valid name"
-msgstr ""
+msgstr "Por favor, indique um nome válido"
 
 #: ../../web/templates/login_1.html:18
 msgid "Welcome"
@@ -203,15 +203,15 @@ msgstr "Bem Vindo"
 
 #: ../../web/templates/login_2.html:42 ../../web/templates/login_1.html:42
 msgid "Login"
-msgstr ""
+msgstr "Efectuar login"
 
 #: ../../web/templates/admin/add_user.html:107
 msgid "Send welcome email"
-msgstr ""
+msgstr "Enviar email de boas-vindas"
 
 #: ../../web/templates/admin/panel.html:2
 msgid "Top"
-msgstr ""
+msgstr "Subir"
 
 #: ../../web/templates/admin/panel.html:33
 msgid "Server"
@@ -219,41 +219,41 @@ msgstr "Servidor"
 
 #: ../../web/templates/admin/panel.html:35
 msgid "Submit an issue report"
-msgstr "Submit an issue report"
+msgstr "Envie um relatório de problema"
 
 #: ../../web/templates/login.html:35
 msgid "Next"
-msgstr ""
+msgstr "Próximo"
 
 #: ../../web/templates/login_2.html:18
 msgid "2 Factor Authentication"
-msgstr "Two-factor Authentication"
+msgstr "Autenticação-de-dois-fatores"
 
 #: ../../web/templates/user/list_web.html:64
 #: ../../web/templates/user/list_mail.html:60
 #: ../../web/templates/admin/list_web.html:59
 #: ../../web/templates/admin/list_mail.html:61
 msgid "SSL"
-msgstr ""
+msgstr "SSL"
 
 #: ../../web/templates/user/list_web.html:139
 #: ../../web/templates/admin/list_web.html:134
 msgid "Edit"
-msgstr ""
+msgstr "Editar"
 
 #: ../../web/templates/user/list_web.html:222
 #: ../../web/templates/admin/list_web.html:217
 msgid "1 web domain"
-msgstr "1 web domain"
+msgstr "1 domínio web"
 
 #: ../../web/templates/user/list_web.html:224
 #: ../../web/templates/admin/list_web.html:219
 msgid "%s web domains"
-msgstr "%s web domains"
+msgstr "%s domínios web"
 
 #: ../../web/templates/admin/add_package.html:37
 msgid "Adding Package"
-msgstr "Adicionando Pacote"
+msgstr "Adicionar Pacotes"
 
 #: ../../web/templates/admin/edit_package.html:53
 #: ../../web/templates/admin/list_packages.html:9
@@ -283,12 +283,12 @@ msgstr "Domínios DNS"
 #: ../../web/templates/admin/add_dns.html:113
 #: ../../web/templates/admin/add_package.html:307
 msgid "Name servers"
-msgstr "Servidores de Nome"
+msgstr "Nome dos Servidores"
 
 #: ../../web/templates/user/list_mail.html:4
 #: ../../web/templates/admin/list_mail.html:4
 msgid "Add Mail Domain"
-msgstr "Adicionar Domínio Email"
+msgstr "Adicionar Domínio de E-mail"
 
 #: ../../web/templates/user/list_mail.html:9
 #: ../../web/templates/user/list_mail.html:55
@@ -300,17 +300,17 @@ msgstr "Contas"
 #: ../../web/templates/user/list_mail.html:59
 #: ../../web/templates/admin/list_mail.html:60
 msgid "DKIM"
-msgstr ""
+msgstr "DKIM"
 
 #: ../../web/templates/user/list_mail.html:217
 #: ../../web/templates/admin/list_mail.html:218
 msgid "1 mail domain"
-msgstr "1 mail domain"
+msgstr "1 domínio de e-mail"
 
 #: ../../web/templates/user/list_mail.html:219
 #: ../../web/templates/admin/list_mail.html:220
 msgid "%s mail domains"
-msgstr "%s mail domains"
+msgstr "%s domínio de e-mail"
 
 #: ../../web/templates/user/list_user.html:6
 #: ../../web/templates/admin/list_user.html:6
@@ -335,7 +335,7 @@ msgstr "reconstruir dns"
 #: ../../web/templates/user/list_user.html:45
 #: ../../web/templates/admin/list_user.html:41
 msgid "rebuild mail"
-msgstr "reconstruir email"
+msgstr "reconstruir e-mail"
 
 #: ../../web/templates/user/list_user.html:46
 #: ../../web/templates/admin/list_user.html:42
@@ -345,7 +345,7 @@ msgstr "reconstruir bd"
 #: ../../web/templates/user/list_user.html:47
 #: ../../web/templates/admin/list_user.html:43
 msgid "rebuild cron"
-msgstr "reconstruir tarefa"
+msgstr "reconstruir tarefa CRON"
 
 #: ../../web/templates/user/list_user.html:48
 #: ../../web/templates/admin/list_user.html:44
@@ -354,17 +354,17 @@ msgstr "atualizar contadores"
 
 #: ../../web/templates/admin/list_user.html:135
 msgid "DELETE_USER_CONFIRMATION"
-msgstr "Tem certeza que deseja deletar o usuário %s?"
+msgstr "Tem certeza que deseja apagar o usuário %s?"
 
 #: ../../web/templates/user/list_user.html:142
 #: ../../web/templates/admin/list_user.html:166
 msgid "1 user account"
-msgstr "1 user account"
+msgstr "1 conta de usuário"
 
 #: ../../web/templates/user/list_user.html:144
 #: ../../web/templates/admin/list_user.html:168
 msgid "%s user accounts"
-msgstr "%s user accounts"
+msgstr "%s contas de usuário"
 
 #: ../../web/templates/admin/list_packages.html:5
 msgid "Add Package"
@@ -372,11 +372,11 @@ msgstr "Adicionar Pacote"
 
 #: ../../web/templates/admin/list_packages.html:44
 msgid "Shell"
-msgstr ""
+msgstr "Shell"
 
 #: ../../web/templates/admin/list_packages.html:83
 msgid "DELETE_PACKAGE_CONFIRMATION"
-msgstr "Tem certeza que deseja deletar o pacote %s?"
+msgstr "Tem certeza que deseja apagar o pacote %s?"
 
 #: ../../web/templates/admin/list_packages.html:206
 msgid "1 package"
@@ -392,17 +392,17 @@ msgstr "Mensagem"
 
 #: ../../web/templates/admin/add_dns.html:38
 msgid "Adding DNS Domain"
-msgstr "Adicionando Domínio DNS"
+msgstr "Adicionar Domínio DNS"
 
 #: ../../web/templates/user/edit_dns.html:110
 #: ../../web/templates/admin/edit_dns.html:110
 #: ../../web/templates/admin/add_dns.html:93
 msgid "YYYY-MM-DD"
-msgstr "DD-MM-YYYY"
+msgstr "YYYY-MM-DD"
 
 #: ../../web/templates/admin/list_rrd.html:5
 msgid "show: CPU / MEM / NET / DISK"
-msgstr "mostrar: CPU / MEM / NET / DISK"
+msgstr "mostrar: CPU | MEM | NET | DISK"
 
 #: ../../web/templates/admin/list_rrd.html:14
 msgid "Yearly"
@@ -414,7 +414,7 @@ msgstr "Editando Pacote"
 
 #: ../../web/templates/admin/edit_package.html:304
 msgid "Name Servers"
-msgstr "Servidores de Nome"
+msgstr "Nomes de Servidor"
 
 #: ../../web/add/user/index.php:91 ../../web/templates/login.html:16
 msgid "Welcome to Hestia Control Panel"
@@ -422,11 +422,11 @@ msgstr "Bem vindo ao Painel de Controle Hestia"
 
 #: ../../web/templates/login_1.html:26
 msgid "forgot password"
-msgstr "esqueci minha senha"
+msgstr "esqueci-me da senha"
 
 #: ../../web/templates/login_2.html:23
 msgid "2FA Token"
-msgstr "OTP PIN"
+msgstr "PIN 2FA"
 
 #: ../../web/templates/login_2.html:26
 msgid "Forgot token"
@@ -438,19 +438,19 @@ msgstr "Entrar"
 
 #: ../../web/templates/user/edit_user.html:5
 msgid "SSH_KEY"
-msgstr ""
+msgstr "Senha SSH"
 
 #: ../../web/templates/reset2fa.html:15
 msgid "2FA Reset successfully"
-msgstr "Two-factor authentication is now turned off for your account.<br><br>You may now proceed to log in."
+msgstr "2FA foi resetado com sucesso! A autenticação de dois fatores agora está desativada para sua conta.<br> <br>Agora você pode prosseguir para fazer o login. "
 
 #: ../../web/templates/reset2fa.html:29
 msgid "Reset 2FA"
-msgstr "Unlock Account"
+msgstr "Efetuar reset 2FA"
 
 #: ../../web/templates/reset2fa.html:44
 msgid "2FA Reset Code"
-msgstr "Account Recovery Code"
+msgstr "2FA ccount Recovery Code"
 
 #: ../../web/templates/reset2fa.html:54 ../../web/templates/reset_1.html:40
 msgid "RESET_NOTICE"
@@ -466,11 +466,11 @@ msgstr "Deixar a página?"
 
 #: ../../web/templates/admin/panel.html:5 ../../web/templates/footer.html:9
 msgid "Shortcuts"
-msgstr "Shortcuts"
+msgstr "Atalhos"
 
 #: ../../web/templates/footer.html:16
 msgid "Add New object"
-msgstr "Adicionar novo objeto"
+msgstr "Adicionar um novo objeto"
 
 #: ../../web/templates/footer.html:17
 msgid "Save Form"
@@ -482,7 +482,7 @@ msgstr "Cancelar salvamento do formulário"
 
 #: ../../web/templates/footer.html:20
 msgid "Go to WEB list"
-msgstr "Ir para a lista de WEB"
+msgstr "Ir para a lista WEB"
 
 #: ../../web/templates/footer.html:21
 msgid "Go to DNS list"
@@ -494,11 +494,11 @@ msgstr "Ir para a lista de MAIL"
 
 #: ../../web/templates/footer.html:23
 msgid "Go to DB list"
-msgstr "Ir para a lista de DB"
+msgstr "Ir para a lista de Banco de Dados"
 
 #: ../../web/templates/footer.html:24
 msgid "Go to CRON list"
-msgstr "Ir para a lista de CRON"
+msgstr "Ir para a lista de tarefas CRON"
 
 #: ../../web/templates/footer.html:25
 msgid "Go to BACKUP list"
@@ -510,7 +510,7 @@ msgstr "Foco na pesquisa"
 
 #: ../../web/templates/footer.html:29
 msgid "Display/Close shortcuts"
-msgstr "Mostrar/Fechar atalhos"
+msgstr "Mostrar/Esconder atalhos"
 
 #: ../../web/templates/footer.html:31
 msgid "Move backward through top menu"
@@ -522,15 +522,15 @@ msgstr "Mover para frente através do menu superior"
 
 #: ../../web/templates/footer.html:33
 msgid "Enter focused element"
-msgstr "Enter focused element"
+msgstr "Insir o elemento focado"
 
 #: ../../web/templates/footer.html:35
 msgid "Move up through elements list"
-msgstr "Move up through elements list"
+msgstr "Mover para cima na lista de elementos"
 
 #: ../../web/templates/footer.html:36
 msgid "Move down through elements list"
-msgstr "Move down through elements list"
+msgstr "Mover para baixo na lista de elementos"
 
 #: ../../web/login/index.php:54 ../../web/login/index.php:90
 msgid "Invalid username or password"
@@ -538,16 +538,16 @@ msgstr "Usuário ou senha inválidos"
 
 #: ../../web/login/index.php:107
 msgid "Invalid or missing 2FA token"
-msgstr ""
+msgstr "Token 2FA inválido ou ausente"
 
 #: ../../web/templates/admin/list_services.html:15
 #: ../../web/templates/admin/list_services.html:139
 msgid "RESTART_CONFIRMATION"
-msgstr "Tem certeza que deseja reiniciar %s?"
+msgstr "Tem a certeza que deseja reiniciar %s?"
 
 #: ../../web/templates/admin/list_services.html:68
 msgid "Operating System"
-msgstr "Sistema Operacional"
+msgstr "Sistema Operativo"
 
 #: ../../web/templates/admin/list_services.html:74
 msgid "Load Average"
@@ -560,12 +560,12 @@ msgstr "Tempo em Atividade"
 
 #: ../../web/templates/admin/list_services.html:96
 msgid "Service"
-msgstr "Service"
+msgstr "Serviço"
 
 #: ../../web/templates/admin/list_updates.html:41
 #: ../../web/templates/admin/list_services.html:98
 msgid "Description"
-msgstr "Description"
+msgstr "Descrição"
 
 #: ../../web/templates/admin/list_services.html:100
 #: ../../web/templates/admin/list_server_info.html:27
@@ -583,7 +583,7 @@ msgstr "editar"
 
 #: ../../web/templates/admin/list_services.html:148
 msgid "Are you sure you want to stop service"
-msgstr ""
+msgstr "Tem certeza que deseja pararo o serviço"
 
 #: ../../web/templates/admin/list_services.html:157
 msgid "mb"
@@ -599,29 +599,29 @@ msgstr "listar fail2ban"
 
 #: ../../web/templates/admin/list_firewall.html:8
 msgid "list ipset"
-msgstr "Manage IP lists"
+msgstr "Gerir lista de IP's"
 
 #: ../../web/templates/admin/edit_firewall.html:41
 #: ../../web/templates/admin/list_firewall.html:82
 #: ../../web/templates/admin/list_firewall.html:102
 msgid "Editing Firewall Rule"
-msgstr "Editando Regra de Firewall"
+msgstr "Editar Regra de Firewall"
 
 #: ../../web/templates/admin/list_firewall.html:118
 msgid "DELETE_RULE_CONFIRMATION"
-msgstr "Tem certeza que deseja deletar o regra #%s?"
+msgstr "Tem certeza que deseja apagar a regra #%s?"
 
 #: ../../web/templates/admin/list_firewall.html:145
 msgid "1 firewall rule"
-msgstr "1 firewall rule"
+msgstr "1 regra de firewall"
 
 #: ../../web/templates/admin/list_firewall.html:147
 msgid "%s firewall rules"
-msgstr "%s firewall rules"
+msgstr "%s regras de firewall"
 
 #: ../../web/templates/admin/edit_user.html:5
 msgid "Manage SSH keys"
-msgstr "Manage SSH keys"
+msgstr "Gerir Senhas SSH"
 
 #: ../../web/templates/user/edit_user.html:42
 #: ../../web/templates/user/list_user.html:114
@@ -674,12 +674,12 @@ msgstr "Acesso SSH"
 
 #: ../../web/templates/admin/edit_user.html:201
 msgid "PHP CLI Version"
-msgstr "PHP CLI Version"
+msgstr "Versão PHP CLI"
 
 #: ../../web/templates/user/edit_user.html:146
 #: ../../web/templates/admin/edit_user.html:227
 msgid "Default Name Servers"
-msgstr "Servidores de Nome Padrão"
+msgstr "Nome dos Servidores padrão"
 
 #: ../../web/templates/user/edit_user.html:211
 #: ../../web/templates/admin/edit_package.html:370
@@ -687,7 +687,7 @@ msgstr "Servidores de Nome Padrão"
 #: ../../web/templates/admin/edit_user.html:293
 #: ../../web/templates/admin/add_package.html:372
 msgid "Add one more Name Server"
-msgstr "Adicionar um ou mais Servidores de Nome"
+msgstr "Adicionar um ou mais Nomes de Servidores"
 
 #: ../../web/templates/user/list_db.html:4
 #: ../../web/templates/admin/list_db.html:4
@@ -706,17 +706,17 @@ msgstr "reconstruir"
 #: ../../web/templates/user/list_db.html:143
 #: ../../web/templates/admin/list_db.html:144
 msgid "DELETE_DATABASE_CONFIRMATION"
-msgstr "Tem certeza que deseja deletar o banco de dados %s?"
+msgstr "Tem certeza que deseja apagar o banco de dados %s?"
 
 #: ../../web/templates/user/list_db.html:171
 #: ../../web/templates/admin/list_db.html:172
 msgid "1 SQL database"
-msgstr "1 SQL database"
+msgstr "1 Base de Dados SQL"
 
 #: ../../web/templates/user/list_db.html:173
 #: ../../web/templates/admin/list_db.html:174
 msgid "%s SQL databases"
-msgstr "%s SQL databases"
+msgstr "%s Base de Dados  SQL"
 
 #: ../../web/templates/admin/edit_mail.html:69
 msgid "Catchall email"
@@ -752,12 +752,12 @@ msgstr "Expira"
 #: ../../web/templates/admin/list_dns.html:11
 #: ../../web/templates/admin/panel.html:13
 msgid "Records"
-msgstr "registros"
+msgstr "Registros"
 
 #: ../../web/templates/user/list_dns.html:11
 #: ../../web/templates/admin/list_dns.html:56
 msgid "Records_DNS"
-msgstr "Records"
+msgstr "Registos de DNS"
 
 #: ../../web/templates/user/edit_dns.html:89
 #: ../../web/templates/user/list_dns.html:56
@@ -777,7 +777,7 @@ msgstr "SOA"
 #: ../../web/templates/admin/add_dns.html:93
 #: ../../web/templates/admin/list_dns.html:60
 msgid "Expiration Date"
-msgstr "data para Expirar"
+msgstr "Data até Expirar"
 
 #: ../../web/templates/user/list_dns.html:87
 #: ../../web/templates/user/list_dns.html:96
@@ -786,7 +786,7 @@ msgstr "data para Expirar"
 #: ../../web/templates/admin/list_dns.html:97
 #: ../../web/templates/admin/add_package.html:219
 msgid "DNS records"
-msgstr "Registros DNS"
+msgstr "Registos DNS"
 
 #: ../../web/templates/user/list_dns.html:113
 #: ../../web/templates/user/list_dns_rec.html:85
@@ -795,17 +795,17 @@ msgstr "Registros DNS"
 #: ../../web/templates/admin/list_web.html:159
 #: ../../web/templates/admin/list_mail.html:121
 msgid "DELETE_DOMAIN_CONFIRMATION"
-msgstr "Tem certeza que deseja deletar o domínio %s?"
+msgstr "Tem certeza que deseja apagar o domínio %s?"
 
 #: ../../web/templates/user/list_dns.html:139
 #: ../../web/templates/admin/list_dns.html:140
 msgid "1 DNS zone"
-msgstr "1 DNS zone"
+msgstr "1 zona de DNS"
 
 #: ../../web/templates/user/list_dns.html:141
 #: ../../web/templates/admin/list_dns.html:142
 msgid "%s DNS zones"
-msgstr "%s DNS zones"
+msgstr "%s zonas de DNS"
 
 #: ../../web/templates/user/list_stats.html:4
 #: ../../web/templates/user/list_search.html:5
@@ -814,43 +814,43 @@ msgstr "%s DNS zones"
 #: ../../web/templates/admin/list_server_info.html:37
 #: ../../web/templates/admin/list_search.html:5
 msgid "Refresh"
-msgstr "Refresh"
+msgstr "Actualizar"
 
 #: ../../web/templates/admin/list_log.html:6
 #: ../../web/templates/admin/list_log.html:8
 msgid "Delete"
-msgstr "Deletar"
+msgstr "Apagar"
 
 #: ../../web/templates/admin/list_log.html:11
 msgid "DELETE_LOGS_CONFIRMATION"
-msgstr "Are you sure you want to delete the logs?"
+msgstr "Tem certeza de que pretende apagar os logs?"
 
 #: ../../web/templates/admin/list_log.html:61
 msgid "1 log record"
-msgstr "1 registro de log"
+msgstr "1 registo de log"
 
 #: ../../web/templates/admin/list_log.html:63
 msgid "%s log records"
-msgstr "%s registros de log"
+msgstr "%s registos de logs"
 
 #: ../../web/templates/user/list_cron.html:4
 #: ../../web/templates/admin/list_cron.html:4
 msgid "Add Cron Job"
-msgstr "Adicionar Tarefa"
+msgstr "Adicionar Tarefa CRON"
 
 #: ../../web/templates/user/list_cron.html:7
 #: ../../web/templates/user/list_cron.html:36
 #: ../../web/templates/admin/list_cron.html:7
 #: ../../web/templates/admin/list_cron.html:36
 msgid "turn off notifications"
-msgstr "desativar notificações"
+msgstr "Desligar notificações"
 
 #: ../../web/templates/user/list_cron.html:9
 #: ../../web/templates/user/list_cron.html:37
 #: ../../web/templates/admin/list_cron.html:9
 #: ../../web/templates/admin/list_cron.html:37
 msgid "turn on notifications"
-msgstr "ativar notificações"
+msgstr "Activar notificações"
 
 #: ../../web/templates/user/list_cron.html:59
 #: ../../web/templates/admin/list_cron.html:59
@@ -868,22 +868,22 @@ msgstr "Min"
 #: ../../web/templates/admin/list_cron.html:96
 #: ../../web/templates/admin/edit_cron.html:356
 msgid "Editing Cron Job"
-msgstr "Editando Tarefa"
+msgstr "Editar Tarefa"
 
 #: ../../web/templates/user/list_cron.html:111
 #: ../../web/templates/admin/list_cron.html:111
 msgid "DELETE_CRON_CONFIRMATION"
-msgstr "Tem certeza que deseja deletar a tarefa do cron?"
+msgstr "Tem a certeza que deseja apagar a tarefa do cron?"
 
 #: ../../web/templates/user/list_cron.html:137
 #: ../../web/templates/admin/list_cron.html:137
 msgid "1 cron job"
-msgstr "1 tarefa"
+msgstr "1 tarefa CRON"
 
 #: ../../web/templates/user/list_cron.html:139
 #: ../../web/templates/admin/list_cron.html:139
 msgid "%s cron jobs"
-msgstr "%s tarefas"
+msgstr "%s tarefas CRON"
 
 #: ../../web/templates/user/list_search.html:37
 #: ../../web/templates/admin/list_search.html:39
@@ -902,7 +902,7 @@ msgstr "Dono"
 #: ../../web/templates/admin/list_ip.html:52
 #: ../../web/templates/admin/list_search.html:44
 msgid "Status"
-msgstr "Status"
+msgstr "Estado"
 
 #: ../../web/templates/user/list_search.html:196
 #: ../../web/templates/admin/list_search.html:198
@@ -924,15 +924,15 @@ msgstr "exclusões de backup"
 
 #: ../../web/templates/admin/list_backup.html:43
 msgid "File Name"
-msgstr "File Name"
+msgstr "Nome do arquivo"
 
 #: ../../web/templates/admin/list_backup.html:46
 msgid "Size"
-msgstr "Size"
+msgstr "Tamanho"
 
 #: ../../web/templates/admin/list_backup.html:48
 msgid "Runtime"
-msgstr "Runtime"
+msgstr "Tempo de execução"
 
 #: ../../web/templates/admin/list_backup.html:82
 msgid "download"
@@ -940,11 +940,11 @@ msgstr "baixar"
 
 #: ../../web/templates/admin/list_backup.html:89
 msgid "DELETE_BACKUP_CONFIRMATION"
-msgstr "Tem certeza que deseja deletar o backup %s ?"
+msgstr "Tem certeza que deseja apagar o backup %s ?"
 
 #: ../../web/templates/admin/list_backup.html:116
 msgid "1 backup"
-msgstr ""
+msgstr "1 backup"
 
 #: ../../web/templates/admin/list_backup.html:118
 msgid "%s backups"
@@ -957,44 +957,44 @@ msgstr "Bloquear Endereço IP"
 #: ../../web/templates/admin/list_ip.html:85
 #: ../../web/templates/admin/list_firewall_banlist.html:65
 msgid "DELETE_IP_CONFIRMATION"
-msgstr "Tem certeza que deseja deletar o endereço IP %s?"
+msgstr "Tem certeza que deseja apagar o endereço de IP %s?"
 
 #: ../../web/templates/admin/list_firewall_banlist.html:89
 msgid "There are currently no banned IP addresses."
-msgstr ""
+msgstr "Atualmente não existem endereços de IP bloqueados."
 
 #: ../../web/templates/admin/list_firewall_banlist.html:92
 msgid "1 banned IP address"
-msgstr "1 banned IP address"
+msgstr "1 endereço IP banido"
 
 #: ../../web/templates/admin/list_firewall_banlist.html:95
 msgid "%s banned IP addresses"
-msgstr "%s banned IP addresses"
+msgstr "%s endereços IP banidos"
 
 #: ../../web/templates/admin/add_dns_rec.html:30
 msgid "Adding DNS Record"
-msgstr "Adicionando Registro DNS"
+msgstr "Adicionar Registro DNS"
 
 #: ../../web/templates/admin/add_db.html:37
 msgid "Adding database"
-msgstr "Adicionando Banco de Dados"
+msgstr "Adicionar Banco de Dados"
 
 #: ../../web/templates/admin/add_db.html:55
 msgid "Prefix %s will be automatically added to database name and database user"
-msgstr ""
+msgstr "Prefixo %s será adicionado automaticamente ao nome do banco de dados e ao usuário do banco de dados"
 
 #: ../../web/templates/admin/edit_db.html:72
 #: ../../web/templates/admin/add_db.html:74
 msgid "maximum characters length, including prefix"
-msgstr "maximum %s characters length, including prefix"
+msgstr "máximo %s comprimento de caracteres, incluindo prefixo"
 
 #: ../../web/templates/admin/list_updates.html:6
 msgid "disable autoupdate"
-msgstr "desativar atualização automática"
+msgstr "desativar atualizações automáticas"
 
 #: ../../web/templates/admin/list_updates.html:8
 msgid "enable autoupdate"
-msgstr "ativar atualização automática"
+msgstr "ativar atualizações automática"
 
 #: ../../web/templates/admin/list_updates.html:20
 msgid "update"
@@ -1002,11 +1002,11 @@ msgstr "atualizar"
 
 #: ../../web/templates/admin/list_server_info.html:28
 msgid "RAM"
-msgstr ""
+msgstr "RAM"
 
 #: ../../web/templates/admin/list_server_info.html:30
 msgid "Network"
-msgstr ""
+msgstr "Network"
 
 #: ../../web/templates/admin/list_server_info.html:31
 msgid "Web"
@@ -1014,15 +1014,15 @@ msgstr "Web"
 
 #: ../../web/templates/admin/list_server_info.html:33
 msgid "Mail"
-msgstr "Email"
+msgstr "E-mail"
 
 #: ../../web/templates/admin/add_mail.html:38
 msgid "Adding Mail Domain"
-msgstr "Adicionando Domínio de Email"
+msgstr "Adicionar Domínio de E-mail"
 
 #: ../../web/templates/admin/add_user.html:38
 msgid "Adding User"
-msgstr "Adicionando Usuário"
+msgstr "Adicionar Usuário"
 
 #: ../../web/templates/admin/list_ssl.html:74
 msgid "SSL CSR"
@@ -1045,7 +1045,7 @@ msgstr "reler IP"
 #: ../../web/templates/admin/list_ip.html:73
 #: ../../web/templates/admin/list_ip.html:79
 msgid "Editing IP Address"
-msgstr "Editando Endereço IP"
+msgstr "Editar Endereço de IP"
 
 #: ../../web/templates/admin/list_ip.html:111
 msgid "1 IP address"
@@ -1072,12 +1072,12 @@ msgstr "Estatísticas"
 #: ../../web/templates/user/panel.html:28
 #: ../../web/templates/admin/panel.html:29
 msgid "Notifications"
-msgstr "Notifications"
+msgstr "Notificações"
 
 #: ../../web/templates/user/panel.html:31
 #: ../../web/templates/admin/panel.html:36
 msgid "Help"
-msgstr "Help"
+msgstr "Ajuda"
 
 #: ../../web/templates/admin/panel.html:48
 msgid "USER"
@@ -1101,12 +1101,12 @@ msgstr "domínios"
 #: ../../web/templates/user/panel.html:48
 #: ../../web/templates/admin/panel.html:62
 msgid "aliases"
-msgstr "apelidos"
+msgstr "aliases"
 
 #: ../../web/templates/user/panel.html:61
 #: ../../web/templates/admin/panel.html:75
 msgid "zones"
-msgstr ""
+msgstr "zonas"
 
 #: ../../web/templates/user/panel.html:76
 #: ../../web/templates/admin/panel.html:90
@@ -1116,7 +1116,7 @@ msgstr "contas"
 #: ../../web/templates/user/panel.html:100
 #: ../../web/templates/admin/panel.html:114
 msgid "CRON"
-msgstr "TAREFA"
+msgstr "Tarefa CRON"
 
 #: ../../web/templates/user/panel.html:102
 #: ../../web/templates/admin/panel.html:116
@@ -1173,17 +1173,17 @@ msgstr "Digite o nome do diretório, um por linha. Para excluir todos os diretó
 #: ../../web/templates/admin/add_cron.html:239
 #: ../../web/templates/admin/add_cron.html:240
 msgid "every"
-msgstr "every"
+msgstr "a cada"
 
 #: ../../web/templates/admin/edit_cron.html:62
 #: ../../web/templates/admin/add_cron.html:64
 msgid "every hour"
-msgstr "every hour"
+msgstr "a cada hora"
 
 #: ../../web/templates/admin/edit_cron.html:63
 #: ../../web/templates/admin/add_cron.html:65
 msgid "every two hours"
-msgstr "every two hours"
+msgstr "a cada duas horas"
 
 #: ../../web/templates/admin/edit_cron.html:69
 #: ../../web/templates/admin/edit_cron.html:128
@@ -1203,17 +1203,17 @@ msgstr "Minuto"
 #: ../../web/templates/admin/add_cron.html:93
 #: ../../web/templates/admin/add_cron.html:163
 msgid "every day"
-msgstr "every day"
+msgstr "a cada dia"
 
 #: ../../web/templates/admin/edit_cron.html:91
 #: ../../web/templates/admin/add_cron.html:94
 msgid "every odd day"
-msgstr "every odd day"
+msgstr "every odd day [help]"
 
 #: ../../web/templates/admin/edit_cron.html:92
 #: ../../web/templates/admin/add_cron.html:95
 msgid "every even day"
-msgstr "every even day"
+msgstr "every even day [help]"
 
 #: ../../web/templates/user/list_cron.html:62
 #: ../../web/templates/admin/list_cron.html:62
@@ -1231,62 +1231,62 @@ msgstr "Hora"
 #: ../../web/templates/admin/edit_cron.html:160
 #: ../../web/templates/admin/add_cron.html:164
 msgid "weekdays (5 days)"
-msgstr "weekdays (5 days)"
+msgstr "dias de semana (5 dias)"
 
 #: ../../web/templates/admin/edit_cron.html:161
 #: ../../web/templates/admin/add_cron.html:165
 msgid "weekend (2 days)"
-msgstr "weekend (2 days)"
+msgstr "dias de semana (2 dias)"
 
 #: ../../web/templates/admin/edit_cron.html:162
 #: ../../web/templates/admin/add_cron.html:166
 msgid "Monday"
-msgstr "Monday"
+msgstr "Segunda"
 
 #: ../../web/templates/admin/edit_cron.html:163
 #: ../../web/templates/admin/add_cron.html:167
 msgid "Tuesday"
-msgstr "Tuesday"
+msgstr "Terça"
 
 #: ../../web/templates/admin/edit_cron.html:164
 #: ../../web/templates/admin/add_cron.html:168
 msgid "Wednesday"
-msgstr "Wednesday"
+msgstr "Quarta"
 
 #: ../../web/templates/admin/edit_cron.html:165
 #: ../../web/templates/admin/add_cron.html:169
 msgid "Thursday"
-msgstr "Thursday"
+msgstr "Quinta"
 
 #: ../../web/templates/admin/edit_cron.html:166
 #: ../../web/templates/admin/add_cron.html:170
 msgid "Friday"
-msgstr "Friday"
+msgstr "Sexta"
 
 #: ../../web/templates/admin/edit_cron.html:167
 #: ../../web/templates/admin/add_cron.html:171
 msgid "Saturday"
-msgstr "Saturday"
+msgstr "Sábado"
 
 #: ../../web/templates/admin/edit_cron.html:168
 #: ../../web/templates/admin/add_cron.html:172
 msgid "Sunday"
-msgstr "Sunday"
+msgstr "Domingo"
 
 #: ../../web/templates/admin/edit_cron.html:230
 #: ../../web/templates/admin/add_cron.html:236
 msgid "every month"
-msgstr "every month"
+msgstr "todo mês"
 
 #: ../../web/templates/admin/edit_cron.html:231
 #: ../../web/templates/admin/add_cron.html:237
 msgid "every odd month"
-msgstr "every odd month"
+msgstr "todo mês ímpar"
 
 #: ../../web/templates/admin/edit_cron.html:232
 #: ../../web/templates/admin/add_cron.html:238
 msgid "every even month"
-msgstr "every even month"
+msgstr "todo mês par"
 
 #: ../../web/templates/admin/edit_cron.html:235
 #: ../../web/templates/admin/add_cron.html:241
@@ -1350,7 +1350,7 @@ msgstr "Dez"
 
 #: ../../web/templates/admin/add_cron.html:363
 msgid "Adding Cron Job"
-msgstr "Adicionando Tarefa"
+msgstr "Adicionar Tarefa"
 
 #: ../../web/templates/user/list_cron.html:15
 #: ../../web/templates/admin/list_cron.html:15
@@ -1375,23 +1375,23 @@ msgstr "Dia da semana"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:38
 msgid "Adding Firewall Ipset List"
-msgstr "New IP list"
+msgstr "Adicionar Lista Ipset de Firewall"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:66
 msgid "url, script or file"
-msgstr ""
+msgstr "url, script ou arquivo"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:85
 msgid "ip v4"
-msgstr ""
+msgstr "ipv4"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:86
 msgid "ip v6"
-msgstr ""
+msgstr "ipv4"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:166
 msgid "BLACKLIST"
-msgstr "BLACKLIST"
+msgstr "LISTA NEGRA"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:179
 msgid "IPVERSE"
@@ -1399,15 +1399,15 @@ msgstr "IPVERSE"
 
 #: ../../web/templates/admin/list_webapps.html:46
 msgid "version"
-msgstr "version"
+msgstr "versão"
 
 #: ../../web/templates/admin/list_webapps.html:47
 msgid "Setup"
-msgstr "Setup"
+msgstr "Configuração"
 
 #: ../../web/templates/admin/list_weblog.html:6
 msgid "Web Log Manager"
-msgstr "Web Log Manager"
+msgstr "Gestor de Logs Web"
 
 #: ../../web/templates/login_2.html:8 ../../web/templates/header.html:6
 #: ../../web/templates/admin/list_services.html:55
@@ -1424,7 +1424,7 @@ msgstr "AccessLog"
 
 #: ../../web/templates/admin/list_weblog.html:28
 msgid "Error Log"
-msgstr ""
+msgstr "Log de Erros"
 
 #: ../../web/templates/user/panel.html:32
 #: ../../web/templates/admin/list_weblog.html:33
@@ -1439,15 +1439,15 @@ msgstr "Últimas 70 linhas de %s.%s.log"
 
 #: ../../web/templates/admin/setup_webapp.html:16
 msgid "Install"
-msgstr ""
+msgstr "Instalar"
 
 #: ../../web/templates/admin/setup_webapp.html:43
 msgid "Data loss warning!<br>Your web domain already has files uploaded, the installer will overwrite your files and/or the installation might fail.<br/><br/> Please use the installer only for empty web domains"
-msgstr ""
+msgstr "Aviso de perda de dados!<br>O seu domínio da web já tem arquivos carregados, o instalador substituirá seus arquivos e/ou a instalação pode falhar.<br/><br/> Use o instalador apenas para domínios da web vazios"
 
 #: ../../web/templates/admin/add_ip.html:38
 msgid "Adding IP address"
-msgstr "Adicionando Endereço IP"
+msgstr "Adicionar Endereço IP"
 
 #: ../../web/templates/admin/add_ip.html:66
 #: ../../web/templates/admin/edit_ip.html:70
@@ -1495,27 +1495,27 @@ msgstr "restaurar"
 
 #: ../../web/templates/admin/list_backup_detail.html:45
 msgid "Details"
-msgstr ""
+msgstr "Detalhes"
 
 #: ../../web/templates/admin/list_backup_detail.html:46
 msgid "Restore"
-msgstr ""
+msgstr "Restaurar"
 
 #: ../../web/templates/admin/list_backup_detail.html:67
 msgid "Web domain"
-msgstr ""
+msgstr "Domínio web"
 
 #: ../../web/templates/admin/list_backup_detail.html:105
 msgid "Mail domain"
-msgstr ""
+msgstr "Domínio correio de E-mail"
 
 #: ../../web/templates/admin/list_backup_detail.html:143
 msgid "DNS domain"
-msgstr ""
+msgstr "Domínio DNS"
 
 #: ../../web/templates/admin/list_backup_detail.html:219
 msgid "Cron Records"
-msgstr ""
+msgstr "Registos Cron"
 
 #: ../../web/templates/user/panel.html:62
 #: ../../web/templates/admin/list_backup_detail.html:222
@@ -1525,11 +1525,11 @@ msgstr "registros"
 
 #: ../../web/templates/admin/list_backup_detail.html:256
 msgid "user dir"
-msgstr "user dir"
+msgstr "diretorio do usuário"
 
 #: ../../web/templates/admin/list_backup_detail.html:288
 msgid "Cron"
-msgstr ""
+msgstr "Cron"
 
 #: ../../web/templates/admin/list_backup_detail.html:319
 msgid "1 item"
@@ -1537,7 +1537,7 @@ msgstr "1 item"
 
 #: ../../web/templates/admin/list_backup_detail.html:321
 msgid "%s items"
-msgstr "%s items"
+msgstr "%s itens"
 
 #: ../../web/templates/user/list_mail_acc.html:5
 #: ../../web/templates/user/list_mail.html:101
@@ -1552,7 +1552,7 @@ msgstr "Adicionar Conta de Email"
 #: ../../web/templates/admin/list_mail_acc.html:6
 #: ../../web/templates/admin/list_mail.html:105
 msgid "Editing Mail Domain"
-msgstr "Editando Domínio de Email"
+msgstr "Editar Domínio de E-mail"
 
 #: ../../web/templates/user/list_dns.html:17
 #: ../../web/templates/user/list_cron.html:21
@@ -1574,18 +1574,18 @@ msgstr "Editando Domínio de Email"
 #: ../../web/templates/admin/list_mail_acc.html:17
 #: ../../web/templates/admin/list_mail.html:16
 msgid "sort by"
-msgstr "ordenar"
+msgstr "ordenar por"
 
 #: ../../web/templates/user/list_mail_acc.html:59
 #: ../../web/templates/admin/list_mail_acc.html:59
 msgid "Forwarding"
-msgstr "Forwarding"
+msgstr "Encaminhar"
 
 #: ../../web/templates/user/list_mail_acc.html:60
 #: ../../web/templates/admin/edit_mail_acc.html:128
 #: ../../web/templates/admin/list_mail_acc.html:60
 msgid "Autoreply"
-msgstr "Auto resposta"
+msgstr "Resposta automatica"
 
 #: ../../web/templates/user/list_mail_acc.html:90
 #: ../../web/templates/user/list_mail_acc.html:97
@@ -1593,7 +1593,7 @@ msgstr "Auto resposta"
 #: ../../web/templates/admin/list_mail_acc.html:90
 #: ../../web/templates/admin/list_mail_acc.html:97
 msgid "Editing Mail Account"
-msgstr "Editando Conta de Email"
+msgstr "Editar Conta de Email"
 
 #: ../../web/templates/user/list_mail_acc.html:96
 #: ../../web/templates/user/list_mail.html:103
@@ -1605,7 +1605,7 @@ msgstr "abrir webmail"
 #: ../../web/templates/user/list_mail_acc.html:113
 #: ../../web/templates/admin/list_mail_acc.html:113
 msgid "DELETE_MAIL_ACCOUNT_CONFIRMATION"
-msgstr "Tem certeza que deseja deletar %s?"
+msgstr "Tem certeza que deseja apagar %s?"
 
 #: ../../web/templates/user/list_mail_acc.html:186
 #: ../../web/templates/admin/list_mail_acc.html:186
@@ -1633,15 +1633,15 @@ msgstr "Atualizações"
 #: ../../web/templates/admin/list_services.html:10
 #: ../../web/templates/admin/list_services.html:12
 msgid "Restart"
-msgstr "Restart"
+msgstr "Reiniciar"
 
 #: ../../web/templates/admin/edit_server.html:604
 msgid "Local backup"
-msgstr "Local backup"
+msgstr "Local de backup"
 
 #: ../../web/templates/admin/edit_server.html:618
 msgid "Compression level"
-msgstr "Compression level"
+msgstr "Nível de compressão"
 
 #: ../../web/templates/user/edit_web.html:297
 #: ../../web/templates/admin/edit_web.html:284
@@ -1649,11 +1649,11 @@ msgstr "Compression level"
 #: ../../web/templates/admin/edit_server.html:716
 #: ../../web/templates/admin/add_web.html:236
 msgid "Directory"
-msgstr "Directory"
+msgstr "Diretório"
 
 #: ../../web/templates/admin/edit_server.html:650
 msgid "Remote backup"
-msgstr "Remote backup"
+msgstr "Backup remoto"
 
 #: ../../web/templates/admin/edit_firewall.html:72
 #: ../../web/templates/admin/edit_server.html:658
@@ -1743,7 +1743,7 @@ msgstr "Chave SSL"
 #: ../../web/templates/admin/edit_server.html:768
 #: ../../web/templates/admin/edit_mail.html:151
 msgid "SUBJECT"
-msgstr "SUBJECT"
+msgstr "ASSUNTO"
 
 #: ../../web/templates/user/edit_web.html:401
 #: ../../web/templates/admin/edit_web.html:387
@@ -1771,21 +1771,21 @@ msgstr "NOT_AFTER"
 #: ../../web/templates/admin/edit_server.html:802
 #: ../../web/templates/admin/edit_mail.html:185
 msgid "SIGNATURE"
-msgstr "SIGNATURE"
+msgstr "ASSINATURA"
 
 #: ../../web/templates/user/edit_web.html:434
 #: ../../web/templates/admin/edit_web.html:420
 #: ../../web/templates/admin/edit_server.html:811
 #: ../../web/templates/admin/edit_mail.html:193
 msgid "PUB_KEY"
-msgstr "PUB_KEY"
+msgstr "CHAVE PUBLICA [PUB_KEY]"
 
 #: ../../web/templates/user/edit_web.html:442
 #: ../../web/templates/admin/edit_web.html:428
 #: ../../web/templates/admin/edit_server.html:819
 #: ../../web/templates/admin/edit_mail.html:201
 msgid "ISSUER"
-msgstr "ISSUER"
+msgstr "EMISSORA"
 
 #: ../../web/templates/admin/edit_server.html:836
 msgid "Hestia Control Panel Plugins"
@@ -1793,7 +1793,7 @@ msgstr "Plugins"
 
 #: ../../web/templates/admin/edit_server.html:859
 msgid "FileSystem Disk Quota"
-msgstr "Cota de Disco"
+msgstr "Cota de disco FileSystem"
 
 #: ../../web/templates/admin/edit_server.html:873
 #: ../../web/templates/admin/list_services.html:7
@@ -1815,14 +1815,14 @@ msgstr "mostrar por usuário"
 #: ../../web/templates/admin/edit_cron.html:415
 #: ../../web/templates/admin/add_cron.html:421
 msgid "Month"
-msgstr "Mes"
+msgstr "Mês"
 
 #: ../../web/templates/user/list_stats.html:30
 #: ../../web/templates/user/list_user.html:73
 #: ../../web/templates/admin/list_stats.html:44
 #: ../../web/templates/admin/list_user.html:69
 msgid "IPs"
-msgstr ""
+msgstr "IPs"
 
 #: ../../web/templates/user/list_stats.html:31
 #: ../../web/templates/user/list_web.html:16
@@ -1898,7 +1898,7 @@ msgstr "Domínios DNS"
 #: ../../web/templates/admin/list_stats.html:50
 #: ../../web/templates/admin/list_packages.html:50
 msgid "DNS Records"
-msgstr ""
+msgstr "Registos DNS"
 
 #: ../../web/templates/user/list_stats.html:37
 #: ../../web/templates/user/list_user.html:77
@@ -1909,7 +1909,7 @@ msgstr ""
 #: ../../web/templates/admin/list_packages.html:51
 #: ../../web/templates/admin/add_package.html:230
 msgid "Mail Domains"
-msgstr "Domínios de Email"
+msgstr "Domínios de E-mail"
 
 #: ../../web/templates/user/list_stats.html:38
 #: ../../web/templates/admin/edit_package.html:238
@@ -1917,7 +1917,7 @@ msgstr "Domínios de Email"
 #: ../../web/templates/admin/list_packages.html:52
 #: ../../web/templates/admin/add_package.html:241
 msgid "Mail Accounts"
-msgstr "Contas de Email"
+msgstr "Contas de E-mail"
 
 #: ../../web/templates/user/list_stats.html:40
 #: ../../web/templates/user/list_user.html:80
@@ -1927,7 +1927,7 @@ msgstr "Contas de Email"
 #: ../../web/templates/admin/list_packages.html:54
 #: ../../web/templates/admin/add_package.html:263
 msgid "Cron Jobs"
-msgstr "Tarefas"
+msgstr "Tarefas CRON"
 
 #: ../../web/templates/user/list_stats.html:79
 #: ../../web/templates/admin/list_stats.html:93
@@ -1944,12 +1944,12 @@ msgstr "%s meses"
 #: ../../web/templates/admin/list_dns.html:96
 #: ../../web/templates/admin/list_dns_rec.html:5
 msgid "Add DNS Record"
-msgstr "Adicionar Entrada DNS"
+msgstr "Adicionar Registo DNS"
 
 #: ../../web/templates/user/list_dns_rec.html:5
 #: ../../web/templates/admin/list_dns_rec.html:5
 msgid "Add Record"
-msgstr "Add Record"
+msgstr "Adicionar Registo"
 
 #: ../../web/templates/user/edit_dns.html:40
 #: ../../web/templates/user/list_dns.html:97
@@ -1958,7 +1958,7 @@ msgstr "Add Record"
 #: ../../web/templates/admin/list_dns.html:98
 #: ../../web/templates/admin/list_dns_rec.html:6
 msgid "Editing DNS Domain"
-msgstr "Editando Dominio DNS"
+msgstr "Editar Dominio DNS"
 
 #: ../../web/templates/user/list_dns.html:32
 #: ../../web/templates/user/list_dns_rec.html:25
@@ -2049,35 +2049,35 @@ msgstr "IP ou Valor"
 #: ../../web/templates/admin/list_dns_rec.html:72
 #: ../../web/templates/admin/edit_dns_rec.html:40
 msgid "Editing DNS Record"
-msgstr "Editando Registro DNS"
+msgstr "Editar Registo DNS"
 
 #: ../../web/templates/admin/list_dns_rec.html:78
 msgid "DELETE_RECORD_CONFIRMATION"
-msgstr "Tem certeza que deseja deletar o registro %s?"
+msgstr "Tem certeza que deseja apagar o registro %s?"
 
 #: ../../web/templates/admin/list_dns_rec.html:88
 msgid "Default"
-msgstr ""
+msgstr "Padrão"
 
 #: ../../web/templates/user/list_dns_rec.html:110
 #: ../../web/templates/admin/list_dns_rec.html:105
 msgid "1 DNS record"
-msgstr ""
+msgstr "1 registo DNS"
 
 #: ../../web/templates/user/list_dns_rec.html:112
 #: ../../web/templates/admin/list_dns_rec.html:107
 msgid "%s DNS records"
-msgstr ""
+msgstr "%s registos DNS"
 
 #: ../../web/templates/admin/edit_backup_exclusions.html:40
 #: ../../web/templates/admin/list_backup_exclusions.html:5
 msgid "Editing Backup Exclusions"
-msgstr "Editando Exclusões de backup"
+msgstr "Editar Exclusões de backup"
 
 #: ../../web/templates/admin/list_log.html:32
 #: ../../web/templates/admin/list_backup_exclusions.html:31
 msgid "Value"
-msgstr "Value"
+msgstr "Valur"
 
 #: ../../web/templates/admin/list_backup_exclusions.html:48
 msgid "no exclusions"
@@ -2089,7 +2089,7 @@ msgstr "sem exclusões"
 #: ../../web/templates/admin/list_db.html:124
 #: ../../web/templates/admin/list_db.html:129
 msgid "Editing Database"
-msgstr "Editando Banco de Dados"
+msgstr "Editar Banco de Dados"
 
 #: ../../web/templates/user/list_db.html:35
 #: ../../web/templates/user/list_db.html:80
@@ -2152,7 +2152,7 @@ msgstr "Configurar"
 
 #: ../../web/templates/admin/add_mail_acc.html:31
 msgid "Adding Mail Account"
-msgstr "Adicionando Conta de Email"
+msgstr "Adicionar Conta de E-mail"
 
 #: ../../web/templates/user/list_mail_acc.html:10
 #: ../../web/templates/admin/add_mail_acc.html:60
@@ -2228,22 +2228,22 @@ msgstr "Enviar credenciais para o endereço de email"
 #: ../../web/templates/admin/add_mail_acc.html:158
 #: ../../web/templates/admin/edit_mail_acc.html:169
 msgid "Use domain hostname"
-msgstr "Use domain hostname"
+msgstr "Usar o domínio do Hostname"
 
 #: ../../web/templates/admin/add_mail_acc.html:159
 #: ../../web/templates/admin/edit_mail_acc.html:170
 msgid "Use STARTTLS"
-msgstr "Use STARTTLS"
+msgstr "Usar STARTTLS"
 
 #: ../../web/templates/admin/add_mail_acc.html:160
 #: ../../web/templates/admin/edit_mail_acc.html:171
 msgid "Use SSL / TLS"
-msgstr "Use SSL / TLS"
+msgstr "Usar SSL/TLS"
 
 #: ../../web/templates/admin/add_mail_acc.html:161
 #: ../../web/templates/admin/edit_mail_acc.html:172
 msgid "No encryption"
-msgstr "No encryption"
+msgstr "Sem criptografia"
 
 #: ../../web/templates/admin/add_mail_acc.html:174
 #: ../../web/templates/admin/edit_mail_acc.html:185
@@ -2253,12 +2253,12 @@ msgstr "IMAP hostname"
 #: ../../web/templates/admin/add_mail_acc.html:178
 #: ../../web/templates/admin/edit_mail_acc.html:189
 msgid "IMAP port"
-msgstr "IMAP port"
+msgstr "IMAP porta"
 
 #: ../../web/templates/admin/add_mail_acc.html:182
 #: ../../web/templates/admin/edit_mail_acc.html:193
 msgid "IMAP security"
-msgstr "IMAP security"
+msgstr "Segurança IMAP"
 
 #: ../../web/templates/admin/add_mail_acc.html:183
 #: ../../web/templates/admin/add_mail_acc.html:199
@@ -2270,40 +2270,40 @@ msgstr "STARTTLS"
 #: ../../web/templates/admin/add_mail_acc.html:186
 #: ../../web/templates/admin/edit_mail_acc.html:197
 msgid "IMAP auth method"
-msgstr "IMAP auth method"
+msgstr "Método de Autenticação IMAP"
 
 #: ../../web/templates/admin/add_mail_acc.html:187
 #: ../../web/templates/admin/add_mail_acc.html:203
 #: ../../web/templates/admin/edit_mail_acc.html:198
 #: ../../web/templates/admin/edit_mail_acc.html:214
 msgid "Normal password"
-msgstr "Normal password"
+msgstr "Senha normal"
 
 #: ../../web/templates/admin/add_mail_acc.html:190
 #: ../../web/templates/admin/edit_mail_acc.html:201
 msgid "SMTP hostname"
-msgstr "SMTP hostname"
+msgstr "Nome de host SMTP"
 
 #: ../../web/templates/admin/add_mail_acc.html:194
 #: ../../web/templates/admin/edit_mail_acc.html:205
 msgid "SMTP port"
-msgstr "SMTP port"
+msgstr "Porta SMTP"
 
 #: ../../web/templates/admin/add_mail_acc.html:198
 #: ../../web/templates/admin/edit_mail_acc.html:209
 msgid "SMTP security"
-msgstr "SMTP security"
+msgstr "Segurança SMTP"
 
 #: ../../web/templates/admin/add_mail_acc.html:202
 #: ../../web/templates/admin/edit_mail_acc.html:213
 msgid "SMTP auth method"
-msgstr "SMTP auth method"
+msgstr "Método de Autenticação SMTP"
 
 #: ../../web/templates/user/edit_web.html:8
 #: ../../web/templates/admin/edit_web.html:8
 #: ../../web/templates/admin/list_webapps.html:24
 msgid "Quick Install App"
-msgstr "Quick Install App"
+msgstr "Aplicação de instalação rápida"
 
 #: ../../web/templates/user/edit_web.html:44
 #: ../../web/templates/user/list_web.html:139
@@ -2312,7 +2312,7 @@ msgstr "Quick Install App"
 #: ../../web/templates/admin/list_web.html:134
 #: ../../web/templates/admin/list_web.html:143
 msgid "Editing Domain"
-msgstr "Editando Domínio"
+msgstr "Editar Domínio"
 
 #: ../../web/templates/user/edit_dns.html:69
 #: ../../web/templates/user/edit_web.html:86
@@ -2320,7 +2320,7 @@ msgstr "Editando Domínio"
 #: ../../web/templates/admin/edit_web.html:73
 #: ../../web/templates/admin/list_ip.html:48
 msgid "IP Address"
-msgstr "IP Address"
+msgstr "Endereço de IP"
 
 #: ../../web/templates/user/edit_web.html:114
 #: ../../web/templates/admin/edit_web.html:101
@@ -2332,14 +2332,14 @@ msgstr "Estatísticas Web"
 #: ../../web/templates/admin/edit_web.html:123
 #: ../../web/templates/admin/add_web.html:169
 msgid "Statistics Authorization"
-msgstr "Estatística de Autorização"
+msgstr "Estatísticas de Autorização"
 
 #: ../../web/templates/user/edit_web.html:167
 #: ../../web/templates/admin/edit_package.html:64
 #: ../../web/templates/admin/edit_web.html:154
 #: ../../web/templates/admin/add_package.html:65
 msgid "Web Template"
-msgstr "Template da Web"
+msgstr "Template Web"
 
 #: ../../web/templates/user/edit_web.html:189
 #: ../../web/templates/admin/edit_package.html:88
@@ -2379,22 +2379,22 @@ msgstr "Suporte SSL"
 #: ../../web/templates/admin/edit_mail.html:102
 #: ../../web/templates/admin/add_web.html:265
 msgid "Lets Encrypt Support"
-msgstr "Lets Encrypt Support"
+msgstr "Suporte Lets Encrypt"
 
 #: ../../web/templates/user/edit_web.html:331
 #: ../../web/templates/admin/edit_web.html:318
 msgid "Force SSL/HTTPS"
-msgstr "Enable automatic HTTP-to-HTTPS redirection"
+msgstr "Ativar redirecionamento automático de HTTP para HTTPS"
 
 #: ../../web/templates/user/edit_web.html:336
 #: ../../web/templates/admin/edit_web.html:323
 msgid "Enable SSL HSTS"
-msgstr "Enable HTTP Strict Transport Security (HSTS) <a href=\"https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security\" target=\"_blank\"><i class=\"fas fa-question-circle\"></i></a>"
+msgstr "Ativar HTTP Strict Transport Security (HSTS) <a href=\"https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security\" target=\"_blank\"><i class=\"fas fa-question-circle\"></i></a>"
 
 #: ../../web/templates/user/edit_web.html:342
 #: ../../web/templates/admin/edit_web.html:328
 msgid "Home Directory"
-msgstr ""
+msgstr "Directorio /home"
 
 #: ../../web/templates/user/edit_web.html:377
 #: ../../web/templates/admin/edit_web.html:363
@@ -2451,7 +2451,7 @@ msgstr "O prefixo %s será automaticamente adicionado ao nome de usuário"
 #: ../../web/templates/admin/add_web.html:355
 #: ../../web/templates/admin/add_web.html:427
 msgid "Path"
-msgstr "Path"
+msgstr "Caminho"
 
 #: ../../web/templates/user/edit_web.html:519
 #: ../../web/templates/user/edit_web.html:592
@@ -2460,7 +2460,7 @@ msgstr "Path"
 #: ../../web/templates/admin/add_web.html:368
 #: ../../web/templates/admin/add_web.html:439
 msgid "Send FTP credentials to email"
-msgstr "Enviar credenciais ao FTP por email"
+msgstr "Enviar credenciais do FTP via email"
 
 #: ../../web/templates/user/edit_web.html:535
 #: ../../web/templates/admin/edit_web.html:521
@@ -2470,7 +2470,7 @@ msgstr "Adicionar mais uma conta FTP"
 
 #: ../../web/templates/admin/add_firewall_banlist.html:38
 msgid "Adding IP Address to Banlist"
-msgstr "Adicionando endereço IP na lista negra"
+msgstr "Adicionar endereço IP há lista negra"
 
 #: ../../web/templates/user/list_dns.html:10
 #: ../../web/templates/user/list_web.html:15
@@ -2533,11 +2533,11 @@ msgstr "BD"
 
 #: ../../web/templates/admin/add_firewall_banlist.html:78
 msgid "HESTIA"
-msgstr "HESTIA"
+msgstr "HestiaCP"
 
 #: ../../web/templates/admin/add_firewall.html:38
 msgid "Adding Firewall Rule"
-msgstr "Adicionando Regra de Firewall"
+msgstr "Adicionar Regra de Firewall"
 
 #: ../../web/templates/admin/edit_firewall.html:59
 #: ../../web/templates/admin/list_firewall.html:12
@@ -2550,12 +2550,12 @@ msgstr "Ação"
 #: ../../web/templates/admin/edit_firewall.html:65
 #: ../../web/templates/admin/add_firewall.html:62
 msgid "DROP"
-msgstr "DROP"
+msgstr "DROPAR"
 
 #: ../../web/templates/admin/edit_firewall.html:66
 #: ../../web/templates/admin/add_firewall.html:63
 msgid "ACCEPT"
-msgstr "ACCEPT"
+msgstr "ACEITAR"
 
 #: ../../web/templates/admin/edit_firewall.html:78
 #: ../../web/templates/admin/add_firewall.html:75
@@ -2595,29 +2595,29 @@ msgstr "Adicionar Domínio Web"
 
 #: ../../web/templates/admin/add_web.html:57
 msgid "Avoid adding web domains on admin account"
-msgstr "It is strongly advised to <a href=\"/add/user/\">create a standard user account</a> before adding web domains to the server due to the increased privileges the admin account possesses and potential security risks."
+msgstr "É altamente recomendado <a href=\"/add/user/\">criar uma conta de usuário padrão</a> antes de adicionar domínios da web ao servidor devido aos maiores privilégios que a conta de administrador possui e potenciais riscos de segurança"
 
 #: ../../web/templates/admin/add_web.html:93
 msgid "DNS Support"
-msgstr "Suporte a DNS"
+msgstr "Suporte DNS"
 
 #: ../../web/templates/admin/add_web.html:100
 msgid "Mail Support"
-msgstr "Suporte a Email"
+msgstr "Suporte a E-mail"
 
 #: ../../web/templates/admin/add_web.html:270
 msgid "Your certificate will be automatically issued in 5 minutes"
-msgstr "Your certificate will be automatically issued in 5 minutes"
+msgstr "Seu certificado será emitido automaticamente dentro de 5 minutos"
 
 #: ../../web/templates/admin/edit_cron.html:27
 #: ../../web/templates/admin/add_cron.html:28
 msgid "Minutes"
-msgstr "Minutes"
+msgstr "Minutos"
 
 #: ../../web/templates/admin/edit_cron.html:28
 #: ../../web/templates/admin/add_cron.html:29
 msgid "Hourly"
-msgstr "Hourly"
+msgstr "A cada hora"
 
 #: ../../web/templates/admin/list_rrd.html:11
 #: ../../web/templates/admin/edit_cron.html:29
@@ -2648,21 +2648,21 @@ msgstr "Mensalmente"
 #: ../../web/templates/admin/add_cron.html:161
 #: ../../web/templates/admin/add_cron.html:234
 msgid "Run Command"
-msgstr "Run Command"
+msgstr "Correr comando"
 
 #: ../../web/templates/admin/edit_cron.html:41
 #: ../../web/templates/admin/add_cron.html:42
 msgid "every minute"
-msgstr "every minute"
+msgstr "todo minuto"
 
 #: ../../web/templates/admin/edit_cron.html:42
 #: ../../web/templates/admin/add_cron.html:43
 msgid "every two minutes"
-msgstr "every two minutes"
+msgstr "a cada dois minutos"
 
 #: ../../web/templates/admin/edit_server.html:149
 msgid "SYSTEM_SET_DEFAULT_LANGUAGE"
-msgstr "Set as default language for all users"
+msgstr "Definir como idioma padrão para todos os usuários"
 
 #: ../../web/templates/admin/edit_server.html:167
 #: ../../web/templates/admin/list_updates.html:42
@@ -2676,7 +2676,7 @@ msgstr "Release"
 #: ../../web/templates/admin/edit_server.html:213
 #: ../../web/templates/admin/edit_server.html:235
 msgid "Web Server"
-msgstr "Web Server"
+msgstr "Servidor Web"
 
 #: ../../web/templates/admin/edit_server.html:223
 msgid "Proxy Server"
@@ -2692,11 +2692,11 @@ msgstr "Proxy Server"
 #: ../../web/templates/admin/edit_server.html:443
 #: ../../web/templates/admin/edit_server.html:523
 msgid "configure"
-msgstr "configure"
+msgstr "configurar"
 
 #: ../../web/templates/admin/edit_server.html:247
 msgid "Backend Server"
-msgstr "Backend Server"
+msgstr "Servidor Backend"
 
 #: ../../web/templates/admin/edit_server.html:258
 msgid "Backend Pool Mode"
@@ -2704,20 +2704,20 @@ msgstr "Backend Pool Mode"
 
 #: ../../web/templates/admin/edit_server.html:272
 msgid "Enabled multi PHP versions"
-msgstr "Enabled PHP versions"
+msgstr "Ativar múltiplas Versões de PHP"
 
 #: ../../web/templates/admin/edit_server.html:276
 msgid "Please wait while php is installed or removed"
-msgstr "Please wait until the process has completed and do not refresh the page."
+msgstr "Por favor aguarde enquanto o php é instalado ou removido e não atualize a página"
 
 #: ../../web/templates/admin/edit_server.html:312
 #: ../../web/templates/admin/edit_server.html:321
 msgid "DNS Server"
-msgstr "DNS Server"
+msgstr "Server DNS"
 
 #: ../../web/templates/admin/edit_server.html:333
 msgid "DNS Cluster"
-msgstr "DNS Cluster"
+msgstr "Grupo DNS"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:99
 #: ../../web/templates/admin/edit_server.html:339
@@ -2762,18 +2762,18 @@ msgstr "sim"
 #: ../../web/templates/admin/add_db.html:125
 #: ../../web/templates/admin/list_db.html:38
 msgid "Host"
-msgstr "Host"
+msgstr "Anfitrião"
 
 #: ../../web/templates/admin/edit_server.html:370
 #: ../../web/templates/admin/edit_server.html:379
 msgid "Mail Server"
-msgstr "Mail Server"
+msgstr "Servidor de E-mail"
 
 #: ../../web/templates/user/list_mail.html:57
 #: ../../web/templates/admin/edit_server.html:391
 #: ../../web/templates/admin/list_mail.html:58
 msgid "Antivirus"
-msgstr "Antivirus"
+msgstr "Antivírus"
 
 #: ../../web/templates/user/list_mail.html:58
 #: ../../web/templates/admin/edit_server.html:404
@@ -2834,16 +2834,16 @@ msgstr "Senha"
 #: ../../web/templates/admin/edit_server.html:498
 #: ../../web/templates/admin/edit_server.html:566
 msgid "Maximum Number Of Databases"
-msgstr "Maximum Number Of Databases"
+msgstr "Número máximo de bancos de dados"
 
 #: ../../web/templates/admin/edit_server.html:509
 #: ../../web/templates/admin/edit_server.html:577
 msgid "Current Number Of Databases"
-msgstr "Current Number Of Databases"
+msgstr "Número atual de bancos de dados"
 
 #: ../../web/templates/admin/edit_server.html:523
 msgid "PostgreSQL Support"
-msgstr "PostgreSQL Support"
+msgstr "Suporte PostgreSQL"
 
 #: ../../web/templates/admin/edit_server.html:538
 msgid "phpPgAdmin URL"
@@ -2869,11 +2869,11 @@ msgstr "A tarefa foi adicionada à fila. Você receberá um email quando o backu
 #: ../../web/unsuspend/dns/index.php:42 ../../web/unsuspend/mail/index.php:21
 #: ../../web/unsuspend/mail/index.php:42 ../../web/bulk/restore/index.php:39
 msgid "Error: hestia did not return any output."
-msgstr ""
+msgstr "Erro: O painel não retornou nenhum resultado de saída."
 
 #: ../../web/schedule/backup/index.php:25
 msgid "BACKUP_EXISTS"
-msgstr "Um backup já está em execução. Por favor aguarde até terminar."
+msgstr "Um backup já está em execução. Por favor aguarde até este terminar."
 
 #: ../../web/schedule/restore/index.php:39 ../../web/bulk/restore/index.php:35
 msgid "RESTORE_SCHEDULED"
@@ -2921,7 +2921,7 @@ msgstr "Relatórios de tarefas ativado com sucesso"
 
 #: ../../web/js/i18n.js.php:8
 msgid "Are you sure?"
-msgstr "Are you sure?"
+msgstr "Você tem a certeza?"
 
 #: ../../web/js/i18n.js.php:9
 msgid "unlimited"
@@ -2929,7 +2929,7 @@ msgstr "ilimitado"
 
 #: ../../web/js/i18n.js.php:10
 msgid "no notifications"
-msgstr "no notifications"
+msgstr "nenhuma notificação"
 
 #: ../../web/reset/index.php:31
 msgid "MAIL_RESET_SUBJECT"
@@ -2966,15 +2966,15 @@ msgstr ""
 
 #: ../../web/reset/index.php:45
 msgid "Invalid host domain"
-msgstr ""
+msgstr "Domínio de host inválido"
 
 #: ../../web/reset/index.php:74
 msgid "An internal error occurred"
-msgstr ""
+msgstr "Ocorreu um erro interno"
 
 #: ../../web/reset/index.php:82
 msgid "Code has been expired"
-msgstr ""
+msgstr "Código expirou"
 
 #: ../../web/reset/index.php:86 ../../web/reset/index.php:90
 msgid "Invalid username or code"
@@ -3058,19 +3058,19 @@ msgstr "As alterações foram salvas."
 #: ../../web/add/db/index.php:39 ../../web/edit/web/index.php:630
 #: ../../web/edit/user/index.php:191 ../../web/edit/mail/index.php:386
 msgid "Please enter valid email address."
-msgstr "Por favor informe um endereço de email válido."
+msgstr "Por favor insira um endereço de e-mail válido."
 
 #: ../../web/add/mail/index.php:205 ../../web/edit/mail/index.php:521
 msgid "Email Credentials"
-msgstr "Email Credentials"
+msgstr "Credenciais de Email"
 
 #: ../../web/edit/web/index.php:569
 msgid "stats username"
-msgstr "estatísticas usuário"
+msgstr "estatísticas de nome de usuário"
 
 #: ../../web/edit/web/index.php:595
 msgid "stats user"
-msgstr ""
+msgstr "estatísticas de usuário"
 
 #: ../../web/add/web/index.php:323 ../../web/edit/web/index.php:657
 #: ../../web/edit/web/index.php:731
@@ -3092,12 +3092,12 @@ msgstr ""
 
 #: ../../web/edit/web/index.php:700
 msgid "ftp user"
-msgstr "ftp usuário"
+msgstr "usuário ftp "
 
 #: ../../web/edit/server/crond/index.php:18
 #: ../../web/edit/server/cron/index.php:18
 msgid "Info (Read-only mode): Crontab can be edited only trough ssh"
-msgstr ""
+msgstr "Informações (modo somente leitura): o Crontab pode ser editado apenas por meio de ssh"
 
 #: ../../web/add/user/index.php:27 ../../web/add/package/index.php:25
 #: ../../web/edit/package/index.php:101
@@ -3106,19 +3106,19 @@ msgstr "pacote"
 
 #: ../../web/add/package/index.php:26 ../../web/edit/package/index.php:102
 msgid "web template"
-msgstr ""
+msgstr "template web"
 
 #: ../../web/add/package/index.php:28 ../../web/edit/package/index.php:104
 msgid "backend template"
-msgstr ""
+msgstr "modelo de backend"
 
 #: ../../web/add/package/index.php:31 ../../web/edit/package/index.php:107
 msgid "proxy template"
-msgstr ""
+msgstr "template de proxy"
 
 #: ../../web/add/package/index.php:33 ../../web/edit/package/index.php:109
 msgid "dns template"
-msgstr ""
+msgstr "template do DNS"
 
 #: ../../web/add/package/index.php:34 ../../web/edit/package/index.php:110
 msgid "shell"
@@ -3130,11 +3130,11 @@ msgstr "domínios web"
 
 #: ../../web/add/package/index.php:36 ../../web/edit/package/index.php:112
 msgid "web aliases"
-msgstr "apelidos web"
+msgstr "web alias"
 
 #: ../../web/add/package/index.php:37 ../../web/edit/package/index.php:113
 msgid "dns domains"
-msgstr ""
+msgstr "dominios dns"
 
 #: ../../web/add/package/index.php:38 ../../web/edit/package/index.php:114
 msgid "dns records"
@@ -3142,7 +3142,7 @@ msgstr "registros dns"
 
 #: ../../web/add/package/index.php:39 ../../web/edit/package/index.php:115
 msgid "mail domains"
-msgstr "domínios de email"
+msgstr "domínios de e-mail"
 
 #: ../../web/add/package/index.php:40
 #: ../../web/templates/user/list_mail.html:96
@@ -3151,7 +3151,7 @@ msgstr "domínios de email"
 #: ../../web/templates/admin/list_mail.html:103
 #: ../../web/edit/package/index.php:116
 msgid "mail accounts"
-msgstr "contas de email"
+msgstr "contas de e-mail"
 
 #: ../../web/add/package/index.php:41 ../../web/templates/user/panel.html:89
 #: ../../web/templates/admin/panel.html:103
@@ -3161,7 +3161,7 @@ msgstr "bases de dados"
 
 #: ../../web/add/package/index.php:42 ../../web/edit/package/index.php:118
 msgid "cron jobs"
-msgstr "tarefas"
+msgstr "tarefas cron"
 
 #: ../../web/add/package/index.php:43 ../../web/templates/user/panel.html:115
 #: ../../web/templates/admin/panel.html:129
@@ -3175,7 +3175,7 @@ msgstr "cota"
 
 #: ../../web/add/package/index.php:45 ../../web/edit/package/index.php:121
 msgid "bandwidth"
-msgstr ""
+msgstr "largura de banda"
 
 #: ../../web/add/package/index.php:49 ../../web/edit/package/index.php:125
 msgid "ns1"
@@ -3234,7 +3234,7 @@ msgstr "usuário"
 
 #: ../../web/add/user/index.php:28
 msgid "email"
-msgstr "email"
+msgstr "e-mail"
 
 #: ../../web/add/user/index.php:29
 msgid "name"
@@ -3252,19 +3252,19 @@ msgstr "logar como"
 
 #: ../../web/add/key/index.php:50
 msgid "Field SSH_KEY can not be blank."
-msgstr "Field SSH Key must not be blank"
+msgstr "O campo da chave SSH não deve ficar em branco"
 
 #: ../../web/add/key/index.php:66 ../../web/add/key/index.php:73
 msgid "SSH KEY is invalid"
-msgstr "SSH key is invalid"
+msgstr "A chave SSH é inválida"
 
 #: ../../web/add/key/index.php:80 ../../web/add/key/index.php:84
 msgid "SSH KEY already exists"
-msgstr "SSH key already exists"
+msgstr "A chave SSH já existe"
 
 #: ../../web/add/key/index.php:100
 msgid "SSH KEY created"
-msgstr ""
+msgstr "SSH KEY criada com sucesso"
 
 #: ../../web/add/firewall/ipset/index.php:25
 #: ../../web/templates/user/list_user.html:70
@@ -3272,12 +3272,12 @@ msgstr ""
 #: ../../web/templates/admin/list_user.html:66
 #: ../../web/templates/admin/list_search.html:9
 msgid "Name"
-msgstr "Name"
+msgstr "Nome"
 
 #: ../../web/add/firewall/ipset/index.php:26
 #: ../../web/templates/admin/add_firewall_ipset.html:66
 msgid "Data Source"
-msgstr "Data Source"
+msgstr "Fonte de dados"
 
 #: ../../web/add/firewall/ipset/index.php:27
 #: ../../web/templates/admin/list_firewall_ipset.html:38
@@ -3293,19 +3293,19 @@ msgstr "Auto Update"
 
 #: ../../web/add/firewall/ipset/index.php:55
 msgid "IPSET_CREATED_OK"
-msgstr "IP list created successfully"
+msgstr "Lista de IPs criada com sucesso"
 
 #: ../../web/add/firewall/index.php:42
 msgid "action"
-msgstr ""
+msgstr "ação"
 
 #: ../../web/add/firewall/index.php:43
 msgid "protocol"
-msgstr ""
+msgstr "protocolo"
 
 #: ../../web/add/firewall/index.php:44
 msgid "port"
-msgstr ""
+msgstr "porta"
 
 #: ../../web/add/ip/index.php:25 ../../web/add/firewall/banlist/index.php:26
 #: ../../web/add/firewall/index.php:45
@@ -3318,11 +3318,11 @@ msgstr "Regra criada com sucesso."
 
 #: ../../web/add/firewall/banlist/index.php:25
 msgid "banlist"
-msgstr ""
+msgstr "Lista Negra"
 
 #: ../../web/add/firewall/banlist/index.php:51
 msgid "BANLIST_CREATED_OK"
-msgstr "IP address has been banned successfully"
+msgstr "O endereço IP foi banido com sucesso"
 
 #: ../../web/add/db/index.php:19
 msgid "database"
@@ -3338,7 +3338,7 @@ msgstr "tipo"
 
 #: ../../web/add/db/index.php:23
 msgid "host"
-msgstr ""
+msgstr "Anfitrião"
 
 #: ../../web/add/db/index.php:24
 msgid "charset"
@@ -3415,7 +3415,7 @@ msgstr "Tarefa adicionada com sucesso."
 
 #: ../../web/download/backup/index.php:20
 msgid "BACKUP_DOWNLOAD_SCHEDULED"
-msgstr "Download of remote backup file has been scheduled."
+msgstr "O download do arquivo de backup remoto foi agendado."
 
 #: ../../web/generate/ssl/index.php:37
 #: ../../web/templates/user/edit_dns.html:58
@@ -3452,11 +3452,11 @@ msgstr "País"
 
 #: ../../web/generate/ssl/index.php:39
 msgid "State"
-msgstr ""
+msgstr "Estado|Região"
 
 #: ../../web/generate/ssl/index.php:40
 msgid "City"
-msgstr ""
+msgstr "Cidade"
 
 #: ../../web/generate/ssl/index.php:41
 #: ../../web/templates/admin/generate_ssl.html:101
@@ -3472,7 +3472,7 @@ msgstr "Organização"
 #: ../../web/templates/admin/add_user.html:97
 #: ../../web/templates/reset_1.html:30
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #: ../../web/generate/ssl/index.php:94
 msgid "SSL_GENERATED_OK"
@@ -3481,7 +3481,7 @@ msgstr "Certificado SSL criado sucesso."
 #: ../../web/templates/reset_1.html:15 ../../web/templates/reset_2.html:15
 #: ../../web/templates/reset_3.html:15
 msgid "Forgot Password"
-msgstr "Forgot Password"
+msgstr "Esqueci-me da senha"
 
 #: ../../web/templates/reset_3.html:23
 msgid "New Password"
@@ -3576,7 +3576,7 @@ msgstr "Confirmar"
 #: ../../web/templates/admin/list_key.html:6
 #: ../../web/templates/admin/add_key.html:39
 msgid "Add SSH Key"
-msgstr "Add SSH key"
+msgstr "Adicionar SSH key"
 
 #: ../../web/templates/admin/list_key.html:17
 msgid "SSH_ID"
@@ -3676,7 +3676,7 @@ msgstr "SSH Key"
 #: ../../web/templates/admin/list_backup.html:23
 #: ../../web/templates/admin/list_backup.html:85
 msgid "delete"
-msgstr "deletar"
+msgstr "apagar"
 
 #: ../../web/templates/user/list_dns.html:103
 #: ../../web/templates/user/list_dns.html:112
@@ -3728,20 +3728,20 @@ msgstr "Confirmação"
 
 #: ../../web/templates/admin/list_key.html:41
 msgid "DELETE_KEY_CONFIRM"
-msgstr "Are you sure you want to delete SSH key %s?"
+msgstr "Tem certeza de que deseja excluir SSH key %s?"
 
 #: ../../web/templates/admin/list_key.html:61
 msgid "1 SSH Key"
-msgstr ""
+msgstr "1 Senha SSH"
 
 #: ../../web/templates/admin/list_key.html:63
 msgid "%s SSH Keys"
-msgstr ""
+msgstr "%s Senhas SSH"
 
 #: ../../web/templates/admin/generate_ssl.html:45
 #: ../../web/templates/admin/list_ssl.html:36
 msgid "Generating CSR"
-msgstr "Gerando CSR"
+msgstr "Gerar CSR"
 
 #: ../../web/templates/admin/generate_ssl.html:71
 msgid "2 letter code"
@@ -3749,7 +3749,7 @@ msgstr "código de duas letras"
 
 #: ../../web/templates/admin/generate_ssl.html:81
 msgid "State / Province"
-msgstr "Estado / Província"
+msgstr "Estado / Província / Região"
 
 #: ../../web/templates/admin/generate_ssl.html:91
 msgid "City / Locality"
@@ -3757,11 +3757,11 @@ msgstr "Cidade / Localidade"
 
 #: ../../web/templates/admin/generate_ssl.html:113
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 #: ../../web/templates/admin/list_firewall_ipset.html:5
 msgid "Add IP list"
-msgstr "Add IP list"
+msgstr "Adicionar lista de IP"
 
 #: ../../web/templates/user/list_dns.html:31
 #: ../../web/templates/user/list_dns_rec.html:24
@@ -3847,23 +3847,23 @@ msgstr "Data"
 #: ../../web/templates/admin/list_log.html:31
 #: ../../web/templates/admin/list_firewall_banlist.html:38
 msgid "Time"
-msgstr "Time"
+msgstr "Tempo"
 
 #: ../../web/templates/admin/list_firewall_ipset.html:73
 msgid "DELETE_IPSET_CONFIRMATION"
-msgstr "Are you sure you want to delete IP list %s"
+msgstr "Tem certeza que deseja excluir a lista de IP %s"
 
 #: ../../web/templates/admin/list_firewall_ipset.html:105
 msgid "There are currently no IP lists defined."
-msgstr "There are currently no IP lists defined."
+msgstr "Atualmente não há listas de IP definidas."
 
 #: ../../web/templates/admin/list_firewall_ipset.html:108
 msgid "1 Ipset list"
-msgstr "1 IP list"
+msgstr "1 lista de IP's"
 
 #: ../../web/templates/admin/list_firewall_ipset.html:111
 msgid "%s Ipset lists"
-msgstr "%s IP lists"
+msgstr "%s istas de IP's"
 
 #: ../../web/templates/user/edit_dns.html:7
 #: ../../web/templates/user/edit_user.html:8
@@ -3916,20 +3916,20 @@ msgstr "Salvar"
 #: ../../web/templates/admin/edit_server_pgsql.html:38
 #: ../../web/templates/admin/edit_server_httpd.html:39
 msgid "Configuring Server"
-msgstr "Configurando Servidor"
+msgstr "Configurar Servidor"
 
 #: ../../web/templates/admin/edit_server_mysql.html:120
 #: ../../web/templates/admin/edit_server.html:59
 #: ../../web/templates/admin/edit_server_php.html:142
 #: ../../web/templates/admin/edit_server_nginx.html:176
 msgid "Basic options"
-msgstr "Basic options"
+msgstr "Opções básicas"
 
 #: ../../web/templates/user/list_db.html:84
 #: ../../web/templates/admin/edit_server.html:67
 #: ../../web/templates/admin/list_db.html:85
 msgid "Hostname"
-msgstr "Hostname"
+msgstr "Nome de Anfitrião"
 
 #: ../../web/templates/admin/edit_server.html:78
 msgid "Time Zone"
@@ -3941,4 +3941,4 @@ msgstr "Aparência"
 
 #: ../../web/templates/admin/edit_server.html:126
 msgid "Default Language"
-msgstr "Linguagem Padrão"
+msgstr "Idioma Padrão"

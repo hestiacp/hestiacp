@@ -98,7 +98,7 @@ function authenticate_user(){
                 if ($data[$_POST['user']]['TWOFA'] != '') {
                    if (empty($_POST['twofa'])){
                        return false;
-                   }else{
+                   } else {
                         $v_twofa = $_POST['twofa'];
                         exec(HESTIA_CMD ."v-check-user-2fa ".$v_user." ".$v_twofa, $output, $return_var);
                         unset($output);
@@ -148,6 +148,13 @@ function authenticate_user(){
                 }
             }
         }
+    } else {
+        unset($_POST);
+        unset($_GET);
+        unset($_SESSION);
+        session_destroy();
+        session_start();
+        return false;
     }
 }
 

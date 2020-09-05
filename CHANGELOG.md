@@ -41,6 +41,8 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue with Restore Failed on Domains with Mail Setups using SSL (#1069)
 - Fixed an issue with PHPMyAdmin button (#1078)
 - Changed WordPress name in Webapp installer (#1074)
+- Add a free disk space validation during backup routine (#1115)
+
 
 ## [1.2.3] - Service Release
 ### Features

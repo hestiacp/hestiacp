@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - Upgrade process will now save logs to the `hst_backups` directory.
 
 ## Bugfixes
+- Add a free disk space validation during backup routine.
 
 ## [1.2.3] - Service Release
 ### Features

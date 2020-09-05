@@ -34,7 +34,7 @@ if [ "$FTP_SYSTEM" == "proftpd" ]; then
     if [ -e  /etc/proftpd/proftpd.conf ]; then
         rm /etc/proftpd/proftpd.conf
     fi
-    if [ -e  /etc/proftpd/tlss.conf ]; then
+    if [ -e  /etc/proftpd/tls.conf ]; then
         rm /etc/proftpd/tls.conf
     fi
     
@@ -43,7 +43,8 @@ if [ "$FTP_SYSTEM" == "proftpd" ]; then
     
 fi
 
-echo "[!] Clean up old language files"
+# Remove old lanugage files.
 if [ -e $HESTIA/web/inc/i18n/en.php ]; then 
-    rm -f -r $HESTIA/web/inc/i18n
+    echo "[!] Clean up old language files"
+    rm -fr $HESTIA/web/inc/i18n
 fi

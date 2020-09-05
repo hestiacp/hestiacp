@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Hestia CP package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-08-20 10:38:28+0000\n"
+"PO-Revision-Date: 2020-09-03 07:11:33+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,137 +13,145 @@ msgstr ""
 
 #: ../../web/restart/service/index.php:25
 msgid "Restart \"%s\" failed"
-msgstr ""
+msgstr "Перезапуск \"%s\" не удался"
 
 #: ../../web/start/service/index.php:25
 msgid "Start \"%s\" failed"
-msgstr ""
+msgstr "Запуск \"%s\" не удался"
 
 #: ../../web/copy/package/index.php:34
 msgid "Error: unable to copy package."
-msgstr ""
+msgstr "Ошибка: невозможно скопировать пакет"
 
 #: ../../web/add/user/index.php:101
 msgid "ACCOUNT_READY"
 msgstr ""
+"Ваш аккаунт успешно создан и готов к использованию.\n"
+"\n"
+"https://%s/login/\n"
+"Имя пользователя: %s\n"
+"Пароль: %s\n"
+"\n"
+"-\n"
+"Панель управления Hestia\\n"
 
 #: ../../web/download/backup/index.php:24
 msgid "Error: Hestia did not return any output."
-msgstr ""
+msgstr "Ошибка: Hestia не вернула никакого ответа"
 
 #: ../../web/templates/user/edit_web.html:261
 #: ../../web/templates/admin/edit_web.html:248
 #: ../../web/templates/admin/add_web.html:200
 msgid "Custom document root"
-msgstr ""
+msgstr "Пользовательский document root"
 
 #: ../../web/templates/user/edit_web.html:269
 #: ../../web/templates/admin/edit_web.html:256
 #: ../../web/templates/admin/add_web.html:208
 msgid "Point to"
-msgstr ""
+msgstr "Указывает на "
 
 #: ../../web/templates/user/panel.html:15
 #: ../../web/templates/admin/panel.html:15
 msgid "Files"
-msgstr ""
+msgstr "Файлы"
 
 #: ../../web/templates/admin/edit_user.html:143
 #: ../../web/templates/admin/add_user.html:136
 msgid "Role"
-msgstr ""
+msgstr "Роль"
 
 #: ../../web/templates/admin/edit_user.html:150
 #: ../../web/templates/admin/add_user.html:143
 msgid "Administrator"
-msgstr ""
+msgstr "Администратор"
 
 #: ../../web/templates/admin/list_dns.html:71
 #: ../../web/templates/admin/list_web.html:70
 msgid "UNSUSPEND_DOMAIN_CONFIRMATION"
-msgstr ""
+msgstr "Вы уверены, что хотите разблокировать домен %s?"
 
 #: ../../web/templates/admin/list_dns.html:76
 #: ../../web/templates/admin/list_web.html:75
 #: ../../web/templates/admin/list_mail.html:76
 #: ../../web/templates/admin/list_mail.html:81
 msgid "SUSPEND_DOMAIN_CONFIRMATION"
-msgstr ""
+msgstr "Вы уверены, что хотите заблокировать домен %s?"
 
 #: ../../web/templates/admin/edit_web.html:468
 #: ../../web/templates/admin/edit_web.html:544
 #: ../../web/templates/admin/add_web.html:333
 #: ../../web/templates/admin/add_web.html:405
 msgid "Prefix %s will be added to username automatically"
-msgstr ""
+msgstr "Префикс %s будет добавлен к имени пользователя автоматически"
 
 #: ../../web/templates/admin/edit_server.html:189
 msgid "Options"
-msgstr ""
+msgstr "Префикс %s будет автоматически добавлен к названию аккаунта"
 
 #: ../../web/templates/admin/edit_server.html:194
 msgid "SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL"
-msgstr ""
+msgstr "Отправить уведомление по электронной почте, когда обновление было установлено"
 
 #: ../../web/templates/admin/edit_server.html:199
 msgid "SYSTEM_UPGRADE_SEND_EMAIL_LOG"
-msgstr ""
+msgstr "Отправить журнал установки обновления по электронной почте"
 
 #: ../../web/templates/admin/edit_server.html:845
 msgid "Filemanager"
-msgstr ""
+msgstr "Файлы"
 
 #: ../../web/templates/admin/list_cron.html:75
 msgid "UNSUSPEND_CRON_CONFIRMATION"
-msgstr ""
+msgstr "Вы уверены, что хотите разблокировать cron-задание?"
 
 #: ../../web/templates/admin/list_cron.html:80
 msgid "SUSPEND_CRON_CONFIRMATION"
-msgstr ""
+msgstr "Вы уверены, что хотите заблокировать cron-задание?"
 
 #: ../../web/templates/admin/list_services.html:148
 msgid "Are you sure you want to start service"
-msgstr ""
+msgstr "Вы действительно хотите запустить службу"
 
 #: ../../web/templates/admin/list_weblog.html:27
 msgid "Access Log"
-msgstr ""
+msgstr "Журнал доступа"
 
 #: ../../web/templates/admin/list_user.html:88
 msgid "UNSUSPEND_USER_CONFIRMATION"
-msgstr ""
+msgstr "Вы уверены, что хотите разблокировать пользователя %s?"
 
 #: ../../web/templates/admin/list_user.html:93
 msgid "SUSPEND_USER_CONFIRMATION"
-msgstr ""
+msgstr "Вы уверены, что хотите заблокировать пользователя %s?"
 
 #: ../../web/templates/admin/list_firewall.html:65
 msgid "UNSUSPEND_RULE_CONFIRMATION"
-msgstr ""
+msgstr "Вы уверены, что хотите разблокировать правило №%s?"
 
 #: ../../web/templates/admin/list_firewall.html:70
 msgid "SUSPEND_RULE_CONFIRMATION"
-msgstr ""
+msgstr "Вы уверены, что хотите заблокирован правило №%s?"
 
 #: ../../web/templates/admin/list_db.html:99
 msgid "UNSUSPEND_DATABASE_CONFIRMATION"
-msgstr ""
+msgstr "Вы уверены, что хотите разблокировать базу данных %s?"
 
 #: ../../web/templates/admin/list_db.html:104
 msgid "SUSPEND_DATABASE_CONFIRMATION"
-msgstr ""
+msgstr "Вы уверены, что хотите заблокировать базу данных %s?"
 
 #: ../../web/templates/admin/list_mail_acc.html:72
 msgid "UNSUSPEND_MAIL_ACCOUNT_CONFIRMATION"
-msgstr ""
+msgstr "Вы уверены, что хотите разблокировать почтовый ящик %s?"
 
 #: ../../web/templates/admin/list_mail_acc.html:77
 msgid "SUSPEND_MAIL_ACCOUNT_CONFIRMATION"
-msgstr ""
+msgstr "Вы уверены, что хотите заблокировать почтовый ящик %s?"
 
 #: ../../web/stop/service/index.php:27
 msgid "Stop \"%s\" failed"
-msgstr ""
+msgstr "Остановка службы %s не удалась"
 
 #: ../../web/templates/admin/edit_db.html:95
 #: ../../web/templates/admin/edit_user.html:82
@@ -973,7 +981,7 @@ msgstr "Добавление базы данных"
 
 #: ../../web/templates/admin/add_db.html:55
 msgid "Prefix %s will be automatically added to database name and database user"
-msgstr ""
+msgstr "Префикс %s будет автоматически добавлен к БД и пользователю БД"
 
 #: ../../web/templates/admin/edit_db.html:72
 #: ../../web/templates/admin/add_db.html:74
@@ -1416,7 +1424,7 @@ msgstr "Access Log"
 
 #: ../../web/templates/admin/list_weblog.html:28
 msgid "Error Log"
-msgstr ""
+msgstr "Журнал ошибок"
 
 #: ../../web/templates/user/panel.html:32
 #: ../../web/templates/admin/list_weblog.html:33
@@ -2905,7 +2913,7 @@ msgstr "мин."
 
 #: ../../web/bulk/cron/index.php:28 ../../web/bulk/cron/index.php:48
 msgid "Cronjob email reporting has been successfully disabled"
-msgstr ""
+msgstr "Cronjob уведомления  были успешно отключены"
 
 #: ../../web/bulk/cron/index.php:35 ../../web/bulk/cron/index.php:55
 msgid "Cronjob email reporting has been successfully enabled"
@@ -2936,7 +2944,7 @@ msgstr "Hestia Control Panel <noreply@%s>"
 
 #: ../../web/add/user/index.php:97 ../../web/reset/index.php:35
 msgid "GREETINGS_GORDON"
-msgstr "Здравствуйте, %s,\\n"
+msgstr "Здравствуйте, %s,"
 
 #: ../../web/add/user/index.php:99 ../../web/reset/index.php:37
 msgid "GREETINGS"
@@ -2944,7 +2952,13 @@ msgstr "Здравствуйте,\\n"
 
 #: ../../web/reset/index.php:40
 msgid "PASSWORD_RESET_REQUEST"
-msgstr "Чтобы восстановить пароль, пройдите по ссылке:\\nhttps://%s/reset/?action=confirm&user=%s&code=%s\\n\\nВы также можете октрыть страницу https://%s/reset/?action=code&user=%s и вручную ввести код для восстановления:\\n%s\\n\\nЕсли вы не запрашивали процедуру восстановления пароля, пожалуйста проигнорируйте это письмо и примите наши извинения.\\n\\n--\\nПанель управления Hestia\\n"
+msgstr ""
+"Чтобы восстановить пароль, пройдите по ссылке:\n"
+"https://%s/reset/?action=confirm&user=%s&code=%s\n"
+"Вы также можете октрыть страницу https://%s/reset/?action=code&user=%s и вручную ввести код для восстановления:\\n%s\\n\\nЕсли вы не запрашивали процедуру восстановления пароля, пожалуйста проигнорируйте это письмо и примите наши извинения.\n"
+"\n"
+"--\n"
+"Панель управления Hestia\\n"
 
 #: ../../web/reset/index.php:45
 msgid "Invalid host domain"
@@ -3062,7 +3076,15 @@ msgstr "Данные для доступа к FTP"
 #: ../../web/add/web/index.php:325 ../../web/edit/web/index.php:660
 #: ../../web/edit/web/index.php:734
 msgid "FTP_ACCOUNT_READY"
-msgstr "FTP аккаунт успешно создан и готов к использованию.\\n\\nХост: %s\\nИмя пользователя: %s_%s\\nПароль: %s\\n\\n--\\nПанель управления Hestia\\n"
+msgstr ""
+"FTP аккаунт успешно создан и готов к использованию.\n"
+"\n"
+"Хост: %s\n"
+"Имя пользователя: %s_%s\n"
+"Пароль: %s\n"
+"\n"
+"--\n"
+"Панель управления Hestia\\n"
 
 #: ../../web/edit/web/index.php:700
 msgid "ftp user"
@@ -3324,7 +3346,15 @@ msgstr "Данные для доступа к БД"
 
 #: ../../web/add/db/index.php:93
 msgid "DATABASE_READY"
-msgstr "База данных создана успешно.\\n\\nБаза данных: %s\\nПользователь: %s\\nПароль: %s\\n%s\\n\\n--\\nПанель управления Hestia\\n"
+msgstr ""
+"База данных создана успешно.\n"
+"\n"
+"База данных: %s\n"
+"Пользователь: %s\n"
+"Пароль: %s\n"
+"%s\n"
+"\n"
+"--Панель управления Hestia\\n"
 
 #: ../../web/add/db/index.php:99
 msgid "DATABASE_CREATED_OK"

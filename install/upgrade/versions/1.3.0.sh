@@ -42,3 +42,9 @@ if [ "$FTP_SYSTEM" == "proftpd" ]; then
     cp -f $HESTIA_INSTALL_DIR/proftpd/tls.conf /etc/proftpd/
     
 fi
+
+# Remove old lanugage files.
+if [ -e $HESTIA/web/inc/i18n/en.php ]; then 
+    echo "[!] Clean up old language files"
+    rm -fr $HESTIA/web/inc/i18n
+fi

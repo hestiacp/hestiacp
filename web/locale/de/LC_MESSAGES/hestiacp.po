@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Hestia CP package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-08-06 21:34:22+0000\n"
+"PO-Revision-Date: 2020-09-03 06:06:49+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -26,6 +26,14 @@ msgstr ""
 #: ../../web/add/user/index.php:101
 msgid "ACCOUNT_READY"
 msgstr ""
+"Ihr Account wurde erfolgreich erstellt.\n"
+"\n"
+"https://%s/login/\n"
+"Benutzername: %s\n"
+"Passwort: %s\n"
+"\n"
+"--\n"
+"Hestia Control Panel"
 
 #: ../../web/download/backup/index.php:24
 msgid "Error: Hestia did not return any output."
@@ -61,14 +69,14 @@ msgstr ""
 #: ../../web/templates/admin/list_dns.html:71
 #: ../../web/templates/admin/list_web.html:70
 msgid "UNSUSPEND_DOMAIN_CONFIRMATION"
-msgstr ""
+msgstr "%s wirklich entsperren?"
 
 #: ../../web/templates/admin/list_dns.html:76
 #: ../../web/templates/admin/list_web.html:75
 #: ../../web/templates/admin/list_mail.html:76
 #: ../../web/templates/admin/list_mail.html:81
 msgid "SUSPEND_DOMAIN_CONFIRMATION"
-msgstr ""
+msgstr "%s wirklich sperren?"
 
 #: ../../web/templates/admin/edit_web.html:468
 #: ../../web/templates/admin/edit_web.html:544
@@ -83,11 +91,11 @@ msgstr ""
 
 #: ../../web/templates/admin/edit_server.html:194
 msgid "SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL"
-msgstr ""
+msgstr "Senden Sie eine E-Mail-Benachrichtigung, wenn ein Update installiert wurde"
 
 #: ../../web/templates/admin/edit_server.html:199
 msgid "SYSTEM_UPGRADE_SEND_EMAIL_LOG"
-msgstr ""
+msgstr "Senden Sie das Update-Installationsprotokoll per E-Mail"
 
 #: ../../web/templates/admin/edit_server.html:845
 msgid "Filemanager"
@@ -95,11 +103,11 @@ msgstr ""
 
 #: ../../web/templates/admin/list_cron.html:75
 msgid "UNSUSPEND_CRON_CONFIRMATION"
-msgstr ""
+msgstr "Cron Job wirklich entsperren?"
 
 #: ../../web/templates/admin/list_cron.html:80
 msgid "SUSPEND_CRON_CONFIRMATION"
-msgstr ""
+msgstr "Cron Job wirklich sperren?"
 
 #: ../../web/templates/admin/list_services.html:148
 msgid "Are you sure you want to start service"
@@ -111,35 +119,35 @@ msgstr ""
 
 #: ../../web/templates/admin/list_user.html:88
 msgid "UNSUSPEND_USER_CONFIRMATION"
-msgstr ""
+msgstr "%s wirklich entsperren?"
 
 #: ../../web/templates/admin/list_user.html:93
 msgid "SUSPEND_USER_CONFIRMATION"
-msgstr ""
+msgstr "%s wirklich sperren?"
 
 #: ../../web/templates/admin/list_firewall.html:65
 msgid "UNSUSPEND_RULE_CONFIRMATION"
-msgstr ""
+msgstr "Regel #%s wirklich entsperren?"
 
 #: ../../web/templates/admin/list_firewall.html:70
 msgid "SUSPEND_RULE_CONFIRMATION"
-msgstr ""
+msgstr "Regel #%s wirklich sperren?"
 
 #: ../../web/templates/admin/list_db.html:99
 msgid "UNSUSPEND_DATABASE_CONFIRMATION"
-msgstr ""
+msgstr "Datenbank %s wirklich entsperren?"
 
 #: ../../web/templates/admin/list_db.html:104
 msgid "SUSPEND_DATABASE_CONFIRMATION"
-msgstr ""
+msgstr "Datenbank %s wirklich sperren?"
 
 #: ../../web/templates/admin/list_mail_acc.html:72
 msgid "UNSUSPEND_MAIL_ACCOUNT_CONFIRMATION"
-msgstr ""
+msgstr "%s wirklich entsperren?"
 
 #: ../../web/templates/admin/list_mail_acc.html:77
 msgid "SUSPEND_MAIL_ACCOUNT_CONFIRMATION"
-msgstr ""
+msgstr "%s wirklich sperren?"
 
 #: ../../web/stop/service/index.php:27
 msgid "Stop \"%s\" failed"
@@ -211,7 +219,7 @@ msgstr "Server"
 
 #: ../../web/templates/admin/panel.html:35
 msgid "Submit an issue report"
-msgstr "Senden Sie einen Problembericht"
+msgstr "Submit an issue report"
 
 #: ../../web/templates/login.html:35
 msgid "Next"
@@ -256,7 +264,7 @@ msgstr "Paket Name"
 #: ../../web/templates/admin/edit_package.html:137
 #: ../../web/templates/admin/add_package.html:140
 msgid "DNS Template"
-msgstr ""
+msgstr "DNS Template"
 
 #: ../../web/templates/admin/edit_package.html:194
 #: ../../web/templates/admin/edit_package.html:216
@@ -454,11 +462,11 @@ msgstr "Übermitteln"
 
 #: ../../web/templates/footer.html:4
 msgid "LEAVE_PAGE_CONFIRMATION"
-msgstr ""
+msgstr "Leave Page?"
 
 #: ../../web/templates/admin/panel.html:5 ../../web/templates/footer.html:9
 msgid "Shortcuts"
-msgstr "Abkürzung"
+msgstr "Shortcuts"
 
 #: ../../web/templates/footer.html:16
 msgid "Add New object"
@@ -498,31 +506,31 @@ msgstr "Wechseln zu BACKUP Liste"
 
 #: ../../web/templates/footer.html:28
 msgid "Focus on search"
-msgstr ""
+msgstr "Focus on search"
 
 #: ../../web/templates/footer.html:29
 msgid "Display/Close shortcuts"
-msgstr ""
+msgstr "Display/Close shortcuts"
 
 #: ../../web/templates/footer.html:31
 msgid "Move backward through top menu"
-msgstr ""
+msgstr "Move backward through top menu"
 
 #: ../../web/templates/footer.html:32
 msgid "Move forward through top menu"
-msgstr ""
+msgstr "Move forward through top menu"
 
 #: ../../web/templates/footer.html:33
 msgid "Enter focused element"
-msgstr ""
+msgstr "Enter focused element"
 
 #: ../../web/templates/footer.html:35
 msgid "Move up through elements list"
-msgstr ""
+msgstr "Move up through elements list"
 
 #: ../../web/templates/footer.html:36
 msgid "Move down through elements list"
-msgstr ""
+msgstr "Move down through elements list"
 
 #: ../../web/login/index.php:54 ../../web/login/index.php:90
 msgid "Invalid username or password"
@@ -635,13 +643,13 @@ msgstr "Kontowiederherstellungscode:"
 #: ../../web/templates/user/edit_user.html:95
 #: ../../web/templates/admin/edit_user.html:95
 msgid "Please scan the code below in your 2FA application:"
-msgstr "Bitte scannen Sie den folgenden Code in Ihrer 2FA-Anwendung:"
+msgstr "Um die Einrichtung der Zwei-Faktor-Authentifizierung abzuschließen, scannen Sie den folgenden QR-Code <br /> mit einer Authentifizierungs-App (z. B. <a href=\"https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2\">Google Authenticator</a>):"
 
 #: ../../web/templates/user/edit_user.html:102
 #: ../../web/templates/admin/edit_user.html:102
 #: ../../web/templates/admin/add_user.html:87
 msgid "Contact"
-msgstr ""
+msgstr "Name"
 
 #: ../../web/templates/user/list_user.html:72
 #: ../../web/templates/admin/edit_user.html:122
@@ -1069,7 +1077,7 @@ msgstr "Benachrichtigungen"
 #: ../../web/templates/user/panel.html:31
 #: ../../web/templates/admin/panel.html:36
 msgid "Help"
-msgstr "Hilfe"
+msgstr "Help"
 
 #: ../../web/templates/admin/panel.html:48
 msgid "USER"
@@ -1412,7 +1420,7 @@ msgstr "Hestia Control Panel"
 #: ../../web/templates/user/list_web.html:149
 #: ../../web/templates/admin/list_web.html:144
 msgid "AccessLog"
-msgstr ""
+msgstr "AccessLog"
 
 #: ../../web/templates/admin/list_weblog.html:28
 msgid "Error Log"
@@ -1735,49 +1743,49 @@ msgstr "SSL Schlüssel"
 #: ../../web/templates/admin/edit_server.html:768
 #: ../../web/templates/admin/edit_mail.html:151
 msgid "SUBJECT"
-msgstr ""
+msgstr "SUBJECT"
 
 #: ../../web/templates/user/edit_web.html:401
 #: ../../web/templates/admin/edit_web.html:387
 #: ../../web/templates/admin/edit_server.html:777
 #: ../../web/templates/admin/edit_mail.html:160
 msgid "ALIASES"
-msgstr ""
+msgstr "ALIASES"
 
 #: ../../web/templates/user/edit_web.html:410
 #: ../../web/templates/admin/edit_web.html:396
 #: ../../web/templates/admin/edit_server.html:786
 #: ../../web/templates/admin/edit_mail.html:169
 msgid "NOT_BEFORE"
-msgstr ""
+msgstr "NOT_BEFORE"
 
 #: ../../web/templates/user/edit_web.html:418
 #: ../../web/templates/admin/edit_web.html:404
 #: ../../web/templates/admin/edit_server.html:794
 #: ../../web/templates/admin/edit_mail.html:177
 msgid "NOT_AFTER"
-msgstr ""
+msgstr "NOT_AFTER"
 
 #: ../../web/templates/user/edit_web.html:426
 #: ../../web/templates/admin/edit_web.html:412
 #: ../../web/templates/admin/edit_server.html:802
 #: ../../web/templates/admin/edit_mail.html:185
 msgid "SIGNATURE"
-msgstr ""
+msgstr "SIGNATURE"
 
 #: ../../web/templates/user/edit_web.html:434
 #: ../../web/templates/admin/edit_web.html:420
 #: ../../web/templates/admin/edit_server.html:811
 #: ../../web/templates/admin/edit_mail.html:193
 msgid "PUB_KEY"
-msgstr ""
+msgstr "PUB_KEY"
 
 #: ../../web/templates/user/edit_web.html:442
 #: ../../web/templates/admin/edit_web.html:428
 #: ../../web/templates/admin/edit_server.html:819
 #: ../../web/templates/admin/edit_mail.html:201
 msgid "ISSUER"
-msgstr ""
+msgstr "ISSUER"
 
 #: ../../web/templates/admin/edit_server.html:836
 msgid "Hestia Control Panel Plugins"
@@ -2230,7 +2238,7 @@ msgstr "Verwenden Sie STARTTLS"
 #: ../../web/templates/admin/add_mail_acc.html:160
 #: ../../web/templates/admin/edit_mail_acc.html:171
 msgid "Use SSL / TLS"
-msgstr "Verwenden SSL / TLS"
+msgstr "Verwenden Sie SSL / TLS"
 
 #: ../../web/templates/admin/add_mail_acc.html:161
 #: ../../web/templates/admin/edit_mail_acc.html:172
@@ -2376,7 +2384,7 @@ msgstr "Lets Encrypt verwenden"
 #: ../../web/templates/user/edit_web.html:331
 #: ../../web/templates/admin/edit_web.html:318
 msgid "Force SSL/HTTPS"
-msgstr ""
+msgstr "Automatische Umleitung von HTTP zu HTTPS aktivieren"
 
 #: ../../web/templates/user/edit_web.html:336
 #: ../../web/templates/admin/edit_web.html:323
@@ -2393,7 +2401,7 @@ msgstr ""
 #: ../../web/templates/admin/edit_mail.html:136
 #: ../../web/templates/admin/add_web.html:296
 msgid "SSL Certificate Authority / Intermediate"
-msgstr ""
+msgstr "SSL Zertifizierungsstelle"
 
 #: ../../web/templates/user/edit_web.html:297
 #: ../../web/templates/user/edit_web.html:377
@@ -2495,33 +2503,33 @@ msgstr "schwarze Liste"
 
 #: ../../web/templates/admin/add_firewall_banlist.html:72
 msgid "SSH"
-msgstr ""
+msgstr "SSH"
 
 #: ../../web/templates/user/panel.html:45
 #: ../../web/templates/admin/add_firewall_banlist.html:73
 #: ../../web/templates/admin/panel.html:59
 msgid "WEB"
-msgstr ""
+msgstr "WEB"
 
 #: ../../web/templates/user/panel.html:59
 #: ../../web/templates/admin/add_firewall_banlist.html:75
 #: ../../web/templates/admin/list_server_info.html:32
 #: ../../web/templates/admin/panel.html:73
 msgid "DNS"
-msgstr ""
+msgstr "DNS"
 
 #: ../../web/templates/user/panel.html:73
 #: ../../web/templates/admin/add_firewall_banlist.html:76
 #: ../../web/templates/admin/panel.html:87
 msgid "MAIL"
-msgstr ""
+msgstr "MAIL"
 
 #: ../../web/templates/user/panel.html:87
 #: ../../web/templates/admin/add_firewall_banlist.html:77
 #: ../../web/templates/admin/list_server_info.html:34
 #: ../../web/templates/admin/panel.html:101
 msgid "DB"
-msgstr ""
+msgstr "DB"
 
 #: ../../web/templates/admin/add_firewall_banlist.html:78
 msgid "HESTIA"
@@ -2659,7 +2667,7 @@ msgstr "Als Standardsprache für alle Benutzer festlegen"
 #: ../../web/templates/admin/edit_server.html:167
 #: ../../web/templates/admin/list_updates.html:42
 msgid "Version"
-msgstr ""
+msgstr "Version"
 
 #: ../../web/templates/admin/edit_server.html:178
 msgid "Release"
@@ -2668,11 +2676,11 @@ msgstr "Freigabeversion"
 #: ../../web/templates/admin/edit_server.html:213
 #: ../../web/templates/admin/edit_server.html:235
 msgid "Web Server"
-msgstr ""
+msgstr "Web Server"
 
 #: ../../web/templates/admin/edit_server.html:223
 msgid "Proxy Server"
-msgstr ""
+msgstr "Proxy Server"
 
 #: ../../web/templates/admin/edit_server.html:223
 #: ../../web/templates/admin/edit_server.html:235
@@ -2705,11 +2713,11 @@ msgstr "Das Speichern von Änderungen kann einige Minuten dauern. Bitte warten S
 #: ../../web/templates/admin/edit_server.html:312
 #: ../../web/templates/admin/edit_server.html:321
 msgid "DNS Server"
-msgstr ""
+msgstr "DNS Server"
 
 #: ../../web/templates/admin/edit_server.html:333
 msgid "DNS Cluster"
-msgstr ""
+msgstr "DNS Cluster"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:99
 #: ../../web/templates/admin/edit_server.html:339
@@ -2777,7 +2785,7 @@ msgstr "AntiSpam"
 #: ../../web/templates/admin/add_mail_acc.html:206
 #: ../../web/templates/admin/edit_mail_acc.html:217
 msgid "Webmail URL"
-msgstr ""
+msgstr "Webmail Alias"
 
 #: ../../web/templates/user/list_stats.html:39
 #: ../../web/templates/user/list_user.html:79
@@ -2797,7 +2805,7 @@ msgstr "MySQL Support"
 
 #: ../../web/templates/admin/edit_server.html:458
 msgid "phpMyAdmin URL"
-msgstr ""
+msgstr "phpMyAdmin Alias"
 
 #: ../../web/templates/user/edit_user.html:71
 #: ../../web/templates/user/edit_web.html:154
@@ -2835,7 +2843,7 @@ msgstr "Aktuelle Anzahl Datenbanken"
 
 #: ../../web/templates/admin/edit_server.html:523
 msgid "PostgreSQL Support"
-msgstr ""
+msgstr "PostgreSQL Support"
 
 #: ../../web/templates/admin/edit_server.html:538
 msgid "phpPgAdmin URL"
@@ -2905,7 +2913,7 @@ msgstr "Minuten"
 
 #: ../../web/bulk/cron/index.php:28 ../../web/bulk/cron/index.php:48
 msgid "Cronjob email reporting has been successfully disabled"
-msgstr ""
+msgstr "Cronjob E-Mail-Berichterstattung wurde erfolgreich deaktiviert"
 
 #: ../../web/bulk/cron/index.php:35 ../../web/bulk/cron/index.php:55
 msgid "Cronjob email reporting has been successfully enabled"
@@ -2936,15 +2944,25 @@ msgstr "Hestia Control Panel <noreply@%s>"
 
 #: ../../web/add/user/index.php:97 ../../web/reset/index.php:35
 msgid "GREETINGS_GORDON"
-msgstr "Hallo %s,\\n"
+msgstr "Hallo, %s,"
 
 #: ../../web/add/user/index.php:99 ../../web/reset/index.php:37
 msgid "GREETINGS"
-msgstr "Hallo,\\n"
+msgstr "Hallo,"
 
 #: ../../web/reset/index.php:40
 msgid "PASSWORD_RESET_REQUEST"
-msgstr "Zum Zurücksetzen Ihres Passwortes, besuchen Sie bitte folgenden Link:\\nhttps://%s/reset/?action=confirm&user=%s&code=%s\\n\\nAlternativ, können Sie auf https://%s/reset/?action=code&user=%s gehen und dort folgenden Reset Code eingeben:\\n%s\\n\\nWenn Sie Ihr Passwort nicht zurücksetzen wollten, ignorieren Sie diese Nachricht und entschuldigen Sie uns die Unannehmlichkeiten.\\n\\n--\\nHestia Control Panel\\n"
+msgstr ""
+"Zum Zurücksetzen Ihres Passwortes, besuchen Sie bitte folgenden Link:\n"
+"https://%s/reset/?action=confirm&user=%s&code=%s\n"
+"\n"
+"Alternativ, können Sie auf https://%s/reset/?action=code&user=%s gehen und dort folgenden Reset Code eingeben:\n"
+"%s\n"
+"\n"
+"Wenn Sie Ihr Passwort nicht zurücksetzen wollten, ignorieren Sie diese Nachricht und entschuldigen Sie uns die Unannehmlichkeiten.\n"
+"\n"
+"--\n"
+"Hestia Control Panel"
 
 #: ../../web/reset/index.php:45
 msgid "Invalid host domain"
@@ -3062,7 +3080,15 @@ msgstr "FTP Anmeldeinformationen"
 #: ../../web/add/web/index.php:325 ../../web/edit/web/index.php:660
 #: ../../web/edit/web/index.php:734
 msgid "FTP_ACCOUNT_READY"
-msgstr "FTP Account erfolgreich erstellt.\\n\\nHostname: %s\\nBenutzername: %s_%s\\nPasswort: %s\\n\\n--\\nHestia Control Panel\\n"
+msgstr ""
+"FTP Account erfolgreich erstellt.\n"
+"\n"
+"Hostname: %s\n"
+"Benutzername: %s_%s\n"
+"Passwort: %s\n"
+"\n"
+"--\n"
+"Hestia Control Panel"
 
 #: ../../web/edit/web/index.php:700
 msgid "ftp user"
@@ -3324,7 +3350,16 @@ msgstr "Datenbank Anmeldeinformationen"
 
 #: ../../web/add/db/index.php:93
 msgid "DATABASE_READY"
-msgstr "Datenbank wurde erfolgreich erstellt.\\n\\nDatenbank: %s\\nBenutzername: %s\\nPasswort: %s\\n%s\\n\\n--\\nHestia Control Panel\\n"
+msgstr ""
+"Datenbank wurde erfolgreich erstellt.\n"
+"\n"
+"Datenbank: %s\n"
+"Benutzername: %s\n"
+"Passwort: %s\n"
+"%s\n"
+"\n"
+"--\n"
+"Hestia Control Panel"
 
 #: ../../web/add/db/index.php:99
 msgid "DATABASE_CREATED_OK"

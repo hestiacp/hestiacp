@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Hestia CP package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-08-15 13:29:32+0000\n"
+"PO-Revision-Date: 2020-09-03 07:36:30+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,137 +13,145 @@ msgstr ""
 
 #: ../../web/restart/service/index.php:25
 msgid "Restart \"%s\" failed"
-msgstr ""
+msgstr "Перезапуск %s невдалий"
 
 #: ../../web/start/service/index.php:25
 msgid "Start \"%s\" failed"
-msgstr ""
+msgstr "Запуск %s невдалий"
 
 #: ../../web/copy/package/index.php:34
 msgid "Error: unable to copy package."
-msgstr ""
+msgstr "Помилка: неможливо скопіювати пакет"
 
 #: ../../web/add/user/index.php:101
 msgid "ACCOUNT_READY"
 msgstr ""
+"Ваш аккаунт успішно створено і готовий до використання.\n"
+"https://%s/login/\n"
+"Ім'я користувача: %s\n"
+"Пароль: %s\n"
+"\n"
+"--\n"
+"Панель керування\n"
+"Hestia"
 
 #: ../../web/download/backup/index.php:24
 msgid "Error: Hestia did not return any output."
-msgstr ""
+msgstr "Помилка: Hestia не вернула ніякого результату"
 
 #: ../../web/templates/user/edit_web.html:261
 #: ../../web/templates/admin/edit_web.html:248
 #: ../../web/templates/admin/add_web.html:200
 msgid "Custom document root"
-msgstr ""
+msgstr "Довільний document root"
 
 #: ../../web/templates/user/edit_web.html:269
 #: ../../web/templates/admin/edit_web.html:256
 #: ../../web/templates/admin/add_web.html:208
 msgid "Point to"
-msgstr ""
+msgstr "Вказує на"
 
 #: ../../web/templates/user/panel.html:15
 #: ../../web/templates/admin/panel.html:15
 msgid "Files"
-msgstr ""
+msgstr "Файли"
 
 #: ../../web/templates/admin/edit_user.html:143
 #: ../../web/templates/admin/add_user.html:136
 msgid "Role"
-msgstr ""
+msgstr "Роль"
 
 #: ../../web/templates/admin/edit_user.html:150
 #: ../../web/templates/admin/add_user.html:143
 msgid "Administrator"
-msgstr ""
+msgstr "Адміністратор"
 
 #: ../../web/templates/admin/list_dns.html:71
 #: ../../web/templates/admin/list_web.html:70
 msgid "UNSUSPEND_DOMAIN_CONFIRMATION"
-msgstr ""
+msgstr "Ви впевнені, що хочете розблокувати домен %s?"
 
 #: ../../web/templates/admin/list_dns.html:76
 #: ../../web/templates/admin/list_web.html:75
 #: ../../web/templates/admin/list_mail.html:76
 #: ../../web/templates/admin/list_mail.html:81
 msgid "SUSPEND_DOMAIN_CONFIRMATION"
-msgstr ""
+msgstr "Ви впевнені, що хочете заблокувати домен %s?"
 
 #: ../../web/templates/admin/edit_web.html:468
 #: ../../web/templates/admin/edit_web.html:544
 #: ../../web/templates/admin/add_web.html:333
 #: ../../web/templates/admin/add_web.html:405
 msgid "Prefix %s will be added to username automatically"
-msgstr ""
+msgstr "Префікс %s буде автоматично додано до назви акаунту"
 
 #: ../../web/templates/admin/edit_server.html:189
 msgid "Options"
-msgstr ""
+msgstr "Опції"
 
 #: ../../web/templates/admin/edit_server.html:194
 msgid "SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL"
-msgstr ""
+msgstr "Надіслати email повідомлення, коли оновлення буде встановлено."
 
 #: ../../web/templates/admin/edit_server.html:199
 msgid "SYSTEM_UPGRADE_SEND_EMAIL_LOG"
-msgstr ""
+msgstr "Надіслати журнал установки оновлення HestiaCP на e-mail"
 
 #: ../../web/templates/admin/edit_server.html:845
 msgid "Filemanager"
-msgstr ""
+msgstr "Файловий менеджер"
 
 #: ../../web/templates/admin/list_cron.html:75
 msgid "UNSUSPEND_CRON_CONFIRMATION"
-msgstr ""
+msgstr "Ви впевнені, що хочете розблокувати cron-завдання?"
 
 #: ../../web/templates/admin/list_cron.html:80
 msgid "SUSPEND_CRON_CONFIRMATION"
-msgstr ""
+msgstr "Ви впевнені, що хочете заблокувати cron-завдання?"
 
 #: ../../web/templates/admin/list_services.html:148
 msgid "Are you sure you want to start service"
-msgstr ""
+msgstr "Ви впевнені, що хочете запустити сервіс"
 
 #: ../../web/templates/admin/list_weblog.html:27
 msgid "Access Log"
-msgstr ""
+msgstr "Журнал доступу"
 
 #: ../../web/templates/admin/list_user.html:88
 msgid "UNSUSPEND_USER_CONFIRMATION"
-msgstr ""
+msgstr "Ви впевнені, що хочете розблокувати користувача %s?"
 
 #: ../../web/templates/admin/list_user.html:93
 msgid "SUSPEND_USER_CONFIRMATION"
-msgstr ""
+msgstr "Ви впевнені, що хочете заблокувати користувача %s?"
 
 #: ../../web/templates/admin/list_firewall.html:65
 msgid "UNSUSPEND_RULE_CONFIRMATION"
-msgstr ""
+msgstr "Ви впевнені, що хочете розблокувати правило #%s?"
 
 #: ../../web/templates/admin/list_firewall.html:70
 msgid "SUSPEND_RULE_CONFIRMATION"
-msgstr ""
+msgstr "Ви впевнені, що хочете заблокувати правило #%s?"
 
 #: ../../web/templates/admin/list_db.html:99
 msgid "UNSUSPEND_DATABASE_CONFIRMATION"
-msgstr ""
+msgstr "Ви впевнені, що хочете розблокувати базу даних %s?"
 
 #: ../../web/templates/admin/list_db.html:104
 msgid "SUSPEND_DATABASE_CONFIRMATION"
-msgstr ""
+msgstr "Ви впевнені, що хочете заблокувати базу даних %s?"
 
 #: ../../web/templates/admin/list_mail_acc.html:72
 msgid "UNSUSPEND_MAIL_ACCOUNT_CONFIRMATION"
-msgstr ""
+msgstr "Ви впевнені, що хочете розблокувати поштову скриньку %s?"
 
 #: ../../web/templates/admin/list_mail_acc.html:77
 msgid "SUSPEND_MAIL_ACCOUNT_CONFIRMATION"
-msgstr ""
+msgstr "Ви впевнені, що хочете заблокувати поштову скриньку %s?"
 
 #: ../../web/stop/service/index.php:27
 msgid "Stop \"%s\" failed"
-msgstr ""
+msgstr "Зупинка %s невдала"
 
 #: ../../web/templates/admin/edit_db.html:95
 #: ../../web/templates/admin/edit_user.html:82
@@ -865,7 +873,7 @@ msgstr "Редагування cron завдання"
 #: ../../web/templates/user/list_cron.html:111
 #: ../../web/templates/admin/list_cron.html:111
 msgid "DELETE_CRON_CONFIRMATION"
-msgstr "Ви впевнені, що хочете видалити cron завдання?"
+msgstr "Ви впевнені, що хочете видалити cron-завдання?"
 
 #: ../../web/templates/user/list_cron.html:137
 #: ../../web/templates/admin/list_cron.html:137
@@ -973,7 +981,7 @@ msgstr "Додавання бази даних"
 
 #: ../../web/templates/admin/add_db.html:55
 msgid "Prefix %s will be automatically added to database name and database user"
-msgstr ""
+msgstr "Префікс %s буде автоматично додано до Бази даних та користувача Бази даних"
 
 #: ../../web/templates/admin/edit_db.html:72
 #: ../../web/templates/admin/add_db.html:74
@@ -1416,7 +1424,7 @@ msgstr "AccessLog"
 
 #: ../../web/templates/admin/list_weblog.html:28
 msgid "Error Log"
-msgstr ""
+msgstr "Журнал помилок"
 
 #: ../../web/templates/user/panel.html:32
 #: ../../web/templates/admin/list_weblog.html:33
@@ -2907,7 +2915,7 @@ msgstr "хв."
 
 #: ../../web/bulk/cron/index.php:28 ../../web/bulk/cron/index.php:48
 msgid "Cronjob email reporting has been successfully disabled"
-msgstr ""
+msgstr "Сповіщення Cron були успішно вимкнені"
 
 #: ../../web/bulk/cron/index.php:35 ../../web/bulk/cron/index.php:55
 msgid "Cronjob email reporting has been successfully enabled"
@@ -2938,15 +2946,26 @@ msgstr "Hestia Control Panel <noreply@%s>"
 
 #: ../../web/add/user/index.php:97 ../../web/reset/index.php:35
 msgid "GREETINGS_GORDON"
-msgstr "Вітаємо, %s,\\n"
+msgstr "Вітаємо, %s,"
 
 #: ../../web/add/user/index.php:99 ../../web/reset/index.php:37
 msgid "GREETINGS"
-msgstr "Вітаємо, \\n"
+msgstr "Вітаємо,"
 
 #: ../../web/reset/index.php:40
 msgid "PASSWORD_RESET_REQUEST"
-msgstr "Щоб відновити пароль, будь-ласка, перейдіть за посиланням :\\nhttps://%s/reset/?action=confirm&user=%s&code=%s\\n\\nТакож ви можете відкрити сторінку https://%s/reset/?action=code&user=%s і вручну ввести код для відновлення:\\n%s\\n\\nЯкщо ви не виконували процедуру відновлення паролю, будь ласка, проігноруйте цей лист і прийміть наші вибачення.\\n\\n--\\nПанель керування Hestia\\n"
+msgstr ""
+"Щоб відновити пароль, будь-ласка, перейдіть за посиланням : \n"
+"\n"
+"https://%s/reset/?action=confirm&user=%s&code=%s\n"
+"\n"
+"Також ви можете відкрити сторінку https://%s/reset/?action=code&user=%s і вручну ввести код для відновлення:\n"
+"%s\n"
+"\n"
+"Якщо ви не виконували процедуру відновлення паролю, будь ласка, проігноруйте цей лист і прийміть наші вибачення.\n"
+"\n"
+"--\n"
+"Панель керування Hestia"
 
 #: ../../web/reset/index.php:45
 msgid "Invalid host domain"
@@ -3064,7 +3083,14 @@ msgstr "Дані доступу до FTP"
 #: ../../web/add/web/index.php:325 ../../web/edit/web/index.php:660
 #: ../../web/edit/web/index.php:734
 msgid "FTP_ACCOUNT_READY"
-msgstr "FTP аккаунт успішно створено і готовий до використання.\\n\\nХост: %s\\nІм'я користувача: %s_%s\\nПароль: %s\\n\\n--\\nПанель керування Hestia\\n"
+msgstr ""
+"FTP аккаунт успішно створено і готовий до використання.\n"
+"\n"
+"Хост: %s\\nІм'я користувача: %s_%s\n"
+"Пароль: %s\n"
+"\n"
+"--\n"
+"Панель керування Hestia\\n"
 
 #: ../../web/edit/web/index.php:700
 msgid "ftp user"
@@ -3326,7 +3352,16 @@ msgstr "Дані доступу до БД"
 
 #: ../../web/add/db/index.php:93
 msgid "DATABASE_READY"
-msgstr "База даних успішно створена.\\n\\nБаза даних: %s\\nКористувач: %s\\nПароль: %s\\n%s\\n\\n--\\nПанель керування Hestia\\n"
+msgstr ""
+"База даних успішно створена.\n"
+"\n"
+"База даних: %s\n"
+"Користувач: %s\n"
+"Пароль: %s\n"
+"%s\n"
+"\n"
+"--\n"
+"Панель керування Hestia\\n"
 
 #: ../../web/add/db/index.php:99
 msgid "DATABASE_CREATED_OK"

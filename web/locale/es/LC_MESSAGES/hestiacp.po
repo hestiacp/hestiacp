@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Hestia CP package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-08-07 07:28:22+0000\n"
+"PO-Revision-Date: 2020-09-03 06:09:37+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -26,6 +26,14 @@ msgstr ""
 #: ../../web/add/user/index.php:101
 msgid "ACCOUNT_READY"
 msgstr ""
+"Su cuenta de usuario ha sido creada con éxito y ya puede hacer uso de ella en:\n"
+"\n"
+"https://%s/login/\n"
+"Nombre de usuario: %s\n"
+"Contraseña: %s\n"
+"\n"
+"--\n"
+"Panel de Control Hestia"
 
 #: ../../web/download/backup/index.php:24
 msgid "Error: Hestia did not return any output."
@@ -61,14 +69,14 @@ msgstr ""
 #: ../../web/templates/admin/list_dns.html:71
 #: ../../web/templates/admin/list_web.html:70
 msgid "UNSUSPEND_DOMAIN_CONFIRMATION"
-msgstr ""
+msgstr "¿Está seguro de que desea habilitar el dominio %s?"
 
 #: ../../web/templates/admin/list_dns.html:76
 #: ../../web/templates/admin/list_web.html:75
 #: ../../web/templates/admin/list_mail.html:76
 #: ../../web/templates/admin/list_mail.html:81
 msgid "SUSPEND_DOMAIN_CONFIRMATION"
-msgstr ""
+msgstr "¿Está seguro de que desea suspender el dominio %s?"
 
 #: ../../web/templates/admin/edit_web.html:468
 #: ../../web/templates/admin/edit_web.html:544
@@ -83,11 +91,11 @@ msgstr ""
 
 #: ../../web/templates/admin/edit_server.html:194
 msgid "SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL"
-msgstr ""
+msgstr "Enviar notificación por correo electrónico cuando se haya instalado una actualización"
 
 #: ../../web/templates/admin/edit_server.html:199
 msgid "SYSTEM_UPGRADE_SEND_EMAIL_LOG"
-msgstr ""
+msgstr "Enviar el registro de instalación de actualizaciones por correo electrónico"
 
 #: ../../web/templates/admin/edit_server.html:845
 msgid "Filemanager"
@@ -95,11 +103,11 @@ msgstr ""
 
 #: ../../web/templates/admin/list_cron.html:75
 msgid "UNSUSPEND_CRON_CONFIRMATION"
-msgstr ""
+msgstr "¿Está seguro de que desea habilitar la tarea programada %s?"
 
 #: ../../web/templates/admin/list_cron.html:80
 msgid "SUSPEND_CRON_CONFIRMATION"
-msgstr ""
+msgstr "¿Está seguro de que desea suspender la tarea programada %s?"
 
 #: ../../web/templates/admin/list_services.html:148
 msgid "Are you sure you want to start service"
@@ -111,35 +119,35 @@ msgstr ""
 
 #: ../../web/templates/admin/list_user.html:88
 msgid "UNSUSPEND_USER_CONFIRMATION"
-msgstr ""
+msgstr "¿Está seguro de que desea habilitar el usuario %s?"
 
 #: ../../web/templates/admin/list_user.html:93
 msgid "SUSPEND_USER_CONFIRMATION"
-msgstr ""
+msgstr "¿Está seguro de que desea suspender el usuario %s?"
 
 #: ../../web/templates/admin/list_firewall.html:65
 msgid "UNSUSPEND_RULE_CONFIRMATION"
-msgstr ""
+msgstr "¿Está seguro de que desea habilitar la regla #%s?"
 
 #: ../../web/templates/admin/list_firewall.html:70
 msgid "SUSPEND_RULE_CONFIRMATION"
-msgstr ""
+msgstr "¿Está seguro de que desea suspender la regla #%s?"
 
 #: ../../web/templates/admin/list_db.html:99
 msgid "UNSUSPEND_DATABASE_CONFIRMATION"
-msgstr ""
+msgstr "¿Está seguro de que desea habilitar la base de datos %s?"
 
 #: ../../web/templates/admin/list_db.html:104
 msgid "SUSPEND_DATABASE_CONFIRMATION"
-msgstr ""
+msgstr "¿Está seguro de que desea suspender la base de datos %s?"
 
 #: ../../web/templates/admin/list_mail_acc.html:72
 msgid "UNSUSPEND_MAIL_ACCOUNT_CONFIRMATION"
-msgstr ""
+msgstr "¿Está seguro de que desea habilitar la cuenta de correo %s?"
 
 #: ../../web/templates/admin/list_mail_acc.html:77
 msgid "SUSPEND_MAIL_ACCOUNT_CONFIRMATION"
-msgstr ""
+msgstr "¿Está seguro de que desea suspender la cuenta de correo %s?"
 
 #: ../../web/stop/service/index.php:27
 msgid "Stop \"%s\" failed"
@@ -211,7 +219,7 @@ msgstr "Servidor"
 
 #: ../../web/templates/admin/panel.html:35
 msgid "Submit an issue report"
-msgstr ""
+msgstr "Submit an issue report"
 
 #: ../../web/templates/login.html:35
 msgid "Next"
@@ -394,7 +402,7 @@ msgstr "AAAA-MM-DD"
 
 #: ../../web/templates/admin/list_rrd.html:5
 msgid "show: CPU / MEM / NET / DISK"
-msgstr "de el es fr hestiacp.pot hst_convert_php2po.sh hst_scan_i18n.sh it nl"
+msgstr "mostrar: CPU / MEM / RED / DISCO"
 
 #: ../../web/templates/admin/list_rrd.html:14
 msgid "Yearly"
@@ -446,7 +454,7 @@ msgstr "Código de recuperación de cuenta"
 
 #: ../../web/templates/reset2fa.html:54 ../../web/templates/reset_1.html:40
 msgid "RESET_NOTICE"
-msgstr " "
+msgstr ""
 
 #: ../../web/templates/reset2fa.html:59 ../../web/templates/reset_1.html:45
 msgid "Submit"
@@ -502,7 +510,7 @@ msgstr "Desplegar Buscador"
 
 #: ../../web/templates/footer.html:29
 msgid "Display/Close shortcuts"
-msgstr ""
+msgstr "Mostrar/Ocultar atajos"
 
 #: ../../web/templates/footer.html:31
 msgid "Move backward through top menu"
@@ -1383,11 +1391,11 @@ msgstr ""
 
 #: ../../web/templates/admin/add_firewall_ipset.html:166
 msgid "BLACKLIST"
-msgstr ""
+msgstr "BLACKLIST"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:179
 msgid "IPVERSE"
-msgstr ""
+msgstr "IPVERSE"
 
 #: ../../web/templates/admin/list_webapps.html:46
 msgid "version"
@@ -1901,7 +1909,7 @@ msgstr "DNS Records"
 #: ../../web/templates/admin/list_packages.html:51
 #: ../../web/templates/admin/add_package.html:230
 msgid "Mail Domains"
-msgstr ""
+msgstr "Dominios de Correo"
 
 #: ../../web/templates/user/list_stats.html:38
 #: ../../web/templates/admin/edit_package.html:238
@@ -2160,7 +2168,7 @@ msgstr "Cuenta"
 #: ../../web/templates/admin/edit_server_nginx.html:168
 #: ../../web/templates/admin/add_web.html:106
 msgid "Advanced options"
-msgstr "Opciones avanzadas"
+msgstr "Opciones avanzadas "
 
 #: ../../web/templates/user/list_mail_acc.html:57
 #: ../../web/templates/admin/edit_package.html:281
@@ -2854,7 +2862,7 @@ msgstr "Respaldos"
 
 #: ../../web/schedule/backup/index.php:17
 msgid "BACKUP_SCHEDULED"
-msgstr ""
+msgstr "La tarea se ha añadido a la cola. Recibirá un correo de notificación cuando el respaldo esté listo para su descarga."
 
 #: ../../web/schedule/backup/index.php:21
 #: ../../web/schedule/restore/index.php:43 ../../web/unsuspend/dns/index.php:21
@@ -2905,7 +2913,7 @@ msgstr "minutos"
 
 #: ../../web/bulk/cron/index.php:28 ../../web/bulk/cron/index.php:48
 msgid "Cronjob email reporting has been successfully disabled"
-msgstr ""
+msgstr "Las notificaciones por correo de Tareas Programadas han sido desactivadas."
 
 #: ../../web/bulk/cron/index.php:35 ../../web/bulk/cron/index.php:55
 msgid "Cronjob email reporting has been successfully enabled"
@@ -2936,15 +2944,25 @@ msgstr "Panel de Control Hestia <noreply@%s>"
 
 #: ../../web/add/user/index.php:97 ../../web/reset/index.php:35
 msgid "GREETINGS_GORDON"
-msgstr "Hola, %s:\\n"
+msgstr "Hola, %s,"
 
 #: ../../web/add/user/index.php:99 ../../web/reset/index.php:37
 msgid "GREETINGS"
-msgstr "Hola, %s:\\n"
+msgstr "Hola,"
 
 #: ../../web/reset/index.php:40
 msgid "PASSWORD_RESET_REQUEST"
-msgstr "Para restablecer su contraseña del panel de control, por favor ingrese a éste link:\\nhttps://%s/reset/?action=confirm&user=%s&code=%s\\n\\nAlternativamente, puede dirigirse a https://%s/reset/?action=code&user=%s e introducir el siguiente código de restablecimiento:\\n%s\\n\\nSi usted no ha solicitado un restablecimiento de contraseña, por favor ignore este mensaje y acepte nuestras disculpas.\\n\\n--\\nPanel de Control Hestia\\n"
+msgstr ""
+"Para restablecer su contraseña del panel de control, por favor ingrese a éste link:\n"
+"https://%s/reset/?action=confirm&user=%s&code=%s\n"
+"\n"
+"Alternativamente, puede dirigirse a https://%s/reset/?action=code&user=%s e introducir el siguiente código de restablecimiento:\n"
+"%s\n"
+"\n"
+"Si usted no ha solicitado un restablecimiento de contraseña, por favor ignore este mensaje y acepte nuestras disculpas.\n"
+"\n"
+"--\n"
+"Panel de Control Hestia"
 
 #: ../../web/reset/index.php:45
 msgid "Invalid host domain"
@@ -3062,7 +3080,15 @@ msgstr "Credenciales FTP"
 #: ../../web/add/web/index.php:325 ../../web/edit/web/index.php:660
 #: ../../web/edit/web/index.php:734
 msgid "FTP_ACCOUNT_READY"
-msgstr "Su cuenta FTP ha sido creada con éxito y ya puede hacer uso de ella.\\n\\nNombre del servidor: %s\\nNombre de usuario: %s_%s\\nContraseña: %s\\n\\n--\\nPanel de Control Hestia\\n"
+msgstr ""
+"Su cuenta FTP ha sido creada con éxito y ya puede hacer uso de ella.\n"
+"\n"
+"Nombre del servidor: %s\n"
+"Nombre de usuario: %s_%s\n"
+"Contraseña: %s\n"
+"\n"
+"--\n"
+"Panel de Control Hestia"
 
 #: ../../web/edit/web/index.php:700
 msgid "ftp user"
@@ -3076,7 +3102,7 @@ msgstr "Información (modo de solo lectura): Crontab se puede editar solo a trav
 #: ../../web/add/user/index.php:27 ../../web/add/package/index.php:25
 #: ../../web/edit/package/index.php:101
 msgid "package"
-msgstr ""
+msgstr "plan"
 
 #: ../../web/add/package/index.php:26 ../../web/edit/package/index.php:102
 msgid "web template"
@@ -3324,7 +3350,16 @@ msgstr "Credenciales de la Base de Datos"
 
 #: ../../web/add/db/index.php:93
 msgid "DATABASE_READY"
-msgstr "La Base de Datos ha sido creada con éxito y ya puede hacer uso de ella.\\n\\nBase de Datos: %s\\nNombre de usuario: %s\\nContraseña: %s\\n%s\\n\\n--\\nPanel de Control Hestia\\n"
+msgstr ""
+"La Base de Datos ha sido creada con éxito y ya puede hacer uso de ella.\n"
+"\n"
+"Base de Datos: %s\n"
+"Nombre de usuario: %s\n"
+"Contraseña: %s\n"
+"%s\n"
+"\n"
+"--\n"
+"Panel de Control Hestia"
 
 #: ../../web/add/db/index.php:99
 msgid "DATABASE_CREATED_OK"
@@ -3718,7 +3753,7 @@ msgstr "Estado / Provincia"
 
 #: ../../web/templates/admin/generate_ssl.html:91
 msgid "City / Locality"
-msgstr "Ciudad / Localida"
+msgstr "Ciudad / Localidad"
 
 #: ../../web/templates/admin/generate_ssl.html:113
 msgid "Ok"

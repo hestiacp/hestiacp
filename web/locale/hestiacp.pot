@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-02 00:53+0200\n"
+"POT-Creation-Date: 2020-09-07 15:34+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -65,7 +65,7 @@ msgstr ""
 
 #: ../../web/generate/ssl/index.php:42
 #: ../../web/templates/user/edit_user.html:112
-#: ../../web/templates/user/list_user.html:108
+#: ../../web/templates/user/list_user.html:99
 #: ../../web/templates/admin/edit_user.html:112
 #: ../../web/templates/admin/generate_ssl.html:60
 #: ../../web/templates/admin/list_user.html:106
@@ -154,10 +154,6 @@ msgstr ""
 #: ../../web/start/service/index.php:25
 #, php-format
 msgid "Start \"%s\" failed"
-msgstr ""
-
-#: ../../web/copy/package/index.php:34
-msgid "Error: unable to copy package."
 msgstr ""
 
 #: ../../web/add/web/index.php:19 ../../web/add/dns/index.php:24
@@ -262,7 +258,7 @@ msgstr ""
 msgid "USER_CREATED_OK"
 msgstr ""
 
-#: ../../web/add/user/index.php:108 ../../web/templates/user/list_user.html:106
+#: ../../web/add/user/index.php:108 ../../web/templates/user/list_user.html:97
 #: ../../web/templates/admin/list_user.html:104
 #: ../../web/templates/admin/list_user.html:118
 msgid "login as"
@@ -572,7 +568,7 @@ msgstr ""
 #: ../../web/templates/user/edit_web.html:4
 #: ../../web/templates/user/list_search.html:4
 #: ../../web/templates/user/list_mail_acc.html:4
-#: ../../web/templates/reset2fa.html:60
+#: ../../web/templates/reset2fa.html:55
 #: ../../web/templates/admin/list_firewall_ipset.html:4
 #: ../../web/templates/admin/edit_server_bind9.html:4
 #: ../../web/templates/admin/edit_server_mysql.html:4
@@ -627,7 +623,7 @@ msgstr ""
 #: ../../web/templates/admin/list_backup_exclusions.html:4
 #: ../../web/templates/admin/add_user.html:4
 #: ../../web/templates/admin/edit_server_httpd.html:4
-#: ../../web/templates/reset_1.html:46 ../../web/templates/login_1.html:43
+#: ../../web/templates/reset_1.html:41 ../../web/templates/login_1.html:43
 #: ../../web/templates/reset_2.html:36 ../../web/templates/reset_3.html:44
 msgid "Back"
 msgstr ""
@@ -886,7 +882,7 @@ msgid "SSH KEY"
 msgstr ""
 
 #: ../../web/templates/user/edit_user.html:42
-#: ../../web/templates/user/list_user.html:114
+#: ../../web/templates/user/list_user.html:105
 #: ../../web/templates/admin/edit_user.html:42
 #: ../../web/templates/admin/list_user.html:120
 msgid "Editing User"
@@ -975,6 +971,46 @@ msgstr ""
 msgid "generate"
 msgstr ""
 
+#: ../../web/templates/user/edit_user.html:82
+#: ../../web/templates/admin/edit_db.html:95
+#: ../../web/templates/admin/edit_user.html:82
+#: ../../web/templates/admin/add_db.html:97
+#: ../../web/templates/admin/add_mail_acc.html:81
+#: ../../web/templates/admin/edit_mail_acc.html:82
+#: ../../web/templates/admin/add_user.html:77
+msgid "Your password must have at least"
+msgstr ""
+
+#: ../../web/templates/user/edit_user.html:84
+#: ../../web/templates/admin/edit_db.html:97
+#: ../../web/templates/admin/edit_user.html:84
+#: ../../web/templates/admin/add_db.html:99
+#: ../../web/templates/admin/add_mail_acc.html:83
+#: ../../web/templates/admin/edit_mail_acc.html:84
+#: ../../web/templates/admin/add_user.html:79
+msgid "8 characters long"
+msgstr ""
+
+#: ../../web/templates/user/edit_user.html:85
+#: ../../web/templates/admin/edit_db.html:98
+#: ../../web/templates/admin/edit_user.html:85
+#: ../../web/templates/admin/add_db.html:100
+#: ../../web/templates/admin/add_mail_acc.html:84
+#: ../../web/templates/admin/edit_mail_acc.html:85
+#: ../../web/templates/admin/add_user.html:80
+msgid "1 uppercase & 1 lowercase character"
+msgstr ""
+
+#: ../../web/templates/user/edit_user.html:86
+#: ../../web/templates/admin/edit_db.html:99
+#: ../../web/templates/admin/edit_user.html:86
+#: ../../web/templates/admin/add_db.html:101
+#: ../../web/templates/admin/add_mail_acc.html:85
+#: ../../web/templates/admin/edit_mail_acc.html:86
+#: ../../web/templates/admin/add_user.html:81
+msgid "1 number"
+msgstr ""
+
 #: ../../web/templates/user/edit_user.html:92
 #: ../../web/templates/admin/edit_user.html:92
 msgid "Enable 2FA"
@@ -1018,7 +1054,7 @@ msgstr ""
 #: ../../web/templates/user/list_dns.html:34
 #: ../../web/templates/user/list_dns.html:109
 #: ../../web/templates/user/list_dns_rec.html:27
-#: ../../web/templates/user/list_dns_rec.html:81
+#: ../../web/templates/user/list_dns_rec.html:72
 #: ../../web/templates/user/edit_web.html:474
 #: ../../web/templates/user/edit_web.html:550
 #: ../../web/templates/user/list_cron.html:40
@@ -1294,6 +1330,24 @@ msgstr ""
 msgid "SOA"
 msgstr ""
 
+#: ../../web/templates/user/list_dns.html:70
+#: ../../web/templates/user/list_web.html:75
+#: ../../web/templates/admin/list_dns.html:71
+#: ../../web/templates/admin/list_web.html:70
+msgid "UNSUSPEND_DOMAIN_CONFIRMATION"
+msgstr ""
+
+#: ../../web/templates/user/list_dns.html:75
+#: ../../web/templates/user/list_web.html:80
+#: ../../web/templates/user/list_mail.html:75
+#: ../../web/templates/user/list_mail.html:80
+#: ../../web/templates/admin/list_dns.html:76
+#: ../../web/templates/admin/list_web.html:75
+#: ../../web/templates/admin/list_mail.html:76
+#: ../../web/templates/admin/list_mail.html:81
+msgid "SUSPEND_DOMAIN_CONFIRMATION"
+msgstr ""
+
 #: ../../web/templates/user/list_dns.html:87
 #: ../../web/templates/user/list_dns.html:96
 #: ../../web/templates/admin/edit_package.html:216
@@ -1312,7 +1366,7 @@ msgstr ""
 
 #: ../../web/templates/user/list_dns.html:103
 #: ../../web/templates/user/list_dns.html:112
-#: ../../web/templates/user/list_dns_rec.html:84
+#: ../../web/templates/user/list_dns_rec.html:75
 #: ../../web/templates/user/list_cron.html:101
 #: ../../web/templates/user/list_cron.html:110
 #: ../../web/templates/user/list_web.html:154
@@ -1359,7 +1413,7 @@ msgid "Confirmation"
 msgstr ""
 
 #: ../../web/templates/user/list_dns.html:113
-#: ../../web/templates/user/list_dns_rec.html:85
+#: ../../web/templates/user/list_dns_rec.html:76
 #: ../../web/templates/user/list_web.html:164
 #: ../../web/templates/user/list_mail.html:120
 #: ../../web/templates/admin/list_web.html:159
@@ -1421,20 +1475,20 @@ msgstr ""
 msgid "IP or Value"
 msgstr ""
 
-#: ../../web/templates/user/list_dns_rec.html:74
-#: ../../web/templates/user/list_dns_rec.html:79
+#: ../../web/templates/user/list_dns_rec.html:65
+#: ../../web/templates/user/list_dns_rec.html:70
 #: ../../web/templates/admin/list_dns_rec.html:67
 #: ../../web/templates/admin/list_dns_rec.html:72
 #: ../../web/templates/admin/edit_dns_rec.html:40
 msgid "Editing DNS Record"
 msgstr ""
 
-#: ../../web/templates/user/list_dns_rec.html:110
+#: ../../web/templates/user/list_dns_rec.html:101
 #: ../../web/templates/admin/list_dns_rec.html:105
 msgid "1 DNS record"
 msgstr ""
 
-#: ../../web/templates/user/list_dns_rec.html:112
+#: ../../web/templates/user/list_dns_rec.html:103
 #: ../../web/templates/admin/list_dns_rec.html:107
 #, php-format
 msgid "%s DNS records"
@@ -1679,7 +1733,12 @@ msgstr ""
 
 #: ../../web/templates/user/edit_web.html:482
 #: ../../web/templates/user/edit_web.html:558
-msgid "Prefix will be automaticaly added to username"
+#: ../../web/templates/admin/edit_web.html:468
+#: ../../web/templates/admin/edit_web.html:544
+#: ../../web/templates/admin/add_web.html:333
+#: ../../web/templates/admin/add_web.html:405
+#, php-format
+msgid "Prefix %s will be added to username automatically"
 msgstr ""
 
 #: ../../web/templates/user/edit_web.html:505
@@ -1767,6 +1826,16 @@ msgstr ""
 #: ../../web/templates/admin/edit_cron.html:425
 #: ../../web/templates/admin/add_cron.html:431
 msgid "Day of week"
+msgstr ""
+
+#: ../../web/templates/user/list_cron.html:75
+#: ../../web/templates/admin/list_cron.html:75
+msgid "UNSUSPEND_CRON_CONFIRMATION"
+msgstr ""
+
+#: ../../web/templates/user/list_cron.html:80
+#: ../../web/templates/admin/list_cron.html:80
+msgid "SUSPEND_CRON_CONFIRMATION"
 msgstr ""
 
 #: ../../web/templates/user/list_cron.html:91
@@ -1897,12 +1966,12 @@ msgstr ""
 msgid "Package"
 msgstr ""
 
-#: ../../web/templates/user/list_user.html:142
+#: ../../web/templates/user/list_user.html:133
 #: ../../web/templates/admin/list_user.html:166
 msgid "1 user account"
 msgstr ""
 
-#: ../../web/templates/user/list_user.html:144
+#: ../../web/templates/user/list_user.html:135
 #: ../../web/templates/admin/list_user.html:168
 #, php-format
 msgid "%s user accounts"
@@ -1951,6 +2020,16 @@ msgstr ""
 #: ../../web/templates/admin/add_db.html:144
 #: ../../web/templates/admin/list_db.html:87
 msgid "Charset"
+msgstr ""
+
+#: ../../web/templates/user/list_db.html:98
+#: ../../web/templates/admin/list_db.html:99
+msgid "UNSUSPEND_DATABASE_CONFIRMATION"
+msgstr ""
+
+#: ../../web/templates/user/list_db.html:103
+#: ../../web/templates/admin/list_db.html:104
+msgid "SUSPEND_DATABASE_CONFIRMATION"
 msgstr ""
 
 #: ../../web/templates/user/list_db.html:123
@@ -2048,6 +2127,16 @@ msgstr ""
 #: ../../web/templates/admin/edit_mail_acc.html:128
 #: ../../web/templates/admin/list_mail_acc.html:60
 msgid "Autoreply"
+msgstr ""
+
+#: ../../web/templates/user/list_mail_acc.html:72
+#: ../../web/templates/admin/list_mail_acc.html:72
+msgid "UNSUSPEND_MAIL_ACCOUNT_CONFIRMATION"
+msgstr ""
+
+#: ../../web/templates/user/list_mail_acc.html:77
+#: ../../web/templates/admin/list_mail_acc.html:77
+msgid "SUSPEND_MAIL_ACCOUNT_CONFIRMATION"
 msgstr ""
 
 #: ../../web/templates/user/list_mail_acc.html:90
@@ -2226,19 +2315,19 @@ msgstr ""
 msgid "Hestia Control Panel"
 msgstr ""
 
-#: ../../web/templates/login_2.html:18
+#: ../../web/templates/login_2.html:16
 msgid "2 Factor Authentication"
 msgstr ""
 
-#: ../../web/templates/login_2.html:23
+#: ../../web/templates/login_2.html:21
 msgid "2FA Token"
 msgstr ""
 
-#: ../../web/templates/login_2.html:26
+#: ../../web/templates/login_2.html:24
 msgid "Forgot token"
 msgstr ""
 
-#: ../../web/templates/login_2.html:42 ../../web/templates/login_1.html:42
+#: ../../web/templates/login_2.html:40 ../../web/templates/login_1.html:42
 msgid "Login"
 msgstr ""
 
@@ -2259,10 +2348,6 @@ msgid "2FA Reset Code"
 msgstr ""
 
 #: ../../web/templates/reset2fa.html:54 ../../web/templates/reset_1.html:40
-msgid "RESET_NOTICE"
-msgstr ""
-
-#: ../../web/templates/reset2fa.html:59 ../../web/templates/reset_1.html:45
 msgid "Submit"
 msgstr ""
 
@@ -2465,42 +2550,6 @@ msgstr ""
 msgid "maximum characters length, including prefix"
 msgstr ""
 
-#: ../../web/templates/admin/edit_db.html:95
-#: ../../web/templates/admin/edit_user.html:82
-#: ../../web/templates/admin/add_db.html:97
-#: ../../web/templates/admin/add_mail_acc.html:81
-#: ../../web/templates/admin/edit_mail_acc.html:82
-#: ../../web/templates/admin/add_user.html:77
-msgid "Your password must have at least"
-msgstr ""
-
-#: ../../web/templates/admin/edit_db.html:97
-#: ../../web/templates/admin/edit_user.html:84
-#: ../../web/templates/admin/add_db.html:99
-#: ../../web/templates/admin/add_mail_acc.html:83
-#: ../../web/templates/admin/edit_mail_acc.html:84
-#: ../../web/templates/admin/add_user.html:79
-msgid "8 characters long"
-msgstr ""
-
-#: ../../web/templates/admin/edit_db.html:98
-#: ../../web/templates/admin/edit_user.html:85
-#: ../../web/templates/admin/add_db.html:100
-#: ../../web/templates/admin/add_mail_acc.html:84
-#: ../../web/templates/admin/edit_mail_acc.html:85
-#: ../../web/templates/admin/add_user.html:80
-msgid "1 uppercase & 1 lowercase character"
-msgstr ""
-
-#: ../../web/templates/admin/edit_db.html:99
-#: ../../web/templates/admin/edit_user.html:86
-#: ../../web/templates/admin/add_db.html:101
-#: ../../web/templates/admin/add_mail_acc.html:85
-#: ../../web/templates/admin/edit_mail_acc.html:86
-#: ../../web/templates/admin/add_user.html:81
-msgid "1 number"
-msgstr ""
-
 #: ../../web/templates/admin/edit_backup_exclusions.html:40
 #: ../../web/templates/admin/list_backup_exclusions.html:5
 msgid "Editing Backup Exclusions"
@@ -2658,18 +2707,6 @@ msgstr ""
 msgid "PHP CLI Version"
 msgstr ""
 
-#: ../../web/templates/admin/list_dns.html:71
-#: ../../web/templates/admin/list_web.html:70
-msgid "UNSUSPEND_DOMAIN_CONFIRMATION"
-msgstr ""
-
-#: ../../web/templates/admin/list_dns.html:76
-#: ../../web/templates/admin/list_web.html:75
-#: ../../web/templates/admin/list_mail.html:76
-#: ../../web/templates/admin/list_mail.html:81
-msgid "SUSPEND_DOMAIN_CONFIRMATION"
-msgstr ""
-
 #: ../../web/templates/admin/edit_firewall.html:41
 #: ../../web/templates/admin/list_firewall.html:82
 #: ../../web/templates/admin/list_firewall.html:102
@@ -2751,14 +2788,6 @@ msgstr ""
 
 #: ../../web/templates/admin/list_dns_rec.html:88
 msgid "Default"
-msgstr ""
-
-#: ../../web/templates/admin/edit_web.html:468
-#: ../../web/templates/admin/edit_web.html:544
-#: ../../web/templates/admin/add_web.html:333
-#: ../../web/templates/admin/add_web.html:405
-#, php-format
-msgid "Prefix %s will be added to username automatically"
 msgstr ""
 
 #: ../../web/templates/admin/edit_server.html:78
@@ -2982,14 +3011,6 @@ msgstr ""
 
 #: ../../web/templates/admin/add_dns_rec.html:30
 msgid "Adding DNS Record"
-msgstr ""
-
-#: ../../web/templates/admin/list_cron.html:75
-msgid "UNSUSPEND_CRON_CONFIRMATION"
-msgstr ""
-
-#: ../../web/templates/admin/list_cron.html:80
-msgid "SUSPEND_CRON_CONFIRMATION"
 msgstr ""
 
 #: ../../web/templates/admin/list_services.html:4
@@ -3624,14 +3645,6 @@ msgstr ""
 msgid "%s IP addresses"
 msgstr ""
 
-#: ../../web/templates/admin/list_db.html:99
-msgid "UNSUSPEND_DATABASE_CONFIRMATION"
-msgstr ""
-
-#: ../../web/templates/admin/list_db.html:104
-msgid "SUSPEND_DATABASE_CONFIRMATION"
-msgstr ""
-
 #: ../../web/templates/admin/edit_mail_acc.html:136
 msgid "Message"
 msgstr ""
@@ -3646,14 +3659,6 @@ msgstr ""
 
 #: ../../web/templates/admin/add_package.html:37
 msgid "Adding Package"
-msgstr ""
-
-#: ../../web/templates/admin/list_mail_acc.html:72
-msgid "UNSUSPEND_MAIL_ACCOUNT_CONFIRMATION"
-msgstr ""
-
-#: ../../web/templates/admin/list_mail_acc.html:77
-msgid "SUSPEND_MAIL_ACCOUNT_CONFIRMATION"
 msgstr ""
 
 #: ../../web/templates/admin/list_ssl.html:74
@@ -3890,11 +3895,11 @@ msgstr ""
 msgid "Reset"
 msgstr ""
 
-#: ../../web/login/index.php:54 ../../web/login/index.php:90
+#: ../../web/login/index.php:52 ../../web/login/index.php:85
 msgid "Invalid username or password"
 msgstr ""
 
-#: ../../web/login/index.php:107
+#: ../../web/login/index.php:104
 msgid "Invalid or missing 2FA token"
 msgstr ""
 
@@ -3963,6 +3968,11 @@ msgstr ""
 #: ../../web/edit/server/crond/index.php:18
 #: ../../web/edit/server/cron/index.php:18
 msgid "Info (Read-only mode): Crontab can be edited only trough ssh"
+msgstr ""
+
+#: ../../web/update/hestia/index.php:22
+#, php-format
+msgid "Error: %s update failed"
 msgstr ""
 
 #: ../../web/js/i18n.js.php:8

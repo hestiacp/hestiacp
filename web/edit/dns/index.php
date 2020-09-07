@@ -144,7 +144,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['recor
 
     // Set success message
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('Changes has been saved.');
+        $_SESSION['ok_msg'] = _('Changes has been saved.');
     }
 }
 
@@ -196,7 +196,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['reco
 
     // Set success message
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('Changes has been saved.');
+        $_SESSION['ok_msg'] = _('Changes has been saved.');
     }
 
     // Change url if record id was changed

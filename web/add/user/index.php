@@ -22,12 +22,12 @@ if (!empty($_POST['ok'])) {
     }
 
     // Check empty fields
-    if (empty($_POST['v_username'])) $errors[] = __('user');
-    if (empty($_POST['v_password'])) $errors[] = __('password');
-    if (empty($_POST['v_package'])) $errrors[] = __('package');
-    if (empty($_POST['v_email'])) $errors[] = __('email');
-    if (empty($_POST['v_name'])) $errors[] = __('name');
-    if (!empty($errors[0])) {
+    if (empty($_POST['v_username'])) $errors[] = _('user');
+    if (empty($_POST['v_password'])) $errors[] = _('password');
+    if (empty($_POST['v_package'])) $errrors[] = _('package');
+    if (empty($_POST['v_email'])) $errors[] = _('email');
+    if (empty($_POST['v_name'])) $errors[] = _('name');
+    if (!empty($errors)) {
         foreach ($errors as $i => $error) {
             if ( $i == 0 ) {
                 $error_msg = $error;
@@ -35,17 +35,17 @@ if (!empty($_POST['ok'])) {
                 $error_msg = $error_msg.", ".$error;
             }
         }
-        $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
+        $_SESSION['error_msg'] = sprintf(_('Field "%s" can not be blank.'),$error_msg);
     }
 
     // Validate email
     if ((empty($_SESSION['error_msg'])) && (!filter_var($_POST['v_email'], FILTER_VALIDATE_EMAIL))) {
-        $_SESSION['error_msg'] = __('Please enter valid email address.');
+        $_SESSION['error_msg'] = _('Please enter valid email address.');
     }
 
     // Check password length
     if (empty($_SESSION['error_msg'])) {
-        if (!validate_password($_POST['v_password'])) { $_SESSION['error_msg'] = __('Password does not match the minimum requirements'); }
+        if (!validate_password($_POST['v_password'])) { $_SESSION['error_msg'] = _('Password does not match the minimum requirements'); }
     }
 
     // Protect input
@@ -88,24 +88,24 @@ if (!empty($_POST['ok'])) {
     // Send email to the new user
     if ((empty($_SESSION['error_msg'])) && (!empty($v_notify))) {
         $to = $_POST['v_notify'];
-        $subject = _translate($_POST['v_language'],"Welcome to Hestia Control Panel");
+        $subject = _("Welcome to Hestia Control Panel"); //currently not supported to use the account language
         $hostname = exec('hostname');
         unset($output);
-        $from = _translate($_POST['v_language'],'MAIL_FROM',$hostname);
-        
+        $from = sprintf(_('MAIL_FROM'),$hostname); //currently not supported to use the account language
+
         if (!empty($_POST['v_name'])) {
-            $mailtext = _translate($_POST['v_language'],'GREETINGS_GORDON',$_POST['v_name']);
+            $mailtext = sprintf(_('GREETINGS_GORDON'),$_POST['v_name'])."\r\n";
         } else {
-            $mailtext = _translate($_POST['v_language'],'GREETINGS');
+            $mailtext = _('GREETINGS')."\r\n";
         }
-        $mailtext .= _translate($_POST['v_language'],'ACCOUNT_READY',$_SERVER['HTTP_HOST'],$_POST['v_username'],$_POST['v_password']);
+        $mailtext .= sprintf(_('ACCOUNT_READY'),$_SERVER['HTTP_HOST'],$_POST['v_username'],$_POST['v_password']);
         send_email($to, $subject, $mailtext, $from);
     }
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('USER_CREATED_OK',htmlentities($_POST['v_username']),htmlentities($_POST['v_username']));
-        $_SESSION['ok_msg'] .= " / <a href=/login/?loginas=".htmlentities($_POST['v_username']).">" . __('login as') ." ".htmlentities($_POST['v_username']). "</a>";
+        $_SESSION['ok_msg'] = sprintf(_('USER_CREATED_OK'),htmlentities($_POST['v_username']),htmlentities($_POST['v_username']));
+        $_SESSION['ok_msg'] .= " / <a href=/login/?loginas=".htmlentities($_POST['v_username']).">" . _('login as') ." ".htmlentities($_POST['v_username']). "</a>";
         unset($v_username);
         unset($v_password);
         unset($v_email);

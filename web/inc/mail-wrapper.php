@@ -25,7 +25,6 @@ if (!empty( $data['config']['LANGUAGE'])) {
 } else {
     $_SESSION['language'] = 'en';
 }
-require_once('/usr/local/hestia/web/inc/i18n/'.$_SESSION['language'].'.php');
 
 // Define vars
 $from = 'Hestia Control Panel <hestia@'.gethostname().'>';

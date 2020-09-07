@@ -1,10 +1,10 @@
 <div class="l-center edit">
         <div class="l-sort clearfix">
           <div class="l-unit-toolbar__buttonstrip">
-            <a class="ui-button cancel" id="btn-back" href="/list/firewall/banlist/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+            <a class="ui-button cancel" id="btn-back" href="/list/firewall/banlist/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
+            <a href="#" class="ui-button" title="<?=_('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
           </div>
         </div>
       </div>
@@ -35,7 +35,7 @@
                         <table class="data-col2" width="600px">
                             <tr>
                                 <td class="step-top">
-                                    <span class="page-title"><?=__('Adding IP Address to Banlist')?></span>
+                                    <span class="page-title"><?=_('Adding IP Address to Banlist')?></span>
                                 </td>
                             </tr>
                             <tr>
@@ -53,7 +53,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?=__('IP address')?> <span class="optional">(<?=__('CIDR format is supported')?>)</span>
+                                    <?=_('IP address')?> <span class="optional">(<?=_('CIDR format is supported')?>)</span>
                                 </td>
                             </tr>
                             <tr>
@@ -63,19 +63,19 @@
                             </tr>
                             <tr>
                                 <td class="vst-text step-top">
-                                    <?php print __('Banlist') ?>
+                                    <?php print _('Banlist') ?>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <select class="vst-list" name="v_chain">
-                                        <option value="SSH" <?php if ((!empty($v_chain)) && ( $v_chain == "'SSH'" )) echo 'selected'?>><?=__('SSH')?></option>
-                                        <option value="WEB" <?php if ((!empty($v_chain)) && ( $v_chain == "'WEB'" )) echo 'selected'?>><?=__('WEB')?></option>
-                                        <option value="FTP" <?php if ((!empty($v_chain)) && ( $v_chain == "'FTP'" )) echo 'selected'?>><?=__('FTP')?></option>
-                                        <option value="DNS" <?php if ((!empty($v_chain)) && ( $v_chain == "'DNS'" )) echo 'selected'?>><?=__('DNS')?></option>
-                                        <option value="MAIL" <?php if ((!empty($v_chain)) && ( $v_chain == "'MAIL'" )) echo 'selected'?>><?=__('MAIL')?></option>
-                                        <option value="DB" <?php if ((!empty($v_chain)) && ( $v_chain == "'DB'" )) echo 'selected'?>><?=__('DB')?></option>
-                                        <option value="HESTIA" <?php if ((!empty($v_chain)) && ( $v_chain == "'HESTIA'" )) echo 'selected'?>><?=__('HESTIA')?></option>
+                                        <option value="SSH" <?php if ((!empty($v_chain)) && ( $v_chain == "'SSH'" )) echo 'selected'?>><?=_('SSH')?></option>
+                                        <option value="WEB" <?php if ((!empty($v_chain)) && ( $v_chain == "'WEB'" )) echo 'selected'?>><?=_('WEB')?></option>
+                                        <option value="FTP" <?php if ((!empty($v_chain)) && ( $v_chain == "'FTP'" )) echo 'selected'?>><?=_('FTP')?></option>
+                                        <option value="DNS" <?php if ((!empty($v_chain)) && ( $v_chain == "'DNS'" )) echo 'selected'?>><?=_('DNS')?></option>
+                                        <option value="MAIL" <?php if ((!empty($v_chain)) && ( $v_chain == "'MAIL'" )) echo 'selected'?>><?=_('MAIL')?></option>
+                                        <option value="DB" <?php if ((!empty($v_chain)) && ( $v_chain == "'DB'" )) echo 'selected'?>><?=_('DB')?></option>
+                                        <option value="HESTIA" <?php if ((!empty($v_chain)) && ( $v_chain == "'HESTIA'" )) echo 'selected'?>><?=_('HESTIA')?></option>
                                     </select>
                                 </td>
                             </tr>

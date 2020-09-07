@@ -1,11 +1,11 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
             <div class="l-unit-toolbar__buttonstrip">
-                <a class="ui-button cancel" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+                <a class="ui-button cancel" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
                 <? if($autoupdate == 'Enabled') {
-                  echo '<a class="ui-button cancel" href="/delete/cron/autoupdate/?token='.$_SESSION['token'].'"><i class="fas fa-toggle-on status-icon green"></i>'.__('disable autoupdate').'</a>';
+                  echo '<a class="ui-button cancel" href="/delete/cron/autoupdate/?token='.$_SESSION['token'].'"><i class="fas fa-toggle-on status-icon green"></i>'._('disable autoupdate').'</a>';
                 } else {
-                  echo '<a class="ui-button cancel" href="/add/cron/autoupdate/?token='.$_SESSION['token'].'"><i class="fas fa-toggle-off status-icon red"></i>'.__('enable autoupdate').'</a>';
+                  echo '<a class="ui-button cancel" href="/add/cron/autoupdate/?token='.$_SESSION['token'].'"><i class="fas fa-toggle-off status-icon red"></i>'._('enable autoupdate').'</a>';
                 } ?>
              </div>
         <div class="l-sort-toolbar clearfix">
@@ -16,8 +16,8 @@
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                 <div class="l-select">
                   <select name="action" id="">
-                    <option value=""><?=__('apply to selected')?></option>
-                    <option value="update"><?php print __('update') ?></option>
+                    <option value=""><?=_('apply to selected')?></option>
+                    <option value="update"><?php print _('update') ?></option>
                   </select>
                 </div>
                 <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
@@ -37,10 +37,10 @@
                   <div class="clearfix l-unit__stat-col--left super-compact">
                       <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
                     </div>
-                  <div class="clearfix l-unit__stat-col--left wide"><b><?php print __('Package');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left wide-5"><b><?php print __('Description');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center wide"><b><?php print __('Version');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Status');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide"><b><?php print _('Package');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide-5"><b><?php print _('Description');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center wide"><b><?php print _('Version');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print _('Status');?></b></div>
               </div>
             </div>
           </div>
@@ -69,7 +69,7 @@
                   <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="pkg[]" value="<?php echo $key ?>">
                 </div>
               <div class="clearfix l-unit__stat-col--left wide"><b><?=$key?></b></div>
-              <div class="clearfix l-unit__stat-col--left wide-5"><?=__($data[$key]['DESCR'])?></div>
+              <div class="clearfix l-unit__stat-col--left wide-5"><?=_($data[$key]['DESCR'])?></div>
               <div class="clearfix l-unit__stat-col--left text-center wide"><?=$data[$key]['VERSION'] ?> (<?=$data[$key]['ARCH']?>)</div>
               <div class="clearfix l-unit__stat-col--left text-center">
                   <? if ($data[$key]['UPDATED'] == 'no') {

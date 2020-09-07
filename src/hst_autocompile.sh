@@ -86,11 +86,11 @@ fi
 
 BUILD_ARCH='amd64'
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
-NGINX_V=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/nginx/control |grep "Version:" |cut -d' ' -f2)
+NGINX_V=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/nginx/control |grep "Version:" |cut -d' ' -f2 |cut -d"~" -f1)
 OPENSSL_V='1.1.1g'
 PCRE_V='8.44'
 ZLIB_V='1.2.11'
-PHP_V=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/php/control |grep "Version:" |cut -d' ' -f2)
+PHP_V=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/php/control |grep "Version:" |cut -d' ' -f2 |cut -d"~" -f1)
 
 # Create build directories
 rm -rf $BUILD_DIR
@@ -339,6 +339,7 @@ if [ "$PHP_B" = true ] ; then
                 --with-fpm-group=admin \
                 --with-libdir=lib/x86_64-linux-gnu \
                 --with-mysqli \
+                --with-gettext \
                 --with-curl \
                 --with-zip \
                 --with-gmp \

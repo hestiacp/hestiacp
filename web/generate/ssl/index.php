@@ -34,12 +34,12 @@ if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
 }
 
 // Check input
-if (empty($_POST['v_domain'])) $errors[] = __('Domain');
-if (empty($_POST['v_country'])) $errors[] = __('Country');
-if (empty($_POST['v_state'])) $errors[] = __('State');
-if (empty($_POST['v_locality'])) $errors[] = __('City');
-if (empty($_POST['v_org'])) $errors[] = __('Organization');
-if (empty($_POST['v_email'])) $errors[] = __('Email');
+if (empty($_POST['v_domain'])) $errors[] = _('Domain');
+if (empty($_POST['v_country'])) $errors[] = _('Country');
+if (empty($_POST['v_state'])) $errors[] = _('State');
+if (empty($_POST['v_locality'])) $errors[] = _('City');
+if (empty($_POST['v_org'])) $errors[] = _('Organization');
+if (empty($_POST['v_email'])) $errors[] = _('Email');
 $v_domain = $_POST['v_domain'];
 $v_email = $_POST['v_email'];
 $v_country = $_POST['v_country'];
@@ -56,7 +56,7 @@ if (!empty($errors[0])) {
             $error_msg = $error_msg.", ".$error;
         }
     }
-    $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
+    $_SESSION['error_msg'] = sprintf(_('Field "%s" can not be blank.'),$error_msg);
     render_page($user, $TAB, 'generate_ssl');
     unset($_SESSION['error_msg']);
     exit;
@@ -83,7 +83,7 @@ $v_org = $_POST['v_org'];
 // Check return code
 if ($return_var != 0) {
     $error = implode('<br>', $output);
-    if (empty($error)) $error = __('Error code:',$return_var);
+    if (empty($error)) $error = sprintf(_('Error code:'),$return_var);
     $_SESSION['error_msg'] = $error;
     render_page($user, $TAB, 'generate_ssl');
     unset($_SESSION['error_msg']);
@@ -91,7 +91,7 @@ if ($return_var != 0) {
 }
 
 // OK message
-$_SESSION['ok_msg'] = __('SSL_GENERATED_OK');
+$_SESSION['ok_msg'] = _('SSL_GENERATED_OK');
 
 // Parse output
 $data = json_decode(implode('', $output), true);

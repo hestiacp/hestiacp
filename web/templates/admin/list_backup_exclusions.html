@@ -1,8 +1,8 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a class="ui-button cancel" id="btn-back" href="/list/backup/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
-          <a href="/edit/backup/exclusions/" class="ui-button cancel" title="<?=__('Editing Backup Exclusions')?>"><i class="fas fa-pencil-alt status-icon orange"></i> <?=__('Editing Backup Exclusions')?></a>
+          <a class="ui-button cancel" id="btn-back" href="/list/backup/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
+          <a href="/edit/backup/exclusions/" class="ui-button cancel" title="<?=_('Editing Backup Exclusions')?>"><i class="fas fa-pencil-alt status-icon orange"></i> <?=_('Editing Backup Exclusions')?></a>
         </div>
         <div class="l-sort-toolbar clearfix">
           <table>
@@ -26,9 +26,9 @@
       <div class="header table-header">     
         <div class="l-unit__col l-unit__col--right">
           <div class="clearfix l-unit__stat-col--left super-compact">&nbsp;</div>
-          <div class="clearfix l-unit__stat-col--left wide-1"><b><?php print __('Type');?></b></div>
+          <div class="clearfix l-unit__stat-col--left wide-1"><b><?php print _('Type');?></b></div>
           <div class="clearfix l-unit__stat-col--left compact text-right"><b>&nbsp;</b></div>
-          <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print __('Value');?></b></div>
+          <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print _('Value');?></b></div>
         </div>
       </div>
 
@@ -45,7 +45,7 @@
           <div class="clearfix l-unit__stat-col--left compact text-right"><b>&nbsp;</b></div>
           <div class="clearfix l-unit__stat-col--left wide-3">
             <?
-              if (empty($value)) echo __('no exclusions');
+              if (empty($value)) echo _('no exclusions');
               foreach ($value as $ex_key => $ex_value) {
               echo '<b>'.$ex_key.' </b>'.$ex_value.'<br>';
               }

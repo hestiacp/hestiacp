@@ -68,7 +68,7 @@ ARCHIVE_DIR="$SRC_DIR/src/archive"
 if [ ! -z "$2" ]; then
   branch=$2
 else
-  echo -n "Please enter the name of the branch to build from (e.g. master): "
+  echo -n "Please enter the name of the branch to build from (e.g. main): "
   read branch
 fi
 
@@ -213,7 +213,7 @@ if [ "$NGINX_B" = true ] ; then
     download_file $ZLIB '-' | tar xz
 
     # Change to nginx directory
-    cd nginx-$NGINX_V
+    cd nginx-$(echo $NGINX_V |cut -d"~" -f1)
 
     # configure nginx
     ./configure   --prefix=/usr/local/hestia/nginx \
@@ -242,7 +242,7 @@ if [ "$NGINX_B" = true ] ; then
 
     # Cleare up unused files
     cd $BUILD_DIR
-    rm -r nginx-$NGINX_V openssl-$OPENSSL_V pcre-$PCRE_V zlib-$ZLIB_V
+    rm -r nginx-$(echo $NGINX_V |cut -d"~" -f1) openssl-$OPENSSL_V pcre-$PCRE_V zlib-$ZLIB_V
 
     # Prepare Deb Package Folder Structure
     cd hestia-nginx_$NGINX_V/
@@ -330,7 +330,7 @@ if [ "$PHP_B" = true ] ; then
     download_file $PHP '-' | tar xz
 
     # Change to php directory
-    cd php-$PHP_V
+    cd php-$(echo $PHP_V |cut -d"~" -f1)
 
     # Configure PHP
     ./configure   --prefix=/usr/local/hestia/php \
@@ -355,7 +355,7 @@ if [ "$PHP_B" = true ] ; then
 
     # Cleare up unused files
     cd $BUILD_DIR
-    rm -r php-$PHP_V
+    rm -r php-$(echo $PHP_V |cut -d"~" -f1)
 
     # Prepare Deb Package Folder Structure
     cd hestia-php_$PHP_V/

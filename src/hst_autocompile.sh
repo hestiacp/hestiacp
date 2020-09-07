@@ -87,10 +87,13 @@ fi
 BUILD_ARCH='amd64'
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
 NGINX_V=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/nginx/control |grep "Version:" |cut -d' ' -f2 |cut -d"~" -f1)
+NGINX_VERSION=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/nginx/control |grep "Version:" |cut -d' ' -f2)
+
 OPENSSL_V='1.1.1g'
 PCRE_V='8.44'
 ZLIB_V='1.2.11'
 PHP_V=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/php/control |grep "Version:" |cut -d' ' -f2 |cut -d"~" -f1)
+PHP_VERSION=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/php/control |grep "Version:" |cut -d' ' -f2)
 
 # Create build directories
 rm -rf $BUILD_DIR
@@ -296,6 +299,10 @@ if [ "$NGINX_B" = true ] ; then
     chown -R  root:root hestia-nginx_$NGINX_V
     dpkg-deb --build hestia-nginx_$NGINX_V
     mv *.deb $DEB_DIR
+    
+    if [ $NGINX_VERSION != $NGINX_V ]; then
+        mv hestia-nginx_$NGINX_V.deb hestia-nginx_$NGINX_VERSION.deb
+    fi
 
     # clear up the source folder
     rm -r hestia-nginx_$NGINX_V
@@ -395,6 +402,11 @@ if [ "$PHP_B" = true ] ; then
     cd $BUILD_DIR
     chown -R  root:root hestia-php_$PHP_V
     dpkg-deb --build hestia-php_$PHP_V
+    
+    if [ $PHP_VERSION != $PHP_V ]; then
+        mv hestia-php_$PHP_V.deb hestia-php_$PHP_VERSION.deb
+    fi
+    
     mv *.deb $DEB_DIR
 
     # clear up the source folder

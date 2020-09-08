@@ -42,6 +42,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue with PHPMyAdmin button (#1078)
 - Changed WordPress name in Webapp installer (#1074)
 - Add a free disk space validation during backup routine (#1115)
+- Removed PHP validation SSH keys allowing support other types then RSA / DSA
 
 
 ## [1.2.3] - Service Release

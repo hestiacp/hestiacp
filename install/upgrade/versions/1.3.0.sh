@@ -48,3 +48,8 @@ if [ -e $HESTIA/web/inc/i18n/en.php ]; then
     echo "[!] Clean up old language files"
     rm -fr $HESTIA/web/inc/i18n
 fi
+
+if [ -e "/etc/exim4/exim4.conf.template" ]; then
+    echo "[ * ] Updating exim4 configuration..."
+    sed -i 's/${if match {${lc:$mime_filename}}{\\N(\\.ade|\\.adp|\\.bat|\\.chm|\\.cmd|\\.com|\\.cpl|\\.exe|\\.hta|\\.ins|\\.isp|\\.jse|\\.lib|\\.lnk|\\.mde|\\.msc|\\.msp|\\.mst|\\.pif|\\.scr|\\.sct|\\.shb|\\.sys|\\.vb|\\.vbe|\\.vbs|\\.vxd|\\.wsc|\\.wsf|\\.wsh)$\\N}{1}{0}}/${if match {${lc:$mime_filename}}{\\N(\\.ace|\\.ade|\\.adp|\\.app|\\.arj|\\.asp|\\.aspx|\\.asx|\\.bas|\\.bat|\\.cab|\\.cer|\\.chm|\\.cmd|\\.cnt|\\.com|\\.cpl|\\.crt|\\.csh|\\.der|\\.diagcab|\\.dll|\\.efi|\\.exe|\\.fla|\\.fon|\\.fxp|\\.gadget|\\.grp|\\.hlp|\\.hpj|\\.hta|\\.htc|\\.img|\\.inf|\\.ins|\\.iso|\\.isp|\\.its|\\.jar|\\.jnlp|\\.js|\\.jse|\\.ksh|\\.lib|\\.lnk|\\.mad|\\.maf|\\.mag|\\.mam|\\.maq|\\.mar|\\.mas|\\.mat|\\.mau|\\.mav|\\.maw|\\.mcf|\\.mda|\\.mdb|\\.mde|\\.mdt|\\.mdw|\\.mdz|\\.msc|\\.msh|\\.msh1|\\.msh1xml|\\.msh2|\\.msh2xml|\\.mshxml|\\.msi|\\.msp|\\.mst|\\.msu|\\.ops|\\.osd|\\.pcd|\\.pif|\\.pl|\\.plg|\\.prf|\\.prg|\\.printerexport|\\.ps1|\\.ps1xml|\\.ps2|\\.ps2xml|\\.psc1|\\.psc2|\\.psd1|\\.psdm1|\\.pst|\\.py|\\.pyc|\\.pyo|\\.pyw|\\.pyz|\\.pyzw|\\.reg|\\.scf|\\.scr|\\.sct|\\.sfx|\\.shb|\\.shs|\\.swf|\\.sys|\\.theme|\\.tmp|\\.ttf|\\.url|\\.vb|\\.vba|\\.vbe|\\.vbp|\\.vbs|\\.vhd|\\.vhdx|\\.vsmacros|\\.vsw|\\.vxd|\\.webpnp|\\.website|\\.wim|\\.ws|\\.wsc|\\.wsf|\\.wsh|\\.xbap|\\.xll|\\.xnk)$\\N}{1}{0}}/g' /etc/exim4/exim4.conf.template
+fi

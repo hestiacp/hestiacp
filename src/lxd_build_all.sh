@@ -14,7 +14,7 @@
 
 # Configs:
 oslist=('debian=9,10' 'ubuntu=16.04,18.04,20.04')
-branch='master'
+branch='main'
 
 
 function setup_container() {

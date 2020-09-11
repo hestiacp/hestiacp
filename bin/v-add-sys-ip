@@ -78,7 +78,7 @@ if [ -z "$sys_ip_check" ]; then
             sys_ip="$sys_ip\n  version: 2"
             sys_ip="$sys_ip\n  renderer: networkd"
             sys_ip="$sys_ip\n  ethernets:"
-            sys_ip="$sys_ip\n    eth0:"
+            sys_ip="$sys_ip\n    $iface:"
             sys_ip="$sys_ip\n      addresses:"
             sys_ip="$sys_ip\n        - $ip/$cidr"
         fi

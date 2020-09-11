@@ -33,7 +33,7 @@ mariadb_v="10.4"
 software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     apparmor-utils awstats bc bind9 bsdmainutils bsdutils clamav-daemon
     cron curl dnsutils dovecot-imapd dovecot-pop3d e2fslibs e2fsprogs exim4
-    exim4-daemon-heavy expect fail2ban flex ftp git idn imagemagick
+    exim4-daemon-heavy expect fail2ban certbot flex ftp git idn imagemagick
     libapache2-mod-fcgid libapache2-mod-php$fpm_v libapache2-mod-rpaf
     lsof mc mariadb-client mariadb-common mariadb-server nginx
     php$fpm_v php$fpm_v-cgi php$fpm_v-common php$fpm_v-curl phpmyadmin
@@ -66,6 +66,7 @@ help() {
   -t, --spamassassin      Install SpamAssassin  [yes|no]  default: yes
   -i, --iptables          Install Iptables      [yes|no]  default: yes
   -b, --fail2ban          Install Fail2ban      [yes|no]  default: yes
+  -cb, --certbot          Install Certbot       [yes|no]  default: yes
   -q, --quota             Filesystem Quota      [yes|no]  default: no
   -d, --api               Activate API          [yes|no]  default: yes
   -r, --port              Change Backend Port             default: 8083
@@ -159,6 +160,7 @@ for arg; do
         --spamassassin)         args="${args}-t " ;;
         --iptables)             args="${args}-i " ;;
         --fail2ban)             args="${args}-b " ;;
+        --certbot)              args="${args}-cb " ;;
         --multiphp)             args="${args}-o " ;;
         --quota)                args="${args}-q " ;;
         --port)                 args="${args}-r " ;;
@@ -178,7 +180,7 @@ done
 eval set -- "$args"
 
 # Parsing arguments
-while getopts "a:n:w:v:j:k:m:g:d:x:z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
+while getopts "a:n:w:v:j:k:m:g:d:x:z:c:t:i:b:cb:r:o:q:l:y:s:e:p:D:fh" Option; do
     case $Option in
         a) apache=$OPTARG ;;            # Apache
         n) nginx=$OPTARG ;;             # Nginx
@@ -195,6 +197,7 @@ while getopts "a:n:w:v:j:k:m:g:d:x:z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
         t) spamd=$OPTARG ;;             # SpamAssassin
         i) iptables=$OPTARG ;;          # Iptables
         b) fail2ban=$OPTARG ;;          # Fail2ban
+        cb) certbot=$OPTARG ;;          # Certbot
         q) quota=$OPTARG ;;             # FS Quota
         r) port=$OPTARG ;;              # Backend Port
         l) lang=$OPTARG ;;              # Language
@@ -231,6 +234,7 @@ else
 fi
 set_default_value 'iptables' 'yes'
 set_default_value 'fail2ban' 'yes'
+set_default_value 'certbot' 'yes'
 set_default_value 'quota' 'no'
 set_default_value 'interactive' 'yes'
 set_default_value 'api' 'yes'
@@ -781,6 +785,9 @@ if [ "$postgresql" = 'no' ]; then
 fi
 if [ "$fail2ban" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/fail2ban//")
+fi
+if [ "$certbot" = 'no' ]; then
+    software=$(echo "$software" | sed -e "s/certbot//")
 fi
 if [ "$iptables" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/ipset//")

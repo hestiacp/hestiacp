@@ -514,7 +514,7 @@ update_domain_serial() {
         s_date=$(echo ${zn_serial:0:8})
         c_date=$(date +'%Y%m%d')
         if [ "$s_date" == "$c_date" ]; then
-            cur_value=$(echo ${zn_serial:8} )
+            cur_value=$(echo ${zn_serial:8:2} )
             new_value=$(expr $cur_value + 1 )
             len_value=$(expr length $new_value)
             if [ 1 -eq "$len_value" ]; then

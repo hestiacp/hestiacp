@@ -52,6 +52,7 @@ if [ -z "$db_data" ]; then
     exit $E_NOTEXIST
 fi
 
+parse_object_kv_list "$db_data"
 #Fix issue #1084 with "Upper case not allowed with PGSQL"
 if [ "$TYPE" == "pgsql" ]; then
    usersmall=$(echo "$user" | tr '[:upper:]' '[:lower:]');
@@ -83,7 +84,6 @@ tmpdir=$(mktemp -p $BACKUP -d "tmp.$database.XXXXXXXXXX" > /dev/null 2>&1)
 $BIN/v-suspend-database $owner $database > /dev/null 2>&1
 
 # Dump database
-parse_object_kv_list "$db_data"
 dump="$tmpdir/$database.$TYPE.sql"
 grants="$tmpdir/$database.$TYPE.$DBUSER"
 case $TYPE in

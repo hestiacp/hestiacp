@@ -81,6 +81,7 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
 
             msg=$($BIN/v-add-letsencrypt-domain $user $domain $aliases)
             if [ $? -ne 0 ]; then
+                echo $msg
                 log_event $E_INVALID "$domain $msg"
                 if [ -z "$fail_counter" ]; then
                     add_object_key "web" 'DOMAIN' "$domain" 'LETSENCRYPT_FAIL_COUNT' 'LETSENCRYPT'
@@ -116,6 +117,7 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
             ((lecounter++))
             msg=$($BIN/v-add-letsencrypt-domain $user $domain ' ' yes)
             if [ $? -ne 0 ]; then
+                echo $msg
                 log_event $E_INVALID "$domain $msg"
                 if [ -z "$fail_counter" ]; then
                     add_object_key "mail" 'DOMAIN' "$domain" 'LETSENCRYPT_FAIL_COUNT' 'LETSENCRYPT'

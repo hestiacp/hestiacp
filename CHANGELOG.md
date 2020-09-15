@@ -33,6 +33,7 @@ All notable changes to this project will be documented in this file.
 - Changed WordPress name in Webapp installer (#1074)
 - Add a free disk space validation during backup routine (#1115)
 - Removed PHP validation SSH keys allowing support other types then RSA / DSA
+- Fixed an issue which cause wrong password generation (#1184)
 - Fixed issue with v-add-sys-ip and saving the ip configuration to correct port (@madito)
 - Updated Exim black list for extensions (@kpapad904 / #1138)
 - Fixed multiple bugs due to translations 

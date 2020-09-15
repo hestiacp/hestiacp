@@ -189,7 +189,7 @@ generate_password() {
         matrix="A-Za-z0-9"
     fi
     if [ -z "$length" ]; then
-        length=10
+        length=16
     fi
     head /dev/urandom | tr -dc $matrix | head -c$length
 }

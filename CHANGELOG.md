@@ -43,6 +43,7 @@ All notable changes to this project will be documented in this file.
 - Changed WordPress name in Webapp installer (#1074)
 - Add a free disk space validation during backup routine (#1115)
 - Removed PHP validation SSH keys allowing support other types then RSA / DSA
+- Fixed an issue which cause wrong password generation (#1184)
 
 
 ## [1.2.3] - Service Release

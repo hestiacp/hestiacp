@@ -107,7 +107,7 @@ download_file() {
 
 # Defining password-gen function
 gen_pass() {
-    cat /dev/urandom | tr -dc [:alnum:] | head -c16
+    head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16
 }
 
 # Defining return code check function

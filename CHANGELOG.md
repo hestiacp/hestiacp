@@ -12,17 +12,7 @@ All notable changes to this project will be documented in this file.
 - Support for removing backup remote location (#1083)
 - Add support Proftpd TLS Support
 - Add the possibility to assign user "Administrators" rights on login. Replaces "root" login. Notifications are only send towards the "admin" account email
-- Updated translations system with the use of Gettext following languages are current supported 
-    - English
-    - German
-    - French
-    - Italian
-    - Spanish
-    - Chinese
-    - Greek
-    - Russian
-    - Ukrainian
-    - Dutch
+- Updated translations system with the use of Gettext. Modified / Updated all translated strings
 
 ## Bugfixes
 - Removed root login (root / root password )
@@ -44,6 +34,13 @@ All notable changes to this project will be documented in this file.
 - Add a free disk space validation during backup routine (#1115)
 - Removed PHP validation SSH keys allowing support other types then RSA / DSA
 - Fixed an issue which cause wrong password generation (#1184)
+- Fixed issue with v-add-sys-ip and saving the ip configuration to correct port (@madito)
+- Updated Exim black list for extensions (@kpapad904 / #1138)
+- Fixed multiple bugs due to translations 
+- Fixed bug with passwords containing "'" [Forum](https://forum.hestiacp.com/t/two-factor-authentication-issue-with-standard-user/1652/)
+- Refactor LXD  Complier script
+- Set default theme to "Dark"
+- Clean up gmail.tpl (DNS) (@madito)
 
 
 ## [1.2.3] - Service Release

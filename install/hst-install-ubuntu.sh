@@ -1837,7 +1837,7 @@ fi
 $HESTIA/bin/v-change-sys-port $port > /dev/null 2>&1
 
 # Set default theme
-$HESTIA/bin/v-change-sys-theme 'default'
+$HESTIA/bin/v-change-sys-theme 'dark'
 
 # Update remaining packages since repositories have changed
 echo -ne "[ * ] Installing remaining software updates..."

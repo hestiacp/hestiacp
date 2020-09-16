@@ -100,8 +100,6 @@ server {
     }
 
     location / {
-        try_files $uri $uri/ /index.php?$args;
-
         if (!-e $request_filename)
         {
             rewrite ^(.+)$ /index.php?q=$1 last;
@@ -115,7 +113,9 @@ server {
         location ~ [^/]\.php(/|$) {
 	    fastcgi_split_path_info ^(.+\.php)(/.+)$;
             fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-            try_files $fastcgi_script_name /index.php$uri&$args =404;
+            if (!-f $document_root$fastcgi_script_name) {
+                return  404;
+            }
             fastcgi_pass %backend_lsnr%;
             fastcgi_index index.php;
             include /etc/nginx/fastcgi_params;

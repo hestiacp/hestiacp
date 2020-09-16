@@ -11,9 +11,9 @@ server {
     access_log  /var/log/nginx/domains/%domain%.log combined;
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;
     error_log   /var/log/nginx/domains/%domain%.error.log error;
-        
+
     include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
-    
+
     location = /favicon.ico {
         log_not_found off;
         access_log off;
@@ -25,46 +25,9 @@ server {
         access_log off;
     }
 
-     # Gzip Settings, convert all types.
-    gzip on;
-    gzip_vary on;
-    gzip_proxied any;
-
-    # Can be enhance to 5, but it can slow you server
-    # gzip_comp_level    5;
-    # gzip_min_length    256;
-
-    gzip_types
-        application/atom+xml
-        application/javascript
-        application/json
-        application/ld+json
-        application/manifest+json
-        application/rss+xml
-        application/vnd.geo+json
-        application/vnd.ms-fontobject
-        application/x-font-ttf
-        application/x-web-app-manifest+json
-        application/xhtml+xml
-        application/xml
-        font/opentype
-        image/bmp
-        image/svg+xml
-        image/x-icon
-        text/cache-manifest
-        text/css
-        text/plain
-        text/vcard
-        text/vnd.rim.location.xloc
-        text/vtt
-        text/x-component
-        text/x-cross-domain-policy;
-
-    gzip_disable "MSIE [1-6]\.(?!.*SV1)";
-
-    # Cloudflare / Max CDN fix
-    location ~* \.(eot|otf|ttf|woff(?:2)?)$ {
-        add_header Access-Control-Allow-Origin *;
+    location ~ /\.(?!well-known\/) {
+        deny all;
+        return 404;
     }
 
     # Force pdf files to be downloaded
@@ -73,7 +36,7 @@ server {
         add_header X-Content-Type-Options nosniff;
     }
 
-    # Force files inupload directory to be downloaded
+    # Force files in upload directory to be downloaded
     location ~ ^/upload/ {
         add_header Content-Disposition Attachment;
         add_header X-Content-Type-Options nosniff;
@@ -107,25 +70,32 @@ server {
     # Source code directories
     location ~ ^/(app|bin|cache|classes|config|controllers|docs|localization|override|src|tests|tools|translations|travis-scripts|vendor|var)/ {
         deny all;
+	return 404;
     }
+    
     # vendor in modules directory
     location ~ ^/modules/.*/vendor/ {
         deny all;
+	return 404;
     }
+    
     # Prevent exposing other sensitive files
     location ~ \.(yml|log|tpl|twig|sass)$ {
         deny all;
+	return 404;
     }
 
     # Prevent injection of php files
     location /upload {
         location ~ \.php$ {
             deny all;
+	    return 404;
         }
     }
     location /img {
         location ~ \.php$ {
             deny all;
+	    return 404;
         }
     }
 
@@ -137,37 +107,27 @@ server {
             rewrite ^(.+)$ /index.php?q=$1 last;
         }
 
-        location ~* ^.+\.(jpeg|jpg|png|gif|bmp|ico|svg|css|js)$ {
-            expires     max;
-			fastcgi_hide_header "Set-Cookie";
+        location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
+            expires 30d;
+            fastcgi_hide_header "Set-Cookie";
         }
 
-		location ~ [^/]\.php(/|$) {
+        location ~ [^/]\.php(/|$) {
+	    fastcgi_split_path_info ^(.+\.php)(/.+)$;
             fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-
             try_files $fastcgi_script_name /index.php$uri&$args =404;
-
-            # Environment variables for PHP
-            fastcgi_split_path_info ^(.+\.php)(/.+)$;
-
-            fastcgi_pass    %backend_lsnr%;
-            fastcgi_index   index.php;
-            include         /etc/nginx/fastcgi_params;
+            fastcgi_pass %backend_lsnr%;
+            fastcgi_index index.php;
+            include /etc/nginx/fastcgi_params;
         }
     }
 
-    error_page  403 /error/404.html;
-    error_page  404 /index.php?controller=404;
-    error_page  500 502 503 504 /error/50x.html;
-
+    error_page 403 /error/404.html;
+    error_page 404 /index.php?controller=404;
+    error_page 500 502 503 504 /error/50x.html;
 
     location /error/ {
         alias   %home%/%user%/web/%domain%/document_errors/;
-    }
-
-    location ~* "/\.(htaccess|htpasswd)$" {
-        deny    all;
-        return  404;
     }
 
     location /vstats/ {
@@ -177,7 +137,5 @@ server {
 
     include     /etc/nginx/conf.d/phpmyadmin.inc*;
     include     /etc/nginx/conf.d/phppgadmin.inc*;
-    include     /etc/nginx/conf.d/webmail.inc*;
-
     include     %home%/%user%/conf/web/%domain%/nginx.conf_*;
 }

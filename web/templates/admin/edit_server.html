@@ -615,6 +615,20 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text">
+                                                <?php print _('Compression') ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_backup_mode">
+                                                    <option value='gzip' <?php if($v_backup_mode == 'gzip') echo 'selected' ?>>gzip</option>
+                                                    <option value='zstd' <?php if($v_backup_mode == 'zstd') echo 'selected' ?>>zstd</option>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text">
                                                 <?php print _('Compression level') ?>
                                             </td>
                                         </tr>

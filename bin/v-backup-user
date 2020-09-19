@@ -245,11 +245,11 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
         set +f
 
         # Backup files
-        #if [ "$BACKUP_MODE" = 'zstd' ]; then
-        #    tar ${fargs[@]} -cpf- * | zstd -$BACKUP_GZIP - > $tmpdir/web/$domain/domain_data.tar.zst
-        #else    
-        #    tar ${fargs[@]} -cpf- * | gzip -$BACKUP_GZIP - > $tmpdir/web/$domain/domain_data.tar.gz
-        #fi
+        if [ "$BACKUP_MODE" = 'zstd' ]; then
+            tar ${fargs[@]} -cpf- * | zstd -$BACKUP_GZIP - > $tmpdir/web/$domain/domain_data.tar.zst
+        else    
+            tar ${fargs[@]} -cpf- * | gzip -$BACKUP_GZIP - > $tmpdir/web/$domain/domain_data.tar.gz
+        fi
     done
 
     # Print total

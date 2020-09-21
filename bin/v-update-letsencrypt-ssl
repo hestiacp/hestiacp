@@ -64,7 +64,8 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
 
             # Split aliases into array
             IFS=',' read -r -a ALIASES <<< "$ALIAS"
-
+            #unset f_aliases
+            f_aliases=''
             # Loop through all crt aliases
             for alias in ${aliases//,/ } ; do
                 # Validate if the alias still exists in web.conf

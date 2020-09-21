@@ -107,7 +107,7 @@ download_file() {
 
 # Defining password-gen function
 gen_pass() {
-    cat /dev/urandom | tr -dc [:alnum:] | head -c16
+    head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16
 }
 
 # Defining return code check function
@@ -1798,7 +1798,7 @@ fi
 $HESTIA/bin/v-change-sys-port $port > /dev/null 2>&1
 
 # Set default theme
-$HESTIA/bin/v-change-sys-theme 'default'
+$HESTIA/bin/v-change-sys-theme 'dark'
 
 # Update remaining packages since repositories have changed
 echo -ne "[ * ] Installing remaining software updates..."

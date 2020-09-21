@@ -37,7 +37,6 @@ $v_web_apps = [
 
     [ 'name'=>'Opencart',   'group'=>'ecommerce', 'enabled'=>true,  'version'=>'3.0.3.3', 'thumbnail'=>'/images/webapps/opencart-thumb.png' ],
     [ 'name'=>'Prestashop', 'group'=>'ecommerce', 'enabled'=>true, 'version'=>'1.7.6.5', 'thumbnail'=>'/images/webapps/prestashop-thumb.png' ],
-    [ 'name'=>'Magento',    'group'=>'ecommerce', 'enabled'=>false, 'version'=>'latest', 'thumbnail'=>'/images/webapps/magento-thumb.png' ],
 
     [ 'name'=>'Laravel', 'group'=>'starter', 'enabled'=>true, 'version'=>'7.x', 'thumbnail'=>'/images/webapps/laravel-thumb.png' ],
     [ 'name'=>'Symfony', 'group'=>'starter', 'enabled'=>true, 'version'=>'4.3.x', 'thumbnail'=>'/images/webapps/symfony-thumb.png' ],
@@ -60,7 +59,7 @@ if (!empty($_GET['app'])) {
             exit();
         }
     } else {
-        $_SESSION['error_msg'] = "${app} installer missing";
+        $_SESSION['error_msg'] = sprintf(_('%s installer missing'),$app);
     }
 }
 
@@ -80,7 +79,7 @@ if (!empty($_POST['ok']) && !empty($app) ) {
                 if(!empty($result))
                     $_SESSION['error_msg'] = implode(PHP_EOL, $result);
             } else {
-                $_SESSION['ok_msg'] = htmlspecialchars($app) . " App was installed succesfully !";
+                $_SESSION['ok_msg'] = sprintf(_('%s App was installed succesfully!'),htmlspecialchars($app));
                 header('Location: /add/webapp/?domain=' . $v_domain);
                 exit();
             }

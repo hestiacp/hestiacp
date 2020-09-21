@@ -186,12 +186,12 @@ generate_password() {
     matrix=$1
     length=$2
     if [ -z "$matrix" ]; then
-        matrix=[:alnum:]
+        matrix="A-Za-z0-9"
     fi
     if [ -z "$length" ]; then
-        length=10
+        length=16
     fi
-    cat /dev/urandom | tr -dc $matrix | head -c$length
+    head /dev/urandom | tr -dc $matrix | head -c$length
 }
 
 # Package existence check

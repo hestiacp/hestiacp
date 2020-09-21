@@ -23,7 +23,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.3.0~alpha'
+HESTIA_INSTALL_VER='1.3.0~beta'
 pma_v='5.0.2'
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
 fpm_v="7.3"
@@ -44,7 +44,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     postgresql postgresql-contrib proftpd-basic quota roundcube-core
     roundcube-mysql roundcube-plugins rrdtool rssh spamassassin sudo hestia=${HESTIA_INSTALL_VER}
     hestia-nginx hestia-php vim-common vsftpd whois zip acl sysstat setpriv
-    ipset libonig5 libzip5 openssh-server ssh zstd"
+    ipset libonig5 libzip5 openssh-server zstd"
 
 installer_dependencies="apt-transport-https curl dirmngr gnupg wget software-properties-common ca-certificates"
 
@@ -89,7 +89,7 @@ download_file() {
 
 # Defining password-gen function
 gen_pass() {
-    cat /dev/urandom | tr -dc [:alnum:] | head -c16
+    head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16
 }
 
 # Defining return code check function
@@ -1838,7 +1838,7 @@ fi
 $HESTIA/bin/v-change-sys-port $port > /dev/null 2>&1
 
 # Set default theme
-$HESTIA/bin/v-change-sys-theme 'default'
+$HESTIA/bin/v-change-sys-theme 'dark'
 
 # Update remaining packages since repositories have changed
 echo -ne "[ * ] Installing remaining software updates..."

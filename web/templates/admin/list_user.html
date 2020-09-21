@@ -93,7 +93,6 @@
             $spnd_confirmation = _('SUSPEND_USER_CONFIRMATION');
           }
       ?>
-
       <div class="l-unit  <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['USER'][$key] == 1) echo ' l-unit--starred';?>" v_section="user"
 v_unit_id="<?=$key?>" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>"
 sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DISK']?>" sort-star="<? if($_SESSION['favourites']['USER'][$key] == 1) echo '1'; else echo '0'; ?>">
@@ -101,7 +100,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
           <div class="clearfix l-unit__stat-col--left super-compact">
             <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="user[]" value="<?=$key?>">
           </div>
-              <div class="clearfix l-unit__stat-col--left wide-3 userlist-username"><b><a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('login as')?> <?=$key?>"><?=$key?> <span style="font-weight: normal !important;">(<?php echo _($data[$key]['NAME']);?>)</span></b></a>
+              <div class="clearfix l-unit__stat-col--left wide-3 userlist-username"><b><a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('login as')?> <?=$key?>"><?=$key?> <span style="font-weight: normal !important;">(<?php echo $data[$key]['NAME'];?>)</span></b></a>
                 <br />
                 <div class="userlist-email"><b><?=_('Email')?>:</b> <?=$data[$key]['CONTACT']?></div>
               </div>

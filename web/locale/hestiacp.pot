@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-07 15:34+0200\n"
+"POT-Creation-Date: 2020-09-07 23:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -568,7 +568,7 @@ msgstr ""
 #: ../../web/templates/user/edit_web.html:4
 #: ../../web/templates/user/list_search.html:4
 #: ../../web/templates/user/list_mail_acc.html:4
-#: ../../web/templates/reset2fa.html:55
+#: ../../web/templates/reset2fa.html:60
 #: ../../web/templates/admin/list_firewall_ipset.html:4
 #: ../../web/templates/admin/edit_server_bind9.html:4
 #: ../../web/templates/admin/edit_server_mysql.html:4
@@ -623,7 +623,7 @@ msgstr ""
 #: ../../web/templates/admin/list_backup_exclusions.html:4
 #: ../../web/templates/admin/add_user.html:4
 #: ../../web/templates/admin/edit_server_httpd.html:4
-#: ../../web/templates/reset_1.html:41 ../../web/templates/login_1.html:43
+#: ../../web/templates/reset_1.html:46 ../../web/templates/login_1.html:43
 #: ../../web/templates/reset_2.html:36 ../../web/templates/reset_3.html:44
 msgid "Back"
 msgstr ""
@@ -2311,7 +2311,9 @@ msgstr ""
 #: ../../web/templates/admin/list_services.html:55
 #: ../../web/templates/admin/list_weblog.html:6
 #: ../../web/templates/admin/list_server_info.html:6
-#: ../../web/templates/login.html:8 ../../web/templates/login_1.html:8
+#: ../../web/templates/reset_1.html:8 ../../web/templates/login.html:8
+#: ../../web/templates/login_1.html:8 ../../web/templates/reset_2.html:8
+#: ../../web/templates/reset_3.html:8
 msgid "Hestia Control Panel"
 msgstr ""
 
@@ -2348,6 +2350,10 @@ msgid "2FA Reset Code"
 msgstr ""
 
 #: ../../web/templates/reset2fa.html:54 ../../web/templates/reset_1.html:40
+msgid "RESET_NOTICE"
+msgstr ""
+
+#: ../../web/templates/reset2fa.html:59 ../../web/templates/reset_1.html:45
 msgid "Submit"
 msgstr ""
 

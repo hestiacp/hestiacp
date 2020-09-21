@@ -56,4 +56,4 @@ fi
 
 # Change backup mode to zstd.
  echo "[ * ] Enable new backup compression zstd as default."
- $HESTIA/v-change-sys-config-value "BACKUP_MODE" "zstd"
+ $BIN/v-change-sys-config-value "BACKUP_MODE" "zstd"

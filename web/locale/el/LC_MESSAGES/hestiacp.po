@@ -11,16 +11,28 @@ msgstr ""
 "Language: el_GR\n"
 "Project-Id-Version: Hestia CP\n"
 
+#: ../../web/templates/admin/edit_server.html:618
+msgid "Compression"
+msgstr ""
+
+#: ../../web/add/webapp/index.php:62
+msgid "%s installer missing"
+msgstr ""
+
+#: ../../web/add/webapp/index.php:82
+msgid "%s App was installed succesfully!"
+msgstr ""
+
+#: ../../web/update/hestia/index.php:22
+msgid "Error: %s update failed"
+msgstr ""
+
 #: ../../web/restart/service/index.php:25
 msgid "Restart \"%s\" failed"
 msgstr ""
 
 #: ../../web/start/service/index.php:25
 msgid "Start \"%s\" failed"
-msgstr ""
-
-#: ../../web/copy/package/index.php:34
-msgid "Error: unable to copy package."
 msgstr ""
 
 #: ../../web/add/user/index.php:101
@@ -39,49 +51,57 @@ msgstr ""
 msgid "Error: Hestia did not return any output."
 msgstr ""
 
-#: ../../web/templates/user/edit_web.html:261
-#: ../../web/templates/admin/edit_web.html:248
 #: ../../web/templates/admin/add_web.html:200
+#: ../../web/templates/admin/edit_web.html:248
+#: ../../web/templates/user/edit_web.html:261
 msgid "Custom document root"
 msgstr ""
 
-#: ../../web/templates/user/edit_web.html:269
-#: ../../web/templates/admin/edit_web.html:256
 #: ../../web/templates/admin/add_web.html:208
+#: ../../web/templates/admin/edit_web.html:256
+#: ../../web/templates/user/edit_web.html:269
 msgid "Point to"
 msgstr ""
 
-#: ../../web/templates/user/panel.html:15
 #: ../../web/templates/admin/panel.html:15
+#: ../../web/templates/user/panel.html:15
 msgid "Files"
 msgstr ""
 
-#: ../../web/templates/admin/edit_user.html:143
+#: ../../web/templates/admin/edit_user.html:145
 #: ../../web/templates/admin/add_user.html:136
 msgid "Role"
 msgstr ""
 
-#: ../../web/templates/admin/edit_user.html:150
+#: ../../web/templates/admin/edit_user.html:152
 #: ../../web/templates/admin/add_user.html:143
 msgid "Administrator"
 msgstr ""
 
-#: ../../web/templates/admin/list_dns.html:71
 #: ../../web/templates/admin/list_web.html:70
+#: ../../web/templates/admin/list_dns.html:71
+#: ../../web/templates/user/list_web.html:75
+#: ../../web/templates/user/list_dns.html:70
 msgid "UNSUSPEND_DOMAIN_CONFIRMATION"
 msgstr "Είστε σίγουρος πως θέλετε να αρθεί ο αποκλεισμός του Domain %s;"
 
-#: ../../web/templates/admin/list_dns.html:76
 #: ../../web/templates/admin/list_web.html:75
 #: ../../web/templates/admin/list_mail.html:76
 #: ../../web/templates/admin/list_mail.html:81
+#: ../../web/templates/admin/list_dns.html:76
+#: ../../web/templates/user/list_web.html:80
+#: ../../web/templates/user/list_mail.html:75
+#: ../../web/templates/user/list_mail.html:80
+#: ../../web/templates/user/list_dns.html:75
 msgid "SUSPEND_DOMAIN_CONFIRMATION"
 msgstr "Είστε σίγουρος πως θέλετε να αποκλείσετε τo Domain %s;"
 
-#: ../../web/templates/admin/edit_web.html:468
-#: ../../web/templates/admin/edit_web.html:544
 #: ../../web/templates/admin/add_web.html:333
 #: ../../web/templates/admin/add_web.html:405
+#: ../../web/templates/admin/edit_web.html:468
+#: ../../web/templates/admin/edit_web.html:544
+#: ../../web/templates/user/edit_web.html:482
+#: ../../web/templates/user/edit_web.html:558
 msgid "Prefix %s will be added to username automatically"
 msgstr ""
 
@@ -97,15 +117,17 @@ msgstr "Αποστολή ειδοποίησης μέσω email όταν έχει
 msgid "SYSTEM_UPGRADE_SEND_EMAIL_LOG"
 msgstr "Αποστολή καταγραφής εγκατάστασης ενημέρωσης μέσω email"
 
-#: ../../web/templates/admin/edit_server.html:845
+#: ../../web/templates/admin/edit_server.html:884
 msgid "Filemanager"
 msgstr ""
 
 #: ../../web/templates/admin/list_cron.html:75
+#: ../../web/templates/user/list_cron.html:75
 msgid "UNSUSPEND_CRON_CONFIRMATION"
 msgstr "Είστε σίγουρος πως θέλετε να αρθεί ο αποκλεισμός του cron job;"
 
 #: ../../web/templates/admin/list_cron.html:80
+#: ../../web/templates/user/list_cron.html:80
 msgid "SUSPEND_CRON_CONFIRMATION"
 msgstr "Είστε σίγουρος πως θέλετε να αποκλείσετε το cron job;"
 
@@ -134,18 +156,22 @@ msgid "SUSPEND_RULE_CONFIRMATION"
 msgstr "Είστε σίγουρος πως θέλετε να αποκλείσετε τον κανόνα  #%s?"
 
 #: ../../web/templates/admin/list_db.html:99
+#: ../../web/templates/user/list_db.html:98
 msgid "UNSUSPEND_DATABASE_CONFIRMATION"
 msgstr "Είστε σίγουρος πως θέλετε να αρθεί ο αποκλεισμός της βάσης δεδομένων%s;"
 
 #: ../../web/templates/admin/list_db.html:104
+#: ../../web/templates/user/list_db.html:103
 msgid "SUSPEND_DATABASE_CONFIRMATION"
 msgstr "Είστε σίγουρος πως θέλετε να αποκλείσετε την βάση δεδομένων %s;"
 
 #: ../../web/templates/admin/list_mail_acc.html:72
+#: ../../web/templates/user/list_mail_acc.html:72
 msgid "UNSUSPEND_MAIL_ACCOUNT_CONFIRMATION"
 msgstr "Είστε σίγουρος πως θέλετε να αρθεί ο αποκλεισμός του %s;"
 
 #: ../../web/templates/admin/list_mail_acc.html:77
+#: ../../web/templates/user/list_mail_acc.html:77
 msgid "SUSPEND_MAIL_ACCOUNT_CONFIRMATION"
 msgstr "Είστε σίγουρος πως θέλετε να αποκλείσετε το %s;"
 
@@ -153,39 +179,43 @@ msgstr "Είστε σίγουρος πως θέλετε να αποκλείσε�
 msgid "Stop \"%s\" failed"
 msgstr ""
 
-#: ../../web/templates/admin/edit_db.html:95
-#: ../../web/templates/admin/edit_user.html:82
+#: ../../web/templates/admin/edit_user.html:84
 #: ../../web/templates/admin/add_db.html:97
-#: ../../web/templates/admin/add_mail_acc.html:81
 #: ../../web/templates/admin/edit_mail_acc.html:82
+#: ../../web/templates/admin/edit_db.html:95
+#: ../../web/templates/admin/add_mail_acc.html:81
 #: ../../web/templates/admin/add_user.html:77
+#: ../../web/templates/user/edit_user.html:82
 msgid "Your password must have at least"
 msgstr ""
 
-#: ../../web/templates/admin/edit_db.html:97
-#: ../../web/templates/admin/edit_user.html:84
+#: ../../web/templates/admin/edit_user.html:86
 #: ../../web/templates/admin/add_db.html:99
-#: ../../web/templates/admin/add_mail_acc.html:83
 #: ../../web/templates/admin/edit_mail_acc.html:84
+#: ../../web/templates/admin/edit_db.html:97
+#: ../../web/templates/admin/add_mail_acc.html:83
 #: ../../web/templates/admin/add_user.html:79
+#: ../../web/templates/user/edit_user.html:84
 msgid "8 characters long"
 msgstr ""
 
-#: ../../web/templates/admin/edit_db.html:98
-#: ../../web/templates/admin/edit_user.html:85
+#: ../../web/templates/admin/edit_user.html:87
 #: ../../web/templates/admin/add_db.html:100
-#: ../../web/templates/admin/add_mail_acc.html:84
 #: ../../web/templates/admin/edit_mail_acc.html:85
+#: ../../web/templates/admin/edit_db.html:98
+#: ../../web/templates/admin/add_mail_acc.html:84
 #: ../../web/templates/admin/add_user.html:80
+#: ../../web/templates/user/edit_user.html:85
 msgid "1 uppercase & 1 lowercase character"
 msgstr ""
 
-#: ../../web/templates/admin/edit_db.html:99
-#: ../../web/templates/admin/edit_user.html:86
+#: ../../web/templates/admin/edit_user.html:88
 #: ../../web/templates/admin/add_db.html:101
-#: ../../web/templates/admin/add_mail_acc.html:85
 #: ../../web/templates/admin/edit_mail_acc.html:86
+#: ../../web/templates/admin/edit_db.html:99
+#: ../../web/templates/admin/add_mail_acc.html:85
 #: ../../web/templates/admin/add_user.html:81
+#: ../../web/templates/user/edit_user.html:86
 msgid "1 number"
 msgstr ""
 
@@ -201,8 +231,12 @@ msgstr ""
 msgid "Welcome"
 msgstr "Καλωσήρθατε"
 
-#: ../../web/templates/login_2.html:42 ../../web/templates/login_1.html:42
+#: ../../web/templates/login_1.html:42 ../../web/templates/login_2.html:40
 msgid "Login"
+msgstr ""
+
+#: ../../web/templates/admin/list_services.html:61
+msgid "Production release"
 msgstr ""
 
 #: ../../web/templates/admin/add_user.html:107
@@ -221,33 +255,33 @@ msgstr "Διακομιστής"
 msgid "Submit an issue report"
 msgstr "Submit an issue report"
 
-#: ../../web/templates/login.html:35
+#: ../../web/templates/login.html:35 ../../web/templates/login_a.html:45
 msgid "Next"
 msgstr ""
 
-#: ../../web/templates/login_2.html:18
+#: ../../web/templates/login_2.html:16
 msgid "2 Factor Authentication"
 msgstr "Έλεγχος ταυτότητας δύο παραγόντων"
 
-#: ../../web/templates/user/list_web.html:64
-#: ../../web/templates/user/list_mail.html:60
 #: ../../web/templates/admin/list_web.html:59
 #: ../../web/templates/admin/list_mail.html:61
+#: ../../web/templates/user/list_web.html:64
+#: ../../web/templates/user/list_mail.html:60
 msgid "SSL"
 msgstr ""
 
-#: ../../web/templates/user/list_web.html:139
 #: ../../web/templates/admin/list_web.html:134
+#: ../../web/templates/user/list_web.html:139
 msgid "Edit"
 msgstr ""
 
-#: ../../web/templates/user/list_web.html:222
 #: ../../web/templates/admin/list_web.html:217
+#: ../../web/templates/user/list_web.html:222
 msgid "1 web domain"
 msgstr "1 τομέας web"
 
-#: ../../web/templates/user/list_web.html:224
 #: ../../web/templates/admin/list_web.html:219
+#: ../../web/templates/user/list_web.html:224
 msgid "%s web domains"
 msgstr "%s τομείς web"
 
@@ -256,8 +290,8 @@ msgid "Adding Package"
 msgstr "Προσθήκη Πακέτου"
 
 #: ../../web/templates/admin/edit_package.html:53
-#: ../../web/templates/admin/list_packages.html:9
 #: ../../web/templates/admin/add_package.html:55
+#: ../../web/templates/admin/list_packages.html:9
 msgid "Package Name"
 msgstr "Όνομα Πακέτου"
 
@@ -285,84 +319,84 @@ msgstr "DNS domains"
 msgid "Name servers"
 msgstr "Διακομιστές ονομάτων"
 
-#: ../../web/templates/user/list_mail.html:4
 #: ../../web/templates/admin/list_mail.html:4
+#: ../../web/templates/user/list_mail.html:4
 msgid "Add Mail Domain"
 msgstr "Προσθήκη Domain Ταχυδρομείου"
 
-#: ../../web/templates/user/list_mail.html:9
-#: ../../web/templates/user/list_mail.html:55
 #: ../../web/templates/admin/list_mail.html:9
 #: ../../web/templates/admin/list_mail.html:56
+#: ../../web/templates/user/list_mail.html:9
+#: ../../web/templates/user/list_mail.html:55
 msgid "Accounts"
 msgstr "Λογαριασμοί"
 
-#: ../../web/templates/user/list_mail.html:59
 #: ../../web/templates/admin/list_mail.html:60
+#: ../../web/templates/user/list_mail.html:59
 msgid "DKIM"
 msgstr ""
 
-#: ../../web/templates/user/list_mail.html:217
 #: ../../web/templates/admin/list_mail.html:218
+#: ../../web/templates/user/list_mail.html:217
 msgid "1 mail domain"
 msgstr "1 τομέας αλληλογραφίας"
 
-#: ../../web/templates/user/list_mail.html:219
 #: ../../web/templates/admin/list_mail.html:220
+#: ../../web/templates/user/list_mail.html:219
 msgid "%s mail domains"
 msgstr "%s τομείς αλληλογραφίας"
 
-#: ../../web/templates/user/list_user.html:6
 #: ../../web/templates/admin/list_user.html:6
+#: ../../web/templates/user/list_user.html:6
 msgid "Add User"
 msgstr "Προσθήκη Χρήστη"
 
-#: ../../web/templates/user/list_user.html:7
 #: ../../web/templates/admin/list_user.html:7
+#: ../../web/templates/user/list_user.html:7
 msgid "Packages"
 msgstr "Πακέτα"
 
-#: ../../web/templates/user/list_user.html:43
 #: ../../web/templates/admin/list_user.html:39
+#: ../../web/templates/user/list_user.html:43
 msgid "rebuild web"
 msgstr "Επαναδημιουργία ιστοσελίδας"
 
-#: ../../web/templates/user/list_user.html:44
 #: ../../web/templates/admin/list_user.html:40
+#: ../../web/templates/user/list_user.html:44
 msgid "rebuild dns"
 msgstr "Επαναδημιουργία dns"
 
-#: ../../web/templates/user/list_user.html:45
 #: ../../web/templates/admin/list_user.html:41
+#: ../../web/templates/user/list_user.html:45
 msgid "rebuild mail"
 msgstr "Επαναδημιουργία ταχυδρομείου"
 
-#: ../../web/templates/user/list_user.html:46
 #: ../../web/templates/admin/list_user.html:42
+#: ../../web/templates/user/list_user.html:46
 msgid "rebuild db"
 msgstr "Επαναδημιουργία βάσης δεδομένων"
 
-#: ../../web/templates/user/list_user.html:47
 #: ../../web/templates/admin/list_user.html:43
+#: ../../web/templates/user/list_user.html:47
 msgid "rebuild cron"
 msgstr "Επαναδημιουργία cron"
 
-#: ../../web/templates/user/list_user.html:48
 #: ../../web/templates/admin/list_user.html:44
+#: ../../web/templates/user/list_user.html:48
 msgid "update counters"
 msgstr "Ενημέρωση μετρητών"
 
-#: ../../web/templates/admin/list_user.html:135
+#: ../../web/templates/admin/list_user.html:134
 msgid "DELETE_USER_CONFIRMATION"
 msgstr "Είστε σίγουρος πως θέλετε να διαγράψετε τον χρήστη %s;"
 
-#: ../../web/templates/user/list_user.html:142
-#: ../../web/templates/admin/list_user.html:166
+#: ../../web/templates/admin/list_user.html:165
+#: ../../web/templates/user/list_user.html:133
 msgid "1 user account"
 msgstr "1 λογαριασμός χρήστη"
 
-#: ../../web/templates/user/list_user.html:144
-#: ../../web/templates/admin/list_user.html:168
+#: ../../web/templates/admin/list_user.html:167
+#: ../../web/templates/user/list_user.html:135
 msgid "%s user accounts"
 msgstr "%s λογαριασμοί χρηστών"
 
@@ -394,9 +428,9 @@ msgstr "Μήνυμα"
 msgid "Adding DNS Domain"
 msgstr "Προσθήκη DNS Domain"
 
-#: ../../web/templates/user/edit_dns.html:110
-#: ../../web/templates/admin/edit_dns.html:110
 #: ../../web/templates/admin/add_dns.html:93
+#: ../../web/templates/admin/edit_dns.html:110
+#: ../../web/templates/user/edit_dns.html:110
 msgid "YYYY-MM-DD"
 msgstr "ΕΕΕΕ-MM-ΗΗ"
 
@@ -417,6 +451,7 @@ msgid "Name Servers"
 msgstr "Διακομιστές Ονομάτων"
 
 #: ../../web/add/user/index.php:91 ../../web/templates/login.html:16
+#: ../../web/templates/login_a.html:16
 msgid "Welcome to Hestia Control Panel"
 msgstr "Καλωσήρθατε στον Πίνακα Ελέγχου Hestia"
 
@@ -424,11 +459,11 @@ msgstr "Καλωσήρθατε στον Πίνακα Ελέγχου Hestia"
 msgid "forgot password"
 msgstr "ξέχασα τον κωδικό πρόσβασης"
 
-#: ../../web/templates/login_2.html:23
+#: ../../web/templates/login_2.html:21
 msgid "2FA Token"
 msgstr "OTP PIN"
 
-#: ../../web/templates/login_2.html:26
+#: ../../web/templates/login_2.html:24
 msgid "Forgot token"
 msgstr "Ξεκλείδωμα λογαριασμού"
 
@@ -452,11 +487,7 @@ msgstr "Ξεκλείδωμα λογαριασμού"
 msgid "2FA Reset Code"
 msgstr "Κωδικός ανάκτησης λογαριασμού"
 
-#: ../../web/templates/reset2fa.html:54 ../../web/templates/reset_1.html:40
-msgid "RESET_NOTICE"
-msgstr ""
-
-#: ../../web/templates/reset2fa.html:59 ../../web/templates/reset_1.html:45
+#: ../../web/templates/reset_1.html:40 ../../web/templates/reset2fa.html:54
 msgid "Submit"
 msgstr "Υποβολή"
 
@@ -464,7 +495,7 @@ msgstr "Υποβολή"
 msgid "LEAVE_PAGE_CONFIRMATION"
 msgstr "Leave Page?"
 
-#: ../../web/templates/admin/panel.html:5 ../../web/templates/footer.html:9
+#: ../../web/templates/footer.html:9 ../../web/templates/admin/panel.html:5
 msgid "Shortcuts"
 msgstr "Shortcuts"
 
@@ -532,11 +563,11 @@ msgstr "Move up through elements list"
 msgid "Move down through elements list"
 msgstr "Move down through elements list"
 
-#: ../../web/login/index.php:54 ../../web/login/index.php:90
+#: ../../web/login/index.php:52 ../../web/login/index.php:85
 msgid "Invalid username or password"
 msgstr "Λάθος όνομα χρήστη ή κωδικός πρόσβασης."
 
-#: ../../web/login/index.php:107
+#: ../../web/login/index.php:104
 msgid "Invalid or missing 2FA token"
 msgstr ""
 
@@ -562,8 +593,8 @@ msgstr "Χρόνος λειτουργίας"
 msgid "Service"
 msgstr "Υπηρεσία"
 
-#: ../../web/templates/admin/list_updates.html:41
 #: ../../web/templates/admin/list_services.html:98
+#: ../../web/templates/admin/list_updates.html:41
 msgid "Description"
 msgstr "περιγραφή"
 
@@ -601,9 +632,9 @@ msgstr "Διαχείριση αποκλεισμένων IP"
 msgid "list ipset"
 msgstr "Διαχείριση λιστών IP"
 
-#: ../../web/templates/admin/edit_firewall.html:41
 #: ../../web/templates/admin/list_firewall.html:82
 #: ../../web/templates/admin/list_firewall.html:102
+#: ../../web/templates/admin/edit_firewall.html:41
 msgid "Editing Firewall Rule"
 msgstr "Επεξεργασία Κανόνα Τείχους Προστασίας"
 
@@ -619,102 +650,102 @@ msgstr "1 κανόνας τείχους προστασίας"
 msgid "%s firewall rules"
 msgstr "%s κανόνες τείχους προστασίας"
 
-#: ../../web/templates/admin/edit_user.html:5
+#: ../../web/templates/admin/edit_user.html:6
 msgid "Manage SSH keys"
 msgstr "Προβολή κλειδιών SSH"
 
+#: ../../web/templates/admin/edit_user.html:44
+#: ../../web/templates/admin/list_user.html:119
 #: ../../web/templates/user/edit_user.html:42
-#: ../../web/templates/user/list_user.html:114
-#: ../../web/templates/admin/edit_user.html:42
-#: ../../web/templates/admin/list_user.html:120
+#: ../../web/templates/user/list_user.html:105
 msgid "Editing User"
 msgstr "Επεξεργασία Χρήστη"
 
+#: ../../web/templates/admin/edit_user.html:94
 #: ../../web/templates/user/edit_user.html:92
-#: ../../web/templates/admin/edit_user.html:92
 msgid "Enable 2FA"
 msgstr "Ενεργοποίηση ελέγχου ταυτότητας δύο παραγόντων"
 
+#: ../../web/templates/admin/edit_user.html:96
 #: ../../web/templates/user/edit_user.html:94
-#: ../../web/templates/admin/edit_user.html:94
 msgid "2FA Reset Code:"
 msgstr "Κωδικός ανάκτησης λογαριασμού:"
 
+#: ../../web/templates/admin/edit_user.html:97
 #: ../../web/templates/user/edit_user.html:95
-#: ../../web/templates/admin/edit_user.html:95
 msgid "Please scan the code below in your 2FA application:"
 msgstr "Για να ολοκληρώσετε τη ρύθμιση ελέγχου ταυτότητας δύο παραγόντων, σαρώστε τον κωδικό QR παρακάτω<br />χρησιμοποιώντας μια εφαρμογή ελέγχου ταυτότητας (όπως <a href=\"https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2\">Επαληθευτής Google</a>):"
 
-#: ../../web/templates/user/edit_user.html:102
-#: ../../web/templates/admin/edit_user.html:102
+#: ../../web/templates/admin/edit_user.html:104
 #: ../../web/templates/admin/add_user.html:87
+#: ../../web/templates/user/edit_user.html:102
 msgid "Contact"
 msgstr "Ονομα"
 
-#: ../../web/templates/user/list_user.html:72
-#: ../../web/templates/admin/edit_user.html:122
-#: ../../web/templates/admin/list_updates.html:40
+#: ../../web/templates/admin/edit_user.html:124
 #: ../../web/templates/admin/list_user.html:68
-#: ../../web/templates/admin/list_packages.html:42
+#: ../../web/templates/admin/list_updates.html:40
 #: ../../web/templates/admin/add_user.html:112
+#: ../../web/templates/admin/list_packages.html:42
+#: ../../web/templates/user/list_user.html:72
 msgid "Package"
 msgstr "Πακέτο"
 
-#: ../../web/templates/user/edit_user.html:122
-#: ../../web/templates/admin/edit_user.html:156
+#: ../../web/templates/admin/edit_user.html:158
 #: ../../web/templates/admin/add_user.html:149
+#: ../../web/templates/user/edit_user.html:122
 msgid "Language"
 msgstr "Γλώσσα"
 
+#: ../../web/templates/admin/edit_user.html:182
 #: ../../web/templates/admin/edit_package.html:160
-#: ../../web/templates/admin/edit_user.html:180
 #: ../../web/templates/admin/add_package.html:163
 msgid "SSH Access"
 msgstr "Πρόσβαση SSH"
 
-#: ../../web/templates/admin/edit_user.html:201
+#: ../../web/templates/admin/edit_user.html:203
 msgid "PHP CLI Version"
 msgstr "Έκδοση γραμμής εντολών PHP"
 
+#: ../../web/templates/admin/edit_user.html:229
 #: ../../web/templates/user/edit_user.html:146
-#: ../../web/templates/admin/edit_user.html:227
 msgid "Default Name Servers"
 msgstr "Προεπιλεγμένοι Διακομιστές Ονομάτων"
 
-#: ../../web/templates/user/edit_user.html:211
-#: ../../web/templates/admin/edit_package.html:370
 #: ../../web/templates/admin/add_dns.html:178
-#: ../../web/templates/admin/edit_user.html:293
+#: ../../web/templates/admin/edit_user.html:295
+#: ../../web/templates/admin/edit_package.html:370
 #: ../../web/templates/admin/add_package.html:372
+#: ../../web/templates/user/edit_user.html:211
 msgid "Add one more Name Server"
 msgstr "Προσθέστε ένα ακόμη Διακομιστή Ονομάτων"
 
-#: ../../web/templates/user/list_db.html:4
 #: ../../web/templates/admin/list_db.html:4
+#: ../../web/templates/user/list_db.html:4
 msgid "Add Database"
 msgstr "Προσθήκη Βάσης Δεδομένων"
 
-#: ../../web/templates/user/list_user.html:42
-#: ../../web/templates/admin/list_dns.html:32
 #: ../../web/templates/admin/list_web.html:32
-#: ../../web/templates/admin/list_user.html:38
-#: ../../web/templates/admin/list_db.html:59
 #: ../../web/templates/admin/list_mail.html:31
+#: ../../web/templates/admin/list_user.html:38
+#: ../../web/templates/admin/list_dns.html:32
+#: ../../web/templates/admin/list_db.html:59
+#: ../../web/templates/user/list_user.html:42
 msgid "rebuild"
 msgstr "Επαναδημιουργία"
 
-#: ../../web/templates/user/list_db.html:143
 #: ../../web/templates/admin/list_db.html:144
+#: ../../web/templates/user/list_db.html:143
 msgid "DELETE_DATABASE_CONFIRMATION"
 msgstr "Είστε σίγουρος πως θέλετε να διαγράψετε την βάση δεδομένων %s;"
 
-#: ../../web/templates/user/list_db.html:171
 #: ../../web/templates/admin/list_db.html:172
+#: ../../web/templates/user/list_db.html:171
 msgid "1 SQL database"
 msgstr "1 Βάση δεδομένων SQL"
 
-#: ../../web/templates/user/list_db.html:173
 #: ../../web/templates/admin/list_db.html:174
+#: ../../web/templates/user/list_db.html:173
 msgid "%s SQL databases"
 msgstr "%s Βάσεις δεδομένων SQL"
 
@@ -722,97 +753,98 @@ msgstr "%s Βάσεις δεδομένων SQL"
 msgid "Catchall email"
 msgstr "Catchall email"
 
-#: ../../web/templates/admin/add_mail.html:66
 #: ../../web/templates/admin/edit_mail.html:79
+#: ../../web/templates/admin/add_mail.html:66
 msgid "AntiSpam Support"
 msgstr "Υποστήριξη AntiSpam"
 
-#: ../../web/templates/admin/add_mail.html:71
 #: ../../web/templates/admin/edit_mail.html:84
+#: ../../web/templates/admin/add_mail.html:71
 msgid "AntiVirus Support"
 msgstr "Υποστήριξη AntiVirus"
 
-#: ../../web/templates/admin/add_mail.html:76
 #: ../../web/templates/admin/edit_mail.html:89
+#: ../../web/templates/admin/add_mail.html:76
 msgid "DKIM Support"
 msgstr "Υποστήριξη DKIM"
 
-#: ../../web/templates/user/list_dns.html:4
 #: ../../web/templates/admin/list_dns.html:4
+#: ../../web/templates/user/list_dns.html:4
 msgid "Add DNS Domain"
 msgstr "Προσθήκη DNS Domain"
 
-#: ../../web/templates/user/list_dns.html:8
 #: ../../web/templates/admin/list_dns.html:8
+#: ../../web/templates/user/list_dns.html:8
 msgid "Expire"
 msgstr "Λήγει"
 
-#: ../../web/templates/user/list_dns.html:55
-#: ../../web/templates/user/panel.html:13
-#: ../../web/templates/admin/list_dns.html:11
 #: ../../web/templates/admin/panel.html:13
+#: ../../web/templates/admin/list_dns.html:11
+#: ../../web/templates/user/panel.html:13
+#: ../../web/templates/user/list_dns.html:55
 msgid "Records"
 msgstr "Εγγραφές"
 
-#: ../../web/templates/user/list_dns.html:11
 #: ../../web/templates/admin/list_dns.html:56
+#: ../../web/templates/user/list_dns.html:11
 msgid "Records_DNS"
 msgstr "Εγγραφές"
 
-#: ../../web/templates/user/edit_dns.html:89
-#: ../../web/templates/user/list_dns.html:56
-#: ../../web/templates/admin/edit_dns.html:89
 #: ../../web/templates/admin/list_dns.html:57
+#: ../../web/templates/admin/edit_dns.html:89
+#: ../../web/templates/user/list_dns.html:56
+#: ../../web/templates/user/edit_dns.html:89
 msgid "Template"
 msgstr "Πρότυπο"
 
-#: ../../web/templates/user/list_dns.html:58
 #: ../../web/templates/admin/list_dns.html:59
+#: ../../web/templates/user/list_dns.html:58
 msgid "SOA"
 msgstr "SOA"
 
-#: ../../web/templates/user/edit_dns.html:110
-#: ../../web/templates/user/list_dns.html:59
-#: ../../web/templates/admin/edit_dns.html:110
 #: ../../web/templates/admin/add_dns.html:93
 #: ../../web/templates/admin/list_dns.html:60
+#: ../../web/templates/admin/edit_dns.html:110
+#: ../../web/templates/user/list_dns.html:59
+#: ../../web/templates/user/edit_dns.html:110
 msgid "Expiration Date"
 msgstr "Ημερομηνία Λήξης"
 
-#: ../../web/templates/user/list_dns.html:87
-#: ../../web/templates/user/list_dns.html:96
 #: ../../web/templates/admin/edit_package.html:216
 #: ../../web/templates/admin/list_dns.html:88
 #: ../../web/templates/admin/list_dns.html:97
 #: ../../web/templates/admin/add_package.html:219
+#: ../../web/templates/user/list_dns.html:87
+#: ../../web/templates/user/list_dns.html:96
 msgid "DNS records"
 msgstr "Εγγραφές DNS"
 
-#: ../../web/templates/user/list_dns.html:113
-#: ../../web/templates/user/list_dns_rec.html:85
-#: ../../web/templates/user/list_web.html:164
-#: ../../web/templates/user/list_mail.html:120
 #: ../../web/templates/admin/list_web.html:159
 #: ../../web/templates/admin/list_mail.html:121
+#: ../../web/templates/admin/list_dns.html:114
+#: ../../web/templates/user/list_web.html:164
+#: ../../web/templates/user/list_mail.html:120
+#: ../../web/templates/user/list_dns.html:113
+#: ../../web/templates/user/list_dns_rec.html:76
 msgid "DELETE_DOMAIN_CONFIRMATION"
 msgstr "Είστε σίγουρος πως θέλετε να διαγράψετε τo Domain %s;"
 
-#: ../../web/templates/user/list_dns.html:139
 #: ../../web/templates/admin/list_dns.html:140
+#: ../../web/templates/user/list_dns.html:139
 msgid "1 DNS zone"
 msgstr "1 Ζώνη DNS"
 
-#: ../../web/templates/user/list_dns.html:141
 #: ../../web/templates/admin/list_dns.html:142
+#: ../../web/templates/user/list_dns.html:141
 msgid "%s DNS zones"
 msgstr "%s Ζώνες DNS"
 
-#: ../../web/templates/user/list_stats.html:4
-#: ../../web/templates/user/list_search.html:5
-#: ../../web/templates/admin/list_log.html:4
-#: ../../web/templates/admin/list_weblog.html:31
 #: ../../web/templates/admin/list_server_info.html:37
+#: ../../web/templates/admin/list_weblog.html:31
 #: ../../web/templates/admin/list_search.html:5
+#: ../../web/templates/admin/list_log.html:4
+#: ../../web/templates/user/list_search.html:5
+#: ../../web/templates/user/list_stats.html:4
 msgid "Refresh"
 msgstr "Φρεσκάρω"
 
@@ -833,84 +865,84 @@ msgstr "1 εγγραφή καταγραφής"
 msgid "%s log records"
 msgstr "%s εγγραφές καταγραφής"
 
-#: ../../web/templates/user/list_cron.html:4
 #: ../../web/templates/admin/list_cron.html:4
+#: ../../web/templates/user/list_cron.html:4
 msgid "Add Cron Job"
 msgstr "Προσθήκη Εργασίας Cron"
 
-#: ../../web/templates/user/list_cron.html:7
-#: ../../web/templates/user/list_cron.html:36
 #: ../../web/templates/admin/list_cron.html:7
 #: ../../web/templates/admin/list_cron.html:36
+#: ../../web/templates/user/list_cron.html:7
+#: ../../web/templates/user/list_cron.html:36
 msgid "turn off notifications"
 msgstr "Απενεργοποίηση ειδοποιήσεων"
 
-#: ../../web/templates/user/list_cron.html:9
-#: ../../web/templates/user/list_cron.html:37
 #: ../../web/templates/admin/list_cron.html:9
 #: ../../web/templates/admin/list_cron.html:37
+#: ../../web/templates/user/list_cron.html:9
+#: ../../web/templates/user/list_cron.html:37
 msgid "turn on notifications"
 msgstr "Ενεργοποίηση ειδοποιήσεων"
 
-#: ../../web/templates/user/list_cron.html:59
 #: ../../web/templates/admin/list_cron.html:59
+#: ../../web/templates/user/list_cron.html:59
 msgid "Cron Job"
 msgstr "Cron Job"
 
-#: ../../web/templates/user/list_cron.html:61
 #: ../../web/templates/admin/list_cron.html:61
+#: ../../web/templates/user/list_cron.html:61
 msgid "Min"
 msgstr "Λεπτό"
 
-#: ../../web/templates/user/list_cron.html:91
-#: ../../web/templates/user/list_cron.html:96
 #: ../../web/templates/admin/list_cron.html:91
 #: ../../web/templates/admin/list_cron.html:96
 #: ../../web/templates/admin/edit_cron.html:356
+#: ../../web/templates/user/list_cron.html:91
+#: ../../web/templates/user/list_cron.html:96
 msgid "Editing Cron Job"
 msgstr "Επεξεργασία Εργασίας Cron"
 
-#: ../../web/templates/user/list_cron.html:111
 #: ../../web/templates/admin/list_cron.html:111
+#: ../../web/templates/user/list_cron.html:111
 msgid "DELETE_CRON_CONFIRMATION"
 msgstr "Είστε σίγουρος πως θέλετε να διαγράψετε το cron job;"
 
-#: ../../web/templates/user/list_cron.html:137
 #: ../../web/templates/admin/list_cron.html:137
+#: ../../web/templates/user/list_cron.html:137
 msgid "1 cron job"
 msgstr "1 cron job"
 
-#: ../../web/templates/user/list_cron.html:139
 #: ../../web/templates/admin/list_cron.html:139
+#: ../../web/templates/user/list_cron.html:139
 msgid "%s cron jobs"
 msgstr "%s cron jobs"
 
-#: ../../web/templates/user/list_search.html:37
 #: ../../web/templates/admin/list_search.html:39
+#: ../../web/templates/user/list_search.html:37
 msgid "Search Results"
 msgstr "Αναζήτηση Αποτελεσμάτων"
 
-#: ../../web/templates/user/list_search.html:41
+#: ../../web/templates/admin/list_search.html:43
 #: ../../web/templates/admin/list_ip.html:13
 #: ../../web/templates/admin/list_ip.html:54
-#: ../../web/templates/admin/list_search.html:43
+#: ../../web/templates/user/list_search.html:41
 msgid "Owner"
 msgstr "Ιδιοκτήτης"
 
-#: ../../web/templates/user/list_search.html:42
+#: ../../web/templates/admin/list_search.html:44
 #: ../../web/templates/admin/list_updates.html:43
 #: ../../web/templates/admin/list_ip.html:52
-#: ../../web/templates/admin/list_search.html:44
+#: ../../web/templates/user/list_search.html:42
 msgid "Status"
 msgstr "Κατάσταση"
 
-#: ../../web/templates/user/list_search.html:196
 #: ../../web/templates/admin/list_search.html:198
+#: ../../web/templates/user/list_search.html:196
 msgid "1 object"
 msgstr "1 αντικείμενο"
 
-#: ../../web/templates/user/list_search.html:198
 #: ../../web/templates/admin/list_search.html:200
+#: ../../web/templates/user/list_search.html:198
 msgid "%s objects"
 msgstr "%s αντικείμενα"
 
@@ -983,8 +1015,8 @@ msgstr "Προσθήκη Βάσης Δεδομένων"
 msgid "Prefix %s will be automatically added to database name and database user"
 msgstr ""
 
-#: ../../web/templates/admin/edit_db.html:72
 #: ../../web/templates/admin/add_db.html:74
+#: ../../web/templates/admin/edit_db.html:72
 msgid "maximum characters length, including prefix"
 msgstr "μέγιστο μήκος χαρακτήρων %s, συμπεριλαμβανομένου του προθέματος"
 
@@ -1041,9 +1073,9 @@ msgstr "Domains"
 msgid "reread IP"
 msgstr "Ενημέρωση IP"
 
-#: ../../web/templates/admin/edit_ip.html:41
 #: ../../web/templates/admin/list_ip.html:73
 #: ../../web/templates/admin/list_ip.html:79
+#: ../../web/templates/admin/edit_ip.html:41
 msgid "Editing IP Address"
 msgstr "Επεξεργασία Διεύθυνσης IP"
 
@@ -1055,27 +1087,27 @@ msgstr "1 διεύθυνση IP"
 msgid "%s IP addresses"
 msgstr "%s διευθύνσεις IP"
 
-#: ../../web/templates/user/panel.html:17
 #: ../../web/templates/admin/panel.html:17
+#: ../../web/templates/user/panel.html:17
 msgid "Log"
 msgstr "Αρχείο Καταγραφής"
 
-#: ../../web/templates/user/list_web.html:65
-#: ../../web/templates/user/list_web.html:145
-#: ../../web/templates/user/panel.html:18
 #: ../../web/templates/admin/list_web.html:60
 #: ../../web/templates/admin/list_web.html:140
 #: ../../web/templates/admin/panel.html:18
+#: ../../web/templates/user/list_web.html:65
+#: ../../web/templates/user/list_web.html:145
+#: ../../web/templates/user/panel.html:18
 msgid "Statistics"
 msgstr "Στατιστικά"
 
-#: ../../web/templates/user/panel.html:28
 #: ../../web/templates/admin/panel.html:29
+#: ../../web/templates/user/panel.html:28
 msgid "Notifications"
 msgstr "Ειδοποιήσεις"
 
-#: ../../web/templates/user/panel.html:31
 #: ../../web/templates/admin/panel.html:36
+#: ../../web/templates/user/panel.html:31
 msgid "Help"
 msgstr "Help"
 
@@ -1091,40 +1123,40 @@ msgstr "χρήστες"
 msgid "spnd"
 msgstr "ανεσταλμένο"
 
-#: ../../web/templates/user/panel.html:47
-#: ../../web/templates/user/panel.html:75
 #: ../../web/templates/admin/panel.html:61
 #: ../../web/templates/admin/panel.html:89
+#: ../../web/templates/user/panel.html:47
+#: ../../web/templates/user/panel.html:75
 msgid "domains"
 msgstr "domains"
 
-#: ../../web/templates/user/panel.html:48
 #: ../../web/templates/admin/panel.html:62
+#: ../../web/templates/user/panel.html:48
 msgid "aliases"
 msgstr "ψευδώνυμα"
 
-#: ../../web/templates/user/panel.html:61
 #: ../../web/templates/admin/panel.html:75
+#: ../../web/templates/user/panel.html:61
 msgid "zones"
 msgstr ""
 
-#: ../../web/templates/user/panel.html:76
 #: ../../web/templates/admin/panel.html:90
+#: ../../web/templates/user/panel.html:76
 msgid "accounts"
 msgstr "λογαριασμοί"
 
-#: ../../web/templates/user/panel.html:100
 #: ../../web/templates/admin/panel.html:114
+#: ../../web/templates/user/panel.html:100
 msgid "CRON"
 msgstr "CRON"
 
-#: ../../web/templates/user/panel.html:102
 #: ../../web/templates/admin/panel.html:116
+#: ../../web/templates/user/panel.html:102
 msgid "jobs"
 msgstr "εργασίες"
 
-#: ../../web/templates/user/panel.html:113
 #: ../../web/templates/admin/panel.html:127
+#: ../../web/templates/user/panel.html:113
 msgid "BACKUP"
 msgstr "ΑΝΤΙΓΡΑΦΟ ΑΣΦΑΛΕΙΑΣ"
 
@@ -1148,18 +1180,6 @@ msgstr "Φάκελοι Χρήστη"
 msgid "USER_EXCLUSIONS"
 msgstr "Πληκτρολογήστε το όνομα καταλόγου, ένα ανά σειρά. Για να εξαιρέσετε όλους τους καταλόγους χρησιμοποιήστε *"
 
-#: ../../web/templates/admin/edit_cron.html:43
-#: ../../web/templates/admin/edit_cron.html:44
-#: ../../web/templates/admin/edit_cron.html:45
-#: ../../web/templates/admin/edit_cron.html:46
-#: ../../web/templates/admin/edit_cron.html:64
-#: ../../web/templates/admin/edit_cron.html:65
-#: ../../web/templates/admin/edit_cron.html:93
-#: ../../web/templates/admin/edit_cron.html:94
-#: ../../web/templates/admin/edit_cron.html:95
-#: ../../web/templates/admin/edit_cron.html:96
-#: ../../web/templates/admin/edit_cron.html:233
-#: ../../web/templates/admin/edit_cron.html:234
 #: ../../web/templates/admin/add_cron.html:44
 #: ../../web/templates/admin/add_cron.html:45
 #: ../../web/templates/admin/add_cron.html:46
@@ -1172,179 +1192,191 @@ msgstr "Πληκτρολογήστε το όνομα καταλόγου, ένα 
 #: ../../web/templates/admin/add_cron.html:99
 #: ../../web/templates/admin/add_cron.html:239
 #: ../../web/templates/admin/add_cron.html:240
+#: ../../web/templates/admin/edit_cron.html:43
+#: ../../web/templates/admin/edit_cron.html:44
+#: ../../web/templates/admin/edit_cron.html:45
+#: ../../web/templates/admin/edit_cron.html:46
+#: ../../web/templates/admin/edit_cron.html:64
+#: ../../web/templates/admin/edit_cron.html:65
+#: ../../web/templates/admin/edit_cron.html:93
+#: ../../web/templates/admin/edit_cron.html:94
+#: ../../web/templates/admin/edit_cron.html:95
+#: ../../web/templates/admin/edit_cron.html:96
+#: ../../web/templates/admin/edit_cron.html:233
+#: ../../web/templates/admin/edit_cron.html:234
 msgid "every"
 msgstr "κάθε"
 
-#: ../../web/templates/admin/edit_cron.html:62
 #: ../../web/templates/admin/add_cron.html:64
+#: ../../web/templates/admin/edit_cron.html:62
 msgid "every hour"
 msgstr "κάθε ώρα"
 
-#: ../../web/templates/admin/edit_cron.html:63
 #: ../../web/templates/admin/add_cron.html:65
+#: ../../web/templates/admin/edit_cron.html:63
 msgid "every two hours"
 msgstr "κάθε δύο ώρες"
 
-#: ../../web/templates/admin/edit_cron.html:69
-#: ../../web/templates/admin/edit_cron.html:128
-#: ../../web/templates/admin/edit_cron.html:200
-#: ../../web/templates/admin/edit_cron.html:313
-#: ../../web/templates/admin/edit_cron.html:385
 #: ../../web/templates/admin/add_cron.html:71
 #: ../../web/templates/admin/add_cron.html:131
 #: ../../web/templates/admin/add_cron.html:204
 #: ../../web/templates/admin/add_cron.html:319
 #: ../../web/templates/admin/add_cron.html:391
+#: ../../web/templates/admin/edit_cron.html:69
+#: ../../web/templates/admin/edit_cron.html:128
+#: ../../web/templates/admin/edit_cron.html:200
+#: ../../web/templates/admin/edit_cron.html:313
+#: ../../web/templates/admin/edit_cron.html:385
 msgid "Minute"
 msgstr "Λεπτό"
 
-#: ../../web/templates/admin/edit_cron.html:90
-#: ../../web/templates/admin/edit_cron.html:159
 #: ../../web/templates/admin/add_cron.html:93
 #: ../../web/templates/admin/add_cron.html:163
+#: ../../web/templates/admin/edit_cron.html:90
+#: ../../web/templates/admin/edit_cron.html:159
 msgid "every day"
 msgstr "κάθε μέρα"
 
-#: ../../web/templates/admin/edit_cron.html:91
 #: ../../web/templates/admin/add_cron.html:94
+#: ../../web/templates/admin/edit_cron.html:91
 msgid "every odd day"
 msgstr "every odd day"
 
-#: ../../web/templates/admin/edit_cron.html:92
 #: ../../web/templates/admin/add_cron.html:95
+#: ../../web/templates/admin/edit_cron.html:92
 msgid "every even day"
 msgstr "every even day"
 
-#: ../../web/templates/user/list_cron.html:62
 #: ../../web/templates/admin/list_cron.html:62
-#: ../../web/templates/admin/edit_cron.html:100
-#: ../../web/templates/admin/edit_cron.html:172
-#: ../../web/templates/admin/edit_cron.html:285
-#: ../../web/templates/admin/edit_cron.html:395
 #: ../../web/templates/admin/add_cron.html:103
 #: ../../web/templates/admin/add_cron.html:176
 #: ../../web/templates/admin/add_cron.html:291
 #: ../../web/templates/admin/add_cron.html:401
+#: ../../web/templates/admin/edit_cron.html:100
+#: ../../web/templates/admin/edit_cron.html:172
+#: ../../web/templates/admin/edit_cron.html:285
+#: ../../web/templates/admin/edit_cron.html:395
+#: ../../web/templates/user/list_cron.html:62
 msgid "Hour"
 msgstr "Ώρα"
 
-#: ../../web/templates/admin/edit_cron.html:160
 #: ../../web/templates/admin/add_cron.html:164
+#: ../../web/templates/admin/edit_cron.html:160
 msgid "weekdays (5 days)"
 msgstr "weekdays (5 days)"
 
-#: ../../web/templates/admin/edit_cron.html:161
 #: ../../web/templates/admin/add_cron.html:165
+#: ../../web/templates/admin/edit_cron.html:161
 msgid "weekend (2 days)"
 msgstr "weekend (2 days)"
 
-#: ../../web/templates/admin/edit_cron.html:162
 #: ../../web/templates/admin/add_cron.html:166
+#: ../../web/templates/admin/edit_cron.html:162
 msgid "Monday"
 msgstr "Δευτέρα"
 
-#: ../../web/templates/admin/edit_cron.html:163
 #: ../../web/templates/admin/add_cron.html:167
+#: ../../web/templates/admin/edit_cron.html:163
 msgid "Tuesday"
 msgstr "Τρίτη"
 
-#: ../../web/templates/admin/edit_cron.html:164
 #: ../../web/templates/admin/add_cron.html:168
+#: ../../web/templates/admin/edit_cron.html:164
 msgid "Wednesday"
 msgstr "Τετάρτη"
 
-#: ../../web/templates/admin/edit_cron.html:165
 #: ../../web/templates/admin/add_cron.html:169
+#: ../../web/templates/admin/edit_cron.html:165
 msgid "Thursday"
 msgstr "Πέμπτη"
 
-#: ../../web/templates/admin/edit_cron.html:166
 #: ../../web/templates/admin/add_cron.html:170
+#: ../../web/templates/admin/edit_cron.html:166
 msgid "Friday"
 msgstr "Παρασκευή"
 
-#: ../../web/templates/admin/edit_cron.html:167
 #: ../../web/templates/admin/add_cron.html:171
+#: ../../web/templates/admin/edit_cron.html:167
 msgid "Saturday"
 msgstr "Σάββατο"
 
-#: ../../web/templates/admin/edit_cron.html:168
 #: ../../web/templates/admin/add_cron.html:172
+#: ../../web/templates/admin/edit_cron.html:168
 msgid "Sunday"
 msgstr "Κυριακή"
 
-#: ../../web/templates/admin/edit_cron.html:230
 #: ../../web/templates/admin/add_cron.html:236
+#: ../../web/templates/admin/edit_cron.html:230
 msgid "every month"
 msgstr "κάθε μήνα"
 
-#: ../../web/templates/admin/edit_cron.html:231
 #: ../../web/templates/admin/add_cron.html:237
+#: ../../web/templates/admin/edit_cron.html:231
 msgid "every odd month"
 msgstr "every odd month"
 
-#: ../../web/templates/admin/edit_cron.html:232
 #: ../../web/templates/admin/add_cron.html:238
+#: ../../web/templates/admin/edit_cron.html:232
 msgid "every even month"
 msgstr "every even month"
 
-#: ../../web/templates/admin/edit_cron.html:235
 #: ../../web/templates/admin/add_cron.html:241
+#: ../../web/templates/admin/edit_cron.html:235
 msgid "Jan"
 msgstr "Ιαν"
 
-#: ../../web/templates/admin/edit_cron.html:236
 #: ../../web/templates/admin/add_cron.html:242
+#: ../../web/templates/admin/edit_cron.html:236
 msgid "Feb"
 msgstr "Φεβ"
 
-#: ../../web/templates/admin/edit_cron.html:237
 #: ../../web/templates/admin/add_cron.html:243
+#: ../../web/templates/admin/edit_cron.html:237
 msgid "Mar"
 msgstr "Μαρ"
 
-#: ../../web/templates/admin/edit_cron.html:238
 #: ../../web/templates/admin/add_cron.html:244
+#: ../../web/templates/admin/edit_cron.html:238
 msgid "Apr"
 msgstr "Απρ"
 
-#: ../../web/templates/admin/edit_cron.html:239
 #: ../../web/templates/admin/add_cron.html:245
+#: ../../web/templates/admin/edit_cron.html:239
 msgid "May"
 msgstr "Μαι"
 
-#: ../../web/templates/admin/edit_cron.html:240
 #: ../../web/templates/admin/add_cron.html:246
+#: ../../web/templates/admin/edit_cron.html:240
 msgid "Jun"
 msgstr "Ιουν"
 
-#: ../../web/templates/admin/edit_cron.html:241
 #: ../../web/templates/admin/add_cron.html:247
+#: ../../web/templates/admin/edit_cron.html:241
 msgid "Jul"
 msgstr "Ιουλ"
 
-#: ../../web/templates/admin/edit_cron.html:242
 #: ../../web/templates/admin/add_cron.html:248
+#: ../../web/templates/admin/edit_cron.html:242
 msgid "Aug"
 msgstr "Αυγ"
 
-#: ../../web/templates/admin/edit_cron.html:243
 #: ../../web/templates/admin/add_cron.html:249
+#: ../../web/templates/admin/edit_cron.html:243
 msgid "Sep"
 msgstr "Σεπ"
 
-#: ../../web/templates/admin/edit_cron.html:244
 #: ../../web/templates/admin/add_cron.html:250
+#: ../../web/templates/admin/edit_cron.html:244
 msgid "Oct"
 msgstr "Οκτ"
 
-#: ../../web/templates/admin/edit_cron.html:245
 #: ../../web/templates/admin/add_cron.html:251
+#: ../../web/templates/admin/edit_cron.html:245
 msgid "Nov"
 msgstr "Νοε"
 
-#: ../../web/templates/admin/edit_cron.html:246
 #: ../../web/templates/admin/add_cron.html:252
+#: ../../web/templates/admin/edit_cron.html:246
 msgid "Dec"
 msgstr "Δεκ"
 
@@ -1352,24 +1384,24 @@ msgstr "Δεκ"
 msgid "Adding Cron Job"
 msgstr "Προσθήκη Εργασίας Cron"
 
-#: ../../web/templates/user/list_cron.html:15
 #: ../../web/templates/admin/list_cron.html:15
-#: ../../web/templates/admin/edit_cron.html:374
 #: ../../web/templates/admin/add_cron.html:381
+#: ../../web/templates/admin/edit_cron.html:374
+#: ../../web/templates/user/list_cron.html:15
 msgid "Command"
 msgstr "Εντολή"
 
-#: ../../web/templates/user/list_cron.html:63
 #: ../../web/templates/admin/list_cron.html:63
-#: ../../web/templates/admin/edit_cron.html:405
 #: ../../web/templates/admin/add_cron.html:411
+#: ../../web/templates/admin/edit_cron.html:405
+#: ../../web/templates/user/list_cron.html:63
 msgid "Day"
 msgstr "Ημέρα"
 
-#: ../../web/templates/user/list_cron.html:65
 #: ../../web/templates/admin/list_cron.html:65
-#: ../../web/templates/admin/edit_cron.html:425
 #: ../../web/templates/admin/add_cron.html:431
+#: ../../web/templates/admin/edit_cron.html:425
+#: ../../web/templates/user/list_cron.html:65
 msgid "Day of week"
 msgstr "Ημέρα της εβδομάδας"
 
@@ -1409,16 +1441,19 @@ msgstr "στήσετε"
 msgid "Web Log Manager"
 msgstr "Διαχείριση Καταγραφών"
 
-#: ../../web/templates/login_2.html:8 ../../web/templates/header.html:6
+#: ../../web/templates/login_1.html:8 ../../web/templates/header.html:6
+#: ../../web/templates/reset_1.html:8 ../../web/templates/reset_2.html:8
+#: ../../web/templates/login.html:8 ../../web/templates/reset_3.html:8
 #: ../../web/templates/admin/list_services.html:55
-#: ../../web/templates/admin/list_weblog.html:6
 #: ../../web/templates/admin/list_server_info.html:6
-#: ../../web/templates/login.html:8 ../../web/templates/login_1.html:8
+#: ../../web/templates/admin/list_weblog.html:6
+#: ../../web/templates/login_a.html:8 ../../web/templates/login_2.html:8
+#: ../../web/templates/reset2fa.html:8
 msgid "Hestia Control Panel"
 msgstr "Πίνακας Ελέγχου Hestia"
 
-#: ../../web/templates/user/list_web.html:149
 #: ../../web/templates/admin/list_web.html:144
+#: ../../web/templates/user/list_web.html:149
 msgid "AccessLog"
 msgstr "Καταγραφές Πρόσβασης"
 
@@ -1426,10 +1461,10 @@ msgstr "Καταγραφές Πρόσβασης"
 msgid "Error Log"
 msgstr ""
 
-#: ../../web/templates/user/panel.html:32
-#: ../../web/templates/admin/list_weblog.html:33
 #: ../../web/templates/admin/list_server_info.html:38
+#: ../../web/templates/admin/list_weblog.html:33
 #: ../../web/templates/admin/panel.html:37
+#: ../../web/templates/user/panel.html:32
 msgid "Log out"
 msgstr "Αποσύνδεση"
 
@@ -1450,16 +1485,16 @@ msgid "Adding IP address"
 msgstr "Προσθήκη Διεύθυνσης IP"
 
 #: ../../web/templates/admin/add_ip.html:66
-#: ../../web/templates/admin/edit_ip.html:70
 #: ../../web/templates/admin/list_ip.html:10
 #: ../../web/templates/admin/list_ip.html:50
+#: ../../web/templates/admin/edit_ip.html:70
 msgid "Netmask"
 msgstr "Μάσκα Δικτύου"
 
 #: ../../web/templates/admin/add_ip.html:76
-#: ../../web/templates/admin/edit_ip.html:80
 #: ../../web/templates/admin/list_ip.html:11
 #: ../../web/templates/admin/list_ip.html:51
+#: ../../web/templates/admin/edit_ip.html:80
 msgid "Interface"
 msgstr "Διεπαφή"
 
@@ -1487,9 +1522,9 @@ msgstr "Συνδεδεμένο NAT IP"
 msgid "Restore All"
 msgstr "Επαναφορά Όλων"
 
-#: ../../web/templates/admin/list_backup_detail.html:24
 #: ../../web/templates/admin/list_backup.html:77
 #: ../../web/templates/admin/list_backup.html:83
+#: ../../web/templates/admin/list_backup_detail.html:24
 msgid "restore"
 msgstr "Επαναφορά"
 
@@ -1498,6 +1533,7 @@ msgid "Details"
 msgstr ""
 
 #: ../../web/templates/admin/list_backup_detail.html:46
+#: ../../web/templates/admin/list_backup_detail.html:78
 msgid "Restore"
 msgstr ""
 
@@ -1517,9 +1553,9 @@ msgstr ""
 msgid "Cron Records"
 msgstr ""
 
-#: ../../web/templates/user/panel.html:62
-#: ../../web/templates/admin/list_backup_detail.html:222
 #: ../../web/templates/admin/panel.html:76
+#: ../../web/templates/admin/list_backup_detail.html:222
+#: ../../web/templates/user/panel.html:62
 msgid "records"
 msgstr "εγγραφές"
 
@@ -1539,81 +1575,81 @@ msgstr "1 item"
 msgid "%s items"
 msgstr "%s items"
 
-#: ../../web/templates/user/list_mail_acc.html:5
-#: ../../web/templates/user/list_mail.html:101
-#: ../../web/templates/admin/list_mail_acc.html:5
 #: ../../web/templates/admin/list_mail.html:102
+#: ../../web/templates/admin/list_mail_acc.html:5
+#: ../../web/templates/user/list_mail.html:101
+#: ../../web/templates/user/list_mail_acc.html:5
 msgid "Add Mail Account"
 msgstr "Προσθήκη Λογαριασμού Ταχυδρομείου"
 
-#: ../../web/templates/user/list_mail_acc.html:6
-#: ../../web/templates/user/list_mail.html:104
+#: ../../web/templates/admin/list_mail.html:105
 #: ../../web/templates/admin/edit_mail.html:40
 #: ../../web/templates/admin/list_mail_acc.html:6
-#: ../../web/templates/admin/list_mail.html:105
+#: ../../web/templates/user/list_mail.html:104
+#: ../../web/templates/user/list_mail_acc.html:6
 msgid "Editing Mail Domain"
 msgstr "Επεξεργασία Domain Ταχυδρομείου"
 
-#: ../../web/templates/user/list_dns.html:17
-#: ../../web/templates/user/list_cron.html:21
-#: ../../web/templates/user/list_web.html:23
-#: ../../web/templates/user/list_user.html:27
-#: ../../web/templates/user/list_db.html:44
-#: ../../web/templates/user/list_search.html:15
-#: ../../web/templates/user/list_mail_acc.html:17
-#: ../../web/templates/user/list_mail.html:16
-#: ../../web/templates/admin/list_dns.html:17
-#: ../../web/templates/admin/list_cron.html:21
 #: ../../web/templates/admin/list_web.html:17
-#: ../../web/templates/admin/list_user.html:23
-#: ../../web/templates/admin/list_packages.html:15
-#: ../../web/templates/admin/list_firewall.html:22
-#: ../../web/templates/admin/list_ip.html:19
-#: ../../web/templates/admin/list_db.html:44
-#: ../../web/templates/admin/list_search.html:15
-#: ../../web/templates/admin/list_mail_acc.html:17
 #: ../../web/templates/admin/list_mail.html:16
+#: ../../web/templates/admin/list_cron.html:21
+#: ../../web/templates/admin/list_search.html:15
+#: ../../web/templates/admin/list_user.html:23
+#: ../../web/templates/admin/list_firewall.html:22
+#: ../../web/templates/admin/list_mail_acc.html:17
+#: ../../web/templates/admin/list_ip.html:19
+#: ../../web/templates/admin/list_dns.html:17
+#: ../../web/templates/admin/list_packages.html:15
+#: ../../web/templates/admin/list_db.html:44
+#: ../../web/templates/user/list_web.html:23
+#: ../../web/templates/user/list_mail.html:16
+#: ../../web/templates/user/list_cron.html:21
+#: ../../web/templates/user/list_search.html:15
+#: ../../web/templates/user/list_user.html:27
+#: ../../web/templates/user/list_mail_acc.html:17
+#: ../../web/templates/user/list_dns.html:17
+#: ../../web/templates/user/list_db.html:44
 msgid "sort by"
 msgstr "ταξινόμηση κατά"
 
-#: ../../web/templates/user/list_mail_acc.html:59
 #: ../../web/templates/admin/list_mail_acc.html:59
+#: ../../web/templates/user/list_mail_acc.html:59
 msgid "Forwarding"
 msgstr "Προώθηση"
 
-#: ../../web/templates/user/list_mail_acc.html:60
 #: ../../web/templates/admin/edit_mail_acc.html:128
 #: ../../web/templates/admin/list_mail_acc.html:60
+#: ../../web/templates/user/list_mail_acc.html:60
 msgid "Autoreply"
 msgstr "Αυτόματη απάντηση"
 
-#: ../../web/templates/user/list_mail_acc.html:90
-#: ../../web/templates/user/list_mail_acc.html:97
 #: ../../web/templates/admin/edit_mail_acc.html:41
 #: ../../web/templates/admin/list_mail_acc.html:90
 #: ../../web/templates/admin/list_mail_acc.html:97
+#: ../../web/templates/user/list_mail_acc.html:90
+#: ../../web/templates/user/list_mail_acc.html:97
 msgid "Editing Mail Account"
 msgstr "Επεξεργασία Λογαριασμού Ταχυδρομείου"
 
-#: ../../web/templates/user/list_mail_acc.html:96
-#: ../../web/templates/user/list_mail.html:103
-#: ../../web/templates/admin/list_mail_acc.html:96
 #: ../../web/templates/admin/list_mail.html:104
+#: ../../web/templates/admin/list_mail_acc.html:96
+#: ../../web/templates/user/list_mail.html:103
+#: ../../web/templates/user/list_mail_acc.html:96
 msgid "open webmail"
 msgstr "Άνοιγμα webmail"
 
-#: ../../web/templates/user/list_mail_acc.html:113
 #: ../../web/templates/admin/list_mail_acc.html:113
+#: ../../web/templates/user/list_mail_acc.html:113
 msgid "DELETE_MAIL_ACCOUNT_CONFIRMATION"
 msgstr "Είστε σίγουρος πως θέλετε να διαγράψετε το %s;"
 
-#: ../../web/templates/user/list_mail_acc.html:186
 #: ../../web/templates/admin/list_mail_acc.html:186
+#: ../../web/templates/user/list_mail_acc.html:186
 msgid "1 mail account"
 msgstr "1 λογιαριασμός mail"
 
-#: ../../web/templates/user/list_mail_acc.html:188
 #: ../../web/templates/admin/list_mail_acc.html:188
+#: ../../web/templates/user/list_mail_acc.html:188
 msgid "%s mail accounts"
 msgstr "%s λογαριασμοί mail"
 
@@ -1625,8 +1661,8 @@ msgstr "Γραφήματα"
 msgid "IP"
 msgstr "IP"
 
-#: ../../web/templates/admin/edit_server.html:159
 #: ../../web/templates/admin/list_services.html:8
+#: ../../web/templates/admin/edit_server.html:159
 msgid "Updates"
 msgstr "Ενημερώσεις"
 
@@ -1639,164 +1675,165 @@ msgstr "επανεκκίνηση"
 msgid "Local backup"
 msgstr "Local backup"
 
-#: ../../web/templates/admin/edit_server.html:618
+#: ../../web/templates/admin/edit_server.html:632
 msgid "Compression level"
 msgstr "Επίπεδο συμπίεσης"
 
-#: ../../web/templates/user/edit_web.html:297
-#: ../../web/templates/admin/edit_web.html:284
-#: ../../web/templates/admin/edit_server.html:639
-#: ../../web/templates/admin/edit_server.html:716
 #: ../../web/templates/admin/add_web.html:236
+#: ../../web/templates/admin/edit_web.html:284
+#: ../../web/templates/admin/edit_server.html:653
+#: ../../web/templates/admin/edit_server.html:730
+#: ../../web/templates/user/edit_web.html:297
 msgid "Directory"
 msgstr "Ευρετήριο"
 
-#: ../../web/templates/admin/edit_server.html:650
+#: ../../web/templates/admin/edit_server.html:664
 msgid "Remote backup"
 msgstr "Remote backup"
 
-#: ../../web/templates/admin/edit_firewall.html:72
-#: ../../web/templates/admin/edit_server.html:658
+#: ../../web/templates/admin/add_firewall.html:69
 #: ../../web/templates/admin/list_firewall.html:13
 #: ../../web/templates/admin/list_firewall.html:52
-#: ../../web/templates/admin/add_firewall.html:69
+#: ../../web/templates/admin/edit_server.html:672
+#: ../../web/templates/admin/edit_firewall.html:72
 msgid "Protocol"
 msgstr "Πρωτόκολλο"
 
-#: ../../web/templates/admin/edit_server.html:664
+#: ../../web/templates/admin/edit_server.html:678
 msgid "ftp"
 msgstr "FTP"
 
-#: ../../web/templates/admin/edit_server.html:665
+#: ../../web/templates/admin/edit_server.html:679
 msgid "sftp"
 msgstr "SFTP"
 
-#: ../../web/templates/admin/edit_firewall.html:86
-#: ../../web/templates/admin/edit_server.html:683
+#: ../../web/templates/admin/add_firewall.html:83
 #: ../../web/templates/admin/list_firewall.html:14
 #: ../../web/templates/admin/list_firewall.html:53
-#: ../../web/templates/admin/add_firewall.html:83
+#: ../../web/templates/admin/edit_server.html:697
+#: ../../web/templates/admin/edit_firewall.html:86
 msgid "Port"
 msgstr "Θύρα"
 
+#: ../../web/templates/reset_1.html:20 ../../web/templates/login.html:21
+#: ../../web/templates/admin/edit_user.html:62
+#: ../../web/templates/admin/add_web.html:177
+#: ../../web/templates/admin/add_web.html:332
+#: ../../web/templates/admin/add_web.html:404
+#: ../../web/templates/admin/edit_web.html:131
+#: ../../web/templates/admin/edit_web.html:467
+#: ../../web/templates/admin/edit_web.html:543
+#: ../../web/templates/admin/add_db.html:73
+#: ../../web/templates/admin/edit_mail_acc.html:177
+#: ../../web/templates/admin/edit_db.html:71
+#: ../../web/templates/admin/list_user.html:15
+#: ../../web/templates/admin/list_mail_acc.html:54
+#: ../../web/templates/admin/edit_server.html:708
+#: ../../web/templates/admin/add_mail_acc.html:166
+#: ../../web/templates/admin/add_user.html:56
+#: ../../web/templates/admin/list_db.html:37
+#: ../../web/templates/admin/list_db.html:84
+#: ../../web/templates/login_a.html:21
 #: ../../web/templates/user/edit_user.html:60
 #: ../../web/templates/user/edit_web.html:144
 #: ../../web/templates/user/edit_web.html:481
 #: ../../web/templates/user/edit_web.html:557
 #: ../../web/templates/user/list_user.html:19
-#: ../../web/templates/user/list_db.html:83
 #: ../../web/templates/user/list_mail_acc.html:54
+#: ../../web/templates/user/list_db.html:83
 #: ../../web/templates/reset2fa.html:34
-#: ../../web/templates/admin/edit_db.html:71
-#: ../../web/templates/admin/edit_user.html:60
-#: ../../web/templates/admin/edit_web.html:131
-#: ../../web/templates/admin/edit_web.html:467
-#: ../../web/templates/admin/edit_web.html:543
-#: ../../web/templates/admin/edit_server.html:694
-#: ../../web/templates/admin/add_db.html:73
-#: ../../web/templates/admin/list_user.html:15
-#: ../../web/templates/admin/add_mail_acc.html:166
-#: ../../web/templates/admin/list_db.html:37
-#: ../../web/templates/admin/list_db.html:84
-#: ../../web/templates/admin/edit_mail_acc.html:177
-#: ../../web/templates/admin/list_mail_acc.html:54
-#: ../../web/templates/admin/add_web.html:177
-#: ../../web/templates/admin/add_web.html:332
-#: ../../web/templates/admin/add_web.html:404
-#: ../../web/templates/admin/add_user.html:56
-#: ../../web/templates/reset_1.html:20 ../../web/templates/login.html:21
 msgid "Username"
 msgstr "Όνομα Χρήστη"
 
-#: ../../web/templates/admin/edit_server.html:735
+#: ../../web/templates/admin/edit_server.html:749
 msgid "Hestia SSL"
 msgstr "SSL"
 
-#: ../../web/templates/user/edit_web.html:356
+#: ../../web/templates/admin/add_web.html:275
 #: ../../web/templates/admin/edit_web.html:342
-#: ../../web/templates/admin/edit_server.html:744
 #: ../../web/templates/admin/edit_mail.html:115
 #: ../../web/templates/admin/list_ssl.html:54
-#: ../../web/templates/admin/add_web.html:275
+#: ../../web/templates/admin/edit_server.html:758
+#: ../../web/templates/user/edit_web.html:356
 msgid "SSL Certificate"
 msgstr "Πιστοποιητικό SSL"
 
-#: ../../web/templates/user/edit_web.html:357
-#: ../../web/templates/admin/edit_web.html:343
-#: ../../web/templates/admin/edit_server.html:745
-#: ../../web/templates/admin/edit_mail.html:116
 #: ../../web/templates/admin/add_web.html:276
+#: ../../web/templates/admin/edit_web.html:343
+#: ../../web/templates/admin/edit_mail.html:116
+#: ../../web/templates/admin/edit_server.html:759
+#: ../../web/templates/user/edit_web.html:357
 msgid "Generate CSR"
 msgstr "Δημιουργήστε CSR"
 
-#: ../../web/templates/user/edit_web.html:367
+#: ../../web/templates/admin/add_web.html:286
 #: ../../web/templates/admin/edit_web.html:353
-#: ../../web/templates/admin/edit_server.html:755
 #: ../../web/templates/admin/edit_mail.html:126
 #: ../../web/templates/admin/list_ssl.html:64
-#: ../../web/templates/admin/add_web.html:286
+#: ../../web/templates/admin/edit_server.html:769
+#: ../../web/templates/user/edit_web.html:367
 msgid "SSL Key"
 msgstr "Κλειδί SSL"
 
-#: ../../web/templates/user/edit_web.html:392
 #: ../../web/templates/admin/edit_web.html:378
-#: ../../web/templates/admin/edit_server.html:768
 #: ../../web/templates/admin/edit_mail.html:151
+#: ../../web/templates/admin/edit_server.html:782
+#: ../../web/templates/user/edit_web.html:392
 msgid "SUBJECT"
 msgstr "SUBJECT"
 
-#: ../../web/templates/user/edit_web.html:401
 #: ../../web/templates/admin/edit_web.html:387
-#: ../../web/templates/admin/edit_server.html:777
 #: ../../web/templates/admin/edit_mail.html:160
+#: ../../web/templates/admin/edit_server.html:791
+#: ../../web/templates/user/edit_web.html:401
 msgid "ALIASES"
 msgstr "ALIASES"
 
-#: ../../web/templates/user/edit_web.html:410
 #: ../../web/templates/admin/edit_web.html:396
-#: ../../web/templates/admin/edit_server.html:786
 #: ../../web/templates/admin/edit_mail.html:169
+#: ../../web/templates/admin/edit_server.html:800
+#: ../../web/templates/user/edit_web.html:410
 msgid "NOT_BEFORE"
 msgstr "NOT_BEFORE"
 
-#: ../../web/templates/user/edit_web.html:418
 #: ../../web/templates/admin/edit_web.html:404
-#: ../../web/templates/admin/edit_server.html:794
 #: ../../web/templates/admin/edit_mail.html:177
+#: ../../web/templates/admin/edit_server.html:808
+#: ../../web/templates/user/edit_web.html:418
 msgid "NOT_AFTER"
 msgstr "NOT_AFTER"
 
-#: ../../web/templates/user/edit_web.html:426
 #: ../../web/templates/admin/edit_web.html:412
-#: ../../web/templates/admin/edit_server.html:802
 #: ../../web/templates/admin/edit_mail.html:185
+#: ../../web/templates/admin/edit_server.html:816
+#: ../../web/templates/user/edit_web.html:426
 msgid "SIGNATURE"
 msgstr "SIGNATURE"
 
-#: ../../web/templates/user/edit_web.html:434
 #: ../../web/templates/admin/edit_web.html:420
-#: ../../web/templates/admin/edit_server.html:811
 #: ../../web/templates/admin/edit_mail.html:193
+#: ../../web/templates/admin/edit_server.html:825
+#: ../../web/templates/user/edit_web.html:434
 msgid "PUB_KEY"
 msgstr "PUB_KEY"
 
-#: ../../web/templates/user/edit_web.html:442
 #: ../../web/templates/admin/edit_web.html:428
-#: ../../web/templates/admin/edit_server.html:819
 #: ../../web/templates/admin/edit_mail.html:201
+#: ../../web/templates/admin/edit_server.html:833
+#: ../../web/templates/user/edit_web.html:442
 msgid "ISSUER"
 msgstr "ISSUER"
 
-#: ../../web/templates/admin/edit_server.html:836
+#: ../../web/templates/admin/edit_server.html:875
 msgid "Hestia Control Panel Plugins"
 msgstr "Plugins"
 
-#: ../../web/templates/admin/edit_server.html:859
+#: ../../web/templates/admin/edit_server.html:898
 msgid "FileSystem Disk Quota"
 msgstr "FileSystem Disk Quota"
 
-#: ../../web/templates/admin/edit_server.html:873
 #: ../../web/templates/admin/list_services.html:7
+#: ../../web/templates/admin/edit_server.html:912
 msgid "Firewall"
 msgstr "Τείχος Προστασίας"
 
@@ -1808,246 +1845,246 @@ msgstr "Συγκεντρωτικά Στατιστικά"
 msgid "show per user"
 msgstr "Εμφάνιση ανά χρήστη"
 
-#: ../../web/templates/user/list_stats.html:28
-#: ../../web/templates/user/list_cron.html:64
-#: ../../web/templates/admin/list_stats.html:42
 #: ../../web/templates/admin/list_cron.html:64
-#: ../../web/templates/admin/edit_cron.html:415
 #: ../../web/templates/admin/add_cron.html:421
+#: ../../web/templates/admin/list_stats.html:42
+#: ../../web/templates/admin/edit_cron.html:415
+#: ../../web/templates/user/list_cron.html:64
+#: ../../web/templates/user/list_stats.html:28
 msgid "Month"
 msgstr "Μήνας"
 
-#: ../../web/templates/user/list_stats.html:30
-#: ../../web/templates/user/list_user.html:73
-#: ../../web/templates/admin/list_stats.html:44
 #: ../../web/templates/admin/list_user.html:69
+#: ../../web/templates/admin/list_stats.html:44
+#: ../../web/templates/user/list_user.html:73
+#: ../../web/templates/user/list_stats.html:30
 msgid "IPs"
 msgstr ""
 
-#: ../../web/templates/user/list_stats.html:31
-#: ../../web/templates/user/list_web.html:16
-#: ../../web/templates/user/list_web.html:62
-#: ../../web/templates/user/list_user.html:20
-#: ../../web/templates/user/list_user.html:74
-#: ../../web/templates/user/list_db.html:36
-#: ../../web/templates/user/list_db.html:85
-#: ../../web/templates/user/list_mail_acc.html:11
-#: ../../web/templates/user/list_mail_acc.html:56
-#: ../../web/templates/user/list_mail.html:10
-#: ../../web/templates/user/list_mail.html:56
-#: ../../web/templates/admin/list_stats.html:45
 #: ../../web/templates/admin/list_web.html:10
 #: ../../web/templates/admin/list_web.html:57
-#: ../../web/templates/admin/list_user.html:16
-#: ../../web/templates/admin/list_user.html:70
-#: ../../web/templates/admin/list_packages.html:45
 #: ../../web/templates/admin/list_server_info.html:29
-#: ../../web/templates/admin/list_db.html:36
-#: ../../web/templates/admin/list_db.html:86
-#: ../../web/templates/admin/list_mail_acc.html:11
-#: ../../web/templates/admin/list_mail_acc.html:56
 #: ../../web/templates/admin/list_mail.html:10
 #: ../../web/templates/admin/list_mail.html:57
+#: ../../web/templates/admin/list_user.html:16
+#: ../../web/templates/admin/list_user.html:70
+#: ../../web/templates/admin/list_mail_acc.html:11
+#: ../../web/templates/admin/list_mail_acc.html:56
+#: ../../web/templates/admin/list_packages.html:45
+#: ../../web/templates/admin/list_stats.html:45
+#: ../../web/templates/admin/list_db.html:36
+#: ../../web/templates/admin/list_db.html:86
+#: ../../web/templates/user/list_web.html:16
+#: ../../web/templates/user/list_web.html:62
+#: ../../web/templates/user/list_mail.html:10
+#: ../../web/templates/user/list_mail.html:56
+#: ../../web/templates/user/list_user.html:20
+#: ../../web/templates/user/list_user.html:74
+#: ../../web/templates/user/list_mail_acc.html:11
+#: ../../web/templates/user/list_mail_acc.html:56
+#: ../../web/templates/user/list_stats.html:31
+#: ../../web/templates/user/list_db.html:36
+#: ../../web/templates/user/list_db.html:85
 msgid "Disk"
 msgstr "Δίσκος"
 
-#: ../../web/templates/user/list_stats.html:32
-#: ../../web/templates/user/list_web.html:17
-#: ../../web/templates/user/list_web.html:63
-#: ../../web/templates/user/list_user.html:21
-#: ../../web/templates/user/list_user.html:75
-#: ../../web/templates/admin/edit_package.html:292
-#: ../../web/templates/admin/list_stats.html:46
 #: ../../web/templates/admin/list_web.html:11
 #: ../../web/templates/admin/list_web.html:58
 #: ../../web/templates/admin/list_user.html:17
 #: ../../web/templates/admin/list_user.html:71
-#: ../../web/templates/admin/list_packages.html:46
+#: ../../web/templates/admin/edit_package.html:292
 #: ../../web/templates/admin/add_package.html:295
+#: ../../web/templates/admin/list_packages.html:46
+#: ../../web/templates/admin/list_stats.html:46
+#: ../../web/templates/user/list_web.html:17
+#: ../../web/templates/user/list_web.html:63
+#: ../../web/templates/user/list_user.html:21
+#: ../../web/templates/user/list_user.html:75
+#: ../../web/templates/user/list_stats.html:32
 msgid "Bandwidth"
 msgstr "Eύρος Zώνης"
 
-#: ../../web/templates/user/list_stats.html:33
-#: ../../web/templates/user/list_user.html:76
 #: ../../web/templates/admin/edit_backup_exclusions.html:58
-#: ../../web/templates/admin/edit_package.html:183
-#: ../../web/templates/admin/list_stats.html:47
 #: ../../web/templates/admin/list_user.html:72
-#: ../../web/templates/admin/list_packages.html:47
+#: ../../web/templates/admin/edit_package.html:183
 #: ../../web/templates/admin/add_package.html:186
+#: ../../web/templates/admin/list_packages.html:47
+#: ../../web/templates/admin/list_stats.html:47
+#: ../../web/templates/user/list_user.html:76
+#: ../../web/templates/user/list_stats.html:33
 msgid "Web Domains"
 msgstr "Domains Ιστοσελίδας"
 
-#: ../../web/templates/user/list_stats.html:34
 #: ../../web/templates/admin/edit_package.html:194
-#: ../../web/templates/admin/list_stats.html:48
-#: ../../web/templates/admin/list_packages.html:48
 #: ../../web/templates/admin/add_package.html:197
+#: ../../web/templates/admin/list_packages.html:48
+#: ../../web/templates/admin/list_stats.html:48
+#: ../../web/templates/user/list_stats.html:34
 msgid "Web Aliases"
 msgstr "Ψευδώνυμα Ιστοσελίδας"
 
-#: ../../web/templates/user/list_stats.html:35
-#: ../../web/templates/user/list_user.html:78
-#: ../../web/templates/admin/list_stats.html:49
 #: ../../web/templates/admin/list_user.html:74
 #: ../../web/templates/admin/list_packages.html:49
+#: ../../web/templates/admin/list_stats.html:49
+#: ../../web/templates/user/list_user.html:78
+#: ../../web/templates/user/list_stats.html:35
 msgid "DNS Domains"
 msgstr "DNS Domains"
 
-#: ../../web/templates/user/list_stats.html:36
-#: ../../web/templates/admin/list_stats.html:50
 #: ../../web/templates/admin/list_packages.html:50
+#: ../../web/templates/admin/list_stats.html:50
+#: ../../web/templates/user/list_stats.html:36
 msgid "DNS Records"
 msgstr ""
 
-#: ../../web/templates/user/list_stats.html:37
-#: ../../web/templates/user/list_user.html:77
 #: ../../web/templates/admin/edit_backup_exclusions.html:68
-#: ../../web/templates/admin/edit_package.html:227
-#: ../../web/templates/admin/list_stats.html:51
 #: ../../web/templates/admin/list_user.html:73
-#: ../../web/templates/admin/list_packages.html:51
+#: ../../web/templates/admin/edit_package.html:227
 #: ../../web/templates/admin/add_package.html:230
+#: ../../web/templates/admin/list_packages.html:51
+#: ../../web/templates/admin/list_stats.html:51
+#: ../../web/templates/user/list_user.html:77
+#: ../../web/templates/user/list_stats.html:37
 msgid "Mail Domains"
 msgstr "Domains Ταχυδρομείου"
 
-#: ../../web/templates/user/list_stats.html:38
 #: ../../web/templates/admin/edit_package.html:238
-#: ../../web/templates/admin/list_stats.html:52
-#: ../../web/templates/admin/list_packages.html:52
 #: ../../web/templates/admin/add_package.html:241
+#: ../../web/templates/admin/list_packages.html:52
+#: ../../web/templates/admin/list_stats.html:52
+#: ../../web/templates/user/list_stats.html:38
 msgid "Mail Accounts"
 msgstr "Λογαριασμοί Ταχυδρομείου"
 
-#: ../../web/templates/user/list_stats.html:40
-#: ../../web/templates/user/list_user.html:80
-#: ../../web/templates/admin/edit_package.html:260
-#: ../../web/templates/admin/list_stats.html:54
 #: ../../web/templates/admin/list_user.html:76
-#: ../../web/templates/admin/list_packages.html:54
+#: ../../web/templates/admin/edit_package.html:260
 #: ../../web/templates/admin/add_package.html:263
+#: ../../web/templates/admin/list_packages.html:54
+#: ../../web/templates/admin/list_stats.html:54
+#: ../../web/templates/user/list_user.html:80
+#: ../../web/templates/user/list_stats.html:40
 msgid "Cron Jobs"
 msgstr "Εργασίες Cron"
 
-#: ../../web/templates/user/list_stats.html:79
 #: ../../web/templates/admin/list_stats.html:93
+#: ../../web/templates/user/list_stats.html:79
 msgid "1 month"
 msgstr "1 μήνας"
 
-#: ../../web/templates/user/list_stats.html:81
 #: ../../web/templates/admin/list_stats.html:95
+#: ../../web/templates/user/list_stats.html:81
 msgid "%s months"
 msgstr "%s μήνες"
 
-#: ../../web/templates/user/list_dns.html:95
-#: ../../web/templates/user/list_dns_rec.html:5
 #: ../../web/templates/admin/list_dns.html:96
 #: ../../web/templates/admin/list_dns_rec.html:5
+#: ../../web/templates/user/list_dns.html:95
+#: ../../web/templates/user/list_dns_rec.html:5
 msgid "Add DNS Record"
 msgstr "Προσθήκη Εγγραφής DNS"
 
-#: ../../web/templates/user/list_dns_rec.html:5
 #: ../../web/templates/admin/list_dns_rec.html:5
+#: ../../web/templates/user/list_dns_rec.html:5
 msgid "Add Record"
 msgstr "Προσθήκη εγγραφής"
 
-#: ../../web/templates/user/edit_dns.html:40
-#: ../../web/templates/user/list_dns.html:97
-#: ../../web/templates/user/list_dns_rec.html:6
-#: ../../web/templates/admin/edit_dns.html:40
 #: ../../web/templates/admin/list_dns.html:98
+#: ../../web/templates/admin/edit_dns.html:40
 #: ../../web/templates/admin/list_dns_rec.html:6
+#: ../../web/templates/user/list_dns.html:97
+#: ../../web/templates/user/edit_dns.html:40
+#: ../../web/templates/user/list_dns_rec.html:6
 msgid "Editing DNS Domain"
 msgstr "Επεξεργασία DNS Domain"
 
-#: ../../web/templates/user/list_dns.html:32
-#: ../../web/templates/user/list_dns_rec.html:25
-#: ../../web/templates/user/list_cron.html:38
-#: ../../web/templates/user/list_web.html:38
-#: ../../web/templates/user/list_user.html:49
-#: ../../web/templates/user/list_db.html:59
-#: ../../web/templates/user/list_mail_acc.html:32
-#: ../../web/templates/user/list_mail.html:31
-#: ../../web/templates/admin/list_dns.html:33
-#: ../../web/templates/admin/list_dns_rec.html:25
-#: ../../web/templates/admin/list_cron.html:38
 #: ../../web/templates/admin/list_web.html:33
-#: ../../web/templates/admin/list_user.html:45
-#: ../../web/templates/admin/list_db.html:60
-#: ../../web/templates/admin/list_mail_acc.html:32
 #: ../../web/templates/admin/list_mail.html:32
+#: ../../web/templates/admin/list_cron.html:38
+#: ../../web/templates/admin/list_user.html:45
+#: ../../web/templates/admin/list_mail_acc.html:32
+#: ../../web/templates/admin/list_dns.html:33
+#: ../../web/templates/admin/list_db.html:60
+#: ../../web/templates/admin/list_dns_rec.html:25
+#: ../../web/templates/user/list_web.html:38
+#: ../../web/templates/user/list_mail.html:31
+#: ../../web/templates/user/list_cron.html:38
+#: ../../web/templates/user/list_user.html:49
+#: ../../web/templates/user/list_mail_acc.html:32
+#: ../../web/templates/user/list_dns.html:32
+#: ../../web/templates/user/list_db.html:59
+#: ../../web/templates/user/list_dns_rec.html:25
 msgid "suspend"
 msgstr "Αποκλεισμός"
 
-#: ../../web/templates/user/list_dns.html:33
-#: ../../web/templates/user/list_dns_rec.html:26
-#: ../../web/templates/user/list_cron.html:39
-#: ../../web/templates/user/list_web.html:39
-#: ../../web/templates/user/list_user.html:50
-#: ../../web/templates/user/list_db.html:60
-#: ../../web/templates/user/list_mail_acc.html:33
-#: ../../web/templates/user/list_mail.html:32
-#: ../../web/templates/admin/list_dns.html:34
-#: ../../web/templates/admin/list_dns_rec.html:26
-#: ../../web/templates/admin/list_cron.html:39
 #: ../../web/templates/admin/list_web.html:34
-#: ../../web/templates/admin/list_user.html:46
-#: ../../web/templates/admin/list_db.html:61
-#: ../../web/templates/admin/list_mail_acc.html:33
 #: ../../web/templates/admin/list_mail.html:33
+#: ../../web/templates/admin/list_cron.html:39
+#: ../../web/templates/admin/list_user.html:46
+#: ../../web/templates/admin/list_mail_acc.html:33
+#: ../../web/templates/admin/list_dns.html:34
+#: ../../web/templates/admin/list_db.html:61
+#: ../../web/templates/admin/list_dns_rec.html:26
+#: ../../web/templates/user/list_web.html:39
+#: ../../web/templates/user/list_mail.html:32
+#: ../../web/templates/user/list_cron.html:39
+#: ../../web/templates/user/list_user.html:50
+#: ../../web/templates/user/list_mail_acc.html:33
+#: ../../web/templates/user/list_dns.html:33
+#: ../../web/templates/user/list_db.html:60
+#: ../../web/templates/user/list_dns_rec.html:26
 msgid "unsuspend"
 msgstr "Άρση αποκλεισμού"
 
-#: ../../web/templates/user/list_dns_rec.html:46
-#: ../../web/templates/admin/list_dns_rec.html:46
 #: ../../web/templates/admin/add_dns_rec.html:59
 #: ../../web/templates/admin/edit_dns_rec.html:69
+#: ../../web/templates/admin/list_dns_rec.html:46
+#: ../../web/templates/user/list_dns_rec.html:46
 msgid "Record"
 msgstr "Εγγραφή"
 
-#: ../../web/templates/user/list_dns_rec.html:48
-#: ../../web/templates/user/list_db.html:82
-#: ../../web/templates/user/list_search.html:40
-#: ../../web/templates/admin/edit_db.html:105
-#: ../../web/templates/admin/list_dns_rec.html:48
+#: ../../web/templates/admin/list_backup.html:47
 #: ../../web/templates/admin/add_db.html:107
-#: ../../web/templates/admin/add_dns_rec.html:70
-#: ../../web/templates/admin/list_backup_detail.html:44
-#: ../../web/templates/admin/edit_dns_rec.html:81
-#: ../../web/templates/admin/list_db.html:83
+#: ../../web/templates/admin/edit_db.html:105
 #: ../../web/templates/admin/list_search.html:42
 #: ../../web/templates/admin/list_backup_exclusions.html:29
-#: ../../web/templates/admin/list_backup.html:47
+#: ../../web/templates/admin/list_backup_detail.html:44
+#: ../../web/templates/admin/add_dns_rec.html:70
+#: ../../web/templates/admin/list_db.html:83
+#: ../../web/templates/admin/edit_dns_rec.html:81
+#: ../../web/templates/admin/list_dns_rec.html:48
+#: ../../web/templates/user/list_search.html:40
+#: ../../web/templates/user/list_db.html:82
+#: ../../web/templates/user/list_dns_rec.html:48
 msgid "Type"
 msgstr "Τύπος"
 
-#: ../../web/templates/user/list_dns_rec.html:49
-#: ../../web/templates/admin/list_dns_rec.html:49
 #: ../../web/templates/admin/add_dns_rec.html:114
 #: ../../web/templates/admin/edit_dns_rec.html:125
+#: ../../web/templates/admin/list_dns_rec.html:49
+#: ../../web/templates/user/list_dns_rec.html:49
 msgid "Priority"
 msgstr "Προτεραιότητα"
 
-#: ../../web/templates/user/list_dns.html:57
 #: ../../web/templates/admin/list_dns.html:58
-#: ../../web/templates/admin/list_dns_rec.html:50
 #: ../../web/templates/admin/add_dns_rec.html:124
 #: ../../web/templates/admin/edit_dns_rec.html:135
+#: ../../web/templates/admin/list_dns_rec.html:50
+#: ../../web/templates/user/list_dns.html:57
 msgid "TTL"
 msgstr "TTL"
 
-#: ../../web/templates/user/list_dns_rec.html:50
-#: ../../web/templates/admin/list_dns_rec.html:52
 #: ../../web/templates/admin/add_dns_rec.html:95
 #: ../../web/templates/admin/edit_dns_rec.html:106
+#: ../../web/templates/admin/list_dns_rec.html:52
+#: ../../web/templates/user/list_dns_rec.html:50
 msgid "IP or Value"
 msgstr "IP ή Τιμή"
 
-#: ../../web/templates/user/list_dns_rec.html:74
-#: ../../web/templates/user/list_dns_rec.html:79
+#: ../../web/templates/admin/edit_dns_rec.html:40
 #: ../../web/templates/admin/list_dns_rec.html:67
 #: ../../web/templates/admin/list_dns_rec.html:72
-#: ../../web/templates/admin/edit_dns_rec.html:40
+#: ../../web/templates/user/list_dns_rec.html:65
+#: ../../web/templates/user/list_dns_rec.html:70
 msgid "Editing DNS Record"
 msgstr "Επεξεργασία Εγγραφής DNS"
 
@@ -2059,13 +2096,13 @@ msgstr "Είστε σίγουρος πως θέλετε να διαγράψετ�
 msgid "Default"
 msgstr ""
 
-#: ../../web/templates/user/list_dns_rec.html:110
 #: ../../web/templates/admin/list_dns_rec.html:105
+#: ../../web/templates/user/list_dns_rec.html:101
 msgid "1 DNS record"
 msgstr ""
 
-#: ../../web/templates/user/list_dns_rec.html:112
 #: ../../web/templates/admin/list_dns_rec.html:107
+#: ../../web/templates/user/list_dns_rec.html:103
 msgid "%s DNS records"
 msgstr ""
 
@@ -2074,8 +2111,8 @@ msgstr ""
 msgid "Editing Backup Exclusions"
 msgstr "Επεξεργασία Εξαιρέσεων Αντιγράφου Ασφαλείας"
 
-#: ../../web/templates/admin/list_log.html:32
 #: ../../web/templates/admin/list_backup_exclusions.html:31
+#: ../../web/templates/admin/list_log.html:32
 msgid "Value"
 msgstr "Ρεκόρ"
 
@@ -2083,70 +2120,70 @@ msgstr "Ρεκόρ"
 msgid "no exclusions"
 msgstr "χωρίς εξαιρέσεις"
 
-#: ../../web/templates/user/list_db.html:123
-#: ../../web/templates/user/list_db.html:128
 #: ../../web/templates/admin/edit_db.html:41
 #: ../../web/templates/admin/list_db.html:124
 #: ../../web/templates/admin/list_db.html:129
+#: ../../web/templates/user/list_db.html:123
+#: ../../web/templates/user/list_db.html:128
 msgid "Editing Database"
 msgstr "Επεξεργασία Βάσης Δεδομένων"
 
-#: ../../web/templates/user/list_db.html:35
-#: ../../web/templates/user/list_db.html:80
-#: ../../web/templates/admin/edit_db.html:59
 #: ../../web/templates/admin/add_db.html:61
+#: ../../web/templates/admin/edit_db.html:59
 #: ../../web/templates/admin/list_backup_detail.html:181
 #: ../../web/templates/admin/list_db.html:35
 #: ../../web/templates/admin/list_db.html:81
+#: ../../web/templates/user/list_db.html:35
+#: ../../web/templates/user/list_db.html:80
 msgid "Database"
 msgstr "Βάση Δεδομένων"
 
-#: ../../web/templates/user/list_db.html:37
-#: ../../web/templates/admin/edit_user.html:149
+#: ../../web/templates/admin/edit_user.html:151
 #: ../../web/templates/admin/add_user.html:142
+#: ../../web/templates/user/list_db.html:37
 msgid "User"
 msgstr "Χρήστης"
 
-#: ../../web/templates/user/edit_user.html:71
-#: ../../web/templates/user/edit_web.html:154
-#: ../../web/templates/user/edit_web.html:494
-#: ../../web/templates/user/edit_web.html:569
-#: ../../web/templates/admin/edit_db.html:84
-#: ../../web/templates/admin/edit_user.html:71
+#: ../../web/templates/admin/setup_webapp.html:67
+#: ../../web/templates/admin/edit_user.html:73
+#: ../../web/templates/admin/add_web.html:187
+#: ../../web/templates/admin/add_web.html:344
+#: ../../web/templates/admin/add_web.html:416
 #: ../../web/templates/admin/edit_web.html:141
 #: ../../web/templates/admin/edit_web.html:480
 #: ../../web/templates/admin/edit_web.html:555
 #: ../../web/templates/admin/add_db.html:86
-#: ../../web/templates/admin/edit_cron.html:50
-#: ../../web/templates/admin/edit_cron.html:79
-#: ../../web/templates/admin/edit_cron.html:147
-#: ../../web/templates/admin/edit_cron.html:220
-#: ../../web/templates/admin/edit_cron.html:332
+#: ../../web/templates/admin/edit_mail_acc.html:71
+#: ../../web/templates/admin/edit_db.html:84
 #: ../../web/templates/admin/add_cron.html:51
 #: ../../web/templates/admin/add_cron.html:81
 #: ../../web/templates/admin/add_cron.html:150
 #: ../../web/templates/admin/add_cron.html:224
 #: ../../web/templates/admin/add_cron.html:339
 #: ../../web/templates/admin/add_mail_acc.html:70
-#: ../../web/templates/admin/edit_mail_acc.html:71
-#: ../../web/templates/admin/add_web.html:187
-#: ../../web/templates/admin/add_web.html:344
-#: ../../web/templates/admin/add_web.html:416
-#: ../../web/templates/admin/setup_webapp.html:67
 #: ../../web/templates/admin/add_user.html:66
+#: ../../web/templates/admin/edit_cron.html:50
+#: ../../web/templates/admin/edit_cron.html:79
+#: ../../web/templates/admin/edit_cron.html:147
+#: ../../web/templates/admin/edit_cron.html:220
+#: ../../web/templates/admin/edit_cron.html:332
+#: ../../web/templates/user/edit_user.html:71
+#: ../../web/templates/user/edit_web.html:154
+#: ../../web/templates/user/edit_web.html:494
+#: ../../web/templates/user/edit_web.html:569
 msgid "generate"
 msgstr "Δημιουργία"
 
-#: ../../web/templates/user/list_db.html:86
-#: ../../web/templates/admin/edit_db.html:125
 #: ../../web/templates/admin/add_db.html:144
+#: ../../web/templates/admin/edit_db.html:125
 #: ../../web/templates/admin/list_db.html:87
+#: ../../web/templates/user/list_db.html:86
 msgid "Charset"
 msgstr "Charset"
 
 #: ../../web/templates/admin/list_services.html:4
-#: ../../web/templates/admin/edit_server_nginx.html:5
 #: ../../web/templates/admin/edit_server_httpd.html:5
+#: ../../web/templates/admin/edit_server_nginx.html:5
 msgid "Configure"
 msgstr "Ρύθμιση"
 
@@ -2154,317 +2191,312 @@ msgstr "Ρύθμιση"
 msgid "Adding Mail Account"
 msgstr "Προσθήκη Λογαριασμού Ταχυδρομείου"
 
-#: ../../web/templates/user/list_mail_acc.html:10
-#: ../../web/templates/admin/add_mail_acc.html:60
 #: ../../web/templates/admin/edit_mail_acc.html:59
 #: ../../web/templates/admin/list_mail_acc.html:10
+#: ../../web/templates/admin/add_mail_acc.html:60
+#: ../../web/templates/user/list_mail_acc.html:10
 msgid "Account"
 msgstr "Λογαριασμός"
 
-#: ../../web/templates/admin/edit_server_mysql.html:113
 #: ../../web/templates/admin/add_dns.html:85
+#: ../../web/templates/admin/edit_server_mysql.html:113
+#: ../../web/templates/admin/add_web.html:106
 #: ../../web/templates/admin/edit_server_php.html:135
 #: ../../web/templates/admin/add_mail_acc.html:91
 #: ../../web/templates/admin/edit_server_nginx.html:168
-#: ../../web/templates/admin/add_web.html:106
 msgid "Advanced options"
 msgstr "Προχωρημένες επιλογές"
 
-#: ../../web/templates/user/list_mail_acc.html:57
-#: ../../web/templates/admin/edit_package.html:281
-#: ../../web/templates/admin/add_mail_acc.html:99
 #: ../../web/templates/admin/edit_mail_acc.html:92
-#: ../../web/templates/admin/add_package.html:284
+#: ../../web/templates/admin/edit_package.html:281
 #: ../../web/templates/admin/list_mail_acc.html:57
+#: ../../web/templates/admin/add_package.html:284
+#: ../../web/templates/admin/add_mail_acc.html:99
+#: ../../web/templates/user/list_mail_acc.html:57
 msgid "Quota"
 msgstr "Ποσοστό"
 
+#: ../../web/templates/admin/edit_mail_acc.html:92
 #: ../../web/templates/admin/edit_package.html:281
 #: ../../web/templates/admin/edit_package.html:292
-#: ../../web/templates/admin/add_mail_acc.html:99
-#: ../../web/templates/admin/edit_mail_acc.html:92
 #: ../../web/templates/admin/add_package.html:284
 #: ../../web/templates/admin/add_package.html:295
+#: ../../web/templates/admin/add_mail_acc.html:99
 msgid "in megabytes"
 msgstr "σε megabytes"
 
-#: ../../web/templates/user/edit_web.html:104
-#: ../../web/templates/user/list_mail_acc.html:58
+#: ../../web/templates/admin/add_web.html:113
 #: ../../web/templates/admin/edit_web.html:91
-#: ../../web/templates/admin/add_mail_acc.html:110
 #: ../../web/templates/admin/edit_mail_acc.html:103
 #: ../../web/templates/admin/list_mail_acc.html:58
-#: ../../web/templates/admin/add_web.html:113
+#: ../../web/templates/admin/add_mail_acc.html:110
+#: ../../web/templates/user/edit_web.html:104
+#: ../../web/templates/user/list_mail_acc.html:58
 msgid "Aliases"
 msgstr "Ψευδώνυμα"
 
-#: ../../web/templates/admin/add_mail_acc.html:110
 #: ../../web/templates/admin/edit_mail_acc.html:103
+#: ../../web/templates/admin/add_mail_acc.html:110
 msgid "use local-part"
 msgstr "Xρήση τοπικού μέρους"
 
-#: ../../web/templates/admin/add_mail_acc.html:120
 #: ../../web/templates/admin/edit_mail_acc.html:113
+#: ../../web/templates/admin/add_mail_acc.html:120
 msgid "Forward to"
 msgstr "Προώθηση σε"
 
-#: ../../web/templates/admin/add_mail_acc.html:120
 #: ../../web/templates/admin/edit_mail_acc.html:113
+#: ../../web/templates/admin/add_mail_acc.html:120
 msgid "one or more email addresses"
 msgstr "μία ή περισσότερες διευθύνσεις ηλεκτρονικού ταχυδρομείου"
 
-#: ../../web/templates/admin/add_mail_acc.html:130
 #: ../../web/templates/admin/edit_mail_acc.html:123
+#: ../../web/templates/admin/add_mail_acc.html:130
 msgid "Do not store forwarded mail"
 msgstr "Μη αποθήκευση προωθημένων μηνυμάτων ταχυδρομείου"
 
 #: ../../web/templates/admin/add_db.html:191
-#: ../../web/templates/admin/add_mail_acc.html:138
 #: ../../web/templates/admin/edit_mail_acc.html:149
+#: ../../web/templates/admin/add_mail_acc.html:138
 #: ../../web/templates/admin/add_user.html:175
 msgid "Send login credentials to email address"
 msgstr "Αποστολή των διαπιστευτηρίων εισόδου στη διεύθυνση ηλεκτρονικού ταχυδρομείου"
 
-#: ../../web/templates/admin/add_mail_acc.html:158
 #: ../../web/templates/admin/edit_mail_acc.html:169
+#: ../../web/templates/admin/add_mail_acc.html:158
 msgid "Use domain hostname"
 msgstr "Χρήση ονόματος κεντρικού υπολογιστή τομέα"
 
-#: ../../web/templates/admin/add_mail_acc.html:159
 #: ../../web/templates/admin/edit_mail_acc.html:170
+#: ../../web/templates/admin/add_mail_acc.html:159
 msgid "Use STARTTLS"
 msgstr "Χρήση STARTTLS"
 
-#: ../../web/templates/admin/add_mail_acc.html:160
 #: ../../web/templates/admin/edit_mail_acc.html:171
+#: ../../web/templates/admin/add_mail_acc.html:160
 msgid "Use SSL / TLS"
 msgstr "Χρήση SSL / TLS"
 
-#: ../../web/templates/admin/add_mail_acc.html:161
 #: ../../web/templates/admin/edit_mail_acc.html:172
+#: ../../web/templates/admin/add_mail_acc.html:161
 msgid "No encryption"
 msgstr "Χωρίς κρυπτογράφηση"
 
-#: ../../web/templates/admin/add_mail_acc.html:174
 #: ../../web/templates/admin/edit_mail_acc.html:185
+#: ../../web/templates/admin/add_mail_acc.html:174
 msgid "IMAP hostname"
 msgstr "IMAP hostname"
 
-#: ../../web/templates/admin/add_mail_acc.html:178
 #: ../../web/templates/admin/edit_mail_acc.html:189
+#: ../../web/templates/admin/add_mail_acc.html:178
 msgid "IMAP port"
 msgstr "Θύρα IMAP"
 
-#: ../../web/templates/admin/add_mail_acc.html:182
 #: ../../web/templates/admin/edit_mail_acc.html:193
+#: ../../web/templates/admin/add_mail_acc.html:182
 msgid "IMAP security"
 msgstr "Ασφάλεια IMAP"
 
-#: ../../web/templates/admin/add_mail_acc.html:183
-#: ../../web/templates/admin/add_mail_acc.html:199
 #: ../../web/templates/admin/edit_mail_acc.html:194
 #: ../../web/templates/admin/edit_mail_acc.html:210
+#: ../../web/templates/admin/add_mail_acc.html:183
+#: ../../web/templates/admin/add_mail_acc.html:199
 msgid "STARTTLS"
 msgstr "STARTTLS"
 
-#: ../../web/templates/admin/add_mail_acc.html:186
 #: ../../web/templates/admin/edit_mail_acc.html:197
+#: ../../web/templates/admin/add_mail_acc.html:186
 msgid "IMAP auth method"
 msgstr "Μέθοδος πιστοποίησης IMAP"
 
-#: ../../web/templates/admin/add_mail_acc.html:187
-#: ../../web/templates/admin/add_mail_acc.html:203
 #: ../../web/templates/admin/edit_mail_acc.html:198
 #: ../../web/templates/admin/edit_mail_acc.html:214
+#: ../../web/templates/admin/add_mail_acc.html:187
+#: ../../web/templates/admin/add_mail_acc.html:203
 msgid "Normal password"
 msgstr "Κωδικός πρόσβασης"
 
-#: ../../web/templates/admin/add_mail_acc.html:190
 #: ../../web/templates/admin/edit_mail_acc.html:201
+#: ../../web/templates/admin/add_mail_acc.html:190
 msgid "SMTP hostname"
 msgstr "SMTP hostname"
 
-#: ../../web/templates/admin/add_mail_acc.html:194
 #: ../../web/templates/admin/edit_mail_acc.html:205
+#: ../../web/templates/admin/add_mail_acc.html:194
 msgid "SMTP port"
 msgstr "Θύρα SMTP"
 
-#: ../../web/templates/admin/add_mail_acc.html:198
 #: ../../web/templates/admin/edit_mail_acc.html:209
+#: ../../web/templates/admin/add_mail_acc.html:198
 msgid "SMTP security"
 msgstr "Ασφάλεια SMTP"
 
-#: ../../web/templates/admin/add_mail_acc.html:202
 #: ../../web/templates/admin/edit_mail_acc.html:213
+#: ../../web/templates/admin/add_mail_acc.html:202
 msgid "SMTP auth method"
 msgstr "Μέθοδος πιστοποίησης SMTP"
 
-#: ../../web/templates/user/edit_web.html:8
 #: ../../web/templates/admin/edit_web.html:8
 #: ../../web/templates/admin/list_webapps.html:24
+#: ../../web/templates/user/edit_web.html:8
 msgid "Quick Install App"
 msgstr "Εγκατάσταση εφαρμογής"
 
-#: ../../web/templates/user/edit_web.html:44
-#: ../../web/templates/user/list_web.html:139
-#: ../../web/templates/user/list_web.html:148
-#: ../../web/templates/admin/edit_web.html:44
 #: ../../web/templates/admin/list_web.html:134
 #: ../../web/templates/admin/list_web.html:143
+#: ../../web/templates/admin/edit_web.html:44
+#: ../../web/templates/user/list_web.html:139
+#: ../../web/templates/user/list_web.html:148
+#: ../../web/templates/user/edit_web.html:44
 msgid "Editing Domain"
 msgstr "Επεξεργασία Domain"
 
-#: ../../web/templates/user/edit_dns.html:69
-#: ../../web/templates/user/edit_web.html:86
-#: ../../web/templates/admin/edit_dns.html:69
 #: ../../web/templates/admin/edit_web.html:73
 #: ../../web/templates/admin/list_ip.html:48
+#: ../../web/templates/admin/edit_dns.html:69
+#: ../../web/templates/user/edit_web.html:86
+#: ../../web/templates/user/edit_dns.html:69
 msgid "IP Address"
 msgstr "Διεύθυνση IP"
 
-#: ../../web/templates/user/edit_web.html:114
-#: ../../web/templates/admin/edit_web.html:101
 #: ../../web/templates/admin/add_web.html:146
+#: ../../web/templates/admin/edit_web.html:101
+#: ../../web/templates/user/edit_web.html:114
 msgid "Web Statistics"
 msgstr "Στατιστικά Ιστοσελίδας"
 
-#: ../../web/templates/user/edit_web.html:136
-#: ../../web/templates/admin/edit_web.html:123
 #: ../../web/templates/admin/add_web.html:169
+#: ../../web/templates/admin/edit_web.html:123
+#: ../../web/templates/user/edit_web.html:136
 msgid "Statistics Authorization"
 msgstr "Εξουσιοδότηση Στατιστικών"
 
-#: ../../web/templates/user/edit_web.html:167
-#: ../../web/templates/admin/edit_package.html:64
 #: ../../web/templates/admin/edit_web.html:154
+#: ../../web/templates/admin/edit_package.html:64
 #: ../../web/templates/admin/add_package.html:65
+#: ../../web/templates/user/edit_web.html:167
 msgid "Web Template"
 msgstr "Πρότυπο Ιστοσελίδας"
 
-#: ../../web/templates/user/edit_web.html:189
-#: ../../web/templates/admin/edit_package.html:88
 #: ../../web/templates/admin/edit_web.html:176
+#: ../../web/templates/admin/edit_package.html:88
 #: ../../web/templates/admin/add_package.html:89
+#: ../../web/templates/user/edit_web.html:189
 msgid "Backend Template"
 msgstr "Πρότυπο Παρασκηνίου"
 
-#: ../../web/templates/user/edit_web.html:215
-#: ../../web/templates/admin/edit_web.html:202
 #: ../../web/templates/admin/add_web.html:124
+#: ../../web/templates/admin/edit_web.html:202
+#: ../../web/templates/user/edit_web.html:215
 msgid "Proxy Support"
 msgstr "Υποστήριξη Διαμεσολαβητή"
 
-#: ../../web/templates/user/edit_web.html:223
-#: ../../web/templates/admin/edit_package.html:113
 #: ../../web/templates/admin/edit_web.html:210
+#: ../../web/templates/admin/edit_package.html:113
 #: ../../web/templates/admin/add_package.html:115
+#: ../../web/templates/user/edit_web.html:223
 msgid "Proxy Template"
 msgstr "Πρότυπο Διαμεσολαβητή"
 
-#: ../../web/templates/user/edit_web.html:247
-#: ../../web/templates/admin/edit_web.html:234
 #: ../../web/templates/admin/add_web.html:132
+#: ../../web/templates/admin/edit_web.html:234
+#: ../../web/templates/user/edit_web.html:247
 msgid "Proxy Extensions"
 msgstr "Πρόσθετα Διαμεσολαβητή"
 
-#: ../../web/templates/user/edit_web.html:318
+#: ../../web/templates/admin/add_web.html:257
 #: ../../web/templates/admin/edit_web.html:305
 #: ../../web/templates/admin/edit_mail.html:94
-#: ../../web/templates/admin/add_web.html:257
+#: ../../web/templates/user/edit_web.html:318
 msgid "SSL Support"
 msgstr "Υποστήριξη SSL"
 
-#: ../../web/templates/user/edit_web.html:326
+#: ../../web/templates/admin/add_web.html:265
 #: ../../web/templates/admin/edit_web.html:313
 #: ../../web/templates/admin/edit_mail.html:102
-#: ../../web/templates/admin/add_web.html:265
+#: ../../web/templates/user/edit_web.html:326
 msgid "Lets Encrypt Support"
 msgstr "Υποστήριξη Lets Encrypt"
 
-#: ../../web/templates/user/edit_web.html:331
 #: ../../web/templates/admin/edit_web.html:318
+#: ../../web/templates/user/edit_web.html:331
 msgid "Force SSL/HTTPS"
 msgstr "Ενεργοποίηση αυτόματης ανακατεύθυνσης HTTP-to-HTTPS"
 
-#: ../../web/templates/user/edit_web.html:336
 #: ../../web/templates/admin/edit_web.html:323
+#: ../../web/templates/user/edit_web.html:336
 msgid "Enable SSL HSTS"
 msgstr "Ενεργοποίηση αυστηρής ασφάλειας μεταφοράς HTTP (HSTS) <a href=\"https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security\" target=\"_blank\"><i class=\"fas fa-question-circle\"></i></a>"
 
-#: ../../web/templates/user/edit_web.html:342
 #: ../../web/templates/admin/edit_web.html:328
+#: ../../web/templates/user/edit_web.html:342
 msgid "Home Directory"
 msgstr ""
 
-#: ../../web/templates/user/edit_web.html:377
+#: ../../web/templates/admin/add_web.html:296
 #: ../../web/templates/admin/edit_web.html:363
 #: ../../web/templates/admin/edit_mail.html:136
-#: ../../web/templates/admin/add_web.html:296
+#: ../../web/templates/user/edit_web.html:377
 msgid "SSL Certificate Authority / Intermediate"
 msgstr "Αρχή Πιστοποιητικού SSL / Ενδιάμεσος"
 
-#: ../../web/templates/user/edit_web.html:297
-#: ../../web/templates/user/edit_web.html:377
-#: ../../web/templates/admin/add_ip.html:123
-#: ../../web/templates/admin/add_ip.html:133
-#: ../../web/templates/admin/edit_firewall.html:109
-#: ../../web/templates/admin/edit_web.html:284
-#: ../../web/templates/admin/edit_web.html:363
-#: ../../web/templates/admin/add_dns_rec.html:114
-#: ../../web/templates/admin/add_dns_rec.html:124
-#: ../../web/templates/admin/edit_dns_rec.html:125
-#: ../../web/templates/admin/edit_dns_rec.html:135
-#: ../../web/templates/admin/edit_ip.html:119
-#: ../../web/templates/admin/edit_ip.html:129
-#: ../../web/templates/admin/edit_mail.html:136
 #: ../../web/templates/admin/add_firewall.html:106
 #: ../../web/templates/admin/add_web.html:236
 #: ../../web/templates/admin/add_web.html:296
+#: ../../web/templates/admin/edit_web.html:284
+#: ../../web/templates/admin/edit_web.html:363
+#: ../../web/templates/admin/edit_mail.html:136
+#: ../../web/templates/admin/add_ip.html:123
+#: ../../web/templates/admin/add_ip.html:133
+#: ../../web/templates/admin/add_dns_rec.html:114
+#: ../../web/templates/admin/add_dns_rec.html:124
+#: ../../web/templates/admin/edit_ip.html:119
+#: ../../web/templates/admin/edit_ip.html:129
+#: ../../web/templates/admin/edit_dns_rec.html:125
+#: ../../web/templates/admin/edit_dns_rec.html:135
+#: ../../web/templates/admin/edit_firewall.html:109
+#: ../../web/templates/user/edit_web.html:297
+#: ../../web/templates/user/edit_web.html:377
 msgid "optional"
 msgstr "προαιρετικό"
 
-#: ../../web/templates/user/edit_web.html:457
-#: ../../web/templates/admin/edit_web.html:443
 #: ../../web/templates/admin/add_web.html:309
+#: ../../web/templates/admin/edit_web.html:443
+#: ../../web/templates/user/edit_web.html:457
 msgid "Additional FTP Account"
 msgstr "Επιπρόσθετος Λογαριασμός FTP"
 
-#: ../../web/templates/user/edit_web.html:474
-#: ../../web/templates/user/edit_web.html:550
-#: ../../web/templates/admin/edit_web.html:460
-#: ../../web/templates/admin/edit_web.html:536
 #: ../../web/templates/admin/add_firewall_banlist.html:74
 #: ../../web/templates/admin/add_web.html:325
 #: ../../web/templates/admin/add_web.html:397
+#: ../../web/templates/admin/edit_web.html:460
+#: ../../web/templates/admin/edit_web.html:536
+#: ../../web/templates/user/edit_web.html:474
+#: ../../web/templates/user/edit_web.html:550
 msgid "FTP"
 msgstr "FTP"
 
-#: ../../web/templates/user/edit_web.html:482
-#: ../../web/templates/user/edit_web.html:558
-msgid "Prefix will be automaticaly added to username"
-msgstr "Το πρόθεμα %s θα προστεθεί αυτόματα στο όνομα χρήστη"
-
-#: ../../web/templates/user/edit_web.html:505
-#: ../../web/templates/user/edit_web.html:580
-#: ../../web/templates/admin/edit_web.html:491
-#: ../../web/templates/admin/edit_web.html:566
 #: ../../web/templates/admin/add_web.html:355
 #: ../../web/templates/admin/add_web.html:427
+#: ../../web/templates/admin/edit_web.html:491
+#: ../../web/templates/admin/edit_web.html:566
+#: ../../web/templates/user/edit_web.html:505
+#: ../../web/templates/user/edit_web.html:580
 msgid "Path"
 msgstr "Μονοπάτι"
 
-#: ../../web/templates/user/edit_web.html:519
-#: ../../web/templates/user/edit_web.html:592
-#: ../../web/templates/admin/edit_web.html:505
-#: ../../web/templates/admin/edit_web.html:578
 #: ../../web/templates/admin/add_web.html:368
 #: ../../web/templates/admin/add_web.html:439
+#: ../../web/templates/admin/edit_web.html:505
+#: ../../web/templates/admin/edit_web.html:578
+#: ../../web/templates/user/edit_web.html:519
+#: ../../web/templates/user/edit_web.html:592
 msgid "Send FTP credentials to email"
 msgstr "Αποστολή διαπιστευτηρίων FTP στη διεύθυνση ηλεκτρονικού ταχυδρομείου"
 
-#: ../../web/templates/user/edit_web.html:535
-#: ../../web/templates/admin/edit_web.html:521
 #: ../../web/templates/admin/add_web.html:382
+#: ../../web/templates/admin/edit_web.html:521
+#: ../../web/templates/user/edit_web.html:535
 msgid "Add one more FTP Account"
 msgstr "Προσθήκη ενός ακόμα Λογαριασμού FTP"
 
@@ -2472,28 +2504,28 @@ msgstr "Προσθήκη ενός ακόμα Λογαριασμού FTP"
 msgid "Adding IP Address to Banlist"
 msgstr "Προσθήκη Διεύθυνσης IP στη Λίστα Απαγόρευσης"
 
-#: ../../web/templates/user/list_dns.html:10
-#: ../../web/templates/user/list_web.html:15
-#: ../../web/templates/user/list_web.html:61
-#: ../../web/templates/admin/add_ip.html:56
-#: ../../web/templates/admin/add_dns.html:66
-#: ../../web/templates/admin/list_dns.html:10
-#: ../../web/templates/admin/edit_firewall.html:96
-#: ../../web/templates/admin/add_firewall_banlist.html:56
 #: ../../web/templates/admin/list_web.html:9
 #: ../../web/templates/admin/list_web.html:56
+#: ../../web/templates/admin/add_dns.html:66
+#: ../../web/templates/admin/add_firewall.html:93
+#: ../../web/templates/admin/add_firewall_banlist.html:56
+#: ../../web/templates/admin/add_web.html:74
 #: ../../web/templates/admin/list_firewall.html:15
 #: ../../web/templates/admin/list_firewall.html:54
-#: ../../web/templates/admin/edit_ip.html:59
-#: ../../web/templates/admin/add_firewall.html:93
-#: ../../web/templates/admin/add_web.html:74
+#: ../../web/templates/admin/add_ip.html:56
+#: ../../web/templates/admin/list_dns.html:10
 #: ../../web/templates/admin/list_firewall_banlist.html:35
+#: ../../web/templates/admin/edit_ip.html:59
+#: ../../web/templates/admin/edit_firewall.html:96
+#: ../../web/templates/user/list_web.html:15
+#: ../../web/templates/user/list_web.html:61
+#: ../../web/templates/user/list_dns.html:10
 msgid "IP address"
 msgstr "διεύθυνση IP"
 
-#: ../../web/templates/admin/edit_firewall.html:96
-#: ../../web/templates/admin/add_firewall_banlist.html:56
 #: ../../web/templates/admin/add_firewall.html:93
+#: ../../web/templates/admin/add_firewall_banlist.html:56
+#: ../../web/templates/admin/edit_firewall.html:96
 msgid "CIDR format is supported"
 msgstr "Η μορφή CIDR υποστηρίζεται"
 
@@ -2505,29 +2537,29 @@ msgstr "Λίστα απαγόρευσης"
 msgid "SSH"
 msgstr "SSH"
 
-#: ../../web/templates/user/panel.html:45
 #: ../../web/templates/admin/add_firewall_banlist.html:73
 #: ../../web/templates/admin/panel.html:59
+#: ../../web/templates/user/panel.html:45
 msgid "WEB"
 msgstr "ΙΣΤΟΣΕΛΙΔΑ"
 
-#: ../../web/templates/user/panel.html:59
 #: ../../web/templates/admin/add_firewall_banlist.html:75
 #: ../../web/templates/admin/list_server_info.html:32
 #: ../../web/templates/admin/panel.html:73
+#: ../../web/templates/user/panel.html:59
 msgid "DNS"
 msgstr "DNS"
 
-#: ../../web/templates/user/panel.html:73
 #: ../../web/templates/admin/add_firewall_banlist.html:76
 #: ../../web/templates/admin/panel.html:87
+#: ../../web/templates/user/panel.html:73
 msgid "MAIL"
 msgstr "ΤΑΧΥΔΡΟΜΕΙΟ"
 
-#: ../../web/templates/user/panel.html:87
 #: ../../web/templates/admin/add_firewall_banlist.html:77
 #: ../../web/templates/admin/list_server_info.html:34
 #: ../../web/templates/admin/panel.html:101
+#: ../../web/templates/user/panel.html:87
 msgid "DB"
 msgstr "ΒΑΣΗ ΔΕΔΟΜΕΝΩΝ"
 
@@ -2539,57 +2571,57 @@ msgstr "HESTIA"
 msgid "Adding Firewall Rule"
 msgstr "Προσθήκη Κανόνα Τείχους Προστασίας"
 
-#: ../../web/templates/admin/edit_firewall.html:59
+#: ../../web/templates/admin/add_firewall.html:56
 #: ../../web/templates/admin/list_firewall.html:12
 #: ../../web/templates/admin/list_firewall.html:22
 #: ../../web/templates/admin/list_firewall.html:49
-#: ../../web/templates/admin/add_firewall.html:56
+#: ../../web/templates/admin/edit_firewall.html:59
 msgid "Action"
 msgstr "Ενέργεια"
 
-#: ../../web/templates/admin/edit_firewall.html:65
 #: ../../web/templates/admin/add_firewall.html:62
+#: ../../web/templates/admin/edit_firewall.html:65
 msgid "DROP"
 msgstr "ΑΠΟΡΡΙΨΗ"
 
-#: ../../web/templates/admin/edit_firewall.html:66
 #: ../../web/templates/admin/add_firewall.html:63
+#: ../../web/templates/admin/edit_firewall.html:66
 msgid "ACCEPT"
 msgstr "ΑΠΟΔΟΧΗ"
 
-#: ../../web/templates/admin/edit_firewall.html:78
 #: ../../web/templates/admin/add_firewall.html:75
+#: ../../web/templates/admin/edit_firewall.html:78
 msgid "TCP"
 msgstr "TCP"
 
-#: ../../web/templates/admin/edit_firewall.html:79
 #: ../../web/templates/admin/add_firewall.html:76
+#: ../../web/templates/admin/edit_firewall.html:79
 msgid "UDP"
 msgstr "UDP"
 
-#: ../../web/templates/admin/edit_firewall.html:80
 #: ../../web/templates/admin/add_firewall.html:77
+#: ../../web/templates/admin/edit_firewall.html:80
 msgid "ICMP"
 msgstr "ICMP"
 
-#: ../../web/templates/admin/edit_firewall.html:86
 #: ../../web/templates/admin/add_firewall.html:83
+#: ../../web/templates/admin/edit_firewall.html:86
 msgid "ranges are acceptable"
 msgstr "εύρος είναι αποδεκτό"
 
-#: ../../web/templates/admin/edit_firewall.html:109
+#: ../../web/templates/admin/add_firewall.html:106
 #: ../../web/templates/admin/list_firewall.html:16
 #: ../../web/templates/admin/list_firewall.html:51
-#: ../../web/templates/admin/add_firewall.html:106
 #: ../../web/templates/admin/list_firewall_banlist.html:39
+#: ../../web/templates/admin/edit_firewall.html:109
 msgid "Comment"
 msgstr "Σχόλιο"
 
+#: ../../web/templates/admin/list_web.html:4
+#: ../../web/templates/admin/add_web.html:41
+#: ../../web/templates/admin/list_user.html:9
 #: ../../web/templates/user/list_web.html:7
 #: ../../web/templates/user/list_user.html:11
-#: ../../web/templates/admin/list_web.html:4
-#: ../../web/templates/admin/list_user.html:9
-#: ../../web/templates/admin/add_web.html:41
 msgid "Add Web Domain"
 msgstr "Προσθήκη Domain Ιστοσελίδας"
 
@@ -2609,54 +2641,54 @@ msgstr "Υποστήριξη Ταχυδρομείου"
 msgid "Your certificate will be automatically issued in 5 minutes"
 msgstr "Το πιστοποιητικό σας θα εκδωθεί αυτόματα σε 5 λεπτά"
 
-#: ../../web/templates/admin/edit_cron.html:27
 #: ../../web/templates/admin/add_cron.html:28
+#: ../../web/templates/admin/edit_cron.html:27
 msgid "Minutes"
 msgstr "Λεπτά"
 
-#: ../../web/templates/admin/edit_cron.html:28
 #: ../../web/templates/admin/add_cron.html:29
+#: ../../web/templates/admin/edit_cron.html:28
 msgid "Hourly"
 msgstr "Hourly"
 
+#: ../../web/templates/admin/add_cron.html:30
 #: ../../web/templates/admin/list_rrd.html:11
 #: ../../web/templates/admin/edit_cron.html:29
-#: ../../web/templates/admin/add_cron.html:30
 msgid "Daily"
 msgstr "Καθημερινά"
 
+#: ../../web/templates/admin/add_cron.html:31
 #: ../../web/templates/admin/list_rrd.html:12
 #: ../../web/templates/admin/edit_cron.html:30
-#: ../../web/templates/admin/add_cron.html:31
 msgid "Weekly"
 msgstr "Εβδομαδιαία"
 
+#: ../../web/templates/admin/add_cron.html:32
 #: ../../web/templates/admin/list_rrd.html:13
 #: ../../web/templates/admin/edit_cron.html:31
-#: ../../web/templates/admin/add_cron.html:32
 msgid "Monthly"
 msgstr "Μηνιαία"
 
-#: ../../web/templates/admin/edit_cron.html:39
-#: ../../web/templates/admin/edit_cron.html:60
-#: ../../web/templates/admin/edit_cron.html:88
-#: ../../web/templates/admin/edit_cron.html:157
-#: ../../web/templates/admin/edit_cron.html:228
 #: ../../web/templates/admin/add_cron.html:40
 #: ../../web/templates/admin/add_cron.html:62
 #: ../../web/templates/admin/add_cron.html:91
 #: ../../web/templates/admin/add_cron.html:161
 #: ../../web/templates/admin/add_cron.html:234
+#: ../../web/templates/admin/edit_cron.html:39
+#: ../../web/templates/admin/edit_cron.html:60
+#: ../../web/templates/admin/edit_cron.html:88
+#: ../../web/templates/admin/edit_cron.html:157
+#: ../../web/templates/admin/edit_cron.html:228
 msgid "Run Command"
 msgstr "Εκτελέστε την εντολή"
 
-#: ../../web/templates/admin/edit_cron.html:41
 #: ../../web/templates/admin/add_cron.html:42
+#: ../../web/templates/admin/edit_cron.html:41
 msgid "every minute"
 msgstr "κάθε λεπτό"
 
-#: ../../web/templates/admin/edit_cron.html:42
 #: ../../web/templates/admin/add_cron.html:43
+#: ../../web/templates/admin/edit_cron.html:42
 msgid "every two minutes"
 msgstr "κάθε δύο λεπτά"
 
@@ -2720,47 +2752,47 @@ msgid "DNS Cluster"
 msgstr "DNS Cluster"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:99
-#: ../../web/templates/admin/edit_server.html:339
-#: ../../web/templates/admin/edit_server.html:449
-#: ../../web/templates/admin/edit_server.html:529
-#: ../../web/templates/admin/edit_server.html:610
-#: ../../web/templates/admin/edit_server.html:851
-#: ../../web/templates/admin/edit_server.html:865
-#: ../../web/templates/admin/edit_server.html:879
 #: ../../web/templates/admin/list_backup.html:55
 #: ../../web/templates/admin/list_backup.html:56
 #: ../../web/templates/admin/list_backup.html:57
 #: ../../web/templates/admin/list_backup.html:58
 #: ../../web/templates/admin/list_backup.html:59
 #: ../../web/templates/admin/list_backup.html:60
+#: ../../web/templates/admin/edit_server.html:339
+#: ../../web/templates/admin/edit_server.html:449
+#: ../../web/templates/admin/edit_server.html:529
+#: ../../web/templates/admin/edit_server.html:610
+#: ../../web/templates/admin/edit_server.html:890
+#: ../../web/templates/admin/edit_server.html:904
+#: ../../web/templates/admin/edit_server.html:918
 msgid "no"
 msgstr "όχι"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:98
-#: ../../web/templates/admin/edit_server.html:340
-#: ../../web/templates/admin/edit_server.html:450
-#: ../../web/templates/admin/edit_server.html:530
-#: ../../web/templates/admin/edit_server.html:611
-#: ../../web/templates/admin/edit_server.html:852
-#: ../../web/templates/admin/edit_server.html:866
-#: ../../web/templates/admin/edit_server.html:880
 #: ../../web/templates/admin/list_backup.html:62
 #: ../../web/templates/admin/list_backup.html:63
 #: ../../web/templates/admin/list_backup.html:64
 #: ../../web/templates/admin/list_backup.html:65
 #: ../../web/templates/admin/list_backup.html:66
 #: ../../web/templates/admin/list_backup.html:67
+#: ../../web/templates/admin/edit_server.html:340
+#: ../../web/templates/admin/edit_server.html:450
+#: ../../web/templates/admin/edit_server.html:530
+#: ../../web/templates/admin/edit_server.html:611
+#: ../../web/templates/admin/edit_server.html:891
+#: ../../web/templates/admin/edit_server.html:905
+#: ../../web/templates/admin/edit_server.html:919
 msgid "yes"
 msgstr "ναι"
 
-#: ../../web/templates/user/list_db.html:38
+#: ../../web/templates/admin/add_db.html:125
 #: ../../web/templates/admin/edit_db.html:115
 #: ../../web/templates/admin/edit_server.html:352
 #: ../../web/templates/admin/edit_server.html:475
 #: ../../web/templates/admin/edit_server.html:555
-#: ../../web/templates/admin/edit_server.html:672
-#: ../../web/templates/admin/add_db.html:125
+#: ../../web/templates/admin/edit_server.html:686
 #: ../../web/templates/admin/list_db.html:38
+#: ../../web/templates/user/list_db.html:38
 msgid "Host"
 msgstr "Πλήθος"
 
@@ -2769,33 +2801,33 @@ msgstr "Πλήθος"
 msgid "Mail Server"
 msgstr "Διακομιστής αλληλογραφίας"
 
-#: ../../web/templates/user/list_mail.html:57
-#: ../../web/templates/admin/edit_server.html:391
 #: ../../web/templates/admin/list_mail.html:58
+#: ../../web/templates/admin/edit_server.html:391
+#: ../../web/templates/user/list_mail.html:57
 msgid "Antivirus"
 msgstr "Antivirus"
 
-#: ../../web/templates/user/list_mail.html:58
-#: ../../web/templates/admin/edit_server.html:404
 #: ../../web/templates/admin/list_mail.html:59
+#: ../../web/templates/admin/edit_server.html:404
+#: ../../web/templates/user/list_mail.html:58
 msgid "AntiSpam"
 msgstr "AntiSpam"
 
+#: ../../web/templates/admin/edit_mail_acc.html:217
 #: ../../web/templates/admin/edit_server.html:416
 #: ../../web/templates/admin/add_mail_acc.html:206
-#: ../../web/templates/admin/edit_mail_acc.html:217
 msgid "Webmail URL"
 msgstr "Webmail Alias"
 
-#: ../../web/templates/user/list_stats.html:39
-#: ../../web/templates/user/list_user.html:79
 #: ../../web/templates/admin/edit_backup_exclusions.html:78
-#: ../../web/templates/admin/edit_package.html:249
-#: ../../web/templates/admin/list_stats.html:53
-#: ../../web/templates/admin/edit_server.html:434
 #: ../../web/templates/admin/list_user.html:75
-#: ../../web/templates/admin/list_packages.html:53
+#: ../../web/templates/admin/edit_package.html:249
+#: ../../web/templates/admin/edit_server.html:434
 #: ../../web/templates/admin/add_package.html:252
+#: ../../web/templates/admin/list_packages.html:53
+#: ../../web/templates/admin/list_stats.html:53
+#: ../../web/templates/user/list_user.html:79
+#: ../../web/templates/user/list_stats.html:39
 msgid "Databases"
 msgstr "Βάσεις Δεδομένων"
 
@@ -2807,27 +2839,28 @@ msgstr "MySQL Support"
 msgid "phpMyAdmin URL"
 msgstr "phpMyAdmin ψευδώνυμο"
 
+#: ../../web/templates/login_1.html:23
+#: ../../web/templates/admin/edit_user.html:73
+#: ../../web/templates/admin/add_web.html:187
+#: ../../web/templates/admin/add_web.html:344
+#: ../../web/templates/admin/add_web.html:416
+#: ../../web/templates/admin/edit_web.html:141
+#: ../../web/templates/admin/edit_web.html:480
+#: ../../web/templates/admin/edit_web.html:555
+#: ../../web/templates/admin/add_db.html:86
+#: ../../web/templates/admin/edit_mail_acc.html:71
+#: ../../web/templates/admin/edit_mail_acc.html:181
+#: ../../web/templates/admin/edit_db.html:84
+#: ../../web/templates/admin/edit_server.html:486
+#: ../../web/templates/admin/edit_server.html:719
+#: ../../web/templates/admin/add_mail_acc.html:70
+#: ../../web/templates/admin/add_mail_acc.html:170
+#: ../../web/templates/admin/add_user.html:66
+#: ../../web/templates/login_a.html:31
 #: ../../web/templates/user/edit_user.html:71
 #: ../../web/templates/user/edit_web.html:154
 #: ../../web/templates/user/edit_web.html:494
 #: ../../web/templates/user/edit_web.html:569
-#: ../../web/templates/admin/edit_db.html:84
-#: ../../web/templates/admin/edit_user.html:71
-#: ../../web/templates/admin/edit_web.html:141
-#: ../../web/templates/admin/edit_web.html:480
-#: ../../web/templates/admin/edit_web.html:555
-#: ../../web/templates/admin/edit_server.html:486
-#: ../../web/templates/admin/edit_server.html:705
-#: ../../web/templates/admin/add_db.html:86
-#: ../../web/templates/admin/add_mail_acc.html:70
-#: ../../web/templates/admin/add_mail_acc.html:170
-#: ../../web/templates/admin/edit_mail_acc.html:71
-#: ../../web/templates/admin/edit_mail_acc.html:181
-#: ../../web/templates/admin/add_web.html:187
-#: ../../web/templates/admin/add_web.html:344
-#: ../../web/templates/admin/add_web.html:416
-#: ../../web/templates/admin/add_user.html:66
-#: ../../web/templates/login_1.html:23
 msgid "Password"
 msgstr "Κωδικός"
 
@@ -2849,14 +2882,14 @@ msgstr "PostgreSQL Support"
 msgid "phpPgAdmin URL"
 msgstr "phpPgAdmin ψευδώνυμο"
 
-#: ../../web/templates/user/list_stats.html:41
-#: ../../web/templates/user/list_user.html:81
-#: ../../web/templates/admin/edit_package.html:271
-#: ../../web/templates/admin/list_stats.html:55
-#: ../../web/templates/admin/edit_server.html:595
 #: ../../web/templates/admin/list_user.html:77
-#: ../../web/templates/admin/list_packages.html:55
+#: ../../web/templates/admin/edit_package.html:271
+#: ../../web/templates/admin/edit_server.html:595
 #: ../../web/templates/admin/add_package.html:274
+#: ../../web/templates/admin/list_packages.html:55
+#: ../../web/templates/admin/list_stats.html:55
+#: ../../web/templates/user/list_user.html:81
+#: ../../web/templates/user/list_stats.html:41
 msgid "Backups"
 msgstr "Αντίγραφα Ασφαλείας"
 
@@ -2864,10 +2897,11 @@ msgstr "Αντίγραφα Ασφαλείας"
 msgid "BACKUP_SCHEDULED"
 msgstr "Η διεργασία έχει προστεθεί στην ουρά. Θα λάβετε ειδοποίηση ηλεκτρονικού ταχυδρομείου όταν το αντίγραφο ασφαλείας είναι έτοιμο προς λήψη."
 
-#: ../../web/schedule/backup/index.php:21
-#: ../../web/schedule/restore/index.php:43 ../../web/unsuspend/dns/index.php:21
+#: ../../web/bulk/restore/index.php:39 ../../web/unsuspend/dns/index.php:21
 #: ../../web/unsuspend/dns/index.php:42 ../../web/unsuspend/mail/index.php:21
-#: ../../web/unsuspend/mail/index.php:42 ../../web/bulk/restore/index.php:39
+#: ../../web/unsuspend/mail/index.php:42
+#: ../../web/schedule/restore/index.php:43
+#: ../../web/schedule/backup/index.php:21
 msgid "Error: hestia did not return any output."
 msgstr ""
 
@@ -2875,19 +2909,19 @@ msgstr ""
 msgid "BACKUP_EXISTS"
 msgstr "Μια υπάρχουσα διεργασία δημιουργίας αντιγράφου ασφαλείας εκτελείται ήδη. Παρακαλώ περιμένετε να ολοκληρωθεί."
 
-#: ../../web/schedule/restore/index.php:39 ../../web/bulk/restore/index.php:35
+#: ../../web/bulk/restore/index.php:35 ../../web/schedule/restore/index.php:39
 msgid "RESTORE_SCHEDULED"
 msgstr "Η διεργασία έχει προστεθεί στην ουρά. Θα λάβετε ειδοποίηση ηλεκτρονικού ταχυδρομείου όταν η επαναφορά σας έχει ολοκληρωθεί."
 
-#: ../../web/schedule/restore/index.php:46 ../../web/bulk/restore/index.php:42
+#: ../../web/bulk/restore/index.php:42 ../../web/schedule/restore/index.php:46
 msgid "RESTORE_EXISTS"
 msgstr "Μια υπάρχουσα διεργασία επαναφοράς εκτελείται ήδη. Παρακαλώ περιμένετε να ολοκληρωθεί πριν την εκκινήσετε ξανά."
 
-#: ../../web/generate/ssl/index.php:86 ../../web/inc/main.php:94
+#: ../../web/inc/main.php:94 ../../web/generate/ssl/index.php:86
 msgid "Error code:"
 msgstr "Κωδικός λάθους: %s"
 
-#: ../../web/inc/main.php:163 ../../web/add/cron/index.php:21
+#: ../../web/add/cron/index.php:21 ../../web/inc/main.php:163
 msgid "day"
 msgstr "ημέρα"
 
@@ -2895,7 +2929,7 @@ msgstr "ημέρα"
 msgid "days"
 msgstr "ημέρες"
 
-#: ../../web/inc/main.php:170 ../../web/add/cron/index.php:20
+#: ../../web/add/cron/index.php:20 ../../web/inc/main.php:170
 msgid "hour"
 msgstr "ώρα"
 
@@ -2903,7 +2937,7 @@ msgstr "ώρα"
 msgid "hours"
 msgstr "ώρες"
 
-#: ../../web/inc/main.php:177 ../../web/add/cron/index.php:19
+#: ../../web/add/cron/index.php:19 ../../web/inc/main.php:177
 msgid "minute"
 msgstr "λεπτό"
 
@@ -2935,10 +2969,10 @@ msgstr "Δεν υπάρχουν ειδοποιήσεις"
 msgid "MAIL_RESET_SUBJECT"
 msgstr "Επαναφορά κωδικού πρόσβασης στο %s"
 
-#: ../../web/add/web/index.php:324 ../../web/add/user/index.php:94
-#: ../../web/add/mail/index.php:207 ../../web/add/db/index.php:92
-#: ../../web/reset/index.php:33 ../../web/edit/web/index.php:659
-#: ../../web/edit/web/index.php:733 ../../web/edit/mail/index.php:523
+#: ../../web/add/mail/index.php:207 ../../web/add/user/index.php:94
+#: ../../web/add/db/index.php:92 ../../web/add/web/index.php:324
+#: ../../web/edit/mail/index.php:523 ../../web/edit/web/index.php:659
+#: ../../web/edit/web/index.php:733 ../../web/reset/index.php:33
 msgid "MAIL_FROM"
 msgstr "Hestia Control Panel <noreply@%s>"
 
@@ -2992,71 +3026,72 @@ msgstr "Εκκίνηση"
 msgid "stop"
 msgstr "Τερματισμός"
 
-#: ../../web/templates/admin/edit_server_bind9.html:75
 #: ../../web/templates/admin/edit_server_mysql.html:135
-#: ../../web/templates/admin/edit_server_php.html:157
-#: ../../web/templates/admin/edit_server_dovecot.html:151
 #: ../../web/templates/admin/list_services.html:31
 #: ../../web/templates/admin/list_services.html:135
+#: ../../web/templates/admin/edit_server_dovecot.html:151
+#: ../../web/templates/admin/edit_server_php.html:157
 #: ../../web/templates/admin/edit_server_service.html:67
-#: ../../web/templates/admin/edit_server_nginx.html:192
-#: ../../web/templates/admin/edit_server_pgsql.html:75
 #: ../../web/templates/admin/edit_server_httpd.html:67
+#: ../../web/templates/admin/edit_server_pgsql.html:75
+#: ../../web/templates/admin/edit_server_nginx.html:192
+#: ../../web/templates/admin/edit_server_bind9.html:75
 msgid "restart"
 msgstr "Επανεκκίνηση"
 
-#: ../../web/generate/ssl/index.php:59 ../../web/add/web/index.php:31
-#: ../../web/add/web/index.php:291 ../../web/add/user/index.php:38
-#: ../../web/add/ip/index.php:37 ../../web/add/cron/index.php:33
-#: ../../web/add/dns/index.php:34 ../../web/add/dns/index.php:116
+#: ../../web/add/ip/index.php:37 ../../web/add/dns/index.php:34
+#: ../../web/add/dns/index.php:116 ../../web/add/cron/index.php:33
+#: ../../web/add/mail/index.php:47 ../../web/add/mail/index.php:114
+#: ../../web/add/user/index.php:38 ../../web/add/db/index.php:33
+#: ../../web/add/web/index.php:31 ../../web/add/web/index.php:291
+#: ../../web/add/package/index.php:60
 #: ../../web/add/firewall/banlist/index.php:35
-#: ../../web/add/firewall/index.php:54
-#: ../../web/add/firewall/ipset/index.php:38 ../../web/add/mail/index.php:47
-#: ../../web/add/mail/index.php:114 ../../web/add/package/index.php:60
-#: ../../web/add/db/index.php:33 ../../web/edit/web/index.php:448
-#: ../../web/edit/web/index.php:578 ../../web/edit/web/index.php:604
-#: ../../web/edit/web/index.php:640 ../../web/edit/web/index.php:709
-#: ../../web/edit/mail/index.php:314 ../../web/edit/package/index.php:137
+#: ../../web/add/firewall/ipset/index.php:38
+#: ../../web/add/firewall/index.php:54 ../../web/edit/mail/index.php:314
+#: ../../web/edit/web/index.php:448 ../../web/edit/web/index.php:578
+#: ../../web/edit/web/index.php:604 ../../web/edit/web/index.php:640
+#: ../../web/edit/web/index.php:709 ../../web/edit/package/index.php:137
+#: ../../web/generate/ssl/index.php:59
 msgid "Field \"%s\" can not be blank."
 msgstr "Το πεδίο \"%s\" δεν επιτρέπεται να είναι κενό."
 
-#: ../../web/edit/web/index.php:801 ../../web/edit/user/index.php:247
-#: ../../web/edit/ip/index.php:104
-#: ../../web/edit/backup/exclusions/index.php:120
-#: ../../web/edit/cron/index.php:74 ../../web/edit/dns/index.php:147
-#: ../../web/edit/dns/index.php:199 ../../web/edit/firewall/index.php:96
-#: ../../web/edit/server/nginx/index.php:42
-#: ../../web/edit/server/php-fpm/index.php:42
-#: ../../web/edit/server/dovecot/index.php:146
-#: ../../web/edit/server/exim/index.php:42
-#: ../../web/edit/server/exim4/index.php:42
-#: ../../web/edit/server/php/index.php:42
-#: ../../web/edit/server/fail2ban/index.php:42
-#: ../../web/edit/server/mysqld/index.php:42
-#: ../../web/edit/server/proftpd/index.php:42
-#: ../../web/edit/server/vsftpd/index.php:42
-#: ../../web/edit/server/theme/index.php:42
-#: ../../web/edit/server/httpd/index.php:42
-#: ../../web/edit/server/mariadb/index.php:42
-#: ../../web/edit/server/clamav-daemon/index.php:42
-#: ../../web/edit/server/named/index.php:42 ../../web/edit/server/index.php:566
-#: ../../web/edit/server/apache2/index.php:42
-#: ../../web/edit/server/spamassassin/index.php:42
-#: ../../web/edit/server/mysql/index.php:42
-#: ../../web/edit/server/bind9/index.php:55
-#: ../../web/edit/server/postgresql/index.php:55
-#: ../../web/edit/server/ssh/index.php:42
-#: ../../web/edit/server/spamd/index.php:42
-#: ../../web/edit/server/php5-fpm/index.php:42
+#: ../../web/edit/ip/index.php:104 ../../web/edit/dns/index.php:147
+#: ../../web/edit/dns/index.php:199 ../../web/edit/cron/index.php:74
 #: ../../web/edit/mail/index.php:370 ../../web/edit/mail/index.php:530
-#: ../../web/edit/package/index.php:226 ../../web/edit/db/index.php:83
+#: ../../web/edit/server/bind9/index.php:55
+#: ../../web/edit/server/exim/index.php:42
+#: ../../web/edit/server/theme/index.php:42
+#: ../../web/edit/server/spamd/index.php:42
+#: ../../web/edit/server/mysqld/index.php:42
+#: ../../web/edit/server/fail2ban/index.php:42
+#: ../../web/edit/server/php/index.php:42
+#: ../../web/edit/server/ssh/index.php:42
+#: ../../web/edit/server/mariadb/index.php:42
+#: ../../web/edit/server/apache2/index.php:42
+#: ../../web/edit/server/dovecot/index.php:146
+#: ../../web/edit/server/php-fpm/index.php:42
+#: ../../web/edit/server/httpd/index.php:42
+#: ../../web/edit/server/vsftpd/index.php:42
+#: ../../web/edit/server/nginx/index.php:42
+#: ../../web/edit/server/spamassassin/index.php:42
+#: ../../web/edit/server/proftpd/index.php:42
+#: ../../web/edit/server/postgresql/index.php:55
+#: ../../web/edit/server/mysql/index.php:42
+#: ../../web/edit/server/named/index.php:42
+#: ../../web/edit/server/php5-fpm/index.php:42
+#: ../../web/edit/server/clamav-daemon/index.php:42
+#: ../../web/edit/server/index.php:566 ../../web/edit/server/exim4/index.php:42
+#: ../../web/edit/backup/exclusions/index.php:120
+#: ../../web/edit/user/index.php:247 ../../web/edit/db/index.php:83
+#: ../../web/edit/web/index.php:801 ../../web/edit/package/index.php:226
+#: ../../web/edit/firewall/index.php:96
 msgid "Changes has been saved."
 msgstr "Οι αλλαγές έχουν αποθηκευτεί."
 
-#: ../../web/add/web/index.php:280 ../../web/add/web/index.php:296
-#: ../../web/add/user/index.php:43 ../../web/add/mail/index.php:120
-#: ../../web/add/db/index.php:39 ../../web/edit/web/index.php:630
-#: ../../web/edit/user/index.php:191 ../../web/edit/mail/index.php:386
+#: ../../web/add/mail/index.php:120 ../../web/add/user/index.php:43
+#: ../../web/add/db/index.php:39 ../../web/add/web/index.php:280
+#: ../../web/add/web/index.php:296 ../../web/edit/mail/index.php:386
+#: ../../web/edit/user/index.php:191 ../../web/edit/web/index.php:630
 msgid "Please enter valid email address."
 msgstr "Παρακαλώ εισάγετε μια έγκυρη διεύθυνση ηλεκτρονικού ταχυδρομείου."
 
@@ -3094,8 +3129,8 @@ msgstr ""
 msgid "ftp user"
 msgstr "χρήστης ftp"
 
-#: ../../web/edit/server/crond/index.php:18
 #: ../../web/edit/server/cron/index.php:18
+#: ../../web/edit/server/crond/index.php:18
 msgid "Info (Read-only mode): Crontab can be edited only trough ssh"
 msgstr ""
 
@@ -3144,18 +3179,17 @@ msgstr "Εγγραφές dns"
 msgid "mail domains"
 msgstr "Domains ταχυδρομείου"
 
-#: ../../web/add/package/index.php:40
-#: ../../web/templates/user/list_mail.html:96
-#: ../../web/templates/user/list_mail.html:102
+#: ../../web/add/package/index.php:40 ../../web/edit/package/index.php:116
 #: ../../web/templates/admin/list_mail.html:97
 #: ../../web/templates/admin/list_mail.html:103
-#: ../../web/edit/package/index.php:116
+#: ../../web/templates/user/list_mail.html:96
+#: ../../web/templates/user/list_mail.html:102
 msgid "mail accounts"
 msgstr "Λογαριασμοί ταχυδρομείου"
 
-#: ../../web/add/package/index.php:41 ../../web/templates/user/panel.html:89
+#: ../../web/add/package/index.php:41 ../../web/edit/package/index.php:117
 #: ../../web/templates/admin/panel.html:103
-#: ../../web/edit/package/index.php:117
+#: ../../web/templates/user/panel.html:89
 msgid "databases"
 msgstr "βάσεις δεδομένων"
 
@@ -3163,9 +3197,9 @@ msgstr "βάσεις δεδομένων"
 msgid "cron jobs"
 msgstr "εργασίες cron"
 
-#: ../../web/add/package/index.php:43 ../../web/templates/user/panel.html:115
+#: ../../web/add/package/index.php:43 ../../web/edit/package/index.php:119
 #: ../../web/templates/admin/panel.html:129
-#: ../../web/edit/package/index.php:119
+#: ../../web/templates/user/panel.html:115
 msgid "backups"
 msgstr "αντίγραφα ασφαλείας"
 
@@ -3185,8 +3219,8 @@ msgstr "ns1"
 msgid "ns2"
 msgstr "ns2"
 
-#: ../../web/add/web/index.php:19 ../../web/add/dns/index.php:24
-#: ../../web/add/mail/index.php:38 ../../web/add/mail/index.php:103
+#: ../../web/add/dns/index.php:24 ../../web/add/mail/index.php:38
+#: ../../web/add/mail/index.php:103 ../../web/add/web/index.php:19
 msgid "domain"
 msgstr "domain"
 
@@ -3198,7 +3232,7 @@ msgstr "Το mail domain <a href=\"/list/mail/?domain=%s\"><b>%s</b></a> έχε�
 msgid "account"
 msgstr "λογαριασμός"
 
-#: ../../web/add/user/index.php:26 ../../web/add/mail/index.php:105
+#: ../../web/add/mail/index.php:105 ../../web/add/user/index.php:26
 #: ../../web/add/db/index.php:21
 msgid "password"
 msgstr "κωδικός πρόσβασης"
@@ -3207,7 +3241,7 @@ msgstr "κωδικός πρόσβασης"
 msgid "MAIL_ACCOUNT_CREATED_OK"
 msgstr "Ο λογαριασμός mail <a href=\"/edit/mail/?account=%s&domain=%s\"><b>%s@%s</b></a> έχει δημιουργηθεί επιτυχώς."
 
-#: ../../web/add/web/index.php:20 ../../web/add/dns/index.php:25
+#: ../../web/add/dns/index.php:25 ../../web/add/web/index.php:20
 #: ../../web/templates/admin/list_ip.html:9
 msgid "ip"
 msgstr "ip"
@@ -3244,33 +3278,34 @@ msgstr "name"
 msgid "USER_CREATED_OK"
 msgstr "Ο χρήστης <a href=\"/edit/user/?user=%s\"><b>%s</b></a> έχει δημιουργηθεί επιτυχώς."
 
-#: ../../web/add/user/index.php:108 ../../web/templates/user/list_user.html:106
-#: ../../web/templates/admin/list_user.html:104
-#: ../../web/templates/admin/list_user.html:118
+#: ../../web/add/user/index.php:108
+#: ../../web/templates/admin/list_user.html:103
+#: ../../web/templates/admin/list_user.html:117
+#: ../../web/templates/user/list_user.html:97
 msgid "login as"
 msgstr "Είσοδος ως"
 
-#: ../../web/add/key/index.php:50
+#: ../../web/add/key/index.php:17
 msgid "Field SSH_KEY can not be blank."
 msgstr "Το κλειδί πεδίου SSH δεν πρέπει να είναι κενό"
 
-#: ../../web/add/key/index.php:66 ../../web/add/key/index.php:73
+#: ../../web/add/key/index.php:35
 msgid "SSH KEY is invalid"
 msgstr "Το κλειδί SSH δεν είναι έγκυρο"
 
-#: ../../web/add/key/index.php:80 ../../web/add/key/index.php:84
+#: ../../web/add/key/index.php:41 ../../web/add/key/index.php:44
 msgid "SSH KEY already exists"
 msgstr "Το κλειδί SSH υπάρχει ήδη"
 
-#: ../../web/add/key/index.php:100
+#: ../../web/add/key/index.php:57
 msgid "SSH KEY created"
 msgstr ""
 
 #: ../../web/add/firewall/ipset/index.php:25
-#: ../../web/templates/user/list_user.html:70
-#: ../../web/templates/user/list_search.html:9
-#: ../../web/templates/admin/list_user.html:66
 #: ../../web/templates/admin/list_search.html:9
+#: ../../web/templates/admin/list_user.html:66
+#: ../../web/templates/user/list_search.html:9
+#: ../../web/templates/user/list_user.html:70
 msgid "Name"
 msgstr "Ονομα"
 
@@ -3280,14 +3315,14 @@ msgid "Data Source"
 msgstr "Πηγή δεδομένων"
 
 #: ../../web/add/firewall/ipset/index.php:27
-#: ../../web/templates/admin/list_firewall_ipset.html:38
 #: ../../web/templates/admin/add_firewall_ipset.html:79
+#: ../../web/templates/admin/list_firewall_ipset.html:38
 msgid "Ip Version"
 msgstr "Έκδοση IP"
 
 #: ../../web/add/firewall/ipset/index.php:28
-#: ../../web/templates/admin/list_firewall_ipset.html:37
 #: ../../web/templates/admin/add_firewall_ipset.html:92
+#: ../../web/templates/admin/list_firewall_ipset.html:37
 msgid "Autoupdate"
 msgstr "Αυτόματη ενημέρωση"
 
@@ -3417,36 +3452,36 @@ msgstr "Το cron job έχει δημιουργηθεί επιτυχώς."
 msgid "BACKUP_DOWNLOAD_SCHEDULED"
 msgstr "Έχει προγραμματιστεί η λήψη του απομακρυσμένου εφεδρικού αρχείου."
 
-#: ../../web/generate/ssl/index.php:37
-#: ../../web/templates/user/edit_dns.html:58
-#: ../../web/templates/user/list_dns.html:9
-#: ../../web/templates/user/list_dns.html:53
-#: ../../web/templates/user/edit_web.html:75
+#: ../../web/templates/admin/list_web.html:8
+#: ../../web/templates/admin/list_web.html:54
+#: ../../web/templates/admin/add_dns.html:56
+#: ../../web/templates/admin/add_web.html:64
+#: ../../web/templates/admin/list_mail.html:8
+#: ../../web/templates/admin/list_mail.html:54
+#: ../../web/templates/admin/edit_web.html:62
+#: ../../web/templates/admin/edit_mail.html:58
+#: ../../web/templates/admin/add_mail.html:56
+#: ../../web/templates/admin/generate_ssl.html:50
+#: ../../web/templates/admin/list_dns.html:9
+#: ../../web/templates/admin/list_dns.html:54
+#: ../../web/templates/admin/add_mail_acc.html:49
+#: ../../web/templates/admin/add_dns_rec.html:48
+#: ../../web/templates/admin/edit_dns.html:58
+#: ../../web/templates/admin/edit_dns_rec.html:58
 #: ../../web/templates/user/list_web.html:14
 #: ../../web/templates/user/list_web.html:59
 #: ../../web/templates/user/list_mail.html:8
 #: ../../web/templates/user/list_mail.html:53
-#: ../../web/templates/admin/edit_dns.html:58
-#: ../../web/templates/admin/add_dns.html:56
-#: ../../web/templates/admin/list_dns.html:9
-#: ../../web/templates/admin/list_dns.html:54
-#: ../../web/templates/admin/edit_web.html:62
-#: ../../web/templates/admin/add_mail.html:56
-#: ../../web/templates/admin/add_dns_rec.html:48
-#: ../../web/templates/admin/generate_ssl.html:50
-#: ../../web/templates/admin/list_web.html:8
-#: ../../web/templates/admin/list_web.html:54
-#: ../../web/templates/admin/edit_dns_rec.html:58
-#: ../../web/templates/admin/edit_mail.html:58
-#: ../../web/templates/admin/add_mail_acc.html:49
-#: ../../web/templates/admin/add_web.html:64
-#: ../../web/templates/admin/list_mail.html:8
-#: ../../web/templates/admin/list_mail.html:54
+#: ../../web/templates/user/edit_web.html:75
+#: ../../web/templates/user/list_dns.html:9
+#: ../../web/templates/user/list_dns.html:53
+#: ../../web/templates/user/edit_dns.html:58
+#: ../../web/generate/ssl/index.php:37
 msgid "Domain"
 msgstr "Domain"
 
-#: ../../web/generate/ssl/index.php:38
 #: ../../web/templates/admin/generate_ssl.html:70
+#: ../../web/generate/ssl/index.php:38
 msgid "Country"
 msgstr "Χώρα"
 
@@ -3458,19 +3493,19 @@ msgstr ""
 msgid "City"
 msgstr ""
 
-#: ../../web/generate/ssl/index.php:41
 #: ../../web/templates/admin/generate_ssl.html:101
+#: ../../web/generate/ssl/index.php:41
 msgid "Organization"
 msgstr "Οργανισμός"
 
-#: ../../web/generate/ssl/index.php:42
-#: ../../web/templates/user/edit_user.html:112
-#: ../../web/templates/user/list_user.html:108
-#: ../../web/templates/admin/edit_user.html:112
-#: ../../web/templates/admin/generate_ssl.html:60
-#: ../../web/templates/admin/list_user.html:106
-#: ../../web/templates/admin/add_user.html:97
 #: ../../web/templates/reset_1.html:30
+#: ../../web/templates/admin/edit_user.html:114
+#: ../../web/templates/admin/list_user.html:105
+#: ../../web/templates/admin/generate_ssl.html:60
+#: ../../web/templates/admin/add_user.html:97
+#: ../../web/templates/user/edit_user.html:112
+#: ../../web/templates/user/list_user.html:99
+#: ../../web/generate/ssl/index.php:42
 msgid "Email"
 msgstr "Ηλεκτρονικό Ταχυδρομείο"
 
@@ -3491,69 +3526,69 @@ msgstr "Νέος κωδικός πρόσβασης"
 msgid "Confirm Password"
 msgstr "Επιβεβαίωση κωδικού πρόσβασης"
 
-#: ../../web/templates/user/edit_dns.html:4
+#: ../../web/templates/login_1.html:43 ../../web/templates/reset_1.html:41
+#: ../../web/templates/reset_2.html:36 ../../web/templates/reset_3.html:44
+#: ../../web/templates/admin/setup_webapp.html:4
+#: ../../web/templates/admin/add_firewall_ipset.html:4
+#: ../../web/templates/admin/add_dns.html:4
+#: ../../web/templates/admin/edit_server_mysql.html:4
+#: ../../web/templates/admin/add_firewall.html:4
+#: ../../web/templates/admin/edit_user.html:4
+#: ../../web/templates/admin/add_firewall_banlist.html:4
+#: ../../web/templates/admin/list_server_info.html:26
+#: ../../web/templates/admin/add_web.html:4
+#: ../../web/templates/admin/edit_web.html:4
+#: ../../web/templates/admin/list_weblog.html:26
+#: ../../web/templates/admin/add_db.html:4
+#: ../../web/templates/admin/edit_mail_acc.html:4
+#: ../../web/templates/admin/edit_db.html:4
+#: ../../web/templates/admin/edit_server_dovecot.html:4
+#: ../../web/templates/admin/edit_backup_exclusions.html:4
+#: ../../web/templates/admin/list_webapps.html:4
+#: ../../web/templates/admin/list_search.html:4
+#: ../../web/templates/admin/list_backup_exclusions.html:4
+#: ../../web/templates/admin/list_firewall.html:4
+#: ../../web/templates/admin/edit_mail.html:4
+#: ../../web/templates/admin/edit_package.html:4
+#: ../../web/templates/admin/add_mail.html:4
+#: ../../web/templates/admin/list_backup_detail.html:4
+#: ../../web/templates/admin/add_ip.html:4
+#: ../../web/templates/admin/list_mail_acc.html:4
+#: ../../web/templates/admin/list_key.html:4
+#: ../../web/templates/admin/list_ssl.html:86
+#: ../../web/templates/admin/edit_server.html:4
+#: ../../web/templates/admin/list_updates.html:4
+#: ../../web/templates/admin/edit_server_php.html:4
+#: ../../web/templates/admin/list_ip.html:4
+#: ../../web/templates/admin/generate_ssl.html:116
+#: ../../web/templates/admin/add_cron.html:4
+#: ../../web/templates/admin/list_firewall_ipset.html:4
+#: ../../web/templates/admin/add_package.html:4
+#: ../../web/templates/admin/add_mail_acc.html:4
+#: ../../web/templates/admin/add_dns_rec.html:4
+#: ../../web/templates/admin/list_firewall_banlist.html:4
+#: ../../web/templates/admin/add_user.html:4
+#: ../../web/templates/admin/list_rrd.html:4
+#: ../../web/templates/admin/edit_server_service.html:4
+#: ../../web/templates/admin/edit_ip.html:4
+#: ../../web/templates/admin/edit_dns.html:4
+#: ../../web/templates/admin/list_packages.html:4
+#: ../../web/templates/admin/edit_server_httpd.html:4
+#: ../../web/templates/admin/add_key.html:4
+#: ../../web/templates/admin/edit_server_pgsql.html:4
+#: ../../web/templates/admin/edit_server_nginx.html:4
+#: ../../web/templates/admin/edit_dns_rec.html:4
+#: ../../web/templates/admin/edit_firewall.html:4
+#: ../../web/templates/admin/list_dns_rec.html:4
+#: ../../web/templates/admin/edit_server_bind9.html:4
+#: ../../web/templates/admin/edit_cron.html:4
 #: ../../web/templates/user/edit_user.html:4
-#: ../../web/templates/user/list_dns_rec.html:4
 #: ../../web/templates/user/edit_web.html:4
 #: ../../web/templates/user/list_search.html:4
 #: ../../web/templates/user/list_mail_acc.html:4
-#: ../../web/templates/reset2fa.html:60
-#: ../../web/templates/admin/list_firewall_ipset.html:4
-#: ../../web/templates/admin/edit_server_bind9.html:4
-#: ../../web/templates/admin/edit_server_mysql.html:4
-#: ../../web/templates/admin/add_firewall_ipset.html:4
-#: ../../web/templates/admin/add_ip.html:4
-#: ../../web/templates/admin/edit_db.html:4
-#: ../../web/templates/admin/edit_backup_exclusions.html:4
-#: ../../web/templates/admin/list_key.html:4
-#: ../../web/templates/admin/edit_package.html:4
-#: ../../web/templates/admin/list_rrd.html:4
-#: ../../web/templates/admin/edit_dns.html:4
-#: ../../web/templates/admin/add_dns.html:4
-#: ../../web/templates/admin/edit_user.html:4
-#: ../../web/templates/admin/edit_firewall.html:4
-#: ../../web/templates/admin/list_dns_rec.html:4
-#: ../../web/templates/admin/edit_web.html:4
-#: ../../web/templates/admin/edit_server.html:4
-#: ../../web/templates/admin/edit_server_php.html:4
-#: ../../web/templates/admin/add_mail.html:4
-#: ../../web/templates/admin/list_updates.html:4
-#: ../../web/templates/admin/add_db.html:4
-#: ../../web/templates/admin/add_dns_rec.html:4
-#: ../../web/templates/admin/edit_server_dovecot.html:4
-#: ../../web/templates/admin/add_key.html:4
-#: ../../web/templates/admin/list_weblog.html:26
-#: ../../web/templates/admin/edit_server_service.html:4
-#: ../../web/templates/admin/list_backup_detail.html:4
-#: ../../web/templates/admin/add_firewall_banlist.html:4
-#: ../../web/templates/admin/generate_ssl.html:116
-#: ../../web/templates/admin/edit_cron.html:4
-#: ../../web/templates/admin/add_cron.html:4
-#: ../../web/templates/admin/list_packages.html:4
-#: ../../web/templates/admin/list_firewall.html:4
-#: ../../web/templates/admin/edit_dns_rec.html:4
-#: ../../web/templates/admin/edit_ip.html:4
-#: ../../web/templates/admin/edit_mail.html:4
-#: ../../web/templates/admin/list_server_info.html:26
-#: ../../web/templates/admin/add_firewall.html:4
-#: ../../web/templates/admin/add_mail_acc.html:4
-#: ../../web/templates/admin/list_ip.html:4
-#: ../../web/templates/admin/edit_mail_acc.html:4
-#: ../../web/templates/admin/list_search.html:4
-#: ../../web/templates/admin/edit_server_nginx.html:4
-#: ../../web/templates/admin/edit_server_pgsql.html:4
-#: ../../web/templates/admin/list_webapps.html:4
-#: ../../web/templates/admin/add_package.html:4
-#: ../../web/templates/admin/list_mail_acc.html:4
-#: ../../web/templates/admin/list_ssl.html:86
-#: ../../web/templates/admin/add_web.html:4
-#: ../../web/templates/admin/setup_webapp.html:4
-#: ../../web/templates/admin/list_firewall_banlist.html:4
-#: ../../web/templates/admin/list_backup_exclusions.html:4
-#: ../../web/templates/admin/add_user.html:4
-#: ../../web/templates/admin/edit_server_httpd.html:4
-#: ../../web/templates/reset_1.html:46 ../../web/templates/login_1.html:43
-#: ../../web/templates/reset_2.html:36 ../../web/templates/reset_3.html:44
+#: ../../web/templates/user/edit_dns.html:4
+#: ../../web/templates/user/list_dns_rec.html:4
+#: ../../web/templates/reset2fa.html:55
 msgid "Back"
 msgstr "Πίσω"
 
@@ -3582,47 +3617,14 @@ msgstr "Προσθήκη κλειδιού SSH"
 msgid "SSH_ID"
 msgstr "Αναγνωριστικό SSH"
 
-#: ../../web/templates/user/edit_user.html:5
 #: ../../web/templates/admin/list_key.html:21
 #: ../../web/templates/admin/add_key.html:57
+#: ../../web/templates/user/edit_user.html:5
 msgid "SSH KEY"
 msgstr "Κλειδί SSH"
 
-#: ../../web/templates/user/edit_user.html:152
-#: ../../web/templates/user/edit_user.html:158
-#: ../../web/templates/user/edit_user.html:165
-#: ../../web/templates/user/edit_user.html:173
-#: ../../web/templates/user/edit_user.html:181
-#: ../../web/templates/user/edit_user.html:189
-#: ../../web/templates/user/edit_user.html:197
-#: ../../web/templates/user/edit_user.html:205
-#: ../../web/templates/user/list_dns.html:34
-#: ../../web/templates/user/list_dns.html:109
-#: ../../web/templates/user/list_dns_rec.html:27
-#: ../../web/templates/user/list_dns_rec.html:81
-#: ../../web/templates/user/edit_web.html:474
-#: ../../web/templates/user/edit_web.html:550
-#: ../../web/templates/user/list_cron.html:40
-#: ../../web/templates/user/list_cron.html:107
-#: ../../web/templates/user/list_web.html:40
-#: ../../web/templates/user/list_web.html:160
-#: ../../web/templates/user/list_user.html:51
-#: ../../web/templates/user/list_db.html:61
-#: ../../web/templates/user/list_db.html:139
-#: ../../web/templates/user/list_mail_acc.html:34
-#: ../../web/templates/user/list_mail_acc.html:109
-#: ../../web/templates/user/list_mail.html:33
-#: ../../web/templates/user/list_mail.html:116
-#: ../../web/templates/admin/list_firewall_ipset.html:16
-#: ../../web/templates/admin/list_key.html:37
-#: ../../web/templates/admin/edit_package.html:310
-#: ../../web/templates/admin/edit_package.html:316
-#: ../../web/templates/admin/edit_package.html:323
-#: ../../web/templates/admin/edit_package.html:331
-#: ../../web/templates/admin/edit_package.html:339
-#: ../../web/templates/admin/edit_package.html:347
-#: ../../web/templates/admin/edit_package.html:355
-#: ../../web/templates/admin/edit_package.html:363
+#: ../../web/templates/admin/list_web.html:35
+#: ../../web/templates/admin/list_web.html:155
 #: ../../web/templates/admin/add_dns.html:119
 #: ../../web/templates/admin/add_dns.html:125
 #: ../../web/templates/admin/add_dns.html:132
@@ -3631,33 +3633,44 @@ msgstr "Κλειδί SSH"
 #: ../../web/templates/admin/add_dns.html:156
 #: ../../web/templates/admin/add_dns.html:164
 #: ../../web/templates/admin/add_dns.html:172
-#: ../../web/templates/admin/edit_user.html:233
-#: ../../web/templates/admin/edit_user.html:239
-#: ../../web/templates/admin/edit_user.html:246
-#: ../../web/templates/admin/edit_user.html:254
-#: ../../web/templates/admin/edit_user.html:262
-#: ../../web/templates/admin/edit_user.html:270
-#: ../../web/templates/admin/edit_user.html:278
-#: ../../web/templates/admin/edit_user.html:286
-#: ../../web/templates/admin/list_dns.html:35
-#: ../../web/templates/admin/list_dns.html:110
-#: ../../web/templates/admin/list_dns_rec.html:27
-#: ../../web/templates/admin/list_dns_rec.html:74
+#: ../../web/templates/admin/list_backup.html:23
+#: ../../web/templates/admin/list_backup.html:85
+#: ../../web/templates/admin/edit_user.html:235
+#: ../../web/templates/admin/edit_user.html:241
+#: ../../web/templates/admin/edit_user.html:248
+#: ../../web/templates/admin/edit_user.html:256
+#: ../../web/templates/admin/edit_user.html:264
+#: ../../web/templates/admin/edit_user.html:272
+#: ../../web/templates/admin/edit_user.html:280
+#: ../../web/templates/admin/edit_user.html:288
+#: ../../web/templates/admin/add_web.html:325
+#: ../../web/templates/admin/add_web.html:397
+#: ../../web/templates/admin/list_mail.html:34
+#: ../../web/templates/admin/list_mail.html:117
 #: ../../web/templates/admin/edit_web.html:460
 #: ../../web/templates/admin/edit_web.html:536
 #: ../../web/templates/admin/list_cron.html:40
 #: ../../web/templates/admin/list_cron.html:107
-#: ../../web/templates/admin/list_web.html:35
-#: ../../web/templates/admin/list_web.html:155
 #: ../../web/templates/admin/list_user.html:47
-#: ../../web/templates/admin/list_user.html:131
-#: ../../web/templates/admin/list_packages.html:23
+#: ../../web/templates/admin/list_user.html:130
 #: ../../web/templates/admin/list_firewall.html:30
 #: ../../web/templates/admin/list_firewall.html:114
+#: ../../web/templates/admin/edit_package.html:310
+#: ../../web/templates/admin/edit_package.html:316
+#: ../../web/templates/admin/edit_package.html:323
+#: ../../web/templates/admin/edit_package.html:331
+#: ../../web/templates/admin/edit_package.html:339
+#: ../../web/templates/admin/edit_package.html:347
+#: ../../web/templates/admin/edit_package.html:355
+#: ../../web/templates/admin/edit_package.html:363
+#: ../../web/templates/admin/list_mail_acc.html:34
+#: ../../web/templates/admin/list_mail_acc.html:109
+#: ../../web/templates/admin/list_key.html:37
 #: ../../web/templates/admin/list_ip.html:28
 #: ../../web/templates/admin/list_ip.html:81
-#: ../../web/templates/admin/list_db.html:62
-#: ../../web/templates/admin/list_db.html:140
+#: ../../web/templates/admin/list_dns.html:35
+#: ../../web/templates/admin/list_dns.html:110
+#: ../../web/templates/admin/list_firewall_ipset.html:16
 #: ../../web/templates/admin/add_package.html:313
 #: ../../web/templates/admin/add_package.html:319
 #: ../../web/templates/admin/add_package.html:326
@@ -3666,63 +3679,85 @@ msgstr "Κλειδί SSH"
 #: ../../web/templates/admin/add_package.html:350
 #: ../../web/templates/admin/add_package.html:358
 #: ../../web/templates/admin/add_package.html:366
-#: ../../web/templates/admin/list_mail_acc.html:34
-#: ../../web/templates/admin/list_mail_acc.html:109
-#: ../../web/templates/admin/add_web.html:325
-#: ../../web/templates/admin/add_web.html:397
-#: ../../web/templates/admin/list_mail.html:34
-#: ../../web/templates/admin/list_mail.html:117
 #: ../../web/templates/admin/list_firewall_banlist.html:16
-#: ../../web/templates/admin/list_backup.html:23
-#: ../../web/templates/admin/list_backup.html:85
+#: ../../web/templates/admin/list_packages.html:23
+#: ../../web/templates/admin/list_db.html:62
+#: ../../web/templates/admin/list_db.html:140
+#: ../../web/templates/admin/list_dns_rec.html:27
+#: ../../web/templates/admin/list_dns_rec.html:74
+#: ../../web/templates/user/list_web.html:40
+#: ../../web/templates/user/list_web.html:160
+#: ../../web/templates/user/edit_user.html:152
+#: ../../web/templates/user/edit_user.html:158
+#: ../../web/templates/user/edit_user.html:165
+#: ../../web/templates/user/edit_user.html:173
+#: ../../web/templates/user/edit_user.html:181
+#: ../../web/templates/user/edit_user.html:189
+#: ../../web/templates/user/edit_user.html:197
+#: ../../web/templates/user/edit_user.html:205
+#: ../../web/templates/user/list_mail.html:33
+#: ../../web/templates/user/list_mail.html:116
+#: ../../web/templates/user/edit_web.html:474
+#: ../../web/templates/user/edit_web.html:550
+#: ../../web/templates/user/list_cron.html:40
+#: ../../web/templates/user/list_cron.html:107
+#: ../../web/templates/user/list_user.html:51
+#: ../../web/templates/user/list_mail_acc.html:34
+#: ../../web/templates/user/list_mail_acc.html:109
+#: ../../web/templates/user/list_dns.html:34
+#: ../../web/templates/user/list_dns.html:109
+#: ../../web/templates/user/list_db.html:61
+#: ../../web/templates/user/list_db.html:139
+#: ../../web/templates/user/list_dns_rec.html:27
+#: ../../web/templates/user/list_dns_rec.html:72
 msgid "delete"
 msgstr "Διαγραφή"
 
-#: ../../web/templates/user/list_dns.html:103
-#: ../../web/templates/user/list_dns.html:112
-#: ../../web/templates/user/list_dns_rec.html:84
-#: ../../web/templates/user/list_cron.html:101
-#: ../../web/templates/user/list_cron.html:110
+#: ../../web/templates/footer.html:3
+#: ../../web/templates/admin/list_web.html:149
+#: ../../web/templates/admin/list_web.html:158
+#: ../../web/templates/admin/list_backup.html:88
+#: ../../web/templates/admin/list_services.html:14
+#: ../../web/templates/admin/list_services.html:138
+#: ../../web/templates/admin/list_services.html:147
+#: ../../web/templates/admin/list_mail.html:111
+#: ../../web/templates/admin/list_mail.html:120
+#: ../../web/templates/admin/list_cron.html:101
+#: ../../web/templates/admin/list_cron.html:110
+#: ../../web/templates/admin/list_search.html:138
+#: ../../web/templates/admin/list_search.html:169
+#: ../../web/templates/admin/list_user.html:124
+#: ../../web/templates/admin/list_user.html:133
+#: ../../web/templates/admin/list_log.html:10
+#: ../../web/templates/admin/list_firewall.html:108
+#: ../../web/templates/admin/list_firewall.html:117
+#: ../../web/templates/admin/list_mail_acc.html:103
+#: ../../web/templates/admin/list_mail_acc.html:112
+#: ../../web/templates/admin/list_key.html:40
+#: ../../web/templates/admin/list_ip.html:84
+#: ../../web/templates/admin/list_dns.html:104
+#: ../../web/templates/admin/list_dns.html:113
+#: ../../web/templates/admin/list_firewall_ipset.html:72
+#: ../../web/templates/admin/list_firewall_banlist.html:64
+#: ../../web/templates/admin/list_packages.html:82
+#: ../../web/templates/admin/list_db.html:134
+#: ../../web/templates/admin/list_db.html:143
+#: ../../web/templates/admin/list_dns_rec.html:77
 #: ../../web/templates/user/list_web.html:154
 #: ../../web/templates/user/list_web.html:163
-#: ../../web/templates/user/list_db.html:133
-#: ../../web/templates/user/list_db.html:142
+#: ../../web/templates/user/list_mail.html:110
+#: ../../web/templates/user/list_mail.html:119
+#: ../../web/templates/user/list_cron.html:101
+#: ../../web/templates/user/list_cron.html:110
 #: ../../web/templates/user/list_search.html:136
 #: ../../web/templates/user/list_search.html:167
 #: ../../web/templates/user/list_mail_acc.html:103
 #: ../../web/templates/user/list_mail_acc.html:112
-#: ../../web/templates/user/list_mail.html:110
-#: ../../web/templates/user/list_mail.html:119
-#: ../../web/templates/admin/list_firewall_ipset.html:72
-#: ../../web/templates/admin/list_log.html:10
-#: ../../web/templates/admin/list_key.html:40
-#: ../../web/templates/admin/list_dns.html:104
-#: ../../web/templates/admin/list_dns.html:113
-#: ../../web/templates/admin/list_dns_rec.html:77
-#: ../../web/templates/admin/list_cron.html:101
-#: ../../web/templates/admin/list_cron.html:110
-#: ../../web/templates/admin/list_services.html:14
-#: ../../web/templates/admin/list_services.html:138
-#: ../../web/templates/admin/list_services.html:147
-#: ../../web/templates/admin/list_web.html:149
-#: ../../web/templates/admin/list_web.html:158
-#: ../../web/templates/admin/list_user.html:125
-#: ../../web/templates/admin/list_user.html:134
-#: ../../web/templates/admin/list_packages.html:82
-#: ../../web/templates/admin/list_firewall.html:108
-#: ../../web/templates/admin/list_firewall.html:117
-#: ../../web/templates/admin/list_ip.html:84
-#: ../../web/templates/admin/list_db.html:134
-#: ../../web/templates/admin/list_db.html:143
-#: ../../web/templates/admin/list_search.html:138
-#: ../../web/templates/admin/list_search.html:169
-#: ../../web/templates/admin/list_mail_acc.html:103
-#: ../../web/templates/admin/list_mail_acc.html:112
-#: ../../web/templates/admin/list_mail.html:111
-#: ../../web/templates/admin/list_mail.html:120
-#: ../../web/templates/admin/list_firewall_banlist.html:64
-#: ../../web/templates/admin/list_backup.html:88
-#: ../../web/templates/footer.html:3
+#: ../../web/templates/user/list_dns.html:103
+#: ../../web/templates/user/list_dns.html:112
+#: ../../web/templates/user/list_db.html:133
+#: ../../web/templates/user/list_db.html:142
+#: ../../web/templates/user/list_dns_rec.html:75
 msgid "Confirmation"
 msgstr "Επιβεβαίωση"
 
@@ -3738,8 +3773,8 @@ msgstr ""
 msgid "%s SSH Keys"
 msgstr ""
 
-#: ../../web/templates/admin/generate_ssl.html:45
 #: ../../web/templates/admin/list_ssl.html:36
+#: ../../web/templates/admin/generate_ssl.html:45
 msgid "Generating CSR"
 msgstr "Δημιουργία CSR"
 
@@ -3763,88 +3798,88 @@ msgstr ""
 msgid "Add IP list"
 msgstr "Προσθήκη λίστας IP"
 
-#: ../../web/templates/user/list_dns.html:31
-#: ../../web/templates/user/list_dns_rec.html:24
-#: ../../web/templates/user/list_cron.html:35
-#: ../../web/templates/user/list_web.html:37
-#: ../../web/templates/user/list_user.html:41
-#: ../../web/templates/user/list_db.html:58
-#: ../../web/templates/user/list_mail_acc.html:31
-#: ../../web/templates/user/list_mail.html:30
-#: ../../web/templates/admin/list_firewall_ipset.html:15
-#: ../../web/templates/admin/list_dns.html:31
-#: ../../web/templates/admin/list_dns_rec.html:24
-#: ../../web/templates/admin/list_updates.html:19
-#: ../../web/templates/admin/list_cron.html:35
-#: ../../web/templates/admin/list_services.html:28
-#: ../../web/templates/admin/list_backup_detail.html:23
 #: ../../web/templates/admin/list_web.html:31
-#: ../../web/templates/admin/list_user.html:37
-#: ../../web/templates/admin/list_packages.html:22
-#: ../../web/templates/admin/list_firewall.html:29
-#: ../../web/templates/admin/list_ip.html:26
-#: ../../web/templates/admin/list_db.html:58
-#: ../../web/templates/admin/list_mail_acc.html:31
-#: ../../web/templates/admin/list_mail.html:30
-#: ../../web/templates/admin/list_firewall_banlist.html:15
 #: ../../web/templates/admin/list_backup.html:22
+#: ../../web/templates/admin/list_services.html:28
+#: ../../web/templates/admin/list_mail.html:30
+#: ../../web/templates/admin/list_cron.html:35
+#: ../../web/templates/admin/list_user.html:37
+#: ../../web/templates/admin/list_firewall.html:29
+#: ../../web/templates/admin/list_backup_detail.html:23
+#: ../../web/templates/admin/list_mail_acc.html:31
+#: ../../web/templates/admin/list_updates.html:19
+#: ../../web/templates/admin/list_ip.html:26
+#: ../../web/templates/admin/list_dns.html:31
+#: ../../web/templates/admin/list_firewall_ipset.html:15
+#: ../../web/templates/admin/list_firewall_banlist.html:15
+#: ../../web/templates/admin/list_packages.html:22
+#: ../../web/templates/admin/list_db.html:58
+#: ../../web/templates/admin/list_dns_rec.html:24
+#: ../../web/templates/user/list_web.html:37
+#: ../../web/templates/user/list_mail.html:30
+#: ../../web/templates/user/list_cron.html:35
+#: ../../web/templates/user/list_user.html:41
+#: ../../web/templates/user/list_mail_acc.html:31
+#: ../../web/templates/user/list_dns.html:31
+#: ../../web/templates/user/list_db.html:58
+#: ../../web/templates/user/list_dns_rec.html:24
 msgid "apply to selected"
 msgstr "Εφαρμογή επιλεγμένων"
 
-#: ../../web/templates/admin/list_firewall_ipset.html:35
 #: ../../web/templates/admin/add_firewall_ipset.html:56
+#: ../../web/templates/admin/list_firewall_ipset.html:35
 msgid "Ip List Name"
 msgstr "Όνομα λίστας IP"
 
-#: ../../web/templates/user/list_dns.html:7
-#: ../../web/templates/user/list_dns.html:17
-#: ../../web/templates/user/list_cron.html:14
-#: ../../web/templates/user/list_cron.html:21
-#: ../../web/templates/user/list_web.html:13
-#: ../../web/templates/user/list_web.html:23
-#: ../../web/templates/user/list_user.html:18
-#: ../../web/templates/user/list_user.html:27
-#: ../../web/templates/user/list_db.html:34
-#: ../../web/templates/user/list_db.html:44
-#: ../../web/templates/user/list_search.html:8
-#: ../../web/templates/user/list_search.html:15
-#: ../../web/templates/user/list_search.html:39
-#: ../../web/templates/user/list_mail_acc.html:9
-#: ../../web/templates/user/list_mail_acc.html:17
-#: ../../web/templates/user/list_mail.html:7
-#: ../../web/templates/user/list_mail.html:16
-#: ../../web/templates/admin/list_firewall_ipset.html:39
-#: ../../web/templates/admin/list_log.html:30
-#: ../../web/templates/admin/list_dns.html:7
-#: ../../web/templates/admin/list_dns.html:17
-#: ../../web/templates/admin/list_cron.html:14
-#: ../../web/templates/admin/list_cron.html:21
-#: ../../web/templates/admin/edit_cron.html:250
 #: ../../web/templates/admin/list_web.html:7
 #: ../../web/templates/admin/list_web.html:17
-#: ../../web/templates/admin/list_user.html:14
-#: ../../web/templates/admin/list_user.html:23
-#: ../../web/templates/admin/add_cron.html:256
-#: ../../web/templates/admin/list_packages.html:8
-#: ../../web/templates/admin/list_packages.html:15
-#: ../../web/templates/admin/list_ip.html:8
-#: ../../web/templates/admin/list_ip.html:19
-#: ../../web/templates/admin/list_db.html:34
-#: ../../web/templates/admin/list_db.html:44
+#: ../../web/templates/admin/list_backup.html:45
+#: ../../web/templates/admin/list_mail.html:7
+#: ../../web/templates/admin/list_mail.html:16
+#: ../../web/templates/admin/list_cron.html:14
+#: ../../web/templates/admin/list_cron.html:21
 #: ../../web/templates/admin/list_search.html:8
 #: ../../web/templates/admin/list_search.html:15
 #: ../../web/templates/admin/list_search.html:41
+#: ../../web/templates/admin/list_user.html:14
+#: ../../web/templates/admin/list_user.html:23
+#: ../../web/templates/admin/list_log.html:30
 #: ../../web/templates/admin/list_mail_acc.html:9
 #: ../../web/templates/admin/list_mail_acc.html:17
-#: ../../web/templates/admin/list_mail.html:7
-#: ../../web/templates/admin/list_mail.html:16
+#: ../../web/templates/admin/list_ip.html:8
+#: ../../web/templates/admin/list_ip.html:19
+#: ../../web/templates/admin/list_dns.html:7
+#: ../../web/templates/admin/list_dns.html:17
+#: ../../web/templates/admin/add_cron.html:256
+#: ../../web/templates/admin/list_firewall_ipset.html:39
 #: ../../web/templates/admin/list_firewall_banlist.html:37
-#: ../../web/templates/admin/list_backup.html:45
+#: ../../web/templates/admin/list_packages.html:8
+#: ../../web/templates/admin/list_packages.html:15
+#: ../../web/templates/admin/list_db.html:34
+#: ../../web/templates/admin/list_db.html:44
+#: ../../web/templates/admin/edit_cron.html:250
+#: ../../web/templates/user/list_web.html:13
+#: ../../web/templates/user/list_web.html:23
+#: ../../web/templates/user/list_mail.html:7
+#: ../../web/templates/user/list_mail.html:16
+#: ../../web/templates/user/list_cron.html:14
+#: ../../web/templates/user/list_cron.html:21
+#: ../../web/templates/user/list_search.html:8
+#: ../../web/templates/user/list_search.html:15
+#: ../../web/templates/user/list_search.html:39
+#: ../../web/templates/user/list_user.html:18
+#: ../../web/templates/user/list_user.html:27
+#: ../../web/templates/user/list_mail_acc.html:9
+#: ../../web/templates/user/list_mail_acc.html:17
+#: ../../web/templates/user/list_dns.html:7
+#: ../../web/templates/user/list_dns.html:17
+#: ../../web/templates/user/list_db.html:34
+#: ../../web/templates/user/list_db.html:44
 msgid "Date"
 msgstr "Ημερομηνία"
 
-#: ../../web/templates/admin/list_firewall_ipset.html:40
 #: ../../web/templates/admin/list_log.html:31
+#: ../../web/templates/admin/list_firewall_ipset.html:40
 #: ../../web/templates/admin/list_firewall_banlist.html:38
 msgid "Time"
 msgstr "χρόνος"
@@ -3865,56 +3900,56 @@ msgstr "1 λίστα IP"
 msgid "%s Ipset lists"
 msgstr "%s Λίστες IP"
 
-#: ../../web/templates/user/edit_dns.html:7
-#: ../../web/templates/user/edit_user.html:8
-#: ../../web/templates/user/edit_web.html:10
-#: ../../web/templates/admin/edit_server_bind9.html:7
-#: ../../web/templates/admin/edit_server_mysql.html:7
 #: ../../web/templates/admin/add_firewall_ipset.html:7
-#: ../../web/templates/admin/add_ip.html:7
-#: ../../web/templates/admin/edit_db.html:7
-#: ../../web/templates/admin/edit_backup_exclusions.html:7
-#: ../../web/templates/admin/edit_package.html:7
-#: ../../web/templates/admin/edit_dns.html:7
 #: ../../web/templates/admin/add_dns.html:7
-#: ../../web/templates/admin/edit_user.html:8
-#: ../../web/templates/admin/edit_firewall.html:7
+#: ../../web/templates/admin/edit_server_mysql.html:7
+#: ../../web/templates/admin/add_firewall.html:7
+#: ../../web/templates/admin/edit_user.html:10
+#: ../../web/templates/admin/add_firewall_banlist.html:7
+#: ../../web/templates/admin/add_web.html:7
 #: ../../web/templates/admin/edit_web.html:10
+#: ../../web/templates/admin/add_db.html:7
+#: ../../web/templates/admin/edit_mail_acc.html:7
+#: ../../web/templates/admin/edit_db.html:7
+#: ../../web/templates/admin/edit_server_dovecot.html:7
+#: ../../web/templates/admin/edit_backup_exclusions.html:7
+#: ../../web/templates/admin/edit_mail.html:7
+#: ../../web/templates/admin/edit_package.html:7
+#: ../../web/templates/admin/add_mail.html:7
+#: ../../web/templates/admin/add_ip.html:7
 #: ../../web/templates/admin/edit_server.html:7
 #: ../../web/templates/admin/edit_server_php.html:7
-#: ../../web/templates/admin/add_mail.html:7
-#: ../../web/templates/admin/add_db.html:7
-#: ../../web/templates/admin/add_dns_rec.html:7
-#: ../../web/templates/admin/edit_server_dovecot.html:7
-#: ../../web/templates/admin/add_key.html:7
-#: ../../web/templates/admin/edit_server_service.html:7
-#: ../../web/templates/admin/add_firewall_banlist.html:7
-#: ../../web/templates/admin/edit_cron.html:7
 #: ../../web/templates/admin/add_cron.html:7
-#: ../../web/templates/admin/edit_dns_rec.html:7
-#: ../../web/templates/admin/edit_ip.html:7
-#: ../../web/templates/admin/edit_mail.html:7
-#: ../../web/templates/admin/add_firewall.html:7
-#: ../../web/templates/admin/add_mail_acc.html:7
-#: ../../web/templates/admin/edit_mail_acc.html:7
-#: ../../web/templates/admin/edit_server_nginx.html:8
-#: ../../web/templates/admin/edit_server_pgsql.html:7
 #: ../../web/templates/admin/add_package.html:7
-#: ../../web/templates/admin/add_web.html:7
+#: ../../web/templates/admin/add_mail_acc.html:7
+#: ../../web/templates/admin/add_dns_rec.html:7
 #: ../../web/templates/admin/add_user.html:7
+#: ../../web/templates/admin/edit_server_service.html:7
+#: ../../web/templates/admin/edit_ip.html:7
+#: ../../web/templates/admin/edit_dns.html:7
 #: ../../web/templates/admin/edit_server_httpd.html:8
+#: ../../web/templates/admin/add_key.html:7
+#: ../../web/templates/admin/edit_server_pgsql.html:7
+#: ../../web/templates/admin/edit_server_nginx.html:8
+#: ../../web/templates/admin/edit_dns_rec.html:7
+#: ../../web/templates/admin/edit_firewall.html:7
+#: ../../web/templates/admin/edit_server_bind9.html:7
+#: ../../web/templates/admin/edit_cron.html:7
+#: ../../web/templates/user/edit_user.html:8
+#: ../../web/templates/user/edit_web.html:10
+#: ../../web/templates/user/edit_dns.html:7
 msgid "Save"
 msgstr "Αποθήκευση"
 
-#: ../../web/templates/admin/edit_server_bind9.html:38
 #: ../../web/templates/admin/edit_server_mysql.html:38
+#: ../../web/templates/admin/edit_server_dovecot.html:38
 #: ../../web/templates/admin/edit_server.html:39
 #: ../../web/templates/admin/edit_server_php.html:38
-#: ../../web/templates/admin/edit_server_dovecot.html:38
 #: ../../web/templates/admin/edit_server_service.html:39
-#: ../../web/templates/admin/edit_server_nginx.html:39
-#: ../../web/templates/admin/edit_server_pgsql.html:38
 #: ../../web/templates/admin/edit_server_httpd.html:39
+#: ../../web/templates/admin/edit_server_pgsql.html:38
+#: ../../web/templates/admin/edit_server_nginx.html:39
+#: ../../web/templates/admin/edit_server_bind9.html:38
 msgid "Configuring Server"
 msgstr "Διαμόρφωση Διακομιστή"
 
@@ -3925,9 +3960,9 @@ msgstr "Διαμόρφωση Διακομιστή"
 msgid "Basic options"
 msgstr "Βασικές επιλογές"
 
-#: ../../web/templates/user/list_db.html:84
 #: ../../web/templates/admin/edit_server.html:67
 #: ../../web/templates/admin/list_db.html:85
+#: ../../web/templates/user/list_db.html:84
 msgid "Hostname"
 msgstr "Hostname"
 

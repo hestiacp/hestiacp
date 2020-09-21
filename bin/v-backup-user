@@ -245,7 +245,11 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
         set +f
 
         # Backup files
-        tar ${fargs[@]} -cpf- * | gzip -$BACKUP_GZIP - > $tmpdir/web/$domain/domain_data.tar.gz
+        if [ "$BACKUP_MODE" = 'zstd' ]; then
+            tar ${fargs[@]} -cpf- * | zstd -$BACKUP_GZIP - > $tmpdir/web/$domain/domain_data.tar.zst
+        else    
+            tar ${fargs[@]} -cpf- * | gzip -$BACKUP_GZIP - > $tmpdir/web/$domain/domain_data.tar.gz
+        fi
     done
 
     # Print total
@@ -358,10 +362,13 @@ if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
                     tee -a $BACKUP/$user.log
             fi
         done
-
         # Compress archive
         if [ ${#accounts[@]} -gt 0 ]; then
-            tar -cpf- ${accounts[@]} |gzip -$BACKUP_GZIP - > $tmpdir/mail/$domain/accounts.tar.gz
+            if [ "$BACKUP_MODE" = 'zstd' ]; then
+                tar -cpf- ${accounts[@]}  | zstd -$BACKUP_GZIP - > $tmpdir/mail/$domain/accounts.tar.zst
+            else    
+                tar -cpf- ${accounts[@]} | gzip -$BACKUP_GZIP - > $tmpdir/mail/$domain/accounts.tar.gz
+            fi        
         fi
     done
 
@@ -406,7 +413,12 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
         grep "DB='$database'" $conf > hestia/db.conf
 
         dump="$tmpdir/db/$database/$database.$TYPE.sql"
-        dumpgz="$tmpdir/db/$database/$database.$TYPE.sql.gz"
+        if [ "$BACKUP_MODE" = 'zstd' ]; then
+                    dumpgz="$tmpdir/db/$database/$database.$TYPE.sql.zst"
+        else
+            dumpgz="$tmpdir/db/$database/$database.$TYPE.sql.gz"        
+        fi
+
         grants="$tmpdir/db/$database/conf/$database.$TYPE.$DBUSER"
         if [ ! -f "$dumpgz" ]; then
 
@@ -432,7 +444,12 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
             esac
 
             # Compress dump
-            gzip -$BACKUP_GZIP $dump
+            if [ "$BACKUP_MODE" = 'zstd' ]; then
+                zstd -$BACKUP_GZIP $dump
+                rm $dump;
+            else    
+                gzip -$BACKUP_GZIP $dump
+            fi                     
         fi
     done
 
@@ -508,7 +525,12 @@ if [ "$USER" != '*' ]; then
             check_backup_conditions
 
             # Backup files and dirs
-            tar --anchored -cpf- ${fargs[@]} $udir |gzip -$BACKUP_GZIP - > $tmpdir/user_dir/$udir.tar.gz
+            if [ "$BACKUP_MODE" = 'zstd' ]; then
+                tar --anchored -cpf- ${fargs[@]} $udir | zstd -$BACKUP_GZIP - > $tmpdir/user_dir/$udir.tar.zst
+            else    
+                tar --anchored -cpf- ${fargs[@]} $udir | gzip -$BACKUP_GZIP - > $tmpdir/user_dir/$udir.tar.gz
+            fi 
+            
         fi
     done
     set +f
@@ -522,6 +544,9 @@ if [ "$USER" != '*' ]; then
         echo -e "$(date "+%F %T") *** $i directories ***" |\
             tee -a $BACKUP/$user.log
     fi
+fi
+if [ "$BACKUP_MODE" = 'zstd' ]; then
+    touch $tmpdir/.zstd
 fi
 
 # Get backup size

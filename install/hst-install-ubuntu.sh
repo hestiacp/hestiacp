@@ -44,7 +44,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     postgresql postgresql-contrib proftpd-basic quota roundcube-core
     roundcube-mysql roundcube-plugins rrdtool rssh spamassassin sudo hestia=${HESTIA_INSTALL_VER}
     hestia-nginx hestia-php vim-common vsftpd whois zip acl sysstat setpriv
-    ipset libonig5 libzip5 openssh-server ssh"
+    ipset libonig5 libzip5 openssh-server ssh zstd"
 
 installer_dependencies="apt-transport-https curl dirmngr gnupg wget software-properties-common ca-certificates"
 
@@ -1113,6 +1113,7 @@ fi
 # Backups
 echo "BACKUP_SYSTEM='local'" >> $HESTIA/conf/hestia.conf
 echo "BACKUP_GZIP='9'" >> $HESTIA/conf/hestia.conf
+echo "BACKUP_MODE='zstd'" >> $HESTIA/conf/hestia.conf
 
 # Language
 echo "LANGUAGE='$lang'" >> $HESTIA/conf/hestia.conf

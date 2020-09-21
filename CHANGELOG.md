@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 - Add support Proftpd TLS Support
 - Add the possibility to assign user "Administrators" rights on login. Replaces "root" login. Notifications are only send towards the "admin" account email
 - Updated translations system with the use of Gettext. Modified / Updated all translated strings
+- Updated MariaDB to 10.5 (Manual upgrade required install/upgrade/manual/upgrade_mariadb.sh)
 
 ## Bugfixes
 - Removed root login (root / root password )

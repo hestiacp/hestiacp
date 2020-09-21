@@ -42,7 +42,7 @@ upgrade_phpmyadmin
 upgrade_set_version $new_version
 
 # Perform account and domain rebuild to ensure configuration files are correct
-upgrade_rebuild_users
+#upgrade_rebuild_users
 
 # Restart necessary services for changes to take full effect
 upgrade_restart_services

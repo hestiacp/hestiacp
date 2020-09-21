@@ -44,7 +44,7 @@ if [ "$release" -eq 9 ]; then
         sudo bc ftp lsof rrdtool quota e2fslibs bsdutils e2fsprogs curl
         imagemagick fail2ban dnsutils bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx
         hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat
-        rsyslog openssh-server setpriv ipset libapache2-mod-ruid2"
+        rsyslog openssh-server setpriv ipset libapache2-mod-ruid2 zstd"
 elif [ "$release" -eq 10 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
         apache2-suexec-pristine libapache2-mod-fcgid libapache2-mod-php$fpm_v
@@ -61,7 +61,7 @@ elif [ "$release" -eq 10 ]; then
         quota e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx hestia-php expect
         libmail-dkim-perl unrar-free vim-common acl sysstat rsyslog openssh-server
-        util-linux ipset libapache2-mpm-itk"
+        util-linux ipset libapache2-mpm-itk zstd"
 fi
 
 installer_dependencies="apt-transport-https curl dirmngr gnupg wget ca-certificates"
@@ -1075,6 +1075,7 @@ fi
 # Backups
 echo "BACKUP_SYSTEM='local'" >> $HESTIA/conf/hestia.conf
 echo "BACKUP_GZIP='9'" >> $HESTIA/conf/hestia.conf
+echo "BACKUP_MODE='zstd'" >> $HESTIA/conf/hestia.conf
 
 # Language
 echo "LANGUAGE='$lang'" >> $HESTIA/conf/hestia.conf

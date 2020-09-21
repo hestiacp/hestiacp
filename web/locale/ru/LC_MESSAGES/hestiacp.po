@@ -11,6 +11,10 @@ msgstr ""
 "Language: ru\n"
 "Project-Id-Version: Hestia CP\n"
 
+#: ../../web/templates/admin/edit_server.html:618
+msgid "Compression"
+msgstr ""
+
 #: ../../web/add/webapp/index.php:62
 msgid "%s installer missing"
 msgstr ""
@@ -64,12 +68,12 @@ msgstr "Указывает на "
 msgid "Files"
 msgstr "Файлы"
 
-#: ../../web/templates/admin/edit_user.html:143
+#: ../../web/templates/admin/edit_user.html:145
 #: ../../web/templates/admin/add_user.html:136
 msgid "Role"
 msgstr "Роль"
 
-#: ../../web/templates/admin/edit_user.html:150
+#: ../../web/templates/admin/edit_user.html:152
 #: ../../web/templates/admin/add_user.html:143
 msgid "Administrator"
 msgstr "Администратор"
@@ -113,7 +117,7 @@ msgstr "Отправить уведомление по электронной п
 msgid "SYSTEM_UPGRADE_SEND_EMAIL_LOG"
 msgstr "Отправить журнал установки обновления по электронной почте"
 
-#: ../../web/templates/admin/edit_server.html:845
+#: ../../web/templates/admin/edit_server.html:884
 msgid "Filemanager"
 msgstr "Файлы"
 
@@ -175,7 +179,7 @@ msgstr "Вы уверены, что хотите заблокировать по
 msgid "Stop \"%s\" failed"
 msgstr "Остановка службы %s не удалась"
 
-#: ../../web/templates/admin/edit_user.html:82
+#: ../../web/templates/admin/edit_user.html:84
 #: ../../web/templates/admin/add_db.html:97
 #: ../../web/templates/admin/edit_mail_acc.html:82
 #: ../../web/templates/admin/edit_db.html:95
@@ -185,7 +189,7 @@ msgstr "Остановка службы %s не удалась"
 msgid "Your password must have at least"
 msgstr "Ваш пароль должен содержать как минимум"
 
-#: ../../web/templates/admin/edit_user.html:84
+#: ../../web/templates/admin/edit_user.html:86
 #: ../../web/templates/admin/add_db.html:99
 #: ../../web/templates/admin/edit_mail_acc.html:84
 #: ../../web/templates/admin/edit_db.html:97
@@ -195,7 +199,7 @@ msgstr "Ваш пароль должен содержать как миниму�
 msgid "8 characters long"
 msgstr "8 символов"
 
-#: ../../web/templates/admin/edit_user.html:85
+#: ../../web/templates/admin/edit_user.html:87
 #: ../../web/templates/admin/add_db.html:100
 #: ../../web/templates/admin/edit_mail_acc.html:85
 #: ../../web/templates/admin/edit_db.html:98
@@ -205,7 +209,7 @@ msgstr "8 символов"
 msgid "1 uppercase & 1 lowercase character"
 msgstr "1 заглавная и 1 строчная буква"
 
-#: ../../web/templates/admin/edit_user.html:86
+#: ../../web/templates/admin/edit_user.html:88
 #: ../../web/templates/admin/add_db.html:101
 #: ../../web/templates/admin/edit_mail_acc.html:86
 #: ../../web/templates/admin/edit_db.html:99
@@ -251,7 +255,7 @@ msgstr "Сервер"
 msgid "Submit an issue report"
 msgstr "Отправить отчет о проблеме"
 
-#: ../../web/templates/login.html:35
+#: ../../web/templates/login.html:35 ../../web/templates/login_a.html:45
 msgid "Next"
 msgstr "Далее"
 
@@ -382,16 +386,16 @@ msgstr "пересоздать CRON"
 msgid "update counters"
 msgstr "обновить счетчики"
 
-#: ../../web/templates/admin/list_user.html:135
+#: ../../web/templates/admin/list_user.html:134
 msgid "DELETE_USER_CONFIRMATION"
 msgstr "Вы уверены, что хотите удалить пользователя %s?"
 
-#: ../../web/templates/admin/list_user.html:166
+#: ../../web/templates/admin/list_user.html:165
 #: ../../web/templates/user/list_user.html:133
 msgid "1 user account"
 msgstr "1 учетная запись пользователя"
 
-#: ../../web/templates/admin/list_user.html:168
+#: ../../web/templates/admin/list_user.html:167
 #: ../../web/templates/user/list_user.html:135
 msgid "%s user accounts"
 msgstr "%s учетных записей пользователей"
@@ -447,6 +451,7 @@ msgid "Name Servers"
 msgstr "Сервер имен"
 
 #: ../../web/add/user/index.php:91 ../../web/templates/login.html:16
+#: ../../web/templates/login_a.html:16
 msgid "Welcome to Hestia Control Panel"
 msgstr "Добро пожаловать в панель управления Hestia"
 
@@ -645,39 +650,39 @@ msgstr "1 правило брандмауэра"
 msgid "%s firewall rules"
 msgstr "%s правил брандмауэра"
 
-#: ../../web/templates/admin/edit_user.html:5
+#: ../../web/templates/admin/edit_user.html:6
 msgid "Manage SSH keys"
 msgstr "Управление ключами SSH"
 
-#: ../../web/templates/admin/edit_user.html:42
-#: ../../web/templates/admin/list_user.html:120
+#: ../../web/templates/admin/edit_user.html:44
+#: ../../web/templates/admin/list_user.html:119
 #: ../../web/templates/user/edit_user.html:42
 #: ../../web/templates/user/list_user.html:105
 msgid "Editing User"
 msgstr "Редактирование аккаунта"
 
-#: ../../web/templates/admin/edit_user.html:92
+#: ../../web/templates/admin/edit_user.html:94
 #: ../../web/templates/user/edit_user.html:92
 msgid "Enable 2FA"
 msgstr "Включить ДФА"
 
-#: ../../web/templates/admin/edit_user.html:94
+#: ../../web/templates/admin/edit_user.html:96
 #: ../../web/templates/user/edit_user.html:94
 msgid "2FA Reset Code:"
 msgstr "Код восстановления доступа к аккаунту:"
 
-#: ../../web/templates/admin/edit_user.html:95
+#: ../../web/templates/admin/edit_user.html:97
 #: ../../web/templates/user/edit_user.html:95
 msgid "Please scan the code below in your 2FA application:"
 msgstr "Чтобы закончить настройку 2FA, сканируйте QR-Code ниже <br /> в приложении на Вашем устройстве (например, <a href=\"https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2\">Google Authenticator</a>):"
 
-#: ../../web/templates/admin/edit_user.html:102
+#: ../../web/templates/admin/edit_user.html:104
 #: ../../web/templates/admin/add_user.html:87
 #: ../../web/templates/user/edit_user.html:102
 msgid "Contact"
 msgstr "Имя"
 
-#: ../../web/templates/admin/edit_user.html:122
+#: ../../web/templates/admin/edit_user.html:124
 #: ../../web/templates/admin/list_user.html:68
 #: ../../web/templates/admin/list_updates.html:40
 #: ../../web/templates/admin/add_user.html:112
@@ -686,29 +691,29 @@ msgstr "Имя"
 msgid "Package"
 msgstr "Пакет"
 
-#: ../../web/templates/admin/edit_user.html:156
+#: ../../web/templates/admin/edit_user.html:158
 #: ../../web/templates/admin/add_user.html:149
 #: ../../web/templates/user/edit_user.html:122
 msgid "Language"
 msgstr "Язык"
 
-#: ../../web/templates/admin/edit_user.html:180
+#: ../../web/templates/admin/edit_user.html:182
 #: ../../web/templates/admin/edit_package.html:160
 #: ../../web/templates/admin/add_package.html:163
 msgid "SSH Access"
 msgstr "Доступ по SSH"
 
-#: ../../web/templates/admin/edit_user.html:201
+#: ../../web/templates/admin/edit_user.html:203
 msgid "PHP CLI Version"
 msgstr "Версия PHP для CLI"
 
-#: ../../web/templates/admin/edit_user.html:227
+#: ../../web/templates/admin/edit_user.html:229
 #: ../../web/templates/user/edit_user.html:146
 msgid "Default Name Servers"
 msgstr "Серверы имен"
 
 #: ../../web/templates/admin/add_dns.html:178
-#: ../../web/templates/admin/edit_user.html:293
+#: ../../web/templates/admin/edit_user.html:295
 #: ../../web/templates/admin/edit_package.html:370
 #: ../../web/templates/admin/add_package.html:372
 #: ../../web/templates/user/edit_user.html:211
@@ -1442,7 +1447,8 @@ msgstr "Менеджер Web журнала"
 #: ../../web/templates/admin/list_services.html:55
 #: ../../web/templates/admin/list_server_info.html:6
 #: ../../web/templates/admin/list_weblog.html:6
-#: ../../web/templates/login_2.html:8 ../../web/templates/reset2fa.html:8
+#: ../../web/templates/login_a.html:8 ../../web/templates/login_2.html:8
+#: ../../web/templates/reset2fa.html:8
 msgid "Hestia Control Panel"
 msgstr "Панель управления Hestia"
 
@@ -1669,48 +1675,48 @@ msgstr "Перезапуск"
 msgid "Local backup"
 msgstr "Локальный бэкап"
 
-#: ../../web/templates/admin/edit_server.html:618
+#: ../../web/templates/admin/edit_server.html:632
 msgid "Compression level"
 msgstr "Уровень сжатия"
 
 #: ../../web/templates/admin/add_web.html:236
 #: ../../web/templates/admin/edit_web.html:284
-#: ../../web/templates/admin/edit_server.html:639
-#: ../../web/templates/admin/edit_server.html:716
+#: ../../web/templates/admin/edit_server.html:653
+#: ../../web/templates/admin/edit_server.html:730
 #: ../../web/templates/user/edit_web.html:297
 msgid "Directory"
 msgstr "Каталог"
 
-#: ../../web/templates/admin/edit_server.html:650
+#: ../../web/templates/admin/edit_server.html:664
 msgid "Remote backup"
 msgstr "Удалённый бекап"
 
 #: ../../web/templates/admin/add_firewall.html:69
 #: ../../web/templates/admin/list_firewall.html:13
 #: ../../web/templates/admin/list_firewall.html:52
-#: ../../web/templates/admin/edit_server.html:658
+#: ../../web/templates/admin/edit_server.html:672
 #: ../../web/templates/admin/edit_firewall.html:72
 msgid "Protocol"
 msgstr "Протокол"
 
-#: ../../web/templates/admin/edit_server.html:664
+#: ../../web/templates/admin/edit_server.html:678
 msgid "ftp"
 msgstr "FTP"
 
-#: ../../web/templates/admin/edit_server.html:665
+#: ../../web/templates/admin/edit_server.html:679
 msgid "sftp"
 msgstr "SFTP"
 
 #: ../../web/templates/admin/add_firewall.html:83
 #: ../../web/templates/admin/list_firewall.html:14
 #: ../../web/templates/admin/list_firewall.html:53
-#: ../../web/templates/admin/edit_server.html:683
+#: ../../web/templates/admin/edit_server.html:697
 #: ../../web/templates/admin/edit_firewall.html:86
 msgid "Port"
 msgstr "Порт"
 
 #: ../../web/templates/reset_1.html:20 ../../web/templates/login.html:21
-#: ../../web/templates/admin/edit_user.html:60
+#: ../../web/templates/admin/edit_user.html:62
 #: ../../web/templates/admin/add_web.html:177
 #: ../../web/templates/admin/add_web.html:332
 #: ../../web/templates/admin/add_web.html:404
@@ -1722,11 +1728,12 @@ msgstr "Порт"
 #: ../../web/templates/admin/edit_db.html:71
 #: ../../web/templates/admin/list_user.html:15
 #: ../../web/templates/admin/list_mail_acc.html:54
-#: ../../web/templates/admin/edit_server.html:694
+#: ../../web/templates/admin/edit_server.html:708
 #: ../../web/templates/admin/add_mail_acc.html:166
 #: ../../web/templates/admin/add_user.html:56
 #: ../../web/templates/admin/list_db.html:37
 #: ../../web/templates/admin/list_db.html:84
+#: ../../web/templates/login_a.html:21
 #: ../../web/templates/user/edit_user.html:60
 #: ../../web/templates/user/edit_web.html:144
 #: ../../web/templates/user/edit_web.html:481
@@ -1738,7 +1745,7 @@ msgstr "Порт"
 msgid "Username"
 msgstr "Аккаунт"
 
-#: ../../web/templates/admin/edit_server.html:735
+#: ../../web/templates/admin/edit_server.html:749
 msgid "Hestia SSL"
 msgstr "SSL"
 
@@ -1746,7 +1753,7 @@ msgstr "SSL"
 #: ../../web/templates/admin/edit_web.html:342
 #: ../../web/templates/admin/edit_mail.html:115
 #: ../../web/templates/admin/list_ssl.html:54
-#: ../../web/templates/admin/edit_server.html:744
+#: ../../web/templates/admin/edit_server.html:758
 #: ../../web/templates/user/edit_web.html:356
 msgid "SSL Certificate"
 msgstr "SSL сертификат"
@@ -1754,7 +1761,7 @@ msgstr "SSL сертификат"
 #: ../../web/templates/admin/add_web.html:276
 #: ../../web/templates/admin/edit_web.html:343
 #: ../../web/templates/admin/edit_mail.html:116
-#: ../../web/templates/admin/edit_server.html:745
+#: ../../web/templates/admin/edit_server.html:759
 #: ../../web/templates/user/edit_web.html:357
 msgid "Generate CSR"
 msgstr "Cгенерировать CSR запрос"
@@ -1763,70 +1770,70 @@ msgstr "Cгенерировать CSR запрос"
 #: ../../web/templates/admin/edit_web.html:353
 #: ../../web/templates/admin/edit_mail.html:126
 #: ../../web/templates/admin/list_ssl.html:64
-#: ../../web/templates/admin/edit_server.html:755
+#: ../../web/templates/admin/edit_server.html:769
 #: ../../web/templates/user/edit_web.html:367
 msgid "SSL Key"
 msgstr "Ключ SSL сертификата"
 
 #: ../../web/templates/admin/edit_web.html:378
 #: ../../web/templates/admin/edit_mail.html:151
-#: ../../web/templates/admin/edit_server.html:768
+#: ../../web/templates/admin/edit_server.html:782
 #: ../../web/templates/user/edit_web.html:392
 msgid "SUBJECT"
 msgstr "ОБЪЕКТ"
 
 #: ../../web/templates/admin/edit_web.html:387
 #: ../../web/templates/admin/edit_mail.html:160
-#: ../../web/templates/admin/edit_server.html:777
+#: ../../web/templates/admin/edit_server.html:791
 #: ../../web/templates/user/edit_web.html:401
 msgid "ALIASES"
 msgstr "АЛИАСЫ"
 
 #: ../../web/templates/admin/edit_web.html:396
 #: ../../web/templates/admin/edit_mail.html:169
-#: ../../web/templates/admin/edit_server.html:786
+#: ../../web/templates/admin/edit_server.html:800
 #: ../../web/templates/user/edit_web.html:410
 msgid "NOT_BEFORE"
 msgstr "НЕДОСТУПЕН ДО"
 
 #: ../../web/templates/admin/edit_web.html:404
 #: ../../web/templates/admin/edit_mail.html:177
-#: ../../web/templates/admin/edit_server.html:794
+#: ../../web/templates/admin/edit_server.html:808
 #: ../../web/templates/user/edit_web.html:418
 msgid "NOT_AFTER"
 msgstr "НЕДОСТУПЕН ПОСЛЕ"
 
 #: ../../web/templates/admin/edit_web.html:412
 #: ../../web/templates/admin/edit_mail.html:185
-#: ../../web/templates/admin/edit_server.html:802
+#: ../../web/templates/admin/edit_server.html:816
 #: ../../web/templates/user/edit_web.html:426
 msgid "SIGNATURE"
 msgstr "ПОДПИСЬ"
 
 #: ../../web/templates/admin/edit_web.html:420
 #: ../../web/templates/admin/edit_mail.html:193
-#: ../../web/templates/admin/edit_server.html:811
+#: ../../web/templates/admin/edit_server.html:825
 #: ../../web/templates/user/edit_web.html:434
 msgid "PUB_KEY"
 msgstr "ПУБЛИЧНЫЙ КЛЮЧ"
 
 #: ../../web/templates/admin/edit_web.html:428
 #: ../../web/templates/admin/edit_mail.html:201
-#: ../../web/templates/admin/edit_server.html:819
+#: ../../web/templates/admin/edit_server.html:833
 #: ../../web/templates/user/edit_web.html:442
 msgid "ISSUER"
 msgstr "ИЗДАТЕЛЬ"
 
-#: ../../web/templates/admin/edit_server.html:836
+#: ../../web/templates/admin/edit_server.html:875
 msgid "Hestia Control Panel Plugins"
 msgstr "Плагины Hestia Control Panel"
 
-#: ../../web/templates/admin/edit_server.html:859
+#: ../../web/templates/admin/edit_server.html:898
 msgid "FileSystem Disk Quota"
 msgstr "Дисковая квота файловой системы"
 
 #: ../../web/templates/admin/list_services.html:7
-#: ../../web/templates/admin/edit_server.html:873
+#: ../../web/templates/admin/edit_server.html:912
 msgid "Firewall"
 msgstr "Файрвол"
 
@@ -2131,14 +2138,14 @@ msgstr "Редактирование БД"
 msgid "Database"
 msgstr "База данных"
 
-#: ../../web/templates/admin/edit_user.html:149
+#: ../../web/templates/admin/edit_user.html:151
 #: ../../web/templates/admin/add_user.html:142
 #: ../../web/templates/user/list_db.html:37
 msgid "User"
 msgstr "Пользователь"
 
 #: ../../web/templates/admin/setup_webapp.html:67
-#: ../../web/templates/admin/edit_user.html:71
+#: ../../web/templates/admin/edit_user.html:73
 #: ../../web/templates/admin/add_web.html:187
 #: ../../web/templates/admin/add_web.html:344
 #: ../../web/templates/admin/add_web.html:416
@@ -2755,9 +2762,9 @@ msgstr "DNS Кластер"
 #: ../../web/templates/admin/edit_server.html:449
 #: ../../web/templates/admin/edit_server.html:529
 #: ../../web/templates/admin/edit_server.html:610
-#: ../../web/templates/admin/edit_server.html:851
-#: ../../web/templates/admin/edit_server.html:865
-#: ../../web/templates/admin/edit_server.html:879
+#: ../../web/templates/admin/edit_server.html:890
+#: ../../web/templates/admin/edit_server.html:904
+#: ../../web/templates/admin/edit_server.html:918
 msgid "no"
 msgstr "нет"
 
@@ -2772,9 +2779,9 @@ msgstr "нет"
 #: ../../web/templates/admin/edit_server.html:450
 #: ../../web/templates/admin/edit_server.html:530
 #: ../../web/templates/admin/edit_server.html:611
-#: ../../web/templates/admin/edit_server.html:852
-#: ../../web/templates/admin/edit_server.html:866
-#: ../../web/templates/admin/edit_server.html:880
+#: ../../web/templates/admin/edit_server.html:891
+#: ../../web/templates/admin/edit_server.html:905
+#: ../../web/templates/admin/edit_server.html:919
 msgid "yes"
 msgstr "да"
 
@@ -2783,7 +2790,7 @@ msgstr "да"
 #: ../../web/templates/admin/edit_server.html:352
 #: ../../web/templates/admin/edit_server.html:475
 #: ../../web/templates/admin/edit_server.html:555
-#: ../../web/templates/admin/edit_server.html:672
+#: ../../web/templates/admin/edit_server.html:686
 #: ../../web/templates/admin/list_db.html:38
 #: ../../web/templates/user/list_db.html:38
 msgid "Host"
@@ -2833,7 +2840,7 @@ msgid "phpMyAdmin URL"
 msgstr "URL phpMyAdmin "
 
 #: ../../web/templates/login_1.html:23
-#: ../../web/templates/admin/edit_user.html:71
+#: ../../web/templates/admin/edit_user.html:73
 #: ../../web/templates/admin/add_web.html:187
 #: ../../web/templates/admin/add_web.html:344
 #: ../../web/templates/admin/add_web.html:416
@@ -2845,10 +2852,11 @@ msgstr "URL phpMyAdmin "
 #: ../../web/templates/admin/edit_mail_acc.html:181
 #: ../../web/templates/admin/edit_db.html:84
 #: ../../web/templates/admin/edit_server.html:486
-#: ../../web/templates/admin/edit_server.html:705
+#: ../../web/templates/admin/edit_server.html:719
 #: ../../web/templates/admin/add_mail_acc.html:70
 #: ../../web/templates/admin/add_mail_acc.html:170
 #: ../../web/templates/admin/add_user.html:66
+#: ../../web/templates/login_a.html:31
 #: ../../web/templates/user/edit_user.html:71
 #: ../../web/templates/user/edit_web.html:154
 #: ../../web/templates/user/edit_web.html:494
@@ -3267,8 +3275,8 @@ msgid "USER_CREATED_OK"
 msgstr "Аккаунт <a href=\"/edit/user/?user=%s\"><b>%s</b></a> успешно создан"
 
 #: ../../web/add/user/index.php:108
-#: ../../web/templates/admin/list_user.html:104
-#: ../../web/templates/admin/list_user.html:118
+#: ../../web/templates/admin/list_user.html:103
+#: ../../web/templates/admin/list_user.html:117
 #: ../../web/templates/user/list_user.html:97
 msgid "login as"
 msgstr "войти как"
@@ -3486,8 +3494,8 @@ msgid "Organization"
 msgstr "Организация"
 
 #: ../../web/templates/reset_1.html:30
-#: ../../web/templates/admin/edit_user.html:112
-#: ../../web/templates/admin/list_user.html:106
+#: ../../web/templates/admin/edit_user.html:114
+#: ../../web/templates/admin/list_user.html:105
 #: ../../web/templates/admin/generate_ssl.html:60
 #: ../../web/templates/admin/add_user.html:97
 #: ../../web/templates/user/edit_user.html:112
@@ -3622,14 +3630,14 @@ msgstr " SSH Ключ"
 #: ../../web/templates/admin/add_dns.html:172
 #: ../../web/templates/admin/list_backup.html:23
 #: ../../web/templates/admin/list_backup.html:85
-#: ../../web/templates/admin/edit_user.html:233
-#: ../../web/templates/admin/edit_user.html:239
-#: ../../web/templates/admin/edit_user.html:246
-#: ../../web/templates/admin/edit_user.html:254
-#: ../../web/templates/admin/edit_user.html:262
-#: ../../web/templates/admin/edit_user.html:270
-#: ../../web/templates/admin/edit_user.html:278
-#: ../../web/templates/admin/edit_user.html:286
+#: ../../web/templates/admin/edit_user.html:235
+#: ../../web/templates/admin/edit_user.html:241
+#: ../../web/templates/admin/edit_user.html:248
+#: ../../web/templates/admin/edit_user.html:256
+#: ../../web/templates/admin/edit_user.html:264
+#: ../../web/templates/admin/edit_user.html:272
+#: ../../web/templates/admin/edit_user.html:280
+#: ../../web/templates/admin/edit_user.html:288
 #: ../../web/templates/admin/add_web.html:325
 #: ../../web/templates/admin/add_web.html:397
 #: ../../web/templates/admin/list_mail.html:34
@@ -3639,7 +3647,7 @@ msgstr " SSH Ключ"
 #: ../../web/templates/admin/list_cron.html:40
 #: ../../web/templates/admin/list_cron.html:107
 #: ../../web/templates/admin/list_user.html:47
-#: ../../web/templates/admin/list_user.html:131
+#: ../../web/templates/admin/list_user.html:130
 #: ../../web/templates/admin/list_firewall.html:30
 #: ../../web/templates/admin/list_firewall.html:114
 #: ../../web/templates/admin/edit_package.html:310
@@ -3713,8 +3721,8 @@ msgstr "удалить"
 #: ../../web/templates/admin/list_cron.html:110
 #: ../../web/templates/admin/list_search.html:138
 #: ../../web/templates/admin/list_search.html:169
-#: ../../web/templates/admin/list_user.html:125
-#: ../../web/templates/admin/list_user.html:134
+#: ../../web/templates/admin/list_user.html:124
+#: ../../web/templates/admin/list_user.html:133
 #: ../../web/templates/admin/list_log.html:10
 #: ../../web/templates/admin/list_firewall.html:108
 #: ../../web/templates/admin/list_firewall.html:117
@@ -3891,7 +3899,7 @@ msgstr "%s Списки IP"
 #: ../../web/templates/admin/add_dns.html:7
 #: ../../web/templates/admin/edit_server_mysql.html:7
 #: ../../web/templates/admin/add_firewall.html:7
-#: ../../web/templates/admin/edit_user.html:8
+#: ../../web/templates/admin/edit_user.html:10
 #: ../../web/templates/admin/add_firewall_banlist.html:7
 #: ../../web/templates/admin/add_web.html:7
 #: ../../web/templates/admin/edit_web.html:10

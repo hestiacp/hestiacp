@@ -591,7 +591,7 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
         format_domain_idn
 
         # Restoring emails
-        if [ $BACKUP_MODE = 'zstd' ]; then    
+        if [ $backup_mode = 'zstd' ]; then    
             if [ -e "$tmpdir/mail/$domain/accounts.tar.zst" ]; then
                 chmod u+w "$HOMEDIR/$user/mail/$domain_idn"
                 $BIN/v-extract-fs-archive "$user" "$tmpdir/mail/$domain/accounts.tar.zst" "$HOMEDIR/$user/mail/$domain_idn/"
@@ -696,7 +696,7 @@ if [ "$db" != 'no' ] && [ ! -z "$DB_SYSTEM" ]; then
         fi
 
         # Unzipping database dump
-        if [ $BACKUP_MODE = 'zstd' ]; then  
+        if [ $backup_mode = 'zstd' ]; then  
             zstd -d $tmpdir/db/$database/$database.*.sql.zst
         else
             gzip -d $tmpdir/db/$database/$database.*.sql.gz
@@ -759,7 +759,7 @@ if [ "$udir" != 'no' ]; then
 
         # Creating user dir restore list
         backup_dirs=$(tar -tf $BACKUP/$backup |grep "^./user_dir")
-        if [ $BACKUP_MODE = 'zstd' ]; then 
+        if [ $backup_mode = 'zstd' ]; then 
             backup_dirs=$(echo "$backup_dirs" |grep tar.zst)
             backup_dirs=$(echo "$backup_dirs" |cut -f 3 -d /)
             backup_dirs=$(echo "$backup_dirs" |sed "s/.tar.zst//")
@@ -777,7 +777,7 @@ if [ "$udir" != 'no' ]; then
 
         for user_dir in $user_dirs; do
             echo -e "$(date "+%F %T") $user_dir" |tee -a $tmpdir/restore.log
-            if [ $BACKUP_MODE = 'zstd' ]; then 
+            if [ $backup_mode = 'zstd' ]; then 
                 tar xf "$BACKUP/$backup" -C "$tmpdir" --no-wildcards "./user_dir/$user_dir.tar.zst"
             else
                 tar xf "$BACKUP/$backup" -C "$tmpdir" --no-wildcards "./user_dir/$user_dir.tar.gz"
@@ -793,7 +793,7 @@ if [ "$udir" != 'no' ]; then
             chown "$user" "$tmpdir/user_dir"
             chown "$user" "$HOMEDIR/$user"
             [ -e "$HOMEDIR/$user/$user_dir" ] && chown "$user" "$HOMEDIR/$user/$user_dir"
-            if [ $BACKUP_MODE = 'zstd' ]; then
+            if [ $backup_mode = 'zstd' ]; then
                 $BIN/v-extract-fs-archive "$user" "$tmpdir/user_dir/$user_dir.tar.zst" "$HOMEDIR/$user"
             else
                 $BIN/v-extract-fs-archive "$user" "$tmpdir/user_dir/$user_dir.tar.gz" "$HOMEDIR/$user"

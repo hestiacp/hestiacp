@@ -209,6 +209,27 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
             fi
         fi
 
+        domain_conf=$(grep "DOMAIN='$domain'" $conf)
+        parse_object_kv_list_non_eval domain_conf
+        
+        mkdir template/
+        mkdir  template/$WEB_SYSTEM/
+        mkdir  template/php-fpm/
+        
+        if [ $WEB_BACKEND == 'php-fpm' ]; then 
+            cp $HESTIA/data/templates/web/$WEB_SYSTEM/php-fpm/$TPL.tpl template/$WEB_SYSTEM/
+            cp $HESTIA/data/templates/web/$WEB_SYSTEM/php-fpm/$TPL.stpl  template/$WEB_SYSTEM/
+            cp $HESTIA/data/templates/web/php-fpm/$BACKEND.tpl template/php-fpm/
+        else
+            cp $HESTIA/data/templates/web/$WEB_SYSTEM/php-fpm/$TPL.tpl template/$WEB_SYSTEM/
+            cp $HESTIA/data/templates/web/$WEB_SYSTEM/php-fpm/$TPL.stpl  template/$WEB_SYSTEM/   
+        fi
+        if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
+            mkdir  template/$PROXY_SYSTEM
+            cp $HESTIA/data/templates/web/$PROXY_SYSTEM/$PROXY.tpl template/$PROXY_SYSTEM/
+            cp $HESTIA/data/templates/web/$PROXY_SYSTEM/$PROXY.stpl template/$PROXY_SYSTEM/      
+        fi
+        
         # Backup custom config / backup LE config
         for sconfig in $(ls $HOMEDIR/$user/conf/web/|grep ".$domain.conf"); do
             cp $HOMEDIR/$user/conf/web/$sconfig conf/
@@ -545,6 +566,7 @@ if [ "$USER" != '*' ]; then
             tee -a $BACKUP/$user.log
     fi
 fi
+
 if [ "$BACKUP_MODE" = 'zstd' ]; then
     touch $tmpdir/.zstd
 fi

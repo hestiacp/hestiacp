@@ -212,8 +212,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
         domain_conf=$(grep "DOMAIN='$domain'" $conf)
         parse_object_kv_list_non_eval domain_conf
         
-        mkdir template/
-        mkdir template/$WEB_SYSTEM/
+        mkdir -p template/$WEB_SYSTEM/
         mkdir template/php-fpm/
         
         if [ $WEB_BACKEND == 'php-fpm' ]; then 

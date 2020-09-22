@@ -9,11 +9,12 @@ All notable changes to this project will be documented in this file.
     - `UPGRADE_SEND_EMAIL` = Sends an email notification to admin email address
     - `UPGRADE_SEND_EMAIL_LOG` = Sends installation log output to admin email address
 - Upgrade process will now save logs to the `hst_backups` directory.
-- Support for removing backup remote location (#1083)
+- Support for removing backup remote location (#1083).
 - Add support Proftpd TLS Support
-- Add the possibility to assign user "Administrators" rights on login. Replaces "root" login. Notifications are only send towards the "admin" account email
-- Updated translations system with the use of Gettext. Modified / Updated all translated strings
-- Use php7.4 as default
+- Add the possibility to assign user "Administrators" rights on login. Replaces "root" login. Notifications are only send towards the "admin" account email.
+- Updated translations system with the use of Gettext. Modified / Updated all translated strings.
+- Use php7.4 as default version.
+- Updated MariaDB to 10.5 (Manual upgrade required install/upgrade/manual/upgrade_mariadb.sh).
 
 ## Bugfixes
 - Removed root login (root / root password )

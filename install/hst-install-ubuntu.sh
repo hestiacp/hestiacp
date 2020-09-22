@@ -27,7 +27,7 @@ HESTIA_INSTALL_VER='1.3.0~beta'
 pma_v='5.0.2'
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
 fpm_v="7.4"
-mariadb_v="10.4"
+mariadb_v="10.5"
 
 # Defining software pack for all distros
 software="apache2 apache2.2-common apache2-suexec-custom apache2-utils

@@ -621,7 +621,7 @@
                                         <tr>
                                             <td>
                                                 <select class="vst-list" name="v_backup_mode">
-                                                    <option value='gzip' <?php if($v_backup_mode == 'gzip') echo 'selected' ?>>gzip</option>
+                                                    <option value='gzip' <?php if($v_backup_mode != 'zstd') echo 'selected' ?>>gzip</option>
                                                     <option value='zstd' <?php if($v_backup_mode == 'zstd') echo 'selected' ?>>zstd</option>
                                                 </select>
                                                 <br><br>

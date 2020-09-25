@@ -13,7 +13,8 @@
 type=$1
 host=$2
 user=$3
-password=$4; HIDE=4
+raw_password=$4; HIDE=4
+password=$(perl -e 'print quotemeta shift(@ARGV)' "${raw_password}")
 path=${5-/backup}
 port=$6
 

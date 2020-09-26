@@ -57,3 +57,7 @@ fi
 # Change backup mode to zstd.
  echo "[ * ] Enable new backup compression zstd as default."
  $BIN/v-change-sys-config-value "BACKUP_MODE" "zstd"
+ 
+# Set var LOGIN_STYLE hestia.conf
+ echo "[ * ] Set var LOGIN_STYLE hestia.conf"
+ $BIN/v-change-sys-config-value "LOGIN_STYLE" "default" 

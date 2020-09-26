@@ -526,7 +526,7 @@ if (!empty($_POST['save'])) {
         }
     }
 
-    // Change backup gzip level
+    // Change login style
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_login_style'] != $_SESSION['LOGIN_STYLE']) {
             exec (HESTIA_CMD."v-change-sys-config-value LOGIN_STYLE ".escapeshellarg($_POST['v_login_style']), $output, $return_var);

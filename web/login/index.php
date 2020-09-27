@@ -192,10 +192,18 @@ require_once('../templates/header.html');
 if(!empty($_SESSION['login'])){
     require_once('../templates/login_2.html');    
 }else if (empty($_POST['user'])) {
-    require_once('../templates/login.html');
+    if($_SESSION['LOGIN_STYLE'] == 'old'){
+        require_once('../templates/login_a.html'); 
+    }else{
+        require_once('../templates/login.html');        
+    }
 }else if (empty($_POST['password'])) {
     require_once('../templates/login_1.html');
 }else{
-    require_once('../templates/login.html');
+    if($_SESSION['LOGIN_STYLE'] == 'old'){
+        require_once('../templates/login_a.html'); 
+    }else{
+        require_once('../templates/login.html');        
+    }
 }
 ?>

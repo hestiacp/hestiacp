@@ -532,7 +532,7 @@ if (!empty($_POST['save'])) {
             exec (HESTIA_CMD."v-change-sys-config-value LOGIN_STYLE ".escapeshellarg($_POST['v_login_style']), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
-            if (empty($_SESSION['error_msg'])) $v_backup_gzip = $_POST['v_login_style'];
+            if (empty($_SESSION['error_msg'])) $v_login_style = $_POST['v_login_style'];
             $v_security_adv = 'yes';
         }
     }

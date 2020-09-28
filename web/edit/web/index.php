@@ -76,9 +76,11 @@ if (!empty($v_stats_user)) $v_stats_password = "";
 $v_custom_doc_root_prepath = '/home/'.$v_username.'/web/';
 $v_custom_doc_root = $data[$v_domain]['CUSTOM_DOCROOT'];
 
-$m = preg_match('/\/home\/'.$v_username.'\/web\/([A-Za-z0-9.-].*)\/([A-Za-z0-9.-\/].*)/', $v_custom_doc_root, $matches);
+$m = preg_match('/\/home\/demo\/web\/([[:alnum:]].*)\/public_html\/([[:alnum:]].*)/', $v_custom_doc_root, $matches);
 $v_custom_doc_domain = $matches[1];
-$v_custom_doc_folder = str_replace('public_html/','',$matches[2]);
+$v_custom_doc_folder = $matches[2];
+
+
 
 $v_ftp_user = $data[$v_domain]['FTP_USER'];
 $v_ftp_path = $data[$v_domain]['FTP_PATH'];
@@ -763,9 +765,13 @@ if (!empty($_POST['save'])) {
             check_return_code($return_var,$output);
             unset($output);     
         }else{
+            if(substr($_POST['v-custom-doc-folder'], -1) == '/'){
+                $v_custom_doc_folder = escapeshellarg(substr($_POST['v-custom-doc-folder'],0,-1));
+            }else{
+                $v_custom_doc_folder = escapeshellarg($_POST['v-custom-doc-folder']);  
+            }
             $v_custom_doc_domain = escapeshellarg($_POST['v-custom-doc-domain']);
-            $v_custom_doc_folder = escapeshellarg($_POST['v-custom-doc-folder']);
-        
+            
             exec(HESTIA_CMD."v-change-web-domain-docroot ".$v_username." ".escapeshellarg($v_domain)." ".$v_custom_doc_domain." ".$v_custom_doc_folder ." yes",  $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);  

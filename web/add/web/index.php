@@ -238,6 +238,11 @@ if (!empty($_POST['ok'])) {
 
         }else{
             $v_custom_doc_domain = escapeshellarg($_POST['v-custom-doc-domain']);
+            if(substr($_POST['v-custom-doc-folder'], -1) == '/'){
+                $v_custom_doc_folder = escapeshellarg(substr($_POST['v-custom-doc-folder'],0,-1));
+            }else{
+                $v_custom_doc_folder = escapeshellarg($_POST['v-custom-doc-folder']);  
+            }
             $v_custom_doc_folder = escapeshellarg($_POST['v-custom-doc-folder']);
             $v_domain = escapeshellarg(trim($_POST['v_domain']));
             

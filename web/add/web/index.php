@@ -241,7 +241,7 @@ if (!empty($_POST['ok'])) {
             $v_custom_doc_folder = escapeshellarg($_POST['v-custom-doc-folder']);
             $v_domain = escapeshellarg(trim($_POST['v_domain']));
             
-            exec(HESTIA_CMD."v-change-web-domain-docroot ".$user." ".$v_domain." ".$v_custom_doc_domain." ".$v_custom_doc_folder,  $output, $return_var);
+            exec(HESTIA_CMD."v-change-web-domain-docroot ".$user." ".$v_domain." ".$v_custom_doc_domain." ".$v_custom_doc_folder." yes",  $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);  
             $v_custom_doc_root = 1; 

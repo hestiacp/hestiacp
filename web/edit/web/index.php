@@ -76,7 +76,7 @@ if (!empty($v_stats_user)) $v_stats_password = "";
 $v_custom_doc_root_prepath = '/home/'.$v_username.'/web/';
 $v_custom_doc_root = $data[$v_domain]['CUSTOM_DOCROOT'];
 
-$m = preg_match('/\/home\/demo\/web\/([[:alnum:]].*)\/public_html\/([[:alnum:]].*)/', $v_custom_doc_root, $matches);
+$m = preg_match('/\/home\/'.$v_username.'\/web\/([[:alnum:]].*)\/public_html\/([[:alnum:]].*)/', $v_custom_doc_root, $matches);
 $v_custom_doc_domain = $matches[1];
 $v_custom_doc_folder = $matches[2];
 if(substr($v_custom_doc_folder, -1) == '/'){

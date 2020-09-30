@@ -621,7 +621,7 @@
                                         <tr>
                                             <td>
                                                 <select class="vst-list" name="v_backup_mode">
-                                                    <option value='gzip' <?php if($v_backup_mode == 'gzip') echo 'selected' ?>>gzip</option>
+                                                    <option value='gzip' <?php if($v_backup_mode != 'zstd') echo 'selected' ?>>gzip</option>
                                                     <option value='zstd' <?php if($v_backup_mode == 'zstd') echo 'selected' ?>>zstd</option>
                                                 </select>
                                                 <br><br>
@@ -842,7 +842,33 @@
                                     </table>
                                 </td>
                             </tr>
-
+<tr>
+                                <td class="vst-text input-label step-top advanced-options">
+                                    <a href="javascript:elementHideShow('security');" class="vst-text">
+                                        <i class="fas fa-key"></i><b><?php print _('Security');?> <img src="/images/arrow.png"></b>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label step-left">
+                                    <table style="display:<?php if (empty($v_security_adv)) echo 'none';?> ;" id="security">
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print _('Login screen style');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_login_style">
+                                                    <option value='default'><?php print _('Default'); ?></option>
+                                                    <option value='old' <?php if($_SESSION['LOGIN_STYLE'] == 'old') echo 'selected' ?> ><?php print _('Old Style'); ?></option>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
 
                             <tr>
                                 <td class="vst-text input-label step-top advanced-options">

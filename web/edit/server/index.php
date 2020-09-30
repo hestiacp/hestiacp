@@ -124,6 +124,8 @@ $v_backup_dir = "/backup";
 if (!empty($_SESSION['BACKUP'])) $v_backup_dir = $_SESSION['BACKUP'];
 $v_backup_gzip = '5';
 if (!empty($_SESSION['BACKUP_GZIP'])) $v_backup_gzip = $_SESSION['BACKUP_GZIP'];
+$v_backup_mode = 'gzip';
+if (!empty($_SESSION['BACKUP_MODE'])) $v_backup_mode = $_SESSION['BACKUP_MODE'];
 $backup_types = explode(",",$_SESSION['BACKUP_SYSTEM']);
 foreach ($backup_types as $backup_type) {
     if ($backup_type == 'local') {
@@ -414,11 +416,11 @@ if (!empty($_POST['save'])) {
 
     // Change backup gzip level
     if (empty($_SESSION['error_msg'])) {
-        if ($_POST['v_backup_mode'] != $v_backup_gzip ) {
+        if ($_POST['v_backup_mode'] != $v_backup_mode ) {
             exec (HESTIA_CMD."v-change-sys-config-value BACKUP_MODE ".escapeshellarg($_POST['v_backup_mode']), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
-            if (empty($_SESSION['error_msg'])) $v_backup_gzip = $_POST['v_backup_mode'];
+            if (empty($_SESSION['error_msg'])) $v_backup_mode = $_POST['v_backup_mode'];
             $v_backup_adv = 'yes';
         }
     }
@@ -521,6 +523,17 @@ if (!empty($_POST['save'])) {
             if (empty($_SESSION['error_msg'])) $v_backup_bpath = '';
             $v_backup_adv = '';
             $v_backup_remote_adv = '';
+        }
+    }
+
+    // Change login style
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_login_style'] != $_SESSION['LOGIN_STYLE']) {
+            exec (HESTIA_CMD."v-change-sys-config-value LOGIN_STYLE ".escapeshellarg($_POST['v_login_style']), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) $v_login_style = $_POST['v_login_style'];
+            $v_security_adv = 'yes';
         }
     }
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 # info: Changes the document root for an existing web domain
 
-# options: USER DOMAIN TARGET_DOMAIN [DIRECTORY]
+# options: USER DOMAIN TARGET_DOMAIN [DIRECTORY] [PHP]
 # example usage:
 # add custom docroot:    v-change-web-domain-docroot admin domain.tld otherdomain.tld
 #                        points domain.tld to otherdomain.tld's document root.
@@ -25,6 +25,7 @@ domain=$2
 # so they are correctly passed through to domain.sh
 export target_domain=$3
 export target_directory=$4
+export php=$5
 
 # Includes
 source $HESTIA/func/main.sh
@@ -66,6 +67,7 @@ check_hestia_demo_mode
 # Unset existing custom document root path
 if [ ! -z "$CUSTOM_DOCROOT" ]; then
     update_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_DOCROOT' ""
+    update_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_PHPROOT' ""
 fi
 
 # If target domain value is 'default', remove the custom document root
@@ -73,6 +75,7 @@ fi
 # Otherwise, set target document root path accordingly based on passed values.
 if [ "$target_domain" = "default" ]; then
     update_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_DOCROOT' ""
+    update_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_PHPROOT' "" 
 else
     # Check for existence of specified directory under target domain's public_html folder
     if [ ! -z "$target_directory" ]; then
@@ -81,12 +84,24 @@ else
             exit 1
         else
             CUSTOM_DOCROOT="$HOMEDIR/$user/web/$target_domain/public_html/$target_directory/"
+            if [ ! -z "$php" ]; then
+                custom_phproot="$HOMEDIR/$user/web/$target_domain/public_html/"
+            else
+                custom_phproot="$HOMEDIR/$user/web/$target_domain/public_html/$target_directory/"
+            fi
         fi
     else
         CUSTOM_DOCROOT="$HOMEDIR/$user/web/$target_domain/public_html/"
+        custom_phproot="$HOMEDIR/$user/web/$target_domain/public_html/"
     fi
+    
     add_object_key 'web' 'DOMAIN' "$domain" 'CUSTOM_DOCROOT' 'IP6'
+    add_object_key 'web' 'DOMAIN' "$domain" 'CUSTOM_PHPROOT' 'IP6'
+    
     update_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_DOCROOT' "$CUSTOM_DOCROOT"
+    # CUSTOM_PHPROOT got overwriten by default
+    CUSTOM_PHPROOT=$custom_phproot
+    update_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_PHPROOT' "$CUSTOM_PHPROOT"  
 fi
 
 #----------------------------------------------------------#

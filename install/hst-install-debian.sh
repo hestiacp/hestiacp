@@ -1323,8 +1323,10 @@ if [ "$mysql" = 'yes' ]; then
     if [ $memory -gt 3900000 ]; then
         mycnf="my-large.cnf"
     fi
-
-   # Configuring MariaDB
+    
+    #remove symbolic link
+    rm /etc/mysql/my.cnf
+    # Configuring MariaDB
     cp -f $HESTIA_INSTALL_DIR/mysql/$mycnf /etc/mysql/my.cnf
     mysql_install_db >> $LOG
 

@@ -123,7 +123,7 @@ if (!empty($_POST['ok_acc'])) {
     
     // Check password length
     if (empty($_SESSION['error_msg']) && !empty($_POST['v_fwd_only']) ) {
-        if (!validate_password($_POST['v_password'])) { $_SESSION['error_msg'] = __('Password does not match the minimum requirements');}
+        if (!validate_password($_POST['v_password'])) { $_SESSION['error_msg'] = _('Password does not match the minimum requirements');}
     }
 
     // Protect input

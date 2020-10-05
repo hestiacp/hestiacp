@@ -134,11 +134,8 @@ set_default_lang() {
     if [ -z "$lang" ]; then
         eval lang=$1
     fi
-    lang_list="
-        ar cz el fa hu ja no pt se ua
-        bs da en fi id ka pl ro tr vi
-        cn de es fr it nl pt-BR ru tw
-        bg ko sr th ur"
+    lang_list="ar az bg bs cs da de el en es fa fi fr hr hu id it ja ka ko nl no pl pt pt-br ro
+        ru sr sv th uk ur vi zh-cn zh-tw"
     if !(echo $lang_list |grep -w $lang > /dev/null 2>&1); then
         eval lang=$1
     fi
@@ -1081,7 +1078,7 @@ echo "BACKUP_MODE='zstd'" >> $HESTIA/conf/hestia.conf
 echo "LANGUAGE='$lang'" >> $HESTIA/conf/hestia.conf
 
 # Login in screen
-echo "LOGIN_STYLE='default" >> $HESTIA/conf/hestia.conf
+echo "LOGIN_STYLE='default'" >> $HESTIA/conf/hestia.conf
 
 # Version & Release Branch
 echo "VERSION='${HESTIA_INSTALL_VER}'" >> $HESTIA/conf/hestia.conf
@@ -1323,8 +1320,11 @@ if [ "$mysql" = 'yes' ]; then
     if [ $memory -gt 3900000 ]; then
         mycnf="my-large.cnf"
     fi
-
-   # Configuring MariaDB
+    
+    # Remove symbolic link
+    rm -f /etc/mysql/my.cnf
+    
+    # Configuring MariaDB
     cp -f $HESTIA_INSTALL_DIR/mysql/$mycnf /etc/mysql/my.cnf
     mysql_install_db >> $LOG
 

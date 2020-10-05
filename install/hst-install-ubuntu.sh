@@ -1119,7 +1119,7 @@ echo "BACKUP_MODE='zstd'" >> $HESTIA/conf/hestia.conf
 echo "LANGUAGE='$lang'" >> $HESTIA/conf/hestia.conf
 
 # Login in screen
-echo "LOGIN_STYLE='default" >> $HESTIA/conf/hestia.conf
+echo "LOGIN_STYLE='default'" >> $HESTIA/conf/hestia.conf
 
 # Version & Release Branch
 echo "VERSION='${HESTIA_INSTALL_VER}'" >> $HESTIA/conf/hestia.conf

@@ -1364,6 +1364,9 @@ if [ "$mysql" = 'yes' ]; then
         mycnf="my-large.cnf"
     fi
 
+    # Remove symbolic link
+    rm -f /etc/mysql/my.cnf
+    
     # Configuring MariaDB
     cp -f $HESTIA_INSTALL_DIR/mysql/$mycnf /etc/mysql/my.cnf
     mysql_install_db >> $LOG

@@ -7,7 +7,7 @@
 #   not accepted in branch name.
 # Examples:
 #   ./hst_autocompile.sh --hestia '~localsrc' 'N'
-#   ./hst_autocompile.sh --all --noinstall master
+#   ./hst_autocompile.sh --all --noinstall main
 
 # Define download function
 download_file() {

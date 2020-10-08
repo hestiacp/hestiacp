@@ -246,7 +246,7 @@ upgrade_send_notification_to_panel () {
 upgrade_send_notification_to_email () {
     if [ "$UPGRADE_SEND_EMAIL" = "true" ]; then
         # Retrieve admin email address, sendmail path, and message temp file path
-        admin_email=$(v-list-user admin json | grep "CONTACT" | cut -d'"' -f4)
+        admin_email=$($HESTIA/bin/v-list-user admin json | grep "CONTACT" | cut -d'"' -f4)
         send_mail="$HESTIA/web/inc/mail-wrapper.php"
         message_tmp_file="/tmp/hestia-upgrade-complete.txt"
 

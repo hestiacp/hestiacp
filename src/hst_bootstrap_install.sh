@@ -2,7 +2,7 @@
 
 # Clean installation bootstrap for development purposes only
 # Usage:    ./hst_bootstrap_install.sh [fork] [branch] [os]
-# Example:  ./hst_bootstrap_install.sh hestiacp master ubuntu
+# Example:  ./hst_bootstrap_install.sh hestiacp main ubuntu
 
 # Define variables
 fork=$1

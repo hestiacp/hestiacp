@@ -168,7 +168,7 @@ clear
 
 # Set command variables
 if [ -z $branch ]; then
-    echo -n "Please enter the name of the branch to build from (e.g. master): "
+    echo -n "Please enter the name of the branch to build from (e.g. main): "
     read branch
 fi
 
@@ -270,12 +270,12 @@ if [ "$HESTIA_DEBUG" ]; then
 fi
 
 # Generate Links for sourcecode
-HESTIA_ARCHIVE_LINK='https://github.com/'$REPO'/archive/'$branch'.tar.gz'
-NGINX='https://nginx.org/download/nginx-'$NGINX_V'.tar.gz'
+HESTIA_ARCHIVE_LINK='https://github.com/hestiacp/hestiacp/archive/'$branch'.tar.gz'
+NGINX='https://nginx.org/download/nginx-'$(echo $NGINX_V |cut -d"~" -f1)'.tar.gz'
 OPENSSL='https://www.openssl.org/source/openssl-'$OPENSSL_V'.tar.gz'
 PCRE='https://ftp.pcre.org/pub/pcre/pcre-'$PCRE_V'.tar.gz'
 ZLIB='https://www.zlib.net/zlib-'$ZLIB_V'.tar.gz'
-PHP='http://de2.php.net/distributions/php-'$PHP_V'.tar.gz'
+PHP='http://de2.php.net/distributions/php-'$(echo $PHP_V |cut -d"~" -f1)'.tar.gz'
 
 # Forward slashes in branchname are replaced with dashes to match foldername in github archive.
 branch_dash=$(echo "$branch" |sed 's/\//-/g');
@@ -292,7 +292,7 @@ if [ "$NGINX_B" = true ] ; then
     cd $BUILD_DIR
 
     BUILD_DIR_HESTIANGINX=$BUILD_DIR/hestia-nginx_$NGINX_V
-    BUILD_DIR_NGINX=$BUILD_DIR/nginx-$NGINX_V
+    BUILD_DIR_NGINX=$BUILD_DIR/nginx-$(echo $NGINX_V |cut -d"~" -f1)
 
     if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIANGINX" ]; then
         # Check if target directory exist
@@ -426,7 +426,7 @@ if [ "$PHP_B" = true ] ; then
     echo "Building hestia-php package..."
 
     BUILD_DIR_HESTIAPHP=$BUILD_DIR/hestia-php_$PHP_V
-    BUILD_DIR_PHP=$BUILD_DIR/php-$PHP_V
+    BUILD_DIR_PHP=$BUILD_DIR/php-$(echo $PHP_V |cut -d"~" -f1)
 
     if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIAPHP" ]; then
         # Check if target directory exist

@@ -31,6 +31,9 @@ rebuild_user_conf() {
     if [ -z "${PHPCLI+x}" ]; then 
         sed -i "/QRCODE/a PHPCLI=''" $USER_DATA/user.conf 
     fi
+    if [ -z "${ROLE+x}" ]; then 
+        sed -i "/PHPCLI/a ROLE='user'" $USER_DATA/user.conf 
+    fi
     # Run template trigger
     if [ -x "$HESTIA/data/packages/$PACKAGE.sh" ]; then
         $HESTIA/data/packages/$PACKAGE.sh "$user" "$CONTACT" "$NAME"

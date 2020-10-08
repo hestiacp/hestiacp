@@ -124,6 +124,8 @@ $v_backup_dir = "/backup";
 if (!empty($_SESSION['BACKUP'])) $v_backup_dir = $_SESSION['BACKUP'];
 $v_backup_gzip = '5';
 if (!empty($_SESSION['BACKUP_GZIP'])) $v_backup_gzip = $_SESSION['BACKUP_GZIP'];
+$v_backup_mode = 'gzip';
+if (!empty($_SESSION['BACKUP_MODE'])) $v_backup_mode = $_SESSION['BACKUP_MODE'];
 $backup_types = explode(",",$_SESSION['BACKUP_SYSTEM']);
 foreach ($backup_types as $backup_type) {
     if ($backup_type == 'local') {
@@ -257,18 +259,16 @@ if (!empty($_POST['save'])) {
    // Set File Manager support
     if (empty($_SESSION['error_msg'])) {
         if ((!empty($_POST['v_filemanager'])) && ($_SESSION['FILE_MANAGER'] != $_POST['v_filemanager'])) {
-            if ($_POST['v_filemanager'] == 'yes') {
-                $_POST['v_filemanager'] == 'true';
+            if ($_POST['v_filemanager'] == 'true') {
                 exec (HESTIA_CMD."v-add-sys-filemanager", $output, $return_var);
                 check_return_code($return_var,$output);
                 unset($output);
-                if (empty($_SESSION['error_msg'])) $_SESSION['FILE_MANAGER'] = 'yes';
+                if (empty($_SESSION['error_msg'])) $_SESSION['FILE_MANAGER'] = 'true';
             } else {
-                $_POST['v_filemanager'] == 'false';
                 exec (HESTIA_CMD."v-delete-sys-filemanager", $output, $return_var);
                 check_return_code($return_var,$output);
                 unset($output);
-                if (empty($_SESSION['error_msg'])) $_SESSION['FILE_MANAGER'] = 'no';
+                if (empty($_SESSION['error_msg'])) $_SESSION['FILE_MANAGER'] = 'false';
             }
         }
     }
@@ -414,6 +414,17 @@ if (!empty($_POST['save'])) {
         }
     }
 
+    // Change backup gzip level
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_backup_mode'] != $v_backup_mode ) {
+            exec (HESTIA_CMD."v-change-sys-config-value BACKUP_MODE ".escapeshellarg($_POST['v_backup_mode']), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) $v_backup_mode = $_POST['v_backup_mode'];
+            $v_backup_adv = 'yes';
+        }
+    }
+
     // Change backup path
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_backup_dir'] != $v_backup_dir ) {
@@ -515,6 +526,17 @@ if (!empty($_POST['save'])) {
         }
     }
 
+    // Change login style
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_login_style'] != $_SESSION['LOGIN_STYLE']) {
+            exec (HESTIA_CMD."v-change-sys-config-value LOGIN_STYLE ".escapeshellarg($_POST['v_login_style']), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) $v_login_style = $_POST['v_login_style'];
+            $v_security_adv = 'yes';
+        }
+    }
+
     // Update SSL certificate
     if ((!empty($_POST['v_ssl_crt'])) && (empty($_SESSION['error_msg']))) {
         if (($v_ssl_crt != str_replace("\r\n", "\n",  $_POST['v_ssl_crt'])) || ($v_ssl_key != str_replace("\r\n", "\n",  $_POST['v_ssl_key']))) {
@@ -565,7 +587,7 @@ if (!empty($_POST['save'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('Changes has been saved.');
+        $_SESSION['ok_msg'] = _('Changes has been saved.');
     }
 
 }

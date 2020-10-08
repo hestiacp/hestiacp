@@ -1,8 +1,8 @@
 <div class="hidden" id="token" token="<?=$_SESSION['token']?>"></div>
-<a href="#" class="to-top" title="<?=__('Top')?>">
+<a href="#" class="to-top" title="<?=_('Top')?>">
 	<i class="fas fa-arrow-up"></i>
 </a>
-<a href="#" class="to-shortcuts" title="<?=__('Shortcuts')?>">
+<a href="#" class="to-shortcuts" title="<?=_('Shortcuts')?>">
 	<i class="fas fa-keyboard"></i>
 </a>
 
@@ -10,31 +10,31 @@
 	<div class="l-center">
 		<a href="/list/user/" class="l-logo"></a>
 		<div class="l-menu clearfix noselect">
-			<div class="l-menu__item <?php if($TAB == 'WEB' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'DNS' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'MAIL' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'DB' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'BACKUP' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'CRON' ) echo 'l-menu__item--active' ?><?php if($TAB == 'PACKAGE' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'USER' ) echo 'l-menu__item--active' ?>"><a href="/list/user/" title="<?=__('Records')?>"><i class="fas fa-tasks panel-icon"></i>&nbsp;&nbsp;&nbsp;<?=__('Records')?></a></div>
+			<div class="l-menu__item <?php if($TAB == 'WEB' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'DNS' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'MAIL' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'DB' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'BACKUP' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'CRON' ) echo 'l-menu__item--active' ?><?php if($TAB == 'PACKAGE' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'USER' ) echo 'l-menu__item--active' ?>"><a href="/list/user/" title="<?=_('Records')?>"><i class="fas fa-tasks panel-icon"></i>&nbsp;&nbsp;&nbsp;<?=_('Records')?></a></div>
 			<?php if ((isset($_SESSION['FILE_MANAGER'])) && (!empty($_SESSION['FILE_MANAGER'])) && ($_SESSION['FILE_MANAGER'] == "true")) {?>
-				<div class="l-menu__item <?php if($TAB == 'FM' ) echo 'l-menu__item--active' ?>"><a href="/fm/" title="<?=__('Fm')?>"><i class="fas fa-folder-open panel-icon"></i>&nbsp;&nbsp;&nbsp;<?=__('Fm')?></a></div>
+				<div class="l-menu__item <?php if($TAB == 'FM' ) echo 'l-menu__item--active' ?>"><a href="/fm/" title="<?=_('Files')?>"><i class="fas fa-folder-open panel-icon"></i>&nbsp;&nbsp;&nbsp;<?=_('Files')?></a></div>
 			<?php } ?>
-			<div class="l-menu__item <?php if($TAB == 'LOG' ) echo 'l-menu__item--active' ?>"><a href="/list/log/" title="<?=__('Log')?>"><i class="fas fa-history panel-icon"></i>&nbsp;&nbsp;&nbsp;<?=__('Log')?></a></div>
-			<div class="l-menu__item <?php if($TAB == 'STATS' ) echo 'l-menu__item--active' ?>"><a href="/list/stats/" title="<?=__('Statistics')?>"><i class="fas fa-chart-line panel-icon"></i>&nbsp;&nbsp;&nbsp;<?=__('Statistics')?></a></div>
+			<div class="l-menu__item <?php if($TAB == 'LOG' ) echo 'l-menu__item--active' ?>"><a href="/list/log/" title="<?=_('Log')?>"><i class="fas fa-history panel-icon"></i>&nbsp;&nbsp;&nbsp;<?=_('Log')?></a></div>
+			<div class="l-menu__item <?php if($TAB == 'STATS' ) echo 'l-menu__item--active' ?>"><a href="/list/stats/" title="<?=_('Statistics')?>"><i class="fas fa-chart-line panel-icon"></i>&nbsp;&nbsp;&nbsp;<?=_('Statistics')?></a></div>
 		</div>
 		<div class="l-profile noselect">
 			<div class="l-menu__item">
-				<span class="pill usage"> 
+				<span class="pill usage">
 					<i class="fas fa-user"></i>&nbsp;&nbsp;<b><?=htmlspecialchars($user)?></b> /
 					<i class="fas fa-hdd"></i>&nbsp;&nbsp;<b><?=humanize_usage_size($panel[$user]['U_DISK'])?></b> <?=humanize_usage_measure($panel[$user]['U_DISK'])?> /
 					<i class="fas fa-exchange-alt"></i>&nbsp;&nbsp;<b><?=humanize_usage_size($panel[$user]['U_BANDWIDTH'])?></b> <?=humanize_usage_measure($panel[$user]['U_BANDWIDTH'])?>
 				</span>
 			</div>
 			<div class="l-menu__item">
-				<a title="<?=__('Notifications')?>" class="l-profile__notifications <? if($panel[$user]['NOTIFICATIONS'] == 'yes') echo " updates"; ?>">
+				<a title="<?=_('Notifications')?>" class="l-profile__notifications <? if($panel[$user]['NOTIFICATIONS'] == 'yes') echo " updates"; ?>">
 					<i class="fas fa-bell <?if($panel[$user]['NOTIFICATIONS'] == 'yes') echo " animated extended swing status-icon orange"; ?>"></i>
 				</a>
 			</div>
-			<div class="l-menu__item <?php if($TAB == 'SERVER' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'UPDATES' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'IP' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'RRD' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'FIREWALL' ) echo 'l-menu__item--active' ?>"><a href="/list/server/" class="l-profile__serversettings" title="<?=__('Server')?>"><i class="fas fa-cog"></i></a></div>
+			<div class="l-menu__item <?php if($TAB == 'SERVER' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'UPDATES' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'IP' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'RRD' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'FIREWALL' ) echo 'l-menu__item--active' ?>"><a href="/list/server/" class="l-profile__serversettings" title="<?=_('Server')?>"><i class="fas fa-cog"></i></a></div>
 			<div class="l-menu__item"><a href="/edit/user/?user=<?php echo $user; ?>" title="<?=$panel[$user]['NAME'];?> (<?=$user?>)" class="l-profile__username"><i class="fas fa-user-edit"></i></a></div>
-			<div class="l-menu__item"><a href="https://github.com/hestiacp/hestiacp/issues/" target="_new" title="<?=__('Submit an issue report')?>" class="l-profile__help"><i class="fas fa-exclamation-triangle"></i></a></div>
-			<div class="l-menu__item"><a href="https://docs.hestiacp.com/" title="<?=__('Help')?>" class="l-profile__help" target="_blank"><i class="fas fa-question-circle"></i></a></div>
-			<div class="l-menu__item"><a href="/logout/" title="<?=__('Log out')?>" class="l-profile__logout"><i class="fas fa-sign-out-alt"></i></a></div>
+			<div class="l-menu__item"><a href="https://github.com/hestiacp/hestiacp/issues/" target="_new" title="<?=_('Submit an issue report')?>" class="l-profile__help"><i class="fas fa-exclamation-triangle"></i></a></div>
+			<div class="l-menu__item"><a href="https://docs.hestiacp.com/" title="<?=_('Help')?>" class="l-profile__help" target="_blank"><i class="fas fa-question-circle"></i></a></div>
+			<div class="l-menu__item"><a href="/logout/" title="<?=_('Log out')?>" class="l-profile__logout"><i class="fas fa-sign-out-alt"></i></a></div>
 		</div>
 	</div>
 </div>
@@ -45,35 +45,35 @@
 		<div class="l-stat">
 			<div class="l-stat__col <?php if($TAB == 'USER' ) echo 'l-stat__col--active' ?>">
 				<a href="/list/user/">
-					<div class="l-stat__col-title"><?=__('USER')?>&nbsp;&nbsp;<i class="fas fa-users"></i></div>
+					<div class="l-stat__col-title"><?=_('USER')?>&nbsp;&nbsp;<i class="fas fa-users"></i></div>
 					<ul>
-						<li><?=__('users')?>: <span><?=$panel[$user]['U_USERS']?></span></li>
-						<li><?=__('spnd');?>: <span><?=$panel[$user]['SUSPENDED_USERS']?></span></li>
+						<li><?=_('users')?>: <span><?=$panel[$user]['U_USERS']?></span></li>
+						<li><?=_('spnd');?>: <span><?=$panel[$user]['SUSPENDED_USERS']?></span></li>
 					</ul>
 				</a>
 			</div>
-	<?php if ((isset($_SESSION['WEB_SYSTEM'])) && (!empty($_SESSION['WEB_SYSTEM']))) {?>	
+	<?php if ((isset($_SESSION['WEB_SYSTEM'])) && (!empty($_SESSION['WEB_SYSTEM']))) {?>
 		<?php if($panel[$user]['WEB_DOMAINS'] != "0") { ?>
 					<div class="l-stat__col <?php if($TAB == 'WEB' ) echo 'l-stat__col--active' ?>">
 						<a href="/list/web/">
-							<div class="l-stat__col-title"><?=__('WEB')?>&nbsp;&nbsp;<i class="fas fa-globe-americas"></i></div>
+							<div class="l-stat__col-title"><?=_('WEB')?>&nbsp;&nbsp;<i class="fas fa-globe-americas"></i></div>
 							<ul>
-								<li><?=__('domains')?>: <span><?=$panel[$user]['U_WEB_DOMAINS']?> / <?=$panel[$user]['SUSPENDED_WEB']?></span></li>
-								<li><?=__('aliases')?>: <span><?=$panel[$user]['U_WEB_ALIASES']?></span></li>
+								<li><?=_('domains')?>: <span><?=$panel[$user]['U_WEB_DOMAINS']?> / <?=$panel[$user]['SUSPENDED_WEB']?></span></li>
+								<li><?=_('aliases')?>: <span><?=$panel[$user]['U_WEB_ALIASES']?></span></li>
 							</ul>
 						</a>
 					</div>
 		<?php } ?>
-	<?php } ?>	
+	<?php } ?>
 
-	<?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?>			
+	<?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?>
 		<?php if($panel[$user]['DNS_DOMAINS'] != "0") { ?>
 					<div class="l-stat__col <?php if($TAB == 'DNS' ) echo 'l-stat__col--active' ?>">
 						<a href="/list/dns/">
-							<div class="l-stat__col-title"><?=__('DNS')?>&nbsp;&nbsp;<i class="fas fa-atlas"></i></div>
+							<div class="l-stat__col-title"><?=_('DNS')?>&nbsp;&nbsp;<i class="fas fa-atlas"></i></div>
 							<ul>
-								<li><?=__('zones')?>: <span><?=$panel[$user]['U_DNS_DOMAINS']?> / <?=$panel[$user]['SUSPENDED_DNS']?></span></li>
-								<li><?=__('records')?>: <span><?=$panel[$user]['U_DNS_RECORDS']?></span></li>
+								<li><?=_('zones')?>: <span><?=$panel[$user]['U_DNS_DOMAINS']?> / <?=$panel[$user]['SUSPENDED_DNS']?></span></li>
+								<li><?=_('records')?>: <span><?=$panel[$user]['U_DNS_RECORDS']?></span></li>
 							</ul>
 						</a>
 					</div>
@@ -84,49 +84,49 @@
 		<?php if($panel[$user]['MAIL_DOMAINS'] != "0") { ?>
 					<div class="l-stat__col <?php if($TAB == 'MAIL' ) echo 'l-stat__col--active' ?>">
 						<a href="/list/mail/">
-							<div class="l-stat__col-title"><?=__('MAIL')?>&nbsp;&nbsp;<i class="fas fa-mail-bulk"></i></div>
+							<div class="l-stat__col-title"><?=_('MAIL')?>&nbsp;&nbsp;<i class="fas fa-mail-bulk"></i></div>
 							<ul>
-								<li><?=__('domains')?>: <span><?=$panel[$user]['U_MAIL_DOMAINS']?> / <?=$panel[$user]['SUSPENDED_MAIL']?></span></li>
-								<li><?=__('accounts')?>: <span><?=$panel[$user]['U_MAIL_ACCOUNTS']?></span></li>
+								<li><?=_('domains')?>: <span><?=$panel[$user]['U_MAIL_DOMAINS']?> / <?=$panel[$user]['SUSPENDED_MAIL']?></span></li>
+								<li><?=_('accounts')?>: <span><?=$panel[$user]['U_MAIL_ACCOUNTS']?></span></li>
 							</ul>
 						</a>
 					</div>
 		<?php } ?>
 	<?php } ?>
 
-	<?php if ((isset($_SESSION['DB_SYSTEM'])) && (!empty($_SESSION['DB_SYSTEM']))) {?>	
+	<?php if ((isset($_SESSION['DB_SYSTEM'])) && (!empty($_SESSION['DB_SYSTEM']))) {?>
 		<?php if($panel[$user]['DATABASES'] != "0") { ?>
 					<div class="l-stat__col <?php if($TAB == 'DB' ) echo 'l-stat__col--active' ?>">
 						<a href="/list/db/">
-							<div class="l-stat__col-title"><?=__('DB')?>&nbsp;&nbsp;<i class="fas fa-database"></i></div>
+							<div class="l-stat__col-title"><?=_('DB')?>&nbsp;&nbsp;<i class="fas fa-database"></i></div>
 							<ul>
-								<li><?=__('databases')?>: <span><?=$panel[$user]['U_DATABASES']?> / <?=$panel[$user]['SUSPENDED_DB']?></span></li>
+								<li><?=_('databases')?>: <span><?=$panel[$user]['U_DATABASES']?> / <?=$panel[$user]['SUSPENDED_DB']?></span></li>
 							</ul>
 						</a>
 					</div>
 		<?php } ?>
 	<?php } ?>
 
-	<?php if ((isset($_SESSION['CRON_SYSTEM'])) && (!empty($_SESSION['CRON_SYSTEM']))) {?>	
+	<?php if ((isset($_SESSION['CRON_SYSTEM'])) && (!empty($_SESSION['CRON_SYSTEM']))) {?>
 		<?php if($panel[$user]['CRON_JOBS'] != "0") { ?>
 					<div class="l-stat__col <?php if($TAB == 'CRON' ) echo 'l-stat__col--active' ?>">
 						<a href="/list/cron/">
-							<div class="l-stat__col-title"><?=__('CRON')?>&nbsp;&nbsp;<i class="fas fa-clock"></i></div>
+							<div class="l-stat__col-title"><?=_('CRON')?>&nbsp;&nbsp;<i class="fas fa-clock"></i></div>
 							<ul>
-								<li><?=__('jobs')?>: <span><?=$panel[$user]['U_CRON_JOBS']?> / <?=$panel[$user]['SUSPENDED_CRON']?></span></li>
+								<li><?=_('jobs')?>: <span><?=$panel[$user]['U_CRON_JOBS']?> / <?=$panel[$user]['SUSPENDED_CRON']?></span></li>
 							</ul>
 						</a>
 					</div>
 		<?php } ?>
 	<?php } ?>
 
-	<?php if ((isset($_SESSION['BACKUP_SYSTEM'])) && (!empty($_SESSION['BACKUP_SYSTEM']))) {?>	
+	<?php if ((isset($_SESSION['BACKUP_SYSTEM'])) && (!empty($_SESSION['BACKUP_SYSTEM']))) {?>
 		<?php if($panel[$user]['BACKUPS'] != "0") { ?>
 					<div class="l-stat__col <?php if($TAB == 'BACKUP' ) echo 'l-stat__col--active' ?>">
 						<a href="/list/backup/">
-							<div class="l-stat__col-title"><?=__('BACKUP')?>&nbsp;&nbsp;<i class="fas fa-file-archive"></i></div>
+							<div class="l-stat__col-title"><?=_('BACKUP')?>&nbsp;&nbsp;<i class="fas fa-file-archive"></i></div>
 							<ul>
-								<li><?=__('backups')?>: <span><?=$panel[$user]['U_BACKUPS']?></span></li>
+								<li><?=_('backups')?>: <span><?=$panel[$user]['U_BACKUPS']?></span></li>
 							</ul>
 						</a>
 					</div>
@@ -135,4 +135,3 @@
 		</div>
 	</div>
 	<div class="l-separator"></div>
-	

@@ -22,10 +22,10 @@ if (!empty($_POST['ok'])) {
     }
 
     // Check empty fields
-    if (empty($_POST['v_ipname'])) $errors[] = __('Name');
-    if (empty($_POST['v_datasource'])) $errors[] = __('Data Source');
-    if (empty($_POST['v_ipver'])) $errors[] = __('Ip Version');
-    if (empty($_POST['v_autoupdate'])) $errors[] = __('Autoupdate');
+    if (empty($_POST['v_ipname'])) $errors[] = _('Name');
+    if (empty($_POST['v_datasource'])) $errors[] = _('Data Source');
+    if (empty($_POST['v_ipver'])) $errors[] = _('Ip Version');
+    if (empty($_POST['v_autoupdate'])) $errors[] = _('Autoupdate');
 
     if (!empty($errors[0])) {
         foreach ($errors as $i => $error) {
@@ -35,7 +35,7 @@ if (!empty($_POST['ok'])) {
                 $error_msg = $error_msg.", ".$error;
             }
         }
-        $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
+        $_SESSION['error_msg'] = sprintf(_('Field "%s" can not be blank.'),$error_msg);
     }
 
     $v_ipname = $_POST['v_ipname'];
@@ -52,7 +52,7 @@ if (!empty($_POST['ok'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('IPSET_CREATED_OK');
+        $_SESSION['ok_msg'] = _('IPSET_CREATED_OK');
     }
 }
 

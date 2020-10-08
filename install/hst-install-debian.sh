@@ -23,11 +23,11 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.3.0~alpha'
+HESTIA_INSTALL_VER='1.3.0~beta'
 pma_v='5.0.2'
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
-fpm_v="7.3"
-mariadb_v="10.4"
+fpm_v="7.4"
+mariadb_v="10.5"
 
 if [ "$release" -eq 9 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
@@ -44,7 +44,7 @@ if [ "$release" -eq 9 ]; then
         sudo bc ftp lsof rrdtool quota e2fslibs bsdutils e2fsprogs curl
         imagemagick fail2ban dnsutils bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx
         hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat
-        rsyslog openssh-server ssh setpriv ipset libapache2-mod-ruid2"
+        rsyslog openssh-server setpriv ipset libapache2-mod-ruid2 zstd"
 elif [ "$release" -eq 10 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
         apache2-suexec-pristine libapache2-mod-fcgid libapache2-mod-php$fpm_v
@@ -59,9 +59,9 @@ elif [ "$release" -eq 10 ]; then
         mariadb-common mariadb-server postgresql postgresql-contrib phpmyadmin
         phppgadmin mc flex whois git idn zip sudo bc ftp lsof rrdtool
         quota e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron hestia hestia-nginx hestia-php expect
+        bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx hestia-php expect
         libmail-dkim-perl unrar-free vim-common acl sysstat rsyslog openssh-server
-        ssh util-linux ipset libapache2-mpm-itk"
+        util-linux ipset libapache2-mpm-itk zstd"
 fi
 
 installer_dependencies="apt-transport-https curl dirmngr gnupg wget ca-certificates"
@@ -107,7 +107,7 @@ download_file() {
 
 # Defining password-gen function
 gen_pass() {
-    cat /dev/urandom | tr -dc [:alnum:] | head -c16
+    head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16
 }
 
 # Defining return code check function
@@ -134,11 +134,8 @@ set_default_lang() {
     if [ -z "$lang" ]; then
         eval lang=$1
     fi
-    lang_list="
-        ar cz el fa hu ja no pt se ua
-        bs da en fi id ka pl ro tr vi
-        cn de es fr it nl pt-BR ru tw
-        bg ko sr th ur"
+    lang_list="ar az bg bs cs da de el en es fa fi fr hr hu id it ja ka ko nl no pl pt pt-br ro
+        ru sr sv th uk ur vi zh-cn zh-tw"
     if !(echo $lang_list |grep -w $lang > /dev/null 2>&1); then
         eval lang=$1
     fi
@@ -681,7 +678,7 @@ cp /etc/vsftpd.conf $hst_backups/vsftpd > /dev/null 2>&1
 
 # Backup ProFTPD configuration
 systemctl stop proftpd > /dev/null 2>&1
-cp /etc/proftpd.conf $hst_backups/proftpd > /dev/null 2>&1
+cp /etc/proftpd/* $hst_backups/proftpd > /dev/null 2>&1
 
 # Backup Exim configuration
 systemctl stop exim4 > /dev/null 2>&1
@@ -1076,9 +1073,13 @@ fi
 # Backups
 echo "BACKUP_SYSTEM='local'" >> $HESTIA/conf/hestia.conf
 echo "BACKUP_GZIP='9'" >> $HESTIA/conf/hestia.conf
+echo "BACKUP_MODE='zstd'" >> $HESTIA/conf/hestia.conf
 
 # Language
 echo "LANGUAGE='$lang'" >> $HESTIA/conf/hestia.conf
+
+# Login in screen
+echo "LOGIN_STYLE='default'" >> $HESTIA/conf/hestia.conf
 
 # Version & Release Branch
 echo "VERSION='${HESTIA_INSTALL_VER}'" >> $HESTIA/conf/hestia.conf
@@ -1299,6 +1300,8 @@ if [ "$proftpd" = 'yes' ]; then
     echo "[ * ] Configuring ProFTPD server..."
     echo "127.0.0.1 $servername" >> /etc/hosts
     cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/proftpd/
+    cp -f $HESTIA_INSTALL_DIR/proftpd/tls.conf /etc/proftpd/
+    
     update-rc.d proftpd defaults > /dev/null 2>&1
     systemctl start proftpd >> $LOG
     check_result $? "proftpd start failed"
@@ -1318,8 +1321,11 @@ if [ "$mysql" = 'yes' ]; then
     if [ $memory -gt 3900000 ]; then
         mycnf="my-large.cnf"
     fi
-
-   # Configuring MariaDB
+    
+    # Remove symbolic link
+    rm -f /etc/mysql/my.cnf
+    
+    # Configuring MariaDB
     cp -f $HESTIA_INSTALL_DIR/mysql/$mycnf /etc/mysql/my.cnf
     mysql_install_db >> $LOG
 
@@ -1797,7 +1803,7 @@ fi
 $HESTIA/bin/v-change-sys-port $port > /dev/null 2>&1
 
 # Set default theme
-$HESTIA/bin/v-change-sys-theme 'default'
+$HESTIA/bin/v-change-sys-theme 'dark'
 
 # Update remaining packages since repositories have changed
 echo -ne "[ * ] Installing remaining software updates..."

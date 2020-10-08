@@ -7,7 +7,7 @@ V_TEST="$HESTIA/test"
 
 # Define functions
 random() {
-    cat /dev/urandom | tr -dc [:digit:] | head -c$1
+    head /dev/urandom | tr -dc 0-9 | head -c$1
 }
 
 echo_result() {

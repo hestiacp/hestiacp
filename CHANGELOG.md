@@ -9,8 +9,41 @@ All notable changes to this project will be documented in this file.
     - `UPGRADE_SEND_EMAIL` = Sends an email notification to admin email address
     - `UPGRADE_SEND_EMAIL_LOG` = Sends installation log output to admin email address
 - Upgrade process will now save logs to the `hst_backups` directory.
+- Support for removing backup remote location (#1083).
+- Add support Proftpd TLS Support
+- Add the possibility to assign user "Administrators" rights on login. Replaces "root" login. Notifications are only send towards the "admin" account email.
+- Updated translations system with the use of Gettext. Modified / Updated all translated strings.
+- Use php7.4 as default version.
+- Updated MariaDB to 10.5 (Manual upgrade required install/upgrade/manual/upgrade_mariadb.sh).
 
 ## Bugfixes
+- Removed root login (root / root password )
+- Update apache2.conf replace Include with IncludeOptional (#1072)
+- Add ca-certificates, software-properties-common to the dependencies (#1073 + [Forum](https://forum.hestiacp.com/t/hestiscp-fails-on-new-debian-9-vps/1623/8) ) @daniel-eder
+- Fixed issues with database port during backup when port was missing (#1068)
+- Postqresql: forbid the use of upper case (#1084) causing issues with backup / creating database or user
+- Fixed permissions email account during restore (#1114)
+- Create .npm on creating new user (#1113) @hahagu 
+- Fixed Access to a website without a ssl certificate on https shows the content of the first, valid ssl website (#1103)
+- Fixed an issue when installing --with-debs and version check (#1110)
+- Improved Translations Chinese @myrevery
+- File manager create directory with proper permissions 
+- Removed loop ad v-rebuild-all (#1096)
+- Add $restart flag to v-add-web-domain-backend call (#1094) (#797) @bright-soft
+- Fixed an issue with Restore Failed on Domains with Mail Setups using SSL (#1069)
+- Fixed an issue with PHPMyAdmin button (#1078)
+- Changed WordPress name in Webapp installer (#1074)
+- Add a free disk space validation during backup routine (#1115)
+- Removed PHP validation SSH keys allowing support other types then RSA / DSA
+- Fixed an issue which cause wrong password generation (#1184)
+- Fixed issue with v-add-sys-ip and saving the ip configuration to correct port (@madito)
+- Updated Exim black list for extensions (@kpapad904 / #1138)
+- Fixed multiple bugs due to translations 
+- Fixed bug with passwords containing "'" [Forum](https://forum.hestiacp.com/t/two-factor-authentication-issue-with-standard-user/1652/)
+- Refactor LXD  Complier script
+- Set default theme to "Dark"
+- Clean up gmail.tpl (DNS) (@madito)
+
 
 ## [1.2.3] - Service Release
 ### Features

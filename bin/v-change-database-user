@@ -15,10 +15,6 @@ database=$2
 dbuser="$user"_"$3"
 password=$4; HIDE=4
 
-if [ "$type" = "pgsql" ]; then
-   dbuser=$(echo "$user"_"$3" | tr '[:upper:]' '[:lower:]'); 
-fi
-
 # Includes
 source $HESTIA/func/main.sh
 source $HESTIA/func/db.sh
@@ -60,7 +56,12 @@ update_object_value 'db' 'DB' "$database" '$DBUSER' "$dbuser"
 # Get database values
 get_database_values
 
-# Rebuild datbase
+#Fix issue #1084 with "Upper case not allowed with PGSQL"
+if [ "$TYPE" = "pgsql" ]; then
+   dbuser=$(echo $dbuser | tr '[:upper:]' '[:lower:]'); 
+fi
+
+# Rebuild database
 case $TYPE in
     mysql) rebuild_mysql_database ;;
     pgsql) rebuild_pgsql_database ;;

@@ -10,40 +10,45 @@ All notable changes to this project will be documented in this file.
     - `UPGRADE_SEND_EMAIL_LOG` = Sends installation log output to admin email address
 - Upgrade process will now save logs to the `hst_backups` directory.
 - Support for removing backup remote location (#1083).
-- Add support Proftpd TLS Support
-- Add the possibility to assign user "Administrators" rights on login. Replaces "root" login. Notifications are only send towards the "admin" account email.
-- Updated translations system with the use of Gettext. Modified / Updated all translated strings.
-- Use php7.4 as default version.
-- Updated MariaDB to 10.5 (Manual upgrade required install/upgrade/manual/upgrade_mariadb.sh).
+- ProFTPD: Enhanced support for TLS
+- Added the ability to assign Administrator rights to users.
+- Introduced more robust translation system and updated translated strings.
+- MariaDB: Updated to version 10.5 (manual upgrade required for existing installations, use `$HESTIA/install/upgrade/manual/upgrade_mariadb.sh`).
+- The user interface theme has been set to "Dark" by default. This can be changed from Server Settings > Configure > Basic Options > Appearance.
+
 
 ## Bugfixes
-- Removed root login (root / root password )
-- Update apache2.conf replace Include with IncludeOptional (#1072)
-- Add ca-certificates, software-properties-common to the dependencies (#1073 + [Forum](https://forum.hestiacp.com/t/hestiscp-fails-on-new-debian-9-vps/1623/8) ) @daniel-eder
-- Fixed issues with database port during backup when port was missing (#1068)
-- Postqresql: forbid the use of upper case (#1084) causing issues with backup / creating database or user
-- Fixed permissions email account during restore (#1114)
-- Create .npm on creating new user (#1113) @hahagu 
-- Fixed Access to a website without a ssl certificate on https shows the content of the first, valid ssl website (#1103)
-- Fixed an issue when installing --with-debs and version check (#1110)
-- Improved Translations Chinese @myrevery
-- File manager create directory with proper permissions 
-- Removed loop ad v-rebuild-all (#1096)
-- Add $restart flag to v-add-web-domain-backend call (#1094) (#797) @bright-soft
-- Fixed an issue with Restore Failed on Domains with Mail Setups using SSL (#1069)
-- Fixed an issue with PHPMyAdmin button (#1078)
+- Removed ability to log in as "root" (which redirected to the admin account)
+- Updated Apache2 configuration to use Include with IncludeOptional (#1072)
+- Add ca-certificates, software-properties-common to the dependencies (#1073 + [Forum](https://forum.hestiacp.com/t/hestiscp-fails-on-new-debian-9-vps/1623/8)) - thanks **@daniel-eder**
+- Fixed an issue with database backups when the port was not specified (#1068)
+- PostqreSQL: forbid the use of upper case (#1084) causing issues with backup / creating database or user
+- Fixed an issue with permissions when restoring email accounts (#1114)
+- Create .npm directory by default when creating new user (#1113) - thanks **@hahagu** 
+- Fixed an issue where websites without SSL enabled would display the content of the first valid SSL enabled website (#1103)
+- Fixed an issue when using the `--with-debs` flag and version check routines (#1110)
+- Improved Chinese translations - thanks **@myrevery**
+- Fixed an issue where the File Manager incorrectly set new directory permissions incorrectly.
+- Removed incorrect for loop that was triggered when running the `v-rebuild-all` command.
+- Add `$restart` flag to `v-add-web-domain-backend` command (#1094) (#797) - thanks **@bright-soft**
+- Fixed an issue when restoring domains with SSL-enabled mail domains (#1069)
+- Fixed an issue where the phpMyAdmin button would not work (#1078)
 - Changed WordPress name in Webapp installer (#1074)
-- Add a free disk space validation during backup routine (#1115)
-- Removed PHP validation SSH keys allowing support other types then RSA / DSA
-- Fixed an issue which cause wrong password generation (#1184)
-- Fixed issue with v-add-sys-ip and saving the ip configuration to correct port (@madito)
-- Updated Exim black list for extensions (@kpapad904 / #1138)
-- Fixed multiple bugs due to translations 
-- Fixed bug with passwords containing "'" [Forum](https://forum.hestiacp.com/t/two-factor-authentication-issue-with-standard-user/1652/)
-- Refactor LXD  Complier script
-- Set default theme to "Dark"
-- Clean up gmail.tpl (DNS) (@madito)
+- Improved validation of free disk space when executing backup routine (#1115)
+- Improved support for SSH keys other than RSA / DSA
+- Fixed an issue where passwords were generated incorrectly (#1184)
+- Fixed an issue in `v-add-sys-ip` to ensure IP configuration is set to the correct port - thanks **@madito**
+- Improved spam filtering in exim blacklist with additional file extensions (#1138) - thanks **@kpapad904**
+- Fixed an issue with paswords containing "`'`" - [Forum](https://forum.hestiacp.com/t/two-factor-authentication-issue-with-standard-user/1652/)
+- Refactored LXD compiler script
+- Cleaned up entries used in the Google / Gmail DNS template - thanks **@madito**
 
+## [1.2.4] - Service Release
+### Features
+- No new features have been introduced in this release.
+
+### Bugfixes
+- Fixes an issue on auto renewing let's encrypt certificates.
 
 ## [1.2.3] - Service Release
 ### Features

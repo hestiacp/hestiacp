@@ -116,9 +116,7 @@ server {
 	    try_files $fastcgi_script_name /index.php$uri&$args =404;
 	    fastcgi_split_path_info ^(.+\.php)(/.+)$;
             fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-            if (!-f $document_root$fastcgi_script_name) {
-                return  404;
-            }
+
             fastcgi_pass %backend_lsnr%;
             fastcgi_index index.php;
             include /etc/nginx/fastcgi_params;

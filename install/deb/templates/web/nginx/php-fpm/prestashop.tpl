@@ -100,10 +100,7 @@ server {
     }
 
     location / {
-        if (!-e $request_filename)
-        {
-            rewrite ^(.+)$ /index.php?q=$1 last;
-        }
+        try_files $uri $uri/ /index.php?$args;
 
         location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
             expires 30d;
@@ -111,11 +108,10 @@ server {
         }
 
         location ~ [^/]\.php(/|$) {
+	    try_files $fastcgi_script_name /index.php$uri&$args =404;
 	    fastcgi_split_path_info ^(.+\.php)(/.+)$;
             fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-            if (!-f $document_root$fastcgi_script_name) {
-                return  404;
-            }
+            
             fastcgi_pass %backend_lsnr%;
             fastcgi_index index.php;
             include /etc/nginx/fastcgi_params;

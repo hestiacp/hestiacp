@@ -93,6 +93,14 @@ fi
 
 # Set ftp user password
 echo "$ftp_user:$password" | /usr/sbin/chpasswd
+
+if [ $? -ne 0 ]; then 
+    # Delete user on failure again
+    /usr/sbin/deluser "$ftp_user"  > /dev/null 2>&1
+    echo "Error: Password not accepted due to PAM restrictions"
+    exit 2
+fi
+
 ftp_md5=$(awk -v user=$ftp_user -F : 'user == $1 {print $2}' /etc/shadow)
 
 # Adding jailed sftp env

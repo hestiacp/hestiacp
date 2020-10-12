@@ -96,8 +96,8 @@ echo "$ftp_user:$password" | /usr/sbin/chpasswd
 
 if [ $? -ne 0 ]; then 
     # Delete user on failure again
-    /usr/sbin/deluser "$ftp_user"
-    echo "Error: Password not accepted by PAM"
+    /usr/sbin/deluser "$ftp_user"  > /dev/null 2>&1
+    echo "Error: Password not accepted due to PAM restrictions"
     exit 2
 fi
 

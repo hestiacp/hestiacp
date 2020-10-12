@@ -63,9 +63,9 @@ check_result $? "user creation failed" $E_INVALID
 echo "$user:$password" | /usr/sbin/chpasswd
 
 if [ $? -ne 0 ]; then 
-    # Delete user on failure again
-    /usr/sbin/deluser "$user"
-    echo "Error: Password not accepted by PAM requirements"
+    # Delete user on failure
+    /usr/sbin/deluser "$user" > /dev/null 2>&1
+    echo "Error: Password not accepted due to PAM restrictions"
     exit 2
 fi
 

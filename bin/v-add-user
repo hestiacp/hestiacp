@@ -62,6 +62,13 @@ check_result $? "user creation failed" $E_INVALID
 # Adding password
 echo "$user:$password" | /usr/sbin/chpasswd
 
+if [ $? -ne 0 ]; then 
+    # Delete user on failure again
+    /usr/sbin/deluser "$user"
+    echo "Error: Password not accepted by PAM requirements"
+    exit 2
+fi
+
 # Add a general group for normal users created by Hestia
 if [ -z "$(grep ^hestia-users: /etc/group)" ]; then
     groupadd --system "hestia-users"

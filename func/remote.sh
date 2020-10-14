@@ -54,7 +54,6 @@ send_api_file() {
                 https://$HOST:$PORT/api/) 
     else
         answer=$(curl -s -k \
-            answer=$(curl -s -k \
                 --data-urlencode "hash=$HASH" \
                 --data-urlencode "returncode=yes" \
                 --data-urlencode "cmd=v-make-tmp-file" \

@@ -16,6 +16,8 @@ port=$2
 PORT=$port
 user=$3
 USER=$user
+hash=$user
+HASH=$user
 password=$4; HIDE=4
 PASSWORD=$password
 type=${5-api}
@@ -33,9 +35,14 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-args_usage='HOST PORT USER PASSWORD [TYPE] [DNS_USER]'
-check_args '4' "$#" "$args_usage"
-is_format_valid 'host' 'port' 'user' 'type' 'dns_user'
+args_usage='HOST PORT USER [PASSWORD] [TYPE] [DNS_USER]'
+check_args '3' "$#" "$args_usage"
+is_format_valid 'host' 'port' 'type' 'dns_user'
+if [ -z "$password" ]; then
+    is_format_valid 'hash'
+else
+    is_format_valid 'user'
+fi
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_password_valid
 is_dnshost_new
@@ -51,10 +58,17 @@ time_n_date=$(date +'%T %F')
 time=$(echo "$time_n_date" |cut -f 1 -d \ )
 date=$(echo "$time_n_date" |cut -f 2 -d \ )
 
-# Concatentating dns host string
-str="HOST='$host' PORT='$port' USER='$user' PASSWORD='$password'"
-str="$str DNS_USER='$dns_user' TYPE='$type' SUSPENDED='no'"
-str="$str TIME='$time' DATE='$date'"
+if [ -z $password ]; then
+    # Concatentating dns host string
+    str="HOST='$host' PORT='$port' HASH='$hash'"
+    str="$str DNS_USER='$dns_user' TYPE='$type' SUSPENDED='no'"
+    str="$str TIME='$time' DATE='$date'"
+else
+    # Concatentating dns host string
+    str="HOST='$host' PORT='$port' USER='$user' PASSWORD='$password'"
+    str="$str DNS_USER='$dns_user' TYPE='$type' SUSPENDED='no'"
+    str="$str TIME='$time' DATE='$date'"
+fi    
 
 # Adding host to dns-cluster.conf
 echo "$str" >> $HESTIA/conf/dns-cluster.conf

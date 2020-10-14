@@ -11,6 +11,18 @@ msgstr ""
 "Language: fa\n"
 "Project-Id-Version: Hestia CP\n"
 
+#: ../../web/templates/admin/edit_server.html:857
+msgid "Login screen style"
+msgstr ""
+
+#: ../../web/templates/admin/edit_server.html:848
+msgid "Security"
+msgstr ""
+
+#: ../../web/templates/admin/edit_server.html:864
+msgid "Old Style"
+msgstr ""
+
 #: ../../web/templates/admin/edit_server.html:618
 msgid "Compression"
 msgstr ""
@@ -117,7 +129,7 @@ msgstr "اعلان ایمیل را هنگام نصب به روزرسانی ار�
 msgid "SYSTEM_UPGRADE_SEND_EMAIL_LOG"
 msgstr "گزارش های نصب را از طریق ایمیل ارسال کنید"
 
-#: ../../web/templates/admin/edit_server.html:884
+#: ../../web/templates/admin/edit_server.html:885
 msgid "Filemanager"
 msgstr ""
 
@@ -1824,16 +1836,16 @@ msgstr "کلید_عمومی"
 msgid "ISSUER"
 msgstr "اقدام کننده"
 
-#: ../../web/templates/admin/edit_server.html:875
+#: ../../web/templates/admin/edit_server.html:876
 msgid "Hestia Control Panel Plugins"
 msgstr "افزونه های كنترل پنل وستا"
 
-#: ../../web/templates/admin/edit_server.html:898
+#: ../../web/templates/admin/edit_server.html:899
 msgid "FileSystem Disk Quota"
 msgstr "سهمیه فایل سیستم دیسك "
 
 #: ../../web/templates/admin/list_services.html:7
-#: ../../web/templates/admin/edit_server.html:912
+#: ../../web/templates/admin/edit_server.html:913
 msgid "Firewall"
 msgstr "دیوار آتشین"
 
@@ -2092,6 +2104,7 @@ msgstr "ویرایش ركورد نام دامنه"
 msgid "DELETE_RECORD_CONFIRMATION"
 msgstr "آیا از پاک کردن پیشینه %s اطمینان دارید؟"
 
+#: ../../web/templates/admin/edit_server.html:863
 #: ../../web/templates/admin/list_dns_rec.html:88
 msgid "Default"
 msgstr ""
@@ -2762,9 +2775,9 @@ msgstr "خوشه نام دامنه"
 #: ../../web/templates/admin/edit_server.html:449
 #: ../../web/templates/admin/edit_server.html:529
 #: ../../web/templates/admin/edit_server.html:610
-#: ../../web/templates/admin/edit_server.html:890
-#: ../../web/templates/admin/edit_server.html:904
-#: ../../web/templates/admin/edit_server.html:918
+#: ../../web/templates/admin/edit_server.html:891
+#: ../../web/templates/admin/edit_server.html:905
+#: ../../web/templates/admin/edit_server.html:919
 msgid "no"
 msgstr "خیر"
 
@@ -2779,9 +2792,9 @@ msgstr "خیر"
 #: ../../web/templates/admin/edit_server.html:450
 #: ../../web/templates/admin/edit_server.html:530
 #: ../../web/templates/admin/edit_server.html:611
-#: ../../web/templates/admin/edit_server.html:891
-#: ../../web/templates/admin/edit_server.html:905
-#: ../../web/templates/admin/edit_server.html:919
+#: ../../web/templates/admin/edit_server.html:892
+#: ../../web/templates/admin/edit_server.html:906
+#: ../../web/templates/admin/edit_server.html:920
 msgid "yes"
 msgstr "بله"
 
@@ -2970,9 +2983,9 @@ msgid "MAIL_RESET_SUBJECT"
 msgstr "بازیابی گذرواژه در %s"
 
 #: ../../web/add/mail/index.php:207 ../../web/add/user/index.php:94
-#: ../../web/add/db/index.php:92 ../../web/add/web/index.php:324
-#: ../../web/edit/mail/index.php:523 ../../web/edit/web/index.php:659
-#: ../../web/edit/web/index.php:733 ../../web/reset/index.php:33
+#: ../../web/add/db/index.php:92 ../../web/add/web/index.php:329
+#: ../../web/edit/mail/index.php:523 ../../web/edit/web/index.php:663
+#: ../../web/edit/web/index.php:737 ../../web/reset/index.php:33
 msgid "MAIL_FROM"
 msgstr "كنترل پنل وستا <noreply@%s>"
 
@@ -3043,14 +3056,14 @@ msgstr "آغاز دوباره"
 #: ../../web/add/dns/index.php:116 ../../web/add/cron/index.php:33
 #: ../../web/add/mail/index.php:47 ../../web/add/mail/index.php:114
 #: ../../web/add/user/index.php:38 ../../web/add/db/index.php:33
-#: ../../web/add/web/index.php:31 ../../web/add/web/index.php:291
+#: ../../web/add/web/index.php:31 ../../web/add/web/index.php:296
 #: ../../web/add/package/index.php:60
 #: ../../web/add/firewall/banlist/index.php:35
 #: ../../web/add/firewall/ipset/index.php:38
 #: ../../web/add/firewall/index.php:54 ../../web/edit/mail/index.php:314
-#: ../../web/edit/web/index.php:448 ../../web/edit/web/index.php:578
-#: ../../web/edit/web/index.php:604 ../../web/edit/web/index.php:640
-#: ../../web/edit/web/index.php:709 ../../web/edit/package/index.php:137
+#: ../../web/edit/web/index.php:452 ../../web/edit/web/index.php:582
+#: ../../web/edit/web/index.php:608 ../../web/edit/web/index.php:644
+#: ../../web/edit/web/index.php:713 ../../web/edit/package/index.php:137
 #: ../../web/generate/ssl/index.php:59
 msgid "Field \"%s\" can not be blank."
 msgstr "قسمت \"%s\" نمی تواند خالی باشد"
@@ -3080,18 +3093,18 @@ msgstr "قسمت \"%s\" نمی تواند خالی باشد"
 #: ../../web/edit/server/named/index.php:42
 #: ../../web/edit/server/php5-fpm/index.php:42
 #: ../../web/edit/server/clamav-daemon/index.php:42
-#: ../../web/edit/server/index.php:566 ../../web/edit/server/exim4/index.php:42
+#: ../../web/edit/server/index.php:590 ../../web/edit/server/exim4/index.php:42
 #: ../../web/edit/backup/exclusions/index.php:120
 #: ../../web/edit/user/index.php:247 ../../web/edit/db/index.php:83
-#: ../../web/edit/web/index.php:801 ../../web/edit/package/index.php:226
+#: ../../web/edit/web/index.php:809 ../../web/edit/package/index.php:226
 #: ../../web/edit/firewall/index.php:96
 msgid "Changes has been saved."
 msgstr "تغییرات به درستی ذخیره گردید."
 
 #: ../../web/add/mail/index.php:120 ../../web/add/user/index.php:43
-#: ../../web/add/db/index.php:39 ../../web/add/web/index.php:280
-#: ../../web/add/web/index.php:296 ../../web/edit/mail/index.php:386
-#: ../../web/edit/user/index.php:191 ../../web/edit/web/index.php:630
+#: ../../web/add/db/index.php:39 ../../web/add/web/index.php:285
+#: ../../web/add/web/index.php:301 ../../web/edit/mail/index.php:386
+#: ../../web/edit/user/index.php:191 ../../web/edit/web/index.php:634
 msgid "Please enter valid email address."
 msgstr "لطفا آدرس پست الکترونیک معتبری وارد نمایید."
 
@@ -3099,21 +3112,21 @@ msgstr "لطفا آدرس پست الکترونیک معتبری وارد نما
 msgid "Email Credentials"
 msgstr "اعتبار پست الکترونیکی"
 
-#: ../../web/edit/web/index.php:569
+#: ../../web/edit/web/index.php:573
 msgid "stats username"
 msgstr "آمار نام كاربری"
 
-#: ../../web/edit/web/index.php:595
+#: ../../web/edit/web/index.php:599
 msgid "stats user"
 msgstr ""
 
-#: ../../web/add/web/index.php:323 ../../web/edit/web/index.php:657
-#: ../../web/edit/web/index.php:731
+#: ../../web/add/web/index.php:328 ../../web/edit/web/index.php:661
+#: ../../web/edit/web/index.php:735
 msgid "FTP login credentials"
 msgstr "اطلاعات ورود به FTP"
 
-#: ../../web/add/web/index.php:325 ../../web/edit/web/index.php:660
-#: ../../web/edit/web/index.php:734
+#: ../../web/add/web/index.php:330 ../../web/edit/web/index.php:664
+#: ../../web/edit/web/index.php:738
 msgid "FTP_ACCOUNT_READY"
 msgstr ""
 "حساب FTP ساخته شد و برای استفاده آماده است.\n"
@@ -3125,7 +3138,7 @@ msgstr ""
 "--\n"
 "كنترل پنل وستا"
 
-#: ../../web/edit/web/index.php:700
+#: ../../web/edit/web/index.php:704
 msgid "ftp user"
 msgstr "نام كاربری FTP"
 
@@ -3254,11 +3267,11 @@ msgstr "گواهینامه ssl"
 msgid "ssl key"
 msgstr "كلید ssl"
 
-#: ../../web/add/web/index.php:38 ../../web/add/web/index.php:303
+#: ../../web/add/web/index.php:38 ../../web/add/web/index.php:308
 msgid "Password is too short."
 msgstr "گذرواژه بسیار کوتاه است."
 
-#: ../../web/add/web/index.php:354 ../../web/add/web/index.php:364
+#: ../../web/add/web/index.php:359 ../../web/add/web/index.php:369
 msgid "WEB_DOMAIN_CREATED_OK"
 msgstr "دامنه <a href=\"/edit/web/?domain=%s\"><b>%s</b></a> به درستی آفریده شد."
 

@@ -1,5 +1,5 @@
 <?php
-error_reporng(NULL);
+error_reporting(NULL);
 ob_start();
 $TAB = 'WEB';
 

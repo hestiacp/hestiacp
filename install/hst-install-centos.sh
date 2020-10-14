@@ -33,7 +33,7 @@ mariadb_v="10.3"
 software=" nginx awstats bc bind bind-libs bind-utils clamav clamav-update
     curl dovecot e2fsprogs exim expect fail2ban flex freetype ftp GeoIP httpd
     ImageMagick iptables-services lsof mailx mariadb mariadb-server mc
-    mod_fcgid mod_ruid2 mod_ssl net-tools openssh-clients pcre php
+    mod_fcgid mod_ssl net-tools openssh-clients pcre php
     php-bcmath php-cli php-common php-fpm php-gd php-imap php-mbstring
     php-mcrypt phpMyAdmin php-mysql php-pdo phpPgAdmin php-pgsql php-soap
     php-tidy php-xml php-xmlrpc postgresql postgresql-contrib
@@ -627,7 +627,6 @@ if [ "$apache" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/\bhttpd\b/ /")
     software=$(echo "$software" | sed -e "s/\bm\od_ssl\b/ /")
     software=$(echo "$software" | sed -e "s/\bmod_fcgid\b/ /")
-    software=$(echo "$software" | sed -e "s/\bmod_ruid2\b/ /")
 fi
 if [ "$phpfpm" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/\bphp-fpm\b/ /")
@@ -726,11 +725,6 @@ elif [ "$codename" = "rhel_8" ]; then
     dnf config-manager --set-enabled remi
     dnf config-manager --set-enabled remi-modular
     dnf config-manager --set-enabled PowerTools
-
-    # Raven-extras repo for mod_ruid2
-    dnf install -y https://pkgs.dyn.su/el8/base/x86_64/raven-release-1.0-1.el8.noarch.rpm
-    dnf config-manager --set-enabled raven-extras
-    echo "exclude=nginx*" >> /etc/yum.repos.d/raven.repo
 
     # No webalizer, phpPgAdmin on CentOS 8 yet
     software=$(echo "$software" | sed -e "s/\bwebalizer\b/ /")
@@ -1125,9 +1119,6 @@ if [ "$apache" = 'yes'  ]; then
         sed -i "/LoadModule mpm_prefork_module/ s/^/#/" /etc/httpd/conf.modules.d/*.conf
         # apache_module_enable 'mpm_event'
         sed -i "/LoadModule mpm_event_module/ s/#*//" /etc/httpd/conf.modules.d/*.conf
-    else
-        # apache_module_enable 'ruid2'
-        sed -i "/LoadModule ruid2_module/ s/#*//" /etc/httpd/conf.modules.d/*.conf
     fi
 
     sed -i "/LoadModule proxy_http2_module/ s/^/#/" /etc/httpd/conf.modules.d/*.conf

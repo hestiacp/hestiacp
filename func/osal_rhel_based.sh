@@ -138,13 +138,13 @@ osal_apache_module_disable() {
 }
 
 # multiphp_php_package_prefix 7.3 = 'php73-php'
-osal_multiphp_php_package_prefix() {
+osal_php_package_prefix() {
     echo php${1//.}-php
 }
 
 # multiphp_fpm_isinstalled 7.3 = (1|null)
-osal_multiphp_fpm_isinstalled() {
-    php_prefix=$(osal_multiphp_php_package_prefix $1)
+osal_php_fpm_isinstalled() {
+    php_prefix=$(osal_php_package_prefix $1)
     rpm -q --quiet ${php_prefix}-fpm && echo 1
 }
 
@@ -155,7 +155,7 @@ osal_multiphp_etc_folder() {
 
 # Returns PHP-FPM directory for a given PHP version
 # multiphp_fpm_pool_d '7.3' = /etc/opt/remi/php73/php-fpm.d
-osal_multiphp_fpm_pool_d() {
+osal_php_fpm_pool_d() {
     local numbersonly=${1//.}       # Remove . in 7.3
     numbersonly=${numbersonly#php}  # Remove php in php73
     echo $PHP_DIR_POOL_D_BASE/php${numbersonly}/php-fpm.d

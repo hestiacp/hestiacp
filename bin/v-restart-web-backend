@@ -11,6 +11,7 @@
 
 # Includes
 source $HESTIA/func/main.sh
+source $HESTIA/func/osal.sh
 source $HESTIA/conf/hestia.conf
 PATH="$PATH:/usr/local/sbin:/sbin:/usr/sbin:/root/bin"
 
@@ -45,11 +46,11 @@ fi
 
 tmpfile=$(mktemp)
 for php_folder in $PHP_DIR_POOL_D_BASE/*; do
-    pool_d=$(osal_multiphp_fpm_pool_d ${php_folder})
+    pool_d=$(osal_php_fpm_pool_d ${php_folder})
     [ ! -d "$pool_d" ] && continue
 
     v_php="$(basename $php_folder)"
-    v_phpfpm="php${v_php}-fpm"
+    v_phpfpm="$(osal_php_package_prefix ${v_php})-fpm"
 
     if [ ! -f "$pool_d/dummy.conf" ]; then
         cp -f "$HESTIA_INSTALL_DIR/php-fpm/dummy.conf" "$pool_d/"

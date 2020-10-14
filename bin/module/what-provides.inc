@@ -13,7 +13,7 @@ hestia_module_what-provides() {
 
     # Search for a module that provides $1
     current_pref=0
-    for hmd in $HESTIA/data/modules/*.hmd; do
+    for hmd in $HESTIA_INSTALL_DIR/../modules/*.hmd; do
         local mod_provides=$(osal_kv_read $hmd 'provides')
         if [ "$mod_provides" = "$1" ]; then
             if [ "$param_all" ]; then

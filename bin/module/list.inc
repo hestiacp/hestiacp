@@ -4,7 +4,7 @@ hestia_module_list() {
     source $HESTIA/bin/module/func.inc
 
     printf "%-16s %-12s %-4s %s\n" "Module" "Provides" "Inst" "Description"
-    for hmd in $HESTIA/data/modules/*.hmd; do
+    for hmd in $HESTIA_INSTALL_DIR/../modules/*.hmd; do
         local mod_name=$(osal_kv_read $hmd 'name')
         local mod_provides=$(osal_kv_read $hmd 'provides')
         local mod_descr=$(osal_kv_read $hmd 'description')

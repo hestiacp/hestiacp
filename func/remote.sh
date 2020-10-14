@@ -9,7 +9,7 @@ is_procces_running() {
 }
 
 send_api_cmd() {
-    if [ -z $HASH ]; then
+    if [ ! -z "$PASSWORD" ]; then
         answer=$(curl -s -k \
             --data-urlencode "user=$USER" \
             --data-urlencode "password=$PASSWORD" \
@@ -43,7 +43,7 @@ send_api_cmd() {
 }
 
 send_api_file() {
-    answer=$(curl -s -k \
+    if [ ! -z "$PASSWORD" ]; then
         answer=$(curl -s -k \
                 --data-urlencode "user=$USER" \
                 --data-urlencode "password=$PASSWORD" \

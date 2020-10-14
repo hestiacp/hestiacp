@@ -38,7 +38,7 @@ source $HESTIA/conf/hestia.conf
 args_usage='HOST PORT USER [PASSWORD] [TYPE] [DNS_USER]'
 check_args '3' "$#" "$args_usage"
 is_format_valid 'host' 'port' 'type' 'dns_user'
-if [ -z $password ]; then
+if [ -z "$password" ]; then
     is_format_valid 'hash'
 else
     is_format_valid 'user'

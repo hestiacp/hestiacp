@@ -60,4 +60,11 @@ fi
  
 # Set var LOGIN_STYLE hestia.conf
  echo "[ * ] Set var LOGIN_STYLE hestia.conf"
- $BIN/v-change-sys-config-value "LOGIN_STYLE" "default" 
+ $BIN/v-change-sys-config-value "LOGIN_STYLE" "default"
+
+# Restrict access to /proc fs
+if [ ! -e "/etc/cron.d/hestia-proc" ]; then
+    echo "[ * ] Restrict access to /proc fs"
+    echo "@reboot root sleep 5 && mount -o remount,defaults,hidepid=2 /proc" > /etc/cron.d/hestia-proc
+    mount -o remount,defaults,hidepid=2 /proc
+fi

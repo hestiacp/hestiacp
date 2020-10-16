@@ -973,6 +973,11 @@ if [ ! -e "/sbin/iptables-restore" ]; then
     fi
 fi
 
+# Restrict access to /proc fs
+# - Prevent unpriv users from seeing each other running processes
+mount -o remount,defaults,hidepid=2 /proc
+echo "@reboot root sleep 5 && mount -o remount,defaults,hidepid=2 /proc" > /etc/cron.d/hestia-proc
+
 
 #----------------------------------------------------------#
 #                     Configure Hestia                     #

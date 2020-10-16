@@ -1,101 +1,101 @@
-# Translation of Hestia CP in Russian
+# Translation of Hestia CP in Turkish
 # This file is distributed under the same license as the Hestia CP package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-10-12 17:30:46+0000\n"
+"PO-Revision-Date: 2020-10-11 12:02:37+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: GlotPress/2.3.1\n"
-"Language: ru\n"
+"Language: tr\n"
 "Project-Id-Version: Hestia CP\n"
 
 #: ../../web/templates/admin/edit_server.html:857
 msgid "Login screen style"
-msgstr "Стиль страницы входа"
+msgstr "Giriş ekranı stili"
 
 #: ../../web/templates/admin/edit_server.html:848
 msgid "Security"
-msgstr "Безопасность"
+msgstr "Güvenlik"
 
 #: ../../web/templates/admin/edit_server.html:864
 msgid "Old Style"
-msgstr "Старый стиль"
+msgstr "Eski Stil"
 
 #: ../../web/templates/admin/edit_server.html:618
 msgid "Compression"
-msgstr "Сжатие"
+msgstr "Sıkıştırma"
 
 #: ../../web/add/webapp/index.php:62
 msgid "%s installer missing"
-msgstr "Установщик %s отсутствует"
+msgstr "%s yükleyici eksik"
 
 #: ../../web/add/webapp/index.php:82
 msgid "%s App was installed succesfully!"
-msgstr "Приложение %s успешно установлено!"
+msgstr "%s uygulaması başarıyla yüklendi!"
 
 #: ../../web/update/hestia/index.php:22
 msgid "Error: %s update failed"
-msgstr "Ошибка: не удалось обновить %s"
+msgstr "Hata: %s güncelleme başarısız oldu!"
 
 #: ../../web/restart/service/index.php:25
 msgid "Restart \"%s\" failed"
-msgstr "Перезапуск \"%s\" не удался"
+msgstr " \"%s\" yeniden başlatılamadı!"
 
 #: ../../web/start/service/index.php:25
 msgid "Start \"%s\" failed"
-msgstr "Запуск \"%s\" не удался"
+msgstr "\"%s\" başlatılamadı!"
 
 #: ../../web/add/user/index.php:101
 msgid "ACCOUNT_READY"
 msgstr ""
-"Ваш аккаунт успешно создан и готов к использованию.\n"
+"Hesabınız başarıyla oluşturuldu ve kullanıma hazır.\n"
 "\n"
 "https://%s/login/\n"
-"Имя пользователя: %s\n"
-"Пароль: %s\n"
+"Kullanıcı adı: %s\n"
+"Şifre:%s\n"
 "\n"
-"-\n"
-"Панель управления Hestia\\n"
+"--\n"
+"Hestia Kontrol Paneli"
 
 #: ../../web/download/backup/index.php:24
 msgid "Error: Hestia did not return any output."
-msgstr "Ошибка: Hestia не вернула никакого ответа"
+msgstr "Hata: Hestia herhangi bir geri dönüş vermedi."
 
 #: ../../web/templates/admin/add_web.html:200
 #: ../../web/templates/admin/edit_web.html:248
 #: ../../web/templates/user/edit_web.html:261
 msgid "Custom document root"
-msgstr "Пользовательский document root"
+msgstr "Özel belge kökü"
 
 #: ../../web/templates/admin/add_web.html:208
 #: ../../web/templates/admin/edit_web.html:256
 #: ../../web/templates/user/edit_web.html:269
 msgid "Point to"
-msgstr "Указывает на "
+msgstr "İşaret et"
 
 #: ../../web/templates/admin/panel.html:15
 #: ../../web/templates/user/panel.html:15
 msgid "Files"
-msgstr "Файлы"
+msgstr "Dosyalar"
 
 #: ../../web/templates/admin/edit_user.html:145
 #: ../../web/templates/admin/add_user.html:136
 msgid "Role"
-msgstr "Роль"
+msgstr "Rol"
 
 #: ../../web/templates/admin/edit_user.html:152
 #: ../../web/templates/admin/add_user.html:143
 msgid "Administrator"
-msgstr "Администратор"
+msgstr "Yönetici"
 
 #: ../../web/templates/admin/list_web.html:70
 #: ../../web/templates/admin/list_dns.html:71
 #: ../../web/templates/user/list_web.html:75
 #: ../../web/templates/user/list_dns.html:70
 msgid "UNSUSPEND_DOMAIN_CONFIRMATION"
-msgstr "Вы уверены, что хотите разблокировать домен %s?"
+msgstr "%s alan adını geri almak istediğinize emin misiniz?"
 
 #: ../../web/templates/admin/list_web.html:75
 #: ../../web/templates/admin/list_mail.html:76
@@ -106,7 +106,7 @@ msgstr "Вы уверены, что хотите разблокировать д
 #: ../../web/templates/user/list_mail.html:80
 #: ../../web/templates/user/list_dns.html:75
 msgid "SUSPEND_DOMAIN_CONFIRMATION"
-msgstr "Вы уверены, что хотите заблокировать домен %s?"
+msgstr "%s alan adını askıya almak istediğinize emin misiniz?"
 
 #: ../../web/templates/admin/add_web.html:333
 #: ../../web/templates/admin/add_web.html:405
@@ -115,81 +115,81 @@ msgstr "Вы уверены, что хотите заблокировать до
 #: ../../web/templates/user/edit_web.html:482
 #: ../../web/templates/user/edit_web.html:558
 msgid "Prefix %s will be added to username automatically"
-msgstr "Префикс %s будет добавлен к имени пользователя автоматически"
+msgstr "%s öneki otomatik olarak kullanıcı adına eklenenecek"
 
 #: ../../web/templates/admin/edit_server.html:189
 msgid "Options"
-msgstr "Префикс %s будет автоматически добавлен к названию аккаунта"
+msgstr "Seçenekler"
 
 #: ../../web/templates/admin/edit_server.html:194
 msgid "SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL"
-msgstr "Отправить уведомление по электронной почте, когда обновление было установлено"
+msgstr "Güncelleme yüklendiğinde bir e-posta bildirimi gönderin"
 
 #: ../../web/templates/admin/edit_server.html:199
 msgid "SYSTEM_UPGRADE_SEND_EMAIL_LOG"
-msgstr "Отправить журнал установки обновления по электронной почте"
+msgstr " Güncelleme kurulum günlüğünü e-posta ile gönderin"
 
 #: ../../web/templates/admin/edit_server.html:885
 msgid "Filemanager"
-msgstr "Файлы"
+msgstr "Dosya yöneticisi"
 
 #: ../../web/templates/admin/list_cron.html:75
 #: ../../web/templates/user/list_cron.html:75
 msgid "UNSUSPEND_CRON_CONFIRMATION"
-msgstr "Вы уверены, что хотите разблокировать cron-задание?"
+msgstr "Zamanlanmış görevi devam ettirmek istediğinize emin misiniz?"
 
 #: ../../web/templates/admin/list_cron.html:80
 #: ../../web/templates/user/list_cron.html:80
 msgid "SUSPEND_CRON_CONFIRMATION"
-msgstr "Вы уверены, что хотите заблокировать cron-задание?"
+msgstr "Zamanlanmış görevi askıya almak istediğinize emin misiniz?"
 
 #: ../../web/templates/admin/list_services.html:148
 msgid "Are you sure you want to start service"
-msgstr "Вы действительно хотите запустить службу"
+msgstr "Hizmeti başlatmak istediğine emin misin?"
 
 #: ../../web/templates/admin/list_weblog.html:27
 msgid "Access Log"
-msgstr "Журнал доступа"
+msgstr "Erişim Günlüğü"
 
 #: ../../web/templates/admin/list_user.html:88
 msgid "UNSUSPEND_USER_CONFIRMATION"
-msgstr "Вы уверены, что хотите разблокировать пользователя %s?"
+msgstr "%s kullanıcısını devam ettirmek istediğinize emin misiniz?"
 
 #: ../../web/templates/admin/list_user.html:93
 msgid "SUSPEND_USER_CONFIRMATION"
-msgstr "Вы уверены, что хотите заблокировать пользователя %s?"
+msgstr "%s kullanıcısını askıya almak istediğinize emin misiniz?"
 
 #: ../../web/templates/admin/list_firewall.html:65
 msgid "UNSUSPEND_RULE_CONFIRMATION"
-msgstr "Вы уверены, что хотите разблокировать правило №%s?"
+msgstr "#%s kuralını etkinleştirmek istediğinize emin misiniz?"
 
 #: ../../web/templates/admin/list_firewall.html:70
 msgid "SUSPEND_RULE_CONFIRMATION"
-msgstr "Вы уверены, что хотите заблокирован правило №%s?"
+msgstr "#%s kuralını pasifleştirmek istediğinize emin misiniz?"
 
 #: ../../web/templates/admin/list_db.html:99
 #: ../../web/templates/user/list_db.html:98
 msgid "UNSUSPEND_DATABASE_CONFIRMATION"
-msgstr "Вы уверены, что хотите разблокировать базу данных %s?"
+msgstr "%s veritabanını devam ettirmek istediğinize emin misiniz?"
 
 #: ../../web/templates/admin/list_db.html:104
 #: ../../web/templates/user/list_db.html:103
 msgid "SUSPEND_DATABASE_CONFIRMATION"
-msgstr "Вы уверены, что хотите заблокировать базу данных %s?"
+msgstr "%s veritabanını askıya almak istediğinize emin misiniz?"
 
 #: ../../web/templates/admin/list_mail_acc.html:72
 #: ../../web/templates/user/list_mail_acc.html:72
 msgid "UNSUSPEND_MAIL_ACCOUNT_CONFIRMATION"
-msgstr "Вы уверены, что хотите разблокировать почтовый ящик %s?"
+msgstr "%s hesabını devam ettirmek istediğinize emin misiniz?"
 
 #: ../../web/templates/admin/list_mail_acc.html:77
 #: ../../web/templates/user/list_mail_acc.html:77
 msgid "SUSPEND_MAIL_ACCOUNT_CONFIRMATION"
-msgstr "Вы уверены, что хотите заблокировать почтовый ящик %s?"
+msgstr "%s hesabını askıya almak istediğinize emin misiniz?"
 
 #: ../../web/stop/service/index.php:27
 msgid "Stop \"%s\" failed"
-msgstr "Остановка службы %s не удалась"
+msgstr "\"%s\" durdurulamadı"
 
 #: ../../web/templates/admin/edit_user.html:84
 #: ../../web/templates/admin/add_db.html:97
@@ -199,7 +199,7 @@ msgstr "Остановка службы %s не удалась"
 #: ../../web/templates/admin/add_user.html:77
 #: ../../web/templates/user/edit_user.html:82
 msgid "Your password must have at least"
-msgstr "Ваш пароль должен содержать как минимум"
+msgstr "Şifreniz en azından olmalı:"
 
 #: ../../web/templates/admin/edit_user.html:86
 #: ../../web/templates/admin/add_db.html:99
@@ -209,7 +209,7 @@ msgstr "Ваш пароль должен содержать как миниму�
 #: ../../web/templates/admin/add_user.html:79
 #: ../../web/templates/user/edit_user.html:84
 msgid "8 characters long"
-msgstr "8 символов"
+msgstr "8 karakter uzunluğunda"
 
 #: ../../web/templates/admin/edit_user.html:87
 #: ../../web/templates/admin/add_db.html:100
@@ -219,7 +219,7 @@ msgstr "8 символов"
 #: ../../web/templates/admin/add_user.html:80
 #: ../../web/templates/user/edit_user.html:85
 msgid "1 uppercase & 1 lowercase character"
-msgstr "1 заглавная и 1 строчная буква"
+msgstr "1 büyük harf & 1 küçük harf karakteri"
 
 #: ../../web/templates/admin/edit_user.html:88
 #: ../../web/templates/admin/add_db.html:101
@@ -229,51 +229,51 @@ msgstr "1 заглавная и 1 строчная буква"
 #: ../../web/templates/admin/add_user.html:81
 #: ../../web/templates/user/edit_user.html:86
 msgid "1 number"
-msgstr "1 цифра"
+msgstr "1 numara"
 
 #: ../../web/add/user/index.php:48 ../../web/add/db/index.php:45
 msgid "Password does not match the minimum requirements"
-msgstr "Пароль не соответствует минимальным требованиям"
+msgstr "Şifre minimum gereksinimleri karşılamıyor"
 
 #: ../../web/edit/user/index.php:203
 msgid "Please enter a valid name"
-msgstr "Пожалуйста, введите корректное имя"
+msgstr "Lütfen geçerli bir isim girin"
 
 #: ../../web/templates/login_1.html:18
 msgid "Welcome"
-msgstr "Добро пожаловать"
+msgstr "Hoş geldiniz"
 
 #: ../../web/templates/login_1.html:42 ../../web/templates/login_2.html:40
 msgid "Login"
-msgstr "Войти"
+msgstr "Giriş"
 
 #: ../../web/templates/admin/list_services.html:61
 msgid "Production release"
-msgstr "Версия продукта"
+msgstr "Ürün sürümü"
 
 #: ../../web/templates/admin/add_user.html:107
 msgid "Send welcome email"
-msgstr "Отправить приветственное письмо"
+msgstr "Hoşgeldin e-postası gönder"
 
 #: ../../web/templates/admin/panel.html:2
 msgid "Top"
-msgstr "Вверх"
+msgstr "Üst"
 
 #: ../../web/templates/admin/panel.html:33
 msgid "Server"
-msgstr "Сервер"
+msgstr "Server"
 
 #: ../../web/templates/admin/panel.html:35
 msgid "Submit an issue report"
-msgstr "Отправить отчет о проблеме"
+msgstr "Sorun raporu gönder"
 
 #: ../../web/templates/login.html:35 ../../web/templates/login_a.html:45
 msgid "Next"
-msgstr "Далее"
+msgstr "İleri"
 
 #: ../../web/templates/login_2.html:16
 msgid "2 Factor Authentication"
-msgstr "Двухфакторная аутентификация"
+msgstr "İki Faktorlu Doğrulama"
 
 #: ../../web/templates/admin/list_web.html:59
 #: ../../web/templates/admin/list_mail.html:61
@@ -285,32 +285,32 @@ msgstr "SSL"
 #: ../../web/templates/admin/list_web.html:134
 #: ../../web/templates/user/list_web.html:139
 msgid "Edit"
-msgstr "Изменить"
+msgstr "Düzenle"
 
 #: ../../web/templates/admin/list_web.html:217
 #: ../../web/templates/user/list_web.html:222
 msgid "1 web domain"
-msgstr "1 веб-домен"
+msgstr "1 web alan adı"
 
 #: ../../web/templates/admin/list_web.html:219
 #: ../../web/templates/user/list_web.html:224
 msgid "%s web domains"
-msgstr "%s веб-доменов"
+msgstr "%s web alan adları"
 
 #: ../../web/templates/admin/add_package.html:37
 msgid "Adding Package"
-msgstr "Добавление пакета"
+msgstr "Paket Ekle"
 
 #: ../../web/templates/admin/edit_package.html:53
 #: ../../web/templates/admin/add_package.html:55
 #: ../../web/templates/admin/list_packages.html:9
 msgid "Package Name"
-msgstr "Имя пакета"
+msgstr "Paket Adı"
 
 #: ../../web/templates/admin/edit_package.html:137
 #: ../../web/templates/admin/add_package.html:140
 msgid "DNS Template"
-msgstr "Шаблон DNS"
+msgstr "DNS Şablonu"
 
 #: ../../web/templates/admin/edit_package.html:194
 #: ../../web/templates/admin/edit_package.html:216
@@ -319,29 +319,29 @@ msgstr "Шаблон DNS"
 #: ../../web/templates/admin/add_package.html:219
 #: ../../web/templates/admin/add_package.html:241
 msgid "per domain"
-msgstr "на домен"
+msgstr "domain başına"
 
 #: ../../web/templates/admin/edit_package.html:205
 #: ../../web/templates/admin/add_package.html:208
 msgid "DNS domains"
-msgstr "DNS домены"
+msgstr "DNS alan adları"
 
 #: ../../web/templates/admin/add_dns.html:113
 #: ../../web/templates/admin/add_package.html:307
 msgid "Name servers"
-msgstr "Сервер имен"
+msgstr "Name servers"
 
 #: ../../web/templates/admin/list_mail.html:4
 #: ../../web/templates/user/list_mail.html:4
 msgid "Add Mail Domain"
-msgstr "Добавить домен"
+msgstr "E-posta Alan Adı Ekle"
 
 #: ../../web/templates/admin/list_mail.html:9
 #: ../../web/templates/admin/list_mail.html:56
 #: ../../web/templates/user/list_mail.html:9
 #: ../../web/templates/user/list_mail.html:55
 msgid "Accounts"
-msgstr "Аккаунты"
+msgstr "Hesaplar"
 
 #: ../../web/templates/admin/list_mail.html:60
 #: ../../web/templates/user/list_mail.html:59
@@ -351,348 +351,348 @@ msgstr "DKIM"
 #: ../../web/templates/admin/list_mail.html:218
 #: ../../web/templates/user/list_mail.html:217
 msgid "1 mail domain"
-msgstr "1 почтовый домен"
+msgstr "1 e-posta alan adı"
 
 #: ../../web/templates/admin/list_mail.html:220
 #: ../../web/templates/user/list_mail.html:219
 msgid "%s mail domains"
-msgstr "%s почтовых доменов"
+msgstr "%s e-posta alan adları"
 
 #: ../../web/templates/admin/list_user.html:6
 #: ../../web/templates/user/list_user.html:6
 msgid "Add User"
-msgstr "Добавить пользователя"
+msgstr "Kullanıcı Ekle"
 
 #: ../../web/templates/admin/list_user.html:7
 #: ../../web/templates/user/list_user.html:7
 msgid "Packages"
-msgstr "Пакеты"
+msgstr "Paketler"
 
 #: ../../web/templates/admin/list_user.html:39
 #: ../../web/templates/user/list_user.html:43
 msgid "rebuild web"
-msgstr "пересоздать WEB"
+msgstr "web'i yeniden oluştur"
 
 #: ../../web/templates/admin/list_user.html:40
 #: ../../web/templates/user/list_user.html:44
 msgid "rebuild dns"
-msgstr "пересоздать DNS"
+msgstr "dns'i yeniden oluştur"
 
 #: ../../web/templates/admin/list_user.html:41
 #: ../../web/templates/user/list_user.html:45
 msgid "rebuild mail"
-msgstr "пересоздать MAIL"
+msgstr "mail'i yeniden oluştur"
 
 #: ../../web/templates/admin/list_user.html:42
 #: ../../web/templates/user/list_user.html:46
 msgid "rebuild db"
-msgstr "пересоздать DB"
+msgstr "db'i yeniden oluştur"
 
 #: ../../web/templates/admin/list_user.html:43
 #: ../../web/templates/user/list_user.html:47
 msgid "rebuild cron"
-msgstr "пересоздать CRON"
+msgstr "cron'u yeniden oluştur"
 
 #: ../../web/templates/admin/list_user.html:44
 #: ../../web/templates/user/list_user.html:48
 msgid "update counters"
-msgstr "обновить счетчики"
+msgstr "sayaçları güncelle"
 
 #: ../../web/templates/admin/list_user.html:134
 msgid "DELETE_USER_CONFIRMATION"
-msgstr "Вы уверены, что хотите удалить пользователя %s?"
+msgstr "%s kullanıcısını silmek istediğinize emin misiniz?"
 
 #: ../../web/templates/admin/list_user.html:165
 #: ../../web/templates/user/list_user.html:133
 msgid "1 user account"
-msgstr "1 учетная запись пользователя"
+msgstr "1 kullanıcı hesabı"
 
 #: ../../web/templates/admin/list_user.html:167
 #: ../../web/templates/user/list_user.html:135
 msgid "%s user accounts"
-msgstr "%s учетных записей пользователей"
+msgstr "%s kullanıcı hesapları"
 
 #: ../../web/templates/admin/list_packages.html:5
 msgid "Add Package"
-msgstr "Добавить пакет"
+msgstr "Paket Ekle"
 
 #: ../../web/templates/admin/list_packages.html:44
 msgid "Shell"
-msgstr "Шелл"
+msgstr "Shell"
 
 #: ../../web/templates/admin/list_packages.html:83
 msgid "DELETE_PACKAGE_CONFIRMATION"
-msgstr "Вы уверены, что хотите удалить пакет %s?"
+msgstr "%s paketini silmek istediğinize emin misiniz?"
 
 #: ../../web/templates/admin/list_packages.html:206
 msgid "1 package"
-msgstr "пакетов на странице: 1"
+msgstr "1 paket"
 
 #: ../../web/templates/admin/list_packages.html:208
 msgid "%s packages"
-msgstr "пакетов на странице: %s"
+msgstr "%s paket"
 
 #: ../../web/templates/admin/edit_mail_acc.html:136
 msgid "Message"
-msgstr "Сообщение"
+msgstr "Mesaj"
 
 #: ../../web/templates/admin/add_dns.html:38
 msgid "Adding DNS Domain"
-msgstr "Добавление DNS домена"
+msgstr "DNS Alan Adı Ekleme"
 
 #: ../../web/templates/admin/add_dns.html:93
 #: ../../web/templates/admin/edit_dns.html:110
 #: ../../web/templates/user/edit_dns.html:110
 msgid "YYYY-MM-DD"
-msgstr "ГГГГ-ММ-ДД"
+msgstr "YYYY-MM-DD"
 
 #: ../../web/templates/admin/list_rrd.html:5
 msgid "show: CPU / MEM / NET / DISK"
-msgstr "показатели: ПРОЦЕССОР / ПАМЯТЬ / СЕТЬ / ДИСК"
+msgstr "göster: CPU / MEM / NET / DISK"
 
 #: ../../web/templates/admin/list_rrd.html:14
 msgid "Yearly"
-msgstr "Год"
+msgstr "Yıllık"
 
 #: ../../web/templates/admin/edit_package.html:35
 msgid "Editing Package"
-msgstr "Редактирование пакета"
+msgstr "Paketi Düzenle"
 
 #: ../../web/templates/admin/edit_package.html:304
 msgid "Name Servers"
-msgstr "Сервер имен"
+msgstr "Name Servers"
 
 #: ../../web/add/user/index.php:91 ../../web/templates/login.html:16
 #: ../../web/templates/login_a.html:16
 msgid "Welcome to Hestia Control Panel"
-msgstr "Добро пожаловать в панель управления Hestia"
+msgstr "Hestia Kontrol Paneline Hoşgeldiniz"
 
 #: ../../web/templates/login_1.html:26
 msgid "forgot password"
-msgstr "напомнить"
+msgstr "şifremi unuttum"
 
 #: ../../web/templates/login_2.html:21
 msgid "2FA Token"
-msgstr "ДФА токен"
+msgstr "2FA Token"
 
 #: ../../web/templates/login_2.html:24
 msgid "Forgot token"
-msgstr "Забыли токен?"
+msgstr "Token'i unuttum"
 
 #: ../../web/templates/reset2fa.html:20
 msgid "Log in"
-msgstr "Войти"
+msgstr "Giriş yap"
 
 #: ../../web/templates/user/edit_user.html:5
 msgid "SSH_KEY"
-msgstr "Ключ SSH"
+msgstr "SSH_KEY"
 
 #: ../../web/templates/reset2fa.html:15
 msgid "2FA Reset successfully"
-msgstr "Двухфакторная аутентификация была отключена для вашего аккаунта.<br><br>Теперь вы можете войти в систему."
+msgstr "2FA başarıyla sıfırlandı"
 
 #: ../../web/templates/reset2fa.html:29
 msgid "Reset 2FA"
-msgstr "Сбросить ДФА"
+msgstr "2FA sıfırla"
 
 #: ../../web/templates/reset2fa.html:44
 msgid "2FA Reset Code"
-msgstr "Код сброса ДФА"
+msgstr "2FA Sıfırlama Kodu"
 
 #: ../../web/templates/reset_1.html:40 ../../web/templates/reset2fa.html:54
 msgid "Submit"
-msgstr "Отправить"
+msgstr "Gönder"
 
 #: ../../web/templates/footer.html:4
 msgid "LEAVE_PAGE_CONFIRMATION"
-msgstr "Покинуть страницу?"
+msgstr "Sayfadan Çıkılsın mı?"
 
 #: ../../web/templates/footer.html:9 ../../web/templates/admin/panel.html:5
 msgid "Shortcuts"
-msgstr "Hotkeys"
+msgstr "Kısayollar"
 
 #: ../../web/templates/footer.html:16
 msgid "Add New object"
-msgstr "Перейти к Форме Добавления"
+msgstr "Yeni nesne ekle"
 
 #: ../../web/templates/footer.html:17
 msgid "Save Form"
-msgstr "Сохранить Форму"
+msgstr "Formu Kaydet"
 
 #: ../../web/templates/footer.html:18
 msgid "Cancel saving form"
-msgstr "Отменить Сохранение"
+msgstr "Formu kaydetmeyi iptal et"
 
 #: ../../web/templates/footer.html:20
 msgid "Go to WEB list"
-msgstr "Перейти в WEB"
+msgstr "WEB listesine git"
 
 #: ../../web/templates/footer.html:21
 msgid "Go to DNS list"
-msgstr "Перейти в DNS"
+msgstr "DNS listesine git"
 
 #: ../../web/templates/footer.html:22
 msgid "Go to MAIL list"
-msgstr "Перейти в MAIL"
+msgstr "MAIL listesine git"
 
 #: ../../web/templates/footer.html:23
 msgid "Go to DB list"
-msgstr "Перейти в DB"
+msgstr "DB listesine git"
 
 #: ../../web/templates/footer.html:24
 msgid "Go to CRON list"
-msgstr "Перейти в CRON"
+msgstr "CRON listesine git"
 
 #: ../../web/templates/footer.html:25
 msgid "Go to BACKUP list"
-msgstr "Перейти в BACKUP"
+msgstr "YEDEK listesine git"
 
 #: ../../web/templates/footer.html:28
 msgid "Focus on search"
-msgstr "Фокус на форме поиска"
+msgstr "Aramaya odaklan"
 
 #: ../../web/templates/footer.html:29
 msgid "Display/Close shortcuts"
-msgstr "Показать/Скрыть hotkeys"
+msgstr "Kısayolları görüntüle/kapat"
 
 #: ../../web/templates/footer.html:31
 msgid "Move backward through top menu"
-msgstr "Фокус на предыдущий пункт меню"
+msgstr "Üst menüde geriye doğru git"
 
 #: ../../web/templates/footer.html:32
 msgid "Move forward through top menu"
-msgstr "Фокус на следующий пункт меню"
+msgstr "Üst menüde ileriye doğru git"
 
 #: ../../web/templates/footer.html:33
 msgid "Enter focused element"
-msgstr "Перейти в активный пункт меню"
+msgstr "Odaklanmış elemanı gir"
 
 #: ../../web/templates/footer.html:35
 msgid "Move up through elements list"
-msgstr "Фокус на предыдущий элемент списка"
+msgstr "Öğe listesinde yukarı doğru git"
 
 #: ../../web/templates/footer.html:36
 msgid "Move down through elements list"
-msgstr "Фокус на следующий элемент списка"
+msgstr "Öğe listesinde aşağı doğru git"
 
 #: ../../web/login/index.php:52 ../../web/login/index.php:85
 msgid "Invalid username or password"
-msgstr "Неверный логин или пароль"
+msgstr "Geçersiz kullanıcı adı veya şifre"
 
 #: ../../web/login/index.php:104
 msgid "Invalid or missing 2FA token"
-msgstr "Неверный или отсутствующий токен ДФА"
+msgstr "Geçersiz veya eksik 2FA token"
 
 #: ../../web/templates/admin/list_services.html:15
 #: ../../web/templates/admin/list_services.html:139
 msgid "RESTART_CONFIRMATION"
-msgstr "Вы уверены, что хотите перезагрузить %s?"
+msgstr "%s yeniden başlatmak istediğinize emin misiniz?"
 
 #: ../../web/templates/admin/list_services.html:68
 msgid "Operating System"
-msgstr "Операционная система"
+msgstr "İşletim Sistemi"
 
 #: ../../web/templates/admin/list_services.html:74
 msgid "Load Average"
-msgstr "Общая нагрузка"
+msgstr "Sistem Yükü"
 
 #: ../../web/templates/admin/list_services.html:80
 #: ../../web/templates/admin/list_services.html:99
 msgid "Uptime"
-msgstr "Запущен"
+msgstr "Çalışma süresi"
 
 #: ../../web/templates/admin/list_services.html:96
 msgid "Service"
-msgstr "Службы"
+msgstr "Servis"
 
 #: ../../web/templates/admin/list_services.html:98
 #: ../../web/templates/admin/list_updates.html:41
 msgid "Description"
-msgstr "Описание"
+msgstr "Açıklama"
 
 #: ../../web/templates/admin/list_services.html:100
 #: ../../web/templates/admin/list_server_info.html:27
 msgid "CPU"
-msgstr "Процессор"
+msgstr "CPU"
 
 #: ../../web/templates/admin/list_services.html:101
 msgid "Memory"
-msgstr "Память"
+msgstr "Bellek"
 
 #: ../../web/templates/admin/list_services.html:128
 #: ../../web/templates/admin/list_services.html:132
 msgid "edit"
-msgstr "изменить"
+msgstr "düzenle"
 
 #: ../../web/templates/admin/list_services.html:148
 msgid "Are you sure you want to stop service"
-msgstr "Вы уверены, что хотите остановить службу %s"
+msgstr "Servisi durdurmak istediğinize emin misiniz?"
 
 #: ../../web/templates/admin/list_services.html:157
 msgid "mb"
-msgstr "Мб"
+msgstr "mb"
 
 #: ../../web/templates/admin/list_firewall.html:5
 msgid "Add Rule"
-msgstr "Добавить правило"
+msgstr "Kural Ekle"
 
 #: ../../web/templates/admin/list_firewall.html:7
 msgid "list fail2ban"
-msgstr "Забаненные IP-адреса"
+msgstr "fail2ban listele"
 
 #: ../../web/templates/admin/list_firewall.html:8
 msgid "list ipset"
-msgstr "Посмотреть списки IP"
+msgstr "ipset listele"
 
 #: ../../web/templates/admin/list_firewall.html:82
 #: ../../web/templates/admin/list_firewall.html:102
 #: ../../web/templates/admin/edit_firewall.html:41
 msgid "Editing Firewall Rule"
-msgstr "Редактирование правила фаервола"
+msgstr "Güvenlik Duvarı Kuralı Düzenleme"
 
 #: ../../web/templates/admin/list_firewall.html:118
 msgid "DELETE_RULE_CONFIRMATION"
-msgstr "Вы уверены, что хотите удалить правило №%s?"
+msgstr "#%s kuralını silmek istediğinize emin misiniz?"
 
 #: ../../web/templates/admin/list_firewall.html:145
 msgid "1 firewall rule"
-msgstr "1 правило брандмауэра"
+msgstr "1 güvenlik duvarı kuralı"
 
 #: ../../web/templates/admin/list_firewall.html:147
 msgid "%s firewall rules"
-msgstr "%s правил брандмауэра"
+msgstr "%s güvenlik duvarı kuralı"
 
 #: ../../web/templates/admin/edit_user.html:6
 msgid "Manage SSH keys"
-msgstr "Управление ключами SSH"
+msgstr "SSH anahtarını yönetin"
 
 #: ../../web/templates/admin/edit_user.html:44
 #: ../../web/templates/admin/list_user.html:119
 #: ../../web/templates/user/edit_user.html:42
 #: ../../web/templates/user/list_user.html:105
 msgid "Editing User"
-msgstr "Редактирование аккаунта"
+msgstr "Kullanıcı Düzenleme"
 
 #: ../../web/templates/admin/edit_user.html:94
 #: ../../web/templates/user/edit_user.html:92
 msgid "Enable 2FA"
-msgstr "Включить ДФА"
+msgstr "2FA'yı aktifleştir"
 
 #: ../../web/templates/admin/edit_user.html:96
 #: ../../web/templates/user/edit_user.html:94
 msgid "2FA Reset Code:"
-msgstr "Код восстановления доступа к аккаунту:"
+msgstr "2FA Sıfırlama Kodu:"
 
 #: ../../web/templates/admin/edit_user.html:97
 #: ../../web/templates/user/edit_user.html:95
 msgid "Please scan the code below in your 2FA application:"
-msgstr "Чтобы закончить настройку 2FA, сканируйте QR-Code ниже <br /> в приложении на Вашем устройстве (например, <a href=\"https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2\">Google Authenticator</a>):"
+msgstr "Lütfen 2FA uygulamanızda aşağıdaki kodu tarayın:"
 
 #: ../../web/templates/admin/edit_user.html:104
 #: ../../web/templates/admin/add_user.html:87
 #: ../../web/templates/user/edit_user.html:102
 msgid "Contact"
-msgstr "Имя"
+msgstr "İletişim"
 
 #: ../../web/templates/admin/edit_user.html:124
 #: ../../web/templates/admin/list_user.html:68
@@ -701,28 +701,28 @@ msgstr "Имя"
 #: ../../web/templates/admin/list_packages.html:42
 #: ../../web/templates/user/list_user.html:72
 msgid "Package"
-msgstr "Пакет"
+msgstr "Paket"
 
 #: ../../web/templates/admin/edit_user.html:158
 #: ../../web/templates/admin/add_user.html:149
 #: ../../web/templates/user/edit_user.html:122
 msgid "Language"
-msgstr "Язык"
+msgstr "Dil"
 
 #: ../../web/templates/admin/edit_user.html:182
 #: ../../web/templates/admin/edit_package.html:160
 #: ../../web/templates/admin/add_package.html:163
 msgid "SSH Access"
-msgstr "Доступ по SSH"
+msgstr "SSH Erişimi"
 
 #: ../../web/templates/admin/edit_user.html:203
 msgid "PHP CLI Version"
-msgstr "Версия PHP для CLI"
+msgstr "PHP CLI Sürümü"
 
 #: ../../web/templates/admin/edit_user.html:229
 #: ../../web/templates/user/edit_user.html:146
 msgid "Default Name Servers"
-msgstr "Серверы имен"
+msgstr "Varsayılan Alan Adı Sunucuları"
 
 #: ../../web/templates/admin/add_dns.html:178
 #: ../../web/templates/admin/edit_user.html:295
@@ -730,12 +730,12 @@ msgstr "Серверы имен"
 #: ../../web/templates/admin/add_package.html:372
 #: ../../web/templates/user/edit_user.html:211
 msgid "Add one more Name Server"
-msgstr "Добавить ещё один Сервер Имён"
+msgstr "Bir alan adı sunucusu daha ekleyin"
 
 #: ../../web/templates/admin/list_db.html:4
 #: ../../web/templates/user/list_db.html:4
 msgid "Add Database"
-msgstr "Добавить БД"
+msgstr "Veritabanı Ekle"
 
 #: ../../web/templates/admin/list_web.html:32
 #: ../../web/templates/admin/list_mail.html:31
@@ -744,70 +744,70 @@ msgstr "Добавить БД"
 #: ../../web/templates/admin/list_db.html:59
 #: ../../web/templates/user/list_user.html:42
 msgid "rebuild"
-msgstr "пересоздать"
+msgstr "yeniden oluştur"
 
 #: ../../web/templates/admin/list_db.html:144
 #: ../../web/templates/user/list_db.html:143
 msgid "DELETE_DATABASE_CONFIRMATION"
-msgstr "Вы уверены, что хотите удалить базу данных %s?"
+msgstr "%s veritabanını silmek istediğinize emin misiniz?"
 
 #: ../../web/templates/admin/list_db.html:172
 #: ../../web/templates/user/list_db.html:171
 msgid "1 SQL database"
-msgstr "1 База данных SQL"
+msgstr "1 SQL veritabanı"
 
 #: ../../web/templates/admin/list_db.html:174
 #: ../../web/templates/user/list_db.html:173
 msgid "%s SQL databases"
-msgstr "%s Баз данных SQL"
+msgstr "%s SQL veritabanı"
 
 #: ../../web/templates/admin/edit_mail.html:69
 msgid "Catchall email"
-msgstr "Ловушка почты"
+msgstr "E-Posta Yakalama"
 
 #: ../../web/templates/admin/edit_mail.html:79
 #: ../../web/templates/admin/add_mail.html:66
 msgid "AntiSpam Support"
-msgstr "Антиспам"
+msgstr "AntiSpam Desteği"
 
 #: ../../web/templates/admin/edit_mail.html:84
 #: ../../web/templates/admin/add_mail.html:71
 msgid "AntiVirus Support"
-msgstr "Антивирус"
+msgstr "AntiVirus Desteği"
 
 #: ../../web/templates/admin/edit_mail.html:89
 #: ../../web/templates/admin/add_mail.html:76
 msgid "DKIM Support"
-msgstr "DKIM"
+msgstr "DKIM Desteği"
 
 #: ../../web/templates/admin/list_dns.html:4
 #: ../../web/templates/user/list_dns.html:4
 msgid "Add DNS Domain"
-msgstr "Добавить домен"
+msgstr "DNS Domaini Ekle"
 
 #: ../../web/templates/admin/list_dns.html:8
 #: ../../web/templates/user/list_dns.html:8
 msgid "Expire"
-msgstr "Истекает"
+msgstr "Sonlanış"
 
 #: ../../web/templates/admin/panel.html:13
 #: ../../web/templates/admin/list_dns.html:11
 #: ../../web/templates/user/panel.html:13
 #: ../../web/templates/user/list_dns.html:55
 msgid "Records"
-msgstr "Записи"
+msgstr "Kayıtlar"
 
 #: ../../web/templates/admin/list_dns.html:56
 #: ../../web/templates/user/list_dns.html:11
 msgid "Records_DNS"
-msgstr "документация"
+msgstr "Records_DNS"
 
 #: ../../web/templates/admin/list_dns.html:57
 #: ../../web/templates/admin/edit_dns.html:89
 #: ../../web/templates/user/list_dns.html:56
 #: ../../web/templates/user/edit_dns.html:89
 msgid "Template"
-msgstr "Шаблон"
+msgstr "Şablon"
 
 #: ../../web/templates/admin/list_dns.html:59
 #: ../../web/templates/user/list_dns.html:58
@@ -820,7 +820,7 @@ msgstr "SOA"
 #: ../../web/templates/user/list_dns.html:59
 #: ../../web/templates/user/edit_dns.html:110
 msgid "Expiration Date"
-msgstr "Зарегистрирован до"
+msgstr "Bitiş Tarihi"
 
 #: ../../web/templates/admin/edit_package.html:216
 #: ../../web/templates/admin/list_dns.html:88
@@ -829,7 +829,7 @@ msgstr "Зарегистрирован до"
 #: ../../web/templates/user/list_dns.html:87
 #: ../../web/templates/user/list_dns.html:96
 msgid "DNS records"
-msgstr "DNS записи"
+msgstr "DNS kayıtları"
 
 #: ../../web/templates/admin/list_web.html:159
 #: ../../web/templates/admin/list_mail.html:121
@@ -839,17 +839,17 @@ msgstr "DNS записи"
 #: ../../web/templates/user/list_dns.html:113
 #: ../../web/templates/user/list_dns_rec.html:76
 msgid "DELETE_DOMAIN_CONFIRMATION"
-msgstr "Вы уверены, что хотите удалить домен %s?"
+msgstr "%s alan adını silmek istediğinize emin misiniz?"
 
 #: ../../web/templates/admin/list_dns.html:140
 #: ../../web/templates/user/list_dns.html:139
 msgid "1 DNS zone"
-msgstr "1 DNS зона"
+msgstr "1 DNS bölgesi"
 
 #: ../../web/templates/admin/list_dns.html:142
 #: ../../web/templates/user/list_dns.html:141
 msgid "%s DNS zones"
-msgstr "%s DNS-зон"
+msgstr "%s DNS bölgesi"
 
 #: ../../web/templates/admin/list_server_info.html:37
 #: ../../web/templates/admin/list_weblog.html:31
@@ -858,53 +858,53 @@ msgstr "%s DNS-зон"
 #: ../../web/templates/user/list_search.html:5
 #: ../../web/templates/user/list_stats.html:4
 msgid "Refresh"
-msgstr "Обновить"
+msgstr "Yenile"
 
 #: ../../web/templates/admin/list_log.html:6
 #: ../../web/templates/admin/list_log.html:8
 msgid "Delete"
-msgstr "Удалить"
+msgstr "Sil"
 
 #: ../../web/templates/admin/list_log.html:11
 msgid "DELETE_LOGS_CONFIRMATION"
-msgstr "Вы уверены, что хотите удалить логи?"
+msgstr "Logları silmek istediğinize emin misiniz?"
 
 #: ../../web/templates/admin/list_log.html:61
 msgid "1 log record"
-msgstr "записей на странице: 1"
+msgstr "1 log kaydı"
 
 #: ../../web/templates/admin/list_log.html:63
 msgid "%s log records"
-msgstr "записей на странице: %s"
+msgstr "%s log kaydı"
 
 #: ../../web/templates/admin/list_cron.html:4
 #: ../../web/templates/user/list_cron.html:4
 msgid "Add Cron Job"
-msgstr "Добавить задание"
+msgstr "Cron Görevi Ekle"
 
 #: ../../web/templates/admin/list_cron.html:7
 #: ../../web/templates/admin/list_cron.html:36
 #: ../../web/templates/user/list_cron.html:7
 #: ../../web/templates/user/list_cron.html:36
 msgid "turn off notifications"
-msgstr "выкл. уведомления"
+msgstr "bildirimleri kapat"
 
 #: ../../web/templates/admin/list_cron.html:9
 #: ../../web/templates/admin/list_cron.html:37
 #: ../../web/templates/user/list_cron.html:9
 #: ../../web/templates/user/list_cron.html:37
 msgid "turn on notifications"
-msgstr "вкл. уведомления"
+msgstr "bildirimleri aç"
 
 #: ../../web/templates/admin/list_cron.html:59
 #: ../../web/templates/user/list_cron.html:59
 msgid "Cron Job"
-msgstr "Задания Cron "
+msgstr "Cron Görevi"
 
 #: ../../web/templates/admin/list_cron.html:61
 #: ../../web/templates/user/list_cron.html:61
 msgid "Min"
-msgstr "Мин"
+msgstr "Dak"
 
 #: ../../web/templates/admin/list_cron.html:91
 #: ../../web/templates/admin/list_cron.html:96
@@ -912,197 +912,197 @@ msgstr "Мин"
 #: ../../web/templates/user/list_cron.html:91
 #: ../../web/templates/user/list_cron.html:96
 msgid "Editing Cron Job"
-msgstr "Редактирование задачи cron"
+msgstr "Cron Görevini Düzenleme"
 
 #: ../../web/templates/admin/list_cron.html:111
 #: ../../web/templates/user/list_cron.html:111
 msgid "DELETE_CRON_CONFIRMATION"
-msgstr "Вы уверены, что хотите удалить задачу cron?"
+msgstr "Cron görevini silmek istediğinize emin misiniz?"
 
 #: ../../web/templates/admin/list_cron.html:137
 #: ../../web/templates/user/list_cron.html:137
 msgid "1 cron job"
-msgstr "заданий на странице: 1"
+msgstr "1 cron görevi"
 
 #: ../../web/templates/admin/list_cron.html:139
 #: ../../web/templates/user/list_cron.html:139
 msgid "%s cron jobs"
-msgstr "заданий на странице: %s"
+msgstr "%s cron görevi"
 
 #: ../../web/templates/admin/list_search.html:39
 #: ../../web/templates/user/list_search.html:37
 msgid "Search Results"
-msgstr "Результаты поиска"
+msgstr "Arama Sonuçları"
 
 #: ../../web/templates/admin/list_search.html:43
 #: ../../web/templates/admin/list_ip.html:13
 #: ../../web/templates/admin/list_ip.html:54
 #: ../../web/templates/user/list_search.html:41
 msgid "Owner"
-msgstr "Владелец"
+msgstr "Sahip"
 
 #: ../../web/templates/admin/list_search.html:44
 #: ../../web/templates/admin/list_updates.html:43
 #: ../../web/templates/admin/list_ip.html:52
 #: ../../web/templates/user/list_search.html:42
 msgid "Status"
-msgstr "Статус"
+msgstr "Durum"
 
 #: ../../web/templates/admin/list_search.html:198
 #: ../../web/templates/user/list_search.html:196
 msgid "1 object"
-msgstr "объектов на странице: 1"
+msgstr "1 nesne"
 
 #: ../../web/templates/admin/list_search.html:200
 #: ../../web/templates/user/list_search.html:198
 msgid "%s objects"
-msgstr "объектов на странице: %s"
+msgstr "%s nesne"
 
 #: ../../web/templates/admin/list_backup.html:4
 msgid "Create Backup"
-msgstr "Создать Бэкап"
+msgstr "Yedek Oluştur"
 
 #: ../../web/templates/admin/list_backup.html:5
 msgid "backup exclusions"
-msgstr "исключения"
+msgstr "yedekleme istisnaları"
 
 #: ../../web/templates/admin/list_backup.html:43
 msgid "File Name"
-msgstr "Имя файла"
+msgstr "Dosya Adı"
 
 #: ../../web/templates/admin/list_backup.html:46
 msgid "Size"
-msgstr "Размер"
+msgstr "Boyut"
 
 #: ../../web/templates/admin/list_backup.html:48
 msgid "Runtime"
-msgstr "Время выполенения"
+msgstr "Çalışma süresi"
 
 #: ../../web/templates/admin/list_backup.html:82
 msgid "download"
-msgstr "скачать"
+msgstr "indir"
 
 #: ../../web/templates/admin/list_backup.html:89
 msgid "DELETE_BACKUP_CONFIRMATION"
-msgstr "Вы уверены, что хотите удалить архив %s?"
+msgstr "%s yedeğini silmek istediğinize emin misiniz?"
 
 #: ../../web/templates/admin/list_backup.html:116
 msgid "1 backup"
-msgstr "1 бекап"
+msgstr "1 yedek"
 
 #: ../../web/templates/admin/list_backup.html:118
 msgid "%s backups"
-msgstr "%s бекапов"
+msgstr "%s yedek"
 
 #: ../../web/templates/admin/list_firewall_banlist.html:5
 msgid "Ban IP Address"
-msgstr "Заблокировать IP"
+msgstr "IP adresini banla"
 
 #: ../../web/templates/admin/list_ip.html:85
 #: ../../web/templates/admin/list_firewall_banlist.html:65
 msgid "DELETE_IP_CONFIRMATION"
-msgstr "Вы уверены, что хотите удалить IP адрес %s?"
+msgstr "%s IP adresini silmek istediğinize emin misiniz?"
 
 #: ../../web/templates/admin/list_firewall_banlist.html:89
 msgid "There are currently no banned IP addresses."
-msgstr "Сейчас нет заблокированных IP-адресов."
+msgstr "Şu anda banlanmış IP adresi yok."
 
 #: ../../web/templates/admin/list_firewall_banlist.html:92
 msgid "1 banned IP address"
-msgstr "1 заблокированный IP-адрес"
+msgstr "1 banlanmış Ip adresi"
 
 #: ../../web/templates/admin/list_firewall_banlist.html:95
 msgid "%s banned IP addresses"
-msgstr "%s заблокированных IP-адресов"
+msgstr "%s banlanmış IP adresi"
 
 #: ../../web/templates/admin/add_dns_rec.html:30
 msgid "Adding DNS Record"
-msgstr "Добавление DNS записи"
+msgstr "DNS Kaydı Ekleme"
 
 #: ../../web/templates/admin/add_db.html:37
 msgid "Adding database"
-msgstr "Добавление базы данных"
+msgstr "Veritabanı ekleme"
 
 #: ../../web/templates/admin/add_db.html:55
 msgid "Prefix %s will be automatically added to database name and database user"
-msgstr "Префикс %s будет автоматически добавлен к БД и пользователю БД"
+msgstr "%s öneki veritabanı adına ve veritabanı kullanıcısına otomatik olarak eklenecek"
 
 #: ../../web/templates/admin/add_db.html:74
 #: ../../web/templates/admin/edit_db.html:72
 msgid "maximum characters length, including prefix"
-msgstr "максимальное %s количество символов, включая префикс"
+msgstr "Önek dahil maksimum karakter uzunluğu"
 
 #: ../../web/templates/admin/list_updates.html:6
 msgid "disable autoupdate"
-msgstr "выключить автообновление"
+msgstr "otomatik güncellemeyi devre dışı bırak"
 
 #: ../../web/templates/admin/list_updates.html:8
 msgid "enable autoupdate"
-msgstr "включить автообновление"
+msgstr "otomatik güncellemeyi etkinleştir"
 
 #: ../../web/templates/admin/list_updates.html:20
 msgid "update"
-msgstr "обновить"
+msgstr "güncelleme"
 
 #: ../../web/templates/admin/list_server_info.html:28
 msgid "RAM"
-msgstr "ОЗУ"
+msgstr "BELLEK"
 
 #: ../../web/templates/admin/list_server_info.html:30
 msgid "Network"
-msgstr "Сеть"
+msgstr "Ağ"
 
 #: ../../web/templates/admin/list_server_info.html:31
 msgid "Web"
-msgstr "Веб"
+msgstr "Web"
 
 #: ../../web/templates/admin/list_server_info.html:33
 msgid "Mail"
-msgstr "Почта"
+msgstr "Posta"
 
 #: ../../web/templates/admin/add_mail.html:38
 msgid "Adding Mail Domain"
-msgstr "Добавление почтового домена"
+msgstr "Posta Alan Adı Ekleme"
 
 #: ../../web/templates/admin/add_user.html:38
 msgid "Adding User"
-msgstr "Добавление аккаунта"
+msgstr "Kullanıcı Ekleme"
 
 #: ../../web/templates/admin/list_ssl.html:74
 msgid "SSL CSR"
-msgstr "SSL CSR запрос"
+msgstr "SSL CSR"
 
 #: ../../web/templates/admin/list_ip.html:5
 msgid "Add IP"
-msgstr "Добавить IP"
+msgstr "IP Ekle"
 
 #: ../../web/templates/admin/list_ip.html:12
 #: ../../web/templates/admin/list_ip.html:53
 msgid "Domains"
-msgstr "Домены"
+msgstr "Domainler"
 
 #: ../../web/templates/admin/list_ip.html:27
 msgid "reread IP"
-msgstr "перечитать IP"
+msgstr "IP'yi tekrar oku"
 
 #: ../../web/templates/admin/list_ip.html:73
 #: ../../web/templates/admin/list_ip.html:79
 #: ../../web/templates/admin/edit_ip.html:41
 msgid "Editing IP Address"
-msgstr "Редактирование IP адреса"
+msgstr "IP Adresi Düzenleme"
 
 #: ../../web/templates/admin/list_ip.html:111
 msgid "1 IP address"
-msgstr "IP адресов на странице: 1"
+msgstr "1 IP adresi"
 
 #: ../../web/templates/admin/list_ip.html:113
 msgid "%s IP addresses"
-msgstr "IP адресов на странице: %s"
+msgstr "%s IP adresi"
 
 #: ../../web/templates/admin/panel.html:17
 #: ../../web/templates/user/panel.html:17
 msgid "Log"
-msgstr "Журнал"
+msgstr "Log"
 
 #: ../../web/templates/admin/list_web.html:60
 #: ../../web/templates/admin/list_web.html:140
@@ -1111,51 +1111,51 @@ msgstr "Журнал"
 #: ../../web/templates/user/list_web.html:145
 #: ../../web/templates/user/panel.html:18
 msgid "Statistics"
-msgstr "Статистика"
+msgstr "İstatistikler"
 
 #: ../../web/templates/admin/panel.html:29
 #: ../../web/templates/user/panel.html:28
 msgid "Notifications"
-msgstr "Уведомления"
+msgstr "Bildirimler"
 
 #: ../../web/templates/admin/panel.html:36
 #: ../../web/templates/user/panel.html:31
 msgid "Help"
-msgstr "Справка"
+msgstr "Yardım"
 
 #: ../../web/templates/admin/panel.html:48
 msgid "USER"
-msgstr "USER"
+msgstr "KULLANICI"
 
 #: ../../web/templates/admin/panel.html:50
 msgid "users"
-msgstr "пользователи"
+msgstr "kullanıcılar"
 
 #: ../../web/templates/admin/panel.html:51
 msgid "spnd"
-msgstr "заблокировано"
+msgstr "spnd"
 
 #: ../../web/templates/admin/panel.html:61
 #: ../../web/templates/admin/panel.html:89
 #: ../../web/templates/user/panel.html:47
 #: ../../web/templates/user/panel.html:75
 msgid "domains"
-msgstr "домены"
+msgstr "alan adları"
 
 #: ../../web/templates/admin/panel.html:62
 #: ../../web/templates/user/panel.html:48
 msgid "aliases"
-msgstr "алиасы"
+msgstr "takma adlar"
 
 #: ../../web/templates/admin/panel.html:75
 #: ../../web/templates/user/panel.html:61
 msgid "zones"
-msgstr "зоны"
+msgstr "bölgeler"
 
 #: ../../web/templates/admin/panel.html:90
 #: ../../web/templates/user/panel.html:76
 msgid "accounts"
-msgstr "аккаунты"
+msgstr "hesaplar"
 
 #: ../../web/templates/admin/panel.html:114
 #: ../../web/templates/user/panel.html:100
@@ -1165,32 +1165,32 @@ msgstr "CRON"
 #: ../../web/templates/admin/panel.html:116
 #: ../../web/templates/user/panel.html:102
 msgid "jobs"
-msgstr "задания"
+msgstr "görevler"
 
 #: ../../web/templates/admin/panel.html:127
 #: ../../web/templates/user/panel.html:113
 msgid "BACKUP"
-msgstr "BACKUP"
+msgstr "YEDEK"
 
 #: ../../web/templates/admin/edit_backup_exclusions.html:63
 msgid "WEB_EXCLUSIONS"
-msgstr "Укажите домены по одному в строке. Для того чтобы исключить все, используйте *. Чтобы исключить только некоторые папки, используйте следующий формат: domain.com:public_html/cache:public_html/tmp"
+msgstr "Her satıra bir alan adı yazın. Tüm alan adlarını hariç tutmak için * kullanın. Belirli bir klasör için şu formatta yazın: domain.com:public_html/cache:public_html/tmp"
 
 #: ../../web/templates/admin/edit_backup_exclusions.html:73
 msgid "MAIL_EXCLUSIONS"
-msgstr "Укажите домены по одному в строке. Для того чтобы исключить все, используйте *. Чтобы исключить отдельные аккаунты, используйте следующий формат: domain.com:info:support:postmaster"
+msgstr "Her satıra bir alan adı yazın. Tüm alan adlarını hariç tutmak için * kullanın. Belirli bir hesap için şu formatta yazın: domain.com:info:destek:postmaster"
 
 #: ../../web/templates/admin/edit_backup_exclusions.html:83
 msgid "DB_EXCLUSIONS"
-msgstr "Укажите базы по одной в строке. Для того чтобы исключить все, используйте *"
+msgstr "Her satıra bir veritabanının tam adını yazın. Hepsi için * kullanın."
 
 #: ../../web/templates/admin/edit_backup_exclusions.html:88
 msgid "User Directories"
-msgstr "Папки пользователя"
+msgstr "Kullanıcı Dizinleri"
 
 #: ../../web/templates/admin/edit_backup_exclusions.html:93
 msgid "USER_EXCLUSIONS"
-msgstr "Укажите папки по одной в строке. Для того чтобы исключить все, используйте *"
+msgstr "Her satıra bir klasör adı yazın. Tüm dizinleri hariç tutmak için * kullanın"
 
 #: ../../web/templates/admin/add_cron.html:44
 #: ../../web/templates/admin/add_cron.html:45
@@ -1217,17 +1217,17 @@ msgstr "Укажите папки по одной в строке. Для тог
 #: ../../web/templates/admin/edit_cron.html:233
 #: ../../web/templates/admin/edit_cron.html:234
 msgid "every"
-msgstr "каждые"
+msgstr "her"
 
 #: ../../web/templates/admin/add_cron.html:64
 #: ../../web/templates/admin/edit_cron.html:62
 msgid "every hour"
-msgstr "каждый час"
+msgstr "her saat"
 
 #: ../../web/templates/admin/add_cron.html:65
 #: ../../web/templates/admin/edit_cron.html:63
 msgid "every two hours"
-msgstr "каждые 2 часа"
+msgstr "her iki saatte bir"
 
 #: ../../web/templates/admin/add_cron.html:71
 #: ../../web/templates/admin/add_cron.html:131
@@ -1240,24 +1240,24 @@ msgstr "каждые 2 часа"
 #: ../../web/templates/admin/edit_cron.html:313
 #: ../../web/templates/admin/edit_cron.html:385
 msgid "Minute"
-msgstr "Минуты"
+msgstr "Dakika"
 
 #: ../../web/templates/admin/add_cron.html:93
 #: ../../web/templates/admin/add_cron.html:163
 #: ../../web/templates/admin/edit_cron.html:90
 #: ../../web/templates/admin/edit_cron.html:159
 msgid "every day"
-msgstr "каждый день"
+msgstr "her gün"
 
 #: ../../web/templates/admin/add_cron.html:94
 #: ../../web/templates/admin/edit_cron.html:91
 msgid "every odd day"
-msgstr "каждый нечётный день"
+msgstr "her tek gün"
 
 #: ../../web/templates/admin/add_cron.html:95
 #: ../../web/templates/admin/edit_cron.html:92
 msgid "every even day"
-msgstr "каждый чётный день"
+msgstr "her çift gün"
 
 #: ../../web/templates/admin/list_cron.html:62
 #: ../../web/templates/admin/add_cron.html:103
@@ -1270,160 +1270,160 @@ msgstr "каждый чётный день"
 #: ../../web/templates/admin/edit_cron.html:395
 #: ../../web/templates/user/list_cron.html:62
 msgid "Hour"
-msgstr "Часы"
+msgstr "Saat"
 
 #: ../../web/templates/admin/add_cron.html:164
 #: ../../web/templates/admin/edit_cron.html:160
 msgid "weekdays (5 days)"
-msgstr "будние дни (5 дней)"
+msgstr "hafta içi (5 gün)"
 
 #: ../../web/templates/admin/add_cron.html:165
 #: ../../web/templates/admin/edit_cron.html:161
 msgid "weekend (2 days)"
-msgstr "выходные дни (2 дня)"
+msgstr "hafta sonu (2 gün)"
 
 #: ../../web/templates/admin/add_cron.html:166
 #: ../../web/templates/admin/edit_cron.html:162
 msgid "Monday"
-msgstr "понедельник"
+msgstr "Pazartesi"
 
 #: ../../web/templates/admin/add_cron.html:167
 #: ../../web/templates/admin/edit_cron.html:163
 msgid "Tuesday"
-msgstr "вторник"
+msgstr "Salı"
 
 #: ../../web/templates/admin/add_cron.html:168
 #: ../../web/templates/admin/edit_cron.html:164
 msgid "Wednesday"
-msgstr "среда"
+msgstr "Çarşamba"
 
 #: ../../web/templates/admin/add_cron.html:169
 #: ../../web/templates/admin/edit_cron.html:165
 msgid "Thursday"
-msgstr "четверг"
+msgstr "Perşembe"
 
 #: ../../web/templates/admin/add_cron.html:170
 #: ../../web/templates/admin/edit_cron.html:166
 msgid "Friday"
-msgstr "пятница"
+msgstr "Cuma"
 
 #: ../../web/templates/admin/add_cron.html:171
 #: ../../web/templates/admin/edit_cron.html:167
 msgid "Saturday"
-msgstr "суббота"
+msgstr "Cumartesi"
 
 #: ../../web/templates/admin/add_cron.html:172
 #: ../../web/templates/admin/edit_cron.html:168
 msgid "Sunday"
-msgstr "воскресенье"
+msgstr "Pazar"
 
 #: ../../web/templates/admin/add_cron.html:236
 #: ../../web/templates/admin/edit_cron.html:230
 msgid "every month"
-msgstr "каждый месяц"
+msgstr "her ay"
 
 #: ../../web/templates/admin/add_cron.html:237
 #: ../../web/templates/admin/edit_cron.html:231
 msgid "every odd month"
-msgstr "каждый нечётный месяц"
+msgstr "her tek ay"
 
 #: ../../web/templates/admin/add_cron.html:238
 #: ../../web/templates/admin/edit_cron.html:232
 msgid "every even month"
-msgstr "каждый чётный месяц"
+msgstr "her çift ay"
 
 #: ../../web/templates/admin/add_cron.html:241
 #: ../../web/templates/admin/edit_cron.html:235
 msgid "Jan"
-msgstr "Янв"
+msgstr "Oca"
 
 #: ../../web/templates/admin/add_cron.html:242
 #: ../../web/templates/admin/edit_cron.html:236
 msgid "Feb"
-msgstr "Фев"
+msgstr "Şub"
 
 #: ../../web/templates/admin/add_cron.html:243
 #: ../../web/templates/admin/edit_cron.html:237
 msgid "Mar"
-msgstr "Мар"
+msgstr "Mar"
 
 #: ../../web/templates/admin/add_cron.html:244
 #: ../../web/templates/admin/edit_cron.html:238
 msgid "Apr"
-msgstr "Апр"
+msgstr "Nis"
 
 #: ../../web/templates/admin/add_cron.html:245
 #: ../../web/templates/admin/edit_cron.html:239
 msgid "May"
-msgstr "Май"
+msgstr "May"
 
 #: ../../web/templates/admin/add_cron.html:246
 #: ../../web/templates/admin/edit_cron.html:240
 msgid "Jun"
-msgstr "Июн"
+msgstr "Haz"
 
 #: ../../web/templates/admin/add_cron.html:247
 #: ../../web/templates/admin/edit_cron.html:241
 msgid "Jul"
-msgstr "Июл"
+msgstr "Tem"
 
 #: ../../web/templates/admin/add_cron.html:248
 #: ../../web/templates/admin/edit_cron.html:242
 msgid "Aug"
-msgstr "Авг"
+msgstr "Ağu"
 
 #: ../../web/templates/admin/add_cron.html:249
 #: ../../web/templates/admin/edit_cron.html:243
 msgid "Sep"
-msgstr "Сен"
+msgstr "Eyl"
 
 #: ../../web/templates/admin/add_cron.html:250
 #: ../../web/templates/admin/edit_cron.html:244
 msgid "Oct"
-msgstr "Окт"
+msgstr "Eki"
 
 #: ../../web/templates/admin/add_cron.html:251
 #: ../../web/templates/admin/edit_cron.html:245
 msgid "Nov"
-msgstr "Ноя"
+msgstr "Kas"
 
 #: ../../web/templates/admin/add_cron.html:252
 #: ../../web/templates/admin/edit_cron.html:246
 msgid "Dec"
-msgstr "Дек"
+msgstr "Ara"
 
 #: ../../web/templates/admin/add_cron.html:363
 msgid "Adding Cron Job"
-msgstr "Добавление cron задания"
+msgstr "Cron Görevi Ekleme"
 
 #: ../../web/templates/admin/list_cron.html:15
 #: ../../web/templates/admin/add_cron.html:381
 #: ../../web/templates/admin/edit_cron.html:374
 #: ../../web/templates/user/list_cron.html:15
 msgid "Command"
-msgstr "Команда"
+msgstr "Komut"
 
 #: ../../web/templates/admin/list_cron.html:63
 #: ../../web/templates/admin/add_cron.html:411
 #: ../../web/templates/admin/edit_cron.html:405
 #: ../../web/templates/user/list_cron.html:63
 msgid "Day"
-msgstr "День"
+msgstr "Gün"
 
 #: ../../web/templates/admin/list_cron.html:65
 #: ../../web/templates/admin/add_cron.html:431
 #: ../../web/templates/admin/edit_cron.html:425
 #: ../../web/templates/user/list_cron.html:65
 msgid "Day of week"
-msgstr "День недели"
+msgstr "Haftanın günü"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:38
 msgid "Adding Firewall Ipset List"
-msgstr "Новый список IP"
+msgstr "Güvenlik Duvarı Ipset Listesi Ekleme"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:66
 msgid "url, script or file"
-msgstr "url, файл или скрипт"
+msgstr "url, komut dosyası veya dosya"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:85
 msgid "ip v4"
@@ -1435,7 +1435,7 @@ msgstr "ip v6"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:166
 msgid "BLACKLIST"
-msgstr "Чёрный список"
+msgstr "BLACKLIST"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:179
 msgid "IPVERSE"
@@ -1443,15 +1443,15 @@ msgstr "IPVERSE"
 
 #: ../../web/templates/admin/list_webapps.html:46
 msgid "version"
-msgstr "версия"
+msgstr "versiyon"
 
 #: ../../web/templates/admin/list_webapps.html:47
 msgid "Setup"
-msgstr "Настроить"
+msgstr "Kurulum"
 
 #: ../../web/templates/admin/list_weblog.html:6
 msgid "Web Log Manager"
-msgstr "Менеджер Web журнала"
+msgstr "Web Log Manager"
 
 #: ../../web/templates/login_1.html:8 ../../web/templates/header.html:6
 #: ../../web/templates/reset_1.html:8 ../../web/templates/reset_2.html:8
@@ -1462,118 +1462,118 @@ msgstr "Менеджер Web журнала"
 #: ../../web/templates/login_a.html:8 ../../web/templates/login_2.html:8
 #: ../../web/templates/reset2fa.html:8
 msgid "Hestia Control Panel"
-msgstr "Панель управления Hestia"
+msgstr "Hestia Kontrol Paneli"
 
 #: ../../web/templates/admin/list_web.html:144
 #: ../../web/templates/user/list_web.html:149
 msgid "AccessLog"
-msgstr "Access Log"
+msgstr "Erişim Günlüğü"
 
 #: ../../web/templates/admin/list_weblog.html:28
 msgid "Error Log"
-msgstr "Журнал ошибок"
+msgstr "Hata Günlüğü"
 
 #: ../../web/templates/admin/list_server_info.html:38
 #: ../../web/templates/admin/list_weblog.html:33
 #: ../../web/templates/admin/panel.html:37
 #: ../../web/templates/user/panel.html:32
 msgid "Log out"
-msgstr "Выйти"
+msgstr "Çıkış yap"
 
 #: ../../web/templates/admin/list_weblog.html:38
 msgid "Last 70 lines of %s.%s.log"
-msgstr "Последние 70 строк файла %s.%s.log"
+msgstr "%s.%s.log dosyasının son 70 satırı"
 
 #: ../../web/templates/admin/setup_webapp.html:16
 msgid "Install"
-msgstr "Установить"
+msgstr "Yükleme"
 
 #: ../../web/templates/admin/setup_webapp.html:43
 msgid "Data loss warning!<br>Your web domain already has files uploaded, the installer will overwrite your files and/or the installation might fail.<br/><br/> Please use the installer only for empty web domains"
-msgstr "Предупреждение о потере данных! <br> В вашем веб-домене уже есть какие-то файлы, установщик перезапишет ваши файлы и / или может произойти сбой установки. <br/> <br/> Используйте установщик только для пустых веб-доменов"
+msgstr "Veri kaybı uyarısı!<br>Web alan alanınızda zaten yüklenmiş dosyalar var, yükleyici dosyalarınızın üzerine yazacak ve/veya kurulum başarısız olabilir.<br/><br/>Lütfen yükleyiciyi yalnızca boş web alan adları için kullanın."
 
 #: ../../web/templates/admin/add_ip.html:38
 msgid "Adding IP address"
-msgstr "Добавление IP адреса"
+msgstr "IP adresi ekleme"
 
 #: ../../web/templates/admin/add_ip.html:66
 #: ../../web/templates/admin/list_ip.html:10
 #: ../../web/templates/admin/list_ip.html:50
 #: ../../web/templates/admin/edit_ip.html:70
 msgid "Netmask"
-msgstr "Маска подсети"
+msgstr "Netmask"
 
 #: ../../web/templates/admin/add_ip.html:76
 #: ../../web/templates/admin/list_ip.html:11
 #: ../../web/templates/admin/list_ip.html:51
 #: ../../web/templates/admin/edit_ip.html:80
 msgid "Interface"
-msgstr "Интерфейс"
+msgstr "Arayüz"
 
 #: ../../web/templates/admin/add_ip.html:94
 #: ../../web/templates/admin/edit_ip.html:90
 msgid "Shared"
-msgstr "Общий"
+msgstr "Paylaşılan"
 
 #: ../../web/templates/admin/add_ip.html:102
 #: ../../web/templates/admin/edit_ip.html:98
 msgid "Assigned user"
-msgstr "Назначить пользователю"
+msgstr "Atanan kullanıcı"
 
 #: ../../web/templates/admin/add_ip.html:123
 #: ../../web/templates/admin/edit_ip.html:119
 msgid "Assigned domain"
-msgstr "Домен"
+msgstr "Atanan alan adı"
 
 #: ../../web/templates/admin/add_ip.html:133
 #: ../../web/templates/admin/edit_ip.html:129
 msgid "NAT IP association"
-msgstr "Ассоциированный NAT IP"
+msgstr "NAT IP birleşmesi"
 
 #: ../../web/templates/admin/list_backup_detail.html:5
 msgid "Restore All"
-msgstr "Восстановить все"
+msgstr "Tümünü Restore Et"
 
 #: ../../web/templates/admin/list_backup.html:77
 #: ../../web/templates/admin/list_backup.html:83
 #: ../../web/templates/admin/list_backup_detail.html:24
 msgid "restore"
-msgstr "восстановить"
+msgstr "onar"
 
 #: ../../web/templates/admin/list_backup_detail.html:45
 msgid "Details"
-msgstr "Подробнее"
+msgstr "Detaylar"
 
 #: ../../web/templates/admin/list_backup_detail.html:46
 #: ../../web/templates/admin/list_backup_detail.html:78
 msgid "Restore"
-msgstr "Восстановить"
+msgstr "Onar"
 
 #: ../../web/templates/admin/list_backup_detail.html:67
 msgid "Web domain"
-msgstr "Web домен"
+msgstr "Web alan adları"
 
 #: ../../web/templates/admin/list_backup_detail.html:105
 msgid "Mail domain"
-msgstr "Почтовый домен"
+msgstr "Posta alan adları"
 
 #: ../../web/templates/admin/list_backup_detail.html:143
 msgid "DNS domain"
-msgstr "DNS домен"
+msgstr "DNS alan adları"
 
 #: ../../web/templates/admin/list_backup_detail.html:219
 msgid "Cron Records"
-msgstr "Задачи Cron"
+msgstr "Cron Kayıtları"
 
 #: ../../web/templates/admin/panel.html:76
 #: ../../web/templates/admin/list_backup_detail.html:222
 #: ../../web/templates/user/panel.html:62
 msgid "records"
-msgstr "записи"
+msgstr "kayıtlar"
 
 #: ../../web/templates/admin/list_backup_detail.html:256
 msgid "user dir"
-msgstr "пользовательская папка"
+msgstr "user dir"
 
 #: ../../web/templates/admin/list_backup_detail.html:288
 msgid "Cron"
@@ -1581,18 +1581,18 @@ msgstr "Cron"
 
 #: ../../web/templates/admin/list_backup_detail.html:319
 msgid "1 item"
-msgstr "1 элемент"
+msgstr "1 öğe"
 
 #: ../../web/templates/admin/list_backup_detail.html:321
 msgid "%s items"
-msgstr "%s элементы"
+msgstr "%s öğe"
 
 #: ../../web/templates/admin/list_mail.html:102
 #: ../../web/templates/admin/list_mail_acc.html:5
 #: ../../web/templates/user/list_mail.html:101
 #: ../../web/templates/user/list_mail_acc.html:5
 msgid "Add Mail Account"
-msgstr "Добавить аккаунт"
+msgstr "Mail Hesabı Ekle"
 
 #: ../../web/templates/admin/list_mail.html:105
 #: ../../web/templates/admin/edit_mail.html:40
@@ -1600,7 +1600,7 @@ msgstr "Добавить аккаунт"
 #: ../../web/templates/user/list_mail.html:104
 #: ../../web/templates/user/list_mail_acc.html:6
 msgid "Editing Mail Domain"
-msgstr "Редактирование почтового домена"
+msgstr "Posta Alan Adı Düzenleme"
 
 #: ../../web/templates/admin/list_web.html:17
 #: ../../web/templates/admin/list_mail.html:16
@@ -1622,18 +1622,18 @@ msgstr "Редактирование почтового домена"
 #: ../../web/templates/user/list_dns.html:17
 #: ../../web/templates/user/list_db.html:44
 msgid "sort by"
-msgstr "сортировка"
+msgstr "sıralama ölçütü"
 
 #: ../../web/templates/admin/list_mail_acc.html:59
 #: ../../web/templates/user/list_mail_acc.html:59
 msgid "Forwarding"
-msgstr "Пересылка"
+msgstr "Yönlendirme"
 
 #: ../../web/templates/admin/edit_mail_acc.html:128
 #: ../../web/templates/admin/list_mail_acc.html:60
 #: ../../web/templates/user/list_mail_acc.html:60
 msgid "Autoreply"
-msgstr "Автоответчик"
+msgstr "Otomatik Cevap"
 
 #: ../../web/templates/admin/edit_mail_acc.html:41
 #: ../../web/templates/admin/list_mail_acc.html:90
@@ -1641,33 +1641,33 @@ msgstr "Автоответчик"
 #: ../../web/templates/user/list_mail_acc.html:90
 #: ../../web/templates/user/list_mail_acc.html:97
 msgid "Editing Mail Account"
-msgstr "Редактирование почтового акканунта"
+msgstr "Posta Hesabı Düzenleme"
 
 #: ../../web/templates/admin/list_mail.html:104
 #: ../../web/templates/admin/list_mail_acc.html:96
 #: ../../web/templates/user/list_mail.html:103
 #: ../../web/templates/user/list_mail_acc.html:96
 msgid "open webmail"
-msgstr "Открыть веб-почту"
+msgstr "webmail'i aç"
 
 #: ../../web/templates/admin/list_mail_acc.html:113
 #: ../../web/templates/user/list_mail_acc.html:113
 msgid "DELETE_MAIL_ACCOUNT_CONFIRMATION"
-msgstr "Вы уверены, что хотите удалить почтовый ящик %s?"
+msgstr "%s hesabını silmek istediğinize emin misiniz?"
 
 #: ../../web/templates/admin/list_mail_acc.html:186
 #: ../../web/templates/user/list_mail_acc.html:186
 msgid "1 mail account"
-msgstr "акаунтов на странице: 1"
+msgstr "1 mail hesabı"
 
 #: ../../web/templates/admin/list_mail_acc.html:188
 #: ../../web/templates/user/list_mail_acc.html:188
 msgid "%s mail accounts"
-msgstr "акаунтов на странице: %s"
+msgstr "%s mail hesabı"
 
 #: ../../web/templates/admin/list_services.html:5
 msgid "Graphs"
-msgstr "Графики"
+msgstr "Grafikler"
 
 #: ../../web/templates/admin/list_services.html:6
 msgid "IP"
@@ -1676,20 +1676,20 @@ msgstr "IP"
 #: ../../web/templates/admin/list_services.html:8
 #: ../../web/templates/admin/edit_server.html:159
 msgid "Updates"
-msgstr "Обновления"
+msgstr "Güncellemeler"
 
 #: ../../web/templates/admin/list_services.html:10
 #: ../../web/templates/admin/list_services.html:12
 msgid "Restart"
-msgstr "Перезапуск"
+msgstr "Yeniden Başlat"
 
 #: ../../web/templates/admin/edit_server.html:604
 msgid "Local backup"
-msgstr "Локальный бэкап"
+msgstr "Yerel yedekleme"
 
 #: ../../web/templates/admin/edit_server.html:632
 msgid "Compression level"
-msgstr "Уровень сжатия"
+msgstr "Sıkıştırma seviyesi"
 
 #: ../../web/templates/admin/add_web.html:236
 #: ../../web/templates/admin/edit_web.html:284
@@ -1697,11 +1697,11 @@ msgstr "Уровень сжатия"
 #: ../../web/templates/admin/edit_server.html:730
 #: ../../web/templates/user/edit_web.html:297
 msgid "Directory"
-msgstr "Каталог"
+msgstr "Dizin"
 
 #: ../../web/templates/admin/edit_server.html:664
 msgid "Remote backup"
-msgstr "Удалённый бекап"
+msgstr "Uzak yedekleme"
 
 #: ../../web/templates/admin/add_firewall.html:69
 #: ../../web/templates/admin/list_firewall.html:13
@@ -1709,15 +1709,15 @@ msgstr "Удалённый бекап"
 #: ../../web/templates/admin/edit_server.html:672
 #: ../../web/templates/admin/edit_firewall.html:72
 msgid "Protocol"
-msgstr "Протокол"
+msgstr "Protokol"
 
 #: ../../web/templates/admin/edit_server.html:678
 msgid "ftp"
-msgstr "FTP"
+msgstr "ftp"
 
 #: ../../web/templates/admin/edit_server.html:679
 msgid "sftp"
-msgstr "SFTP"
+msgstr "sftp"
 
 #: ../../web/templates/admin/add_firewall.html:83
 #: ../../web/templates/admin/list_firewall.html:14
@@ -1725,7 +1725,7 @@ msgstr "SFTP"
 #: ../../web/templates/admin/edit_server.html:697
 #: ../../web/templates/admin/edit_firewall.html:86
 msgid "Port"
-msgstr "Порт"
+msgstr "Port"
 
 #: ../../web/templates/reset_1.html:20 ../../web/templates/login.html:21
 #: ../../web/templates/admin/edit_user.html:62
@@ -1755,11 +1755,11 @@ msgstr "Порт"
 #: ../../web/templates/user/list_db.html:83
 #: ../../web/templates/reset2fa.html:34
 msgid "Username"
-msgstr "Аккаунт"
+msgstr "Kullanıcı adı"
 
 #: ../../web/templates/admin/edit_server.html:749
 msgid "Hestia SSL"
-msgstr "SSL"
+msgstr "Hestia SSL"
 
 #: ../../web/templates/admin/add_web.html:275
 #: ../../web/templates/admin/edit_web.html:342
@@ -1768,7 +1768,7 @@ msgstr "SSL"
 #: ../../web/templates/admin/edit_server.html:758
 #: ../../web/templates/user/edit_web.html:356
 msgid "SSL Certificate"
-msgstr "SSL сертификат"
+msgstr "SSL Sertifikası"
 
 #: ../../web/templates/admin/add_web.html:276
 #: ../../web/templates/admin/edit_web.html:343
@@ -1776,7 +1776,7 @@ msgstr "SSL сертификат"
 #: ../../web/templates/admin/edit_server.html:759
 #: ../../web/templates/user/edit_web.html:357
 msgid "Generate CSR"
-msgstr "Cгенерировать CSR запрос"
+msgstr "CSR Oluştur"
 
 #: ../../web/templates/admin/add_web.html:286
 #: ../../web/templates/admin/edit_web.html:353
@@ -1785,77 +1785,77 @@ msgstr "Cгенерировать CSR запрос"
 #: ../../web/templates/admin/edit_server.html:769
 #: ../../web/templates/user/edit_web.html:367
 msgid "SSL Key"
-msgstr "Ключ SSL сертификата"
+msgstr "SSL Anahtarı"
 
 #: ../../web/templates/admin/edit_web.html:378
 #: ../../web/templates/admin/edit_mail.html:151
 #: ../../web/templates/admin/edit_server.html:782
 #: ../../web/templates/user/edit_web.html:392
 msgid "SUBJECT"
-msgstr "ОБЪЕКТ"
+msgstr "BAĞIMLI"
 
 #: ../../web/templates/admin/edit_web.html:387
 #: ../../web/templates/admin/edit_mail.html:160
 #: ../../web/templates/admin/edit_server.html:791
 #: ../../web/templates/user/edit_web.html:401
 msgid "ALIASES"
-msgstr "АЛИАСЫ"
+msgstr "TAKMA AD"
 
 #: ../../web/templates/admin/edit_web.html:396
 #: ../../web/templates/admin/edit_mail.html:169
 #: ../../web/templates/admin/edit_server.html:800
 #: ../../web/templates/user/edit_web.html:410
 msgid "NOT_BEFORE"
-msgstr "НЕДОСТУПЕН ДО"
+msgstr "OLUŞTURMA ZAMANI"
 
 #: ../../web/templates/admin/edit_web.html:404
 #: ../../web/templates/admin/edit_mail.html:177
 #: ../../web/templates/admin/edit_server.html:808
 #: ../../web/templates/user/edit_web.html:418
 msgid "NOT_AFTER"
-msgstr "НЕДОСТУПЕН ПОСЛЕ"
+msgstr "BİTİŞ ZAMANI"
 
 #: ../../web/templates/admin/edit_web.html:412
 #: ../../web/templates/admin/edit_mail.html:185
 #: ../../web/templates/admin/edit_server.html:816
 #: ../../web/templates/user/edit_web.html:426
 msgid "SIGNATURE"
-msgstr "ПОДПИСЬ"
+msgstr "İMZA"
 
 #: ../../web/templates/admin/edit_web.html:420
 #: ../../web/templates/admin/edit_mail.html:193
 #: ../../web/templates/admin/edit_server.html:825
 #: ../../web/templates/user/edit_web.html:434
 msgid "PUB_KEY"
-msgstr "ПУБЛИЧНЫЙ КЛЮЧ"
+msgstr "GENEL ANAHTAR"
 
 #: ../../web/templates/admin/edit_web.html:428
 #: ../../web/templates/admin/edit_mail.html:201
 #: ../../web/templates/admin/edit_server.html:833
 #: ../../web/templates/user/edit_web.html:442
 msgid "ISSUER"
-msgstr "ИЗДАТЕЛЬ"
+msgstr "VEREN KURULUŞ"
 
 #: ../../web/templates/admin/edit_server.html:876
 msgid "Hestia Control Panel Plugins"
-msgstr "Плагины Hestia Control Panel"
+msgstr "Hestia Kontrol Paneli Eklentileri"
 
 #: ../../web/templates/admin/edit_server.html:899
 msgid "FileSystem Disk Quota"
-msgstr "Дисковая квота файловой системы"
+msgstr "Dosya Sistemi Disk Kotası"
 
 #: ../../web/templates/admin/list_services.html:7
 #: ../../web/templates/admin/edit_server.html:913
 msgid "Firewall"
-msgstr "Файрвол"
+msgstr "Güvenlik Duvarı"
 
 #: ../../web/templates/admin/list_stats.html:4
 msgid "Overall Statistics"
-msgstr "Сводная статистика"
+msgstr "Tüm İstatistikler"
 
 #: ../../web/templates/admin/list_stats.html:14
 msgid "show per user"
-msgstr "выбрать пользователя"
+msgstr "kullanıcı başına göster"
 
 #: ../../web/templates/admin/list_cron.html:64
 #: ../../web/templates/admin/add_cron.html:421
@@ -1864,14 +1864,14 @@ msgstr "выбрать пользователя"
 #: ../../web/templates/user/list_cron.html:64
 #: ../../web/templates/user/list_stats.html:28
 msgid "Month"
-msgstr "Месяц"
+msgstr "Ay"
 
 #: ../../web/templates/admin/list_user.html:69
 #: ../../web/templates/admin/list_stats.html:44
 #: ../../web/templates/user/list_user.html:73
 #: ../../web/templates/user/list_stats.html:30
 msgid "IPs"
-msgstr "IP адрес(а)"
+msgstr "IPs"
 
 #: ../../web/templates/admin/list_web.html:10
 #: ../../web/templates/admin/list_web.html:57
@@ -1898,7 +1898,7 @@ msgstr "IP адрес(а)"
 #: ../../web/templates/user/list_db.html:36
 #: ../../web/templates/user/list_db.html:85
 msgid "Disk"
-msgstr "Диск"
+msgstr "Disk"
 
 #: ../../web/templates/admin/list_web.html:11
 #: ../../web/templates/admin/list_web.html:58
@@ -1914,7 +1914,7 @@ msgstr "Диск"
 #: ../../web/templates/user/list_user.html:75
 #: ../../web/templates/user/list_stats.html:32
 msgid "Bandwidth"
-msgstr "Трафик"
+msgstr "Trafik"
 
 #: ../../web/templates/admin/edit_backup_exclusions.html:58
 #: ../../web/templates/admin/list_user.html:72
@@ -1925,7 +1925,7 @@ msgstr "Трафик"
 #: ../../web/templates/user/list_user.html:76
 #: ../../web/templates/user/list_stats.html:33
 msgid "Web Domains"
-msgstr "Веб домены"
+msgstr "Web Alan Adları"
 
 #: ../../web/templates/admin/edit_package.html:194
 #: ../../web/templates/admin/add_package.html:197
@@ -1933,7 +1933,7 @@ msgstr "Веб домены"
 #: ../../web/templates/admin/list_stats.html:48
 #: ../../web/templates/user/list_stats.html:34
 msgid "Web Aliases"
-msgstr "Веб алиасы"
+msgstr "Web Takma Adları"
 
 #: ../../web/templates/admin/list_user.html:74
 #: ../../web/templates/admin/list_packages.html:49
@@ -1941,13 +1941,13 @@ msgstr "Веб алиасы"
 #: ../../web/templates/user/list_user.html:78
 #: ../../web/templates/user/list_stats.html:35
 msgid "DNS Domains"
-msgstr "DNS домены"
+msgstr "DNS Alan Adları"
 
 #: ../../web/templates/admin/list_packages.html:50
 #: ../../web/templates/admin/list_stats.html:50
 #: ../../web/templates/user/list_stats.html:36
 msgid "DNS Records"
-msgstr "DNS Записи"
+msgstr "DNS Kayıtları"
 
 #: ../../web/templates/admin/edit_backup_exclusions.html:68
 #: ../../web/templates/admin/list_user.html:73
@@ -1958,7 +1958,7 @@ msgstr "DNS Записи"
 #: ../../web/templates/user/list_user.html:77
 #: ../../web/templates/user/list_stats.html:37
 msgid "Mail Domains"
-msgstr "Почтовые домены"
+msgstr "Posta Alan Adları"
 
 #: ../../web/templates/admin/edit_package.html:238
 #: ../../web/templates/admin/add_package.html:241
@@ -1966,7 +1966,7 @@ msgstr "Почтовые домены"
 #: ../../web/templates/admin/list_stats.html:52
 #: ../../web/templates/user/list_stats.html:38
 msgid "Mail Accounts"
-msgstr "Почтовые аккаунты"
+msgstr "Posta Hesapları"
 
 #: ../../web/templates/admin/list_user.html:76
 #: ../../web/templates/admin/edit_package.html:260
@@ -1976,29 +1976,29 @@ msgstr "Почтовые аккаунты"
 #: ../../web/templates/user/list_user.html:80
 #: ../../web/templates/user/list_stats.html:40
 msgid "Cron Jobs"
-msgstr "Cron задания"
+msgstr "Cron Görevleri"
 
 #: ../../web/templates/admin/list_stats.html:93
 #: ../../web/templates/user/list_stats.html:79
 msgid "1 month"
-msgstr "месяцев на странице: 1"
+msgstr "1 ay"
 
 #: ../../web/templates/admin/list_stats.html:95
 #: ../../web/templates/user/list_stats.html:81
 msgid "%s months"
-msgstr "месяцев на странице: %s"
+msgstr "%s ay"
 
 #: ../../web/templates/admin/list_dns.html:96
 #: ../../web/templates/admin/list_dns_rec.html:5
 #: ../../web/templates/user/list_dns.html:95
 #: ../../web/templates/user/list_dns_rec.html:5
 msgid "Add DNS Record"
-msgstr "Добавить DNS запись"
+msgstr "DNS Alan Adı Ekle"
 
 #: ../../web/templates/admin/list_dns_rec.html:5
 #: ../../web/templates/user/list_dns_rec.html:5
 msgid "Add Record"
-msgstr "Добавить запись"
+msgstr "Kayıt Ekle"
 
 #: ../../web/templates/admin/list_dns.html:98
 #: ../../web/templates/admin/edit_dns.html:40
@@ -2007,7 +2007,7 @@ msgstr "Добавить запись"
 #: ../../web/templates/user/edit_dns.html:40
 #: ../../web/templates/user/list_dns_rec.html:6
 msgid "Editing DNS Domain"
-msgstr "Редактирование DNS домена"
+msgstr "DNS Alan Adı Düzenleme"
 
 #: ../../web/templates/admin/list_web.html:33
 #: ../../web/templates/admin/list_mail.html:32
@@ -2026,7 +2026,7 @@ msgstr "Редактирование DNS домена"
 #: ../../web/templates/user/list_db.html:59
 #: ../../web/templates/user/list_dns_rec.html:25
 msgid "suspend"
-msgstr "приостановить"
+msgstr "askıya al"
 
 #: ../../web/templates/admin/list_web.html:34
 #: ../../web/templates/admin/list_mail.html:33
@@ -2045,14 +2045,14 @@ msgstr "приостановить"
 #: ../../web/templates/user/list_db.html:60
 #: ../../web/templates/user/list_dns_rec.html:26
 msgid "unsuspend"
-msgstr "активировать"
+msgstr "askıyı kaldır"
 
 #: ../../web/templates/admin/add_dns_rec.html:59
 #: ../../web/templates/admin/edit_dns_rec.html:69
 #: ../../web/templates/admin/list_dns_rec.html:46
 #: ../../web/templates/user/list_dns_rec.html:46
 msgid "Record"
-msgstr "Запись"
+msgstr "Kayıt"
 
 #: ../../web/templates/admin/list_backup.html:47
 #: ../../web/templates/admin/add_db.html:107
@@ -2068,14 +2068,14 @@ msgstr "Запись"
 #: ../../web/templates/user/list_db.html:82
 #: ../../web/templates/user/list_dns_rec.html:48
 msgid "Type"
-msgstr "Тип"
+msgstr "Tür"
 
 #: ../../web/templates/admin/add_dns_rec.html:114
 #: ../../web/templates/admin/edit_dns_rec.html:125
 #: ../../web/templates/admin/list_dns_rec.html:49
 #: ../../web/templates/user/list_dns_rec.html:49
 msgid "Priority"
-msgstr "Приоритет"
+msgstr "Öncelik"
 
 #: ../../web/templates/admin/list_dns.html:58
 #: ../../web/templates/admin/add_dns_rec.html:124
@@ -2090,7 +2090,7 @@ msgstr "TTL"
 #: ../../web/templates/admin/list_dns_rec.html:52
 #: ../../web/templates/user/list_dns_rec.html:50
 msgid "IP or Value"
-msgstr "IP адрес или значение"
+msgstr "IP veya Değer"
 
 #: ../../web/templates/admin/edit_dns_rec.html:40
 #: ../../web/templates/admin/list_dns_rec.html:67
@@ -2098,40 +2098,40 @@ msgstr "IP адрес или значение"
 #: ../../web/templates/user/list_dns_rec.html:65
 #: ../../web/templates/user/list_dns_rec.html:70
 msgid "Editing DNS Record"
-msgstr "Редактирование DNS записи"
+msgstr "DNS Kaydı Düzenleme"
 
 #: ../../web/templates/admin/list_dns_rec.html:78
 msgid "DELETE_RECORD_CONFIRMATION"
-msgstr "Вы уверены, что хотите удалить запись %s?"
+msgstr "%s kaydını silmek istediğinize emin misiniz?"
 
 #: ../../web/templates/admin/edit_server.html:863
 #: ../../web/templates/admin/list_dns_rec.html:88
 msgid "Default"
-msgstr "По умолчанию"
+msgstr "Varsayılan"
 
 #: ../../web/templates/admin/list_dns_rec.html:105
 #: ../../web/templates/user/list_dns_rec.html:101
 msgid "1 DNS record"
-msgstr "1 запись DNS"
+msgstr "1 DNS kaydı"
 
 #: ../../web/templates/admin/list_dns_rec.html:107
 #: ../../web/templates/user/list_dns_rec.html:103
 msgid "%s DNS records"
-msgstr "%s DNS-записей"
+msgstr "%s DNS kaydı"
 
 #: ../../web/templates/admin/edit_backup_exclusions.html:40
 #: ../../web/templates/admin/list_backup_exclusions.html:5
 msgid "Editing Backup Exclusions"
-msgstr "Редактирование исключений бэкапа"
+msgstr "Yedekleme İstisnalarını Düzenleme"
 
 #: ../../web/templates/admin/list_backup_exclusions.html:31
 #: ../../web/templates/admin/list_log.html:32
 msgid "Value"
-msgstr "Значение"
+msgstr "Değer"
 
 #: ../../web/templates/admin/list_backup_exclusions.html:48
 msgid "no exclusions"
-msgstr "нет исключений"
+msgstr "istisna yok"
 
 #: ../../web/templates/admin/edit_db.html:41
 #: ../../web/templates/admin/list_db.html:124
@@ -2139,7 +2139,7 @@ msgstr "нет исключений"
 #: ../../web/templates/user/list_db.html:123
 #: ../../web/templates/user/list_db.html:128
 msgid "Editing Database"
-msgstr "Редактирование БД"
+msgstr "Veritabanı Düzenleme"
 
 #: ../../web/templates/admin/add_db.html:61
 #: ../../web/templates/admin/edit_db.html:59
@@ -2149,13 +2149,13 @@ msgstr "Редактирование БД"
 #: ../../web/templates/user/list_db.html:35
 #: ../../web/templates/user/list_db.html:80
 msgid "Database"
-msgstr "База данных"
+msgstr "Veritabanı"
 
 #: ../../web/templates/admin/edit_user.html:151
 #: ../../web/templates/admin/add_user.html:142
 #: ../../web/templates/user/list_db.html:37
 msgid "User"
-msgstr "Пользователь"
+msgstr "Kullanıcı"
 
 #: ../../web/templates/admin/setup_webapp.html:67
 #: ../../web/templates/admin/edit_user.html:73
@@ -2185,31 +2185,31 @@ msgstr "Пользователь"
 #: ../../web/templates/user/edit_web.html:494
 #: ../../web/templates/user/edit_web.html:569
 msgid "generate"
-msgstr "сгенерировать"
+msgstr "oluştur"
 
 #: ../../web/templates/admin/add_db.html:144
 #: ../../web/templates/admin/edit_db.html:125
 #: ../../web/templates/admin/list_db.html:87
 #: ../../web/templates/user/list_db.html:86
 msgid "Charset"
-msgstr "Кодировка"
+msgstr "Karakter Seti"
 
 #: ../../web/templates/admin/list_services.html:4
 #: ../../web/templates/admin/edit_server_httpd.html:5
 #: ../../web/templates/admin/edit_server_nginx.html:5
 msgid "Configure"
-msgstr "Настроить"
+msgstr "Yapılandır"
 
 #: ../../web/templates/admin/add_mail_acc.html:31
 msgid "Adding Mail Account"
-msgstr "Добавление почтового аккаунта"
+msgstr "Posta Hesabı Ekleme"
 
 #: ../../web/templates/admin/edit_mail_acc.html:59
 #: ../../web/templates/admin/list_mail_acc.html:10
 #: ../../web/templates/admin/add_mail_acc.html:60
 #: ../../web/templates/user/list_mail_acc.html:10
 msgid "Account"
-msgstr "Аккаунт"
+msgstr "Hesap"
 
 #: ../../web/templates/admin/add_dns.html:85
 #: ../../web/templates/admin/edit_server_mysql.html:113
@@ -2218,7 +2218,7 @@ msgstr "Аккаунт"
 #: ../../web/templates/admin/add_mail_acc.html:91
 #: ../../web/templates/admin/edit_server_nginx.html:168
 msgid "Advanced options"
-msgstr "Дополнительные опции"
+msgstr "Gelişmiş seçenekler"
 
 #: ../../web/templates/admin/edit_mail_acc.html:92
 #: ../../web/templates/admin/edit_package.html:281
@@ -2227,7 +2227,7 @@ msgstr "Дополнительные опции"
 #: ../../web/templates/admin/add_mail_acc.html:99
 #: ../../web/templates/user/list_mail_acc.html:57
 msgid "Quota"
-msgstr "Квота"
+msgstr "Kota"
 
 #: ../../web/templates/admin/edit_mail_acc.html:92
 #: ../../web/templates/admin/edit_package.html:281
@@ -2236,7 +2236,7 @@ msgstr "Квота"
 #: ../../web/templates/admin/add_package.html:295
 #: ../../web/templates/admin/add_mail_acc.html:99
 msgid "in megabytes"
-msgstr "в мегабайтах"
+msgstr "megabayt olarak"
 
 #: ../../web/templates/admin/add_web.html:113
 #: ../../web/templates/admin/edit_web.html:91
@@ -2246,69 +2246,69 @@ msgstr "в мегабайтах"
 #: ../../web/templates/user/edit_web.html:104
 #: ../../web/templates/user/list_mail_acc.html:58
 msgid "Aliases"
-msgstr "Алиасы"
+msgstr "Takma Adlar"
 
 #: ../../web/templates/admin/edit_mail_acc.html:103
 #: ../../web/templates/admin/add_mail_acc.html:110
 msgid "use local-part"
-msgstr "используйте только имена аккаунтов"
+msgstr "local-part kullan"
 
 #: ../../web/templates/admin/edit_mail_acc.html:113
 #: ../../web/templates/admin/add_mail_acc.html:120
 msgid "Forward to"
-msgstr "Пересылка"
+msgstr "Şuraya yönlendir"
 
 #: ../../web/templates/admin/edit_mail_acc.html:113
 #: ../../web/templates/admin/add_mail_acc.html:120
 msgid "one or more email addresses"
-msgstr "один или несколько email-адресов"
+msgstr "bir veya daha fazla e-posta adresi"
 
 #: ../../web/templates/admin/edit_mail_acc.html:123
 #: ../../web/templates/admin/add_mail_acc.html:130
 msgid "Do not store forwarded mail"
-msgstr "Не сохранять перенаправленные письма"
+msgstr "Yönlendirilmiş postaları depolama"
 
 #: ../../web/templates/admin/add_db.html:191
 #: ../../web/templates/admin/edit_mail_acc.html:149
 #: ../../web/templates/admin/add_mail_acc.html:138
 #: ../../web/templates/admin/add_user.html:175
 msgid "Send login credentials to email address"
-msgstr "Отправить данные аккаунта по адресу"
+msgstr "Giriş bilgilerini e-posta adresine gönder"
 
 #: ../../web/templates/admin/edit_mail_acc.html:169
 #: ../../web/templates/admin/add_mail_acc.html:158
 msgid "Use domain hostname"
-msgstr "Использовать доменное имя хоста"
+msgstr "Alan adı hostname kullan"
 
 #: ../../web/templates/admin/edit_mail_acc.html:170
 #: ../../web/templates/admin/add_mail_acc.html:159
 msgid "Use STARTTLS"
-msgstr "Использовать STARTTLS"
+msgstr " STARTTLS kullan"
 
 #: ../../web/templates/admin/edit_mail_acc.html:171
 #: ../../web/templates/admin/add_mail_acc.html:160
 msgid "Use SSL / TLS"
-msgstr "Использовать SSL /TLS"
+msgstr "SSL/TLS kullan"
 
 #: ../../web/templates/admin/edit_mail_acc.html:172
 #: ../../web/templates/admin/add_mail_acc.html:161
 msgid "No encryption"
-msgstr "Без шифрования"
+msgstr "Şifreleme yok"
 
 #: ../../web/templates/admin/edit_mail_acc.html:185
 #: ../../web/templates/admin/add_mail_acc.html:174
 msgid "IMAP hostname"
-msgstr "Имя хоста IMAP "
+msgstr "IMAP hostname"
 
 #: ../../web/templates/admin/edit_mail_acc.html:189
 #: ../../web/templates/admin/add_mail_acc.html:178
 msgid "IMAP port"
-msgstr "Порт IMAP"
+msgstr "IMAP port"
 
 #: ../../web/templates/admin/edit_mail_acc.html:193
 #: ../../web/templates/admin/add_mail_acc.html:182
 msgid "IMAP security"
-msgstr "Безопасность IMAP"
+msgstr "IMAP güvenliği"
 
 #: ../../web/templates/admin/edit_mail_acc.html:194
 #: ../../web/templates/admin/edit_mail_acc.html:210
@@ -2320,40 +2320,40 @@ msgstr "STARTTLS"
 #: ../../web/templates/admin/edit_mail_acc.html:197
 #: ../../web/templates/admin/add_mail_acc.html:186
 msgid "IMAP auth method"
-msgstr "Метод аутентификации IMAP"
+msgstr "IMAP kimlik doğrulama yöntemi"
 
 #: ../../web/templates/admin/edit_mail_acc.html:198
 #: ../../web/templates/admin/edit_mail_acc.html:214
 #: ../../web/templates/admin/add_mail_acc.html:187
 #: ../../web/templates/admin/add_mail_acc.html:203
 msgid "Normal password"
-msgstr "Обычный пароль"
+msgstr "Normal şifre"
 
 #: ../../web/templates/admin/edit_mail_acc.html:201
 #: ../../web/templates/admin/add_mail_acc.html:190
 msgid "SMTP hostname"
-msgstr "Имя хоста SMTP "
+msgstr "SMTP hostname"
 
 #: ../../web/templates/admin/edit_mail_acc.html:205
 #: ../../web/templates/admin/add_mail_acc.html:194
 msgid "SMTP port"
-msgstr "Порт SMTP"
+msgstr "SMTP port"
 
 #: ../../web/templates/admin/edit_mail_acc.html:209
 #: ../../web/templates/admin/add_mail_acc.html:198
 msgid "SMTP security"
-msgstr "Безопасность SMTP"
+msgstr "SMTP güvenliği"
 
 #: ../../web/templates/admin/edit_mail_acc.html:213
 #: ../../web/templates/admin/add_mail_acc.html:202
 msgid "SMTP auth method"
-msgstr "Метод аутентификации SMTP"
+msgstr "SMTP kimlik doğrulama yöntemi"
 
 #: ../../web/templates/admin/edit_web.html:8
 #: ../../web/templates/admin/list_webapps.html:24
 #: ../../web/templates/user/edit_web.html:8
 msgid "Quick Install App"
-msgstr "Установить приложение"
+msgstr "Hızlı Kurulum App"
 
 #: ../../web/templates/admin/list_web.html:134
 #: ../../web/templates/admin/list_web.html:143
@@ -2362,7 +2362,7 @@ msgstr "Установить приложение"
 #: ../../web/templates/user/list_web.html:148
 #: ../../web/templates/user/edit_web.html:44
 msgid "Editing Domain"
-msgstr "Редактирование домена"
+msgstr "Alan Adını Düzenleme"
 
 #: ../../web/templates/admin/edit_web.html:73
 #: ../../web/templates/admin/list_ip.html:48
@@ -2370,88 +2370,88 @@ msgstr "Редактирование домена"
 #: ../../web/templates/user/edit_web.html:86
 #: ../../web/templates/user/edit_dns.html:69
 msgid "IP Address"
-msgstr "IP адрес"
+msgstr "IP Adresi"
 
 #: ../../web/templates/admin/add_web.html:146
 #: ../../web/templates/admin/edit_web.html:101
 #: ../../web/templates/user/edit_web.html:114
 msgid "Web Statistics"
-msgstr "Статистика сайта"
+msgstr "Web İstatistikleri"
 
 #: ../../web/templates/admin/add_web.html:169
 #: ../../web/templates/admin/edit_web.html:123
 #: ../../web/templates/user/edit_web.html:136
 msgid "Statistics Authorization"
-msgstr "Ограниченный доступ к статистике"
+msgstr "İstatistik Yetkisi"
 
 #: ../../web/templates/admin/edit_web.html:154
 #: ../../web/templates/admin/edit_package.html:64
 #: ../../web/templates/admin/add_package.html:65
 #: ../../web/templates/user/edit_web.html:167
 msgid "Web Template"
-msgstr "Шаблон Web"
+msgstr "Web Şablonu"
 
 #: ../../web/templates/admin/edit_web.html:176
 #: ../../web/templates/admin/edit_package.html:88
 #: ../../web/templates/admin/add_package.html:89
 #: ../../web/templates/user/edit_web.html:189
 msgid "Backend Template"
-msgstr "Шаблон Backend"
+msgstr "Arka Uç Şablonu"
 
 #: ../../web/templates/admin/add_web.html:124
 #: ../../web/templates/admin/edit_web.html:202
 #: ../../web/templates/user/edit_web.html:215
 msgid "Proxy Support"
-msgstr "Поддержка Proxy"
+msgstr "Proxy Desteği"
 
 #: ../../web/templates/admin/edit_web.html:210
 #: ../../web/templates/admin/edit_package.html:113
 #: ../../web/templates/admin/add_package.html:115
 #: ../../web/templates/user/edit_web.html:223
 msgid "Proxy Template"
-msgstr "Шаблон Proxy"
+msgstr "Proxy Şablonu"
 
 #: ../../web/templates/admin/add_web.html:132
 #: ../../web/templates/admin/edit_web.html:234
 #: ../../web/templates/user/edit_web.html:247
 msgid "Proxy Extensions"
-msgstr "Обработка Proxy"
+msgstr "Proxy Uzantıları"
 
 #: ../../web/templates/admin/add_web.html:257
 #: ../../web/templates/admin/edit_web.html:305
 #: ../../web/templates/admin/edit_mail.html:94
 #: ../../web/templates/user/edit_web.html:318
 msgid "SSL Support"
-msgstr "Поддержка SSL"
+msgstr "SSL Desteği"
 
 #: ../../web/templates/admin/add_web.html:265
 #: ../../web/templates/admin/edit_web.html:313
 #: ../../web/templates/admin/edit_mail.html:102
 #: ../../web/templates/user/edit_web.html:326
 msgid "Lets Encrypt Support"
-msgstr "Поддержка Lets Encrypt"
+msgstr "Lets Encrypt Desteği"
 
 #: ../../web/templates/admin/edit_web.html:318
 #: ../../web/templates/user/edit_web.html:331
 msgid "Force SSL/HTTPS"
-msgstr "Принудительный редирект HTTP-на-HTTPS"
+msgstr "SSL/HTTPS'yi Zorla"
 
 #: ../../web/templates/admin/edit_web.html:323
 #: ../../web/templates/user/edit_web.html:336
 msgid "Enable SSL HSTS"
-msgstr "Включить HTTP Strict Transport Security (HSTS) <a href=\"https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security\" target=\"_blank\"><i class=\"fas fa-question-circle\"></i></a>"
+msgstr "SSL HSTS'yi etkinleştir"
 
 #: ../../web/templates/admin/edit_web.html:328
 #: ../../web/templates/user/edit_web.html:342
 msgid "Home Directory"
-msgstr "Домашний каталог"
+msgstr "Ana Dizin"
 
 #: ../../web/templates/admin/add_web.html:296
 #: ../../web/templates/admin/edit_web.html:363
 #: ../../web/templates/admin/edit_mail.html:136
 #: ../../web/templates/user/edit_web.html:377
 msgid "SSL Certificate Authority / Intermediate"
-msgstr "Центр сертификации SSL / Промежуточный"
+msgstr "SSL Sertifika Yetkilisi / Aracı"
 
 #: ../../web/templates/admin/add_firewall.html:106
 #: ../../web/templates/admin/add_web.html:236
@@ -2471,13 +2471,13 @@ msgstr "Центр сертификации SSL / Промежуточный"
 #: ../../web/templates/user/edit_web.html:297
 #: ../../web/templates/user/edit_web.html:377
 msgid "optional"
-msgstr "опционально"
+msgstr "isteğe bağlı"
 
 #: ../../web/templates/admin/add_web.html:309
 #: ../../web/templates/admin/edit_web.html:443
 #: ../../web/templates/user/edit_web.html:457
 msgid "Additional FTP Account"
-msgstr "Дополнительный FTP аккаунт"
+msgstr "İlave FTP Hesabı"
 
 #: ../../web/templates/admin/add_firewall_banlist.html:74
 #: ../../web/templates/admin/add_web.html:325
@@ -2496,7 +2496,7 @@ msgstr "FTP"
 #: ../../web/templates/user/edit_web.html:505
 #: ../../web/templates/user/edit_web.html:580
 msgid "Path"
-msgstr "Путь"
+msgstr "Path"
 
 #: ../../web/templates/admin/add_web.html:368
 #: ../../web/templates/admin/add_web.html:439
@@ -2505,17 +2505,17 @@ msgstr "Путь"
 #: ../../web/templates/user/edit_web.html:519
 #: ../../web/templates/user/edit_web.html:592
 msgid "Send FTP credentials to email"
-msgstr "Отправить данные FTP аккаунта на почту"
+msgstr "FTP bilgilerini e-posta ile gönder"
 
 #: ../../web/templates/admin/add_web.html:382
 #: ../../web/templates/admin/edit_web.html:521
 #: ../../web/templates/user/edit_web.html:535
 msgid "Add one more FTP Account"
-msgstr "Добавить еще один FTP аккаунт"
+msgstr "Bir FTP hesabı daha ekle"
 
 #: ../../web/templates/admin/add_firewall_banlist.html:38
 msgid "Adding IP Address to Banlist"
-msgstr "Блокирование IP адреса"
+msgstr "Yasaklı Listesine IP Adresi Ekleme"
 
 #: ../../web/templates/admin/list_web.html:9
 #: ../../web/templates/admin/list_web.html:56
@@ -2534,17 +2534,17 @@ msgstr "Блокирование IP адреса"
 #: ../../web/templates/user/list_web.html:61
 #: ../../web/templates/user/list_dns.html:10
 msgid "IP address"
-msgstr "IP адрес"
+msgstr "IP adresi"
 
 #: ../../web/templates/admin/add_firewall.html:93
 #: ../../web/templates/admin/add_firewall_banlist.html:56
 #: ../../web/templates/admin/edit_firewall.html:96
 msgid "CIDR format is supported"
-msgstr "поддерживается формат CIDR"
+msgstr "CIDR biçimi destekleniyor"
 
 #: ../../web/templates/admin/add_firewall_banlist.html:66
 msgid "Banlist"
-msgstr "Черный список"
+msgstr "Yasak Listesi"
 
 #: ../../web/templates/admin/add_firewall_banlist.html:72
 msgid "SSH"
@@ -2567,7 +2567,7 @@ msgstr "DNS"
 #: ../../web/templates/admin/panel.html:87
 #: ../../web/templates/user/panel.html:73
 msgid "MAIL"
-msgstr "MAIL"
+msgstr "POSTA"
 
 #: ../../web/templates/admin/add_firewall_banlist.html:77
 #: ../../web/templates/admin/list_server_info.html:34
@@ -2582,7 +2582,7 @@ msgstr "HESTIA"
 
 #: ../../web/templates/admin/add_firewall.html:38
 msgid "Adding Firewall Rule"
-msgstr "Добавление правила фаервола"
+msgstr "Güvenlik Duvarı Kuralı Ekleme"
 
 #: ../../web/templates/admin/add_firewall.html:56
 #: ../../web/templates/admin/list_firewall.html:12
@@ -2590,7 +2590,7 @@ msgstr "Добавление правила фаервола"
 #: ../../web/templates/admin/list_firewall.html:49
 #: ../../web/templates/admin/edit_firewall.html:59
 msgid "Action"
-msgstr "Действие"
+msgstr "İşlem"
 
 #: ../../web/templates/admin/add_firewall.html:62
 #: ../../web/templates/admin/edit_firewall.html:65
@@ -2620,7 +2620,7 @@ msgstr "ICMP"
 #: ../../web/templates/admin/add_firewall.html:83
 #: ../../web/templates/admin/edit_firewall.html:86
 msgid "ranges are acceptable"
-msgstr "можно использовать диапазоны"
+msgstr "kabul edilen aralık"
 
 #: ../../web/templates/admin/add_firewall.html:106
 #: ../../web/templates/admin/list_firewall.html:16
@@ -2628,7 +2628,7 @@ msgstr "можно использовать диапазоны"
 #: ../../web/templates/admin/list_firewall_banlist.html:39
 #: ../../web/templates/admin/edit_firewall.html:109
 msgid "Comment"
-msgstr "Коментарий"
+msgstr "Açıklama"
 
 #: ../../web/templates/admin/list_web.html:4
 #: ../../web/templates/admin/add_web.html:41
@@ -2636,51 +2636,51 @@ msgstr "Коментарий"
 #: ../../web/templates/user/list_web.html:7
 #: ../../web/templates/user/list_user.html:11
 msgid "Add Web Domain"
-msgstr "Добавить домен"
+msgstr "Web Alan Adı Ekle"
 
 #: ../../web/templates/admin/add_web.html:57
 msgid "Avoid adding web domains on admin account"
-msgstr "Настоятельно рекомендуется <a href=\"/add/user/\">создать стандартную учетную запись пользователя</a> перед добавлением веб-доменов на сервер. Работа под администратором (admin) создаёт потенциальные угрозы в безопасности, т.к. её привилегии неограничены."
+msgstr "Yönetici hesabına web alan alanları eklemekten kaçının"
 
 #: ../../web/templates/admin/add_web.html:93
 msgid "DNS Support"
-msgstr "Поддержка DNS"
+msgstr "DNS Desteği"
 
 #: ../../web/templates/admin/add_web.html:100
 msgid "Mail Support"
-msgstr "Поддержка почты"
+msgstr "E-posta Desteği"
 
 #: ../../web/templates/admin/add_web.html:270
 msgid "Your certificate will be automatically issued in 5 minutes"
-msgstr "Сертификат будет автоматически создан в течение 5-ти минут"
+msgstr "Sertifikanız 5 dakika içinde otomatik olarak yayınlanacak"
 
 #: ../../web/templates/admin/add_cron.html:28
 #: ../../web/templates/admin/edit_cron.html:27
 msgid "Minutes"
-msgstr "Минуты"
+msgstr "Dakikalık"
 
 #: ../../web/templates/admin/add_cron.html:29
 #: ../../web/templates/admin/edit_cron.html:28
 msgid "Hourly"
-msgstr "Часы"
+msgstr "Saatlik"
 
 #: ../../web/templates/admin/add_cron.html:30
 #: ../../web/templates/admin/list_rrd.html:11
 #: ../../web/templates/admin/edit_cron.html:29
 msgid "Daily"
-msgstr "Дни"
+msgstr "Günlük"
 
 #: ../../web/templates/admin/add_cron.html:31
 #: ../../web/templates/admin/list_rrd.html:12
 #: ../../web/templates/admin/edit_cron.html:30
 msgid "Weekly"
-msgstr "Неделя"
+msgstr "Haftalık"
 
 #: ../../web/templates/admin/add_cron.html:32
 #: ../../web/templates/admin/list_rrd.html:13
 #: ../../web/templates/admin/edit_cron.html:31
 msgid "Monthly"
-msgstr "Месяц"
+msgstr "Aylık"
 
 #: ../../web/templates/admin/add_cron.html:40
 #: ../../web/templates/admin/add_cron.html:62
@@ -2693,30 +2693,30 @@ msgstr "Месяц"
 #: ../../web/templates/admin/edit_cron.html:157
 #: ../../web/templates/admin/edit_cron.html:228
 msgid "Run Command"
-msgstr "Выполнять"
+msgstr "Komutu Çalıştır"
 
 #: ../../web/templates/admin/add_cron.html:42
 #: ../../web/templates/admin/edit_cron.html:41
 msgid "every minute"
-msgstr "каждую минуту"
+msgstr "her dakika"
 
 #: ../../web/templates/admin/add_cron.html:43
 #: ../../web/templates/admin/edit_cron.html:42
 msgid "every two minutes"
-msgstr "каждые 2 минуты"
+msgstr "her iki dakikada bir"
 
 #: ../../web/templates/admin/edit_server.html:149
 msgid "SYSTEM_SET_DEFAULT_LANGUAGE"
-msgstr "Установить язык по умолчанию для всех пользователей"
+msgstr "Tüm kullanıcılar için varsayılan dil olarak ayarla"
 
 #: ../../web/templates/admin/edit_server.html:167
 #: ../../web/templates/admin/list_updates.html:42
 msgid "Version"
-msgstr "Версия"
+msgstr "Sürüm"
 
 #: ../../web/templates/admin/edit_server.html:178
 msgid "Release"
-msgstr "Релиз"
+msgstr "Yayın"
 
 #: ../../web/templates/admin/edit_server.html:213
 #: ../../web/templates/admin/edit_server.html:235
@@ -2737,7 +2737,7 @@ msgstr "Proxy Server"
 #: ../../web/templates/admin/edit_server.html:443
 #: ../../web/templates/admin/edit_server.html:523
 msgid "configure"
-msgstr "configure"
+msgstr "yapılandır"
 
 #: ../../web/templates/admin/edit_server.html:247
 msgid "Backend Server"
@@ -2749,20 +2749,20 @@ msgstr "Backend Pool Mode"
 
 #: ../../web/templates/admin/edit_server.html:272
 msgid "Enabled multi PHP versions"
-msgstr "Включенные версии PHP"
+msgstr "multi-PHP etkinleştirilmiş"
 
 #: ../../web/templates/admin/edit_server.html:276
 msgid "Please wait while php is installed or removed"
-msgstr "Сохранение ваших изменений может занять несколько минут. Пожалуйста, дождитесь завершения процесса и не обновляйте страницу."
+msgstr "Php yüklenirken veya kaldırılırken lütfen bekleyin"
 
 #: ../../web/templates/admin/edit_server.html:312
 #: ../../web/templates/admin/edit_server.html:321
 msgid "DNS Server"
-msgstr "DNS Сервер"
+msgstr "DNS Server"
 
 #: ../../web/templates/admin/edit_server.html:333
 msgid "DNS Cluster"
-msgstr "DNS Кластер"
+msgstr "DNS Cluster"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:99
 #: ../../web/templates/admin/list_backup.html:55
@@ -2779,7 +2779,7 @@ msgstr "DNS Кластер"
 #: ../../web/templates/admin/edit_server.html:905
 #: ../../web/templates/admin/edit_server.html:919
 msgid "no"
-msgstr "нет"
+msgstr "hayır"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:98
 #: ../../web/templates/admin/list_backup.html:62
@@ -2796,7 +2796,7 @@ msgstr "нет"
 #: ../../web/templates/admin/edit_server.html:906
 #: ../../web/templates/admin/edit_server.html:920
 msgid "yes"
-msgstr "да"
+msgstr "evet"
 
 #: ../../web/templates/admin/add_db.html:125
 #: ../../web/templates/admin/edit_db.html:115
@@ -2807,30 +2807,30 @@ msgstr "да"
 #: ../../web/templates/admin/list_db.html:38
 #: ../../web/templates/user/list_db.html:38
 msgid "Host"
-msgstr "Хост"
+msgstr "Host"
 
 #: ../../web/templates/admin/edit_server.html:370
 #: ../../web/templates/admin/edit_server.html:379
 msgid "Mail Server"
-msgstr "Почтовый сервер"
+msgstr "Mail Server"
 
 #: ../../web/templates/admin/list_mail.html:58
 #: ../../web/templates/admin/edit_server.html:391
 #: ../../web/templates/user/list_mail.html:57
 msgid "Antivirus"
-msgstr "Антивирус"
+msgstr "Antivirus"
 
 #: ../../web/templates/admin/list_mail.html:59
 #: ../../web/templates/admin/edit_server.html:404
 #: ../../web/templates/user/list_mail.html:58
 msgid "AntiSpam"
-msgstr "АнтиСпам"
+msgstr "AntiSpam"
 
 #: ../../web/templates/admin/edit_mail_acc.html:217
 #: ../../web/templates/admin/edit_server.html:416
 #: ../../web/templates/admin/add_mail_acc.html:206
 msgid "Webmail URL"
-msgstr "URL Webmail "
+msgstr "Webmail URL"
 
 #: ../../web/templates/admin/edit_backup_exclusions.html:78
 #: ../../web/templates/admin/list_user.html:75
@@ -2842,15 +2842,15 @@ msgstr "URL Webmail "
 #: ../../web/templates/user/list_user.html:79
 #: ../../web/templates/user/list_stats.html:39
 msgid "Databases"
-msgstr "Базы данных"
+msgstr "Veritabanları"
 
 #: ../../web/templates/admin/edit_server.html:443
 msgid "MySQL Support"
-msgstr "Поддержка MySQL"
+msgstr "MySQL Desteği"
 
 #: ../../web/templates/admin/edit_server.html:458
 msgid "phpMyAdmin URL"
-msgstr "URL phpMyAdmin "
+msgstr "phpMyAdmin URL"
 
 #: ../../web/templates/login_1.html:23
 #: ../../web/templates/admin/edit_user.html:73
@@ -2875,25 +2875,25 @@ msgstr "URL phpMyAdmin "
 #: ../../web/templates/user/edit_web.html:494
 #: ../../web/templates/user/edit_web.html:569
 msgid "Password"
-msgstr "Пароль"
+msgstr "Şifre"
 
 #: ../../web/templates/admin/edit_server.html:498
 #: ../../web/templates/admin/edit_server.html:566
 msgid "Maximum Number Of Databases"
-msgstr "Максимальное количество БД"
+msgstr "Maksimum Veritabanı Sayısı"
 
 #: ../../web/templates/admin/edit_server.html:509
 #: ../../web/templates/admin/edit_server.html:577
 msgid "Current Number Of Databases"
-msgstr "Текущее количество БД"
+msgstr "Mevcut Veritabanı Sayısı"
 
 #: ../../web/templates/admin/edit_server.html:523
 msgid "PostgreSQL Support"
-msgstr "Поддержка PostgreSQL"
+msgstr "PostgreSQL Desteği"
 
 #: ../../web/templates/admin/edit_server.html:538
 msgid "phpPgAdmin URL"
-msgstr "URL phpPgAdmin "
+msgstr "phpPgAdmin URL"
 
 #: ../../web/templates/admin/list_user.html:77
 #: ../../web/templates/admin/edit_package.html:271
@@ -2904,11 +2904,11 @@ msgstr "URL phpPgAdmin "
 #: ../../web/templates/user/list_user.html:81
 #: ../../web/templates/user/list_stats.html:41
 msgid "Backups"
-msgstr "Резервные копии"
+msgstr "Yedekler"
 
 #: ../../web/schedule/backup/index.php:17
 msgid "BACKUP_SCHEDULED"
-msgstr "Задание успешно добавлено в очередь. После завершения вы получите полный отчет по почте."
+msgstr "Görev sıraya eklendi. Yedeğiniz indirilmeye hazır olduğunda bir bilgilendirme e-postası alacaksınız."
 
 #: ../../web/bulk/restore/index.php:39 ../../web/unsuspend/dns/index.php:21
 #: ../../web/unsuspend/dns/index.php:42 ../../web/unsuspend/mail/index.php:21
@@ -2916,124 +2916,128 @@ msgstr "Задание успешно добавлено в очередь. По
 #: ../../web/schedule/restore/index.php:43
 #: ../../web/schedule/backup/index.php:21
 msgid "Error: hestia did not return any output."
-msgstr "Ошибка: Hestia не вернула ответа."
+msgstr "Hata: hestia herhangi bir çıktı vermedi."
 
 #: ../../web/schedule/backup/index.php:25
 msgid "BACKUP_EXISTS"
-msgstr "Резервное копирование уже выполняется, пожалуйста дождитесь окончания."
+msgstr "Mevcut bir yedekleme zaten çalışıyor. Lütfen yedeklemenin bitmesini bekleyin."
 
 #: ../../web/bulk/restore/index.php:35 ../../web/schedule/restore/index.php:39
 msgid "RESTORE_SCHEDULED"
-msgstr "Задание успешно добавлено в очередь. После завершения вы получите полный отчет по почте."
+msgstr "Görev sıraya eklendi. Geri yükleme tamamlandığında bir e-posta bildirimi alacaksınız."
 
 #: ../../web/bulk/restore/index.php:42 ../../web/schedule/restore/index.php:46
 msgid "RESTORE_EXISTS"
-msgstr "Задание уже выполняется, пожалуйста дождитесь окончания."
+msgstr "Mevcut bir geri yükleme görevi zaten çalışıyor. Lütfen tekrar başlatmadan önce bitmesini bekleyin."
 
 #: ../../web/inc/main.php:94 ../../web/generate/ssl/index.php:86
 msgid "Error code:"
-msgstr "Код ошибки: %s"
+msgstr "Hata kodu: %s"
 
 #: ../../web/add/cron/index.php:21 ../../web/inc/main.php:163
 msgid "day"
-msgstr "дн."
+msgstr "gün"
 
 #: ../../web/inc/main.php:165
 msgid "days"
-msgstr "дн."
+msgstr "gün"
 
 #: ../../web/add/cron/index.php:20 ../../web/inc/main.php:170
 msgid "hour"
-msgstr "час"
+msgstr "saat"
 
 #: ../../web/inc/main.php:172
 msgid "hours"
-msgstr "час."
+msgstr "saat"
 
 #: ../../web/add/cron/index.php:19 ../../web/inc/main.php:177
 msgid "minute"
-msgstr "мин."
+msgstr "dakika"
 
 #: ../../web/inc/main.php:179
 msgid "minutes"
-msgstr "мин."
+msgstr "dakika"
 
 #: ../../web/bulk/cron/index.php:28 ../../web/bulk/cron/index.php:48
 msgid "Cronjob email reporting has been successfully disabled"
-msgstr "Cronjob уведомления  были успешно отключены"
+msgstr "Cronjob e-posta raporlama başarıyla pasif hale getirildi"
 
 #: ../../web/bulk/cron/index.php:35 ../../web/bulk/cron/index.php:55
 msgid "Cronjob email reporting has been successfully enabled"
-msgstr "Cron уведомления были успешно включены"
+msgstr "Cronjob e-posta raporu başarıyla etkinleştirildi"
 
 #: ../../web/js/i18n.js.php:8
 msgid "Are you sure?"
-msgstr "Вы уверенны?"
+msgstr "Emin misiniz?"
 
 #: ../../web/js/i18n.js.php:9
 msgid "unlimited"
-msgstr "неограничено"
+msgstr "sınırsız"
 
 #: ../../web/js/i18n.js.php:10
 msgid "no notifications"
-msgstr "нет оповещений"
+msgstr "bildirim yok"
 
 #: ../../web/reset/index.php:31
 msgid "MAIL_RESET_SUBJECT"
-msgstr "Восстановление пароля %s"
+msgstr "%s Şifreyi Sıfırla"
 
 #: ../../web/add/mail/index.php:207 ../../web/add/user/index.php:94
 #: ../../web/add/db/index.php:92 ../../web/add/web/index.php:329
 #: ../../web/edit/mail/index.php:523 ../../web/edit/web/index.php:663
 #: ../../web/edit/web/index.php:737 ../../web/reset/index.php:33
 msgid "MAIL_FROM"
-msgstr "Hestia Control Panel <noreply@%s>"
+msgstr "Hestia Kontrol Paneli <noreply@%s>"
 
 #: ../../web/add/user/index.php:97 ../../web/reset/index.php:35
 msgid "GREETINGS_GORDON"
-msgstr "Здравствуйте, %s,"
+msgstr "Merhaba, %s,"
 
 #: ../../web/add/user/index.php:99 ../../web/reset/index.php:37
 msgid "GREETINGS"
-msgstr "Здравствуйте,\\n"
+msgstr "Merhaba"
 
 #: ../../web/reset/index.php:40
 msgid "PASSWORD_RESET_REQUEST"
 msgstr ""
-"Чтобы восстановить пароль, пройдите по ссылке:\n"
+"Hestia Kontrol Paneli şifrenizi sıfırlamak için lütfen şu bağlantıyı takip edin:\n"
 "https://%s/reset/?action=confirm&user=%s&code=%s\n"
-"Вы также можете октрыть страницу https://%s/reset/?action=code&user=%s и вручную ввести код для восстановления:\\n%s\\n\\nЕсли вы не запрашивали процедуру восстановления пароля, пожалуйста проигнорируйте это письмо и примите наши извинения.\n"
+"\n"
+"Alternatif olarak, https://%s/reset/?action=code&user=%s adresine gidebilir ve aşağıdaki sıfırlama kodunu girebilirsiniz:\n"
+"%s\n"
+"\n"
+"Şifre sıfırlama talebiniz olmadıysa, lütfen bu mesajı dikkate almayın ve özürlerimizi kabul edin.\n"
 "\n"
 "--\n"
-"Панель управления Hestia\\n"
+"Hestia Kontrol Paneli"
 
 #: ../../web/reset/index.php:45
 msgid "Invalid host domain"
-msgstr "Неверный домен хоста"
+msgstr "Geçersiz host alan adı"
 
 #: ../../web/reset/index.php:74
 msgid "An internal error occurred"
-msgstr "Возникла внутренняя ошибка"
+msgstr "Dahili bir hata oluştu"
 
 #: ../../web/reset/index.php:82
 msgid "Code has been expired"
-msgstr "Время действия кода истекло"
+msgstr "Kodun süresi doldu"
 
 #: ../../web/reset/index.php:86 ../../web/reset/index.php:90
 msgid "Invalid username or code"
-msgstr "Неверный логин или код сброса пароля"
+msgstr "Geçersiz kullanıcı adı veya kod"
 
 #: ../../web/reset/index.php:93
 msgid "Passwords not match"
-msgstr "Пароли не совпадают"
+msgstr "Şifreler eşleşmiyor"
 
 #: ../../web/templates/admin/list_services.html:30
 msgid "start"
-msgstr "запустить"
+msgstr "başlat"
 
 #: ../../web/templates/admin/list_services.html:29
 msgid "stop"
-msgstr "остановить"
+msgstr "durdur"
 
 #: ../../web/templates/admin/edit_server_mysql.html:135
 #: ../../web/templates/admin/list_services.html:31
@@ -3046,7 +3050,7 @@ msgstr "остановить"
 #: ../../web/templates/admin/edit_server_nginx.html:192
 #: ../../web/templates/admin/edit_server_bind9.html:75
 msgid "restart"
-msgstr "перезапустить"
+msgstr "yeniden başlat"
 
 #: ../../web/add/ip/index.php:37 ../../web/add/dns/index.php:34
 #: ../../web/add/dns/index.php:116 ../../web/add/cron/index.php:33
@@ -3062,7 +3066,7 @@ msgstr "перезапустить"
 #: ../../web/edit/web/index.php:713 ../../web/edit/package/index.php:137
 #: ../../web/generate/ssl/index.php:59
 msgid "Field \"%s\" can not be blank."
-msgstr "Поле \"%s\" не может быть пустым."
+msgstr "\"%s\" alanı boş bırakılamaz."
 
 #: ../../web/edit/ip/index.php:104 ../../web/edit/dns/index.php:147
 #: ../../web/edit/dns/index.php:199 ../../web/edit/cron/index.php:74
@@ -3095,98 +3099,97 @@ msgstr "Поле \"%s\" не может быть пустым."
 #: ../../web/edit/web/index.php:809 ../../web/edit/package/index.php:226
 #: ../../web/edit/firewall/index.php:96
 msgid "Changes has been saved."
-msgstr "Изменения сохранены."
+msgstr "Değişiklikler kaydedildi."
 
 #: ../../web/add/mail/index.php:120 ../../web/add/user/index.php:43
 #: ../../web/add/db/index.php:39 ../../web/add/web/index.php:285
 #: ../../web/add/web/index.php:301 ../../web/edit/mail/index.php:386
 #: ../../web/edit/user/index.php:191 ../../web/edit/web/index.php:634
 msgid "Please enter valid email address."
-msgstr "Пожалуйста, введите реальный email адрес."
+msgstr "Lütfen geçerli bir e-posta adresi giriniz."
 
 #: ../../web/add/mail/index.php:205 ../../web/edit/mail/index.php:521
 msgid "Email Credentials"
-msgstr "Данные для доступа Hestia"
+msgstr "E-posta Kimlik Bilgileri"
 
 #: ../../web/edit/web/index.php:573
 msgid "stats username"
-msgstr "имя пользователя статистики"
+msgstr "istatistik kullanıcı adı"
 
 #: ../../web/edit/web/index.php:599
 msgid "stats user"
-msgstr "статистика пользователя"
+msgstr "kullanıcı istatistikleri"
 
 #: ../../web/add/web/index.php:328 ../../web/edit/web/index.php:661
 #: ../../web/edit/web/index.php:735
 msgid "FTP login credentials"
-msgstr "Данные для доступа к FTP"
+msgstr "FTP oturum açma kimlik bilgileri"
 
 #: ../../web/add/web/index.php:330 ../../web/edit/web/index.php:664
 #: ../../web/edit/web/index.php:738
 msgid "FTP_ACCOUNT_READY"
 msgstr ""
-"FTP аккаунт успешно создан и готов к использованию.\n"
-"\n"
-"Хост: %s\n"
-"Имя пользователя: %s_%s\n"
-"Пароль: %s\n"
+"FTP hesabı oluşturuldu ve kullanıma hazır.\n"
+"Hostname: %s\n"
+"Username: %s_%s\n"
+"Password: %s\n"
 "\n"
 "--\n"
-"Панель управления Hestia\\n"
+"Hestia Control Panel"
 
 #: ../../web/edit/web/index.php:704
 msgid "ftp user"
-msgstr "пользователь FTP"
+msgstr "ftp kullanıcısı"
 
 #: ../../web/edit/server/cron/index.php:18
 #: ../../web/edit/server/crond/index.php:18
 msgid "Info (Read-only mode): Crontab can be edited only trough ssh"
-msgstr "Инфо (режим \"только чтение\"): Crontab можно менять только по ssh"
+msgstr "Bilgi (Salt okunur mod): Crontab yalnızca ssh aracılığıyla düzenlenebilir"
 
 #: ../../web/add/user/index.php:27 ../../web/add/package/index.php:25
 #: ../../web/edit/package/index.php:101
 msgid "package"
-msgstr "пакет"
+msgstr "paket"
 
 #: ../../web/add/package/index.php:26 ../../web/edit/package/index.php:102
 msgid "web template"
-msgstr "шаблон web "
+msgstr "web şablonu"
 
 #: ../../web/add/package/index.php:28 ../../web/edit/package/index.php:104
 msgid "backend template"
-msgstr "шаблон backend "
+msgstr "backend şablonu"
 
 #: ../../web/add/package/index.php:31 ../../web/edit/package/index.php:107
 msgid "proxy template"
-msgstr "шаблон proxy "
+msgstr "proxy şablonu"
 
 #: ../../web/add/package/index.php:33 ../../web/edit/package/index.php:109
 msgid "dns template"
-msgstr "шаблон dns"
+msgstr "dns şablonu"
 
 #: ../../web/add/package/index.php:34 ../../web/edit/package/index.php:110
 msgid "shell"
-msgstr "ssh доступ"
+msgstr "shell"
 
 #: ../../web/add/package/index.php:35 ../../web/edit/package/index.php:111
 msgid "web domains"
-msgstr "веб домены"
+msgstr "web domainleri"
 
 #: ../../web/add/package/index.php:36 ../../web/edit/package/index.php:112
 msgid "web aliases"
-msgstr "алиасы хостов"
+msgstr "web takma adları"
 
 #: ../../web/add/package/index.php:37 ../../web/edit/package/index.php:113
 msgid "dns domains"
-msgstr "домены dns"
+msgstr "dns domainleri"
 
 #: ../../web/add/package/index.php:38 ../../web/edit/package/index.php:114
 msgid "dns records"
-msgstr "DNS записи"
+msgstr "dns kayıtları"
 
 #: ../../web/add/package/index.php:39 ../../web/edit/package/index.php:115
 msgid "mail domains"
-msgstr "почтовые домены"
+msgstr "posta domainleri"
 
 #: ../../web/add/package/index.php:40 ../../web/edit/package/index.php:116
 #: ../../web/templates/admin/list_mail.html:97
@@ -3194,121 +3197,121 @@ msgstr "почтовые домены"
 #: ../../web/templates/user/list_mail.html:96
 #: ../../web/templates/user/list_mail.html:102
 msgid "mail accounts"
-msgstr "почтовые аккаунты"
+msgstr "posta hesapları"
 
 #: ../../web/add/package/index.php:41 ../../web/edit/package/index.php:117
 #: ../../web/templates/admin/panel.html:103
 #: ../../web/templates/user/panel.html:89
 msgid "databases"
-msgstr "базы данных"
+msgstr "veritabanları"
 
 #: ../../web/add/package/index.php:42 ../../web/edit/package/index.php:118
 msgid "cron jobs"
-msgstr "cron задания"
+msgstr "cron görevleri"
 
 #: ../../web/add/package/index.php:43 ../../web/edit/package/index.php:119
 #: ../../web/templates/admin/panel.html:129
 #: ../../web/templates/user/panel.html:115
 msgid "backups"
-msgstr "бэкапы"
+msgstr "yedekler"
 
 #: ../../web/add/package/index.php:44 ../../web/edit/package/index.php:120
 msgid "quota"
-msgstr "квота диска"
+msgstr "kota"
 
 #: ../../web/add/package/index.php:45 ../../web/edit/package/index.php:121
 msgid "bandwidth"
-msgstr "трафик"
+msgstr "trafik"
 
 #: ../../web/add/package/index.php:49 ../../web/edit/package/index.php:125
 msgid "ns1"
-msgstr "NS1"
+msgstr "ns1"
 
 #: ../../web/add/package/index.php:50 ../../web/edit/package/index.php:126
 msgid "ns2"
-msgstr "NS2"
+msgstr "ns2"
 
 #: ../../web/add/dns/index.php:24 ../../web/add/mail/index.php:38
 #: ../../web/add/mail/index.php:103 ../../web/add/web/index.php:19
 msgid "domain"
-msgstr "домен"
+msgstr "domain"
 
 #: ../../web/add/mail/index.php:85
 msgid "MAIL_DOMAIN_CREATED_OK"
-msgstr "Домен <a href=\"/list/mail/?domain=%s\"><b>%s</b></a> успешно создан."
+msgstr "<a href=\"/list/mail/?domain=%s\"><b>%s</b></a> mail alan adı başarıyla oluşturuldu."
 
 #: ../../web/add/mail/index.php:104
 msgid "account"
-msgstr "аккаунт"
+msgstr "hesap"
 
 #: ../../web/add/mail/index.php:105 ../../web/add/user/index.php:26
 #: ../../web/add/db/index.php:21
 msgid "password"
-msgstr "пароль"
+msgstr "şifre"
 
 #: ../../web/add/mail/index.php:214
 msgid "MAIL_ACCOUNT_CREATED_OK"
-msgstr "Аккаунт <a href=\"/edit/mail/?account=%s&domain=%s\"><b>%s@%s</b></a> успешно создан"
+msgstr "<a href=\"/edit/mail/?account=%s&domain=%s\"><b>%s@%s</b></a> mail hesabı başarıyla oluşturuldu."
 
 #: ../../web/add/dns/index.php:25 ../../web/add/web/index.php:20
 #: ../../web/templates/admin/list_ip.html:9
 msgid "ip"
-msgstr "IP"
+msgstr "ip"
 
 #: ../../web/add/web/index.php:21
 msgid "ssl certificate"
-msgstr "SSL сертификат"
+msgstr "ssl sertifikası"
 
 #: ../../web/add/web/index.php:22
 msgid "ssl key"
-msgstr "ключ SSL сертификата"
+msgstr "ssl anahtarı"
 
 #: ../../web/add/web/index.php:38 ../../web/add/web/index.php:308
 msgid "Password is too short."
-msgstr "Пароль слишком короткий. Используйте не менее 6 символов."
+msgstr "Şifre çok kısa."
 
 #: ../../web/add/web/index.php:359 ../../web/add/web/index.php:369
 msgid "WEB_DOMAIN_CREATED_OK"
-msgstr "Домен <a href=\"/edit/web/?domain=%s\"><b>%s</b></a> был успешно создан."
+msgstr "<a href=\"/edit/web/?domain=%s\"><b>%s</b></a> alan adı başarıyla oluşturuldu."
 
 #: ../../web/add/user/index.php:25
 msgid "user"
-msgstr "пользователь"
+msgstr "kullanıcı"
 
 #: ../../web/add/user/index.php:28
 msgid "email"
-msgstr "email"
+msgstr "e-posta"
 
 #: ../../web/add/user/index.php:29
 msgid "name"
-msgstr "имя"
+msgstr "ad"
 
 #: ../../web/add/user/index.php:107
 msgid "USER_CREATED_OK"
-msgstr "Аккаунт <a href=\"/edit/user/?user=%s\"><b>%s</b></a> успешно создан"
+msgstr "<a href=\"/edit/user/?user=%s\"><b>%s</b></a> kullanıcısı başarıyla oluşturuldu."
 
 #: ../../web/add/user/index.php:108
 #: ../../web/templates/admin/list_user.html:103
 #: ../../web/templates/admin/list_user.html:117
 #: ../../web/templates/user/list_user.html:97
 msgid "login as"
-msgstr "войти как"
+msgstr "giriş yap"
 
 #: ../../web/add/key/index.php:17
 msgid "Field SSH_KEY can not be blank."
-msgstr "Поле SSH Key не может быть пустым"
+msgstr "SSH_KEY alanı boş bırakılamaz"
 
 #: ../../web/add/key/index.php:35
 msgid "SSH KEY is invalid"
-msgstr "SSH ключ недействителен"
+msgstr "SSH anahtarı geçersiz"
 
 #: ../../web/add/key/index.php:41 ../../web/add/key/index.php:44
 msgid "SSH KEY already exists"
-msgstr "SSH ключ уже существует"
+msgstr "SSH anahtarı zaten mevcut"
 
 #: ../../web/add/key/index.php:57
 msgid "SSH KEY created"
-msgstr " SSH ключ создан"
+msgstr "SSH KEY oluşturuldu"
 
 #: ../../web/add/firewall/ipset/index.php:25
 #: ../../web/templates/admin/list_search.html:9
@@ -3316,149 +3319,149 @@ msgstr " SSH ключ создан"
 #: ../../web/templates/user/list_search.html:9
 #: ../../web/templates/user/list_user.html:70
 msgid "Name"
-msgstr "Имя"
+msgstr "Ad"
 
 #: ../../web/add/firewall/ipset/index.php:26
 #: ../../web/templates/admin/add_firewall_ipset.html:66
 msgid "Data Source"
-msgstr "Источник данных"
+msgstr "Veri Kaynağı"
 
 #: ../../web/add/firewall/ipset/index.php:27
 #: ../../web/templates/admin/add_firewall_ipset.html:79
 #: ../../web/templates/admin/list_firewall_ipset.html:38
 msgid "Ip Version"
-msgstr "IP версия"
+msgstr "IP Versiyonu"
 
 #: ../../web/add/firewall/ipset/index.php:28
 #: ../../web/templates/admin/add_firewall_ipset.html:92
 #: ../../web/templates/admin/list_firewall_ipset.html:37
 msgid "Autoupdate"
-msgstr "Автоматическое обновление"
+msgstr "Otomatik güncelleme"
 
 #: ../../web/add/firewall/ipset/index.php:55
 msgid "IPSET_CREATED_OK"
-msgstr "Список IP успешно создан"
+msgstr "IP listesi başarıyla oluşturuldu"
 
 #: ../../web/add/firewall/index.php:42
 msgid "action"
-msgstr "действие"
+msgstr "işlem"
 
 #: ../../web/add/firewall/index.php:43
 msgid "protocol"
-msgstr "протокол"
+msgstr "Protokol"
 
 #: ../../web/add/firewall/index.php:44
 msgid "port"
-msgstr "порт"
+msgstr "port"
 
 #: ../../web/add/ip/index.php:25 ../../web/add/firewall/banlist/index.php:26
 #: ../../web/add/firewall/index.php:45
 msgid "ip address"
-msgstr "IP адрес"
+msgstr "IP adresi"
 
 #: ../../web/add/firewall/index.php:76
 msgid "RULE_CREATED_OK"
-msgstr "Правило было успешно добавлено"
+msgstr "Kural başarıyla oluşturuldu."
 
 #: ../../web/add/firewall/banlist/index.php:25
 msgid "banlist"
-msgstr "блоклист"
+msgstr "banlist"
 
 #: ../../web/add/firewall/banlist/index.php:51
 msgid "BANLIST_CREATED_OK"
-msgstr "IP-адрес успешно заблокирован"
+msgstr "IP adresi başarıyla yasaklandı"
 
 #: ../../web/add/db/index.php:19
 msgid "database"
-msgstr "база данных"
+msgstr "Veritabanı"
 
 #: ../../web/add/db/index.php:20
 msgid "username"
-msgstr "пользователь"
+msgstr " kullanıcı adı"
 
 #: ../../web/add/db/index.php:22
 msgid "type"
-msgstr "тип"
+msgstr "tür"
 
 #: ../../web/add/db/index.php:23
 msgid "host"
-msgstr "Хост"
+msgstr "host"
 
 #: ../../web/add/db/index.php:24
 msgid "charset"
-msgstr "кодировка"
+msgstr "karakter seti"
 
 #: ../../web/add/db/index.php:90
 msgid "Database Credentials"
-msgstr "Данные для доступа к БД"
+msgstr "Veritabanı Kimlik Bilgileri"
 
 #: ../../web/add/db/index.php:93
 msgid "DATABASE_READY"
 msgstr ""
-"База данных создана успешно.\n"
-"\n"
-"База данных: %s\n"
-"Пользователь: %s\n"
-"Пароль: %s\n"
+"Veritabanı başarıyla oluşturuldu.\n"
+"Veritabanı: %s\n"
+"Kullanıcı: %s\n"
+"Şifre: %s\n"
 "%s\n"
 "\n"
-"--Панель управления Hestia\\n"
+"--\n"
+"Hestia Kontrol Paneli"
 
 #: ../../web/add/db/index.php:99
 msgid "DATABASE_CREATED_OK"
-msgstr "База данных <a href=\"/edit/db/?database=%s\"><b>%s</b></a> успешно создана"
+msgstr "<a href=\"/edit/db/?database=%s\"><b>%s</b></a> veritabanı başarıyla oluşturuldu."
 
 #: ../../web/add/db/index.php:100
 msgid "open %s"
-msgstr "открыть %s"
+msgstr "%s aç"
 
 #: ../../web/add/ip/index.php:26
 msgid "netmask"
-msgstr "маска подсети"
+msgstr "netmask"
 
 #: ../../web/add/ip/index.php:27
 msgid "interface"
-msgstr "интерфейс"
+msgstr "Arayüz"
 
 #: ../../web/add/ip/index.php:28
 msgid "assigned user"
-msgstr "назначенный пользователь"
+msgstr "Atanan Kullanıcı"
 
 #: ../../web/add/ip/index.php:69
 msgid "IP_CREATED_OK"
-msgstr "IP адрес <a href=\"/edit/ip/?ip=%s\"><b>%s</b></a> успешно создан."
+msgstr "<a href=\"/edit/ip/?ip=%s\"><b>%s</b></a> IP adresi başarıyla oluşturuldu."
 
 #: ../../web/add/dns/index.php:88
 msgid "DNS_DOMAIN_CREATED_OK"
-msgstr "Домен <a href=\"/list/dns/?domain=%s\"><b>%s</b></a> успешно создан."
+msgstr "<a href=\"/list/dns/?domain=%s\"><b>%s</b></a> DNS alan adı başarıyla oluşturuldu."
 
 #: ../../web/add/dns/index.php:137
 msgid "DNS_RECORD_CREATED_OK"
-msgstr "Запись <b>%s.%s</b> успешно создана."
+msgstr "<b>%s.%s</b> kaydı başarıyla oluşturuldu."
 
 #: ../../web/add/package/index.php:152
 msgid "PACKAGE_CREATED_OK"
-msgstr "Пакет <a href=\"/edit/package/?package=%s\"><b>%s</b></a> успешно создан."
+msgstr "<a href=\"/edit/package/?package=%s\"><b>%s</b></a> paketi başarıyla oluşturuldu."
 
 #: ../../web/add/cron/index.php:22
 msgid "month"
-msgstr "месяц"
+msgstr "ay"
 
 #: ../../web/add/cron/index.php:23
 msgid "day of week"
-msgstr "день недели"
+msgstr "Haftanın günü"
 
 #: ../../web/add/cron/index.php:24
 msgid "cmd"
-msgstr "командная строка"
+msgstr "cmd"
 
 #: ../../web/add/cron/index.php:53
 msgid "CRON_CREATED_OK"
-msgstr "Задание успешно создано"
+msgstr "Cron görevi başarıyla oluşturuldu."
 
 #: ../../web/download/backup/index.php:20
 msgid "BACKUP_DOWNLOAD_SCHEDULED"
-msgstr "Загрузка файла удаленной резервной копии запланирована."
+msgstr "Uzaktan yedekleme dosyasının indirilmesi planlandı."
 
 #: ../../web/templates/admin/list_web.html:8
 #: ../../web/templates/admin/list_web.html:54
@@ -3486,25 +3489,25 @@ msgstr "Загрузка файла удаленной резервной коп
 #: ../../web/templates/user/edit_dns.html:58
 #: ../../web/generate/ssl/index.php:37
 msgid "Domain"
-msgstr "Домен"
+msgstr "Domain"
 
 #: ../../web/templates/admin/generate_ssl.html:70
 #: ../../web/generate/ssl/index.php:38
 msgid "Country"
-msgstr "Страна"
+msgstr "Ülke"
 
 #: ../../web/generate/ssl/index.php:39
 msgid "State"
-msgstr "Область"
+msgstr "Eyalet"
 
 #: ../../web/generate/ssl/index.php:40
 msgid "City"
-msgstr "Город / Населенный пункт"
+msgstr "Şehir"
 
 #: ../../web/templates/admin/generate_ssl.html:101
 #: ../../web/generate/ssl/index.php:41
 msgid "Organization"
-msgstr "Организация"
+msgstr "Organizasyon"
 
 #: ../../web/templates/reset_1.html:30
 #: ../../web/templates/admin/edit_user.html:114
@@ -3515,24 +3518,24 @@ msgstr "Организация"
 #: ../../web/templates/user/list_user.html:99
 #: ../../web/generate/ssl/index.php:42
 msgid "Email"
-msgstr "E-mail"
+msgstr "E-posta"
 
 #: ../../web/generate/ssl/index.php:94
 msgid "SSL_GENERATED_OK"
-msgstr "SSL cертификат был успешно создан."
+msgstr "Sertifika başarıyla oluşturuldu."
 
 #: ../../web/templates/reset_1.html:15 ../../web/templates/reset_2.html:15
 #: ../../web/templates/reset_3.html:15
 msgid "Forgot Password"
-msgstr "Забыли пароль"
+msgstr " Şifremi Unuttum"
 
 #: ../../web/templates/reset_3.html:23
 msgid "New Password"
-msgstr "Новый пароль"
+msgstr "Yeni Şifre"
 
 #: ../../web/templates/reset_3.html:33
 msgid "Confirm Password"
-msgstr "Подтверждение пароля"
+msgstr "Şifreyi Onayla"
 
 #: ../../web/templates/login_1.html:43 ../../web/templates/reset_1.html:41
 #: ../../web/templates/reset_2.html:36 ../../web/templates/reset_3.html:44
@@ -3598,38 +3601,38 @@ msgstr "Подтверждение пароля"
 #: ../../web/templates/user/list_dns_rec.html:4
 #: ../../web/templates/reset2fa.html:55
 msgid "Back"
-msgstr "Назад"
+msgstr "Geri"
 
 #: ../../web/templates/reset_3.html:43
 msgid "Reset"
-msgstr "Сбросить"
+msgstr "Sıfırla"
 
 #: ../../web/templates/reset_2.html:20
 msgid "RESET_CODE_SENT"
-msgstr "Код для восстановления пароля был выслан на ваш электронный адрес.<br>"
+msgstr "Şifre sıfırlama kodu e-posta adresinize gönderildi<br>"
 
 #: ../../web/templates/reset_2.html:24
 msgid "Reset Code"
-msgstr "Код восстановления"
+msgstr "Sıfırlama Kodu"
 
 #: ../../web/templates/reset_2.html:35
 msgid "Confirm"
-msgstr "Подтвердить"
+msgstr "Onayla"
 
 #: ../../web/templates/admin/list_key.html:6
 #: ../../web/templates/admin/add_key.html:39
 msgid "Add SSH Key"
-msgstr "Добавить SSH ключ"
+msgstr "SSH anahtarı ekle"
 
 #: ../../web/templates/admin/list_key.html:17
 msgid "SSH_ID"
-msgstr "SSH ID"
+msgstr "SSH KİMLİĞİ"
 
 #: ../../web/templates/admin/list_key.html:21
 #: ../../web/templates/admin/add_key.html:57
 #: ../../web/templates/user/edit_user.html:5
 msgid "SSH KEY"
-msgstr " SSH Ключ"
+msgstr "SSH ANAHTARI"
 
 #: ../../web/templates/admin/list_web.html:35
 #: ../../web/templates/admin/list_web.html:155
@@ -3719,7 +3722,7 @@ msgstr " SSH Ключ"
 #: ../../web/templates/user/list_dns_rec.html:27
 #: ../../web/templates/user/list_dns_rec.html:72
 msgid "delete"
-msgstr "удалить"
+msgstr "Sil"
 
 #: ../../web/templates/footer.html:3
 #: ../../web/templates/admin/list_web.html:149
@@ -3767,44 +3770,44 @@ msgstr "удалить"
 #: ../../web/templates/user/list_db.html:142
 #: ../../web/templates/user/list_dns_rec.html:75
 msgid "Confirmation"
-msgstr "Подтверждение"
+msgstr "Onayla"
 
 #: ../../web/templates/admin/list_key.html:41
 msgid "DELETE_KEY_CONFIRM"
-msgstr "Вы уверены, что хотите удалить ключ SSH %s?"
+msgstr "%s SSH anahtarını silmek istediğinize emin misiniz?"
 
 #: ../../web/templates/admin/list_key.html:61
 msgid "1 SSH Key"
-msgstr "1  SSH ключ "
+msgstr "1 SSH Anahtarı"
 
 #: ../../web/templates/admin/list_key.html:63
 msgid "%s SSH Keys"
-msgstr "%s SSH ключей"
+msgstr "%s SSH Anahtarı"
 
 #: ../../web/templates/admin/list_ssl.html:36
 #: ../../web/templates/admin/generate_ssl.html:45
 msgid "Generating CSR"
-msgstr "Генерирование CSR запроса"
+msgstr "CSR Oluşturma"
 
 #: ../../web/templates/admin/generate_ssl.html:71
 msgid "2 letter code"
-msgstr "двухбуквенный код"
+msgstr "2 harfli kod"
 
 #: ../../web/templates/admin/generate_ssl.html:81
 msgid "State / Province"
-msgstr "Область"
+msgstr "Eyalet / İl"
 
 #: ../../web/templates/admin/generate_ssl.html:91
 msgid "City / Locality"
-msgstr "Город / Населенный пункт"
+msgstr "Şehir / Bölge"
 
 #: ../../web/templates/admin/generate_ssl.html:113
 msgid "Ok"
-msgstr "OK"
+msgstr "Ok"
 
 #: ../../web/templates/admin/list_firewall_ipset.html:5
 msgid "Add IP list"
-msgstr "Добавить список IP"
+msgstr "IP listesi ekle"
 
 #: ../../web/templates/admin/list_web.html:31
 #: ../../web/templates/admin/list_backup.html:22
@@ -3832,12 +3835,12 @@ msgstr "Добавить список IP"
 #: ../../web/templates/user/list_db.html:58
 #: ../../web/templates/user/list_dns_rec.html:24
 msgid "apply to selected"
-msgstr "применить к выбранным"
+msgstr "seçimi uygula"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:56
 #: ../../web/templates/admin/list_firewall_ipset.html:35
 msgid "Ip List Name"
-msgstr "Имя списка IP"
+msgstr "IP Listesi Adı"
 
 #: ../../web/templates/admin/list_web.html:7
 #: ../../web/templates/admin/list_web.html:17
@@ -3884,29 +3887,29 @@ msgstr "Имя списка IP"
 #: ../../web/templates/user/list_db.html:34
 #: ../../web/templates/user/list_db.html:44
 msgid "Date"
-msgstr "Дата"
+msgstr "Tarih"
 
 #: ../../web/templates/admin/list_log.html:31
 #: ../../web/templates/admin/list_firewall_ipset.html:40
 #: ../../web/templates/admin/list_firewall_banlist.html:38
 msgid "Time"
-msgstr "Время"
+msgstr "Zaman"
 
 #: ../../web/templates/admin/list_firewall_ipset.html:73
 msgid "DELETE_IPSET_CONFIRMATION"
-msgstr "Вы уверены, что хотите удалить список IP %s?"
+msgstr "%s IP listesini silmek istediğinize emin misiniz?"
 
 #: ../../web/templates/admin/list_firewall_ipset.html:105
 msgid "There are currently no IP lists defined."
-msgstr "В настоящее время списки IP-адресов не заданы."
+msgstr "Şu anda tanımlanmış IP listesi yok."
 
 #: ../../web/templates/admin/list_firewall_ipset.html:108
 msgid "1 Ipset list"
-msgstr "1 Список IP"
+msgstr "1 Ipset listesi"
 
 #: ../../web/templates/admin/list_firewall_ipset.html:111
 msgid "%s Ipset lists"
-msgstr "%s Списки IP"
+msgstr "%s Ipset listeleri"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:7
 #: ../../web/templates/admin/add_dns.html:7
@@ -3947,7 +3950,7 @@ msgstr "%s Списки IP"
 #: ../../web/templates/user/edit_web.html:10
 #: ../../web/templates/user/edit_dns.html:7
 msgid "Save"
-msgstr "Сохранить"
+msgstr "Kaydet"
 
 #: ../../web/templates/admin/edit_server_mysql.html:38
 #: ../../web/templates/admin/edit_server_dovecot.html:38
@@ -3959,29 +3962,29 @@ msgstr "Сохранить"
 #: ../../web/templates/admin/edit_server_nginx.html:39
 #: ../../web/templates/admin/edit_server_bind9.html:38
 msgid "Configuring Server"
-msgstr "Настройки Сервера"
+msgstr "Sunucu Yapılandırma"
 
 #: ../../web/templates/admin/edit_server_mysql.html:120
 #: ../../web/templates/admin/edit_server.html:59
 #: ../../web/templates/admin/edit_server_php.html:142
 #: ../../web/templates/admin/edit_server_nginx.html:176
 msgid "Basic options"
-msgstr "Основные настройки"
+msgstr "Temel seçenekler"
 
 #: ../../web/templates/admin/edit_server.html:67
 #: ../../web/templates/admin/list_db.html:85
 #: ../../web/templates/user/list_db.html:84
 msgid "Hostname"
-msgstr "Имя Хоста"
+msgstr "Hostname"
 
 #: ../../web/templates/admin/edit_server.html:78
 msgid "Time Zone"
-msgstr "Часовой Пояс"
+msgstr "Saat Dilimi"
 
 #: ../../web/templates/admin/edit_server.html:102
 msgid "Theme"
-msgstr "Тема оформления"
+msgstr "Tema"
 
 #: ../../web/templates/admin/edit_server.html:126
 msgid "Default Language"
-msgstr "Язык по умолчанию"
+msgstr "Varsayılan Dil"

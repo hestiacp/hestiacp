@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Hestia CP package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-09-14 07:22:26+0000\n"
+"PO-Revision-Date: 2020-10-07 12:07:04+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,27 +13,27 @@ msgstr ""
 
 #: ../../web/templates/admin/edit_server.html:857
 msgid "Login screen style"
-msgstr ""
+msgstr "Stile schermata di login"
 
 #: ../../web/templates/admin/edit_server.html:848
 msgid "Security"
-msgstr ""
+msgstr "Sicurezza"
 
 #: ../../web/templates/admin/edit_server.html:864
 msgid "Old Style"
-msgstr ""
+msgstr "Stile precedente"
 
 #: ../../web/templates/admin/edit_server.html:618
 msgid "Compression"
-msgstr ""
+msgstr "Compressione"
 
 #: ../../web/add/webapp/index.php:62
 msgid "%s installer missing"
-msgstr ""
+msgstr "%s installer mancante"
 
 #: ../../web/add/webapp/index.php:82
 msgid "%s App was installed succesfully!"
-msgstr ""
+msgstr "%s App installata con successo!"
 
 #: ../../web/update/hestia/index.php:22
 msgid "Error: %s update failed"
@@ -249,7 +249,7 @@ msgstr "Login"
 
 #: ../../web/templates/admin/list_services.html:61
 msgid "Production release"
-msgstr ""
+msgstr "Rilascio di produzione"
 
 #: ../../web/templates/admin/add_user.html:107
 msgid "Send welcome email"

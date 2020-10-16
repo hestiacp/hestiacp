@@ -136,7 +136,7 @@ if [ "$create_user" = 'yes' ]; then
     
     # Add check if user already exists as Linux User
     getent passwd $user > /dev/null 2&>1
-    check_result "$E_EXISTS" "User already exsists"  
+    check_result "$E_EXISTS" "User already exists"  
 
     echo "-- USER --" |tee $tmpdir/restore.log
     echo -e "$(date "+%F %T") $user" |tee -a $tmpdir/restore.log

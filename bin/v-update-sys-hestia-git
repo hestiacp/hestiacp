@@ -96,7 +96,7 @@ timestamp() {
 
 # Set install flags
 if [ ! -z "$1" ]; then
-    fork_check=$(curl -s --head -w %{http_code} https://raw.githubusercontent.com/$fork/hestiacp/release/src/deb/hestia/control -o /dev/null)
+    fork_check=$(curl -s --head -w %{http_code} https://raw.githubusercontent.com/$fork/hestiacp/main/src/deb/hestia/control -o /dev/null)
     if [ $fork_check -ne "200" ]; then
         echo "ERROR: invalid repository name specified."
         exit 1

@@ -562,7 +562,11 @@ echo
 if [ "$nginx" = 'yes' ]; then
     echo "[ * ] NGINX"
     echo "deb [arch=amd64] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
-    apt-key adv --fetch-keys 'https://nginx.org/keys/nginx_signing.key' > /dev/null 2>&1
+    if [ "$release" = '16.04' ]; then 
+        apt-key adv --fetch-keys 'http://nginx.org/keys/nginx_signing.key' > /dev/null 2>&1
+    else
+        apt-key adv --fetch-keys 'https://nginx.org/keys/nginx_signing.key' > /dev/null 2>&1    
+    fi
 fi
 
 # Installing sury PHP repo
@@ -579,7 +583,12 @@ fi
 if [ "$mysql" = 'yes' ]; then
     echo "[ * ] MariaDB"
     echo "deb [arch=amd64] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
-    apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc' > /dev/null 2>&1
+    if [ "$release" = '16.04' ]; then 
+        apt-key adv --fetch-keys 'http://mariadb.org/mariadb_release_signing_key.asc' > /dev/null 2>&1
+    else
+        apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc' > /dev/null 2>&1
+    fi
+
 fi
 
 # Installing HestiaCP repo
@@ -591,7 +600,11 @@ apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev
 if [ "$postgresql" = 'yes' ]; then
     echo "[ * ] PostgreSQL"
     echo "deb https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
-    apt-key adv --fetch-keys 'https://www.postgresql.org/media/keys/ACCC4CF8.asc' > /dev/null 2>&1
+    if [ "$release" = '16.04' ]; then 
+        apt-key adv --fetch-keys 'http://www.postgresql.org/media/keys/ACCC4CF8.asc' > /dev/null 2>&1
+    else
+        apt-key adv --fetch-keys 'https://www.postgresql.org/media/keys/ACCC4CF8.asc' > /dev/null 2>&1
+    fi
 fi
 
 # Echo for a new line

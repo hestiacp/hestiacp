@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - Updated translations system with the use of Gettext. Modified / Updated all translated strings.
 - Use php7.4 as default version.
 - Updated MariaDB to 10.5 (Manual upgrade required install/upgrade/manual/upgrade_mariadb.sh).
+- Added support for Turkish (emrahk [Forum](https://forum.hestiacp.com/t/how-to-contribute-with-translations/1664/4?u=eris) )
 
 ## Bugfixes
 - Removed root login (root / root password )
@@ -43,7 +44,7 @@ All notable changes to this project will be documented in this file.
 - Refactor LXD  Complier script
 - Set default theme to "Dark"
 - Clean up gmail.tpl (DNS) (@madito)
-
+- Improved translations (NL, DE, UK, RU, ES, IT, ZH-CN)
 
 ## [1.2.3] - Service Release
 ### Features

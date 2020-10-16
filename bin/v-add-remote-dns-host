@@ -58,7 +58,7 @@ time_n_date=$(date +'%T %F')
 time=$(echo "$time_n_date" |cut -f 1 -d \ )
 date=$(echo "$time_n_date" |cut -f 2 -d \ )
 
-if [ -z $password ]; then
+if [ -z "$password" ]; then
     # Concatentating dns host string
     str="HOST='$host' PORT='$port' HASH='$hash'"
     str="$str DNS_USER='$dns_user' TYPE='$type' SUSPENDED='no'"

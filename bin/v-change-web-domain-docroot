@@ -1,14 +1,15 @@
 #!/bin/bash
 # info: Changes the document root for an existing web domain
-
 # options: USER DOMAIN TARGET_DOMAIN [DIRECTORY] [PHP]
-# example usage:
-# add custom docroot:    v-change-web-domain-docroot admin domain.tld otherdomain.tld
-#                        points domain.tld to otherdomain.tld's document root.
 #
-# remove custom docroot: v-change-web-domain-docroot admin test.local default
-#                        returns document root to default value for domain.
-
+# example: v-change-web-domain-docroot admin domain.tld otherdomain.tld
+#          # add custom docroot
+#          # points domain.tld to otherdomain.tld's document root.
+#
+# example: v-change-web-domain-docroot admin test.local default
+#          # remove custom docroot
+#          # returns document root to default value for domain.
+#
 # This call changes the document root of a chosen web domain
 # to another available domain under the user context.
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add cron reports
-# options: user
+# options: USER
 #
 # The script for enabling reports on cron tasks and administrative
 # notifications.

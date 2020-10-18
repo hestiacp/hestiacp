@@ -1,10 +1,10 @@
 #!/bin/bash
 # info: enable or disable demo mode
 # options: ACTIVE
+#
 # This function will set the demo mode variable,
 # which will prevent usage of certain v-scripts in the backend
 # and prevent modification of objects in the control panel.
-#
 # It will also disable virtual hosts for Apache and NGINX
 # for domains which have been created.
 

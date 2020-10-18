@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: start service
-# options: service
+# options: SERVICE
 #
 # The function starts system service.
 

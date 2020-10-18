@@ -1,5 +1,8 @@
 #!/bin/bash
 # info: changing domain ssl home
+# options: NONE
+#
+# The function changes SSL home directory.
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

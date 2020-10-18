@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add file manager functionality to Hestia Control Panel
-# options: none
+# options: NONE
 #
 # The function installs the File Manager on the server
 # for access through the Web interface.

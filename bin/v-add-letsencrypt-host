@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add letsencrypt for host and backend
-# options:
+# options: NONE
 #
 # The function check and validates the backend certificate and generate
 # a new let's encrypt certificate.

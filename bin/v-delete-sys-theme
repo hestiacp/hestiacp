@@ -1,6 +1,8 @@
 #!/bin/bash
-# info: removes a theme from the custom theme library.
+# info: removes a theme from the custom theme library
 # options: [RESTART]
+#
+# The function removes a theme from the custom theme library.
 
 
 #----------------------------------------------------------#

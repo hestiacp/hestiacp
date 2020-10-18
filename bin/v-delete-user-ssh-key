@@ -1,8 +1,8 @@
 #!/bin/bash
 # info: add ssh key
-# options: USER key
+# options: USER KEY
 #
-# Function check if $user/.ssh/authorized_keys exists and create it
+# Function check if $user/.ssh/authorized_keys exists and create it.
 # After that it append the new key(s)
 
 #----------------------------------------------------------#

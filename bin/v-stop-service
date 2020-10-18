@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: stop service
-# options: service
+# options: SERVICE
 #
 # The function stops system service.
 

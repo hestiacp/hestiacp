@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: restart service
-# options: service [RESTART]
+# options: SERVICE [RESTART]
 #
 # The function restarts system service.
 

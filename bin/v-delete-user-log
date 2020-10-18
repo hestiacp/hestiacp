@@ -1,5 +1,6 @@
 #!/bin/bash
 # info: Delete log file for user
+# options: NONE
 #
 # The function for deleting a users log file
 

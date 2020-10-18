@@ -1,6 +1,8 @@
 #!/bin/bash
 # info: updates user role
 # options: USER ROLE
+#
+# The function changes user's role.
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

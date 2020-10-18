@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: rebuild databases
-# options: USER
+# options: USER DATABASE
 #
 # The function for rebuilding a single database for a user
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change dns domain record
-# options: USER DOMAIN ID VALUE [PRIORITY] [RESTART] [TTL]
+# options: USER DOMAIN ID RECORD TYPE VALUE [PRIORITY] [RESTART] [TTL]
 #
 # The function for changing DNS record.
 

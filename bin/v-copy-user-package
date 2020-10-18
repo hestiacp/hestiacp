@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: duplicate existing package
-# options: NONE
+# options: PACKAGE NEW_PACKAGE
 #
 # The function allows the user to duplicate an existing
 # package file to facilitate easier configuration.

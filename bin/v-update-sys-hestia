@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: update hestia package/configs
-# options: PACKAGE [VERSION]
+# options: PACKAGE
 #
 # The function runs as rpm update trigger. It pulls shell script from hestia
 # server and runs it.

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: run cli command
-# options: USER FILE
+# options: USER CMD [ARG...]
 #
 # The function runs a limited list of cli commands with dropped privileges as the specific hestia user
 

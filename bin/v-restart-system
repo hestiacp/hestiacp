@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: restart operating system
-# options: RESTART
+# options: RESTART [DELAY]
 #
 # The function restarts operating system.
 

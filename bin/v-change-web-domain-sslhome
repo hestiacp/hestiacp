@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: changing domain ssl home
-# options: NONE
+# options: USER DOMAIN SSL_HOME [RESTART]
 #
 # The function changes SSL home directory.
 

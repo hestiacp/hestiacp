@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: search for available commands
-# options: NONE
+# options: ARG1 [ARG...]
 #
 # This function searches for available Hestia Control Panel commands
 # and returns results based on the specified criteria.

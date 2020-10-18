@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete backup ftp server
-# options: TYPE
+# options: TYPE [HOST]
 #
 # The function deletes ftp backup host
 

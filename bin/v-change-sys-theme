@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: update web templates
-# options: NONE
+# options: THEME
 #
 # The function for changing the currently active system theme.
 

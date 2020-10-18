@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete dns domain or dns record based on web domain alias
-# options: USER DOMAIN
+# options: USER DOMAIN ALIAS [RESTART]
 #
 # The function deletes dns domain or dns record based on web domain alias.
 
@@ -34,7 +34,7 @@ format_domain_idn
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'USER DOMAIN ALIAS'
+check_args '3' "$#" 'USER DOMAIN ALIAS [RESTART]'
 is_format_valid 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'

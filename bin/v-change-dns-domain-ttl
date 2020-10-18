@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change dns domain ttl
-# options: USER DOMAIN TTL
+# options: USER DOMAIN TTL [RESTART]
 #
 # The function for changing the time to live TTL parameter for all records.
 
@@ -31,7 +31,7 @@ format_domain_idn
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'USER DOMAIN TTL'
+check_args '3' "$#" 'USER DOMAIN TTL [RESTART]'
 is_format_valid 'user' 'domain' 'ttl'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list user stats
-# options: [FORMAT]
+# options: USER [FORMAT]
 #
 # The function for listing user statistics
 

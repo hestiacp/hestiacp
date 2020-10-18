@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: update all hestia packages
-# options: USER [RESTART]
+# options: NONE
 #
 # The function of updating all hestia packages
 

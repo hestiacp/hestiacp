@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list backup host
-# options: TYPE HOST [FORMAT]
+# options: TYPE [FORMAT]
 #
 # The function for obtaining the list of backup host parameters.
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change password for http auth user
-# options: USER DOMAIN AUTH_USER AUTH_PASSWORD
+# options: USER DOMAIN AUTH_USER AUTH_PASSWORD [RESTART]
 #
 # The call is used for changing http auth user password
 

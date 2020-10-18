@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: archive directory
-# options: USER ARCHIVE SOURCE
+# options: USER ARCHIVE SOURCE [SOURCE...]
 #
 # The function creates tar archive
 

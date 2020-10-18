@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: unsuspend web domain
-# options: USER DOMAIN
+# options: USER DOMAIN [RESTART]
 #
 # The function of unsuspending the domain.
 

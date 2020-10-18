@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add ssh key
-# options: USER 
+# options: USER [FORMAT]
 #
 # Lists $user/.ssh/authorized_keys
 

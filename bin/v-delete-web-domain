@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete web domain
-# options: USER DOMAIN
+# options: USER DOMAIN [RESTART]
 #
 # The call of function leads to the removal of domain and all its components
 # (statistics, folders contents, ssl certificates, etc.). This operation is
@@ -34,7 +34,7 @@ format_domain_idn
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN'
+check_args '2' "$#" 'USER DOMAIN [RESTART]'
 is_format_valid 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"

@@ -929,6 +929,10 @@ if [ ! "$release" -eq 10 ]; then
     chmod 755 /usr/bin/rssh
 fi
 
+# Restrict access to /proc fs
+# - Prevent unpriv users from seeing each other running processes
+mount -o remount,defaults,hidepid=2 /proc
+echo "@reboot root sleep 5 && mount -o remount,defaults,hidepid=2 /proc" > /etc/cron.d/hestia-proc
 
 #----------------------------------------------------------#
 #                     Configure Hestia                     #

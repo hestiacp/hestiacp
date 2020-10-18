@@ -15,3 +15,4 @@ test/node_modules/
 npm-debug.log
 .phpunit.result.cache
 .vs
+.nova

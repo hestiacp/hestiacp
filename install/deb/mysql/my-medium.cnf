@@ -39,3 +39,4 @@ interactive_timeout=50
 long_query_time=5
 
 !includedir /etc/mysql/conf.d/
+!includedir /etc/mysql/mariadb.conf.d/

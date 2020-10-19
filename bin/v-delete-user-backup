@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete user backup
 # options: USER BACKUP
+# labels: panel
+#
+# example: v-delete-user-backup admin.2012-12-21_00-10-00.tar
 #
 # The function deletes user backup.
 

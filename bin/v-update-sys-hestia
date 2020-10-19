@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update hestia package/configs
 # options: PACKAGE
+# labels: panel
+#
+# example: v-update-sys-hestia exim4
 #
 # The function runs as rpm update trigger. It pulls shell script from hestia
 # server and runs it.

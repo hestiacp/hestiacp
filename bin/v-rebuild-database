@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: rebuild databases
 # options: USER DATABASE
+# labels: hestia
 #
 # The function for rebuilding a single database for a user
 

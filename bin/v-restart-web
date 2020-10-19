@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: restart web server
 # options: NONE
+# labels: web
 #
 # The function reloads web server configuration.
 

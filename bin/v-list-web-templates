@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list web templates
 # options: [FORMAT]
+# labels: web
 #
 # The function for obtaining the list of web templates available to a user.
 

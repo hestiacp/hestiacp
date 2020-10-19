@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: delete firewall ipset
 # options: NAME
+# labels: hestia
 #
 # The function removes ipset from system and from hestia
 

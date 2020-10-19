@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list user stats
 # options: USER [FORMAT]
+# labels: panel
+#
+# example: v-list-users-stats admin
 #
 # The function for listing user statistics
 

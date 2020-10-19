@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: deleting web domain backend configuration
 # options: USER DOMAIN [RESTART]
+# labels: web
+#
+# example: v-delete-web-domain-backend admin acme.com
 #
 # The function of deleting the virtualhost backend configuration.
 

@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: restart mail service
 # options: NONE
+# labels: mail
 #
 # The function tells exim or dovecot services to reload configuration files.
 

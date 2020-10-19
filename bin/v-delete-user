@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete user
 # options: USER [RESTART]
+# labels: panel
+#
+# example: v-delete-user whistler
 #
 # This function deletes a certain user and all his resources such as domains,
 # databases, cron jobs, etc.

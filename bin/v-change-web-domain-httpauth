@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change password for http auth user
 # options: USER DOMAIN AUTH_USER AUTH_PASSWORD [RESTART]
+# labels: web
+#
+# example: v-change-web-domain-httpauth admin acme.com alice white_rA$$bIt
 #
 # The call is used for changing http auth user password
 

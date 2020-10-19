@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete webdomain ftp account
 # options: USER DOMAIN FTP_USER
+# labels: web
+#
+# example: v-delete-web-domain-ftp admin wonderland.com bob_ftp
 #
 # The function deletes additional ftp account.
 

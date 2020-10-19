@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change ip status
 # options: IP IP_STATUS
+# labels: panel
+#
+# example: 91.198.136.14 yourstatus
 #
 # The function of changing an ip address's status.
 

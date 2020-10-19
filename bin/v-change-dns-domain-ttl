@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change dns domain ttl
 # options: USER DOMAIN TTL [RESTART]
+# labels: dns
+#
+# example: v-change-dns-domain-ttl alice example.com 14400
 #
 # The function for changing the time to live TTL parameter for all records.
 

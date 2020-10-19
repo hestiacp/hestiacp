@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: duplicate existing package
 # options: PACKAGE NEW_PACKAGE
+# labels: hestia
 #
 # The function allows the user to duplicate an existing
 # package file to facilitate easier configuration.

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: adding cronjob for letsencrypt cetificate installation
 # options: USER DOMAIN [ALIASES]
+# labels: panel
+#
+# example: v-schedule-letsencrypt-domain admin example.com www.example.com
 #
 # The function adds cronjob for letsencrypt ssl certificate installation
 

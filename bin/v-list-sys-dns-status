@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list dns status
 # options: [FORMAT]
+# labels: 
 #
 # The function lists dns server status
 

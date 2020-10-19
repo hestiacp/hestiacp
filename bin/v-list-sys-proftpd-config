@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list proftpd config parameters
 # options: [FORMAT]
+# labels: panel
 #
 # The function for obtaining the list of proftpd config parameters.
 

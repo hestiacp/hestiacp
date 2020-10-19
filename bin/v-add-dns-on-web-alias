@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add dns domain or dns record after web domain alias
 # options: USER ALIAS IP [RESTART]
+# labels: dns
+#
+# example: v-add-dns-on-web-alias admin www.example.com 8.8.8.8
 #
 # The function adds dns domain or dns record based on web domain alias.
 

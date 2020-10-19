@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list clamd config parameters
 # options: [FORMAT]
+# labels: 
+#
+# example: v-list-sys-clamdconfig
 #
 # The function for obtaining the list of clamd config parameters.
 

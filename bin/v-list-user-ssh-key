@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: add ssh key
 # options: USER [FORMAT]
+# labels: hestia
 #
 # Lists $user/.ssh/authorized_keys
 

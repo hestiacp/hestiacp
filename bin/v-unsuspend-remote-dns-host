@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: unsuspend remote dns server
 # options: HOST
+# labels: dns
+#
+# example: v-unsuspend-remote-dns-host hosname.com
 #
 # The function for unsuspending remote dns server.
 

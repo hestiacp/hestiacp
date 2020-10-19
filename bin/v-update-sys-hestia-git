@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: Delete log file for user
 # options: REPOSITORY BRANCH INSTALL [PACKAGES]
+# labels: hestia
 #
 # example: v-update-sys-hestia-git hestiacp staging/beta install all
 #          # Will download from the hestiacp repository

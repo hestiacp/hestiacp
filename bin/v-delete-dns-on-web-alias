@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete dns domain or dns record based on web domain alias
 # options: USER DOMAIN ALIAS [RESTART]
+# labels: dns
+#
+# example: v-delete-dns-on-web-alias admin example.com www.example.com
 #
 # The function deletes dns domain or dns record based on web domain alias.
 

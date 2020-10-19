@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change ip nat address
 # options: IP NAT_IP [RESTART]
+# labels: panel
+#
+# example: 185.209.50.140 10.110.104.205
 #
 # The function for changing nat ip associated with ip.
 

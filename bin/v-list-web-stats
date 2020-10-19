@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list web statistics
 # options: [FORMAT]
+# labels: web
 #
 # The function for obtaining the list of web statistics analyzer.
 

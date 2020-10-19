@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: add ssh key
 # options: USER KEY
+# labels: hestia
 #
 # Function check if $user/.ssh/authorized_keys exists and create it.
 # After that it append the new key(s)

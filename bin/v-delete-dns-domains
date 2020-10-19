@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete dns domains
 # options: USER [RESTART]
+# labels: dns
+#
+# example: v-delete-dns-domains bob
 #
 # The function for deleting all users DNS domains.
 

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: restore user
 # options: USER BACKUP [WEB] [DNS] [MAIL] [DB] [CRON] [UDIR] [NOTIFY]
+# labels: panel
+#
+# example: v-restore-user admin 2019-04-22_01-00-00.tar
 #
 # The function for restoring user from backup.
 

@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: change phpmyadmin/phppgadmin alias url
 # options: TYPE ALIAS
+# labels: hestia
 #
 # example: v-change-sys-db-alias pma phpmyadmin
 #          # Sets phpMyAdmin alias to phpmyadmin

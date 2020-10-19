@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: Adding hsts to a domain
 # options: USER DOMAIN
+# labels: hestia
 #
 # The function enables HSTS for the requested domain.
 

@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: rebuild web domains
 # options: USER [RESTART]
+# labels: 
 #
 # The function rebuilds web configuration files.
 

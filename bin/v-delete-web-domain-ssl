@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete web domain SSL support
 # options: USER DOMAIN [RESTART]
+# labels: web
+#
+# example: v-delete-web-domain-ssl admin acme.com
 #
 # The function disable https support and deletes SSL certificates.
 

@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: delete system quota
 # options: NONE
+# labels: panel
 #
 # The script disables filesystem quota on /home partition
 

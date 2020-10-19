@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: unsuspend mail account
 # options: USER DOMAIN ACCOUNT
+# labels: mail
+#
+# example: v-suspend-mail-account admin acme.com tester
 #
 # The function unsuspends mail account.
 

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete mail domain dkim support
 # options: USER DOMAIN
+# labels: mail
+#
+# example: v-delete-mail-domain-dkim admin mydomain.tld
 #
 # The function delete DKIM domain pem.
 

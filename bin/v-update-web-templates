@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: update web templates
 # options: [RESTART]
+# labels: web
 #
 # The function for obtaining updated pack of web templates.
 

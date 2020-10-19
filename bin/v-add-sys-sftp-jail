@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: add system sftp jail
 # options: [RESTART]
+# labels: 
 #
 # The script enables sftp jailed environment
 

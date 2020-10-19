@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: update mail templates
 # options: [RESTART]
+# labels: hestia
 #
 # The function for obtaining updated pack of mail templates.
 

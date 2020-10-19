@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: rebuild web domain
 # options: USER DOMAIN [RESTART]
+# labels: hestia
 #
 # The function rebuilds web configuration files.
 

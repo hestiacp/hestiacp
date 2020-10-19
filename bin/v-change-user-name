@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change user full name
 # options: USER NAME [LAST_NAME]
+# labels: panel
+#
+# example: v-change-user-name admin John Smith
 #
 # The function allow to change user's full name.
 

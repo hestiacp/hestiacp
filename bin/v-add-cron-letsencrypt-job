@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add letsencrypt cronjob
 # options: NONE
+# labels: 
+#
+# example: v-add-letsencrypt-job
 #
 # The script for enabling letsencrypt cronjob
 

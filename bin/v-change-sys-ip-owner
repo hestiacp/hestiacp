@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change ip owner
 # options: IP USER
+# labels: panel
+#
+# example: 91.198.136.14 admin
 #
 # The function of changing ip address ownership.
 

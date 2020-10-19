@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: update user usage counters
 # options: USER
+# labels: panel
 #
 # Function updates usage counters like U_WEB_DOMAINS, U_MAIL_ACCOUNTS, etc.
 

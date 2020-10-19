@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: deleting web domain proxy configuration
 # options: USER DOMAIN [RESTART]
+# labels: web
+#
+# example: v-delete-web-domain-proxy alice lookinglass.com
 #
 # The function of deleting the virtualhost proxy configuration.
 

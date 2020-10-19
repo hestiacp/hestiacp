@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: add php fpm version
 # options: VERSION
+# labels: hestia
 #
 # The function checks and delete a fpm php version if not used by any domain.
 

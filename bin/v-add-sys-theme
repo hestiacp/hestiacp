@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: install theme from local source or GitHub.
 # options: THEME [MODE] [ACTIVE]
+# labels: hestia
 #
 # The function for installing a custom theme or downloading one
 # from the HestiaCP theme repository.

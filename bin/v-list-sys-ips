@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list system ips
 # options: [FORMAT]
+# labels: panel
 #
 # The function for obtaining the list of system ip adresses.
 

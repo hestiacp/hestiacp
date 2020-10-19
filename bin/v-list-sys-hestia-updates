@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list system updates
 # options: [FORMAT]
+# labels: 
 #
 # The function checks available updates for hestia packages.
 

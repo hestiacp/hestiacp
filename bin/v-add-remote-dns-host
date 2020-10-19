@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add new remote dns host
 # options: HOST PORT USER PASSWORD [TYPE] [DNS_USER]
+# labels: dns
+#
+# example: v-add-remote-dns-host slave.your_host.com 8083 admin your_passw0rd
 #
 # The function adds remote dns server to the dns cluster.
 

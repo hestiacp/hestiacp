@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: enable or disable demo mode
 # options: ACTIVE
+# labels: hestia
 #
 # This function will set the demo mode variable,
 # which will prevent usage of certain v-scripts in the backend

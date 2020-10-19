@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete web domain
 # options: USER DOMAIN [RESTART]
+# labels: web
+#
+# example: v-delete-web-domain admin wonderland.com
 #
 # The call of function leads to the removal of domain and all its components
 # (statistics, folders contents, ssl certificates, etc.). This operation is

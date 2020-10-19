@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: update web templates
 # options: THEME
+# labels: hestia
 #
 # The function for changing the currently active system theme.
 

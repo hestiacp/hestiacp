@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: enable/disable directory listing
 # options: USER DOMAIN MODE
+# labels: hestia
 #
 # The call is used for changing the directory list mode.
 

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change dns domain soa record
 # options: USER DOMAIN SOA [RESTART]
+# labels: dns
+#
+# example: v-change-dns-domain-soa admin acme.com d.ns.domain.tld
 #
 # The function for changing SOA record. This type of records can not be
 # modified by v-change-dns-record call.

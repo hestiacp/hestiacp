@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: update all hestia packages
 # options: NONE
+# labels: panel
 #
 # The function of updating all hestia packages
 

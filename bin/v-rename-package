@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: change package name
 # options: OLD_NAME NEW_NAME
+# labels: hestia
 #
 # The function changes the name of an existing package.
 

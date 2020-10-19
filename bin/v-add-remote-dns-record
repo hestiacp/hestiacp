@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add remote dns domain record
 # options: USER DOMAIN ID
+# labels: dns
+#
+# example: v-add-remote-dns-record bob acme.com 23
 #
 # The function synchronize dns domain with the remote server.
 

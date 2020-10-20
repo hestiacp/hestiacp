@@ -21,7 +21,6 @@ nginx-proxy      rproxy       No   Nginx reverse proxy
 nginx-web        web          No   Nginx web server
 php-fpm          php          Yes  PHP language FPM
 phpmyadmin       phpmyadmin   Yes  phpMyAdmin MariaDB/MySQL web admin
-php-ruid2        php          No   PHP language ruid2
 spamassassin     antispam     Yes  SpamAssassin antispam
 vsftpd           ftp          No   Vsftpd FTP server
 ```

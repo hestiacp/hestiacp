@@ -57,6 +57,12 @@ for service in $service_list; do
             "$service" = "php7.2-fpm" -o \
             "$service" = "php7.3-fpm" -o \
             "$service" = "php7.4-fpm" -o \
+            "$service" = "php56-php-fpm" -o \
+            "$service" = "php70-php-fpm" -o \
+            "$service" = "php71-php-fpm" -o \
+            "$service" = "php72-php-fpm" -o \
+            "$service" = "php73-php-fpm" -o \
+            "$service" = "php74-php-fpm" -o \
             "$service" = "proftpd" -o    \
             "$service" = "ssh" -o       \
             "$service" = "fail2ban" ]; then

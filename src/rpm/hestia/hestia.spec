@@ -1,5 +1,5 @@
 Name:           hestia
-Version:        1.2.0
+Version:        %HESTIA-VERSION%
 Release:        0
 Summary:        Hestia Control Panel
 Group:          System Environment/Base

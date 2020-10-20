@@ -389,6 +389,7 @@ if [ "$NGINX_B" = true ] ; then
     if [ "$BUILD_RPM" = true ]; then
         # Get RHEL package files
         get_branch_file 'src/rpm/nginx/hestia-nginx.spec' "${BUILD_DIR_HESTIANGINX}/hestia-nginx.spec"
+        sed -i "s/%HESTIA-NGINX-VERSION%/${NGINX_V}/g" "${BUILD_DIR_HESTIANGINX}/hestia-nginx.spec"
         get_branch_file 'src/rpm/nginx/hestia-nginx.service' "${BUILD_DIR_HESTIANGINX}/hestia-nginx.service"
 
         # Custom config
@@ -505,6 +506,7 @@ if [ "$PHP_B" = true ] ; then
     if [ "$BUILD_RPM" = true ]; then
         # Get RHEL package files
         get_branch_file 'src/rpm/php/hestia-php.spec' "${BUILD_DIR_HESTIAPHP}/hestia-php.spec"
+        sed -i "s/%HESTIA-PHP-VERSION%/${PHP_V}/g" "${BUILD_DIR_HESTIAPHP}/hestia-php.spec"
         get_branch_file 'src/rpm/php/hestia-php.service' "${BUILD_DIR_HESTIAPHP}/hestia-php.service"
 
         # Get custom config
@@ -592,6 +594,7 @@ if [ "$HESTIA_B" = true ]; then
     if [ "$BUILD_RPM" = true ]; then
         # Get RHEL package files
         get_branch_file 'src/rpm/hestia/hestia.spec' "${BUILD_DIR_HESTIA}/hestia.spec"
+        sed -i "s/%HESTIA-VERSION%/${HESTIA_V}/g" "${BUILD_DIR_HESTIA}/hestia.spec"
         get_branch_file 'src/rpm/hestia/hestia.service' "${BUILD_DIR_HESTIA}/hestia.service"
 
         # Build RPM package

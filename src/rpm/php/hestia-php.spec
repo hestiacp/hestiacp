@@ -1,5 +1,5 @@
 Name:           hestia-php
-Version:        7.4.6
+Version:        %HESTIA-PHP-VERSION%
 Release:        0
 Summary:        Hestia internal PHP
 Group:          System Environment/Base

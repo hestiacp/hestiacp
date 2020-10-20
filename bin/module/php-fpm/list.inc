@@ -13,7 +13,7 @@ hestia_module_php-fpm_list() {
     for php_version in $PHP_SUPPORTED_VERSIONS; do
         php_withoutdot=${php_version//.}
         php_version_present=$(osal_kv_read $HESTIA_CONF_MODULES/php-fpm.conf "php${php_withoutdot}_present" 0)
-        echo PHP (FPM) ${php_version}: $(osal_bool_tostring $php_version_present 'present' 'not present')
+        echo "PHP (FPM) ${php_version}: $(osal_bool_tostring $php_version_present 'present' 'not present')"
     done
 
     return 0

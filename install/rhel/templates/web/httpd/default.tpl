@@ -39,11 +39,6 @@
         AllowOverride All
     </Directory>
 
-    <IfModule mod_ruid2.c>
-        RMode config
-        RUidGid %user% %group%
-        RGroups %apache_group%
-    </IfModule>
     <IfModule mpm_itk.c>
         AssignUserID %user% %group%
     </IfModule>

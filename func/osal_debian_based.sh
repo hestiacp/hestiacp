@@ -134,12 +134,12 @@ osal_apache_module_disable() {
 }
 
 # multiphp_php_package_prefix 7.3 = 'php7.3'
-osal_multiphp_php_package_prefix() {
+osal_php_package_prefix() {
     echo "php${1}"
 }
 
 # multiphp_fpm_isinstalled 7.3 = (1|null)
-osal_multiphp_fpm_isinstalled() {
+osal_php_fpm_isinstalled() {
     [ -f "/etc/init.d/php$1-fpm" ] && echo 1
 }
 
@@ -150,6 +150,6 @@ multiphp_etc_folder() {
 
 # Returns PHP-FPM directory for a given PHP version
 # multiphp_fpm_pool_d '7.3' = /etc/php/7.3/fpm/pool.d
-osal_multiphp_fpm_pool_d() {
+osal_php_fpm_pool_d() {
     echo $PHP_DIR_POOL_D_BASE/$1/fpm/pool.d
 }

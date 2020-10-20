@@ -57,7 +57,7 @@ hestia_module_php-fpm_add() {
 
     echo "Adding PHP (FPM) version ${php_version}..."
 
-    local php_prefix=$(osal_multiphp_php_package_prefix $php_version)
+    local php_prefix=$(osal_php_package_prefix $php_version)
 
     mph="$php_prefix-mbstring $php_prefix-bcmath $php_prefix-cli $php_prefix-curl
         $php_prefix-fpm $php_prefix-gd $php_prefix-intl $php_prefix-mysql
@@ -75,7 +75,7 @@ hestia_module_php-fpm_add() {
     osal_execute_with_spinner osal_package_install $mph
 
     # Check if installation was sucessfully
-    if [ ! $(osal_multiphp_fpm_isinstalled $php_version) ]; then
+    if [ ! $(osal_php_fpm_isinstalled $php_version) ]; then
         echo "Installation failed, please run the following command manualy for debuging:"
         echo "$OSAL_CMD_PACKAGE_MANAGER install ${mph//\\n/ \\}"
     fi
@@ -88,7 +88,7 @@ hestia_module_php-fpm_add() {
 
     # Configure FPM
     osal_service_enable $php_prefix-fpm > /dev/null 2>&1
-    pool_d=$(osal_multiphp_fpm_pool_d $php_version)
+    pool_d=$(osal_php_fpm_pool_d $php_version)
     if [ "$pool_d" ]; then
         mkdir -p $pool_d
         hestia_safe_rm $pool_d/*

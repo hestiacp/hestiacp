@@ -1,7 +1,7 @@
 ; origin-src: deb/templates/web/php-fpm/socket.tpl
 
 [%backend%]
-listen = /var/run/php/%backend%.sock
+listen = /var/run/php-fpm/%backend%.sock
 listen.owner = %user%
 listen.group = apache
 listen.mode = 0660

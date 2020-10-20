@@ -11,7 +11,7 @@ hestia_module_php-fpm_install() {
 
     echo "Installing PHP (FPM) module..."
 
-    local pool_d=$(osal_multiphp_fpm_pool_d $PHP_DEFAULT_VERSION)
+    local pool_d=$(osal_php_fpm_pool_d $PHP_DEFAULT_VERSION)
     mkdir -p $pool_d
     cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf $pool_d/www.conf
 

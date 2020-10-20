@@ -3,7 +3,7 @@
 # options: USER [RESTART]
 # labels: dns
 #
-# example: v-suspend-dns-domain admin yes
+# example: v-suspend-dns-domains admin yes
 #
 # The function suspends all user's DNS domains.
 

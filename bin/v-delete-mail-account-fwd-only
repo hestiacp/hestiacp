@@ -3,7 +3,7 @@
 # options: USER DOMAIN ACCOUNT
 # labels: mail
 #
-# example: v-delete-mail-accont-fwd-only admin example.com jack
+# example: v-delete-mail-account-fwd-only admin example.com jack
 #
 # The function deletes fwd-only flag
 

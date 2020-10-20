@@ -3,7 +3,7 @@
 # options: USER SRC [RESTART]
 # labels: dns
 #
-# example: v-delete-dns-domain-src admin '' yes
+# example: v-delete-dns-domains-src admin '' yes
 #
 # The function for deleting DNS domains related to a certain host.
 

@@ -3,7 +3,7 @@
 # options: USER [FORMAT]
 # labels: panel
 #
-# example: v-list-users-stats admin
+# example: v-list-user-stats admin
 #
 # The function for listing user statistics
 

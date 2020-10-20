@@ -3,7 +3,7 @@
 # options: USER DOMAIN ACCOUNT
 # labels: mail
 #
-# example: v-suspend-mail-account admin acme.com tester
+# example: v-unsuspend-mail-account admin acme.com tester
 #
 # The function unsuspends mail account.
 

@@ -3,8 +3,6 @@
 # options: [FORMAT]
 # labels: panel
 #
-# example: v-list-pgsql-config
-#
 # The function for obtaining the list of postgresql config parameters.
 
 

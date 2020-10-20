@@ -3,7 +3,7 @@
 # options: SSL_DIR [RESTART]
 # labels: panel
 #
-# example: v-change-hestia-ssl /home/new/dir/path yes
+# example: v-change-sys-hestia-ssl /home/new/dir/path yes
 #
 # The function changes hestia SSL certificate and the key.
 

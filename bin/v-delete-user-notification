@@ -3,7 +3,7 @@
 # options: USER NOTIFICATION
 # labels: panel
 #
-# example: admin "Hello, admin!"
+# example: v-delete-user-notification admin "Hello, admin!"
 #
 # The function deletes user notification.
 

@@ -3,8 +3,6 @@
 # options: NONE
 # labels: 
 #
-# example: v-add-letsencrypt-job
-#
 # The script for enabling letsencrypt cronjob
 
 

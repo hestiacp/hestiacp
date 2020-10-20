@@ -452,6 +452,7 @@ if [ "$PHP_B" = true ] ; then
                     --with-fpm-group=admin \
                     --with-libdir=lib/x86_64-linux-gnu \
                     --with-mysqli \
+                    --with-gettext \
                     --with-curl \
                     --with-zip \
                     --with-gmp \

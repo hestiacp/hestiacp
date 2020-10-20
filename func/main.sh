@@ -921,6 +921,12 @@ is_service_format_valid() {
     fi
 }
 
+is_hash_format_valid() {
+  if ! [[ "$1" =~ ^[_A-Za-z0-9]{1,32}$ ]]; then
+        check_result $E_INVALID "invalid $2 format :: $1"
+    fi    
+}
+
 # Format validation controller
 is_format_valid() {
     for arg_name in $*; do
@@ -952,6 +958,7 @@ is_format_valid() {
                 extentions)     is_common_format_valid "$arg" 'extentions' ;;
                 ftp_password)   is_password_format_valid "$arg" ;;
                 ftp_user)       is_user_format_valid "$arg" "$arg_name" ;;
+                hash)           is_hash_format_valid "$arg" "$arg_name" ;;
                 host)           is_object_format_valid "$arg" "$arg_name" ;;
                 hour)           is_cron_format_valid "$arg" $arg_name ;;
                 id)             is_int_format_valid "$arg" 'id' ;;

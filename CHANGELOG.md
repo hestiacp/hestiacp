@@ -42,6 +42,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue with paswords containing "`'`" - [Forum](https://forum.hestiacp.com/t/two-factor-authentication-issue-with-standard-user/1652/)
 - Refactored LXD compiler script
 - Cleaned up entries used in the Google / Gmail DNS template - thanks **@madito**
+- Improved translations (NL, DE, UK, RU, ES, IT, ZH-CN)
 
 ## [1.2.4] - Service Release
 ### Features

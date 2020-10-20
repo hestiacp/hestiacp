@@ -7,6 +7,12 @@ source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
 
 hestia() {
+
+    if [[ -z $@ ]]; then
+        echo "Hestia: command missing. Try 'hestia help' for more information."
+        exit
+    fi
+
     # Search for command file
     local cmd_name=''
     local cmd_file=''

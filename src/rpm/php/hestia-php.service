@@ -2,7 +2,6 @@
 Description=Hestia PHP daemon
 Documentation=https://www.hestiacp.com
 PartOf=hestia.service
-After=hestia.service
 
 [Service]
 Type=forking

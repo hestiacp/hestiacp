@@ -3,6 +3,8 @@ Description=Hestia web console
 Documentation=https://www.hestiacp.com
 Wants=network-online.target
 After=network-online.target
+Requires=hestia-php.service
+Requires=hestia-nginx.service
 
 [Service]
 Type=oneshot

@@ -2,7 +2,6 @@
 Description=Hestia nginx - administration web server
 Documentation=https://www.hestiacp.com
 PartOf=hestia.service
-After=hestia.service
 After=hestia-php.service
 
 [Service]

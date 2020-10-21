@@ -40,6 +40,7 @@ hestia() {
                 cmd_name=$arg
                 cmd_file=$arg
             fi
+            cmd_type='dir'
             shift
         elif [ -x "$HESTIA_BIN/$cmd_file/${arg}" ]; then
             # Look for regular executable file
@@ -117,6 +118,11 @@ hestia() {
         if [ "$cmd_type" = 'include' ]; then
             source $cmd_file
             hestia_$cmd_name $@
+        elif [ "$cmd_type" = 'dir' ]; then
+            # Found to dir level, but no file. Assume 'help' command
+            source "$HESTIA_BIN/${cmd_file}/help.inc"
+            cmd_name_help="${cmd_name}_help"
+            hestia_$cmd_name_help
         else
             $cmd_file $@
         fi

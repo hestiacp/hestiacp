@@ -5,7 +5,7 @@
 # i.e. `hestia_module_what-provides 'web'` = 'apache'
 # i.e. `hestia_module_what-provides 'exim'` = 'exim'
 hestia_module_what-provides() {
-    if [ -e $HESTIA/data/modules/$1.hmd ]; then
+    if [ -e $HESTIA_INSTALL_DIR/../modules/$1.hmd ]; then
         # There's a module with that name
         echo $1
         return 0

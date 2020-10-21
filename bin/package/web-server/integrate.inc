@@ -85,4 +85,18 @@ hestia_package_web-server_integrate() {
             osal_service_start $OSAL_SERVICE_NGINX
         fi
     fi
+
+    if hestia_module_isinstalled 'php-fpm'; then
+        source $HESTIA/bin/module/php-fpm/func.inc
+        for php_version in $PHP_SUPPORTED_VERSIONS; do
+            local php_withoutdot=${php_version//.}
+            php_version_present=$(osal_kv_read $HESTIA_CONF_MODULES/php-fpm.conf "php${php_withoutdot}_present" 0)
+            if [ "$php_version_present" == "1" ]; then
+                local php_prefix=$(osal_php_package_prefix $php_version)
+                osal_service_enable $php_prefix-fpm
+                osal_service_restart $php_prefix-fpm
+                echo "Enabling $php_version (systemctl restart $php_prefix-fpm)"
+            fi
+        done
+    fi
 }

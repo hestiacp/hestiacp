@@ -116,6 +116,9 @@ hestia_setup_init() {
         cp -f $HESTIA_INSTALL_DIR/ssl/dhparam.pem /etc/ssl/
     fi
 
+    echo " - Configuring system IP addresses..."
+    $HESTIA/bin/v-update-sys-ip
+
     echo " - Enabling and starting Hestia service..."
     osal_service_enable hestia
     osal_service_restart hestia

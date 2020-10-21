@@ -58,13 +58,13 @@ osal_service_restart() {
 # service_enable 'service-name'
 osal_service_enable() {
     [ "$HESTIA_DEBUG" ] && >&2 echo Enable service $1
-    /usr/bin/systemctl enable ${1}.service
+    /usr/bin/systemctl enable ${1}.service > /dev/null
 }
 
 # service_disable 'service-name'
 osal_service_disable() {
     [ "$HESTIA_DEBUG" ] && >&2 echo Disable service $1
-    /usr/bin/systemctl disable ${1}.service
+    /usr/bin/systemctl disable ${1}.service > /dev/null
 }
 
 osal_value_in_list() {

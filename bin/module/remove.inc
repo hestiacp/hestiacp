@@ -11,11 +11,27 @@ hestia_module_remove() {
         #echo "$mod_providers" equals "$mod_name"
         if [ "$mod_providers" == "$mod_name" ]; then
             # It's a final module name, remove immediately
+            local hmd="$HESTIA/data/modules/${mod_provider}.hmd"
             local requiredby=$(hestia_module_remove_check_requiredby $mod_name)
             if [ "$requiredby" ]; then
                 if [ "$param_force" ]; then
                     for mod_required in $requiredby; do
                         hestia module remove $mod_required --force
+
+                        local mod_provides=$(osal_kv_read $hmd 'provides')
+                        if [ "$mod_provides" ]; then
+                            # Write what this module provides
+                            for mod in $mod_provides; do
+                                local current_variant=$(hestia_module_variant_installed $mod)
+                                current_variant=$(echo "$current_variant" | sed "s/$mod_provider//")
+
+                                if [ ! "$current_variant" ]; then
+                                    osal_kv_write $HESTIA_CONF_MODULES/$mod.conf 'installed' 0
+                                fi
+                                osal_kv_write $HESTIA_CONF_MODULES/$mod.conf $mod_provider 'no'
+                                osal_kv_write $HESTIA_CONF_MODULES/$mod.conf 'variant' $current_variant
+                            done
+                        fi
                     done
                 else
                     echo "Module '${mod_name}' is required by '${requiredby}'. Use --force to remove recursively."

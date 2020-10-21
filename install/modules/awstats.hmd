@@ -1,0 +1,6 @@
+name=awstats
+provides=webstats
+requires=
+conflicts=
+preference=100
+description=AWStats

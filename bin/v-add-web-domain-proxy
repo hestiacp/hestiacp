@@ -20,6 +20,7 @@ extentions=${4-$default_extentions}
 restart="$5"
 
 # Includes
+source $HESTIA/func/osal.sh
 source $HESTIA/func/main.sh
 source $HESTIA/func/domain.sh
 source $HESTIA/func/ip.sh

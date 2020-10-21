@@ -98,6 +98,11 @@ OSAL_PATH_RUN=/var/run
 # Functions                                                         #
 #-------------------------------------------------------------------#
 
+# osal_package_getversion 'package'
+osal_package_getversion() {
+   dpkg-query --showformat='${Version}\n' --show $1 | cut -d"~" -f1
+}
+
 # OS function wrappers
 
 # package_preinstall

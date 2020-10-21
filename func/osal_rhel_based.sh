@@ -97,6 +97,11 @@ OSAL_PATH_RUN=/var/run
 # Functions                                                         #
 #-------------------------------------------------------------------#
 
+# osal_package_getversion 'package'
+osal_package_getversion() {
+    rpm --queryformat="%{VERSION}" -q $1 | cut -d"~" -f1
+}
+
 # OS function wrappers
 
 # package_preinstall

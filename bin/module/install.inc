@@ -26,6 +26,9 @@ hestia_module_install() {
 
         if ! hestia module "$mod_provider" install "$@"; then
             echo "$mod_provider module installation failed"
+            if [ ! "$param_force" ]; then
+                exit 1
+            fi
         fi
 
         # Write installed module info

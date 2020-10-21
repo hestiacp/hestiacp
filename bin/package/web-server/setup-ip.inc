@@ -42,6 +42,7 @@ hestia_package_web-server_setup-ip() {
             sed -e "s/%ip%/$ip/g" \
                 -e "s/%web_port%/$WEB_PORT/g" \
                 -e "s/%proxy_port%/$PROXY_PORT/g" \
+                -e "s/%proxy_ssl_port%/$PROXY_SSL_PORT/g" \
             > /etc/$PROXY_SYSTEM/conf.d/$ip.conf
 
         # mod_extract_forwarded

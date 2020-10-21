@@ -35,7 +35,9 @@ EOL
     osal_package_preinstall
     osal_package_install $OSAL_PKG_NGINX
 
+    hestia_config_backup 'nginx-install' $OSAL_PATH_NGINX_CONF $OSAL_PATH_NGINX_CONF_D
     hestia_safe_rm $OSAL_PATH_NGINX_CONF_D/*.conf
+    
     cp -f $HESTIA_INSTALL_DIR/nginx/nginx.conf $OSAL_PATH_NGINX_CONF/
     cp -f $HESTIA_INSTALL_DIR/nginx/status.conf $OSAL_PATH_NGINX_CONF_D/
     #FIXME: move the following to *admin install

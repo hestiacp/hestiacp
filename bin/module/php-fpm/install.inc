@@ -26,7 +26,7 @@ hestia_module_php-fpm_install() {
     
     # Add default PHP version
     # Use --force, otherwise it will fail because technically php-fpm is still not installed
-    echo "Adding default PHP version..."
+    echo "Adding default PHP version ($PHP_DEFAULT_VERSION)..."
     hestia module php-fpm add $PHP_DEFAULT_VERSION --force
 
     return 0

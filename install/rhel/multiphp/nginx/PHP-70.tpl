@@ -22,7 +22,7 @@ server {
                 return  404;
             }
 
-            fastcgi_pass    unix:/run/php-fpm/php7.0-fpm-%domain%.sock;
+            fastcgi_pass    unix:/var/run/php/php7.0-fpm-%domain%.sock;
             fastcgi_index   index.php;
             include         /etc/nginx/fastcgi_params;
         }

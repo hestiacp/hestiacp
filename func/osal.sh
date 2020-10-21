@@ -58,13 +58,13 @@ osal_service_restart() {
 # service_enable 'service-name'
 osal_service_enable() {
     [ "$HESTIA_DEBUG" ] && >&2 echo Enable service $1
-    /usr/bin/systemctl enable ${1}.service > /dev/null
+    /usr/bin/systemctl enable ${1}.service > /dev/null 2>&1
 }
 
 # service_disable 'service-name'
 osal_service_disable() {
     [ "$HESTIA_DEBUG" ] && >&2 echo Disable service $1
-    /usr/bin/systemctl disable ${1}.service > /dev/null
+    /usr/bin/systemctl disable ${1}.service > /dev/null 2>&1
 }
 
 osal_value_in_list() {
@@ -109,7 +109,7 @@ osal_kv_write() {
     echo "$2=$3" >> "$1"
     if [ "$1" == "$HESTIA/conf/hestia.conf" ]; then
         # Writing config value. Take effect immediately.
-        declare $2="$3"
+        declare -x $2="$3"
     fi
 }
 
@@ -134,6 +134,10 @@ osal_kv_read() {
 osal_kv_delete() {
     local kv_keyname=$(echo "$2" | sed_escape)
     test -f "$1" && sed -i "/^${kv_keyname}\s*=.*$/d" "$1"
+    if [ "$1" == "$HESTIA/conf/hestia.conf" ]; then
+        # Deleting config value. Take effect immediately.
+        declare $2=''
+    fi
 }
 
 # Tests if a value exists in a key-value file.

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-hestia_package_install_mail-server() {
+hestia_package_mail-server_install() {
     local memory=$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])
 
     if [ "$param_help" ]; then
@@ -12,6 +12,7 @@ hestia_package_install_mail-server() {
 
     hestia module install exim
     hestia module install dovecot
+    
     if [ $memory -ge 1572864 ] || [ "$param_withantivirus" ]; then
         if [ ! "$param_withoutantivirus" ]; then
             hestia module install clamav

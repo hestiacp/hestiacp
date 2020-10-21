@@ -87,7 +87,7 @@ hestia_module_php-fpm_add() {
     fi
 
     # Configure FPM
-    osal_service_enable $php_prefix-fpm > /dev/null 2>&1
+    osal_service_enable $php_prefix-fpm
     pool_d=$(osal_php_fpm_pool_d $php_version)
     if [ "$pool_d" ]; then
         mkdir -p $pool_d

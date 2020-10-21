@@ -13,9 +13,10 @@ hestia_package_web-server_setup-ip() {
         hestia_safe_rm $web_conf
 
         if [ "$WEB_SYSTEM" = 'httpd' ] || [ "$WEB_SYSTEM" = 'apache2' ]; then
+            echo "# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS" > $web_conf
             if [ -z "$(/usr/sbin/apachectl -v | grep Apache/2.4)" ]; then
                 # FIXME: this will break with Apache > 2.4
-                echo "NameVirtualHost $ip:$WEB_PORT" >  $web_conf
+                echo "NameVirtualHost $ip:$WEB_PORT" >>  $web_conf
             fi
             echo "Listen $ip:$WEB_PORT" >> $web_conf
             cat $HESTIA_INSTALL_DIR/$WEB_SYSTEM/unassigned.conf >> $web_conf

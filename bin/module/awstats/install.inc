@@ -8,7 +8,7 @@ hestia_module_awstats_install() {
         return 1
     fi
 
-    echo "Installing web stats (Awstats) module..."
+    echo "Installing web stats (AWStats) module..."
 
 
     hestia_config_backup 'awstats-install' $OSAL_PATH_AWSTATS_CONF /etc/cron.d/awstats
@@ -21,7 +21,7 @@ hestia_module_awstats_install() {
 
     osal_kv_write $HESTIA/conf/hestia.conf 'STATS_SYSTEM' 'awstats'
     osal_kv_write $HESTIA_CONF_MODULES/webstats.conf 'installed' '1'
-    osal_kv_write $HESTIA_CONF_MODULES/webstats.conf 'description' 'Hestia web stats (Awstats) module'
+    osal_kv_write $HESTIA_CONF_MODULES/webstats.conf 'description' 'Hestia web stats (AWStats) module'
     osal_kv_write $HESTIA_CONF_MODULES/webstats.conf 'enabled' '1'
     osal_kv_write $HESTIA_CONF_MODULES/webstats.conf 'variant' 'awstats'
     osal_kv_write $HESTIA_CONF_MODULES/webstats.conf 'version' '1'

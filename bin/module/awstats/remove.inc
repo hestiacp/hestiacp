@@ -14,7 +14,7 @@ hestia_module_awstats_remove() {
         return 1
     fi
 
-    echo "Removing web stats (Awstats) module..."
+    echo "Removing web stats (AWStats) module..."
 
     hestia_config_backup 'awstats-remove' $OSAL_PATH_AWSTATS_CONF
     osal_package_remove $OSAL_PKG_AWSTATS

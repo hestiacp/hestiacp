@@ -108,5 +108,5 @@ hestia_module_php-fpm_add() {
 
     log_history "installed php $php_version" '' 'admin'
 
-    $BIN/v-restart-web
+    hestia module php-fpm integrate
 }

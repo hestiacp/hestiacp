@@ -82,6 +82,8 @@ hestia_module_php-fpm_del() {
 
     osal_kv_write $HESTIA_CONF_MODULES/php-fpm.conf "php${php_withoutdot}_present" '0'
 
+    hestia module php-fpm integrate
+
     log_history "removed php $phpversion" '' 'admin'
 
     return 0

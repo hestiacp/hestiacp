@@ -18,16 +18,12 @@ hestia_module_php-fpm_install() {
 
     cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf $pool_d/www.conf
 
-    if [ "$OS_BASE" = 'debian' ]; then    
-        update-alternatives --set php /usr/bin/php$PHP_DEFAULT_VERSION > /dev/null 2>&1
-    fi
-
     osal_kv_write $HESTIA/conf/hestia.conf 'WEB_BACKEND' 'php-fpm'
     
     # Add default PHP version
     # Use --force, otherwise it will fail because technically php-fpm is still not installed
     echo "Adding default PHP version ($PHP_DEFAULT_VERSION)..."
-    hestia module php-fpm add $PHP_DEFAULT_VERSION --force
+    hestia module php-fpm add $PHP_DEFAULT_VERSION --force --default --no-integrate
 
     return 0
 }

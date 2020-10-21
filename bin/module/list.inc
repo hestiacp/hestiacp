@@ -9,8 +9,7 @@ hestia_module_list() {
         local mod_provides=$(osal_kv_read $hmd 'provides')
         local mod_descr=$(osal_kv_read $hmd 'description')
 
-        local mod_varinstalled=$(hestia_module_variant_installed $mod_provides)
-        if [ "$mod_varinstalled" == "$mod_name" ]; then
+        if $(hestia_module_isinstalled $mod_name); then
             local mod_installed='Yes'
         else
             local mod_installed='No'

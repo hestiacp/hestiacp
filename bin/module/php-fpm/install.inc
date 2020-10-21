@@ -13,6 +13,9 @@ hestia_module_php-fpm_install() {
 
     local pool_d=$(osal_php_fpm_pool_d $PHP_DEFAULT_VERSION)
     mkdir -p $pool_d
+
+    mkdir -p $OSAL_PATH_RUN/php
+
     cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf $pool_d/www.conf
 
     if [ "$OS_BASE" = 'debian' ]; then    

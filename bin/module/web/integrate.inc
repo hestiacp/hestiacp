@@ -16,7 +16,7 @@ hestia_module_web_integrate() {
         osal_kv_write $HESTIA/conf/hestia.conf  'WEB_PORT' '80'
         osal_kv_write $HESTIA/conf/hestia.conf  'WEB_SSL_PORT' '443'
         osal_kv_write $HESTIA/conf/hestia.conf  'WEB_SSL' 'mod_ssl'
-        osal_kv_delete $HESTIA/conf/hestia.conf 'PROXY_SYSTEM'
+        osal_kv_write $HESTIA/conf/hestia.conf 'PROXY_SYSTEM' ''
         osal_kv_delete $HESTIA/conf/hestia.conf 'PROXY_PORT'
         osal_kv_delete $HESTIA/conf/hestia.conf 'PROXY_SSL_PORT'
 
@@ -41,7 +41,7 @@ hestia_module_web_integrate() {
         osal_kv_write $HESTIA/conf/hestia.conf  'WEB_PORT' '80'
         osal_kv_write $HESTIA/conf/hestia.conf  'WEB_SSL_PORT' '443'
         osal_kv_write $HESTIA/conf/hestia.conf  'WEB_SSL' 'openssl'
-        osal_kv_delete $HESTIA/conf/hestia.conf 'PROXY_SYSTEM'
+        osal_kv_write $HESTIA/conf/hestia.conf 'PROXY_SYSTEM' ''
         osal_kv_delete $HESTIA/conf/hestia.conf 'PROXY_PORT'
         osal_kv_delete $HESTIA/conf/hestia.conf 'PROXY_SSL_PORT'
 
@@ -53,7 +53,7 @@ hestia_module_web_integrate() {
         osal_kv_delete $HESTIA/conf/hestia.conf 'WEB_PORT' '80'
         osal_kv_delete $HESTIA/conf/hestia.conf 'WEB_SSL_PORT' '443'
         osal_kv_delete $HESTIA/conf/hestia.conf 'WEB_SSL' 'openssl'
-        osal_kv_delete $HESTIA/conf/hestia.conf 'PROXY_SYSTEM'
+        osal_kv_write $HESTIA/conf/hestia.conf 'PROXY_SYSTEM' ''
         osal_kv_delete $HESTIA/conf/hestia.conf 'PROXY_PORT'
         osal_kv_delete $HESTIA/conf/hestia.conf 'PROXY_SSL_PORT'
     fi

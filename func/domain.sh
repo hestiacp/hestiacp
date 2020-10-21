@@ -87,11 +87,15 @@ prepare_web_backend() {
     # Accept first function argument as backend template otherwise fallback to $template global variable
     local backend_template=${1:-$template}
 
-    pool=$(find -L $PHP_DIR_POOL_D_BASE/ -name "$domain.conf" -exec dirname {} \;)
+    backend_type="$domain"
+    if [ "$WEB_BACKEND_POOL" = 'user' ]; then
+        backend_type="$user"
+    fi
+
+    pool=$(find -L $PHP_DIR_POOL_D_BASE/ -name "$backend_type.conf" -exec dirname {} \;)
     # Check if multiple-PHP installed
     regex="socket-(\d+)_(\d+)"
     if [[ $backend_template =~ ^.*PHP-([0-9])\_([0-9])$ ]]; then
-    echo 1
         backend_version="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
         #pool=$(find -L /etc/php/$backend_version -type d \( -name "pool.d" -o -name "*fpm.d" \))
         pool=$(osal_php_fpm_pool_d $backend_version)
@@ -106,10 +110,7 @@ prepare_web_backend() {
     if [ ! -e "$pool" ]; then
         check_result $E_NOTEXIST "php-fpm pool doesn't exist ($pool / $backend_template)"
     fi
-    backend_type="$domain"
-    if [ "$WEB_BACKEND_POOL" = 'user' ]; then
-        backend_type="$user"
-    fi
+
     if [ -e "$pool/$backend_type.conf" ]; then
         backend_lsnr=$(grep "listen =" $pool/$backend_type.conf)
         backend_lsnr=$(echo "$backend_lsnr" |cut -f 2 -d = |sed "s/ //")
@@ -121,6 +122,10 @@ prepare_web_backend() {
 
 # Delete web backend
 delete_web_backend() {
+    backend_type="$domain"
+    if [ "$WEB_BACKEND_POOL" = 'user' ]; then
+        backend_type="$user"
+    fi
     find -L $PHP_DIR_POOL_D_BASE/ -type f -name "$backend_type.conf" -exec rm -f {} \;
 }
 

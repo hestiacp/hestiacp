@@ -9,6 +9,7 @@ hestia_package_web-server_setup-ip() {
 
     # Web support
     if [ ! -z "$WEB_SYSTEM" ]; then
+        echo " Creating web server ($WEB_SYSTEM) IP config for $ip:$WEB_PORT"
         web_conf="/etc/$WEB_SYSTEM/conf.d/$ip.conf"
         hestia_safe_rm $web_conf
 
@@ -39,6 +40,7 @@ hestia_package_web-server_setup-ip() {
 
     # Proxy support
     if [ ! -z "$PROXY_SYSTEM" ]; then
+        echo " Creating proxy ($PROXY_SYSTEM) IP config for $ip:$PROXY_PORT"
         cat $WEBTPL/$PROXY_SYSTEM/proxy_ip.tpl |\
             sed -e "s/%ip%/$ip/g" \
                 -e "s/%web_port%/$WEB_PORT/g" \

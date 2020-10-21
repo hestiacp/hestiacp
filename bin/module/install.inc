@@ -46,7 +46,7 @@ hestia_module_install() {
             done
         fi
 
-        if [ ! "$param_nointegrate" ]; then
+        if [ ! "$param_no_integrate" ]; then
             # Now integrate everything we've just installed
             for mod in $mod_provider $mod_requires; do
                 hestia module $mod integrate
@@ -82,7 +82,7 @@ hestia_module_install_check_requires() {
     for mod in $@; do
         [ "$HESTIA_DEBUG" ] && echo "Check dependency: $mod"
         if ! hestia_module_isinstalled $mod; then
-            if ! hestia module install $mod --nointegrate; then
+            if ! hestia module install $mod --no-integrate; then
                 echo "Module '${mod}' is required for module '${mod_name}' but can not be installed"
                 return 1
             fi

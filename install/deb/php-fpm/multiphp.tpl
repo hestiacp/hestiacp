@@ -1,7 +1,7 @@
 ; origin-src: deb/php-fpm/multiphp.tpl
 
 [%domain%]
-listen = /run/php/php%backend_version%-fpm-%domain%.sock
+listen = /var/run/php/php%backend_version%-fpm-%domain%.sock
 listen.owner = %user%
 listen.group = %apache_group%
 listen.mode = 0660

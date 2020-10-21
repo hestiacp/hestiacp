@@ -8,7 +8,7 @@ docroot="$5"
 
 pool_conf="[$2]
 
-listen = /run/php/php7.4-fpm-$2.sock
+listen = /var/run/php/php7.4-fpm-$2.sock
 listen.owner = $1
 listen.group = www-data
 listen.mode = 0660

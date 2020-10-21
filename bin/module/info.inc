@@ -4,6 +4,10 @@ hestia_module_info() {
     source $HESTIA/bin/module/func.inc
 
     local modulename=$1
+    if [ -z "$modulename" ]; then
+        usage
+        return 1
+    fi
     echo "Module name     : $modulename"
     
     if hestia_module_isinstalled $modulename; then
@@ -17,4 +21,11 @@ hestia_module_info() {
     else
         echo "Installed       : no"
     fi
+}
+
+usage() {
+    echo "Usage:"
+    echo "  hestia module info MODULE_NAME"
+    echo ""
+    echo "See 'hestia module list' for a list of installed and available modules."
 }

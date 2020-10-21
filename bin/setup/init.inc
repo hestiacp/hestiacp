@@ -44,6 +44,12 @@ hestia_setup_init() {
         param_admin_email="admin@$param_server_name"
     fi
 
+    lang=$(osal_kv_read $HESTIA/conf/hestia.conf 'LANGUAGE' '')
+    if [ ! "$lang" ] || [ "$lang" != "$param_lang" ]; then
+        osal_kv_write $HESTIA/conf/hestia.conf 'LANGUAGE' $param_lang
+        lang=$param_lang
+    fi
+
     if ! id "admin" &>/dev/null; then
         echo " - Creating admin user..."
 
@@ -52,7 +58,7 @@ hestia_setup_init() {
         fi
         $HESTIA/bin/v-add-user admin ${param_admin_password} ${param_admin_email} default System Administrator
         $HESTIA/bin/v-change-user-shell admin nologin
-        $HESTIA/bin/v-change-user-language admin $param_lang
+        $HESTIA/bin/v-change-user-language admin $lang
 
         echo "    Username        :   admin"
         echo "    Password        :   $param_admin_password"

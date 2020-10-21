@@ -46,10 +46,11 @@ fi
 
 tmpfile=$(mktemp)
 for php_folder in $PHP_DIR_POOL_D_BASE/*; do
-    pool_d=$(osal_php_fpm_pool_d ${php_folder})
+    v_php="$(basename $php_folder)"
+    v_php=${v_php#php}  # Remove "php" in "php72"
+    pool_d=$(osal_php_fpm_pool_d ${v_php})
     [ ! -d "$pool_d" ] && continue
 
-    v_php="$(basename $php_folder)"
     v_phpfpm="$(osal_php_package_prefix ${v_php})-fpm"
 
     if [ ! -f "$pool_d/dummy.conf" ]; then

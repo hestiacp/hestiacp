@@ -17,7 +17,7 @@ hestia_package_web-server_setup-ips() {
 
     # FIXME: the following line should be: if WEB_SYSTEM is apache and PROXY_SYSTEM is something (i.e. not [ null or 'no' ])
     if ( [ "$WEB_SYSTEM" = 'apache2' ] || [ "$WEB_SYSTEM" = 'httpd' ] ) && [ "$PROXY_SYSTEM" = 'nginx' ]; then
-        echo "Configuring remoteip apache module"
+        echo "Configuring RemoteIP Apache module"
         # If we are using web server and proxy server, configure mod_remoteip
         echo "<IfModule mod_remoteip.c>" > $remoteip_conf
         echo "  RemoteIPHeader X-Real-IP" >> $remoteip_conf
@@ -43,8 +43,12 @@ hestia_package_web-server_setup-ips() {
         osal_apache_module_enable remoteip
     fi
     
-    for ip_conf in $HESTIA/data/ips/*; do
-        ip=$(basename $ip_conf)
-        hestia package web-server setup-ip "$ip"
-    done
+    if [ -z "$(ls -A $HESTIA/data/ips/)" ]; then
+        echo "*** WARNING: this system has no IP addresses configured. See 'hestia ip list'."
+    else
+        for ip_conf in $HESTIA/data/ips/*; do
+            ip=$(basename $ip_conf)
+            hestia package web-server setup-ip "$ip"
+        done
+    fi
 }

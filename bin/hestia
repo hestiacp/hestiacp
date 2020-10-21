@@ -4,7 +4,9 @@ HESTIA_BIN=$HESTIA/bin
 [ "$HESTIA_DEBUG" ] && OSAL_DEBUG=1
 source $HESTIA/func/osal.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
+if [ -f $HESTIA/conf/hestia.conf ]; then
+    source $HESTIA/conf/hestia.conf
+fi
 
 hestia() {
 
@@ -73,7 +75,7 @@ hestia() {
                 # Previous --arg is empty, so set it to true before continuing
                 declare $param_name=1
             fi
-            param_name="param_${param:2}"     # trim --
+            param_name=$(echo "param_${param:2}" | sed 's/-/_/')    # trim --, replace - with _
             # Add param_name to the list of used params (unless it's there already)
             [[ $params =~ (^|[[:space:]])$param_name($|[[:space:]]) ]] || params="$params $param_name"
             last_was='name'

@@ -121,7 +121,7 @@ prepare_web_backend() {
 
 # Delete web backend
 delete_web_backend() {
-    find -L /etc/php/ -type f -name "$backend_type.conf" -exec rm -f {} \;
+    find -L $PHP_DIR_POOL_D_BASE/ -type f -name "$backend_type.conf" -exec rm -f {} \;
 }
 
 # Prepare web aliases

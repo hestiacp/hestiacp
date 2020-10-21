@@ -92,6 +92,7 @@ OSAL_CMD_PACKAGE_MANAGER=/usr/bin/apt-get
 
 # Misc. paths
 OSAL_PATH_LOGROTATE_CONF_D=/etc/logrotate.d
+OSAL_PATH_RUN=/var/run
 
 #-------------------------------------------------------------------#
 # Functions                                                         #

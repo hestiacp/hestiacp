@@ -107,6 +107,10 @@ sed_escape() {
 osal_kv_write() { 
     osal_kv_delete "$1" "$2"
     echo "$2=$3" >> "$1"
+    if [ "$1" == "$HESTIA/conf/hestia.conf" ]; then
+        # Writing config value. Take effect immediately.
+        declare $2="$3"
+    fi
 }
 
 # Reads a value from a key-value file. # Exits successfully if it does.

@@ -59,6 +59,14 @@ hestia_module_web_integrate() {
     fi
 
     if [ "$apache_installed" ] || [ "$nginx_installed" ] ; then
+        # Install default success page
+        mkdir -p /var/www/html
+        mkdir -p /var/www/document_errors
+        if [ ! -f /var/www/html/index.html ]; then
+            cp -rf $HESTIA_INSTALL_DIR/templates/web/unassigned/index.html /var/www/html/
+            cp -rf $HESTIA_INSTALL_DIR/templates/web/skel/document_errors/* /var/www/document_errors/
+        fi
+
         hestia module web setup-ips
         # Rebuild domains
         echo "Rebuilding web domains"

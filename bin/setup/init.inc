@@ -17,6 +17,10 @@ hestia_setup_init() {
     chmod 660 $HESTIA/log/*
     chmod 770 $HESTIA/data/sessions
 
+    if [ "$OS_BASE" = 'rhel' ]; then
+        ln -s /usr/sbin/ip /bin/ip
+    fi
+
     if [ ! -e /var/log/hestia ]; then
         ln -s $HESTIA/log /var/log/hestia
     fi
@@ -35,6 +39,9 @@ deb https://apt.hestiacp.com/ $codename main
 EOL
         apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
     elif [ "$OS_BASE" = 'rhel' ]; then
+        dnf config-manager --set-enabled extras
+        dnf -y install epel-release
+        dnf config-manager --set-enabled epel epel-modular
         cat > "/etc/yum.repos.d/hestia.repo" <<EOL
 # This file was added by Hestia Control Panel.
 #[hestia]
@@ -66,7 +73,7 @@ EOL
     if [ ! "$param_server_name" ]; then
         param_server_name=$(hostname -f)
     fi
-    if [ ! "${param_admin-email}" ]; then
+    if [ ! "${param_admin_email}" ]; then
         param_admin_email="admin@$param_server_name"
     fi
 
@@ -97,6 +104,7 @@ EOL
 
         echo "    Username        :   admin"
         echo "    Password        :   $param_admin_password"
+        echo "    E-mail          :   $param_admin_email"
     fi
 
     chown admin:admin $HESTIA/data/sessions

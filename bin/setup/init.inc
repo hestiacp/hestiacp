@@ -45,8 +45,8 @@ EOL
         dnf config-manager --set-enabled epel epel-modular
 
         # Enable Perl 5.26
-        dnf -y module disable perl:*
-        dnf -y module enable perl:5.26
+        #dnf -y module disable perl:*
+        #dnf -y module enable perl:5.26
 
         cat > "/etc/yum.repos.d/hestia.repo" <<EOL
 # This file was added by Hestia Control Panel.

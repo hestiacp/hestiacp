@@ -50,6 +50,15 @@ hestia_setup_init() {
         lang=$param_lang
     fi
 
+    # Default values
+    if [ ! "$DB_PMA_ALIAS" ]; then
+        osal_kv_write $HESTIA/conf/hestia.conf 'DB_PMA_ALIAS' 'phpMyAdmin'
+    fi
+    # Default values
+    if [ ! "$DB_PMA_ALIAS" ]; then
+        osal_kv_write $HESTIA/conf/hestia.conf 'DB_PGA_ALIAS' 'phpPgAdmin'
+    fi
+
     if ! id "admin" &>/dev/null; then
         echo " - Creating admin user..."
 

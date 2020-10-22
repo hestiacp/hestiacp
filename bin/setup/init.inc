@@ -21,6 +21,31 @@ hestia_setup_init() {
         ln -s $HESTIA/log /var/log/hestia
     fi
 
+    # Setup repos
+    if [ "$OS_BASE" = 'debian' ]; then
+        cat > /etc/apt/sources.list.d/hestia.list <<EOL
+# This file was added by Hestia Control Panel.
+deb https://apt.hestiacp.com/ $codename main
+EOL
+        apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
+    elif [ "$OS_BASE" = 'ubuntu' ]; then
+        cat > /etc/apt/sources.list.d/hestia.list <<EOL
+# This file was added by Hestia Control Panel.
+deb https://apt.hestiacp.com/ $codename main
+EOL
+        apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
+    elif [ "$OS_BASE" = 'rhel' ]; then
+        cat > "/etc/yum.repos.d/hestia.repo" <<EOL
+# This file was added by Hestia Control Panel.
+#[hestia]
+#name=Hestia Control Panel
+#baseurl=http://rpm.hestiacp.com/packages/centos/\$releasever/\$basearch/
+#gpgcheck=0
+#enabled=1
+#gpgkey=https://rpm.hestiacp.com/keys/hestia.key
+EOL
+    fi
+
     HESTIA_VERSION=$(osal_package_getversion 'hestia')
     osal_kv_write $HESTIA/conf/hestia.conf 'VERSION' $HESTIA_VERSION
 

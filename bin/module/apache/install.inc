@@ -13,6 +13,20 @@ hestia_module_apache_install() {
     osal_service_stop $OSAL_SERVICE_APACHE > /dev/null 2>&1
     hestia_config_backup 'apache-install' $OSAL_PATH_APACHE_CONF $OSAL_PATH_APACHE_CONF_D
 
+    # Setup repos
+    if [ "$OS_BASE" = 'debian' ]; then
+        cat > /etc/apt/sources.list.d/apache2.list <<EOL
+# This file was added by Hestia Control Panel.
+deb https://packages.sury.org/apache2/ $OS_CODENAME main
+EOL
+        apt-key adv --fetch-keys 'https://packages.sury.org/apache2/apt.gpg' > /dev/null 2>&1
+    elif [ "$OS_BASE" = 'ubuntu' ]; then
+        cat > /etc/apt/sources.list.d/apache2.list <<EOL
+# This file was added by Hestia Control Panel.
+deb http://ppa.launchpad.net/ondrej/apache2/ubuntu $OS_CODENAME main
+EOL
+    fi
+
     osal_package_preinstall
     osal_package_install $OSAL_PKG_APACHE $OSAL_PKG_APACHE_EXTRA
 

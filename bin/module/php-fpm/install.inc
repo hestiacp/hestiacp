@@ -11,6 +11,19 @@ hestia_module_php-fpm_install() {
 
     echo "Installing PHP (FPM) module..."
 
+    if [ "$OS_BASE" = 'debian' ]; then
+        cat > /etc/apt/sources.list.d/php.list <<EOL
+# This file was added by Hestia Control Panel.
+deb https://packages.sury.org/php/ $OS_CODENAME main
+EOL
+        apt-key adv --fetch-keys 'https://packages.sury.org/php/apt.gpg' > /dev/null 2>&1
+    elif [ "$OS_BASE" = 'ubuntu' ]; then
+        LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
+    elif [ "$OS_BASE" = 'rhel' ]; then
+        dnf -y install http://rpms.remirepo.net/enterprise/remi-release-$OS_VERSION.rpm
+        dnf config-manager --set-enabled remi
+    fi
+
     local pool_d=$(osal_php_fpm_pool_d $PHP_DEFAULT_VERSION)
     mkdir -p $pool_d
 

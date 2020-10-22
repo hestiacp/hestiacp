@@ -167,7 +167,7 @@ EOL
     fi
 
     echo " - Configuring system IP addresses..."
-    $HESTIA/bin/v-update-sys-ip
+    $HESTIA/bin/v-update-sys-ip > /dev/null 2>&1
 
     echo " - Enabling and starting Hestia service..."
     osal_service_enable hestia

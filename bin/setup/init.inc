@@ -5,6 +5,7 @@ hestia_setup_init() {
     mkdir -p $HESTIA/conf $HESTIA/log $HESTIA/ssl $HESTIA/data/ips \
         $HESTIA/data/queue $HESTIA/data/users $HESTIA/data/firewall \
         $HESTIA/data/sessions
+    mkdir -p /var/run/php
     touch $HESTIA/data/queue/backup.pipe $HESTIA/data/queue/disk.pipe \
         $HESTIA/data/queue/webstats.pipe $HESTIA/data/queue/restart.pipe \
         $HESTIA/data/queue/traffic.pipe $HESTIA/log/system.log \

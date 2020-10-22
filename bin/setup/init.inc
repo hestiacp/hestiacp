@@ -174,6 +174,8 @@ EOL
     echo " - Configuring system IP addresses..."
     $HESTIA/bin/v-update-sys-ip > /dev/null 2>&1
 
+    hestia module install php
+
     echo " - Enabling and starting Hestia service..."
     osal_service_enable hestia
     osal_service_restart hestia

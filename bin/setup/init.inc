@@ -19,7 +19,7 @@ hestia_setup_init() {
 
     if [ "$OS_BASE" = 'rhel' ]; then
         # FIXME: Hestia scripts should not assume ip is located in /bin
-        ln -s /usr/sbin/ip /bin/ip
+        ln -s /usr/sbin/ip /bin/ip > /dev/null 2>&1
     fi
 
     if [ ! -e /var/log/hestia ]; then

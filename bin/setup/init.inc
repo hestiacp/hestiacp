@@ -18,6 +18,7 @@ hestia_setup_init() {
     chmod 770 $HESTIA/data/sessions
 
     if [ "$OS_BASE" = 'rhel' ]; then
+        # FIXME: Hestia scripts should not assume ip is located in /bin
         ln -s /usr/sbin/ip /bin/ip
     fi
 

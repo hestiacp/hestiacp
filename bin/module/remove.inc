@@ -11,7 +11,7 @@ hestia_module_remove() {
         #echo "$mod_providers" equals "$mod_name"
         if [ "$mod_providers" == "$mod_name" ]; then
             # It's a final module name, remove immediately
-            local hmd="$HESTIA/data/modules/${mod_provider}.hmd"
+            local hmd="$HESTIA_INSTALL_DIR/../modules/${mod_provider}.hmd"
             local requiredby=$(hestia_module_remove_check_requiredby $mod_name)
             if [ "$requiredby" ]; then
                 if [ "$param_force" ]; then
@@ -73,7 +73,7 @@ hestia_module_remove_check_requiredby() {
     shift
 
     local requiredby=''
-    for mod_conf in $HESTIA_CONF_MODULES/*.conf; do
+    for mod_conf in $HESTIA_INSTALL_DIR/../modules/*.conf; do
         local mod_hmd=$(osal_kv_read $mod_conf 'hmd')
         if [ "$mod_hmd" ]; then
             # This module is a provider. Check it isn't needed

@@ -5,7 +5,7 @@ hestia_module_vsftpd_remove() {
 
     if ! hestia_module_isinstalled 'ftp' && [ ! "$param_force" ]; then
         echo "FTP module is not installed. See 'hestia module info ftp'."
-        return 1
+        return 0
     fi
 
     module_variant=$(hestia_module_getvariant ftp)

@@ -5,10 +5,16 @@ hestia_module_phpmyadmin_install() {
 
     if hestia_module_isinstalled 'phpmyadmin' && [ ! "$param_force" ]; then
         echo "phpMyAdmin module is already installed. See 'hestia module info phpmyadmin'."
+        return 0
+    fi
+
+    if hestia_module_isinstalled 'phpmyadmin' && [ ! "$param_force" ]; then
+        echo "phpMyAdmin module is already installed. See 'hestia module info phpmyadmin'."
         return 1
     fi
 
-    local pma_version='5.0.2'
+    local hmd="$HESTIA_INSTALL_DIR/../modules/phpmyadmin.hmd"
+    local pma_version=$(osal_kv_read $hmd 'version')
     echo "Installing phpMyAdmin module..."
     
     hestia_config_backup 'phpmyadmin-remove' $OSAL_PATH_NGINX_CONF_D/phpmyadmin.inc \

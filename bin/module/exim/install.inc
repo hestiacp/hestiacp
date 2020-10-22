@@ -5,7 +5,7 @@ hestia_module_exim_install() {
 
     if hestia_module_isinstalled 'mta' && [ ! "$param_force" ]; then
         echo "MTA module is already installed. See 'hestia module info mta'."
-        return 1
+        return 0
     fi
 
     echo "Installing MTA (Exim) module..."

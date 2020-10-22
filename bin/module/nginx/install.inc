@@ -5,7 +5,7 @@ hestia_module_nginx_install() {
 
     if hestia_module_isinstalled 'nginx' && [ ! "$param_force" ]; then
         echo "Nginx module is already installed. See 'hestia module info nginx'."
-        return 1
+        return 0
     fi
 
     echo "Installing Nginx module..."

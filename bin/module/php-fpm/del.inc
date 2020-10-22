@@ -41,7 +41,7 @@ hestia_module_php-fpm_del() {
     php_version_present=$(osal_kv_read_bool $HESTIA_CONF_MODULES/php-fpm.conf "php${php_withoutdot}_present" && echo 1)
     if [ ! "$php_version_present" ] && [ ! "$param_force" ]; then
         echo "PHP (FPM) version ${php_version} is not present. See 'hestia module php-fpm list'."
-        return 1
+        return 0
     fi
 
     # Perform verification if read-only mode is enabled

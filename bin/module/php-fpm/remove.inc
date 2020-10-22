@@ -6,7 +6,7 @@ hestia_module_php-fpm_remove() {
 
     if ! hestia_module_isinstalled 'php-fpm' && [ ! "$param_force" ]; then
         echo "PHP (FPM) module is not installed. See 'hestia module info php-fpm'."
-        return 1
+        return 0
     fi
 
     echo "Removing PHP (FPM) module..."

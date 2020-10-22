@@ -5,7 +5,7 @@ hestia_module_awstats_install() {
 
     if hestia_module_isinstalled 'webstats' && [ ! "$param_force" ]; then
         echo "Stats module is already installed. See 'hestia module info webstats'."
-        return 1
+        return 0
     fi
 
     echo "Installing web stats (AWStats) module..."

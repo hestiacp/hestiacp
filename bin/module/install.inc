@@ -12,7 +12,7 @@ hestia_module_install() {
             echo "Module '${mod_provider}' selected as provider of '${mod_name}'"
         fi
 
-        local hmd="$HESTIA/data/modules/${mod_provider}.hmd"
+        local hmd="$HESTIA_INSTALL_DIR/../modules/${mod_provider}.hmd"
 
         local mod_conflicts=$(osal_kv_read $hmd 'conflicts')
         if [ "$mod_conflicts" ] && ! hestia_module_install_check_conflicts "$mod_provider" "$mod_conflicts"; then

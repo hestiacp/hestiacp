@@ -5,7 +5,7 @@ hestia_module_spamassassin_remove() {
 
     if ! hestia_module_isinstalled 'antispam' && [ ! "$param_force" ]; then
         echo "Antispam module is not installed. See 'hestia module info antispam'."
-        return 1
+        return 0
     fi
 
     module_variant=$(hestia_module_getvariant antispam)

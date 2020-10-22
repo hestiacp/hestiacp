@@ -5,7 +5,7 @@ hestia_module_vsftpd_install() {
 
     if hestia_module_isinstalled 'ftp' && [ ! "$param_force" ]; then
         echo "FTP module is already installed. See 'hestia module info ftp'."
-        return 1
+        return 0
     fi
 
     echo "Installing FTP (vsftpd) module..."

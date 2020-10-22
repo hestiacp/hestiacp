@@ -5,7 +5,7 @@ hestia_module_api_install() {
 
     if hestia_module_isinstalled 'api' && [ ! "$param_force" ]; then
         echo "API module is already installed. See 'hestia module info api'."
-        return 1
+        return 0
     fi
 
     echo "Installing API module..."

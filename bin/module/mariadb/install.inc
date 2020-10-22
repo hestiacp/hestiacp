@@ -5,7 +5,7 @@ hestia_module_mariadb_install() {
 
     if hestia_module_isinstalled 'mydb' && [ ! "$param_force" ]; then
         echo "MySQL/MariaDB database module is already installed. See 'hestia module info mydb'."
-        return 1
+        return 0
     fi
 
     echo "Installing database (MariaDB) module..."

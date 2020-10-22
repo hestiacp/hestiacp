@@ -5,7 +5,7 @@ hestia_module_clamav_remove() {
 
     if ! hestia_module_isinstalled 'antivirus' && [ ! "$param_force" ]; then
         echo "antivirus module is not installed. See 'hestia module info antivirus'."
-        return 1
+        return 0
     fi
 
     module_variant=$(hestia_module_getvariant antivirus)

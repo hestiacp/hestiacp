@@ -5,7 +5,7 @@ hestia_module_spamassassin_exim-integration_disable() {
 
     if ! hestia_module_isinstalled 'mta' && [ ! "$param_force" ]; then
         echo "MTA module is not installed. See 'hestia module info mta'."
-        return 1
+        return 0
     fi
 
     module_variant=$(hestia_module_getvariant mta)

@@ -5,7 +5,7 @@ hestia_module_clamav_install() {
 
     if hestia_module_isinstalled 'antivirus' && [ ! "$param_force" ]; then
         echo "Antivirus module is already installed. See 'hestia module info antivirus'."
-        return 1
+        return 0
     fi
 
     echo "Installing antivirus (ClamAV) module..."

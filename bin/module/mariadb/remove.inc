@@ -5,7 +5,7 @@ hestia_module_mariadb_remove() {
 
     if ! hestia_module_isinstalled 'mydb' && [ ! "$param_force" ]; then
         echo "MySQL/MariaDB database module is not installed. See 'hestia module info mydb'."
-        return 1
+        return 0
     fi
 
     module_variant=$(hestia_module_getvariant mydb)

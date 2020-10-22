@@ -5,7 +5,7 @@ hestia_module_dovecot_remove() {
 
     if ! hestia_module_isinstalled 'imap' && [ ! "$param_force" ]; then
         echo "IMAP module is not installed. See 'hestia module info imap'."
-        return 1
+        return 0
     fi
 
     module_variant=$(hestia_module_getvariant imap)

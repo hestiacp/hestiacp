@@ -5,7 +5,7 @@ hestia_module_nginx_remove() {
 
     if ! hestia_module_isinstalled 'nginx' && [ ! "$param_force" ]; then
         echo "Nginx module is not installed. See 'hestia module info nginx'."
-        return 1
+        return 0
     fi
 
     echo "Removing Nginx module..."

@@ -5,7 +5,7 @@ hestia_module_spamassassin_install() {
 
     if hestia_module_isinstalled 'antispam' && [ ! "$param_force" ]; then
         echo "Antispam module is already installed. See 'hestia module info antispam'."
-        return 1
+        return 0
     fi
 
     echo "Installing Antispam (SpamAssassin) module..."

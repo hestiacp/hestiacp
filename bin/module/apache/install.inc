@@ -5,7 +5,7 @@ hestia_module_apache_install() {
 
     if hestia_module_isinstalled 'apache' && [ ! "$param_force" ]; then
         echo "Apache module is already installed. See 'hestia module info apache'."
-        return 1
+        return 0
     fi
 
     echo "Installing Apache module..."

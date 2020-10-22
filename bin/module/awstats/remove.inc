@@ -5,7 +5,7 @@ hestia_module_awstats_remove() {
 
     if ! hestia_module_isinstalled 'webstats' && [ ! "$param_force" ]; then
         echo "Web stats module is not installed. See 'hestia module info webstats'."
-        return 1
+        return 0
     fi
 
     module_variant=$(hestia_module_getvariant 'webstats')

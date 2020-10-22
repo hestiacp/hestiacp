@@ -5,7 +5,7 @@ hestia_module_phpmyadmin_remove() {
 
     if ! hestia_module_isinstalled 'phpmyadmin' && [ ! "$param_force" ]; then
         echo "phpMyAdmin module is not installed. See 'hestia module info phpmyadmin'."
-        return 1
+        return 0
     fi
 
     echo "Removing phpMyAdmin module..."

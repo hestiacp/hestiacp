@@ -41,7 +41,7 @@ hestia_module_php-fpm_add() {
 
     if [ "$php_version_present" ] && [ ! "$param_force" ]; then
         echo "PHP version ${php_version} is already present. See 'hestia module php-fpm list'."
-        return 1
+        return 0
     fi
 
     # Check if php version is supported

@@ -5,7 +5,7 @@ hestia_module_api_remove() {
 
     if ! hestia_module_isinstalled 'api' && [ ! "$param_force" ]; then
         echo "API module is not installed. See 'hestia module info api'."
-        return 1
+        return 0
     fi
 
     echo "Removing API module..."

@@ -5,7 +5,7 @@ hestia_module_dovecot_install() {
 
     if hestia_module_isinstalled 'imap' && [ ! "$param_force" ]; then
         echo "IMAP module is already installed. See 'hestia module info imap'."
-        return 1
+        return 0
     fi
 
     echo "Installing IMAP (Dovecot) module..."

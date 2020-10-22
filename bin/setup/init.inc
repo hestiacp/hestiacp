@@ -40,9 +40,14 @@ deb https://apt.hestiacp.com/ $OS_CODENAME main
 EOL
         apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
     elif [ "$OS_BASE" = 'rhel' ]; then
-        dnf config-manager --set-enabled extras
+        dnf config-manager --set-enabled extras PowerTools
         dnf -y install epel-release
         dnf config-manager --set-enabled epel epel-modular
+
+        # Enable Perl 5.26
+        dnf -y module disable perl:*
+        dnf -y module enable perl:5.26
+
         cat > "/etc/yum.repos.d/hestia.repo" <<EOL
 # This file was added by Hestia Control Panel.
 #[hestia]

@@ -36,7 +36,7 @@ hestia_module_php_add() {
         fi
     done
     if [ ! "$php_version" ]; then
-        echo "PHP (FPM) version $param_ver is not supported."
+        echo "PHP version $param_ver is not supported."
         return 1
     fi
 
@@ -51,15 +51,14 @@ hestia_module_php_add() {
     # Check if php version is supported
     # TODO:
     if [ ! -f "$HESTIA_INSTALL_DIR/multiphp/$WEB_SYSTEM/PHP-${php_withoutdot}.sh" ]; then
-        echo "$HESTIA_INSTALL_DIR/multiphp/$WEB_SYSTEM/PHP-${php_withoutdot}.sh"
-        echo "PHP (FPM) version ${php_version} is currently not supported or does not exist."
+        echo "PHP version ${php_version} is currently not supported or does not exist."
         return 1
     fi
 
     # Perform verification if read-only mode is enabled
     check_hestia_demo_mode
 
-    echo "Adding PHP (FPM) version ${php_version}..."
+    echo "Adding PHP version ${php_version}..."
 
     local php_prefix=$(osal_php_package_prefix $php_version)
 

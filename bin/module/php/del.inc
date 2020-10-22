@@ -32,7 +32,7 @@ hestia_module_php_del() {
         fi
     done
     if [ ! "$php_version" ]; then
-        echo "PHP (FPM) version $param_ver is not supported."
+        echo "PHP version $param_ver is not supported."
         return 1
     fi
 
@@ -40,14 +40,14 @@ hestia_module_php_del() {
 
     php_version_present=$(osal_kv_read_bool $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_present" && echo 1)
     if [ ! "$php_version_present" ] && [ ! "$param_force" ]; then
-        echo "PHP (FPM) version ${php_version} is not present. See 'hestia module php list'."
+        echo "PHP version ${php_version} is not present. See 'hestia module php list'."
         return 0
     fi
 
     # Perform verification if read-only mode is enabled
     check_hestia_demo_mode
 
-    echo "Removing PHP (FPM) version ${php_version}..."
+    echo "Removing PHP version ${php_version}..."
 
     php_etc_folder=$(osal_multiphp_etc_folder $php_version)
     hestia_config_backup 'php-del' $php_etc_folder \

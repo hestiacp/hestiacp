@@ -48,13 +48,6 @@ hestia_module_php_add() {
         return 0
     fi
 
-    # Check if php version is supported
-    # TODO:
-    if [ ! -f "$HESTIA_INSTALL_DIR/multiphp/$WEB_SYSTEM/PHP-${php_withoutdot}.sh" ]; then
-        echo "PHP version ${php_version} is currently not supported or does not exist."
-        return 1
-    fi
-
     # Perform verification if read-only mode is enabled
     check_hestia_demo_mode
 
@@ -103,11 +96,11 @@ hestia_module_php_add() {
     cp -f $HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl \
         $HESTIA/data/templates/web/php-fpm/PHP-${php_version/\./_}.tpl
 
+    osal_kv_write $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_present" '1'
+
     #----------------------------------------------------------#
     #                       Hestia                             #
     #----------------------------------------------------------#
-
-    osal_kv_write $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_present" '1'
 
     log_history "installed php $php_version" '' 'admin'
 

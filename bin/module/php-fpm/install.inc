@@ -20,8 +20,10 @@ EOL
     elif [ "$OS_BASE" = 'ubuntu' ]; then
         LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
     elif [ "$OS_BASE" = 'rhel' ]; then
+        # Disable CentOS PHP, enable Remi PHP
+        dnf -y module disable php:*
         dnf -y install http://rpms.remirepo.net/enterprise/remi-release-$OS_VERSION.rpm
-        dnf config-manager --set-enabled remi
+        dnf config-manager --set-enabled remi remi-modular
     fi
 
     local pool_d=$(osal_php_fpm_pool_d $PHP_DEFAULT_VERSION)

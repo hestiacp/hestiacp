@@ -106,11 +106,13 @@ hestia_package_web-server_integrate() {
         if [ "$WEB_SYSTEM" = 'nginx' ]; then
             # Setup Nginx config
             cp -f $HESTIA_INSTALL_DIR/nginx/phpmyadmin.inc $OSAL_PATH_NGINX_CONF_D/
+            sed -i "s|%pma_alias%|$DB_PMA_ALIAS|g" $OSAL_PATH_NGINX_CONF_D/phpmyadmin.inc
             # Remove apache support        
             hestia_safe_rm $OSAL_PATH_APACHE_CONF_D/phpmyadmin.conf
         elif [ "$WEB_SYSTEM" = 'apache2' ] || [ "$WEB_SYSTEM" = 'httpd' ]; then
             # Setup Apache config
             cp -f $HESTIA_INSTALL_DIR/pma/apache.conf /etc/phpmyadmin/
+            sed -i "s|%pma_alias%|$DB_PMA_ALIAS|g" /etc/phpmyadmin/apache.conf
             ln -sf /etc/phpmyadmin/apache.conf $OSAL_PATH_APACHE_CONF_D/phpmyadmin.conf
             # Remove Nginx support
             hestia_safe_rm $OSAL_PATH_NGINX_CONF_D/phpmyadmin.inc

@@ -24,7 +24,12 @@ EOL
         dnf -y module disable php:*
         dnf -y install http://rpms.remirepo.net/enterprise/remi-release-$OS_VERSION.rpm
         dnf config-manager --set-enabled remi remi-modular
+        dnf -y module enable php:remi-$PHP_DEFAULT_VERSION
     fi
+
+    # Install mod_php for system default PHP
+    osal_package_preinstall
+    osal_execute_with_spinner osal_package_install $PHP_PKG_MOD_PHP
 
     local pool_d=$(osal_php_fpm_pool_d $PHP_DEFAULT_VERSION)
     mkdir -p $pool_d
@@ -37,8 +42,8 @@ EOL
     
     # Add default PHP version
     # Use --force, otherwise it will fail because technically PHP is still not installed
-    echo "Adding default PHP version ($PHP_DEFAULT_VERSION)..."
-    hestia module php add $PHP_DEFAULT_VERSION --force --default
+    echo "Adding default PHP version..."
+    hestia module php add default --force
 
     return 0
 }

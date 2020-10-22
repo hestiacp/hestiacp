@@ -30,13 +30,13 @@ hestia_setup_init() {
     if [ "$OS_BASE" = 'debian' ]; then
         cat > /etc/apt/sources.list.d/hestia.list <<EOL
 # This file was added by Hestia Control Panel.
-deb https://apt.hestiacp.com/ $codename main
+deb https://apt.hestiacp.com/ $OS_CODENAME main
 EOL
         apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
     elif [ "$OS_BASE" = 'ubuntu' ]; then
         cat > /etc/apt/sources.list.d/hestia.list <<EOL
 # This file was added by Hestia Control Panel.
-deb https://apt.hestiacp.com/ $codename main
+deb https://apt.hestiacp.com/ $OS_CODENAME main
 EOL
         apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
     elif [ "$OS_BASE" = 'rhel' ]; then

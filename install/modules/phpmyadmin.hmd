@@ -3,3 +3,4 @@ provides=phpmyadmin
 requires=web php
 conflicts=
 description=phpMyAdmin MariaDB/MySQL web admin
+version=5.0.4

@@ -9,7 +9,7 @@
 OSAL_SERVICE_APACHE=apache2
 OSAL_USER_APACHE_DATA=www-data
 OSAL_PKG_APACHE=apache2
-OSAL_PKG_APACHE_EXTRA=
+OSAL_PKG_APACHE_EXTRA="apache2-utils apache2-suexec-custom apache2-suexec-pristine"
 OSAL_PKG_APACHE_MOD_RUID2=libapache2-mod-ruid2
 OSAL_PATH_APACHE_CONF=/etc/apache2
 OSAL_PATH_APACHE_CONF_D=/etc/apache2/conf.d

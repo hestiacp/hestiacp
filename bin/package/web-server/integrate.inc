@@ -64,20 +64,23 @@ hestia_package_web-server_integrate() {
     osal_kv_write $HESTIA/conf/hestia.conf 'PROXY_PORT' $PROXY_PORT
     osal_kv_write $HESTIA/conf/hestia.conf 'PROXY_SSL_PORT' $PROXY_SSL_PORT
 
+    # *** PHP-FPM
     if hestia_module_isinstalled 'php-fpm'; then
+        echo "Integrating PHP (FPM)..."
         source $HESTIA/bin/module/php-fpm/func.inc
         for php_version in $PHP_SUPPORTED_VERSIONS; do
             local php_withoutdot=${php_version//.}
             php_version_present=$(osal_kv_read $HESTIA_CONF_MODULES/php-fpm.conf "php${php_withoutdot}_present" 0)
             if [ "$php_version_present" == "1" ]; then
+                echo " Enabling PHP $php_version"
                 local php_prefix=$(osal_php_package_prefix $php_version)
                 osal_service_enable $php_prefix-fpm
                 osal_service_restart $php_prefix-fpm
-                echo "Enabling PHP $php_version"
             fi
         done
     fi
 
+    # *** Rebuild IPs and domains
     if [ "$apache_installed" ] || [ "$nginx_installed" ] ; then
         # Install default success page
         mkdir -p /var/www/html
@@ -94,18 +97,34 @@ hestia_package_web-server_integrate() {
         for user in $($HESTIA/bin/v-list-sys-users plain); do
             $BIN/v-rebuild-web-domains $user 'no' > /dev/null 2>&1
         done
+    fi
 
-        osal_service_stop $OSAL_SERVICE_APACHE > /dev/null 2>&1
-        osal_service_stop $OSAL_SERVICE_NGINX > /dev/null 2>&1
-
-        if [ "$apache_installed" ]; then
-            osal_service_enable $OSAL_SERVICE_APACHE
-            osal_service_start $OSAL_SERVICE_APACHE
+    # phpMyAdmin
+    if hestia_module_isinstalled 'phpmyadmin'; then
+        echo "Integrating phpMyAdmin..."
+        # FIXME: use Nginx-web config when using Nginx proxy (ignore apache in that case)
+        if [ "$WEB_SYSTEM" = 'nginx' ]; then
+            # Setup Nginx config
+            cp -f $HESTIA_INSTALL_DIR/nginx/phpmyadmin.inc $OSAL_PATH_NGINX_CONF_D/
+            # Remove apache support        
+            hestia_safe_rm $OSAL_PATH_APACHE_CONF_D/phpmyadmin.conf
+        elif [ "$WEB_SYSTEM" = 'apache2' ] || [ "$WEB_SYSTEM" = 'httpd' ]; then
+            # Setup Apache config
+            cp -f $HESTIA_INSTALL_DIR/pma/apache.conf /etc/phpmyadmin/
+            ln -sf /etc/phpmyadmin/apache.conf $OSAL_PATH_APACHE_CONF_D/phpmyadmin.conf
+            # Remove Nginx support
+            hestia_safe_rm $OSAL_PATH_NGINX_CONF_D/phpmyadmin.inc
         fi
+    fi
 
-        if [ "$nginx_installed" ]; then
-            osal_service_enable $OSAL_SERVICE_NGINX
-            osal_service_start $OSAL_SERVICE_NGINX
-        fi
+    # Start web server and proxy
+    if [ "$apache_installed" ]; then
+        osal_service_enable $OSAL_SERVICE_APACHE
+        osal_service_start $OSAL_SERVICE_APACHE
+    fi
+
+    if [ "$nginx_installed" ]; then
+        osal_service_enable $OSAL_SERVICE_NGINX
+        osal_service_start $OSAL_SERVICE_NGINX
     fi
 }

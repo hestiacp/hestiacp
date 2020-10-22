@@ -1,11 +1,11 @@
 #!/bin/bash
 
-hestia_module_php-fpm_del() {
+hestia_module_php_del() {
     source $HESTIA/bin/module/func.inc
-    source $HESTIA/bin/module/php-fpm/func.inc
+    source $HESTIA/bin/module/php/func.inc
 
-    if ! hestia_module_isinstalled 'php-fpm' && [ ! "$param_force" ]; then
-        echo "PHP module is not installed. See 'hestia module info php-fpm'."
+    if ! hestia_module_isinstalled 'php' && [ ! "$param_force" ]; then
+        echo "PHP module is not installed. See 'hestia module info php'."
         return 1
     fi
 
@@ -38,9 +38,9 @@ hestia_module_php-fpm_del() {
 
     php_withoutdot=${php_version//.}
 
-    php_version_present=$(osal_kv_read_bool $HESTIA_CONF_MODULES/php-fpm.conf "php${php_withoutdot}_present" && echo 1)
+    php_version_present=$(osal_kv_read_bool $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_present" && echo 1)
     if [ ! "$php_version_present" ] && [ ! "$param_force" ]; then
-        echo "PHP (FPM) version ${php_version} is not present. See 'hestia module php-fpm list'."
+        echo "PHP (FPM) version ${php_version} is not present. See 'hestia module php list'."
         return 0
     fi
 
@@ -51,7 +51,7 @@ hestia_module_php-fpm_del() {
 
     php_etc_folder=$(osal_multiphp_etc_folder $php_version)
     hestia_config_backup 'php-del' $php_etc_folder \
-        $HESTIA/data/templates/web/php-fpm/PHP-${php_version/\./_}.tpl
+        $HESTIA/data/templates/web/php/PHP-${php_version/\./_}.tpl
 
     php_prefix=$(osal_php_package_prefix $php_version)
 
@@ -80,9 +80,9 @@ hestia_module_php-fpm_del() {
     [ -f $HESTIA/data/templates/web/php-fpm/PHP-${php_version/\./_}.tpl ] && hestia_safe_rm $HESTIA/data/templates/web/php-fpm/PHP-${php_version/\./_}.tpl
     [[ -d "$php_etc_folder" ]] && hestia_safe_rm "$php_etc_folder"
 
-    osal_kv_write $HESTIA_CONF_MODULES/php-fpm.conf "php${php_withoutdot}_present" '0'
+    osal_kv_write $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_present" '0'
 
-    hestia module php-fpm integrate
+    hestia module php integrate
 
     log_history "removed php $phpversion" '' 'admin'
 

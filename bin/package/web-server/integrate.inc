@@ -65,12 +65,12 @@ hestia_package_web-server_integrate() {
     osal_kv_write $HESTIA/conf/hestia.conf 'PROXY_SSL_PORT' $PROXY_SSL_PORT
 
     # *** PHP-FPM
-    if hestia_module_isinstalled 'php-fpm'; then
-        echo "Integrating PHP (FPM)..."
-        source $HESTIA/bin/module/php-fpm/func.inc
+    if hestia_module_isinstalled 'php'; then
+        echo "Integrating PHP..."
+        source $HESTIA/bin/module/php/func.inc
         for php_version in $PHP_SUPPORTED_VERSIONS; do
             local php_withoutdot=${php_version//.}
-            php_version_present=$(osal_kv_read $HESTIA_CONF_MODULES/php-fpm.conf "php${php_withoutdot}_present" 0)
+            php_version_present=$(osal_kv_read $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_present" 0)
             if [ "$php_version_present" == "1" ]; then
                 echo " Enabling PHP $php_version"
                 local php_prefix=$(osal_php_package_prefix $php_version)
@@ -78,6 +78,23 @@ hestia_package_web-server_integrate() {
                 osal_service_restart $php_prefix-fpm
             fi
         done
+
+        if hestia_module_isinstalled 'apache'; then
+            # Enable mod_ruid/mpm_itk or mpm_event
+            # Disable prefork and php, enable event
+            osal_apache_module_disable php$fpm_v > /dev/null 2>&1
+            osal_apache_module_disable mpm_prefork > /dev/null 2>&1
+            osal_apache_module_enable mpm_event > /dev/null 2>&1
+            cp -f $HESTIA_INSTALL_DIR/$WEB_SYSTEM/hestia-event.conf $OSAL_PATH_APACHE_CONF_D/
+        fi
+
+        # Update default CLI version
+        if [ "$OS_BASE" = 'debian' ]; then    
+            update-alternatives --set php /usr/bin/php$PHP_DEFAULT_VERSION > /dev/null 2>&1
+        elif [ "$OS_BASE" == 'rhel' ]; then
+            local php_withoutdot=${PHP_DEFAULT_VERSION//.}
+            ln -sf /usr/bin/php$php_withoutdot /usr/bin/php
+        fi
     fi
 
     # *** Rebuild IPs and domains

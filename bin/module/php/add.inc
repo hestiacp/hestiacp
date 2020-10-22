@@ -1,11 +1,11 @@
 #!/bin/bash
 
-hestia_module_php-fpm_add() {
+hestia_module_php_add() {
     source $HESTIA/bin/module/func.inc
-    source $HESTIA/bin/module/php-fpm/func.inc
+    source $HESTIA/bin/module/php/func.inc
 
-    if ! hestia_module_isinstalled 'php-fpm' && [ ! "$param_force" ]; then
-        echo "PHP (FPM) module is not installed. See 'hestia module info php-fpm'."
+    if ! hestia_module_isinstalled 'php' && [ ! "$param_force" ]; then
+        echo "PHP module is not installed. See 'hestia module info php'."
         return 1
     fi
 
@@ -15,6 +15,10 @@ hestia_module_php-fpm_add() {
     if [ ! "$param_ver" ]; then
         echo "You must specify PHP version"
         return 1
+    fi
+
+    if [ "$param_ver" == "default" ]; then
+        param_ver="$PHP_DEFAULT_VERSION"
     fi
 
     # Verify php version format
@@ -37,10 +41,10 @@ hestia_module_php-fpm_add() {
     fi
 
     local php_withoutdot=${php_version//.}
-    local php_version_present=$(osal_kv_read_bool $HESTIA_CONF_MODULES/php-fpm.conf "php${php_withoutdot}_present" && echo 1)
+    local php_version_present=$(osal_kv_read_bool $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_present" && echo 1)
 
     if [ "$php_version_present" ] && [ ! "$param_force" ]; then
-        echo "PHP version ${php_version} is already present. See 'hestia module php-fpm list'."
+        echo "PHP version ${php_version} is already present. See 'hestia module php list'."
         return 0
     fi
 
@@ -104,9 +108,9 @@ hestia_module_php-fpm_add() {
     #                       Hestia                             #
     #----------------------------------------------------------#
 
-    osal_kv_write $HESTIA_CONF_MODULES/php-fpm.conf "php${php_withoutdot}_present" '1'
+    osal_kv_write $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_present" '1'
 
     log_history "installed php $php_version" '' 'admin'
 
-    hestia module php-fpm integrate
+    hestia module php integrate
 }

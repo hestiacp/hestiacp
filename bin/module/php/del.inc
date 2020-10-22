@@ -49,7 +49,7 @@ hestia_module_php_del() {
 
     echo "Removing PHP version ${php_version}..."
 
-    php_etc_folder=$(osal_multiphp_etc_folder $php_version)
+    php_etc_folder=$(osal_php_etc_folder $php_version)
     hestia_config_backup 'php-del' $php_etc_folder \
         $HESTIA/data/templates/web/php/PHP-${php_version/\./_}.tpl
 

@@ -67,6 +67,7 @@ OSAL_PATH_NGINX_CONF_D=/etc/nginx/conf.d
 
 # PHP
 PHP_DIR_POOL_D_BASE=/etc/php
+PHP_PKG_MOD_PHP=libapache2-mod-php
 
 # phpMyAdmin
 OSAL_PKG_PHPMYADMIN=phpmyadmin
@@ -150,7 +151,7 @@ osal_php_fpm_isinstalled() {
 }
 
 # multiphp_etc_folder '7.3' = /etc/php/7.3
-multiphp_etc_folder() {
+osal_php_etc_folder() {
     echo /etc/php/php${1}
 }
 

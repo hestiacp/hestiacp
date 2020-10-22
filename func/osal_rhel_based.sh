@@ -65,6 +65,7 @@ OSAL_PATH_NGINX_CONF_D=/etc/nginx/conf.d
 
 # PHP
 PHP_DIR_POOL_D_BASE=/etc/opt/remi
+PHP_PKG_MOD_PHP=mod_php
 
 # phpMyAdmin
 OSAL_PKG_PHPMYADMIN=phpMyAdmin
@@ -154,7 +155,7 @@ osal_php_fpm_isinstalled() {
 }
 
 # multiphp_etc_folder '7.3' = /etc/opt/remi/php73
-osal_multiphp_etc_folder() {
+osal_php_etc_folder() {
     echo /etc/opt/remi/php${1//.}
 }
 

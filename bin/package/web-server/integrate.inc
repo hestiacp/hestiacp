@@ -44,7 +44,7 @@ hestia_package_web-server_integrate() {
         PROXY_SSL_PORT=''
         osal_kv_write $HESTIA_CONF_MODULES/nginx.conf 'service_name' $OSAL_SERVICE_NGINX
     else
-        echo "Remove Web module setup..."
+        echo "Setup web module (no web server)..."
         WEB_SYSTEM=''
         WEB_RGROUPS=''
         WEB_PORT='80'
@@ -64,7 +64,9 @@ hestia_package_web-server_integrate() {
     osal_kv_write $HESTIA/conf/hestia.conf 'PROXY_PORT' $PROXY_PORT
     osal_kv_write $HESTIA/conf/hestia.conf 'PROXY_SSL_PORT' $PROXY_SSL_PORT
 
-    # *** PHP-FPM
+
+
+    # *** PHP (FPM and CLI)
     if hestia_module_isinstalled 'php'; then
         echo "Integrating PHP..."
         source $HESTIA/bin/module/php/func.inc
@@ -97,6 +99,8 @@ hestia_package_web-server_integrate() {
         fi
     fi
 
+
+
     # *** Rebuild IPs and domains
     if [ "$apache_installed" ] || [ "$nginx_installed" ] ; then
         # Install default success page
@@ -115,6 +119,8 @@ hestia_package_web-server_integrate() {
             $BIN/v-rebuild-web-domains $user 'no' > /dev/null 2>&1
         done
     fi
+
+
 
     # phpMyAdmin
     if hestia_module_isinstalled 'phpmyadmin'; then
@@ -135,6 +141,8 @@ hestia_package_web-server_integrate() {
             hestia_safe_rm $OSAL_PATH_NGINX_CONF_D/phpmyadmin.inc
         fi
     fi
+
+
 
     # Start web server and proxy
     if [ "$apache_installed" ]; then

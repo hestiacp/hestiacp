@@ -45,6 +45,7 @@ All notable changes to this project will be documented in this file.
 - Cleaned up entries used in the Google / Gmail DNS template - thanks **@madito**
 - Enhanced ProFTPd support for TLS
 - Refactored LXD compiler script
+- Updated phpMyAdmin to version 5.0.4
 
 ## [1.2.4] - Service Release
 ### Features

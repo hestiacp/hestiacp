@@ -53,6 +53,6 @@ apt remove -qq mariadb-server -y  > /dev/null 2>&1
 
 # Install new version and run upgrader
 echo "Installing new MariaDB Server, start and run upgrade..."
-apt install -qq mariadb-server -y  > /dev/null 2>&1
+apt install -qq mariadb-server -y 
 systemctl start mysql > /dev/null 2>&1
 mysql_upgrade

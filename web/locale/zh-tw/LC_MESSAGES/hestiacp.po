@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Hestia CP package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-09-04 09:00:20+0000\n"
+"PO-Revision-Date: 2020-10-24 17:13:59+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,39 +13,39 @@ msgstr ""
 
 #: ../../web/templates/admin/edit_server.html:857
 msgid "Login screen style"
-msgstr ""
+msgstr "登入介面風格"
 
 #: ../../web/templates/admin/edit_server.html:848
 msgid "Security"
-msgstr ""
+msgstr "安全性"
 
 #: ../../web/templates/admin/edit_server.html:864
 msgid "Old Style"
-msgstr ""
+msgstr "舊風格"
 
 #: ../../web/templates/admin/edit_server.html:618
 msgid "Compression"
-msgstr ""
+msgstr "壓縮類型"
 
 #: ../../web/add/webapp/index.php:62
 msgid "%s installer missing"
-msgstr ""
+msgstr "安裝程序遺失 %s"
 
 #: ../../web/add/webapp/index.php:82
 msgid "%s App was installed succesfully!"
-msgstr ""
+msgstr "%s 應用程式已安裝成功！"
 
 #: ../../web/update/hestia/index.php:22
 msgid "Error: %s update failed"
-msgstr ""
+msgstr "錯誤: %s 更新失敗"
 
 #: ../../web/restart/service/index.php:25
 msgid "Restart \"%s\" failed"
-msgstr ""
+msgstr "重新啟動 \"%s\" 失敗"
 
 #: ../../web/start/service/index.php:25
 msgid "Start \"%s\" failed"
-msgstr ""
+msgstr "啟動 \"%s\" 失敗"
 
 #: ../../web/add/user/index.php:101
 msgid "ACCOUNT_READY"
@@ -61,34 +61,34 @@ msgstr ""
 
 #: ../../web/download/backup/index.php:24
 msgid "Error: Hestia did not return any output."
-msgstr ""
+msgstr "錯誤: Hestia 沒有返回任何輸出。"
 
 #: ../../web/templates/admin/add_web.html:200
 #: ../../web/templates/admin/edit_web.html:248
 #: ../../web/templates/user/edit_web.html:261
 msgid "Custom document root"
-msgstr ""
+msgstr "自訂網站目錄"
 
 #: ../../web/templates/admin/add_web.html:208
 #: ../../web/templates/admin/edit_web.html:256
 #: ../../web/templates/user/edit_web.html:269
 msgid "Point to"
-msgstr ""
+msgstr "指向"
 
 #: ../../web/templates/admin/panel.html:15
 #: ../../web/templates/user/panel.html:15
 msgid "Files"
-msgstr ""
+msgstr "檔案管理"
 
 #: ../../web/templates/admin/edit_user.html:145
 #: ../../web/templates/admin/add_user.html:136
 msgid "Role"
-msgstr ""
+msgstr "角色"
 
 #: ../../web/templates/admin/edit_user.html:152
 #: ../../web/templates/admin/add_user.html:143
 msgid "Administrator"
-msgstr ""
+msgstr "系統管理員"
 
 #: ../../web/templates/admin/list_web.html:70
 #: ../../web/templates/admin/list_dns.html:71
@@ -115,23 +115,23 @@ msgstr "確定要暫停網域 %s 嗎？"
 #: ../../web/templates/user/edit_web.html:482
 #: ../../web/templates/user/edit_web.html:558
 msgid "Prefix %s will be added to username automatically"
-msgstr ""
+msgstr "使用者名稱將自動新增 %s 前綴"
 
 #: ../../web/templates/admin/edit_server.html:189
 msgid "Options"
-msgstr ""
+msgstr "選項"
 
 #: ../../web/templates/admin/edit_server.html:194
 msgid "SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL"
-msgstr "安裝更新後發送電子郵件通知"
+msgstr "安裝更新後寄出電子郵件通知"
 
 #: ../../web/templates/admin/edit_server.html:199
 msgid "SYSTEM_UPGRADE_SEND_EMAIL_LOG"
-msgstr "通過電子郵件發送更新安裝日誌"
+msgstr "通過電子郵件寄出更新安裝日誌"
 
 #: ../../web/templates/admin/edit_server.html:885
 msgid "Filemanager"
-msgstr ""
+msgstr "檔案管理"
 
 #: ../../web/templates/admin/list_cron.html:75
 #: ../../web/templates/user/list_cron.html:75
@@ -145,11 +145,11 @@ msgstr "確定要暫停 任務排程嗎？"
 
 #: ../../web/templates/admin/list_services.html:148
 msgid "Are you sure you want to start service"
-msgstr ""
+msgstr "您確定想要啟動服務"
 
 #: ../../web/templates/admin/list_weblog.html:27
 msgid "Access Log"
-msgstr ""
+msgstr "訪問日誌"
 
 #: ../../web/templates/admin/list_user.html:88
 msgid "UNSUSPEND_USER_CONFIRMATION"
@@ -189,7 +189,7 @@ msgstr "確定要暫停 %s 嗎？"
 
 #: ../../web/stop/service/index.php:27
 msgid "Stop \"%s\" failed"
-msgstr ""
+msgstr "停止 \"%s\" 失敗"
 
 #: ../../web/templates/admin/edit_user.html:84
 #: ../../web/templates/admin/add_db.html:97
@@ -199,7 +199,7 @@ msgstr ""
 #: ../../web/templates/admin/add_user.html:77
 #: ../../web/templates/user/edit_user.html:82
 msgid "Your password must have at least"
-msgstr ""
+msgstr "您的密碼須至少"
 
 #: ../../web/templates/admin/edit_user.html:86
 #: ../../web/templates/admin/add_db.html:99
@@ -209,7 +209,7 @@ msgstr ""
 #: ../../web/templates/admin/add_user.html:79
 #: ../../web/templates/user/edit_user.html:84
 msgid "8 characters long"
-msgstr ""
+msgstr "8 個字元"
 
 #: ../../web/templates/admin/edit_user.html:87
 #: ../../web/templates/admin/add_db.html:100
@@ -219,7 +219,7 @@ msgstr ""
 #: ../../web/templates/admin/add_user.html:80
 #: ../../web/templates/user/edit_user.html:85
 msgid "1 uppercase & 1 lowercase character"
-msgstr ""
+msgstr "1 個大寫字母與 1 個小寫字母"
 
 #: ../../web/templates/admin/edit_user.html:88
 #: ../../web/templates/admin/add_db.html:101
@@ -229,15 +229,15 @@ msgstr ""
 #: ../../web/templates/admin/add_user.html:81
 #: ../../web/templates/user/edit_user.html:86
 msgid "1 number"
-msgstr ""
+msgstr "1 個數字"
 
 #: ../../web/add/user/index.php:48 ../../web/add/db/index.php:45
 msgid "Password does not match the minimum requirements"
-msgstr ""
+msgstr "密碼不符最低要求"
 
 #: ../../web/edit/user/index.php:203
 msgid "Please enter a valid name"
-msgstr ""
+msgstr "請輸入有效名稱"
 
 #: ../../web/templates/login_1.html:18
 msgid "Welcome"
@@ -245,19 +245,19 @@ msgstr "歡迎"
 
 #: ../../web/templates/login_1.html:42 ../../web/templates/login_2.html:40
 msgid "Login"
-msgstr ""
+msgstr "登入"
 
 #: ../../web/templates/admin/list_services.html:61
 msgid "Production release"
-msgstr ""
+msgstr "生產發佈"
 
 #: ../../web/templates/admin/add_user.html:107
 msgid "Send welcome email"
-msgstr ""
+msgstr "寄出歡迎電子郵件"
 
 #: ../../web/templates/admin/panel.html:2
 msgid "Top"
-msgstr ""
+msgstr "頂端"
 
 #: ../../web/templates/admin/panel.html:33
 msgid "Server"
@@ -269,33 +269,33 @@ msgstr "Submit an issue report"
 
 #: ../../web/templates/login.html:35 ../../web/templates/login_a.html:45
 msgid "Next"
-msgstr ""
+msgstr "下一步"
 
 #: ../../web/templates/login_2.html:16
 msgid "2 Factor Authentication"
-msgstr "Two-factor Authentication"
+msgstr "雙重驗證"
 
 #: ../../web/templates/admin/list_web.html:59
 #: ../../web/templates/admin/list_mail.html:61
 #: ../../web/templates/user/list_web.html:64
 #: ../../web/templates/user/list_mail.html:60
 msgid "SSL"
-msgstr ""
+msgstr "SSL"
 
 #: ../../web/templates/admin/list_web.html:134
 #: ../../web/templates/user/list_web.html:139
 msgid "Edit"
-msgstr ""
+msgstr "編輯"
 
 #: ../../web/templates/admin/list_web.html:217
 #: ../../web/templates/user/list_web.html:222
 msgid "1 web domain"
-msgstr "1 web domain"
+msgstr "1 網站網域"
 
 #: ../../web/templates/admin/list_web.html:219
 #: ../../web/templates/user/list_web.html:224
 msgid "%s web domains"
-msgstr "%s web domains"
+msgstr "%s 網站網域"
 
 #: ../../web/templates/admin/add_package.html:37
 msgid "Adding Package"
@@ -346,7 +346,7 @@ msgstr "帳號"
 #: ../../web/templates/admin/list_mail.html:60
 #: ../../web/templates/user/list_mail.html:59
 msgid "DKIM"
-msgstr ""
+msgstr "DKIM"
 
 #: ../../web/templates/admin/list_mail.html:218
 #: ../../web/templates/user/list_mail.html:217
@@ -405,12 +405,12 @@ msgstr "確定要刪除使用者 %s 嗎？"
 #: ../../web/templates/admin/list_user.html:165
 #: ../../web/templates/user/list_user.html:133
 msgid "1 user account"
-msgstr "1 user account"
+msgstr "1 使用者帳戶"
 
 #: ../../web/templates/admin/list_user.html:167
 #: ../../web/templates/user/list_user.html:135
 msgid "%s user accounts"
-msgstr "%s user accounts"
+msgstr "%s 使用者帳戶"
 
 #: ../../web/templates/admin/list_packages.html:5
 msgid "Add Package"
@@ -418,7 +418,7 @@ msgstr "新增方案"
 
 #: ../../web/templates/admin/list_packages.html:44
 msgid "Shell"
-msgstr ""
+msgstr "Shell"
 
 #: ../../web/templates/admin/list_packages.html:83
 msgid "DELETE_PACKAGE_CONFIRMATION"
@@ -473,11 +473,11 @@ msgstr "忘記密碼"
 
 #: ../../web/templates/login_2.html:21
 msgid "2FA Token"
-msgstr "OTP PIN"
+msgstr "雙重驗證碼"
 
 #: ../../web/templates/login_2.html:24
 msgid "Forgot token"
-msgstr "Unlock Account"
+msgstr "忘記令牌"
 
 #: ../../web/templates/reset2fa.html:20
 msgid "Log in"
@@ -485,19 +485,19 @@ msgstr "登入"
 
 #: ../../web/templates/user/edit_user.html:5
 msgid "SSH_KEY"
-msgstr ""
+msgstr "SSH金鑰"
 
 #: ../../web/templates/reset2fa.html:15
 msgid "2FA Reset successfully"
-msgstr "Two-factor authentication is now turned off for your account.<br><br>You may now proceed to log in."
+msgstr "此帳戶已解除雙重驗證。<br><br>現在可以重新登入。"
 
 #: ../../web/templates/reset2fa.html:29
 msgid "Reset 2FA"
-msgstr "Unlock Account"
+msgstr "重置雙重驗證"
 
 #: ../../web/templates/reset2fa.html:44
 msgid "2FA Reset Code"
-msgstr "Account Recovery Code"
+msgstr "帳戶復原代碼"
 
 #: ../../web/templates/reset_1.html:40 ../../web/templates/reset2fa.html:54
 msgid "Submit"
@@ -581,7 +581,7 @@ msgstr "無效的使用者名稱或密碼"
 
 #: ../../web/login/index.php:104
 msgid "Invalid or missing 2FA token"
-msgstr ""
+msgstr "無效或缺少雙重驗證令牌"
 
 #: ../../web/templates/admin/list_services.html:15
 #: ../../web/templates/admin/list_services.html:139
@@ -590,7 +590,7 @@ msgstr "確定要重新啟動 %s 嗎？"
 
 #: ../../web/templates/admin/list_services.html:68
 msgid "Operating System"
-msgstr ""
+msgstr "操作系統"
 
 #: ../../web/templates/admin/list_services.html:74
 msgid "Load Average"
@@ -603,12 +603,12 @@ msgstr "已啟動時間"
 
 #: ../../web/templates/admin/list_services.html:96
 msgid "Service"
-msgstr "Service"
+msgstr "服務"
 
 #: ../../web/templates/admin/list_services.html:98
 #: ../../web/templates/admin/list_updates.html:41
 msgid "Description"
-msgstr "Description"
+msgstr "描述"
 
 #: ../../web/templates/admin/list_services.html:100
 #: ../../web/templates/admin/list_server_info.html:27
@@ -626,7 +626,7 @@ msgstr "編輯"
 
 #: ../../web/templates/admin/list_services.html:148
 msgid "Are you sure you want to stop service"
-msgstr ""
+msgstr "您確定想要停止服務"
 
 #: ../../web/templates/admin/list_services.html:157
 msgid "mb"
@@ -642,7 +642,7 @@ msgstr "列出登入失敗遭封鎖名單"
 
 #: ../../web/templates/admin/list_firewall.html:8
 msgid "list ipset"
-msgstr "Manage IP lists"
+msgstr "管理IP清單"
 
 #: ../../web/templates/admin/list_firewall.html:82
 #: ../../web/templates/admin/list_firewall.html:102
@@ -656,15 +656,15 @@ msgstr "確定要刪除規則 #%s 嗎？"
 
 #: ../../web/templates/admin/list_firewall.html:145
 msgid "1 firewall rule"
-msgstr "1 firewall rule"
+msgstr "1 防火牆規則"
 
 #: ../../web/templates/admin/list_firewall.html:147
 msgid "%s firewall rules"
-msgstr "%s firewall rules"
+msgstr "%s 防火牆規則"
 
 #: ../../web/templates/admin/edit_user.html:6
 msgid "Manage SSH keys"
-msgstr "Manage SSH keys"
+msgstr "管理SSH金鑰"
 
 #: ../../web/templates/admin/edit_user.html:44
 #: ../../web/templates/admin/list_user.html:119
@@ -676,23 +676,23 @@ msgstr "編輯使用者"
 #: ../../web/templates/admin/edit_user.html:94
 #: ../../web/templates/user/edit_user.html:92
 msgid "Enable 2FA"
-msgstr "Enable two-factor authentication"
+msgstr "啟用雙重驗證"
 
 #: ../../web/templates/admin/edit_user.html:96
 #: ../../web/templates/user/edit_user.html:94
 msgid "2FA Reset Code:"
-msgstr "Account Recovery Code:"
+msgstr "帳戶復原代碼:"
 
 #: ../../web/templates/admin/edit_user.html:97
 #: ../../web/templates/user/edit_user.html:95
 msgid "Please scan the code below in your 2FA application:"
-msgstr "To finish setting up two-factor authentication, scan the QR code below<br />using an authentication app (such as <a href=\"https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2\">Google Authenticator</a>):"
+msgstr "完成雙重驗證設定, 掃描下方QR碼<br />使用雙重驗證應用程式 (例如 <a href=\"https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2\">Google Authenticator</a>):"
 
 #: ../../web/templates/admin/edit_user.html:104
 #: ../../web/templates/admin/add_user.html:87
 #: ../../web/templates/user/edit_user.html:102
 msgid "Contact"
-msgstr "Name"
+msgstr "聯繫"
 
 #: ../../web/templates/admin/edit_user.html:124
 #: ../../web/templates/admin/list_user.html:68
@@ -717,7 +717,7 @@ msgstr "SSH 權限"
 
 #: ../../web/templates/admin/edit_user.html:203
 msgid "PHP CLI Version"
-msgstr "PHP CLI Version"
+msgstr "PHP 命令列版本"
 
 #: ../../web/templates/admin/edit_user.html:229
 #: ../../web/templates/user/edit_user.html:146
@@ -754,12 +754,12 @@ msgstr "確定要刪除資料庫 %s 嗎？"
 #: ../../web/templates/admin/list_db.html:172
 #: ../../web/templates/user/list_db.html:171
 msgid "1 SQL database"
-msgstr "1 SQL database"
+msgstr "1 SQL資料庫"
 
 #: ../../web/templates/admin/list_db.html:174
 #: ../../web/templates/user/list_db.html:173
 msgid "%s SQL databases"
-msgstr "%s SQL databases"
+msgstr "%s SQL資料庫"
 
 #: ../../web/templates/admin/edit_mail.html:69
 msgid "Catchall email"
@@ -844,12 +844,12 @@ msgstr "確定要刪除網域 %s 嗎？"
 #: ../../web/templates/admin/list_dns.html:140
 #: ../../web/templates/user/list_dns.html:139
 msgid "1 DNS zone"
-msgstr "1 DNS zone"
+msgstr "1 DNS區域"
 
 #: ../../web/templates/admin/list_dns.html:142
 #: ../../web/templates/user/list_dns.html:141
 msgid "%s DNS zones"
-msgstr "%s DNS zones"
+msgstr "%s DNS區域"
 
 #: ../../web/templates/admin/list_server_info.html:37
 #: ../../web/templates/admin/list_weblog.html:31
@@ -858,7 +858,7 @@ msgstr "%s DNS zones"
 #: ../../web/templates/user/list_search.html:5
 #: ../../web/templates/user/list_stats.html:4
 msgid "Refresh"
-msgstr "Refresh"
+msgstr "重新整理"
 
 #: ../../web/templates/admin/list_log.html:6
 #: ../../web/templates/admin/list_log.html:8
@@ -867,7 +867,7 @@ msgstr "刪除"
 
 #: ../../web/templates/admin/list_log.html:11
 msgid "DELETE_LOGS_CONFIRMATION"
-msgstr "Are you sure you want to delete the logs?"
+msgstr "您確定想要刪除此日誌？"
 
 #: ../../web/templates/admin/list_log.html:61
 msgid "1 log record"
@@ -899,7 +899,7 @@ msgstr "啟用通知"
 #: ../../web/templates/admin/list_cron.html:59
 #: ../../web/templates/user/list_cron.html:59
 msgid "Cron Job"
-msgstr "Cron Job"
+msgstr "任務排程"
 
 #: ../../web/templates/admin/list_cron.html:61
 #: ../../web/templates/user/list_cron.html:61
@@ -968,15 +968,15 @@ msgstr "備份例外"
 
 #: ../../web/templates/admin/list_backup.html:43
 msgid "File Name"
-msgstr "File Name"
+msgstr "檔案名稱"
 
 #: ../../web/templates/admin/list_backup.html:46
 msgid "Size"
-msgstr "Size"
+msgstr "大小"
 
 #: ../../web/templates/admin/list_backup.html:48
 msgid "Runtime"
-msgstr "Runtime"
+msgstr "執行時間"
 
 #: ../../web/templates/admin/list_backup.html:82
 msgid "download"
@@ -988,11 +988,11 @@ msgstr "確定要刪除 %s 備份嗎？"
 
 #: ../../web/templates/admin/list_backup.html:116
 msgid "1 backup"
-msgstr ""
+msgstr "1 備份"
 
 #: ../../web/templates/admin/list_backup.html:118
 msgid "%s backups"
-msgstr "%s backups"
+msgstr "%s 備份"
 
 #: ../../web/templates/admin/list_firewall_banlist.html:5
 msgid "Ban IP Address"
@@ -1005,15 +1005,15 @@ msgstr "確定要刪除 IP 地址 %s 嗎？"
 
 #: ../../web/templates/admin/list_firewall_banlist.html:89
 msgid "There are currently no banned IP addresses."
-msgstr ""
+msgstr "目前沒有任何被禁止的IP地址。"
 
 #: ../../web/templates/admin/list_firewall_banlist.html:92
 msgid "1 banned IP address"
-msgstr "1 banned IP address"
+msgstr "1 被禁止的IP地址"
 
 #: ../../web/templates/admin/list_firewall_banlist.html:95
 msgid "%s banned IP addresses"
-msgstr "%s banned IP addresses"
+msgstr "%s 被禁止的IP地址"
 
 #: ../../web/templates/admin/add_dns_rec.html:30
 msgid "Adding DNS Record"
@@ -1025,7 +1025,7 @@ msgstr "新增資料庫"
 
 #: ../../web/templates/admin/add_db.html:55
 msgid "Prefix %s will be automatically added to database name and database user"
-msgstr ""
+msgstr "前綴 ％s 將自動新增到資料庫名稱和資料庫使用者帳號"
 
 #: ../../web/templates/admin/add_db.html:74
 #: ../../web/templates/admin/edit_db.html:72
@@ -1046,11 +1046,11 @@ msgstr "更新"
 
 #: ../../web/templates/admin/list_server_info.html:28
 msgid "RAM"
-msgstr ""
+msgstr "記憶體"
 
 #: ../../web/templates/admin/list_server_info.html:30
 msgid "Network"
-msgstr ""
+msgstr "網路"
 
 #: ../../web/templates/admin/list_server_info.html:31
 msgid "Web"
@@ -1150,12 +1150,12 @@ msgstr "子網域"
 #: ../../web/templates/admin/panel.html:75
 #: ../../web/templates/user/panel.html:61
 msgid "zones"
-msgstr ""
+msgstr "區域"
 
 #: ../../web/templates/admin/panel.html:90
 #: ../../web/templates/user/panel.html:76
 msgid "accounts"
-msgstr "帳號"
+msgstr "帳戶"
 
 #: ../../web/templates/admin/panel.html:114
 #: ../../web/templates/user/panel.html:100
@@ -1419,23 +1419,23 @@ msgstr "星期幾"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:38
 msgid "Adding Firewall Ipset List"
-msgstr "New IP list"
+msgstr "新增防火牆IP清單"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:66
 msgid "url, script or file"
-msgstr ""
+msgstr "超連結, 腳本或檔案"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:85
 msgid "ip v4"
-msgstr ""
+msgstr "Ipv4"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:86
 msgid "ip v6"
-msgstr ""
+msgstr "Ipv6"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:166
 msgid "BLACKLIST"
-msgstr "BLACKLIST"
+msgstr "黑名單"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:179
 msgid "IPVERSE"
@@ -1443,11 +1443,11 @@ msgstr "IPVERSE"
 
 #: ../../web/templates/admin/list_webapps.html:46
 msgid "version"
-msgstr "version"
+msgstr "版本"
 
 #: ../../web/templates/admin/list_webapps.html:47
 msgid "Setup"
-msgstr "Setup"
+msgstr "建立"
 
 #: ../../web/templates/admin/list_weblog.html:6
 msgid "Web Log Manager"
@@ -1471,7 +1471,7 @@ msgstr "存取記錄"
 
 #: ../../web/templates/admin/list_weblog.html:28
 msgid "Error Log"
-msgstr ""
+msgstr "錯誤日誌"
 
 #: ../../web/templates/admin/list_server_info.html:38
 #: ../../web/templates/admin/list_weblog.html:33
@@ -1486,11 +1486,11 @@ msgstr "%s.%s.log 的最後 70 行"
 
 #: ../../web/templates/admin/setup_webapp.html:16
 msgid "Install"
-msgstr ""
+msgstr "安裝"
 
 #: ../../web/templates/admin/setup_webapp.html:43
 msgid "Data loss warning!<br>Your web domain already has files uploaded, the installer will overwrite your files and/or the installation might fail.<br/><br/> Please use the installer only for empty web domains"
-msgstr ""
+msgstr "資料遺失警告！<br>您的網域已經上傳了檔案，安裝程序將覆蓋您的檔案且/或安裝可能會失敗。<br/> <br/>安裝程序請使用於空的網域"
 
 #: ../../web/templates/admin/add_ip.html:38
 msgid "Adding IP address"
@@ -1542,28 +1542,28 @@ msgstr "還原"
 
 #: ../../web/templates/admin/list_backup_detail.html:45
 msgid "Details"
-msgstr ""
+msgstr "細節"
 
 #: ../../web/templates/admin/list_backup_detail.html:46
 #: ../../web/templates/admin/list_backup_detail.html:78
 msgid "Restore"
-msgstr ""
+msgstr "還原"
 
 #: ../../web/templates/admin/list_backup_detail.html:67
 msgid "Web domain"
-msgstr ""
+msgstr "網站網域"
 
 #: ../../web/templates/admin/list_backup_detail.html:105
 msgid "Mail domain"
-msgstr ""
+msgstr "郵件網域"
 
 #: ../../web/templates/admin/list_backup_detail.html:143
 msgid "DNS domain"
-msgstr ""
+msgstr "DNS網域"
 
 #: ../../web/templates/admin/list_backup_detail.html:219
 msgid "Cron Records"
-msgstr ""
+msgstr "任務紀錄"
 
 #: ../../web/templates/admin/panel.html:76
 #: ../../web/templates/admin/list_backup_detail.html:222
@@ -1577,7 +1577,7 @@ msgstr "使用者資料夾"
 
 #: ../../web/templates/admin/list_backup_detail.html:288
 msgid "Cron"
-msgstr ""
+msgstr "任務"
 
 #: ../../web/templates/admin/list_backup_detail.html:319
 msgid "1 item"
@@ -1627,7 +1627,7 @@ msgstr "排序依"
 #: ../../web/templates/admin/list_mail_acc.html:59
 #: ../../web/templates/user/list_mail_acc.html:59
 msgid "Forwarding"
-msgstr "Forwarding"
+msgstr "轉寄"
 
 #: ../../web/templates/admin/edit_mail_acc.html:128
 #: ../../web/templates/admin/list_mail_acc.html:60
@@ -1681,7 +1681,7 @@ msgstr "系統更新"
 #: ../../web/templates/admin/list_services.html:10
 #: ../../web/templates/admin/list_services.html:12
 msgid "Restart"
-msgstr "Restart"
+msgstr "重新啟動"
 
 #: ../../web/templates/admin/edit_server.html:604
 msgid "Local backup"
@@ -1871,7 +1871,7 @@ msgstr "月"
 #: ../../web/templates/user/list_user.html:73
 #: ../../web/templates/user/list_stats.html:30
 msgid "IPs"
-msgstr ""
+msgstr "IPs"
 
 #: ../../web/templates/admin/list_web.html:10
 #: ../../web/templates/admin/list_web.html:57
@@ -1947,7 +1947,7 @@ msgstr "DNS 網域"
 #: ../../web/templates/admin/list_stats.html:50
 #: ../../web/templates/user/list_stats.html:36
 msgid "DNS Records"
-msgstr ""
+msgstr "DNS紀錄"
 
 #: ../../web/templates/admin/edit_backup_exclusions.html:68
 #: ../../web/templates/admin/list_user.html:73
@@ -1998,7 +1998,7 @@ msgstr "新增 DNS 紀錄"
 #: ../../web/templates/admin/list_dns_rec.html:5
 #: ../../web/templates/user/list_dns_rec.html:5
 msgid "Add Record"
-msgstr "Add Record"
+msgstr "新增紀錄"
 
 #: ../../web/templates/admin/list_dns.html:98
 #: ../../web/templates/admin/edit_dns.html:40
@@ -2107,17 +2107,17 @@ msgstr "確定要刪除記錄 %s 嗎？"
 #: ../../web/templates/admin/edit_server.html:863
 #: ../../web/templates/admin/list_dns_rec.html:88
 msgid "Default"
-msgstr ""
+msgstr "預設"
 
 #: ../../web/templates/admin/list_dns_rec.html:105
 #: ../../web/templates/user/list_dns_rec.html:101
 msgid "1 DNS record"
-msgstr ""
+msgstr "1 DNS紀錄"
 
 #: ../../web/templates/admin/list_dns_rec.html:107
 #: ../../web/templates/user/list_dns_rec.html:103
 msgid "%s DNS records"
-msgstr ""
+msgstr "%s DNS紀錄"
 
 #: ../../web/templates/admin/edit_backup_exclusions.html:40
 #: ../../web/templates/admin/list_backup_exclusions.html:5
@@ -2127,7 +2127,7 @@ msgstr "編輯備份排除項目"
 #: ../../web/templates/admin/list_backup_exclusions.html:31
 #: ../../web/templates/admin/list_log.html:32
 msgid "Value"
-msgstr "Value"
+msgstr "值"
 
 #: ../../web/templates/admin/list_backup_exclusions.html:48
 msgid "no exclusions"
@@ -2315,7 +2315,7 @@ msgstr "IMAP 安全性"
 #: ../../web/templates/admin/add_mail_acc.html:183
 #: ../../web/templates/admin/add_mail_acc.html:199
 msgid "STARTTLS"
-msgstr "STARTTLS"
+msgstr "啟動TLS"
 
 #: ../../web/templates/admin/edit_mail_acc.html:197
 #: ../../web/templates/admin/add_mail_acc.html:186
@@ -2353,7 +2353,7 @@ msgstr "SMTP 驗證方式"
 #: ../../web/templates/admin/list_webapps.html:24
 #: ../../web/templates/user/edit_web.html:8
 msgid "Quick Install App"
-msgstr "Quick Install App"
+msgstr "簡易安裝App"
 
 #: ../../web/templates/admin/list_web.html:134
 #: ../../web/templates/admin/list_web.html:143
@@ -2434,17 +2434,17 @@ msgstr "Lets Encrypt 支援"
 #: ../../web/templates/admin/edit_web.html:318
 #: ../../web/templates/user/edit_web.html:331
 msgid "Force SSL/HTTPS"
-msgstr "Enable automatic HTTP-to-HTTPS redirection"
+msgstr "啟動自動 HTTP到HTTPS 轉址"
 
 #: ../../web/templates/admin/edit_web.html:323
 #: ../../web/templates/user/edit_web.html:336
 msgid "Enable SSL HSTS"
-msgstr "Enable HTTP Strict Transport Security (HSTS) <a href=\"https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security\" target=\"_blank\"><i class=\"fas fa-question-circle\"></i></a>"
+msgstr "啟用 HTTP 嚴格傳輸安全 (HSTS) <a href=\"https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security\" target=\"_blank\"><i class=\"fas fa-question-circle\"></i></a>"
 
 #: ../../web/templates/admin/edit_web.html:328
 #: ../../web/templates/user/edit_web.html:342
 msgid "Home Directory"
-msgstr ""
+msgstr "家目錄"
 
 #: ../../web/templates/admin/add_web.html:296
 #: ../../web/templates/admin/edit_web.html:363
@@ -2640,7 +2640,7 @@ msgstr "新增網站網域"
 
 #: ../../web/templates/admin/add_web.html:57
 msgid "Avoid adding web domains on admin account"
-msgstr "It is strongly advised to <a href=\"/add/user/\">create a standard user account</a> before adding web domains to the server due to the increased privileges the admin account possesses and potential security risks."
+msgstr "強烈建議在新增網站網域到伺服器前，先 <a href=\"/add/user/\">建立一般帳戶</a>，因為管理員帳戶擁有的權限較大，且存在潛在的安全風險。"
 
 #: ../../web/templates/admin/add_web.html:93
 msgid "DNS Support"
@@ -2707,7 +2707,7 @@ msgstr "每兩分鐘"
 
 #: ../../web/templates/admin/edit_server.html:149
 msgid "SYSTEM_SET_DEFAULT_LANGUAGE"
-msgstr "Set as default language for all users"
+msgstr "設置為所有帳戶的預設語言"
 
 #: ../../web/templates/admin/edit_server.html:167
 #: ../../web/templates/admin/list_updates.html:42
@@ -2749,11 +2749,11 @@ msgstr "Backend 池模式"
 
 #: ../../web/templates/admin/edit_server.html:272
 msgid "Enabled multi PHP versions"
-msgstr "Enabled PHP versions"
+msgstr "啟用 PHP 版本"
 
 #: ../../web/templates/admin/edit_server.html:276
 msgid "Please wait while php is installed or removed"
-msgstr "Please wait until the process has completed and do not refresh the page."
+msgstr "請等待該過程完成，且勿重新整理此頁面。"
 
 #: ../../web/templates/admin/edit_server.html:312
 #: ../../web/templates/admin/edit_server.html:321
@@ -2807,12 +2807,12 @@ msgstr "是"
 #: ../../web/templates/admin/list_db.html:38
 #: ../../web/templates/user/list_db.html:38
 msgid "Host"
-msgstr "Host"
+msgstr "主機"
 
 #: ../../web/templates/admin/edit_server.html:370
 #: ../../web/templates/admin/edit_server.html:379
 msgid "Mail Server"
-msgstr "Mail Server"
+msgstr "郵件伺服器"
 
 #: ../../web/templates/admin/list_mail.html:58
 #: ../../web/templates/admin/edit_server.html:391
@@ -2916,7 +2916,7 @@ msgstr "您的要求已加入隊列中，備份完成後會再以電子郵件通
 #: ../../web/schedule/restore/index.php:43
 #: ../../web/schedule/backup/index.php:21
 msgid "Error: hestia did not return any output."
-msgstr ""
+msgstr "錯誤: hestia未返回任何輸出。"
 
 #: ../../web/schedule/backup/index.php:25
 msgid "BACKUP_EXISTS"
@@ -3013,15 +3013,15 @@ msgstr ""
 
 #: ../../web/reset/index.php:45
 msgid "Invalid host domain"
-msgstr ""
+msgstr "無效主機網域"
 
 #: ../../web/reset/index.php:74
 msgid "An internal error occurred"
-msgstr ""
+msgstr "發生內部錯誤"
 
 #: ../../web/reset/index.php:82
 msgid "Code has been expired"
-msgstr ""
+msgstr "代碼已過期"
 
 #: ../../web/reset/index.php:86 ../../web/reset/index.php:90
 msgid "Invalid username or code"
@@ -3118,7 +3118,7 @@ msgstr "統計使用者名稱"
 
 #: ../../web/edit/web/index.php:599
 msgid "stats user"
-msgstr ""
+msgstr "統計資料帳戶"
 
 #: ../../web/add/web/index.php:328 ../../web/edit/web/index.php:661
 #: ../../web/edit/web/index.php:735
@@ -3145,7 +3145,7 @@ msgstr "FTP 使用者"
 #: ../../web/edit/server/cron/index.php:18
 #: ../../web/edit/server/crond/index.php:18
 msgid "Info (Read-only mode): Crontab can be edited only trough ssh"
-msgstr ""
+msgstr "資訊（唯讀模式）：Crontab只能通過ssh進行編輯"
 
 #: ../../web/add/user/index.php:27 ../../web/add/package/index.php:25
 #: ../../web/edit/package/index.php:101
@@ -3154,19 +3154,19 @@ msgstr "方案"
 
 #: ../../web/add/package/index.php:26 ../../web/edit/package/index.php:102
 msgid "web template"
-msgstr ""
+msgstr "網站模板"
 
 #: ../../web/add/package/index.php:28 ../../web/edit/package/index.php:104
 msgid "backend template"
-msgstr ""
+msgstr "backend模板"
 
 #: ../../web/add/package/index.php:31 ../../web/edit/package/index.php:107
 msgid "proxy template"
-msgstr ""
+msgstr "proxy模板"
 
 #: ../../web/add/package/index.php:33 ../../web/edit/package/index.php:109
 msgid "dns template"
-msgstr ""
+msgstr "DNS模板"
 
 #: ../../web/add/package/index.php:34 ../../web/edit/package/index.php:110
 msgid "shell"
@@ -3182,7 +3182,7 @@ msgstr "網站子網域"
 
 #: ../../web/add/package/index.php:37 ../../web/edit/package/index.php:113
 msgid "dns domains"
-msgstr ""
+msgstr "DNS網域"
 
 #: ../../web/add/package/index.php:38 ../../web/edit/package/index.php:114
 msgid "dns records"
@@ -3222,7 +3222,7 @@ msgstr "配額"
 
 #: ../../web/add/package/index.php:45 ../../web/edit/package/index.php:121
 msgid "bandwidth"
-msgstr ""
+msgstr "流量"
 
 #: ../../web/add/package/index.php:49 ../../web/edit/package/index.php:125
 msgid "ns1"
@@ -3312,7 +3312,7 @@ msgstr "SSH key already exists"
 
 #: ../../web/add/key/index.php:57
 msgid "SSH KEY created"
-msgstr ""
+msgstr "已建立SSH金鑰"
 
 #: ../../web/add/firewall/ipset/index.php:25
 #: ../../web/templates/admin/list_search.html:9
@@ -3345,15 +3345,15 @@ msgstr "IP list created successfully"
 
 #: ../../web/add/firewall/index.php:42
 msgid "action"
-msgstr ""
+msgstr "action"
 
 #: ../../web/add/firewall/index.php:43
 msgid "protocol"
-msgstr ""
+msgstr "protocol"
 
 #: ../../web/add/firewall/index.php:44
 msgid "port"
-msgstr ""
+msgstr "連結埠"
 
 #: ../../web/add/ip/index.php:25 ../../web/add/firewall/banlist/index.php:26
 #: ../../web/add/firewall/index.php:45
@@ -3366,7 +3366,7 @@ msgstr "已成功加入規則！"
 
 #: ../../web/add/firewall/banlist/index.php:25
 msgid "banlist"
-msgstr ""
+msgstr "封鎖清單"
 
 #: ../../web/add/firewall/banlist/index.php:51
 msgid "BANLIST_CREATED_OK"
@@ -3386,7 +3386,7 @@ msgstr "類型"
 
 #: ../../web/add/db/index.php:23
 msgid "host"
-msgstr ""
+msgstr "主機"
 
 #: ../../web/add/db/index.php:24
 msgid "charset"
@@ -3500,11 +3500,11 @@ msgstr "國家"
 
 #: ../../web/generate/ssl/index.php:39
 msgid "State"
-msgstr ""
+msgstr "州(區)"
 
 #: ../../web/generate/ssl/index.php:40
 msgid "City"
-msgstr ""
+msgstr "城市"
 
 #: ../../web/templates/admin/generate_ssl.html:101
 #: ../../web/generate/ssl/index.php:41
@@ -3529,7 +3529,7 @@ msgstr "已成功產生 SSL 憑證！"
 #: ../../web/templates/reset_1.html:15 ../../web/templates/reset_2.html:15
 #: ../../web/templates/reset_3.html:15
 msgid "Forgot Password"
-msgstr "Forgot Password"
+msgstr "忘記密碼"
 
 #: ../../web/templates/reset_3.html:23
 msgid "New Password"
@@ -3624,7 +3624,7 @@ msgstr "確認"
 #: ../../web/templates/admin/list_key.html:6
 #: ../../web/templates/admin/add_key.html:39
 msgid "Add SSH Key"
-msgstr "Add SSH key"
+msgstr "新增SSH金鑰"
 
 #: ../../web/templates/admin/list_key.html:17
 msgid "SSH_ID"
@@ -3634,7 +3634,7 @@ msgstr "SSH ID"
 #: ../../web/templates/admin/add_key.html:57
 #: ../../web/templates/user/edit_user.html:5
 msgid "SSH KEY"
-msgstr "SSH Key"
+msgstr "SSH金鑰"
 
 #: ../../web/templates/admin/list_web.html:35
 #: ../../web/templates/admin/list_web.html:155
@@ -3776,15 +3776,15 @@ msgstr "確認"
 
 #: ../../web/templates/admin/list_key.html:41
 msgid "DELETE_KEY_CONFIRM"
-msgstr "Are you sure you want to delete SSH key %s?"
+msgstr "您確定想要刪除 %s SSH金鑰嗎？"
 
 #: ../../web/templates/admin/list_key.html:61
 msgid "1 SSH Key"
-msgstr ""
+msgstr "1 SSH金鑰"
 
 #: ../../web/templates/admin/list_key.html:63
 msgid "%s SSH Keys"
-msgstr ""
+msgstr "%s SSH金鑰"
 
 #: ../../web/templates/admin/list_ssl.html:36
 #: ../../web/templates/admin/generate_ssl.html:45
@@ -3805,11 +3805,11 @@ msgstr "市 / 地區"
 
 #: ../../web/templates/admin/generate_ssl.html:113
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 #: ../../web/templates/admin/list_firewall_ipset.html:5
 msgid "Add IP list"
-msgstr "Add IP list"
+msgstr "新增IP清單"
 
 #: ../../web/templates/admin/list_web.html:31
 #: ../../web/templates/admin/list_backup.html:22
@@ -3842,7 +3842,7 @@ msgstr "套用到所有已選擇的"
 #: ../../web/templates/admin/add_firewall_ipset.html:56
 #: ../../web/templates/admin/list_firewall_ipset.html:35
 msgid "Ip List Name"
-msgstr "IP List Name"
+msgstr "IP 清單名稱"
 
 #: ../../web/templates/admin/list_web.html:7
 #: ../../web/templates/admin/list_web.html:17
@@ -3895,11 +3895,11 @@ msgstr "日期"
 #: ../../web/templates/admin/list_firewall_ipset.html:40
 #: ../../web/templates/admin/list_firewall_banlist.html:38
 msgid "Time"
-msgstr "Time"
+msgstr "時間"
 
 #: ../../web/templates/admin/list_firewall_ipset.html:73
 msgid "DELETE_IPSET_CONFIRMATION"
-msgstr "Are you sure you want to delete IP list %s"
+msgstr "您確定想要刪除 %s IP清單嗎？"
 
 #: ../../web/templates/admin/list_firewall_ipset.html:105
 msgid "There are currently no IP lists defined."
@@ -3907,11 +3907,11 @@ msgstr "There are currently no IP lists defined."
 
 #: ../../web/templates/admin/list_firewall_ipset.html:108
 msgid "1 Ipset list"
-msgstr "1 IP list"
+msgstr "1 IP清單"
 
 #: ../../web/templates/admin/list_firewall_ipset.html:111
 msgid "%s Ipset lists"
-msgstr "%s IP lists"
+msgstr "%s IP清單"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:7
 #: ../../web/templates/admin/add_dns.html:7
@@ -3985,7 +3985,7 @@ msgstr "時區"
 
 #: ../../web/templates/admin/edit_server.html:102
 msgid "Theme"
-msgstr ""
+msgstr "主題風格"
 
 #: ../../web/templates/admin/edit_server.html:126
 msgid "Default Language"

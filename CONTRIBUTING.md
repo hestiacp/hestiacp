@@ -27,9 +27,9 @@ We have three primary or "evergreen" branches, which exist throughout our produc
 
 | Branch        | Description     | Cycle           |
 |---------------|:---------------:|:---------------:|
-| `main`        | Contains a snapshot of the latest development code.<br>**Not intended for production use and may be unstable.** | Daily  |
+| `main`        | Contains a snapshot of the latest development code.<br>**Not intended for production use and contains code from a merge snapshot.** | Daily  |
 | `beta`        | Contains a snapshot of the next version which is currently in testing.<br>**Not intended for production but should be highly stable.**  | Weekly |
-| `release`     | Contains a snapshot of the latest stable release.<br>**Intended for production use. Same code as packages in repository.** | Monthly |
+| `release`     | Contains a snapshot of the latest stable release.<br>**Intended for production use. This repository contains the same code as our compiled packages.** | Monthly |
 
 ### Creating a new branch and submitting pull requests
 The first step is to create a fork of the `hestiacp/hestiacp` repository under your account so that you may submit pull requests and patches via GitHub. 
@@ -37,7 +37,7 @@ The first step is to create a fork of the `hestiacp/hestiacp` repository under y
 Once you've created your fork, clone the repository to your computer and make sure that you've checked out the `main` branch. **Always** create a new topic branch for you work. When submitting pull requests it is important that you target the correct branch to ensure that your changes are properly integrated and tested based on our release schedule. When creating a new branch, we ask that you please adhere to the following naming conventions as much as possible:
 
 ### Branch naming convention:
-- **Prefix:** `topic/` (such as **bugfix**, **feature**, **refactor**, etc.)
+- **Prefix:** `topic/` (such as **fix**, **feature**, **refactor**, etc.)
 - **ID**: `888` (GitHub Issue ID if an issue exists) -or- `2020-07` (Year-Month if an issue does not already exist)
 - **Separator:** `_` (underscore)
 - **Title:** `my-awesome-patch`
@@ -49,7 +49,7 @@ Branch name examples:
 * `test/2020-07_mail-domain-ssl`
 
 ### Squashing commits for smaller changes
-When submitting a pull request with multiple smaller commits which are related to the same file or issue, we ask that you please **squash your commits** whenever appropriate in order to keep the project's commit history clean and easy to follow for other developers.
+To aid other developers and keep the project's commit history clean, please **squash your commits** when it's appropriate. For example with smaller commits related to the same piece of code, such as commits labelled "Fixed item 1", "Adjusted color of button XYZ", "Adjusted alignment of button XYZ" can be squashed into one commit with the title "Fixed button issues in item". 
 
 ### What happens when I submit a pull request?
 - Our internal development team will review your work and validate your request.

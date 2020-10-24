@@ -931,8 +931,13 @@ fi
 
 # Restrict access to /proc fs
 # - Prevent unpriv users from seeing each other running processes
-mount -o remount,defaults,hidepid=2 /proc
-echo "@reboot root sleep 5 && mount -o remount,defaults,hidepid=2 /proc" > /etc/cron.d/hestia-proc
+mount -o remount,defaults,hidepid=2 /proc > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    echo "Info: Cannot remount /proc (LXC containers require additional perm added to host apparmor profile)"
+else
+    echo "@reboot root sleep 5 && mount -o remount,defaults,hidepid=2 /proc" > /etc/cron.d/hestia-proc
+fi
+
 
 #----------------------------------------------------------#
 #                     Configure Hestia                     #

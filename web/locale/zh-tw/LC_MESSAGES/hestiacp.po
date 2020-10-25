@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Hestia CP package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-10-24 17:13:59+0000\n"
+"PO-Revision-Date: 2020-10-25 11:00:36+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -265,7 +265,7 @@ msgstr "伺服器"
 
 #: ../../web/templates/admin/panel.html:35
 msgid "Submit an issue report"
-msgstr "Submit an issue report"
+msgstr "遞交問題報告"
 
 #: ../../web/templates/login.html:35 ../../web/templates/login_a.html:45
 msgid "Next"
@@ -351,12 +351,12 @@ msgstr "DKIM"
 #: ../../web/templates/admin/list_mail.html:218
 #: ../../web/templates/user/list_mail.html:217
 msgid "1 mail domain"
-msgstr "1 mail domain"
+msgstr "1 郵件網域"
 
 #: ../../web/templates/admin/list_mail.html:220
 #: ../../web/templates/user/list_mail.html:219
 msgid "%s mail domains"
-msgstr "%s mail domains"
+msgstr "%s 郵件網域"
 
 #: ../../web/templates/admin/list_user.html:6
 #: ../../web/templates/user/list_user.html:6
@@ -1116,7 +1116,7 @@ msgstr "統計資料"
 #: ../../web/templates/admin/panel.html:29
 #: ../../web/templates/user/panel.html:28
 msgid "Notifications"
-msgstr "Notifications"
+msgstr "通知"
 
 #: ../../web/templates/admin/panel.html:36
 #: ../../web/templates/user/panel.html:31
@@ -3300,15 +3300,15 @@ msgstr "登入帳號"
 
 #: ../../web/add/key/index.php:17
 msgid "Field SSH_KEY can not be blank."
-msgstr "Field SSH Key must not be blank"
+msgstr "字段SSH金鑰不能為空"
 
 #: ../../web/add/key/index.php:35
 msgid "SSH KEY is invalid"
-msgstr "SSH key is invalid"
+msgstr "SSH金鑰無效"
 
 #: ../../web/add/key/index.php:41 ../../web/add/key/index.php:44
 msgid "SSH KEY already exists"
-msgstr "SSH key already exists"
+msgstr "SSH金鑰已存在"
 
 #: ../../web/add/key/index.php:57
 msgid "SSH KEY created"
@@ -3320,28 +3320,28 @@ msgstr "已建立SSH金鑰"
 #: ../../web/templates/user/list_search.html:9
 #: ../../web/templates/user/list_user.html:70
 msgid "Name"
-msgstr "Name"
+msgstr "名稱"
 
 #: ../../web/add/firewall/ipset/index.php:26
 #: ../../web/templates/admin/add_firewall_ipset.html:66
 msgid "Data Source"
-msgstr "Data Source"
+msgstr "資料來源"
 
 #: ../../web/add/firewall/ipset/index.php:27
 #: ../../web/templates/admin/add_firewall_ipset.html:79
 #: ../../web/templates/admin/list_firewall_ipset.html:38
 msgid "Ip Version"
-msgstr "IP Version"
+msgstr "IP版本"
 
 #: ../../web/add/firewall/ipset/index.php:28
 #: ../../web/templates/admin/add_firewall_ipset.html:92
 #: ../../web/templates/admin/list_firewall_ipset.html:37
 msgid "Autoupdate"
-msgstr "Auto Update"
+msgstr "自動更新"
 
 #: ../../web/add/firewall/ipset/index.php:55
 msgid "IPSET_CREATED_OK"
-msgstr "IP list created successfully"
+msgstr "IP清單已建立成功"
 
 #: ../../web/add/firewall/index.php:42
 msgid "action"
@@ -3463,7 +3463,7 @@ msgstr "任務排程 已加入成功！"
 
 #: ../../web/download/backup/index.php:20
 msgid "BACKUP_DOWNLOAD_SCHEDULED"
-msgstr "Download of remote backup file has been scheduled."
+msgstr "下載遠程備份檔案已排程。"
 
 #: ../../web/templates/admin/list_web.html:8
 #: ../../web/templates/admin/list_web.html:54
@@ -3903,7 +3903,7 @@ msgstr "您確定想要刪除 %s IP清單嗎？"
 
 #: ../../web/templates/admin/list_firewall_ipset.html:105
 msgid "There are currently no IP lists defined."
-msgstr "There are currently no IP lists defined."
+msgstr "目前沒有自訂IP清單。"
 
 #: ../../web/templates/admin/list_firewall_ipset.html:108
 msgid "1 Ipset list"

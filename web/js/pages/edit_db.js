@@ -23,10 +23,6 @@ App.Actions.DB.update_db_databasename_hint = function(elm, hint) {
 App.Listeners.DB.keypress_db_username = function() {
     var ref = $('input[name="v_dbuser"]');
     var current_val = ref.val();
-    if (current_val.indexOf(GLOBAL.DB_DBNAME_PREFIX) == 0) {
-        current_val = current_val.slice(GLOBAL.DB_DBNAME_PREFIX.length, current_val.length);
-        ref.val(current_val);
-    }
     if (current_val.trim() != '') {
         App.Actions.DB.update_db_username_hint(ref, current_val);
     }    

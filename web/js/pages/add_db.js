@@ -6,9 +6,9 @@ App.Actions.DB.update_db_username_hint = function(elm, hint) {
         $(elm).parent().find('.hint').html('');
     } 
     // remove prefix from value in order to eliminate duplicates
-    if (hint.indexOf(GLOBAL.DB_USER_PREFIX) == 0) {
-        hint = hint.slice(GLOBAL.DB_USER_PREFIX.length, hint.length);
-    }
+    //if (hint.indexOf(GLOBAL.DB_USER_PREFIX) == 0) {
+    //    hint = hint.slice(GLOBAL.DB_USER_PREFIX.length, hint.length);
+    //}
     
     $(elm).parent().find('.hint').text(GLOBAL.DB_USER_PREFIX + hint);
 }
@@ -21,9 +21,9 @@ App.Actions.DB.update_db_databasename_hint = function(elm, hint) {
         $(elm).parent().find('.hint').html('');
     } 
     // remove prefix from value in order to eliminate duplicates
-    if (hint.indexOf(GLOBAL.DB_DBNAME_PREFIX) == 0) {
-        hint = hint.slice(GLOBAL.DB_DBNAME_PREFIX.length, hint.length);
-    }
+    //if (hint.indexOf(GLOBAL.DB_DBNAME_PREFIX) == 0) {
+    //    hint = hint.slice(GLOBAL.DB_DBNAME_PREFIX.length, hint.length);
+    //}
     $(elm).parent().find('.hint').text(GLOBAL.DB_DBNAME_PREFIX + hint);
 }
 

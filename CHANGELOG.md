@@ -12,13 +12,15 @@ All notable changes to this project will be documented in this file.
     - **Note:** We may adjust this path in the future and will document such changes as they happen.
 - We've introduced the ability to assign Administrator rights to other user accounts, enabling them to perform tasks under the Server Settings tab.
 - We've introduced a more robust translation system which will allow us to provide higher quality translations in future releases.
+    - **Note:** Some country codes have been updated, as a result your language setting may default back to English after upgrading.
 - For new installations, MariaDB 10.5 is now the default version.
     - For existing installations, we've provided a manual post-install upgrade script. Please run `$HESTIA/install/upgrade/manual/upgrade_mariadb.sh` to migrate to MariaDB 10.5).
 - The user interface theme has been set to "Dark" by default. This can be changed from **Server Settings > Configure > Basic Options > Appearance**.
     - **Note:** The name of the default theme has not been adjusted, and the change to the "dark" theme only applies to new installations at this time. This behavior may be changed in a future release.
 
 ### Bugfixes
-- Fixed an issue with paswords containing "`'`" - [Forum](https://forum.hestiacp.com/t/two-factor-authentication-issue-with-standard-user/1652/)
+- Fixed a security issue where user password reset keys could potentially be gleaned from system process list - thanks **RACK911 LABS**
+- Fixed an issue with passwords containing "`'`" - [Forum](https://forum.hestiacp.com/t/two-factor-authentication-issue-with-standard-user/1652/)
 - Fixed an issue with database backups when the port was not specified (#1068)
 - Fixed an issue where websites without SSL enabled would display the content of the first valid SSL enabled website (#1103)
 - Fixed an issue that would occur when using the `--with-debs` flag with the installer due to an incorrect version check routine (#1110)

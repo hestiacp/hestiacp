@@ -20,14 +20,13 @@ if ((!empty($_POST['user'])) && (empty($_POST['code']))) {
         $data = json_decode(implode('', $output), true);
         if($email == $data[$user]['CONTACT']){
             //genrate new rkey
-            $rkey = substr( password_hash( 'hestiacp', PASSWORD_DEFAULT ), 5, 12 );
+            $rkey = substr( password_hash( rand(0,10000), PASSWORD_DEFAULT ), 5, 12 );
             $hash = password_hash($rkey, PASSWORD_DEFAULT);
             $v_rkey = tempnam("/tmp","vst");
             $fp = fopen($v_rkey, "w");
             fwrite($fp, $hash."\n");
             fclose($fp);
-            exec ("/usr/bin/sudo /usr/local/hestia/bin/v-change-user-rkey ".$v_user." ".$v_rkey."", $output, $return_var);
-            unset($output);
+            unlink($v_rkey);
             exec ($cmd." ".$v_user." json", $output, $return_var);
             $data = json_decode(implode('', $output), true);
             $name = $data[$user]['NAME'];

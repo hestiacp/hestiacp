@@ -53,7 +53,6 @@ if (!empty($_POST['save'])) {
     
     // Change database user
     if (($v_dbuser != $_POST['v_dbuser']) && (empty($_SESSION['error_msg']))) {
-        //$v_dbuser = preg_replace("/^".$user."_/", "", $_POST['v_dbuser']);
         $v_dbuser = escapeshellarg($v_dbuser);
         exec (HESTIA_CMD."v-change-database-user ".$v_username." ".escapeshellarg($v_database)." ".$v_dbuser, $output, $return_var);
         check_return_code($return_var,$output);

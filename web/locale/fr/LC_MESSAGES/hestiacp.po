@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Hestia CP package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-09-03 06:08:23+0000\n"
+"PO-Revision-Date: 2020-10-24 17:13:11+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,39 +13,39 @@ msgstr ""
 
 #: ../../web/templates/admin/edit_server.html:857
 msgid "Login screen style"
-msgstr ""
+msgstr "Style de l'écran de connexion"
 
 #: ../../web/templates/admin/edit_server.html:848
 msgid "Security"
-msgstr ""
+msgstr "Sécurité"
 
 #: ../../web/templates/admin/edit_server.html:864
 msgid "Old Style"
-msgstr ""
+msgstr "Ancien style"
 
 #: ../../web/templates/admin/edit_server.html:618
 msgid "Compression"
-msgstr ""
+msgstr "Compression"
 
 #: ../../web/add/webapp/index.php:62
 msgid "%s installer missing"
-msgstr ""
+msgstr "%s installateur manquant"
 
 #: ../../web/add/webapp/index.php:82
 msgid "%s App was installed succesfully!"
-msgstr ""
+msgstr "%s L'application a été installée avec succès !"
 
 #: ../../web/update/hestia/index.php:22
 msgid "Error: %s update failed"
-msgstr ""
+msgstr "Erreur : %s échec de la mise à jour"
 
 #: ../../web/restart/service/index.php:25
 msgid "Restart \"%s\" failed"
-msgstr ""
+msgstr "Les \"%s\" de redémarrage ont échoué"
 
 #: ../../web/start/service/index.php:25
 msgid "Start \"%s\" failed"
-msgstr ""
+msgstr "Les \"%s\" de départ ont échoué"
 
 #: ../../web/add/user/index.php:101
 msgid "ACCOUNT_READY"
@@ -57,38 +57,38 @@ msgstr ""
 "Mot de Passe : %s\n"
 "\n"
 "--\n"
-"Hestia Control Panel"
+"Panneau de contrôle Hestia"
 
 #: ../../web/download/backup/index.php:24
 msgid "Error: Hestia did not return any output."
-msgstr ""
+msgstr "Erreur : Hestia n'a renvoyé aucun résultat."
 
 #: ../../web/templates/admin/add_web.html:200
 #: ../../web/templates/admin/edit_web.html:248
 #: ../../web/templates/user/edit_web.html:261
 msgid "Custom document root"
-msgstr ""
+msgstr "Personnalisé la racine du document"
 
 #: ../../web/templates/admin/add_web.html:208
 #: ../../web/templates/admin/edit_web.html:256
 #: ../../web/templates/user/edit_web.html:269
 msgid "Point to"
-msgstr ""
+msgstr "Pointer vers"
 
 #: ../../web/templates/admin/panel.html:15
 #: ../../web/templates/user/panel.html:15
 msgid "Files"
-msgstr ""
+msgstr "Fichiers"
 
 #: ../../web/templates/admin/edit_user.html:145
 #: ../../web/templates/admin/add_user.html:136
 msgid "Role"
-msgstr ""
+msgstr "Rôle"
 
 #: ../../web/templates/admin/edit_user.html:152
 #: ../../web/templates/admin/add_user.html:143
 msgid "Administrator"
-msgstr ""
+msgstr "Administrateur"
 
 #: ../../web/templates/admin/list_web.html:70
 #: ../../web/templates/admin/list_dns.html:71
@@ -115,11 +115,11 @@ msgstr "Êtes-vous sûr de vouloir suspendre le domaine %s ?"
 #: ../../web/templates/user/edit_web.html:482
 #: ../../web/templates/user/edit_web.html:558
 msgid "Prefix %s will be added to username automatically"
-msgstr ""
+msgstr "Le préfixe %s sera ajouté automatiquement au nom d'utilisateur"
 
 #: ../../web/templates/admin/edit_server.html:189
 msgid "Options"
-msgstr ""
+msgstr "Options"
 
 #: ../../web/templates/admin/edit_server.html:194
 msgid "SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL"
@@ -131,7 +131,7 @@ msgstr "Envoyer le journal d'installation de la mise à jour par e-mail"
 
 #: ../../web/templates/admin/edit_server.html:885
 msgid "Filemanager"
-msgstr ""
+msgstr "Gestionnaire de fichiers"
 
 #: ../../web/templates/admin/list_cron.html:75
 #: ../../web/templates/user/list_cron.html:75
@@ -145,11 +145,11 @@ msgstr "Êtes-vous sûr de vouloir suspendre la tâche cron ?"
 
 #: ../../web/templates/admin/list_services.html:148
 msgid "Are you sure you want to start service"
-msgstr ""
+msgstr "Êtes-vous sûr de vouloir commencer le service"
 
 #: ../../web/templates/admin/list_weblog.html:27
 msgid "Access Log"
-msgstr ""
+msgstr "Journal d'accès"
 
 #: ../../web/templates/admin/list_user.html:88
 msgid "UNSUSPEND_USER_CONFIRMATION"
@@ -189,7 +189,7 @@ msgstr "Êtes-vous sûr de vouloir suspendre %s ?"
 
 #: ../../web/stop/service/index.php:27
 msgid "Stop \"%s\" failed"
-msgstr ""
+msgstr "L'arrêt des \"%s\" a échoué"
 
 #: ../../web/templates/admin/edit_user.html:84
 #: ../../web/templates/admin/add_db.html:97
@@ -199,7 +199,7 @@ msgstr ""
 #: ../../web/templates/admin/add_user.html:77
 #: ../../web/templates/user/edit_user.html:82
 msgid "Your password must have at least"
-msgstr ""
+msgstr "Votre mot de passe doit avoir au moins"
 
 #: ../../web/templates/admin/edit_user.html:86
 #: ../../web/templates/admin/add_db.html:99
@@ -209,7 +209,7 @@ msgstr ""
 #: ../../web/templates/admin/add_user.html:79
 #: ../../web/templates/user/edit_user.html:84
 msgid "8 characters long"
-msgstr ""
+msgstr "8 caractères de long"
 
 #: ../../web/templates/admin/edit_user.html:87
 #: ../../web/templates/admin/add_db.html:100
@@ -219,7 +219,7 @@ msgstr ""
 #: ../../web/templates/admin/add_user.html:80
 #: ../../web/templates/user/edit_user.html:85
 msgid "1 uppercase & 1 lowercase character"
-msgstr ""
+msgstr "1 majuscule et 1 caractère minuscule"
 
 #: ../../web/templates/admin/edit_user.html:88
 #: ../../web/templates/admin/add_db.html:101
@@ -229,15 +229,15 @@ msgstr ""
 #: ../../web/templates/admin/add_user.html:81
 #: ../../web/templates/user/edit_user.html:86
 msgid "1 number"
-msgstr ""
+msgstr "1 numéro"
 
 #: ../../web/add/user/index.php:48 ../../web/add/db/index.php:45
 msgid "Password does not match the minimum requirements"
-msgstr ""
+msgstr "Le mot de passe ne correspond pas aux exigences minimales"
 
 #: ../../web/edit/user/index.php:203
 msgid "Please enter a valid name"
-msgstr ""
+msgstr "Merci d'entrer un nom valide"
 
 #: ../../web/templates/login_1.html:18
 msgid "Welcome"
@@ -245,19 +245,19 @@ msgstr "Bienvenue"
 
 #: ../../web/templates/login_1.html:42 ../../web/templates/login_2.html:40
 msgid "Login"
-msgstr ""
+msgstr "Se connecter"
 
 #: ../../web/templates/admin/list_services.html:61
 msgid "Production release"
-msgstr ""
+msgstr "Production"
 
 #: ../../web/templates/admin/add_user.html:107
 msgid "Send welcome email"
-msgstr ""
+msgstr "Envoyer un courriel de bienvenue"
 
 #: ../../web/templates/admin/panel.html:2
 msgid "Top"
-msgstr ""
+msgstr "Haut"
 
 #: ../../web/templates/admin/panel.html:33
 msgid "Server"
@@ -269,7 +269,7 @@ msgstr "Submit an issue report"
 
 #: ../../web/templates/login.html:35 ../../web/templates/login_a.html:45
 msgid "Next"
-msgstr ""
+msgstr "Suivant"
 
 #: ../../web/templates/login_2.html:16
 msgid "2 Factor Authentication"
@@ -1005,7 +1005,7 @@ msgstr "Êtes-vous sûr de vouloir supprimer l'adresse IP %s ?"
 
 #: ../../web/templates/admin/list_firewall_banlist.html:89
 msgid "There are currently no banned IP addresses."
-msgstr ""
+msgstr "Il n'y a actuellement aucune adresse IP interdite."
 
 #: ../../web/templates/admin/list_firewall_banlist.html:92
 msgid "1 banned IP address"
@@ -1025,7 +1025,7 @@ msgstr "Ajout d'une base de données"
 
 #: ../../web/templates/admin/add_db.html:55
 msgid "Prefix %s will be automatically added to database name and database user"
-msgstr ""
+msgstr "Le préfixe %s sera automatiquement ajouté au nom de la base de données et de son utilisateur"
 
 #: ../../web/templates/admin/add_db.html:74
 #: ../../web/templates/admin/edit_db.html:72
@@ -1150,7 +1150,7 @@ msgstr "alias"
 #: ../../web/templates/admin/panel.html:75
 #: ../../web/templates/user/panel.html:61
 msgid "zones"
-msgstr ""
+msgstr "zones"
 
 #: ../../web/templates/admin/panel.html:90
 #: ../../web/templates/user/panel.html:76
@@ -1423,7 +1423,7 @@ msgstr "Nouvelle liste IP"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:66
 msgid "url, script or file"
-msgstr ""
+msgstr "URL, script ou fichier"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:85
 msgid "ip v4"
@@ -1471,7 +1471,7 @@ msgstr "AccessLog"
 
 #: ../../web/templates/admin/list_weblog.html:28
 msgid "Error Log"
-msgstr ""
+msgstr "Journal des erreurs"
 
 #: ../../web/templates/admin/list_server_info.html:38
 #: ../../web/templates/admin/list_weblog.html:33
@@ -1490,7 +1490,7 @@ msgstr "Installer"
 
 #: ../../web/templates/admin/setup_webapp.html:43
 msgid "Data loss warning!<br>Your web domain already has files uploaded, the installer will overwrite your files and/or the installation might fail.<br/><br/> Please use the installer only for empty web domains"
-msgstr ""
+msgstr "Avertissement de perte de données ! <br> Votre domaine Web a déjà des fichiers téléchargés, le programme d'installation écrasera vos fichiers et/ou l'installation pourrait échouer. <br/> <br/> Veuillez utiliser le programme d'installation uniquement pour les domaines Web vides."
 
 #: ../../web/templates/admin/add_ip.html:38
 msgid "Adding IP address"
@@ -1542,28 +1542,28 @@ msgstr "restaurer"
 
 #: ../../web/templates/admin/list_backup_detail.html:45
 msgid "Details"
-msgstr ""
+msgstr "Détails"
 
 #: ../../web/templates/admin/list_backup_detail.html:46
 #: ../../web/templates/admin/list_backup_detail.html:78
 msgid "Restore"
-msgstr ""
+msgstr "Restaurer"
 
 #: ../../web/templates/admin/list_backup_detail.html:67
 msgid "Web domain"
-msgstr ""
+msgstr "Domain web"
 
 #: ../../web/templates/admin/list_backup_detail.html:105
 msgid "Mail domain"
-msgstr ""
+msgstr "Domain mail"
 
 #: ../../web/templates/admin/list_backup_detail.html:143
 msgid "DNS domain"
-msgstr ""
+msgstr "DNS domain"
 
 #: ../../web/templates/admin/list_backup_detail.html:219
 msgid "Cron Records"
-msgstr ""
+msgstr "Enregistrements cron"
 
 #: ../../web/templates/admin/panel.html:76
 #: ../../web/templates/admin/list_backup_detail.html:222
@@ -1871,7 +1871,7 @@ msgstr "Mois"
 #: ../../web/templates/user/list_user.html:73
 #: ../../web/templates/user/list_stats.html:30
 msgid "IPs"
-msgstr ""
+msgstr "IPs"
 
 #: ../../web/templates/admin/list_web.html:10
 #: ../../web/templates/admin/list_web.html:57
@@ -2107,17 +2107,17 @@ msgstr "Êtes-vous sûr de vouloir supprimer l'enregistrement %s ?"
 #: ../../web/templates/admin/edit_server.html:863
 #: ../../web/templates/admin/list_dns_rec.html:88
 msgid "Default"
-msgstr ""
+msgstr "Défaut"
 
 #: ../../web/templates/admin/list_dns_rec.html:105
 #: ../../web/templates/user/list_dns_rec.html:101
 msgid "1 DNS record"
-msgstr ""
+msgstr "1 DNS enregistré"
 
 #: ../../web/templates/admin/list_dns_rec.html:107
 #: ../../web/templates/user/list_dns_rec.html:103
 msgid "%s DNS records"
-msgstr ""
+msgstr "%s DNS enregistrés"
 
 #: ../../web/templates/admin/edit_backup_exclusions.html:40
 #: ../../web/templates/admin/list_backup_exclusions.html:5
@@ -2444,7 +2444,7 @@ msgstr "Activer la sécurité de transport HTTP stricte (HSTS) <a href=\"https:/
 #: ../../web/templates/admin/edit_web.html:328
 #: ../../web/templates/user/edit_web.html:342
 msgid "Home Directory"
-msgstr ""
+msgstr "Home Directory"
 
 #: ../../web/templates/admin/add_web.html:296
 #: ../../web/templates/admin/edit_web.html:363
@@ -2916,7 +2916,7 @@ msgstr "La tâche a bien été ajoutée à la liste. Vous recevrez un mail de co
 #: ../../web/schedule/restore/index.php:43
 #: ../../web/schedule/backup/index.php:21
 msgid "Error: hestia did not return any output."
-msgstr ""
+msgstr "Erreur : hestia n'a renvoyé aucun résultat."
 
 #: ../../web/schedule/backup/index.php:25
 msgid "BACKUP_EXISTS"
@@ -3013,15 +3013,15 @@ msgstr ""
 
 #: ../../web/reset/index.php:45
 msgid "Invalid host domain"
-msgstr ""
+msgstr "Le domaine hôte n'est pas valide"
 
 #: ../../web/reset/index.php:74
 msgid "An internal error occurred"
-msgstr ""
+msgstr "Une erreur interne a eu lieu"
 
 #: ../../web/reset/index.php:82
 msgid "Code has been expired"
-msgstr ""
+msgstr "Le code a expiré"
 
 #: ../../web/reset/index.php:86 ../../web/reset/index.php:90
 msgid "Invalid username or code"
@@ -3118,7 +3118,7 @@ msgstr "utilisateur statistiques"
 
 #: ../../web/edit/web/index.php:599
 msgid "stats user"
-msgstr ""
+msgstr "statistiques utilisateur"
 
 #: ../../web/add/web/index.php:328 ../../web/edit/web/index.php:661
 #: ../../web/edit/web/index.php:735
@@ -3154,19 +3154,19 @@ msgstr "paquet"
 
 #: ../../web/add/package/index.php:26 ../../web/edit/package/index.php:102
 msgid "web template"
-msgstr ""
+msgstr "web template"
 
 #: ../../web/add/package/index.php:28 ../../web/edit/package/index.php:104
 msgid "backend template"
-msgstr ""
+msgstr "modèle de backend"
 
 #: ../../web/add/package/index.php:31 ../../web/edit/package/index.php:107
 msgid "proxy template"
-msgstr ""
+msgstr "proxy template"
 
 #: ../../web/add/package/index.php:33 ../../web/edit/package/index.php:109
 msgid "dns template"
-msgstr ""
+msgstr "dns template"
 
 #: ../../web/add/package/index.php:34 ../../web/edit/package/index.php:110
 msgid "shell"
@@ -3182,7 +3182,7 @@ msgstr "alias web"
 
 #: ../../web/add/package/index.php:37 ../../web/edit/package/index.php:113
 msgid "dns domains"
-msgstr ""
+msgstr "dns domains"
 
 #: ../../web/add/package/index.php:38 ../../web/edit/package/index.php:114
 msgid "dns records"
@@ -3222,7 +3222,7 @@ msgstr "quota"
 
 #: ../../web/add/package/index.php:45 ../../web/edit/package/index.php:121
 msgid "bandwidth"
-msgstr ""
+msgstr "Bande Passante"
 
 #: ../../web/add/package/index.php:49 ../../web/edit/package/index.php:125
 msgid "ns1"
@@ -3312,7 +3312,7 @@ msgstr "La clé SSH existe déjà"
 
 #: ../../web/add/key/index.php:57
 msgid "SSH KEY created"
-msgstr ""
+msgstr "Clé SSH créée"
 
 #: ../../web/add/firewall/ipset/index.php:25
 #: ../../web/templates/admin/list_search.html:9
@@ -3345,15 +3345,15 @@ msgstr "Liste IP créée avec succès"
 
 #: ../../web/add/firewall/index.php:42
 msgid "action"
-msgstr ""
+msgstr "action"
 
 #: ../../web/add/firewall/index.php:43
 msgid "protocol"
-msgstr ""
+msgstr "protocol"
 
 #: ../../web/add/firewall/index.php:44
 msgid "port"
-msgstr ""
+msgstr "port"
 
 #: ../../web/add/ip/index.php:25 ../../web/add/firewall/banlist/index.php:26
 #: ../../web/add/firewall/index.php:45
@@ -3366,7 +3366,7 @@ msgstr "Règle a été créée avec succès."
 
 #: ../../web/add/firewall/banlist/index.php:25
 msgid "banlist"
-msgstr ""
+msgstr "banlist"
 
 #: ../../web/add/firewall/banlist/index.php:51
 msgid "BANLIST_CREATED_OK"
@@ -3386,7 +3386,7 @@ msgstr "type"
 
 #: ../../web/add/db/index.php:23
 msgid "host"
-msgstr ""
+msgstr "host"
 
 #: ../../web/add/db/index.php:24
 msgid "charset"
@@ -3805,7 +3805,7 @@ msgstr "Ville"
 
 #: ../../web/templates/admin/generate_ssl.html:113
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 #: ../../web/templates/admin/list_firewall_ipset.html:5
 msgid "Add IP list"

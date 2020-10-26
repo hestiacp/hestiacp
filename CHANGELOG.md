@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
     - **Note:** We may adjust this path in the future and will document such changes as they happen.
 - We've introduced the ability to assign Administrator rights to other user accounts, enabling them to perform tasks under the Server Settings tab.
 - We've introduced a more robust translation system which will allow us to provide higher quality translations in future releases.
+    - **Note:** Some country codes have been updated, as a result your language setting may default back to English after upgrading.
 - For new installations, MariaDB 10.5 is now the default version.
     - For existing installations, we've provided a manual post-install upgrade script. Please run `$HESTIA/install/upgrade/manual/upgrade_mariadb.sh` to migrate to MariaDB 10.5).
 - The user interface theme has been set to "Dark" by default. This can be changed from **Server Settings > Configure > Basic Options > Appearance**.

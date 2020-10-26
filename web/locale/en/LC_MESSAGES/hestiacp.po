@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Hestia CP package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-10-02 20:36:38+0000\n"
+"PO-Revision-Date: 2020-10-24 13:07:07+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2155,7 +2155,7 @@ msgstr "Database"
 #: ../../web/templates/admin/add_user.html:142
 #: ../../web/templates/user/list_db.html:37
 msgid "User"
-msgstr "Username"
+msgstr "User"
 
 #: ../../web/templates/admin/setup_webapp.html:67
 #: ../../web/templates/admin/edit_user.html:73

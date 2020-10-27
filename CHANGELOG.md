@@ -19,7 +19,8 @@ All notable changes to this project will be documented in this file.
     - **Note:** The name of the default theme has not been adjusted, and the change to the "dark" theme only applies to new installations at this time. This behavior may be changed in a future release.
 
 ### Bugfixes
-- Fixed an issue with paswords containing "`'`" - [Forum](https://forum.hestiacp.com/t/two-factor-authentication-issue-with-standard-user/1652/)
+- Fixed a security issue where user password reset keys could potentially be gleaned from system process list - thanks **RACK911 LABS**
+- Fixed an issue with passwords containing "`'`" - [Forum](https://forum.hestiacp.com/t/two-factor-authentication-issue-with-standard-user/1652/)
 - Fixed an issue with database backups when the port was not specified (#1068)
 - Fixed an issue where websites without SSL enabled would display the content of the first valid SSL enabled website (#1103)
 - Fixed an issue that would occur when using the `--with-debs` flag with the installer due to an incorrect version check routine (#1110)

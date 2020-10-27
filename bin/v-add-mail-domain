@@ -110,18 +110,20 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     if [ ! -z "$local_ip" ]; then
         IP_RDNS=$(is_ip_rdns_valid "$local_ip")
 
-        # Setting HELO for mail domain
-        if [ $(grep -s "^${domain}:" /etc/exim4/mailhelo.conf) ]; then
-            sed -i "/^${domain}:/c\\${domain}:${IP_RDNS}" /etc/exim4/mailhelo.conf
-        else
-            echo ${domain}:${IP_RDNS} >> /etc/exim4/mailhelo.conf
-        fi
+        if [ ! -z "$IP_RDNS" ]; then
+            # Setting HELO for mail domain
+            if [ $(grep -s "^${domain}:" /etc/exim4/mailhelo.conf) ]; then
+                sed -i "/^${domain}:/c\\${domain}:${IP_RDNS}" /etc/exim4/mailhelo.conf
+            else
+                echo ${domain}:${IP_RDNS} >> /etc/exim4/mailhelo.conf
+            fi
 
-        # Map IP to Hostname
-        if [ $(grep -s "^${local_ip}:" /etc/exim4/ip_hostname.conf) ]; then
-            sed -i "/^${local_ip}:/c\\${local_ip}:${IP_RDNS}" /etc/exim4/ip_hostname.conf
-        else
-            echo ${local_ip}:${IP_RDNS} >> /etc/exim4/ip_hostname.conf
+            # Map IP to Hostname
+            if [ $(grep -s "^${local_ip}:" /etc/exim4/ip_hostname.conf) ]; then
+                sed -i "/^${local_ip}:/c\\${local_ip}:${IP_RDNS}" /etc/exim4/ip_hostname.conf
+            else
+                echo ${local_ip}:${IP_RDNS} >> /etc/exim4/ip_hostname.conf
+            fi
         fi
     fi
 

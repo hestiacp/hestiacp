@@ -23,8 +23,8 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.3.0~rc'
-pma_v='5.0.2'
+HESTIA_INSTALL_VER='1.3.0'
+pma_v='5.0.4'
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
 fpm_v="7.4"
 mariadb_v="10.5"
@@ -988,8 +988,12 @@ fi
 
 # Restrict access to /proc fs
 # - Prevent unpriv users from seeing each other running processes
-mount -o remount,defaults,hidepid=2 /proc
-echo "@reboot root sleep 5 && mount -o remount,defaults,hidepid=2 /proc" > /etc/cron.d/hestia-proc
+mount -o remount,defaults,hidepid=2 /proc > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    echo "Info: Cannot remount /proc (LXC containers require additional perm added to host apparmor profile)"
+else
+    echo "@reboot root sleep 5 && mount -o remount,defaults,hidepid=2 /proc" > /etc/cron.d/hestia-proc
+fi
 
 
 #----------------------------------------------------------#

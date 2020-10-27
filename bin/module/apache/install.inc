@@ -62,6 +62,11 @@ EOL
         echo "# Powered by Hestia" > $OSAL_PATH_APACHE_CONF_D/ssl.conf
         echo "# Powered by Hestia" > $OSAL_PATH_APACHE_CONF_D/welcome.conf
         echo "# Powered by Hestia" > $OSAL_PATH_APACHE_CONF_D/userdir.conf
+        echo > $OSAL_PATH_APACHE_CONF_D/dir.conf <<EOL "# This file was added by Hestia Control Panel.
+        <IfModule mod_dir.c>
+                DirectoryIndex index.html index.cgi index.pl index.php index.xhtml index.htm
+        </IfModule>
+EOL
 
         # Copy configuration files
         cp -f $HESTIA_INSTALL_DIR/$OSAL_PKG_APACHE/status.conf $OSAL_PATH_APACHE_CONF_D/

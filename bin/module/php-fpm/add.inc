@@ -1,11 +1,11 @@
 #!/bin/bash
 
-hestia_module_php_add() {
+hestia_module_php-fpm_add() {
     source $HESTIA/bin/module/func.inc
     source $HESTIA/bin/module/php/func.inc
 
-    if ! hestia_module_isinstalled 'php' && [ ! "$param_force" ]; then
-        echo "PHP (CLI) module is not installed. See 'hestia module info php'."
+    if ! hestia_module_isinstalled 'php-fpm' && [ ! "$param_force" ]; then
+        echo "PHP (FPM) module is not installed. See 'hestia module info php-php'."
         return 1
     fi
 
@@ -43,40 +43,40 @@ hestia_module_php_add() {
     local php_withoutdot=${php_version//.}
     local php_version_present=$(osal_kv_read_bool $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_present" && echo 1)
 
-    if [ "$php_version_present" ] && [ ! "$param_force" ]; then
-        echo "PHP version ${php_version} is already present. See 'hestia module php list'."
-        return 0
-    fi
-
     # Perform verification if read-only mode is enabled
     check_hestia_demo_mode
 
-    echo "Adding PHP version ${php_version}..."
+    echo "Adding PHP (FPM) version ${php_version}..."
 
     local php_prefix=$(osal_php_package_prefix $php_version)
 
-    mph="$php_prefix-mbstring $php_prefix-bcmath $php_prefix-cli $php_prefix-curl
-        $php_prefix-gd $php_prefix-intl $php_prefix-mysql
-        $php_prefix-soap $php_prefix-xml $php_prefix-zip $php_prefix-mbstring
-        $php_prefix-json $php_prefix-bz2 $php_prefix-pspell $php_prefix-imagick $php_prefix-pgsql
-        $php_prefix-imap $php_prefix-ldap"
-
-    # Check is version is 7.1 or below to add mcrypt
-    if [[ `echo "$php_version 7.2" | awk '{print ($1 < $2)}'` == 1 ]]; then
-        mph="$mph $php_prefix-mcrypt"
-    fi
-
     # Install php packages
     osal_package_preinstall
-    osal_execute_with_spinner osal_package_install $mph
+    osal_execute_with_spinner osal_package_install $php_prefix-fpm
 
-    osal_kv_write $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_present" '1'
-
-    if hestia_module_isinstalled 'php-fpm'; then
-        hestia module php-fpm add $php_version
+    # Check if required modules for apache2 are enabled
+    if [ "$WEB_SYSTEM" = "apache2" ] || [ "$WEB_SYSTEM" = "httpd" ]; then
+        osal_apache_module_enable 'proxy_fcgi'
+        osal_apache_module_enable 'setenvif'
     fi
 
-    log_history "installed php $php_version" '' 'admin'
+    # Configure FPM
+    osal_service_enable $php_prefix-fpm
+    pool_d=$(osal_php_fpm_pool_d $php_version)
+    if [ "$pool_d" ]; then
+        mkdir -p $pool_d
+        hestia_safe_rm $pool_d/*
+        cp -f $HESTIA_INSTALL_DIR/php-fpm/dummy.conf $pool_d/
+        sed -i "s/9999/99$php_withoutdot/g" $pool_d/dummy.conf       # FIXME: this'll break with PHP 10.0
+    fi
 
-    hestia module php integrate
+    # Install backend template
+    cp -f $HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl \
+        $HESTIA/data/templates/web/php-fpm/PHP-${php_version/\./_}.tpl
+
+    osal_kv_write $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_fpm" '1'
+
+    hestia module php-fpm integrate
+
+    log_history "installed php $php_version" '' 'admin'
 }

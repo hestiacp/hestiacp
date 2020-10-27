@@ -22,6 +22,7 @@ hestia_package_web-server_install() {
     if [ $memory -ge 1572864 ] || [ "$param_withphp" ]; then
         if [ ! "$param_withoutphp" ]; then
             hestia module install php --no-integrate
+            hestia module install php-fpm --no-integrate
         fi
     fi
 

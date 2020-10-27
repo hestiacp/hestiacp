@@ -1,0 +1,6 @@
+name=php-fpm
+provides=php-fpm
+requires=php-cli
+conflicts=
+preference=100
+description=PHP language (FPM)

@@ -1,6 +1,6 @@
 name=php
-provides=php
+provides=php-cli
 requires=
 conflicts=
 preference=100
-description=PHP language
+description=PHP language (CLI)

@@ -456,7 +456,7 @@ if [ "$HESTIA_B" = true ]; then
     
 
     # Set permission
-    chmod +x postinst
+    chmod 755 postinst
 
     # Move needed directories
     cd $BUILD_DIR/hestiacp-$branch

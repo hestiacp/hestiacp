@@ -373,6 +373,9 @@ if [ "$PHP_B" = true ] ; then
       cp $BUILD_DIR/hestiacp-$branch/src/deb/php/postinst ./
     fi
 
+    # Set permission
+    chmod +x postinst
+
     # Move php directory
     cd ..
     mv ${BUILD_DIR}/usr/local/hestia/php usr/local/hestia/

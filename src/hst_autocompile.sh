@@ -229,7 +229,7 @@ if [ "$dontinstalldeps" != 'true' ]; then
         SOFTWARE='gcc gcc-c++ make libxml2-devel zlib-devel libzip-devel gmp-devel libcurl-devel gnutls-devel unzip openssl openssl-devel pkg-config sqlite-devel oniguruma-devel rpm-build wget tar'
 
         echo "Updating system DNF repositories..."
-        yum config-manager --set-enabled PowerTools > /dev/null 2>&1
+        yum config-manager --set-enabled powertools > /dev/null 2>&1
         yum update -y > /dev/null 2>&1
         echo "Installing dependencies for compilation..."
         yum install -y $SOFTWARE > /dev/null 2>&1

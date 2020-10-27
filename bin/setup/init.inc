@@ -4,13 +4,12 @@ hestia_setup_init() {
     echo "Initializing Hestia configuration..."
     mkdir -p $HESTIA/conf $HESTIA/log $HESTIA/ssl $HESTIA/data/ips \
         $HESTIA/data/queue $HESTIA/data/users $HESTIA/data/firewall \
-        $HESTIA/data/sessions
-    mkdir -p /var/run/php
+        $HESTIA/data/sessions /var/run/php
     touch $HESTIA/data/queue/backup.pipe $HESTIA/data/queue/disk.pipe \
         $HESTIA/data/queue/webstats.pipe $HESTIA/data/queue/restart.pipe \
         $HESTIA/data/queue/traffic.pipe $HESTIA/log/system.log \
         $HESTIA/log/nginx-error.log $HESTIA/log/auth.log \
-        $HESTIA/conf/hestia.conf
+        $HESTIA/conf/hestia.conf $HESTIA/log/error.log
     chmod 750 $HESTIA/conf $HESTIA/data/users $HESTIA/data/ips $HESTIA/log
     chmod -R 750 $HESTIA/data/queue
     chmod 660 $HESTIA/conf/hestia.conf

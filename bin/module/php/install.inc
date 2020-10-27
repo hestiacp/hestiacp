@@ -38,7 +38,7 @@ EOL
 
     cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf $pool_d/www.conf
 
-    osal_kv_write $HESTIA/conf/hestia.conf 'WEB_BACKEND' 'php'
+    osal_kv_write $HESTIA/conf/hestia.conf 'WEB_BACKEND' 'php-fpm'
     
     # Add default PHP version
     # Use --force, otherwise it will fail because technically PHP is still not installed

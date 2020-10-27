@@ -46,6 +46,15 @@ fi
 %post
 %systemd_post hestia.service
 
+if [ ! -e /etc/profile.d/hestia.sh ]; then
+    HESTIA='/usr/local/hestia'
+    echo "export HESTIA='$HESTIA'" > /etc/profile.d/hestia.sh
+    echo 'PATH=$PATH:'$HESTIA'/bin' >> /etc/profile.d/hestia.sh
+    echo 'export PATH' >> /etc/profile.d/hestia.sh
+    chmod 755 /etc/profile.d/hestia.sh
+    source /etc/profile.d/hestia.sh
+fi
+
 if [ -e "/usr/local/hestia/data/users/admin" ]; then
     ###############################################################
     #                Initialize functions/variables               #

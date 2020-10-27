@@ -366,9 +366,11 @@ if [ "$PHP_B" = true ] ; then
     if [ -z "$use_src_folder" ]; then
       download_file $GIT_REP/php/control
       download_file $GIT_REP/php/copyright
+      download_file $GIT_REP/php/postinst
     else
       cp $BUILD_DIR/hestiacp-$branch/src/deb/php/control ./
       cp $BUILD_DIR/hestiacp-$branch/src/deb/php/copyright ./
+      cp $BUILD_DIR/hestiacp-$branch/src/deb/php/postinst ./
     fi
 
     # Move php directory

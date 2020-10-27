@@ -536,13 +536,32 @@ rebuild_mail_domain_conf() {
             echo "$local_ip" > $HOMEDIR/$user/conf/mail/$domain/ip
         fi
 
-        
-        # Setting HELO for mail domain
+        # Touch mailhelo.conf if it doesnt exist
+        if [ ! -f "/etc/exim4/mailhelo.conf" ]; then
+            touch /etc/exim4/mailhelo.conf
+        fi
+
+        # Touch ip_hostname.conf if it doesnt exist
+        if [ ! -f "/etc/exim4/ip_hostname.conf" ]; then
+            touch /etc/exim4/ip_hostname.conf
+        fi
+
+        # Setting multi-ip exim settings
         if [ ! -z "$local_ip" ]; then
             IP_RDNS=$(is_ip_rdns_valid "$local_ip")
-            sed -i "/^${domain}:/d" /etc/exim4/mailhelo.conf >/dev/null 2>&1
-            if [ ! -z "$IP_RDNS" ]; then
+
+            # Setting HELO for mail domain
+            if [ $(grep -s "^${domain}:" /etc/exim4/mailhelo.conf) ]; then
+                sed -i "/^${domain}:/c\\${domain}:${IP_RDNS}" /etc/exim4/mailhelo.conf
+            else
                 echo ${domain}:${IP_RDNS} >> /etc/exim4/mailhelo.conf
+            fi
+
+            # Map IP to Hostname
+            if [ $(grep -s "^${local_ip}:" /etc/exim4/ip_hostname.conf) ]; then
+                sed -i "/^${local_ip}:/c\\${local_ip}:${IP_RDNS}" /etc/exim4/ip_hostname.conf
+            else
+                echo ${local_ip}:${IP_RDNS} >> /etc/exim4/ip_hostname.conf
             fi
         fi
 

@@ -8,7 +8,8 @@
 #SPAM_SCORE = 50
 #CLAMD = yes
 
-smtp_banner = $smtp_active_hostname
+smtp_banner = "${smtp_active_hostname}"
+smtp_active_hostname = ${if exists {/etc/exim4/ip_hostname.conf}{${lookup{$interface_address}lsearch{/etc/exim4/ip_hostname.conf}{$value}{$primary_hostname}}}{$primary_hostname}}
 add_environment = <; PATH=/bin:/usr/bin
 keep_environment =
 disable_ipv6 = true

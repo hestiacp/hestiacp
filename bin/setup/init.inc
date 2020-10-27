@@ -20,6 +20,9 @@ hestia_setup_init() {
     if [ "$OS_BASE" = 'rhel' ]; then
         # FIXME: Hestia scripts should not assume ip is located in /bin
         ln -s /usr/sbin/ip /bin/ip > /dev/null 2>&1
+
+        # Compatibility with Debian-only scripts
+        groupadd nogroup
     fi
 
     if [ ! -e /var/log/hestia ]; then
@@ -40,7 +43,7 @@ deb https://apt.hestiacp.com/ $OS_CODENAME main
 EOL
         apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
     elif [ "$OS_BASE" = 'rhel' ]; then
-        dnf config-manager --set-enabled extras PowerTools
+        dnf config-manager --set-enabled extras powertools
         dnf -y install epel-release
         dnf config-manager --set-enabled epel epel-modular
 

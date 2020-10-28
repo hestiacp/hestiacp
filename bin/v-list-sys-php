@@ -61,7 +61,7 @@ csv_list() {
 #                       Action                             #
 #----------------------------------------------------------#
 
-# List trough /etc/php
+# List through /etc/php
 versions_list=$(ls -d /etc/php/*)
 versions=()
 for version in $versions_list; do

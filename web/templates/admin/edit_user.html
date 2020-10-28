@@ -3,11 +3,11 @@
           <div class="l-unit-toolbar__buttonstrip">
             <a class="ui-button cancel" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
             <?php if( $_SESSION['user'] == $_GET['user'] || isset($_SESSION['look'])){?>
-                <a href="/list/key/" id="btn-create" class="ui-button cancel" title="<?=_('Manage SSH keys');?>"><i class="fas fa-key status-icon orange"></i><?=_('Manage SSH keys')?></a>
+                <a href="/list/key/" id="btn-create" class="ui-button cancel"><i class="fas fa-key status-icon orange"></i><?=_('Manage SSH keys')?></a>
             <?php } ?>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" title="<?=_('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
+            <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
           </div>
         </div>
       </div>

@@ -4,7 +4,7 @@
             <?php
             if ((isset($_SESSION['WEB_SYSTEM'])) && (!empty($_SESSION['WEB_SYSTEM']))) {
                 if (intval($panel[$user]['WEB_DOMAINS']) > 0 || $panel[$user]['WEB_DOMAINS'] == 'unlimited') {
-                    echo '<a href="/add/web/" id="btn-create" class="ui-button cancel" title="'._('Add Web Domain').'"> <i class="fas fa-plus-circle status-icon green"></i> '._('Add Web Domain').'</a>';
+                    echo '<a href="/add/web/" id="btn-create" class="ui-button cancel"> <i class="fas fa-plus-circle status-icon green"></i> '._('Add Web Domain').'</a>';
                 }
             }
             ?>
@@ -136,7 +136,7 @@ sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-dis
           <div class="clearfix l-unit__stat-col--left super-compact">
               <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?=$key?>">
           </div>
-          <div class="clearfix l-unit__stat-col--left wide-4"><b><a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" alt="<?=_('Edit')?>" title="<?=_('Editing Domain')?>"><?=$key?></a></b></div>
+          <div class="clearfix l-unit__stat-col--left wide-4"><b><a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Domain')?>: <?=$key?>"><?=$key?></a></b></div>
           <!-- START QUICK ACTION TOOLBAR AREA -->
           <div class="clearfix l-unit__stat-col--left compact-4 text-right">
             <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">

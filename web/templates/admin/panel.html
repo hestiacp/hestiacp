@@ -10,19 +10,19 @@
 	<div class="l-center">
 		<a href="/list/user/" class="l-logo"></a>
 		<div class="l-menu clearfix noselect">
-			<div class="l-menu__item <?php if($TAB == 'WEB' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'DNS' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'MAIL' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'DB' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'BACKUP' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'CRON' ) echo 'l-menu__item--active' ?><?php if($TAB == 'PACKAGE' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'USER' ) echo 'l-menu__item--active' ?>"><a href="/list/user/" title="<?=_('Records')?>"><i class="fas fa-tasks panel-icon"></i>&nbsp;&nbsp;&nbsp;<?=_('Records')?></a></div>
+			<div class="l-menu__item <?php if($TAB == 'WEB' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'DNS' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'MAIL' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'DB' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'BACKUP' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'CRON' ) echo 'l-menu__item--active' ?><?php if($TAB == 'PACKAGE' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'USER' ) echo 'l-menu__item--active' ?>"><a href="/list/user/"><i class="fas fa-tasks panel-icon"></i>&nbsp;&nbsp;&nbsp;<?=_('Records')?></a></div>
 			<?php if ((isset($_SESSION['FILE_MANAGER'])) && (!empty($_SESSION['FILE_MANAGER'])) && ($_SESSION['FILE_MANAGER'] == "true")) {?>
-				<div class="l-menu__item <?php if($TAB == 'FM' ) echo 'l-menu__item--active' ?>"><a href="/fm/" title="<?=_('Files')?>"><i class="fas fa-folder-open panel-icon"></i>&nbsp;&nbsp;&nbsp;<?=_('Files')?></a></div>
+				<div class="l-menu__item <?php if($TAB == 'FM' ) echo 'l-menu__item--active' ?>"><a href="/fm/"><i class="fas fa-folder-open panel-icon"></i>&nbsp;&nbsp;&nbsp;<?=_('Files')?></a></div>
 			<?php } ?>
-			<div class="l-menu__item <?php if($TAB == 'LOG' ) echo 'l-menu__item--active' ?>"><a href="/list/log/" title="<?=_('Log')?>"><i class="fas fa-history panel-icon"></i>&nbsp;&nbsp;&nbsp;<?=_('Log')?></a></div>
-			<div class="l-menu__item <?php if($TAB == 'STATS' ) echo 'l-menu__item--active' ?>"><a href="/list/stats/" title="<?=_('Statistics')?>"><i class="fas fa-chart-line panel-icon"></i>&nbsp;&nbsp;&nbsp;<?=_('Statistics')?></a></div>
+			<div class="l-menu__item <?php if($TAB == 'LOG' ) echo 'l-menu__item--active' ?>"><a href="/list/log/"><i class="fas fa-history panel-icon"></i>&nbsp;&nbsp;&nbsp;<?=_('Log')?></a></div>
+			<div class="l-menu__item <?php if($TAB == 'STATS' ) echo 'l-menu__item--active' ?>"><a href="/list/stats/"><i class="fas fa-chart-line panel-icon"></i>&nbsp;&nbsp;&nbsp;<?=_('Statistics')?></a></div>
 		</div>
 		<div class="l-profile noselect">
 			<div class="l-menu__item">
 				<span class="pill usage">
-					<i class="fas fa-user"></i>&nbsp;&nbsp;<b><?=htmlspecialchars($user)?></b> /
-					<i class="fas fa-hdd"></i>&nbsp;&nbsp;<b><?=humanize_usage_size($panel[$user]['U_DISK'])?></b> <?=humanize_usage_measure($panel[$user]['U_DISK'])?> /
-					<i class="fas fa-exchange-alt"></i>&nbsp;&nbsp;<b><?=humanize_usage_size($panel[$user]['U_BANDWIDTH'])?></b> <?=humanize_usage_measure($panel[$user]['U_BANDWIDTH'])?>
+					<i class="fas fa-user" title="<?=_('Statistics')?>: <?=htmlspecialchars($user)?>"></i>&nbsp;&nbsp;<b><?=htmlspecialchars($user)?></b> /
+					<i class="fas fa-hdd" title="<?=_('Disk')?>: <?=humanize_usage_size($panel[$user]['U_DISK'])?> <?=humanize_usage_measure($panel[$user]['U_DISK'])?>"></i>&nbsp;&nbsp;<b><?=humanize_usage_size($panel[$user]['U_DISK'])?></b> <?=humanize_usage_measure($panel[$user]['U_DISK'])?> /
+					<i class="fas fa-exchange-alt" title="<?=_('Bandwidth')?>: <?=humanize_usage_size($panel[$user]['U_DISK'])?> <?=humanize_usage_measure($panel[$user]['U_DISK'])?>"></i>&nbsp;&nbsp;<b><?=humanize_usage_size($panel[$user]['U_BANDWIDTH'])?></b> <?=humanize_usage_measure($panel[$user]['U_BANDWIDTH'])?>
 				</span>
 			</div>
 			<div class="l-menu__item">

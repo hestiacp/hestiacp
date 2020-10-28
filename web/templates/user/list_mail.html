@@ -1,7 +1,7 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a href="/add/mail/" id="btn-create" class="ui-button cancel" title="<?=_('Add Mail Domain')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Add Mail Domain')?></a>
+          <a href="/add/mail/" id="btn-create" class="ui-button cancel"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Add Mail Domain')?></a>
         </div>
         <ul class="context-menu sort-order animated fadeIn" style="display:none;">
           <li entity="sort-date" sort_as_int="1"><span class="name active"><?=_('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
@@ -93,7 +93,7 @@ sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favouri
                   <div class="clearfix l-unit__stat-col--left super-compact">
                     <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?php echo $key ?>">
                   </div>
-                  <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('mail accounts')?>"><?=$key?></a></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('mail accounts')?>: <?=$key?>"><?=$key?></a></b></div>
                   <!-- START QUICK ACTION TOOLBAR AREA -->
                   <div class="clearfix l-unit__stat-col--left text-right compact-4">
                       <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">

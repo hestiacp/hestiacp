@@ -275,7 +275,7 @@ NGINX='https://nginx.org/download/nginx-'$(echo $NGINX_V |cut -d"~" -f1)'.tar.gz
 OPENSSL='https://www.openssl.org/source/openssl-'$OPENSSL_V'.tar.gz'
 PCRE='https://ftp.pcre.org/pub/pcre/pcre-'$PCRE_V'.tar.gz'
 ZLIB='https://www.zlib.net/zlib-'$ZLIB_V'.tar.gz'
-PHP='http://de2.php.net/distributions/php-'$(echo $PHP_V |cut -d"~" -f1)'.tar.gz'
+PHP='http://de2.php.net/distributions/php-'$(echo $PHP_V |cut -d"-" -f1)'.tar.gz'
 
 # Forward slashes in branchname are replaced with dashes to match foldername in github archive.
 branch_dash=$(echo "$branch" |sed 's/\//-/g');
@@ -469,6 +469,9 @@ if [ "$PHP_B" = true ] ; then
         [ "$HESTIA_DEBUG" ] && echo DEBUG: cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch_dash
         cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch_dash
     fi
+
+    # Set permission
+    chmod +x postinst
 
     # Move php directory
     [ "$HESTIA_DEBUG" ] && echo DEBUG: mkdir -p $BUILD_DIR_HESTIAPHP/usr/local/hestia

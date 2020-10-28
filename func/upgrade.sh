@@ -609,7 +609,7 @@ upgrade_filemanager_update_config() {
 upgrade_rebuild_web_templates() {
     if [ "$UPGRADE_UPDATE_WEB_TEMPLATES" = "true" ]; then
         echo "[ ! ] Updating default web domain templates..."
-        $BIN/v-update-web-templates
+        $BIN/v-update-web-templates "no" "skip"
     fi
 }
 

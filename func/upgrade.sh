@@ -616,7 +616,7 @@ upgrade_rebuild_web_templates() {
 upgrade_rebuild_mail_templates() {
     if [ "$UPGRADE_UPDATE_MAIL_TEMPLATES" = "true" ]; then
         echo "[ ! ] Updating default mail domain templates..."
-        $BIN/v-update-mail-templates
+        $BIN/v-update-mail-templates "no" "skip"
     fi
 }
 

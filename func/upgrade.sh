@@ -193,9 +193,13 @@ upgrade_complete_message() {
     echo
     echo "Web:      https://www.hestiacp.com/                                          "
     echo "Forum:    https://forum.hestiacp.com/                                        "
+    echo "Discord:  https://discord.gg/nXRUZch                                         "
     echo "GitHub:   https://github.com/hestiacp/hestiacp/                              "
     echo "E-mail:   info@hestiacp.com                                                  "
     echo 
+    echo "Help support the Hestia Contol Panel project by donating via PayPal:         "
+    echo "https://www.hestiacp.com/donate                                              "
+    echo
     echo "Made with love & pride by the open-source community around the world.        "
     echo
     echo "============================================================================="

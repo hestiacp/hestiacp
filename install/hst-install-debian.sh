@@ -1869,6 +1869,7 @@ or if you encounter any bugs or problems:
 E-mail:  info@hestiacp.com
 Web:     https://www.hestiacp.com/
 Forum:   https://forum.hestiacp.com/
+Discord: https://discord.gg/nXRUZch
 GitHub:  https://www.github.com/hestiacp/hestiacp
 
 Note: Automatic updates are enabled by default. If you would like to disable them,

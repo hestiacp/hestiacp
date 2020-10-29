@@ -213,14 +213,7 @@ sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favouri
           <table class='data'></table>
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php
-             echo ngettext('%d mail domain', '%d mail domains', $i);
-            ?>
-            <?php
-              if ( $i == 1) {
-                echo _('1 mail domain');
-              } else {
-                echo _('%s mail domains',$i);
-              }
+             printf(ngettext('%d mail domain', '%d mail domains', $i),$i);
             ?>
           </div>
         </div>

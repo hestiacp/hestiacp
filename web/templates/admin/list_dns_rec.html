@@ -101,7 +101,7 @@ v_unit_id="<?=$key?>" v_section="dns_rec">
           <table class='data'></table>
           <div class="data-count l-unit__col l-unit__col--right total clearfix">
             <?php
-            echo ngettext('%d DNS record', '%d DNS records', $i);
+            printf(ngettext('%d DNS record', '%d DNS records', $i),$i);
             ?>
           </div>
           <div class="data-count l-unit__col l-unit__col--right back clearfix">

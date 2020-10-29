@@ -141,7 +141,7 @@ sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$k
           <table class='data'></table>
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php
-              echo ngettext('%d firewall rule', '%d firewall rules', $i);
+               printf(ngettext('%d firewall rule', '%d firewall rules', $i),$i);
             ?>
           </div>
       </div>

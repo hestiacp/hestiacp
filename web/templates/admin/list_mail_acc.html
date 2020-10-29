@@ -182,7 +182,7 @@ sort-star="<? if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] =
           <table class='data'></table>
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php
-               echo ngettext('%d mail account', '%d mail accounts', $i);
+               printf(ngettext('%d mail account', '%d mail accounts', $i),$i);
             ?>
           </div>
           <div class="data-count l-unit__col l-unit__col--right back clearfix">

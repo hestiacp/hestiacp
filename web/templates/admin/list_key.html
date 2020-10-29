@@ -58,7 +58,7 @@
                 <table class='data'></table>
                 <div class="data-count l-unit__col l-unit__col--right clearfix">
                 <?php
-                echo ngettext('%d SSH Key', '%d SSH Keys', $i);
+                printf(ngettext('%d SSH Key', '%d SSH Keys', $i),$i);
                 ?>
       </div>
     </div>

@@ -103,12 +103,8 @@
             <?php
               if ( $i == 0) {
                 echo _('There are currently no IP lists defined.');
-              }
-              if ( $i == 1) {
-                echo _('1 Ipset list');
-              }
-              if ( $i > 1) {
-                echo _('%s Ipset lists',$i);
+              }else{
+                echo ngettext('%d Ipset list', '%d Ipset lists', $i);
               }
             ?>
           </div>

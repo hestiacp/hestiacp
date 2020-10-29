@@ -87,12 +87,8 @@
             <?php
               if ( $i == 0) {
                 echo _('There are currently no banned IP addresses.');
-              }
-              if ( $i == 1) {
-                echo _('1 banned IP address');
-              }
-              if ( $i > 1) {
-                echo _('%s banned IP addresses',$i);
+              }else{
+                echo ngettext('%d banned IP address', '%d banned IP addresses', $i);
               }
             ?>
           </div>

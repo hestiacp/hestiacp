@@ -57,11 +57,8 @@
             <div class="l-unit-ft">
                 <table class='data'></table>
                 <div class="data-count l-unit__col l-unit__col--right clearfix">
-                <?php if ( $i == 1) {
-                      echo _('1 SSH Key');
-                  } else {
-                      echo _('%s SSH Keys',$i);
-                  }
+                <?php
+                echo ngettext('%d SSH Key', '%d SSH Keys', $i);
                 ?>
       </div>
     </div>

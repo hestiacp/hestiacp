@@ -74,7 +74,7 @@
                   <div class="clearfix l-unit__stat-col--left super-compact">
                     <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="backup[]" value="<?php echo $key ?>">
                   </div>
-                  <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/list/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('restore')?>"><?=$key?></a></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide-3 truncate"><b><a href="/list/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('restore')?>"><?=$key?></a></b></div>
                   <!-- START QUICK ACTION TOOLBAR AREA -->
                   <div class="clearfix l-unit__stat-col--left compact-4 text-right">
                     <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">

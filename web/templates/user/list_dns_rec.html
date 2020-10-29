@@ -62,7 +62,7 @@ v_unit_id="<?=$key?>" v_section="dns_rec">
             <div class="clearfix l-unit__stat-col--left super-compact">
               <input id="check<?=$data[$key]['ID']?>" class="ch-toggle" type="checkbox" name="record[]" value="<?=$data[$key]['ID']?>">
             </div>
-            <div class="clearfix l-unit__stat-col--left small"><b><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing DNS Record').': '.htmlspecialchars($data[$key]['RECORD'])?>"><? echo substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?></a></b></div>
+            <div class="clearfix l-unit__stat-col--left small truncate"><b><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing DNS Record').': '.htmlspecialchars($data[$key]['RECORD'])?>"><? echo substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?></a></b></div>
             <!-- START QUICK ACTION TOOLBAR AREA -->
             <div class="clearfix l-unit__stat-col--left compact text-right">
               <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">

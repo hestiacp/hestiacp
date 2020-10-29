@@ -87,7 +87,7 @@ sort-star="<? if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] =
                 <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="account[]" value="<?php echo $key ?>">
                 <input type="hidden" value="<?php echo $_GET['domain'] ?>" name="domain" />
               </div>
-              <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Mail Account')?>: <?=$key?>@<?=htmlspecialchars($_GET['domain'])?>"><?=$key."@".$_GET['domain']?></a></b></div>
+              <div class="clearfix l-unit__stat-col--left wide-3 truncate"><b><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Mail Account')?>: <?=$key?>@<?=htmlspecialchars($_GET['domain'])?>"><?=$key."@".$_GET['domain']?></a></b></div>
 
               <!-- START QUICK ACTION TOOLBAR AREA -->
               <div class="clearfix l-unit__stat-col--left text-right compact-4">

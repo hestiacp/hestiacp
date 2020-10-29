@@ -84,7 +84,7 @@ sort-expire="<?=strtotime($data[$key]['EXP'])?>" sort-records="<?=(int)$data[$ke
               <div class="clearfix l-unit__stat-col--left super-compact">
                 <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?php echo $key ?>">
               </div>
-              <div class="clearfix l-unit__stat-col--left wide-3">
+              <div class="clearfix l-unit__stat-col--left wide-3 truncate">
                 <b><a href="/list/dns/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('DNS records')?>: <?=$key?>"><?=$key?></a></b>
                 <?=empty($data[$key]['SRC'])? '' : '<br/>⇢ <span style="font-size:11px;">' . htmlspecialchars($data[$key]['SRC'], ENT_QUOTES) . '</span>'; ?>
               </div>

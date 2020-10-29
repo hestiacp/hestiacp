@@ -94,7 +94,7 @@ sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favouri
                   <div class="clearfix l-unit__stat-col--left super-compact">
                     <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?php echo $key ?>">
                   </div>
-                  <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('mail accounts')?>: <?=$key?>"><?=$key?></a></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide-3 truncate"><b><a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('mail accounts')?>: <?=$key?>"><?=$key?></a></b></div>
                   <!-- START QUICK ACTION TOOLBAR AREA -->
                   <div class="clearfix l-unit__stat-col--left text-right compact-4">
                       <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">

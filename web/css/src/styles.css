@@ -1979,6 +1979,12 @@ div.l-content > div.l-separator:nth-of-type(4) {
   border-left: 1px solid transparent;
 }
 
+.l-unit__stat-col--left.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .l-unit__stat-col--left.super-compact {
   width: 50px;
 }

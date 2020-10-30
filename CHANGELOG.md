@@ -1,6 +1,25 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.3.1] - Service Release
+### Features
+- No new features have been introduced in this release.
+
+### Bugfixes
+- Fixed an issue where updates for `hestia-php` were incorrectly being marked as out-of-date in the UI due to a change in our servicing and package versioning scheme.
+- Fixed an issue that occured on the Updates page where the table row color of available updates would be difficult to read.
+- Fixed an issue where an administrator would get stuck in a loop trying to navigate back after adding a SSH key.
+- Fixed an issue where long table entries which exceeded the table length would overlap other UI elements.
+- Fixed an issue where the total amount of items on a page would fail to display correctly.
+- Improved the accuracy and reliability of tooltips throughout the the Control Panel UI:
+    - Removed unnecessary tooltips from buttons and other elements.
+    - Fixed incorrect tags which prevented tooltips from being displayed.
+    - Introduced tooltips to counter items on the Users, Packages, and Statistics pages to help better distinguish statistics.
+- Fixed an issue which caused higher than normal CPU usage during an upgrade due to a duplicate condition in the rebuild process.
+- Fixed minor spelling inconsistencies in command line script comments and output text.
+- Fixed an issue where old configuration files were not cleaned up when moving domains with `v-change-domain-owner`.
+- Fixed an issue where a `no backend template doesn't exist` could potentially would appear after upgrade with older templates (#1322).
+
 ## [1.3.0] - Major Release (Feature / Quality Update)
 ### Features
 - Users can now choose to point a domain to a different document root location (similar to domain parking).

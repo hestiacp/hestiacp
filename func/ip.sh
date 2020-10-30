@@ -43,6 +43,35 @@ is_ip_rdns_valid() {
     return 1 # False
 }
 
+# Update ip helo for exim
+update_ip_helo_value() {
+    ip="$1"
+    helo="$2"
+
+    # Create or update ip value
+    if [ ! $(get_ip_value '$HELO') ]; then
+        echo "HELO='$helo'" >> $HESTIA/data/ips/$ip
+    else
+        update_ip_value '$HELO' "$helo"
+    fi
+
+    # Create mailhelo.conf file if doesn't exist
+    if [ ! -e "/etc/${MAIL_SYSTEM}/mailhelo.conf" ]; then
+        touch /etc/${MAIL_SYSTEM}/mailhelo.conf
+    fi
+
+    #Create or update ip:helo pair in mailhelo.conf file
+    if [ ! -z "$helo" ]; then
+        if [ $(cat /etc/${MAIL_SYSTEM}/mailhelo.conf | grep "$ip") ]; then
+            sed -i "/^$ip:/c $ip:$helo" /etc/${MAIL_SYSTEM}/mailhelo.conf
+        else
+            echo $ip:$helo >> /etc/${MAIL_SYSTEM}/mailhelo.conf
+        fi
+    else
+        sed -i "/^$ip:/d" /etc/${MAIL_SYSTEM}/mailhelo.conf
+    fi
+}
+
 # Update ip address value
 update_ip_value() {
     key="$1"

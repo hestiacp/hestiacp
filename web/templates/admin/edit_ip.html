@@ -134,6 +134,16 @@
                                     <input type="text" size="20" class="vst-input" name="v_nat" value="<?=htmlentities(trim($v_nat, "'"))?>">
                                 </td>
                             </tr>
+                            <tr style="<?php if ($_SESSION['MAIL_SYSTEM'] != 'exim4') { echo 'display: none;';}?>">
+                                <td class="vst-text input-label">
+                                    <?php print _('HELO/SMTP Banner');?> <span class="optional">(<?php print _('optional');?>)</span>
+                                </td>
+                            </tr>
+                            <tr style="<?php if ($_SESSION['MAIL_SYSTEM'] != 'exim4') { echo 'display: none;';}?>">
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_helo" value="<?=htmlentities(trim($v_helo, "'"))?>">
+                                </td>
+                            </tr>
                         </table>
                         <table class="data-col2"></table>
                     </td>

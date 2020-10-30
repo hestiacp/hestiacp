@@ -9,6 +9,7 @@
 #CLAMD = yes
 
 smtp_banner = $smtp_active_hostname
+smtp_active_hostname = ${if exists {/etc/exim4/mailhelo.conf}{${lookup{$interface_address}lsearch{/etc/exim4/mailhelo.conf}{$value}{$primary_hostname}}}{$primary_hostname}}
 add_environment = <; PATH=/bin:/usr/bin
 keep_environment =
 disable_ipv6 = true
@@ -325,7 +326,7 @@ begin transports
 
 remote_smtp:
   driver = smtp
-  helo_data = ${if exists {/etc/exim4/mailhelo.conf}{${lookup{$sender_address_domain}lsearch*{/etc/exim4/mailhelo.conf}{$value}{$primary_hostname}}}{$primary_hostname}}
+  helo_data = ${if exists {/etc/exim4/mailhelo.conf}{${lookup{$sending_ip_address}lsearch{/etc/exim4/mailhelo.conf}{$value}{$primary_hostname}}}{$primary_hostname}}
   dkim_domain = DKIM_DOMAIN
   dkim_selector = mail
   dkim_private_key = DKIM_PRIVATE_KEY

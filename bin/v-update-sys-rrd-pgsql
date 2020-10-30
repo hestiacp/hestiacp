@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: update PostgreSQL rrd
 # options: PERIOD
+# labels: panel
 #
 # The function is for updating postgresql rrd database and graphic.
 

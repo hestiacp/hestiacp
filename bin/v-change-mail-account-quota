@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change mail account quota
 # options: USER DOMAIN ACCOUNT QUOTA
+# labels: mail
+#
+# example: v-change-mail-account-quota admin mydomain.tld user01 unlimited
 #
 # The function changes email account disk quota.
 

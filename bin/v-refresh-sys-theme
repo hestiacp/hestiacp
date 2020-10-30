@@ -1,4 +1,8 @@
 #!/bin/bash
+# info: change active system theme
+# options: NONE
+# labels: hestia
+#
 # The function for changing the currently active system theme.
 
 #----------------------------------------------------------#

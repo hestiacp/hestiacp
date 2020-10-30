@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list system network status
 # options: [FORMAT]
+# labels: 
 #
 # The function lists network status
 

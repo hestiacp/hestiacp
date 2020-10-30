@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: unsuspend mail domains
 # options: USER
+# labels: mail
+#
+# example: v-unsuspend-mail-domains admin
 #
 # The function unsuspends all user's MAIL domains.
 

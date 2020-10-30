@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list mail status
 # options: [FORMAT]
+# labels: mail
 #
 # The function lists mail server status
 

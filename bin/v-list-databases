@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: listing databases
 # options: USER [FORMAT]
+# labels: panel
 #
 # The function for obtaining the list of all user's databases.
 

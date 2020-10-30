@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: unsuspend web/dns/mail domain
 # options: USER DOMAIN
+# labels: panel
+#
+# example: v-unsuspend-domain admin acme.com
 #
 # The function unsuspends web/dns/mail domain.
 

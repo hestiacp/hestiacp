@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: update system queue
 # options: PIPE
+# labels: panel
 #
 # This function is responsible queue processing. Restarts of services,
 # scheduled backups, web log parsing and other heavy resource consuming

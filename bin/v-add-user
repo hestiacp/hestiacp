@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add system user
 # options: USER PASSWORD EMAIL [PACKAGE] [NAME]
+# labels: 
+#
+# example: v-add-user admin2 P4$$w@rD bgates@aol.com
 #
 # The function creates new user account.
 

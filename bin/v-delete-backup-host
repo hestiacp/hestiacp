@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete backup ftp server
-# options: TYPE
+# options: TYPE [HOST]
+# labels: 
+#
+# example: v-delete-backup-host sftp
 #
 # The function deletes ftp backup host
 

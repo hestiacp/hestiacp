@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add new database server
-# options: TYPE HOST DBUSER DBPASS [MAX_DB] [CHARSETS] [TEMPLATE]
+# options: TYPE HOST DBUSER DBPASS [MAX_DB] [CHARSETS] [TEMPLATE] [PORT]
+# labels: 
+#
+# example: v-add-database-host mysql localhost alice p@$$wOrd
 #
 # The function add new database server to the server pool. It supports local
 # and remote database servers, which is useful for clusters. By adding a host

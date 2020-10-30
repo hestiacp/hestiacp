@@ -1,9 +1,12 @@
 #!/bin/bash
 # info: add cron job
 # options: USER MIN HOUR DAY MONTH WDAY COMMAND [JOB] [RESTART]
+# labels: 
+#
+# example: v-add-cron-job admin * * * * * sudo /usr/local/hestia/bin/v-backup-users
 #
 # The function adds a job to cron daemon. When executing commands, any output
-# is  mailed to user's email if parameter REPORTS is set to 'yes'.
+# is mailed to user's email if parameter REPORTS is set to 'yes'.
 
 
 #----------------------------------------------------------#

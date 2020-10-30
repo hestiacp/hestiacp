@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: update firewall ipset
 # options: [REFRESH]
+# labels: hestia
 #
 # The function creates ipset lists and updates the lists if they are expired or ondemand
 

@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: restart proxy server
 # options: NONE
+# labels: panel
 #
 # The function reloads proxy server configuration.
 

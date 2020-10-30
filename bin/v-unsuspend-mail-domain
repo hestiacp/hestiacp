@@ -1,8 +1,11 @@
 #!/bin/bash
 # info: unsuspend mail domain
 # options: USER DOMAIN
+# labels: mail
 #
-# The function unsuspends mail domain. 
+# example: v-unsuspend-mail-domain user02 acme.com
+#
+# The function unsuspends mail domain.
 
 
 #----------------------------------------------------------#

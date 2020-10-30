@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: unsuspend dns domain
 # options: USER DOMAIN
+# labels: dns
+#
+# example: v-unsuspend-dns-domain alice wonderland.com
 #
 # The function unsuspends a certain user's domain.
 

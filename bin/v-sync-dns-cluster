@@ -1,6 +1,8 @@
 #!/bin/bash
 # info: synchronize dns domains
 # options: HOST
+# labels: dns
+#
 # The function synchronize all dns domains.
 
 

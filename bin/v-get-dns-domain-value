@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: get dns domain value
 # options: USER DOMAIN KEY
+# labels: dns
+#
+# example: v-get-dns-domain-value admin example.com SOA
 #
 # The function for getting a certain DNS domain parameter.
 

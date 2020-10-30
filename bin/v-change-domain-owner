@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change domain owner
 # options: DOMAIN USER
+# labels: 
+#
+# example: v-change-domain-owner www.example.com bob
 #
 # The function of changing domain ownership.
 

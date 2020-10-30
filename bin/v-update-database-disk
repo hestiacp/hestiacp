@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update database disk usage
 # options: USER DATABASE
+# labels: panel
+#
+# example: v-update-database-disk admin wp_db
 #
 # The function recalculates disk usage for specific database.
 

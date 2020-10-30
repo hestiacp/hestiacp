@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: rebuild databases
 # options: USER
+# labels: panel
+#
+# example: v-rebuild-databases admin
 #
 # The function for rebuilding of all databases of a single user.
 

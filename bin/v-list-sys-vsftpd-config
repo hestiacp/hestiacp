@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list vsftpd config parameters
 # options: [FORMAT]
+# labels: 
 #
 # The function for obtaining the list of vsftpd config parameters.
 

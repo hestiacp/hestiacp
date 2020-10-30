@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete user ips
 # options: USER
+# labels: panel
+#
+# example: v-delete-user-ips admin
 #
 # The function deletes all user's ip addresses.
 

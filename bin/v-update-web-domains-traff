@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update domains bandwidth usage
 # options: USER
+# labels: web
+#
+# example: v-update-web-domains-traff bob
 #
 # The function recalculates bandwidth usage for all user webdomains.
 

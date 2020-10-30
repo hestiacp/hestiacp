@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: update web templates
 # options: [RESTART]
+# labels: hestia
 #
 # The function for changing the release branch for the
 # Hestia Control Panel. This allows the user to switch between

@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: update dns templates
 # options: [RESTART]
+# labels: dns
 #
 # The function for obtaining updated pack of dns templates.
 

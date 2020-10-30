@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list hestia ssl certificate
 # options: [FORMAT]
+# labels: 
 #
 # The function of obtaining hestia ssl files.
 

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change database username
 # options: USER DATABASE DBUSER [DBPASS]
+# labels: 
+#
+# example: v-change-database-user admin my_db joe_user
 #
 # The function for changing database user. It uses the
 

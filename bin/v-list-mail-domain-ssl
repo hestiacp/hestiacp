@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list mail domain ssl certificate
 # options: USER DOMAIN [FORMAT]
+# labels: hestia
 #
 # The function of obtaining domain ssl files.
 

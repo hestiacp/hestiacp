@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list remote dns host
 # options: [FORMAT]
+# labels: 
 #
 # The function for obtaining the list of remote dns host.
 

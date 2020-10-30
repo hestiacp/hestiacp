@@ -342,7 +342,7 @@ if (!empty($_POST['ok'])) {
                     $v_ftp_user_data['is_new'] = 1;
                 }
 
-                $v_ftp_username = preg_replace("/^".$user."_/", "", $v_ftp_user_data['v_ftp_user']);
+                $v_ftp_username = $user.'_'.$v_ftp_user_data['v_ftp_user'];
                 $v_ftp_users_updated[] = array(
                     'is_new'            => $v_ftp_user_data['is_new'],
                     'v_ftp_user'        => $return_var == 0 ? $v_ftp_username_full : $v_ftp_username,

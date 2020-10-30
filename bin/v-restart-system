@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: restart operating system
-# options: restart
+# options: RESTART [DELAY]
+# labels: panel
+#
+# example: v-restart-system yes
 #
 # The function restarts operating system.
 

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: rebuild cron jobs
 # options: USER [RESTART]
+# labels: panel
+#
+# example: v-rebuild-cron-jobs admin yes
 #
 # The function rebuilds system cron config file for specified user.
 

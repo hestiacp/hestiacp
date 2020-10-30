@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: restart service
-# options: service [RESTART]
+# options: SERVICE [RESTART]
+# labels: panel
 #
 # The function restarts system service.
 

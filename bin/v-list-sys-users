@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list system users
 # options: [FORMAT]
+# labels: panel
 #
 # The function for obtaining the list of system users without
 # detailed information.

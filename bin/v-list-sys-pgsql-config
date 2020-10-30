@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list postgresql config parameters
 # options: [FORMAT]
+# labels: panel
 #
 # The function for obtaining the list of postgresql config parameters.
 

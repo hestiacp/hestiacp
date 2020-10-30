@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: Suspending sys cron jobs
 # options: USER [RESTART]
+# labels: panel
+#
+# example: v-suspend-cron-jobs admin
 #
 # The function suspends all user cron jobs.
 

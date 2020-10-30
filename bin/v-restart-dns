@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: restart dns service
 # options: NONE
+# labels: dns
 #
 # The function tells BIND service to reload dns zone files.
 

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: unsuspend database
 # options: USER DATABASE
+# labels: panel
+#
+# example: v-unsuspend-database admin mydb
 #
 # The function for unsuspending database.
 

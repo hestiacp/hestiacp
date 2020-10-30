@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: Adding force SSL for a domain
 # options: USER DOMAIN
+# labels: hestia web
+#
+# example: v-add-web-domain-ssl-force admin acme.com
 #
 # The function forces SSL for the requested domain.
 

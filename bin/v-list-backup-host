@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list backup host
-# options: TYPE HOST [FORMAT]
+# options: TYPE [FORMAT]
+# labels: panel
+#
+# example: v-list-backup-host local
 #
 # The function for obtaining the list of backup host parameters.
 

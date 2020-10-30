@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: generate api key
-# options: none
+# options: NONE
+# labels: panel
 #
 # The function creates a key file in $HESTIA/data/keys/
 

@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: change user random key
 # options: USER [HASH]
+# labels: hestia
 #
 # The function changes user's RKEY value thats has been used for security value to be used forgot password function only.
 

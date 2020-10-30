@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: unsuspend cron job
 # options: USER JOB [RESTART]
+# labels: panel
+#
+# example: v-unsuspend-cron-job admin 7 yes
 #
 # The function unsuspend certain cron job.
 

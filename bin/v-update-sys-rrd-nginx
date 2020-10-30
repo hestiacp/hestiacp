@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: update nginx rrd
 # options: PERIOD
+# labels: panel
 #
 # The function is for updating nginx rrd database and graphic.
 

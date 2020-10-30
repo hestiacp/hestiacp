@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: copy directory
 # options: USER SRC_DIRECTORY DST_DIRECTORY
+# labels: 
+#
+# example: v-copy-fs-directory alice /home/alice/dir1 /home/bob/dir2
 #
 # The function copies directory on the file system
 

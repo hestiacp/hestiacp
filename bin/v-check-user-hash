@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: check user hash
 # options: USER HASH [IP]
+# labels: 
+#
+# example: v-check-user-hash admin CN5JY6SMEyNGnyCuvmK5z4r7gtHAC4mRZ...
 #
 # The function verifies user hash
 

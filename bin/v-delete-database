@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete database
 # options: USER DATABASE
+# labels: 
+#
+# example: v-delete-database admin wp_db
 #
 # The function for deleting the database. If database user have access to
 # another database, he will not be deleted.

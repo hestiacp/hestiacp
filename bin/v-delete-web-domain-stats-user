@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: disable webdomain stats  authentication support
 # options: USER DOMAIN [RESTART]
+# labels: web
+#
+# example: v-delete-web-domain-stats-user admin acme.com
 #
 # The function removes authentication of statistics system. If the script is
 # called without naming a certain user, all users will be removed. After

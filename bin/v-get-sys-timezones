@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list system timezone
 # options: [FORMAT]
+# labels: panel
 #
 # The function checks system timezone settings
 

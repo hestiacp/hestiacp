@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list web domain ssl certificate
 # options: USER DOMAIN [FORMAT]
+# labels: web
+#
+# example: v-list-web-domain-ssl admin wonderland.com
 #
 # The function of obtaining domain ssl files.
 

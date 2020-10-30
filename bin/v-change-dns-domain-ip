@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change dns domain ip address
-# options: USER DOMAIN IP
+# options: USER DOMAIN IP [RESTART]
+# labels: dns
+#
+# example: v-change-dns-domain-ip admin domain.com 123.212.111.222
 #
 # The function for changing the main ip of DNS zone.
 
@@ -31,7 +34,7 @@ format_domain_idn
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'USER DOMAIN IP'
+check_args '3' "$#" 'USER DOMAIN IP [RESTART]'
 is_format_valid 'user' 'domain' 'ip'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"

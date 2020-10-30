@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: add firewall ipset
 # options: NAME [SOURCE] [IPVERSION] [AUTOUPDATE] [FORCE]
+# labels: hestia
 #
 # The function adds new ipset to system firewall
 

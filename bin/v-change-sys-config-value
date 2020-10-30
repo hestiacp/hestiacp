@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change sysconfig value
 # options: KEY VALUE
+# labels: panel
+#
+# example: v-change-sys-config-value VERSION 1.0
 #
 # The function is for changing main config settings such as COMPANY_NAME or
 # COMPANY_EMAIL and so on.

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: updates user role
 # options: USER ROLE
+# labels: hestia
+#
+# The function changes user's role.
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

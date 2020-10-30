@@ -1,8 +1,9 @@
 #!/bin/bash
 # info: stop system firewall
 # options: NONE
+# labels: panel
 #
-# The function stops  iptables
+# The function stops iptables
 
 
 #----------------------------------------------------------#

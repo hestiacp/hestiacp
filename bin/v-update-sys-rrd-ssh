@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: update ssh rrd
 # options: PERIOD
+# labels: panel
 #
 # The function is for updating ssh rrd database and graphic.
 

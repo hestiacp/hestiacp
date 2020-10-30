@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list user log
 # options: USER [FORMAT]
+# labels: 
 #
 # The function of obtaining the list of 100 last users commands.
 

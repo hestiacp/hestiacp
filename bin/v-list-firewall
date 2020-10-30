@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list iptables rules
 # options: [FORMAT]
+# labels: 
 #
 # The function of obtaining the list of all iptables rules.
 

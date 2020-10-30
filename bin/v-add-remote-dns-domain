@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add remote dns domain
 # options: USER DOMAIN [FLUSH]
+# labels: dns
+#
+# example: v-add-remote-dns-domain admin mydomain.tld yes
 #
 # The function synchronize dns domain with the remote server.
 

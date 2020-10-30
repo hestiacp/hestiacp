@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add file
 # options: USER FILE
+# labels: 
+#
+# example: v-add-fs-file admin readme.md
 #
 # The function creates new files on file system
 

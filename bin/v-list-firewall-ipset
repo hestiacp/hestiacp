@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: List firewall ipset
 # options: [FORMAT]
+# labels: hestia
 #
 # The function prints defined ipset lists
 

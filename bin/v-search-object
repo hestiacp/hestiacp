@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: search objects
 # options: OBJECT [FORMAT]
+# labels: panel
+#
+# example: v-search-object example.com json
 #
 # The function that allows to find system objects.
 

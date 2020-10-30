@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 - Introduced caching templates for nginx + php-fpm configurations  - thanks **@cmstew**!
 - Fixed an issue where DNS cluster updates could fail due to the format of a DKIM record in an available zone - thanks **@jrohde**!
 - Improved the behavior of nginx SSL SNI detection to reject connections for domains which have no SSL certificate - thanks **@myrevery**! 
+- Improved the quality of comment formatting in command line scripts - thanks **@bisubus**! 
 
 ## [1.3.0] - Major Release (Feature / Quality Update)
 ### Features

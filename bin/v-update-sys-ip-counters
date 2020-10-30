@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: update IP usage counters
 # options: IP
+# labels: panel
 #
 # Function updates usage U_WEB_ADOMAINS and U_SYS_USERS counters.
 

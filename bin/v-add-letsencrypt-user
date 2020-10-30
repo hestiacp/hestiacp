@@ -1,8 +1,11 @@
 #!/bin/bash
 # info: register letsencrypt user account
 # options: USER
+# labels: web
 #
-# The function creates and register LetsEncrypt account 
+# example: v-add-letsencrypt-user bob
+#
+# The function creates and register LetsEncrypt account
 
 
 #----------------------------------------------------------#

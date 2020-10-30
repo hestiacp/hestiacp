@@ -19,7 +19,9 @@ All notable changes to this project will be documented in this file.
 - Fixed minor spelling inconsistencies in command line script comments and output text.
 - Fixed an issue where old configuration files were not cleaned up when moving domains with `v-change-domain-owner`.
 - Fixed an issue where a `no backend template doesn't exist` could potentially would appear after upgrade with older templates (#1322).
-- Fixed an issue where DNS cluster updates could fail due to DKIM - thanks **@jrohde**!
+- Introduced caching templates for nginx + php-fpm configurations  - thanks **@cmstew**!
+- Fixed an issue where DNS cluster updates could fail due to the format of a DKIM record in an available zone - thanks **@jrohde**!
+
 
 ## [1.3.0] - Major Release (Feature / Quality Update)
 ### Features

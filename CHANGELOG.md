@@ -21,7 +21,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue where a `no backend template doesn't exist` could potentially would appear after upgrade with older templates (#1322).
 - Introduced caching templates for nginx + php-fpm configurations  - thanks **@cmstew**!
 - Fixed an issue where DNS cluster updates could fail due to the format of a DKIM record in an available zone - thanks **@jrohde**!
-
+- Improved the behavior of nginx SSL SNI detection to reject connections for domains which have no SSL certificate - thanks **@myrevery**! 
 
 ## [1.3.0] - Major Release (Feature / Quality Update)
 ### Features

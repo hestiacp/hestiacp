@@ -2,7 +2,7 @@
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
           <a class="ui-button cancel" id="btn-back" href="/list/backup/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
-          <a href="/schedule/restore/?token=<?=$_SESSION['token']?>&backup=<?=htmlentities($_GET['backup'])?>" class="ui-button cancel" title="<?=_('Restore All')?>"><i class="fas fa-undo status-icon green"></i> <?=_('Restore All')?></a>
+          <a href="/schedule/restore/?token=<?=$_SESSION['token']?>&backup=<?=htmlentities($_GET['backup'])?>" class="ui-button cancel"><i class="fas fa-undo status-icon green"></i> <?=_('Restore All')?></a>
         </div>
         <div class="l-sort-toolbar clearfix">
           <table>

@@ -1,7 +1,7 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a href="/add/db/" id="btn-create" class="ui-button cancel" title="<?=_('Add Database')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Add Database')?></a>
+          <a href="/add/db/" id="btn-create" class="ui-button cancel"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Add Database')?></a>
           <?
             $mysql = 0;
             $pgsql = 0;
@@ -120,7 +120,7 @@ sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" so
                 <div class="clearfix l-unit__stat-col--left super-compact">
                   <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="database[]" value="<?php echo $key ?>">
                 </div>
-                <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Database')?>"><?=$key?></a></b></div>
+                <div class="clearfix l-unit__stat-col--left wide-3 truncate"><b><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Database')?>"><?=$key?></a></b></div>
                 <!-- START QUICK ACTION TOOLBAR AREA -->
                 <div class="clearfix l-unit__stat-col--left text-right compact-2">
                       <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">

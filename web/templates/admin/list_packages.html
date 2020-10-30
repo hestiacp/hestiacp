@@ -2,7 +2,7 @@
     <div class="l-sort clearfix noselect">
       <div class="l-unit-toolbar__buttonstrip">
         <a class="ui-button cancel" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
-        <a href="/add/package/" id="btn-create" class="ui-button cancel" title="<?=_('Add Package')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Add Package')?></a>
+        <a href="/add/package/" id="btn-create" class="ui-button cancel"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Add Package')?></a>
     </div>
       <ul class="context-menu sort-order animated fadeIn" style="display:none;">
         <li entity="sort-date" sort_as_int="1"><span class="name active"><?=_('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
@@ -68,7 +68,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
         <div class="clearfix l-unit__stat-col--left super-compact">
           <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="user[]" value="<?=$key?>">
         </div>
-            <div class="clearfix l-unit__stat-col--left wide-2"><b><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>"><?=$key?></b></a></div>
+            <div class="clearfix l-unit__stat-col--left wide-2 truncate"><b><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>"><?=$key?></b></a></div>
             <!-- START QUICK ACTION TOOLBAR AREA -->
             <div class="clearfix l-unit__stat-col--left text-right compact-3">
                   <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">

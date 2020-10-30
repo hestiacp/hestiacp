@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-02 22:31+0200\n"
+"POT-Creation-Date: 2020-10-29 00:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: ../../web/add/ip/index.php:25 ../../web/add/firewall/banlist/index.php:26
 #: ../../web/add/firewall/index.php:45
@@ -125,6 +126,12 @@ msgstr ""
 msgid "Please enter valid email address."
 msgstr ""
 
+#: ../../web/add/mail/index.php:126 ../../web/add/user/index.php:48
+#: ../../web/add/db/index.php:45 ../../web/edit/mail/index.php:402
+#: ../../web/edit/user/index.php:105 ../../web/edit/db/index.php:67
+msgid "Password does not match the minimum requirements"
+msgstr ""
+
 #: ../../web/add/mail/index.php:205 ../../web/edit/mail/index.php:521
 msgid "Email Credentials"
 msgstr ""
@@ -132,7 +139,7 @@ msgstr ""
 #: ../../web/add/mail/index.php:207 ../../web/add/user/index.php:94
 #: ../../web/add/db/index.php:92 ../../web/add/web/index.php:329
 #: ../../web/edit/mail/index.php:523 ../../web/edit/web/index.php:663
-#: ../../web/edit/web/index.php:737 ../../web/reset/index.php:33
+#: ../../web/edit/web/index.php:737 ../../web/reset/index.php:37
 #, php-format
 msgid "MAIL_FROM"
 msgstr ""
@@ -146,15 +153,11 @@ msgstr ""
 msgid "Field SSH_KEY can not be blank."
 msgstr ""
 
-#: ../../web/add/key/index.php:35
-msgid "SSH KEY is invalid"
-msgstr ""
-
-#: ../../web/add/key/index.php:41 ../../web/add/key/index.php:44
+#: ../../web/add/key/index.php:42 ../../web/add/key/index.php:45
 msgid "SSH KEY already exists"
 msgstr ""
 
-#: ../../web/add/key/index.php:57
+#: ../../web/add/key/index.php:58
 msgid "SSH KEY created"
 msgstr ""
 
@@ -175,21 +178,17 @@ msgstr ""
 msgid "name"
 msgstr ""
 
-#: ../../web/add/user/index.php:48 ../../web/add/db/index.php:45
-msgid "Password does not match the minimum requirements"
-msgstr ""
-
 #: ../../web/add/user/index.php:91 ../../web/templates/login.html:16
 #: ../../web/templates/login_a.html:16
 msgid "Welcome to Hestia Control Panel"
 msgstr ""
 
-#: ../../web/add/user/index.php:97 ../../web/reset/index.php:35
+#: ../../web/add/user/index.php:97 ../../web/reset/index.php:39
 #, php-format
 msgid "GREETINGS_GORDON"
 msgstr ""
 
-#: ../../web/add/user/index.php:99 ../../web/reset/index.php:37
+#: ../../web/add/user/index.php:99 ../../web/reset/index.php:41
 msgid "GREETINGS"
 msgstr ""
 
@@ -458,6 +457,10 @@ msgstr ""
 msgid "Restart \"%s\" failed"
 msgstr ""
 
+#: ../../web/restart/system/index.php:30
+msgid "The system is going down for reboot NOW!"
+msgstr ""
+
 #: ../../web/stop/service/index.php:27
 #, php-format
 msgid "Stop \"%s\" failed"
@@ -541,33 +544,33 @@ msgstr ""
 msgid "Cronjob email reporting has been successfully enabled"
 msgstr ""
 
-#: ../../web/reset/index.php:31
+#: ../../web/reset/index.php:35
 #, php-format
 msgid "MAIL_RESET_SUBJECT"
 msgstr ""
 
-#: ../../web/reset/index.php:40
+#: ../../web/reset/index.php:44
 #, php-format
 msgid "PASSWORD_RESET_REQUEST"
 msgstr ""
 
-#: ../../web/reset/index.php:45
+#: ../../web/reset/index.php:49
 msgid "Invalid host domain"
 msgstr ""
 
-#: ../../web/reset/index.php:74
+#: ../../web/reset/index.php:78
 msgid "An internal error occurred"
 msgstr ""
 
-#: ../../web/reset/index.php:82
+#: ../../web/reset/index.php:86
 msgid "Code has been expired"
 msgstr ""
 
-#: ../../web/reset/index.php:86 ../../web/reset/index.php:90
+#: ../../web/reset/index.php:90 ../../web/reset/index.php:94
 msgid "Invalid username or code"
 msgstr ""
 
-#: ../../web/reset/index.php:93
+#: ../../web/reset/index.php:97
 msgid "Passwords not match"
 msgstr ""
 
@@ -1449,16 +1452,12 @@ msgstr ""
 msgid "DELETE_DOMAIN_CONFIRMATION"
 msgstr ""
 
-#: ../../web/templates/admin/list_web.html:217
-#: ../../web/templates/user/list_web.html:222
-msgid "1 web domain"
-msgstr ""
-
-#: ../../web/templates/admin/list_web.html:219
-#: ../../web/templates/user/list_web.html:224
+#: ../../web/templates/admin/list_web.html:216
 #, php-format
-msgid "%s web domains"
-msgstr ""
+msgid "%d web domain"
+msgid_plural "%d web domains"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../web/templates/admin/add_dns.html:38
 msgid "Adding DNS Domain"
@@ -1675,14 +1674,12 @@ msgstr ""
 msgid "DELETE_BACKUP_CONFIRMATION"
 msgstr ""
 
-#: ../../web/templates/admin/list_backup.html:116
-msgid "1 backup"
-msgstr ""
-
-#: ../../web/templates/admin/list_backup.html:118
+#: ../../web/templates/admin/list_backup.html:115
 #, php-format
-msgid "%s backups"
-msgstr ""
+msgid "%d backup"
+msgid_plural "%d backups"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../web/templates/admin/edit_user.html:6
 msgid "Manage SSH keys"
@@ -2191,16 +2188,12 @@ msgstr ""
 msgid "Editing Mail Domain"
 msgstr ""
 
-#: ../../web/templates/admin/list_mail.html:218
-#: ../../web/templates/user/list_mail.html:217
-msgid "1 mail domain"
-msgstr ""
-
-#: ../../web/templates/admin/list_mail.html:220
-#: ../../web/templates/user/list_mail.html:219
+#: ../../web/templates/admin/list_mail.html:217
 #, php-format
-msgid "%s mail domains"
-msgstr ""
+msgid "%d mail domain"
+msgid_plural "%d mail domains"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../web/templates/admin/edit_web.html:8
 #: ../../web/templates/admin/list_webapps.html:24
@@ -2465,16 +2458,12 @@ msgstr ""
 msgid "DELETE_CRON_CONFIRMATION"
 msgstr ""
 
-#: ../../web/templates/admin/list_cron.html:137
-#: ../../web/templates/user/list_cron.html:137
-msgid "1 cron job"
-msgstr ""
-
-#: ../../web/templates/admin/list_cron.html:139
-#: ../../web/templates/user/list_cron.html:139
+#: ../../web/templates/admin/list_cron.html:136
 #, php-format
-msgid "%s cron jobs"
-msgstr ""
+msgid "%d cron job"
+msgid_plural "%d cron jobs"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../web/templates/admin/edit_mail_acc.html:41
 #: ../../web/templates/admin/list_mail_acc.html:90
@@ -2807,16 +2796,12 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: ../../web/templates/admin/list_search.html:198
-#: ../../web/templates/user/list_search.html:196
-msgid "1 object"
-msgstr ""
-
-#: ../../web/templates/admin/list_search.html:200
-#: ../../web/templates/user/list_search.html:198
+#: ../../web/templates/admin/list_search.html:197
 #, php-format
-msgid "%s objects"
-msgstr ""
+msgid "%d object"
+msgid_plural "%d objects"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../web/templates/admin/list_backup_exclusions.html:31
 #: ../../web/templates/admin/list_log.html:32
@@ -2916,16 +2901,12 @@ msgstr ""
 msgid "DELETE_USER_CONFIRMATION"
 msgstr ""
 
-#: ../../web/templates/admin/list_user.html:165
-#: ../../web/templates/user/list_user.html:133
-msgid "1 user account"
-msgstr ""
-
-#: ../../web/templates/admin/list_user.html:167
-#: ../../web/templates/user/list_user.html:135
+#: ../../web/templates/admin/list_user.html:164
 #, php-format
-msgid "%s user accounts"
-msgstr ""
+msgid "%d user account"
+msgid_plural "%d user accounts"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../web/templates/admin/list_log.html:6
 #: ../../web/templates/admin/list_log.html:8
@@ -2942,14 +2923,12 @@ msgstr ""
 msgid "Time"
 msgstr ""
 
-#: ../../web/templates/admin/list_log.html:61
-msgid "1 log record"
-msgstr ""
-
-#: ../../web/templates/admin/list_log.html:63
+#: ../../web/templates/admin/list_log.html:60
 #, php-format
-msgid "%s log records"
-msgstr ""
+msgid "%d log record"
+msgid_plural "%d log records"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../web/templates/admin/list_firewall.html:5
 msgid "Add Rule"
@@ -2982,14 +2961,12 @@ msgstr ""
 msgid "DELETE_RULE_CONFIRMATION"
 msgstr ""
 
-#: ../../web/templates/admin/list_firewall.html:145
-msgid "1 firewall rule"
-msgstr ""
-
-#: ../../web/templates/admin/list_firewall.html:147
+#: ../../web/templates/admin/list_firewall.html:144
 #, php-format
-msgid "%s firewall rules"
-msgstr ""
+msgid "%d firewall rule"
+msgid_plural "%d firewall rules"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../web/templates/admin/edit_mail.html:69
 msgid "Catchall email"
@@ -3109,14 +3086,12 @@ msgstr ""
 msgid "Cron"
 msgstr ""
 
-#: ../../web/templates/admin/list_backup_detail.html:319
-msgid "1 item"
-msgstr ""
-
-#: ../../web/templates/admin/list_backup_detail.html:321
+#: ../../web/templates/admin/list_backup_detail.html:318
 #, php-format
-msgid "%s items"
-msgstr ""
+msgid "%d item"
+msgid_plural "%d items"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../web/templates/admin/add_ip.html:38
 msgid "Adding IP address"
@@ -3177,16 +3152,12 @@ msgstr ""
 msgid "DELETE_MAIL_ACCOUNT_CONFIRMATION"
 msgstr ""
 
-#: ../../web/templates/admin/list_mail_acc.html:186
-#: ../../web/templates/user/list_mail_acc.html:186
-msgid "1 mail account"
-msgstr ""
-
-#: ../../web/templates/admin/list_mail_acc.html:188
-#: ../../web/templates/user/list_mail_acc.html:188
+#: ../../web/templates/admin/list_mail_acc.html:185
 #, php-format
-msgid "%s mail accounts"
-msgstr ""
+msgid "%d mail account"
+msgid_plural "%d mail accounts"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../web/templates/admin/list_key.html:6
 #: ../../web/templates/admin/add_key.html:39
@@ -3209,13 +3180,11 @@ msgid "DELETE_KEY_CONFIRM"
 msgstr ""
 
 #: ../../web/templates/admin/list_key.html:61
-msgid "1 SSH Key"
-msgstr ""
-
-#: ../../web/templates/admin/list_key.html:63
 #, php-format
-msgid "%s SSH Keys"
-msgstr ""
+msgid "%d SSH Key"
+msgid_plural "%d SSH Keys"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../web/templates/admin/list_ssl.html:36
 #: ../../web/templates/admin/generate_ssl.html:45
@@ -3440,14 +3409,12 @@ msgstr ""
 msgid "DELETE_IP_CONFIRMATION"
 msgstr ""
 
-#: ../../web/templates/admin/list_ip.html:111
-msgid "1 IP address"
-msgstr ""
-
-#: ../../web/templates/admin/list_ip.html:113
+#: ../../web/templates/admin/list_ip.html:110
 #, php-format
-msgid "%s IP addresses"
-msgstr ""
+msgid "%d IP address"
+msgid_plural "%d IP addresses"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../web/templates/admin/generate_ssl.html:70
 #: ../../web/generate/ssl/index.php:38
@@ -3526,16 +3493,12 @@ msgstr ""
 msgid "Editing DNS Domain"
 msgstr ""
 
-#: ../../web/templates/admin/list_dns.html:140
-#: ../../web/templates/user/list_dns.html:139
-msgid "1 DNS zone"
-msgstr ""
-
-#: ../../web/templates/admin/list_dns.html:142
-#: ../../web/templates/user/list_dns.html:141
+#: ../../web/templates/admin/list_dns.html:139
 #, php-format
-msgid "%s DNS zones"
-msgstr ""
+msgid "%d DNS zone"
+msgid_plural "%d DNS zones"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../web/templates/admin/add_cron.html:28
 #: ../../web/templates/admin/edit_cron.html:27
@@ -3792,14 +3755,12 @@ msgstr ""
 msgid "There are currently no IP lists defined."
 msgstr ""
 
-#: ../../web/templates/admin/list_firewall_ipset.html:108
-msgid "1 Ipset list"
-msgstr ""
-
-#: ../../web/templates/admin/list_firewall_ipset.html:111
+#: ../../web/templates/admin/list_firewall_ipset.html:107
 #, php-format
-msgid "%s Ipset lists"
-msgstr ""
+msgid "%d Ipset list"
+msgid_plural "%d Ipset lists"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../web/templates/admin/add_package.html:37
 msgid "Adding Package"
@@ -3842,14 +3803,12 @@ msgstr ""
 msgid "There are currently no banned IP addresses."
 msgstr ""
 
-#: ../../web/templates/admin/list_firewall_banlist.html:92
-msgid "1 banned IP address"
-msgstr ""
-
-#: ../../web/templates/admin/list_firewall_banlist.html:95
+#: ../../web/templates/admin/list_firewall_banlist.html:91
 #, php-format
-msgid "%s banned IP addresses"
-msgstr ""
+msgid "%d banned IP address"
+msgid_plural "%d banned IP addresses"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../web/templates/admin/add_user.html:38
 msgid "Adding User"
@@ -3886,14 +3845,12 @@ msgstr ""
 msgid "DELETE_PACKAGE_CONFIRMATION"
 msgstr ""
 
-#: ../../web/templates/admin/list_packages.html:206
-msgid "1 package"
-msgstr ""
-
-#: ../../web/templates/admin/list_packages.html:208
+#: ../../web/templates/admin/list_packages.html:205
 #, php-format
-msgid "%s packages"
-msgstr ""
+msgid "%d package"
+msgid_plural "%d packages"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../web/templates/admin/list_stats.html:4
 msgid "Overall Statistics"
@@ -3903,16 +3860,12 @@ msgstr ""
 msgid "show per user"
 msgstr ""
 
-#: ../../web/templates/admin/list_stats.html:93
-#: ../../web/templates/user/list_stats.html:79
-msgid "1 month"
-msgstr ""
-
-#: ../../web/templates/admin/list_stats.html:95
-#: ../../web/templates/user/list_stats.html:81
+#: ../../web/templates/admin/list_stats.html:92
 #, php-format
-msgid "%s months"
-msgstr ""
+msgid "%d month"
+msgid_plural "%d months"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../web/templates/admin/list_db.html:4
 #: ../../web/templates/user/list_db.html:4
@@ -3935,16 +3888,12 @@ msgstr ""
 msgid "DELETE_DATABASE_CONFIRMATION"
 msgstr ""
 
-#: ../../web/templates/admin/list_db.html:172
-#: ../../web/templates/user/list_db.html:171
-msgid "1 SQL database"
-msgstr ""
-
-#: ../../web/templates/admin/list_db.html:174
-#: ../../web/templates/user/list_db.html:173
+#: ../../web/templates/admin/list_db.html:171
 #, php-format
-msgid "%s SQL databases"
-msgstr ""
+msgid "%d SQL database"
+msgid_plural "%d SQL databases"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../web/templates/admin/edit_dns_rec.html:40
 #: ../../web/templates/admin/list_dns_rec.html:67
@@ -3964,19 +3913,105 @@ msgstr ""
 msgid "DELETE_RECORD_CONFIRMATION"
 msgstr ""
 
-#: ../../web/templates/admin/list_dns_rec.html:105
-#: ../../web/templates/user/list_dns_rec.html:101
-msgid "1 DNS record"
+#: ../../web/templates/admin/list_dns_rec.html:104
+#, php-format
+msgid "%d DNS record"
+msgid_plural "%d DNS records"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../web/templates/user/list_web.html:222
+msgid "1 web domain"
 msgstr ""
 
-#: ../../web/templates/admin/list_dns_rec.html:107
-#: ../../web/templates/user/list_dns_rec.html:103
+#: ../../web/templates/user/list_web.html:224
 #, php-format
-msgid "%s DNS records"
+msgid "%s web domains"
 msgstr ""
 
 #: ../../web/templates/user/edit_user.html:5
 msgid "SSH_KEY"
+msgstr ""
+
+#: ../../web/templates/user/list_mail.html:217
+msgid "1 mail domain"
+msgstr ""
+
+#: ../../web/templates/user/list_mail.html:219
+#, php-format
+msgid "%s mail domains"
+msgstr ""
+
+#: ../../web/templates/user/list_cron.html:137
+msgid "1 cron job"
+msgstr ""
+
+#: ../../web/templates/user/list_cron.html:139
+#, php-format
+msgid "%s cron jobs"
+msgstr ""
+
+#: ../../web/templates/user/list_search.html:196
+msgid "1 object"
+msgstr ""
+
+#: ../../web/templates/user/list_search.html:198
+#, php-format
+msgid "%s objects"
+msgstr ""
+
+#: ../../web/templates/user/list_user.html:133
+msgid "1 user account"
+msgstr ""
+
+#: ../../web/templates/user/list_user.html:135
+#, php-format
+msgid "%s user accounts"
+msgstr ""
+
+#: ../../web/templates/user/list_mail_acc.html:186
+msgid "1 mail account"
+msgstr ""
+
+#: ../../web/templates/user/list_mail_acc.html:188
+#, php-format
+msgid "%s mail accounts"
+msgstr ""
+
+#: ../../web/templates/user/list_dns.html:139
+msgid "1 DNS zone"
+msgstr ""
+
+#: ../../web/templates/user/list_dns.html:141
+#, php-format
+msgid "%s DNS zones"
+msgstr ""
+
+#: ../../web/templates/user/list_stats.html:79
+msgid "1 month"
+msgstr ""
+
+#: ../../web/templates/user/list_stats.html:81
+#, php-format
+msgid "%s months"
+msgstr ""
+
+#: ../../web/templates/user/list_db.html:171
+msgid "1 SQL database"
+msgstr ""
+
+#: ../../web/templates/user/list_db.html:173
+#, php-format
+msgid "%s SQL databases"
+msgstr ""
+
+#: ../../web/templates/user/list_dns_rec.html:101
+msgid "1 DNS record"
+msgstr ""
+
+#: ../../web/templates/user/list_dns_rec.html:103
+#, php-format
+msgid "%s DNS records"
 msgstr ""
 
 #: ../../web/templates/login_2.html:16

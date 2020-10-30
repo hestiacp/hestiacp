@@ -136,11 +136,7 @@ sort-expire="<?=strtotime($data[$key]['EXP'])?>" sort-records="<?=(int)$data[$ke
           <table class='data'></table>
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php
-              if ( $i == 1) {
-                echo _('1 DNS zone');
-              } else {
-                echo _('%s DNS zones',$i);
-              }
+            printf(ngettext('%d DNS zone', '%d DNS zones', $i),$i);
             ?>
           </div>
         </div>

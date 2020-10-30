@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Hestia CP package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-10-24 13:07:07+0000\n"
+"PO-Revision-Date: 2020-10-29 06:51:26+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10,6 +10,82 @@ msgstr ""
 "X-Generator: GlotPress/2.3.1\n"
 "Language: en_US\n"
 "Project-Id-Version: Hestia CP\n"
+
+#: ../../web/restart/system/index.php:30
+msgid "The system is going down for reboot NOW!"
+msgstr "The system is going down for reboot NOW!"
+
+#: ../../web/templates/admin/list_web.html:216
+msgid "%d web domain"
+msgid_plural "%d web domains"
+msgstr[0] "%d web domain"
+msgstr[1] "%d web domains"
+
+#: ../../web/templates/admin/list_backup.html:115
+msgid "%d backup"
+msgid_plural "%d backups"
+msgstr[0] "%d backup"
+msgstr[1] "%d backups"
+
+#: ../../web/templates/admin/list_mail.html:217
+msgid "%d mail domain"
+msgid_plural "%d mail domains"
+msgstr[0] "%d mail domain"
+msgstr[1] "%d mail domains"
+
+#: ../../web/templates/admin/list_cron.html:136
+msgid "%d cron job"
+msgid_plural "%d cron jobs"
+msgstr[0] "%d cron job"
+msgstr[1] "%d cron jobs"
+
+#: ../../web/templates/admin/list_search.html:197
+msgid "%d object"
+msgid_plural "%d objects"
+msgstr[0] "%d object"
+msgstr[1] "%d objects"
+
+#: ../../web/templates/admin/list_user.html:164
+msgid "%d user account"
+msgid_plural "%d user accounts"
+msgstr[0] "%d user account"
+msgstr[1] "%d user accounts"
+
+#: ../../web/templates/admin/list_backup_detail.html:318
+msgid "%d item"
+msgid_plural "%d items"
+msgstr[0] "%d item"
+msgstr[1] "%d items"
+
+#: ../../web/templates/admin/list_mail_acc.html:185
+msgid "%d mail account"
+msgid_plural "%d mail accounts"
+msgstr[0] "%d mail account"
+msgstr[1] "%d mail accounts"
+
+#: ../../web/templates/admin/list_dns.html:139
+msgid "%d DNS zone"
+msgid_plural "%d DNS zones"
+msgstr[0] "%d DNS zone"
+msgstr[1] "%d DNS zones"
+
+#: ../../web/templates/admin/list_stats.html:92
+msgid "%d month"
+msgid_plural "%d months"
+msgstr[0] "%d month"
+msgstr[1] "%d months"
+
+#: ../../web/templates/admin/list_db.html:171
+msgid "%d SQL database"
+msgid_plural "%d SQL databases"
+msgstr[0] "%d SQL database"
+msgstr[1] "%d SQL databases"
+
+#: ../../web/templates/admin/list_dns_rec.html:104
+msgid "%d DNS record"
+msgid_plural "%d DNS records"
+msgstr[0] "%d DNS record"
+msgstr[1] "%d DNS records"
 
 #: ../../web/templates/admin/edit_server.html:857
 msgid "Login screen style"
@@ -131,7 +207,7 @@ msgstr "Send update installation log by email"
 
 #: ../../web/templates/admin/edit_server.html:885
 msgid "Filemanager"
-msgstr "Filemanager"
+msgstr "File Manager"
 
 #: ../../web/templates/admin/list_cron.html:75
 #: ../../web/templates/user/list_cron.html:75
@@ -231,7 +307,9 @@ msgstr "1 uppercase & 1 lowercase character"
 msgid "1 number"
 msgstr "1 number"
 
-#: ../../web/add/user/index.php:48 ../../web/add/db/index.php:45
+#: ../../web/add/mail/index.php:126 ../../web/add/user/index.php:48
+#: ../../web/add/db/index.php:45 ../../web/edit/mail/index.php:402
+#: ../../web/edit/user/index.php:105 ../../web/edit/db/index.php:67
 msgid "Password does not match the minimum requirements"
 msgstr "Password does not match the minimum requirements"
 
@@ -287,12 +365,10 @@ msgstr "SSL"
 msgid "Edit"
 msgstr "Edit"
 
-#: ../../web/templates/admin/list_web.html:217
 #: ../../web/templates/user/list_web.html:222
 msgid "1 web domain"
 msgstr "1 web domain"
 
-#: ../../web/templates/admin/list_web.html:219
 #: ../../web/templates/user/list_web.html:224
 msgid "%s web domains"
 msgstr "%s web domains"
@@ -348,12 +424,10 @@ msgstr "Accounts"
 msgid "DKIM"
 msgstr "DKIM"
 
-#: ../../web/templates/admin/list_mail.html:218
 #: ../../web/templates/user/list_mail.html:217
 msgid "1 mail domain"
 msgstr "1 mail domain"
 
-#: ../../web/templates/admin/list_mail.html:220
 #: ../../web/templates/user/list_mail.html:219
 msgid "%s mail domains"
 msgstr "%s mail domains"
@@ -402,12 +476,10 @@ msgstr "Update Usage Counters"
 msgid "DELETE_USER_CONFIRMATION"
 msgstr "Are you sure you want to delete user %s?"
 
-#: ../../web/templates/admin/list_user.html:165
 #: ../../web/templates/user/list_user.html:133
 msgid "1 user account"
 msgstr "1 user account"
 
-#: ../../web/templates/admin/list_user.html:167
 #: ../../web/templates/user/list_user.html:135
 msgid "%s user accounts"
 msgstr "%s user accounts"
@@ -424,13 +496,11 @@ msgstr "Shell"
 msgid "DELETE_PACKAGE_CONFIRMATION"
 msgstr "Are you sure you want to delete package %s?"
 
-#: ../../web/templates/admin/list_packages.html:206
-msgid "1 package"
-msgstr "1 package"
-
-#: ../../web/templates/admin/list_packages.html:208
-msgid "%s packages"
-msgstr "%s packages"
+#: ../../web/templates/admin/list_packages.html:205
+msgid "%d package"
+msgid_plural "%d packages"
+msgstr[0] "%d package"
+msgstr[1] "%d packages"
 
 #: ../../web/templates/admin/edit_mail_acc.html:136
 msgid "Message"
@@ -448,7 +518,7 @@ msgstr "YYYY-MM-DD"
 
 #: ../../web/templates/admin/list_rrd.html:5
 msgid "show: CPU / MEM / NET / DISK"
-msgstr "show: CPU / MEM / NET / DISK"
+msgstr "View Advanced Details"
 
 #: ../../web/templates/admin/list_rrd.html:14
 msgid "Yearly"
@@ -654,13 +724,11 @@ msgstr "Edit Firewall Rule"
 msgid "DELETE_RULE_CONFIRMATION"
 msgstr "Are you sure you want to delete rule #%s?"
 
-#: ../../web/templates/admin/list_firewall.html:145
-msgid "1 firewall rule"
-msgstr "1 firewall rule"
-
-#: ../../web/templates/admin/list_firewall.html:147
-msgid "%s firewall rules"
-msgstr "%s firewall rules"
+#: ../../web/templates/admin/list_firewall.html:144
+msgid "%d firewall rule"
+msgid_plural "%d firewall rules"
+msgstr[0] "%d firewall rules"
+msgstr[1] "%d firewall rules"
 
 #: ../../web/templates/admin/edit_user.html:6
 msgid "Manage SSH keys"
@@ -751,12 +819,10 @@ msgstr "Rebuild All"
 msgid "DELETE_DATABASE_CONFIRMATION"
 msgstr "Are you sure you want to delete database %s?"
 
-#: ../../web/templates/admin/list_db.html:172
 #: ../../web/templates/user/list_db.html:171
 msgid "1 SQL database"
 msgstr "1 SQL database"
 
-#: ../../web/templates/admin/list_db.html:174
 #: ../../web/templates/user/list_db.html:173
 msgid "%s SQL databases"
 msgstr "%s SQL databases"
@@ -841,12 +907,10 @@ msgstr "DNS Records"
 msgid "DELETE_DOMAIN_CONFIRMATION"
 msgstr "Are you sure you want to delete domain %s?"
 
-#: ../../web/templates/admin/list_dns.html:140
 #: ../../web/templates/user/list_dns.html:139
 msgid "1 DNS zone"
 msgstr "1 DNS zone"
 
-#: ../../web/templates/admin/list_dns.html:142
 #: ../../web/templates/user/list_dns.html:141
 msgid "%s DNS zones"
 msgstr "%s DNS zones"
@@ -869,13 +933,11 @@ msgstr "Delete"
 msgid "DELETE_LOGS_CONFIRMATION"
 msgstr "Are you sure you want to delete the logs?"
 
-#: ../../web/templates/admin/list_log.html:61
-msgid "1 log record"
-msgstr "1 log record"
-
-#: ../../web/templates/admin/list_log.html:63
-msgid "%s log records"
-msgstr "%s log records"
+#: ../../web/templates/admin/list_log.html:60
+msgid "%d log record"
+msgid_plural "%d log records"
+msgstr[0] "%d log record"
+msgstr[1] "%d log records"
 
 #: ../../web/templates/admin/list_cron.html:4
 #: ../../web/templates/user/list_cron.html:4
@@ -919,12 +981,10 @@ msgstr "Edit Job"
 msgid "DELETE_CRON_CONFIRMATION"
 msgstr "Are you sure you want to delete cron job?"
 
-#: ../../web/templates/admin/list_cron.html:137
 #: ../../web/templates/user/list_cron.html:137
 msgid "1 cron job"
 msgstr "1 cron job"
 
-#: ../../web/templates/admin/list_cron.html:139
 #: ../../web/templates/user/list_cron.html:139
 msgid "%s cron jobs"
 msgstr "%s cron jobs"
@@ -948,12 +1008,10 @@ msgstr "Owner"
 msgid "Status"
 msgstr "Status"
 
-#: ../../web/templates/admin/list_search.html:198
 #: ../../web/templates/user/list_search.html:196
 msgid "1 object"
 msgstr "1 object"
 
-#: ../../web/templates/admin/list_search.html:200
 #: ../../web/templates/user/list_search.html:198
 msgid "%s objects"
 msgstr "%s objects"
@@ -986,14 +1044,6 @@ msgstr "Download"
 msgid "DELETE_BACKUP_CONFIRMATION"
 msgstr "Are you sure you want to delete %s backup?"
 
-#: ../../web/templates/admin/list_backup.html:116
-msgid "1 backup"
-msgstr "1 backup"
-
-#: ../../web/templates/admin/list_backup.html:118
-msgid "%s backups"
-msgstr "%s backups"
-
 #: ../../web/templates/admin/list_firewall_banlist.html:5
 msgid "Ban IP Address"
 msgstr "Add IP to ban list"
@@ -1007,13 +1057,11 @@ msgstr "Are you sure you want to delete IP address %s?"
 msgid "There are currently no banned IP addresses."
 msgstr "There are currently no banned IP addresses."
 
-#: ../../web/templates/admin/list_firewall_banlist.html:92
-msgid "1 banned IP address"
-msgstr "1 banned IP address"
-
-#: ../../web/templates/admin/list_firewall_banlist.html:95
-msgid "%s banned IP addresses"
-msgstr "%s banned IP addresses"
+#: ../../web/templates/admin/list_firewall_banlist.html:91
+msgid "%d banned IP address"
+msgid_plural "%d banned IP addresses"
+msgstr[0] "%d banned IP address"
+msgstr[1] "%d banned IP addresses"
 
 #: ../../web/templates/admin/add_dns_rec.html:30
 msgid "Adding DNS Record"
@@ -1091,13 +1139,11 @@ msgstr "Verify IP address"
 msgid "Editing IP Address"
 msgstr "Edit IP Address"
 
-#: ../../web/templates/admin/list_ip.html:111
-msgid "1 IP address"
-msgstr "1 IP address"
-
-#: ../../web/templates/admin/list_ip.html:113
-msgid "%s IP addresses"
-msgstr "%s IP addresses"
+#: ../../web/templates/admin/list_ip.html:110
+msgid "%d IP address"
+msgid_plural "%d IP addresses"
+msgstr[0] "%d IP address"
+msgstr[1] "%d IP addresses"
 
 #: ../../web/templates/admin/panel.html:17
 #: ../../web/templates/user/panel.html:17
@@ -1579,14 +1625,6 @@ msgstr "User Directory"
 msgid "Cron"
 msgstr "Cron"
 
-#: ../../web/templates/admin/list_backup_detail.html:319
-msgid "1 item"
-msgstr "1 item"
-
-#: ../../web/templates/admin/list_backup_detail.html:321
-msgid "%s items"
-msgstr "%s items"
-
 #: ../../web/templates/admin/list_mail.html:102
 #: ../../web/templates/admin/list_mail_acc.html:5
 #: ../../web/templates/user/list_mail.html:101
@@ -1655,12 +1693,10 @@ msgstr "Open Webmail"
 msgid "DELETE_MAIL_ACCOUNT_CONFIRMATION"
 msgstr "Are you sure you want to delete %s?"
 
-#: ../../web/templates/admin/list_mail_acc.html:186
 #: ../../web/templates/user/list_mail_acc.html:186
 msgid "1 mail account"
 msgstr "1 mail account"
 
-#: ../../web/templates/admin/list_mail_acc.html:188
 #: ../../web/templates/user/list_mail_acc.html:188
 msgid "%s mail accounts"
 msgstr "%s mail accounts"
@@ -1978,12 +2014,10 @@ msgstr "Mail Accounts"
 msgid "Cron Jobs"
 msgstr "Cron Jobs"
 
-#: ../../web/templates/admin/list_stats.html:93
 #: ../../web/templates/user/list_stats.html:79
 msgid "1 month"
 msgstr "1 month"
 
-#: ../../web/templates/admin/list_stats.html:95
 #: ../../web/templates/user/list_stats.html:81
 msgid "%s months"
 msgstr "%s months"
@@ -2109,12 +2143,10 @@ msgstr "Are you sure you want to delete record %s?"
 msgid "Default"
 msgstr "Default"
 
-#: ../../web/templates/admin/list_dns_rec.html:105
 #: ../../web/templates/user/list_dns_rec.html:101
 msgid "1 DNS record"
 msgstr "1 DNS record"
 
-#: ../../web/templates/admin/list_dns_rec.html:107
 #: ../../web/templates/user/list_dns_rec.html:103
 msgid "%s DNS records"
 msgstr "%s DNS records"
@@ -2978,26 +3010,26 @@ msgstr "∞"
 msgid "no notifications"
 msgstr "No notifications"
 
-#: ../../web/reset/index.php:31
+#: ../../web/reset/index.php:35
 msgid "MAIL_RESET_SUBJECT"
 msgstr "Password Reset at %s"
 
 #: ../../web/add/mail/index.php:207 ../../web/add/user/index.php:94
 #: ../../web/add/db/index.php:92 ../../web/add/web/index.php:329
 #: ../../web/edit/mail/index.php:523 ../../web/edit/web/index.php:663
-#: ../../web/edit/web/index.php:737 ../../web/reset/index.php:33
+#: ../../web/edit/web/index.php:737 ../../web/reset/index.php:37
 msgid "MAIL_FROM"
 msgstr "Hestia Control Panel <noreply@%s>"
 
-#: ../../web/add/user/index.php:97 ../../web/reset/index.php:35
+#: ../../web/add/user/index.php:97 ../../web/reset/index.php:39
 msgid "GREETINGS_GORDON"
 msgstr "Hello, %s,"
 
-#: ../../web/add/user/index.php:99 ../../web/reset/index.php:37
+#: ../../web/add/user/index.php:99 ../../web/reset/index.php:41
 msgid "GREETINGS"
 msgstr "Hello,"
 
-#: ../../web/reset/index.php:40
+#: ../../web/reset/index.php:44
 msgid "PASSWORD_RESET_REQUEST"
 msgstr ""
 "To reset your Hestia Control Panel password, please follow this link:\n"
@@ -3011,23 +3043,23 @@ msgstr ""
 "--\n"
 "Hestia Control Panel"
 
-#: ../../web/reset/index.php:45
+#: ../../web/reset/index.php:49
 msgid "Invalid host domain"
 msgstr "Invalid host domain"
 
-#: ../../web/reset/index.php:74
+#: ../../web/reset/index.php:78
 msgid "An internal error occurred"
 msgstr "An internal error occurred"
 
-#: ../../web/reset/index.php:82
+#: ../../web/reset/index.php:86
 msgid "Code has been expired"
 msgstr "Code has been expired"
 
-#: ../../web/reset/index.php:86 ../../web/reset/index.php:90
+#: ../../web/reset/index.php:90 ../../web/reset/index.php:94
 msgid "Invalid username or code"
 msgstr "Invalid username or code."
 
-#: ../../web/reset/index.php:93
+#: ../../web/reset/index.php:97
 msgid "Passwords not match"
 msgstr "Passwords do not match."
 
@@ -3301,15 +3333,11 @@ msgstr "Login as"
 msgid "Field SSH_KEY can not be blank."
 msgstr "Field SSH Key must not be blank"
 
-#: ../../web/add/key/index.php:35
-msgid "SSH KEY is invalid"
-msgstr "SSH key is invalid"
-
-#: ../../web/add/key/index.php:41 ../../web/add/key/index.php:44
+#: ../../web/add/key/index.php:42 ../../web/add/key/index.php:45
 msgid "SSH KEY already exists"
 msgstr "SSH key already exists"
 
-#: ../../web/add/key/index.php:57
+#: ../../web/add/key/index.php:58
 msgid "SSH KEY created"
 msgstr "SSH key created"
 
@@ -3777,12 +3805,10 @@ msgid "DELETE_KEY_CONFIRM"
 msgstr "Are you sure you want to delete SSH key %s?"
 
 #: ../../web/templates/admin/list_key.html:61
-msgid "1 SSH Key"
-msgstr "1 SSH Key"
-
-#: ../../web/templates/admin/list_key.html:63
-msgid "%s SSH Keys"
-msgstr "%s SSH Keys"
+msgid "%d SSH Key"
+msgid_plural "%d SSH Keys"
+msgstr[0] "%d SSH Key"
+msgstr[1] "%d SSH Keys"
 
 #: ../../web/templates/admin/list_ssl.html:36
 #: ../../web/templates/admin/generate_ssl.html:45
@@ -3903,13 +3929,11 @@ msgstr "Are you sure you want to delete IP list %s?"
 msgid "There are currently no IP lists defined."
 msgstr "There are currently no IP lists defined."
 
-#: ../../web/templates/admin/list_firewall_ipset.html:108
-msgid "1 Ipset list"
-msgstr "1 IP list"
-
-#: ../../web/templates/admin/list_firewall_ipset.html:111
-msgid "%s Ipset lists"
-msgstr "%s IP lists"
+#: ../../web/templates/admin/list_firewall_ipset.html:107
+msgid "%d Ipset list"
+msgid_plural "%d Ipset lists"
+msgstr[0] "%d IP list"
+msgstr[1] "%d IP lists"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:7
 #: ../../web/templates/admin/add_dns.html:7

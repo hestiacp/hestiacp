@@ -133,12 +133,8 @@ sort-star="<? if($_SESSION['favourites']['CRON'][$key] == 1) echo '1'; else echo
         <table class='data'></table>
         <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php
-              if ( $i == 1) {
-                echo _('1 cron job');
-              } else {
-                echo _('%s cron jobs',$i);
-              }
-            ?>
+            echo ngettext('%d cron job', '%d cron jobs', $i);
+            ?>  
         </div>
       </div>
     </div>

@@ -114,6 +114,19 @@ upgrade_health_check() {
         echo "[ ! ] File Manager is enabled but not installed, repairing components..."
         $BIN/v-add-sys-filemanager quiet
     fi
+    
+    # Support for ZSTD / GZIP Change
+    if [ -z "$BACKUP_MODE" ]; then
+        echo "[ ! ] Setting zstd backup compression type as default..."
+        $BIN/v-change-sys-config-value "BACKUP_MODE" "zstd"
+    fi
+    
+    # Login style switcher
+    if [ -z "$LOGIN_STYLE" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: LOGIN_STYLE ('default')"
+        $BIN/v-change-sys-config-value "LOGIN_STYLE" "default"
+    fi
+    
     echo "[ * ] Health check complete. Starting upgrade from $VERSION to $new_version..."
     echo "============================================================================="
 }

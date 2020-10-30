@@ -125,7 +125,14 @@
           <div class="clearfix l-unit__stat-col--left super-compact">
             <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="service[]" value="<?php echo $key ?>">
           </div>
-          <div class="clearfix l-unit__stat-col--left wide-2"><b><a href="/edit/server/<? echo $key ?>/" title="<?=_('edit')?>: <?=$key?>"><?=$key?></a></b></div>
+          <div class="clearfix l-unit__stat-col--left wide-2">
+            <? if($data[$key]['STATE'] == 'running'){ ?>
+                <i class="fas fa-check-circle status-icon green icon-pad-right"></i>
+            <? } else {?>
+                <i class="fas fa-minus-circle status-icon red icon-pad-right"></i>
+            <? } ?>
+            <b><a href="/edit/server/<? echo $key ?>/" title="<?=_('edit')?>: <?=$key?>"><?=$key?></a></b>
+          </div>
           <div class="clearfix l-unit__stat-col--left text-center compact-2">
             <div class="actions-panel clearfix">
               <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href">

@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - Improved the quality of comment formatting in command line scripts - thanks **@bisubus**! 
 - Fixed an issue where the logo was not displayed in the File Manager - thanks **@robothemes**!
 - Fixed an issue in the Control Panel UI which caused databases and additional FTP accounts to be named incorrectly if manually prefaced with the username.
+- Improved the visibility of service availability in the Control Panel UI.
 
 ## [1.3.0] - Major Release (Feature / Quality Update)
 ### Features

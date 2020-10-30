@@ -3585,6 +3585,10 @@ form#vstobjects.suspended {
   width: 100px;
 }
 
+.lang-de .l-sort-toolbar .l-select {
+  max-width: 140px;
+}
+
 .float-left {
   float: left;
 }

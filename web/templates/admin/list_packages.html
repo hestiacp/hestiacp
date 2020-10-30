@@ -42,7 +42,7 @@
                 <div class="clearfix l-unit__stat-col--left wide-2"><b><?php print _('Package');?></b></div>
                 <div class="clearfix l-unit__stat-col--left compact-3 text-right"><b>&nbsp;</b></div>
                 <div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-terminal" title="<?php print _('Shell');?>"></i></b></div>
-                <div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-hdd" title="<?php print _('Disk');?>"></i></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-hdd" title="<?php print _('Quota');?>"></i></b></div>
                 <div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-exchange-alt" title="<?php print _('Bandwidth');?>"></i></b></div>
                 <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-globe-americas" title="<?php print _('Web Domains');?>"></i></b></div>
                 <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-link" title="<?php print _('Web Aliases');?>"></i></b></div>
@@ -68,15 +68,15 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
         <div class="clearfix l-unit__stat-col--left super-compact">
           <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="user[]" value="<?=$key?>">
         </div>
-            <div class="clearfix l-unit__stat-col--left wide-2 truncate"><b><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>"><?=$key?></b></a></div>
+            <div class="clearfix l-unit__stat-col--left wide-2 truncate"><b><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Package')?>: <?=$key?>"><?=$key?></b></a></div>
             <!-- START QUICK ACTION TOOLBAR AREA -->
             <div class="clearfix l-unit__stat-col--left text-right compact-3">
                   <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                       <div class="actions-panel clearfix">
-                        <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
-                        <div class="actions-panel__col actions-panel__edit" key-action="href"><a href="/copy/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-clone status-icon teal status-icon dim"></i></a></div>
+                        <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Package')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+                        <div class="actions-panel__col actions-panel__edit" key-action="href"><a href="/copy/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Copy')?>"><i class="fas fa-clone status-icon teal status-icon dim"></i></a></div>
                         <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-                          <a id="delete_link_<?=$i?>" class="data-controls do_delete">
+                          <a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('Delete')?>">
                             <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
                             <input type="hidden" name="delete_url" value="/delete/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" />
                             <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=_('Confirmation')?>">
@@ -90,27 +90,31 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
             <!-- END QUICK ACTION TOOLBAR AREA -->
             <div class="clearfix l-unit__stat-col--left text-center compact">
               <? if($data[$key]['SHELL'] == 'nologin'){ ?>
-                <i class="fas fa-minus-circle status-icon large"></i>
+                <i class="fas fa-minus-circle status-icon large" title="<?=_('SSH Access')?>: <?=$data[$key]['SHELL']?>"> </i>
               <? } else {?>
                 <i class="fas fa-check-circle status-icon green large"></i>
               <? } ?>
             </div>
             <div class="clearfix l-unit__stat-col--left text-center compact">
-              <?php if (preg_match('/[a-z]/i', $data[$key]['DISK_QUOTA'])): ?>
-                <b>&infin;</b>
-              <?php else: ?>
-                  <b><?=humanize_usage_size($data[$key]['DISK_QUOTA'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['DISK_QUOTA'])?></span>
-              <?php endif; ?>
+              <span title="<?=_('Quota')?>: <?=humanize_usage_size($data[$key]['DISK_QUOTA'])?> <?=humanize_usage_measure($data[$key]['DISK_QUOTA'])?>">
+                <?php if (preg_match('/[a-z]/i', $data[$key]['DISK_QUOTA'])): ?>
+                  <b>&infin;</b>
+                <?php else: ?>
+                    <b><?=humanize_usage_size($data[$key]['DISK_QUOTA'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['DISK_QUOTA'])?></span>
+                <?php endif; ?>
+              </span>
             </div>
             <div class="clearfix l-unit__stat-col--left text-center compact">
-                <? if($data[$key]['WEB_DOMAINS'] == 'unlimited'){ ?>
+              <span title="<?=_('Bandwidth')?>: <?=humanize_usage_size($data[$key]['BANDWIDTH'])?> <?=humanize_usage_measure($data[$key]['BANDWIDTH'])?>">
+                <? if($data[$key]['BANDWIDTH'] == 'unlimited'){ ?>
                   <b>&infin;</b>
                 <? } else {?>
                   <b><?=humanize_usage_size($data[$key]['BANDWIDTH'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['BANDWIDTH'])?></span>
                 <? } ?>
+              </span>
             </div>
             <div class="clearfix l-unit__stat-col--left text-center super-compact">
-              <span class="jump-top badge gray raised">
+              <span class="jump-top badge gray raised" title="<?=_('Web Domains')?>: <?=$data[$key]['WEB_DOMAINS']?>">
                 <? if($data[$key]['WEB_DOMAINS'] == 'unlimited'){ ?>
                   <b>&infin;</b>
                 <? } else {?>
@@ -119,7 +123,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
               </span>
             </div>
             <div class="clearfix l-unit__stat-col--left text-center super-compact">
-                <span class="jump-top badge gray raised">
+                <span class="jump-top badge gray raised" title="<?=_('Web Aliases')?>: <?=$data[$key]['WEB_ALIASES']?>">
                   <? if($data[$key]['WEB_ALIASES'] == 'unlimited'){ ?>
                     <b>&infin;</b>
                   <? } else {?>
@@ -128,7 +132,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                 </span>
             </div>
             <div class="clearfix l-unit__stat-col--left text-center super-compact">
-                <span class="jump-top badge gray raised">
+                <span class="jump-top badge gray raised" title="<?=_('DNS Domains')?>: <?=$data[$key]['DNS_DOMAINS']?>">
                   <? if($data[$key]['DNS_DOMAINS'] == 'unlimited'){ ?>
                     <b>&infin;</b>
                   <? } else {?>
@@ -137,7 +141,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                 </span>
             </div>
             <div class="clearfix l-unit__stat-col--left text-center super-compact">
-                <span class="jump-top badge gray raised">
+                <span class="jump-top badge gray raised" title="<?=_('DNS Records')?>: <?=$data[$key]['DNS_RECORDS']?>">
                   <? if($data[$key]['DNS_RECORDS'] == 'unlimited'){ ?>
                     <b>&infin;</b>
                   <? } else {?>
@@ -146,7 +150,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                 </span>
             </div>
             <div class="clearfix l-unit__stat-col--left text-center super-compact">
-                <span class="jump-top badge gray raised">
+                <span class="jump-top badge gray raised" title="<?=_('Mail Domains')?>: <?=$data[$key]['MAIL_DOMAINS']?>">
                   <? if($data[$key]['MAIL_DOMAINS'] == 'unlimited'){ ?>
                     <b>&infin;</b>
                   <? } else {?>
@@ -155,7 +159,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                 </span>
             </div>
             <div class="clearfix l-unit__stat-col--left text-center super-compact">
-                <span class="jump-top badge gray raised">
+                <span class="jump-top badge gray raised" title="<?=_('Mail Accounts')?>: <?=$data[$key]['MAIL_ACCOUNTS']?>">
                   <? if($data[$key]['MAIL_ACCOUNTS'] == 'unlimited'){ ?>
                     <b>&infin;</b>
                   <? } else {?>
@@ -164,7 +168,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                 </span>
             </div>
             <div class="clearfix l-unit__stat-col--left text-center super-compact">
-                <span class="jump-top badge gray raised">
+                <span class="jump-top badge gray raised" title="<?=_('Databases')?>: <?=$data[$key]['DATABASES']?>">
                   <? if($data[$key]['DATABASES'] == 'unlimited'){ ?>
                     <b>&infin;</b>
                   <? } else {?>
@@ -173,7 +177,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                 </span>
               </div>
               <div class="clearfix l-unit__stat-col--left text-center super-compact">
-                  <span class="jump-top badge gray raised">
+                  <span class="jump-top badge gray raised" title="<?=_('Cron Jobs')?>: <?=$data[$key]['CRON_JOBS']?>">
                     <? if($data[$key]['CRON_JOBS'] == 'unlimited'){ ?>
                       <b>&infin;</b>
                     <? } else {?>
@@ -182,7 +186,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                   </span>
                 </div>
                 <div class="clearfix l-unit__stat-col--left text-center super-compact">
-                  <span class="jump-top badge gray raised">
+                  <span class="jump-top badge gray raised" title="<?=_('Backups')?>: <?=$data[$key]['BACKUPS']?>">
                     <? if($data[$key]['BACKUPS'] == 'unlimited'){ ?>
                       <b>&infin;</b>
                     <? } else {?>

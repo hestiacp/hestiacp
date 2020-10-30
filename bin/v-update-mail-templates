@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: update mail templates
-# options: [RESTART]
+# options: [RESTART] [SKIP]
 #
 # The function for obtaining updated pack of mail templates.
 
@@ -11,6 +11,7 @@
 
 # Argument definition
 restart=$1
+skip=$2
 
 # Includes
 source $HESTIA/func/main.sh
@@ -24,12 +25,13 @@ source $HESTIA/conf/hestia.conf
 cp -rf $HESTIA_INSTALL_DIR/templates/mail $HESTIA/data/templates/
 
 # Rebuild mail domains if mail services are enabled
-if [ ! -z $MAIL_SYSTEM ]; then
-	for user in $($HESTIA/bin/v-list-sys-users plain); do
-		$BIN/v-rebuild-mail-domains $user no
-	done
+if [ ! -z "$skip" ]; then
+	if [ ! -z $MAIL_SYSTEM ]; then
+		for user in $($HESTIA/bin/v-list-sys-users plain); do
+			$BIN/v-rebuild-mail-domains $user no
+		done
+	fi
 fi
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

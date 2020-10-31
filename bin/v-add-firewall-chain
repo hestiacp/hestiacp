@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add firewall chain
-# options: CHAIN [PORT] [PROTOCOL]
+# options: CHAIN [PORT] [PROTOCOL] [PROTOCOL]
 #
 # The function adds new rule to system firewall
 
@@ -15,11 +15,11 @@ source /etc/profile
 # Argument definition
 chain=$(echo $1 | tr '[:lower:]' '[:upper:]')
 port=$2
+protocol=${4-TCP}
 protocol=$(echo $protocol|tr '[:lower:]' '[:upper:]')
 
 # Defining absolute path to iptables
 iptables="/sbin/iptables"
-ip6tables="/sbin/ip6tables"
 
 # Get hestia port by reading nginx.conf
 hestiaport=$(grep 'listen' $HESTIA/nginx/conf/nginx.conf | awk '{print $2}' | sed "s|;||")

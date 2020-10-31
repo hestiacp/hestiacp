@@ -397,7 +397,7 @@ $v_ftp_user_prepath = $panel[$user]['HOME'] . "/web";
 $v_ftp_email = $panel[$user]['CONTACT'];
 $v_custom_doc_root_prepath = '/home/'.$user.'/web/';
 
-if( $_POST['v_ssl_forcessl'] == 'yes' ){
+if( $_POST['v_ssl_forcessl'] != 'no' ){
     $v_ssl_forcessl = 'yes';
 }else{
     $v_ssl_forcessl = 'no';

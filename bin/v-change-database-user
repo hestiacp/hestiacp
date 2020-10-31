@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change database username
 # options: USER DATABASE DBUSER [DBPASS]
+# labels: 
+#
+# example: v-change-database-user admin my_db joe_user
 #
 # The function for changing database user. It uses the
 
@@ -56,7 +59,12 @@ update_object_value 'db' 'DB' "$database" '$DBUSER' "$dbuser"
 # Get database values
 get_database_values
 
-# Rebuild datbase
+#Fix issue #1084 with "Upper case not allowed with PGSQL"
+if [ "$TYPE" = "pgsql" ]; then
+   dbuser=$(echo $dbuser | tr '[:upper:]' '[:lower:]'); 
+fi
+
+# Rebuild database
 case $TYPE in
     mysql) rebuild_mysql_database ;;
     pgsql) rebuild_pgsql_database ;;

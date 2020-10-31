@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# This script validates and upgrades the MariaDB version to 10.4
+# This script validates and upgrades the MariaDB version to 10.5
 
 # Set MariaDB Target Version
-mariadb_v='10.4'
+mariadb_v='10.5'
 
 # Load OS informations
 source /etc/os-release
@@ -31,10 +31,10 @@ fi
 echo "Add new MariaDB repository..."
 apt="/etc/apt/sources.list.d/"
 if [ "$id" = "ubuntu" ]; then
-    echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/$mariadb_v/$ID $codename main" > $apt/mariadb.list
+    echo "deb [arch=amd64] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$ID $codename main" > $apt/mariadb.list
     APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8 > /dev/null 2>&1
 else
-    echo "deb [arch=amd64] http://ams2.mirrors.digitalocean.com/mariadb/repo/$mariadb_v/$ID $codename main" > $apt/mariadb.list
+    echo "deb [arch=amd64] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$ID $codename main" > $apt/mariadb.list
     if [ "$id" = "jessie" ]; then
         APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com CBCB082A1BB943DB > /dev/null 2>&1
     else
@@ -53,6 +53,6 @@ apt remove -qq mariadb-server -y  > /dev/null 2>&1
 
 # Install new version and run upgrader
 echo "Installing new MariaDB Server, start and run upgrade..."
-apt install -qq mariadb-server -y  > /dev/null 2>&1
+apt install -qq mariadb-server -y 
 systemctl start mysql > /dev/null 2>&1
 mysql_upgrade

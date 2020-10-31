@@ -4,7 +4,7 @@ $dist_config = require __DIR__.'/configuration_sample.php';
 
 $dist_config['public_path'] = '/fm/';
 $dist_config['frontend_config']['app_name'] = 'File Manager - Hestia Control Panel';
-$dist_config['frontend_config']['logo'] = '../images/logo.png';
+$dist_config['frontend_config']['logo'] = '../images/logo.svg';
 $dist_config['frontend_config']['editable'] = ['.txt', '.css', '.js', '.ts', '.html', '.php', '.py',
         '.yml', '.xml', '.md', '.log', '.csv', '.conf', '.config', '.ini', '.scss', '.sh', '.env', '.example', '.htaccess'];
 $dist_config['frontend_config']['guest_redirection'] = '/login/' ;
@@ -38,6 +38,7 @@ $dist_config['services']['Filegator\Services\Storage\Filesystem']['config']['ada
             'privateKey' => '/home/'.basename($v_user).'/.ssh/hst-filemanager-key',
             'root' => '/',
             'timeout' => 10,
+            'directoryPerm' => 0755,
         ]);
     };
 
@@ -50,7 +51,13 @@ $dist_config['services']['Filegator\Services\Auth\AuthInterface'] = [
     ];
 
 $dist_config['services']['Filegator\Services\View\ViewInterface']['config'] = [
-    'add_to_head' => '',
+    'add_to_head' => '
+    <style>
+        .logo {
+            width: 46px;
+        }
+    </style>
+    ',
     'add_to_body' => '
 <script>
     var checkVueLoaded = setInterval(function() {

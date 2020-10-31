@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: rebuild system user
-# options: USER [RESTART]
+# options: [RESTART]
+# labels: hestia
 #
 # The function rebuilds system user accounts.
 
@@ -24,10 +25,6 @@ export PATH=$PATH:/usr/sbin
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'USER [RESTART]'
-is_format_valid 'user'
-is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 
 
 #----------------------------------------------------------#

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add backup host
 # options: TYPE HOST USERNAME PASSWORD [PATH] [PORT]
+# labels: 
+#
+# example: v-add-backup-host sftp backup.acme.com admin p4$$w@Rd
 #
 # This function adds a backup host
 
@@ -13,7 +16,8 @@
 type=$1
 host=$2
 user=$3
-password=$4; HIDE=4
+raw_password=$4; HIDE=4
+password=$(perl -e 'print quotemeta shift(@ARGV)' "${raw_password}")
 path=${5-/backup}
 port=$6
 

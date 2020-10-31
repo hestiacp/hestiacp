@@ -73,11 +73,28 @@ $v_proxy_ext = str_replace(',', ', ', $data[$v_domain]['PROXY_EXT']);
 $v_stats = $data[$v_domain]['STATS'];
 $v_stats_user = $data[$v_domain]['STATS_USER'];
 if (!empty($v_stats_user)) $v_stats_password = "";
+$v_custom_doc_root_prepath = '/home/'.$v_username.'/web/';
+$v_custom_doc_root = $data[$v_domain]['CUSTOM_DOCROOT'];
+
+$m = preg_match('/\/home\/'.$v_username.'\/web\/([[:alnum:]].*)\/public_html\/([[:alnum:]].*)/', $v_custom_doc_root, $matches);
+$v_custom_doc_domain = $matches[1];
+$v_custom_doc_folder = $matches[2];
+if(substr($v_custom_doc_folder, -1) == '/'){
+    $v_custom_doc_folder = substr($v_custom_doc_folder,0,-1);
+}
+
+
 $v_ftp_user = $data[$v_domain]['FTP_USER'];
 $v_ftp_path = $data[$v_domain]['FTP_PATH'];
 if (!empty($v_ftp_user)) $v_ftp_password = "";
-$v_ftp_user_prepath = $data[$v_domain]['DOCUMENT_ROOT'];
-$v_ftp_user_prepath = str_replace('/public_html', '', $v_ftp_user_prepath, $occurance = 1);
+
+if($v_custom_doc_domain != ''){
+    $v_ftp_user_prepath = '/home/'.$v_username.'/web/'.$v_custom_doc_domain;
+}else{
+    $v_ftp_user_prepath = '/home/'.$v_username.'/web/'.$v_domain;
+}
+
+
 $v_ftp_email = $panel[$user]['CONTACT'];
 $v_suspended = $data[$v_domain]['SUSPENDED'];
 if ( $v_suspended == 'yes' ) {
@@ -432,7 +449,7 @@ if (!empty($_POST['save'])) {
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
+            $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
         } else {
             exec ('mktemp -d', $mktemp_output, $return_var);
             $tmpdir = $mktemp_output[0];
@@ -553,7 +570,7 @@ if (!empty($_POST['save'])) {
 
     // Change web stats user or password
     if ((empty($v_stats_user)) && (!empty($_POST['v_stats_auth'])) && (empty($_SESSION['error_msg']))) {
-        if (empty($_POST['v_stats_user'])) $errors[] = __('stats username');
+        if (empty($_POST['v_stats_user'])) $errors[] = _('stats username');
         if (!empty($errors[0])) {
             foreach ($errors as $i => $error) {
                 if ( $i == 0 ) {
@@ -562,7 +579,7 @@ if (!empty($_POST['save'])) {
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
+            $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
         } else {
             $v_stats_user = escapeshellarg($_POST['v_stats_user']);
             $v_stats_password = tempnam("/tmp","vst");
@@ -579,7 +596,7 @@ if (!empty($_POST['save'])) {
 
     // Add web stats authorization
     if ((!empty($v_stats_user)) && (!empty($_POST['v_stats_auth'])) && (empty($_SESSION['error_msg']))) {
-        if (empty($_POST['v_stats_user'])) $errors[] = __('stats user');
+        if (empty($_POST['v_stats_user'])) $errors[] = _('stats user');
         if (!empty($errors[0])) {
             foreach ($errors as $i => $error) {
                 if ( $i == 0 ) {
@@ -588,7 +605,7 @@ if (!empty($_POST['save'])) {
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
+            $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
         }
         if (($v_stats_user != $_POST['v_stats_user']) || (!empty($_POST['v_stats_password'])) && (empty($_SESSION['error_msg']))) {
             $v_stats_user = escapeshellarg($_POST['v_stats_user']);
@@ -614,7 +631,7 @@ if (!empty($_POST['save'])) {
 
             $v_ftp_user_data['v_ftp_user'] = preg_replace("/^".$user."_/i", "", $v_ftp_user_data['v_ftp_user']);
             if ($v_ftp_user_data['is_new'] == 1 && !empty($_POST['v_ftp'])) {
-                if ((!empty($v_ftp_user_data['v_ftp_email'])) && (!filter_var($v_ftp_user_data['v_ftp_email'], FILTER_VALIDATE_EMAIL))) $_SESSION['error_msg'] = __('Please enter valid email address.');
+                if ((!empty($v_ftp_user_data['v_ftp_email'])) && (!filter_var($v_ftp_user_data['v_ftp_email'], FILTER_VALIDATE_EMAIL))) $_SESSION['error_msg'] = _('Please enter valid email address.');
                 if (empty($v_ftp_user_data['v_ftp_user'])) $errors[] = 'ftp user';
                 if (!empty($errors[0])) {
                     foreach ($errors as $i => $error) {
@@ -624,7 +641,7 @@ if (!empty($_POST['save'])) {
                             $error_msg = $error_msg.", ".$error;
                         }
                     }
-                    $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
+                    $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
                 }
 
                 // Add ftp account
@@ -641,10 +658,10 @@ if (!empty($_POST['save'])) {
                     check_return_code($return_var,$output);
                     if ((!empty($v_ftp_user_data['v_ftp_email'])) && (empty($_SESSION['error_msg']))) {
                         $to = $v_ftp_user_data['v_ftp_email'];
-                        $subject = __("FTP login credentials");
+                        $subject = _("FTP login credentials");
                         $hostname = exec('hostname');
-                        $from = __('MAIL_FROM',$hostname);
-                        $mailtext = __('FTP_ACCOUNT_READY',escapeshellarg($_GET['domain']),$user,$v_ftp_username,$v_ftp_user_data['v_ftp_password']);
+                        $from = sprintf(_('MAIL_FROM'),$hostname);
+                        $mailtext = sprintf(_('FTP_ACCOUNT_READY'),escapeshellarg($_GET['domain']),$user,$v_ftp_username,$v_ftp_user_data['v_ftp_password']);
                         send_email($to, $subject, $mailtext, $from);
                         unset($v_ftp_email);
                     }
@@ -684,7 +701,7 @@ if (!empty($_POST['save'])) {
             }
 
             if (!empty($_POST['v_ftp'])) {
-                if (empty($v_ftp_user_data['v_ftp_user'])) $errors[] = __('ftp user');
+                if (empty($v_ftp_user_data['v_ftp_user'])) $errors[] = _('ftp user');
                 if (!empty($errors[0])) {
                     foreach ($errors as $i => $error) {
                         if ( $i == 0 ) {
@@ -693,7 +710,7 @@ if (!empty($_POST['save'])) {
                             $error_msg = $error_msg.", ".$error;
                         }
                     }
-                    $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
+                    $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
                 }
 
                 // Change FTP account path
@@ -715,10 +732,10 @@ if (!empty($_POST['save'])) {
                     unlink($v_ftp_password);
 
                     $to = $v_ftp_user_data['v_ftp_email'];
-                    $subject = __("FTP login credentials");
+                    $subject = _("FTP login credentials");
                     $hostname = exec('hostname');
-                    $from = __('MAIL_FROM',$hostname);
-                    $mailtext = __('FTP_ACCOUNT_READY',escapeshellarg($_GET['domain']),$user,$v_ftp_username_for_emailing,$v_ftp_user_data['v_ftp_password']);
+                    $from = _('MAIL_FROM',$hostname);
+                    $mailtext = _('FTP_ACCOUNT_READY',escapeshellarg($_GET['domain']),$user,$v_ftp_username_for_emailing,$v_ftp_user_data['v_ftp_password']);
                     send_email($to, $subject, $mailtext, $from);
                     unset($v_ftp_email);
                 }
@@ -736,6 +753,35 @@ if (!empty($_POST['save'])) {
             }
         }
     }
+    //custom docoot with check box disabled      
+    if( !empty($v_custom_doc_root) && empty($_POST['v_custom_doc_root_check']) ){
+        exec(HESTIA_CMD."v-change-web-domain-docroot ".$v_username." ".escapeshellarg($v_domain)." default",  $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);    
+        unset($_POST['v-custom-doc-domain'], $_POST['v-custom-doc-folder']);    
+    }
+
+    if ( !empty($_POST['v-custom-doc-domain']) && !empty($_POST['v_custom_doc_root_check']) && $v_custom_doc_root_prepath.$v_custom_doc_domain.'/public_html'.$v_custom_doc_folder != $v_custom_doc_root){
+        if($_POST['v-custom-doc-domain'] == $v_domain && empty($_POST['v-custom-doc-folder'])){
+            exec(HESTIA_CMD."v-change-web-domain-docroot ".$v_username." ".escapeshellarg($v_domain)." default",  $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);     
+        }else{
+            if(substr($_POST['v-custom-doc-folder'], -1) == '/'){
+                $v_custom_doc_folder = escapeshellarg(substr($_POST['v-custom-doc-folder'],0,-1));
+            }else{
+                $v_custom_doc_folder = escapeshellarg($_POST['v-custom-doc-folder']);  
+            }
+            $v_custom_doc_domain = escapeshellarg($_POST['v-custom-doc-domain']);
+            
+            exec(HESTIA_CMD."v-change-web-domain-docroot ".$v_username." ".escapeshellarg($v_domain)." ".$v_custom_doc_domain." ".$v_custom_doc_folder ." yes",  $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);  
+            $v_custom_doc_root = 1; 
+        }
+    }else{
+        unset($v_custom_doc_root);
+    }   
 
     // Restart web server
     if (!empty($restart_web) && (empty($_SESSION['error_msg']))) {
@@ -760,7 +806,7 @@ if (!empty($_POST['save'])) {
 
     // Set success message
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('Changes has been saved.');
+        $_SESSION['ok_msg'] = _('Changes has been saved.');
         header("Location: /edit/web/?domain=" . $v_domain);
     }
 

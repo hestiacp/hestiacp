@@ -1,0 +1,65 @@
+        <center>
+            <table class="login animated zoomIn">
+                <tr>
+                    <td>
+                        <table>
+                            <tr>
+                                <td style="padding: 22px 30px 0 42px; height: 280px; width: 170px;">
+                                    <a href="/"><img border=0 src="/images/logo.svg" title="<?=_('Hestia Control Panel');?>" style="margin-top: 70px;" /></a>
+                                </td>
+                                <td style="padding: 40px 60px 0 0;">
+                                    <form method="post" action="/login/" id="form_login">
+                                    <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
+                                    <table class="login-box">
+                                        <tr>
+                                            <td style="padding: 12px 0 0 2px;" class="login-welcome">
+                                                <?php print _('Welcome to Hestia Control Panel');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 12px 0 5px 2px;">
+                                                <?php print _('Username');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input tabindex="1" type="text" size="20px" style="width:240px;" name="user" class="vst-input" autofocus />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 12px 0 5px 2px;">
+                                                <?php print _('Password');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input tabindex="2" type="password" size="20px"  style="width:240px;" name="password" class="vst-input" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td height="10px">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 0 0 5px 0;">
+                                                <button tabindex="3" type="submit" class="button"><?php print _('Next');?>&nbsp;&nbsp;&nbsp;<i class="fas fa-sign-in-alt"></i></button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan=2>
+                                <div class="login-bottom">
+                                    <div style="height:20px"><?php if (isset($error)) echo $error ?></div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </tr>
+            </table>
+        </center>
+
+    </body>
+</html>

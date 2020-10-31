@@ -11,9 +11,9 @@ Ways to contribute
 - **New features**:
     - Is there an awesome feature that you'd love to see included? While our development team tries to fulfill all reasonable requests, it can take time to implement new features depending on the amount of work involved. Submit a pull request with your code and if your idea is approved, we'll review and test it for inclusion with an upcoming release.
 - **Translations**:
-    - If you are a non-English speaker and would like to improve the quality of the translations used in Hestia Control Panel's web interface, please review the `.php` files found under `hestiacp/web/inc/i18n` and submit a pull request or open an issue report [GitHub](https://www.github.com/hestiacp/hestiacp/issues) highlighting the issue with the current translation so that it can be corrected.
+    - If you are a non-English speaker and would like to improve the quality of the translations used in Hestia Control Panel's web interface, Please go to [Hestia Translate](https://translate.hestiacp.com/projects/hestiacp/) to review the translations. For more information please read [How to contribute with Translations](https://forum.hestiacp.com/t/how-to-contribute-with-translations/1664).  Or open an issue report [GitHub](https://www.github.com/hestiacp/hestiacp/issues) highlighting the issue with the current translation so that it can be corrected.
 - **Donations**:
-    - If you're not a developer but you still want to make a contribution, you can make a donation to the Hestia Control Panel project to further its development (or if you'd just like to buy our developers a lunch, we'd appreciate that too). We currently accept dontations through [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ST87LQH2CHGLA).
+    - If you're not a developer but you still want to make a contribution, you can make a donation to the Hestia Control Panel project to further its development (or if you'd just like to buy our developers a lunch, we'd appreciate that too). We currently accept donations through [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ST87LQH2CHGLA).
 
 Development Guidelines
 -----------------------
@@ -27,9 +27,9 @@ We have three primary or "evergreen" branches, which exist throughout our produc
 
 | Branch        | Description     | Cycle           |
 |---------------|:---------------:|:---------------:|
-| `main`        | Contains a snapshot of the latest development code.<br>**Not intended for production use and may be unstable.** | Daily  |
+| `main`        | Contains a snapshot of the latest development code.<br>**Not intended for production use and contains code from a merge snapshot.** | Daily  |
 | `beta`        | Contains a snapshot of the next version which is currently in testing.<br>**Not intended for production but should be highly stable.**  | Weekly |
-| `release`     | Contains a snapshot of the latest stable release.<br>**Intended for production use. Same code as packages in repository.** | Monthly |
+| `release`     | Contains a snapshot of the latest stable release.<br>**Intended for production use. This repository contains the same code as our compiled packages.** | Monthly |
 
 ### Creating a new branch and submitting pull requests
 The first step is to create a fork of the `hestiacp/hestiacp` repository under your account so that you may submit pull requests and patches via GitHub. 
@@ -37,7 +37,7 @@ The first step is to create a fork of the `hestiacp/hestiacp` repository under y
 Once you've created your fork, clone the repository to your computer and make sure that you've checked out the `main` branch. **Always** create a new topic branch for you work. When submitting pull requests it is important that you target the correct branch to ensure that your changes are properly integrated and tested based on our release schedule. When creating a new branch, we ask that you please adhere to the following naming conventions as much as possible:
 
 ### Branch naming convention:
-- **Prefix:** `topic/` (such as **bugfix**, **feature**, **refactor**, etc.)
+- **Prefix:** `topic/` (such as **fix**, **feature**, **refactor**, etc.)
 - **ID**: `888` (GitHub Issue ID if an issue exists) -or- `2020-07` (Year-Month if an issue does not already exist)
 - **Separator:** `_` (underscore)
 - **Title:** `my-awesome-patch`
@@ -49,7 +49,7 @@ Branch name examples:
 * `test/2020-07_mail-domain-ssl`
 
 ### Squashing commits for smaller changes
-When submitting a pull request with multiple smaller commits which are related to the same file or issue, we ask that you please **squash your commits** whenever appropriate in order to keep the project's commit history clean and easy to follow for other developers.
+To aid other developers and keep the project's commit history clean, please **squash your commits** when it's appropriate. For example with smaller commits related to the same piece of code, such as commits labelled "Fixed item 1", "Adjusted color of button XYZ", "Adjusted alignment of button XYZ" can be squashed into one commit with the title "Fixed button issues in item". 
 
 ### What happens when I submit a pull request?
 - Our internal development team will review your work and validate your request.

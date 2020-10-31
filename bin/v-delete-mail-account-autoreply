@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete mail account autoreply message
 # options: USER DOMAIN ACCOUNT ALIAS
+# labels: mail
+#
+# example: v-delete-mail-account-autoreply admin mydomain.tld bob
 #
 # The function delete email account autoreply.
 

@@ -1,6 +1,8 @@
 #!/bin/bash
 # info: delete remote dns domains
 # options: [HOST]
+# labels: dns
+#
 # The function deletes remote dns domains.
 
 

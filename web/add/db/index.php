@@ -16,12 +16,12 @@ if (!empty($_POST['ok'])) {
     }
 
     // Check empty fields
-    if (empty($_POST['v_database'])) $errors[] = __('database');
-    if (empty($_POST['v_dbuser'])) $errors[] = __('username');
-    if (empty($_POST['v_password'])) $errors[] = __('password');
-    if (empty($_POST['v_type'])) $errors[] = __('type');
-    if (empty($_POST['v_host'])) $errors[] = __('host');
-    if (empty($_POST['v_charset'])) $errors[] = __('charset');
+    if (empty($_POST['v_database'])) $errors[] = _('database');
+    if (empty($_POST['v_dbuser'])) $errors[] = _('username');
+    if (empty($_POST['v_password'])) $errors[] = _('password');
+    if (empty($_POST['v_type'])) $errors[] = _('type');
+    if (empty($_POST['v_host'])) $errors[] = _('host');
+    if (empty($_POST['v_charset'])) $errors[] = _('charset');
     if (!empty($errors[0])) {
         foreach ($errors as $i => $error) {
             if ( $i == 0 ) {
@@ -30,20 +30,19 @@ if (!empty($_POST['ok'])) {
                 $error_msg = $error_msg.", ".$error;
             }
         }
-        $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
+        $_SESSION['error_msg'] = sprintf(_('Field "%s" can not be blank.'),$error_msg);
     }
 
     // Validate email
     if ((!empty($_POST['v_db_email'])) && (empty($_SESSION['error_msg']))) {
         if (!filter_var($_POST['v_db_email'], FILTER_VALIDATE_EMAIL)) {
-            $_SESSION['error_msg'] = __('Please enter valid email address.');
+            $_SESSION['error_msg'] = _('Please enter valid email address.');
         }
     }
 
     // Check password length
     if (empty($_SESSION['error_msg'])) {
-        $pw_len = strlen($_POST['v_password']);
-        if ($pw_len < 6 ) $_SESSION['error_msg'] = __('Password is too short.',$error_msg);
+         if (!validate_password($_POST['v_password'])) { $_SESSION['error_msg'] = _('Password does not match the minimum requirements');}
     }
 
     // Protect input
@@ -88,17 +87,17 @@ if (!empty($_POST['ok'])) {
     // Email login credentials
     if ((!empty($v_db_email)) && (empty($_SESSION['error_msg']))) {
         $to = $v_db_email;
-        $subject = __("Database Credentials");
+        $subject = _("Database Credentials");
         $hostname = exec('hostname');
-        $from = __('MAIL_FROM',$hostname);
-        $mailtext = __('DATABASE_READY',$user."_".$_POST['v_database'],$user."_".$_POST['v_dbuser'],$_POST['v_password'],$db_admin_link);
+        $from = sprintf(_('MAIL_FROM'),$hostname);
+        $mailtext = sprintf(_('DATABASE_READY'),$user."_".$_POST['v_database'],$user."_".$_POST['v_dbuser'],$_POST['v_password'],$db_admin_link);
         send_email($to, $subject, $mailtext, $from);
     }
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('DATABASE_CREATED_OK',htmlentities($user)."_".htmlentities($_POST['v_database']),htmlentities($user)."_".htmlentities($_POST['v_database']));
-        $_SESSION['ok_msg'] .= " / <a href=".$db_admin_link." target='_blank'>" . __('open %s',$db_admin) . "</a>";
+        $_SESSION['ok_msg'] = sprintf(_('DATABASE_CREATED_OK'),htmlentities($user)."_".htmlentities($_POST['v_database']),htmlentities($user)."_".htmlentities($_POST['v_database']));
+        $_SESSION['ok_msg'] .= " / <a href=".$db_admin_link." target='_blank'>" . sprintf(_('open %s'),$db_admin) . "</a>";
         unset($v_database);
         unset($v_dbuser);
         unset($v_password);

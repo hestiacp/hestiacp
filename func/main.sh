@@ -43,6 +43,25 @@ E_RRD=18
 E_UPDATE=19
 E_RESTART=20
 
+# Detect operating system
+detect_os() {
+    if [ -e "/etc/os-release" ]; then
+        get_os_type=$(grep "^ID=" /etc/os-release | cut -f 2 -d '=')
+        if [ "$get_os_type" = "ubuntu" ]; then
+            if [ -e '/usr/bin/lsb_release' ]; then
+                OS_VERSION="$(lsb_release -s -r)"
+                OS_TYPE='Ubuntu'            
+            fi
+        elif [ "$get_os_type" = "debian" ]; then
+            OS_TYPE='Debian'
+            OS_VERSION=$(cat /etc/debian_version|grep -o "[0-9]\{1,2\}"|head -n1)
+        fi
+    else
+        OS_TYPE="Unsupported OS"
+        OS_VERSION="Unknown"
+    fi
+}
+
 # Generate time stamp
 new_timestamp() {
     time_n_date=$(date +'%T %F')
@@ -167,12 +186,12 @@ generate_password() {
     matrix=$1
     length=$2
     if [ -z "$matrix" ]; then
-        matrix=[:alnum:]
+        matrix="A-Za-z0-9"
     fi
     if [ -z "$length" ]; then
-        length=10
+        length=16
     fi
-    cat /dev/urandom | tr -dc $matrix | head -c$length
+    head /dev/urandom | tr -dc $matrix | head -c$length
 }
 
 # Package existence check
@@ -706,7 +725,7 @@ is_common_format_valid() {
 # Database format validator
 is_database_format_valid() {
     exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|/|\|\"|'|;|%|\`| ]"
-    if [[ "$1" =~ $exclude ]] || [ 65 -le ${#1} ]; then
+    if [[ "$1" =~ $exclude ]] || [ 64 -le ${#1} ]; then
         check_result $E_INVALID "invalid $2 format :: $1"
     fi
 }
@@ -721,8 +740,8 @@ is_date_format_valid() {
 # Database user validator
 is_dbuser_format_valid() {
     exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|/|\|\"|'|;|%|\`| ]"
-    if [ 31 -le ${#1} ]; then
-        check_result $E_INVALID "mysql username can be up to 30 characters long"
+    if [ 33 -le ${#1} ]; then
+        check_result $E_INVALID "mysql username can be up to 32 characters long"
     fi
     if [[ "$1" =~ $exclude ]]; then
         check_result $E_INVALID "invalid $2 format :: $1"
@@ -871,6 +890,13 @@ is_object_format_valid() {
     fi
 }
 
+# Role validator 
+is_role_valid (){
+    if ! [[ "$1" =~ ^admin|user$ ]]; then
+        check_result $E_INVALID "invalid $2 format :: $1"
+    fi
+}
+
 # Password validator
 is_password_format_valid() {
     if [ "${#1}" -lt '6' ]; then
@@ -893,6 +919,12 @@ is_service_format_valid() {
     if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,64}$ ]]; then
         check_result $E_INVALID "invalid $2 format :: $1"
     fi
+}
+
+is_hash_format_valid() {
+  if ! [[ "$1" =~ ^[_A-Za-z0-9]{1,32}$ ]]; then
+        check_result $E_INVALID "invalid $2 format :: $1"
+    fi    
 }
 
 # Format validation controller
@@ -926,6 +958,7 @@ is_format_valid() {
                 extentions)     is_common_format_valid "$arg" 'extentions' ;;
                 ftp_password)   is_password_format_valid "$arg" ;;
                 ftp_user)       is_user_format_valid "$arg" "$arg_name" ;;
+                hash)           is_hash_format_valid "$arg" "$arg_name" ;;
                 host)           is_object_format_valid "$arg" "$arg_name" ;;
                 hour)           is_cron_format_valid "$arg" $arg_name ;;
                 id)             is_int_format_valid "$arg" 'id' ;;
@@ -960,6 +993,7 @@ is_format_valid() {
                 quota)          is_int_format_valid "$arg" 'quota' ;;
                 record)         is_common_format_valid "$arg" 'record';;
                 restart)        is_boolean_format_valid "$arg" 'restart' ;;
+                role)           is_role_valid "$arg" 'role' ;;
                 rtype)          is_dns_type_format_valid "$arg" ;;
                 rule)           is_int_format_valid "$arg" "rule id" ;;
                 service)        is_service_format_valid "$arg" "$arg_name" ;;

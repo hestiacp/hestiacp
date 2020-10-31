@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: unsuspend dns domains
 # options: USER [RESTART]
+# labels: dns
+#
+# example: v-unsuspend-dns-domains alice
 #
 # The function unsuspends all user's DNS domains.
 

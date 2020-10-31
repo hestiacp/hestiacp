@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: unsuspend user
 # options: USER [RESTART]
+# labels: panel
+#
+# example: v-unsuspend-user bob
 #
 # The function unsuspends user and all his objects.
 

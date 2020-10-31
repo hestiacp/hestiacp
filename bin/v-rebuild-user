@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: rebuild system user
 # options: USER [RESTART]
+# labels: panel
+#
+# example: v-rebuild-user admin yes
 #
 # The function rebuilds system user account.
 

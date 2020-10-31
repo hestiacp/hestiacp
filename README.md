@@ -2,13 +2,13 @@
 
 [Hestia Control Panel](https://www.hestiacp.com/)
 ==================================================
-**Latest stable release:** Version 1.2.0 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md)<br>
-**Latest beta release:** Version 1.2.1 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/beta/CHANGELOG.md)<br>
-**Latest unstable development snapshot:** Version 1.2.2 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/main/CHANGELOG.md)<br>
+**Latest stable release:** Version 1.3.0 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md)<br>
 
 **Web:** [www.hestiacp.com](https://www.hestiacp.com/)<br>
 **Documentation:** [docs.hestiacp.com](https://docs.hestiacp.com/)<br>
-**Forums:** [forum.hestiacp.com](https://forum.hestiacp.com/)<br><br>
+**Forums:** [forum.hestiacp.com](https://forum.hestiacp.com/)<br>
+**Discord:** [Join the discussion](https://discord.gg/nXRUZch)<br />
+<br>
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ST87LQH2CHGLA)
 <br>
 

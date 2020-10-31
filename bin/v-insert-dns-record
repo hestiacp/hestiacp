@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: insert dns record
 # options: USER DOMAIN DATA [RESTART]
+# labels: 
 #
 # The function inserts raw dns record to the domain conf
 

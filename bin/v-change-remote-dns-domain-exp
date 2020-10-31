@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: change remote dns domain expiration date
 # options: USER DOMAIN
+# labels: dns
 #
 # The function synchronize dns domain with the remote server.
 

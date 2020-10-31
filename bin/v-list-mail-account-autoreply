@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list mail account autoreply
 # options: USER DOMAIN ACCOUNT [FORMAT]
+# labels: mail
+#
+# example: v-list-mail-account-autoreply admin example.com testing
 #
 # The function of obtaining mail account autoreply message.
 

@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: remove ssl force from domain
 # options: USER DOMAIN [RESTART]
+# labels: hestia
 #
 # The function removes force SSL configurations.
 
@@ -49,7 +50,7 @@ else
 fi
 
 rm -f $hstsconf
-echo "HTTP Strict Transport Security (HSTS) turned off for $domain."
+
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list dns template
 # options: TEMPLATE [FORMAT]
+# labels: dns
+#
+# example: v-list-dns-template zoho
 #
 # The function for obtaining the DNS template parameters.
 

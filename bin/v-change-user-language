@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change user language
 # options: USER LANGUAGE
+# labels: panel
+#
+# example: v-change-user-language admin en
 #
 # The function for changing language.
 
@@ -24,7 +27,7 @@ is_language_valid() {
         log_event "$E_INVALID" "$ARGUMENTS"
         exit $E_INVALID
     fi
-    if [ ! -e "$HESTIA/web/inc/i18n/$1.php" ]; then
+    if [ ! -d "$HESTIA/web/locale/$1" ]; then
         echo "Error: language $1 doesn't exist"
         log_event "$E_NOTEXIST" "$ARGUMENTS"
         exit $E_NOTEXIST

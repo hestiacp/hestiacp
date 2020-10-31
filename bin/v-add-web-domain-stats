@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add log analyzer to generate domain statitics
 # options: USER DOMAIN TYPE
+# labels: web
+#
+# example: v-add-web-domain-stats admin example.com awstats
 #
 # The call is used for enabling log analyzer system to a domain. For viewing
 # the domain statistics use http://domain.tld/vstats/ link. Access this page
@@ -75,7 +78,7 @@ cat $WEBTPL/$type/$type.tpl |\
         -e "s|%domain%|$domain|g" \
         -e "s|%user%|$user|g" \
         -e "s|%home%|$HOMEDIR|g" \
-        -e "s|%alias%|${aliases//,/ }|g" \
+        -e "s|%alias%|$stats_alias|g" \
         -e "s|%alias_idn%|$stats_alias|g" \
     > $HOMEDIR/$user/conf/web/$domain/$type.conf
 

@@ -1,5 +1,11 @@
 #!/bin/bash
 # info: changing domain ssl home
+# options: USER DOMAIN SSL_HOME [RESTART]
+# labels: web
+#
+# example: v-change-web-domain-sslhome admin acme.com /home/admin/acme.com/public_shtml
+#
+# The function changes SSL home directory.
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

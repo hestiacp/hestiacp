@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete firewall chain
 # options: CHAIN
+# labels: panel
+#
+# example: v-delete-firewall-chain WEB
 #
 # The function adds new rule to system firewall
 

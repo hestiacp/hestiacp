@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete directory
 # options: USER DIRECTORY
+# labels: 
+#
+# example: v-delete-fs-directory admin report1
 #
 # The function deletes directory on the file system
 

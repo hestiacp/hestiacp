@@ -1,10 +1,10 @@
 <div class="l-center edit">
         <div class="l-sort clearfix">
           <div class="l-unit-toolbar__buttonstrip">
-            <a class="ui-button cancel" id="btn-back" href="/list/firewall/ipset/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+            <a class="ui-button cancel" id="btn-back" href="/list/firewall/ipset/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
+            <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
           </div>
         </div>
       </div>
@@ -35,7 +35,7 @@
                         <table class="data-col2" width="600px">
                             <tr>
                                 <td class="step-top">
-                                    <span class="page-title"><?=__('Adding Firewall Ipset List')?></span>
+                                    <span class="page-title"><?=_('Adding Firewall Ipset List')?></span>
                                 </td>
                             </tr>
                             <tr>
@@ -53,7 +53,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text step-top">
-                                    <?php print __('Ip List Name') ?>
+                                    <?php print _('Ip List Name') ?>
                                 </td>
                             </tr>
                             <tr>
@@ -63,7 +63,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text step-top">
-                                    <?php print __('Data Source') ?> <span class="optional">(<?php print __('url, script or file');?>)</span>
+                                    <?php print _('Data Source') ?> <span class="optional">(<?php print _('url, script or file');?>)</span>
                                 </td>
                             </tr>
                             <tr>
@@ -76,27 +76,27 @@
                             </tr>
                             <tr>
                                 <td class="vst-text step-top">
-                                    <?php print __('Ip Version') ?>
+                                    <?php print _('Ip Version') ?>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <select class="vst-list" name="v_ipver">
-                                        <option value="v4" <?php if ((!empty($v_ipver)) && ( $v_ipver == "'v4'" )) echo 'selected'?>><?=__('ip v4')?></option>
-                                        <option value="v6" <?php if ((!empty($v_ipver)) && ( $v_ipver == "'v6'" )) echo 'selected'?>><?=__('ip v6')?></option>
+                                        <option value="v4" <?php if ((!empty($v_ipver)) && ( $v_ipver == "'v4'" )) echo 'selected'?>><?=_('ip v4')?></option>
+                                        <option value="v6" <?php if ((!empty($v_ipver)) && ( $v_ipver == "'v6'" )) echo 'selected'?>><?=_('ip v6')?></option>
                                     </select>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="vst-text step-top">
-                                    <?php print __('Autoupdate') ?>
+                                    <?php print _('Autoupdate') ?>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <select class="vst-list" name="v_autoupdate">
-                                        <option value="yes" <?php if ((!empty($v_autoupdate)) && ( $v_autoupdate == "'yes'" )) echo 'selected'?>><?=__('yes')?></option>
-                                        <option value="no" <?php if ((!empty($v_autoupdate)) && ( $v_autoupdate == "'no'" )) echo 'selected'?>><?=__('no')?></option>
+                                        <option value="yes" <?php if ((!empty($v_autoupdate)) && ( $v_autoupdate == "'yes'" )) echo 'selected'?>><?=_('yes')?></option>
+                                        <option value="no" <?php if ((!empty($v_autoupdate)) && ( $v_autoupdate == "'no'" )) echo 'selected'?>><?=_('no')?></option>
                                     </select>
                                 </td>
                             </tr>
@@ -163,7 +163,7 @@
 
             // Blacklist
             var newEl = document.createElement("option");
-            newEl.text="<?php print __('BLACKLIST') ?>";
+            newEl.text="<?php print _('BLACKLIST') ?>";
             newEl.disabled=true;
             targetelement.appendChild(newEl);
 
@@ -176,7 +176,7 @@
 
             // IPVERSE
             var newEl = document.createElement("option");
-            newEl.text="<?php print __('IPVERSE') ?>";
+            newEl.text="<?php print _('IPVERSE') ?>";
             newEl.disabled=true;
             targetelement.appendChild(newEl);
 

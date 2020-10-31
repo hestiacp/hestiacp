@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list user parameters
 # options: USER [FORMAT]
+# labels: 
+#
+# example: v-list-user admin
 #
 # The function to obtain user parameters.
 
@@ -45,6 +48,7 @@ json_list() {
         "RKEY": "'$RKEY'",
         "TWOFA": "'$TWOFA'",
         "QRCODE": "'$QRCODE'",
+        "ROLE": "'$ROLE'",
         "SUSPENDED": "'$SUSPENDED'",
         "SUSPENDED_USERS": "'$SUSPENDED_USERS'",
         "SUSPENDED_WEB": "'$SUSPENDED_WEB'",

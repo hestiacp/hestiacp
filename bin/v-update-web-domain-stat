@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update domain statistics
 # options: USER DOMAIN
+# labels: web
+#
+# example: v-update-web-domain-stat alice acme.com
 #
 # The function runs log analyzer for specific webdomain.
 
@@ -81,8 +84,8 @@ build_awstats() {
     fi
 
     # Logo check
-    if [ ! -e "$dir/logo.png" ]; then
-        cp -r $HESTIA/web/images/logo.png $dir/
+    if [ ! -e "$dir/logo.svg" ]; then
+        cp -r $HESTIA/web/images/logo.svg $dir/
     fi
 
     # Icon directory check

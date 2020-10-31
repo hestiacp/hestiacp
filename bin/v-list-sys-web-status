@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list web status
 # options: [FORMAT]
+# labels: 
 #
 # The function lists web server status
 

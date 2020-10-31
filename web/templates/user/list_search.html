@@ -1,18 +1,18 @@
 <div class="l-center">
     <div class="l-sort clearfix noselect">
       <div class="l-unit-toolbar__buttonstrip">
-        <a href="javascript:window.history.back();" id="btn-back" class="ui-button cancel" title="<?=__('Back')?>"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
-        <a href="javascript:location.reload();" class="ui-button cancel" title="<?=__('Refresh')?>"><i class="fas fa-sync status-icon green"></i> <?=__('Refresh')?></a>
+        <a href="javascript:window.history.back();" id="btn-back" class="ui-button cancel"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
+        <a href="javascript:location.reload();" class="ui-button cancel"><i class="fas fa-sync status-icon green"></i> <?=_('Refresh')?></a>
       </div>
       <ul class="context-menu sort-order animated fadeIn" style="display:none;">
-        <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
-        <li entity="sort-name"><span class="name"><?=__('Name')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+        <li entity="sort-date" sort_as_int="1"><span class="name active"><?=_('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+        <li entity="sort-name"><span class="name"><?=_('Name')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
       </ul>
       <div class="l-sort-toolbar clearfix">
         <table>
           <tr>
             <td class="sort-by">
-              <?=__('sort by');?>: <span><b><?=__('Date')?> <i class="fas fa-sort-amount-down"></i></b></span>
+              <?=_('sort by');?>: <span><b><?=_('Date')?> <i class="fas fa-sort-amount-down"></i></b></span>
             </td>
             <td class="l-sort-toolbar__search-box">
               <form action="/search/" method="get">
@@ -34,12 +34,12 @@
                 <div class="clearfix l-unit__stat-col--left super-compact">
                     &nbsp;
                 </div> 
-              <div class="clearfix l-unit__stat-col--left wide-5"><b><?php print __('Search Results');?></b></div>
+              <div class="clearfix l-unit__stat-col--left wide-5"><b><?php print _('Search Results');?></b></div>
               <div class="clearfix l-unit__stat-col--left compact-3"><b>&nbsp;</b></div>
-              <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Date');?></b></div>
-              <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Type');?></b></div>
-              <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Owner');?></b></div>
-              <div class="clearfix l-unit__stat-col--left text-center"><b><?php print __('Status');?></b></div>
+              <div class="clearfix l-unit__stat-col--left text-center"><b><?php print _('Date');?></b></div>
+              <div class="clearfix l-unit__stat-col--left text-center"><b><?php print _('Type');?></b></div>
+              <div class="clearfix l-unit__stat-col--left text-center"><b><?php print _('Owner');?></b></div>
+              <div class="clearfix l-unit__stat-col--left text-center"><b><?php print _('Status');?></b></div>
             </div>
           </div>
       <?
@@ -66,14 +66,14 @@
         ?>
 
 
-        <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_COOKIE[$uniq_id] == 1) echo ' l-unit--starred'; ?>" id="web-unit-<?=$i?>" uniq-id="<?=$uniq_id?>" sort-date="<?=strtotime($value['DATE'].' '.$value['TIME'])?>" sort-name="<?=$value['RESULT']?>" sort-type="<?=__($object)?>" sort-owner="<?=$value['USER']?>" sort-status="<?=$status?>">
+        <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_COOKIE[$uniq_id] == 1) echo ' l-unit--starred'; ?>" id="web-unit-<?=$i?>" uniq-id="<?=$uniq_id?>" sort-date="<?=strtotime($value['DATE'].' '.$value['TIME'])?>" sort-name="<?=$value['RESULT']?>" sort-type="<?=_($object)?>" sort-owner="<?=$value['USER']?>" sort-status="<?=$status?>">
       
       
       <div class="l-unit__col l-unit__col--right">
           <div class="clearfix l-unit__stat-col--left super-compact">
               &nbsp;
             </div>
-            <div class="clearfix l-unit__stat-col--left wide-5">
+            <div class="clearfix l-unit__stat-col--left wide-5 truncate">
                 <!--<?
                 if ($value['KEY'] == 'RECORD') {
                   $edit_lnk = '/edit/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&record_id='.$value['LINK'].'&user='.$value['USER'];
@@ -133,8 +133,8 @@
                           <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
                             <i class="fas fa-pause status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
                             <input type="hidden" name="<?=$spnd_action?>_url" value="<?=$spnd_lnk?>&token=<?=$_SESSION['token']?>" />
-                            <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=__('Confirmation')?>">
-                              <p class="confirmation"><?=__($cnfrm, $value['RESULT'])?></p>
+                            <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=_('Confirmation')?>">
+                              <p class="confirmation"><?=_($cnfrm, $value['RESULT'])?></p>
                             </div>
                           </a>
                         </div>
@@ -164,8 +164,8 @@
                           <a id="delete_link_<?=$i?>" class="data-controls do_delete">
                             <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
                             <input type="hidden" name="delete_url" value="<?=$delete_lnk?>&token=<?=$_SESSION['token']?>" />
-                            <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
-                              <p class="confirmation"><?=__($cnfrm, $value['RESULT'])?></p>
+                            <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=_('Confirmation')?>">
+                              <p class="confirmation"><?=_($cnfrm, $value['RESULT'])?></p>
                             </div>
                           </a>
                          </div>
@@ -176,9 +176,9 @@
               </div>
               
               <div class="clearfix l-unit__stat-col--left text-center"><b><?=translate_date($value['DATE'])?></b></div>
-              <div class="clearfix l-unit__stat-col--left text-center"><b><?=__($object)?></b></div>
+              <div class="clearfix l-unit__stat-col--left text-center"><b><?=_($object)?></b></div>
               <div class="clearfix l-unit__stat-col--left text-center"><b><?=$value['USER']?></b></div>
-              <div class="clearfix l-unit__stat-col--left text-center"><b><?=__($status)?></b></div>
+              <div class="clearfix l-unit__stat-col--left text-center"><b><?=_($status)?></b></div>
             </div>
         </div>
     
@@ -192,11 +192,7 @@
           <table class='data'></table>
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php
-              if ( $i == 1) {
-                echo __('1 object');
-              } else {
-                echo __('%s objects',$i);
-              }
+              printf(ngettext('%d object', '%d objects', $i),$i);
             ?>
           </div>
         </div>

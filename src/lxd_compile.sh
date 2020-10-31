@@ -1,10 +1,10 @@
 #!/bin/bash
 
-branch=${1-master}
+branch=${1-main}
 
 apt -y install curl wget
 
-curl https://raw.githubusercontent.com/hestiacp/hestiacp/master/src/hst_autocompile.sh > /tmp/hst_autocompile.sh
+curl https://raw.githubusercontent.com/hestiacp/hestiacp/main/src/hst_autocompile.sh > /tmp/hst_autocompile.sh
 chmod +x /tmp/hst_autocompile.sh
 
 mkdir -p /opt/hestiacp

@@ -1,0 +1,4013 @@
+# Translation of Hestia CP in Azerbaijani
+# This file is distributed under the same license as the Hestia CP package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2020-09-04 09:24:46+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/2.3.1\n"
+"Language: az\n"
+"Project-Id-Version: Hestia CP\n"
+
+#: ../../web/restart/system/index.php:30
+msgid "The system is going down for reboot NOW!"
+msgstr ""
+
+#: ../../web/templates/admin/list_web.html:216
+msgid "%d web domain"
+msgid_plural "%d web domains"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../web/templates/admin/list_backup.html:115
+msgid "%d backup"
+msgid_plural "%d backups"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../web/templates/admin/list_mail.html:217
+msgid "%d mail domain"
+msgid_plural "%d mail domains"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../web/templates/admin/list_cron.html:136
+msgid "%d cron job"
+msgid_plural "%d cron jobs"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../web/templates/admin/list_search.html:197
+msgid "%d object"
+msgid_plural "%d objects"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../web/templates/admin/list_user.html:164
+msgid "%d user account"
+msgid_plural "%d user accounts"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../web/templates/admin/list_backup_detail.html:318
+msgid "%d item"
+msgid_plural "%d items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../web/templates/admin/list_mail_acc.html:185
+msgid "%d mail account"
+msgid_plural "%d mail accounts"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../web/templates/admin/list_dns.html:139
+msgid "%d DNS zone"
+msgid_plural "%d DNS zones"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../web/templates/admin/list_stats.html:92
+msgid "%d month"
+msgid_plural "%d months"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../web/templates/admin/list_db.html:171
+msgid "%d SQL database"
+msgid_plural "%d SQL databases"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../web/templates/admin/list_dns_rec.html:104
+msgid "%d DNS record"
+msgid_plural "%d DNS records"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../web/templates/admin/edit_server.html:857
+msgid "Login screen style"
+msgstr ""
+
+#: ../../web/templates/admin/edit_server.html:848
+msgid "Security"
+msgstr ""
+
+#: ../../web/templates/admin/edit_server.html:864
+msgid "Old Style"
+msgstr ""
+
+#: ../../web/templates/admin/edit_server.html:618
+msgid "Compression"
+msgstr ""
+
+#: ../../web/add/webapp/index.php:62
+msgid "%s installer missing"
+msgstr ""
+
+#: ../../web/add/webapp/index.php:82
+msgid "%s App was installed succesfully!"
+msgstr ""
+
+#: ../../web/update/hestia/index.php:22
+msgid "Error: %s update failed"
+msgstr ""
+
+#: ../../web/restart/service/index.php:25
+msgid "Restart \"%s\" failed"
+msgstr ""
+
+#: ../../web/start/service/index.php:25
+msgid "Start \"%s\" failed"
+msgstr ""
+
+#: ../../web/add/user/index.php:101
+msgid "ACCOUNT_READY"
+msgstr ""
+"Hesabınız uğurla yaradıldı və istifadəyə hazırdır.\n"
+"\n"
+"https://%s/login/\n"
+"İstifadəçi adı: %s\n"
+"Şifrə: %s\n"
+"\n"
+"--\n"
+"Vesta Nəzarət Paneli"
+
+#: ../../web/download/backup/index.php:24
+msgid "Error: Hestia did not return any output."
+msgstr ""
+
+#: ../../web/templates/admin/add_web.html:200
+#: ../../web/templates/admin/edit_web.html:248
+#: ../../web/templates/user/edit_web.html:261
+msgid "Custom document root"
+msgstr ""
+
+#: ../../web/templates/admin/add_web.html:208
+#: ../../web/templates/admin/edit_web.html:256
+#: ../../web/templates/user/edit_web.html:269
+msgid "Point to"
+msgstr ""
+
+#: ../../web/templates/admin/panel.html:15
+#: ../../web/templates/user/panel.html:15
+msgid "Files"
+msgstr ""
+
+#: ../../web/templates/admin/edit_user.html:145
+#: ../../web/templates/admin/add_user.html:136
+msgid "Role"
+msgstr ""
+
+#: ../../web/templates/admin/edit_user.html:152
+#: ../../web/templates/admin/add_user.html:143
+msgid "Administrator"
+msgstr ""
+
+#: ../../web/templates/admin/list_web.html:70
+#: ../../web/templates/admin/list_dns.html:71
+#: ../../web/templates/user/list_web.html:75
+#: ../../web/templates/user/list_dns.html:70
+msgid "UNSUSPEND_DOMAIN_CONFIRMATION"
+msgstr "%s domeni davam etdirmək istədiyinizə əminsinizmi?"
+
+#: ../../web/templates/admin/list_web.html:75
+#: ../../web/templates/admin/list_mail.html:76
+#: ../../web/templates/admin/list_mail.html:81
+#: ../../web/templates/admin/list_dns.html:76
+#: ../../web/templates/user/list_web.html:80
+#: ../../web/templates/user/list_mail.html:75
+#: ../../web/templates/user/list_mail.html:80
+#: ../../web/templates/user/list_dns.html:75
+msgid "SUSPEND_DOMAIN_CONFIRMATION"
+msgstr "%s domeni qapatmaq istədiyinizə əminsinizmi?"
+
+#: ../../web/templates/admin/add_web.html:333
+#: ../../web/templates/admin/add_web.html:405
+#: ../../web/templates/admin/edit_web.html:468
+#: ../../web/templates/admin/edit_web.html:544
+#: ../../web/templates/user/edit_web.html:482
+#: ../../web/templates/user/edit_web.html:558
+msgid "Prefix %s will be added to username automatically"
+msgstr ""
+
+#: ../../web/templates/admin/edit_server.html:189
+msgid "Options"
+msgstr ""
+
+#: ../../web/templates/admin/edit_server.html:194
+msgid "SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL"
+msgstr "Yeniləmə quraşdırıldıqda e-poçt bildirişini göndərin"
+
+#: ../../web/templates/admin/edit_server.html:199
+msgid "SYSTEM_UPGRADE_SEND_EMAIL_LOG"
+msgstr "Yeniləmə quraşdırma jurnalını elektron poçtla göndərin"
+
+#: ../../web/templates/admin/edit_server.html:885
+msgid "Filemanager"
+msgstr ""
+
+#: ../../web/templates/admin/list_cron.html:75
+#: ../../web/templates/user/list_cron.html:75
+msgid "UNSUSPEND_CRON_CONFIRMATION"
+msgstr "Zamanlanmış tapşırığı davam etdirmək istədiyinizə əminsinizmi?"
+
+#: ../../web/templates/admin/list_cron.html:80
+#: ../../web/templates/user/list_cron.html:80
+msgid "SUSPEND_CRON_CONFIRMATION"
+msgstr "Zamanlanmış tapşırığı qapatmaq istədiyinizə əminsinizmi?"
+
+#: ../../web/templates/admin/list_services.html:148
+msgid "Are you sure you want to start service"
+msgstr ""
+
+#: ../../web/templates/admin/list_weblog.html:27
+msgid "Access Log"
+msgstr ""
+
+#: ../../web/templates/admin/list_user.html:88
+msgid "UNSUSPEND_USER_CONFIRMATION"
+msgstr "%s istifadəçisini davam etdirmək istədiyinizə əminsinizmi?"
+
+#: ../../web/templates/admin/list_user.html:93
+msgid "SUSPEND_USER_CONFIRMATION"
+msgstr "%s istifadəçisini qapatmaq istədiyinizə əminsinizmi?"
+
+#: ../../web/templates/admin/list_firewall.html:65
+msgid "UNSUSPEND_RULE_CONFIRMATION"
+msgstr "#%s qaydasını davam etdirmək istədiyinizə əminsinizmi?"
+
+#: ../../web/templates/admin/list_firewall.html:70
+msgid "SUSPEND_RULE_CONFIRMATION"
+msgstr "#%s qaydasını qapatmaq istədiyinizə əminsinizmi?"
+
+#: ../../web/templates/admin/list_db.html:99
+#: ../../web/templates/user/list_db.html:98
+msgid "UNSUSPEND_DATABASE_CONFIRMATION"
+msgstr "%s verilənlər bazasını davam etdirmək istədiyinizə əminsinizmi?"
+
+#: ../../web/templates/admin/list_db.html:104
+#: ../../web/templates/user/list_db.html:103
+msgid "SUSPEND_DATABASE_CONFIRMATION"
+msgstr "%s verilənlər bazasını qapatmaq istədiyinizə əminsinizmi?"
+
+#: ../../web/templates/admin/list_mail_acc.html:72
+#: ../../web/templates/user/list_mail_acc.html:72
+msgid "UNSUSPEND_MAIL_ACCOUNT_CONFIRMATION"
+msgstr "%s hesabını davam etdirmək istədiyinizə əminsinizmi?"
+
+#: ../../web/templates/admin/list_mail_acc.html:77
+#: ../../web/templates/user/list_mail_acc.html:77
+msgid "SUSPEND_MAIL_ACCOUNT_CONFIRMATION"
+msgstr "%s hesabını qapatmaq istədiyinizə əminsinizmi?"
+
+#: ../../web/stop/service/index.php:27
+msgid "Stop \"%s\" failed"
+msgstr ""
+
+#: ../../web/templates/admin/edit_user.html:84
+#: ../../web/templates/admin/add_db.html:97
+#: ../../web/templates/admin/edit_mail_acc.html:82
+#: ../../web/templates/admin/edit_db.html:95
+#: ../../web/templates/admin/add_mail_acc.html:81
+#: ../../web/templates/admin/add_user.html:77
+#: ../../web/templates/user/edit_user.html:82
+msgid "Your password must have at least"
+msgstr ""
+
+#: ../../web/templates/admin/edit_user.html:86
+#: ../../web/templates/admin/add_db.html:99
+#: ../../web/templates/admin/edit_mail_acc.html:84
+#: ../../web/templates/admin/edit_db.html:97
+#: ../../web/templates/admin/add_mail_acc.html:83
+#: ../../web/templates/admin/add_user.html:79
+#: ../../web/templates/user/edit_user.html:84
+msgid "8 characters long"
+msgstr ""
+
+#: ../../web/templates/admin/edit_user.html:87
+#: ../../web/templates/admin/add_db.html:100
+#: ../../web/templates/admin/edit_mail_acc.html:85
+#: ../../web/templates/admin/edit_db.html:98
+#: ../../web/templates/admin/add_mail_acc.html:84
+#: ../../web/templates/admin/add_user.html:80
+#: ../../web/templates/user/edit_user.html:85
+msgid "1 uppercase & 1 lowercase character"
+msgstr ""
+
+#: ../../web/templates/admin/edit_user.html:88
+#: ../../web/templates/admin/add_db.html:101
+#: ../../web/templates/admin/edit_mail_acc.html:86
+#: ../../web/templates/admin/edit_db.html:99
+#: ../../web/templates/admin/add_mail_acc.html:85
+#: ../../web/templates/admin/add_user.html:81
+#: ../../web/templates/user/edit_user.html:86
+msgid "1 number"
+msgstr ""
+
+#: ../../web/add/mail/index.php:126 ../../web/add/user/index.php:48
+#: ../../web/add/db/index.php:45 ../../web/edit/mail/index.php:402
+#: ../../web/edit/user/index.php:105 ../../web/edit/db/index.php:67
+msgid "Password does not match the minimum requirements"
+msgstr ""
+
+#: ../../web/edit/user/index.php:203
+msgid "Please enter a valid name"
+msgstr ""
+
+#: ../../web/templates/login_1.html:18
+msgid "Welcome"
+msgstr "XOŞ GƏLDİNİZ"
+
+#: ../../web/templates/login_1.html:42 ../../web/templates/login_2.html:40
+msgid "Login"
+msgstr ""
+
+#: ../../web/templates/admin/list_services.html:61
+msgid "Production release"
+msgstr ""
+
+#: ../../web/templates/admin/add_user.html:107
+msgid "Send welcome email"
+msgstr ""
+
+#: ../../web/templates/admin/panel.html:2
+msgid "Top"
+msgstr ""
+
+#: ../../web/templates/admin/panel.html:33
+msgid "Server"
+msgstr "Server"
+
+#: ../../web/templates/admin/panel.html:35
+msgid "Submit an issue report"
+msgstr "Submit an issue report"
+
+#: ../../web/templates/login.html:35 ../../web/templates/login_a.html:45
+msgid "Next"
+msgstr ""
+
+#: ../../web/templates/login_2.html:16
+msgid "2 Factor Authentication"
+msgstr "İki faktorlu Doğrulama"
+
+#: ../../web/templates/admin/list_web.html:59
+#: ../../web/templates/admin/list_mail.html:61
+#: ../../web/templates/user/list_web.html:64
+#: ../../web/templates/user/list_mail.html:60
+msgid "SSL"
+msgstr ""
+
+#: ../../web/templates/admin/list_web.html:134
+#: ../../web/templates/user/list_web.html:139
+msgid "Edit"
+msgstr ""
+
+#: ../../web/templates/user/list_web.html:222
+msgid "1 web domain"
+msgstr "1 veb domeni"
+
+#: ../../web/templates/user/list_web.html:224
+msgid "%s web domains"
+msgstr "%s veb domenləri"
+
+#: ../../web/templates/admin/add_package.html:37
+msgid "Adding Package"
+msgstr "Paket əlavə edin"
+
+#: ../../web/templates/admin/edit_package.html:53
+#: ../../web/templates/admin/add_package.html:55
+#: ../../web/templates/admin/list_packages.html:9
+msgid "Package Name"
+msgstr "Paket adı"
+
+#: ../../web/templates/admin/edit_package.html:137
+#: ../../web/templates/admin/add_package.html:140
+msgid "DNS Template"
+msgstr "DNS şablonu"
+
+#: ../../web/templates/admin/edit_package.html:194
+#: ../../web/templates/admin/edit_package.html:216
+#: ../../web/templates/admin/edit_package.html:238
+#: ../../web/templates/admin/add_package.html:197
+#: ../../web/templates/admin/add_package.html:219
+#: ../../web/templates/admin/add_package.html:241
+msgid "per domain"
+msgstr "domen başına"
+
+#: ../../web/templates/admin/edit_package.html:205
+#: ../../web/templates/admin/add_package.html:208
+msgid "DNS domains"
+msgstr "DNS domen adları"
+
+#: ../../web/templates/admin/add_dns.html:113
+#: ../../web/templates/admin/add_package.html:307
+msgid "Name servers"
+msgstr "Neymserverlər"
+
+#: ../../web/templates/admin/list_mail.html:4
+#: ../../web/templates/user/list_mail.html:4
+msgid "Add Mail Domain"
+msgstr "E-poçt domeni əlavə edin"
+
+#: ../../web/templates/admin/list_mail.html:9
+#: ../../web/templates/admin/list_mail.html:56
+#: ../../web/templates/user/list_mail.html:9
+#: ../../web/templates/user/list_mail.html:55
+msgid "Accounts"
+msgstr "Hesablar"
+
+#: ../../web/templates/admin/list_mail.html:60
+#: ../../web/templates/user/list_mail.html:59
+msgid "DKIM"
+msgstr ""
+
+#: ../../web/templates/user/list_mail.html:217
+msgid "1 mail domain"
+msgstr "1 poçt domeni"
+
+#: ../../web/templates/user/list_mail.html:219
+msgid "%s mail domains"
+msgstr "%s poçt sahələri"
+
+#: ../../web/templates/admin/list_user.html:6
+#: ../../web/templates/user/list_user.html:6
+msgid "Add User"
+msgstr "İstifadəçi əlavə edin"
+
+#: ../../web/templates/admin/list_user.html:7
+#: ../../web/templates/user/list_user.html:7
+msgid "Packages"
+msgstr "Paketlər"
+
+#: ../../web/templates/admin/list_user.html:39
+#: ../../web/templates/user/list_user.html:43
+msgid "rebuild web"
+msgstr "Veb-in yenidən qurulması"
+
+#: ../../web/templates/admin/list_user.html:40
+#: ../../web/templates/user/list_user.html:44
+msgid "rebuild dns"
+msgstr "DNS-in yenidən qurulması"
+
+#: ../../web/templates/admin/list_user.html:41
+#: ../../web/templates/user/list_user.html:45
+msgid "rebuild mail"
+msgstr "E-poçt-un yenidən qurulması"
+
+#: ../../web/templates/admin/list_user.html:42
+#: ../../web/templates/user/list_user.html:46
+msgid "rebuild db"
+msgstr "DB-nin yenidən qurulması"
+
+#: ../../web/templates/admin/list_user.html:43
+#: ../../web/templates/user/list_user.html:47
+msgid "rebuild cron"
+msgstr "Cron-nun yenidən qurulması"
+
+#: ../../web/templates/admin/list_user.html:44
+#: ../../web/templates/user/list_user.html:48
+msgid "update counters"
+msgstr "Yeniləmə sayğacları"
+
+#: ../../web/templates/admin/list_user.html:134
+msgid "DELETE_USER_CONFIRMATION"
+msgstr "%s istifadəçisini silmək istədiyinizə əminsinizmi?"
+
+#: ../../web/templates/user/list_user.html:133
+msgid "1 user account"
+msgstr "1 istifadəçi hesabı"
+
+#: ../../web/templates/user/list_user.html:135
+msgid "%s user accounts"
+msgstr "%s istifadəçi hesabları"
+
+#: ../../web/templates/admin/list_packages.html:5
+msgid "Add Package"
+msgstr "Paket əlavə edin"
+
+#: ../../web/templates/admin/list_packages.html:44
+msgid "Shell"
+msgstr ""
+
+#: ../../web/templates/admin/list_packages.html:83
+msgid "DELETE_PACKAGE_CONFIRMATION"
+msgstr "%s paketini silmək istədiyinizə əminsinizmi?"
+
+#: ../../web/templates/admin/list_packages.html:205
+msgid "%d package"
+msgid_plural "%d packages"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../web/templates/admin/edit_mail_acc.html:136
+msgid "Message"
+msgstr "Mesaj"
+
+#: ../../web/templates/admin/add_dns.html:38
+msgid "Adding DNS Domain"
+msgstr "DNS domeni əlavə edin"
+
+#: ../../web/templates/admin/add_dns.html:93
+#: ../../web/templates/admin/edit_dns.html:110
+#: ../../web/templates/user/edit_dns.html:110
+msgid "YYYY-MM-DD"
+msgstr "YYYY-AA-GG"
+
+#: ../../web/templates/admin/list_rrd.html:5
+msgid "show: CPU / MEM / NET / DISK"
+msgstr "göstər: CPU / BEL / ŞƏ / DISK"
+
+#: ../../web/templates/admin/list_rrd.html:14
+msgid "Yearly"
+msgstr "İllik"
+
+#: ../../web/templates/admin/edit_package.html:35
+msgid "Editing Package"
+msgstr "Paketi redaktə edin"
+
+#: ../../web/templates/admin/edit_package.html:304
+msgid "Name Servers"
+msgstr "Neymserverlər"
+
+#: ../../web/add/user/index.php:91 ../../web/templates/login.html:16
+#: ../../web/templates/login_a.html:16
+msgid "Welcome to Hestia Control Panel"
+msgstr "Vesta nəzarət panelinə xoş gəldiniz"
+
+#: ../../web/templates/login_1.html:26
+msgid "forgot password"
+msgstr "Şifrəmi unutdum"
+
+#: ../../web/templates/login_2.html:21
+msgid "2FA Token"
+msgstr "OTP PIN"
+
+#: ../../web/templates/login_2.html:24
+msgid "Forgot token"
+msgstr "Hesabı açın"
+
+#: ../../web/templates/reset2fa.html:20
+msgid "Log in"
+msgstr "Hesab yarat"
+
+#: ../../web/templates/user/edit_user.html:5
+msgid "SSH_KEY"
+msgstr ""
+
+#: ../../web/templates/reset2fa.html:15
+msgid "2FA Reset successfully"
+msgstr "Hesabınız üçün iki amil identifikasiyası artıq söndürüldü. <br> <br> İndi girməyə davam edə bilərsiniz."
+
+#: ../../web/templates/reset2fa.html:29
+msgid "Reset 2FA"
+msgstr "Hesabı açın"
+
+#: ../../web/templates/reset2fa.html:44
+msgid "2FA Reset Code"
+msgstr "Hesabın bərpası koduHesab bərpa proqramı"
+
+#: ../../web/templates/reset_1.html:40 ../../web/templates/reset2fa.html:54
+msgid "Submit"
+msgstr "Göndər"
+
+#: ../../web/templates/footer.html:4
+msgid "LEAVE_PAGE_CONFIRMATION"
+msgstr "Səhifəni tərk edirsiniz?"
+
+#: ../../web/templates/footer.html:9 ../../web/templates/admin/panel.html:5
+msgid "Shortcuts"
+msgstr "Qısayollar"
+
+#: ../../web/templates/footer.html:16
+msgid "Add New object"
+msgstr "Yeni obyekt əlavə edin"
+
+#: ../../web/templates/footer.html:17
+msgid "Save Form"
+msgstr "Formanı yadda saxla"
+
+#: ../../web/templates/footer.html:18
+msgid "Cancel saving form"
+msgstr "Formanı yadda saxlama"
+
+#: ../../web/templates/footer.html:20
+msgid "Go to WEB list"
+msgstr "Veb siyahısına get"
+
+#: ../../web/templates/footer.html:21
+msgid "Go to DNS list"
+msgstr "DNS siyahısına get"
+
+#: ../../web/templates/footer.html:22
+msgid "Go to MAIL list"
+msgstr "MAIL siyahısına get"
+
+#: ../../web/templates/footer.html:23
+msgid "Go to DB list"
+msgstr "DB siyahısına get"
+
+#: ../../web/templates/footer.html:24
+msgid "Go to CRON list"
+msgstr "CRON siyahısına get"
+
+#: ../../web/templates/footer.html:25
+msgid "Go to BACKUP list"
+msgstr "Nüsxə siyahısına get"
+
+#: ../../web/templates/footer.html:28
+msgid "Focus on search"
+msgstr "Axtarışa fokuslan"
+
+#: ../../web/templates/footer.html:29
+msgid "Display/Close shortcuts"
+msgstr "Qısayolları göstər/bağla"
+
+#: ../../web/templates/footer.html:31
+msgid "Move backward through top menu"
+msgstr "Üst menyu arasında geriyə get"
+
+#: ../../web/templates/footer.html:32
+msgid "Move forward through top menu"
+msgstr "Üst menyu arasında iləriyə get"
+
+#: ../../web/templates/footer.html:33
+msgid "Enter focused element"
+msgstr "Fokuslanmış elementi gör"
+
+#: ../../web/templates/footer.html:35
+msgid "Move up through elements list"
+msgstr "Elementlər siyahısına keçin"
+
+#: ../../web/templates/footer.html:36
+msgid "Move down through elements list"
+msgstr "Elementlər siyahısına keçin"
+
+#: ../../web/login/index.php:52 ../../web/login/index.php:85
+msgid "Invalid username or password"
+msgstr "Doğru olmayan istifadəçi adı və ya şifrə"
+
+#: ../../web/login/index.php:104
+msgid "Invalid or missing 2FA token"
+msgstr ""
+
+#: ../../web/templates/admin/list_services.html:15
+#: ../../web/templates/admin/list_services.html:139
+msgid "RESTART_CONFIRMATION"
+msgstr "%s yenidən başladılacaq.əstiqləyirsiniz?"
+
+#: ../../web/templates/admin/list_services.html:68
+msgid "Operating System"
+msgstr "Əməliyyat sistemi"
+
+#: ../../web/templates/admin/list_services.html:74
+msgid "Load Average"
+msgstr "Sistem yükü"
+
+#: ../../web/templates/admin/list_services.html:80
+#: ../../web/templates/admin/list_services.html:99
+msgid "Uptime"
+msgstr "Uptime"
+
+#: ../../web/templates/admin/list_services.html:96
+msgid "Service"
+msgstr "Xidmət"
+
+#: ../../web/templates/admin/list_services.html:98
+#: ../../web/templates/admin/list_updates.html:41
+msgid "Description"
+msgstr "Təsvir"
+
+#: ../../web/templates/admin/list_services.html:100
+#: ../../web/templates/admin/list_server_info.html:27
+msgid "CPU"
+msgstr "CPU"
+
+#: ../../web/templates/admin/list_services.html:101
+msgid "Memory"
+msgstr "Yaddaş"
+
+#: ../../web/templates/admin/list_services.html:128
+#: ../../web/templates/admin/list_services.html:132
+msgid "edit"
+msgstr "redaktə et"
+
+#: ../../web/templates/admin/list_services.html:148
+msgid "Are you sure you want to stop service"
+msgstr ""
+
+#: ../../web/templates/admin/list_services.html:157
+msgid "mb"
+msgstr "mb"
+
+#: ../../web/templates/admin/list_firewall.html:5
+msgid "Add Rule"
+msgstr "Qayda əlavə edin"
+
+#: ../../web/templates/admin/list_firewall.html:7
+msgid "list fail2ban"
+msgstr "fail2ban siyahı alın"
+
+#: ../../web/templates/admin/list_firewall.html:8
+msgid "list ipset"
+msgstr "IP siyahılarını idarə et"
+
+#: ../../web/templates/admin/list_firewall.html:82
+#: ../../web/templates/admin/list_firewall.html:102
+#: ../../web/templates/admin/edit_firewall.html:41
+msgid "Editing Firewall Rule"
+msgstr "Təhlükəsizlik divarı qaydasını redaktə edin"
+
+#: ../../web/templates/admin/list_firewall.html:118
+msgid "DELETE_RULE_CONFIRMATION"
+msgstr "#%s qaydasını silmək istədiyinizə əminsinizmi?"
+
+#: ../../web/templates/admin/list_firewall.html:144
+msgid "%d firewall rule"
+msgid_plural "%d firewall rules"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../web/templates/admin/edit_user.html:6
+msgid "Manage SSH keys"
+msgstr "SSH düymələrini idarə edin"
+
+#: ../../web/templates/admin/edit_user.html:44
+#: ../../web/templates/admin/list_user.html:119
+#: ../../web/templates/user/edit_user.html:42
+#: ../../web/templates/user/list_user.html:105
+msgid "Editing User"
+msgstr "İstifadəçi redaktə edin"
+
+#: ../../web/templates/admin/edit_user.html:94
+#: ../../web/templates/user/edit_user.html:92
+msgid "Enable 2FA"
+msgstr "İki faktorlu identifikasiyanı aktivləşdirin"
+
+#: ../../web/templates/admin/edit_user.html:96
+#: ../../web/templates/user/edit_user.html:94
+msgid "2FA Reset Code:"
+msgstr "Hesab bərpa kodu:"
+
+#: ../../web/templates/admin/edit_user.html:97
+#: ../../web/templates/user/edit_user.html:95
+msgid "Please scan the code below in your 2FA application:"
+msgstr "İki faktorlu identifikasiyanı qurmağı başa çatdırmaq üçün aşağıdakı qr kodu yoxlayın <br /> bir identifikasiya tətbiqindən istifadə edərəkp (kimi <a href=\"https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2\">Google Authenticator</a>):"
+
+#: ../../web/templates/admin/edit_user.html:104
+#: ../../web/templates/admin/add_user.html:87
+#: ../../web/templates/user/edit_user.html:102
+msgid "Contact"
+msgstr "Adı"
+
+#: ../../web/templates/admin/edit_user.html:124
+#: ../../web/templates/admin/list_user.html:68
+#: ../../web/templates/admin/list_updates.html:40
+#: ../../web/templates/admin/add_user.html:112
+#: ../../web/templates/admin/list_packages.html:42
+#: ../../web/templates/user/list_user.html:72
+msgid "Package"
+msgstr "Paket"
+
+#: ../../web/templates/admin/edit_user.html:158
+#: ../../web/templates/admin/add_user.html:149
+#: ../../web/templates/user/edit_user.html:122
+msgid "Language"
+msgstr "Dil"
+
+#: ../../web/templates/admin/edit_user.html:182
+#: ../../web/templates/admin/edit_package.html:160
+#: ../../web/templates/admin/add_package.html:163
+msgid "SSH Access"
+msgstr "SSH giriş"
+
+#: ../../web/templates/admin/edit_user.html:203
+msgid "PHP CLI Version"
+msgstr "PHP CLI versiyası"
+
+#: ../../web/templates/admin/edit_user.html:229
+#: ../../web/templates/user/edit_user.html:146
+msgid "Default Name Servers"
+msgstr "Default neymserver"
+
+#: ../../web/templates/admin/add_dns.html:178
+#: ../../web/templates/admin/edit_user.html:295
+#: ../../web/templates/admin/edit_package.html:370
+#: ../../web/templates/admin/add_package.html:372
+#: ../../web/templates/user/edit_user.html:211
+msgid "Add one more Name Server"
+msgstr "Neymserver əlavə edin"
+
+#: ../../web/templates/admin/list_db.html:4
+#: ../../web/templates/user/list_db.html:4
+msgid "Add Database"
+msgstr "Verilənlər bazası əlavə edin"
+
+#: ../../web/templates/admin/list_web.html:32
+#: ../../web/templates/admin/list_mail.html:31
+#: ../../web/templates/admin/list_user.html:38
+#: ../../web/templates/admin/list_dns.html:32
+#: ../../web/templates/admin/list_db.html:59
+#: ../../web/templates/user/list_user.html:42
+msgid "rebuild"
+msgstr "Yenidən yarat"
+
+#: ../../web/templates/admin/list_db.html:144
+#: ../../web/templates/user/list_db.html:143
+msgid "DELETE_DATABASE_CONFIRMATION"
+msgstr "%s verilənlər bazasını silmək istədiyinizə əminsinizmi?"
+
+#: ../../web/templates/user/list_db.html:171
+msgid "1 SQL database"
+msgstr "1 SQL verilənlər bazası"
+
+#: ../../web/templates/user/list_db.html:173
+msgid "%s SQL databases"
+msgstr "%s SQL verilənlər bazası"
+
+#: ../../web/templates/admin/edit_mail.html:69
+msgid "Catchall email"
+msgstr "Catchall e-poçt"
+
+#: ../../web/templates/admin/edit_mail.html:79
+#: ../../web/templates/admin/add_mail.html:66
+msgid "AntiSpam Support"
+msgstr "AntiSpam dəstəyi"
+
+#: ../../web/templates/admin/edit_mail.html:84
+#: ../../web/templates/admin/add_mail.html:71
+msgid "AntiVirus Support"
+msgstr "AntiVirus dəstəyi"
+
+#: ../../web/templates/admin/edit_mail.html:89
+#: ../../web/templates/admin/add_mail.html:76
+msgid "DKIM Support"
+msgstr "DKIM dəstəyi"
+
+#: ../../web/templates/admin/list_dns.html:4
+#: ../../web/templates/user/list_dns.html:4
+msgid "Add DNS Domain"
+msgstr "DNS domeni əlavə edin"
+
+#: ../../web/templates/admin/list_dns.html:8
+#: ../../web/templates/user/list_dns.html:8
+msgid "Expire"
+msgstr "Sona çatdırın"
+
+#: ../../web/templates/admin/panel.html:13
+#: ../../web/templates/admin/list_dns.html:11
+#: ../../web/templates/user/panel.html:13
+#: ../../web/templates/user/list_dns.html:55
+msgid "Records"
+msgstr "Qeydlər"
+
+#: ../../web/templates/admin/list_dns.html:56
+#: ../../web/templates/user/list_dns.html:11
+msgid "Records_DNS"
+msgstr "Qeydlər"
+
+#: ../../web/templates/admin/list_dns.html:57
+#: ../../web/templates/admin/edit_dns.html:89
+#: ../../web/templates/user/list_dns.html:56
+#: ../../web/templates/user/edit_dns.html:89
+msgid "Template"
+msgstr "Şablon"
+
+#: ../../web/templates/admin/list_dns.html:59
+#: ../../web/templates/user/list_dns.html:58
+msgid "SOA"
+msgstr "SOA"
+
+#: ../../web/templates/admin/add_dns.html:93
+#: ../../web/templates/admin/list_dns.html:60
+#: ../../web/templates/admin/edit_dns.html:110
+#: ../../web/templates/user/list_dns.html:59
+#: ../../web/templates/user/edit_dns.html:110
+msgid "Expiration Date"
+msgstr "Bitmə tarixi"
+
+#: ../../web/templates/admin/edit_package.html:216
+#: ../../web/templates/admin/list_dns.html:88
+#: ../../web/templates/admin/list_dns.html:97
+#: ../../web/templates/admin/add_package.html:219
+#: ../../web/templates/user/list_dns.html:87
+#: ../../web/templates/user/list_dns.html:96
+msgid "DNS records"
+msgstr "DNS qeydləri"
+
+#: ../../web/templates/admin/list_web.html:159
+#: ../../web/templates/admin/list_mail.html:121
+#: ../../web/templates/admin/list_dns.html:114
+#: ../../web/templates/user/list_web.html:164
+#: ../../web/templates/user/list_mail.html:120
+#: ../../web/templates/user/list_dns.html:113
+#: ../../web/templates/user/list_dns_rec.html:76
+msgid "DELETE_DOMAIN_CONFIRMATION"
+msgstr "%s domeni silmək istədiyinizə əminsinizmi?"
+
+#: ../../web/templates/user/list_dns.html:139
+msgid "1 DNS zone"
+msgstr "1 DNS zonası"
+
+#: ../../web/templates/user/list_dns.html:141
+msgid "%s DNS zones"
+msgstr "%s DNS zonaları"
+
+#: ../../web/templates/admin/list_server_info.html:37
+#: ../../web/templates/admin/list_weblog.html:31
+#: ../../web/templates/admin/list_search.html:5
+#: ../../web/templates/admin/list_log.html:4
+#: ../../web/templates/user/list_search.html:5
+#: ../../web/templates/user/list_stats.html:4
+msgid "Refresh"
+msgstr "təzələmək"
+
+#: ../../web/templates/admin/list_log.html:6
+#: ../../web/templates/admin/list_log.html:8
+msgid "Delete"
+msgstr "Sil"
+
+#: ../../web/templates/admin/list_log.html:11
+msgid "DELETE_LOGS_CONFIRMATION"
+msgstr "Günlükləri silmək istədiyinizə əminsiniz?"
+
+#: ../../web/templates/admin/list_log.html:60
+msgid "%d log record"
+msgid_plural "%d log records"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../web/templates/admin/list_cron.html:4
+#: ../../web/templates/user/list_cron.html:4
+msgid "Add Cron Job"
+msgstr "Cron əlavə et"
+
+#: ../../web/templates/admin/list_cron.html:7
+#: ../../web/templates/admin/list_cron.html:36
+#: ../../web/templates/user/list_cron.html:7
+#: ../../web/templates/user/list_cron.html:36
+msgid "turn off notifications"
+msgstr "xəbərdarlıqları bağlayın"
+
+#: ../../web/templates/admin/list_cron.html:9
+#: ../../web/templates/admin/list_cron.html:37
+#: ../../web/templates/user/list_cron.html:9
+#: ../../web/templates/user/list_cron.html:37
+msgid "turn on notifications"
+msgstr "xəbərdarlıqları açın"
+
+#: ../../web/templates/admin/list_cron.html:59
+#: ../../web/templates/user/list_cron.html:59
+msgid "Cron Job"
+msgstr "Cron Job"
+
+#: ../../web/templates/admin/list_cron.html:61
+#: ../../web/templates/user/list_cron.html:61
+msgid "Min"
+msgstr "Dəq"
+
+#: ../../web/templates/admin/list_cron.html:91
+#: ../../web/templates/admin/list_cron.html:96
+#: ../../web/templates/admin/edit_cron.html:356
+#: ../../web/templates/user/list_cron.html:91
+#: ../../web/templates/user/list_cron.html:96
+msgid "Editing Cron Job"
+msgstr "Cron-u redaktə et"
+
+#: ../../web/templates/admin/list_cron.html:111
+#: ../../web/templates/user/list_cron.html:111
+msgid "DELETE_CRON_CONFIRMATION"
+msgstr "Zamanlanmış tapşırığı silmək istədiyinizə əminsinizmi?"
+
+#: ../../web/templates/user/list_cron.html:137
+msgid "1 cron job"
+msgstr "1 zamanlanmış tapşırıq"
+
+#: ../../web/templates/user/list_cron.html:139
+msgid "%s cron jobs"
+msgstr "%s zamanlanmış tapşırıq"
+
+#: ../../web/templates/admin/list_search.html:39
+#: ../../web/templates/user/list_search.html:37
+msgid "Search Results"
+msgstr "Axtarış nəticələri"
+
+#: ../../web/templates/admin/list_search.html:43
+#: ../../web/templates/admin/list_ip.html:13
+#: ../../web/templates/admin/list_ip.html:54
+#: ../../web/templates/user/list_search.html:41
+msgid "Owner"
+msgstr "Sahib"
+
+#: ../../web/templates/admin/list_search.html:44
+#: ../../web/templates/admin/list_updates.html:43
+#: ../../web/templates/admin/list_ip.html:52
+#: ../../web/templates/user/list_search.html:42
+msgid "Status"
+msgstr "Status"
+
+#: ../../web/templates/user/list_search.html:196
+msgid "1 object"
+msgstr "1 obyekt"
+
+#: ../../web/templates/user/list_search.html:198
+msgid "%s objects"
+msgstr "%s obyekt"
+
+#: ../../web/templates/admin/list_backup.html:4
+msgid "Create Backup"
+msgstr "Nüsxə yarat"
+
+#: ../../web/templates/admin/list_backup.html:5
+msgid "backup exclusions"
+msgstr "NÜSXƏLƏMƏ İSTİSNALARI"
+
+#: ../../web/templates/admin/list_backup.html:43
+msgid "File Name"
+msgstr "Fayl adı"
+
+#: ../../web/templates/admin/list_backup.html:46
+msgid "Size"
+msgstr "Ölçüsü"
+
+#: ../../web/templates/admin/list_backup.html:48
+msgid "Runtime"
+msgstr "İş vaxtı"
+
+#: ../../web/templates/admin/list_backup.html:82
+msgid "download"
+msgstr "yüklə"
+
+#: ../../web/templates/admin/list_backup.html:89
+msgid "DELETE_BACKUP_CONFIRMATION"
+msgstr "%s nüsxəsini silmək istədiyinizə əminsinizmi?"
+
+#: ../../web/templates/admin/list_firewall_banlist.html:5
+msgid "Ban IP Address"
+msgstr "IP ünvanını ban edin"
+
+#: ../../web/templates/admin/list_ip.html:85
+#: ../../web/templates/admin/list_firewall_banlist.html:65
+msgid "DELETE_IP_CONFIRMATION"
+msgstr "%s IP ünvanı silmək istədiyinizə əminsinizmi?"
+
+#: ../../web/templates/admin/list_firewall_banlist.html:89
+msgid "There are currently no banned IP addresses."
+msgstr ""
+
+#: ../../web/templates/admin/list_firewall_banlist.html:91
+msgid "%d banned IP address"
+msgid_plural "%d banned IP addresses"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../web/templates/admin/add_dns_rec.html:30
+msgid "Adding DNS Record"
+msgstr "DNS qeyd əlavə edin"
+
+#: ../../web/templates/admin/add_db.html:37
+msgid "Adding database"
+msgstr "Verilənlər bazası əlavə edin"
+
+#: ../../web/templates/admin/add_db.html:55
+msgid "Prefix %s will be automatically added to database name and database user"
+msgstr ""
+
+#: ../../web/templates/admin/add_db.html:74
+#: ../../web/templates/admin/edit_db.html:72
+msgid "maximum characters length, including prefix"
+msgstr "Simvolların maksimal uzunlu %s, prfiks daxil"
+
+#: ../../web/templates/admin/list_updates.html:6
+msgid "disable autoupdate"
+msgstr "AVTOMATİK YENİLƏNMƏNİ SÖNDÜR"
+
+#: ../../web/templates/admin/list_updates.html:8
+msgid "enable autoupdate"
+msgstr "AVTOMATIK YENİLƏNMƏNİ AKTİVLƏŞDİR"
+
+#: ../../web/templates/admin/list_updates.html:20
+msgid "update"
+msgstr "yenilə"
+
+#: ../../web/templates/admin/list_server_info.html:28
+msgid "RAM"
+msgstr ""
+
+#: ../../web/templates/admin/list_server_info.html:30
+msgid "Network"
+msgstr ""
+
+#: ../../web/templates/admin/list_server_info.html:31
+msgid "Web"
+msgstr "Veb"
+
+#: ../../web/templates/admin/list_server_info.html:33
+msgid "Mail"
+msgstr "E-poçt"
+
+#: ../../web/templates/admin/add_mail.html:38
+msgid "Adding Mail Domain"
+msgstr "E-poçt domen əlavə edin"
+
+#: ../../web/templates/admin/add_user.html:38
+msgid "Adding User"
+msgstr "İstifadəçi əlavə edin"
+
+#: ../../web/templates/admin/list_ssl.html:74
+msgid "SSL CSR"
+msgstr "SSL CSR"
+
+#: ../../web/templates/admin/list_ip.html:5
+msgid "Add IP"
+msgstr "IP əlavə edin"
+
+#: ../../web/templates/admin/list_ip.html:12
+#: ../../web/templates/admin/list_ip.html:53
+msgid "Domains"
+msgstr "Domenlər"
+
+#: ../../web/templates/admin/list_ip.html:27
+msgid "reread IP"
+msgstr "IP-ni yenidən oxu"
+
+#: ../../web/templates/admin/list_ip.html:73
+#: ../../web/templates/admin/list_ip.html:79
+#: ../../web/templates/admin/edit_ip.html:41
+msgid "Editing IP Address"
+msgstr "IP ünvamını redaktə edin"
+
+#: ../../web/templates/admin/list_ip.html:110
+msgid "%d IP address"
+msgid_plural "%d IP addresses"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../web/templates/admin/panel.html:17
+#: ../../web/templates/user/panel.html:17
+msgid "Log"
+msgstr "Log"
+
+#: ../../web/templates/admin/list_web.html:60
+#: ../../web/templates/admin/list_web.html:140
+#: ../../web/templates/admin/panel.html:18
+#: ../../web/templates/user/list_web.html:65
+#: ../../web/templates/user/list_web.html:145
+#: ../../web/templates/user/panel.html:18
+msgid "Statistics"
+msgstr "Statistikalar"
+
+#: ../../web/templates/admin/panel.html:29
+#: ../../web/templates/user/panel.html:28
+msgid "Notifications"
+msgstr "Bildirişlər"
+
+#: ../../web/templates/admin/panel.html:36
+#: ../../web/templates/user/panel.html:31
+msgid "Help"
+msgstr "Help"
+
+#: ../../web/templates/admin/panel.html:48
+msgid "USER"
+msgstr "İstifadəsi"
+
+#: ../../web/templates/admin/panel.html:50
+msgid "users"
+msgstr "istifadəçilər"
+
+#: ../../web/templates/admin/panel.html:51
+msgid "spnd"
+msgstr "söndürülmüş"
+
+#: ../../web/templates/admin/panel.html:61
+#: ../../web/templates/admin/panel.html:89
+#: ../../web/templates/user/panel.html:47
+#: ../../web/templates/user/panel.html:75
+msgid "domains"
+msgstr "domenlər"
+
+#: ../../web/templates/admin/panel.html:62
+#: ../../web/templates/user/panel.html:48
+msgid "aliases"
+msgstr "aliases"
+
+#: ../../web/templates/admin/panel.html:75
+#: ../../web/templates/user/panel.html:61
+msgid "zones"
+msgstr ""
+
+#: ../../web/templates/admin/panel.html:90
+#: ../../web/templates/user/panel.html:76
+msgid "accounts"
+msgstr "hesablar"
+
+#: ../../web/templates/admin/panel.html:114
+#: ../../web/templates/user/panel.html:100
+msgid "CRON"
+msgstr "CRON"
+
+#: ../../web/templates/admin/panel.html:116
+#: ../../web/templates/user/panel.html:102
+msgid "jobs"
+msgstr "işlər"
+
+#: ../../web/templates/admin/panel.html:127
+#: ../../web/templates/user/panel.html:113
+msgid "BACKUP"
+msgstr "NÜSXƏ"
+
+#: ../../web/templates/admin/edit_backup_exclusions.html:63
+msgid "WEB_EXCLUSIONS"
+msgstr "Hər sətrə bir domen əlavə yazın. Bütün domenlər xaric etmək üçün * istifadə edin. Xüsusi qovluq üçün bu formatda yazın: domain.com:public_html/cache:public_html/tmp"
+
+#: ../../web/templates/admin/edit_backup_exclusions.html:73
+msgid "MAIL_EXCLUSIONS"
+msgstr "Hər sətrə bi domen əlavə edin. Bütün domenləri xaric etmək üçün * istifadə edin. Xüsusi hesab təyin etmək üçün bu formatda yazın: domain.com:info:destek:postmaster"
+
+#: ../../web/templates/admin/edit_backup_exclusions.html:83
+msgid "DB_EXCLUSIONS"
+msgstr "Hər sətrə bir verilənlər bazası əlavə edin. Hamısı üçün * istifadə edin. "
+
+#: ../../web/templates/admin/edit_backup_exclusions.html:88
+msgid "User Directories"
+msgstr "İstifadəçi qovluqları"
+
+#: ../../web/templates/admin/edit_backup_exclusions.html:93
+msgid "USER_EXCLUSIONS"
+msgstr "Hər sətrə bir qovluq əlavə edin. Bütün versiyaları xaric etmək üçün * istifadə edin"
+
+#: ../../web/templates/admin/add_cron.html:44
+#: ../../web/templates/admin/add_cron.html:45
+#: ../../web/templates/admin/add_cron.html:46
+#: ../../web/templates/admin/add_cron.html:47
+#: ../../web/templates/admin/add_cron.html:66
+#: ../../web/templates/admin/add_cron.html:67
+#: ../../web/templates/admin/add_cron.html:96
+#: ../../web/templates/admin/add_cron.html:97
+#: ../../web/templates/admin/add_cron.html:98
+#: ../../web/templates/admin/add_cron.html:99
+#: ../../web/templates/admin/add_cron.html:239
+#: ../../web/templates/admin/add_cron.html:240
+#: ../../web/templates/admin/edit_cron.html:43
+#: ../../web/templates/admin/edit_cron.html:44
+#: ../../web/templates/admin/edit_cron.html:45
+#: ../../web/templates/admin/edit_cron.html:46
+#: ../../web/templates/admin/edit_cron.html:64
+#: ../../web/templates/admin/edit_cron.html:65
+#: ../../web/templates/admin/edit_cron.html:93
+#: ../../web/templates/admin/edit_cron.html:94
+#: ../../web/templates/admin/edit_cron.html:95
+#: ../../web/templates/admin/edit_cron.html:96
+#: ../../web/templates/admin/edit_cron.html:233
+#: ../../web/templates/admin/edit_cron.html:234
+msgid "every"
+msgstr "hər"
+
+#: ../../web/templates/admin/add_cron.html:64
+#: ../../web/templates/admin/edit_cron.html:62
+msgid "every hour"
+msgstr "hər saat"
+
+#: ../../web/templates/admin/add_cron.html:65
+#: ../../web/templates/admin/edit_cron.html:63
+msgid "every two hours"
+msgstr "hər iki saatda bir"
+
+#: ../../web/templates/admin/add_cron.html:71
+#: ../../web/templates/admin/add_cron.html:131
+#: ../../web/templates/admin/add_cron.html:204
+#: ../../web/templates/admin/add_cron.html:319
+#: ../../web/templates/admin/add_cron.html:391
+#: ../../web/templates/admin/edit_cron.html:69
+#: ../../web/templates/admin/edit_cron.html:128
+#: ../../web/templates/admin/edit_cron.html:200
+#: ../../web/templates/admin/edit_cron.html:313
+#: ../../web/templates/admin/edit_cron.html:385
+msgid "Minute"
+msgstr "Dəqiqə"
+
+#: ../../web/templates/admin/add_cron.html:93
+#: ../../web/templates/admin/add_cron.html:163
+#: ../../web/templates/admin/edit_cron.html:90
+#: ../../web/templates/admin/edit_cron.html:159
+msgid "every day"
+msgstr "hər gün"
+
+#: ../../web/templates/admin/add_cron.html:94
+#: ../../web/templates/admin/edit_cron.html:91
+msgid "every odd day"
+msgstr "hər tək gün"
+
+#: ../../web/templates/admin/add_cron.html:95
+#: ../../web/templates/admin/edit_cron.html:92
+msgid "every even day"
+msgstr "hər cüt gün"
+
+#: ../../web/templates/admin/list_cron.html:62
+#: ../../web/templates/admin/add_cron.html:103
+#: ../../web/templates/admin/add_cron.html:176
+#: ../../web/templates/admin/add_cron.html:291
+#: ../../web/templates/admin/add_cron.html:401
+#: ../../web/templates/admin/edit_cron.html:100
+#: ../../web/templates/admin/edit_cron.html:172
+#: ../../web/templates/admin/edit_cron.html:285
+#: ../../web/templates/admin/edit_cron.html:395
+#: ../../web/templates/user/list_cron.html:62
+msgid "Hour"
+msgstr "Saat"
+
+#: ../../web/templates/admin/add_cron.html:164
+#: ../../web/templates/admin/edit_cron.html:160
+msgid "weekdays (5 days)"
+msgstr "həftə içi (5 gün)"
+
+#: ../../web/templates/admin/add_cron.html:165
+#: ../../web/templates/admin/edit_cron.html:161
+msgid "weekend (2 days)"
+msgstr "həftə sonu (2 gün)"
+
+#: ../../web/templates/admin/add_cron.html:166
+#: ../../web/templates/admin/edit_cron.html:162
+msgid "Monday"
+msgstr "Bazar ertəsi"
+
+#: ../../web/templates/admin/add_cron.html:167
+#: ../../web/templates/admin/edit_cron.html:163
+msgid "Tuesday"
+msgstr "Çərşənbə axşamı"
+
+#: ../../web/templates/admin/add_cron.html:168
+#: ../../web/templates/admin/edit_cron.html:164
+msgid "Wednesday"
+msgstr "Çərşənbə"
+
+#: ../../web/templates/admin/add_cron.html:169
+#: ../../web/templates/admin/edit_cron.html:165
+msgid "Thursday"
+msgstr "Cümə axşamı"
+
+#: ../../web/templates/admin/add_cron.html:170
+#: ../../web/templates/admin/edit_cron.html:166
+msgid "Friday"
+msgstr "Cümə"
+
+#: ../../web/templates/admin/add_cron.html:171
+#: ../../web/templates/admin/edit_cron.html:167
+msgid "Saturday"
+msgstr "Şənbə"
+
+#: ../../web/templates/admin/add_cron.html:172
+#: ../../web/templates/admin/edit_cron.html:168
+msgid "Sunday"
+msgstr "Bazar"
+
+#: ../../web/templates/admin/add_cron.html:236
+#: ../../web/templates/admin/edit_cron.html:230
+msgid "every month"
+msgstr "hər ay"
+
+#: ../../web/templates/admin/add_cron.html:237
+#: ../../web/templates/admin/edit_cron.html:231
+msgid "every odd month"
+msgstr "hər tək ay"
+
+#: ../../web/templates/admin/add_cron.html:238
+#: ../../web/templates/admin/edit_cron.html:232
+msgid "every even month"
+msgstr "hər cüt ay"
+
+#: ../../web/templates/admin/add_cron.html:241
+#: ../../web/templates/admin/edit_cron.html:235
+msgid "Jan"
+msgstr "Yan"
+
+#: ../../web/templates/admin/add_cron.html:242
+#: ../../web/templates/admin/edit_cron.html:236
+msgid "Feb"
+msgstr "Fev"
+
+#: ../../web/templates/admin/add_cron.html:243
+#: ../../web/templates/admin/edit_cron.html:237
+msgid "Mar"
+msgstr "Mar"
+
+#: ../../web/templates/admin/add_cron.html:244
+#: ../../web/templates/admin/edit_cron.html:238
+msgid "Apr"
+msgstr "Apr"
+
+#: ../../web/templates/admin/add_cron.html:245
+#: ../../web/templates/admin/edit_cron.html:239
+msgid "May"
+msgstr "May"
+
+#: ../../web/templates/admin/add_cron.html:246
+#: ../../web/templates/admin/edit_cron.html:240
+msgid "Jun"
+msgstr "İyn"
+
+#: ../../web/templates/admin/add_cron.html:247
+#: ../../web/templates/admin/edit_cron.html:241
+msgid "Jul"
+msgstr "İyl"
+
+#: ../../web/templates/admin/add_cron.html:248
+#: ../../web/templates/admin/edit_cron.html:242
+msgid "Aug"
+msgstr "Avq"
+
+#: ../../web/templates/admin/add_cron.html:249
+#: ../../web/templates/admin/edit_cron.html:243
+msgid "Sep"
+msgstr "Sent"
+
+#: ../../web/templates/admin/add_cron.html:250
+#: ../../web/templates/admin/edit_cron.html:244
+msgid "Oct"
+msgstr "Okt"
+
+#: ../../web/templates/admin/add_cron.html:251
+#: ../../web/templates/admin/edit_cron.html:245
+msgid "Nov"
+msgstr "Noy"
+
+#: ../../web/templates/admin/add_cron.html:252
+#: ../../web/templates/admin/edit_cron.html:246
+msgid "Dec"
+msgstr "Dek"
+
+#: ../../web/templates/admin/add_cron.html:363
+msgid "Adding Cron Job"
+msgstr "Cron əlavə etmək"
+
+#: ../../web/templates/admin/list_cron.html:15
+#: ../../web/templates/admin/add_cron.html:381
+#: ../../web/templates/admin/edit_cron.html:374
+#: ../../web/templates/user/list_cron.html:15
+msgid "Command"
+msgstr "Əmr"
+
+#: ../../web/templates/admin/list_cron.html:63
+#: ../../web/templates/admin/add_cron.html:411
+#: ../../web/templates/admin/edit_cron.html:405
+#: ../../web/templates/user/list_cron.html:63
+msgid "Day"
+msgstr "Gün"
+
+#: ../../web/templates/admin/list_cron.html:65
+#: ../../web/templates/admin/add_cron.html:431
+#: ../../web/templates/admin/edit_cron.html:425
+#: ../../web/templates/user/list_cron.html:65
+msgid "Day of week"
+msgstr "Həftənin günü"
+
+#: ../../web/templates/admin/add_firewall_ipset.html:38
+msgid "Adding Firewall Ipset List"
+msgstr "Yeni IP siyahısı"
+
+#: ../../web/templates/admin/add_firewall_ipset.html:66
+msgid "url, script or file"
+msgstr ""
+
+#: ../../web/templates/admin/add_firewall_ipset.html:85
+msgid "ip v4"
+msgstr ""
+
+#: ../../web/templates/admin/add_firewall_ipset.html:86
+msgid "ip v6"
+msgstr ""
+
+#: ../../web/templates/admin/add_firewall_ipset.html:166
+msgid "BLACKLIST"
+msgstr "QARABAQ"
+
+#: ../../web/templates/admin/add_firewall_ipset.html:179
+msgid "IPVERSE"
+msgstr "IPVERSE"
+
+#: ../../web/templates/admin/list_webapps.html:46
+msgid "version"
+msgstr "versiya"
+
+#: ../../web/templates/admin/list_webapps.html:47
+msgid "Setup"
+msgstr "Qurmaq"
+
+#: ../../web/templates/admin/list_weblog.html:6
+msgid "Web Log Manager"
+msgstr "Veb loq menecer"
+
+#: ../../web/templates/login_1.html:8 ../../web/templates/header.html:6
+#: ../../web/templates/reset_1.html:8 ../../web/templates/reset_2.html:8
+#: ../../web/templates/login.html:8 ../../web/templates/reset_3.html:8
+#: ../../web/templates/admin/list_services.html:55
+#: ../../web/templates/admin/list_server_info.html:6
+#: ../../web/templates/admin/list_weblog.html:6
+#: ../../web/templates/login_a.html:8 ../../web/templates/login_2.html:8
+#: ../../web/templates/reset2fa.html:8
+msgid "Hestia Control Panel"
+msgstr "Hestia Control Panel"
+
+#: ../../web/templates/admin/list_web.html:144
+#: ../../web/templates/user/list_web.html:149
+msgid "AccessLog"
+msgstr "AccessLog"
+
+#: ../../web/templates/admin/list_weblog.html:28
+msgid "Error Log"
+msgstr ""
+
+#: ../../web/templates/admin/list_server_info.html:38
+#: ../../web/templates/admin/list_weblog.html:33
+#: ../../web/templates/admin/panel.html:37
+#: ../../web/templates/user/panel.html:32
+msgid "Log out"
+msgstr "Çıxış"
+
+#: ../../web/templates/admin/list_weblog.html:38
+msgid "Last 70 lines of %s.%s.log"
+msgstr "%s.%s.log faylının son 70 sətri"
+
+#: ../../web/templates/admin/setup_webapp.html:16
+msgid "Install"
+msgstr ""
+
+#: ../../web/templates/admin/setup_webapp.html:43
+msgid "Data loss warning!<br>Your web domain already has files uploaded, the installer will overwrite your files and/or the installation might fail.<br/><br/> Please use the installer only for empty web domains"
+msgstr ""
+
+#: ../../web/templates/admin/add_ip.html:38
+msgid "Adding IP address"
+msgstr "IP ünvanı əlavə edin"
+
+#: ../../web/templates/admin/add_ip.html:66
+#: ../../web/templates/admin/list_ip.html:10
+#: ../../web/templates/admin/list_ip.html:50
+#: ../../web/templates/admin/edit_ip.html:70
+msgid "Netmask"
+msgstr "Netmask"
+
+#: ../../web/templates/admin/add_ip.html:76
+#: ../../web/templates/admin/list_ip.html:11
+#: ../../web/templates/admin/list_ip.html:51
+#: ../../web/templates/admin/edit_ip.html:80
+msgid "Interface"
+msgstr "İnterfeys"
+
+#: ../../web/templates/admin/add_ip.html:94
+#: ../../web/templates/admin/edit_ip.html:90
+msgid "Shared"
+msgstr "Paylaşılan"
+
+#: ../../web/templates/admin/add_ip.html:102
+#: ../../web/templates/admin/edit_ip.html:98
+msgid "Assigned user"
+msgstr "Təyin edilən istifadəçi"
+
+#: ../../web/templates/admin/add_ip.html:123
+#: ../../web/templates/admin/edit_ip.html:119
+msgid "Assigned domain"
+msgstr "Təyin edilən domen"
+
+#: ../../web/templates/admin/add_ip.html:133
+#: ../../web/templates/admin/edit_ip.html:129
+msgid "NAT IP association"
+msgstr "NAT IP assosiasiyası"
+
+#: ../../web/templates/admin/list_backup_detail.html:5
+msgid "Restore All"
+msgstr "Hamısını bərpa edin"
+
+#: ../../web/templates/admin/list_backup.html:77
+#: ../../web/templates/admin/list_backup.html:83
+#: ../../web/templates/admin/list_backup_detail.html:24
+msgid "restore"
+msgstr "bərpa edin"
+
+#: ../../web/templates/admin/list_backup_detail.html:45
+msgid "Details"
+msgstr ""
+
+#: ../../web/templates/admin/list_backup_detail.html:46
+#: ../../web/templates/admin/list_backup_detail.html:78
+msgid "Restore"
+msgstr ""
+
+#: ../../web/templates/admin/list_backup_detail.html:67
+msgid "Web domain"
+msgstr ""
+
+#: ../../web/templates/admin/list_backup_detail.html:105
+msgid "Mail domain"
+msgstr ""
+
+#: ../../web/templates/admin/list_backup_detail.html:143
+msgid "DNS domain"
+msgstr ""
+
+#: ../../web/templates/admin/list_backup_detail.html:219
+msgid "Cron Records"
+msgstr ""
+
+#: ../../web/templates/admin/panel.html:76
+#: ../../web/templates/admin/list_backup_detail.html:222
+#: ../../web/templates/user/panel.html:62
+msgid "records"
+msgstr "qeydlər"
+
+#: ../../web/templates/admin/list_backup_detail.html:256
+msgid "user dir"
+msgstr "istifadəçidir"
+
+#: ../../web/templates/admin/list_backup_detail.html:288
+msgid "Cron"
+msgstr ""
+
+#: ../../web/templates/admin/list_mail.html:102
+#: ../../web/templates/admin/list_mail_acc.html:5
+#: ../../web/templates/user/list_mail.html:101
+#: ../../web/templates/user/list_mail_acc.html:5
+msgid "Add Mail Account"
+msgstr "E-poçt hesabı əlavə edin"
+
+#: ../../web/templates/admin/list_mail.html:105
+#: ../../web/templates/admin/edit_mail.html:40
+#: ../../web/templates/admin/list_mail_acc.html:6
+#: ../../web/templates/user/list_mail.html:104
+#: ../../web/templates/user/list_mail_acc.html:6
+msgid "Editing Mail Domain"
+msgstr "E-poçt domen redaktə edin"
+
+#: ../../web/templates/admin/list_web.html:17
+#: ../../web/templates/admin/list_mail.html:16
+#: ../../web/templates/admin/list_cron.html:21
+#: ../../web/templates/admin/list_search.html:15
+#: ../../web/templates/admin/list_user.html:23
+#: ../../web/templates/admin/list_firewall.html:22
+#: ../../web/templates/admin/list_mail_acc.html:17
+#: ../../web/templates/admin/list_ip.html:19
+#: ../../web/templates/admin/list_dns.html:17
+#: ../../web/templates/admin/list_packages.html:15
+#: ../../web/templates/admin/list_db.html:44
+#: ../../web/templates/user/list_web.html:23
+#: ../../web/templates/user/list_mail.html:16
+#: ../../web/templates/user/list_cron.html:21
+#: ../../web/templates/user/list_search.html:15
+#: ../../web/templates/user/list_user.html:27
+#: ../../web/templates/user/list_mail_acc.html:17
+#: ../../web/templates/user/list_dns.html:17
+#: ../../web/templates/user/list_db.html:44
+msgid "sort by"
+msgstr "sıralama ölçüsü"
+
+#: ../../web/templates/admin/list_mail_acc.html:59
+#: ../../web/templates/user/list_mail_acc.html:59
+msgid "Forwarding"
+msgstr "İstiqamətləndirmə"
+
+#: ../../web/templates/admin/edit_mail_acc.html:128
+#: ../../web/templates/admin/list_mail_acc.html:60
+#: ../../web/templates/user/list_mail_acc.html:60
+msgid "Autoreply"
+msgstr "Avtomatik cavab"
+
+#: ../../web/templates/admin/edit_mail_acc.html:41
+#: ../../web/templates/admin/list_mail_acc.html:90
+#: ../../web/templates/admin/list_mail_acc.html:97
+#: ../../web/templates/user/list_mail_acc.html:90
+#: ../../web/templates/user/list_mail_acc.html:97
+msgid "Editing Mail Account"
+msgstr "E-poçt hesabını redaktə edin"
+
+#: ../../web/templates/admin/list_mail.html:104
+#: ../../web/templates/admin/list_mail_acc.html:96
+#: ../../web/templates/user/list_mail.html:103
+#: ../../web/templates/user/list_mail_acc.html:96
+msgid "open webmail"
+msgstr "Vebpoçtu aç"
+
+#: ../../web/templates/admin/list_mail_acc.html:113
+#: ../../web/templates/user/list_mail_acc.html:113
+msgid "DELETE_MAIL_ACCOUNT_CONFIRMATION"
+msgstr "%s hesabını silmək istədiyinizə əminsinizmi?"
+
+#: ../../web/templates/user/list_mail_acc.html:186
+msgid "1 mail account"
+msgstr "1 mail hesabı"
+
+#: ../../web/templates/user/list_mail_acc.html:188
+msgid "%s mail accounts"
+msgstr "%s mail hesabı"
+
+#: ../../web/templates/admin/list_services.html:5
+msgid "Graphs"
+msgstr "Qrafiklər"
+
+#: ../../web/templates/admin/list_services.html:6
+msgid "IP"
+msgstr "IP"
+
+#: ../../web/templates/admin/list_services.html:8
+#: ../../web/templates/admin/edit_server.html:159
+msgid "Updates"
+msgstr "Yeniləmələr"
+
+#: ../../web/templates/admin/list_services.html:10
+#: ../../web/templates/admin/list_services.html:12
+msgid "Restart"
+msgstr "Yenidən başlamaq"
+
+#: ../../web/templates/admin/edit_server.html:604
+msgid "Local backup"
+msgstr "Yerli backup"
+
+#: ../../web/templates/admin/edit_server.html:632
+msgid "Compression level"
+msgstr "Sıxılma səviyyəsi"
+
+#: ../../web/templates/admin/add_web.html:236
+#: ../../web/templates/admin/edit_web.html:284
+#: ../../web/templates/admin/edit_server.html:653
+#: ../../web/templates/admin/edit_server.html:730
+#: ../../web/templates/user/edit_web.html:297
+msgid "Directory"
+msgstr "Kataloq"
+
+#: ../../web/templates/admin/edit_server.html:664
+msgid "Remote backup"
+msgstr "Uzaqdan backup"
+
+#: ../../web/templates/admin/add_firewall.html:69
+#: ../../web/templates/admin/list_firewall.html:13
+#: ../../web/templates/admin/list_firewall.html:52
+#: ../../web/templates/admin/edit_server.html:672
+#: ../../web/templates/admin/edit_firewall.html:72
+msgid "Protocol"
+msgstr "Protokol"
+
+#: ../../web/templates/admin/edit_server.html:678
+msgid "ftp"
+msgstr "FTP"
+
+#: ../../web/templates/admin/edit_server.html:679
+msgid "sftp"
+msgstr "SFTP"
+
+#: ../../web/templates/admin/add_firewall.html:83
+#: ../../web/templates/admin/list_firewall.html:14
+#: ../../web/templates/admin/list_firewall.html:53
+#: ../../web/templates/admin/edit_server.html:697
+#: ../../web/templates/admin/edit_firewall.html:86
+msgid "Port"
+msgstr "Port"
+
+#: ../../web/templates/reset_1.html:20 ../../web/templates/login.html:21
+#: ../../web/templates/admin/edit_user.html:62
+#: ../../web/templates/admin/add_web.html:177
+#: ../../web/templates/admin/add_web.html:332
+#: ../../web/templates/admin/add_web.html:404
+#: ../../web/templates/admin/edit_web.html:131
+#: ../../web/templates/admin/edit_web.html:467
+#: ../../web/templates/admin/edit_web.html:543
+#: ../../web/templates/admin/add_db.html:73
+#: ../../web/templates/admin/edit_mail_acc.html:177
+#: ../../web/templates/admin/edit_db.html:71
+#: ../../web/templates/admin/list_user.html:15
+#: ../../web/templates/admin/list_mail_acc.html:54
+#: ../../web/templates/admin/edit_server.html:708
+#: ../../web/templates/admin/add_mail_acc.html:166
+#: ../../web/templates/admin/add_user.html:56
+#: ../../web/templates/admin/list_db.html:37
+#: ../../web/templates/admin/list_db.html:84
+#: ../../web/templates/login_a.html:21
+#: ../../web/templates/user/edit_user.html:60
+#: ../../web/templates/user/edit_web.html:144
+#: ../../web/templates/user/edit_web.html:481
+#: ../../web/templates/user/edit_web.html:557
+#: ../../web/templates/user/list_user.html:19
+#: ../../web/templates/user/list_mail_acc.html:54
+#: ../../web/templates/user/list_db.html:83
+#: ../../web/templates/reset2fa.html:34
+msgid "Username"
+msgstr "İstifadəçi adı"
+
+#: ../../web/templates/admin/edit_server.html:749
+msgid "Hestia SSL"
+msgstr ""
+
+#: ../../web/templates/admin/add_web.html:275
+#: ../../web/templates/admin/edit_web.html:342
+#: ../../web/templates/admin/edit_mail.html:115
+#: ../../web/templates/admin/list_ssl.html:54
+#: ../../web/templates/admin/edit_server.html:758
+#: ../../web/templates/user/edit_web.html:356
+msgid "SSL Certificate"
+msgstr "SSL sertifikatı"
+
+#: ../../web/templates/admin/add_web.html:276
+#: ../../web/templates/admin/edit_web.html:343
+#: ../../web/templates/admin/edit_mail.html:116
+#: ../../web/templates/admin/edit_server.html:759
+#: ../../web/templates/user/edit_web.html:357
+msgid "Generate CSR"
+msgstr "CSR yarat"
+
+#: ../../web/templates/admin/add_web.html:286
+#: ../../web/templates/admin/edit_web.html:353
+#: ../../web/templates/admin/edit_mail.html:126
+#: ../../web/templates/admin/list_ssl.html:64
+#: ../../web/templates/admin/edit_server.html:769
+#: ../../web/templates/user/edit_web.html:367
+msgid "SSL Key"
+msgstr "SSL açarı (Key)"
+
+#: ../../web/templates/admin/edit_web.html:378
+#: ../../web/templates/admin/edit_mail.html:151
+#: ../../web/templates/admin/edit_server.html:782
+#: ../../web/templates/user/edit_web.html:392
+msgid "SUBJECT"
+msgstr "MÖVZU"
+
+#: ../../web/templates/admin/edit_web.html:387
+#: ../../web/templates/admin/edit_mail.html:160
+#: ../../web/templates/admin/edit_server.html:791
+#: ../../web/templates/user/edit_web.html:401
+msgid "ALIASES"
+msgstr "LƏQƏBLƏR"
+
+#: ../../web/templates/admin/edit_web.html:396
+#: ../../web/templates/admin/edit_mail.html:169
+#: ../../web/templates/admin/edit_server.html:800
+#: ../../web/templates/user/edit_web.html:410
+msgid "NOT_BEFORE"
+msgstr "NOT_BEFORE"
+
+#: ../../web/templates/admin/edit_web.html:404
+#: ../../web/templates/admin/edit_mail.html:177
+#: ../../web/templates/admin/edit_server.html:808
+#: ../../web/templates/user/edit_web.html:418
+msgid "NOT_AFTER"
+msgstr "NOT_AFTER"
+
+#: ../../web/templates/admin/edit_web.html:412
+#: ../../web/templates/admin/edit_mail.html:185
+#: ../../web/templates/admin/edit_server.html:816
+#: ../../web/templates/user/edit_web.html:426
+msgid "SIGNATURE"
+msgstr "İMZA"
+
+#: ../../web/templates/admin/edit_web.html:420
+#: ../../web/templates/admin/edit_mail.html:193
+#: ../../web/templates/admin/edit_server.html:825
+#: ../../web/templates/user/edit_web.html:434
+msgid "PUB_KEY"
+msgstr "PUB_KEY"
+
+#: ../../web/templates/admin/edit_web.html:428
+#: ../../web/templates/admin/edit_mail.html:201
+#: ../../web/templates/admin/edit_server.html:833
+#: ../../web/templates/user/edit_web.html:442
+msgid "ISSUER"
+msgstr "ISSUER"
+
+#: ../../web/templates/admin/edit_server.html:876
+msgid "Hestia Control Panel Plugins"
+msgstr ""
+
+#: ../../web/templates/admin/edit_server.html:899
+msgid "FileSystem Disk Quota"
+msgstr "FaylSistemi disk kvotası"
+
+#: ../../web/templates/admin/list_services.html:7
+#: ../../web/templates/admin/edit_server.html:913
+msgid "Firewall"
+msgstr "Firewall"
+
+#: ../../web/templates/admin/list_stats.html:4
+msgid "Overall Statistics"
+msgstr "Bütün statistikalar"
+
+#: ../../web/templates/admin/list_stats.html:14
+msgid "show per user"
+msgstr "istifadəçiyə görə göstər"
+
+#: ../../web/templates/admin/list_cron.html:64
+#: ../../web/templates/admin/add_cron.html:421
+#: ../../web/templates/admin/list_stats.html:42
+#: ../../web/templates/admin/edit_cron.html:415
+#: ../../web/templates/user/list_cron.html:64
+#: ../../web/templates/user/list_stats.html:28
+msgid "Month"
+msgstr "Ay"
+
+#: ../../web/templates/admin/list_user.html:69
+#: ../../web/templates/admin/list_stats.html:44
+#: ../../web/templates/user/list_user.html:73
+#: ../../web/templates/user/list_stats.html:30
+msgid "IPs"
+msgstr ""
+
+#: ../../web/templates/admin/list_web.html:10
+#: ../../web/templates/admin/list_web.html:57
+#: ../../web/templates/admin/list_server_info.html:29
+#: ../../web/templates/admin/list_mail.html:10
+#: ../../web/templates/admin/list_mail.html:57
+#: ../../web/templates/admin/list_user.html:16
+#: ../../web/templates/admin/list_user.html:70
+#: ../../web/templates/admin/list_mail_acc.html:11
+#: ../../web/templates/admin/list_mail_acc.html:56
+#: ../../web/templates/admin/list_packages.html:45
+#: ../../web/templates/admin/list_stats.html:45
+#: ../../web/templates/admin/list_db.html:36
+#: ../../web/templates/admin/list_db.html:86
+#: ../../web/templates/user/list_web.html:16
+#: ../../web/templates/user/list_web.html:62
+#: ../../web/templates/user/list_mail.html:10
+#: ../../web/templates/user/list_mail.html:56
+#: ../../web/templates/user/list_user.html:20
+#: ../../web/templates/user/list_user.html:74
+#: ../../web/templates/user/list_mail_acc.html:11
+#: ../../web/templates/user/list_mail_acc.html:56
+#: ../../web/templates/user/list_stats.html:31
+#: ../../web/templates/user/list_db.html:36
+#: ../../web/templates/user/list_db.html:85
+msgid "Disk"
+msgstr "Disk"
+
+#: ../../web/templates/admin/list_web.html:11
+#: ../../web/templates/admin/list_web.html:58
+#: ../../web/templates/admin/list_user.html:17
+#: ../../web/templates/admin/list_user.html:71
+#: ../../web/templates/admin/edit_package.html:292
+#: ../../web/templates/admin/add_package.html:295
+#: ../../web/templates/admin/list_packages.html:46
+#: ../../web/templates/admin/list_stats.html:46
+#: ../../web/templates/user/list_web.html:17
+#: ../../web/templates/user/list_web.html:63
+#: ../../web/templates/user/list_user.html:21
+#: ../../web/templates/user/list_user.html:75
+#: ../../web/templates/user/list_stats.html:32
+msgid "Bandwidth"
+msgstr "Traffik"
+
+#: ../../web/templates/admin/edit_backup_exclusions.html:58
+#: ../../web/templates/admin/list_user.html:72
+#: ../../web/templates/admin/edit_package.html:183
+#: ../../web/templates/admin/add_package.html:186
+#: ../../web/templates/admin/list_packages.html:47
+#: ../../web/templates/admin/list_stats.html:47
+#: ../../web/templates/user/list_user.html:76
+#: ../../web/templates/user/list_stats.html:33
+msgid "Web Domains"
+msgstr "Veb domenləri"
+
+#: ../../web/templates/admin/edit_package.html:194
+#: ../../web/templates/admin/add_package.html:197
+#: ../../web/templates/admin/list_packages.html:48
+#: ../../web/templates/admin/list_stats.html:48
+#: ../../web/templates/user/list_stats.html:34
+msgid "Web Aliases"
+msgstr "Veb aliasları"
+
+#: ../../web/templates/admin/list_user.html:74
+#: ../../web/templates/admin/list_packages.html:49
+#: ../../web/templates/admin/list_stats.html:49
+#: ../../web/templates/user/list_user.html:78
+#: ../../web/templates/user/list_stats.html:35
+msgid "DNS Domains"
+msgstr "DNS domen adları"
+
+#: ../../web/templates/admin/list_packages.html:50
+#: ../../web/templates/admin/list_stats.html:50
+#: ../../web/templates/user/list_stats.html:36
+msgid "DNS Records"
+msgstr ""
+
+#: ../../web/templates/admin/edit_backup_exclusions.html:68
+#: ../../web/templates/admin/list_user.html:73
+#: ../../web/templates/admin/edit_package.html:227
+#: ../../web/templates/admin/add_package.html:230
+#: ../../web/templates/admin/list_packages.html:51
+#: ../../web/templates/admin/list_stats.html:51
+#: ../../web/templates/user/list_user.html:77
+#: ../../web/templates/user/list_stats.html:37
+msgid "Mail Domains"
+msgstr "E-poçt domenləri"
+
+#: ../../web/templates/admin/edit_package.html:238
+#: ../../web/templates/admin/add_package.html:241
+#: ../../web/templates/admin/list_packages.html:52
+#: ../../web/templates/admin/list_stats.html:52
+#: ../../web/templates/user/list_stats.html:38
+msgid "Mail Accounts"
+msgstr "E-poçt hesabları"
+
+#: ../../web/templates/admin/list_user.html:76
+#: ../../web/templates/admin/edit_package.html:260
+#: ../../web/templates/admin/add_package.html:263
+#: ../../web/templates/admin/list_packages.html:54
+#: ../../web/templates/admin/list_stats.html:54
+#: ../../web/templates/user/list_user.html:80
+#: ../../web/templates/user/list_stats.html:40
+msgid "Cron Jobs"
+msgstr "Cron-lar"
+
+#: ../../web/templates/user/list_stats.html:79
+msgid "1 month"
+msgstr "1 ay"
+
+#: ../../web/templates/user/list_stats.html:81
+msgid "%s months"
+msgstr "%s ay"
+
+#: ../../web/templates/admin/list_dns.html:96
+#: ../../web/templates/admin/list_dns_rec.html:5
+#: ../../web/templates/user/list_dns.html:95
+#: ../../web/templates/user/list_dns_rec.html:5
+msgid "Add DNS Record"
+msgstr "DNS qeydləri əlavə edin"
+
+#: ../../web/templates/admin/list_dns_rec.html:5
+#: ../../web/templates/user/list_dns_rec.html:5
+msgid "Add Record"
+msgstr "Qeyd əlavə edin"
+
+#: ../../web/templates/admin/list_dns.html:98
+#: ../../web/templates/admin/edit_dns.html:40
+#: ../../web/templates/admin/list_dns_rec.html:6
+#: ../../web/templates/user/list_dns.html:97
+#: ../../web/templates/user/edit_dns.html:40
+#: ../../web/templates/user/list_dns_rec.html:6
+msgid "Editing DNS Domain"
+msgstr "DNS domeni redaktə edin"
+
+#: ../../web/templates/admin/list_web.html:33
+#: ../../web/templates/admin/list_mail.html:32
+#: ../../web/templates/admin/list_cron.html:38
+#: ../../web/templates/admin/list_user.html:45
+#: ../../web/templates/admin/list_mail_acc.html:32
+#: ../../web/templates/admin/list_dns.html:33
+#: ../../web/templates/admin/list_db.html:60
+#: ../../web/templates/admin/list_dns_rec.html:25
+#: ../../web/templates/user/list_web.html:38
+#: ../../web/templates/user/list_mail.html:31
+#: ../../web/templates/user/list_cron.html:38
+#: ../../web/templates/user/list_user.html:49
+#: ../../web/templates/user/list_mail_acc.html:32
+#: ../../web/templates/user/list_dns.html:32
+#: ../../web/templates/user/list_db.html:59
+#: ../../web/templates/user/list_dns_rec.html:25
+msgid "suspend"
+msgstr "Dayandırın"
+
+#: ../../web/templates/admin/list_web.html:34
+#: ../../web/templates/admin/list_mail.html:33
+#: ../../web/templates/admin/list_cron.html:39
+#: ../../web/templates/admin/list_user.html:46
+#: ../../web/templates/admin/list_mail_acc.html:33
+#: ../../web/templates/admin/list_dns.html:34
+#: ../../web/templates/admin/list_db.html:61
+#: ../../web/templates/admin/list_dns_rec.html:26
+#: ../../web/templates/user/list_web.html:39
+#: ../../web/templates/user/list_mail.html:32
+#: ../../web/templates/user/list_cron.html:39
+#: ../../web/templates/user/list_user.html:50
+#: ../../web/templates/user/list_mail_acc.html:33
+#: ../../web/templates/user/list_dns.html:33
+#: ../../web/templates/user/list_db.html:60
+#: ../../web/templates/user/list_dns_rec.html:26
+msgid "unsuspend"
+msgstr "Davam etdirin"
+
+#: ../../web/templates/admin/add_dns_rec.html:59
+#: ../../web/templates/admin/edit_dns_rec.html:69
+#: ../../web/templates/admin/list_dns_rec.html:46
+#: ../../web/templates/user/list_dns_rec.html:46
+msgid "Record"
+msgstr "Qeydiyyat"
+
+#: ../../web/templates/admin/list_backup.html:47
+#: ../../web/templates/admin/add_db.html:107
+#: ../../web/templates/admin/edit_db.html:105
+#: ../../web/templates/admin/list_search.html:42
+#: ../../web/templates/admin/list_backup_exclusions.html:29
+#: ../../web/templates/admin/list_backup_detail.html:44
+#: ../../web/templates/admin/add_dns_rec.html:70
+#: ../../web/templates/admin/list_db.html:83
+#: ../../web/templates/admin/edit_dns_rec.html:81
+#: ../../web/templates/admin/list_dns_rec.html:48
+#: ../../web/templates/user/list_search.html:40
+#: ../../web/templates/user/list_db.html:82
+#: ../../web/templates/user/list_dns_rec.html:48
+msgid "Type"
+msgstr "Tip"
+
+#: ../../web/templates/admin/add_dns_rec.html:114
+#: ../../web/templates/admin/edit_dns_rec.html:125
+#: ../../web/templates/admin/list_dns_rec.html:49
+#: ../../web/templates/user/list_dns_rec.html:49
+msgid "Priority"
+msgstr "Prioritet"
+
+#: ../../web/templates/admin/list_dns.html:58
+#: ../../web/templates/admin/add_dns_rec.html:124
+#: ../../web/templates/admin/edit_dns_rec.html:135
+#: ../../web/templates/admin/list_dns_rec.html:50
+#: ../../web/templates/user/list_dns.html:57
+msgid "TTL"
+msgstr "TTL"
+
+#: ../../web/templates/admin/add_dns_rec.html:95
+#: ../../web/templates/admin/edit_dns_rec.html:106
+#: ../../web/templates/admin/list_dns_rec.html:52
+#: ../../web/templates/user/list_dns_rec.html:50
+msgid "IP or Value"
+msgstr "IP və ya qiymət"
+
+#: ../../web/templates/admin/edit_dns_rec.html:40
+#: ../../web/templates/admin/list_dns_rec.html:67
+#: ../../web/templates/admin/list_dns_rec.html:72
+#: ../../web/templates/user/list_dns_rec.html:65
+#: ../../web/templates/user/list_dns_rec.html:70
+msgid "Editing DNS Record"
+msgstr "DNS qeydi redaktə edin"
+
+#: ../../web/templates/admin/list_dns_rec.html:78
+msgid "DELETE_RECORD_CONFIRMATION"
+msgstr "%s qeydi silmək istədiyinizə əminsinizmi?"
+
+#: ../../web/templates/admin/edit_server.html:863
+#: ../../web/templates/admin/list_dns_rec.html:88
+msgid "Default"
+msgstr ""
+
+#: ../../web/templates/user/list_dns_rec.html:101
+msgid "1 DNS record"
+msgstr ""
+
+#: ../../web/templates/user/list_dns_rec.html:103
+msgid "%s DNS records"
+msgstr ""
+
+#: ../../web/templates/admin/edit_backup_exclusions.html:40
+#: ../../web/templates/admin/list_backup_exclusions.html:5
+msgid "Editing Backup Exclusions"
+msgstr "Nüsxələmə istisnalarını redaktə edin"
+
+#: ../../web/templates/admin/list_backup_exclusions.html:31
+#: ../../web/templates/admin/list_log.html:32
+msgid "Value"
+msgstr "Dəyər"
+
+#: ../../web/templates/admin/list_backup_exclusions.html:48
+msgid "no exclusions"
+msgstr "istisna yoxdur"
+
+#: ../../web/templates/admin/edit_db.html:41
+#: ../../web/templates/admin/list_db.html:124
+#: ../../web/templates/admin/list_db.html:129
+#: ../../web/templates/user/list_db.html:123
+#: ../../web/templates/user/list_db.html:128
+msgid "Editing Database"
+msgstr "Verilənlər bazasını redaktə edin"
+
+#: ../../web/templates/admin/add_db.html:61
+#: ../../web/templates/admin/edit_db.html:59
+#: ../../web/templates/admin/list_backup_detail.html:181
+#: ../../web/templates/admin/list_db.html:35
+#: ../../web/templates/admin/list_db.html:81
+#: ../../web/templates/user/list_db.html:35
+#: ../../web/templates/user/list_db.html:80
+msgid "Database"
+msgstr "Verilənlər bazası"
+
+#: ../../web/templates/admin/edit_user.html:151
+#: ../../web/templates/admin/add_user.html:142
+#: ../../web/templates/user/list_db.html:37
+msgid "User"
+msgstr "İstifadəçi"
+
+#: ../../web/templates/admin/setup_webapp.html:67
+#: ../../web/templates/admin/edit_user.html:73
+#: ../../web/templates/admin/add_web.html:187
+#: ../../web/templates/admin/add_web.html:344
+#: ../../web/templates/admin/add_web.html:416
+#: ../../web/templates/admin/edit_web.html:141
+#: ../../web/templates/admin/edit_web.html:480
+#: ../../web/templates/admin/edit_web.html:555
+#: ../../web/templates/admin/add_db.html:86
+#: ../../web/templates/admin/edit_mail_acc.html:71
+#: ../../web/templates/admin/edit_db.html:84
+#: ../../web/templates/admin/add_cron.html:51
+#: ../../web/templates/admin/add_cron.html:81
+#: ../../web/templates/admin/add_cron.html:150
+#: ../../web/templates/admin/add_cron.html:224
+#: ../../web/templates/admin/add_cron.html:339
+#: ../../web/templates/admin/add_mail_acc.html:70
+#: ../../web/templates/admin/add_user.html:66
+#: ../../web/templates/admin/edit_cron.html:50
+#: ../../web/templates/admin/edit_cron.html:79
+#: ../../web/templates/admin/edit_cron.html:147
+#: ../../web/templates/admin/edit_cron.html:220
+#: ../../web/templates/admin/edit_cron.html:332
+#: ../../web/templates/user/edit_user.html:71
+#: ../../web/templates/user/edit_web.html:154
+#: ../../web/templates/user/edit_web.html:494
+#: ../../web/templates/user/edit_web.html:569
+msgid "generate"
+msgstr "yarat"
+
+#: ../../web/templates/admin/add_db.html:144
+#: ../../web/templates/admin/edit_db.html:125
+#: ../../web/templates/admin/list_db.html:87
+#: ../../web/templates/user/list_db.html:86
+msgid "Charset"
+msgstr "Kodlaşdırma"
+
+#: ../../web/templates/admin/list_services.html:4
+#: ../../web/templates/admin/edit_server_httpd.html:5
+#: ../../web/templates/admin/edit_server_nginx.html:5
+msgid "Configure"
+msgstr "Konfiqurasiya"
+
+#: ../../web/templates/admin/add_mail_acc.html:31
+msgid "Adding Mail Account"
+msgstr "E-poçt əlavə edin"
+
+#: ../../web/templates/admin/edit_mail_acc.html:59
+#: ../../web/templates/admin/list_mail_acc.html:10
+#: ../../web/templates/admin/add_mail_acc.html:60
+#: ../../web/templates/user/list_mail_acc.html:10
+msgid "Account"
+msgstr "Hesab"
+
+#: ../../web/templates/admin/add_dns.html:85
+#: ../../web/templates/admin/edit_server_mysql.html:113
+#: ../../web/templates/admin/add_web.html:106
+#: ../../web/templates/admin/edit_server_php.html:135
+#: ../../web/templates/admin/add_mail_acc.html:91
+#: ../../web/templates/admin/edit_server_nginx.html:168
+msgid "Advanced options"
+msgstr "TƏKMİLLƏŞMİŞ SEÇİMLƏR"
+
+#: ../../web/templates/admin/edit_mail_acc.html:92
+#: ../../web/templates/admin/edit_package.html:281
+#: ../../web/templates/admin/list_mail_acc.html:57
+#: ../../web/templates/admin/add_package.html:284
+#: ../../web/templates/admin/add_mail_acc.html:99
+#: ../../web/templates/user/list_mail_acc.html:57
+msgid "Quota"
+msgstr "Norma"
+
+#: ../../web/templates/admin/edit_mail_acc.html:92
+#: ../../web/templates/admin/edit_package.html:281
+#: ../../web/templates/admin/edit_package.html:292
+#: ../../web/templates/admin/add_package.html:284
+#: ../../web/templates/admin/add_package.html:295
+#: ../../web/templates/admin/add_mail_acc.html:99
+msgid "in megabytes"
+msgstr "megabayt olaraq"
+
+#: ../../web/templates/admin/add_web.html:113
+#: ../../web/templates/admin/edit_web.html:91
+#: ../../web/templates/admin/edit_mail_acc.html:103
+#: ../../web/templates/admin/list_mail_acc.html:58
+#: ../../web/templates/admin/add_mail_acc.html:110
+#: ../../web/templates/user/edit_web.html:104
+#: ../../web/templates/user/list_mail_acc.html:58
+msgid "Aliases"
+msgstr "Ləqəblər (Alias)"
+
+#: ../../web/templates/admin/edit_mail_acc.html:103
+#: ../../web/templates/admin/add_mail_acc.html:110
+msgid "use local-part"
+msgstr "local-part istifadə et"
+
+#: ../../web/templates/admin/edit_mail_acc.html:113
+#: ../../web/templates/admin/add_mail_acc.html:120
+msgid "Forward to"
+msgstr "Buraya yönləndir"
+
+#: ../../web/templates/admin/edit_mail_acc.html:113
+#: ../../web/templates/admin/add_mail_acc.html:120
+msgid "one or more email addresses"
+msgstr "bir və ya daha çox e-poçt ünvanı"
+
+#: ../../web/templates/admin/edit_mail_acc.html:123
+#: ../../web/templates/admin/add_mail_acc.html:130
+msgid "Do not store forwarded mail"
+msgstr "Göndərilən poçtu saxlamayın"
+
+#: ../../web/templates/admin/add_db.html:191
+#: ../../web/templates/admin/edit_mail_acc.html:149
+#: ../../web/templates/admin/add_mail_acc.html:138
+#: ../../web/templates/admin/add_user.html:175
+msgid "Send login credentials to email address"
+msgstr "Giriş məlumatlarını ünvanlarını e-poçt ünvanına göndərin"
+
+#: ../../web/templates/admin/edit_mail_acc.html:169
+#: ../../web/templates/admin/add_mail_acc.html:158
+msgid "Use domain hostname"
+msgstr "Domen hostname-dən istifadə et"
+
+#: ../../web/templates/admin/edit_mail_acc.html:170
+#: ../../web/templates/admin/add_mail_acc.html:159
+msgid "Use STARTTLS"
+msgstr "STARTTLS istifadə et"
+
+#: ../../web/templates/admin/edit_mail_acc.html:171
+#: ../../web/templates/admin/add_mail_acc.html:160
+msgid "Use SSL / TLS"
+msgstr "SSL / TLS istifadə et"
+
+#: ../../web/templates/admin/edit_mail_acc.html:172
+#: ../../web/templates/admin/add_mail_acc.html:161
+msgid "No encryption"
+msgstr "Şifrələnməsiz"
+
+#: ../../web/templates/admin/edit_mail_acc.html:185
+#: ../../web/templates/admin/add_mail_acc.html:174
+msgid "IMAP hostname"
+msgstr "IMAP hostname"
+
+#: ../../web/templates/admin/edit_mail_acc.html:189
+#: ../../web/templates/admin/add_mail_acc.html:178
+msgid "IMAP port"
+msgstr "IMAP port"
+
+#: ../../web/templates/admin/edit_mail_acc.html:193
+#: ../../web/templates/admin/add_mail_acc.html:182
+msgid "IMAP security"
+msgstr "IMAP təhlükəsizlik"
+
+#: ../../web/templates/admin/edit_mail_acc.html:194
+#: ../../web/templates/admin/edit_mail_acc.html:210
+#: ../../web/templates/admin/add_mail_acc.html:183
+#: ../../web/templates/admin/add_mail_acc.html:199
+msgid "STARTTLS"
+msgstr "STARTTLS"
+
+#: ../../web/templates/admin/edit_mail_acc.html:197
+#: ../../web/templates/admin/add_mail_acc.html:186
+msgid "IMAP auth method"
+msgstr "IMAP auth metodu"
+
+#: ../../web/templates/admin/edit_mail_acc.html:198
+#: ../../web/templates/admin/edit_mail_acc.html:214
+#: ../../web/templates/admin/add_mail_acc.html:187
+#: ../../web/templates/admin/add_mail_acc.html:203
+msgid "Normal password"
+msgstr "Normal şifrə"
+
+#: ../../web/templates/admin/edit_mail_acc.html:201
+#: ../../web/templates/admin/add_mail_acc.html:190
+msgid "SMTP hostname"
+msgstr "SMTP hostname"
+
+#: ../../web/templates/admin/edit_mail_acc.html:205
+#: ../../web/templates/admin/add_mail_acc.html:194
+msgid "SMTP port"
+msgstr "SMTP port"
+
+#: ../../web/templates/admin/edit_mail_acc.html:209
+#: ../../web/templates/admin/add_mail_acc.html:198
+msgid "SMTP security"
+msgstr "SMTP təhlükəsizlik"
+
+#: ../../web/templates/admin/edit_mail_acc.html:213
+#: ../../web/templates/admin/add_mail_acc.html:202
+msgid "SMTP auth method"
+msgstr "SMTP auth metodu"
+
+#: ../../web/templates/admin/edit_web.html:8
+#: ../../web/templates/admin/list_webapps.html:24
+#: ../../web/templates/user/edit_web.html:8
+msgid "Quick Install App"
+msgstr "Tez Quraşdırma Tətbiqi"
+
+#: ../../web/templates/admin/list_web.html:134
+#: ../../web/templates/admin/list_web.html:143
+#: ../../web/templates/admin/edit_web.html:44
+#: ../../web/templates/user/list_web.html:139
+#: ../../web/templates/user/list_web.html:148
+#: ../../web/templates/user/edit_web.html:44
+msgid "Editing Domain"
+msgstr "Domen redaktə edin"
+
+#: ../../web/templates/admin/edit_web.html:73
+#: ../../web/templates/admin/list_ip.html:48
+#: ../../web/templates/admin/edit_dns.html:69
+#: ../../web/templates/user/edit_web.html:86
+#: ../../web/templates/user/edit_dns.html:69
+msgid "IP Address"
+msgstr "IP ünvan"
+
+#: ../../web/templates/admin/add_web.html:146
+#: ../../web/templates/admin/edit_web.html:101
+#: ../../web/templates/user/edit_web.html:114
+msgid "Web Statistics"
+msgstr "Veb statistikaları"
+
+#: ../../web/templates/admin/add_web.html:169
+#: ../../web/templates/admin/edit_web.html:123
+#: ../../web/templates/user/edit_web.html:136
+msgid "Statistics Authorization"
+msgstr "Statistikanın avtorizasiyası"
+
+#: ../../web/templates/admin/edit_web.html:154
+#: ../../web/templates/admin/edit_package.html:64
+#: ../../web/templates/admin/add_package.html:65
+#: ../../web/templates/user/edit_web.html:167
+msgid "Web Template"
+msgstr "Veb Şablonu"
+
+#: ../../web/templates/admin/edit_web.html:176
+#: ../../web/templates/admin/edit_package.html:88
+#: ../../web/templates/admin/add_package.html:89
+#: ../../web/templates/user/edit_web.html:189
+msgid "Backend Template"
+msgstr "Backend şablonu"
+
+#: ../../web/templates/admin/add_web.html:124
+#: ../../web/templates/admin/edit_web.html:202
+#: ../../web/templates/user/edit_web.html:215
+msgid "Proxy Support"
+msgstr "Proxy dəstəyi"
+
+#: ../../web/templates/admin/edit_web.html:210
+#: ../../web/templates/admin/edit_package.html:113
+#: ../../web/templates/admin/add_package.html:115
+#: ../../web/templates/user/edit_web.html:223
+msgid "Proxy Template"
+msgstr "Proxy şablonu"
+
+#: ../../web/templates/admin/add_web.html:132
+#: ../../web/templates/admin/edit_web.html:234
+#: ../../web/templates/user/edit_web.html:247
+msgid "Proxy Extensions"
+msgstr "Proxy əlavələri"
+
+#: ../../web/templates/admin/add_web.html:257
+#: ../../web/templates/admin/edit_web.html:305
+#: ../../web/templates/admin/edit_mail.html:94
+#: ../../web/templates/user/edit_web.html:318
+msgid "SSL Support"
+msgstr "SSL dəstək"
+
+#: ../../web/templates/admin/add_web.html:265
+#: ../../web/templates/admin/edit_web.html:313
+#: ../../web/templates/admin/edit_mail.html:102
+#: ../../web/templates/user/edit_web.html:326
+msgid "Lets Encrypt Support"
+msgstr "Lets Encrypt dəstəyi"
+
+#: ../../web/templates/admin/edit_web.html:318
+#: ../../web/templates/user/edit_web.html:331
+msgid "Force SSL/HTTPS"
+msgstr "Avtomatik HTTP-dən HTTPS yönləndirməsini aktiv edin"
+
+#: ../../web/templates/admin/edit_web.html:323
+#: ../../web/templates/user/edit_web.html:336
+msgid "Enable SSL HSTS"
+msgstr "HTTP sərt nəqliyyat təhlükəsizliyini (HSTS) aktivləşdirin <a href=\"https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security\" target=\"_blank\"><i class=\"fas fa-question-circle\"></i></a>"
+
+#: ../../web/templates/admin/edit_web.html:328
+#: ../../web/templates/user/edit_web.html:342
+msgid "Home Directory"
+msgstr ""
+
+#: ../../web/templates/admin/add_web.html:296
+#: ../../web/templates/admin/edit_web.html:363
+#: ../../web/templates/admin/edit_mail.html:136
+#: ../../web/templates/user/edit_web.html:377
+msgid "SSL Certificate Authority / Intermediate"
+msgstr "SSL sertifikat eyniləşdirməsi / köməkçi)"
+
+#: ../../web/templates/admin/add_firewall.html:106
+#: ../../web/templates/admin/add_web.html:236
+#: ../../web/templates/admin/add_web.html:296
+#: ../../web/templates/admin/edit_web.html:284
+#: ../../web/templates/admin/edit_web.html:363
+#: ../../web/templates/admin/edit_mail.html:136
+#: ../../web/templates/admin/add_ip.html:123
+#: ../../web/templates/admin/add_ip.html:133
+#: ../../web/templates/admin/add_dns_rec.html:114
+#: ../../web/templates/admin/add_dns_rec.html:124
+#: ../../web/templates/admin/edit_ip.html:119
+#: ../../web/templates/admin/edit_ip.html:129
+#: ../../web/templates/admin/edit_dns_rec.html:125
+#: ../../web/templates/admin/edit_dns_rec.html:135
+#: ../../web/templates/admin/edit_firewall.html:109
+#: ../../web/templates/user/edit_web.html:297
+#: ../../web/templates/user/edit_web.html:377
+msgid "optional"
+msgstr "istəyə bağlı"
+
+#: ../../web/templates/admin/add_web.html:309
+#: ../../web/templates/admin/edit_web.html:443
+#: ../../web/templates/user/edit_web.html:457
+msgid "Additional FTP Account"
+msgstr "Əlavə FTP hesabı"
+
+#: ../../web/templates/admin/add_firewall_banlist.html:74
+#: ../../web/templates/admin/add_web.html:325
+#: ../../web/templates/admin/add_web.html:397
+#: ../../web/templates/admin/edit_web.html:460
+#: ../../web/templates/admin/edit_web.html:536
+#: ../../web/templates/user/edit_web.html:474
+#: ../../web/templates/user/edit_web.html:550
+msgid "FTP"
+msgstr "FTP"
+
+#: ../../web/templates/admin/add_web.html:355
+#: ../../web/templates/admin/add_web.html:427
+#: ../../web/templates/admin/edit_web.html:491
+#: ../../web/templates/admin/edit_web.html:566
+#: ../../web/templates/user/edit_web.html:505
+#: ../../web/templates/user/edit_web.html:580
+msgid "Path"
+msgstr "Path"
+
+#: ../../web/templates/admin/add_web.html:368
+#: ../../web/templates/admin/add_web.html:439
+#: ../../web/templates/admin/edit_web.html:505
+#: ../../web/templates/admin/edit_web.html:578
+#: ../../web/templates/user/edit_web.html:519
+#: ../../web/templates/user/edit_web.html:592
+msgid "Send FTP credentials to email"
+msgstr "FTP məlumatlarını e-poçt ile göndər"
+
+#: ../../web/templates/admin/add_web.html:382
+#: ../../web/templates/admin/edit_web.html:521
+#: ../../web/templates/user/edit_web.html:535
+msgid "Add one more FTP Account"
+msgstr "FTP hesabı əlavə edin"
+
+#: ../../web/templates/admin/add_firewall_banlist.html:38
+msgid "Adding IP Address to Banlist"
+msgstr "Ban siyahısına IP ünvanı əlavə edin"
+
+#: ../../web/templates/admin/list_web.html:9
+#: ../../web/templates/admin/list_web.html:56
+#: ../../web/templates/admin/add_dns.html:66
+#: ../../web/templates/admin/add_firewall.html:93
+#: ../../web/templates/admin/add_firewall_banlist.html:56
+#: ../../web/templates/admin/add_web.html:74
+#: ../../web/templates/admin/list_firewall.html:15
+#: ../../web/templates/admin/list_firewall.html:54
+#: ../../web/templates/admin/add_ip.html:56
+#: ../../web/templates/admin/list_dns.html:10
+#: ../../web/templates/admin/list_firewall_banlist.html:35
+#: ../../web/templates/admin/edit_ip.html:59
+#: ../../web/templates/admin/edit_firewall.html:96
+#: ../../web/templates/user/list_web.html:15
+#: ../../web/templates/user/list_web.html:61
+#: ../../web/templates/user/list_dns.html:10
+msgid "IP address"
+msgstr "IP ünvanı"
+
+#: ../../web/templates/admin/add_firewall.html:93
+#: ../../web/templates/admin/add_firewall_banlist.html:56
+#: ../../web/templates/admin/edit_firewall.html:96
+msgid "CIDR format is supported"
+msgstr "CIDR versiyasını dəstəkləyir"
+
+#: ../../web/templates/admin/add_firewall_banlist.html:66
+msgid "Banlist"
+msgstr "Ban siyahısı"
+
+#: ../../web/templates/admin/add_firewall_banlist.html:72
+msgid "SSH"
+msgstr "SSH"
+
+#: ../../web/templates/admin/add_firewall_banlist.html:73
+#: ../../web/templates/admin/panel.html:59
+#: ../../web/templates/user/panel.html:45
+msgid "WEB"
+msgstr "Veb"
+
+#: ../../web/templates/admin/add_firewall_banlist.html:75
+#: ../../web/templates/admin/list_server_info.html:32
+#: ../../web/templates/admin/panel.html:73
+#: ../../web/templates/user/panel.html:59
+msgid "DNS"
+msgstr "DNS"
+
+#: ../../web/templates/admin/add_firewall_banlist.html:76
+#: ../../web/templates/admin/panel.html:87
+#: ../../web/templates/user/panel.html:73
+msgid "MAIL"
+msgstr "Poçt"
+
+#: ../../web/templates/admin/add_firewall_banlist.html:77
+#: ../../web/templates/admin/list_server_info.html:34
+#: ../../web/templates/admin/panel.html:101
+#: ../../web/templates/user/panel.html:87
+msgid "DB"
+msgstr "DB"
+
+#: ../../web/templates/admin/add_firewall_banlist.html:78
+msgid "HESTIA"
+msgstr ""
+
+#: ../../web/templates/admin/add_firewall.html:38
+msgid "Adding Firewall Rule"
+msgstr "Təhlükəsizlik divarı qaydası əlavə edin"
+
+#: ../../web/templates/admin/add_firewall.html:56
+#: ../../web/templates/admin/list_firewall.html:12
+#: ../../web/templates/admin/list_firewall.html:22
+#: ../../web/templates/admin/list_firewall.html:49
+#: ../../web/templates/admin/edit_firewall.html:59
+msgid "Action"
+msgstr "Fəaliyyət"
+
+#: ../../web/templates/admin/add_firewall.html:62
+#: ../../web/templates/admin/edit_firewall.html:65
+msgid "DROP"
+msgstr "DROP"
+
+#: ../../web/templates/admin/add_firewall.html:63
+#: ../../web/templates/admin/edit_firewall.html:66
+msgid "ACCEPT"
+msgstr "ACCEPT"
+
+#: ../../web/templates/admin/add_firewall.html:75
+#: ../../web/templates/admin/edit_firewall.html:78
+msgid "TCP"
+msgstr "TCP"
+
+#: ../../web/templates/admin/add_firewall.html:76
+#: ../../web/templates/admin/edit_firewall.html:79
+msgid "UDP"
+msgstr "UDP"
+
+#: ../../web/templates/admin/add_firewall.html:77
+#: ../../web/templates/admin/edit_firewall.html:80
+msgid "ICMP"
+msgstr "ICMP"
+
+#: ../../web/templates/admin/add_firewall.html:83
+#: ../../web/templates/admin/edit_firewall.html:86
+msgid "ranges are acceptable"
+msgstr "qəbul edilə bilən aralıqlar"
+
+#: ../../web/templates/admin/add_firewall.html:106
+#: ../../web/templates/admin/list_firewall.html:16
+#: ../../web/templates/admin/list_firewall.html:51
+#: ../../web/templates/admin/list_firewall_banlist.html:39
+#: ../../web/templates/admin/edit_firewall.html:109
+msgid "Comment"
+msgstr "Rəy"
+
+#: ../../web/templates/admin/list_web.html:4
+#: ../../web/templates/admin/add_web.html:41
+#: ../../web/templates/admin/list_user.html:9
+#: ../../web/templates/user/list_web.html:7
+#: ../../web/templates/user/list_user.html:11
+msgid "Add Web Domain"
+msgstr "Domen əlavə edin"
+
+#: ../../web/templates/admin/add_web.html:57
+msgid "Avoid adding web domains on admin account"
+msgstr "Qəti şəkildə tövsiyə olunur <a href=\"/add/user/\">standart istifadəçi hesabı yaratmaq</a> İdarəetmə hesabının sahib olduğu üstünlüklər və potensial təhlükəsizlik riskləri səbəbiylə veb domenləri serverə əlavə etməzdən əvvəl."
+
+#: ../../web/templates/admin/add_web.html:93
+msgid "DNS Support"
+msgstr "DNS dəstəyi"
+
+#: ../../web/templates/admin/add_web.html:100
+msgid "Mail Support"
+msgstr "E-poçt dəstəyi"
+
+#: ../../web/templates/admin/add_web.html:270
+msgid "Your certificate will be automatically issued in 5 minutes"
+msgstr "Sənədiniz avtomatik olaraq 5 dəqiqə ərzində veriləcək"
+
+#: ../../web/templates/admin/add_cron.html:28
+#: ../../web/templates/admin/edit_cron.html:27
+msgid "Minutes"
+msgstr "Dəqiqəlik"
+
+#: ../../web/templates/admin/add_cron.html:29
+#: ../../web/templates/admin/edit_cron.html:28
+msgid "Hourly"
+msgstr "Saatlıq"
+
+#: ../../web/templates/admin/add_cron.html:30
+#: ../../web/templates/admin/list_rrd.html:11
+#: ../../web/templates/admin/edit_cron.html:29
+msgid "Daily"
+msgstr "Günlük"
+
+#: ../../web/templates/admin/add_cron.html:31
+#: ../../web/templates/admin/list_rrd.html:12
+#: ../../web/templates/admin/edit_cron.html:30
+msgid "Weekly"
+msgstr "Həftəlik"
+
+#: ../../web/templates/admin/add_cron.html:32
+#: ../../web/templates/admin/list_rrd.html:13
+#: ../../web/templates/admin/edit_cron.html:31
+msgid "Monthly"
+msgstr "Aylıq"
+
+#: ../../web/templates/admin/add_cron.html:40
+#: ../../web/templates/admin/add_cron.html:62
+#: ../../web/templates/admin/add_cron.html:91
+#: ../../web/templates/admin/add_cron.html:161
+#: ../../web/templates/admin/add_cron.html:234
+#: ../../web/templates/admin/edit_cron.html:39
+#: ../../web/templates/admin/edit_cron.html:60
+#: ../../web/templates/admin/edit_cron.html:88
+#: ../../web/templates/admin/edit_cron.html:157
+#: ../../web/templates/admin/edit_cron.html:228
+msgid "Run Command"
+msgstr "Əmri aktivləşdir"
+
+#: ../../web/templates/admin/add_cron.html:42
+#: ../../web/templates/admin/edit_cron.html:41
+msgid "every minute"
+msgstr "hər dəqiqə"
+
+#: ../../web/templates/admin/add_cron.html:43
+#: ../../web/templates/admin/edit_cron.html:42
+msgid "every two minutes"
+msgstr "hər iki dəqiqdə bir"
+
+#: ../../web/templates/admin/edit_server.html:149
+msgid "SYSTEM_SET_DEFAULT_LANGUAGE"
+msgstr "Bütün istifadəçilər üçün standart dil olaraq təyin edin"
+
+#: ../../web/templates/admin/edit_server.html:167
+#: ../../web/templates/admin/list_updates.html:42
+msgid "Version"
+msgstr "Versiya"
+
+#: ../../web/templates/admin/edit_server.html:178
+msgid "Release"
+msgstr "Buraxın"
+
+#: ../../web/templates/admin/edit_server.html:213
+#: ../../web/templates/admin/edit_server.html:235
+msgid "Web Server"
+msgstr "Veb server"
+
+#: ../../web/templates/admin/edit_server.html:223
+msgid "Proxy Server"
+msgstr "Proxy server"
+
+#: ../../web/templates/admin/edit_server.html:223
+#: ../../web/templates/admin/edit_server.html:235
+#: ../../web/templates/admin/edit_server.html:247
+#: ../../web/templates/admin/edit_server.html:321
+#: ../../web/templates/admin/edit_server.html:379
+#: ../../web/templates/admin/edit_server.html:391
+#: ../../web/templates/admin/edit_server.html:404
+#: ../../web/templates/admin/edit_server.html:443
+#: ../../web/templates/admin/edit_server.html:523
+msgid "configure"
+msgstr "ayalar"
+
+#: ../../web/templates/admin/edit_server.html:247
+msgid "Backend Server"
+msgstr "Backend Server"
+
+#: ../../web/templates/admin/edit_server.html:258
+msgid "Backend Pool Mode"
+msgstr "Backend pul rejimi"
+
+#: ../../web/templates/admin/edit_server.html:272
+msgid "Enabled multi PHP versions"
+msgstr "Effektiv PHP versiyaları"
+
+#: ../../web/templates/admin/edit_server.html:276
+msgid "Please wait while php is installed or removed"
+msgstr "Xahiş edirəm proses başa çatana qədər gözləyin və səhifəni yeniləməyin."
+
+#: ../../web/templates/admin/edit_server.html:312
+#: ../../web/templates/admin/edit_server.html:321
+msgid "DNS Server"
+msgstr "DNS server"
+
+#: ../../web/templates/admin/edit_server.html:333
+msgid "DNS Cluster"
+msgstr "DNS Cluster"
+
+#: ../../web/templates/admin/add_firewall_ipset.html:99
+#: ../../web/templates/admin/list_backup.html:55
+#: ../../web/templates/admin/list_backup.html:56
+#: ../../web/templates/admin/list_backup.html:57
+#: ../../web/templates/admin/list_backup.html:58
+#: ../../web/templates/admin/list_backup.html:59
+#: ../../web/templates/admin/list_backup.html:60
+#: ../../web/templates/admin/edit_server.html:339
+#: ../../web/templates/admin/edit_server.html:449
+#: ../../web/templates/admin/edit_server.html:529
+#: ../../web/templates/admin/edit_server.html:610
+#: ../../web/templates/admin/edit_server.html:891
+#: ../../web/templates/admin/edit_server.html:905
+#: ../../web/templates/admin/edit_server.html:919
+msgid "no"
+msgstr "xeyir"
+
+#: ../../web/templates/admin/add_firewall_ipset.html:98
+#: ../../web/templates/admin/list_backup.html:62
+#: ../../web/templates/admin/list_backup.html:63
+#: ../../web/templates/admin/list_backup.html:64
+#: ../../web/templates/admin/list_backup.html:65
+#: ../../web/templates/admin/list_backup.html:66
+#: ../../web/templates/admin/list_backup.html:67
+#: ../../web/templates/admin/edit_server.html:340
+#: ../../web/templates/admin/edit_server.html:450
+#: ../../web/templates/admin/edit_server.html:530
+#: ../../web/templates/admin/edit_server.html:611
+#: ../../web/templates/admin/edit_server.html:892
+#: ../../web/templates/admin/edit_server.html:906
+#: ../../web/templates/admin/edit_server.html:920
+msgid "yes"
+msgstr "bəli"
+
+#: ../../web/templates/admin/add_db.html:125
+#: ../../web/templates/admin/edit_db.html:115
+#: ../../web/templates/admin/edit_server.html:352
+#: ../../web/templates/admin/edit_server.html:475
+#: ../../web/templates/admin/edit_server.html:555
+#: ../../web/templates/admin/edit_server.html:686
+#: ../../web/templates/admin/list_db.html:38
+#: ../../web/templates/user/list_db.html:38
+msgid "Host"
+msgstr "Ev sahibi"
+
+#: ../../web/templates/admin/edit_server.html:370
+#: ../../web/templates/admin/edit_server.html:379
+msgid "Mail Server"
+msgstr "e-poçt serveri"
+
+#: ../../web/templates/admin/list_mail.html:58
+#: ../../web/templates/admin/edit_server.html:391
+#: ../../web/templates/user/list_mail.html:57
+msgid "Antivirus"
+msgstr "Antivirus"
+
+#: ../../web/templates/admin/list_mail.html:59
+#: ../../web/templates/admin/edit_server.html:404
+#: ../../web/templates/user/list_mail.html:58
+msgid "AntiSpam"
+msgstr "AntiSpam"
+
+#: ../../web/templates/admin/edit_mail_acc.html:217
+#: ../../web/templates/admin/edit_server.html:416
+#: ../../web/templates/admin/add_mail_acc.html:206
+msgid "Webmail URL"
+msgstr "Vebmail URL"
+
+#: ../../web/templates/admin/edit_backup_exclusions.html:78
+#: ../../web/templates/admin/list_user.html:75
+#: ../../web/templates/admin/edit_package.html:249
+#: ../../web/templates/admin/edit_server.html:434
+#: ../../web/templates/admin/add_package.html:252
+#: ../../web/templates/admin/list_packages.html:53
+#: ../../web/templates/admin/list_stats.html:53
+#: ../../web/templates/user/list_user.html:79
+#: ../../web/templates/user/list_stats.html:39
+msgid "Databases"
+msgstr "Verilənlər bazası"
+
+#: ../../web/templates/admin/edit_server.html:443
+msgid "MySQL Support"
+msgstr "MySQL dəstək"
+
+#: ../../web/templates/admin/edit_server.html:458
+msgid "phpMyAdmin URL"
+msgstr "phpMyAdmin Alias"
+
+#: ../../web/templates/login_1.html:23
+#: ../../web/templates/admin/edit_user.html:73
+#: ../../web/templates/admin/add_web.html:187
+#: ../../web/templates/admin/add_web.html:344
+#: ../../web/templates/admin/add_web.html:416
+#: ../../web/templates/admin/edit_web.html:141
+#: ../../web/templates/admin/edit_web.html:480
+#: ../../web/templates/admin/edit_web.html:555
+#: ../../web/templates/admin/add_db.html:86
+#: ../../web/templates/admin/edit_mail_acc.html:71
+#: ../../web/templates/admin/edit_mail_acc.html:181
+#: ../../web/templates/admin/edit_db.html:84
+#: ../../web/templates/admin/edit_server.html:486
+#: ../../web/templates/admin/edit_server.html:719
+#: ../../web/templates/admin/add_mail_acc.html:70
+#: ../../web/templates/admin/add_mail_acc.html:170
+#: ../../web/templates/admin/add_user.html:66
+#: ../../web/templates/login_a.html:31
+#: ../../web/templates/user/edit_user.html:71
+#: ../../web/templates/user/edit_web.html:154
+#: ../../web/templates/user/edit_web.html:494
+#: ../../web/templates/user/edit_web.html:569
+msgid "Password"
+msgstr "Şifrə"
+
+#: ../../web/templates/admin/edit_server.html:498
+#: ../../web/templates/admin/edit_server.html:566
+msgid "Maximum Number Of Databases"
+msgstr "Verilənlər bazasının maksimum sayı"
+
+#: ../../web/templates/admin/edit_server.html:509
+#: ../../web/templates/admin/edit_server.html:577
+msgid "Current Number Of Databases"
+msgstr "Current Number Of Databases"
+
+#: ../../web/templates/admin/edit_server.html:523
+msgid "PostgreSQL Support"
+msgstr "PostgreSQL dəstəyi"
+
+#: ../../web/templates/admin/edit_server.html:538
+msgid "phpPgAdmin URL"
+msgstr "phpPgAdmin Alias"
+
+#: ../../web/templates/admin/list_user.html:77
+#: ../../web/templates/admin/edit_package.html:271
+#: ../../web/templates/admin/edit_server.html:595
+#: ../../web/templates/admin/add_package.html:274
+#: ../../web/templates/admin/list_packages.html:55
+#: ../../web/templates/admin/list_stats.html:55
+#: ../../web/templates/user/list_user.html:81
+#: ../../web/templates/user/list_stats.html:41
+msgid "Backups"
+msgstr "Nüsxələr"
+
+#: ../../web/schedule/backup/index.php:17
+msgid "BACKUP_SCHEDULED"
+msgstr "Tapşırıq uğurla əlavə edildi. Nüsxə yüklənildiyi zaman xəbərdarlıq e-poçtu alacaqsınız."
+
+#: ../../web/bulk/restore/index.php:39 ../../web/unsuspend/dns/index.php:21
+#: ../../web/unsuspend/dns/index.php:42 ../../web/unsuspend/mail/index.php:21
+#: ../../web/unsuspend/mail/index.php:42
+#: ../../web/schedule/restore/index.php:43
+#: ../../web/schedule/backup/index.php:21
+msgid "Error: hestia did not return any output."
+msgstr ""
+
+#: ../../web/schedule/backup/index.php:25
+msgid "BACKUP_EXISTS"
+msgstr "Artıq nüsxələmə əməliyyatı davam edir. Yenidən yaratmaq üçün bunun bitməsini gözləyin."
+
+#: ../../web/bulk/restore/index.php:35 ../../web/schedule/restore/index.php:39
+msgid "RESTORE_SCHEDULED"
+msgstr "Tapşırıq sıraya əlavə edildi. Nüsxə yüklənildiyi zaman xəbərdarlıq e-poçtu alacaqsınız."
+
+#: ../../web/bulk/restore/index.php:42 ../../web/schedule/restore/index.php:46
+msgid "RESTORE_EXISTS"
+msgstr "Artıq restovrasiya əməliyyatı davam edir. Bunu işlətmək üçün lütfən əvvəlki əməliyyatın bitməsiniz gözləyin."
+
+#: ../../web/inc/main.php:94 ../../web/generate/ssl/index.php:86
+msgid "Error code:"
+msgstr "Xəta kodu: %s"
+
+#: ../../web/add/cron/index.php:21 ../../web/inc/main.php:163
+msgid "day"
+msgstr "gün"
+
+#: ../../web/inc/main.php:165
+msgid "days"
+msgstr "günlər"
+
+#: ../../web/add/cron/index.php:20 ../../web/inc/main.php:170
+msgid "hour"
+msgstr "saat"
+
+#: ../../web/inc/main.php:172
+msgid "hours"
+msgstr "saat"
+
+#: ../../web/add/cron/index.php:19 ../../web/inc/main.php:177
+msgid "minute"
+msgstr "dəqiqə"
+
+#: ../../web/inc/main.php:179
+msgid "minutes"
+msgstr "dəqiqə"
+
+#: ../../web/bulk/cron/index.php:28 ../../web/bulk/cron/index.php:48
+msgid "Cronjob email reporting has been successfully disabled"
+msgstr "Zamanlanmış tapşırıq e-poçt hesabatı uğurla dayandırıldı"
+
+#: ../../web/bulk/cron/index.php:35 ../../web/bulk/cron/index.php:55
+msgid "Cronjob email reporting has been successfully enabled"
+msgstr "Zamanlanmış tapşırıq e-poçt hesabatı uğurla aktivləşdirildi"
+
+#: ../../web/js/i18n.js.php:8
+msgid "Are you sure?"
+msgstr "Əminsinizmi?"
+
+#: ../../web/js/i18n.js.php:9
+msgid "unlimited"
+msgstr "limitsiz"
+
+#: ../../web/js/i18n.js.php:10
+msgid "no notifications"
+msgstr "bildiriş yoxdur"
+
+#: ../../web/reset/index.php:35
+msgid "MAIL_RESET_SUBJECT"
+msgstr "Şifrə sıfırlama - %s"
+
+#: ../../web/add/mail/index.php:207 ../../web/add/user/index.php:94
+#: ../../web/add/db/index.php:92 ../../web/add/web/index.php:329
+#: ../../web/edit/mail/index.php:523 ../../web/edit/web/index.php:663
+#: ../../web/edit/web/index.php:737 ../../web/reset/index.php:37
+msgid "MAIL_FROM"
+msgstr "Vesta Nəzarət Paneli <noreply@%s>"
+
+#: ../../web/add/user/index.php:97 ../../web/reset/index.php:39
+msgid "GREETINGS_GORDON"
+msgstr "Hello, %s,"
+
+#: ../../web/add/user/index.php:99 ../../web/reset/index.php:41
+msgid "GREETINGS"
+msgstr "Hər vaxtınız xeyir,"
+
+#: ../../web/reset/index.php:44
+msgid "PASSWORD_RESET_REQUEST"
+msgstr ""
+"Şifrənizi sıfırlamaq üçün lütfən linki izləyin:\n"
+"https://%s/reset/?action=confirm&user=%s&code=%s\n"
+"\\Alternativ olaraq https://%s/reset/?action=code&user=%s linkinə klik edib davamına bu reset kodunuzu daxil edə bilərsiniz:\n"
+"%s\n"
+"\n"
+"Əgər şifrə sıfırlama istəyiniz olmayıbsa lütfən mesajı yox sayın və üzrümüzü qəbul edin.\n"
+"\n"
+"--\n"
+"Vesta Nəzarət Mərkəzi"
+
+#: ../../web/reset/index.php:49
+msgid "Invalid host domain"
+msgstr ""
+
+#: ../../web/reset/index.php:78
+msgid "An internal error occurred"
+msgstr ""
+
+#: ../../web/reset/index.php:86
+msgid "Code has been expired"
+msgstr ""
+
+#: ../../web/reset/index.php:90 ../../web/reset/index.php:94
+msgid "Invalid username or code"
+msgstr "Doğru olmayan istifadəçi adı və ya kod"
+
+#: ../../web/reset/index.php:97
+msgid "Passwords not match"
+msgstr "Şifrələr uyğun deyil"
+
+#: ../../web/templates/admin/list_services.html:30
+msgid "start"
+msgstr "başlat"
+
+#: ../../web/templates/admin/list_services.html:29
+msgid "stop"
+msgstr "dayandırın"
+
+#: ../../web/templates/admin/edit_server_mysql.html:135
+#: ../../web/templates/admin/list_services.html:31
+#: ../../web/templates/admin/list_services.html:135
+#: ../../web/templates/admin/edit_server_dovecot.html:151
+#: ../../web/templates/admin/edit_server_php.html:157
+#: ../../web/templates/admin/edit_server_service.html:67
+#: ../../web/templates/admin/edit_server_httpd.html:67
+#: ../../web/templates/admin/edit_server_pgsql.html:75
+#: ../../web/templates/admin/edit_server_nginx.html:192
+#: ../../web/templates/admin/edit_server_bind9.html:75
+msgid "restart"
+msgstr "yenidən başlat"
+
+#: ../../web/add/ip/index.php:37 ../../web/add/dns/index.php:34
+#: ../../web/add/dns/index.php:116 ../../web/add/cron/index.php:33
+#: ../../web/add/mail/index.php:47 ../../web/add/mail/index.php:114
+#: ../../web/add/user/index.php:38 ../../web/add/db/index.php:33
+#: ../../web/add/web/index.php:31 ../../web/add/web/index.php:296
+#: ../../web/add/package/index.php:60
+#: ../../web/add/firewall/banlist/index.php:35
+#: ../../web/add/firewall/ipset/index.php:38
+#: ../../web/add/firewall/index.php:54 ../../web/edit/mail/index.php:314
+#: ../../web/edit/web/index.php:452 ../../web/edit/web/index.php:582
+#: ../../web/edit/web/index.php:608 ../../web/edit/web/index.php:644
+#: ../../web/edit/web/index.php:713 ../../web/edit/package/index.php:137
+#: ../../web/generate/ssl/index.php:59
+msgid "Field \"%s\" can not be blank."
+msgstr "\"%s\" sahəni boş saxlaya bilməzsiniz."
+
+#: ../../web/edit/ip/index.php:104 ../../web/edit/dns/index.php:147
+#: ../../web/edit/dns/index.php:199 ../../web/edit/cron/index.php:74
+#: ../../web/edit/mail/index.php:370 ../../web/edit/mail/index.php:530
+#: ../../web/edit/server/bind9/index.php:55
+#: ../../web/edit/server/exim/index.php:42
+#: ../../web/edit/server/theme/index.php:42
+#: ../../web/edit/server/spamd/index.php:42
+#: ../../web/edit/server/mysqld/index.php:42
+#: ../../web/edit/server/fail2ban/index.php:42
+#: ../../web/edit/server/php/index.php:42
+#: ../../web/edit/server/ssh/index.php:42
+#: ../../web/edit/server/mariadb/index.php:42
+#: ../../web/edit/server/apache2/index.php:42
+#: ../../web/edit/server/dovecot/index.php:146
+#: ../../web/edit/server/php-fpm/index.php:42
+#: ../../web/edit/server/httpd/index.php:42
+#: ../../web/edit/server/vsftpd/index.php:42
+#: ../../web/edit/server/nginx/index.php:42
+#: ../../web/edit/server/spamassassin/index.php:42
+#: ../../web/edit/server/proftpd/index.php:42
+#: ../../web/edit/server/postgresql/index.php:55
+#: ../../web/edit/server/mysql/index.php:42
+#: ../../web/edit/server/named/index.php:42
+#: ../../web/edit/server/php5-fpm/index.php:42
+#: ../../web/edit/server/clamav-daemon/index.php:42
+#: ../../web/edit/server/index.php:590 ../../web/edit/server/exim4/index.php:42
+#: ../../web/edit/backup/exclusions/index.php:120
+#: ../../web/edit/user/index.php:247 ../../web/edit/db/index.php:83
+#: ../../web/edit/web/index.php:809 ../../web/edit/package/index.php:226
+#: ../../web/edit/firewall/index.php:96
+msgid "Changes has been saved."
+msgstr "Dəyişikliklər yadda saxlanıldı."
+
+#: ../../web/add/mail/index.php:120 ../../web/add/user/index.php:43
+#: ../../web/add/db/index.php:39 ../../web/add/web/index.php:285
+#: ../../web/add/web/index.php:301 ../../web/edit/mail/index.php:386
+#: ../../web/edit/user/index.php:191 ../../web/edit/web/index.php:634
+msgid "Please enter valid email address."
+msgstr "Lütfən doğru e-poçt ünvanı daxil edin."
+
+#: ../../web/add/mail/index.php:205 ../../web/edit/mail/index.php:521
+msgid "Email Credentials"
+msgstr "E-poçt hüquqları"
+
+#: ../../web/edit/web/index.php:573
+msgid "stats username"
+msgstr "statistik istifadəçi adı"
+
+#: ../../web/edit/web/index.php:599
+msgid "stats user"
+msgstr ""
+
+#: ../../web/add/web/index.php:328 ../../web/edit/web/index.php:661
+#: ../../web/edit/web/index.php:735
+msgid "FTP login credentials"
+msgstr "FTP giriş məlumatları"
+
+#: ../../web/add/web/index.php:330 ../../web/edit/web/index.php:664
+#: ../../web/edit/web/index.php:738
+msgid "FTP_ACCOUNT_READY"
+msgstr ""
+"FTP hesabı uğurla yaradıldı və istifadə hazırdır.\n"
+"\n"
+"Hostname: %s\n"
+"İstifadəçi adı: %s_%s\n"
+"Şifrə: %s\n"
+"\n"
+"--\n"
+"Vesta Control Panel"
+
+#: ../../web/edit/web/index.php:704
+msgid "ftp user"
+msgstr "ftp istifadəçisi"
+
+#: ../../web/edit/server/cron/index.php:18
+#: ../../web/edit/server/crond/index.php:18
+msgid "Info (Read-only mode): Crontab can be edited only trough ssh"
+msgstr ""
+
+#: ../../web/add/user/index.php:27 ../../web/add/package/index.php:25
+#: ../../web/edit/package/index.php:101
+msgid "package"
+msgstr "paket"
+
+#: ../../web/add/package/index.php:26 ../../web/edit/package/index.php:102
+msgid "web template"
+msgstr ""
+
+#: ../../web/add/package/index.php:28 ../../web/edit/package/index.php:104
+msgid "backend template"
+msgstr ""
+
+#: ../../web/add/package/index.php:31 ../../web/edit/package/index.php:107
+msgid "proxy template"
+msgstr ""
+
+#: ../../web/add/package/index.php:33 ../../web/edit/package/index.php:109
+msgid "dns template"
+msgstr ""
+
+#: ../../web/add/package/index.php:34 ../../web/edit/package/index.php:110
+msgid "shell"
+msgstr "shell"
+
+#: ../../web/add/package/index.php:35 ../../web/edit/package/index.php:111
+msgid "web domains"
+msgstr "Veb domenləri"
+
+#: ../../web/add/package/index.php:36 ../../web/edit/package/index.php:112
+msgid "web aliases"
+msgstr "veb ləqəblər"
+
+#: ../../web/add/package/index.php:37 ../../web/edit/package/index.php:113
+msgid "dns domains"
+msgstr ""
+
+#: ../../web/add/package/index.php:38 ../../web/edit/package/index.php:114
+msgid "dns records"
+msgstr "dns qeydləri"
+
+#: ../../web/add/package/index.php:39 ../../web/edit/package/index.php:115
+msgid "mail domains"
+msgstr "mail domenləri"
+
+#: ../../web/add/package/index.php:40 ../../web/edit/package/index.php:116
+#: ../../web/templates/admin/list_mail.html:97
+#: ../../web/templates/admin/list_mail.html:103
+#: ../../web/templates/user/list_mail.html:96
+#: ../../web/templates/user/list_mail.html:102
+msgid "mail accounts"
+msgstr "mail hesabları"
+
+#: ../../web/add/package/index.php:41 ../../web/edit/package/index.php:117
+#: ../../web/templates/admin/panel.html:103
+#: ../../web/templates/user/panel.html:89
+msgid "databases"
+msgstr "verilənlər bazası"
+
+#: ../../web/add/package/index.php:42 ../../web/edit/package/index.php:118
+msgid "cron jobs"
+msgstr "Cron tapşırıqları"
+
+#: ../../web/add/package/index.php:43 ../../web/edit/package/index.php:119
+#: ../../web/templates/admin/panel.html:129
+#: ../../web/templates/user/panel.html:115
+msgid "backups"
+msgstr "nüsxələr"
+
+#: ../../web/add/package/index.php:44 ../../web/edit/package/index.php:120
+msgid "quota"
+msgstr "kvota"
+
+#: ../../web/add/package/index.php:45 ../../web/edit/package/index.php:121
+msgid "bandwidth"
+msgstr ""
+
+#: ../../web/add/package/index.php:49 ../../web/edit/package/index.php:125
+msgid "ns1"
+msgstr "ns1"
+
+#: ../../web/add/package/index.php:50 ../../web/edit/package/index.php:126
+msgid "ns2"
+msgstr "ns2"
+
+#: ../../web/add/dns/index.php:24 ../../web/add/mail/index.php:38
+#: ../../web/add/mail/index.php:103 ../../web/add/web/index.php:19
+msgid "domain"
+msgstr "domen"
+
+#: ../../web/add/mail/index.php:85
+msgid "MAIL_DOMAIN_CREATED_OK"
+msgstr "<a href=\"/list/mail/?domain=%s\"><b>%s</b></a> əsas domen uğurla yaradıldı"
+
+#: ../../web/add/mail/index.php:104
+msgid "account"
+msgstr "hesab"
+
+#: ../../web/add/mail/index.php:105 ../../web/add/user/index.php:26
+#: ../../web/add/db/index.php:21
+msgid "password"
+msgstr "şifrə"
+
+#: ../../web/add/mail/index.php:214
+msgid "MAIL_ACCOUNT_CREATED_OK"
+msgstr "<a href=\"/edit/mail/?account=%s&domain=%s\"><b>%s@%s</b></a> e-poçt hesabı uğurla yaradıldı"
+
+#: ../../web/add/dns/index.php:25 ../../web/add/web/index.php:20
+#: ../../web/templates/admin/list_ip.html:9
+msgid "ip"
+msgstr "ip"
+
+#: ../../web/add/web/index.php:21
+msgid "ssl certificate"
+msgstr "ssl sertifikatı"
+
+#: ../../web/add/web/index.php:22
+msgid "ssl key"
+msgstr "ssl açarı (key)"
+
+#: ../../web/add/web/index.php:38 ../../web/add/web/index.php:308
+msgid "Password is too short."
+msgstr "Şifrə çox qısadır (minimum 6 simvol)"
+
+#: ../../web/add/web/index.php:359 ../../web/add/web/index.php:369
+msgid "WEB_DOMAIN_CREATED_OK"
+msgstr "<a href=\"/edit/web/?domain=%s\"><b>%s</b></a> domen uğurla yaradıldı."
+
+#: ../../web/add/user/index.php:25
+msgid "user"
+msgstr "istifadəçi"
+
+#: ../../web/add/user/index.php:28
+msgid "email"
+msgstr "e-poçt"
+
+#: ../../web/add/user/index.php:29
+msgid "name"
+msgstr "ad"
+
+#: ../../web/add/user/index.php:107
+msgid "USER_CREATED_OK"
+msgstr "<a href=\"/edit/user/?user=%s\"><b>%s</b></a> istifadəşisi uğurla yaradıldı."
+
+#: ../../web/add/user/index.php:108
+#: ../../web/templates/admin/list_user.html:103
+#: ../../web/templates/admin/list_user.html:117
+#: ../../web/templates/user/list_user.html:97
+msgid "login as"
+msgstr "GİRİŞ ET:"
+
+#: ../../web/add/key/index.php:17
+msgid "Field SSH_KEY can not be blank."
+msgstr "Sahə SSH Açarı boş olmamalıdır"
+
+#: ../../web/add/key/index.php:42 ../../web/add/key/index.php:45
+msgid "SSH KEY already exists"
+msgstr "SSH açarı artıq mövcuddur"
+
+#: ../../web/add/key/index.php:58
+msgid "SSH KEY created"
+msgstr ""
+
+#: ../../web/add/firewall/ipset/index.php:25
+#: ../../web/templates/admin/list_search.html:9
+#: ../../web/templates/admin/list_user.html:66
+#: ../../web/templates/user/list_search.html:9
+#: ../../web/templates/user/list_user.html:70
+msgid "Name"
+msgstr "Adı"
+
+#: ../../web/add/firewall/ipset/index.php:26
+#: ../../web/templates/admin/add_firewall_ipset.html:66
+msgid "Data Source"
+msgstr "Verilənlər mənbəyi"
+
+#: ../../web/add/firewall/ipset/index.php:27
+#: ../../web/templates/admin/add_firewall_ipset.html:79
+#: ../../web/templates/admin/list_firewall_ipset.html:38
+msgid "Ip Version"
+msgstr "IP versiyası"
+
+#: ../../web/add/firewall/ipset/index.php:28
+#: ../../web/templates/admin/add_firewall_ipset.html:92
+#: ../../web/templates/admin/list_firewall_ipset.html:37
+msgid "Autoupdate"
+msgstr "Avtomatik yeniləmə"
+
+#: ../../web/add/firewall/ipset/index.php:55
+msgid "IPSET_CREATED_OK"
+msgstr "IP siyahısı uğurla yaradılmışdır"
+
+#: ../../web/add/firewall/index.php:42
+msgid "action"
+msgstr ""
+
+#: ../../web/add/firewall/index.php:43
+msgid "protocol"
+msgstr ""
+
+#: ../../web/add/firewall/index.php:44
+msgid "port"
+msgstr ""
+
+#: ../../web/add/ip/index.php:25 ../../web/add/firewall/banlist/index.php:26
+#: ../../web/add/firewall/index.php:45
+msgid "ip address"
+msgstr "ip ünvanı"
+
+#: ../../web/add/firewall/index.php:76
+msgid "RULE_CREATED_OK"
+msgstr "Qayda uğurla yaradıldı."
+
+#: ../../web/add/firewall/banlist/index.php:25
+msgid "banlist"
+msgstr ""
+
+#: ../../web/add/firewall/banlist/index.php:51
+msgid "BANLIST_CREATED_OK"
+msgstr "IP ünvan müvəffəqiyyətlə qadağan edildi"
+
+#: ../../web/add/db/index.php:19
+msgid "database"
+msgstr "verilənələr bazası"
+
+#: ../../web/add/db/index.php:20
+msgid "username"
+msgstr "istifadəçi adı"
+
+#: ../../web/add/db/index.php:22
+msgid "type"
+msgstr "tip"
+
+#: ../../web/add/db/index.php:23
+msgid "host"
+msgstr ""
+
+#: ../../web/add/db/index.php:24
+msgid "charset"
+msgstr "kodlaşdırma"
+
+#: ../../web/add/db/index.php:90
+msgid "Database Credentials"
+msgstr "Veritabanı Bilgileri"
+
+#: ../../web/add/db/index.php:93
+msgid "DATABASE_READY"
+msgstr ""
+"Verilənlər bazası yaradıldı.\n"
+"\\Verilənlər bazsı: %s\n"
+"İstifadəçi: %s\\Şifrə: %s\n"
+"%s\n"
+"\n"
+"--\n"
+"Vesta Nəzarət Paneli"
+
+#: ../../web/add/db/index.php:99
+msgid "DATABASE_CREATED_OK"
+msgstr "<a href=\"/edit/db/?database=%s\"><b>%s</b></a> verilənlər bazası uğurla yaradıldı."
+
+#: ../../web/add/db/index.php:100
+msgid "open %s"
+msgstr "%s aç"
+
+#: ../../web/add/ip/index.php:26
+msgid "netmask"
+msgstr "netmask"
+
+#: ../../web/add/ip/index.php:27
+msgid "interface"
+msgstr "interfeys"
+
+#: ../../web/add/ip/index.php:28
+msgid "assigned user"
+msgstr "təyin edilən istifadəçi"
+
+#: ../../web/add/ip/index.php:69
+msgid "IP_CREATED_OK"
+msgstr "<a href=\"/edit/ip/?ip=%s\"><b>%s</b></a> ip ünvanı uğurla yaradıldı."
+
+#: ../../web/add/dns/index.php:88
+msgid "DNS_DOMAIN_CREATED_OK"
+msgstr "<a href=\"/list/dns/?domain=%s\"><b>%s</b></a> DNS domen uğurla yaradıldı."
+
+#: ../../web/add/dns/index.php:137
+msgid "DNS_RECORD_CREATED_OK"
+msgstr "<b>%s.%s</b> qeydi uğurla yaradıldı."
+
+#: ../../web/add/package/index.php:152
+msgid "PACKAGE_CREATED_OK"
+msgstr "<a href=\"/edit/package/?package=%s\"><b>%s</b></a> paketi uğurla yaradıldı."
+
+#: ../../web/add/cron/index.php:22
+msgid "month"
+msgstr "ay"
+
+#: ../../web/add/cron/index.php:23
+msgid "day of week"
+msgstr "həftənin günü"
+
+#: ../../web/add/cron/index.php:24
+msgid "cmd"
+msgstr "cmd"
+
+#: ../../web/add/cron/index.php:53
+msgid "CRON_CREATED_OK"
+msgstr "Zamanlanmış tapşırıq uğurla yaradıldı."
+
+#: ../../web/download/backup/index.php:20
+msgid "BACKUP_DOWNLOAD_SCHEDULED"
+msgstr "Uzaqdan yedek faylının yüklənməsi planlaşdırıldı."
+
+#: ../../web/templates/admin/list_web.html:8
+#: ../../web/templates/admin/list_web.html:54
+#: ../../web/templates/admin/add_dns.html:56
+#: ../../web/templates/admin/add_web.html:64
+#: ../../web/templates/admin/list_mail.html:8
+#: ../../web/templates/admin/list_mail.html:54
+#: ../../web/templates/admin/edit_web.html:62
+#: ../../web/templates/admin/edit_mail.html:58
+#: ../../web/templates/admin/add_mail.html:56
+#: ../../web/templates/admin/generate_ssl.html:50
+#: ../../web/templates/admin/list_dns.html:9
+#: ../../web/templates/admin/list_dns.html:54
+#: ../../web/templates/admin/add_mail_acc.html:49
+#: ../../web/templates/admin/add_dns_rec.html:48
+#: ../../web/templates/admin/edit_dns.html:58
+#: ../../web/templates/admin/edit_dns_rec.html:58
+#: ../../web/templates/user/list_web.html:14
+#: ../../web/templates/user/list_web.html:59
+#: ../../web/templates/user/list_mail.html:8
+#: ../../web/templates/user/list_mail.html:53
+#: ../../web/templates/user/edit_web.html:75
+#: ../../web/templates/user/list_dns.html:9
+#: ../../web/templates/user/list_dns.html:53
+#: ../../web/templates/user/edit_dns.html:58
+#: ../../web/generate/ssl/index.php:37
+msgid "Domain"
+msgstr "Domen"
+
+#: ../../web/templates/admin/generate_ssl.html:70
+#: ../../web/generate/ssl/index.php:38
+msgid "Country"
+msgstr "Ölkə"
+
+#: ../../web/generate/ssl/index.php:39
+msgid "State"
+msgstr ""
+
+#: ../../web/generate/ssl/index.php:40
+msgid "City"
+msgstr ""
+
+#: ../../web/templates/admin/generate_ssl.html:101
+#: ../../web/generate/ssl/index.php:41
+msgid "Organization"
+msgstr "Orqanizasiya"
+
+#: ../../web/templates/reset_1.html:30
+#: ../../web/templates/admin/edit_user.html:114
+#: ../../web/templates/admin/list_user.html:105
+#: ../../web/templates/admin/generate_ssl.html:60
+#: ../../web/templates/admin/add_user.html:97
+#: ../../web/templates/user/edit_user.html:112
+#: ../../web/templates/user/list_user.html:99
+#: ../../web/generate/ssl/index.php:42
+msgid "Email"
+msgstr "E-poçt"
+
+#: ../../web/generate/ssl/index.php:94
+msgid "SSL_GENERATED_OK"
+msgstr "Sertifikart uğurla yaradıldı."
+
+#: ../../web/templates/reset_1.html:15 ../../web/templates/reset_2.html:15
+#: ../../web/templates/reset_3.html:15
+msgid "Forgot Password"
+msgstr "Şifrəni unutmusunuz"
+
+#: ../../web/templates/reset_3.html:23
+msgid "New Password"
+msgstr "Yeni şifrə"
+
+#: ../../web/templates/reset_3.html:33
+msgid "Confirm Password"
+msgstr "Şifrəni təstiqlə"
+
+#: ../../web/templates/login_1.html:43 ../../web/templates/reset_1.html:41
+#: ../../web/templates/reset_2.html:36 ../../web/templates/reset_3.html:44
+#: ../../web/templates/admin/setup_webapp.html:4
+#: ../../web/templates/admin/add_firewall_ipset.html:4
+#: ../../web/templates/admin/add_dns.html:4
+#: ../../web/templates/admin/edit_server_mysql.html:4
+#: ../../web/templates/admin/add_firewall.html:4
+#: ../../web/templates/admin/edit_user.html:4
+#: ../../web/templates/admin/add_firewall_banlist.html:4
+#: ../../web/templates/admin/list_server_info.html:26
+#: ../../web/templates/admin/add_web.html:4
+#: ../../web/templates/admin/edit_web.html:4
+#: ../../web/templates/admin/list_weblog.html:26
+#: ../../web/templates/admin/add_db.html:4
+#: ../../web/templates/admin/edit_mail_acc.html:4
+#: ../../web/templates/admin/edit_db.html:4
+#: ../../web/templates/admin/edit_server_dovecot.html:4
+#: ../../web/templates/admin/edit_backup_exclusions.html:4
+#: ../../web/templates/admin/list_webapps.html:4
+#: ../../web/templates/admin/list_search.html:4
+#: ../../web/templates/admin/list_backup_exclusions.html:4
+#: ../../web/templates/admin/list_firewall.html:4
+#: ../../web/templates/admin/edit_mail.html:4
+#: ../../web/templates/admin/edit_package.html:4
+#: ../../web/templates/admin/add_mail.html:4
+#: ../../web/templates/admin/list_backup_detail.html:4
+#: ../../web/templates/admin/add_ip.html:4
+#: ../../web/templates/admin/list_mail_acc.html:4
+#: ../../web/templates/admin/list_key.html:4
+#: ../../web/templates/admin/list_ssl.html:86
+#: ../../web/templates/admin/edit_server.html:4
+#: ../../web/templates/admin/list_updates.html:4
+#: ../../web/templates/admin/edit_server_php.html:4
+#: ../../web/templates/admin/list_ip.html:4
+#: ../../web/templates/admin/generate_ssl.html:116
+#: ../../web/templates/admin/add_cron.html:4
+#: ../../web/templates/admin/list_firewall_ipset.html:4
+#: ../../web/templates/admin/add_package.html:4
+#: ../../web/templates/admin/add_mail_acc.html:4
+#: ../../web/templates/admin/add_dns_rec.html:4
+#: ../../web/templates/admin/list_firewall_banlist.html:4
+#: ../../web/templates/admin/add_user.html:4
+#: ../../web/templates/admin/list_rrd.html:4
+#: ../../web/templates/admin/edit_server_service.html:4
+#: ../../web/templates/admin/edit_ip.html:4
+#: ../../web/templates/admin/edit_dns.html:4
+#: ../../web/templates/admin/list_packages.html:4
+#: ../../web/templates/admin/edit_server_httpd.html:4
+#: ../../web/templates/admin/add_key.html:4
+#: ../../web/templates/admin/edit_server_pgsql.html:4
+#: ../../web/templates/admin/edit_server_nginx.html:4
+#: ../../web/templates/admin/edit_dns_rec.html:4
+#: ../../web/templates/admin/edit_firewall.html:4
+#: ../../web/templates/admin/list_dns_rec.html:4
+#: ../../web/templates/admin/edit_server_bind9.html:4
+#: ../../web/templates/admin/edit_cron.html:4
+#: ../../web/templates/user/edit_user.html:4
+#: ../../web/templates/user/edit_web.html:4
+#: ../../web/templates/user/list_search.html:4
+#: ../../web/templates/user/list_mail_acc.html:4
+#: ../../web/templates/user/edit_dns.html:4
+#: ../../web/templates/user/list_dns_rec.html:4
+#: ../../web/templates/reset2fa.html:55
+msgid "Back"
+msgstr "Ləğv edin"
+
+#: ../../web/templates/reset_3.html:43
+msgid "Reset"
+msgstr "Sıfırla"
+
+#: ../../web/templates/reset_2.html:20
+msgid "RESET_CODE_SENT"
+msgstr "Şifrə sıfırlama kodu e-poçt ünvanınıza göndərildi.<br>"
+
+#: ../../web/templates/reset_2.html:24
+msgid "Reset Code"
+msgstr "Sıfırlama Kodu"
+
+#: ../../web/templates/reset_2.html:35
+msgid "Confirm"
+msgstr "Təstiqlə"
+
+#: ../../web/templates/admin/list_key.html:6
+#: ../../web/templates/admin/add_key.html:39
+msgid "Add SSH Key"
+msgstr "SSH düyməsini əlavə edin"
+
+#: ../../web/templates/admin/list_key.html:17
+msgid "SSH_ID"
+msgstr "SSH şəxsiyyəti"
+
+#: ../../web/templates/admin/list_key.html:21
+#: ../../web/templates/admin/add_key.html:57
+#: ../../web/templates/user/edit_user.html:5
+msgid "SSH KEY"
+msgstr "SSH açarı"
+
+#: ../../web/templates/admin/list_web.html:35
+#: ../../web/templates/admin/list_web.html:155
+#: ../../web/templates/admin/add_dns.html:119
+#: ../../web/templates/admin/add_dns.html:125
+#: ../../web/templates/admin/add_dns.html:132
+#: ../../web/templates/admin/add_dns.html:140
+#: ../../web/templates/admin/add_dns.html:148
+#: ../../web/templates/admin/add_dns.html:156
+#: ../../web/templates/admin/add_dns.html:164
+#: ../../web/templates/admin/add_dns.html:172
+#: ../../web/templates/admin/list_backup.html:23
+#: ../../web/templates/admin/list_backup.html:85
+#: ../../web/templates/admin/edit_user.html:235
+#: ../../web/templates/admin/edit_user.html:241
+#: ../../web/templates/admin/edit_user.html:248
+#: ../../web/templates/admin/edit_user.html:256
+#: ../../web/templates/admin/edit_user.html:264
+#: ../../web/templates/admin/edit_user.html:272
+#: ../../web/templates/admin/edit_user.html:280
+#: ../../web/templates/admin/edit_user.html:288
+#: ../../web/templates/admin/add_web.html:325
+#: ../../web/templates/admin/add_web.html:397
+#: ../../web/templates/admin/list_mail.html:34
+#: ../../web/templates/admin/list_mail.html:117
+#: ../../web/templates/admin/edit_web.html:460
+#: ../../web/templates/admin/edit_web.html:536
+#: ../../web/templates/admin/list_cron.html:40
+#: ../../web/templates/admin/list_cron.html:107
+#: ../../web/templates/admin/list_user.html:47
+#: ../../web/templates/admin/list_user.html:130
+#: ../../web/templates/admin/list_firewall.html:30
+#: ../../web/templates/admin/list_firewall.html:114
+#: ../../web/templates/admin/edit_package.html:310
+#: ../../web/templates/admin/edit_package.html:316
+#: ../../web/templates/admin/edit_package.html:323
+#: ../../web/templates/admin/edit_package.html:331
+#: ../../web/templates/admin/edit_package.html:339
+#: ../../web/templates/admin/edit_package.html:347
+#: ../../web/templates/admin/edit_package.html:355
+#: ../../web/templates/admin/edit_package.html:363
+#: ../../web/templates/admin/list_mail_acc.html:34
+#: ../../web/templates/admin/list_mail_acc.html:109
+#: ../../web/templates/admin/list_key.html:37
+#: ../../web/templates/admin/list_ip.html:28
+#: ../../web/templates/admin/list_ip.html:81
+#: ../../web/templates/admin/list_dns.html:35
+#: ../../web/templates/admin/list_dns.html:110
+#: ../../web/templates/admin/list_firewall_ipset.html:16
+#: ../../web/templates/admin/add_package.html:313
+#: ../../web/templates/admin/add_package.html:319
+#: ../../web/templates/admin/add_package.html:326
+#: ../../web/templates/admin/add_package.html:334
+#: ../../web/templates/admin/add_package.html:342
+#: ../../web/templates/admin/add_package.html:350
+#: ../../web/templates/admin/add_package.html:358
+#: ../../web/templates/admin/add_package.html:366
+#: ../../web/templates/admin/list_firewall_banlist.html:16
+#: ../../web/templates/admin/list_packages.html:23
+#: ../../web/templates/admin/list_db.html:62
+#: ../../web/templates/admin/list_db.html:140
+#: ../../web/templates/admin/list_dns_rec.html:27
+#: ../../web/templates/admin/list_dns_rec.html:74
+#: ../../web/templates/user/list_web.html:40
+#: ../../web/templates/user/list_web.html:160
+#: ../../web/templates/user/edit_user.html:152
+#: ../../web/templates/user/edit_user.html:158
+#: ../../web/templates/user/edit_user.html:165
+#: ../../web/templates/user/edit_user.html:173
+#: ../../web/templates/user/edit_user.html:181
+#: ../../web/templates/user/edit_user.html:189
+#: ../../web/templates/user/edit_user.html:197
+#: ../../web/templates/user/edit_user.html:205
+#: ../../web/templates/user/list_mail.html:33
+#: ../../web/templates/user/list_mail.html:116
+#: ../../web/templates/user/edit_web.html:474
+#: ../../web/templates/user/edit_web.html:550
+#: ../../web/templates/user/list_cron.html:40
+#: ../../web/templates/user/list_cron.html:107
+#: ../../web/templates/user/list_user.html:51
+#: ../../web/templates/user/list_mail_acc.html:34
+#: ../../web/templates/user/list_mail_acc.html:109
+#: ../../web/templates/user/list_dns.html:34
+#: ../../web/templates/user/list_dns.html:109
+#: ../../web/templates/user/list_db.html:61
+#: ../../web/templates/user/list_db.html:139
+#: ../../web/templates/user/list_dns_rec.html:27
+#: ../../web/templates/user/list_dns_rec.html:72
+msgid "delete"
+msgstr "Sil"
+
+#: ../../web/templates/footer.html:3
+#: ../../web/templates/admin/list_web.html:149
+#: ../../web/templates/admin/list_web.html:158
+#: ../../web/templates/admin/list_backup.html:88
+#: ../../web/templates/admin/list_services.html:14
+#: ../../web/templates/admin/list_services.html:138
+#: ../../web/templates/admin/list_services.html:147
+#: ../../web/templates/admin/list_mail.html:111
+#: ../../web/templates/admin/list_mail.html:120
+#: ../../web/templates/admin/list_cron.html:101
+#: ../../web/templates/admin/list_cron.html:110
+#: ../../web/templates/admin/list_search.html:138
+#: ../../web/templates/admin/list_search.html:169
+#: ../../web/templates/admin/list_user.html:124
+#: ../../web/templates/admin/list_user.html:133
+#: ../../web/templates/admin/list_log.html:10
+#: ../../web/templates/admin/list_firewall.html:108
+#: ../../web/templates/admin/list_firewall.html:117
+#: ../../web/templates/admin/list_mail_acc.html:103
+#: ../../web/templates/admin/list_mail_acc.html:112
+#: ../../web/templates/admin/list_key.html:40
+#: ../../web/templates/admin/list_ip.html:84
+#: ../../web/templates/admin/list_dns.html:104
+#: ../../web/templates/admin/list_dns.html:113
+#: ../../web/templates/admin/list_firewall_ipset.html:72
+#: ../../web/templates/admin/list_firewall_banlist.html:64
+#: ../../web/templates/admin/list_packages.html:82
+#: ../../web/templates/admin/list_db.html:134
+#: ../../web/templates/admin/list_db.html:143
+#: ../../web/templates/admin/list_dns_rec.html:77
+#: ../../web/templates/user/list_web.html:154
+#: ../../web/templates/user/list_web.html:163
+#: ../../web/templates/user/list_mail.html:110
+#: ../../web/templates/user/list_mail.html:119
+#: ../../web/templates/user/list_cron.html:101
+#: ../../web/templates/user/list_cron.html:110
+#: ../../web/templates/user/list_search.html:136
+#: ../../web/templates/user/list_search.html:167
+#: ../../web/templates/user/list_mail_acc.html:103
+#: ../../web/templates/user/list_mail_acc.html:112
+#: ../../web/templates/user/list_dns.html:103
+#: ../../web/templates/user/list_dns.html:112
+#: ../../web/templates/user/list_db.html:133
+#: ../../web/templates/user/list_db.html:142
+#: ../../web/templates/user/list_dns_rec.html:75
+msgid "Confirmation"
+msgstr "Təsdiqləmə"
+
+#: ../../web/templates/admin/list_key.html:41
+msgid "DELETE_KEY_CONFIRM"
+msgstr "SSH düyməsini silmək istədiyinizə əminsiniz %s?"
+
+#: ../../web/templates/admin/list_key.html:61
+msgid "%d SSH Key"
+msgid_plural "%d SSH Keys"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../web/templates/admin/list_ssl.html:36
+#: ../../web/templates/admin/generate_ssl.html:45
+msgid "Generating CSR"
+msgstr "CSR yaratma"
+
+#: ../../web/templates/admin/generate_ssl.html:71
+msgid "2 letter code"
+msgstr "2 hərf kodu"
+
+#: ../../web/templates/admin/generate_ssl.html:81
+msgid "State / Province"
+msgstr "Dövlət / Əyalət"
+
+#: ../../web/templates/admin/generate_ssl.html:91
+msgid "City / Locality"
+msgstr "Şəhər / Yerləşmə"
+
+#: ../../web/templates/admin/generate_ssl.html:113
+msgid "Ok"
+msgstr ""
+
+#: ../../web/templates/admin/list_firewall_ipset.html:5
+msgid "Add IP list"
+msgstr "IP siyahısını əlavə edin"
+
+#: ../../web/templates/admin/list_web.html:31
+#: ../../web/templates/admin/list_backup.html:22
+#: ../../web/templates/admin/list_services.html:28
+#: ../../web/templates/admin/list_mail.html:30
+#: ../../web/templates/admin/list_cron.html:35
+#: ../../web/templates/admin/list_user.html:37
+#: ../../web/templates/admin/list_firewall.html:29
+#: ../../web/templates/admin/list_backup_detail.html:23
+#: ../../web/templates/admin/list_mail_acc.html:31
+#: ../../web/templates/admin/list_updates.html:19
+#: ../../web/templates/admin/list_ip.html:26
+#: ../../web/templates/admin/list_dns.html:31
+#: ../../web/templates/admin/list_firewall_ipset.html:15
+#: ../../web/templates/admin/list_firewall_banlist.html:15
+#: ../../web/templates/admin/list_packages.html:22
+#: ../../web/templates/admin/list_db.html:58
+#: ../../web/templates/admin/list_dns_rec.html:24
+#: ../../web/templates/user/list_web.html:37
+#: ../../web/templates/user/list_mail.html:30
+#: ../../web/templates/user/list_cron.html:35
+#: ../../web/templates/user/list_user.html:41
+#: ../../web/templates/user/list_mail_acc.html:31
+#: ../../web/templates/user/list_dns.html:31
+#: ../../web/templates/user/list_db.html:58
+#: ../../web/templates/user/list_dns_rec.html:24
+msgid "apply to selected"
+msgstr "Seçimi tətbiq edin"
+
+#: ../../web/templates/admin/add_firewall_ipset.html:56
+#: ../../web/templates/admin/list_firewall_ipset.html:35
+msgid "Ip List Name"
+msgstr "IP siyahısı adı"
+
+#: ../../web/templates/admin/list_web.html:7
+#: ../../web/templates/admin/list_web.html:17
+#: ../../web/templates/admin/list_backup.html:45
+#: ../../web/templates/admin/list_mail.html:7
+#: ../../web/templates/admin/list_mail.html:16
+#: ../../web/templates/admin/list_cron.html:14
+#: ../../web/templates/admin/list_cron.html:21
+#: ../../web/templates/admin/list_search.html:8
+#: ../../web/templates/admin/list_search.html:15
+#: ../../web/templates/admin/list_search.html:41
+#: ../../web/templates/admin/list_user.html:14
+#: ../../web/templates/admin/list_user.html:23
+#: ../../web/templates/admin/list_log.html:30
+#: ../../web/templates/admin/list_mail_acc.html:9
+#: ../../web/templates/admin/list_mail_acc.html:17
+#: ../../web/templates/admin/list_ip.html:8
+#: ../../web/templates/admin/list_ip.html:19
+#: ../../web/templates/admin/list_dns.html:7
+#: ../../web/templates/admin/list_dns.html:17
+#: ../../web/templates/admin/add_cron.html:256
+#: ../../web/templates/admin/list_firewall_ipset.html:39
+#: ../../web/templates/admin/list_firewall_banlist.html:37
+#: ../../web/templates/admin/list_packages.html:8
+#: ../../web/templates/admin/list_packages.html:15
+#: ../../web/templates/admin/list_db.html:34
+#: ../../web/templates/admin/list_db.html:44
+#: ../../web/templates/admin/edit_cron.html:250
+#: ../../web/templates/user/list_web.html:13
+#: ../../web/templates/user/list_web.html:23
+#: ../../web/templates/user/list_mail.html:7
+#: ../../web/templates/user/list_mail.html:16
+#: ../../web/templates/user/list_cron.html:14
+#: ../../web/templates/user/list_cron.html:21
+#: ../../web/templates/user/list_search.html:8
+#: ../../web/templates/user/list_search.html:15
+#: ../../web/templates/user/list_search.html:39
+#: ../../web/templates/user/list_user.html:18
+#: ../../web/templates/user/list_user.html:27
+#: ../../web/templates/user/list_mail_acc.html:9
+#: ../../web/templates/user/list_mail_acc.html:17
+#: ../../web/templates/user/list_dns.html:7
+#: ../../web/templates/user/list_dns.html:17
+#: ../../web/templates/user/list_db.html:34
+#: ../../web/templates/user/list_db.html:44
+msgid "Date"
+msgstr "Tarix"
+
+#: ../../web/templates/admin/list_log.html:31
+#: ../../web/templates/admin/list_firewall_ipset.html:40
+#: ../../web/templates/admin/list_firewall_banlist.html:38
+msgid "Time"
+msgstr "Vaxt"
+
+#: ../../web/templates/admin/list_firewall_ipset.html:73
+msgid "DELETE_IPSET_CONFIRMATION"
+msgstr "IP siyahısını silmək istədiyinizə əminsiniz %s?"
+
+#: ../../web/templates/admin/list_firewall_ipset.html:105
+msgid "There are currently no IP lists defined."
+msgstr "Hal-hazırda müəyyən edilmiş IP siyahıları yoxdur."
+
+#: ../../web/templates/admin/list_firewall_ipset.html:107
+msgid "%d Ipset list"
+msgid_plural "%d Ipset lists"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../web/templates/admin/add_firewall_ipset.html:7
+#: ../../web/templates/admin/add_dns.html:7
+#: ../../web/templates/admin/edit_server_mysql.html:7
+#: ../../web/templates/admin/add_firewall.html:7
+#: ../../web/templates/admin/edit_user.html:10
+#: ../../web/templates/admin/add_firewall_banlist.html:7
+#: ../../web/templates/admin/add_web.html:7
+#: ../../web/templates/admin/edit_web.html:10
+#: ../../web/templates/admin/add_db.html:7
+#: ../../web/templates/admin/edit_mail_acc.html:7
+#: ../../web/templates/admin/edit_db.html:7
+#: ../../web/templates/admin/edit_server_dovecot.html:7
+#: ../../web/templates/admin/edit_backup_exclusions.html:7
+#: ../../web/templates/admin/edit_mail.html:7
+#: ../../web/templates/admin/edit_package.html:7
+#: ../../web/templates/admin/add_mail.html:7
+#: ../../web/templates/admin/add_ip.html:7
+#: ../../web/templates/admin/edit_server.html:7
+#: ../../web/templates/admin/edit_server_php.html:7
+#: ../../web/templates/admin/add_cron.html:7
+#: ../../web/templates/admin/add_package.html:7
+#: ../../web/templates/admin/add_mail_acc.html:7
+#: ../../web/templates/admin/add_dns_rec.html:7
+#: ../../web/templates/admin/add_user.html:7
+#: ../../web/templates/admin/edit_server_service.html:7
+#: ../../web/templates/admin/edit_ip.html:7
+#: ../../web/templates/admin/edit_dns.html:7
+#: ../../web/templates/admin/edit_server_httpd.html:8
+#: ../../web/templates/admin/add_key.html:7
+#: ../../web/templates/admin/edit_server_pgsql.html:7
+#: ../../web/templates/admin/edit_server_nginx.html:8
+#: ../../web/templates/admin/edit_dns_rec.html:7
+#: ../../web/templates/admin/edit_firewall.html:7
+#: ../../web/templates/admin/edit_server_bind9.html:7
+#: ../../web/templates/admin/edit_cron.html:7
+#: ../../web/templates/user/edit_user.html:8
+#: ../../web/templates/user/edit_web.html:10
+#: ../../web/templates/user/edit_dns.html:7
+msgid "Save"
+msgstr "Yadda saxla"
+
+#: ../../web/templates/admin/edit_server_mysql.html:38
+#: ../../web/templates/admin/edit_server_dovecot.html:38
+#: ../../web/templates/admin/edit_server.html:39
+#: ../../web/templates/admin/edit_server_php.html:38
+#: ../../web/templates/admin/edit_server_service.html:39
+#: ../../web/templates/admin/edit_server_httpd.html:39
+#: ../../web/templates/admin/edit_server_pgsql.html:38
+#: ../../web/templates/admin/edit_server_nginx.html:39
+#: ../../web/templates/admin/edit_server_bind9.html:38
+msgid "Configuring Server"
+msgstr "Server ayarlanması"
+
+#: ../../web/templates/admin/edit_server_mysql.html:120
+#: ../../web/templates/admin/edit_server.html:59
+#: ../../web/templates/admin/edit_server_php.html:142
+#: ../../web/templates/admin/edit_server_nginx.html:176
+msgid "Basic options"
+msgstr "Əsas seçimlər"
+
+#: ../../web/templates/admin/edit_server.html:67
+#: ../../web/templates/admin/list_db.html:85
+#: ../../web/templates/user/list_db.html:84
+msgid "Hostname"
+msgstr "Hostname"
+
+#: ../../web/templates/admin/edit_server.html:78
+msgid "Time Zone"
+msgstr "Vaxt qurşağı"
+
+#: ../../web/templates/admin/edit_server.html:102
+msgid "Theme"
+msgstr "Görünüş"
+
+#: ../../web/templates/admin/edit_server.html:126
+msgid "Default Language"
+msgstr "Default dil"

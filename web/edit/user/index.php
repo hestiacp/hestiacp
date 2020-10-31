@@ -38,6 +38,7 @@ $v_shell = $data[$v_username]['SHELL'];
 $v_twofa = $data[$v_username]['TWOFA'];
 $v_qrcode = $data[$v_username]['QRCODE'];
 $v_phpcli = $data[$v_username]['PHPCLI'];
+$v_role = $data[$v_username]['ROLE'];
 $v_ns = $data[$v_username]['NS'];
 $nameservers = explode(",", $v_ns);
 $v_ns1 = $nameservers[0];
@@ -98,15 +99,22 @@ if (!empty($_POST['save'])) {
 
     // Change password
     if ((!empty($_POST['v_password'])) && (empty($_SESSION['error_msg']))) {
-        $v_password = tempnam("/tmp","vst");
-        $fp = fopen($v_password, "w");
-        fwrite($fp, $_POST['v_password']."\n");
-        fclose($fp);
-        exec (HESTIA_CMD."v-change-user-password ".escapeshellarg($v_username)." ".$v_password, $output, $return_var);
-        check_return_code($return_var,$output);
-        unset($output);
-        unlink($v_password);
-        $v_password = escapeshellarg($_POST['v_password']);
+        // Check password length
+        $pw_len = strlen($_POST['v_password']);
+        if (!validate_password($_POST['v_password'])){ 
+            $_SESSION['error_msg'] = _('Password does not match the minimum requirements');
+        } 
+        if (empty($_SESSION['error_msg'])) {
+            $v_password = tempnam("/tmp","vst");
+            $fp = fopen($v_password, "w");
+            fwrite($fp, $_POST['v_password']."\n");
+            fclose($fp);
+            exec (HESTIA_CMD."v-change-user-password ".escapeshellarg($v_username)." ".$v_password, $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            unlink($v_password);
+            $v_password = escapeshellarg($_POST['v_password']);
+        }
     }
 
     // Enable twofa
@@ -150,7 +158,14 @@ if (!empty($_POST['save'])) {
         check_return_code($return_var,$output);
         unset($output);
     }
-
+    // Change Role (admin only)
+    if (($v_role != $_POST['$v_role']) && ($_SESSION['user'] == 'admin') && (empty($_SESSION['error_msg']))) {
+        $v_role = escapeshellarg($_POST['v_role']);
+        exec (HESTIA_CMD."v-change-user-role ".escapeshellarg($v_username)." ".$v_role, $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
+        $v_role = $_POST['v_role'];
+    }
     // Change language
     if (($v_language != $_POST['v_language']) && (empty($_SESSION['error_msg']))) {
         $v_language = escapeshellarg($_POST['v_language']);
@@ -173,7 +188,7 @@ if (!empty($_POST['save'])) {
     // Change contact email
     if (($v_email != $_POST['v_email']) && (empty($_SESSION['error_msg']))) {
         if (!filter_var($_POST['v_email'], FILTER_VALIDATE_EMAIL)) {
-            $_SESSION['error_msg'] = __('Please enter valid email address.');
+            $_SESSION['error_msg'] = _('Please enter valid email address.');
         } else {
             $v_email = escapeshellarg($_POST['v_email']);
             exec (HESTIA_CMD."v-change-user-contact ".escapeshellarg($v_username)." ".$v_email, $output, $return_var);
@@ -184,11 +199,15 @@ if (!empty($_POST['save'])) {
 
     // Change full name
     if ($v_name != $_POST['v_name']){
-        $v_name = escapeshellarg($_POST['v_name']);
-        exec (HESTIA_CMD."v-change-user-name ".escapeshellarg($v_username). " ". "$v_name", $output, $return_var);
-        check_return_code($return_var,$output);
-        unset($output);
-        $v_name = $_POST['v_name'];
+            if (empty($_POST['v_name'])) {
+                 $_SESSION['error_msg'] = _('Please enter a valid name');
+            }else{
+                $v_name = escapeshellarg($_POST['v_name']);
+                exec (HESTIA_CMD."v-change-user-name ".escapeshellarg($v_username). " ".$v_name, $output, $return_var);
+                check_return_code($return_var,$output);
+                unset($output);
+                $v_name = $_POST['v_name'];
+            }
     }
 
     // Change NameServers
@@ -225,7 +244,7 @@ if (!empty($_POST['save'])) {
 
     // Set success message
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('Changes has been saved.');
+        $_SESSION['ok_msg'] = _('Changes has been saved.');
     }
 }
 

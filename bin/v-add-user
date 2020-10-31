@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add system user
 # options: USER PASSWORD EMAIL [PACKAGE] [NAME]
+# labels: 
+#
+# example: v-add-user admin2 P4$$w@rD bgates@aol.com
 #
 # The function creates new user account.
 
@@ -62,6 +65,13 @@ check_result $? "user creation failed" $E_INVALID
 # Adding password
 echo "$user:$password" | /usr/sbin/chpasswd
 
+if [ $? -ne 0 ]; then 
+    # Delete user on failure
+    /usr/sbin/deluser "$user" > /dev/null 2>&1
+    echo "Error: Password not accepted due to PAM restrictions"
+    exit 2
+fi
+
 # Add a general group for normal users created by Hestia
 if [ -z "$(grep ^hestia-users: /etc/group)" ]; then
     groupadd --system "hestia-users"
@@ -102,14 +112,16 @@ mkdir $HOMEDIR/$user/.config \
       $HOMEDIR/$user/.cache \
       $HOMEDIR/$user/.local \
       $HOMEDIR/$user/.composer \
-      $HOMEDIR/$user/.ssh
+      $HOMEDIR/$user/.ssh \
+      $HOMEDIR/$user/.npm
 
 chown $user:$user \
       $HOMEDIR/$user/.config \
       $HOMEDIR/$user/.cache \
       $HOMEDIR/$user/.local \
       $HOMEDIR/$user/.composer \
-      $HOMEDIR/$user/.ssh
+      $HOMEDIR/$user/.ssh \
+      $HOMEDIR/$user/.npm
 
 # Set permissions
 chmod a+x $HOMEDIR/$user
@@ -183,6 +195,10 @@ CONTACT='$email'
 CRON_REPORTS='yes'
 MD5='$(awk -v user=$user -F : 'user == $1 {print $2}' /etc/shadow)'
 RKEY='$(generate_password)'
+TWOFA=''
+QRCODE=''
+PHPCLI=''
+ROLE='user'
 SUSPENDED='no'
 SUSPENDED_USERS='0'
 SUSPENDED_WEB='0'

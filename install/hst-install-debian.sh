@@ -23,11 +23,11 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.2.2-alpha'
-pma_v='5.0.2'
+HESTIA_INSTALL_VER='1.3.1~alpha'
+pma_v='5.0.4'
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
-fpm_v="7.3"
-mariadb_v="10.4"
+fpm_v="7.4"
+mariadb_v="10.5"
 
 if [ "$release" -eq 9 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
@@ -42,9 +42,9 @@ if [ "$release" -eq 9 ]; then
         mariadb-client mariadb-common mariadb-server postgresql
         postgresql-contrib phppgadmin phpmyadmin mc flex whois rssh git idn zip
         sudo bc ftp lsof rrdtool quota e2fslibs bsdutils e2fsprogs curl
-        imagemagick fail2ban dnsutils bsdmainutils cron hestia hestia-nginx
+        imagemagick fail2ban dnsutils bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx
         hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat
-        rsyslog ssh setpriv ipset libapache2-mod-ruid2"
+        rsyslog openssh-server setpriv ipset libapache2-mod-ruid2 zstd"
 elif [ "$release" -eq 10 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
         apache2-suexec-pristine libapache2-mod-fcgid libapache2-mod-php$fpm_v
@@ -59,12 +59,12 @@ elif [ "$release" -eq 10 ]; then
         mariadb-common mariadb-server postgresql postgresql-contrib phpmyadmin
         phppgadmin mc flex whois git idn zip sudo bc ftp lsof rrdtool
         quota e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron hestia hestia-nginx hestia-php expect
-        libmail-dkim-perl unrar-free vim-common acl sysstat rsyslog ssh util-linux
-        ipset libapache2-mpm-itk"
+        bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx hestia-php expect
+        libmail-dkim-perl unrar-free vim-common acl sysstat rsyslog openssh-server
+        util-linux ipset libapache2-mpm-itk zstd"
 fi
 
-installer_dependencies="apt-transport-https curl dirmngr gnupg wget"
+installer_dependencies="apt-transport-https curl dirmngr gnupg wget ca-certificates"
 
 # Defining help function
 help() {
@@ -107,7 +107,7 @@ download_file() {
 
 # Defining password-gen function
 gen_pass() {
-    cat /dev/urandom | tr -dc [:alnum:] | head -c16
+    head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16
 }
 
 # Defining return code check function
@@ -134,11 +134,8 @@ set_default_lang() {
     if [ -z "$lang" ]; then
         eval lang=$1
     fi
-    lang_list="
-        ar cz el fa hu ja no pt se ua
-        bs da en fi id ka pl ro tr vi
-        cn de es fr it nl pt-BR ru tw
-        bg ko sr th ur"
+    lang_list="ar az bg bs cs da de el en es fa fi fr hr hu id it ja ka ko nl no pl pt pt-br ro
+        ru sr sv th uk ur vi zh-cn zh-tw"
     if !(echo $lang_list |grep -w $lang > /dev/null 2>&1); then
         eval lang=$1
     fi
@@ -391,7 +388,7 @@ if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
         echo -e "\e[33mhttps://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh\e[0m"
         echo ""
         echo -e "\e[33mTo test pre-release versions, build the .deb packages and re-run the installer:\e[0m"
-        echo -e "  \e[33m./hst_autocompile.sh \e[1m--hestia no\e[21m\e[0m"
+        echo -e "  \e[33m./hst_autocompile.sh \e[1m--hestia branchname no\e[21m\e[0m"
         echo -e "  \e[33m./hst-install.sh .. \e[1m--with-debs /tmp/hestiacp-src/debs\e[21m\e[0m"
         echo ""
         check_result 1 "Installation aborted"
@@ -403,6 +400,7 @@ fi
 #----------------------------------------------------------#
 
 install_welcome_message() {
+    DISPLAY_VER=$(echo $HESTIA_INSTALL_VER | sed "s|~alpha||g" | sed "s|~beta||g")
     echo
     echo '                _   _           _   _        ____ ____                  '
     echo '               | | | | ___  ___| |_(_) __ _ / ___|  _ \                 '
@@ -411,7 +409,15 @@ install_welcome_message() {
     echo '               |_| |_|\___||___/\__|_|\__,_|\____|_|                    '
     echo "                                                                        "
     echo "                          Hestia Control Panel                          "
-    echo "                                  ${HESTIA_INSTALL_VER}                 "
+    if [[ "$HESTIA_INSTALL_VER" =~ "beta" ]]; then
+        echo "                              BETA RELEASE                          "
+    fi
+    if [[ "$HESTIA_INSTALL_VER" =~ "alpha" ]]; then
+        echo "                          DEVELOPMENT SNAPSHOT                      "
+        echo "                    NOT INTENDED FOR PRODUCTION USE                 "
+        echo "                          USE AT YOUR OWN RISK                      "
+    fi
+    echo "                                  ${DISPLAY_VER}                        "
     echo "                            www.hestiacp.com                            "
     echo
     echo "========================================================================"
@@ -672,7 +678,7 @@ cp /etc/vsftpd.conf $hst_backups/vsftpd > /dev/null 2>&1
 
 # Backup ProFTPD configuration
 systemctl stop proftpd > /dev/null 2>&1
-cp /etc/proftpd.conf $hst_backups/proftpd > /dev/null 2>&1
+cp /etc/proftpd/* $hst_backups/proftpd > /dev/null 2>&1
 
 # Backup Exim configuration
 systemctl stop exim4 > /dev/null 2>&1
@@ -802,7 +808,7 @@ fi
 if [ -d "$withdebs" ]; then
     software=$(echo "$software" | sed -e "s/hestia-nginx//")
     software=$(echo "$software" | sed -e "s/hestia-php//")
-    software=$(echo "$software" | sed -e "s/hestia//")
+    software=$(echo "$software" | sed -e "s/hestia=${HESTIA_INSTALL_VER}//")
 fi
 
 #----------------------------------------------------------#
@@ -921,6 +927,15 @@ if [ ! "$release" -eq 10 ]; then
     sed -i 's/#allowsftp/allowsftp/' /etc/rssh.conf
     sed -i 's/#allowrsync/allowrsync/' /etc/rssh.conf
     chmod 755 /usr/bin/rssh
+fi
+
+# Restrict access to /proc fs
+# - Prevent unpriv users from seeing each other running processes
+mount -o remount,defaults,hidepid=2 /proc > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    echo "Info: Cannot remount /proc (LXC containers require additional perm added to host apparmor profile)"
+else
+    echo "@reboot root sleep 5 && mount -o remount,defaults,hidepid=2 /proc" > /etc/cron.d/hestia-proc
 fi
 
 
@@ -1066,9 +1081,13 @@ fi
 # Backups
 echo "BACKUP_SYSTEM='local'" >> $HESTIA/conf/hestia.conf
 echo "BACKUP_GZIP='9'" >> $HESTIA/conf/hestia.conf
+echo "BACKUP_MODE='zstd'" >> $HESTIA/conf/hestia.conf
 
 # Language
 echo "LANGUAGE='$lang'" >> $HESTIA/conf/hestia.conf
+
+# Login in screen
+echo "LOGIN_STYLE='default'" >> $HESTIA/conf/hestia.conf
 
 # Version & Release Branch
 echo "VERSION='${HESTIA_INSTALL_VER}'" >> $HESTIA/conf/hestia.conf
@@ -1289,6 +1308,8 @@ if [ "$proftpd" = 'yes' ]; then
     echo "[ * ] Configuring ProFTPD server..."
     echo "127.0.0.1 $servername" >> /etc/hosts
     cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/proftpd/
+    cp -f $HESTIA_INSTALL_DIR/proftpd/tls.conf /etc/proftpd/
+    
     update-rc.d proftpd defaults > /dev/null 2>&1
     systemctl start proftpd >> $LOG
     check_result $? "proftpd start failed"
@@ -1308,8 +1329,11 @@ if [ "$mysql" = 'yes' ]; then
     if [ $memory -gt 3900000 ]; then
         mycnf="my-large.cnf"
     fi
-
-   # Configuring MariaDB
+    
+    # Remove symbolic link
+    rm -f /etc/mysql/my.cnf
+    
+    # Configuring MariaDB
     cp -f $HESTIA_INSTALL_DIR/mysql/$mycnf /etc/mysql/my.cnf
     mysql_install_db >> $LOG
 
@@ -1793,7 +1817,7 @@ fi
 $HESTIA/bin/v-change-sys-port $port > /dev/null 2>&1
 
 # Set default theme
-$HESTIA/bin/v-change-sys-theme 'default'
+$HESTIA/bin/v-change-sys-theme 'dark'
 
 # Update remaining packages since repositories have changed
 echo -ne "[ * ] Installing remaining software updates..."
@@ -1851,6 +1875,7 @@ or if you encounter any bugs or problems:
 E-mail:  info@hestiacp.com
 Web:     https://www.hestiacp.com/
 Forum:   https://forum.hestiacp.com/
+Discord: https://discord.gg/nXRUZch
 GitHub:  https://www.github.com/hestiacp/hestiacp
 
 Note: Automatic updates are enabled by default. If you would like to disable them,

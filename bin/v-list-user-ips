@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list user ips
 # options: USER [FORMAT]
+# labels: 
+#
+# example: v-list-user-ips admin
 #
 # The function for obtaining the list of available ip addresses.
 

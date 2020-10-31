@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list system updates
 # options: [FORMAT]
+# labels: 
 #
 # The function checks available updates for hestia packages.
 
@@ -68,7 +69,7 @@ php_v=$(apt-cache policy hestia-php | grep Candidate | cut -d ':' -f 2 | xargs)
 dpkg_data=$(dpkg-query -s hestia)
 pkg_date=$(stat -c "%Y" /var/lib/dpkg/info/hestia.list)
 ARCH=$(echo "$dpkg_data"|grep Architecture |cut -f 2 -d ' ')
-VERSION=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 1 -d \-)
+VERSION=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' ')
 DATE=$(date -d @$pkg_date +"%F")
 TIME=$(date -d @$pkg_date +"%T")
 
@@ -84,7 +85,7 @@ data="$data UPDATED='$UPDATED' DESCR='core package' TIME='$TIME' DATE='$DATE'"
 dpkg_data=$(dpkg-query -s hestia-php)
 pkg_date=$(stat -c "%Y" /var/lib/dpkg/info/hestia-php.list)
 ARCH=$(echo "$dpkg_data"|grep Architecture | cut -f 2 -d ' ')
-VERSION=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 1 -d \-)
+VERSION=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' ')
 DATE=$(date -d @$pkg_date +"%F")
 TIME=$(date -d @$pkg_date +"%T")
 
@@ -101,7 +102,7 @@ data="$data TIME='$TIME' DATE='$DATE'"
 dpkg_data=$(dpkg-query -s hestia-nginx)
 pkg_date=$(stat -c "%Y" /var/lib/dpkg/info/hestia-nginx.list)
 ARCH=$(echo "$dpkg_data"|grep Architecture | cut -f 2 -d ' ')
-VERSION=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' '|cut -f 1 -d \-)
+VERSION=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' ')
 DATE=$(date -d @$pkg_date +"%F")
 TIME=$(date -d @$pkg_date +"%T")
 

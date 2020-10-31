@@ -1,10 +1,10 @@
 <div class="l-center edit">
         <div class="l-sort clearfix">
           <div class="l-unit-toolbar__buttonstrip">
-            <a class="ui-button cancel" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+            <a class="ui-button cancel" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
+            <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
           </div>
         </div>
       </div>
@@ -35,7 +35,7 @@
                         <table class="data-col2">
                             <tr>
                                 <td class="step-top">
-                                    <span class="page-title"><?=__('Adding User')?></span>
+                                    <span class="page-title"><?=_('Adding User')?></span>
                                 </td>
                             </tr>
                             <tr>
@@ -53,7 +53,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text step-top">
-                                    <?php print __('Username');?>
+                                    <?php print _('Username');?>
                                 </td>
                             </tr>
                             <tr>
@@ -63,17 +63,28 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Password');?> / <a href="javascript:randomString();" class="generate" ><?php print __('generate');?></a>
+                                    <?php print _('Password');?> / <a href="javascript:randomString();" class="generate" ><?php print _('generate');?></a>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>" tabindex="2" >
+                                    <input type="text" size="20" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>" tabindex="2" /><br />
+                                    <meter max="4" id="meter"></meter>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text input-label">
-                                    <?php print __('Contact');?>
+                                <td class="vst-text">
+                                    <?php print _('Your password must have at least');?>
+                                    <ul>
+                                        <li><?php print _('8 characters long');?></li>
+                                        <li><?php print _('1 uppercase & 1 lowercase character');?></li>
+                                        <li><?php print _('1 number');?></li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text ">
+                                    <?php print _('Contact');?>
                                 </td>
                             </tr>
                             <tr>
@@ -83,7 +94,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Email');?>
+                                    <?php print _('Email');?>
                                 </td>
                             </tr>
                             <tr>
@@ -91,9 +102,14 @@
                                     <input type="text" size="20" class="vst-input" name="v_email" id='v_email' value="<?=htmlentities(trim($v_email, "'"))?>" tabindex="5" >
                                 </td>
                             </tr>
+                             <tr>
+                                <td class="vst-text input-label">
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_email_notice" id='v_email_notify' value="" tabindex="5" /> <?php print _('Send welcome email');?></label>
+                                </td>
+                            </tr>
                             <tr>
                                 <td class="vst-text input-label" name="v_package">
-                                    <?php print __('Package');?>
+                                    <?php print _('Package');?>
                                 </td>
                             </tr>
                             <tr>
@@ -117,7 +133,20 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Language');?>
+                                    <?php print _('Role');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_role">
+                                        <option value="user"><?php print _('User');?>
+                                        <option value="admin" <?php if($v_role == "admin" ){ echo "selected"; } ?> ><?php print _('Administrator');?>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print _('Language');?>
                                 </td>
                             </tr>
                             <tr>
@@ -143,7 +172,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Send login credentials to email address');?>
+                                    <?php print _('Send login credentials to email address');?>
                                 </td>
                             </tr>
                             <tr>

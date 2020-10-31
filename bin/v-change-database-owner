@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change database owner
 # options: DATABASE USER
+# labels: 
+#
+# example: v-change-database-owner mydb alice
 #
 # The function for changing database owner.
 
@@ -12,6 +15,7 @@
 # Argument definition
 database=$1
 user=$2
+
 
 # Includes
 source $HESTIA/func/main.sh
@@ -51,8 +55,16 @@ if [ -z "$db_data" ]; then
     exit $E_NOTEXIST
 fi
 
-# Check if datbase name is uniq
-new_db=$(echo $database | sed "s/^${owner}_/${user}_/")
+parse_object_kv_list "$db_data"
+#Fix issue #1084 with "Upper case not allowed with PGSQL"
+if [ "$TYPE" == "pgsql" ]; then
+   usersmall=$(echo "$user" | tr '[:upper:]' '[:lower:]');
+else
+   usersmall=$user
+fi
+
+# Check if database name is uniqe
+new_db=$(echo $database | sed "s/^${owner}_/${usersmall}_/")
 check_db=$(grep "DB='$new_db'" $HESTIA/data/users/$user/db.conf)
 if [ ! -z "$check_db" ]; then
     echo "Error: $new_db database exists"
@@ -75,7 +87,6 @@ tmpdir=$(mktemp -p $BACKUP -d "tmp.$database.XXXXXXXXXX" > /dev/null 2>&1)
 $BIN/v-suspend-database $owner $database > /dev/null 2>&1
 
 # Dump database
-parse_object_kv_list "$db_data"
 dump="$tmpdir/$database.$TYPE.sql"
 grants="$tmpdir/$database.$TYPE.$DBUSER"
 case $TYPE in
@@ -84,7 +95,7 @@ case $TYPE in
 esac
 
 # Import configuration
-db_data=$(echo "$db_data" | sed "s/'${owner}_/'${user}_/g")
+db_data=$(echo "$db_data" | sed "s/'${owner}_/'${usersmall}_/g")
 echo "$db_data" >> $HESTIA/data/users/$user/db.conf
 parse_object_kv_list "$db_data"
 

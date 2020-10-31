@@ -1,8 +1,11 @@
 #!/bin/bash
 # info: add database
 # options: USER DATABASE DBUSER DBPASS [TYPE] [HOST] [CHARSET]
+# labels: 
 #
-# The function creates the database concatenating username  and user_db.
+# example: v-add-database admin wordpress_db matt qwerty123
+#
+# The function creates the database concatenating username and user_db.
 # Supported types of databases you can get using v-list-sys-config script.
 # If the host isn't stated and there are few hosts configured on the server,
 # then the host will be defined by one of three algorithms. "First" will choose
@@ -29,6 +32,11 @@ charset=$(echo "$charset" |tr '[:lower:]' '[:upper:]')
 source $HESTIA/func/main.sh
 source $HESTIA/func/db.sh
 source $HESTIA/conf/hestia.conf
+
+if [ "$type" = "pgsql" ]; then
+   database=$(echo "$user"_"$2" | tr '[:upper:]' '[:lower:]');
+   dbuser=$(echo "$user"_"$3" | tr '[:upper:]' '[:lower:]'); 
+fi
 
 #----------------------------------------------------------#
 #                    Verifications                         #

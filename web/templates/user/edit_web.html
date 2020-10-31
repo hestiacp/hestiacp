@@ -1,13 +1,13 @@
 <div class="l-center edit">
         <div class="l-sort clearfix">
           <div class="l-unit-toolbar__buttonstrip">
-            <a class="ui-button cancel" id="btn-back" href="/list/web/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+            <a class="ui-button cancel" id="btn-back" href="/list/web/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
             <a href="/add/webapp/?domain=<?=$v_domain?>" class="ui-button cancel">
-                <i class="fas fa-magic status-icon blue"></i> <?=__('Quick Install App')?>
+                <i class="fas fa-magic status-icon blue"></i> <?=_('Quick Install App')?>
             </a>
-            <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
+            <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
           </div>
         </div>
       </div>
@@ -41,7 +41,7 @@
                         <table class="data-col2">
                             <tr>
                                 <td class="step-top">
-                                    <span class="page-title"><?=__('Editing Domain')?></span>
+                                    <span class="page-title"><?=_('Editing Domain')?></span>
                                 </td>
                             </tr>
                             <tr>
@@ -72,7 +72,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text step-top">
-                                    <?php print __('Domain');?>
+                                    <?php print _('Domain');?>
                                 </td>
                             </tr>
                             <tr>
@@ -83,7 +83,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('IP Address');?>
+                                    <?php print _('IP Address');?>
                                 </td>
                             </tr>
                             <tr>
@@ -101,7 +101,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Aliases');?>
+                                    <?php print _('Aliases');?>
                                 </td>
                             </tr>
                             <tr>
@@ -111,7 +111,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text step-top">
-                                    <?php print __('Web Statistics');?>
+                                    <?php print _('Web Statistics');?>
                                 </td>
                             </tr>
                             <tr>
@@ -125,7 +125,7 @@
                                                 if (( $value == $v_stats ) || ($svalue == $v_stats )){
                                                     echo ' selected' ;
                                                 }
-                                            echo ">". htmlentities(__($value)) ."</option>\n";
+                                            echo ">". htmlentities(_($value)) ."</option>\n";
                                             }
                                     ?>
                                     </select>
@@ -133,7 +133,7 @@
                             </tr>
                             <tr  class="stats-auth" style="<? if ($v_stats == 'none') { ?>display:none<? } ?>">
                                 <td class="vst-text input-label step-left">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_stats_auth" <?php if (!empty($v_stats_user)) echo "checked=yes" ?> onclick="javascript:elementHideShow('statstable');"><?php print __('Statistics Authorization');?></label>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_stats_auth" <?php if (!empty($v_stats_user)) echo "checked=yes" ?> onclick="javascript:elementHideShow('statstable');"><?php print _('Statistics Authorization');?></label>
                                 </td>
                             </tr>
                             <tr class="stats-auth">
@@ -141,7 +141,7 @@
                                     <table style="display:<?php if (empty($v_stats_user)) { echo 'none';} else {echo 'block';}?> ;" id="statstable" name="v-add-web-domain-stats-user">
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('Username');?>
+                                                <?php print _('Username');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -151,7 +151,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('Password');?> / <a href="javascript:WEBrandom();" class="generate"><?php print __('generate');?></a>
+                                                <?php print _('Password');?> / <a href="javascript:WEBrandom();" class="generate"><?php print _('generate');?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -164,7 +164,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Web Template')  . "<span class='optional'>" .strtoupper($_SESSION['WEB_SYSTEM']) . "</span>";?>
+                                    <?php print _('Web Template')  . "<span class='optional'>" .strtoupper($_SESSION['WEB_SYSTEM']) . "</span>";?>
                                 </td>
                             </tr>
                             <tr>
@@ -186,7 +186,7 @@
                             <?php if (!empty($_SESSION['WEB_BACKEND'])) { ?>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Backend Template') . " <span class='optional'>" . strtoupper($_SESSION['WEB_BACKEND']) . "</span>";?>
+                                    <?php print _('Backend Template') . " <span class='optional'>" . strtoupper($_SESSION['WEB_BACKEND']) . "</span>";?>
                                 </td>
                             </tr>
                             <tr>
@@ -212,7 +212,7 @@
                             <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { ?>
                             <tr>
                                 <td class="vst-text step-top">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_proxy" <?php if (!empty($v_proxy)) echo "checked=yes" ?> onclick="javascript:elementHideShow('proxytable');"> <?php print __('Proxy Support') . "<span class='optional'>" . strtoupper($_SESSION['PROXY_SYSTEM']) . "</span>";?></label>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_proxy" <?php if (!empty($v_proxy)) echo "checked=yes" ?> onclick="javascript:elementHideShow('proxytable');"> <?php print _('Proxy Support') . "<span class='optional'>" . strtoupper($_SESSION['PROXY_SYSTEM']) . "</span>";?></label>
                                 </td>
                             </tr>
                             <tr>
@@ -220,7 +220,7 @@
                                     <table style="display:<?php if (empty($v_proxy)) { echo 'none';} else {echo 'block';}?> ;" id="proxytable">
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('Proxy Template');?>
+                                                <?php print _('Proxy Template');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -244,7 +244,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('Proxy Extensions');?>
+                                                <?php print _('Proxy Extensions');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -258,7 +258,64 @@
                             <?php } ?>
                             <tr>
                                 <td class="vst-text step-top">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');"> <?php print __('SSL Support');?></label>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_custom_doc_root_check" <?php if (!empty($v_custom_doc_root)) echo "checked=yes" ?> onclick="javascript:elementHideShow('v_custom_doc_root');"> <?php print _('Custom document root');?></label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="step-left">
+                                    <table style="display:<?php if (empty($v_custom_doc_root)) { echo 'none';} else {echo 'block';}?> ;" id="v_custom_doc_root">
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print _('Point to');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="hidden" name="v-custom-doc-root_prepath"" value="<?php echo $v_custom_doc_root_prepath;?>">
+                                                <select class="vst-list" name="v-custom-doc-domain">
+                                                    <option value="<?php echo $v_domain;?>"><?php echo $v_domain;?></option>
+                                                    <?php
+                                                    foreach ($user_domains  as $domain) {
+                                                        if($domain != $v_domain ){
+                                                        if($v_custom_doc_domain == $domain){
+                                                    ?>
+                                                            <option value="<?php echo $domain;?>" selected="selected"><?php echo $domain;?></option>
+                                                    <?php
+                                                        }else{
+                                                     ?>
+                                                            <option value="<?php echo $domain;?>"><?php echo $domain;?></option>
+                                                    <?php
+                                                        }
+                                                        }
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print( _('Directory'));?> <span class="optional">(<?php print _('optional');?>)</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input"
+                                                name="v-custom-doc-folder" value="<?=htmlentities(trim($v_custom_doc_folder, "'"))?>">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <small class="custom_docroot_hint"></small>
+                                            </td>
+                                        </tr>
+
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="vst-text step-top">
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');"> <?php print _('SSL Support');?></label>
                                 </td>
                             </tr>
                             <tr>
@@ -266,23 +323,23 @@
                                     <table style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;" id="ssltable">
                                       <tr>
                                           <td class="input-label vst-text">
-                                              <label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letencrypt == 'on') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_letsencrypt(this)"> <?php print __('Lets Encrypt Support');?></label>
+                                              <label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letencrypt == 'on') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_letsencrypt(this)"> <?php print _('Lets Encrypt Support');?></label>
                                           </td>
                                       </tr>
                                       <tr>
                                           <td class="input-label vst-text">
-                                              <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl_forcessl" <?php if($v_ssl_forcessl == 'yes') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_forcessl(this)"> <?php print __('Force SSL/HTTPS');?></label>
+                                              <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl_forcessl" <?php if($v_ssl_forcessl == 'yes') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_forcessl(this)"> <?php print _('Force SSL/HTTPS');?></label>
                                           </td>
                                       </tr>
                                       <tr>
                                           <td class="input-label vst-text">
-                                              <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl_hsts" <?php if($v_ssl_hsts == 'yes') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_hsts(this)"> <?php print __('Enable SSL HSTS');?></label>
+                                              <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl_hsts" <?php if($v_ssl_hsts == 'yes') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_hsts(this)"> <?php print _('Enable SSL HSTS');?></label>
                                           </td>
                                       </tr>
 
                                       <tr style="display: none;">
                                             <td class="vst-text input-label">
-                                                <?php print __('Home Directory');?>
+                                                <?php print _('Home Directory');?>
                                             </td>
                                         </tr>
                                         <tr style="display: none;">
@@ -296,8 +353,8 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('SSL Certificate');?>
-                                                <span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=$v_domain?>"><?=__('Generate CSR')?></a></span>
+                                                <?php print _('SSL Certificate');?>
+                                                <span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=$v_domain?>"><?=_('Generate CSR')?></a></span>
                                             </td>
                                         </tr>
                                         <tr>
@@ -307,7 +364,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('SSL Key');?>
+                                                <?php print _('SSL Key');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -317,7 +374,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('SSL Certificate Authority / Intermediate');?> <span class="optional">(<?php print __('optional');?>)</span>
+                                                <?php print _('SSL Certificate Authority / Intermediate');?> <span class="optional">(<?php print _('optional');?>)</span>
                                             </td>
                                         </tr>
                                         <tr>
@@ -332,7 +389,7 @@
                                                 <table class="additional-info">
                                                     <tr>
                                                         <td>
-                                                            <b><?=__('SUBJECT')?>:</b>
+                                                            <b><?=_('SUBJECT')?>:</b>
                                                         </td>
                                                         <td class="details">
                                                             <?=$v_ssl_subject?>
@@ -341,7 +398,7 @@
                                                     <? if($v_ssl_aliases){?>
                                                     <tr>
                                                         <td>
-                                                            <b><?=__('ALIASES')?>:</b>
+                                                            <b><?=_('ALIASES')?>:</b>
                                                         </td>
                                                         <td class="details">
                                                             <?=$v_ssl_aliases?>
@@ -350,7 +407,7 @@
                                                     <? } ?>
                                                     <tr>
                                                         <td>
-                                                            <b><?=__('NOT_BEFORE')?>:</b>
+                                                            <b><?=_('NOT_BEFORE')?>:</b>
                                                         </td>
                                                         <td class="details">
                                                             <?=$v_ssl_not_before?>
@@ -358,7 +415,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <b><?=__('NOT_AFTER')?>:</b>
+                                                            <b><?=_('NOT_AFTER')?>:</b>
                                                         </td>
                                                         <td class="details">
                                                             <?=$v_ssl_not_after?>
@@ -366,7 +423,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <b><?=__('SIGNATURE')?>:</b>
+                                                            <b><?=_('SIGNATURE')?>:</b>
                                                         </td>
                                                         <td class="details">
                                                             <?=$v_ssl_signature?>
@@ -374,7 +431,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <b><?=__('PUB_KEY')?>:</b>
+                                                            <b><?=_('PUB_KEY')?>:</b>
                                                         </td>
                                                         <td class="details">
                                                             <?=$v_ssl_pub_key?>
@@ -382,7 +439,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <b><?=__('ISSUER')?>:</b>
+                                                            <b><?=_('ISSUER')?>:</b>
                                                         </td>
                                                         <td class="details">
                                                             <?=$v_ssl_issuer?>
@@ -397,7 +454,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text step-top">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ftp" <?php if (!empty($v_ftp_user)) echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_additional_ftp_accounts(this)"> <?php print __('Additional FTP Account');?></label>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ftp" <?php if (!empty($v_ftp_user)) echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_additional_ftp_accounts(this)"> <?php print _('Additional FTP Account');?></label>
                                 </td>
                             </tr>
                             <tr>
@@ -414,27 +471,27 @@
                                     <table style="display:<?php if (empty($v_ftp_user)) { echo 'none';} else {echo 'block';}?> ;" class="ftptable ftptable-nrm" name="v_add_domain_ftp">
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('FTP') ?> #<span class="ftp-user-number"><?php print $i + 1; ?></span> <a class="ftp-remove-user additional-control" onCLick="App.Actions.WEB.remove_ftp_user(this)">(<?=__('delete')?>)</a>
+                                                <?php print _('FTP') ?> #<span class="ftp-user-number"><?php print $i + 1; ?></span> <a class="ftp-remove-user additional-control" onCLick="App.Actions.WEB.remove_ftp_user(this)">(<?=_('delete')?>)</a>
                                                 <input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[<?php print $i ?>][delete]" value="0" />
                                                 <input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[<?php print $i ?>][is_new]" value="<?php print htmlentities($ftp_user['is_new']) ?>" />
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="vst-text step-left input-label">
-                                                <?php print __('Username');?><br>
-                                                <span style="font-size: 10pt; color:#777;"><?php print __('Prefix will be automaticaly added to username',$user."_");?></span>
+                                                <?php print _('Username');?><br>
+                                                <span style="font-size: 10pt; color:#777;"><?php print sprintf(_('Prefix %s will be added to username automatically'),$user."_");?></span>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="step-left">
-                                                <input type="text" size="20" class="vst-input v-ftp-user" <?php print $ftp_user['is_new'] != 1 ? 'disabled="disabled"' : '' ?> 
+                                                <input type="text" size="20" class="vst-input v-ftp-user" <?php print $ftp_user['is_new'] != 1 ? 'disabled="disabled"' : '' ?>
                                                 name="v_ftp_user[<?php print $i ?>][v_ftp_user]" value="<?=htmlentities(trim($v_ftp_user, "'"))?>">
                                                 <small class="hint"></small>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="vst-text step-left  input-label">
-                                                <?php print __('Password');?> / <a href="javascript:void(0);" onClick="FTPrandom(this)"; class="generate" ><?php print __('generate');?></a>
+                                                <?php print _('Password');?> / <a href="javascript:void(0);" onClick="FTPrandom(this)"; class="generate" ><?php print _('generate');?></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -445,7 +502,7 @@
 
                                         <tr>
                                             <td class="vst-text step-left input-label">
-                                                 <?php print __('Path');?>
+                                                 <?php print _('Path');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -459,7 +516,7 @@
                                         <?php if ($ftp_user['is_new'] == 1): ?>
                                         <tr>
                                             <td class="vst-text step-left input-label">
-                                                 <?php print __('Send FTP credentials to email');?>
+                                                 <?php print _('Send FTP credentials to email');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -475,7 +532,7 @@
 
                             <tr class="add-new-ftp-user-button" style="<?php print !empty($v_ftp_user) ? '' : 'display:none;' ?>">
                                 <td class="vst-text step-top v-add-new-user step-bottom">
-                                    <a class="additional-control" onClick="App.Actions.WEB.add_ftp_user_form()"><?php print __('Add one more FTP Account');?></a>
+                                    <a class="additional-control" onClick="App.Actions.WEB.add_ftp_user_form()"><?php print _('Add one more FTP Account');?></a>
                                 </td>
                             </tr>
                         </table>
@@ -490,15 +547,15 @@
             <table class="ftptable ftptable-nrm" name="v_add_domain_ftp">
                 <tr>
                     <td class="vst-text input-label">
-                        <?php print __('FTP') ?> #<span class="ftp-user-number"></span> <a class="ftp-remove-user additional-control" onCLick="App.Actions.WEB.remove_ftp_user(this)">(<?=__('delete')?>)</a>
+                        <?php print _('FTP') ?> #<span class="ftp-user-number"></span> <a class="ftp-remove-user additional-control" onCLick="App.Actions.WEB.remove_ftp_user(this)">(<?=_('delete')?>)</a>
                         <input type="hidden"  class="v-ftp-user-deleted" name="v_ftp_user[%INDEX%][delete]" value="0" />
                         <input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[%INDEX%][is_new]" value="1" />
                     </td>
                 </tr>
                 <tr>
                     <td class="vst-text step-left input-label">
-                        <?php print __('Username');?><br>
-                        <span style="font-size: 10pt; color:#777;"><?php print __('Prefix will be automaticaly added to username',$user."_");?></span>
+                        <?php print _('Username');?><br>
+                        <span style="font-size: 10pt; color:#777;"><?php print sprintf(_('Prefix %s will be added to username automatically'),$user."_");?></span>
                     </td>
                 </tr>
                 <tr>
@@ -509,7 +566,7 @@
                 </tr>
                 <tr>
                     <td class="vst-text step-left  input-label">
-                        <?php print __('Password');?> / <a href="javascript:void(0);" onClick="FTPrandom(this)"; class="generate" ><?php print __('generate');?></a>
+                        <?php print _('Password');?> / <a href="javascript:void(0);" onClick="FTPrandom(this)"; class="generate" ><?php print _('generate');?></a>
                     </td>
                 </tr>
                 <tr>
@@ -520,7 +577,7 @@
 
                 <tr>
                     <td class="vst-text step-left input-label">
-                         <?php print __('Path');?>
+                         <?php print _('Path');?>
                     </td>
                 </tr>
                 <tr>
@@ -532,7 +589,7 @@
                 </tr>
                 <tr>
                     <td class="vst-text step-left input-label">
-                         <?php print __('Send FTP credentials to email');?>
+                         <?php print _('Send FTP credentials to email');?>
                     </td>
                 </tr>
                 <tr>

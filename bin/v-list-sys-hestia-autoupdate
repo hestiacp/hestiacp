@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list hestia autoupdate settings
 # options: [FORMAT]
+# labels: 
 #
 # The function for obtaining autoupdate setings.
 

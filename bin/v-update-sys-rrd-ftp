@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: update ftp rrd
 # options: PERIOD
+# labels: panel
 #
 # The function is for updating ftpd rrd database and graphic.
 

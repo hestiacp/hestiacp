@@ -1,26 +1,26 @@
   <div class="l-center">
     <div class="l-sort clearfix noselect">
       <div class="l-unit-toolbar__buttonstrip">
-        <a class="ui-button cancel" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
-        <a href="/add/package/" id="btn-create" class="ui-button cancel" title="<?=__('Add Package')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=__('Add Package')?></a>
+        <a class="ui-button cancel" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
+        <a href="/add/package/" id="btn-create" class="ui-button cancel"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Add Package')?></a>
     </div>
       <ul class="context-menu sort-order animated fadeIn" style="display:none;">
-        <li entity="sort-date" sort_as_int="1"><span class="name active"><?=__('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
-        <li entity="sort-name"><span class="name"><?=__('Package Name')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+        <li entity="sort-date" sort_as_int="1"><span class="name active"><?=_('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+        <li entity="sort-name"><span class="name"><?=_('Package Name')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
       </ul>
       <div class="l-sort-toolbar clearfix">
         <table>
           <tr>
             <td class="sort-by">
-                <?=__('sort by');?>: <span><b><?=__('Date')?> <i class="fas fa-sort-amount-down"></i></b></span>
+                <?=_('sort by');?>: <span><b><?=_('Date')?> <i class="fas fa-sort-amount-down"></i></b></span>
             </td>
             <td>
               <form action="/bulk/package/" method="post" id="objects">
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
                 <div class="l-select">
                   <select class="" name="action">
-                    <option value=""><?=__('apply to selected')?></option>
-                    <option value="delete"><?=__('delete')?></option>
+                    <option value=""><?=_('apply to selected')?></option>
+                    <option value="delete"><?=_('delete')?></option>
                   </select>
                 </div>
                 <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
@@ -39,35 +39,26 @@
                 <div class="clearfix l-unit__stat-col--left super-compact">
                   <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
                 </div>
-                <div class="clearfix l-unit__stat-col--left wide-2"><b><?php print __('Package');?></b></div>
+                <div class="clearfix l-unit__stat-col--left wide-2"><b><?php print _('Package');?></b></div>
                 <div class="clearfix l-unit__stat-col--left compact-3 text-right"><b>&nbsp;</b></div>
-                <div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-terminal" title="<?php print __('Shell');?>"></i></b></div>
-                <div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-hdd" title="<?php print __('Disk');?>"></i></b></div>
-                <div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-exchange-alt" title="<?php print __('Bandwidth');?>"></i></b></div>
-                <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-globe-americas" title="<?php print __('Web Domains');?>"></i></b></div>
-                <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-link" title="<?php print __('Web Aliases');?>"></i></b></div>
-                <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-atlas" title="<?php print __('DNS Domains');?>"></i></b></div>
-                <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-globe" title="<?php print __('DNS Records');?>"></i></b></div>
-                <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-mail-bulk" title="<?php print __('Mail Domains');?>"></i></b></div>
-                <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-inbox" title="<?php print __('Mail Accounts');?>"></i></b></div>
-                <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-database" title="<?php print __('Databases');?>"></i></b></div>
-                <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-clock" title="<?php print __('Cron Jobs');?>"></i></b></div>
-                <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-file-archive" title="<?php print __('Backups');?>"></i></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-terminal" title="<?php print _('Shell');?>"></i></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-hdd" title="<?php print _('Quota');?>"></i></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-exchange-alt" title="<?php print _('Bandwidth');?>"></i></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-globe-americas" title="<?php print _('Web Domains');?>"></i></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-link" title="<?php print _('Web Aliases');?>"></i></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-atlas" title="<?php print _('DNS Domains');?>"></i></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-globe" title="<?php print _('DNS Records');?>"></i></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-mail-bulk" title="<?php print _('Mail Domains');?>"></i></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-inbox" title="<?php print _('Mail Accounts');?>"></i></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-database" title="<?php print _('Databases');?>"></i></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-clock" title="<?php print _('Cron Jobs');?>"></i></b></div>
+                <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-file-archive" title="<?php print _('Backups');?>"></i></b></div>
            </div>
         </div>
 
     <?php
       foreach ($data as $key => $value) {
         ++$i;
-        if ($data[$key]['SUSPENDED'] == 'yes') {
-          $status = 'suspended';
-          $spnd_action = 'unsuspend' ;
-          $spnd_confirmation = 'UNSUSPEND_USER_CONFIRMATION' ;
-        } else {
-          $status = 'active';
-          $spnd_action = 'suspend' ;
-          $spnd_confirmation = 'SUSPEND_USER_CONFIRMATION' ;
-        }
     ?>
 
     <div class="l-unit  <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['USER'][$key] == 1) echo ' l-unit--starred';?>" v_section="user"
@@ -77,19 +68,19 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
         <div class="clearfix l-unit__stat-col--left super-compact">
           <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="user[]" value="<?=$key?>">
         </div>
-            <div class="clearfix l-unit__stat-col--left wide-2"><b><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>"><?=$key?></b></a></div>
+            <div class="clearfix l-unit__stat-col--left wide-2 truncate"><b><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Package')?>: <?=$key?>"><?=$key?></b></a></div>
             <!-- START QUICK ACTION TOOLBAR AREA -->
             <div class="clearfix l-unit__stat-col--left text-right compact-3">
                   <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                       <div class="actions-panel clearfix">
-                        <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
-                        <div class="actions-panel__col actions-panel__edit" key-action="href"><a href="/copy/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>"><i class="fas fa-clone status-icon teal status-icon dim"></i></a></div>
+                        <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Package')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+                        <div class="actions-panel__col actions-panel__edit" key-action="href"><a href="/copy/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Copy')?>"><i class="fas fa-clone status-icon teal status-icon dim"></i></a></div>
                         <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-                          <a id="delete_link_<?=$i?>" class="data-controls do_delete">
+                          <a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('Delete')?>">
                             <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
                             <input type="hidden" name="delete_url" value="/delete/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" />
-                            <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=__('Confirmation')?>">
-                              <p class="confirmation"><?=__('DELETE_PACKAGE_CONFIRMATION',$key)?></p>
+                            <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=_('Confirmation')?>">
+                              <p class="confirmation"><?=sprintf(_('DELETE_PACKAGE_CONFIRMATION'),$key)?></p>
                             </div>
                           </a>
                         </div>
@@ -99,27 +90,31 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
             <!-- END QUICK ACTION TOOLBAR AREA -->
             <div class="clearfix l-unit__stat-col--left text-center compact">
               <? if($data[$key]['SHELL'] == 'nologin'){ ?>
-                <i class="fas fa-minus-circle status-icon large"></i>
+                <i class="fas fa-minus-circle status-icon large" title="<?=_('SSH Access')?>: <?=$data[$key]['SHELL']?>"> </i>
               <? } else {?>
                 <i class="fas fa-check-circle status-icon green large"></i>
               <? } ?>
             </div>
             <div class="clearfix l-unit__stat-col--left text-center compact">
-              <?php if (preg_match('/[a-z]/i', $data[$key]['DISK_QUOTA'])): ?>
-                <b>&infin;</b>
-              <?php else: ?>
-                  <b><?=humanize_usage_size($data[$key]['DISK_QUOTA'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['DISK_QUOTA'])?></span>
-              <?php endif; ?>
+              <span title="<?=_('Quota')?>: <?=humanize_usage_size($data[$key]['DISK_QUOTA'])?> <?=humanize_usage_measure($data[$key]['DISK_QUOTA'])?>">
+                <?php if (preg_match('/[a-z]/i', $data[$key]['DISK_QUOTA'])): ?>
+                  <b>&infin;</b>
+                <?php else: ?>
+                    <b><?=humanize_usage_size($data[$key]['DISK_QUOTA'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['DISK_QUOTA'])?></span>
+                <?php endif; ?>
+              </span>
             </div>
             <div class="clearfix l-unit__stat-col--left text-center compact">
-                <? if($data[$key]['WEB_DOMAINS'] == 'unlimited'){ ?>
+              <span title="<?=_('Bandwidth')?>: <?=humanize_usage_size($data[$key]['BANDWIDTH'])?> <?=humanize_usage_measure($data[$key]['BANDWIDTH'])?>">
+                <? if($data[$key]['BANDWIDTH'] == 'unlimited'){ ?>
                   <b>&infin;</b>
                 <? } else {?>
                   <b><?=humanize_usage_size($data[$key]['BANDWIDTH'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['BANDWIDTH'])?></span>
                 <? } ?>
+              </span>
             </div>
             <div class="clearfix l-unit__stat-col--left text-center super-compact">
-              <span class="jump-top badge gray raised">
+              <span class="jump-top badge gray raised" title="<?=_('Web Domains')?>: <?=$data[$key]['WEB_DOMAINS']?>">
                 <? if($data[$key]['WEB_DOMAINS'] == 'unlimited'){ ?>
                   <b>&infin;</b>
                 <? } else {?>
@@ -128,7 +123,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
               </span>
             </div>
             <div class="clearfix l-unit__stat-col--left text-center super-compact">
-                <span class="jump-top badge gray raised">
+                <span class="jump-top badge gray raised" title="<?=_('Web Aliases')?>: <?=$data[$key]['WEB_ALIASES']?>">
                   <? if($data[$key]['WEB_ALIASES'] == 'unlimited'){ ?>
                     <b>&infin;</b>
                   <? } else {?>
@@ -137,7 +132,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                 </span>
             </div>
             <div class="clearfix l-unit__stat-col--left text-center super-compact">
-                <span class="jump-top badge gray raised">
+                <span class="jump-top badge gray raised" title="<?=_('DNS Domains')?>: <?=$data[$key]['DNS_DOMAINS']?>">
                   <? if($data[$key]['DNS_DOMAINS'] == 'unlimited'){ ?>
                     <b>&infin;</b>
                   <? } else {?>
@@ -146,7 +141,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                 </span>
             </div>
             <div class="clearfix l-unit__stat-col--left text-center super-compact">
-                <span class="jump-top badge gray raised">
+                <span class="jump-top badge gray raised" title="<?=_('DNS Records')?>: <?=$data[$key]['DNS_RECORDS']?>">
                   <? if($data[$key]['DNS_RECORDS'] == 'unlimited'){ ?>
                     <b>&infin;</b>
                   <? } else {?>
@@ -155,7 +150,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                 </span>
             </div>
             <div class="clearfix l-unit__stat-col--left text-center super-compact">
-                <span class="jump-top badge gray raised">
+                <span class="jump-top badge gray raised" title="<?=_('Mail Domains')?>: <?=$data[$key]['MAIL_DOMAINS']?>">
                   <? if($data[$key]['MAIL_DOMAINS'] == 'unlimited'){ ?>
                     <b>&infin;</b>
                   <? } else {?>
@@ -164,7 +159,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                 </span>
             </div>
             <div class="clearfix l-unit__stat-col--left text-center super-compact">
-                <span class="jump-top badge gray raised">
+                <span class="jump-top badge gray raised" title="<?=_('Mail Accounts')?>: <?=$data[$key]['MAIL_ACCOUNTS']?>">
                   <? if($data[$key]['MAIL_ACCOUNTS'] == 'unlimited'){ ?>
                     <b>&infin;</b>
                   <? } else {?>
@@ -173,7 +168,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                 </span>
             </div>
             <div class="clearfix l-unit__stat-col--left text-center super-compact">
-                <span class="jump-top badge gray raised">
+                <span class="jump-top badge gray raised" title="<?=_('Databases')?>: <?=$data[$key]['DATABASES']?>">
                   <? if($data[$key]['DATABASES'] == 'unlimited'){ ?>
                     <b>&infin;</b>
                   <? } else {?>
@@ -182,7 +177,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                 </span>
               </div>
               <div class="clearfix l-unit__stat-col--left text-center super-compact">
-                  <span class="jump-top badge gray raised">
+                  <span class="jump-top badge gray raised" title="<?=_('Cron Jobs')?>: <?=$data[$key]['CRON_JOBS']?>">
                     <? if($data[$key]['CRON_JOBS'] == 'unlimited'){ ?>
                       <b>&infin;</b>
                     <? } else {?>
@@ -191,7 +186,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                   </span>
                 </div>
                 <div class="clearfix l-unit__stat-col--left text-center super-compact">
-                  <span class="jump-top badge gray raised">
+                  <span class="jump-top badge gray raised" title="<?=_('Backups')?>: <?=$data[$key]['BACKUPS']?>">
                     <? if($data[$key]['BACKUPS'] == 'unlimited'){ ?>
                       <b>&infin;</b>
                     <? } else {?>
@@ -210,13 +205,9 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
       <div class="l-unit-ft">
         <table class='data'></table>
         <div class="data-count l-unit__col l-unit__col--right clearfix">
-          <?php
-          if ( $i == 1) {
-            echo __('1 package');
-          } else {
-            echo __('%s packages',$i);
-          }
-        ?>
+            <?php
+             printf(ngettext('%d package', '%d packages', $i),$i);
+            ?>
         </div>
     </div>
   </div>

@@ -1,15 +1,17 @@
 #!/bin/bash
-
-# v-update-sys-hestia-git
+# info: Delete log file for user
+# options: REPOSITORY BRANCH INSTALL [PACKAGES]
+# labels: hestia
+#
+# example: v-update-sys-hestia-git hestiacp staging/beta install all
+#          # Will download from the hestiacp repository
+#          # Pulls code from staging/beta branch
+#          # install: installs package immediately
+#          # install-auto: installs package and schedules automatic updates from Git
+#          # 'all': (optional) - compiles nginx and php alongside panel.
+#          #                     this option takes a long time, only use when needed
+#
 # Downloads and compiles/installs packages from GitHub repositories
-# Options:  REPOSITORY BRANCH INSTALL [PACKAGES]
-# Example:  v-update-sys-hestia-git hestiacp staging/beta install all
-#           - Will download from the hestiacp repository
-#           - Pulls code from staging/beta branch
-#           - install: installs package immediately
-#           - install-auto: installs package and schedules automatic updates from Git
-#           - 'all': (optional) - compiles nginx and php alongside panel.
-#                                 this option takes a long time, only use when needed
 
 
 # Define download function
@@ -96,7 +98,7 @@ timestamp() {
 
 # Set install flags
 if [ ! -z "$1" ]; then
-    fork_check=$(curl -s --head -w %{http_code} https://raw.githubusercontent.com/$fork/hestiacp/release/src/deb/hestia/control -o /dev/null)
+    fork_check=$(curl -s --head -w %{http_code} https://raw.githubusercontent.com/$fork/hestiacp/main/src/deb/hestia/control -o /dev/null)
     if [ $fork_check -ne "200" ]; then
         echo "ERROR: invalid repository name specified."
         exit 1

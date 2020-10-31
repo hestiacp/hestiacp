@@ -1,10 +1,10 @@
 <div class="l-center edit">
         <div class="l-sort clearfix">
           <div class="l-unit-toolbar__buttonstrip">
-            <a class="ui-button cancel" id="btn-back" href="/list/db/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+            <a class="ui-button cancel" id="btn-back" href="/list/db/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
+            <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
           </div>
         </div>
       </div>
@@ -34,7 +34,7 @@
                         <table class="data-col2" width="600px">
                             <tr>
                                 <td class="step-top">
-                                    <span class="page-title"><?=__('Adding database')?></span>
+                                    <span class="page-title"><?=_('Adding database')?></span>
                                 </td>
                             </tr>
                             <tr>
@@ -52,12 +52,13 @@
                             </tr>
                             <tr>
                                 <td class="step-top hint">
-                                    <?php print __('Prefix will be automaticaly added to database name and database user',"<b>".$user."_</b>");?>
+                                    <?php print sprintf(_('Prefix %s will be automatically added to database name and database user'),'<b>'.$user.'_</b>'); ?>
+                                </td>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Database');?>
+                                    <?php print _('Database');?>
                                 </td>
                             </tr>
                             <tr>
@@ -69,9 +70,8 @@
                             <tr>
                                 <td class="vst-text input-label">
                                     <?php
-                                        print __('User');
-                                        // if (is_it_mysql_or_mariadb()=='mysql')
-                                        echo "&nbsp;&nbsp;&nbsp;&nbsp;<em><small>(".__('maximum characters length, including prefix', 16).")</small></em>";
+                                        print _('Username');
+                                        echo "&nbsp;&nbsp;&nbsp;&nbsp;<em><small>(".sprintf(_('maximum characters length, including prefix'), 32).")</small></em>";
                                     ?>
                                 </td>
                             </tr>
@@ -83,17 +83,28 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Password');?> / <a href="javascript:randomString();" class="generate"><?php print __('generate');?></a>
+                                    <?php print _('Password');?> / <a href="javascript:randomString();" class="generate"><?php print _('generate');?></a>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input password" name="v_password">
+                                    <input type="text" size="20" class="vst-input password" name="v_password"><br />
+                                    <meter max="4" id="meter"></meter>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text input-label">
-                                    <?php print __('Type');?>
+                                <td class="vst-text">
+                                    <?php print _('Your password must have at least');?>
+                                    <ul>
+                                        <li><?php print _('8 characters long');?></li>
+                                        <li><?php print _('1 uppercase & 1 lowercase character');?></li>
+                                        <li><?php print _('1 number');?></li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text">
+                                    <?php print _('Type');?>
                                 </td>
                             </tr>
                             <tr>
@@ -111,7 +122,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Host');?>
+                                    <?php print _('Host');?>
                                 </td>
                             </tr>
                             <tr>
@@ -130,7 +141,7 @@
 
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Charset');?>
+                                    <?php print _('Charset');?>
                                 </td>
                             </tr>
                             <tr>
@@ -177,7 +188,7 @@
                                 </td>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Send login credentials to email address') ?>
+                                    <?php print _('Send login credentials to email address') ?>
                                 </td>
                             </tr>
                             <tr>

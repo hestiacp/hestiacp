@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: suspend database
 # options: USER DATABASE
+# labels: panel
+#
+# example: v-suspend-database admin admin_wordpress_db
 #
 # The function for suspending a certain user database.
 

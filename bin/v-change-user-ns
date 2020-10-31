@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change user nameservers
 # options: USER NS1 NS2 [NS3] [NS4] [NS5] [NS6] [NS7] [NS8]
+# labels: panel
+#
+# example: v-change-user-ns ns1.domain.tld ns2.domain.tld
 #
 # The function for changing default nameservers for specific user.
 

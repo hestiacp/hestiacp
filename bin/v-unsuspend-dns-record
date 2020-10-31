@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: unsuspend dns domain record
 # options: USER DOMAIN ID [RESTART]
+# labels: dns
+#
+# example: v-unsuspend-dns-record admin example.com 33
 #
 # The function unsuspends a certain domain record.
 

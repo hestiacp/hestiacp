@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list firewall block list
 # options: [FORMAT]
+# labels: panel
 #
 # The function of obtaining the list of currently blocked ips.
 

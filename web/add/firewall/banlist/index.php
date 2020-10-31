@@ -22,8 +22,8 @@ if (!empty($_POST['ok'])) {
     }
 
     // Check empty fields
-    if (empty($_POST['v_chain'])) $errors[] = __('banlist');
-    if (empty($_POST['v_ip'])) $errors[] = __('ip address');
+    if (empty($_POST['v_chain'])) $errors[] = _('banlist');
+    if (empty($_POST['v_ip'])) $errors[] = _('ip address');
     if (!empty($errors[0])) {
         foreach ($errors as $i => $error) {
             if ( $i == 0 ) {
@@ -32,7 +32,7 @@ if (!empty($_POST['ok'])) {
                 $error_msg = $error_msg.", ".$error;
             }
         }
-        $_SESSION['error_msg'] = __('Field "%s" can not be blank.',$error_msg);
+        $_SESSION['error_msg'] = sprintf(_('Field "%s" can not be blank.'),$error_msg);
     }
 
     // Protect input
@@ -48,7 +48,7 @@ if (!empty($_POST['ok'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = __('BANLIST_CREATED_OK');
+        $_SESSION['ok_msg'] = _('BANLIST_CREATED_OK');
         unset($v_chain);
         unset($v_ip);
     }

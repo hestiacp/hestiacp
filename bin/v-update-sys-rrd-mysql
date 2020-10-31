@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: update MySQL rrd
 # options: PERIOD
+# labels: panel
 #
 # The function is for updating mysql rrd database and graphic.
 

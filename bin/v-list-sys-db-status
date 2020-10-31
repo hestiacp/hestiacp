@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list db status
 # options: [FORMAT]
+# labels: 
 #
 # The function lists db server status
 

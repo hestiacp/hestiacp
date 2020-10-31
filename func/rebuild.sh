@@ -17,10 +17,23 @@ rebuild_user_conf() {
     # Update FNAME LNAME to NAME
     if [ -z "$NAME" ]; then 
         NAME="$FNAME $LNAME"
+        if [ -z $FNAME ]; then NAME=""; fi
+        
         sed -i "s/FNAME='$FNAME'/NAME='$NAME'/g" $USER_DATA/user.conf
         sed -i "/LNAME='$LNAME'/d" $USER_DATA/user.conf  
     fi
-
+    if [ -z "${TWOFA+x}" ]; then 
+        sed -i "/RKEY/a TWOFA=''" $USER_DATA/user.conf 
+    fi
+    if [ -z "${QRCODE+x}" ]; then
+        sed -i "/TWOFA/a QRCODE=''" $USER_DATA/user.conf 
+    fi
+    if [ -z "${PHPCLI+x}" ]; then 
+        sed -i "/QRCODE/a PHPCLI=''" $USER_DATA/user.conf 
+    fi
+    if [ -z "${ROLE+x}" ]; then 
+        sed -i "/PHPCLI/a ROLE='user'" $USER_DATA/user.conf 
+    fi
     # Run template trigger
     if [ -x "$HESTIA/data/packages/$PACKAGE.sh" ]; then
         $HESTIA/data/packages/$PACKAGE.sh "$user" "$CONTACT" "$NAME"
@@ -527,14 +540,9 @@ rebuild_mail_domain_conf() {
         # Setting HELO for mail domain
         if [ ! -z "$local_ip" ]; then
             IP_RDNS=$(is_ip_rdns_valid "$local_ip")
+            sed -i "/^${domain}:/d" /etc/exim4/mailhelo.conf >/dev/null 2>&1
             if [ ! -z "$IP_RDNS" ]; then
-                if [ -f /etc/exim4/mailhelo.conf ] && [ $(grep -s "^${domain}:" /etc/exim4/mailhelo.conf) ]; then
-                    sed -i "/^${domain}:/c\\${domain}:${IP_RDNS}" /etc/exim4/mailhelo.conf
-                else
-                    echo ${domain}:${IP_RDNS} >> /etc/exim4/mailhelo.conf
-                fi
-            else
-                sed -i "/^${domain}:/d" /etc/exim4/mailhelo.conf >/dev/null 2>&1
+                echo ${domain}:${IP_RDNS} >> /etc/exim4/mailhelo.conf
             fi
         fi
 

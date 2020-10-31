@@ -8,9 +8,6 @@ define('DEFAULT_PHP_VERSION', "php-" . exec('php -r "echo (float)phpversion();"'
 
 $i = 0;
 
-require_once(dirname(__FILE__).'/i18n.php');
-
-
 // Saving user IPs to the session for preventing session hijacking
 $user_combined_ip = $_SERVER['REMOTE_ADDR'];
 
@@ -50,6 +47,8 @@ if($_SESSION['user_combined_ip'] != $user_combined_ip && $_SERVER['REMOTE_ADDR']
     header("Location: /login/");
     exit;
 }
+// Load Hestia Config directly
+    load_hestia_config();
 
 // Check system settings
 if ((!isset($_SESSION['VERSION'])) && (!defined('NO_AUTH_REQUIRED'))) {
@@ -78,49 +77,27 @@ if (isset($_SESSION['user'])) {
 if( NO_AUTH_REQUIRED !== true){
     if(empty($_SESSION['LAST_ACTIVITY']) || empty($_SESSION['INACTIVE_SESSION_TIMEOUT'])){
         session_destroy();
-        header("Location: /login/"); 
+        header("Location: /login/");
     }else if ($_SESSION['INACTIVE_SESSION_TIMEOUT'] * 60 + $_SESSION['LAST_ACTIVITY'] < time()) {
         $v_user = escapeshellarg($_SESSION['user']);
         $v_murmur = escapeshellarg($_SESSION['MURMUR']);
         exec(HESTIA_CMD."v-log-user-logout ".$v_user." ".$v_murmur, $output, $return_var);
         session_destroy();
-        header("Location: /login/"); 
+        header("Location: /login/");
     }else{
         $_SESSION['LAST_ACTIVITY'] = time();
     }
 }
 
-if (isset($_SESSION['language'])) {
-    switch ($_SESSION['language']) {
-        case 'ro':
-            setlocale(LC_ALL, 'ro_RO.utf8');
-            break;
-        case 'ru':
-            setlocale(LC_ALL, 'ru_RU.utf8');
-            break;
-        case 'ua':
-            setlocale(LC_ALL, 'uk_UA.utf8');
-            break;
-        case 'es':
-            setlocale(LC_ALL, 'es_ES.utf8');
-            break;
-        case 'ja':
-            setlocale(LC_ALL, 'ja_JP.utf8');
-            break;
-        default:
-            setlocale(LC_ALL, 'en_US.utf8');
-    }
-}
-
 if (isset($_SESSION['user'])) {
     $user = $_SESSION['user'];
-    load_hestia_config();
 }
 
 if (isset($_SESSION['look']) && ( $_SESSION['look'] != 'admin' )) {
     $user = $_SESSION['look'];
 }
 
+require_once(dirname(__FILE__).'/i18n.php');
 
 function check_error($return_var) {
     if ( $return_var > 0 ) {
@@ -132,7 +109,7 @@ function check_error($return_var) {
 function check_return_code($return_var,$output) {
     if ($return_var != 0) {
         $error = implode('<br>', $output);
-        if (empty($error)) $error = __('Error code:',$return_var);
+        if (empty($error)) $error = sprintf(_('Error code:'),$return_var);
         $_SESSION['error_msg'] = $error;
     }
 }
@@ -190,7 +167,7 @@ function top_panel($user, $TAB) {
 
 function translate_date($date){
   $date = strtotime($date);
-  return strftime("%d &nbsp;", $date).__(strftime("%b", $date)).strftime(" &nbsp;%Y", $date);
+  return strftime("%d &nbsp;", $date)._(strftime("%b", $date)).strftime(" &nbsp;%Y", $date);
 }
 
 function humanize_time($usage) {
@@ -201,23 +178,23 @@ function humanize_time($usage) {
 
             $usage = number_format($usage);
             if ( $usage == 1 ) {
-                $usage = $usage." ".__('day');
+                $usage = $usage." "._('day');
             } else {
-                $usage = $usage." ".__('days');
+                $usage = $usage." "._('days');
             }
         } else {
             $usage = number_format($usage);
             if ( $usage == 1 ) {
-                $usage = $usage." ".__('hour');
+                $usage = $usage." "._('hour');
             } else {
-                $usage = $usage." ".__('hours');
+                $usage = $usage." "._('hours');
             }
         }
     } else {
         if ( $usage == 1 ) {
-            $usage = $usage." ".__('minute');
+            $usage = $usage." "._('minute');
         } else {
-            $usage = $usage." ".__('minutes');
+            $usage = $usage." "._('minutes');
         }
     }
     return $usage;
@@ -261,7 +238,7 @@ function humanize_usage_measure($usage) {
         $measure = 'mb';
     }
 
-    return __($measure);
+    return _($measure);
 }
 
 
@@ -402,4 +379,12 @@ function backendtpl_with_webdomains() {
         }
     }
     return $backend_list;
+}
+/**
+ * Check if password is valid
+ *
+ * @return int; 1 / 0
+ */
+function validate_password($password){
+    return preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(.){8,}$/', $password);
 }

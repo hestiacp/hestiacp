@@ -1,7 +1,7 @@
 <div class="l-center edit">
         <div class="l-sort clearfix">
           <div class="l-unit-toolbar__buttonstrip">
-            <a class="ui-button cancel" id="btn-back" href="/add/webapp/?domain=<?=$v_domain?>"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+            <a class="ui-button cancel" id="btn-back" href="/add/webapp/?domain=<?=$v_domain?>"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
               <?php
@@ -13,7 +13,7 @@
                 }
               }
             ?>
-            <a href="#" class="ui-button" title="<?=__('Install')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Install')?></a>
+            <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Install')?></a>
           </div>
         </div>
       </div>
@@ -40,7 +40,7 @@
                 <?php if( !$WebappInstaller->isDomainRootClean()): ?>
                   <span class="alert alert-info alert-with-icon">
                       <i class="fas fa-info"></i>
-                      <?=__('Data loss warning!<br>Your web domain already has files uploaded, the installer will overwrite your files and/or the installation might fail.<br/><br/> Please use the installer only for empty web domains')?>
+                      <?=_('Data loss warning!<br>Your web domain already has files uploaded, the installer will overwrite your files and/or the installation might fail.<br/><br/> Please use the installer only for empty web domains')?>
                   </span>
                   <br/>
                 <?php endif ?>
@@ -64,7 +64,7 @@
                     <div class="form-group">
                         <label style="padding-bottom: 2px;" for="<?=$f_name?>"><?=$f_label?>
                         <?php if ($f_type === 'password'):?>
-                            / <a href="javascript:randomString('<?=$f_name?>');" class="generate" ><?php print __('generate')?></a>
+                            / <a href="javascript:randomString('<?=$f_name?>');" class="generate" ><?php print _('generate')?></a>
                         <?php endif?>
                         </label>
                         

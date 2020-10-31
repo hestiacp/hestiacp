@@ -1,5 +1,7 @@
 #!/bin/bash
 # info: Delete log file for user
+# options: USER
+# labels: hestia
 #
 # The function for deleting a users log file
 

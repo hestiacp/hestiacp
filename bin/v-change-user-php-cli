@@ -1,8 +1,9 @@
 #!/bin/bash
 # info: add php version to .bash_aliases
 # options: USER VERSION
-
-#  add line to .bash_aliases to set default php incase of multiPHP
+# labels: hestia
+#
+# add line to .bash_aliases to set default php incase of multiPHP
 
 
 #----------------------------------------------------------#
@@ -62,12 +63,8 @@ sed -i "/alias php='env/d" "$FILE"
 
 echo "alias php='env php$version'" >> $FILE
 
-# Change language
-if [ -z "$(grep PHPCLI $USER_DATA/user.conf)" ]; then
-    sed -i "s/^TIME/PHPCLI='$version'\nTIME/g" $USER_DATA/user.conf
-else
-    update_user_value "$user" '$PHPCLI' "$version"
-fi
+update_user_value "$user" '$PHPCLI' "$version"
+
 
 #----------------------------------------------------------#
 #                       Hestia                             #

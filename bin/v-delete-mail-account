@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete mail account
 # options: USER DOMAIN ACCOUNT
+# labels: mail
+#
+# example: v-delete-mail-account admin acme.com alice
 #
 # The function deletes email account.
 

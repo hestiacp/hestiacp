@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change system timezone
 # options: TIMEZONE
+# labels: panel
+#
+# example: v-change-sys-timezone Europe/Berlin
 #
 # The function for changing system timezone.
 

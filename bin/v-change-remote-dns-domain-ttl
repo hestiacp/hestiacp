@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change remote dns domain TTL
 # options: USER DOMAIN
+# labels: dns
+#
+# example: v-change-remote-dns-domain-ttl admin domain.tld
 #
 # The function synchronize dns domain with the remote server.
 

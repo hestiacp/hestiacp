@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add 2fa to existing user
 # options: USER
+# labels: hestia panel
+#
+# example: v-add-user-2fa admin
 #
 # The function creates a new 2fa token for user.
 
@@ -51,8 +54,8 @@ secret=${array[0]}
 qrcode=${array[1]}
 
 # Save the secret in user config (needs encryption?)
-sed -i "/RKEY/a TWOFA='$secret'" $USER_DATA/user.conf
-sed -i "/TWOFA/a QRCODE='$qrcode'" $USER_DATA/user.conf
+update_user_value "$user" '$TWOFA' "$secret"
+update_user_value "$user" '$QRCODE' "$qrcode"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

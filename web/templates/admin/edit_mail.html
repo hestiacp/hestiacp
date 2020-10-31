@@ -1,10 +1,10 @@
 <div class="l-center edit">
         <div class="l-sort clearfix">
           <div class="l-unit-toolbar__buttonstrip">
-            <a class="ui-button cancel" id="btn-back" href="/list/mail/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+            <a class="ui-button cancel" id="btn-back" href="/list/mail/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
+            <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
           </div>
         </div>
       </div>
@@ -37,7 +37,7 @@
                         <table class="data-col2">
                             <tr>
                                 <td class="step-top">
-                                    <span class="page-title"><?=__('Editing Mail Domain')?></span>
+                                    <span class="page-title"><?=_('Editing Mail Domain')?></span>
                                 </td>
                             </tr>
                             <tr>
@@ -55,7 +55,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text step-top">
-                                    <?php print __('Domain');?>
+                                    <?php print _('Domain');?>
                                 </td>
                             </tr>
                             <tr>
@@ -66,7 +66,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Catchall email');?>
+                                    <?php print _('Catchall email');?>
                                 </td>
                             </tr>
                             <tr>
@@ -76,22 +76,22 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_antispam" <?php if ($v_antispam == 'yes') echo "checked=yes"; ?>> <?php print __('AntiSpam Support');?></label>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_antispam" <?php if ($v_antispam == 'yes') echo "checked=yes"; ?>> <?php print _('AntiSpam Support');?></label>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_antivirus" <?php if ($v_antivirus == 'yes') echo "checked=yes"; ?>> <?php print __('AntiVirus Support');?></label>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_antivirus" <?php if ($v_antivirus == 'yes') echo "checked=yes"; ?>> <?php print _('AntiVirus Support');?></label>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_dkim" <?php if ($v_dkim == 'yes') echo "checked=yes"; ?>> <?php print __('DKIM Support');?></label>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_dkim" <?php if ($v_dkim == 'yes') echo "checked=yes"; ?>> <?php print _('DKIM Support');?></label>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="vst-text step-top">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');"> <?php print __('SSL Support');?></label>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');"> <?php print _('SSL Support');?></label>
                                 </td>
                             </tr>
                             <tr>
@@ -99,21 +99,21 @@
                                     <table style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;" id="ssltable">
                                         <tr>
                                             <td class="input-label vst-text">
-                                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letencrypt == 'on') echo "checked=yes" ?> onclick="App.Actions.MAIL.toggle_letsencrypt(this)"> <?php print __('Lets Encrypt Support');?></label>
+                                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letencrypt == 'on') echo "checked=yes" ?> onclick="App.Actions.MAIL.toggle_letsencrypt(this)"> <?php print _('Lets Encrypt Support');?></label>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <span class="alert alert-info alert-with-icon">
                                                     <i class="fas fa-exclamation"></i>
-                                                    <?=__("To enable Let's Encrypt SSL, ensure that DNS records exist for mail.$v_domain and $v_webmail_alias!")?><br/>
+                                                    <?=_("To enable Let's Encrypt SSL, ensure that DNS records exist for mail.$v_domain and $v_webmail_alias!")?><br/>
                                                 </span>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('SSL Certificate');?>
-                                                <span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=$v_domain?>"><?=__('Generate CSR')?></a></span>
+                                                <?php print _('SSL Certificate');?>
+                                                <span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=$v_domain?>"><?=_('Generate CSR')?></a></span>
                                             </td>
                                         </tr>
                                         <tr>
@@ -123,7 +123,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('SSL Key');?>
+                                                <?php print _('SSL Key');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -133,7 +133,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print __('SSL Certificate Authority / Intermediate');?> <span class="optional">(<?php print __('optional');?>)</span>
+                                                <?php print _('SSL Certificate Authority / Intermediate');?> <span class="optional">(<?php print _('optional');?>)</span>
                                             </td>
                                         </tr>
                                         <tr>
@@ -148,7 +148,7 @@
                                                     <table class="additional-info">
                                                         <tr>
                                                             <td>
-                                                                <?=__('SUBJECT')?>:
+                                                                <?=_('SUBJECT')?>:
                                                             </td>
                                                             <td class="details">
                                                                 <?=$v_ssl_subject?>
@@ -157,7 +157,7 @@
                                                         <? if($v_ssl_aliases){?>
                                                             <tr>
                                                                 <td>
-                                                                    <?=__('ALIASES')?>:
+                                                                    <?=_('ALIASES')?>:
                                                                 </td>
                                                                 <td class="details">
                                                                     <?=$v_ssl_aliases?>
@@ -166,7 +166,7 @@
                                                         <? } ?>
                                                         <tr>
                                                             <td>
-                                                                <?=__('NOT_BEFORE')?>:
+                                                                <?=_('NOT_BEFORE')?>:
                                                             </td>
                                                             <td class="details">
                                                                 <?=$v_ssl_not_before?>
@@ -174,7 +174,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td>
-                                                                <?=__('NOT_AFTER')?>:
+                                                                <?=_('NOT_AFTER')?>:
                                                             </td>
                                                             <td class="details">
                                                                 <?=$v_ssl_not_after?>
@@ -182,7 +182,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td>
-                                                                <?=__('SIGNATURE')?>:
+                                                                <?=_('SIGNATURE')?>:
                                                             </td>
                                                             <td class="details">
                                                                 <?=$v_ssl_signature?>
@@ -190,7 +190,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td>
-                                                                <?=__('PUB_KEY')?>:
+                                                                <?=_('PUB_KEY')?>:
                                                             </td>
                                                             <td class="details">
                                                                 <?=$v_ssl_pub_key?>
@@ -198,7 +198,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td>
-                                                                <?=__('ISSUER')?>
+                                                                <?=_('ISSUER')?>
                                                             </td>
                                                             <td class="details">
                                                                 <?=$v_ssl_issuer?>

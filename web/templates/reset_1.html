@@ -5,19 +5,19 @@
                         <table>
                             <tr>
                                 <td style="padding: 22px 30px 0 42px; height: 280px; width: 170px;">
-                                    <a href="/"><img border=0 src="/images/logo.png" alt="Hestia Control Panel" style="margin: 20px; margin-top: 64px;" /></a>
+                                    <a href="/"><img border=0 src="/images/logo.svg" title="<?=_('Hestia Control Panel');?>" style="margin-top: 70px;" /></a>
                                 </td>
                                 <td style="padding: 40px 60px 0 0;" class="animated fadeIn">
                                     <form method="post" action="/reset/">
                                         <table class="login-box">
                                             <tr>
                                                 <td style="padding: 12px 0 0 2px;" class="login-welcome">
-                                                    <?php print __('Forgot Password');?>
+                                                    <?php print _('Forgot Password');?>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td style="padding: 12px 0 0 2px;">
-                                                    <?php print __('Username');?>
+                                                    <?php print _('Username');?>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -27,7 +27,7 @@
                                             </tr>
                                             <tr>
                                                 <td style="padding: 12px 0 0 2px;">
-                                                    <?php print __('Email');?>
+                                                    <?php print _('Email');?>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -36,14 +36,9 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 12px 0 0 2px;">
-                                                    <?php print __('RESET_NOTICE');?>
-                                                </td>
-                                            </tr>
-                                            <tr>
                                                 <td style="padding: 20px 0 12px 0;">
-                                                    <input tabindex="2" type="submit" value="<?php print __('Submit');?>" class="button">&nbsp;&nbsp;
-                                                    <input type="button" class="button cancel" value="<?php print __('Back');?>" onclick="location.href='/login/'">
+                                                    <input tabindex="2" type="submit" value="<?php print _('Submit');?>" class="button">&nbsp;&nbsp;
+                                                    <input type="button" class="button cancel" value="<?php print _('Back');?>" onclick="location.href='/login/'">
                                                 </td>
                                             </tr>
                                         </table>
@@ -64,4 +59,3 @@
         </center>
     </body>
 </html>
-

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add web domain
 # options: USER DOMAIN [IP] [ALIASES] [PROXY_EXTENSIONS] [RESTART]
+# labels: web
+#
+# example: v-add-web-domain admin wonderland.com 192.18.22.43 yes www.wonderland.com
 #
 # The function adds virtual host to a server. In cases when ip is
 # undefined in the script, "default" template will be used. The alias of
@@ -109,7 +112,7 @@ if [ ! -z "$WEB_BACKEND" ]; then
         fi
     fi
     BACKEND="$BACKEND_TEMPLATE"
-    $BIN/v-add-web-domain-backend "$user" "$domain" $BACKEND_TEMPLATE
+    $BIN/v-add-web-domain-backend "$user" "$domain" $BACKEND_TEMPLATE $restart
     check_result $? "Backend error" >/dev/null
 fi
 
@@ -169,7 +172,7 @@ time=$(echo "$time_n_date" |cut -f 1 -d \ )
 date=$(echo "$time_n_date" |cut -f 2 -d \ )
 
 # Adding domain in web.conf
-echo "DOMAIN='$domain' IP='$ip' IP6='' ALIAS='$ALIAS' TPL='$WEB_TEMPLATE'\
+echo "DOMAIN='$domain' IP='$ip' IP6='' CUSTOM_DOCROOT='' ALIAS='$ALIAS' TPL='$WEB_TEMPLATE'\
  SSL='no' SSL_FORCE='no' SSL_HOME='same' LETSENCRYPT='no' FTP_USER='' FTP_MD5=''\
  BACKEND='$BACKEND_TEMPLATE' PROXY='$PROXY_TEMPLATE' PROXY_EXT='$PROXY_EXT'\
  STATS='' STATS_USER='' STATS_CRYPT='' U_DISK='0' U_BANDWIDTH='0'\

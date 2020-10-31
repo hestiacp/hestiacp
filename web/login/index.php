@@ -31,15 +31,15 @@ if (isset($_SESSION['user'])) {
     exit;
 }
 
-function authenticate_user(){
+function authenticate_user($user, $password, $twofa = ''){
     if(isset($_SESSION['token']) && isset($_POST['token']) && $_POST['token'] == $_SESSION['token']) {
-    $v_user = escapeshellarg($_POST['user']);
-    $ip = $_SERVER['REMOTE_ADDR'];
+    $v_user = escapeshellarg($user);
+    $v_ip = escapeshellarg($_SERVER['REMOTE_ADDR']);
     if(isset($_SERVER['HTTP_CF_CONNECTING_IP'])){
         if(!empty($_SERVER['HTTP_CF_CONNECTING_IP'])){
             $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
         }
-    } 
+    }
     $v_ip = escapeshellarg($ip);
      // Get user's salt
     $output = '';
@@ -47,13 +47,9 @@ function authenticate_user(){
     $pam = json_decode(implode('', $output), true);
     if ( $return_var > 0 ) {
         sleep(2);
-        unset($_POST['password']);
-        unset($_POST['user']);
-        $error = "<a class=\"error\">".__('Invalid username or password')."</a>";
+        $error = "<a class=\"error\">"._('Invalid username or password')."</a>";
         return $error;
         } else {
-            $user = $_POST['user'];
-            $password = $_POST['password'];
             $salt = $pam[$user]['SALT'];
             $method = $pam[$user]['METHOD'];
 
@@ -84,19 +80,17 @@ function authenticate_user(){
             // Check API answer
             if ( $return_var > 0 ) {
                 sleep(2);
-                unset($_POST['password']);
-                $error = "<a class=\"error\">".__('Invalid username or password')."</a>";
+                $error = "<a class=\"error\">"._('Invalid username or password')."</a>";
                 return $error;
             } else {
-                // Make root admin user
-                if ($_POST['user'] == 'root') $v_user = 'admin';
+
                 // Get user speciefic parameters
                 exec (HESTIA_CMD . "v-list-user ".$v_user." json", $output, $return_var);
                 $data = json_decode(implode('', $output), true);
                 if ($data[$user]['TWOFA'] != '') {
                     if(password_verify($data[$user]['TWOFA'].$ip.$_POST['murmur'],$_COOKIE['limit2fa'])){
 
-                    }else{                        
+                    }else{
                        setcookie('limit2fa','',time() - 3600,"/");
                         if(empty($_POST['twofa'])){
                             return false;
@@ -106,13 +100,21 @@ function authenticate_user(){
                             unset($output);
                             if ( $return_var > 0 ) {
                                 sleep(2);
-                                $error = "<a class=\"error\">".__('Invalid or missing 2FA token')."</a>";
+                                $error = "<a class=\"error\">"._('Invalid or missing 2FA token')."</a>";
+                                $_SESSION['login']['username'] = $user;
+                                $_SESSION['login']['password'] = $password;
                                 return $error;
                                 unset($_POST['twofa']);
-                            }   
+                            }
                         }
-                        
+
                     }
+                }
+
+                if ($data[$user]['ROLE'] == 'admin'){
+                    exec (HESTIA_CMD . "v-list-user admin json", $output, $return_var);
+                    $data = json_decode(implode('', $output), true);
+                    unset($output);
                 }
                 // Define session user
                 $_SESSION['user'] = key($data);
@@ -120,20 +122,20 @@ function authenticate_user(){
                 //log successfull login attempt
                 $v_murmur = escapeshellarg($_POST['murmur']);
                 exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." ".$v_murmur, $output, $return_var);
-                
+
                 //rename $_SESSION['TWOFA_VALID_LENGTH'] still to be done!
                 if(empty($_COOKIE['limit2fa'] && $_SESSION['TWOFA_VALID_LENGTH'] == 1 && $data[$user]['TWOFA'] != "")){
                     setcookie('limit2fa',password_hash($data[$user]['TWOFA'].$ip.$_POST['murmur'],PASSWORD_BCRYPT),time()+60*60*24,"/");
                 };
                 $_SESSION['LAST_ACTIVITY'] = time();
                 $_SESSION['MURMUR'] = $_POST['murmur'];
-                                
+
                 // Define language
                 $output = '';
                 exec (HESTIA_CMD."v-list-sys-languages json", $output, $return_var);
                 $languages = json_decode(implode('', $output), true);
                 if (in_array($data[$v_user]['LANGUAGE'], $languages)){
-                    $_SESSION['language'] = $data[$v_user]['LANGUAGE'];
+                    $_SESSION['language'] = $data[$user]['LANGUAGE'];
                 } else {
                     $_SESSION['language'] = 'en';
                 }
@@ -146,7 +148,7 @@ function authenticate_user(){
                     unset($_SESSION['request_uri']);
                     exit;
                 } else {
-                    if ($v_user == 'admin') {
+                    if ($user == 'admin') {
                         header("Location: /list/user/");
                     } else {
                         header("Location: /list/web/");
@@ -155,13 +157,23 @@ function authenticate_user(){
                 }
             }
         }
+    } else {
+        unset($_POST);
+        unset($_GET);
+        unset($_SESSION);
+        session_destroy();
+        session_start();
+        return false;
     }
 }
-
-if (!empty($_POST['user']) && !empty($_POST['password']) && !empty($_POST['twofa'])){
-    $error = authenticate_user(); 
+if (!empty($_SESSION['login']['username']) && !empty($_SESSION['login']['password']) && !empty($_POST['twofa'])){
+    $error = authenticate_user($_SESSION['login']['username'], $_SESSION['login']['password'], $_POST['twofa']);
+    unset($_POST);
 } else if (!empty($_POST['user']) && !empty($_POST['password'])) {
-    $error = authenticate_user();    
+    $error = authenticate_user($_POST['user'], $_POST['password']);
+    unset($_POST);
+}else{
+    unset($_SESSION['login']);
 }
 // Check system configuration
 load_hestia_config();
@@ -186,15 +198,23 @@ if (empty($_SESSION['language'])) {
 
 // Generate CSRF token
 $_SESSION['token'] = md5(uniqid(mt_rand(), true));
-require_once($_SERVER['DOCUMENT_ROOT'].'/inc/i18n/'.$_SESSION['language'].'.php');
+
 require_once('../templates/header.html');
-if (empty($_POST['user'])) {
-    require_once('../templates/login.html');
+if(!empty($_SESSION['login'])){
+    require_once('../templates/login_2.html');
+}else if (empty($_POST['user'])) {
+    if($_SESSION['LOGIN_STYLE'] == 'old'){
+        require_once('../templates/login_a.html');
+    }else{
+        require_once('../templates/login.html');
+    }
 }else if (empty($_POST['password'])) {
     require_once('../templates/login_1.html');
-}else if (empty($_POST['twofa'])) {
-    require_once('../templates/login_2.html');    
-} else {
-    require_once('../templates/login.html');
+}else{
+    if($_SESSION['LOGIN_STYLE'] == 'old'){
+        require_once('../templates/login_a.html');
+    }else{
+        require_once('../templates/login.html');
+    }
 }
 ?>

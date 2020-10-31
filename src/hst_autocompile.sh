@@ -68,7 +68,7 @@ ARCHIVE_DIR="$SRC_DIR/src/archive"
 if [ ! -z "$2" ]; then
   branch=$2
 else
-  echo -n "Please enter the name of the branch to build from (e.g. master): "
+  echo -n "Please enter the name of the branch to build from (e.g. main): "
   read branch
 fi
 
@@ -176,11 +176,11 @@ GIT_REP='https://raw.githubusercontent.com/hestiacp/hestiacp/'$branch'/src/deb'
 
 # Generate Links for sourcecode
 HESTIA_ARCHIVE_LINK='https://github.com/hestiacp/hestiacp/archive/'$branch'.tar.gz'
-NGINX='https://nginx.org/download/nginx-'$NGINX_V'.tar.gz'
+NGINX='https://nginx.org/download/nginx-'$(echo $NGINX_V |cut -d"~" -f1)'.tar.gz'
 OPENSSL='https://www.openssl.org/source/openssl-'$OPENSSL_V'.tar.gz'
 PCRE='https://ftp.pcre.org/pub/pcre/pcre-'$PCRE_V'.tar.gz'
 ZLIB='https://www.zlib.net/zlib-'$ZLIB_V'.tar.gz'
-PHP='http://de2.php.net/distributions/php-'$PHP_V'.tar.gz'
+PHP='http://de2.php.net/distributions/php-'$(echo $PHP_V |cut -d"-" -f1)'.tar.gz'
 
 # Forward slashes in branchname are replaced with dashes to match foldername in github archive.
 branch=$(echo "$branch" |sed 's/\//-/g');
@@ -213,7 +213,7 @@ if [ "$NGINX_B" = true ] ; then
     download_file $ZLIB '-' | tar xz
 
     # Change to nginx directory
-    cd nginx-$NGINX_V
+    cd nginx-$(echo $NGINX_V |cut -d"~" -f1)
 
     # configure nginx
     ./configure   --prefix=/usr/local/hestia/nginx \
@@ -242,7 +242,7 @@ if [ "$NGINX_B" = true ] ; then
 
     # Cleare up unused files
     cd $BUILD_DIR
-    rm -r nginx-$NGINX_V openssl-$OPENSSL_V pcre-$PCRE_V zlib-$ZLIB_V
+    rm -r nginx-$(echo $NGINX_V |cut -d"~" -f1) openssl-$OPENSSL_V pcre-$PCRE_V zlib-$ZLIB_V
 
     # Prepare Deb Package Folder Structure
     cd hestia-nginx_$NGINX_V/
@@ -330,7 +330,7 @@ if [ "$PHP_B" = true ] ; then
     download_file $PHP '-' | tar xz
 
     # Change to php directory
-    cd php-$PHP_V
+    cd php-$(echo $PHP_V |cut -d"-" -f1)
 
     # Configure PHP
     ./configure   --prefix=/usr/local/hestia/php \
@@ -339,6 +339,7 @@ if [ "$PHP_B" = true ] ; then
                 --with-fpm-group=admin \
                 --with-libdir=lib/x86_64-linux-gnu \
                 --with-mysqli \
+                --with-gettext \
                 --with-curl \
                 --with-zip \
                 --with-gmp \
@@ -354,7 +355,7 @@ if [ "$PHP_B" = true ] ; then
 
     # Cleare up unused files
     cd $BUILD_DIR
-    rm -r php-$PHP_V
+    rm -r php-$(echo $PHP_V |cut -d"-" -f1)
 
     # Prepare Deb Package Folder Structure
     cd hestia-php_$PHP_V/
@@ -365,10 +366,15 @@ if [ "$PHP_B" = true ] ; then
     if [ -z "$use_src_folder" ]; then
       download_file $GIT_REP/php/control
       download_file $GIT_REP/php/copyright
+      download_file $GIT_REP/php/postinst
     else
       cp $BUILD_DIR/hestiacp-$branch/src/deb/php/control ./
       cp $BUILD_DIR/hestiacp-$branch/src/deb/php/copyright ./
+      cp $BUILD_DIR/hestiacp-$branch/src/deb/php/postinst ./
     fi
+
+    # Set permission
+    chmod +x postinst
 
     # Move php directory
     cd ..
@@ -450,7 +456,7 @@ if [ "$HESTIA_B" = true ]; then
     
 
     # Set permission
-    chmod +x postinst
+    chmod 755 postinst
 
     # Move needed directories
     cd $BUILD_DIR/hestiacp-$branch

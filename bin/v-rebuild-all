@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: rebuild all assets for a specified user
 # options: USER [RESTART]
+# labels: hestia
 #
 # The function rebuilds all assets for a user account:
 # - Web domains
@@ -42,15 +43,12 @@ is_object_unsuspended 'user' 'USER' "$user"
 #----------------------------------------------------------#
 
 # Rebuild loop
-for user in $($HESTIA/bin/v-list-sys-users plain); do
-    $BIN/v-rebuild-web-domains $user $restart
-    $BIN/v-rebuild-dns-domains $user $restart
-    $BIN/v-rebuild-mail-domains $user $restart
-    $BIN/v-rebuild-databases $user $restart
-    $BIN/v-rebuild-cron-jobs $user $restart
-    $BIN/v-rebuild-user $user $restart
-done
-
+$BIN/v-rebuild-web-domains $user $restart
+$BIN/v-rebuild-dns-domains $user $restart
+$BIN/v-rebuild-mail-domains $user $restart
+$BIN/v-rebuild-databases $user $restart
+$BIN/v-rebuild-cron-jobs $user $restart
+$BIN/v-rebuild-user $user $restart
 
 #----------------------------------------------------------#
 #                       Hestia                             #

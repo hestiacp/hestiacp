@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: restore user
 # options: USER BACKUP [WEB] [DNS] [MAIL] [DB] [CRON] [UDIR] [NOTIFY]
+# labels: panel
+#
+# example: v-restore-user admin 2019-04-22_01-00-00.tar
 #
 # The function for restoring user from backup.
 
@@ -30,121 +33,12 @@ fi
 
 # Includes
 source $HESTIA/func/main.sh
+source $HESTIA/func/backup.sh
 source $HESTIA/func/domain.sh
 source $HESTIA/func/ip.sh
 source $HESTIA/func/db.sh
 source $HESTIA/func/rebuild.sh
 source $HESTIA/conf/hestia.conf
-
-# Defining FTP command function
-ftpc() {
-    /usr/bin/ftp -n $HOST $PORT <<EOF
-    quote USER $USERNAME
-    quote PASS $PASSWORD
-    lcd $BACKUP
-    binary
-    $1
-    $2
-    $3
-    quit
-EOF
-}
-
-# FTP backup download function
-ftp_download() {
-    source $HESTIA/conf/ftp.backup.conf
-    if [ -z "$PORT" ]; then
-        PORT='21'
-    fi
-    if [ -z $BPATH ]; then
-        ftpc "get $1"
-    else
-        ftpc "cd $BPATH" "get $1"
-    fi
-}
-
-# SFTP command function
-sftpc() {
-    expect -f "-" <<EOF "$@"
-        set timeout 60
-        set count 0
-        spawn /usr/bin/sftp -o StrictHostKeyChecking=no \
-            -o Port=$PORT $USERNAME@$HOST
-        expect {
-            "password:" {
-                send "$PASSWORD\r"
-                exp_continue
-            }
-
-            -re "Couldn't|(.*)disconnect|(.*)stalled|(.*)not found" {
-                set count \$argc
-                set output "Disconnected."
-                set rc $E_FTP
-                exp_continue
-            }
-
-            -re ".*denied.*(publickey|password)." {
-                set output "Permission denied, wrong publickey or password."
-                set rc $E_CONNECT
-            }
-
-            -re "\[0-9]*%" {
-                exp_continue
-            }
-
-            "sftp>" {
-                if {\$count < \$argc} {
-                    set arg [lindex \$argv \$count]
-                    send "\$arg\r"
-                    incr count
-                } else {
-                    send "exit\r"
-                    set output "Disconnected."
-                    if {[info exists rc] != 1} {
-                        set rc $OK
-                    }
-                }
-                exp_continue
-            }
-            timeout {
-                set output "Connection timeout."
-                set rc $E_CONNECT
-            }
-        }
-
-        if {[info exists output] == 1} {
-            puts "\$output"
-        }
-
-    exit \$rc
-EOF
-}
-
-# SFTP backup download function
-sftp_download() {
-    source $HESTIA/conf/sftp.backup.conf
-    if [ -z "$PORT" ]; then
-        PORT='22'
-    fi
-    cd $BACKUP
-    if [ -z $BPATH ]; then
-        sftpc "get $1" > /dev/null 2>&1
-    else
-        sftpc "cd $BPATH" "get $1" > /dev/null 2>&1
-    fi
-
-}
-
-# Google backup download function
-google_download() {
-    source $HESTIA/conf/google.backup.conf
-    gsutil="$HESTIA/3rdparty/gsutil/gsutil"
-    export BOTO_CONFIG="$HESTIA/conf/.google.backup.boto"
-    ${gsutil} cp gs://$BUCKET/$BPATH/$1 $BACKUP/ > /dev/null 2>&1
-    if [ "$?" -ne 0 ]; then
-        check_result "$E_CONNECT" "gsutil failed to download $1"
-    fi
-}
 
 
 #----------------------------------------------------------#
@@ -229,14 +123,26 @@ fi
 
 # Set default backup source system
 backup_system="hestia"
+backup_mode="gzip"
 
 # Check if it is a Vesta backup
 if tar -tf "$BACKUP/$backup" ./vesta >/dev/null 2>&1; then
     backup_system="vesta"
 fi
 
+if tar -tf "$BACKUP/$backup" ./.zstd >/dev/null 2>&1; then
+    backup_mode="zstd"
+fi
+
 # Restoring user account
 if [ "$create_user" = 'yes' ]; then
+    
+    # Add check if user already exists as Linux User
+    getent passwd $user > /dev/null 2&>1
+    if [ "$?" == 0 ]; then
+        check_result "$E_EXISTS" "User already exists"  
+    fi 
+    
     echo "-- USER --" |tee $tmpdir/restore.log
     echo -e "$(date "+%F %T") $user" |tee -a $tmpdir/restore.log
 
@@ -279,7 +185,11 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
 
     # Creating web domain restore list
     backup_domains=$(tar -tf $BACKUP/$backup |grep "^./web")
-    backup_domains=$(echo "$backup_domains" |grep domain_data.tar.gz)
+    if [ "$backup_mode" = "zstd" ]; then
+        backup_domains=$(echo "$backup_domains" |grep domain_data.tar.zst)
+    else
+        backup_domains=$(echo "$backup_domains" |grep domain_data.tar.gz)
+    fi
     backup_domains=$(echo "$backup_domains" |cut -f 3 -d /)
     if [ -z "$web" ] || [ "$web" = '*' ]; then
         domains="$backup_domains"
@@ -416,10 +326,19 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
         fi
         chmod u+w "$HOMEDIR/$user/web/$domain"
         [[ -d $HOMEDIR/$user/web/$domain/stats ]] && chmod u+w "$HOMEDIR/$user/web/$domain/stats"
-        user_exec tar -xzpf $tmpdir/web/$domain/domain_data.tar.gz \
-            -C "$HOMEDIR/$user/web/$domain/" \
-            --anchored \
-            --exclude='logs/*'
+    
+        if [ "$backup_mode" = "zstd" ]; then
+            user_exec tar -I zstd -xpf $tmpdir/web/$domain/domain_data.tar.zst \
+                -C "$HOMEDIR/$user/web/$domain/" \
+                --anchored \
+                --exclude='logs/*'
+        else
+            user_exec tar -xzpf $tmpdir/web/$domain/domain_data.tar.gz \
+                -C "$HOMEDIR/$user/web/$domain/" \
+                --anchored \
+                --exclude='logs/*'
+        fi
+        
         if [ "$?" -ne 0 ]; then
             rm -rf $tmpdir
             error="Can't unpack $domain data tarball"
@@ -636,7 +555,11 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
             if [ -e "$USER_DATA/ssl/mail.$domain.ca" ]; then
                 cp -f $USER_DATA/ssl/mail.$domain.ca $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.ca
             fi
-
+            
+            if [ ! -d  /etc/dovecot/conf.d/domains ]; then
+                mkdir /etc/dovecot/conf.d/domains
+            fi
+            
             # Add domain SSL configuration to dovecot
             if [ -f /etc/dovecot/conf.d/domains/$domain.conf ]; then
                 rm -f /etc/dovecot/conf.d/domains/$domain.conf
@@ -647,6 +570,10 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
             echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
             echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
             echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+            
+            if [ ! -d /usr/local/hestia/ssl/mail ]; then
+                mkdir /usr/local/hestia/ssl/mail
+            fi
 
             # Add domain SSL configuration to exim4
             # Cleanup broken symlinks
@@ -674,28 +601,43 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
         format_domain_idn
 
         # Restoring emails
-        if [ -e "$tmpdir/mail/$domain/accounts.tar.gz" ]; then
-            chmod u+w "$HOMEDIR/$user/mail/$domain_idn"
-            $BIN/v-extract-fs-archive "$user" "$tmpdir/mail/$domain/accounts.tar.gz" "$HOMEDIR/$user/mail/$domain_idn/"
-            if [ "$?" -ne 0 ]; then
-                rm -rf $tmpdir
-                error="Can't unpack $domain mail account container"
-                echo "$error" |$SENDMAIL -s "$subj" $email $notify
-                sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-                check_result "$E_PARSING" "$error"
+        if [ $backup_mode = 'zstd' ]; then    
+            if [ -e "$tmpdir/mail/$domain/accounts.tar.zst" ]; then
+                chmod u+w "$HOMEDIR/$user/mail/$domain_idn"
+                $BIN/v-extract-fs-archive "$user" "$tmpdir/mail/$domain/accounts.tar.zst" "$HOMEDIR/$user/mail/$domain_idn/"
+                if [ "$?" -ne 0 ]; then
+                    rm -rf $tmpdir
+                    error="Can't unpack $domain mail account container"
+                    echo "$error" |$SENDMAIL -s "$subj" $email $notify
+                    sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
+                    check_result "$E_PARSING" "$error"
+                fi
+    
+                # Chowning as owner needs to be user:mail instead of user:user
+                find $HOMEDIR/$user/mail/$domain_idn -user $user \
+                   -exec chown -h $user:mail {} \;
             fi
-
-            # Re-chowning files if uid differs
-            if [ "$old_uid" -ne "$new_uid" ]; then
-                find $HOMEDIR/$user/mail/$domain_idn -user $old_uid \
-                    -exec chown -h $user:mail {} \;
+        else
+            if [ -e "$tmpdir/mail/$domain/accounts.tar.gz" ]; then
+                chmod u+w "$HOMEDIR/$user/mail/$domain_idn"
+                $BIN/v-extract-fs-archive "$user" "$tmpdir/mail/$domain/accounts.tar.gz" "$HOMEDIR/$user/mail/$domain_idn/"
+                if [ "$?" -ne 0 ]; then
+                    rm -rf $tmpdir
+                    error="Can't unpack $domain mail account container"
+                    echo "$error" |$SENDMAIL -s "$subj" $email $notify
+                    sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
+                    check_result "$E_PARSING" "$error"
+                fi
+    
+                # Chowning as owner needs to be user:mail instead of user:user
+                find $HOMEDIR/$user/mail/$domain_idn -user $user \
+                   -exec chown -h $user:mail {} \;
             fi
         fi
-
         # Chowning mail conf files to exim user
         find $HOMEDIR/$user/conf/mail/$domain_idn -user root \
             -exec chown $exim_user {} \;
-
+            
     done
 
     # Restarting web server
@@ -764,7 +706,11 @@ if [ "$db" != 'no' ] && [ ! -z "$DB_SYSTEM" ]; then
         fi
 
         # Unzipping database dump
-        gzip -d $tmpdir/db/$database/$database.*.sql.gz
+        if [ $backup_mode = 'zstd' ]; then  
+            zstd -d $tmpdir/db/$database/$database.*.sql.zst
+        else
+            gzip -d $tmpdir/db/$database/$database.*.sql.gz
+        fi
 
         # Importing database dump
         database_dump="$tmpdir/db/$database/$database.$TYPE.sql"
@@ -823,9 +769,15 @@ if [ "$udir" != 'no' ]; then
 
         # Creating user dir restore list
         backup_dirs=$(tar -tf $BACKUP/$backup |grep "^./user_dir")
-        backup_dirs=$(echo "$backup_dirs" |grep tar.gz)
-        backup_dirs=$(echo "$backup_dirs" |cut -f 3 -d /)
-        backup_dirs=$(echo "$backup_dirs" |sed "s/.tar.gz//")
+        if [ $backup_mode = 'zstd' ]; then 
+            backup_dirs=$(echo "$backup_dirs" |grep tar.zst)
+            backup_dirs=$(echo "$backup_dirs" |cut -f 3 -d /)
+            backup_dirs=$(echo "$backup_dirs" |sed "s/.tar.zst//")
+        else
+            backup_dirs=$(echo "$backup_dirs" |grep tar.gz)        
+            backup_dirs=$(echo "$backup_dirs" |cut -f 3 -d /)
+            backup_dirs=$(echo "$backup_dirs" |sed "s/.tar.gz//")
+        fi
         if [ -z "$udir" ] || [ "$udir" = '*' ]; then
             user_dirs="$backup_dirs"
         else
@@ -835,7 +787,11 @@ if [ "$udir" != 'no' ]; then
 
         for user_dir in $user_dirs; do
             echo -e "$(date "+%F %T") $user_dir" |tee -a $tmpdir/restore.log
-            tar xf "$BACKUP/$backup" -C "$tmpdir" --no-wildcards "./user_dir/$user_dir.tar.gz"
+            if [ $backup_mode = 'zstd' ]; then 
+                tar xf "$BACKUP/$backup" -C "$tmpdir" --no-wildcards "./user_dir/$user_dir.tar.zst"
+            else
+                tar xf "$BACKUP/$backup" -C "$tmpdir" --no-wildcards "./user_dir/$user_dir.tar.gz"
+            fi
             if [ "$?" -ne 0 ]; then
                 rm -rf $tmpdir
                 error="Can't unpack $user_dir user dir container"
@@ -847,7 +803,11 @@ if [ "$udir" != 'no' ]; then
             chown "$user" "$tmpdir/user_dir"
             chown "$user" "$HOMEDIR/$user"
             [ -e "$HOMEDIR/$user/$user_dir" ] && chown "$user" "$HOMEDIR/$user/$user_dir"
-            $BIN/v-extract-fs-archive "$user" "$tmpdir/user_dir/$user_dir.tar.gz" "$HOMEDIR/$user"
+            if [ $backup_mode = 'zstd' ]; then
+                $BIN/v-extract-fs-archive "$user" "$tmpdir/user_dir/$user_dir.tar.zst" "$HOMEDIR/$user"
+            else
+                $BIN/v-extract-fs-archive "$user" "$tmpdir/user_dir/$user_dir.tar.gz" "$HOMEDIR/$user"
+            fi
             cmdstatus="$?"
             chown root:root "$HOMEDIR/$user"
             if [ "$cmdstatus" -ne 0 ]; then

@@ -1,10 +1,10 @@
 <div class="l-center edit">
         <div class="l-sort clearfix">
           <div class="l-unit-toolbar__buttonstrip">
-            <a class="ui-button cancel" id="btn-back" href="/list/cron/"><i class="fas fa-arrow-left status-icon blue"></i> <?=__('Back')?></a>
+            <a class="ui-button cancel" id="btn-back" href="/list/cron/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" title="<?=__('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=__('Save')?></a>
+            <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
           </div>
         </div>
       </div>
@@ -25,11 +25,11 @@
                                 <div class="vst-text step-top helper-container">
                                     <div id="tabs"  class="cron-helper-tabs">
                                       <ul>
-                                        <li><a href="#tabs-1"><?=__('Minutes')?></a></li>
-                                        <li><a href="#tabs-2"><?=__('Hourly')?></a></li>
-                                        <li><a href="#tabs-3"><?=__('Daily')?></a></li>
-                                        <li><a href="#tabs-4"><?=__('Weekly')?></a></li>
-                                        <li><a href="#tabs-5"><?=__('Monthly')?></a></li>
+                                        <li><a href="#tabs-1"><?=_('Minutes')?></a></li>
+                                        <li><a href="#tabs-2"><?=_('Hourly')?></a></li>
+                                        <li><a href="#tabs-3"><?=_('Daily')?></a></li>
+                                        <li><a href="#tabs-4"><?=_('Weekly')?></a></li>
+                                        <li><a href="#tabs-5"><?=_('Monthly')?></a></li>
                                       </ul>
                                       <div id="tabs-1">
                                         <form>
@@ -37,18 +37,18 @@
                                             <input type="hidden" name="h_day" value="*" />
                                             <input type="hidden" name="h_month" value="*" />
                                             <input type="hidden" name="h_wday" value="*" />
-                                            <p><span class="first"><?=__('Run Command')?>:</span>
+                                            <p><span class="first"><?=_('Run Command')?>:</span>
                                                 <select name="h_min" class="vst-list">
-                                                    <option value="*"  selected="selected"><?=__('every minute')?></option>
-                                                    <option value="*/2"><?=__('every two minutes')?></option>
-                                                    <option value="*/5"><?=__('every')?> 5</option>
-                                                    <option value="*/10"><?=__('every')?> 10</option>
-                                                    <option value="*/15"><?=__('every')?> 15</option>
-                                                    <option value="*/30"><?=__('every')?> 30</option>
+                                                    <option value="*"  selected="selected"><?=_('every minute')?></option>
+                                                    <option value="*/2"><?=_('every two minutes')?></option>
+                                                    <option value="*/5"><?=_('every')?> 5</option>
+                                                    <option value="*/10"><?=_('every')?> 10</option>
+                                                    <option value="*/15"><?=_('every')?> 15</option>
+                                                    <option value="*/30"><?=_('every')?> 30</option>
                                                 </select>
                                             </p>
                                             <p class="step-top">
-                                                <input type="submit" value="<?=__('generate')?>" class="button">
+                                                <input type="submit" value="<?=_('generate')?>" class="button">
                                             </p>
                                         </form>
                                       </div>
@@ -59,16 +59,16 @@
                                             <input type="hidden" name="h_day" value="*" />
                                             <input type="hidden" name="h_month" value="*" />
                                             <input type="hidden" name="h_wday" value="*" />
-                                            <p><span class="first"><?=__('Run Command')?>:</span>
+                                            <p><span class="first"><?=_('Run Command')?>:</span>
                                                 <select name="h_hour" class="vst-list">
-                                                    <option value="*" selected="selected"><?=__('every hour')?></option>
-                                                    <option value="*/2"><?=__('every two hours')?></option>
-                                                    <option value="*/6"><?=__('every')?> 6</option>
-                                                    <option value="*/12"><?=__('every')?> 12</option>
+                                                    <option value="*" selected="selected"><?=_('every hour')?></option>
+                                                    <option value="*/2"><?=_('every two hours')?></option>
+                                                    <option value="*/6"><?=_('every')?> 6</option>
+                                                    <option value="*/12"><?=_('every')?> 12</option>
                                                 </select>
                                             </p>
 
-                                            <p><span class="first"><?=__('Minute')?>:</span>
+                                            <p><span class="first"><?=_('Minute')?>:</span>
                                                 <select name="h_min" class="vst-list short">
                                                     <option value="0" selected="selected">00</option>
                                                     <option value="15">15</option>
@@ -78,7 +78,7 @@
                                             </p>
 
                                             <p class="step-top">
-                                                <input type="submit" value="<?=__('generate')?>" class="button">
+                                                <input type="submit" value="<?=_('generate')?>" class="button">
                                             </p>
                                         </form>
                                       </div>
@@ -88,19 +88,19 @@
                                         <form>
                                             <input type="hidden" name="h_month" value="*" />
                                             <input type="hidden" name="h_wday" value="*" />
-                                            <p><span class="first"><?=__('Run Command')?>:</span>
+                                            <p><span class="first"><?=_('Run Command')?>:</span>
                                                 <select name="h_day" class="vst-list">
-                                                    <option value="*" selected="selected"><?=__('every day')?></option>
-                                                    <option value="1-31/2"><?=__('every odd day')?></option>
-                                                    <option value="*/2"><?=__('every even day')?></option>
-                                                    <option value="*/3"><?=__('every')?> 3</option>
-                                                    <option value="*/5"><?=__('every')?> 5</option>
-                                                    <option value="*/10"><?=__('every')?> 10</option>
-                                                    <option value="*/15"><?=__('every')?> 15</option>
+                                                    <option value="*" selected="selected"><?=_('every day')?></option>
+                                                    <option value="1-31/2"><?=_('every odd day')?></option>
+                                                    <option value="*/2"><?=_('every even day')?></option>
+                                                    <option value="*/3"><?=_('every')?> 3</option>
+                                                    <option value="*/5"><?=_('every')?> 5</option>
+                                                    <option value="*/10"><?=_('every')?> 10</option>
+                                                    <option value="*/15"><?=_('every')?> 15</option>
                                                 </select>
                                             </p>
 
-                                            <p><span class="first"><?=__('Hour')?>:</span>
+                                            <p><span class="first"><?=_('Hour')?>:</span>
                                                 <select name="h_hour" class="vst-list short">
                                                     <option value="0">00</option>
                                                     <option value="1">01</option>
@@ -128,7 +128,7 @@
                                                     <option value="23">23</option>
                                                 </select>
 
-                                                <span><?=__('Minute')?>:</span>
+                                                <span><?=_('Minute')?>:</span>
                                                 <select name="h_min" class="vst-list  short">
                                                     <option value="0" selected="selected">00</option>
                                                     <option value="1">01</option>
@@ -147,7 +147,7 @@
                                                 </select>
                                             </p>
                                             <p class="step-top">
-                                                <input type="submit" value="<?=__('generate')?>" class="button">
+                                                <input type="submit" value="<?=_('generate')?>" class="button">
                                             </p>
                                         </form>
                                       </div>
@@ -158,22 +158,22 @@
                                             <input type="hidden" name="h_month" value="*" />
                                             <input type="hidden" name="h_day" value="*" />
 
-                                            <p><span class="first"><?=__('Run Command')?>:</span>
+                                            <p><span class="first"><?=_('Run Command')?>:</span>
                                                 <select name="h_wday" class="vst-list">
-                                                    <option value="*" selected="selected"><?=__('every day')?></option>
-                                                    <option value="1,2,3,4,5"><?=__('weekdays (5 days)')?></option>
-                                                    <option value="0,6"><?=__('weekend (2 days)')?></option>
-                                                    <option value="1"><?=__('Monday')?></option>
-                                                    <option value="2"><?=__('Tuesday')?></option>
-                                                    <option value="3"><?=__('Wednesday')?></option>
-                                                    <option value="4"><?=__('Thursday')?></option>
-                                                    <option value="5"><?=__('Friday')?></option>
-                                                    <option value="6"><?=__('Saturday')?></option>
-                                                    <option value="0"><?=__('Sunday')?></option>
+                                                    <option value="*" selected="selected"><?=_('every day')?></option>
+                                                    <option value="1,2,3,4,5"><?=_('weekdays (5 days)')?></option>
+                                                    <option value="0,6"><?=_('weekend (2 days)')?></option>
+                                                    <option value="1"><?=_('Monday')?></option>
+                                                    <option value="2"><?=_('Tuesday')?></option>
+                                                    <option value="3"><?=_('Wednesday')?></option>
+                                                    <option value="4"><?=_('Thursday')?></option>
+                                                    <option value="5"><?=_('Friday')?></option>
+                                                    <option value="6"><?=_('Saturday')?></option>
+                                                    <option value="0"><?=_('Sunday')?></option>
                                                 </select>
                                             </p>
 
-                                            <p><span class="first"><?=__('Hour')?>:</span>
+                                            <p><span class="first"><?=_('Hour')?>:</span>
                                                 <select name="h_hour" class="vst-list short">
                                                     <option value="0">00</option>
                                                     <option value="1">01</option>
@@ -201,7 +201,7 @@
                                                     <option value="23">23</option>
                                                 </select>
 
-                                                <span><?=__('Minute')?>:</span>
+                                                <span><?=_('Minute')?>:</span>
                                                 <select name="h_min" class="vst-list short">
                                                     <option value="0" selected="selected">00</option>
                                                     <option value="1">01</option>
@@ -221,7 +221,7 @@
                                             </p>
 
                                             <p class="step-top">
-                                                <input type="submit" value="<?=__('generate')?>" class="button">
+                                                <input type="submit" value="<?=_('generate')?>" class="button">
                                             </p>
                                         </form>
                                       </div>
@@ -231,29 +231,29 @@
                                         <form>
                                             <input type="hidden" name="h_wday" value="*" />
 
-                                            <p><span class="first"><?=__('Run Command')?>:</span>
+                                            <p><span class="first"><?=_('Run Command')?>:</span>
                                                 <select name="h_month" class="vst-list">
-                                                    <option value="*" selected="selected"><?=__('every month')?></option>
-                                                    <option value="1-11/2"><?=__('every odd month')?></option>
-                                                    <option value="*/2"><?=__('every even month')?></option>
-                                                    <option value="*/3"><?=__('every')?> 3</option>
-                                                    <option value="*/6"><?=__('every')?> 6</option>
-                                                    <option value="1"><?=__('Jan')?></option>
-                                                    <option value="2"><?=__('Feb')?></option>
-                                                    <option value="3"><?=__('Mar')?></option>
-                                                    <option value="4"><?=__('Apr')?></option>
-                                                    <option value="5"><?=__('May')?></option>
-                                                    <option value="6"><?=__('Jun')?></option>
-                                                    <option value="7"><?=__('Jul')?></option>
-                                                    <option value="8"><?=__('Aug')?></option>
-                                                    <option value="9"><?=__('Sep')?></option>
-                                                    <option value="10"><?=__('Oct')?></option>
-                                                    <option value="11"><?=__('Nov')?></option>
-                                                    <option value="12"><?=__('Dec')?></option>
+                                                    <option value="*" selected="selected"><?=_('every month')?></option>
+                                                    <option value="1-11/2"><?=_('every odd month')?></option>
+                                                    <option value="*/2"><?=_('every even month')?></option>
+                                                    <option value="*/3"><?=_('every')?> 3</option>
+                                                    <option value="*/6"><?=_('every')?> 6</option>
+                                                    <option value="1"><?=_('Jan')?></option>
+                                                    <option value="2"><?=_('Feb')?></option>
+                                                    <option value="3"><?=_('Mar')?></option>
+                                                    <option value="4"><?=_('Apr')?></option>
+                                                    <option value="5"><?=_('May')?></option>
+                                                    <option value="6"><?=_('Jun')?></option>
+                                                    <option value="7"><?=_('Jul')?></option>
+                                                    <option value="8"><?=_('Aug')?></option>
+                                                    <option value="9"><?=_('Sep')?></option>
+                                                    <option value="10"><?=_('Oct')?></option>
+                                                    <option value="11"><?=_('Nov')?></option>
+                                                    <option value="12"><?=_('Dec')?></option>
                                                 </select>
                                             </p>
 
-                                            <p><span class="first"><?=__('Date')?>:</span>
+                                            <p><span class="first"><?=_('Date')?>:</span>
                                                 <select name="h_day" class="vst-list short">
                                                     <option value="1" selected="selected">1</option>
                                                     <option value="2">2</option>
@@ -288,7 +288,7 @@
                                                     <option value="31">31</option>
                                                 </select>
 
-                                                <span><?=__('Hour')?>:</span>
+                                                <span><?=_('Hour')?>:</span>
                                                 <select name="h_hour" class="vst-list short">
                                                     <option value="0">00</option>
                                                     <option value="1">01</option>
@@ -316,7 +316,7 @@
                                                     <option value="23">23</option>
                                                 </select>
 
-                                                <span><?=__('Minute')?>:</span>
+                                                <span><?=_('Minute')?>:</span>
                                                 <select name="h_min" class="vst-list short">
                                                     <option value="0" selected="selected">00</option>
                                                     <option value="1">01</option>
@@ -336,7 +336,7 @@
                                             </p>
 
                                             <p class="step-top">
-                                                <input type="submit" value="<?=__('generate')?>" class="button">
+                                                <input type="submit" value="<?=_('generate')?>" class="button">
                                             </p>
                                         </form>
                                       </div>
@@ -360,7 +360,7 @@
                         <table class="data-col2" width="600px">
                             <tr>
                                 <td class="step-top">
-                                    <span class="page-title"><?=__('Adding Cron Job')?></span>
+                                    <span class="page-title"><?=_('Adding Cron Job')?></span>
                                  </td>
                             </tr>
                             <tr>
@@ -378,7 +378,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Command');?>
+                                    <?php print _('Command');?>
                                 </td>
                             </tr>
                             <tr>
@@ -388,7 +388,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text step-top">
-                                    <?php print __('Minute');?>
+                                    <?php print _('Minute');?>
                                 </td>
                             </tr>
                             <tr>
@@ -398,7 +398,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Hour');?>
+                                    <?php print _('Hour');?>
                                 </td>
                             </tr>
                             <tr>
@@ -408,7 +408,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Day');?>
+                                    <?php print _('Day');?>
                                 </td>
                             </tr>
                             <tr>
@@ -418,7 +418,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Month');?>
+                                    <?php print _('Month');?>
                                 </td>
                             </tr>
                             <tr>
@@ -428,7 +428,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print __('Day of week');?>
+                                    <?php print _('Day of week');?>
                                 </td>
                             </tr>
                             <tr>

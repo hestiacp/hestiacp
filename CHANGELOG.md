@@ -1,9 +1,97 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [CURRENT] - Development
+## [1.3.1] - Service Release
 ### Features
-- Use stronger ciphers and Disable TLS v1.1 for vsftpd.
+- No new features have been introduced in this release.
+
+### Bugfixes
+- Fixed an issue where updates for `hestia-php` were incorrectly being marked as out-of-date in the UI due to a change in our servicing and package versioning scheme.
+- Fixed an issue that occured on the Updates page where the table row color of available updates would be difficult to read.
+- Fixed an issue where an administrator would get stuck in a loop trying to navigate back after adding a SSH key.
+- Fixed an issue where long table entries which exceeded the table length would overlap other UI elements.
+- Fixed an issue where the total amount of items on a page would fail to display correctly.
+- Improved the accuracy and reliability of tooltips throughout the the Control Panel UI:
+    - Removed unnecessary tooltips from buttons and other elements.
+    - Fixed incorrect tags which prevented tooltips from being displayed.
+    - Introduced tooltips to counter items on the Users, Packages, and Statistics pages to help better distinguish statistics.
+- Fixed an issue which caused higher than normal CPU usage during an upgrade due to a duplicate condition in the rebuild process.
+- Fixed minor spelling inconsistencies in command line script comments and output text.
+- Fixed an issue where old configuration files were not cleaned up when moving domains with `v-change-domain-owner`.
+- Fixed an issue where a `no backend template doesn't exist` could potentially would appear after upgrade with older templates (#1322).
+- Introduced caching templates for nginx + php-fpm configurations  - thanks **@cmstew**!
+- Fixed an issue where DNS cluster updates could fail due to the format of a DKIM record in an available zone - thanks **@jrohde**!
+- Improved the behavior of nginx SSL SNI detection to reject connections for domains which have no SSL certificate - thanks **@myrevery**! 
+- Improved the quality of comment formatting in command line scripts - thanks **@bisubus**! 
+- Fixed an issue where the logo was not displayed in the File Manager - thanks **@robothemes**!
+- Fixed an issue in the Control Panel UI which caused databases and additional FTP accounts to be named incorrectly if manually prefaced with the username.
+- Improved the visibility of service availability in the Control Panel UI.
+
+## [1.3.0] - Major Release (Feature / Quality Update)
+### Features
+- Users can now choose to point a domain to a different document root location (similar to domain parking).
+- The software update process will now perform a system health check before proceeding with installation.
+- Administrators now have control over software update notifications through the following settings in `$HESTIA/conf/hestia.conf` and through the Control Panel web interface:
+    - `UPGRADE_SEND_EMAIL` = Sends an email notification to primary admin account's email address
+    - `UPGRADE_SEND_EMAIL_LOG` = Sends installation log output to the primary admin account's email address
+- The upgrade process will now save installation logs to the `/root/hst_backups` directory by default for post-install troubleshooting.
+    - **Note:** We may adjust this path in the future and will document such changes as they happen.
+- We've introduced the ability to assign Administrator rights to other user accounts, enabling them to perform tasks under the Server Settings tab.
+- We've introduced a more robust translation system which will allow us to provide higher quality translations in future releases.
+    - **Note:** Some country codes have been updated, as a result your language setting may default back to English after upgrading.
+- For new installations, MariaDB 10.5 is now the default version.
+    - For existing installations, we've provided a manual post-install upgrade script. Please run `$HESTIA/install/upgrade/manual/upgrade_mariadb.sh` to migrate to MariaDB 10.5).
+- The user interface theme has been set to "Dark" by default. This can be changed from **Server Settings > Configure > Basic Options > Appearance**.
+    - **Note:** The name of the default theme has not been adjusted, and the change to the "dark" theme only applies to new installations at this time. This behavior may be changed in a future release.
+
+### Bugfixes
+- Fixed a security issue where user password reset keys could potentially be gleaned from system process list - thanks **RACK911 LABS**
+- Fixed an issue with passwords containing "`'`" - [Forum](https://forum.hestiacp.com/t/two-factor-authentication-issue-with-standard-user/1652/)
+- Fixed an issue with database backups when the port was not specified (#1068)
+- Fixed an issue where websites without SSL enabled would display the content of the first valid SSL enabled website (#1103)
+- Fixed an issue that would occur when using the `--with-debs` flag with the installer due to an incorrect version check routine (#1110)
+- Fixed an issue with incorrect permissions which would occur when restoring email accounts (#1114)
+- Fixed an issue where the File Manager would apply the wrong permissions on new directories
+- Fixed an issue that prevented successful restoration of SSL-enabled mail domains from a backup archive (#1069)
+- Fixed an issue where the phpMyAdmin button would not work in the Control Panel Web UI (#1078)
+- Fixed an issue where passwords were generated incorrectly (#1184)
+- Fixed an issue in `v-add-sys-ip` to ensure IP configuration is set to the correct port - thanks **@madito**
+- Fixed an issue that resulted in an extended loop condition when running `v-rebuild-all`
+- Improved support for API key usage with the `v-add-remote-dns-host` command (#1265)
+- Improved validation of free disk space when executing backup routine (#1115)
+- Improved support for SSH key types other than RSA / DSA
+- Improved reliability of backup function when removing remote locations (#1083)
+- Improved spam filtering by adding additional known-dangerous file extensions in exim's blacklist (#1138) - thanks **@kpapad904**
+- Updated Apache2 configuration to use Include with IncludeOptional (#1072)
+- Removed the ability to log in as "root" (whic logged to the admin account, deemed no longer necessary)
+- Add ca-certificates, software-properties-common to the dependencies (#1073 + [Forum](https://forum.hestiacp.com/t/hestiscp-fails-on-new-debian-9-vps/1623/8)) - thanks **@daniel-eder**
+- Create .npm directory by default when creating new user accounts (#1113) - thanks **@hahagu** 
+- Improved accuracy of several UI translations (NL, DE, UK, RU, ES, IT, ZH-CN) - thanks **@myrevery** and other contributors for your work!
+- Added `$restart` flag to `v-add-web-domain-backend` command (#1094) (#797) - thanks **@bright-soft**
+- PostgreSQL: forbid the use of upper case (#1084) causing issues with backup / creating database or user
+- Changed WordPress name in Quick Web App installer (#1074)
+- Cleaned up entries used in the Google / Gmail DNS template - thanks **@madito**
+- Enhanced ProFTPd support for TLS
+- Refactored LXD compiler script
+- Updated phpMyAdmin to version 5.0.4
+
+## [1.2.4] - Service Release
+### Features
+- No new features have been introduced in this release.
+
+### Bugfixes
+- Fixes an issue on auto renewing let's encrypt certificates.
+
+## [1.2.3] - Service Release
+### Features
+- No new features have been introduced in this release.
+
+### Bugfixes
+- Fixes an issue where non-ASCII characters were rejected in the password field.
+
+## [1.2.2] - Service Release
+### Features
+- No new features have been introduced in this release.
 
 ### Bugfixes
 - Create mailhelo.conf if it doesnt exist to prevent a error message during grep.
@@ -18,7 +106,12 @@ All notable changes to this project will be documented in this file.
 - Corrected an issue where tooltips were not displayed when hovering over the top level menu items.
 - Improved handling of APT repository keys during installation.
 - Reworked the Let's Encrypt renew functionality to skip removed aliases.
- 
+- Improved reliability of list handling when using IP lists.
+- Enforce minimum password requirements with visual indication of password strength.
+- Fixed an issue where user display name value was incorrectly set when changing packages.
+- Improved installer version detection.
+- Improved detection of MariaDB and MySQL services.
+
 ## [1.2.1] - Service Release
 ### Features
 - Consolidated First and Last Name fields to a singular name field to simply input.
@@ -57,7 +150,6 @@ All notable changes to this project will be documented in this file.
 - Added a manual migration script for apache2 mpm_event for existing installations/upgrades (`$HESTIA/install/upgrade/manual/migrate_mpm_event.sh`).
 - Added BATS system for testing the functionality of Bash scripts (WIP).
 - Added **v-change-sys-db-alias** to change phpMyAdmin and phpPgAdmin access points (`v-change-sys-db-alias pma/pga myCustomURL`).
-
 
 ### Bugfixes
 - Prevent ability to change the password of a non-Hestia user account. Thanks to **Alexandre Zanni**!

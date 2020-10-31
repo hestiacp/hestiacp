@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list system users
 # options: [FORMAT]
+# labels: panel
 #
 # The function for obtaining the list of system users without
 # detailed information.
@@ -62,7 +63,7 @@ csv_list() {
 #----------------------------------------------------------#
 
 # Defining language list
-languages=$(ls $HESTIA/web/inc/i18n/ |cut -f 1 -d .)
+languages=$(ls -d $HESTIA/web/locale/*/ |awk -F'/' '{print $(NF-1)}')
 
 # Listing data
 case $format in

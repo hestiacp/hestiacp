@@ -10,16 +10,7 @@
 nginx_ver_info="$(sudo nginx -v 2>&1 | awk '{print $3}' | awk -F '/' '{print $2}' | awk -F '.' '{print $2, $3}')"
 nginx_ver_b=$(echo $nginx_ver_info | awk '{print $1}') && nginx_ver_c=$(echo $nginx_ver_info | awk '{print $2}')
 
-if [ $nginx_ver_b -ge 19 ] && [ $nginx_ver_c -ge 4 ]; then
-    update_nginx_conf
-else
-    echo "[ * ] Upgrading nginx to the latest..."
-    sudo apt update -qq > /dev/null 2>&1
-    sudo apt install -qq nginx -y > /dev/null 2>&1
-    update_nginx_conf
-fi
-
-function update_nginx_conf {
+update_nginx_conf() {
     if [ "$WEB_SYSTEM" = "nginx" ]; then
         echo "[ * ] Hardening nginx SSL SNI configuration..."
         for IP in $(ls $HESTIA/data/ips/ 2>/dev/null); do
@@ -39,3 +30,12 @@ function update_nginx_conf {
         done
     fi
 }
+
+if [ $nginx_ver_b -ge 19 ] && [ $nginx_ver_c -ge 4 ]; then
+    update_nginx_conf
+else
+    echo "[ * ] Upgrading nginx to the latest..."
+    sudo apt update -qq > /dev/null 2>&1
+    sudo apt install -qq nginx -y > /dev/null 2>&1
+    update_nginx_conf
+fi

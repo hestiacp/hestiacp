@@ -1,0 +1,149 @@
+#!/bin/bash
+# info: delete system ipv6
+# options: IPV6
+#
+# The function for deleting a system ip. It does not allow to delete first ip
+# on interface and do not allow to delete ip which is used by a web domain.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+ipv6=$1
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/func/ipv6.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/conf/hestia.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'IPV6'
+is_format_valid 'ipv6'
+is_ip_valid "$ipv6"
+is_ip_key_empty '$U_WEB_DOMAINS'
+is_ip_key_empty '$U_SYS_USERS'
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Import ip variables
+source $HESTIA/data/ips/$ipv6
+cidr=$(convert_netmaskv6 $NETMASK)
+
+# Checking main ip on the interface
+interface=$(/sbin/ip  -6 addr | grep "$ipv6/$cidr" | awk '{print $NF}')
+if [ ! -z "$interface" ] && [ -z "$(echo $interface |cut -s -f2 -d :)" ]; then
+    echo "Error: can't delete main IP address"
+    log_event "$E_FORBIDEN" "$ARGUMENTS"
+    exit $E_FORBIDEN
+fi
+
+# Deleting system ip
+if [ ! -z "$interface" ]; then
+    /sbin/ip -6 addr del $ip/$cidr dev $INTERFACE
+    if [ "$?" -ne 0 ]; then
+        echo "Error: can't delete system ip"
+        log_event "$E_FORBIDEN" "$ARGUMENTS"
+        exit $E_FORBIDEN
+    fi
+fi
+
+# Deleting startup conf on RHEL/CentOS/Fedora
+if [ -e "/etc/sysconfig/network-scripts/ifcfg-$interface" ]; then
+    rm -f /etc/sysconfig/network-scripts/ifcfg-$interface
+fi
+
+# Deleting startup conf on Debian/Ubuntu
+if [ -e "/etc/network/interfaces" ]; then
+    ip_str=$(grep -n $ip$ /etc/network/interfaces |cut -f1 -d:)
+    if [ ! -z "$ip_str" ]; then
+        first_str=$((ip_str - 3))
+        last_str=$((ip_str + 1))
+        sed -i "$first_str,$last_str d" /etc/network/interfaces
+    fi
+fi
+
+# Deleting hestia ip
+rm -f $HESTIA/data/ips/$ipv6
+
+# Deleting web config
+if [ ! -z "$WEB_SYSTEM" ]; then
+    rm -f /etc/$WEB_SYSTEM/conf.d/$ipv6.conf
+fi
+
+# Deleting proxy config
+if [ ! -z "$PROXY_SYSTEM" ]; then
+    rm -f /etc/$PROXY_SYSTEM/conf.d/$ipv6.conf
+
+    # mod_extract_forwarded
+    fw_conf="/etc/$WEB_SYSTEM/conf.d/mod_extract_forwarded.conf"
+    if [ -e "$fw_conf" ]; then
+        ips=$(grep 'MEFaccept 127.0.0.1' $fw_conf)
+        new_ips=$(echo "$ips" | sed "s/$ipv6//" )
+        sed -i "s/$ips/$new_ips/g" $fw_conf
+    fi
+
+    # mod_rpaf
+    rpaf_conf="/etc/$WEB_SYSTEM/mods-enabled/rpaf.conf"
+    if [ -e "$rpaf_conf" ]; then
+        ips=$(grep RPAFproxy_ips $rpaf_conf)
+        new_ips=$(echo "$rpaf_str" | sed "s/$ipv6//")
+        sed -i "s/$ips/$new_ips/g" $rpaf_conf
+    fi
+    
+    #mod_remoteip
+    remoteip_conf="/etc/$WEB_SYSTEM/mods-enabled/remoteip.conf"
+    if [ -e "$remoteip_conf" ]; then
+        sed -i "s/RemoteIPInternalProxy $ipv6//g" $remoteip_conf
+    fi
+fi
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Updating user conf
+if [ ! -z "$OWNER" ]; then
+    decrease_user_value "$OWNER" '$IPV6_OWNED'
+fi
+
+if [ "$OWNER" = 'admin' ]; then
+    if [ "$STATUS" = 'shared' ]; then
+        for user in $(ls $HESTIA/data/users/); do
+            decrease_user_value "$user" '$IPV6_AVAIL'
+        done
+    fi
+else
+    decrease_user_value "$OWNER" '$IPV6_AVAIL'
+fi
+
+# Restarting web server
+$BIN/v-restart-web
+check_result $? "Web restart failed" >/dev/null
+
+# Restarting proxy server
+if [ ! -z "$PROXY_SYSTEM" ]; then
+    $BIN/v-restart-proxy
+    check_result $? "Proxy restart failed" >/dev/null
+fi
+
+# Restarting firewall
+if [ ! -z "$FIREWALL_SYSTEM" ]; then
+    $BIN/v-update-firewall
+fi
+
+# Logging
+log_history "deleted system ip address $ip"
+log_event "$OK" "$ARGUMENTS"
+
+exit

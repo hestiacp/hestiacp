@@ -1,0 +1,48 @@
+#!/bin/bash
+# info: change ip name
+# options: IPV6 NAME
+#
+# The function for changing the name of the ip.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+ipv6=$1
+ip_name=$2
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/func/ipv6.sh
+source $HESTIA/conf/hestia.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'IPV6 IP_NAME'
+is_format_valid 'ipv6'
+is_format_valid 'ip_name'
+is_ipv6_valid "$ipv6"
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Changing ip name
+update_ipv6_value '$NAME' "$ip_name"
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_history "changed associated name of $ipv6 to $ip_name" '' 'admin'
+log_event "$OK" "$ARGUMENTS"
+
+exit

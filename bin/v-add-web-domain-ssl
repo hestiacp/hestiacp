@@ -96,6 +96,10 @@ if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
     cp -f $USER_DATA/ssl/$domain.ca $HOMEDIR/$user/conf/web/$domain/ssl/$domain.ca
 fi
 
+if [ "$SSL_FORCE" == "yes" ]; then
+    # Enabling SSL redirection on demand
+    $BIN/v-add-web-domain-ssl-force "$user" "$domain"
+fi
 # Parsing domain values
 get_domain_values 'web'
 local_ip=$(get_real_ip $IP)

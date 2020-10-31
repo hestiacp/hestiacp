@@ -167,6 +167,13 @@ if (!empty($_POST['ok'])) {
         exec (HESTIA_CMD."v-schedule-letsencrypt-domain ".$user." ".escapeshellarg($v_domain), $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
+        
+        if(!empty($_POST['v_ssl_forcessl']) && $_POST['v_ssl_forcessl'] = 'yes'){
+            exec (HESTIA_CMD."v-add-web-domain-ssl-preset ".$user." ".escapeshellarg($v_domain)." 'yes'", $output, $return_var); 
+            check_return_code($return_var,$output);
+            unset ($output); 
+        }        
+        
      } else {
         // Add SSL certificates only if Lets Encrypt is off
          if ((!empty($_POST['v_ssl'])) && (empty($_SESSION['error_msg']))) {
@@ -202,6 +209,12 @@ if (!empty($_POST['ok'])) {
              exec (HESTIA_CMD."v-add-web-domain-ssl ".$user." ".escapeshellarg($v_domain)." ".$tmpdir." ".$v_ssl_home." 'no'", $output, $return_var);
              check_return_code($return_var,$output);
              unset($output);
+             
+             if(!empty($_POST['v_ssl_forcessl']) && $_POST['v_ssl_forcessl'] = 'yes'){
+                exec (HESTIA_CMD."v-add-web-domain-ssl-force ".$user." ".escapeshellarg($v_domain), $output, $return_var); 
+                check_return_code($return_var,$output);
+                unset ($output); 
+             }
 
             // Cleanup certificate tempfiles
             if (!empty($_POST['v_ssl_crt'])) unlink($tmpdir."/".$v_domain.".crt");
@@ -383,6 +396,12 @@ if (!empty($_POST['ok'])) {
 $v_ftp_user_prepath = $panel[$user]['HOME'] . "/web";
 $v_ftp_email = $panel[$user]['CONTACT'];
 $v_custom_doc_root_prepath = '/home/'.$user.'/web/';
+
+if( $_POST['v_ssl_forcessl'] == 'yes' ){
+    $v_ssl_forcessl = 'yes';
+}else{
+    $v_ssl_forcessl = 'no';
+}
 
 // List IP addresses
 exec (HESTIA_CMD."v-list-user-ips ".$user." json", $output, $return_var);

@@ -24,7 +24,7 @@ if (($_SESSION['user'] == 'admin') && (!empty($_GET['user']))) {
 exec(HESTIA_CMD."v-list-user-auth-log ".escapeshellarg($v_username)." json", $output, $return_var);
 check_return_code($return_var,$output);
 $data = json_decode(implode('', $output), true);
-array_reverse($data);
+$data = array_reverse($data);
 unset($output);
 
 // Render page

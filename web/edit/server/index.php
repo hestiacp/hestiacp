@@ -528,14 +528,25 @@ if (!empty($_POST['save'])) {
 
     // Change login style
     if (empty($_SESSION['error_msg'])) {
-        if ($_POST['v_login_style'] != $_SESSION['LOGIN_STYLE']) {
-            exec (HESTIA_CMD."v-change-sys-config-value LOGIN_STYLE ".escapeshellarg($_POST['v_login_style']), $output, $return_var);
+        if ($_POST['v_inactive_session_timeout'] != $_SESSION['INACTIVE_SESSION_TIMEOUT']) {
+            exec (HESTIA_CMD."v-change-sys-config-value INACTIVE_SESSION_TIMEOUT ".escapeshellarg($_POST['v_inactive_session_timeout']), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
-            if (empty($_SESSION['error_msg'])) $v_login_style = $_POST['v_login_style'];
+            if (empty($_SESSION['error_msg'])) $v_login_style = $_POST['v_inactive_session_timeout'];
             $v_security_adv = 'yes';
         }
     }
+
+// Change login style
+if (empty($_SESSION['error_msg'])) {
+    if ($_POST['v_login_style'] != $_SESSION['LOGIN_STYLE']) {
+        exec (HESTIA_CMD."v-change-sys-config-value LOGIN_STYLE ".escapeshellarg($_POST['v_login_style']), $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
+        if (empty($_SESSION['error_msg'])) $v_login_style = $_POST['v_login_style'];
+        $v_security_adv = 'yes';
+    }
+}
 
     // Update SSL certificate
     if ((!empty($_POST['v_ssl_crt'])) && (empty($_SESSION['error_msg']))) {

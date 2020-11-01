@@ -28,22 +28,20 @@ json_list() {
         DATE=$(echo "$str" |cut -f 6 -d \')
         TIME=$(echo "$str" |cut -f 8 -d \')
         ACTIVE=$(echo "$str" |cut -f 10 -d \')
-        CMD=${CMD//\"/\\\"}
-        echo -n '    {
-        "DATE": "'$DATE'",
-        "TIME": "'$TIME'",
-        "IP": "'$IP'",
-        "FINGERPRINT": "'$FINGERPRINT'",
-        "ACTIVE": "'$ACTIVE'",
-        
-    }'
+        echo -n '    "'$i'": {
+            "IP": "'$IP'",
+            "FINGERPRINT": "'$FINGERPRINT'",
+            "TIME": "'$TIME'",
+            "DATE": "'$DATE'",
+            "ACTIVE": "'$ACTIVE'"
+        }'
         if [ "$i" -lt "$objects" ]; then
             echo ','
         else
             echo
         fi
         ((i++))
-    done
+        done
     echo '}'
 }
 

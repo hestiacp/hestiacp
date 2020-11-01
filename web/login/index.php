@@ -34,7 +34,7 @@ if (isset($_SESSION['user'])) {
 function authenticate_user($user, $password, $twofa = ''){
     if(isset($_SESSION['token']) && isset($_POST['token']) && $_POST['token'] == $_SESSION['token']) {
     $v_user = escapeshellarg($user);
-    $v_ip = escapeshellarg($_SERVER['REMOTE_ADDR']);
+    $ip = $_SERVER['REMOTE_ADDR'];
     if(isset($_SERVER['HTTP_CF_CONNECTING_IP'])){
         if(!empty($_SERVER['HTTP_CF_CONNECTING_IP'])){
             $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
@@ -88,10 +88,6 @@ function authenticate_user($user, $password, $twofa = ''){
                 exec (HESTIA_CMD . "v-list-user ".$v_user." json", $output, $return_var);
                 $data = json_decode(implode('', $output), true);
                 if ($data[$user]['TWOFA'] != '') {
-                    if(password_verify($data[$user]['TWOFA'].$ip.$_POST['murmur'],$_COOKIE['limit2fa'])){
-
-                    }else{
-                       setcookie('limit2fa','',time() - 3600,"/");
                         if(empty($_POST['twofa'])){
                             return false;
                         }else{
@@ -107,8 +103,6 @@ function authenticate_user($user, $password, $twofa = ''){
                                 unset($_POST['twofa']);
                             }
                         }
-
-                    }
                 }
 
                 if ($data[$user]['ROLE'] == 'admin'){
@@ -123,10 +117,6 @@ function authenticate_user($user, $password, $twofa = ''){
                 $v_murmur = escapeshellarg($_POST['murmur']);
                 exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." ".$v_murmur, $output, $return_var);
 
-                //rename $_SESSION['TWOFA_VALID_LENGTH'] still to be done!
-                if(empty($_COOKIE['limit2fa'] && $_SESSION['TWOFA_VALID_LENGTH'] == 1 && $data[$user]['TWOFA'] != "")){
-                    setcookie('limit2fa',password_hash($data[$user]['TWOFA'].$ip.$_POST['murmur'],PASSWORD_BCRYPT),time()+60*60*24,"/");
-                };
                 $_SESSION['LAST_ACTIVITY'] = time();
                 $_SESSION['MURMUR'] = $_POST['murmur'];
 

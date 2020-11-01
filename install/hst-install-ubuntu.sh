@@ -1723,13 +1723,6 @@ else
 fi
 
 #----------------------------------------------------------#
-#                     Limit PHP SESSIONS                   #
-#----------------------------------------------------------#
-
-echo "INACTIVE_SESSION_TIMEOUT='60'" >> $HESTIA/conf/hestia.conf
-echo "TWOFA_VALID_LENGTH='1'" >> $HESTIA/conf/hestia.conf
-
-#----------------------------------------------------------#
 #                      Fix phpmyadmin                      #
 #----------------------------------------------------------#
 # Special thanks to Pavel Galkin (https://skurudo.ru)

@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Hestia CP package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-10-12 17:30:46+0000\n"
+"PO-Revision-Date: 2020-11-01 12:04:42+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10,6 +10,94 @@ msgstr ""
 "X-Generator: GlotPress/2.3.1\n"
 "Language: ru\n"
 "Project-Id-Version: Hestia CP\n"
+
+#: ../../web/restart/system/index.php:30
+msgid "The system is going down for reboot NOW!"
+msgstr "Сейчас сервер будет перезагружен!"
+
+#: ../../web/templates/admin/list_web.html:216
+msgid "%d web domain"
+msgid_plural "%d web domains"
+msgstr[0] "%d веб домен"
+msgstr[1] "%d веб домена"
+msgstr[2] "%d веб доменов"
+
+#: ../../web/templates/admin/list_backup.html:115
+msgid "%d backup"
+msgid_plural "%d backups"
+msgstr[0] "%d бекап"
+msgstr[1] "%d бекапа"
+msgstr[2] "%d бекапов"
+
+#: ../../web/templates/admin/list_mail.html:217
+msgid "%d mail domain"
+msgid_plural "%d mail domains"
+msgstr[0] "%d почтовый домен"
+msgstr[1] "%d почтовых домена"
+msgstr[2] "%d почтовых доменов"
+
+#: ../../web/templates/admin/list_cron.html:136
+msgid "%d cron job"
+msgid_plural "%d cron jobs"
+msgstr[0] "%d cron задача"
+msgstr[1] "%d cron задачи"
+msgstr[2] "%d cron задач"
+
+#: ../../web/templates/admin/list_search.html:197
+msgid "%d object"
+msgid_plural "%d objects"
+msgstr[0] "%d объект"
+msgstr[1] "%d объекта"
+msgstr[2] "%d объектов"
+
+#: ../../web/templates/admin/list_user.html:164
+msgid "%d user account"
+msgid_plural "%d user accounts"
+msgstr[0] "%d аккаунт"
+msgstr[1] "%d аккаунта"
+msgstr[2] "%d аккаунтов"
+
+#: ../../web/templates/admin/list_backup_detail.html:318
+msgid "%d item"
+msgid_plural "%d items"
+msgstr[0] "%d элемент"
+msgstr[1] "%d элемента"
+msgstr[2] "%d элементов"
+
+#: ../../web/templates/admin/list_mail_acc.html:185
+msgid "%d mail account"
+msgid_plural "%d mail accounts"
+msgstr[0] "%d почтовых аккаунт"
+msgstr[1] "%d почтовых аккаунта"
+msgstr[2] "%d почтовых аккаунтов"
+
+#: ../../web/templates/admin/list_dns.html:139
+msgid "%d DNS zone"
+msgid_plural "%d DNS zones"
+msgstr[0] "%d DNS зона"
+msgstr[1] "%d DNS зоны"
+msgstr[2] "%d DNS зон"
+
+#: ../../web/templates/admin/list_stats.html:92
+msgid "%d month"
+msgid_plural "%d months"
+msgstr[0] "%d месяц"
+msgstr[1] "%d месяца"
+msgstr[2] "%d месяцев"
+
+#: ../../web/templates/admin/list_db.html:171
+msgid "%d SQL database"
+msgid_plural "%d SQL databases"
+msgstr[0] "%d SQL база данных"
+msgstr[1] "%d SQL базы данных"
+msgstr[2] "%d SQL баз данных"
+
+#: ../../web/templates/admin/list_dns_rec.html:104
+msgid "%d DNS record"
+msgid_plural "%d DNS records"
+msgstr[0] "%d DNS запись"
+msgstr[1] "%d DNS записи"
+msgstr[2] "%d DNS записей"
 
 #: ../../web/templates/admin/edit_server.html:857
 msgid "Login screen style"
@@ -57,7 +145,7 @@ msgstr ""
 "Пароль: %s\n"
 "\n"
 "-\n"
-"Панель управления Hestia\\n"
+"Панель управления Hestia"
 
 #: ../../web/download/backup/index.php:24
 msgid "Error: Hestia did not return any output."
@@ -231,7 +319,9 @@ msgstr "1 заглавная и 1 строчная буква"
 msgid "1 number"
 msgstr "1 цифра"
 
-#: ../../web/add/user/index.php:48 ../../web/add/db/index.php:45
+#: ../../web/add/mail/index.php:126 ../../web/add/user/index.php:48
+#: ../../web/add/db/index.php:45 ../../web/edit/mail/index.php:402
+#: ../../web/edit/user/index.php:105 ../../web/edit/db/index.php:67
 msgid "Password does not match the minimum requirements"
 msgstr "Пароль не соответствует минимальным требованиям"
 
@@ -287,12 +377,10 @@ msgstr "SSL"
 msgid "Edit"
 msgstr "Изменить"
 
-#: ../../web/templates/admin/list_web.html:217
 #: ../../web/templates/user/list_web.html:222
 msgid "1 web domain"
 msgstr "1 веб-домен"
 
-#: ../../web/templates/admin/list_web.html:219
 #: ../../web/templates/user/list_web.html:224
 msgid "%s web domains"
 msgstr "%s веб-доменов"
@@ -348,12 +436,10 @@ msgstr "Аккаунты"
 msgid "DKIM"
 msgstr "DKIM"
 
-#: ../../web/templates/admin/list_mail.html:218
 #: ../../web/templates/user/list_mail.html:217
 msgid "1 mail domain"
 msgstr "1 почтовый домен"
 
-#: ../../web/templates/admin/list_mail.html:220
 #: ../../web/templates/user/list_mail.html:219
 msgid "%s mail domains"
 msgstr "%s почтовых доменов"
@@ -402,12 +488,10 @@ msgstr "обновить счетчики"
 msgid "DELETE_USER_CONFIRMATION"
 msgstr "Вы уверены, что хотите удалить пользователя %s?"
 
-#: ../../web/templates/admin/list_user.html:165
 #: ../../web/templates/user/list_user.html:133
 msgid "1 user account"
 msgstr "1 учетная запись пользователя"
 
-#: ../../web/templates/admin/list_user.html:167
 #: ../../web/templates/user/list_user.html:135
 msgid "%s user accounts"
 msgstr "%s учетных записей пользователей"
@@ -424,13 +508,12 @@ msgstr "Шелл"
 msgid "DELETE_PACKAGE_CONFIRMATION"
 msgstr "Вы уверены, что хотите удалить пакет %s?"
 
-#: ../../web/templates/admin/list_packages.html:206
-msgid "1 package"
-msgstr "пакетов на странице: 1"
-
-#: ../../web/templates/admin/list_packages.html:208
-msgid "%s packages"
-msgstr "пакетов на странице: %s"
+#: ../../web/templates/admin/list_packages.html:205
+msgid "%d package"
+msgid_plural "%d packages"
+msgstr[0] "%d пакет на странице"
+msgstr[1] "%d пакета на странице"
+msgstr[2] "%d пакетов на странице"
 
 #: ../../web/templates/admin/edit_mail_acc.html:136
 msgid "Message"
@@ -654,13 +737,12 @@ msgstr "Редактирование правила фаервола"
 msgid "DELETE_RULE_CONFIRMATION"
 msgstr "Вы уверены, что хотите удалить правило №%s?"
 
-#: ../../web/templates/admin/list_firewall.html:145
-msgid "1 firewall rule"
-msgstr "1 правило брандмауэра"
-
-#: ../../web/templates/admin/list_firewall.html:147
-msgid "%s firewall rules"
-msgstr "%s правил брандмауэра"
+#: ../../web/templates/admin/list_firewall.html:144
+msgid "%d firewall rule"
+msgid_plural "%d firewall rules"
+msgstr[0] "%d правило брандмауэра"
+msgstr[1] "%d правила брандмауэра"
+msgstr[2] "%d правил брандмауэра"
 
 #: ../../web/templates/admin/edit_user.html:6
 msgid "Manage SSH keys"
@@ -751,12 +833,10 @@ msgstr "пересоздать"
 msgid "DELETE_DATABASE_CONFIRMATION"
 msgstr "Вы уверены, что хотите удалить базу данных %s?"
 
-#: ../../web/templates/admin/list_db.html:172
 #: ../../web/templates/user/list_db.html:171
 msgid "1 SQL database"
 msgstr "1 База данных SQL"
 
-#: ../../web/templates/admin/list_db.html:174
 #: ../../web/templates/user/list_db.html:173
 msgid "%s SQL databases"
 msgstr "%s Баз данных SQL"
@@ -841,12 +921,10 @@ msgstr "DNS записи"
 msgid "DELETE_DOMAIN_CONFIRMATION"
 msgstr "Вы уверены, что хотите удалить домен %s?"
 
-#: ../../web/templates/admin/list_dns.html:140
 #: ../../web/templates/user/list_dns.html:139
 msgid "1 DNS zone"
 msgstr "1 DNS зона"
 
-#: ../../web/templates/admin/list_dns.html:142
 #: ../../web/templates/user/list_dns.html:141
 msgid "%s DNS zones"
 msgstr "%s DNS-зон"
@@ -869,13 +947,12 @@ msgstr "Удалить"
 msgid "DELETE_LOGS_CONFIRMATION"
 msgstr "Вы уверены, что хотите удалить логи?"
 
-#: ../../web/templates/admin/list_log.html:61
-msgid "1 log record"
-msgstr "записей на странице: 1"
-
-#: ../../web/templates/admin/list_log.html:63
-msgid "%s log records"
-msgstr "записей на странице: %s"
+#: ../../web/templates/admin/list_log.html:60
+msgid "%d log record"
+msgid_plural "%d log records"
+msgstr[0] "%d запись журнала"
+msgstr[1] "%d записи журнала"
+msgstr[2] "%d записей журнала"
 
 #: ../../web/templates/admin/list_cron.html:4
 #: ../../web/templates/user/list_cron.html:4
@@ -919,12 +996,10 @@ msgstr "Редактирование задачи cron"
 msgid "DELETE_CRON_CONFIRMATION"
 msgstr "Вы уверены, что хотите удалить задачу cron?"
 
-#: ../../web/templates/admin/list_cron.html:137
 #: ../../web/templates/user/list_cron.html:137
 msgid "1 cron job"
 msgstr "заданий на странице: 1"
 
-#: ../../web/templates/admin/list_cron.html:139
 #: ../../web/templates/user/list_cron.html:139
 msgid "%s cron jobs"
 msgstr "заданий на странице: %s"
@@ -948,12 +1023,10 @@ msgstr "Владелец"
 msgid "Status"
 msgstr "Статус"
 
-#: ../../web/templates/admin/list_search.html:198
 #: ../../web/templates/user/list_search.html:196
 msgid "1 object"
 msgstr "объектов на странице: 1"
 
-#: ../../web/templates/admin/list_search.html:200
 #: ../../web/templates/user/list_search.html:198
 msgid "%s objects"
 msgstr "объектов на странице: %s"
@@ -986,14 +1059,6 @@ msgstr "скачать"
 msgid "DELETE_BACKUP_CONFIRMATION"
 msgstr "Вы уверены, что хотите удалить архив %s?"
 
-#: ../../web/templates/admin/list_backup.html:116
-msgid "1 backup"
-msgstr "1 бекап"
-
-#: ../../web/templates/admin/list_backup.html:118
-msgid "%s backups"
-msgstr "%s бекапов"
-
 #: ../../web/templates/admin/list_firewall_banlist.html:5
 msgid "Ban IP Address"
 msgstr "Заблокировать IP"
@@ -1007,13 +1072,12 @@ msgstr "Вы уверены, что хотите удалить IP адрес %s
 msgid "There are currently no banned IP addresses."
 msgstr "Сейчас нет заблокированных IP-адресов."
 
-#: ../../web/templates/admin/list_firewall_banlist.html:92
-msgid "1 banned IP address"
-msgstr "1 заблокированный IP-адрес"
-
-#: ../../web/templates/admin/list_firewall_banlist.html:95
-msgid "%s banned IP addresses"
-msgstr "%s заблокированных IP-адресов"
+#: ../../web/templates/admin/list_firewall_banlist.html:91
+msgid "%d banned IP address"
+msgid_plural "%d banned IP addresses"
+msgstr[0] "%d заблокированный IP-адрес"
+msgstr[1] "%d заблокированных IP-адреса"
+msgstr[2] "%d заблокированных IP-адресов"
 
 #: ../../web/templates/admin/add_dns_rec.html:30
 msgid "Adding DNS Record"
@@ -1091,13 +1155,12 @@ msgstr "перечитать IP"
 msgid "Editing IP Address"
 msgstr "Редактирование IP адреса"
 
-#: ../../web/templates/admin/list_ip.html:111
-msgid "1 IP address"
-msgstr "IP адресов на странице: 1"
-
-#: ../../web/templates/admin/list_ip.html:113
-msgid "%s IP addresses"
-msgstr "IP адресов на странице: %s"
+#: ../../web/templates/admin/list_ip.html:110
+msgid "%d IP address"
+msgid_plural "%d IP addresses"
+msgstr[0] "%d IP адрес на странице"
+msgstr[1] "%d IP адреса на странице"
+msgstr[2] "%d IP адресов на странице"
 
 #: ../../web/templates/admin/panel.html:17
 #: ../../web/templates/user/panel.html:17
@@ -1579,14 +1642,6 @@ msgstr "пользовательская папка"
 msgid "Cron"
 msgstr "Cron"
 
-#: ../../web/templates/admin/list_backup_detail.html:319
-msgid "1 item"
-msgstr "1 элемент"
-
-#: ../../web/templates/admin/list_backup_detail.html:321
-msgid "%s items"
-msgstr "%s элементы"
-
 #: ../../web/templates/admin/list_mail.html:102
 #: ../../web/templates/admin/list_mail_acc.html:5
 #: ../../web/templates/user/list_mail.html:101
@@ -1655,12 +1710,10 @@ msgstr "Открыть веб-почту"
 msgid "DELETE_MAIL_ACCOUNT_CONFIRMATION"
 msgstr "Вы уверены, что хотите удалить почтовый ящик %s?"
 
-#: ../../web/templates/admin/list_mail_acc.html:186
 #: ../../web/templates/user/list_mail_acc.html:186
 msgid "1 mail account"
 msgstr "акаунтов на странице: 1"
 
-#: ../../web/templates/admin/list_mail_acc.html:188
 #: ../../web/templates/user/list_mail_acc.html:188
 msgid "%s mail accounts"
 msgstr "акаунтов на странице: %s"
@@ -1978,12 +2031,10 @@ msgstr "Почтовые аккаунты"
 msgid "Cron Jobs"
 msgstr "Cron задания"
 
-#: ../../web/templates/admin/list_stats.html:93
 #: ../../web/templates/user/list_stats.html:79
 msgid "1 month"
 msgstr "месяцев на странице: 1"
 
-#: ../../web/templates/admin/list_stats.html:95
 #: ../../web/templates/user/list_stats.html:81
 msgid "%s months"
 msgstr "месяцев на странице: %s"
@@ -2109,12 +2160,10 @@ msgstr "Вы уверены, что хотите удалить запись %s?
 msgid "Default"
 msgstr "По умолчанию"
 
-#: ../../web/templates/admin/list_dns_rec.html:105
 #: ../../web/templates/user/list_dns_rec.html:101
 msgid "1 DNS record"
 msgstr "1 запись DNS"
 
-#: ../../web/templates/admin/list_dns_rec.html:107
 #: ../../web/templates/user/list_dns_rec.html:103
 msgid "%s DNS records"
 msgstr "%s DNS-записей"
@@ -2640,7 +2689,7 @@ msgstr "Добавить домен"
 
 #: ../../web/templates/admin/add_web.html:57
 msgid "Avoid adding web domains on admin account"
-msgstr "Настоятельно рекомендуется <a href=\"/add/user/\">создать стандартную учетную запись пользователя</a> перед добавлением веб-доменов на сервер. Работа под администратором (admin) создаёт потенциальные угрозы в безопасности, т.к. её привилегии неограничены."
+msgstr "Настоятельно рекомендуется <a href=\\\"/add/user/\\\">создать стандартную учетную запись пользователя</a> перед добавлением веб-доменов на сервер. Работа под администратором (admin) создаёт потенциальные угрозы безопасности, т.к. её привилегии неограниченны"
 
 #: ../../web/templates/admin/add_web.html:93
 msgid "DNS Support"
@@ -2978,26 +3027,26 @@ msgstr "неограничено"
 msgid "no notifications"
 msgstr "нет оповещений"
 
-#: ../../web/reset/index.php:31
+#: ../../web/reset/index.php:35
 msgid "MAIL_RESET_SUBJECT"
 msgstr "Восстановление пароля %s"
 
 #: ../../web/add/mail/index.php:207 ../../web/add/user/index.php:94
 #: ../../web/add/db/index.php:92 ../../web/add/web/index.php:329
 #: ../../web/edit/mail/index.php:523 ../../web/edit/web/index.php:663
-#: ../../web/edit/web/index.php:737 ../../web/reset/index.php:33
+#: ../../web/edit/web/index.php:737 ../../web/reset/index.php:37
 msgid "MAIL_FROM"
 msgstr "Hestia Control Panel <noreply@%s>"
 
-#: ../../web/add/user/index.php:97 ../../web/reset/index.php:35
+#: ../../web/add/user/index.php:97 ../../web/reset/index.php:39
 msgid "GREETINGS_GORDON"
 msgstr "Здравствуйте, %s,"
 
-#: ../../web/add/user/index.php:99 ../../web/reset/index.php:37
+#: ../../web/add/user/index.php:99 ../../web/reset/index.php:41
 msgid "GREETINGS"
 msgstr "Здравствуйте,\\n"
 
-#: ../../web/reset/index.php:40
+#: ../../web/reset/index.php:44
 msgid "PASSWORD_RESET_REQUEST"
 msgstr ""
 "Чтобы восстановить пароль, пройдите по ссылке:\n"
@@ -3007,23 +3056,23 @@ msgstr ""
 "--\n"
 "Панель управления Hestia\\n"
 
-#: ../../web/reset/index.php:45
+#: ../../web/reset/index.php:49
 msgid "Invalid host domain"
 msgstr "Неверный домен хоста"
 
-#: ../../web/reset/index.php:74
+#: ../../web/reset/index.php:78
 msgid "An internal error occurred"
 msgstr "Возникла внутренняя ошибка"
 
-#: ../../web/reset/index.php:82
+#: ../../web/reset/index.php:86
 msgid "Code has been expired"
 msgstr "Время действия кода истекло"
 
-#: ../../web/reset/index.php:86 ../../web/reset/index.php:90
+#: ../../web/reset/index.php:90 ../../web/reset/index.php:94
 msgid "Invalid username or code"
 msgstr "Неверный логин или код сброса пароля"
 
-#: ../../web/reset/index.php:93
+#: ../../web/reset/index.php:97
 msgid "Passwords not match"
 msgstr "Пароли не совпадают"
 
@@ -3132,7 +3181,7 @@ msgstr ""
 "Пароль: %s\n"
 "\n"
 "--\n"
-"Панель управления Hestia\\n"
+"Панель управления Hestia"
 
 #: ../../web/edit/web/index.php:704
 msgid "ftp user"
@@ -3298,15 +3347,11 @@ msgstr "войти как"
 msgid "Field SSH_KEY can not be blank."
 msgstr "Поле SSH Key не может быть пустым"
 
-#: ../../web/add/key/index.php:35
-msgid "SSH KEY is invalid"
-msgstr "SSH ключ недействителен"
-
-#: ../../web/add/key/index.php:41 ../../web/add/key/index.php:44
+#: ../../web/add/key/index.php:42 ../../web/add/key/index.php:45
 msgid "SSH KEY already exists"
 msgstr "SSH ключ уже существует"
 
-#: ../../web/add/key/index.php:57
+#: ../../web/add/key/index.php:58
 msgid "SSH KEY created"
 msgstr " SSH ключ создан"
 
@@ -3774,12 +3819,11 @@ msgid "DELETE_KEY_CONFIRM"
 msgstr "Вы уверены, что хотите удалить ключ SSH %s?"
 
 #: ../../web/templates/admin/list_key.html:61
-msgid "1 SSH Key"
-msgstr "1  SSH ключ "
-
-#: ../../web/templates/admin/list_key.html:63
-msgid "%s SSH Keys"
-msgstr "%s SSH ключей"
+msgid "%d SSH Key"
+msgid_plural "%d SSH Keys"
+msgstr[0] "%d SSH ключ"
+msgstr[1] "%d SSH ключа"
+msgstr[2] "%d SSH ключей"
 
 #: ../../web/templates/admin/list_ssl.html:36
 #: ../../web/templates/admin/generate_ssl.html:45
@@ -3900,13 +3944,12 @@ msgstr "Вы уверены, что хотите удалить список IP 
 msgid "There are currently no IP lists defined."
 msgstr "В настоящее время списки IP-адресов не заданы."
 
-#: ../../web/templates/admin/list_firewall_ipset.html:108
-msgid "1 Ipset list"
-msgstr "1 Список IP"
-
-#: ../../web/templates/admin/list_firewall_ipset.html:111
-msgid "%s Ipset lists"
-msgstr "%s Списки IP"
+#: ../../web/templates/admin/list_firewall_ipset.html:107
+msgid "%d Ipset list"
+msgid_plural "%d Ipset lists"
+msgstr[0] "%d cписок IP"
+msgstr[1] "%d cписка IP"
+msgstr[2] "%d cписков IP"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:7
 #: ../../web/templates/admin/add_dns.html:7

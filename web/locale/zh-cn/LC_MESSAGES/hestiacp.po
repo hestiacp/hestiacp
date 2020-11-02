@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Hestia CP package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-10-26 06:34:52+0000\n"
+"PO-Revision-Date: 2020-10-31 18:58:29+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10,6 +10,70 @@ msgstr ""
 "X-Generator: GlotPress/2.3.1\n"
 "Language: zh_CN\n"
 "Project-Id-Version: Hestia CP\n"
+
+#: ../../web/restart/system/index.php:30
+msgid "The system is going down for reboot NOW!"
+msgstr "系统正在关闭以立即重新启动！"
+
+#: ../../web/templates/admin/list_web.html:216
+msgid "%d web domain"
+msgid_plural "%d web domains"
+msgstr[0] "%d 个网站域名"
+
+#: ../../web/templates/admin/list_backup.html:115
+msgid "%d backup"
+msgid_plural "%d backups"
+msgstr[0] "%d 个数据备份"
+
+#: ../../web/templates/admin/list_mail.html:217
+msgid "%d mail domain"
+msgid_plural "%d mail domains"
+msgstr[0] "%d 个邮箱域名"
+
+#: ../../web/templates/admin/list_cron.html:136
+msgid "%d cron job"
+msgid_plural "%d cron jobs"
+msgstr[0] "%d 个定时任务"
+
+#: ../../web/templates/admin/list_search.html:197
+msgid "%d object"
+msgid_plural "%d objects"
+msgstr[0] "%d 个对象"
+
+#: ../../web/templates/admin/list_user.html:164
+msgid "%d user account"
+msgid_plural "%d user accounts"
+msgstr[0] "%d 个用户账户"
+
+#: ../../web/templates/admin/list_backup_detail.html:318
+msgid "%d item"
+msgid_plural "%d items"
+msgstr[0] "%d 个项目"
+
+#: ../../web/templates/admin/list_mail_acc.html:185
+msgid "%d mail account"
+msgid_plural "%d mail accounts"
+msgstr[0] "%d 个邮箱账户"
+
+#: ../../web/templates/admin/list_dns.html:139
+msgid "%d DNS zone"
+msgid_plural "%d DNS zones"
+msgstr[0] "%d 个DNS域名"
+
+#: ../../web/templates/admin/list_stats.html:92
+msgid "%d month"
+msgid_plural "%d months"
+msgstr[0] "%d 个月"
+
+#: ../../web/templates/admin/list_db.html:171
+msgid "%d SQL database"
+msgid_plural "%d SQL databases"
+msgstr[0] "%d 个数据库"
+
+#: ../../web/templates/admin/list_dns_rec.html:104
+msgid "%d DNS record"
+msgid_plural "%d DNS records"
+msgstr[0] "%d 条DNS记录"
 
 #: ../../web/templates/admin/edit_server.html:857
 msgid "Login screen style"
@@ -231,7 +295,9 @@ msgstr "大小写字母至少各1个"
 msgid "1 number"
 msgstr "数字至少1个"
 
-#: ../../web/add/user/index.php:48 ../../web/add/db/index.php:45
+#: ../../web/add/mail/index.php:126 ../../web/add/user/index.php:48
+#: ../../web/add/db/index.php:45 ../../web/edit/mail/index.php:402
+#: ../../web/edit/user/index.php:105 ../../web/edit/db/index.php:67
 msgid "Password does not match the minimum requirements"
 msgstr "密码不符合最低要求"
 
@@ -287,12 +353,10 @@ msgstr "SSL"
 msgid "Edit"
 msgstr "编辑"
 
-#: ../../web/templates/admin/list_web.html:217
 #: ../../web/templates/user/list_web.html:222
 msgid "1 web domain"
 msgstr "1 个网站域名"
 
-#: ../../web/templates/admin/list_web.html:219
 #: ../../web/templates/user/list_web.html:224
 msgid "%s web domains"
 msgstr "%s 个网站域名"
@@ -348,12 +412,10 @@ msgstr "账户"
 msgid "DKIM"
 msgstr "DKIM"
 
-#: ../../web/templates/admin/list_mail.html:218
 #: ../../web/templates/user/list_mail.html:217
 msgid "1 mail domain"
 msgstr "1 个邮箱域名"
 
-#: ../../web/templates/admin/list_mail.html:220
 #: ../../web/templates/user/list_mail.html:219
 msgid "%s mail domains"
 msgstr "%s 个邮箱域名"
@@ -402,12 +464,10 @@ msgstr "更新使用情况"
 msgid "DELETE_USER_CONFIRMATION"
 msgstr "确定要删除用户 %s 吗？"
 
-#: ../../web/templates/admin/list_user.html:165
 #: ../../web/templates/user/list_user.html:133
 msgid "1 user account"
 msgstr "1 个用户账户"
 
-#: ../../web/templates/admin/list_user.html:167
 #: ../../web/templates/user/list_user.html:135
 msgid "%s user accounts"
 msgstr "%s 个用户账户"
@@ -424,13 +484,10 @@ msgstr "Shell"
 msgid "DELETE_PACKAGE_CONFIRMATION"
 msgstr "确定要删除用户方案 %s 吗？"
 
-#: ../../web/templates/admin/list_packages.html:206
-msgid "1 package"
-msgstr "1 个用户方案"
-
-#: ../../web/templates/admin/list_packages.html:208
-msgid "%s packages"
-msgstr "%s 个用户方案"
+#: ../../web/templates/admin/list_packages.html:205
+msgid "%d package"
+msgid_plural "%d packages"
+msgstr[0] "%d 个用户方案"
 
 #: ../../web/templates/admin/edit_mail_acc.html:136
 msgid "Message"
@@ -654,13 +711,10 @@ msgstr "编辑防火墙规则"
 msgid "DELETE_RULE_CONFIRMATION"
 msgstr "确定要删除防火墙规则 #%s 吗？"
 
-#: ../../web/templates/admin/list_firewall.html:145
-msgid "1 firewall rule"
-msgstr "1 条防火墙规则"
-
-#: ../../web/templates/admin/list_firewall.html:147
-msgid "%s firewall rules"
-msgstr "%s 条防火墙规则"
+#: ../../web/templates/admin/list_firewall.html:144
+msgid "%d firewall rule"
+msgid_plural "%d firewall rules"
+msgstr[0] "%d 条防火墙规则"
 
 #: ../../web/templates/admin/edit_user.html:6
 msgid "Manage SSH keys"
@@ -751,12 +805,10 @@ msgstr "重建"
 msgid "DELETE_DATABASE_CONFIRMATION"
 msgstr "确定要删除数据库 %s 吗？"
 
-#: ../../web/templates/admin/list_db.html:172
 #: ../../web/templates/user/list_db.html:171
 msgid "1 SQL database"
 msgstr "1 个数据库"
 
-#: ../../web/templates/admin/list_db.html:174
 #: ../../web/templates/user/list_db.html:173
 msgid "%s SQL databases"
 msgstr "%s 个数据库"
@@ -841,12 +893,10 @@ msgstr "DNS记录"
 msgid "DELETE_DOMAIN_CONFIRMATION"
 msgstr "确定要删除域名 %s 吗？"
 
-#: ../../web/templates/admin/list_dns.html:140
 #: ../../web/templates/user/list_dns.html:139
 msgid "1 DNS zone"
 msgstr "1 个DNS域名"
 
-#: ../../web/templates/admin/list_dns.html:142
 #: ../../web/templates/user/list_dns.html:141
 msgid "%s DNS zones"
 msgstr "%s 个DNS域名"
@@ -869,13 +919,10 @@ msgstr "删除"
 msgid "DELETE_LOGS_CONFIRMATION"
 msgstr "确定要删除系统日志吗？"
 
-#: ../../web/templates/admin/list_log.html:61
-msgid "1 log record"
-msgstr "1 条日志记录"
-
-#: ../../web/templates/admin/list_log.html:63
-msgid "%s log records"
-msgstr "%s 条日志记录"
+#: ../../web/templates/admin/list_log.html:60
+msgid "%d log record"
+msgid_plural "%d log records"
+msgstr[0] "%d 条日志记录"
 
 #: ../../web/templates/admin/list_cron.html:4
 #: ../../web/templates/user/list_cron.html:4
@@ -919,12 +966,10 @@ msgstr "编辑定时任务"
 msgid "DELETE_CRON_CONFIRMATION"
 msgstr "确定要删除定时任务吗？"
 
-#: ../../web/templates/admin/list_cron.html:137
 #: ../../web/templates/user/list_cron.html:137
 msgid "1 cron job"
 msgstr "1 个定时任务"
 
-#: ../../web/templates/admin/list_cron.html:139
 #: ../../web/templates/user/list_cron.html:139
 msgid "%s cron jobs"
 msgstr "%s 个定时任务"
@@ -948,12 +993,10 @@ msgstr "归属"
 msgid "Status"
 msgstr "状态"
 
-#: ../../web/templates/admin/list_search.html:198
 #: ../../web/templates/user/list_search.html:196
 msgid "1 object"
 msgstr "1 个对象"
 
-#: ../../web/templates/admin/list_search.html:200
 #: ../../web/templates/user/list_search.html:198
 msgid "%s objects"
 msgstr "%s 个对象"
@@ -986,14 +1029,6 @@ msgstr "下载"
 msgid "DELETE_BACKUP_CONFIRMATION"
 msgstr "确定要删除 %s 数据备份吗？"
 
-#: ../../web/templates/admin/list_backup.html:116
-msgid "1 backup"
-msgstr "1 个数据备份"
-
-#: ../../web/templates/admin/list_backup.html:118
-msgid "%s backups"
-msgstr "%s 个数据备份"
-
 #: ../../web/templates/admin/list_firewall_banlist.html:5
 msgid "Ban IP Address"
 msgstr "封锁IP地址"
@@ -1007,13 +1042,10 @@ msgstr "确定要删除IP地址 %s 吗？"
 msgid "There are currently no banned IP addresses."
 msgstr "目前没有被封锁的IP地址"
 
-#: ../../web/templates/admin/list_firewall_banlist.html:92
-msgid "1 banned IP address"
-msgstr "1 个IP地址被封锁"
-
-#: ../../web/templates/admin/list_firewall_banlist.html:95
-msgid "%s banned IP addresses"
-msgstr "%s 个IP地址被封锁"
+#: ../../web/templates/admin/list_firewall_banlist.html:91
+msgid "%d banned IP address"
+msgid_plural "%d banned IP addresses"
+msgstr[0] "%d 个IP地址被封锁"
 
 #: ../../web/templates/admin/add_dns_rec.html:30
 msgid "Adding DNS Record"
@@ -1091,13 +1123,10 @@ msgstr "重新读取IP地址"
 msgid "Editing IP Address"
 msgstr "编辑IP地址"
 
-#: ../../web/templates/admin/list_ip.html:111
-msgid "1 IP address"
-msgstr "1 个IP地址"
-
-#: ../../web/templates/admin/list_ip.html:113
-msgid "%s IP addresses"
-msgstr "%s 个IP地址"
+#: ../../web/templates/admin/list_ip.html:110
+msgid "%d IP address"
+msgid_plural "%d IP addresses"
+msgstr[0] "%d 个IP地址"
 
 #: ../../web/templates/admin/panel.html:17
 #: ../../web/templates/user/panel.html:17
@@ -1579,14 +1608,6 @@ msgstr "用户目录"
 msgid "Cron"
 msgstr "定时任务"
 
-#: ../../web/templates/admin/list_backup_detail.html:319
-msgid "1 item"
-msgstr "1 个项目"
-
-#: ../../web/templates/admin/list_backup_detail.html:321
-msgid "%s items"
-msgstr "%s 个项目"
-
 #: ../../web/templates/admin/list_mail.html:102
 #: ../../web/templates/admin/list_mail_acc.html:5
 #: ../../web/templates/user/list_mail.html:101
@@ -1655,12 +1676,10 @@ msgstr "打开网页邮箱"
 msgid "DELETE_MAIL_ACCOUNT_CONFIRMATION"
 msgstr "确定要删除 %s 吗？"
 
-#: ../../web/templates/admin/list_mail_acc.html:186
 #: ../../web/templates/user/list_mail_acc.html:186
 msgid "1 mail account"
 msgstr "1 个邮箱账户"
 
-#: ../../web/templates/admin/list_mail_acc.html:188
 #: ../../web/templates/user/list_mail_acc.html:188
 msgid "%s mail accounts"
 msgstr "%s 个邮箱账户"
@@ -1978,12 +1997,10 @@ msgstr "邮箱账户"
 msgid "Cron Jobs"
 msgstr "定时任务"
 
-#: ../../web/templates/admin/list_stats.html:93
 #: ../../web/templates/user/list_stats.html:79
 msgid "1 month"
 msgstr "1 个月"
 
-#: ../../web/templates/admin/list_stats.html:95
 #: ../../web/templates/user/list_stats.html:81
 msgid "%s months"
 msgstr "%s 个月"
@@ -2109,12 +2126,10 @@ msgstr "确定要删除记录 %s 吗？"
 msgid "Default"
 msgstr "默认"
 
-#: ../../web/templates/admin/list_dns_rec.html:105
 #: ../../web/templates/user/list_dns_rec.html:101
 msgid "1 DNS record"
 msgstr "1 条DNS记录"
 
-#: ../../web/templates/admin/list_dns_rec.html:107
 #: ../../web/templates/user/list_dns_rec.html:103
 msgid "%s DNS records"
 msgstr "%s 条DNS记录"
@@ -2978,26 +2993,26 @@ msgstr "无限"
 msgid "no notifications"
 msgstr "没有通知"
 
-#: ../../web/reset/index.php:31
+#: ../../web/reset/index.php:35
 msgid "MAIL_RESET_SUBJECT"
 msgstr "重置密码在 %s"
 
 #: ../../web/add/mail/index.php:207 ../../web/add/user/index.php:94
 #: ../../web/add/db/index.php:92 ../../web/add/web/index.php:329
 #: ../../web/edit/mail/index.php:523 ../../web/edit/web/index.php:663
-#: ../../web/edit/web/index.php:737 ../../web/reset/index.php:33
+#: ../../web/edit/web/index.php:737 ../../web/reset/index.php:37
 msgid "MAIL_FROM"
 msgstr "Hestia 管理系统 <noreply@%s>"
 
-#: ../../web/add/user/index.php:97 ../../web/reset/index.php:35
+#: ../../web/add/user/index.php:97 ../../web/reset/index.php:39
 msgid "GREETINGS_GORDON"
 msgstr "您好，%s，"
 
-#: ../../web/add/user/index.php:99 ../../web/reset/index.php:37
+#: ../../web/add/user/index.php:99 ../../web/reset/index.php:41
 msgid "GREETINGS"
 msgstr "您好，"
 
-#: ../../web/reset/index.php:40
+#: ../../web/reset/index.php:44
 msgid "PASSWORD_RESET_REQUEST"
 msgstr ""
 "重置密码请点击链接:\n"
@@ -3012,23 +3027,23 @@ msgstr ""
 "--\n"
 "Hestia 管理系统"
 
-#: ../../web/reset/index.php:45
+#: ../../web/reset/index.php:49
 msgid "Invalid host domain"
 msgstr "无效的主机名称"
 
-#: ../../web/reset/index.php:74
+#: ../../web/reset/index.php:78
 msgid "An internal error occurred"
 msgstr "发生了内部错误"
 
-#: ../../web/reset/index.php:82
+#: ../../web/reset/index.php:86
 msgid "Code has been expired"
 msgstr "重置代码已过期"
 
-#: ../../web/reset/index.php:86 ../../web/reset/index.php:90
+#: ../../web/reset/index.php:90 ../../web/reset/index.php:94
 msgid "Invalid username or code"
 msgstr "无效的用户名称或重置代码"
 
-#: ../../web/reset/index.php:93
+#: ../../web/reset/index.php:97
 msgid "Passwords not match"
 msgstr "密码错误"
 
@@ -3303,15 +3318,11 @@ msgstr "切换登录至账户"
 msgid "Field SSH_KEY can not be blank."
 msgstr "SSH密钥不能为空"
 
-#: ../../web/add/key/index.php:35
-msgid "SSH KEY is invalid"
-msgstr "SSH密钥无效"
-
-#: ../../web/add/key/index.php:41 ../../web/add/key/index.php:44
+#: ../../web/add/key/index.php:42 ../../web/add/key/index.php:45
 msgid "SSH KEY already exists"
 msgstr "SSH密钥已存在"
 
-#: ../../web/add/key/index.php:57
+#: ../../web/add/key/index.php:58
 msgid "SSH KEY created"
 msgstr "SSH密钥已添加成功"
 
@@ -3780,12 +3791,9 @@ msgid "DELETE_KEY_CONFIRM"
 msgstr "确定要删除SSH密钥 %s 吗？"
 
 #: ../../web/templates/admin/list_key.html:61
-msgid "1 SSH Key"
-msgstr "1 个SSH密钥"
-
-#: ../../web/templates/admin/list_key.html:63
-msgid "%s SSH Keys"
-msgstr "%s 个SSH密钥"
+msgid "%d SSH Key"
+msgid_plural "%d SSH Keys"
+msgstr[0] "%d 个SSH密钥"
 
 #: ../../web/templates/admin/list_ssl.html:36
 #: ../../web/templates/admin/generate_ssl.html:45
@@ -3906,13 +3914,10 @@ msgstr "确定要删除IP列表 %s 吗？"
 msgid "There are currently no IP lists defined."
 msgstr "目前没有定义IP列表"
 
-#: ../../web/templates/admin/list_firewall_ipset.html:108
-msgid "1 Ipset list"
-msgstr "1 个IP列表"
-
-#: ../../web/templates/admin/list_firewall_ipset.html:111
-msgid "%s Ipset lists"
-msgstr "%s 个IP列表"
+#: ../../web/templates/admin/list_firewall_ipset.html:107
+msgid "%d Ipset list"
+msgid_plural "%d Ipset lists"
+msgstr[0] "%d 个IP列表"
 
 #: ../../web/templates/admin/add_firewall_ipset.html:7
 #: ../../web/templates/admin/add_dns.html:7

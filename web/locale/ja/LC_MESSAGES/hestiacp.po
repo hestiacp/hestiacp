@@ -11,6 +11,70 @@ msgstr ""
 "Language: ja_JP\n"
 "Project-Id-Version: Hestia CP\n"
 
+#: ../../web/restart/system/index.php:30
+msgid "The system is going down for reboot NOW!"
+msgstr ""
+
+#: ../../web/templates/admin/list_web.html:216
+msgid "%d web domain"
+msgid_plural "%d web domains"
+msgstr[0] ""
+
+#: ../../web/templates/admin/list_backup.html:115
+msgid "%d backup"
+msgid_plural "%d backups"
+msgstr[0] ""
+
+#: ../../web/templates/admin/list_mail.html:217
+msgid "%d mail domain"
+msgid_plural "%d mail domains"
+msgstr[0] ""
+
+#: ../../web/templates/admin/list_cron.html:136
+msgid "%d cron job"
+msgid_plural "%d cron jobs"
+msgstr[0] ""
+
+#: ../../web/templates/admin/list_search.html:197
+msgid "%d object"
+msgid_plural "%d objects"
+msgstr[0] ""
+
+#: ../../web/templates/admin/list_user.html:164
+msgid "%d user account"
+msgid_plural "%d user accounts"
+msgstr[0] ""
+
+#: ../../web/templates/admin/list_backup_detail.html:318
+msgid "%d item"
+msgid_plural "%d items"
+msgstr[0] ""
+
+#: ../../web/templates/admin/list_mail_acc.html:185
+msgid "%d mail account"
+msgid_plural "%d mail accounts"
+msgstr[0] ""
+
+#: ../../web/templates/admin/list_dns.html:139
+msgid "%d DNS zone"
+msgid_plural "%d DNS zones"
+msgstr[0] ""
+
+#: ../../web/templates/admin/list_stats.html:92
+msgid "%d month"
+msgid_plural "%d months"
+msgstr[0] ""
+
+#: ../../web/templates/admin/list_db.html:171
+msgid "%d SQL database"
+msgid_plural "%d SQL databases"
+msgstr[0] ""
+
+#: ../../web/templates/admin/list_dns_rec.html:104
+msgid "%d DNS record"
+msgid_plural "%d DNS records"
+msgstr[0] ""
+
 #: ../../web/templates/admin/edit_server.html:857
 msgid "Login screen style"
 msgstr ""
@@ -231,7 +295,9 @@ msgstr ""
 msgid "1 number"
 msgstr ""
 
-#: ../../web/add/user/index.php:48 ../../web/add/db/index.php:45
+#: ../../web/add/mail/index.php:126 ../../web/add/user/index.php:48
+#: ../../web/add/db/index.php:45 ../../web/edit/mail/index.php:402
+#: ../../web/edit/user/index.php:105 ../../web/edit/db/index.php:67
 msgid "Password does not match the minimum requirements"
 msgstr ""
 
@@ -287,12 +353,10 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: ../../web/templates/admin/list_web.html:217
 #: ../../web/templates/user/list_web.html:222
 msgid "1 web domain"
 msgstr "1 Webドメイン"
 
-#: ../../web/templates/admin/list_web.html:219
 #: ../../web/templates/user/list_web.html:224
 msgid "%s web domains"
 msgstr "%s Webドメイン"
@@ -348,12 +412,10 @@ msgstr "アカウント"
 msgid "DKIM"
 msgstr ""
 
-#: ../../web/templates/admin/list_mail.html:218
 #: ../../web/templates/user/list_mail.html:217
 msgid "1 mail domain"
 msgstr "1 メールドメイン"
 
-#: ../../web/templates/admin/list_mail.html:220
 #: ../../web/templates/user/list_mail.html:219
 msgid "%s mail domains"
 msgstr "%s メールドメイン"
@@ -402,12 +464,10 @@ msgstr "カウンタを更新"
 msgid "DELETE_USER_CONFIRMATION"
 msgstr "ユーザー %s を削除してもよろしいですか？"
 
-#: ../../web/templates/admin/list_user.html:165
 #: ../../web/templates/user/list_user.html:133
 msgid "1 user account"
 msgstr "1 ユーザーアカウント"
 
-#: ../../web/templates/admin/list_user.html:167
 #: ../../web/templates/user/list_user.html:135
 msgid "%s user accounts"
 msgstr "%s ユーザーアカウント"
@@ -424,13 +484,10 @@ msgstr ""
 msgid "DELETE_PACKAGE_CONFIRMATION"
 msgstr "パッケージ %s を削除してもよろしいですか？"
 
-#: ../../web/templates/admin/list_packages.html:206
-msgid "1 package"
-msgstr "1個のパッケージ"
-
-#: ../../web/templates/admin/list_packages.html:208
-msgid "%s packages"
-msgstr "%s個のパッケージ"
+#: ../../web/templates/admin/list_packages.html:205
+msgid "%d package"
+msgid_plural "%d packages"
+msgstr[0] ""
 
 #: ../../web/templates/admin/edit_mail_acc.html:136
 msgid "Message"
@@ -654,13 +711,10 @@ msgstr "ファイアウォールの規則の編集"
 msgid "DELETE_RULE_CONFIRMATION"
 msgstr "規則 #%s を削除してもよろしいですか？"
 
-#: ../../web/templates/admin/list_firewall.html:145
-msgid "1 firewall rule"
-msgstr "1 firewall rule"
-
-#: ../../web/templates/admin/list_firewall.html:147
-msgid "%s firewall rules"
-msgstr "%s firewall rules"
+#: ../../web/templates/admin/list_firewall.html:144
+msgid "%d firewall rule"
+msgid_plural "%d firewall rules"
+msgstr[0] ""
 
 #: ../../web/templates/admin/edit_user.html:6
 msgid "Manage SSH keys"
@@ -751,12 +805,10 @@ msgstr "再構築"
 msgid "DELETE_DATABASE_CONFIRMATION"
 msgstr "データベース %s を削除してもよろしいですか？"
 
-#: ../../web/templates/admin/list_db.html:172
 #: ../../web/templates/user/list_db.html:171
 msgid "1 SQL database"
 msgstr "1 SQLデータベース"
 
-#: ../../web/templates/admin/list_db.html:174
 #: ../../web/templates/user/list_db.html:173
 msgid "%s SQL databases"
 msgstr "%s SQLデータベース"
@@ -841,12 +893,10 @@ msgstr "DNSレコード"
 msgid "DELETE_DOMAIN_CONFIRMATION"
 msgstr "ドメイン %s を削除してもよろしいですか？"
 
-#: ../../web/templates/admin/list_dns.html:140
 #: ../../web/templates/user/list_dns.html:139
 msgid "1 DNS zone"
 msgstr "1 DNSゾーン"
 
-#: ../../web/templates/admin/list_dns.html:142
 #: ../../web/templates/user/list_dns.html:141
 msgid "%s DNS zones"
 msgstr "%s DNSゾーン"
@@ -869,13 +919,10 @@ msgstr "削除"
 msgid "DELETE_LOGS_CONFIRMATION"
 msgstr "ログを削除してもよろしいですか？"
 
-#: ../../web/templates/admin/list_log.html:61
-msgid "1 log record"
-msgstr "1個のログレコード"
-
-#: ../../web/templates/admin/list_log.html:63
-msgid "%s log records"
-msgstr "%s個のログレコード"
+#: ../../web/templates/admin/list_log.html:60
+msgid "%d log record"
+msgid_plural "%d log records"
+msgstr[0] ""
 
 #: ../../web/templates/admin/list_cron.html:4
 #: ../../web/templates/user/list_cron.html:4
@@ -919,12 +966,10 @@ msgstr "Cronジョブの編集"
 msgid "DELETE_CRON_CONFIRMATION"
 msgstr "Cronジョブを削除してもよろしいですか？"
 
-#: ../../web/templates/admin/list_cron.html:137
 #: ../../web/templates/user/list_cron.html:137
 msgid "1 cron job"
 msgstr "1個のCronジョブ"
 
-#: ../../web/templates/admin/list_cron.html:139
 #: ../../web/templates/user/list_cron.html:139
 msgid "%s cron jobs"
 msgstr "%s個のCronジョブ"
@@ -948,12 +993,10 @@ msgstr "所有者"
 msgid "Status"
 msgstr "状態"
 
-#: ../../web/templates/admin/list_search.html:198
 #: ../../web/templates/user/list_search.html:196
 msgid "1 object"
 msgstr "1個のオブジェクト"
 
-#: ../../web/templates/admin/list_search.html:200
 #: ../../web/templates/user/list_search.html:198
 msgid "%s objects"
 msgstr "%s個のオブジェクト"
@@ -986,14 +1029,6 @@ msgstr "ダウンロード"
 msgid "DELETE_BACKUP_CONFIRMATION"
 msgstr "バックアップ %s を削除してもよろしいですか？"
 
-#: ../../web/templates/admin/list_backup.html:116
-msgid "1 backup"
-msgstr ""
-
-#: ../../web/templates/admin/list_backup.html:118
-msgid "%s backups"
-msgstr "%s backups"
-
 #: ../../web/templates/admin/list_firewall_banlist.html:5
 msgid "Ban IP Address"
 msgstr "IPアドレスをBANリストに追加"
@@ -1007,13 +1042,10 @@ msgstr "IPアドレス %s を削除してもよろしいですか？"
 msgid "There are currently no banned IP addresses."
 msgstr ""
 
-#: ../../web/templates/admin/list_firewall_banlist.html:92
-msgid "1 banned IP address"
-msgstr "1 banned IP address"
-
-#: ../../web/templates/admin/list_firewall_banlist.html:95
-msgid "%s banned IP addresses"
-msgstr "%s banned IP addresses"
+#: ../../web/templates/admin/list_firewall_banlist.html:91
+msgid "%d banned IP address"
+msgid_plural "%d banned IP addresses"
+msgstr[0] ""
 
 #: ../../web/templates/admin/add_dns_rec.html:30
 msgid "Adding DNS Record"
@@ -1091,13 +1123,10 @@ msgstr "IPアドレスを再読み込み"
 msgid "Editing IP Address"
 msgstr "IPアドレスの編集"
 
-#: ../../web/templates/admin/list_ip.html:111
-msgid "1 IP address"
-msgstr "1個のIPアドレス"
-
-#: ../../web/templates/admin/list_ip.html:113
-msgid "%s IP addresses"
-msgstr "%s個のIPアドレス"
+#: ../../web/templates/admin/list_ip.html:110
+msgid "%d IP address"
+msgid_plural "%d IP addresses"
+msgstr[0] ""
 
 #: ../../web/templates/admin/panel.html:17
 #: ../../web/templates/user/panel.html:17
@@ -1579,14 +1608,6 @@ msgstr "ユーザーディレクトリ"
 msgid "Cron"
 msgstr ""
 
-#: ../../web/templates/admin/list_backup_detail.html:319
-msgid "1 item"
-msgstr "1個の項目"
-
-#: ../../web/templates/admin/list_backup_detail.html:321
-msgid "%s items"
-msgstr "%s個の項目"
-
 #: ../../web/templates/admin/list_mail.html:102
 #: ../../web/templates/admin/list_mail_acc.html:5
 #: ../../web/templates/user/list_mail.html:101
@@ -1655,12 +1676,10 @@ msgstr "ウェブメールを開く"
 msgid "DELETE_MAIL_ACCOUNT_CONFIRMATION"
 msgstr "メールアカウント %s を削除してもよろしいですか？"
 
-#: ../../web/templates/admin/list_mail_acc.html:186
 #: ../../web/templates/user/list_mail_acc.html:186
 msgid "1 mail account"
 msgstr "1個のメールアカウント"
 
-#: ../../web/templates/admin/list_mail_acc.html:188
 #: ../../web/templates/user/list_mail_acc.html:188
 msgid "%s mail accounts"
 msgstr "%s個のメールアカウント"
@@ -1978,12 +1997,10 @@ msgstr "メールアカウント"
 msgid "Cron Jobs"
 msgstr "Cronジョブ"
 
-#: ../../web/templates/admin/list_stats.html:93
 #: ../../web/templates/user/list_stats.html:79
 msgid "1 month"
 msgstr "1ヶ月"
 
-#: ../../web/templates/admin/list_stats.html:95
 #: ../../web/templates/user/list_stats.html:81
 msgid "%s months"
 msgstr "%sヶ月"
@@ -2109,12 +2126,10 @@ msgstr "レコード %s を削除してもよろしいですか？"
 msgid "Default"
 msgstr ""
 
-#: ../../web/templates/admin/list_dns_rec.html:105
 #: ../../web/templates/user/list_dns_rec.html:101
 msgid "1 DNS record"
 msgstr ""
 
-#: ../../web/templates/admin/list_dns_rec.html:107
 #: ../../web/templates/user/list_dns_rec.html:103
 msgid "%s DNS records"
 msgstr ""
@@ -2978,26 +2993,26 @@ msgstr "無制限"
 msgid "no notifications"
 msgstr "通知はありません"
 
-#: ../../web/reset/index.php:31
+#: ../../web/reset/index.php:35
 msgid "MAIL_RESET_SUBJECT"
 msgstr "%s のパスワードのリセット"
 
 #: ../../web/add/mail/index.php:207 ../../web/add/user/index.php:94
 #: ../../web/add/db/index.php:92 ../../web/add/web/index.php:329
 #: ../../web/edit/mail/index.php:523 ../../web/edit/web/index.php:663
-#: ../../web/edit/web/index.php:737 ../../web/reset/index.php:33
+#: ../../web/edit/web/index.php:737 ../../web/reset/index.php:37
 msgid "MAIL_FROM"
 msgstr "Hestia Control Panel <noreply@%s>"
 
-#: ../../web/add/user/index.php:97 ../../web/reset/index.php:35
+#: ../../web/add/user/index.php:97 ../../web/reset/index.php:39
 msgid "GREETINGS_GORDON"
 msgstr "Hello, %s,"
 
-#: ../../web/add/user/index.php:99 ../../web/reset/index.php:37
+#: ../../web/add/user/index.php:99 ../../web/reset/index.php:41
 msgid "GREETINGS"
 msgstr "こんにちは"
 
-#: ../../web/reset/index.php:40
+#: ../../web/reset/index.php:44
 msgid "PASSWORD_RESET_REQUEST"
 msgstr ""
 "コントロールパネルのパスワードをリセットするには、以下のリンクの手順に従ってください\n"
@@ -3011,23 +3026,23 @@ msgstr ""
 "--\n"
 "Hestia Control Panel"
 
-#: ../../web/reset/index.php:45
+#: ../../web/reset/index.php:49
 msgid "Invalid host domain"
 msgstr ""
 
-#: ../../web/reset/index.php:74
+#: ../../web/reset/index.php:78
 msgid "An internal error occurred"
 msgstr ""
 
-#: ../../web/reset/index.php:82
+#: ../../web/reset/index.php:86
 msgid "Code has been expired"
 msgstr ""
 
-#: ../../web/reset/index.php:86 ../../web/reset/index.php:90
+#: ../../web/reset/index.php:90 ../../web/reset/index.php:94
 msgid "Invalid username or code"
 msgstr "ユーザー名またはコードが無効です"
 
-#: ../../web/reset/index.php:93
+#: ../../web/reset/index.php:97
 msgid "Passwords not match"
 msgstr "パスワードが一致しません"
 
@@ -3302,15 +3317,11 @@ msgstr "次のユーザーとしてログイン："
 msgid "Field SSH_KEY can not be blank."
 msgstr "フィールドSSHキーは空白にできません"
 
-#: ../../web/add/key/index.php:35
-msgid "SSH KEY is invalid"
-msgstr "SSHキーが無効です"
-
-#: ../../web/add/key/index.php:41 ../../web/add/key/index.php:44
+#: ../../web/add/key/index.php:42 ../../web/add/key/index.php:45
 msgid "SSH KEY already exists"
 msgstr "SSHキーはすでに存在します"
 
-#: ../../web/add/key/index.php:57
+#: ../../web/add/key/index.php:58
 msgid "SSH KEY created"
 msgstr ""
 
@@ -3779,12 +3790,9 @@ msgid "DELETE_KEY_CONFIRM"
 msgstr "SSHキーを削除してもよろしいですか %s?"
 
 #: ../../web/templates/admin/list_key.html:61
-msgid "1 SSH Key"
-msgstr ""
-
-#: ../../web/templates/admin/list_key.html:63
-msgid "%s SSH Keys"
-msgstr ""
+msgid "%d SSH Key"
+msgid_plural "%d SSH Keys"
+msgstr[0] ""
 
 #: ../../web/templates/admin/list_ssl.html:36
 #: ../../web/templates/admin/generate_ssl.html:45
@@ -3905,13 +3913,10 @@ msgstr "IPリストを削除してもよろしいですか %s?"
 msgid "There are currently no IP lists defined."
 msgstr "現在、定義されているIPリストはありません。"
 
-#: ../../web/templates/admin/list_firewall_ipset.html:108
-msgid "1 Ipset list"
-msgstr "1 IPリスト"
-
-#: ../../web/templates/admin/list_firewall_ipset.html:111
-msgid "%s Ipset lists"
-msgstr "%s IPリスト"
+#: ../../web/templates/admin/list_firewall_ipset.html:107
+msgid "%d Ipset list"
+msgid_plural "%d Ipset lists"
+msgstr[0] ""
 
 #: ../../web/templates/admin/add_firewall_ipset.html:7
 #: ../../web/templates/admin/add_dns.html:7

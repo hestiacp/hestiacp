@@ -83,7 +83,7 @@ increase_ip_value() {
     if [ -z "$current_usr" ]; then
         new_usr="$USER"
     else
-        check_usr=$(echo -e "${current_usr//,/\n}" |grep -w $USER)
+        check_usr=$(echo -e "${current_usr//,/\\n}" | grep -w ^${USER}$)
         if [ -z "$check_usr" ]; then
             new_usr="$current_usr,$USER"
         else

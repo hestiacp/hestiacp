@@ -37,7 +37,6 @@ server {
     server_name _;
     ssl_certificate      /usr/local/hestia/ssl/certificate.crt;
     ssl_certificate_key  /usr/local/hestia/ssl/certificate.key;
-    ssl_reject_handshake on;
 
     return 301 http://$host$request_uri;
 

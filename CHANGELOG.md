@@ -21,11 +21,11 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue where a `no backend template doesn't exist` could potentially would appear after upgrade with older templates (#1322).
 - Introduced caching templates for nginx + php-fpm configurations  - thanks **@cmstew**!
 - Fixed an issue where DNS cluster updates could fail due to the format of a DKIM record in an available zone - thanks **@jrohde**!
-- Improved the behavior of nginx SSL SNI detection to reject connections for domains which have no SSL certificate - thanks **@myrevery**! 
 - Improved the quality of comment formatting in command line scripts - thanks **@bisubus**! 
 - Fixed an issue where the logo was not displayed in the File Manager - thanks **@robothemes**!
 - Fixed an issue in the Control Panel UI which caused databases and additional FTP accounts to be named incorrectly if manually prefaced with the username.
 - Improved the visibility of service availability in the Control Panel UI.
+
 
 ## [1.3.0] - Major Release (Feature / Quality Update)
 ### Features

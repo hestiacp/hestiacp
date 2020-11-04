@@ -83,13 +83,19 @@ increase_ip_value() {
     if [ -z "$current_usr" ]; then
         new_usr="$USER"
     else
-        check_usr=$(echo -e "${current_usr//,/\\n}" | grep -w ^${USER}$)
+        check_usr=$(echo -e "${current_usr//,/\\n}" | grep -x "$USER")
         if [ -z "$check_usr" ]; then
             new_usr="$current_usr,$USER"
         else
             new_usr="$current_usr"
         fi
     fi
+
+    # Make sure users list does not contain duplicates
+    new_usr=$(echo "$new_usr" |\
+        sed "s/,/\n/g"|\
+        sort -u |\
+        sed ':a;N;$!ba;s/\n/,/g')
 
     sed -i "s/$web_key='$current_web'/$web_key='$new_web'/g" \
         $HESTIA/data/ips/$sip
@@ -118,6 +124,7 @@ decrease_ip_value() {
             sed "s/,/\n/g"|\
             sed "s/^$user$//g"|\
             sed "/^$/d"|\
+            sort -u |\
             sed ':a;N;$!ba;s/\n/,/g')
     else
         new_usr="$current_usr"

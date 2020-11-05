@@ -7,7 +7,6 @@
 #
 # This function searches for available Hestia Control Panel commands
 # and returns results based on the specified criteria.
-
 # Originally developed for VestaCP by Federico Krum
 # https://github.com/FastDigitalOceanDroplets/VestaCP/blob/master/files/v-search-command
 

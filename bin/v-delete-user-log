@@ -3,6 +3,8 @@
 # options: USER
 # labels: hestia
 #
+# v-delete-user-log user 
+#
 # The function for deleting a users log file
 
 #----------------------------------------------------------#

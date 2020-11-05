@@ -3,6 +3,8 @@
 # options: USER [RESTART]
 # labels: 
 #
+# example: v-rebuild-web-domains
+#
 # The function rebuilds web configuration files.
 
 

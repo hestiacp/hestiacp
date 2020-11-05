@@ -3,6 +3,8 @@
 # options: NONE
 # labels: panel
 #
+# example: v-delete-sys-firewall
+#
 # The script disables firewall support
 
 

@@ -3,7 +3,7 @@
 # options: USER DOMAIN TEMPLATE [RESTART]
 # labels: web
 #
-# example: v-change-web-domain-backend-tpl admin acme.com socket
+# example: v-change-web-domain-backend-tpl admin acme.com PHP-7_4
 #
 # The function changes backend template
 

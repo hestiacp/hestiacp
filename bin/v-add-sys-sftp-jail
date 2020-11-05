@@ -3,6 +3,8 @@
 # options: [RESTART]
 # labels: 
 #
+# example: v-add-sys-sftp-jail yes
+#
 # The script enables sftp jailed environment
 
 

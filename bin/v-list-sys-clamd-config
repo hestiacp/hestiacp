@@ -3,6 +3,8 @@
 # options: [FORMAT]
 # labels: 
 #
+# example: v-list-clamd-config
+#
 # The function for obtaining the list of clamd config parameters.
 
 

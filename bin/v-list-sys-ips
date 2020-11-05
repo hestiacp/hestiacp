@@ -3,6 +3,8 @@
 # options: [FORMAT]
 # labels: panel
 #
+# example: v-list-sys-ips
+#
 # The function for obtaining the list of system ip adresses.
 
 

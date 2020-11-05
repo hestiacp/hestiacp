@@ -3,6 +3,8 @@
 # options: ARG1 [ARG...]
 # labels: hestia
 #
+# v-search-command web
+#
 # This function searches for available Hestia Control Panel commands
 # and returns results based on the specified criteria.
 

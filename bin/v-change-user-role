@@ -3,7 +3,9 @@
 # options: USER ROLE
 # labels: hestia
 #
-# The function changes user's role.
+# v-change-user-role user administrator
+#
+# Give/revoke user administrator rights to manage all accounts as admin 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

@@ -3,7 +3,7 @@
 # options: USER ROLE
 # labels: hestia
 #
-# v-change-user-role user administrator
+# example: v-change-user-role user administrator
 #
 # Give/revoke user administrator rights to manage all accounts as admin 
 

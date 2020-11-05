@@ -3,6 +3,8 @@
 # options: USER DATABASE
 # labels: hestia
 #
+# example: v-rebuild user user_wordpress
+#
 # The function for rebuilding a single database for a user
 
 

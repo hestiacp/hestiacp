@@ -3,6 +3,8 @@
 # options: [FORMAT]
 # labels: mail
 #
+# example: v-list-sys-main-status json
+#
 # The function lists mail server status
 
 

@@ -1,7 +1,9 @@
 #!/bin/bash
-# info: add php version to .bash_aliases
+# info: add php  version alias to .bash_aliases
 # options: USER VERSION
 # labels: hestia
+#
+# example: v-change-user-php-cli user php7.4
 #
 # add line to .bash_aliases to set default php incase of multiPHP
 

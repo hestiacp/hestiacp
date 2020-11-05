@@ -3,6 +3,8 @@
 # options: NONE
 # labels: panel
 #
+# example: v-delete-sys-quota
+#
 # The script disables filesystem quota on /home partition
 
 

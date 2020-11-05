@@ -3,6 +3,8 @@
 # options: [FORMAT]
 # labels: panel
 #
+# v-list-sys-memory-status json
+#
 # The function lists virtual memory information
 
 

@@ -1,7 +1,9 @@
 #!/bin/bash
 # info: list system services
 # options: [FORMAT]
-# labels: 
+# labels: panel
+#
+# example: v-list-sys-services
 #
 # The function for obtaining the list of configured system services.
 

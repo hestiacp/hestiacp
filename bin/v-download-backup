@@ -3,7 +3,7 @@
 # options: USER BACKUP
 # labels: hestia
 #
-# v-download-user admin admin.2020-11-05_05-10-21.tar
+# example: v-download-user admin admin.2020-11-05_05-10-21.tar
 #
 # The function download back-up from remote server
 

@@ -3,7 +3,7 @@
 # options: [FORMAT]
 # labels: panel
 #
-# example: v-list-sys-languages 
+# example: v-list-sys-languages json
 #
 # The function for obtaining the available languages for HestiaCP
 # Output is always in the ISO language code

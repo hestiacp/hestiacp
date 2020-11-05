@@ -3,7 +3,7 @@
 # options: USER
 # labels: panel
 #
-# v-update-user-stats admin
+# example: v-update-user-stats admin
 #
 # Function logs user parameters into statistics database.
 

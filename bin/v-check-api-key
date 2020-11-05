@@ -3,7 +3,7 @@
 # options: KEY [IP]
 # labels: 
 #
-# v-check-api-key random_key
+# example: v-check-api-key random_key 127.0.0.1
 #
 # The function checks a key file in $HESTIA/data/keys/
 

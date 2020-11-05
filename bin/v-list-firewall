@@ -3,7 +3,7 @@
 # options: [FORMAT]
 # labels: 
 #
-# example v-list-firewall json
+# example: v-list-firewall json
 #
 # The function of obtaining the list of all iptables rules.
 

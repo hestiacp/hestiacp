@@ -3,7 +3,7 @@
 # options: USER KEY
 # labels: hestia
 #
-# example: v-delelete-user-ssh-key user unique_id
+# example: v-delete-user-ssh-key user unique_id
 #
 # Delete user ssh key from authorized_keys
 

@@ -3,7 +3,7 @@
 # options: PERIOD
 # labels: panel
 #
-# v-update-sys-rrd-mysql
+# example: v-update-sys-rrd-mysql
 #
 # The function is for updating mysql rrd database and graphic.
 

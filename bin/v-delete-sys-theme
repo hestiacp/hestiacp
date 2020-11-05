@@ -1,9 +1,9 @@
 #!/bin/bash
 # info: removes a theme from the custom theme library
-# options: none
+# options: theme
 # labels: hestia
 #
-# v-delete-sys-theme dark
+# example: v-delete-sys-theme dark
 #
 # The function removes a theme from the custom theme library. 
 # Please note "default" theme can't be deleted due to dependencies for other themes

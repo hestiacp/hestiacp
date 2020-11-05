@@ -3,7 +3,7 @@
 # options: [FORMAT]
 # labels: panel
 #
-# example: v-list-sys-services
+# example: v-list-sys-services json
 #
 # The function for obtaining the list of configured system services.
 

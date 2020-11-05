@@ -3,7 +3,7 @@
 # options: [FORMAT]
 # labels: panel
 #
-# example: v-get-sys-timezones
+# example: v-get-sys-timezones json
 #
 # The function checks system timezone settings
 

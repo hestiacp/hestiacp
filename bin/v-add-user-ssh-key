@@ -3,7 +3,7 @@
 # options: USER KEY
 # labels: hestia
 #
-# example v-add-user-ssh-key user 'valid ssh key'
+# example: v-add-user-ssh-key user 'valid ssh key'
 #
 # Function check if $user/.ssh/authorized_keys exists and create it.
 # After that it append the new key(s)

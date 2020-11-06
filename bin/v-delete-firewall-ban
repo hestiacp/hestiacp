@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete firewall blocking rule
 # options: IP CHAIN
+# labels: panel
+#
+# example: v-delete-firewall-ban 198.11.130.250 MAIL
 #
 # The function deletes blocking rule from system firewall
 

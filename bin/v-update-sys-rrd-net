@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: update network rrd
 # options: PERIOD
+# labels: panel
 #
 # The function is for updating network usage rrd database and graphic.
 

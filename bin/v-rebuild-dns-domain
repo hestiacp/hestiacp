@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: rebuild dns domain
 # options: USER DOMAIN [RESTART] [UPDATE_SERIAL]
+# labels: dns
+#
+# example: v-rebuild-dns-domain alice wonderland.com
 #
 # The function rebuilds DNS configuration files.
 

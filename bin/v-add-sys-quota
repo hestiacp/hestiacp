@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: add system quota
 # options: NONE
+# labels: 
 #
 # The script enables filesystem quota on /home partition
 

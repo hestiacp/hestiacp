@@ -5,11 +5,6 @@ App.Actions.DB.update_db_username_hint = function(elm, hint) {
     if (hint.trim() == '') {
         $(elm).parent().find('.hint').html('');
     } 
-    // remove prefix from value in order to eliminate duplicates
-    if (hint.indexOf(GLOBAL.DB_USER_PREFIX) == 0) {
-        hint = hint.slice(GLOBAL.DB_USER_PREFIX.length, hint.length);
-    }
-    
     $(elm).parent().find('.hint').text(GLOBAL.DB_USER_PREFIX + hint);
 }
 
@@ -20,10 +15,6 @@ App.Actions.DB.update_db_databasename_hint = function(elm, hint) {
     if (hint.trim() == '') {
         $(elm).parent().find('.hint').html('');
     } 
-    // remove prefix from value in order to eliminate duplicates
-    if (hint.indexOf(GLOBAL.DB_DBNAME_PREFIX) == 0) {
-        hint = hint.slice(GLOBAL.DB_DBNAME_PREFIX.length, hint.length);
-    }
     $(elm).parent().find('.hint').text(GLOBAL.DB_DBNAME_PREFIX + hint);
 }
 
@@ -34,7 +25,7 @@ App.Listeners.DB.keypress_db_username = function() {
     var current_val = ref.val();
     if (current_val.trim() != '') {
         App.Actions.DB.update_db_username_hint(ref, current_val);
-    }
+    }    
     
     ref.bind('keypress input', function(evt) {
         clearTimeout(window.frp_usr_tmt);
@@ -50,9 +41,13 @@ App.Listeners.DB.keypress_db_username = function() {
 App.Listeners.DB.keypress_db_databasename = function() {
     var ref = $('input[name="v_database"]');
     var current_val = ref.val();
-    if (current_val.trim() != '') {
-        App.Actions.DB.update_db_databasename_hint(ref, current_val);
+    if (current_val.indexOf(GLOBAL.DB_DBNAME_PREFIX) == 0) {
+        current_val = current_val.slice(GLOBAL.DB_DBNAME_PREFIX.length, current_val.length);
+        ref.val(current_val);
     }
+    if (current_val.trim() != '') {
+        App.Actions.DB.update_db_username_hint(ref, current_val);
+    }   
     
     ref.bind('keypress input', function(evt) {
         clearTimeout(window.frp_dbn_tmt);
@@ -96,6 +91,7 @@ App.Listeners.DB.keypress_v_password();
 // Trigger listeners
 App.Listeners.DB.keypress_db_username();
 App.Listeners.DB.keypress_db_databasename();
+
 
 randomString = function(min_length = 16) {
     var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';

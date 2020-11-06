@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list letsencrypt key
 # options: USER [FORMAT]
+# labels: panel
+#
+# example: v-list-letsencrypt-user admin
 #
 # The function for obtaining the letsencrypt key thumbprint
 

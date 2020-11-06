@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add firewall rule
 # options: ACTION IP PORT [PROTOCOL] [COMMENT] [RULE]
+# labels: 
+#
+# example: v-add-firewall-rule DROP 185.137.111.77 25
 #
 # The function adds new rule to system firewall
 

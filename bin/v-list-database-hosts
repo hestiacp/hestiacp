@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list database hosts
 # options: [FORMAT]
+# labels: panel
 #
 # The function for obtaining the list of all configured database hosts.
 

@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: add webmail support for a domain
 # options: USER DOMAIN [RESTART] [QUIET]
+# labels: hestia
 #
 # this function adds support for webmail services
 # to a mail domain.

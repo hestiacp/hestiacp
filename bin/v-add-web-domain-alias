@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add web domain alias
 # options: USER DOMAIN ALIASES [RESTART]
+# labels: web
+#
+# example: v-add-web-domain-alias admin acme.com www.acme.com yes
 #
 # The call is intended for adding aliases to a domain (it is also called
 # "domain parking"). The function supports wildcards *.domain.tpl.

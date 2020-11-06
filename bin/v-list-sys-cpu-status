@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list system cpu info
 # options: [FORMAT]
+# labels: 
 #
 # The function lists cpu information
 

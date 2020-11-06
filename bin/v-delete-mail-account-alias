@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete mail account alias aka nickname
 # options: USER DOMAIN ACCOUNT ALIAS
+# labels: mail
+#
+# example: v-delete-mail-account-alias admin example.com alice alicia
 #
 # The function deletes email account alias.
 

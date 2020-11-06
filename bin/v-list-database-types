@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list supported database types
 # options: [FORMAT]
+# labels: panel
 #
 # The function for obtaining the list of database types.
 

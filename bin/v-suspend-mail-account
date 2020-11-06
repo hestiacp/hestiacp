@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: suspend mail account
 # options: USER DOMAIN ACCOUNT
+# labels: mail
+#
+# example: v-suspend-mail-account admin acme.com bob
 #
 # The function suspends mail account.
 

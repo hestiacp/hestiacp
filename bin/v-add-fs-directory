@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add directory
 # options: USER DIRECTORY
+# labels: 
+#
+# example: v-add-fs-directory admin mybar
 #
 # The function creates new directory on the file system
 

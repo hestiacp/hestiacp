@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: suspend mail domains
 # options: USER
+# labels: mail
+#
+# example: v-suspend-mail-domains admin
 #
 # The function suspends all user's MAIL domains.
 

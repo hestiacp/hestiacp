@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change database owner
 # options: DATABASE USER
+# labels: 
+#
+# example: v-change-database-owner mydb alice
 #
 # The function for changing database owner.
 

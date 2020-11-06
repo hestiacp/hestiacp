@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change domain ssl certificate
 # options: USER DOMAIN SSL_DIR [RESTART]
+# labels: web
+#
+# example: v-change-web-domain-sslcert admin example.com /home/admin/tmp
 #
 # The function changes SSL domain certificate and the key. If ca file present
 # it will be replaced as well.

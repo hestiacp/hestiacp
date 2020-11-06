@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete user databases
 # options: USER
+# labels: 
+#
+# example: v-delete-databases admin
 #
 # The function deletes all user databases.
 

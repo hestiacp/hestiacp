@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: restart backend server
 # options: NONE
+# labels: web
 #
 # The function reloads backend server configuration.
 

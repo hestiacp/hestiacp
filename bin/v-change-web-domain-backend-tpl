@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change web domain backend template
 # options: USER DOMAIN TEMPLATE [RESTART]
+# labels: web
+#
+# example: v-change-web-domain-backend-tpl admin acme.com socket
 #
 # The function changes backend template
 

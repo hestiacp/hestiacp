@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add password protection for web domain
 # options: USER DOMAIN AUTH_USER AUTH_PASSWORD [RESTART]
+# labels: web
+#
+# example: v-add-web-domain-httpauth admin acme.com user02 super_pass
 #
 # The call is used for securing web domain with http auth
 

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change service config
 # options: CONFIG SERVICE [RESTART]
+# labels: panel
+#
+# example: v-change-sys-service-config /home/admin/dovecot.conf dovecot yes
 #
 # The function for changing service confguration.
 

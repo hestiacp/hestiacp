@@ -23,7 +23,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.3.0'
+HESTIA_INSTALL_VER='1.3.1~alpha'
 pma_v='5.0.4'
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
 fpm_v="7.4"
@@ -1922,6 +1922,7 @@ or if you encounter any bugs or problems:
 E-mail:  info@hestiacp.com
 Web:     https://www.hestiacp.com/
 Forum:   https://forum.hestiacp.com/
+Discord: https://discord.gg/nXRUZch
 GitHub:  https://www.github.com/hestiacp/hestiacp
 
 Note: Automatic updates are enabled by default. If you would like to disable them,

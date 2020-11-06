@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list firewall rule
 # options: RULE [FORMAT]
+# labels: panel
+#
+# example: v-list-firewall-rule 2
 #
 # The function of obtaining firewall rule parameters.
 

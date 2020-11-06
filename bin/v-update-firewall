@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: update system firewall rules
 # options: NONE
+# labels: panel
 #
 # The function updates iptables rules
 

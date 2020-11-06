@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add password protection to web domain statistics
 # options: USER DOMAIN STATS_USER STATS_PASSWORD [RESTART]
+# labels: web
+#
+# example: v-add-web-domain-stats-user admin example.com watchdog your_password
 #
 # The call is used for securing the web statistics page.
 

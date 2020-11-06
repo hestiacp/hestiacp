@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list mysql config parameters
 # options: [FORMAT]
+# labels: panel
 #
 # The function for obtaining the list of mysql config parameters.
 

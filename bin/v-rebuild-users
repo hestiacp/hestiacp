@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: rebuild system user
 # options: [RESTART]
+# labels: hestia
 #
 # The function rebuilds system user accounts.
 

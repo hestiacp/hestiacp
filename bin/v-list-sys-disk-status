@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list disk information
 # options: [FORMAT]
+# labels: 
 #
 # The function lists disk information
 

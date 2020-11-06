@@ -807,7 +807,6 @@ if (!empty($_POST['save'])) {
     // Set success message
     if (empty($_SESSION['error_msg'])) {
         $_SESSION['ok_msg'] = _('Changes has been saved.');
-        header("Location: /edit/web/?domain=" . $v_domain);
     }
 
 }

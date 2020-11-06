@@ -24,14 +24,14 @@
       <a href="/list/web/" class="l-logo"></a>
       <div class="l-menu clearfix">
         <div class="l-menu__item"><a href="/list/rrd/" title="<?=_('Back')?>"><i class="fas fa-arrow-alt-circle-left"></i></a></div>
-        <div class="l-menu__item <?php if(isset($_GET['cpu'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?cpu" title="<?=_('CPU')?>"><i class="fas fa-microchip"></i>&nbsp;&nbsp;&nbsp;<?=_('CPU')?></a></div>
-        <div class="l-menu__item <?php if(isset($_GET['mem'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?mem" title="<?=_('RAM')?>"><i class="fas fa-memory"></i>&nbsp;&nbsp;&nbsp;<?=_('RAM')?></a></div>
-        <div class="l-menu__item <?php if(isset($_GET['disk'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?disk" title="<?=_('Disk')?>"><i class="fas fa-hdd"></i>&nbsp;&nbsp;&nbsp;<?=_('Disk')?></a></div>
-        <div class="l-menu__item <?php if(isset($_GET['net'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?net"  title="<?=_('Network')?>"><i class="fas fa-ethernet"></i>&nbsp;&nbsp;&nbsp;<?=_('Network')?></a></div>
-        <?php if ((isset($_SESSION['WEB_SYSTEM'])) && (!empty($_SESSION['WEB_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['web'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?web" title="<?=_('Web')?>"><i class="fas fa-globe-europe"></i>&nbsp;&nbsp;&nbsp;<?=_('Web')?></a></div><?php }?>
-        <?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['dns'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?dns" title="<?=_('DNS')?>"><i class="fas fa-atlas"></i>&nbsp;&nbsp;&nbsp;<?=_('DNS')?></a></div><?php }?>
-        <?php if ((isset($_SESSION['MAIL_SYSTEM'])) && (!empty($_SESSION['MAIL_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['mail'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?mail" title="<?=_('Mail')?>"><i class="fas fa-mail-bulk"></i>&nbsp;&nbsp;&nbsp;<?=_('Mail')?></a></div><?php }?>
-        <?php if ((isset($_SESSION['DB_SYSTEM'])) && (!empty($_SESSION['DB_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['db'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?db" title="<?=_('DB')?>"><i class="fas fa-database"></i>&nbsp;&nbsp;&nbsp;<?=_('DB')?></a></div><?php }?>
+        <div class="l-menu__item <?php if(isset($_GET['cpu'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?cpu"><i class="fas fa-microchip"></i>&nbsp;&nbsp;&nbsp;<?=_('CPU')?></a></div>
+        <div class="l-menu__item <?php if(isset($_GET['mem'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?mem"><i class="fas fa-memory"></i>&nbsp;&nbsp;&nbsp;<?=_('RAM')?></a></div>
+        <div class="l-menu__item <?php if(isset($_GET['disk'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?disk"><i class="fas fa-hdd"></i>&nbsp;&nbsp;&nbsp;<?=_('Disk')?></a></div>
+        <div class="l-menu__item <?php if(isset($_GET['net'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?net"><i class="fas fa-ethernet"></i>&nbsp;&nbsp;&nbsp;<?=_('Network')?></a></div>
+        <?php if ((isset($_SESSION['WEB_SYSTEM'])) && (!empty($_SESSION['WEB_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['web'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?web"><i class="fas fa-globe-europe"></i>&nbsp;&nbsp;&nbsp;<?=_('Web')?></a></div><?php }?>
+        <?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['dns'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?dns"><i class="fas fa-atlas"></i>&nbsp;&nbsp;&nbsp;<?=_('DNS')?></a></div><?php }?>
+        <?php if ((isset($_SESSION['MAIL_SYSTEM'])) && (!empty($_SESSION['MAIL_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['mail'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?mail"><i class="fas fa-mail-bulk"></i>&nbsp;&nbsp;&nbsp;<?=_('Mail')?></a></div><?php }?>
+        <?php if ((isset($_SESSION['DB_SYSTEM'])) && (!empty($_SESSION['DB_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['db'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?db"><i class="fas fa-database"></i>&nbsp;&nbsp;&nbsp;<?=_('DB')?></a></div><?php }?>
       </div>
       <div class="l-profile noselect">
         <div class="l-menu__item"><a href="javascript:location.reload();" title="<?=_('Refresh')?>"><i class="fas fa-redo"></i></a></div>

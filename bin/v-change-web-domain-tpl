@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change web domain template
 # options: USER DOMAIN TEMPLATE [RESTART]
+# labels: web
+#
+# example: v-change-web-domain-tpl admin acme.com opencart
 #
 # The function changes template of the web configuration file. The content
 # of webdomain directories remains untouched.

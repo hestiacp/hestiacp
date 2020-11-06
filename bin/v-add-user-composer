@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: add composer (php dependency manager) for a user
 # options: USER
+# labels: hestia
 #
 # The function adds support for composer (php dependency manager)
 # Homepage: https://getcomposer.org/

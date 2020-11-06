@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete remote dns host
 # options: HOST
+# labels: dns
+#
+# example: v-delete-remote-dns-host example.org
 #
 # The function for deleting the remote dns host from hestia configuration.
 

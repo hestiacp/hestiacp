@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list clamd config parameters
 # options: [FORMAT]
+# labels: 
 #
 # The function for obtaining the list of clamd config parameters.
 

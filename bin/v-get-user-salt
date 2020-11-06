@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: get user salt
 # options: USER [IP] [FORMAT]
+# labels: panel
+#
+# example: v-get-user-salt admin
 #
 # The function provides users salt
 

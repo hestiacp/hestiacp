@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: suspend cron job
 # options: USER JOB [RESTART]
+# labels: panel
+#
+# example: v-suspend-cron-job admin 5 yes
 #
 # The function suspends a certain job of the cron scheduler.
 

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete web/dns/mail domain
 # options: USER DOMAIN
+# labels: panel
+#
+# example: v-delete-domain admin domain.tld
 #
 # The function deletes web/dns/mail domain.
 

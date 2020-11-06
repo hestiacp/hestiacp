@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: inserts dns records
 # options: USER DOMAIN DATA_FILE [RESTART]
+# labels: 
 #
 # The function copy dns record to the domain conf
 

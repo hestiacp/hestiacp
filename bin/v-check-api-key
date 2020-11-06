@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: check api key
-# options: KEY
+# options: KEY [IP]
+# labels: 
 #
 # The function checks a key file in $HESTIA/data/keys/
 

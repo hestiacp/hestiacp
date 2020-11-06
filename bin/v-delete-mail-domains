@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete mail domains
 # options: USER
+# labels: mail
+#
+# example: v-delete-mail-domains admin
 #
 # The function for deleting all users mail domains.
 

@@ -15,7 +15,7 @@ for ip in $(ls $HESTIA/data/ips/); do
         sort -u |\
         sed ':a;N;$!ba;s/\n/,/g')
 
-    if [ ! -z $new_usr ]; then
+    if [ ! -z "$new_usr" ]; then
         sed -i "s/U_SYS_USERS='$current_usr'/U_SYS_USERS='$new_usr'/g" $HESTIA/data/ips/$ip
     fi
 done

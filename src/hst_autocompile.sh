@@ -230,6 +230,7 @@ if [ "$dontinstalldeps" != 'true' ]; then
 
         echo "Updating system DNF repositories..."
         dnf config-manager --set-enabled powertools > /dev/null 2>&1
+        dnf config-manager --set-enabled PowerTools > /dev/null 2>&1
         dnf update -y > /dev/null 2>&1
         echo "Installing dependencies for compilation..."
         dnf install -y $SOFTWARE > /dev/null 2>&1

@@ -27,7 +27,8 @@ hestia_module_php-fpm_install() {
         php_withoutdot=${php_version//.}
         php_version_present=$(osal_kv_read $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_present" 0)
         if [ "php_version_present" ]; then
-            hestia module php-fpm add $php_version
+            # Use force, because FPM is technically still not installed
+            hestia module php-fpm add $php_version --force
         fi
     done
 

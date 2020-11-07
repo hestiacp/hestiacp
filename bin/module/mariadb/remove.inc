@@ -23,6 +23,9 @@ hestia_module_mariadb_remove() {
 
     osal_package_remove ${OSAL_PKG_MARIADB}-server
 
+    # Remove this host from MySQL server list
+    sed -i "/HOST='localhost'/d" $HESTIA/conf/mysql.conf
+
     osal_kv_write $HESTIA/conf/hestia.conf 'DB_SYSTEM' ''
     osal_kv_write $HESTIA_CONF_MODULES/mydb.conf 'installed' '0'
     osal_kv_write $HESTIA_CONF_MODULES/mydb.conf 'description' ''

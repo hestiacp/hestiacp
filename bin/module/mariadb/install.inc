@@ -80,6 +80,13 @@ EOL
         chmod 600 /root/.my.cnf
     fi
 
+    # Add this host to MySQL server list
+    if [ -e $HESTIA/conf/mysql.conf ]; then
+        # Remove previous line
+        sed -i "/HOST='localhost'/d" $HESTIA/conf/mysql.conf
+    fi
+    echo "HOST='localhost' USER='root' PASSWORD='$mariadb_root_password' CHARSETS='UTF8,LATIN1,WIN1250,WIN1251,WIN1252,WIN1256,WIN1258,KOI8' MAX_DB='500' U_SYS_USERS='' U_DB_BASES='0' SUSPENDED='no' TIME='$(date +%H:%M:%S)' DATE='$(date +%Y-%m-%d)' PORT='3306'" >> $HESTIA/conf/mysql.conf
+
     mysql_upgrade > /dev/null
 
     # Clear MariaDB test users and databases
@@ -91,10 +98,4 @@ EOL
     mysql -e "DROP DATABASE test" > /dev/null 2>&1
 
     osal_kv_write $HESTIA/conf/hestia.conf 'DB_SYSTEM' 'mysql'
-    osal_kv_write $HESTIA_CONF_MODULES/mydb.conf 'installed' '1'
-    osal_kv_write $HESTIA_CONF_MODULES/mydb.conf 'description' 'Hestia Database (MariaDB) module'
-    osal_kv_write $HESTIA_CONF_MODULES/mydb.conf 'enabled' '1'
-    osal_kv_write $HESTIA_CONF_MODULES/mydb.conf 'variant' 'mariadb'
-    osal_kv_write $HESTIA_CONF_MODULES/mydb.conf 'version' '1'
-    osal_kv_write $HESTIA_CONF_MODULES/mydb.conf 'service_name' $OSAL_PKG_MARIADB
 }

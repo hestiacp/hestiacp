@@ -23,7 +23,7 @@ hestia_setup_init() {
         ln -s /usr/sbin/ip /bin/ip > /dev/null 2>&1
 
         # Compatibility with Debian-only scripts
-        groupadd nogroup
+        groupadd nogroup > /dev/null 2>&1
     fi
 
     if [ ! -e /var/log/hestia ]; then
@@ -44,10 +44,18 @@ deb https://apt.hestiacp.com/ $OS_CODENAME main
 EOL
         apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
     elif [ "$OS_BASE" = 'rhel' ]; then
+        echo " - Adding repositories and packages..."
         dnf config-manager --set-enabled extras powertools > /dev/null 2>&1
         dnf config-manager --set-enabled extras PowerTools > /dev/null 2>&1
         dnf -y install epel-release
-        dnf config-manager --set-enabled epel epel-modular
+        dnf config-manager --set-enabled epel epel-modular  > /dev/null 2>&1
+
+        # Install needed packages
+        dnf -y install crudini
+
+        # Disable SELinux
+        setenforce 0
+        crudini --set /etc/selinux/config '' SELINUX permissive
 
         # Enable Perl 5.26
         #dnf -y module disable perl:*

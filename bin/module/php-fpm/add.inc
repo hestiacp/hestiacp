@@ -48,6 +48,8 @@ hestia_module_php-fpm_add() {
 
     echo "Adding PHP (FPM) version ${php_version}..."
 
+    mkdir -p /var/run/php
+
     local php_prefix=$(osal_php_package_prefix $php_version)
 
     # Install php packages
@@ -72,7 +74,7 @@ hestia_module_php-fpm_add() {
 
     # Install backend template
     cp -f $HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl \
-        $HESTIA/data/templates/web/php-fpm/PHP-${php_version/\./_}.tpl
+        $HESTIA/data/templates/web/php-fpm/PHP-${php_withoutdot}.tpl
 
     osal_kv_write $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_fpm" '1'
 

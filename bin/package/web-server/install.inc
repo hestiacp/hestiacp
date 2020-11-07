@@ -26,6 +26,10 @@ hestia_package_web-server_install() {
         fi
     fi
 
+    if [ ! "$param_without_mariadb" ]; then
+        hestia module install mariadb --no-integrate
+    fi
+
     # Integrate everything
     hestia package web-server integrate
 }

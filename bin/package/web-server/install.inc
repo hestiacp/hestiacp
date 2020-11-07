@@ -13,14 +13,14 @@ hestia_package_web-server_install() {
     hestia module install apache --no-integrate
     hestia module install awstats --no-integrate
 
-    if [ $memory -ge 1572864 ] || [ "$param_withproxy" ]; then
-        if [ ! "$param_withoutproxy" ]; then
+    if [ $memory -ge 1572864 ] || [ "$param_with_proxy" ]; then
+        if [ ! "$param_without_proxy" ]; then
             hestia module install nginx --no-integrate
         fi
     fi
 
-    if [ $memory -ge 1572864 ] || [ "$param_withphp" ]; then
-        if [ ! "$param_withoutphp" ]; then
+    if [ $memory -ge 1572864 ] || [ "$param_with_php" ]; then
+        if [ ! "$param_without_php" ]; then
             hestia module install php --no-integrate
             hestia module install php-fpm --no-integrate
         fi
@@ -34,8 +34,8 @@ usage() {
     echo "Hestia web server package."
     echo "Usage:"
     echo "  hestia package install web-server \\"
-    echo "    [--withproxy|--withoutproxy]\\"
-    echo "    [--withphp|--withoutphp]"
+    echo "    [--with-proxy|--without-proxy]\\"
+    echo "    [--with-php|--without-php]"
     echo ""
     echo "Proxy and PHP packages will be installed hestia_config_backup 'nginx-remove' $OSAL_PATH_NGINX_CONFon systems"
     echo "with at least 1.5 GB of RAM, unless otherwise specified."

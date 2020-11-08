@@ -80,21 +80,28 @@ if [ "$target_domain" = "default" ]; then
     update_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_PHPROOT' "" 
 else
     # Check for existence of specified directory under target domain's public_html folder
+    target_domain_directory="$HOMEDIR/$user/web/$target_domain/"
     if [ ! -z "$target_directory" ]; then
-        if [ ! -e "$HOMEDIR/$user/web/$target_domain/public_html/$target_directory" ]; then
-            echo "ERROR: Directory $target_directory does not exist under $HOMEDIR/$user/$target_domain/public_html/."
-            exit 1
+
+        # Checking destination path
+        real_target_directory="$(readlink -e "${target_domain_directory}/public_html/$target_directory/")"
+        if [ -z "$(echo $real_target_directory | egrep "^$target_domain_directory")" ]; then
+            check_result $E_FORBIDEN "Error: target dir outside of target domain dir"
+        fi
+
+        if [ ! -e "$real_target_directory" ]; then
+            check_result $E_NOTEXIST "ERROR: Directory $target_directory does not exist under $HOMEDIR/$user/$target_domain/public_html/."
         else
-            CUSTOM_DOCROOT="$HOMEDIR/$user/web/$target_domain/public_html/$target_directory/"
+            CUSTOM_DOCROOT="$real_target_directory"
             if [ ! -z "$php" ]; then
-                custom_phproot="$HOMEDIR/$user/web/$target_domain/public_html/"
+                custom_phproot="${target_domain_directory}/public_html/"
             else
-                custom_phproot="$HOMEDIR/$user/web/$target_domain/public_html/$target_directory/"
+                custom_phproot="$real_target_directory"
             fi
         fi
     else
-        CUSTOM_DOCROOT="$HOMEDIR/$user/web/$target_domain/public_html/"
-        custom_phproot="$HOMEDIR/$user/web/$target_domain/public_html/"
+        CUSTOM_DOCROOT="${target_domain_directory}/public_html/"
+        custom_phproot="${target_domain_directory}/public_html/"
     fi
     
     add_object_key 'web' 'DOMAIN' "$domain" 'CUSTOM_DOCROOT' 'IP6'

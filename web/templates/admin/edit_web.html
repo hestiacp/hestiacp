@@ -258,24 +258,14 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="hidden" name="v-custom-doc-root_prepath"" value="<?php echo $v_custom_doc_root_prepath;?>">
+                                                <input type="hidden" name="v-custom-doc-root_prepath" value="<?php echo $v_custom_doc_root_prepath;?>">
                                                 <select class="vst-list" name="v-custom-doc-domain">
-                                                    <option value="<?php echo $v_domain;?>"><?php echo $v_domain;?></option>
-                                                    <?php
-                                                    foreach ($user_domains as $domain) {
-                                                        if($domain != $v_domain ){
-                                                        if($v_custom_doc_domain == $domain){
-                                                    ?>
-                                                            <option value="<?php echo $domain;?>" selected="selected"><?php echo $domain;?></option>
-                                                    <?php
-                                                        }else{
-                                                     ?>
-                                                            <option value="<?php echo $domain;?>"><?php echo $domain;?></option>
-                                                    <?php
-                                                        }
-                                                        }
-                                                    }
-                                                    ?>
+                                                <?php foreach ($user_domains as $domain): ?>
+                                                    <option value="<?php echo $domain;?>"
+                                                        <?=($v_custom_doc_domain === $domain)?' selected="selected" ':''; ?>>
+                                                        <?php echo $domain;?>
+                                                    </option>
+                                                <?php endforeach; ?>
                                                 </select>
                                             </td>
                                         </tr>

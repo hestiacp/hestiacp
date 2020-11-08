@@ -80,12 +80,12 @@ if [ "$target_domain" = "default" ]; then
     update_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_PHPROOT' "" 
 else
     # Check for existence of specified directory under target domain's public_html folder
-    target_domain_directory="$HOMEDIR/$user/web/$target_domain/"
+    target_domain_directory="$HOMEDIR/$user/web/$target_domain"
     if [ ! -z "$target_directory" ]; then
 
         # Checking destination path
         real_target_directory="$(readlink -e "${target_domain_directory}/public_html/$target_directory/")"
-        if [ -z "$(echo $real_target_directory | egrep "^$target_domain_directory")" ]; then
+        if [ -z "$(echo $real_target_directory | egrep "^$target_domain_directory\b")" ]; then
             check_result $E_FORBIDEN "Error: target dir outside of target domain dir"
         fi
 

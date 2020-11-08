@@ -96,6 +96,14 @@
                                     <textarea size="20" class="vst-textinput short" name="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
                                 </td>
                             </tr>
+			    <tr>
+                                <td>
+                                    <span class="alert alert-info alert-with-icon">
+                                                    <i class="fas fa-exclamation"></i>
+                                                    <?php print _('Changes to Aliases will cause Lets Encrypt to obtain a new SSL certificate if enabled.');?>
+                                                </span>
+                                </td>
+                            </tr>
                             <tr>
                                 <td class="vst-text step-top">
                                     <?php print _('Web Statistics');?>

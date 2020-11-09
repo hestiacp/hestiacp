@@ -70,6 +70,8 @@ else
     echo 'RewriteRule ^(.*)$ https://%{HTTP_HOST}$1 [R=301,L]' >> $forcessl
 fi
 
+chown root:$user $forcessl
+chmod 640 $forcessl
 
 #----------------------------------------------------------#
 #                       Hestia                             #

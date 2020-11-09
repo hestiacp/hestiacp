@@ -1,9 +1,9 @@
 #!/bin/bash
 # info: add dns domain
-# options: USER DOMAIN IP [NS1] [NS2] [NS3] [..] [NS8] [RESTART]
+# options: USER DOMAIN IP [NS1] [NS2] [NS3] [NS4] [NS5] [NS6] [NS7] [NS8] [RESTART]
 # labels: dns
 #
-# example: v-add-dns-domain admin example.com ns1.example.com ns2.example.com yes
+# example: v-add-dns-domain admin example.com ns1.example.com ns2.example.com '' '' '' '' '' '' yes
 #
 # The function adds DNS zone with records defined in the template. If the exp
 # argument isn't stated, the expiration date value will be set to next year.

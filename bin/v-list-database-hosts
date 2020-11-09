@@ -3,6 +3,8 @@
 # options: [FORMAT]
 # labels: panel
 #
+# example: v-list-database-hosts json
+#
 # The function for obtaining the list of all configured database hosts.
 
 

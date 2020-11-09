@@ -3,6 +3,8 @@
 # options: NONE
 # labels: panel
 #
+# example: v-stop-firewall
+#
 # The function stops iptables
 
 

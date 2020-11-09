@@ -3,6 +3,8 @@
 # options: USER DOMAIN [RESTART]
 # labels: hestia
 #
+# example: v-rebuild-web-domain user domain.tld 
+#
 # The function rebuilds web configuration files.
 
 

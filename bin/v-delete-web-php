@@ -3,6 +3,8 @@
 # options: VERSION
 # labels: hestia
 #
+# example: v-delete-web-php 7.3
+#
 # The function checks and delete a fpm php version if not used by any domain.
 
 

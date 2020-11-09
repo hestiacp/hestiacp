@@ -3,6 +3,8 @@
 # options: NONE
 # labels: web
 #
+# example: v-restart-web
+#
 # The function reloads web server configuration.
 
 

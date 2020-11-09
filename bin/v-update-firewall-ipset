@@ -3,6 +3,8 @@
 # options: [REFRESH]
 # labels: hestia
 #
+# example: v-update-firewall-ipset
+#
 # The function creates ipset lists and updates the lists if they are expired or ondemand
 
 

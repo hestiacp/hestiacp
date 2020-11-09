@@ -5,7 +5,8 @@
 #
 # example: v-change-user-php-cli user php7.4
 #
-# add line to .bash_aliases to set default php incase of multiPHP
+# add line to .bash_aliases to set default php command line
+# version when multi-php is enabled.
 
 
 #----------------------------------------------------------#

@@ -44,8 +44,8 @@
 						<a href="/list/web/">
 							<div class="l-stat__col-title"><?=_('WEB')?>&nbsp;&nbsp;<i class="fas fa-globe-americas"></i></div>
 							<ul>
-								<li><?=_('domains')?>: <span><?=$panel[$user]['U_WEB_DOMAINS']?> / <?=$panel[$user]['SUSPENDED_WEB']?></span></li>
-								<li><?=_('aliases')?>: <span><?=$panel[$user]['U_WEB_ALIASES']?></span></li>
+								<li><?=_('domains')?>: <span><?=$panel[$user]['U_WEB_DOMAINS']?> / <?=$panel[$user]['WEB_DOMAINS']=='unlimited' ? "<b>∞</b>" : $panel[$user]['WEB_DOMAINS']?> (<?=$panel[$user]['SUSPENDED_WEB']?>)</span></li>
+								<li><?=_('aliases')?>: <span><?=$panel[$user]['U_WEB_ALIASES']?> / <?= $panel[$user]['WEB_ALIASES'] == 'unlimited' ? "<b>∞</b>": $panel[$user]['WEB_ALIASES'] * $panel[$user]['WEB_DOMAINS']?></span></li>
 							</ul>
 						</a>
 					</div>
@@ -58,8 +58,8 @@
 						<a href="/list/dns/">
 							<div class="l-stat__col-title"><?=_('DNS')?>&nbsp;&nbsp;<i class="fas fa-atlas"></i></div>
 							<ul>
-								<li><?=_('zones')?>: <span><?=$panel[$user]['U_DNS_DOMAINS']?> / <?=$panel[$user]['SUSPENDED_DNS']?></span></li>
-								<li><?=_('records')?>: <span><?=$panel[$user]['U_DNS_RECORDS']?></span></li>
+								<li><?=_('zones')?>: <span><?=$panel[$user]['U_DNS_DOMAINS']?> / <?=$panel[$user]['DNS_DOMAINS']=='unlimited' ? "<b>∞</b>" : $panel[$user]['DNS_DOMAINS']?> (<?=$panel[$user]['SUSPENDED_DNS']?>)</span></li>
+								<li><?=_('records')?>: <span><?=$panel[$user]['U_DNS_RECORDS']?> / <?=$panel[$user]['DNS_RECORDS']=='unlimited' ? "<b>∞</b>" : $panel[$user]['DNS_RECORDS'] * $panel[$user]['DNS_DOMAINS']?></span></li>
 							</ul>
 						</a>
 					</div>
@@ -72,8 +72,8 @@
 						<a href="/list/mail/">
 							<div class="l-stat__col-title"><?=_('MAIL')?>&nbsp;&nbsp;<i class="fas fa-mail-bulk"></i></div>
 							<ul>
-								<li><?=_('domains')?>: <span><?=$panel[$user]['U_MAIL_DOMAINS']?> / <?=$panel[$user]['SUSPENDED_MAIL']?></span></li>
-								<li><?=_('accounts')?>: <span><?=$panel[$user]['U_MAIL_ACCOUNTS']?></span></li>
+								<li><?=_('domains')?>: <span><?=$panel[$user]['U_MAIL_DOMAINS']?> / <?=$panel[$user]['MAIL_DOMAINS']=='unlimited' ? "<b>∞</b>" : $panel[$user]['MAIL_DOMAINS']?> (<?=$panel[$user]['SUSPENDED_MAIL']?>)</span></li>
+								<li><?=_('accounts')?>: <span><?=$panel[$user]['U_MAIL_ACCOUNTS']?> / <?=$panel[$user]['MAIL_ACCOUNTS']=='unlimited' ? "<b>∞</b>" : $panel[$user]['MAIL_ACCOUNTS'] * $panel[$user]['MAIL_DOMAINS']?></span></li>
 							</ul>
 						</a>
 					</div>
@@ -86,7 +86,7 @@
 						<a href="/list/db/">
 							<div class="l-stat__col-title"><?=_('DB')?>&nbsp;&nbsp;<i class="fas fa-database"></i></div>
 							<ul>
-								<li><?=_('databases')?>: <span><?=$panel[$user]['U_DATABASES']?> / <?=$panel[$user]['SUSPENDED_DB']?></span></li>
+								<li><?=_('databases')?>: <span><?=$panel[$user]['U_DATABASES']?> / <?=$panel[$user]['DATABASES']=='unlimited' ? "<b>∞</b>" : $panel[$user]['DATABASES']?> (<?=$panel[$user]['SUSPENDED_DB']?>)</span></li>
 							</ul>
 						</a>
 					</div>
@@ -99,7 +99,7 @@
 						<a href="/list/cron/">
 							<div class="l-stat__col-title"><?=_('CRON')?>&nbsp;&nbsp;<i class="fas fa-clock"></i></div>
 							<ul>
-								<li><?=_('jobs')?>: <span><?=$panel[$user]['U_CRON_JOBS']?> / <?=$panel[$user]['SUSPENDED_CRON']?></span></li>
+								<li><?=_('jobs')?>: <span><?=$panel[$user]['U_CRON_JOBS']?> / <?=$panel[$user]['CRON_JOBS']=='unlimited' ? "<b>∞</b>" : $panel[$user]['CRON_JOBS']?> (<?=$panel[$user]['SUSPENDED_CRON']?>)</span></li>
 							</ul>
 						</a>
 					</div>
@@ -112,7 +112,7 @@
 						<a href="/list/backup/">
 							<div class="l-stat__col-title"><?=_('BACKUP')?>&nbsp;&nbsp;<i class="fas fa-file-archive"></i></div>
 							<ul>
-								<li><?=_('backups')?>: <span><?=$panel[$user]['U_BACKUPS']?></span></li>
+								<li><?=_('backups')?>: <span><?=$panel[$user]['U_BACKUPS']?> / <?=$panel[$user]['BACKUPS']=='unlimited' ? "<b>∞</b>" : $panel[$user]['BACKUPS']?></span></li>
 							</ul>
 						</a>
 					</div>

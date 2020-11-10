@@ -472,14 +472,16 @@ if [ "$PHP_B" = true ] ; then
     fi
 
     # Set permission
-    chmod +x postinst
+    #chmod +x postinst
 
     # Move php directory
     [ "$HESTIA_DEBUG" ] && echo DEBUG: mkdir -p $BUILD_DIR_HESTIAPHP/usr/local/hestia
     mkdir -p $BUILD_DIR_HESTIAPHP/usr/local/hestia
     
     [ "$HESTIA_DEBUG" ] && echo DEBUG: rm -r $BUILD_DIR_HESTIAPHP/usr/local/hestia/php
-    rm -r $BUILD_DIR_HESTIAPHP/usr/local/hestia/php
+    if [ -d $BUILD_DIR_HESTIAPHP/usr/local/hestia/php ]; then
+        rm -r $BUILD_DIR_HESTIAPHP/usr/local/hestia/php
+    fi
 
     [ "$HESTIA_DEBUG" ] && echo DEBUG: mv ${BUILD_DIR}/usr/local/hestia/php ${BUILD_DIR_HESTIAPHP}/usr/local/hestia/
     mv ${BUILD_DIR}/usr/local/hestia/php ${BUILD_DIR_HESTIAPHP}/usr/local/hestia/

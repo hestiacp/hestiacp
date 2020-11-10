@@ -63,7 +63,7 @@ get_branch_file() {
     local filename=$1
     local destination=$2
     [ "$HESTIA_DEBUG" ] && >&2 echo DEBUG: Get branch file "$filename" to "$destination"
-    if [ "$use_src_folder" = 'true' ]; then
+    if [ "$use_src_folder" == 'true' ]; then
         if [ -z "$destination" ]; then
             [ "$HESTIA_DEBUG" ] && >&2 echo DEBUG: cp -f "$SRC_DIR/$filename" ./
             cp -f "$SRC_DIR/$filename" ./
@@ -185,7 +185,7 @@ if [ -z $install ]; then
 fi
 
 # Set Version for compiling
-if [ -f "$SRC_DIR/src/deb/hestia/control" ] && [ "$use_src_folder" = 'true' ]; then
+if [ -f "$SRC_DIR/src/deb/hestia/control" ] && [ "$use_src_folder" == 'true' ]; then
     BUILD_VER=$(cat $SRC_DIR/src/deb/hestia/control |grep "Version:" |cut -d' ' -f2)
     NGINX_V=$(cat $SRC_DIR/src/deb/nginx/control |grep "Version:" |cut -d' ' -f2)
     PHP_V=$(cat $SRC_DIR/src/deb/php/control |grep "Version:" |cut -d' ' -f2)
@@ -336,7 +336,7 @@ if [ "$NGINX_B" = true ] ; then
     fi
 
     # Copy local hestia source files
-    if [ ! -z "$use_src_folder" ] && [ -d $SRC_DIR ]; then
+    if [ "$use_src_folder" == 'true' ] && [ -d $SRC_DIR ]; then
         cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch_dash
     fi
 
@@ -411,7 +411,7 @@ if [ "$NGINX_B" = true ] ; then
         # Clean up the source folder
         rm -r hestia-nginx_$NGINX_V
         rm -rf $BUILD_DIR/rpmbuild
-        if [ ! -z "$use_src_folder" ] && [ -d $$BUILD_DIR/hestiacp-$branch_dash ]; then
+        if [ "$use_src_folder" == 'true' ] && [ -d $BUILD_DIR/hestiacp-$branch_dash ]; then
             rm -r $BUILD_DIR/hestiacp-$branch_dash
         fi
     fi
@@ -466,7 +466,7 @@ if [ "$PHP_B" = true ] ; then
     make -j $NUM_CPUS && make INSTALL_ROOT=$BUILD_DIR install
 
     # Copy local hestia source files
-    if [ ! -z "$use_src_folder" ] && [ -d $SRC_DIR ]; then
+    if [ "$use_src_folder" == 'true' ] && [ -d $SRC_DIR ]; then
         [ "$HESTIA_DEBUG" ] && echo DEBUG: cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch_dash
         cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch_dash
     fi
@@ -533,7 +533,7 @@ if [ "$PHP_B" = true ] ; then
     if [ "$KEEPBUILD" != 'true' ]; then
         rm -r $BUILD_DIR/php-$PHP_V
         rm -r $BUILD_DIR_HESTIAPHP
-        if [ ! -z "$use_src_folder" ] && [ -d $BUILD_DIR/hestiacp-$branch_dash ]; then
+        if [ "$use_src_folder" == 'true' ] && [ -d $BUILD_DIR/hestiacp-$branch_dash ]; then
             rm -r $BUILD_DIR/hestiacp-$branch_dash
         fi
     fi
@@ -567,10 +567,11 @@ if [ "$HESTIA_B" = true ]; then
     cd $BUILD_DIR
     rm -rf $BUILD_DIR/hestiacp-$branch_dash
     # Download and unpack source files
-    if [ -z "$use_src_folder" ]; then
-        download_file $HESTIA_ARCHIVE_LINK '-' 'fresh' | tar xz
-    elif [ -d $SRC_DIR ]; then
+    if [ "$use_src_folder" == 'true' ]; then
+        [ "$HESTIA_DEBUG" ] && echo DEBUG: cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch_dash
         cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch_dash
+    elif [ -d $SRC_DIR ]; then
+        download_file $HESTIA_ARCHIVE_LINK '-' 'fresh' | tar xz
     fi
 
     mkdir -p $BUILD_DIR_HESTIA/usr/local/hestia

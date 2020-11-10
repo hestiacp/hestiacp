@@ -3,6 +3,8 @@
 # options: PERIOD
 # labels: panel
 #
+# example: v-update-sys-rrd-net
+#
 # The function is for updating network usage rrd database and graphic.
 
 

@@ -3,7 +3,9 @@
 # options: [RESTART] [SKIP]
 # labels: web
 #
-# The function for obtaining updated pack of web templates.
+# example: v-update-web-templates
+#
+# The function for obtaining updated web (Nginx/Apache2/PHP) templates from Hestia package.
 
 
 #----------------------------------------------------------#

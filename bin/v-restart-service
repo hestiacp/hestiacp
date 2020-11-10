@@ -3,6 +3,8 @@
 # options: SERVICE [RESTART]
 # labels: panel
 #
+# example: v-restart-service apache2
+#
 # The function restarts system service.
 
 

@@ -3,6 +3,8 @@
 # options: USER
 # labels: hestia
 #
+# example: v-add-user-composer user
+#
 # The function adds support for composer (php dependency manager)
 # Homepage: https://getcomposer.org/
 

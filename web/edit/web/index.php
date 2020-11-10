@@ -74,13 +74,23 @@ $v_stats = $data[$v_domain]['STATS'];
 $v_stats_user = $data[$v_domain]['STATS_USER'];
 if (!empty($v_stats_user)) $v_stats_password = "";
 $v_custom_doc_root_prepath = '/home/'.$v_username.'/web/';
-$v_custom_doc_root = $data[$v_domain]['CUSTOM_DOCROOT'];
 
-$m = preg_match('/\/home\/'.$v_username.'\/web\/([[:alnum:]].*)\/public_html\/([[:alnum:]].*)/', $v_custom_doc_root, $matches);
-$v_custom_doc_domain = $matches[1];
-$v_custom_doc_folder = $matches[2];
-if(substr($v_custom_doc_folder, -1) == '/'){
-    $v_custom_doc_folder = substr($v_custom_doc_folder,0,-1);
+if(!empty($data[$v_domain]['CUSTOM_DOCROOT']))
+    $v_custom_doc_root = realpath($data[$v_domain]['CUSTOM_DOCROOT']) . DIRECTORY_SEPARATOR;
+
+if(!empty($v_custom_doc_root) &&
+    false !== preg_match('/\/home\/'.$v_username.'\/web\/([[:alnum:]].*)\/public_html\/([[:alnum:]].*)?/', $v_custom_doc_root, $matches) ) {
+
+    if(!empty($matches[1]))
+        $v_custom_doc_domain = $matches[1];
+
+    if(!empty($matches[2]))
+        $v_custom_doc_folder = rtrim($matches[2], '/');
+
+    if($v_custom_doc_domain && !in_array($v_custom_doc_domain, $user_domains)) {
+        $v_custom_doc_domain = '';
+        $v_custom_doc_folder = '';
+    }
 }
 
 
@@ -767,11 +777,7 @@ if (!empty($_POST['save'])) {
             check_return_code($return_var,$output);
             unset($output);     
         }else{
-            if(substr($_POST['v-custom-doc-folder'], -1) == '/'){
-                $v_custom_doc_folder = escapeshellarg(substr($_POST['v-custom-doc-folder'],0,-1));
-            }else{
-                $v_custom_doc_folder = escapeshellarg($_POST['v-custom-doc-folder']);  
-            }
+            $v_custom_doc_folder = escapeshellarg(rtrim($_POST['v-custom-doc-folder'],'/'));
             $v_custom_doc_domain = escapeshellarg($_POST['v-custom-doc-domain']);
             
             exec(HESTIA_CMD."v-change-web-domain-docroot ".$v_username." ".escapeshellarg($v_domain)." ".$v_custom_doc_domain." ".$v_custom_doc_folder ." yes",  $output, $return_var);
@@ -807,6 +813,8 @@ if (!empty($_POST['save'])) {
     // Set success message
     if (empty($_SESSION['error_msg'])) {
         $_SESSION['ok_msg'] = _('Changes has been saved.');
+        header("Location: /edit/web/?domain=" . $v_domain);
+        exit();
     }
 
 }

@@ -1,7 +1,9 @@
 #!/bin/bash
 # info: update user notification
 # options: USER NOTIFICATION
-# labels: 
+# labels: panel
+#
+# example: v-acknowledge-user-notification
 #
 # The function updates user notification.
 

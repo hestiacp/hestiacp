@@ -1,11 +1,12 @@
 #!/bin/bash
-# info: add ssh key
-# options: USER KEY
-# labels: hestia
+# info: Adding force SSL for a domain
+# options: USER DOMAIN [SSL] 
+# labels: hestia web
 #
-# example: v-delete-user-ssh-key user unique_id
+# example: v-add-web-domain-ssl-preset
 #
-# Delete user ssh key from authorized_keys
+# Up on creating an web domain set the SSL Force values due to the delay of LE due to DNS propergation over DNS cluster
+# When LE has been activated it will set the actions
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -13,31 +14,23 @@
 
 # Argument definition
 user=$1
-keyid=$2
+domain=$2
+ssl=$3
 
 # Includes
 source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
 
-# Additional argument formatting
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER KEYID'
-is_format_valid 'user'
+check_args '2' "$#" 'USER DOMAIN [SSL]'
+is_format_valid 'user' 'domain' 'ssl'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-
-source $USER_DATA/user.conf
-
-AUTHKEY_FILE="$HOMEDIR/$user/.ssh/authorized_keys"
-[ -z "$(readlink -f "$AUTHKEY_FILE" | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result $E_FORBIDEN "Invalid authorized keys path"
-
-if [ ! -f "$AUTHKEY_FILE" ]; then
-    exit
-fi
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -46,14 +39,20 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-sed -i "/${keyid}/d" "$AUTHKEY_FILE"
+# Load domain data
+parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 
-#----------------------------------------------------------#
-#                       Hestia                             #
-#----------------------------------------------------------#
+if [  "$ssl" = "yes" ]; then
+    if [ -z "$SSL_FORCE" ]; then
+    add_object_key "web" 'DOMAIN' "$domain" 'SSL_FORCE' 'SSL_HOME'
+    fi
+
+    # Set forcessl flag to enabled
+    update_object_value 'web' 'DOMAIN' "$domain" '$SSL_FORCE' 'yes'
+fi
 
 # Logging
-log_history "Deleted ssh-key $user"
+log_history "Set values SSL FORCE / HSTS for $domain"
 log_event "$OK" "$ARGUMENTS"
 
 exit

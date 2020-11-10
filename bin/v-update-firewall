@@ -3,6 +3,8 @@
 # options: NONE
 # labels: panel
 #
+# example: v-update-firewall
+#
 # The function updates iptables rules
 
 

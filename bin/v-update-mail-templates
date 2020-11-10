@@ -3,7 +3,9 @@
 # options: [RESTART] [SKIP]
 # labels: hestia
 #
-# The function for obtaining updated pack of mail templates.
+# example: v-update-mail-templates
+#
+# The function for obtaining updated webmail templates from Hestia package.
 
 
 #----------------------------------------------------------#

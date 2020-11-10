@@ -3,7 +3,10 @@
 # options: NONE
 # labels: 
 #
+# example: v-add-sys-quota
+#
 # The script enables filesystem quota on /home partition
+# Some kernels do require additional packages to be installed first
 
 
 #----------------------------------------------------------#

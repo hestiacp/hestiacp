@@ -3,6 +3,8 @@
 # options: NONE
 # labels: dns
 #
+# example: v-restart-dns
+#
 # The function tells BIND service to reload dns zone files.
 
 

@@ -3,10 +3,10 @@
 # options: PACKAGE
 # labels: panel
 #
-# example: v-update-sys-hestia exim4
+# example: v-update-sys-hestia hestia-php
 #
-# The function runs as rpm update trigger. It pulls shell script from hestia
-# server and runs it.
+# The function runs as apt update trigger. It pulls shell script from hestia
+# server and runs it. (hestia, hestia-nginx and hestia-php are valid options)
 
 
 #----------------------------------------------------------#

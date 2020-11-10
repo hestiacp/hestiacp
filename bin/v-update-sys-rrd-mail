@@ -3,6 +3,8 @@
 # options: PERIOD
 # labels: panel
 #
+# example: v-update-sys-rrd-mail
+#
 # The function is for updating mail rrd database and graphic.
 
 

@@ -48,8 +48,6 @@ hestia_module_php-fpm_add() {
 
     echo "Adding PHP (FPM) version ${php_version}..."
 
-    mkdir -p /var/run/php
-
     local php_prefix=$(osal_php_package_prefix $php_version)
 
     # Install php packages

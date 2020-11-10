@@ -32,6 +32,7 @@ fi
 
 # Includes
 source $HESTIA/func/main.sh
+source $HESTIA/func/firewall.sh
 source $HESTIA/conf/hestia.conf
 
 
@@ -49,6 +50,9 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+# Self heal iptables links
+heal_iptables_links
 
 # Checking known chains
 case $chain in

@@ -1,0 +1,9 @@
+passdb {
+  driver = passwd-file
+  args = scheme=MD5-CRYPT username_format=%n /etc/exim/domains/%d/passwd
+}
+
+userdb {
+  driver = passwd-file
+  args = username_format=%n /etc/exim/domains/%d/passwd
+}

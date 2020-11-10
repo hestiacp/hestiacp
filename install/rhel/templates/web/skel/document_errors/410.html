@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Resource is Gone</title>
+<style type="text/css">
+    body {
+        background-color: #f5f5f5;
+        margin-top: 8%;
+        color: #5d5d5d;
+        font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+        text-shadow: 0px 1px 1px rgba(255,255,255,0.75);
+        text-align: center !important;
+    }
+
+    h1 {
+        font-size: 2.45em;
+        font-weight: 700;
+        color: #5d5d5d;
+        letter-spacing: -0.02em;
+        margin-bottom: 30px;
+        margin-top: 30px;
+    }
+
+    .container {
+        width: 100%;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .animated {
+        -webkit-animation-duration: 1s;
+        animation-duration: 1s;
+        -webkit-animation-fill-mode: both;
+        animation-fill-mode: both;
+    }
+
+    .fadeIn {
+        -webkit-animation-name: fadeIn;
+        animation-name: fadeIn;
+    }
+
+    .info {
+        color:#5594cf;
+        fill:#5594cf;
+    }
+
+    .error {
+        color:#c92127;
+        fill:#c92127;
+    }
+
+    .warning {
+        color:#ffcc33;
+        fill:#ffcc33;
+    }
+
+    .success {
+        color:#5aba47;
+        fill:#5aba47;
+    }
+
+    .icon-large {
+        height: 132px;
+        width: 132px;
+    }
+
+    .description-text {
+        color: #707070;
+        letter-spacing: -0.01em;
+        font-size: 1.25em;
+        line-height: 20px;
+    }
+
+    .footer {
+        margin-top: 40px;
+        font-size: 0.7em;
+    }
+
+    .delay-1s {
+        -webkit-animation-delay: 1s;
+        animation-delay: 1s;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+
+</style>
+</head>
+<body>
+<div class="container text-center">
+    <div class="row">
+        <div class="col">
+            <div class="animated fadeIn">
+                <svg class="info icon-large fa-sign-out-alt" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                    <path d="M272 112v51.6h-96c-26.5 0-48 21.5-48 48v88.6c0 26.5 21.5 48 48 48h96v51.6c0 42.6 51.7 64.2 81.9 33.9l144-143.9c18.7-18.7 18.7-49.1 0-67.9l-144-144C323.8 48 272 69.3 272 112zm192 144L320 400v-99.7H176v-88.6h144V112l144 144zM96 64h84c6.6 0 12 5.4 12 12v24c0 6.6-5.4 12-12 12H96c-26.5 0-48 21.5-48 48v192c0 26.5 21.5 48 48 48h84c6.6 0 12 5.4 12 12v24c0 6.6-5.4 12-12 12H96c-53 0-96-43-96-96V160c0-53 43-96 96-96z"></path>
+                </svg>
+            </div>
+            <h1 class="animated fadeIn">Resource is Gone</h1>
+            <div class="description-text animated fadeIn delay-1s">
+                <p>Oops! The requested resource is no longer available.</p>
+                <p>Please check the address and try again.</p>
+                <section class="footer"><strong>Error Code:</strong> 410</section>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

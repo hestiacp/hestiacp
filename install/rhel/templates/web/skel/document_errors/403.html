@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Access Denied</title>
+<style type="text/css">
+    body {
+        background-color: #f5f5f5;
+        margin-top: 8%;
+        color: #5d5d5d;
+        font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+        text-shadow: 0px 1px 1px rgba(255,255,255,0.75);
+        text-align: center !important;
+    }
+
+    h1 {
+        font-size: 2.45em;
+        font-weight: 700;
+        color: #5d5d5d;
+        letter-spacing: -0.02em;
+        margin-bottom: 30px;
+        margin-top: 30px;
+    }
+
+    .container {
+        width: 100%;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .animated {
+        -webkit-animation-duration: 1s;
+        animation-duration: 1s;
+        -webkit-animation-fill-mode: both;
+        animation-fill-mode: both;
+    }
+
+    .fadeIn {
+        -webkit-animation-name: fadeIn;
+        animation-name: fadeIn;
+    }
+
+    .info {
+        color:#5594cf;
+        fill:#5594cf;
+    }
+
+    .error {
+        color:#c92127;
+        fill:#c92127;
+    }
+
+    .warning {
+        color:#ffcc33;
+        fill:#ffcc33;
+    }
+
+    .success {
+        color:#5aba47;
+        fill:#5aba47;
+    }
+
+    .icon-large {
+        height: 132px;
+        width: 132px;
+    }
+
+    .description-text {
+        color: #707070;
+        letter-spacing: -0.01em;
+        font-size: 1.25em;
+        line-height: 20px;
+    }
+
+    .footer {
+        margin-top: 40px;
+        font-size: 0.7em;
+    }
+
+    .delay-1s {
+        -webkit-animation-delay: 1s;
+        animation-delay: 1s;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+
+</style>
+</head>
+<body>
+<div class="container text-center">
+    <div class="row">
+        <div class="col">
+            <div class="animated fadeIn">
+                <svg class="error icon-large fa-times-circle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                    <path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"></path>
+                </svg>
+            </div>
+            <h1 class="animated fadeIn">Access Denied</h1>
+            <div class="description-text animated fadeIn delay-1s">
+                <p>You do not have permission to view this page.</p>
+                <p>Please check your credentials and try again.</p>
+                <section class="footer"><strong>Error Code:</strong> 403</section>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

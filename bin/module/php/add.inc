@@ -59,7 +59,13 @@ hestia_module_php_add() {
         $php_prefix-gd $php_prefix-intl $php_prefix-mysql
         $php_prefix-soap $php_prefix-xml $php_prefix-zip $php_prefix-mbstring
         $php_prefix-json $php_prefix-bz2 $php_prefix-pspell $php_prefix-imagick $php_prefix-pgsql
-        $php_prefix-imap $php_prefix-ldap"
+        $php_prefix-imap $php_prefix-ldap $php_prefix-opcache"
+
+    if [ "$OS_BASE" = 'rhel' ]; then
+        mph="$mph $php_prefix-apcu"
+    else
+        mph="$mph php-apcu"
+    fi
 
     # Check is version is 7.1 or below to add mcrypt
     if [[ `echo "$php_version 7.2" | awk '{print ($1 < $2)}'` == 1 ]]; then

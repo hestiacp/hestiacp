@@ -70,7 +70,11 @@ unset($output);
 
 // List languages
 exec (HESTIA_CMD."v-list-sys-languages json", $output, $return_var);
-$languages = json_decode(implode('', $output), true);
+$language = json_decode(implode('', $output), true);
+foreach($language as $lang){
+    $languages[$lang] = translate_json($lang);
+}
+asort($languages);
 unset($output);
 
 // List shells

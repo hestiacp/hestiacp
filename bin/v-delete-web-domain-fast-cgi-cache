@@ -57,7 +57,7 @@ add_object_key "web" 'DOMAIN' "$domain" 'FASTCGI_CACHE' 'ALIAS'
 fi
 
 # Set FASTCGI flag to disabled
-update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_CACHE' 'no'
+update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_CACHE' ''
 
 # Restart services if requested
 if [ ! -z "$restart" ]; then

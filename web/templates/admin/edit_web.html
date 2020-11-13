@@ -170,6 +170,26 @@
                                     </select>
                                 </td>
                             </tr>
+                            <?php if($_SESSION['WEB_SYSTEM'] == 'nginx'){?>
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print _('Enable Fast CGI Cache'); ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_nginx_cache">
+                                        <option value="no"><?php echo _('No');?></option>
+                                        <option value="yes" <?php if ( $v_nginx_cache == "yes") { echo 'selected'; }?>><?php echo _('Yes');?></option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <?php } ?>
+                            <tr style="display:<?php if (empty($v_nginx_cache) || $v_template == 'cacheing') { echo 'none';} else {echo 'block';}?>">
+                                  <td class="input-label vst-text step-left">
+                                      <label><input type="checkbox" size="20" class="vst-checkbox" name="v_clear_cache" id="clear_cache" value="yes"> <?php print _('Clear Nginx Cache');?></label>
+                                  </td>
+                             </tr>                           
                             <?php if (!empty($_SESSION['WEB_BACKEND'])) { ?>
                             <tr>
                                 <td class="vst-text input-label">
@@ -196,26 +216,6 @@
                                 </td>
                             </tr>
                             <?php }?>
-                            <?php if($_SESSION['WEB_SYSTEM'] == 'nginx'){?>
-                            <tr>
-                                <td class="vst-text input-label">
-                                    <?php print _('Enable Fast CGI Cache'); ?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <select class="vst-list" name="v_nginx_cache">
-                                        <option value="no"><?php echo _('No');?></option>
-                                        <option value="yes" <?php if ( $v_nginx_cache == "yes") { echo 'selected'; }?>><?php echo _('Yes');?></option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                  <td class="input-label vst-text">
-                                      <label><input type="checkbox" size="20" class="vst-checkbox" name="v_clear_cache" id="clear_cache" value="yes"> <?php print _('Clear Nginx Cache');?></label>
-                                  </td>
-                              </tr>
-                            <?php } ?>
                             <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { ?>
                             <tr>
                                 <td class="vst-text step-top">

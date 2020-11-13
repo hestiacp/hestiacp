@@ -1,10 +1,10 @@
 <?php
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
 
-if (isset($_POST['user']) || isset($_POST['hash'])) {
+if (isset($_POST['user']) || isset($_POST['apikey'])) {
 
     // Authentication
-    if (empty($_POST['hash'])) {
+    if (empty($_POST['apikey'])) {
         if ($_POST['user'] != 'admin') {
             echo 'Error: authentication failed';
             exit;
@@ -48,7 +48,7 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
             exit;
         }
     } else {
-        $key = '/usr/local/hestia/data/keys/' . basename($_POST['hash']);
+        $key = '/usr/local/hestia/data/keys/' . basename($_POST['apikey']);
         if (file_exists($key) && is_file($key)) {
             exec(HESTIA_CMD ."v-check-api-key ".escapeshellarg($key)." ".$v_ip,  $output, $return_var);
             unset($output);

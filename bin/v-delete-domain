@@ -71,7 +71,7 @@ fi
 
 # Checking domain search result
 if [ -z "$domain_found" ]; then
-    check_result $E_NOTEXISTS "domain $domain doesn't exist"
+    check_result $E_NOTEXIST "domain $domain doesn't exist"
 fi
 
 # Restarting services

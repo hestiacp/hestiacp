@@ -196,12 +196,12 @@
                                 </td>
                             </tr>
                             <?php }?>
+                            <?php if($_SESSION['WEB_SYSTEM'] == 'nginx'){?>
                             <tr>
                                 <td class="vst-text input-label">
                                     <?php print _('Enable Fast CGI Cache'); ?>
                                 </td>
                             </tr>
-                            <?php if($_SESSION['WEB_SYSTEM'] == 'nginx'){?>
                             <tr>
                                 <td>
                                     <select class="vst-list" name="v_nginx_cache">
@@ -210,6 +210,11 @@
                                     </select>
                                 </td>
                             </tr>
+                            <tr>
+                                  <td class="input-label vst-text">
+                                      <label><input type="checkbox" size="20" class="vst-checkbox" name="v_clear_cache" id="clear_cache" value="yes"> <?php print _('Clear Nginx Cache');?></label>
+                                  </td>
+                              </tr>
                             <?php } ?>
                             <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { ?>
                             <tr>

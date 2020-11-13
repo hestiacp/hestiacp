@@ -180,7 +180,7 @@ NGINX='https://nginx.org/download/nginx-'$(echo $NGINX_V |cut -d"~" -f1)'.tar.gz
 OPENSSL='https://www.openssl.org/source/openssl-'$OPENSSL_V'.tar.gz'
 PCRE='https://ftp.pcre.org/pub/pcre/pcre-'$PCRE_V'.tar.gz'
 ZLIB='https://www.zlib.net/zlib-'$ZLIB_V'.tar.gz'
-PHP='http://de2.php.net/distributions/php-'$(echo $PHP_V |cut -d"-" -f1)'.tar.gz'
+PHP='http://de2.php.net/distributions/php-'$(echo $PHP_V |cut -d"~" -f1)'.tar.gz'
 
 # Forward slashes in branchname are replaced with dashes to match foldername in github archive.
 branch=$(echo "$branch" |sed 's/\//-/g');
@@ -330,7 +330,7 @@ if [ "$PHP_B" = true ] ; then
     download_file $PHP '-' | tar xz
 
     # Change to php directory
-    cd php-$(echo $PHP_V |cut -d"-" -f1)
+    cd php-$(echo $PHP_V |cut -d"~" -f1)
 
     # Configure PHP
     ./configure   --prefix=/usr/local/hestia/php \
@@ -355,7 +355,7 @@ if [ "$PHP_B" = true ] ; then
 
     # Cleare up unused files
     cd $BUILD_DIR
-    rm -r php-$(echo $PHP_V |cut -d"-" -f1)
+    rm -r php-$(echo $PHP_V |cut -d"~" -f1)
 
     # Prepare Deb Package Folder Structure
     cd hestia-php_$PHP_V/

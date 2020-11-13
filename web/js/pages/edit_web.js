@@ -246,13 +246,13 @@ $(function() {
         }
     });  
     
-    $('select[name="v_template"]').change(function(evt){
+    $('select[name="v_proxy_template"]').change(function(evt){
         var select = $(evt.target);
 
-        if(select.val() != 'yes'){
-            $('#v-clear-cache').hide();
+        if(select.val() != 'caching'){
+            $('#v-clear-cache-proxy').hide();
         } else {
-            $('#v-clear-cache').show();
+            $('#v-clear-cache-proxy').show();
         }
     });  
 

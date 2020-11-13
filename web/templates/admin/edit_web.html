@@ -184,12 +184,12 @@
                                     </select>
                                 </td>
                             </tr>
-                            <?php } ?>
-                            <tr id="v-clear-cache" style="display:<?php if (empty($v_nginx_cache) || $v_template == 'cacheing') { echo 'none';} else {echo 'block';}?>">
+                            <tr id="v-clear-cache" style="display:<?php if (empty($v_nginx_cache)) { echo 'none';} else {echo 'block';}?>">
                                   <td class="input-label vst-text step-left">
                                       <label><input type="checkbox" size="20" class="vst-checkbox" name="v_clear_cache" id="clear_cache" value="yes"> <?php print _('Clear Nginx Cache');?></label>
                                   </td>
-                             </tr>                           
+                             </tr> 
+                             <?php } ?>                          
                             <?php if (!empty($_SESSION['WEB_BACKEND'])) { ?>
                             <tr>
                                 <td class="vst-text input-label">
@@ -259,6 +259,12 @@
                                                 <textarea size="20" class="vst-textinput short" name="v_proxy_ext"><?php if (!empty($v_proxy_ext)) { echo htmlentities(trim($v_proxy_ext, "'"));} else { echo 'jpg, jpeg, gif, png, ico, svg, css, zip, tgz, gz, rar, bz2, exe, pdf, doc, xls, ppt, txt, odt, ods, odp, odf, tar, bmp, rtf, js, mp3, avi, mpeg, flv, html, htm'; }  ?></textarea>
                                             </td>
                                         </tr>
+                                        <tr  id="v-clear-cache-proxy" style="display:<?php if ($v_proxy_template != 'caching') { echo 'none';} else {echo 'block';}?>">
+                                              <td class="input-label vst-text">
+                                                  <label><input type="checkbox" size="20" class="vst-checkbox" name="v_clear_cache_proxy" id="clear_cache_proxy" value="yes"> <?php print _('Clear Nginx Cache');?></label>
+                                              </td>
+                                         </tr> 
+            
                                     </table>
                                 </td>
                             </tr>

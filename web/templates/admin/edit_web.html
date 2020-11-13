@@ -196,6 +196,21 @@
                                 </td>
                             </tr>
                             <?php }?>
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print _('Enable Fast CGI Cache'); ?>
+                                </td>
+                            </tr>
+                            <?php if($_SESSION['WEB_SYSTEM'] == 'nginx'){?>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_nginx_cache">
+                                        <option value="no"><?php echo _('No');?></option>
+                                        <option value="yes" <?php if ( $v_nginx_cache == "yes") { echo 'selected'; }?>><?php echo _('Yes');?></option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <?php } ?>
                             <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { ?>
                             <tr>
                                 <td class="vst-text step-top">

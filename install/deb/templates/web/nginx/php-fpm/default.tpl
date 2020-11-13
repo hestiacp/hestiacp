@@ -29,7 +29,7 @@ server {
 
             fastcgi_pass    %backend_lsnr%;
             fastcgi_index   index.php;
-            include         /etc/nginx/fastcgi_params;
+            include         /etc/nginx/fastcgi_params;      
         }
     }
 

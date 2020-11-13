@@ -67,6 +67,7 @@ $v_letsencrypt = $data[$v_domain]['LETSENCRYPT'];
 if (empty($v_letsencrypt)) $v_letsencrypt = 'no';
 $v_ssl_home = $data[$v_domain]['SSL_HOME'];
 $v_backend_template = $data[$v_domain]['BACKEND'];
+$v_nginx_cache = $data[$v_domain]['FASTCGI_CACHE'];
 $v_proxy = $data[$v_domain]['PROXY'];
 $v_proxy_template = $data[$v_domain]['PROXY'];
 $v_proxy_ext = str_replace(',', ', ', $data[$v_domain]['PROXY_EXT']);
@@ -288,6 +289,13 @@ if (!empty($_POST['save'])) {
         unset($output);
     }
 
+    if (($_SESSION['WEB_SYSTEM'] == 'NGINX') && ($v_nginx_cache != $_POST['v_nginx_cache'] ) && (empty($_SESSION['error_msg']))) {
+        if ( $_POST['v_nginx_cache'] == 'yes' ) {
+            
+        } else {
+            
+        }
+    }
     // Delete proxy support
     if ((!empty($_SESSION['PROXY_SYSTEM'])) && (!empty($v_proxy)) && (empty($_POST['v_proxy'])) && (empty($_SESSION['error_msg']))) {
         exec (HESTIA_CMD."v-delete-web-domain-proxy ".$v_username." ".escapeshellarg($v_domain)." 'no'", $output, $return_var);

@@ -128,4 +128,5 @@ if (isset($_POST['user']) || isset($_POST['apikey'])) {
     }
 } else {
     echo "Error: data received is null or invalid, check https://docs.hestiacp.com/admin_docs/rest_api.html"
+    exit;
 }

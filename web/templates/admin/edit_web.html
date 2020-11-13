@@ -185,7 +185,7 @@
                                 </td>
                             </tr>
                             <?php } ?>
-                            <tr style="display:<?php if (empty($v_nginx_cache) || $v_template == 'cacheing') { echo 'none';} else {echo 'block';}?>">
+                            <tr id="v-clear-cache" style="display:<?php if (empty($v_nginx_cache) || $v_template == 'cacheing') { echo 'none';} else {echo 'block';}?>">
                                   <td class="input-label vst-text step-left">
                                       <label><input type="checkbox" size="20" class="vst-checkbox" name="v_clear_cache" id="clear_cache" value="yes"> <?php print _('Clear Nginx Cache');?></label>
                                   </td>

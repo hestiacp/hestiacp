@@ -302,8 +302,8 @@ if (!empty($_POST['save'])) {
         }
     }
     //Clear cache
-    if (( $_POST['v_clear_cache'] == 'yes') && (empty($_SESSION['error_msg']))){
-        exec (HESTIA_CMD."v-delete-web-domain-fast-cgi-cache ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
+    if (( $_POST['v_clear_cache'] == 'yes' || $_POST['v_clear_cache_proxy'] == 'yes') && (empty($_SESSION['error_msg']))){
+        exec (HESTIA_CMD."v-delete-web-domain-nginx-cache ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);        
     }

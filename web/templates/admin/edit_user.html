@@ -163,12 +163,12 @@
                                     <select class="vst-list" name="v_language">
                                         <?php
                                             foreach ($languages as $key => $value) {
-                                                echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".$value."\"";
-                                                $svalue = "'".$value."'";
-                                                if (( $value == $v_language ) || ( $svalue == $v_language)){
+                                                echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".$key."\"";
+                                                $skey = "'".$key."'";
+                                                if (( $key == $v_language ) || ( $skey == $v_language)){
                                                     echo 'selected' ;
                                                 }
-                                                if (( $value == detect_user_language() ) && (empty($v_language))){
+                                                if (( $key == detect_user_language() ) && (empty($v_language))){
                                                     echo 'selected' ;
                                                 }
                                                 echo ">".htmlentities($value)."</option>\n";

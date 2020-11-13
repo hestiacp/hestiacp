@@ -11,6 +11,10 @@ if (isset($_POST['user']) || isset($_POST['apikey'])) {
         }
 
         $password = $_POST['password'];
+        if (!isset($password)){
+            echo 'Error: missing authentication';
+            exit;
+        })
         $v_ip = escapeshellarg($_SERVER['REMOTE_ADDR']);
         $output = '';
         exec (HESTIA_CMD."v-get-user-salt admin ".$v_ip." json" , $output, $return_var);

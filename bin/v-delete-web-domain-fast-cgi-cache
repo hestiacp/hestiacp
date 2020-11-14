@@ -43,9 +43,14 @@ check_hestia_demo_mode
 # Load domain data
 parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 
-# Remove forcessl configs
+# Remove fast cgi configs
 if [ -f $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.fastcgi_cache.conf ]; then
     rm -f $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.fastcgi_cache.conf
+fi
+
+# Delete cache folder on disabling
+if [ -d /var/cache/nginx/php-fpm/$domain ]; then
+    rm -f /var/cache/nginx/php-fpm/$domain
 fi
 
 #----------------------------------------------------------#
@@ -53,7 +58,7 @@ fi
 #----------------------------------------------------------#
 
 if [ -z "$FASTCGI_CACHE" ]; then
-add_object_key "web" 'DOMAIN' "$domain" 'FASTCGI_CACHE' 'ALIAS'
+    add_object_key "web" 'DOMAIN' "$domain" 'FASTCGI_CACHE' 'ALIAS'
 fi
 
 # Set FASTCGI flag to disabled

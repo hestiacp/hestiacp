@@ -44,11 +44,11 @@ parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 
 # Empty Fast CGI Cache 
 if [ -d /var/cache/nginx/php-fpm/$domain ]; then
-    rm -f /var/cache/nginx/php-fpm/$domain/*
+    rm -fr /var/cache/nginx/php-fpm/$domain/*
 fi
 # Empty Proxy Cache
 if [ -d /var/cache/nginx/$domain ]; then
-    rm -f /var/cache/nginx/$domain/*
+    rm -fr /var/cache/nginx/$domain/*
 fi
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -301,13 +301,7 @@ if (!empty($_POST['save'])) {
             unset($output); 
         }
     }
-    //Clear cache
-    if (( $_POST['v_clear_cache'] == 'yes' || $_POST['v_clear_cache_proxy'] == 'yes') && (empty($_SESSION['error_msg']))){
-        exec (HESTIA_CMD."v-delete-web-domain-nginx-cache ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
-        check_return_code($return_var,$output);
-        unset($output);        
-    }
-    
+
     // Delete proxy support
     if ((!empty($_SESSION['PROXY_SYSTEM'])) && (!empty($v_proxy)) && (empty($_POST['v_proxy'])) && (empty($_SESSION['error_msg']))) {
         exec (HESTIA_CMD."v-delete-web-domain-proxy ".$v_username." ".escapeshellarg($v_domain)." 'no'", $output, $return_var);

@@ -4,6 +4,8 @@
             <a class="ui-button cancel" id="btn-back" href="/list/web/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
         </div>
         <div class="l-unit-toolbar__buttonstrip float-right">
+            <a href="/delete/web/cache/?domain=<?=$_GET['domain'];?>&token=<?=$_SESSION['token'];?>" class="ui-button cancel <?php if ( $v_nginx_cache == 'yes' || $v_proxy_template == 'caching'){ echo "block"; } else{ echo "hidden"; }?>" id="v-clear-cache"><i class="fas fa-trash status-icon red"></i><?=_('Purge Nginx Cache');?></a>
+
             <a href="/add/webapp/?domain=<?=$v_domain?>" class="ui-button cancel">
                 <i class="fas fa-magic status-icon blue"></i> <?=_('Quick Install App')?>
             </a>
@@ -184,11 +186,6 @@
                                     </select>
                                 </td>
                             </tr>
-                            <tr id="v-clear-cache" style="display:<?php if (empty($v_nginx_cache)) { echo 'none';} else {echo 'block';}?>">
-                                  <td class="input-label vst-text step-left">
-                                      <label><input type="checkbox" size="20" class="vst-checkbox" name="v_clear_cache" id="clear_cache" value="yes"> <?php print _('Clear Nginx Cache');?></label>
-                                  </td>
-                             </tr> 
                              <?php } ?>                          
                             <?php if (!empty($_SESSION['WEB_BACKEND'])) { ?>
                             <tr>
@@ -259,12 +256,6 @@
                                                 <textarea size="20" class="vst-textinput short" name="v_proxy_ext"><?php if (!empty($v_proxy_ext)) { echo htmlentities(trim($v_proxy_ext, "'"));} else { echo 'jpg, jpeg, gif, png, ico, svg, css, zip, tgz, gz, rar, bz2, exe, pdf, doc, xls, ppt, txt, odt, ods, odp, odf, tar, bmp, rtf, js, mp3, avi, mpeg, flv, html, htm'; }  ?></textarea>
                                             </td>
                                         </tr>
-                                        <tr  id="v-clear-cache-proxy" style="display:<?php if ($v_proxy_template != 'caching') { echo 'none';} else {echo 'block';}?>">
-                                              <td class="input-label vst-text">
-                                                  <label><input type="checkbox" size="20" class="vst-checkbox" name="v_clear_cache_proxy" id="clear_cache_proxy" value="yes"> <?php print _('Clear Nginx Cache');?></label>
-                                              </td>
-                                         </tr> 
-            
                                     </table>
                                 </td>
                             </tr>

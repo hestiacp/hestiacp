@@ -250,9 +250,9 @@ $(function() {
         var select = $(evt.target);
 
         if(select.val() != 'caching'){
-            $('#v-clear-cache-proxy').hide();
+            $('#v-clear-cache').hide();
         } else {
-            $('#v-clear-cache-proxy').show();
+            $('#v-clear-cache').show();
         }
     });  
 

@@ -65,7 +65,8 @@ server {
             fastcgi_index   index.php;
             fastcgi_param SCRIPT_FILENAME $request_filename;
             fastcgi_intercept_errors on;
-            include         /etc/nginx/fastcgi_params;
+            include /etc/nginx/fastcgi_params;
+            include     %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf;
         }
     }
 

@@ -63,13 +63,9 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
                 exit;
             }
         } else {
-            $return_var = 1;
+            echo 'Error: authentication failed';
+            exit;
         }
-    }
-
-    if ( $return_var > 0 ) {
-        echo 'Error: authentication failed';
-        exit;
     }
 
     // Prepare arguments
@@ -127,6 +123,6 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
         }
     }
 } else {
-    echo "Error: data received is null or invalid, check https://docs.hestiacp.com/admin_docs/rest_api.html"
+    echo "Error: data received is null or invalid, check https://docs.hestiacp.com/admin_docs/rest_api.html";
     exit;
 }

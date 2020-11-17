@@ -1,8 +1,8 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a href="/schedule/backup/?token=<?=$_SESSION['token']?>" class="ui-button cancel" title="<?=_('Create Backup')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Create Backup')?></a>
-          <a href="/list/backup/exclusions/" class="ui-button cancel" title="<?=_('backup exclusions')?>"><i class="fas fa-folder-minus status-icon orange"></i> <?=_('backup exclusions')?></a>
+          <a href="/schedule/backup/?token=<?=$_SESSION['token']?>" class="ui-button cancel"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Create Backup')?></a>
+          <a href="/list/backup/exclusions/" class="ui-button cancel"><i class="fas fa-folder-minus status-icon orange"></i> <?=_('backup exclusions')?></a>
         </div>
         <div class="l-sort-toolbar clearfix">
           <table>
@@ -74,7 +74,7 @@
                   <div class="clearfix l-unit__stat-col--left super-compact">
                     <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="backup[]" value="<?php echo $key ?>">
                   </div>
-                  <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/list/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('restore')?>"><?=$key?></a></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide-3 truncate"><b><a href="/list/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('restore')?>"><?=$key?></a></b></div>
                   <!-- START QUICK ACTION TOOLBAR AREA -->
                   <div class="clearfix l-unit__stat-col--left compact-4 text-right">
                     <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
@@ -112,11 +112,7 @@
           <table class='data'></table>
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php
-              if ( $i == 1) {
-                echo _('1 backup');
-              } else {
-                echo _('%s backups',$i);
-              }
+            printf(ngettext('%d backup', '%d backups', $i),$i);
             ?>
           </div>
         </div>

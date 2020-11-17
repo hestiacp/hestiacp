@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: Schedule a backup
-# options: USER BACKUP 
+# options: USER BACKUP
+# labels: hestia
+#
+# example: v-schedule-user-backup-download admin 2019-04-22_01-00-00.tar
 #
 # The function for scheduling user backup creation.
 

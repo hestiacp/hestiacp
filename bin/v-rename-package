@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change package name
 # options: OLD_NAME NEW_NAME
+# labels: hestia
+#
+# example: v-rename-package package package2
 #
 # The function changes the name of an existing package.
 

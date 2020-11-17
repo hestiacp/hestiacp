@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change hostname
 # options: HOSTNAME
+# labels: panel
+#
+# example: v-change-sys-hostname mydomain.tld
 #
 # The function for changing system hostname.
 

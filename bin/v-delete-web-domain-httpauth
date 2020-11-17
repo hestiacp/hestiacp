@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete http auth user
 # options: USER DOMAIN AUTH_USER [RESTART]
+# labels: web
+#
+# example: v-delete-web-domain-httpauth admin example.com alice
 #
 # The call is used for deleting http auth user
 

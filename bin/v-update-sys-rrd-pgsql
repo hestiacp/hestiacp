@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update PostgreSQL rrd
 # options: PERIOD
+# labels: panel
+#
+# example: v-update-sys-rrd-pgsql
 #
 # The function is for updating postgresql rrd database and graphic.
 

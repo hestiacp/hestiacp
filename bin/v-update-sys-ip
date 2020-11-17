@@ -1,6 +1,10 @@
 #!/bin/bash
 # info: update system ip
-# options: [NONE]
+# options: NONE
+# labels: panel
+#
+# example: v-update-sys-ip
+#          # Intended for internal usage
 #
 # The function scans configured ip in the system and register them with hestia
 # internal database. This call is intended for use on vps servers, where ip is

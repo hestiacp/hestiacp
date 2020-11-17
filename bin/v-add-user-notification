@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: add user notification
 # options: USER TOPIC NOTICE [TYPE]
+# labels: 
 #
 # The function adds user notification.
 

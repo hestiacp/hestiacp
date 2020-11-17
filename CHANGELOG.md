@@ -1,6 +1,38 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.3.1] - Service Release
+### Features
+- No new features have been introduced in this release.
+
+### Bugfixes
+- Fixed an issue where updates for `hestia-php` were incorrectly being marked as out-of-date in the UI due to a change in our servicing and package versioning scheme.
+- Fixed an issue that occured on the Updates page where the table row color of available updates would be difficult to read.
+- Fixed an issue where an administrator would get stuck in a loop trying to navigate back after adding a SSH key.
+- Fixed an issue where long table entries which exceeded the table length would overlap other UI elements.
+- Fixed an issue where the total amount of items on a page would fail to display correctly.
+- Improved the accuracy and reliability of tooltips throughout the the Control Panel UI:
+    - Removed unnecessary tooltips from buttons and other elements.
+    - Fixed incorrect tags which prevented tooltips from being displayed.
+    - Introduced tooltips to counter items on the Users, Packages, and Statistics pages to help better distinguish statistics.
+- Improved the display of items, quotas, and suspended items in the Control Panel navigation header - thanks **@cmstew**!
+- Fixed an issue which caused higher than normal CPU usage during an upgrade due to a duplicate condition in the rebuild process.
+- Fixed minor spelling inconsistencies in command line script comments and output text.
+- Fixed an issue where old configuration files were not cleaned up when moving domains with `v-change-domain-owner`.
+- Fixed an issue where a `no backend template doesn't exist` could potentially would appear after upgrade with older templates (#1322).
+- Introduced caching templates for nginx + php-fpm configurations  - thanks **@cmstew**!
+- Fixed an issue where DNS cluster updates could fail due to the format of a DKIM record in an available zone - thanks **@jrohde**!
+- Improved the quality of comment formatting in command line scripts - thanks **@bisubus**! 
+- Fixed an issue where the logo was not displayed in the File Manager - thanks **@robothemes**!
+- Fixed an issue in the Control Panel UI which caused databases and additional FTP accounts to be named incorrectly if manually prefaced with the username.
+- Fixed an issue where custom document roots were not saved correctly.
+- Improved the visibility of service availability in the Control Panel UI.
+- Fixed an issue which let you unsuspend a cronjob on active demo mode.
+- Updated DE, EN, ES, KO, NL and TR languages, thanks to @Wibol, Blackjack, @emrahkayihan, areo and @hahagu!
+- Fixed an issue which let the auto compiler fail with local src builds.
+- Added turkish language to system installers, thanks to @emrahkayihan!
+- Fixed incorrect error message when using unknown domain with v-delete-domain.
+
 ## [1.3.0] - Major Release (Feature / Quality Update)
 ### Features
 - Users can now choose to point a domain to a different document root location (similar to domain parking).

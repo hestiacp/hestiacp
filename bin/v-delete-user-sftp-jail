@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete user sftp jail
 # options: USER
+# labels: panel
+#
+# example: v-delete-user-sftp-jail whistler
 #
 # The script disables sftp jailed environment for USER
 

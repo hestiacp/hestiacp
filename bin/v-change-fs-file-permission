@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change file permission
 # options: USER FILE PERMISSIONS
+# labels: 
+#
+# example: v-change-fs-file-permission admin readme.txt 0777
 #
 # The function changes file access permissions on the file system
 

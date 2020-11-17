@@ -1,8 +1,11 @@
 #!/bin/bash
 # info: update web templates
-# options: [RESTART]
+# options: [RESTART] [SKIP]
+# labels: web
 #
-# The function for obtaining updated pack of web templates.
+# example: v-update-web-templates
+#
+# The function for obtaining updated web (Nginx/Apache2/PHP) templates from Hestia package.
 
 
 #----------------------------------------------------------#
@@ -11,6 +14,7 @@
 
 # Argument definition
 restart=$1
+skip=$2
 
 # Includes
 source $HESTIA/func/main.sh
@@ -43,10 +47,11 @@ for php_ver in $(ls /etc/php/); do
 done
 
 # Rebuilding web domains
-for user in $($BIN/v-list-sys-users plain); do
-    $BIN/v-rebuild-web-domains $user no
-done
-
+if [ ! -z "$skip" ]; then
+    for user in $($BIN/v-list-sys-users plain); do
+        $BIN/v-rebuild-web-domains $user no
+    done
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #

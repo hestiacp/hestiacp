@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: delete restart job
 # options: NONE
+# labels: 
 #
 # The script for disabling restart cron tasks
 

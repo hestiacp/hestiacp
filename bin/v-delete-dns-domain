@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete dns domain
 # options: USER DOMAIN
+# labels: dns
+#
+# example: v-delete-dns-domain alice acme.com
 #
 # The function for deleting DNS domain. By deleting it all records will also be
 # deleted.

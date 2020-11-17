@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: generate api key
-# options: none
+# options: NONE
+# labels: panel
+#
+# example: v-generate-api-key 
 #
 # The function creates a key file in $HESTIA/data/keys/
 

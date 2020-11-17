@@ -2,7 +2,7 @@
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
           <a class="ui-button cancel" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
-          <a href="/add/firewall/" id="btn-create" class="ui-button cancel" title="<?=_('Add Rule')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Add Rule')?></a>
+          <a href="/add/firewall/" id="btn-create" class="ui-button cancel"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Add Rule')?></a>
           <?php if(!empty($_SESSION['FIREWALL_EXTENSION'])): ?>
             <a class="ui-button cancel" href="/list/firewall/banlist/"><i class="fas fa-eye status-icon red"></i> <?=_('list fail2ban')?></a>
             <a class="ui-button cancel" href="/list/firewall/ipset/"><i class="fas fa-list status-icon blue"></i> <?=_('list ipset')?></a>
@@ -141,11 +141,7 @@ sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$k
           <table class='data'></table>
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php
-              if ( $i == 1) {
-                echo _('1 firewall rule');
-              } else {
-                echo _('%s firewall rules',$i);
-              }
+               printf(ngettext('%d firewall rule', '%d firewall rules', $i),$i);
             ?>
           </div>
       </div>

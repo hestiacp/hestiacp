@@ -1,9 +1,11 @@
 #!/bin/bash
 # info: add ssh key
-# options: USER key
+# options: USER KEY
+# labels: hestia
 #
-# Function check if $user/.ssh/authorized_keys exists and create it
-# After that it append the new key(s)
+# example: v-delete-user-ssh-key user unique_id
+#
+# Delete user ssh key from authorized_keys
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

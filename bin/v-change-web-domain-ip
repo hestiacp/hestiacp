@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change web domain ip
 # options: USER DOMAIN DOMAIN [RESTART]
+# labels: web
+#
+# example: v-change-web-domain-ip admin example.com 167.86.105.230 yes
 #
 # The call is used for changing domain ip
 

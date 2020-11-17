@@ -5,7 +5,7 @@
             <a href="/list/key/" id="btn-create" class="ui-button cancel" title="<?=_('SSH_KEY');?>"><i class="fas fa-key status-icon green"></i><?=_('SSH KEY')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" title="<?=_('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
+            <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
           </div>
         </div>
       </div>
@@ -127,12 +127,11 @@
                                     <select class="vst-list" name="v_language">
                                         <?php
                                             foreach ($languages as $key => $value) {
-                                                echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".$value."\"";
-                                                $svalue = "'".$value."'";
-                                                if (( $value == $v_language ) || ( $svalue == $v_language)){
+                                                echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".$key."\"";
+                                                if ( $key == $v_language ){
                                                     echo 'selected' ;
                                                 }
-                                                if (( $value == detect_user_language() ) && (empty($v_language))){
+                                                if (( $key == detect_user_language() ) && (empty($v_language))){
                                                     echo 'selected' ;
                                                 }
                                                 echo ">".htmlentities($value)."</option>\n";

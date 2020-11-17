@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change user package
 # options: USER PACKAGE [FORCE]
+# labels: panel
+#
+# example: v-change-user-package admin yourpackage
 #
 # The function changes user's hosting package.
 

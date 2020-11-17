@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change user language
 # options: USER LANGUAGE
+# labels: panel
+#
+# example: v-change-user-language admin en
 #
 # The function for changing language.
 

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list web statistics
 # options: [FORMAT]
+# labels: web panel
+#
+# example: v-list-web-stats 
 #
 # The function for obtaining the list of web statistics analyzer.
 

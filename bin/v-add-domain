@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add web/dns/mail domain
 # options: USER DOMAIN [IP] [RESTART]
+# labels: 
+#
+# example: v-add-domain admin example.com
 #
 # The function adds web/dns/mail domain to a server.
 

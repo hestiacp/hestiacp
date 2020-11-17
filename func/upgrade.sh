@@ -114,6 +114,19 @@ upgrade_health_check() {
         echo "[ ! ] File Manager is enabled but not installed, repairing components..."
         $BIN/v-add-sys-filemanager quiet
     fi
+    
+    # Support for ZSTD / GZIP Change
+    if [ -z "$BACKUP_MODE" ]; then
+        echo "[ ! ] Setting zstd backup compression type as default..."
+        $BIN/v-change-sys-config-value "BACKUP_MODE" "zstd"
+    fi
+    
+    # Login style switcher
+    if [ -z "$LOGIN_STYLE" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: LOGIN_STYLE ('default')"
+        $BIN/v-change-sys-config-value "LOGIN_STYLE" "default"
+    fi
+    
     echo "[ * ] Health check complete. Starting upgrade from $VERSION to $new_version..."
     echo "============================================================================="
 }
@@ -193,9 +206,13 @@ upgrade_complete_message() {
     echo
     echo "Web:      https://www.hestiacp.com/                                          "
     echo "Forum:    https://forum.hestiacp.com/                                        "
+    echo "Discord:  https://discord.gg/nXRUZch                                         "
     echo "GitHub:   https://github.com/hestiacp/hestiacp/                              "
     echo "E-mail:   info@hestiacp.com                                                  "
     echo 
+    echo "Help support the Hestia Contol Panel project by donating via PayPal:         "
+    echo "https://www.hestiacp.com/donate                                              "
+    echo
     echo "Made with love & pride by the open-source community around the world.        "
     echo
     echo "============================================================================="
@@ -275,7 +292,7 @@ upgrade_send_notification_to_email () {
 
 upgrade_send_log_to_email() {
     if [ "$UPGRADE_SEND_EMAIL_LOG" = "true" ]; then
-        admin_email=$(v-list-user admin json | grep "CONTACT" | cut -d'"' -f4)
+        admin_email=$($BIN/v-list-user admin json | grep "CONTACT" | cut -d'"' -f4)
         send_mail="$HESTIA/web/inc/mail-wrapper.php"
         cat $LOG | $send_mail -s "Update Installation Log - v${new_version}" $admin_email
     fi
@@ -609,14 +626,14 @@ upgrade_filemanager_update_config() {
 upgrade_rebuild_web_templates() {
     if [ "$UPGRADE_UPDATE_WEB_TEMPLATES" = "true" ]; then
         echo "[ ! ] Updating default web domain templates..."
-        $BIN/v-update-web-templates
+        $BIN/v-update-web-templates "no" "skip"
     fi
 }
 
 upgrade_rebuild_mail_templates() {
     if [ "$UPGRADE_UPDATE_MAIL_TEMPLATES" = "true" ]; then
         echo "[ ! ] Updating default mail domain templates..."
-        $BIN/v-update-mail-templates
+        $BIN/v-update-mail-templates "no" "skip"
     fi
 }
 

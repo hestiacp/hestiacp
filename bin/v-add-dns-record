@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add dns record
 # options: USER DOMAIN RECORD TYPE VALUE [PRIORITY] [ID] [RESTART] [TTL]
+# labels: dns
+#
+# example: v-add-dns-record admin acme.com www A 162.227.73.112
 #
 # The call is used for adding new DNS record. Complex records of TXT, MX and
 # SRV types can be used by a filling in the 'value' argument. The function also

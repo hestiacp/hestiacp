@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: rebuild mail domain
 # options: USER DOMAIN
+# labels: hestia
+#
+# example: v-rebuild-mail-domain user domain.tld
 #
 # The function rebuilds configuration files for a single domain.
 

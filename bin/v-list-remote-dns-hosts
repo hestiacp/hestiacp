@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list remote dns host
 # options: [FORMAT]
+# labels: 
+#
+# example: v-list-remote-dns-hosts json
 #
 # The function for obtaining the list of remote dns host.
 

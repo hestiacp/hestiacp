@@ -1,5 +1,9 @@
 #!/bin/bash
 # info: Delete log file for user
+# options: USER
+# labels: hestia
+#
+# example: v-delete-user-log user 
 #
 # The function for deleting a users log file
 

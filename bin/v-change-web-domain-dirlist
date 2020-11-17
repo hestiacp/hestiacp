@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: enable/disable directory listing
 # options: USER DOMAIN MODE
+# labels: hestia
+#
+# example: v-change-web-domain-dirlist user demo.com on
 #
 # The call is used for changing the directory list mode.
 

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add system firewall
 # options: NONE
+# labels: 
+#
+# example: v-add-sys-firewall
 #
 # The script enables firewall
 

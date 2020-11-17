@@ -23,7 +23,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.3.0'
+HESTIA_INSTALL_VER='1.3.1'
 pma_v='5.0.4'
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
 fpm_v="7.4"
@@ -117,7 +117,7 @@ set_default_lang() {
         eval lang=$1
     fi
     lang_list="ar az bg bs cs da de el en es fa fi fr hr hu id it ja ka ko nl no pl pt pt-br ro
-        ru sr sv th uk ur vi zh-cn zh-tw"
+        ru sr sv th tr uk ur vi zh-cn zh-tw"
     if !(echo $lang_list |grep -w $lang > /dev/null 2>&1); then
         eval lang=$1
     fi
@@ -1921,6 +1921,7 @@ or if you encounter any bugs or problems:
 E-mail:  info@hestiacp.com
 Web:     https://www.hestiacp.com/
 Forum:   https://forum.hestiacp.com/
+Discord: https://discord.gg/nXRUZch
 GitHub:  https://www.github.com/hestiacp/hestiacp
 
 Note: Automatic updates are enabled by default. If you would like to disable them,

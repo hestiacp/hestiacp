@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add web domain backend
 # options: USER DOMAIN [TEMPLATE] [RESTART]
+# labels: web
+#
+# example: v-add-web-domain-backend admin exmaple.com default yes
 #
 # The call is used for adding web backend configuration.
 

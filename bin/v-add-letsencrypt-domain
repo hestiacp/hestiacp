@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: check letsencrypt domain
 # options: USER DOMAIN [ALIASES] [MAIL]
+# labels: web
+#
+# example: v-add-letsencrypt-domain admin wonderland.com www.wonderland.com
 #
 # The function check and validates domain with Let's Encrypt
 

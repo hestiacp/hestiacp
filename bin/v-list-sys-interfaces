@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list system interfaces
 # options: [FORMAT]
+# labels: 
+#
+# example: v-list-sys-interfaces
 #
 # The function for obtaining the list of network interfaces.
 

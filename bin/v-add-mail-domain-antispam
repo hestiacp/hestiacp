@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add mail domain antispam support
 # options: USER DOMAIN
+# labels: mail
+#
+# example: v-add-mail-domain-antispam admin mydomain.tld
 #
 # The function enables spamassasin for incoming emails.
 

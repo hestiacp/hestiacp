@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: unsuspend web domains
 # options: USER [RESTART]
+# labels: web
+#
+# example: v-unsuspend-web-domains admin
 #
 # The function of unsuspending all user's sites.
 

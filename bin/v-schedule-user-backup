@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: schedule user backup creation
 # options: USER
+# labels: panel
+#
+# example: v-schedule-user-backup admin
 #
 # The function for scheduling user backup creation.
 

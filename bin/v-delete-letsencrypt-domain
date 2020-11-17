@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: deleting letsencrypt ssl cetificate for domain
 # options: USER DOMAIN [RESTART] [MAIL]
+# labels: panel
+#
+# example: v-delete-letsencrypt-domain admin acme.com yes
 #
 # The function turns off letsencrypt SSL support for a domain.
 

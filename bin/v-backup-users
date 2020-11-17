@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: backup all users
 # options: NONE
+# labels: 
+#
+# example: v-backup-users
 #
 # The function backups all system users.
 

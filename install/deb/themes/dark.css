@@ -506,8 +506,17 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .units .l-unit.l-unit--outdated {
   color: #d4d4d4;
+  background-color: #760000;
 }
 
+.l-unit--outdated.selected {
+  background: #b70000 !important;
+  color: #fff !important;
+  text-shadow: none !important;
+}
+.l-unit--outdated.selected b {
+  color: #fff !important;
+}
 .l-unit--suspended .l-unit__name,
 .l-unit--suspended b,
 .l-unit--outdated .l-unit__name,

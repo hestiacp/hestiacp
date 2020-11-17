@@ -1,8 +1,11 @@
 #!/bin/bash
-# info: rebuild system user
+# info: rebuild system users
 # options: [RESTART]
+# labels: hestia
 #
-# The function rebuilds system user accounts.
+# example: v-rebuild-users
+#
+# The function all users on the system.
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

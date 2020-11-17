@@ -27,6 +27,11 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue in the Control Panel UI which caused databases and additional FTP accounts to be named incorrectly if manually prefaced with the username.
 - Fixed an issue where custom document roots were not saved correctly.
 - Improved the visibility of service availability in the Control Panel UI.
+- Fixed an issue which let you unsuspend a cronjob on active demo mode.
+- Updated DE, EN, ES, KO, NL and TR languages, thanks to @Wibol, Blackjack, @emrahkayihan, areo and @hahagu!
+- Fixed an issue which let the auto compiler fail with local src builds.
+- Added turkish language to system installers, thanks to @emrahkayihan!
+- Fixed incorrect error message when using unknown domain with v-delete-domain.
 
 ## [1.3.0] - Major Release (Feature / Quality Update)
 ### Features

@@ -258,8 +258,8 @@ for auth in $authz; do
             else
                 # Get root directory from configuration
                 domain_config="$HOMEDIR/$user/conf/web/$domain"
-                if [ -f "$domain_config/apache2.conf" ]; then
-                    well_known="$(cat $domain_config/apache2.conf | egrep \
+                if [ -f "$domain_config/$WEB_SYSTEM.conf" ]; then
+                    well_known="$(cat $domain_config/$WEB_SYSTEM.conf | egrep \
                                 '^\s+DocumentRoot'| awk '{split($0, a, " "); \
                                 print a[2]}')/.well-known"
                 else

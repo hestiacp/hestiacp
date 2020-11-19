@@ -25,7 +25,17 @@ function detect_user_language() {
        return 'en';
    }
 }
-
+/**
+ * Translate ISO2 to "Language" 
+ * nl = Dutch, de = German
+ * @param string iso2 code
+ * @return string Language
+ */
+function translate_json($string){
+    $json = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/locale/languages.json');
+    $json_a = json_decode($json, true);
+    return $json_a[$string][0] .' ('.$json_a[$string.'_locale'][0].')';
+}
 /**
  * Detects user language .
  * @param string Fallback language (default: 'en')

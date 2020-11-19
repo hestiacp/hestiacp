@@ -117,7 +117,7 @@ set_default_lang() {
         eval lang=$1
     fi
     lang_list="ar az bg bs cs da de el en es fa fi fr hr hu id it ja ka ko nl no pl pt pt-br ro
-        ru sr sv th uk ur vi zh-cn zh-tw"
+        ru sr sv th tr uk ur vi zh-cn zh-tw"
     if !(echo $lang_list |grep -w $lang > /dev/null 2>&1); then
         eval lang=$1
     fi

@@ -67,7 +67,7 @@ if (isset($_GET['web'])) {
     foreach($output as $file) {
         $file=str_replace('border="0"', 'border="1"', $file);
         $file=str_replace('bgcolor="#ffffff"', '', $file);
-        $file=str_replace('bgcolor="#000000"', '', $file);
+        $file=str_replace('bgcolor="#000000"', 'bgcolor="#282828"', $file);
         
         echo $file . "\n";
     }

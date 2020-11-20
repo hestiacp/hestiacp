@@ -262,7 +262,7 @@
                                                 <select class="vst-list" name="v-custom-doc-domain">
                                                 <?php foreach ($user_domains as $domain): ?>
                                                     <option value="<?php echo $domain;?>"
-                                                        <?=($v_custom_doc_domain === $domain)?' selected="selected" ':''; ?>>
+                                                        <?=($v_custom_doc_domain === $domain || (empty($v_custom_doc_domain) && $domain === $v_domain))?' selected="selected" ':''; ?>>
                                                         <?php echo $domain;?>
                                                     </option>
                                                 <?php endforeach; ?>

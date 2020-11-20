@@ -2,6 +2,22 @@
 
 hestia_setup_init() {
     echo "Initializing Hestia configuration..."
+
+    if [ ! "$param_lang" ]; then
+        param_lang='en'
+    fi
+    if [ ! "$param_server_name" ]; then
+        param_server_name=$(hostname -f)
+        read -e -p 'Please enter FQDN hostname: ' -i "$param_server_name" param_server_name
+    fi
+    if [ ! "${param_admin_email}" ]; then
+        param_admin_email="admin@$param_server_name"
+        mail_regex="^(([A-Za-z0-9]+((\.|\-|\_|\+)?[A-Za-z0-9]?)*[A-Za-z0-9]+)|[A-Za-z0-9]+)@(([A-Za-z0-9]+)+((\.|\-|\_)?([A-Za-z0-9]+)+)*)+\.([A-Za-z]{2,})+$"
+        if [ -z "$param_admin_email" ] || [[ ! $i =~ $mail_regex ]]; then
+            read -e -p 'Please enter admin email address: ' -i "$param_admin_email" param_admin_email
+        fi
+    fi
+
     mkdir -p $HESTIA/conf $HESTIA/log $HESTIA/ssl $HESTIA/data/ips \
         $HESTIA/data/queue $HESTIA/data/users $HESTIA/data/firewall \
         $HESTIA/data/sessions
@@ -84,16 +100,6 @@ EOL
     # Add nologin as a valid system shell
     if [ -z "$(grep nologin /etc/shells)" ]; then
         echo "/usr/sbin/nologin" >> /etc/shells
-    fi
-
-    if [ ! "$param_lang" ]; then
-        param_lang='en'
-    fi
-    if [ ! "$param_server_name" ]; then
-        param_server_name=$(hostname -f)
-    fi
-    if [ ! "${param_admin_email}" ]; then
-        param_admin_email="admin@$param_server_name"
     fi
 
     lang=$(osal_kv_read $HESTIA/conf/hestia.conf 'LANGUAGE' '')

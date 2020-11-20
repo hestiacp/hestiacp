@@ -34,7 +34,7 @@ hestia_setup_init() {
 
     # Setup initial hestia.conf default values (if not already present)
     hestia_config_init_value 'THEME' 'default'
-    hestia_config_init_value 'LANG' 'en'
+    hestia_config_init_value 'LANGUAGE' 'en'
     hestia_config_init_value 'WEB_SYSTEM' ''
     hestia_config_init_value 'PROXY_SYSTEM' ''
     hestia_config_init_value 'STATS_SYSTEM' ''
@@ -129,9 +129,9 @@ EOL
         echo "/usr/sbin/nologin" >> /etc/shells
     fi
 
-    lang=$(osal_kv_read $HESTIA/conf/hestia.conf 'LANG' '')
+    lang=$(osal_kv_read $HESTIA/conf/hestia.conf 'LANGUAGE' '')
     if [ ! "$lang" ] || [ "$lang" != "$param_lang" ]; then
-        osal_kv_write $HESTIA/conf/hestia.conf 'LANG' $param_lang
+        osal_kv_write $HESTIA/conf/hestia.conf 'LANGUAGE' $param_lang
         lang=$param_lang
     fi
 

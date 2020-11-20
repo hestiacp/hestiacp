@@ -31,7 +31,9 @@ hestia_package_web-server_install() {
     fi
 
     # Integrate everything
-    hestia package web-server integrate
+    if [ ! "$param_without_no_integrate" ]; then
+        hestia package web-server integrate
+    fi
 }
 
 usage() {

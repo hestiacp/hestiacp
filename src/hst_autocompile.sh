@@ -226,14 +226,16 @@ if [ "$dontinstalldeps" != 'true' ]; then
     # Install needed software
     if [ "$OSTYPE" = 'rhel' ]; then
         # Set package dependencies for compiling
-        SOFTWARE='gcc gcc-c++ make libxml2-devel zlib-devel libzip-devel gmp-devel libcurl-devel gnutls-devel unzip openssl openssl-devel pkg-config sqlite-devel oniguruma-devel rpm-build wget tar'
+        SOFTWARE='gcc gcc-c++ make libxml2-devel zlib-devel libzip-devel gmp-devel libcurl-devel gnutls-devel unzip openssl openssl-devel pkg-config sqlite-devel oniguruma-devel rpm-build wget tar git curl'
 
         echo "Updating system DNF repositories..."
+        dnf install -yq 'dnf-command(config-manager)'
+        dnf install -yq dnf-plugins-core
         dnf config-manager --set-enabled powertools > /dev/null 2>&1
         dnf config-manager --set-enabled PowerTools > /dev/null 2>&1
-        dnf update -y > /dev/null 2>&1
+        dnf upgrade -yq
         echo "Installing dependencies for compilation..."
-        dnf install -y $SOFTWARE > /dev/null 2>&1
+        dnf install -yq $SOFTWARE
     else
         # Set package dependencies for compiling
         SOFTWARE='build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config libsqlite3-dev libonig-dev rpm'

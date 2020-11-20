@@ -36,12 +36,18 @@ hestia_module_php-fpm_add() {
         fi
     done
     if [ ! "$php_version" ]; then
-        echo "PHP version $param_ver is not supported."
+        echo "PHP (FPM( version $param_ver is not supported."
         return 1
     fi
 
     local php_withoutdot=${php_version//.}
-    local php_version_present=$(osal_kv_read_bool $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_present" && echo 1)
+    local php_version_present=$(osal_kv_read_bool $HESTIA_CONF_MODULES/php-fpm.conf "php${php_withoutdot}_present" && echo 1)
+
+    if [ "$php_version_present" ] && [ ! "$param_force" ]; then
+        echo "PHP (FPM) version ${php_version} is already present. See 'hestia module php list'."
+        return 0
+    fi
+
 
     # Perform verification if read-only mode is enabled
     check_hestia_demo_mode
@@ -74,9 +80,16 @@ hestia_module_php-fpm_add() {
     cp -f $HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl \
         $HESTIA/data/templates/web/php-fpm/PHP-${php_version/\./_}.tpl
 
-    osal_kv_write $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_fpm" '1'
+    osal_kv_write $HESTIA_CONF_MODULES/php-fpm.conf "php${php_withoutdot}_present" '1'
 
-    hestia module php-fpm integrate
+    if hestia_module_isinstalled 'php'; then
+        hestia module php add $php_version
+    fi
+
+    # Integrate everything
+    if [ ! "$param_without_no_integrate" ]; then
+        hestia module php-fpm integrate
+    fi
 
     log_history "installed php $php_version" '' 'admin'
 }

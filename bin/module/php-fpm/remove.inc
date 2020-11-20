@@ -11,7 +11,7 @@ hestia_module_php-fpm_remove() {
 
     for php_version in $PHP_SUPPORTED_VERSIONS; do
         php_withoutdot=${php_version//.}
-        php_version_present=$(osal_kv_read $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_fpm" 0)
+        php_version_present=$(osal_kv_read $HESTIA_CONF_MODULES/php-fpm.conf "php${php_withoutdot}_present" 0)
         if [ "php_version_present" ]; then
             hestia module php-fpm del $php_version
         fi

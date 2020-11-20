@@ -21,29 +21,24 @@ EOL
         LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
     elif [ "$OS_BASE" = 'rhel' ]; then
         # Disable CentOS PHP, enable Remi PHP
-        dnf -y module disable php
-        dnf -y install http://rpms.remirepo.net/enterprise/remi-release-$OS_VERSION.rpm
+        dnf -yq module disable php
+        dnf -yq install http://rpms.remirepo.net/enterprise/remi-release-$OS_VERSION.rpm
         dnf config-manager --set-enabled remi remi-modular
-        dnf -y module enable php:remi-$PHP_DEFAULT_VERSION
+        dnf -yq module reset php
+        dnf -yq module enable php:remi-$PHP_DEFAULT_VERSION
     fi
 
     # Install mod_php for system default PHP
     osal_package_preinstall
     osal_execute_with_spinner osal_package_install $PHP_PKG_MOD_PHP
 
-    local pool_d=$(osal_php_fpm_pool_d $PHP_DEFAULT_VERSION)
-    mkdir -p $pool_d
-
     mkdir -p $OSAL_PATH_RUN/php
 
-    cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf $pool_d/www.conf
-
-    osal_kv_write $HESTIA/conf/hestia.conf 'WEB_BACKEND' 'php-fpm'
+    osal_kv_write $HESTIA_CONF_MODULES/php.conf 'installed' 1
     
     # Add default PHP version
-    # Use --force, otherwise it will fail because technically PHP is still not installed
-    echo "Adding default PHP version..."
-    hestia module php add default --force
+    echo "Adding default PHP (CLI) version..."
+    hestia module php add default
 
     return 0
 }

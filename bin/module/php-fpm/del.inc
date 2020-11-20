@@ -38,9 +38,9 @@ hestia_module_php-fpm_del() {
 
     php_withoutdot=${php_version//.}
 
-    php_version_present=$(osal_kv_read_bool $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_fpm" && echo 1)
+    php_version_present=$(osal_kv_read_bool $HESTIA_CONF_MODULES/php-fpm.conf "php${php_withoutdot}_present" && echo 1)
     if [ ! "$php_version_present" ] && [ ! "$param_force" ]; then
-        echo "PHP version ${php_version} is not present. See 'hestia module php list'."
+        echo "PHP (FPM) version ${php_version} is not present. See 'hestia module php list'."
         return 0
     fi
 
@@ -63,11 +63,11 @@ hestia_module_php-fpm_del() {
     # Cleanup files and folders
     [ -f $HESTIA/data/templates/web/php-fpm/PHP-${php_version/\./_}.tpl ] && hestia_safe_rm $HESTIA/data/templates/web/php-fpm/PHP-${php_version/\./_}.tpl
 
-    osal_kv_write $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_fpm" '0'
+    osal_kv_write $HESTIA_CONF_MODULES/php-fpm.conf "php${php_withoutdot}_present" '0'
 
     hestia module php-fpm integrate
 
-    log_history "removed php $phpversion" '' 'admin'
+    log_history "removed php-fpm $phpversion" '' 'admin'
 
     return 0
 }

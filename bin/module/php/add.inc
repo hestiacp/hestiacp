@@ -36,7 +36,7 @@ hestia_module_php_add() {
         fi
     done
     if [ ! "$php_version" ]; then
-        echo "PHP version $param_ver is not supported."
+        echo "PHP (CLI) version $param_ver is not supported."
         return 1
     fi
 
@@ -44,7 +44,7 @@ hestia_module_php_add() {
     local php_version_present=$(osal_kv_read_bool $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_present" && echo 1)
 
     if [ "$php_version_present" ] && [ ! "$param_force" ]; then
-        echo "PHP version ${php_version} is already present. See 'hestia module php list'."
+        echo "PHP (CLI) version ${php_version} is already present. See 'hestia module php list'."
         return 0
     fi
 
@@ -82,7 +82,10 @@ hestia_module_php_add() {
         hestia module php-fpm add $php_version
     fi
 
-    log_history "installed php $php_version" '' 'admin'
+    # Integrate everything
+    if [ ! "$param_without_no_integrate" ]; then
+        hestia module php integrate
+    fi
 
-    hestia module php integrate
+    log_history "installed php $php_version" '' 'admin'
 }

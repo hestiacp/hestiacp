@@ -21,14 +21,15 @@ hestia_module_php-fpm_install() {
 
     cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf $pool_d/www.conf
 
+    osal_kv_write $HESTIA_CONF_MODULES/php-fpm.conf 'installed' 1
     osal_kv_write $HESTIA/conf/hestia.conf 'WEB_BACKEND' 'php-fpm'
 
+    # Add FPM support for each CLI version installed
     for php_version in $PHP_SUPPORTED_VERSIONS; do
         php_withoutdot=${php_version//.}
         php_version_present=$(osal_kv_read $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_present" 0)
         if [ "php_version_present" ]; then
-            # Use force, because FPM is technically still not installed
-            hestia module php-fpm add $php_version --force
+            hestia module php-fpm add $php_version
         fi
     done
 

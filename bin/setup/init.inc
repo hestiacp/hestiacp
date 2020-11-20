@@ -32,6 +32,31 @@ hestia_setup_init() {
     chmod 660 $HESTIA/log/*
     chmod 770 $HESTIA/data/sessions
 
+    # Setup initial hestia.conf default values (if not already present)
+    hestia_config_init_value 'THEME' 'default'
+    hestia_config_init_value 'LANG' 'en'
+    hestia_config_init_value 'WEB_SYSTEM' ''
+    hestia_config_init_value 'PROXY_SYSTEM' ''
+    hestia_config_init_value 'STATS_SYSTEM' ''
+    hestia_config_init_value 'WEB_BACKEND' ''
+    hestia_config_init_value 'DB_SYSTEM' ''
+    hestia_config_init_value 'FTP_SYSTEM' ''
+    hestia_config_init_value 'DNS_SYSTEM' ''
+    hestia_config_init_value 'MAIL_SYSTEM' ''
+    hestia_config_init_value 'ANTIVIRUS_SYSTEM' ''
+    hestia_config_init_value 'ANTISPAM_SYSTEM' ''
+    hestia_config_init_value 'IMAP_SYSTEM' ''
+    hestia_config_init_value 'CRON_SYSTEM' ''
+    hestia_config_init_value 'FIREWALL_SYSTEM' ''
+    hestia_config_init_value 'FIREWALL_EXTENSION' ''
+    hestia_config_init_value 'BACKUP_SYSTEM' 'local'
+    hestia_config_init_value 'BACKUP_GZIP' '9'
+    hestia_config_init_value 'RELEASE_BRANCH' 'release'
+    hestia_config_init_value 'DB_PMA_ALIAS' 'phpmyadmin'
+    hestia_config_init_value 'WEBMAIL_ALIAS' 'webmail'
+    hestia_config_init_value 'API' 'yes'
+    hestia_config_init_value 'BACKEND_PORT' '8083'
+
     memory=$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])
 
     if [ "$OS_BASE" = 'rhel' ]; then
@@ -90,6 +115,8 @@ EOL
 
     HESTIA_VERSION=$(osal_package_getversion 'hestia')
     osal_kv_write $HESTIA/conf/hestia.conf 'VERSION' $HESTIA_VERSION
+
+    
 
     echo " - Installing hosting packages and templates..."
     cp -rf $HESTIA_INSTALL_DIR/packages $HESTIA/data/
@@ -198,4 +225,11 @@ EOL
     echo " - Enabling and starting Hestia service..."
     osal_service_enable hestia
     osal_service_restart hestia
+}
+
+# Writes a value only if it does not exists
+hestia_config_init_value() {
+    if ! osal_kv_haskey $HESTIA/conf/hestia.conf $1; then
+        osal_kv_write $HESTIA/conf/hestia.conf $1 $2
+    fi   
 }

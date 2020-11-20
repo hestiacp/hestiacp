@@ -129,9 +129,9 @@ EOL
         echo "/usr/sbin/nologin" >> /etc/shells
     fi
 
-    lang=$(osal_kv_read $HESTIA/conf/hestia.conf 'LANGUAGE' '')
+    lang=$(osal_kv_read $HESTIA/conf/hestia.conf 'LANG' '')
     if [ ! "$lang" ] || [ "$lang" != "$param_lang" ]; then
-        osal_kv_write $HESTIA/conf/hestia.conf 'LANGUAGE' $param_lang
+        osal_kv_write $HESTIA/conf/hestia.conf 'LANG' $param_lang
         lang=$param_lang
     fi
 

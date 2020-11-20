@@ -86,13 +86,13 @@ EOL
         apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
     elif [ "$OS_BASE" = 'rhel' ]; then
         echo " - Adding repositories and packages..."
-        dnf config-manager --set-enabled extras powertools > /dev/null 2>&1
-        dnf config-manager --set-enabled extras PowerTools > /dev/null 2>&1
-        dnf -y install epel-release
-        dnf config-manager --set-enabled epel epel-modular  > /dev/null 2>&1
+        dnf -q config-manager --set-enabled extras powertools > /dev/null 2>&1
+        dnf -q config-manager --set-enabled extras PowerTools > /dev/null 2>&1
+        dnf -yq install epel-release
+        dnf -q config-manager --set-enabled epel epel-modular > /dev/null 2>&1
 
         # Install needed packages
-        dnf -y install crudini
+        dnf -yq install crudini
 
         # Disable SELinux
         setenforce 0

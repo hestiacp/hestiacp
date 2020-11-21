@@ -81,6 +81,7 @@ abstract class BaseSetup implements InstallerInterface {
         if(!empty($this->extractsubdir)) {
             $this->appcontext->runUser('v-delete-fs-directory',[$this->getDocRoot($this->extractsubdir)], $result);
         }
+        //$this->appcontext->deleteTempDirectory(); //doesnt work check HestiaApp.php for more info
     }
 
     public function saveTempFile(string $data)

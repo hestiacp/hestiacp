@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Hestia\System;
 
+define(TMPDIR_DOWNLOADS, '/tmp/hestia-webapp-' . rand(10000, 999999));
+
 class HestiaApp {
 
-    protected const TMPDIR_DOWNLOADS="/tmp/hestia-webapp";
-
     public function __construct() {
-        @mkdir(self::TMPDIR_DOWNLOADS);
+        @mkdir(TMPDIR_DOWNLOADS);
     }
 
     public function run(string $cmd, $args, &$cmd_result=null) : bool
@@ -56,7 +56,7 @@ class HestiaApp {
            throw new \Exception("Error reading composer signature");
         }
 
-        $composer_setup = self::TMPDIR_DOWNLOADS . DIRECTORY_SEPARATOR . 'composer-setup-' . $signature . '.php';
+        $composer_setup = TMPDIR_DOWNLOADS . DIRECTORY_SEPARATOR . 'composer-setup-' . $signature . '.php';
 
         exec("wget https://getcomposer.org/installer --quiet -O " . escapeshellarg($composer_setup), $output, $return_code);
         if ($return_code !== 0 ) {
@@ -155,7 +155,7 @@ class HestiaApp {
             return false;
         }
 
-        exec("/usr/bin/wget --tries 3 --timeout=30 --no-dns-cache -nv " . escapeshellarg($src). " -P " . escapeshellarg(self::TMPDIR_DOWNLOADS) . ' 2>&1', $output, $return_var);
+        exec("/usr/bin/wget --tries 3 --timeout=30 --no-dns-cache -nv " . escapeshellarg($src). " -P " . escapeshellarg(TMPDIR_DOWNLOADS) . ' 2>&1', $output, $return_var);
         if ($return_var !== 0) {
             return false;
         }
@@ -190,5 +190,10 @@ class HestiaApp {
         }
 
         return $this->runUser('v-extract-fs-archive', [$archive_file, $path, null, $skip_components]);
+    }
+
+    public function deleteTempDirectory() {  //This doesnt work, maybe when its called it actually creates a new folder (because of __construct(), i am unsure) and deletes it?
+        @exec("rm -rf " . TMPDIR_DOWNLOADS);
+        return true;
     }
 }

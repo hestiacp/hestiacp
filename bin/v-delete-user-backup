@@ -46,12 +46,13 @@ backup_folder=$BACKUP
 line=$(grep "BACKUP='$backup'" $USER_DATA/backup.conf)
 parse_object_kv_list "$line"
 
-
+deleted=0
 if [[ "$TYPE" =~ "sftp" ]]; then
     sftp_delete "$backup"
+    deleted=1
 fi
 if [[ "$TYPE" =~ "ftp" ]] && [ "$deleted" == "0" ]; then
-    ftp_delete "backup"
+    ftp_delete "$backup"
 fi
 if [[ "$TYPE" =~ "local" ]]; then
     rm -f $backup_folder/$2

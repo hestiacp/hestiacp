@@ -862,7 +862,7 @@ foreach ($v_ftp_users_raw as $v_ftp_user_index => $v_ftp_user_val) {
     }
     $v_ftp_users[] = array(
         'is_new'            => 0,
-        'v_ftp_user'        => $v_ftp_user_val,
+        'v_ftp_user'        => preg_replace("/^".$user."_/", "", $v_ftp_user_val),
         'v_ftp_password'    => $v_ftp_password,
         'v_ftp_path'        => (isset($v_ftp_users_paths_raw[$v_ftp_user_index]) ? $v_ftp_users_paths_raw[$v_ftp_user_index] : ''),
         'v_ftp_email'       => $v_ftp_email,

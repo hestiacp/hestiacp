@@ -11,7 +11,8 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue where the iptables service would appear to be in a stopped state when fail2ban is stopped. (#1374)
 - Fixed an issue where the default language value was incorrectly set under Server Settings > Configure.
 - Fixed an issue with the dark theme where available updates were incorrectly displayed.
-- Added verbose logging capabilities to the `v-add-letsencrypt-domain` command. (#1399)
+- Fixed an issue where local and FTP backup files were not deleted when running `v-delete-user-backup`. (#1421)
+- Fixed an issue where IP addresses could not be deleted (#1423)
 - Improvements have been made to the API's error handling - thanks **@danielalexis**!
 
 ## [1.3.1] - Service Release

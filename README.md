@@ -26,10 +26,11 @@ Features and Services
 * Let's Encrypt SSL support with wildcard certificates
 * Firewall with brute-force attack detection and IP lists (iptables, fail2ban, and ipset).
 
-Supported operating systems
+Supported platforms and operating systems
 ----------------------------
-* Debian 10, 9 (amd64 only)
-* Ubuntu 20.04 LTS, 18.04 LTS, or 16.04 LTS (amd64 only)
+* **CPU Architecture:** AMD64 (x86_64 Intel/AMD)
+* **Debian:** 10, 9
+* **Ubuntu:** 20.04 LTS, 18.04 LTS, or 16.04 LTS
 * **NOTE:** Hestia Control Panel must be installed on top of a fresh operating system installation to ensure proper functionality.
 
 Installing Hestia Control Panel
@@ -67,7 +68,7 @@ Alternatively, @gabizz has made available a command-line script generator at htt
 
 Installing Hestia Control Panel
 ============================
-Updates of existing installations are performed by the Auto Updater. If you want to do this manually, you can do it via the apt package manager;
+Automatic Updates are enabled by default on new installations of Hestia Control Panel and can be managed from **Server Settings > Updates**. To manually check for and install available updates, use the apt package manager:
 ```bash
 apt-get update
 apt-get upgrade

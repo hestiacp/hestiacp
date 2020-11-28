@@ -3,6 +3,8 @@
 # options: NONE
 # labels: hestia
 #
+# example: v-add-letsencrypt-host
+#
 # The function check and validates the backend certificate and generate
 # a new let's encrypt certificate.
 

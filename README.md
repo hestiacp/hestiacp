@@ -66,7 +66,7 @@ bash hst-install.sh -h
 ```
 Alternatively, @gabizz has made available a command-line script generator at https://gabizz.github.io/hestiacp-scriptline-generator/ which allows you to easily generate the installation command via GUI.
 
-Installing Hestia Control Panel
+How to upgrade an existing installation
 ============================
 Automatic Updates are enabled by default on new installations of Hestia Control Panel and can be managed from **Server Settings > Updates**. To manually check for and install available updates, use the apt package manager:
 ```bash

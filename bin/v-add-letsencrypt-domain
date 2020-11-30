@@ -55,7 +55,7 @@ query_le_v2() {
     # Save http response to file passed as "$4" arg or print to stdout if not provided
     # http response headers are always sent to stdout
     local save_to_file=${4:-"/dev/stdout"}
-    curl -k --retry 5 --retry-connrefused --silent --dump-header /dev/stdout --data "$post_data" "$1" --header "$content" --output "$save_to_file"
+    curl --location --insecure --retry 5 --retry-connrefused --silent --dump-header /dev/stdout --data "$post_data" "$1" --header "$content" --output "$save_to_file"
     debug_log "API call" "exit status: $?"
 }
 
@@ -430,7 +430,7 @@ done
 
 # Fallback on depreciated download method for certs (unauthenticated GET)
 if [[ $status != 200 ]]; then
-    answer=$(curl  -k --retry 5 --retry-connrefused --silent --dump-header /dev/stdout "$certificate" --output "$ssl_dir/$domain.pem")
+    answer=$(curl  --insecure --retry 5 --retry-connrefused --silent --dump-header /dev/stdout "$certificate" --output "$ssl_dir/$domain.pem")
     status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
 
     debug_log "Step 7 - Fallback" "- status: ${status}\n- answer: ${answer}"

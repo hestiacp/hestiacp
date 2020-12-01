@@ -88,7 +88,7 @@ for host in $hosts; do
         # Parsing data
         q='SELECT SUM(xact_commit + xact_rollback), SUM(numbackends)
                 FROM pg_stat_database;'
-        status=$($sql plsql -d postgres -c "$q" 2>/dev/null); code="$?"
+        status=$($sql psql -d postgres -c "$q" 2>/dev/null); code="$?"
         if [ '0' -ne "$code" ]; then
             active=0
             slow=0

@@ -73,7 +73,7 @@ if [[ "$signature" != $(sha384sum $COMPOSER_SETUP_FILE | cut -f 1 -d " ") ]]; th
     check_result $E_INVALID "Composer signature does not match"
 fi
 
-COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php "$COMPOSER_SETUP_FILE" --quiet --install-dir="$COMPOSER_DIR" --filename=composer
+COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php "$COMPOSER_SETUP_FILE" --1 --quiet --install-dir="$COMPOSER_DIR" --filename=composer
 check_result $? "Composer install failed"
 
 [ -f "$COMPOSER_SETUP_FILE" ] && rm -f "$COMPOSER_SETUP_FILE"

@@ -3,6 +3,8 @@
 # options: NONE
 # labels: panel
 #
+# example: v-update-firewall
+#
 # The function updates iptables rules
 
 
@@ -18,6 +20,7 @@ sysctl="/sbin/sysctl"
 # Includes
 source /etc/profile.d/hestia.sh
 source $HESTIA/func/main.sh
+source $HESTIA/func/firewall.sh
 source $HESTIA/conf/hestia.conf
 
 
@@ -31,6 +34,9 @@ is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+# Self heal iptables links
+heal_iptables_links
 
 # Checking local IPv4 rules
 rules="$HESTIA/data/firewall/rules.conf"

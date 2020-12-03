@@ -3,6 +3,8 @@
 # options: NONE
 # labels: panel
 #
+# example: v-update-sys-hestia-all
+#
 # The function of updating all hestia packages
 
 

@@ -3,6 +3,8 @@
 # options: USER [FORMAT]
 # labels: 
 #
+# example: v-list-user-log
+#
 # The function of obtaining the list of 100 last users commands.
 
 

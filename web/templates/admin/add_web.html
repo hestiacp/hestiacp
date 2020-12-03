@@ -4,7 +4,7 @@
             <a class="ui-button cancel" id="btn-back" href="/list/web/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
+            <a href="#" class="ui-button" title="<?=_('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
           </div>
         </div>
       </div>
@@ -264,10 +264,15 @@
                                         <td class="step-left input-label vst-text">
                                             <label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_letsencrypt(this)"> <?php print _('Lets Encrypt Support');?></label>
                                         </td>
-                                    </tr>
+                                    </tr>                                    
                                     <tr>
                                         <td class="vst-text input-label lets-encrypt-note step-left" >
                                             <?= _('Your certificate will be automatically issued in 5 minutes')?>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="step-left input-label vst-text">
+                                            <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl_forcessl" <?php if($v_ssl_forcessl != 'no') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_forcessl(this)"> <?php print _('Force SSL/HTTPS');?></label>
                                         </td>
                                     </tr>
                                     <tr>

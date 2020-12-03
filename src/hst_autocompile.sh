@@ -229,13 +229,13 @@ if [ "$dontinstalldeps" != 'true' ]; then
         SOFTWARE='gcc gcc-c++ make libxml2-devel zlib-devel libzip-devel gmp-devel libcurl-devel gnutls-devel unzip openssl openssl-devel pkg-config sqlite-devel oniguruma-devel rpm-build wget tar git curl'
 
         echo "Updating system DNF repositories..."
-        dnf install -yq 'dnf-command(config-manager)'
-        dnf install -yq dnf-plugins-core
+        dnf install -y -q 'dnf-command(config-manager)'
+        dnf install -y -q dnf-plugins-core
         dnf config-manager --set-enabled powertools > /dev/null 2>&1
         dnf config-manager --set-enabled PowerTools > /dev/null 2>&1
-        dnf upgrade -yq
+        dnf upgrade -y -q
         echo "Installing dependencies for compilation..."
-        dnf install -yq $SOFTWARE
+        dnf install -y -q $SOFTWARE
     else
         # Set package dependencies for compiling
         SOFTWARE='build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config libsqlite3-dev libonig-dev rpm'
@@ -278,7 +278,7 @@ NGINX='https://nginx.org/download/nginx-'$(echo $NGINX_V |cut -d"~" -f1)'.tar.gz
 OPENSSL='https://www.openssl.org/source/openssl-'$OPENSSL_V'.tar.gz'
 PCRE='https://ftp.pcre.org/pub/pcre/pcre-'$PCRE_V'.tar.gz'
 ZLIB='https://www.zlib.net/zlib-'$ZLIB_V'.tar.gz'
-PHP='http://de2.php.net/distributions/php-'$(echo $PHP_V |cut -d"-" -f1)'.tar.gz'
+PHP='http://de2.php.net/distributions/php-'$(echo $PHP_V |cut -d"~" -f1)'.tar.gz'
 
 # Forward slashes in branchname are replaced with dashes to match foldername in github archive.
 branch_dash=$(echo "$branch" |sed 's/\//-/g');

@@ -3,6 +3,8 @@
 # options: [FORMAT]
 # labels: panel
 #
+# example: v-list-firewall-ban json
+#
 # The function of obtaining the list of currently blocked ips.
 
 

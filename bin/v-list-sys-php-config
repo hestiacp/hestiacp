@@ -3,6 +3,8 @@
 # options: [FORMAT]
 # labels: panel
 #
+# example: v-list-sys-php-config
+#
 # The function for obtaining the list of php config parameters.
 
 

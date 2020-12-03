@@ -3,6 +3,8 @@
 # options: USER DOMAIN [RESTART] [QUIET]
 # labels: hestia
 #
+# example: v-add-sys-webmail user domain.com
+#
 # this function adds support for webmail services
 # to a mail domain.
 

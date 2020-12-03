@@ -11,6 +11,10 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
         }
 
         $password = $_POST['password'];
+        if (!isset($password)){
+            echo 'Error: missing authentication';
+            exit;
+        }
         $v_ip = escapeshellarg($_SERVER['REMOTE_ADDR']);
         $output = '';
         exec (HESTIA_CMD."v-get-user-salt admin ".$v_ip." json" , $output, $return_var);
@@ -59,13 +63,9 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
                 exit;
             }
         } else {
-            $return_var = 1;
+            echo 'Error: authentication failed';
+            exit;
         }
-    }
-
-    if ( $return_var > 0 ) {
-        echo 'Error: authentication failed';
-        exit;
     }
 
     // Prepare arguments
@@ -122,4 +122,7 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
             echo implode("\n",$output)."\n";
         }
     }
+} else {
+    echo "Error: data received is null or invalid, check https://docs.hestiacp.com/admin_docs/rest_api.html";
+    exit;
 }

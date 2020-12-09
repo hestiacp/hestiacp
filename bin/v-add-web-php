@@ -3,7 +3,7 @@
 # options: VERSION
 # labels: hestia
 #
-# example: v-add-web-php 7.4
+# example: v-add-web-php 8.0
 #
 # The function checks and delete a fpm php version if not used by any domain.
 
@@ -32,7 +32,7 @@ php_fpm="/etc/init.d/php$version-fpm"
 # Verify php version format
 if [[ ! $version =~ ^[0-9]\.[0-9]+ ]]; then
     echo "The specified PHP version format is invalid, it should look like [0-9].[0-9]."
-    echo "Example:  7.0, 7.4"
+    echo "Example:  7.0, 7.4, 8.0"
     exit
 fi
 

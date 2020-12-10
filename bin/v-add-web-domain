@@ -71,7 +71,6 @@ source $USER_DATA/user.conf
 # Creating domain directories
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain"
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/public_html"
-$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/public_shtml"
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/document_errors"
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/cgi-bin"
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/private"
@@ -100,7 +99,7 @@ chmod 551 $HOMEDIR/$user/web/$domain/stats $HOMEDIR/$user/web/$domain/logs
 chmod 644 $HOMEDIR/$user/web/$domain/public_*html/*
 chown $user:www-data $HOMEDIR/$user/web/$domain/public_*html
 
-# Addding PHP-FPM backend
+# Adding PHP-FPM backend
 if [ ! -z "$WEB_BACKEND" ]; then
     if [ -z "$BACKEND_TEMPLATE" ]; then
         BACKEND_TEMPLATE='default'

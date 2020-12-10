@@ -4,7 +4,7 @@
             <a class="ui-button cancel" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" title="<?=_('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
+            <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
           </div>
         </div>
       </div>
@@ -131,14 +131,14 @@
                                                 <select class="vst-list" name="v_language">
                                                     <?php
                                                         foreach ($languages as $key => $value) {
-                                                            echo "\t\t\t\t<option value=\"".$value."\"";
-                                                            if ((!empty($_SESSION['LANGUAGE'])) && ( $value == $_SESSION['LANGUAGE'])){
-                                                                echo ' selected' ;
+                                                            echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".$key."\"";
+                                                            if ( $key == $v_language ){
+                                                                echo 'selected' ;
                                                             }
-                                                            if ((!empty($_SESSION['LANGUAGE'])) && ( $value == $_POST['v_language'])){
-                                                                echo ' selected' ;
+                                                            if (( $key == $_SESSION['LANGUAGE'] && (empty($v_language)) )) {
+                                                                echo 'selected' ;
                                                             }
-                                                            echo ">".$value."</option>\n";
+                                                            echo ">".htmlentities($value)."</option>\n";
                                                         }
                                                     ?>
                                                 </select>

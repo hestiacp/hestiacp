@@ -7,7 +7,7 @@
             <a href="/add/webapp/?domain=<?=$v_domain?>" class="ui-button cancel">
                 <i class="fas fa-magic status-icon blue"></i> <?=_('Quick Install App')?>
             </a>
-            <a href="#" class="ui-button" title="<?=_('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
+            <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
           </div>
         </div>
       </div>
@@ -107,6 +107,14 @@
                             <tr>
                                 <td>
                                     <textarea size="20" class="vst-textinput short" name="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
+                                </td>
+                            </tr>
+			    <tr>
+                                <td>
+                                    <span class="alert alert-info alert-with-icon">
+                                                    <i class="fas fa-exclamation"></i>
+                                                    <?php print _('Changes to Aliases will cause Lets Encrypt to obtain a new SSL certificate if enabled.');?>
+                                                </span>
                                 </td>
                             </tr>
                             <tr>

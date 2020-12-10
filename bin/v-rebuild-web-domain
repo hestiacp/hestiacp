@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: rebuild web domain
 # options: USER DOMAIN [RESTART]
+# labels: hestia
+#
+# example: v-rebuild-web-domain user domain.tld 
 #
 # The function rebuilds web configuration files.
 
@@ -71,6 +74,10 @@ fi
 # Deleting backend configs
 if [ ! -z "$WEB_BACKEND" ]; then
     template=$(get_object_value 'web' 'DOMAIN' "$domain" '$BACKEND')
+    if [ -z "$template" ]; then 
+        template="default"
+        update_object_value 'web' 'DOMAIN' "$domain" '$BACKEND' 'default'  
+    fi
     prepare_web_backend
     delete_web_backend
     $BIN/v-add-web-domain-backend $user $domain $template $restart

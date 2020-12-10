@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: check letsencrypt domain
 # options: USER DOMAIN [ALIASES] [MAIL]
+# labels: web
+#
+# example: v-add-letsencrypt-domain admin wonderland.com www.wonderland.com
 #
 # The function check and validates domain with Let's Encrypt
 
@@ -97,9 +100,17 @@ fi
 
 
 
+# Dump debug info
+debug_log() {
+    echo -e "\n==[${1}]==\n${2}\n" >> "$log_file"
+}
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+
+
 
 # Generate correct variables for mail domain SSL certificates
 if [ ! -z "$mail" ]; then
@@ -107,6 +118,17 @@ if [ ! -z "$mail" ]; then
     domain="mail.$root_domain"
     aliases="$WEBMAIL_ALIAS.$root_domain"
 fi
+
+log_file="/var/log/hestia/LE-${user}-${domain}-$(date +%Y%m%d-%H%M%S).log"
+touch "$log_file"
+chmod 600 "$log_file"
+
+echo -e "\n\n=============================
+WEB_SYSTEM: ${WEB_SYSTEM}
+PROXY_SYSTEM: ${PROXY_SYSTEM}
+user: ${user}
+domain: ${domain}
+" >> "$log_file"
 
 # Registering LetsEncrypt user account
 $BIN/v-add-letsencrypt-user $user
@@ -130,6 +152,12 @@ if [ "$aliases" = "*.$domain" ]; then
 else
     proto="http-01"
 fi
+
+echo -e "
+- aliases: ${aliases}
+- proto: ${proto}
+- wildcard: ${wildcard}
+" >> "$log_file"
 
 # Check if dns records exist for requested domain/aliases
 if [ "$proto" = "http-01" ]; then
@@ -161,6 +189,9 @@ fi
 answer=$(curl -s -I "$LE_API/directory")
 nonce=$(echo "$answer" |grep -i nonce |cut -f2 -d \ |tr -d '\r\n')
 status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
+
+debug_log "Step 1" "- status: ${status}\n- nonce: ${nonce}\n- answer: ${answer}"
+
 if [[ "$status" -ne 200 ]]; then
     # Delete DNS CAA record
     if [ ! -z "$DNS_SYSTEM" ]; then
@@ -189,6 +220,9 @@ nonce=$(echo "$answer" |grep -i nonce |cut -f2 -d \ |tr -d '\r\n')
 authz=$(echo "$answer" |grep "acme/authz" |cut -f2 -d '"')
 finalize=$(echo "$answer" |grep 'finalize":' |cut -f4 -d '"')
 status=$(echo "$answer" |grep HTTP/ |tail -n1 |cut -f2 -d ' ')
+
+debug_log "Step 2" "- status: ${status}\n- nonce: ${nonce}\n- authz: ${authz}\n- finalize: ${finalize}\n- payload: ${payload}\n- answer: ${answer}"
+
 if [[ "$status" -ne 201 ]]; then
     # Delete DNS CAA record
     if [ ! -z "$DNS_SYSTEM" ]; then
@@ -209,6 +243,9 @@ for auth in $authz; do
     token=$(echo "$answer" |grep -A3 $proto |grep token |cut -f 4 -d \")
     nonce=$(echo "$answer" |grep -i nonce |cut -f2 -d \ |tr -d '\r\n')
     status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
+
+    debug_log "Step 3" "- status: ${status}\n- nonce: ${nonce}\n- url: ${url}\n- token: ${token}\n- answer: ${answer}"
+
     if [[ "$status" -ne 200 ]]; then
         # Delete DNS CAA record
         if [ ! -z "$DNS_SYSTEM" ]; then
@@ -300,6 +337,9 @@ for auth in $authz; do
         nonce=$(echo "$answer" |grep -i nonce |cut -f2 -d \ |tr -d '\r\n')
         status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
         details=$(echo "$answer"| grep detail | cut -f 1 -d ',' | cut -f 2-4 -d ':' | cut -f 2 -d '"')
+
+        debug_log "Step 5" "- status: ${status}\n- nonce: ${nonce}\n- validation: ${validation}\n- details: ${details}\n- answer: ${answer}"
+
         if [[ "$status" -ne 200 ]]; then
             # Delete DNS CAA record
             if [ ! -z "$DNS_SYSTEM" ]; then
@@ -312,6 +352,7 @@ for auth in $authz; do
                     fi
                 fi
             fi
+            debug_log "Abort Step 5" "=> Wrong status"
             check_result $E_CONNECT "Let's Encrypt validation status $status. Details: $details"
         fi
 
@@ -328,6 +369,7 @@ for auth in $authz; do
                     fi
                 fi
             fi
+            debug_log "Abort Step 5" "=> Too many validation retries"
             check_result $E_CONNECT "Let's Encrypt domain validation timeout"
         fi
         sleep $((i*2))
@@ -359,6 +401,9 @@ answer=$(query_le_v2 "$finalize" "$payload" "$nonce")
 nonce=$(echo "$answer" |grep -i nonce |cut -f2 -d \ |tr -d '\r\n')
 status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
 certificate=$(echo "$answer"|grep 'certificate":' |cut -f4 -d '"')
+
+debug_log "Step 6" "- status: ${status}\n- nonce: ${nonce}\n- payload: ${payload}\n- certificate: ${certificate}\n- answer: ${answer}"
+
 if [[ "$status" -ne 200 ]]; then
     [ -d "$ssl_dir" ] && rm -rf "$ssl_dir"
     check_result $E_CONNECT "Let's Encrypt finalize bad status $status"
@@ -367,6 +412,12 @@ fi
 # Downloading signed certificate / STEP 7
 answer=$(query_le_v2 "$certificate" "" "$nonce" "$ssl_dir/$domain.pem")
 status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
+
+debug_log "Step 7" "- status: ${status}\n- answer: ${answer}"
+debug_log "CERT DIR" "$(ls -las "$ssl_dir/")"
+debug_log "CERT PEM" "$(cat "$ssl_dir/$domain.pem")"
+
+
 if [[ "$status" -ne 200 ]]; then
     [ -d "$ssl_dir" ] && rm -rf "$ssl_dir"
     check_result $E_NOTEXIST "Let's Encrypt downloading signed cert failed status:$status"
@@ -381,10 +432,13 @@ ca_end=$(grep -n  "BEGIN" $ssl_dir/$domain.pem |tail -n1 |cut -f 1 -d :)
 ca_end=$(( pem_lines - crt_end + 1 ))
 tail -n $ca_end $ssl_dir/$domain.pem > $ssl_dir/$domain.ca
 
+debug_log "CERT CRT" "$(cat "$ssl_dir/$domain.crt")"
+debug_log "CERT CA-1" "$(cat "$ssl_dir/$domain.ca")"
 # Temporary fix for double "END CERTIFICATE"
 if [[ $(head -n 1 $ssl_dir/$domain.ca) = "-----END CERTIFICATE-----" ]]; then
     sed -i '1,2d' $ssl_dir/$domain.ca
 fi
+debug_log "CERT CA-2" "$(cat "$ssl_dir/$domain.ca")"
 
 # Rename certs for mail
 if [ ! -z "$mail" ]; then
@@ -463,5 +517,8 @@ send_notice 'LETSENCRYPT' "$domain SSL has been installed successfully"
 
 # Logging
 log_event "$OK" "$ARGUMENTS"
+
+# Cleanup debug since the SSL was issues succesfully
+rm -f "$log_file"
 
 exit

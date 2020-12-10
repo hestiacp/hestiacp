@@ -1,6 +1,11 @@
 #!/bin/bash
 # info: updates user role
 # options: USER ROLE
+# labels: hestia
+#
+# example: v-change-user-role user administrator
+#
+# Give/revoke user administrator rights to manage all accounts as admin 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

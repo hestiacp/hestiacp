@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete webmail support for a domain
 # options: USER DOMAIN [RESTART] [QUIET]
+# labels: hestia
+#
+# example: v-delete-sys-webmail user demo.com
 #
 # this function removes support for webmail from
 # a specified mail domain.

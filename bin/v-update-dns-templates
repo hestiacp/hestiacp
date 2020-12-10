@@ -1,8 +1,11 @@
 #!/bin/bash
 # info: update dns templates
 # options: [RESTART]
+# labels: dns
 #
-# The function for obtaining updated pack of dns templates.
+# example: v-update-dns-templates
+#
+# The function for obtaining updated dns templates from Hestia package.
 
 
 #----------------------------------------------------------#

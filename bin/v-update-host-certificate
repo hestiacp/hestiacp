@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update host certificate for hestia
 # options: USER HOSTNAME
+# labels: panel
+#
+# example: v-update-host-certificate admin example.com
 #
 # Function updates certificates for hestia
 

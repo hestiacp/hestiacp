@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list database host
 # options: TYPE HOST [FORMAT]
+# labels: panel
+#
+# example: v-list-database-host mysql localhost
 #
 # The function for obtaining database host parameters.
 

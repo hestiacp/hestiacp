@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete remote dns domain
 # options: USER DOMAIN
+# labels: dns
+#
+# example: v-delete-remote-dns-domain admin example.tld
 #
 # The function synchronize dns with the remote server.
 

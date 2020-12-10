@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: adding user package
 # options: PKG_DIR PACKAGE [REWRITE]
+# labels: 
 #
 # The function adds new user package to the system.
 

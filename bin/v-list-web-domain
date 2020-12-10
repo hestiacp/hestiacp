@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list web domain parameters
 # options: USER DOMAIN [FORMAT]
+# labels: web
+#
+# example: v-list-web-domain admin example.com
 #
 # The function to obtain web domain parameters.
 

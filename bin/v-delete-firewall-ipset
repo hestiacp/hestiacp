@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete firewall ipset
 # options: NAME
+# labels: hestia
+#
+# example: v-delete-firewall-ipset country-nl
 #
 # The function removes ipset from system and from hestia
 

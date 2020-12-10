@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add cron reports
-# options: user
+# options: USER
+# labels: 
+#
+# example: v-add-cron-reports admin
 #
 # The script for enabling reports on cron tasks and administrative
 # notifications.

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list mail domain ssl certificate
 # options: USER DOMAIN [FORMAT]
+# labels: hestia
+#
+# example: v-list-mail-domain-ssl user acme.com json
 #
 # The function of obtaining domain ssl files.
 

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add ftp account for web domain.
 # options: USER DOMAIN FTP_USER FTP_PASSWORD [FTP_PATH]
+# labels: web
+#
+# example: v-add-web-domain-ftp alice wonderland.com alice_ftp p4$$vvOrD
 #
 # The function creates additional ftp account for web domain.
 

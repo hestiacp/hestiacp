@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change domain owner
 # options: DOMAIN USER
+# labels: 
+#
+# example: v-change-domain-owner www.example.com bob
 #
 # The function of changing domain ownership.
 
@@ -94,6 +97,9 @@ if [ ! -z "$web_data" ]; then
     $BIN/v-unsuspend-web-domain $user $domain no >> /dev/null 2>&1
     $BIN/v-rebuild-web-domains $owner no
     $BIN/v-rebuild-web-domains $user
+
+    # Cleanup old config
+    rm -rf $HOMEDIR/$owner/conf/web/$domain/
 fi
 
 # DNS domain
@@ -120,6 +126,9 @@ if [ ! -z "$dns_data" ]; then
     $BIN/v-unsuspend-dns-domain $user $domain no >> /dev/null 2>&1
     $BIN/v-rebuild-dns-domains $owner no
     $BIN/v-rebuild-dns-domains $user
+
+    # Cleanup old config
+    rm -f $HOMEDIR/$owner/conf/dns/$domain.db
 
     # Resync dns cluster
     if [ ! -z "$DNS_CLUSTER" ]; then

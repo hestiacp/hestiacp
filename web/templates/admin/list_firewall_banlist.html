@@ -2,7 +2,7 @@
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
           <a class="ui-button cancel" id="btn-back" href="/list/firewall/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
-          <a href="/add/firewall/banlist/" id="btn-create" class="ui-button cancel" title="<?=_('Ban IP Address')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Ban IP Address')?></a>
+          <a href="/add/firewall/banlist/" id="btn-create" class="ui-button cancel"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Ban IP Address')?></a>
         </div>
         <div class="l-sort-toolbar clearfix">
           <table>
@@ -87,12 +87,8 @@
             <?php
               if ( $i == 0) {
                 echo _('There are currently no banned IP addresses.');
-              }
-              if ( $i == 1) {
-                echo _('1 banned IP address');
-              }
-              if ( $i > 1) {
-                echo _('%s banned IP addresses',$i);
+              }else{
+                printf(ngettext('%d banned IP address', '%d banned IP addresses', $i),$i);
               }
             ?>
           </div>

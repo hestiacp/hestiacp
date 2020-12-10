@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: rebuild databases
-# options: USER
+# options: USER DATABASE
+# labels: hestia
+#
+# example: v-rebuild-database user user_wordpress
 #
 # The function for rebuilding a single database for a user
 

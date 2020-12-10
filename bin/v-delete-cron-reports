@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete cron reports
 # options: USER
+# labels: 
+#
+# example: v-delete-cron-reports admin
 #
 # The script for disabling reports on cron tasks and administrative
 # notifications.

@@ -1,6 +1,10 @@
 #!/bin/bash
 # info: duplicate existing package
+# options: PACKAGE NEW_PACKAGE
+# labels: hestia
 #
+# example: v-copy-user-package default new
+# 
 # The function allows the user to duplicate an existing
 # package file to facilitate easier configuration.
 

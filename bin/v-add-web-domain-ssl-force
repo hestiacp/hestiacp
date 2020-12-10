@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: Adding force SSL for a domain
 # options: USER DOMAIN
+# labels: hestia web
+#
+# example: v-add-web-domain-ssl-force admin acme.com
 #
 # The function forces SSL for the requested domain.
 
@@ -67,6 +70,8 @@ else
     echo 'RewriteRule ^(.*)$ https://%{HTTP_HOST}$1 [R=301,L]' >> $forcessl
 fi
 
+chown root:$user $forcessl
+chmod 640 $forcessl
 
 #----------------------------------------------------------#
 #                       Hestia                             #

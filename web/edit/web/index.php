@@ -74,13 +74,23 @@ $v_stats = $data[$v_domain]['STATS'];
 $v_stats_user = $data[$v_domain]['STATS_USER'];
 if (!empty($v_stats_user)) $v_stats_password = "";
 $v_custom_doc_root_prepath = '/home/'.$v_username.'/web/';
-$v_custom_doc_root = $data[$v_domain]['CUSTOM_DOCROOT'];
 
-$m = preg_match('/\/home\/'.$v_username.'\/web\/([[:alnum:]].*)\/public_html\/([[:alnum:]].*)/', $v_custom_doc_root, $matches);
-$v_custom_doc_domain = $matches[1];
-$v_custom_doc_folder = $matches[2];
-if(substr($v_custom_doc_folder, -1) == '/'){
-    $v_custom_doc_folder = substr($v_custom_doc_folder,0,-1);
+if(!empty($data[$v_domain]['CUSTOM_DOCROOT']))
+    $v_custom_doc_root = realpath($data[$v_domain]['CUSTOM_DOCROOT']) . DIRECTORY_SEPARATOR;
+
+if(!empty($v_custom_doc_root) &&
+    false !== preg_match('/\/home\/'.$v_username.'\/web\/([[:alnum:]].*)\/public_html\/([[:alnum:]].*)?/', $v_custom_doc_root, $matches) ) {
+
+    if(!empty($matches[1]))
+        $v_custom_doc_domain = $matches[1];
+
+    if(!empty($matches[2]))
+        $v_custom_doc_folder = rtrim($matches[2], '/');
+
+    if($v_custom_doc_domain && !in_array($v_custom_doc_domain, $user_domains)) {
+        $v_custom_doc_domain = '';
+        $v_custom_doc_folder = '';
+    }
 }
 
 
@@ -260,7 +270,40 @@ if (!empty($_POST['save'])) {
                     }
                 }
             }
-        }
+	}
+
+	// Regenerate LE if aliases are different
+	if ((!empty($_POST['v_ssl'])) && ( $v_letsencrypt == 'yes' ) && (!empty($_POST['v_letsencrypt'])) && empty($_SESSION['error_msg'])) {
+
+		// If aliases are different from stored aliases
+		if (array_diff($valiases,$aliases) || array_diff($aliases,$valiases)) {
+			
+			// Add certificate with new aliases
+			$l_aliases = str_replace("\n", ',', $v_aliases);
+			exec (HESTIA_CMD."v-add-letsencrypt-domain ".$user." ".escapeshellarg($v_domain)." ".escapeshellarg($l_aliases)." ''", $output, $return_var);
+        		check_return_code($return_var,$output);
+        		unset($output);
+        		$v_letsencrypt = 'yes';
+        		$v_ssl = 'yes';
+        		$restart_web = 'yes';
+			$restart_proxy = 'yes';
+
+			exec (HESTIA_CMD."v-list-web-domain-ssl ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
+                        $ssl_str = json_decode(implode('', $output), true);
+                        unset($output);
+                        $v_ssl_crt = $ssl_str[$v_domain]['CRT'];
+                        $v_ssl_key = $ssl_str[$v_domain]['KEY'];
+                        $v_ssl_ca = $ssl_str[$v_domain]['CA'];
+                        $v_ssl_subject = $ssl_str[$v_domain]['SUBJECT'];
+                        $v_ssl_aliases = $ssl_str[$v_domain]['ALIASES'];
+                        $v_ssl_not_before = $ssl_str[$v_domain]['NOT_BEFORE'];
+                        $v_ssl_not_after = $ssl_str[$v_domain]['NOT_AFTER'];
+                        $v_ssl_signature = $ssl_str[$v_domain]['SIGNATURE'];
+                        $v_ssl_pub_key = $ssl_str[$v_domain]['PUB_KEY'];
+                        $v_ssl_issuer = $ssl_str[$v_domain]['ISSUER'];
+		}
+	}
+
         if ((!empty($v_stats)) && ($_POST['v_stats'] == $v_stats) && (empty($_SESSION['error_msg']))) {
             // Update statistics configuration when changing domain aliases
             $v_stats = escapeshellarg($_POST['v_stats']);
@@ -767,11 +810,7 @@ if (!empty($_POST['save'])) {
             check_return_code($return_var,$output);
             unset($output);     
         }else{
-            if(substr($_POST['v-custom-doc-folder'], -1) == '/'){
-                $v_custom_doc_folder = escapeshellarg(substr($_POST['v-custom-doc-folder'],0,-1));
-            }else{
-                $v_custom_doc_folder = escapeshellarg($_POST['v-custom-doc-folder']);  
-            }
+            $v_custom_doc_folder = escapeshellarg(rtrim($_POST['v-custom-doc-folder'],'/'));
             $v_custom_doc_domain = escapeshellarg($_POST['v-custom-doc-domain']);
             
             exec(HESTIA_CMD."v-change-web-domain-docroot ".$v_username." ".escapeshellarg($v_domain)." ".$v_custom_doc_domain." ".$v_custom_doc_folder ." yes",  $output, $return_var);
@@ -808,6 +847,7 @@ if (!empty($_POST['save'])) {
     if (empty($_SESSION['error_msg'])) {
         $_SESSION['ok_msg'] = _('Changes has been saved.');
         header("Location: /edit/web/?domain=" . $v_domain);
+        exit();
     }
 
 }
@@ -822,7 +862,7 @@ foreach ($v_ftp_users_raw as $v_ftp_user_index => $v_ftp_user_val) {
     }
     $v_ftp_users[] = array(
         'is_new'            => 0,
-        'v_ftp_user'        => $v_ftp_user_val,
+        'v_ftp_user'        => preg_replace("/^".$user."_/", "", $v_ftp_user_val),
         'v_ftp_password'    => $v_ftp_password,
         'v_ftp_path'        => (isset($v_ftp_users_paths_raw[$v_ftp_user_index]) ? $v_ftp_users_paths_raw[$v_ftp_user_index] : ''),
         'v_ftp_email'       => $v_ftp_email,

@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: Adding hsts to a domain
 # options: USER DOMAIN
+# labels: hestia
 #
 # The function enables HSTS for the requested domain.
 
@@ -55,6 +56,8 @@ fi
 
 echo 'add_header Strict-Transport-Security "max-age=15768000;" always;' > $hstsconf
 
+chown root:$user $hstsconf
+chmod 640 $hstsconf
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: check api key
-# options: KEY
+# options: KEY [IP]
+# labels: 
+#
+# example: v-check-api-key random_key 127.0.0.1
 #
 # The function checks a key file in $HESTIA/data/keys/
 

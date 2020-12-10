@@ -75,8 +75,12 @@ fi
 # Set Version for compiling
 if [ -f "$SRC_DIR/src/deb/hestia/control" ] && [ "$branch" = '~localsrc' ]; then
   BUILD_VER=$(cat $SRC_DIR/src/deb/hestia/control |grep "Version:" |cut -d' ' -f2)
+  NGINX_V=$(cat $SRC_DIR/src/deb/nginx/control |grep "Version:" |cut -d' ' -f2)
+  PHP_V=$(cat $SRC_DIR/src/deb/php/control |grep "Version:" |cut -d' ' -f2)
 else
   BUILD_VER=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/hestia/control |grep "Version:" |cut -d' ' -f2)
+  NGINX_V=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/nginx/control |grep "Version:" |cut -d' ' -f2)
+  PHP_V=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/php/control |grep "Version:" |cut -d' ' -f2)
 fi
 
 if [ -z "$BUILD_VER" ]; then
@@ -86,11 +90,9 @@ fi
 
 BUILD_ARCH='amd64'
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
-NGINX_V=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/nginx/control |grep "Version:" |cut -d' ' -f2)
 OPENSSL_V='1.1.1g'
 PCRE_V='8.44'
 ZLIB_V='1.2.11'
-PHP_V=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/php/control |grep "Version:" |cut -d' ' -f2)
 
 # Create build directories
 rm -rf $BUILD_DIR
@@ -180,7 +182,7 @@ NGINX='https://nginx.org/download/nginx-'$(echo $NGINX_V |cut -d"~" -f1)'.tar.gz
 OPENSSL='https://www.openssl.org/source/openssl-'$OPENSSL_V'.tar.gz'
 PCRE='https://ftp.pcre.org/pub/pcre/pcre-'$PCRE_V'.tar.gz'
 ZLIB='https://www.zlib.net/zlib-'$ZLIB_V'.tar.gz'
-PHP='http://de2.php.net/distributions/php-'$(echo $PHP_V |cut -d"-" -f1)'.tar.gz'
+PHP='http://de2.php.net/distributions/php-'$(echo $PHP_V |cut -d"~" -f1)'.tar.gz'
 
 # Forward slashes in branchname are replaced with dashes to match foldername in github archive.
 branch=$(echo "$branch" |sed 's/\//-/g');
@@ -330,7 +332,7 @@ if [ "$PHP_B" = true ] ; then
     download_file $PHP '-' | tar xz
 
     # Change to php directory
-    cd php-$(echo $PHP_V |cut -d"-" -f1)
+    cd php-$(echo $PHP_V |cut -d"~" -f1)
 
     # Configure PHP
     ./configure   --prefix=/usr/local/hestia/php \
@@ -355,7 +357,7 @@ if [ "$PHP_B" = true ] ; then
 
     # Cleare up unused files
     cd $BUILD_DIR
-    rm -r php-$(echo $PHP_V |cut -d"-" -f1)
+    rm -r php-$(echo $PHP_V |cut -d"~" -f1)
 
     # Prepare Deb Package Folder Structure
     cd hestia-php_$PHP_V/

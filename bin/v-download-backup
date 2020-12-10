@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: Download backup
-# options: USER BACKUP 
+# options: USER BACKUP
+# labels: hestia
+#
+# example: v-download-backup admin admin.2020-11-05_05-10-21.tar
 #
 # The function download back-up from remote server
 

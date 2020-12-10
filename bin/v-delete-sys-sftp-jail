@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete system sftp jail
 # options: NONE
+# labels: panel
+#
+# example: v-delete-sys-sftp-jail 
 #
 # The script disables sftp jailed environment
 

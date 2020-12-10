@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change user shell
 # options: USER SHELL
+# labels: panel
+#
+# example: v-change-user-shell admin nologin
 #
 # The function changes system shell of a user. Shell gives ability to use ssh.
 

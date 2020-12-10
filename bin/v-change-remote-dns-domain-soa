@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change remote dns domain SOA
 # options: USER DOMAIN
+# labels: dns
+#
+# example: v-change-remote-dns-domain-soa admin example.org.uk
 #
 # The function synchronize dns domain with the remote server.
 

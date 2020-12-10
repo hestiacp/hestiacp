@@ -7,7 +7,7 @@
             <a href="/add/webapp/?domain=<?=$v_domain?>" class="ui-button cancel">
                 <i class="fas fa-magic status-icon blue"></i> <?=_('Quick Install App')?>
             </a>
-            <a href="#" class="ui-button" title="<?=_('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
+            <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
         </div>
     </div>
     </div>
@@ -94,6 +94,14 @@
                             <tr>
                                 <td>
                                     <textarea size="20" class="vst-textinput short" name="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
+                                </td>
+                            </tr>
+			    <tr>
+                                <td>
+                                    <span class="alert alert-info alert-with-icon">
+                                                    <i class="fas fa-exclamation"></i>
+                                                    <?php print _('Changes to Aliases will cause Lets Encrypt to obtain a new SSL certificate if enabled.');?>
+                                                </span>
                                 </td>
                             </tr>
                             <tr>
@@ -258,24 +266,14 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="hidden" name="v-custom-doc-root_prepath"" value="<?php echo $v_custom_doc_root_prepath;?>">
+                                                <input type="hidden" name="v-custom-doc-root_prepath" value="<?php echo $v_custom_doc_root_prepath;?>">
                                                 <select class="vst-list" name="v-custom-doc-domain">
-                                                    <option value="<?php echo $v_domain;?>"><?php echo $v_domain;?></option>
-                                                    <?php
-                                                    foreach ($user_domains as $domain) {
-                                                        if($domain != $v_domain ){
-                                                        if($v_custom_doc_domain == $domain){
-                                                    ?>
-                                                            <option value="<?php echo $domain;?>" selected="selected"><?php echo $domain;?></option>
-                                                    <?php
-                                                        }else{
-                                                     ?>
-                                                            <option value="<?php echo $domain;?>"><?php echo $domain;?></option>
-                                                    <?php
-                                                        }
-                                                        }
-                                                    }
-                                                    ?>
+                                                <?php foreach ($user_domains as $domain): ?>
+                                                    <option value="<?php echo $domain;?>"
+                                                        <?=($v_custom_doc_domain === $domain || (empty($v_custom_doc_domain) && $domain === $v_domain))?' selected="selected" ':''; ?>>
+                                                        <?php echo $domain;?>
+                                                    </option>
+                                                <?php endforeach; ?>
                                                 </select>
                                             </td>
                                         </tr>
@@ -302,7 +300,7 @@
 
                             <tr>
                                 <td class="vst-text step-top">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');"> <?php print _('SSL Support');?></label>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:App.Actions.WEB.toggle_ssl(this);"> <?php print _('SSL Support');?></label>
                                 </td>
                             </tr>
                             <tr>
@@ -310,17 +308,17 @@
                                     <table style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;" id="ssltable">
                                      <tr>
                                           <td class="input-label vst-text">
-                                              <label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letencrypt == 'on') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_letsencrypt(this)"> <?php print _('Lets Encrypt Support');?></label>
+                                              <label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" id="letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letencrypt == 'on') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_letsencrypt(this)"> <?php print _('Lets Encrypt Support');?></label>
                                           </td>
                                       </tr>
                                       <tr>
                                           <td class="input-label vst-text">
-                                              <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl_forcessl" <?php if($v_ssl_forcessl == 'yes') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_forcessl(this)"> <?php print _('Force SSL/HTTPS');?></label>
+                                              <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl_forcessl" id="v_ssl_forcessl" <?php if($v_ssl_forcessl == 'yes') echo "checked=yes" ?> onclick=""> <?php print _('Force SSL/HTTPS');?></label>
                                           </td>
                                       </tr>
                                       <tr>
                                           <td class="input-label vst-text">
-                                              <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl_hsts" <?php if($v_ssl_hsts == 'yes') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_hsts(this)"> <?php print _('Enable SSL HSTS');?></label>
+                                              <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl_hsts" id="ssl_hsts" <?php if($v_ssl_hsts == 'yes') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_hsts(this)"> <?php print _('Enable SSL HSTS');?></label>
                                           </td>
                                       </tr>
                                       <tr style="display: none;">
@@ -345,7 +343,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <textarea size="20" class="vst-textinput short" name="v_ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
+                                                <textarea size="20" class="vst-textinput short" name="v_ssl_crt" id="ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
                                             </td>
                                         </tr>
                                         <tr>

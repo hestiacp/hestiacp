@@ -1,6 +1,9 @@
 #!/bin/bash
-# info: update domains disk usage 
+# info: update domains disk usage
 # options: USER
+# labels: web
+#
+# example: v-update-web-domains-disk alice
 #
 # The function recalculates disk usage for all user webdomains.
 

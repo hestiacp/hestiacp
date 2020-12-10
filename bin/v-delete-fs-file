@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete file
 # options: USER FILE
+# labels: 
+#
+# example: v-delete-fs-file admin readme.txt
 #
 # The function deletes file on the file system
 

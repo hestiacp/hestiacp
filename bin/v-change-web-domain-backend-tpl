@@ -52,11 +52,11 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Deleting current backend
-delete_web_backend
-
 # Prepare new backend configuration
 prepare_web_backend
+
+# Deleting current backend
+delete_web_backend
 
 # Allocating backend port
 backend_port=9000

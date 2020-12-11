@@ -70,7 +70,6 @@ EOL
 
     osal_service_enable $OSAL_SERVICE_MARIADB
     osal_service_start $OSAL_SERVICE_MARIADB
-    check_result $? "MariaDB start failed"
 
     if [ ! -f /root/.my.cnf ]; then
         # If /root/.my.cnf does not exist, secure MariaDB by setting root password

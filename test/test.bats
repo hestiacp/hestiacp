@@ -691,6 +691,20 @@ function validate_webmail_domain() {
     validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
     rm $HOMEDIR/$user/web/$multi_domain/public_html/php-test.php
 }
+
+@test "Multiphp: Cleanup" {
+    multi_domain="multiphp.${domain}"
+
+    run v-delete-web-domain $user $multi_domain 'yes'
+    assert_success
+    refute_output
+
+    # No php-fpm pool config file must be present
+    num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+    assert_equal "$num_fpm_config_files" '0'
+}
+
+
 #----------------------------------------------------------#
 #                         DNS                              #
 #----------------------------------------------------------#

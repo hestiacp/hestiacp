@@ -20,7 +20,7 @@
 		<div class="l-profile noselect">
 			<div class="l-menu__item">
 				<span class="pill usage">
-					<i class="fas fa-user"></i>&nbsp;&nbsp;<b><?=htmlspecialchars($user)?></b> /
+					<i class="fas fa-user"></i>&nbsp;&nbsp;<b><?=htmlspecialchars($user)?> (<?=htmlspecialchars($panel[$user]['NAME'])?>)</b> /
 					<i class="fas fa-hdd"></i>&nbsp;&nbsp;<b><?=humanize_usage_size($panel[$user]['U_DISK'])?></b> <?=humanize_usage_measure($panel[$user]['U_DISK'])?> /
 					<i class="fas fa-exchange-alt"></i>&nbsp;&nbsp;<b><?=humanize_usage_size($panel[$user]['U_BANDWIDTH'])?></b> <?=humanize_usage_measure($panel[$user]['U_BANDWIDTH'])?>
 				</span>

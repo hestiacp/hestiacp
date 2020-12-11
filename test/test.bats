@@ -18,6 +18,8 @@ function setup() {
         echo 'userpass2=t3st-p4ssw0rd' >> /tmp/hestia-test-env.sh
         echo 'HESTIA=/usr/local/hestia' >> /tmp/hestia-test-env.sh
         echo 'domain=test-5285.hestiacp.com' >> /tmp/hestia-test-env.sh
+        echo 'database=test-5285_database' >> /tmp/hestia-test-env.sh
+        echo 'dbuser=test-5285_dbuser' >> /tmp/hestia-test-env.sh
     fi
 
     source /tmp/hestia-test-env.sh
@@ -133,6 +135,40 @@ function validate_webmail_domain() {
     fi
 }
 
+function validate_database(){
+    local database=$1
+    local dbuser=$2
+    local password=$3
+    
+    host_str=$(grep "HOST='localhost'" $HESTIA/conf/mysql.conf)
+    parse_object_kv_list "$host_str"
+    if [ -z $PORT ]; then PORT=3306; fi
+    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
+        echo "Error: mysql config parsing failed"
+        log_event "$E_PARSING" "$ARGUMENTS"
+        exit $E_PARSING
+    fi
+    
+    # Create an connection to verify correct username / password has been set correctly
+    tmpfile=$(mktemp /tmp/mysql.XXXXXX)
+    echo "[client]">$tmpfile
+    echo "host='$HOST'" >> $tmpfile
+    echo "user='$dbuser'" >> $tmpfile
+    echo "password='$password'" >> $tmpfile
+    echo "port='$PORT'" >> $tmpfile
+    chmod 600 $tmpfile
+    
+    sql_tmp=$(mktemp /tmp/query.XXXXXX)
+    echo "show databases;" > $sql_tmp
+    run mysql --defaults-file=$tmpfile < "$sql_tmp"
+    
+    assert_success
+    assert_output --partial "$database"
+    
+    rm -f "$sql_tmp"
+    rm -f "$tmpfile"
+}
+
 #----------------------------------------------------------#
 #                         MAIN                             #
 #----------------------------------------------------------#
@@ -149,7 +185,6 @@ function validate_webmail_domain() {
 #----------------------------------------------------------#
 
 @test "Check reverse Dns validation" {
-
     # 1. PTR record for a IP should return a hostname(reverse) which in turn must resolve to the same IP addr(forward). (Full circle)
     #  `-> not implemented in `is_ip_rdns_valid` yet and also not tested here
     # 2. Reject rPTR records that match generic dynamic IP pool patterns
@@ -616,6 +651,61 @@ function validate_webmail_domain() {
 #                         DB                               #
 #----------------------------------------------------------#
 
+@test "DB: Add database (mysql)" {
+    run v-add-database $user database dbuser 1234 mysql
+    assert_success
+    refute_output
+    # validate_database database_name database_user password
+    validate_database $database $dbuser 1234
+}
+@test "DB: Add Database (mysql) (Duplicate)" {
+    run v-add-database $user database dbuser 1234 mysql
+    assert_failure $E_EXISTS
+}
+
+@test "DB: Rebuild Database (mysql)" {
+    run v-rebuild-database $user $database
+    assert_success
+    refute_output 
+}
+
+@test "DB: Change database user password (mysql)" {
+    run v-change-database-password $user $database 123456
+    assert_success
+    refute_output 
+    
+    validate_database $database $dbuser 123456
+}
+
+@test "DB: Change database user (mysql)" {
+    run v-change-database-user $user $database database
+    assert_success
+    refute_output 
+    validate_database $database $database 123456
+}
+
+@test "DB: Suspend database" {
+    run v-suspend-database $user $database
+    assert_success
+    refute_output
+}
+
+@test "DB: Unsuspend database" {
+    run v-unsuspend-database $user $database
+    assert_success
+    refute_output
+}
+
+@test "DB: Delete database" {
+    run v-delete-database $user $database
+    assert_success
+    refute_output 
+}
+
+@test "DB: Delete missing database" {
+    run v-delete-database $user $database
+    assert_failure $E_NOTEXIST
+}
 
 #----------------------------------------------------------#
 #                     Backup / Restore                     #
@@ -636,7 +726,20 @@ function validate_webmail_domain() {
 #      - hestia111_db
 #    cron:
 #      - 1: /bin/true
-#
+#  Hestia 1.3.1 archive contains (As zstd format)
+#    user: hestia111
+#    web:
+#      - test.hestia.com (+SSL self-signed)
+#    dns:
+#      - test.hestia.com
+#    mail:
+#      - test.hestia.com
+#    mail acc:
+#      - testaccount@test.hestia.com
+#    db:
+#      - hestia111_db
+#    cron:
+#      - 1: /bin/true 
 #  Vesta 0.9.8-23 archive contains:
 #    user: vesta09823
 #    web:
@@ -786,6 +889,139 @@ function validate_webmail_domain() {
     run v-delete-user $userbk
     assert_success
     refute_output
+}
+
+@test "Restore[3]: Hestia (zstd) archive for a non-existing user" {
+if [ -d "$HOMEDIR/$userbk" ]; then
+    run v-delete-user $userbk
+    assert_success
+    refute_output
+fi
+
+mkdir -p /backup
+
+local archive_name="hestia111.zstd"
+run wget --quiet --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache "https://hestiacp.com/testing/data/${archive_name}.tar" -O "/backup/${archive_name}.tar"
+assert_success
+
+run v-restore-user $userbk "${archive_name}.tar"
+assert_success
+
+rm "/backup/${archive_name}.tar"
+}
+
+@test "Restore[3]: From Hestia [WEB]" {
+local domain="test.hestia.com"
+validate_web_domain $userbk $domain 'Hello Hestia'
+}
+
+@test "Restore[3]: From Hestia [DNS]" {
+local domain="test.hestia.com"
+
+run v-list-dns-domain $userbk $domain
+assert_success
+
+run nslookup $domain 127.0.0.1
+assert_success
+}
+
+@test "Restore[3]: From Hestia [MAIL]" {
+local domain="test.hestia.com"
+
+run v-list-mail-domain $userbk $domain
+assert_success
+}
+
+@test "Restore[3]: From Hestia [MAIL-Account]" {
+local domain="test.hestia.com"
+
+run v-list-mail-account $userbk $domain testaccount
+assert_success
+}
+
+@test "Restore[3]: From Hestia [DB]" {
+run v-list-database $userbk "${userbk}_db"
+assert_success
+}
+
+@test "Restore[3]: From Hestia [CRON]" {
+run v-list-cron-job $userbk 1
+assert_success
+}
+
+@test "Restore[3]: From Hestia Cleanup" {
+run v-delete-user $userbk
+assert_success
+refute_output
+}
+
+@test "Restore[4]: Hestia (zstd) archive for a existing user" {
+    if [ -d "$HOMEDIR/$userbk" ]; then
+        run v-delete-user $userbk
+        assert_success
+        refute_output
+    fi
+
+    if [ ! -d "$HOMEDIR/$userbk" ]; then
+        run v-add-user $userbk $userbk test@hestia.com
+        assert_success
+    fi
+
+mkdir -p /backup
+
+local archive_name="hestia111.zstd"
+run wget --quiet --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache "https://hestiacp.com/testing/data/${archive_name}.tar" -O "/backup/${archive_name}.tar"
+assert_success
+
+run v-restore-user $userbk "${archive_name}.tar"
+assert_success
+
+rm "/backup/${archive_name}.tar"
+}
+
+@test "Restore[4]: From Hestia [WEB]" {
+local domain="test.hestia.com"
+validate_web_domain $userbk $domain 'Hello Hestia'
+}
+
+@test "Restore[4]: From Hestia [DNS]" {
+local domain="test.hestia.com"
+
+run v-list-dns-domain $userbk $domain
+assert_success
+
+run nslookup $domain 127.0.0.1
+assert_success
+}
+
+@test "Restore[4]: From Hestia [MAIL]" {
+local domain="test.hestia.com"
+
+run v-list-mail-domain $userbk $domain
+assert_success
+}
+
+@test "Restore[4]: From Hestia [MAIL-Account]" {
+local domain="test.hestia.com"
+
+run v-list-mail-account $userbk $domain testaccount
+assert_success
+}
+
+@test "Restore[4]: From Hestia [DB]" {
+run v-list-database $userbk "${userbk}_db"
+assert_success
+}
+
+@test "Restore[4]: From Hestia [CRON]" {
+run v-list-cron-job $userbk 1
+assert_success
+}
+
+@test "Restore[4]: From Hestia Cleanup" {
+run v-delete-user $userbk
+assert_success
+refute_output
 }
 
 

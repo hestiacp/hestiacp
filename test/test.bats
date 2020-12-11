@@ -47,7 +47,12 @@ function validate_web_domain() {
     domain_ip=$(get_real_ip "$domain_ip")
 
     if [ ! -z $webpath ]; then
-        assert_file_exist $HOMEDIR/$user/web/$domain/public_html/$webpath
+        domain_docroot=$(get_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_DOCROOT')
+        if [ -n "$domain_docroot" ] && [ -d "$domain_docroot" ]; then
+            assert_file_exist "${domain_docroot}/${webpath}"
+        else
+            assert_file_exist "${HOMEDIR}/${user}/web/${domain}/public_html/${webpath}"
+        fi
     fi
 
     # Test HTTP
@@ -704,6 +709,89 @@ function validate_webmail_domain() {
     assert_equal "$num_fpm_config_files" '0'
 }
 
+
+#----------------------------------------------------------#
+#                     CUSTOM DOCROOT                       #
+#----------------------------------------------------------#
+
+@test "Docroot: Self Subfolder" {
+    docroot1_domain="docroot1.${domain}"
+
+    run v-add-web-domain $user $docroot1_domain 198.18.0.125
+    assert_success
+    refute_output
+
+    run v-add-fs-directory $user "$HOMEDIR/$user/web/$docroot1_domain/public_html/public/"
+    assert_success
+    refute_output
+
+    run v-change-web-domain-docroot $user "$docroot1_domain" "$docroot1_domain" "/public"
+    assert_success
+    refute_output
+
+    echo -e '<?php\necho "self-sub-".$_SERVER["HTTP_HOST"];' > "$HOMEDIR/$user/web/$docroot1_domain/public_html/public/php-test.php"
+    validate_web_domain $user $docroot1_domain "self-sub-${docroot1_domain}" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$docroot1_domain/public_html/public/php-test.php"
+}
+
+@test "Docroot: Other domain subfolder" {
+    docroot1_domain="docroot1.${domain}"
+    docroot2_domain="docroot2.${domain}"
+
+    run v-add-web-domain $user $docroot2_domain 198.18.0.125
+    assert_success
+    refute_output
+
+    run v-add-fs-directory $user "$HOMEDIR/$user/web/$docroot2_domain/public_html/public/"
+    assert_success
+    refute_output
+
+    run v-change-web-domain-docroot $user "$docroot1_domain" "$docroot2_domain" "/public"
+    assert_success
+    refute_output
+
+    echo -e '<?php\necho "doc2-sub-".$_SERVER["HTTP_HOST"];' > "$HOMEDIR/$user/web/$docroot2_domain/public_html/public/php-test.php"
+    validate_web_domain $user $docroot1_domain "doc2-sub-${docroot1_domain}" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$docroot2_domain/public_html/public/php-test.php"
+}
+
+@test "Docroot: Other domain root folder" {
+    docroot1_domain="docroot1.${domain}"
+    docroot2_domain="docroot2.${domain}"
+
+    run v-change-web-domain-docroot $user "$docroot1_domain" "$docroot2_domain"
+    assert_success
+    refute_output
+
+    echo -e '<?php\necho "doc2-root-".$_SERVER["HTTP_HOST"];' > "$HOMEDIR/$user/web/$docroot2_domain/public_html/php-test.php"
+    validate_web_domain $user $docroot1_domain "doc2-root-${docroot1_domain}" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$docroot2_domain/public_html/php-test.php"
+}
+
+@test "Docroot: Reset" {
+    docroot1_domain="docroot1.${domain}"
+
+    run v-change-web-domain-docroot $user "$docroot1_domain" "default"
+    assert_success
+    refute_output
+
+    echo -e '<?php\necho "doc1-root-".$_SERVER["HTTP_HOST"];' > "$HOMEDIR/$user/web/$docroot1_domain/public_html/php-test.php"
+    validate_web_domain $user $docroot1_domain "doc1-root-${docroot1_domain}" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$docroot1_domain/public_html/php-test.php"
+}
+
+@test "Docroot: Cleanup" {
+    docroot1_domain="docroot1.${domain}"
+    docroot2_domain="docroot2.${domain}"
+
+    run v-delete-web-domain $user $docroot1_domain
+    assert_success
+    refute_output
+
+    run v-delete-web-domain $user $docroot2_domain
+    assert_success
+    refute_output
+}
 
 #----------------------------------------------------------#
 #                         DNS                              #

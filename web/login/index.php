@@ -16,6 +16,12 @@ if (isset($_GET['logout'])) {
 
 // Login as someone else
 if (isset($_SESSION['user'])) {
+    if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
+        session_destroy();
+        session_start();
+        header('Location: /login/');
+        exit();
+    }
     if ($_SESSION['user'] == 'admin' && !empty($_GET['loginas'])) {
         exec (HESTIA_CMD . "v-list-user ".escapeshellarg($_GET['loginas'])." json", $output, $return_var);
         if ( $return_var == 0 ) {

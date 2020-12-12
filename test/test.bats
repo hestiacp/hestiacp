@@ -143,11 +143,9 @@ function validate_database(){
     host_str=$(grep "HOST='localhost'" $HESTIA/conf/mysql.conf)
     parse_object_kv_list "$host_str"
     if [ -z $PORT ]; then PORT=3306; fi
-    if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
-        echo "Error: mysql config parsing failed"
-        log_event "$E_PARSING" "$ARGUMENTS"
-        exit $E_PARSING
-    fi
+    
+    refute [ -z "$HOST" ]
+    refute [ -z "$PORT" ]
     
     # Create an connection to verify correct username / password has been set correctly
     tmpfile=$(mktemp /tmp/mysql.XXXXXX)

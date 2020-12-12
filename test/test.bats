@@ -146,6 +146,10 @@ function validate_database(){
     
     refute [ -z "$HOST" ]
     refute [ -z "$PORT" ]
+    refute [ -z "$database" ]
+    refute [ -z "$dbuser" ]
+    refute [ -z "$password" ]
+    
     
     # Create an connection to verify correct username / password has been set correctly
     tmpfile=$(mktemp /tmp/mysql.XXXXXX)
@@ -725,7 +729,7 @@ function validate_database(){
 #    cron:
 #      - 1: /bin/true
 #  Hestia 1.3.1 archive contains (As zstd format)
-#    user: hestia111
+#    user: hestia131
 #    web:
 #      - test.hestia.com (+SSL self-signed)
 #    dns:
@@ -735,7 +739,7 @@ function validate_database(){
 #    mail acc:
 #      - testaccount@test.hestia.com
 #    db:
-#      - hestia111_db
+#      - hestia131_db
 #    cron:
 #      - 1: /bin/true 
 #  Vesta 0.9.8-23 archive contains:
@@ -890,67 +894,67 @@ function validate_database(){
 }
 
 @test "Restore[3]: Hestia (zstd) archive for a non-existing user" {
-if [ -d "$HOMEDIR/$userbk" ]; then
-    run v-delete-user $userbk
+    if [ -d "$HOMEDIR/$userbk" ]; then
+        run v-delete-user $userbk
+        assert_success
+        refute_output
+    fi
+    
+    mkdir -p /backup
+    
+    local archive_name="hestia131.2020-12-12"
+    run wget --quiet --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache "https://dev.eris.nu/${archive_name}.tar" -O "/backup/${archive_name}.tar"
     assert_success
-    refute_output
-fi
-
-mkdir -p /backup
-
-local archive_name="hestia111.zstd"
-run wget --quiet --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache "https://hestiacp.com/testing/data/${archive_name}.tar" -O "/backup/${archive_name}.tar"
-assert_success
-
-run v-restore-user $userbk "${archive_name}.tar"
-assert_success
-
-rm "/backup/${archive_name}.tar"
+    
+    run v-restore-user $userbk "${archive_name}.tar"
+    assert_success
+    
+    rm "/backup/${archive_name}.tar"
 }
 
 @test "Restore[3]: From Hestia [WEB]" {
-local domain="test.hestia.com"
-validate_web_domain $userbk $domain 'Hello Hestia'
+    local domain="test.hestia.com"
+    validate_web_domain $userbk $domain 'Hello Hestia'
 }
 
 @test "Restore[3]: From Hestia [DNS]" {
-local domain="test.hestia.com"
-
-run v-list-dns-domain $userbk $domain
-assert_success
-
-run nslookup $domain 127.0.0.1
-assert_success
+    local domain="test.hestia.com"
+    
+    run v-list-dns-domain $userbk $domain
+    assert_success
+    
+    run nslookup $domain 127.0.0.1
+    assert_success
 }
 
 @test "Restore[3]: From Hestia [MAIL]" {
-local domain="test.hestia.com"
-
-run v-list-mail-domain $userbk $domain
-assert_success
+    local domain="test.hestia.com"
+    
+    run v-list-mail-domain $userbk $domain
+    assert_success
 }
 
 @test "Restore[3]: From Hestia [MAIL-Account]" {
-local domain="test.hestia.com"
-
-run v-list-mail-account $userbk $domain testaccount
-assert_success
+    local domain="test.hestia.com"
+    
+    run v-list-mail-account $userbk $domain testaccount
+    assert_success
 }
 
 @test "Restore[3]: From Hestia [DB]" {
-run v-list-database $userbk "${userbk}_db"
-assert_success
+    run v-list-database $userbk "${userbk}_db"
+    assert_success
 }
 
 @test "Restore[3]: From Hestia [CRON]" {
-run v-list-cron-job $userbk 1
-assert_success
+    run v-list-cron-job $userbk 1
+    assert_success
 }
 
 @test "Restore[3]: From Hestia Cleanup" {
-run v-delete-user $userbk
-assert_success
-refute_output
+    run v-delete-user $userbk
+    assert_success
+    refute_output
 }
 
 @test "Restore[4]: Hestia (zstd) archive for a existing user" {
@@ -965,61 +969,61 @@ refute_output
         assert_success
     fi
 
-mkdir -p /backup
-
-local archive_name="hestia111.zstd"
-run wget --quiet --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache "https://hestiacp.com/testing/data/${archive_name}.tar" -O "/backup/${archive_name}.tar"
-assert_success
-
-run v-restore-user $userbk "${archive_name}.tar"
-assert_success
-
-rm "/backup/${archive_name}.tar"
+    mkdir -p /backup
+    
+    local archive_name="hestia131.2020-12-12"
+    run wget --quiet --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache "https://dev.eris.nu/${archive_name}.tar" -O "/backup/${archive_name}.tar"
+    assert_success
+    
+    run v-restore-user $userbk "${archive_name}.tar"
+    assert_success
+    
+    rm "/backup/${archive_name}.tar"
 }
 
 @test "Restore[4]: From Hestia [WEB]" {
-local domain="test.hestia.com"
-validate_web_domain $userbk $domain 'Hello Hestia'
+    local domain="test.hestia.com"
+    validate_web_domain $userbk $domain 'Hello Hestia'
 }
 
 @test "Restore[4]: From Hestia [DNS]" {
-local domain="test.hestia.com"
-
-run v-list-dns-domain $userbk $domain
-assert_success
-
-run nslookup $domain 127.0.0.1
-assert_success
+    local domain="test.hestia.com"
+    
+    run v-list-dns-domain $userbk $domain
+    assert_success
+    
+    run nslookup $domain 127.0.0.1
+    assert_success
 }
 
 @test "Restore[4]: From Hestia [MAIL]" {
-local domain="test.hestia.com"
-
-run v-list-mail-domain $userbk $domain
-assert_success
+    local domain="test.hestia.com"
+    
+    run v-list-mail-domain $userbk $domain
+    assert_success
 }
 
 @test "Restore[4]: From Hestia [MAIL-Account]" {
-local domain="test.hestia.com"
-
-run v-list-mail-account $userbk $domain testaccount
-assert_success
+    local domain="test.hestia.com"
+    
+    run v-list-mail-account $userbk $domain testaccount
+    assert_success
 }
 
 @test "Restore[4]: From Hestia [DB]" {
-run v-list-database $userbk "${userbk}_db"
-assert_success
+    run v-list-database $userbk "${userbk}_db"
+    assert_success
 }
 
 @test "Restore[4]: From Hestia [CRON]" {
-run v-list-cron-job $userbk 1
-assert_success
+    run v-list-cron-job $userbk 1
+    assert_success
 }
 
 @test "Restore[4]: From Hestia Cleanup" {
-run v-delete-user $userbk
-assert_success
-refute_output
+    run v-delete-user $userbk
+    assert_success
+    refute_output
 }
 
 

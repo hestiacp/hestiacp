@@ -903,7 +903,7 @@ function validate_database(){
     mkdir -p /backup
     
     local archive_name="hestia131.2020-12-12"
-    run wget --quiet --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache "https://dev.eris.nu/${archive_name}.tar" -O "/backup/${archive_name}.tar"
+    run wget --quiet --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache "https://hestiacp.com/testing/data/${archive_name}.tar" -O "/backup/${archive_name}.tar"
     assert_success
     
     run v-restore-user $userbk "${archive_name}.tar"
@@ -972,7 +972,7 @@ function validate_database(){
     mkdir -p /backup
     
     local archive_name="hestia131.2020-12-12"
-    run wget --quiet --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache "https://dev.eris.nu/${archive_name}.tar" -O "/backup/${archive_name}.tar"
+    run wget --quiet --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache "https://hestiacp.com/testing/data/${archive_name}.tar" -O "/backup/${archive_name}.tar"
     assert_success
     
     run v-restore-user $userbk "${archive_name}.tar"

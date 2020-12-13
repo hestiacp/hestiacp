@@ -73,7 +73,7 @@ if [ -z $template ]; then template="template1"; fi
 database_set_default_ports
 
 is_format_valid 'host' 'dbuser' 'max_db' 'charsets' 'template' 'port'
-#is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
+is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
 is_type_valid "$DB_SYSTEM" "$type"
 is_dbhost_new
 is_password_valid

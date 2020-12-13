@@ -63,7 +63,7 @@
 
       <?
         list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
-        $webmail = "http://webmail.".$http_host."/";
+        $webmail = "webmail";
         if (!empty($_SESSION['WEBMAIL_ALIAS'])) $webmail = $_SESSION['WEBMAIL_ALIAS'];
 
         foreach ($data as $key => $value) {

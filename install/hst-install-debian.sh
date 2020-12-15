@@ -1245,7 +1245,6 @@ fi
 
 if [ "$multiphp" = 'yes' ] ; then
     for v in "${multiphp_v[@]}"; do
-        cp -r /etc/php/$v/ /root/hst_install_backups/php$v/
         rm -f /etc/php/$v/fpm/pool.d/*
         echo "[ * ] Install PHP version $v..."
         $HESTIA/bin/v-add-web-php "$v" > /dev/null 2>&1

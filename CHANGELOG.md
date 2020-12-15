@@ -1,6 +1,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.3.2] - Service Release
+### Features
+- Added PHP v8.0 support for multiphp environment.
+
+### Bugfixes
+- Improved session token handling in login as function, thanks to Vulnerability Laboratory - [Evolution Security GmbH]™.
+- Fixed an where fpm pool config was not deleted when changing backend template.
+- Improved bats testing with multiphp (5.6-8.0) tests.
+- Fixed an issue where full webmail path was loaded as default value.
+
+
 ## [1.3.1] - Service Release
 ### Features
 - No new features have been introduced in this release.

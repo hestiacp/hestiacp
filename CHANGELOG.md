@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Improved session token handling in login as function, thanks to Vulnerability Laboratory - [Evolution Security GmbH]™.
 - Fixed an where fpm pool config was not deleted when changing backend template.
 - Improved bats testing with multiphp (5.6-8.0) tests.
+- Fixed an issue where full webmail path was loaded as default value.
 
 
 ## [1.3.1] - Service Release

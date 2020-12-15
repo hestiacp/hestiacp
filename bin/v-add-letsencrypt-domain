@@ -55,7 +55,8 @@ query_le_v2() {
     # Save http response to file passed as "$4" arg or print to stdout if not provided
     # http response headers are always sent to stdout
     local save_to_file=${4:-"/dev/stdout"}
-    curl --silent --dump-header /dev/stdout --data "$post_data" "$1" --header "$content" --output "$save_to_file"
+    curl --location --insecure --retry 5 --retry-connrefused --silent --dump-header /dev/stdout --data "$post_data" "$1" --header "$content" --output "$save_to_file"
+    debug_log "API call" "exit status: $?"
 }
 
 
@@ -410,10 +411,31 @@ if [[ "$status" -ne 200 ]]; then
 fi
 
 # Downloading signed certificate / STEP 7
-answer=$(query_le_v2 "$certificate" "" "$nonce" "$ssl_dir/$domain.pem")
-status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
+status=0
+retry=0
 
-debug_log "Step 7" "- status: ${status}\n- answer: ${answer}"
+while [[ $status != 200 && $retry -lt 3 ]]; do
+
+    answer=$(query_le_v2 "$certificate" "" "$nonce" "$ssl_dir/$domain.pem")
+    status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
+
+    debug_log "Step 7" "- status: ${status}\n- retry: ${retry}\n- answer: ${answer}"
+
+    if [[ $status != 200 ]]; then
+        retry=$((retry + 1))
+        sleep $((retry * 2))    # Sleep for 2s, 4s, 6s, 8s
+    fi
+
+done
+
+# Fallback on depreciated download method for certs (unauthenticated GET)
+if [[ $status != 200 ]]; then
+    answer=$(curl  --insecure --retry 5 --retry-connrefused --silent --dump-header /dev/stdout "$certificate" --output "$ssl_dir/$domain.pem")
+    status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
+
+    debug_log "Step 7 - Fallback" "- status: ${status}\n- answer: ${answer}"
+fi
+
 debug_log "CERT DIR" "$(ls -las "$ssl_dir/")"
 debug_log "CERT PEM" "$(cat "$ssl_dir/$domain.pem")"
 

@@ -8,7 +8,7 @@ docroot="$5"
 
 pool_conf="[$2]
 
-listen = /var/run/php/php7.3-fpm-$2.sock
+listen = /run/php/php8.0-fpm-$2.sock
 listen.owner = $1
 listen.group = www-data
 listen.mode = 0660
@@ -67,18 +67,18 @@ if [ -f "$pool_file_72" ]; then
     service php7.2-fpm restart
 fi
 
-if [ ! -f "$pool_file_73" ]; then
-    echo "$pool_conf" > $pool_file_73
+if [ -f "$pool_file_73" ]; then
+    rm $pool_file_73
     service php7.3-fpm restart
 fi
 
-if [ -f "$pool_file_74" ]; then
-    rm $pool_file_74
+if [ ! -f "$pool_file_74" ]; then
+    echo "$pool_conf" > $pool_file_74
     service php7.4-fpm restart
 fi
 
 if [ -f "$pool_file_80" ]; then
-    rm $pool_file_80
+    echo "$pool_conf" > $pool_file_80
     service php8.0-fpm restart
 fi
 

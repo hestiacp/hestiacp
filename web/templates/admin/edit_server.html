@@ -135,7 +135,7 @@
                                                             if ( $key == $v_language ){
                                                                 echo 'selected' ;
                                                             }
-                                                            if (( $key == detect_user_language() ) && (empty($v_language))){
+                                                            if (( $key == $_SESSION['LANGUAGE'] && (empty($v_language)) )) {
                                                                 echo 'selected' ;
                                                             }
                                                             echo ">".htmlentities($value)."</option>\n";

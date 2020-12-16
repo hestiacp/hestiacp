@@ -58,6 +58,9 @@ if grep -q "alias php='env php$version'" "$FILE"; then
   exit;
 fi
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#

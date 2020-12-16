@@ -55,7 +55,8 @@ is_password_valid
 is_dnshost_new
 is_dnshost_alive
 
-
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#

@@ -13,6 +13,8 @@
 #
 # Downloads and compiles/installs packages from GitHub repositories
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 # Define download function
 download_file() {

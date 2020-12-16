@@ -204,7 +204,7 @@ echo "Build version $BUILD_VER, with Nginx version $NGINX_V and PHP version $PHP
 
 BUILD_ARCH='amd64'
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
-OPENSSL_V='1.1.1g'
+OPENSSL_V='1.1.1i'
 PCRE_V='8.44'
 ZLIB_V='1.2.11'
 

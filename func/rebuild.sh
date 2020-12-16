@@ -216,7 +216,6 @@ rebuild_web_domain_conf() {
 
     $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain"
     $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/public_html"
-    $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/public_shtml"
     $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/document_errors"
     $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/cgi-bin"
     $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/private"
@@ -248,8 +247,7 @@ rebuild_web_domain_conf() {
         $HOMEDIR/$user/web/$domain \
         $HOMEDIR/$user/web/$domain/private \
         $HOMEDIR/$user/web/$domain/cgi-bin \
-        $HOMEDIR/$user/web/$domain/public_html \
-        $HOMEDIR/$user/web/$domain/public_shtml
+        $HOMEDIR/$user/web/$domain/public_*html 
     chown -R $user:$user $HOMEDIR/$user/web/$domain/document_errors
     chown root:$user /var/log/$WEB_SYSTEM/domains/$domain.*
 
@@ -410,15 +408,12 @@ rebuild_web_domain_conf() {
                 $HOMEDIR/$user/web/$domain/logs
     chmod 751   $HOMEDIR/$user/web/$domain/private \
                 $HOMEDIR/$user/web/$domain/cgi-bin \
-                $HOMEDIR/$user/web/$domain/public_html \
-                $HOMEDIR/$user/web/$domain/public_shtml \
+                $HOMEDIR/$user/web/$domain/public_*html \
                 $HOMEDIR/$user/web/$domain/document_errors
     chmod 640 /var/log/$WEB_SYSTEM/domains/$domain.*
 
-    chown $user:$WEB_RGROUPS $HOMEDIR/$user/web/$domain/public_html \
-                $HOMEDIR/$user/web/$domain/public_shtml
+    chown $user:$WEB_RGROUPS $HOMEDIR/$user/web/$domain/public_*html
 }
-
 # DNS domain rebuild
 rebuild_dns_domain_conf() {
 

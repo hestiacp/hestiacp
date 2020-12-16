@@ -73,7 +73,7 @@ if [ -f "$pool_file_73" ]; then
 fi
 
 if [ ! -f "$pool_file_74" ]; then
-    echo "$pool_conf" > $pool_file_74
+    rm $pool_file_74
     systemctl restart php74-php-fpm
 fi
 

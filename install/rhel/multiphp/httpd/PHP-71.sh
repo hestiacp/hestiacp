@@ -39,41 +39,47 @@ env[TMPDIR] = /home/$1/tmp
 env[TEMP] = /home/$1/tmp
 "
 
-pool_file_56="/etc/php/5.6/fpm/pool.d/$2.conf"
-pool_file_70="/etc/php/7.0/fpm/pool.d/$2.conf"
-pool_file_71="/etc/php/7.1/fpm/pool.d/$2.conf"
-pool_file_72="/etc/php/7.2/fpm/pool.d/$2.conf"
-pool_file_73="/etc/php/7.3/fpm/pool.d/$2.conf"
-pool_file_74="/etc/php/7.4/fpm/pool.d/$2.conf"
+pool_file_56="/etc/opt/remi/php56/php-fpm.d/$2.conf"
+pool_file_70="/etc/opt/remi/php70/php-fpm.d/$2.conf"
+pool_file_71="/etc/opt/remi/php71/php-fpm.d/$2.conf"
+pool_file_72="/etc/opt/remi/php72/php-fpm.d/$2.conf"
+pool_file_73="/etc/opt/remi/php73/php-fpm.d/$2.conf"
+pool_file_74="/etc/opt/remi/php74/php-fpm.d/$2.conf"
+pool_file_80="/etc/opt/remi/php80/php-fpm.d/$2.conf"
 
 if [ -f "$pool_file_56" ]; then
     rm $pool_file_56
-    service php5.6-fpm restart
+    systemctl restart php56-php-fpm
 fi
 
 if [ -f "$pool_file_70" ]; then
     rm $pool_file_70
-    service php7.0-fpm restart
+    systemctl restart php70-php-fpm
 fi
 
-if [ ! -f "$pool_file_71" ]; then
+if [ -f "$pool_file_71" ]; then
     echo "$pool_conf" > $pool_file_71
-    service php7.1-fpm restart
+    systemctl restart php71-php-fpm
 fi
 
 if [ -f "$pool_file_72" ]; then
     rm $pool_file_72
-    service php7.2-fpm restart
+    systemctl restart php72-php-fpm
 fi
 
 if [ -f "$pool_file_73" ]; then
     rm $pool_file_73
-    service php7.3-fpm restart
+    systemctl restart php73-php-fpm
 fi
 
-if [ -f "$pool_file_74" ]; then
+if [ ! -f "$pool_file_74" ]; then
     rm $pool_file_74
-    service php7.4-fpm restart
+    systemctl restart php74-php-fpm
+fi
+
+if [ -f "$pool_file_80" ]; then
+    rm $pool_file_80
+    systemctl restart php80-php-fpm
 fi
 
 exit 0

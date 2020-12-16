@@ -18,7 +18,8 @@ keygen() {
 KEYS="$HESTIA/data/keys/"
 HASH=$(keygen)
 
-
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#

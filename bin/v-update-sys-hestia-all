@@ -19,6 +19,8 @@ source /etc/profile
 source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

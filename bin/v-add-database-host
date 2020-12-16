@@ -84,6 +84,8 @@ case $type in
     pgsql) is_pgsql_host_alive ;;
 esac
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

@@ -34,15 +34,16 @@ source $HESTIA/conf/hestia.conf
 is_mysql_host_alive() {
     mycnf=$(mktemp)
     echo "[client]">$mycnf
-    echo "host='$HOST'" >> $mycnf
-    echo "user='$USER'" >> $mycnf
-    echo "password='$PASSWORD'" >> $mycnf
-    echo "port='$PORT'" >> $mycnf
+    echo "host='$host'" >> $mycnf
+    echo "user='$user'" >> $mycnf
+    echo "password='$password'" >> $mycnf
+    echo "port='$port'" >> $mycnf
     
     chmod 600 $mycnf
     mysql --defaults-file=$mycnf -e 'SELECT VERSION()' >/dev/null 2>&1
     rm $mycnf
-    if [ '0' -ne "$?" ]; then
+    
+    if [ "$?" -ne '0' ]; then
         echo "Error: MySQL connection to $host failed"
         log_event "$E_CONNECT" "$ARGUMENTS"
         exit $E_CONNECT
@@ -52,7 +53,7 @@ is_mysql_host_alive() {
 is_pgsql_host_alive() {
     export PGPASSWORD="$dbpass"
     psql -h $host -U $dbuser -p $port -c "SELECT VERSION()" > /dev/null 2>&1
-    if [ '0' -ne "$?" ]; then
+    if [ "$?" -ne '0' ]; then
         echo "Error: PostgreSQL connection to $host failed"
         log_event "$E_CONNECT" "$ARGUMENTS"
         exit $E_CONNECT
@@ -73,8 +74,8 @@ if [ -z $template ]; then template="template1"; fi
 database_set_default_ports
 
 is_format_valid 'host' 'dbuser' 'max_db' 'charsets' 'template' 'port'
-#is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
-#is_type_valid "$DB_SYSTEM" "$type"
+is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
+is_type_valid "$DB_SYSTEM" "$type"
 is_dbhost_new
 is_password_valid
 dbpass="$password"

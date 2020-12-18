@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [DEVELOPMENT]
 ### Features
-- No new features have been introduced in this release.
+- Introduced support for PHPmyAdmin Single Sign On
 
 ### Bugfixes
 - Fixed an issue where user name was duplicated when editing FTP users (#1411)

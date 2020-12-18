@@ -61,6 +61,7 @@ json_list() {
         "DB_PMA_ALIAS": "'$DB_PMA_ALIAS'",
         "DB_PGA_ALIAS": "'$DB_PGA_ALIAS'",
         "LOGIN_STYLE": "'$LOGIN_STYLE'",
+        "PHPMYADMIN_KEY": "'$PHPMYADMIN_KEY'",
         "SOFTACULOUS": "'$SOFTACULOUS'"
     }
 }'

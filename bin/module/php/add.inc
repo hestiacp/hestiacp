@@ -56,15 +56,15 @@ hestia_module_php_add() {
     local php_prefix=$(osal_php_package_prefix $php_version)
 
     mph="$php_prefix-mbstring $php_prefix-bcmath $php_prefix-cli $php_prefix-curl
-        $php_prefix-gd $php_prefix-intl $php_prefix-mysql
-        $php_prefix-soap $php_prefix-xml $php_prefix-zip $php_prefix-mbstring
+        $php_prefix-gd $php_prefix-intl
+        $php_prefix-soap $php_prefix-xml $php_prefix-zip
         $php_prefix-bz2 $php_prefix-pspell $php_prefix-imagick $php_prefix-pgsql
         $php_prefix-imap $php_prefix-ldap $php_prefix-opcache"
 
     if [ "$OS_BASE" = 'rhel' ]; then
-        mph="$mph $php_prefix-apcu"
+        mph="$mph $php_prefix-apcu $php_prefix-mysqlnd"
     else
-        mph="$mph php-apcu"
+        mph="$mph php-apcu $php_prefix-mysql"
     fi
 
     # Check is version is 7.1 or below to add mcrypt
@@ -72,9 +72,9 @@ hestia_module_php_add() {
         mph="$mph $php_prefix-mcrypt"
     fi
 
-    # Check is version is below 8.0 to add json
+    # Check is version is below 8.0 to add json, mbstring
     if [[ `echo "$php_version 8.0" | awk '{print ($1 < $2)}'` == 1 ]]; then
-        mph="$mph $php_prefix-json"
+        mph="$mph $php_prefix-json $php_prefix-mbstring"
     fi
 
     # Install php packages

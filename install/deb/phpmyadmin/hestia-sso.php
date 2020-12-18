@@ -85,39 +85,47 @@ session_set_cookie_params(0, '/', '', true, true);
 $session_name = 'SignonSession';
 session_name($session_name);
 @session_start();
+
+function session_invalid(){
+    global $session_name;
+    //delete all current sessions
+    session_destroy();
+    setcookie($session_name, null, -1, '/');
+    header('Location: /phpmyadmin/index.php');
+    die();
+}
     $api = new Hestia_API();
     if(!empty($_GET)){
         if(isset($_GET['logout'])){
-           //delete all current sessions
-           session_destroy();
-           setcookie($session_name, null, -1, '/');
-           header('Location: /phpmyadmin/index.php');
-           die();
+            //logout but threat the same
+            session_invalid();
         }else{ 
             if(isset($_GET['user']) && isset($_GET['hestia_token'])){
                 $database = $_GET['database'];
                 $user = $_GET['user'];
                 $host = 'localhost';
                 $token = $_GET['hestia_token'];
-                $ip = $api -> get_user_ip();
-                if(!password_verify($database.$user.$ip.PHPMYADMIN_KEY,$token)){
-                    setcookie($session_name, null, -1, '/');
-                    #header('Location: /phpmyadmin/index.php');
-                    die('Error: Unautorized access');
+                $time = $_GET['exp'];
+                if($time + 60 > time()){
+                    $ip = $api -> get_user_ip();
+                    if(!password_verify($database.$user.$ip.$time.PHPMYADMIN_KEY,$token)){
+                        session_invalid();
+                    }else{
+                        $id = session_id();
+                        $data = $api -> create_temp_user($database,$user, $host);
+                        $_SESSION['PMA_single_signon_user'] = $data -> login -> user;
+                        $_SESSION['PMA_single_signon_password'] = $data -> login -> password ; 
+                        @session_write_close();
+                        setcookie($session_name, $id , 0, "/");
+                        header('Location: /phpmyadmin/index.php');
+                        die();
+                    }
                 }else{
-                    $id = session_id();
-                    $data = $api -> create_temp_user($database,$user, $host);
-                    $_SESSION['PMA_single_signon_user'] = $data -> login -> user;
-                    $_SESSION['PMA_single_signon_password'] = $data -> login -> password ; 
-                    
-                    @session_write_close();
-                    setcookie($session_name, $id , 0, "/");
-                    header('Location: /phpmyadmin/index.php');
-                    die();
+                    session_invalid();
                 }
             }
         }
     }else{
-        //header('Location: /phpmyadmin/index.php');
+        session_invalid();
     }
 ?>

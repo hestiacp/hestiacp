@@ -146,8 +146,9 @@ sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" so
                               </a>
                             </div>
                             <?php if ($data[$key]['TYPE'] == 'mysql' && isset($_SESSION['PHPMYADMIN_KEY']) && $_SESSION['PHPMYADMIN_KEY'] != '') {
+                            $time = time();
                             ?>
-                                <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="<?=$db_myadmin_link;?>/hestia-sso.php?database=<?=$key;?>&user=<?=$user;?>&ip=<?=$_SESSION['user_combined_ip'];?>&hestia_token=<?=password_hash($key.$user . $_SESSION['user_combined_ip'].$_SESSION['PHPMYADMIN_KEY'], PASSWORD_DEFAULT)?>" title="<?=_('Editing Database')?>"><i class="fas fa-sign-in-alt status-icon orange status-icon dim"></i></a></div>
+                                <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="<?=$db_myadmin_link;?>/hestia-sso.php?database=<?=$key;?>&user=<?=$user;?>&exp=<?=$time;?>&hestia_token=<?=password_hash($key.$user.$_SESSION['user_combined_ip'].$time.$_SESSION['PHPMYADMIN_KEY'], PASSWORD_DEFAULT)?>" title="<?=_('Editing Database')?>"><i class="fas fa-sign-in-alt status-icon orange status-icon dim"></i></a></div>
                             <?php
                             }
                             ?>

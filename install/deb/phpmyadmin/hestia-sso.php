@@ -2,10 +2,11 @@
 /* Hestia way to enable support for SSO to PHPmyAdmin */
 /* To install please run v-add-sys-pma-sso */
 
-    define('PHPMYADMIN_KEY','%PHPMYADMIN_KEY%');
-    define('API_HOST_NAME','%API_HOST_NAME%');
-    define('API_HESTIA_PORT','%API_HESTIA_PORT%');
-    define('API_KEY', '%API_KEY%');
+/* Following keys will get replaced when calling v-add-sys-pma-sso */
+define('PHPMYADMIN_KEY','%PHPMYADMIN_KEY%');
+define('API_HOST_NAME','%API_HOST_NAME%');
+define('API_HESTIA_PORT','%API_HESTIA_PORT%');
+define('API_KEY', '%API_KEY%');
 
 
 class Hestia_API {
@@ -45,6 +46,29 @@ class Hestia_API {
         return json_decode($request);
     }
     
+    /*
+    user=$1
+    database=$2
+    dbuser=$3
+    type=${4-mysql}
+    host=$5
+    */
+    /* Delete an new temp user in mysql */
+    function delete_temp_user ($database, $user, $dbuser, $host){
+        $post_request = array(
+        'hash' => $this -> key,
+        'returncode' => 'no',
+        'cmd' => 'v-delete-database-temp-user',
+        'arg1' => $user,
+        'arg2' => $database,
+        'arg3' => $dbuser,
+        'arg4' => 'mysql',
+        'arg5' => $host
+        );
+        $request = $this -> request($post_request);
+        return json_decode($request);
+    }
+
     function get_user_ip(){
         // Saving user IPs to the session for preventing session hijacking
         $user_combined_ip = $_SERVER['REMOTE_ADDR'];
@@ -97,7 +121,8 @@ function session_invalid(){
     $api = new Hestia_API();
     if(!empty($_GET)){
         if(isset($_GET['logout'])){
-            //logout but threat the same
+            $api -> delete_temp_user($_SESSION['HESTIA_sso_database'], $_SESSION['HESTIA_sso_user'],  $_SESSION['PMA_single_signon_user'], $_SESSION['HESTIA_sso_host']);
+            //remove sessin
             session_invalid();
         }else{ 
             if(isset($_GET['user']) && isset($_GET['hestia_token'])){
@@ -107,14 +132,21 @@ function session_invalid(){
                 $token = $_GET['hestia_token'];
                 $time = $_GET['exp'];
                 if($time + 60 > time()){
+                    //note: Possible issues with cloudflare due to ip obfuscation
                     $ip = $api -> get_user_ip();
                     if(!password_verify($database.$user.$ip.$time.PHPMYADMIN_KEY,$token)){
                         session_invalid();
                     }else{
                         $id = session_id();
+                        //create a new temp user 
                         $data = $api -> create_temp_user($database,$user, $host);
                         $_SESSION['PMA_single_signon_user'] = $data -> login -> user;
                         $_SESSION['PMA_single_signon_password'] = $data -> login -> password ; 
+                        //save database / username to be used for sending logout notification. 
+                        $_SESSION['HESTIA_sso_user'] = $user;
+                        $_SESSION['HESTIA_sso_database'] = $database;
+                        $_SESSION['HESTIA_sso_host'] = $host;
+                        
                         @session_write_close();
                         setcookie($session_name, $id , 0, "/");
                         header('Location: /phpmyadmin/index.php');

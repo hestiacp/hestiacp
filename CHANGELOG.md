@@ -1,6 +1,29 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [DEVELOPMENT]
+### Features
+- No new features have been introduced in this release.
+
+### Bugfixes
+- Fixed an issue where user name was duplicated when editing FTP users (#1411)
+- Fixed an issue where the iptables service would appear to be in a stopped state when fail2ban is stopped. (#1374)
+- Fixed an issue where the default language value was incorrectly set under Server Settings > Configure.
+- Fixed an issue with the dark theme where available updates were incorrectly displayed.
+- Fixed an issue where local and FTP backup files were not deleted when running `v-delete-user-backup`. (#1421)
+- Fixed an issue where IP addresses could not be deleted (#1423)
+- Improvements have been made to the API's error handling - thanks **@danielalexis**!
+
+## [1.3.2] - Service Release
+### Features
+- Added PHP v8.0 support for multiphp environment.
+
+### Bugfixes
+- Improved session token handling in login as function, thanks to Vulnerability Laboratory - [Evolution Security GmbH]™.
+- Fixed an where fpm pool config was not deleted when changing backend template.
+- Improved bats testing with multiphp (5.6-8.0) tests.
+- Fixed an issue where full webmail path was loaded as default value.
+
 ## [1.3.1] - Service Release
 ### Features
 - No new features have been introduced in this release.
@@ -27,6 +50,11 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue in the Control Panel UI which caused databases and additional FTP accounts to be named incorrectly if manually prefaced with the username.
 - Fixed an issue where custom document roots were not saved correctly.
 - Improved the visibility of service availability in the Control Panel UI.
+- Fixed an issue which let you unsuspend a cronjob on active demo mode.
+- Updated DE, EN, ES, KO, NL and TR languages, thanks to @Wibol, Blackjack, @emrahkayihan, areo and @hahagu!
+- Fixed an issue which let the auto compiler fail with local src builds.
+- Added turkish language to system installers, thanks to @emrahkayihan!
+- Fixed incorrect error message when using unknown domain with v-delete-domain.
 
 ## [1.3.0] - Major Release (Feature / Quality Update)
 ### Features

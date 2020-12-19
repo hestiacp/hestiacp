@@ -292,7 +292,7 @@ upgrade_send_notification_to_email () {
 
 upgrade_send_log_to_email() {
     if [ "$UPGRADE_SEND_EMAIL_LOG" = "true" ]; then
-        admin_email=$(v-list-user admin json | grep "CONTACT" | cut -d'"' -f4)
+        admin_email=$($BIN/v-list-user admin json | grep "CONTACT" | cut -d'"' -f4)
         send_mail="$HESTIA/web/inc/mail-wrapper.php"
         cat $LOG | $send_mail -s "Update Installation Log - v${new_version}" $admin_email
     fi

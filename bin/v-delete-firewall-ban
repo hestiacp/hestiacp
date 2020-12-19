@@ -24,6 +24,7 @@ iptables="/sbin/iptables"
 
 # Includes
 source $HESTIA/func/main.sh
+source $HESTIA/func/firewall.sh
 source $HESTIA/conf/hestia.conf
 
 
@@ -42,6 +43,9 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+# Self heal iptables links
+heal_iptables_links
 
 # Checking ip in banlist
 conf="$HESTIA/data/firewall/banlist.conf"

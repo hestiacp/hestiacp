@@ -43,14 +43,20 @@ class Hestia_API {
         'arg4' => $host
         );
         $request = $this -> request($post_request);
-        return json_decode($request);
+        $json = json_decode($request);
+        if(json_last_error() == JSON_ERROR_NONE){
+            return $json;
+        }else{
+            return false;
+        }
+        
     }
     
     /* Delete an new temp user in mysql */
     function delete_temp_user ($database, $user, $dbuser, $host){
         $post_request = array(
         'hash' => $this -> key,
-        'returncode' => 'no',
+        'returncode' => 'yes',
         'cmd' => 'v-delete-database-temp-user',
         'arg1' => $user,
         'arg2' => $database,
@@ -59,7 +65,11 @@ class Hestia_API {
         'arg5' => $host
         );
         $request = $this -> request($post_request);
-        return json_decode($request);
+        if(is_numeric($request) && $request == 0){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     function get_user_ip(){

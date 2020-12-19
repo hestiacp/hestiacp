@@ -46,13 +46,6 @@ class Hestia_API {
         return json_decode($request);
     }
     
-    /*
-    user=$1
-    database=$2
-    dbuser=$3
-    type=${4-mysql}
-    host=$5
-    */
     /* Delete an new temp user in mysql */
     function delete_temp_user ($database, $user, $dbuser, $host){
         $post_request = array(

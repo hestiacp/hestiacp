@@ -103,8 +103,8 @@ function api($hst_hash, $hst_user, $hst_password, $hst_returncode, $hst_cmd, $hs
     // Check command
     if ($cmd == "'v-make-tmp-file'") {
         // Used in DNS Cluster
-        $fp = fopen($_hst_arg2, 'w');
-        fwrite($fp, $_hst_arg1."\n");
+        $fp = fopen($hst_arg2, 'w');
+        fwrite($fp, $hst_arg1."\n");
         fclose($fp);
         $return_var = 0;
     } else {
@@ -125,7 +125,7 @@ function api($hst_hash, $hst_user, $hst_password, $hst_returncode, $hst_cmd, $hs
 
 if (isset($_POST['user']) || isset($_POST['hash'])) {
 
-    api($_POST['hash'], $_POST['user'], $_POST['password'], $_POST['returncode'], $_post['cmd'], $_POST['arg1'], $_POST['arg2'], $_POST['arg3'], $_POST['arg4'], $_POST['arg5'], $_POST['arg6'], $_POST['arg7'], $_POST['arg8'], $_POST['arg9']);
+    api($_POST['hash'], $_POST['user'], $_POST['password'], $_POST['returncode'], $_POST['cmd'], $_POST['arg1'], $_POST['arg2'], $_POST['arg3'], $_POST['arg4'], $_POST['arg5'], $_POST['arg6'], $_POST['arg7'], $_POST['arg8'], $_POST['arg9']);
 
 } else if (json_decode(file_get_contents("php://input"), true) != NULL){ //JSON POST support
     $json_data = json_decode(file_get_contents("php://input"), true);

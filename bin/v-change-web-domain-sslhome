@@ -3,9 +3,10 @@
 # options: USER DOMAIN SSL_HOME [RESTART]
 # labels: web
 #
-# example: v-change-web-domain-sslhome admin acme.com /home/admin/acme.com/public_shtml
+# example: v-change-web-domain-sslhome admin acme.com single
+# example: v-change-web-domain-sslhome admin acme.com same
 #
-# The function changes SSL home directory.
+# The function changes SSL home directory. Single will seperate the both public_html / public_shtml. Same will always point to public_shtml
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

@@ -3,6 +3,8 @@
 # options: [FORMAT]
 # labels: web
 #
+# example: v-list-web-templates-backend
+#
 # The function for obtaining the list of available backend templates.
 
 

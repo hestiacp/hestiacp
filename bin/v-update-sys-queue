@@ -3,6 +3,8 @@
 # options: PIPE
 # labels: panel
 #
+# example: v-update-sys-queue
+#
 # This function is responsible queue processing. Restarts of services,
 # scheduled backups, web log parsing and other heavy resource consuming
 # operations are handled by this script. It helps to optimize system behaviour.

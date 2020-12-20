@@ -3,6 +3,8 @@
 # options: NONE
 # labels: panel
 #
+# example: v-update-sys-rrd
+#
 # The script is wrapper for all rrd functions. It updates all 
 # v-update-sys-rrd_* at once.
 

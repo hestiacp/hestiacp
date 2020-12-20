@@ -3,6 +3,8 @@
 # options: [FORMAT]
 # labels: 
 #
+# example: v-list-sys-cpu-status
+#
 # The function lists cpu information
 
 

@@ -3,7 +3,9 @@
 # options: [FORMAT]
 # labels: 
 #
-# The function for obtaining autoupdate setings.
+# example: v-list-sys-hestia-autoupdate
+#
+# The function for obtaining autoupdate settings.
 
 
 #----------------------------------------------------------#

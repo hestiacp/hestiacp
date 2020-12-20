@@ -168,6 +168,14 @@ App.Actions.WEB.toggle_additional_ftp_accounts = function(elm) {
     }
 }
 
+App.Actions.WEB.toggle_ssl = function (elm){
+    elementHideShow('ssltable');
+    if($('#ssl_crt').val().length > 0 || $('#ssl_hsts').prop('checked') || $('#letsencrypt').prop('checked')){
+        return false;
+    }
+    $('#v_ssl_forcessl').prop('checked', true);
+}
+
 App.Actions.WEB.toggle_letsencrypt = function(elm) {
     if ($(elm).attr('checked')) {
         $('#ssltable textarea[name=v_ssl_crt],#ssltable textarea[name=v_ssl_key], #ssltable textarea[name=v_ssl_ca]').attr('disabled', 'disabled');
@@ -227,6 +235,26 @@ $(function() {
             $('.stats-auth').show();
         }
     });
+    
+    $('select[name="v_nginx_cache"]').change(function(evt){
+        var select = $(evt.target);
+    
+        if(select.val() != 'yes'){
+            $('#v-clear-cache').hide();
+        } else {
+            $('#v-clear-cache').show();
+        }
+    });  
+    
+    $('select[name="v_proxy_template"]').change(function(evt){
+        var select = $(evt.target);
+
+        if(select.val() != 'caching'){
+            $('#v-clear-cache').hide();
+        } else {
+            $('#v-clear-cache').show();
+        }
+    });  
 
     $('#vstobjects').on('submit', function(evt) {
         $('input[disabled]').each(function(i, elm) {

@@ -3,6 +3,8 @@
 # options: [FORMAT]
 # labels: panel
 #
+# example: v-list-users
+#
 # The function to obtain the list of all system users.
 
 

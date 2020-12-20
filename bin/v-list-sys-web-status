@@ -1,7 +1,9 @@
 #!/bin/bash
 # info: list web status
 # options: [FORMAT]
-# labels: 
+# labels: panel
+#
+# example: v-list-sys-web-status
 #
 # The function lists web server status
 

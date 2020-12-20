@@ -3,7 +3,7 @@
 # options: USER DOMAIN ACCOUNT PASSWORD [QUOTA]
 # labels: mail
 #
-# example: v-add-mail-account john example.com john P4$$vvOrD
+# example: v-add-mail-account user example.com john P4$$vvOrD
 #
 # The function add new email account.
 

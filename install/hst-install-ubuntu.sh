@@ -23,9 +23,9 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.3.1~alpha'
+HESTIA_INSTALL_VER='1.3.3~alpha'
 pma_v='5.0.4'
-multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
+multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
 fpm_v="7.4"
 mariadb_v="10.5"
 
@@ -117,7 +117,7 @@ set_default_lang() {
         eval lang=$1
     fi
     lang_list="ar az bg bs cs da de el en es fa fi fr hr hu id it ja ka ko nl no pl pt pt-br ro
-        ru sr sv th uk ur vi zh-cn zh-tw"
+        ru sr sv th tr uk ur vi zh-cn zh-tw"
     if !(echo $lang_list |grep -w $lang > /dev/null 2>&1); then
         eval lang=$1
     fi
@@ -1147,6 +1147,10 @@ echo "INACTIVE_SESSION_TIMEOUT='60'" >> $HESTIA/conf/hestia.conf
 echo "VERSION='${HESTIA_INSTALL_VER}'" >> $HESTIA/conf/hestia.conf
 echo "RELEASE_BRANCH='release'" >> $HESTIA/conf/hestia.conf
 
+# Email notifications after upgrade
+echo "UPGRADE_SEND_EMAIL='true'" >> $HESTIA/conf/hestia.conf
+echo "UPGRADE_SEND_EMAIL_LOG='true'" >> $HESTIA/conf/hestia.conf
+
 # Installing hosting packages
 cp -rf $HESTIA_INSTALL_DIR/packages $HESTIA/data/
 
@@ -1298,7 +1302,6 @@ fi
 
 if [ "$multiphp" = 'yes' ] ; then
     for v in "${multiphp_v[@]}"; do
-        cp -r /etc/php/$v/ /root/hst_install_backups/php$v/
         rm -f /etc/php/$v/fpm/pool.d/*
         echo "[ * ] Install PHP version $v..."
         $HESTIA/bin/v-add-web-php "$v" > /dev/null 2>&1

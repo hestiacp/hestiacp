@@ -1,0 +1,7 @@
+/usr/local/hestia/log/*.log {
+    rotate 12
+    monthly
+    missingok
+    notifempty
+    create 0600 root root
+}

@@ -3,6 +3,8 @@
 # options: VERSION
 # labels: hestia
 #
+# example: v-add-web-php 8.0
+#
 # The function checks and delete a fpm php version if not used by any domain.
 
 
@@ -30,7 +32,7 @@ php_fpm="/etc/init.d/php$version-fpm"
 # Verify php version format
 if [[ ! $version =~ ^[0-9]\.[0-9]+ ]]; then
     echo "The specified PHP version format is invalid, it should look like [0-9].[0-9]."
-    echo "Example:  7.0, 7.4"
+    echo "Example:  7.0, 7.4, 8.0"
     exit
 fi
 
@@ -63,6 +65,11 @@ mph="php$version-mbstring php$version-bcmath php$version-cli php$version-curl
 # Check is version is 7.1 or below to add mcrypt
 if [[ `echo "$version 7.2" | awk '{print ($1 < $2)}'` == 1 ]]; then
     mph="$mph php$version-mcrypt"
+fi
+
+# Check if version is 8.0 or higher and drop php json.
+if [[ ${version:0:1} == "8" ]]; then
+    mph=$(echo "$mph" | sed -e "s/php$version-json//")
 fi
 
 if ! echo "$DB_SYSTEM" | grep -w 'mysql' >/dev/null; then

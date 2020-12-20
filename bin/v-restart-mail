@@ -3,6 +3,8 @@
 # options: NONE
 # labels: mail
 #
+# example: v-restart-mail
+#
 # The function tells exim or dovecot services to reload configuration files.
 
 

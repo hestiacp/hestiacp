@@ -3,6 +3,8 @@
 # options: USER DOMAIN
 # labels: hestia
 #
+# example: v-delete-mail-domain-ssl user demo.com
+#
 # The function delete ssl certificates.
 
 #----------------------------------------------------------#

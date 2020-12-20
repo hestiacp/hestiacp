@@ -3,6 +3,8 @@
 # options: USER CMD [ARG...]
 # labels: hestia
 #
+# example: v-run-cli-cmd user composer require package
+#
 # The function runs a limited list of cli commands with dropped privileges as the specific hestia user
 
 user=$1

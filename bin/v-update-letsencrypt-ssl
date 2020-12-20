@@ -3,6 +3,8 @@
 # options: NONE
 # labels: panel
 #
+# example: v-update-letsencrypt-ssl
+#
 # The function for renew letsencrypt expired ssl certificate for all users
 
 

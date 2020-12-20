@@ -3,6 +3,8 @@
 # options: [FULL]
 # labels: hestia
 #
+# example: v-delete-sys-filemanager
+#
 # The function removes the File Manager and its entry points
 
 #----------------------------------------------------------#

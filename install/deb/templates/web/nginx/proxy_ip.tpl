@@ -13,11 +13,10 @@ server {
 }
 
 server {
-    listen      %ip%:%proxy_ssl_port% ssl http2 default;
+    listen      %ip%:%proxy_ssl_port% ssl http2;
     server_name _;
     ssl_certificate      /usr/local/hestia/ssl/certificate.crt;
     ssl_certificate_key  /usr/local/hestia/ssl/certificate.key;
-    ssl_reject_handshake on;
 
     return 301 http://$host$request_uri;
 

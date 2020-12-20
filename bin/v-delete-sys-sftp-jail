@@ -3,6 +3,8 @@
 # options: NONE
 # labels: panel
 #
+# example: v-delete-sys-sftp-jail 
+#
 # The script disables sftp jailed environment
 
 

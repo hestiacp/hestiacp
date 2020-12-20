@@ -3,6 +3,8 @@
 # options: [FORMAT]
 # labels: panel
 #
+# example: v-list-database-types json
+#
 # The function for obtaining the list of database types.
 
 

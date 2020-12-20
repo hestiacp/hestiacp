@@ -3,6 +3,8 @@
 # options: [FORMAT]
 # labels: hestia
 #
+# example: v-list-firewall-ipset json
+#
 # The function prints defined ipset lists
 
 

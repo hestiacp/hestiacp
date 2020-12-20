@@ -3,6 +3,8 @@
 # options: PERIOD
 # labels: panel
 #
+# example: v-update-sys-rrd-la
+#
 # The function is for updating load average rrd database and graphic.
 
 

@@ -3,7 +3,7 @@
 session_start();
 
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
-define('JS_LATEST_UPDATE', '1491697868');
+define('JS_LATEST_UPDATE', time());
 define('DEFAULT_PHP_VERSION', "php-" . exec('php -r "echo (float)phpversion();"'));
 
 $i = 0;

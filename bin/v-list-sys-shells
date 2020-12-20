@@ -1,7 +1,9 @@
 #!/bin/bash
 # info: list system shells
 # options: [FORMAT]
-# labels: 
+# labels: panel
+# 
+# example: v-list-sys-shells
 #
 # The function for obtaining the list of system shells.
 

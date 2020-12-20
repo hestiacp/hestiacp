@@ -3,6 +3,8 @@
 # options: NONE
 # labels: 
 #
+# example: v-add-sys-firewall
+#
 # The script enables firewall
 
 

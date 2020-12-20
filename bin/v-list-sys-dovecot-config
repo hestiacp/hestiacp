@@ -3,6 +3,8 @@
 # options: [FORMAT]
 # labels: 
 #
+# example: v-list-sys-dovecot-config
+#
 # The function for obtaining the list of dovecot config parameters.
 
 

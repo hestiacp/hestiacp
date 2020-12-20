@@ -23,6 +23,8 @@ source $HESTIA/conf/hestia.conf
 
 PATH="$PATH:/usr/local/sbin:/sbin:/usr/sbin:/root/bin"
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                    Verifications                         #

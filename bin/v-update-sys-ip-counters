@@ -3,6 +3,8 @@
 # options: IP
 # labels: panel
 #
+# example: v-update-sys-ip-counters
+#
 # Function updates usage U_WEB_ADOMAINS and U_SYS_USERS counters.
 
 

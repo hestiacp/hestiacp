@@ -56,6 +56,8 @@ fi
 
 echo 'add_header Strict-Transport-Security "max-age=15768000;" always;' > $hstsconf
 
+chown root:$user $hstsconf
+chmod 640 $hstsconf
 
 #----------------------------------------------------------#
 #                       Hestia                             #

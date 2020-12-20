@@ -4,8 +4,12 @@
 # labels: dns
 #
 # example: v-add-remote-dns-host slave.your_host.com 8083 admin your_passw0rd
+# 
+# example: v-add-remote-dns-host slave.your_host.com 8083 api_key ''
 #
 # The function adds remote dns server to the dns cluster.
+# As alternative api_key generated on the slave server.
+# See v-generate-api-key can be used to connect the remote dns server
 
 
 #----------------------------------------------------------#

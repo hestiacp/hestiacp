@@ -3,6 +3,8 @@
 # options: PERIOD
 # labels: panel
 #
+# example: v-update-sys-rrd-nginx
+#
 # The function is for updating nginx rrd database and graphic.
 
 

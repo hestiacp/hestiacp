@@ -3,6 +3,8 @@
 # options: [FORMAT]
 # labels: web
 #
+# example: v-list-web-templates
+#
 # The function for obtaining the list of web templates available to a user.
 
 

@@ -47,7 +47,12 @@ function validate_web_domain() {
     domain_ip=$(get_real_ip "$domain_ip")
 
     if [ ! -z $webpath ]; then
-        assert_file_exist $HOMEDIR/$user/web/$domain/public_html/$webpath
+        domain_docroot=$(get_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_DOCROOT')
+        if [ -n "$domain_docroot" ] && [ -d "$domain_docroot" ]; then
+            assert_file_exist "${domain_docroot}/${webpath}"
+        else
+            assert_file_exist "${HOMEDIR}/${user}/web/${domain}/public_html/${webpath}"
+        fi
     fi
 
     # Test HTTP
@@ -505,6 +510,288 @@ function validate_webmail_domain() {
     refute_output
 }
 
+
+#----------------------------------------------------------#
+#                      MULTIPHP                            #
+#----------------------------------------------------------#
+
+@test "Multiphp: Default php Backend version" {
+    def_phpver=$(multiphp_default_version)
+    multi_domain="multiphp.${domain}"
+
+    run v-add-web-domain $user $multi_domain 198.18.0.125
+    assert_success
+    refute_output
+
+    echo -e "<?php\necho PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "$def_phpver" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+
+}
+
+@test "Multiphp: Change backend version - PHP v5.6" {
+    test_phpver='5.6'
+    multi_domain="multiphp.${domain}"
+
+    if [ ! -d "/etc/php/${test_phpver}/fpm/pool.d/" ]; then
+        skip "PHP ${test_phpver} not installed"
+    fi
+
+    run v-change-web-domain-backend-tpl $user $multi_domain 'PHP-5_6' 'yes'
+    assert_success
+    refute_output
+
+    # Changing web backend will create a php-fpm pool config in the corresponding php folder
+    assert_file_exist "/etc/php/${test_phpver}/fpm/pool.d/${multi_domain}.conf"
+
+    # A single php-fpm pool config file must be present
+    num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+    assert_equal "$num_fpm_config_files" '1'
+
+    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+}
+
+@test "Multiphp: Change backend version - PHP v7.0" {
+    test_phpver='7.0'
+    multi_domain="multiphp.${domain}"
+
+    if [ ! -d "/etc/php/${test_phpver}/fpm/pool.d/" ]; then
+        skip "PHP ${test_phpver} not installed"
+    fi
+
+    run v-change-web-domain-backend-tpl $user $multi_domain 'PHP-7_0' 'yes'
+    assert_success
+    refute_output
+
+    # Changing web backend will create a php-fpm pool config in the corresponding php folder
+    assert_file_exist "/etc/php/${test_phpver}/fpm/pool.d/${multi_domain}.conf"
+
+    # A single php-fpm pool config file must be present
+    num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+    assert_equal "$num_fpm_config_files" '1'
+
+    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+}
+
+@test "Multiphp: Change backend version - PHP v7.1" {
+    test_phpver='7.1'
+    multi_domain="multiphp.${domain}"
+
+    if [ ! -d "/etc/php/${test_phpver}/fpm/pool.d/" ]; then
+        skip "PHP ${test_phpver} not installed"
+    fi
+
+    run v-change-web-domain-backend-tpl $user $multi_domain 'PHP-7_1' 'yes'
+    assert_success
+    refute_output
+
+    # Changing web backend will create a php-fpm pool config in the corresponding php folder
+    assert_file_exist "/etc/php/${test_phpver}/fpm/pool.d/${multi_domain}.conf"
+
+    # A single php-fpm pool config file must be present
+    num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+    assert_equal "$num_fpm_config_files" '1'
+
+    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+}
+
+@test "Multiphp: Change backend version - PHP v7.2" {
+    test_phpver='7.2'
+    multi_domain="multiphp.${domain}"
+
+    if [ ! -d "/etc/php/${test_phpver}/fpm/pool.d/" ]; then
+        skip "PHP ${test_phpver} not installed"
+    fi
+
+    run v-change-web-domain-backend-tpl $user $multi_domain 'PHP-7_2' 'yes'
+    assert_success
+    refute_output
+
+    # Changing web backend will create a php-fpm pool config in the corresponding php folder
+    assert_file_exist "/etc/php/${test_phpver}/fpm/pool.d/${multi_domain}.conf"
+
+    # A single php-fpm pool config file must be present
+    num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+    assert_equal "$num_fpm_config_files" '1'
+
+    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+}
+
+@test "Multiphp: Change backend version - PHP v7.3" {
+    test_phpver='7.3'
+    multi_domain="multiphp.${domain}"
+
+    if [ ! -d "/etc/php/${test_phpver}/fpm/pool.d/" ]; then
+        skip "PHP ${test_phpver} not installed"
+    fi
+
+    run v-change-web-domain-backend-tpl $user $multi_domain 'PHP-7_3' 'yes'
+    assert_success
+    refute_output
+
+    # Changing web backend will create a php-fpm pool config in the corresponding php folder
+    assert_file_exist "/etc/php/${test_phpver}/fpm/pool.d/${multi_domain}.conf"
+
+    # A single php-fpm pool config file must be present
+    num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+    assert_equal "$num_fpm_config_files" '1'
+
+    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+}
+
+@test "Multiphp: Change backend version - PHP v7.4" {
+    test_phpver='7.4'
+    multi_domain="multiphp.${domain}"
+
+    if [ ! -d "/etc/php/${test_phpver}/fpm/pool.d/" ]; then
+        skip "PHP ${test_phpver} not installed"
+    fi
+
+    run v-change-web-domain-backend-tpl $user $multi_domain 'PHP-7_4' 'yes'
+    assert_success
+    refute_output
+
+    # Changing web backend will create a php-fpm pool config in the corresponding php folder
+    assert_file_exist "/etc/php/${test_phpver}/fpm/pool.d/${multi_domain}.conf"
+
+    # A single php-fpm pool config file must be present
+    num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+    assert_equal "$num_fpm_config_files" '1'
+
+    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+}
+
+@test "Multiphp: Change backend version - PHP v8.0" {
+    test_phpver='8.0'
+    multi_domain="multiphp.${domain}"
+
+    if [ ! -d "/etc/php/${test_phpver}/fpm/pool.d/" ]; then
+        skip "PHP ${test_phpver} not installed"
+    fi
+
+    run v-change-web-domain-backend-tpl $user $multi_domain 'PHP-8_0' 'yes'
+    assert_success
+    refute_output
+
+    # Changing web backend will create a php-fpm pool config in the corresponding php folder
+    assert_file_exist "/etc/php/${test_phpver}/fpm/pool.d/${multi_domain}.conf"
+
+    # A single php-fpm pool config file must be present
+    num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+    assert_equal "$num_fpm_config_files" '1'
+
+    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    rm $HOMEDIR/$user/web/$multi_domain/public_html/php-test.php
+}
+
+@test "Multiphp: Cleanup" {
+    multi_domain="multiphp.${domain}"
+
+    run v-delete-web-domain $user $multi_domain 'yes'
+    assert_success
+    refute_output
+
+    # No php-fpm pool config file must be present
+    num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+    assert_equal "$num_fpm_config_files" '0'
+}
+
+
+#----------------------------------------------------------#
+#                     CUSTOM DOCROOT                       #
+#----------------------------------------------------------#
+
+@test "Docroot: Self Subfolder" {
+    docroot1_domain="docroot1.${domain}"
+
+    run v-add-web-domain $user $docroot1_domain 198.18.0.125
+    assert_success
+    refute_output
+
+    run v-add-fs-directory $user "$HOMEDIR/$user/web/$docroot1_domain/public_html/public/"
+    assert_success
+    refute_output
+
+    run v-change-web-domain-docroot $user "$docroot1_domain" "$docroot1_domain" "/public"
+    assert_success
+    refute_output
+
+    echo -e '<?php\necho "self-sub-".$_SERVER["HTTP_HOST"];' > "$HOMEDIR/$user/web/$docroot1_domain/public_html/public/php-test.php"
+    validate_web_domain $user $docroot1_domain "self-sub-${docroot1_domain}" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$docroot1_domain/public_html/public/php-test.php"
+}
+
+@test "Docroot: Other domain subfolder" {
+    docroot1_domain="docroot1.${domain}"
+    docroot2_domain="docroot2.${domain}"
+
+    run v-add-web-domain $user $docroot2_domain 198.18.0.125
+    assert_success
+    refute_output
+
+    run v-add-fs-directory $user "$HOMEDIR/$user/web/$docroot2_domain/public_html/public/"
+    assert_success
+    refute_output
+
+    run v-change-web-domain-docroot $user "$docroot1_domain" "$docroot2_domain" "/public"
+    assert_success
+    refute_output
+
+    echo -e '<?php\necho "doc2-sub-".$_SERVER["HTTP_HOST"];' > "$HOMEDIR/$user/web/$docroot2_domain/public_html/public/php-test.php"
+    validate_web_domain $user $docroot1_domain "doc2-sub-${docroot1_domain}" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$docroot2_domain/public_html/public/php-test.php"
+}
+
+@test "Docroot: Other domain root folder" {
+    docroot1_domain="docroot1.${domain}"
+    docroot2_domain="docroot2.${domain}"
+
+    run v-change-web-domain-docroot $user "$docroot1_domain" "$docroot2_domain"
+    assert_success
+    refute_output
+
+    echo -e '<?php\necho "doc2-root-".$_SERVER["HTTP_HOST"];' > "$HOMEDIR/$user/web/$docroot2_domain/public_html/php-test.php"
+    validate_web_domain $user $docroot1_domain "doc2-root-${docroot1_domain}" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$docroot2_domain/public_html/php-test.php"
+}
+
+@test "Docroot: Reset" {
+    docroot1_domain="docroot1.${domain}"
+
+    run v-change-web-domain-docroot $user "$docroot1_domain" "default"
+    assert_success
+    refute_output
+
+    echo -e '<?php\necho "doc1-root-".$_SERVER["HTTP_HOST"];' > "$HOMEDIR/$user/web/$docroot1_domain/public_html/php-test.php"
+    validate_web_domain $user $docroot1_domain "doc1-root-${docroot1_domain}" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$docroot1_domain/public_html/php-test.php"
+}
+
+@test "Docroot: Cleanup" {
+    docroot1_domain="docroot1.${domain}"
+    docroot2_domain="docroot2.${domain}"
+
+    run v-delete-web-domain $user $docroot1_domain
+    assert_success
+    refute_output
+
+    run v-delete-web-domain $user $docroot2_domain
+    assert_success
+    refute_output
+}
 
 #----------------------------------------------------------#
 #                         DNS                              #

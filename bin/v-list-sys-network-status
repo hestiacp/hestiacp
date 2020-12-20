@@ -3,6 +3,8 @@
 # options: [FORMAT]
 # labels: 
 #
+# example: v-list-sys-network-status json
+#
 # The function lists network status
 
 

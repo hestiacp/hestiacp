@@ -3,6 +3,8 @@
 # options: [FORMAT]
 # labels: 
 #
+# example: v-list-sys-dns-status
+#
 # The function lists dns server status
 
 

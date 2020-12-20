@@ -6,13 +6,17 @@
 #######                      Place additional commands below.                   #######
 #######################################################################################
 
-# Update nginx configuration to block connections for unsigned (no SSL certificate) domains
-for ipaddr in $(ls /usr/local/hestia/data/ips/ 2>/dev/null); do
-    web_conf="/etc/$PROXY_SYSTEM/conf.d/$ipaddr.conf"
+# Remove duplicate values in U_SYS_USERS variable for ips
+for ip in $(ls $HESTIA/data/ips/); do
+    current_usr=$(grep "U_SYS_USERS=" $HESTIA/data/ips/$ip |cut -f 2 -d \')
+    
+    new_usr=$(echo "$current_usr" |\
+        sed "s/,/\n/g"|\
+        sort -u |\
+        sed ':a;N;$!ba;s/\n/,/g')
 
-    if [ "$PROXY_SYSTEM" = "nginx" ]; then
-        echo "[ * ] Hardening nginx SSL SNI configuration..."
-        cp -f $HESTIA_INSTALL_DIR/nginx/unassigned.inc $web_conf
-        sed -i 's/directIP/'$ipaddr'/g' $web_conf
+    if [ ! -z "$new_usr" ]; then
+        sed -i "s/U_SYS_USERS='$current_usr'/U_SYS_USERS='$new_usr'/g" $HESTIA/data/ips/$ip
     fi
 done
+

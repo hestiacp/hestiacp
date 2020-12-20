@@ -3,6 +3,8 @@
 # options: NONE
 # labels: web
 #
+# example: v-restart-web-backend
+#
 # The function reloads backend server configuration.
 
 

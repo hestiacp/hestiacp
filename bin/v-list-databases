@@ -3,6 +3,8 @@
 # options: USER [FORMAT]
 # labels: panel
 #
+# example: v-list-databases user json
+#
 # The function for obtaining the list of all user's databases.
 
 

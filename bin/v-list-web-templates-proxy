@@ -3,6 +3,8 @@
 # options: [FORMAT]
 # labels: web
 #
+# example: v-list-web-templates-proxy
+#
 # The function for obtaining the list of proxy templates available to a user.
 
 

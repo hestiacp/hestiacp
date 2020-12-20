@@ -3,6 +3,8 @@
 # options: [FORMAT]
 # labels:
 #
+# example: v-list-sys-config json
+#
 # The function for obtaining the list of system parameters.
 
 

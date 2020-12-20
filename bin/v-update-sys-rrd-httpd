@@ -3,6 +3,8 @@
 # options: PERIOD
 # labels: panel
 #
+# example: v-update-sys-rrd-httpd
+#
 # The function is for updating apache rrd database and graphic.
 
 

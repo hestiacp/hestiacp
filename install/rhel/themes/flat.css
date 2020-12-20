@@ -1,0 +1,124 @@
+/* Flat theme */
+
+body {
+    letter-spacing: 0;
+}
+
+b, strong {
+    font-weight: 600;
+}
+
+.body-login, .body-reset {
+    background: #5f7eb3 !important;
+}
+
+.table-header {
+    box-shadow: none !important;
+}
+
+.l-header {
+    box-shadow: none;
+    background: #5070a6;
+}
+
+.l-menu__item--active {
+    background-color: #fff;
+}
+
+.l-menu__item.l-menu__item--active a {
+    background: none;
+}
+
+.l-menu__item a:hover {
+    background: #FFFFFF !important;
+    box-shadow: none;
+}
+
+.l-menu__item a:active {
+    background: none;
+    box-shadow: none;
+}
+
+.l-profile__notifications:hover,
+.l-profile__notifications.updates:hover,
+.l-profile__notifications.active.l-profile__notifications.updates:active {
+    background: white !important;
+    border: 1px solid transparent !important;
+    box-shadow: none !important;
+}
+
+.l-unit:hover {
+    box-shadow: none;
+}
+
+.l-unit__stat-col--left a, .l-unit__stat-col--left a:visited {
+    color: #5f7eb3;
+}
+
+.l-unit__stat-col--left a:hover {
+    color: #474747;
+}
+
+.l-unit:hover, .units .l-unit:hover {
+    box-shadow: none;
+}
+.vst-input {
+    box-shadow: none;
+}
+
+.vst-list {
+    box-shadow: none;
+}
+
+.advanced-options {
+    box-shadow: none !important;
+}
+
+.vst-textinput {
+    box-shadow: none;
+}
+
+.ui-button, .button {
+    box-shadow: none !important;
+    background: linear-gradient(to bottom, rgba(235,243,249,1) 0%,rgba(223,235,245,1) 100%) !important;
+}
+
+.ui-button.cancel, .button.cancel {
+    box-shadow: none !important;
+    background: linear-gradient(to bottom, rgba(250,250,250,1) 0%,rgba(241,241,241,1) 100%) !important;
+}
+
+.ui-button:hover, .button:hover, .ui-button.cancel:hover, .button.cancel:hover {
+    box-shadow: none !important;
+    background: linear-gradient(to bottom, rgba(241,248,253,1) 0%,rgba(227,240,251,1) 100%) !important;
+}
+
+.ui-button:focus,.ui-button:active,
+.button:active,.button:focus,.ui-button.cancel:focus,.ui-button.cancel:active,
+.button.cancel:active,.button.cancel:focus {
+    box-shadow: none !important;
+    background: linear-gradient(to bottom, rgba(210,232,250,1) 0%,rgba(194,224,248,1) 100%) !important;
+}
+
+.alert {
+    text-shadow: none !important;
+    box-shadow: none !important;
+}
+
+.pill.usage {
+    box-shadow: none;
+}
+
+.badge {
+    box-shadow: none;
+}
+
+.notification-container {
+    box-shadow: none;
+    border: 1px solid #dadada;
+}
+
+.context-menu.sort-order {
+    box-shadow: none;
+    border: 1px solid #dadada;
+}

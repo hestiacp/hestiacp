@@ -4,12 +4,11 @@
   <meta charset="utf-8">
   <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
   <title><?php echo $_SERVER['HTTP_HOST']; ?> - <?=_($TAB)?> - <?=_('Hestia Control Panel');?></title>
-  <link type="text/css" rel="stylesheet" href="/css/styles.min.css?<?php echo JS_LATEST_UPDATE; ?>" />
+  <link type="text/css" rel="stylesheet" href="/css/styles.min.css?<?=JS_LATEST_UPDATE?>" />
   <link type="text/css" rel="stylesheet" href="/css/active-theme.css?<?php echo rand(); ?>" />
-  <link type="text/css" href="/css/animate.min.css?<?php echo JS_LATEST_UPDATE; ?>" rel="stylesheet" />
-  <link type="text/css" href="/css/jquery-custom-dialogs.css?<?php echo JS_LATEST_UPDATE; ?>" rel="stylesheet" />
-  <link type="text/css" href="/css/all.min.css?<?php echo JS_LATEST_UPDATE; ?>" rel="stylesheet" />
-  <script src="/inc/jquery/jquery-3.5.1.min.js"></script>
+  <link type="text/css" href="/css/animate.min.css?<?=JS_LATEST_UPDATE?>" rel="stylesheet" />
+  <link type="text/css" href="/css/jquery-custom-dialogs.css?<?=JS_LATEST_UPDATE?>" rel="stylesheet" />
+  <link type="text/css" href="/css/all.min.css?<?=JS_LATEST_UPDATE?>" rel="stylesheet" />
   <script>
     //
     //  GLOBAL SETTINGS
@@ -19,6 +18,24 @@
     GLOBAL.DB_USER_PREFIX   = 'admin_';
     GLOBAL.DB_DBNAME_PREFIX = 'admin_';
     GLOBAL.AJAX_URL = '';
+
+    if (window.requestIdleCallback) {
+        requestIdleCallback(function () {
+            Fingerprint2.get(function (components) {
+                var values = components.map(function (component) { return component.value })
+                var murmur = Fingerprint2.x64hash128(values.join(''), 31);
+                $('#murmur').val(murmur);
+            })
+        })
+    } else {
+        setTimeout(function () {
+                Fingerprint2.get(function (components) {
+                var values = components.map(function (component) { return component.value })
+                var murmur = Fingerprint2.x64hash128(values.join(''), 31);
+                $('#murmur').val(murmur);
+            })
+        }, 500);
+    }
   </script>
 </head>
 <body class="body-<?=strtolower($TAB)?> lang-<?=$_SESSION['language']?>">

@@ -126,6 +126,13 @@ upgrade_health_check() {
         echo "[ ! ] Adding missing variable to hestia.conf: LOGIN_STYLE ('default')"
         $BIN/v-change-sys-config-value "LOGIN_STYLE" "default"
     fi
+
+    # Inactive session timeout
+    if [ -z "$INACTIVE_SESSION_TIMEOUT" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: INACTIVE_SESSION_TIMEOUT ('60')"
+        $BIN/v-change-sys-config-value "INACTIVE_SESSION_TIMEOUT" "60"
+    fi
+    
     
     echo "[ * ] Health check complete. Starting upgrade from $VERSION to $new_version..."
     echo "============================================================================="

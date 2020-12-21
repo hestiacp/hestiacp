@@ -1,8 +1,33 @@
 <?php
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
 
+function get_real_user_ip(){
+    $ip = $_SERVER['REMOTE_ADDR'];
+    if(isset($_SERVER['HTTP_CLIENT_IP'])){
+        $ip = $_SERVER['HTTP_CLIENT_IP'];
+    }
+    if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])){
+        $ip =  $_SERVER['HTTP_X_FORWARDED_FOR'];
+    }
+    if(isset($_SERVER['HTTP_FORWARDED_FOR'])){
+        $ip = $_SERVER['HTTP_FORWARDED_FOR'];
+    }
+    if(isset($_SERVER['HTTP_X_FORWARDED'])){
+        $ip = $_SERVER['HTTP_X_FORWARDED'];
+    }
+    if(isset($_SERVER['HTTP_FORWARDED'])){
+        $ip = $_SERVER['HTTP_FORWARDED'];
+    }
+    if(isset($_SERVER['HTTP_CF_CONNECTING_IP'])){
+        if(!empty($_SERVER['HTTP_CF_CONNECTING_IP'])){
+            $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
+        }
+    }
+    return $ip;
+}
+
 function api($hst_hash, $hst_user, $hst_password, $hst_returncode, $hst_cmd, $hst_arg1, $hst_arg2, $hst_arg3, $hst_arg4, $hst_arg5, $hst_arg6, $hst_arg7, $hst_arg8, $hst_arg9){
-    //This exists, so native JSON can be used without the repeating the code twice, so future code changes are easier and dont need to be replicated twice
+    //This exists, so native JSON can be used without the repeating the code twice, so future code changes are easier and don't need to be replicated twice
     // Authentication
     if (empty($hst_hash)) {
         if ($hst_user != 'admin') {
@@ -15,7 +40,7 @@ function api($hst_hash, $hst_user, $hst_password, $hst_returncode, $hst_cmd, $hs
             echo 'Error: missing authentication';
             exit;
         }
-        $v_ip = escapeshellarg($_SERVER['REMOTE_ADDR']);
+        $v_ip = escapeshellarg(get_real_user_ip());
         $output = '';
         exec (HESTIA_CMD."v-get-user-salt admin ".$v_ip." json" , $output, $return_var);
         $pam = json_decode(implode('', $output), true);
@@ -53,16 +78,11 @@ function api($hst_hash, $hst_user, $hst_password, $hst_returncode, $hst_cmd, $hs
         }
     } else {
         $key = '/usr/local/hestia/data/keys/' . basename($hst_hash);
-        if (file_exists($key) && is_file($key)) {
-            exec(HESTIA_CMD ."v-check-api-key ".escapeshellarg($key)." ".$v_ip,  $output, $return_var);
-            unset($output);
-
-            // Check API answer
-            if ( $return_var > 0 ) {
-                echo 'Error: authentication failed';
-                exit;
-            }
-        } else {
+        $v_ip = escapeshellarg(get_real_user_ip());
+        exec(HESTIA_CMD ."v-check-api-key ".escapeshellarg($key)." ".$v_ip,  $output, $return_var);
+        unset($output);
+        // Check API answer
+        if ( $return_var > 0 ) {
             echo 'Error: authentication failed';
             exit;
         }

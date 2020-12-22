@@ -110,7 +110,7 @@ unset($output);
 exec (HESTIA_CMD."v-list-remote-dns-hosts json", $output, $return_var);
 $dns_cluster = json_decode(implode('', $output), true);
 unset($output);
-if(is_array($dns_cluster)){
+if (is_array($dns_cluster)) {
     foreach ($dns_cluster as $key => $value) {
         $v_dns_cluster = 'yes';
     }

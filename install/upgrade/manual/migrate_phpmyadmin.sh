@@ -23,7 +23,7 @@ echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
    # Create an backup of current config
-   echo "[ * ] Make backup old confi files"
+   echo "[ * ] Make backup old config files"
    mkdir -p /root/hst_backup_man/phmyadmin
    cp -r /etc/phpmyadmin/* /root/hst_backup_man/phmyadmin
    

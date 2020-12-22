@@ -1,5 +1,5 @@
 <?php
-/* PHPmyadmin config for for Hestia 1.3.3 > */
+/* PHPmyadmin config for Hestia 1.3.3 > */
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**
  * All directives are explained in documentation in the doc/ folder

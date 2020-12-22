@@ -97,7 +97,7 @@ if(isset(\$_GET['hestia_token']) || isset(\$_COOKIE['SignonSession'])){
 file=$(cat $PMA_CONFIG/config.inc.php)
 if ! [[  $file =~ "hestia-sso.inc.php" ]]; then 
     if [[ $file =~ "//Add Hestia SSO code here" ]]; then 
-        sed -i "s|     //Add Hestia SSO code here|     //Add Hestia SSO code here\n    include ('$PMA_CONFIG/hestia-sso.inc.php');|g" $PMA_CONFIG/config.inc.php
+        sed -i "s|//Add Hestia SSO code here|//Add Hestia SSO code here\n     include ('$PMA_CONFIG/hestia-sso.inc.php');|g" $PMA_CONFIG/config.inc.php
     else
         echo "include ('$PMA_CONFIG/hestia-sso.inc.php');" >> $PMA_CONFIG/config.inc.php    
     fi

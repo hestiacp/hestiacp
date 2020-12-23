@@ -87,9 +87,7 @@ hestia_module_php-fpm_add() {
     fi
 
     # Integrate everything
-    if [ ! "$param_without_no_integrate" ]; then
-        hestia module php-fpm integrate
-    fi
+    osal_enqueue_integrate php-fpm
 
     log_history "installed php $php_version" '' 'admin'
 }

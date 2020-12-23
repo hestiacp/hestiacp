@@ -9,7 +9,6 @@ if [ -f $HESTIA/conf/hestia.conf ]; then
 fi
 
 hestia() {
-
     if [[ -z $@ ]]; then
         echo "Hestia: command missing. Try 'hestia help' for more information."
         exit
@@ -135,4 +134,7 @@ hestia() {
 }
 
 # If this files is _not_ being sourced, act immediately
-[[ "${BASH_SOURCE[0]}" == "${0}" ]] && hestia $@
+if [ "${BASH_SOURCE[0]}" == "${0}" ]; then
+    hestia $@
+    hestia integrate pending
+fi

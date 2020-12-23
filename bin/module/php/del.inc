@@ -79,9 +79,7 @@ hestia_module_php_del() {
 
     osal_kv_write $HESTIA_CONF_MODULES/php.conf "php${php_withoutdot}_present" '0'
 
-    if [ ! "$param_without_no_integrate" ]; then
-        hestia module php integrate
-    fi
+    osal_enqueue_integrate php
 
     log_history "removed php $phpversion" '' 'admin'
 

@@ -57,7 +57,5 @@ hestia_module_clamav_install() {
     osal_kv_write $HESTIA_CONF_MODULES/antivirus.conf 'version' '1'
     osal_kv_write $HESTIA_CONF_MODULES/antivirus.conf 'service_name' $OSAL_SERVICE_CLAMAV
 
-    if [[ $(hestia_module_variant_installed 'mta') == 'exim' ]]; then
-        hestia module clamav exim-integration enable
-    fi
+    osal_enqueue_integrate clamav
 }

@@ -65,9 +65,7 @@ hestia_module_php-fpm_del() {
 
     osal_kv_write $HESTIA_CONF_MODULES/php-fpm.conf "php${php_withoutdot}_present" '0'
 
-    if [ ! "$param_without_no_integrate" ]; then
-        hestia module php-fpm integrate
-    fi
+    osal_enqueue_integrate php-fpm
 
     log_history "removed php-fpm $phpversion" '' 'admin'
 

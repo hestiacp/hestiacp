@@ -67,6 +67,15 @@ osal_service_disable() {
     /usr/bin/systemctl disable ${1}.service > /dev/null 2>&1
 }
 
+# osal_enqueue_integrate 'all'
+osal_enqueue_integrate() {
+    if [ "$1" ]; then
+        echo "$1" >> $HESTIA/data/queue/integrate
+    else
+        echo "all" >> $HESTIA/data/queue/integrate
+    fi
+}
+
 osal_value_in_list() {
     local needle=$1
     shift

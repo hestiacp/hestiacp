@@ -39,4 +39,6 @@ hestia_module_exim_remove() {
     osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'enabled' '0'
     osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'variant' ''
     osal_kv_write $HESTIA_CONF_MODULES/mta.conf 'version' '0'
+
+    osal_enqueue_integrate exim
 }

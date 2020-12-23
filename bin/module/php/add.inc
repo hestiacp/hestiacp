@@ -88,9 +88,7 @@ hestia_module_php_add() {
     fi
 
     # Integrate everything
-    if [ ! "$param_without_no_integrate" ]; then
-        hestia module php integrate
-    fi
+    osal_enqueue_integrate php
 
     log_history "installed php $php_version" '' 'admin'
 }

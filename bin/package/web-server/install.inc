@@ -10,30 +10,28 @@ hestia_package_web-server_install() {
 
     echo "Installing web server package..."
 
-    hestia module install apache --no-integrate
-    hestia module install awstats --no-integrate
+    hestia module install apache
+    hestia module install awstats
 
     if [ $memory -ge 1572864 ] || [ "$param_with_proxy" ]; then
         if [ ! "$param_without_proxy" ]; then
-            hestia module install nginx --no-integrate
+            hestia module install nginx
         fi
     fi
 
     if [ $memory -ge 1572864 ] || [ "$param_with_php" ]; then
         if [ ! "$param_without_php" ]; then
-            hestia module install php --no-integrate
-            hestia module install php-fpm --no-integrate
+            hestia module install php
+            hestia module install php-fpm
         fi
     fi
 
     if [ ! "$param_without_mariadb" ]; then
-        hestia module install mariadb --no-integrate
+        hestia module install mariadb
     fi
 
     # Integrate everything
-    if [ ! "$param_without_no_integrate" ]; then
-        hestia package web-server integrate
-    fi
+    osal_enqueue_integrate web-server
 }
 
 usage() {

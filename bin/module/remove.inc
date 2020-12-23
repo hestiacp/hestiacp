@@ -38,28 +38,24 @@ hestia_module_remove() {
                     return 1
                 fi
             else
-                hestia module $mod_name remove "$@" --no-integrate
-                if [ ! "$param_no_integrate" ]; then
-                    hestia module $mod_name integrate
-                fi
+                hestia module $mod_name remove "$@"
+                osal_enqueue_integrate $mod_name
             fi
         else
             # It's provided by something else
             for mod in $mod_providers; do
                 if hestia_module_isinstalled $mod; then
                     echo "Ok, 'remove ${mod_name}' means 'remove ${mod}'"
-                    if ! hestia module remove $mod --no-integrate; then
+                    if ! hestia module remove $mod; then
                         echo "Unable to remove '${mod_name}' because '${mod}' refuses to uninstall."
                     fi
                 fi
             done
 
-            if [ ! "$param_no_integrate" ]; then
-                hestia module $mod_name integrate
-                for mod in $mod_providers; do
-                    hestia module $mod integrate
-                done
-            fi
+            osal_enqueue_integrate $mod_name
+            for mod in $mod_providers; do
+                osal_enqueue_integrate $mod
+            done
         fi
     else
         echo "Usage: module remove module_name"

@@ -49,12 +49,7 @@ hestia_module_install() {
             done
         fi
 
-        if [ ! "$param_no_integrate" ]; then
-            # Now integrate everything we've just installed
-            for mod in $mod_provider $mod_requires; do
-                hestia module $mod integrate
-            done
-        fi
+        osal_enqueue_integrate $mod
     else
         echo "Usage: module install module_name"
         return 1
@@ -85,7 +80,7 @@ hestia_module_install_check_requires() {
     for mod in $@; do
         [ "$HESTIA_DEBUG" ] && echo "Check dependency: $mod"
         if ! hestia_module_isinstalled $mod; then
-            if ! hestia module install $mod --no-integrate; then
+            if ! hestia module install $mod; then
                 echo "Module '${mod}' is required for module '${mod_name}' but can not be installed"
                 return 1
             fi

@@ -36,5 +36,5 @@ hestia_module_dovecot_install() {
     osal_kv_write $HESTIA_CONF_MODULES/imap.conf 'version' '1'
     osal_kv_write $HESTIA_CONF_MODULES/imap.conf 'service_name' $OSAL_PKG_DOVECOT
 
-    return 0
+    osal_enqueue_integrate dovecot
 }

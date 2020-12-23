@@ -36,5 +36,5 @@ hestia_module_spamassassin_remove() {
     osal_kv_write $HESTIA_CONF_MODULES/antispam.conf 'variant' ''
     osal_kv_write $HESTIA_CONF_MODULES/antispam.conf 'version' '0'
 
-    return 0
+    osal_enqueue_integrate spamassassin
 }

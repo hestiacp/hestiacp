@@ -35,4 +35,6 @@ hestia_module_clamav_remove() {
     osal_kv_write $HESTIA_CONF_MODULES/antivirus.conf 'enabled' '0'
     osal_kv_write $HESTIA_CONF_MODULES/antivirus.conf 'variant' ''
     osal_kv_write $HESTIA_CONF_MODULES/antivirus.conf 'version' '0'
+
+    osal_enqueue_integrate clamav
 }

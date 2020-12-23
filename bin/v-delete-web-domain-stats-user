@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: disable webdomain stats  authentication support
+# info: disable web domain stats authentication support
 # options: USER DOMAIN [RESTART]
 # labels: web
 #
@@ -47,7 +47,7 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Defining statistic dir
+# Deleting statistic dir
 rm -f $HOMEDIR/$user/web/$domain/stats/.htpasswd
 rm -f $HOMEDIR/$user/web/$domain/stats/.htaccess
 

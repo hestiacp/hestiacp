@@ -56,6 +56,7 @@ hestia_setup_init() {
     hestia_config_init_value 'WEBMAIL_ALIAS' 'webmail'
     hestia_config_init_value 'API' 'yes'
     hestia_config_init_value 'BACKEND_PORT' '8083'
+    hestia_config_init_value 'FILE_MANAGER' 'false'
 
     memory=$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])
 

@@ -88,11 +88,11 @@ EOL
         echo " - Adding repositories and packages..."
         dnf -q config-manager --set-enabled extras powertools > /dev/null 2>&1
         dnf -q config-manager --set-enabled extras PowerTools > /dev/null 2>&1
-        dnf -yq install epel-release
+        dnf -y -q install epel-release
         dnf -q config-manager --set-enabled epel epel-modular > /dev/null 2>&1
 
         # Install needed packages
-        dnf -yq install crudini
+        dnf -y -q install crudini
 
         # Disable SELinux
         setenforce 0

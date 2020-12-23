@@ -21,11 +21,11 @@ EOL
         LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
     elif [ "$OS_BASE" = 'rhel' ]; then
         # Disable CentOS PHP, enable Remi PHP
-        dnf -yq module disable php
-        dnf -yq install http://rpms.remirepo.net/enterprise/remi-release-$OS_VERSION.rpm
+        dnf -y -q module disable php
+        dnf -y -q install http://rpms.remirepo.net/enterprise/remi-release-$OS_VERSION.rpm
         dnf config-manager --set-enabled remi remi-modular
-        dnf -yq module reset php
-        dnf -yq module enable php:remi-$PHP_DEFAULT_VERSION
+        dnf -y -q module reset php
+        dnf -y -q module enable php:remi-$PHP_DEFAULT_VERSION
     fi
 
     # Install mod_php for system default PHP

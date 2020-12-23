@@ -576,9 +576,9 @@ fi
 # BackBlaze B2 backup function
 backblazeb2_backup() {
     # Defining backblaze b2 settings
-    source $HESTIA/conf/b2.backup.conf
+    source $HESTIA/conf/b2.backupmonthly.conf
     b2util=$(which b2)
-    # Recreate backblaze auth file ~/.b2_account_info (for situation when key was changed in b2.backup.conf)
+    # Recreate backblaze auth file ~/.b2_account_info (for situation when key was changed in b2.backupmonthly.conf)
     $b2util clear-account > /dev/null 2>&1
     $b2util authorize-account $B2_KEYID $B2_KEY > /dev/null 2>&1
 

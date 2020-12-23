@@ -122,7 +122,12 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <textarea size="20" class="vst-textinput short" name="v_fwd"><?=htmlentities(trim($v_fwd, "'"))?></textarea>
+                                        <textarea size="20" class="vst-textinput short" name="v_fwd" id="v_fwd" <?php if($v_blackhole == 'yes') echo "disabled";?>><?=htmlentities(trim($v_fwd, "'"))?></textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="vst-text input-label">
+                                        <label><input type="checkbox" size="20" class="vst-checkbox" id="v_blackhole" name="v_blackhole" <?php if ($v_blackhole == 'yes') echo "checked=yes" ?>> <?php print _('Forward email to :blackhole:');?></label>
                                     </td>
                                 </tr>
                                 <tr>

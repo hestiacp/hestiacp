@@ -69,6 +69,7 @@ App.Listeners.MAIL_ACC.checkbox_unlimited_feature();
 $('#v_blackhole').on('click', function(evt){
    if($('#v_blackhole').is(':checked')){
        $('#v_fwd').prop('disabled', true);
+       $('#v_fwd_for').prop('checked', true);       
    }else{
        $('#v_fwd').prop('disabled', false);       
    }

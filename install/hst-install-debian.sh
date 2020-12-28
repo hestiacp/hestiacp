@@ -1863,6 +1863,12 @@ Ready to get started? Log in using the following credentials:
     Username:   admin
     Password:   $vpass
 
+Other Credentials you may need:
+
+    PHP URL:  https://$servername/phpmyadmin
+    Username:   root
+    Password:   $mpass
+    
 Thank you for choosing Hestia Control Panel to power your full stack web server,
 we hope that you enjoy using it as much as we do!
 

@@ -280,6 +280,24 @@ add_pgsql_database() {
     md5=$(psql_query "$query" | grep md5 | cut -f 2 -d \ )
 }
 
+add_mysql_database_temp_user() {
+    mysql_connect $host;
+    query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost
+    IDENTIFIED BY '$dbpass'"
+    mysql_query "$query" > /dev/null
+  }
+
+delete_mysql_database_temp_user(){
+    echo $database;
+    echo $dbuser;
+    echo $host;
+    mysql_connect $host;
+    query="REVOKE ALL ON \`$database\`.* FROM \`$dbuser\`@localhost"
+    mysql_query "$query" > /dev/null
+    query="DROP USER '$dbuser'@'localhost'"
+    mysql_query "$query" > /dev/null
+}
+
 # Check if database host do not exist in config 
 is_dbhost_new() {
     if [ -e "$HESTIA/conf/$type.conf" ]; then

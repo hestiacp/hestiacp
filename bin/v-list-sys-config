@@ -61,10 +61,9 @@ json_list() {
         "DB_PMA_ALIAS": "'$DB_PMA_ALIAS'",
         "DB_PGA_ALIAS": "'$DB_PGA_ALIAS'",
         "LOGIN_STYLE": "'$LOGIN_STYLE'",
-        "INACTIVE_SESSION_TIMEOUT": "'$INACTIVE_SESSION_TIMEOUT'",
-        "SOFTACULOUS": "'$SOFTACULOUS'"
+        "PHPMYADMIN_KEY": "'$PHPMYADMIN_KEY'"
     }
-}'
+    }'
 }
 
 # Shell list

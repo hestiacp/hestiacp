@@ -279,6 +279,22 @@ if (!empty($_POST['save'])) {
             }
         }
     }
+    // Set File Manager support
+    if (empty($_SESSION['error_msg'])) {
+        if (!empty($_POST['v_phpmyadmin_key'])) {
+            if ($_POST['v_phpmyadmin_key'] == 'yes' && $_SESSION['PHPMYADMIN_KEY'] == '') {
+                exec (HESTIA_CMD."v-add-sys-pma-sso quiet", $output, $return_var);
+                check_return_code($return_var,$output);
+                unset($output);
+                if (empty($_SESSION['error_msg'])) $_SESSION['PHPMYADMIN_KEY'] != "";
+            } else if($_POST['v_phpmyadmin_key'] == 'no' && $_SESSION['PHPMYADMIN_KEY'] != ''){
+                exec (HESTIA_CMD."v-delete-sys-pma-sso  quiet", $output, $return_var);
+                check_return_code($return_var,$output);
+                unset($output);
+                if (empty($_SESSION['error_msg'])) $_SESSION['PHPMYADMIN_KEY'] = '';
+            }
+        }
+    }
 
     // Set disk_quota support
     if (empty($_SESSION['error_msg'])) {

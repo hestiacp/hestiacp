@@ -464,6 +464,21 @@
                                                 <br><br>
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print _('phpMyAdmin Single Sign On') ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_phpmyadmin_key">
+                                                    <option value='no'><?php print _('Disabled'); ?></option>
+                                                    <option value='yes' <?php if($_POST['v_phpmyadmin_key'] == "yes" || $_SESSION['PHPMYADMIN_KEY'] != ''){ echo 'selected="selected"'; }; ?>><?php print _('Enabled'); ?></option>
+                                                </select>
+                                                <br />
+                                                <br />
+                                            </td>
+                                        </tr>
                                         <?php } ?>
                                         <?php if ($v_mysql == 'yes') {
                                                   $i = 0;

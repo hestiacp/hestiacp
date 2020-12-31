@@ -26,6 +26,9 @@ source $HESTIA/conf/hestia.conf
 # Define themes repository URL format
 HESTIA_THEMES_REPO="$HESTIA_GIT_REPO/$RELEASE_BRANCH/install/deb/themes"
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#

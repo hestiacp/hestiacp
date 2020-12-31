@@ -1,7 +1,7 @@
 #!/bin/bash
 # info: list system configuration
 # options: [FORMAT]
-# labels: 
+# labels:
 #
 # example: v-list-sys-config json
 #
@@ -61,6 +61,7 @@ json_list() {
         "DB_PMA_ALIAS": "'$DB_PMA_ALIAS'",
         "DB_PGA_ALIAS": "'$DB_PGA_ALIAS'",
         "LOGIN_STYLE": "'$LOGIN_STYLE'",
+        "INACTIVE_SESSION_TIMEOUT": "'$INACTIVE_SESSION_TIMEOUT'",
         "SOFTACULOUS": "'$SOFTACULOUS'"
     }
 }'

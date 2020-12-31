@@ -72,6 +72,7 @@ server {
             fastcgi_index index.php;
             fastcgi_param SCRIPT_FILENAME $request_filename;
             include /etc/nginx/fastcgi_params;
+            include     %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf;
         }
 
         location ~ ^/sites/.*/files/styles/ {

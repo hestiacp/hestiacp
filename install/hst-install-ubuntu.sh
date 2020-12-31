@@ -1140,6 +1140,9 @@ echo "LANGUAGE='$lang'" >> $HESTIA/conf/hestia.conf
 # Login in screen
 echo "LOGIN_STYLE='default'" >> $HESTIA/conf/hestia.conf
 
+# Inactive session timeout
+echo "INACTIVE_SESSION_TIMEOUT='60'" >> $HESTIA/conf/hestia.conf
+
 # Version & Release Branch
 echo "VERSION='${HESTIA_INSTALL_VER}'" >> $HESTIA/conf/hestia.conf
 echo "RELEASE_BRANCH='release'" >> $HESTIA/conf/hestia.conf
@@ -1721,7 +1724,6 @@ else
     rm -r $HESTIA/web/api
     echo "API='no'" >> $HESTIA/conf/hestia.conf
 fi
-
 
 #----------------------------------------------------------#
 #                      Fix phpmyadmin                      #

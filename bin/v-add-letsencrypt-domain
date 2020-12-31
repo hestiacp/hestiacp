@@ -106,6 +106,9 @@ debug_log() {
     echo -e "\n==[${1}]==\n${2}\n" >> "$log_file"
 }
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#

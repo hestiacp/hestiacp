@@ -34,6 +34,8 @@ is_type_valid "$DB_SYSTEM" "$type"
 is_object_valid "../../conf/$type" 'HOST' "$host"
 is_dbhost_free
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

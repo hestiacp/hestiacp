@@ -881,6 +881,17 @@
                                                 <br><br>
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print _('Inactive session length');?> (<?php print _('Minutes');?>)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_inactive_session_timeout" value="<?=trim($_SESSION['INACTIVE_SESSION_TIMEOUT'], "'")?>">
+                                                <br><br>
+                                            </td>
+                                        </tr>
                                     </table>
                                 </td>
                             </tr>

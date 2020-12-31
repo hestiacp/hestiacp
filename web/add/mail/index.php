@@ -98,11 +98,18 @@ if (!empty($_POST['ok_acc'])) {
     }
     
     
-
+    // Check antispam option
+    if (!empty($_POST['v_blackhole'])) {
+        $v_blackhole = 'yes';
+    } else {
+        $v_blackhole = 'no';
+    }
     // Check empty fields
     if (empty($_POST['v_domain'])) $errors[] = _('domain');
     if (empty($_POST['v_account'])) $errors[] = _('account');
-    if (empty($_POST['v_password'])) $errors[] = _('password');
+    if ((empty($_POST['v_fwd_only']) && empty($_POST['v_password']))) {
+        if (empty($_POST['v_password'])) $errors[] = _('password');
+    }
     if (!empty($errors[0])) {
         foreach ($errors as $i => $error) {
             if ( $i == 0 ) {
@@ -122,7 +129,7 @@ if (!empty($_POST['ok_acc'])) {
     }
     
     // Check password length
-    if (empty($_SESSION['error_msg']) && !empty($_POST['v_fwd_only']) ) {
+    if (empty($_SESSION['error_msg']) && (empty($_POST['v_fwd_only']))) {
         if (!validate_password($_POST['v_password'])) { $_SESSION['error_msg'] = _('Password does not match the minimum requirements');}
     }
 
@@ -168,6 +175,13 @@ if (!empty($_POST['ok_acc'])) {
         }
     }
 
+    if ((!empty($_POST['v_blackhole'])) && (empty($_SESSION['error_msg']))){
+        exec (HESTIA_CMD."v-add-mail-account-forward ".$user." ".$v_domain." ".$v_account." :blackhole:", $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
+        //disable  any input in v_fwd
+        $_POST['v_fwd'] = '';
+    }
     // Add Forwarders
     if ((!empty($_POST['v_fwd'])) && (empty($_SESSION['error_msg']))) {
         $vfwd = preg_replace("/\n/", " ", $_POST['v_fwd']);

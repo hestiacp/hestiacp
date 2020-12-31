@@ -30,7 +30,8 @@ is_format_valid 'host'
 is_system_enabled "$DNS_CLUSTER" 'DNS_CLUSTER'
 is_object_valid "../../conf/dns-cluster" 'HOST' "$host"
 
-
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#

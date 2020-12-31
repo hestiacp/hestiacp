@@ -22,6 +22,9 @@ check_args '2' "$#" 'USER DIRECTORY'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 # Checking user homedir
 homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
 if [ -z $homedir ]; then

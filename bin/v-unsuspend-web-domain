@@ -41,6 +41,8 @@ is_object_valid 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_suspended 'web' 'DOMAIN' "$domain"
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

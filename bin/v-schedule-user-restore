@@ -38,6 +38,8 @@ is_object_valid 'user' 'USER' "$user"
 is_backup_enabled
 is_backup_scheduled 'restore'
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

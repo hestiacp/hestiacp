@@ -48,5 +48,7 @@ server {
     location ~ /\.hg/   {return 404;}
     location ~ /\.bzr/  {return 404;}
 
+    proxy_hide_header Upgrade;
+
     include %home%/%user%/conf/web/%domain%/nginx.ssl.conf_*;
 }

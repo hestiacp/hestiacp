@@ -36,7 +36,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     exim4-daemon-heavy expect fail2ban flex ftp git idn imagemagick
     libapache2-mod-fcgid libapache2-mod-php$fpm_v libapache2-mod-rpaf
     lsof mc mariadb-client mariadb-common mariadb-server nginx
-    php$fpm_v php$fpm_v-cgi php$fpm_v-common php$fpm_v-curl phpmyadmin
+    php$fpm_v php$fpm_v-cgi php$fpm_v-common php$fpm_v-curl
     php$fpm_v-mysql php$fpm_v-imap php$fpm_v-ldap php$fpm_v-apcu phppgadmin
     php$fpm_v-pgsql php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli php$fpm_v-gd
     php$fpm_v-imagick php$fpm_v-intl php$fpm_v-json php$fpm_v-mbstring
@@ -776,7 +776,6 @@ if [ "$mysql" = 'no' ]; then
             software=$(echo "$software" | sed -e "s/php$v-bz2//")
         done
     fi
-    software=$(echo "$software" | sed -e "s/phpmyadmin//")
 fi
 if [ "$postgresql" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/postgresql-contrib//")
@@ -1412,14 +1411,6 @@ if [ "$mysql" = 'yes' ]; then
     mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
     mysql -e "DELETE FROM mysql.user WHERE user='';"
     mysql -e "DELETE FROM mysql.user WHERE password='' AND authentication_string='';"
-
-    # Configuring phpMyAdmin
-    if [ "$apache" = 'yes' ]; then
-        cp -f $HESTIA_INSTALL_DIR/pma/apache.conf /etc/phpmyadmin/
-        ln -s /etc/phpmyadmin/apache.conf /etc/apache2/conf.d/phpmyadmin.conf
-    fi
-    cp -f $HESTIA_INSTALL_DIR/pma/config.inc.php /etc/phpmyadmin/
-    chmod 777 /var/lib/phpmyadmin/tmp
 fi
 
 
@@ -1430,38 +1421,55 @@ fi
 if [ "$mysql" = 'yes' ]; then
     # Display upgrade information
     echo "[ * ] Installing phpMyAdmin version v$pma_v..."
-
+    
     # Download latest phpmyadmin release
     wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
-
+    
     # Unpack files
     tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
-
-    # Delete files to prevent error
-    rm -fr /usr/share/phpmyadmin/doc/html
-    rm -fr /usr/share/phpmyadmin/js/vendor/openlayers
-
+    
+    # Create folders
+    mkdir -p  /usr/share/phpmyadmin
+    mkdir -p /etc/phpmyadmin
+    mkdir -p /etc/phpmyadmin/conf.d/  
+    mkdir /usr/share/phpmyadmin/tmp
+    
+    # Configuring Apache2 for PHPMYADMIN
+    if [ "$apache" = 'yes' ]; then
+        cp -f $HESTIA_INSTALL_DIR/pma/apache.conf /etc/phpmyadmin/
+        ln -s /etc/phpmyadmin/apache.conf /etc/apache2/conf.d/phpmyadmin.conf
+    fi
+    
     # Overwrite old files
     cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
-
+    
+    # Create copy of config file
+    cp -f $HESTIA_INSTALL_DIR/pma/config.inc.php /etc/phpmyadmin/
+    mkdir -p /var/lib/phpmyadmin/tmp
+    chmod 777 /var/lib/phpmyadmin/tmp
+    
     # Set config and log directory
     sed -i "s|define('CONFIG_DIR', ROOT_PATH);|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
     sed -i "s|define('TEMP_DIR', ROOT_PATH . 'tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
-
+    
     # Create temporary folder and change permission
-    [ ! -d "/usr/share/phpmyadmin/tmp" ] && mkdir /usr/share/phpmyadmin/tmp
+    mkdir /usr/share/phpmyadmin/tmp
     chmod 777 /usr/share/phpmyadmin/tmp
     
-    if [ -e /var/lib/phpmyadmin/blowfish_secret.inc.php ]; then
-        chmod 0644 /var/lib/phpmyadmin/blowfish_secret.inc.php
-    fi
-
-    # Clear Up
+    # Generate blow fish
+    blowfish=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)
+    sed -i "s|%blowfish_secret%|$blowfish|" /etc/phpmyadmin/config.inc.php
+    
+    # Clean Up
     rm -fr phpMyAdmin-$pma_v-all-languages
     rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
-
+    
     echo "DB_PMA_ALIAS='phpmyadmin'" >> $HESTIA/conf/hestia.conf
     $HESTIA/bin/v-change-sys-db-alias 'pma' "phpmyadmin"
+    
+    # Special thanks to Pavel Galkin (https://skurudo.ru)
+    # https://github.com/skurudo/phpmyadmin-fixer
+    source $HESTIA_INSTALL_DIR/phpmyadmin/pma.sh > /dev/null 2>&1
 fi
 
 
@@ -1723,16 +1731,6 @@ if [ "$api" = 'yes' ]; then
 else
     rm -r $HESTIA/web/api
     echo "API='no'" >> $HESTIA/conf/hestia.conf
-fi
-
-#----------------------------------------------------------#
-#                      Fix phpmyadmin                      #
-#----------------------------------------------------------#
-# Special thanks to Pavel Galkin (https://skurudo.ru)
-# https://github.com/skurudo/phpmyadmin-fixer
-
-if [ "$mysql" = 'yes' ]; then
-    source $HESTIA_INSTALL_DIR/phpmyadmin/pma.sh > /dev/null 2>&1
 fi
 
 

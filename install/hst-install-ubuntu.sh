@@ -1445,7 +1445,6 @@ if [ "$mysql" = 'yes' ]; then
     
     # Create copy of config file
     cp -f $HESTIA_INSTALL_DIR/phpmyadmin/config.inc.php /etc/phpmyadmin/
-    mkdir -p /var/lib/phpmyadmin/tmp
     chmod 777 /var/lib/phpmyadmin/tmp
     
     # Set config and log directory

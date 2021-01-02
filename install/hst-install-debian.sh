@@ -1400,7 +1400,6 @@ if [ "$mysql" = 'yes' ]; then
     sed -i "s|define('TEMP_DIR', ROOT_PATH . 'tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
 
     # Create temporary folder and change permission
-    mkdir /usr/share/phpmyadmin/tmp
     chmod 777 /usr/share/phpmyadmin/tmp
     
     # Generate blow fish

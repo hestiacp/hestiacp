@@ -1391,7 +1391,7 @@ if [ "$mysql" = 'yes' ]; then
     cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
     
     # Create copy of config file
-    cp -f $HESTIA_INSTALL_DIR/pma/config.inc.php /etc/phpmyadmin/
+    cp -f $HESTIA_INSTALL_DIR/phpmyadmin/config.inc.php /etc/phpmyadmin/
     mkdir -p /var/lib/phpmyadmin/tmp
     chmod 777 /var/lib/phpmyadmin/tmp
     
@@ -1400,7 +1400,6 @@ if [ "$mysql" = 'yes' ]; then
     sed -i "s|define('TEMP_DIR', ROOT_PATH . 'tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
 
     # Create temporary folder and change permission
-    mkdir /usr/share/phpmyadmin/tmp
     chmod 777 /usr/share/phpmyadmin/tmp
     
     # Generate blow fish

@@ -1072,7 +1072,7 @@ if [ "$mysql" = 'yes' ]; then
     installed_db_types='mysql'
 fi
 
-if [ "$pgsql" = 'yes' ]; then
+if [ "$postgresql" = 'yes' ]; then
     installed_db_types="$installed_db_type,pgsql"
 fi
 

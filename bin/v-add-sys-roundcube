@@ -17,14 +17,13 @@ MODE=$1
 
 # Version and Download paths
 RC_V="1.4.10"
-RC_FILE="roundcubemail-{$RC_V}-complete.tar.gz"
-RC_EXTRACT="roundcubemail-{$RC_V}"
+RC_FILE="roundcubemail-$RC_V-complete.tar.gz"
+RC_EXTRACT="roundcubemail-$RC_V"
 # Downloading full version
-RC_URL="https://github.com/roundcube/roundcubemail/releases/download/{$RC_V}/roundcubemail-{$RC_V}-complete.tar.gz"
-
+RC_URL="https://github.com/roundcube/roundcubemail/releases/download/$RC_V/roundcubemail-$RC_V-complete.tar.gz"
 
 # Folder paths
-RC_INSTALL_DIR="/usr/share/roundcube"
+RC_INSTALL_DIR="/var/lib/roundcube"
 RC_CONFIG_DIR="/etc/roundcube"
 RC_LOG="/var/log/roundcube"
 
@@ -56,75 +55,79 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-rm --recursive --force "$RC_INSTALL_DIR"
-mkdir -p "$RC_INSTALL_DIR"
+rm --recursive --force $RC_INSTALL_DIR
+rm --recursive --force $RC_CONFIG_DIR
+mkdir -p $RC_INSTALL_DIR/
+mkdir -p $RC_CONFIG_DIR/
+
 cd "$RC_INSTALL_DIR"
 
 [ ! -f "${RC_INSTALL_DIR}/${RC_FILE}" ] && wget "$RC_URL" --quiet -O "${RC_INSTALL_DIR}/${RC_FILE}"
 
 tar xzf $RC_FILE
 cp -rf $RC_EXTRACT/* $RC_INSTALL_DIR
+
+# Delete old config folder
+cp $RC_INSTALL_DIR/config/defaults.inc.php $RC_CONFIG_DIR/defaults.inc.php
+rm -f -r $RC_INSTALL_DIR/config/
+ln -s /etc/roundcube/ ./config
+# Replace with Hestia config
 cp -f $HESTIA_INSTALL_DIR/roundcube/main.inc.php $RC_CONFIG_DIR/config.inc.php
-cp -f $HESTIA_INSTALL_DIR/roundcube/db.inc.php $RC_CONFIG_DIR/debian-db-roundcube.php
-cp -f $HESTIA_INSTALL_DIR/roundcube/config.inc.php $RC_CONFIG_DIR/plugins/password/
+cp -f $HESTIA_INSTALL_DIR/roundcube/mimetypes.php $RC_CONFIG_DIR/mimetypes.php
+
 cp -f $HESTIA_INSTALL_DIR/roundcube/hestia.php $RC_INSTALL_DIR/plugins/password/drivers/
+mkdir -p $RC_CONFIG_DIR/plugins/password
+mkdir -p $RC_CONFIG_DIR/plugins/newmail_notifier
+mkdir -p $RC_CONFIG_DIR/plugins/zipdownload
+
+# Allow changes to the respecitive config / Create symlinks to /etc/roundcube/ 
+cp -f $HESTIA_INSTALL_DIR/roundcube/config.inc.php $RC_CONFIG_DIR/plugins/password/config.inc.php
+ln -s $RC_CONFIG_DIR/plugins/password/config.inc.php ./plugins/password/config.inc.php
+cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_newmail_notifier.inc.php $RC_CONFIG_DIR/plugins/newmail_notifier/config.inc.php
+ln -s $RC_CONFIG_DIR/plugins/newmail_notifier/config.inc.php ./plugins/newmail_notifier/config.inc.php
+cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_zipdownload.inc.php $RC_CONFIG_DIR/plugins/zipdownload/config.inc.php
+ln -s $RC_CONFIG_DIR/plugins/zipdownload/config.inc.php ./plugins/zipdownload/config.inc.php
+
+
 chmod 640 $RC_CONFIG_DIR/config.inc.php
 chown root:www-data $RC_CONFIG_DIR/config.inc.php
-chmod 640 $RC_CONFIG_DIR/debian-db-roundcube.php
-chown root:www-data $RC_CONFIG_DIR/debian-db-roundcube.php
-touch $RC_LOG/errors
-chmod 640 $RC_LOG/errors
-chown www-data:adm $RC_LOG/errors
 
+# Log file 
+if [ ! -d  $RC_LOG ];then
+    mkdir $RC_LOG
+fi
+chown www-data:root $RC_LOG
+chmod 751 $RC_LOG
 
-if [ $DB_SYSTEM ~= "mysql" ]; then
+if [ ! -z "$(echo "$DB_SYSTEM" | grep -w 'mysql')" ]; then
+    # Remove the following 2 lines when going live
+    mysql -e "DROP DATABASE roundcube"
+    mysql -e "DROP USER roundcube@localhost"
     # Mysql available on system
     r=$(generate_password)
-    rcDesKey="$(openssl rand -base64 30 | tr -d "/" | cut -c1-24)"
     mysql -e "CREATE DATABASE roundcube"
     mysql -e "GRANT ALL ON roundcube.*
      TO roundcube@localhost IDENTIFIED BY '$r'"
-    sed -i "s/%password%/$r/g" $RC_CONFIG_DIR/debian-db-roundcube.php
-    sed -i "s/%des_key%/$rcDesKey/g" $RC_CONFIG_DIR/config.inc.php
-    sed -i "s/localhost/$servername/g" $RC_CONFIG_DIR/plugins/password/config.inc.php
-    mysql roundcube < /usr/share/dbconfig-common/data/roundcube/install/mysql
-else
-    if [ $DB_SYSTEM ~= "pgsql" ]; then
-    # Pgsql
-    echo "TO DO add support for pgsql"
-    fi
+    sed -i "s/%password%/$r/g" $RC_CONFIG_DIR/config.inc.php
+    mysql roundcube < /usr/share/roundcube/SQL/mysql.initial.sql
 fi
-    
-# Enable Roundcube plugins
-cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_newmail_notifier.inc.php /etc/roundcube/plugins/newmail_notifier/config.inc.php
-cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_zipdownload.inc.php /etc/roundcube/plugins/zipdownload/config.inc.php
-    
-# Fixes for PHP 7.4 compatibility
-[ -f "/usr/share/roundcube/plugins/enigma/lib/enigma_ui.php" ] && sed -i 's/$identities, "\\n"/"\\n", $identities/g' /usr/share/roundcube/plugins/enigma/lib/enigma_ui.php
-[ -f "/usr/share/roundcube/program/lib/Roundcube/rcube_contacts.php" ] && sed -i 's/(array_keys($post_search), \x27|\x27)/(\x27|\x27, array_keys($post_search))/g' /usr/share/roundcube/program/lib/Roundcube/rcube_contacts.php
-[ -f "/usr/share/roundcube/program/lib/Roundcube/rcube_db.php" ] && sed -i 's/implode($name, \x27.\x27)/implode(\x27.\x27, $name)/g' /usr/share/roundcube/program/lib/Roundcube/rcube_db.php
-[ -f "/usr/share/roundcube/program/steps/addressbook/search.inc" ] && sed -i 's/$fields, \x27,\x27/\x27,\x27, $fields/g' /usr/share/roundcube/program/steps/addressbook/search.inc
-[ -f "/usr/share/roundcube/program/steps/addressbook/search.inc" ] && sed -i 's/implode($fields, \x27,\x27)/implode(\x27,\x27, $fields)/g' /usr/share/roundcube/program/steps/addressbook/search.inc
-[ -f "/usr/share/roundcube/program/steps/mail/sendmail.inc" ] && sed -i 's/implode($bstyle, \x27; \x27)/implode(\x27; \x27, $bstyle)/g' /usr/share/roundcube/program/steps/mail/sendmail.inc
-    
-# Configure webmail alias
-echo "WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
+
+rcDesKey="$(openssl rand -base64 30 | tr -d "/" | cut -c1-24)"
+sed -i "s/%des_key%/$rcDesKey/g" $RC_CONFIG_DIR/config.inc.php
+# Change hostname for password change
+sed -i "s/localhost/$(hostname)/g" $RC_CONFIG_DIR/plugins/password/config.inc.php
 
 # Add robots.txt
 echo "User-agent: *" > /var/lib/roundcube/robots.txt
 echo "Disallow: /" >> /var/lib/roundcube/robots.txt
 
-# Restart services
-if [ "$apache" = 'yes' ]; then
-    systemctl restart apache2
-fi
-if [ "$nginx" = 'yes' ]; then
-    systemctl restart nginx
-fi
+phpenmod mcrypt > /dev/null 2>&1
 
 #----------------------------------------------------------#
 #                       Logging                            #
 #----------------------------------------------------------#
+
+
 
 log_history "Rouncube successfuly installed" '' 'admin'
 log_event "$OK" "$ARGUMENTS"

@@ -45,6 +45,7 @@ then
    mkdir -p /etc/phpmyadmin
    mkdir -p /etc/phpmyadmin/conf.d/  
    mkdir /usr/share/phpmyadmin/tmp
+   chmod 777 /usr/share/phpmyadmin/tmp/
    mkdir -p /etc/phpmyadmin/conf.d/  
    
    # Configuring Apache2 for PHPMYADMIN

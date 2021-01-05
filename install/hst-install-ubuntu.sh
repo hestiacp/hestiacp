@@ -1065,7 +1065,7 @@ if [ "$mysql" = 'yes' ]; then
     installed_db_types='mysql'
 fi
 
-if [ "$pgsql" = 'yes' ]; then
+if [ "$postgresql" = 'yes' ]; then
     installed_db_types="$installed_db_type,pgsql"
 fi
 
@@ -1437,8 +1437,7 @@ if [ "$mysql" = 'yes' ]; then
     cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
     
     # Create copy of config file
-    cp -f $HESTIA_INSTALL_DIR/pma/config.inc.php /etc/phpmyadmin/
-    mkdir -p /var/lib/phpmyadmin/tmp
+    cp -f $HESTIA_INSTALL_DIR/phpmyadmin/config.inc.php /etc/phpmyadmin/
     chmod 777 /var/lib/phpmyadmin/tmp
     
     # Set config and log directory

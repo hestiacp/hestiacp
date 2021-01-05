@@ -92,6 +92,7 @@ function authenticate_user($user, $password, $twofa = ''){
                 // Get user speciefic parameters
                 exec (HESTIA_CMD . "v-list-user ".$v_user." json", $output, $return_var);
                 $data = json_decode(implode('', $output), true);
+                unset($output); 
                 if ($data[$user]['TWOFA'] != '') {
                         if(empty($_POST['twofa'])){
                             return false;

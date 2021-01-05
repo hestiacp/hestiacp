@@ -594,6 +594,7 @@ for backup_type in $(echo -e "${BACKUP_SYSTEM//,/\\n}"); do
         ftp)   ftp_backup ;;
         sftp)  sftp_backup ;;
         google) google_backup ;;
+        b2) b2_backup ;;
     esac
 done
 

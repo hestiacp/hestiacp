@@ -1021,8 +1021,8 @@ if [ "$mysql" = 'yes' ]; then
     installed_db_types='mysql'
 fi
 
-if [ "$pgsql" = 'yes' ]; then
-    installed_db_types="$installed_db_type,pgsql"
+if [ "$postgresql" = 'yes' ]; then
+    installed_db_types="$installed_db_types,pgsql"
 fi
 
 if [ ! -z "$installed_db_types" ]; then
@@ -1712,6 +1712,7 @@ check_result $? "can't enable sftp jail"
 $HESTIA/bin/v-add-user admin $vpass $email default "System Administrator"
 check_result $? "can't create admin user"
 $HESTIA/bin/v-change-user-shell admin nologin
+$HESTIA/bin/v-change-user-role admin admin
 $HESTIA/bin/v-change-user-language admin $lang
 
 # Roundcube permissions fix

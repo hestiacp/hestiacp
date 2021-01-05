@@ -20,3 +20,6 @@ if [ -e "/etc/nginx/nginx.conf" ]; then
         echo '    [!] fastcgi_cache_path found skipping install of fast cgi cache support!'
     fi
 fi
+
+echo '[*] Set Role "Admin" to Administrator'
+$HESTIA/bin/v-change-user-role admin admin

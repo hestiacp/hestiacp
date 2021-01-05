@@ -430,7 +430,7 @@ b2_backup() {
     b2 authorize-account $B2_KEYID $B2_KEY > /dev/null 2>&1
 
     # Uploading backup archive
-    echo -e "$(date "+%F %T") Uploading $user/$user.$backup_new_date.tar ..."
+    echo -e "$(date "+%F %T") Upload to B2: $user/$user.$backup_new_date.tar"
     if [ "$localbackup" = 'yes' ]; then
         cd $BACKUP
         b2 upload-file $BUCKET $user.$backup_new_date.tar $user/$user.$backup_new_date.tar > /dev/null 2>&1

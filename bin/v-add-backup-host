@@ -4,6 +4,7 @@
 # labels: 
 #
 # example: v-add-backup-host sftp backup.acme.com admin p4$$w@Rd
+#          v-add-backup-host b2 bucketName keyID applicationKey
 #
 # This function adds a backup host
 
@@ -198,10 +199,16 @@ if [ "$type" = 'b2' ]; then
 fi
 
 # Adding backup host
-if [ $type != 'local' ]; then
+if [ $type != 'local' ] && [ $type != 'b2' ]; then
     new_timestamp
     str="HOST='$host'\nUSERNAME='$user'\nPASSWORD='$password'"
     str="$str\nBPATH='$path'\nPORT='$port'\nTIME='$time'\nDATE='$date'"
+    echo -e "$str" > $HESTIA/conf/$type.backup.conf
+    chmod 660 $HESTIA/conf/$type.backup.conf
+elif [ $type == 'b2' ]; then
+    new_timestamp
+    str="BUCKET='$host'\nB2_KEYID='$user'\nB2_KEY='$password'"
+    str="$str\nTIME='$time'\nDATE='$date'"
     echo -e "$str" > $HESTIA/conf/$type.backup.conf
     chmod 660 $HESTIA/conf/$type.backup.conf
 fi

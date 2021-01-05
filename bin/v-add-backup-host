@@ -25,6 +25,10 @@ port=$6
 source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
 
+# Paths
+b2cli = "/usr/local/bin/b2"
+b2lnk = "https://f000.backblazeb2.com/file/backblazefiles/b2/cli/linux/b2"
+
 # Defining ftp command function
 ftpc() {
     ftp -p -n $host $port <<EOF
@@ -146,6 +150,7 @@ if [ "$type" = 'ftp' ]; then
         exit $E_FTP
     fi
 fi
+
 if [ "$type" = 'sftp' ]; then
     if [ -z $port ]; then
         port=22
@@ -173,6 +178,24 @@ if [ "$type" = 'sftp' ]; then
     fi
 fi
 
+if [ "$type" = 'b2' ]; then
+    # Download b2 binary
+    if [ ! -f "$b2cli" ]; then
+        wget -O $b2cli $b2lnk > /dev/null 2>&1
+        chmod +x $b2cli > /dev/null 2>&1
+        if [ ! -f "$b2cli" ]; then
+            echo "Error: Binary download failed, b2 doesnt work as expected."
+            exit 3
+        fi
+    fi
+
+    # Validate b2 binary
+    b2version="$(b2 version)"
+    if [[ ! "$b2version" =~ "b2 command line tool" ]]; then
+        echo "Error: Binary download failed, b2 doesnt work as expected."
+        exit 3
+    fi
+fi
 
 # Adding backup host
 if [ $type != 'local' ]; then

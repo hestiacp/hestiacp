@@ -126,6 +126,10 @@ upgrade_health_check() {
         echo "[ ! ] Adding missing variable to hestia.conf: LOGIN_STYLE ('default')"
         $BIN/v-change-sys-config-value "LOGIN_STYLE" "default"
     fi
+    if [ -z "$WEBMAIL_SYSTEM" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: WEBMAIL_SYSTEM ('')"
+        $BIN/v-change-sys-config-value "WEBMAIL_SYSTEM" ""
+    fi
 
     # Inactive session timeout
     if [ -z "$INACTIVE_SESSION_TIMEOUT" ]; then
@@ -625,6 +629,18 @@ upgrade_filemanager_update_config() {
                 cp -f $HESTIA_INSTALL_DIR/filemanager/filegator/configuration.php $HESTIA/web/fm/configuration.php
                 # Set environment variable for interface
                 $HESTIA/bin/v-change-sys-config-value 'FILE_MANAGER' 'true'
+            fi
+        fi
+    fi
+}
+
+upgrade_roundcube(){
+    if [ "UPGRADE_UPDATE_ROUNDCUBE" = "true" ]; then
+        if [ ! -z "$(echo "$WEBMAIL_SYSTEM" | grep -w 'roundcube')" ]; then
+            rc_version=$(cat $RC_INSTALL_DIR/index.php | grep -o -E '[0-9].[0-9].[0-9]+' | head -1);
+            if [ "$rc_version" == "$rc_v" ]; then
+                echo "[ * ] Upgrading RoundCube to version v$rc_v..."
+                $HESTIA/bin/v-add-sys-roundcube
             fi
         fi
     fi

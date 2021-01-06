@@ -25,6 +25,7 @@ VERBOSE='no'
 # Define software versions
 HESTIA_INSTALL_VER='1.3.3~alpha'
 pma_v='5.0.4'
+rc_v="1.4.10"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
 fpm_v="7.4"
 mariadb_v="10.5"
@@ -38,7 +39,7 @@ if [ "$release" -eq 9 ]; then
         php$fpm_v-json php$fpm_v-mbstring php$fpm_v-opcache php$fpm_v-pspell
         php$fpm_v-readline php$fpm_v-xml vsftpd proftpd-basic bind9 exim4
         exim4-daemon-heavy clamav-daemon spamassassin dovecot-imapd
-        dovecot-pop3d roundcube-core net-tools roundcube-mysql roundcube-plugins
+        dovecot-pop3d net-tools 
         mariadb-client mariadb-common mariadb-server postgresql
         postgresql-contrib phppgadmin mc flex whois rssh git idn zip
         sudo bc ftp lsof rrdtool quota e2fslibs bsdutils e2fsprogs curl
@@ -54,8 +55,8 @@ elif [ "$release" -eq 10 ]; then
         php$fpm_v-gd php$fpm_v-intl php$fpm_v-json php$fpm_v-mbstring
         php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
         awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy
-        clamav-daemon spamassassin dovecot-imapd dovecot-pop3d roundcube-core
-        net-tools roundcube-mysql roundcube-plugins mariadb-client
+        clamav-daemon spamassassin dovecot-imapd dovecot-pop3d 
+        net-tools mariadb-client
         mariadb-common mariadb-server postgresql postgresql-contrib
         phppgadmin mc flex whois git idn zip sudo bc ftp lsof rrdtool
         quota e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
@@ -761,9 +762,6 @@ if [ "$exim" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/dovecot-pop3d//")
     software=$(echo "$software" | sed -e "s/clamav-daemon//")
     software=$(echo "$software" | sed -e "s/spamassassin//")
-    software=$(echo "$software" | sed -e "s/roundcube-core//")
-    software=$(echo "$software" | sed -e "s/roundcube-mysql//")
-    software=$(echo "$software" | sed -e "s/roundcube-plugins//")
 fi
 if [ "$clamd" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/clamav-daemon//")
@@ -774,9 +772,6 @@ fi
 if [ "$dovecot" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/dovecot-imapd//")
     software=$(echo "$software" | sed -e "s/dovecot-pop3d//")
-    software=$(echo "$software" | sed -e "s/roundcube-core//")
-    software=$(echo "$software" | sed -e "s/roundcube-mysql//")
-    software=$(echo "$software" | sed -e "s/roundcube-plugins//")
 fi
 if [ "$mysql" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/mariadb-server//")
@@ -1578,62 +1573,6 @@ if [ "$spamd" = 'yes' ]; then
 fi
 
 
-#----------------------------------------------------------#
-#                   Configure Roundcube                    #
-#----------------------------------------------------------#
-
-if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
-    echo "[ * ] Configuring Roundcube webmail client..."
-    cp -f $HESTIA_INSTALL_DIR/roundcube/main.inc.php /etc/roundcube/config.inc.php
-    cp -f $HESTIA_INSTALL_DIR/roundcube/db.inc.php /etc/roundcube/debian-db-roundcube.php
-    cp -f $HESTIA_INSTALL_DIR/roundcube/config.inc.php /etc/roundcube/plugins/password/
-    cp -f $HESTIA_INSTALL_DIR/roundcube/hestia.php /usr/share/roundcube/plugins/password/drivers/
-    touch /var/log/roundcube/errors
-    chmod 640 /etc/roundcube/config.inc.php
-    chown root:www-data /etc/roundcube/config.inc.php
-    chmod 640 /etc/roundcube/debian-db-roundcube.php
-    chown root:www-data /etc/roundcube/debian-db-roundcube.php
-    chmod 640 /var/log/roundcube/errors
-    chown www-data:adm /var/log/roundcube/errors
-
-    r="$(gen_pass)"
-    rcDesKey="$(openssl rand -base64 30 | tr -d "/" | cut -c1-24)"
-    mysql -e "CREATE DATABASE roundcube"
-    mysql -e "GRANT ALL ON roundcube.*
-        TO roundcube@localhost IDENTIFIED BY '$r'"
-    sed -i "s/%password%/$r/g" /etc/roundcube/debian-db-roundcube.php
-    sed -i "s/%des_key%/$rcDesKey/g" /etc/roundcube/config.inc.php
-    sed -i "s/localhost/$servername/g" /etc/roundcube/plugins/password/config.inc.php
-    mysql roundcube < /usr/share/dbconfig-common/data/roundcube/install/mysql
-    
-    # Enable Roundcube plugins
-    cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_newmail_notifier.inc.php /etc/roundcube/plugins/newmail_notifier/config.inc.php
-    cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_zipdownload.inc.php /etc/roundcube/plugins/zipdownload/config.inc.php
-    
-    # Fixes for PHP 7.4 compatibility
-    [ -f "/usr/share/roundcube/plugins/enigma/lib/enigma_ui.php" ] && sed -i 's/$identities, "\\n"/"\\n", $identities/g' /usr/share/roundcube/plugins/enigma/lib/enigma_ui.php
-    [ -f "/usr/share/roundcube/program/lib/Roundcube/rcube_contacts.php" ] && sed -i 's/(array_keys($post_search), \x27|\x27)/(\x27|\x27, array_keys($post_search))/g' /usr/share/roundcube/program/lib/Roundcube/rcube_contacts.php
-    [ -f "/usr/share/roundcube/program/lib/Roundcube/rcube_db.php" ] && sed -i 's/implode($name, \x27.\x27)/implode(\x27.\x27, $name)/g' /usr/share/roundcube/program/lib/Roundcube/rcube_db.php
-    [ -f "/usr/share/roundcube/program/steps/addressbook/search.inc" ] && sed -i 's/$fields, \x27,\x27/\x27,\x27, $fields/g' /usr/share/roundcube/program/steps/addressbook/search.inc
-    [ -f "/usr/share/roundcube/program/steps/addressbook/search.inc" ] && sed -i 's/implode($fields, \x27,\x27)/implode(\x27,\x27, $fields)/g' /usr/share/roundcube/program/steps/addressbook/search.inc
-    [ -f "/usr/share/roundcube/program/steps/mail/sendmail.inc" ] && sed -i 's/implode($bstyle, \x27; \x27)/implode(\x27; \x27, $bstyle)/g' /usr/share/roundcube/program/steps/mail/sendmail.inc
-    
-    # Configure webmail alias
-    echo "WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
-
-    # Add robots.txt
-    echo "User-agent: *" > /var/lib/roundcube/robots.txt
-    echo "Disallow: /" >> /var/lib/roundcube/robots.txt
-
-    # Restart services
-    if [ "$apache" = 'yes' ]; then
-        systemctl restart apache2
-    fi
-    if [ "$nginx" = 'yes' ]; then
-        systemctl restart nginx
-    fi
-fi
-
 
 #----------------------------------------------------------#
 #                    Configure Fail2Ban                    #
@@ -1675,6 +1614,16 @@ if [ "$fail2ban" = 'yes' ]; then
     check_result $? "fail2ban start failed"
 fi
 
+#----------------------------------------------------------#
+#                       Install Roundcube                  #
+#----------------------------------------------------------#
+
+echo "[ * ] Install Roundcube..."
+# Min requirements Dovecote + Exim + Mysql
+
+if [ "$mysql" == 'yes' ] && [ "$$dovecot" == "yes" ]; then
+    $BIN/v-add-sys-roundcube 
+fi
 
 #----------------------------------------------------------#
 #                       Configure API                      #

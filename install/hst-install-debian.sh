@@ -1614,6 +1614,16 @@ if [ "$fail2ban" = 'yes' ]; then
     check_result $? "fail2ban start failed"
 fi
 
+#----------------------------------------------------------#
+#                       Install Roundcube                  #
+#----------------------------------------------------------#
+
+echo "[ * ] Install Roundcube..."
+# Min requirements Dovecote + Exim + Mysql
+
+if [ "$mysql" == 'yes' ] && [ "$$dovecot" == "yes" ]; then
+    $BIN/v-add-sys-roundcube 
+fi
 
 #----------------------------------------------------------#
 #                       Configure API                      #

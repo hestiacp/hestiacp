@@ -140,7 +140,6 @@ if [ "$UPDATE" == "no" ]; then
     sed -i "s/localhost/$(hostname)/g" $RC_CONFIG_DIR/plugins/password/config.inc.php
     
     #Clean up
-    rm -f -r $RC_INSTALL_DIR/SQL;
     rm -f -r $RC_INSTALL_DIR/installer;
     rm -f -r $RC_INSTALL_DIR/$RC_FILE;
     rm -f -r $RC_INSTALL_DIR/$RC_EXTRACT;
@@ -150,15 +149,14 @@ if [ "$UPDATE" == "no" ]; then
     echo "Disallow: /" >> /var/lib/roundcube/robots.txt
     
     # Updating hestia.conf
-    if [ -z "$(grep DB_SYSTEM $HESTIA/conf/hestia.conf)" ]; then
-        echo "$WEBMAIL_SYSTEM='roundcube'" >> $HESTIA/conf/hestia.conf
+    if [ -z "$(grep WEBMAIL_SYSTEM $HESTIA/conf/hestia.conf)" ]; then
+        $BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' 'roundcube'
     else
-        $webmail=$(echo "$WEBMAIL_SYSTEM,'roundcube'" |\
-            sed "s/,/\n/g"|\
-            sort -r -u |\
-            sed "/^$/d"|\
-            sed ':a;N;$!ba;s/\n/,/g')
-        sed -i "s/$WEBMAIL_SYSTEM=.*/$WEBMAIL_SYSTEM='$webmail'/g" $HESTIA/conf/hestia.conf
+        if [ -z "$(echo "$WEBMAIL_SYSTEM" | grep -w 'roundcube')" ]; then
+            $BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' "roundcube"
+        else
+            $BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' "roundcube,$WEBMAIL_SYSTEM"
+        fi
     fi
     
     phpenmod mcrypt > /dev/null 2>&1
@@ -181,8 +179,6 @@ else
     
     $RC_INSTALL_DIR/bin/update.sh --version "$version"
         
-    #Clean up
-    rm -f -r $RC_INSTALL_DIR/SQL;
     rm -f -r $RC_INSTALL_DIR/installer;
     rm -f -r $RC_INSTALL_DIR/$RC_FILE;
     rm -f -r $RC_INSTALL_DIR/$RC_EXTRACT;  

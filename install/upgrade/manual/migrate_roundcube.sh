@@ -31,7 +31,7 @@ then
     version=$(cat /usr/share/roundcube/index.php | grep -o -E '[0-9].[0-9].[0-9]+' | head -1);
     # Backup database 
     echo "SET FOREIGN_KEY_CHECKS = 0;" >> ~/roundcube.sql
-    mysqldump -U root --add-drop-table roundcube >> ~/roundcube.sql
+    mysqldump  --add-drop-table roundcube >> ~/roundcube.sql
     echo "SET FOREIGN_KEY_CHECKS = 1;" >> ~/roundcube.sql
     echo '[ * ] Remove Roundcube via ATP'
     apt-get autoremove roundcube-core roundcube-mysql roundcube-plugins

@@ -107,7 +107,4 @@ $config['smtp_host'] = 'ssl://localhost';
 
 // Log session authentication errors to <log_dir>/session or to syslog
 $config['log_session'] = true;
-
-// Log session authentication errors to <log_dir>/session or to syslog
-$config['log_session'] = false;
 ?>

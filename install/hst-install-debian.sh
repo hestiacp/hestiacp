@@ -1070,6 +1070,8 @@ fi
 # Disk quota
 if [ "$quota" = 'yes' ]; then
     echo "DISK_QUOTA='yes'" >> $HESTIA/conf/hestia.conf
+else
+    echo "DISK_QUOTA='no'" >> $HESTIA/conf/hestia.conf
 fi
 
 # Backups

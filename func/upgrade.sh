@@ -221,7 +221,7 @@ upgrade_complete_message() {
     echo "GitHub:   https://github.com/hestiacp/hestiacp/                              "
     echo "E-mail:   info@hestiacp.com                                                  "
     echo 
-    echo "Help support the Hestia Contol Panel project by donating via PayPal:         "
+    echo "Help support the Hestia Control Panel project by donating via PayPal:         "
     echo "https://www.hestiacp.com/donate                                              "
     echo
     echo "Made with love & pride by the open-source community around the world.        "

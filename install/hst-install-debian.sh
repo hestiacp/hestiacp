@@ -1830,7 +1830,7 @@ GitHub:  https://www.github.com/hestiacp/hestiacp
 Note: Automatic updates are enabled by default. If you would like to disable them,
 please log in and navigate to Server > Updates to turn them off.
 
-Help support the Hestia Contol Panel project by donating via PayPal:
+Help support the Hestia Control Panel project by donating via PayPal:
 https://www.hestiacp.com/donate
 --
 Sincerely yours,

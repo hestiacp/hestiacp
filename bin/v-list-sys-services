@@ -294,8 +294,12 @@ fi
 
 # Checking FIREWALL Fail2ban extention
 if [ ! -z "$FIREWALL_EXTENSION" ]; then
-    if [ "$(lsb_release -s -r)" = "20.04" ]; then
-        get_srv_state $FIREWALL_EXTENSION f2b/server script
+    if [ -e '/usr/bin/lsb_release' ]; then
+        if [ "$(lsb_release -s -r)" = "20.04" ]; then
+            get_srv_state $FIREWALL_EXTENSION f2b/server script
+        else
+            get_srv_state $FIREWALL_EXTENSION fail2ban-server script
+        fi
     else
         get_srv_state $FIREWALL_EXTENSION fail2ban-server script
     fi

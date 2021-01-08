@@ -107,10 +107,10 @@ if [ "$UPDATE" == "no" ]; then
     cp -f -r $HESTIA_INSTALL_DIR/rainloop/plugins/hestia-change-password/ $RL_CONFIG_DIR/data/_data_/_default_/plugins
     mkdir -p $RL_CONFIG_DIR/data/_data_/_default_/plugins/add-x-originating-ip-header
     # Download add-x-originating-ip-header from rainloop github
-    wget -O $RL_CONFIG_DIR/data/_data_/_default_/plugins/add-x-originating-ip-header/index.php https://raw.githubusercontent.com/RainLoop/rainloop-webmail/master/plugins/add-x-originating-ip-header/index.php 
-    wget -O $RL_CONFIG_DIR/data/_data_/_default_/plugins/add-x-originating-ip-header/VERSION https://raw.githubusercontent.com/RainLoop/rainloop-webmail/master/plugins/add-x-originating-ip-header/VERSION
-    wget -O $RL_CONFIG_DIR/data/_data_/_default_/plugins/add-x-originating-ip-header/README https://raw.githubusercontent.com/RainLoop/rainloop-webmail/master/plugins/add-x-originating-ip-header/README
-    wget -O $RL_CONFIG_DIR/data/_data_/_default_/plugins/add-x-originating-ip-header/LICENSE https://raw.githubusercontent.com/RainLoop/rainloop-webmail/master/plugins/add-x-originating-ip-header/LICENSE
+    wget --quiet -O $RL_CONFIG_DIR/data/_data_/_default_/plugins/add-x-originating-ip-header/index.php https://raw.githubusercontent.com/RainLoop/rainloop-webmail/master/plugins/add-x-originating-ip-header/index.php
+    wget --quiet -O $RL_CONFIG_DIR/data/_data_/_default_/plugins/add-x-originating-ip-header/VERSION https://raw.githubusercontent.com/RainLoop/rainloop-webmail/master/plugins/add-x-originating-ip-header/VERSION
+    wget --quiet -O $RL_CONFIG_DIR/data/_data_/_default_/plugins/add-x-originating-ip-header/README https://raw.githubusercontent.com/RainLoop/rainloop-webmail/master/plugins/add-x-originating-ip-header/README
+    wget --quiet -O $RL_CONFIG_DIR/data/_data_/_default_/plugins/add-x-originating-ip-header/LICENSE https://raw.githubusercontent.com/RainLoop/rainloop-webmail/master/plugins/add-x-originating-ip-header/LICENSE
     
     cp -f $HESTIA_INSTALL_DIR/rainloop/plugins/plugin-add-x-originating-ip-header.ini $RL_CONFIG_DIR/data/_data_/_default_/configs/plugin-add-x-originating-ip-header.ini
     cp -f $HESTIA_INSTALL_DIR/rainloop/plugins/plugin-hestia-change-password.ini $RL_CONFIG_DIR/data/_data_/_default_/configs/plugin-hestia-change-password.ini

@@ -18,9 +18,7 @@ MODE=$2
 UPDATE="no"
 # Version and Download paths
 # Version to be moved to upgrade script
-RL_V="1.14.0"
 RL_FILE="rainloop-community-latest.zip"
-RL_EXTRACT="rainloop/v/$RL_V"
 # For removal of folder
 RL_EXTRACT_MAIN="rainloop"
 
@@ -50,6 +48,17 @@ fi
 if [ -z "$HOMEDIR" ] || [ -z "$HESTIA_INSTALL_DIR" ]; then
     echo "ERROR: Environment variables not present, installation aborted."
     exit 2
+fi
+
+# Get current version 
+if [ -f "/var/lib/rainloop/data/VERSION" ]; then
+    version=$(cat $RL_INSTALL_DIR/data/VERSION);
+    if [ "$version" == "$rl_v" ]; then
+        echo "Error: Installed version ($version) is equal as the availble version ($rc_v)"
+        exit 2;
+    else 
+        UPDATE="yes"
+    fi
 fi
 
 # Perform verification if read-only mode is enabled
@@ -121,7 +130,34 @@ if [ "$UPDATE" == "no" ]; then
     
     chown -R  www-data:www-data ./data
     chown -R  www-data:www-data $RL_CONFIG_DIR/
-         
+    
+    rm  ${RL_INSTALL_DIR}/${RL_FILE}  
+    # Add robots.txt
+    echo "User-agent: *" > $RL_INSTALL_DIR/robots.txt
+    echo "Disallow: /" >> $RL_INSTALL_DIR/robots.txt
+    
+    # Updating hestia.conf
+    if [ -z "$(grep WEBMAIL_SYSTEM $HESTIA/conf/hestia.conf)" ]; then
+        $BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' 'roundcube'
+    else
+        if [ -z "$(echo "$WEBMAIL_SYSTEM" | grep -w 'roundcube')" ]; then
+            $BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' "roundcube"
+        else
+            $BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' "roundcube,$WEBMAIL_SYSTEM"
+        fi
+    fi
+
 else
-    echo "Currently not supported"
+   [ ! -f "${RC_INSTALL_DIR}/${RC_FILE}" ] && wget "$RL_URL" --quiet -O "${RL_INSTALL_DIR}/${RL_FILE}"
+   unzip -q -o $RL_FILE
+   rm $RL_INSTALL_DIR/$RL_FILE
 fi
+
+#----------------------------------------------------------#
+#                       Logging                            #
+#----------------------------------------------------------#
+
+
+
+log_history "Rouncube successfuly installed" '' 'admin'
+log_event "$OK" "$ARGUMENTS"

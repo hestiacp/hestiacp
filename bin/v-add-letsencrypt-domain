@@ -357,7 +357,7 @@ for auth in $authz; do
                 fi
             fi
             debug_log "Abort Step 5" "=> Wrong status"
-            check_result $E_CONNECT "Let's Encrypt validation status $status for ($domain). Details: $details"
+            check_result $E_CONNECT "Let's Encrypt validation status $status ($domain). Details: $details"
         fi
 
         i=$((i + 1))

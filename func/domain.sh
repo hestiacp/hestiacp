@@ -745,6 +745,7 @@ add_webmail_config() {
         override_alias="mail.$domain"
     fi
     
+    echo "$1/$2"
     cat $MAILTPL/$1/$2 | \
         sed -e "s|%ip%|$local_ip|g" \
             -e "s|%domain%|$WEBMAIL_ALIAS.$domain|g" \

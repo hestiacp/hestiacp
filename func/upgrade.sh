@@ -126,9 +126,16 @@ upgrade_health_check() {
         echo "[ ! ] Adding missing variable to hestia.conf: LOGIN_STYLE ('default')"
         $BIN/v-change-sys-config-value "LOGIN_STYLE" "default"
     fi
+    
+    # Webmail clients
     if [ -z "$WEBMAIL_SYSTEM" ]; then
-        echo "[ ! ] Adding missing variable to hestia.conf: WEBMAIL_SYSTEM ('')"
-        $BIN/v-change-sys-config-value "WEBMAIL_SYSTEM" ""
+        if [ -d "/var/lib/roundcube" ]; then 
+            echo "[ ! ] Adding missing variable to hestia.conf: WEBMAIL_SYSTEM ('roundcube')"
+            $BIN/v-change-sys-config-value "WEBMAIL_SYSTEM" "roundcube"
+        else
+            echo "[ ! ] Adding missing variable to hestia.conf: WEBMAIL_SYSTEM ('')"
+            $BIN/v-change-sys-config-value "WEBMAIL_SYSTEM" ""
+        fi
     fi
 
     # Inactive session timeout

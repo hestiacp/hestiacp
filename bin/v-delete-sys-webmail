@@ -68,6 +68,8 @@ else
     echo "Error: WEBMAIL_ALIAS is not defined in hestia.conf."
 fi
 
+# Set SSL as enabled in configuration
+update_object_value 'mail' 'DOMAIN' "$domain" '$WEBMAIL' ""
 #----------------------------------------------------------#
 #                       Hestia                              #
 #----------------------------------------------------------#

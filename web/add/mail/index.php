@@ -1,5 +1,5 @@
 <?php
-error_reporting(NULL);
+#error_reporting(NULL);
 ob_start();
 $TAB = 'MAIL';
 
@@ -10,6 +10,10 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 exec (HESTIA_CMD."v-list-mail-domains ".escapeshellarg($user)." json", $output, $return_var);
 $user_domains = json_decode(implode('', $output), true);
 $user_domains = array_keys($user_domains);
+unset($output);
+
+exec (HESTIA_CMD."v-list-sys-webmail json", $output, $return_var);
+$webmail_clients = json_decode(implode('', $output), true);
 unset($output);
 
 $v_domain = $_GET['domain'];
@@ -84,6 +88,15 @@ if (!empty($_POST['ok'])) {
     if (empty($_SESSION['error_msg'])) {
         $_SESSION['ok_msg'] = sprintf(_('MAIL_DOMAIN_CREATED_OK'),htmlentities($_POST['v_domain']),htmlentities($_POST['v_domain']));
         unset($v_domain);
+    }
+    
+    if (!empty($_SESSION['IMAP_SYSTEM']) && !empty($_SESSION['WEBMAIL_SYSTEM'])){
+        if(!empty($_POST['v_webmail'])){
+            $v_webmail = escapeshellarg($_POST['v_webmail']);
+            exec (HESTIA_CMD."v-add-sys-webmail ".$user." ".$v_domain." ".$v_webmail, $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+        }
     }
 }
 
@@ -238,7 +251,12 @@ if (!empty($_POST['ok_acc'])) {
 // Render page
 if (empty($_GET['domain'])) {
     // Display body for mail domain
-
+    if( !empty($_POST['v_webmail']) ){
+        $v_webmail  = $_POST['v_webmail'];
+    }else{
+        //default is always roundcube unless it hasn't been installed. Then picks the first one in order
+        $v_webmail  = 'roundcube';
+    }
     render_page($user, $TAB, 'add_mail');
 } else {
     // Display body for mail account

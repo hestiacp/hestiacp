@@ -24,6 +24,10 @@ $user_domains = json_decode(implode('', $output), true);
 $user_domains = array_keys($user_domains);
 unset($output);
 
+exec (HESTIA_CMD."v-list-sys-webmail json", $output, $return_var);
+$webmail_clients = json_decode(implode('', $output), true);
+unset($output);
+
 // List mail domain
 if ((!empty($_GET['domain'])) && (empty($_GET['account']))) {
 
@@ -46,6 +50,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account']))) {
     $v_time = $data[$v_domain]['TIME'];
     $v_suspended = $data[$v_domain]['SUSPENDED'];
     $v_webmail_alias = $data[$v_domain]['WEBMAIL_ALIAS'];
+    $v_webmail = $data[$v_domain]['WEBMAIL'];
     
     if ( $v_suspended == 'yes' ) {
         $v_status =  'suspended';
@@ -209,6 +214,15 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
         exec (HESTIA_CMD."v-add-mail-domain-catchall ".$v_username." ".escapeshellarg($v_domain)." ".$v_catchall, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
+    }
+    if (!empty($_SESSION['IMAP_SYSTEM']) && !empty($_SESSION['WEBMAIL_SYSTEM'])){
+        // Update webmail
+        if ((!empty($_POST['v_webmail'])) && $_POST['v_webmail'] != $v_webmail && (empty($_SESSION['error_msg']))) {
+            $v_webmail = escapeshellarg($_POST['v_webmail']);
+            exec (HESTIA_CMD."v-add-sys-webmail ".$v_username." ".escapeshellarg($v_domain)." ".$v_webmail." yes", $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+        }
     }
     
     // Change SSL certificate

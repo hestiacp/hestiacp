@@ -1,39 +1,30 @@
 server {
-listen      %ip%:%web_ssl_port% ssl http2;
+listen      %ip%:%proxy_port%;
 server_name %domain% %alias%;
 root        /var/lib/rainloop;
 index       index.php index.html index.htm;
 access_log /var/log/nginx/domains/%domain%.log combined;
 error_log  /var/log/nginx/domains/%domain%.error.log error;
 
-ssl_certificate     %ssl_pem%;
-ssl_certificate_key %ssl_key%;
-ssl_stapling on;
-ssl_stapling_verify on;
+include %home%/%user%/conf/mail/%root_domain%/nginx.forcessl.conf*;
 
 location ~ /\.(?!well-known\/) {
     deny all;
     return 404;
 }
 
-location ~ ^/(README.md|config|temp|logs|bin|SQL|INSTALL|LICENSE|CHANGELOG|UPGRADING)$ {
+location ~ /data/ {
     deny all;
     return 404;
 }
 
 location / {
+    proxy_pass http://%ip%:%web_port%;
     try_files $uri $uri/ =404;
+    alias /var/lib/rainloop/;
     location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
         expires 7d;
         fastcgi_hide_header "Set-Cookie";
-    }
-
-    location ~ ^/(.*\.php)$ {
-        alias /var/lib/rainloop/$1;
-        fastcgi_pass 127.0.0.1:9000;
-        fastcgi_index index.php;
-        include fastcgi_params;
-        fastcgi_param SCRIPT_FILENAME $request_filename;
     }
 }
 
@@ -41,5 +32,9 @@ location /error/ {
     alias /var/www/document_errors/;
 }
 
-include %home%/%user%/conf/mail/%root_domain%/%web_system%.conf_*;
+location @fallback {
+    proxy_pass http://%ip%:%web_port%;
+}
+
+include %home%/%user%/conf/mail/%root_domain%/%proxy_system%.conf_*;
 }

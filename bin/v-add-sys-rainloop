@@ -138,12 +138,14 @@ if [ "$UPDATE" == "no" ]; then
     
     # Updating hestia.conf
     if [ -z "$(grep WEBMAIL_SYSTEM $HESTIA/conf/hestia.conf)" ]; then
-        $BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' 'roundcube'
+        $BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' 'rainloop'
     else
-        if [ -z "$(echo "$WEBMAIL_SYSTEM" | grep -w 'roundcube')" ]; then
-            $BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' "roundcube"
-        else
-            $BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' "roundcube,$WEBMAIL_SYSTEM"
+        if [  -z "$(echo "$WEBMAIL_SYSTEM" | grep -w 'rainloop')" ]; then
+           if [ ! -z "$WEBMAIL_SYSTEM" ]; then
+               $BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' "rainloop,$WEBMAIL_SYSTEM"
+           else
+               $BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' "rainloop"
+           fi
         fi
     fi
 

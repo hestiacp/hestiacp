@@ -74,7 +74,7 @@ if (isset($_SESSION['user'])) {
     }
 }
 
-if( NO_AUTH_REQUIRED !== true){
+if( !defined('NO_AUTH_REQUIRED')){
     if(empty($_SESSION['LAST_ACTIVITY']) || empty($_SESSION['INACTIVE_SESSION_TIMEOUT'])){
         session_destroy();
         header("Location: /login/");

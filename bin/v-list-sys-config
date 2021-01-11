@@ -58,6 +58,7 @@ json_list() {
         "BACKUP": "'$BACKUP'",
         "BACKUP_MODE": "'$BACKUP_MODE'",
         "WEBMAIL_ALIAS": "'$WEBMAIL_ALIAS'",
+        "WEBMAIL_SYSTEM": "'$WEBMAIL_SYSTEM'",
         "DB_PMA_ALIAS": "'$DB_PMA_ALIAS'",
         "DB_PGA_ALIAS": "'$DB_PGA_ALIAS'",
         "LOGIN_STYLE": "'$LOGIN_STYLE'",

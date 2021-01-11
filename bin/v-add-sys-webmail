@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add webmail support for a domain
-# options: USER DOMAIN [RESTART] [QUIET]
+# options: USER DOMAIN WEBMAIL [RESTART] [QUIET]
 # labels: hestia
 #
 # example: v-add-sys-webmail user domain.com
@@ -15,8 +15,9 @@
 # Argument definition
 user=$1
 domain=$2
-restart="$3"
-quiet=$4
+webmail=$3
+restart="$4"
+quiet=$5
 
 # Additional argument formatting
 if [[ "$domain" =~ [[:upper:]] ]]; then
@@ -46,10 +47,17 @@ format_domain_idn
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN [RESTART]'
+if [ -z "$webmail" ]; then
+    for client in ${WEBMAIL_SYSTEM//,/ };do
+        webmail="$client"
+    done
+fi
+
+check_args '3' "$#" 'USER DOMAIN WEBMAIL [RESTART]'
 is_format_valid 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_system_enabled "$IMAP_SYSTEM" 'IMAP_SYSTEM'
+is_type_valid "$WEBMAIL_SYSTEM" "$webmail"
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
@@ -95,16 +103,28 @@ else
             fi
         fi
     fi
-
-    # Add webmail configuration to mail domain
-    WEBMAIL_TEMPLATE="default"
-    if [ "$WEB_SYSTEM" = "nginx" ]; then
-        WEBMAIL_TEMPLATE="web_system"
+    
+    if [ "$webmail" == "roundcube" ]; then
+        WEBMAIL_TEMPLATE="default"
+        if [ ! -z "$PROXY_SYSTEM" ]; then
+            PROXY_TEMPLATE="default"
+        fi
+        # Add webmail configuration to mail domain
+        WEBMAIL_TEMPLATE="default"
+        if [ "$WEB_SYSTEM" = "nginx" ]; then
+            WEBMAIL_TEMPLATE="web_system"
+        fi
+    else
+        WEBMAIL_TEMPLATE="rainloop"
+        if [ ! -z "$PROXY_SYSTEM" ]; then
+            PROXY_TEMPLATE="default_rainloop"
+        fi
     fi
+    
     add_webmail_config "$WEB_SYSTEM" "${WEBMAIL_TEMPLATE}.tpl"
 
     if [ ! -z "$PROXY_SYSTEM" ]; then
-        add_webmail_config "$PROXY_SYSTEM" "default.tpl"
+        add_webmail_config "$PROXY_SYSTEM" "${PROXY_TEMPLATE}.tpl"
     fi
 
     # Enable SSL for webmail if available
@@ -112,16 +132,23 @@ else
         add_webmail_config "$WEB_SYSTEM" "${WEBMAIL_TEMPLATE}.stpl"
 
         if [ ! -z "$PROXY_SYSTEM" ]; then
-            add_webmail_config "$PROXY_SYSTEM" "default.stpl"
+            add_webmail_config "$PROXY_SYSTEM" "${PROXY_TEMPLATE}.stpl"
         fi
     fi
 fi
 
+WEBMAIL=$(get_object_value 'web' 'DOMAIN' "$domain" "$WEBMAIL")
+if [ -z "$WEBMAIL" ]; then
+    add_object_key 'mail' 'DOMAIN' "$domain" 'WEBMAIL' 'SSL'
+fi
+
+# Set SSL as enabled in configuration
+update_object_value 'mail' 'DOMAIN' "$domain" '$WEBMAIL' "$webmail"
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-if [ "$3" = 'yes' ]; then 
+if [ "$restart" = 'yes' ]; then 
     # Restarting web server
     $BIN/v-restart-web $restart
     check_result $? "Web restart failed" >/dev/null

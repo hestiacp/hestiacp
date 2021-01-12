@@ -674,10 +674,8 @@
                                                 <br><br>
                                             </td>
                                         </tr>                                        <tr>
-                                            <td class="vst-text input-label step-top">
-                                                <a href="javascript:elementHideShow('remote_backup');" class="vst-text">
-                                                <?php print _('Remote backup');?> <img src="/images/arrow.png">
-                                                </a>
+                                            <td class="vst-text input-label">
+                                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_backup_remote_adv" <?php if (!empty($v_backup_remote_adv)) echo "checked=yes" ?> onclick="javascript:elementHideShow('remote_backup');"> <?php print _('Remote backup');?></label>
                                             </td>
                                         </tr>
                                         <tr>

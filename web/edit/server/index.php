@@ -148,11 +148,13 @@ foreach ($backup_types as $backup_type) {
             $v_backup_password = "";
             $v_backup_port = $v_remote_backup[$backup_type]['PORT'];
             $v_backup_bpath = $v_remote_backup[$backup_type]['BPATH'];
+            $v_backup_remote_adv = "yes";
         }else if ( in_array($backup_type , array('b2')) ){
             $v_backup_bucket = $v_remote_backup[$backup_type]['BUCKET'];
             $v_backup_type = $v_remote_backup[$backup_type]['TYPE'];
             $v_backup_application_id = $v_remote_backup[$backup_type]['B2_KEY_ID'];
             $v_backup_application_key = '';
+            $v_backup_remote_adv = "yes";
         }
     }
 }
@@ -465,10 +467,10 @@ if (!empty($_POST['save'])) {
             $v_backup_adv = 'yes';
         }
     }
-
+    
     // Add remote backup host
     if (empty($_SESSION['error_msg'])) {
-        if ((empty($v_backup_host) && empty($v_backup_bucket) && ((!empty($_POST['v_backup_host']))) || !empty($_POST['v_backup_bucket'])) ) {
+        if ((empty($v_backup_host) && empty($v_backup_bucket) && ((!empty($_POST['v_backup_host'])) || !empty($_POST['v_backup_bucket']))) ) {
             if(in_array($_POST['v_backup_type'], array('ftp','sftp'))){
                 $v_backup_host = escapeshellarg($_POST['v_backup_host']);
                 $v_backup_port = escapeshellarg($_POST['v_backup_port']);
@@ -590,7 +592,7 @@ if (!empty($_POST['save'])) {
 
     // Delete remote backup host
     if (empty($_SESSION['error_msg'])) {
-        if ((empty($_POST['v_backup_host'])) && (empty($_POST['v_backup_bucket'])) && (!empty($v_backup_bucket) || (!empty($v_backup_host)))) {
+        if (empty($_POST['v_backup_remote_adv']) && isset($v_backup_remote_adv)) {
             exec (HESTIA_CMD."v-delete-backup-host ".escapeshellarg($v_backup_type), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);

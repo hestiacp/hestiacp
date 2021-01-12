@@ -83,17 +83,17 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print _('Port');?> <span class="optional">(<?php print _('ranges are acceptable');?>)</span>
+                                    <?php print _('Port');?> <span class="optional">(<?php print _('Ranges and Lists are acceptable');?>)</span>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_port" value="<?=htmlentities(trim($v_port, "'"))?>">
+                                    <input type="text" size="20" class="vst-input" name="v_port" value="<?=htmlentities(trim($v_port, "'"))?>" placeholder="<?php print _('All port: 0, Range: 80-82, List: 80,443,8080,8443');?>">
                                 </td>
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print _('IP address');?> <span class="optional">(<?php print _('CIDR format is supported');?>)</span>
+                                    <?php print _('IP address / IPset');?> <span class="optional">(<?php print _('CIDR format is supported');?>)</span>
                                 </td>
                             </tr>
                             <tr>

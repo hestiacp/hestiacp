@@ -21,6 +21,8 @@ source $HESTIA/func/main.sh
 
 # JSON list function
 json_list() {
+    case $type in 
+    'sftp' | 'ftp')
     echo '{'
     echo '    "'$type'": {
         "HOST": "'$HOST'",
@@ -32,10 +34,25 @@ json_list() {
         "DATE": "'$DATE'"
     }'
     echo '}'
+    ;;
+    'b2')
+     echo '{'
+     echo '    "'$type'": {
+         "BUCKET": "'$BUCKET'",
+         "TYPE": "'$type'",
+         "B2_KEY_ID": "'$B2_KEYID'",
+         "TIME": "'$TIME'",
+         "DATE": "'$DATE'"
+     }'
+     echo '}' 
+    ;;
+    esac
 }
 
 # SHELL list function
 shell_list() {
+    case $type in
+    'sftp' | 'ftp')
     echo "HOST:           $HOST"
     echo "USERNAME:       $USERNAME"
     echo "PORT:           $PORT"
@@ -43,17 +60,41 @@ shell_list() {
     echo "PATH:           $BPATH"
     echo "TIME:           $TIME"
     echo "DATE:           $DATE"
+    ;;
+    'b2')
+    echo "BUCKET          $BUCKET"
+    echo "TYPE            $type"
+    echo "B2_KEY_ID       $B2_KEYID"
+    echo "TIME:           $TIME"
+    echo "DATE:           $DATE"
+    ;;
+    esac
 }
 
 # PLAIN list function
 plain_list() {
+    case $type in
+    'sftp' | 'ftp')
     echo -e "$HOST\t$USERNAME\t$PORT\t$type\t$BPATH\t$TIME\t$DATE"
+    ;;
+    'b2')
+    echo -e "$BUCKET\t$type\t$B2_KEYID\t$TIME\t$DATE"
+    ;;
+    esac 
 }
 
 # CSV list function
 csv_list() {
+    case $type in
+    'sftp' | 'ftp')
     echo "HOST,USERNAME,PORT,TYPE,PATH,TIME,DATE"
     echo "$HOST,$USERNAME,$PORT,$type,$BPATH,$TIME,$DATE"
+    ;;
+    'b2')
+    echo "BUCKET,TYPE,B2_KEYID,TIME,DATE"
+    echo "$BUCKET,$type,$B2_KEYID,$TIME,$DATE"
+    ;;
+    esac 
 }
 
 # Type format validator

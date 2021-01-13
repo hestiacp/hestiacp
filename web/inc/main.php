@@ -11,33 +11,36 @@ $i = 0;
 // Saving user IPs to the session for preventing session hijacking
 $user_combined_ip = $_SERVER['REMOTE_ADDR'];
 
-if(isset($_SERVER['HTTP_CLIENT_IP'])){
+if (isset($_SERVER['HTTP_CLIENT_IP'])){
     $user_combined_ip .=  '|'. $_SERVER['HTTP_CLIENT_IP'];
 }
-if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])){
+if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])){
     $user_combined_ip .=  '|'. $_SERVER['HTTP_X_FORWARDED_FOR'];
 }
-if(isset($_SERVER['HTTP_FORWARDED_FOR'])){
+if (isset($_SERVER['HTTP_FORWARDED_FOR'])){
     $user_combined_ip .=  '|'. $_SERVER['HTTP_FORWARDED_FOR'];
 }
-if(isset($_SERVER['HTTP_X_FORWARDED'])){
+if (isset($_SERVER['HTTP_X_FORWARDED'])){
     $user_combined_ip .=  '|'. $_SERVER['HTTP_X_FORWARDED'];
 }
-if(isset($_SERVER['HTTP_FORWARDED'])){
+if (isset($_SERVER['HTTP_FORWARDED'])){
     $user_combined_ip .=  '|'. $_SERVER['HTTP_FORWARDED'];
 }
-if(isset($_SERVER['HTTP_CF_CONNECTING_IP'])){
+if (isset($_SERVER['HTTP_CF_CONNECTING_IP'])){
     if(!empty($_SERVER['HTTP_CF_CONNECTING_IP'])){
       $user_combined_ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
     }
 }
 
-if(!isset($_SESSION['user_combined_ip'])){
+if (!isset($_SESSION['user_combined_ip'])){
     $_SESSION['user_combined_ip'] = $user_combined_ip;
 }
 
 // Checking user to use session from the same IP he has been logged in
-if($_SESSION['user_combined_ip'] != $user_combined_ip && $_SERVER['REMOTE_ADDR'] != '127.0.0.1'){
+if ($_SESSION['user_combined_ip'] != $user_combined_ip && $_SERVER['REMOTE_ADDR'] != '127.0.0.1'){
+    $v_user = escapeshellarg($_SESSION['user']);
+    $v_murmur = escapeshellarg($_SESSION['MURMUR']);
+    exec(HESTIA_CMD."v-log-user-logout ".$v_user." ".$v_murmur, $output, $return_var);
     session_destroy();
     session_start();
     $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
@@ -68,6 +71,21 @@ if (isset($_SESSION['user'])) {
     if(!isset($_SESSION['token'])){
         $token = bin2hex(file_get_contents('/dev/urandom', false, null, 0, 16));
         $_SESSION['token'] = $token;
+    }
+}
+
+if (!defined('NO_AUTH_REQUIRED')){
+    if (empty($_SESSION['LAST_ACTIVITY']) || empty($_SESSION['INACTIVE_SESSION_TIMEOUT'])){
+        session_destroy();
+        header("Location: /login/");
+    } else if ($_SESSION['INACTIVE_SESSION_TIMEOUT'] * 60 + $_SESSION['LAST_ACTIVITY'] < time()) {
+        $v_user = escapeshellarg($_SESSION['user']);
+        $v_murmur = escapeshellarg($_SESSION['MURMUR']);
+        exec(HESTIA_CMD."v-log-user-logout ".$v_user." ".$v_murmur, $output, $return_var);
+        session_destroy();
+        header("Location: /login/");
+    } else {
+        $_SESSION['LAST_ACTIVITY'] = time();
     }
 }
 

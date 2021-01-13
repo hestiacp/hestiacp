@@ -73,7 +73,7 @@ fi
 new_timestamp
 
 # Adding domain to mail.conf
-s="DOMAIN='$domain' ANTIVIRUS='$antivirus' ANTISPAM='$antispam' DKIM='$dkim'"
+s="DOMAIN='$domain' ANTIVIRUS='$antivirus' ANTISPAM='$antispam' DKIM='$dkim' WEBMAIL=''"
 s="$s SSL='no' LETSENCRYPT='no' CATCHALL='' ACCOUNTS='0' U_DISK='0' SUSPENDED='no' TIME='$time'"
 s="$s DATE='$date'"
 echo $s >> $USER_DATA/mail.conf
@@ -170,7 +170,7 @@ fi
 # Add webmail configuration to mail domain
 if [ ! -z "$WEB_SYSTEM" ] || [ ! -z "$PROXY_SYSTEM" ]; then
     if [ ! -z "$IMAP_SYSTEM" ]; then
-        $BIN/v-add-sys-webmail $user $domain ''
+        $BIN/v-add-sys-webmail $user $domain '' ''
     fi
 fi
     

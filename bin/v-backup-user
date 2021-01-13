@@ -38,6 +38,8 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_backup_enabled
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -592,6 +594,7 @@ for backup_type in $(echo -e "${BACKUP_SYSTEM//,/\\n}"); do
         ftp)   ftp_backup ;;
         sftp)  sftp_backup ;;
         google) google_backup ;;
+        b2) b2_backup ;;
     esac
 done
 

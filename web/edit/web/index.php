@@ -67,6 +67,7 @@ $v_letsencrypt = $data[$v_domain]['LETSENCRYPT'];
 if (empty($v_letsencrypt)) $v_letsencrypt = 'no';
 $v_ssl_home = $data[$v_domain]['SSL_HOME'];
 $v_backend_template = $data[$v_domain]['BACKEND'];
+$v_nginx_cache = $data[$v_domain]['FASTCGI_CACHE'];
 $v_proxy = $data[$v_domain]['PROXY'];
 $v_proxy_template = $data[$v_domain]['PROXY'];
 $v_proxy_ext = str_replace(',', ', ', $data[$v_domain]['PROXY_EXT']);
@@ -314,11 +315,24 @@ if (!empty($_POST['save'])) {
     }
     
     // Change backend template
-    if ((!empty($_SESSION['WEB_BACKEND'])) && ( $v_backend_template != $_POST['v_backend_template']) && ( $_SESSION['user'] == 'admin') && (empty($_SESSION['error_msg']))) {
+    if ((!empty($_SESSION['WEB_BACKEND'])) && ( $v_backend_template != $_POST['v_backend_template'])  && (empty($_SESSION['error_msg']))) {
         $v_backend_template = $_POST['v_backend_template'];
         exec (HESTIA_CMD."v-change-web-domain-backend-tpl ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_backend_template), $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
+    }
+
+    //Add / Delete caching support
+    if (($_SESSION['WEB_SYSTEM'] == 'nginx') && ($v_nginx_cache != $_POST['v_nginx_cache'] ) && (empty($_SESSION['error_msg']))) {
+        if ( $_POST['v_nginx_cache'] == 'yes' ) {
+           exec (HESTIA_CMD."v-add-web-domain-fast-cgi-cache ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
+           check_return_code($return_var,$output);
+           unset($output); 
+        } else {
+            exec (HESTIA_CMD."v-delete-web-domain-fast-cgi-cache ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output); 
+        }
     }
 
     // Delete proxy support

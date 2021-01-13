@@ -5,9 +5,11 @@
 # For building from local source folder use "~localsrc" keyword as hesia branch name,
 #   and the script will not try to download the arhive from github, since '~' char is 
 #   not accepted in branch name.
-# Examples:
-#   ./hst_autocompile.sh --hestia '~localsrc' 'N'
-#   ./hst_autocompile.sh --all --noinstall main
+# Compile but dont install -> ./hst_autocompile.sh --hestia --noinstall --keepbuild '~localsrc'
+# Compilea and install -> ./hst_autocompile.sh --hestia --install '~localsrc' 
+
+# Clear previous screen output
+clear
 
 # Define download function
 download_file() {

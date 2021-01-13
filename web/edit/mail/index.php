@@ -24,6 +24,10 @@ $user_domains = json_decode(implode('', $output), true);
 $user_domains = array_keys($user_domains);
 unset($output);
 
+exec (HESTIA_CMD."v-list-sys-webmail json", $output, $return_var);
+$webmail_clients = json_decode(implode('', $output), true);
+unset($output);
+
 // List mail domain
 if ((!empty($_GET['domain'])) && (empty($_GET['account']))) {
 
@@ -46,6 +50,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account']))) {
     $v_time = $data[$v_domain]['TIME'];
     $v_suspended = $data[$v_domain]['SUSPENDED'];
     $v_webmail_alias = $data[$v_domain]['WEBMAIL_ALIAS'];
+    $v_webmail = $data[$v_domain]['WEBMAIL'];
     
     if ( $v_suspended == 'yes' ) {
         $v_status =  'suspended';
@@ -93,6 +98,12 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['account']))) {
     $v_aliases = str_replace(',', "\n", $data[$v_account]['ALIAS']);
     $valiases = explode(",", $data[$v_account]['ALIAS']);
     $v_fwd = str_replace(',', "\n", $data[$v_account]['FWD']);
+    if ($v_fwd == ":blackhole:") {
+        $v_fwd = '';
+        $v_blackhole = "yes";
+    }else{
+        $v_blackhole = "no";        
+    }
     $vfwd = explode(",", $data[$v_account]['FWD']);
     $v_fwd_only = $data[$v_account]['FWD_ONLY'];
     $v_quota = $data[$v_account]['QUOTA'];
@@ -155,7 +166,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
         unset($output);
     }
 
-    // Add antivirs
+    // Add antivirus
     if (($v_antivirus == 'no') && (!empty($_POST['v_antivirus'])) && (empty($_SESSION['error_msg']))) {
         exec (HESTIA_CMD."v-add-mail-domain-antivirus ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
         check_return_code($return_var,$output);
@@ -203,6 +214,15 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
         exec (HESTIA_CMD."v-add-mail-domain-catchall ".$v_username." ".escapeshellarg($v_domain)." ".$v_catchall, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
+    }
+    if (!empty($_SESSION['IMAP_SYSTEM']) && !empty($_SESSION['WEBMAIL_SYSTEM'])){
+        // Update webmail
+        if ((!empty($_POST['v_webmail'])) && $_POST['v_webmail'] != $v_webmail && (empty($_SESSION['error_msg']))) {
+            $v_webmail = escapeshellarg($_POST['v_webmail']);
+            exec (HESTIA_CMD."v-add-sys-webmail ".$v_username." ".escapeshellarg($v_domain)." ".$v_webmail." yes", $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+        }
     }
     
     // Change SSL certificate
@@ -450,9 +470,23 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['acco
             }
         }
     }
-
+    // Change forwarders to :blackhole: 
+    if (empty($_SESSION['error_msg']) && !empty($_POST['v_blackhole'])) {
+        foreach ($vfwd as $forward) {
+            if ((empty($_SESSION['error_msg'])) && (!empty($forward))) {
+                exec (HESTIA_CMD."v-delete-mail-account-forward ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." ".escapeshellarg($forward), $output, $return_var);
+                check_return_code($return_var,$output);
+                unset($output);
+            }
+            exec (HESTIA_CMD."v-add-mail-account-forward ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." :blackhole:", $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            $v_fwd  = '';
+            $v_blackhole = "yes";
+        }   
+    }
     // Change forwarders
-    if (empty($_SESSION['error_msg'])) {
+    if (empty($_SESSION['error_msg']) && empty($_POST['v_blackhole'])) {
         $wfwd = preg_replace("/\n/", " ", $_POST['v_fwd']);
         $wfwd = preg_replace("/,/", " ", $wfwd);
         $wfwd = preg_replace('/\s+/', ' ',$wfwd);
@@ -475,6 +509,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['acco
                 unset($output);
             }
         }
+        $v_blackhole = "no";
     }
 
     // Delete FWD_ONLY flag

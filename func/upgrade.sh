@@ -127,6 +127,24 @@ upgrade_health_check() {
         $BIN/v-change-sys-config-value "LOGIN_STYLE" "default"
     fi
     
+    # Webmail clients
+    if [ -z "$WEBMAIL_SYSTEM" ]; then
+        if [ -d "/var/lib/roundcube" ]; then 
+            echo "[ ! ] Adding missing variable to hestia.conf: WEBMAIL_SYSTEM ('roundcube')"
+            $BIN/v-change-sys-config-value "WEBMAIL_SYSTEM" "roundcube"
+        else
+            echo "[ ! ] Adding missing variable to hestia.conf: WEBMAIL_SYSTEM ('')"
+            $BIN/v-change-sys-config-value "WEBMAIL_SYSTEM" ""
+        fi
+    fi
+
+    # Inactive session timeout
+    if [ -z "$INACTIVE_SESSION_TIMEOUT" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: INACTIVE_SESSION_TIMEOUT ('60')"
+        $BIN/v-change-sys-config-value "INACTIVE_SESSION_TIMEOUT" "60"
+    fi
+    
+    
     echo "[ * ] Health check complete. Starting upgrade from $VERSION to $new_version..."
     echo "============================================================================="
 }
@@ -210,7 +228,7 @@ upgrade_complete_message() {
     echo "GitHub:   https://github.com/hestiacp/hestiacp/                              "
     echo "E-mail:   info@hestiacp.com                                                  "
     echo 
-    echo "Help support the Hestia Contol Panel project by donating via PayPal:         "
+    echo "Help support the Hestia Control Panel project by donating via PayPal:         "
     echo "https://www.hestiacp.com/donate                                              "
     echo
     echo "Made with love & pride by the open-source community around the world.        "
@@ -618,6 +636,30 @@ upgrade_filemanager_update_config() {
                 cp -f $HESTIA_INSTALL_DIR/filemanager/filegator/configuration.php $HESTIA/web/fm/configuration.php
                 # Set environment variable for interface
                 $HESTIA/bin/v-change-sys-config-value 'FILE_MANAGER' 'true'
+            fi
+        fi
+    fi
+}
+
+upgrade_roundcube(){
+    if [ "UPGRADE_UPDATE_ROUNDCUBE" = "true" ]; then
+        if [ ! -z "$(echo "$WEBMAIL_SYSTEM" | grep -w 'roundcube')" ]; then
+            rc_version=$(cat /var/lib/roundcube/index.php | grep -o -E '[0-9].[0-9].[0-9]+' | head -1);
+            if [ "$rc_version" == "$rc_v" ]; then
+                echo "[ * ] Upgrading RoundCube to version v$rc_v..."
+                $HESTIA/bin/v-add-sys-roundcube
+            fi
+        fi
+    fi
+}
+
+upgrade_rainloop(){
+    if [ "UPGRADE_UPDATE_RAINLOOP" = "true" ]; then
+        if [ ! -z "$(echo "$WEBMAIL_SYSTEM" | grep -w 'rainloop')" ]; then
+            rc_version=$(cat /var/lib/rainloop/data/VERSION);
+            if [ "$rc_version" == "$rc_v" ]; then
+                echo "[ * ] Upgrading rainloop to version v$rc_v..."
+                $HESTIA/bin/v-add-sys-rainloop
             fi
         fi
     fi

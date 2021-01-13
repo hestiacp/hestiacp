@@ -464,6 +464,21 @@
                                                 <br><br>
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print _('phpMyAdmin Single Sign On') ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_phpmyadmin_key">
+                                                    <option value='no'><?php print _('Disabled'); ?></option>
+                                                    <option value='yes' <?php if($_POST['v_phpmyadmin_key'] == "yes" || $_SESSION['PHPMYADMIN_KEY'] != ''){ echo 'selected="selected"'; }; ?>><?php print _('Enabled'); ?></option>
+                                                </select>
+                                                <br />
+                                                <br />
+                                            </td>
+                                        </tr>
                                         <?php } ?>
                                         <?php if ($v_mysql == 'yes') {
                                                   $i = 0;
@@ -659,10 +674,8 @@
                                                 <br><br>
                                             </td>
                                         </tr>                                        <tr>
-                                            <td class="vst-text input-label step-top">
-                                                <a href="javascript:elementHideShow('remote_backup');" class="vst-text">
-                                                <?php print _('Remote backup');?> <img src="/images/arrow.png">
-                                                </a>
+                                            <td class="vst-text input-label">
+                                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_backup_remote_adv" <?php if (!empty($v_backup_remote_adv)) echo "checked=yes" ?> onclick="javascript:elementHideShow('remote_backup');"> <?php print _('Remote backup');?></label>
                                             </td>
                                         </tr>
                                         <tr>
@@ -674,66 +687,112 @@
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <select class="vst-list" name="v_backup_type">
+                                                            <select class="vst-list" name="v_backup_type" id="backup_type">
                                                                 <option value='ftp'><?php print _('ftp'); ?></option>
                                                                 <option value='sftp' <?php if((!empty($v_backup_type)) && (trim($v_backup_type,"'")  == 'sftp' )) echo 'selected="selected"'; ?>><?php print _('sftp'); ?></option>
+                                                                <option value="b2" <?php if((!empty($v_backup_type)) && (trim($v_backup_type,"'")  == 'b2' )) echo 'selected="selected"'; ?>><?php print _('Backblaze '); ?>
                                                             </select>
                                                             <br><br>
                                                         </td>
                                                     </tr>
-                                                    <tr>
-                                                        <td class="vst-text">
-                                                            <?php print _('Host') ?>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
+                                                    <tr style="display: <?php if ((!empty($v_backup_type)) && !in_array(trim($v_backup_type, "'"),array('ftp','sftp'))){ echo 'none';} else {echo 'block';} ?>" id="backup_sftp">
                                                         <td>
-                                                            <input type="text" size="20" class="vst-input" name="v_backup_host" value="<?=trim($v_backup_host, "'")?>">
-                                                            <br><br>
+                                                            <table>
+                                                            <tr>
+                                                                <td class="vst-text">
+                                                                    <?php print _('Host') ?>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <input type="text" size="20" class="vst-input" name="v_backup_host" value="<?=trim($v_backup_host, "'")?>">
+                                                                    <br><br>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="vst-text">
+                                                                    <?php print _('Port') ?>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <input type="text" size="20" class="vst-input" name="v_backup_port" value="<?=trim($v_backup_port, "'")?>">
+                                                                    <br><br>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="vst-text">
+                                                                    <?php print _('Username') ?>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <input type="text" size="20" class="vst-input" name="v_backup_username" value="<?=trim($v_backup_username, "'")?>">
+                                                                    <br><br>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="vst-text">
+                                                                    <?php print _('Password') ?>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <input type="text" size="20" class="vst-input" name="v_backup_password" value="<?=trim($v_backup_password, "'")?>">
+                                                                    <br><br>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="vst-text">
+                                                                    <?php print _('Directory') ?>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <input type="text" size="20" class="vst-input" name="v_backup_bpath" value="<?=trim($v_backup_bpath, "'")?>">
+                                                                    <br><br>
+                                                                </td>
+                                                            </tr>
+                                                            </table>
                                                         </td>
                                                     </tr>
-                                                    <tr>
-                                                        <td class="vst-text">
-                                                            <?php print _('Port') ?>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
+                                                    <tr style="display: <?php if ((empty($v_backup_type)) || !in_array(trim($v_backup_type, "'"),array('b2'))){ echo 'none';} else {echo 'block';} ?>"  id="backup_bucket">
                                                         <td>
-                                                            <input type="text" size="20" class="vst-input" name="v_backup_port" value="<?=trim($v_backup_port, "'")?>">
-                                                            <br><br>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="vst-text">
-                                                            <?php print _('Username') ?>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <input type="text" size="20" class="vst-input" name="v_backup_username" value="<?=trim($v_backup_username, "'")?>">
-                                                            <br><br>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="vst-text">
-                                                            <?php print _('Password') ?>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <input type="text" size="20" class="vst-input" name="v_backup_password" value="<?=trim($v_backup_password, "'")?>">
-                                                            <br><br>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="vst-text">
-                                                            <?php print _('Directory') ?>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <input type="text" size="20" class="vst-input" name="v_backup_bpath" value="<?=trim($v_backup_bpath, "'")?>">
-                                                            <br><br>
+                                                            <table>
+                                                            <tr>
+                                                                <td class="vst-text">
+                                                                    <?php print _('Bucket') ?>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <input type="text" size="20" class="vst-input" name="v_backup_bucket" value="<?=trim($v_backup_bucket, "'")?>">
+                                                                    <br><br>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="vst-text">
+                                                                    <?php print _('Application ID') ?>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <input type="text" size="20" class="vst-input" name="v_backup_application_id" value="<?=trim($v_backup_application_id, "'")?>">
+                                                                    <br><br>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="vst-text">
+                                                                    <?php print _('Application Key') ?>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <input type="text" size="20" class="vst-input" name="v_backup_application_key" value="<?=trim($v_backup_application_key, "'")?>">
+                                                                    <br><br>
+                                                                </td>
+                                                            </tr>
+                                                            </table>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -863,6 +922,17 @@
                                                     <option value='default'><?php print _('Default'); ?></option>
                                                     <option value='old' <?php if($_SESSION['LOGIN_STYLE'] == 'old') echo 'selected' ?> ><?php print _('Old Style'); ?></option>
                                                 </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print _('Inactive session length');?> (<?php print _('Minutes');?>)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_inactive_session_timeout" value="<?=trim($_SESSION['INACTIVE_SESSION_TIMEOUT'], "'")?>">
                                                 <br><br>
                                             </td>
                                         </tr>

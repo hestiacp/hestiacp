@@ -78,6 +78,7 @@
                                             echo ">".htmlentities(ucfirst($client))."</option>\n";
                                             }
                                             ?>
+                                            <option value="" <?php if(empty($v_webmail)){ echo "selected";}?>><?php print _('Disabled');?></option>
                                         </select>
                                     </td>
                                 </tr>

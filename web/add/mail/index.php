@@ -83,20 +83,30 @@ if (!empty($_POST['ok'])) {
         check_return_code($return_var,$output);
         unset($output);
     }
-
-    // Flush field values on success
-    if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = sprintf(_('MAIL_DOMAIN_CREATED_OK'),htmlentities($_POST['v_domain']),htmlentities($_POST['v_domain']));
-        unset($v_domain);
-    }
     
     if (!empty($_SESSION['IMAP_SYSTEM']) && !empty($_SESSION['WEBMAIL_SYSTEM'])){
-        if(!empty($_POST['v_webmail'])){
+        if (empty($_SESSION['error_msg'])) {
+        if (!empty($_POST['v_webmail'])) {
             $v_webmail = escapeshellarg($_POST['v_webmail']);
-            exec (HESTIA_CMD."v-add-sys-webmail ".$user." ".$v_domain." ".$v_webmail, $output, $return_var);
+            exec (HESTIA_CMD."v-add-sys-webmail ".$user." ".$v_domain." ".$v_webmail." yes", $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
         }
+        }
+    }
+    
+    if (empty($_POST['v_webmail'])) {
+        if (empty($_SESSION['error_msg'])) {
+        exec (HESTIA_CMD."v-delete-sys-webmail ".$user." ".$v_domain." yes", $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
+        }
+    }
+    
+    // Flush field values on success
+    if (empty($_SESSION['error_msg'])) {
+        $_SESSION['ok_msg'] = sprintf(_('MAIL_DOMAIN_CREATED_OK'),htmlentities($_POST['v_domain']),htmlentities($_POST['v_domain']));
+        unset($v_domain, $v_webmail);
     }
 }
 

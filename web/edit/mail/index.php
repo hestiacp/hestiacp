@@ -215,13 +215,24 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
         check_return_code($return_var,$output);
         unset($output);
     }
+    
     if (!empty($_SESSION['IMAP_SYSTEM']) && !empty($_SESSION['WEBMAIL_SYSTEM'])){
-        // Update webmail
-        if ((!empty($_POST['v_webmail'])) && $_POST['v_webmail'] != $v_webmail && (empty($_SESSION['error_msg']))) {
+        if (empty($_SESSION['error_msg'])) {
+        if (!empty($_POST['v_webmail'])) {
             $v_webmail = escapeshellarg($_POST['v_webmail']);
-            exec (HESTIA_CMD."v-add-sys-webmail ".$v_username." ".escapeshellarg($v_domain)." ".$v_webmail." yes", $output, $return_var);
+            exec (HESTIA_CMD."v-add-sys-webmail ".$user." ".$v_domain." ".$v_webmail." yes", $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
+        }
+        }
+    }
+    
+    if (empty($_POST['v_webmail'])) {
+        if (empty($_SESSION['error_msg'])) {
+        exec (HESTIA_CMD."v-delete-sys-webmail ".$user." ".$v_domain." yes", $output, $return_var);
+        check_return_code($return_var,$output);
+        $v_webmail = "";
+        unset($output);
         }
     }
     

@@ -596,7 +596,7 @@ rebuild_mail_domain_conf() {
             if [ "$QUOTA" = 'unlimited' ]; then
                 QUOTA=0
             fi
-            str="$account:$MD5:$user:mail::$HOMEDIR/$user::userdb_quota_rule=*:storage=${QUOTA}M"
+            str="$account:$MD5:$user:mail::$HOMEDIR/$user:${QUOTA}:userdb_quota_rule=*:storage=${QUOTA}M"
             echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
             for malias in ${ALIAS//,/ }; do
                 echo "$malias@$domain_idn:$account@$domain_idn" >> $dom_aliases

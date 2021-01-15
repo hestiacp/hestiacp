@@ -36,7 +36,7 @@ $v_web_apps = [
     [ 'name'=>'Joomla',    'group'=>'cms', 'enabled'=>false,'version'=>'latest', 'thumbnail'=>'/images/webapps/joomla-thumb.png' ],
 
     [ 'name'=>'Opencart',   'group'=>'ecommerce', 'enabled'=>true,  'version'=>'3.0.3.3', 'thumbnail'=>'/images/webapps/opencart-thumb.png' ],
-    [ 'name'=>'Prestashop', 'group'=>'ecommerce', 'enabled'=>true, 'version'=>'1.7.6.5', 'thumbnail'=>'/images/webapps/prestashop-thumb.png' ],
+    [ 'name'=>'Prestashop', 'group'=>'ecommerce', 'enabled'=>true, 'version'=>'1.7.7.1', 'thumbnail'=>'/images/webapps/prestashop-thumb.png' ],
 
     [ 'name'=>'Laravel', 'group'=>'starter', 'enabled'=>true, 'version'=>'7.x', 'thumbnail'=>'/images/webapps/laravel-thumb.png' ],
     [ 'name'=>'Symfony', 'group'=>'starter', 'enabled'=>true, 'version'=>'4.3.x', 'thumbnail'=>'/images/webapps/symfony-thumb.png' ],

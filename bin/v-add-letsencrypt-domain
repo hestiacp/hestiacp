@@ -120,7 +120,10 @@ check_hestia_demo_mode
 if [ ! -z "$mail" ]; then
     root_domain=$domain
     domain="mail.$root_domain"
-    aliases="$WEBMAIL_ALIAS.$root_domain"
+    webmail=$(get_object_value "mail" "$domain" '$WEBMAIL');
+    if [ ! -z "$webmail" ]; then
+        aliases="$WEBMAIL_ALIAS.$root_domain"
+    fi
 fi
 
 log_file="/var/log/hestia/LE-${user}-${domain}-$(date +%Y%m%d-%H%M%S).log"
@@ -243,7 +246,7 @@ fi
 for auth in $authz; do
     payload=''
     answer=$(query_le_v2 "$auth" "$payload" "$nonce")
-    url=$(echo "$answer" |grep -A3 $proto |grep url |cut -f 4 -d \")
+    url=$(echo "$answer" |grep -A3 $proto |grep -m1 url |cut -f 4 -d \")
     token=$(echo "$answer" |grep -A3 $proto |grep token |cut -f 4 -d \")
     nonce=$(echo "$answer" |grep -i nonce |cut -f2 -d \ |tr -d '\r\n')
     status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')

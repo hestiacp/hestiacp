@@ -74,6 +74,11 @@ DKIM_PRIVATE_KEY = ${if exists{DKIM_FILE}{DKIM_FILE}{0}}
 
 OUTGOING_IP = /etc/exim4/domains/$sender_address_domain/ip
 
+SMARTHOST_FILE = ${if exists{/etc/exim4/domains/${sender_address_domain}/smarthost.conf}{/etc/exim4/domains/$sender_address_domain/smarthost.conf}{/etc/exim4/smarthost.conf}}
+SMARTHOST_HOST=${lookup{host}lsearch{SMARTHOST_FILE}}
+SMARTHOST_PORT=${lookup{port}lsearch{SMARTHOST_FILE}}
+SMARTHOST_USER=${lookup{user}lsearch{SMARTHOST_FILE}}
+SMARTHOST_PASS=${lookup{pass}lsearch{SMARTHOST_FILE}}
 
 ######################################################################
 #                       ACL CONFIGURATION                            #
@@ -218,6 +223,11 @@ acl_check_mime:
 ######################################################################
 begin authenticators
 
+smarthost_login:
+  driver = plaintext
+  public_name = LOGIN
+  hide client_send = : SMARTHOST_USER : SMARTHOST_PASS
+
 dovecot_plain:
   driver = dovecot
   public_name = PLAIN
@@ -238,13 +248,15 @@ dovecot_login:
 ######################################################################
 begin routers
 
-#smarthost:
-#  driver = manualroute
-#  domains = ! +local_domains
-#  transport = remote_smtp
-#  route_list = * smartrelay.hestiacp.com
-#  no_more
-#  no_verify
+send_via_smarthost:
+  driver = manualroute
+  address_data = SMARTHOST_HOST:SMARTHOST_PORT
+  domains = !+local_domains
+  require_files = SMARTHOST_FILE : !/etc/exim4/domains/$sender_address_domain/no_smarthost
+  transport = smarthost_smtp
+  route_list = * ${extract{1}{:}{$address_data}}::${extract{2}{:}{$address_data}}
+  no_more
+  no_verify
 
 dnslookup:
   driver = dnslookup
@@ -322,6 +334,11 @@ terminate_alias:
 #                      TRANSPORTS CONFIGURATION                      #
 ######################################################################
 begin transports
+
+smarthost_smtp:
+  driver = smtp
+  hosts_require_auth = $host_address
+  hosts_require_tls = $host_address
 
 remote_smtp:
   driver = smtp

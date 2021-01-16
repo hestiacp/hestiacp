@@ -103,6 +103,26 @@ if (!empty($_POST['ok'])) {
         }
     }
     
+    // Add Smarthost Support
+    if (($_POST['v_smarthost']) && (empty($_SESSION['error_msg']))) {
+        if ((!empty($_POST['v_smarthost_host'])) && (!empty($_POST['v_smarthost_user'])) && (!empty($_POST['v_smarthost_pass']))) {
+            $v_smarthost = true;	
+            $v_smarthost_host = escapeshellarg($_POST['v_smarthost_host']);
+            $v_smarthost_user = escapeshellarg($_POST['v_smarthost_user']);
+            $v_smarthost_pass = escapeshellarg($_POST['v_smarthost_pass']);
+            if (!empty($_POST['v_smarthost_port'])) {
+                $v_smarthost_port = escapeshellarg($_POST['v_smarthost_port']);
+            } else {
+                $v_smarthost_port = '587';
+            }
+            exec (HESTIA_CMD."v-add-mail-domain-smarthost ".$v_username." ".escapeshellarg($v_domain)." ".$v_smarthost_host." ".$v_smarthost_user." ".$v_smarthost_pass." ".$v_smarthost_port, $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+        } else {
+                $_SESSION['error_msg'] = _('Smarthost requires: Host, Username, and Password.');
+        }
+    }
+    
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
         $_SESSION['ok_msg'] = sprintf(_('MAIL_DOMAIN_CREATED_OK'),htmlentities($_POST['v_domain']),htmlentities($_POST['v_domain']));

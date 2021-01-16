@@ -51,7 +51,11 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account']))) {
     $v_suspended = $data[$v_domain]['SUSPENDED'];
     $v_webmail_alias = $data[$v_domain]['WEBMAIL_ALIAS'];
     $v_webmail = $data[$v_domain]['WEBMAIL'];
-    
+    $v_smarthost = $data[$v_domain]['U_SMARTHOST'];
+    $v_smarthost_host = $data[$v_domain]['U_SMARTHOST_HOST'];
+    $v_smarthost_port = $data[$v_domain]['U_SMARTHOST_PORT'];
+    $v_smarthost_user = $data[$v_domain]['U_SMARTHOST_USERNAME'];
+
     if ( $v_suspended == 'yes' ) {
         $v_status =  'suspended';
     } else {
@@ -394,6 +398,32 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
             if (!empty($_POST['v_ssl_ca'])) unlink($tmpdir."/".$v_domain.".ca");
             rmdir($tmpdir);
         }
+    }
+
+    // Add Smarthost Support
+    if (($_POST['v_smarthost']) && (empty($_SESSION['error_msg']))) {
+        if ((!empty($_POST['v_smarthost_host'])) && (!empty($_POST['v_smarthost_user'])) && (!empty($_POST['v_smarthost_pass']))) {
+            $v_smarthost = true;	
+            $v_smarthost_host = escapeshellarg($_POST['v_smarthost_host']);
+            $v_smarthost_user = escapeshellarg($_POST['v_smarthost_user']);
+            $v_smarthost_pass = escapeshellarg($_POST['v_smarthost_pass']);
+            if (!empty($_POST['v_smarthost_port'])) {
+                $v_smarthost_port = escapeshellarg($_POST['v_smarthost_port']);
+            } else {
+                $v_smarthost_port = '587';
+            }
+            exec (HESTIA_CMD."v-add-mail-domain-smarthost ".$v_username." ".escapeshellarg($v_domain)." ".$v_smarthost_host." ".$v_smarthost_user." ".$v_smarthost_pass." ".$v_smarthost_port, $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+        } else {
+                $_SESSION['error_msg'] = _('Smarthost requires: Host, Username, and Password.');
+        }
+    } else {
+        $v_smarthost = false;
+        $v_smarthost_host = $v_smarthost_user = $v_smarthost_pass = $v_smarthost_port = '';
+        exec (HESTIA_CMD."v-delete-mail-domain-smarthost ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
     }
 
     // Set success message

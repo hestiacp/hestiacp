@@ -98,6 +98,65 @@
                                     <label><input type="checkbox" size="20" class="vst-checkbox" name="v_dkim" <?php if (isset($v_dkim)&&$v_dkim == 'yes') echo "checked=yes"; ?>> <?php print _('DKIM Support');?></label>
                                 </td>
                             </tr>
+                            <tr>
+                                <td class="vst-text step-top">
+                                    <label>
+                                        <input type="checkbox" size="20" class="vst-checkbox" name="v_smarthost" <?php if ($v_smarthost == 'yes') echo "checked=yes"; ?> onclick="javascript:elementHideShow('smarthost_table');">
+                                        <?php print _('Smarthost');?>
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="step-left">
+                                    <table style="display:<?php if ($v_smarthost == 'yes') {echo 'block';} else {echo 'none';}  ?>;" id="smarthost_table">
+                                        <tr>
+                                            <td class="input-label vst-text">
+                                                <?php print _('Host');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_smarthost_host" value="<?=htmlentities(trim($v_smarthost_host, "'"))?>">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="input-label vst-text">
+                                                <?php print _('Port');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_smarthost_port" value="<?=htmlentities(trim($v_smarthost_port, "'"))?>">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="input-label vst-text">
+                                                <?php print _('Username');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_smarthost_user" value="<?=htmlentities(trim($v_smarthost_user, "'"))?>">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="input-label vst-text">
+                                                <?php print _('Password');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_smarthost_pass">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <br>
+                                </td>
+                            </tr>
                         </table>
                         <table class="data-col2"></table>
                     </td>

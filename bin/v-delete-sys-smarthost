@@ -1,0 +1,45 @@
+#!/bin/bash
+# info: disable system wide smarthost support
+# options: 
+# labels: hestia
+#
+# example: v-delete-sys-smarthost
+#
+# this function disables system wide smarthost support.
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+
+$BIN/v-change-sys-config-value SMARTHOST false
+$BIN/v-change-sys-config-value SMARTHOST_HOST ''
+$BIN/v-change-sys-config-value SMARTHOST_PORT ''
+$BIN/v-change-sys-config-value SMARTHOST_USER ''
+
+rm -f /etc/exim4/smarthost.conf
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_history "Disable system wide smarthost support."
+log_event "$OK" "$ARGUMENTS"
+
+exit

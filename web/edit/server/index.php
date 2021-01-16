@@ -115,6 +115,7 @@ if (is_array($dns_cluster)) {
     }
 }
 
+
 // List Database hosts
 exec (HESTIA_CMD."v-list-database-hosts json", $output, $return_var);
 $db_hosts = json_decode(implode('', $output), true);
@@ -358,6 +359,29 @@ if (!empty($_POST['save'])) {
             unset($output);
             $v_mail_adv = 'yes';
         }
+    }
+
+    // Update system wide smarthost
+    if (empty($_SESSION['error_msg'])) {
+	if ($_POST['v_smarthost']) {
+	    if (!empty($_POST['v_smarthost_host']) && !empty($_POST['v_smarthost_user']) && !empty($_POST['v_smarthost_pass'])) {
+	        $v_smarthost_host = escapeshellarg($_POST['v_smarthost_host']);
+                $v_smarthost_user = escapeshellarg($_POST['v_smarthost_user']);
+	        $v_smarthost_pass = escapeshellarg($_POST['v_smarthost_pass']);
+	        if (!empty($_POST['v_smarthost_port'])) {
+	            $v_smarthost_port = escapeshellarg($_POST['v_smarthost_port']);
+	            exec (HESTIA_CMD."v-add-sys-smarthost ". $v_smarthost_host ." ". $v_smarthost_user ." ". $v_smarthost_pass ." ". $v_smarthost_port, $output, $return_var);
+	        } else {
+		    exec (HESTIA_CMD."v-add-sys-smarthost ". $v_smarthost_host ." ". $v_smarthost_user ." ". $v_smarthost_pass, $output, $return_var);
+	        }
+	        check_return_code($return_var,$output);
+		unset($output);
+	    }
+	} else {
+            exec (HESTIA_CMD."v-delete-sys-smarthost", $output, $return_var);
+	    check_return_code($return_var,$output);
+            unset($output);
+	}
     }
 
     // Update phpMyAdmin url

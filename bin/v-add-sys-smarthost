@@ -1,0 +1,61 @@
+#!/bin/bash
+# info: add system wide smarthost support
+# options: HOST USERNAME PASSWORD [PORT]
+# labels: hestia
+#
+# example: v-add-sys-smarthost srv.smarthost.tld uname123 pass12345
+#
+# this function adds system wide smarthost support.
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+host=$1
+username=$2
+password=$3
+port=${4-587}
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'HOST USERNAME PASSWORD'
+is_format_valid 'port'
+is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+
+$BIN/v-change-sys-config-value SMARTHOST 'true'
+$BIN/v-change-sys-config-value SMARTHOST_HOST $host
+$BIN/v-change-sys-config-value SMARTHOST_PORT $port
+$BIN/v-change-sys-config-value SMARTHOST_USER $username
+
+cat >/etc/exim4/smarthost.conf << EOL
+host:$host
+port:$port
+user:$username
+pass:$password
+EOL
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_history "enabled system wide smarthost support."
+log_event "$OK" "$ARGUMENTS"
+
+exit

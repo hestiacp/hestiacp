@@ -1,0 +1,59 @@
+#!/bin/bash
+# info: Remove mail domain smarthost support
+# options: USER DOMAIN
+# labels: hestia
+#
+# example: v-delete-mail-domain-smarthost user domain.tld
+#
+# This function removes mail domain smarthost support.
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN'
+is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'mail' 'DOMAIN' "$domain"
+is_object_unsuspended 'mail' 'DOMAIN' "$domain"
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+rm -f /etc/exim4/domains/${domain}/smarthost.conf
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Adding smarthost values in config
+add_object_key 'mail' 'DOMAIN' "$domain" 'U_SMARTHOST' 'ACCOUNTS'
+add_object_key 'mail' 'DOMAIN' "$domain" 'U_SMARTHOST_HOST' 'ACCOUNTS'
+add_object_key 'mail' 'DOMAIN' "$domain" 'U_SMARTHOST_PORT' 'ACCOUNTS'
+add_object_key 'mail' 'DOMAIN' "$domain" 'U_SMARTHOST_USERNAME' 'ACCOUNTS'
+
+update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMARTHOST' ''
+update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMARTHOST_HOST' ''
+update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMARTHOST_PORT' ''
+update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMARTHOST_USERNAME' ''
+
+# Logging
+log_history "Removed mail domain smarthost support for $domain"
+
+log_event "$OK" "$ARGUMENTS"
+
+exit

@@ -132,7 +132,7 @@ if [ ! -z "$dns_data" ]; then
 
     # Resync dns cluster
     if [ ! -z "$DNS_CLUSTER" ]; then
-        v-sync-dns-cluster
+        $BIN/v-sync-dns-cluster
     fi
 fi
 

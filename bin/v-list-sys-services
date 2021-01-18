@@ -231,8 +231,8 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'remote' ]; then
                 service='mariadb'
                 proc_name='mysqld'
             fi
-            if [ -f /usr/bin/mysqladmin ]; then
-                mariadb_v=`mysqladmin --version | awk 'NR==1{print $5}' | head -c 4`
+            if [ -f /usr/bin/mysql ]; then
+                mariadb_v=`mysql -V | awk 'NR==1{print $5}' | head -c 4`
                 if [ $mariadb_v = "10.5" ]; then
                     service='mariadb'
                     proc_name='mariadbd'

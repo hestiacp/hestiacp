@@ -11,4 +11,4 @@ assignees: ''
 
 **Documentation:** [docs.hestiacp.com](https://docs.hestiacp.com/)
 **Forums:** [forum.hestiacp.com](https://forum.hestiacp.com/)
-**Discord:** [Join the discussion](https://discord.gg/nXRUZch)
+**Discord:** [Join the discussion](https://discord.gg/8b2HGNe8ne)

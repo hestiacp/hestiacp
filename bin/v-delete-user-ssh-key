@@ -28,7 +28,6 @@ source $HESTIA/conf/hestia.conf
 check_args '2' "$#" 'USER KEYID'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 
 source $USER_DATA/user.conf
 

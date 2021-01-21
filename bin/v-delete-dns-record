@@ -37,9 +37,7 @@ format_domain_idn
 check_args '3' "$#" 'USER DOMAIN ID [RESTART]'
 is_format_valid 'user' 'domain' 'id'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"
-is_object_unsuspended 'dns' 'DOMAIN' "$domain"
 is_object_valid "dns/$domain" 'ID' "$id"
 is_dns_record_critical
 

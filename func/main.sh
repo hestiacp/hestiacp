@@ -676,7 +676,7 @@ is_number_format_valid() {
 
 # Autoreply format validator
 is_autoreply_format_valid() {
-    if [[ "$1" =~ [$|\`] ]] || [ 10240 -le ${#1} ]; then
+    if [[ 10240 -le ${#1} ]; then
         check_result $E_INVALID "invalid autoreply format :: $1"
     fi
 }

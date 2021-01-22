@@ -39,11 +39,8 @@ if [ "$forward"  != ':blackhole:' ]; then
 fi
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
-is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 is_object_valid "mail/$domain" 'ACCOUNT' "$account"
-is_object_unsuspended "mail/$domain" 'ACCOUNT' "$account"
 fwd=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$FWD')
 if [ -z "$(echo $fwd | grep -w $forward)" ]; then
     check_result $E_NOTEXIST "forward $forward doesn't exist"

@@ -41,9 +41,7 @@ check_args '2' "$#" 'USER DOMAIN [RESTART]'
 is_format_valid 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
-is_object_unsuspended 'web' 'DOMAIN' "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -124,6 +122,13 @@ fi
 if [ ! -z "$ALIAS" ]; then
     aliases=$(echo $ALIAS | tr ',' '\n' | wc -l )
     decrease_user_value "$user" '$U_WEB_ALIASES' "$aliases"
+fi
+
+# Check if is suspended to decrease the suspended value
+if [ ! -z "$SUSPENDED" ]; then
+    if [ "$SUSPENDED" == "yes" ]; then
+        decrease_user_value "$user" '$SUSPENDED_WEB'
+    fi
 fi
 
 # Restarting web server

@@ -145,6 +145,9 @@ EOL
         osal_kv_write $HESTIA/conf/hestia.conf 'DB_PGA_ALIAS' 'phpPgAdmin'
     fi
 
+    # Configure SFTP jail
+    $HESTIA/bin/v-add-sys-sftp-jail
+
     if ! id "admin" &>/dev/null; then
         echo " - Creating admin user..."
 

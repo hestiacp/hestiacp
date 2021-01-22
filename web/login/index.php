@@ -25,6 +25,9 @@ if (isset($_SESSION['user'])) {
             reset($data);
             $_SESSION['look'] = key($data);
             $_SESSION['look_alert'] = 'yes';
+            # Remove current path for filemanager
+            unset($_SESSION['_sf2_attributes']);
+            unset($_SESSION['_sf2_meta']);
         }
     }
     if ($_SESSION['user'] == 'admin' && empty($_GET['loginas'])) {

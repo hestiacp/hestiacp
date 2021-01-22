@@ -12,6 +12,7 @@ Requires:       chkconfig
 Requires:       gawk
 Requires:       sed
 Requires:       acl
+Requires:       bc
 Requires:       sysstat
 Requires:       (setpriv or util-linux)
 Requires:       zstd

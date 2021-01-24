@@ -41,9 +41,14 @@ else
     eximstats /var/log/exim/main.log 2>/dev/null
 fi
 
+if [ $? -ne 0 ]; then
+    echo "[Exim4] No valid log lines read"
+    exit 0;
+fi
+
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-exit
+exit 0

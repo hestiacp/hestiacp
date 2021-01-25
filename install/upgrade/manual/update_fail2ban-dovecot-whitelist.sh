@@ -19,7 +19,7 @@
 #----------------------------------------------------------#
 
 #Adds the config lines at the end of jail.local
-file1='/etc/fail2ban/jail.local'
+file='/etc/fail2ban/jail.local'
 
 echo "[dovecot-whitelist]" >> $file
 echo "enabled   = true" >> $file
@@ -64,4 +64,3 @@ fi
 
 #restarts service
 systemctl restart fail2ban
-

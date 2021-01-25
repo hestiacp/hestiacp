@@ -53,3 +53,11 @@ logpath  = /var/log/fail2ban.log
 maxretry = 5
 findtime = 86400
 bantime  = 864000
+
+[dovecot-whitelist]
+enabled = true
+filter = dovecot-whitelist
+action = ignoreip[name=WHITELIST]
+logpath = /var/log/dovecot.log
+maxretry = 0
+bantime = 14400

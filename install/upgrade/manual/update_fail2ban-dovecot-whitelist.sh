@@ -1,8 +1,10 @@
 #!/bin/bash
-# info: enable multiphp 
+# info: enable fail2ban dovecot whitelisting
 #
-# The function edits jail.conf to make the rule work
-
+# The function:
+#   edits jail.local
+#   adds action.d/ignoreip.conf
+#   adds filter.d/dovecot-whitelist.conf
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

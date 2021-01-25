@@ -186,12 +186,12 @@ generate_password() {
     matrix=$1
     length=$2
     if [ -z "$matrix" ]; then
-        matrix=[:alnum:]
+        matrix="A-Za-z0-9"
     fi
     if [ -z "$length" ]; then
-        length=10
+        length=16
     fi
-    cat /dev/urandom | tr -dc $matrix | head -c$length
+    head /dev/urandom | tr -dc $matrix | head -c$length
 }
 
 # Package existence check
@@ -676,7 +676,7 @@ is_number_format_valid() {
 
 # Autoreply format validator
 is_autoreply_format_valid() {
-    if [[ "$1" =~ [$|\`] ]] || [ 10240 -le ${#1} ]; then
+    if [[ 10240 -le ${#1} ]; then
         check_result $E_INVALID "invalid autoreply format :: $1"
     fi
 }
@@ -724,14 +724,9 @@ is_common_format_valid() {
 
 # Database format validator
 is_database_format_valid() {
-    if [ "$3" == "pgsql" ]; then
-        if ! [[ "$1" =~ ^[0-9a-z_]{1,63}$ ]]; then
-            check_result $E_INVALID "invalid $2 format :: $1"
-        fi  
-    else
-        if ! [[ "$1" =~ ^[0-9a-zA-Z_]{1,64}$ ]]; then
-            check_result $E_INVALID "invalid $2 format :: $1"
-        fi  
+    exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|/|\|\"|'|;|%|\`| ]"
+    if [[ "$1" =~ $exclude ]] || [ 64 -le ${#1} ]; then
+        check_result $E_INVALID "invalid $2 format :: $1"
     fi
 }
 
@@ -744,17 +739,12 @@ is_date_format_valid() {
 
 # Database user validator
 is_dbuser_format_valid() {
-    if [ "$3" == "pgsql" ]; then
-        if ! [[ "$1" =~ ^[0-9a-z_]{1,63}$ ]]; then
-            check_result $E_INVALID "invalid $2 format :: $1"
-        fi 
-    else
-        if [ 33 -le ${#1} ]; then
-            check_result $E_INVALID "mysql username can be up to 32 characters long"
-        fi
-        if ! [[ "$1" =~ ^[0-9a-zA-Z_]{1,64}$ ]]; then
-            check_result $E_INVALID "invalid $2 format :: $1"
-        fi           
+    exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|/|\|\"|'|;|%|\`| ]"
+    if [ 33 -le ${#1} ]; then
+        check_result $E_INVALID "mysql username can be up to 32 characters long"
+    fi
+    if [[ "$1" =~ $exclude ]]; then
+        check_result $E_INVALID "invalid $2 format :: $1"
     fi
 }
 
@@ -931,6 +921,12 @@ is_service_format_valid() {
     fi
 }
 
+is_hash_format_valid() {
+  if ! [[ "$1" =~ ^[_A-Za-z0-9]{1,32}$ ]]; then
+        check_result $E_INVALID "invalid $2 format :: $1"
+    fi    
+}
+
 # Format validation controller
 is_format_valid() {
     for arg_name in $*; do
@@ -948,10 +944,10 @@ is_format_valid() {
                 charset)        is_object_format_valid "$arg" "$arg_name" ;;
                 charsets)       is_common_format_valid "$arg" 'charsets' ;;
                 comment)        is_object_format_valid "$arg" 'comment' ;;
-                database)       is_database_format_valid "$arg" 'database' $type;;
+                database)       is_database_format_valid "$arg" 'database';;
                 day)            is_cron_format_valid "$arg" $arg_name ;;
                 dbpass)         is_password_format_valid "$arg" ;;
-                dbuser)         is_dbuser_format_valid "$arg" 'dbuser' $type;;
+                dbuser)         is_dbuser_format_valid "$arg" 'dbuser';;
                 dkim)           is_boolean_format_valid "$arg" 'dkim' ;;
                 dkim_size)      is_int_format_valid "$arg" ;;
                 domain)         is_domain_format_valid "$arg" ;;
@@ -962,6 +958,7 @@ is_format_valid() {
                 extentions)     is_common_format_valid "$arg" 'extentions' ;;
                 ftp_password)   is_password_format_valid "$arg" ;;
                 ftp_user)       is_user_format_valid "$arg" "$arg_name" ;;
+                hash)           is_hash_format_valid "$arg" "$arg_name" ;;
                 host)           is_object_format_valid "$arg" "$arg_name" ;;
                 hour)           is_cron_format_valid "$arg" $arg_name ;;
                 id)             is_int_format_valid "$arg" 'id' ;;

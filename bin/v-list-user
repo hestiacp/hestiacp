@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list user parameters
 # options: USER [FORMAT]
+# labels: 
+#
+# example: v-list-user admin
 #
 # The function to obtain user parameters.
 

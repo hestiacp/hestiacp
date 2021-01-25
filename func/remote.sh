@@ -9,32 +9,58 @@ is_procces_running() {
 }
 
 send_api_cmd() {
-    answer=$(curl -s -k \
-        --data-urlencode "user=$USER" \
-        --data-urlencode "password=$PASSWORD" \
-        --data-urlencode "returncode=yes" \
-        --data-urlencode "cmd=$1" \
-        --data-urlencode "arg1=$2" \
-        --data-urlencode "arg2=$3" \
-        --data-urlencode "arg3=$4" \
-        --data-urlencode "arg4=$5" \
-        --data-urlencode "arg5=$6" \
-        --data-urlencode "arg6=$7" \
-        --data-urlencode "arg7=$8" \
-        --data-urlencode "arg8=$9" \
-        https://$HOST:$PORT/api/)
+    if [ ! -z "$PASSWORD" ]; then
+        answer=$(curl -s -k \
+            --data-urlencode "user=$USER" \
+            --data-urlencode "password=$PASSWORD" \
+            --data-urlencode "returncode=yes" \
+            --data-urlencode "cmd=$1" \
+            --data-urlencode "arg1=$2" \
+            --data-urlencode "arg2=$3" \
+            --data-urlencode "arg3=$4" \
+            --data-urlencode "arg4=$5" \
+            --data-urlencode "arg5=$6" \
+            --data-urlencode "arg6=$7" \
+            --data-urlencode "arg7=$8" \
+            --data-urlencode "arg8=$9" \
+            https://$HOST:$PORT/api/)    
+    else
+        answer=$(curl -s -k \
+            --data-urlencode "hash=$HASH" \
+            --data-urlencode "returncode=yes" \
+            --data-urlencode "cmd=$1" \
+            --data-urlencode "arg1=$2" \
+            --data-urlencode "arg2=$3" \
+            --data-urlencode "arg3=$4" \
+            --data-urlencode "arg4=$5" \
+            --data-urlencode "arg5=$6" \
+            --data-urlencode "arg6=$7" \
+            --data-urlencode "arg7=$8" \
+            --data-urlencode "arg8=$9" \
+            https://$HOST:$PORT/api/)
+    fi
     return $answer
 }
 
 send_api_file() {
-    answer=$(curl -s -k \
-        --data-urlencode "user=$USER" \
-        --data-urlencode "password=$PASSWORD" \
-        --data-urlencode "returncode=yes" \
-        --data-urlencode "cmd=v-make-tmp-file" \
-        --data-urlencode "arg1=$(cat $1)" \
-        --data-urlencode "arg2=$2" \
-        https://$HOST:$PORT/api/)
+    if [ ! -z "$PASSWORD" ]; then
+        answer=$(curl -s -k \
+                --data-urlencode "user=$USER" \
+                --data-urlencode "password=$PASSWORD" \
+                --data-urlencode "returncode=yes" \
+                --data-urlencode "cmd=v-make-tmp-file" \
+                --data-urlencode "arg1=$(cat $1)" \
+                --data-urlencode "arg2=$2" \
+                https://$HOST:$PORT/api/) 
+    else
+        answer=$(curl -s -k \
+                --data-urlencode "hash=$HASH" \
+                --data-urlencode "returncode=yes" \
+                --data-urlencode "cmd=v-make-tmp-file" \
+                --data-urlencode "arg1=$(cat $1)" \
+                --data-urlencode "arg2=$2" \
+                https://$HOST:$PORT/api/)
+    fi
     return $answer
 }
 

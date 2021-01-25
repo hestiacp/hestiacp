@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change webmail alias url
 # options: WEBMAIL
+# labels: hestia panel
+#
+# example: v-change-sys-webmail YourtrickyURLhere
 #
 # This function changes the webmail url in apache2 or nginx configuration.
 

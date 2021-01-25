@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update ssh rrd
 # options: PERIOD
+# labels: panel
+#
+# example: v-update-sys-rrd-ssh
 #
 # The function is for updating ssh rrd database and graphic.
 

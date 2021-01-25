@@ -1,7 +1,7 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a href="/add/cron/" id="btn-create" class="ui-button cancel" title="<?=_('Add Cron Job')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Add Cron Job')?></a>
+          <a href="/add/cron/" id="btn-create" class="ui-button cancel"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Add Cron Job')?></a>
           <?
             if($panel[$user]['CRON_REPORTS'] == 'yes') {
               echo '<a class="ui-button cancel" href="/delete/cron/reports/?token='.$_SESSION['token'].'"><i class="fas fa-toggle-off status-icon green"></i> '._('turn off notifications').'</a>';
@@ -88,7 +88,7 @@ sort-star="<? if($_SESSION['favourites']['CRON'][$key] == 1) echo '1'; else echo
         <div class="clearfix l-unit__stat-col--left super-compact">
           <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="job[]" value="<?php echo $key ?>">
         </div>
-        <div class="clearfix l-unit__stat-col--left wide-5"><b><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Cron Job')?>"><?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?></a></b></div>
+        <div class="clearfix l-unit__stat-col--left wide-5 truncate"><b><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Cron Job')?>"><?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?></a></b></div>
         <!-- START QUICK ACTION TOOLBAR AREA -->
         <div class="clearfix l-unit__stat-col--left compact-2 text-right">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
@@ -133,12 +133,8 @@ sort-star="<? if($_SESSION['favourites']['CRON'][$key] == 1) echo '1'; else echo
         <table class='data'></table>
         <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php
-              if ( $i == 1) {
-                echo _('1 cron job');
-              } else {
-                echo _('%s cron jobs',$i);
-              }
-            ?>
+            printf(ngettext('%d cron job', '%d cron jobs', $i),$i);
+            ?>                
         </div>
       </div>
     </div>

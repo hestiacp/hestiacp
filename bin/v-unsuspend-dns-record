@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: unsuspend dns domain record
 # options: USER DOMAIN ID [RESTART]
+# labels: dns
+#
+# example: v-unsuspend-dns-record admin example.com 33
 #
 # The function unsuspends a certain domain record.
 
@@ -26,6 +29,8 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                    Verifications                         #

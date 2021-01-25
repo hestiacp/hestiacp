@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: rebuild mail domains
 # options: USER
+# labels: mail
+#
+# example: v-rebuild-mail-domains admin
 #
 # The function rebuilds EXIM configuration files for all mail domains.
 
@@ -39,7 +42,8 @@ if [ "$MAIL_SYSTEM" = 'remote' ]; then
     exit
 fi
 
-
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#

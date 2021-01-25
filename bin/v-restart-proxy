@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: restart proxy server
 # options: NONE
+# labels: panel
+#
+# example: v-restart-proxy
 #
 # The function reloads proxy server configuration.
 

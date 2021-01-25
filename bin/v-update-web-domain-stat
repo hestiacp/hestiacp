@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update domain statistics
 # options: USER DOMAIN
+# labels: web
+#
+# example: v-update-web-domain-stat alice acme.com
 #
 # The function runs log analyzer for specific webdomain.
 

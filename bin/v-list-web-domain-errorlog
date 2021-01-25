@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list web domain error log
 # options: USER DOMAIN [LINES] [FORMAT]
+# labels: web
+#
+# example: v-list-web-domain-errorlog admin acme.com
 #
 # The function of obtaining raw error web domain logs.
 

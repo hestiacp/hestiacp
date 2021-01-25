@@ -32,7 +32,8 @@ if (!empty($_POST['ok'])) {
             $v_key_parts = explode(' ',$_POST['v_key']);
             $key_id = trim($v_key_parts[2]);
             if($v_key_parts[2] == ''){
-                $_SESSION['error_msg']  = _('SSH KEY is invalid');
+                $v_key_parts[2] = md5(time());
+                $_POST['v_key'] .= ' '.$v_key_parts[2];
             }
     
             //for deleting / revoking key the last part user@domain is used therefore needs to be unique

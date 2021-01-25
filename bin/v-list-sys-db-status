@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list db status
 # options: [FORMAT]
+# labels: 
+#
+# v-list-sys-db-status
 #
 # The function lists db server status
 

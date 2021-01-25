@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete web domain SSL support
-# options: USER DOMAIN
+# options: USER DOMAIN [RESTART]
+# labels: web
+#
+# example: v-delete-web-domain-ssl admin acme.com
 #
 # The function disable https support and deletes SSL certificates.
 
@@ -30,13 +33,11 @@ format_domain_idn
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN'
+check_args '2' "$#" 'USER DOMAIN [RESTART]'
 is_format_valid 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
-is_object_unsuspended 'web' 'DOMAIN' "$domain"
 is_object_value_exist 'web' 'DOMAIN' "$domain" '$SSL'
 
 # Perform verification if read-only mode is enabled

@@ -1,0 +1,195 @@
+#!/bin/bash
+# info: Install RoundCube for Nginx/Apache2 
+# options: [MODE]
+# labels: hestia
+#
+# The function installs Round Cube
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+source $HESTIA/install/upgrade/upgrade.conf
+
+MODE=$2
+UPDATE="no"
+# Version and Download paths
+RC_FILE="roundcubemail-$rc_v-complete.tar.gz"
+RC_EXTRACT="roundcubemail-$rc_v"
+# Downloading full version
+RC_URL="https://github.com/roundcube/roundcubemail/releases/download/$rc_v/roundcubemail-$rc_v-complete.tar.gz"
+
+# Folder paths
+RC_INSTALL_DIR="/var/lib/roundcube"
+RC_CONFIG_DIR="/etc/roundcube"
+RC_LOG="/var/log/roundcube"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking root permissions
+if [ "x$(id -u)" != 'x0' ]; then
+    echo "ERROR: v-add-sys-roundcube can be run executed only by root user"
+    exit 10
+fi
+
+# Ensure that $HESTIA (/usr/local/hestia/) and other variables are valid.
+if [ -z "$HESTIA" ]; then
+    HESTIA="/usr/local/hestia"
+fi
+
+if [ -z "$HOMEDIR" ] || [ -z "$HESTIA_INSTALL_DIR" ]; then
+    echo "ERROR: Environment variables not present, installation aborted."
+    exit 2
+fi
+
+if [ -z "$(echo "$DB_SYSTEM" | grep -w 'mysql')" ]; then
+    echo "ERROR: Mysql not available. Instalation aborted"
+    exit 2
+fi
+
+if [ -d "/usr/share/roundcube" ]; then
+    echo "ERROR: Install done from atp source unable to continue"
+    exit 2;
+fi
+
+# Get current version 
+if [ -f "/var/lib/roundcube/index.php" ]; then
+    version=$(cat $RC_INSTALL_DIR/index.php | grep -o -E '[0-9].[0-9].[0-9]+' | head -1);
+    if [ "$version" == "$rc_v" ]; then
+        echo "Error: Installed version ($version) is equal as the availble version ($rc_v)"
+        exit 2;
+    else 
+        UPDATE="yes"
+    fi
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+if [ "$UPDATE" == "no" ]; then
+    rm  -f -r $RC_INSTALL_DIR
+    rm  -f -r $RC_CONFIG_DIR
+    
+    mkdir -p $RC_INSTALL_DIR/
+    mkdir -p $RC_CONFIG_DIR/
+    
+    cd "$RC_INSTALL_DIR"
+    [ ! -f "${RC_INSTALL_DIR}/${RC_FILE}" ] && wget "$RC_URL" --quiet -O "${RC_INSTALL_DIR}/${RC_FILE}"
+    
+    tar xzf $RC_FILE
+    cp -rf $RC_EXTRACT/* $RC_INSTALL_DIR
+    
+    # Delete old config folder
+    cp $RC_INSTALL_DIR/config/defaults.inc.php $RC_CONFIG_DIR/defaults.inc.php
+    rm -f -r $RC_INSTALL_DIR/config/
+    ln -s $RC_CONFIG_DIR/ ./config
+    # Replace with Hestia config
+    cp -f $HESTIA_INSTALL_DIR/roundcube/main.inc.php $RC_CONFIG_DIR/config.inc.php
+    cp -f $HESTIA_INSTALL_DIR/roundcube/mimetypes.php $RC_CONFIG_DIR/mimetypes.php
+    
+    cp -f $HESTIA_INSTALL_DIR/roundcube/hestia.php $RC_INSTALL_DIR/plugins/password/drivers/
+    mkdir -p $RC_CONFIG_DIR/plugins/password
+    mkdir -p $RC_CONFIG_DIR/plugins/newmail_notifier
+    mkdir -p $RC_CONFIG_DIR/plugins/zipdownload
+    
+    # Allow changes to the respective config / Create symlinks to /etc/roundcube/ 
+    cp -f $HESTIA_INSTALL_DIR/roundcube/config.inc.php $RC_CONFIG_DIR/plugins/password/config.inc.php
+    ln -s $RC_CONFIG_DIR/plugins/password/config.inc.php ./plugins/password/config.inc.php
+    cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_newmail_notifier.inc.php $RC_CONFIG_DIR/plugins/newmail_notifier/config.inc.php
+    ln -s $RC_CONFIG_DIR/plugins/newmail_notifier/config.inc.php ./plugins/newmail_notifier/config.inc.php
+    cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_zipdownload.inc.php $RC_CONFIG_DIR/plugins/zipdownload/config.inc.php
+    ln -s $RC_CONFIG_DIR/plugins/zipdownload/config.inc.php ./plugins/zipdownload/config.inc.php
+    
+    
+    chmod 640 $RC_CONFIG_DIR/config.inc.php
+    chown root:www-data $RC_CONFIG_DIR/config.inc.php
+    
+    # Log file 
+    if [ ! -d  $RC_LOG ];then
+        mkdir $RC_LOG
+    fi
+    chown www-data:root $RC_LOG
+    chmod 751 $RC_LOG
+    
+    if [ ! -z "$(echo "$DB_SYSTEM" | grep -w 'mysql')" ]; then
+        # Remove the following 2 lines when going live
+        mysql -e "DROP DATABASE roundcube"
+        mysql -e "DROP USER roundcube@localhost"
+        mysql -e "CREATE DATABASE roundcube"
+        # Mysql available on system
+        r=$(generate_password)
+        mysql -e "GRANT ALL ON roundcube.*
+         TO roundcube@localhost IDENTIFIED BY '$r'"
+        sed -i "s/%password%/$r/g" $RC_CONFIG_DIR/config.inc.php
+        mysql roundcube < /var/lib/roundcube/SQL/mysql.initial.sql
+    fi
+    # To do in future add support for Postgresql only setup
+    
+    rcDesKey="$(openssl rand -base64 30 | tr -d "/" | cut -c1-24)"
+    sed -i "s/%des_key%/$rcDesKey/g" $RC_CONFIG_DIR/config.inc.php
+    # Change hostname for password change
+    sed -i "s/localhost/$(hostname)/g" $RC_CONFIG_DIR/plugins/password/config.inc.php
+    
+    #Clean up
+    rm -f -r $RC_INSTALL_DIR/installer;
+    rm -f -r $RC_INSTALL_DIR/$RC_FILE;
+    rm -f -r $RC_INSTALL_DIR/$RC_EXTRACT;
+    
+    # Add robots.txt
+    echo "User-agent: *" > /var/lib/roundcube/robots.txt
+    echo "Disallow: /" >> /var/lib/roundcube/robots.txt
+    
+    # Updating hestia.conf
+    if [ -z "$(grep WEBMAIL_SYSTEM $HESTIA/conf/hestia.conf)" ]; then
+        $BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' 'roundcube'
+    else
+        if [  -z "$(echo "$WEBMAIL_SYSTEM" | grep -w 'roundcube')" ]; then
+           if [ ! -z "$WEBMAIL_SYSTEM" ]; then
+               $BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' "roundcube,$WEBMAIL_SYSTEM"
+           else
+               $BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' "roundcube"
+           fi
+        fi
+    fi
+    
+    phpenmod mcrypt > /dev/null 2>&1
+else
+    rm  -f -r $RC_INSTALL_DIR
+    mkdir $RC_INSTALL_DIR
+    cd "$RC_INSTALL_DIR"
+    [ ! -f "${RC_INSTALL_DIR}/${RC_FILE}" ] && wget "$RC_URL" --quiet -O "${RC_INSTALL_DIR}/${RC_FILE}"
+    
+    tar xzf $RC_FILE
+    cp -rf $RC_EXTRACT/* $RC_INSTALL_DIR
+    
+    cp -f $RC_INSTALL_DIR/config/defaults.inc.php $RC_CONFIG_DIR/defaults.inc.php
+    rm -f -r $RC_INSTALL_DIR/config/
+    ln -s $RC_CONFIG_DIR/ ./config
+
+    ln -s $RC_CONFIG_DIR/plugins/password/config.inc.php ./plugins/password/config.inc.php
+    ln -s $RC_CONFIG_DIR/plugins/newmail_notifier/config.inc.php ./plugins/newmail_notifier/config.inc.php
+    ln -s $RC_CONFIG_DIR/plugins/zipdownload/config.inc.php ./plugins/zipdownload/config.inc.php  
+    
+    $RC_INSTALL_DIR/bin/update.sh --version "$version"
+        
+    rm -f -r $RC_INSTALL_DIR/installer;
+    rm -f -r $RC_INSTALL_DIR/$RC_FILE;
+    rm -f -r $RC_INSTALL_DIR/$RC_EXTRACT;  
+fi
+#----------------------------------------------------------#
+#                       Logging                            #
+#----------------------------------------------------------#
+
+
+
+log_history "Rouncube successfuly installed" '' 'admin'
+log_event "$OK" "$ARGUMENTS"

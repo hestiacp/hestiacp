@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add webdomain proxy support
 # options: USER DOMAIN [TEMPLATE] [EXTENTIONS] [RESTART]
+# labels: web
+#
+# example: v-add-web-domain-proxy admin example.com
 #
 # The function enables proxy support for a domain. This can significantly
 # improve website speed.

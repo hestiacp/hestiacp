@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: backup system user with all its objects
 # options: USER NOTIFY
+# labels: 
+#
+# example: v-backup-user admin yes
 #
 # The call is used for backing up user with all its domains and databases.
 
@@ -35,6 +38,8 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_backup_enabled
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -209,6 +214,26 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
             fi
         fi
 
+        domain_conf=$(grep "DOMAIN='$domain'" $conf)
+        parse_object_kv_list_non_eval domain_conf
+        
+        mkdir -p template/$WEB_SYSTEM/
+        mkdir template/php-fpm/
+        
+        if [ $WEB_BACKEND == 'php-fpm' ]; then 
+            cp $HESTIA/data/templates/web/$WEB_SYSTEM/php-fpm/$TPL.tpl template/$WEB_SYSTEM/
+            cp $HESTIA/data/templates/web/$WEB_SYSTEM/php-fpm/$TPL.stpl template/$WEB_SYSTEM/
+            cp $HESTIA/data/templates/web/php-fpm/$BACKEND.tpl template/php-fpm/
+        else
+            cp $HESTIA/data/templates/web/$WEB_SYSTEM/$TPL.tpl template/$WEB_SYSTEM/
+            cp $HESTIA/data/templates/web/$WEB_SYSTEM/$TPL.stpl template/$WEB_SYSTEM/   
+        fi
+        if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
+            mkdir  template/$PROXY_SYSTEM
+            cp $HESTIA/data/templates/web/$PROXY_SYSTEM/$PROXY.tpl template/$PROXY_SYSTEM/
+            cp $HESTIA/data/templates/web/$PROXY_SYSTEM/$PROXY.stpl template/$PROXY_SYSTEM/      
+        fi
+        
         # Backup custom config / backup LE config
         for sconfig in $(ls $HOMEDIR/$user/conf/web/|grep ".$domain.conf"); do
             cp $HOMEDIR/$user/conf/web/$sconfig conf/
@@ -245,7 +270,11 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
         set +f
 
         # Backup files
-        tar ${fargs[@]} -cpf- * | gzip -$BACKUP_GZIP - > $tmpdir/web/$domain/domain_data.tar.gz
+        if [ "$BACKUP_MODE" = 'zstd' ]; then
+            tar ${fargs[@]} -cpf- * | zstd -$BACKUP_GZIP - > $tmpdir/web/$domain/domain_data.tar.zst
+        else    
+            tar ${fargs[@]} -cpf- * | gzip -$BACKUP_GZIP - > $tmpdir/web/$domain/domain_data.tar.gz
+        fi
     done
 
     # Print total
@@ -358,10 +387,13 @@ if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
                     tee -a $BACKUP/$user.log
             fi
         done
-
         # Compress archive
         if [ ${#accounts[@]} -gt 0 ]; then
-            tar -cpf- ${accounts[@]} |gzip -$BACKUP_GZIP - > $tmpdir/mail/$domain/accounts.tar.gz
+            if [ "$BACKUP_MODE" = 'zstd' ]; then
+                tar -cpf- ${accounts[@]}  | zstd -$BACKUP_GZIP - > $tmpdir/mail/$domain/accounts.tar.zst
+            else    
+                tar -cpf- ${accounts[@]} | gzip -$BACKUP_GZIP - > $tmpdir/mail/$domain/accounts.tar.gz
+            fi        
         fi
     done
 
@@ -406,7 +438,12 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
         grep "DB='$database'" $conf > hestia/db.conf
 
         dump="$tmpdir/db/$database/$database.$TYPE.sql"
-        dumpgz="$tmpdir/db/$database/$database.$TYPE.sql.gz"
+        if [ "$BACKUP_MODE" = 'zstd' ]; then
+                    dumpgz="$tmpdir/db/$database/$database.$TYPE.sql.zst"
+        else
+            dumpgz="$tmpdir/db/$database/$database.$TYPE.sql.gz"        
+        fi
+
         grants="$tmpdir/db/$database/conf/$database.$TYPE.$DBUSER"
         if [ ! -f "$dumpgz" ]; then
 
@@ -432,7 +469,12 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
             esac
 
             # Compress dump
-            gzip -$BACKUP_GZIP $dump
+            if [ "$BACKUP_MODE" = 'zstd' ]; then
+                zstd -$BACKUP_GZIP $dump
+                rm $dump;
+            else    
+                gzip -$BACKUP_GZIP $dump
+            fi                     
         fi
     done
 
@@ -508,7 +550,12 @@ if [ "$USER" != '*' ]; then
             check_backup_conditions
 
             # Backup files and dirs
-            tar --anchored -cpf- ${fargs[@]} $udir |gzip -$BACKUP_GZIP - > $tmpdir/user_dir/$udir.tar.gz
+            if [ "$BACKUP_MODE" = 'zstd' ]; then
+                tar --anchored -cpf- ${fargs[@]} $udir | zstd -$BACKUP_GZIP - > $tmpdir/user_dir/$udir.tar.zst
+            else    
+                tar --anchored -cpf- ${fargs[@]} $udir | gzip -$BACKUP_GZIP - > $tmpdir/user_dir/$udir.tar.gz
+            fi 
+            
         fi
     done
     set +f
@@ -522,6 +569,10 @@ if [ "$USER" != '*' ]; then
         echo -e "$(date "+%F %T") *** $i directories ***" |\
             tee -a $BACKUP/$user.log
     fi
+fi
+
+if [ "$BACKUP_MODE" = 'zstd' ]; then
+    touch $tmpdir/.zstd
 fi
 
 # Get backup size
@@ -543,6 +594,7 @@ for backup_type in $(echo -e "${BACKUP_SYSTEM//,/\\n}"); do
         ftp)   ftp_backup ;;
         sftp)  sftp_backup ;;
         google) google_backup ;;
+        b2) b2_backup ;;
     esac
 done
 

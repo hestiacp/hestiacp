@@ -1,0 +1,58 @@
+#!/bin/bash
+# info: Adding force SSL for a domain
+# options: USER DOMAIN [SSL] 
+# labels: hestia web
+#
+# example: v-add-web-domain-ssl-preset
+#
+# Up on creating an web domain set the SSL Force values due to the delay of LE due to DNS propergation over DNS cluster
+# When LE has been activated it will set the actions
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+ssl=$3
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN [SSL]'
+is_format_valid 'user' 'domain' 'ssl'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Load domain data
+parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
+
+if [  "$ssl" = "yes" ]; then
+    if [ -z "$SSL_FORCE" ]; then
+    add_object_key "web" 'DOMAIN' "$domain" 'SSL_FORCE' 'SSL_HOME'
+    fi
+
+    # Set forcessl flag to enabled
+    update_object_value 'web' 'DOMAIN' "$domain" '$SSL_FORCE' 'yes'
+fi
+
+# Logging
+log_history "Set values SSL FORCE / HSTS for $domain"
+log_event "$OK" "$ARGUMENTS"
+
+exit

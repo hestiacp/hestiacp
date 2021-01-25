@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: unsuspend databases
 # options: USER
+# labels: panel
 #
 # The function for unsuspending all user's databases.
 
@@ -27,6 +28,8 @@ is_format_valid 'user'
 is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

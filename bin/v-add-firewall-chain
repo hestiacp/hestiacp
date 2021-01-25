@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add firewall chain
 # options: CHAIN [PORT] [PROTOCOL] [PROTOCOL]
+# labels: 
+#
+# example: v-add-firewall-chain CRM 5678 TCP
 #
 # The function adds new rule to system firewall
 
@@ -29,6 +32,7 @@ fi
 
 # Includes
 source $HESTIA/func/main.sh
+source $HESTIA/func/firewall.sh
 source $HESTIA/conf/hestia.conf
 
 
@@ -46,6 +50,9 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+# Self heal iptables links
+heal_iptables_links
 
 # Checking known chains
 case $chain in

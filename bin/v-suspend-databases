@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: suspend databases
 # options: USER
+# labels: panel
+#
+# example: v-suspend-databases admin
 #
 # The function for suspending of all databases of a single user.
 

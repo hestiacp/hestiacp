@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update network rrd
 # options: PERIOD
+# labels: panel
+#
+# example: v-update-sys-rrd-net
 #
 # The function is for updating network usage rrd database and graphic.
 
@@ -41,7 +44,7 @@ ifaces=$(echo "$ndev" |grep : |cut -f 1 -d : | sed "s/ //g")
 
 # Parsing excludes
 if [ -z "$RRD_IFACE_EXCLUDE" ]; then
-    RRD_IFACE_EXCLUDE='lo'
+    RRD_IFACE_EXCLUDE='lo,docker0,br-.*,veth.*'
 fi
 for exclude in $(echo ${RRD_IFACE_EXCLUDE//,/ }); do
     ifaces=$(echo "$ifaces" |grep -vw "$exclude" )

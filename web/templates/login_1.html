@@ -5,13 +5,13 @@
                         <table>
                             <tr>
                                 <td style="padding: 22px 30px 0 42px; height: 280px; width: 170px;">
-                                    <a href="/"><img border=0 src="/images/logo.svg" alt="<?=_('Hestia Control Panel');?>" style="margin-top: 70px;" /></a>
+                                    <a href="/"><img border=0 src="/images/logo.svg" title="<?=_('Hestia Control Panel');?>" style="margin-top: 70px;" /></a>
                                 </td>
                                 <td style="padding: 40px 60px 0 0;" class="animated fadeIn">
                                     <form method="post" action="/login/" id="form_login">
                                     <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
                                     <input type="hidden" name="user" value="<?php echo $_POST['user']; ?>">
-
+                                    <input type="hidden" name="murmur" value="<?php echo $_POST['murmur']; ?>" id="murmur">    
                                     <table class="login-box">
                                         <tr>
                                             <td style="padding: 12px 0 0 2px;" class="login-welcome">
@@ -58,5 +58,7 @@
                 </tr>
             </table>
         </center>
+        <script src="/inc/jquery/jquery-3.5.1.min.js"></script>
+        <script type="text/javascript" src="/js/fingerprint2.min.js?<?=JS_LATEST_UPDATE?>"></script>
     </body>
 </html>

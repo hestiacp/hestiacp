@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: rebuild web domains
 # options: USER [RESTART]
+# labels: 
+#
+# example: v-rebuild-web-domains
 #
 # The function rebuilds web configuration files.
 
@@ -31,7 +34,8 @@ is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 
-
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -95,7 +99,11 @@ fi
 # Starting rebuild loop for each web domain
 for domain in $($BIN/v-list-web-domains $user plain |cut -f 1); do
     if [ ! -z "$WEB_BACKEND" ]; then
-        template=$(get_object_value 'web' 'DOMAIN' "$domain" '$BACKEND')
+        template=$(get_object_value 'web' 'DOMAIN' "$domain" '$BACKEND');
+        if [ -z "$template" ]; then 
+            template="default"
+            update_object_value 'web' 'DOMAIN' "$domain" '$BACKEND' 'default'  
+        fi
         $BIN/v-add-web-domain-backend $user $domain $template $restart
     fi
     rebuild_web_domain_conf

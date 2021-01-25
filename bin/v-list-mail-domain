@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list mail domain
 # options: USER DOMAIN [FORMAT]
+# labels: mail
+#
+# example: v-list-mail-domain user01 mydomain.com
 #
 # The function of obtaining the list of domain parameters.
 
@@ -34,7 +37,8 @@ json_list() {
         "SUSPENDED": "'$SUSPENDED'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'",
-        "WEBMAIL_ALIAS": "'$WEBMAIL_ALIAS.$domain'"
+        "WEBMAIL_ALIAS": "'$WEBMAIL_ALIAS.$domain'",
+        "WEBMAIL":"'$WEBMAIL'"
         }'
     echo '}'
 }
@@ -54,20 +58,21 @@ shell_list() {
     echo "TIME:           $TIME"
     echo "DATE:           $DATE"
     echo "WEBMAIL_ALIAS:  $WEBMAIL_ALIAS.$domain"
+    echo "WEBMAIL:        $WEBMAIL"
 }
 
 # PLAIN list function
 plain_list() {
     echo -ne "$DOMAIN\t$ANTIVIRUS\t$ANTISPAM\t$DKIM\t$CATCHALL\t"
-    echo -e "$ACCOUNTS\t$U_DISK\t$SSL\t$LETSENCRYPT\t$SUSPENDED\t$TIME\t$DATE\t$WEBMAIL_ALIAS.$domain"
+    echo -e "$ACCOUNTS\t$U_DISK\t$SSL\t$LETSENCRYPT\t$SUSPENDED\t$TIME\t$DATE\t$WEBMAIL_ALIAS.$domain\t$WEBMAIL"
 }
 
 # CSV list function
 csv_list() {
     echo -n "DOMAIN,ANTIVIRUS,ANTISPAM,DKIM,CATCHALL,ACCOUNTS,U_DISK,"
-    echo "SSL,LETSENCRYPT,SUSPENDED,TIME,DATE"
+    echo "SSL,LETSENCRYPT,SUSPENDED,TIME,DATE,WEBMAIL_ALIAS,WEBMAIL"
     echo -n "$DOMAIN,$ANTIVIRUS,$ANTISPAM,$DKIM,$CATCHALL,$ACCOUNTS,$U_DISK"
-    echo "$SSL,$LETSENCRYPT,$SUSPENDED,$TIME,$DATE,$WEBMAIL_ALIAS.$domain"
+    echo "$SSL,$LETSENCRYPT,$SUSPENDED,$TIME,$DATE,$WEBMAIL_ALIAS.$domain,$WEBMAIL"
 }
 
 

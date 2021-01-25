@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update host certificate for hestia
 # options: USER HOSTNAME
+# labels: panel
+#
+# example: v-update-host-certificate admin example.com
 #
 # Function updates certificates for hestia
 
@@ -43,6 +46,9 @@ if [ ! -f "/home/$user/conf/web/$hostname/ssl/$hostname.pem" ]; then
     echo "Error: domain $hostname does not have an SSL certificate.";
     exit 1;
 fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

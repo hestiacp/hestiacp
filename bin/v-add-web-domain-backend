@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add web domain backend
 # options: USER DOMAIN [TEMPLATE] [RESTART]
+# labels: web
+#
+# example: v-add-web-domain-backend admin exmaple.com default yes
 #
 # The call is used for adding web backend configuration.
 
@@ -66,9 +69,13 @@ cat $WEBTPL/$WEB_BACKEND/$template.tpl |\
         -e "s|%backend%|$backend_type|g"\
         -e "s|%backend_version%|$backend_version|g" > $pool/$backend_type.conf
 
+
 # Set correct document root path
 if [ ! -z "$CUSTOM_DOCROOT" ]; then
     docroot="$CUSTOM_DOCROOT"
+    if [ ! -z "$CUSTOM_PHPROOT" ]; then
+        docroot="$CUSTOM_PHPROOT"
+    fi
     sed -i "s|/home\/$user\/web\/$domain\/public_html|$docroot|g"  $pool/$backend_type.conf
 else
     docroot="$HOMEDIR/$user/web/$domain/public_html/"

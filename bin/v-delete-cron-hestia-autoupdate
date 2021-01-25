@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: delete hestia autoupdate cron job
 # options: NONE
+# labels: hestia
 #
 # The function deletes hestia autoupdate cron job.
 

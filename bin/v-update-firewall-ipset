@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update firewall ipset
 # options: [REFRESH]
+# labels: hestia
+#
+# example: v-update-firewall-ipset
 #
 # The function creates ipset lists and updates the lists if they are expired or ondemand
 
@@ -24,6 +27,9 @@ source $HESTIA/conf/hestia.conf
 
 is_boolean_format_valid "$force" 'bool (yes/no)'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 ipset_hstobject='../../data/firewall/ipset'
 

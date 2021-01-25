@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update memory rrd
 # options: PERIOD
+# labels: panel
+#
+# example: v-update-sys-rrd-mem
 #
 # The function is for updating memory rrd database and graphic.
 

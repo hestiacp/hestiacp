@@ -1,6 +1,9 @@
 #!/bin/bash
-# info: list web templates
-# options: USER [FORMAT]
+# info: list system themes
+# options: [FORMAT]
+# labels: hestia
+#
+# example: v-list-sys-themes
 #
 # The function for obtaining the list of themes in the theme
 # library and displaying them in the backend or user interface.

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: rebuild mail domain
 # options: USER DOMAIN
+# labels: hestia
+#
+# example: v-rebuild-mail-domain user domain.tld
 #
 # The function rebuilds configuration files for a single domain.
 
@@ -42,7 +45,8 @@ if [ "$MAIL_SYSTEM" = 'remote' ]; then
     exit
 fi
 
-
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -53,8 +57,9 @@ rebuild_mail_domain_conf
 # Rebuild webmail configuration
 if [ ! -z "$WEB_SYSTEM" ] || [ ! -z "$PROXY_SYSTEM" ]; then
     if [ ! -z "$IMAP_SYSTEM" ]; then
+        WEBMAIL=$(get_object_value 'web' 'DOMAIN' "$domain" "$WEBMAIL")
         $BIN/v-delete-sys-webmail $user $domain '' 'yes'
-        $BIN/v-add-sys-webmail $user $domain '' 'yes'
+        $BIN/v-add-sys-webmail $user $domain $WEBMAIL '' 'yes'
     fi
 fi
 

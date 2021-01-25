@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change user package
 # options: USER PACKAGE [FORCE]
+# labels: panel
+#
+# example: v-change-user-package admin yourpackage
 #
 # The function changes user's hosting package.
 
@@ -164,8 +167,7 @@ change_user_package
 
 # Update user shell
 shell_conf=$(echo "$pkg_data" | grep 'SHELL' | cut -f 2 -d \')
-shell=$(grep -w "$shell_conf" /etc/shells |head -n1)
-/usr/bin/chsh -s "$shell" "$user" &>/dev/null
+$BIN/v-change-user-shell $user $shell_conf
 
 # Run template trigger
 if [ -x "$HESTIA/data/packages/$package.sh" ]; then

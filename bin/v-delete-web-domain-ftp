@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete webdomain ftp account
 # options: USER DOMAIN FTP_USER
+# labels: web
+#
+# example: v-delete-web-domain-ftp admin wonderland.com bob_ftp
 #
 # The function deletes additional ftp account.
 
@@ -34,9 +37,7 @@ check_args '3' "$#" 'USER DOMAIN FTP_USER'
 is_format_valid 'user' 'domain' 'ftp_user'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
-is_object_unsuspended 'web' 'DOMAIN' "$domain"
 get_domain_values 'web'
 if [ -z "$(echo $FTP_USER | tr ':' '\n' | grep ^$ftp_user$)" ]; then
     echo "Error: account $ftp_user doesn't exist"

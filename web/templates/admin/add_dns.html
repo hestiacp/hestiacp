@@ -4,7 +4,7 @@
             <a class="ui-button cancel" id="btn-back" href="/list/dns/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" title="<?=_('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
+            <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
           </div>
         </div>
       </div>
@@ -88,6 +88,27 @@
                             <tr>
                                 <td class="vst-text">
                                   <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print _('Template') . "<span class='optional'>" . strtoupper($_SESSION['DNS_SYSTEM']) . "</span>";?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_template">
+                                                    <?php
+                                                        foreach ($templates as $key => $value) {
+                                                            echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
+                                                            $svalue = "'".$value."'";
+                                                            if ((!empty($v_template)) && ( $value == $v_template ) || ($svalue == $v_template)){
+                                                                echo ' selected' ;
+                                                            }
+                                                            echo ">".htmlentities($value)."</option>\n";
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </td>
+                                        </tr>
                                         <tr>
                                             <td class="vst-text input-label">
                                                 <?php print _('Expiration Date');?> <span class="optional">(<?=_('YYYY-MM-DD');?>)</span>

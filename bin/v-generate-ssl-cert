@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: generate self signed certificate and CSR request
 # options: DOMAIN EMAIL COUNTRY STATE CITY ORG UNIT [ALIASES] [FORMAT]
+# labels: panel
+#
+# example: v-generate-ssl-cert example.com mail@yahoo.com USA California Monterey ACME.COM IT
 #
 # The function generates self signed SSL certificate and CSR request
 
@@ -72,6 +75,9 @@ is_format_valid 'domain_alias' 'format'
 if [ ! -f /root/.rnd ]; then
     touch /root/.rnd
 fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

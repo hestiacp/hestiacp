@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list dns domains
 # options: USER [FORMAT]
+# labels: dns
+#
+# example: v-list-dns-domains admin
 #
 # The function for obtaining all DNS domains of a user.
 

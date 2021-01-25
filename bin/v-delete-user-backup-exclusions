@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete backup exclusion
 # options: USER [SYSTEM]
+# labels: panel
+#
+# example: v-delete-user-backup-exclusions admin
 #
 # The function for deleting backup exclusion
 

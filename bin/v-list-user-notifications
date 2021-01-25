@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list user notifications
 # options: USER [FORMAT]
+# labels: 
+#
+# example: v-list-user-notifications admin
 #
 # The function for getting the list notifications
 

@@ -1,6 +1,9 @@
 #!/bin/bash
-# info: add log analyzer to generate domain statitics
+# info: add log analyzer to generate domain statistics
 # options: USER DOMAIN TYPE
+# labels: web
+#
+# example: v-add-web-domain-stats admin example.com awstats
 #
 # The call is used for enabling log analyzer system to a domain. For viewing
 # the domain statistics use http://domain.tld/vstats/ link. Access this page

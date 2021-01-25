@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change sys language
-# options: LANGUAGE
+# options: LANGUAGE [UPDATE_USERS]
+# labels: panel
+#
+# example: v-change-sys-language ru
 #
 # The function for changing system language.
 
@@ -31,7 +34,7 @@ is_language_valid() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'LANGUAGE'
+check_args '1' "$#" 'LANGUAGE [UPDATE_USERS]'
 is_format_valid 'language'
 is_language_valid $language
 

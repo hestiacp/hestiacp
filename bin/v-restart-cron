@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: restart cron service
 # options: NONE
+# labels: panel
+#
+# example: v-restart-cron
 #
 # The function tells crond service to reread its configuration files.
 

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: remove ssl force from domain
 # options: USER DOMAIN [RESTART]
+# labels: hestia
+#
+# example: v-delete-web-domain-ssl-hsts user domain.tld
 #
 # The function removes force SSL configurations.
 
@@ -25,9 +28,7 @@ source $HESTIA/conf/hestia.conf
 check_args '2' "$#" 'USER DOMAIN'
 is_format_valid 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
-is_object_unsuspended 'web' 'DOMAIN' "$domain"
 is_object_valid 'web' 'DOMAIN' "$domain" "$SSL_FORCE"
 
 # Perform verification if read-only mode is enabled

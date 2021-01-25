@@ -1,8 +1,12 @@
 #!/bin/bash
 # info: add system quota
 # options: NONE
+# labels: 
+#
+# example: v-add-sys-quota
 #
 # The script enables filesystem quota on /home partition
+# Some kernels do require additional packages to be installed first
 
 
 #----------------------------------------------------------#
@@ -42,7 +46,8 @@ if [ $? -ne 0 ]; then
     fi
 fi
 
-
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#

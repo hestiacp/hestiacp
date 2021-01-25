@@ -22,3 +22,8 @@ source /usr/local/hestia/conf/hestia.conf
 if [ ! -z "$BACKEND_PORT" ]; then
     /usr/local/hestia/bin/v-change-sys-port $BACKEND_PORT
 fi
+
+# Restart hestia service
+if [ -f "/etc/init.d/hestia" ]; then
+    systemctl restart hestia > /dev/null 2>&1
+fi

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update domains statistics
 # options: USER
+# labels: web
+#
+# example: v-update-web-domains-stat admin
 #
 # The function runs log analyzer usage for all user webdomains.
 

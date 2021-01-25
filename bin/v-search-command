@@ -1,12 +1,15 @@
 #!/bin/bash
-
 # info: search for available commands
+# options: ARG1 [ARG...]
+# labels: hestia
+#
+# example: v-search-command web
 #
 # This function searches for available Hestia Control Panel commands
 # and returns results based on the specified criteria.
-#
 # Originally developed for VestaCP by Federico Krum
 # https://github.com/FastDigitalOceanDroplets/VestaCP/blob/master/files/v-search-command
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -21,6 +24,9 @@ if [ $# -eq 0 ]; then
     echo "Usage: v-search-command ARG1 [ARG2] [ARG...]"
     exit 1
 fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

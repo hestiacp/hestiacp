@@ -1,11 +1,13 @@
 #!/bin/bash
 # info: change phpmyadmin/phppgadmin alias url
-# options: type alias
-# example:  v-change-sys-db-alias pma phpmyadmin
-#           Sets phpMyAdmin alias to phpmyadmin
+# options: TYPE ALIAS
+# labels: hestia
 #
-# example:  v-change-sys-db-alias pga phppgadmin
-#           Sets phpPgAdmin alias to phppgadmin
+# example: v-change-sys-db-alias pma phpmyadmin
+#          # Sets phpMyAdmin alias to phpmyadmin
+#
+# example: v-change-sys-db-alias pga phppgadmin
+#          # Sets phpPgAdmin alias to phppgadmin
 #
 # This function changes the database editor url in
 # apache2 or nginx configuration.

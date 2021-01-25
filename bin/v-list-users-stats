@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list overall user stats
 # options: [FORMAT]
+# labels: 
 #
 # The function for listing overall user statistics
 

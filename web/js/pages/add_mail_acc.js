@@ -66,6 +66,16 @@ App.Helpers.isUnlimitedValue = function(value) {
 // Trigger listeners
 App.Listeners.MAIL_ACC.init();
 App.Listeners.MAIL_ACC.checkbox_unlimited_feature();
+$('#v_blackhole').on('click', function(evt){
+    if($('#v_blackhole').is(':checked')){
+       $('#v_fwd').prop('disabled', true);
+       $('#v_fwd_for').prop('checked', true);
+       $('#id_fwd_for').hide();
+    }else{
+       $('#v_fwd').prop('disabled', false);
+       $('#id_fwd_for').show();        
+    }
+});
 $('form[name="v_quota"]').on('submit', function(evt) {
     $('input:disabled').each(function(i, elm) {
         $(elm).attr('disabled', false);

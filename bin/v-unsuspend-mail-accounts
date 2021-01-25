@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: unsuspend all mail domain accounts
 # options: USER DOMAIN
+# labels: mail
+#
+# example: v-unsuspend-mail-accounts admin acme.com
 #
 # The function unsuspends all mail domain accounts.
 
@@ -36,6 +39,8 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
 is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

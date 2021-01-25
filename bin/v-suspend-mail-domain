@@ -1,8 +1,11 @@
 #!/bin/bash
 # info: suspend mail domain
 # options: USER DOMAIN
+# labels: mail
 #
-# The function suspends mail domain. 
+# example: v-suspend-mail-domain admin domain.com
+#
+# The function suspends mail domain.
 
 
 #----------------------------------------------------------#

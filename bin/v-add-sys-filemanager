@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: add file manager functionality to Hestia Control Panel
-# options: none
+# options: [MODE]
+# labels: hestia
 #
 # The function installs the File Manager on the server
 # for access through the Web interface.
@@ -52,13 +53,6 @@ if [ ! -f "$COMPOSER_BIN" ]; then
     fi
 fi
 
-# Ensure PHP 7.3 is installed before continuing
-if [ ! -f "/usr/bin/php7.3" ]; then
-    $BIN/v-add-user-notification admin 'File Manager installation failed!' '<b>Unable to proceed with installation of File Manager.</b><br><br>Package <b>php7.3-cli</b> is missing from your system. Please check your PHP installation and environment settings.'
-    echo "ERROR: PHP 7.3 not installed on your system, aborting."
-    exit 1
-fi
-
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
@@ -81,7 +75,7 @@ cp --recursive --force ${HESTIA_INSTALL_DIR}/filemanager/filegator/* "${FM_INSTA
 
 chown $user: -R "${FM_INSTALL_DIR}"
 
-COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php7.3 $COMPOSER_BIN --quiet --no-dev install
+COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php $COMPOSER_BIN --quiet --no-dev install
 
 # Check if installation was successful, if not abort script and throw error message notification and clean-up
 if [ $? -ne 0 ]; then

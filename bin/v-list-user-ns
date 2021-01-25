@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list user nameservers
 # options: USER [FORMAT]
+# labels: 
+#
+# example: v-list-user-ns admin
 #
 # Function for obtaining the list of user's DNS servers.
 

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: schedule user backup restoration
 # options: USER BACKUP [WEB] [DNS] [MAIL] [DB] [CRON] [UDIR]
+# labels: panel
+#
+# example: v-schedule-user-restore 2019-04-22_01-00-00.tar
 #
 # The function for scheduling user backup restoration.
 
@@ -35,6 +38,8 @@ is_object_valid 'user' 'USER' "$user"
 is_backup_enabled
 is_backup_scheduled 'restore'
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

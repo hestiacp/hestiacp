@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update databases disk usage
 # options: USER
+# labels: panel
+#
+# example: v-update-databases-disk admin
 #
 # The function recalculates disk usage for all user databases.
 

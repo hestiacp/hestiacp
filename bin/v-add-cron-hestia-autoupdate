@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: add cron job for hestia autoupdates
 # options: MODE
+# labels: 
 #
 # The function adds cronjob for hestia autoupdate from apt or git.
 

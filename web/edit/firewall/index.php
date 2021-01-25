@@ -66,34 +66,59 @@ if (!empty($_POST['save'])) {
         header('location: /login/');
         exit();
     }
-
-    $v_rule = escapeshellarg($_GET['rule']);
-    $v_action = escapeshellarg($_POST['v_action']);
-    $v_protocol = escapeshellarg($_POST['v_protocol']);
-    $v_port = str_replace(" ",",", $_POST['v_port']);
-    $v_port = preg_replace('/\,+/', ',', $v_port);
-    $v_port = trim($v_port, ",");
-    $v_port = escapeshellarg($v_port);
-    $v_ip = escapeshellarg($_POST['v_ip']);
-    $v_comment = escapeshellarg($_POST['v_comment']);
-
-    // Change Status
-    exec (HESTIA_CMD."v-change-firewall-rule ".$v_rule." ".$v_action." ".$v_ip."  ".$v_port." ".$v_protocol." ".$v_comment, $output, $return_var);
-    check_return_code($return_var,$output);
-    unset($output);
-
-    $v_rule = $_GET['v_rule'];
-    $v_action = $_POST['v_action'];
-    $v_protocol = $_POST['v_protocol'];
-    $v_port = str_replace(" ",",", $_POST['v_port']);
-    $v_port = preg_replace('/\,+/', ',', $v_port);
-    $v_port = trim($v_port, ",");
-    $v_ip = $_POST['v_ip'];
-    $v_comment = $_POST['v_comment'];
-
-    // Set success message
-    if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = _('Changes has been saved.');
+    // Check empty fields
+    if (empty($_POST['v_action'])) $errors[] = _('action');
+    if (empty($_POST['v_protocol'])) $errors[] = _('protocol');
+    if (empty($_POST['v_port']) && strlen($_POST['v_port']) == 0) $errors[] = _('port');
+    if (empty($_POST['v_ip'])) $errors[] = _('ip address');
+    if (!empty($errors[0])) {
+        foreach ($errors as $i => $error) {
+            if ( $i == 0 ) {
+                $error_msg = $error;
+            } else {
+                $error_msg = $error_msg.", ".$error;
+            }
+        }
+        $_SESSION['error_msg'] = sprintf(_('Field "%s" can not be blank.'),$error_msg);
+    }
+    if (!empty($_SESSION['error_msg'])) {
+        $v_rule = escapeshellarg($_GET['rule']);
+        $v_action = escapeshellarg($_POST['v_action']);
+        $v_protocol = escapeshellarg($_POST['v_protocol']);
+        $v_port = str_replace(" ",",", $_POST['v_port']);
+        $v_port = preg_replace('/\,+/', ',', $v_port);
+        $v_port = trim($v_port, ",");
+        $v_port = escapeshellarg($v_port);
+        $v_ip = escapeshellarg($_POST['v_ip']);
+        $v_comment = escapeshellarg($_POST['v_comment']);
+    
+        // Change Status
+        exec (HESTIA_CMD."v-change-firewall-rule ".$v_rule." ".$v_action." ".$v_ip."  ".$v_port." ".$v_protocol." ".$v_comment, $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
+    
+        $v_rule = $_GET['v_rule'];
+        $v_action = $_POST['v_action'];
+        $v_protocol = $_POST['v_protocol'];
+        $v_port = str_replace(" ",",", $_POST['v_port']);
+        $v_port = preg_replace('/\,+/', ',', $v_port);
+        $v_port = trim($v_port, ",");
+        $v_ip = $_POST['v_ip'];
+        $v_comment = $_POST['v_comment'];
+    
+        // Set success message
+        if (empty($_SESSION['error_msg'])) {
+            $_SESSION['ok_msg'] = _('Changes has been saved.');
+        }
+    }else{
+        $v_rule = $_GET['v_rule'];
+        $v_action = $_POST['v_action'];
+        $v_protocol = $_POST['v_protocol'];
+        $v_port = str_replace(" ",",", $_POST['v_port']);
+        $v_port = preg_replace('/\,+/', ',', $v_port);
+        $v_port = trim($v_port, ",");
+        $v_ip = $_POST['v_ip'];
+        $v_comment = $_POST['v_comment'];
     }
 }
 

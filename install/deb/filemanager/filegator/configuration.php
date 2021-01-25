@@ -51,7 +51,13 @@ $dist_config['services']['Filegator\Services\Auth\AuthInterface'] = [
     ];
 
 $dist_config['services']['Filegator\Services\View\ViewInterface']['config'] = [
-    'add_to_head' => '',
+    'add_to_head' => '
+    <style>
+        .logo {
+            width: 46px;
+        }
+    </style>
+    ',
     'add_to_body' => '
 <script>
     var checkVueLoaded = setInterval(function() {

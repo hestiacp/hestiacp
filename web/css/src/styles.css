@@ -1712,8 +1712,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .units .l-unit.l-unit--outdated {
   background-color: #ffcaca;
   color: #4b4b4b;
-  border-left: 5px solid #ff6f6f;
-  border-bottom: 1px solid #fff;
 }
 
 .l-unit--suspended .l-unit__name,
@@ -1755,8 +1753,9 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 
 .l-unit--outdated.selected {
-  background: #765D5D !important;
+  background: #ff9494 !important;
   color: #333 !important;
+  text-shadow: none !important;
 }
 
 .l-unit--suspended.selected .l-unit__name,
@@ -1977,6 +1976,12 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .l-unit__stat-col--left.border-clear {
   border-left: 1px solid transparent;
+}
+
+.l-unit__stat-col--left.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .l-unit__stat-col--left.super-compact {
@@ -2548,19 +2553,23 @@ label:hover {
 }
 
 .vst-input:disabled,
-.vst-list:disabled {
+.vst-list:disabled,
+.vst-textinput:disabled
+ {
   background-color: #e7e7e7;
   text-shadow: 1px 1px rgba(255,255,255,1);
   color: #686868;
 }
 
-.vst-input:focus:disabled {
+.vst-input:focus:disabled,
+.vst-textinput:disabled {
   border-color: #f1f1f1;
   background-color: #f1f1f1;
 }
 
 .vst-input:disabled:hover,
-.vst-list:disabled:hover {
+.vst-list:disabled:hover
+.vst-textinput:disabled:hover {
   border-color: #cfcfcf;
 }
 
@@ -3578,6 +3587,10 @@ form#vstobjects.suspended {
 
 .lang-fr .search-input, .lang-de .search-input, .lang-nl .search-input {
   width: 100px;
+}
+
+.lang-de .l-sort-toolbar .l-select {
+  max-width: 140px;
 }
 
 .float-left {

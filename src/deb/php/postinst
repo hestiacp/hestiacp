@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -e
+
+if [ "$1" != "configure" ]; then
+    exit 0
+fi
+
+# Run triggers below only on updates
+if [ ! -e "/usr/local/hestia/data/users/admin" ]; then
+    exit
+fi
+
+# Restart hestia service
+if [ -f "/etc/init.d/hestia" ]; then
+    systemctl restart hestia > /dev/null 2>&1
+fi

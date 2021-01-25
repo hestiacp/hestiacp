@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: rebuild all assets for a specified user
 # options: USER [RESTART]
+# labels: hestia
 #
 # The function rebuilds all assets for a user account:
 # - Web domains
@@ -36,6 +37,8 @@ is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

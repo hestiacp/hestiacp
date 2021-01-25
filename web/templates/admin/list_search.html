@@ -1,8 +1,8 @@
 <div class="l-center">
     <div class="l-sort clearfix noselect">
       <div class="l-unit-toolbar__buttonstrip">
-        <a href="javascript:window.history.back();" id="btn-back" class="ui-button cancel" title="<?=_('Back')?>"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
-        <a href="javascript:location.reload();" class="ui-button cancel" title="<?=_('Refresh')?>"><i class="fas fa-sync status-icon green"></i> <?=_('Refresh')?></a>
+        <a href="javascript:window.history.back();" id="btn-back" class="ui-button cancel"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
+        <a href="javascript:location.reload();" class="ui-button cancel"><i class="fas fa-sync status-icon green"></i> <?=_('Refresh')?></a>
       </div>
       <ul class="context-menu sort-order animated fadeIn" style="display:none;">
         <li entity="sort-date" sort_as_int="1"><span class="name active"><?=_('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
@@ -75,7 +75,7 @@
           <div class="clearfix l-unit__stat-col--left super-compact">
               &nbsp;
             </div>
-            <div class="clearfix l-unit__stat-col--left wide-5">
+            <div class="clearfix l-unit__stat-col--left wide-5 truncate">
                 <!--<?
                 if ($value['KEY'] == 'RECORD') {
                   $edit_lnk = '/edit/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&record_id='.$value['LINK'].'&user='.$value['USER'];
@@ -193,13 +193,9 @@
         <div class="l-unit-ft">
           <table class='data'></table>
           <div class="data-count l-unit__col l-unit__col--right clearfix">
-            <?php
-              if ( $i == 1) {
-                echo _('1 object');
-              } else {
-                echo _('%s objects',$i);
-              }
-            ?>
+              <?php
+               printf(ngettext('%d object', '%d objects', $i),$i);
+              ?>
           </div>
         </div>
       </div>

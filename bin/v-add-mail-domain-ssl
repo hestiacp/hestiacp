@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: add mail SSL for $domain
 # options: USER DOMAIN SSL_DIR [RESTART]
+# labels: hestia
 #
 # The function turns on SSL support for a mail domain. Parameter ssl_dir
 # is a path to a directory where 2 or 3 ssl files can be found. Certificate file 

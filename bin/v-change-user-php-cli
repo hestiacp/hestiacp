@@ -1,8 +1,12 @@
 #!/bin/bash
-# info: add php version to .bash_aliases
+# info: add php  version alias to .bash_aliases
 # options: USER VERSION
-
-#  add line to .bash_aliases to set default php incase of multiPHP
+# labels: hestia
+#
+# example: v-change-user-php-cli user php7.4
+#
+# add line to .bash_aliases to set default php command line
+# version when multi-php is enabled.
 
 
 #----------------------------------------------------------#
@@ -53,6 +57,9 @@ if grep -q "alias php='env php$version'" "$FILE"; then
   echo "PHP CLI Already defined"
   exit;
 fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

@@ -1,13 +1,13 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a href="/edit/server/" class="ui-button cancel" title="<?=_('Configure')?>"><i class="fas fa-cog status-icon maroon"></i> <?=_('Configure')?></a>
-          <a href="/list/rrd/" class="ui-button cancel" title="<?=_('Graphs')?>"><i class="fas fa-chart-area status-icon green"></i> <?=_('Graphs')?></a>
-          <a href="/list/ip/" class="ui-button cancel" title="<?=_('IP')?>"><i class="fas fa-ethernet status-icon blue"></i> <?=_('IP')?></a>
-          <?php if ((isset($_SESSION['FIREWALL_SYSTEM'])) && (!empty($_SESSION['FIREWALL_SYSTEM']))) {?><a href="/list/firewall/" class="ui-button cancel" title="<?=_('Firewall')?>"><i class="fas fa-shield-alt status-icon red"></i> <?=_('Firewall')?></a><?php }?>
-          <a href="/list/updates/" class="ui-button cancel" title="<?=_('Updates')?>"><i class="fas fa-sync status-icon green"></i> <?=_('Updates')?></a>
+          <a href="/edit/server/" class="ui-button cancel"><i class="fas fa-cog status-icon maroon"></i> <?=_('Configure')?></a>
+          <a href="/list/rrd/" class="ui-button cancel"><i class="fas fa-chart-area status-icon green"></i> <?=_('Graphs')?></a>
+          <a href="/list/ip/" class="ui-button cancel"><i class="fas fa-ethernet status-icon blue"></i> <?=_('IP')?></a>
+          <?php if ((isset($_SESSION['FIREWALL_SYSTEM'])) && (!empty($_SESSION['FIREWALL_SYSTEM']))) {?><a href="/list/firewall/" class="ui-button cancel"><i class="fas fa-shield-alt status-icon red"></i> <?=_('Firewall')?></a><?php }?>
+          <a href="/list/updates/" class="ui-button cancel"><i class="fas fa-sync status-icon green"></i> <?=_('Updates')?></a>
           <div class="actions-panel display-inline-block" key-action="js">
-              <a class="data-controls do_servicerestart ui-button danger cancel" title="<?=_('Restart')?>">
+              <a class="data-controls do_servicerestart ui-button danger cancel">
                 <i class="do_servicerestart fas fa-undo status-icon red"></i>
                 <?=_('Restart')?>
                 <input type="hidden" name="servicerestart_url" value="/restart/system/?hostname=<?php echo $sys['sysinfo']['HOSTNAME'] ?>&token=<?=$_SESSION['token']?>&system_reset_token=<?php echo time(); ?>" />
@@ -108,7 +108,7 @@
           if ($data[$key]['STATE'] == 'running') {
             $status = 'active';
             $action = 'stop';
-            $spnd_icon = 'fa-pause';
+            $spnd_icon = 'fa-stop';
           } else {
             $status = 'suspended';
             $action = 'start';
@@ -125,7 +125,14 @@
           <div class="clearfix l-unit__stat-col--left super-compact">
             <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="service[]" value="<?php echo $key ?>">
           </div>
-          <div class="clearfix l-unit__stat-col--left wide-2"><b><a href="/edit/server/<? echo $key ?>/" title="<?=_('edit')?>"><?=$key?></a></b></div>
+          <div class="clearfix l-unit__stat-col--left wide-2">
+            <? if($data[$key]['STATE'] == 'running'){ ?>
+                <i class="fas fa-check-circle status-icon green icon-pad-right"></i>
+            <? } else {?>
+                <i class="fas fa-minus-circle status-icon red icon-pad-right"></i>
+            <? } ?>
+            <b><a href="/edit/server/<? echo $key ?>/" title="<?=_('edit')?>: <?=$key?>"><?=$key?></a></b>
+          </div>
           <div class="clearfix l-unit__stat-col--left text-center compact-2">
             <div class="actions-panel clearfix">
               <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href">

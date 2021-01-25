@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete user databases
 # options: USER
+# labels: 
+#
+# example: v-delete-databases admin
 #
 # The function deletes all user databases.
 
@@ -25,7 +28,6 @@ check_args '1' "$#" 'USER'
 is_format_valid 'user'
 is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode

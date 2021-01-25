@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list system os
 # options: [FORMAT]
+# labels: 
+#
+# example: v-list-sys-info
 #
 # The function checks available updates for hestia packages.
 

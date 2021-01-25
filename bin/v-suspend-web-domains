@@ -1,8 +1,11 @@
 #!/bin/bash
 # info: suspend web domains
 # options: USER [RESTART]
+# labels: web
 #
-# The function of suspending all user's sites. 
+# example: v-suspend-web-domains bob
+#
+# The function of suspending all user's sites.
 
 
 #----------------------------------------------------------#

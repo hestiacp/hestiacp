@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: search domain owner
 # options: DOMAIN [TYPE]
+# labels: panel
+#
+# example: v-search-domain-owner acme.com
 #
 # The function that allows to find user objects.
 
@@ -23,6 +26,8 @@ source $HESTIA/func/main.sh
 
 check_args '1' "$#" 'DOMAIN [TYPE]'
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

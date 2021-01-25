@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: unsuspend dns domain
 # options: USER DOMAIN
+# labels: dns
+#
+# example: v-unsuspend-dns-domain alice wonderland.com
 #
 # The function unsuspends a certain user's domain.
 
@@ -23,6 +26,8 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                    Verifications                         #

@@ -1,8 +1,11 @@
 #!/bin/bash
 # info: listing availble PHP versions installed
 # options: [FORMAT]
+# labels: hestia panel
 #
-# List /etc/php/* version check if folder fpm is avalible
+# example: v-list-sys-php
+#
+# List /etc/php/* version check if folder fpm is available
 
 
 #----------------------------------------------------------#
@@ -61,7 +64,7 @@ csv_list() {
 #                       Action                             #
 #----------------------------------------------------------#
 
-# List trough /etc/php
+# List through /etc/php
 versions_list=$(ls -d /etc/php/*)
 versions=()
 for version in $versions_list; do

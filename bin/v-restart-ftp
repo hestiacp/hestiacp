@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: restart ftp service
 # options: NONE
+# labels: panel
+#
+# example: v-restart-ftp
 #
 # The function tells ftp server to reread its configuration.
 

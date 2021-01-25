@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: unsuspend user
 # options: USER [RESTART]
+# labels: panel
+#
+# example: v-unsuspend-user bob
 #
 # The function unsuspends user and all his objects.
 
@@ -29,6 +32,8 @@ if [ "$user" = 'admin' ]; then
     exit
 fi
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

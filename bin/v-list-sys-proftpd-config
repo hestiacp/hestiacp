@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list proftpd config parameters
 # options: [FORMAT]
+# labels: panel
+#
+# example: v-list-sys-proftpd-config
 #
 # The function for obtaining the list of proftpd config parameters.
 

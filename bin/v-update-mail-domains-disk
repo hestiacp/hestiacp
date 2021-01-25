@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: calculate disk usage for all mail domains
 # options: USER
+# labels: mail
+#
+# example: v-update-mail-domains-disk admin
 #
 # The function calculates disk usage for all mail domains.
 

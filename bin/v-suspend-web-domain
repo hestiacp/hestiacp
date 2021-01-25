@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: suspend web domain
-# options: USER DOMAIN
+# options: USER DOMAIN [RESTART]
+# labels: web
+#
+# example: v-suspend-web-domain admin example.com yes
 #
 # The function for suspending the site's operation. After blocking it all
 # visitors will be redirected to a web page explaining the reason of suspend.

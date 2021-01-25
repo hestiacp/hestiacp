@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: rebuild dns domains
 # options: USER [RESTART] [UPDATE_SERIAL]
+# labels: dns
+#
+# example: v-rebuild-dns-domains alice
 #
 # The function rebuilds DNS configuration files.
 
@@ -34,7 +37,8 @@ if [ "$DNS_SYSTEM" = 'remote' ]; then
     exit
 fi
 
-
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#

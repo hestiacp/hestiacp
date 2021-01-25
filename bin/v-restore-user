@@ -1,8 +1,12 @@
 #!/bin/bash
 # info: restore user
 # options: USER BACKUP [WEB] [DNS] [MAIL] [DB] [CRON] [UDIR] [NOTIFY]
+# labels: panel
 #
-# The function for restoring user from backup.
+# example: v-restore-user admin 2019-04-22_01-00-00.tar
+#
+# The function for restoring user from backup. To be able to restore the backup,
+# the archive needs to be placed in /backup.
 
 
 #----------------------------------------------------------#
@@ -120,14 +124,26 @@ fi
 
 # Set default backup source system
 backup_system="hestia"
+backup_mode="gzip"
 
 # Check if it is a Vesta backup
 if tar -tf "$BACKUP/$backup" ./vesta >/dev/null 2>&1; then
     backup_system="vesta"
 fi
 
+if tar -tf "$BACKUP/$backup" ./.zstd >/dev/null 2>&1; then
+    backup_mode="zstd"
+fi
+
 # Restoring user account
 if [ "$create_user" = 'yes' ]; then
+    
+    # Add check if user already exists as Linux User
+    getent passwd $user > /dev/null 2&>1
+    if [ "$?" == 0 ]; then
+        check_result "$E_EXISTS" "User already exists"  
+    fi 
+    
     echo "-- USER --" |tee $tmpdir/restore.log
     echo -e "$(date "+%F %T") $user" |tee -a $tmpdir/restore.log
 
@@ -170,7 +186,11 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
 
     # Creating web domain restore list
     backup_domains=$(tar -tf $BACKUP/$backup |grep "^./web")
-    backup_domains=$(echo "$backup_domains" |grep domain_data.tar.gz)
+    if [ "$backup_mode" = "zstd" ]; then
+        backup_domains=$(echo "$backup_domains" |grep domain_data.tar.zst)
+    else
+        backup_domains=$(echo "$backup_domains" |grep domain_data.tar.gz)
+    fi
     backup_domains=$(echo "$backup_domains" |cut -f 3 -d /)
     if [ -z "$web" ] || [ "$web" = '*' ]; then
         domains="$backup_domains"
@@ -184,7 +204,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
         echo -e "$(date "+%F %T") $domain" |tee -a $tmpdir/restore.log
 
         # Cleanup previous domain keys
-        unset -v DOMAIN IP IP6 ALIAS TPL SSL SSL_HOME LETSENCRYPT FTP_USER FTP_MD5 BACKEND PROXY PROXY_EXT STATS STATS_USER STATS_CRYPT U_DISK
+        unset -v DOMAIN IP IP6 ALIAS TPL SSL SSL_HOME LETSENCRYPT FTP_USER FTP_MD5 BACKEND PROXY PROXY_EXT STATS STATS_USER STATS_CRYPT U_DISK CUSTOM_DOCROOT CUSTOM_PHPROOT
 
         # Checking domain existance
         check_config=$(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
@@ -283,6 +303,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
 
             # Merging web.conf keys
             str="DOMAIN='$domain' IP='$IP' IP6='$IP6' ALIAS='$ALIAS'"
+            str="$str CUSTOM_DOCROOT='$CUSTOM_DOCROOT' CUSTOM_PHPROOT='$CUSTOM_PHPROOT' IP='$IP' IP6='$IP6' ALIAS='$ALIAS'"
             str="$str TPL='$TPL' SSL='$SSL' SSL_HOME='$SSL_HOME'"
             str="$str LETSENCRYPT='$LETSENCRYPT' FTP_USER='$FTP_USER'"
             str="$str FTP_MD5='$FTP_MD5' BACKEND='$BACKEND' PROXY='$PROXY'"
@@ -307,10 +328,19 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
         fi
         chmod u+w "$HOMEDIR/$user/web/$domain"
         [[ -d $HOMEDIR/$user/web/$domain/stats ]] && chmod u+w "$HOMEDIR/$user/web/$domain/stats"
-        user_exec tar -xzpf $tmpdir/web/$domain/domain_data.tar.gz \
-            -C "$HOMEDIR/$user/web/$domain/" \
-            --anchored \
-            --exclude='logs/*'
+    
+        if [ "$backup_mode" = "zstd" ]; then
+            user_exec tar -I zstd -xpf $tmpdir/web/$domain/domain_data.tar.zst \
+                -C "$HOMEDIR/$user/web/$domain/" \
+                --anchored \
+                --exclude='logs/*'
+        else
+            user_exec tar -xzpf $tmpdir/web/$domain/domain_data.tar.gz \
+                -C "$HOMEDIR/$user/web/$domain/" \
+                --anchored \
+                --exclude='logs/*'
+        fi
+        
         if [ "$?" -ne 0 ]; then
             rm -rf $tmpdir
             error="Can't unpack $domain data tarball"
@@ -573,22 +603,39 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
         format_domain_idn
 
         # Restoring emails
-        if [ -e "$tmpdir/mail/$domain/accounts.tar.gz" ]; then
-            chmod u+w "$HOMEDIR/$user/mail/$domain_idn"
-            $BIN/v-extract-fs-archive "$user" "$tmpdir/mail/$domain/accounts.tar.gz" "$HOMEDIR/$user/mail/$domain_idn/"
-            if [ "$?" -ne 0 ]; then
-                rm -rf $tmpdir
-                error="Can't unpack $domain mail account container"
-                echo "$error" |$SENDMAIL -s "$subj" $email $notify
-                sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-                check_result "$E_PARSING" "$error"
+        if [ $backup_mode = 'zstd' ]; then    
+            if [ -e "$tmpdir/mail/$domain/accounts.tar.zst" ]; then
+                chmod u+w "$HOMEDIR/$user/mail/$domain_idn"
+                $BIN/v-extract-fs-archive "$user" "$tmpdir/mail/$domain/accounts.tar.zst" "$HOMEDIR/$user/mail/$domain_idn/"
+                if [ "$?" -ne 0 ]; then
+                    rm -rf $tmpdir
+                    error="Can't unpack $domain mail account container"
+                    echo "$error" |$SENDMAIL -s "$subj" $email $notify
+                    sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
+                    check_result "$E_PARSING" "$error"
+                fi
+    
+                # Chowning as owner needs to be user:mail instead of user:user
+                find $HOMEDIR/$user/mail/$domain_idn -user $user \
+                   -exec chown -h $user:mail {} \;
             fi
-
-            # Chowning as owner needs to be user:mail instead of user:user
-            find $HOMEDIR/$user/mail/$domain_idn -user $user \
-               -exec chown -h $user:mail {} \;
+        else
+            if [ -e "$tmpdir/mail/$domain/accounts.tar.gz" ]; then
+                chmod u+w "$HOMEDIR/$user/mail/$domain_idn"
+                $BIN/v-extract-fs-archive "$user" "$tmpdir/mail/$domain/accounts.tar.gz" "$HOMEDIR/$user/mail/$domain_idn/"
+                if [ "$?" -ne 0 ]; then
+                    rm -rf $tmpdir
+                    error="Can't unpack $domain mail account container"
+                    echo "$error" |$SENDMAIL -s "$subj" $email $notify
+                    sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
+                    check_result "$E_PARSING" "$error"
+                fi
+    
+                # Chowning as owner needs to be user:mail instead of user:user
+                find $HOMEDIR/$user/mail/$domain_idn -user $user \
+                   -exec chown -h $user:mail {} \;
+            fi
         fi
-
         # Chowning mail conf files to exim user
         find $HOMEDIR/$user/conf/mail/$domain_idn -user root \
             -exec chown $exim_user {} \;
@@ -661,7 +708,11 @@ if [ "$db" != 'no' ] && [ ! -z "$DB_SYSTEM" ]; then
         fi
 
         # Unzipping database dump
-        gzip -d $tmpdir/db/$database/$database.*.sql.gz
+        if [ $backup_mode = 'zstd' ]; then  
+            zstd -d $tmpdir/db/$database/$database.*.sql.zst
+        else
+            gzip -d $tmpdir/db/$database/$database.*.sql.gz
+        fi
 
         # Importing database dump
         database_dump="$tmpdir/db/$database/$database.$TYPE.sql"
@@ -720,9 +771,15 @@ if [ "$udir" != 'no' ]; then
 
         # Creating user dir restore list
         backup_dirs=$(tar -tf $BACKUP/$backup |grep "^./user_dir")
-        backup_dirs=$(echo "$backup_dirs" |grep tar.gz)
-        backup_dirs=$(echo "$backup_dirs" |cut -f 3 -d /)
-        backup_dirs=$(echo "$backup_dirs" |sed "s/.tar.gz//")
+        if [ $backup_mode = 'zstd' ]; then 
+            backup_dirs=$(echo "$backup_dirs" |grep tar.zst)
+            backup_dirs=$(echo "$backup_dirs" |cut -f 3 -d /)
+            backup_dirs=$(echo "$backup_dirs" |sed "s/.tar.zst//")
+        else
+            backup_dirs=$(echo "$backup_dirs" |grep tar.gz)        
+            backup_dirs=$(echo "$backup_dirs" |cut -f 3 -d /)
+            backup_dirs=$(echo "$backup_dirs" |sed "s/.tar.gz//")
+        fi
         if [ -z "$udir" ] || [ "$udir" = '*' ]; then
             user_dirs="$backup_dirs"
         else
@@ -732,7 +789,11 @@ if [ "$udir" != 'no' ]; then
 
         for user_dir in $user_dirs; do
             echo -e "$(date "+%F %T") $user_dir" |tee -a $tmpdir/restore.log
-            tar xf "$BACKUP/$backup" -C "$tmpdir" --no-wildcards "./user_dir/$user_dir.tar.gz"
+            if [ $backup_mode = 'zstd' ]; then 
+                tar xf "$BACKUP/$backup" -C "$tmpdir" --no-wildcards "./user_dir/$user_dir.tar.zst"
+            else
+                tar xf "$BACKUP/$backup" -C "$tmpdir" --no-wildcards "./user_dir/$user_dir.tar.gz"
+            fi
             if [ "$?" -ne 0 ]; then
                 rm -rf $tmpdir
                 error="Can't unpack $user_dir user dir container"
@@ -744,7 +805,11 @@ if [ "$udir" != 'no' ]; then
             chown "$user" "$tmpdir/user_dir"
             chown "$user" "$HOMEDIR/$user"
             [ -e "$HOMEDIR/$user/$user_dir" ] && chown "$user" "$HOMEDIR/$user/$user_dir"
-            $BIN/v-extract-fs-archive "$user" "$tmpdir/user_dir/$user_dir.tar.gz" "$HOMEDIR/$user"
+            if [ $backup_mode = 'zstd' ]; then
+                $BIN/v-extract-fs-archive "$user" "$tmpdir/user_dir/$user_dir.tar.zst" "$HOMEDIR/$user"
+            else
+                $BIN/v-extract-fs-archive "$user" "$tmpdir/user_dir/$user_dir.tar.gz" "$HOMEDIR/$user"
+            fi
             cmdstatus="$?"
             chown root:root "$HOMEDIR/$user"
             if [ "$cmdstatus" -ne 0 ]; then

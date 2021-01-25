@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update PostgreSQL rrd
 # options: PERIOD
+# labels: panel
+#
+# example: v-update-sys-rrd-pgsql
 #
 # The function is for updating postgresql rrd database and graphic.
 
@@ -73,7 +76,7 @@ for host in $hosts; do
         done
 
         export PGPASSWORD="$PASSWORD"
-        sql="psql -h $HOST -U $USER -c"
+        sql="psql -h $HOST -U $USER"
 
         # Checking empty vars
         if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
@@ -85,7 +88,7 @@ for host in $hosts; do
         # Parsing data
         q='SELECT SUM(xact_commit + xact_rollback), SUM(numbackends)
                 FROM pg_stat_database;'
-        status=$($sql plsql -d postgres -c "$q" 2>/dev/null); code="$?"
+        status=$($sql -d postgres -c "$q" 2>/dev/null); code="$?"
         if [ '0' -ne "$code" ]; then
             active=0
             slow=0

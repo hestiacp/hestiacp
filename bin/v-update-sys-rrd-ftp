@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update ftp rrd
 # options: PERIOD
+# labels: panel
+#
+# example: v-update-sys-rrd-ftp
 #
 # The function is for updating ftpd rrd database and graphic.
 

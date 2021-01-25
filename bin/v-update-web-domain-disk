@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update disk usage for domain
 # options: USER DOMAIN
+# labels: web
+#
+# example: v-update-web-domain-disk alice wonderland.com
 #
 # The function recalculates disk usage for specific webdomain.
 

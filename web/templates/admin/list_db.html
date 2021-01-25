@@ -1,7 +1,7 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a href="/add/db/" id="btn-create" class="ui-button cancel" title="<?=_('Add Database')?>"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Add Database')?></a>
+          <a href="/add/db/" id="btn-create" class="ui-button cancel"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Add Database')?></a>
           <?
             $mysql = 0;
             $pgsql = 0;
@@ -79,7 +79,7 @@
                       <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
                   </div>
                   <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print _('Database');?></b></div>
-                  <div class="clearfix l-unit__stat-col--left text-right compact-2"><b>&nbsp;</b></div>
+                  <div class="clearfix l-unit__stat-col--left text-right compact-3"><b>&nbsp;</b></div>
                   <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print _('Type');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center wide"><b><?php print _('Username');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?php print _('Hostname');?></b></div>
@@ -121,9 +121,9 @@ sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" so
                 <div class="clearfix l-unit__stat-col--left super-compact">
                   <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="database[]" value="<?php echo $key ?>">
                 </div>
-                <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Database')?>"><?=$key?></a></b></div>
+                <div class="clearfix l-unit__stat-col--left wide-3 truncate"><b><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Database')?>"><?=$key?></a></b></div>
                 <!-- START QUICK ACTION TOOLBAR AREA -->
-                <div class="clearfix l-unit__stat-col--left text-right compact-2">
+                <div class="clearfix l-unit__stat-col--left text-right compact-3">
                       <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                           <div class="actions-panel clearfix">
                             <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Database')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
@@ -145,7 +145,13 @@ sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" so
                                 </div>
                               </a>
                             </div>
-
+                            <?php if ($data[$key]['TYPE'] == 'mysql' && isset($_SESSION['PHPMYADMIN_KEY']) && $_SESSION['PHPMYADMIN_KEY'] != '') {
+                            $time = time();
+                            ?>
+                                <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="<?=$db_myadmin_link;?>/hestia-sso.php?database=<?=$key;?>&user=<?=$user;?>&exp=<?=$time;?>&hestia_token=<?=password_hash($key.$user.$_SESSION['user_combined_ip'].$time.$_SESSION['PHPMYADMIN_KEY'], PASSWORD_DEFAULT)?>" title="<?=_('Editing Database')?>"><i class="fas fa-sign-in-alt status-icon orange status-icon dim"></i></a></div>
+                            <?php
+                            }
+                            ?>
                           </div>
                         </div>
                   </div>
@@ -168,11 +174,7 @@ sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" so
           <table class='data'></table>
           <div class="data-count l-unit__col l-unit__col--right clearfix">
             <?php
-              if ( $i == 1) {
-                echo _('1 SQL database');
-              } else {
-                echo _('%s SQL databases',$i);
-              }
+            printf(ngettext('%d SQL database', '%d SQL databases', $i),$i);
             ?>
           </div>
         </div>

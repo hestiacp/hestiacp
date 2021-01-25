@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: insert dns domain
 # options: USER DATA [SRC] [FLUSH] [RESTART]
+# labels: 
 #
 # The function inserts raw record to the dns.conf
 
@@ -43,6 +44,8 @@ if [ "$flush" = 'no' ]; then
     is_domain_new 'dns' $domain
 fi
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

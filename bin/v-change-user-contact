@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change user contact email
 # options: USER EMAIL
+# labels: panel
+#
+# example: v-change-user-contact admin admin@yahoo.com
 #
 # The function for changing of e-mail associated with a certain user.
 

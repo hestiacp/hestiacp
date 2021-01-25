@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: add letsencrypt cronjob
 # options: NONE
+# labels: 
 #
 # The script for enabling letsencrypt cronjob
 
@@ -20,6 +21,8 @@ source $HESTIA/conf/hestia.conf
 
 is_system_enabled "$CRON_SYSTEM" 'CRON_SYSTEM'
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add system user
-# options: USER PASSWORD EMAIL [PACKAGE] [NAME]
+# options: USER PASSWORD EMAIL [PACKAGE] [NAME] [LASTNAME]
+# labels: 
+#
+# example: v-add-user admin2 P4$$w@rD bgates@aol.com
 #
 # The function creates new user account.
 
@@ -15,7 +18,10 @@ password=$2; HIDE=2
 email=$3
 package=${4-default}
 name=$5
-
+# Last name has been added for backward compatibility with WHMCS / Blesta VestaCP Plugins
+if [ ! -z "$6" ]; then 
+    name="$name $6";
+fi
 # Includes
 source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
@@ -61,6 +67,13 @@ check_result $? "user creation failed" $E_INVALID
 
 # Adding password
 echo "$user:$password" | /usr/sbin/chpasswd
+
+if [ $? -ne 0 ]; then 
+    # Delete user on failure
+    /usr/sbin/deluser "$user" > /dev/null 2>&1
+    echo "Error: Password not accepted due to PAM restrictions"
+    exit 2
+fi
 
 # Add a general group for normal users created by Hestia
 if [ -z "$(grep ^hestia-users: /etc/group)" ]; then

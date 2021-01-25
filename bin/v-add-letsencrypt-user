@@ -1,8 +1,11 @@
 #!/bin/bash
 # info: register letsencrypt user account
 # options: USER
+# labels: web
 #
-# The function creates and register LetsEncrypt account 
+# example: v-add-letsencrypt-user bob
+#
+# The function creates and register LetsEncrypt account
 
 
 #----------------------------------------------------------#
@@ -63,7 +66,8 @@ if [ ! -z "$KID" ]; then
     exit
 fi
 
-
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#

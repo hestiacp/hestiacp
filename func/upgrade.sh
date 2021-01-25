@@ -114,6 +114,37 @@ upgrade_health_check() {
         echo "[ ! ] File Manager is enabled but not installed, repairing components..."
         $BIN/v-add-sys-filemanager quiet
     fi
+    
+    # Support for ZSTD / GZIP Change
+    if [ -z "$BACKUP_MODE" ]; then
+        echo "[ ! ] Setting zstd backup compression type as default..."
+        $BIN/v-change-sys-config-value "BACKUP_MODE" "zstd"
+    fi
+    
+    # Login style switcher
+    if [ -z "$LOGIN_STYLE" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: LOGIN_STYLE ('default')"
+        $BIN/v-change-sys-config-value "LOGIN_STYLE" "default"
+    fi
+    
+    # Webmail clients
+    if [ -z "$WEBMAIL_SYSTEM" ]; then
+        if [ -d "/var/lib/roundcube" ]; then 
+            echo "[ ! ] Adding missing variable to hestia.conf: WEBMAIL_SYSTEM ('roundcube')"
+            $BIN/v-change-sys-config-value "WEBMAIL_SYSTEM" "roundcube"
+        else
+            echo "[ ! ] Adding missing variable to hestia.conf: WEBMAIL_SYSTEM ('')"
+            $BIN/v-change-sys-config-value "WEBMAIL_SYSTEM" ""
+        fi
+    fi
+
+    # Inactive session timeout
+    if [ -z "$INACTIVE_SESSION_TIMEOUT" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: INACTIVE_SESSION_TIMEOUT ('60')"
+        $BIN/v-change-sys-config-value "INACTIVE_SESSION_TIMEOUT" "60"
+    fi
+    
+    
     echo "[ * ] Health check complete. Starting upgrade from $VERSION to $new_version..."
     echo "============================================================================="
 }
@@ -193,9 +224,13 @@ upgrade_complete_message() {
     echo
     echo "Web:      https://www.hestiacp.com/                                          "
     echo "Forum:    https://forum.hestiacp.com/                                        "
+    echo "Discord:  https://discord.gg/nXRUZch                                         "
     echo "GitHub:   https://github.com/hestiacp/hestiacp/                              "
     echo "E-mail:   info@hestiacp.com                                                  "
     echo 
+    echo "Help support the Hestia Control Panel project by donating via PayPal:         "
+    echo "https://www.hestiacp.com/donate                                              "
+    echo
     echo "Made with love & pride by the open-source community around the world.        "
     echo
     echo "============================================================================="
@@ -275,7 +310,7 @@ upgrade_send_notification_to_email () {
 
 upgrade_send_log_to_email() {
     if [ "$UPGRADE_SEND_EMAIL_LOG" = "true" ]; then
-        admin_email=$(v-list-user admin json | grep "CONTACT" | cut -d'"' -f4)
+        admin_email=$($BIN/v-list-user admin json | grep "CONTACT" | cut -d'"' -f4)
         send_mail="$HESTIA/web/inc/mail-wrapper.php"
         cat $LOG | $send_mail -s "Update Installation Log - v${new_version}" $admin_email
     fi
@@ -435,7 +470,8 @@ upgrade_start_backup() {
                 echo "      ---- mysql"
             fi
             cp -f /etc/mysql/*.cnf $HESTIA_BACKUP/conf/mysql/
-            cp -f /etc/mysql/conf.d/*.cnf $HESTIA_BACKUP/conf/mysql/      
+            cp -f /etc/mysql/conf.d/*.cnf $HESTIA_BACKUP/conf/mysql/ > /dev/null 2>&1
+            cp -f /etc/mysql/mariadb.conf.d/*.cnf $HESTIA_BACKUP/conf/mysql/ > /dev/null 2>&1       
         fi
         if [[ "$DB_SYSTEM" =~ "pgsql" ]]; then
             if [ "$DEBUG_MODE" = "true" ]; then
@@ -605,17 +641,41 @@ upgrade_filemanager_update_config() {
     fi
 }
 
+upgrade_roundcube(){
+    if [ "UPGRADE_UPDATE_ROUNDCUBE" = "true" ]; then
+        if [ ! -z "$(echo "$WEBMAIL_SYSTEM" | grep -w 'roundcube')" ]; then
+            rc_version=$(cat /var/lib/roundcube/index.php | grep -o -E '[0-9].[0-9].[0-9]+' | head -1);
+            if [ "$rc_version" == "$rc_v" ]; then
+                echo "[ * ] Upgrading RoundCube to version v$rc_v..."
+                $HESTIA/bin/v-add-sys-roundcube
+            fi
+        fi
+    fi
+}
+
+upgrade_rainloop(){
+    if [ "UPGRADE_UPDATE_RAINLOOP" = "true" ]; then
+        if [ ! -z "$(echo "$WEBMAIL_SYSTEM" | grep -w 'rainloop')" ]; then
+            rc_version=$(cat /var/lib/rainloop/data/VERSION);
+            if [ "$rc_version" == "$rc_v" ]; then
+                echo "[ * ] Upgrading rainloop to version v$rc_v..."
+                $HESTIA/bin/v-add-sys-rainloop
+            fi
+        fi
+    fi
+}
+
 upgrade_rebuild_web_templates() {
     if [ "$UPGRADE_UPDATE_WEB_TEMPLATES" = "true" ]; then
         echo "[ ! ] Updating default web domain templates..."
-        $BIN/v-update-web-templates
+        $BIN/v-update-web-templates "no" "skip"
     fi
 }
 
 upgrade_rebuild_mail_templates() {
     if [ "$UPGRADE_UPDATE_MAIL_TEMPLATES" = "true" ]; then
         echo "[ ! ] Updating default mail domain templates..."
-        $BIN/v-update-mail-templates
+        $BIN/v-update-mail-templates "no" "skip"
     fi
 }
 

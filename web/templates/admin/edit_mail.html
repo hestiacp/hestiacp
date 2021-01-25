@@ -4,7 +4,7 @@
             <a class="ui-button cancel" id="btn-back" href="/list/mail/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" title="<?=_('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
+            <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
           </div>
         </div>
       </div>
@@ -64,6 +64,28 @@
                                   <input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
                                 </td>
                             </tr>
+                            <?php if($_SESSION['IMAP_SYSTEM']){?>                            
+                                <tr>
+                                    <td class="vst-text step-top">
+                                        <?php print _('Webmail Client');?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <select class="vst-list" name="v_webmail" tabindex="6" >
+                                            <?php foreach ($webmail_clients as $client){
+                                            echo "\t\t\t\t<option value=\"".htmlentities($client)."\"";
+                                            if ((!empty($v_webmail)) && ( $v_webmail == $client )) {
+                                                echo ' selected' ;
+                                            }
+                                            echo ">".htmlentities(ucfirst($client))."</option>\n";
+                                            }
+                                            ?>
+                                            <option value="" <?php if (empty($v_webmail)){ echo "selected";}?>><?php print _('Disabled');?></option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            <?php } ?>
                             <tr>
                                 <td class="vst-text input-label">
                                     <?php print _('Catchall email');?>

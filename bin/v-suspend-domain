@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: suspend web/dns/mail domain
 # options: USER DOMAIN
+# labels: panel
+#
+# example: v-suspend-domain admin example.com
 #
 # The function suspends web/dns/mail domain.
 

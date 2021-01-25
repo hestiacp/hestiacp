@@ -105,7 +105,7 @@ if (!empty($_POST['ok'])) {
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
         $_SESSION['ok_msg'] = sprintf(_('USER_CREATED_OK'),htmlentities($_POST['v_username']),htmlentities($_POST['v_username']));
-        $_SESSION['ok_msg'] .= " / <a href=/login/?loginas=".htmlentities($_POST['v_username']).">" . _('login as') ." ".htmlentities($_POST['v_username']). "</a>";
+        $_SESSION['ok_msg'] .= " / <a href=/login/?loginas=".htmlentities($_POST['v_username'])."&token=".htmlentities($_SESSION['token']).">" . _('login as') ." ".htmlentities($_POST['v_username']). "</a>";
         unset($v_username);
         unset($v_password);
         unset($v_email);
@@ -123,8 +123,11 @@ unset($output);
 
 // List languages
 exec (HESTIA_CMD."v-list-sys-languages json", $output, $return_var);
-$languages = json_decode(implode('', $output), true);
-unset($output);
+$language = json_decode(implode('', $output), true);
+foreach($language as $lang){
+    $languages[$lang] = translate_json($lang);
+}
+asort($languages);
 
 // Render page
 render_page($user, $TAB, 'add_user');

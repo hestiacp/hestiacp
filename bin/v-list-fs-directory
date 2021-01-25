@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list directory
 # options: USER DIRECTORY
+# labels: 
+#
+# example: v-list-fs-directory /home/admin/web
 #
 # The function lists directory on the file system
 

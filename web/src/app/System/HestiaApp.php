@@ -69,7 +69,7 @@ class HestiaApp {
         }
 
         $install_folder = $this->getUserHomeDir() . DIRECTORY_SEPARATOR . '.composer';
-        $this->runUser('v-run-cli-cmd', ["/usr/bin/php", $composer_setup, "--quiet", "--install-dir=".$install_folder, "--filename=composer" ], $status);
+        $this->runUser('v-run-cli-cmd', ["/usr/bin/php", $composer_setup, "--1", "--quiet", "--install-dir=".$install_folder, "--filename=composer" ], $status);
 
         unlink($composer_setup);
 

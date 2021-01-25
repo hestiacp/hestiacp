@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: get mail domain value
 # options: USER DOMAIN KEY
+# labels: mail
+#
+# example: v-get-mail-domain-value admin example.com DKIM
 #
 # The function for getting a certain mail domain parameter.
 

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update IP usage counters
 # options: IP
+# labels: panel
+#
+# example: v-update-sys-ip-counters
 #
 # Function updates usage U_WEB_ADOMAINS and U_SYS_USERS counters.
 
@@ -28,6 +31,8 @@ if [ ! -z "$ip" ]; then
     is_ip_valid
 fi
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

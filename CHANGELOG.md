@@ -1,49 +1,115 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [DEVELOPMENT]
+### Features
+- Introduced support for PHPmyAdmin Single Sign On
+
+### Bugfixes
+- Fixed an issue where user name was duplicated when editing FTP users (#1411)
+- Fixed an issue where the iptables service would appear to be in a stopped state when fail2ban is stopped. (#1374)
+- Fixed an issue where the default language value was incorrectly set under Server Settings > Configure.
+- Fixed an issue with the dark theme where available updates were incorrectly displayed.
+- Fixed an issue where local and FTP backup files were not deleted when running `v-delete-user-backup`. (#1421)
+- Fixed an issue where IP addresses could not be deleted (#1423)
+- Improvements have been made to the API's error handling - thanks **@danielalexis**!
+
+## [1.3.2] - Service Release
+### Features
+- Added PHP v8.0 support for multiphp environment.
+
+### Bugfixes
+- Improved session token handling in login as function, thanks to Vulnerability Laboratory - [Evolution Security GmbH]™.
+- Fixed an where fpm pool config was not deleted when changing backend template.
+- Improved bats testing with multiphp (5.6-8.0) tests.
+- Fixed an issue where full webmail path was loaded as default value.
+
+## [1.3.1] - Service Release
+### Features
+- No new features have been introduced in this release.
+
+### Bugfixes
+- Fixed an issue where updates for `hestia-php` were incorrectly being marked as out-of-date in the UI due to a change in our servicing and package versioning scheme.
+- Fixed an issue that occured on the Updates page where the table row color of available updates would be difficult to read.
+- Fixed an issue where an administrator would get stuck in a loop trying to navigate back after adding a SSH key.
+- Fixed an issue where long table entries which exceeded the table length would overlap other UI elements.
+- Fixed an issue where the total amount of items on a page would fail to display correctly.
+- Improved the accuracy and reliability of tooltips throughout the the Control Panel UI:
+    - Removed unnecessary tooltips from buttons and other elements.
+    - Fixed incorrect tags which prevented tooltips from being displayed.
+    - Introduced tooltips to counter items on the Users, Packages, and Statistics pages to help better distinguish statistics.
+- Improved the display of items, quotas, and suspended items in the Control Panel navigation header - thanks **@cmstew**!
+- Fixed an issue which caused higher than normal CPU usage during an upgrade due to a duplicate condition in the rebuild process.
+- Fixed minor spelling inconsistencies in command line script comments and output text.
+- Fixed an issue where old configuration files were not cleaned up when moving domains with `v-change-domain-owner`.
+- Fixed an issue where a `no backend template doesn't exist` could potentially would appear after upgrade with older templates (#1322).
+- Introduced caching templates for nginx + php-fpm configurations  - thanks **@cmstew**!
+- Fixed an issue where DNS cluster updates could fail due to the format of a DKIM record in an available zone - thanks **@jrohde**!
+- Improved the quality of comment formatting in command line scripts - thanks **@bisubus**! 
+- Fixed an issue where the logo was not displayed in the File Manager - thanks **@robothemes**!
+- Fixed an issue in the Control Panel UI which caused databases and additional FTP accounts to be named incorrectly if manually prefaced with the username.
+- Fixed an issue where custom document roots were not saved correctly.
+- Improved the visibility of service availability in the Control Panel UI.
+- Fixed an issue which let you unsuspend a cronjob on active demo mode.
+- Updated DE, EN, ES, KO, NL and TR languages, thanks to @Wibol, Blackjack, @emrahkayihan, areo and @hahagu!
+- Fixed an issue which let the auto compiler fail with local src builds.
+- Added turkish language to system installers, thanks to @emrahkayihan!
+- Fixed incorrect error message when using unknown domain with v-delete-domain.
+
 ## [1.3.0] - Major Release (Feature / Quality Update)
 ### Features
-- Users can now choose to point a domain to a different document root (similar to domain parking).
-- The software update procedure will now perform a system health check prior to installation and repair missing environment variables.
+- Users can now choose to point a domain to a different document root location (similar to domain parking).
+- The software update process will now perform a system health check before proceeding with installation.
 - Administrators now have control over software update notifications through the following settings in `$HESTIA/conf/hestia.conf` and through the Control Panel web interface:
-    - `UPGRADE_SEND_EMAIL` = Sends an email notification to admin email address
-    - `UPGRADE_SEND_EMAIL_LOG` = Sends installation log output to admin email address
-- Upgrade process will now save logs to the `hst_backups` directory.
-- Support for removing backup remote location (#1083)
-- Add support Proftpd TLS Support
-- Add the possibility to assign user "Administrators" rights on login. Replaces "root" login. Notifications are only send towards the "admin" account email
-- Updated translations system with the use of Gettext following languages are current supported 
-    - English
-    - German
-    - French
-    - Italian
-    - Spanish
-    - Chinese
-    - Greek
-    - Russian
-    - Ukrainian
-    - Dutch
+    - `UPGRADE_SEND_EMAIL` = Sends an email notification to primary admin account's email address
+    - `UPGRADE_SEND_EMAIL_LOG` = Sends installation log output to the primary admin account's email address
+- The upgrade process will now save installation logs to the `/root/hst_backups` directory by default for post-install troubleshooting.
+    - **Note:** We may adjust this path in the future and will document such changes as they happen.
+- We've introduced the ability to assign Administrator rights to other user accounts, enabling them to perform tasks under the Server Settings tab.
+- We've introduced a more robust translation system which will allow us to provide higher quality translations in future releases.
+    - **Note:** Some country codes have been updated, as a result your language setting may default back to English after upgrading.
+- For new installations, MariaDB 10.5 is now the default version.
+    - For existing installations, we've provided a manual post-install upgrade script. Please run `$HESTIA/install/upgrade/manual/upgrade_mariadb.sh` to migrate to MariaDB 10.5).
+- The user interface theme has been set to "Dark" by default. This can be changed from **Server Settings > Configure > Basic Options > Appearance**.
+    - **Note:** The name of the default theme has not been adjusted, and the change to the "dark" theme only applies to new installations at this time. This behavior may be changed in a future release.
 
-## Bugfixes
-- Removed root login (root / root password )
-- Update apache2.conf replace Include with IncludeOptional (#1072)
-- Add ca-certificates, software-properties-common to the dependencies (#1073 + [Forum](https://forum.hestiacp.com/t/hestiscp-fails-on-new-debian-9-vps/1623/8) ) @daniel-eder
-- Fixed issues with database port during backup when port was missing (#1068)
-- Postqresql: forbid the use of upper case (#1084) causing issues with backup / creating database or user
-- Fixed permissions email account during restore (#1114)
-- Create .npm on creating new user (#1113) @hahagu 
-- Fixed Access to a website without a ssl certificate on https shows the content of the first, valid ssl website (#1103)
-- Fixed an issue when installing --with-debs and version check (#1110)
-- Improved Translations Chinese @myrevery
-- File manager create directory with proper permissions 
-- Removed loop ad v-rebuild-all (#1096)
-- Add $restart flag to v-add-web-domain-backend call (#1094) (#797) @bright-soft
-- Fixed an issue with Restore Failed on Domains with Mail Setups using SSL (#1069)
-- Fixed an issue with PHPMyAdmin button (#1078)
-- Changed WordPress name in Webapp installer (#1074)
-- Add a free disk space validation during backup routine (#1115)
-- Removed PHP validation SSH keys allowing support other types then RSA / DSA
+### Bugfixes
+- Fixed a security issue where user password reset keys could potentially be gleaned from system process list - thanks **RACK911 LABS**
+- Fixed an issue with passwords containing "`'`" - [Forum](https://forum.hestiacp.com/t/two-factor-authentication-issue-with-standard-user/1652/)
+- Fixed an issue with database backups when the port was not specified (#1068)
+- Fixed an issue where websites without SSL enabled would display the content of the first valid SSL enabled website (#1103)
+- Fixed an issue that would occur when using the `--with-debs` flag with the installer due to an incorrect version check routine (#1110)
+- Fixed an issue with incorrect permissions which would occur when restoring email accounts (#1114)
+- Fixed an issue where the File Manager would apply the wrong permissions on new directories
+- Fixed an issue that prevented successful restoration of SSL-enabled mail domains from a backup archive (#1069)
+- Fixed an issue where the phpMyAdmin button would not work in the Control Panel Web UI (#1078)
+- Fixed an issue where passwords were generated incorrectly (#1184)
+- Fixed an issue in `v-add-sys-ip` to ensure IP configuration is set to the correct port - thanks **@madito**
+- Fixed an issue that resulted in an extended loop condition when running `v-rebuild-all`
+- Improved support for API key usage with the `v-add-remote-dns-host` command (#1265)
+- Improved validation of free disk space when executing backup routine (#1115)
+- Improved support for SSH key types other than RSA / DSA
+- Improved reliability of backup function when removing remote locations (#1083)
+- Improved spam filtering by adding additional known-dangerous file extensions in exim's blacklist (#1138) - thanks **@kpapad904**
+- Updated Apache2 configuration to use Include with IncludeOptional (#1072)
+- Removed the ability to log in as "root" (whic logged to the admin account, deemed no longer necessary)
+- Add ca-certificates, software-properties-common to the dependencies (#1073 + [Forum](https://forum.hestiacp.com/t/hestiscp-fails-on-new-debian-9-vps/1623/8)) - thanks **@daniel-eder**
+- Create .npm directory by default when creating new user accounts (#1113) - thanks **@hahagu** 
+- Improved accuracy of several UI translations (NL, DE, UK, RU, ES, IT, ZH-CN) - thanks **@myrevery** and other contributors for your work!
+- Added `$restart` flag to `v-add-web-domain-backend` command (#1094) (#797) - thanks **@bright-soft**
+- PostgreSQL: forbid the use of upper case (#1084) causing issues with backup / creating database or user
+- Changed WordPress name in Quick Web App installer (#1074)
+- Cleaned up entries used in the Google / Gmail DNS template - thanks **@madito**
+- Enhanced ProFTPd support for TLS
+- Refactored LXD compiler script
+- Updated phpMyAdmin to version 5.0.4
 
+## [1.2.4] - Service Release
+### Features
+- No new features have been introduced in this release.
+
+### Bugfixes
+- Fixes an issue on auto renewing let's encrypt certificates.
 
 ## [1.2.3] - Service Release
 ### Features

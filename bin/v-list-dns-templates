@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list dns templates
 # options: [FORMAT]
+# labels: dns
+#
+# example: v-list-dns-templates json
 #
 # The function for obtaining the list of all DNS templates available.
 

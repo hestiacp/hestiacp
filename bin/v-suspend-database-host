@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: suspend database server
 # options: TYPE HOST
+# labels: panel
+#
+# example: v-suspend-database-host mysql localhost
 #
 # The function for suspending a database server.
 

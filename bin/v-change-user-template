@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change user default template
 # options: USER TYPE TEMPLATE
+# labels: panel
+#
+# example: v-change-user-template admin WEB wordpress
 #
 # The function changes default user web template.
 

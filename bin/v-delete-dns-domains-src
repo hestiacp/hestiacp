@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete dns domains based on SRC field
 # options: USER SRC [RESTART]
+# labels: dns
+#
+# example: v-delete-dns-domains-src admin '' yes
 #
 # The function for deleting DNS domains related to a certain host.
 

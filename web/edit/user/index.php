@@ -70,7 +70,11 @@ unset($output);
 
 // List languages
 exec (HESTIA_CMD."v-list-sys-languages json", $output, $return_var);
-$languages = json_decode(implode('', $output), true);
+$language = json_decode(implode('', $output), true);
+foreach($language as $lang){
+    $languages[$lang] = translate_json($lang);
+}
+asort($languages);
 unset($output);
 
 // List shells
@@ -101,8 +105,8 @@ if (!empty($_POST['save'])) {
     if ((!empty($_POST['v_password'])) && (empty($_SESSION['error_msg']))) {
         // Check password length
         $pw_len = strlen($_POST['v_password']);
-        if (!validate_password($_POST['v_password'])) { 
-            $_SESSION['error_msg'] = __('Password does not match the minimum requirements');
+        if (!validate_password($_POST['v_password'])){ 
+            $_SESSION['error_msg'] = _('Password does not match the minimum requirements');
         } 
         if (empty($_SESSION['error_msg'])) {
             $v_password = tempnam("/tmp","vst");
@@ -159,7 +163,7 @@ if (!empty($_POST['save'])) {
         unset($output);
     }
     // Change Role (admin only)
-    if (($v_role != $_POST['$v_role']) && ($_SESSION['user'] == 'admin') && (empty($_SESSION['error_msg']))) {
+    if (($v_role != $_POST['$v_role']) && ($_SESSION['user'] == 'admin') && $v_username != "admin" && (empty($_SESSION['error_msg']))) {
         $v_role = escapeshellarg($_POST['v_role']);
         exec (HESTIA_CMD."v-change-user-role ".escapeshellarg($v_username)." ".$v_role, $output, $return_var);
         check_return_code($return_var,$output);

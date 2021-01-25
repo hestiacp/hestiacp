@@ -536,9 +536,9 @@ rebuild_mail_domain_conf() {
         # Setting HELO for mail domain
         if [ ! -z "$local_ip" ]; then
             IP_RDNS=$(is_ip_rdns_valid "$local_ip")
-            sed -i "/^${domain}:/d" /etc/exim4/mailhelo.conf >/dev/null 2>&1
+            sed -i "/^${domain}:/d" $OSAL_DIR_EXIM_CONF/mailhelo.conf >/dev/null 2>&1
             if [ ! -z "$IP_RDNS" ]; then
-                echo ${domain}:${IP_RDNS} >> /etc/exim4/mailhelo.conf
+                echo ${domain}:${IP_RDNS} >> $OSAL_DIR_EXIM_CONF/mailhelo.conf
             fi
         fi
 
@@ -560,7 +560,7 @@ rebuild_mail_domain_conf() {
 
         # Removing configuration files if domain is suspended
         if [ "$SUSPENDED" = 'yes' ]; then
-            rm -f /etc/exim/domains/$domain_idn
+            rm -f $OSAL_DIR_EXIM_CONF/domains/$domain_idn
             rm -f /etc/dovecot/conf.d/domains/$domain_idn.conf
         fi
 

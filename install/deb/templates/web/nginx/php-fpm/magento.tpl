@@ -187,8 +187,9 @@ server {
     gzip_vary on;
 
     # Banned locations (only reached if the earlier PHP entry point regexes don't match)
-    location ~* (\.php$|\.htaccess$|\.git) {
-        deny all;
+    location ~ /\.(?!well-known\/) { 
+       deny all; 
+       return 404;
     }
 
     location /vstats/ {

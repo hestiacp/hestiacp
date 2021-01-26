@@ -437,6 +437,9 @@ if (!empty($_POST['save'])) {
     // Change backup gzip level
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_backup_gzip'] != $v_backup_gzip ) {
+            if ( $_POST['v_backup_mode'] == 'gzip' ){
+                $_POST['v_backup_gzip'] = 9;
+            }
             exec (HESTIA_CMD."v-change-sys-config-value BACKUP_GZIP ".escapeshellarg($_POST['v_backup_gzip']), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
@@ -445,7 +448,7 @@ if (!empty($_POST['save'])) {
         }
     }
 
-    // Change backup gzip level
+    // Change backup mode
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_backup_mode'] != $v_backup_mode ) {
             exec (HESTIA_CMD."v-change-sys-config-value BACKUP_MODE ".escapeshellarg($_POST['v_backup_mode']), $output, $return_var);
@@ -453,6 +456,12 @@ if (!empty($_POST['save'])) {
             unset($output);
             if (empty($_SESSION['error_msg'])) $v_backup_mode = $_POST['v_backup_mode'];
             $v_backup_adv = 'yes';
+            if ( $_POST['v_backup_mode'] == 'gzip' ){
+                $_POST['v_backup_gzip'] = 9;
+                if (empty($_SESSION['error_msg'])) $v_backup_gzip = $_POST['v_backup_gzip'];
+                exec (HESTIA_CMD."v-change-sys-config-value BACKUP_GZIP ".escapeshellarg($_POST['v_backup_gzip']), $output, $return_var);
+            }
+            
         }
     }
 

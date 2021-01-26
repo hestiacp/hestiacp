@@ -18,7 +18,7 @@ source $HESTIA/conf/hestia.conf
 #----------------------------------------------------------#
 
 echo "For deleting PHPmyAdmin you will need confirm the removal with root password. Password can be found in /usr/local/hestia/conf/mysql.conf"
-read -p 'Would you like to continye? [y/n]'
+read -p 'Would you like to continue? [y/n]'
 echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
 then

@@ -145,6 +145,7 @@ function session_invalid(){
                         $data = $api -> create_temp_user($database,$user, $host);
                         $_SESSION['PMA_single_signon_user'] = $data -> login -> user;
                         $_SESSION['PMA_single_signon_password'] = $data -> login -> password ; 
+                        $_SESSION['PMA_single_signon_host'] = $host;
                         //save database / username to be used for sending logout notification. 
                         $_SESSION['HESTIA_sso_user'] = $user;
                         $_SESSION['HESTIA_sso_database'] = $database;

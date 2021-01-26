@@ -25,7 +25,9 @@ $cfg['SaveDir'] = '';
  * You can find more configuration options in the documentation
  * in the doc/ folder or at <https://docs.phpmyadmin.net/>.
  */
- $i = 0;
+
+ //start with 1 other wise it doesn't work
+ $i = 1;
  foreach (glob('/etc/phpmyadmin/conf.d/*.php') as $filename)
  {
      include($filename);

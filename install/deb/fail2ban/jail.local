@@ -59,5 +59,7 @@ enabled = true
 filter = dovecot-whitelist
 action = ignoreip[name=WHITELIST]
 logpath = /var/log/dovecot.log
+#IP gets whitelisted directly. No need to retry.
 maxretry = 0
+#Whitelisting lasts for 14400s = 4 hours
 bantime = 14400

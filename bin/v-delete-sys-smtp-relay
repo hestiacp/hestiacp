@@ -1,11 +1,11 @@
 #!/bin/bash
-# info: disable system wide smarthost support
+# info: disable system wide smtp relay support
 # options: 
 # labels: hestia
 #
-# example: v-delete-sys-smarthost
+# example: v-delete-sys-smtp-relay
 #
-# this function disables system wide smarthost support.
+# this function disables system wide smtp relay support.
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -27,19 +27,19 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 
-$BIN/v-change-sys-config-value SMARTHOST false
-$BIN/v-change-sys-config-value SMARTHOST_HOST ''
-$BIN/v-change-sys-config-value SMARTHOST_PORT ''
-$BIN/v-change-sys-config-value SMARTHOST_USER ''
+$BIN/v-change-sys-config-value SMTP_RELAY false
+$BIN/v-change-sys-config-value SMTP_RELAY_HOST ''
+$BIN/v-change-sys-config-value SMTP_RELAY_PORT ''
+$BIN/v-change-sys-config-value SMTP_RELAY_USER ''
 
-rm -f /etc/exim4/smarthost.conf
+rm -f /etc/exim4/smtp_relay.conf
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging
-log_history "Disable system wide smarthost support."
+log_history "Disable system wide smtp relay support."
 log_event "$OK" "$ARGUMENTS"
 
 exit

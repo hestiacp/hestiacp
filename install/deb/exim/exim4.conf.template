@@ -74,11 +74,11 @@ DKIM_PRIVATE_KEY = ${if exists{DKIM_FILE}{DKIM_FILE}{0}}
 
 OUTGOING_IP = /etc/exim4/domains/$sender_address_domain/ip
 
-SMARTHOST_FILE = ${if exists{/etc/exim4/domains/${sender_address_domain}/smarthost.conf}{/etc/exim4/domains/$sender_address_domain/smarthost.conf}{/etc/exim4/smarthost.conf}}
-SMARTHOST_HOST=${lookup{host}lsearch{SMARTHOST_FILE}}
-SMARTHOST_PORT=${lookup{port}lsearch{SMARTHOST_FILE}}
-SMARTHOST_USER=${lookup{user}lsearch{SMARTHOST_FILE}}
-SMARTHOST_PASS=${lookup{pass}lsearch{SMARTHOST_FILE}}
+SMTP_RELAY_FILE = ${if exists{/etc/exim4/domains/${sender_address_domain}/smtp_relay.conf}{/etc/exim4/domains/$sender_address_domain/smtp_relay.conf}{/etc/exim4/smtp_relay.conf}}
+SMTP_RELAY_HOST = ${lookup{host}lsearch{SMTP_RELAY_FILE}}
+SMTP_RELAY_PORT = ${lookup{port}lsearch{SMTP_RELAY_FILE}}
+SMTP_RELAY_USER = ${lookup{user}lsearch{SMTP_RELAY_FILE}}
+SMTP_RELAY_PASS = ${lookup{pass}lsearch{SMTP_RELAY_FILE}}
 
 ######################################################################
 #                       ACL CONFIGURATION                            #
@@ -223,10 +223,10 @@ acl_check_mime:
 ######################################################################
 begin authenticators
 
-smarthost_login:
+smtp_relay_login:
   driver = plaintext
   public_name = LOGIN
-  hide client_send = : SMARTHOST_USER : SMARTHOST_PASS
+  hide client_send = : SMTP_RELAY_USER : SMTP_RELAY_PASS
 
 dovecot_plain:
   driver = dovecot
@@ -248,12 +248,12 @@ dovecot_login:
 ######################################################################
 begin routers
 
-send_via_smarthost:
+send_via_smtp_relay:
   driver = manualroute
-  address_data = SMARTHOST_HOST:SMARTHOST_PORT
+  address_data = SMTP_RELAY_HOST:SMTP_RELAY_PORT
   domains = !+local_domains
-  require_files = SMARTHOST_FILE : !/etc/exim4/domains/$sender_address_domain/no_smarthost
-  transport = smarthost_smtp
+  require_files = SMTP_RELAY_FILE
+  transport = smtp_relay_smtp
   route_list = * ${extract{1}{:}{$address_data}}::${extract{2}{:}{$address_data}}
   no_more
   no_verify
@@ -335,7 +335,7 @@ terminate_alias:
 ######################################################################
 begin transports
 
-smarthost_smtp:
+smtp_relay_smtp:
   driver = smtp
   hosts_require_auth = $host_address
   hosts_require_tls = $host_address

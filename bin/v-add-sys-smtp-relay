@@ -1,11 +1,11 @@
 #!/bin/bash
-# info: add system wide smarthost support
+# info: add system wide smtp relay support
 # options: HOST USERNAME PASSWORD [PORT]
 # labels: hestia
 #
-# example: v-add-sys-smarthost srv.smarthost.tld uname123 pass12345
+# example: v-add-sys-smtp-relay srv.smtprelay.tld uname123 pass12345
 #
-# this function adds system wide smarthost support.
+# this function adds system wide smtp relay support.
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -37,12 +37,12 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 
-$BIN/v-change-sys-config-value SMARTHOST 'true'
-$BIN/v-change-sys-config-value SMARTHOST_HOST $host
-$BIN/v-change-sys-config-value SMARTHOST_PORT $port
-$BIN/v-change-sys-config-value SMARTHOST_USER $username
+$BIN/v-change-sys-config-value SMTP_RELAY 'true'
+$BIN/v-change-sys-config-value SMTP_RELAY_HOST $host
+$BIN/v-change-sys-config-value SMTP_RELAY_PORT $port
+$BIN/v-change-sys-config-value SMTP_RELAY_USER $username
 
-cat >/etc/exim4/smarthost.conf << EOL
+cat >/etc/exim4/smtp_relay.conf << EOL
 host:$host
 port:$port
 user:$username
@@ -55,7 +55,7 @@ EOL
 #----------------------------------------------------------#
 
 # Logging
-log_history "enabled system wide smarthost support."
+log_history "enabled system wide smtp relay support."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -51,10 +51,10 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account']))) {
     $v_suspended = $data[$v_domain]['SUSPENDED'];
     $v_webmail_alias = $data[$v_domain]['WEBMAIL_ALIAS'];
     $v_webmail = $data[$v_domain]['WEBMAIL'];
-    $v_smarthost = $data[$v_domain]['U_SMARTHOST'];
-    $v_smarthost_host = $data[$v_domain]['U_SMARTHOST_HOST'];
-    $v_smarthost_port = $data[$v_domain]['U_SMARTHOST_PORT'];
-    $v_smarthost_user = $data[$v_domain]['U_SMARTHOST_USERNAME'];
+    $v_smtp_relay = $data[$v_domain]['U_SMTP_RELAY'];
+    $v_smtp_relay_host = $data[$v_domain]['U_SMTP_RELAY_HOST'];
+    $v_smtp_relay_port = $data[$v_domain]['U_SMTP_RELAY_PORT'];
+    $v_smtp_relay_user = $data[$v_domain]['U_SMTP_RELAY_USERNAME'];
 
     if ( $v_suspended == 'yes' ) {
         $v_status =  'suspended';
@@ -400,30 +400,37 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
         }
     }
 
-    // Add Smarthost Support
-    if (($_POST['v_smarthost']) && (empty($_SESSION['error_msg']))) {
-        if ((!empty($_POST['v_smarthost_host'])) && (!empty($_POST['v_smarthost_user'])) && (!empty($_POST['v_smarthost_pass']))) {
-            $v_smarthost = true;	
-            $v_smarthost_host = escapeshellarg($_POST['v_smarthost_host']);
-            $v_smarthost_user = escapeshellarg($_POST['v_smarthost_user']);
-            $v_smarthost_pass = escapeshellarg($_POST['v_smarthost_pass']);
-            if (!empty($_POST['v_smarthost_port'])) {
-                $v_smarthost_port = escapeshellarg($_POST['v_smarthost_port']);
+    // Add SMTP Relay Support
+    if (empty($_SESSION['error_msg'])) {
+        if (isset($_POST['v_smtp_relay']) && (!empty($_POST['v_smtp_relay_host'])) && (!empty($_POST['v_smtp_relay_user']))) {
+            if (!empty($_POST['v_smtp_relay_pass'])) {
+                if (($_POST['v_smtp_relay_host'] != $v_smtp_relay_host) ||
+                    ($_POST['v_smtp_relay_user'] != $v_smtp_relay_user) ||
+                    ($_POST['v_smtp_relay_port'] != $v_smtp_relay_port)) {
+                    $v_smtp_relay = true;	
+                    $v_smtp_relay_host = escapeshellarg($_POST['v_smtp_relay_host']);
+                    $v_smtp_relay_user = escapeshellarg($_POST['v_smtp_relay_user']);
+                    $v_smtp_relay_pass = escapeshellarg($_POST['v_smtp_relay_pass']);
+                    if (!empty($_POST['v_smtp_relay_port'])) {
+                        $v_smtp_relay_port = escapeshellarg($_POST['v_smtp_relay_port']);
+                    } else {
+                        $v_smtp_relay_port = '587';
+                    }
+                    exec (HESTIA_CMD."v-add-mail-domain-smtp-relay ".$v_username." ".escapeshellarg($v_domain)." ".$v_smtp_relay_host." ".$v_smtp_relay_user." ".$v_smtp_relay_pass." ".$v_smtp_relay_port, $output, $return_var);
+                    check_return_code($return_var,$output);
+                    unset($output);   
+                }
             } else {
-                $v_smarthost_port = '587';
+                $_SESSION['error_msg'] = _('SMTP Relay Password is required');
             }
-            exec (HESTIA_CMD."v-add-mail-domain-smarthost ".$v_username." ".escapeshellarg($v_domain)." ".$v_smarthost_host." ".$v_smarthost_user." ".$v_smarthost_pass." ".$v_smarthost_port, $output, $return_var);
+        }
+        if ((!isset($_POST['v_smtp_relay'])) && ($v_smtp_relay == true)) {
+            $v_smtp_relay = false;
+            $v_smtp_relay_host = $v_smtp_relay_user = $v_smtp_relay_pass = $v_smtp_relay_port = '';
+            exec (HESTIA_CMD."v-delete-mail-domain-smtp-relay ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
-        } else {
-                $_SESSION['error_msg'] = _('Smarthost requires: Host, Username, and Password.');
         }
-    } else {
-        $v_smarthost = false;
-        $v_smarthost_host = $v_smarthost_user = $v_smarthost_pass = $v_smarthost_port = '';
-        exec (HESTIA_CMD."v-delete-mail-domain-smarthost ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
-        check_return_code($return_var,$output);
-        unset($output);
     }
 
     // Set success message

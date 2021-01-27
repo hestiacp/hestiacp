@@ -1,11 +1,11 @@
 #!/bin/bash
-# info: Add mail domain smarthost support
+# info: Add mail domain smtp relay support
 # options: USER DOMAIN HOST USERNAME PASSWORD [PORT]
 # labels: mail
 #
-# example: v-add-mail-domain-smarthost user domain.tld srv.smarthost.tld uname123 pass12345
+# example: v-add-mail-domain-smtp-relay user domain.tld srv.smtprelay.tld uname123 pass12345
 #
-# This function adds mail domain smarthost support.
+# This function adds mail domain smtp relay support.
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -42,7 +42,7 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-cat >/etc/exim4/domains/${domain}/smarthost.conf << EOL
+cat >/etc/exim4/domains/${domain}/smtp_relay.conf << EOL
 host:$host
 port:$port
 user:$username
@@ -53,19 +53,19 @@ EOL
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-# Adding smarthost values in config
-add_object_key 'mail' 'DOMAIN' "$domain" 'U_SMARTHOST' 'ACCOUNTS'
-add_object_key 'mail' 'DOMAIN' "$domain" 'U_SMARTHOST_HOST' 'ACCOUNTS'
-add_object_key 'mail' 'DOMAIN' "$domain" 'U_SMARTHOST_PORT' 'ACCOUNTS'
-add_object_key 'mail' 'DOMAIN' "$domain" 'U_SMARTHOST_USERNAME' 'ACCOUNTS'
+# Adding smtp relay values in config
+add_object_key 'mail' 'DOMAIN' "$domain" 'U_SMTP_RELAY' 'ACCOUNTS'
+add_object_key 'mail' 'DOMAIN' "$domain" 'U_SMTP_RELAY_HOST' 'ACCOUNTS'
+add_object_key 'mail' 'DOMAIN' "$domain" 'U_SMTP_RELAY_PORT' 'ACCOUNTS'
+add_object_key 'mail' 'DOMAIN' "$domain" 'U_SMTP_RELAY_USERNAME' 'ACCOUNTS'
 
-update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMARTHOST' 'yes'
-update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMARTHOST_HOST' "$host"
-update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMARTHOST_PORT' "$port"
-update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMARTHOST_USERNAME' "$username"
+update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMTP_RELAY' 'true'
+update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMTP_RELAY_HOST' "$host"
+update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMTP_RELAY_PORT' "$port"
+update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMTP_RELAY_USERNAME' "$username"
 
 # Logging
-log_history "Added domain smarthost support for $domain"
+log_history "Added domain smtp relay support for $domain"
 log_event "$OK" "$ARGUMENTS"
 
 exit

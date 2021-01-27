@@ -115,6 +115,11 @@ if (is_array($dns_cluster)) {
     }
 }
 
+// List smtp relay settings
+if (!empty($_SESSION['SMTP_RELAY'])) $v_smtp_relay = $_SESSION['SMTP_RELAY'];
+if (!empty($_SESSION['SMTP_RELAY_HOST'])) $v_smtp_relay_host = $_SESSION['SMTP_RELAY_HOST'];
+if (!empty($_SESSION['SMTP_RELAY_PORT'])) $v_smtp_relay_port = $_SESSION['SMTP_RELAY_PORT'];
+if (!empty($_SESSION['SMTP_RELAY_USER'])) $v_smtp_relay_user = $_SESSION['SMTP_RELAY_USER'];
 
 // List Database hosts
 exec (HESTIA_CMD."v-list-database-hosts json", $output, $return_var);
@@ -361,27 +366,37 @@ if (!empty($_POST['save'])) {
         }
     }
 
-    // Update system wide smarthost
+    // Update system wide smtp relay
     if (empty($_SESSION['error_msg'])) {
-	if ($_POST['v_smarthost']) {
-	    if (!empty($_POST['v_smarthost_host']) && !empty($_POST['v_smarthost_user']) && !empty($_POST['v_smarthost_pass'])) {
-	        $v_smarthost_host = escapeshellarg($_POST['v_smarthost_host']);
-                $v_smarthost_user = escapeshellarg($_POST['v_smarthost_user']);
-	        $v_smarthost_pass = escapeshellarg($_POST['v_smarthost_pass']);
-	        if (!empty($_POST['v_smarthost_port'])) {
-	            $v_smarthost_port = escapeshellarg($_POST['v_smarthost_port']);
-	            exec (HESTIA_CMD."v-add-sys-smarthost ". $v_smarthost_host ." ". $v_smarthost_user ." ". $v_smarthost_pass ." ". $v_smarthost_port, $output, $return_var);
-	        } else {
-		    exec (HESTIA_CMD."v-add-sys-smarthost ". $v_smarthost_host ." ". $v_smarthost_user ." ". $v_smarthost_pass, $output, $return_var);
-	        }
-	        check_return_code($return_var,$output);
-		unset($output);
-	    }
-	} else {
-            exec (HESTIA_CMD."v-delete-sys-smarthost", $output, $return_var);
-	    check_return_code($return_var,$output);
+        if (isset($_POST['v_smtp_relay']) && (!empty($_POST['v_smtp_relay_host'])) && (!empty($_POST['v_smtp_relay_user']))) {
+            if (!empty($_POST['v_smtp_relay_pass'])) {
+                if (($_POST['v_smtp_relay_host'] != $v_smtp_relay_host) ||
+                    ($_POST['v_smtp_relay_user'] != $v_smtp_relay_user) ||
+                    ($_POST['v_smtp_relay_port'] != $v_smtp_relay_port)) {
+                    $v_smtp_relay = true;	
+                    $v_smtp_relay_host = escapeshellarg($_POST['v_smtp_relay_host']);
+                    $v_smtp_relay_user = escapeshellarg($_POST['v_smtp_relay_user']);
+                    $v_smtp_relay_pass = escapeshellarg($_POST['v_smtp_relay_pass']);
+                    if (!empty($_POST['v_smtp_relay_port'])) {
+                        $v_smtp_relay_port = escapeshellarg($_POST['v_smtp_relay_port']);
+                    } else {
+                        $v_smtp_relay_port = '587';
+                    }
+                    exec (HESTIA_CMD."v-add-sys-smtp-relay ".$v_smtp_relay_host." ".$v_smtp_relay_user." ".$v_smtp_relay_pass." ".$v_smtp_relay_port, $output, $return_var);
+                    check_return_code($return_var,$output);
+                    unset($output);
+                }
+            } else {
+                $_SESSION['error_msg'] = _('SMTP Relay Password is required');
+            }
+        }
+        if ((!isset($_POST['v_smtp_relay'])) && ($v_smtp_relay == true)) {
+            $v_smtp_relay = false;
+            $v_smtp_relay_host = $v_smtp_relay_user = $v_smtp_relay_pass = $v_smtp_relay_port = '';
+            exec (HESTIA_CMD."v-delete-sys-smtp-relay", $output, $return_var);
+            check_return_code($return_var,$output);
             unset($output);
-	}
+        }
     }
 
     // Update phpMyAdmin url

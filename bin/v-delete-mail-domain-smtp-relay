@@ -1,11 +1,11 @@
 #!/bin/bash
-# info: Remove mail domain smarthost support
+# info: Remove mail domain smtp relay support
 # options: USER DOMAIN
 # labels: hestia
 #
-# example: v-delete-mail-domain-smarthost user domain.tld
+# example: v-delete-mail-domain-smtp-relay user domain.tld
 #
-# This function removes mail domain smarthost support.
+# This function removes mail domain smtp relay support.
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -34,25 +34,25 @@ is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 #                       Action                             #
 #----------------------------------------------------------#
 
-rm -f /etc/exim4/domains/${domain}/smarthost.conf
+rm -f /etc/exim4/domains/${domain}/smtp_relay.conf
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-# Adding smarthost values in config
-add_object_key 'mail' 'DOMAIN' "$domain" 'U_SMARTHOST' 'ACCOUNTS'
-add_object_key 'mail' 'DOMAIN' "$domain" 'U_SMARTHOST_HOST' 'ACCOUNTS'
-add_object_key 'mail' 'DOMAIN' "$domain" 'U_SMARTHOST_PORT' 'ACCOUNTS'
-add_object_key 'mail' 'DOMAIN' "$domain" 'U_SMARTHOST_USERNAME' 'ACCOUNTS'
+# Adding smtp relay values in config
+add_object_key 'mail' 'DOMAIN' "$domain" 'U_SMTP_RELAY' 'ACCOUNTS'
+add_object_key 'mail' 'DOMAIN' "$domain" 'U_SMTP_RELAY_HOST' 'ACCOUNTS'
+add_object_key 'mail' 'DOMAIN' "$domain" 'U_SMTP_RELAY_PORT' 'ACCOUNTS'
+add_object_key 'mail' 'DOMAIN' "$domain" 'U_SMTP_RELAY_USERNAME' 'ACCOUNTS'
 
-update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMARTHOST' ''
-update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMARTHOST_HOST' ''
-update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMARTHOST_PORT' ''
-update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMARTHOST_USERNAME' ''
+update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMTP_RELAY' 'false'
+update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMTP_RELAY_HOST' ''
+update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMTP_RELAY_PORT' ''
+update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMTP_RELAY_USERNAME' ''
 
 # Logging
-log_history "Removed mail domain smarthost support for $domain"
+log_history "Removed mail domain smtp relay support for $domain"
 
 log_event "$OK" "$ARGUMENTS"
 

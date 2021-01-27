@@ -106,8 +106,8 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     fi
 
     # Touch mailhelo.conf if it doesnt exist
-    if [ ! -f "/etc/exim4/mailhelo.conf" ]; then
-        touch /etc/exim4/mailhelo.conf
+    if [ ! -f "$OSAL_DIR_EXIM_CONF/mailhelo.conf" ]; then
+        touch $OSAL_DIR_EXIM_CONF/mailhelo.conf
     fi
 
     # Setting HELO for mail domain

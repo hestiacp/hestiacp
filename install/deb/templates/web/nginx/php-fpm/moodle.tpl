@@ -42,13 +42,6 @@ server {
         return 403;
     }
 
-    # Block access to "hidden" files and directories whose names begin with a
-    # period. This includes directories used by version control systems such
-    # as Subversion or Git to store control files.
-    location ~ (^|/)\. {
-        return 403;
-    }
-
     location / {
         location ~* ^.+\.(jpeg|jpg|png|gif|bmp|ico|svg|css|js)$ {
             expires     max;

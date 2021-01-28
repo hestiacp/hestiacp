@@ -330,7 +330,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
         [[ -d $HOMEDIR/$user/web/$domain/stats ]] && chmod u+w "$HOMEDIR/$user/web/$domain/stats"
     
         if [ "$backup_mode" = "zstd" ]; then
-            user_exec tar -I zstd -xpf $tmpdir/web/$domain/domain_data.tar.zst \
+            user_exec tar -I pzstd -xpf $tmpdir/web/$domain/domain_data.tar.zst \
                 -C "$HOMEDIR/$user/web/$domain/" \
                 --anchored \
                 --exclude='logs/*'
@@ -709,7 +709,7 @@ if [ "$db" != 'no' ] && [ ! -z "$DB_SYSTEM" ]; then
 
         # Unzipping database dump
         if [ $backup_mode = 'zstd' ]; then  
-            zstd -d $tmpdir/db/$database/$database.*.sql.zst
+            pzstd -d $tmpdir/db/$database/$database.*.sql.zst
         else
             gzip -d $tmpdir/db/$database/$database.*.sql.gz
         fi

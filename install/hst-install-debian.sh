@@ -1076,7 +1076,7 @@ fi
 
 # Backups
 echo "BACKUP_SYSTEM='local'" >> $HESTIA/conf/hestia.conf
-echo "BACKUP_GZIP='9'" >> $HESTIA/conf/hestia.conf
+echo "BACKUP_GZIP='4'" >> $HESTIA/conf/hestia.conf
 echo "BACKUP_MODE='zstd'" >> $HESTIA/conf/hestia.conf
 
 # Language

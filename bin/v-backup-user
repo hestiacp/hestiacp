@@ -271,7 +271,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
 
         # Backup files
         if [ "$BACKUP_MODE" = 'zstd' ]; then
-            tar ${fargs[@]} -cpf- * | zstd -$BACKUP_GZIP - > $tmpdir/web/$domain/domain_data.tar.zst
+            tar ${fargs[@]} -cpf- * | pzstd -$BACKUP_GZIP - > $tmpdir/web/$domain/domain_data.tar.zst
         else    
             tar ${fargs[@]} -cpf- * | gzip -$BACKUP_GZIP - > $tmpdir/web/$domain/domain_data.tar.gz
         fi
@@ -390,7 +390,7 @@ if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
         # Compress archive
         if [ ${#accounts[@]} -gt 0 ]; then
             if [ "$BACKUP_MODE" = 'zstd' ]; then
-                tar -cpf- ${accounts[@]}  | zstd -$BACKUP_GZIP - > $tmpdir/mail/$domain/accounts.tar.zst
+                tar -cpf- ${accounts[@]}  | pzstd -$BACKUP_GZIP - > $tmpdir/mail/$domain/accounts.tar.zst
             else    
                 tar -cpf- ${accounts[@]} | gzip -$BACKUP_GZIP - > $tmpdir/mail/$domain/accounts.tar.gz
             fi        
@@ -470,7 +470,7 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
 
             # Compress dump
             if [ "$BACKUP_MODE" = 'zstd' ]; then
-                zstd -$BACKUP_GZIP $dump
+                pzstd -$BACKUP_GZIP $dump
                 rm $dump;
             else    
                 gzip -$BACKUP_GZIP $dump
@@ -551,7 +551,7 @@ if [ "$USER" != '*' ]; then
 
             # Backup files and dirs
             if [ "$BACKUP_MODE" = 'zstd' ]; then
-                tar --anchored -cpf- ${fargs[@]} $udir | zstd -$BACKUP_GZIP - > $tmpdir/user_dir/$udir.tar.zst
+                tar --anchored -cpf- ${fargs[@]} $udir | pzstd -$BACKUP_GZIP - > $tmpdir/user_dir/$udir.tar.zst
             else    
                 tar --anchored -cpf- ${fargs[@]} $udir | gzip -$BACKUP_GZIP - > $tmpdir/user_dir/$udir.tar.gz
             fi 

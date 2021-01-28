@@ -602,8 +602,6 @@
                                     </table>
                                 </td>
                             </tr>
-
-
                             <tr>
                                 <td class="vst-text input-label step-top advanced-options">
                                     <a href="javascript:elementHideShow('backup');" class="vst-text">
@@ -630,7 +628,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print _('Compression') ?>
+                                                <?php print _('Compression') ?> <a href="https://docs.hestiacp.com/admin_docs/backups.html"><i class="fas fa-question-circle"></i></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -644,21 +642,18 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print _('Compression level') ?>
+                                                <?php print _('Compression level') ?> <a href="https://docs.hestiacp.com/admin_docs/backups.html"><i class="fas fa-question-circle"></i></a>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <select class="vst-list" name="v_backup_gzip">
-                                                    <option value='1' <?php if($v_backup_gzip == '1') echo 'selected' ?>>1</option>
-                                                    <option value='2' <?php if($v_backup_gzip == '2') echo 'selected' ?>>2</option>
-                                                    <option value='3' <?php if($v_backup_gzip == '3') echo 'selected' ?>>3</option>
-                                                    <option value='4' <?php if($v_backup_gzip == '4') echo 'selected' ?>>4</option>
-                                                    <option value='5' <?php if($v_backup_gzip == '5') echo 'selected' ?>>5</option>
-                                                    <option value='6' <?php if($v_backup_gzip == '6') echo 'selected' ?>>6</option>
-                                                    <option value='7' <?php if($v_backup_gzip == '7') echo 'selected' ?>>7</option>
-                                                    <option value='8' <?php if($v_backup_gzip == '8') echo 'selected' ?>>8</option>
-                                                    <option value='9' <?php if($v_backup_gzip == '9') echo 'selected' ?>>9</option>
+                                                <?php for($level = 1; $level < 20; $level++){
+                                                ?>
+                                                <option value='<?=$level;?>' <?php if($v_backup_gzip == $level) echo 'selected' ?>><?=$level;?><?php if($level > 9){ echo sprintf(' (%s)', _('zstd only')); } ?></option>
+                                                <?php
+                                                }
+                                                ?>
                                                 </select>
                                                 <br><br>
                                             </td>
@@ -673,7 +668,8 @@
                                                 <input type="text" size="20" class="vst-input" name="v_backup_dir" value="<?=trim($v_backup_dir, "'")?>">
                                                 <br><br>
                                             </td>
-                                        </tr>                                        <tr>
+                                        </tr>
+                                        <tr>
                                             <td class="vst-text input-label">
                                                     <label><input type="checkbox" size="20" class="vst-checkbox" name="v_backup_remote_adv" <?php if (!empty($v_backup_remote_adv)) echo "checked=yes" ?> onclick="javascript:elementHideShow('remote_backup');"> <?php print _('Remote backup');?></label>
                                             </td>
@@ -682,7 +678,7 @@
                                             <td class="vst-text input-label step-left">
                                                 <table style="display:<?php if (empty($v_backup_remote_adv)) echo 'none';?> ;" id="remote_backup">
                                                     <td class="vst-text">
-                                                        <?php print _('Protocol') ?>
+                                                        <?php print _('Protocol') ?> <a href="https://docs.hestiacp.com/admin_docs/backups.html"><i class="fas fa-question-circle"></i></a>
                                                     </td>
                                                     </tr>
                                                     <tr>

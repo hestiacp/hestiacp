@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue where local and FTP backup files were not deleted when running `v-delete-user-backup`. (#1421)
 - Fixed an issue where IP addresses could not be deleted (#1423)
 - Improvements have been made to the API's error handling - thanks **@danielalexis**!
+- ZSTD Compression has been made multi-threaded.
 
 ## [1.3.2] - Service Release
 ### Features

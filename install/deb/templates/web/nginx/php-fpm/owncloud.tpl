@@ -33,8 +33,13 @@ server {
     error_page 404 = /core/templates/404.php;
     error_page 500 502 503 504 /error/50x.html;
 
-    location ~ ^/(?:\.htaccess|data|config|db_structure\.xml|README){
+    location ~ ^/(?:\data|config|db_structure\.xml|README){
         deny all;
+    }
+    
+    location ~ /\.(?!well-known\/) { 
+       deny all; 
+       return 404;
     }
 
     location / {
@@ -68,11 +73,6 @@ server {
 
     location /error/ {
         alias   %home%/%user%/web/%domain%/document_errors/;
-    }
-
-    location ~* "/\.(htaccess|htpasswd)$" {
-        deny    all;
-        return  404;
     }
 
     location /vstats/ {

@@ -25,8 +25,9 @@ server {
         access_log off;
     }
 
-    location ~* "/\.(htaccess|htpasswd|git|svn|DS_Store)$" {
-        deny all;
+    location ~ /\.(?!well-known\/) { 
+       deny all; 
+       return 404;
     }
 
     location ~ /(readme.html|license.txt) {

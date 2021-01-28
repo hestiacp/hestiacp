@@ -18,7 +18,7 @@ source $HESTIA/conf/hestia.conf
 #----------------------------------------------------------#
 
 echo "For deleting PHPmyAdmin you will need confirm the removal with root password. Password can be found in /usr/local/hestia/conf/mysql.conf"
-read -p "Please enter Y to continue" -n 1 -r
+read -p 'Would you like to continue? [y/n]'
 echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
@@ -69,7 +69,7 @@ then
    # Create copy of config file
    cp -f $HESTIA_INSTALL_DIR/phpmyadmin/config.inc.php /etc/phpmyadmin/
    mkdir -p /var/lib/phpmyadmin/tmp
-   chmod 777 /var/lib/phpmyadmin/tmp
+   chmod 777 -R /var/lib/phpmyadmin/tmp
    
    # Set config and log directory
    sed -i "s|define('CONFIG_DIR', ROOT_PATH);|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
@@ -83,7 +83,9 @@ then
    rm -fr phpMyAdmin-$pma_v-all-languages
    rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
    
-   echo "DB_PMA_ALIAS='phpmyadmin'" >> $HESTIA/conf/hestia.conf
+   if [ -z '$DB_PMA_ALIAS' ]; then
+       echo "DB_PMA_ALIAS='phpmyadmin'" >> $HESTIA/conf/hestia.conf
+   fi
    $HESTIA/bin/v-change-sys-db-alias 'pma' "phpmyadmin"
 
    # Special thanks to Pavel Galkin (https://skurudo.ru)
@@ -91,32 +93,34 @@ then
    
    echo "[ * ] Createing localhost config"
    #ubuntu phpmyadmin path
-   pmapath1="/etc/phpmyadmin/conf.d/01-localhost.php"
-   
-   echo "\$cfg['Servers'][\$i]['favorite'] = 'pma__favorite';" >> $pmapath1
-   echo "\$cfg['Servers'][\$i]['usergroups'] = 'pma__usergroups';" >> $pmapath1
-   echo "\$cfg['Servers'][\$i]['central_columns'] = 'pma__central_columns';" >> $pmapath1
-   echo "\$cfg['Servers'][\$i]['designer_settings'] = 'pma__designer_settings';" >> $pmapath1
-   echo "\$cfg['Servers'][\$i]['export_templates'] = 'pma__export_templates';" >> $pmapath1
-   echo "\$cfg['Servers'][\$i]['savedsearches'] = 'pma__savedsearches';" >> $pmapath1
-   echo "\$cfg['Servers'][\$i]['navigationhiding'] = 'pma__navigationhiding';" >> $pmapath1
-   echo "\$cfg['Servers'][\$i]['users'] = 'pma__users';" >> $pmapath1
-   echo "\$cfg['Servers'][\$i]['usergroups'] = 'pma__usergroups';" >> $pmapath1
-   echo "\$cfg['Servers'][\$i]['pmadb'] = 'phpmyadmin';" >> $pmapath1
-   echo "\$cfg['Servers'][\$i]['controluser'] = 'pma';" >> $pmapath1
-   echo "\$cfg['Servers'][\$i]['controlpass'] = '$PASS';" >> $pmapath1
-   echo "\$cfg['Servers'][\$i]['bookmarktable'] = 'pma__bookmark';" >> $pmapath1
-   echo "\$cfg['Servers'][\$i]['relation'] = 'pma__relation';" >> $pmapath1
-   echo "\$cfg['Servers'][\$i]['userconfig'] = 'pma__userconfig';" >> $pmapath1
-   echo "\$cfg['Servers'][\$i]['table_info'] = 'pma__table_info';" >> $pmapath1
-   echo "\$cfg['Servers'][\$i]['column_info'] = 'pma__column_info';" >> $pmapath1
-   echo "\$cfg['Servers'][\$i]['history'] = 'pma__history';" >> $pmapath1
-   echo "\$cfg['Servers'][\$i]['recent'] = 'pma__recent';" >> $pmapath1
-   echo "\$cfg['Servers'][\$i]['table_uiprefs'] = 'pma__table_uiprefs';" >> $pmapath1
-   echo "\$cfg['Servers'][\$i]['tracking'] = 'pma__tracking';" >> $pmapath1
-   echo "\$cfg['Servers'][\$i]['table_coords'] = 'pma__table_coords';" >> $pmapath1
-   echo "\$cfg['Servers'][\$i]['pdf_pages'] = 'pma__pdf_pages';" >> $pmapath1
-   echo "\$cfg['Servers'][\$i]['designer_coords'] = 'pma__designer_coords';" >> $pmapath1
+   pmapath="/etc/phpmyadmin/conf.d/01-localhost.php"
+   echo "<?php " >> $pmapath
+   echo "\$cfg['Servers'][\$i]['host'] = 'localhost';" >> $pmapath
+   echo "\$cfg['Servers'][\$i]['port'] = '3306';" >> $pmapath
+   echo "\$cfg['Servers'][\$i]['favorite'] = 'pma__favorite';" >> $pmapath
+   echo "\$cfg['Servers'][\$i]['usergroups'] = 'pma__usergroups';" >> $pmapath
+   echo "\$cfg['Servers'][\$i]['central_columns'] = 'pma__central_columns';" >> $pmapath
+   echo "\$cfg['Servers'][\$i]['designer_settings'] = 'pma__designer_settings';" >> $pmapath
+   echo "\$cfg['Servers'][\$i]['export_templates'] = 'pma__export_templates';" >> $pmapath
+   echo "\$cfg['Servers'][\$i]['savedsearches'] = 'pma__savedsearches';" >> $pmapath
+   echo "\$cfg['Servers'][\$i]['navigationhiding'] = 'pma__navigationhiding';" >> $pmapath
+   echo "\$cfg['Servers'][\$i]['users'] = 'pma__users';" >> $pmapath
+   echo "\$cfg['Servers'][\$i]['usergroups'] = 'pma__usergroups';" >> $pmapath
+   echo "\$cfg['Servers'][\$i]['pmadb'] = 'phpmyadmin';" >> $pmapath
+   echo "\$cfg['Servers'][\$i]['controluser'] = 'pma';" >> $pmapath
+   echo "\$cfg['Servers'][\$i]['controlpass'] = '$PASS';" >> $pmapath
+   echo "\$cfg['Servers'][\$i]['bookmarktable'] = 'pma__bookmark';" >> $pmapath
+   echo "\$cfg['Servers'][\$i]['relation'] = 'pma__relation';" >> $pmapath
+   echo "\$cfg['Servers'][\$i]['userconfig'] = 'pma__userconfig';" >> $pmapath
+   echo "\$cfg['Servers'][\$i]['table_info'] = 'pma__table_info';" >> $pmapath
+   echo "\$cfg['Servers'][\$i]['column_info'] = 'pma__column_info';" >> $pmapath
+   echo "\$cfg['Servers'][\$i]['history'] = 'pma__history';" >> $pmapath
+   echo "\$cfg['Servers'][\$i]['recent'] = 'pma__recent';" >> $pmapath
+   echo "\$cfg['Servers'][\$i]['table_uiprefs'] = 'pma__table_uiprefs';" >> $pmapath
+   echo "\$cfg['Servers'][\$i]['tracking'] = 'pma__tracking';" >> $pmapath
+   echo "\$cfg['Servers'][\$i]['table_coords'] = 'pma__table_coords';" >> $pmapath
+   echo "\$cfg['Servers'][\$i]['pdf_pages'] = 'pma__pdf_pages';" >> $pmapath
+   echo "\$cfg['Servers'][\$i]['designer_coords'] = 'pma__designer_coords';" >> $pmapath
    
    #SOME WORK with DATABASE (table / user)
    PMADB=phpmyadmin

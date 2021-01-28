@@ -502,7 +502,7 @@ function validate_database(){
 }
 
 @test "WEB: Add web domain wildcard alias" {
-    run v-add-web-domain-alias $user $domain *.$domain
+    run v-add-web-domain-alias $user $domain "*.$domain"
     assert_success
     refute_output
 }

@@ -501,6 +501,12 @@ function validate_database(){
     assert_failure $E_EXISTS
 }
 
+@test "WEB: Add web domain wildcard alias" {
+    run v-add-web-domain-alias $user $domain "*.$domain"
+    assert_success
+    refute_output
+}
+
 @test "WEB: Add web domain stats" {
     run v-add-web-domain-stats $user $domain awstats
     assert_success

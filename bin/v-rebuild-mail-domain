@@ -63,6 +63,16 @@ if [ ! -z "$WEB_SYSTEM" ] || [ ! -z "$PROXY_SYSTEM" ]; then
     fi
 fi
 
+# Rebuild SMTP Relay configuration
+U_SMTP_RELAY=$(get_object_value 'web' 'DOMAIN' "$domain" "$U_SMTP_RELAY")
+if [ ! -z "$U_SMTP_RELAY" ]; then
+    U_SMTP_RELAY_HOST=$(get_object_value 'web' 'DOMAIN' "$domain" "$U_SMTP_RELAY_HOST")
+    U_SMTP_RELAY_USERNAME=$(get_object_value 'web' 'DOMAIN' "$domain" "$U_SMTP_RELAY_USERNAME")
+    U_SMTP_RELAY_PASSWORD=$(get_object_value 'web' 'DOMAIN' "$domain" "$U_SMTP_RELAY_PASSWORD")
+    U_SMTP_RELAY_PORT=$(get_object_value 'web' 'DOMAIN' "$domain" "$U_SMTP_RELAY_PORT")
+    $BIN/v-add-mail-domain-smtp-relay $user $domain "$U_SMTP_RELAY_HOST" "$U_SMTP_RELAY_USERNAME" "$U_SMTP_RELAY_PASSWORD" "$U_SMTP_RELAY_PORT"
+fi
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

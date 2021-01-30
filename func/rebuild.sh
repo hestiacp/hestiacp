@@ -556,6 +556,11 @@ rebuild_mail_domain_conf() {
             cp $USER_DATA/mail/$domain.pem \
                 $HOMEDIR/$user/conf/mail/$domain/dkim.pem
         fi
+        
+        # Rebuild SMTP Relay configuration
+        if [ "$U_SMTP_RELAY" = 'true' ]; then
+            $BIN/v-add-mail-domain-smtp-relay $user $domain "$U_SMTP_RELAY_HOST" "$U_SMTP_RELAY_USERNAME" "$U_SMTP_RELAY_PASSWORD" "$U_SMTP_RELAY_PORT"
+        fi
 
         # Removing configuration files if domain is suspended
         if [ "$SUSPENDED" = 'yes' ]; then

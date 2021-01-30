@@ -369,10 +369,10 @@ if (!empty($_POST['save'])) {
     // Update system wide smtp relay
     if (empty($_SESSION['error_msg'])) {
         if (isset($_POST['v_smtp_relay']) && (!empty($_POST['v_smtp_relay_host'])) && (!empty($_POST['v_smtp_relay_user']))) {
-            if (!empty($_POST['v_smtp_relay_pass'])) {
-                if (($_POST['v_smtp_relay_host'] != $v_smtp_relay_host) ||
-                    ($_POST['v_smtp_relay_user'] != $v_smtp_relay_user) ||
-                    ($_POST['v_smtp_relay_port'] != $v_smtp_relay_port)) {
+            if (($_POST['v_smtp_relay_host'] != $v_smtp_relay_host) ||
+                ($_POST['v_smtp_relay_user'] != $v_smtp_relay_user) ||
+                ($_POST['v_smtp_relay_port'] != $v_smtp_relay_port)) {
+                if (!empty($_POST['v_smtp_relay_pass'])) {               
                     $v_smtp_relay = true;	
                     $v_smtp_relay_host = escapeshellarg($_POST['v_smtp_relay_host']);
                     $v_smtp_relay_user = escapeshellarg($_POST['v_smtp_relay_user']);
@@ -385,9 +385,9 @@ if (!empty($_POST['save'])) {
                     exec (HESTIA_CMD."v-add-sys-smtp-relay ".$v_smtp_relay_host." ".$v_smtp_relay_user." ".$v_smtp_relay_pass." ".$v_smtp_relay_port, $output, $return_var);
                     check_return_code($return_var,$output);
                     unset($output);
+                } else {
+                    $_SESSION['error_msg'] = _('SMTP Relay Password is required');
                 }
-            } else {
-                $_SESSION['error_msg'] = _('SMTP Relay Password is required');
             }
         }
         if ((!isset($_POST['v_smtp_relay'])) && ($v_smtp_relay == true)) {

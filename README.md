@@ -74,11 +74,12 @@ apt-get update
 apt-get upgrade
 ```
 
-Issues
+Issues & Support Requests
 =============================
-If you've run into a problem, [file a new issue report via GitHub](https://github.com/hestiacp/hestiacp/issues) so that we may investigate further.
+* If you encounter a general problem while using Hestia Control Panel and need help, please [visit our forum](https://forum.hestiacp.com/) to search for potential solutions or post a new thread where community members can assist.
+* Bugs and other reproducible issues should be filed via GitHub by [creating a new issue report](https://github.com/hestiacp/hestiacp/issues) so that our developers can investigate further. Please note that requests for support will be redirected to our forum.
 
-**We cannot provide support for requests that do not describe the troubleshooting steps that have already been performed, or for third-party applications which do not relate to Hestia Control Panel. Please make sure that you fill in the necessary details in your issue reports!**
+**IMPORTANT: We _cannot_ provide support for requests that do not describe the troubleshooting steps that have already been performed, or for third-party applications not related to Hestia Control Panel (such as WordPress). Please make sure that you include as much information as possible in your forum posts or issue reports!**
 
 Contributions
 =============================

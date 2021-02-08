@@ -57,6 +57,7 @@ rebuild_user_conf() {
         setfacl -m "u:$user:r-x" "$HOMEDIR/$user"
     fi
     setfacl -m "g:hestia-users:---" "$HOMEDIR/$user"
+    setfacl -m "g:hestia-users:---" "$HESTIA"
 
     # Update user shell
     /usr/bin/chsh -s "$shell" "$user" &>/dev/null
@@ -82,7 +83,7 @@ rebuild_user_conf() {
 
     chmod a+x $HOMEDIR/$user
     chmod a+x $HOMEDIR/$user/conf
-    chown $user:$user \
+    chown --no-dereference $user:$user \
         $HOMEDIR/$user \
         $HOMEDIR/$user/.config \
         $HOMEDIR/$user/.cache \
@@ -119,7 +120,7 @@ rebuild_user_conf() {
         chmod 751 $HOMEDIR/$user/conf/web
         chmod 751 $HOMEDIR/$user/web
         chmod 771 $HOMEDIR/$user/tmp
-        chown $user:$user $HOMEDIR/$user/web
+        chown --no-dereference $user:$user $HOMEDIR/$user/web
         if [ -z "$create_user" ]; then
             $BIN/v-rebuild-web-domains $user $restart
         fi
@@ -244,7 +245,7 @@ rebuild_web_domain_conf() {
     fi
 
     # Set ownership
-    chown $user:$user \
+    chown --no-dereference $user:$user \
         $HOMEDIR/$user/web/$domain \
         $HOMEDIR/$user/web/$domain/private \
         $HOMEDIR/$user/web/$domain/cgi-bin \
@@ -404,18 +405,17 @@ rebuild_web_domain_conf() {
     done
 
     # Set folder permissions
-    chmod 551   $HOMEDIR/$user/web/$domain \
+    no_symlink_chmod 551   $HOMEDIR/$user/web/$domain \
                 $HOMEDIR/$user/web/$domain/stats \
                 $HOMEDIR/$user/web/$domain/logs
-    chmod 751   $HOMEDIR/$user/web/$domain/private \
+    no_symlink_chmod 751   $HOMEDIR/$user/web/$domain/private \
                 $HOMEDIR/$user/web/$domain/cgi-bin \
                 $HOMEDIR/$user/web/$domain/public_html \
                 $HOMEDIR/$user/web/$domain/public_shtml \
                 $HOMEDIR/$user/web/$domain/document_errors
     chmod 640 /var/log/$WEB_SYSTEM/domains/$domain.*
 
-    chown $user:www-data $HOMEDIR/$user/web/$domain/public_html \
-                $HOMEDIR/$user/web/$domain/public_shtml
+    chown --no-dereference $user:www-data $HOMEDIR/$user/web/$domain/public_*html
 }
 
 # DNS domain rebuild

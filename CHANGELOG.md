@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.3.3] - Service Release
+### Bugfixes
+- Improved permission handling.
+
 ## [1.3.2] - Service Release
 ### Features
 - Added PHP v8.0 support for multiphp environment.

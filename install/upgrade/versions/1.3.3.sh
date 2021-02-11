@@ -7,9 +7,12 @@
 #######################################################################################
 
 
-echo '[ * ] Update permissions'
-chmod 750 "$HESTIA/data/keys"
-chown admin:root "$HESTIA/data/keys"
+# Check if keys folder exists and adjust permissions
+if [ -d "$HESTIA/data/keys" ]; then
+    echo '[ * ] Update permissions'
+    chmod 750 "$HESTIA/data/keys"
+    chown admin:root "$HESTIA/data/keys"
+fi
 
 if [[ ! -e /etc/hestiacp/hestia.conf ]]; then
     echo '[ * ] Create global Hestia config'

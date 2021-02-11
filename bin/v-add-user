@@ -85,7 +85,6 @@ else
     setfacl -m "u:$user:r-x" "$HOMEDIR/$user"
 fi
 setfacl -m "g:hestia-users:---" "$HOMEDIR/$user"
-setfacl -m "g:hestia-users:---" "$HESTIA"
 
 # Building directory tree
 mkdir $HOMEDIR/$user/conf

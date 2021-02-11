@@ -8,8 +8,8 @@
 
 
 echo '[ * ] Update permissions'
-setfacl -m "g:hestia-users:---" "$HESTIA"
-
+chmod 750 "$HESTIA/data/keys"
+chown admin:root "$HESTIA/data/keys"
 
 if [[ ! -e /etc/hestiacp/hestia.conf ]]; then
     echo '[ * ] Create global Hestia config'

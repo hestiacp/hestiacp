@@ -24,7 +24,9 @@ HASH=$(keygen)
 #----------------------------------------------------------#
 
 if [ ! -d ${KEYS} ]; then
-  mkdir -p ${KEYS}
+    mkdir -p ${KEYS}
+    chown admin:root ${KEYS}
+    chmod 750 ${KEYS}
 fi
 
 if [[ -e ${KEYS}${HASH} ]] ; then

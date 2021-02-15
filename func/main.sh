@@ -1165,3 +1165,14 @@ user_exec() {
 
     setpriv --groups "$user_groups" --reuid "$user" --regid "$user" -- $@
 }
+
+# Simple chmod wrapper that skips symlink files after glob expand
+no_symlink_chmod() {
+    local filemode=$1; shift;
+
+    for i in "$@"; do
+        [[ -L ${i} ]] && continue
+
+        chmod "${filemode}" "${i}"
+    done
+}

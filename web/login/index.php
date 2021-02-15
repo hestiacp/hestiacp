@@ -16,6 +16,10 @@ if (isset($_GET['logout'])) {
 
 // Login as someone else
 if (isset($_SESSION['user'])) {
+    if (empty($_GET['loginas']) ){
+        header("Location: /list/web/");
+        exit;
+    }
     if ($_SESSION['user'] == 'admin' && !empty($_GET['loginas'])) {
         exec (HESTIA_CMD . "v-list-user ".escapeshellarg($_GET['loginas'])." json", $output, $return_var);
         if ( $return_var == 0 ) {
@@ -34,6 +38,7 @@ if (isset($_SESSION['user'])) {
 }
 
 function authenticate_user($user, $password, $twofa = ''){
+    unset($_SESSION['login']);
     if(isset($_SESSION['token']) && isset($_POST['token']) && $_POST['token'] == $_SESSION['token']) {
     $v_user = escapeshellarg($user);
     $v_ip = escapeshellarg($_SERVER['REMOTE_ADDR']);

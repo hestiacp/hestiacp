@@ -12,11 +12,18 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-if [ -z "$1" ]; then
+[[ -z $HESTIA ]] && HESTIA="/usr/local/hestia"
+
+source $HESTIA/func/main.sh
+
+new_timestamp
+
+abort_missmatch() {
     echo "Error: key missmatch"
-    exit 9
-fi
-key=$(basename $1)
+    echo "$date $time api $ip failed to login" >> $HESTIA/log/auth.log
+    exit $E_PASSWORD
+}
+
 ip=${2-127.0.0.1}
 time_n_date=$(date +'%T %F')
 time=$(echo "$time_n_date" |cut -f 1 -d \ )
@@ -27,11 +34,20 @@ date=$(echo "$time_n_date" |cut -f 2 -d \ )
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ ! -e $HESTIA/data/keys/$key ]; then
-    echo "Error: key missmatch"
-    echo "$date $time api $ip failed to login" >> $HESTIA/log/auth.log
-    exit 9
-fi
+key="$(basename "$1")"
+
+# Exit if Key is unset or to short
+[[ -z $key || ${#key} -lt 16 ]] && abort_missmatch
+
+# Key file must exist
+maybe_key_path="$(readlink -e "${HESTIA}/data/keys/${key}")"
+[[ -z $maybe_key_path ]] && abort_missmatch
+
+# Key file cannot be the key store
+[[ $maybe_key_path == "${HESTIA}/data/keys" ]] && abort_missmatch
+
+# Key file must be in the key store
+[[ $maybe_key_path == "${HESTIA}/data/keys/"* ]] || abort_missmatch
 
 
 #----------------------------------------------------------#

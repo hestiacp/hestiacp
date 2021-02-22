@@ -878,8 +878,8 @@ is_valid_extension() {
         chmod 750 $HESTIA/data/extensions/
         /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O $HESTIA/data/extensions/public_suffix_list.dat https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat 
     fi
-    domain=$1
-    extension=$( /bin/echo "${domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1 | /usr/bin/rev );
+    test_domain=$1
+    extension=$( /bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1 | /usr/bin/rev );
     exten=$(grep "^$extension\$" $HESTIA/data/extensions/public_suffix_list.dat);
     if [ $? -ne 0 ]; then
         check_result 2 ".$extension is not valid"
@@ -892,23 +892,23 @@ is_valid_2_part_extension() {
         chmod 750 $HESTIA/data/extensions/
         /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O $HESTIA/data/extensions/public_suffix_list.dat https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat 
     fi
-    domain=$1
-    extension=$( /bin/echo "${domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1-2 | /usr/bin/rev );
+    test_domain=$1
+    extension=$( /bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1-2 | /usr/bin/rev );
     exten=$(grep "^$extension\$" $HESTIA/data/extensions/public_suffix_list.dat);
 }
 
 get_base_domain() {
-    domain=$1
-    is_valid_extension "$domain"
+    test_domain=$1
+    is_valid_extension "$test_domain"
     if [ $? -ne 0 ]; then
         basedomain=""
     else 
-        is_valid_2_part_extension "$domain"
+        is_valid_2_part_extension "$test_domain"
         if [ $? -ne 0 ]; then
-           basedomain=$( /bin/echo "${domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1-2 | /usr/bin/rev ); 
+           basedomain=$( /bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1-2 | /usr/bin/rev ); 
         else
-           extension=$( /bin/echo "${domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1-2 | /usr/bin/rev ); 
-           partdomain=$( /bin/echo "${domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 3 | /usr/bin/rev );
+           extension=$( /bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1-2 | /usr/bin/rev ); 
+           partdomain=$( /bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 3 | /usr/bin/rev );
            basedomain="$partdomain.$extension"
         fi
     fi

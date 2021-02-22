@@ -13,11 +13,14 @@ function setup() {
     # echo "# Setup_file" > &3
     if [ $BATS_TEST_NUMBER = 1 ]; then
         echo 'user=test-5285' > /tmp/hestia-test-env.sh
+        echo 'user2=test-5286' > /tmp/hestia-test-env.sh
         echo 'userbk=testbk-5285' >> /tmp/hestia-test-env.sh
         echo 'userpass1=test-5285' >> /tmp/hestia-test-env.sh
         echo 'userpass2=t3st-p4ssw0rd' >> /tmp/hestia-test-env.sh
         echo 'HESTIA=/usr/local/hestia' >> /tmp/hestia-test-env.sh
         echo 'domain=test-5285.hestiacp.com' >> /tmp/hestia-test-env.sh
+        echo 'rootdomain=testhestiacp.com' >> /tmp/hestia-test-env.sh
+        echo 'subdomain=cdn.testhestiacp.com' >> /tmp/hestia-test-env.sh
         echo 'database=test-5285_database' >> /tmp/hestia-test-env.sh
         echo 'dbuser=test-5285_dbuser' >> /tmp/hestia-test-env.sh
     fi
@@ -553,7 +556,61 @@ function validate_database(){
     refute_output
 }
 
+#----------------------------------------------------------#
+#                    ALLOW Users                           #
+#----------------------------------------------------------#
 
+@test "ALLOW_USERS: Check if user can't steal web domains" {
+    run v-add-user $user2 $user2 $user@hestiacp.com default "Super Test"
+    assert_success
+    refute_output
+    
+    run v-add-web-domain $user2 $rootdomain 
+    assert_success
+    refute_output
+    
+    run v-add-web-domain $user $subdomain
+    assert_failure $E_EXISTS
+}
+
+@test "ALLOW_USERS: Set Allow users" {
+    run v-add-web-domain-allow-user $user2 $rootdomain
+    assert_success
+    refute_output
+}
+
+@test "ALLOW_USERS: Try to add subdomain user" {
+    run v-add-web-domain $user $subdomain
+    assert_success
+    refute_output
+}
+
+@test "ALLOW_USERS: Set Allow users no" {
+    run v-delete-web-domain $user $subdomain
+    assert_success
+    refute_output
+    
+    run v-delete-web-domain-allow-user $user2 $rootdomain
+    assert_success
+    refute_output
+}
+
+@test "ALLOW_USERS: Check if user can't steal web domains" {
+    run v-add-web-domain $user $subdomain
+    assert_failure $E_EXISTS
+}
+
+@test "ALLOW_USERS: Check if owner can add subdomain {
+    run v-add-web-domain $user2 $subdomain
+    assert_success
+    refute_output
+
+    run v-delete-user $user2
+    assert_success
+    refute_output
+}
+
+ 
 #----------------------------------------------------------#
 #                      MULTIPHP                            #
 #----------------------------------------------------------#

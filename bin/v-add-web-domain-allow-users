@@ -59,7 +59,7 @@ if [ -z "$ALLOW_USERS" ]; then
 fi
 
 # Adding new alias
-update_object_value 'web' 'DOMAIN' "$domain" '$ALLOW_USERS' "no"
+update_object_value 'web' 'DOMAIN' "$domain" '$ALLOW_USERS' "yes"
 
 log_history "Allow users create subdomain for $domain"
 log_event "$OK" "$ARGUMENTS"

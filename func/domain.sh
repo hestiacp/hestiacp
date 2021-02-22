@@ -916,16 +916,18 @@ get_base_domain() {
 
 is_base_domain_owner(){
     for object in ${1//,/ }; do
-        get_base_domain $object
-        web=$(grep -F -H -h "DOMAIN='$basedomain'" $HESTIA/data/users/*/web.conf);
-        if [ ! -z "$web" ]; then
-            parse_object_kv_list "$web"
-            if [ -z "$ALLOW_USERS" ] &&  [ "$ALLOW_USERS" != "yes" ]; then
-            # Don't care if $basedomain all ready exists only if the owner is of the base domain is the current user
-            is_domain_new "" $basedomain
+        if [ "$object" != "none" ]; then
+            get_base_domain $object
+            web=$(grep -F -H -h "DOMAIN='$basedomain'" $HESTIA/data/users/*/web.conf);
+            if [ ! -z "$web" ]; then
+                parse_object_kv_list "$web"
+                if [ -z "$ALLOW_USERS" ] ||  [ "$ALLOW_USERS" != "yes" ]; then
+                # Don't care if $basedomain all ready exists only if the owner is of the base domain is the current user
+                is_domain_new "" $basedomain
+                fi
+            else
+                is_domain_new "" $basedomain
             fi
-        else
-            is_domain_new "" $basedomain
         fi
     done
 }

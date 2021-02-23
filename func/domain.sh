@@ -878,7 +878,7 @@ is_valid_extension() {
         chmod 750 $HESTIA/data/extensions/
         /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O $HESTIA/data/extensions/public_suffix_list.dat https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat 
     fi
-    test_domain=$1
+    test_domain=$(idn -t --quiet -u "$1" )
     extension=$( /bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1 | /usr/bin/rev );
     exten=$(grep "^$extension\$" $HESTIA/data/extensions/public_suffix_list.dat);
     if [ $? -ne 0 ]; then
@@ -892,7 +892,7 @@ is_valid_2_part_extension() {
         chmod 750 $HESTIA/data/extensions/
         /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O $HESTIA/data/extensions/public_suffix_list.dat https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat 
     fi
-    test_domain=$1
+    test_domain=$(idn -t --quiet -u "$1" )
     extension=$( /bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1-2 | /usr/bin/rev );
     exten=$(grep "^$extension\$" $HESTIA/data/extensions/public_suffix_list.dat);
 }

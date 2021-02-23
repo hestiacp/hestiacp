@@ -13,7 +13,7 @@ function setup() {
     # echo "# Setup_file" > &3
     if [ $BATS_TEST_NUMBER = 1 ]; then
         echo 'user=test-5285' > /tmp/hestia-test-env.sh
-        echo 'user2=test-5286' > /tmp/hestia-test-env.sh
+        echo 'user2=test-5286' >> /tmp/hestia-test-env.sh
         echo 'userbk=testbk-5285' >> /tmp/hestia-test-env.sh
         echo 'userpass1=test-5285' >> /tmp/hestia-test-env.sh
         echo 'userpass2=t3st-p4ssw0rd' >> /tmp/hestia-test-env.sh
@@ -555,61 +555,6 @@ function validate_database(){
     assert_success
     refute_output
 }
-
-#----------------------------------------------------------#
-#                    ALLOW Users                           #
-#----------------------------------------------------------#
-
-@test "ALLOW_USERS: Check if user can't steal web domains" {
-    run v-add-user $user2 $user2 $user@hestiacp.com default "Super Test"
-    assert_success
-    refute_output
-    
-    run v-add-web-domain $user2 $rootdomain 
-    assert_success
-    refute_output
-    
-    run v-add-web-domain $user $subdomain
-    assert_failure $E_EXISTS
-}
-
-@test "ALLOW_USERS: Set Allow users" {
-    run v-add-web-domain-allow-user $user2 $rootdomain
-    assert_success
-    refute_output
-}
-
-@test "ALLOW_USERS: Try to add subdomain user" {
-    run v-add-web-domain $user $subdomain
-    assert_success
-    refute_output
-}
-
-@test "ALLOW_USERS: Set Allow users no" {
-    run v-delete-web-domain $user $subdomain
-    assert_success
-    refute_output
-    
-    run v-delete-web-domain-allow-user $user2 $rootdomain
-    assert_success
-    refute_output
-}
-
-@test "ALLOW_USERS: Check if user can't steal web domains" {
-    run v-add-web-domain $user $subdomain
-    assert_failure $E_EXISTS
-}
-
-@test "ALLOW_USERS: Check if owner can add subdomain {
-    run v-add-web-domain $user2 $subdomain
-    assert_success
-    refute_output
-
-    run v-delete-user $user2
-    assert_success
-    refute_output
-}
-
  
 #----------------------------------------------------------#
 #                      MULTIPHP                            #
@@ -997,6 +942,114 @@ function validate_database(){
     run v-delete-mail-account $user $domain test
     assert_failure $E_NOTEXIST
 }
+
+#----------------------------------------------------------#
+#    Limit posibibilities adding different owner domain    #
+#----------------------------------------------------------#
+
+@test "Allow Users: User can't add user.user2.com " {
+    # Case: admin company.ltd
+    # users should not be allowed to add user.company.ltd
+    run v-add-user $user2 $user2 $user@hestiacp.com default "Super Test"
+    assert_success
+    refute_output
+    
+    run v-add-web-domain $user2 $rootdomain 
+    assert_success
+    refute_output
+    
+    run v-add-web-domain $user $subdomain
+    assert_failure $E_EXISTS
+}
+
+@test "Allow Users: User can't add user.user2.com as alias" {
+    run v-add-web-domain-alias $user $domain $subdomain
+    assert_failure $E_EXISTS
+}
+
+@test "Allow Users: User can't add user.user2.com as mail domain" {
+    run v-add-mail-domain $user $subdomain
+    assert_failure $E_EXISTS
+}
+
+@test "Allow Users: User can't add user.user2.com as dns domain" {
+    run v-add-dns-domain $user $subdomain 198.18.0.125
+    assert_failure $E_EXISTS
+}
+
+@test "Allow Users: Set Allow users" {
+    # Allow user to yes allows
+    # Case: admin company.ltd
+    # users are allowed to add user.company.ltd
+    run v-add-web-domain-allow-users $user2 $rootdomain
+    assert_success
+    refute_output
+}
+
+@test "Allow Users: User can add user.user2.com" {
+    run v-add-web-domain $user $subdomain
+    assert_success
+    refute_output
+}
+
+@test "Allow Users: User can add user.user2.com as alias" {
+    run v-delete-web-domain $user $subdomain
+    assert_success
+    refute_output
+    
+    run v-add-web-domain-alias $user $domain $subdomain
+    assert_success
+    refute_output
+}
+
+@test "Allow Users: User can add user.user2.com as mail domain" {
+    run v-add-mail-domain $user $subdomain
+    assert_success
+    refute_output
+}
+
+@test "Allow Users: User can add user.user2.com as dns domain" {
+    run v-add-dns-domain $user $subdomain 198.18.0.125
+    assert_success
+    refute_output
+}
+
+@test "Allow Users: Cleanup tests" {
+    run v-delete-dns-domain $user $subdomain
+    assert_success
+    refute_output
+
+    run v-delete-mail-domain $user $subdomain
+    assert_success
+    refute_output
+}
+
+
+@test "Allow Users: Set Allow users no" {
+    run v-delete-web-domain-alias $user $domain $subdomain 
+    assert_success
+    refute_output
+    
+    run v-delete-web-domain-allow-users $user2 $rootdomain
+    assert_success
+    refute_output
+}
+
+@test "Allow Users: User can't add user.user2.com again" {
+    run v-add-web-domain $user $subdomain
+    assert_failure $E_EXISTS
+}
+
+@test "Allow Users: user2 can add user.user2.com again {
+    run v-add-web-domain $user2 $subdomain
+    assert_success
+    refute_output
+
+    run v-delete-user $user2
+    assert_success
+    refute_output
+}
+
 
 
 #----------------------------------------------------------#

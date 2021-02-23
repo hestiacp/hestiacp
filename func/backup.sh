@@ -194,7 +194,7 @@ sftpc() {
         spawn /usr/bin/sftp -o StrictHostKeyChecking=no \
             -o Port=$PORT $USERNAME@$HOST
         expect {
-            "password:" {
+            -nocase "password:" {
                 send "$PASSWORD\r"
                 exp_continue
             }

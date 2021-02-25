@@ -944,7 +944,7 @@ function validate_database(){
 }
 
 #----------------------------------------------------------#
-#    Limit posibibilities adding different owner domain    #
+#    Limit possibilities adding different owner domain    #
 #----------------------------------------------------------#
 
 @test "Allow Users: User can't add user.user2.com " {

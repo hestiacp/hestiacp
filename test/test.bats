@@ -1040,7 +1040,7 @@ function validate_database(){
     assert_failure $E_EXISTS
 }
 
-@test "Allow Users: user2 can add user.user2.com again {
+@test "Allow Users: user2 can add user.user2.com again" {
     run v-add-web-domain $user2 $subdomain
     assert_success
     refute_output

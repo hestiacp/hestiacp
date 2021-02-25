@@ -32,6 +32,7 @@ source $USER_DATA/user.conf
 
 FILE=$HOMEDIR/$user/.bash_aliases
 
+check_args '2' "$#" 'USER PHPVERSION'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"

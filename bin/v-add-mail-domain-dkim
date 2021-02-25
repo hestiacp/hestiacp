@@ -14,8 +14,7 @@
 
 # Argument definition
 user=$1
-domain=$2
-domain_idn=$2
+domain=$(idn -t --quiet -a "$2" )
 dkim_size=${3-1024}
 
 # Includes
@@ -33,8 +32,6 @@ fi
 # Additional argument formatting
 format_domain
 format_domain_idn
-# TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #

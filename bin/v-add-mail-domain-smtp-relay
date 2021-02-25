@@ -13,7 +13,7 @@
 
 # Argument definition
 user=$1
-domain=$2
+domain=$(idn -t --quiet -a "$2" )
 host=$3
 username=$4
 password=$5

@@ -1,11 +1,13 @@
 #!/bin/bash
-# info: suspend all mail domain accounts
+# info: disables other users create subdomains
 # options: USER DOMAIN
-# labels: mail
+# labels: web hestia
 #
-# example: v-suspend-mail-accounts admin example.com
+# example: v-delete-web-domain-allow-users
 #
-# The function suspends all mail domain accounts.
+# Disallow other users to create a new subdomain.
+# eg: admin adds admin.com
+# user can't create user.admin.com
 
 
 #----------------------------------------------------------#
@@ -18,11 +20,13 @@ domain=$(idn -t --quiet -a "$2" )
 
 # Includes
 source $HESTIA/func/main.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/func/ip.sh
 source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
 format_domain
-format_domain_idn
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -30,31 +34,34 @@ format_domain_idn
 
 check_args '2' "$#" 'USER DOMAIN'
 is_format_valid 'user' 'domain'
-is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-is_object_valid 'mail' 'DOMAIN' "$domain"
-is_object_unsuspended 'mail' 'DOMAIN' "$domain"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Starting suspend loop
-for account in $(search_objects "mail/$domain" 'SUSPENDED' "no" 'ACCOUNT'); do
-    $BIN/v-suspend-mail-account "$user" "$domain" "$account"
-done
 
+# Load domain data
+parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-# No Logging
-#log_event "$OK" "$ARGUMENTS"
+if [ -z "$ALLOW_USERS" ]; then
+add_object_key "web" 'DOMAIN' "$domain" 'ALLOW_USERS' 'TIME'
+fi
+
+# Adding new alias
+update_object_value 'web' 'DOMAIN' "$domain" '$ALLOW_USERS' "no"
+
+log_history "Allow users create subdomain for $domain"
+log_event "$OK" "$ARGUMENTS"
 
 exit

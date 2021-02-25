@@ -14,7 +14,7 @@
 
 # Argument definition
 user=$1
-domain=$2
+domain=$(idn -t --quiet -a "$2" )
 antispam=${3-yes}
 antivirus=${4-yes}
 dkim=${5-yes}
@@ -50,6 +50,8 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_domain_new 'mail' "$domain"
 is_package_full 'MAIL_DOMAINS'
 is_dir_symlink $HOMEDIR/$user/mail
+
+is_base_domain_owner "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode

@@ -1,0 +1,70 @@
+#!/bin/bash
+# info: Delete force redirect to domain
+# options: USER DOMAIN REDIRECT [CUSTOM]
+# labels: hestia web
+#
+# example: v-add-web-domain-redirect user domain.tld
+#
+# Function delete a forced redirect to a domain 
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+redirect=$3
+
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'USER DOMAIN REDIRECT'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+
+
+# Check if proxy is active
+if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
+    rm $HOMEDIR/$user/conf/web/$domain/nginx.conf_redirect"
+    rm $HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_redirect"
+else
+   echo "Non supported please use .htaccess instead" 
+   exit 2;
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+update_object_value 'web' 'DOMAIN' "$domain" '$REDIRECT' ""
+
+# Restart web server
+$BIN/v-restart-web
+check_result $? "Web restart failed" > /dev/null
+
+# Logging
+log_history "Enable forced redirect $domain"
+log_event "$OK" "$ARGUMENTS"
+
+exit

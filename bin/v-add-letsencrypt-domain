@@ -109,12 +109,10 @@ debug_log() {
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-
-
-
 
 # Generate correct variables for mail domain SSL certificates
 if [ ! -z "$mail" ]; then

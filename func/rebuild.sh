@@ -57,6 +57,7 @@ rebuild_user_conf() {
         setfacl -m "u:$user:r-x" "$HOMEDIR/$user"
     fi
     setfacl -m "g:hestia-users:---" "$HOMEDIR/$user"
+    setfacl -m "g:hestia-users:---" "$HESTIA"
 
     # Update user shell
     /usr/bin/chsh -s "$shell" "$user" &>/dev/null
@@ -216,7 +217,6 @@ rebuild_web_domain_conf() {
 
     $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain"
     $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/public_html"
-    $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/public_shtml"
     $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/document_errors"
     $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/cgi-bin"
     $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/private"
@@ -248,8 +248,7 @@ rebuild_web_domain_conf() {
         $HOMEDIR/$user/web/$domain \
         $HOMEDIR/$user/web/$domain/private \
         $HOMEDIR/$user/web/$domain/cgi-bin \
-        $HOMEDIR/$user/web/$domain/public_html \
-        $HOMEDIR/$user/web/$domain/public_shtml
+        $HOMEDIR/$user/web/$domain/public_*html 
     chown -R $user:$user $HOMEDIR/$user/web/$domain/document_errors
     chown root:$user /var/log/$WEB_SYSTEM/domains/$domain.*
 
@@ -409,14 +408,12 @@ rebuild_web_domain_conf() {
                 $HOMEDIR/$user/web/$domain/logs
     no_symlink_chmod 751   $HOMEDIR/$user/web/$domain/private \
                 $HOMEDIR/$user/web/$domain/cgi-bin \
-                $HOMEDIR/$user/web/$domain/public_html \
-                $HOMEDIR/$user/web/$domain/public_shtml \
+                $HOMEDIR/$user/web/$domain/public_*html \
                 $HOMEDIR/$user/web/$domain/document_errors
     chmod 640 /var/log/$WEB_SYSTEM/domains/$domain.*
 
     chown --no-dereference $user:www-data $HOMEDIR/$user/web/$domain/public_*html
 }
-
 # DNS domain rebuild
 rebuild_dns_domain_conf() {
 
@@ -560,6 +557,11 @@ rebuild_mail_domain_conf() {
             cp $USER_DATA/mail/$domain.pem \
                 $HOMEDIR/$user/conf/mail/$domain/dkim.pem
         fi
+        
+        # Rebuild SMTP Relay configuration
+        if [ "$U_SMTP_RELAY" = 'true' ]; then
+            $BIN/v-add-mail-domain-smtp-relay $user $domain "$U_SMTP_RELAY_HOST" "$U_SMTP_RELAY_USERNAME" "$U_SMTP_RELAY_PASSWORD" "$U_SMTP_RELAY_PORT"
+        fi
 
         # Removing configuration files if domain is suspended
         if [ "$SUSPENDED" = 'yes' ]; then
@@ -600,7 +602,7 @@ rebuild_mail_domain_conf() {
             if [ "$QUOTA" = 'unlimited' ]; then
                 QUOTA=0
             fi
-            str="$account:$MD5:$user:mail::$HOMEDIR/$user::userdb_quota_rule=*:storage=${QUOTA}M"
+            str="$account:$MD5:$user:mail::$HOMEDIR/$user:${QUOTA}:userdb_quota_rule=*:storage=${QUOTA}M"
             echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
             for malias in ${ALIAS//,/ }; do
                 echo "$malias@$domain_idn:$account@$domain_idn" >> $dom_aliases

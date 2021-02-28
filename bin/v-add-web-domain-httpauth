@@ -14,7 +14,7 @@
 
 # Argument definition
 user=$1
-domain=$2
+domain=$(idn -t --quiet -a "$2" )
 auth_user=$3
 password=$4; HIDE=4
 restart=${5-yes}
@@ -31,7 +31,8 @@ shtaccess="$htaccess"
 shtpasswd="$htpasswd"
 docroot="$HOMEDIR/$user/web/$domain/public_html"
 
-
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#

@@ -14,7 +14,7 @@
 
 # Argument definition
 user=$1
-domain=$2
+domain=$(idn -t --quiet -a "$2" )
 aliases=$3
 
 # Includes
@@ -36,6 +36,8 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

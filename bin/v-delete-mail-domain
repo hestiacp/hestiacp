@@ -15,8 +15,7 @@
 
 # Argument definition
 user=$1
-domain=$2
-domain_idn=$2
+domain=$(idn -t --quiet -a "$2" )
 
 # Includes
 source $HESTIA/func/main.sh
@@ -36,9 +35,7 @@ check_args '2' "$#" 'USER DOMAIN'
 is_format_valid 'user' 'domain'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
-is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -98,6 +95,13 @@ if [ "$DKIM" = 'yes' ]; then
 fi
 
 decrease_user_value "$user" '$U_MAIL_ACCOUNTS' "$accounts"
+
+# Check if is suspended to decrease the suspended value
+if [ ! -z "$SUSPENDED" ]; then
+    if [ "$SUSPENDED" == "yes" ]; then
+        decrease_user_value "$user" '$SUSPENDED_MAIL'
+    fi
+fi
 
 # Logging
 log_history "deleted mail domain $domain"

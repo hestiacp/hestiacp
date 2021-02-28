@@ -1,0 +1,67 @@
+#!/bin/bash
+# info: Empty nginx cache
+# options: USER DOMAIN MODE
+# labels: hestia web
+#
+# example: v-purge-web-domain-nginx-cache user domain.tld proxy
+#
+# The function clears Nginx cache.
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+is_object_valid 'web' 'DOMAIN' "$domain" "$FASTCGI_CACHE"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Load domain data
+parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
+
+# Empty Fast CGI Cache 
+if [ -d /var/cache/nginx/php-fpm/$domain ]; then
+    rm -fr /var/cache/nginx/php-fpm/$domain/*
+fi
+# Empty Proxy Cache
+if [ -d /var/cache/nginx/$domain ]; then
+    rm -fr /var/cache/nginx/$domain/*
+fi
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Restart services if requested
+if [ ! -z "$restart" ]; then
+    $BIN/v-restart-web
+    check_result $? "Web restart failed" >/dev/null
+fi
+
+# Logging
+log_history "purged nginx cache for $domain"
+log_event "$OK" "$ARGUMENTS"
+
+exit

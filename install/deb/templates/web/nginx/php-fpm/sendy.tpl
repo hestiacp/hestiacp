@@ -25,8 +25,9 @@ server {
         access_log off;
     }
 
-    location ~* "/\.(htaccess|htpasswd|git|svn|DS_Store)$" {
-        deny all;
+    location ~ /\.(?!well-known\/) { 
+       deny all; 
+       return 404;
     }
 
     location ~ /(readme.html|license.txt) {
@@ -49,6 +50,7 @@ server {
             fastcgi_pass %backend_lsnr%;
             fastcgi_index index.php;
             include /etc/nginx/fastcgi_params;
+            include     %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf;
         }
 
         location /l/ {

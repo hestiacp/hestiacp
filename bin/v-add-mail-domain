@@ -14,7 +14,7 @@
 
 # Argument definition
 user=$1
-domain=$2
+domain=$(idn -t --quiet -a "$2" )
 antispam=${3-yes}
 antivirus=${4-yes}
 dkim=${5-yes}
@@ -51,6 +51,8 @@ is_domain_new 'mail' "$domain"
 is_package_full 'MAIL_DOMAINS'
 is_dir_symlink $HOMEDIR/$user/mail
 
+is_base_domain_owner "$domain"
+
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
@@ -72,7 +74,7 @@ fi
 new_timestamp
 
 # Adding domain to mail.conf
-s="DOMAIN='$domain' ANTIVIRUS='$antivirus' ANTISPAM='$antispam' DKIM='$dkim'"
+s="DOMAIN='$domain' ANTIVIRUS='$antivirus' ANTISPAM='$antispam' DKIM='$dkim' WEBMAIL=''"
 s="$s SSL='no' LETSENCRYPT='no' CATCHALL='' ACCOUNTS='0' U_DISK='0' SUSPENDED='no' TIME='$time'"
 s="$s DATE='$date'"
 echo $s >> $USER_DATA/mail.conf
@@ -169,7 +171,7 @@ fi
 # Add webmail configuration to mail domain
 if [ ! -z "$WEB_SYSTEM" ] || [ ! -z "$PROXY_SYSTEM" ]; then
     if [ ! -z "$IMAP_SYSTEM" ]; then
-        $BIN/v-add-sys-webmail $user $domain ''
+        $BIN/v-add-sys-webmail $user $domain '' '' ''
     fi
 fi
     

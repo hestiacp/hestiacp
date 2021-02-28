@@ -4,6 +4,9 @@
             <a class="ui-button cancel" id="btn-back" href="/list/web/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
+            <a href="/delete/web/cache/?domain=<?=$_GET['domain'];?>&token=<?=$_SESSION['token'];?>" class="ui-button cancel <?php if ( $v_nginx_cache == 'yes' || ($v_proxy_template == 'caching' && $_SESSION['PROXY'] == 'nginx')) { echo "block"; } else{ echo "hidden"; }?>" id="v-clear-cache">
+                <i class="fas fa-trash status-icon red"></i><?=_('Purge Nginx Cache');?>
+            </a>
             <a href="/add/webapp/?domain=<?=$v_domain?>" class="ui-button cancel">
                 <i class="fas fa-magic status-icon blue"></i> <?=_('Quick Install App')?>
             </a>
@@ -58,19 +61,6 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                    <?php
-                                        if (!empty($_SESSION['error_msg'])) {
-                                            echo "<span class=\"vst-error\"> <i class=\"fas fa-exclamation-circle status-icon red\"></i> ".htmlentities($_SESSION['error_msg'])."</span>";
-                                        } else {
-                                            if (!empty($_SESSION['ok_msg'])) {
-                                                echo "<span class=\"vst-ok\"> <i class=\"fas fa-check-circle status-icon green\"></i> ".$_SESSION['ok_msg']."</span>";
-                                            }
-                                        }
-                                    ?>
-                                </td>
-                            </tr>
-                            <tr>
                                 <td class="vst-text step-top">
                                     <?php print _('Domain');?>
                                 </td>
@@ -107,6 +97,14 @@
                             <tr>
                                 <td>
                                     <textarea size="20" class="vst-textinput short" name="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
+                                </td>
+                            </tr>
+			    <tr>
+                                <td>
+                                    <span class="alert alert-info alert-with-icon">
+                                                    <i class="fas fa-exclamation"></i>
+                                                    <?php print _('Changes to Aliases will cause Lets Encrypt to obtain a new SSL certificate if enabled.');?>
+                                                </span>
                                 </td>
                             </tr>
                             <tr>
@@ -183,6 +181,21 @@
                                     </select>
                                 </td>
                             </tr>
+                            <?php if($_SESSION['WEB_SYSTEM'] == 'nginx'){?>
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print _('Enable Fast CGI Cache'); ?> <a href="https://docs.hestiacp.com/admin_docs/nginx_caching.html" target="_blank"><i class="fas fa-question-circle"></i></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_nginx_cache">
+                                        <option value="no"><?php echo _('No');?></option>
+                                        <option value="yes" <?php if ( $v_nginx_cache == "yes") { echo 'selected'; }?>><?php echo _('Yes');?></option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <?php } ?>  
                             <?php if (!empty($_SESSION['WEB_BACKEND'])) { ?>
                             <tr>
                                 <td class="vst-text input-label">
@@ -209,6 +222,7 @@
                                 </td>
                             </tr>
                             <?php }?>
+                            
                             <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { ?>
                             <tr>
                                 <td class="vst-text step-top">

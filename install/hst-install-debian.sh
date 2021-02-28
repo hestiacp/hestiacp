@@ -23,8 +23,9 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.3.3'
+HESTIA_INSTALL_VER='1.4.0~alpha'
 pma_v='5.0.4'
+rc_v="1.4.10"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
 fpm_v="7.4"
 mariadb_v="10.5"
@@ -38,13 +39,13 @@ if [ "$release" -eq 9 ]; then
         php$fpm_v-json php$fpm_v-mbstring php$fpm_v-opcache php$fpm_v-pspell
         php$fpm_v-readline php$fpm_v-xml vsftpd proftpd-basic bind9 exim4
         exim4-daemon-heavy clamav-daemon spamassassin dovecot-imapd
-        dovecot-pop3d roundcube-core net-tools roundcube-mysql roundcube-plugins
+        dovecot-pop3d net-tools 
         mariadb-client mariadb-common mariadb-server postgresql
-        postgresql-contrib phppgadmin phpmyadmin mc flex whois rssh git idn zip
+        postgresql-contrib phppgadmin mc flex whois rssh git idn zip
         sudo bc ftp lsof rrdtool quota e2fslibs bsdutils e2fsprogs curl
         imagemagick fail2ban dnsutils bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx
         hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat
-        rsyslog openssh-server setpriv ipset libapache2-mod-ruid2 zstd"
+        rsyslog openssh-server setpriv ipset libapache2-mod-ruid2"
 elif [ "$release" -eq 10 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
         apache2-suexec-pristine libapache2-mod-fcgid libapache2-mod-php$fpm_v
@@ -54,14 +55,14 @@ elif [ "$release" -eq 10 ]; then
         php$fpm_v-gd php$fpm_v-intl php$fpm_v-json php$fpm_v-mbstring
         php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
         awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy
-        clamav-daemon spamassassin dovecot-imapd dovecot-pop3d roundcube-core
-        net-tools roundcube-mysql roundcube-plugins mariadb-client
-        mariadb-common mariadb-server postgresql postgresql-contrib phpmyadmin
+        clamav-daemon spamassassin dovecot-imapd dovecot-pop3d 
+        net-tools mariadb-client
+        mariadb-common mariadb-server postgresql postgresql-contrib
         phppgadmin mc flex whois git idn zip sudo bc ftp lsof rrdtool
         quota e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
         bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx hestia-php expect
         libmail-dkim-perl unrar-free vim-common acl sysstat rsyslog openssh-server
-        util-linux ipset libapache2-mpm-itk zstd"
+        util-linux ipset libapache2-mpm-itk"
 fi
 
 installer_dependencies="apt-transport-https curl dirmngr gnupg wget ca-certificates"
@@ -761,9 +762,6 @@ if [ "$exim" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/dovecot-pop3d//")
     software=$(echo "$software" | sed -e "s/clamav-daemon//")
     software=$(echo "$software" | sed -e "s/spamassassin//")
-    software=$(echo "$software" | sed -e "s/roundcube-core//")
-    software=$(echo "$software" | sed -e "s/roundcube-mysql//")
-    software=$(echo "$software" | sed -e "s/roundcube-plugins//")
 fi
 if [ "$clamd" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/clamav-daemon//")
@@ -774,16 +772,12 @@ fi
 if [ "$dovecot" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/dovecot-imapd//")
     software=$(echo "$software" | sed -e "s/dovecot-pop3d//")
-    software=$(echo "$software" | sed -e "s/roundcube-core//")
-    software=$(echo "$software" | sed -e "s/roundcube-mysql//")
-    software=$(echo "$software" | sed -e "s/roundcube-plugins//")
 fi
 if [ "$mysql" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/mariadb-server//")
     software=$(echo "$software" | sed -e "s/mariadb-client//")
     software=$(echo "$software" | sed -e "s/mariadb-common//")
     software=$(echo "$software" | sed -e "s/php$fpm_v-mysql//")
-    software=$(echo "$software" | sed -e "s/phpmyadmin//")
 fi
 if [ "$postgresql" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/postgresql-contrib//")
@@ -1028,8 +1022,8 @@ if [ "$mysql" = 'yes' ]; then
     installed_db_types='mysql'
 fi
 
-if [ "$pgsql" = 'yes' ]; then
-    installed_db_types="$installed_db_type,pgsql"
+if [ "$postgresql" = 'yes' ]; then
+    installed_db_types="$installed_db_types,pgsql"
 fi
 
 if [ ! -z "$installed_db_types" ]; then
@@ -1082,11 +1076,13 @@ fi
 # Disk quota
 if [ "$quota" = 'yes' ]; then
     echo "DISK_QUOTA='yes'" >> $HESTIA/conf/hestia.conf
+else
+    echo "DISK_QUOTA='no'" >> $HESTIA/conf/hestia.conf
 fi
 
 # Backups
 echo "BACKUP_SYSTEM='local'" >> $HESTIA/conf/hestia.conf
-echo "BACKUP_GZIP='9'" >> $HESTIA/conf/hestia.conf
+echo "BACKUP_GZIP='4'" >> $HESTIA/conf/hestia.conf
 echo "BACKUP_MODE='zstd'" >> $HESTIA/conf/hestia.conf
 
 # Language
@@ -1095,9 +1091,16 @@ echo "LANGUAGE='$lang'" >> $HESTIA/conf/hestia.conf
 # Login in screen
 echo "LOGIN_STYLE='default'" >> $HESTIA/conf/hestia.conf
 
+# Inactive session timeout
+echo "INACTIVE_SESSION_TIMEOUT='60'" >> $HESTIA/conf/hestia.conf
+
 # Version & Release Branch
 echo "VERSION='${HESTIA_INSTALL_VER}'" >> $HESTIA/conf/hestia.conf
 echo "RELEASE_BRANCH='release'" >> $HESTIA/conf/hestia.conf
+
+# Email notifications after upgrade
+echo "UPGRADE_SEND_EMAIL='true'" >> $HESTIA/conf/hestia.conf
+echo "UPGRADE_SEND_EMAIL_LOG='true'" >> $HESTIA/conf/hestia.conf
 
 # Installing hosting packages
 cp -rf $HESTIA_INSTALL_DIR/packages $HESTIA/data/
@@ -1247,7 +1250,6 @@ fi
 
 if [ "$multiphp" = 'yes' ] ; then
     for v in "${multiphp_v[@]}"; do
-        cp -r /etc/php/$v/ /root/hst_install_backups/php$v/
         rm -f /etc/php/$v/fpm/pool.d/*
         echo "[ * ] Install PHP version $v..."
         $HESTIA/bin/v-add-web-php "$v" > /dev/null 2>&1
@@ -1359,14 +1361,6 @@ if [ "$mysql" = 'yes' ]; then
     mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
     mysql -e "DELETE FROM mysql.user WHERE user='';"
     mysql -e "DELETE FROM mysql.user WHERE password='' AND authentication_string='';"
-
-    # Configuring phpMyAdmin
-    if [ "$apache" = 'yes' ]; then
-        cp -f $HESTIA_INSTALL_DIR/pma/apache.conf /etc/phpmyadmin/
-        ln -s /etc/phpmyadmin/apache.conf /etc/apache2/conf.d/phpmyadmin.conf
-    fi
-    cp -f $HESTIA_INSTALL_DIR/pma/config.inc.php /etc/phpmyadmin/
-    chmod 777 /var/lib/phpmyadmin/tmp
 fi
 
 
@@ -1383,31 +1377,48 @@ if [ "$mysql" = 'yes' ]; then
 
     # Unpack files
     tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
-
-    # Delete file to prevent error
-    rm -fr /usr/share/phpmyadmin/doc/html
-
+    
+    # Create folders
+    mkdir -p  /usr/share/phpmyadmin
+    mkdir -p /etc/phpmyadmin
+    mkdir -p /etc/phpmyadmin/conf.d/  
+    mkdir /usr/share/phpmyadmin/tmp
+    
+    # Configuring Apache2 for PHPMYADMIN
+    if [ "$apache" = 'yes' ]; then
+        cp -f $HESTIA_INSTALL_DIR/pma/apache.conf /etc/phpmyadmin/
+        ln -s /etc/phpmyadmin/apache.conf /etc/apache2/conf.d/phpmyadmin.conf
+    fi
+    
     # Overwrite old files
     cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
-
+    
+    # Create copy of config file
+    cp -f $HESTIA_INSTALL_DIR/phpmyadmin/config.inc.php /etc/phpmyadmin/
+    mkdir -p /var/lib/phpmyadmin/tmp
+    chmod 777 /var/lib/phpmyadmin/tmp
+    
     # Set config and log directory
     sed -i "s|define('CONFIG_DIR', ROOT_PATH);|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
     sed -i "s|define('TEMP_DIR', ROOT_PATH . 'tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
 
     # Create temporary folder and change permission
-    mkdir /usr/share/phpmyadmin/tmp
     chmod 777 /usr/share/phpmyadmin/tmp
-
-    if [ -e /var/lib/phpmyadmin/blowfish_secret.inc.php ]; then
-        chmod 0644 /var/lib/phpmyadmin/blowfish_secret.inc.php
-    fi
     
-    # Clear Up
+    # Generate blow fish
+    blowfish=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)
+    sed -i "s|%blowfish_secret%|$blowfish|" /etc/phpmyadmin/config.inc.php
+
+    # Clean Up
     rm -fr phpMyAdmin-$pma_v-all-languages
     rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
 
     echo "DB_PMA_ALIAS='phpmyadmin'" >> $HESTIA/conf/hestia.conf
     $HESTIA/bin/v-change-sys-db-alias 'pma' "phpmyadmin"
+
+    # Special thanks to Pavel Galkin (https://skurudo.ru)
+    # https://github.com/skurudo/phpmyadmin-fixer
+    source $HESTIA_INSTALL_DIR/phpmyadmin/pma.sh > /dev/null 2>&1
 fi
 
 
@@ -1570,62 +1581,6 @@ if [ "$spamd" = 'yes' ]; then
 fi
 
 
-#----------------------------------------------------------#
-#                   Configure Roundcube                    #
-#----------------------------------------------------------#
-
-if [ "$dovecot" = 'yes' ] && [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
-    echo "[ * ] Configuring Roundcube webmail client..."
-    cp -f $HESTIA_INSTALL_DIR/roundcube/main.inc.php /etc/roundcube/config.inc.php
-    cp -f $HESTIA_INSTALL_DIR/roundcube/db.inc.php /etc/roundcube/debian-db-roundcube.php
-    cp -f $HESTIA_INSTALL_DIR/roundcube/config.inc.php /etc/roundcube/plugins/password/
-    cp -f $HESTIA_INSTALL_DIR/roundcube/hestia.php /usr/share/roundcube/plugins/password/drivers/
-    touch /var/log/roundcube/errors
-    chmod 640 /etc/roundcube/config.inc.php
-    chown root:www-data /etc/roundcube/config.inc.php
-    chmod 640 /etc/roundcube/debian-db-roundcube.php
-    chown root:www-data /etc/roundcube/debian-db-roundcube.php
-    chmod 640 /var/log/roundcube/errors
-    chown www-data:adm /var/log/roundcube/errors
-
-    r="$(gen_pass)"
-    rcDesKey="$(openssl rand -base64 30 | tr -d "/" | cut -c1-24)"
-    mysql -e "CREATE DATABASE roundcube"
-    mysql -e "GRANT ALL ON roundcube.*
-        TO roundcube@localhost IDENTIFIED BY '$r'"
-    sed -i "s/%password%/$r/g" /etc/roundcube/debian-db-roundcube.php
-    sed -i "s/%des_key%/$rcDesKey/g" /etc/roundcube/config.inc.php
-    sed -i "s/localhost/$servername/g" /etc/roundcube/plugins/password/config.inc.php
-    mysql roundcube < /usr/share/dbconfig-common/data/roundcube/install/mysql
-    
-    # Enable Roundcube plugins
-    cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_newmail_notifier.inc.php /etc/roundcube/plugins/newmail_notifier/config.inc.php
-    cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_zipdownload.inc.php /etc/roundcube/plugins/zipdownload/config.inc.php
-    
-    # Fixes for PHP 7.4 compatibility
-    [ -f "/usr/share/roundcube/plugins/enigma/lib/enigma_ui.php" ] && sed -i 's/$identities, "\\n"/"\\n", $identities/g' /usr/share/roundcube/plugins/enigma/lib/enigma_ui.php
-    [ -f "/usr/share/roundcube/program/lib/Roundcube/rcube_contacts.php" ] && sed -i 's/(array_keys($post_search), \x27|\x27)/(\x27|\x27, array_keys($post_search))/g' /usr/share/roundcube/program/lib/Roundcube/rcube_contacts.php
-    [ -f "/usr/share/roundcube/program/lib/Roundcube/rcube_db.php" ] && sed -i 's/implode($name, \x27.\x27)/implode(\x27.\x27, $name)/g' /usr/share/roundcube/program/lib/Roundcube/rcube_db.php
-    [ -f "/usr/share/roundcube/program/steps/addressbook/search.inc" ] && sed -i 's/$fields, \x27,\x27/\x27,\x27, $fields/g' /usr/share/roundcube/program/steps/addressbook/search.inc
-    [ -f "/usr/share/roundcube/program/steps/addressbook/search.inc" ] && sed -i 's/implode($fields, \x27,\x27)/implode(\x27,\x27, $fields)/g' /usr/share/roundcube/program/steps/addressbook/search.inc
-    [ -f "/usr/share/roundcube/program/steps/mail/sendmail.inc" ] && sed -i 's/implode($bstyle, \x27; \x27)/implode(\x27; \x27, $bstyle)/g' /usr/share/roundcube/program/steps/mail/sendmail.inc
-    
-    # Configure webmail alias
-    echo "WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
-
-    # Add robots.txt
-    echo "User-agent: *" > /var/lib/roundcube/robots.txt
-    echo "Disallow: /" >> /var/lib/roundcube/robots.txt
-
-    # Restart services
-    if [ "$apache" = 'yes' ]; then
-        systemctl restart apache2
-    fi
-    if [ "$nginx" = 'yes' ]; then
-        systemctl restart nginx
-    fi
-fi
-
 
 #----------------------------------------------------------#
 #                    Configure Fail2Ban                    #
@@ -1667,6 +1622,16 @@ if [ "$fail2ban" = 'yes' ]; then
     check_result $? "fail2ban start failed"
 fi
 
+#----------------------------------------------------------#
+#                       Install Roundcube                  #
+#----------------------------------------------------------#
+
+echo "[ * ] Install Roundcube..."
+# Min requirements Dovecote + Exim + Mysql
+
+if [ "$mysql" == 'yes' ] && [ "$$dovecot" == "yes" ]; then
+    $BIN/v-add-sys-roundcube 
+fi
 
 #----------------------------------------------------------#
 #                       Configure API                      #
@@ -1677,17 +1642,6 @@ if [ "$api" = 'yes' ]; then
 else
     rm -r $HESTIA/web/api
     echo "API='no'" >> $HESTIA/conf/hestia.conf
-fi
-
-
-#----------------------------------------------------------#
-#                      Fix phpmyadmin                      #
-#----------------------------------------------------------#
-# Special thanks to Pavel Galkin (https://skurudo.ru)
-# https://github.com/skurudo/phpmyadmin-fixer
-
-if [ "$mysql" = 'yes' ]; then
-    source $HESTIA_INSTALL_DIR/phpmyadmin/pma.sh > /dev/null 2>&1
 fi
 
 
@@ -1715,6 +1669,7 @@ check_result $? "can't enable sftp jail"
 $HESTIA/bin/v-add-user admin $vpass $email default "System Administrator"
 check_result $? "can't create admin user"
 $HESTIA/bin/v-change-user-shell admin nologin
+$HESTIA/bin/v-change-user-role admin admin
 $HESTIA/bin/v-change-user-language admin $lang
 
 # Roundcube permissions fix
@@ -1881,7 +1836,7 @@ GitHub:  https://www.github.com/hestiacp/hestiacp
 Note: Automatic updates are enabled by default. If you would like to disable them,
 please log in and navigate to Server > Updates to turn them off.
 
-Help support the Hestia Contol Panel project by donating via PayPal:
+Help support the Hestia Control Panel project by donating via PayPal:
 https://www.hestiacp.com/donate
 --
 Sincerely yours,

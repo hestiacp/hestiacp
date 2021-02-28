@@ -67,6 +67,7 @@ $v_letsencrypt = $data[$v_domain]['LETSENCRYPT'];
 if (empty($v_letsencrypt)) $v_letsencrypt = 'no';
 $v_ssl_home = $data[$v_domain]['SSL_HOME'];
 $v_backend_template = $data[$v_domain]['BACKEND'];
+$v_nginx_cache = $data[$v_domain]['FASTCGI_CACHE'];
 $v_proxy = $data[$v_domain]['PROXY'];
 $v_proxy_template = $data[$v_domain]['PROXY'];
 $v_proxy_ext = str_replace(',', ', ', $data[$v_domain]['PROXY_EXT']);
@@ -270,7 +271,40 @@ if (!empty($_POST['save'])) {
                     }
                 }
             }
-        }
+	}
+
+	// Regenerate LE if aliases are different
+	if ((!empty($_POST['v_ssl'])) && ( $v_letsencrypt == 'yes' ) && (!empty($_POST['v_letsencrypt'])) && empty($_SESSION['error_msg'])) {
+
+		// If aliases are different from stored aliases
+		if (array_diff($valiases,$aliases) || array_diff($aliases,$valiases)) {
+			
+			// Add certificate with new aliases
+			$l_aliases = str_replace("\n", ',', $v_aliases);
+			exec (HESTIA_CMD."v-add-letsencrypt-domain ".$user." ".escapeshellarg($v_domain)." ".escapeshellarg($l_aliases)." ''", $output, $return_var);
+        		check_return_code($return_var,$output);
+        		unset($output);
+        		$v_letsencrypt = 'yes';
+        		$v_ssl = 'yes';
+        		$restart_web = 'yes';
+			$restart_proxy = 'yes';
+
+			exec (HESTIA_CMD."v-list-web-domain-ssl ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
+                        $ssl_str = json_decode(implode('', $output), true);
+                        unset($output);
+                        $v_ssl_crt = $ssl_str[$v_domain]['CRT'];
+                        $v_ssl_key = $ssl_str[$v_domain]['KEY'];
+                        $v_ssl_ca = $ssl_str[$v_domain]['CA'];
+                        $v_ssl_subject = $ssl_str[$v_domain]['SUBJECT'];
+                        $v_ssl_aliases = $ssl_str[$v_domain]['ALIASES'];
+                        $v_ssl_not_before = $ssl_str[$v_domain]['NOT_BEFORE'];
+                        $v_ssl_not_after = $ssl_str[$v_domain]['NOT_AFTER'];
+                        $v_ssl_signature = $ssl_str[$v_domain]['SIGNATURE'];
+                        $v_ssl_pub_key = $ssl_str[$v_domain]['PUB_KEY'];
+                        $v_ssl_issuer = $ssl_str[$v_domain]['ISSUER'];
+		}
+	}
+
         if ((!empty($v_stats)) && ($_POST['v_stats'] == $v_stats) && (empty($_SESSION['error_msg']))) {
             // Update statistics configuration when changing domain aliases
             $v_stats = escapeshellarg($_POST['v_stats']);
@@ -281,11 +315,24 @@ if (!empty($_POST['save'])) {
     }
     
     // Change backend template
-    if ((!empty($_SESSION['WEB_BACKEND'])) && ( $v_backend_template != $_POST['v_backend_template']) && ( $_SESSION['user'] == 'admin') && (empty($_SESSION['error_msg']))) {
+    if ((!empty($_SESSION['WEB_BACKEND'])) && ( $v_backend_template != $_POST['v_backend_template'])  && (empty($_SESSION['error_msg']))) {
         $v_backend_template = $_POST['v_backend_template'];
         exec (HESTIA_CMD."v-change-web-domain-backend-tpl ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_backend_template), $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
+    }
+
+    //Add / Delete caching support
+    if (($_SESSION['WEB_SYSTEM'] == 'nginx') && ($v_nginx_cache != $_POST['v_nginx_cache'] ) && (empty($_SESSION['error_msg']))) {
+        if ( $_POST['v_nginx_cache'] == 'yes' ) {
+           exec (HESTIA_CMD."v-add-web-domain-fast-cgi-cache ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
+           check_return_code($return_var,$output);
+           unset($output); 
+        } else {
+            exec (HESTIA_CMD."v-delete-web-domain-fast-cgi-cache ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output); 
+        }
     }
 
     // Delete proxy support
@@ -829,7 +876,7 @@ foreach ($v_ftp_users_raw as $v_ftp_user_index => $v_ftp_user_val) {
     }
     $v_ftp_users[] = array(
         'is_new'            => 0,
-        'v_ftp_user'        => $v_ftp_user_val,
+        'v_ftp_user'        => preg_replace("/^".$user."_/", "", $v_ftp_user_val),
         'v_ftp_password'    => $v_ftp_password,
         'v_ftp_path'        => (isset($v_ftp_users_paths_raw[$v_ftp_user_index]) ? $v_ftp_users_paths_raw[$v_ftp_user_index] : ''),
         'v_ftp_email'       => $v_ftp_email,

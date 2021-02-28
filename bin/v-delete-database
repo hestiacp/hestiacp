@@ -31,9 +31,7 @@ check_args '2' "$#" 'USER DATABASE'
 is_format_valid 'user' 'database'
 is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'db' 'DB' "$database"
-is_object_unsuspended 'db' 'DB' "$database"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -45,6 +43,8 @@ check_hestia_demo_mode
 
 # Get database values
 get_database_values
+# Issues with $SUSPENDED overwritten when delete_mysql_database is called
+suspended=$SUSPENDED
 
 # Switching on db type
 case $TYPE in
@@ -63,6 +63,13 @@ sed -i "/DB='$database' /d" $USER_DATA/db.conf
 # Decreasing counters
 decrease_dbhost_values
 decrease_user_value "$user" '$U_DATABASES'
+
+# Check if is suspended to decrease the suspended value
+if [ ! -z "$suspended" ]; then
+    if [ "$suspended" == "yes" ]; then
+        decrease_user_value "$user" '$SUSPENDED_DB'
+    fi
+fi
 
 # Logging
 log_history "deleted $database database"

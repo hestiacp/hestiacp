@@ -14,8 +14,7 @@
 
 # Argument definition
 user=$1
-domain=$2
-domain_idn=$2
+domain=$(idn -t --quiet -a "$2" )
 restart=$3
 
 # Includes
@@ -41,6 +40,8 @@ is_object_valid 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_suspended 'web' 'DOMAIN' "$domain"
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

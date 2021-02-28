@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add system user
-# options: USER PASSWORD EMAIL [PACKAGE] [NAME]
+# options: USER PASSWORD EMAIL [PACKAGE] [NAME] [LASTNAME]
 # labels: 
 #
 # example: v-add-user admin2 P4$$w@rD bgates@aol.com
@@ -18,7 +18,10 @@ password=$2; HIDE=2
 email=$3
 package=${4-default}
 name=$5
-
+# Last name has been added for backward compatibility with WHMCS / Blesta VestaCP Plugins
+if [ ! -z "$6" ]; then 
+    name="$name $6";
+fi
 # Includes
 source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
@@ -85,6 +88,7 @@ else
     setfacl -m "u:$user:r-x" "$HOMEDIR/$user"
 fi
 setfacl -m "g:hestia-users:---" "$HOMEDIR/$user"
+setfacl -m "g:hestia-users:---" "$HESTIA"
 
 # Building directory tree
 mkdir $HOMEDIR/$user/conf

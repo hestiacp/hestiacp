@@ -14,7 +14,7 @@
 
 # Argument definition
 user=$1
-alias=$2
+alias=$(idn -t --quiet -a "$2" )
 ip=$3
 restart=$4
 
@@ -37,6 +37,8 @@ if [ -e "$USER_DATA/dns/$alias.conf" ]; then
     exit
 fi
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

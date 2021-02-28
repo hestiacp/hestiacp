@@ -5,7 +5,8 @@
 #
 # example: v-restore-user admin 2019-04-22_01-00-00.tar
 #
-# The function for restoring user from backup.
+# The function for restoring user from backup. To be able to restore the backup,
+# the archive needs to be placed in /backup.
 
 
 #----------------------------------------------------------#
@@ -203,7 +204,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
         echo -e "$(date "+%F %T") $domain" |tee -a $tmpdir/restore.log
 
         # Cleanup previous domain keys
-        unset -v DOMAIN IP IP6 ALIAS TPL SSL SSL_HOME LETSENCRYPT FTP_USER FTP_MD5 BACKEND PROXY PROXY_EXT STATS STATS_USER STATS_CRYPT U_DISK
+        unset -v DOMAIN IP IP6 ALIAS TPL SSL SSL_HOME LETSENCRYPT FTP_USER FTP_MD5 BACKEND PROXY PROXY_EXT STATS STATS_USER STATS_CRYPT U_DISK CUSTOM_DOCROOT CUSTOM_PHPROOT
 
         # Checking domain existance
         check_config=$(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
@@ -302,6 +303,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
 
             # Merging web.conf keys
             str="DOMAIN='$domain' IP='$IP' IP6='$IP6' ALIAS='$ALIAS'"
+            str="$str CUSTOM_DOCROOT='$CUSTOM_DOCROOT' CUSTOM_PHPROOT='$CUSTOM_PHPROOT' IP='$IP' IP6='$IP6' ALIAS='$ALIAS'"
             str="$str TPL='$TPL' SSL='$SSL' SSL_HOME='$SSL_HOME'"
             str="$str LETSENCRYPT='$LETSENCRYPT' FTP_USER='$FTP_USER'"
             str="$str FTP_MD5='$FTP_MD5' BACKEND='$BACKEND' PROXY='$PROXY'"
@@ -328,7 +330,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
         [[ -d $HOMEDIR/$user/web/$domain/stats ]] && chmod u+w "$HOMEDIR/$user/web/$domain/stats"
     
         if [ "$backup_mode" = "zstd" ]; then
-            user_exec tar -I zstd -xpf $tmpdir/web/$domain/domain_data.tar.zst \
+            user_exec tar -I pzstd -xpf $tmpdir/web/$domain/domain_data.tar.zst \
                 -C "$HOMEDIR/$user/web/$domain/" \
                 --anchored \
                 --exclude='logs/*'
@@ -707,7 +709,7 @@ if [ "$db" != 'no' ] && [ ! -z "$DB_SYSTEM" ]; then
 
         # Unzipping database dump
         if [ $backup_mode = 'zstd' ]; then  
-            zstd -d $tmpdir/db/$database/$database.*.sql.zst
+            pzstd -d $tmpdir/db/$database/$database.*.sql.zst
         else
             gzip -d $tmpdir/db/$database/$database.*.sql.gz
         fi

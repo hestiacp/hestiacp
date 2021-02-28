@@ -225,7 +225,7 @@ $(function() {
 
     $('select[name="v_stats"]').change(function(evt){
         var select = $(evt.target);
-
+    
         if(select.val() == 'none'){
             $('.stats-auth').hide();
         } else {
@@ -233,6 +233,8 @@ $(function() {
         }
     });
 });
+
+
 
 function WEBrandom() {
     var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';

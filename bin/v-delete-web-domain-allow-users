@@ -1,0 +1,67 @@
+#!/bin/bash
+# info: disables other users create subdomains
+# options: USER DOMAIN
+# labels: web hestia
+#
+# example: v-delete-web-domain-allow-users
+#
+# Disallow other users to create a new subdomain.
+# eg: admin adds admin.com
+# user can't create user.admin.com
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$(idn -t --quiet -a "$2" )
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/func/domain.sh
+source $HESTIA/func/ip.sh
+source $HESTIA/conf/hestia.conf
+
+# Additional argument formatting
+format_domain
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+
+# Load domain data
+parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+if [ -z "$ALLOW_USERS" ]; then
+add_object_key "web" 'DOMAIN' "$domain" 'ALLOW_USERS' 'TIME'
+fi
+
+# Adding new alias
+update_object_value 'web' 'DOMAIN' "$domain" '$ALLOW_USERS' "no"
+
+log_history "Allow users create subdomain for $domain"
+log_event "$OK" "$ARGUMENTS"
+
+exit

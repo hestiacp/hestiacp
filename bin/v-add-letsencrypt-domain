@@ -14,7 +14,7 @@
 
 # Argument definition
 user=$1
-domain=$2
+domain=$(idn -t --quiet -a "$2" )
 aliases=$3
 mail=${4// }
 
@@ -106,18 +106,22 @@ debug_log() {
     echo -e "\n==[${1}]==\n${2}\n" >> "$log_file"
 }
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-
-
-
 
 # Generate correct variables for mail domain SSL certificates
 if [ ! -z "$mail" ]; then
     root_domain=$domain
     domain="mail.$root_domain"
-    aliases="$WEBMAIL_ALIAS.$root_domain"
+    webmail=$(get_object_value "mail" "$domain" '$WEBMAIL');
+    if [ ! -z "$webmail" ]; then
+        aliases="$WEBMAIL_ALIAS.$root_domain"
+    fi
 fi
 
 log_file="/var/log/hestia/LE-${user}-${domain}-$(date +%Y%m%d-%H%M%S).log"
@@ -136,8 +140,8 @@ $BIN/v-add-letsencrypt-user $user
 if [ "$?" -ne 0  ]; then
     touch $HESTIA/data/queue/letsencrypt.pipe
     sed -i "/ $domain /d" $HESTIA/data/queue/letsencrypt.pipe
-    send_notice "LETSENCRYPT" "Account registration failed"
-    check_result $E_CONNECT "LE account registration" > /dev/null
+    send_notice "LETSENCRYPT" "Account registration failed ($user)"
+    check_result $E_CONNECT "LE account registration ($user)" > /dev/null
 fi
 
 # Parsing LetsEncrypt account data
@@ -202,7 +206,7 @@ if [[ "$status" -ne 200 ]]; then
             fi
         fi
     fi
-    check_result $E_CONNECT "Let's Encrypt nonce request status $status"
+    check_result $E_CONNECT "Let's Encrypt nonce request status $status ($domain)"
 fi
 
 # Placing new order / STEP 2
@@ -233,14 +237,14 @@ if [[ "$status" -ne 201 ]]; then
             fi
         fi
     fi
-    check_result $E_CONNECT "Let's Encrypt new auth status $status"
+    check_result $E_CONNECT "Let's Encrypt new auth status $status ($domain)"
 fi
 
 # Requesting authorization token / STEP 3
 for auth in $authz; do
     payload=''
     answer=$(query_le_v2 "$auth" "$payload" "$nonce")
-    url=$(echo "$answer" |grep -A3 $proto |grep url |cut -f 4 -d \")
+    url=$(echo "$answer" |grep -A3 $proto |grep -m1 url |cut -f 4 -d \")
     token=$(echo "$answer" |grep -A3 $proto |grep token |cut -f 4 -d \")
     nonce=$(echo "$answer" |grep -i nonce |cut -f2 -d \ |tr -d '\r\n')
     status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
@@ -259,7 +263,7 @@ for auth in $authz; do
                 fi
             fi
         fi
-        check_result $E_CONNECT "Let's Encrypt acme/authz bad status $status"
+        check_result $E_CONNECT "Let's Encrypt acme/authz bad status $status ($domain)"
     fi
 
     # Accepting challenge / STEP 4
@@ -272,13 +276,13 @@ for auth in $authz; do
             $BIN/v-delete-dns-record $user $domain $old_record
         done
         $BIN/v-add-dns-record $user $domain "_acme-challenge" "TXT" $record
-        check_result $? "DNS _acme-challenge record wasn't created"
+        check_result $? "DNS _acme-challenge record wasn't created ($domain)"
     else
         if [ -z "$mail" ]; then
             if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
                 conf="$HOMEDIR/$user/conf/web/$domain/nginx.conf_letsencrypt"
                 sconf="$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_letsencrypt"
-                echo 'location ~ "^/\.well-known/acme-challenge/(.*)$" {' \
+                echo 'location ~ "^/\.well-known/acme-challenge/([-_A-Za-z0-9]+)$" {' \
                     > $conf
                 echo '    default_type text/plain;' >> $conf
                 echo '    return 200 "$1.'$THUMB'";' >> $conf
@@ -354,7 +358,7 @@ for auth in $authz; do
                 fi
             fi
             debug_log "Abort Step 5" "=> Wrong status"
-            check_result $E_CONNECT "Let's Encrypt validation status $status. Details: $details"
+            check_result $E_CONNECT "Let's Encrypt validation status $status ($domain). Details: $details"
         fi
 
         i=$((i + 1))
@@ -371,7 +375,7 @@ for auth in $authz; do
                 fi
             fi
             debug_log "Abort Step 5" "=> Too many validation retries"
-            check_result $E_CONNECT "Let's Encrypt domain validation timeout"
+            check_result $E_CONNECT "Let's Encrypt domain validation timeout ($domain)"
         fi
         sleep $((i*2))
     done
@@ -387,7 +391,7 @@ for auth in $authz; do
                 fi
             fi
         fi
-        check_result $E_CONNECT "Let's Encrypt domain verification failed"
+        check_result $E_CONNECT "Let's Encrypt domain verification failed ($domain)"
     fi
 done
 
@@ -407,7 +411,7 @@ debug_log "Step 6" "- status: ${status}\n- nonce: ${nonce}\n- payload: ${payload
 
 if [[ "$status" -ne 200 ]]; then
     [ -d "$ssl_dir" ] && rm -rf "$ssl_dir"
-    check_result $E_CONNECT "Let's Encrypt finalize bad status $status"
+    check_result $E_CONNECT "Let's Encrypt finalize bad status $status ($domain)"
 fi
 
 # Downloading signed certificate / STEP 7
@@ -442,7 +446,7 @@ debug_log "CERT PEM" "$(cat "$ssl_dir/$domain.pem")"
 
 if [[ "$status" -ne 200 ]]; then
     [ -d "$ssl_dir" ] && rm -rf "$ssl_dir"
-    check_result $E_NOTEXIST "Let's Encrypt downloading signed cert failed status:$status"
+    check_result $E_NOTEXIST "Let's Encrypt downloading signed cert failed status:$status ($domain)"
 fi
 
 # Splitting up downloaded pem
@@ -489,7 +493,7 @@ if [ "$?" -ne '0' ]; then
     [ -d "$ssl_dir" ] && rm -rf "$ssl_dir"
     touch $HESTIA/data/queue/letsencrypt.pipe
     sed -i "/ $domain /d" $HESTIA/data/queue/letsencrypt.pipe
-    send_notice 'LETSENCRYPT' "$domain certificate installation failed"
+    send_notice 'LETSENCRYPT' "$domain certificate installation failed ($domain)"
     check_result $? "SSL install" > /dev/null
 fi
 

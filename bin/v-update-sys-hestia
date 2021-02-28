@@ -31,6 +31,9 @@ source $HESTIA/conf/hestia.conf
 # Checking arg number
 check_args '1' "$#" 'PACKAGE'
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#

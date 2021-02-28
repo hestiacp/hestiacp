@@ -14,7 +14,7 @@
 
 # Argument definition
 user=$1
-domain=$2
+domain=$(idn -t --quiet -a "$2" )
 domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
 
 # Includes
@@ -31,9 +31,7 @@ check_args '2' "$#" 'USER DOMAIN'
 is_format_valid 'user' 'domain'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
-is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 is_object_value_exist 'mail' 'DOMAIN' "$domain" '$DKIM'
 
 # Perform verification if read-only mode is enabled

@@ -1,0 +1,75 @@
+#!/bin/bash
+# info: remove fast cgi nginx support
+# options: USER DOMAIN [RESTART]
+# labels: hestia web
+#
+# example: v-delete-web-domain-fast-cgi-cache user domain.tld
+#
+# The function removes fast cgi cache.
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$(idn -t --quiet -a "$2" )
+restart=$3
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_valid 'web' 'DOMAIN' "$domain" "$FASTCGI_CACHE"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Load domain data
+parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
+
+# Remove fast cgi configs
+if [ -f $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.fastcgi_cache.conf ]; then
+    rm -f $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.fastcgi_cache.conf
+fi
+
+# Delete cache folder on disabling
+if [ -d /var/cache/nginx/php-fpm/$domain ]; then
+    rm -f /var/cache/nginx/php-fpm/$domain
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+if [ -z "$FASTCGI_CACHE" ]; then
+    add_object_key "web" 'DOMAIN' "$domain" 'FASTCGI_CACHE' 'ALIAS'
+fi
+
+# Set FASTCGI flag to disabled
+update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_CACHE' ''
+
+# Restart services if requested
+if [ ! -z "$restart" ]; then
+    $BIN/v-restart-web
+    check_result $? "Web restart failed" >/dev/null
+fi
+
+# Logging
+log_history "disabled fast cgi support for $domain"
+log_event "$OK" "$ARGUMENTS"
+
+exit

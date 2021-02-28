@@ -15,7 +15,7 @@
 # Argument definition
 user=$1
 domain=$2
-domain_idn=$2
+domain_idn=$(idn -t --quiet -a "$2" )
 dom_alias=$(idn -t --quiet -u "$3" )
 dom_alias=$(echo $dom_alias |sed -e 's/\.*$//g' -e 's/^\.*//g')
 dom_alias=$(echo $dom_alias |tr '[:upper:]' '[:lower:]')
@@ -32,6 +32,8 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -42,9 +44,7 @@ is_format_valid 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
-is_object_unsuspended 'web' 'DOMAIN' "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode

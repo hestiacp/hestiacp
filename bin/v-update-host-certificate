@@ -47,6 +47,9 @@ if [ ! -f "/home/$user/conf/web/$hostname/ssl/$hostname.pem" ]; then
     exit 1;
 fi
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#

@@ -1,13 +1,13 @@
 #!/bin/bash
-# info: disables other users create subdomains
+# info: Alow other users create subdomains
 # options: USER DOMAIN
 # labels: web hestia
 #
-# example: v-delete-web-domain-allow-users
+# example: v-add-web-domain-allow-users
 #
 # Disallow other users to create a new subdomain.
 # eg: admin adds admin.com
-# user can't create user.admin.com
+# user can create user.admin.com
 
 
 #----------------------------------------------------------#

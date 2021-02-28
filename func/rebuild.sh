@@ -57,7 +57,6 @@ rebuild_user_conf() {
         setfacl -m "u:$user:r-x" "$HOMEDIR/$user"
     fi
     setfacl -m "g:hestia-users:---" "$HOMEDIR/$user"
-    setfacl -m "g:hestia-users:---" "$HESTIA"
 
     # Update user shell
     /usr/bin/chsh -s "$shell" "$user" &>/dev/null

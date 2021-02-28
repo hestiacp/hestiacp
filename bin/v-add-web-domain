@@ -51,6 +51,9 @@ is_package_full 'WEB_DOMAINS' 'WEB_ALIASES'
 is_domain_new 'web' "$domain,$aliases"
 is_dir_symlink "$HOMEDIR/$user/web"
 is_dir_symlink "$HOMEDIR/$user/web/$domain"
+
+is_base_domain_owner "$domain,$aliases"
+
 if [ ! -z "$ip" ]; then
     is_ip_valid "$ip" "$user"
 else

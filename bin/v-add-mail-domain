@@ -51,6 +51,8 @@ is_domain_new 'mail' "$domain"
 is_package_full 'MAIL_DOMAINS'
 is_dir_symlink $HOMEDIR/$user/mail
 
+is_base_domain_owner "$domain"
+
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 

@@ -53,6 +53,8 @@ is_package_full 'DNS_DOMAINS'
 template=$(get_user_value '$DNS_TEMPLATE')
 is_dns_template_valid $template
 
+is_base_domain_owner "$domain"
+
 if [ ! -z "$ns1" ]; then
     ns1=$(echo $4 |sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns1'

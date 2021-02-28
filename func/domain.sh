@@ -38,11 +38,11 @@ is_web_domain_new() {
     web=$(grep -F -H "DOMAIN='$1'" $HESTIA/data/users/*/web.conf)
     if [ ! -z "$web" ]; then
         if [ "$type" == 'web' ]; then
-            check_result $E_EXISTS "Web domain $1 exist"
+            check_result $E_EXISTS "Web domain $1 exists"
         fi
         web_user=$(echo "$web" |cut -f 7 -d /)
         if [ "$web_user" != "$user" ]; then
-            check_result $E_EXISTS "Web domain $1 exist"
+            check_result $E_EXISTS "Web domain $1 exists"
         fi
     fi
 }

@@ -239,7 +239,7 @@ is_object_new() {
         object=$(grep "$2='$3'" $USER_DATA/$1.conf)
     fi
     if [ ! -z "$object" ]; then
-        check_result $E_EXISTS "$2=$3 is already exists"
+        check_result $E_EXISTS "$2=$3 already exists"
     fi
 }
 
@@ -346,7 +346,7 @@ is_object_value_empty() {
     parse_object_kv_list "$str"
     eval value=$4
     if [ ! -z "$value" ] && [ "$value" != 'no' ]; then
-        check_result $E_EXISTS "${4//$}=$value is already exists"
+        check_result $E_EXISTS "${4//$}=$value already exists"
     fi
 }
 

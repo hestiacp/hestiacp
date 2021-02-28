@@ -17,7 +17,7 @@
 
 # Argument definition
 user=$1
-domain=$2
+domain=$(idn -t --quiet -a "$2" )
 restart=$3
 
 # Includes

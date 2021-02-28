@@ -20,8 +20,7 @@
 
 # Argument definition
 user=$1
-domain=$2
-domain_idn=$2
+domain=$(idn -t --quiet -a "$2" )
 ip=$3
 restart=$4      # will be moved to the end soon
 aliases=$5
@@ -32,6 +31,18 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/domain.sh
 source $HESTIA/func/ip.sh
 source $HESTIA/conf/hestia.conf
+
+# Rewrite all aliases as puni code 
+aliases_list=$(echo $aliases | tr "," "\n")
+aliases=''
+for alias in $aliases_list
+do
+    if [ -z "$aliases" ]; then
+        aliases=$(idn -t --quiet -a "$alias" )
+    else
+        aliases=$aliases,$(idn -t --quiet -a "$alias" )
+    fi
+done
 
 # Additional argument formatting
 format_domain

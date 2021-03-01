@@ -24,7 +24,7 @@ VERBOSE='no'
 
 # Define software versions
 HESTIA_INSTALL_VER='1.4.0~alpha'
-pma_v='5.0.4'
+pma_v='5.1.0'
 rc_v="1.4.10"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
 fpm_v="7.4"
@@ -618,7 +618,7 @@ apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev
 # Installing PostgreSQL repo
 if [ "$postgresql" = 'yes' ]; then
     echo "[ * ] PostgreSQL"
-    echo "deb https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
+    echo "deb [arch=amd64] https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
     apt-key adv --fetch-keys 'https://www.postgresql.org/media/keys/ACCC4CF8.asc' > /dev/null 2>&1
 fi
 

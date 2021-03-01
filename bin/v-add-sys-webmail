@@ -14,7 +14,7 @@
 
 # Argument definition
 user=$1
-domain=$2
+domain=$(idn -t --quiet -a "$2")
 webmail=$3
 restart="$4"
 quiet=$5
@@ -29,8 +29,6 @@ fi
 if [[ "$domain" =~ .*\.$ ]]; then
     domain=$(echo "$domain" |sed -e "s/\.$//")
 fi
-
-domain_idn=$(idn -t --quiet -a "$domain")
 
 # Includes
 source $HESTIA/func/main.sh

@@ -18,10 +18,10 @@
 # Argument definition
 user=$1
 domain=$(idn -t --quiet -a "$2" )
-record=$(idn -t --quiet -a "$3" )
+record=$(idn -t --quiet -u "$3" )
 record=$(echo "$record" | tr '[:upper:]' '[:lower:]')
 rtype=$(echo "$4"| tr '[:lower:]' '[:upper:]')
-dvalue=$(idn -t --quiet -a "$5" )
+dvalue=$(idn -t --quiet -u "$5" )
 priority=$6
 id=$7
 restart=$8
@@ -47,6 +47,11 @@ if [[ $rtype =~ NS|CNAME|MX|PTR|SRV ]]; then
     if [ -z "$trailing_dot" ]; then
         dvalue="$dvalue."
     fi
+fi
+
+if [[ $rtype =~ NS|CNAME|MX|PTR|SRV ]]; then
+    dvalue=$(idn -t --quiet -a "$dvalue" )
+    record=$(idn -t --quiet -a "$record" )
 fi
 
 # Cleanup quotes on dvalue

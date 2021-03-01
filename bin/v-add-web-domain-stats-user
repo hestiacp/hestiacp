@@ -14,7 +14,7 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -a "$2" )
+domain=$2
 stats_user=$3
 password=$4; HIDE=4
 restart=$5
@@ -52,8 +52,8 @@ conf_dir="$HOMEDIR/$user/conf/web"
 
 # Adding htaccess file
 if [ "$WEB_SYSTEM" = 'nginx' ]; then
-    echo "auth_basic \"Web Statistics\";" > $stats_dir/auth.conf
-    echo "auth_basic_user_file $stats_dir/.htpasswd;" >> $stats_dir/auth.conf
+    echo "auth_basic \"Web Statistics\";" > $conf_dir/$domain.auth
+    echo "auth_basic_user_file $stats_dir/.htpasswd;" >> $conf_dir/$domain.auth
 else
     echo "AuthUserFile $stats_dir/.htpasswd" > $stats_dir/.htaccess
     echo "AuthName \"Web Statistics\"" >> $stats_dir/.htaccess

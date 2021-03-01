@@ -54,14 +54,7 @@ if (!empty($_POST['ok'])) {
         check_return_code($return_var,$output);
         unset($output);
     }
-    
-    // Change domain template
-    if (($v_template != $_POST['v_template']) && (empty($_SESSION['error_msg']))) {
-        $v_template = escapeshellarg($_POST['v_template']);
-        exec (HESTIA_CMD."v-change-dns-domain-tpl ".$user." ".$v_domain." ".$v_template." 'no'", $output, $return_var);
-        check_return_code($return_var,$output);
-        unset($output);
-    }
+
 
     // Set expiriation date
     if (empty($_SESSION['error_msg'])) {
@@ -163,16 +156,6 @@ if(empty($v_ip) && count($v_ips) > 0) {
     $ip = array_key_first($v_ips);
     $v_ip = (empty($v_ips[$ip]['NAT'])?$ip:$v_ips[$ip]['NAT']);
 }
-
-// List dns templates
-exec (HESTIA_CMD."v-list-dns-templates json", $output, $return_var);
-$templates = json_decode(implode('', $output), true);
-unset($output);
-
-exec (HESTIA_CMD."v-list-user ".$user." json", $output, $return_var);
-$user_config = json_decode(implode('', $output), true);
-unset($output);
-$v_template = $user_config[$user]['DNS_TEMPLATE'];
 
 if (empty($_GET['domain'])) {
     // Display body for dns domain

@@ -25,9 +25,6 @@ check_args '3' "$#" 'USER ARCHIVE DIRECTORY [SELECTED_DIR] [STRIP] [TEST]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 
-# Perform verification if read-only mode is enabled
-check_hestia_demo_mode
-
 # Checking user homedir
 homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
 if [ -z $homedir ]; then
@@ -90,10 +87,10 @@ if [ ! -z "$(echo $src_file |egrep -i  '.tar.zst')" ]; then
     x='yes'
     if [ -z "$test" ] || [ "$test" = "no" ]; then
         user_exec mkdir -p "$dst_dir" >/dev/null 2>&1
-        user_exec tar -I pzstd -xf "$src_file" -C "$dst_dir" --no-wildcards "$selected_dir" $tar_strip_level >/dev/null 2>&1
+        user_exec tar -I zstd -xf "$src_file" -C "$dst_dir" --no-wildcards "$selected_dir" $tar_strip_level >/dev/null 2>&1
         rc=$?
     else
-        user_exec tar -I pzstd -tf "$src_file" --no-wildcards "$selected_dir" >/dev/null 2>&1
+        user_exec tar -I zstd -tf "$src_file" --no-wildcards "$selected_dir" >/dev/null 2>&1
         rc=$?
     fi
 fi
@@ -102,7 +99,7 @@ fi
 if [ ! -z "$(echo $src_file |grep -i  '.zst')" ] && [ -z "$x" ]; then
     user_exec mkdir -p "$dst_dir" >/dev/null 2>&1
     user_exec mv "$src_file" "$dst_dir" >/dev/null 2>&1
-    user_exec pzstd -d "$dst_dir/$(basename $src_file)" >/dev/null 2>&1
+    user_exec zstd -d "$dst_dir/$(basename $src_file)" >/dev/null 2>&1
     rc=$?
 fi
 

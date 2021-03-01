@@ -10,7 +10,6 @@
                                 <td style="padding: 40px 60px 0 0;" class="animated fadeIn">
                                     <form method="post" action="/login/" id="form_login">
                                     <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
-                                    <input type="hidden" name="murmur" value="" id="murmur">
                                     <table class="login-box">
                                         <tr>
                                             <td style="padding: 12px 0 0 2px;" class="login-welcome">
@@ -56,7 +55,5 @@
                 </tr>
             </table>
         </center>
-        <script src="/inc/jquery/jquery-3.5.1.min.js"></script>
-        <script type="text/javascript" src="/js/fingerprint2.min.js?<?=JS_LATEST_UPDATE?>"></script>
     </body>
 </html>

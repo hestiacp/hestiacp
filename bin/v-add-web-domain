@@ -20,7 +20,8 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -a "$2" )
+domain=$2
+domain_idn=$2
 ip=$3
 restart=$4      # will be moved to the end soon
 aliases=$5
@@ -31,18 +32,6 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/domain.sh
 source $HESTIA/func/ip.sh
 source $HESTIA/conf/hestia.conf
-
-# Rewrite all aliases as puni code 
-aliases_list=$(echo $aliases | tr "," "\n")
-aliases=''
-for alias in $aliases_list
-do
-    if [ -z "$aliases" ]; then
-        aliases=$(idn -t --quiet -a "$alias" )
-    else
-        aliases=$aliases,$(idn -t --quiet -a "$alias" )
-    fi
-done
 
 # Additional argument formatting
 format_domain
@@ -62,9 +51,6 @@ is_package_full 'WEB_DOMAINS' 'WEB_ALIASES'
 is_domain_new 'web' "$domain,$aliases"
 is_dir_symlink "$HOMEDIR/$user/web"
 is_dir_symlink "$HOMEDIR/$user/web/$domain"
-
-is_base_domain_owner "$domain,$aliases"
-
 if [ ! -z "$ip" ]; then
     is_ip_valid "$ip" "$user"
 else
@@ -87,6 +73,7 @@ source $USER_DATA/user.conf
 # Creating domain directories
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain"
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/public_html"
+$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/public_shtml"
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/document_errors"
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/cgi-bin"
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/private"
@@ -115,7 +102,7 @@ user_exec chmod 551 $HOMEDIR/$user/web/$domain/stats $HOMEDIR/$user/web/$domain/
 user_exec chmod 644 $HOMEDIR/$user/web/$domain/public_*html/*
 chown --no-dereference $user:www-data $HOMEDIR/$user/web/$domain/public_*html
 
-# Adding PHP-FPM backend
+# Addding PHP-FPM backend
 if [ ! -z "$WEB_BACKEND" ]; then
     if [ -z "$BACKEND_TEMPLATE" ]; then
         BACKEND_TEMPLATE='default'

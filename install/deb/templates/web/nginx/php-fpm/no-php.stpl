@@ -34,9 +34,9 @@ server {
         alias   %home%/%user%/web/%domain%/document_errors/;
     }
 
-    location ~ /\.(?!well-known\/) { 
-       deny all; 
-       return 404;
+    location ~* "/\.(htaccess|htpasswd)$" {
+        deny    all;
+        return  404;
     }
 
     location /vstats/ {

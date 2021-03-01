@@ -12,7 +12,7 @@ server {
     location / {
         proxy_pass      http://%ip%:%web_port%;
 
-        proxy_cache %domain%;
+        proxy_cache cache;
         proxy_cache_valid 15m;
         proxy_cache_valid 404 1m;
         proxy_no_cache $no_cache;

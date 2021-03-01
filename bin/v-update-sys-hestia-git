@@ -13,11 +13,6 @@
 #
 # Downloads and compiles/installs packages from GitHub repositories
 
-# Includes
-source $HESTIA/func/main.sh
-
-# Perform verification if read-only mode is enabled
-check_hestia_demo_mode
 
 # Define download function
 download_file() {

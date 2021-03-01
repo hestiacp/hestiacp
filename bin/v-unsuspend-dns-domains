@@ -30,8 +30,6 @@ is_format_valid 'user'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 
-# Perform verification if read-only mode is enabled
-check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

@@ -16,7 +16,7 @@ class PrestashopSetup extends BaseSetup {
             ],
         'database' => true,
         'resources' => [
-            'archive'  => [ 'src' => 'https://github.com/PrestaShop/PrestaShop/releases/download/1.7.7.1/prestashop_1.7.7.1.zip' ],
+            'archive'  => [ 'src' => 'https://github.com/PrestaShop/PrestaShop/releases/download/1.7.6.5/prestashop_1.7.6.5.zip' ],
         ],
 
     ];
@@ -24,15 +24,9 @@ class PrestashopSetup extends BaseSetup {
     public function install(array $options=null) : bool
     {
         parent::install($options);
+
         $this->appcontext->archiveExtract($this->getDocRoot($this->extractsubdir . '/prestashop.zip'), $this->getDocRoot());
-        //check if ssl is enabled 
-        $this->appcontext->run('v-list-web-domain',[$this -> appcontext->user(),$this -> domain,'json'],$status);
-        if($status->code !== 0) {
-            throw new \Exception("Cannot list domain");
-        }
-        
-        if ($status -> json == 'no'){ $ssl_enabled = 0; }else{ $ssl_enabled = 1;}
-        
+
         $this->appcontext->runUser('v-run-cli-cmd', [
             "/usr/bin/php",
             $this->getDocRoot("/install/index_cli.php"),
@@ -43,9 +37,8 @@ class PrestashopSetup extends BaseSetup {
             "--lastname="    . $options['prestashop_account_last_name'],
             "--password="    . $options['prestashop_account_password'],
             "--email="       . $options['prestashop_account_email'],
-            "--domain="      . $this->domain,
-            "--ssl="         . $ssl_enabled,],  $status);
-        
+            "--domain="      . $this->domain], $status);
+
         // remove install folder
         $this->appcontext->runUser('v-delete-fs-directory', [$this->getDocRoot("/install")]);
         $this->cleanup();

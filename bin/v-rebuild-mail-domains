@@ -42,8 +42,7 @@ if [ "$MAIL_SYSTEM" = 'remote' ]; then
     exit
 fi
 
-# Perform verification if read-only mode is enabled
-check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -61,12 +60,8 @@ for domain in $(search_objects 'mail' 'SUSPENDED' "*" 'DOMAIN'); do
     rebuild_mail_domain_conf
     if [ ! -z "$WEB_SYSTEM" ] || [ ! -z "$PROXY_SYSTEM" ]; then
         if [ ! -z "$IMAP_SYSTEM" ]; then
-            WEBMAIL=$(get_object_value 'web' 'DOMAIN' "$domain" "$WEBMAIL")
             $BIN/v-delete-sys-webmail $user $domain '' 'yes'
-            $BIN/v-add-sys-webmail $user $domain $WEBMAIL '' 'yes'
-            if [ $? -ne 0 ]; then
-                $BIN/v-add-sys-webmail $user $domain '' '' 'yes'    
-            fi
+            $BIN/v-add-sys-webmail $user $domain '' 'yes'
         fi
     fi
 done

@@ -14,7 +14,7 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -a "$2" )
+domain=$2
 format=${3-shell}
 
 # Includes
@@ -44,7 +44,6 @@ json_list() {
         "BACKEND": "'$BACKEND'",
         "PROXY": "'$PROXY'",
         "PROXY_EXT": "'$PROXY_EXT'",
-        "FASTCGI_CACHE": "'$FASTCGI_CACHE'",
         "CUSTOM_DOCROOT": "'$CUSTOM_DOCROOT'",
         "SUSPENDED": "'$SUSPENDED'",
         "TIME": "'$TIME'",

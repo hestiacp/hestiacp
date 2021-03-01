@@ -15,8 +15,8 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -a "$2" )
-dom_alias=$(idn -t --quiet -a "$3" )
+domain=$2
+dom_alias=$3
 restart=$4
 
 # Includes
@@ -34,7 +34,9 @@ check_args '3' "$#" 'USER DOMAIN DOM_ALIAS [RESTART]'
 is_format_valid 'user' 'domain' 'dom_alias'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
 get_domain_values 'web'
 if [ -z "$(echo $ALIAS |tr ',' '\n' |grep ^$dom_alias$)" ]; then
     check_result $E_NOTEXIST "alias $dom_alias doesn't exist"

@@ -148,7 +148,7 @@
                                 <td class="vst-text input-label">
                                     <?php print _('Language');?>
                                 </td>
-                            </tr>                        
+                            </tr>
                             <tr>
                                 <td>
                                     <select class="vst-list" name="v_language" tabindex="7" >
@@ -159,7 +159,7 @@
                                                     echo ' selected' ;
                                                 }
                                                 if (isset($v_language)){
-                                                    if ( htmlentities($key) == trim($v_language,"'") ){
+                                                    if ( $key == $v_language ){
                                                         echo ' selected' ;
                                                     }
                                                 }

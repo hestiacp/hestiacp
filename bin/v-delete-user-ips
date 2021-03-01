@@ -28,6 +28,7 @@ source $HESTIA/conf/hestia.conf
 check_args '1' "$#" 'USER'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
 if [ "$user" = 'admin' ]; then
     exit
 fi

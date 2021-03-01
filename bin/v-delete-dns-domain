@@ -15,7 +15,7 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -a "$2" )
+domain=$2
 restart="$3"
 
 # Includes
@@ -32,7 +32,9 @@ check_args '2' "$#" 'USER DOMAIN'
 is_format_valid 'user' 'domain'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"
+is_object_unsuspended 'dns' 'DOMAIN' "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -41,8 +43,6 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-
-suspended=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf |grep "SUSPENDED='yes'")
 
 records=$(wc -l $USER_DATA/dns/$domain.conf | cut -f 1 -d ' ')
 
@@ -80,12 +80,6 @@ decrease_user_value "$user" '$U_DNS_RECORDS' "$records"
 # Restarting named
 $BIN/v-restart-dns $restart
 check_result $? "Bind restart failed" >/dev/null
-
-# Check if is suspended to decrease the suspended value
-if [ ! -z "$suspended" ]; then
-    decrease_user_value "$user" '$SUSPENDED_DNS'
-fi
-
 
 # Logging
 log_history "deleted dns domain $domain"

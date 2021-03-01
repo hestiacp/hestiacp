@@ -38,8 +38,6 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_backup_enabled
 
-# Perform verification if read-only mode is enabled
-check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -271,7 +269,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
 
         # Backup files
         if [ "$BACKUP_MODE" = 'zstd' ]; then
-            tar ${fargs[@]} -cpf- * | pzstd -$BACKUP_GZIP - > $tmpdir/web/$domain/domain_data.tar.zst
+            tar ${fargs[@]} -cpf- * | zstd -$BACKUP_GZIP - > $tmpdir/web/$domain/domain_data.tar.zst
         else    
             tar ${fargs[@]} -cpf- * | gzip -$BACKUP_GZIP - > $tmpdir/web/$domain/domain_data.tar.gz
         fi
@@ -390,7 +388,7 @@ if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
         # Compress archive
         if [ ${#accounts[@]} -gt 0 ]; then
             if [ "$BACKUP_MODE" = 'zstd' ]; then
-                tar -cpf- ${accounts[@]}  | pzstd -$BACKUP_GZIP - > $tmpdir/mail/$domain/accounts.tar.zst
+                tar -cpf- ${accounts[@]}  | zstd -$BACKUP_GZIP - > $tmpdir/mail/$domain/accounts.tar.zst
             else    
                 tar -cpf- ${accounts[@]} | gzip -$BACKUP_GZIP - > $tmpdir/mail/$domain/accounts.tar.gz
             fi        
@@ -470,7 +468,7 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
 
             # Compress dump
             if [ "$BACKUP_MODE" = 'zstd' ]; then
-                pzstd -$BACKUP_GZIP $dump
+                zstd -$BACKUP_GZIP $dump
                 rm $dump;
             else    
                 gzip -$BACKUP_GZIP $dump
@@ -551,7 +549,7 @@ if [ "$USER" != '*' ]; then
 
             # Backup files and dirs
             if [ "$BACKUP_MODE" = 'zstd' ]; then
-                tar --anchored -cpf- ${fargs[@]} $udir | pzstd -$BACKUP_GZIP - > $tmpdir/user_dir/$udir.tar.zst
+                tar --anchored -cpf- ${fargs[@]} $udir | zstd -$BACKUP_GZIP - > $tmpdir/user_dir/$udir.tar.zst
             else    
                 tar --anchored -cpf- ${fargs[@]} $udir | gzip -$BACKUP_GZIP - > $tmpdir/user_dir/$udir.tar.gz
             fi 
@@ -594,7 +592,6 @@ for backup_type in $(echo -e "${BACKUP_SYSTEM//,/\\n}"); do
         ftp)   ftp_backup ;;
         sftp)  sftp_backup ;;
         google) google_backup ;;
-        b2) b2_backup ;;
     esac
 done
 

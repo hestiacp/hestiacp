@@ -14,7 +14,7 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -a "$2" )
+domain=$2
 account=$3
 password=$4; HIDE=4
 quota=${5-unlimited}
@@ -65,7 +65,7 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     if [ "$quota" = 'unlimited' ]; then
         quota='0'
     fi
-    str="$account:$md5:$user:mail::$HOMEDIR/$user:${quota}:userdb_quota_rule=*:storage=${quota}M"
+    str="$account:$md5:$user:mail::$HOMEDIR/$user::userdb_quota_rule=*:storage=${quota}M"
     echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
 fi
 

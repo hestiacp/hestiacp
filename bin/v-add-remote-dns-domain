@@ -14,7 +14,7 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -a "$2" )
+domain=$2
 flush=$3
 
 
@@ -34,8 +34,6 @@ is_system_enabled "$DNS_CLUSTER" 'DNS_CLUSTER'
 is_procces_running
 remote_dns_health_check
 
-# Perform verification if read-only mode is enabled
-check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

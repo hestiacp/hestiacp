@@ -14,7 +14,7 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -a "$2" )
+domain=$2
 restart="${3-yes}"
 
 # Includes
@@ -30,8 +30,6 @@ check_args '2' "$#" 'USER DOMAIN'
 is_format_valid 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
 
-# Perform verification if read-only mode is enabled
-check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

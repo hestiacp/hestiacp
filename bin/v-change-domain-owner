@@ -13,7 +13,7 @@
 #----------------------------------------------------------#
 
 # Argument definition
-domain=$(idn -t --quiet -a "$1" )
+domain=$1
 user=$2
 
 # Includes
@@ -132,7 +132,7 @@ if [ ! -z "$dns_data" ]; then
 
     # Resync dns cluster
     if [ ! -z "$DNS_CLUSTER" ]; then
-        $BIN/v-sync-dns-cluster
+        v-sync-dns-cluster
     fi
 fi
 

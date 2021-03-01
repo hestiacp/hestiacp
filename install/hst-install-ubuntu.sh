@@ -24,7 +24,7 @@ VERBOSE='no'
 
 # Define software versions
 HESTIA_INSTALL_VER='1.4.0~alpha'
-pma_v='5.0.4'
+pma_v='5.1.0'
 rc_v="1.4.10"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
 fpm_v="7.4"
@@ -396,9 +396,9 @@ install_welcome_message() {
     echo "                            www.hestiacp.com                            "
     echo
     echo "========================================================================"
-    echo 
+    echo
     echo "Thank you for downloading Hestia Control Panel! In a few moments,"
-    echo "we will begin installing the following components on your server:"          
+    echo "we will begin installing the following components on your server:"
     echo
 }
 
@@ -562,7 +562,7 @@ echo
 if [ "$nginx" = 'yes' ]; then
     echo "[ * ] NGINX"
     echo "deb [arch=amd64] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
-    if [ "$release" = '16.04' ]; then 
+    if [ "$release" = '16.04' ]; then
         apt-key adv --fetch-keys 'http://nginx.org/keys/nginx_signing.key' > /dev/null 2>&1
     else
         apt-key adv --fetch-keys 'https://nginx.org/keys/nginx_signing.key' > /dev/null 2>&1    
@@ -583,7 +583,7 @@ fi
 if [ "$mysql" = 'yes' ]; then
     echo "[ * ] MariaDB"
     echo "deb [arch=amd64] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
-    if [ "$release" = '16.04' ]; then 
+    if [ "$release" = '16.04' ]; then
         apt-key adv --fetch-keys 'http://mariadb.org/mariadb_release_signing_key.asc' > /dev/null 2>&1
     else
         apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc' > /dev/null 2>&1
@@ -599,8 +599,8 @@ apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev
 # Installing PostgreSQL repo
 if [ "$postgresql" = 'yes' ]; then
     echo "[ * ] PostgreSQL"
-    echo "deb https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
-    if [ "$release" = '16.04' ]; then 
+    echo "deb [arch=amd64] https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
+    if [ "$release" = '16.04' ]; then
         apt-key adv --fetch-keys 'http://www.postgresql.org/media/keys/ACCC4CF8.asc' > /dev/null 2>&1
     else
         apt-key adv --fetch-keys 'https://www.postgresql.org/media/keys/ACCC4CF8.asc' > /dev/null 2>&1
@@ -797,7 +797,7 @@ fi
 if [ -d "$withdebs" ]; then
     software=$(echo "$software" | sed -e "s/hestia-nginx//")
     software=$(echo "$software" | sed -e "s/hestia-php//")
-    software=$(echo "$software" | sed -e "s/hestia=${HESTIA_INSTALL_VER}//")        
+    software=$(echo "$software" | sed -e "s/hestia=${HESTIA_INSTALL_VER}//")
 fi
 if [ "$release" = '16.04' ]; then
     software=$(echo "$software" | sed -e "s/libonig5/libonig2/")
@@ -1255,7 +1255,7 @@ if [ "$apache" = 'yes' ]; then
     cp -f $HESTIA_INSTALL_DIR/apache2/status.conf /etc/apache2/mods-available/hestia-status.conf
     cp -f /etc/apache2/mods-available/status.load /etc/apache2/mods-available/hestia-status.load
     cp -f $HESTIA_INSTALL_DIR/logrotate/apache2 /etc/logrotate.d/
-    
+
     # Enable needed modules
     a2enmod rewrite > /dev/null 2>&1
     a2enmod suexec > /dev/null 2>&1
@@ -1357,7 +1357,6 @@ if [ "$vsftpd" = 'yes' ]; then
     update-rc.d vsftpd defaults
     systemctl start vsftpd >> $LOG
     check_result $? "vsftpd start failed"
-
 fi
 
 
@@ -1392,7 +1391,7 @@ if [ "$mysql" = 'yes' ]; then
 
     # Remove symbolic link
     rm -f /etc/mysql/my.cnf
-    
+
     # Configuring MariaDB
     cp -f $HESTIA_INSTALL_DIR/mysql/$mycnf /etc/mysql/my.cnf
     mysql_install_db >> $LOG
@@ -1456,7 +1455,7 @@ if [ "$mysql" = 'yes' ]; then
     # Create temporary folder and change permission
     mkdir /usr/share/phpmyadmin/tmp
     chmod 777 /usr/share/phpmyadmin/tmp
-    
+
     # Generate blow fish
     blowfish=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)
     sed -i "s|%blowfish_secret%|$blowfish|" /etc/phpmyadmin/config.inc.php
@@ -1627,6 +1626,7 @@ if [ "$spamd" = 'yes' ]; then
     fi
 fi
 
+
 #----------------------------------------------------------#
 #                    Configure Fail2Ban                    #
 #----------------------------------------------------------#
@@ -1661,6 +1661,7 @@ if [ "$fail2ban" = 'yes' ]; then
     systemctl start fail2ban >> $LOG
     check_result $? "fail2ban start failed"
 fi
+
 
 #----------------------------------------------------------#
 #                       Install Roundcube                  #

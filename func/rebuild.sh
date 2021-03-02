@@ -78,6 +78,7 @@ rebuild_user_conf() {
         $HOMEDIR/$user/.cache \
         $HOMEDIR/$user/.local \
         $HOMEDIR/$user/.composer \
+        $HOMEDIR/$user/.vscode-server \
         $HOMEDIR/$user/.ssh
 
     chmod a+x $HOMEDIR/$user
@@ -88,6 +89,7 @@ rebuild_user_conf() {
         $HOMEDIR/$user/.cache \
         $HOMEDIR/$user/.local \
         $HOMEDIR/$user/.composer \
+        $HOMEDIR/$user/.vscode-server \
         $HOMEDIR/$user/.ssh
     chown root:root $HOMEDIR/$user/conf
 

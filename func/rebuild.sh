@@ -79,8 +79,8 @@ rebuild_user_conf() {
         $HOMEDIR/$user/.local \
         $HOMEDIR/$user/.composer \
         $HOMEDIR/$user/.vscode-server \
-        $HOMEDIR/$user/.ssh
-
+        $HOMEDIR/$user/.ssh \
+        $HOMEDIR/$user/.npm
     chmod a+x $HOMEDIR/$user
     chmod a+x $HOMEDIR/$user/conf
     chown --no-dereference $user:$user \
@@ -90,7 +90,8 @@ rebuild_user_conf() {
         $HOMEDIR/$user/.local \
         $HOMEDIR/$user/.composer \
         $HOMEDIR/$user/.vscode-server \
-        $HOMEDIR/$user/.ssh
+        $HOMEDIR/$user/.ssh \
+        $HOMEDIR/$user/.npm
     chown root:root $HOMEDIR/$user/conf
 
     $BIN/v-add-user-sftp-jail "$user"

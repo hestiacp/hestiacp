@@ -14,7 +14,7 @@ source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
 source $HESTIA/install/upgrade/upgrade.conf
 
-MODE=$2
+MODE=$1
 UPDATE="no"
 # Version and Download paths
 # Version to be moved to upgrade script
@@ -88,7 +88,7 @@ if [ "$UPDATE" == "no" ]; then
     echo "Password: $admin_password" >> ~/.rainloop
     echo "Secret key: admin_$key" >> ~/.rainloop
     
-    unzip -q $RL_FILE
+    unzip -q ${RL_INSTALL_DIR}/${RL_FILE}
     
     mv ./data $RL_CONFIG_DIR/
     ln -s $RL_CONFIG_DIR/data/ ./data
@@ -151,8 +151,17 @@ if [ "$UPDATE" == "no" ]; then
 
 else
    [ ! -f "${RC_INSTALL_DIR}/${RC_FILE}" ] && wget "$RL_URL" --quiet -O "${RL_INSTALL_DIR}/${RL_FILE}"
-   unzip -q -o $RL_FILE
-   rm $RL_INSTALL_DIR/$RL_FILE
+   version=$(cat $RL_INSTALL_DIR/data/VERSION);
+   
+   unzip -q -j rainloop-community-latest.zip "data/VERSION" -d $RL_INSTALL_DIR/ 
+   version_source=$(cat $RL_INSTALL_DIR/VERSION);
+   
+   # Check version inside .zip file in case hestia didn't update yet
+   if [ "$version" != "$version_source" ]; then 
+       unzip -q ${RL_INSTALL_DIR}/${RL_FILE}
+       rm $RL_INSTALL_DIR/$RL_FILE
+    fi
+    rm ${RL_INSTALL_DIR}/VERSION
 fi
 
 #----------------------------------------------------------#

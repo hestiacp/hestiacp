@@ -22,6 +22,13 @@ read -p 'Would you like to continue? [y/n]'
 echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
+    # Remove PMA SSO first 
+    sso="no"
+    if [ "$PHPMYADMIN_KEY" != "" ]; then
+        sso="yes"
+        $HESTIA/bin/v-delete-sys-pma-sso
+    fi
+    
    # Create an backup of current config
    echo "[ * ] Make backup old config files"
    mkdir -p /root/hst_backup_man/phmyadmin
@@ -154,4 +161,7 @@ MYSQL_PMA3
    #MYSQL DB and TABLES ADDITION
    mysql -uroot < $HESTIA_INSTALL_DIR/phpmyadmin/create_tables.sql
       
+    if [ "$sso" == "yes" ]; then
+        $HESTIA/bin/v-add-sys-pma-sso
+    fi
 fi

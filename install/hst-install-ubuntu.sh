@@ -1671,7 +1671,8 @@ echo "[ * ] Install Roundcube..."
 # Min requirements Dovecote + Exim + Mysql
 
 if [ "$mysql" == 'yes' ] && [ "$$dovecot" == "yes" ]; then
-    $BIN/v-add-sys-roundcube 
+    $HESTIA/bin/v-add-sys-roundcube 
+    echo " WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
 fi
 
 

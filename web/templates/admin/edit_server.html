@@ -719,12 +719,12 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print _('Directory') ?>
+                                                <?php print _('Directory') ?> <a href="https://docs.hestiacp.com/admin_docs/backups.html"><i class="fas fa-question-circle"></i></a>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="vst-input" name="v_backup_dir" value="<?=trim($v_backup_dir, "'")?>">
+                                                <input type="text" size="20" class="vst-input" name="v_backup_dir" value="<?=trim($v_backup_dir, "'")?>" disabled="disabled">
                                                 <br><br>
                                             </td>
                                         </tr>

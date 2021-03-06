@@ -508,9 +508,12 @@ if (!empty($_POST['save'])) {
     // Change backup path
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_backup_dir'] != $v_backup_dir ) {
+            /*
+            See #1655 
             exec (HESTIA_CMD."v-change-sys-config-value BACKUP ".escapeshellarg($_POST['v_backup_dir']), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
+            */
             if (empty($_SESSION['error_msg'])) $v_backup_dir = $_POST['v_backup_dir'];
             $v_backup_adv = 'yes';
         }

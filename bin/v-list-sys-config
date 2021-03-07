@@ -67,7 +67,8 @@ json_list() {
         "DB_PGA_ALIAS": "'$DB_PGA_ALIAS'",
         "LOGIN_STYLE": "'$LOGIN_STYLE'",
         "INACTIVE_SESSION_TIMEOUT": "'$INACTIVE_SESSION_TIMEOUT'",
-        "PHPMYADMIN_KEY": "'$PHPMYADMIN_KEY'"
+        "PHPMYADMIN_KEY": "'$PHPMYADMIN_KEY'",
+        "ALLOW_USERS_SYSTEM": "'$ALLOW_USERS_SYSTEM'"
     }
     }'
 }

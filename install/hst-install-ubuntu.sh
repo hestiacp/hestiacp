@@ -1127,6 +1127,9 @@ echo "LOGIN_STYLE='default'" >> $HESTIA/conf/hestia.conf
 # Inactive session timeout
 echo "INACTIVE_SESSION_TIMEOUT='60'" >> $HESTIA/conf/hestia.conf
 
+# Allow users to always create domains even the are not the owner of the main domain
+echo "ALLOW_USERS_SYSTEM='yes'" >> $HESTIA/conf/hestia.conf
+
 # Version & Release Branch
 echo "VERSION='${HESTIA_INSTALL_VER}'" >> $HESTIA/conf/hestia.conf
 echo "RELEASE_BRANCH='release'" >> $HESTIA/conf/hestia.conf

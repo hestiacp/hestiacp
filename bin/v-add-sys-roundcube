@@ -121,7 +121,7 @@ if [ "$UPDATE" == "no" ]; then
     chmod 751 $RC_LOG
     
     if [ ! -z "$(echo "$DB_SYSTEM" | grep -w 'mysql')" ]; then
-        mysql -e "DROP DATABASE  IF EXISTS roundcube"
+        mysql -e "DROP DATABASE IF EXISTS roundcube"
         mysql -e "DROP USER IF EXISTS roundcube@localhost"
         mysql -e "CREATE DATABASE roundcube"
         # Mysql available on system

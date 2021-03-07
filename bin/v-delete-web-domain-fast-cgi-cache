@@ -48,7 +48,7 @@ fi
 
 # Delete cache folder on disabling
 if [ -d /var/cache/nginx/php-fpm/$domain ]; then
-    rm -r -f /var/cache/nginx/php-fpm/$domain
+    rm -rf /var/cache/nginx/php-fpm/$domain
 fi
 
 #----------------------------------------------------------#

@@ -44,7 +44,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
     postgresql postgresql-contrib proftpd-basic quota rrdtool rssh spamassassin sudo hestia=${HESTIA_INSTALL_VER}
     hestia-nginx hestia-php vim-common vsftpd whois zip acl sysstat setpriv
-    ipset libonig5 libzip5 openssh-server"
+    ipset libonig5 libzip5 openssh-server lsb-release zstd"
 
 installer_dependencies="apt-transport-https curl dirmngr gnupg wget software-properties-common ca-certificates"
 
@@ -562,11 +562,7 @@ echo
 if [ "$nginx" = 'yes' ]; then
     echo "[ * ] NGINX"
     echo "deb [arch=amd64] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
-    if [ "$release" = '16.04' ]; then
-        apt-key adv --fetch-keys 'http://nginx.org/keys/nginx_signing.key' > /dev/null 2>&1
-    else
-        apt-key adv --fetch-keys 'https://nginx.org/keys/nginx_signing.key' > /dev/null 2>&1    
-    fi
+    apt-key adv --fetch-keys 'https://nginx.org/keys/nginx_signing.key' > /dev/null 2>&1    
 fi
 
 # Installing sury PHP repo
@@ -583,12 +579,7 @@ fi
 if [ "$mysql" = 'yes' ]; then
     echo "[ * ] MariaDB"
     echo "deb [arch=amd64] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
-    if [ "$release" = '16.04' ]; then
-        apt-key adv --fetch-keys 'http://mariadb.org/mariadb_release_signing_key.asc' > /dev/null 2>&1
-    else
-        apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc' > /dev/null 2>&1
-    fi
-
+    apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc' > /dev/null 2>&1
 fi
 
 # Installing HestiaCP repo
@@ -600,11 +591,7 @@ apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev
 if [ "$postgresql" = 'yes' ]; then
     echo "[ * ] PostgreSQL"
     echo "deb [arch=amd64] https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
-    if [ "$release" = '16.04' ]; then
-        apt-key adv --fetch-keys 'http://www.postgresql.org/media/keys/ACCC4CF8.asc' > /dev/null 2>&1
-    else
-        apt-key adv --fetch-keys 'https://www.postgresql.org/media/keys/ACCC4CF8.asc' > /dev/null 2>&1
-    fi
+    apt-key adv --fetch-keys 'https://www.postgresql.org/media/keys/ACCC4CF8.asc' > /dev/null 2>&1
 fi
 
 # Echo for a new line
@@ -798,10 +785,6 @@ if [ -d "$withdebs" ]; then
     software=$(echo "$software" | sed -e "s/hestia-nginx//")
     software=$(echo "$software" | sed -e "s/hestia-php//")
     software=$(echo "$software" | sed -e "s/hestia=${HESTIA_INSTALL_VER}//")
-fi
-if [ "$release" = '16.04' ]; then
-    software=$(echo "$software" | sed -e "s/libonig5/libonig2/")
-    software=$(echo "$software" | sed -e "s/libzip5/libzip4/")
 fi
 if [ "$release" = '18.04' ]; then
     software=$(echo "$software" | sed -e "s/libonig5/libonig4/")
@@ -1446,6 +1429,7 @@ if [ "$mysql" = 'yes' ]; then
     
     # Create copy of config file
     cp -f $HESTIA_INSTALL_DIR/phpmyadmin/config.inc.php /etc/phpmyadmin/
+    mkdir -p /var/lib/phpmyadmin/tmp
     chmod 777 /var/lib/phpmyadmin/tmp
     
     # Set config and log directory
@@ -1453,7 +1437,6 @@ if [ "$mysql" = 'yes' ]; then
     sed -i "s|define('TEMP_DIR', ROOT_PATH . 'tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
     
     # Create temporary folder and change permission
-    mkdir /usr/share/phpmyadmin/tmp
     chmod 777 /usr/share/phpmyadmin/tmp
 
     # Generate blow fish
@@ -1670,8 +1653,9 @@ fi
 echo "[ * ] Install Roundcube..."
 # Min requirements Dovecote + Exim + Mysql
 
-if [ "$mysql" == 'yes' ] && [ "$$dovecot" == "yes" ]; then
-    $BIN/v-add-sys-roundcube 
+if [ "$mysql" == 'yes' ] && [ "$dovecot" == "yes" ]; then
+    $HESTIA/bin/v-add-sys-roundcube 
+    echo " WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
 fi
 
 

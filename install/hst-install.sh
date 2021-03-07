@@ -62,7 +62,7 @@ no_support_message(){
     echo "Hestia Control Panel. Officially supported releases:"
     echo "****************************************************"
     echo "  Debian 9, 10"
-    echo "  Ubuntu 16.04 LTS, 18.04, 20.04 LTS"
+    echo "  Ubuntu 18.04, 20.04 LTS"
     echo ""
     exit 1;
 }

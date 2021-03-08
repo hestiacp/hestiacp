@@ -3,15 +3,14 @@ All notable changes to this project will be documented in this file.
 
 ## [DEVELOPMENT]
 ### Features
-- Introduced support for PHPmyAdmin Single Sign On
-- Added NGINX Fast CGI Cache support
-- Install PHPMyAdmin directly from source, provide a migration script for existing installations.
-- Added new Webmail Stack to provide the ability to change the webmail client (Roundcube/Rainloop).
-- Install roundcube directly from source instead apt.
-- Added B2 Backup Support for Remote Backup Location, thanks @rez0n for the codeparts.
-- Added an upgrade script to provide inplace upgrades to php7.4 (or any other version).
-- Added template support for osticket, thanks @madito.
-- Added an SMTP Relay support for the whole server aswell for each domain.
+- Introduced single sign-on support for phpMyAdmin.
+- Introduced support for NGINX Fast CGI Cache.
+- Introduced support for SMTP Relay / smarthosts (server-wide or per-domain).
+- Introduced the ability to choose which webmail client to use per-domain (Roundcube or Rainloop)
+- Added B2 Backup Support for Remote Backup Location - thanks **@rez0n**!
+- Added template support for osticket - thanks **@madito**!
+- Install phpMyAdmin directly from source and provide a migration script for existing installations.
+- Added an upgrade script to provide in-place upgrades to php7.4 (or any other version).
 
 ### Bugfixes
 - Fixed an issue where user name was duplicated when editing FTP users. (#1411)
@@ -20,27 +19,27 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue with the dark theme where available updates were incorrectly displayed.
 - Fixed an issue where local and FTP backup files were not deleted when running `v-delete-user-backup`. (#1421)
 - Fixed an issue where IP addresses could not be deleted. (#1423)
-- Fixed an issue where nginx web statistics authorization is located in the wrong directory.
-- Added last name option for backward compatibility with Bleasta / WHMCS plugins.
-- Added private folder to openbasedir permission for all main templates.
-- Improvements have been made to the API's error handling - thanks **@danielalexis**!
-- ZSTD Compression has been made multi-threaded.
-- Fixed multiple small bugs in email stack.
-- Fixed an issue which leads custom docroot to be not set on backup restore.
-- Fixed an issue which leads to an NSPOSIXErrorDomain:100 Error on Safari/iOS (thanks @stsimb).
-- Fixed multiple small issues with postgresql.
-- Fixed an issue which the adding firewall rules didnt check if port field is empty.
-- Fixed an issue where exim ignored the mail quota limit.
-- Improved mail informations to provide DKIM and other mail server settings in mail overview.
+- Fixed an issue where nginx web statistics authorization file was placed in the wrong directory.
+- Fixed multiple small issues in mail domain handling and webmail stack.
+- Fixed an issue which caused the custom docroot value to be not set when restoring a backup.
+- Fixed an issue which caused a `NSPOSIXErrorDomain:100` error when using Safari/iOS (thanks **@stsimb**).
+- Fixed multiple small issues which occured when using PostgreSQL.
+- Fixed an issue where exim ignored the conigured mail quota limit.
+- Fixed an issue with the invalid character validation for mail auto replies.
+- Fixed an issue which caused Let's Encrypt to fail when using the Moodle template - thanks **@ArturoBlanco**.
+- Fixed an issue where the MySQL `wait_timeout` value was not saved due to wrong regexp attribute (thanks **@guicapanema**).
+- Improved compatibility with Blesta / WHMCS plugins.
+- Improved API error handling routines - thanks **@danielalexis**!
+- Improved performance by enabling multithreading when creating backups using the `zstd` compression type.
+- Improved error handling when creating firewall rules.
+- Improved overview to provide DKIM and other mail server settings in mail overview.
 - Improved removal handling to allow the remove of suspended users, domains, etc.
-- Fixed an issue with the invalid chars validation for mail auto reply.
-- Improved dependencies over package control to install lsb-release and zstd.
-- Fixed an issue which leads let's encrypt to fail in moodle template, thanks @ArturoBlanco.
-- Improved SFTP connection handling, changing expect to be case insensitive in SFTP (thanks @lazzurs).
-- Fixed an issue which doesnt save the mysql wait_timeout due to wrong regexp attribute (thanks @guicapanema).
-- Improved subdoamin handling to prevent the ability of creating subdomains when the tld belongs to another account (thanks @KuJoe and @sickcodes).
-- Improved the IDN handling to remove the current issues with let's encrypt and mail.
-- Disabled changing backup folder via Web UI because it used symbolic link instead of mount causing issues with restore mail / user files 
+- Improved dependencies over package control to install `lsb-release` and `zstd`.
+- Improved SFTP connection handling, changing expect to be case insensitive in SFTP (thanks **@lazzurs**).
+- Improved domain validation to prevent creating subdomains when the top-level domain belongs to another account (thanks **@KuJoe** and **@sickcodes**).
+- Improved IDN domain handling to resolve issues with Let's Encrypt SSL and mail domain services.
+- Added private folder to openbasedir permission for all main templates.
+- Disabled changing backup folder via Web UI because it used symbolic link instead of mount causing issues with restore mail / user files.
 
 ## [1.3.3] - Service Release
 ### Bugfixes

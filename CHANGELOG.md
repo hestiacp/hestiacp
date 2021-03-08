@@ -40,7 +40,8 @@ All notable changes to this project will be documented in this file.
 - Improved IDN domain handling to resolve issues with Let's Encrypt SSL and mail domain services.
 - Added private folder to openbasedir permission for all main templates.
 - Disabled changing backup folder via Web UI because it used symbolic link instead of mount causing issues with restore mail / user files.
-- Fix xss vulnerability in v-add-sys-ip (thanks @numanturle)
+- Fixed xss vulnerability in v-add-sys-ip (thanks **@numanturle**)
+- Fixed remote execution possibility when deleting ssh key (thanks **@numanturle**)
 
 ## [1.3.3] - Service Release
 ### Bugfixes

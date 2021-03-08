@@ -97,10 +97,10 @@ function authenticate_user($user, $password, $twofa = ''){
                 $data = json_decode(implode('', $output), true);
                 unset($output); 
                 if ($data[$user]['TWOFA'] != '') {
-                        if(empty($_POST['twofa'])){
+                        if(empty($twofa)){
                             return false;
                         }else{
-                            $v_twofa = $_POST['twofa'];
+                            $v_twofa = escapeshellarg($twofa);
                             exec(HESTIA_CMD ."v-check-user-2fa ".$v_user." ".$v_twofa, $output, $return_var);
                             unset($output);
                             if ( $return_var > 0 ) {

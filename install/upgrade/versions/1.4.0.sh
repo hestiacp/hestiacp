@@ -10,22 +10,23 @@
 if [ -e "/etc/nginx/nginx.conf" ]; then
     check=$(cat /etc/nginx/nginx.conf | grep 'fastcgi_cache_path');
     if [ -z "$check" ]; then 
-        echo "[ * ] Updating Nginx to support fast cgi cache..."
+        echo "[ * ] Enabling Nginx FastCGI cache support..."
         sed  -i 's/# Cache bypass/# FastCGI Cache settings\n    fastcgi_cache_path \/var\/cache\/nginx\/php-fpm levels=2\n    keys_zone=fcgi_cache:10m inactive=60m max_size=1024m;\n    fastcgi_cache_key \"$host$request_uri $cookie_user\";\n    fastcgi_temp_path  \/var\/cache\/nginx\/temp;\n    fastcgi_ignore_headers Expires Cache-Control;\n    fastcgi_cache_use_stale error timeout invalid_header;\n    fastcgi_cache_valid any 1d;\n\n    # Cache bypass/g' /etc/nginx/nginx.conf
     fi
 fi
 
-echo '[ * ] Set Role "Admin" to Administrator'
+echo '[ * ] Updating System Administrator account permissions...'
 $HESTIA/bin/v-change-user-role admin admin
 
 # Upgrading Mail System
 if [ "$MAIL_SYSTEM" == "exim4" ]; then
     if ! grep -q "send_via_smtp_relay" /etc/exim4/exim4.conf.template; then
 
-        echo '[ * ] Installing smtp relay feature'
+        echo '[ * ] Enabling SMTP relay support...'
         if grep -q "driver = plaintext" /etc/exim4/exim4.conf.template; then
             disable_smtp_relay=true
-            echo '[ ! ] SMTP Relay install requires manual intervention:'
+            echo '[ ! ] ERROR: Manual intervention required to enable SMTP Relay:'
+            echo ''
             echo '      Exim only supports one plaintext authenticator.'
             echo '      If you want to use the Hestia smtp relay feature,'
             echo '      please review the /etc/exim4/exim4.conf.template'
@@ -80,5 +81,6 @@ fi
 
 # Fix PostgreSQL repo
 if [ -f /etc/apt/sources.list.d/postgresql.list ]; then
+    echo "[*] Updating PostgreSQL repository..."
     sed -i 's|deb https://apt.postgresql.org/pub/repos/apt/|deb [arch=amd64] https://apt.postgresql.org/pub/repos/apt/|g' /etc/apt/sources.list.d/postgresql.list
 fi

@@ -40,6 +40,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue which doesnt save the mysql wait_timeout due to wrong regexp attribute (thanks @guicapanema).
 - Improved subdoamin handling to prevent the ability of creating subdomains when the tld belongs to another account (thanks @KuJoe and @sickcodes).
 - Improved the IDN handling to remove the current issues with let's encrypt and mail.
+- Disabled changing backup folder via Web UI because it used symbolic link instead of mount causing issues with restore mail / user files 
 
 ## [1.3.3] - Service Release
 ### Bugfixes

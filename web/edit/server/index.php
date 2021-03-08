@@ -660,13 +660,24 @@ if (!empty($_POST['save'])) {
         }
     }
 
-    // Change login style
+    // Change INACTIVE_SESSION_TIMEOUT
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_inactive_session_timeout'] != $_SESSION['INACTIVE_SESSION_TIMEOUT']) {
             exec (HESTIA_CMD."v-change-sys-config-value INACTIVE_SESSION_TIMEOUT ".escapeshellarg($_POST['v_inactive_session_timeout']), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
             if (empty($_SESSION['error_msg'])) $v_login_style = $_POST['v_inactive_session_timeout'];
+            $v_security_adv = 'yes';
+        }
+    }
+    
+    // Change ALLOW_USERS_SERVER
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_allow_users_system'] != $_SESSION['v_allow_users_system']) {
+            exec (HESTIA_CMD."v-change-sys-config-value ALLOW_USERS_SYSTEM ".escapeshellarg($_POST['v_allow_users_system']), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) $v_allow_users_system = $_POST['v_allow_users_system'];
             $v_security_adv = 'yes';
         }
     }

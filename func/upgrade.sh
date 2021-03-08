@@ -143,7 +143,12 @@ upgrade_health_check() {
         echo "[ ! ] Adding missing variable to hestia.conf: INACTIVE_SESSION_TIMEOUT ('60')"
         $BIN/v-change-sys-config-value "INACTIVE_SESSION_TIMEOUT" "60"
     fi
-    
+
+    # Inactive session timeout
+    if [ -z "$ALLOW_USERS_SYSTEM" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: ALLOW_USERS_SYSTEM ('yes')"
+        $BIN/v-change-sys-config-value "ALLOW_USERS_SYSTEM" "yes"
+    fi    
     
     echo "[ * ] Health check complete. Starting upgrade from $VERSION to $new_version..."
     echo "============================================================================="

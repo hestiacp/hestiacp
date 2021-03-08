@@ -168,6 +168,7 @@ if (!empty($_POST['ok'])) {
         exec (HESTIA_CMD."v-delete-web-domain-proxy ".$user." ".escapeshellarg($v_domain)." 'no'", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
+        $restart_web = 'yes';
     }
     
     // Change template

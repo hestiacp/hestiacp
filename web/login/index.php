@@ -89,6 +89,9 @@ function authenticate_user($user, $password, $twofa = ''){
             if ( $return_var > 0 ) {
                 sleep(2);
                 $error = "<a class=\"error\">"._('Invalid username or password')."</a>";
+                $v_murmur = escapeshellarg($_POST['murmur']);
+                exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." failed ".$v_murmur, $output, $return_var);
+
                 return $error;
             } else {
 
@@ -108,6 +111,7 @@ function authenticate_user($user, $password, $twofa = ''){
                                 $error = "<a class=\"error\">"._('Invalid or missing 2FA token')."</a>";
                                 $_SESSION['login']['username'] = $user;
                                 $_SESSION['login']['password'] = $password;
+                                exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip."  failed ".$v_murmur, $output, $return_var);
                                 return $error;
                                 unset($_POST['twofa']);
                             }
@@ -124,7 +128,7 @@ function authenticate_user($user, $password, $twofa = ''){
                 $v_user = $_SESSION['user'];
                 //log successfull login attempt
                 $v_murmur = escapeshellarg($_POST['murmur']);
-                exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." ".$v_murmur, $output, $return_var);
+                exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." succes ".$v_murmur, $output, $return_var);
 
                 $_SESSION['LAST_ACTIVITY'] = time();
                 $_SESSION['MURMUR'] = $_POST['murmur'];

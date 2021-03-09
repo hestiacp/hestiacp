@@ -96,20 +96,20 @@ function authenticate_user($user, $password, $twofa = ''){
                 unset($output);
                 // Check if 2FA is active
                 if ($data[$user]['TWOFA'] != '') {
-                   if (empty($twofa)){
-                            $_SESSION['login']['username'] = $user;
-                            $_SESSION['login']['password'] = $password;
+                        if(empty($twofa)){
                             return false;
-                   } else {
-                        $v_twofa = escapeshellarg($twofa);
-                        exec(HESTIA_CMD ."v-check-user-2fa ".$v_user." ".$v_twofa, $output, $return_var);
-                        unset($output);
-                        if ( $return_var > 0 ) {
-                            //sleep(2);
-                            $error = "<a class=\"error\">"._('Invalid or missing 2FA token')."</a>";
-                            $_SESSION['login']['username'] = $user;
-                            $_SESSION['login']['password'] = $password;
-                            return $error;
+                        }else{
+                            $v_twofa = escapeshellarg($twofa);
+                            exec(HESTIA_CMD ."v-check-user-2fa ".$v_user." ".$v_twofa, $output, $return_var);
+                            unset($output);
+                            if ( $return_var > 0 ) {
+                                sleep(2);
+                                $error = "<a class=\"error\">"._('Invalid or missing 2FA token')."</a>";
+                                $_SESSION['login']['username'] = $user;
+                                $_SESSION['login']['password'] = $password;
+                                return $error;
+                                unset($_POST['twofa']);
+                            }
                         }
                    }
                 }

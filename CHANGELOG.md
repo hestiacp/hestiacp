@@ -1,6 +1,8 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+- Fixed xss vulnerability in v-add-sys-ip (thanks **@numanturle**)
+- Fixed remote execution possibility when deleting ssh key (thanks **@numanturle**)
 ## [1.3.3] - Service Release
 ### Bugfixes
 - Improved permission handling.

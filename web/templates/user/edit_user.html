@@ -2,7 +2,8 @@
         <div class="l-sort clearfix">
           <div class="l-unit-toolbar__buttonstrip">
             <a class="ui-button cancel" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
-            <a href="/list/key/" id="btn-create" class="ui-button cancel" title="<?=_('SSH_KEY');?>"><i class="fas fa-key status-icon green"></i><?=_('SSH KEY')?></a>
+            <a href="/list/key/" id="btn-create" class="ui-button cancel" title="<?=_('Manage SSH keys');?>"><i class="fas fa-key status-icon orange"></i><?=_('Manage SSH keys')?></a>
+            <a href="/edit/user/log/?user=<?php echo $user; ?>" id="btn-list" class="ui-button cancel" title="<?=_('Login history');?>"><i class="fas fa-binoculars status-icon green"></i><?=_('Login history')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
             <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>

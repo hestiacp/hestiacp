@@ -3,16 +3,6 @@
         <div class="l-unit-toolbar__buttonstrip">
           <a href="/edit/user/?user=<?php echo $user; ?>" id="btn-back" class="ui-button cancel"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
           <a href="javascript:location.reload();" class="ui-button cancel"><i class="fas fa-redo status-icon green"></i> <?=_('Refresh')?></a>
-          <div class="actions-panel display-inline-block" key-action="js">
-            <a class="data-controls do_delete ui-button danger cancel">
-              <i class="do_delete fas fa-times-circle status-icon red"></i>
-              <?=_('Delete')?>
-              <input type="hidden" name="delete_url" value="/delete/user/log/?token=<?=$_SESSION['token']?>" />
-                <div class="confirmation-text-delete hidden" title="<?=_('Confirmation')?>">
-                  <p class="confirmation"><?=_('Delete authentication logs')?></p>
-                </div>
-            </a>
-          </div>
         </div>
         <div class="l-sort-toolbar clearfix">
         </div>

@@ -13,7 +13,6 @@
 
 # Argument definition
 user=$1
-date=$(date "+%F %T")
 
 # Includes
 source $HESTIA/func/main.sh
@@ -23,19 +22,22 @@ source $HESTIA/conf/hestia.conf
 check_hestia_demo_mode
 
 #----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER'
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+
+#----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Remove log file
-if [ -z $user ]; then
-    echo "Error: no user specified."
-elif [ ! -f "$HESTIA/data/users/$user/history.log" ]; then
-    echo "Error: no history log found for $user."
-else
+# Remove log file and log event
+if [ -f "$HESTIA/data/users/$user/history.log" ]; then
     rm -f $HESTIA/data/users/$user/history.log
+    log_history "user action log for $user was cleared."
+    log_event "$OK" "$ARGUMENTS"
 fi
-
-log_history "Log for $user was cleared on $date."
-log_event "$OK" "$ARGUMENTS"
 
 exit

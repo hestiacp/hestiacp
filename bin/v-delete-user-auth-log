@@ -3,9 +3,12 @@
 #
 # The function for deleting a users auth log file
 
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
 # Argument definition
 user=$1
-date=$(date "+%F %T")
 
 # Includes
 source $HESTIA/func/main.sh
@@ -22,17 +25,15 @@ check_args '1' "$#" 'USER'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 
-if [ ! -f $USER_DATA/auth.log ]; then
-    touch  $USER_DATA/auth.log
-fi
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-rm $USER_DATA/auth.log
-
-log_history "Authentication log for $user was cleared on $date."
-log_event "$OK" "$ARGUMENTS"
+# Remove log file and log event
+if [ -f $USER_DATA/auth.log ]; then
+    rm -f $USER_DATA/auth.log
+    log_history "login history for $user was cleared."
+    log_event "$OK" "$ARGUMENTS"
+fi
 
 exit

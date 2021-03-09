@@ -962,6 +962,7 @@ is_format_valid() {
                 host)           is_object_format_valid "$arg" "$arg_name" ;;
                 hour)           is_cron_format_valid "$arg" $arg_name ;;
                 id)             is_int_format_valid "$arg" 'id' ;;
+                interface)      is_interface_format_valid "$arg" ;;
                 ip)             is_ip_format_valid "$arg" ;;
                 ip_name)        is_domain_format_valid "$arg" 'IP name';;
                 ip_status)      is_ip_status_format_valid "$arg" ;;

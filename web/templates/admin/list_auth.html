@@ -9,7 +9,7 @@
               <?=_('Delete')?>
               <input type="hidden" name="delete_url" value="/delete/user/log/?token=<?=$_SESSION['token']?>" />
                 <div class="confirmation-text-delete hidden" title="<?=_('Confirmation')?>">
-                  <p class="confirmation"><?=_('Delete authentication logs')?></p>
+                  <p class="confirmation"><?=_('Are you sure you want to delete the login history for this user?')?></p>
                 </div>
             </a>
           </div>
@@ -28,10 +28,10 @@
         &nbsp;
       </div>       
       <div class="clearfix l-unit__stat-col--left small"><b><?php print _('Date');?></b></div>
-      <div class="clearfix l-unit__stat-col--left compact"><b><?php print _('Time');?></b></div>
-      <div class="clearfix l-unit__stat-col--left "><b><?php print _('IP address');?></b></div>
-      <div class="clearfix l-unit__stat-col--left "><b><?php print _('Status');?></b></div>
-      <div class="clearfix l-unit__stat-col--left "><b><?php print _('Active');?></b></div>
+      <div class="clearfix l-unit__stat-col--left"><b><?php print _('Time');?></b></div>
+      <div class="clearfix l-unit__stat-col--left"><b><?php print _('IP address');?></b></div>
+      <div class="clearfix l-unit__stat-col--left"><b><?php print _('Status');?></b></div>
+      <div class="clearfix l-unit__stat-col--left"><b><?php print _('Active');?></b></div>
       <div class="clearfix l-unit__stat-col--left wide-4"><b><?php print _('Browser Fingerprint');?></b></div>
     </div>
   </div> 
@@ -45,11 +45,11 @@
         <i class="fas fa-info-circle status-icon dim"></i>
       </div>
       <div class="clearfix l-unit__stat-col--left small"><b><?=translate_date($data[$key]['DATE'])?></b></div>
-      <div class="clearfix l-unit__stat-col--left compact"><b><?=$data[$key]['TIME']?></b></div>
-      <div class="clearfix l-unit__stat-col--left "><?=$data[$key]['IP']?></div>
-      <div class="clearfix l-unit__stat-col--left "><?=$data[$key]['STATUS']?></div>
-      <div class="clearfix l-unit__stat-col--left "><?=$data[$key]['ACTIVE']?></div>
-      <div class="clearfix l-unit__stat-col--left "><?=$data[$key]['FINGERPRINT']?></div>
+      <div class="clearfix l-unit__stat-col--left"><b><?=$data[$key]['TIME']?></b></div>
+      <div class="clearfix l-unit__stat-col--left"><?=$data[$key]['IP']?></div>
+      <div class="clearfix l-unit__stat-col--left"><?=$data[$key]['STATUS']?></div>
+      <div class="clearfix l-unit__stat-col--left"><?=$data[$key]['ACTIVE']?></div>
+      <div class="clearfix l-unit__stat-col--left"><?=$data[$key]['FINGERPRINT']?></div>
       
       
     </div>

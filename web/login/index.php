@@ -128,7 +128,7 @@ function authenticate_user($user, $password, $twofa = ''){
                 $v_user = $_SESSION['user'];
                 //log successfull login attempt
                 $v_murmur = escapeshellarg($_POST['murmur']);
-                exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." succes ".$v_murmur, $output, $return_var);
+                exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." success ".$v_murmur, $output, $return_var);
 
                 $_SESSION['LAST_ACTIVITY'] = time();
                 $_SESSION['MURMUR'] = $_POST['murmur'];

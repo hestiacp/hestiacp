@@ -8,6 +8,10 @@ ip=$2
 status=$3
 fingerprint=${4}
 
+active="yes"
+if [ $status = "failed" ]; then
+    active="no"
+fi
 
 # Includes
 source $HESTIA/func/main.sh
@@ -38,7 +42,7 @@ fi
 
 awk -i inplace -v finger="FINGERPRINT='$fingerprint'" -v active="ACTIVE='no'" '$2 == TIME {$5=ACTIVE}1' $USER_DATA/auth.log   
 
-echo "IP='$ip' FINGERPRINT='$fingerprint' STATUS='$status' DATE='$date' TIME='$time' ACTIVE='yes'" >> $USER_DATA/auth.log
+echo "IP='$ip' FINGERPRINT='$fingerprint' STATUS='$status' DATE='$date' TIME='$time' ACTIVE='$active'" >> $USER_DATA/auth.log
 
 #----------------------------------------------------------#
 #                       Hestia                             #

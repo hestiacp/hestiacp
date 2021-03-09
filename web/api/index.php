@@ -123,7 +123,7 @@ function api($hst_hash, $hst_user, $hst_password, $hst_returncode, $hst_cmd, $hs
     // Check command
     if ($cmd == "'v-make-tmp-file'") {
         // Used in DNS Cluster
-        $fp = fopen($hst_arg2, 'w');
+        $fp = fopen('/tmp/'.basename($hst_arg2), 'w');
         fwrite($fp, $hst_arg1."\n");
         fclose($fp);
         $return_var = 0;

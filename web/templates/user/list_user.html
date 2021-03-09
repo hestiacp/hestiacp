@@ -94,9 +94,9 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
           <div class="clearfix l-unit__stat-col--left super-compact">
             <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="user[]" value="<?=$key?>">
           </div>
-              <div class="clearfix l-unit__stat-col--left wide-3 userlist-username"><b><a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('login as')?>"><?php echo $data[$key]['FNAME'];?> <span style="font-weight: normal !important;">(<?=$key?>)</span></b></a>
+          <div class="clearfix l-unit__stat-col--left wide-3 userlist-username"><b><a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('login as')?> <?=$key?>"><?=$key?> <span style="font-weight: normal !important;">(<?php echo $data[$key]['NAME'];?>)</span></b></a>
                 <br />
-                <span class="userlist-email"><b><?=_('Email')?>:</b> <?=$data[$key]['CONTACT']?></span>
+                <div class="userlist-email"><b><?=_('Email')?>:</b> <?=$data[$key]['CONTACT']?></div>
               </div>
               <!-- START QUICK ACTION TOOLBAR AREA -->
               <div class="clearfix l-unit__stat-col--left text-right compact-3">

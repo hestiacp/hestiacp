@@ -14,7 +14,6 @@
 			<?php if ((isset($_SESSION['FILE_MANAGER'])) && (!empty($_SESSION['FILE_MANAGER'])) && ($_SESSION['FILE_MANAGER'] == "true")) {?>
 				<div class="l-menu__item <?php if($TAB == 'FM' ) echo 'l-menu__item--active' ?>"><a href="/fm/"><i class="fas fa-folder-open panel-icon"></i>&nbsp;&nbsp;&nbsp;<?=_('Files')?></a></div>
 			<?php } ?>
-				<div class="l-menu__item <?php if($TAB == 'LOG' ) echo 'l-menu__item--active' ?>"><a href="/list/log/"><i class="fas fa-history panel-icon"></i>&nbsp;&nbsp;&nbsp;<?=_('Log')?></a></div>
 			<div class="l-menu__item <?php if($TAB == 'STATS' ) echo 'l-menu__item--active' ?>"><a href="/list/stats/"><i class="fas fa-chart-line panel-icon"></i>&nbsp;&nbsp;&nbsp;<?=_('Statistics')?></a></div>
 		</div>
 		<div class="l-profile noselect">

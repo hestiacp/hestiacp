@@ -314,9 +314,9 @@
         <div class="l-unit-ft">
           <table class='data'></table>
           <div class="data-count l-unit__col l-unit__col--right total clearfix">
-            <?php
-                echo ngettext('%d item', '%d items', $i);
-            ?>
+              <?php
+              printf(ngettext('%d item', '%d items', $i),$i);
+              ?>
           </div>
           <div class="data-count l-unit__col l-unit__col--right back clearfix">
           </div>

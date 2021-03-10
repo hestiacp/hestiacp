@@ -84,7 +84,6 @@ function authenticate_user($user, $password, $twofa = ''){
 
             // Remove tmp file
             unlink($v_hash);
-
             // Check API answer
             if ( $return_var > 0 ) {
                 sleep(2);
@@ -101,6 +100,8 @@ function authenticate_user($user, $password, $twofa = ''){
                 unset($output); 
                 if ($data[$user]['TWOFA'] != '') {
                         if(empty($twofa)){
+                            $_SESSION['login']['username'] = $user;
+                            $_SESSION['login']['password'] = $password;
                             return false;
                         }else{
                             $v_twofa = escapeshellarg($twofa);
@@ -111,7 +112,8 @@ function authenticate_user($user, $password, $twofa = ''){
                                 $error = "<a class=\"error\">"._('Invalid or missing 2FA token')."</a>";
                                 $_SESSION['login']['username'] = $user;
                                 $_SESSION['login']['password'] = $password;
-                                exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip."  failed ".$v_murmur, $output, $return_var);
+                                $v_murmur = escapeshellarg($_POST['murmur']);
+                                exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." failed ".$v_murmur, $output, $return_var);
                                 return $error;
                                 unset($_POST['twofa']);
                             }

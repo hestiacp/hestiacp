@@ -121,9 +121,9 @@ function authenticate_user($user, $password, $twofa = ''){
                 }
 
                 if ($data[$user]['ROLE'] == 'admin'){
-                    exec (HESTIA_CMD . "v-list-user admin json", $output, $return_var);
-                    $data = json_decode(implode('', $output), true);
-                    unset($output);
+                 //   exec (HESTIA_CMD . "v-list-user admin json", $output, $return_var);
+                 //   $data = json_decode(implode('', $output), true);
+                 //   unset($output);
                 }
                 // Define session user
                 $_SESSION['user'] = key($data);

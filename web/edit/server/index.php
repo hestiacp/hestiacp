@@ -671,13 +671,13 @@ if (!empty($_POST['save'])) {
         }
     }
     
-    // Change ALLOW_USERS_SERVER
+    // Change ENFORCE_SUBDOMAIN_OWNERSHIP
     if (empty($_SESSION['error_msg'])) {
-        if ($_POST['v_allow_users_system'] != $_SESSION['v_allow_users_system']) {
-            exec (HESTIA_CMD."v-change-sys-config-value ALLOW_USERS_SYSTEM ".escapeshellarg($_POST['v_allow_users_system']), $output, $return_var);
+        if ($_POST['v_enforce_subdomain_ownership'] != $_SESSION['v_enforce_subdomain_ownership']) {
+            exec (HESTIA_CMD."v-change-sys-config-value ENFORCE_SUBDOMAIN_OWNERSHIP ".escapeshellarg($_POST['v_enforce_subdomain_ownership']), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
-            if (empty($_SESSION['error_msg'])) $v_allow_users_system = $_POST['v_allow_users_system'];
+            if (empty($_SESSION['error_msg'])) $v_enforce_subdomain_ownership = $_POST['v_enforce_subdomain_ownership'];
             $v_security_adv = 'yes';
         }
     }

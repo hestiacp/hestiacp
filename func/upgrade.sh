@@ -145,9 +145,9 @@ upgrade_health_check() {
     fi
 
     # Inactive session timeout
-    if [ -z "$ALLOW_USERS_SYSTEM" ]; then
-        echo "[ ! ] Adding missing variable to hestia.conf: ALLOW_USERS_SYSTEM ('yes')"
-        $BIN/v-change-sys-config-value "ALLOW_USERS_SYSTEM" "yes"
+    if [ -z "$ENFORCE_SUBDOMAIN_OWNERSHIP" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: ENFORCE_SUBDOMAIN_OWNERSHIP ('yes')"
+        $BIN/v-change-sys-config-value "ENFORCE_SUBDOMAIN_OWNERSHIP" "yes"
     fi    
     
     echo "[ * ] Health check complete. Starting upgrade from $VERSION to $new_version..."

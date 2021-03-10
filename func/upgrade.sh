@@ -149,6 +149,12 @@ upgrade_health_check() {
         echo "[ ! ] Adding missing variable to hestia.conf: ALLOW_USERS_SYSTEM ('yes')"
         $BIN/v-change-sys-config-value "ALLOW_USERS_SYSTEM" "yes"
     fi    
+
+    # Debug Mode
+    if [ -z "$DEBUG_MODE" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: DEBUG_MODE ('false')"
+        $BIN/v-change-sys-config-value "DEBUG_MODE" "false"
+    fi
     
     echo "[ * ] Health check complete. Starting upgrade from $VERSION to $new_version..."
     echo "============================================================================="

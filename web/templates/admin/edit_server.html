@@ -147,6 +147,18 @@
                                         <tr>
                                         <td class="vst-text input-label">
                                                 <label><input type="checkbox" size="20" class="vst-checkbox" name="v_language_update"><?php print _('SYSTEM_SET_DEFAULT_LANGUAGE');?></label>
+                                                
+                                            </td>
+                                        </tr>
+                                        <?php if ($_SESSION['RELEASE_BRANCH'] != "release") { ?>
+                                            <tr>
+                                                <td>
+                                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_debug_mode" <?php if ((isset($_SESSION['DEBUG_MODE'])) && (!empty($_SESSION['DEBUG_MODE'])) && ($_SESSION['DEBUG_MODE'] == "true")) echo "checked=yes" ?>><?php print _('Enable debug mode');?></label>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                        <tr>
+                                            <td>
                                                 <br><br>
                                             </td>
                                         </tr>

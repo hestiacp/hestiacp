@@ -916,7 +916,7 @@ is_base_domain_owner(){
         if [ "$object" != "none" ]; then
             get_base_domain $object
             web=$(grep -F -H -h "DOMAIN='$basedomain'" $HESTIA/data/users/*/web.conf);
-            if [ $ENFORCE_SUBDOMAIN_OWNERSHIP = "no" ]; then
+            if [ $ENFORCE_SUBDOMAIN_OWNERSHIP = "yes" ]; then
                 if [ ! -z "$web" ]; then
                     parse_object_kv_list "$web"
                     if [ -z "$ALLOW_USERS" ] ||  [ "$ALLOW_USERS" != "yes" ]; then

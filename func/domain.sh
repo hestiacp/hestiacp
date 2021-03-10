@@ -920,8 +920,8 @@ is_base_domain_owner(){
                 if [ ! -z "$web" ]; then
                     parse_object_kv_list "$web"
                     if [ -z "$ALLOW_USERS" ] ||  [ "$ALLOW_USERS" != "yes" ]; then
-                    # Don't care if $basedomain all ready exists only if the owner is of the base domain is the current user
-                    is_domain_new "" $basedomain
+                        # Don't care if $basedomain all ready exists only if the owner is of the base domain is the current user
+                        is_domain_new "" $basedomain
                     fi
                 else
                     is_domain_new "" $basedomain

@@ -97,6 +97,8 @@ function authenticate_user($user, $password, $twofa = ''){
                 // Check if 2FA is active
                 if ($data[$user]['TWOFA'] != '') {
                         if(empty($twofa)){
+                            $_SESSION['login']['username'] = $user;
+                            $_SESSION['login']['password'] = $password;
                             return false;
                         }else{
                             $v_twofa = escapeshellarg($twofa);
@@ -150,7 +152,6 @@ function authenticate_user($user, $password, $twofa = ''){
                     exit;
                 }
             }
-        }
     } else {
         unset($_POST);
         unset($_GET);

@@ -277,6 +277,17 @@ if (!empty($_POST['save'])) {
         }
     }
 
+   // Update debug mode status
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_debug_mode'] != $_SESSION['DEBUG_MODE']) {
+            if ($_POST['v_debug_mode'] == 'on') { $_POST['v_debug_mode'] = 'true'; } else { $_POST['v_debug_mode'] = 'false'; }
+            exec (HESTIA_CMD."v-change-sys-config-value DEBUG_MODE ".escapeshellarg($_POST['v_debug_mode']), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            $v_debug_mode_adv = 'yes';
+        }
+    }
+
    // Set File Manager support
     if (empty($_SESSION['error_msg'])) {
         if ((!empty($_POST['v_filemanager'])) && ($_SESSION['FILE_MANAGER'] != $_POST['v_filemanager'])) {

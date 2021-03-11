@@ -124,6 +124,10 @@ function authenticate_user($user, $password, $twofa = ''){
                  //   exec (HESTIA_CMD . "v-list-user admin json", $output, $return_var);
                  //   $data = json_decode(implode('', $output), true);
                  //   unset($output);
+
+                    $_SESSION['userContext'] = 'admin';
+                } else {
+                    $_SESSION['userContext'] = 'user';
                 }
                 // Define session user
                 $_SESSION['user'] = key($data);

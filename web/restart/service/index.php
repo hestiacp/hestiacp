@@ -1,8 +1,6 @@
 <?php
 // Init
 error_reporting(NULL);
-ob_start();
-session_start();
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check token
@@ -11,7 +9,7 @@ if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
     exit();
 }
 
-if ($_SESSION['user'] == 'admin') {
+if ($_SESSION['userContext'] == "admin") {
     if (!empty($_GET['srv'])) {
         if ($_GET['srv'] == 'iptables') {
             exec (HESTIA_CMD."v-update-firewall", $output, $return_var);

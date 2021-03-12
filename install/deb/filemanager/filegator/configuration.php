@@ -69,8 +69,8 @@ $dist_config['services']['Filegator\Services\View\ViewInterface']['config'] = [
             callback = function(){
                 if (document.getElementsByClassName("navbar-item logout")[0]){
                     if ( document.getElementsByClassName("navbar-item logout")[0].text != "Exit to Control Panel \u00BB" ){
-                        //var navProfile = document.getElementsByClassName("navbar-item profile")[0]; navProfile.replaceWith(navProfile.cloneNode(true))
-                        //document.getElementsByClassName("navbar-item logout")[0].text="Exit to Control Panel \u00BB";
+                        var navProfile = document.getElementsByClassName("navbar-item profile")[0]; navProfile.replaceWith(navProfile.cloneNode(true))
+                        document.getElementsByClassName("navbar-item logout")[0].text="Exit to Control Panel \u00BB";
                     }
                 }
             }

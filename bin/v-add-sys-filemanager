@@ -13,12 +13,12 @@
 # Includes
 source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
+source $HESTIA/install/upgrade/upgrade.conf
 
 MODE=$1
 user="admin"
 
 FM_INSTALL_DIR="$HESTIA/web/fm"
-FM_V="7.4.1"
 FM_FILE="filegator_v${FM_V}.zip"
 FM_URL="https://github.com/filegator/filegator/releases/download/v${FM_V}/${FM_FILE}"
 COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"

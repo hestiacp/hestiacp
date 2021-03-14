@@ -743,6 +743,7 @@ a {
   font-size: 1rem;
   vertical-align: middle;
   margin-top: -4px;
+  margin-right: 8px;
 }
 
 .l-profile {
@@ -2121,6 +2122,10 @@ body.mobile .l-unit-toolbar__col--right {
   float: right;
 }
 
+.actions-panel {
+  line-height: 1rem;
+}
+
 .actions-panel__col {
   display: inline-block;
   min-width: 18px;
@@ -2150,6 +2155,14 @@ body.mobile .l-unit-toolbar__col--right {
   font-size: 0.9rem;
   font-weight: normal;
   line-height: 31px;
+}
+
+.l-unit__col .actions-panel .fas {
+  display: none;
+}
+
+.l-unit__col:hover .actions-panel .fas {
+  display: inline-block;
 }
 
 .icon-pad-right {

@@ -18,6 +18,32 @@ fi
 echo '[ * ] Updating System Administrator account permissions...'
 $HESTIA/bin/v-change-user-role admin admin
 
+# Populating HELO/SMTP Banner for existing ip's
+if [ "$MAIL_SYSTEM" == "exim4" ]; then
+    source $HESTIA/func/ip.sh
+
+    echo "[ * ] Populating HELO/SMTP Banner param for existing IP's..."
+    > /etc/exim4/mailhelo.conf
+
+    for ip in $(v-list-sys-ips plain | cut -f1); do
+        helo=$(is_ip_rdns_valid $ip)
+
+        if [ ! -z "$helo" ]; then
+            v-change-sys-ip-helo $ip $helo
+        fi
+    done
+
+    # Update exim configuration
+    echo "[ * ] Updating exim4 configuration..."
+
+    # Check if smtp_active_hostname exists before adding it
+    if [ ! 'grep -q ^smtp_active_hostname  /etc/exim4/exim4.conf.template' ]; then
+        sed -i '/^smtp_banner = \$smtp_active_hostname$/a smtp_active_hostname = ${if exists {\/etc\/exim4\/mailhelo.conf}{${lookup{$interface_address}lsearch{\/etc\/exim4\/mailhelo.conf}{$value}{$primary_hostname}}}{$primary_hostname}}"' /etc/exim4/exim4.conf.template
+    fi
+
+    sed -i 's/helo_data = \${if exists {\/etc\/exim4\/mailhelo.conf}{${lookup{\$sender_address_domain}lsearch\*{\/etc\/exim4\/mailhelo.conf}{\$value}{\$primary_hostname}}}{\$primary_hostname}}/helo_data = ${if exists {\/etc\/exim4\/mailhelo.conf}{${lookup{$sending_ip_address}lsearch{\/etc\/exim4\/mailhelo.conf}{$value}{$primary_hostname}}}{$primary_hostname}}/' /etc/exim4/exim4.conf.template
+fi
+
 # Upgrading Mail System
 if [ "$MAIL_SYSTEM" == "exim4" ]; then
     if ! grep -q "send_via_smtp_relay" /etc/exim4/exim4.conf.template; then

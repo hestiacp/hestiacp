@@ -379,7 +379,7 @@ if [ "$NGINX_B" = true ] ; then
         mkdir -p $BUILD_DIR_HESTIANGINX/DEBIAN
         get_branch_file 'src/deb/nginx/control' "$BUILD_DIR_HESTIANGINX/DEBIAN/control"
         if [ "$BUILD_ARCH" != "amd64" ]; then
-            sed -i "s/%amd64%/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIANGINX/DEBIAN/control"
+            sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIANGINX/DEBIAN/control"
         fi
         get_branch_file 'src/deb/nginx/copyright' "$BUILD_DIR_HESTIANGINX/DEBIAN/copyright"
         get_branch_file 'src/deb/nginx/postinst' "$BUILD_DIR_HESTIANGINX/DEBIAN/postinst"
@@ -512,7 +512,7 @@ if [ "$PHP_B" = true ] ; then
         mkdir -p $BUILD_DIR_HESTIAPHP/DEBIAN
         get_branch_file 'src/deb/php/control' "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
         if [ "$BUILD_ARCH" != "amd64" ]; then
-            sed -i "s/%amd64%/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
+            sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
         fi
         get_branch_file 'src/deb/php/copyright' "$BUILD_DIR_HESTIAPHP/DEBIAN/copyright"
 
@@ -608,7 +608,7 @@ if [ "$HESTIA_B" = true ]; then
         mkdir -p $BUILD_DIR_HESTIA/DEBIAN
         get_branch_file 'src/deb/hestia/control' "$BUILD_DIR_HESTIA/DEBIAN/control"
         if [ "$BUILD_ARCH" != "amd64" ]; then
-            sed -i "s/%amd64%/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIA/DEBIAN/control"
+            sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIA/DEBIAN/control"
         fi
         get_branch_file 'src/deb/hestia/copyright' "$BUILD_DIR_HESTIA/DEBIAN/copyright"
         get_branch_file 'src/deb/hestia/postinst' "$BUILD_DIR_HESTIA/DEBIAN/postinst"

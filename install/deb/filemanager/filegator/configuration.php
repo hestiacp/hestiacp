@@ -15,7 +15,7 @@ $dist_config['services']['Filegator\Services\Storage\Filesystem']['config']['ada
         if (isset($_SESSION['user'])) {
             $v_user = $_SESSION['user'];
         }
-        if (isset($_SESSION['look']) && $_SESSION['look'] != 'admin' && $v_user === 'admin') {
+        if (isset($_SESSION['look']) && $_SESSION['look'] != 'admin' && $_SESSION['userContext'] === 'admin') {
             $v_user = $_SESSION['look'];
         }
         # Create filemanager sftp key if missing and trash it after 30 min

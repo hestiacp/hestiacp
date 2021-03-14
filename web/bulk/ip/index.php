@@ -15,7 +15,7 @@ if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
 $ip = $_POST['ip'];
 $action = $_POST['action'];
 
-if ($_SESSION['user'] == 'admin') {
+if ($_SESSION['userContext'] == 'admin') {
     switch ($action) {
         case 'reread IP': exec(HESTIA_CMD."v-update-sys-ip", $output, $return_var);
                 header("Location: /list/ip/");

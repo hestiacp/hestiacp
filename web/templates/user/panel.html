@@ -28,8 +28,10 @@
 			<?php if ((isset($panel[$user]['ROLE'])) && (!empty($panel[$user]['ROLE'])) && ($panel[$user]['ROLE'] == "admin")) {?>
 				<div class="l-menu__item <?php if($TAB == 'SERVER' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'UPDATES' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'IP' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'RRD' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'FIREWALL' ) echo 'l-menu__item--active' ?>"><a href="/list/server/" class="l-profile__serversettings" title="<?=_('Server')?>"><i class="fas fa-cog"></i></a></div>
 			<?php } ?>
-			<div class="l-menu__item"><a href="/edit/user/?user=<?php echo $user; ?>" title="<?=htmlspecialchars($user)?> (<?=htmlspecialchars($panel[$user]['NAME'])?>)" class="l-profile__username"><i class="fas fa-user-edit"></i></a></div>
-			<div class="l-menu__item"><a href="https://github.com/hestiacp/hestiacp/issues/" target="_new" title="Submit a bug report" class="l-profile__help"><i class="fas fa-exclamation-triangle"></i></a></div>
+			<div class="l-menu__item"><a href="/edit/user/?user=<?php echo $user; ?>&token=<?=$_SESSION['token']?>" title="<?=htmlspecialchars($user)?> (<?=htmlspecialchars($panel[$user]['NAME'])?>)" class="l-profile__username"><i class="fas fa-user-edit"></i></a></div>
+			<?php if ((isset($panel[$user]['ROLE'])) && (!empty($panel[$user]['ROLE'])) && ($panel[$user]['ROLE'] == "admin")) {?>
+				<div class="l-menu__item"><a href="https://github.com/hestiacp/hestiacp/issues/" target="_new" title="Submit a bug report" class="l-profile__help"><i class="fas fa-exclamation-triangle"></i></a></div>
+			<?php } ?>
 			<div class="l-menu__item"><a href="https://docs.hestiacp.com/" title="<?=_('Help')?>" class="l-profile__help" target="_blank"><i class="fas fa-question-circle"></i></a></div>
 			<div class="l-menu__item"><a href="/logout/" title="<?=_('Log out')?>" class="l-profile__logout"><i class="fas fa-sign-out-alt"></i></a></div>
 		</div>

@@ -18,7 +18,7 @@ if (isset($_SESSION['user'])) {
         header("Location: /list/web/");
         exit;
     }
-    if ($_SESSION['user'] == 'admin' && !empty($_GET['loginas'])) {
+    if ($_SESSION['userContext'] == 'admin' && !empty($_GET['loginas'])) {
         exec (HESTIA_CMD . "v-list-user ".escapeshellarg($_GET['loginas'])." json", $output, $return_var);
         if ( $return_var == 0 ) {
             $data = json_decode(implode('', $output), true);
@@ -30,7 +30,7 @@ if (isset($_SESSION['user'])) {
             unset($_SESSION['_sf2_meta']);
         }
     }
-    if ($_SESSION['user'] == 'admin' && empty($_GET['loginas'])) {
+    if ($_SESSION['userContext'] == 'admin' && empty($_GET['loginas'])) {
         header("Location: /list/user/");
     } else {
         header("Location: /list/web/");
@@ -119,16 +119,9 @@ function authenticate_user($user, $password, $twofa = ''){
                             }
                         }
                 }
+                
+                $_SESSION['userContext'] = $data[$user]['ROLE'];
 
-                if ($data[$user]['ROLE'] == 'admin'){
-                 //   exec (HESTIA_CMD . "v-list-user admin json", $output, $return_var);
-                 //   $data = json_decode(implode('', $output), true);
-                 //   unset($output);
-
-                    $_SESSION['userContext'] = 'admin';
-                } else {
-                    $_SESSION['userContext'] = 'user';
-                }
                 // Define session user
                 $_SESSION['user'] = key($data);
                 $v_user = $_SESSION['user'];
@@ -157,7 +150,7 @@ function authenticate_user($user, $password, $twofa = ''){
                     unset($_SESSION['request_uri']);
                     exit;
                 } else {
-                    if ($user == 'admin') {
+                    if ($_SESSION['userContext'] == 'admin') {
                         header("Location: /list/user/");
                     } else {
                         header("Location: /list/web/");

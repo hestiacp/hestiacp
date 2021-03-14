@@ -6,7 +6,7 @@ session_start();
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Delete as someone else?
-if (($_SESSION['user'] == 'admin') && (!empty($_GET['user']))) {
+if (($_SESSION['userContext'] == 'admin') && (!empty($_GET['user']))) {
     $user=$_GET['user'];
 }
 

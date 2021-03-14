@@ -93,7 +93,7 @@ if (isset($_SESSION['user'])) {
     $user = $_SESSION['user'];
 }
 
-if (isset($_SESSION['look']) && ( $_SESSION['look'] != 'admin' )) {
+if (isset($_SESSION['look']) && ($_SESSION['userContext'] == 'admin')) {
     $user = $_SESSION['look'];
 }
 
@@ -129,8 +129,7 @@ function render_page($user, $TAB, $page) {
     extract($GLOBALS, EXTR_SKIP);
 
     // Body
-    // if (($_SESSION['user'] !== 'admin') && (@include($__template_dir . "user/$page.html"))) {
-    if (($_SESSION['loginContext'] == 'admin') && (@include($__template_dir . "user/$page.html"))) {
+    if (($_SESSION['userContext'] != 'admin') && (@include($__template_dir . "user/$page.html"))) {
         // User page loaded
     } else {
         // Not admin or user page doesn't exist
@@ -159,7 +158,7 @@ function top_panel($user, $TAB) {
     $panel = json_decode(implode('', $output), true);
     unset($output);
 
-    if ( $user == 'admin' ) {
+    if (($_SESSION['userContext'] == 'admin')) {
         include(dirname(__FILE__).'/../templates/admin/panel.html');
     } else {
         include(dirname(__FILE__).'/../templates/user/panel.html');

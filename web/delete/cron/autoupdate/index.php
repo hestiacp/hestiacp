@@ -11,7 +11,7 @@ if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
     exit();
 }
 
-if ($_SESSION['user'] == 'admin') {
+if ($_SESSION['userContext'] == 'admin') {
     exec (HESTIA_CMD."v-delete-cron-hestia-autoupdate", $output, $return_var);
     unset($output);
 }

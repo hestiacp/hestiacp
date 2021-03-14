@@ -5,6 +5,7 @@ define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
 
 if (!empty($_SESSION['look'])) {
     unset($_SESSION['look']);
+    unset($_SESSION['look_alert']);
     # Remove current path for filemanager
     unset($_SESSION['_sf2_attributes']);
     unset($_SESSION['_sf2_meta']);

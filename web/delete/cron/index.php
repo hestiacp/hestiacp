@@ -5,7 +5,7 @@ ob_start();
 session_start();
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
-if (($_SESSION['user'] == 'admin') && (!empty($_GET['user']))) {
+if (($_SESSION['userContext'] == 'admin') && (!empty($_GET['user']))) {
     $user=$_GET['user'];
 }
 

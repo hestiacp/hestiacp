@@ -15,7 +15,7 @@ if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
 $user = $_POST['user'];
 $action = $_POST['action'];
 
-if ($_SESSION['user'] == 'admin') {
+if ($_SESSION['userContext'] == 'admin') {
     switch ($action) {
         case 'delete': $cmd='v-delete-user'; $restart = 'no';
             break;

@@ -2,8 +2,13 @@
         <div class="l-sort clearfix">
           <div class="l-unit-toolbar__buttonstrip">
             <a class="ui-button cancel" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
-            <a href="/list/key/" id="btn-create" class="ui-button cancel" title="<?=_('Manage SSH keys');?>"><i class="fas fa-key status-icon orange"></i><?=_('Manage SSH keys')?></a>
-            <a href="/list/log/" id="btn-create" class="ui-button cancel" title="<?=_('Logs');?>"><i class="fas fa-history status-icon maroon"></i><?=_('Logs')?></a>
+
+            <? if (($_SESSION['user'] == $v_username) || (isset($_SESSION['look']))) {?>
+                <a href="/list/key/" id="btn-create" class="ui-button cancel" title="<?=_('Manage SSH keys');?>"><i class="fas fa-key status-icon orange"></i><?=_('Manage SSH keys')?></a>
+                <a href="/list/log/" id="btn-create" class="ui-button cancel" title="<?=_('Logs');?>"><i class="fas fa-history status-icon maroon"></i><?=_('Logs')?></a>
+            <? } ?>
+
+
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
             <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
@@ -98,6 +103,9 @@
                                     <?php } ?>
                                 </td>
                             </tr>
+                            <?php if ($v_username == 'admin') {?>
+                                <!-- Hide option to change 'admin' user's role-->
+                            <? } else { ?>
                             <tr>
                                 <td class="vst-text input-label">
                                     <?php print _('Role');?>
@@ -111,6 +119,7 @@
                                     </select>
                                 </td>
                             </tr>
+                            <? } ?>
                             <tr>
                                 <td class="vst-text input-label">
                                     <?php print _('Contact');?>

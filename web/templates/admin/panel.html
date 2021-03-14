@@ -19,7 +19,12 @@
 		<div class="l-profile noselect">
 			<div class="l-menu__item">
 				<span class="pill usage">
-					<i class="fas fa-user" title="<?=_('Statistics')?>: <?=htmlspecialchars($panel[$user]['NAME'])?>"></i>&nbsp;&nbsp;<b><?=htmlspecialchars($user)?></b> /
+					<i class="fas 
+					<? if (isset($_SESSION['look'])) {?>
+						echo fa-binoculars
+					<? } else { ?>
+						echo fa-user
+					<? } ?>" title="<?=_('Statistics')?>: <?=htmlspecialchars($panel[$user]['NAME'])?>"></i>&nbsp;&nbsp;<b><?=htmlspecialchars($user)?></b> /
 					<i class="fas fa-hdd" title="<?=_('Disk')?>: <?=humanize_usage_size($panel[$user]['U_DISK'])?> <?=humanize_usage_measure($panel[$user]['U_DISK'])?>"></i>&nbsp;&nbsp;<b><?=humanize_usage_size($panel[$user]['U_DISK'])?></b> <?=humanize_usage_measure($panel[$user]['U_DISK'])?> /
 					<i class="fas fa-exchange-alt" title="<?=_('Bandwidth')?>: <?=humanize_usage_size($panel[$user]['U_DISK'])?> <?=humanize_usage_measure($panel[$user]['U_DISK'])?>"></i>&nbsp;&nbsp;<b><?=humanize_usage_size($panel[$user]['U_BANDWIDTH'])?></b> <?=humanize_usage_measure($panel[$user]['U_BANDWIDTH'])?>
 				</span>
@@ -32,10 +37,21 @@
 			<?php if ((isset($panel[$user]['ROLE'])) && (!empty($panel[$user]['ROLE'])) && ($panel[$user]['ROLE'] == "admin")) {?>
 				<div class="l-menu__item <?php if($TAB == 'SERVER' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'UPDATES' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'IP' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'RRD' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'FIREWALL' ) echo 'l-menu__item--active' ?>"><a href="/list/server/" class="l-profile__serversettings" title="<?=_('Server')?>"><i class="fas fa-cog"></i></a></div>
 			<?php } ?>
-			<div class="l-menu__item"><a href="/edit/user/?user=<?php echo $user; ?>" title="<?=htmlspecialchars($user)?> (<?=htmlspecialchars($panel[$user]['NAME'])?>)" class="l-profile__username"><i class="fas fa-user-edit"></i></a></div>
-			<div class="l-menu__item"><a href="https://github.com/hestiacp/hestiacp/issues/" target="_new" title="<?=_('Submit an issue report')?>" class="l-profile__help"><i class="fas fa-exclamation-triangle"></i></a></div>
+
+			<? if (($_SESSION['userContext'] == 'admin') && (isset($_SESSION['look']) && ($user == 'admin'))) {?>
+				<!-- Hide 'edit user' entry point from other administrators for default 'admin' account-->
+			<? } else { ?>
+				<div class="l-menu__item"><a href="/edit/user/?user=<?php echo $user; ?>&token=<?=$_SESSION['token']?>" title="<?=htmlspecialchars($user)?> (<?=htmlspecialchars($panel[$user]['NAME'])?>)" class="l-profile__username"><i class="fas fa-user-edit"></i></a></div>
+			<? } ?>
+			<?php if ((isset($panel[$user]['ROLE'])) && (!empty($panel[$user]['ROLE'])) && ($panel[$user]['ROLE'] == "admin")) {?>
+				<div class="l-menu__item"><a href="https://github.com/hestiacp/hestiacp/issues/" target="_new" title="Submit a bug report" class="l-profile__help"><i class="fas fa-exclamation-triangle"></i></a></div>
+			<?php } ?>
 			<div class="l-menu__item"><a href="https://docs.hestiacp.com/" title="<?=_('Help')?>" class="l-profile__help" target="_blank"><i class="fas fa-question-circle"></i></a></div>
-			<div class="l-menu__item"><a href="/logout/" title="<?=_('Log out')?>" class="l-profile__logout"><i class="fas fa-sign-out-alt"></i></a></div>
+			<? if(isset($_SESSION['look']) && (!empty($_SESSION['look']))){ ?>
+				<div class="l-menu__item"><a href="/logout/" title="<?=_('Log out')?> (<?=$user?>)" class="l-profile__logout"><i class="fas fa-check-circle"></i></a></div>
+			<? } else {?>
+				<div class="l-menu__item"><a href="/logout/" title="<?=_('Log out')?>" class="l-profile__logout"><i class="fas fa-sign-out-alt"></i></a></div>
+			<? } ?>
 		</div>
 	</div>
 </div>
@@ -44,6 +60,7 @@
 <div class="l-content">
 	<div class="l-center">
 		<div class="l-stat">
+		<?php if (!isset($_SESSION['look'])) {?>
 			<div class="l-stat__col <?php if($TAB == 'USER' ) echo 'l-stat__col--active' ?>">
 				<a href="/list/user/">
 					<div class="l-stat__col-title"><?=_('USER')?>&nbsp;&nbsp;<i class="fas fa-users"></i></div>
@@ -53,6 +70,7 @@
 					</ul>
 				</a>
 			</div>
+			<?php } ?>
 	<?php if ((isset($_SESSION['WEB_SYSTEM'])) && (!empty($_SESSION['WEB_SYSTEM']))) {?>
 		<?php if($panel[$user]['WEB_DOMAINS'] != "0") { ?>
 					<div class="l-stat__col <?php if($TAB == 'WEB' ) echo 'l-stat__col--active' ?>">

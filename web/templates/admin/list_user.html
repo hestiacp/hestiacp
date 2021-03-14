@@ -2,7 +2,7 @@
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
         <?php
-          if ($user == 'admin') {
+          if ($_SESSION['userContext'] == "admin") {
             echo '<a href="/add/user/" id="btn-create" class="ui-button cancel"><i class="fas fa-plus-circle status-icon green"></i> '._('Add User').'</a>&nbsp;';
             echo '<a href="/list/package/" class="ui-button cancel"><i class="fas fa-box-open status-icon orange"></i> '._('Packages').'</a>&nbsp;';
           } else {
@@ -100,42 +100,56 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
           <div class="clearfix l-unit__stat-col--left super-compact">
             <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="user[]" value="<?=$key?>">
           </div>
-              <div class="clearfix l-unit__stat-col--left wide-3 userlist-username"><b><a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('login as')?> <?=$key?>"><?=$key?> <span style="font-weight: normal !important;">(<?php echo $data[$key]['NAME'];?>)</span></b></a>
-                <br />
+              <div class="clearfix l-unit__stat-col--left wide-3 userlist-username">
+                  <? if ($key == $user) { ?>
+                    <a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing User')?>"><b><?=$key?> <span style="font-weight: normal !important;">(<?php echo $data[$key]['NAME'];?>)</span></b></a>
+                  <? } else { ?>
+                    <a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('login as')?> <?=$key?>"><b><?=$key?> <span style="font-weight: normal !important;">(<?php echo $data[$key]['NAME'];?>)</span></b></a>
+                  <? } ?>
+                  <br />
                 <div class="userlist-email"><b><?=_('Email')?>:</b> <?=$data[$key]['CONTACT']?></div>
               </div>
               <!-- START QUICK ACTION TOOLBAR AREA -->
               <div class="clearfix l-unit__stat-col--left text-right compact-3">
                     <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                         <div class="actions-panel clearfix">
-                            <?
-                            if ($key == $user) {
-                            ?>
-                            <?php
-                              } else {
-                              ?>
-                              <a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('login as')?>"><i class="fas fa-sign-in-alt status-icon green status-icon dim icon-large"></i></a>
-                            <?}?>
-                          <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing User')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
-                          <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
-                            <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=_($spnd_action)?>">
-                              <i class="fas <?=$spnd_icon?> status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
-                              <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" />
-                              <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=_('Confirmation')?>">
-                                <p class="confirmation"><?=sprintf($spnd_confirmation,$key)?></p>
-                              </div>
-                            </a>
-                          </div>
-                          <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-                            <a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('delete')?>">
-                              <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
-                              <input type="hidden" name="delete_url" value="/delete/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" />
-                              <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=_('Confirmation')?>">
-                                <p class="confirmation"><?=sprintf(_('DELETE_USER_CONFIRMATION'),$key)?></p>
-                              </div>
-                            </a>
-                          </div>
-                        </div>
+                            <? if ($key == $user) { ?>
+                              <i class="fas fa-user-check status-icon status-icon dim icon-large" title="<?=$key?> (<?=$data[$key]['NAME']?>)"></i>
+                            <? } else { ?>
+                              <a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('login as')?> <?=$key?>"><i class="fas fa-sign-in-alt status-icon green status-icon dim icon-large"></i></a>
+                            <? } ?>
+                            <? if (($_SESSION['userContext'] == 'admin') && ($key == 'admin') && ($_SESSION['user'] != 'admin')) { ?>
+                              <!-- Hide edit button from admin user when logged in with another admin user -->
+                            <? } else {?>
+                              <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing User')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+                            <? } ?>
+                            <? if ($key == 'admin') { ?>
+                              <!-- Hide suspend and delete buttons in the user list for primary 'admin' account -->
+                            <? } else {?>
+                              <? if ($key == $user) { ?>
+                                <!-- Hide suspend and delete buttons in the user list for current user -->
+                                <? } else {?>
+                                  <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
+                                    <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=_($spnd_action)?>">
+                                      <i class="fas <?=$spnd_icon?> status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
+                                      <input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" />
+                                      <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=_('Confirmation')?>">
+                                        <p class="confirmation"><?=sprintf($spnd_confirmation,$key)?></p>
+                                      </div>
+                                    </a>
+                                  </div>
+                                  <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+                                    <a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('delete')?>">
+                                      <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
+                                      <input type="hidden" name="delete_url" value="/delete/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" />
+                                      <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=_('Confirmation')?>">
+                                        <p class="confirmation"><?=sprintf(_('DELETE_USER_CONFIRMATION'),$key)?></p>
+                                      </div>
+                                    </a>
+                                  </div>
+                                <? } ?>
+                            <? } ?>
+                            </div>
                       </div>
               </div>
               <!-- END QUICK ACTION TOOLBAR AREA -->

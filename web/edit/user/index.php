@@ -14,12 +14,24 @@ if (empty($_GET['user'])) {
 }
 
 // Edit as someone else?
-if (($_SESSION['user'] == 'admin') && (!empty($_GET['user']))) {
+if (($_SESSION['userContext'] == 'admin') && (!empty($_GET['user']))) {
     $user=$_GET['user'];
     $v_username=$_GET['user'];
 } else {
     $user=$_SESSION['user'];
     $v_username=$_SESSION['user'];
+}
+
+// Prevent other users with admin privileges from editing properties of default 'admin' user
+if (($_SESSION['userContext'] == 'admin') && (isset($_SESSION['look']) && ($user == 'admin'))) {
+    header("Location: /list/user/");
+    exit;
+}
+
+// Ensure token is passed before loading page
+if ((!$_GET['token']) || ($_SESSION['token'] != $_GET['token'])) {
+    header('location: /login/');
+    exit();
 }
 
 // List user
@@ -148,7 +160,7 @@ if (!empty($_POST['save'])) {
     }
 
     // Change package (admin only)
-    if (($v_package != $_POST['v_package']) && ($_SESSION['user'] == 'admin') && (empty($_SESSION['error_msg']))) {
+    if (($v_package != $_POST['v_package']) && ($_SESSION['userContext'] == 'admin') && (empty($_SESSION['error_msg']))) {
         $v_package = escapeshellarg($_POST['v_package']);
         exec (HESTIA_CMD."v-change-user-package ".escapeshellarg($v_username)." ".$v_package, $output, $return_var);
         check_return_code($return_var,$output);
@@ -156,14 +168,14 @@ if (!empty($_POST['save'])) {
     }
 
     // Change phpcli (admin only)
-    if (($v_phpcli != $_POST['v_phpcli']) && ($_SESSION['user'] == 'admin') && (empty($_SESSION['error_msg']))) {
+    if (($v_phpcli != $_POST['v_phpcli']) && ($_SESSION['userContext'] == 'admin') && (empty($_SESSION['error_msg']))) {
         $v_phpcli = escapeshellarg($_POST['v_phpcli']);
         exec (HESTIA_CMD."v-change-user-php-cli ".escapeshellarg($v_username)." ".$v_phpcli, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }
     // Change Role (admin only)
-    if (($v_role != $_POST['$v_role']) && ($_SESSION['user'] == 'admin') && $v_username != "admin" && (empty($_SESSION['error_msg']))) {
+    if (($v_role != $_POST['$v_role']) && ($_SESSION['userContext'] == 'admin') && $v_username != "admin" && (empty($_SESSION['error_msg']))) {
         $v_role = escapeshellarg($_POST['v_role']);
         exec (HESTIA_CMD."v-change-user-role ".escapeshellarg($v_username)." ".$v_role, $output, $return_var);
         check_return_code($return_var,$output);
@@ -182,7 +194,7 @@ if (!empty($_POST['save'])) {
     }
 
     // Change shell (admin only)
-    if (($v_shell != $_POST['v_shell']) && ($_SESSION['user'] == 'admin') && (empty($_SESSION['error_msg']))) {
+    if (($v_shell != $_POST['v_shell']) && ($_SESSION['userContext'] == 'admin') && (empty($_SESSION['error_msg']))) {
         $v_shell = escapeshellarg($_POST['v_shell']);
         exec (HESTIA_CMD."v-change-user-shell ".escapeshellarg($v_username)." ".$v_shell, $output, $return_var);
         check_return_code($return_var,$output);

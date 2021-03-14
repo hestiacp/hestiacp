@@ -120,6 +120,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                             <? } ?>
                             <? if (($_SESSION['userContext'] == 'admin') && ($key == 'admin') && ($_SESSION['user'] != 'admin')) { ?>
                               <!-- Hide edit button from admin user when logged in with another admin user -->
+                              &nbsp;
                             <? } else {?>
                               <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing User')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
                             <? } ?>

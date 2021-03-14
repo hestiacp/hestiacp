@@ -464,7 +464,7 @@ if [ "$PHP_B" = true ] ; then
         cd $BUILD_DIR_PHP
 
         # Configure PHP
-        if [ $BUILD_ARCH == 'amd64' ]; then
+        if [ $BUILD_ARCH = 'amd64' ]; then
             ./configure   --prefix=/usr/local/hestia/php \
                         --enable-fpm \
                         --with-fpm-user=admin \

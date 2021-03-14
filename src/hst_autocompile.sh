@@ -254,7 +254,11 @@ if [ "$dontinstalldeps" != 'true' ]; then
 
         # Fix for Debian PHP Envroiment
         if [ ! -e /usr/local/include/curl ]; then
-            ln -s /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl
+            if [ $BUILD_ARCH == "amd64" ]; then
+                ln -s /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl
+            else
+                echo "No x86_64 working"
+            fi
         fi
     fi
 fi

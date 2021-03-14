@@ -253,7 +253,7 @@ if [ "$dontinstalldeps" != 'true' ]; then
         apt-get -qq install -y $SOFTWARE > /dev/null 2>&1
 
         # Fix for Debian PHP Envroiment
-        if [ ! -f /usr/local/include/curl ]; then
+        if [ ! -e /usr/local/include/curl ]; then
             ln -s /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl
         fi
     fi

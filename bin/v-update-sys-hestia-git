@@ -71,6 +71,12 @@ BUILD_DIR='/tmp/hestiacp-src'
 DEB_DIR="$BUILD_DIR/debs"
 INSTALL_DIR='/usr/local/hestia'
 ARCHIVE_DIR="${BUILD_DIR}/archive"
+architecture="$(uname -m)"
+if [ $architecture == 'aarch64' ]; then
+    BUILD_ARCH='arm64'
+else
+    BUILD_ARCH='amd64'
+fi
 
 # Set command variables
 fork=$1
@@ -233,6 +239,9 @@ if [ "$NGINX_B" = true ] ; then
     # Download control, postinst and postrm files
     cd DEBIAN
     download_file $GIT_REP/nginx/control
+    if [ "$BUILD_ARCH" != "amd64" ]; then
+        sed -i "s/amd64/${BUILD_ARCH}/g" "control"
+    fi
     download_file $GIT_REP/nginx/copyright
     download_file $GIT_REP/nginx/postinst
     download_file $GIT_REP/nginx/postrm
@@ -295,14 +304,31 @@ if [ "$PHP_B" = true ] ; then
     cd php-$PHP_V
 
     # Configure PHP
-    ./configure     --prefix=/usr/local/hestia/php \
+    if [ $BUILD_ARCH = 'amd64' ]; then
+        ./configure   --prefix=/usr/local/hestia/php \
                     --enable-fpm \
                     --with-fpm-user=admin \
                     --with-fpm-group=admin \
                     --with-libdir=lib/x86_64-linux-gnu \
                     --with-mysqli \
+                    --with-gettext \
                     --with-curl \
+                    --with-zip \
+                    --with-gmp \
                     --enable-mbstring
+    else
+        ./configure   --prefix=/usr/local/hestia/php \
+                    --enable-fpm \
+                    --with-fpm-user=admin \
+                    --with-fpm-group=admin \
+                    --with-libdir=lib/aarch64-linux-gnu \
+                    --with-mysqli \
+                    --with-gettext \
+                    --with-curl \
+                    --with-zip \
+                    --with-gmp \
+                    --enable-mbstring
+    fi
 
     # Create the files and install them
     make -j $NUM_CPUS && make INSTALL_ROOT=$BUILD_DIR install
@@ -318,6 +344,9 @@ if [ "$PHP_B" = true ] ; then
     # Download control, postinst and postrm files
     cd DEBIAN
     download_file $GIT_REP/php/control
+    if [ "$BUILD_ARCH" != "amd64" ]; then
+        sed -i "s/amd64/${BUILD_ARCH}/g" "control"
+    fi
     download_file $GIT_REP/php/copyright
 
     # Move php directory
@@ -374,6 +403,9 @@ if [ "$HESTIA_B" = true ] ; then
     # Download control, postinst and postrm files
     cd DEBIAN
     download_file $GIT_REP/hestia/control
+    if [ "$BUILD_ARCH" != "amd64" ]; then
+        sed -i "s/amd64/${BUILD_ARCH}/g" "control"
+    fi
     download_file $GIT_REP/hestia/copyright
     download_file $GIT_REP/hestia/postinst
 

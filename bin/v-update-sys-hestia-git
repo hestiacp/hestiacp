@@ -86,7 +86,6 @@ flags=$4
 
 # Set Version for compiling
 BUILD_VER=$(curl -s https://raw.githubusercontent.com/$fork/hestiacp/$branch/src/deb/hestia/control | grep "Version:" | cut -d' ' -f2)
-BUILD_ARCH='amd64'
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
 NGINX_V=$(curl -s https://raw.githubusercontent.com/$fork/hestiacp/$branch/src/deb/nginx/control |grep "Version:" |cut -d' ' -f2)
 OPENSSL_V='1.1.1g'

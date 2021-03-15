@@ -7,7 +7,7 @@ $TAB = 'BACKUP';
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Edit as someone else?
-if (($_SESSION['userContext'] == 'admin') && (!empty($_GET['user']))) {
+if (($_SESSION['userContext'] === "admin") && (!empty($_GET['user']))) {
     $user=escapeshellarg($_GET['user']);
 }
 

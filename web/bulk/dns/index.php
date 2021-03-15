@@ -16,7 +16,7 @@ $domain = $_POST['domain'];
 $record = $_POST['record'];
 $action = $_POST['action'];
 
-if ($_SESSION['userContext'] == 'admin') {
+if ($_SESSION['userContext'] === "admin") {
     if (empty($record)) {
         switch ($action) {
             case 'rebuild': $cmd='v-rebuild-dns-domain';

@@ -150,7 +150,7 @@ function authenticate_user($user, $password, $twofa = ''){
                     unset($_SESSION['request_uri']);
                     exit;
                 } else {
-                    if ($_SESSION['userContext'] == 'admin') {
+                    if ($_SESSION['userContext'] === "admin") {
                         header("Location: /list/user/");
                     } else {
                         header("Location: /list/web/");

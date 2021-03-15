@@ -16,7 +16,7 @@ $domain = $_POST['domain'];
 $account = $_POST['account'];
 $action = $_POST['action'];
 
-if ($_SESSION['userContext'] == 'admin') {
+if ($_SESSION['userContext'] === "admin") {
     if (empty($account)) {
         switch ($action) {
             case 'rebuild': $cmd='v-rebuild-mail-domain';

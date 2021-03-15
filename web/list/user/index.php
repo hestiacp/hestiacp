@@ -6,7 +6,7 @@ $TAB = 'USER';
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Data
-if ($_SESSION['userContext'] == 'admin') {
+if ($_SESSION['userContext'] === "admin") {
     exec (HESTIA_CMD . "v-list-users json", $output, $return_var);
 } else {
     exec (HESTIA_CMD . "v-list-user ".$user." json", $output, $return_var);

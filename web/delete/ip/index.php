@@ -11,7 +11,7 @@ if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
     exit();
 }
 
-if ($_SESSION['userContext'] == 'admin') {
+if ($_SESSION['userContext'] === "admin") {
     if (!empty($_GET['ip'])) {
         $v_ip = escapeshellarg($_GET['ip']);
         exec (HESTIA_CMD."v-delete-sys-ip ".$v_ip, $output, $return_var);

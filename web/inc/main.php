@@ -93,7 +93,7 @@ if (isset($_SESSION['user'])) {
     $user = $_SESSION['user'];
 }
 
-if (isset($_SESSION['look']) && ($_SESSION['userContext'] == 'admin')) {
+if (isset($_SESSION['look']) && ($_SESSION['userContext'] === "admin")) {
     $user = $_SESSION['look'];
 }
 
@@ -158,7 +158,7 @@ function top_panel($user, $TAB) {
     $panel = json_decode(implode('', $output), true);
     unset($output);
 
-    if (($_SESSION['userContext'] == 'admin')) {
+    if (($_SESSION['userContext'] === "admin")) {
         include(dirname(__FILE__).'/../templates/admin/panel.html');
     } else {
         include(dirname(__FILE__).'/../templates/user/panel.html');

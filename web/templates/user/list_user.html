@@ -2,7 +2,7 @@
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
         <?php
-          if ($_SESSION['userContext'] == 'admin') {
+          if ($_SESSION['userContext'] === "admin") {
             echo '<a href="/add/user/" id="btn-create" class="ui-button cancel"><i class="fas fa-plus-circle status-icon green"></i>'._('Add User').'</a>&nbsp;';
             echo '<a href="/list/package/" class="ui-button cancel"><i class="fas fa-box-open status-icon orange"></i>'._('Packages').'</a>&nbsp;';
           } else {

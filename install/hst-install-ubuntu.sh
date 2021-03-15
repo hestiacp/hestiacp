@@ -374,9 +374,9 @@ case $architecture in
     x86_64)
         ARCH="amd64"
         ;;
-    aarch64)
-        ARCH="arm64"
-        ;;
+    # aarch64)
+    #    ARCH="arm64"
+    #    ;;
     *)
     echo
     echo -e "\e[91mInstallation aborted\e[0m"

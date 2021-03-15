@@ -1,7 +1,7 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a href="/add/db/" id="btn-create" class="ui-button cancel"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Add Database')?></a>
+          <a href="/add/db/" id="btn-create" class="ui-button cancel"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Database')?></a>
           <?
             $mysql = 0;
             $pgsql = 0;
@@ -23,10 +23,10 @@
               }
             }
             if($mysql){
-              echo '<a class="ui-button cancel" href="'.$db_myadmin_link.'" target="_blank"><i class="fas fa-database status-icon orange"></i> phpMyAdmin</a>';
+              echo '<a class="ui-button cancel" href="'.$db_myadmin_link.'" target="_blank"><i class="fas fa-database status-icon orange"></i>phpMyAdmin</a>';
             }
             if($pgsql){
-              echo '<a class="ui-button cancel" href="'.$db_pgadmin_link.'" target="_blank"><i class="fas fa-database status-icon orange"></i> phpPgAdmin</a>';
+              echo '<a class="ui-button cancel" href="'.$db_pgadmin_link.'" target="_blank"><i class="fas fa-database status-icon orange"></i>phpPgAdmin</a>';
             }
           ?>
         </div>

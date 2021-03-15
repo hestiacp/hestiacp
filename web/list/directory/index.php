@@ -4,7 +4,7 @@ error_reporting(NULL);
 include($_SERVER['DOCUMENT_ROOT'] . "/inc/main.php");
 
 // Check login_as feature
-if (($_SESSION['userContext'] === "admin") && (!empty($_SESSION['look']))) {
+if (($_SESSION['userContext'] === 'admin') && (!empty($_SESSION['look']))) {
     $user=$_SESSION['look'];
 }
 

@@ -15,7 +15,7 @@ if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
 $domain = $_POST['domain'];
 $action = $_POST['action'];
 
-if ($_SESSION['userContext'] === "admin") {
+if ($_SESSION['userContext'] === 'admin') {
     switch ($action) {
         case 'delete': $cmd='v-delete-web-domain';
             break;

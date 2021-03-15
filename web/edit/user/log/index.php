@@ -14,7 +14,7 @@ if (empty($_GET['user'])) {
 }
 
 // Edit as someone else?
-if (($_SESSION['userContext'] === "admin") && (!empty($_GET['user']))) {
+if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
     $user=$_GET['user'];
     $v_username=$_GET['user'];
 } else {

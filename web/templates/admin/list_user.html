@@ -2,7 +2,7 @@
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
         <?php
-          if ($_SESSION['userContext'] === "admin") {
+          if ($_SESSION['userContext'] === 'admin') {
             echo '<a href="/add/user/" id="btn-create" class="ui-button cancel"><i class="fas fa-plus-circle status-icon green"></i> '._('Add User').'</a>&nbsp;';
             echo '<a href="/list/package/" class="ui-button cancel"><i class="fas fa-box-open status-icon orange"></i> '._('Packages').'</a>&nbsp;';
           } else {
@@ -118,7 +118,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                             <? } else { ?>
                               <a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('login as')?> <?=$key?>"><i class="fas fa-sign-in-alt status-icon green status-icon dim icon-large"></i></a>
                             <? } ?>
-                            <? if (($_SESSION['userContext'] === "admin") && ($key == 'admin') && ($_SESSION['user'] != 'admin')) { ?>
+                            <? if (($_SESSION['userContext'] === 'admin') && ($key == 'admin') && ($_SESSION['user'] != 'admin')) { ?>
                               <!-- Hide edit button from admin user when logged in with another admin user -->
                               &nbsp;
                             <? } else {?>

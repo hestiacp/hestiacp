@@ -15,7 +15,7 @@ if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
 $package = $_POST['package'];
 $action = $_POST['action'];
 
-if ($_SESSION['userContext'] === "admin") {
+if ($_SESSION['userContext'] === 'admin') {
     switch ($action) {
         case 'delete': $cmd='v-delete-user-package';
             break;

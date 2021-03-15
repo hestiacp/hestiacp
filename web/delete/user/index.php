@@ -11,7 +11,7 @@ if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
     exit();
 }
 
-if ($_SESSION['userContext'] === "admin") {
+if ($_SESSION['userContext'] === 'admin') {
     if (!empty($_GET['user'])) {
         $v_username = escapeshellarg($_GET['user']);
         exec (HESTIA_CMD."v-delete-user ".$v_username, $output, $return_var);

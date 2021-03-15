@@ -18,7 +18,7 @@ if (isset($_SESSION['user'])) {
         header("Location: /list/web/");
         exit;
     }
-    if ($_SESSION['userContext'] == 'admin' && !empty($_GET['loginas'])) {
+    if ($_SESSION['userContext'] === 'admin' && !empty($_GET['loginas'])) {
         exec (HESTIA_CMD . "v-list-user ".escapeshellarg($_GET['loginas'])." json", $output, $return_var);
         if ( $return_var == 0 ) {
             $data = json_decode(implode('', $output), true);
@@ -30,7 +30,7 @@ if (isset($_SESSION['user'])) {
             unset($_SESSION['_sf2_meta']);
         }
     }
-    if ($_SESSION['userContext'] == 'admin' && empty($_GET['loginas'])) {
+    if ($_SESSION['userContext'] === 'admin' && empty($_GET['loginas'])) {
         header("Location: /list/user/");
     } else {
         header("Location: /list/web/");

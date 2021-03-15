@@ -120,17 +120,17 @@
                         </tr>
                         <tr>
                             <td class="vst-text input-label">
-                                <label><input type="checkbox" size="20" class="vst-checkbox"  id="v_blackhole" name="v_blackhole" <?php if ($v_blackhole == 'yes') echo "checked=yes" ?>> <?php print _('Discard all mail');?></label>
+                                <label><input type="checkbox" size="20" class="vst-checkbox"  id="v_blackhole" name="v_blackhole" <?php if ($v_blackhole == 'yes') echo "checked=yes" ?>><?php print _('Discard all mail');?></label>
                             </td>
                         </tr>
                         <tr <?php if ($v_blackhole == 'yes') echo 'style="display:none"'; ?> id="id_fwd_for">
                             <td class="vst-text input-type input-label">
-                                <label><input type="checkbox" size="20" class="vst-checkbox" id="v_fwd_for" name="v_fwd_only" <?php if ($v_fwd_only == 'yes') echo "checked=yes" ?>> <?php print _('Do not store forwarded mail');?></label>
+                                <label><input type="checkbox" size="20" class="vst-checkbox" id="v_fwd_for" name="v_fwd_only" <?php if ($v_fwd_only == 'yes') echo "checked=yes" ?>><?php print _('Do not store forwarded mail');?></label>
                             </td>
                         </tr>
                         <tr>
                             <td class="vst-text input-type input-label">
-                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_autoreply" <?php if ($v_autoreply == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('autoreplytable');"> <?php print _('Autoreply');?></label>
+                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_autoreply" <?php if ($v_autoreply == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('autoreplytable');"><?php print _('Autoreply');?></label>
                             </td>
                         </tr>
                         <tr>

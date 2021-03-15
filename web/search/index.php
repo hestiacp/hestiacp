@@ -22,11 +22,13 @@ if (empty($q)) {
 
 // Data
 $q = escapeshellarg($q);
-$command = $_SESSION['user'] == 'admin'
-           ? "v-search-object $q json"
-           : "v-search-user-object $user $q json";
 
-exec (HESTIA_CMD . $command, $output, $return_var);
+if ($_SESSION['userContext'] === 'admin') {
+    exec (HESTIA_CMD . "v-search-object " .$q. " json", $output, $return_var);
+} else {
+    exec (HESTIA_CMD . "v-search-user-object " .$user. " " .$q. " json", $output, $return_var);
+}
+
 $data = json_decode(implode('', $output), true);
 
 // Render page

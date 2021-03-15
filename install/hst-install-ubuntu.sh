@@ -14,7 +14,6 @@ HESTIA='/usr/local/hestia'
 LOG="/root/hst_install_backups/hst_install-$(date +%d%m%Y%H%M).log"
 memory=$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])
 hst_backups="/root/hst_install_backups/$(date +%d%m%Y%H%M)"
-arch=$(uname -i)
 spinner="/-\|"
 os='ubuntu'
 release="$(lsb_release -s -r)"

@@ -1656,7 +1656,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
   border-bottom: 1px solid #ddd;
   border-left: 1px solid transparent;
   border-right: 1px solid transparent;
-  background-color: rgba(255,255,255,0.6);
 }
 
 .l-unit:hover, .units .l-unit:hover {

@@ -90,7 +90,7 @@
                             </tr>                            
                             <tr>
                                 <td>
-                                    <label><input type="checkbox" class="vst-checkbox password-option" name="v_twofa" <?php if(!empty($v_twofa)) echo "checked=yes" ?>> <?php print _('Enable 2FA');?></label>
+                                    <label><input type="checkbox" class="vst-checkbox password-option" name="v_twofa" <?php if(!empty($v_twofa)) echo "checked=yes" ?>><?php print _('Enable 2FA');?></label>
                                     <?php if (!empty($v_twofa)) { ?>
                                     <p><?php echo _('2FA Reset Code:').' '.$v_twofa; ?></br></p>
                                     <p><?php echo _('Please scan the code below in your 2FA application:'); ?></p>

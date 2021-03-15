@@ -225,7 +225,7 @@
                             <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { ?>
                             <tr>
                                 <td class="vst-text step-top">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_proxy" <?php if (!empty($v_proxy)) echo "checked=yes" ?> onclick="javascript:elementHideShow('proxytable');"> <?php print _('Proxy Support') . "<span class='optional'>" . strtoupper($_SESSION['PROXY_SYSTEM']) . "</span>";?></label>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_proxy" <?php if (!empty($v_proxy)) echo "checked=yes" ?> onclick="javascript:elementHideShow('proxytable');"><?php print _('Proxy Support') . "<span class='optional'>" . strtoupper($_SESSION['PROXY_SYSTEM']) . "</span>";?></label>
                                 </td>
                             </tr>
                             <tr>
@@ -271,7 +271,7 @@
                             <?php } ?>
                             <tr>
                                 <td class="vst-text step-top">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_custom_doc_root_check" <?php if (!empty($v_custom_doc_root)) echo "checked=yes" ?> onclick="javascript:elementHideShow('v_custom_doc_root');"> <?php print _('Custom document root');?></label>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_custom_doc_root_check" <?php if (!empty($v_custom_doc_root)) echo "checked=yes" ?> onclick="javascript:elementHideShow('v_custom_doc_root');"><?php print _('Custom document root');?></label>
                                 </td>
                             </tr>
                             <tr>
@@ -318,7 +318,7 @@
 
                             <tr>
                                 <td class="vst-text step-top">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:App.Actions.WEB.toggle_ssl(this);"> <?php print _('SSL Support');?></label>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:App.Actions.WEB.toggle_ssl(this);"><?php print _('SSL Support');?></label>
                                 </td>
                             </tr>
                             <tr>
@@ -326,17 +326,17 @@
                                     <table style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;" id="ssltable">
                                      <tr>
                                           <td class="input-label vst-text">
-                                              <label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" id="letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letencrypt == 'on') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_letsencrypt(this)"> <?php print _('Lets Encrypt Support');?></label>
+                                              <label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" id="letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letencrypt == 'on') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_letsencrypt(this)"><?php print _('Lets Encrypt Support');?></label>
                                           </td>
                                       </tr>
                                       <tr>
                                           <td class="input-label vst-text">
-                                              <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl_forcessl" id="v_ssl_forcessl" <?php if($v_ssl_forcessl == 'yes') echo "checked=yes" ?> onclick=""> <?php print _('Force SSL/HTTPS');?></label>
+                                              <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl_forcessl" id="v_ssl_forcessl" <?php if($v_ssl_forcessl == 'yes') echo "checked=yes" ?> onclick=""><?php print _('Force SSL/HTTPS');?></label>
                                           </td>
                                       </tr>
                                       <tr>
                                           <td class="input-label vst-text">
-                                              <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl_hsts" id="ssl_hsts" <?php if($v_ssl_hsts == 'yes') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_hsts(this)"> <?php print _('Enable SSL HSTS');?></label>
+                                              <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl_hsts" id="ssl_hsts" <?php if($v_ssl_hsts == 'yes') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_hsts(this)"><?php print _('Enable SSL HSTS');?></label>
                                           </td>
                                       </tr>
                                       <tr style="display: none;">
@@ -456,7 +456,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text step-top">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ftp" <?php if (!empty($v_ftp_user)) echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_additional_ftp_accounts(this)"> <?php print _('Additional FTP Account');?></label>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ftp" <?php if (!empty($v_ftp_user)) echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_additional_ftp_accounts(this)"><?php print _('Additional FTP Account');?></label>
                                 </td>
                             </tr>
                             <tr>

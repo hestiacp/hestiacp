@@ -120,7 +120,7 @@
           if ($cpu == '0.0')  $cpu = 0;
       ?>
 
-        <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended';?>">
+        <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended';?> animated fadeIn">
           <div class="l-unit__col l-unit__col--right">
           <div class="clearfix l-unit__stat-col--left super-compact">
             <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="service[]" value="<?php echo $key ?>">

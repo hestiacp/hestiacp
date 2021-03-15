@@ -45,7 +45,7 @@
 
     <div class="l-separator"></div>
 
-    <div class="l-center units narrow animated fadeIn">
+    <div class="l-center units narrow">
         <div class="header table-header">      
             <div class="l-unit__col l-unit__col--right">
                 <div class="clearfix l-unit__stat-col--left super-compact">
@@ -123,7 +123,7 @@
                         }
                     ?>
 
-      <div class="l-unit <? if($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended'; if($_SESSION['favourites']['WEB'][$key] == 1) echo ' l-unit--starred'; ?>" v_section="web" v_unit_id="<?=$key?>"
+      <div class="l-unit <? if($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended'; if($_SESSION['favourites']['WEB'][$key] == 1) echo ' l-unit--starred'; ?> animated fadeIn" v_section="web" v_unit_id="<?=$key?>"
 id="web-unit-<?=$i?>"  sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>"
 sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
 sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DISK']?>" sort-star="<? if($_SESSION['WEB'][$key] == 1) echo '1'; else echo '0';?>">

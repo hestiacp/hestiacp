@@ -40,7 +40,7 @@
 
     <div class="l-separator"></div>
 
-    <div class="l-center units compact animated fadeIn">         
+    <div class="l-center units compact">         
           <div class="header table-header">     
             <div class="l-unit__col l-unit__col--right">
                   <div class="clearfix l-unit__stat-col--left super-compact">
@@ -71,7 +71,7 @@
           }
       ?>
 
-      <div class="l-unit<? if($status == 'suspended') echo ' l-unit--suspended'; if($_SESSION['favourites']['FIREWALL'][$key] == 1) echo ' l-unit--starred'; ?>" v_unit_id="<?=$key?>" v_section="firewall"
+      <div class="l-unit<? if($status == 'suspended') echo ' l-unit--suspended'; if($_SESSION['favourites']['FIREWALL'][$key] == 1) echo ' l-unit--starred'; ?> animated fadeIn" v_unit_id="<?=$key?>" v_section="firewall"
 sort-action="<?=$data[$key]['ACTION']?>" sort-protocol="<?=$data[$key]['PROTOCOL']?>" sort-port="<?=$data[$key]['PORT']?>"
 sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$key]['COMMENT']?>" sort-star="<? if($_SESSION['favourites']['FIREWALL'][$key] == 1) echo '1'; else echo '2'; ?>">
         <div class="l-unit__col l-unit__col--right">

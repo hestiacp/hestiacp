@@ -19,6 +19,7 @@ spinner="/-\|"
 os='ubuntu'
 release="$(lsb_release -s -r)"
 codename="$(lsb_release -s -c)"
+architecture="$(uname -m)"
 HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
@@ -370,6 +371,24 @@ if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
     fi
 fi
 
+case $architecture in 
+    x86_64)
+        ARCH="amd64"
+        ;;
+    aarch64)
+        ARCH="arm64"
+        ;;
+    *);
+    echo
+    echo -e "\e[91mInstallation aborted\e[0m"
+    echo "===================================================================="
+    echo -e "\e[33mERROR: $architecture is currently not supported!\e[0m"
+    echo -e "\e[33mPlease verify the achitecture used is currenlty supported\e[0m"
+    echo ""
+    echo -e "\e[33mhttps://github.com/hestiacp/hestiacp/blob/main/README.md\e[0m"
+    echo ""
+    check_result 1 "Installation aborted"
+esac
 #----------------------------------------------------------#
 #                       Brief Info                         #
 #----------------------------------------------------------#
@@ -561,7 +580,7 @@ echo
 # Installing Nginx repo
 if [ "$nginx" = 'yes' ]; then
     echo "[ * ] NGINX"
-    echo "deb [arch=amd64] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
+    echo "deb [arch=$ARCH] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
     apt-key adv --fetch-keys 'https://nginx.org/keys/nginx_signing.key' > /dev/null 2>&1    
 fi
 
@@ -578,7 +597,7 @@ fi
 # Installing MariaDB repo
 if [ "$mysql" = 'yes' ]; then
     echo "[ * ] MariaDB"
-    echo "deb [arch=amd64] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
+    echo "deb [arch=$ARCH] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
     apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc' > /dev/null 2>&1
 fi
 
@@ -590,7 +609,7 @@ apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev
 # Installing PostgreSQL repo
 if [ "$postgresql" = 'yes' ]; then
     echo "[ * ] PostgreSQL"
-    echo "deb [arch=amd64] https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
+    echo "deb [arch=$ARCH] https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
     apt-key adv --fetch-keys 'https://www.postgresql.org/media/keys/ACCC4CF8.asc' > /dev/null 2>&1
 fi
 

@@ -1,12 +1,12 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a href="/add/cron/" id="btn-create" class="ui-button cancel"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Cron Job')?></a>
+          <a href="/add/cron/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Cron Job')?></a>
           <?
             if($panel[$user]['CRON_REPORTS'] == 'yes') {
-              echo '<a class="ui-button cancel" href="/delete/cron/reports/?token='.$_SESSION['token'].'"><i class="fas fa-bell status-icon orange"></i>'._('turn off notifications').'</a>';
+              echo '<a class="ui-button cancel" dir="ltr" href="/delete/cron/reports/?token='.$_SESSION['token'].'"><i class="fas fa-bell status-icon orange"></i>'._('turn off notifications').'</a>';
             } else {
-              echo '<a class="ui-button cancel" href="/add/cron/reports/?token='.$_SESSION['token'].'"><i class="fas fa-bell-slash status-icon orange"></i>'._('turn on notifications').'</a>';
+              echo '<a class="ui-button cancel" dir="ltr" href="/add/cron/reports/?token='.$_SESSION['token'].'"><i class="fas fa-bell-slash status-icon orange"></i>'._('turn on notifications').'</a>';
             }
           ?>
         </div>

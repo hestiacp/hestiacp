@@ -5,6 +5,12 @@ $TAB = 'USER';
 // Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
+// Do not show the users list for regular users
+if ($_SESSION['userContext'] === 'user') {
+    header("Location: /login/");
+    exit;
+}
+
 // Do not show the users list if user is impersonating another user
 if (isset($_SESSION['look'])) {
     header("Location: /login/");

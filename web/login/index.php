@@ -94,7 +94,7 @@ function authenticate_user($user, $password, $twofa = ''){
                 return $error;
             } else {
 
-                // Get user speciefic parameters
+                // Get user specific parameters
                 exec (HESTIA_CMD . "v-list-user ".$v_user." json", $output, $return_var);
                 $data = json_decode(implode('', $output), true);
                 unset($output); 

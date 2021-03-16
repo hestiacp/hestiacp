@@ -14,7 +14,7 @@
 
 # Argument defenition
 user=$1
-domain=$(idn -t --quiet -a "$2" )
+domain=$2
 mode=$3
 
 # Includes

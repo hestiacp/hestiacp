@@ -11,6 +11,20 @@
 
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
+            <? if (($_SESSION['user'] == $v_username) || (isset($_SESSION['look']))) {?>
+                <!-- Do not show delete button for currently logged in user-->
+            <?} else {?>
+            <div class="actions-panel display-inline-block" key-action="js">
+                <a class="data-controls do_delete ui-button danger cancel">
+                  <i class="do_delete fas fa-times-circle status-icon red"></i>
+                  <?=_('Delete')?>
+                  <input type="hidden" name="delete_url" value="/delete/user/?user=<?=$v_username?>&token=<?=$_SESSION['token']?>" />
+                    <div class="confirmation-text-delete hidden" title="<?=_('Confirmation')?>">
+                      <p class="confirmation"><?=sprintf(_('DELETE_USER_CONFIRMATION'),$v_username)?></p>
+                    </div>
+                </a>
+            </div>
+            <? } ?>
             <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
           </div>
         </div>

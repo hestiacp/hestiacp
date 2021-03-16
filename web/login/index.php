@@ -153,7 +153,21 @@ function authenticate_user($user, $password, $twofa = ''){
                     if ($_SESSION['userContext'] === 'admin') {
                         header("Location: /list/user/");
                     } else {
-                        header("Location: /list/web/");
+                        if($data[$user]['WEB_DOMAINS'] != "0") {
+                            header("Location: /list/web/");
+                        } else if ($data[$user]['DNS_DOMAINS'] != "0") {
+                            header("Location: /list/dns/");
+                        } else if ($data[$user]['MAIL_DOMAINS'] != "0") {
+                            header("Location: /list/mail/");
+                        } else if ($data[$user]['DATABASES'] != "0") {
+                            header("Location: /list/db/");
+                        } else if ($data[$user]['CRON_JOBS'] != "0") {
+                            header("Location: /list/cron/");
+                        } else if ($data[$user]['BACKUPS'] != "0") {
+                            header("Location: /list/backup/");
+                        } else {
+                            header("Location: /list/web/");
+                        }
                     }
                     exit;
                 }

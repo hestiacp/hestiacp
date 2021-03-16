@@ -425,8 +425,7 @@
 					<tr>
                                             <td class="vst-text step-top">
 						<label>
-						    <input type="checkbox" size="20" class="vst-checkbox" name="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo "checked=yes"; ?> onclick="javascript:elementHideShow('smtp_relay_table');">
-						    <?php print _('Global SMTP Relay');?>
+						    <input type="checkbox" size="20" class="vst-checkbox" name="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo "checked=yes"; ?> onclick="javascript:elementHideShow('smtp_relay_table');"><?php print _('Global SMTP Relay');?>
 						</label>
 					    </td>
 					</tr>
@@ -730,7 +729,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text input-label">
-                                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_backup_remote_adv" <?php if (!empty($v_backup_remote_adv)) echo "checked=yes" ?> onclick="javascript:elementHideShow('remote_backup');"> <?php print _('Remote backup');?></label>
+                                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_backup_remote_adv" <?php if (!empty($v_backup_remote_adv)) echo "checked=yes" ?> onclick="javascript:elementHideShow('remote_backup');"><?php print _('Remote backup');?></label>
                                             </td>
                                         </tr>
                                         <tr>

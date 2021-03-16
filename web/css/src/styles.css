@@ -743,6 +743,7 @@ a {
   font-size: 1rem;
   vertical-align: middle;
   margin-top: -4px;
+  margin-right: 8px;
 }
 
 .l-profile {
@@ -1655,7 +1656,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
   border-bottom: 1px solid #ddd;
   border-left: 1px solid transparent;
   border-right: 1px solid transparent;
-  background-color: rgba(255,255,255,0.6);
 }
 
 .l-unit:hover, .units .l-unit:hover {
@@ -2121,6 +2121,10 @@ body.mobile .l-unit-toolbar__col--right {
   float: right;
 }
 
+.actions-panel {
+  line-height: 1rem;
+}
+
 .actions-panel__col {
   display: inline-block;
   min-width: 18px;
@@ -2150,6 +2154,14 @@ body.mobile .l-unit-toolbar__col--right {
   font-size: 0.9rem;
   font-weight: normal;
   line-height: 31px;
+}
+
+.l-unit__col .actions-panel .fas {
+  display: none;
+}
+
+.l-unit__col:hover .actions-panel .fas {
+  display: inline-block;
 }
 
 .icon-pad-right {

@@ -50,7 +50,7 @@
 
     <div class="l-separator"></div>
 
-    <div class="l-center units animated fadeIn">
+    <div class="l-center units">
       <div class="header table-header">
         <div class="l-unit__col l-unit__col--right">
           <div class="clearfix l-unit__stat-col--left super-compact">
@@ -81,7 +81,7 @@
           }
       ?>
 
-      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['CRON'][$key] == 1) echo ' l-unit--starred'; ?>" v_unit_id="<?=$key?>" v_section="cron"
+      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['CRON'][$key] == 1) echo ' l-unit--starred'; ?> animated fadeIn" v_unit_id="<?=$key?>" v_section="cron"
 sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?>"
 sort-star="<? if($_SESSION['favourites']['CRON'][$key] == 1) echo '1'; else echo '0';  ?>">
       <div class="l-unit__col l-unit__col--right">

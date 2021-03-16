@@ -85,25 +85,22 @@
                             <?php } ?>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_antispam" <?php if ((empty($v_antispam)) || ($v_antispam == 'yes')) echo "checked=yes"; ?>> <?php print _('AntiSpam Support');?></label>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_antispam" <?php if ((empty($v_antispam)) || ($v_antispam == 'yes')) echo "checked=yes"; ?>><?php print _('AntiSpam Support');?></label>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_antivirus" <?php if ((empty($v_antivirus)) || ($v_antivirus == 'yes')) echo "checked=yes"; ?>> <?php print _('AntiVirus Support');?></label>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_antivirus" <?php if ((empty($v_antivirus)) || ($v_antivirus == 'yes')) echo "checked=yes"; ?>><?php print _('AntiVirus Support');?></label>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_dkim" <?php if (isset($v_dkim)&&$v_dkim == 'yes') echo "checked=yes"; ?>> <?php print _('DKIM Support');?></label>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_dkim" <?php if (isset($v_dkim)&&$v_dkim == 'yes') echo "checked=yes"; ?>><?php print _('DKIM Support');?></label>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="vst-text step-top">
-                                    <label>
-                                        <input type="checkbox" size="20" class="vst-checkbox" name="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo "checked=yes"; ?> onclick="javascript:elementHideShow('smtp_relay_table');">
-                                        <?php print _('SMTP Relay');?>
-                                    </label>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo "checked=yes"; ?> onclick="javascript:elementHideShow('smtp_relay_table');"><?php print _('SMTP Relay');?></label>
                                 </td>
                             </tr>
                             <tr>

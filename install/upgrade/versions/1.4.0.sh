@@ -25,11 +25,11 @@ if [ "$MAIL_SYSTEM" == "exim4" ]; then
     echo "[ * ] Populating HELO/SMTP Banner param for existing IP's..."
     > /etc/exim4/mailhelo.conf
 
-    for ip in $(v-list-sys-ips plain | cut -f1); do
+    for ip in $($BIN/v-list-sys-ips plain | cut -f1); do
         helo=$(is_ip_rdns_valid $ip)
 
         if [ ! -z "$helo" ]; then
-            v-change-sys-ip-helo $ip $helo
+            $BIN/v-change-sys-ip-helo $ip $helo
         fi
     done
 

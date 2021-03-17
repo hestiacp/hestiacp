@@ -6,6 +6,9 @@
 #######                      Place additional commands below.                   #######
 #######################################################################################
 
+echo '[ * ] Updating System Administrator account permissions...'
+$HESTIA/bin/v-change-user-role admin admin
+
 # Send end-of-life notification to admin user on servers running Ubuntu 16.04
 if [ "$OS_TYPE" = "Ubuntu" ]; then
     if [ "$OS_VERSION" = '16.04' ]; then

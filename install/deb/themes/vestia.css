@@ -26,7 +26,9 @@ b, strong {
     background: #fafafa !important;
 }
 
-
+.actions-panel {
+    line-height: inherit !important;
+}
 .l-header {
     box-shadow: none;
     background: #5d5d5d;

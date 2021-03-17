@@ -505,7 +505,7 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
 
         # Unpacking domain container
         tar xf $BACKUP/$backup -C $tmpdir ./mail/$domain
-        echo "$domain"
+        
         if [ "$?" -ne 0 ]; then
             rm -rf $tmpdir
             error="Can't unpack $domain mail container"
@@ -602,12 +602,12 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
         
         domain_idn=$domain
         format_domain_idn
-        exit
+        
         # Restoring emails
         if [ $backup_mode = 'zstd' ]; then    
             if [ -e "$tmpdir/mail/$domain/accounts.tar.zst" ]; then
-                # Current Hestia store email in the $HOMEDIR/$user/mail/$domain
-                chmod u+w "$HOMEDIR/$user/mail/$domain"
+                # Current Hestia store email in the $HOMEDIR/$user/mail/$domain_idn
+                chmod u+w "$HOMEDIR/$user/mail/$domain_idn"
                 $BIN/v-extract-fs-archive "$user" "$tmpdir/mail/$domain/accounts.tar.zst" "$HOMEDIR/$user/mail/$domain_idn/"
                 if [ "$?" -ne 0 ]; then
                     rm -rf $tmpdir
@@ -618,12 +618,12 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
                 fi
     
                 # Chowning as owner needs to be user:mail instead of user:user
-                find $HOMEDIR/$user/mail/$domain -user $user \
+                find $HOMEDIR/$user/mail/$domain_idn -user $user \
                    -exec chown -h $user:mail {} \;
             fi
         else
             if [ -e "$tmpdir/mail/$domain/accounts.tar.gz" ]; then
-                chmod u+w "$HOMEDIR/$user/mail/$domain"
+                chmod u+w "$HOMEDIR/$user/mail/$domain_idn"
                 $BIN/v-extract-fs-archive "$user" "$tmpdir/mail/$domain/accounts.tar.gz" "$HOMEDIR/$user/mail/$domain_idn/"
                 if [ "$?" -ne 0 ]; then
                     rm -rf $tmpdir
@@ -634,12 +634,12 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
                 fi
     
                 # Chowning as owner needs to be user:mail instead of user:user
-                find $HOMEDIR/$user/mail/$domain -user $user \
+                find $HOMEDIR/$user/mail/$domain_idn -user $user \
                    -exec chown -h $user:mail {} \;
             fi
         fi
         # Chowning mail conf files to exim user
-        find $HOMEDIR/$user/conf/mail/$domain_idn -user root \
+        find $HOMEDIR/$user/conf/mail/$domain -user root \
             -exec chown $exim_user {} \;
             
     done

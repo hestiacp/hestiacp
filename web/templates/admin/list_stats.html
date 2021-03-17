@@ -15,6 +15,7 @@
                   </td>
             </tr>
           </table>
+          <? if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look']))) {?>
           <table>
             <tr>
               <td>
@@ -39,6 +40,7 @@
               </td>
             </tr>
           </table>
+          <? } ?>
         </div>
       </div>
     </div>

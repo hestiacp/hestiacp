@@ -14,22 +14,33 @@ if (isset($_GET['logout'])) {
 
 // Login as someone else
 if (isset($_SESSION['user'])) {
+
+    // Default location
     if (empty($_GET['loginas']) ){
         header("Location: /list/web/");
         exit;
     }
+
     if ($_SESSION['userContext'] === 'admin' && !empty($_GET['loginas'])) {
-        exec (HESTIA_CMD . "v-list-user ".escapeshellarg($_GET['loginas'])." json", $output, $return_var);
-        if ( $return_var == 0 ) {
-            $data = json_decode(implode('', $output), true);
-            reset($data);
-            $_SESSION['look'] = key($data);
-            $_SESSION['look_alert'] = 'yes';
-            # Remove current path for filemanager
-            unset($_SESSION['_sf2_attributes']);
-            unset($_SESSION['_sf2_meta']);
+        // Ensure token is passed and matches before granting user impersonation
+        if ((!$_GET['token']) || ($_SESSION['token'] != $_GET['token'])) {
+            header('location: /list/user/');
+            exit();
+        } else {
+            exec (HESTIA_CMD . "v-list-user ".escapeshellarg($_GET['loginas'])." json", $output, $return_var);
+            if ( $return_var == 0 ) {
+                $data = json_decode(implode('', $output), true);
+                reset($data);
+                $_SESSION['look'] = key($data);
+                $_SESSION['look_alert'] = 'yes';
+                # Remove current path for filemanager
+                unset($_SESSION['_sf2_attributes']);
+                unset($_SESSION['_sf2_meta']);
+            }
         }
     }
+
+    // Set correct entry point into the panel
     if ($_SESSION['userContext'] === 'admin' && empty($_GET['loginas'])) {
         header("Location: /list/user/");
     } else {

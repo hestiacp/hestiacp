@@ -562,8 +562,8 @@ rebuild_mail_domain_conf() {
         fi
 
         # Adding mail directory
-        if [ ! -e $HOMEDIR/$user/mail/$domain ]; then
-            mkdir "$HOMEDIR/$user/mail/$domain"
+        if [ ! -e $HOMEDIR/$user/mail/$domain_idn ]; then
+            mkdir "$HOMEDIR/$user/mail/$domain_idn"
         fi
 
         # Adding catchall email
@@ -614,12 +614,12 @@ rebuild_mail_domain_conf() {
         chmod 771 $HOMEDIR/$user/conf/mail/$domain
         chmod 660 $HOMEDIR/$user/conf/mail/$domain/*
         chmod 771 /etc/$MAIL_SYSTEM/domains/$domain_idn
-        chmod 770 $HOMEDIR/$user/mail/$domain
+        chmod 770 $HOMEDIR/$user/mail/$domain_idn
         chown -R $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain
         if [ "$IMAP_SYSTEM" = "dovecot" ]; then
             chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain/passwd
         fi
-        chown $user:mail $HOMEDIR/$user/mail/$domain
+        chown $user:mail $HOMEDIR/$user/mail/$domain_idn
     fi
 
     # Add missing SSL configuration flags to existing domains

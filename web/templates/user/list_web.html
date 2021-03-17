@@ -4,7 +4,7 @@
             <?php
             if ((isset($_SESSION['WEB_SYSTEM'])) && (!empty($_SESSION['WEB_SYSTEM']))) {
                 if (intval($panel[$user]['WEB_DOMAINS']) > 0 || $panel[$user]['WEB_DOMAINS'] == 'unlimited') {
-                    echo '<a href="/add/web/" id="btn-create" class="ui-button cancel"> <i class="fas fa-plus-circle status-icon green"></i> '._('Add Web Domain').'</a>';
+                    echo '<a href="/add/web/" id="btn-create" class="ui-button cancel" dir="ltr"> <i class="fas fa-plus-circle status-icon green"></i>'._('Add Web Domain').'</a>';
                 }
             }
             ?>

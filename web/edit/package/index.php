@@ -14,7 +14,7 @@ if ($_SESSION['user'] != 'admin') {
 }
 
 // Check package argument
-if (empty($_GET['package']) || ($_GET['package'] === 'default')) {
+if (empty($_GET['package'])) {
     header("Location: /list/package/");
     exit;
 }

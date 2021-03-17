@@ -158,11 +158,31 @@ function top_panel($user, $TAB) {
     $panel = json_decode(implode('', $output), true);
     unset($output);
 
+    // Set home location URLs
+    if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look']))) {
+        $home_url = "/list/user/";
+    } else {
+        if($panel[$user]['WEB_DOMAINS'] != "0") {
+            $home_url = "/list/web/";
+        } else if ($panel[$user]['DNS_DOMAINS'] != "0") {
+            $home_url = "/list/dns/";
+        } else if ($panel[$user]['MAIL_DOMAINS'] != "0") {
+            $home_url = "/list/mail/";
+        } else if ($panel[$user]['DATABASES'] != "0") {
+            $home_url = "/list/db/";
+        } else if ($panel[$user]['CRON_JOBS'] != "0") {
+            $home_url = "/list/cron/";
+        } else if ($panel[$user]['BACKUPS'] != "0") {
+            $home_url = "/list/backups/";
+        }
+    }
+
     if (($_SESSION['userContext'] === 'admin')) {
         include(dirname(__FILE__).'/../templates/admin/panel.html');
     } else {
         include(dirname(__FILE__).'/../templates/user/panel.html');
     }
+
 }
 
 function translate_date($date){

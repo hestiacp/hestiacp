@@ -3,12 +3,12 @@
         <div class="l-unit-toolbar__buttonstrip">
         <?php
           if ($_SESSION['userContext'] === 'admin') {
-            echo '<a href="/add/user/" id="btn-create" class="ui-button cancel"><i class="fas fa-plus-circle status-icon green"></i>'._('Add User').'</a>&nbsp;';
-            echo '<a href="/list/package/" class="ui-button cancel"><i class="fas fa-box-open status-icon orange"></i>'._('Packages').'</a>&nbsp;';
+            echo '<a href="/add/user/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i>'._('Add User').'</a>&nbsp;';
+            echo '<a href="/list/package/" class="ui-button cancel" dir="ltr"><i class="fas fa-box-open status-icon orange"></i>'._('Packages').'</a>&nbsp;';
           } else {
               if ((isset($_SESSION['WEB_SYSTEM'])) && (!empty($_SESSION['WEB_SYSTEM']))) {
                   if (intval($panel[$user]['WEB_DOMAINS']) > 0 || $panel[$user]['WEB_DOMAINS'] == 'unlimited') {
-                      echo '<a href="/add/web/" id="btn-create" class="ui-button cancel" title="'._('Add Web Domain').'"><i class="fas fa-plus-circle status-icon green"></i>'._('Add Web Domain').'</a>';
+                      echo '<a href="/add/web/" id="btn-create" class="ui-button cancel" dir="ltr" title="'._('Add Web Domain').'"><i class="fas fa-plus-circle status-icon green"></i>'._('Add Web Domain').'</a>';
                   }
               }
           }

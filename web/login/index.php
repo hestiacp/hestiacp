@@ -6,46 +6,84 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 $TAB = 'login';
 
+/*
 // Logout
 if (isset($_GET['logout'])) {
     setcookie('limit2fa','',time() - 3600,"/");
     session_destroy();
 }
+*/
 
-// Login as someone else
+/* ACTIONS FOR CURRENT USER SESSION */
 if (isset($_SESSION['user'])) {
 
-    // Default location
-    if (empty($_GET['loginas']) ){
-        header("Location: /list/web/");
-        exit;
-    }
-
-    if ($_SESSION['userContext'] === 'admin' && !empty($_GET['loginas'])) {
-        // Ensure token is passed and matches before granting user impersonation
+    // User impersonation
+    // Allow administrators to view and manipulate contents of other user accounts
+    if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['loginas']))) {
+        // Ensure token is passed and matches before granting user impersonation access
         if ((!$_GET['token']) || ($_SESSION['token'] != $_GET['token'])) {
             header('location: /list/user/');
             exit();
         } else {
-            exec (HESTIA_CMD . "v-list-user ".escapeshellarg($_GET['loginas'])." json", $output, $return_var);
+            $v_user = escapeshellarg($_GET['loginas']);
+            exec (HESTIA_CMD . "v-list-user ".$v_user." json", $output, $return_var);
             if ( $return_var == 0 ) {
                 $data = json_decode(implode('', $output), true);
                 reset($data);
                 $_SESSION['look'] = key($data);
-                $_SESSION['look_alert'] = 'yes';
-                # Remove current path for filemanager
+                // Reset account details for File Manager to impersonated user
                 unset($_SESSION['_sf2_attributes']);
                 unset($_SESSION['_sf2_meta']);
+                header("Location: /login/");
             }
         }
+        exit;
     }
 
-    // Set correct entry point into the panel
-    if ($_SESSION['userContext'] === 'admin' && empty($_GET['loginas'])) {
-        header("Location: /list/user/");
-    } else {
-        header("Location: /list/web/");
+    // Set view based on account properties
+    if (empty($_GET['loginas'])) {
+        // Default view to Users list for administrator accounts
+        if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look']))) {
+            header("Location: /list/user/");
+            exit;
+        }
+        
+        // Obtain account properties
+        if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']))) {
+            $v_user = escapeshellarg($_SESSION['look']);
+        } else {
+            $v_user = escapeshellarg($_SESSION['user']);
+        }
+
+        exec (HESTIA_CMD . "v-list-user ".$v_user." json", $output, $return_var);
+        $data = json_decode(implode('', $output), true);
+        unset($output); 
+        
+        // Determine package features and land user at the first available page
+        if ($data[$user]['WEB_DOMAINS'] !== "0") {
+            header("Location: /list/web/");
+        } else if ($data[$user]['DNS_DOMAINS'] !== "0") {
+            header("Location: /list/dns/");
+        } else if ($data[$user]['MAIL_DOMAINS'] !== "0") {
+            header("Location: /list/mail/");
+        } else if ($data[$user]['DATABASES'] !== "0") {
+            header("Location: /list/db/");
+        } else if ($data[$user]['CRON_JOBS'] !== "0") {
+            header("Location: /list/cron/");
+        } else if ($data[$user]['BACKUPS'] !== "0") {
+            header("Location: /list/backup/");
+        } else {
+            header("Location: /error/");
+        }
+        exit;
     }
+
+    // Do not allow non-administrators to access account impersonation
+    if (($_SESSION['userContext'] !== 'admin') && (!empty($_GET['loginas']))) {
+        header("Location: /login/");
+        exit;
+    }
+
     exit;
 }
 
@@ -177,7 +215,7 @@ function authenticate_user($user, $password, $twofa = ''){
                         } else if ($data[$user]['BACKUPS'] != "0") {
                             header("Location: /list/backup/");
                         } else {
-                            header("Location: /list/web/");
+                            header("Location: /error/");
                         }
                     }
                     exit;

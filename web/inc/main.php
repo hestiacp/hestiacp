@@ -160,8 +160,10 @@ function top_panel($user, $TAB) {
 
     // Set home location URLs
     if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look']))) {
+        // Display users list for administrators unless they are impersonating a user account
         $home_url = "/list/user/";
     } else {
+        // Set home location URL based on available package features from account
         if($panel[$user]['WEB_DOMAINS'] != "0") {
             $home_url = "/list/web/";
         } else if ($panel[$user]['DNS_DOMAINS'] != "0") {

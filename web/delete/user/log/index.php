@@ -35,6 +35,10 @@ exec(HESTIA_CMD."v-log-user-login ".$v_username." ".$v_ip." success ".$v_murmur,
 unset($_SESSION['error_msg']);
 unset($_SESSION['ok_msg']);
 
-header("Location: /edit/user/log/?user=".$_SESSION['user']);
+if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']))) {
+    header("Location: /edit/user/log/?user=".$_SESSION['look']);
+} else {
+    header("Location: /edit/user/log/?user=".$_SESSION['user']);
+}
 
 exit;

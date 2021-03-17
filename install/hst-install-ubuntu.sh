@@ -620,7 +620,7 @@ else
     echo -e "\e[033[0;31m[ ! ] HestiaCP on ARM is currently in Development.\033[0m"
     echo -e "\e[033[0;31m      This will mean that we don't provide any packages and you are responisble\033[0m"
     echo -e "\e[033[0;31m      for building the packages your self. To build your own packeges see\033[0m"  
-    echo -e "\e[033[0;31m      https://docs.hestiacp.com/development/panel.html#compiling\033[0m""
+    echo -e "\e[033[0;31m      https://docs.hestiacp.com/development/panel.html#compiling\033[0m"
 fi
 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
 

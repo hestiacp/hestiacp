@@ -23,7 +23,7 @@ if (empty($q)) {
 // Data
 $q = escapeshellarg($q);
 
-if ($_SESSION['userContext'] === 'admin') {
+if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look']))) {
     exec (HESTIA_CMD . "v-search-object " .$q. " json", $output, $return_var);
 } else {
     exec (HESTIA_CMD . "v-search-user-object " .$user. " " .$q. " json", $output, $return_var);

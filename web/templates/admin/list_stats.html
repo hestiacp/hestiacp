@@ -1,7 +1,11 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
           <div class="l-unit-toolbar__buttonstrip">
+              <? if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look']))) { ?>
               <a class="ui-button cancel" href='/list/stats/'><i class="fas fa-info-circle status-icon lightblue"></i> <?=_('Overall Statistics')?></a>
+              <? } else {?>
+              <a class="ui-button cancel" href='/list/stats/'><i class="fas fa-redo status-icon green"></i> <?=_('Refresh')?></a>
+              <? } ?>
           </div>
         <div class="l-sort-toolbar clearfix">
           <table>

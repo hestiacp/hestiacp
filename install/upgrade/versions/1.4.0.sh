@@ -107,6 +107,6 @@ fi
 
 # Fix PostgreSQL repo
 if [ -f /etc/apt/sources.list.d/postgresql.list ]; then
-    echo "[*] Updating PostgreSQL repository..."
+    echo "[ * ] Updating PostgreSQL repository..."
     sed -i 's|deb https://apt.postgresql.org/pub/repos/apt/|deb [arch=amd64] https://apt.postgresql.org/pub/repos/apt/|g' /etc/apt/sources.list.d/postgresql.list
 fi

@@ -373,7 +373,7 @@ if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
         fi
 
         # Backup emails
-        cd $HOMEDIR/$user/mail/$domain
+        cd $HOMEDIR/$user/mail/$domain_idn
         accounts=()
         for account in $(ls); do
             exclusion=$(echo "$MAIL" |tr ',' '\n' |grep "$domain:")

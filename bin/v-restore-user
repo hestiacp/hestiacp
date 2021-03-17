@@ -599,13 +599,16 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
 
         # Rebuilding mail config
         $BIN/v-rebuild-mail-domains $user
-
+        
+        domain_idn=$domain
+        format_domain_idn
+        exit
         # Restoring emails
         if [ $backup_mode = 'zstd' ]; then    
             if [ -e "$tmpdir/mail/$domain/accounts.tar.zst" ]; then
                 # Current Hestia store email in the $HOMEDIR/$user/mail/$domain
                 chmod u+w "$HOMEDIR/$user/mail/$domain"
-                $BIN/v-extract-fs-archive "$user" "$tmpdir/mail/$domain/accounts.tar.zst" "$HOMEDIR/$user/mail/$domain/"
+                $BIN/v-extract-fs-archive "$user" "$tmpdir/mail/$domain/accounts.tar.zst" "$HOMEDIR/$user/mail/$domain_idn/"
                 if [ "$?" -ne 0 ]; then
                     rm -rf $tmpdir
                     error="Can't unpack $domain mail account container"
@@ -621,7 +624,7 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
         else
             if [ -e "$tmpdir/mail/$domain/accounts.tar.gz" ]; then
                 chmod u+w "$HOMEDIR/$user/mail/$domain"
-                $BIN/v-extract-fs-archive "$user" "$tmpdir/mail/$domain/accounts.tar.gz" "$HOMEDIR/$user/mail/$domain/"
+                $BIN/v-extract-fs-archive "$user" "$tmpdir/mail/$domain/accounts.tar.gz" "$HOMEDIR/$user/mail/$domain_idn/"
                 if [ "$?" -ne 0 ]; then
                     rm -rf $tmpdir
                     error="Can't unpack $domain mail account container"
@@ -636,7 +639,7 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
             fi
         fi
         # Chowning mail conf files to exim user
-        find $HOMEDIR/$user/conf/mail/$domain -user root \
+        find $HOMEDIR/$user/conf/mail/$domain_idn -user root \
             -exec chown $exim_user {} \;
             
     done

@@ -36,9 +36,9 @@ unset($_SESSION['error_msg']);
 unset($_SESSION['ok_msg']);
 
 if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']))) {
-    header("Location: /edit/user/log/?user=".$_SESSION['look']);
+    header("Location: /list/log/auth/?user=".$_SESSION['look']);
 } else {
-    header("Location: /edit/user/log/?user=".$_SESSION['user']);
+    header("Location: /list/log/auth/?user=".$_SESSION['user']);
 }
 
 exit;

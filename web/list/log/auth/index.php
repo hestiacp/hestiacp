@@ -20,7 +20,7 @@ $data = array_reverse($data);
 unset($output);
 
 // Render page
-render_page($user, $TAB, 'list_auth');
+render_page($user, $TAB, 'list_log_auth');
 
 // Flush session messages
 unset($_SESSION['error_msg']);

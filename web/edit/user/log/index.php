@@ -6,22 +6,14 @@ $TAB = 'USER';
 // Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
-
-// Check user argument
-if (empty($_GET['user'])) {
-    header("Location: /list/user/");
-    exit;
-}
-
 // Edit as someone else?
-if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
-    $user=$_GET['user'];
-    $v_username=$_GET['user'];
+if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']))) {
+    $v_username = escapeshellarg($_SESSION['look']);
 } else {
-    $user=$_SESSION['user'];
-    $v_username=$_SESSION['user'];
+    $v_username = escapeshellarg($_SESSION['user']);
 }
-exec(HESTIA_CMD."v-list-user-auth-log ".escapeshellarg($v_username)." json", $output, $return_var);
+
+exec(HESTIA_CMD."v-list-user-auth-log ".$v_username." json", $output, $return_var);
 check_return_code($return_var,$output);
 $data = json_decode(implode('', $output), true);
 $data = array_reverse($data);

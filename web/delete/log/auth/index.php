@@ -25,8 +25,8 @@ if(isset($_SERVER['HTTP_CF_CONNECTING_IP'])){
 } 
 $v_ip = escapeshellarg($ip);
     
-$v_murmur = escapeshellarg($_SESSION['token']);
-exec(HESTIA_CMD."v-log-user-login ".$v_username." ".$v_ip." success ".$v_murmur, $output, $return_var);
+$v_session_id = escapeshellarg($_SESSION['token']);
+exec(HESTIA_CMD."v-log-user-login ".$v_username." ".$v_ip." success ".$v_session_id, $output, $return_var);
 
 // Render page
 //render_page($user, $TAB, 'list_auth');

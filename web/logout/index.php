@@ -14,8 +14,8 @@ if (!empty($_SESSION['look'])) {
 } else {
     if($_SESSION['token'] && $_SESSION['user']){
         $v_user = escapeshellarg($_SESSION['user']);
-        $v_murmur = escapeshellarg($_SESSION['token']);
-        exec(HESTIA_CMD."v-log-user-logout ".$v_user." ".$v_murmur, $output, $return_var);
+        $v_session_id = escapeshellarg($_SESSION['token']);
+        exec(HESTIA_CMD."v-log-user-logout ".$v_user." ".$v_session_id, $output, $return_var);
     }
     
     session_destroy();

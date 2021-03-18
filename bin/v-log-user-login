@@ -25,8 +25,6 @@ check_args '2' "$#" 'USER IP [FINGERPRINT]'
 is_format_valid 'user' 'ip'
 is_object_valid 'user' 'USER' "$user"
 
-browser=$(echo $browser | sed -e "s/\'//g");
-
 # Generating timestamp
 time_n_date=$(date +'%T %F')
 time=$(echo "$time_n_date" |cut -f 1 -d \ )

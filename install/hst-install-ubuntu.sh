@@ -1865,6 +1865,9 @@ $HESTIA/bin/v-change-sys-port $port > /dev/null 2>&1
 # Set default theme
 $HESTIA/bin/v-change-sys-theme 'dark'
 
+# Set user account permissions for default 'admin' account
+$HESTIA/bin/v-change-user-role admin admin
+
 # Update remaining packages since repositories have changed
 echo -ne "[ * ] Installing remaining software updates..."
 apt-get -qq update

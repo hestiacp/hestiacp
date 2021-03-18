@@ -48,7 +48,7 @@
 			<?php } ?>
 			<div class="l-menu__item"><a href="https://docs.hestiacp.com/" title="<?=_('Help')?>" class="l-profile__help" target="_blank"><i class="fas fa-question-circle"></i></a></div>
 			<? if(isset($_SESSION['look']) && (!empty($_SESSION['look']))){ ?>
-				<div class="l-menu__item"><a href="/logout/" title="<?=_('Log out')?> (<?=$user?>)" class="l-profile__logout"><i class="fas fa-check-circle"></i></a></div>
+				<div class="l-menu__item"><a href="/logout/" title="<?=_('Log out')?> (<?=$user?>)" class="l-profile__logout"><i class="fas fa-arrow-alt-circle-up"></i></a></div>
 			<? } else {?>
 				<div class="l-menu__item"><a href="/logout/" title="<?=_('Log out')?>" class="l-profile__logout"><i class="fas fa-sign-out-alt"></i></a></div>
 			<? } ?>

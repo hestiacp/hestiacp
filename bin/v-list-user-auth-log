@@ -23,19 +23,21 @@ json_list() {
     objects=$(echo "$logs" |wc -l)
     echo "{"
     for str in $logs; do
-        IP=$(echo "$str" |cut -f 2 -d \')
-        FINGERPRINT=$(echo "$str" |cut -f 4 -d \')
-        STATUS=$(echo "$str" |cut -f 6 -d \')
-        DATE=$(echo "$str" |cut -f 8 -d \')
-        TIME=$(echo "$str" |cut -f 10 -d \')
-        ACTIVE=$(echo "$str" |cut -f 12 -d \')
+        DATE=$(echo "$str" |cut -f 2 -d \')
+        TIME=$(echo "$str" |cut -f 4 -d \')
+        IP=$(echo "$str" |cut -f 6 -d \')
+        ACTION=$(echo "$str" |cut -f 8 -d \')
+        STATUS=$(echo "$str" |cut -f 10 -d \')
+        SESSION=$(echo "$str" |cut -f 12 -d \')
+        ACTIVE=$(echo "$str" |cut -f 14 -d \')
         echo -n '    "'$i'": {
-            "IP": "'$IP'",
-            "FINGERPRINT": "'$FINGERPRINT'",
-            "TIME": "'$TIME'",
             "DATE": "'$DATE'",
-            "ACTIVE": "'$ACTIVE'",
-            "STATUS": "'$STATUS'"
+            "TIME": "'$TIME'",
+            "IP": "'$IP'",
+            "ACTION": "'$ACTION'",
+            "STATUS": "'$STATUS'",
+            "SESSION": "'$SESSION'",
+            "ACTIVE": "'$ACTIVE'"
         }'
         if [ "$i" -lt "$objects" ]; then
             echo ','
@@ -49,16 +51,17 @@ json_list() {
 
 shell_list() {
     IFS=$'\n'
-    echo "DATE~TIME~IP~FINGERPRINT~ACTIVE~STATUS"
+    echo "DATE~TIME~IP~SESSION~ACTIVE~STATUS"
     echo "----~----~--~-----------~------"
     for str in $logs; do
-        IP=$(echo "$str" |cut -f 2 -d \')
-        FINGERPRINT=$(echo "$str" |cut -f 4 -d \')
-        STATUS=$(echo "$str" |cut -f 6 -d \')
-        DATE=$(echo "$str" |cut -f 8 -d \')
-        TIME=$(echo "$str" |cut -f 10 -d \')
-        ACTIVE=$(echo "$str" |cut -f 12 -d \')
-        echo "$DATE~$TIME~$IP~$FINGERPRINT~$ACTIVE~$STATUS"
+        DATE=$(echo "$str" |cut -f 2 -d \')
+        TIME=$(echo "$str" |cut -f 4 -d \')
+        IP=$(echo "$str" |cut -f 6 -d \')
+        ACTION=$(echo "$str" |cut -f 8 -d \')
+        STATUS=$(echo "$str" |cut -f 10 -d \')
+        SESSION=$(echo "$str" |cut -f 12 -d \')
+        ACTIVE=$(echo "$str" |cut -f 14 -d \')
+        echo "$DATE~$TIME~$IP~$ACTION~$STATUS~$SESSION~$ACTIVE"
     done
 }
 
@@ -66,28 +69,30 @@ shell_list() {
 plain_list() {
     IFS=$'\n'
     for str in $logs; do
-        IP=$(echo "$str" |cut -f 2 -d \')
-        FINGERPRINT=$(echo "$str" |cut -f 4 -d \')
-        STATUS=$(echo "$str" |cut -f 6 -d \')
-        DATE=$(echo "$str" |cut -f 8 -d \')
-        TIME=$(echo "$str" |cut -f 10 -d \')
-        ACTIVE=$(echo "$str" |cut -f 12 -d \')
-        echo -e "$DATE\t$TIME\t$IP\t$FINGERPRINT\t$ACTIVE\t$STATUS"
+        DATE=$(echo "$str" |cut -f 2 -d \')
+        TIME=$(echo "$str" |cut -f 4 -d \')
+        IP=$(echo "$str" |cut -f 6 -d \')
+        ACTION=$(echo "$str" |cut -f 8 -d \')
+        STATUS=$(echo "$str" |cut -f 10 -d \')
+        SESSION=$(echo "$str" |cut -f 12 -d \')
+        ACTIVE=$(echo "$str" |cut -f 14 -d \')
+        echo -e "$DATE\t$TIME\t$IP\t$ACTION\t$STATUS\t$SESSION\t$ACTIVE"
     done
 }
 
 # CSV list function
 csv_list() {
     IFS=$'\n'
-    echo "DATE,TIME,IP,FINGERPRINT,ACTIVE,STATUS"
+    echo "DATE,TIME,IP,ACTION,STATUS,SESSION,ACTIVE"
     for str in $logs; do
-        IP=$(echo "$str" |cut -f 2 -d \')
-        FINGERPRINT=$(echo "$str" |cut -f 4 -d \')
-        STATUS=$(echo "$str" |cut -f 6 -d \')
-        DATE=$(echo "$str" |cut -f 8 -d \')
-        TIME=$(echo "$str" |cut -f 10 -d \')
-        ACTIVE=$(echo "$str" |cut -f 12 -d \')
-        echo "$DATE,$TIME,$IP,$FINGERPRINT,$ACTIVE,$STATUS"
+        DATE=$(echo "$str" |cut -f 2 -d \')
+        TIME=$(echo "$str" |cut -f 4 -d \')
+        IP=$(echo "$str" |cut -f 6 -d \')
+        ACTION=$(echo "$str" |cut -f 8 -d \')
+        STATUS=$(echo "$str" |cut -f 10 -d \')
+        SESSION=$(echo "$str" |cut -f 12 -d \')
+        ACTIVE=$(echo "$str" |cut -f 14 -d \')
+        echo "$DATE,$TIME,$IP,$SESSION,$ACTIVE,$STATUS"
 
     done
 }

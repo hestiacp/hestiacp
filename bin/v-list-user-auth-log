@@ -28,14 +28,16 @@ json_list() {
         IP=$(echo "$str" |cut -f 6 -d \')
         ACTION=$(echo "$str" |cut -f 8 -d \')
         STATUS=$(echo "$str" |cut -f 10 -d \')
-        SESSION=$(echo "$str" |cut -f 12 -d \')
-        ACTIVE=$(echo "$str" |cut -f 14 -d \')
+        USER_AGENT=$(echo "$str" |cut -f 12 -d \')
+        SESSION=$(echo "$str" |cut -f 14 -d \')
+        ACTIVE=$(echo "$str" |cut -f 16 -d \')
         echo -n '    "'$i'": {
             "DATE": "'$DATE'",
             "TIME": "'$TIME'",
             "IP": "'$IP'",
             "ACTION": "'$ACTION'",
             "STATUS": "'$STATUS'",
+            "USER_AGENT": "'$USER_AGENT'",
             "SESSION": "'$SESSION'",
             "ACTIVE": "'$ACTIVE'"
         }'
@@ -59,9 +61,10 @@ shell_list() {
         IP=$(echo "$str" |cut -f 6 -d \')
         ACTION=$(echo "$str" |cut -f 8 -d \')
         STATUS=$(echo "$str" |cut -f 10 -d \')
-        SESSION=$(echo "$str" |cut -f 12 -d \')
-        ACTIVE=$(echo "$str" |cut -f 14 -d \')
-        echo "$DATE~$TIME~$IP~$ACTION~$STATUS~$SESSION~$ACTIVE"
+        USER_AGENT=$(echo "$str" |cut -f 12 -d \')
+        SESSION=$(echo "$str" |cut -f 14 -d \')
+        ACTIVE=$(echo "$str" |cut -f 16 -d \')
+        echo "$DATE~$TIME~$IP~$ACTION~$STATUS~$USER_AGENT~$SESSION~$ACTIVE"
     done
 }
 
@@ -74,25 +77,27 @@ plain_list() {
         IP=$(echo "$str" |cut -f 6 -d \')
         ACTION=$(echo "$str" |cut -f 8 -d \')
         STATUS=$(echo "$str" |cut -f 10 -d \')
-        SESSION=$(echo "$str" |cut -f 12 -d \')
-        ACTIVE=$(echo "$str" |cut -f 14 -d \')
-        echo -e "$DATE\t$TIME\t$IP\t$ACTION\t$STATUS\t$SESSION\t$ACTIVE"
+        USER_AGENT=$(echo "$str" |cut -f 12 -d \')
+        SESSION=$(echo "$str" |cut -f 14 -d \')
+        ACTIVE=$(echo "$str" |cut -f 16 -d \')
+        echo -e "$DATE\t$TIME\t$IP\t$ACTION\t$STATUS\t$USER_AGENT\t$SESSION\t$ACTIVE"
     done
 }
 
 # CSV list function
 csv_list() {
     IFS=$'\n'
-    echo "DATE,TIME,IP,ACTION,STATUS,SESSION,ACTIVE"
+    echo "DATE,TIME,IP,ACTION,STATUS,USER_AGENT,SESSION,ACTIVE"
     for str in $logs; do
         DATE=$(echo "$str" |cut -f 2 -d \')
         TIME=$(echo "$str" |cut -f 4 -d \')
         IP=$(echo "$str" |cut -f 6 -d \')
         ACTION=$(echo "$str" |cut -f 8 -d \')
         STATUS=$(echo "$str" |cut -f 10 -d \')
-        SESSION=$(echo "$str" |cut -f 12 -d \')
-        ACTIVE=$(echo "$str" |cut -f 14 -d \')
-        echo "$DATE,$TIME,$IP,$SESSION,$ACTIVE,$STATUS"
+        USER_AGENT=$(echo "$str" |cut -f 12 -d \')
+        SESSION=$(echo "$str" |cut -f 14 -d \')
+        ACTIVE=$(echo "$str" |cut -f 16 -d \')
+        echo "$DATE,$TIME,$IP,$ACTION,$STATUS,$USER_AGENT,$SESSION,$ACTIVE"
 
     done
 }

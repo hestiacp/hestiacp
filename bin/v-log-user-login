@@ -7,9 +7,10 @@ user=$1
 ip=$2
 status=$3
 session_id=$4
+user_agent=$5
 
 active="yes"
-if [ $status = "failed" ]; then
+if [ "$status" = "failed" ]; then
     active="no"
 fi
 
@@ -21,7 +22,7 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER IP SESSION_ID'
+check_args '2' "$#" 'USER IP SESSION_ID USER_AGENT'
 is_format_valid 'user' 'ip'
 is_object_valid 'user' 'USER' "$user"
 
@@ -38,7 +39,7 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
-echo "DATE='$date' TIME='$time' IP='$ip' ACTION='login' STATUS='$status' SESSION='$session_id' ACTIVE='$active'" >> $USER_DATA/auth.log
+echo "DATE='$date' TIME='$time' IP='$ip' ACTION='login' STATUS='$status' USER_AGENT='$user_agent' SESSION='$session_id' ACTIVE='$active'" >> $USER_DATA/auth.log
 
 #----------------------------------------------------------#
 #                       Hestia                             #

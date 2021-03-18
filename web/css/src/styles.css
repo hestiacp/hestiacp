@@ -1145,10 +1145,6 @@ form#vstobjects .alert {
   text-transform: lowercase;
 }
 
-.l-stat__col span {
-  padding-left: 15px;
-}
-
 .l-stat__col-title {
   text-transform: uppercase;
   font-weight: 600;
@@ -2147,13 +2143,11 @@ body.mobile .l-unit-toolbar__col--right {
 .lang-tw .actions-panel__col a {
   font-size: 0.9rem;
   font-weight: normal;
-  line-height: 29px;
 }
 
 .lang-ar .actions-panel__col a {
   font-size: 0.9rem;
   font-weight: normal;
-  line-height: 31px;
 }
 
 .l-unit__col .actions-panel .fas {

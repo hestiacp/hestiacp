@@ -46,50 +46,214 @@
 
     <div class="l-separator"></div>
 
-    <div class="l-center units">
-      <div class="header table-header">     
-        <div class="l-unit__col l-unit__col--right">
-          <div class="clearfix l-unit__stat-col--left super-compact">&nbsp;</div>
-          <div class="clearfix l-unit__stat-col--left wide-2"><b><?php print _('Month');?></b></div>
-          <div class="clearfix l-unit__stat-col--left compact text-right"><b>&nbsp;</b></div>
-          <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><?php print _('IPs');?></b></div>
-          <div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-hdd" title="<?php print _('Disk');?>"></i></b></div>
-          <div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-exchange-alt" title="<?php print _('Bandwidth');?>"></i></b></div>
-          <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-globe-americas" title="<?php print _('Web Domains');?>"></i></b></div>
-          <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-link" title="<?php print _('Web Aliases');?>"></i></b></div>
-          <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-atlas" title="<?php print _('DNS Domains');?>"></i></b></div>
-          <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-globe" title="<?php print _('DNS Records');?>"></i></b></div>
-          <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-mail-bulk" title="<?php print _('Mail Domains');?>"></i></b></div>
-          <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-inbox" title="<?php print _('Mail Accounts');?>"></i></b></div>
-          <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-database" title="<?php print _('Databases');?>"></i></b></div>
-          <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-clock" title="<?php print _('Cron Jobs');?>"></i></b></div>
-          <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-file-archive" title="<?php print _('Backups');?>"></i></b></div>
-        </div>
-      </div>
-    
+    <div class="l-center units">   
      <?php
         foreach ($data as $key => $value) {
         ++$i;
       ?>
-        <div class="l-unit header animated fadeIn">
-          <div class="l-unit__col l-unit__col--right">
-            <div class="clearfix l-unit__stat-col--left super-compact"><i class="fas fa-calendar-alt status-icon dim"></i></div>
-            <div class="clearfix l-unit__stat-col--left wide-2"><b><?=_(strftime("%b", strtotime($key))).strftime(" %Y", strtotime($key))?></b></div>
-            <div class="clearfix l-unit__stat-col--left compact text-right"><b>&nbsp;</b></div>
-            <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><?=$data[$key]['IP_OWNED']?></b></div>
-            <div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
-            <div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_BANDWIDTH'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_BANDWIDTH'])?></span></div>
-            <div class="clearfix l-unit__stat-col--left text-center super-compact" title="<?=$data[$key]['U_WEB_DOMAINS']?> <?php print _('Web Domains');?>"><span class="jump-top badge gray raised"><b><?=$data[$key]['U_WEB_DOMAINS']?></b></span></div>
-            <div class="clearfix l-unit__stat-col--left text-center super-compact" title="<?=$data[$key]['U_WEB_ALIASES']?> <?php print _('Web Aliases');?>"><span class="jump-top badge gray raised"><b><?=$data[$key]['U_WEB_ALIASES']?></b></span></div>
-            <div class="clearfix l-unit__stat-col--left text-center super-compact" title="<?=$data[$key]['U_DNS_DOMAINS']?> <?php print _('DNS Domains');?>"><span class="jump-top badge gray raised"><b><?=$data[$key]['U_DNS_DOMAINS']?></b></span></div>
-            <div class="clearfix l-unit__stat-col--left text-center super-compact" title="<?=$data[$key]['U_DNS_RECORDS']?> <?php print _('DNS Records');?>"><span class="jump-top badge gray raised"><b><?=$data[$key]['U_DNS_RECORDS']?></b></span></div>
-            <div class="clearfix l-unit__stat-col--left text-center super-compact" title="<?=$data[$key]['U_MAIL_DOMAINS']?> <?php print _('Mail Domains');?>"><span class="jump-top badge gray raised"><b><?=$data[$key]['U_MAIL_DOMAINS']?></b></span></div>
-            <div class="clearfix l-unit__stat-col--left text-center super-compact" title="<?=$data[$key]['U_MAIL_ACCOUNTS']?> <?php print _('Mail Accounts');?>"><span class="jump-top badge gray raised"><b><?=$data[$key]['U_MAIL_ACCOUNTS']?></b></span></div>
-            <div class="clearfix l-unit__stat-col--left text-center super-compact" title="<?=$data[$key]['U_DATABASES']?> <?php print _('Databases');?>"><span class="jump-top badge gray raised"><b><?=$data[$key]['U_DATABASES']?></b></span></div>
-            <div class="clearfix l-unit__stat-col--left text-center super-compact" title="<?=$data[$key]['U_CRON_JOBS']?> <?php print _('Cron Jobs');?>"><span class="jump-top badge gray raised"><b><?=$data[$key]['U_CRON_JOBS']?></b></span></div>
-            <div class="clearfix l-unit__stat-col--left text-center super-compact" title="<?=$data[$key]['U_BACKUPS']?> <?php print _('Backups');?>"><span class="jump-top badge gray raised"><b><?=$data[$key]['U_BACKUPS']?></b></span></div>
-          </div>
+        <div class="header animated fadeIn">
+          <div class="step-top">
+            <div class="clearfix l-unit__stat-col--left super-compact">
+              <i class="fas fa-calendar-alt status-icon dim" style="font-size: 1.8rem;margin-top: 14px;margin-left: 16px;"></i>
+            </div>
+            <div class="l-unit__col l-unit__col--right">
+              <span class="page-title">
+                <?=_(strftime("%b", strtotime($key))).strftime(" %Y", strtotime($key))?> <? if (!empty($_GET['user'])) {?> <span class="text-small">(<? echo htmlspecialchars($_GET['user']) ?>)</span><? } ?>
+              </span>
+            </div>
+            <div class="l-separator"></div>
+            <table border="0" style="border-collapse: collapse; width: 100%; font-size:0.85rem;">
+              <tbody>
+                <tr>
+                  <td style="width: 33.3333%;padding-left:8px;padding-right:8px;padding-top: 4px;padding-bottom:4px;">
+                    <table>
+                      <tr>
+                        <td style="width:42px;text-align: center;font-size:1.2rem;">
+                          <i class="fas fa-exchange-alt status-icon dim" title="<?php print _('Bandwidth');?>"></i>
+                        </td>
+                        <td>  
+                          <b><?php print _('Bandwidth');?></b>:
+                        </td>
+                        <td style="padding-left:10px;padding-right:10px;">
+                          <?=humanize_usage_size($data[$key]['U_BANDWIDTH'])?> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_BANDWIDTH'])?></span>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td style="width: 33.3333%;padding-left:8px;padding-right:8px;padding-top: 4px;padding-bottom:4px;">
+                    <table>
+                      <tr>
+                        <td style="width:42px;text-align: center;font-size:1.2rem;">
+                          <i class="fas fa-hdd status-icon dim" title="<?php print _('Disk');?>"></i>
+                        </td>
+                        <td>
+                          <b><?php print _('Disk');?></b>:
+                        </td>
+                        <td style="padding-left:10px;padding-right:10px;">
+                          <?=humanize_usage_size($data[$key]['U_DISK'])?> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td style="width: 33.3333%;padding-left:8px;padding-right:8px;padding-top: 4px;padding-bottom:4px;">
+                    <table>
+                      <tr>
+                        <td style="width:42px;text-align: center;font-size:1.2rem;">
+                          <i class="fas fa-globe status-icon dim" title="<?php print _('DNS Records');?>"></i>
+                        </td>
+                        <td>
+                          <b><?php print _('IPs');?></b>:
+                        </td>
+                        <td style="padding-left:10px;padding-right:10px;">
+                          <?=$data[$key]['IP_OWNED']?>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width: 33.3333%;padding-left:8px;padding-right:8px;padding-top: 4px;padding-bottom:4px;">
+                    <table>
+                      <tr>
+                        <td style="width:42px;text-align: center;font-size:1.2rem;">
+                          <i class="fas fa-globe-americas status-icon dim" title="<?php print _('Web Domains');?>"></i>
+                        </td>
+                        <td>
+                          <b><?php print _('Web Domains');?></b>:
+                        </td>
+                        <td style="padding-left:10px;padding-right:10px;">
+                          <?=$data[$key]['U_WEB_DOMAINS']?>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td style="width: 33.3333%;padding-left:8px;padding-right:8px;padding-top: 4px;padding-bottom:4px;">
+                    <table>
+                      <tr>
+                        <td style="width:42px;text-align: center;font-size:1.2rem;">
+                          <i class="fas fa-link status-icon dim" title="<?php print _('Web Aliases');?>"></i>
+                        </td>
+                        <td>
+                          <b><?php print _('Web Aliases');?></b>:
+                        </td>
+                        <td style="padding-left:10px;padding-right:10px;">
+                          <?=$data[$key]['U_WEB_ALIASES']?></td>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td style="width: 33.3333%;padding-left:8px;padding-right:8px;padding-top: 4px;padding-bottom:4px;">
+                    <table>
+                      <td style="width:42px;text-align: center;font-size:1.2rem;">
+                        <i class="fas fa-atlas status-icon dim" title="<?php print _('DNS Domains');?>"></i>
+                      </td>
+                      <td>
+                        <b><?php print _('DNS Domains');?></b>:
+                      </td>
+                      <td style="padding-left:10px;padding-right:10px;">
+                        <?=$data[$key]['U_DNS_DOMAINS']?>
+                      </td>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width: 33.3333%;padding-left:8px;padding-right:8px;padding-top: 4px;padding-bottom:4px;">
+                    <table>
+                      <tr>
+                        <td style="width:42px;text-align: center;font-size:1.2rem;">
+                          <i class="fas fa-globe status-icon dim" title="<?php print _('DNS Records');?>"></i>
+                        </td>
+                        <td>
+                          <b><?php print _('DNS Records');?></b>:
+                        </td>
+                        <td style="padding-left:10px;padding-right:10px;">
+                          <?=$data[$key]['U_DNS_RECORDS']?>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td style="width: 33.3333%;padding-left:8px;padding-right:8px;padding-top: 4px;padding-bottom:4px;">
+                    <table>
+                      <tr>
+                        <td style="width:42px;text-align: center;font-size:1.2rem;">
+                          <i class="fas fa-mail-bulk status-icon dim" title="<?php print _('Mail Domains');?>"></i>
+                        </td>
+                        <td>
+                          <b><?php print _('Mail Domains');?></b>:
+                        </td>
+                        <td style="padding-left:10px;padding-right:10px;">
+                          <?=$data[$key]['U_MAIL_DOMAINS']?>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td style="width: 33.3333%;padding-left:8px;padding-right:8px;padding-top: 4px;padding-bottom:4px;">
+                    <table>
+                      <tr>
+                        <td style="width:42px;text-align: center;font-size:1.2rem;">
+                          <i class="fas fa-inbox status-icon dim" title="<?php print _('Mail Accounts');?>"></i>
+                        </td>
+                        <td>
+                          <b><?php print _('Mail Accounts');?></b>:
+                        </td>
+                        <td style="padding-left:10px;padding-right:10px;">
+                          <?=$data[$key]['U_MAIL_ACCOUNTS']?>
+                        </td>
+                      </tr>
+                    </table> 
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width: 33.3333%;padding-left:8px;padding-right:8px;padding-top: 4px;padding-bottom:4px;">
+                    <table>
+                      <tr>
+                        <td style="width:42px;text-align: center;font-size:1.2rem;">
+                          <i class="fas fa-database status-icon dim" title="<?php print _('Databases');?>"></i>
+                        </td>
+                        <td>
+                          <b><?php print _('Databases');?></b>:
+                        </td>
+                        <td style="padding-left:10px;padding-right:10px;">
+                          <?=$data[$key]['U_DATABASES']?>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td style="width: 33.3333%;padding-left:8px;padding-right:8px;padding-top: 4px;padding-bottom:4px;">
+                    <table>
+                      <tr>
+                        <td style="width:42px;text-align: center;font-size:1.2rem;">
+                          <i class="fas fa-clock status-icon dim" title="<?php print _('Cron Jobs');?>"></i>
+                        </td>
+                        <td>
+                          <b><?php print _('Cron Jobs');?></b>:
+                        </td>
+                        <td style="padding-left:10px;padding-right:10px;">
+                          <?=$data[$key]['U_CRON_JOBS']?>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td style="width: 33.3333%;padding-left:8px;padding-right:8px;padding-top: 4px;padding-bottom:4px;">
+                    <table>
+                      <tr>
+                        <td style="width:42px;text-align: center;font-size:1.2rem;">
+                          <i class="fas fa-file-archive status-icon dim" title="<?php print _('Backups');?>"></i>
+                        </td>
+                        <td>
+                          <b><?php print _('Backups');?></b>: 
+                        </td>
+                        <td style="padding-left:10px;padding-right:10px;">
+                          <?=$data[$key]['U_BACKUPS']?>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
         </div>
+      </div>
       <?}?>
     </div>
 

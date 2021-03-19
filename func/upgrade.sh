@@ -675,7 +675,7 @@ upgrade_rainloop(){
 }
 
 disable_api(){
-    if [ "API" = "no" ]; then
+    if [ "$API" = "no" ]; then
         echo "[ ! ] Disable Api..."
         sed -i 's|//die("Error: Disabled");|die("Error: Disabled");|g' $HESTIA/web/api/index.php
     fi

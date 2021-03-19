@@ -8,7 +8,6 @@ All notable changes to this project will be documented in this file.
 ### Bugfixes
 - Fixed xss vulnerability in v-add-sys-ip and user history log (thanks **@numanturle**)
 - Fixed remote execution possibility when deleting ssh key (thanks **@numanturle**)
-- Updated phpMyAdmin to v5.1.0
 
 ## [1.3.3] - Service Release
 ### Features

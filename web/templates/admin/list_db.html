@@ -1,7 +1,11 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a href="/add/db/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Database')?></a>
+          <? if (($_SESSION['user'] === 'admin') && (!isset($_SESSION['look']))) {?>
+            <!-- Hide item creation button from 'admin' account unless impersonating another user -->
+          <? } else {?>
+            <a href="/add/db/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Database')?></a>
+          <? } ?>
           <?
             $mysql = 0;
             $pgsql = 0;

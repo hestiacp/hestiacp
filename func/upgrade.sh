@@ -650,7 +650,7 @@ upgrade_roundcube(){
         if [ ! -z "$(echo "$WEBMAIL_SYSTEM" | grep -w 'roundcube')" ]; then
             rc_version=$(cat /var/lib/roundcube/index.php | grep -o -E '[0-9].[0-9].[0-9]+' | head -1);
             if [ "$rc_version" == "$rc_v" ]; then
-                echo "[ * ] Upgrading RoundCube to version v$rc_v..."
+                echo "[ * ] Upgrading Roundcube to version v$rc_v..."
                 $HESTIA/bin/v-add-sys-roundcube
             fi
         fi
@@ -662,7 +662,7 @@ upgrade_rainloop(){
         if [ ! -z "$(echo "$WEBMAIL_SYSTEM" | grep -w 'rainloop')" ]; then
             rc_version=$(cat /var/lib/rainloop/data/VERSION);
             if [ "$rc_version" == "$rc_v" ]; then
-                echo "[ * ] Upgrading rainloop to version v$rc_v..."
+                echo "[ * ] Upgrading Rainloop to version v$rl_v..."
                 $HESTIA/bin/v-add-sys-rainloop
             fi
         fi

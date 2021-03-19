@@ -13,6 +13,7 @@ fi
 user='admin'
 fm_error='no'
 source $HESTIA/func/main.sh
+source $HESTIA/install/upgrade/upgrade.conf
 
 if [ -z "$HOMEDIR" ] || [ -z "$HESTIA_INSTALL_DIR" ]; then
     echo "Error: Hestia environment vars not present"
@@ -21,9 +22,8 @@ fi
 
 FM_INSTALL_DIR="$HESTIA/web/fm"
 
-FM_V="7.4.1"
-FM_FILE="filegator_v${FM_V}.zip"
-FM_URL="https://github.com/filegator/filegator/releases/download/v${FM_V}/${FM_FILE}"
+FM_FILE="filegator_v${fm_v}.zip"
+FM_URL="https://github.com/filegator/filegator/releases/download/v${fm_v}/${FM_FILE}"
 
 
 COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"

@@ -7,32 +7,24 @@
             <a href="/add/db/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Database')?></a>
           <? } ?>
           <?
-            $mysql = 0;
-            $pgsql = 0;
-
             list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
 
-            foreach ($data as $key => $value) {
-              if ($data[$key]['TYPE'] == 'mysql'){
-                $mysql = 1;
-                $db_myadmin_link = "//".$http_host."/phpmyadmin/";
-                if (!empty($_SESSION['DB_PMA_ALIAS']))
-                  $db_myadmin_link = "//".$http_host."/".$_SESSION['DB_PMA_ALIAS'];
-              }
-              if ($data[$key]['TYPE'] == 'pgsql'){
-                $pgsql = 1;
-                $db_pgadmin_link = "//".$http_host."/phppgadmin/";
-                if (!empty($_SESSION['DB_PGA_ALIAS']))
-                  $db_pgadmin_link = "//".$http_host."/".$_SESSION['DB_PGA_ALIAS'];
-              }
+            $db_myadmin_link = "//".$http_host."/phpmyadmin/";
+            $db_pgadmin_link = "//".$http_host."/phppgadmin/";
+
+            if (!empty($_SESSION['DB_PMA_ALIAS'])) {
+              $db_myadmin_link = "//".$http_host."/".$_SESSION['DB_PMA_ALIAS']."/";
             }
-            if($mysql){
-              echo '<a class="ui-button cancel" dir="ltr" href="'.$db_myadmin_link.'" target="_blank"><i class="fas fa-database status-icon orange"></i>phpMyAdmin</a>';
-            }
-            if($pgsql){
-              echo '<a class="ui-button cancel" dir="ltr" href="'.$db_pgadmin_link.'" target="_blank"><i class="fas fa-database status-icon orange"></i>phpPgAdmin</a>';
+            if (!empty($_SESSION['DB_PGA_ALIAS'])) {
+              $db_pgadmin_link = "//".$http_host."/".$_SESSION['DB_PGA_ALIAS']."/";
             }
           ?>
+          <? if (($_SESSION['DB_SYSTEM'] === 'mysql') || ($_SESSION['DB_SYSTEM'] === 'mysql,pgsql') || ($_SESSION['DB_SYSTEM'] === 'pgsql,mysql')) {?>
+            <a class="ui-button cancel" dir="ltr" href="<?php echo $db_myadmin_link; ?>" target="_blank"><i class="fas fa-database status-icon orange"></i>phpMyAdmin</a>
+          <? } ?>
+          <? if (($_SESSION['DB_SYSTEM'] === 'pgsql') || ($_SESSION['DB_SYSTEM'] === 'mysql,pgsql') || ($_SESSION['DB_SYSTEM'] === 'pgsql,mysql')) {?>
+            <a class="ui-button cancel" dir="ltr" href="<?php echo $db_pgadmin_link; ?>" target="_blank"><i class="fas fa-database status-icon orange"></i>phpPgAdmin</a>
+          <? } ?>
         </div>
         <ul class="context-menu sort-order animated fadeIn" style="display:none;">
           <li entity="sort-date" sort_as_int="1"><span class="name active"><?=_('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>

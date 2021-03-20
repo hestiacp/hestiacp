@@ -90,16 +90,21 @@ sort-star="<? if($_SESSION['favourites']['CRON'][$key] == 1) echo '1'; else echo
         <div class="clearfix l-unit__stat-col--left super-compact">
           <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="job[]" value="<?php echo $key ?>">
         </div>
-
-        <div class="clearfix l-unit__stat-col--left wide-5 truncate"><b><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Cron Job')?>"><?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?></a></b> </div>
+        <div class="clearfix l-unit__stat-col--left wide-5 truncate">
+        <? if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look'])) && ($_SESSION['look'] === 'admin')) {?>
+          <b><?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?></b> 
+        <? } else { ?>
+          <b><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Cron Job')?>"><?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?></a></b> 
+        <? } ?>  
+        </div>
         <!-- START QUICK ACTION TOOLBAR AREA -->
         <div class="clearfix l-unit__stat-col--left compact-2 text-right">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
               <? if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look'])) && ($_SESSION['look'] === 'admin')) {?>
-                <!-- Restrict other administrators from deleting or suspending 'admin' user cron jobs -->
-                <div class="actions-panel__col actions-panel__download shortcut-enter" key-action="href"><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Cron Job')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+                <!-- Restrict other administrators from editing, deleting, or suspending 'admin' user cron jobs -->
               <? } else { ?>
+                <div class="actions-panel__col actions-panel__download shortcut-enter" key-action="href"><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Cron Job')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
                 <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
                   <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=_($spnd_action)?>">
                     <i class="fas <?=$spnd_icon?> status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>

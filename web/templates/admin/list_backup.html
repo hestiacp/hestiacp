@@ -1,10 +1,10 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a href="/schedule/backup/?token=<?=$_SESSION['token']?>" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Create Backup')?></a>
           <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
-            <!-- Restrict ability to edit backup exclusions when impersonating 'admin' account -->
+            <!-- Restrict ability to create or edit backups or exclusions when impersonating 'admin' account -->
           <? } else { ?>
+            <a href="/schedule/backup/?token=<?=$_SESSION['token']?>" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Create Backup')?></a>
             <a href="/list/backup/exclusions/" class="ui-button cancel" dir="ltr"><i class="fas fa-folder-minus status-icon orange"></i><?=_('backup exclusions')?></a>
           <? } ?> 
         </div>
@@ -18,17 +18,21 @@
                   <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value=""><i class="fas fa-search"></i></button>
                 </form>
               </td>
-              <td>
-                <form action="/bulk/backup/" method="post" id="objects">
-                <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-                <div class="l-select">
-                  <select name="action" id="">
-                    <option value=""><?=_('apply to selected')?></option>
-                    <option value="delete"><?php print _('delete') ?></option>
-                  </select>
-                </div>
-                <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
-              </td>
+              <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
+                <!-- Hide bulk actions for domain items when impersonating 'admin' account-->
+              <? } else { ?>
+                <td>
+                  <form action="/bulk/backup/" method="post" id="objects">
+                  <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+                  <div class="l-select">
+                    <select name="action" id="">
+                      <option value=""><?=_('apply to selected')?></option>
+                      <option value="delete"><?php print _('delete') ?></option>
+                    </select>
+                  </div>
+                  <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
+                </td>
+              <? } ?>
             </tr>
           </table>
         </div>
@@ -78,16 +82,23 @@
                   <div class="clearfix l-unit__stat-col--left super-compact">
                     <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="backup[]" value="<?php echo $key ?>">
                   </div>
-                  <div class="clearfix l-unit__stat-col--left wide-3 truncate"><b><a href="/list/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('restore')?>"><?=$key?></a></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide-3 truncate">
+                    <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
+                      <b><?=$key?></b>
+                    <? } else { ?>
+                      <b><a href="/list/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('restore')?>"><?=$key?></a></b>
+                    <? } ?>
+                  </div>
                   <!-- START QUICK ACTION TOOLBAR AREA -->
                   <div class="clearfix l-unit__stat-col--left compact-4 text-right">
                     <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                       <div class="actions-panel clearfix">
-                        <div class="actions-panel__col actions-panel__download shortcut-d" key-action="href"><a href="/download/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('download')?>"><i class="fas fa-file-download status-icon lightblue status-icon dim"></i></a></div>
-                        <div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href"><a href="/list/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('restore')?>"><i class="fas fa-undo status-icon green status-icon dim"></i></a></div>
                         <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
-                          <!-- Restrict ability to delete backups when impersonating 'admin' account -->
+                          <!-- Restrict ability to restore or delete backups when impersonating 'admin' account -->
+                          &nbsp;
                         <? } else { ?>
+                          <div class="actions-panel__col actions-panel__download shortcut-d" key-action="href"><a href="/download/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('download')?>"><i class="fas fa-file-download status-icon lightblue status-icon dim"></i></a></div>
+                          <div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href"><a href="/list/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('restore')?>"><i class="fas fa-undo status-icon green status-icon dim"></i></a></div>
                           <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                             <a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('delete')?>">
                               <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>

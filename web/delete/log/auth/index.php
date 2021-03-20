@@ -28,7 +28,11 @@ $user_agent = $_SERVER['HTTP_USER_AGENT'];
 $v_user_agent = escapeshellarg($user_agent);
     
 $v_session_id = escapeshellarg($_SESSION['token']);
-exec(HESTIA_CMD."v-log-user-login ".$v_username." ".$v_ip." success ".$v_session_id." ".$v_user_agent, $output, $return_var);
+
+// Add current user session back to log unless impersonating another user
+if (!isset($_SESSION['look'])) {
+    exec(HESTIA_CMD."v-log-user-login ".$v_username." ".$v_ip." success ".$v_session_id." ".$v_user_agent, $output, $return_var);
+}
 
 // Flush session messages
 unset($_SESSION['error_msg']);

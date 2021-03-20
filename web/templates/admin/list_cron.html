@@ -2,7 +2,7 @@
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
           <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
-            <!-- Restrict ability to add cron jobs or disable/enable cron job notifications when impersonating 'admin' account -->
+            <!-- Hide item creation button when impersonating 'admin' account -->
           <? } else { ?>
             <a href="/add/cron/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Cron Job')?></a>
             <? if($panel[$user]['CRON_REPORTS'] == 'yes') { ?>
@@ -29,21 +29,25 @@
                   <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value=""><i class="fas fa-search"></i></button>
                 </form>
               </td>
-              <td class="">
-                <form action="/bulk/cron/" method="post" id="objects">
-                <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-                <div class="l-select">
-                  <select name="action" id="">
-                    <option value=""><?=_('apply to selected')?></option>
-                    <? if($panel[$user]['CRON_REPORTS'] == 'yes') echo '<option value="delete-cron-reports">'._('turn off notifications').'</option>'; ?>
-                    <? if($panel[$user]['CRON_REPORTS'] == 'no') echo '<option value="add-cron-reports">'._('turn on notifications').'</option>'; ?>
-                    <option value="suspend"><?=_('suspend')?></option>
-                    <option value="unsuspend"><?=_('unsuspend')?></option>
-                    <option value="delete"><?=_('delete')?></option>
-                  </select>
-                </div>
-                <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
-              </td>
+              <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
+                <!-- Hide bulk actions for domain items when impersonating 'admin' account-->
+              <? } else { ?>
+                <td class="">
+                  <form action="/bulk/cron/" method="post" id="objects">
+                  <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+                  <div class="l-select">
+                    <select name="action" id="">
+                      <option value=""><?=_('apply to selected')?></option>
+                      <? if($panel[$user]['CRON_REPORTS'] == 'yes') echo '<option value="delete-cron-reports">'._('turn off notifications').'</option>'; ?>
+                      <? if($panel[$user]['CRON_REPORTS'] == 'no') echo '<option value="add-cron-reports">'._('turn on notifications').'</option>'; ?>
+                      <option value="suspend"><?=_('suspend')?></option>
+                      <option value="unsuspend"><?=_('unsuspend')?></option>
+                      <option value="delete"><?=_('delete')?></option>
+                    </select>
+                  </div>
+                  <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
+                </td>
+              <? } ?>
             </tr>
           </table>
         </div>
@@ -103,6 +107,7 @@ sort-star="<? if($_SESSION['favourites']['CRON'][$key] == 1) echo '1'; else echo
             <div class="actions-panel clearfix">
               <? if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look'])) && ($_SESSION['look'] === 'admin')) {?>
                 <!-- Restrict other administrators from editing, deleting, or suspending 'admin' user cron jobs -->
+                &nbsp;
               <? } else { ?>
                 <div class="actions-panel__col actions-panel__download shortcut-enter" key-action="href"><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Cron Job')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
                 <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">

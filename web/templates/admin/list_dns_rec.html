@@ -2,8 +2,12 @@
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
           <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/dns/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back')?></a>
-          <a href="/add/dns/?domain=<?=htmlentities($_GET['domain'])?>" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Add Record')?></a>
-          <a href="/edit/dns/?domain=<?=htmlentities($_GET['domain'])?>" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-pencil-alt status-icon blue"></i> <?=_('Editing DNS Domain')?></a>
+          <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
+            <!-- Hide item creation button when impersonating 'admin' account -->
+          <? } else { ?>
+            <a href="/add/dns/?domain=<?=htmlentities($_GET['domain'])?>" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Add Record')?></a>
+            <a href="/edit/dns/?domain=<?=htmlentities($_GET['domain'])?>" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-pencil-alt status-icon blue"></i> <?=_('Editing DNS Domain')?></a>
+          <? } ?>
         </div>
         <div class="l-sort-toolbar clearfix">
           <table>
@@ -15,20 +19,24 @@
                   <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value=""><i class="fas fa-search"></i></button>
                 </form>
               </td>
-              <td>
-                <form action="/bulk/dns/" method="post" id="objects">
-                <input type="hidden" name="domain" value="<?=htmlentities($_GET['domain'])?>" />
-                <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-                <div class="l-select">
-                  <select name="action" id="">
-                    <option value=""><?=_('apply to selected')?></option>
-                    <option value="suspend"><?php print _('suspend');?></option>
-                    <option value="unsuspend"><?php print _('unsuspend');?></option>
-                    <option value="delete"><?php print _('delete');?></option>
-                  </select>
-                </div>
-                <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
-              </td>
+              <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
+                <!-- Hide bulk actions for domain items when impersonating 'admin' account-->
+              <? } else { ?>
+                <td>
+                  <form action="/bulk/dns/" method="post" id="objects">
+                  <input type="hidden" name="domain" value="<?=htmlentities($_GET['domain'])?>" />
+                  <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+                  <div class="l-select">
+                    <select name="action" id="">
+                      <option value=""><?=_('apply to selected')?></option>
+                      <option value="suspend"><?php print _('suspend');?></option>
+                      <option value="unsuspend"><?php print _('unsuspend');?></option>
+                      <option value="delete"><?php print _('delete');?></option>
+                    </select>
+                  </div>
+                  <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
+                </td>
+              <? } ?>
             </tr>
           </table>
         </div>
@@ -64,21 +72,31 @@ v_unit_id="<?=$key?>" v_section="dns_rec">
             <div class="clearfix l-unit__stat-col--left super-compact">
               <input id="check<?=$data[$key]['ID']?>" class="ch-toggle" type="checkbox" name="record[]" value="<?=$data[$key]['ID']?>">
             </div>
-            <div class="clearfix l-unit__stat-col--left small truncate"><b><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing DNS Record').': '.htmlspecialchars($data[$key]['RECORD'])?>"><? echo substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?></a></b></div>
+            <div class="clearfix l-unit__stat-col--left small truncate">
+              <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
+                <b><? echo substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?></b></div>
+              <? } else { ?>
+                <b><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing DNS Record').': '.htmlspecialchars($data[$key]['RECORD'])?>"><? echo substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?></a></b></div>
+              <? } ?>
             <!-- START QUICK ACTION TOOLBAR AREA -->
             <div class="clearfix l-unit__stat-col--left super-compact text-right">
               <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                 <div class="actions-panel clearfix">
-                  <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing DNS Record')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
-                  <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-                    <a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('delete')?>">
-                      <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
-                      <input type="hidden" name="delete_url" value="/delete/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" />
-                      <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=_('Confirmation')?>">
-                        <p class="confirmation"><?=sprintf(_('DELETE_RECORD_CONFIRMATION'),$key)?></p>
-                      </div>
-                    </a>
-                  </div>
+                  <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
+                    <!-- Restrict editing of DNS records when impersonating 'admin' account -->
+                    &nbsp;
+                  <? } else { ?>
+                    <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing DNS Record')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+                    <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+                      <a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('delete')?>">
+                        <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
+                        <input type="hidden" name="delete_url" value="/delete/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" />
+                        <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=_('Confirmation')?>">
+                          <p class="confirmation"><?=sprintf(_('DELETE_RECORD_CONFIRMATION'),$key)?></p>
+                        </div>
+                      </a>
+                    </div>
+                  <? } ?>
                 </div>
               </div>
             </div>

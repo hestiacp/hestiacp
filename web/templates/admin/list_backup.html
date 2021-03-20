@@ -2,7 +2,7 @@
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
           <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
-            <!-- Restrict ability to create or edit backups or exclusions when impersonating 'admin' account -->
+            <!-- Hide item creation button when impersonating 'admin' account -->
           <? } else { ?>
             <a href="/schedule/backup/?token=<?=$_SESSION['token']?>" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Create Backup')?></a>
             <a href="/list/backup/exclusions/" class="ui-button cancel" dir="ltr"><i class="fas fa-folder-minus status-icon orange"></i><?=_('backup exclusions')?></a>

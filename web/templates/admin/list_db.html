@@ -1,29 +1,29 @@
+<?
+  list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
+
+  $db_myadmin_link = "//".$http_host."/phpmyadmin/";
+  $db_pgadmin_link = "//".$http_host."/phppgadmin/";
+
+  if (!empty($_SESSION['DB_PMA_ALIAS'])) {
+    $db_myadmin_link = "//".$http_host."/".$_SESSION['DB_PMA_ALIAS']."/";
+  }
+  if (!empty($_SESSION['DB_PGA_ALIAS'])) {
+    $db_pgadmin_link = "//".$http_host."/".$_SESSION['DB_PGA_ALIAS']."/";
+  }
+?>
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <? if (($_SESSION['user'] === 'admin') && (!isset($_SESSION['look'])) || ($_SESSION['look'] === 'admin')) {?>
-            <!-- Hide item creation button from 'admin' account unless impersonating another user -->
+          <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
+            <!-- Hide item creation button when impersonating 'admin' account -->
           <? } else {?>
             <a href="/add/db/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Database')?></a>
-          <? } ?>
-          <?
-            list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
-
-            $db_myadmin_link = "//".$http_host."/phpmyadmin/";
-            $db_pgadmin_link = "//".$http_host."/phppgadmin/";
-
-            if (!empty($_SESSION['DB_PMA_ALIAS'])) {
-              $db_myadmin_link = "//".$http_host."/".$_SESSION['DB_PMA_ALIAS']."/";
-            }
-            if (!empty($_SESSION['DB_PGA_ALIAS'])) {
-              $db_pgadmin_link = "//".$http_host."/".$_SESSION['DB_PGA_ALIAS']."/";
-            }
-          ?>
-          <? if (($_SESSION['DB_SYSTEM'] === 'mysql') || ($_SESSION['DB_SYSTEM'] === 'mysql,pgsql') || ($_SESSION['DB_SYSTEM'] === 'pgsql,mysql')) {?>
-            <a class="ui-button cancel" dir="ltr" href="<?php echo $db_myadmin_link; ?>" target="_blank"><i class="fas fa-database status-icon orange"></i>phpMyAdmin</a>
-          <? } ?>
-          <? if (($_SESSION['DB_SYSTEM'] === 'pgsql') || ($_SESSION['DB_SYSTEM'] === 'mysql,pgsql') || ($_SESSION['DB_SYSTEM'] === 'pgsql,mysql')) {?>
-            <a class="ui-button cancel" dir="ltr" href="<?php echo $db_pgadmin_link; ?>" target="_blank"><i class="fas fa-database status-icon orange"></i>phpPgAdmin</a>
+            <? if (($_SESSION['DB_SYSTEM'] === 'mysql') || ($_SESSION['DB_SYSTEM'] === 'mysql,pgsql') || ($_SESSION['DB_SYSTEM'] === 'pgsql,mysql')) {?>
+              <a class="ui-button cancel" dir="ltr" href="<?php echo $db_myadmin_link; ?>" target="_blank"><i class="fas fa-database status-icon orange"></i>phpMyAdmin</a>
+            <? } ?>
+            <? if (($_SESSION['DB_SYSTEM'] === 'pgsql') || ($_SESSION['DB_SYSTEM'] === 'mysql,pgsql') || ($_SESSION['DB_SYSTEM'] === 'pgsql,mysql')) {?>
+              <a class="ui-button cancel" dir="ltr" href="<?php echo $db_pgadmin_link; ?>" target="_blank"><i class="fas fa-database status-icon orange"></i>phpPgAdmin</a>
+            <? } ?>
           <? } ?>
         </div>
         <ul class="context-menu sort-order animated fadeIn" style="display:none;">

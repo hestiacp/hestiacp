@@ -7,7 +7,7 @@
         <div class="l-unit-toolbar__buttonstrip">
           <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/mail/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back')?></a>
           <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
-            <!-- Restrict ability to create or edit domain items when impersonating 'admin' account -->
+            <!-- Hide item creation button when impersonating 'admin' account -->
           <? } else { ?>
             <a href="/add/mail/?domain=<?=htmlentities($_GET['domain'])?>" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Mail Account')?></a>
             <a href="/edit/mail/?domain=<?=htmlentities($_GET['domain'])?>" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-pencil-alt status-icon blue"></i><?=_('Editing Mail Domain')?></a>
@@ -103,7 +103,7 @@ sort-star="<? if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] =
                 <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
                   <b><?=$key."@".$_GET['domain']?></b>
                 <? } else { ?>
-                  <b><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Mail Account')?>: <?=$key?>@<?=htmlspecialchars($_GET['domain'])?>"><?=$key."@".$_GET['domain']?></a></b></div>
+                  <b><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Mail Account')?>: <?=$key?>@<?=htmlspecialchars($_GET['domain'])?>"><?=$key."@".$_GET['domain']?></a></b>
                 <? } ?>
               </div>
               <!-- START QUICK ACTION TOOLBAR AREA -->
@@ -129,15 +129,15 @@ sort-star="<? if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] =
                       <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                         <a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('delete')?>">
                           <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
-                            <input type="hidden" name="delete_url" value="/delete/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" />
-                            <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=_('Confirmation')?>">
-                              <p class="confirmation"><?=sprintf(_('DELETE_MAIL_ACCOUNT_CONFIRMATION'),$key)?></p>
-                            </div>
+                          <input type="hidden" name="delete_url" value="/delete/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" />
+                          <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=_('Confirmation')?>">
+                            <p class="confirmation"><?=sprintf(_('DELETE_MAIL_ACCOUNT_CONFIRMATION'),$key)?></p>
+                          </div>
                         </a>
                       </div>
                     <? } ?>
-                </div>
-              </div>
+                  </div>
+            </div>
               <!-- END QUICK ACTION TOOLBAR AREA -->
             </div>
             

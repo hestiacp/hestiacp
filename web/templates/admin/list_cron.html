@@ -2,7 +2,7 @@
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
           <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
-            <!-- Restrict ability to add cron jobs or disable/enable cron job notifications when impersonating 'admin' account -->
+            <!-- Hide item creation button when impersonating 'admin' account -->
           <? } else { ?>
             <a href="/add/cron/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Cron Job')?></a>
             <? if($panel[$user]['CRON_REPORTS'] == 'yes') { ?>

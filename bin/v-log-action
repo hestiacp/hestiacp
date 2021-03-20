@@ -1,12 +1,14 @@
 #!/bin/bash
-# info: adds an event to the appropriate log
+# info: adds action event to user or system log
 # options: LOG_TYPE USER
 
 # Argument definition
 log_type=$1
 event_type=$2
 user=$3
-message=$4
+event_details=${4-$3}
+
+echo $event_details
 
 # Includes
 source $HESTIA/func/main.sh
@@ -16,32 +18,28 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '4' "$#" 'LOG_TYPE EVENT_TYPE USER MESSAGE'
-is_format_valid 'user' 'ip'
-is_object_valid 'user' 'USER' "$user"
-
 # Generating timestamp
 time_n_date=$(date +'%T %F')
 time=$(echo "$time_n_date" |cut -f 1 -d \ )
 date=$(echo "$time_n_date" |cut -f 2 -d \ )
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-
 # Provide context switch for different log types
 if [ "$log_type" = "user" ]; then
-    log_history "$message" '' "$user"
+    check_args '4' "$#" 'LOG_TYPE EVENT_TYPE USER MESSAGE'
+    is_object_valid 'user' 'USER' "$user"
+    log_history "'$event_details" '' "$user"
     exit
 fi
 
 if [ "$log_type" = "system" ]; then
-    log_history "$message" '' 'admin'
+    check_args '3' "$#" 'LOG_TYPE EVENT_TYPE MESSAGE'
+    log_history "$event_details" '' 'admin'
     exit
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

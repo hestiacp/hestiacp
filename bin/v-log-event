@@ -31,7 +31,16 @@ date=$(echo "$time_n_date" |cut -f 2 -d \ )
 #----------------------------------------------------------#
 
 
+# Provide context switch for different log types
+if [ "$log_type" = "user" ]; then
+    log_history "$message" '' "$user"
+    exit
+fi
 
+if [ "$log_type" = "system" ]; then
+    log_history "$message" '' 'admin'
+    exit
+fi
 
 
 #----------------------------------------------------------#

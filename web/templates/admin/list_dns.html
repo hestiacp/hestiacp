@@ -1,7 +1,7 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <? if (($_SESSION['user'] === 'admin') && (!isset($_SESSION['look']))) {?>
+          <? if (($_SESSION['user'] === 'admin') && (!isset($_SESSION['look'])) || ($_SESSION['look'] === 'admin')) {?>
             <!-- Hide item creation button from 'admin' account unless impersonating another user -->
           <? } else {?>
             <a href="/add/dns/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add DNS Domain')?></a>

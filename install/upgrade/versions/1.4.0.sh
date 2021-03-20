@@ -110,3 +110,14 @@ if [ -f /etc/apt/sources.list.d/postgresql.list ]; then
     echo "[ * ] Updating PostgreSQL repository..."
     sed -i 's|deb https://apt.postgresql.org/pub/repos/apt/|deb [arch=amd64] https://apt.postgresql.org/pub/repos/apt/|g' /etc/apt/sources.list.d/postgresql.list
 fi
+
+
+##### COMMANDS FOR V1.5.X
+
+# Back up default package and install latest version
+if [ -d $HESTIA/data/packages/ ]; then
+    echo "[ * ] Migrating legacy default package for all users..."
+    $HESTIA/bin/v-rename-user-package default custom >/dev/null 2>&1
+    echo "[ * ] Replacing default package..."
+    cp -f $HESTIA_INSTALL_DIR/packages/default.pkg $HESTIA/data/packages/
+fi

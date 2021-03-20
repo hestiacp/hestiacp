@@ -1,11 +1,15 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a href="/add/cron/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Cron Job')?></a>
-          <? if($panel[$user]['CRON_REPORTS'] == 'yes') { ?>
-            <a class="ui-button cancel" dir="ltr" href="/delete/cron/reports/?token='.$_SESSION['token'].'"><i class="fas fa-toggle-off status-icon green"></i><?=_('turn off notifications')?></a>
+          <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
+            <!-- Restrict ability to add cron jobs or disable/enable cron job notifications when impersonating 'admin' account -->
           <? } else { ?>
-            <a class="ui-button cancel" dir="ltr" href="/add/cron/reports/?token='.$_SESSION['token'].'"><i class="fas fa-toggle-off status-icon grey"></i><?=_('turn on notifications')?></a>
+            <a href="/add/cron/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Cron Job')?></a>
+            <? if($panel[$user]['CRON_REPORTS'] == 'yes') { ?>
+              <a class="ui-button cancel" dir="ltr" href="/delete/cron/reports/?token='.$_SESSION['token'].'"><i class="fas fa-toggle-off status-icon green"></i><?=_('turn off notifications')?></a>
+            <? } else { ?>
+              <a class="ui-button cancel" dir="ltr" href="/add/cron/reports/?token='.$_SESSION['token'].'"><i class="fas fa-toggle-off status-icon grey"></i><?=_('turn on notifications')?></a>
+            <? } ?> 
           <? } ?> 
         </div>
         <ul class="context-menu sort-order animated fadeIn" style="display:none;">

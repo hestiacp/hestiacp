@@ -1,0 +1,41 @@
+#!/bin/bash
+# info: adds an event to the appropriate log
+# options: LOG_TYPE USER
+
+# Argument definition
+log_type=$1
+event_type=$2
+user=$3
+message=$4
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '4' "$#" 'LOG_TYPE EVENT_TYPE USER MESSAGE'
+is_format_valid 'user' 'ip'
+is_object_valid 'user' 'USER' "$user"
+
+# Generating timestamp
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" |cut -f 1 -d \ )
+date=$(echo "$time_n_date" |cut -f 2 -d \ )
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+
+
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

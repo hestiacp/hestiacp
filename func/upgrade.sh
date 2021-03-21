@@ -709,6 +709,7 @@ upgrade_rebuild_users() {
             echo "[ * ] Rebuilding user accounts and domains, this may take a few minutes..."
         fi
         for user in $($HESTIA/bin/v-list-sys-users plain); do
+        export restart="no"
             if [ "$DEBUG_MODE" = "true" ]; then
                 echo "      - $user:"
             else
@@ -759,6 +760,7 @@ upgrade_restart_services() {
 
     if [ "$UPGRADE_RESTART_SERVICES" = "true" ]; then
         echo "[ * ] Restarting services..."
+        export restart="yes"
         sleep 2
         if [ ! -z "$MAIL_SYSTEM" ]; then
             if [ "$DEBUG_MODE" = "true" ]; then
@@ -789,7 +791,7 @@ upgrade_restart_services() {
                 if [ "$DEBUG_MODE" = "true" ]; then
                     echo "      - php$v-fpm"
                 fi
-                $BIN/v-restart-service php$v-fpm $restart
+                $BIN/v-restart-service php$v-fpm
             fi
         done
         if [ ! -z "$FTP_SYSTEM" ]; then

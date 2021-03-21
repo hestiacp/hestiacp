@@ -58,7 +58,7 @@ if [ ! -z "$WEBMAIL_ALIAS" ]; then
 
         if [ "$dns_domain" = "$domain" ]; then
             if [ ! -z "$webmail_record" ]; then
-                $BIN/v-delete-dns-record $user $domain $webmail_record
+                $BIN/v-delete-dns-record $user $domain $webmail_record $restart
             fi
         fi
     fi

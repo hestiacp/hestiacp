@@ -254,6 +254,7 @@ upgrade_complete_message_log() {
     echo "https://github.com/hestiacp/hestiacp/issues                                  "
     echo "============================================================================="
     echo 
+    $BIN/v-log-action "system" "Info" "Updates" "Update installed (Version: $new_version)."
 }
 
 upgrade_cleanup_message() {
@@ -412,6 +413,8 @@ upgrade_init_logging() {
 
     # Create log file
     touch $LOG
+
+    $BIN/v-log-action "system" "Info" "Updates" "Started update installation (Latest: $new_version, Previous: $VERSION)."
 }
 
 upgrade_start_backup() {

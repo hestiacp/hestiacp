@@ -678,6 +678,7 @@ disable_api(){
     if [ "$API" = "no" ]; then
         echo "[ ! ] Disable Api..."
         sed -i 's|//die("Error: Disabled");|die("Error: Disabled");|g' $HESTIA/web/api/index.php
+        $HESTIA/bin/v-change-sys-config-value "API_ALLOWED_IP" ""
     fi
 }
 upgrade_rebuild_web_templates() {

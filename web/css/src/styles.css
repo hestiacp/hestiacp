@@ -1710,6 +1710,10 @@ div.l-content > div.l-separator:nth-of-type(4) {
   color: #4b4b4b;
 }
 
+.body-updates .units .l-unit.l-unit--outdated .fas.fa-box-open {
+  color: #da1010;
+}
+
 .l-unit--suspended .l-unit__name,
 .l-unit--suspended b,
 .l-unit--outdated .l-unit__name,

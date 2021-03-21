@@ -669,7 +669,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label step-left">
-                                    <table style="display:<?php if (empty($v_backup_adv)) echo 'none';?> ;" id="backup">
+                                    <table style="<?php if (empty($v_backup_adv)) echo 'display:none';?> ;" id="backup">
                                         <tr>
                                             <td class="vst-text">
                                                 <?php print _('Local backup') ?>
@@ -955,7 +955,7 @@
                                     </table>
                                 </td>
                             </tr>
-<tr>
+                            <tr>
                                 <td class="vst-text input-label step-top advanced-options">
                                     <a href="javascript:elementHideShow('security');" class="vst-text">
                                         <i class="fas fa-key"></i><b><?php print _('Security');?> <img src="/images/arrow.png"></b>
@@ -964,7 +964,41 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label step-left">
-                                    <table style="display:<?php if (empty($v_security_adv)) echo 'none';?> ;" id="security">
+                                    <table style="<?php if (empty($v_security_adv)) echo 'display:none;';?>" id="security">
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print _('Enable API access');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_api" id="api">
+                                                    <option value='yes'><?php print _('yes'); ?></option>
+                                                    <option value='no' <?php if($_SESSION['API'] == 'no') echo 'selected' ?> ><?php print _('no'); ?></option>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                        <table id="security_ip" style="<?php if ($_SESSION['API'] == "no") echo 'display:none;';?>">
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print _('Allowed IP addresses for API');?> <span class="optional" style="float:right">1 IP address per line</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <textarea size="20" class="vst-textinput short" name="v_api_allowed_ip"><?php 
+                                                    foreach(explode(',',$_SESSION['API_ALLOWED_IP']) as $ip ){
+                                                        echo $ip."\n";
+                                                    }
+                                                    ?></textarea>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        </table>
+                                            </td></tr>
                                         <tr>
                                             <td class="vst-text input-label">
                                                 <?php print _('Login screen style');?>

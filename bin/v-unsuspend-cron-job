@@ -57,6 +57,7 @@ $BIN/v-restart-cron $restart
 check_result $? "Cron restart failed" >/dev/null
 
 # Logging
+$BIN/v-log-action "system" "Info" "System" "Unsuspended cron job (User: $user, Job: $job)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

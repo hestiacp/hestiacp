@@ -101,6 +101,7 @@ $BIN/v-update-firewall
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "Firewall" "Added firewall rule (Action: $chain, Port: $port, Protocol: $protocol)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

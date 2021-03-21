@@ -257,7 +257,7 @@ fi
 $BIN/v-add-user-sftp-jail $user
 
 # Logging
-log_history "added system user $user" '' 'admin'
+$BIN/v-log-action "$user" "Info" "Users" "Added user $user to the system."
 log_event "$OK" "$ARGUMENTS"
 
 exit

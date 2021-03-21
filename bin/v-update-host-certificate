@@ -97,6 +97,7 @@ $BIN/v-restart-service hestia
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "System" "System SSL certificate updated (Host: $hostname)."
 log_event "$OK" "$ARGUMENTS"
 
 exit 0;

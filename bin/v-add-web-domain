@@ -202,7 +202,7 @@ $BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging
-log_history "added web domain $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Added new web domain (Name: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

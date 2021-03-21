@@ -61,7 +61,7 @@ if [ ! -z "$restart" ]; then
 fi
 
 # Logging
-log_history "purged nginx cache for $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Purged web domain cache (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -178,7 +178,7 @@ $BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging
-log_history "added mail domain $domain"
+$BIN/v-log-action "$user" "Info" "Mail" "Added new mail domain ($domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -70,7 +70,7 @@ if [ ! -z "$restart" ]; then
 fi
 
 # Logging
-log_history "disabled automatic HTTP-to-HTTPS redirection for $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Disabled automatic HTTPS redirection (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

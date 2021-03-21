@@ -104,7 +104,7 @@ $BIN/v-restart-web
 check_result $? "Web restart failed" > /dev/null
 
 # Logging
-log_history "enabled fast cgi support for $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Enabled FastCGI support (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

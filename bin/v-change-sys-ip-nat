@@ -107,7 +107,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_history "changed associated nat address on $ip to $nat_ip" '' 'admin'
+$BIN/v-log-action "system" "Info" "System" "Changed IP NAT address (IP: $ip, NAT IP: $nat_ip)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

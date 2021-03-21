@@ -91,11 +91,14 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
             if [ $? -ne 0 ]; then
                 echo $msg
                 log_event $E_INVALID "$domain $msg"
+                $BIN/v-log-action "$user" "Error" "Web" "Let's Encrypt SSL certificate update failed (Domain: $domain)."
                 if [ -z "$fail_counter" ]; then
                     add_object_key "web" 'DOMAIN' "$domain" 'LETSENCRYPT_FAIL_COUNT' 'LETSENCRYPT'
                 fi
                 ((fail_counter++))
                 update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT' "$fail_counter"
+            else
+                $BIN/v-log-action "$user" "Info" "Web" "Let's Encrypt SSL certificate renewed (Domain: $domain)."
             fi
         fi
     done
@@ -126,12 +129,15 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
             msg=$($BIN/v-add-letsencrypt-domain $user $domain ' ' yes)
             if [ $? -ne 0 ]; then
                 echo $msg
+                $BIN/v-log-action "$user" "Error" "Web" "Let's Encrypt SSL certificate update failed (Domain: $domain)."
                 log_event $E_INVALID "$domain $msg"
                 if [ -z "$fail_counter" ]; then
                     add_object_key "mail" 'DOMAIN' "$domain" 'LETSENCRYPT_FAIL_COUNT' 'LETSENCRYPT'
                 fi
                 ((fail_counter++))
                 update_object_value 'mail' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT' "$fail_counter"
+            else
+                $BIN/v-log-action "$user" "Info" "Web" "Let's Encrypt SSL certificate renewed (Domain: $domain)."
             fi
         fi
     done

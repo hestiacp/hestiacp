@@ -44,5 +44,6 @@ echo ${HASH}
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
+$BIN/v-log-action "system" "Warn" "System" "New system API key generated (Key: ${HASH})."
 
 exit

@@ -97,9 +97,9 @@ chmod 644 $HESTIA/data/packages/$package.pkg
 
 # Logging
 if [ "$rewrite" != 'yes' ]; then
-    log_history "added user package $package" '' 'admin'
+    $BIN/v-log-action "system" "Info" "Packages" "Added new package (Name: $package)."
 else
-    log_history "updated user package $package" '' 'admin'
+    $BIN/v-log-action "system" "Info" "Mail" "Updated a package (Name: $package)."
 fi
 log_event "$OK" "$ARGUMENTS"
 

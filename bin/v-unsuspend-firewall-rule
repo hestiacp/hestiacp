@@ -49,6 +49,7 @@ $BIN/v-update-firewall
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "Firewall" "Unsuspended firewall rule (Rule: $rule)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

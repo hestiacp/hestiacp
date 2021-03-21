@@ -90,7 +90,7 @@ $BIN/v-restart-web-backend $restart
 check_result $? "Web backend restart failed" >/dev/null
 
 # Logging
-log_history "added $WEB_BACKEND backend configuration for $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Added $WEB_BACKEND backend configuration (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

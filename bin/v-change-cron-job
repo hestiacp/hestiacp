@@ -80,6 +80,7 @@ $BIN/v-restart-cron
 check_result $? "Cron restart failed" >/dev/null
 
 # Logging
+$BIN/v-log-action "$user" "Info" "Cron Jobs" "Updated a cron job (Job: $job)."
 log_history "changed cron job $job"
 log_event "$OK" "$ARGUMENTS"
 

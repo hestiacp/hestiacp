@@ -57,6 +57,7 @@ echo "$BIN/v-restore-user $user $backup $options  yes >> $log 2>&1" >>\
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "Backup" "Restore of backup archive requested (User: $user, Archive: $backup)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

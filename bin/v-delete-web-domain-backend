@@ -79,7 +79,7 @@ $BIN/v-restart-web-backend $restart
 check_result $? "Backend restart failed" >/dev/null
 
 # Logging
-log_history "deleting backend support for $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Deleted web domain backend configuration (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

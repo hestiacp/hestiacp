@@ -52,7 +52,6 @@ if [  "$ssl" = "yes" ]; then
 fi
 
 # Logging
-log_history "Set values SSL FORCE / HSTS for $domain"
 log_event "$OK" "$ARGUMENTS"
 
 exit

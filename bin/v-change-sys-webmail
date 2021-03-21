@@ -57,7 +57,7 @@ $BIN/v-restart-web $restart
 $BIN/v-restart-proxy $restart
 
 # Logging
-log_history "changed global webmail alias to $NEW_ALIAS" '' 'admin'
+$BIN/v-log-action "system" "Info" "System" "Changed webmail access alias (Value: $NEW_ALIAS, Previous: $OLD_ALIAS)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

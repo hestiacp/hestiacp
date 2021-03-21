@@ -69,7 +69,7 @@ if [ ! -z "$restart" ]; then
 fi
 
 # Logging
-log_history "disabled fast cgi support for $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Disabled FastCGI support (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

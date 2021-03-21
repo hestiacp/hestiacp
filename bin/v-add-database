@@ -93,7 +93,7 @@ increase_dbhost_values
 increase_user_value "$user" '$U_DATABASES'
 
 # Logging
-log_history "added $type database $database"
+$BIN/v-log-action "$user" "Info" "Databases" "Added new database $database ($type)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

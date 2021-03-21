@@ -67,6 +67,7 @@ fi
 update_object_value "mail/$domain" 'ACCOUNT' "$account" '$SUSPENDED' 'no'
 
 # Logging
+$BIN/v-log-action "system" "Info" "System" "Unsuspended mail account (User: $user, Account: $account@$domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

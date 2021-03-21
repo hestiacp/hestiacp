@@ -68,7 +68,7 @@ update_object_value 'mail' 'DOMAIN' "$domain" '$DKIM' 'no'
 decrease_user_value "$user" '$U_MAIL_DKIM'
 
 # Logging
-log_history "disabled DKIM support on $domain"
+$BIN/v-log-action "$user" "Info" "Mail" "Disabled DKIM message signing (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

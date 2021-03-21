@@ -55,7 +55,7 @@ EOL
 #----------------------------------------------------------#
 
 # Logging
-log_history "enabled system wide smtp relay support."
+$BIN/v-log-action "system" "Info" "Mail" "Server-wide SMTP Relay enabled (Host: $host, Port: $port)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

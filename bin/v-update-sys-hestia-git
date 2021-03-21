@@ -422,6 +422,7 @@ install_build() {
     for i in $DEB_DIR/*.deb; do
         # Install all available packages
         dpkg -i $i
+        $BIN/v-log-action "system" "Warning" "System" "Development package installed."
     done
     # Remove temporary files
     rm -rf $BUILD_DIR

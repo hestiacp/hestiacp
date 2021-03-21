@@ -84,6 +84,7 @@ service ssh restart > /dev/null 2>&1
 service sshd restart > /dev/null 2>&1
 
 # Logging
+$BIN/v-log-action "system" "Warn" "Plugins" "SFTP Chroot Jail disabled."
 log_event "$OK" "$ARGUMENTS"
 
 exit

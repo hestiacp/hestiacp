@@ -659,6 +659,8 @@ if [ -e "$BACKUP/$user.log" ] && [ "$notify" = "yes" ]; then
 fi
 
 # Logging
+$BIN/v-log-action "$user" "Info" "Backup" "Backup created (Archive: $backup_new_date.tar)."
+$BIN/v-log-action "system" "Info" "Backup" "Backup created (User: $user, Archive: $backup_new_date.tar)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

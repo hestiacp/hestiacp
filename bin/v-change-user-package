@@ -186,7 +186,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_history "changed $user package to $package" '' 'admin'
+$BIN/v-log-action "system" "Info" "System" "Changed user package (User: $user, Package: $package)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

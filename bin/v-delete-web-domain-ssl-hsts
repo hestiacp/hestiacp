@@ -69,7 +69,7 @@ if [ ! -z "$restart" ]; then
 fi
 
 # Logging
-log_history "disabled HTTP Strict Transport Security (HSTS) for $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Disabled HTTP Strict Transport Security (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

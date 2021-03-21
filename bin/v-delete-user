@@ -114,7 +114,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_history "deleted system user $user" '' 'admin'
+$BIN/v-log-action "system" "Info" "System" "User deleted (User: $user)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

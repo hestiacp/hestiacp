@@ -131,7 +131,7 @@ update_object_value 'web' 'DOMAIN' "$domain" '$FTP_MD5' "$ftp_md5"
 update_object_value 'web' 'DOMAIN' "$domain" '$FTP_PATH' "$ftp_path"
 
 # Logging
-log_history "added ftp account ${1}_${3}@$domain"
+$BIN/v-log-action "$user" "Info" "Web" "Added new FTP account (Name: ${1}_${3}@$domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -82,7 +82,7 @@ $BIN/v-restart-dns $restart
 check_result $? "Bind restart failed" >/dev/null
 
 # Logging
-log_history "deleted dns record $id on $domain"
+$BIN/v-log-action "$user" "Info" "DNS" "Deleted DNS record (ID: $id, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

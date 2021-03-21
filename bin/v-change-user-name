@@ -54,7 +54,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_history "changed user display name to $name"
+$BIN/v-log-action "$user" "Info" "System" "User display name changed (Value: $name)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

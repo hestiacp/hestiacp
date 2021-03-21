@@ -61,6 +61,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "System" "Unsuspended DNS record (User: $user, Domain: $domain, Record: $id)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

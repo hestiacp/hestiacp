@@ -64,7 +64,7 @@ $BIN/v-restart-cron
 check_result $? "Cron restart failed" >/dev/null
 
 # Logging
-log_history "disabled automatic updates"
+$BIN/v-log-action "system" "Warn" "System" "Automatic updates disabled."
 log_event "$OK" "$ARGUMENTS"
 
 exit

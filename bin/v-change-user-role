@@ -40,8 +40,8 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
+$BIN/v-log-action "system" "Info" "System" "User role changed (User: $user, Role: $role)."
 update_user_value "$user" '$ROLE' "$role"
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

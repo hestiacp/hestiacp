@@ -101,6 +101,8 @@ fi
 sed -i "/v-download-backup $user /d" $HESTIA/data/queue/backup.pipe
 
 # Logging
+$BIN/v-log-action "system" "Info" "Backup" "Backup download requested (User: $user, Archive: $backup)."
+$BIN/v-log-action "$user" "Info" "Backup" "Backup download requested (Archive: $backup)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

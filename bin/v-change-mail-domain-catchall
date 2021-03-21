@@ -62,6 +62,7 @@ fi
 update_object_value 'mail' 'DOMAIN' "$domain" '$CATCHALL' "$email"
 
 # Logging
+$BIN/v-log-action "$user" "Info" "Mail" "Changed mail domain catch-all address (Domain: $domain, Send to: $email)."
 log_history "changed catchall email for $domain to $email"
 log_event "$OK" "$ARGUMENTS"
 

@@ -188,7 +188,5 @@ fi
 #                       Logging                            #
 #----------------------------------------------------------#
 
-
-
-log_history "Rouncube successfuly installed" '' 'admin'
+$BIN/v-log-action "system" "Info" "Plugins" "Roundcube enabled (Version: $version)."
 log_event "$OK" "$ARGUMENTS"

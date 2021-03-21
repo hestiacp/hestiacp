@@ -221,6 +221,7 @@ if [ ! -z "$MAIL_SYSTEM" ] && [ ! -z "$helo"]; then
 fi
 
 # Logging
+$BIN/v-log-action "system" "Info" "Network" "Added an IP address to the system (IP: $ip)."
 log_history "added system ip address $ip" '' 'admin'
 log_event "$OK" "$ARGUMENTS"
 

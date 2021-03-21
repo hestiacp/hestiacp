@@ -124,7 +124,7 @@ $BIN/v-restart-dns $restart
 check_result $? "DNS restart failed" >/dev/null
 
 # Logging
-log_history "changed dns record on $domain to $dvalue"
+$BIN/v-log-action "$user" "Info" "DNS" "Changed DNS record value (Type: $type, Record: $record, Value: $dvalue, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

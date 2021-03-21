@@ -62,6 +62,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Error" "System" "Suspended DNS record (User: $user, Domain: $domain, Record: $id)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

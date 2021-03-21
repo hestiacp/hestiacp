@@ -78,7 +78,7 @@ add_object_key "mail/$domain" 'ACCOUNT' "$account" 'FWD_ONLY' 'MD5'
 update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$FWD_ONLY' "yes"
 
 # Logging
-log_history "added fwd_only flag for $account@$domain"
+$BIN/v-log-action "$user" "Warning" "Mail" "Enabled forward-only flag on mail account $account@$domain."
 log_event "$OK" "$ARGUMENTS"
 
 exit

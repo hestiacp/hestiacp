@@ -23,10 +23,10 @@
 <div class="l-center units">
 <div class="header table-header">     
     <div class="l-unit__col l-unit__col--right">
-      <div class="clearfix l-unit__stat-col--left compact text-center">
+      <div class="clearfix l-unit__stat-col--left super-compact text-center">
         <b><?php print _('Active');?></b>
       </div>
-      <div class="clearfix l-unit__stat-col--left small text-center">
+      <div class="clearfix l-unit__stat-col--left compact text-center">
         <b><?php print _('Status');?></b>
       </div>
       <div class="clearfix l-unit__stat-col--left"><b><?php print _('Date');?></b></div>
@@ -41,7 +41,7 @@
   ?>
   <div class="l-unit header animated fadeIn">
     <div class="l-unit__col l-unit__col--right">
-      <div class="clearfix l-unit__stat-col--left compact text-center">
+      <div class="clearfix l-unit__stat-col--left super-compact text-center">
         <? if ($data[$key]['ACTION'] == 'login') { ?>
           <? if ($data[$key]['ACTIVE'] === 'yes') {?>
             <i class="fas fa-sign-in-alt status-icon maroon icon-pad-right" title="<?=_('Login')?>"></i>
@@ -50,7 +50,7 @@
           <? } ?>
         <? } ?>
       </div>
-      <div class="clearfix l-unit__stat-col--left small text-center">
+      <div class="clearfix l-unit__stat-col--left compact text-center">
         <? if ($data[$key]['STATUS'] == 'success') { ?>
           <i class="fas fa-check-circle status-icon green icon-pad-right" title="<?=_('Success')?>"></i>
         <? } else {?>
@@ -60,7 +60,7 @@
       <div class="clearfix l-unit__stat-col--left"><b><?=translate_date($data[$key]['DATE'])?></b></div>
       <div class="clearfix l-unit__stat-col--left compact"><b><?=$data[$key]['TIME']?></b></div>
       <div class="clearfix l-unit__stat-col--left"><?=$data[$key]['IP']?></div>
-      <div class="clearfix l-unit__stat-col--left wide-6"><?=$data[$key]['USER_AGENT']?></b></div>
+      <div class="clearfix l-unit__stat-col--left wide-7"><?=$data[$key]['USER_AGENT']?></b></div>
     </div>
   </div>
 <?}?>

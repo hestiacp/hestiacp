@@ -15,14 +15,11 @@ if [ -e "/etc/nginx/nginx.conf" ]; then
     fi
 fi
 
-echo '[ * ] Updating System Administrator account permissions...'
-$HESTIA/bin/v-change-user-role admin admin
-
 # Populating HELO/SMTP Banner for existing ip's
 if [ "$MAIL_SYSTEM" == "exim4" ]; then
     source $HESTIA/func/ip.sh
 
-    echo "[ * ] Populating HELO/SMTP Banner param for existing IP's..."
+    echo "[ * ] Populating HELO/SMTP Banner value for existing IP addresses..."
     > /etc/exim4/mailhelo.conf
 
     for ip in $($BIN/v-list-sys-ips plain | cut -f1); do

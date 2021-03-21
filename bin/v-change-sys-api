@@ -1,0 +1,56 @@
+#!/bin/bash
+# info: Enable / Disable API access 
+# options: STATUS 
+# labels: hestia
+#
+# example: v-change-sys-api enable
+#          # Enable API
+#
+# example: v-change-sys-api disable
+#          # Disable API
+#
+# Enabled / Disable API
+
+
+status=$1
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+check_args '1' "$#" "STATUS"
+is_type_valid "enable,disable" "$status"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+if [ "$status" = "enable" ]; then
+    if [ $API = "no" ]; then
+        if [ ! -f "$HESTIA/web/api/index.php" ]; then
+            wget -q https://raw.githubusercontent.com/hestiacp/hestiacp/release/web/api/index.php -O $HESTIA/web/api/index.php
+        else
+            sed -i 's|die("Error: Disabled");|//die("Error: Disabled");|g' $HESTIA/web/api/index.php
+        fi
+        $HESTIA/bin/v-change-sys-config-value "API" "yes"
+    fi
+else
+    if [ $API = "yes" ]; then
+        $HESTIA/bin/v-change-sys-config-value "API" "no"
+        sed -i 's|//die("Error: Disabled");|die("Error: Disabled");|g' $HESTIA/web/api/index.php
+    fi
+fi
+
+#----------------------------------------------------------#
+#                       Logging                            #
+#----------------------------------------------------------#
+
+log_history "API status has been changed to $status" '' 'admin'
+log_event "$OK" "$ARGUMENTS"

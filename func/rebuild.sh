@@ -123,7 +123,7 @@ rebuild_user_conf() {
         chmod 751 $HOMEDIR/$user/web
         chmod 771 $HOMEDIR/$user/tmp
         chown --no-dereference $user:$user $HOMEDIR/$user/web
-        if [ -z "$create_user" ]; then
+        if [ "$create_user" = "yes" ]; then
             $BIN/v-rebuild-web-domains $user $restart
         fi
     fi
@@ -137,7 +137,7 @@ rebuild_user_conf() {
 
         mkdir -p $HOMEDIR/$user/conf/dns
         chmod 751 $HOMEDIR/$user/conf/dns
-        if [ -z "$create_user" ]; then
+        if [ "$create_user" = "yes" ]; then
             $BIN/v-rebuild-dns-domains $user $restart
         fi
     fi
@@ -157,7 +157,7 @@ rebuild_user_conf() {
         mkdir -p $HOMEDIR/$user/mail
         chmod 751 $HOMEDIR/$user/mail
         chmod 751 $HOMEDIR/$user/conf/mail
-        if [ -z "$create_user" ]; then
+        if [ "$create_user" = "yes" ]; then
             $BIN/v-rebuild-mail-domains $user
         fi
     fi
@@ -168,7 +168,7 @@ rebuild_user_conf() {
         chmod 660 $USER_DATA/db.conf
         echo "$BIN/v-update-databases-disk $user" >> $HESTIA/data/queue/disk.pipe
 
-        if [ -z "$create_user" ]; then
+        if [ "$create_user" = "yes" ]; then
             $BIN/v-rebuild-databases $user
         fi
     fi
@@ -177,7 +177,7 @@ rebuild_user_conf() {
         touch $USER_DATA/cron.conf
         chmod 660 $USER_DATA/cron.conf
 
-        if [ -z "$create_user" ]; then
+        if [ "$create_user" = "yes" ]; then
             $BIN/v-rebuild-cron-jobs $user $restart
         fi
     fi

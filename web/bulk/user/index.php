@@ -27,6 +27,8 @@ if ($_SESSION['user'] == 'admin') {
             break;
         case 'rebuild': $cmd='v-rebuild-all'; $restart = 'no';
             break;
+        case 'rebuild user': $cmd='v-rebuild-user'; $restart = 'no';
+            break;
         case 'rebuild web': $cmd='v-rebuild-web-domains'; $restart = 'no';
             break;
         case 'rebuild dns': $cmd='v-rebuild-dns-domains'; $restart = 'no';

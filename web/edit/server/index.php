@@ -443,7 +443,8 @@ if (!empty($_POST['save'])) {
 
     // Update send notification setting
     if (empty($_SESSION['error_msg'])) {
-        if ($_POST['v_upgrade_send_notification_email'] != $_SESSION['UPGRADE_SEND_EMAIL']) {
+        if ( $_SESSION['UPGRADE_SEND_EMAIL'] == 'true' ){ $ugrade_send_mail = 'on'; }else{ $ugrade_send_mail = ''; }
+        if ( $_POST['v_upgrade_send_notification_email'] != $ugrade_send_mail ) {
             if ($_POST['v_upgrade_send_notification_email'] == 'on') { $_POST['v_upgrade_send_notification_email'] = 'true'; } else { $_POST['v_upgrade_send_notification_email'] = 'false'; }
             exec (HESTIA_CMD."v-change-sys-config-value UPGRADE_SEND_EMAIL ".escapeshellarg($_POST['v_upgrade_send_notification_email']), $output, $return_var);
             check_return_code($return_var,$output);
@@ -454,7 +455,8 @@ if (!empty($_POST['save'])) {
 
     // Update send log by email setting
     if (empty($_SESSION['error_msg'])) {
-        if ($_POST['v_upgrade_send_email_log'] != $_SESSION['UPGRADE_SEND_EMAIL_LOG']) {
+        if ( $_SESSION['UPGRADE_SEND_EMAIL_LOG'] == 'true' ){ $send_email_log = 'on'; }else{ $send_email_log = ''; }
+        if ( $_POST['v_upgrade_send_email_log'] != $send_email_log ) {
             if ($_POST['v_upgrade_send_email_log'] == 'on') { $_POST['v_upgrade_send_email_log'] = 'true'; } else { $_POST['v_upgrade_send_email_log'] = 'false'; }
             exec (HESTIA_CMD."v-change-sys-config-value UPGRADE_SEND_EMAIL_LOG ".escapeshellarg($_POST['v_upgrade_send_email_log']), $output, $return_var);
             check_return_code($return_var,$output);
@@ -526,7 +528,7 @@ if (!empty($_POST['save'])) {
             unset($output);
             */
             if (empty($_SESSION['error_msg'])) $v_backup_dir = $_POST['v_backup_dir'];
-            $v_backup_adv = 'yes';
+            #$v_backup_adv = 'yes';
         }
     }
     
@@ -684,7 +686,7 @@ if (!empty($_POST['save'])) {
     
     // Change ENFORCE_SUBDOMAIN_OWNERSHIP
     if (empty($_SESSION['error_msg'])) {
-        if ($_POST['v_enforce_subdomain_ownership'] != $_SESSION['v_enforce_subdomain_ownership']) {
+        if ($_POST['v_enforce_subdomain_ownership'] != $_SESSION['ENFORCE_SUBDOMAIN_OWNERSHIP']) {
             exec (HESTIA_CMD."v-change-sys-config-value ENFORCE_SUBDOMAIN_OWNERSHIP ".escapeshellarg($_POST['v_enforce_subdomain_ownership']), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
@@ -703,7 +705,36 @@ if (!empty($_POST['save'])) {
             $v_security_adv = 'yes';
         }
     }
-
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_api'] != $_SESSION['API']) {
+            $api_status = 'disable';
+            if ($_POST['v_api'] == 'yes'){
+                $api_status = 'enable';
+            }
+            exec (HESTIA_CMD."v-change-sys-api ".escapeshellarg($api_status), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) $v_login_style = $_POST['v_api'];
+            $v_security_adv = 'yes';
+        }
+    }
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_api_allowed_ip'] != $_SESSION['API_ALLOWED_IP']) {
+            $ips = array();
+            foreach(explode("\n",$_POST['v_api_allowed_ip']) as $ip){ 
+                if(filter_var(trim($ip), FILTER_VALIDATE_IP)){
+                    $ips[] = trim($ip);
+                }
+            }
+            if(implode(',',$ips) != $_SESSION['API_ALLOWED_IP']){
+            exec (HESTIA_CMD."v-change-sys-config-value API_ALLOWED_IP ".escapeshellarg(implode(',',$ips)), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) $v_login_style = $_POST['v_api_allowed_ip'];
+                $v_security_adv = 'yes';
+            }
+        }
+    }
     // Update SSL certificate
     if ((!empty($_POST['v_ssl_crt'])) && (empty($_SESSION['error_msg']))) {
         if (($v_ssl_crt != str_replace("\r\n", "\n",  $_POST['v_ssl_crt'])) || ($v_ssl_key != str_replace("\r\n", "\n",  $_POST['v_ssl_key']))) {

@@ -7,3 +7,10 @@ $('#backup_type').change(function (){
        $('#backup_sftp').show();
    }
 });
+$('#api').change(function (){
+       if(this.value == 'yes'){
+           $('#security_ip').show();
+       }else{
+           $('#security_ip').hide();
+       }
+    });

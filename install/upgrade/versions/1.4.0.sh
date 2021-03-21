@@ -98,8 +98,6 @@ if [ "$MAIL_SYSTEM" == "exim4" ]; then
         line=$(expr $(sed -n '/begin transports/=' /etc/exim4/exim4.conf.template) + 2)
         sed -i "${line}i $insert" /etc/exim4/exim4.conf.template
     fi
-    
-    $HESTIA/bin/v-restart-mail
 fi
 
 # Fix PostgreSQL repo

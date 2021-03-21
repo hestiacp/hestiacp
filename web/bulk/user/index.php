@@ -55,10 +55,4 @@ foreach ($user as $value) {
     $changes = 'yes';
 }
 
-if ((!empty($restart)) && (!empty($changes))) {
-    exec (HESTIA_CMD."v-restart-web", $output, $return_var);
-    exec (HESTIA_CMD."v-restart-dns", $output, $return_var);
-    exec (HESTIA_CMD."v-restart-cron", $output, $return_var);
-}
-
 header("Location: /list/user/");

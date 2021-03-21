@@ -151,8 +151,8 @@ upgrade_health_check() {
     fi    
     # API Allowed IP
     if [ -z "$API_ALLOWED_IP" ]; then
-        echo "[ ! ] Adding missing variable to hestia.conf: API_ALLOWED_IP ('')"        
-        $BIN/v-change-sys-config-value "API_ALLOWED_IP" "127.0.0.1"
+        echo "[ ! ] Adding missing variable to hestia.conf: API_ALLOWED_IP ('allow-all')"        
+        $BIN/v-change-sys-config-value "API_ALLOWED_IP" "allow-all"
     fi  
     
     echo "[ * ] Health check complete. Starting upgrade from $VERSION to $new_version..."

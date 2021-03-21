@@ -595,10 +595,7 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
 
         # Restoring email accounts
         cp -f $tmpdir/mail/$domain/$backup_system/$domain.conf $USER_DATA/mail/
-
-        # Rebuilding mail config
-        $BIN/v-rebuild-mail-domains $user
-        
+       
         domain_idn=$domain
         format_domain_idn
 

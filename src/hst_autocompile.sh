@@ -6,7 +6,7 @@
 #   and the script will not try to download the arhive from github, since '~' char is 
 #   not accepted in branch name.
 # Compile but dont install -> ./hst_autocompile.sh --hestia --noinstall --keepbuild '~localsrc'
-# Compilea and install -> ./hst_autocompile.sh --hestia --install '~localsrc' 
+# Compile and install -> ./hst_autocompile.sh --hestia --install '~localsrc' 
 
 # Clear previous screen output
 clear

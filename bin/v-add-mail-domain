@@ -52,7 +52,7 @@ if [ "$($BIN/v-list-mail-domain $user $domain_utf plain |cut -f 1) " != "$domain
     is_domain_new 'mail' "$domain_utf"
 fi
 if [ "$($BIN/v-list-mail-domain $user $domain_idn plain |cut -f 1) " != "$domain" ]; then
-    is_domain_new 'mail' "$domain_idn,"
+    is_domain_new 'mail' "$domain_idn"
 else
     is_domain_new 'mail' "$domain"
 fi

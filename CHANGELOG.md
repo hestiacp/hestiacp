@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.3.5] - Service Release
+### Features
+- No new features have been introduced in this release.
+
+### Bugfixes
+- Updated APT repository key for PHP from packages.sury.org (https://forum.hestiacp.com/t/apt-upgrade-failed-gpg-error-packages-sury-org)
+- Updated phpMyAdmin to v5.1.0.
+
 ## [1.3.4] - Service Release
 ### Features
 - No new features have been introduced in this release.

@@ -271,7 +271,7 @@ if (!empty($_POST['save'])) {
     // Update theme
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_theme'] != $_SESSION['THEME']) {
-            exec (HESTIA_CMD."v-change-sys-theme ".escapeshellarg($_POST['v_theme']), $output, $return_var);
+            exec (HESTIA_CMD."v-change-sys-config-value THEME ".escapeshellarg($_POST['v_theme']), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
         }

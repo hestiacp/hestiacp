@@ -869,6 +869,27 @@ get_domain_values() {
 }
 
 #----------------------------------------------------------#
+#                  Health Check                            #
+#----------------------------------------------------------#
+
+web_health_check() {
+    # list of all know vars in config when every options is enabled
+    for key in DOMAIN IP IP6 CUSTOM_DOCROOT CUSTOM_PHPROOT FASTCGI_CACHE ALIAS TPL SSL SSL_FORCE SSL_HOME LETSENCRYPT FTP_USER FTP_MD5 FTP_PATH BACKEND PROXY PROXY_EXT STATS STATS_USER STATS_CRYPT SUSPENDED TIME DATE
+    do
+        unset $key
+    done
+    get_domain_values 'web'
+    prev="DOMAIN"
+    for key in DOMAIN IP IP6 CUSTOM_DOCROOT CUSTOM_PHPROOT FASTCGI_CACHE ALIAS TPL SSL SSL_FORCE SSL_HOME LETSENCRYPT FTP_USER FTP_MD5 FTP_PATH BACKEND PROXY PROXY_EXT STATS STATS_USER STATS_CRYPT SUSPENDED TIME DATE
+    do
+        if [ -z "${!key}" ]; then 
+            add_object_key 'web' 'DOMAIN' "$domain" "$key" "$prev"   
+        fi
+        prev=$key
+    done
+}
+ 
+#----------------------------------------------------------#
 # 2 Char domain name detection                             #
 #----------------------------------------------------------#
 

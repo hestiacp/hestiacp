@@ -197,6 +197,7 @@ rebuild_web_domain_conf() {
         mkdir -p /etc/$PROXY_SYSTEM/conf.d/domains
     fi
 
+    web_health_check 
     get_domain_values 'web'
     is_ip_valid $IP
     prepare_web_domain_values

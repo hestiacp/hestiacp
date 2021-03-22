@@ -49,8 +49,8 @@ if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
     rm $HOMEDIR/$user/conf/web/$domain/nginx.conf_redirect"
     rm $HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_redirect"
 else
-    conf="$HOMEDIR/$user/web/$domain/public_html/.htaccess"
-    echo "redirect $code http://$redirect" >> $conf
+     echo "Non supported please use .htaccess instead" 
+     exit 2;
 fi
 
 #----------------------------------------------------------#

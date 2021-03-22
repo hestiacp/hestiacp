@@ -54,23 +54,18 @@ if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
     sconf="$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_redirect"
 fi
 # Insert redirect commands
-#if [ ! -z "$PROXY_SYSTEM" ] || [ "$WEB_SYSTEM" = 'nginx' ]; then
-#    echo "if (\$host != \"$redirect\") {" > $conf
-#    echo "   return $code \$scheme://$redirect\$request_uri;" >> $conf
-#    echo "}" >> $conf
-#    
-#    if [ ! -e "$sconf" ]; then
-#        ln -s "$conf" "$sconf"
-#    fi
-#else
-   if [ ! -e "$HOMEDIR/$user/web/$domain/public_html/.htaccess" ]; then
-       conf="$HOMEDIR/$user/web/$domain/public_html/.htaccess"
-       echo "redirect $code http://$redirect" > $conf
-   else
-       conf="$HOMEDIR/$user/web/$domain/public_html/.htaccess"
-       echo "redirect $code http://$redirect" >> $conf
-   fi
-#fi
+if [ ! -z "$PROXY_SYSTEM" ] || [ "$WEB_SYSTEM" = 'nginx' ]; then
+    echo "if (\$host != \"$redirect\") {" > $conf
+    echo "   return $code \$scheme://$redirect\$request_uri;" >> $conf
+    echo "}" >> $conf
+    
+    if [ ! -e "$sconf" ]; then
+        ln -s "$conf" "$sconf"
+    fi
+else
+    echo "Non supported please use .htaccess instead" 
+    exit 2;
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #

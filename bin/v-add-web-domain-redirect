@@ -72,7 +72,8 @@ fi
 #----------------------------------------------------------#
 
 if [ -z "$REDIRECT" ]; then
-    add_object_key "web" 'DOMAIN' "$domain" 'REDIRECT' 'TIME'
+    add_object_key "web" 'DOMAIN' "$domain" 'REDIRECT' 'STATS_CRYPT'
+    add_object_key "web" 'DOMAIN' "$domain" 'REDIRECT_CODE' 'STATS_CRYPT'
 fi
 
 update_object_value 'web' 'DOMAIN' "$domain" '$REDIRECT' "$redirect"

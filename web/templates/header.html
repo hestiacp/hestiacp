@@ -4,11 +4,17 @@
   <meta charset="utf-8">
   <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
   <title><?php echo $_SERVER['HTTP_HOST']; ?> - <?=_($TAB)?> - <?=_('Hestia Control Panel');?></title>
-  <link type="text/css" rel="stylesheet" href="/css/styles.min.css?<?=JS_LATEST_UPDATE?>" />
-  <link type="text/css" rel="stylesheet" href="/css/active-theme.css?<?php echo rand(); ?>" />
-  <link type="text/css" href="/css/animate.min.css?<?=JS_LATEST_UPDATE?>" rel="stylesheet" />
-  <link type="text/css" href="/css/jquery-custom-dialogs.css?<?=JS_LATEST_UPDATE?>" rel="stylesheet" />
-  <link type="text/css" href="/css/all.min.css?<?=JS_LATEST_UPDATE?>" rel="stylesheet" />
+  <!-- Load base theme-->
+  <link type="text/css" rel="stylesheet" href="/css/themes/default.min.css?<?=JS_LATEST_UPDATE?>" />
+  <? if ($_SESSION['THEME'] !== 'default') {?>
+    <!-- Load provided theme -->
+    <link type="text/css" rel="stylesheet" href="/css/themes/<?php echo $_SESSION['THEME']; ?>.min.css?<?php echo rand(); ?>" />
+    <!-- Load custom theme -->
+    <link type="text/css" rel="stylesheet" href="/css/themes/custom/<?php echo $_SESSION['THEME']; ?>.css?<?php echo rand(); ?>" />
+  <? } ?>
+  <link type="text/css" href="/css/dependencies/animate.min.css?<?=JS_LATEST_UPDATE?>" rel="stylesheet" />
+  <link type="text/css" href="/css/dependencies/jquery-custom-dialogs.css?<?=JS_LATEST_UPDATE?>" rel="stylesheet" />
+  <link type="text/css" href="/css/dependencies/fontawesome.min.css?<?=JS_LATEST_UPDATE?>" rel="stylesheet" />
   <script type="text/javascript" src="/inc/jquery/jquery-3.5.1.min.js"></script> 
   <script>
     //

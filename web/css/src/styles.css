@@ -1620,6 +1620,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .table-header {
   font-size: 0.95em !important;
   background: linear-gradient(to bottom, rgba(247,247,247,1) 0%,rgba(255,255,255,1) 100%) !important;
+  background-color: #fff;
   border-left: 1px solid #d0d0d0 !important;
   border-right: 1px solid #d0d0d0 !important;
   border-bottom: 1px solid #d0d0d0 !important;
@@ -1636,6 +1637,9 @@ div.l-content > div.l-separator:nth-of-type(4) {
   overflow: hidden;
   line-height: 1rem;
   margin-top: 1px;
+  position: sticky;
+  top: 145px;
+  z-index: 1000;
 }
 
 .table-header:hover {

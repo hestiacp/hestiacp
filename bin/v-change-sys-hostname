@@ -62,7 +62,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-$BIN/v-log-action "system" "Warn" "System" "Changed system hostname (Host: $domain)."
+$BIN/v-log-action "system" "Warning" "System" "Changed system hostname (Host: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -414,7 +414,16 @@ upgrade_init_logging() {
     # Create log file
     touch $LOG
 
+    # Add message to system log
     $BIN/v-log-action "system" "Info" "Updates" "Started update installation (Latest: $new_version, Previous: $VERSION)."
+
+    # Add warnings for pre-release builds
+    if [[ "$new_version" =~ "alpha" ]]; then
+        $BIN/v-log-action "system" "Warning" "Updates" "Development build for testing purposes only. Report bugs at https://github.com/hestiacp/hestiacp/issues/."
+    fi
+    if [[ "$new_version" =~ "beta" ]]; then
+        $BIN/v-log-action "system" "Warning" "Updates" "Beta release. Please report bugs at https://github.com/hestiacp/hestiacp/issues/."
+    fi
 }
 
 upgrade_start_backup() {

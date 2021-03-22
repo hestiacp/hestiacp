@@ -52,9 +52,9 @@ check_result $? "restart" >/dev/null 2>&1
 
 # Logging
 if [ "$active" = "yes" ]; then
-    $BIN/v-log-action "system" "Warn" "System" "Demonstration mode (restricted access) enabled."
+    $BIN/v-log-action "system" "Warning" "System" "Demonstration mode (restricted access) enabled."
 else
-    $BIN/v-log-action "system" "Warn" "Info" "Demonstration mode (restricted access) disabled."
+    $BIN/v-log-action "system" "Warning" "Info" "Demonstration mode (restricted access) disabled."
 fi
 
 

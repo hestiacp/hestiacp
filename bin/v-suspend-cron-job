@@ -57,7 +57,7 @@ $BIN/v-restart-cron $restart
 check_result $? "Cron restart failed" >/dev/null
 
 # Logging
-$BIN/v-log-action "system" "Info" "System" "Cron job suspended (Job: $job)."
+$BIN/v-log-action "system" "Info" "Cron Jobs" "Cron job suspended (Job: $job)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

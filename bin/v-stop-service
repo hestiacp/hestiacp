@@ -46,11 +46,16 @@ for service in $service_list; do
     if [ "$service" = "iptables" ]; then
         $BIN/v-stop-firewall
     else
-        systemctl stop $service >/dev/null 2>&1
-        $BIN/v-log-action "system" "Info" "System" "Service stopped (Name: $service)."
+        systemctl stop $service
+        result=$?
+        if [ "$result" -ne 0 ]; then
+            $BIN/v-log-action "system" "Error" "System" "Service failed to stop (Name: $service)."
+        else
+            $BIN/v-log-action "system" "Info" "System" "Service stopped (Name: $service)."
+        fi
     fi
     check_result $? "ERROR: $service stop failed" $E_RESTART
-    $BIN/v-log-action "system" "Error" "System" "Service failed to stop (Name: $service)."
+
 done
 
 

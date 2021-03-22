@@ -97,7 +97,7 @@ update_user_value "$user" '$SUSPENDED' 'yes'
 increase_user_value 'admin' '$SUSPENDED_USERS'
 
 # Logging
-$BIN/v-log-action "system" "Info" "System" "Suspended user account (Name: $user)."
+$BIN/v-log-action "system" "Info" "Users" "Suspended user account (Name: $user)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

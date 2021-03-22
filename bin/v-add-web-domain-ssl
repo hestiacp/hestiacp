@@ -146,8 +146,7 @@ if [ ! -z "$UPDATE_SSL_SCRIPT" ]; then
 fi
 
 # Logging
-$BIN/v-log-action "$user" "Info" "Web" "Enabled SSL (Domain: $domain)."
-log_history "enabled ssl support for $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Added certificate and enabled SSL (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

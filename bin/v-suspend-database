@@ -61,7 +61,7 @@ update_object_value 'db' 'DB' "$database" '$SUSPENDED' 'yes'
 increase_user_value "$user" '$SUSPENDED_DB'
 
 # Logging
-$BIN/v-log-action "system" "Info" "System" "Suspended database (User: $user, Database: $database)."
+$BIN/v-log-action "system" "Info" "Database" "Suspended database (User: $user, Database: $database)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

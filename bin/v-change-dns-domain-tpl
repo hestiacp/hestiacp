@@ -124,7 +124,7 @@ if [ "$template" = "office365" ]; then
     if [ "$?" -eq 0 ]; then
         record='@'
         formatted_domain=$(echo "$domain" | sed 's/\./-/g')
-        $BIN/v-add-dns-record $user $domain $record MX "${formatted_domain}.mail.protection.outlook.com." '0'
+        $BIN/v-add-dns-record $user $domain $record MX "${formatted_domain}.mail.protection.outlook.com." '0' '' $restart
     fi
 fi
 

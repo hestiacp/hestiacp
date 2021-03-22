@@ -69,7 +69,7 @@ upgrade_health_check() {
     # Theme
     if [ -z "$THEME" ]; then 
         echo "[ ! ] Adding missing variable to hestia.conf: THEME ('default')"
-        $BIN/v-change-sys-theme 'default'
+        $BIN/v-change-sys-config-value 'THEME' 'default'
     fi
 
     # Default language
@@ -157,8 +157,8 @@ upgrade_health_check() {
     fi
     # API Allowed IP
     if [ -z "$API_ALLOWED_IP" ]; then
-        echo "[ ! ] Adding missing variable to hestia.conf: API_ALLOWED_IP ('')"        
-        $BIN/v-change-sys-config-value "API_ALLOWED_IP" "127.0.0.1"
+        echo "[ ! ] Adding missing variable to hestia.conf: API_ALLOWED_IP ('allow-all')"        
+        $BIN/v-change-sys-config-value "API_ALLOWED_IP" "allow-all"
     fi  
     
     echo "[ * ] Health check complete. Starting upgrade from $VERSION to $new_version..."
@@ -684,6 +684,7 @@ disable_api(){
     if [ "$API" = "no" ]; then
         echo "[ ! ] Disable Api..."
         sed -i 's|//die("Error: Disabled");|die("Error: Disabled");|g' $HESTIA/web/api/index.php
+        $HESTIA/bin/v-change-sys-config-value "API_ALLOWED_IP" ""
     fi
 }
 upgrade_rebuild_web_templates() {
@@ -756,14 +757,6 @@ upgrade_rebuild_users() {
 }
 
 upgrade_restart_services() {
-    # Refresh user interface theme
-    if [ "$THEME" ]; then
-        if [ "$THEME" != "default" ]; then
-            echo "[ * ] Applying user interface updates..."
-            $BIN/v-change-sys-theme $THEME
-        fi
-    fi
-
     if [ "$UPGRADE_RESTART_SERVICES" = "true" ]; then
         echo "[ * ] Restarting services..."
         export restart="yes"

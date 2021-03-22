@@ -271,7 +271,7 @@ if (!empty($_POST['save'])) {
     // Update theme
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_theme'] != $_SESSION['THEME']) {
-            exec (HESTIA_CMD."v-change-sys-theme ".escapeshellarg($_POST['v_theme']), $output, $return_var);
+            exec (HESTIA_CMD."v-change-sys-config-value THEME ".escapeshellarg($_POST['v_theme']), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
         }
@@ -705,6 +705,29 @@ if (!empty($_POST['save'])) {
             $v_security_adv = 'yes';
         }
     }
+    
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_api_allowed_ip'] != $_SESSION['API_ALLOWED_IP']) {
+            $ips = array();
+            foreach(explode("\n",$_POST['v_api_allowed_ip']) as $ip){ 
+                if ($ip != "allow-all") {
+                    if(filter_var(trim($ip), FILTER_VALIDATE_IP)){
+                        $ips[] = trim($ip);
+                    }
+                }else{
+                    $ips[] = trim($ip);
+                }
+            }
+            if(implode(',',$ips) != $_SESSION['API_ALLOWED_IP']){
+            exec (HESTIA_CMD."v-change-sys-config-value API_ALLOWED_IP ".escapeshellarg(implode(',',$ips)), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) $v_login_style = $_POST['v_api_allowed_ip'];
+                $v_security_adv = 'yes';
+            }
+        }
+    }
+    
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_api'] != $_SESSION['API']) {
             $api_status = 'disable';
@@ -718,23 +741,7 @@ if (!empty($_POST['save'])) {
             $v_security_adv = 'yes';
         }
     }
-    if (empty($_SESSION['error_msg'])) {
-        if ($_POST['v_api_allowed_ip'] != $_SESSION['API_ALLOWED_IP']) {
-            $ips = array();
-            foreach(explode("\n",$_POST['v_api_allowed_ip']) as $ip){ 
-                if(filter_var(trim($ip), FILTER_VALIDATE_IP)){
-                    $ips[] = trim($ip);
-                }
-            }
-            if(implode(',',$ips) != $_SESSION['API_ALLOWED_IP']){
-            exec (HESTIA_CMD."v-change-sys-config-value API_ALLOWED_IP ".escapeshellarg(implode(',',$ips)), $output, $return_var);
-            check_return_code($return_var,$output);
-            unset($output);
-            if (empty($_SESSION['error_msg'])) $v_login_style = $_POST['v_api_allowed_ip'];
-                $v_security_adv = 'yes';
-            }
-        }
-    }
+
     // Update SSL certificate
     if ((!empty($_POST['v_ssl_crt'])) && (empty($_SESSION['error_msg']))) {
         if (($v_ssl_crt != str_replace("\r\n", "\n",  $_POST['v_ssl_crt'])) || ($v_ssl_key != str_replace("\r\n", "\n",  $_POST['v_ssl_key']))) {

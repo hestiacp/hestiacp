@@ -94,10 +94,10 @@ else
 
         if [ "$dns_domain" = "$domain" ]; then
             if [ -z "$webmail_record" ]; then
-                $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip
+                $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip '' '' $restart
             else
-                $BIN/v-delete-dns-record $user $domain $webmail_record
-                $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip
+                $BIN/v-delete-dns-record $user $domain $webmail_record $restart
+                $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip '' '' $restart
             fi
         fi
     fi

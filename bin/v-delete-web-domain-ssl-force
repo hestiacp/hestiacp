@@ -61,13 +61,11 @@ fi
 update_object_value 'web' 'DOMAIN' "$domain" '$SSL_FORCE' 'no'
 
 # Restart services if requested
-if [ ! -z "$restart" ]; then
-    $BIN/v-restart-web
-    check_result $? "Web restart failed" >/dev/null
+$BIN/v-restart-web $restart
+check_result $? "Web restart failed" >/dev/null
 
-    $BIN/v-restart-proxy
-    check_result $? "Proxy restart failed" >/dev/null
-fi
+$BIN/v-restart-proxy $restart
+check_result $? "Proxy restart failed" >/dev/null
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Web" "Disabled automatic HTTPS redirection (Domain: $domain)."

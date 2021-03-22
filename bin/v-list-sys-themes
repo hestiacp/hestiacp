@@ -91,7 +91,7 @@ csv_list() {
 
 # System provided themes
 themes=$(ls -v $HESTIA_THEMES/)
-themes=$(echo "$themes" | grep '\.css' | sed 's/\.css$//')
+themes=$(echo "$themes" | grep '\.min.css' | sed 's/\.min.css$//')
 
 # Custom themes
 themes_custom=$(ls -v $HESTIA_THEMES_CUSTOM/)

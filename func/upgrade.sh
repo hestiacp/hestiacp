@@ -69,7 +69,7 @@ upgrade_health_check() {
     # Theme
     if [ -z "$THEME" ]; then 
         echo "[ ! ] Adding missing variable to hestia.conf: THEME ('default')"
-        $BIN/v-change-sys-theme 'default'
+        $BIN/v-change-sys-config-value 'THEME' 'default'
     fi
 
     # Default language
@@ -751,14 +751,6 @@ upgrade_rebuild_users() {
 }
 
 upgrade_restart_services() {
-    # Refresh user interface theme
-    if [ "$THEME" ]; then
-        if [ "$THEME" != "default" ]; then
-            echo "[ * ] Applying user interface updates..."
-            $BIN/v-change-sys-theme $THEME
-        fi
-    fi
-
     if [ "$UPGRADE_RESTART_SERVICES" = "true" ]; then
         echo "[ * ] Restarting services..."
         export restart="yes"

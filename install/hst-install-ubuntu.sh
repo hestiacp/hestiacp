@@ -1124,6 +1124,9 @@ echo "LANGUAGE='$lang'" >> $HESTIA/conf/hestia.conf
 # Login in screen
 echo "LOGIN_STYLE='default'" >> $HESTIA/conf/hestia.conf
 
+# Theme
+echo "THEME='dark'" >> $HESTIA/conf/hestia.conf
+
 # Inactive session timeout
 echo "INACTIVE_SESSION_TIMEOUT='60'" >> $HESTIA/conf/hestia.conf
 
@@ -1803,9 +1806,6 @@ fi
 
 # Set backend port
 $HESTIA/bin/v-change-sys-port $port > /dev/null 2>&1
-
-# Set default theme
-$HESTIA/bin/v-change-sys-theme 'dark'
 
 # Update remaining packages since repositories have changed
 echo -ne "[ * ] Installing remaining software updates..."

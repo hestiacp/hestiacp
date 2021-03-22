@@ -71,11 +71,11 @@ fi
 update_object_value 'web' 'DOMAIN' "$domain" '$SSL_HSTS' 'yes'
 
 # Restart web server
-$BIN/v-restart-web
+$BIN/v-restart-web $restart
 check_result $? "Web restart failed" > /dev/null
 
 # Restart proxy
-$BIN/v-restart-proxy
+$BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" > /dev/null
 
 # Logging

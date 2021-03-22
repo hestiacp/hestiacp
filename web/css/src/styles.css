@@ -1639,7 +1639,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   margin-top: 1px;
   position: sticky;
   top: 145px;
-  z-index: 1000;
+  z-index: 100;
 }
 
 .table-header:hover {

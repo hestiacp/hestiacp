@@ -117,12 +117,14 @@ done
 # Updating user counters
 $BIN/v-update-user-counters $user
 
-# Restarting web server
-$BIN/v-restart-web $restart
-check_result $? "Web restart failed" >/dev/null
+if [ "$restart" = "yes" ]; then
+    # Restarting web server
+    $BIN/v-restart-web $restart
+    check_result $? "Web restart failed" >/dev/null
 
-$BIN/v-restart-proxy $restart
-check_result $? "Proxy restart failed" >/dev/null
+    $BIN/v-restart-proxy $restart
+    check_result $? "Proxy restart failed" >/dev/null
+fi
 
 # Logging
 $BIN/v-log-action "system" "Info" "System" "Rebuilt web domains (User: $user)."

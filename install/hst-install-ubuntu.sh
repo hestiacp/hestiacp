@@ -1666,13 +1666,11 @@ fi
 #                       Configure API                      #
 #----------------------------------------------------------#
 
-if [ "$api" = 'yes' ]; then
-    echo "API='yes'" >> $HESTIA/conf/hestia.conf
-else
-    rm -r $HESTIA/web/api
-    echo "API='no'" >> $HESTIA/conf/hestia.conf
+echo "API='yes'" >> $HESTIA/conf/hestia.conf
+if [ "$api" != "yes" ]; then
+    $HESTIA/bin/v-change-sys-api disable
 fi
-
+echo "API_ALLOWED_IP='127.0.0.1'" >> $HESTIA/conf/hestia.conf
 
 #----------------------------------------------------------#
 #                   Configure Admin User                   #

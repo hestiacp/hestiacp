@@ -42,7 +42,7 @@ source $HESTIA/conf/hestia.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'IP NETMASK [INTERFACE] [USER] [STATUS] [NAME] [NATED_IP] [HELO]'
-is_format_valid 'ip' 'netmask' 'interface' 'user' 'ip_status'
+is_format_valid 'ip' 'netmask' 'iface' 'user' 'ip_status'
 is_ip_free
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"

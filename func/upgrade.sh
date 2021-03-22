@@ -144,11 +144,16 @@ upgrade_health_check() {
         $BIN/v-change-sys-config-value "INACTIVE_SESSION_TIMEOUT" "60"
     fi
 
-    # Inactive session timeout
+    # Enforce Subdomain ownership
     if [ -z "$ENFORCE_SUBDOMAIN_OWNERSHIP" ]; then
         echo "[ ! ] Adding missing variable to hestia.conf: ENFORCE_SUBDOMAIN_OWNERSHIP ('yes')"
         $BIN/v-change-sys-config-value "ENFORCE_SUBDOMAIN_OWNERSHIP" "yes"
     fi    
+    # API Allowed IP
+    if [ -z "$API_ALLOWED_IP" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: API_ALLOWED_IP ('allow-all')"        
+        $BIN/v-change-sys-config-value "API_ALLOWED_IP" "allow-all"
+    fi  
     
     echo "[ * ] Health check complete. Starting upgrade from $VERSION to $new_version..."
     echo "============================================================================="
@@ -650,7 +655,7 @@ upgrade_roundcube(){
         if [ ! -z "$(echo "$WEBMAIL_SYSTEM" | grep -w 'roundcube')" ]; then
             rc_version=$(cat /var/lib/roundcube/index.php | grep -o -E '[0-9].[0-9].[0-9]+' | head -1);
             if [ "$rc_version" == "$rc_v" ]; then
-                echo "[ * ] Upgrading RoundCube to version v$rc_v..."
+                echo "[ * ] Upgrading Roundcube to version v$rc_v..."
                 $HESTIA/bin/v-add-sys-roundcube
             fi
         fi
@@ -662,13 +667,20 @@ upgrade_rainloop(){
         if [ ! -z "$(echo "$WEBMAIL_SYSTEM" | grep -w 'rainloop')" ]; then
             rc_version=$(cat /var/lib/rainloop/data/VERSION);
             if [ "$rc_version" == "$rc_v" ]; then
-                echo "[ * ] Upgrading rainloop to version v$rc_v..."
+                echo "[ * ] Upgrading Rainloop to version v$rl_v..."
                 $HESTIA/bin/v-add-sys-rainloop
             fi
         fi
     fi
 }
 
+disable_api(){
+    if [ "$API" = "no" ]; then
+        echo "[ ! ] Disable Api..."
+        sed -i 's|//die("Error: Disabled");|die("Error: Disabled");|g' $HESTIA/web/api/index.php
+        $HESTIA/bin/v-change-sys-config-value "API_ALLOWED_IP" ""
+    fi
+}
 upgrade_rebuild_web_templates() {
     if [ "$UPGRADE_UPDATE_WEB_TEMPLATES" = "true" ]; then
         echo "[ ! ] Updating default web domain templates..."
@@ -698,6 +710,7 @@ upgrade_rebuild_users() {
             echo "[ * ] Rebuilding user accounts and domains, this may take a few minutes..."
         fi
         for user in $($HESTIA/bin/v-list-sys-users plain); do
+        export restart="no"
             if [ "$DEBUG_MODE" = "true" ]; then
                 echo "      - $user:"
             else
@@ -748,6 +761,7 @@ upgrade_restart_services() {
 
     if [ "$UPGRADE_RESTART_SERVICES" = "true" ]; then
         echo "[ * ] Restarting services..."
+        export restart="yes"
         sleep 2
         if [ ! -z "$MAIL_SYSTEM" ]; then
             if [ "$DEBUG_MODE" = "true" ]; then
@@ -778,7 +792,7 @@ upgrade_restart_services() {
                 if [ "$DEBUG_MODE" = "true" ]; then
                     echo "      - php$v-fpm"
                 fi
-                $BIN/v-restart-service php$v-fpm $restart
+                $BIN/v-restart-service php$v-fpm
             fi
         done
         if [ ! -z "$FTP_SYSTEM" ]; then
@@ -791,20 +805,20 @@ upgrade_restart_services() {
             if [ "$DEBUG_MODE" = "true" ]; then
                 echo "      - $FIREWALL_EXTENSION"
             fi
-            $BIN/v-restart-service $FIREWALL_EXTENSION yes
+            $BIN/v-restart-service $FIREWALL_EXTENSION
         fi
         # Restart SSH daemon service
         if [ "$DEBUG_MODE" = "true" ]; then
             echo "      - sshd"
         fi
-        $BIN/v-restart-service ssh $restart
+        $BIN/v-restart-service ssh
     fi
 
     # Always restart the Hestia Control Panel service
     if [ "$DEBUG_MODE" = "true" ]; then
         echo "      - hestia"
     fi
-    $BIN/v-restart-service hestia $restart
+    $BIN/v-restart-service hestia
 }
 
 upgrade_perform_cleanup() {

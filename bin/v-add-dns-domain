@@ -38,6 +38,7 @@ source $HESTIA/conf/hestia.conf
 # Additional argument formatting
 format_domain
 format_domain_idn
+domain_utf=$(idn -t --quiet -u "$domain_idn")
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -48,7 +49,16 @@ is_format_valid 'user' 'domain' 'ip'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-is_domain_new 'dns' "$domain"
+
+if [ "$($BIN/v-list-dns-domain $user $domain_utf plain |cut -f 1) " != "$domain" ]; then
+    is_domain_new 'dns' "$domain_utf"
+fi
+if [ "$($BIN/v-list-dns-domain $user $domain_idn plain |cut -f 1) " != "$domain" ]; then
+    is_domain_new 'dns' "$domain_idn"
+else
+    is_domain_new 'dns' "$domain"
+fi
+
 is_package_full 'DNS_DOMAINS'
 template=$(get_user_value '$DNS_TEMPLATE')
 is_dns_template_valid $template

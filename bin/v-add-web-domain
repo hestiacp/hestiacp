@@ -37,6 +37,7 @@ source $HESTIA/conf/hestia.conf
 format_domain
 format_domain_idn
 format_aliases
+domain_utf=$(idn -t --quiet -u "$domain_idn")
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -48,7 +49,16 @@ is_format_valid 'user' 'domain' 'aliases' 'ip' 'proxy_ext'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_package_full 'WEB_DOMAINS' 'WEB_ALIASES'
-is_domain_new 'web' "$domain,$aliases"
+
+if [ "$($BIN/v-list-web-domain $user $domain_utf plain |cut -f 1) " != "$domain" ]; then
+    is_domain_new 'web' "$domain_utf,$aliases"
+fi
+if [ "$($BIN/v-list-web-domain $user $domain_idn plain |cut -f 1) " != "$domain" ]; then
+    is_domain_new 'web' "$domain_idn,$aliases"
+else
+    is_domain_new 'web' "$domain,$aliases"
+fi
+
 is_dir_symlink "$HOMEDIR/$user/web"
 is_dir_symlink "$HOMEDIR/$user/web/$domain"
 

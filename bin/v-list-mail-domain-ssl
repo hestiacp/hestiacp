@@ -106,7 +106,7 @@ csv_list() {
 check_args '2' "$#" 'USER DOMAIN [FORMAT]'
 is_format_valid 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
-is_object_valid 'mail' 'DOMAIN' "$domain_idn"
+is_object_valid 'mail' 'DOMAIN' "$domain"
 
 
 #----------------------------------------------------------#

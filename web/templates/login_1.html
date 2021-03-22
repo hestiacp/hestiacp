@@ -11,7 +11,7 @@
                                     <form method="post" action="/login/" id="form_login">
                                     <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
                                     <input type="hidden" name="user" value="<?php echo $_POST['user']; ?>">
-                                    <input type="hidden" name="murmur" value="<?php echo $_POST['murmur']; ?>" id="murmur">    
+                                    <input type="hidden" name="murmur" value="<?php echo $_SESSION['token']; ?>" id="murmur">    
                                     <table class="login-box">
                                         <tr>
                                             <td style="padding: 12px 0 0 2px;" class="login-welcome">

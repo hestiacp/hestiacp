@@ -13,8 +13,8 @@ if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
 // Clear log
 $v_username = escapeshellarg($user);
 exec (HESTIA_CMD."v-delete-user-auth-log ".$v_username, $output, $return_var);
-//check_return_code($return_var,$output);
-//unset($output);
+check_return_code($return_var,$output);
+unset($output);
 
 
 $ip = $_SERVER['REMOTE_ADDR'];
@@ -24,21 +24,21 @@ if(isset($_SERVER['HTTP_CF_CONNECTING_IP'])){
     }
 } 
 $v_ip = escapeshellarg($ip);
+$user_agent = $_SERVER['HTTP_USER_AGENT'];
+$v_user_agent = escapeshellarg($user_agent);
     
-$v_murmur = escapeshellarg($_SESSION['MURMUR']);
-exec(HESTIA_CMD."v-log-user-login ".$v_username." ".$v_ip." success ".$v_murmur, $output, $return_var);
+$v_session_id = escapeshellarg($_SESSION['token']);
 
-// Render page
-//render_page($user, $TAB, 'list_auth');
+// Add current user session back to log unless impersonating another user
+if (!isset($_SESSION['look'])) {
+    exec(HESTIA_CMD."v-log-user-login ".$v_username." ".$v_ip." success ".$v_session_id." ".$v_user_agent, $output, $return_var);
+}
 
 // Flush session messages
 unset($_SESSION['error_msg']);
 unset($_SESSION['ok_msg']);
 
-if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']))) {
-    header("Location: /list/log/auth/?user=".$_SESSION['look']);
-} else {
-    header("Location: /list/log/auth/?user=".$_SESSION['user']);
-}
+// Return to authentication history
+header("Location: /list/log/auth/");
 
 exit;

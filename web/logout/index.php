@@ -12,10 +12,10 @@ if (!empty($_SESSION['look'])) {
     unset($_SESSION['_sf2_meta']);
     header("Location: /");
 } else {
-    if($_SESSION['MURMUR'] && $_SESSION['user']){
+    if($_SESSION['token'] && $_SESSION['user']){
         $v_user = escapeshellarg($_SESSION['user']);
-        $v_murmur = escapeshellarg($_SESSION['MURMUR']);
-        exec(HESTIA_CMD."v-log-user-logout ".$v_user." ".$v_murmur, $output, $return_var);
+        $v_session_id = escapeshellarg($_SESSION['token']);
+        exec(HESTIA_CMD."v-log-user-logout ".$v_user." ".$v_session_id, $output, $return_var);
     }
     
     session_destroy();

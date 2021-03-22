@@ -92,12 +92,15 @@ function authenticate_user($user, $password, $twofa = ''){
     if(isset($_SESSION['token']) && isset($_POST['token']) && $_POST['token'] == $_SESSION['token']) {
     $v_user = escapeshellarg($user);
     $ip = $_SERVER['REMOTE_ADDR'];
+    $user_agent = $_SERVER['HTTP_USER_AGENT'];
     if(isset($_SERVER['HTTP_CF_CONNECTING_IP'])){
         if(!empty($_SERVER['HTTP_CF_CONNECTING_IP'])){
             $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
         }
     }
     $v_ip = escapeshellarg($ip);
+    $v_user_agent = escapeshellarg($user_agent);
+
      // Get user's salt
     $output = '';
     exec (HESTIA_CMD."v-get-user-salt ".$v_user." ".$v_ip." json" , $output, $return_var);
@@ -137,8 +140,8 @@ function authenticate_user($user, $password, $twofa = ''){
             if ( $return_var > 0 ) {
                 sleep(2);
                 $error = "<a class=\"error\">"._('Invalid username or password')."</a>";
-                $v_murmur = escapeshellarg($_POST['murmur']);
-                exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." failed ".$v_murmur, $output, $return_var);
+                $v_session_id = escapeshellarg($_POST['token']);
+                exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." failed ".$v_session_id." ".$v_user_agent, $output, $return_var);
 
                 return $error;
             } else {
@@ -161,8 +164,8 @@ function authenticate_user($user, $password, $twofa = ''){
                                 $error = "<a class=\"error\">"._('Invalid or missing 2FA token')."</a>";
                                 $_SESSION['login']['username'] = $user;
                                 $_SESSION['login']['password'] = $password;
-                                $v_murmur = escapeshellarg($_POST['murmur']);
-                                exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." failed ".$v_murmur, $output, $return_var);
+                                $v_session_id = escapeshellarg($_POST['token']);
+                                exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." failed ".$v_session_id." ".$v_user_agent, $output, $return_var);
                                 return $error;
                                 unset($_POST['twofa']);
                             }
@@ -175,8 +178,8 @@ function authenticate_user($user, $password, $twofa = ''){
                 $_SESSION['user'] = key($data);
                 $v_user = $_SESSION['user'];
                 //log successfull login attempt
-                $v_murmur = escapeshellarg($_POST['murmur']);
-                exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." success ".$v_murmur, $output, $return_var);
+                $v_session_id = escapeshellarg($_POST['token']);
+                exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." success ".$v_session_id." ".$v_user_agent, $output, $return_var);
 
                 $_SESSION['LAST_ACTIVITY'] = time();
                 $_SESSION['MURMUR'] = $_POST['murmur'];

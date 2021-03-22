@@ -6,10 +6,11 @@
 user=$1
 ip=$2
 status=$3
-fingerprint=${4}
+session_id=$4
+user_agent=$5
 
 active="yes"
-if [ $status = "failed" ]; then
+if [ "$status" = "failed" ]; then
     active="no"
 fi
 
@@ -21,7 +22,7 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER IP [FINGERPRINT]'
+check_args '2' "$#" 'USER IP SESSION_ID USER_AGENT'
 is_format_valid 'user' 'ip'
 is_object_valid 'user' 'USER' "$user"
 
@@ -31,16 +32,14 @@ time=$(echo "$time_n_date" |cut -f 1 -d \ )
 date=$(echo "$time_n_date" |cut -f 2 -d \ )
 
 if [ ! -f $USER_DATA/auth.log ]; then
-    touch  $USER_DATA/auth.log
+    touch $USER_DATA/auth.log
 fi
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-awk -i inplace -v finger="FINGERPRINT='$fingerprint'" -v active="ACTIVE='no'" '$2 == TIME {$5=ACTIVE}1' $USER_DATA/auth.log   
-
-echo "IP='$ip' FINGERPRINT='$fingerprint' STATUS='$status' DATE='$date' TIME='$time' ACTIVE='$active'" >> $USER_DATA/auth.log
+echo "DATE='$date' TIME='$time' IP='$ip' ACTION='login' STATUS='$status' USER_AGENT='$user_agent' SESSION='$session_id' ACTIVE='$active'" >> $USER_DATA/auth.log
 
 #----------------------------------------------------------#
 #                       Hestia                             #

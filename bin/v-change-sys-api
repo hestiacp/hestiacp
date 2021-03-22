@@ -44,6 +44,7 @@ if [ "$status" = "enable" ]; then
 else
     if [ $API = "yes" ]; then
         $HESTIA/bin/v-change-sys-config-value "API" "no"
+        $HESTIA/bin/v-change-sys-config-value "API_ALLOWED_IP" ""
         sed -i 's|//die("Error: Disabled");|die("Error: Disabled");|g' $HESTIA/web/api/index.php
     fi
 fi

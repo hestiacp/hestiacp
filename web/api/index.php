@@ -45,8 +45,9 @@ function api($hst_hash, $hst_user, $hst_password, $hst_returncode, $hst_cmd, $hs
         echo 'Error: authentication failed';
         exit;
     }
-    if ( $settings['config']['API_ALLOWED_IP'] != '' ){
+    if ( $settings['config']['API_ALLOWED_IP'] != 'allow-all' ){
         $ip_list = explode(',',$settings['config']['API_ALLOWED_IP']);
+        $ip_list[] = '127.0.0.1';
         if ( !in_array(get_real_user_ip(), $ip_list)){
            echo 'Error: authentication failed';
            exit; 

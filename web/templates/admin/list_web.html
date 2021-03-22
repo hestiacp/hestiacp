@@ -140,7 +140,7 @@ sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-dis
               <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?=$key?>">
           </div>
           <div class="clearfix l-unit__stat-col--left wide-4 truncate">
-            <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
+            <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') || ($data[$key]['SUSPENDED'] == 'yes')) {?>
               <b><?=$key?></b>
             <? } else { ?>
               <b><a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Domain')?>: <?=$key?>"><?=$key?></a></b>
@@ -158,7 +158,9 @@ sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-dis
                   <!-- Restrict ability to edit, delete, or suspend web domains when impersonating the 'admin' account -->
                   &nbsp;
                 <? } else { ?>
-                  <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Domain')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+                  <? if ($data[$key]['SUSPENDED'] == 'no') {?>
+                    <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Domain')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+                  <? } ?>
                   <div class="actions-panel__col actions-panel__logs shortcut-l" key-action="href"><a href="/list/web-log/?domain=<?php echo $key ?>&type=access#" title="<?=_('AccessLog')?>"><i class="fas fa-binoculars status-icon purple status-icon dim"></i></a></div>
                   <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
                     <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=_($spnd_action)?>">

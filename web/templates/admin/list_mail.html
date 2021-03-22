@@ -111,14 +111,16 @@ sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<? if($_SESSION['favouri
                               <!-- Restrict ability to edit, delete, or suspend domain items when impersonating 'admin' account -->
                               <div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('mail accounts')?>"><i class="fas fa-users status-icon blue status-icon dim"></i></a></div>
                               <div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="?domain=<?=$key?>&dns=1&token=<?=$_SESSION['token']?>" title="<?=_('DNS records mail')?>"><i class="fas fa-atlas status-icon blue status-icon dim"></i></a></div>
-                              <div class="actions-panel__col actions-panel__edit" key-action="href"><a href="http://<?=$webmail;?>.<?=$key?>/" target="_blank" title="<?=_('open webmail')?>"><i class="fas fa-paper-plane status-icon lightblue status-icon dim"></i></a></div>
+                              <? if ($data[$key]['SUSPENDED'] == 'no') {?>
+                                <div class="actions-panel__col actions-panel__edit" key-action="href"><a href="http://<?=$webmail;?>.<?=$key?>/" target="_blank" title="<?=_('open webmail')?>"><i class="fas fa-paper-plane status-icon lightblue status-icon dim"></i></a></div>
+                              <? } ?>
                             <? } else { ?>
-                              <div class="actions-panel__col actions-panel__logs shortcut-n" key-action="href"><a href="/add/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Add Mail Account')?>"><i class="fas fa-plus-circle status-icon green status-icon dim"></i></a></div>
-                              <div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('mail accounts')?>"><i class="fas fa-users status-icon blue status-icon dim"></i></a></div>
-                              <div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="?domain=<?=$key?>&dns=1&token=<?=$_SESSION['token']?>" title="<?=_('DNS records mail')?>"><i class="fas fa-atlas status-icon blue status-icon dim"></i></a></div>
-                              <div class="actions-panel__col actions-panel__edit" key-action="href"><a href="http://<?=$webmail;?>.<?=$key?>/" target="_blank" title="<?=_('open webmail')?>"><i class="fas fa-paper-plane status-icon lightblue status-icon dim"></i></a></div>
-                              <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Mail Domain')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
-
+                              <? if ($data[$key]['SUSPENDED'] == 'no') {?>
+                                <div class="actions-panel__col actions-panel__logs shortcut-n" key-action="href"><a href="/add/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Add Mail Account')?>"><i class="fas fa-plus-circle status-icon green status-icon dim"></i></a></div>
+                                <div class="actions-panel__col actions-panel__edit" key-action="href"><a href="http://<?=$webmail;?>.<?=$key?>/" target="_blank" title="<?=_('open webmail')?>"><i class="fas fa-paper-plane status-icon lightblue status-icon dim"></i></a></div>
+                                <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Mail Domain')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+                              <? } ?>
+                              <div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="?domain=<?=$key?>&dns=1&token=<?=$_SESSION['token']?>" title="<?=_('DNS records')?>"><i class="fas fa-atlas status-icon blue status-icon dim"></i></a></div>
                               <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
                                 <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=_($spnd_action)?>">
                                   <i class="fas <?=$spnd_icon?> status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>

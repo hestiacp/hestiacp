@@ -122,7 +122,7 @@ sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" so
                   <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="database[]" value="<?php echo $key ?>">
                 </div>
                 <div class="clearfix l-unit__stat-col--left wide-3 truncate">
-                  <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
+                  <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') || ($data[$key]['SUSPENDED'] == 'yes')) {?>
                     <b><?=$key?></b>
                   <? } else { ?>
                     <b><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Database')?>"><?=$key?></a></b>
@@ -136,7 +136,9 @@ sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" so
                         <!-- Restrict the ability to edit, delete, or suspend domain items when impersonating 'admin' user -->
                         &nbsp;
                       <? } else { ?>
-                        <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Database')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+                        <? if ($data[$key]['SUSPENDED'] == 'no') {?>
+                          <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Database')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+                        <? } ?>                    
                         <?php if ($data[$key]['TYPE'] == 'mysql' && isset($_SESSION['PHPMYADMIN_KEY']) && $_SESSION['PHPMYADMIN_KEY'] != '') { $time = time(); ?>
                           <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="<?=$db_myadmin_link;?>/hestia-sso.php?database=<?=$key;?>&user=<?=$user;?>&exp=<?=$time;?>&hestia_token=<?=password_hash($key.$user.$_SESSION['user_combined_ip'].$time.$_SESSION['PHPMYADMIN_KEY'], PASSWORD_DEFAULT)?>" title="<?=_('Editing Database')?>"><i class="fas fa-sign-in-alt status-icon orange status-icon dim"></i></a></div>
                         <? } ?>

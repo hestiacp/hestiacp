@@ -73,7 +73,7 @@ v_unit_id="<?=$key?>" v_section="dns_rec">
               <input id="check<?=$data[$key]['ID']?>" class="ch-toggle" type="checkbox" name="record[]" value="<?=$data[$key]['ID']?>">
             </div>
             <div class="clearfix l-unit__stat-col--left small truncate">
-              <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
+              <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') || ($data[$key]['SUSPENDED'] == 'yes')) {?>
                 <b><? echo substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?></b></div>
               <? } else { ?>
                 <b><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing DNS Record').': '.htmlspecialchars($data[$key]['RECORD'])?>"><? echo substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?></a></b></div>
@@ -86,7 +86,9 @@ v_unit_id="<?=$key?>" v_section="dns_rec">
                     <!-- Restrict editing of DNS records when impersonating 'admin' account -->
                     &nbsp;
                   <? } else { ?>
-                    <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing DNS Record')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+                    <? if ($data[$key]['SUSPENDED'] == 'no') {?>
+                      <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing DNS Record')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+                    <? } ?>
                     <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                       <a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('delete')?>">
                         <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>

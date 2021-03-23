@@ -317,17 +317,17 @@
                             </tr>
                             <tr>
                                 <td class="vst-text step-top">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v-redirect-checkbox" <?php if (!empty($v_redirect)) echo "checked=yes" ?> onclick="javascript:elementHideShow('v_redirect');"><?php print _('Enable address redirection for this domain');?></label>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v-redirect-checkbox" <?php if (!empty($v_redirect)) echo "checked=yes" ?> onclick="javascript:elementHideShow('v_redirect');"><?php print _('Enable domain redirection');?></label>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="step-left">
                                     <table style="display:<?php if (empty($v_redirect)) { echo 'none';} else {echo 'block';}?> ;" id="v_redirect">
                                         <tr>
-                                            <td>
-                                                <input type="radio" name="v-redirect" value="<?php echo 'www.'.$domain;?>" <?php if ($v_redirect == "www.".$domain) echo "checked"; ?>/><?=sprintf(_('Always redirect visitors to %s'),"www.".$domain);?><br />
-                                                <input type="radio" name="v-redirect" value="<?php echo $domain;?>" <?php if( $v_redirect == $domain) echo "checked";?>/><?=sprintf(_('Always redirect visitors to %s'),$domain);?><br />
-                                                <input type="radio" name="v-redirect" value="custom" <?php if( !empty($v_redirect_custom)) echo "checked";?> id="v-redirect-custom-value"/><?=_("Redirect visitors to custom URL or domain");?>
+                                            <td class="step-top">
+                                                <input type="radio" name="v-redirect" value="<?php echo 'www.'.$v_domain;?>" <?php if ($v_redirect == "www.".$v_domain) echo "checked"; ?>/><?=sprintf(_('Redirect visitors to %s'),"www.".$v_domain);?><br />
+                                                <input type="radio" name="v-redirect" value="<?php echo $v_domain;?>" <?php if( $v_redirect == $v_domain) echo "checked";?>/><?=sprintf(_('Redirect visitors to %s'),$v_domain);?><br />
+                                                <input type="radio" name="v-redirect" value="custom" <?php if( !empty($v_redirect_custom)) echo "checked";?> id="v-redirect-custom-value"/><?=_("Redirect visitors to a custom domain or web address");?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -335,7 +335,7 @@
                                                 <table id="custom_redirect" style="display:<?php if (empty($v_redirect_custom)) { echo 'none';} else {echo 'block';}?> ;">
                                                     <tr>
                                                         <td class="vst-text input-label">
-                                                            <?=_('Address');?>
+                                                            <?=_('Target domain or URL');?>:
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -348,7 +348,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text input-label">
-                                               <?=_('Status code');?>
+                                               <?=_('Status code');?>:
                                             </td>
                                         </tr>
                                         <tr>
@@ -362,8 +362,6 @@
                                                     <?php endforeach; ?>
                                                 </select>
                                             </td>
-                                        </tr>
-                                        <tr>
                                         </tr>
                                     </table>
                                 </td>

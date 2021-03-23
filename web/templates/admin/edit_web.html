@@ -325,9 +325,9 @@
                                     <table style="display:<?php if (empty($v_redirect)) { echo 'none';} else {echo 'block';}?> ;" id="v_redirect">
                                         <tr>
                                             <td class="step-top">
-                                                <input type="radio" name="v-redirect" value="<?php echo 'www.'.$v_domain;?>" <?php if ($v_redirect == "www.".$v_domain) echo "checked"; ?>/><?=sprintf(_('Redirect visitors to %s'),"www.".$v_domain);?><br />
-                                                <input type="radio" name="v-redirect" value="<?php echo $v_domain;?>" <?php if( $v_redirect == $v_domain) echo "checked";?>/><?=sprintf(_('Redirect visitors to %s'),$v_domain);?><br />
-                                                <input type="radio" name="v-redirect" value="custom" <?php if( !empty($v_redirect_custom)) echo "checked";?> id="v-redirect-custom-value"/><?=_("Redirect visitors to a custom domain or web address");?>
+                                                <input type="radio" name="v-redirect" value="<?php echo 'www.'.$v_domain;?>" <?php if ($v_redirect == "www.".$v_domain) echo "checked"; ?> class="v-redirect-custom-value"/><?=sprintf(_('Redirect visitors to %s'),"www.".$v_domain);?><br />
+                                                <input type="radio" name="v-redirect" value="<?php echo $v_domain;?>" <?php if( $v_redirect == $v_domain) echo "checked";?> class="v-redirect-custom-value"/><?=sprintf(_('Redirect visitors to %s'),$v_domain);?><br />
+                                                <input type="radio" name="v-redirect" value="custom" <?php if( !empty($v_redirect_custom)) echo "checked";?> class="v-redirect-custom-value"/><?=_("Redirect visitors to a custom domain or web address");?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -343,24 +343,24 @@
                                                             <input type="text" name="v-redirect-custom" class="vst-input" value="<?=$v_redirect_custom;?>" />
                                                         </td>
                                                     </tr>
+                                                    <tr>
+                                                        <td class="vst-text input-label">
+                                                           <?=_('Status code');?>:
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="vst-text input-label">
+                                                            <select  class="vst-list" name="v-redirect-code">
+                                                                <?php foreach ($redirect_code_options as $status_code): ?>
+                                                                    <option value="<?php echo $status_code;?>"
+                                                                        <?=($v_redirect_code === $status_code || (empty($v_redirect_code) && $status_code === $v_redirect_code))?' selected="selected" ':''; ?>>
+                                                                        <?php echo $status_code;?>
+                                                                    </option>
+                                                                <?php endforeach; ?>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
                                                 </table>   
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text input-label">
-                                               <?=_('Status code');?>:
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text input-label">
-                                                <select  class="vst-list" name="v-redirect-code">
-                                                    <?php foreach ($redirect_code_options as $status_code): ?>
-                                                        <option value="<?php echo $status_code;?>"
-                                                            <?=($v_redirect_code === $status_code || (empty($v_redirect_code) && $status_code === $v_redirect_code))?' selected="selected" ':''; ?>>
-                                                            <?php echo $status_code;?>
-                                                        </option>
-                                                    <?php endforeach; ?>
-                                                </select>
                                             </td>
                                         </tr>
                                     </table>

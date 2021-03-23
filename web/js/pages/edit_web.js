@@ -295,9 +295,9 @@ function elementHideShow(elementToHideOrShow){
     el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
 
-$('#v-redirect-custom-value').change( function(){
-    console.log($('#v-redirect-custom-value').is(":checked"));
-    if($('#v-redirect-custom-value').is(":checked")){
+$('.v-redirect-custom-value').change( function(){
+    
+    if(this.value == "custom"){
         $('#custom_redirect').show();
     }else{
         $('#custom_redirect').hide();

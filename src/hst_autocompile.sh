@@ -461,6 +461,7 @@ if [ "$PHP_B" = true ] ; then
                     --with-curl \
                     --with-zip \
                     --with-gmp \
+                    --enable-intl \
                     --enable-mbstring
     fi
 

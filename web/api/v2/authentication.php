@@ -14,7 +14,7 @@ function isAPIenabled(){
 }
 
 
-function authAPI() {
+function authAPI($apikey) {
     //will return a JSON with user info including the user role
 }
 ?>

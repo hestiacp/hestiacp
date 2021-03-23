@@ -1,0 +1,49 @@
+#!/usr/local/hestia/php/bin/php
+<?php
+#!/bin/bash
+# info: generate api key
+# options: USER
+# labels: panel
+#
+# example: v-generate-api-key 
+#
+# The function creates a key file in $HESTIA/data/keys/
+
+define("HESTIA", "/usr/local/hestia");
+define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
+
+if ((empty($argv[1]))) {
+    echo "Error: not enought arguments\n";
+    echo "Usage: " . $argv[0] ." USER\n";
+    exit(1);
+}
+
+
+exec(HESTIA_CMD."v-list-users json" , $output, $return_var);
+$users = json_decode(implode('', $output), true);
+unset($output);
+if ($users[$argv[1]]) {
+    $user = $argv[1];
+} else {
+    echo "Error: No valid user";
+    exit();
+}
+
+if (!file_exists(HESTIA.'/data/keys/')) {
+    mkdir(HESTIA.'/data/keys/', 0750, true);
+}
+
+$permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+$id = uniqid() . substr(str_shuffle($permitted_chars), 0, 8);
+$hash = hash("sha256", $id);
+
+if (file_exists(HESTIA.'/data/keys/'.$id)) {
+    $id = uniqid() . substr(str_shuffle($permitted_chars), 0, 8);
+    $hash = hash("sha256", $id);
+}
+
+echo $hash;
+$apifile = fopen(HESTIA.'/data/keys/'.$hash, "w");
+fwrite($apifile, $user);
+fclose($apifile);
+?>

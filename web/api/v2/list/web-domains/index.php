@@ -2,6 +2,8 @@
 require_once($_SERVER['DOCUMENT_ROOT']."/api/v2/authentication.php");
 //HESTIA_CMD is set on authentication.php
 $headers = getallheaders();
+header('Content-Type: application/json');
+
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     echo('{"Error": "Method not allowed"}');

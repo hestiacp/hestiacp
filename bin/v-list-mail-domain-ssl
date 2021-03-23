@@ -27,7 +27,7 @@ format_domain_idn
 # JSON list function
 json_list() {
     echo '{'
-    echo -e "\t\"$domain_idn\": {"
+    echo -e "\t\"$domain\": {"
     echo "        \"CRT\": \"$crt\","
     echo "        \"KEY\": \"$key\","
     echo "        \"CA\": \"$ca\","

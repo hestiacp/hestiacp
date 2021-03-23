@@ -31,6 +31,8 @@ if ($users[$argv[1]]) {
 
 if (!file_exists(HESTIA.'/data/keys/')) {
     mkdir(HESTIA.'/data/keys/', 0750, true);
+    chown(HESTIA.'/data/keys/', "admin");// Needs to belong to admin or else php wont be able to read it
+    chgrp(HESTIA.'/data/keys/', "admin");//
 }
 
 $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -42,8 +44,9 @@ if (file_exists(HESTIA.'/data/keys/'.$id)) {
     $hash = hash("sha256", $id);
 }
 
-echo $hash;
+
 $apifile = fopen(HESTIA.'/data/keys/'.$hash, "w");
 fwrite($apifile, $user);
 fclose($apifile);
+echo $hash;
 ?>

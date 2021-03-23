@@ -94,6 +94,12 @@ if(!empty($v_custom_doc_root) &&
     }
 }
 
+$redirect_code_options = array(301,302);
+$v_redirect = $data[$v_domain]['REDIRECT'];
+$v_redirect_code = $data[$v_domain]['REDIRECT_CODE'];
+if ( !in_array($v_redirect, array('www.'.$v_domain, $v_domain))){
+    $v_redirect_custom = $v_redirect;
+}
 
 $v_ftp_user = $data[$v_domain]['FTP_USER'];
 $v_ftp_path = $data[$v_domain]['FTP_PATH'];
@@ -835,7 +841,38 @@ if (!empty($_POST['save'])) {
     }else{
         unset($v_custom_doc_root);
     }   
+    
+    if ( !empty($v_redirect) && empty($_POST['v-redirect-checkbox']) ) {
+        exec(HESTIA_CMD."v-delete-web-domain-redirect ".$v_username." ".escapeshellarg($v_domain),  $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);    
+        unset($_POST['v-redirect']);
+    }
+    
+    if (!empty($_POST['v-redirect']) && !empty($_POST['v-redirect-checkbox']) ){
+        if (empty($v_redirect)){
+            if ($_POST['v-redirect']  == 'custom' && empty($_POST['v-redirect-custom'])){
+            }else{
+                if($_POST['v-redirect']  == 'custom'){
+                    $_POST['v-redirect'] = $_POST['v-redirect-custom'];
+                }
+            exec(HESTIA_CMD."v-add-web-domain-redirect ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($_POST['v-redirect'])." ".escapeshellarg($_POST['v-redirect-code']),  $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);  
+     
+            }
 
+        }else {
+             if ($_POST['v-redirect'] == 'custom') {
+                 $_POST['v-redirect'] = $_POST['v-redirect-custom'];
+             }
+             if ( $_POST['v-redirect'] != $v_redirect || $_POST['v-redirect-code'] != $v_redirect_code ) {
+                 exec(HESTIA_CMD."v-add-web-domain-redirect ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($_POST['v-redirect'])." ".escapeshellarg($_POST['v-redirect-code']),  $output, $return_var);
+                 check_return_code($return_var,$output);
+                 unset($output);  
+             }
+        }
+    }
     // Restart web server
     if (!empty($restart_web) && (empty($_SESSION['error_msg']))) {
         exec (HESTIA_CMD."v-restart-web", $output, $return_var);

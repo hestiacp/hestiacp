@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: Delete force redirect to domain
-# options: USER DOMAIN REDIRECT [CUSTOM]
+# options: USER DOMAIN
 # labels: hestia web
 #
 # example: v-add-web-domain-redirect user domain.tld
@@ -27,7 +27,7 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'USER DOMAIN REDIRECT'
+check_args '2' "$#" 'USER DOMAIN'
 is_format_valid 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -58,7 +58,7 @@ fi
 #----------------------------------------------------------#
 
 update_object_value 'web' 'DOMAIN' "$domain" '$REDIRECT' ""
-
+update_object_value 'web' 'DOMAIN' "$domain" '$REDIRECT_CODE' ""
 # Restart web server
 $BIN/v-restart-web
 check_result $? "Web restart failed" > /dev/null

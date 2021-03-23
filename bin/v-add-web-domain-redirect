@@ -20,13 +20,12 @@
 # Argument definition
 user=$1
 domain=$2
-redirect=$3
+redirect=$(echo $3 | idn);
 code=${4-301}
 
 # Includes
 source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #

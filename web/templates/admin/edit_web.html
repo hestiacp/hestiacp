@@ -318,7 +318,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text step-top">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v-redirect-checkbox" <?php if (!empty($v_redirect)) echo "checked=yes" ?> onclick="javascript:elementHideShow('v_redirect');"> <?php print _('Redirect');?></label>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v-redirect-checkbox" <?php if (!empty($v_redirect)) echo "checked=yes" ?> onclick="javascript:elementHideShow('v_redirect');"><?php print _('Enable address redirection for this domain');?></label>
                                 </td>
                             </tr>
                             <tr>
@@ -326,15 +326,14 @@
                                     <table style="display:<?php if (empty($v_redirect)) { echo 'none';} else {echo 'block';}?> ;" id="v_redirect">
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php $v_redirect;?>
                                                 <?=_('Redirect');?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="radio" name="v-redirect" value="<?php echo 'www.'.$domain;?>" <?php if ($v_redirect == "www.".$domain) echo "checked"; ?>/> <?=sprintf(_('Always redirect to %s'),"www.".$domain);?><br />
-                                                <input type="radio" name="v-redirect" value="<?php echo $domain;?>" <?php if( $v_redirect == $domain) echo "checked";?>/> <?=sprintf(_('Always redirect to %s'),$domain);?><br />
-                                                <input type="radio" name="v-redirect" value="custom" <?php if( !empty($v_redirect_custom)) echo "checked";?> id="v-redirect-custom-value"/> <?=_("Redirect to custom URL or domain");?>
+                                                <input type="radio" name="v-redirect" value="<?php echo 'www.'.$domain;?>" <?php if ($v_redirect == "www.".$domain) echo "checked"; ?>/><?=sprintf(_('Always redirect visitors to %s'),"www.".$domain);?><br />
+                                                <input type="radio" name="v-redirect" value="<?php echo $domain;?>" <?php if( $v_redirect == $domain) echo "checked";?>/><?=sprintf(_('Always redirect visitors to %s'),$domain);?><br />
+                                                <input type="radio" name="v-redirect" value="custom" <?php if( !empty($v_redirect_custom)) echo "checked";?> id="v-redirect-custom-value"/><?=_("Redirect visitors to custom URL or domain");?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -362,11 +361,11 @@
                                             <td class="vst-text input-label">
                                                 <select  class="vst-list" name="v-redirect-code">
                                                     <?php foreach ($redirect_code_options as $status_code): ?>
-                                                    <option value="<?php echo $status_code;?>"
-                                                        <?=($v_redirect_code === $status_code || (empty($v_redirect_code) && $status_code === $v_redirect_code))?' selected="selected" ':''; ?>>
-                                                        <?php echo $status_code;?>
-                                                    </option>
-                                                <?php endforeach; ?>
+                                                        <option value="<?php echo $status_code;?>"
+                                                            <?=($v_redirect_code === $status_code || (empty($v_redirect_code) && $status_code === $v_redirect_code))?' selected="selected" ':''; ?>>
+                                                            <?php echo $status_code;?>
+                                                        </option>
+                                                    <?php endforeach; ?>
                                                 </select>
                                             </td>
                                         </tr>

@@ -1,10 +1,10 @@
 <div class="l-center edit">
         <div class="l-sort clearfix">
           <div class="l-unit-toolbar__buttonstrip">
-            <a class="ui-button cancel" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
+            <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
+            <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save')?></a>
           </div>
         </div>
       </div>
@@ -425,8 +425,7 @@
 					<tr>
                                             <td class="vst-text step-top">
 						<label>
-						    <input type="checkbox" size="20" class="vst-checkbox" name="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo "checked=yes"; ?> onclick="javascript:elementHideShow('smtp_relay_table');">
-						    <?php print _('Global SMTP Relay');?>
+						    <input type="checkbox" size="20" class="vst-checkbox" name="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo "checked=yes"; ?> onclick="javascript:elementHideShow('smtp_relay_table');"><?php print _('Global SMTP Relay');?>
 						</label>
 					    </td>
 					</tr>
@@ -670,7 +669,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label step-left">
-                                    <table style="display:<?php if (empty($v_backup_adv)) echo 'none';?> ;" id="backup">
+                                    <table style="<?php if (empty($v_backup_adv)) echo 'display:none';?> ;" id="backup">
                                         <tr>
                                             <td class="vst-text">
                                                 <?php print _('Local backup') ?>
@@ -719,18 +718,18 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print _('Directory') ?>
+                                                <?php print _('Directory') ?> <a href="https://docs.hestiacp.com/admin_docs/backups.html"><i class="fas fa-question-circle"></i></a>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="vst-input" name="v_backup_dir" value="<?=trim($v_backup_dir, "'")?>">
+                                                <input type="text" size="20" class="vst-input" name="v_backup_dir" value="<?=trim($v_backup_dir, "'")?>" disabled="disabled">
                                                 <br><br>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="vst-text input-label">
-                                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_backup_remote_adv" <?php if (!empty($v_backup_remote_adv)) echo "checked=yes" ?> onclick="javascript:elementHideShow('remote_backup');"> <?php print _('Remote backup');?></label>
+                                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_backup_remote_adv" <?php if (!empty($v_backup_remote_adv)) echo "checked=yes" ?> onclick="javascript:elementHideShow('remote_backup');"><?php print _('Remote backup');?></label>
                                             </td>
                                         </tr>
                                         <tr>
@@ -956,7 +955,7 @@
                                     </table>
                                 </td>
                             </tr>
-<tr>
+                            <tr>
                                 <td class="vst-text input-label step-top advanced-options">
                                     <a href="javascript:elementHideShow('security');" class="vst-text">
                                         <i class="fas fa-key"></i><b><?php print _('Security');?> <img src="/images/arrow.png"></b>
@@ -965,7 +964,41 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label step-left">
-                                    <table style="display:<?php if (empty($v_security_adv)) echo 'none';?> ;" id="security">
+                                    <table style="<?php if (empty($v_security_adv)) echo 'display:none;';?>" id="security">
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print _('Enable API access');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_api" id="api">
+                                                    <option value='yes'><?php print _('yes'); ?></option>
+                                                    <option value='no' <?php if($_SESSION['API'] == 'no') echo 'selected' ?> ><?php print _('no'); ?></option>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                        <table id="security_ip" style="<?php if ($_SESSION['API'] == "no") echo 'display:none;';?>">
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print _('Allowed IP addresses for API');?> <span class="optional" style="float:right">1 IP address per line</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <textarea size="20" class="vst-textinput short" name="v_api_allowed_ip"><?php 
+                                                    foreach(explode(',',$_SESSION['API_ALLOWED_IP']) as $ip ){
+                                                        echo $ip."\n";
+                                                    }
+                                                    ?></textarea>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        </table>
+                                            </td></tr>
                                         <tr>
                                             <td class="vst-text input-label">
                                                 <?php print _('Login screen style');?>
@@ -982,12 +1015,26 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print _('Inactive session length');?> (<?php print _('Minutes');?>)
+                                                <?php print _('Inactive session timeout');?> (<?php print _('Minutes');?>)
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <input type="text" size="20" class="vst-input" name="v_inactive_session_timeout" value="<?=trim($_SESSION['INACTIVE_SESSION_TIMEOUT'], "'")?>">
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print _('Enforce subdomain ownership');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_enforce_subdomain_ownership">
+                                                    <option value='yes'><?php print _('yes'); ?></option>
+                                                    <option value='no' <?php if($_SESSION['ENFORCE_SUBDOMAIN_OWNERSHIP'] == 'no') echo 'selected' ?> ><?php print _('no'); ?></option>
+                                                </select>
                                                 <br><br>
                                             </td>
                                         </tr>

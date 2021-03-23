@@ -1,25 +1,36 @@
 #!/bin/bash
-# info: update web templates
-# options: THEME
-# labels: hestia
+# info: change ip HELO/SMTP Banner
+# options: IP HELO
 #
-# The function for changing the currently active system theme.
+# The function for changing HELO/SMTP Banner associated with ip.
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
 # Argument definition
-theme=$1
+ip=$1
+helo=$2
 
 # Includes
 source $HESTIA/func/main.sh
+source $HESTIA/func/ip.sh
 source $HESTIA/conf/hestia.conf
 
+# Check if mail system is installed
+if [ -z "$MAIL_SYSTEM" ]; then
+    check_result "$E_NOTEXIST" "Mail system not installed"
+fi
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
+
+check_args '2' "$#" 'IP HELO'
+is_format_valid 'ip'
+is_format_valid 'helo'
+is_ip_valid "$ip"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -29,35 +40,15 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Initialize local directory if it does not exist
-if [ ! -d "$HESTIA_THEMES_CUSTOM" ]; then
-    mkdir -p $HESTIA_THEMES_CUSTOM
-fi
-
-# Theme argument and file detection
-if [ -z "$theme" ]; then
-    echo "ERROR: No theme specified."
-    exit 1
-else
-    if [ -e "$HESTIA_THEMES/$theme.css" ]; then
-        theme_conf="$HESTIA_THEMES/$theme.css"
-    elif [ -e "$HESTIA_THEMES_CUSTOM/$theme.css" ]; then
-        theme_conf="$HESTIA_THEMES_CUSTOM/$theme.css"
-    else
-        echo "ERROR: Unable to locate specified theme."
-        exit 1
-    fi
-
-    # Replace theme override file
-    rm -f $HESTIA/web/css/active-theme.css
-    cp -f $theme_conf $HESTIA/web/css/active-theme.css
-
-    # Set default theme in configuration file
-    $BIN/v-change-sys-config-value 'THEME' $theme
-fi
+# Change ip HELO/SMTP Banner
+update_ip_helo_value $ip $helo
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
+
+# Logging
+log_history "changed associated HELO/SMTP Banner on $ip to $helo" '' 'admin'
+log_event "$OK" "$ARGUMENTS"
 
 exit

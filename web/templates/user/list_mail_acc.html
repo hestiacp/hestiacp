@@ -5,9 +5,9 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a class="ui-button cancel" id="btn-back" href="/list/mail/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
-          <a href="/add/mail/?domain=<?=htmlentities($_GET['domain'])?>" id="btn-create" class="ui-button cancel"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Add Mail Account')?></a>
-          <a href="/edit/mail/?domain=<?=htmlentities($_GET['domain'])?>" id="btn-create" class="ui-button cancel"><i class="fas fa-pencil-alt status-icon blue"></i> <?=_('Editing Mail Domain')?></a>
+          <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/mail/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back')?></a>
+          <a href="/add/mail/?domain=<?=htmlentities($_GET['domain'])?>" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Mail Account')?></a>
+          <a href="/edit/mail/?domain=<?=htmlentities($_GET['domain'])?>" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-pencil-alt status-icon blue"></i><?=_('Editing Mail Domain')?></a>
         </div>
         <ul class="context-menu sort-order animated fadeIn" style="display:none;">
           <li entity="sort-date" sort_as_int="1"><span class="name active"><?=_('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
@@ -48,7 +48,7 @@
 
     <div class="l-separator"></div>
 
-    <div class="l-center units animated fadeIn">
+    <div class="l-center units">
         <div class="header table-header">     
             <div class="l-unit__col l-unit__col--right">
               <div>
@@ -83,8 +83,8 @@
       ?>
 
 
-      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] == 1) echo ' l-unit--starred'; ?>"
- v_unit_id="<?=$key."@".$_GET['domain']?>" v_section="mail_acc" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?$data[$key]['U_DISK']?>"
+      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] == 1) echo ' l-unit--starred'; ?> animated fadeIn"
+ v_unit_id="<?=$key."@".$_GET['domain']?>" v_section="mail_acc" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?=$data[$key]['U_DISK']?>"
 sort-star="<? if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] == 1) echo '1'; else echo '0'; ?>">
             <div class="l-unit__col l-unit__col--right">
               <div class="clearfix l-unit__stat-col--left super-compact">

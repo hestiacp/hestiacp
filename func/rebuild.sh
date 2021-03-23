@@ -78,17 +78,20 @@ rebuild_user_conf() {
         $HOMEDIR/$user/.cache \
         $HOMEDIR/$user/.local \
         $HOMEDIR/$user/.composer \
-        $HOMEDIR/$user/.ssh
-
+        $HOMEDIR/$user/.vscode-server \
+        $HOMEDIR/$user/.ssh \
+        $HOMEDIR/$user/.npm
     chmod a+x $HOMEDIR/$user
     chmod a+x $HOMEDIR/$user/conf
-    chown $user:$user \
+    chown --no-dereference $user:$user \
         $HOMEDIR/$user \
         $HOMEDIR/$user/.config \
         $HOMEDIR/$user/.cache \
         $HOMEDIR/$user/.local \
         $HOMEDIR/$user/.composer \
-        $HOMEDIR/$user/.ssh
+        $HOMEDIR/$user/.vscode-server \
+        $HOMEDIR/$user/.ssh \
+        $HOMEDIR/$user/.npm
     chown root:root $HOMEDIR/$user/conf
 
     $BIN/v-add-user-sftp-jail "$user"
@@ -119,8 +122,8 @@ rebuild_user_conf() {
         chmod 751 $HOMEDIR/$user/conf/web
         chmod 751 $HOMEDIR/$user/web
         chmod 771 $HOMEDIR/$user/tmp
-        chown $user:$user $HOMEDIR/$user/web
-        if [ -z "$create_user" ]; then
+        chown --no-dereference $user:$user $HOMEDIR/$user/web
+        if [ "$create_user" = "yes" ]; then
             $BIN/v-rebuild-web-domains $user $restart
         fi
     fi
@@ -134,7 +137,7 @@ rebuild_user_conf() {
 
         mkdir -p $HOMEDIR/$user/conf/dns
         chmod 751 $HOMEDIR/$user/conf/dns
-        if [ -z "$create_user" ]; then
+        if [ "$create_user" = "yes" ]; then
             $BIN/v-rebuild-dns-domains $user $restart
         fi
     fi
@@ -154,7 +157,7 @@ rebuild_user_conf() {
         mkdir -p $HOMEDIR/$user/mail
         chmod 751 $HOMEDIR/$user/mail
         chmod 751 $HOMEDIR/$user/conf/mail
-        if [ -z "$create_user" ]; then
+        if [ "$create_user" = "yes" ]; then
             $BIN/v-rebuild-mail-domains $user
         fi
     fi
@@ -165,7 +168,7 @@ rebuild_user_conf() {
         chmod 660 $USER_DATA/db.conf
         echo "$BIN/v-update-databases-disk $user" >> $HESTIA/data/queue/disk.pipe
 
-        if [ -z "$create_user" ]; then
+        if [ "$create_user" = "yes" ]; then
             $BIN/v-rebuild-databases $user
         fi
     fi
@@ -174,7 +177,7 @@ rebuild_user_conf() {
         touch $USER_DATA/cron.conf
         chmod 660 $USER_DATA/cron.conf
 
-        if [ -z "$create_user" ]; then
+        if [ "$create_user" = "yes" ]; then
             $BIN/v-rebuild-cron-jobs $user $restart
         fi
     fi
@@ -243,7 +246,7 @@ rebuild_web_domain_conf() {
     fi
 
     # Set ownership
-    chown $user:$user \
+    chown --no-dereference $user:$user \
         $HOMEDIR/$user/web/$domain \
         $HOMEDIR/$user/web/$domain/private \
         $HOMEDIR/$user/web/$domain/cgi-bin \
@@ -402,16 +405,16 @@ rebuild_web_domain_conf() {
     done
 
     # Set folder permissions
-    chmod 551   $HOMEDIR/$user/web/$domain \
+    no_symlink_chmod 551   $HOMEDIR/$user/web/$domain \
                 $HOMEDIR/$user/web/$domain/stats \
                 $HOMEDIR/$user/web/$domain/logs
-    chmod 751   $HOMEDIR/$user/web/$domain/private \
+    no_symlink_chmod 751   $HOMEDIR/$user/web/$domain/private \
                 $HOMEDIR/$user/web/$domain/cgi-bin \
                 $HOMEDIR/$user/web/$domain/public_*html \
                 $HOMEDIR/$user/web/$domain/document_errors
     chmod 640 /var/log/$WEB_SYSTEM/domains/$domain.*
 
-    chown $user:www-data $HOMEDIR/$user/web/$domain/public_*html
+    chown --no-dereference $user:www-data $HOMEDIR/$user/web/$domain/public_*html
 }
 # DNS domain rebuild
 rebuild_dns_domain_conf() {
@@ -529,16 +532,6 @@ rebuild_mail_domain_conf() {
         # Setting outgoing ip address
         if [ ! -z "$local_ip" ]; then
             echo "$local_ip" > $HOMEDIR/$user/conf/mail/$domain/ip
-        fi
-
-        
-        # Setting HELO for mail domain
-        if [ ! -z "$local_ip" ]; then
-            IP_RDNS=$(is_ip_rdns_valid "$local_ip")
-            sed -i "/^${domain}:/d" /etc/exim4/mailhelo.conf >/dev/null 2>&1
-            if [ ! -z "$IP_RDNS" ]; then
-                echo ${domain}:${IP_RDNS} >> /etc/exim4/mailhelo.conf
-            fi
         fi
 
         # Adding antispam protection

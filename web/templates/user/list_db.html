@@ -1,34 +1,26 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a href="/add/db/" id="btn-create" class="ui-button cancel"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Add Database')?></a>
+          <a href="/add/db/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Database')?></a>
           <?
-            $mysql = 0;
-            $pgsql = 0;
-
             list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
 
-            foreach ($data as $key => $value) {
-              if ($data[$key]['TYPE'] == 'mysql'){
-                $mysql = 1;
-                $db_myadmin_link = "//".$http_host."/phpmyadmin/";
-                if (!empty($_SESSION['DB_PMA_ALIAS']))
-                  $db_myadmin_link = "//".$http_host."/".$_SESSION['DB_PMA_ALIAS'];
-              }
-              if ($data[$key]['TYPE'] == 'pgsql'){
-                $pgsql = 1;
-                $db_pgadmin_link = "//".$http_host."/phppgadmin/";
-                if (!empty($_SESSION['DB_PGA_ALIAS']))
-                  $db_pgadmin_link = "//".$http_host."/".$_SESSION['DB_PGA_ALIAS'];
-              }
+            $db_myadmin_link = "//".$http_host."/phpmyadmin/";
+            $db_pgadmin_link = "//".$http_host."/phppgadmin/";
+
+            if (!empty($_SESSION['DB_PMA_ALIAS'])) {
+              $db_myadmin_link = "//".$http_host."/".$_SESSION['DB_PMA_ALIAS']."/";
             }
-            if($mysql){
-              echo '<a class="ui-button cancel" href="'.$db_myadmin_link.'" target="_blank"><i class="fas fa-database status-icon orange"></i> phpMyAdmin</a>';
-            }
-            if($pgsql){
-              echo '<a class="ui-button cancel" href="'.$db_pgadmin_link.'" target="_blank"><i class="fas fa-database status-icon orange"></i> phpPgAdmin</a>';
+            if (!empty($_SESSION['DB_PGA_ALIAS'])) {
+              $db_pgadmin_link = "//".$http_host."/".$_SESSION['DB_PGA_ALIAS']."/";
             }
           ?>
+          <? if (($_SESSION['DB_SYSTEM'] === 'mysql') || ($_SESSION['DB_SYSTEM'] === 'mysql,pgsql') || ($_SESSION['DB_SYSTEM'] === 'pgsql,mysql')) {?>
+            <a class="ui-button cancel" dir="ltr" href="<?php echo $db_myadmin_link; ?>" target="_blank"><i class="fas fa-database status-icon orange"></i>phpMyAdmin</a>
+          <? } ?>
+          <? if (($_SESSION['DB_SYSTEM'] === 'pgsql') || ($_SESSION['DB_SYSTEM'] === 'mysql,pgsql') || ($_SESSION['DB_SYSTEM'] === 'pgsql,mysql')) {?>
+            <a class="ui-button cancel" dir="ltr" href="<?php echo $db_pgadmin_link; ?>" target="_blank"><i class="fas fa-database status-icon orange"></i>phpPgAdmin</a>
+          <? } ?>
         </div>
         <ul class="context-menu sort-order animated fadeIn" style="display:none;">
           <li entity="sort-date" sort_as_int="1"><span class="name active"><?=_('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
@@ -71,7 +63,7 @@
 
     <div class="l-separator"></div>
 
-    <div class="l-center units animated fadeIn">
+    <div class="l-center units">
         <div class="header table-header">
             <div class="l-unit__col l-unit__col--right">
                   <div class="clearfix l-unit__stat-col--left super-compact">
@@ -112,7 +104,7 @@
       ?>
 
 
-      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['DB'][$key] == 1) echo ' l-unit--starred'; ?>" v_unit_id="<?=$key?>" v_section="db"
+      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['DB'][$key] == 1) echo ' l-unit--starred'; ?> animated fadeIn" v_unit_id="<?=$key?>" v_section="db"
 sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?=$data[$key]['U_DISK']?>"
 sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" sort-star="<? if($_SESSION['favourites']['DB'][$key] == 1) echo '1'; else echo '0'; ?>">
             <div class="l-unit__col l-unit__col--right">

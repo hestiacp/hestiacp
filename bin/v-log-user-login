@@ -1,11 +1,17 @@
 #!/bin/bash
 # info: add user login
-# options: USER IP [FINGERPRINT]
+# options: USER IP STATUS [FINGERPRINT]
 
 # Argument definition
 user=$1
 ip=$2
-fingerprint=${3}
+status=$3
+fingerprint=${4}
+
+active="yes"
+if [ $status = "failed" ]; then
+    active="no"
+fi
 
 # Includes
 source $HESTIA/func/main.sh
@@ -34,9 +40,9 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
-awk -i inplace -v finger="FINGERPRINT='$fingerprint'" -v active="active='no'" '$2 == finger {$5=active}1' $USER_DATA/auth.log   
+awk -i inplace -v finger="FINGERPRINT='$fingerprint'" -v active="ACTIVE='no'" '$2 == TIME {$5=ACTIVE}1' $USER_DATA/auth.log   
 
-echo "IP='$ip' FINGERPRINT='$fingerprint' DATE='$date' TIME='$time' active='yes'" >> $USER_DATA/auth.log
+echo "IP='$ip' FINGERPRINT='$fingerprint' STATUS='$status' DATE='$date' TIME='$time' ACTIVE='$active'" >> $USER_DATA/auth.log
 
 #----------------------------------------------------------#
 #                       Hestia                             #

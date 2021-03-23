@@ -1,12 +1,13 @@
 #!/bin/bash
 # info: add webmail support for a domain
-# options: USER DOMAIN WEBMAIL [RESTART] [QUIET]
+# options: USER DOMAIN [WEBMAIL] [RESTART] [QUIET]
 # labels: hestia
 #
 # example: v-add-sys-webmail user domain.com
+# example: v-add-sys-webmail user domain.com rainloop
+# example: v-add-sys-webmail user domain.com roundcube
 #
-# this function adds support for webmail services
-# to a mail domain.
+# this function enables webmail client for a mail domain.
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -30,8 +31,6 @@ if [[ "$domain" =~ .*\.$ ]]; then
     domain=$(echo "$domain" |sed -e "s/\.$//")
 fi
 
-domain_idn=$(idn -t --quiet -a "$domain")
-
 # Includes
 source $HESTIA/func/main.sh
 source $HESTIA/func/domain.sh
@@ -53,7 +52,7 @@ if [ -z "$webmail" ]; then
     done
 fi
 
-check_args '3' "$#" 'USER DOMAIN WEBMAIL [RESTART]'
+check_args '2' "$#" 'USER DOMAIN [WEBMAIL] [RESTART]'
 is_format_valid 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_system_enabled "$IMAP_SYSTEM" 'IMAP_SYSTEM'
@@ -96,10 +95,10 @@ else
 
         if [ "$dns_domain" = "$domain" ]; then
             if [ -z "$webmail_record" ]; then
-                $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip
+                $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip '' '' $restart
             else
-                $BIN/v-delete-dns-record $user $domain $webmail_record
-                $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip
+                $BIN/v-delete-dns-record $user $domain $webmail_record $restart
+                $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip '' '' $restart
             fi
         fi
     fi

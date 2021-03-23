@@ -5,7 +5,7 @@ if (!empty($_SESSION['WEBMAIL_ALIAS'])) $v_webmail_alias = $_SESSION['WEBMAIL_AL
 <div class="l-center">
   <div class="l-sort clearfix noselect">
     <div class="l-unit-toolbar__buttonstrip">
-      <a class="ui-button cancel" id="btn-back" href="/list/mail/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
+      <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/mail/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back')?></a>
     </div>
     <div class="l-sort-toolbar clearfix">
       <table>
@@ -27,7 +27,7 @@ if (!empty($_SESSION['WEBMAIL_ALIAS'])) $v_webmail_alias = $_SESSION['WEBMAIL_AL
 
 <div class="l-separator"></div>
 
-<div class="l-center units animated fadeIn">
+<div class="l-center units">
     <div class="header table-header">     
         <div class="l-unit__col l-unit__col--right">
           <div>
@@ -39,7 +39,7 @@ if (!empty($_SESSION['WEBMAIL_ALIAS'])) $v_webmail_alias = $_SESSION['WEBMAIL_AL
           </div>
         </div>
     </div>
-    <div class="l-unit">
+    <div class="l-unit animated fadeIn">
                     <div class="l-unit__col l-unit__col--right">
                       <div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" style="width:200px !important;" value="mail.<?=htmlspecialchars($_GET['domain']);?>"/></b> </div>
                     <div class="clearfix l-unit__stat-col--left text-center"><b>A</b></div>
@@ -48,7 +48,7 @@ if (!empty($_SESSION['WEBMAIL_ALIAS'])) $v_webmail_alias = $_SESSION['WEBMAIL_AL
                     <div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" value="<?php echo array_key_first($ips);?>"/></b></div>
               </div>
     </div>
-    <div class="l-unit">
+    <div class="l-unit animated fadeIn">
                   <div class="l-unit__col l-unit__col--right">
                     <div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" style="width:200px !important;" value="<?=$v_webmail_alias;?>.<?=htmlspecialchars($_GET['domain']);?>"/></b> </div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b>A</b></div>
@@ -57,7 +57,7 @@ if (!empty($_SESSION['WEBMAIL_ALIAS'])) $v_webmail_alias = $_SESSION['WEBMAIL_AL
                   <div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" value="<?php echo array_key_first($ips);?>"/></b></div>
             </div>
     </div>
-    <div class="l-unit">
+    <div class="l-unit animated fadeIn">
           <div class="l-unit__col l-unit__col--right">
             <div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" style="width:200px !important;" value="@"/></b> </div>
           <div class="clearfix l-unit__stat-col--left text-center"><b>TXT</b></div>
@@ -67,7 +67,7 @@ if (!empty($_SESSION['WEBMAIL_ALIAS'])) $v_webmail_alias = $_SESSION['WEBMAIL_AL
           </div>
     </div>
 <?php foreach($dkim as $key => $value){ ?>
-<div class="l-unit">
+<div class="l-unit animated fadeIn">
       <div class="l-unit__col l-unit__col--right">
         <div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" style="width:200px !important;" value="<?=htmlspecialchars($key);?>"/></b></div>
       <div class="clearfix l-unit__stat-col--left text-center"><b>TXT</b></div>

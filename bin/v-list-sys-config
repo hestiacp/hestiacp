@@ -67,7 +67,10 @@ json_list() {
         "DB_PGA_ALIAS": "'$DB_PGA_ALIAS'",
         "LOGIN_STYLE": "'$LOGIN_STYLE'",
         "INACTIVE_SESSION_TIMEOUT": "'$INACTIVE_SESSION_TIMEOUT'",
-        "PHPMYADMIN_KEY": "'$PHPMYADMIN_KEY'"
+        "PHPMYADMIN_KEY": "'$PHPMYADMIN_KEY'",
+        "ENFORCE_SUBDOMAIN_OWNERSHIP": "'$ENFORCE_SUBDOMAIN_OWNERSHIP'",
+        "API": "'$API'",
+        "API_ALLOWED_IP": "'$API_ALLOWED_IP'"
     }
     }'
 }
@@ -150,6 +153,12 @@ shell_list() {
     if [ ! -z "$FILE_MANAGER" ]; then
         echo "File Manager enabled:             $FILE_MANAGER"
     fi
+    if [ ! -z "$API" ]; then
+    echo "API enabled:             $API"
+    echo "Allowed IPS:             $API_ALLOWED_IP"
+    
+    fi
+    
     if [ ! -z "$SMTP_RELAY" ] && [ "$SMTP_RELAY" != 'false' ]; then
 	echo "SMTP Relay enabled:                $SMTP_RELAY"
 	echo "SMTP Relay Server:                 $SMTP_RELAY_HOST"
@@ -174,7 +183,7 @@ plain_list() {
     echo -ne "$FILE_MANAGER\t$REPOSITORY\t$VERSION\t$DEMO_MODE\t$RELEASE_BRANCH\t"
     echo -ne "$SMTP_RELAY_HOST\t$SMTP_RELAY_PORT\t$SMTP_RELAY_USER\t"
     echo -ne "$UPGRADE_SEND_EMAIL\t$UPGRADE_SEND_EMAIL_LOG\t$THEME\t$LANGUAGE\t$BACKUP_GZIP\t"
-    echo -e  "$BACKUP\t$WEBMAIL_ALIAS\t$DB_PMA_URL\t$DB_PGA_URL"
+    echo -e  "$BACKUP\t$WEBMAIL_ALIAS\t$DB_PMA_URL\t$DB_PGA_URL\t$API\t$API_ALLOWED_IP"
 }
 
 
@@ -191,7 +200,7 @@ csv_list() {
     echo -n "'SMTP_RELAY','SMTP_RELAY_HOST','SMTP_RELAY_PORT','SMTP_RELAY_USER',"
     echo -n "'UPGRADE_SEND_EMAIL','UPGRADE_SEND_EMAIL_LOG',"
     echo -n "'THEME', 'LANGUAGE','BACKUP_GZIP','BACKUP','WEBMAIL_ALIAS',"
-    echo -n "'DB_PMA_ALIAS','DB_PGA_ALIAS'"
+    echo -n "'DB_PMA_ALIAS','DB_PGA_ALIAS','API','API_ALLOWED_IP'"
     echo
     echo -n "'$WEB_SYSTEM','$WEB_RGROUPS','$WEB_PORT','$WEB_SSL',"
     echo -n "'$WEB_SSL_PORT','$WEB_BACKEND','$PROXY_SYSTEM','$PROXY_PORT',"
@@ -203,6 +212,8 @@ csv_list() {
     echo -n "'$SMTP_RELAY','$SMTP_RELAY_HOST','$SMTP_RELAY_PORT','$SMTP_RELAY_USER',"
     echo -n "'$UPGRADE_SEND_EMAIL','$UPGRADE_SEND_EMAIL_LOG','$THEME','$LANGUAGE',"
     echo -n "'$BACKUP_GZIP','$BACKUP','$WEBMAIL_ALIAS','$DB_PMA_URL','$DB_PGA_URL'"
+    echo -n "'$API','$API_ALLOWED_IP'"
+    
     echo
 }
 

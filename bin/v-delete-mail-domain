@@ -86,9 +86,6 @@ rm -f $USER_DATA/mail/$domain.pem
 rm -f $USER_DATA/mail/$domain.pub
 rm -f $USER_DATA/mail/*@$domain.msg
 
-# Unsetting HELO for mail domain
-sed -i "/^${domain}:/d" /etc/exim4/mailhelo.conf
-
 # Decreasing domain value
 decrease_user_value "$user" '$U_MAIL_DOMAINS'
 if [ "$DKIM" = 'yes' ]; then

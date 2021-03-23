@@ -36,7 +36,7 @@ fi
 # Additional argument formatting
 format_domain
 format_domain_idn
-
+domain_utf=$(idn -t --quiet -u "$domain_idn")
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -47,9 +47,20 @@ is_format_valid 'user' 'domain' 'antispam' 'antivirus' 'dkim' 'dkim_size'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-is_domain_new 'mail' "$domain"
+
+if [ "$($BIN/v-list-mail-domain $user $domain_utf plain |cut -f 1) " != "$domain" ]; then
+    is_domain_new 'mail' "$domain_utf"
+fi
+if [ "$($BIN/v-list-mail-domain $user $domain_idn plain |cut -f 1) " != "$domain" ]; then
+    is_domain_new 'mail' "$domain_idn"
+else
+    is_domain_new 'mail' "$domain"
+fi
+
 is_package_full 'MAIL_DOMAINS'
 is_dir_symlink $HOMEDIR/$user/mail
+
+is_base_domain_owner "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -104,23 +115,6 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
         echo "$local_ip" > $HOMEDIR/$user/conf/mail/$domain/ip
     fi
 
-    # Touch mailhelo.conf if it doesnt exist
-    if [ ! -f "/etc/exim4/mailhelo.conf" ]; then
-        touch /etc/exim4/mailhelo.conf
-    fi
-
-    # Setting HELO for mail domain
-    if [ ! -z "$local_ip" ]; then
-        IP_RDNS=$(is_ip_rdns_valid "$local_ip")
-        if [ ! -z "$IP_RDNS" ]; then
-            if [ $(grep -s "^${domain}:" /etc/exim4/mailhelo.conf) ]; then
-                sed -i "/^${domain}:/c\\${domain}:${IP_RDNS}" /etc/exim4/mailhelo.conf
-            else
-                echo ${domain}:${IP_RDNS} >> /etc/exim4/mailhelo.conf
-            fi
-        fi        
-    fi
-
     # Adding antispam protection
     if [ "$antispam" = 'yes' ]; then
         touch $HOMEDIR/$user/conf/mail/$domain/antispam
@@ -169,7 +163,7 @@ fi
 # Add webmail configuration to mail domain
 if [ ! -z "$WEB_SYSTEM" ] || [ ! -z "$PROXY_SYSTEM" ]; then
     if [ ! -z "$IMAP_SYSTEM" ]; then
-        $BIN/v-add-sys-webmail $user $domain '' '' ''
+        $BIN/v-add-sys-webmail $user $domain '' 'no'
     fi
 fi
     

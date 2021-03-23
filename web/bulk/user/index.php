@@ -27,6 +27,8 @@ if ($_SESSION['user'] == 'admin') {
             break;
         case 'rebuild': $cmd='v-rebuild-all'; $restart = 'no';
             break;
+        case 'rebuild user': $cmd='v-rebuild-user'; $restart = 'no';
+            break;
         case 'rebuild web': $cmd='v-rebuild-web-domains'; $restart = 'no';
             break;
         case 'rebuild dns': $cmd='v-rebuild-dns-domains'; $restart = 'no';
@@ -51,12 +53,6 @@ foreach ($user as $value) {
     $value = escapeshellarg($value);
     exec (HESTIA_CMD.$cmd." ".$value." ".$restart, $output, $return_var);
     $changes = 'yes';
-}
-
-if ((!empty($restart)) && (!empty($changes))) {
-    exec (HESTIA_CMD."v-restart-web", $output, $return_var);
-    exec (HESTIA_CMD."v-restart-dns", $output, $return_var);
-    exec (HESTIA_CMD."v-restart-cron", $output, $return_var);
 }
 
 header("Location: /list/user/");

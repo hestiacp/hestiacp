@@ -206,7 +206,7 @@ echo "Build version $BUILD_VER, with Nginx version $NGINX_V and PHP version $PHP
 
 BUILD_ARCH='amd64'
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
-OPENSSL_V='1.1.1i'
+OPENSSL_V='1.1.1j'
 PCRE_V='8.44'
 ZLIB_V='1.2.11'
 
@@ -461,6 +461,7 @@ if [ "$PHP_B" = true ] ; then
                     --with-curl \
                     --with-zip \
                     --with-gmp \
+                    --enable-intl \
                     --enable-mbstring
     fi
 

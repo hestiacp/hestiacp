@@ -38,11 +38,11 @@ is_web_domain_new() {
     web=$(grep -F -H "DOMAIN='$1'" $HESTIA/data/users/*/web.conf)
     if [ ! -z "$web" ]; then
         if [ "$type" == 'web' ]; then
-            check_result $E_EXISTS "Web domain $1 exist"
+            check_result $E_EXISTS "Web domain $1 exists"
         fi
         web_user=$(echo "$web" |cut -f 7 -d /)
         if [ "$web_user" != "$user" ]; then
-            check_result $E_EXISTS "Web domain $1 exist"
+            check_result $E_EXISTS "Web domain $1 exists"
         fi
     fi
 }
@@ -743,15 +743,17 @@ add_webmail_config() {
     override_alias="";
     if [ "$WEBMAIL_ALIAS" != "mail" ]; then
         override_alias="mail.$domain"
+        override_alias_idn="mail.$domain_idn"
+        
     fi
     
     cat $MAILTPL/$1/$2 | \
         sed -e "s|%ip%|$local_ip|g" \
             -e "s|%domain%|$WEBMAIL_ALIAS.$domain|g" \
-            -e "s|%domain_idn%|$domain_idn|g" \
+            -e "s|%domain_idn%|$WEBMAIL_ALIAS.$domain_idn|g" \
             -e "s|%root_domain%|$domain|g" \
             -e "s|%alias%|$override_alias|g" \
-            -e "s|%alias_idn%|${aliases_idn//,/ }|g" \
+            -e "s|%alias_idn%|$override_alias_idn|g" \
             -e "s|%alias_string%|$alias_string|g" \
             -e "s|%email%|info@$domain|g" \
             -e "s|%web_system%|$WEB_SYSTEM|g" \
@@ -866,4 +868,67 @@ is_domain_new() {
 # Get domain variables
 get_domain_values() {
     parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/$1.conf)
+}
+
+#----------------------------------------------------------#
+# 2 Char domain name detection                             #
+#----------------------------------------------------------#
+
+is_valid_extension() {
+    if [ ! -e "$HESTIA/data/extensions/public_suffix_list.dat" ]; then
+        mkdir $HESTIA/data/extensions/
+        chmod 750 $HESTIA/data/extensions/
+        /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O $HESTIA/data/extensions/public_suffix_list.dat https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat 
+    fi
+    test_domain=$(idn -t --quiet -u "$1" )
+    extension=$( /bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1 | /usr/bin/rev );
+    exten=$(grep "^$extension\$" $HESTIA/data/extensions/public_suffix_list.dat);
+}
+
+is_valid_2_part_extension() {
+    if [ ! -e "$HESTIA/data/extensions/public_suffix_list.dat" ]; then
+        mkdir $HESTIA/data/extensions/
+        chmod 750 $HESTIA/data/extensions/
+        /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O $HESTIA/data/extensions/public_suffix_list.dat https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat 
+    fi
+    test_domain=$(idn -t --quiet -u "$1" )
+    extension=$( /bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1-2 | /usr/bin/rev );
+    exten=$(grep "^$extension\$" $HESTIA/data/extensions/public_suffix_list.dat);
+}
+
+get_base_domain() {
+    test_domain=$1
+    is_valid_extension "$test_domain"
+    if [ $? -ne 0 ]; then
+        basedomain=$( /bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1-2 | /usr/bin/rev ); 
+    else 
+        is_valid_2_part_extension "$test_domain"
+        if [ $? -ne 0 ]; then
+           basedomain=$( /bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1-2 | /usr/bin/rev ); 
+        else
+           extension=$( /bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1-2 | /usr/bin/rev ); 
+           partdomain=$( /bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 3 | /usr/bin/rev );
+           basedomain="$partdomain.$extension"
+        fi
+    fi
+}
+
+is_base_domain_owner(){
+    for object in ${1//,/ }; do
+        if [ "$object" != "none" ]; then
+            get_base_domain $object
+            web=$(grep -F -H -h "DOMAIN='$basedomain'" $HESTIA/data/users/*/web.conf);
+            if [ $ENFORCE_SUBDOMAIN_OWNERSHIP = "yes" ]; then
+                if [ ! -z "$web" ]; then
+                    parse_object_kv_list "$web"
+                    if [ -z "$ALLOW_USERS" ] ||  [ "$ALLOW_USERS" != "yes" ]; then
+                        # Don't care if $basedomain all ready exists only if the owner is of the base domain is the current user
+                        is_domain_new "" $basedomain
+                    fi
+                else
+                    is_domain_new "" $basedomain
+                fi
+            fi
+        fi
+    done
 }

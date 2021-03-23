@@ -51,6 +51,11 @@ else
     echo "$domain" > /etc/hostname
 fi
 
+# Update ip helo for exim
+if [ ! -z "$MAIL_SYSTEM" ]; then
+    pub_ip=$(curl --ipv4 -s https://ip.hestiacp.com/)
+    $BIN/v-change-sys-ip-helo $pub_ip $domain
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #

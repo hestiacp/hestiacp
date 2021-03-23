@@ -22,6 +22,6 @@ if (!empty($_GET['domain'])) {
     exec (HESTIA_CMD."v-purge-web-domain-nginx-cache ".$v_username." ".$v_domain, $output, $return_var);
     check_return_code($return_var,$output);
 }
-$_SESSION['ok_msg'] = _('Nginx cache has been sucessfully purged');
+$_SESSION['ok_msg'] = _('Nginx cache has been successfully purged');
 header("Location: /edit/web/?domain=".$_GET['domain']);
 exit;

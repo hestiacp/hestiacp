@@ -6,7 +6,9 @@ session_start();
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 if (($_SESSION['user'] == 'admin') && (!empty($_GET['user']))) {
-    $user=$_GET['user'];;
+    $v_user=$_GET['user'];
+}else{
+    $v_user = $user;
 }
 
 // Check token
@@ -17,8 +19,8 @@ if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
 
 if (!empty($_GET['key'])) {
     $v_key = escapeshellarg(trim($_GET['key']));
-    $v_key = str_replace('/','\\/', $v_key);
-    exec (HESTIA_CMD."v-delete-user-ssh-key ".$user." ".$v_key);
+    $v_user = escapeshellarg(trim($v_user));
+    exec (HESTIA_CMD."v-delete-user-ssh-key ".$v_user." ".$v_key);
     check_return_code($return_var,$output);
 }
 

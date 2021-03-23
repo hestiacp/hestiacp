@@ -339,6 +339,7 @@ if (!empty($_POST['save'])) {
             check_return_code($return_var,$output);
             unset($output); 
         }
+        $restart_proxy = 'yes';
     }
 
     // Delete proxy support

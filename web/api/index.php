@@ -1,5 +1,6 @@
 <?php
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
+//die("Error: Disabled");
 
 function get_real_user_ip(){
     $ip = $_SERVER['REMOTE_ADDR'];
@@ -7,26 +8,51 @@ function get_real_user_ip(){
         $ip = $_SERVER['HTTP_CLIENT_IP'];
     }
     if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])){
-        $ip =  $_SERVER['HTTP_X_FORWARDED_FOR'];
+        if (filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP)){
+            $ip =  $_SERVER['HTTP_X_FORWARDED_FOR'];
+        }
     }
     if(isset($_SERVER['HTTP_FORWARDED_FOR'])){
-        $ip = $_SERVER['HTTP_FORWARDED_FOR'];
+        if (filter_var($_SERVER['HTTP_FORWARDED_FOR'], FILTER_VALIDATE_IP)){
+            $ip =  $_SERVER['HTTP_FORWARDED_FOR'];
+        }
     }
     if(isset($_SERVER['HTTP_X_FORWARDED'])){
-        $ip = $_SERVER['HTTP_X_FORWARDED'];
+        if (filter_var($_SERVER['HTTP_X_FORWARDED'], FILTER_VALIDATE_IP)){
+            $ip =  $_SERVER['HTTP_X_FORWARDED'];
+        }
     }
     if(isset($_SERVER['HTTP_FORWARDED'])){
-        $ip = $_SERVER['HTTP_FORWARDED'];
+        if (filter_var($_SERVER['HTTP_FORWARDED'], FILTER_VALIDATE_IP)){
+            $ip =  $_SERVER['HTTP_FORWARDED'];
+        }
     }
     if(isset($_SERVER['HTTP_CF_CONNECTING_IP'])){
         if(!empty($_SERVER['HTTP_CF_CONNECTING_IP'])){
-            $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
+            if (filter_var($_SERVER['HTTP_FORWARDED'], FILTER_VALIDATE_IP)){
+                $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
+            }
         }
     }
     return $ip;
 }
 
 function api($hst_hash, $hst_user, $hst_password, $hst_returncode, $hst_cmd, $hst_arg1, $hst_arg2, $hst_arg3, $hst_arg4, $hst_arg5, $hst_arg6, $hst_arg7, $hst_arg8, $hst_arg9){
+    exec (HESTIA_CMD."v-list-sys-config json" , $output, $return_var);
+    $settings = json_decode(implode('', $output), true);
+    unset($output);
+    if( $settings['config']['API'] != 'yes' ){
+        echo 'Error: authentication failed';
+        exit;
+    }
+    if ( $settings['config']['API_ALLOWED_IP'] != 'allow-all' ){
+        $ip_list = explode(',',$settings['config']['API_ALLOWED_IP']);
+        $ip_list[] = '127.0.0.1';
+        if ( !in_array(get_real_user_ip(), $ip_list)){
+           echo 'Error: authentication failed';
+           exit; 
+        }
+    }
     //This exists, so native JSON can be used without the repeating the code twice, so future code changes are easier and don't need to be replicated twice
     // Authentication
     if (empty($hst_hash)) {
@@ -123,7 +149,7 @@ function api($hst_hash, $hst_user, $hst_password, $hst_returncode, $hst_cmd, $hs
     // Check command
     if ($cmd == "'v-make-tmp-file'") {
         // Used in DNS Cluster
-        $fp = fopen($hst_arg2, 'w');
+        $fp = fopen('/tmp/'.basename($hst_arg2), 'w');
         fwrite($fp, $hst_arg1."\n");
         fclose($fp);
         $return_var = 0;

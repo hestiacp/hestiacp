@@ -109,18 +109,16 @@ debug_log() {
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-
-
-
 
 # Generate correct variables for mail domain SSL certificates
 if [ ! -z "$mail" ]; then
     root_domain=$domain
     domain="mail.$root_domain"
-    webmail=$(get_object_value "mail" "$domain" '$WEBMAIL');
+    webmail=$(get_object_value "mail" "DOMAIN" "$root_domain" '$WEBMAIL');
     if [ ! -z "$webmail" ]; then
         aliases="$WEBMAIL_ALIAS.$root_domain"
     fi

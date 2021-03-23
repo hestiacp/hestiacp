@@ -29,9 +29,11 @@ source $HESTIA/conf/hestia.conf
 # Ensure that package names have been passed to the script.
 if [ -z "$old_name" ]; then
     echo "ERROR: Current package name not specified."
+    exit 1
 fi
 if [ -z "$new_name" ]; then
     echo "ERROR: New package name not specified."
+    exit 1
 fi
 
 # Perform verification if read-only mode is enabled
@@ -44,7 +46,7 @@ check_hestia_demo_mode
 
 if [ -e $HESTIA/data/packages/$old_name.pkg ]; then
     mv $HESTIA/data/packages/$old_name.pkg $HESTIA/data/packages/$new_name.pkg
-    echo "Successfully renamed $old_name to $new_name."
+    
 
     # Update package for existing users
     for user in `ls $HESTIA/data/users/`; do
@@ -54,6 +56,7 @@ if [ -e $HESTIA/data/packages/$old_name.pkg ]; then
             v-change-user-package $user $new_name
         fi
     done
+    echo "Successfully renamed package $old_name to $new_name."
 else
     echo "ERROR: Specified package not found."
 fi
@@ -64,7 +67,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_history "renamed package $old_name to $new_name"
+log_history "renamed package $old_name to $new_name" '' 'admin'
 log_event "$OK" "$ARGUMENTS"
 
 exit

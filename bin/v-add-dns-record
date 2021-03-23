@@ -50,6 +50,11 @@ if [[ $rtype =~ NS|CNAME|MX|PTR|SRV ]]; then
     fi
 fi
 
+if [[ $rtype =~ NS|CNAME|MX|PTR|SRV ]]; then
+    dvalue=$(idn -t --quiet -a "$dvalue" )
+    record=$(idn -t --quiet -a "$record" )
+fi
+
 # Cleanup quotes on dvalue
 # - [CAA] records will be left unchanged
 # - [SRV] will be  stripped of double quotes even when  containg spaces

@@ -3,12 +3,12 @@
         <div class="l-unit-toolbar__buttonstrip">
         <?php
           if ($user == 'admin') {
-            echo '<a href="/add/user/" id="btn-create" class="ui-button cancel"><i class="fas fa-plus-circle status-icon green"></i>'._('Add User').'</a>&nbsp;';
-            echo '<a href="/list/package/" class="ui-button cancel"><i class="fas fa-box-open status-icon orange"></i>'._('Packages').'</a>&nbsp;';
+            echo '<a href="/add/user/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i>'._('Add User').'</a>&nbsp;';
+            echo '<a href="/list/package/" class="ui-button cancel" dir="ltr"><i class="fas fa-box-open status-icon orange"></i>'._('Packages').'</a>&nbsp;';
           } else {
               if ((isset($_SESSION['WEB_SYSTEM'])) && (!empty($_SESSION['WEB_SYSTEM']))) {
                   if (intval($panel[$user]['WEB_DOMAINS']) > 0 || $panel[$user]['WEB_DOMAINS'] == 'unlimited') {
-                      echo '<a href="/add/web/" id="btn-create" class="ui-button cancel" title="'._('Add Web Domain').'"><i class="fas fa-plus-circle status-icon green"></i>'._('Add Web Domain').'</a>';
+                      echo '<a href="/add/web/" id="btn-create" class="ui-button cancel" dir="ltr" title="'._('Add Web Domain').'"><i class="fas fa-plus-circle status-icon green"></i>'._('Add Web Domain').'</a>';
                   }
               }
           }
@@ -61,7 +61,7 @@
 
     <div class="l-separator"></div>
 
-    <div class="l-center units animated fadeIn">
+    <div class="l-center units">
         <div class="table-header"> 
             <div class="l-unit__col l-unit__col--right">
                   <div class="clearfix l-unit__stat-col--left super-compact">
@@ -87,16 +87,16 @@
           ++$i;
       ?>
 
-      <div class="l-unit  <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['USER'][$key] == 1) echo ' l-unit--starred';?>" v_section="user"
+      <div class="l-unit  <? if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['USER'][$key] == 1) echo ' l-unit--starred';?> animated fadeIn" v_section="user"
 v_unit_id="<?=$key?>" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>"
 sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DISK']?>" sort-star="<? if($_SESSION['favourites']['USER'][$key] == 1) echo '1'; else echo '0'; ?>">
         <div class="l-unit__col l-unit__col--right">
           <div class="clearfix l-unit__stat-col--left super-compact">
             <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="user[]" value="<?=$key?>">
           </div>
-              <div class="clearfix l-unit__stat-col--left wide-3 userlist-username"><b><a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('login as')?>"><?php echo $data[$key]['FNAME'];?> <span style="font-weight: normal !important;">(<?=$key?>)</span></b></a>
+          <div class="clearfix l-unit__stat-col--left wide-3 userlist-username"><b><a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('login as')?> <?=$key?>"><?=$key?> <span style="font-weight: normal !important;">(<?php echo $data[$key]['NAME'];?>)</span></b></a>
                 <br />
-                <span class="userlist-email"><b><?=_('Email')?>:</b> <?=$data[$key]['CONTACT']?></span>
+                <div class="userlist-email"><b><?=_('Email')?>:</b> <?=$data[$key]['CONTACT']?></div>
               </div>
               <!-- START QUICK ACTION TOOLBAR AREA -->
               <div class="clearfix l-unit__stat-col--left text-right compact-3">

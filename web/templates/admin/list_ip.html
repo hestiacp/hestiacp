@@ -1,8 +1,8 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a class="ui-button cancel" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
-          <a href="/add/ip/" id="btn-create" class="ui-button cancel"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Add IP')?></a>
+          <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back')?></a>
+          <a href="/add/ip/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add IP')?></a>
         </div>
         <ul class="context-menu sort-order animated fadeIn" style="display:none;">
           <li entity="sort-date" sort_as_int="1"><span class="name active"><?=_('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
@@ -38,7 +38,7 @@
 
     <div class="l-separator"></div>
 
-    <div class="l-center units animated fadeIn">
+    <div class="l-center units">
       <div class="header table-header">     
         <div class="l-unit__col l-unit__col--right">
           <div>
@@ -61,7 +61,7 @@
            ++$i;
       ?>
 
-      <div class="l-unit <? if($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended'; if($_SESSION['favourites']['IP'][$key] == 1) echo ' l-unit--starred'; ?>" v_unit_id="<?=$key?>"
+      <div class="l-unit <? if($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended'; if($_SESSION['favourites']['IP'][$key] == 1) echo ' l-unit--starred'; ?> animated fadeIn" v_unit_id="<?=$key?>"
 v_section="ip" sort-ip="<?=str_replace('.', '', $key)?>" sort-date="<?=strtotime($data[$key]['DATE'] .' '. $data[$key]['TIME'] )?>"
 sort-netmask="<?=str_replace('.', '', $data[$key]['NETMASK'])?>" sort-interface="<?=$data[$key]['INTERFACE']?>" sort-domains="<?=$data[$key]['U_WEB_DOMAINS']?>"
 sort-owner="<?=$data[$key]['OWNER']?>" sort-star="<? if($_SESSION['favourites']['IP'][$key] == 1) echo '1'; else echo '0'; ?>">

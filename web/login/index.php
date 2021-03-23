@@ -84,11 +84,13 @@ function authenticate_user($user, $password, $twofa = ''){
 
             // Remove tmp file
             unlink($v_hash);
-
             // Check API answer
             if ( $return_var > 0 ) {
                 sleep(2);
                 $error = "<a class=\"error\">"._('Invalid username or password')."</a>";
+                $v_murmur = escapeshellarg($_POST['murmur']);
+                exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." failed ".$v_murmur, $output, $return_var);
+
                 return $error;
             } else {
 
@@ -97,10 +99,12 @@ function authenticate_user($user, $password, $twofa = ''){
                 $data = json_decode(implode('', $output), true);
                 unset($output); 
                 if ($data[$user]['TWOFA'] != '') {
-                        if(empty($_POST['twofa'])){
+                        if(empty($twofa)){
+                            $_SESSION['login']['username'] = $user;
+                            $_SESSION['login']['password'] = $password;
                             return false;
                         }else{
-                            $v_twofa = $_POST['twofa'];
+                            $v_twofa = escapeshellarg($twofa);
                             exec(HESTIA_CMD ."v-check-user-2fa ".$v_user." ".$v_twofa, $output, $return_var);
                             unset($output);
                             if ( $return_var > 0 ) {
@@ -108,6 +112,8 @@ function authenticate_user($user, $password, $twofa = ''){
                                 $error = "<a class=\"error\">"._('Invalid or missing 2FA token')."</a>";
                                 $_SESSION['login']['username'] = $user;
                                 $_SESSION['login']['password'] = $password;
+                                $v_murmur = escapeshellarg($_POST['murmur']);
+                                exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." failed ".$v_murmur, $output, $return_var);
                                 return $error;
                                 unset($_POST['twofa']);
                             }
@@ -124,7 +130,7 @@ function authenticate_user($user, $password, $twofa = ''){
                 $v_user = $_SESSION['user'];
                 //log successfull login attempt
                 $v_murmur = escapeshellarg($_POST['murmur']);
-                exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." ".$v_murmur, $output, $return_var);
+                exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." success ".$v_murmur, $output, $return_var);
 
                 $_SESSION['LAST_ACTIVITY'] = time();
                 $_SESSION['MURMUR'] = $_POST['murmur'];

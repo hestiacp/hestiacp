@@ -1,12 +1,12 @@
 #!/bin/bash
-# info: Adding fast cgi nginx support
+# info: Adding FastCGI nginx support
 # options: USER DOMAIN [DEBUG]
 # labels: hestia web
 #
-# example: v-add-web-domain-fast-cgi-cache user domain.tld
+# example: v-add-fastcgi-cache user domain.tld
 #
-# Function enables fast cgi support for Nginx
-# Add "yes" as last parameter append debug information to response headers
+# Function enables FastCGI cache for nginx
+# Add "yes" as last parameter to append debug information to response headers
 
 
 #----------------------------------------------------------#
@@ -45,16 +45,16 @@ check_hestia_demo_mode
 # Load domain data
 parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 
-# Check if web server is NGINX standalone
+# Check if nginx is not in proxy mode
 if [ "$WEB_SYSTEM" != 'nginx' ]; then
-    echo "Error: NGINX not in Stand Alone mode"
+    echo "Error: nginx is in proxy mode"
     exit $E_NOTEXIST
 fi
-
 
 if ! grep --quiet "forcessl" $HESTIA/data/templates/web/nginx/default.tpl; then
     $BIN/v-update-web-templates
 fi
+
 fastcgi="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.fastcgi_cache.conf"
 no_cache='$no_cache'
 cookie_session='$cookie_session'
@@ -63,9 +63,11 @@ status='$upstream_cache_status'
 
 cat << EOF > $fastcgi
     fastcgi_cache $domain;
-    fastcgi_no_cache $no_cache;
+    fastcgi_cache_valid 200 2m;
+    fastcgi_cache_valid 301 302 10m;
+    fastcgi_cache_valid 404 10m;
     fastcgi_cache_bypass $no_cache;
-    fastcgi_cache_bypass $cookie_session $http_x_update;
+    fastcgi_no_cache $no_cache;  
 EOF
 
 if [ ! -z "$debug" ]; then
@@ -75,9 +77,9 @@ fi
 chown root:$user $fastcgi
 chmod 640 $fastcgi
 
-str="fastcgi_cache_path /var/cache/nginx/php-fpm/$domain levels=2" 
-str="$str keys_zone=$domain:10m inactive=60m max_size=512m;" 
-conf='/etc/nginx/conf.d/01_fast_cgi_caching_pool.conf'
+str="fastcgi_cache_path /var/cache/nginx/micro/$domain levels=1:2" 
+str="$str keys_zone=$domain:10m max_size=512m inactive=30m;" 
+conf='/etc/nginx/conf.d/fastcgi_cache_pool.conf'
 if [ -e "$conf" ]; then
     if [ -z "$(grep "=${domain}:" $conf)" ]; then
         echo "$str" >> $conf
@@ -86,7 +88,7 @@ else
     echo "$str" >> $conf
 fi
 
-mkdir -p /var/cache/nginx/php-fpm/$domain
+mkdir -p /var/cache/nginx/micro/$domain
 
 #----------------------------------------------------------#
 #                       Hestia                             #
@@ -96,7 +98,7 @@ if [ -z "$FASTCGI" ]; then
     add_object_key "web" 'DOMAIN' "$domain" 'FASTCGI_CACHE' 'ALIAS'
 fi
 
-# Set FASTCGI flag to enabled
+# Set FastCGI cache flag to enabled
 update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_CACHE' 'yes'
 
 # Restart web server
@@ -104,7 +106,7 @@ $BIN/v-restart-web
 check_result $? "Web restart failed" > /dev/null
 
 # Logging
-log_history "enabled fast cgi support for $domain"
+log_history "Enabled FastCGI cache for $domain"
 log_event "$OK" "$ARGUMENTS"
 
 exit

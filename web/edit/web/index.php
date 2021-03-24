@@ -573,6 +573,8 @@ if (!empty($_POST['save'])) {
         check_return_code($return_var,$output);
         unset($output);
         $v_ssl_forcessl = 'yes';
+        $restart_web = 'yes';
+        $restart_proxy = 'yes';
     }
 
     // Add SSL HSTS
@@ -581,22 +583,28 @@ if (!empty($_POST['save'])) {
         check_return_code($return_var,$output);
         unset($output);
         $v_ssl_hsts = 'yes';
+        $restart_web = 'yes';
+        $restart_proxy = 'yes';
     }
     
     // Delete Force SSL
     if (( $v_ssl_forcessl == 'yes' ) && (empty($_POST['v_ssl_forcessl'])) && (empty($_SESSION['error_msg']))) {
-        exec (HESTIA_CMD."v-delete-web-domain-ssl-force ".$user." ".escapeshellarg($v_domain)." yes", $output, $return_var);
+        exec (HESTIA_CMD."v-delete-web-domain-ssl-force ".$user." ".escapeshellarg($v_domain), $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
         $v_ssl_forcessl = 'no';
+        $restart_web = 'yes';
+        $restart_proxy = 'yes';
     }
 
     // Delete SSL HSTS
     if (( $v_ssl_hsts == 'yes' ) && (empty($_POST['v_ssl_hsts'])) && (empty($_SESSION['error_msg']))) {
-        exec (HESTIA_CMD."v-delete-web-domain-ssl-hsts ".$user." ".escapeshellarg($v_domain)." yes", $output, $return_var);
+        exec (HESTIA_CMD."v-delete-web-domain-ssl-hsts ".$user." ".escapeshellarg($v_domain), $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
         $v_ssl_hsts = 'no';
+        $restart_web = 'yes';
+        $restart_proxy = 'yes';
     }
 
     // Delete web stats
@@ -822,7 +830,9 @@ if (!empty($_POST['save'])) {
         exec(HESTIA_CMD."v-change-web-domain-docroot ".$v_username." ".escapeshellarg($v_domain)." default",  $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);    
-        unset($_POST['v-custom-doc-domain'], $_POST['v-custom-doc-folder']);    
+        unset($_POST['v-custom-doc-domain'], $_POST['v-custom-doc-folder']);
+        $restart_web = 'yes';
+        $restart_proxy = 'yes';    
     }
 
     if ( !empty($_POST['v-custom-doc-domain']) && !empty($_POST['v_custom_doc_root_check']) && $v_custom_doc_root_prepath.$v_custom_doc_domain.'/public_html'.$v_custom_doc_folder != $v_custom_doc_root){
@@ -838,7 +848,10 @@ if (!empty($_POST['save'])) {
             check_return_code($return_var,$output);
             unset($output);  
             $v_custom_doc_root = 1; 
+            
         }
+        $restart_web = 'yes';
+        $restart_proxy = 'yes';
     }else{
         unset($v_custom_doc_root);
     }   
@@ -848,6 +861,8 @@ if (!empty($_POST['save'])) {
         check_return_code($return_var,$output);
         unset($output);    
         unset($_POST['v-redirect']);
+        $restart_web = 'yes';
+        $restart_proxy = 'yes';
     }
     
     if (!empty($_POST['v-redirect']) && !empty($_POST['v-redirect-checkbox']) ){
@@ -860,7 +875,8 @@ if (!empty($_POST['save'])) {
             exec(HESTIA_CMD."v-add-web-domain-redirect ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($_POST['v-redirect'])." ".escapeshellarg($_POST['v-redirect-code']),  $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);  
-     
+            $restart_web = 'yes';
+            $restart_proxy = 'yes';
             }
 
         }else {
@@ -871,8 +887,11 @@ if (!empty($_POST['save'])) {
                  exec(HESTIA_CMD."v-add-web-domain-redirect ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($_POST['v-redirect'])." ".escapeshellarg($_POST['v-redirect-code']),  $output, $return_var);
                  check_return_code($return_var,$output);
                  unset($output);  
+                 $restart_web = 'yes';
+                 $restart_proxy = 'yes';
              }
         }
+        
     }
     // Restart web server
     if (!empty($restart_web) && (empty($_SESSION['error_msg']))) {

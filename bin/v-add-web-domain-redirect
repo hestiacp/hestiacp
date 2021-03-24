@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: Adding force redirect to domain
-# options: USER DOMAIN REDIRECT HTTPCODE
+# options: USER DOMAIN REDIRECT HTTPCODE [RESTART]
 # labels: hestia web
 #
 # example: v-add-web-domain-redirect user domain.tld domain.tld 
@@ -22,6 +22,7 @@ user=$1
 domain=$2
 redirect=$(echo $3 | idn);
 code=${4-301}
+restart=${5-no}
 
 # Includes
 source $HESTIA/func/main.sh
@@ -31,7 +32,7 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'USER DOMAIN REDIRECT [HTTP-CODE]'
+check_args '3' "$#" 'USER DOMAIN REDIRECT [HTTP-CODE] [RESTART]'
 is_format_valid 'user' 'domain'
 is_number_format_valid "$code" "code"
 is_object_valid 'user' 'USER' "$user"
@@ -101,9 +102,15 @@ fi
 
 update_object_value 'web' 'DOMAIN' "$domain" '$REDIRECT' "$redirect"
 update_object_value 'web' 'DOMAIN' "$domain" '$REDIRECT_CODE' "$code"
-# Restart web server
-$BIN/v-restart-web
-check_result $? "Web restart failed" > /dev/null
+
+if [ "$restart" = "yes" ]; then
+    # Restarting web server
+    $BIN/v-restart-web $restart
+    check_result $? "Web restart failed" >/dev/null
+    
+    $BIN/v-restart-proxy $restart
+    check_result $? "Proxy restart failed" >/dev/null
+fi
 
 # Logging
 log_history "Enable forced redirect $domain"

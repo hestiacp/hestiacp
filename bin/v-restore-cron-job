@@ -1,0 +1,48 @@
+#!/bin/bash
+# info: restore single cron job
+# options: USER BACKUP DOMAIN [NOTIFY]
+# labels: panel
+#
+# example: v-restore-cron-job USER BACKUP CRON [NOTIFY]
+# 
+# The function allows the user to restore a single cron job
+# from a backup archive.
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+backup=$2
+cronjob=$3
+notify=$4
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+args_usage='USER BACKUP CRON [NOTIFY]'
+check_args '3' "$#" "$args_usage"
+is_format_valid 'user' 'backup'
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+$BIN/v-restore-user $user $backup 'no' 'no' 'no' 'no' $cronjob 'no' $notify
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+log_event "$OK" "$ARGUMENTS"
+
+exit

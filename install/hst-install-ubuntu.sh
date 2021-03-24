@@ -1138,7 +1138,7 @@ echo "VERSION='${HESTIA_INSTALL_VER}'" >> $HESTIA/conf/hestia.conf
 echo "RELEASE_BRANCH='release'" >> $HESTIA/conf/hestia.conf
 
 # Email notifications after upgrade
-echo "UPGRADE_SEND_EMAIL='true'" >> $HESTIA/conf/hestia.conf
+echo "UPGRADE_SEND_EMAIL='false'" >> $HESTIA/conf/hestia.conf
 echo "UPGRADE_SEND_EMAIL_LOG='true'" >> $HESTIA/conf/hestia.conf
 
 # Installing hosting packages

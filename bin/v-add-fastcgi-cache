@@ -5,7 +5,7 @@
 #
 # example: v-add-fastcgi-cache user domain.tld
 #
-# Function enables FastCGI cache for nginx
+# The function enables FastCGI cache for nginx
 # Add "yes" as last parameter to append debug information to response headers
 
 
@@ -103,7 +103,7 @@ update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_CACHE' 'yes'
 
 # Restart web server
 $BIN/v-restart-web
-check_result $? "Web restart failed" > /dev/null
+check_result $? "Web server restart failed" > /dev/null
 
 # Logging
 log_history "Enabled FastCGI cache for $domain"

@@ -107,11 +107,19 @@ if [ -f /etc/apt/sources.list.d/postgresql.list ]; then
 fi
 
 # New configuration value for enforcing subdomain ownership
-echo "ENFORCE_SUBDOMAIN_OWNERSHIP='no'" >> $HESTIA/conf/hestia.conf
+check=$(cat $HESTIA/conf/hestia.conf | grep 'ENFORCE_SUBDOMAIN_OWNERSHIP');
+if [ -z "$check" ]; then 
+    echo "[ * ] Setting ENFORCE_SUBDOMAIN_OWNERSHIP to no"
+    echo "ENFORCE_SUBDOMAIN_OWNERSHIP='no'" >> $HESTIA/conf/hestia.conf
+fi
 
 # New API feature to set allowed IPs
 if [ "$api" = "yes" ]; then
-    echo "API_ALLOWED_IP='allow-all'" >> $HESTIA/conf/hestia.conf
+    check=$(cat $HESTIA/conf/hestia.conf | grep 'API_ALLOWED_IP');
+    if [ -z "$check" ]; then 
+        echo "[ * ] Setting API_ALLOWED_IP to allow-all"
+        echo "API_ALLOWED_IP='allow-all'" >> $HESTIA/conf/hestia.conf
+    fi
 else
     $HESTIA/bin/v-change-sys-api disable
 fi

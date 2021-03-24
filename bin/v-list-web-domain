@@ -45,6 +45,8 @@ json_list() {
         "PROXY": "'$PROXY'",
         "PROXY_EXT": "'$PROXY_EXT'",
         "FASTCGI_CACHE": "'$FASTCGI_CACHE'",
+        "REDIRECT": "'$REDIRECT'",
+        "REDIRECT_CODE": "'$REDIRECT_CODE'",
         "CUSTOM_DOCROOT": "'$CUSTOM_DOCROOT'",
         "SUSPENDED": "'$SUSPENDED'",
         "TIME": "'$TIME'",

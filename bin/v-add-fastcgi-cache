@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: Adding FastCGI nginx support
+# info: Add FastCGI nginx support
 # options: USER DOMAIN [DEBUG]
 # labels: hestia web
 #

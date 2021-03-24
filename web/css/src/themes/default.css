@@ -451,6 +451,9 @@ input[type="radio"] {
   /* 1 */
   padding: 0;
   /* 2 */
+  margin-left: 0px;
+  margin-right: 8px;
+  margin-top: 6px;
 }
 
 /**
@@ -2505,7 +2508,7 @@ body.mobile .l-icon-shortcuts {
 }
 
 .input-label {
-  padding-top: 20px;
+  padding-top: 8px;
 }
 
 .data input[type="checkbox"] {

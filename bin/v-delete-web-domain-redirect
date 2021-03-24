@@ -1,11 +1,11 @@
 #!/bin/bash
-# info: suspend mail domain
-# options: USER DOMAIN
-# labels: mail
+# info: Delete force redirect to domain
+# options: USER DOMAIN [RESTART]
+# labels: hestia web
 #
-# example: v-suspend-mail-domain admin domain.com
+# example: v-add-web-domain-redirect user domain.tld
 #
-# The function suspends mail domain.
+# Function delete a forced redirect to a domain 
 
 
 #----------------------------------------------------------#
@@ -15,30 +15,24 @@
 # Argument definition
 user=$1
 domain=$2
-domain_idn=$2
+restart=${3-no}
+
 
 # Includes
 source $HESTIA/func/main.sh
-source $HESTIA/func/domain.sh
 source $HESTIA/conf/hestia.conf
-
-# Additional argument formatting
-format_domain
-format_domain_idn
-# TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN'
+check_args '2' "$#" 'USER DOMAIN [RESTART]'
 is_format_valid 'user' 'domain'
-is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-is_object_valid 'mail' 'DOMAIN' "$domain"
-is_object_unsuspended 'mail' 'DOMAIN' "$domain"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -48,25 +42,35 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Deleting symbolic link
-if [[ "$MAIL_SYSTEM" =~ exim ]]; then
-    rm -f /etc/$MAIL_SYSTEM/domains/$domain
-fi
 
-# Removing webmail configuration
-$BIN/v-delete-sys-webmail $user $domain 'yes'
+
+# Check if proxy is active
+if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
+    rm $HOMEDIR/$user/conf/web/$domain/nginx.conf_redirect
+    rm $HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_redirect
+else
+     echo "Non supported please use .htaccess instead" 
+     exit 2;
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-# Updating config
-update_object_value 'mail' 'DOMAIN' "$domain" '$SUSPENDED' 'yes'
-sed -i "s/SUSPENDED='no'/SUSPENDED='yes'/g" $USER_DATA/mail/$domain.conf
-increase_user_value "$user" '$SUSPENDED_MAIL'
+update_object_value 'web' 'DOMAIN' "$domain" '$REDIRECT' ""
+update_object_value 'web' 'DOMAIN' "$domain" '$REDIRECT_CODE' ""
+
+if [ "$restart" = "yes" ]; then
+    # Restarting web server
+    $BIN/v-restart-web $restart
+    check_result $? "Web restart failed" >/dev/null
+    
+    $BIN/v-restart-proxy $restart
+    check_result $? "Proxy restart failed" >/dev/null
+fi
 
 # Logging
-$BIN/v-log-action "system" "Info" "Mail" "Suspended mail domain (User: $user, Domain: $domain)."
+log_history "Enable forced redirect $domain"
 log_event "$OK" "$ARGUMENTS"
 
 exit

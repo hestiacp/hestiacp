@@ -15,7 +15,7 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -a "$2" )
+domain=$2
 debug=$3
 
 # Includes

@@ -15,7 +15,7 @@
 # Argument definition
 user=$1
 domain=$2
-domain_idn=$(idn -t --quiet -a "$2" )
+domain_idn=$2
 account=$3
 email_forward=$4
 

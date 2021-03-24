@@ -105,3 +105,13 @@ if [ -f /etc/apt/sources.list.d/postgresql.list ]; then
     echo "[ * ] Updating PostgreSQL repository..."
     sed -i 's|deb https://apt.postgresql.org/pub/repos/apt/|deb [arch=amd64] https://apt.postgresql.org/pub/repos/apt/|g' /etc/apt/sources.list.d/postgresql.list
 fi
+
+# New configuration value for enforcing subdomain ownership
+echo "ENFORCE_SUBDOMAIN_OWNERSHIP='no'" >> $HESTIA/conf/hestia.conf
+
+# New API feature to set allowed IPs
+if [ "$api" = "yes" ]; then
+    echo "API_ALLOWED_IP='allow-all'" >> $HESTIA/conf/hestia.conf
+else
+    $HESTIA/bin/v-change-sys-api disable
+fi

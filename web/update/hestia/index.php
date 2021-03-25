@@ -19,8 +19,10 @@ if ($_SESSION['userContext'] === 'admin') {
 
     if ($return_var != 0) {
         $error = implode('<br>', $output);
-        if (empty($error)) $error = sprintf(_('Error: %s update failed',$v_pkg);
+        if (empty($error)) {
+            $error = sprintf(_('Error: %s update failed',$v_pkg));
             $_SESSION['error_msg'] = $error;
+        }
     }
     unset($output);
 }

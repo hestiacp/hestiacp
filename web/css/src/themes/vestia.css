@@ -20,7 +20,7 @@ b, strong {
 .table-header {
     box-shadow: none !important;
     background: #fafafa !important;
-    line-height: inherit !important;
+    line-height: 1.2rem !important;
 }
 .advanced-options {
     background: #fafafa !important;
@@ -662,9 +662,32 @@ a.vst-advanced:active, a.vst-advanced:focus {
 
 .mail-infoblock {
     border-radius: 0px !important;
+    margin-top: 92px !important;
     box-shadow: none !important;
 }
 
 .l-menu__item i.fas.fa-arrow-alt-circle-left {
     display: inline-block !important;
+}
+
+.helper-container {
+    margin-top: 406px !important;
+    border-radius: 0px !important;
+    box-shadow: none !important;
+}
+
+.cron-helper-tabs .ui-tabs-selected a {
+    color: #ff6701;
+}
+
+.cron-helper-tabs a:hover {
+    color: #f79b44;
+}
+
+.cron-helper-tabs a:active {
+    color: #e95e00;
+}
+
+a.vst-advanced {
+    margin-left: -10px;
 }

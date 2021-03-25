@@ -67,7 +67,7 @@
                         </tr>
                         <tr>
                             <td class="vst-text input-label">
-                                <?php print _('Password');?> / <a href="javascript:randomString();" class="generate"><?php print _('generate');?></a>
+                                <?php print _('Password');?> <a href="javascript:randomString();" title="<?php print _('generate');?>"><i class="fas fa-sync status-icon green icon-large"></i></a>
                             </td>
                         </tr>
                         <tr>
@@ -78,7 +78,7 @@
                         </tr>
                         <tr>
                             <td class="vst-text">
-                                <?php print _('Your password must have at least');?>
+                                <?php print _('Your password must have at least');?>:
                                 <ul>
                                     <li><?php print _('8 characters long');?></li>
                                     <li><?php print _('1 uppercase & 1 lowercase character');?></li>
@@ -102,7 +102,7 @@
                                     <tr>
                                         <td>
                                             <input type="text" size="20" class="vst-input" name="v_quota" value="<?=htmlentities(trim($v_quota, "'"))?>">
-                                            <i class="unlim-trigger fas fa-infinity" id="unlim-quota" /</i>
+                                            <i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited')?>" id="unlim-quota" /</i>
                                         </td>
                                     </tr>
                                 <tr>

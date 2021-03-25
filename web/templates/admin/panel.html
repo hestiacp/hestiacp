@@ -8,7 +8,7 @@
 
 <div class="l-header">
 	<div class="l-center">
-		<a href="<?=htmlspecialchars($home_url)?>" class="l-logo"></a>
+		<a href="<?=htmlspecialchars($home_url)?>" class="l-logo" title="<?=_('Hestia Control Panel');?>"></a>
 		<div class="l-menu clearfix noselect">
 			<div class="l-menu__item <?php if($TAB == 'WEB' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'DNS' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'MAIL' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'DB' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'BACKUP' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'CRON' ) echo 'l-menu__item--active' ?><?php if($TAB == 'PACKAGE' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'USER' ) echo 'l-menu__item--active' ?>"><a href="<?=htmlspecialchars($home_url)?>"><i class="fas fa-tasks panel-icon"></i><?=_('Records')?></a></div>
 			<?php if ((isset($_SESSION['FILE_MANAGER'])) && (!empty($_SESSION['FILE_MANAGER'])) && ($_SESSION['FILE_MANAGER'] == "true")) {?>
@@ -49,9 +49,9 @@
 				<div class="l-menu__item"><a href="/edit/user/?user=<?php echo $user; ?>&token=<?=$_SESSION['token']?>" title="<?=htmlspecialchars($user)?> (<?=htmlspecialchars($panel[$user]['NAME'])?>)" class="l-profile__username"><i class="fas fa-user-edit"></i></a></div>
 			<? } ?>
 			<?php if ((isset($panel[$user]['ROLE'])) && (!empty($panel[$user]['ROLE'])) && ($panel[$user]['ROLE'] === "admin")) {?>
-				<div class="l-menu__item"><a href="https://github.com/hestiacp/hestiacp/issues/" target="_new" title="Submit a bug report" class="l-profile__help"><i class="fas fa-exclamation-triangle"></i></a></div>
+				<div class="l-menu__item"><a href="https://github.com/hestiacp/hestiacp/issues/" rel="noopener" target="_new" title="Submit a bug report" class="l-profile__help"><i class="fas fa-exclamation-triangle"></i></a></div>
 			<?php } ?>
-			<div class="l-menu__item"><a href="https://docs.hestiacp.com/" title="<?=_('Help')?>" class="l-profile__help" target="_blank"><i class="fas fa-question-circle"></i></a></div>
+			<div class="l-menu__item"><a href="https://docs.hestiacp.com/" rel="noopener" title="<?=_('Help')?>" class="l-profile__help" target="_blank"><i class="fas fa-question-circle"></i></a></div>
 			<? if(isset($_SESSION['look']) && (!empty($_SESSION['look']))){ ?>
 				<div class="l-menu__item"><a href="/logout/" title="<?=_('Log out')?> (<?=$user?>)" class="l-profile__logout"><i class="fas fa-arrow-alt-circle-up"></i></a></div>
 			<? } else {?>

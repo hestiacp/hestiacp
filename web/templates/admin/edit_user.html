@@ -86,7 +86,27 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print _('Password');?> / <a href="javascript:randomString();" class="generate"><?php print _('generate');?></a>
+                                    <?php print _('Contact');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print _('Email');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_email" value="<?=htmlentities(trim($v_email, "'"))?>">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print _('Password');?> <a href="javascript:randomString();" title="<?php print _('generate');?>"><i class="fas fa-sync status-icon green icon-large"></i></a>
                                 </td>
                             </tr>
                             <tr>
@@ -97,7 +117,7 @@
                             </tr>
                             <tr>
                                 <td class="vst-text">
-                                    <?php print _('Your password must have at least');?>
+                                    <?php print _('Your password must have at least');?>:
                                     <ul>
                                         <li><?php print _('8 characters long');?></li>
                                         <li><?php print _('1 uppercase & 1 lowercase character');?></li>
@@ -120,6 +140,31 @@
                             <? } else { ?>
                             <tr>
                                 <td class="vst-text input-label">
+                                    <?php print _('Language');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_language">
+                                        <?php
+                                            foreach ($languages as $key => $value) {
+                                                echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".$key."\"";
+                                                $skey = "'".$key."'";
+                                                if (( $key == $v_language ) || ( $skey == $v_language)){
+                                                    echo 'selected' ;
+                                                }
+                                                if (( $key == detect_user_language() ) && (empty($v_language))){
+                                                    echo 'selected' ;
+                                                }
+                                                echo ">".htmlentities($value)."</option>\n";
+                                            }
+                                        ?>
+                                    </select>
+                                </td>
+                            </tr>
+                            <? } ?>
+                            <tr>
+                                <td class="vst-text input-label">
                                     <?php print _('Role');?>
                                 </td>
                             </tr>
@@ -129,27 +174,6 @@
                                         <option value="user"><?php print _('User');?>
                                         <option value="admin" <?php if($v_role == "admin" ){ echo "selected"; } ?> ><?php print _('Administrator');?>
                                     </select>
-                                </td>
-                            </tr>
-                            <? } ?>
-                            <tr>
-                                <td class="vst-text input-label">
-                                    <?php print _('Contact');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" size="20" class="vst-input" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text input-label">
-                                    <?php print _('Email');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" size="20" class="vst-input" name="v_email" value="<?=htmlentities(trim($v_email, "'"))?>">
                                 </td>
                             </tr>
                             <tr>
@@ -168,30 +192,6 @@
                                                     echo 'selected' ;
                                                 }
                                                 echo ">".htmlentities($key)."</option>\n";
-                                            }
-                                        ?>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text input-label">
-                                    <?php print _('Language');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <select class="vst-list" name="v_language">
-                                        <?php
-                                            foreach ($languages as $key => $value) {
-                                                echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".$key."\"";
-                                                $skey = "'".$key."'";
-                                                if (( $key == $v_language ) || ( $skey == $v_language)){
-                                                    echo 'selected' ;
-                                                }
-                                                if (( $key == detect_user_language() ) && (empty($v_language))){
-                                                    echo 'selected' ;
-                                                }
-                                                echo ">".htmlentities($value)."</option>\n";
                                             }
                                         ?>
                                     </select>
@@ -252,20 +252,20 @@
                             <tr>
                                 <td>
                                     <input type="text" size="20" class="vst-input" name="v_ns1" value="<?=htmlentities(trim($v_ns1, "'"))?>">
-                                    <span class="remove-ns additional-control delete"><?=_('delete')?></span>
+                                    <span class="remove-ns additional-control delete vst-advanced button danger"><?=_('delete')?></span>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <input type="text" size="20" class="vst-input" name="v_ns2" value="<?=htmlentities(trim($v_ns2, "'"))?>">
-                                    <span class="remove-ns additional-control delete"><?=_('delete')?></span>
+                                    <span class="remove-ns additional-control delete vst-advanced button danger"><?=_('delete')?></span>
                                 </td>
                             </tr>
                             <?  if($v_ns3)
                                   echo '<tr>
                                     <td>
                                         <input type="text" size="20" class="vst-input" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
-                                        <span class="remove-ns additional-control delete">'._('delete').'</span>
+                                        <span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
                                     </td>
                                 </tr>';
 
@@ -273,7 +273,7 @@
                                   echo '<tr>
                                     <td>
                                         <input type="text" size="20" class="vst-input" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
-                                        <span class="remove-ns additional-control delete">'._('delete').'</span>
+                                        <span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
                                     </td>
                                 </tr>';
 
@@ -281,7 +281,7 @@
                                   echo '<tr>
                                     <td>
                                         <input type="text" size="20" class="vst-input" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
-                                        <span class="remove-ns additional-control delete">'._('delete').'</span>
+                                        <span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
                                     </td>
                                 </tr>';
 
@@ -289,7 +289,7 @@
                                   echo '<tr>
                                     <td>
                                         <input type="text" size="20" class="vst-input" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
-                                        <span class="remove-ns additional-control delete">'._('delete').'</span>
+                                        <span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
                                     </td>
                                 </tr>';
 
@@ -297,7 +297,7 @@
                                   echo '<tr>
                                     <td>
                                         <input type="text" size="20" class="vst-input" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
-                                        <span class="remove-ns additional-control delete">'._('delete').'</span>
+                                        <span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
                                     </td>
                                 </tr>';
 
@@ -305,14 +305,14 @@
                                   echo '<tr>
                                     <td>
                                         <input type="text" size="20" class="vst-input" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
-                                        <span class="remove-ns additional-control delete">'._('delete').'</span>
+                                        <span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
                                     </td>
                                 </tr>';
                             ?>
 
                                 <tr class="add-ns" <? if($v_ns8) echo 'style="display:none;"'; ?> >
                                     <td class="step-top-small">
-                                      <span class="add-ns-button additional-control add"><?=_('Add one more Name Server')?></span>
+                                      <span class="add-ns-button vst-advanced button"><?=_('Add one more Name Server')?></span>
                                     </td>
                                 </tr>
                             <?php } ?>

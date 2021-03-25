@@ -36,14 +36,14 @@
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
-              <td class="sort-by">
+              <td class="sort-by" title="<?=_('Sort items');?>">
                 <?=_('sort by');?>: <span><b><?=_('Date')?> <i class="fas fa-sort-amount-down"></i></b></span>
               </td>
               <td class="l-sort-toolbar__search-box">
                 <form action="/search/" method="get">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-                  <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
-                  <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value=""><i class="fas fa-search"></i></button>
+                  <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search')?>" />
+                  <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search')?>"><i class="fas fa-search"></i></button>
                 </form>
               </td>
               <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
@@ -61,7 +61,7 @@
                       <option value="delete"><?=_('delete')?></option>
                     </select>
                   </div>
-                  <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
+                  <button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected')?>"><i class="fas fa-arrow-right"></i></button>
                 </td>
               <? } ?>
             </tr>
@@ -76,7 +76,7 @@
         <div class="header table-header">
             <div class="l-unit__col l-unit__col--right">
                   <div class="clearfix l-unit__stat-col--left super-compact">
-                      <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
+                      <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all')?>" onChange="checkedAll('objects');">
                   </div>
                   <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print _('Database');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-right compact-3"><b>&nbsp;</b></div>
@@ -119,13 +119,13 @@ sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" so
             <div class="l-unit__col l-unit__col--right">
               <div>
                 <div class="clearfix l-unit__stat-col--left super-compact">
-                  <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="database[]" value="<?php echo $key ?>">
+                  <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" title="<?=_('Select')?>" name="database[]" value="<?php echo $key ?>">
                 </div>
                 <div class="clearfix l-unit__stat-col--left wide-3 truncate">
                   <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') || ($data[$key]['SUSPENDED'] == 'yes')) {?>
                     <b><?=$key?></b>
                   <? } else { ?>
-                    <b><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Database')?>"><?=$key?></a></b>
+                    <b><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Database')?>: <?=$key?>"><?=$key?></a></b>
                   <? } ?>
                 </div>
                 <!-- START QUICK ACTION TOOLBAR AREA -->

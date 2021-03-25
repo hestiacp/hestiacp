@@ -97,7 +97,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text input-label">
+                                <td class="vst-text input-label step-top">
                                     <label><input type="checkbox" size="20" class="vst-checkbox" name="v_antispam" <?php if ($v_antispam == 'yes') echo "checked=yes"; ?>><?php print _('AntiSpam Support');?></label>
                                 </td>
                             </tr>
@@ -112,7 +112,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text step-top">
+                                <td class="vst-text input-label">
                                     <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');"><?php print _('SSL Support');?></label>
                                 </td>
                             </tr>
@@ -140,7 +140,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <textarea size="20" class="vst-textinput" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
+                                                <textarea size="20" class="vst-textinput short" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
                                             </td>
                                         </tr>
                                         <tr>
@@ -150,7 +150,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <textarea size="20" class="vst-textinput" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
+                                                <textarea size="20" class="vst-textinput short" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
                                             </td>
                                         </tr>
                                         <tr>
@@ -160,7 +160,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <textarea size="20" class="vst-textinput" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
+                                                <textarea size="20" class="vst-textinput short" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
                                             </td>
                                         </tr>
                                         <?
@@ -170,7 +170,7 @@
                                                     <table class="additional-info">
                                                         <tr>
                                                             <td>
-                                                                <?=_('SUBJECT')?>:
+                                                                <b><?=_('SUBJECT')?>:</b>
                                                             </td>
                                                             <td class="details">
                                                                 <?=$v_ssl_subject?>
@@ -179,7 +179,7 @@
                                                         <? if($v_ssl_aliases){?>
                                                             <tr>
                                                                 <td>
-                                                                    <?=_('ALIASES')?>:
+                                                                    <b><?=_('Aliases')?>:</b>
                                                                 </td>
                                                                 <td class="details">
                                                                     <?=$v_ssl_aliases?>
@@ -188,7 +188,7 @@
                                                         <? } ?>
                                                         <tr>
                                                             <td>
-                                                                <?=_('NOT_BEFORE')?>:
+                                                                <b><?=_('NOT_BEFORE')?>:</b>
                                                             </td>
                                                             <td class="details">
                                                                 <?=$v_ssl_not_before?>
@@ -196,7 +196,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td>
-                                                                <?=_('NOT_AFTER')?>:
+                                                                <b><?=_('NOT_AFTER')?>:</b>
                                                             </td>
                                                             <td class="details">
                                                                 <?=$v_ssl_not_after?>
@@ -204,7 +204,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td>
-                                                                <?=_('SIGNATURE')?>:
+                                                                <b><?=_('SIGNATURE')?>:</b>
                                                             </td>
                                                             <td class="details">
                                                                 <?=$v_ssl_signature?>
@@ -212,7 +212,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td>
-                                                                <?=_('PUB_KEY')?>:
+                                                                <b><?=_('PUB_KEY')?>:</b>
                                                             </td>
                                                             <td class="details">
                                                                 <?=$v_ssl_pub_key?>
@@ -220,7 +220,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td>
-                                                                <?=_('ISSUER')?>
+                                                                <b><?=_('ISSUER')?>:</b>
                                                             </td>
                                                             <td class="details">
                                                                 <?=$v_ssl_issuer?>
@@ -234,7 +234,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text step-top">
+                                <td class="vst-text">
                                     <label>
                                         <input type="checkbox" size="20" class="vst-checkbox" name="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo "checked=yes"; ?> onclick="javascript:elementHideShow('smtp_relay_table');"><?php print _('SMTP Relay');?>
                                     </label>

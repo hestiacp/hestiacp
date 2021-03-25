@@ -21,7 +21,7 @@
                     <option value="update"><?php print _('update') ?></option>
                   </select>
                 </div>
-                <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
+                <button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected')?>"><i class="fas fa-arrow-right"></i></button>
               </td>
             </tr>
           </table>
@@ -38,7 +38,7 @@
               <div>
                   <div class="clearfix l-unit__stat-col--left super-compact center">
                     &nbsp;
-                    <!-- <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');"> -->
+                    <!-- <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all')?>" onChange="checkedAll('objects');"> -->
                     </div>
                   <div class="clearfix l-unit__stat-col--left wide"><b><?php print _('Package');?></b></div>
                   <div class="clearfix l-unit__stat-col--left wide-5"><b><?php print _('Description');?></b></div>
@@ -70,7 +70,7 @@
             <div>
                 <div class="clearfix l-unit__stat-col--left super-compact center">
                   <i class="fas fa-box-open status-icon dim"></i>
-                  <!-- <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="pkg[]" value="<?php echo $key ?>"> -->
+                  <!-- <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" title="<?=_('Select')?>" name="pkg[]" value="<?php echo $key ?>"> -->
                 </div>
               <div class="clearfix l-unit__stat-col--left wide"><b><?=$key?></b></div>
               <div class="clearfix l-unit__stat-col--left wide-5"><?=_($data[$key]['DESCR'])?></div>

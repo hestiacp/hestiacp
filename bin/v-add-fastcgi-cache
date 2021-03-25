@@ -104,13 +104,14 @@ if [ -z "$FASTCGI_CACHE" ]; then
     add_object_key "web" 'DOMAIN' "$domain" 'FASTCGI_CACHE' 'ALIAS'
 fi
 if [ -z "$FASTCGI_LENGTH" ]; then
-add_object_key "web" 'DOMAIN' "$domain" 'FASTCGI_LENGTH' 'ALIAS'
+    add_object_key "web" 'DOMAIN' "$domain" 'FASTCGI_LENGTH' 'ALIAS'
 fi
 
 # Set FastCGI cache flag to enabled
 update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_CACHE' 'yes'
+update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_LENGTH' "$length"
 
-if [ "$restart" = "yes"]; then
+if [ "$restart" = "yes" ]; then
     # Restart web server
     $BIN/v-restart-web
     check_result $? "Web server restart failed" > /dev/null

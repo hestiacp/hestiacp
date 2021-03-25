@@ -71,6 +71,25 @@
                                     <input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
                                 </td>
                             </tr>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print _('Aliases');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <textarea size="20" class="vst-textinput short" name="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
+                                </td>
+                            </tr>
+			                <tr>
+                                <td>
+                                    <span class="alert alert-info alert-with-icon">
+                                                    <i class="fas fa-exclamation"></i>
+                                                    <?php print _('Changes to Aliases will cause Lets Encrypt to obtain a new SSL certificate if enabled.');?>
+                                                </span>
+                                </td>
+                            </tr>
                             <tr>
                                 <td class="vst-text input-label">
                                     <?php print _('IP Address');?>
@@ -88,25 +107,6 @@
                                         ?>
                                     </select>
                                 </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text input-label">
-                                    <?php print _('Aliases');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <textarea size="20" class="vst-textinput short" name="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
-                                </td>
-                            </tr>
-			    <tr>
-                                <td>
-                                    <span class="alert alert-info alert-with-icon">
-                                                    <i class="fas fa-exclamation"></i>
-                                                    <?php print _('Changes to Aliases will cause Lets Encrypt to obtain a new SSL certificate if enabled.');?>
-                                                </span>
-                                </td>
-                            </tr>
                             <tr>
                                 <td class="vst-text step-top">
                                     <?php print _('Web Statistics');?>
@@ -162,161 +162,6 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print _('Web Template')  . "<span class='optional'>" .strtoupper($_SESSION['WEB_SYSTEM']) . "</span>";?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <select class="vst-list" name="v_template">
-                                        <?php
-                                            foreach ($templates as $key => $value) {
-                                                echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
-                                                $svalue = "'".$value."'";
-                                                if ((!empty($v_template)) && ( $value == $v_template ) || ($svalue == $v_template)){
-                                                    echo ' selected' ;
-                                                }
-                                                echo ">".htmlentities($value)."</option>\n";
-                                            }
-                                        ?>
-                                    </select>
-                                </td>
-                            </tr>
-                            <?php if($_SESSION['WEB_SYSTEM'] == 'nginx'){?>
-                            <tr>
-                                <td class="vst-text input-label">
-                                    <?php print _('Enable Fast CGI Cache'); ?> <a href="https://docs.hestiacp.com/admin_docs/nginx_caching.html" target="_blank"><i class="fas fa-question-circle"></i></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <select class="vst-list" name="v_nginx_cache">
-                                        <option value="no"><?php echo _('No');?></option>
-                                        <option value="yes" <?php if ( $v_nginx_cache == "yes") { echo 'selected'; }?>><?php echo _('Yes');?></option>
-                                    </select>
-                                </td>
-                            </tr>
-                             <?php } ?>                          
-                            <?php if (!empty($_SESSION['WEB_BACKEND'])) { ?>
-                            <tr>
-                                <td class="vst-text input-label">
-                                    <?php print _('Backend Template') . " <span class='optional'>" . strtoupper($_SESSION['WEB_BACKEND']) . "</span>";?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <select class="vst-list" name="v_backend_template">
-                                        <?php
-                                            foreach ($backend_templates as $key => $value) {
-                                                echo "\t\t\t\t<option value=\"".$value."\"";
-                                                $svalue = "'".$value."'";
-                                                if ((!empty($v_backend_template)) && ( $value == $v_backend_template ) || ($svalue == $v_backend_template)){
-                                                    echo ' selected' ;
-                                                }
-                                                if ((empty($v_backend_template)) && ($value == 'default')){
-                                                    echo ' selected' ;
-                                                }
-                                                echo ">".htmlentities($value)."</option>\n";
-                                            }
-                                        ?>
-                                    </select>
-                                </td>
-                            </tr>
-                            <?php }?>
-                            <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { ?>
-                            <tr>
-                                <td class="vst-text step-top">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_proxy" <?php if (!empty($v_proxy)) echo "checked=yes" ?> onclick="javascript:elementHideShow('proxytable');"><?php print _('Proxy Support') . "<span class='optional'>" . strtoupper($_SESSION['PROXY_SYSTEM']) . "</span>";?></label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="step-left">
-                                    <table style="display:<?php if (empty($v_proxy)) { echo 'none';} else {echo 'block';}?> ;" id="proxytable">
-                                        <tr>
-                                            <td class="vst-text input-label">
-                                                <?php print _('Proxy Template');?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <select class="vst-list" name="v_proxy_template">
-                                                    <?php
-                                                        foreach ($proxy_templates as $key => $value) {
-                                                            echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
-                                                            $svalue = "'".$value."'";
-                                                            if ((!empty($v_proxy_template)) && ( $value == $v_proxy_template ) || ($svalue == $v_proxy_template)){
-                                                                echo ' selected' ;
-                                                            }
-                                                            if ((empty($v_proxy_template)) && ($value == 'default')){
-                                                                echo ' selected' ;
-                                                            }
-                                                            echo ">".htmlentities($value)."</option>\n";
-                                                        }
-                                                    ?>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text input-label">
-                                                <?php print _('Proxy Extensions');?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <textarea size="20" class="vst-textinput short" name="v_proxy_ext"><?php if (!empty($v_proxy_ext)) { echo htmlentities(trim($v_proxy_ext, "'"));} else { echo 'jpg, jpeg, gif, png, ico, svg, css, zip, tgz, gz, rar, bz2, exe, pdf, doc, xls, ppt, txt, odt, ods, odp, odf, tar, bmp, rtf, js, mp3, avi, mpeg, flv, html, htm'; }  ?></textarea>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                            <?php } ?>
-                            <tr>
-                                <td class="vst-text step-top">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_custom_doc_root_check" <?php if (!empty($v_custom_doc_root)) echo "checked=yes" ?> onclick="javascript:elementHideShow('v_custom_doc_root');"><?php print _('Custom document root');?></label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="step-left">
-                                    <table style="display:<?php if (empty($v_custom_doc_root)) { echo 'none';} else {echo 'block';}?> ;" id="v_custom_doc_root">
-                                        <tr>
-                                            <td class="vst-text input-label">
-                                                <?php print _('Point to');?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="hidden" name="v-custom-doc-root_prepath" value="<?php echo $v_custom_doc_root_prepath;?>">
-                                                <select class="vst-list" name="v-custom-doc-domain">
-                                                <?php foreach ($user_domains as $domain): ?>
-                                                    <option value="<?php echo $domain;?>"
-                                                        <?=($v_custom_doc_domain === $domain || (empty($v_custom_doc_domain) && $domain === $v_domain))?' selected="selected" ':''; ?>>
-                                                        <?php echo $domain;?>
-                                                    </option>
-                                                <?php endforeach; ?>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text input-label">
-                                                <?php print( _('Directory'));?> <span class="optional">(<?php print _('optional');?>)</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" size="20" class="vst-input"
-                                                name="v-custom-doc-folder" value="<?=htmlentities(trim($v_custom_doc_folder, "'"))?>">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <small class="custom_docroot_hint"></small>
-                                            </td>
-                                        </tr>
-
-                                    </table>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text step-top">
                                     <label><input type="checkbox" size="20" class="vst-checkbox" name="v-redirect-checkbox" <?php if (!empty($v_redirect)) echo "checked=yes" ?> onclick="javascript:elementHideShow('v_redirect');"><?php print _('Enable domain redirection');?></label>
                                 </td>
                             </tr>
@@ -324,15 +169,15 @@
                                 <td class="step-left">
                                     <table style="display:<?php if (empty($v_redirect)) { echo 'none';} else {echo 'block';}?> ;" id="v_redirect">
                                         <tr>
-                                            <td class="step-top">
-                                                <input type="radio" name="v-redirect" value="<?php echo 'www.'.$v_domain;?>" <?php if ($v_redirect == "www.".$v_domain) echo "checked"; ?> class="v-redirect-custom-value"/><?=sprintf(_('Redirect visitors to %s'),"www.".$v_domain);?><br />
-                                                <input type="radio" name="v-redirect" value="<?php echo $v_domain;?>" <?php if( $v_redirect == $v_domain) echo "checked";?> class="v-redirect-custom-value"/><?=sprintf(_('Redirect visitors to %s'),$v_domain);?><br />
-                                                <input type="radio" name="v-redirect" value="custom" <?php if( !empty($v_redirect_custom)) echo "checked";?> class="v-redirect-custom-value"/><?=_("Redirect visitors to a custom domain or web address");?>
+                                            <td>
+                                                <input type="radio" name="v-redirect" value="<?php echo 'www.'.$v_domain;?>" <?php if ($v_redirect == "www.".$v_domain) echo "checked"; ?> class="v-redirect-custom-value"><?=sprintf(_('Redirect visitors to %s'),"www.".$v_domain);?></label></input><br />
+                                                <input type="radio" name="v-redirect" value="<?php echo $v_domain;?>" <?php if( $v_redirect == $v_domain) echo "checked";?> class="v-redirect-custom-value"><?=sprintf(_('Redirect visitors to %s'),$v_domain);?></label></input><br />
+                                                <input type="radio" name="v-redirect" value="custom" <?php if( !empty($v_redirect_custom)) echo "checked";?> class="v-redirect-custom-value"><?=_("Redirect visitors to a custom domain or web address");?></label></input>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <table id="custom_redirect" style="display:<?php if (empty($v_redirect_custom)) { echo 'none';} else {echo 'block';}?> ;">
+                                                <table id="custom_redirect" style="margin-left: 22px; display:<?php if (empty($v_redirect_custom)) { echo 'none';} else {echo 'block';}?> ;">
                                                     <tr>
                                                         <td class="vst-text input-label">
                                                             <?=_('Target domain or URL');?>:
@@ -367,7 +212,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text step-top">
+                                <td class="vst-text input-label">
                                     <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:App.Actions.WEB.toggle_ssl(this);"><?php print _('SSL Support');?></label>
                                 </td>
                             </tr>
@@ -404,7 +249,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="vst-text input-label">
+                                            <td class="vst-text input-label step-top">
                                                 <?php print _('SSL Certificate');?>
                                                 <span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=$v_domain?>"><?=_('Generate CSR')?></a></span>
                                             </td>
@@ -504,8 +349,173 @@
                                     </table>
                                 </td>
                             </tr>
+
+                        <tr>
+                            <td class="step-top vst-text" style="/*padding: 32px 0 20px 0;*/">
+                                <a href="javascript:elementHideShow('advanced-opts');" class="vst-advanced"><?php print _('Advanced options');?></a>
+                            </td>
+                        </tr>
+                        <tr>
+                                <td class="step-top">
+                                    <table id="advanced-opts" style="display: none;">
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print _('Web Template')  . "<span class='optional'>" .strtoupper($_SESSION['WEB_SYSTEM']) . "</span>";?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_template">
+                                                    <?php
+                                                        foreach ($templates as $key => $value) {
+                                                            echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
+                                                            $svalue = "'".$value."'";
+                                                            if ((!empty($v_template)) && ( $value == $v_template ) || ($svalue == $v_template)){
+                                                                echo ' selected' ;
+                                                            }
+                                                            echo ">".htmlentities($value)."</option>\n";
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <?php if($_SESSION['WEB_SYSTEM'] == 'nginx'){?>
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print _('Enable Fast CGI Cache'); ?> <a href="https://docs.hestiacp.com/admin_docs/nginx_caching.html" target="_blank"><i class="fas fa-question-circle"></i></a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_nginx_cache">
+                                                    <option value="no"><?php echo _('No');?></option>
+                                                    <option value="yes" <?php if ( $v_nginx_cache == "yes") { echo 'selected'; }?>><?php echo _('Yes');?></option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <?php } ?>                          
+                                        <?php if (!empty($_SESSION['WEB_BACKEND'])) { ?>
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print _('Backend Template') . " <span class='optional'>" . strtoupper($_SESSION['WEB_BACKEND']) . "</span>";?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_backend_template">
+                                                    <?php
+                                                        foreach ($backend_templates as $key => $value) {
+                                                            echo "\t\t\t\t<option value=\"".$value."\"";
+                                                            $svalue = "'".$value."'";
+                                                            if ((!empty($v_backend_template)) && ( $value == $v_backend_template ) || ($svalue == $v_backend_template)){
+                                                                echo ' selected' ;
+                                                            }
+                                                            if ((empty($v_backend_template)) && ($value == 'default')){
+                                                                echo ' selected' ;
+                                                            }
+                                                            echo ">".htmlentities($value)."</option>\n";
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <?php }?>
+                                        <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { ?>
+                                        <tr style="display: none;">
+                                            <td class="vst-text input-label">
+                                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_proxy" <?php if (!empty($v_proxy)) echo "checked=yes" ?> onclick="javascript:elementHideShow('proxytable');"><?php print _('Proxy Support') . "<span class='optional'>" . strtoupper($_SESSION['PROXY_SYSTEM']) . "</span>";?></label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <table style="display:<?php if (empty($v_proxy)) { echo 'none';} else {echo 'block';}?> ;" id="proxytable">
+                                                    <tr>
+                                                        <td class="vst-text input-label">
+                                                            <?php print _('Proxy Template');?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <select class="vst-list" name="v_proxy_template">
+                                                                <?php
+                                                                    foreach ($proxy_templates as $key => $value) {
+                                                                        echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
+                                                                        $svalue = "'".$value."'";
+                                                                        if ((!empty($v_proxy_template)) && ( $value == $v_proxy_template ) || ($svalue == $v_proxy_template)){
+                                                                            echo ' selected' ;
+                                                                        }
+                                                                        if ((empty($v_proxy_template)) && ($value == 'default')){
+                                                                            echo ' selected' ;
+                                                                        }
+                                                                        echo ">".htmlentities($value)."</option>\n";
+                                                                    }
+                                                                ?>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="vst-text input-label">
+                                                            <?php print _('Proxy Extensions');?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <textarea size="20" class="vst-textinput short" name="v_proxy_ext"><?php if (!empty($v_proxy_ext)) { echo htmlentities(trim($v_proxy_ext, "'"));} else { echo 'jpg, jpeg, gif, png, ico, svg, css, zip, tgz, gz, rar, bz2, exe, pdf, doc, xls, ppt, txt, odt, ods, odp, odf, tar, bmp, rtf, js, mp3, avi, mpeg, flv, html, htm'; }  ?></textarea>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <?php } ?>
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_custom_doc_root_check" <?php if (!empty($v_custom_doc_root)) echo "checked=yes" ?> onclick="javascript:elementHideShow('v_custom_doc_root');"><?php print _('Custom document root');?></label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="step-left">
+                                                <table style="display:<?php if (empty($v_custom_doc_root)) { echo 'none';} else {echo 'block';}?> ;" id="v_custom_doc_root">
+                                                    <tr>
+                                                        <td class="vst-text input-label">
+                                                            <?php print _('Point to');?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="hidden" name="v-custom-doc-root_prepath" value="<?php echo $v_custom_doc_root_prepath;?>">
+                                                            <select class="vst-list" name="v-custom-doc-domain">
+                                                            <?php foreach ($user_domains as $domain): ?>
+                                                                <option value="<?php echo $domain;?>"
+                                                                    <?=($v_custom_doc_domain === $domain || (empty($v_custom_doc_domain) && $domain === $v_domain))?' selected="selected" ':''; ?>>
+                                                                    <?php echo $domain;?>
+                                                                </option>
+                                                            <?php endforeach; ?>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="vst-text input-label">
+                                                            <?php print( _('Directory'));?> <span class="optional">(<?php print _('optional');?>)</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text" size="20" class="vst-input"
+                                                            name="v-custom-doc-folder" value="<?=htmlentities(trim($v_custom_doc_folder, "'"))?>">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <small class="custom_docroot_hint"></small>
+                                                        </td>
+                                                    </tr>
+
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        
                             <tr>
-                                <td class="vst-text step-top">
+                                <td class="vst-text input-label">
                                     <label><input type="checkbox" size="20" class="vst-checkbox" name="v_ftp" <?php if (!empty($v_ftp_user)) echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_additional_ftp_accounts(this)"><?php print _('Additional FTP Account');?></label>
                                 </td>
                             </tr>
@@ -523,7 +533,7 @@
                                     <table style="display:<?php if (empty($v_ftp_user)) { echo 'none';} else {echo 'block';}?> ;" class="ftptable ftptable-nrm" name="v_add_domain_ftp">
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print _('FTP') ?> #<span class="ftp-user-number"><?php print $i + 1; ?></span> <a class="ftp-remove-user additional-control" onCLick="App.Actions.WEB.remove_ftp_user(this)">(<?=_('delete')?>)</a>
+                                                <?php print _('FTP') ?> #<span class="ftp-user-number"><?php print $i + 1; ?></span> <a class="ftp-remove-user additional-control" onCLick="App.Actions.WEB.remove_ftp_user(this)"><?=_('delete')?></a>
                                                 <input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[<?php print $i ?>][delete]" value="0" />
                                                 <input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[<?php print $i ?>][is_new]" value="<?php print htmlentities($ftp_user['is_new']) ?>" />
                                             </td>
@@ -584,7 +594,10 @@
 
                             <tr class="add-new-ftp-user-button" style="<?php print !empty($v_ftp_user) ? '' : 'display:none;' ?>">
                                 <td class="vst-text step-top v-add-new-user step-bottom">
-                                    <a class="additional-control" onClick="App.Actions.WEB.add_ftp_user_form()"><?php print _('Add one more FTP Account');?></a>
+                                    <a class="additional-control vst-advanced" onClick="App.Actions.WEB.add_ftp_user_form()"><?php print _('Add one more FTP Account');?></a>
+                                </td>
+                            </tr>
+                                    </table>
                                 </td>
                             </tr>
                         </table>
@@ -599,7 +612,7 @@
             <table class="ftptable ftptable-nrm" name="v_add_domain_ftp">
                 <tr>
                     <td class="vst-text input-label">
-                        <?php print _('FTP') ?> #<span class="ftp-user-number"></span> <a class="ftp-remove-user additional-control" onCLick="App.Actions.WEB.remove_ftp_user(this)">(<?=_('delete')?>)</a>
+                        <?php print _('FTP') ?> #<span class="ftp-user-number"></span> <a class="ftp-remove-user additional-control" onCLick="App.Actions.WEB.remove_ftp_user(this)"><?=_('delete')?></a>
                         <input type="hidden"  class="v-ftp-user-deleted" name="v_ftp_user[%INDEX%][delete]" value="0" />
                         <input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[%INDEX%][is_new]" value="1" />
                     </td>

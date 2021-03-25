@@ -33,8 +33,11 @@ dns_user=${6-dns-cluster}
 DNS_USER=$dns_user
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/remote.sh
 source $HESTIA/func/remote.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 

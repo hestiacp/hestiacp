@@ -5,15 +5,19 @@
     </div>
     <div class="l-unit-toolbar__buttonstrip float-right">
       <a href="javascript:location.reload();" class="ui-button cancel" dir="ltr"><i class="fas fa-redo status-icon green"></i><?=_('Refresh')?></a>
-      <div class="actions-panel display-inline-block" key-action="js">
-        <a class="data-controls do_delete ui-button danger cancel">
-          <i class="do_delete fas fa-times-circle status-icon red"></i><?=_('Delete')?>
-          <input type="hidden" name="delete_url" value="/delete/log/auth/?token=<?=$_SESSION['token']?>" />
-            <div class="confirmation-text-delete hidden" title="<?=_('Confirmation')?>">
-              <p class="confirmation"><?=_('DELETE_LOGS_CONFIRMATION')?></p>
-            </div>
-        </a>
-      </div>
+      <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['RESTRICTED_ADMIN'] === 'yes')) {?>
+              <!-- Hide delete buttons-->
+      <? } else { ?>
+        <div class="actions-panel display-inline-block" key-action="js">
+          <a class="data-controls do_delete ui-button danger cancel">
+            <i class="do_delete fas fa-times-circle status-icon red"></i><?=_('Delete')?>
+            <input type="hidden" name="delete_url" value="/delete/log/auth/?token=<?=$_SESSION['token']?>" />
+              <div class="confirmation-text-delete hidden" title="<?=_('Confirmation')?>">
+                <p class="confirmation"><?=_('DELETE_LOGS_CONFIRMATION')?></p>
+              </div>
+          </a>
+        </div>
+      <? } ?>
     </div>
   </div>
 </div>

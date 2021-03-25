@@ -27,7 +27,7 @@
                   <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search')?>"><i class="fas fa-search"></i></button>
                 </form>
               </td>
-              <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
+              <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['RESTRICTED_ADMIN'] === 'yes')) {?>
                 <!-- Hide bulk actions for domain items when impersonating 'admin' account-->
               <? } else { ?>
                 <td>

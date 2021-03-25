@@ -45,9 +45,11 @@
 			<? } ?>
 			<? if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($user == 'admin'))) {?>
 				<!-- Hide 'edit user' entry point from other administrators for default 'admin' account-->
+				<div class="l-menu__item"><a href="/list/log/" title="<?_('Logs')?>" class="l-profile__username"><i class="fas fa-history"></i></a></div>
 			<? } else { ?>
 				<div class="l-menu__item"><a href="/edit/user/?user=<?php echo $user; ?>&token=<?=$_SESSION['token']?>" title="<?=htmlspecialchars($user)?> (<?=htmlspecialchars($panel[$user]['NAME'])?>)" class="l-profile__username"><i class="fas fa-user-edit"></i></a></div>
 			<? } ?>
+
 			<?php if ((isset($panel[$user]['ROLE'])) && (!empty($panel[$user]['ROLE'])) && ($panel[$user]['ROLE'] === "admin")) {?>
 				<div class="l-menu__item"><a href="https://github.com/hestiacp/hestiacp/issues/" rel="noopener" target="_new" title="Submit a bug report" class="l-profile__help"><i class="fas fa-exclamation-triangle"></i></a></div>
 			<?php } ?>

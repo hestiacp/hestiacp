@@ -68,7 +68,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
         <div class="clearfix l-unit__stat-col--left super-compact">
           <input id="check<?=$i?>" class="ch-toggle" type="checkbox" title="<?=_('Select')?>" name="user[]" value="<?=$key?>">
         </div>
-            <? if ($key == 'default') { ?>
+            <? if (($key == 'default') && ($_SESSION['userContext'] === 'admin') && ($_SESSION['user'] !== 'admin')) { ?>
               <div class="clearfix l-unit__stat-col--left wide-2 truncate"><b><?=$key?></b></div>
             <? } else {?>
               <div class="clearfix l-unit__stat-col--left wide-2 truncate"><b><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Package')?>: <?=$key?>"><?=$key?></b></a></div>
@@ -77,7 +77,7 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
             <div class="clearfix l-unit__stat-col--left text-right compact-3">
                   <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                       <div class="actions-panel clearfix">
-                        <? if ($key == 'default') { ?>
+                        <? if (($key == 'default') && ($_SESSION['userContext'] === 'admin') && ($_SESSION['user'] !== 'admin')) { ?>
                           <!-- Restrict editing default package -->
                         <? } else {?>
                           <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Package')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>            

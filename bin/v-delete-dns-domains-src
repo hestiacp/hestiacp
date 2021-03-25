@@ -14,7 +14,7 @@
 
 # Argument definition
 user=$1
-src=$(idn -t --quiet -a "$2" )
+src=$2
 restart=$3
 
 # Includes

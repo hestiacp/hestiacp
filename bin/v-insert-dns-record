@@ -12,7 +12,7 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -a "$2" )
+domain=$2
 data=$3
 restart=$4
 

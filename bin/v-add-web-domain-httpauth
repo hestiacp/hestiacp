@@ -14,7 +14,7 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -a "$2" )
+domain=$2
 auth_user=$3
 password=$4; HIDE=4
 restart=${5-yes}

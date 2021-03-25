@@ -27,7 +27,6 @@
                   <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search')?>"><i class="fas fa-search"></i></button>
                 </form>
               </td>
-<<<<<<< HEAD
               <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
                 <!-- Hide bulk actions for domain items when impersonating 'admin' account-->
               <? } else { ?>
@@ -43,25 +42,9 @@
                       <option value="delete"><?=_('delete')?></option>
                     </select>
                   </div>
-                  <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
+                  <button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected')?>"><i class="fas fa-arrow-right"></i></button>
                 </td>
               <? } ?>
-=======
-              <td>
-                <form action="/bulk/web/" method="post" id="objects">
-                <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-                <div class="l-select">
-                  <select name="action">
-                    <option value=""><?=_('apply to selected')?></option>
-                    <option value="rebuild"><?=_('rebuild')?></option>
-                    <option value="suspend"><?=_('suspend')?></option>
-                    <option value="unsuspend"><?=_('unsuspend')?></option>
-                    <option value="delete"><?=_('delete')?></option>
-                  </select>
-                </div>
-                <button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected')?>"><i class="fas fa-arrow-right"></i></button>
-              </td>
->>>>>>> main
             </tr>
           </table>
         </div>

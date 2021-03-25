@@ -74,7 +74,7 @@ aliases=$(echo "$aliases" |\
 update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$ALIAS' "$aliases"
 
 # Logging
-log_history "deleted alias $malias on $account@$domain"
+$BIN/v-log-action "$user" "Info" "Mail" "Mail account alias removed (Alias: $malias, User: $account@$domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

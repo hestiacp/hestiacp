@@ -93,7 +93,7 @@ $BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" > /dev/null
 
 # Logging
-log_history "enabled automatic HTTP-to-HTTPS redirection for $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Enabled automatic HTTPS redirection (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

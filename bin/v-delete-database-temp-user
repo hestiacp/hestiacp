@@ -57,7 +57,7 @@ delete_mysql_database_temp_user
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
-log_history "Revoked $dbuser access to $database"
+$BIN/v-log-action "$user" "Info" "Database" "Revoked user access (Database: $database, User: $dbuser)."
 
 # Logging
 log_event "$OK" "$ARGUMENTS"

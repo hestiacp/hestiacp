@@ -36,7 +36,8 @@ is_object_valid 'user' 'USER' "$user"
 # Remove log file and log event
 if [ -f "$HESTIA/data/users/$user/history.log" ]; then
     rm -f $HESTIA/data/users/$user/history.log
-    log_history "user action log for $user was cleared."
+    $BIN/v-log-action "system" "Warning" "Security" "User history log deleted (User: $user)."
+    $BIN/v-log-action "$user" "Info" "Security" "User history log deleted."
     log_event "$OK" "$ARGUMENTS"
 fi
 

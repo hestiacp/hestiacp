@@ -186,6 +186,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "Firewall" "Added new IP list (Name: $ip_name, IP version: $ip_version, Autoupdate: $autoupdate)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -61,7 +61,7 @@ fi
 update_user_value "$user" '$SHELL' "$shell"
 
 # Logging
-log_history "changed $user shell to $shell" '' 'admin'
+$BIN/v-log-action "system" "Info" "System" "SSH access shell changed (Shell: $shell, User: $user)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -51,6 +51,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "System" "System configuration value changed (Key: $key, Value: $value)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

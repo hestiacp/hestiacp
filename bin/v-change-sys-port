@@ -93,6 +93,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-#log_event "$OK" "$ARGUMENTS"
+$BIN/v-log-action "system" "Warning" "System" "Hestia Control Panel backend port changed (New Value: $PORT, Old Value: $ORIGINAL_PORT)."
+log_event "$OK" "$ARGUMENTS"
 
 exit

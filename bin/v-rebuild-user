@@ -60,6 +60,7 @@ $BIN/v-update-user-stats $user
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "System" "Rebuilt user profile (User: $user)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

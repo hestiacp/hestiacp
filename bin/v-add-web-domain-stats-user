@@ -82,7 +82,7 @@ if [ "$WEB_SYSTEM" = 'nginx' ]; then
 fi
 
 # Logging
-log_history "added password protection for web stats on $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Enabled web traffic analyzer password (Username: $stats_user, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

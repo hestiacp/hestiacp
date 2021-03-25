@@ -46,6 +46,7 @@ fi
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
+$BIN/v-log-action "system" "Info" "System" "Package copied (Package: $package, New Package: $new_package)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

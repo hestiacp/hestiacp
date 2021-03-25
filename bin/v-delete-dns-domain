@@ -88,7 +88,7 @@ fi
 
 
 # Logging
-log_history "deleted dns domain $domain"
+$BIN/v-log-action "$user" "Info" "DNS" "Deleted DNS domain (Name: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

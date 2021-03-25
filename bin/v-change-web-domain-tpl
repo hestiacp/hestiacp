@@ -83,7 +83,7 @@ $BIN/v-restart-web $restart
 check_result $? "Web restart failed" >/dev/null
 
 # Logging
-log_history "changed web domain template for $domain to $template" '' 'admin'
+$BIN/v-log-action "system" "Info" "Web" "Changed web domain template (Domain: $domain, Template: $template)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

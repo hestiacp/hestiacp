@@ -84,7 +84,6 @@ $BIN/v-restart-dns $restart
 check_result $? "DNS restart failed" >/dev/null
 
 # Logging
-log_history "changed dns record id on $domain"
 log_event "$OK" "$ARGUMENTS"
 
 exit

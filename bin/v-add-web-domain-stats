@@ -101,7 +101,7 @@ echo "$BIN/v-update-web-domain-stat $user $domain" >> \
 update_object_value 'web' 'DOMAIN' "$domain" '$STATS' "$type"
 
 # Logging
-log_history "enabled web log analyzer for $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Enabled web traffic analyzer (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 # Build stats

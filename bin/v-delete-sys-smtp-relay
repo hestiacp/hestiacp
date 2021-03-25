@@ -39,7 +39,7 @@ rm -f /etc/exim4/smtp_relay.conf
 #----------------------------------------------------------#
 
 # Logging
-log_history "Disable system wide smtp relay support."
+$BIN/v-log-action "system" "Info" "Mail" "Disabled System SMTP Relay."
 log_event "$OK" "$ARGUMENTS"
 
 exit

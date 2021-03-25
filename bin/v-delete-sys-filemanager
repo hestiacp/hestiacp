@@ -70,5 +70,5 @@ fi
 #                       Logging                            #
 #----------------------------------------------------------#
 
-log_history "file manager uninstalled" '' 'admin'
+$BIN/v-log-action "system" "Info" "Plugins" "File Manager disabled."
 log_event "$OK" "$ARGUMENTS"

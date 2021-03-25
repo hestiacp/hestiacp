@@ -71,6 +71,7 @@ fi
 $BIN/v-update-user-disk $user
 
 # Logging
+$BIN/v-log-action "system" "Info" "System" "Rebuilt mail domain (User: $user, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

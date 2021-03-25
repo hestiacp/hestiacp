@@ -88,6 +88,7 @@ update_user_value "$user" '$U_DISK_MAIL' "$U_DISK_MAIL"
 $BIN/v-update-user-disk $user
 
 # Logging
+$BIN/v-log-action "system" "Info" "System" "Rebuilt mail domains (User: $user)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

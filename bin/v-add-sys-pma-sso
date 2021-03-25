@@ -112,6 +112,5 @@ $BIN/v-change-sys-config-value 'PHPMYADMIN_KEY' "$phpmyadminkey"
 if [ "$MODE" != "quiet" ]; then
     echo "PMA Hestia-SSO plugin has been succesfully installed"
 fi
-
-log_history "PMA Hestia-SSO plugin has been succesfully installed" '' 'admin'
+$BIN/v-log-action "system" "Info" "Plugins" "phpMyAdmin Single Sign-On has been enabled."
 log_event "$OK" "$ARGUMENTS"

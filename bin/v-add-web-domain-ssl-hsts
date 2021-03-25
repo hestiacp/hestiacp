@@ -79,7 +79,7 @@ $BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" > /dev/null
 
 # Logging
-log_history "enabled HTTP Strict Transport Security (HSTS) for $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Enabled HTTP Strict Transport Security (HSTS) (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

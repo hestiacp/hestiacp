@@ -97,6 +97,7 @@ $BIN/v-restart-cron $restart
 check_result $? "Cron restart failed" >/dev/null
 
 # Logging
+$BIN/v-log-action "system" "Info" "Users" "Unsuspended user account (User: $user)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

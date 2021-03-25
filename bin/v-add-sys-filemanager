@@ -86,6 +86,7 @@ if [ $? -ne 0 ]; then
     # Installation failed, clean up files
     rm --recursive --force ${FM_INSTALL_DIR}
     $BIN/v-change-sys-config-value 'FILE_MANAGER' 'false'
+    $BIN/v-log-action "system" "Error" "Plugins" "File Manager installation failed (Version: $fm_v)."
     exit 1
 fi
 
@@ -101,13 +102,9 @@ chown $user: "${FM_INSTALL_DIR}/repository"
 
 $BIN/v-change-sys-config-value 'FILE_MANAGER' 'true'
 
-if [ "$MODE" != "quiet" ]; then
-    echo "File Manager is now installed and ready for use."  
-fi
-
 #----------------------------------------------------------#
 #                       Logging                            #
 #----------------------------------------------------------#
 
-log_history "file manager installed" '' 'admin'
+$BIN/v-log-action "system" "Info" "Plugins" "File Manager enabled (Version: $fm_v)."
 log_event "$OK" "$ARGUMENTS"

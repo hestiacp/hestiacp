@@ -73,6 +73,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "System" "System time zone changed (Value: $timezone)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

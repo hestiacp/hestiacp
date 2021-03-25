@@ -69,6 +69,7 @@ chmod 660 $conf
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "Firewall" "Removed IP from ban list (IP: $ip, Service: $chain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

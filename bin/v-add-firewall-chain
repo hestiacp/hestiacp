@@ -103,6 +103,7 @@ chmod 660 $chains
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "Firewall" "Added service to firewall (Service: $chain, Port: $port, Protocol: $protocol)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

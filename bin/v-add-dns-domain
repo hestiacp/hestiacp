@@ -218,7 +218,7 @@ $BIN/v-restart-dns $restart
 check_result $? "DNS restart failed"
 
 # Logging
-log_history "added dns domain $domain"
+$BIN/v-log-action "$user" "Info" "DNS" "Added new DNS domain (Name: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

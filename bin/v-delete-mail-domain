@@ -102,7 +102,7 @@ if [ ! -z "$SUSPENDED" ]; then
 fi
 
 # Logging
-log_history "deleted mail domain $domain"
+$BIN/v-log-action "$user" "Info" "Mail" "Mail domain deleted (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

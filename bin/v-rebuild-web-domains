@@ -127,6 +127,7 @@ if [ "$restart" = "yes" ]; then
 fi
 
 # Logging
+$BIN/v-log-action "system" "Info" "System" "Rebuilt web domains (User: $user)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

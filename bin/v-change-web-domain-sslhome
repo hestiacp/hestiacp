@@ -94,7 +94,6 @@ update_object_value 'web' 'DOMAIN' "$domain" '$SSL_HOME' "$SSL_HOME"
 $BIN/v-rebuild-web-domain $user $domain
 
 # Logging
-log_history "changed ssl home for $domain to $ssl_home"
 log_event "$OK" "$ARGUMENTS"
 
 exit

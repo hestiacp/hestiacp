@@ -79,7 +79,7 @@ $BIN/v-restart-dns $restart
 check_result $? "DNS restart failed" >/dev/null
 
 # Logging
-log_history "changed TTL for $domain to $ttl"
+$BIN/v-log-action "$user" "Info" "DNS" "Changed TTL for DNS domain (TTL: $ttl, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

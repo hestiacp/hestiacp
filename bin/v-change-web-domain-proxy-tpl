@@ -89,7 +89,7 @@ $BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging
-log_history "changed proxy template for $domain to $template"
+$BIN/v-log-action "$user" "Info" "Web" "Changed proxy template (Domain: $domain, Template: $template)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

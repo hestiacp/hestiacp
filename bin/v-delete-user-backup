@@ -71,7 +71,7 @@ U_BACKUPS=$(grep BACKUP $USER_DATA/backup.conf |wc -l)
 update_user_value "$user" '$U_BACKUPS' "$U_BACKUPS"
 
 # Logging
-log_history "deleted backup archive $backup"
+$BIN/v-log-action "$user" "Info" "Backup" "Deleted backup (Archive: $backup)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

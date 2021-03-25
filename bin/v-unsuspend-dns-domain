@@ -71,6 +71,7 @@ decrease_user_value "$user" '$SUSPENDED_DNS'
 sed -i "s/SUSPENDED='yes'/SUSPENDED='no'/g" $USER_DATA/dns/$domain.conf
 
 # Logging
+$BIN/v-log-action "system" "Info" "DNS" "Unsuspended DNS zone (User: $user, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

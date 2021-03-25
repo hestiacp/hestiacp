@@ -29,13 +29,16 @@ json_list() {
         ID=$(echo "$str" |cut -f 2 -d \')
         DATE=$(echo "$str" |cut -f 4 -d \')
         TIME=$(echo "$str" |cut -f 6 -d \')
-        CMD=$(echo "$str" |cut -f 8 -d \')
-        CMD=${CMD//\"/\\\"}
+        LEVEL=$(echo "$str" |cut -f 8 -d \')
+        CATEGORY=$(echo "$str" |cut -f 10 -d \')
+        MESSAGE=$(echo "$str" |cut -f 12 -d \')
+        MESSAGE=${MESSAGE//\"/\\\"}
         echo -n '    "'$ID'": {
-        "CMD": "'$CMD'",
-        "UNDO": "'$UNDO'",
+        "DATE": "'$DATE'",
         "TIME": "'$TIME'",
-        "DATE": "'$DATE'"
+        "LEVEL": "'$LEVEL'",
+        "CATEGORY": "'$CATEGORY'",
+        "MESSAGE": "'$MESSAGE'"
     }'
         if [ "$i" -lt "$objects" ]; then
             echo ','
@@ -49,13 +52,16 @@ json_list() {
 
 shell_list() {
     IFS=$'\n'
-    echo "DATE~TIME~CMD"
-    echo "----~----~---"
+    echo "ID~DATE~TIME~LEVEL~CATEGORY~MESSAGE"
+    echo "----~----~----~-----~--------~-------"
     for str in $logs; do
+        ID=$(echo "$str" |cut -f 2 -d \')
         DATE=$(echo "$str" |cut -f 4 -d \')
         TIME=$(echo "$str" |cut -f 6 -d \')
-        CMD=$(echo "$str" |cut -f 8 -d \')
-        echo "$DATE~$TIME~$CMD"
+        LEVEL=$(echo "$str" |cut -f 8 -d \')
+        CATEGORY=$(echo "$str" |cut -f 10 -d \')
+        MESSAGE=$(echo "$str" |cut -f 12 -d \')
+        echo "$ID~$DATE~$TIME~$LEVEL~$CATEGORY~$MESSAGE"
     done
 }
 
@@ -63,22 +69,28 @@ shell_list() {
 plain_list() {
     IFS=$'\n'
     for str in $logs; do
+        ID=$(echo "$str" |cut -f 2 -d \')
         DATE=$(echo "$str" |cut -f 4 -d \')
         TIME=$(echo "$str" |cut -f 6 -d \')
-        CMD=$(echo "$str" |cut -f 8 -d \')
-        echo -e "$ID\t$CMD\t$UNDO\t$TIME\t$DATE"
+        LEVEL=$(echo "$str" |cut -f 8 -d \')
+        CATEGORY=$(echo "$str" |cut -f 10 -d \')
+        MESSAGE=$(echo "$str" |cut -f 12 -d \')
+        echo -e "$ID\t$DATE\t$TIME\t$LEVEL\t$CATEGORY\t$MESSAGE"
     done
 }
 
 # CSV list function
 csv_list() {
     IFS=$'\n'
-    echo "ID,CMD,UNDO,TIME,DATE"
+    echo "ID,MESSAGE,TIME,DATE"
     for str in $logs; do
+        ID=$(echo "$str" |cut -f 2 -d \')
         DATE=$(echo "$str" |cut -f 4 -d \')
         TIME=$(echo "$str" |cut -f 6 -d \')
-        CMD=$(echo "$str" |cut -f 8 -d \')
-        echo "$ID,\"$CMD\",\"$UNDO\",$TIME,$DATE"
+        LEVEL=$(echo "$str" |cut -f 8 -d \')
+        CATEGORY=$(echo "$str" |cut -f 10 -d \')
+        MESSAGE=$(echo "$str" |cut -f 12 -d \')
+        echo "$ID,\"$DATE\",\"$TIME",\"$LEVEL\",\"$CATEGORY\",\"$MESSAGE""
     done
 }
 

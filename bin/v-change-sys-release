@@ -69,5 +69,5 @@ fi
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
-
+$BIN/v-log-action "system" "Info" "System" "Update branch changed (Value: $branch)."
 exit

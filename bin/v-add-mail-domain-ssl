@@ -108,7 +108,7 @@ $BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging
-log_history "enabled mail ssl support for $domain"
+$BIN/v-log-action "$user" "Info" "Mail" "Enabled SSL (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

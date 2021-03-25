@@ -264,9 +264,9 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_history "moved domain $domain from $owner to $user" '' "admin"
-log_history "$domain was added to your account" '' "$user"
-log_history "$domain was removed from your account" '' "$owner"
+$BIN/v-log-action "system" "Info" "System" "Domain moved between users (Domain: $domain, Old user: $owner, New User: $user)."
+$BIN/v-log-action "$user" "Info" "System" "New domain added to account (Domain: $domain)."
+$BIN/v-log-action "$owner" "Info" "System" "Domain removed from account (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -72,7 +72,7 @@ sed -i "/ $domain$/d" $HESTIA/data/queue/webstats.pipe
 update_object_value 'web' 'DOMAIN' "$domain" '$STATS' ''
 
 # Logging
-log_history "disabled web log analyzer for $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Disabled web traffic analyzer (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

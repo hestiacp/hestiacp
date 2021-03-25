@@ -55,7 +55,7 @@ rm -f $HESTIA/data/packages/$package.pkg
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-log_history "deleted user package $package" '' 'admin'
+$BIN/v-log-action "system" "Info" "System" "Deleted package (Name: $package)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

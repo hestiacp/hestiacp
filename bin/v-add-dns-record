@@ -149,7 +149,7 @@ $BIN/v-restart-dns $restart
 check_result $? $E_RESTART 'dns failed to restart'
 
 # Logging
-log_history "added $rtype dns record $record for $domain"
+$BIN/v-log-action "$user" "Info" "DNS" "Added DNS record (Type: $rtype, Value: $record, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

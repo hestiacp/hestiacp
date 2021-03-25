@@ -68,7 +68,7 @@ update_object_value 'web' 'DOMAIN' "$domain" '$STATS_CRYPT' ''
 
 
 # Logging
-log_history "disabled web stats password protection for $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Enabled web traffic analyzer password (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

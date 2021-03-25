@@ -103,7 +103,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_history "removed php $version" '' 'admin'
+$BIN/v-log-action "system" "Info" "System" "Uninstalled PHP $version."
 log_event "$OK" "$ARGUMENTS"
 
 exit

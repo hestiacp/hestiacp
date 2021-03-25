@@ -163,7 +163,7 @@ $BIN/v-restart-dns $restart
 check_result $? "DNS restart failed" >/dev/null
 
 # Logging
-log_history "changed dns template for $domain to $template" '' 'admin'
+$BIN/v-log-action "system" "Info" "DNS" "Changed template for DNS domain (Template: $template, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

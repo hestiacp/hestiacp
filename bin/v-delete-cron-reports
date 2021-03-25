@@ -53,7 +53,7 @@ $BIN/v-restart-cron
 check_result $? "Cron restart failed" >/dev/null
 
 # Logging
-log_history "disabled cron reporting"
+$BIN/v-log-action "$user" "Info" "Warn" "Disabled cron job notifications and reporting."
 log_event "$OK" "$ARGUMENTS"
 
 exit

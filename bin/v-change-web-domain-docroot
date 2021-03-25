@@ -122,9 +122,9 @@ $BIN/v-rebuild-web-domain $user $domain
 
 # Logging
 if [ "$target_domain" = "default" ]; then
-    log_history "set web domain $domain to use default document root."
+    $BIN/v-log-action "$user" "Info" "Web" "Domain document root reset (Domain: $domain)."
 else
-    log_history "set web domain $domain to use document root from $target_domain."
+    $BIN/v-log-action "$user" "Info" "Web" "Domain document root updated (Domain: $domain, Target: $target_domain)."
 fi
 
 log_event "$OK" "$ARGUMENTS"

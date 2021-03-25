@@ -77,7 +77,11 @@ fi
 $BIN/v-restart-web
 
 # Logging
-log_history "turned directory browsing $mode for $domain."
+if [ "$mode" = "on" ]; then
+    $BIN/v-log-action "$user" "Warning" "Web" "Enabled directory browsing (Domain: $domain)."
+else
+    $BIN/v-log-action "$user" "Info" "Web" "Disabled directory browsing (Domain: $domain)."
+fi
 log_event "$OK" "$EVENT"
 
 exit

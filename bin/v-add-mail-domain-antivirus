@@ -63,7 +63,7 @@ fi
 update_object_value 'mail' 'DOMAIN' "$domain" '$ANTIVIRUS' 'yes'
 
 # Logging
-log_history "enabled antivirus on $domain"
+$BIN/v-log-action "$user" "Info" "Mail" "Enabled anti-virus scanning for $domain."
 log_event "$OK" "$ARGUMENTS"
 
 exit

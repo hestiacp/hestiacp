@@ -32,7 +32,8 @@ is_object_valid 'user' 'USER' "$user"
 # Remove log file and log event
 if [ -f $USER_DATA/auth.log ]; then
     rm -f $USER_DATA/auth.log
-    log_history "login history for $user was cleared."
+    $BIN/v-log-action "system" "Warning" "Security" "User authentication log deleted (User: $user)."
+    $BIN/v-log-action "$user" "Warning" "Security" "Login history cleared."
     log_event "$OK" "$ARGUMENTS"
 fi
 

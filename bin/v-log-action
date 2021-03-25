@@ -1,0 +1,65 @@
+#!/bin/bash
+# info: adds action event to user or system log
+# options: LOG_TYPE USER
+
+
+# Event Levels:
+# info, warning, error
+
+# Event Categories:
+# user:     web, dns, mail, db, letsencrypt, pwchange, pwreset
+# system:   ip, firewall, service, updates,
+#           users, pwchange, pwreset, impersonation
+
+
+# Includes
+source $HESTIA/func/main.sh
+source $HESTIA/conf/hestia.conf
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+# Argument definition
+user=$1
+event_level=$2
+event_category=$3
+event_details=$4
+
+# Generating timestamp
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" |cut -f 1 -d \ )
+date=$(echo "$time_n_date" |cut -f 2 -d \ )
+
+# Validate event type input
+if [ "$event_level" != "Info" ] && [ "$event_level" != "Warning" ] && [ "$event_level" != "Error" ]; then 
+    echo "Error: Invalid event type specified."
+    exit 1
+fi
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+if [ "$user" = "system" ] || [ "$user" = "System" ]; then
+    user="admin"
+fi
+
+check_args '4' "$#" 'USER TYPE CATEGORY DETAILS'
+is_object_valid 'user' 'USER' "$user"
+
+# Future hooks for login/logout events, currently housed in v-log-user-login and v-log-user-logout
+if [ "$event_category" = "login" ] || [ "$event_category" = "Login" ]; then
+echo "login hook used"
+fi
+
+if [ "$event_category" = "logout" ] || [ "$event_category" = "Logout" ]; then
+echo "logout hook used"
+fi
+
+log_history "$event_details" '' "$user"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

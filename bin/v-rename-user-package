@@ -67,7 +67,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_history "renamed package $old_name to $new_name" '' 'admin'
+$BIN/v-log-action "system" "Info" "System" "Renamed package (Value: $new_name, Previous: $old_name)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

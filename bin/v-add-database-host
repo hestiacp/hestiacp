@@ -130,6 +130,7 @@ else
 fi
 
 # Logging
+$BIN/v-log-action "system" "Info" "Database" "Added external $type database server ($host) to the system."
 log_event "$OK" "$ARGUMENTS"
 
 exit

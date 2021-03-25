@@ -62,7 +62,7 @@ fi
 update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$FWD_ONLY' ''
 
 # Logging
-log_history "deleted fwd_only flag for $account@$domain"
+$BIN/v-log-action "$user" "Info" "Mail" "Mail account forwarding disabled (User: $account@$domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

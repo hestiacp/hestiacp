@@ -70,6 +70,7 @@ if [ ! -z "$IMAP_SYSTEM" ]; then
     fi   
 fi
 # Logging
+$BIN/v-log-action "system" "Info" "Mail" "Unsuspended mail domain (User: $user, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

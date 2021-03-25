@@ -59,7 +59,7 @@ update_ip_value '$STATUS' "$ip_status"
 #----------------------------------------------------------#
 
 # Logging
-log_history "changed $ip status to $ip_status" '' 'admin'
+$BIN/v-log-action "system" "Info" "System" "IP address status changed (Status: $ip_status, IP: $ip)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -113,7 +113,7 @@ update_object_value 'web' 'DOMAIN' "$domain" '$AUTH_USER' "$auth_user"
 update_object_value 'web' 'DOMAIN' "$domain" '$AUTH_HASH' "$auth_hash"
 
 # Logging
-log_history "added http auth user $httpauth_user on $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Enabled password protection (Domain: $domain, Username: $httpauth_user)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

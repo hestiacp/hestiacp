@@ -35,8 +35,8 @@ fi
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-log_history "Revoked API Key"
-
 # Logging
+$BIN/v-log-action "system" "Info" "System" "System API key revoked (Key: $hash)."
 log_event "$OK" "$ARGUMENTS"
+
 exit

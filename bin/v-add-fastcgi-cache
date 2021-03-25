@@ -104,7 +104,7 @@ if [ -z "$FASTCGI_CACHE" ]; then
     add_object_key "web" 'DOMAIN' "$domain" 'FASTCGI_CACHE' 'ALIAS'
 fi
 if [ -z "$FASTCGI_LENGTH" ]; then
-add_object_key "web" 'DOMAIN' "$domain" '$FASTCGI_LENGTH' 'ALIAS'
+add_object_key "web" 'DOMAIN' "$domain" 'FASTCGI_LENGTH' 'ALIAS'
 fi
 
 # Set FastCGI cache flag to enabled

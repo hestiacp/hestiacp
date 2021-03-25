@@ -44,7 +44,15 @@ parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 
 # Remove FastCGI cache configuration
 if [ -f $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.fastcgi_cache.conf ]; then
-    rm -f $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.fastcgi_cache.conf
+    rm -rf $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.fastcgi_cache.conf
+fi
+
+conf='/etc/nginx/conf.d/fastcgi_cache_pool.conf'
+if [ -f "$conf" ]; then
+    sed -i "/fastcgi_cache $domain;/d" $conf
+    if [ ! -s "$conf" ]; then
+        rm -rf $conf
+    fi
 fi
 
 # Delete FastCGI cache folder

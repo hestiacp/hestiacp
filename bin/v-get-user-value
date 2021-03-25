@@ -17,6 +17,7 @@ user=$1
 key=$(echo "$2"| tr '[:lower:]' '[:upper:]' | sed "s/^/$/")
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 

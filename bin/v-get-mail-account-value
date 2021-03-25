@@ -20,6 +20,7 @@ account=$3
 key=$4
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 # Additional argument formatting

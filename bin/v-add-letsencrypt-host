@@ -19,8 +19,11 @@ user="$($HESTIA/bin/v-search-domain-owner "$domain" web)"
 [[ -z "$user" ]] && user="admin"
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 # Perform verification if read-only mode is enabled

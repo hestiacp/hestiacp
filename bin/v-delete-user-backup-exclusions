@@ -17,7 +17,9 @@ user=$1
 system=$(echo $2 | tr '[:lower:]' '[:upper:]')
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 

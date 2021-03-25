@@ -1027,7 +1027,7 @@
                                         <? if (($_SESSION['userContext'] === "admin") && ($_SESSION['user'] === 'admin')) {?>
                                             <tr>
                                                 <td class="vst-text input-label">
-                                                    <?php print _('Restrict access to System Administrator account');?>
+                                                    <?php print _('Restrict access to System Administrator account items');?>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -1035,6 +1035,20 @@
                                                     <select class="vst-list" name="v_restrict_admin">
                                                         <option value='yes'><?php print _('yes'); ?></option>
                                                         <option value='no' <?php if($_SESSION['RESTRICTED_ADMIN'] == 'no') echo 'selected' ?> ><?php print _('no'); ?></option>
+                                                    </select>
+                                                    <br><br>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="vst-text input-label">
+                                                    <?php print _('Hide Administrator account from other Administrators');?>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <select class="vst-list" name="v_hide_admin">
+                                                        <option value='yes'><?php print _('yes'); ?></option>
+                                                        <option value='no' <?php if($_SESSION['HIDE_ADMIN_ACCOUNT'] == 'no') echo 'selected' ?> ><?php print _('no'); ?></option>
                                                     </select>
                                                     <br><br>
                                                 </td>

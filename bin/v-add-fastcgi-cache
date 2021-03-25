@@ -1,13 +1,13 @@
 #!/bin/bash
 # info: Add FastCGI nginx support
-# options: USER DOMAIN [DEBUG]
+# options: USER DOMAIN [LENTGH] [DEBUG] [RESTART]
 # labels: hestia web
 #
-# example: v-add-fastcgi-cache user domain.tld
+# example: v-add-fastcgi-cache user domain.tld 30m
 #
 # The function enables FastCGI cache for nginx
+# For Length only use time in seconds (10s) minutes (10m) or days (10d)
 # Add "yes" as last parameter to append debug information to response headers
-
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -16,7 +16,9 @@
 # Argument definition
 user=$1
 domain=$2
-debug=$3
+length=${3-30m}
+debug=${4-no}
+restart=${5-no}
 
 # Includes
 source $HESTIA/func/main.sh
@@ -34,6 +36,10 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 
+if ! [[ "$length" =~ ^[0-9].*[s|m|d]$ ]]; then
+   echo "Invalid length";
+   exit 2;
+fi
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
@@ -94,16 +100,21 @@ mkdir -p /var/cache/nginx/micro/$domain
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-if [ -z "$FASTCGI" ]; then
+if [ -z "$FASTCGI_CACHE" ]; then
     add_object_key "web" 'DOMAIN' "$domain" 'FASTCGI_CACHE' 'ALIAS'
+fi
+if [ -z "$FASTCGI_LENGTH" ]; then
+add_object_key "web" 'DOMAIN' "$domain" '$FASTCGI_LENGTH' 'ALIAS'
 fi
 
 # Set FastCGI cache flag to enabled
 update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_CACHE' 'yes'
 
-# Restart web server
-$BIN/v-restart-web
-check_result $? "Web server restart failed" > /dev/null
+if [ "$restart" = "yes"]; then
+    # Restart web server
+    $BIN/v-restart-web
+    check_result $? "Web server restart failed" > /dev/null
+fi
 
 # Logging
 log_history "Enabled FastCGI cache for $domain"

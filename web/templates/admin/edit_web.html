@@ -398,6 +398,18 @@
                                     </select>
                                 </td>
                             </tr>
+                            <tr>
+                                <td class="step-left">
+                                    <table id="v_nginx_cache_length" style="display:<?php if ($v_nginx_cache != 'yes' ) { echo 'none';} else {echo 'block';}?> ;" >
+                                        <td class="vst-text input-label">
+                                            <?php print _('Cache length'); ?> <span class="optional"><?=_('For example: 30s, 10m or 1d');?>
+                                        </td>
+                                        <tr>
+                                            <td><input type="text" size="20" class="vst-input" name="v_nginx_cache_length" value="<?=htmlentities(trim($v_nginx_cache_length, "'"))?>"></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
                              <?php } ?>                          
                             <?php if (!empty($_SESSION['WEB_BACKEND'])) { ?>
                             <tr>

@@ -2599,7 +2599,7 @@ label:hover {
 
 .vst-input:focus:disabled,
 .vst-textinput:disabled {
-  border-color: #f1f1f1;
+  border-color: #dedede;
   background-color: #f1f1f1;
 }
 
@@ -3158,7 +3158,7 @@ a.button.cancel {
   color: #777;
   border: 1px solid #d9d9d9;
   padding: 6px 6px 6px 18px;
-  margin-top: 102px;
+  margin-top: 97px;
   min-width: 320px;
   overflow: hidden;
   box-shadow: 0px 1px 4px rgba(0,0,0,0.15);
@@ -3193,8 +3193,8 @@ a.button.cancel {
 }
 
 .additional-info {
-    margin-top: 30px;
-    width: 547px;
+  margin-top: 12px;
+  width: 400px;
 }
 
 .additional-info td {
@@ -3202,10 +3202,11 @@ a.button.cancel {
     height: 20px;
     font-weight: normal;
     line-height: 0.95rem;
+    min-width: 70px
 }
 
 .additional-info td.details {
-    padding-left: 20px;
+    padding-left: 20px !important;
 }
 
 :focus {outline:none;}
@@ -3864,7 +3865,7 @@ form#vstobjects.suspended {
 .helper-container {
   float: right;
   margin-bottom: -450px;
-  margin-top: 420px;
+  margin-top: 410px;
   margin-right: 22px;
   padding-top: 0px;
   width: 600px;

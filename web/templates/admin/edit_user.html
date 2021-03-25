@@ -135,9 +135,7 @@
                                     <?php } ?>
                                 </td>
                             </tr>
-                            <?php if ($v_username == 'admin') {?>
-                                <!-- Hide option to change 'admin' user's role-->
-                            <? } else { ?>
+
                             <tr>
                                 <td class="vst-text input-label">
                                     <?php print _('Language');?>
@@ -162,7 +160,9 @@
                                     </select>
                                 </td>
                             </tr>
-                            <? } ?>
+                            <?php if ($v_username == 'admin') {?>
+                                <!-- Hide option to change 'admin' user's role-->
+                            <? } else { ?>
                             <tr>
                                 <td class="vst-text input-label">
                                     <?php print _('Role');?>
@@ -176,6 +176,7 @@
                                     </select>
                                 </td>
                             </tr>
+                            <? } ?>
                             <tr>
                                 <td class="vst-text input-label">
                                     <?php print _('Package');?>

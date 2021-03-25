@@ -6,16 +6,16 @@
 #######                      Place additional commands below.                   #######
 #######################################################################################
 
-# Allow Fast CGI Cache to be enabled for Nginx Standalone
+# Add support for nginx FastCGI cache (standalone)
 if [ -e "/etc/nginx/nginx.conf" ]; then
     check=$(cat /etc/nginx/nginx.conf | grep 'fastcgi_cache_path');
     if [ -z "$check" ]; then 
-        echo "[ * ] Enabling Nginx FastCGI cache support..."
-        sed  -i 's/# Cache bypass/# FastCGI Cache settings\n    fastcgi_cache_path \/var\/cache\/nginx\/php-fpm levels=2\n    keys_zone=fcgi_cache:10m inactive=60m max_size=1024m;\n    fastcgi_cache_key \"$host$request_uri $cookie_user\";\n    fastcgi_temp_path  \/var\/cache\/nginx\/temp;\n    fastcgi_ignore_headers Expires Cache-Control;\n    fastcgi_cache_use_stale error timeout invalid_header;\n    fastcgi_cache_valid any 1d;\n\n    # Cache bypass/g' /etc/nginx/nginx.conf
+        echo "[ * ] Enabling nginx FastCGI cache support..."
+        sed  -i 's/# Cache bypass/# FastCGI cache\n    fastcgi_cache_path \/var\/cache\/nginx\/micro levels=1:2 keys_zone=microcache:10m max_size=1024m inactive=30m;\n    fastcgi_cache_key \"$scheme$request_method$host$request_uri\";\n    fastcgi_cache_methods GET HEAD;\n    fastcgi_cache_use_stale updating error timeout invalid_header http_500 http_503;\n    fastcgi_ignore_headers Cache-Control Expires Set-Cookie;\n    add_header X-FastCGI-Cache \$upstream_cache_status;\n\n    # Cache bypass/g' /etc/nginx/nginx.conf
     fi
 fi
 
-# Populating HELO/SMTP Banner for existing ip's
+# Populating HELO/SMTP Banner for existing IPs
 if [ "$MAIL_SYSTEM" == "exim4" ]; then
     source $HESTIA/func/ip.sh
 
@@ -104,6 +104,24 @@ fi
 if [ -f /etc/apt/sources.list.d/postgresql.list ]; then
     echo "[ * ] Updating PostgreSQL repository..."
     sed -i 's|deb https://apt.postgresql.org/pub/repos/apt/|deb [arch=amd64] https://apt.postgresql.org/pub/repos/apt/|g' /etc/apt/sources.list.d/postgresql.list
+fi
+
+# New configuration value for enforcing subdomain ownership
+check=$(cat $HESTIA/conf/hestia.conf | grep 'ENFORCE_SUBDOMAIN_OWNERSHIP');
+if [ -z "$check" ]; then 
+    echo "[ * ] Setting ENFORCE_SUBDOMAIN_OWNERSHIP to no..."
+    echo "ENFORCE_SUBDOMAIN_OWNERSHIP='no'" >> $HESTIA/conf/hestia.conf
+fi
+
+# New API feature to set allowed IPs
+if [ "$api" = "yes" ]; then
+    check=$(cat $HESTIA/conf/hestia.conf | grep 'API_ALLOWED_IP');
+    if [ -z "$check" ]; then 
+        echo "[ * ] Setting API_ALLOWED_IP to allow-all..."
+        echo "API_ALLOWED_IP='allow-all'" >> $HESTIA/conf/hestia.conf
+    fi
+else
+    $HESTIA/bin/v-change-sys-api disable
 fi
 
 

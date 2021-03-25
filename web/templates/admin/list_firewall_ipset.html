@@ -16,7 +16,7 @@
                     <option value="delete"><?php print _('delete') ?></option>
                   </select>
                 </div>
-                <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
+                <button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected')?>"><i class="fas fa-arrow-right"></i></button>
               </td>
             </tr>
           </table>
@@ -30,7 +30,7 @@
           <div class="header table-header">
               <div class="l-unit__col l-unit__col--right">
                     <div class="clearfix l-unit__stat-col--left super-compact">
-                        <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
+                        <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all')?>" onChange="checkedAll('objects');">
                     </div>
                     <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print _('Ip List Name');?></b></div>
                     <div class="clearfix l-unit__stat-col--left compact-4"><b>&nbsp;</b></div>  
@@ -57,7 +57,7 @@
       <div class="l-unit<? if($status == 'suspended') echo ' l-unit--suspended';?> animated fadeIn">
         <div class="l-unit__col l-unit__col--right">
               <div class="clearfix l-unit__stat-col--left super-compact">
-                  <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="setname[]" value="<?php echo $listname ?>">
+                  <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" title="<?=_('Select')?>" name="setname[]" value="<?php echo $listname ?>">
                 </div>
               <div class="clearfix l-unit__stat-col--left wide-3"><b><?=$listname?></b></div>
               <!-- START QUICK ACTION TOOLBAR AREA -->

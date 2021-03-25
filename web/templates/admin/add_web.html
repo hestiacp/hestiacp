@@ -87,6 +87,7 @@
                                 </select>
                             </td>
                         </tr>
+                        <tr><td class="input-label"></td></tr>
                         <?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?>	
                             <?php if($panel[$user]['DNS_DOMAINS'] != "0") { ?><tr>
                                 <td class="vst-text input-label">
@@ -101,11 +102,13 @@
                                 </td>
                             </tr><?php } ?>
                         <?php } ?>
+                        <!--
                         <tr>
                             <td class="step-top vst-text" style="/*padding: 32px 0 20px 0;*/">
                                 <a href="javascript:elementHideShow('advtable');" class="vst-advanced"><?php print _('Advanced options');?>&nbsp;<i class="fas fa-arrow-circle-right"></i></a>
                             </td>
                         </tr>
+                        -->
                     </table>
                     <table class="data-col2" width="600px" style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
                         <tr>

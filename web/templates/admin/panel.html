@@ -8,7 +8,7 @@
 
 <div class="l-header">
 	<div class="l-center">
-		<a href="/list/user/" class="l-logo"></a>
+		<a href="/list/user/" class="l-logo" title="<?=_('Hestia Control Panel');?>"></a>
 		<div class="l-menu clearfix noselect">
 			<div class="l-menu__item <?php if($TAB == 'WEB' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'DNS' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'MAIL' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'DB' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'BACKUP' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'CRON' ) echo 'l-menu__item--active' ?><?php if($TAB == 'PACKAGE' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'USER' ) echo 'l-menu__item--active' ?>"><a href="/list/user/"><i class="fas fa-tasks panel-icon"></i><?=_('Records')?></a></div>
 			<?php if ((isset($_SESSION['FILE_MANAGER'])) && (!empty($_SESSION['FILE_MANAGER'])) && ($_SESSION['FILE_MANAGER'] == "true")) {?>
@@ -31,8 +31,8 @@
 			</div>
 			<div class="l-menu__item <?php if($TAB == 'SERVER' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'UPDATES' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'IP' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'RRD' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'FIREWALL' ) echo 'l-menu__item--active' ?>"><a href="/list/server/" class="l-profile__serversettings" title="<?=_('Server')?>"><i class="fas fa-cog"></i></a></div>
 			<div class="l-menu__item"><a href="/edit/user/?user=<?php echo $user; ?>" title="<?=htmlspecialchars($user)?> (<?=htmlspecialchars($panel[$user]['NAME'])?>)" class="l-profile__username"><i class="fas fa-user-edit"></i></a></div>
-			<div class="l-menu__item"><a href="https://github.com/hestiacp/hestiacp/issues/" target="_new" title="<?=_('Submit an issue report')?>" class="l-profile__help"><i class="fas fa-exclamation-triangle"></i></a></div>
-			<div class="l-menu__item"><a href="https://docs.hestiacp.com/" title="<?=_('Help')?>" class="l-profile__help" target="_blank"><i class="fas fa-question-circle"></i></a></div>
+			<div class="l-menu__item"><a href="https://github.com/hestiacp/hestiacp/issues/" target="_new" rel="noopener" title="<?=_('Submit an issue report')?>" class="l-profile__help"><i class="fas fa-exclamation-triangle"></i></a></div>
+			<div class="l-menu__item"><a href="https://docs.hestiacp.com/" title="<?=_('Help')?>" class="l-profile__help" rel="noopener" target="_blank"><i class="fas fa-question-circle"></i></a></div>
 			<div class="l-menu__item"><a href="/logout/" title="<?=_('Log out')?>" class="l-profile__logout"><i class="fas fa-sign-out-alt"></i></a></div>
 		</div>
 	</div>

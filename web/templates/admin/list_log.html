@@ -26,9 +26,9 @@
 
   <div class="header table-header">     
     <div class="l-unit__col l-unit__col--right">
-      <div class="clearfix l-unit__stat-col--left compact text-center">&nbsp;</div>
+      <div class="clearfix l-unit__stat-col--left super-compact text-center">&nbsp;</div>
       <div class="clearfix l-unit__stat-col--left"><b><?php print _('Date');?></b></div>
-      <div class="clearfix l-unit__stat-col--left compact"><b><?php print _('Time');?></b></div>
+      <div class="clearfix l-unit__stat-col--left compact-2"><b><?php print _('Time');?></b></div>
 
       <div class="clearfix l-unit__stat-col--left"><b><?php print _('Category');?></b></div>
       <div class="clearfix l-unit__stat-col--left"><b><?php print _('Message');?></b></div>
@@ -41,7 +41,7 @@
       ?>
       <div class="l-unit header animated fadeIn">
         <div class="l-unit__col l-unit__col--right">
-          <div class="clearfix l-unit__stat-col--left compact text-center">
+          <div class="clearfix l-unit__stat-col--left super-compact text-center">
             <? if ($data[$key]['LEVEL'] === 'Info') {?>
               <i class="fas fa-info-circle status-icon blue"></i>
             <? } ?>
@@ -53,7 +53,7 @@
             <? } ?>
           </div>
           <div class="clearfix l-unit__stat-col--left"><b><?=translate_date($data[$key]['DATE'])?></b></div>
-          <div class="clearfix l-unit__stat-col--left compact"><b><?=$data[$key]['TIME']?></b></div>
+          <div class="clearfix l-unit__stat-col--left compact-2"><b><?=$data[$key]['TIME']?></b></div>
 
           <div class="clearfix l-unit__stat-col--left"><b><?=$data[$key]['CATEGORY']?></b></div>
           <div class="clearfix l-unit__stat-col--left wide-7"><?=htmlspecialchars($data[$key]['MESSAGE'], ENT_QUOTES)?></div>

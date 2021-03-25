@@ -2,7 +2,7 @@
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
           <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/dns/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back')?></a>
-          <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
+          <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['RESTRICTED_ADMIN'] === 'yes')) {?>
             <!-- Hide item creation button when impersonating 'admin' account -->
           <? } else { ?>
             <a href="/add/dns/?domain=<?=htmlentities($_GET['domain'])?>" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Add Record')?></a>
@@ -19,7 +19,7 @@
                   <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search')?>"><i class="fas fa-search"></i></button>
                 </form>
               </td>
-              <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
+              <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['RESTRICTED_ADMIN'] === 'yes')) {?>
                 <!-- Hide bulk actions for domain items when impersonating 'admin' account-->
               <? } else { ?>
                 <td>
@@ -73,7 +73,7 @@ v_unit_id="<?=$key?>" v_section="dns_rec">
               <input id="check<?=$data[$key]['ID']?>" class="ch-toggle" type="checkbox" title="<?=_('Select')?>" name="record[]" value="<?=$data[$key]['ID']?>">
             </div>
             <div class="clearfix l-unit__stat-col--left small truncate">
-              <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') || ($data[$key]['SUSPENDED'] == 'yes')) {?>
+              <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['RESTRICTED_ADMIN'] === 'yes') || ($data[$key]['SUSPENDED'] == 'yes')) {?>
                 <b><? echo substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?></b></div>
               <? } else { ?>
                 <b><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing DNS Record').': '.htmlspecialchars($data[$key]['RECORD'])?>"><? echo substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?></a></b></div>
@@ -82,7 +82,7 @@ v_unit_id="<?=$key?>" v_section="dns_rec">
             <div class="clearfix l-unit__stat-col--left super-compact text-right">
               <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                 <div class="actions-panel clearfix">
-                  <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
+                  <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['RESTRICTED_ADMIN'] === 'yes')) {?>
                     <!-- Restrict editing of DNS records when impersonating 'admin' account -->
                     &nbsp;
                   <? } else { ?>

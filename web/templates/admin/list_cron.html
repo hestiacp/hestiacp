@@ -1,7 +1,7 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
+          <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['RESTRICTED_ADMIN'] === 'yes')) {?>
             <!-- Hide item creation button when impersonating 'admin' account -->
           <? } else { ?>
             <a href="/add/cron/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Cron Job')?></a>
@@ -29,7 +29,7 @@
                   <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search')?>"><i class="fas fa-search"></i></button>
                 </form>
               </td>
-              <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
+              <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['RESTRICTED_ADMIN'] === 'yes')) {?>
                 <!-- Hide bulk actions for domain items when impersonating 'admin' account-->
               <? } else { ?>
                 <td class="">
@@ -95,7 +95,7 @@ sort-star="<? if($_SESSION['favourites']['CRON'][$key] == 1) echo '1'; else echo
           <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" title="<?=_('Select')?>" name="job[]" value="<?php echo $key ?>">
         </div>
         <div class="clearfix l-unit__stat-col--left wide-5 truncate">
-        <? if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look'])) && ($_SESSION['look'] === 'admin') || ($data[$key]['SUSPENDED'] == 'yes')) {?>
+        <? if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look'])) && ($_SESSION['look'] === 'admin') && ($_SESSION['RESTRICTED_ADMIN'] === 'yes') || ($data[$key]['SUSPENDED'] == 'yes')) {?>
           <b><?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?></b> 
         <? } else { ?>
           <b><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Cron Job')?>: <?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?>"><?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?></a></b> 
@@ -105,7 +105,7 @@ sort-star="<? if($_SESSION['favourites']['CRON'][$key] == 1) echo '1'; else echo
         <div class="clearfix l-unit__stat-col--left compact-2 text-right">
           <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
             <div class="actions-panel clearfix">
-              <? if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look'])) && ($_SESSION['look'] === 'admin')) {?>
+              <? if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look'])) && ($_SESSION['look'] === 'admin') && ($_SESSION['RESTRICTED_ADMIN'] === 'yes')) {?>
                 <!-- Restrict other administrators from editing, deleting, or suspending 'admin' user cron jobs -->
                 &nbsp;
               <? } else { ?>

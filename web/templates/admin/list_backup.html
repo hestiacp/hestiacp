@@ -1,7 +1,7 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
+          <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['RESTRICTED_ADMIN'] === 'yes')) {?>
             <!-- Hide item creation button when impersonating 'admin' account -->
           <? } else { ?>
             <a href="/schedule/backup/?token=<?=$_SESSION['token']?>" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Create Backup')?></a>
@@ -18,7 +18,7 @@
                   <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search')?>"><i class="fas fa-search"></i></button>
                 </form>
               </td>
-              <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
+              <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['RESTRICTED_ADMIN'] === 'yes')) {?>
                 <!-- Hide bulk actions for domain items when impersonating 'admin' account-->
               <? } else { ?>
                 <td>
@@ -83,7 +83,7 @@
                     <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" title="<?=_('Select')?>" name="backup[]" value="<?php echo $key ?>">
                   </div>
                   <div class="clearfix l-unit__stat-col--left wide-3 truncate">
-                    <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
+                    <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['RESTRICTED_ADMIN'] === 'yes')) {?>
                       <b><?=$key?></b>
                     <? } else { ?>
                       <b><a href="/list/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('restore')?>"><?=$key?></a></b>
@@ -93,7 +93,7 @@
                   <div class="clearfix l-unit__stat-col--left compact-4 text-right">
                     <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                       <div class="actions-panel clearfix">
-                        <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
+                        <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['RESTRICTED_ADMIN'] === 'yes')) {?>
                           <!-- Restrict ability to restore or delete backups when impersonating 'admin' account -->
                           &nbsp;
                         <? } else { ?>

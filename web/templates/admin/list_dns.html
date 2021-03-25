@@ -1,7 +1,7 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
+          <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['RESTRICTED_ADMIN'] === 'yes')) {?>
             <!-- Hide item creation button when impersonating 'admin' account -->
           <? } else {?>
             <a href="/add/dns/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add DNS Domain')?></a>
@@ -100,7 +100,7 @@ sort-expire="<?=strtotime($data[$key]['EXP'])?>" sort-records="<?=(int)$data[$ke
               <div class="clearfix l-unit__stat-col--left text-right">
                   <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                   <div class="actions-panel clearfix">
-                    <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
+                    <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['RESTRICTED_ADMIN'] === 'yes')) {?>
                       <!-- Restrict administrators from editing domain items when impersonating the 'admin' user -->
                       &nbsp;
                     <? } else { ?>

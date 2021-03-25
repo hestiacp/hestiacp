@@ -148,7 +148,13 @@ upgrade_health_check() {
     if [ -z "$ENFORCE_SUBDOMAIN_OWNERSHIP" ]; then
         echo "[ ! ] Adding missing variable to hestia.conf: ENFORCE_SUBDOMAIN_OWNERSHIP ('yes')"
         $BIN/v-change-sys-config-value "ENFORCE_SUBDOMAIN_OWNERSHIP" "yes"
-    fi    
+    fi
+
+    # Enable read-only access to the System Administrator account for other administrators
+    if [ -z "$RESTRICTED_ADMIN" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: RESTRICTED_ADMIN ('yes')"
+        $BIN/v-change-sys-config-value 'RESTRICTED_ADMIN' 'yes'
+    fi
 
     # Debug Mode
     if [ -z "$DEBUG_MODE" ]; then

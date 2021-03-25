@@ -71,12 +71,11 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
             <div class="clearfix l-unit__stat-col--left wide-2 truncate">
               <b>
                 <? if (($_SESSION['userContext'] === "admin") && ($_SESSION['user'] === 'admin')) {?>
-                  <a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Package')?>: <?=$key?>">
-                    <? } else { ?>
-                      <?=$key?>
-                    <? } ?>
-                </b>
-              </a>
+                  <a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Package')?>: <?=$key?>"><?=$key?></a>
+                <? } else { ?>
+                  <?=$key?>
+                <? } ?>
+              </b>
             </div>
             <!-- START QUICK ACTION TOOLBAR AREA -->
             <div class="clearfix l-unit__stat-col--left text-right compact-3">

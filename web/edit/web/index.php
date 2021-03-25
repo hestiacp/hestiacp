@@ -328,14 +328,14 @@ if (!empty($_POST['save'])) {
         unset($output);
     }
 
-    //Add / Delete caching support
+    // Enable/Disable nginx cache
     if (($_SESSION['WEB_SYSTEM'] == 'nginx') && ($v_nginx_cache != $_POST['v_nginx_cache'] ) && (empty($_SESSION['error_msg']))) {
         if ( $_POST['v_nginx_cache'] == 'yes' ) {
-           exec (HESTIA_CMD."v-add-web-domain-fast-cgi-cache ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
+           exec (HESTIA_CMD."v-add-fastcgi-cache ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
            check_return_code($return_var,$output);
            unset($output); 
         } else {
-            exec (HESTIA_CMD."v-delete-web-domain-fast-cgi-cache ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
+            exec (HESTIA_CMD."v-delete-fastcgi-cache ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output); 
         }

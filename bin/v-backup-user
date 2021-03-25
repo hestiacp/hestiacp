@@ -20,10 +20,15 @@ user=$1
 notify=${2-no}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/db.sh
+# shellcheck source=/usr/local/hestia/func/backup.sh
 source $HESTIA/func/backup.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 

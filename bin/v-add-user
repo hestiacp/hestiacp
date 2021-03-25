@@ -23,7 +23,9 @@ if [ ! -z "$6" ]; then
     name="$name $6";
 fi
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 is_user_free() {

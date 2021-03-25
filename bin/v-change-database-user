@@ -19,9 +19,13 @@ dbuser="$user"_"$3"
 password=$4; HIDE=4
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/db.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
 source $HESTIA/func/rebuild.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 

@@ -16,6 +16,7 @@
 #format=${1-shell}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 #source $HESTIA/func/main.sh
 
 

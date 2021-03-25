@@ -18,6 +18,9 @@ modprobe="/sbin/modprobe"
 sysctl="/sbin/sysctl"
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/usr/local/hestia/func/firewall.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source /etc/profile.d/hestia.sh
 source $HESTIA/func/main.sh
 source $HESTIA/func/firewall.sh

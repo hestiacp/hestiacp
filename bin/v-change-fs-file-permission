@@ -12,6 +12,7 @@ src_file=$2
 permissions=$3
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 #----------------------------------------------------------#

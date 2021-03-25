@@ -23,8 +23,11 @@ chain=$(echo $2|tr '[:lower:]' '[:upper:]')
 iptables="/sbin/iptables"
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/firewall.sh
 source $HESTIA/func/firewall.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 

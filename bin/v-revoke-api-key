@@ -7,6 +7,8 @@
 #
 # The function removes a key from in $HESTIA/data/keys/
 
+# Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 #----------------------------------------------------------#

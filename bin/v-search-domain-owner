@@ -17,6 +17,7 @@ domain=$1
 type=${2-any}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 

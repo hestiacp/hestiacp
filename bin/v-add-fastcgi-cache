@@ -108,7 +108,8 @@ if [ -z "$FASTCGI_LENGTH" ]; then
 fi
 
 # Set FastCGI cache flag to enabled
-update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_CACHE' "$length"
+update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_CACHE' 'yes'
+update_object_value 'web' 'DOMAIN' "$domain" 'FASTCGI_LENGTH' "$length"
 
 if [ "$restart" = "yes" ]; then
     # Restart web server

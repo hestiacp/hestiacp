@@ -19,6 +19,7 @@ account=$3
 format=${4-shell}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 # JSON list function

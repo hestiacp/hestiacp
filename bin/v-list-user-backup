@@ -19,6 +19,7 @@ backup=$2
 format=${3-shell}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 fields="\$BACKUP \$TYPE \$SIZE \$WEB \$DNS \$DB \$MAIL \$CRON \$UDIR"

@@ -11,6 +11,12 @@ if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
     exit();
 }
 
+// Prevent editing of default package
+if ($_GET['package'] === 'default') {
+    header("Location: /list/package/");
+    exit;
+}
+
 if ($_SESSION['userContext'] === 'admin') {
     if (!empty($_GET['package'])) {
         $v_package = escapeshellarg($_GET['package']);

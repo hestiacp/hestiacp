@@ -3,11 +3,14 @@
     <div class="l-unit-toolbar__buttonstrip">
       <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
         <a href="/list/user/" id="btn-back" class="ui-button cancel" dir="ltr"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back')?></a>
-      <? } else { ?>
+      <? } else if (($_SESSION['userContext'] === 'admin') && ($_GET['user'] === 'admin')) { ?>
+        <a href="/list/server/" id="btn-back" class="ui-button cancel" dir="ltr"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back')?></a>
+      <? } else {?>
         <a href="/edit/user/?user=<?php echo $user; ?>&token=<?=$_SESSION['token']?>" id="btn-back" class="ui-button cancel" dir="ltr"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back')?></a>
       <? } ?>
-      
-      <a href="/list/log/auth/" id="btn-list" class="ui-button cancel" dir="ltr" title="<?=_('Login history');?>"><i class="fas fa-binoculars status-icon green"></i><?=_('Login history')?></a>
+      <? if (($_SESSION['userContext'] === 'admin') && ($_GET['user'] !== 'admin')) { ?>
+        <a href="/list/log/auth/" id="btn-list" class="ui-button cancel" dir="ltr" title="<?=_('Login history');?>"><i class="fas fa-binoculars status-icon green"></i><?=_('Login history')?></a>
+      <? } ?>
     </div>
     <div class="l-unit-toolbar__buttonstrip float-right">
       <a href="javascript:location.reload();" class="ui-button cancel" dir="ltr"><i class="fas fa-redo status-icon green"></i><?=_('Refresh')?></a>

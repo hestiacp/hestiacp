@@ -168,9 +168,6 @@ prepare_web_domain_values() {
     sdocroot="$docroot"
     if [ "$SSL_HOME" = 'single' ]; then
         sdocroot="$HOMEDIR/$user/web/$domain/public_shtml"
-        $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/public_shtml";
-        chmod 751 $HOMEDIR/$user/web/$domain/public_shtml;
-        chown www-data:$user $HOMEDIR/$user/web/$domain/public_shtml;    
     fi
 
     if [ ! -z "$WEB_BACKEND" ]; then

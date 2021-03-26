@@ -163,7 +163,7 @@ if (!empty($_POST['save'])) {
         unset($output);
     }
     // Change Role (admin only)
-    if (($v_role != $_POST['$v_role']) && ($_SESSION['user'] == 'admin') && $v_username != "admin" && (empty($_SESSION['error_msg']))) {
+    if (($v_role != $_POST['$v_role']) && ($_SESSION['user'] == 'admin') && (empty($_SESSION['error_msg']))) {
         $v_role = escapeshellarg($_POST['v_role']);
         exec (HESTIA_CMD."v-change-user-role ".escapeshellarg($v_username)." ".$v_role, $output, $return_var);
         check_return_code($return_var,$output);

@@ -28,8 +28,7 @@ server {
             fastcgi_pass   %backend_lsnr%;
             fastcgi_index  index.php;
             fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
-            include /etc/nginx/fastcgi_params;
-            include     %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf;
+            include        /etc/nginx/fastcgi_params;
         }
 
         location ~ ^/setup/(?!pub/). {
@@ -51,8 +50,7 @@ server {
             fastcgi_index  index.php;
             fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
             fastcgi_param  PATH_INFO        $fastcgi_path_info;
-            include /etc/nginx/fastcgi_params;
-            include     %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf;
+            include        /etc/nginx/fastcgi_params;
         }
 
         # Deny everything but index.php
@@ -161,8 +159,7 @@ server {
 
         fastcgi_index  index.php;
         fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
-        include /etc/nginx/fastcgi_params;
-        include     %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf;
+        include        /etc/nginx/fastcgi_params;
     }
 
     gzip on;

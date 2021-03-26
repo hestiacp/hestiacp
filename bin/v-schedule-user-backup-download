@@ -32,9 +32,6 @@ source $HESTIA/conf/hestia.conf
 check_args '2' "$#" 'USER BACKUP'
 is_format_valid 'user' 'backup'
 
-# Perform verification if read-only mode is enabled
-check_hestia_demo_mode
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#

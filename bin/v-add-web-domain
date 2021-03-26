@@ -69,9 +69,12 @@ check_hestia_demo_mode
 # Reading user values
 source $USER_DATA/user.conf
 
+[[ -e "$HOMEDIR/$user/web/$domain" ]] && check_result $E_EXISTS "Web domain folder for $domain should not exist"
+
 # Creating domain directories
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain"
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/public_html"
+$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/public_shtml"
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/document_errors"
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/cgi-bin"
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/private"
@@ -95,12 +98,12 @@ done
 chown -R $user:$user $HOMEDIR/$user/web/$domain
 chown root:$user /var/log/$WEB_SYSTEM/domains/$domain.* $conf
 chmod 640 /var/log/$WEB_SYSTEM/domains/$domain.*
-chmod 751 $HOMEDIR/$user/web/$domain $HOMEDIR/$user/web/$domain/*
-chmod 551 $HOMEDIR/$user/web/$domain/stats $HOMEDIR/$user/web/$domain/logs
-chmod 644 $HOMEDIR/$user/web/$domain/public_*html/*
-chown $user:$WEB_RGROUPS $HOMEDIR/$user/web/$domain/public_*html
+user_exec chmod 751 $HOMEDIR/$user/web/$domain $HOMEDIR/$user/web/$domain/*
+user_exec chmod 551 $HOMEDIR/$user/web/$domain/stats $HOMEDIR/$user/web/$domain/logs
+user_exec chmod 644 $HOMEDIR/$user/web/$domain/public_*html/*
+chown --no-dereference $user:$WEB_RGROUPS $HOMEDIR/$user/web/$domain/public_*html
 
-# Adding PHP-FPM backend
+# Addding PHP-FPM backend
 if [ ! -z "$WEB_BACKEND" ]; then
     if [ -z "$BACKEND_TEMPLATE" ]; then
         BACKEND_TEMPLATE='default'

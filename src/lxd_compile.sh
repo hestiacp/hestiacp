@@ -10,16 +10,16 @@ chmod +x /tmp/hst_autocompile.sh
 mkdir -p /opt/hestiacp
 
 # Building Hestia
-if bash /tmp/hst_autocompile.sh --hestia --noinstall --keepbuild $branch; then
+if bash /tmp/hst_autocompile.sh --hestia $branch no; then
     cp /tmp/hestiacp-src/debs/*.deb /opt/hestiacp/
 fi
 
 # Building PHP
-if bash /tmp/hst_autocompile.sh --php --noinstall --keepbuild $branch; then
+if bash /tmp/hst_autocompile.sh --php $branch no; then
     cp /tmp/hestiacp-src/debs/*.deb /opt/hestiacp/
 fi
 
 # Building NGINX
-if bash /tmp/hst_autocompile.sh --nginx --noinstall --keepbuild $branch; then
+if bash /tmp/hst_autocompile.sh --nginx $branch no; then
     cp /tmp/hestiacp-src/debs/*.deb /opt/hestiacp/
 fi

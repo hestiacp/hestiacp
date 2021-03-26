@@ -102,7 +102,6 @@ server {
             fastcgi_pass    %backend_lsnr%;
             fastcgi_index   index.php;
             include         /etc/nginx/fastcgi_params;
-            include     %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf;
         }
     }
 

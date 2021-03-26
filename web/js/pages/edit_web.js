@@ -235,26 +235,6 @@ $(function() {
             $('.stats-auth').show();
         }
     });
-    
-    $('select[name="v_nginx_cache"]').change(function(evt){
-        var select = $(evt.target);
-    
-        if(select.val() != 'yes'){
-            $('#v-clear-cache').hide();
-        } else {
-            $('#v-clear-cache').show();
-        }
-    });  
-    
-    $('select[name="v_proxy_template"]').change(function(evt){
-        var select = $(evt.target);
-
-        if(select.val() != 'caching'){
-            $('#v-clear-cache').hide();
-        } else {
-            $('#v-clear-cache').show();
-        }
-    });  
 
     $('#vstobjects').on('submit', function(evt) {
         $('input[disabled]').each(function(i, elm) {

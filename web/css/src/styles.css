@@ -2553,23 +2553,19 @@ label:hover {
 }
 
 .vst-input:disabled,
-.vst-list:disabled,
-.vst-textinput:disabled
- {
+.vst-list:disabled {
   background-color: #e7e7e7;
   text-shadow: 1px 1px rgba(255,255,255,1);
   color: #686868;
 }
 
-.vst-input:focus:disabled,
-.vst-textinput:disabled {
+.vst-input:focus:disabled {
   border-color: #f1f1f1;
   background-color: #f1f1f1;
 }
 
 .vst-input:disabled:hover,
-.vst-list:disabled:hover
-.vst-textinput:disabled:hover {
+.vst-list:disabled:hover {
   border-color: #cfcfcf;
 }
 

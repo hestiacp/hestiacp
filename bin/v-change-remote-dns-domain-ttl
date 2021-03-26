@@ -34,8 +34,6 @@ is_object_valid 'dns' 'DOMAIN' "$domain"
 is_procces_running
 remote_dns_health_check
 
-# Perform verification if read-only mode is enabled
-check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: add log analyzer to generate domain statistics
+# info: add log analyzer to generate domain statitics
 # options: USER DOMAIN TYPE
 # labels: web
 #

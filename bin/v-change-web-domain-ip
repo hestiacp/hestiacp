@@ -76,12 +76,12 @@ fi
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-# Update config
-update_object_value 'web' 'DOMAIN' "$domain" '$IP' "$3"
-
 # Update counters
 increase_ip_value "$new"
 decrease_ip_value "$old"
+
+# Update config
+update_object_value 'web' 'DOMAIN' "$domain" '$IP' "$3"
 
 # Restart web server
 $BIN/v-restart-web $restart

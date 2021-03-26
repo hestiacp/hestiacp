@@ -41,8 +41,6 @@ server {
 
     disable_symlinks if_not_owner from=%docroot%;
 
-    proxy_hide_header Upgrade;
-
     include %home%/%user%/conf/web/%domain%/nginx.ssl.conf_*;
 }
 

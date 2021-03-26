@@ -621,29 +621,6 @@ label {
 label:hover {
   color: #d4d4d4 !important;
 }
-.vst-textinput {
-    background-color: #454545;
-    border: 1px solid #606060;
-    color: #d4d4d4;
-    box-shadow: 0px 1px 4px rgba(0,0,0,0.35);
-}
-.vst-textinput:hover {
-    border: 1px solid #0090ff;
-    background-color: #494949;
-}
-.vst-textinput:focus {
-    background-color: #222222;
-    border-color: #0080df;
-    color: #fff !important;
-    box-shadow: 0px 1px 6px rgba(0,52,91,0.75);
-}
-.vst-textinput.console{
-    
-}
-.vst-textinput.short {
-    
-}
-    
 .vst-input {
   background-color: #454545;
   border: 1px solid #606060;
@@ -663,9 +640,7 @@ label:hover {
 }
 
 .vst-input:disabled,
-.vst-list:disabled,
-.vst-textinput:disabled
- {
+.vst-list:disabled {
   background-color: #303030;
   text-shadow: 1px 1px rgba(0,0,0,0.3);
   color: #acacac;
@@ -676,8 +651,7 @@ label:hover {
 }
 
 .vst-input:disabled:hover,
-.vst-list:disabled:hover,
-.vst-textinput:disabled:hover {
+.vst-list:disabled:hover {
   border-color: #606060 !important;
 }
 
@@ -765,6 +739,32 @@ a.vst-text:active b{
 }
 
 .advanced-options .fas {
+
+}
+
+.vst-textinput {
+  background-color: #454545;
+  border: 1px solid #606060;
+  color: #d4d4d4;
+  box-shadow: 0px 1px 4px rgba(0,0,0,0.35);
+}
+.vst-textinput:hover {
+  border: 1px solid #0090ff;
+  background-color: #494949;
+}
+.vst-textinput:focus {
+  background-color: #222222;
+  border-color: #0080df;
+  color: #fff !important;
+  box-shadow: 0px 1px 6px rgba(0,52,91,0.75);
+}
+.vst-textinput:disabled {
+  background-color: #454545;
+}
+.vst-textinput.console{
+
+}
+.vst-textinput.short {
 
 }
 #advanced-options .console{

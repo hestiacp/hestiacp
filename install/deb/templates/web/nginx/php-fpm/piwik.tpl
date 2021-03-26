@@ -37,8 +37,7 @@ server {
             }
 
             fastcgi_pass    %backend_lsnr%;
-            include /etc/nginx/fastcgi_params;
-            include     %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf;
+            include         /etc/nginx/fastcgi_params;
         }
     }
 

@@ -29,8 +29,7 @@ check_args '2' "$#" 'USER TOPIC NOTICE [TYPE]'
 is_format_valid 'user' 'topic' 'notice'
 is_object_valid 'user' 'USER' "$user"
 
-# Perform verification if read-only mode is enabled
-check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#

@@ -966,6 +966,7 @@ is_format_valid() {
                 host)           is_object_format_valid "$arg" "$arg_name" ;;
                 hour)           is_cron_format_valid "$arg" $arg_name ;;
                 id)             is_int_format_valid "$arg" 'id' ;;
+                iface)          is_interface_format_valid "$arg" ;;
                 ip)             is_ip_format_valid "$arg" ;;
                 ip_name)        is_domain_format_valid "$arg" 'IP name';;
                 ip_status)      is_ip_status_format_valid "$arg" ;;
@@ -1168,4 +1169,15 @@ user_exec() {
     user_groups=${user_groups//\ /,}
 
     setpriv --groups "$user_groups" --reuid "$user" --regid "$user" -- $@
+}
+
+# Simple chmod wrapper that skips symlink files after glob expand
+no_symlink_chmod() {
+    local filemode=$1; shift;
+
+    for i in "$@"; do
+        [[ -L ${i} ]] && continue
+
+        chmod "${filemode}" "${i}"
+    done
 }

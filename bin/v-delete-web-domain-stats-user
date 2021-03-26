@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: disable web domain stats authentication support
+# info: disable webdomain stats  authentication support
 # options: USER DOMAIN [RESTART]
 # labels: web
 #
@@ -47,14 +47,14 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Deleting statistic dir
-stats_dir="$HOMEDIR/$user/web/$domain/stats"
-rm -f $stats_dir/.htpasswd
-rm -f $stats_dir/.htaccess
+# Defining statistic dir
+rm -f $HOMEDIR/$user/web/$domain/stats/.htpasswd
+rm -f $HOMEDIR/$user/web/$domain/stats/.htaccess
 
 # Deleting nginx auth config
 if [ "$WEB_SYSTEM" = 'nginx' ]; then
-    rm -f $stats_dir/auth.conf 2>/dev/null
+    conf_dir="$HOMEDIR/$user/conf/web"
+    rm -f $conf_dir/$domain.auth 2>/dev/null
     $BIN/v-restart-web $restart
     check_result $? "Web restart failed" >/dev/null
 fi

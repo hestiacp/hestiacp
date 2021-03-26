@@ -75,12 +75,6 @@ upgrade_rebuild_dns_templates | tee -a $LOG
 # Upgrade phpMyAdmin if applicable
 upgrade_phpmyadmin | tee -a $LOG
 
-# Upgrade Roundcube if applicable
-upgrade_roundcube | tee -a $LOG
-
-# Upgrade Rainloop if applicable
-upgrade_rainloop | tee -a $LOG
-
 # Set new version number in hestia.conf
 upgrade_set_version $new_version
 

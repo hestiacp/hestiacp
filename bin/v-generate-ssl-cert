@@ -70,14 +70,12 @@ fi
 
 args_usage='DOMAIN EMAIL COUNTRY STATE CITY ORG UNIT [ALIASES] [FORMAT]'
 check_args '7' "$#" "$args_usage"
-is_format_valid 'domain_alias' 'format'
+is_format_valid 'domain' 'aliases' 'format'
+
 
 if [ ! -f /root/.rnd ]; then
     touch /root/.rnd
 fi
-
-# Perform verification if read-only mode is enabled
-check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

@@ -66,9 +66,6 @@ if (isset($_GET['web'])) {
     exec (HESTIA_CMD.'v-list-sys-web-status', $output, $return_var);
     foreach($output as $file) {
         $file=str_replace('border="0"', 'border="1"', $file);
-        $file=str_replace('bgcolor="#ffffff"', '', $file);
-        $file=str_replace('bgcolor="#000000"', 'bgcolor="#282828"', $file);
-        
         echo $file . "\n";
     }
     echo "    </pre>\n</body>\n</html>\n";

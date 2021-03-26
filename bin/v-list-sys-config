@@ -1,7 +1,7 @@
 #!/bin/bash
 # info: list system configuration
 # options: [FORMAT]
-# labels:
+# labels: 
 #
 # example: v-list-sys-config json
 #
@@ -58,14 +58,12 @@ json_list() {
         "BACKUP": "'$BACKUP'",
         "BACKUP_MODE": "'$BACKUP_MODE'",
         "WEBMAIL_ALIAS": "'$WEBMAIL_ALIAS'",
-        "WEBMAIL_SYSTEM": "'$WEBMAIL_SYSTEM'",
         "DB_PMA_ALIAS": "'$DB_PMA_ALIAS'",
         "DB_PGA_ALIAS": "'$DB_PGA_ALIAS'",
         "LOGIN_STYLE": "'$LOGIN_STYLE'",
-        "INACTIVE_SESSION_TIMEOUT": "'$INACTIVE_SESSION_TIMEOUT'",
-        "PHPMYADMIN_KEY": "'$PHPMYADMIN_KEY'"
+        "SOFTACULOUS": "'$SOFTACULOUS'"
     }
-    }'
+}'
 }
 
 # Shell list

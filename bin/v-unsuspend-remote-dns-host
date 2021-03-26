@@ -30,8 +30,6 @@ is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid "../../conf/dns-cluster" 'HOST' "$host"
 is_object_suspended "../../conf/dns-cluster" 'HOST' "$host"
 
-# Perform verification if read-only mode is enabled
-check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

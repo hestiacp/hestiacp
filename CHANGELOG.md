@@ -1,18 +1,28 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [DEVELOPMENT]
+## [1.3.5] - Service Release
 ### Features
-- Introduced support for PHPmyAdmin Single Sign On
+- No new features have been introduced in this release.
 
 ### Bugfixes
-- Fixed an issue where user name was duplicated when editing FTP users (#1411)
-- Fixed an issue where the iptables service would appear to be in a stopped state when fail2ban is stopped. (#1374)
-- Fixed an issue where the default language value was incorrectly set under Server Settings > Configure.
-- Fixed an issue with the dark theme where available updates were incorrectly displayed.
-- Fixed an issue where local and FTP backup files were not deleted when running `v-delete-user-backup`. (#1421)
-- Fixed an issue where IP addresses could not be deleted (#1423)
-- Improvements have been made to the API's error handling - thanks **@danielalexis**!
+- Updated APT repository key for PHP from packages.sury.org (https://forum.hestiacp.com/t/apt-upgrade-failed-gpg-error-packages-sury-org)
+- Updated phpMyAdmin to v5.1.0.
+
+## [1.3.4] - Service Release
+### Features
+- No new features have been introduced in this release.
+
+### Bugfixes
+- Fixed xss vulnerability in v-add-sys-ip and user history log (thanks **@numanturle**)
+- Fixed remote execution possibility when deleting ssh key (thanks **@numanturle**)
+
+## [1.3.3] - Service Release
+### Features
+- No new features have been introduced in this release.
+
+### Bugfixes
+- Improved permission handling.
 
 ## [1.3.2] - Service Release
 ### Features
@@ -23,6 +33,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an where fpm pool config was not deleted when changing backend template.
 - Improved bats testing with multiphp (5.6-8.0) tests.
 - Fixed an issue where full webmail path was loaded as default value.
+
 
 ## [1.3.1] - Service Release
 ### Features

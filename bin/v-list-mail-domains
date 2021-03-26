@@ -37,9 +37,7 @@ json_list() {
         "SSL": "'$SSL'",
         "SUSPENDED": "'$SUSPENDED'",
         "TIME": "'$TIME'",
-        "DATE": "'$DATE'",
-        "WEBMAIL_ALIAS": "'$WEBMAIL_ALIAS'",
-        "WEBMAIL": "'$WEBMAIL'"
+        "DATE": "'$DATE'"
     }'
         if [ "$i" -lt "$objects" ]; then
             echo ','
@@ -69,7 +67,7 @@ plain_list() {
     while read str; do
         parse_object_kv_list "$str"
         echo -ne "$DOMAIN\t$ANTIVIRUS\t$ANTISPAM\t$DKIM\t$SSL\$CATCHALL\t"
-        echo -e "$ACCOUNTS\t$U_DISK\t$SUSPENDED\t$TIME\t$DATE\t$WEBMAIL_ALIAS\t$WEBMAIL"
+        echo -e "$ACCOUNTS\t$U_DISK\t$SUSPENDED\t$TIME\t$DATE"
     done < <(cat $USER_DATA/mail.conf)
 }
 
@@ -77,11 +75,11 @@ plain_list() {
 csv_list() {
     IFS=$'\n'
     echo -n "DOMAIN,ANTIVIRUS,ANTISPAM,DKIM,SSL,CATCHALL,ACCOUNTS,U_DISK,"
-    echo "SUSPENDED,TIME,DATE,WEBMAIL_ALIAS,WEBMAIL"
+    echo "SUSPENDED,TIME,DATE"
     while read str; do
         parse_object_kv_list "$str"
         echo -n "$DOMAIN,$ANTIVIRUS,$ANTISPAM,$DKIM,$SSL,$CATCHALL,$ACCOUNTS,"
-        echo "'$U_DISK,$SUSPENDED,$TIME,$DATE,$WEBMAIL_ALIAS,$WEBMAIL"
+        echo "'$U_DISK,$SUSPENDED,$TIME,$DATE"
         echo
     done < <(cat $USER_DATA/mail.conf)
 }

@@ -44,8 +44,6 @@ if [ "$flush" = 'no' ]; then
     is_domain_new 'dns' $domain
 fi
 
-# Perform verification if read-only mode is enabled
-check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

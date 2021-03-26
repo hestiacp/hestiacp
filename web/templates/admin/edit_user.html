@@ -178,124 +178,135 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text input-label">
-                                    <?php print _('SSH Access');?>
+                                <td class="step-top vst-text" style="/*padding: 32px 0 20px 0;*/">
+                                    <a href="javascript:elementHideShow('advanced-opts');" class="vst-advanced"><?php print _('Advanced options');?></a>
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                    <select class="vst-list" name="v_shell">
-                                        <?php
-                                            foreach ($shells as $key => $value) {
-                                                echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
-                                                $svalue = "'".$value."'";
-                                                if (( $value == $v_shell ) || ($svalue == $v_shell )){
-                                                    echo 'selected' ;
-                                                }
-                                                echo ">".htmlentities($value)."</option>\n";
-                                            }
+                                <td class="step-top">
+                                    <table id="advanced-opts" style="display: none;">
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print _('SSH Access');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_shell">
+                                                    <?php
+                                                        foreach ($shells as $key => $value) {
+                                                            echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
+                                                            $svalue = "'".$value."'";
+                                                            if (( $value == $v_shell ) || ($svalue == $v_shell )){
+                                                                echo 'selected' ;
+                                                            }
+                                                            echo ">".htmlentities($value)."</option>\n";
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                             <td class="vst-text input-label">
+                                                 <?php print _('PHP CLI Version');?>
+                                             </td>
+                                         </tr>
+                                         <tr>
+                                             <td>
+                                                 <select class="vst-list" name="v_phpcli">
+                                                     <?php
+                                                         foreach ($php_versions as $key => $value) {
+                                                             $php = explode('-',$value);
+                                                             echo "\t\t\t\t<option value=\"".$value."\"";
+                                                             $svalue = "'".$value."'";
+                                                             if ((!empty($v_phpcli)) && ( $value == $v_phpcli ) || ($svalue == $v_phpcli)){
+                                                                 echo ' selected' ;
+                                                             }
+                                                             if ((empty($v_phpcli)) && ($value == DEFAULT_PHP_VERSION)){
+                                                                 echo ' selected' ;
+                                                             }
+                                                             echo ">".htmlentities($value)."</option>\n";
+                                                         }
+                                                     ?>
+                                                 </select>
+                                             </td>
+                                         </tr>
+                                    <?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?>
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print _('Default Name Servers');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_ns1" value="<?=htmlentities(trim($v_ns1, "'"))?>">
+                                                <span class="remove-ns additional-control delete vst-advanced button danger"><?=_('delete')?></span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_ns2" value="<?=htmlentities(trim($v_ns2, "'"))?>">
+                                                <span class="remove-ns additional-control delete vst-advanced button danger"><?=_('delete')?></span>
+                                            </td>
+                                        </tr>
+                                        <?  if($v_ns3)
+                                              echo '<tr>
+                                                <td>
+                                                    <input type="text" size="20" class="vst-input" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
+                                                    <span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
+                                                </td>
+                                            </tr>';
+            
+                                            if($v_ns4)
+                                              echo '<tr>
+                                                <td>
+                                                    <input type="text" size="20" class="vst-input" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
+                                                    <span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
+                                                </td>
+                                            </tr>';
+            
+                                            if($v_ns5)
+                                              echo '<tr>
+                                                <td>
+                                                    <input type="text" size="20" class="vst-input" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
+                                                    <span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
+                                                </td>
+                                            </tr>';
+            
+                                            if($v_ns6)
+                                              echo '<tr>
+                                                <td>
+                                                    <input type="text" size="20" class="vst-input" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
+                                                    <span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
+                                                </td>
+                                            </tr>';
+            
+                                            if($v_ns7)
+                                              echo '<tr>
+                                                <td>
+                                                    <input type="text" size="20" class="vst-input" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
+                                                    <span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
+                                                </td>
+                                            </tr>';
+            
+                                            if($v_ns8)
+                                              echo '<tr>
+                                                <td>
+                                                    <input type="text" size="20" class="vst-input" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
+                                                    <span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
+                                                </td>
+                                            </tr>';
                                         ?>
-                                    </select>
+            
+                                            <tr class="add-ns" <? if($v_ns8) echo 'style="display:none;"'; ?> >
+                                                <td class="step-top-small">
+                                                  <span class="add-ns-button vst-advanced button"><?=_('Add one more Name Server')?></span>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                    </table>
                                 </td>
                             </tr>
-                            <tr>
-                                 <td class="vst-text input-label">
-                                     <?php print _('PHP CLI Version');?>
-                                 </td>
-                             </tr>
-                             <tr>
-                                 <td>
-                                     <select class="vst-list" name="v_phpcli">
-                                         <?php
-                                             foreach ($php_versions as $key => $value) {
-                                                 $php = explode('-',$value);
-                                                 echo "\t\t\t\t<option value=\"".$value."\"";
-                                                 $svalue = "'".$value."'";
-                                                 if ((!empty($v_phpcli)) && ( $value == $v_phpcli ) || ($svalue == $v_phpcli)){
-                                                     echo ' selected' ;
-                                                 }
-                                                 if ((empty($v_phpcli)) && ($value == DEFAULT_PHP_VERSION)){
-                                                     echo ' selected' ;
-                                                 }
-                                                 echo ">".htmlentities($value)."</option>\n";
-                                             }
-                                         ?>
-                                     </select>
-                                 </td>
-                             </tr>
-                        <?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?>
-                            <tr>
-                                <td class="vst-text input-label">
-                                    <?php print _('Default Name Servers');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" size="20" class="vst-input" name="v_ns1" value="<?=htmlentities(trim($v_ns1, "'"))?>">
-                                    <span class="remove-ns additional-control delete vst-advanced button danger"><?=_('delete')?></span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" size="20" class="vst-input" name="v_ns2" value="<?=htmlentities(trim($v_ns2, "'"))?>">
-                                    <span class="remove-ns additional-control delete vst-advanced button danger"><?=_('delete')?></span>
-                                </td>
-                            </tr>
-                            <?  if($v_ns3)
-                                  echo '<tr>
-                                    <td>
-                                        <input type="text" size="20" class="vst-input" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
-                                        <span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
-                                    </td>
-                                </tr>';
-
-                                if($v_ns4)
-                                  echo '<tr>
-                                    <td>
-                                        <input type="text" size="20" class="vst-input" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
-                                        <span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
-                                    </td>
-                                </tr>';
-
-                                if($v_ns5)
-                                  echo '<tr>
-                                    <td>
-                                        <input type="text" size="20" class="vst-input" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
-                                        <span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
-                                    </td>
-                                </tr>';
-
-                                if($v_ns6)
-                                  echo '<tr>
-                                    <td>
-                                        <input type="text" size="20" class="vst-input" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
-                                        <span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
-                                    </td>
-                                </tr>';
-
-                                if($v_ns7)
-                                  echo '<tr>
-                                    <td>
-                                        <input type="text" size="20" class="vst-input" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
-                                        <span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
-                                    </td>
-                                </tr>';
-
-                                if($v_ns8)
-                                  echo '<tr>
-                                    <td>
-                                        <input type="text" size="20" class="vst-input" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
-                                        <span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
-                                    </td>
-                                </tr>';
-                            ?>
-
-                                <tr class="add-ns" <? if($v_ns8) echo 'style="display:none;"'; ?> >
-                                    <td class="step-top-small">
-                                      <span class="add-ns-button vst-advanced button"><?=_('Add one more Name Server')?></span>
-                                    </td>
-                                </tr>
-                            <?php } ?>
                         </table>
                         <table class="data-col2"></table>
                     </td>

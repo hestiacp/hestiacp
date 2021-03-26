@@ -14,7 +14,7 @@
     </div>
     <div class="l-unit-toolbar__buttonstrip float-right">
       <a href="javascript:location.reload();" class="ui-button cancel" dir="ltr"><i class="fas fa-redo status-icon green"></i><?=_('Refresh')?></a>
-    <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['RESTRICTED_ADMIN'] === 'yes')) {?>
+    <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['RESTRICTED_ADMIN'] === 'yes')) {?>
       <!-- Hide delete buttons-->
     <? } else { ?>
       <div class="actions-panel display-inline-block" key-action="js">

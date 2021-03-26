@@ -86,7 +86,7 @@ fi
 
 # Logging
 if [ "$quiet" != 'yes' ]; then
-    $BIN/v-log-action "$user" "Info" "Mail" "Webmail access disabled (Domain: $domain)."
+    $BIN/v-log-action "$user" "Info" "Mail" "Webmail client access disabled (Domain: $domain)."
 fi
 log_event "$OK" "$ARGUMENTS"
 

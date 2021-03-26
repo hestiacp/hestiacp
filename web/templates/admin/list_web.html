@@ -140,7 +140,7 @@ sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-dis
               <input id="check<?=$i?>" class="ch-toggle" type="checkbox" title="<?=_('Select')?>" name="domain[]" value="<?=$key?>">
           </div>
           <div class="clearfix l-unit__stat-col--left wide-4 truncate">
-            <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') || ($data[$key]['SUSPENDED'] == 'yes')) {?>
+            <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['RESTRICTED_ADMIN'] === 'yes') || ($data[$key]['SUSPENDED'] == 'yes')) {?>
               <b><?=$key?></b>
             <? } else { ?>
               <b><a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Domain')?>: <?=$key?>"><?=$key?></a></b>

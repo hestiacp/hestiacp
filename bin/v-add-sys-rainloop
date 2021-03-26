@@ -103,8 +103,6 @@ if [ "$UPDATE" == "no" ]; then
     echo "Forbidden" >  ./data/index.html
 
     # Create database
-    mysql -e "DROP DATABASE rainloop"
-    mysql -e "DROP USER rainloop@localhost"
     mysql -e "CREATE DATABASE rainloop"
     # Mysql available on system
     r=$(generate_password)

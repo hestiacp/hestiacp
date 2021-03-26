@@ -621,6 +621,10 @@ a {
   font-size: 0.85em;
 }
 
+.text-italic {
+  font-style: italic;
+}
+
 .check-label {
   display: inline-block;
   cursor: pointer;
@@ -1911,6 +1915,12 @@ div.l-content > div.l-separator:nth-of-type(4) {
   padding-bottom: 15px;
 }
 
+.body-stats .l-unit__name {
+  margin-left: -42px;
+  margin-top: 12px;
+  color: #606060;
+}
+
 .l-unit__name.small {
   font-size: 16px;
 }
@@ -1956,7 +1966,13 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .l-unit__stats {
   margin-bottom: 10px;
-  margin-left: 12%;
+  margin-left: 15%;
+  border-left: 1px solid transparent !important;
+  border-right: 1px solid transparent !important;
+}
+
+.lang-ar .l-unit__stats {
+  margin-left: 20%;
 }
 
 .l-unit__stats:hover {
@@ -1969,12 +1985,25 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .l-unit__stats table {
   width: 100%;
   table-layout: fixed;
+  margin-top: -54px;
+  margin-left: -20px;
 }
 
 .l-unit__stats td {
-  height: 22px;
-  padding-bottom: 3px;
-  vertical-align: top;
+  height: 32px;
+  padding-bottom: 4px;
+  vertical-align: middle;
+}
+.body-stats .l-unit__stat-col--left {
+  width: 130px;
+}
+
+.l-unit__stat-col.l-unit__stat-col--left.text-right.icon-pad-right.text-italic {
+  width: 180px;
+}
+
+.body-stats .l-unit__stat-col--right {
+  float: right;
 }
 
 .l-unit__stat-col--left a, .l-unit__stat-col--left a:visited {
@@ -2300,25 +2329,33 @@ body.mobile .l-icon-shortcuts {
 }
 
 .l-unit__stat-cols.graph {
-  width: 200px;
+  width: 242px;
 }
 
 .l-unit__stat-cols.tiny {
-  font-size:11px;
-  line-height: 19px;
+  font-size: 12px;
+  line-height: 18px;
 }
 
 .l-percent {
-  border-bottom: 1px dotted #ccc;
-  margin-top: 1px;
-  width: 200px;
+  border-bottom: 3px solid #e6e6e6;
+  margin-top: 2px;
+  width: 242px;
 }
 
 .l-percent__fill {
-  background-color: #aacc0d;
+  background-color: #54e000;
   height: 3px;
   position: relative;
-  bottom: -1px;
+  bottom: -3px;
+}
+
+.statistics-count {
+  min-width: 24px;
+  text-align: right;
+  border-bottom: 1px dotted #ddd;
+  border-right: 1px dotted #ddd;
+  padding-right: 4px;
 }
 
 .to-top {

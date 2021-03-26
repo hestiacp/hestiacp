@@ -62,6 +62,26 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td class="vst-text ">
+                                    <?php print _('Contact');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>" tabindex="3" >
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print _('Email');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_email" id='v_email' value="<?=htmlentities(trim($v_email, "'"))?>" tabindex="5" >
+                                </td>
+                            </tr>
+                            <tr>
                                 <td class="vst-text input-label">
                                     <?php print _('Password');?> / <a href="javascript:randomString();" class="generate" ><?php print _('generate');?></a>
                                 </td>
@@ -82,66 +102,9 @@
                                     </ul>
                                 </td>
                             </tr>
-                            <tr>
-                                <td class="vst-text ">
-                                    <?php print _('Contact');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" size="20" class="vst-input" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>" tabindex="3" >
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text input-label">
-                                    <?php print _('Email');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" size="20" class="vst-input" name="v_email" id='v_email' value="<?=htmlentities(trim($v_email, "'"))?>" tabindex="5" >
-                                </td>
-                            </tr>
                              <tr>
                                 <td class="vst-text input-label">
                                     <label><input type="checkbox" size="20" class="vst-checkbox" name="v_email_notice" id='v_email_notify' value="" tabindex="5" /><?php print _('Send welcome email');?></label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text input-label" name="v_package">
-                                    <?php print _('Package');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <select class="vst-list" name="v_package" tabindex="6" >
-                                        <?php
-                                            foreach ($data as $key => $value) {
-                                                echo "\n\t\t\t\t\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($key)."\"";
-                                                if ((!empty($v_package)) && ( $key == $_POST['v_package'])){
-                                                    echo 'selected' ;
-                                                } else {
-                                                    if ( $key == 'default'){
-                                                        echo 'selected' ;
-                                                    }
-                                                }
-                                                echo ">".htmlentities($key)."</option>\n";
-                                            }
-                                        ?>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text input-label">
-                                    <?php print _('Role');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <select class="vst-list" name="v_role">
-                                        <option value="user"><?php print _('User');?>
-                                        <option value="admin" <?php if($v_role == "admin" ){ echo "selected"; } ?> ><?php print _('Administrator');?>
-                                    </select>
                                 </td>
                             </tr>
                             <tr>
@@ -164,6 +127,43 @@
                                                     }
                                                 }
                                                 echo ">".htmlentities($value)."</option>\n";
+                                            }
+                                        ?>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print _('Role');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_role">
+                                        <option value="user"><?php print _('User');?>
+                                        <option value="admin" <?php if($v_role == "admin" ){ echo "selected"; } ?> ><?php print _('Administrator');?>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label" name="v_package">
+                                    <?php print _('Package');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_package" tabindex="6" >
+                                        <?php
+                                            foreach ($data as $key => $value) {
+                                                echo "\n\t\t\t\t\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($key)."\"";
+                                                if ((!empty($v_package)) && ( $key == $_POST['v_package'])){
+                                                    echo 'selected' ;
+                                                } else {
+                                                    if ( $key == 'default'){
+                                                        echo 'selected' ;
+                                                    }
+                                                }
+                                                echo ">".htmlentities($key)."</option>\n";
                                             }
                                         ?>
                                     </select>

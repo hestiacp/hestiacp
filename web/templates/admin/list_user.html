@@ -155,7 +155,13 @@ sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DI
                       </div>
               </div>
               <!-- END QUICK ACTION TOOLBAR AREA -->
-              <div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['PACKAGE']?></b></div>
+              <div class="clearfix l-unit__stat-col--left text-center"><b>
+                <? if ($data[$key]['PACKAGE'] === 'default' ){?>
+                  <?=$data[$key]['PACKAGE']?>
+                <?} else {?>
+                  <a href="/edit/package/?package=<?=$data[$key]['PACKAGE']?>&token=<?=$_SESSION['token']?>" title="<?=_('Edit Package')?>"><?=$data[$key]['PACKAGE']?></a>
+                <?}?>
+                </b></div>
               <div class="clearfix l-unit__stat-col--left text-center super-compact"><?=$data[$key]['IP_OWNED']?></div>
               <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
               <div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_BANDWIDTH'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_BANDWIDTH'])?></span></div>

@@ -68,7 +68,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>" tabindex="3" >
+                                    <input type="text" size="20" class="vst-input" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>" tabindex="2" >
                                 </td>
                             </tr>
                             <tr>
@@ -78,7 +78,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_email" id='v_email' value="<?=htmlentities(trim($v_email, "'"))?>" tabindex="5" >
+                                    <input type="text" size="20" class="vst-input" name="v_email" id='v_email' value="<?=htmlentities(trim($v_email, "'"))?>" tabindex="3" >
                                 </td>
                             </tr>
                             <tr>
@@ -88,7 +88,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>" tabindex="2" /><br />
+                                    <input type="text" size="20" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>" tabindex="4" /><br />
                                     <meter max="4" id="meter"></meter>
                                 </td>
                             </tr>
@@ -114,7 +114,7 @@
                             </tr>                        
                             <tr>
                                 <td>
-                                    <select class="vst-list" name="v_language" tabindex="7" >
+                                    <select class="vst-list" name="v_language" tabindex="6" >
                                         <?php
                                             foreach ($languages as $key => $value) {
                                                 echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($key)."\"";
@@ -139,7 +139,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <select class="vst-list" name="v_role">
+                                    <select class="vst-list" name="v_role" tabindex="7">
                                         <option value="user"><?php print _('User');?>
                                         <option value="admin" <?php if($v_role == "admin" ){ echo "selected"; } ?> ><?php print _('Administrator');?>
                                     </select>
@@ -152,7 +152,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <select class="vst-list" name="v_package" tabindex="6" >
+                                    <select class="vst-list" name="v_package" tabindex="8">
                                         <?php
                                             foreach ($data as $key => $value) {
                                                 echo "\n\t\t\t\t\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($key)."\"";

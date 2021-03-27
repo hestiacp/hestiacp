@@ -3672,6 +3672,11 @@ form#vstobjects.suspended {
   max-width: 140px;
 }
 
+.admin-warning-button {
+  padding-left: 59px !important;
+  padding-right: 59px !important;
+}
+
 .float-left {
   float: left;
 }
@@ -4062,6 +4067,7 @@ form#vstobjects.suspended {
 .lang-es .userlist-email {
   width: 270px;
 }
+
 
 @media screen and (max-width: 950px) {
   .helper-container {

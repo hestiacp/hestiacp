@@ -616,6 +616,8 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
         cp -f $tmpdir/mail/$domain/$backup_system/$domain.conf $USER_DATA/mail/
                
         domain_idn=$domain
+        format_domain_idn
+        
         if [ ! -d "$HOMEDIR/$user/mail/$domain_idn" ]; then
             mkdir $HOMEDIR/$user/mail/$domain_idn
         fi

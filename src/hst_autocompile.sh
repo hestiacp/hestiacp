@@ -589,6 +589,10 @@ if [ "$HESTIA_B" = true ]; then
 
     # Set permissions
     find $BUILD_DIR_HESTIA/usr/local/hestia/ -type f -exec chmod -x {} \;
+    
+    # Allow send email via /usr/local/hestia/web/inc/mail-wrapper.php via cli
+    chmod +x $BUILD_DIR_HESTIA/usr/local/hestia/web/inc/mail-wrapper.php
+    # Allow the executable to be executed
     chmod +x $BUILD_DIR_HESTIA/usr/local/hestia/bin/*
     chown -R root:root $BUILD_DIR_HESTIA
 

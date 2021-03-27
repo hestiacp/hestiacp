@@ -4,7 +4,9 @@
             <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/web/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" title="<?=_('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save')?></a>
+            <? if (($user == 'admin') && (($_GET['accept'] === "true")) || ($user !== "admin"))  {?>
+                <a href="#" class="ui-button" title="<?=_('Save')?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save')?></a>
+            <?}?>
           </div>
         </div>
       </div>
@@ -51,57 +53,71 @@
                                         }
                                     ?>
                                 </span>
-                                <?php if ($user == 'admin') { ?>
+                            </td>
+                        </tr>
+                        <? if (($user == 'admin') && (($_GET['accept'] !== "true")))  {?>
+                        <tr>
+                            <td class="step-top">
                                 <span class="alert alert-danger alert-with-icon">
                                     <i class="fas fa-exclamation"></i>
                                     <?=_('Avoid adding web domains on admin account')?>
                                 </span>
-                                <?php } ?>
                             </td>
                         </tr>
-                        <tr>
-                            <td class="vst-text step-top">
-                                <?php print _('Domain');?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input type="text" size="20" class="vst-input" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="vst-text input-label">
-                                <?php print _('IP address');?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <select class="vst-list" name="v_ip">
-                                    <?php
-                                        foreach ($ips as $ip => $value) {
-                                            $display_ip = htmlentities(empty($value['NAT']) ? $ip : "{$value['NAT']}");
-                                            $ip_selected = (!empty($v_ip) && $ip == $_POST['v_ip']) ? 'selected' : '';
-                                            echo "\t\t\t\t<option value=\"{$ip}\" {$ip_selected}>{$display_ip}</option>\n";
-                                        }
-                                    ?>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr><td class="input-label"></td></tr>
-                        <?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?>	
-                            <?php if($panel[$user]['DNS_DOMAINS'] != "0") { ?><tr>
-                                <td class="vst-text input-label">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_dns" <?php if (empty($v_dns)&&$panel[$user]['DNS_DOMAINS'] != "0") ?>><?php print _('DNS Support');?></label>
-                                </td>
-                            </tr><?php } ?>
                         <?php } ?>
-                        <?php if ((isset($_SESSION['IMAP_SYSTEM'])) && (!empty($_SESSION['IMAP_SYSTEM']))) {?>		
-                            <?php if($panel[$user]['MAIL_DOMAINS'] != "0") { ?><tr>
-                                <td class="vst-text input-label">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_mail" <?php if (empty($v_mail)&&$panel[$user]['MAIL_DOMAINS'] != "0") ?>><?php print _('Mail Support');?></label>
+                        <? if (($user == 'admin') && (empty($_GET['accept']))) {?>
+                            <tr>
+                                <td class="step-top">
+                                    <span><a href="/add/user/" class="vst-advanced admin-warning-button"><?=_('Add User')?></a></span>
+                                    <span><a href="/add/web/?accept=true" class="vst-advanced button danger admin-warning-button"><?=_('Continue')?></a> </span>
                                 </td>
-                            </tr><?php } ?>
-                        <?php } ?>
+                            </tr>
+                        <? } ?>
+                        <? if (($user == 'admin') && (($_GET['accept'] === "true")) || ($user !== "admin"))  {?>
+                            <tr>
+                                <td class="vst-text step-top">
+                                    <?php print _('Domain');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print _('IP address');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_ip">
+                                        <?php
+                                            foreach ($ips as $ip => $value) {
+                                                $display_ip = htmlentities(empty($value['NAT']) ? $ip : "{$value['NAT']}");
+                                                $ip_selected = (!empty($v_ip) && $ip == $_POST['v_ip']) ? 'selected' : '';
+                                                echo "\t\t\t\t<option value=\"{$ip}\" {$ip_selected}>{$display_ip}</option>\n";
+                                            }
+                                        ?>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr><td class="input-label"></td></tr>
+                            <?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?>	
+                                <?php if($panel[$user]['DNS_DOMAINS'] != "0") { ?><tr>
+                                    <td class="vst-text input-label">
+                                        <label><input type="checkbox" size="20" class="vst-checkbox" name="v_dns" <?php if (empty($v_dns)&&$panel[$user]['DNS_DOMAINS'] != "0") ?>><?php print _('DNS Support');?></label>
+                                    </td>
+                                </tr><?php } ?>
+                            <?php } ?>
+                            <?php if ((isset($_SESSION['IMAP_SYSTEM'])) && (!empty($_SESSION['IMAP_SYSTEM']))) {?>		
+                                <?php if($panel[$user]['MAIL_DOMAINS'] != "0") { ?><tr>
+                                    <td class="vst-text input-label">
+                                        <label><input type="checkbox" size="20" class="vst-checkbox" name="v_mail" <?php if (empty($v_mail)&&$panel[$user]['MAIL_DOMAINS'] != "0") ?>><?php print _('Mail Support');?></label>
+                                    </td>
+                                </tr><?php } ?>
+                            <?php } ?>
+                        <? } ?>
                         <!--
                         <tr>
                             <td class="step-top vst-text" style="/*padding: 32px 0 20px 0;*/">
@@ -110,7 +126,7 @@
                         </tr>
                         -->
                     </table>
-                    <table class="data-col2" width="600px" style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
+                    <table class="data-col2" width="600px" style="display: none;">
                         <tr>
                             <td class="vst-text input-label">
                                 <?php print _('Aliases');?>

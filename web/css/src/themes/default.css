@@ -621,6 +621,10 @@ a {
   font-size: 0.85em;
 }
 
+.text-italic {
+  font-style: italic;
+}
+
 .check-label {
   display: inline-block;
   cursor: pointer;
@@ -1911,6 +1915,12 @@ div.l-content > div.l-separator:nth-of-type(4) {
   padding-bottom: 15px;
 }
 
+.body-stats .l-unit__name {
+  margin-left: -42px;
+  margin-top: 12px;
+  color: #606060;
+}
+
 .l-unit__name.small {
   font-size: 16px;
 }
@@ -1956,7 +1966,13 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .l-unit__stats {
   margin-bottom: 10px;
-  margin-left: 12%;
+  margin-left: 15%;
+  border-left: 1px solid transparent !important;
+  border-right: 1px solid transparent !important;
+}
+
+.lang-ar .l-unit__stats {
+  margin-left: 20%;
 }
 
 .l-unit__stats:hover {
@@ -1969,12 +1985,25 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .l-unit__stats table {
   width: 100%;
   table-layout: fixed;
+  margin-top: -54px;
+  margin-left: -20px;
 }
 
 .l-unit__stats td {
-  height: 22px;
-  padding-bottom: 3px;
-  vertical-align: top;
+  height: 32px;
+  padding-bottom: 4px;
+  vertical-align: middle;
+}
+.body-stats .l-unit__stat-col--left {
+  width: 130px;
+}
+
+.l-unit__stat-col.l-unit__stat-col--left.text-right.icon-pad-right.text-italic {
+  width: 180px;
+}
+
+.body-stats .l-unit__stat-col--right {
+  float: right;
 }
 
 .l-unit__stat-col--left a, .l-unit__stat-col--left a:visited {
@@ -2300,25 +2329,33 @@ body.mobile .l-icon-shortcuts {
 }
 
 .l-unit__stat-cols.graph {
-  width: 200px;
+  width: 242px;
 }
 
 .l-unit__stat-cols.tiny {
-  font-size:11px;
-  line-height: 19px;
+  font-size: 12px;
+  line-height: 18px;
 }
 
 .l-percent {
-  border-bottom: 1px dotted #ccc;
-  margin-top: 1px;
-  width: 200px;
+  border-bottom: 3px solid #e6e6e6;
+  margin-top: 2px;
+  width: 242px;
 }
 
 .l-percent__fill {
-  background-color: #aacc0d;
+  background-color: #54e000;
   height: 3px;
   position: relative;
-  bottom: -1px;
+  bottom: -3px;
+}
+
+.statistics-count {
+  min-width: 24px;
+  text-align: right;
+  border-bottom: 1px dotted #ddd;
+  border-right: 1px dotted #ddd;
+  padding-right: 4px;
 }
 
 .to-top {
@@ -2519,7 +2556,7 @@ body.mobile .l-icon-shortcuts {
 .data td {
   color: #4b4b4b;
   font-size: 0.85rem;
-  padding-bottom: 6px;
+  padding-bottom: 4px;
   font-weight: 600;
 }
 
@@ -2599,7 +2636,7 @@ label:hover {
 
 .vst-input:focus:disabled,
 .vst-textinput:disabled {
-  border-color: #f1f1f1;
+  border-color: #dedede;
   background-color: #f1f1f1;
 }
 
@@ -3158,7 +3195,7 @@ a.button.cancel {
   color: #777;
   border: 1px solid #d9d9d9;
   padding: 6px 6px 6px 18px;
-  margin-top: 102px;
+  margin-top: 97px;
   min-width: 320px;
   overflow: hidden;
   box-shadow: 0px 1px 4px rgba(0,0,0,0.15);
@@ -3193,8 +3230,8 @@ a.button.cancel {
 }
 
 .additional-info {
-    margin-top: 30px;
-    width: 547px;
+  margin-top: 12px;
+  width: 400px;
 }
 
 .additional-info td {
@@ -3202,10 +3239,11 @@ a.button.cancel {
     height: 20px;
     font-weight: normal;
     line-height: 0.95rem;
+    min-width: 70px
 }
 
 .additional-info td.details {
-    padding-left: 20px;
+    padding-left: 20px !important;
 }
 
 :focus {outline:none;}
@@ -3634,6 +3672,11 @@ form#vstobjects.suspended {
   max-width: 140px;
 }
 
+.admin-warning-button {
+  padding-left: 59px !important;
+  padding-right: 59px !important;
+}
+
 .float-left {
   float: left;
 }
@@ -3864,7 +3907,7 @@ form#vstobjects.suspended {
 .helper-container {
   float: right;
   margin-bottom: -450px;
-  margin-top: 420px;
+  margin-top: 410px;
   margin-right: 22px;
   padding-top: 0px;
   width: 600px;
@@ -4024,6 +4067,7 @@ form#vstobjects.suspended {
 .lang-es .userlist-email {
   width: 270px;
 }
+
 
 @media screen and (max-width: 950px) {
   .helper-container {

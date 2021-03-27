@@ -7,8 +7,14 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Data
 if (($_SESSION['userContext'] === "admin") && ($_GET['user'])) {
+    // Check token
+    if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
+        header('location: /login/');
+        exit();
+    }
     $user=escapeshellarg($_GET['user']);
 }
+
 exec (HESTIA_CMD."v-list-user-log $user json", $output, $return_var);
 check_error($return_var);
 $data = json_decode(implode('', $output), true);

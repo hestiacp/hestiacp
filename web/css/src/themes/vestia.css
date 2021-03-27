@@ -177,15 +177,15 @@ b, strong {
 }
 
 .ui-button.danger:hover, .button.danger:hover {
-    background: #fcd3cf !important;
+    background: none !important;
     color: #F4301A !important;
-    border: 1px solid #F27E71 !important;
+    border: none !important
 }
   
 .ui-button.danger:active, .button.danger:active, .ui-button.danger:focus, .button.danger:focus {
-    background: #a91200 !important; 
-    color: #fff !important;
-    border: 1px solid #F4301A !important;
+    background: none !important;
+    color: #a91200 !important;
+    border: none !important;
 }
 
 .ui-dialog .ui-dialog-buttonpane button:nth-of-type(2) {

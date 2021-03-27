@@ -1506,6 +1506,14 @@ div.l-content > div.l-separator:nth-of-type(4) {
   padding-right: 6px;
 }
 
+.body-user .l-unit.animated.fadeIn {
+  line-height: 2rem;
+}
+
+.body-user .actions-panel {
+  line-height: 2rem;
+}
+
 .subtitle {
   color: #cc3366;
   font-size: 0.8rem;

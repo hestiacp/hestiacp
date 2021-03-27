@@ -232,7 +232,7 @@
                                         <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print _('Proxy Server') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['PROXY_SYSTEM'] ?>/"><?=_('configure')?></a>
+                                                <?php print _('Proxy Server') ?> <a href="/edit/server/<? echo $_SESSION['PROXY_SYSTEM'] ?>/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -244,7 +244,7 @@
                                         <?php } ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print _('Web Server') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['WEB_SYSTEM'] ?>/"><?=_('configure')?></a>
+                                                <?php print _('Web Server') ?> <a href="/edit/server/<? echo $_SESSION['WEB_SYSTEM'] ?>/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -256,7 +256,7 @@
                                         <?php if (!empty($_SESSION['WEB_BACKEND'])) { ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print _('Backend Server') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['WEB_BACKEND'] ?>/"><?=_('configure')?></a>
+                                                <?php print _('Backend Server') ?> <a href="/edit/server/<? echo $_SESSION['WEB_BACKEND'] ?>/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -331,7 +331,7 @@
                                     <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="dns">
                                         <tr>
                                             <td class="vst-text step-top">
-                                                <?php print _('DNS Server') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['DNS_SYSTEM'] ?>/"><?=_('configure')?></a>
+                                                <?php print _('DNS Server') ?> <a href="/edit/server/<? echo $_SESSION['DNS_SYSTEM'] ?>/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -389,7 +389,7 @@
                                     <table style="display:<?php if (empty($v_mail_adv)) echo 'none';?> ;" id="mail">
                                         <tr>
                                             <td class="vst-text step-top">
-                                                <?php print _('Mail Server') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['MAIL_SYSTEM'] ?>/"><?=_('configure')?></a>
+                                                <?php print _('Mail Server') ?> <a href="/edit/server/<? echo $_SESSION['MAIL_SYSTEM'] ?>/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -401,7 +401,7 @@
                                         <?php if (!empty($_SESSION['ANTIVIRUS_SYSTEM'])) { ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print _('Antivirus') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['ANTIVIRUS_SYSTEM'] ?>/"><?=_('configure')?></a>
+                                                <?php print _('Antivirus') ?> <a href="/edit/server/<? echo $_SESSION['ANTIVIRUS_SYSTEM'] ?>/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -414,7 +414,7 @@
                                         <?php if (!empty($_SESSION['ANTISPAM_SYSTEM'])) { ?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print _('AntiSpam') ?> / <a class="generate" href="/edit/server/<? echo $_SESSION['ANTISPAM_SYSTEM'] ?>/"><?=_('configure')?></a>
+                                                <?php print _('AntiSpam') ?> <a href="/edit/server/<? echo $_SESSION['ANTISPAM_SYSTEM'] ?>/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -511,7 +511,7 @@
                                     <table style="display:<?php if (empty($v_db_adv)) echo 'none';?> ;" id="db">
                                         <tr>
                                             <td class="vst-text step-top">
-                                                <?php print _('MySQL Support');?> / <a class="generate" href="/edit/server/mysql/"><?=_('configure')?></a>
+                                                <?php print _('MySQL Support');?> <a href="/edit/server/mysql/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -604,7 +604,7 @@
                                         <?php }} ?>
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print _('PostgreSQL Support');?> / <a class="generate" href="/edit/server/postgresql/"><?=_('configure')?></a>
+                                                <?php print _('PostgreSQL Support');?> <a href="/edit/server/postgresql/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a>
                                             </td>
                                         </tr>
                                         <tr>

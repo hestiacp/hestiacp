@@ -1,7 +1,7 @@
 <?php
 error_reporting(NULL);
 ob_start();
-$TAB = 'USER';
+$TAB = 'LOG';
 
 // Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");

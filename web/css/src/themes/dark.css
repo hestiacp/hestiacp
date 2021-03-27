@@ -1513,6 +1513,11 @@ form#vstobjects.suspended {
   color: #fff !important;
 }
 
+.admin-warning-button {
+    padding-left: 65px!important;
+    padding-right: 65px!important;
+}
+
 @media screen and (max-width: 950px) {
   .helper-container {
     display: none;

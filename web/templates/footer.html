@@ -1,5 +1,30 @@
   </div>
-
+  <? if (($_SESSION['RELEASE_BRANCH'] !== "release") && ($_SESSION['RELEASE_BRANCH'] !== "beta")) { ?>
+    <div class="footer-banner alpha" id="banner">
+      <div>
+        <b>Pre-release development build for testing purposes only.</b> Please report bugs or issues to our development team on <a href="https://github.com/hestiacp/hestiacp/"><i class="fab fa-github icon-large icon-pad-right"></i>GitHub</a>.<br> Hestia Control Panel <b>v<?php echo $_SESSION['VERSION']; ?></b> (code branch <b><?php echo $_SESSION['RELEASE_BRANCH']; ?></b>)
+      </div>
+      <div style="margin-top: 4px;"><a href="javascript:elementHideShow('banner');">Hide</a></div>
+    </div>
+  <?}?>
+  <? if ($_SESSION['RELEASE_BRANCH'] === "beta") { ?>
+    <div class="footer-banner beta" id="banner">
+      <div>
+        <b>Thank you for testing <?=_('Hestia Control Panel')?> v<?=$_SESSION['VERSION']?>!</b><br> Please report any issues that you encounter to our development team on <a href="https://github.com/hestiacp/hestiacp/"><i class="fab fa-github icon-large icon-pad-right"></i>GitHub</a>.
+      </div>
+      <div style="margin-top: 4px;"><a href="javascript:elementHideShow('banner');">Hide</a></div>
+    </div>
+  <?}?>
+  <? if ($_SESSION['user'] === 'admin') {?>
+    <? if ($_SESSION['updateAvailableNotify'] === "yes") { ?>
+      <div class="footer-banner updates" id="banner">
+        <div>
+          <b>New updates are available!</b> To upgrade your server now, run <span style="font-family:'Courier New', Courier, monospace">apt update && apt upgrade</span> from a shell session.
+        </div>
+        <div style="margin-top: 4px;"></div><a href="javascript:elementHideShow('banner');">Hide</a></div>
+      </div>
+    <?}?>
+  <?}?>
   <div title="<?=_('Confirmation')?>" class="confirmation-text-redirect hidden">
     <p class="confirmation"><?=_('LEAVE_PAGE_CONFIRMATION')?></p>
   </div>

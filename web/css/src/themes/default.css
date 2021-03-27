@@ -839,7 +839,7 @@ a {
   padding: 4rem;
 }
 
-.notification-container .empty .status-icon {
+.notification-container .empty . {
   color: #54a6e5;
 }
 
@@ -3675,6 +3675,71 @@ form#vstobjects.suspended {
 .admin-warning-button {
   padding-left: 59px !important;
   padding-right: 59px !important;
+}
+
+.footer-banner {
+  width: 100%;
+  text-align:center;
+  border-top: 1px solid rgba(255,255,255,0.25);
+  box-shadow: 0px -2px 4px rgb(0 0 0 / 40%);
+  font-size: 0.75rem;
+  padding: 10px;
+  position: fixed;
+  bottom: 0px;
+}
+
+.footer-banner b, .footer-banner strong {
+  color: unset;
+}
+
+.footer-banner a {
+  font-weight: 500;
+  color: #fff;
+}
+
+.footer-banner a:hover {
+  color: #fff;
+}
+
+.footer-banner a:hover {
+  text-decoration: underline;
+}
+
+.footer-banner.alpha {
+  background-color: #222;
+  color: #fff;
+}
+
+.footer-banner.alpha a {
+  color: #fff;
+}
+
+.footer-banner.alpha a:hover {
+  color: #fff;
+}
+
+.footer-banner.beta {
+  background-color: #eaeaea;
+  color: #404040;
+}
+
+.footer-banner.beta a {
+  color: #404040;
+}
+
+.footer-banner.developer {
+  background-color: yellow;
+  color: #000;
+}
+
+.footer-banner.developer a {
+  font-weight: 500;
+  color: #000;
+}
+
+.footer-banner.updates {
+  background-color: green;
+  color: #fff;
 }
 
 .float-left {

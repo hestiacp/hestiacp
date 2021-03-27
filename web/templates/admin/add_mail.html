@@ -64,8 +64,8 @@
                                 <? if (($user == 'admin') && (empty($_GET['accept']))) {?>
                                     <tr>
                                         <td class="step-top">
-                                            <span><a href="/add/user/" class="vst-advanced" style="padding-left: 67px !important;padding-right: 67px !important;"><?=_('Add User')?></a></span>
-                                            <span><a href="/add/mail/?accept=true" class="vst-advanced" style="padding-left: 67px !important;padding-right: 67px !important;"><?=_('Continue')?></a> </span>
+                                            <span><a href="/add/user/" class="vst-advanced admin-warning-button"><?=_('Add User')?></a></span>
+                                            <span><a href="/add/mail/?accept=true" class="vst-advanced admin-warning-button"><?=_('Continue')?></a> </span>
                                         </td>
                                     </tr>
                                 <? } ?>

@@ -12,7 +12,7 @@
                 <!-- Do not show delete button for currently logged in user-->
             <?} else {?>
             <a href="/login/?loginas=<?=$v_username?>&token=<?=$_SESSION['token']?>" id="btn-create" class="ui-button cancel" dir="ltr" title="<?=_('login as')?>"><i class="fas fa-sign-in-alt status-icon maroon"></i><?=_('login as')?></a>
-            <div class="actions-panel display-inline-block" key-action="js">
+            <div class="display-inline-block" key-action="js">
                 <a class="data-controls do_delete ui-button danger cancel">
                   <i class="do_delete fas fa-times-circle status-icon red"></i>
                   <?=_('Delete')?>

@@ -521,6 +521,10 @@ td.vst-text.input-label.step-top.advanced-options .fas {
     display: none !important;
 }
 
+label {
+    font-size: 0.8rem;
+}
+
 a#btn-back {
     color: #30659d !important;
     background: none !important;

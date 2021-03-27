@@ -10,8 +10,8 @@
               <td class="l-sort-toolbar__search-box">
                 <form action="/search/" method="get">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-                  <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
-                  <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value=""><i class="fas fa-search"></i></button>
+                  <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search')?>" />
+                  <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search')?>"><i class="fas fa-search"></i></button>
                 </form>
               </td>
               <td>
@@ -23,7 +23,7 @@
                     <option value="delete"><?php print _('delete') ?></option>
                   </select>
                 </div>
-                <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
+                <button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected')?>"><i class="fas fa-arrow-right"></i></button>
               </td>
             </tr>
           </table>
@@ -38,7 +38,7 @@
             <div class="l-unit__col l-unit__col--right">
               <div>
                   <div class="clearfix l-unit__stat-col--left super-compact">
-                      <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
+                      <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all')?>" onChange="checkedAll('objects');">
                   </div>
                   <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print _('File Name');?></b></div>
                   <div class="clearfix l-unit__stat-col--left compact-4 text-right"><b>&nbsp;</b></div>
@@ -72,7 +72,7 @@
             <div class="l-unit__col l-unit__col--right">
               <div>
                   <div class="clearfix l-unit__stat-col--left super-compact">
-                    <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="backup[]" value="<?php echo $key ?>">
+                    <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" title="<?=_('Select')?>" name="backup[]" value="<?php echo $key ?>">
                   </div>
                   <div class="clearfix l-unit__stat-col--left wide-3 truncate"><b><a href="/list/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('restore')?>"><?=$key?></a></b></div>
                   <!-- START QUICK ACTION TOOLBAR AREA -->

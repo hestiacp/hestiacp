@@ -16,7 +16,10 @@
 format=${1-shell}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/main.sh
+source $HESTIA/func/ip.sh
 
 # JSON list function
 json_list() {

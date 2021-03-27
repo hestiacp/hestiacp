@@ -33,6 +33,13 @@ if [ -z "$BACKUP" ]; then
 fi
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/usr/local/hestia/func/backup.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/func/main.sh
 source $HESTIA/func/backup.sh
 source $HESTIA/func/domain.sh
@@ -505,6 +512,7 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
 
         # Unpacking domain container
         tar xf $BACKUP/$backup -C $tmpdir ./mail/$domain
+        
         if [ "$?" -ne 0 ]; then
             rm -rf $tmpdir
             error="Can't unpack $domain mail container"
@@ -598,10 +606,11 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
        
         domain_idn=$domain
         format_domain_idn
-
+        
         # Restoring emails
         if [ $backup_mode = 'zstd' ]; then    
             if [ -e "$tmpdir/mail/$domain/accounts.tar.zst" ]; then
+                # Current Hestia store email in the $HOMEDIR/$user/mail/$domain_idn
                 chmod u+w "$HOMEDIR/$user/mail/$domain_idn"
                 $BIN/v-extract-fs-archive "$user" "$tmpdir/mail/$domain/accounts.tar.zst" "$HOMEDIR/$user/mail/$domain_idn/"
                 if [ "$?" -ne 0 ]; then
@@ -634,7 +643,7 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
             fi
         fi
         # Chowning mail conf files to exim user
-        find $HOMEDIR/$user/conf/mail/$domain_idn -user root \
+        find $HOMEDIR/$user/conf/mail/$domain -user root \
             -exec chown $exim_user {} \;
             
     done

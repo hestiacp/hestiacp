@@ -1,11 +1,12 @@
 #!/bin/bash
-# info: Empty nginx cache
-# options: USER DOMAIN MODE
+# info: Remove FastCGI nginx support
+# options: USER DOMAIN [RESTART]
 # labels: hestia web
 #
-# example: v-purge-web-domain-nginx-cache user domain.tld proxy
+# example: v-delete-fastcgi-cache user domain.tld
 #
-# The function clears Nginx cache.
+# The function enables FastCGI cache for nginx
+
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -14,9 +15,12 @@
 # Argument definition
 user=$1
 domain=$2
+restart=$3
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 #----------------------------------------------------------#
@@ -26,9 +30,7 @@ source $HESTIA/conf/hestia.conf
 check_args '2' "$#" 'USER DOMAIN'
 is_format_valid 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
-is_object_unsuspended 'web' 'DOMAIN' "$domain"
 is_object_valid 'web' 'DOMAIN' "$domain" "$FASTCGI_CACHE"
 
 # Perform verification if read-only mode is enabled
@@ -42,26 +44,44 @@ check_hestia_demo_mode
 # Load domain data
 parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 
-# Empty Fast CGI Cache 
-if [ -d /var/cache/nginx/php-fpm/$domain ]; then
-    rm -fr /var/cache/nginx/php-fpm/$domain/*
+# Remove FastCGI cache configuration
+if [ -f $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.fastcgi_cache.conf ]; then
+    rm -rf $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.fastcgi_cache.conf
 fi
-# Empty Proxy Cache
-if [ -d /var/cache/nginx/$domain ]; then
-    rm -fr /var/cache/nginx/$domain/*
+
+conf='/etc/nginx/conf.d/fastcgi_cache_pool.conf'
+if [ -f "$conf" ]; then
+    sed -i "/fastcgi_cache $domain;/d" $conf
+    if [ ! -s "$conf" ]; then
+        rm -rf $conf
+    fi
 fi
+
+# Delete FastCGI cache folder
+if [ -d /var/cache/nginx/micro/$domain ]; then
+    rm -rf /var/cache/nginx/micro/$domain
+fi
+
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-# Restart services if requested
+if [ -z "$FASTCGI_CACHE" ]; then
+    add_object_key "web" 'DOMAIN' "$domain" 'FASTCGI_CACHE' 'ALIAS'
+fi
+
+# Set FASTCGI flag to disabled
+update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_CACHE' ''
+
+# Restart web server
 if [ ! -z "$restart" ]; then
     $BIN/v-restart-web
-    check_result $? "Web restart failed" >/dev/null
+    check_result $? "Web server restart failed" > /dev/null
 fi
 
 # Logging
-log_history "purged nginx cache for $domain"
+log_history "Disabled FastCGI cache for $domain"
 log_event "$OK" "$ARGUMENTS"
 
 exit

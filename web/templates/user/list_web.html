@@ -19,14 +19,14 @@
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
-              <td class="sort-by">
+              <td class="sort-by" title="<?=_('Sort items');?>">
                 <?=_('sort by');?>: <span><b><?=_('Date')?> <i class="fas fa-sort-amount-down"></i></b></span>
               </td>
               <td class="l-sort-toolbar__search-box">
                 <form action="/search/" method="get">
                   <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-                  <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" />
-                  <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value=""><i class="fas fa-search"></i></button>
+                  <input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search')?>" />
+                  <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search')?>"><i class="fas fa-search"></i></button>
                 </form>
               </td>
               <td>
@@ -40,7 +40,7 @@
                     <option value="delete"><?=_('delete')?></option>
                   </select>
                 </div>
-                <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
+                <button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected')?>"><i class="fas fa-arrow-right"></i></button>
               </td>
             </tr>
           </table>
@@ -54,7 +54,7 @@
         <div class="header table-header">      
             <div class="l-unit__col l-unit__col--right">
                 <div class="clearfix l-unit__stat-col--left super-compact">
-                  <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
+                  <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all')?>" onChange="checkedAll('objects');">
                 </div>
                 <div class="clearfix l-unit__stat-col--left wide-4"><b><?php print _('Domain');?></b></div>
                 <div class="clearfix l-unit__stat-col--left compact-4 text-right"><b>&nbsp;</b></div>
@@ -134,7 +134,7 @@ sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
 sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DISK']?>" sort-star="<? if($_SESSION['WEB'][$key] == 1) echo '1'; else echo '0';?>">
       <div class="l-unit__col l-unit__col--right">
           <div class="clearfix l-unit__stat-col--left super-compact">
-              <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="domain[]" value="<?=$key?>">
+              <input id="check<?=$i?>" class="ch-toggle" type="checkbox" title="<?=_('Select')?>" name="domain[]" value="<?=$key?>">
           </div>
           <div class="clearfix l-unit__stat-col--left wide-4 truncate"><b><a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Domain')?>: <?=$key?>"><?=$key?></a></b></div>
           <!-- START QUICK ACTION TOOLBAR AREA -->
@@ -142,9 +142,9 @@ sort-name="<?=$key?>"  sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-dis
             <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
               <div class="actions-panel clearfix">
                 <? if (!empty($data[$key]['STATS'])) { ?>
-                  <div class="actions-panel__col actions-panel__logs shortcut-w" key-action="href"><a href="http://<?=$key?>/vstats/"  target="_blank" title="<?=_('Statistics')?>"><i class="fas fa-chart-bar status-icon maroon status-icon dim"></i></a></div>
+                  <div class="actions-panel__col actions-panel__logs shortcut-w" key-action="href"><a href="http://<?=$key?>/vstats/" rel="noopener" target="_blank" title="<?=_('Statistics')?>"><i class="fas fa-chart-bar status-icon maroon status-icon dim"></i></a></div>
                 <? } ?>
-                <div class="actions-panel__col actions-panel__view" key-action="href"><a href="http://<?=$key?>/" target="_blank"><i class="fas fa-external-link-square-alt status-icon lightblue status-icon dim"></i></a></div>
+                <div class="actions-panel__col actions-panel__view" key-action="href"><a href="http://<?=$key?>/" target="_blank" rel="noopener"><i class="fas fa-external-link-square-alt status-icon lightblue status-icon dim"></i></a></div>
                 <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Domain')?>" ><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
                 <div class="actions-panel__col actions-panel__logs shortcut-l" key-action="href"><a href="/list/web-log/?domain=<?php echo $key ?>&type=access#" title="<?=_('AccessLog')?>"><i class="fas fa-binoculars status-icon purple status-icon dim"></i></a></div>
                 <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">

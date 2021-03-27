@@ -444,19 +444,22 @@ if( $_POST['v_ssl_forcessl'] != 'no' ){
 }else{
     $v_ssl_forcessl = 'no';
 }
-
+// List user package
+exec (HESTIA_CMD."v-list-user ".$user." json", $output, $return_var);
+$user_config = json_decode(implode('', $output), true);
+unset($output);
 // List web templates and set default values
 exec (HESTIA_CMD."v-list-web-templates json", $output, $return_var);
 $templates = json_decode(implode('', $output), true);
 unset($output);
-$v_template = (!empty($_POST['v_template'])) ? $_POST['v_template'] : $user_config['WEB_TEMPLATE'];
+$v_template = (!empty($_POST['v_template'])) ? $_POST['v_template'] : $user_config[$user]['WEB_TEMPLATE'];
 
 // List backend templates
 if (!empty($_SESSION['WEB_BACKEND'])) {
     exec (HESTIA_CMD."v-list-web-templates-backend json", $output, $return_var);
     $backend_templates = json_decode(implode('', $output), true);
     unset($output);
-    $v_backend_template = (!empty($_POST['v_backend_template'])) ? $_POST['v_backend_template'] : $user_config['BACKEND_TEMPLATE'];
+    $v_backend_template = (!empty($_POST['v_backend_template'])) ? $_POST['v_backend_template'] : $user_config[$user]['BACKEND_TEMPLATE'];
 }
 
 // List proxy templates
@@ -464,7 +467,7 @@ if (!empty($_SESSION['PROXY_SYSTEM'])) {
     exec (HESTIA_CMD."v-list-web-templates-proxy json", $output, $return_var);
     $proxy_templates = json_decode(implode('', $output), true);
     unset($output);
-    $v_proxy_template = (!empty($_POST['v_proxy_template'])) ? $_POST['v_proxy_template'] : $user_config['PROXY_TEMPLATE'];
+    $v_proxy_template = (!empty($_POST['v_proxy_template'])) ? $_POST['v_proxy_template'] : $user_config[$user]['PROXY_TEMPLATE'];
 
 }
 

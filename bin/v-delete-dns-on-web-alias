@@ -15,7 +15,7 @@
 # Argument definition
 user=$1
 domain=$2
-domain_idn=$(idn -t --quiet -a "$2" )
+domain_idn=$2
 dom_alias=$(idn -t --quiet -u "$3" )
 dom_alias=$(echo $dom_alias |sed -e 's/\.*$//g' -e 's/^\.*//g')
 dom_alias=$(echo $dom_alias |tr '[:upper:]' '[:lower:]')
@@ -23,8 +23,11 @@ dom_alias_idn=$(idn -t --quiet -a "$dom_alias" )
 restart="$4"
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting

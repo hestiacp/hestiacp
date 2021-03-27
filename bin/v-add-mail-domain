@@ -14,17 +14,21 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -a "$2" )
+domain=$2
 antispam=${3-yes}
 antivirus=${4-yes}
 dkim=${5-yes}
 dkim_size=${6-1024}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-source $HESTIA/conf/hestia.conf
+# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
+source $HESTIA/conf/hestia.conf
 
 # Define mail user
 if [ "$MAIL_SYSTEM" = 'exim4' ]; then
@@ -36,7 +40,7 @@ fi
 # Additional argument formatting
 format_domain
 format_domain_idn
-
+domain_utf=$(idn -t --quiet -u "$domain_idn")
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -47,7 +51,16 @@ is_format_valid 'user' 'domain' 'antispam' 'antivirus' 'dkim' 'dkim_size'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-is_domain_new 'mail' "$domain"
+
+if [ "$($BIN/v-list-mail-domain $user $domain_utf plain |cut -f 1) " != "$domain" ]; then
+    is_domain_new 'mail' "$domain_utf"
+fi
+if [ "$($BIN/v-list-mail-domain $user $domain_idn plain |cut -f 1) " != "$domain" ]; then
+    is_domain_new 'mail' "$domain_idn"
+else
+    is_domain_new 'mail' "$domain"
+fi
+
 is_package_full 'MAIL_DOMAINS'
 is_dir_symlink $HOMEDIR/$user/mail
 

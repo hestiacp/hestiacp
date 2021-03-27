@@ -1,5 +1,5 @@
 <VirtualHost %ip%:%web_ssl_port%>
-    ServerName %domain%
+    ServerName %domain_idn%
     ServerAlias %alias%
     Alias / /var/lib/roundcube/
     Alias /error/ %home%/%user%/web/%root_domain%/document_errors/

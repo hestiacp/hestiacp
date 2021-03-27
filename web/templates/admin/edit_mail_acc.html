@@ -35,7 +35,7 @@
                         </table>
                     </td>
                     <td class="data-dotted">
-                      <table class="data-col2" width="440px">
+                      <table class="data-col2" width="420px">
                         <tr>
                             <td class="step-top">
                                 <span class="page-title"><?=_('Editing Mail Account')?></span>
@@ -68,7 +68,7 @@
                         </tr>
                         <tr>
                             <td class="vst-text input-type input-label">
-                                <?php print _('Password');?> / <a href="javascript:randomString();" class="generate"><?=_('generate')?></a>
+                                <?php print _('Password');?> <a href="javascript:randomString();" title="<?php print _('generate');?>"><i class="fas fa-sync status-icon green icon-large"></i></a>
                             </td>
                         </tr>
                         <tr>
@@ -79,12 +79,23 @@
                         </tr>
                         <tr>
                             <td class="vst-text">
-                                <?php print _('Your password must have at least');?>
+                                <?php print _('Your password must have at least');?>:
                                 <ul>
                                     <li><?php print _('8 characters long');?></li>
                                     <li><?php print _('1 uppercase & 1 lowercase character');?></li>
                                     <li><?php print _('1 number');?></li>
                                     </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="vst-text input-label">
+                                <?php print _('Send login credentials to email address') ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="text"  class="vst-input" name="v_send_email" value="<?=htmlentities(trim($v_send_email, "'"))?>">
+                                <input type="hidden" name="v_credentials" id="v_credentials">
                             </td>
                         </tr>
                         <tr>
@@ -95,7 +106,7 @@
                         <tr>
                           <td>
                                 <input type="text" size="20" class="vst-input" name="v_quota" value="<? if (!empty($v_quota)) {echo htmlentities(trim($v_quota, "'"));} else { echo "0"; } ?>">
-                                <i class="unlim-trigger fas fa-infinity" id="unlim-quota"></i>
+                                <i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited')?>" id="unlim-quota"></i>
                             </td>
                         </tr>
                         <tr>
@@ -109,18 +120,8 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="vst-text input-type input-label">
-                                <?php print _('Forward to');?> <span class="optional">(<?=_('one or more email addresses')?>)</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <textarea size="20" class="vst-textinput short" name="v_fwd"  id="v_fwd" <?php if($v_blackhole == 'yes') echo "disabled";?>><?=htmlentities(trim($v_fwd, "'"))?></textarea>
-                            </td>
-                        </tr>
-                        <tr>
                             <td class="vst-text input-label">
-                                <label><input type="checkbox" size="20" class="vst-checkbox"  id="v_blackhole" name="v_blackhole" <?php if ($v_blackhole == 'yes') echo "checked=yes" ?>><?php print _('Discard all mail');?></label>
+                                <label><input type="checkbox" size="20" class="vst-checkbox" onclick="javascript:elementHideShow('v-fwd-opt');" id="v_blackhole" name="v_blackhole" <?php if ($v_blackhole == 'yes') echo "checked=yes" ?>><?php print _('Discard all mail');?></label>
                             </td>
                         </tr>
                         <tr <?php if ($v_blackhole == 'yes') echo 'style="display:none"'; ?> id="id_fwd_for">
@@ -149,17 +150,22 @@
                                 </table>
                             </td>
                         </tr>
-                    <tr>
-                        <td class="vst-text input-label">
-                            <?php print _('Send login credentials to email address') ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input type="text"  class="vst-input" name="v_send_email" value="<?=htmlentities(trim($v_send_email, "'"))?>">
-                            <input type="hidden" name="v_credentials" id="v_credentials">
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>
+                                <table id="v-fwd-opt">
+                                    <tr>
+                                        <td class="vst-text input-type input-label">
+                                            <?php print _('Forward to');?> <span class="optional">(<?=_('one or more email addresses')?>)</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <textarea size="20" class="vst-textinput short" name="v_fwd"  id="v_fwd" <?php if($v_blackhole == 'yes') echo "disabled";?>><?=htmlentities(trim($v_fwd, "'"))?></textarea>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
                     </table>
                     <table class="data-col2">
                     </table>

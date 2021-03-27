@@ -28,7 +28,9 @@ KEY_SIZE=4096
 DAYS=365
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 # Json function
@@ -92,9 +94,9 @@ cd $workdir
 openssl genrsa $KEY_SIZE > $domain.key 2>/dev/null
 
 # Generate the CSR
-subj="/C=$country/ST=$state/localityName=$city/O=$org"
-subj="$subj/organizationalUnitName=$org_unit/commonName=$domain_idn"
-subj="$subj/emailAddress=$email"
+subj="/emailAddress=$email/C=$country/ST=$state/L=$city/O=$org"
+subj="$subj/OU=$org_unit/CN=$domain_idn"
+
 if [ -z "$aliases" ]; then
     openssl req -sha256\
         -new \

@@ -14,6 +14,8 @@
 
 [[ -z $HESTIA ]] && HESTIA="/usr/local/hestia"
 
+# Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 new_timestamp

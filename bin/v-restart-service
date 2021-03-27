@@ -17,6 +17,7 @@ service=$1
 restart=$2
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 PATH="$PATH:/usr/local/sbin:/sbin:/usr/sbin:/root/bin"
 

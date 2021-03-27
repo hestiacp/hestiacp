@@ -13,6 +13,7 @@ src_dir=$2
 dst_dir=$3
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 #----------------------------------------------------------#

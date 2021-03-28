@@ -26,9 +26,6 @@ b, strong {
     background: #fafafa !important;
 }
 
-.actions-panel {
-    line-height: inherit !important;
-}
 .l-header {
     box-shadow: none;
     background: #5d5d5d;
@@ -425,13 +422,8 @@ a.vst-text:hover, a.vst-text:hover b,.advanced-options a:hover {
     border-radius: 0px !important;
 }
 
-.userlist-username {
-    line-height: 1.4em !important;
-}
-
 .l-unit__name {
     letter-spacing: 0 !important;
-    
 }
 
 .badge {

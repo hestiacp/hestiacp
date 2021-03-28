@@ -3,7 +3,7 @@
 # Hestia Control Panel - System Health Check Function Library
 
 # Read known configuration keys from $HESTIA/conf/defaults/$system.conf
-function read_kv_config_file () {
+function read_kv_config_file() {
     local system=$1
     while read -r str; do
         echo "$str"
@@ -12,7 +12,7 @@ function read_kv_config_file () {
 }
 
 # Write known configuration keys to $HESTIA/conf/defaults/
-function write_kv_config_file () {
+function write_kv_config_file() {
     # Ensure configuration directory exists
     if [ ! -d "$HESTIA/conf/defaults/" ]; then
         mkdir "$HESTIA/conf/defaults/"
@@ -30,8 +30,17 @@ function write_kv_config_file () {
     done
 }
 
+# Sanitize configuration input
+function sanitize_config_file() {
+    local system=$1
+    known_keys=$(read_kv_config_file "$system")
+    for key in $known_keys; do
+        unset $key
+    done
+}
+
 # Update list of known keys for web.conf files
-function syshealth_update_web_config_format () {
+function syshealth_update_web_config_format() {
 
     # WEB DOMAINS
     # Create array of known keys in configuration file
@@ -43,7 +52,7 @@ function syshealth_update_web_config_format () {
 }
 
 # Update list of known keys for dns.conf files
-function syshealth_update_dns_config_format () {
+function syshealth_update_dns_config_format() {
 
     # DNS DOMAINS
     # Create array of known keys in configuration file
@@ -62,7 +71,7 @@ function syshealth_update_dns_config_format () {
 }
 
 # Update list of known keys for mail.conf files
-function syshealth_update_mail_config_format () {
+function syshealth_update_mail_config_format() {
 
     # MAIL DOMAINS
     # Create array of known keys in configuration file
@@ -81,7 +90,7 @@ function syshealth_update_mail_config_format () {
 }
 
 # Update list of known keys for user.conf files
-function syshealth_update_user_config_format () {
+function syshealth_update_user_config_format() {
 
     # USER CONFIGURATION
     # Create array of known keys in configuration file
@@ -101,7 +110,7 @@ function syshealth_update_user_config_format () {
 }
 
 # Update list of known keys for db.conf files
-function syshealth_update_database_config_format () {
+function syshealth_update_database_config_format() {
 
     # DATABASE CONFIGURATION
     # Create array of known keys in configuration file
@@ -113,7 +122,7 @@ function syshealth_update_database_config_format () {
 }
 
 # Update list of known keys for ip.conf files
-function syshealth_update_ip_config_format () {
+function syshealth_update_ip_config_format() {
 
     # IP ADDRESS
     # Create array of known keys in configuration file
@@ -124,18 +133,24 @@ function syshealth_update_ip_config_format () {
     unset known_keys
 }
 
-# Sanitize web domain configuration
-function syshealth_sanitize_config() {
-    local system=$1
-    known_keys=$(read_kv_config_file "$system")
-    for key in $known_keys; do
-        unset $key
+# Repair web domain configuration
+function syshealth_repair_web_config() {
+    system="web"
+    sanitize_config_file
+    get_domain_values 'web'
+    prev="DOMAIN"
+    for key in $known_keys;
+    do
+        if [ -z "${!key}" ]; then 
+            add_object_key 'web' 'DOMAIN' "$domain" "$key" "$prev"   
+        fi
+        prev=$key
     done
 }
 
 # Repair System Configuration
 # Adds missing variables to $HESTIA/conf/hestia.conf with safe default values
-function syshealth_repair_system_config () {
+function syshealth_repair_system_config() {
     # Release branch
     if [ -z "$RELEASE_BRANCH" ]; then
         echo "[ ! ] Adding missing variable to hestia.conf: RELEASE_BRANCH ('release')"

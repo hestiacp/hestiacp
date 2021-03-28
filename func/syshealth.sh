@@ -2,6 +2,120 @@
 
 # Hestia Control Panel - System Health Check Function Library
 
+
+# Write known configuration keys to $HESTIA/conf/defaults/
+function write_kv_config_file () {
+    # Ensure configuration directory exists
+    if [ ! -d "$HESTIA/conf/defaults/" ]; then
+        mkdir "$HESTIA/conf/defaults/"
+    fi
+
+    # Remove previous known good configuration
+    if [ -f "$HESTIA/conf/defaults/$system.conf" ]; then
+        rm -f $HESTIA/conf/defaults/$system.conf
+    fi
+
+    touch $HESTIA/conf/defaults/$system.conf
+
+    for key in ${known_keys[@]}; do
+        echo $key >> $HESTIA/conf/defaults/$system.conf
+    done
+}
+
+# Update list of known keys for web.conf files
+function syshealth_update_web_config_format () {
+
+    # WEB DOMAINS
+    # Create array of known keys in configuration file
+    system="web"
+    known_keys=(DOMAIN IP IP6 CUSTOM_DOCROOT CUSTOM_PHPROOT FASTCGI_CACHE ALIAS TPL SSL SSL_FORCE SSL_HOME LETSENCRYPT FTP_USER FTP_MD5 FTP_PATH BACKEND PROXY PROXY_EXT STATS STATS_USER STATS_CRYPT SUSPENDED TIME DATE)
+    write_kv_config_file
+    unset system
+    unset known_keys
+}
+
+# Update list of known keys for dns.conf files
+function syshealth_update_dns_config_format () {
+
+    # DNS DOMAINS
+    # Create array of known keys in configuration file
+    system="dns"
+    known_keys=(DOMAIN IP TPL TTL EXP SOA SERIAL SRC RECORDS SUSPENDED TIME DATE)
+    write_kv_config_file
+    unset system
+    unset known_keys
+
+    # DNS RECORDS
+    system="dns_records"
+    known_keys=(ID RECORD TYPE PRIORITY VALUE SUSPENDED TIME DATE TTL)
+    write_kv_config_file
+    unset system
+    unset known_keys
+}
+
+# Update list of known keys for mail.conf files
+function syshealth_update_mail_config_format () {
+
+    # MAIL DOMAINS
+    # Create array of known keys in configuration file
+    system="mail"
+    known_keys=(DOMAIN ANTIVIRUS ANTISPAM DKIM WEBMAIL SSL LETSENCRYPT CATCHALL ACCOUNTS U_DISK SUSPENDED TIME DATE)
+    write_kv_config_file
+    unset system
+    unset known_keys
+
+    # MAIL ACCOUNTS
+    system="mail_accounts"
+    known_keys=(ACCOUNT ALIAS AUTOREPLY FWD FWD_ONLY MD5 QUOTA U_DISK SUSPENDED TIME DATE)
+    write_kv_config_file
+    unset system
+    unset known_keys
+}
+
+# Update list of known keys for user.conf files
+function syshealth_update_user_config_format () {
+
+    # USER CONFIGURATION
+    # Create array of known keys in configuration file
+    system="user"
+    known_keys=(NAME PACKAGE CONTACT CRON_REPORTS MD5 RKEY TWOFA QRCODE PHPCLI ROLE SUSPENDED SUSPENDED_USERS SUSPENDED_WEB SUSPENDED_DNS SUSPENDED_MAIL SUSPENDED_DB SUSPENDED_CRON IP_AVAIL IP_OWNED U_USERS U_DISK U_DISK_DIRS U_DISK_WEB U_DISK_MAIL U_DISK_DB U_BANDWIDTH U_WEB_DOMAINS U_WEB_SSL U_WEB_ALIASES U_DNS_DOMAINS U_DNS_RECORDS U_MAIL_DKIM U_MAIL_DKIM U_MAIL_ACCOUNTS U_MAIL_DOMAINS U_MAIL_SSL U_DATABASES U_CRON_JOBS U_BACKUPS LANGUAGE NOTIFICATIONS TIME DATE)
+    write_kv_config_file
+    unset system
+    unset known_keys
+
+    # CRON JOB CONFIGURATION
+    # Create array of known keys in configuration file
+    system="cron"
+    known_keys=(JOB MIN HOUR DAY MONTH WDAY CMD SUSPENDED TIME DATE)
+    write_kv_config_file
+    unset system
+    unset known_keys
+}
+
+# Update list of known keys for db.conf files
+function syshealth_update_database_config_format () {
+
+    # DATABASE CONFIGURATION
+    # Create array of known keys in configuration file
+    system="db"
+    known_keys=(DB DBUSER MD5 HOST TYPE CHARSET U_DISK SUSPENDED TIME DATE)
+    write_kv_config_file
+    unset system
+    unset known_keys
+}
+
+# Update list of known keys for ip.conf files
+function syshealth_update_ip_config_format () {
+
+    # IP ADDRESS
+    # Create array of known keys in configuration file
+    system="ip"
+    known_keys=(OWNER STATUS NAME U_SYS_USERS U_WEB_DOMAINS INTERFACE NETMASK NAT HELO TIME DATE)
+    write_kv_config_file
+    unset system
+    unset known_keys
+}
+
 # Repair System Configuration
 # Adds missing variables to $HESTIA/conf/hestia.conf with safe default values
 function syshealth_repair_system_config () {

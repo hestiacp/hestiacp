@@ -5,7 +5,7 @@
 #
 # example: v-rebuild-users
 #
-# The function all users on the system.
+# The function rebuilds user configuration for all users.
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

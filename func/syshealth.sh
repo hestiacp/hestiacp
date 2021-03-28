@@ -110,7 +110,7 @@ function syshealth_update_user_config_format() {
 }
 
 # Update list of known keys for db.conf files
-function syshealth_update_database_config_format() {
+function syshealth_update_db_config_format() {
 
     # DATABASE CONFIGURATION
     # Create array of known keys in configuration file
@@ -139,8 +139,7 @@ function syshealth_repair_web_config() {
     sanitize_config_file
     get_domain_values 'web'
     prev="DOMAIN"
-    for key in $known_keys;
-    do
+    for key in $known_keys; do
         if [ -z "${!key}" ]; then 
             add_object_key 'web' 'DOMAIN' "$domain" "$key" "$prev"   
         fi

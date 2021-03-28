@@ -136,7 +136,7 @@ function syshealth_update_ip_config_format() {
 # Repair web domain configuration
 function syshealth_repair_web_config() {
     system="web"
-    sanitize_config_file
+    sanitize_config_file "$system"
     get_domain_values 'web'
     prev="DOMAIN"
     for key in $known_keys; do

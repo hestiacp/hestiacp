@@ -29,7 +29,7 @@
   ?>
   <div class="l-unit header animated fadeIn">
     <div class="l-unit__col l-unit__col--right">
-      <div class="clearfix l-unit__stat-col--left wide-3"><b><?=$data[$key]['ID'];?></b></div>
+      <div class="clearfix l-unit__stat-col--left wide-3"><b><?=htmlspecialchars($data[$key]['ID']);?></b></div>
           <div class="clearfix l-unit__stat-col--left text-left compact-2">
             <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
               <div class="actions-panel clearfix">

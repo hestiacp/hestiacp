@@ -2,6 +2,14 @@
 
 # Hestia Control Panel - System Health Check Function Library
 
+# Read known configuration keys from $HESTIA/conf/defaults/$system.conf
+function read_kv_config_file () {
+    local system=$1
+    while read -r str; do
+        echo "$str"
+    done < <(cat $HESTIA/conf/defaults/$system.conf)
+    unset system
+}
 
 # Write known configuration keys to $HESTIA/conf/defaults/
 function write_kv_config_file () {
@@ -114,6 +122,15 @@ function syshealth_update_ip_config_format () {
     write_kv_config_file
     unset system
     unset known_keys
+}
+
+# Sanitize web domain configuration
+function syshealth_sanitize_config() {
+    local system=$1
+    known_keys=$(read_kv_config_file "$system")
+    for key in $known_keys; do
+        unset $key
+    done
 }
 
 # Repair System Configuration

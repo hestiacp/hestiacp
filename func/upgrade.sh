@@ -144,16 +144,22 @@ upgrade_health_check() {
         $BIN/v-change-sys-config-value "INACTIVE_SESSION_TIMEOUT" "60"
     fi
 
-    # Enforce Subdomain ownership
+    # Enforce subdomain ownership
     if [ -z "$ENFORCE_SUBDOMAIN_OWNERSHIP" ]; then
         echo "[ ! ] Adding missing variable to hestia.conf: ENFORCE_SUBDOMAIN_OWNERSHIP ('yes')"
         $BIN/v-change-sys-config-value "ENFORCE_SUBDOMAIN_OWNERSHIP" "yes"
-    fi    
-    # API Allowed IP
-    if [ -z "$API_ALLOWED_IP" ]; then
-        echo "[ ! ] Adding missing variable to hestia.conf: API_ALLOWED_IP ('allow-all')"        
-        $BIN/v-change-sys-config-value "API_ALLOWED_IP" "allow-all"
-    fi  
+    fi
+
+    # API access allowed IP's
+    if [ "$API" = "yes" ]; then
+        check_api_key=$(grep "API_ALLOWED_IP" $HESTIA/conf/hestia.conf)
+        if [ -z "$check_api_key" ]; then
+            if [ -z "$API_ALLOWED_IP" ]; then
+                echo "[ ! ] Adding missing variable to hestia.conf: API_ALLOWED_IP ('allow-all')"        
+                $BIN/v-change-sys-config-value "API_ALLOWED_IP" "allow-all"
+            fi
+        fi
+    fi
     
     echo "[ * ] Health check complete. Starting upgrade from $VERSION to $new_version..."
     echo "============================================================================="
@@ -674,13 +680,6 @@ upgrade_rainloop(){
     fi
 }
 
-disable_api(){
-    if [ "$API" = "no" ]; then
-        echo "[ ! ] Disable Api..."
-        sed -i 's|//die("Error: Disabled");|die("Error: Disabled");|g' $HESTIA/web/api/index.php
-        $HESTIA/bin/v-change-sys-config-value "API_ALLOWED_IP" ""
-    fi
-}
 upgrade_rebuild_web_templates() {
     if [ "$UPGRADE_UPDATE_WEB_TEMPLATES" = "true" ]; then
         echo "[ ! ] Updating default web domain templates..."

@@ -1671,7 +1671,7 @@ fi
 
 if [ "$api" = "yes" ]; then
     echo "API='yes'" >> $HESTIA/conf/hestia.conf
-    echo "API_ALLOWED_IP='127.0.0.1'" >> $HESTIA/conf/hestia.conf
+    echo "API_ALLOWED_IP=''" >> $HESTIA/conf/hestia.conf
 else
     $HESTIA/bin/v-change-sys-api disable
 fi

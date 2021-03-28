@@ -1,10 +1,10 @@
 <div class="l-center edit">
         <div class="l-sort clearfix">
           <div class="l-unit-toolbar__buttonstrip">
-            <a class="ui-button cancel" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
+            <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
+            <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save')?></a>
           </div>
         </div>
       </div>
@@ -62,34 +62,13 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text input-label">
-                                    <?php print _('Password');?> / <a href="javascript:randomString();" class="generate" ><?php print _('generate');?></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" size="20" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>" tabindex="2" /><br />
-                                    <meter max="4" id="meter"></meter>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text">
-                                    <?php print _('Your password must have at least');?>
-                                    <ul>
-                                        <li><?php print _('8 characters long');?></li>
-                                        <li><?php print _('1 uppercase & 1 lowercase character');?></li>
-                                        <li><?php print _('1 number');?></li>
-                                    </ul>
-                                </td>
-                            </tr>
-                            <tr>
                                 <td class="vst-text ">
                                     <?php print _('Contact');?>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>" tabindex="3" >
+                                    <input type="text" size="20" class="vst-input" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>" tabindex="2" >
                                 </td>
                             </tr>
                             <tr>
@@ -99,49 +78,33 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_email" id='v_email' value="<?=htmlentities(trim($v_email, "'"))?>" tabindex="5" >
+                                    <input type="text" size="20" class="vst-input" name="v_email" id='v_email' value="<?=htmlentities(trim($v_email, "'"))?>" tabindex="3" >
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print _('Password');?> / <a href="javascript:randomString();" class="generate" ><?php print _('generate');?></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>" tabindex="4" /><br />
+                                    <meter max="4" id="meter"></meter>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text">
+                                    <?php print _('Your password must have at least');?>:
+                                    <ul>
+                                        <li><?php print _('8 characters long');?></li>
+                                        <li><?php print _('1 uppercase & 1 lowercase character');?></li>
+                                        <li><?php print _('1 number');?></li>
+                                    </ul>
                                 </td>
                             </tr>
                              <tr>
                                 <td class="vst-text input-label">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_email_notice" id='v_email_notify' value="" tabindex="5" /> <?php print _('Send welcome email');?></label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text input-label" name="v_package">
-                                    <?php print _('Package');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <select class="vst-list" name="v_package" tabindex="6" >
-                                        <?php
-                                            foreach ($data as $key => $value) {
-                                                echo "\n\t\t\t\t\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($key)."\"";
-                                                if ((!empty($v_package)) && ( $key == $_POST['v_package'])){
-                                                    echo 'selected' ;
-                                                } else {
-                                                    if ( $key == 'default'){
-                                                        echo 'selected' ;
-                                                    }
-                                                }
-                                                echo ">".htmlentities($key)."</option>\n";
-                                            }
-                                        ?>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text input-label">
-                                    <?php print _('Role');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <select class="vst-list" name="v_role">
-                                        <option value="user"><?php print _('User');?>
-                                        <option value="admin" <?php if($v_role == "admin" ){ echo "selected"; } ?> ><?php print _('Administrator');?>
-                                    </select>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_email_notice" id='v_email_notify' value="" tabindex="5" /><?php print _('Send welcome email');?></label>
                                 </td>
                             </tr>
                             <tr>
@@ -151,7 +114,7 @@
                             </tr>                        
                             <tr>
                                 <td>
-                                    <select class="vst-list" name="v_language" tabindex="7" >
+                                    <select class="vst-list" name="v_language" tabindex="6" >
                                         <?php
                                             foreach ($languages as $key => $value) {
                                                 echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($key)."\"";
@@ -164,6 +127,43 @@
                                                     }
                                                 }
                                                 echo ">".htmlentities($value)."</option>\n";
+                                            }
+                                        ?>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print _('Role');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_role" tabindex="7">
+                                        <option value="user"><?php print _('User');?>
+                                        <option value="admin" <?php if($v_role == "admin" ){ echo "selected"; } ?> ><?php print _('Administrator');?>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label" name="v_package">
+                                    <?php print _('Package');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_package" tabindex="8">
+                                        <?php
+                                            foreach ($data as $key => $value) {
+                                                echo "\n\t\t\t\t\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($key)."\"";
+                                                if ((!empty($v_package)) && ( $key == $_POST['v_package'])){
+                                                    echo 'selected' ;
+                                                } else {
+                                                    if ( $key == 'default'){
+                                                        echo 'selected' ;
+                                                    }
+                                                }
+                                                echo ">".htmlentities($key)."</option>\n";
                                             }
                                         ?>
                                     </select>

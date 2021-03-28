@@ -14,9 +14,14 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -a "$2" )
+domain=$2
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/func/main.sh
 source $HESTIA/func/domain.sh
 source $HESTIA/func/rebuild.sh
@@ -58,8 +63,8 @@ rebuild_mail_domain_conf
 if [ ! -z "$WEB_SYSTEM" ] || [ ! -z "$PROXY_SYSTEM" ]; then
     if [ ! -z "$IMAP_SYSTEM" ]; then
         WEBMAIL=$(get_object_value 'web' 'DOMAIN' "$domain" "$WEBMAIL")
-        $BIN/v-delete-sys-webmail $user $domain '' 'yes'
-        $BIN/v-add-sys-webmail $user $domain $WEBMAIL '' 'yes'
+        $BIN/v-delete-sys-webmail $user $domain '' $restart
+        $BIN/v-add-sys-webmail $user $domain $WEBMAIL '' $restart
     fi
 fi
 

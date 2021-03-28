@@ -14,10 +14,12 @@
 
 # Argument definition
 user=$1
-domain=$(idn -t --quiet -a "$2" )
+domain=$2
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -85,11 +87,11 @@ fi
 update_object_value 'web' 'DOMAIN' "$domain" '$SSL_FORCE' 'yes'
 
 # Restart web server
-$BIN/v-restart-web
+$BIN/v-restart-web $restart
 check_result $? "Web restart failed" > /dev/null
 
 # Restart proxy
-$BIN/v-restart-proxy
+$BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" > /dev/null
 
 # Logging

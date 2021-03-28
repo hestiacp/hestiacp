@@ -1,8 +1,8 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a class="ui-button cancel" id="btn-back" href="/list/backup/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
-          <a href="/schedule/restore/?token=<?=$_SESSION['token']?>&backup=<?=htmlentities($_GET['backup'])?>" class="ui-button cancel"><i class="fas fa-undo status-icon green"></i> <?=_('Restore All')?></a>
+          <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/backup/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back')?></a>
+          <a href="/schedule/restore/?token=<?=$_SESSION['token']?>&backup=<?=htmlentities($_GET['backup'])?>" class="ui-button cancel" dir="ltr"><i class="fas fa-undo status-icon green"></i><?=_('Restore All')?></a>
         </div>
         <div class="l-sort-toolbar clearfix">
           <table>
@@ -34,7 +34,7 @@
 
     <div class="l-separator"></div>
 
-    <div class="l-center units animated fadeIn">
+    <div class="l-center units">
       <div class="header table-header">
           <div class="l-unit__col l-unit__col--right">
             <div>
@@ -56,11 +56,10 @@
             ++$i;
       ?>
 
-      <div class="l-unit">
+      <div class="l-unit animated fadeIn">
         <div class="l-unit__col l-unit__col--right">
             <div class="clearfix l-unit__stat-col--left super-compact">
               <input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="web[]" value="<?=$key?>">
-              <label for="check<?=$i++?>" class="check-label"></label>
             </div>
 
             <div class="clearfix l-unit__stat-col--left compact-4">
@@ -98,7 +97,6 @@
           <div class="l-unit__col l-unit__col--right">
               <div class="clearfix l-unit__stat-col--left super-compact">
                   <input id="check2<?=$i?>" class="ch-toggle" type="checkbox" name="mail[]" value="<?=$key?>">
-                  <label for="check2<?=$i++?>" class="check-label"></label>
               </div>
   
               <div class="clearfix l-unit__stat-col--left compact-4">
@@ -136,7 +134,6 @@
           <div class="l-unit__col l-unit__col--right">
               <div class="clearfix l-unit__stat-col--left super-compact">
                 <input id="check3<?=$i?>" class="ch-toggle" type="checkbox" name="dns[]" value="<?=$key?>">
-                <label for="check3<?=$i++?>" class="check-label"></label>
               </div>
   
               <div class="clearfix l-unit__stat-col--left compact-4">
@@ -174,7 +171,6 @@
           <div class="l-unit__col l-unit__col--right">
               <div class="clearfix l-unit__stat-col--left super-compact">
                 <input id="check4<?=$i?>" class="ch-toggle" type="checkbox" name="db[]" value="<?=$key?>">
-                <label for="check4<?=$i++?>" class="check-label"></label>
               </div>
   
               <div class="clearfix l-unit__stat-col--left compact-4">
@@ -212,7 +208,6 @@
           <div class="l-unit__col l-unit__col--right">
               <div class="clearfix l-unit__stat-col--left super-compact">
                 <input id="check5<?=$i?>" class="ch-toggle" type="checkbox" name="check" value="<?=$key?>">
-                <label for="check5<?=$i++?>" class="check-label"></label>
               </div>
   
               <div class="clearfix l-unit__stat-col--left compact-4">
@@ -249,7 +244,6 @@
           <div class="l-unit__col l-unit__col--right">
               <div class="clearfix l-unit__stat-col--left super-compact">
                 <input id="check6<?=$i?>" class="ch-toggle" type="checkbox" name="udir[]" value="<?=$key?>">
-                <label for="check6<?=$i++?>" class="check-label"></label>
               </div>
   
               <div class="clearfix l-unit__stat-col--left compact-4">
@@ -281,7 +275,6 @@
           <div class="l-unit__col l-unit__col--right">
               <div class="clearfix l-unit__stat-col--left super-compact">
                 <input id="check7<?=$i?>" class="ch-toggle" type="checkbox" name="cron" value="<?=$i?>">
-                <label for="check7<?=$i++?>" class="check-label"></label>
               </div>
   
               <div class="clearfix l-unit__stat-col--left compact-4">

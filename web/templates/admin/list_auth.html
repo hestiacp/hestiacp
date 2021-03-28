@@ -1,14 +1,13 @@
 <div class="l-center">
   <div class="l-sort clearfix noselect">
     <div class="l-unit-toolbar__buttonstrip">
-      <a href="/list/log/" id="btn-back" class="ui-button cancel"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
+      <a href="/list/log/" id="btn-back" class="ui-button cancel" dir="ltr"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back')?></a>
     </div>
     <div class="l-unit-toolbar__buttonstrip float-right">
-      <a href="javascript:location.reload();" class="ui-button cancel"><i class="fas fa-redo status-icon green"></i> <?=_('Refresh')?></a>
+      <a href="javascript:location.reload();" class="ui-button cancel" dir="ltr"><i class="fas fa-redo status-icon green"></i><?=_('Refresh')?></a>
       <div class="actions-panel display-inline-block" key-action="js">
         <a class="data-controls do_delete ui-button danger cancel">
-          <i class="do_delete fas fa-times-circle status-icon red"></i>
-          <?=_('Delete')?>
+          <i class="do_delete fas fa-times-circle status-icon red"></i><?=_('Delete')?>
           <input type="hidden" name="delete_url" value="/delete/user/log/?token=<?=$_SESSION['token']?>" />
             <div class="confirmation-text-delete hidden" title="<?=_('Confirmation')?>">
               <p class="confirmation"><?=_('DELETE_LOGS_CONFIRMATION')?></p>
@@ -21,7 +20,7 @@
 
 <div class="l-separator"></div>
 
-<div class="l-center units animated fadeIn">
+<div class="l-center units">
 <div class="header table-header">     
     <div class="l-unit__col l-unit__col--right">
       <div class="clearfix l-unit__stat-col--left super-compact">
@@ -39,7 +38,7 @@
   foreach ($data as $key => $value) {
     ++$i;
   ?>
-  <div class="l-unit header">
+  <div class="l-unit header animated fadeIn">
     <div class="l-unit__col l-unit__col--right">
       <div class="clearfix l-unit__stat-col--left super-compact">
         <i class="fas fa-info-circle status-icon dim"></i>

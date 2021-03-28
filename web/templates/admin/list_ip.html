@@ -1,8 +1,8 @@
     <div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <a class="ui-button cancel" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
-          <a href="/add/ip/" id="btn-create" class="ui-button cancel"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Add IP')?></a>
+          <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back')?></a>
+          <a href="/add/ip/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add IP')?></a>
         </div>
         <ul class="context-menu sort-order animated fadeIn" style="display:none;">
           <li entity="sort-date" sort_as_int="1"><span class="name active"><?=_('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
@@ -15,7 +15,7 @@
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
-              <td class="sort-by">
+              <td class="sort-by" title="<?=_('Sort items');?>">
                   <?=_('sort by');?>: <span><b><?=_('Date')?> <i class="fas fa-sort-amount-down"></i></b></span>
                 </td>
               <td>
@@ -28,7 +28,7 @@
                     <option value="delete"><?=_('delete')?></option>
                   </select>
                 </div>
-                <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
+                <button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected')?>"><i class="fas fa-arrow-right"></i></button>
               </td>
             </tr>
           </table>
@@ -38,12 +38,12 @@
 
     <div class="l-separator"></div>
 
-    <div class="l-center units animated fadeIn">
+    <div class="l-center units">
       <div class="header table-header">     
         <div class="l-unit__col l-unit__col--right">
           <div>
             <div class="clearfix l-unit__stat-col--left super-compact">
-              <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onChange="checkedAll('objects');">
+              <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all')?>" onChange="checkedAll('objects');">
             </div>           
             <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print _('IP Address');?></b></div>
             <div class="clearfix l-unit__stat-col--left compact text-right"><b>&nbsp;</b></div>
@@ -61,14 +61,14 @@
            ++$i;
       ?>
 
-      <div class="l-unit <? if($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended'; if($_SESSION['favourites']['IP'][$key] == 1) echo ' l-unit--starred'; ?>" v_unit_id="<?=$key?>"
+      <div class="l-unit <? if($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended'; if($_SESSION['favourites']['IP'][$key] == 1) echo ' l-unit--starred'; ?> animated fadeIn" v_unit_id="<?=$key?>"
 v_section="ip" sort-ip="<?=str_replace('.', '', $key)?>" sort-date="<?=strtotime($data[$key]['DATE'] .' '. $data[$key]['TIME'] )?>"
 sort-netmask="<?=str_replace('.', '', $data[$key]['NETMASK'])?>" sort-interface="<?=$data[$key]['INTERFACE']?>" sort-domains="<?=$data[$key]['U_WEB_DOMAINS']?>"
 sort-owner="<?=$data[$key]['OWNER']?>" sort-star="<? if($_SESSION['favourites']['IP'][$key] == 1) echo '1'; else echo '0'; ?>">
 
           <div class="l-unit__col l-unit__col--right">
               <div class="clearfix l-unit__stat-col--left super-compact">
-                <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" name="ip[]" value="<?=$key?>">
+                <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" title="<?=_('Select')?>" name="ip[]" value="<?=$key?>">
               </div>
               <div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing IP Address')?>"><?=$key?> <?php if (!empty($data[$key]['NAT'])) echo ' → ' . $data[$key]['NAT'] . ''; ?></a></b>
               </div>

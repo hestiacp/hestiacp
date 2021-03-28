@@ -1,0 +1,79 @@
+#!/bin/bash
+# info: Enable / Disable API access 
+# options: STATUS 
+# labels: hestia
+#
+# example: v-change-sys-api enable
+#          # Enable API
+#
+# example: v-change-sys-api disable
+#          # Disable API
+#
+# Enabled / Disable API
+
+
+status=$1
+
+# Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
+source $HESTIA/conf/hestia.conf
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+check_args '1' "$#" "STATUS"
+is_type_valid "enable,disable,remove" "$status"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+if [ "$status" = "enable" ]; then
+    if [ ! -f "$HESTIA/web/api/index.php" ]; then
+        wget -q https://raw.githubusercontent.com/hestiacp/hestiacp/$RELEASE_BRANCH/web/api/index.php -O $HESTIA/web/api/index.php
+        check_api_download=$(cat $HESTIA/web/api/index.php)
+        if [ -z "$HESTIA/web/api/index.php" ]; then
+            # Throw error message to user
+            echo "ERROR: API installation failed."
+            # Remove empty file created by wget output
+            rm -f "$HESTIA/web/api/index.php"
+            exit 1
+        fi
+    else
+        sed -i 's|die("Error: Disabled");|//die("Error: Disabled");|g' $HESTIA/web/api/index.php
+        sed -i 's|////|//|g' $HESTIA/web/api/index.php
+    fi
+    $HESTIA/bin/v-change-sys-config-value "API" "yes"
+else
+    $HESTIA/bin/v-change-sys-config-value "API" "no"
+    $HESTIA/bin/v-change-sys-config-value "API_ALLOWED_IP" ""
+    if [ "$status" != "remove" ]; then
+        sed -i 's|//die("Error: Disabled");|die("Error: Disabled");|g' $HESTIA/web/api/index.php
+    fi
+fi
+
+if [ "$status" = "remove" ]; then
+    if [ ! -f "$HESTIA/web/api/index.php" ]; then
+        echo "ERROR: API is not installed."
+        exit 1
+    else
+        rm -f "$HESTIA/web/api/index.php"
+    fi
+fi
+
+#----------------------------------------------------------#
+#                       Logging                            #
+#----------------------------------------------------------#
+
+if [ "$status" = "enable" ] || [ "$status" = "disable" ]; then
+    log_history "API status has been changed to $status" '' 'admin'
+else
+    log_history "API has been disabled and removed" '' 'admin'
+fi
+log_event "$OK" "$ARGUMENTS"

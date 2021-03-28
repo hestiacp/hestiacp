@@ -39,7 +39,7 @@ if [ "$release" -eq 9 ]; then
         php$fpm_v-json php$fpm_v-mbstring php$fpm_v-opcache php$fpm_v-pspell
         php$fpm_v-readline php$fpm_v-xml vsftpd proftpd-basic bind9 exim4
         exim4-daemon-heavy clamav-daemon spamassassin dovecot-imapd
-        dovecot-pop3d net-tools 
+        dovecot-pop3d net-tools
         mariadb-client mariadb-common mariadb-server postgresql
         postgresql-contrib phppgadmin mc flex whois rssh git idn zip
         sudo bc ftp lsof rrdtool quota e2fslibs bsdutils e2fsprogs curl
@@ -372,7 +372,7 @@ if [ -d /etc/netplan ] && [ -z "$force" ]; then
         echo
         echo '!!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!!'
         echo
-        check_result 1 "Unable to detect netplan configuration."    
+        check_result 1 "Unable to detect netplan configuration."
     fi
 fi
 
@@ -454,7 +454,7 @@ install_welcome_message() {
     echo "========================================================================"
     echo 
     echo "Thank you for downloading Hestia Control Panel! In a few moments,"
-    echo "we will begin installing the following components on your server:"          
+    echo "we will begin installing the following components on your server:"
     echo
 }
 
@@ -1129,10 +1129,13 @@ echo "LANGUAGE='$lang'" >> $HESTIA/conf/hestia.conf
 # Login in screen
 echo "LOGIN_STYLE='default'" >> $HESTIA/conf/hestia.conf
 
+# Theme
+echo "THEME='dark'" >> $HESTIA/conf/hestia.conf
+
 # Inactive session timeout
 echo "INACTIVE_SESSION_TIMEOUT='60'" >> $HESTIA/conf/hestia.conf
 
-# Allow users to always create domains even the are not the owner of the main domain
+# Do not allow users to create subdomains when they don't own the domain
 echo "ENFORCE_SUBDOMAIN_OWNERSHIP='yes'" >> $HESTIA/conf/hestia.conf
 
 # Version & Release Branch
@@ -1140,7 +1143,7 @@ echo "VERSION='${HESTIA_INSTALL_VER}'" >> $HESTIA/conf/hestia.conf
 echo "RELEASE_BRANCH='release'" >> $HESTIA/conf/hestia.conf
 
 # Email notifications after upgrade
-echo "UPGRADE_SEND_EMAIL='true'" >> $HESTIA/conf/hestia.conf
+echo "UPGRADE_SEND_EMAIL='false'" >> $HESTIA/conf/hestia.conf
 echo "UPGRADE_SEND_EMAIL_LOG='true'" >> $HESTIA/conf/hestia.conf
 
 # Installing hosting packages
@@ -1234,13 +1237,13 @@ if [ "$apache" = 'yes' ]; then
 
     mkdir -p /etc/apache2/conf.d
     mkdir -p /etc/apache2/conf.d/domains
-    
+
     # Copy configuration files
     cp -f $HESTIA_INSTALL_DIR/apache2/apache2.conf /etc/apache2/
     cp -f $HESTIA_INSTALL_DIR/apache2/status.conf /etc/apache2/mods-available/hestia-status.conf
     cp -f /etc/apache2/mods-available/status.load /etc/apache2/mods-available/hestia-status.load
     cp -f $HESTIA_INSTALL_DIR/logrotate/apache2 /etc/logrotate.d/
-    
+
     # Enable needed modules
     a2enmod rewrite > /dev/null 2>&1
     a2enmod suexec > /dev/null 2>&1
@@ -1358,7 +1361,7 @@ if [ "$proftpd" = 'yes' ]; then
     echo "127.0.0.1 $servername" >> /etc/hosts
     cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/proftpd/
     cp -f $HESTIA_INSTALL_DIR/proftpd/tls.conf /etc/proftpd/
-    
+
     update-rc.d proftpd defaults > /dev/null 2>&1
     systemctl start proftpd >> $LOG
     check_result $? "proftpd start failed"
@@ -1378,10 +1381,10 @@ if [ "$mysql" = 'yes' ]; then
     if [ $memory -gt 3900000 ]; then
         mycnf="my-large.cnf"
     fi
-    
+
     # Remove symbolic link
     rm -f /etc/mysql/my.cnf
-    
+
     # Configuring MariaDB
     cp -f $HESTIA_INSTALL_DIR/mysql/$mycnf /etc/mysql/my.cnf
     mysql_install_db >> $LOG
@@ -1418,34 +1421,34 @@ if [ "$mysql" = 'yes' ]; then
 
     # Unpack files
     tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
-    
+
     # Create folders
     mkdir -p  /usr/share/phpmyadmin
     mkdir -p /etc/phpmyadmin
-    mkdir -p /etc/phpmyadmin/conf.d/  
+    mkdir -p /etc/phpmyadmin/conf.d/
     mkdir /usr/share/phpmyadmin/tmp
-    
+
     # Configuring Apache2 for PHPMYADMIN
     if [ "$apache" = 'yes' ]; then
         cp -f $HESTIA_INSTALL_DIR/pma/apache.conf /etc/phpmyadmin/
         ln -s /etc/phpmyadmin/apache.conf /etc/apache2/conf.d/phpmyadmin.conf
     fi
-    
+
     # Overwrite old files
     cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
-    
+
     # Create copy of config file
     cp -f $HESTIA_INSTALL_DIR/phpmyadmin/config.inc.php /etc/phpmyadmin/
     mkdir -p /var/lib/phpmyadmin/tmp
     chmod 777 /var/lib/phpmyadmin/tmp
-    
+
     # Set config and log directory
     sed -i "s|define('CONFIG_DIR', ROOT_PATH);|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
     sed -i "s|define('TEMP_DIR', ROOT_PATH . 'tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
 
     # Create temporary folder and change permission
     chmod 777 /usr/share/phpmyadmin/tmp
-    
+
     # Generate blow fish
     blowfish=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)
     sed -i "s|%blowfish_secret%|$blowfish|" /etc/phpmyadmin/config.inc.php
@@ -1672,20 +1675,19 @@ echo "[ * ] Install Roundcube..."
 
 if [ "$mysql" == 'yes' ] && [ "$dovecot" == "yes" ]; then
     $HESTIA/bin/v-add-sys-roundcube 
-    echo " WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
+    echo "WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
 fi
 
 #----------------------------------------------------------#
 #                       Configure API                      #
 #----------------------------------------------------------#
 
-if [ "$api" = 'yes' ]; then
+if [ "$api" = "yes" ]; then
     echo "API='yes'" >> $HESTIA/conf/hestia.conf
+    echo "API_ALLOWED_IP=''" >> $HESTIA/conf/hestia.conf
 else
-    rm -r $HESTIA/web/api
-    echo "API='no'" >> $HESTIA/conf/hestia.conf
+    $HESTIA/bin/v-change-sys-api disable
 fi
-
 
 #----------------------------------------------------------#
 #                   Configure Admin User                   #
@@ -1813,9 +1815,6 @@ fi
 # Set backend port
 $HESTIA/bin/v-change-sys-port $port > /dev/null 2>&1
 
-# Set default theme
-$HESTIA/bin/v-change-sys-theme 'dark'
-
 # Update remaining packages since repositories have changed
 echo -ne "[ * ] Installing remaining software updates..."
 apt-get -qq update
@@ -1855,7 +1854,7 @@ echo -e "\n"
 # Sending notification to admin email
 echo -e "Congratulations!
 
-You have successfully installed Hestia Control Panel on your server. 
+You have successfully installed Hestia Control Panel on your server.
 
 Ready to get started? Log in using the following credentials:
 

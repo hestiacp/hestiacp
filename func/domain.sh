@@ -743,15 +743,17 @@ add_webmail_config() {
     override_alias="";
     if [ "$WEBMAIL_ALIAS" != "mail" ]; then
         override_alias="mail.$domain"
+        override_alias_idn="mail.$domain_idn"
+        
     fi
     
     cat $MAILTPL/$1/$2 | \
         sed -e "s|%ip%|$local_ip|g" \
             -e "s|%domain%|$WEBMAIL_ALIAS.$domain|g" \
-            -e "s|%domain_idn%|$domain_idn|g" \
+            -e "s|%domain_idn%|$WEBMAIL_ALIAS.$domain_idn|g" \
             -e "s|%root_domain%|$domain|g" \
             -e "s|%alias%|$override_alias|g" \
-            -e "s|%alias_idn%|${aliases_idn//,/ }|g" \
+            -e "s|%alias_idn%|$override_alias_idn|g" \
             -e "s|%alias_string%|$alias_string|g" \
             -e "s|%email%|info@$domain|g" \
             -e "s|%web_system%|$WEB_SYSTEM|g" \

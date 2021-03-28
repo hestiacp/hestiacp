@@ -5,7 +5,7 @@
 #
 # example: v-rebuild-users
 #
-# The function all users on the system.
+# The function rebuilds user configuration for all users.
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -15,6 +15,9 @@
 restart=$1
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/func/main.sh
 source $HESTIA/func/rebuild.sh
 source $HESTIA/conf/hestia.conf

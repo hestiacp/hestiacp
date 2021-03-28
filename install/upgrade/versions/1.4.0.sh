@@ -6,30 +6,27 @@
 #######                      Place additional commands below.                   #######
 #######################################################################################
 
-# Allow Fast CGI Cache to be enabled for Nginx Standalone
+# Add support for nginx FastCGI cache (standalone)
 if [ -e "/etc/nginx/nginx.conf" ]; then
     check=$(cat /etc/nginx/nginx.conf | grep 'fastcgi_cache_path');
     if [ -z "$check" ]; then 
-        echo "[ * ] Enabling Nginx FastCGI cache support..."
-        sed  -i 's/# Cache bypass/# FastCGI Cache settings\n    fastcgi_cache_path \/var\/cache\/nginx\/php-fpm levels=2\n    keys_zone=fcgi_cache:10m inactive=60m max_size=1024m;\n    fastcgi_cache_key \"$host$request_uri $cookie_user\";\n    fastcgi_temp_path  \/var\/cache\/nginx\/temp;\n    fastcgi_ignore_headers Expires Cache-Control;\n    fastcgi_cache_use_stale error timeout invalid_header;\n    fastcgi_cache_valid any 1d;\n\n    # Cache bypass/g' /etc/nginx/nginx.conf
+        echo "[ * ] Enabling nginx FastCGI cache support..."
+        sed  -i 's/# Cache bypass/# FastCGI cache\n    fastcgi_cache_path \/var\/cache\/nginx\/micro levels=1:2 keys_zone=microcache:10m max_size=1024m inactive=30m;\n    fastcgi_cache_key \"$scheme$request_method$host$request_uri\";\n    fastcgi_cache_methods GET HEAD;\n    fastcgi_cache_use_stale updating error timeout invalid_header http_500 http_503;\n    fastcgi_ignore_headers Cache-Control Expires Set-Cookie;\n    add_header X-FastCGI-Cache \$upstream_cache_status;\n\n    # Cache bypass/g' /etc/nginx/nginx.conf
     fi
 fi
 
-echo '[ * ] Updating System Administrator account permissions...'
-$HESTIA/bin/v-change-user-role admin admin
-
-# Populating HELO/SMTP Banner for existing ip's
+# Populating HELO/SMTP Banner for existing IPs
 if [ "$MAIL_SYSTEM" == "exim4" ]; then
     source $HESTIA/func/ip.sh
 
-    echo "[ * ] Populating HELO/SMTP Banner param for existing IP's..."
+    echo "[ * ] Populating HELO/SMTP Banner value for existing IP addresses..."
     > /etc/exim4/mailhelo.conf
 
-    for ip in $(v-list-sys-ips plain | cut -f1); do
+    for ip in $($BIN/v-list-sys-ips plain | cut -f1); do
         helo=$(is_ip_rdns_valid $ip)
 
         if [ ! -z "$helo" ]; then
-            v-change-sys-ip-helo $ip $helo
+            $BIN/v-change-sys-ip-helo $ip $helo
         fi
     done
 
@@ -101,12 +98,18 @@ if [ "$MAIL_SYSTEM" == "exim4" ]; then
         line=$(expr $(sed -n '/begin transports/=' /etc/exim4/exim4.conf.template) + 2)
         sed -i "${line}i $insert" /etc/exim4/exim4.conf.template
     fi
-    
-    $HESTIA/bin/v-restart-mail
 fi
 
 # Fix PostgreSQL repo
 if [ -f /etc/apt/sources.list.d/postgresql.list ]; then
-    echo "[*] Updating PostgreSQL repository..."
+    echo "[ * ] Updating PostgreSQL repository..."
     sed -i 's|deb https://apt.postgresql.org/pub/repos/apt/|deb [arch=amd64] https://apt.postgresql.org/pub/repos/apt/|g' /etc/apt/sources.list.d/postgresql.list
+fi
+
+# Remove API file if API is set to "no"
+if [ "$API" = "no" ]; then
+    if [ -f "$HESTIA/web/api/index.php" ]; then
+        echo "[ * ] Disabling API access..."
+        $HESTIA/bin/v-change-sys-api remove
+    fi
 fi

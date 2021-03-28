@@ -16,8 +16,8 @@ DNSTPL=$HESTIA/data/templates/dns
 RRD=$HESTIA/web/rrd
 SENDMAIL="$HESTIA/web/inc/mail-wrapper.php"
 HESTIA_GIT_REPO="https://raw.githubusercontent.com/hestiacp/hestiacp"
-HESTIA_THEMES="$HESTIA_INSTALL_DIR/themes"
-HESTIA_THEMES_CUSTOM="$HESTIA/data/templates/themes"
+HESTIA_THEMES="$HESTIA/web/css/themes"
+HESTIA_THEMES_CUSTOM="$HESTIA/web/css/themes/custom"
 SCRIPT="$(basename $0)"
 
 # Return codes
@@ -962,7 +962,6 @@ is_format_valid() {
                 host)           is_object_format_valid "$arg" "$arg_name" ;;
                 hour)           is_cron_format_valid "$arg" $arg_name ;;
                 id)             is_int_format_valid "$arg" 'id' ;;
-                interface)      is_interface_format_valid "$arg" ;;
                 iface)          is_interface_format_valid "$arg" ;;
                 ip)             is_ip_format_valid "$arg" ;;
                 ip_name)        is_domain_format_valid "$arg" 'IP name';;

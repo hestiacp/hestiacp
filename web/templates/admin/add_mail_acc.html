@@ -1,10 +1,10 @@
 <div class="l-center edit">
         <div class="l-sort clearfix">
           <div class="l-unit-toolbar__buttonstrip">
-            <a class="ui-button cancel" id="btn-back" href="/list/mail/?domain=<?=htmlentities(trim($v_domain, "'"))?>&token=<?=$_SESSION['token']?>"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
+            <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/mail/?domain=<?=htmlentities(trim($v_domain, "'"))?>&token=<?=$_SESSION['token']?>"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
+            <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save')?></a>
           </div>
         </div>
       </div>
@@ -67,7 +67,7 @@
                         </tr>
                         <tr>
                             <td class="vst-text input-label">
-                                <?php print _('Password');?> / <a href="javascript:randomString();" class="generate"><?php print _('generate');?></a>
+                                <?php print _('Password');?> <a href="javascript:randomString();" title="<?php print _('generate');?>"><i class="fas fa-sync status-icon green icon-large"></i></a>
                             </td>
                         </tr>
                         <tr>
@@ -78,7 +78,7 @@
                         </tr>
                         <tr>
                             <td class="vst-text">
-                                <?php print _('Your password must have at least');?>
+                                <?php print _('Your password must have at least');?>:
                                 <ul>
                                     <li><?php print _('8 characters long');?></li>
                                     <li><?php print _('1 uppercase & 1 lowercase character');?></li>
@@ -88,7 +88,7 @@
                         </tr>
                         <tr>
                             <td class="vst-text">
-                                <a href="javascript:elementHideShow('advtable');" class="vst-advanced"> <?php print _('Advanced options');?>&nbsp;<i class="fas fa-arrow-circle-right"></i></a>
+                                <a href="javascript:elementHideShow('advtable');" class="vst-advanced"> <?php print _('Advanced options');?></a>
                             </td>
                         </tr>
                         <tr>
@@ -102,7 +102,7 @@
                                     <tr>
                                         <td>
                                             <input type="text" size="20" class="vst-input" name="v_quota" value="<?=htmlentities(trim($v_quota, "'"))?>">
-                                            <i class="unlim-trigger fas fa-infinity" id="unlim-quota" /</i>
+                                            <i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited')?>" id="unlim-quota" /</i>
                                         </td>
                                     </tr>
                                 <tr>
@@ -127,12 +127,12 @@
                                 </tr>
                                 <tr>
                                     <td class="vst-text input-label">
-                                        <label><input type="checkbox" size="20" class="vst-checkbox" id="v_blackhole" name="v_blackhole" <?php if ($v_blackhole == 'yes') echo "checked=yes" ?>> <?php print _('Discard all mail');?></label>
+                                        <label><input type="checkbox" size="20" class="vst-checkbox" id="v_blackhole" name="v_blackhole" <?php if ($v_blackhole == 'yes') echo "checked=yes" ?>><?php print _('Discard all mail');?></label>
                                     </td>
                                 </tr>
                                 <tr <?php if ($v_blackhole == 'yes') echo 'style="display:none"'; ?> id="id_fwd_for">
                                     <td class="vst-text input-label">
-                                        <label><input type="checkbox" size="20" class="vst-checkbox" id="v_fwd_for" name="v_fwd_only" <?php if ($v_fwd_only == 'yes') echo "checked=yes" ?>> <?php print _('Do not store forwarded mail');?></label>
+                                        <label><input type="checkbox" size="20" class="vst-checkbox" id="v_fwd_for" name="v_fwd_only" <?php if ($v_fwd_only == 'yes') echo "checked=yes" ?>><?php print _('Do not store forwarded mail');?></label>
                                     </td>
                                 </tr>
                             </table>

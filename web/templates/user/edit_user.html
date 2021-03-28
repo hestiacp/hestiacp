@@ -1,12 +1,12 @@
 <div class="l-center edit">
         <div class="l-sort clearfix">
           <div class="l-unit-toolbar__buttonstrip">
-            <a class="ui-button cancel" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i> <?=_('Back')?></a>
-            <a href="/list/key/" id="btn-create" class="ui-button cancel" title="<?=_('Manage SSH keys');?>"><i class="fas fa-key status-icon orange"></i><?=_('Manage SSH keys')?></a>
-            <a href="/list/log/" id="btn-create" class="ui-button cancel" title="<?=_('Logs');?>"><i class="fas fa-history status-icon maroon"></i><?=_('Logs')?></a>
+            <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back')?></a>
+            <a href="/list/key/" id="btn-create" class="ui-button cancel" dir="ltr" title="<?=_('Manage SSH keys');?>"><i class="fas fa-key status-icon orange"></i><?=_('Manage SSH keys')?></a>
+            <a href="/list/log/" id="btn-create" class="ui-button cancel" dir="ltr" title="<?=_('Logs');?>"><i class="fas fa-history status-icon maroon"></i><?=_('Logs')?></a>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save')?></a>
+            <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save')?></a>
           </div>
         </div>
       </div>
@@ -69,37 +69,6 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print _('Password');?> / <a href="javascript:randomString();" class="generate"><?php print _('generate');?></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" size="20" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>"><br />
-                                    <meter max="4" id="meter"></meter>       
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text">
-                                    <?php print _('Your password must have at least');?>
-                                    <ul>
-                                        <li><?php print _('8 characters long');?></li>
-                                        <li><?php print _('1 uppercase & 1 lowercase character');?></li>
-                                        <li><?php print _('1 number');?></li>
-                                    </ul>
-                                </td>
-                            </tr>                            
-                            <tr>
-                                <td>
-                                    <label><input type="checkbox" class="vst-checkbox password-option" name="v_twofa" <?php if(!empty($v_twofa)) echo "checked=yes" ?>> <?php print _('Enable 2FA');?></label>
-                                    <?php if (!empty($v_twofa)) { ?>
-                                    <p><?php echo _('2FA Reset Code:').' '.$v_twofa; ?></br></p>
-                                    <p><?php echo _('Please scan the code below in your 2FA application:'); ?></p>
-                                    <div><img class="qr-code" src="<?php echo $v_qrcode; ?>"></div>
-                                    <?php } ?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text input-label">
                                     <?php print _('Contact');?>
                                 </td>
                             </tr>
@@ -116,6 +85,37 @@
                             <tr>
                                 <td>
                                     <input type="text" size="20" class="vst-input" name="v_email" value="<?=htmlentities(trim($v_email, "'"))?>">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print _('Password');?> <a href="javascript:randomString();" title="<?php print _('generate');?>"><i class="fas fa-sync status-icon green icon-large"></i></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" size="20" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>"><br />
+                                    <meter max="4" id="meter"></meter>       
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text">
+                                    <?php print _('Your password must have at least');?>:
+                                    <ul>
+                                        <li><?php print _('8 characters long');?></li>
+                                        <li><?php print _('1 uppercase & 1 lowercase character');?></li>
+                                        <li><?php print _('1 number');?></li>
+                                    </ul>
+                                </td>
+                            </tr>                            
+                            <tr>
+                                <td>
+                                    <label><input type="checkbox" class="vst-checkbox password-option" name="v_twofa" <?php if(!empty($v_twofa)) echo "checked=yes" ?>><?php print _('Enable 2FA');?></label>
+                                    <?php if (!empty($v_twofa)) { ?>
+                                    <p><?php echo _('2FA Reset Code:').' '.$v_twofa; ?></br></p>
+                                    <p><?php echo _('Please scan the code below in your 2FA application:'); ?></p>
+                                    <div><img class="qr-code" src="<?php echo $v_qrcode; ?>"></div>
+                                    <?php } ?>
                                 </td>
                             </tr>
                             <tr>

@@ -1,20 +1,20 @@
 <div class="hidden" id="token" token="<?=$_SESSION['token']?>"></div>
-<a href="#" class="to-top">
+<a href="#" class="to-top" title="<?=_('top')?>">
 	<i class="fas fa-arrow-up"></i>
 </a>
-<a href="#" class="to-shortcuts">
+<a href="#" class="to-shortcuts" title="Shortcuts">
 	<i class="fas fa-keyboard"></i>
 </a>
 
 <div class="l-header">
 	<div class="l-center">
-		<a href="/list/web/" class="l-logo"></a>
+		<a href="/list/web/" class="l-logo" title="<?=_('Hestia Control Panel');?>"></a>
 		<div class="l-menu clearfix noselect">
-			<div class="l-menu__item <?php if($TAB == 'WEB' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'DNS' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'MAIL' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'DB' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'BACKUP' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'CRON' ) echo 'l-menu__item--active' ?>"><a href="/list/web/"><i class="fas fa-tasks panel-icon"></i>&nbsp;&nbsp;&nbsp;<?=_('Records')?></a></div>
+			<div class="l-menu__item <?php if($TAB == 'WEB' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'DNS' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'MAIL' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'DB' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'BACKUP' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'CRON' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'LOG' ) echo 'l-menu__item--active' ?>"><a href="/list/web/"><i class="fas fa-tasks panel-icon"></i><?=_('Records')?></a></div>
 			<?php if ((isset($_SESSION['FILE_MANAGER'])) && (!empty($_SESSION['FILE_MANAGER'])) && ($_SESSION['FILE_MANAGER'] == "true")) {?>
-				<div class="l-menu__item <?php if($TAB == 'FM' ) echo 'l-menu__item--active' ?>"><a href="/fm/"><i class="fas fa-folder-open panel-icon"></i>&nbsp;&nbsp;&nbsp;<?=_('Files')?></a></div>
+				<div class="l-menu__item <?php if($TAB == 'FM' ) echo 'l-menu__item--active' ?>"><a href="/fm/"><i class="fas fa-folder-open panel-icon"></i><?=_('Files')?></a></div>
 			<?php } ?>
-			<div class="l-menu__item <?php if($TAB == 'STATS' ) echo 'l-menu__item--active' ?>"><a href="/list/stats/"><i class="fas fa-chart-line panel-icon"></i>&nbsp;&nbsp;&nbsp;<?=_('Statistics')?></a></div>
+			<div class="l-menu__item <?php if($TAB == 'STATS' ) echo 'l-menu__item--active' ?>"><a href="/list/stats/"><i class="fas fa-chart-line panel-icon"></i><?=_('Statistics')?></a></div>
 		</div>
 		<div class="l-profile noselect">
 			<div class="l-menu__item">
@@ -25,9 +25,8 @@
 				</span>
 			</div>
 			<div class="l-menu__item"><a title="<?=_('Notifications')?>" class="l-profile__notifications <? if($panel[$user]['NOTIFICATIONS'] == 'yes') echo " updates"; ?>"><i class="fas fa-bell <?if($panel[$user]['NOTIFICATIONS'] == 'yes') echo " status-icon orange"; ?>"></i></a></div>
-			<div class="l-menu__item"><a href="/edit/user/?user=<?php echo $user; ?>" title="<?=htmlspecialchars($user)?> (<?=htmlspecialchars($panel[$user]['NAME'])?>)" class="l-profile__username"><i class="fas fa-user-edit"></i></a></div>
-			<div class="l-menu__item"><a href="https://github.com/hestiacp/hestiacp/issues/" target="_new" title="Submit a bug report" class="l-profile__help"><i class="fas fa-exclamation-triangle"></i></a></div>
-			<div class="l-menu__item"><a href="https://docs.hestiacp.com/" title="<?=_('Help')?>" class="l-profile__help" target="_blank"><i class="fas fa-question-circle"></i></a></div>
+			<div class="l-menu__item"><a href="/edit/user/?user=<?php echo $user; ?>" title="<?=htmlspecialchars($user)?> (<?=htmlspecialchars($panel[$user]['NAME'])?>)" class="l-profile__username"><i class="fas fa-user-circle"></i></a></div>
+			<div class="l-menu__item"><a href="https://docs.hestiacp.com/" title="<?=_('Help')?>" rel="noopener" class="l-profile__help" target="_blank"><i class="fas fa-question-circle"></i></a></div>
 			<div class="l-menu__item"><a href="/logout/" title="<?=_('Log out')?>" class="l-profile__logout"><i class="fas fa-sign-out-alt"></i></a></div>
 		</div>
 	</div>

@@ -41,6 +41,7 @@ if (empty($_POST['v_locality'])) $errors[] = _('City');
 if (empty($_POST['v_org'])) $errors[] = _('Organization');
 if (empty($_POST['v_email'])) $errors[] = _('Email');
 $v_domain = $_POST['v_domain'];
+$v_aliases = $_POST['v_aliases'];
 $v_email = $_POST['v_email'];
 $v_country = $_POST['v_country'];
 $v_state = $_POST['v_state'];
@@ -64,14 +65,20 @@ if (!empty($errors[0])) {
 
 // Protect input
 $v_domain = escapeshellarg($_POST['v_domain']);
+$waliases = preg_replace("/\n/", " ", $_POST['v_aliases']);
+$waliases = preg_replace("/,/", " ", $waliases);
+$waliases = preg_replace('/\s+/', ' ',$waliases);
+$waliases = trim($waliases);
+$aliases = explode(" ", $waliases);
+$v_aliases = escapeshellarg(str_replace(' ', "\n", $waliases));
+
 $v_email = escapeshellarg($_POST['v_email']);
 $v_country = escapeshellarg($_POST['v_country']);
 $v_state = escapeshellarg($_POST['v_state']);
 $v_locality = escapeshellarg($_POST['v_locality']);
 $v_org = escapeshellarg($_POST['v_org']);
 
-exec (HESTIA_CMD."v-generate-ssl-cert ".$v_domain." ".$v_email." ".$v_country." ".$v_state." ".$v_locality." ".$v_org." IT '' json", $output, $return_var);
-
+exec (HESTIA_CMD."v-generate-ssl-cert ".$v_domain." ".$v_email." ".$v_country." ".$v_state." ".$v_locality." ".$v_org." IT  '".$v_aliases."' json", $output, $return_var);
 // Revert to raw values
 $v_domain = $_POST['v_domain'];
 $v_email = $_POST['v_email'];

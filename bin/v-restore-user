@@ -39,6 +39,7 @@ fi
 # shellcheck source=/usr/local/hestia/func/ip.sh
 # shellcheck source=/usr/local/hestia/func/db.sh
 # shellcheck source=/usr/local/hestia/func/rebuild.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
 # shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/func/main.sh
 source $HESTIA/func/backup.sh
@@ -46,6 +47,7 @@ source $HESTIA/func/domain.sh
 source $HESTIA/func/ip.sh
 source $HESTIA/func/db.sh
 source $HESTIA/func/rebuild.sh
+source $HESTIA/func/syshealth.sh
 source $HESTIA/conf/hestia.conf
 
 

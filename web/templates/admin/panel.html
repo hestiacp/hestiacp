@@ -10,7 +10,7 @@
 	<div class="l-center">
 		<a href="/list/user/" class="l-logo" title="<?=_('Hestia Control Panel');?>"></a>
 		<div class="l-menu clearfix noselect">
-			<div class="l-menu__item <?php if($TAB == 'WEB' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'DNS' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'MAIL' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'DB' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'BACKUP' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'CRON' ) echo 'l-menu__item--active' ?><?php if($TAB == 'PACKAGE' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'USER' ) echo 'l-menu__item--active' ?>"><a href="/list/user/"><i class="fas fa-tasks panel-icon"></i><?=_('Records')?></a></div>
+			<div class="l-menu__item <?php if($TAB == 'WEB' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'DNS' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'MAIL' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'DB' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'BACKUP' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'CRON' ) echo 'l-menu__item--active' ?><?php if($TAB == 'PACKAGE' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'USER' ) echo 'l-menu__item--active' ?><?php if($TAB == 'LOG' ) echo 'l-menu__item--active' ?>"><a href="/list/user/"><i class="fas fa-tasks panel-icon"></i><?=_('Records')?></a></div>
 			<?php if ((isset($_SESSION['FILE_MANAGER'])) && (!empty($_SESSION['FILE_MANAGER'])) && ($_SESSION['FILE_MANAGER'] == "true")) {?>
 				<div class="l-menu__item <?php if($TAB == 'FM' ) echo 'l-menu__item--active' ?>"><a href="/fm/"><i class="fas fa-folder-open panel-icon"></i><?=_('Files')?></a></div>
 			<?php } ?>
@@ -41,7 +41,7 @@
 <div class="l-content">
 	<div class="l-center">
 		<div class="l-stat">
-			<div class="l-stat__col <?php if($TAB == 'USER' ) echo 'l-stat__col--active' ?>">
+			<div class="l-stat__col <?php if($TAB == 'USER' ) echo 'l-stat__col--active' ?><?php if($TAB == 'LOG' ) echo 'l-stat__col--active' ?>">
 				<a href="/list/user/">
 					<div class="l-stat__col-title"><?=_('USER')?>&nbsp;&nbsp;<i class="fas fa-users"></i></div>
 					<ul>

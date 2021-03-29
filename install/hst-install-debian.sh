@@ -156,6 +156,20 @@ write_config_value() {
     echo "$key='$value'" >> $HESTIA/conf/hestia.conf
 }
 
+# Sort configuration file values
+# Write final copy to $HESTIA/conf/hestia.conf for active usage
+# Duplicate file to $HESTIA/conf/defaults/hestia.conf to restore known good installation values
+sort_config_file(){
+    sort $HESTIA/conf/hestia.conf -o /tmp/updconf
+    mv $HESTIA/conf/hestia.conf $HESTIA/conf/hestia.conf.bak
+    mv /tmp/updconf $HESTIA/conf/hestia.conf
+    rm -f $HESTIA/conf/hestia.conf.bak
+    if [ ! -d "$HESTIA/conf/defaults/" ]; then
+        mkdir -p "$HESTIA/conf/defaults/"
+    fi
+    cp $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
+}
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -1874,5 +1888,9 @@ if [ "$interactive" = 'yes' ]; then
         reboot
     fi
 fi
+
+# Clean-up
+# Sort final configuration file
+sort_config_file
 
 # EOF

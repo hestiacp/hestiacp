@@ -989,8 +989,11 @@
                                         <tr>
                                             <td>
                                                 <table id="security-system-table" style="display: none;">
+                                                    <td class="vst-text input-label step-top" style="font-size:1rem;padding-bottom:12px;">
+                                                        <?=_('API');?>
+                                                    </td>
                                                     <tr>
-                                                        <td class="vst-text step-top">
+                                                        <td class="vst-text input-label">
                                                             <?php print _('Enable API access');?>
                                                         </td>
                                                     </tr>
@@ -1022,7 +1025,11 @@
                                                         </td>
                                                     </tr>
                                                     </table>
-                                                        </td></tr>
+                                                        </td>
+                                                    </tr>
+                                                    <td class="vst-text input-label step-top" style="font-size:1rem;padding-bottom:12px;">
+                                                        <?=_('Login');?>
+                                                    </td>
                                                     <tr>
                                                         <td class="vst-text input-label">
                                                             <?php print _('Login screen style');?>
@@ -1078,13 +1085,13 @@
                                                 <td>
                                                     <table id="security-sysadminprotect-table" class="step-top" style="display: none;">
                                                         <tr>
-                                                            <td class="vst-text input-label step-top" style="font-size:0.95rem;">
+                                                            <td class="vst-text input-label step-top" style="font-size:1rem;padding-bottom:12px;">
                                                                 <?=_('System Administrator account');?>
                                                             </td>
                                                             
                                                         </tr>
                                                         <tr>
-                                                            <td class="vst-text input-label step-top">
+                                                            <td class="vst-text input-label">
                                                                 <?=_('Restrict access to read-only for other administrators');?>
                                                             </td>
                                                         </tr>
@@ -1126,9 +1133,14 @@
                                         <tr>
                                             <td>
                                                 <table id="security-policies-table" style="display: none;">
-                                                
+                                                    <tr>
+                                                        <td class="vst-text input-label step-top" style="font-size:1rem;padding-bottom:12px;">
+                                                            <?=_('Users');?>
+                                                        </td>
+                                                        
+                                                    </tr>
                                         <tr>
-                                            <td class="vst-text input-label step-top">
+                                            <td class="vst-text input-label">
                                                 <?php print _('Allow users to edit their account details');?>
                                             </td>
                                         </tr>
@@ -1184,6 +1196,11 @@
                                             </td>
                                         </tr>
                                         <tr>
+                                            <td class="vst-text input-label step-top" style="font-size:1rem;padding-bottom:12px;">
+                                                <?=_('Domains');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
                                             <td class="vst-text input-label">
                                                 <?php print _('Enforce subdomain ownership');?>
                                             </td>
@@ -1194,11 +1211,16 @@
                                                     <option value='yes'><?php print _('yes'); ?></option>
                                                     <option value='no' <?php if($_SESSION['ENFORCE_SUBDOMAIN_OWNERSHIP'] == 'no') echo 'selected' ?> ><?php print _('no'); ?></option>
                                                 </select>
-                                                <br><br>
                                             </td>
                                         </tr>
+
                                                 </table>
                                             </td>
+                                            <tr>
+                                                <td>
+                                                    <br><br>
+                                                </td>
+                                            </tr>
                                         </tr>
                                     </table>
                                 </td>

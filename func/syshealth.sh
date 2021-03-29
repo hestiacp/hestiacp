@@ -147,10 +147,11 @@ function syshealth_repair_web_config() {
     done
 }
 
-function syshealth_restore_system_installed_defaults() {
+function syshealth_restore_system_installed_config() {
     if [ -f "$HESTIA/conf/defaults/hestia.conf" ]; then
         mv $HESTIA/conf/hestia.conf $HESTIA/conf/hestia.conf.old
         cp $HESTIA/conf/defaults/hestia.conf $HESTIA/conf/hestia.conf
+        rm -f $HESTIA/conf/hestia.conf.old
     else
         echo "ERROR: System default configuration file not found, aborting."
         exit 1

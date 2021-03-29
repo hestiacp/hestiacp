@@ -2925,7 +2925,6 @@ a.vst-text:active b{
 }
 
 .additional-control {
-  margin-left: 17px;
   color: #326b9b;
   border-bottom: 0px solid #326b9b;
   font-size: 0.8rem;
@@ -3292,11 +3291,28 @@ a.button.cancel {
 }
 
 .page-title {
-  font-size: 1.4rem!important;
-  font-weight: 500!important;
-  padding-bottom: 30px!important;
+  font-size: 1.4rem !important;
+  font-weight: 500 !important;
+  padding-bottom: 30px !important;
   letter-spacing: -0.01em;
   cursor: default;
+}
+
+.section-title {
+  cursor: default;
+  font-size: 1.2rem!important;
+  font-weight: 600!important;
+  padding-bottom: 12px!important;
+  padding-top: 28px!important;
+  letter-spacing: -0.01em;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.section-hide-button {
+  margin-top: 30px;
+  display: inline-block;
+  margin-left: -14px;
 }
 
 .qr-code {

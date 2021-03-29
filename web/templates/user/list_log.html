@@ -6,7 +6,7 @@
     </div>
     <div class="l-unit-toolbar__buttonstrip float-right">
       <a href="javascript:location.reload();" class="ui-button cancel" dir="ltr"><i class="fas fa-redo status-icon green"></i><?=_('Refresh')?></a>
-      <? if (($_SESSION['userContext'] === 'user') && ($_SESSION['POLICY_USER_DELETE_LOGS'] === 'yes')) {?>
+      <? if (($_SESSION['userContext'] === 'user') && ($_SESSION['POLICY_USER_DELETE_LOGS'] === 'yes') || (!isset($_SESSION['POLICY_USER_DELETE_LOGS']))) {?>
         <div class="actions-panel display-inline-block" key-action="js">
           <a class="data-controls do_delete ui-button danger cancel">
             <i class="do_delete fas fa-times-circle status-icon red"></i><?=_('Delete')?>

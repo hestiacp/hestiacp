@@ -48,6 +48,7 @@ if (!empty($_SESSION['WEBMAIL_ALIAS'])) $v_webmail_alias = $_SESSION['WEBMAIL_AL
                     <div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" value="<?php echo array_key_first($ips);?>"/></b></div>
               </div>
     </div>
+    <?php if($_SESSION['WEBMAIL_SYSTEM']){?>
     <div class="l-unit animated fadeIn">
                   <div class="l-unit__col l-unit__col--right">
                     <div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" style="width:200px !important;" value="<?=$v_webmail_alias;?>.<?=htmlspecialchars($_GET['domain']);?>"/></b> </div>
@@ -57,6 +58,7 @@ if (!empty($_SESSION['WEBMAIL_ALIAS'])) $v_webmail_alias = $_SESSION['WEBMAIL_AL
                   <div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" value="<?php echo array_key_first($ips);?>"/></b></div>
             </div>
     </div>
+    <?php } ?>
     <div class="l-unit animated fadeIn">
           <div class="l-unit__col l-unit__col--right">
             <div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" style="width:200px !important;" value="@"/></b> </div>

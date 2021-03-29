@@ -147,7 +147,20 @@ function syshealth_repair_web_config() {
     done
 }
 
-function syshealth_restore_system_installed_config() {
+function syshealth_update_system_config_format() {
+    # SYSTEM CONFIGURATION
+    # Create array of known keys in configuration file
+    system="system"
+    known_keys=(ANTISPAM_SYSTEM ANTIVIRUS_SYSTEM API_ALLOWED_IP API BACKEND_PORT BACKUP_GZIP BACKUP_MODE BACKUP_SYSTEM CRON_SYSTEM DB_PMA_ALIAS DB_SYSTEM DISK_QUOTA DNS_SYSTEM ENFORCE_SUBDOMAIN_OWNERSHIP FILE_MANAGER FIREWALL_EXTENSION FIREWALL_SYSTEM FTP_SYSTEM IMAP_SYSTEM INACTIVE_SESSION_TIMEOUT LANGUAGE LOGIN_STYLE MAIL_SYSTEM PROXY_PORT PROXY_SSL_PORT PROXY_SYSTEM RELEASE_BRANCH STATS_SYSTEM THEME UPDATE_HOSTNAME_SSL UPGRADE_SEND_EMAIL UPGRADE_SEND_EMAIL_LOG WEB_BACKEND WEBMAIL_ALIAS WEBMAIL_SYSTEM WEB_PORT WEB_RGROUPS WEB_SSL WEB_SSL_PORT WEB_SYSTEM VERSION)
+    write_kv_config_file
+    unset system
+    unset known_keys
+}
+
+
+# Restore System Configuration
+# Replaces $HESTIA/conf/hestia.conf with "known good defaults" file ($HESTIA/conf/defaults/hestia.conf)
+function syshealth_restore_system_config() {
     if [ -f "$HESTIA/conf/defaults/hestia.conf" ]; then
         mv $HESTIA/conf/hestia.conf $HESTIA/conf/hestia.conf.old
         cp $HESTIA/conf/defaults/hestia.conf $HESTIA/conf/hestia.conf
@@ -179,14 +192,14 @@ function syshealth_repair_system_config() {
     if [ ! -z "$DB_SYSTEM" ]; then
         if [ "$DB_SYSTEM" = "mysql" ]; then
             if [ -z "$DB_PMA_ALIAS" ]; then 
-                echo "[ ! ] Adding missing variable to hestia.conf: DB_PMA_ALIAS ('phpMyAdmin')"
-                $BIN/v-change-sys-config-value 'DB_PMA_ALIAS' 'phpMyAdmin'
+                echo "[ ! ] Adding missing variable to hestia.conf: DB_PMA_ALIAS ('phpmyadmin)"
+                $BIN/v-change-sys-config-value 'DB_PMA_ALIAS' 'phpmyadmin'
             fi
         fi
         if [ "$DB_SYSTEM" = "pgsql" ]; then
             if [ -z "$DB_PGA_ALIAS" ]; then 
-                echo "[ ! ] Adding missing variable to hestia.conf: DB_PGA_ALIAS ('phpPgAdmin')"
-                $BIN/v-change-sys-config-value 'DB_PGA_ALIAS' 'phpPgAdmin'
+                echo "[ ! ] Adding missing variable to hestia.conf: DB_PGA_ALIAS ('phppgadmin')"
+                $BIN/v-change-sys-config-value 'DB_PGA_ALIAS' 'phppgadmin'
             fi
         fi
     fi
@@ -199,8 +212,8 @@ function syshealth_repair_system_config() {
 
     # Theme
     if [ -z "$THEME" ]; then 
-        echo "[ ! ] Adding missing variable to hestia.conf: THEME ('default')"
-        $BIN/v-change-sys-config-value 'THEME' 'default'
+        echo "[ ! ] Adding missing variable to hestia.conf: THEME ('dark')"
+        $BIN/v-change-sys-config-value 'THEME' 'dark'
     fi
 
     # Default language
@@ -242,7 +255,6 @@ function syshealth_repair_system_config() {
     # File Manager
     if [ -z "$FILE_MANAGER" ]; then
         echo "[ ! ] Adding missing variable to hestia.conf: FILE_MANAGER ('true')"
-        echo "[ ! ] File Manager is enabled but not installed, repairing components..."
         $BIN/v-add-sys-filemanager quiet
     fi
     

@@ -71,7 +71,6 @@ installer_dependencies="apt-transport-https curl dirmngr gnupg wget ca-certifica
 help() {
     echo "Usage: $0 [OPTIONS]
   -a, --apache            Install Apache        [yes|no]  default: yes
-  -n, --nginx             Install Nginx         [yes|no]  default: yes
   -w, --phpfpm            Install PHP-FPM       [yes|no]  default: yes
   -o, --multiphp          Install Multi-PHP     [yes|no]  default: no
   -v, --vsftpd            Install Vsftpd        [yes|no]  default: yes
@@ -182,7 +181,6 @@ for arg; do
     delim=""
     case "$arg" in
         --apache)               args="${args}-a " ;;
-        --nginx)                args="${args}-n " ;;
         --phpfpm)               args="${args}-w " ;;
         --vsftpd)               args="${args}-v " ;;
         --proftpd)              args="${args}-j " ;;
@@ -214,10 +212,9 @@ done
 eval set -- "$args"
 
 # Parsing arguments
-while getopts "a:n:w:v:j:k:m:g:d:x:z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
+while getopts "a:w:v:j:k:m:g:d:x:z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
     case $Option in
         a) apache=$OPTARG ;;            # Apache
-        n) nginx=$OPTARG ;;             # Nginx
         w) phpfpm=$OPTARG ;;            # PHP-FPM
         o) multiphp=$OPTARG ;;          # Multi-PHP
         v) vsftpd=$OPTARG ;;            # Vsftpd
@@ -453,9 +450,9 @@ clear
 install_welcome_message
 
 # Web stack
-if [ "$nginx" = 'yes' ]; then
-    echo '   - NGINX Web / Proxy Server'
-fi
+
+echo '   - NGINX Web / Proxy Server'
+
 if [ "$apache" = 'yes' ] && [ "$nginx" = 'no' ] ; then
     echo '   - Apache Web Server'
 fi
@@ -605,11 +602,10 @@ echo "Adding required repositories to proceed with installation:"
 echo
 
 # Installing Nginx repo
-if [ "$nginx" = 'yes' ]; then
-    echo "[ * ] NGINX"
-    echo "deb [arch=amd64] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
-    apt-key adv --fetch-keys 'https://nginx.org/keys/nginx_signing.key' > /dev/null 2>&1
-fi
+echo "[ * ] NGINX"
+echo "deb [arch=amd64] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
+apt-key adv --fetch-keys 'https://nginx.org/keys/nginx_signing.key' > /dev/null 2>&1
+
 
 # Installing sury PHP repo
 echo "[ * ] PHP"
@@ -752,9 +748,7 @@ fi
 
 # Excluding packages
 software=$(echo "$software" | sed -e "s/apache2.2-common//")
-if [ "$nginx" = 'no'  ]; then
-    software=$(echo "$software" | sed -r -e 's/(\s|^)nginx(\s|$)/ /')
-fi
+
 if [ "$apache" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/apache2 //")
     software=$(echo "$software" | sed -e "s/apache2-bin//")
@@ -1000,15 +994,7 @@ touch $HESTIA/conf/hestia.conf
 chmod 660 $HESTIA/conf/hestia.conf
 
 # Web stack
-if [ "$apache" = 'yes' ] && [ "$nginx" = 'no' ] ; then
-    write_config_value "WEB_SYSTEM" "apache2"
-    write_config_value "WEB_RGROUPS" "www-data"
-    write_config_value "WEB_PORT" "80"
-    write_config_value "WEB_SSL_PORT" "443"
-    write_config_value "WEB_SSL" "mod_ssl"
-    write_config_value "STATS_SYSTEM" "awstats"
-fi
-if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
+if [ "$apache" = 'yes' ]; then
     write_config_value "WEB_SYSTEM" "apache2"
     write_config_value "WEB_RGROUPS" "www-data"
     write_config_value "WEB_PORT" "8080"
@@ -1019,12 +1005,13 @@ if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
     write_config_value "PROXY_SSL_PORT" "443"
     write_config_value "STATS_SYSTEM" "awstats"
 fi
-if [ "$apache" = 'no' ] && [ "$nginx"  = 'yes' ]; then
+if [ "$apache" = 'no' ]; then
     write_config_value "WEB_SYSTEM" "nginx"
     write_config_value "WEB_PORT" "80"
     write_config_value "WEB_SSL_PORT" "443"
     write_config_value "WEB_SSL" "openssl"
     write_config_value "STATS_SYSTEM" "awstats"
+
 fi
 
 if [ "$release" -ge 9 ] || [ "$multiphp" = 'yes' ]; then
@@ -1180,34 +1167,32 @@ cp -f $HESTIA_INSTALL_DIR/ssl/dhparam.pem /etc/ssl
 #                     Configure Nginx                      #
 #----------------------------------------------------------#
 
-if [ "$nginx" = 'yes' ]; then
-    echo "[ * ] Configuring NGINX..."
-    rm -f /etc/nginx/conf.d/*.conf
-    cp -f $HESTIA_INSTALL_DIR/nginx/nginx.conf /etc/nginx/
-    cp -f $HESTIA_INSTALL_DIR/nginx/status.conf /etc/nginx/conf.d/
-    cp -f $HESTIA_INSTALL_DIR/nginx/phpmyadmin.inc /etc/nginx/conf.d/
-    cp -f $HESTIA_INSTALL_DIR/nginx/phppgadmin.inc /etc/nginx/conf.d/
-    cp -f $HESTIA_INSTALL_DIR/logrotate/nginx /etc/logrotate.d/
-    mkdir -p /etc/nginx/conf.d/domains
-    mkdir -p /etc/nginx/modules-enabled
-    mkdir -p /var/log/nginx/domains
+echo "[ * ] Configuring NGINX..."
+rm -f /etc/nginx/conf.d/*.conf
+cp -f $HESTIA_INSTALL_DIR/nginx/nginx.conf /etc/nginx/
+cp -f $HESTIA_INSTALL_DIR/nginx/status.conf /etc/nginx/conf.d/
+cp -f $HESTIA_INSTALL_DIR/nginx/phpmyadmin.inc /etc/nginx/conf.d/
+cp -f $HESTIA_INSTALL_DIR/nginx/phppgadmin.inc /etc/nginx/conf.d/
+cp -f $HESTIA_INSTALL_DIR/logrotate/nginx /etc/logrotate.d/
+mkdir -p /etc/nginx/conf.d/domains
+mkdir -p /etc/nginx/modules-enabled
+mkdir -p /var/log/nginx/domains
 
-    # Update dns servers in nginx.conf
-    dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
-    for ip in $dns_resolver; do
-        if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            resolver="$ip $resolver"
-        fi
-    done
-    if [ ! -z "$resolver" ]; then
-        sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /etc/nginx/nginx.conf
-        sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
+# Update dns servers in nginx.conf
+dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
+for ip in $dns_resolver; do
+    if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        resolver="$ip $resolver"
     fi
-
-    update-rc.d nginx defaults > /dev/null 2>&1
-    systemctl start nginx >> $LOG
-    check_result $? "nginx start failed"
+done
+if [ ! -z "$resolver" ]; then
+    sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /etc/nginx/nginx.conf
+    sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
 fi
+
+update-rc.d nginx defaults > /dev/null 2>&1
+systemctl start nginx >> $LOG
+check_result $? "nginx start failed"
 
 
 #----------------------------------------------------------#

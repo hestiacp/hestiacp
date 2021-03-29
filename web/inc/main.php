@@ -93,6 +93,10 @@ if (isset($_SESSION['user'])) {
     $user = $_SESSION['user'];
 }
 
+if (isset($panel[$user]['THEME'])) {
+    $_SESSION['userTheme'] = $panel[$user]['THEME'];
+}
+
 if (isset($_SESSION['look']) && ($_SESSION['userContext'] === 'admin')) {
     $user = $_SESSION['look'];
 }

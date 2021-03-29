@@ -45,6 +45,7 @@ $v_password = "";
 $v_email = $data[$v_username]['CONTACT'];
 $v_package = $data[$v_username]['PACKAGE'];
 $v_language = $data[$v_username]['LANGUAGE'];
+$v_user_theme = $data[$v_username]['THEME'];
 $v_name = $data[$v_username]['NAME'];
 $v_shell = $data[$v_username]['SHELL'];
 $v_twofa = $data[$v_username]['TWOFA'];
@@ -87,6 +88,11 @@ foreach($language as $lang){
     $languages[$lang] = translate_json($lang);
 }
 asort($languages);
+unset($output);
+
+// List themes
+exec (HESTIA_CMD."v-list-sys-themes json", $output, $return_var);
+$themes = json_decode(implode('', $output), true);
 unset($output);
 
 // List shells
@@ -226,6 +232,20 @@ if (!empty($_POST['save'])) {
                 unset($output);
                 $v_name = $_POST['v_name'];
             }
+    }
+
+    // Update theme
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_user_theme'] != $_SESSION['userTheme']) {
+            exec (HESTIA_CMD."v-change-user-theme ".escapeshellarg($v_username)." ".escapeshellarg($_POST['v_user_theme']), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            $v_user_theme = $_POST['v_user_theme'];
+            if ($_SESSION['user'] === $v_username) {
+                unset($_SESSION['userTheme']);
+                $_SESSION['userTheme'] = $v_user_theme;
+            }
+        }
     }
 
     // Change NameServers

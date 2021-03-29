@@ -78,6 +78,7 @@ json_list() {
         "U_CRON_JOBS": "'$U_CRON_JOBS'",
         "U_BACKUPS": "'$U_BACKUPS'",
         "LANGUAGE": "'$LANGUAGE'",
+        "THEME": "'$THEME'",
         "NOTIFICATIONS": "'$NOTIFICATIONS'",
         "PHPCLI": "'$PHPCLI'",
         "TIME": "'$TIME'",

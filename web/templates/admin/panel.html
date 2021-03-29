@@ -33,6 +33,10 @@
 					<i class="fas fa-exchange-alt" title="<?=_('Bandwidth')?>: <?=humanize_usage_size($panel[$user]['U_DISK'])?> <?=humanize_usage_measure($panel[$user]['U_DISK'])?>"></i>&nbsp;&nbsp;<b><?=humanize_usage_size($panel[$user]['U_BANDWIDTH'])?></b> <?=humanize_usage_measure($panel[$user]['U_BANDWIDTH'])?>
 				</span>
 			</div>
+			<!-- Show update notifier for administrators -->
+			<? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['UPDATE_AVAILABLE'])) {?>
+				<div class="l-menu__item <?php if($TAB == 'UPDATES' ) echo 'l-menu__item--active' ?>"><a href="/list/updates/" title="<?_('Updates')?>" class="l-profile__username "><i class="fas fa-star status-icon orange"></i></a></div>
+			<?}?>
 			<? if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($user == 'admin'))) {?>
 				<!-- Do not show notifications panel when impersonating 'admin' user -->
 			<? } else { ?>
@@ -44,8 +48,8 @@
 			<? } ?>
 			<? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
 				<!-- Hide 'Server Settings' button when impersonating 'admin' or other users -->
-			<? } else if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look']))) { ?>
-				<div class="l-menu__item <?php if($TAB == 'SERVER' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'UPDATES' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'IP' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'RRD' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'FIREWALL' ) echo 'l-menu__item--active' ?>"><a href="/list/server/" class="l-profile__serversettings" title="<?=_('Server')?>"><i class="fas fa-cog"></i></a></div>
+			<? } else if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look']))) { ?>				
+				<div class="l-menu__item <?php if($TAB == 'SERVER' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'IP' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'RRD' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'FIREWALL' ) echo 'l-menu__item--active' ?>"><a href="/list/server/" class="l-profile__serversettings" title="<?=_('Server')?>"><i class="fas fa-cog"></i></a></div>
 			<? } ?>
 			<? if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($user == 'admin'))) {?>
 				<!-- Hide 'edit user' entry point from other administrators for default 'admin' account-->

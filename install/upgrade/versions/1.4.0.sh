@@ -113,3 +113,12 @@ if [ "$API" = "no" ]; then
         $HESTIA/bin/v-change-sys-api remove
     fi
 fi
+
+# Back up users existing configuration data to $HESTIA/conf/defaults/hestia.conf
+if [ ! -f "$HESTIA/conf/defaults/hestia.conf" ]; then
+    echo "[ * ] Creating known good configuration data for system recovery..."
+    if [ ! -d "$HESTIA/conf/defaults/" ]; then
+        mkdir -p "$HESTIA/conf/defaults/"
+    fi
+    cp -f $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
+fi

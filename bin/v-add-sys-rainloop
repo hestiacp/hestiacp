@@ -171,5 +171,5 @@ fi
 
 
 
-log_history "Rouncube successfuly installed" '' 'admin'
+log_history "Rainloop successfuly installed" '' 'admin'
 log_event "$OK" "$ARGUMENTS"

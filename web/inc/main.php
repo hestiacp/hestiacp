@@ -158,6 +158,9 @@ function top_panel($user, $TAB) {
     $panel = json_decode(implode('', $output), true);
     unset($output);
 
+    unset($_SESSION['userTheme']);
+    $_SESSION['userTheme'] = $panel[$user]['THEME'];
+
     // Set home location URLs
     if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look']))) {
         // Display users list for administrators unless they are impersonating a user account

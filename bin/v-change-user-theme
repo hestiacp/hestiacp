@@ -42,6 +42,9 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
+if [ -z $THEME ]; then
+    add_object_key "user" 'USER' "$user" 'THEME' 'LANGUAGE'
+fi
 update_user_value "$user" '$THEME' "$theme"
 
 $BIN/v-log-action "$user" "Info" "System" "User theme changed (User: $user, Theme: $theme)."

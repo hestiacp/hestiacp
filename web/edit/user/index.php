@@ -237,10 +237,12 @@ if (!empty($_POST['save'])) {
         if ($_POST['v_user_theme'] != $_SESSION['userTheme']) {
             exec (HESTIA_CMD."v-change-user-theme ".escapeshellarg($v_username)." ".escapeshellarg($_POST['v_user_theme']), $output, $return_var);
             check_return_code($return_var,$output);
-            unset($_SESSION['userTheme']);
             unset($output);
             $v_user_theme = $_POST['v_user_theme'];
-            $_SESSION['userTheme'] = $v_user_theme;
+            if ($_SESSION['user'] === $v_username) {
+                unset($_SESSION['userTheme']);
+                $_SESSION['userTheme'] = $v_user_theme;
+            }
         }
     }
 

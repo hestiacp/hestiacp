@@ -1058,6 +1058,48 @@
                                         <?}?>
                                         <tr>
                                             <td class="vst-text input-label">
+                                                <?php print _('Users can edit their account details');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_policy_user_edit_details">
+                                                    <option value='yes'><?php print _('yes'); ?></option>
+                                                    <option value='no' <?php if($_SESSION['POLICY_USER_EDIT_DETAILS'] == 'no') echo 'selected' ?> ><?php print _('no'); ?></option>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print _('Users can view their action and login history logs');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_policy_user_view_logs">
+                                                    <option value='yes'><?php print _('yes'); ?></option>
+                                                    <option value='no' <?php if($_SESSION['POLICY_USER_VIEW_LOGS'] == 'no') echo 'selected' ?> ><?php print _('no'); ?></option>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text input-label">
+                                                <?php print _('Users can delete their action and login history logs');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_policy_user_delete_logs">
+                                                    <option value='yes'><?php print _('yes'); ?></option>
+                                                    <option value='no' <?php if($_SESSION['POLICY_USER_DELETE_LOGS'] == 'no') echo 'selected' ?> ><?php print _('no'); ?></option>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text input-label">
                                                 <?php print _('Inactive session timeout');?> (<?php print _('Minutes');?>)
                                             </td>
                                         </tr>

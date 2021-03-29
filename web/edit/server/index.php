@@ -695,6 +695,39 @@ if (!empty($_POST['save'])) {
         }
     }
 
+    // Change POLICY_USER_EDIT_DETAILS
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_policy_user_edit_details'] != $_SESSION['POLICY_USER_EDIT_DETAILS']) {
+            exec (HESTIA_CMD."v-change-sys-config-value POLICY_USER_EDIT_DETAILS ".escapeshellarg($_POST['v_policy_user_edit_details']), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) $v_enforce_subdomain_ownership = $_POST['v_policy_user_edit_details'];
+            $v_security_adv = 'yes';
+        }
+    }
+
+    // Change POLICY_USER_VIEW_LOGS
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_policy_user_view_logs'] != $_SESSION['POLICY_USER_VIEW_LOGS']) {
+            exec (HESTIA_CMD."v-change-sys-config-value POLICY_USER_VIEW_LOGS ".escapeshellarg($_POST['v_policy_user_view_logs']), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) $v_enforce_subdomain_ownership = $_POST['v_policy_user_view_logs'];
+            $v_security_adv = 'yes';
+        }
+    }
+
+    // Change POLICY_USER_DELETE_LOGS
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_policy_user_delete_logs'] != $_SESSION['POLICY_USER_DELETE_LOGS']) {
+            exec (HESTIA_CMD."v-change-sys-config-value POLICY_USER_DELETE_LOGS ".escapeshellarg($_POST['v_policy_user_delete_logs']), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) $v_enforce_subdomain_ownership = $_POST['v_policy_user_delete_logs'];
+            $v_security_adv = 'yes';
+        }
+    }
+
     // Change RESTRICTED_ADMIN
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_restrict_admin'] != $_SESSION['RESTRICTED_ADMIN']) {

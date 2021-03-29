@@ -2861,7 +2861,7 @@ a.vst-text:active b{
 }
 
 .body-web .vst-advanced:focus {
-  background: none !inportant;
+  background: none !important;
 }
 
 .login-box .vst-advanced:hover {

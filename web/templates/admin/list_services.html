@@ -7,7 +7,9 @@
           <?php if ((isset($_SESSION['FIREWALL_SYSTEM'])) && (!empty($_SESSION['FIREWALL_SYSTEM']))) {?>
             <a href="/list/firewall/" class="ui-button cancel" dir="ltr"><i class="fas fa-shield-alt status-icon red"></i><?=_('Firewall')?></a>
           <?php }?>
+          <!-- Disable Updates Button 
           <a href="/list/updates/" class="ui-button cancel" dir="ltr"><i class="fas fa-sync status-icon green"></i><?=_('Updates')?></a>
+          -->
           <a href="/list/log/?user=admin&token=<?=$_SESSION['token']?>" class="ui-button cancel" dir="ltr"><i class="fas fa-book-reader status-icon lightblue"></i><?=_('Logs')?></a>
           <div class="actions-panel display-inline-block" key-action="js">
               <a class="data-controls do_servicerestart ui-button danger cancel">

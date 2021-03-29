@@ -76,7 +76,8 @@ json_list() {
         "API": "'$API'",
         "API_ALLOWED_IP": "'$API_ALLOWED_IP'",
         "RESTRICTED_ADMIN": "'$RESTRICTED_ADMIN'",
-        "HIDE_ADMIN_ACCOUNT": "'$HIDE_ADMIN_ACCOUNT'"
+        "HIDE_ADMIN_ACCOUNT": "'$HIDE_ADMIN_ACCOUNT'",
+        "POLICY_USER_EDIT_DETAILS": "'$POLICY_USER_EDIT_DETAILS'"
     }
     }'
 }

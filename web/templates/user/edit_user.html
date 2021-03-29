@@ -74,7 +74,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>">
+                                    <input type="text" size="20" class="vst-input" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>" <? if ($_SESSION['POLICY_USER_EDIT_DETAILS'] === 'no') { echo 'disabled'; }?>>
                                 </td>
                             </tr>
                             <tr>
@@ -84,7 +84,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_email" value="<?=htmlentities(trim($v_email, "'"))?>">
+                                    <input type="text" size="20" class="vst-input" name="v_email" value="<?=htmlentities(trim($v_email, "'"))?>" <? if ($_SESSION['POLICY_USER_EDIT_DETAILS'] === 'no') { echo 'disabled'; }?>>
                                 </td>
                             </tr>
                             <tr>

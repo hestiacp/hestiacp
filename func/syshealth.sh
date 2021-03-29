@@ -147,6 +147,16 @@ function syshealth_repair_web_config() {
     done
 }
 
+function syshealth_restore_system_installed_defaults() {
+    if [ -f "$HESTIA/conf/defaults/hestia.conf" ]; then
+        mv $HESTIA/conf/hestia.conf $HESTIA/conf/hestia.conf.old
+        cp $HESTIA/conf/defaults/hestia.conf $HESTIA/conf/hestia.conf
+    else
+        echo "ERROR: System default configuration file not found, aborting."
+        exit 1
+    fi
+}
+
 # Repair System Configuration
 # Adds missing variables to $HESTIA/conf/hestia.conf with safe default values
 function syshealth_repair_system_config() {
@@ -182,8 +192,8 @@ function syshealth_repair_system_config() {
 
     # Backup compression level
     if [ -z "$BACKUP_GZIP" ]; then 
-        echo "[ ! ] Adding missing variable to hestia.conf: BACKUP_GZIP ('9')"
-        $BIN/v-change-sys-config-value 'BACKUP_GZIP' '9'
+        echo "[ ! ] Adding missing variable to hestia.conf: BACKUP_GZIP ('4')"
+        $BIN/v-change-sys-config-value 'BACKUP_GZIP' '4'
     fi
 
     # Theme

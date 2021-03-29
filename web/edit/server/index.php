@@ -739,7 +739,7 @@ if (!empty($_POST['save'])) {
         }
     }
 
-    // Change POLICY_SYSTEM_PROTECTED_ADMIN
+    // Change POLICY_SYSTEM_HIDE_ADMIN
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_policy_system_hide_admin'] != $_SESSION['POLICY_SYSTEM_HIDE_ADMIN']) {
             exec (HESTIA_CMD."v-change-sys-config-value POLICY_SYSTEM_HIDE_ADMIN ".escapeshellarg($_POST['v_policy_system_hide_admin']), $output, $return_var);

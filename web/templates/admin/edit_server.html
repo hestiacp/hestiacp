@@ -1036,7 +1036,7 @@
                                                 <td>
                                                     <select class="vst-list" name="v_policy_system_protected_admin">
                                                         <option value='yes'><?php print _('yes'); ?></option>
-                                                        <option value='no' <?php if($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] == 'no') echo 'selected' ?> ><?php print _('no'); ?></option>
+                                                        <option value='no' <?php if($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] !== 'yes') echo 'selected' ?>><?php print _('no'); ?></option>
                                                     </select>
                                                     <br><br>
                                                 </td>
@@ -1050,7 +1050,7 @@
                                                 <td>
                                                     <select class="vst-list" name="v_policy_system_hide_admin">
                                                         <option value='yes'><?php print _('yes'); ?></option>
-                                                        <option value='no' <?php if($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] == 'no') echo 'selected' ?> ><?php print _('no'); ?></option>
+                                                        <option value='no' <?php if($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] !== 'yes') echo 'selected' ?>><?php print _('no'); ?></option>
                                                     </select>
                                                     <br><br>
                                                 </td>
@@ -1064,8 +1064,8 @@
                                         <tr>
                                             <td>
                                                 <select class="vst-list" name="v_policy_user_edit_details">
-                                                    <option value='yes'><?php print _('yes'); ?></option>
-                                                    <option value='no' <?php if($_SESSION['POLICY_USER_EDIT_DETAILS'] == 'no') echo 'selected' ?> ><?php print _('no'); ?></option>
+                                                    <option value='yes' <?php if($_SESSION['POLICY_USER_EDIT_DETAILS'] !== 'no') echo 'selected' ?>><?php print _('yes'); ?></option>
+                                                    <option value='no' <?php if($_SESSION['POLICY_USER_EDIT_DETAILS'] == 'no') echo 'selected' ?>><?php print _('no'); ?></option>
                                                 </select>
                                                 <br><br>
                                             </td>
@@ -1078,8 +1078,8 @@
                                         <tr>
                                             <td>
                                                 <select class="vst-list" name="v_policy_user_view_logs">
-                                                    <option value='yes'><?php print _('yes'); ?></option>
-                                                    <option value='no' <?php if($_SESSION['POLICY_USER_VIEW_LOGS'] == 'no') echo 'selected' ?> ><?php print _('no'); ?></option>
+                                                    <option value='yes' <?php if($_SESSION['POLICY_USER_VIEW_LOGS'] !== 'no') echo 'selected' ?>><?php print _('yes'); ?></option>
+                                                    <option value='no' <?php if($_SESSION['POLICY_USER_VIEW_LOGS'] == 'no') echo 'selected' ?>><?php print _('no'); ?></option>
                                                 </select>
                                                 <br><br>
                                             </td>
@@ -1092,8 +1092,8 @@
                                         <tr>
                                             <td>
                                                 <select class="vst-list" name="v_policy_user_delete_logs">
-                                                    <option value='yes'><?php print _('yes'); ?></option>
-                                                    <option value='no' <?php if($_SESSION['POLICY_USER_DELETE_LOGS'] == 'no') echo 'selected' ?> ><?php print _('no'); ?></option>
+                                                    <option value='yes' <?php if($_SESSION['POLICY_USER_DELETE_LOGS'] !== 'no') echo 'selected' ?>><?php print _('yes'); ?></option>
+                                                    <option value='no' <?php if($_SESSION['POLICY_USER_DELETE_LOGS'] == 'no') echo 'selected' ?>><?php print _('no'); ?></option>
                                                 </select>
                                                 <br><br>
                                             </td>

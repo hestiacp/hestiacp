@@ -1,0 +1,27 @@
+#!/bin/bash
+# info: Restore system configuration
+# options: [SYSTEM]
+# labels: 
+#
+# example: v-restore-sys-config
+#
+# The function restores system configuration file
+
+system=$1
+
+# Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+source $HESTIA/func/syshealth.sh
+
+#----------------------------------------------------------#
+#                        Action                            #
+#----------------------------------------------------------#
+
+syshealth_restore_system_installed_config
+
+#----------------------------------------------------------#
+#                        Hestia                            #
+#----------------------------------------------------------#
+log_event "$OK" "$ARGUMENTS"

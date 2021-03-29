@@ -87,7 +87,7 @@
               </tr>
               <tr>
                 <td>
-                  <div class="l-unit__stat-cols clearfix tiny">
+                <div class="l-unit__stat-cols clearfix tiny" style="<?if ($data[$key]['IP_OWNED'] === '0') { echo 'display: none'; }?>">
                       <div class="text-right">
                         <span style="float: left;font-weight:500;"><?=_('IP Addresses')?>:</span><b><?=$data[$key]['IP_OWNED']?></b> <?=_('IPs')?></span>
                       </div>

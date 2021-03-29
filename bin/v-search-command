@@ -26,11 +26,12 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
-SearchPath=`ls -a $HESTIA/bin/ | sort`
+SearchResults=`ls -a $HESTIA/bin/ | sort`
 TotalItems=`ls -a $HESTIA/bin/ | sort | wc -l`
 
+
 for i; do
-    SearchResults=`echo $SearchPath | tr " " "\n" | grep $i`
+    SearchResults=`echo $SearchResults | tr " " "\n" | grep $i`
     FoundItems=`echo $SearchResults | tr " " "\n" | grep $i | wc -l`
 done
 

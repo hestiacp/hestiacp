@@ -28,12 +28,16 @@
                   <option value=""><?=_('show per user')?></option>
                     <?
                       foreach ($users as $key => $value) {
+                        if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($value === 'admin')) {
+
+                        } else {
                         echo "\t\t\t\t<option value=\"".$value."\"";
                         if ((!empty($v_user)) && ( $value == $_GET['user'])){
                           echo ' selected';
                         }
                           echo ">".$value."</option>\n";
                         }
+                      }
                       ?>
                 </select>
               </div>

@@ -118,11 +118,15 @@
                                                         }
                                                     ?>
                                                 </select>
-                                                <br><br>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="vst-text input-label">
+                                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_policy_user_change_theme" <?php if ((isset($_SESSION['POLICY_USER_CHANGE_THEME'])) && (!empty($_SESSION['POLICY_USER_CHANGE_THEME'])) && ($_SESSION['POLICY_USER_CHANGE_THEME'] == "no")) echo "checked=yes" ?>><?php print _('Set as selected theme for all users');?></label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text input-label step-top">
                                                 <?php print _('Default Language');?>
                                             </td>
                                         </tr>
@@ -1177,20 +1181,6 @@
                                                 <select class="vst-list" name="v_policy_user_delete_logs">
                                                     <option value='yes' <?php if($_SESSION['POLICY_USER_DELETE_LOGS'] !== 'no') echo 'selected' ?>><?php print _('yes'); ?></option>
                                                     <option value='no' <?php if($_SESSION['POLICY_USER_DELETE_LOGS'] == 'no') echo 'selected' ?>><?php print _('no'); ?></option>
-                                                </select>
-                                                <br><br>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text input-label">
-                                                <?php print _('Allow users to change user interface theme');?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <select class="vst-list" name="v_policy_user_change_theme">
-                                                    <option value='yes' <?php if($_SESSION['POLICY_USER_CHANGE_THEME'] !== 'no') echo 'selected' ?>><?php print _('yes'); ?></option>
-                                                    <option value='no' <?php if($_SESSION['POLICY_USER_CHANGE_THEME'] == 'no') echo 'selected' ?>><?php print _('no'); ?></option>
                                                 </select>
                                                 <br><br>
                                             </td>

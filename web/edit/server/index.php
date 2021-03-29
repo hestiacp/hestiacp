@@ -752,12 +752,13 @@ if (!empty($_POST['save'])) {
 
     // Change POLICY_USER_CHANGE_THEME
     if (empty($_SESSION['error_msg'])) {
-        if ($_POST['v_policy_user_change_theme'] != $_SESSION['POLICY_USER_CHANGE_THEME']) {
-            exec (HESTIA_CMD."v-change-sys-config-value POLICY_USER_CHANGE_THEME ".escapeshellarg($_POST['v_policy_user_change_theme']), $output, $return_var);
-            check_return_code($return_var,$output);
-            unset($output);
-            if (empty($_SESSION['error_msg'])) $v_policy_user_change_theme = $_POST['v_policy_user_change_theme'];
-            $v_security_adv = 'yes';
+        if ($_POST['v_policy_user_change_theme'] == 'on') { $_POST['v_policy_user_change_theme'] = 'no'; } else { $_POST['v_policy_user_change_theme'] = 'yes'; } {
+            if ($_POST['v_policy_user_change_theme'] != $_SESSION['POLICY_USER_CHANGE_THEME']) {
+                exec (HESTIA_CMD."v-change-sys-config-value POLICY_USER_CHANGE_THEME ".escapeshellarg($_POST['v_policy_user_change_theme']), $output, $return_var);
+                check_return_code($return_var,$output);
+                unset($output);
+                if (empty($_SESSION['error_msg'])) $v_policy_user_change_theme = $_POST['v_policy_user_change_theme'];
+            }
         }
     }
 

@@ -6,7 +6,7 @@
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
           <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/mail/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back')?></a>
-          <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['RESTRICTED_ADMIN'] === 'yes')) {?>
+          <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes')) {?>
             <!-- Hide item creation button when impersonating 'admin' account -->
           <? } else { ?>
             <a href="/add/mail/?domain=<?=htmlentities($_GET['domain'])?>" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Mail Account')?></a>
@@ -31,7 +31,7 @@
                   <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search')?>"><i class="fas fa-search"></i></button>
                 </form>
               </td>
-              <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['RESTRICTED_ADMIN'] === 'yes')) {?>
+              <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes')) {?>
                 <!-- Hide bulk actions for domain items when impersonating 'admin' account-->
               <? } else { ?>
                 <td>
@@ -100,7 +100,7 @@ sort-star="<? if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] =
                 <input type="hidden" value="<?php echo $_GET['domain'] ?>" name="domain" />
               </div>
               <div class="clearfix l-unit__stat-col--left wide-3 truncate">
-                <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['RESTRICTED_ADMIN'] === 'yes') || ($data[$key]['SUSPENDED'] == 'yes')) {?>
+                <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes') || ($data[$key]['SUSPENDED'] == 'yes')) {?>
                   <b><?=$key."@".$_GET['domain']?></b>
                 <? } else { ?>
                   <b><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Mail Account')?>: <?=$key?>@<?=htmlspecialchars($_GET['domain'])?>"><?=$key."@".$_GET['domain']?></a></b>
@@ -110,7 +110,7 @@ sort-star="<? if($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] =
               <div class="clearfix l-unit__stat-col--left text-right compact-4">
                 <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                   <div class="actions-panel clearfix">
-                    <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['RESTRICTED_ADMIN'] === 'yes')) {?>
+                    <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes')) {?>
                       <!-- Restrict the ability to edit, delete, or suspend domain items when impersonating 'admin' account -->
                       <? if ($data[$key]['SUSPENDED'] == 'no') {?>
                         <div class="actions-panel__col actions-panel__edit" key-action="href"><a href="http://<?=$v_webmail_alias;?>.<?=htmlspecialchars($_GET['domain'])?>/?_user=<?=$key?>@<?=htmlspecialchars($_GET['domain'])?>" target="_blank" title="<?=_('open webmail')?>"><i class="fas fa-envelope-open-text status-icon maroon status-icon dim"></i></a></div>

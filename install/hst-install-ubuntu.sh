@@ -1703,7 +1703,7 @@ check_result $? "can't create admin user"
 $HESTIA/bin/v-change-user-shell admin nologin
 $HESTIA/bin/v-change-user-role admin admin
 $HESTIA/bin/v-change-user-language admin $lang
-$HESTIA/bin/v-change-sys-config-value 'RESTRICTED_ADMIN' 'yes'
+$HESTIA/bin/v-change-sys-config-value 'POLICY_SYSTEM_PROTECTED_ADMIN' 'yes'
 
 # Configuring system IPs
 $HESTIA/bin/v-update-sys-ip > /dev/null 2>&1

@@ -75,7 +75,7 @@ json_list() {
         "DEBUG_MODE": "'$DEBUG_MODE'",
         "API": "'$API'",
         "API_ALLOWED_IP": "'$API_ALLOWED_IP'",
-        "RESTRICTED_ADMIN": "'$RESTRICTED_ADMIN'",
+        "POLICY_SYSTEM_PROTECTED_ADMIN": "'$POLICY_SYSTEM_PROTECTED_ADMIN'",
         "POLICY_SYSTEM_HIDE_ADMIN": "'$POLICY_SYSTEM_HIDE_ADMIN'",
         "POLICY_USER_EDIT_DETAILS": "'$POLICY_USER_EDIT_DETAILS'",
         "POLICY_USER_DELETE_LOGS": "'$POLICY_USER_DELETE_LOGS'",
@@ -178,7 +178,7 @@ shell_list() {
     echo "Release Branch:                   $RELEASE_BRANCH"
     echo "Debug Mode:                       $DEBUG_MODE"
     echo "Theme:                            $THEME"
-    echo "Restricted Admin Access:          $RESTRICTED_ADMIN"
+    echo "Restricted Admin Access:          $POLICY_SYSTEM_PROTECTED_ADMIN"
     echo "Hide System Administator:         $POLICY_SYSTEM_HIDE_ADMIN"
     echo "Updates: Notify by email:         $UPGRADE_SEND_EMAIL"
     echo "Updates: Email install log:       $UPGRADE_SEND_EMAIL_LOG"
@@ -196,7 +196,7 @@ plain_list() {
     echo -ne "$SMTP_RELAY_HOST\t$SMTP_RELAY_PORT\t$SMTP_RELAY_USER\t"
     echo -ne "$UPGRADE_SEND_EMAIL\t$UPGRADE_SEND_EMAIL_LOG\t$THEME\t$LANGUAGE\t$BACKUP_GZIP\t"
     echo -ne "$BACKUP\t$WEBMAIL_ALIAS\t$DB_PMA_URL\t$DB_PGA_URL\t\t$DEBUG_MODE\t$API\t$API_ALLOWED_IP"
-    echo -e "$RESTRICTED_ADMIN\t$POLICY_SYSTEM_HIDE_ADMIN"
+    echo -e "$POLICY_SYSTEM_PROTECTED_ADMIN\t$POLICY_SYSTEM_HIDE_ADMIN"
 }
 
 
@@ -214,7 +214,7 @@ csv_list() {
     echo -n "'UPGRADE_SEND_EMAIL','UPGRADE_SEND_EMAIL_LOG',"
     echo -n "'THEME', 'LANGUAGE','BACKUP_GZIP','BACKUP','WEBMAIL_ALIAS',"
     echo -n "'DB_PMA_ALIAS','DB_PGA_ALIAS','DEBUG_MODE','API','API_ALLOWED_IP',"
-    echo -n "'RESTRICTED_ADMIN',POLICY_SYSTEM_HIDE_ADMIN'"
+    echo -n "'POLICY_SYSTEM_PROTECTED_ADMIN',POLICY_SYSTEM_HIDE_ADMIN'"
     echo
     echo -n "'$WEB_SYSTEM','$WEB_RGROUPS','$WEB_PORT','$WEB_SSL',"
     echo -n "'$WEB_SSL_PORT','$WEB_BACKEND','$PROXY_SYSTEM','$PROXY_PORT',"
@@ -226,7 +226,7 @@ csv_list() {
     echo -n "'$SMTP_RELAY','$SMTP_RELAY_HOST','$SMTP_RELAY_PORT','$SMTP_RELAY_USER',"
     echo -n "'$UPGRADE_SEND_EMAIL','$UPGRADE_SEND_EMAIL_LOG','$THEME','$LANGUAGE',"
     echo -n "'$BACKUP_GZIP','$BACKUP','$WEBMAIL_ALIAS','$DB_PMA_URL','$DB_PGA_URL'"
-    echo -n "'$DEBUG_MODE','$API','$API_ALLOWED_IP','$RESTRICTED_ADMIN,$POLICY_SYSTEM_HIDE_ADMIN"
+    echo -n "'$DEBUG_MODE','$API','$API_ALLOWED_IP','$POLICY_SYSTEM_PROTECTED_ADMIN,$POLICY_SYSTEM_HIDE_ADMIN"
     
     echo
 }

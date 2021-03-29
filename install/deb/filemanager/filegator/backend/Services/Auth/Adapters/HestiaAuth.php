@@ -32,7 +32,7 @@ class HestiaAuth implements Service, AuthInterface
         if (isset($_SESSION['user'])) {
             $v_user = $_SESSION['user'];
         }
-        if (isset($_SESSION['look']) && ($_SESSION['userContext'] === 'admin') && ($_SESSION['RESTRICTED_ADMIN'] === 'no')) {
+        if (isset($_SESSION['look']) && ($_SESSION['userContext'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'no')) {
             $v_user = $_SESSION['look'];
         }
         $this->hestia_user = $v_user;

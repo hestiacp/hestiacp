@@ -624,6 +624,16 @@ upgrade_rebuild_users() {
     fi
 }
 
+upgrade_replace_default_config() {
+    if [ "$UPGRADE_REPLACE_KNOWN_KEYS" ]; then
+        syshealth_update_web_config_format
+        syshealth_update_mail_config_format
+        syshealth_update_dns_config_format
+        syshealth_update_db_config_format
+        syshealth_update_user_config_format
+    fi
+}
+
 upgrade_restart_services() {
     if [ "$UPGRADE_RESTART_SERVICES" = "true" ]; then
         echo "[ * ] Restarting services..."

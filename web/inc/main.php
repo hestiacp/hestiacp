@@ -93,6 +93,10 @@ if (isset($_SESSION['user'])) {
     $user = $_SESSION['user'];
 }
 
+if (isset($panel[$user]['THEME'])) {
+    $_SESSION['userTheme'] = $panel[$user]['THEME'];
+}
+
 if (isset($_SESSION['look']) && ($_SESSION['userContext'] === 'admin')) {
     $user = $_SESSION['look'];
 }
@@ -157,9 +161,6 @@ function top_panel($user, $TAB) {
     }
     $panel = json_decode(implode('', $output), true);
     unset($output);
-
-    unset($_SESSION['userTheme']);
-    $_SESSION['userTheme'] = $panel[$user]['THEME'];
 
     // Set home location URLs
     if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look']))) {

@@ -1119,6 +1119,10 @@ a.button.cancel {
   color: #e8e8e8 !important;
 }
 
+.section-title {
+  border-bottom-color: #484848 !important;
+}
+
 .qr-code {
   border: 1px solid #3b3b3b;
   box-shadow: 0px 1px 4px rgba(0,0,0,0.35);

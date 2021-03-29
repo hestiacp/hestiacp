@@ -8,7 +8,7 @@
       <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['RESTRICTED_ADMIN'] === 'yes')) {?>
               <!-- Hide delete buttons-->
       <? } else { ?>
-        <? if (($_SESSION['userContext'] === 'admin') || (($_SESSION['userContext'] === 'user') && ($_SESSION['POLICY_USER_DELETE_LOGS'] === 'yes'))) {?>
+        <? if (($_SESSION['userContext'] === 'admin') || (($_SESSION['userContext'] === 'user') && ($_SESSION['POLICY_USER_DELETE_LOGS'] !== 'no'))) {?>
           <div class="actions-panel display-inline-block" key-action="js">
             <a class="data-controls do_delete ui-button danger cancel">
               <i class="do_delete fas fa-times-circle status-icon red"></i><?=_('Delete')?>

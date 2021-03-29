@@ -227,6 +227,10 @@ a {
 .l-stat__col {
 }
 
+.l-stat__col li {
+  color: #b7b7b7 !important;
+}
+
 .l-stat__col a {
   border-bottom: 4px solid #282828;
   background-color: #282828;
@@ -699,6 +703,21 @@ label:hover {
   box-shadow: 0px 1px 4px rgba(0,0,0,0.35);
 }
 
+textarea::-webkit-input-placeholder {
+  color: #bbb !important;
+}
+
+textarea:focus::-webkit-input-placeholder {
+  color: #909090 !important;
+}
+
+textarea::-moz-placeholder {
+  color: #bbb !important;
+}
+textarea:focus::-moz-placeholder {
+  color: #909090 !important;
+}
+
 select.vst-list:-moz-focusring {
 
 }
@@ -1100,6 +1119,10 @@ a.button.cancel {
   color: #e8e8e8 !important;
 }
 
+.section-title {
+  border-bottom-color: #484848 !important;
+}
+
 .qr-code {
   border: 1px solid #3b3b3b;
   box-shadow: 0px 1px 4px rgba(0,0,0,0.35);
@@ -1478,6 +1501,40 @@ form#vstobjects.suspended {
   background-color: #282828 !important;
   border-left: 1px solid transparent !important;
   border-right: 1px solid transparent !important;
+}
+
+.l-percent {
+  border-bottom: 2px solid #585858 !important;
+}
+
+.body-stats .l-unit__name {
+  color: #eee !important;
+}
+
+.statistics-count {
+  border-bottom: 1px dotted #707070;
+  border-right: 1px dotted #707070;
+}
+
+.body-stats .units .l-unit {
+  background-color: #282828 !important;
+  border-bottom: 1px solid #404040 !important;
+  border-left: 1px solid #282828 !important;
+  border-right: 1px solid #282828 !important;
+}
+
+.body-stats .units:hover .l-unit:hover {
+  background-color: #303030 !important;
+  color: #fff !important;
+}
+
+.body-stats .units:hover .l-unit:hover b,.body-stats .units:hover .l-unit:hover strong  {
+  color: #fff !important;
+}
+
+.admin-warning-button {
+    padding-left: 65px!important;
+    padding-right: 65px!important;
 }
 
 @media screen and (max-width: 950px) {

@@ -129,6 +129,26 @@ set_default_port() {
     fi
 }
 
+# Write configuration KEY/VALUE pair to $HESTIA/conf/hestia.conf
+write_config_value() {
+    local key="$1"
+    local value="$2"
+    echo "$key='$value'" >> $HESTIA/conf/hestia.conf
+}
+
+# Sort configuration file values
+# Write final copy to $HESTIA/conf/hestia.conf for active usage
+# Duplicate file to $HESTIA/conf/defaults/hestia.conf to restore known good installation values
+sort_config_file(){
+    sort $HESTIA/conf/hestia.conf -o /tmp/updconf
+    mv $HESTIA/conf/hestia.conf $HESTIA/conf/hestia.conf.bak
+    mv /tmp/updconf $HESTIA/conf/hestia.conf
+    rm -f $HESTIA/conf/hestia.conf.bak
+    if [ ! -d "$HESTIA/conf/defaults/" ]; then
+        mkdir -p "$HESTIA/conf/defaults/"
+    fi
+    cp $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
+}
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -1008,27 +1028,29 @@ rm -f $HESTIA/conf/hestia.conf > /dev/null 2>&1
 touch $HESTIA/conf/hestia.conf
 chmod 660 $HESTIA/conf/hestia.conf
 
+# Web stack
 if [ "$apache" = 'yes' ]; then
-    echo "WEB_SYSTEM='apache2'" >> $HESTIA/conf/hestia.conf
-    echo "WEB_RGROUPS='www-data'" >> $HESTIA/conf/hestia.conf
-    echo "WEB_PORT='8080'" >> $HESTIA/conf/hestia.conf
-    echo "WEB_SSL_PORT='8443'" >> $HESTIA/conf/hestia.conf
-    echo "WEB_SSL='mod_ssl'"  >> $HESTIA/conf/hestia.conf
-    echo "PROXY_SYSTEM='nginx'" >> $HESTIA/conf/hestia.conf
-    echo "PROXY_PORT='80'" >> $HESTIA/conf/hestia.conf
-    echo "PROXY_SSL_PORT='443'" >> $HESTIA/conf/hestia.conf
-    echo "STATS_SYSTEM='awstats'" >> $HESTIA/conf/hestia.conf
+    write_config_value "WEB_SYSTEM" "apache2"
+    write_config_value "WEB_RGROUPS" "www-data"
+    write_config_value "WEB_PORT" "8080"
+    write_config_value "WEB_SSL_PORT" "8443"
+    write_config_value "WEB_SSL" "mod_ssl"
+    write_config_value "PROXY_SYSTEM" "nginx"
+    write_config_value "PROXY_PORT" "80"
+    write_config_value "PROXY_SSL_PORT" "443"
+    write_config_value "STATS_SYSTEM" "awstats"
 fi
+
 if [ "$apache" = 'no' ]; then
-    echo "WEB_SYSTEM='nginx'" >> $HESTIA/conf/hestia.conf
-    echo "WEB_PORT='80'" >> $HESTIA/conf/hestia.conf
-    echo "WEB_SSL_PORT='443'" >> $HESTIA/conf/hestia.conf
-    echo "WEB_SSL='openssl'"  >> $HESTIA/conf/hestia.conf
-    echo "STATS_SYSTEM='awstats'" >> $HESTIA/conf/hestia.conf
+    write_config_value "WEB_SYSTEM" "nginx"
+    write_config_value "WEB_PORT" "80"
+    write_config_value "WEB_SSL_PORT" "443"
+    write_config_value "WEB_SSL" "openssl"
+    write_config_value "STATS_SYSTEM" "awstats"
 fi
 
 if [ "$phpfpm" = 'yes' ] || [ "$multiphp" = 'yes' ]; then
-    echo "WEB_BACKEND='php-fpm'" >> $HESTIA/conf/hestia.conf
+    write_config_value "WEB_BACKEND" "php-fpm"
 fi
 
 # Database stack
@@ -1046,81 +1068,81 @@ if [ ! -z "$installed_db_types" ]; then
         sort -r -u |\
         sed "/^$/d"|\
         sed ':a;N;$!ba;s/\n/,/g')
-    echo "DB_SYSTEM='$db'" >> $HESTIA/conf/hestia.conf
+    write_config_value "DB_SYSTEM" "$db"
 fi
 
 # FTP stack
 if [ "$vsftpd" = 'yes' ]; then
-    echo "FTP_SYSTEM='vsftpd'" >> $HESTIA/conf/hestia.conf
+    write_config_value "FTP_SYSTEM" "vsftpd"
 fi
 if [ "$proftpd" = 'yes' ]; then
-    echo "FTP_SYSTEM='proftpd'" >> $HESTIA/conf/hestia.conf
+    write_config_value "FTP_SYSTEM" "proftpd"
 fi
 
 # DNS stack
 if [ "$named" = 'yes' ]; then
-    echo "DNS_SYSTEM='bind9'" >> $HESTIA/conf/hestia.conf
+    write_config_value "DNS_SYSTEM" "bind9"
 fi
 
 # Mail stack
 if [ "$exim" = 'yes' ]; then
-    echo "MAIL_SYSTEM='exim4'" >> $HESTIA/conf/hestia.conf
+    write_config_value "MAIL_SYSTEM" "exim4"
     if [ "$clamd" = 'yes'  ]; then
-        echo "ANTIVIRUS_SYSTEM='clamav-daemon'" >> $HESTIA/conf/hestia.conf
+        write_config_value "ANTIVIRUS_SYSTEM" "clamav-daemon"
     fi
     if [ "$spamd" = 'yes' ]; then
-        echo "ANTISPAM_SYSTEM='spamassassin'" >> $HESTIA/conf/hestia.conf
+        write_config_value "ANTISPAM_SYSTEM" "spamassassin"
     fi
     if [ "$dovecot" = 'yes' ]; then
-        echo "IMAP_SYSTEM='dovecot'" >> $HESTIA/conf/hestia.conf
+        write_config_value "IMAP_SYSTEM" "dovecot"
     fi
 fi
 
 # Cron daemon
-echo "CRON_SYSTEM='cron'" >> $HESTIA/conf/hestia.conf
+write_config_value "CRON_SYSTEM" "cron"
 
 # Firewall stack
 if [ "$iptables" = 'yes' ]; then
-    echo "FIREWALL_SYSTEM='iptables'" >> $HESTIA/conf/hestia.conf
+    write_config_value "FIREWALL_SYSTEM" "iptables"
 fi
 if [ "$iptables" = 'yes' ] && [ "$fail2ban" = 'yes' ]; then
-    echo "FIREWALL_EXTENSION='fail2ban'" >> $HESTIA/conf/hestia.conf
+    write_config_value "FIREWALL_EXTENSION" "fail2ban"
 fi
 
 # Disk quota
 if [ "$quota" = 'yes' ]; then
-    echo "DISK_QUOTA='yes'" >> $HESTIA/conf/hestia.conf
+    write_config_value "DISK_QUOTA" "yes"
 else
-    echo "DISK_QUOTA='no'" >> $HESTIA/conf/hestia.conf
+    write_config_value "DISK_QUOTA" "no"
 fi
 
 # Backups
-echo "BACKUP_SYSTEM='local'" >> $HESTIA/conf/hestia.conf
-echo "BACKUP_GZIP='4'" >> $HESTIA/conf/hestia.conf
-echo "BACKUP_MODE='zstd'" >> $HESTIA/conf/hestia.conf
+write_config_value "BACKUP_SYSTEM" "local"
+write_config_value "BACKUP_GZIP" "4"
+write_config_value "BACKUP_MODE" "zstd"
 
 # Language
-echo "LANGUAGE='$lang'" >> $HESTIA/conf/hestia.conf
+write_config_value "LANGUAGE" "$lang"
 
 # Login in screen
-echo "LOGIN_STYLE='default'" >> $HESTIA/conf/hestia.conf
+write_config_value "LOGIN_STYLE" "default"
 
 # Theme
-echo "THEME='dark'" >> $HESTIA/conf/hestia.conf
+write_config_value "THEME" "dark"
 
 # Inactive session timeout
-echo "INACTIVE_SESSION_TIMEOUT='60'" >> $HESTIA/conf/hestia.conf
+write_config_value "INACTIVE_SESSION_TIMEOUT" "60"
 
 # Do not allow users to create subdomains when they don't own the domain
-echo "ENFORCE_SUBDOMAIN_OWNERSHIP='yes'" >> $HESTIA/conf/hestia.conf
+write_config_value "ENFORCE_SUBDOMAIN_OWNERSHIP" "yes"
 
 # Version & Release Branch
-echo "VERSION='${HESTIA_INSTALL_VER}'" >> $HESTIA/conf/hestia.conf
-echo "RELEASE_BRANCH='release'" >> $HESTIA/conf/hestia.conf
+write_config_value "VERSION" "${HESTIA_INSTALL_VER}"
+write_config_value "RELEASE_BRANCH" "release"
 
 # Email notifications after upgrade
-echo "UPGRADE_SEND_EMAIL='false'" >> $HESTIA/conf/hestia.conf
-echo "UPGRADE_SEND_EMAIL_LOG='true'" >> $HESTIA/conf/hestia.conf
+write_config_value "UPGRADE_SEND_EMAIL" "true"
+write_config_value "UPGRADE_SEND_EMAIL_LOG" "false"
 
 # Installing hosting packages
 cp -rf $HESTIA_INSTALL_DIR/packages $HESTIA/data/
@@ -1431,7 +1453,7 @@ if [ "$mysql" = 'yes' ]; then
     rm -fr phpMyAdmin-$pma_v-all-languages
     rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
 
-    echo "DB_PMA_ALIAS='phpmyadmin'" >> $HESTIA/conf/hestia.conf
+    write_config_value "DB_PMA_ALIAS" "phpmyadmin"
     $HESTIA/bin/v-change-sys-db-alias 'pma' "phpmyadmin"
 
     # Special thanks to Pavel Galkin (https://skurudo.ru)
@@ -1457,7 +1479,7 @@ if [ "$postgresql" = 'yes' ]; then
     fi
     cp -f $HESTIA_INSTALL_DIR/pga/config.inc.php /etc/phppgadmin/
 
-    echo "DB_PGA_ALIAS='phppgadmin'" >> $HESTIA/conf/hestia.conf
+    write_config_value "DB_PGA_ALIAS" "phppgadmin"
     $HESTIA/bin/v-change-sys-db-alias 'pga' "phppgadmin"
 fi
 
@@ -1638,8 +1660,8 @@ echo "[ * ] Install Roundcube..."
 # Min requirements Dovecote + Exim + Mysql
 
 if [ "$mysql" == 'yes' ] && [ "$dovecot" == "yes" ]; then
-    $HESTIA/bin/v-add-sys-roundcube 
-    echo " WEBMAIL_ALIAS='webmail'" >> $HESTIA/conf/hestia.conf
+    $HESTIA/bin/v-add-sys-roundcube
+    write_config_value "WEBMAIL_ALIAS" "webmail"
 fi
 
 
@@ -1648,8 +1670,8 @@ fi
 #----------------------------------------------------------#
 
 if [ "$api" = "yes" ]; then
-    echo "API='yes'" >> $HESTIA/conf/hestia.conf
-    echo "API_ALLOWED_IP='127.0.0.1'" >> $HESTIA/conf/hestia.conf
+    write_config_value "API" "yes"
+    write_config_value "API_ALLOWED_IP" ""
 else
     $HESTIA/bin/v-change-sys-api disable
 fi
@@ -1878,5 +1900,9 @@ if [ "$interactive" = 'yes' ]; then
         reboot
     fi
 fi
+
+# Clean-up
+# Sort final configuration file
+sort_config_file
 
 # EOF

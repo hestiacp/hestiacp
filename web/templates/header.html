@@ -4,13 +4,20 @@
   <meta charset="utf-8">
   <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
   <title><?php echo $_SERVER['HTTP_HOST']; ?> - <?=_($TAB)?> - <?=_('Hestia Control Panel');?></title>
-  <!-- Load base theme-->
+  <!-- Load base system theme-->
   <link type="text/css" rel="stylesheet" href="/css/themes/default.min.css?<?=JS_LATEST_UPDATE?>" rel="preload" />
-  <? if ($_SESSION['THEME'] !== 'default') {?>
-    <!-- Load provided theme -->
-    <link type="text/css" rel="stylesheet" href="/css/themes/<?php echo $_SESSION['THEME']; ?>.min.css?<?php echo rand(); ?>" rel="preload" />
-    <!-- Load custom theme -->
-    <link type="text/css" rel="stylesheet" href="/css/themes/custom/<?php echo $_SESSION['THEME']; ?>.css?<?php echo rand(); ?>" rel="preload" />
+  <? if ($_SESSION['userTheme']) {
+        $selected_theme = $_SESSION['userTheme']; 
+     } else {
+        $seleced_theme = $_SESSION['THEME'];
+     } 
+  ?>
+  <!-- Load custom theme -->
+  <? if (($_SESSION['THEME'] !== 'default') || ($_SESSION['userTheme'] !== 'default')) {?>
+    <!-- Load HestiaCP-shipped themes (minified, updated/overwritten with updates) - ($HESTIA/web/css/themes/*.min.css) -->
+    <link type="text/css" rel="stylesheet" href="/css/themes/<?php echo $selected_theme; ?>.min.css?<?php echo rand(); ?>" rel="preload" />
+    <!-- Load custom theme files ($HESTIA/web/css/themes/custom/*.css) -->
+    <link type="text/css" rel="stylesheet" href="/css/themes/custom/<?php echo $selected_theme; ?>.css?<?php echo rand(); ?>" rel="preload" />
   <? } ?>
   <link type="text/css" href="/css/dependencies/animate.min.css?<?=JS_LATEST_UPDATE?>" rel="stylesheet" rel="preload" />
   <link type="text/css" href="/css/dependencies/jquery-custom-dialogs.css?<?=JS_LATEST_UPDATE?>" rel="stylesheet" rel="preload" />
@@ -30,7 +37,7 @@
 </head>
 <body class="body-<?=strtolower($TAB)?> lang-<?=$_SESSION['language']?>">
     <?php if (($_SESSION['DEBUG_MODE']) == "true" ) {?>
-    <div style="font-size:12px !important; padding:8px;">
+    <div style="font-size:12px !important; padding:12px;position:sticky;top:0;z-index:3000;background-color:">
         <?php
             echo "<h3>Server Variables</h3>";
             foreach ($_SERVER as $key=>$val)
@@ -43,3 +50,4 @@
         ?>
     </div>
 <?php } ?>
+

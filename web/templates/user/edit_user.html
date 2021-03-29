@@ -145,6 +145,29 @@
                             </tr>
                             <tr>
                                 <td class="vst-text input-label">
+                                    <?php print _('Theme') ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_user_theme">
+                                        <?php
+                                            foreach ($themes as $key => $value) {
+                                                echo "\t\t\t\t<option value=\"".$value."\"";
+                                                if ((!empty($_SESSION['userTheme'])) && ( $value == $v_user_theme )) {
+                                                    echo ' selected' ;
+                                                }
+                                                if ((!empty($_SESSION['userTheme'])) && ( $value == $_POST['v_user_theme'])){
+                                                    echo ' selected' ;
+                                                }
+                                                echo ">".$value."</option>\n";
+                                            }
+                                        ?>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vst-text input-label">
                                     <?php print _('Default Name Servers');?>
                                 </td>
                             </tr>

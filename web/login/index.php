@@ -173,6 +173,7 @@ function authenticate_user($user, $password, $twofa = ''){
                 }
                 
                 $_SESSION['userContext'] = $data[$user]['ROLE'];
+                $_SESSION['userTheme'] = $data[$user]['THEME'];
 
                 // Define session user
                 $_SESSION['user'] = key($data);

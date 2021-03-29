@@ -235,6 +235,7 @@ U_DATABASES='0'
 U_CRON_JOBS='0'
 U_BACKUPS='0'
 LANGUAGE=''
+THEME=''
 NOTIFICATIONS='no'
 TIME='$time'
 DATE='$date'" > $USER_DATA/user.conf

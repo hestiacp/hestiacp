@@ -161,6 +161,10 @@ function top_panel($user, $TAB) {
     if (isset($panel[$user]['THEME'])) {
         $_SESSION['userTheme'] = $panel[$user]['THEME'];
     }
+
+    if ($_SESSION['POLICY_USER_CHANGE_THEME'] === 'no') {
+        unset($_SESSION['userTheme']);
+    }
     
     // Set home location URLs
     if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look']))) {

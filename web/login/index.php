@@ -174,7 +174,10 @@ function authenticate_user($user, $password, $twofa = ''){
                 
                 $_SESSION['userContext'] = $data[$user]['ROLE'];
                 $_SESSION['userTheme'] = $data[$user]['THEME'];
-
+                if ($_SESSION['POLICY_USER_CHANGE_THEME'] === 'no') {
+                    unset($_SESSION['userTheme']);
+                }
+                
                 // Define session user
                 $_SESSION['user'] = key($data);
                 $v_user = $_SESSION['user'];

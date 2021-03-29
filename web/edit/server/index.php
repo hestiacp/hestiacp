@@ -739,6 +739,17 @@ if (!empty($_POST['save'])) {
         }
     }
 
+    // Change POLICY_USER_CHANGE_THEME
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_policy_user_change_theme'] != $_SESSION['POLICY_USER_CHANGE_THEME']) {
+            exec (HESTIA_CMD."v-change-sys-config-value POLICY_USER_CHANGE_THEME ".escapeshellarg($_POST['v_policy_user_change_theme']), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) $v_enforce_subdomain_ownership = $_POST['v_policy_user_change_theme'];
+            $v_security_adv = 'yes';
+        }
+    }
+
     // Change POLICY_SYSTEM_HIDE_ADMIN
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_policy_system_hide_admin'] != $_SESSION['POLICY_SYSTEM_HIDE_ADMIN']) {

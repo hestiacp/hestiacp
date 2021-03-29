@@ -45,7 +45,7 @@ check_ckey=$(grep "^$key='" $HESTIA/conf/hestia.conf)
 if [ -z "$check_ckey" ]; then
     echo "$key='$value'" >> $HESTIA/conf/hestia.conf
 else
-    sed -i "s|$key=.*|$key='$value'|g" $HESTIA/conf/hestia.conf
+    sed -i "s|^$key=.*|$key='$value'|g" $HESTIA/conf/hestia.conf
 fi
 
 # Sort configuration file in alphabetical order on change

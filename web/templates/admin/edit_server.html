@@ -1100,6 +1100,20 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text input-label">
+                                                <?php print _('Allow users to change user interface theme');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_policy_user_change_theme">
+                                                    <option value='yes' <?php if($_SESSION['POLICY_USER_CHANGE_THEME'] !== 'no') echo 'selected' ?>><?php print _('yes'); ?></option>
+                                                    <option value='no' <?php if($_SESSION['POLICY_USER_CHANGE_THEME'] == 'no') echo 'selected' ?>><?php print _('no'); ?></option>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text input-label">
                                                 <?php print _('Inactive session timeout');?> (<?php print _('Minutes');?>)
                                             </td>
                                         </tr>

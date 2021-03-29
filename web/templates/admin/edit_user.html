@@ -178,6 +178,7 @@
                                 </tr>
                                 <? } ?>
                             <? } ?>
+                            <? if ($_SESSION['POLICY_USER_CHANGE_THEME'] !== 'no') {?>
                             <tr>
                                 <td class="vst-text input-label">
                                     <?php print _('Theme') ?>
@@ -201,6 +202,7 @@
                                     </select>
                                 </td>
                             </tr>
+                            <?}?>
                             <tr>
                                 <td class="vst-text input-label">
                                     <?php print _('Package');?>

@@ -1037,13 +1037,38 @@
                                                             <br><br>
                                                         </td>
                                                     </tr>
+                                                    <tr>
+                                                        <td class="vst-text input-label">
+                                                            <?php print _('Allow users to reset their passwords');?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <select class="vst-list" name="v_policy_system_password_reset">
+                                                                <option value='yes'><?php print _('yes'); ?></option>
+                                                                <option value='no' <?php if($_SESSION['POLICY_SYSTEM_PASSWORD_RESET'] == 'no') echo 'selected' ?> ><?php print _('no'); ?></option>
+                                                            </select>
+                                                            <br><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="vst-text input-label">
+                                                            <?php print _('Inactive session timeout');?> (<?php print _('Minutes');?>)
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text" size="20" class="vst-input" name="v_inactive_session_timeout" value="<?=trim($_SESSION['INACTIVE_SESSION_TIMEOUT'], "'")?>">
+                                                            <br><br>
+                                                        </td>
+                                                    </tr>
                                                 </table>
                                             </td>
                                         </tr>
                                         <? if (($_SESSION['userContext'] === "admin") && ($_SESSION['user'] === 'admin')) {?>
                                             <tr>
                                                 <td class="section-title" onclick="javascript:elementHideShow('security-sysadminprotect-table');">
-                                                    <?=('System Administrator Protection');?>
+                                                    <?=('System Protection');?>
                                                 </td>
                                                 <td class="section-hide-button">
                                                     <a href="javascript:elementHideShow('security-sysadminprotect-table');"><i class="fas fa-minus-square status-icon dim maroon"></i></a>
@@ -1053,8 +1078,14 @@
                                                 <td>
                                                     <table id="security-sysadminprotect-table" class="step-top" style="display: none;">
                                                         <tr>
-                                                            <td class="vst-text input-label">
-                                                                <?php print _('Restrict access to System Administrator account items');?>
+                                                            <td class="vst-text input-label step-top" style="font-size:0.95rem;">
+                                                                <?=_('System Administrator account');?>
+                                                            </td>
+                                                            
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="vst-text input-label step-top">
+                                                                <?=_('Restrict access to read-only for other administrators');?>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -1068,7 +1099,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td class="vst-text input-label">
-                                                                <?php print _('Hide Administrator account from other Administrators');?>
+                                                                <?php print _('Disable access and hide account for other administrators');?>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -1097,7 +1128,7 @@
                                                 <table id="security-policies-table" style="display: none;">
                                                 
                                         <tr>
-                                            <td class="vst-text input-label">
+                                            <td class="vst-text input-label step-top">
                                                 <?php print _('Allow users to edit their account details');?>
                                             </td>
                                         </tr>
@@ -1126,7 +1157,7 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text input-label">
-                                                <?php print _('Allow users to delete action and login history logs');?>
+                                                <?php print _('Allow users to delete log history');?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -1149,17 +1180,6 @@
                                                     <option value='yes' <?php if($_SESSION['POLICY_USER_CHANGE_THEME'] !== 'no') echo 'selected' ?>><?php print _('yes'); ?></option>
                                                     <option value='no' <?php if($_SESSION['POLICY_USER_CHANGE_THEME'] == 'no') echo 'selected' ?>><?php print _('no'); ?></option>
                                                 </select>
-                                                <br><br>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text input-label">
-                                                <?php print _('Inactive session timeout');?> (<?php print _('Minutes');?>)
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" size="20" class="vst-input" name="v_inactive_session_timeout" value="<?=trim($_SESSION['INACTIVE_SESSION_TIMEOUT'], "'")?>">
                                                 <br><br>
                                             </td>
                                         </tr>

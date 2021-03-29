@@ -701,7 +701,7 @@ if (!empty($_POST['save'])) {
             exec (HESTIA_CMD."v-change-sys-config-value POLICY_USER_EDIT_DETAILS ".escapeshellarg($_POST['v_policy_user_edit_details']), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
-            if (empty($_SESSION['error_msg'])) $v_enforce_subdomain_ownership = $_POST['v_policy_user_edit_details'];
+            if (empty($_SESSION['error_msg'])) $v_policy_user_edit_details = $_POST['v_policy_user_edit_details'];
             $v_security_adv = 'yes';
         }
     }
@@ -712,7 +712,7 @@ if (!empty($_POST['save'])) {
             exec (HESTIA_CMD."v-change-sys-config-value POLICY_USER_VIEW_LOGS ".escapeshellarg($_POST['v_policy_user_view_logs']), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
-            if (empty($_SESSION['error_msg'])) $v_enforce_subdomain_ownership = $_POST['v_policy_user_view_logs'];
+            if (empty($_SESSION['error_msg'])) $v_policy_user_view_logs = $_POST['v_policy_user_view_logs'];
             $v_security_adv = 'yes';
         }
     }
@@ -723,7 +723,18 @@ if (!empty($_POST['save'])) {
             exec (HESTIA_CMD."v-change-sys-config-value POLICY_USER_DELETE_LOGS ".escapeshellarg($_POST['v_policy_user_delete_logs']), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
-            if (empty($_SESSION['error_msg'])) $v_enforce_subdomain_ownership = $_POST['v_policy_user_delete_logs'];
+            if (empty($_SESSION['error_msg'])) $v_policy_user_delete_logs = $_POST['v_policy_user_delete_logs'];
+            $v_security_adv = 'yes';
+        }
+    }
+
+    // Change POLICY_SYSTEM_PASSWORD_RESET
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_policy_system_password_reset'] != $_SESSION['POLICY_SYSTEM_PASSWORD_RESET']) {
+            exec (HESTIA_CMD."v-change-sys-config-value POLICY_SYSTEM_PASSWORD_RESET ".escapeshellarg($_POST['v_policy_system_password_reset']), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) $v_policy_system_password_reset = $_POST['v_policy_system_password_reset'];
             $v_security_adv = 'yes';
         }
     }
@@ -734,7 +745,7 @@ if (!empty($_POST['save'])) {
             exec (HESTIA_CMD."v-change-sys-config-value POLICY_SYSTEM_PROTECTED_ADMIN ".escapeshellarg($_POST['v_policy_system_protected_admin']), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
-            if (empty($_SESSION['error_msg'])) $v_enforce_subdomain_ownership = $_POST['v_policy_system_protected_admin'];
+            if (empty($_SESSION['error_msg'])) $v_policy_system_protected_admin = $_POST['v_policy_system_protected_admin'];
             $v_security_adv = 'yes';
         }
     }
@@ -745,7 +756,7 @@ if (!empty($_POST['save'])) {
             exec (HESTIA_CMD."v-change-sys-config-value POLICY_USER_CHANGE_THEME ".escapeshellarg($_POST['v_policy_user_change_theme']), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
-            if (empty($_SESSION['error_msg'])) $v_enforce_subdomain_ownership = $_POST['v_policy_user_change_theme'];
+            if (empty($_SESSION['error_msg'])) $v_policy_user_change_theme = $_POST['v_policy_user_change_theme'];
             $v_security_adv = 'yes';
         }
     }
@@ -756,7 +767,7 @@ if (!empty($_POST['save'])) {
             exec (HESTIA_CMD."v-change-sys-config-value POLICY_SYSTEM_HIDE_ADMIN ".escapeshellarg($_POST['v_policy_system_hide_admin']), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
-            if (empty($_SESSION['error_msg'])) $v_enforce_subdomain_ownership = $_POST['v_policy_system_hide_admin'];
+            if (empty($_SESSION['error_msg'])) $v_policy_system_hide_admin = $_POST['v_policy_system_hide_admin'];
             $v_security_adv = 'yes';
         }
     }

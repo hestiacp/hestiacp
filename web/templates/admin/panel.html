@@ -72,7 +72,13 @@
 				<a href="/list/user/">
 					<div class="l-stat__col-title"><?=_('USER')?>&nbsp;&nbsp;<i class="fas fa-users"></i></div>
 					<ul>
-						<li><?=_('users')?>: <span><?=$panel[$user]['U_USERS']?></span></li>
+						<li><?=_('users')?>: <span>
+							<? if (($_SESSION['user'] !== 'admin') && ($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes')) {
+								$user_count = $panel[$user]['U_USERS'] - 1;
+							} else {
+								$user_count = $panel[$user]['U_USERS'];
+							} ?>
+							<?=htmlspecialchars($user_count);?></span></li>
 						<li><?=_('spnd');?>: <span><?=$panel[$user]['SUSPENDED_USERS']?></span></li>
 					</ul>
 				</a>

@@ -741,11 +741,11 @@ if (!empty($_POST['save'])) {
 
     // Change RESTRICTED_ADMIN
     if (empty($_SESSION['error_msg'])) {
-        if ($_POST['v_hide_admin'] != $_SESSION['HIDE_ADMIN_ACCOUNT']) {
-            exec (HESTIA_CMD."v-change-sys-config-value HIDE_ADMIN_ACCOUNT ".escapeshellarg($_POST['v_hide_admin']), $output, $return_var);
+        if ($_POST['v_policy_system_hide_admin'] != $_SESSION['POLICY_SYSTEM_HIDE_ADMIN']) {
+            exec (HESTIA_CMD."v-change-sys-config-value POLICY_SYSTEM_HIDE_ADMIN ".escapeshellarg($_POST['v_policy_system_hide_admin']), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
-            if (empty($_SESSION['error_msg'])) $v_enforce_subdomain_ownership = $_POST['v_hide_admin'];
+            if (empty($_SESSION['error_msg'])) $v_enforce_subdomain_ownership = $_POST['v_policy_system_hide_admin'];
             $v_security_adv = 'yes';
         }
     }

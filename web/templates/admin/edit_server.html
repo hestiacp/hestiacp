@@ -979,83 +979,123 @@
                                 <td class="vst-text input-label step-left">
                                     <table style="<?php if (empty($v_security_adv)) echo 'display:none;';?>" id="security">
                                         <tr>
-                                            <td class="vst-text step-top">
-                                                <?php print _('Enable API access');?>
+                                            <td class="section-title" onclick="javascript:elementHideShow('security-system-table');">
+                                                <?=('System');?>
+                                            </td>
+                                            <td class="section-hide-button">
+                                                <a href="javascript:elementHideShow('security-system-table');"><i class="fas fa-minus-square status-icon dim maroon"></i></a>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <select class="vst-list" name="v_api" id="api">
-                                                    <option value='yes'><?php print _('yes'); ?></option>
-                                                    <option value='no' <?php if($_SESSION['API'] == 'no') echo 'selected' ?> ><?php print _('no'); ?></option>
-                                                </select>
-                                                <br><br>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                        <table id="security_ip" style="<?php if ($_SESSION['API'] == "no") echo 'display:none;';?>">
-                                        <tr>
-                                            <td class="vst-text input-label">
-                                                <?php print _('Allowed IP addresses for API');?> <span class="optional" style="float:right">1 IP address per line</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <textarea size="20" class="vst-textinput short" name="v_api_allowed_ip"><?php 
-                                                    foreach(explode(',',$_SESSION['API_ALLOWED_IP']) as $ip ){
-                                                        echo $ip."\n";
-                                                    }
-                                                    ?></textarea>
-                                                <br><br>
-                                            </td>
-                                        </tr>
-                                        </table>
-                                            </td></tr>
-                                        <tr>
-                                            <td class="vst-text input-label">
-                                                <?php print _('Login screen style');?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <select class="vst-list" name="v_login_style">
-                                                    <option value='default'><?php print _('Default'); ?></option>
-                                                    <option value='old' <?php if($_SESSION['LOGIN_STYLE'] == 'old') echo 'selected' ?> ><?php print _('Old Style'); ?></option>
-                                                </select>
-                                                <br><br>
+                                                <table id="security-system-table" style="display: none;">
+                                                    <tr>
+                                                        <td class="vst-text step-top">
+                                                            <?php print _('Enable API access');?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <select class="vst-list" name="v_api" id="api">
+                                                                <option value='yes'><?php print _('yes'); ?></option>
+                                                                <option value='no' <?php if($_SESSION['API'] == 'no') echo 'selected' ?> ><?php print _('no'); ?></option>
+                                                            </select>
+                                                            <br><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                    <table id="security_ip" style="<?php if ($_SESSION['API'] == "no") echo 'display:none;';?>">
+                                                    <tr>
+                                                        <td class="vst-text input-label">
+                                                            <?php print _('Allowed IP addresses for API');?> <span class="optional" style="float:right">1 IP address per line</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <textarea size="20" class="vst-textinput short" name="v_api_allowed_ip"><?php 
+                                                                foreach(explode(',',$_SESSION['API_ALLOWED_IP']) as $ip ){
+                                                                    echo $ip."\n";
+                                                                }
+                                                                ?></textarea>
+                                                            <br><br>
+                                                        </td>
+                                                    </tr>
+                                                    </table>
+                                                        </td></tr>
+                                                    <tr>
+                                                        <td class="vst-text input-label">
+                                                            <?php print _('Login screen style');?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <select class="vst-list" name="v_login_style">
+                                                                <option value='default'><?php print _('Default'); ?></option>
+                                                                <option value='old' <?php if($_SESSION['LOGIN_STYLE'] == 'old') echo 'selected' ?> ><?php print _('Old Style'); ?></option>
+                                                            </select>
+                                                            <br><br>
+                                                        </td>
+                                                    </tr>
+                                                </table>
                                             </td>
                                         </tr>
                                         <? if (($_SESSION['userContext'] === "admin") && ($_SESSION['user'] === 'admin')) {?>
                                             <tr>
-                                                <td class="vst-text input-label">
-                                                    <?php print _('Restrict access to System Administrator account items');?>
+                                                <td class="section-title" onclick="javascript:elementHideShow('security-sysadminprotect-table');">
+                                                    <?=('System Administrator Protection');?>
+                                                </td>
+                                                <td class="section-hide-button">
+                                                    <a href="javascript:elementHideShow('security-sysadminprotect-table');"><i class="fas fa-minus-square status-icon dim maroon"></i></a>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <select class="vst-list" name="v_policy_system_protected_admin">
-                                                        <option value='yes'><?php print _('yes'); ?></option>
-                                                        <option value='no' <?php if($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] !== 'yes') echo 'selected' ?>><?php print _('no'); ?></option>
-                                                    </select>
-                                                    <br><br>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="vst-text input-label">
-                                                    <?php print _('Hide Administrator account from other Administrators');?>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <select class="vst-list" name="v_policy_system_hide_admin">
-                                                        <option value='yes'><?php print _('yes'); ?></option>
-                                                        <option value='no' <?php if($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] !== 'yes') echo 'selected' ?>><?php print _('no'); ?></option>
-                                                    </select>
-                                                    <br><br>
+                                                    <table id="security-sysadminprotect-table" class="step-top" style="display: none;">
+                                                        <tr>
+                                                            <td class="vst-text input-label">
+                                                                <?php print _('Restrict access to System Administrator account items');?>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <select class="vst-list" name="v_policy_system_protected_admin">
+                                                                    <option value='yes'><?php print _('yes'); ?></option>
+                                                                    <option value='no' <?php if($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] !== 'yes') echo 'selected' ?>><?php print _('no'); ?></option>
+                                                                </select>
+                                                                <br><br>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="vst-text input-label">
+                                                                <?php print _('Hide Administrator account from other Administrators');?>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <select class="vst-list" name="v_policy_system_hide_admin">
+                                                                    <option value='yes'><?php print _('yes'); ?></option>
+                                                                    <option value='no' <?php if($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] !== 'yes') echo 'selected' ?>><?php print _('no'); ?></option>
+                                                                </select>
+                                                                <br><br>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
                                                 </td>
                                             </tr>
                                         <?}?>
+                                        <tr>
+                                            <td class="section-title" onclick="javascript:elementHideShow('security-policies-table');">
+                                                <?=('Policies');?>
+                                            </td>
+                                            <td class="section-hide-button">
+                                                <a href="javascript:elementHideShow('security-policies-table');"><i class="fas fa-minus-square status-icon dim maroon"></i></a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <table id="security-policies-table" style="display: none;">
+                                                
                                         <tr>
                                             <td class="vst-text input-label">
                                                 <?php print _('Allow users to edit their account details');?>
@@ -1135,6 +1175,9 @@
                                                     <option value='no' <?php if($_SESSION['ENFORCE_SUBDOMAIN_OWNERSHIP'] == 'no') echo 'selected' ?> ><?php print _('no'); ?></option>
                                                 </select>
                                                 <br><br>
+                                            </td>
+                                        </tr>
+                                                </table>
                                             </td>
                                         </tr>
                                     </table>

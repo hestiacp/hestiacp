@@ -3307,10 +3307,11 @@ a.button.cancel {
   letter-spacing: -0.01em;
   border-bottom: 1px solid #ccc;
   cursor: pointer;
+  min-width: 379px;
 }
 
 .section-hide-button {
-  margin-top: 30px;
+  margin-top: 32px;
   display: inline-block;
   margin-left: -14px;
 }

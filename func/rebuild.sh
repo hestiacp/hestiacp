@@ -196,7 +196,8 @@ rebuild_web_domain_conf() {
     if [ ! -d /etc/$PROXY_SYSTEM/conf.d/domains ]; then
         mkdir -p /etc/$PROXY_SYSTEM/conf.d/domains
     fi
-
+    
+    syshealth_repair_web_config
     get_domain_values 'web'
     is_ip_valid $IP
     prepare_web_domain_values

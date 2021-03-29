@@ -6,7 +6,7 @@
 # Currently Supported Operating Systems:
 #
 #   Debian 9, 10
-#   Ubuntu 16.04, 18.04, 20.04
+#   Ubuntu 18.04, 20.04
 #
 
 # Am I root?
@@ -99,7 +99,7 @@ check_wget_curl(){
 
 # Check for supported operating system before proceeding with download
 # of OS-specific installer, and throw error message if unsupported OS detected.
-if [[ "$release" =~ ^(9|10|16.04|18.04|20.04)$ ]]; then
+if [[ "$release" =~ ^(9|10|18.04|20.04)$ ]]; then
     check_wget_curl $*
 else
     no_support_message

@@ -17,28 +17,32 @@ fi
 
 # Populating HELO/SMTP Banner for existing IPs
 if [ "$MAIL_SYSTEM" == "exim4" ]; then
-    source $HESTIA/func/ip.sh
 
-    echo "[ * ] Populating HELO/SMTP Banner value for existing IP addresses..."
-    > /etc/exim4/mailhelo.conf
+    # Check if we've already done this upgrade before proceeding
+    if ! grep -q ^smtp_active_hostname  /etc/exim4/exim4.conf.template; then
 
-    for ip in $($BIN/v-list-sys-ips plain | cut -f1); do
-        helo=$(is_ip_rdns_valid $ip)
+        source $HESTIA/func/ip.sh
 
-        if [ ! -z "$helo" ]; then
-            $BIN/v-change-sys-ip-helo $ip $helo
-        fi
-    done
+        echo "[ * ] Populating HELO/SMTP Banner value for existing IP addresses..."
+        > /etc/exim4/mailhelo.conf
 
-    # Update exim configuration
-    echo "[ * ] Updating exim4 configuration..."
+        for ip in $($BIN/v-list-sys-ips plain | cut -f1); do
+            helo=$(is_ip_rdns_valid $ip)
 
-    # Check if smtp_active_hostname exists before adding it
-    if [ ! 'grep -q ^smtp_active_hostname  /etc/exim4/exim4.conf.template' ]; then
+            if [ ! -z "$helo" ]; then
+                $BIN/v-change-sys-ip-helo $ip $helo
+            fi
+        done
+
+        # Update exim configuration
+        echo "[ * ] Updating exim4 configuration..."
+
+        # Add new smtp_active_hostname variable to exim config
         sed -i '/^smtp_banner = \$smtp_active_hostname$/a smtp_active_hostname = ${if exists {\/etc\/exim4\/mailhelo.conf}{${lookup{$interface_address}lsearch{\/etc\/exim4\/mailhelo.conf}{$value}{$primary_hostname}}}{$primary_hostname}}"' /etc/exim4/exim4.conf.template
-    fi
 
-    sed -i 's/helo_data = \${if exists {\/etc\/exim4\/mailhelo.conf}{${lookup{\$sender_address_domain}lsearch\*{\/etc\/exim4\/mailhelo.conf}{\$value}{\$primary_hostname}}}{\$primary_hostname}}/helo_data = ${if exists {\/etc\/exim4\/mailhelo.conf}{${lookup{$sending_ip_address}lsearch{\/etc\/exim4\/mailhelo.conf}{$value}{$primary_hostname}}}{$primary_hostname}}/' /etc/exim4/exim4.conf.template
+        # Lookup HELO address by sending ip instead of sending domain
+        sed -i 's/helo_data = \${if exists {\/etc\/exim4\/mailhelo.conf}{${lookup{\$sender_address_domain}lsearch\*{\/etc\/exim4\/mailhelo.conf}{\$value}{\$primary_hostname}}}{\$primary_hostname}}/helo_data = ${if exists {\/etc\/exim4\/mailhelo.conf}{${lookup{$sending_ip_address}lsearch{\/etc\/exim4\/mailhelo.conf}{$value}{$primary_hostname}}}{$primary_hostname}}/' /etc/exim4/exim4.conf.template
+    fi
 fi
 
 # Upgrading Mail System
@@ -112,4 +116,13 @@ if [ "$API" = "no" ]; then
         echo "[ * ] Disabling API access..."
         $HESTIA/bin/v-change-sys-api remove
     fi
+fi
+
+# Back up users existing configuration data to $HESTIA/conf/defaults/hestia.conf
+if [ ! -f "$HESTIA/conf/defaults/hestia.conf" ]; then
+    echo "[ * ] Creating known good configuration data for system recovery..."
+    if [ ! -d "$HESTIA/conf/defaults/" ]; then
+        mkdir -p "$HESTIA/conf/defaults/"
+    fi
+    cp -f $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
 fi

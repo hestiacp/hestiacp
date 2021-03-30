@@ -78,10 +78,10 @@
             <? } ?>
           </div>
           <div class="clearfix l-unit__stat-col--left"><b><?=translate_date($data[$key]['DATE'])?></b></div>
-          <div class="clearfix l-unit__stat-col--left compact-2"><b><?=$data[$key]['TIME']?></b></div>
+          <div class="clearfix l-unit__stat-col--left compact-2"><b><?=htmlspecialchars($data[$key]['TIME']);?></b></div>
 
-          <div class="clearfix l-unit__stat-col--left"><b><?=$data[$key]['CATEGORY']?></b></div>
-          <div class="clearfix l-unit__stat-col--left wide-7"><?=htmlspecialchars($data[$key]['MESSAGE'], ENT_QUOTES)?></div>
+          <div class="clearfix l-unit__stat-col--left"><b><?=htmlspecialchars($data[$key]['CATEGORY']);?></b></div>
+          <div class="clearfix l-unit__stat-col--left wide-7"><?=htmlspecialchars($data[$key]['MESSAGE'], ENT_QUOTES);?></div>
         </div>
       </div>
   <?}?>

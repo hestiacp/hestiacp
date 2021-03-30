@@ -13,6 +13,7 @@ if (!empty($_SESSION['look'])) {
     header("Location: /");
 } else {
     if($_SESSION['token'] && $_SESSION['user']){
+        unset($_SESSION['userTheme']);
         $v_user = escapeshellarg($_SESSION['user']);
         $v_session_id = escapeshellarg($_SESSION['token']);
         exec(HESTIA_CMD."v-log-user-logout ".$v_user." ".$v_session_id, $output, $return_var);

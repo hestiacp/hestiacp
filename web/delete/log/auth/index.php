@@ -10,6 +10,12 @@ if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
     exit();
 }
 
+// Check if administrator is viewing system log (currently 'admin' user)
+if (($_SESSION['userContext'] === "admin") && (isset($_GET['user']))) {
+    $user=$_GET['user'];
+    $token=$_SESSION['token'];
+}
+
 // Clear log
 $v_username = escapeshellarg($user);
 exec (HESTIA_CMD."v-delete-user-auth-log ".$v_username, $output, $return_var);
@@ -38,7 +44,11 @@ if (!isset($_SESSION['look'])) {
 unset($_SESSION['error_msg']);
 unset($_SESSION['ok_msg']);
 
-// Return to authentication history
-header("Location: /list/log/auth/");
+// Set correct page reload target
+if (($_SESSION['userContext'] === "admin") && (!empty($_GET['user']))) {
+    header("Location: /list/log/auth/?user=$user&token=$token");
+} else {
+    header("Location: /list/log/auth/");
+}
 
 exit;

@@ -6,7 +6,7 @@ $TAB = 'LOG';
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Data
-if (($_SESSION['userContext'] === "admin") && ($_GET['user'])) {
+if (($_SESSION['userContext'] === "admin") && (!empty($_GET['user']))) {
     // Check token
     if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
         header('location: /login/');

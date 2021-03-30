@@ -11,13 +11,13 @@ if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
 }
 
 // Check if administrator is viewing system log (currently 'admin' user)
-if (($_SESSION['userContext'] === "admin") && ($_GET['user']) === 'admin') {
+if (($_SESSION['userContext'] === "admin") && (!empty($_GET['user']))) {
     $user=$_GET['user'];
     $token=$_SESSION['token'];
 }
 
 // Set correct page reload target
-if (($_SESSION['userContext'] === "admin") && ($_GET['user']) === 'admin') {
+if (($_SESSION['userContext'] === "admin") && (!empty($_GET['user']))) {
     header("Location: /list/log/?user=$user&token=$token");
 } else {
     header("Location: /list/log/");

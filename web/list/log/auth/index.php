@@ -9,6 +9,8 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 // Edit as someone else?
 if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']))) {
     $v_username = escapeshellarg($_SESSION['look']);
+} else if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
+    $v_username = escapeshellarg($_GET['user']);
 } else {
     $v_username = escapeshellarg($_SESSION['user']);
 }

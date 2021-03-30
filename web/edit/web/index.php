@@ -68,13 +68,14 @@ if (empty($v_letsencrypt)) $v_letsencrypt = 'no';
 $v_ssl_home = $data[$v_domain]['SSL_HOME'];
 $v_backend_template = $data[$v_domain]['BACKEND'];
 $v_nginx_cache = $data[$v_domain]['FASTCGI_CACHE'];
-$v_nginx_cache_length = $data[$v_domain]['FASTCGI_DURATION'];
-$v_nginx_cache_check = ''
-if(empty($v_nginx_duration)){
-    $v_nginx_cache_length = '30m';
+$v_nginx_cache_duration = $data[$v_domain]['FASTCGI_DURATION'];
+$v_nginx_cache_check = '';
+if(empty($v_nginx_cache_duration)){
+    $v_nginx_cache_duration = '2m';
+    $v_nginx_cache_check = '';
+}else{
     $v_nginx_cache_check = 'on';
 }
-;
 $v_proxy = $data[$v_domain]['PROXY'];
 $v_proxy_template = $data[$v_domain]['PROXY'];
 $v_proxy_ext = str_replace(',', ', ', $data[$v_domain]['PROXY_EXT']);
@@ -336,12 +337,12 @@ if (!empty($_POST['save'])) {
     }
 
     // Enable/Disable nginx cache
-    if (($_SESSION['WEB_SYSTEM'] == 'nginx') && ($v_nginx_cache_check != $_POST['v_nginx_cache_check'] ) && ($v_nginx_cache_length != $_POST['v_nginx_cache_length'] && $_POST['v_nginx_cache'] = "yes" ) && (empty($_SESSION['error_msg']))) {
+    if (($_SESSION['WEB_SYSTEM'] == 'nginx') && ($v_nginx_cache_check != $_POST['v_nginx_cache_check'] ) && ($v_nginx_cache_duration != $_POST['v_nginx_cache_duration'] && $_POST['v_nginx_cache'] = "yes" ) && (empty($_SESSION['error_msg']))) {
         if ( $_POST['v_nginx_cache_check'] == 'on' ) {
-            if (!empty ($_POST['v_nginx_cache_length'])){
-                echo $_POST['v_nginx_cache_length'] = "2m";
+            if (empty ($_POST['v_nginx_cache_duration'])){
+                echo $_POST['v_nginx_cache_duration'] = "2m";
             }
-            exec (HESTIA_CMD."v-add-fastcgi-cache ".$v_username." ".escapeshellarg($v_domain).' '. escapeshellarg($_POST['v_nginx_duration']) , $output, $return_var);
+            exec (HESTIA_CMD."v-add-fastcgi-cache ".$v_username." ".escapeshellarg($v_domain).' '. escapeshellarg($_POST['v_nginx_cache_duration']) , $output, $return_var);
             check_return_code($return_var,$output);
             unset($output); 
         } else {

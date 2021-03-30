@@ -16,7 +16,7 @@
 # Argument definition
 user=$1
 domain=$2
-duration=${3-30m}
+duration=${3-2m}
 debug=${4-no}
 restart=${5-no}
 
@@ -71,7 +71,7 @@ status='$upstream_cache_status'
 
 cat << EOF > $fastcgi
     fastcgi_cache $domain;
-    fastcgi_cache_valid 200 2m;
+    fastcgi_cache_valid 200 $duration;
     fastcgi_cache_valid 301 302 10m;
     fastcgi_cache_valid 404 10m;
     fastcgi_cache_bypass $no_cache;
@@ -111,7 +111,7 @@ fi
 
 # Set FastCGI cache flag to enabled
 update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_CACHE' 'yes'
-update_object_value 'web' 'DOMAIN' "$domain" 'FASTCGI_DURATION' "$duration"
+update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_DURATION' "$duration"
 
 if [ "$restart" = "yes" ]; then
     # Restart web server

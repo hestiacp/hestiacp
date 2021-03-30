@@ -32,6 +32,7 @@ source $HESTIA/conf/hestia.conf
 
 # Checking arg number
 check_args '1' "$#" 'PACKAGE'
+is_hestia_package "hestia,hestia-nginx,hestia-php" "$package"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode

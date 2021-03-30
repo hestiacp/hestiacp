@@ -2860,10 +2860,6 @@ a.vst-text:active b{
   text-transform: none;
 }
 
-.body-web .vst-advanced:focus {
-  background: none !important;
-}
-
 .login-box .vst-advanced:hover {
   color: #cc3366;
   background-color: transparent;

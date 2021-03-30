@@ -16,6 +16,7 @@ if (empty($_GET['domain'])) {
 if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
     $user=escapeshellarg($_GET['user']);
 }
+
 $v_username = $user;
 
 // Get all user domains 
@@ -32,9 +33,11 @@ unset($output);
 if ((!empty($_GET['domain'])) && (empty($_GET['account']))) {
 
     $v_domain = $_GET['domain'];
-    if(!in_array($v_domain, $user_domains)) {
-        header("Location: /list/mail/");
-        exit;
+    if ($_SESSION['userContext'] !== 'admin') {
+        if(!in_array($v_domain, $user_domains)) {
+            header("Location: /list/mail/");
+            exit;
+        }
     }
 
     exec (HESTIA_CMD."v-list-mail-domain ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
@@ -86,9 +89,11 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account']))) {
 if ((!empty($_GET['domain'])) && (!empty($_GET['account']))) {
 
     $v_domain = $_GET['domain'];
-    if(!in_array($v_domain, $user_domains)) {
-        header("Location: /list/mail/");
-        exit;
+    if ($_SESSION['userContext'] !== 'admin') {
+        if(!in_array($v_domain, $user_domains)) {
+            header("Location: /list/mail/");
+            exit;
+        }
     }
 
     $v_account = $_GET['account'];

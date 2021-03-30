@@ -158,10 +158,12 @@ function top_panel($user, $TAB) {
     $panel = json_decode(implode('', $output), true);
     unset($output);
 
-    if (isset($panel[$user]['THEME'])) {
+    // Load user's selected theme and do not change it when impersonting user
+    if ( (isset($panel[$user]['THEME'])) && (!isset($_SESSION['look']) )) {
         $_SESSION['userTheme'] = $panel[$user]['THEME'];
     }
-
+    
+    // Unset userTheme override variable if POLICY_USER_CHANGE_THEME is set to no
     if ($_SESSION['POLICY_USER_CHANGE_THEME'] === 'no') {
         unset($_SESSION['userTheme']);
     }

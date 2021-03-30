@@ -32,7 +32,6 @@ if (isset($_SESSION['user'])) {
                 reset($data);
                 $_SESSION['look'] = key($data);
                 // Reset account details for File Manager to impersonated user
-                //unset($_SESSION['userTheme']);
                 unset($_SESSION['_sf2_attributes']);
                 unset($_SESSION['_sf2_meta']);
                 header("Location: /login/");
@@ -186,10 +185,6 @@ function authenticate_user($user, $password, $twofa = ''){
                 $_SESSION['MURMUR'] = $_POST['murmur'];
 
                 $_SESSION['userContext'] = $data[$user]['ROLE'];
-                $_SESSION['userTheme'] = $data[$user]['THEME'];
-                if ($_SESSION['POLICY_USER_CHANGE_THEME'] === 'no') {
-                    unset($_SESSION['userTheme']);
-                }
 
                 // Define language
                 $output = '';

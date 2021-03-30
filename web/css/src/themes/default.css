@@ -1333,10 +1333,12 @@ div.l-content > div.l-separator:nth-of-type(4) {
               inset -1px -1px 4px rgba(220,220,220,0.4);
 }
 
-.context-menu.sort-order span.name i.fas.fa-sort-amount-down {
+.context-menu.sort-order span.name i.fas.fa-sort-amount-down,
+.context-menu.sort-order span.name i.fas.fa-sort-alpha-down {
   float: right;
   margin-top: 2px;
 }
+
 
 .context-menu.sort-order li:last-child {
   border-bottom: none;

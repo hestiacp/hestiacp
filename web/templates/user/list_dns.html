@@ -4,17 +4,17 @@
           <a href="/add/dns/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add DNS Domain')?></a>
         </div>
         <ul class="context-menu sort-order animated fadeIn" style="display:none;">
-          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=_('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
-          <li entity="sort-expire" sort_as_int="1"><span class="name"><?=_('Expire')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
-          <li entity="sort-name"><span class="name"><?=_('Domain')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
-          <li entity="sort-ip"><span class="name"><?=_('IP address')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
-          <li entity="sort-records"><span class="name"><?=_('Records_DNS')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=_('Date')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+          <li entity="sort-expire" sort_as_int="1"><span class="name"><?=_('Expire')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+          <li entity="sort-name"><span class="name"><?=_('Domain')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+          <li entity="sort-ip"><span class="name"><?=_('IP address')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+          <li entity="sort-records"><span class="name"><?=_('Records_DNS')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
         </ul>
         <div class="l-sort-toolbar clearfix">
           <table>
             <tr>
               <td class="sort-by" title="<?=_('Sort items');?>">
-		            <?=_('sort by');?>: <span><b><?=_('Date')?> <i class="fas fa-sort-amount-down"></i></b></span>
+		            <?=_('sort by');?>: <span><b><?=_('Date')?> <i class="fas fa-sort-alpha-down"></i></b></span>
               </td>
               <td class="l-sort-toolbar__search-box">
                 <form action="/search/" method="get">

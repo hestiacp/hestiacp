@@ -26,9 +26,11 @@ unset($output);
 
 // List domain
 $v_domain = $_GET['domain'];
-if(!in_array($v_domain, $user_domains)) {
-    header("Location: /list/web/");
-    exit;
+if ($_SESSION['userContext'] !== 'admin') {
+    if(!in_array($v_domain, $user_domains)) {
+        header("Location: /list/mail/");
+        exit;
+    }
 }
 
 exec (HESTIA_CMD."v-list-web-domain ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);

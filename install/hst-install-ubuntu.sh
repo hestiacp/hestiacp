@@ -1810,6 +1810,9 @@ fi
 # Set backend port
 $HESTIA/bin/v-change-sys-port $port > /dev/null 2>&1
 
+# Create default configuration files
+$HESTIA/bin/v-update-sys-defaults
+
 # Update remaining packages since repositories have changed
 echo -ne "[ * ] Installing remaining software updates..."
 apt-get -qq update

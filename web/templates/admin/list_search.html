@@ -29,19 +29,19 @@
     <div class="l-separator"></div>
     <!-- /.l-separator -->
 
-
     <div class="l-center units">
         <div class="header table-header">     
             <div class="l-unit__col l-unit__col--right">
                 <div class="clearfix l-unit__stat-col--left super-compact">
                     &nbsp;
                 </div> 
+              <div class="clearfix l-unit__stat-col--left text-center compact-2"><b><?php print _('Status');?></b></div>
               <div class="clearfix l-unit__stat-col--left wide-5"><b><?php print _('Search Results');?></b></div>
               <div class="clearfix l-unit__stat-col--left compact-3"><b>&nbsp;</b></div>
               <div class="clearfix l-unit__stat-col--left text-center"><b><?php print _('Date');?></b></div>
-              <div class="clearfix l-unit__stat-col--left text-center"><b><?php print _('Type');?></b></div>
               <div class="clearfix l-unit__stat-col--left text-center"><b><?php print _('Owner');?></b></div>
-              <div class="clearfix l-unit__stat-col--left text-center"><b><?php print _('Status');?></b></div>
+              <div class="clearfix l-unit__stat-col--left text-center"><b><?php print _('Type');?></b></div>
+
             </div>
           </div>
       <?
@@ -68,119 +68,74 @@
         ?>
 
 
-        <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_COOKIE[$uniq_id] == 1) echo ' l-unit--starred'; ?> animated fadeIn" id="web-unit-<?=$i?>" uniq-id="<?=$uniq_id?>" sort-date="<?=strtotime($value['DATE'].' '.$value['TIME'])?>" sort-name="<?=$value['RESULT']?>" sort-type="<?=_($object)?>" sort-owner="<?=$value['USER']?>" sort-status="<?=$status?>">
-      
-      
+      <div class="l-unit <? if($status == 'suspended') echo 'l-unit--suspended'; if($_COOKIE[$uniq_id] == 1) echo ' l-unit--starred'; ?> animated fadeIn" id="web-unit-<?=$i?>" uniq-id="<?=$uniq_id?>" sort-date="<?=strtotime($value['DATE'].' '.$value['TIME'])?>" sort-name="<?=$value['RESULT']?>" sort-type="<?=_($object)?>" sort-owner="<?=$value['USER']?>" sort-status="<?=$status?>">
+            
       <div class="l-unit__col l-unit__col--right">
-          <div class="clearfix l-unit__stat-col--left super-compact">
-              &nbsp;
+          <div class="clearfix l-unit__stat-col--left super-compact text-center">
+              <? if ($object === 'web domain') {
+                $icon = 'fa-globe-americas';
+              }?>
+              <? if ($object === 'mail domain') {
+                $icon = 'fa-mail-bulk';
+              }?>
+              <? if ($object === 'dns domain') {
+                $icon = 'fa-atlas';
+              }?>
+              <? if ($object === 'dns record') {
+                $icon = 'fa-atlas';
+              }?>
+              <? if ($object === 'database') {
+                $icon = 'fa-database';
+              }?>
+              <? if ($object === 'cron job') {
+                $icon = 'fa-clock';
+              }?>
+              <i class="fa <?=$icon;?> status-icon dim"></i>
             </div>
+            <div class="clearfix l-unit__stat-col--left compact-2 text-center">
+              <b>
+                <? if ($status === 'active') {?>
+                  <i class="fas fa-check-circle status-icon green"></i>
+                <? } ?>
+                <? if ($status === 'suspended') {?>
+                  <i class="fas fa-exclamation-triangle status-icon orange"></i>
+                <? } ?>
+            </b>
+          </div>
             <div class="clearfix l-unit__stat-col--left wide-5 truncate">
-                <!--<?
+                <?
                 if ($value['KEY'] == 'RECORD') {
-                  $edit_lnk = '/edit/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&record_id='.$value['LINK'].'&user='.$value['USER'];
+                  $edit_lnk = '/edit/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&record_id='.$value['LINK'].'&user='.$value['USER'].'&token='.$_SESSION['token'].'';
                 }
                 if ($value['KEY'] == 'ACCOUNT') {
-                  $edit_lnk = '/edit/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&account='.$value['LINK'].'&user='.$value['USER'];
+                  $edit_lnk = '/edit/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&account='.$value['LINK'].'&user='.$value['USER'].'&token='.$_SESSION['token'].'';
                 }
                 if ($value['KEY'] == 'JOB') {
-                  $edit_lnk = '/edit/'.$value['TYPE'].'/?job='.$value['LINK'].'&user='.$value['USER'];
+                  $edit_lnk = '/edit/'.$value['TYPE'].'/?job='.$value['LINK'].'&user='.$value['USER'].'&token='.$_SESSION['token'].'';
                 }
                 if ($value['KEY'] == 'DATABASE') {
-                  $edit_lnk = '/edit/'.$value['TYPE'].'/?database='.$value['RESULT'].'&user='.$value['USER'];
+                  $edit_lnk = '/edit/'.$value['TYPE'].'/?database='.$value['RESULT'].'&user='.$value['USER'].'&token='.$_SESSION['token'].'';
                 }
                 if (($value['KEY'] != 'RECORD') && ($value['KEY'] != 'ACCOUNT') && ($value['KEY'] != 'JOB') && ($value['KEY'] != 'DATABASE') ) {
-                  $edit_lnk = '/edit/'.$value['TYPE'].'/?'.strtolower($value['KEY']).'='.$value['RESULT'].'&user='.$value['USER'];
+                  $edit_lnk = '/edit/'.$value['TYPE'].'/?'.strtolower($value['KEY']).'='.$value['RESULT'].'&user='.$value['USER'].'&token='.$_SESSION['token'].'';
                 }
-              ?>-->
+              ?>
               <b>
-                <?=$value['RESULT']?>
+                <a href="<?php echo $edit_lnk; ?>"><?=$value['RESULT']?></a>
               </b>
             </div>
-             
             <div class="clearfix l-unit__stat-col--left text-right compact-3">
-              &nbsp;
-              <!--
                   <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                       <div class="actions-panel clearfix">
-                        <div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href">
-                          <a href="<?=$edit_lnk?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a>
-                        </div>
-                        <? if (!empty($value['STATS'])) { ?>
-                          <div class="actions-panel__col actions-panel__logs shortcut-w" key-action="href"><a href="http://<?=$value['RESULT']?>/vstats/"  target="_blank"><i class="fas fa-binoculars status-icon purple status-icon dim"></i></a></div>
-                        <? } ?>
-                        <div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
-                            <?
-                            if ($value['KEY'] == 'RECORD') {
-                              $spnd_lnk = '/'.$spnd_action.'/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&record_id='.$value['LINK'].'&user='.$value['USER'];
-                              $cnfrm = 'SUSPEND_RECORD_CONFIRMATION';
-                            }
-                            if ($value['KEY'] == 'ACCOUNT') {
-                              $spnd_lnk = '/'.$spnd_action.'/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&account='.$value['LINK'].'&user='.$value['USER'];
-                              $cnfrm = 'SUSPEND_USER_CONFIRMATION';
-                            }
-                            if ($value['KEY'] == 'JOB') {
-                              $spnd_lnk = '/'.$spnd_action.'/'.$value['TYPE'].'/?job='.$value['LINK'].'&user='.$value['USER'];
-                              $cnfrm = 'SUSPEND_CRON_CONFIRMATION';
-                            }
-                              if ($value['KEY'] == 'DATABASE') {
-                              $spnd_lnk = '/'.$spnd_action.'/'.$value['TYPE'].'/?database='.$value['RESULT'].'&user='.$value['USER'];
-                              $cnfrm = 'SUSPEND_DATABASE_CONFIRMATION';
-                            }
-                            if (($value['KEY'] != 'RECORD') && ($value['KEY'] != 'ACCOUNT') && ($value['KEY'] != 'JOB') && ($value['KEY'] != 'DATABASE') ) {
-                              $spnd_lnk = '/'.$spnd_action.'/'.$value['TYPE'].'/?'.strtolower($value['KEY']).'='.$value['RESULT'].'&user='.$value['USER'];
-                              $cnfrm = 'SUSPEND_DOMAIN_CONFIRMATION';
-                            }
-                          ?>
-                          <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>">
-                            <i class="fas fa-pause status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
-                            <input type="hidden" name="<?=$spnd_action?>_url" value="<?=$spnd_lnk?>&token=<?=$_SESSION['token']?>" />
-                            <div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=_('Confirmation')?>">
-                              <p class="confirmation"><?=_($cnfrm, $value['RESULT'])?></p>
-                            </div>
-                          </a>
-                        </div>
-                        <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-                          <?
-                            if ($value['KEY'] == 'RECORD') {
-                              $delete_lnk = '/delete/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&record_id='.$value['LINK'].'&user='.$value['USER'];
-                              $cnfrm = 'DELETE_RECORD_CONFIRMATION';
-                            }
-                            if ($value['KEY'] == 'ACCOUNT') {
-                              $delete_lnk = '/delete/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&account='.$value['LINK'].'&user='.$value['USER'];
-                              $cnfrm = 'DELETE_USER_CONFIRMATION';
-                            }
-                            if ($value['KEY'] == 'JOB') {
-                              $delete_lnk = '/delete/'.$value['TYPE'].'/?job='.$value['LINK'].'&user='.$value['USER'];
-                              $cnfrm = 'DELETE_CRON_CONFIRMATION';
-                            }
-                            if ($value['KEY'] == 'DATABASE') {
-                              $delete_lnk = '/delete/'.$value['TYPE'].'/?database='.$value['RESULT'].'&user='.$value['USER'];
-                              $cnfrm = 'DELETE_DATABASE_CONFIRMATION';
-                            }
-                            if (($value['KEY'] != 'RECORD') && ($value['KEY'] != 'ACCOUNT') && ($value['KEY'] != 'JOB') && ($value['KEY'] != 'DATABASE') ) {
-                              $delete_lnk = '/delete/'.$value['TYPE'].'/?'.strtolower($value['KEY']).'='.$value['RESULT'].'&user='.$value['USER'];
-                              $cnfrm = 'DELETE_DOMAIN_CONFIRMATION';
-                            }
-                          ?>
-                          <a id="delete_link_<?=$i?>" class="data-controls do_delete">
-                            <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
-                            <input type="hidden" name="delete_url" value="<?=$delete_lnk?>&token=<?=$_SESSION['token']?>" />
-                            <div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=_('Confirmation')?>">
-                              <p class="confirmation"><?=_($cnfrm, $value['RESULT'])?></p>
-                            </div>
-                          </a>
-                         </div>
-          
+                        &nbsp;
                        </div>
                     </div>
-                    END QUICK ACTION TOOLBAR AREA -->
+                  <!-- END QUICK ACTION TOOLBAR AREA -->
               </div>
-              
-              <div class="clearfix l-unit__stat-col--left text-center"><b><?=translate_date($value['DATE'])?></b></div>
-              <div class="clearfix l-unit__stat-col--left text-center"><b><?=_($object)?></b></div>
-              <div class="clearfix l-unit__stat-col--left text-center"><b><?=$value['USER']?></b></div>
-              <div class="clearfix l-unit__stat-col--left text-center"><b><?=_($status)?></b></div>
+              <div class="clearfix l-unit__stat-col--left text-center"><?=translate_date($value['DATE'])?></div>
+              <div class="clearfix l-unit__stat-col--left text-center"><b>
+                <a href="/search/?q=<?php echo $_GET['q'] ?>&u=<?php echo $value['USER']; ?>"><?php echo $value['USER']; ?></a></b></div>
+              <div class="clearfix l-unit__stat-col--left text-center"><?=_($object)?></b></div>
             </div>
         </div>
     

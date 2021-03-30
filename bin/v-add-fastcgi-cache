@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: Add FastCGI nginx support
+# info: Enable FastCGI cache for nginx
 # options: USER DOMAIN [DURATION] [DEBUG] [RESTART]
 # labels: hestia web
 #

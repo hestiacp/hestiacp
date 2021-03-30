@@ -314,7 +314,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
             str="DOMAIN='$domain' IP='$IP' IP6='$IP6' ALIAS='$ALIAS'"
             str="$str CUSTOM_DOCROOT='$CUSTOM_DOCROOT' CUSTOM_PHPROOT='$CUSTOM_PHPROOT'"
             str="$str REDIRECT='$REDIRECT' REDIRECT_CODE='$REDIRECT_CODE'"
-            str="$str FASTCGI_CACHE='$FASTCGI_CACHE' FASTCGI_CACHE_LENGTH='$FASTCGI_CACHE_LENGTH'"
+            str="$str FASTCGI_CACHE='$FASTCGI_CACHE' FASTCGI_DURATION='$FASTCGI_DURATION'"
             str="$str TPL='$TPL' SSL='$SSL' SSL_HOME='$SSL_HOME'"
             str="$str LETSENCRYPT='$LETSENCRYPT' FTP_USER='$FTP_USER'"
             str="$str FTP_MD5='$FTP_MD5' BACKEND='$BACKEND' PROXY='$PROXY'"

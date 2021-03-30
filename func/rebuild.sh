@@ -34,6 +34,9 @@ rebuild_user_conf() {
     if [ -z "${ROLE+x}" ]; then 
         sed -i "/PHPCLI/a ROLE='user'" $USER_DATA/user.conf 
     fi
+    if [ -z "${THEME+x}" ]; then 
+        sed -i "/LANGUAGE/a THEME=''" $USER_DATA/user.conf 
+    fi
     # Run template trigger
     if [ -x "$HESTIA/data/packages/$PACKAGE.sh" ]; then
         $HESTIA/data/packages/$PACKAGE.sh "$user" "$CONTACT" "$NAME"

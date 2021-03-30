@@ -1,6 +1,8 @@
 # User account rebuild
 rebuild_user_conf() {
 
+    sanitize_config_file "user"
+
     # Get user variables
     source $USER_DATA/user.conf
 

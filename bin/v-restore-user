@@ -33,12 +33,21 @@ if [ -z "$BACKUP" ]; then
 fi
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/usr/local/hestia/func/backup.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/func/main.sh
 source $HESTIA/func/backup.sh
 source $HESTIA/func/domain.sh
 source $HESTIA/func/ip.sh
 source $HESTIA/func/db.sh
 source $HESTIA/func/rebuild.sh
+source $HESTIA/func/syshealth.sh
 source $HESTIA/conf/hestia.conf
 
 
@@ -303,7 +312,9 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
 
             # Merging web.conf keys
             str="DOMAIN='$domain' IP='$IP' IP6='$IP6' ALIAS='$ALIAS'"
-            str="$str CUSTOM_DOCROOT='$CUSTOM_DOCROOT' CUSTOM_PHPROOT='$CUSTOM_PHPROOT' IP='$IP' IP6='$IP6' ALIAS='$ALIAS'"
+            str="$str CUSTOM_DOCROOT='$CUSTOM_DOCROOT' CUSTOM_PHPROOT='$CUSTOM_PHPROOT'"
+            str="$str REDIRECT='$REDIRECT' REDIRECT_CODE='$REDIRECT_CODE'"
+            str="$str FASTCGI_CACHE='$FASTCGI_CACHE' FASTCGI_CACHE_LENGTH='$FASTCGI_CACHE_LENGTH'"
             str="$str TPL='$TPL' SSL='$SSL' SSL_HOME='$SSL_HOME'"
             str="$str LETSENCRYPT='$LETSENCRYPT' FTP_USER='$FTP_USER'"
             str="$str FTP_MD5='$FTP_MD5' BACKEND='$BACKEND' PROXY='$PROXY'"
@@ -535,20 +546,29 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
             if [ ! -e "$HOMEDIR/$user/conf/mail/$domain/ssl/" ]; then
                 mkdir -p $HOMEDIR/$user/conf/mail/$domain/ssl/
             fi
-
+            
             # Add certificate to Hestia user configuration data directory
             if [ -f $tmpdir/mail/$domain/$backup_system/ssl/$domain.crt ]; then
-                echo "path found"
                 cp -f $tmpdir/mail/$domain/$backup_system/ssl/$domain.crt $USER_DATA/ssl/mail.$domain.crt
                 cp -f $tmpdir/mail/$domain/$backup_system/ssl/$domain.key $USER_DATA/ssl/mail.$domain.key
                 cp -f $tmpdir/mail/$domain/$backup_system/ssl/$domain.crt $USER_DATA/ssl/mail.$domain.pem
-                if [ -e "$tmpdir/mail/$domain/$backup_system/ssl//$domain.ca" ]; then
-                    cp -f $tmpdir/mail/$domain/$backup_system/ssl//$domain.ca $USER_DATA/ssl/mail.$domain.ca
+                if [ -e "$tmpdir/mail/$domain/$backup_system/ssl/$domain.ca" ]; then
+                    cp -f $tmpdir/mail/$domain/$backup_system/ssl/$domain.ca $USER_DATA/ssl/mail.$domain.ca
                     echo >> $USER_DATA/ssl/mail.$domain.pem
                     cat $USER_DATA/ssl/mail.$domain.ca >> $USER_DATA/ssl/mail.$domain.pem
                 fi
+            elif [ -f "$tmpdir/mail/$domain/conf/ssl/$domain.crt" ]; then
+                cp -f $tmpdir/mail/$domain/conf/ssl/$domain.crt $USER_DATA/ssl/mail.$domain.crt
+                cp -f $tmpdir/mail/$domain/conf/ssl/$domain.key $USER_DATA/ssl/mail.$domain.key
+                cp -f $tmpdir/mail/$domain/conf/ssl/$domain.crt $USER_DATA/ssl/mail.$domain.pem
+                if [ -e "$tmpdir/mail/$domain/conf/ssl/$domain.ca" ]; then
+                    cp -f $tmpdir/mail/$domain/conf/ssl/$domain.ca $USER_DATA/ssl/mail.$domain.ca
+                    echo >> $USER_DATA/ssl/mail.$domain.pem
+                    cat $USER_DATA/ssl/mail.$domain.ca >> $USER_DATA/ssl/mail.$domain.pem
+                fi
+                
             fi
-            
+
             chmod 660 $USER_DATA/ssl/mail.$domain.*
 
             # Add certificate to user home directory
@@ -593,18 +613,24 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
             chmod -R 0644 /usr/local/hestia/ssl/mail/*
             chown -h $user:mail /usr/local/hestia/ssl/mail/*
         fi
-
+        
         # Restoring email accounts
         cp -f $tmpdir/mail/$domain/$backup_system/$domain.conf $USER_DATA/mail/
-       
+               
         domain_idn=$domain
         format_domain_idn
+        
+        if [ ! -d "$HOMEDIR/$user/mail/$domain_idn" ]; then
+            mkdir $HOMEDIR/$user/mail/$domain_idn
+        fi
+        
+        # Current Hestia store email in the $HOMEDIR/$user/mail/$domain_idn
+        chmod u+w "$HOMEDIR/$user/mail/$domain_idn"
+        chown $user:$user "$HOMEDIR/$user/mail/$domain_idn"
         
         # Restoring emails
         if [ $backup_mode = 'zstd' ]; then    
             if [ -e "$tmpdir/mail/$domain/accounts.tar.zst" ]; then
-                # Current Hestia store email in the $HOMEDIR/$user/mail/$domain_idn
-                chmod u+w "$HOMEDIR/$user/mail/$domain_idn"
                 $BIN/v-extract-fs-archive "$user" "$tmpdir/mail/$domain/accounts.tar.zst" "$HOMEDIR/$user/mail/$domain_idn/"
                 if [ "$?" -ne 0 ]; then
                     rm -rf $tmpdir
@@ -620,7 +646,6 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
             fi
         else
             if [ -e "$tmpdir/mail/$domain/accounts.tar.gz" ]; then
-                chmod u+w "$HOMEDIR/$user/mail/$domain_idn"
                 $BIN/v-extract-fs-archive "$user" "$tmpdir/mail/$domain/accounts.tar.gz" "$HOMEDIR/$user/mail/$domain_idn/"
                 if [ "$?" -ne 0 ]; then
                     rm -rf $tmpdir
@@ -636,9 +661,13 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
             fi
         fi
         # Chowning mail conf files to exim user
-        find $HOMEDIR/$user/conf/mail/$domain -user root \
-            -exec chown $exim_user {} \;
-            
+        if [ -d "$HOMEDIR/$user/conf/mail/$domain" ]; then 
+            find $HOMEDIR/$user/conf/mail/$domain -user root \
+                -exec chown $exim_user {} \;
+        fi
+        
+        $HESTIA/bin/v-rebuild-mail-domain $user $domain
+        
     done
 
     # Restarting web server

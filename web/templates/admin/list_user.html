@@ -10,9 +10,9 @@
           }
         ?>
       </div>
-        <ul class="context-menu sort-order animated fadeIn" style="display:none;">
-          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=_('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
-          <li entity="sort-name"><span class="name"><?=_('Username')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+        <ul class="context-menu sort-order animated fadeIn" id="content-menu" style="display:none;">
+          <li entity="sort-date" sort_as_int="1"><span class="name"><?=_('Date')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
+          <li entity="sort-name"><span class="name" id="default-sort"><?=_('Username')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
           <li entity="sort-disk" sort_as_int="1"><span class="name"><?=_('Disk')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
           <li entity="sort-bandwidth" sort_as_int="1"><span class="name"><?=_('Bandwidth')?> <i class="fas fa-sort-amount-down"></i></span><span class="up"><i class="fas fa-sort-amount-up"></i></span></li>
         </ul>

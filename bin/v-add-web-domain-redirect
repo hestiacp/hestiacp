@@ -115,7 +115,7 @@ if [ "$restart" = "yes" ]; then
 fi
 
 # Logging
-log_history "Enable forced redirect $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Enabled domain redirection (Domain: $domain, Redirect to: $redirect)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

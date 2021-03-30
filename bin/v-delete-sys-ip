@@ -165,7 +165,6 @@ fi
 
 # Logging
 $BIN/v-log-action "system" "Info" "System" "IP address deleted (IP: $ip)."
-log_history "deleted system ip address $ip" '' 'admin'
 log_event "$OK" "$ARGUMENTS"
 
 exit

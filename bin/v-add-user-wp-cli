@@ -68,8 +68,7 @@ user_exec chmod +x $WPCLI_BIN
 #----------------------------------------------------------#
 
 # Logging
-$BIN/v-log-action "$user" "Info" "Plugins" "Enabled WP-CLI support."
-log_history "Enabled wp-cli for user $user"
+$BIN/v-log-action "$user" "Info" "Plugins" "WP-CLI support enabled."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -1165,6 +1165,12 @@ multiphp_default_version() {
     echo "$sys_phpversion"
 }
 
+is_hestia_package(){
+    if [ -z "$(echo $1 | grep -w $2)" ]; then
+        check_result $E_INVALID "$2 package is not controlled by hestiacp"
+    fi
+}
+
 # Run arbitrary cli commands with dropped privileges
 # Note: setpriv --init-groups is not available on debian9 (util-linux 2.29.2)
 # Input:

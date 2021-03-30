@@ -42,6 +42,12 @@ if ! [[ "$duration" =~ ^[0-9].*[s|m|d]$ ]]; then
    echo "Invalid duration";
    exit 2;
 fi
+
+if [[ "$duration" =~ ^[0].*[s|m|d]$ ]]; then
+   echo "Invalid duration";
+   exit 2;
+fi
+
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 

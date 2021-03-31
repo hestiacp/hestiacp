@@ -19,9 +19,9 @@
 		<div class="l-profile noselect">
 			<div class="l-menu__item">
 				<span class="pill usage">
-					<i class="fas fa-user" title="<?=_('Statistics')?>: <?=htmlspecialchars($panel[$user]['NAME'])?>"></i>&nbsp;&nbsp;<b><?=htmlspecialchars($user)?></b> /
-					<i class="fas fa-hdd" title="<?=_('Disk')?>: <?=humanize_usage_size($panel[$user]['U_DISK'])?> <?=humanize_usage_measure($panel[$user]['U_DISK'])?>"></i>&nbsp;&nbsp;<b><?=humanize_usage_size($panel[$user]['U_DISK'])?></b> <?=humanize_usage_measure($panel[$user]['U_DISK'])?> /
-					<i class="fas fa-exchange-alt" title="<?=_('Bandwidth')?>: <?=humanize_usage_size($panel[$user]['U_DISK'])?> <?=humanize_usage_measure($panel[$user]['U_DISK'])?>"></i>&nbsp;&nbsp;<b><?=humanize_usage_size($panel[$user]['U_BANDWIDTH'])?></b> <?=humanize_usage_measure($panel[$user]['U_BANDWIDTH'])?>
+					<span class="label-space-right"><i class="fas fa-user icon-pad-right" title="<?=_('Statistics')?>: <?=htmlspecialchars($panel[$user]['NAME'])?>"></i><b><?=htmlspecialchars($user)?></b></span>
+					<span class="label-space-right"><i class="fas fa-hdd icon-pad-right" title="<?=_('Disk')?>: <?=humanize_usage_size($panel[$user]['U_DISK'])?> <?=humanize_usage_measure($panel[$user]['U_DISK'])?>"></i><b><?=humanize_usage_size($panel[$user]['U_DISK'])?></b> <?=humanize_usage_measure($panel[$user]['U_DISK'])?></span>
+					<span><i class="fas fa-exchange-alt icon-pad-right" title="<?=_('Bandwidth')?>: <?=humanize_usage_size($panel[$user]['U_DISK'])?> <?=humanize_usage_measure($panel[$user]['U_DISK'])?>"></i><b><?=humanize_usage_size($panel[$user]['U_BANDWIDTH'])?></b> <?=humanize_usage_measure($panel[$user]['U_BANDWIDTH'])?></span>
 				</span>
 			</div>
 			<div class="l-menu__item"><a title="<?=_('Notifications')?>" class="l-profile__notifications <? if($panel[$user]['NOTIFICATIONS'] == 'yes') echo " updates"; ?>"><i class="fas fa-bell <?if($panel[$user]['NOTIFICATIONS'] == 'yes') echo " status-icon orange"; ?>"></i></a></div>

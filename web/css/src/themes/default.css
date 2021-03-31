@@ -3502,6 +3502,10 @@ form#vstobjects.suspended {
 
 .pill.usage b { color: #30659d; }
 
+.label-space-right {
+  margin-right: 8px;
+}
+
 .badge {
   display: inline-block;
   min-width: 24px;

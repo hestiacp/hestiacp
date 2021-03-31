@@ -196,7 +196,12 @@ if (!empty($_POST['save'])) {
         exec (HESTIA_CMD."v-change-user-language ".escapeshellarg($v_username)." ".$v_language, $output, $return_var);
         check_return_code($return_var,$output);
         if (empty($_SESSION['error_msg'])) {
-             if ((empty($_GET['user'])) || ($_GET['user'] == $_SESSION['user'])) $_SESSION['language'] = $_POST['v_language'];
+             if (($_GET['user'] == $_SESSION['user'])) {
+                 unset ($_SESSION['language']);
+                 $_SESSION['language'] = $_POST['v_language'];
+                 $refresh = $_SERVER['REQUEST_URI'];
+                 header("Location: $refresh");
+             }
         }
         unset($output);
     }

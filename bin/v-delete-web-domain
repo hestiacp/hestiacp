@@ -111,6 +111,10 @@ rm -f /var/log/$WEB_SYSTEM/domains/$domain.error*
 rm -rf $HOMEDIR/$user/web/$domain
 rm -rf $HOMEDIR/$user/conf/web/$domain
 
+if [ "$FASTCGI_CACHE" = "yes" ]; then
+    # make sure no trails left behind 
+    $BIN/v-delete-fastcgi-cache $user $domain
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #

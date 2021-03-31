@@ -337,7 +337,7 @@ if (!empty($_POST['save'])) {
     }
 
     // Enable/Disable nginx cache
-    if (($_SESSION['WEB_SYSTEM'] == 'nginx') && ($v_nginx_cache_check != $_POST['v_nginx_cache_check'] ) && ($v_nginx_cache_duration != $_POST['v_nginx_cache_duration'] && $_POST['v_nginx_cache'] = "yes" ) && (empty($_SESSION['error_msg']))) {
+    if (($_SESSION['WEB_SYSTEM'] == 'nginx') && ($v_nginx_cache_check != $_POST['v_nginx_cache_check'] ) || ($v_nginx_cache_duration != $_POST['v_nginx_cache_duration'] && $_POST['v_nginx_cache'] = "yes" ) && (empty($_SESSION['error_msg']))) {
         if ( $_POST['v_nginx_cache_check'] == 'on' ) {
             if (empty ($_POST['v_nginx_cache_duration'])){
                 echo $_POST['v_nginx_cache_duration'] = "2m";

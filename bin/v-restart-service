@@ -33,9 +33,20 @@ is_format_valid 'service' 'restart'
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Get installed php versions
+php_versions=$(ls /usr/sbin/php*fpm* | cut -d'/' -f4 | sed 's|php-fpm||')
+
+# Substitute php-fpm service name formats
+for version in $php_versions; do
+    if [ "$service" = "php-fpm${version}" ]; then
+        service="php${version}-fpm"
+    fi
+done
+
+# Multi-instance service restart request handling
 if [ "$service" = "php-fpm" ];then
-    for php_ver in $(multiphp_versions); do
-        service_list="${service_list} php${php_ver}-fpm"
+    for version in $php_versions; do
+        service_list="${service_list} php${version}-fpm"
     done
 else
     service_list="$service"
@@ -61,6 +72,7 @@ for service in $service_list; do
             "$service" = "php7.2-fpm" -o \
             "$service" = "php7.3-fpm" -o \
             "$service" = "php7.4-fpm" -o \
+            "$service" = "php8.0-fpm" -o \
             "$service" = "proftpd" -o    \
             "$service" = "ssh" -o       \
             "$service" = "fail2ban" ]; then

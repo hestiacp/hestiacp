@@ -17,7 +17,7 @@ if ($_SESSION['userContext'] === 'admin') {
             exec (HESTIA_CMD."v-update-firewall", $output, $return_var);
         } else {
             $v_service = escapeshellarg($_GET['srv']);
-            exec (HESTIA_CMD."v-restart-service ".$v_service, $output, $return_var);
+            exec (HESTIA_CMD."v-restart-service ".$v_service. " yes", $output, $return_var);
         }
     }
     if ($return_var != 0) {

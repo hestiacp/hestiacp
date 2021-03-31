@@ -162,10 +162,14 @@ fi
 
 # Checking WEB Backend
 if [ ! -z "$WEB_BACKEND" ] && [ "$WEB_BACKEND" != 'remote' ]; then
-    proc_name=$(ls /usr/sbin/php*fpm* | rev | cut -d'/' -f 1 | rev)
-    get_srv_state $proc_name
-    data="$data\nNAME='$WEB_BACKEND' SYSTEM='backend server' STATE='$state'"
-    data="$data CPU='$cpu' MEM='$mem' RTIME='$rtime'"
+    php_versions=$(ls /usr/sbin/php*fpm* | cut -d'/' -f4 | sed 's|php-fpm||')
+    for version in $php_versions; do
+        proc_name="php-fpm${version}"
+        service_name="php${version}-fpm"
+        get_srv_state $proc_name
+        data="$data\nNAME='$service_name' SYSTEM='backend server' STATE='$state'"
+        data="$data CPU='$cpu' MEM='$mem' RTIME='$rtime'"
+    done
 fi
 
 # Checking WEB Proxy

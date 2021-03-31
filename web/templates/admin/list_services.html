@@ -140,12 +140,17 @@
             <? } else {?>
                 <i class="fas fa-minus-circle status-icon red icon-pad-right"></i>
             <? } ?>
-            <b><a href="/edit/server/<? echo $key ?>/" title="<?=_('edit')?>: <?=$key?>"><?=$key?></a></b>
+            <? if (($key == "php5.6-fpm") || ($key == "php7.0-fpm") || ($key == "php7.1-fpm") || ($key == "php7.2-fpm") || ($key == "php7.3-fpm") || ($key == "php7.4-fpm") || ($key == "php8.0-fpm")) {
+                $edit_url="php";
+            } else {
+                $edit_url=$key;
+            }?>
+            <b><a href="/edit/server/<? echo $edit_url ?>/" title="<?=_('edit')?>: <?=$key?>"><?=$key?></a></b>
           </div>
           <div class="clearfix l-unit__stat-col--left text-center compact-2">
             <div class="actions-panel clearfix">
               <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href">
-                  <a href="/edit/server/<? echo $key ?>/" title="<?=_('edit')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim icon-large"></i></a>
+                  <a href="/edit/server/<? echo $edit_url ?>/" title="<?=_('edit')?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim icon-large"></i></a>
               </div>
               <div class="actions-panel__col actions-panel__stop shortcut-s" key-action="js">
                   <a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_servicerestart" title="<?=_('restart')?>">

@@ -49,7 +49,6 @@ server {
             fastcgi_index index.php;
             include /etc/nginx/fastcgi_params;
             include %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
-
             if ($request_uri ~* "/administrator/|index.php") {
                 set $no_cache 1;
             }

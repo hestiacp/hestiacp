@@ -80,6 +80,7 @@ json_list() {
         "LANGUAGE": "'$LANGUAGE'",
         "THEME": "'$THEME'",
         "NOTIFICATIONS": "'$NOTIFICATIONS'",
+        "PREF_UI_SORT": "'$PREF_UI_SORT'",
         "PHPCLI": "'$PHPCLI'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"

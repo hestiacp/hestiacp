@@ -199,6 +199,9 @@
                                                 if ((!empty($_SESSION['userTheme'])) && ( $value == $v_user_theme )) {
                                                     echo ' selected' ;
                                                 }
+                                                if ((empty($v_user_theme) && (!empty($_SESSION['THEME']))) && ( $value == $_SESSION['THEME'] )) {
+                                                    echo ' selected' ;
+                                                }
                                                 if ((!empty($_SESSION['userTheme'])) && ( $value == $_POST['v_user_theme'])){
                                                     echo ' selected' ;
                                                 }
@@ -209,6 +212,19 @@
                                 </td>
                             </tr>
                             <?}?>
+                            <tr>
+                                <td class="vst-text input-label">
+                                    <?php print _('Default sort order');?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="vst-list" name="v_sort_order">
+                                        <option value='date' <?php if($data[$user]['PREF_UI_SORT'] === '') echo 'selected' ?>><?php print _('Date'); ?></option>
+                                        <option value='name' <?php if($data[$user]['PREF_UI_SORT'] === 'name') echo 'selected' ?>><?php print _('Name'); ?></option>
+                                    </select>
+                                </td>
+                            </tr>
                             <tr>
                                 <td class="vst-text input-label">
                                     <?php print _('Package');?>

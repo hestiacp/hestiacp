@@ -101,15 +101,21 @@ csv_list() {
 
 check_args '1' "$#" 'USER [FORMAT]'
 is_format_valid 'user'
-is_object_valid 'user' 'USER' "$user"
-
+if [ "$user" != "system" ]; then
+    is_object_valid 'user' 'USER' "$user"
+fi
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Parsing history log
-logs=$(tail -n 300 $USER_DATA/history.log 2>/dev/null)
+if [ "$user" = "system" ]; then
+    log_file="$HESTIA/data/users/admin/system.log"
+else
+    log_file="$USER_DATA/history.log"
+fi
+logs=$(tail -n 300 $log_file 2>/dev/null)
 
 case $format in
     json)   json_list ;;

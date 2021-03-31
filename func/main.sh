@@ -106,11 +106,15 @@ log_history() {
         event_category="System"
     fi
 
-    if ! $BIN/v-list-user "$log_user" >/dev/null; then
-        return $E_NOTEXIST
+    # Log system events to system log file
+    if [ "$log_user" = "system" ]; then
+        log=$HESTIA/data/users/admin/system.log
+    else 
+        if ! $BIN/v-list-user "$log_user" >/dev/null; then
+            return $E_NOTEXIST
+        fi
+        log=$HESTIA/data/users/$log_user/history.log
     fi
-
-    log=$HESTIA/data/users/$log_user/history.log
     touch $log
 
     # TODO: Improve log pruning and pagination

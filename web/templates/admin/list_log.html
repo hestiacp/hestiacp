@@ -3,7 +3,7 @@
     <div class="l-unit-toolbar__buttonstrip">
       <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
         <a href="/list/user/" id="btn-back" class="ui-button cancel" dir="ltr"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back')?></a>
-      <? } else if (($_SESSION['userContext'] === 'admin') && ($_GET['user'] === 'admin')) { ?>
+      <? } else if (($_SESSION['userContext'] === 'admin') && ($_GET['user'] === 'system')) { ?>
         <a href="/list/server/" id="btn-back" class="ui-button cancel" dir="ltr"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back')?></a>
       <? } else {?>
         <? if (($_SESSION['userContext'] === 'admin') && (isset($_GET['user'])) && ($_GET['user'] !== 'admin')) { ?>
@@ -14,10 +14,12 @@
       <? } ?>
       <? if (($_SESSION['userContext'] === 'admin') && ($_GET['user'] !== 'admin')) { ?>
         <? if (($_SESSION['userContext'] === 'admin') && (isset($_GET['user'])) && ($_GET['user'] !== 'admin')) { ?>
-          <a href="/list/log/auth/?user=<?php echo $_GET['user']; ?>&token=<?=$_SESSION['token']?>" id="btn-back" class="ui-button cancel" dir="ltr" title="<?=_('Login history');?>"><i class="fas fa-binoculars status-icon green"></i><?=_('Login history')?></a>
-          <? } else { ?>
-          <a href="/list/log/auth/" id="btn-back" class="ui-button cancel" dir="ltr" title="<?=_('Login history');?>"><i class="fas fa-binoculars status-icon green"></i><?=_('Login history')?></a>
+          <? if ($_GET['user'] !== 'system') {?>
+            <a href="/list/log/auth/?user=<?php echo $_GET['user']; ?>&token=<?=$_SESSION['token']?>" id="btn-back" class="ui-button cancel" dir="ltr" title="<?=_('Login history');?>"><i class="fas fa-binoculars status-icon green"></i><?=_('Login history')?></a>
           <? } ?>
+        <? } else { ?>
+          <a href="/list/log/auth/" id="btn-back" class="ui-button cancel" dir="ltr" title="<?=_('Login history');?>"><i class="fas fa-binoculars status-icon green"></i><?=_('Login history')?></a>
+        <? } ?>
       <? } ?>
     </div>
     <div class="l-unit-toolbar__buttonstrip float-right">

@@ -41,19 +41,12 @@ fi
 #----------------------------------------------------------#
 
 if [ "$user" = "system" ] || [ "$user" = "System" ]; then
-    user="admin"
+    user="system"
 fi
 
 check_args '4' "$#" 'USER TYPE CATEGORY DETAILS'
-is_object_valid 'user' 'USER' "$user"
-
-# Future hooks for login/logout events, currently housed in v-log-user-login and v-log-user-logout
-if [ "$event_category" = "login" ] || [ "$event_category" = "Login" ]; then
-echo "login hook used"
-fi
-
-if [ "$event_category" = "logout" ] || [ "$event_category" = "Logout" ]; then
-echo "logout hook used"
+if [ "$user" != "system" ]; then
+    is_object_valid 'user' 'USER' "$user"
 fi
 
 log_history "$event_details" '' "$user"

@@ -46,6 +46,7 @@ $v_email = $data[$v_username]['CONTACT'];
 $v_package = $data[$v_username]['PACKAGE'];
 $v_language = $data[$v_username]['LANGUAGE'];
 $v_user_theme = $data[$v_username]['THEME'];
+$v_sort_order = $data[$v_username]['PREF_UI_SORT'];
 $v_name = $data[$v_username]['NAME'];
 $v_shell = $data[$v_username]['SHELL'];
 $v_twofa = $data[$v_username]['TWOFA'];
@@ -164,6 +165,15 @@ if (!empty($_POST['save'])) {
         $v_twofa = '';
         $v_qrcode = '';
     }
+
+    // Change default sort order
+    if (($v_sort_order != $_POST['v_sort_order']) && (empty($_SESSION['error_msg']))) {
+        $v_sort_order = escapeshellarg($_POST['v_sort_order']);
+        exec (HESTIA_CMD."v-change-user-sort-order ".escapeshellarg($v_username)." ".$v_sort_order, $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
+    }
+
 
     // Change package (admin only)
     if (($v_package != $_POST['v_package']) && ($_SESSION['userContext'] === 'admin') && (empty($_SESSION['error_msg']))) {

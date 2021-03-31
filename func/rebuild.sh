@@ -39,6 +39,9 @@ rebuild_user_conf() {
     if [ -z "${THEME+x}" ]; then 
         sed -i "/LANGUAGE/a THEME=''" $USER_DATA/user.conf 
     fi
+    if [ -z "${PREF_UI_SORT+x}" ]; then 
+        sed -i "/NOTIFICATIONS/a PREF_UI_SORT='name'" $USER_DATA/user.conf 
+    fi
     # Run template trigger
     if [ -x "$HESTIA/data/packages/$PACKAGE.sh" ]; then
         $HESTIA/data/packages/$PACKAGE.sh "$user" "$CONTACT" "$NAME"

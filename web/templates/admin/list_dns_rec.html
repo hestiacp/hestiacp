@@ -10,9 +10,9 @@
           <? } ?>
         </div>
         <ul class="context-menu sort-order animated fadeIn" style="display:none;">
-          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=_('Date')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+          <li entity="sort-date" sort_as_int="1"><span class="name active" id="<?php if ($panel[$user]['PREF_UI_SORT'] === 'date') { echo 'default-sort'; }?>"><?=_('Date')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
           <li entity="sort-value"><span class="name"><?=_('IP or Value')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
-          <li entity="sort-record"><span class="name" id="default-sort"><?=_('Record')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+          <li entity="sort-record"><span class="name" id="<?php if ($panel[$user]['PREF_UI_SORT'] === 'name') { echo 'default-sort'; }?>"><?=_('Record')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
           <li entity="sort-ttl" sort_as_int="1"><span class="name"><?=_('TTL')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
           <li entity="sort-type"><span class="name"><?=_('Type')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
         </ul>
@@ -20,7 +20,12 @@
           <table>
             <tr>
               <td class="sort-by" title="<?=_('Sort items');?>">
-		            <?=_('sort by');?>: <span><b><?=_('Record')?> <i class="fas fa-sort-alpha-down"></i></b></span>
+                <?=_('sort by');?>: <span>
+                  <b>
+                    <? if ($panel[$user]['PREF_UI_SORT'] === 'name') { $label = 'Record'; } else { $label = 'Date'; } ?>
+                    <?=_($label)?><i class="fas fa-sort-alpha-down"></i>
+                  </b>
+                </span>
               </td>
               <td class="l-sort-toolbar__search-box">
                 <form action="/search/" method="get">

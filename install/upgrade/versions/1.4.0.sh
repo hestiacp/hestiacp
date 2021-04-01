@@ -126,3 +126,13 @@ if [ ! -f "$HESTIA/conf/defaults/hestia.conf" ]; then
     fi
     cp -f $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
 fi
+
+# Consolidate nginx (standalone) templates used by active websites
+if [ "$WEB_SYSTEM" = "nginx" ]; then
+    echo "[ * ] Consolidating nginx templates for Drupal & CodeIgniter..."
+    sed -i "s|TPL='drupal6'|TPL='drupal'|g" $HESTIA/data/users/*/web.conf
+    sed -i "s|TPL='drupal7'|TPL='drupal'|g" $HESTIA/data/users/*/web.conf
+    sed -i "s|TPL='drupal8'|TPL='drupal'|g" $HESTIA/data/users/*/web.conf
+    sed -i "s|TPL='codeigniter2'|TPL='codeigniter'|g" $HESTIA/data/users/*/web.conf
+    sed -i "s|TPL='codeigniter3'|TPL='codeigniter'|g" $HESTIA/data/users/*/web.conf
+fi

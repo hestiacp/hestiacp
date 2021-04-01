@@ -152,7 +152,7 @@ function top_panel($user, $TAB) {
     $command = HESTIA_CMD."v-list-user ".escapeshellarg($user)." 'json'";
     exec ($command, $output, $return_var);
     if ( $return_var > 0 ) {
-        header("Location: /error/");
+        header("Location: /logout/");
         exit;
     }
     $panel = json_decode(implode('', $output), true);

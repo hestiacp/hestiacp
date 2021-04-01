@@ -166,6 +166,10 @@ body {
   background-color: #fff;
 }
 
+.debug-panel-contents {
+  background-color: #fff;
+}
+
 /* HTML5 display definitions
    ========================================================================== */
 /**
@@ -4165,6 +4169,36 @@ form#vstobjects.suspended {
   width: 270px;
 }
 
+
+.debug-panel-header {
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.25);
+  box-shadow: 0px -2px 4px rgb(0 0 0 / 40%);
+  font-size: 0.75rem;
+  padding: 10px;
+  background-color: yellow;
+  color: #000;
+  position: sticky;
+  top: 0;
+  z-index: 3001;
+}
+
+.debug-panel-header a {
+  font-weight: 500;
+  color: #000;
+}
+
+.debug-panel-contents {
+  font-size:12px !important;
+  padding:18px;
+  position:sticky;
+  top:0;
+  z-index:3000;
+  height:250px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
 
 @media screen and (max-width: 950px) {
   .helper-container {

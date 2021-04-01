@@ -37,7 +37,8 @@
 </head>
 <body class="body-<?=strtolower($TAB)?> lang-<?=$_SESSION['language']?>">
     <?php if (($_SESSION['DEBUG_MODE']) == "true" ) {?>
-    <div style="font-size:12px !important; padding:12px;position:sticky;top:0;z-index:3000;background-color:#fff;height:200px;overflow:scroll;">
+    <div class="debug-panel-header"><?=_('Debug mode is enabled.')?> <a href="javascript:elementHideShow('debug-panel')"><?=_('Hide / Show Panel')?></a></div>
+    <div class="debug-panel-contents animated fadeIn" id="debug-panel" style="display:none;">
         <?php
             echo "<h3>Server Variables</h3>";
             foreach ($_SERVER as $key=>$val)

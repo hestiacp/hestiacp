@@ -102,16 +102,20 @@
                                                 </td>
                                             </tr>
                                         <?php } ?>
+                                        <? if (!empty($_SESSION['ANTISPAM_SYSTEM'])) {?>
                                         <tr>
                                             <td class="vst-text input-label step-top">
                                                 <label><input type="checkbox" size="20" class="vst-checkbox" name="v_antispam" <?php if ((empty($v_antispam)) || ($v_antispam == 'yes')) echo "checked=yes"; ?>><?php print _('AntiSpam Support');?></label>
                                             </td>
                                         </tr>
+                                        <? } ?>
+                                        <? if (!empty($_SESSION['ANTIVIRUS_SYSTEM'])) {?>
                                         <tr>
                                             <td class="vst-text input-label">
                                                 <label><input type="checkbox" size="20" class="vst-checkbox" name="v_antivirus" <?php if ((empty($v_antivirus)) || ($v_antivirus == 'yes')) echo "checked=yes"; ?>><?php print _('AntiVirus Support');?></label>
                                             </td>
                                         </tr>
+                                        <? } ?>
                                         <tr>
                                             <td class="vst-text input-label">
                                                 <label><input type="checkbox" size="20" class="vst-checkbox" name="v_dkim" <?php if (isset($v_dkim)&&$v_dkim == 'yes') echo "checked=yes"; ?>><?php print _('DKIM Support');?></label>

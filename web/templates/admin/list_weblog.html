@@ -2,20 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
-  <title><?=_('Web Log Manager')?> - <?=_('Hestia Control Panel');?></title>
-  <!-- Load base theme-->
-  <link type="text/css" rel="stylesheet" href="/css/themes/default.min.css?<?=JS_LATEST_UPDATE?>" />
-  <? if ($_SESSION['THEME'] !== 'default') {?>
-    <!-- Load provided theme -->
-    <link type="text/css" rel="stylesheet" href="/css/themes/<?php echo $_SESSION['THEME']; ?>.min.css?<?php echo rand(); ?>" />
-    <!-- Load custom theme -->
-    <link type="text/css" rel="stylesheet" href="/css/themes/custom/<?php echo $_SESSION['THEME']; ?>.css?<?php echo rand(); ?>" />
-  <? } ?>
-  <link type="text/css" href="/css/dependencies/animate.min.css?<?=JS_LATEST_UPDATE?>" rel="stylesheet" />
-  <link type="text/css" href="/css/dependencies/jquery-custom-dialogs.css?<?=JS_LATEST_UPDATE?>" rel="stylesheet" />
-  <link type="text/css" href="/css/dependencies/fontawesome.min.css?<?=JS_LATEST_UPDATE?>" rel="stylesheet" />
-  <script src="/inc/jquery/jquery-3.4.1.min.js"></script>
+  <!-- Load necessary CSS and JavaScript from init.html source -->
+  <?php require ''.$_SERVER['HESTIA'].'/web/templates/init.html'; ?>
   <script type="text/javascript" src="/js/jquery/jquery-1.7.2.min.js"></script>
   <script type="text/javascript" src="/js/jquery/jquery.cookie.js"></script>
   <script type="text/javascript" src="/js/jquery/jquery-ui-1.8.20.custom.min.js"></script>

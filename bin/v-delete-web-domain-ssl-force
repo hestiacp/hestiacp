@@ -16,6 +16,7 @@
 user=$1
 domain=$2
 restart=$3
+quiet=$4
 
 # Includes
 # shellcheck source=/usr/local/hestia/func/main.sh
@@ -70,7 +71,9 @@ $BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging
-$BIN/v-log-action "$user" "Info" "Web" "Disabled automatic HTTPS redirection (Domain: $domain)."
+if [ "$quiet" != "yes" ]; then
+    $BIN/v-log-action "$user" "Info" "Web" "Automatic HTTPS redirection disabled (Domain: $domain)."
+fi
 log_event "$OK" "$ARGUMENTS"
 
 exit

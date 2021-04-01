@@ -65,7 +65,7 @@ fi
 # Adding new alias
 update_object_value 'web' 'DOMAIN' "$domain" '$ALLOW_USERS' "no"
 
-$BIN/v-log-action "system" "Info" "Web" "Enabled subdomain ownership enforcement (Domain: $domain)."
+$BIN/v-log-action "system" "Info" "Web" "Subdomain ownership enforcement enabled (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

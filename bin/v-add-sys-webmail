@@ -99,10 +99,19 @@ else
 
         if [ "$dns_domain" = "$domain" ]; then
             if [ -z "$webmail_record" ]; then
-                $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip '' '' $restart
+                if [ "$quiet" = "yes" ]; then
+                    $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip '' '' $restart '' 'yes'
+                else
+                    $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip '' '' $restart '' 'yes'
+                fi
             else
-                $BIN/v-delete-dns-record $user $domain $webmail_record $restart
-                $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip '' '' $restart
+                if [ "$quiet" = "yes" ]; then
+                    $BIN/v-delete-dns-record $user $domain $webmail_record $restart 'yes'
+                    $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip '' '' $restart '' 'yes'
+                else
+                    $BIN/v-delete-dns-record $user $domain $webmail_record $restart 'yes'
+                    $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip '' '' $restart '' 'yes'
+                fi
             fi
         fi
     fi
@@ -162,7 +171,7 @@ fi
 
 # Logging
 if [ "$quiet" != 'yes' ]; then
-    $BIN/v-log-action "$user" "Info" "Mail" "Webmail client access enabled (Domain: $domain)."
+    $BIN/v-log-action "$user" "Info" "Mail" "Webmail access enabled (Domain: $domain)."
 fi
 log_event "$OK" "$ARGUMENTS"
 

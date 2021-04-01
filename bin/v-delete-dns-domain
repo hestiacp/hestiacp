@@ -91,7 +91,7 @@ fi
 
 
 # Logging
-$BIN/v-log-action "$user" "Info" "DNS" "Deleted DNS domain (Name: $domain)."
+$BIN/v-log-action "$user" "Info" "DNS" "Deleted DNS zone (Name: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

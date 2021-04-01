@@ -173,7 +173,7 @@ $BIN/v-restart-web-backend $restart
 check_result $? "Web backend restart failed" >/dev/null
 
 # Logging
-$BIN/v-log-action "$user" "Info" "Web" "Backend template changed (Domain: $domain, Template: $template)."
+$BIN/v-log-action "$user" "Info" "Web" "Backend template applied (Domain: $domain, Template: $template)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

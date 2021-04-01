@@ -112,7 +112,7 @@ $BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging
-$BIN/v-log-action "$user" "Info" "Mail" "Enabled SSL (Domain: $domain)."
+$BIN/v-log-action "$user" "Info" "Mail" "SSL enabled (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

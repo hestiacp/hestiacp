@@ -71,7 +71,7 @@ update_object_value 'web' 'DOMAIN' "$domain" '$STATS_CRYPT' ''
 
 
 # Logging
-$BIN/v-log-action "$user" "Info" "Web" "Enabled web traffic analyzer password (Domain: $domain)."
+$BIN/v-log-action "$user" "Info" "Web" "Web traffic analyzer password enabled (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

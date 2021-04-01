@@ -67,7 +67,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-$BIN/v-log-action "$user" "Info" "System" "Changed display language (Value: $language)."
+$BIN/v-log-action "$user" "Info" "System" "Display language changed (Value: $language)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

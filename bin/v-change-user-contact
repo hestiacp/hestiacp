@@ -56,7 +56,7 @@ $BIN/v-rebuild-cron-jobs $user > /dev/null 2>&1
 #----------------------------------------------------------#
 
 # Logging
-$BIN/v-log-action "$user" "Info" "System" "Changed email address (Value: $email)."
+$BIN/v-log-action "$user" "Info" "System" "Email address changed (Value: $email)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

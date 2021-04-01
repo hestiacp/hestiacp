@@ -18,6 +18,7 @@ domain=$2
 domain_idn=$2
 id=$3
 restart=$4
+quiet=$5
 
 # Includes
 # shellcheck source=/usr/local/hestia/func/main.sh
@@ -86,7 +87,9 @@ $BIN/v-restart-dns $restart
 check_result $? "Bind restart failed" >/dev/null
 
 # Logging
-$BIN/v-log-action "$user" "Info" "DNS" "Deleted DNS record (ID: $id, Domain: $domain)."
+if [ "$quiet" != "yes" ]; then
+    $BIN/v-log-action "$user" "Info" "DNS" "Deleted DNS record (ID: $id, Domain: $domain)."
+fi
 log_event "$OK" "$ARGUMENTS"
 
 exit

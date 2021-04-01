@@ -85,7 +85,7 @@ update_object_value 'web' 'DOMAIN' "$domain" '$PROXY_EXT' "$extentions"
 $BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" >/dev/null
 
-$BIN/v-log-action "$user" "Info" "Web" "Proxy Enabled (Domain: $domain)."
+$BIN/v-log-action "$user" "Info" "Web" "Proxy enabled (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

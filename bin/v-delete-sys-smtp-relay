@@ -41,7 +41,7 @@ rm -f /etc/exim4/smtp_relay.conf
 #----------------------------------------------------------#
 
 # Logging
-$BIN/v-log-action "system" "Info" "Mail" "Disabled System SMTP Relay."
+$BIN/v-log-action "system" "Info" "Mail" "Global SMTP Relay disabled."
 log_event "$OK" "$ARGUMENTS"
 
 exit

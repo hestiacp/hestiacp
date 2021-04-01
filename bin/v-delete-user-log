@@ -49,7 +49,7 @@ if [ -f "$log_file" ]; then
     rm -f "$log_file"
     # Add event to user and system logs specifying that the log history was cleared
     if [ "$user" = "system" ]; then
-        $BIN/v-log-action "system" "Info" "Security" "System log history deleted."
+        $BIN/v-log-action "system" "Warning" "Security" "System log history deleted."
     else
         $BIN/v-log-action "system" "Warning" "Security" "User action log deleted (User: $user)."
         $BIN/v-log-action "$user" "Info" "Security" "Log entries deleted."

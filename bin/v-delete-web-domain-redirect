@@ -72,7 +72,7 @@ if [ "$restart" = "yes" ]; then
 fi
 
 # Logging
-$BIN/v-log-action "$user" "Info" "Web" "Disabled domain redirection (Domain: $domain)."
+$BIN/v-log-action "$user" "Info" "Web" "Domain redirection disabled (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

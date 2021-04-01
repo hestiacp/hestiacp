@@ -262,7 +262,7 @@ $BIN/v-add-user-sftp-jail $user
 
 # Logging
 $BIN/v-log-action "system" "Info" "Users" "User account added (Name: $user)."
-$BIN/v-log-action "$user" "Info" "System" "User account added."
+$BIN/v-log-action "$user" "Info" "System" "Welcome!"
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -189,7 +189,8 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-$BIN/v-log-action "system" "Info" "System" "Changed user's package (User: $user, Package: $package)."
+$BIN/v-log-action "$user" "Info" "System" "You have been assigned a new package ($package)."
+$BIN/v-log-action "system" "Info" "System" "Package limits applied to user (Package: $package, User: $user)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

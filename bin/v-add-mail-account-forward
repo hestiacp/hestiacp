@@ -85,7 +85,7 @@ fi
 update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$FWD' "$fwd"
 
 # Logging
-$BIN/v-log-action "$user" "Warning" "Mail" "Enabled mail forwarding on mail account $account@$domain (send to: $email_forward)."
+$BIN/v-log-action "$user" "Warning" "Mail" "Mail forwarding on mail account $account@$domain enabled (send to: $email_forward)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

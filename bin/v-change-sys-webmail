@@ -59,7 +59,7 @@ $BIN/v-restart-web $restart
 $BIN/v-restart-proxy $restart
 
 # Logging
-$BIN/v-log-action "system" "Info" "System" "Changed webmail access alias (Value: $NEW_ALIAS, Previous: $OLD_ALIAS)."
+$BIN/v-log-action "system" "Info" "System" "Webmail access alias changed (Value: $NEW_ALIAS, Previous: $OLD_ALIAS)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

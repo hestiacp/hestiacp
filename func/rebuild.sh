@@ -289,13 +289,13 @@ rebuild_web_domain_conf() {
 
     # Refresh HTTPS redirection if previously enabled
     if [ "$SSL_FORCE" = 'yes' ]; then
-        $BIN/v-delete-web-domain-ssl-force $user $domain no
-        $BIN/v-add-web-domain-ssl-force $user $domain yes
+        $BIN/v-delete-web-domain-ssl-force $user $domain no yes
+        $BIN/v-add-web-domain-ssl-force $user $domain yes yes
     fi
 
     if [ "$SSL_HSTS" = 'yes' ]; then
-        $BIN/v-delete-web-domain-ssl-hsts $user $domain no
-        $BIN/v-add-web-domain-ssl-hsts $user $domain yes
+        $BIN/v-delete-web-domain-ssl-hsts $user $domain no yes
+        $BIN/v-add-web-domain-ssl-hsts $user $domain yes yes
     fi
 
     # Adding proxy configuration

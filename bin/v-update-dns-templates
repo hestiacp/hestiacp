@@ -38,5 +38,5 @@ cp -rf $HESTIA_INSTALL_DIR/templates/dns $HESTIA/data/templates/
 # Clean tmpdir
 rm -rf $tmpdir
 
-$BIN/v-log-action "system" "Info" "System" "Updated DNS templates."
+$BIN/v-log-action "system" "Info" "Updates" "Default DNS zone templates updated."
 exit

@@ -100,7 +100,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-$BIN/v-log-action "$user" "Info" "Database" "Changed database user (Database: $database, User: $dbuser)"
+$BIN/v-log-action "$user" "Info" "Database" "Database user changed (Database: $database, User: $dbuser)"
 log_event "$OK" "$ARGUMENTS"
 
 exit

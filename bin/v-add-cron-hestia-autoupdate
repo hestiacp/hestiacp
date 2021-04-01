@@ -94,7 +94,7 @@ $BIN/v-restart-cron
 check_result $? "Cron restart failed" >/dev/null
 
 # Logging
-$BIN/v-log-action "system" "Info" "Updates" "Enabled automatic updates for Hestia Control Panel packages."
+$BIN/v-log-action "system" "Info" "Updates" "Automatic updates enabled."
 log_event "$OK" "$ARGUMENTS"
 
 exit

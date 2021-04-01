@@ -91,7 +91,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-$BIN/v-log-action "system" "Info" "System" "Changed IP address owner (IP: $ip, Owner: $user)"
+$BIN/v-log-action "system" "Info" "System" "IP address owner changed (IP: $ip, Owner: $user)"
 log_event "$OK" "$ARGUMENTS"
 
 exit

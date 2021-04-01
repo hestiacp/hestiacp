@@ -97,7 +97,7 @@ ftp_path=$(echo $FTP_PATH |tr ':' '\n' |grep -n '' |\
 update_object_value 'web' 'DOMAIN' "$domain" '$FTP_PATH' "$ftp_path"
 
 # Logging
-$BIN/v-log-action "$user" "Info" "Web" "Changed FTP account path (User: $ftp_user@domain, Path: $ftp_path_a)."
+$BIN/v-log-action "$user" "Info" "Web" "FTP account path changed (User: $ftp_user@domain, Path: $ftp_path_a)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

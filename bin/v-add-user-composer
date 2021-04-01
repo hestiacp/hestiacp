@@ -85,7 +85,7 @@ check_result $? "Composer install failed"
 
 
 # Logging
-$BIN/v-log-action "$user" "Info" "Plugins" "Enabled support for Composer."
+$BIN/v-log-action "$user" "Info" "Plugins" "Composer support enabled."
 log_event "$OK" "$ARGUMENTS"
 
 exit

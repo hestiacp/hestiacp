@@ -61,7 +61,11 @@ if [ ! -z "$WEBMAIL_ALIAS" ]; then
 
         if [ "$dns_domain" = "$domain" ]; then
             if [ ! -z "$webmail_record" ]; then
-                $BIN/v-delete-dns-record $user $domain $webmail_record $restart
+                if [ "$quiet" = "yes" ]; then
+                    $BIN/v-delete-dns-record $user $domain $webmail_record $restart 'yes'
+                else
+                    $BIN/v-delete-dns-record $user $domain $webmail_record $restart
+                fi
             fi
         fi
     fi
@@ -86,7 +90,7 @@ fi
 
 # Logging
 if [ "$quiet" != 'yes' ]; then
-    $BIN/v-log-action "$user" "Info" "Mail" "Webmail client access disabled (Domain: $domain)."
+    $BIN/v-log-action "$user" "Info" "Mail" "Webmail access disabled (Domain: $domain)."
 fi
 log_event "$OK" "$ARGUMENTS"
 

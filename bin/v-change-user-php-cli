@@ -80,6 +80,6 @@ update_user_value "$user" '$PHPCLI' "$version"
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-$BIN/v-log-action "system" "Info" "Users" "Changed default PHP CLI version (User: $user, Version: $version)."
+$BIN/v-log-action "system" "Info" "Users" "Default PHP CLI version changed (User: $user, Version: $version)."
 
 exit

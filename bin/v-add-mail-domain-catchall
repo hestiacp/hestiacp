@@ -67,7 +67,7 @@ fi
 update_object_value 'mail' 'DOMAIN' "$domain" '$CATCHALL' "$email"
 
 # Logging
-$BIN/v-log-action "$user" "Warning" "Mail" "Enabled catch-all forwarding (Domain: $domain, Send to: $email)."
+$BIN/v-log-action "$user" "Warning" "Mail" "Catch-all forwarding enabled (Domain: $domain, Send to: $email)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

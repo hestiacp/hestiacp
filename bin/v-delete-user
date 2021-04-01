@@ -119,7 +119,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-$BIN/v-log-action "system" "Info" "System" "User deleted (User: $user)."
+$BIN/v-log-action "system" "Info" "Users" "User deleted (User: $user)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

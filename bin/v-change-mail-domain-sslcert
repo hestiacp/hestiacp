@@ -69,7 +69,7 @@ $BIN/v-restart-mail $restart
 check_result $? "Mail restart failed" >/dev/null
 
 # Logging
-$BIN/v-log-action "$user" "Info" "Web" "Changed SSL certificate (Domain: $domain)."
+$BIN/v-log-action "$user" "Info" "Mail" "SSL certificate changed (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

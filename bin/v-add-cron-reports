@@ -56,7 +56,7 @@ $BIN/v-restart-cron
 check_result $? "Cron restart failed" >/dev/null
 
 # Logging
-$BIN/v-log-action "$user" "Info" "Cron Jobs" "Enabled cron job notifications and reporting."
+$BIN/v-log-action "$user" "Info" "Cron Jobs" "Cron job notifications and reporting enabled."
 log_event "$OK" "$ARGUMENTS"
 
 exit

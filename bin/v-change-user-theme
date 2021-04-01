@@ -56,6 +56,6 @@ update_user_value "$user" '$THEME' "$theme"
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
-$BIN/v-log-action "$user" "Info" "System" "User theme changed (User: $user, Theme: $theme)."
+$BIN/v-log-action "$user" "Info" "System" "Applied theme to user interface (Theme: $theme)."
 
 exit

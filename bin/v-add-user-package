@@ -99,9 +99,9 @@ chmod 644 $HESTIA/data/packages/$package.pkg
 
 # Logging
 if [ "$rewrite" != 'yes' ]; then
-    $BIN/v-log-action "system" "Info" "Packages" "Added new package (Name: $package)."
+    $BIN/v-log-action "system" "Info" "Packages" "Package added (Name: $package)."
 else
-    $BIN/v-log-action "system" "Info" "Packages" "Updated package (Name: $package)."
+    $BIN/v-log-action "system" "Info" "Packages" "Package limits updated (Name: $package)."
 fi
 log_event "$OK" "$ARGUMENTS"
 

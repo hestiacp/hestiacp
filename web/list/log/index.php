@@ -1,6 +1,10 @@
 <?php
 error_reporting(NULL);
-$TAB = 'LOG';
+if ($_GET['user'] === 'system') {
+    $TAB = 'SERVER';
+} else {
+    $TAB = 'LOG';
+}
 
 // Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");

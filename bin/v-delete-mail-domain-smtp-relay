@@ -58,7 +58,7 @@ update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMTP_RELAY_USERNAME' ''
 update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMTP_RELAY_PASSWORD' ''
 
 # Logging
-$BIN/v-log-action "$user" "Info" "Mail" "Disabled SMTP Relay (Domain: $domain)."
+$BIN/v-log-action "$user" "Info" "Mail" "SMTP Relay disabled (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

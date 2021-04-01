@@ -68,6 +68,6 @@ if [ ! -z "$restart" ] || [ "$restart" == "yes" ]; then
     check_result $? "restart" >/dev/null 2>&1
 fi 
 
-$BIN/v-log-action "system" "Info" "System" "Updated web domain templates."
+$BIN/v-log-action "system" "Info" "Updates" "Default web domain templates updated."
 
 exit

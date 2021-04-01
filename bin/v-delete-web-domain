@@ -81,6 +81,11 @@ if [ "$SSL" = 'yes' ]; then
     rm -f $USER_DATA/ssl/$domain.*
 fi
 
+if [ "$FASTCGI_CACHE" = "yes" ]; then
+    # make sure no trails left behind 
+    $BIN/v-delete-fastcgi-cache $user $domain
+fi
+
 # Deleting domain from web.conf
 sed -i "/DOMAIN='$domain'/ d" $USER_DATA/web.conf
 
@@ -110,7 +115,6 @@ rm -f /var/log/$WEB_SYSTEM/domains/$domain.error*
 # Deleting directory
 rm -rf $HOMEDIR/$user/web/$domain
 rm -rf $HOMEDIR/$user/conf/web/$domain
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

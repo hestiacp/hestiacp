@@ -1,11 +1,11 @@
 #!/bin/bash
-# info: Remove FastCGI nginx support
+# info: Disable FastCGI cache for nginx
 # options: USER DOMAIN [RESTART]
 # labels: hestia web
 #
 # example: v-delete-fastcgi-cache user domain.tld
 #
-# The function enables FastCGI cache for nginx
+# The function disables FastCGI cache for nginx
 
 
 #----------------------------------------------------------#
@@ -51,7 +51,7 @@ fi
 
 conf='/etc/nginx/conf.d/fastcgi_cache_pool.conf'
 if [ -f "$conf" ]; then
-    sed -i "/fastcgi_cache $domain;/d" $conf
+    sed -i "/ keys_zone=$domain/d" $conf
     if [ ! -s "$conf" ]; then
         rm -rf $conf
     fi
@@ -68,11 +68,15 @@ fi
 #----------------------------------------------------------#
 
 if [ -z "$FASTCGI_CACHE" ]; then
-    add_object_key "web" 'DOMAIN' "$domain" 'FASTCGI_CACHE' 'ALIAS'
+add_object_key "web" 'DOMAIN' "$domain" 'FASTCGI_CACHE' 'ALIAS'
+fi
+if [ -z "$FASTCGI_DURATION" ]; then
+add_object_key "web" 'DOMAIN' "$domain" 'FASTCGI_DURATION' 'ALIAS'
 fi
 
-# Set FASTCGI flag to disabled
-update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_CACHE' ''
+# Set FastCGI cache flag to disabled
+update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_CACHE' 'no'
+update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_DURATION' '0s'
 
 # Restart web server
 if [ ! -z "$restart" ]; then

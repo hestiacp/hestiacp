@@ -45,7 +45,7 @@ function syshealth_update_web_config_format() {
     # WEB DOMAINS
     # Create array of known keys in configuration file
     system="web"
-    known_keys=(DOMAIN IP IP6 CUSTOM_DOCROOT CUSTOM_PHPROOT FASTCGI_CACHE FASTCGI_LENGTH ALIAS TPL SSL SSL_FORCE SSL_HOME LETSENCRYPT FTP_USER FTP_MD5 FTP_PATH BACKEND PROXY PROXY_EXT STATS STATS_USER STATS_CRYPT SUSPENDED TIME DATE)
+    known_keys=(DOMAIN IP IP6 CUSTOM_DOCROOT CUSTOM_PHPROOT FASTCGI_CACHE FASTCGI_DURATION ALIAS TPL SSL SSL_FORCE SSL_HOME LETSENCRYPT FTP_USER FTP_MD5 FTP_PATH BACKEND PROXY PROXY_EXT STATS STATS_USER STATS_CRYPT SUSPENDED TIME DATE)
     write_kv_config_file
     unset system
     unset known_keys
@@ -236,8 +236,9 @@ function syshealth_repair_system_config() {
 
     # Backend port
     if [ -z "$BACKEND_PORT" ]; then 
-        echo "[ ! ] Adding missing variable to hestia.conf: BACKEND_PORT ('8083')"
-        $BIN/v-change-sys-port '8083' >/dev/null 2>&1
+        ORIGINAL_PORT=$(cat $HESTIA/nginx/conf/nginx.conf | grep "listen" | sed 's/[^0-9]*//g')
+        echo "[ ! ] Adding missing variable to hestia.conf: BACKEND_PORT ('$ORIGINAL_PORT')"
+        $HESTIA/bin/v-change-sys-config-value 'BACKEND_PORT' $PORT
     fi
 
     # Upgrade: Send email notification

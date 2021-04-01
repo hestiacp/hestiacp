@@ -389,16 +389,20 @@
                                         </tr>
                                         <?php if($_SESSION['WEB_SYSTEM'] == 'nginx'){?>
                                         <tr>
-                                            <td class="vst-text input-label">
-                                                <?php print _('Enable Fast CGI Cache'); ?> <a href="https://docs.hestiacp.com/admin_docs/nginx_caching.html" target="_blank"><i class="fas fa-question-circle"></i></a>
+                                            <td class="vst-text">
+                                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_nginx_cache_check" <?php if (!empty($v_nginx_cache)) echo "checked=yes" ?> onclick="javascript:elementHideShow('v_nginx_duration');"><?php print _('Enable FastCGI Cache'); ?> <a href="https://docs.hestiacp.com/admin_docs/nginx_caching.html" target="_blank"><i class="fas fa-question-circle"></i></a></label>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>
-                                                <select class="vst-list" name="v_nginx_cache">
-                                                    <option value="no"><?php echo _('No');?></option>
-                                                    <option value="yes" <?php if ( $v_nginx_cache == "yes") { echo 'selected'; }?>><?php echo _('Yes');?></option>
-                                                </select>
+                                            <td class="step-left">
+                                                <table id="v_nginx_duration" style="display:<?php if ($v_nginx_cache != 'yes' ) { echo 'none';} else {echo 'block';}?> ;" >
+                                                    <td class="vst-text input-label">
+                                                        <?php print _('Cache Duration'); ?> <span class="optional"><?=_('For example: 30s, 10m or 1d');?>
+                                                    </td>
+                                                    <tr>
+                                                        <td><input type="text" size="20" class="vst-input" name="v_nginx_cache_duration" value="<?=htmlentities(trim($v_nginx_cache_duration, "'"))?>"></td>
+                                                    </tr>
+                                                </table>
                                             </td>
                                         </tr>
                                         <?php } ?>                          

@@ -185,7 +185,7 @@
                                         </tr>
                                         <?php if ($_SESSION['RELEASE_BRANCH'] !== 'release') {?>
                                         <tr>
-                                            <td class="vst-text input-label">
+                                            <td class="vst-text">
                                                 <?php print _('Release'); ?>: <span class="optional"><?php echo $_SESSION['RELEASE_BRANCH'] ?></span>
                                             </td>
                                         </tr>
@@ -308,7 +308,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="vst-text input-label">
+                                            <td class="vst-text">
                                                 <?php print _('DNS Cluster');?>: <span class="optional"><? if ($v_dns_cluster == 'yes') { echo 'Yes'; } else { echo 'No'; } ?></span>
                                             </td>
                                         </tr>

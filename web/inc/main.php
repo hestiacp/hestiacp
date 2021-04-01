@@ -129,16 +129,10 @@ function render_page($user, $TAB, $page) {
     extract($GLOBALS, EXTR_SKIP);
 
     // Body
-    if (($_SESSION['userContext'] != 'admin') && (@include($__template_dir . "user/$page.html"))) {
-        // User page loaded
-    } else {
-        // Not admin or user page doesn't exist
-        // Load admin page
-        @include($__template_dir . "admin/$page.html");
-    }
+    include($__template_dir . "pages/$page.html");
 
     // Including common js files
-    @include_once(dirname(__DIR__) . '/templates/scripts.html');
+    @include_once(dirname(__DIR__) . '/templates/includes/end_js.html');
     // Including page specific js file
     if(file_exists($__pages_js_dir.$page.'.js'))
        echo '<script type="text/javascript" src="/js/pages/'.$page.'.js?'.JS_LATEST_UPDATE.'"></script>';
@@ -167,6 +161,9 @@ function top_panel($user, $TAB) {
     if ($_SESSION['POLICY_USER_CHANGE_THEME'] === 'no') {
         unset($_SESSION['userTheme']);
     }
+
+    // Set preferred sort order
+    $_SESSION['userSortOrder'] = $panel[$user]['PREF_UI_SORT'];
     
     // Set home location URLs
     if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look']))) {
@@ -189,11 +186,7 @@ function top_panel($user, $TAB) {
         }
     }
 
-    if (($_SESSION['userContext'] === 'admin')) {
-        include(dirname(__FILE__).'/../templates/admin/panel.html');
-    } else {
-        include(dirname(__FILE__).'/../templates/user/panel.html');
-    }
+    include(dirname(__FILE__).'/../templates/includes/panel.html');
 
 }
 

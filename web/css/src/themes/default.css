@@ -4202,7 +4202,8 @@ form#vstobjects.suspended {
   box-shadow: 0px 2px 4px rgb(0 0 0 / 25%);
 }
 
-.body-login .debug-panel-header, .debug-panel-contents {
+.body-login .debug-panel-header, .body-login .debug-panel-contents,
+.body-reset .debug-panel-header, .body-reset .debug-panel-contents {
   display: none;
 }
 

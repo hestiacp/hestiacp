@@ -189,6 +189,11 @@ function authenticate_user($user, $password, $twofa = ''){
 
                 // Set active user theme on login
                 $_SESSION['userTheme'] = $data[$user]['THEME'];
+                if (!empty($data[$user]['PREF_UI_SORT'])) {
+                    $_SESSION['userSortOrder'] = $data[$user]['PREF_UI_SORT'];
+                } else {
+                    $_SESSION['userSortOrder'] = 'name';
+                }
 
                 // Define language
                 $output = '';
@@ -275,20 +280,20 @@ $_SESSION['token'] = md5(uniqid(mt_rand(), true));
 
 require_once('../templates/header.html');
 if(!empty($_SESSION['login'])){
-    require_once('../templates/login_2.html');
+    require_once('..templates/pages/login/login_2.html');
 }else if (empty($_POST['user'])) {
     if($_SESSION['LOGIN_STYLE'] == 'old'){
-        require_once('../templates/login_a.html');
+        require_once('../templates/pages/login/login_a.html');
     }else{
-        require_once('../templates/login.html');
+        require_once('../templates/pages/login/login.html');
     }
 }else if (empty($_POST['password'])) {
-    require_once('../templates/login_1.html');
+    require_once('../templates/pages/login/login_1.html');
 }else{
     if($_SESSION['LOGIN_STYLE'] == 'old'){
-        require_once('../templates/login_a.html');
+        require_once('../templates/pages/login/login_a.html');
     }else{
-        require_once('../templates/login.html');
+        require_once('../templates/pages/login/login.html');
     }
 }
 ?>

@@ -4,7 +4,7 @@
 <head>
   <?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/title.html'; ?>
   <?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/css.html'; ?>
-  <?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/js.html'; ?>
+  <?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/top_js.html'; ?>
   <script>
     //
     //  GLOBAL SETTINGS
@@ -19,5 +19,5 @@
 
 <body class="body-<?=strtolower($TAB)?> lang-<?=$_SESSION['language']?>">
   <?php if (($_SESSION['DEBUG_MODE']) == "true" ) {?>
-  <?php require ''.$_SERVER['HESTIA'].'/web/templates/debug.html'; ?>
+  <?php require ''.$_SERVER['HESTIA'].'/web/templates/pages/debug_panel.html'; ?>
   <?php } ?>

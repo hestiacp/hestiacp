@@ -136,3 +136,11 @@ if [ "$WEB_SYSTEM" = "nginx" ]; then
     sed -i "s|TPL='codeigniter2'|TPL='codeigniter'|g" $HESTIA/data/users/*/web.conf
     sed -i "s|TPL='codeigniter3'|TPL='codeigniter'|g" $HESTIA/data/users/*/web.conf
 fi
+
+# Remove outdated nginx templates
+echo "[ * ] Removing outdated nginx templates..."
+rm -rf $HESTIA/data/templates/web/nginx/php-fpm/drupal6.*tpl
+rm -rf $HESTIA/data/templates/web/nginx/php-fpm/drupal7.*tpl
+rm -rf $HESTIA/data/templates/web/nginx/php-fpm/drupal8.*tpl
+rm -rf $HESTIA/data/templates/web/nginx/php-fpm/codeigniter2.*tpl
+rm -rf $HESTIA/data/templates/web/nginx/php-fpm/codeigniter3.*tpl

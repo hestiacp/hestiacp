@@ -4200,6 +4200,10 @@ form#vstobjects.suspended {
   overflow-y: scroll;
 }
 
+.body-login .debug-panel-header, .debug-panel-contents {
+  display: none;
+}
+
 @media screen and (max-width: 950px) {
   .helper-container {
     display: none;

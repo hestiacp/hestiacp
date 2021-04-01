@@ -25,9 +25,11 @@
 				<span class="pill usage">
 					<span class="label-space-right"><i class="fas 
 					<? if (isset($_SESSION['look'])) {?>
-						echo fa-binoculars
+						fa-binoculars
+					<? } else if ($_SESSION['userContext'] === 'admin') { ?>
+						fa-user-tie
 					<? } else { ?>
-						echo fa-user
+						fa-user
 					<? } ?> icon-pad-right" title="<?=_('Statistics')?>: <?=htmlspecialchars($panel[$user]['NAME'])?>"></i><b><?=htmlspecialchars($user)?></b></span>
 					<span class="label-space-right"><i class="fas fa-hdd icon-pad-right" title="<?=_('Disk')?>: <?=humanize_usage_size($panel[$user]['U_DISK'])?> <?=humanize_usage_measure($panel[$user]['U_DISK'])?>"></i><b><?=humanize_usage_size($panel[$user]['U_DISK'])?></b> <?=humanize_usage_measure($panel[$user]['U_DISK'])?></span>
 					<span><i class="fas fa-exchange-alt icon-pad-right" title="<?=_('Bandwidth')?>: <?=humanize_usage_size($panel[$user]['U_DISK'])?> <?=humanize_usage_measure($panel[$user]['U_DISK'])?>"></i><b><?=humanize_usage_size($panel[$user]['U_BANDWIDTH'])?></b> <?=humanize_usage_measure($panel[$user]['U_BANDWIDTH'])?></span>

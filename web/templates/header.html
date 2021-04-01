@@ -37,7 +37,7 @@
 </head>
 <body class="body-<?=strtolower($TAB)?> lang-<?=$_SESSION['language']?>">
     <?php if (($_SESSION['DEBUG_MODE']) == "true" ) {?>
-    <div style="font-size:12px !important; padding:12px;position:sticky;top:0;z-index:3000;background-color:#fff;">
+    <div style="font-size:12px !important; padding:12px;position:sticky;top:0;z-index:3000;background-color:#fff;height:200px;overflow:scroll;">
         <?php
             echo "<h3>Server Variables</h3>";
             foreach ($_SERVER as $key=>$val)
@@ -46,6 +46,16 @@
         <?php
             echo "<h3>Session Variables</h3>";
             foreach ($_SESSION as $key=>$val)
+            echo "<b>".$key."= </b> ".$val."  ";
+        ?>
+        <?php
+            echo "<h3>POST Variables</h3>";
+            foreach ($_POST as $key=>$val)
+            echo "<b>".$key."= </b> ".$val."  ";  
+        ?>
+        <?php
+            echo "<h3>GET Variables</h3>";
+            foreach ($_GET as $key=>$val)
             echo "<b>".$key."= </b> ".$val."  ";
         ?>
     </div>

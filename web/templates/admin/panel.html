@@ -33,10 +33,10 @@
 					<span><i class="fas fa-exchange-alt icon-pad-right" title="<?=_('Bandwidth')?>: <?=humanize_usage_size($panel[$user]['U_DISK'])?> <?=humanize_usage_measure($panel[$user]['U_DISK'])?>"></i><b><?=humanize_usage_size($panel[$user]['U_BANDWIDTH'])?></b> <?=humanize_usage_measure($panel[$user]['U_BANDWIDTH'])?></span>
 				</span>
 			</div>
-			<!-- Show update notifier for administrators -->
+			<!-- Show update notifier for administrators 
 			<? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['UPDATE_AVAILABLE'])) {?>
 				<div class="l-menu__item <?php if($TAB == 'UPDATES' ) echo 'l-menu__item--active' ?>"><a href="/list/updates/" title="<?_('Updates')?>" class="l-profile__username "><i class="fas fa-star status-icon orange"></i></a></div>
-			<?}?>
+			<?}?>-->
 			<? if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($user == 'admin'))) {?>
 				<!-- Do not show notifications panel when impersonating 'admin' user -->
 			<? } else { ?>

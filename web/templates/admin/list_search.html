@@ -121,7 +121,11 @@
                 }
               ?>
               <b>
-                <a href="<?php echo $edit_lnk; ?>"><?=$value['RESULT']?></a>
+                <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['user'] !== 'admin') && ($value['USER'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes')) {?>
+                  <?=$value['RESULT']?>
+                <?} else {?>
+                  <a href="<?php echo $edit_lnk; ?>"><?=$value['RESULT']?></a>
+                <?}?>
               </b>
             </div>
             <div class="clearfix l-unit__stat-col--left text-right compact-3">

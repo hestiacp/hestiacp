@@ -196,21 +196,11 @@
                                                 </select>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td class="vst-text input-label">
-                                                <?php print _('Databases');?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" size="20" class="vst-input" name="v_databases" value="<?=htmlentities(trim($v_databases, "'"))?>">
-                                                <i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited')?>" id="unlim-databases"></i>
-                                            </td>
-                                        </tr>
+                                        <?php echo ""; }?>
                                     </table>
                                 </td>
                             </tr>
-                            <?php echo ""; }?>
+
                             <tr>
                                 <td class="section-title" onclick="javascript:elementHideShow('dns-options')">
                                     <?=_('DNS');?>
@@ -377,6 +367,31 @@
                                                 <input type="text" size="20" class="vst-input" name="v_mail_accounts" value="<?=htmlentities(trim($v_mail_accounts, "'"))?>">
                                                 <i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited')?>" id="unlim-mail-accounts"></i>
                                             <td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="section-title" onclick="javascript:elementHideShow('database-options')">
+                                    <?=_('Databases');?>
+                                </td>
+                                <td class="section-hide-button">
+                                    <a href="javascript:elementHideShow('database-options');"><i class="fas fa-minus-square status-icon dim maroon"></i></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table id="database-options" style="display: none;">
+                                        <tr>
+                                            <td class="vst-text input-label step-top">
+                                                <?php print _('Databases');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" size="20" class="vst-input" name="v_databases" value="<?=htmlentities(trim($v_databases, "'"))?>">
+                                                <i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited')?>" id="unlim-databases"></i>
+                                            </td>
                                         </tr>
                                     </table>
                                 </td>

@@ -94,7 +94,7 @@ if (!empty($_POST['ok'])) {
         $subject = _("Welcome to Hestia Control Panel");
         $hostname = exec('hostname');
         unset($output);
-        $from = sprintf(_('MAIL_FROM'),$hostname); /
+        $from = sprintf(_('MAIL_FROM'),$hostname);
 
         if (!empty($_POST['v_name'])) {
             $mailtext = sprintf(_('GREETINGS_GORDON'),$_POST['v_name'])."\r\n";

@@ -757,6 +757,11 @@ if (!empty($_POST['save'])) {
                 exec (HESTIA_CMD."v-change-sys-config-value POLICY_USER_CHANGE_THEME ".escapeshellarg($_POST['v_policy_user_change_theme']), $output, $return_var);
                 check_return_code($return_var,$output);
                 unset($output);
+                if ($_POST['v_policy_user_change_theme']) { 
+                    unset ($_SESSION['userTheme']);
+                    $refresh = $_SERVER['REQUEST_URI'];
+                    header("Location: $refresh");
+                }
                 if (empty($_SESSION['error_msg'])) $v_policy_user_change_theme = $_POST['v_policy_user_change_theme'];
             }
         }

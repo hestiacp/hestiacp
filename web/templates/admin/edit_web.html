@@ -82,14 +82,16 @@
                                     <textarea size="20" class="vst-textinput short" name="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
                                 </td>
                             </tr>
+                            <? if ($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') {?>
 			                <tr>
                                 <td>
                                     <span class="alert alert-info alert-with-icon">
-                                                    <i class="fas fa-exclamation"></i>
-                                                    <?php print _('Changes to Aliases will cause Lets Encrypt to obtain a new SSL certificate if enabled.');?>
-                                                </span>
+                                        <i class="fas fa-exclamation"></i>
+                                        <?php print _('Lets Encrypt will obtain a new SSL certificate if web domain aliases are changed.');?>
+                                    </span>
                                 </td>
                             </tr>
+                            <? } ?>
                             <tr>
                                 <td class="vst-text input-label">
                                     <?php print _('IP Address');?>
@@ -221,7 +223,7 @@
                                     <table style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;" id="ssltable">
                                      <tr>
                                           <td class="input-label vst-text">
-                                              <label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" id="letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letencrypt == 'on') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_letsencrypt(this)"><?php print _('Lets Encrypt Support');?></label>
+                                              <label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" id="letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letencrypt == 'on') echo "checked=yes" ?> onclick="elementHideShow('ssl-details');App.Actions.WEB.toggle_letsencrypt(this)"><?php print _('Lets Encrypt Support');?></label>
                                           </td>
                                       </tr>
                                       <tr>
@@ -249,34 +251,40 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="vst-text input-label step-top">
-                                                <?php print _('SSL Certificate');?>
-                                                <span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=$v_domain?>"><?=_('Generate CSR')?></a></span>
-                                            </td>
-                                        </tr>
-                                        <tr>
                                             <td>
-                                                <textarea size="20" class="vst-textinput short console" name="v_ssl_crt" id="ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text input-label">
-                                                <?php print _('SSL Key');?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <textarea size="20" class="vst-textinput short console" name="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="vst-text input-label">
-                                                <?php print _('SSL Certificate Authority / Intermediate');?> <span class="optional">(<?php print _('optional');?>)</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <textarea size="20" class="vst-textinput short console" name="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
+                                                <table id="ssl-details"  style="<? if ($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') { echo 'display: none;'; } ?>">
+                                                    <tr>
+                                                        <td class="vst-text input-label step-top">
+                                                            <?php print _('SSL Certificate');?>
+                                                            <span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=$v_domain?>"><?=_('Generate CSR')?></a></span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <textarea size="20" class="vst-textinput short console" name="v_ssl_crt" id="ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="vst-text input-label">
+                                                            <?php print _('SSL Key');?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <textarea size="20" class="vst-textinput short console" name="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="vst-text input-label">
+                                                            <?php print _('SSL Certificate Authority / Intermediate');?> <span class="optional">(<?php print _('optional');?>)</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <textarea size="20" class="vst-textinput short console" name="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
+                                                        </td>
+                                                    </tr>
+                                                </table>
                                             </td>
                                         </tr>
                                         <?

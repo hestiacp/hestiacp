@@ -60,6 +60,10 @@ if [ "$($BIN/v-list-mail-domain $user $domain_idn plain |cut -f 1) " != "$domain
 else
     is_domain_new 'mail' "$domain"
 fi
+if [ -z "$(is_ip_format_valid $domain)" ]; then
+    echo "Error: Invalid domain format. IP address detected as input." 
+    exit 1
+fi
 
 is_package_full 'MAIL_DOMAINS'
 is_dir_symlink $HOMEDIR/$user/mail

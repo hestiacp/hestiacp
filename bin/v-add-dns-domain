@@ -61,6 +61,10 @@ if [ "$($BIN/v-list-dns-domain $user $domain_idn plain |cut -f 1) " != "$domain"
 else
     is_domain_new 'dns' "$domain"
 fi
+if [ -z "$(is_ip_format_valid $domain)" ]; then
+    echo "Error: Invalid domain format. IP address detected as input." 
+    exit 1
+fi
 
 is_package_full 'DNS_DOMAINS'
 template=$(get_user_value '$DNS_TEMPLATE')

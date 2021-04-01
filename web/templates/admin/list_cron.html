@@ -68,7 +68,7 @@
             <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes')) { $display_mode = 'disabled'; } ?>
             <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all')?>" onChange="checkedAll('objects');" <?=$display_mode;?>>
           </div>
-          <div class="clearfix l-unit__stat-col--left wide-5"><b><?php print _('Cron Job');?></b></div>
+          <div class="clearfix l-unit__stat-col--left wide-5"><b><?php print _('Command');?></b></div>
           <div class="clearfix l-unit__stat-col--left compact-2 text-right"><b>&nbsp;</b></div>
           <div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?=_('Min')?></b></div>
           <div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?=_('Hour')?></b></div>

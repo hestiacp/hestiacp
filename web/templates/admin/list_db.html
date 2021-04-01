@@ -28,9 +28,9 @@
         </div>
         <ul class="context-menu sort-order animated fadeIn" style="display:none;">
           <li entity="sort-charset"><span class="name"><?=_('Charset')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
-          <li entity="sort-name"><span class="name" id="<?php if ($panel[$user]['PREF_UI_SORT'] === 'name') { echo 'default-sort'; }?>"><?=_('Database')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
-          <li entity="sort-date" sort_as_int="1"><span class="name active" id="<?php if ($panel[$user]['PREF_UI_SORT'] === 'date') { echo 'default-sort'; }?>"><?=_('Date')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+           <li entity="sort-date" sort_as_int="1"><span class="name active" id="<?php if ($panel[$user]['PREF_UI_SORT'] === 'date') { echo 'default-sort'; }?>"><?=_('Date')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
           <li entity="sort-disk" sort_as_int="1"><span class="name"><?=_('Disk')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+          <li entity="sort-name"><span class="name" id="<?php if ($panel[$user]['PREF_UI_SORT'] === 'name') { echo 'default-sort'; }?>"><?=_('Name')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
           <li entity="sort-server"><span class="name"><?=_('Host')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
           <li entity="sort-user"><span class="name"><?=_('Username')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
         </ul>
@@ -40,7 +40,7 @@
               <td class="sort-by" title="<?=_('Sort items');?>">
                 <?=_('sort by');?>: <span>
                   <b>
-                    <? if ($panel[$user]['PREF_UI_SORT'] === 'name') { $label = 'Database'; } else { $label = 'Date'; } ?>
+                    <? if ($panel[$user]['PREF_UI_SORT'] === 'name') { $label = 'Name'; } else { $label = 'Date'; } ?>
                     <?=_($label)?><i class="fas fa-sort-alpha-down"></i>
                   </b>
                 </span>
@@ -85,7 +85,7 @@
                     <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes')) { $display_mode = 'disabled'; } ?>
                       <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all')?>" onChange="checkedAll('objects');" <?=$display_mode;?>>
                   </div>
-                  <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print _('Database');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print _('Name');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-right compact-3"><b>&nbsp;</b></div>
                   <div class="clearfix l-unit__stat-col--left text-center compact"><b><?php print _('Type');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?php print _('Disk');?></b></div>

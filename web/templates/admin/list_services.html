@@ -7,7 +7,10 @@
           <!-- Disable Updates Button 
           <a href="/list/updates/" class="ui-button cancel" dir="ltr"><i class="fas fa-sync status-icon green"></i><?=_('Updates')?></a>
           -->
-          <a href="/list/log/?user=system&token=<?=$_SESSION['token']?>" class="ui-button cancel" dir="ltr"><i class="fas fa-binoculars status-icon lightblue"></i><?=_('Logs')?></a>
+          <?php if ((isset($_SESSION['FIREWALL_SYSTEM'])) && (!empty($_SESSION['FIREWALL_SYSTEM']))) {?>
+            <a href="/list/firewall/" class="ui-button cancel" dir="ltr"><i class="fas fa-shield-alt status-icon red"></i><?=_('Firewall')?></a>
+          <?php }?>
+          <a href="/list/log/?user=system&token=<?=$_SESSION['token']?>" class="ui-button cancel" dir="ltr"><i class="fas fa-history status-icon lightblue"></i><?=_('Logs')?></a>
           <div class="actions-panel display-inline-block" key-action="js">
               <a class="data-controls do_servicerestart ui-button danger cancel">
                 <i class="do_servicerestart fas fa-undo status-icon red"></i><?=_('Restart')?>

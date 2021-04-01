@@ -189,7 +189,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-$BIN/v-log-action "system" "Info" "System" "Changed user package (User: $user, Package: $package)."
+$BIN/v-log-action "system" "Info" "System" "Changed user's package (User: $user, Package: $package)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

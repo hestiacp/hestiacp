@@ -63,7 +63,7 @@ fi
 update_user_value "$user" '$SHELL' "$shell"
 
 # Logging
-$BIN/v-log-action "system" "Info" "System" "Changed users default SSH shell (Shell: $shell, User: $user)."
+$BIN/v-log-action "system" "Info" "System" "Changed user's SSH shell (Shell: $shell, User: $user)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

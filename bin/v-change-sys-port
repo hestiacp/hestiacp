@@ -58,16 +58,8 @@ check_hestia_demo_mode
 # Get original port
 ORIGINAL_PORT=$(cat $HESTIA/nginx/conf/nginx.conf | grep "listen" | sed 's/[^0-9]*//g')
 
-# Check if system variable is set
-if [ ! -n "$BACKEND_PORT" ]; then
-    echo "BACKEND_PORT='$port'" >> $HESTIA/conf/hestia.conf
-    source $HESTIA/conf/hestia.conf
-fi
-
-# Check if port is different to hestia.conf
-if [ ! "$BACKEND_PORT" = "$PORT" ]; then
-    sed -i s/BACKEND_PORT=\'$BACKEND_PORT\'/BACKEND_PORT=\'$PORT\'/g $HESTIA/conf/hestia.conf
-fi
+# Set new port in config via v-change-sys-config-value
+$HESTIA/bin/v-change-sys-config-value "BACKEND_PORT" $PORT
 
 # Check if port is different to nginx.conf
 if [ "$ORIGINAL_PORT" = "$PORT" ]; then

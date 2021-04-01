@@ -236,8 +236,9 @@ function syshealth_repair_system_config() {
 
     # Backend port
     if [ -z "$BACKEND_PORT" ]; then 
-        echo "[ ! ] Adding missing variable to hestia.conf: BACKEND_PORT ('8083')"
-        $BIN/v-change-sys-port '8083' >/dev/null 2>&1
+        ORIGINAL_PORT=$(cat $HESTIA/nginx/conf/nginx.conf | grep "listen" | sed 's/[^0-9]*//g')
+        echo "[ ! ] Adding missing variable to hestia.conf: BACKEND_PORT ('$ORIGINAL_PORT')"
+        $HESTIA/bin/v-change-sys-config-value 'BACKEND_PORT' $PORT
     fi
 
     # Upgrade: Send email notification

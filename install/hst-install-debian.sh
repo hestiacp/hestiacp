@@ -14,9 +14,9 @@ HESTIA='/usr/local/hestia'
 LOG="/root/hst_install_backups/hst_install-$(date +%d%m%Y%H%M).log"
 memory=$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])
 hst_backups="/root/hst_install_backups/$(date +%d%m%Y%H%M)"
-arch=$(uname -i)
 spinner="/-\|"
 os='debian'
+architecture="$(uname -m)"
 release=$(cat /etc/debian_version | tr "." "\n" | head -n1)
 codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
 HESTIA_INSTALL_DIR="$HESTIA/install/deb"
@@ -413,6 +413,36 @@ if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
     fi
 fi
 
+case $architecture in 
+x86_64)
+    ARCH="amd64"
+    ;;
+ aarch64)
+    ARCH="arm64"
+    if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
+        echo
+        echo -e "\e[91mInstallation aborted\e[0m"
+        echo "===================================================================="
+        echo -e "\e[33mERROR: HestiaCP on ARM is currently not supported with install from ATP!\e[0m"
+        echo -e "\e[33mPlease compile your own packages for HestiaCP. \e[0m"
+        echo -e "\e[33mPlease follow the instructions at: \e[0m"
+        echo -e "  \e[33mhttps://docs.hestiacp.com/development/panel.html#compiling\e[21m\e[0m"
+        echo ""
+        check_result 1 "Installation aborted"    
+    fi
+    ;;
+*)
+echo
+echo -e "\e[91mInstallation aborted\e[0m"
+echo "===================================================================="
+echo -e "\e[33mERROR: $architecture is currently not supported!\e[0m"
+echo -e "\e[33mPlease verify the achitecture used is currenlty supported\e[0m"
+echo ""
+echo -e "\e[33mhttps://github.com/hestiacp/hestiacp/blob/main/README.md\e[0m"
+echo ""
+check_result 1 "Installation aborted"
+esac
+
 #----------------------------------------------------------#
 #                       Brief Info                         #
 #----------------------------------------------------------#
@@ -602,10 +632,10 @@ echo "Adding required repositories to proceed with installation:"
 echo
 
 # Installing Nginx repo
-echo "[ * ] NGINX"
-echo "deb [arch=amd64] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
-apt-key adv --fetch-keys 'https://nginx.org/keys/nginx_signing.key' > /dev/null 2>&1
 
+echo "[ * ] NGINX"
+echo "deb [arch=$ARCH] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
+apt-key adv --fetch-keys 'https://nginx.org/keys/nginx_signing.key' > /dev/null 2>&1
 
 # Installing sury PHP repo
 echo "[ * ] PHP"
@@ -622,19 +652,27 @@ fi
 # Installing MariaDB repo
 if [ "$mysql" = 'yes' ]; then
     echo "[ * ] MariaDB"
-    echo "deb [arch=amd64] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
+    echo "deb [arch=$ARCH] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
     apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc' > /dev/null 2>&1
 fi
 
 # Installing HestiaCP repo
 echo "[ * ] Hestia Control Panel"
-echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
+if [ "$ARCH" = "amd64" ]; then
+    echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
+else
+    echo "# deb https://$RHOST/ $codename main" > $apt/hestia.list
+    echo -e "\e[91m[ ! ] HestiaCP on ARM is currently in Development.\e[0m"
+    echo -e "\e[91m      This will mean that we don't provide any packages and you are responisble\e[0m"
+    echo -e "\e[91m      for building the packages your self. To build your own packeges see\e[0m"
+    echo -e "\e[91m      https://docs.hestiacp.com/development/panel.html#compiling\e[0m"
+fi
 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
 
 # Installing PostgreSQL repo
 if [ "$postgresql" = 'yes' ]; then
     echo "[ * ] PostgreSQL"
-    echo "deb [arch=amd64] https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
+    echo "deb [arch=$ARCH] https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
     apt-key adv --fetch-keys 'https://www.postgresql.org/media/keys/ACCC4CF8.asc' > /dev/null 2>&1
 fi
 

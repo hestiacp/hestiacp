@@ -1,6 +1,8 @@
 <?php
 
-namespace Hestia\WebApp\Installers;
+namespace Hestia\WebApp\Installers\Opencart;
+
+use \Hestia\WebApp\Installers\BaseSetup as BaseSetup;
 
 class OpencartSetup extends BaseSetup {
 

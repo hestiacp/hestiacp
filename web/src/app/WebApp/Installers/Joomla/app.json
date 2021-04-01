@@ -1,0 +1,7 @@
+{
+    "name": "Joomla",
+    "group": "cms",
+    "enabled": false,
+    "version": "latest",
+    "thumbnail": "joomla-thumb.png"
+}

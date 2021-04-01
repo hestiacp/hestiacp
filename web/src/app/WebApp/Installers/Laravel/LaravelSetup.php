@@ -1,6 +1,8 @@
 <?php
 
-namespace Hestia\WebApp\Installers;
+namespace Hestia\WebApp\Installers\Laravel;
+
+use \Hestia\WebApp\Installers\BaseSetup as BaseSetup;
 
 class LaravelSetup extends BaseSetup {
 

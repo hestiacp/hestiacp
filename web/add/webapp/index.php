@@ -30,24 +30,20 @@ if(!in_array($v_domain, $user_domains)) {
     exit;
 }
 
-$v_web_apps = [
-    [ 'name'=>'Wordpress', 'group'=>'cms', 'enabled'=>true, 'version'=>'latest', 'thumbnail'=>'/images/webapps/wp-thumb.png' ],
-    [ 'name'=>'Drupal',    'group'=>'cms', 'enabled'=>false,'version'=>'latest', 'thumbnail'=>'/images/webapps/drupal-thumb.png' ],
-    [ 'name'=>'Joomla',    'group'=>'cms', 'enabled'=>false,'version'=>'latest', 'thumbnail'=>'/images/webapps/joomla-thumb.png' ],
-
-    [ 'name'=>'Opencart',   'group'=>'ecommerce', 'enabled'=>true,  'version'=>'3.0.3.3', 'thumbnail'=>'/images/webapps/opencart-thumb.png' ],
-    [ 'name'=>'Prestashop', 'group'=>'ecommerce', 'enabled'=>true, 'version'=>'1.7.7.1', 'thumbnail'=>'/images/webapps/prestashop-thumb.png' ],
-
-    [ 'name'=>'Laravel', 'group'=>'starter', 'enabled'=>true, 'version'=>'7.x', 'thumbnail'=>'/images/webapps/laravel-thumb.png' ],
-    [ 'name'=>'Symfony', 'group'=>'starter', 'enabled'=>true, 'version'=>'4.3.x', 'thumbnail'=>'/images/webapps/symfony-thumb.png' ],
-];
+$appInstallers = glob(__DIR__.'/../../src/app/WebApp/Installers/*/app.json');
+$v_web_apps = array();
+foreach($appInstallers as $app){
+    $json = json_decode(file_get_contents($app));
+    $array[$json -> name] = $json;
+    $v_web_apps = array_merge($v_web_apps, $array);
+}
 
 // Check GET request
 if (!empty($_GET['app'])) {
     $app = basename($_GET['app']);
     
     $hestia = new \Hestia\System\HestiaApp();
-    $app_installer_class = '\Hestia\WebApp\Installers\\' . $app . 'Setup';
+    $app_installer_class = '\Hestia\WebApp\Installers\\'.$app.'\\' . $app . 'Setup';
     if(class_exists($app_installer_class)) {
         try {
             $app_installer = new $app_installer_class($v_domain, $hestia);

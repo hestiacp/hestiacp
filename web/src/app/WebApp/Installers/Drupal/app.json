@@ -1,0 +1,7 @@
+{
+    "name": "Drupal",
+    "group": "cms",
+    "enabled": false,
+    "version": "latest",
+    "thumbnail": "drupal-thumb.png"
+}

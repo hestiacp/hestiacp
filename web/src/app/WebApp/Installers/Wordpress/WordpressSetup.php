@@ -1,8 +1,9 @@
 <?php
 
-namespace Hestia\WebApp\Installers;
+namespace Hestia\WebApp\Installers\Wordpress;
 
 use Hestia\System\Util;
+use \Hestia\WebApp\Installers\BaseSetup as BaseSetup;
 
 class WordpressSetup extends BaseSetup {
 

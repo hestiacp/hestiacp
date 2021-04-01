@@ -1,0 +1,7 @@
+{
+    "name": "Prestashop",
+    "group": "ecommerce",
+    "enabled": true,
+    "version": "1.7.7.1",
+    "thumbnail": "prestashop-thumb.png"
+}

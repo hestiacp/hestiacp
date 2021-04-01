@@ -1,0 +1,7 @@
+{
+    "name": "Symfony",
+    "group": "framework",
+    "enabled": true,
+    "version": "4.3.x",
+    "thumbnail": "symfony-thumb.png"
+}

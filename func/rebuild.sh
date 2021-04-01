@@ -289,6 +289,10 @@ rebuild_web_domain_conf() {
         $BIN/v-delete-web-domain-ssl-hsts $user $domain no
         $BIN/v-add-web-domain-ssl-hsts $user $domain yes
     fi
+    if [ "$FASTCGI_CACHE" = 'yes' ]; then
+        $BIN/v-delete-fastcgi-cache $user $domain
+        $BIN/v-add-fastcgi-cache $user $domain "$FASTCGI_DURATION"
+    fi
 
     # Adding proxy configuration
     if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then

@@ -241,8 +241,10 @@ $(function() {
     
         if(select.val() != 'yes'){
             $('#v-clear-cache').hide();
+            $('#v_nginx_cache_length').hide();
         } else {
             $('#v-clear-cache').show();
+            $('#v_nginx_cache_length').show();
         }
     });  
     

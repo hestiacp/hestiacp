@@ -1,22 +1,23 @@
 <!doctype html>
 <html lang="<?php echo $_SESSION['LANGUAGE'];?>">
+
 <head>
-  <!-- Load necessary CSS and JavaScript from init.html source -->
-  <?php require ''.$_SERVER['HESTIA'].'/web/templates/init.html'; ?>
+  <?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/title.html'; ?>
+  <?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/css.html'; ?>
+  <?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/top_js.html'; ?>
   <script>
     //
     //  GLOBAL SETTINGS
     //
     var GLOBAL = {};
-    GLOBAL.FTP_USER_PREFIX  = 'admin_';
-    GLOBAL.DB_USER_PREFIX   = 'admin_';
+    GLOBAL.FTP_USER_PREFIX = 'admin_';
+    GLOBAL.DB_USER_PREFIX = 'admin_';
     GLOBAL.DB_DBNAME_PREFIX = 'admin_';
     GLOBAL.AJAX_URL = '';
-
   </script>
 </head>
+
 <body class="body-<?=strtolower($TAB)?> lang-<?=$_SESSION['language']?>">
   <?php if (($_SESSION['DEBUG_MODE']) == "true" ) {?>
-    <?php require ''.$_SERVER['HESTIA'].'/web/templates/debug.html'; ?>
+  <?php require ''.$_SERVER['HESTIA'].'/web/templates/pages/debug_panel.html'; ?>
   <?php } ?>
-

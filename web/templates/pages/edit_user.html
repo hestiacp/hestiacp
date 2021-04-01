@@ -10,8 +10,10 @@
                 $log_url = "/list/log/";
             } ?>
                 <a href="<?php echo $ssh_key_url; ?>" id="btn-create" class="ui-button cancel" dir="ltr" title="<?=_('Manage SSH keys');?>"><i class="fas fa-key status-icon orange"></i><?=_('Manage SSH keys')?></a>
-                <a href="<?php echo $log_url; ?>" id="btn-create" class="ui-button cancel" dir="ltr" title="<?=_('Logs');?>"><i class="fas fa-history status-icon maroon"></i><?=_('Logs')?></a>
 
+                <? if (($_SESSION['userContext'] == 'admin') || ($_SESSION['userContext'] !== 'admin') && ($_SESSION['POLICY_USER_VIEW_LOGS'] !== 'no')) {?>
+                    <a href="<?php echo $log_url; ?>" id="btn-create" class="ui-button cancel" dir="ltr" title="<?=_('Logs');?>"><i class="fas fa-history status-icon maroon"></i><?=_('Logs')?></a>
+                <? } ?>
           </div>
           <div class="l-unit-toolbar__buttonstrip float-right">
             <? if (($_SESSION['user'] == $v_username) || (isset($_SESSION['look']))) {?>
@@ -97,7 +99,10 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>">
+                                    <input type="text" size="20" class="vst-input" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>" <? if (($_SESSION['userContext'] !== 'admin') && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !== 'yes')) { echo 'disabled'; }?> >
+                                    <? if (($_SESSION['userContext'] !== 'admin') && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !== 'yes')) {?>
+                                        <input type="hidden" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>">
+                                    <? } ?>
                                 </td>
                             </tr>
                             <tr>
@@ -107,7 +112,10 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" name="v_email" value="<?=htmlentities(trim($v_email, "'"))?>">
+                                    <input type="text" size="20" class="vst-input" name="v_email" value="<?=htmlentities(trim($v_email, "'"))?>" <? if (($_SESSION['userContext'] !== 'admin') && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !== 'yes')) { echo 'disabled'; }?>>
+                                    <? if (($_SESSION['userContext'] !== 'admin') && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !== 'yes')) {?>
+                                        <input type="hidden" name="v_email" value="<?=htmlentities(trim($v_email, "'"))?>">
+                                    <? } ?>
                                 </td>
                             </tr>
                             <tr>
@@ -220,11 +228,12 @@
                             <tr>
                                 <td>
                                     <select class="vst-list" name="v_sort_order">
-                                        <option value='date' <?php if($data[$user]['PREF_UI_SORT'] === '') echo 'selected' ?>><?php print _('Date'); ?></option>
-                                        <option value='name' <?php if($data[$user]['PREF_UI_SORT'] === 'name') echo 'selected' ?>><?php print _('Name'); ?></option>
+                                        <option value='date' <?php if($_SESSION['userSortOrder'] === 'date') echo 'selected' ?>><?php print _('Date'); ?></option>
+                                        <option value='name' <?php if($_SESSION['userSortOrder'] === 'name') echo 'selected' ?>><?php print _('Name'); ?></option>
                                     </select>
                                 </td>
                             </tr>
+                            <? if ($_SESSION['userContext'] === 'admin') {?>
                             <tr>
                                 <td class="vst-text input-label">
                                     <?php print _('Package');?>
@@ -246,6 +255,7 @@
                                     </select>
                                 </td>
                             </tr>
+                            
                             <tr>
                                 <td class="step-top vst-text" style="/*padding: 32px 0 20px 0;*/">
                                     <a href="javascript:elementHideShow('advanced-opts');" class="vst-advanced"><?php print _('Advanced options');?></a>
@@ -376,6 +386,13 @@
                                     </table>
                                 </td>
                             </tr>
+                            <? } ?>
+                            <? if ($_SESSION['userContext'] !== 'admin') {?>
+                            <tr>
+                                <td class="step-top">
+                                </td>
+                            </tr>
+                            <? } ?>
                         </table>
                         <table class="data-col2"></table>
                     </td>

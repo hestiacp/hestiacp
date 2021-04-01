@@ -9,6 +9,12 @@ if ($_GET['user'] === 'system') {
 // Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
+// Redirect non-administrators if they request another user's log
+if (($_SESSION['userContext'] !== 'admin') && (!empty($_GET['user']))) {
+    header('location: /login/');
+    exit();
+}
+
 // Data
 if (($_SESSION['userContext'] === "admin") && (!empty($_GET['user']))) {
     // Check token

@@ -171,6 +171,8 @@ if (!empty($_POST['save'])) {
         $v_sort_order = escapeshellarg($_POST['v_sort_order']);
         exec (HESTIA_CMD."v-change-user-sort-order ".escapeshellarg($v_username)." ".$v_sort_order, $output, $return_var);
         check_return_code($return_var,$output);
+        unset($_SESSION['userSortOrder']);
+        $_SESSION['userSortOrder'] = $v_sort_order;
         unset($output);
     }
 

@@ -21,6 +21,9 @@
           <a href="/list/log/auth/" id="btn-back" class="ui-button cancel" dir="ltr" title="<?=_('Login history');?>"><i class="fas fa-binoculars status-icon green"></i><?=_('Login history')?></a>
         <? } ?>
       <? } ?>
+      <? if ($_SESSION['userContext'] === 'user') {?>
+        <a href="/list/log/auth/" id="btn-back" class="ui-button cancel" dir="ltr" title="<?=_('Login history');?>"><i class="fas fa-binoculars status-icon green"></i><?=_('Login history')?></a>
+      <? } ?>
     </div>
     <div class="l-unit-toolbar__buttonstrip float-right">
       <a href="javascript:location.reload();" class="ui-button cancel" dir="ltr"><i class="fas fa-redo status-icon green"></i><?=_('Refresh')?></a>

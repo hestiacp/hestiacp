@@ -102,7 +102,12 @@
                                     </ul>
                                 </td>
                             </tr>
-                             <tr>
+                                <tr>
+                                    <td>
+                                        <label><input type="checkbox" size="20" class="vst-checkbox" onclick="javascript:elementHideShow('send-welcome');" name="v_login_disabled" <?php if ($data[$user]['LOGIN_DISABLED'] == "yes") echo "checked=yes" ?>><?php print _('Do not allow user to log in to Control Panel');?></label>
+                                    </td>
+                                </tr>
+                             <tr id="send-welcome">
                                 <td class="vst-text input-label">
                                     <label><input type="checkbox" size="20" class="vst-checkbox" name="v_email_notice" id='v_email_notify' value="" tabindex="5" /><?php print _('Send welcome email');?></label>
                                 </td>

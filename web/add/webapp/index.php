@@ -39,8 +39,13 @@ if (!empty($_GET['app'])) {
     if(class_exists($app_installer_class)) {
         try {
             $app_installer = new $app_installer_class($v_domain, $hestia);
-            $installer = new \Hestia\WebApp\AppWizard($app_installer, $v_domain, $hestia);
-            $GLOBALS['WebappInstaller'] = $installer;
+            $info = $app_installer -> info();
+            if ($info['enabled'] != true){
+                $_SESSION['error_msg'] = sprintf(_('%s installer missing'),$app);
+            }else{
+                $installer = new \Hestia\WebApp\AppWizard($app_installer, $v_domain, $hestia);
+                $GLOBALS['WebappInstaller'] = $installer;
+            }
         } catch (Exception $e) {
             $_SESSION['error_msg'] = $e->getMessage();
             header('Location: /add/webapp/?domain=' . $v_domain);

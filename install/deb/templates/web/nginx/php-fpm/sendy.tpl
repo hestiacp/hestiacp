@@ -11,7 +11,7 @@ server {
     access_log  /var/log/nginx/domains/%domain%.log combined;
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;
     error_log   /var/log/nginx/domains/%domain%.error.log error;
-        
+
     include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
 
     location = /favicon.ico {
@@ -25,16 +25,12 @@ server {
         access_log off;
     }
 
-    location ~ /\.(?!well-known\/) { 
-       deny all; 
-       return 404;
-    }
-
-    location ~ /(readme.html|license.txt) {
+    location ~ /\.(?!well-known\/) {
         deny all;
+        return 404;
     }
 
-    if (!-f $request_filename){
+    if (!-f $request_filename) {
         rewrite ^/([a-zA-Z0-9-]+)$ /$1.php last;
     }
 
@@ -42,6 +38,7 @@ server {
         try_files $uri $uri/ /index.php?$args;
         location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|ico|bmp|mid|midi|wav|rtf|css|js|jar|pdf)$ {
             expires 1d;
+            fastcgi_hide_header "Set-Cookie";
         }
 
         location ~ [^/]\.php(/|$) {
@@ -50,7 +47,7 @@ server {
             fastcgi_pass %backend_lsnr%;
             fastcgi_index index.php;
             include /etc/nginx/fastcgi_params;
-            include     %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
+            include %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
         }
 
         location /l/ {
@@ -83,7 +80,7 @@ server {
         include %home%/%user%/web/%domain%/stats/auth.conf*;
     }
 
-    include     /etc/nginx/conf.d/phpmyadmin.inc*;
-    include     /etc/nginx/conf.d/phppgadmin.inc*;
-    include     %home%/%user%/conf/web/%domain%/nginx.conf_*;
+    include /etc/nginx/conf.d/phpmyadmin.inc*;
+    include /etc/nginx/conf.d/phppgadmin.inc*;
+    include %home%/%user%/conf/web/%domain%/nginx.conf_*;
 }

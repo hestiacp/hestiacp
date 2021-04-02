@@ -26,11 +26,15 @@ if (isset($_SESSION['user'])) {
             exit();
         } else {
             $v_user = escapeshellarg($_GET['loginas']);
+            $v_impersonator = escapeshellarg($_SESSION['user']);
             exec (HESTIA_CMD . "v-list-user ".$v_user." json", $output, $return_var);
             if ( $return_var == 0 ) {
                 $data = json_decode(implode('', $output), true);
                 reset($data);
                 $_SESSION['look'] = key($data);
+                // Log impersonation events
+                exec (HESTIA_CMD . "v-log-action ".$v_impersonator." 'Info' 'Security' 'Logged in as another user (User: $v_user)'", $output, $return_var);
+                exec (HESTIA_CMD . "v-log-action system 'Warning' 'Security' 'User impersonation session started (User: $v_user, Administrator: $v_impersonator)'", $output, $return_var);
                 // Reset account details for File Manager to impersonated user
                 unset($_SESSION['_sf2_attributes']);
                 unset($_SESSION['_sf2_meta']);

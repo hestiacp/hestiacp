@@ -4,9 +4,10 @@ session_start();
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
 
 if (!empty($_SESSION['look'])) {
+    $v_user = escapeshellarg($_SESSION['look']);
+    $v_impersonator = escapeshellarg($_SESSION['user']);
+    exec (HESTIA_CMD . "v-log-action system 'Warning' 'Security' 'User impersonation session ended (User: $v_user, Administrator: $v_impersonator)'", $output, $return_var);
     unset($_SESSION['look']);
-    unset($_SESSION['LANDING_POINT_SOURCE']);
-    unset($_SESSION['LANDING_POINT_VAR_DATA']);
     # Remove current path for filemanager
     unset($_SESSION['_sf2_attributes']);
     unset($_SESSION['_sf2_meta']);

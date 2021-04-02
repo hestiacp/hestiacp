@@ -35,10 +35,6 @@ class WordpressSetup extends BaseSetup {
         
     ];
     
-    public function info(){
-        return $this -> appInfo;
-    }
-    
     public function install(array $options = null)
     {
         parent::install($options);

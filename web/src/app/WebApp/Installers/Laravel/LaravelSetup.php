@@ -24,10 +24,6 @@ class LaravelSetup extends BaseSetup {
             'composer' => [ 'src' => 'laravel/laravel', 'dst' => '/' ],
         ],
     ];
-    
-    public function info(){
-        return $this -> appInfo;
-    }
 
     public function install(array $options=null) : bool
     {

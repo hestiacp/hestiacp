@@ -24,10 +24,6 @@ class JoomlaSetup extends BaseSetup {
         
         ],
     ];
-    
-    public function info(){
-        return $this -> appInfo;
-    }
 
     public function install(array $options=null) : bool
     {

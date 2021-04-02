@@ -24,10 +24,6 @@ class SymfonySetup extends BaseSetup {
             'composer' => [ 'src' => 'symfony/website-skeleton', 'dst' => '/' ],
         ],
     ];
-    
-    public function info(){
-        return $this -> appInfo;
-    }
 
     public function install(array $options=null) : bool
     {

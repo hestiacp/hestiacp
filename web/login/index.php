@@ -207,6 +207,10 @@ function authenticate_user($user, $password, $twofa = ''){
 
                 // Set active user theme on login
                 $_SESSION['userTheme'] = $data[$user]['THEME'];
+                if ($_SESSION['POLICY_USER_CHANGE_THEME'] !== 'yes') {
+                    unset($_SESSION['userTheme']);
+                }
+
                 if (!empty($data[$user]['PREF_UI_SORT'])) {
                     $_SESSION['userSortOrder'] = $data[$user]['PREF_UI_SORT'];
                 } else {

@@ -4,7 +4,7 @@
 #=======================================================================#
 
 server {
-    listen      %ip%:%web_ssl_port% ssl http2;
+    listen      %ip%:%web_port%;
     server_name %domain_idn% %alias_idn%;
     root        %docroot%;
     index       index.php index.html index.htm;
@@ -12,12 +12,7 @@ server {
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;
     error_log   /var/log/nginx/domains/%domain%.error.log error;
 
-    ssl_certificate      %ssl_pem%;
-    ssl_certificate_key  %ssl_key%;
-    ssl_stapling on;
-    ssl_stapling_verify on;
-
-    include %home%/%user%/conf/web/%domain%/nginx.hsts.conf*;
+    include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
 
     location = /favicon.ico {
         log_not_found off;
@@ -62,6 +57,7 @@ server {
 
     location / {
         try_files $uri $uri/ /index.php?$query_string;
+
         location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
             try_files $uri @rewrite;
             expires 30d;
@@ -76,7 +72,13 @@ server {
             fastcgi_index index.php;
             fastcgi_param SCRIPT_FILENAME $request_filename;
             include /etc/nginx/fastcgi_params;
-            include     %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
+            include %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
+                if ($request_uri ~* "/user/|/admin/|index.php") {
+                    set $no_cache 1;
+                }
+                if ($http_cookie ~ SESS) {
+                    set $no_cache 1;
+                }
         }
 
         location ~ ^/sites/.*/files/styles/ {
@@ -101,6 +103,5 @@ server {
 
     include     /etc/nginx/conf.d/phpmyadmin.inc*;
     include     /etc/nginx/conf.d/phppgadmin.inc*;
-    include     %home%/%user%/conf/web/%domain%/nginx.ssl.conf_*;
+    include     %home%/%user%/conf/web/%domain%/nginx.conf_*;
 }
-

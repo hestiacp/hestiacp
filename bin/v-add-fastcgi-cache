@@ -81,7 +81,8 @@ cat << EOF > $fastcgi
     fastcgi_cache_valid 301 302 10m;
     fastcgi_cache_valid 404 10m;
     fastcgi_cache_bypass $no_cache;
-    fastcgi_no_cache $no_cache;  
+    fastcgi_no_cache $no_cache;
+    set $no_cache 0;
 EOF
 
 if [ ! -z "$debug" ]; then

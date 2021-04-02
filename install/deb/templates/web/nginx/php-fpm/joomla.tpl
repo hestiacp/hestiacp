@@ -11,44 +11,18 @@ server {
     access_log  /var/log/nginx/domains/%domain%.log combined;
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;
     error_log   /var/log/nginx/domains/%domain%.error.log error;
-        
+
     include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
 
-    location / {
-        try_files $uri $uri/ /index.php?$args;
-
-        location ~* ^.+\.(jpeg|jpg|png|gif|bmp|ico|svg|css|js)$ {
-            expires     max;
-            fastcgi_hide_header "Set-Cookie";
-        }
-
-        # deny running scripts inside writable directories
-        location ~* /(images|cache|media|logs|tmp)/.*\.(php|pl|py|jsp|asp|sh|cgi)$ {
-            return 403;
-            error_page 403 /403_error.html;
-        }
-
-        location ~ [^/]\.php(/|$) {
-            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-            if (!-f $document_root$fastcgi_script_name) {
-                return  404;
-            }
-
-            fastcgi_pass    %backend_lsnr%;
-            fastcgi_index   index.php;
-            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-            include /etc/nginx/fastcgi_params;
-            include     %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
-        }
+    location = /favicon.ico {
+        log_not_found off;
+        access_log off;
     }
 
-    error_page 403 /error/404.html;
-    error_page 404 /error/404.html;
-    error_page 410 /error/410.html;
-    error_page 500 502 503 504 /error/50x.html;
-
-    location /error/ {
-        alias   %home%/%user%/web/%domain%/document_errors/;
+    location = /robots.txt {
+        allow all;
+        log_not_found off;
+        access_log off;
     }
 
     location ~ /\.(?!well-known\/) {
@@ -56,12 +30,41 @@ server {
         return 404;
     }
 
+    location ~* /(images|cache|media|logs|tmp)/.*\.(php|pl|py|jsp|asp|sh|cgi)$ {
+        deny all;
+        return 404;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+        location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
+            expires 30d;
+            fastcgi_hide_header "Set-Cookie";
+        }
+
+        location ~ [^/]\.php(/|$) {
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            try_files $uri =404;
+            fastcgi_pass %backend_lsnr%;
+            fastcgi_index index.php;
+            include /etc/nginx/fastcgi_params;
+            include %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
+            if ($request_uri ~* "/administrator/|index.php") {
+                set $no_cache 1;
+            }
+        }
+    }
+
+    location /error/ {
+        alias   %home%/%user%/web/%domain%/document_errors/;
+    }
+
     location /vstats/ {
         alias   %home%/%user%/web/%domain%/stats/;
         include %home%/%user%/web/%domain%/stats/auth.conf*;
     }
 
-    include     /etc/nginx/conf.d/phpmyadmin.inc*;
-    include     /etc/nginx/conf.d/phppgadmin.inc*;
-    include     %home%/%user%/conf/web/%domain%/nginx.conf_*;
+    include /etc/nginx/conf.d/phpmyadmin.inc*;
+    include /etc/nginx/conf.d/phppgadmin.inc*;
+    include %home%/%user%/conf/web/%domain%/nginx.conf_*;
 }

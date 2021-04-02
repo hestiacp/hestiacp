@@ -48,6 +48,12 @@ else
     sed -i "s|$key=.*|$key='$value'|g" $HESTIA/conf/hestia.conf
 fi
 
+# Sort configuration file in alphabetical order on change
+sort $HESTIA/conf/hestia.conf -o /tmp/updconf
+mv $HESTIA/conf/hestia.conf $HESTIA/conf/hestia.conf.bak
+mv /tmp/updconf $HESTIA/conf/hestia.conf
+rm -f $HESTIA/conf/hestia.conf.bak
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

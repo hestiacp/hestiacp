@@ -1,3 +1,8 @@
+#=======================================================================#
+# Default Web Domain Template                                           #
+# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS #
+#=======================================================================#
+
 server {
     listen      %ip%:%web_ssl_port% ssl http2;
     server_name %domain_idn% %alias_idn%;
@@ -60,8 +65,14 @@ server {
             fastcgi_pass %backend_lsnr%;
             fastcgi_index index.php;
             fastcgi_param SCRIPT_FILENAME $request_filename;
-            include         /etc/nginx/fastcgi_params;
-            include     %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
+            include /etc/nginx/fastcgi_params;
+            include %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
+                if ($request_uri ~* "/user/|/admin/|index.php") {
+                    set $no_cache 1;
+                }
+                if ($http_cookie ~ SESS) {
+                    set $no_cache 1;
+                }
         }
 
         location ~ ^/sites/.*/files/styles/ {
@@ -88,4 +99,3 @@ server {
     include     /etc/nginx/conf.d/phppgadmin.inc*;
     include     %home%/%user%/conf/web/%domain%/nginx.ssl.conf_*;
 }
-

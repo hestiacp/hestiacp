@@ -17,28 +17,32 @@ fi
 
 # Populating HELO/SMTP Banner for existing IPs
 if [ "$MAIL_SYSTEM" == "exim4" ]; then
-    source $HESTIA/func/ip.sh
 
-    echo "[ * ] Populating HELO/SMTP Banner value for existing IP addresses..."
-    > /etc/exim4/mailhelo.conf
+    # Check if we've already done this upgrade before proceeding
+    if ! grep -q ^smtp_active_hostname  /etc/exim4/exim4.conf.template; then
 
-    for ip in $($BIN/v-list-sys-ips plain | cut -f1); do
-        helo=$(is_ip_rdns_valid $ip)
+        source $HESTIA/func/ip.sh
 
-        if [ ! -z "$helo" ]; then
-            $BIN/v-change-sys-ip-helo $ip $helo
-        fi
-    done
+        echo "[ * ] Populating HELO/SMTP Banner value for existing IP addresses..."
+        > /etc/exim4/mailhelo.conf
 
-    # Update exim configuration
-    echo "[ * ] Updating exim4 configuration..."
+        for ip in $($BIN/v-list-sys-ips plain | cut -f1); do
+            helo=$(is_ip_rdns_valid $ip)
 
-    # Check if smtp_active_hostname exists before adding it
-    if [ ! 'grep -q ^smtp_active_hostname  /etc/exim4/exim4.conf.template' ]; then
+            if [ ! -z "$helo" ]; then
+                $BIN/v-change-sys-ip-helo $ip $helo
+            fi
+        done
+
+        # Update exim configuration
+        echo "[ * ] Updating exim4 configuration..."
+
+        # Add new smtp_active_hostname variable to exim config
         sed -i '/^smtp_banner = \$smtp_active_hostname$/a smtp_active_hostname = ${if exists {\/etc\/exim4\/mailhelo.conf}{${lookup{$interface_address}lsearch{\/etc\/exim4\/mailhelo.conf}{$value}{$primary_hostname}}}{$primary_hostname}}"' /etc/exim4/exim4.conf.template
-    fi
 
-    sed -i 's/helo_data = \${if exists {\/etc\/exim4\/mailhelo.conf}{${lookup{\$sender_address_domain}lsearch\*{\/etc\/exim4\/mailhelo.conf}{\$value}{\$primary_hostname}}}{\$primary_hostname}}/helo_data = ${if exists {\/etc\/exim4\/mailhelo.conf}{${lookup{$sending_ip_address}lsearch{\/etc\/exim4\/mailhelo.conf}{$value}{$primary_hostname}}}{$primary_hostname}}/' /etc/exim4/exim4.conf.template
+        # Lookup HELO address by sending ip instead of sending domain
+        sed -i 's/helo_data = \${if exists {\/etc\/exim4\/mailhelo.conf}{${lookup{\$sender_address_domain}lsearch\*{\/etc\/exim4\/mailhelo.conf}{\$value}{\$primary_hostname}}}{\$primary_hostname}}/helo_data = ${if exists {\/etc\/exim4\/mailhelo.conf}{${lookup{$sending_ip_address}lsearch{\/etc\/exim4\/mailhelo.conf}{$value}{$primary_hostname}}}{$primary_hostname}}/' /etc/exim4/exim4.conf.template
+    fi
 fi
 
 # Upgrading Mail System
@@ -106,20 +110,37 @@ if [ -f /etc/apt/sources.list.d/postgresql.list ]; then
     sed -i 's|deb https://apt.postgresql.org/pub/repos/apt/|deb [arch=amd64] https://apt.postgresql.org/pub/repos/apt/|g' /etc/apt/sources.list.d/postgresql.list
 fi
 
-# New configuration value for enforcing subdomain ownership
-check=$(cat $HESTIA/conf/hestia.conf | grep 'ENFORCE_SUBDOMAIN_OWNERSHIP');
-if [ -z "$check" ]; then 
-    echo "[ * ] Setting ENFORCE_SUBDOMAIN_OWNERSHIP to no..."
-    echo "ENFORCE_SUBDOMAIN_OWNERSHIP='no'" >> $HESTIA/conf/hestia.conf
+# Remove API file if API is set to "no"
+if [ "$API" = "no" ]; then
+    if [ -f "$HESTIA/web/api/index.php" ]; then
+        echo "[ * ] Disabling API access..."
+        $HESTIA/bin/v-change-sys-api remove
+    fi
 fi
 
-# New API feature to set allowed IPs
-if [ "$api" = "yes" ]; then
-    check=$(cat $HESTIA/conf/hestia.conf | grep 'API_ALLOWED_IP');
-    if [ -z "$check" ]; then 
-        echo "[ * ] Setting API_ALLOWED_IP to allow-all..."
-        echo "API_ALLOWED_IP='allow-all'" >> $HESTIA/conf/hestia.conf
+# Back up users existing configuration data to $HESTIA/conf/defaults/hestia.conf
+if [ ! -f "$HESTIA/conf/defaults/hestia.conf" ]; then
+    echo "[ * ] Creating known good configuration data for system recovery..."
+    if [ ! -d "$HESTIA/conf/defaults/" ]; then
+        mkdir -p "$HESTIA/conf/defaults/"
     fi
-else
-    $HESTIA/bin/v-change-sys-api disable
+    cp -f $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
 fi
+
+# Consolidate nginx (standalone) templates used by active websites
+if [ "$WEB_SYSTEM" = "nginx" ]; then
+    echo "[ * ] Consolidating nginx templates for Drupal & CodeIgniter..."
+    sed -i "s|TPL='drupal6'|TPL='drupal'|g" $HESTIA/data/users/*/web.conf
+    sed -i "s|TPL='drupal7'|TPL='drupal'|g" $HESTIA/data/users/*/web.conf
+    sed -i "s|TPL='drupal8'|TPL='drupal'|g" $HESTIA/data/users/*/web.conf
+    sed -i "s|TPL='codeigniter2'|TPL='codeigniter'|g" $HESTIA/data/users/*/web.conf
+    sed -i "s|TPL='codeigniter3'|TPL='codeigniter'|g" $HESTIA/data/users/*/web.conf
+fi
+
+# Remove outdated nginx templates
+echo "[ * ] Removing outdated nginx templates..."
+rm -rf $HESTIA/data/templates/web/nginx/php-fpm/drupal6.*tpl
+rm -rf $HESTIA/data/templates/web/nginx/php-fpm/drupal7.*tpl
+rm -rf $HESTIA/data/templates/web/nginx/php-fpm/drupal8.*tpl
+rm -rf $HESTIA/data/templates/web/nginx/php-fpm/codeigniter2.*tpl
+rm -rf $HESTIA/data/templates/web/nginx/php-fpm/codeigniter3.*tpl

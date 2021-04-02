@@ -922,7 +922,7 @@ is_service_format_valid() {
 }
 
 is_hash_format_valid() {
-  if ! [[ "$1" =~ ^[_A-Za-z0-9]{1,32}$ ]]; then
+  if ! [[ "$1" =~ ^[-_A-Za-z0-9]{1,32}$ ]]; then
         check_result $E_INVALID "invalid $2 format :: $1"
     fi    
 }
@@ -1152,6 +1152,12 @@ multiphp_default_version() {
     fi
 
     echo "$sys_phpversion"
+}
+
+is_hestia_package(){
+    if [ -z "$(echo $1 | grep -w $2)" ]; then
+        check_result $E_INVALID "$2 package is not controlled by hestiacp"
+    fi
 }
 
 # Run arbitrary cli commands with dropped privileges

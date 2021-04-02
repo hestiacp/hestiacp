@@ -207,10 +207,12 @@
                             <td><?=_('SMTP auth method')?>:</td>
                             <td><div><?=_('Normal password')?></div></td>
                         </tr>
+                        <?php if($_SESSION['WEBMAIL_SYSTEM']){?>
                         <tr>
                             <td><?=_('Webmail URL')?>:</td>
                             <td><div><a class="vst" href="http://<?=$v_webmail_alias?>" target="_blank">http://<?=$v_webmail_alias?> <i></i></a></div></td>
                         </tr>
+                        <?php } ?>
                     </table>
                 </div>
             </td>

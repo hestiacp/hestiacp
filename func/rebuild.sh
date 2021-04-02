@@ -196,7 +196,8 @@ rebuild_web_domain_conf() {
     if [ ! -d /etc/$PROXY_SYSTEM/conf.d/domains ]; then
         mkdir -p /etc/$PROXY_SYSTEM/conf.d/domains
     fi
-
+    
+    syshealth_repair_web_config
     get_domain_values 'web'
     is_ip_valid $IP
     prepare_web_domain_values
@@ -287,6 +288,10 @@ rebuild_web_domain_conf() {
     if [ "$SSL_HSTS" = 'yes' ]; then
         $BIN/v-delete-web-domain-ssl-hsts $user $domain no
         $BIN/v-add-web-domain-ssl-hsts $user $domain yes
+    fi
+    if [ "$FASTCGI_CACHE" = 'yes' ]; then
+        $BIN/v-delete-fastcgi-cache $user $domain
+        $BIN/v-add-fastcgi-cache $user $domain "$FASTCGI_DURATION"
     fi
 
     # Adding proxy configuration

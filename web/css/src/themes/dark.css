@@ -703,6 +703,21 @@ label:hover {
   box-shadow: 0px 1px 4px rgba(0,0,0,0.35);
 }
 
+textarea::-webkit-input-placeholder {
+  color: #bbb !important;
+}
+
+textarea:focus::-webkit-input-placeholder {
+  color: #909090 !important;
+}
+
+textarea::-moz-placeholder {
+  color: #bbb !important;
+}
+textarea:focus::-moz-placeholder {
+  color: #909090 !important;
+}
+
 select.vst-list:-moz-focusring {
 
 }
@@ -1102,6 +1117,10 @@ a.button.cancel {
 
 .page-title {
   color: #e8e8e8 !important;
+}
+
+.section-title {
+  border-bottom-color: #484848 !important;
 }
 
 .qr-code {

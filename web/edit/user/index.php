@@ -179,6 +179,25 @@ if (!empty($_POST['save'])) {
         unset($output);
     }
 
+    // Update panel login status (admin only)
+    if (empty($_SESSION['error_msg'])) {
+        if ($data[$user]['LOGIN_DISABLED'] != $_POST['v_login_disabled']) {
+            if ($_POST['v_login_disabled'] == 'on') { $_POST['v_login_disabled'] = 'yes'; } else { $_POST['v_login_disabled'] = 'no'; }
+            exec (HESTIA_CMD."v-change-user-config-value ".escapeshellarg($v_username)." LOGIN_DISABLED ".escapeshellarg($_POST['v_login_disabled']), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+
+            $v_login_disabled = $_POST['v_login_disabled'];
+        }
+    }
+
+    // Change use IP allow list option (admin only)
+    if (($v_login_use_iplist != $_POST['v_login_use_iplist']) && (empty($_SESSION['error_msg']))) {
+        $v_login_use_iplist = escapeshellarg($_POST['v_login_use_iplist']);
+        exec (HESTIA_CMD."v-change-user-config-value ".escapeshellarg($v_username)." LOGIN_USE_IPLIST ".$v_login_use_iplist, $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
+    }
 
     // Change package (admin only)
     if (($v_package != $_POST['v_package']) && ($_SESSION['userContext'] === 'admin') && (empty($_SESSION['error_msg']))) {

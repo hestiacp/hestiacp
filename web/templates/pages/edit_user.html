@@ -158,7 +158,7 @@
                             <? if ($_SESSION['userContext'] === 'admin') {?>
                                 <tr>
                                     <td>
-                                        <label><input type="checkbox" size="20" class="vst-checkbox" onclick="javascript:elementHideShow('password-details')" name="v_login_disabled" <?php if ((isset($data[$user]['LOGIN_DISABLED'])) && (!empty($data[$user]['LOGIN_DISABLED'])) && ($data[$user]['LOGIN_DISABLED'] == "yes")) echo "checked=yes" ?>><?php print _('User can not log in to Control Panel');?></label>
+                                        <label><input type="checkbox" size="20" class="vst-checkbox" name="v_login_disabled" <?php if ($data[$user]['LOGIN_DISABLED'] == "yes") echo "checked=yes" ?>><?php print _('User can not log in to Control Panel');?></label>
                                     </td>
                                 </tr>
                             <? } ?>
@@ -172,7 +172,7 @@
                                     <table id="ip-allowlist" style="<? if ($data[$user]['LOGIN_USE_IPLIST'] === 'yes') { echo 'display: table-cell;'; } else { echo 'display: none;'; } ?>">
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="vst-input" name="v_login_allowed_ups" value="<?=htmlentities(trim($v_login_allowed_ips, "'"))?>">
+                                                <input type="text" size="20" class="vst-input" name="v_login_allowed_ips" value="<?=htmlentities(trim($v_login_allowed_ips, "'"))?>">
                                                 <input type="hidden" name="v_login_allowed_ips" value="<?=htmlentities(trim($v_login_allowed_ips, "'"))?>">
                                             </td>
                                         </tr>

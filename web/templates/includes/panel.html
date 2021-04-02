@@ -48,10 +48,13 @@
 					</a>
 				</div>
 			<? } ?>
-			<? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
-				<!-- Hide 'Server Settings' button when impersonating 'admin' or other users -->
-			<? } else if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look']))) { ?>				
-				<div class="l-menu__item <?php if($TAB == 'SERVER' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'IP' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'RRD' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'FIREWALL' ) echo 'l-menu__item--active' ?>"><a href="/list/server/" class="l-profile__serversettings" title="<?=_('Server')?>"><i class="fas fa-cog"></i></a></div>
+
+			<? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['POLICY_SYSTEM_HIDE_SERVICES'] !== 'yes') || ($_SESSION['user'] === 'admin')) {?>
+				<? if (($_SESSION['userContext'] === 'admin') && (!empty($_SESSION['look']))) {?>
+					<!-- Hide 'Server Settings' button when impersonating 'admin' or other users -->
+				<? } else { ?>				
+					<div class="l-menu__item <?php if($TAB == 'SERVER' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'IP' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'RRD' ) echo 'l-menu__item--active' ?> <?php if($TAB == 'FIREWALL' ) echo 'l-menu__item--active' ?>"><a href="/list/server/" class="l-profile__serversettings" title="<?=_('Server')?>"><i class="fas fa-cog"></i></a></div>
+				<? } ?>
 			<? } ?>
 			<? if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($user == 'admin'))) {?>
 				<!-- Hide 'edit user' entry point from other administrators for default 'admin' account-->

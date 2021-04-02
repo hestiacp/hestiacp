@@ -778,6 +778,18 @@ if (!empty($_POST['save'])) {
         }
     }
 
+
+    // Change POLICY_SYSTEM_HIDE_SERVICES
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_policy_system_hide_services'] != $_SESSION['POLICY_SYSTEM_HIDE_SERVICES']) {
+            exec (HESTIA_CMD."v-change-sys-config-value POLICY_SYSTEM_HIDE_SERVICES ".escapeshellarg($_POST['v_policy_system_hide_services']), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) $v_policy_system_hide_services = $_POST['v_policy_system_hide_services'];
+            $v_security_adv = 'yes';
+        }
+    }
+
     // Change login style
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_login_style'] != $_SESSION['LOGIN_STYLE']) {

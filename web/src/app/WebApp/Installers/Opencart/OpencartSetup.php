@@ -6,6 +6,14 @@ use \Hestia\WebApp\Installers\BaseSetup as BaseSetup;
 
 class OpencartSetup extends BaseSetup {
 
+    protected $appInfo = [ 
+        'name' => 'Opencart',
+        'group' => 'ecommerce',
+        'enabled' => true,
+        'version' => '3.0.3.3',
+        'thumbnail' => 'opencart-thumb.png'
+    ];
+    
     protected $appname = 'opencart';
     protected $extractsubdir="/tmp-opencart";
 
@@ -20,7 +28,11 @@ class OpencartSetup extends BaseSetup {
             'archive'  => [ 'src' => 'https://github.com/opencart/opencart/releases/download/3.0.3.3/opencart-3.0.3.3.zip' ],
         ],
     ];
-
+    
+    public function info(){
+        return $this -> appInfo;
+    }
+    
     public function install(array $options = null) : bool
     {
         parent::install($options);

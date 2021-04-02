@@ -5,7 +5,15 @@ namespace Hestia\WebApp\Installers\Symfony;
 use \Hestia\WebApp\Installers\BaseSetup as BaseSetup;
 
 class SymfonySetup extends BaseSetup {
-
+    
+    protected $appInfo = [ 
+        'name' => 'Symfony',
+        'group' => 'framework',
+        'enabled' => true,
+        'version' => '5.2',
+        'thumbnail' => 'symfony-thumb.png'
+    ];
+    
     protected $appname = 'symfony';
 
     protected $config = [
@@ -16,6 +24,10 @@ class SymfonySetup extends BaseSetup {
             'composer' => [ 'src' => 'symfony/website-skeleton', 'dst' => '/' ],
         ],
     ];
+    
+    public function info(){
+        return $this -> appInfo;
+    }
 
     public function install(array $options=null) : bool
     {

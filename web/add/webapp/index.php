@@ -30,14 +30,6 @@ if(!in_array($v_domain, $user_domains)) {
     exit;
 }
 
-$appInstallers = glob(__DIR__.'/../../src/app/WebApp/Installers/*/app.json');
-$v_web_apps = array();
-foreach($appInstallers as $app){
-    $json = json_decode(file_get_contents($app));
-    $array[$json -> name] = $json;
-    $v_web_apps = array_merge($v_web_apps, $array);
-}
-
 // Check GET request
 if (!empty($_GET['app'])) {
     $app = basename($_GET['app']);
@@ -90,6 +82,19 @@ if (!empty($_POST['ok']) && !empty($app) ) {
 if(!empty($installer)) {
     render_page($user, $TAB, 'setup_webapp');
 } else {
+    $appInstallers = glob(__DIR__.'/../../src/app/WebApp/Installers/*/*.php');
+    $v_web_apps = array();
+    foreach($appInstallers as $app){
+        $hestia = new \Hestia\System\HestiaApp();
+        if( preg_match('/Installers\/([a-zA-Z0-0].*)\/([a-zA-Z0-0].*).php/', $app, $matches)){
+            if ($matches[1] != "Resources"){
+                $app_installer_class = '\Hestia\WebApp\Installers\\'.$matches[1].'\\' . $matches[1] . 'Setup';
+                $app_installer = new $app_installer_class($v_domain, $hestia);
+                $v_web_apps[] = $app_installer -> info();
+                
+            }
+        }
+    }
     render_page($user, $TAB, 'list_webapps');
 }
 

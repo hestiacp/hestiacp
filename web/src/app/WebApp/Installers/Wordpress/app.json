@@ -1,7 +1,0 @@
-{
-    "name": "Wordpress",
-    "group": "cms",
-    "enabled": true,
-    "version": "latest",
-    "thumbnail": "wp-thumb.png"
-}

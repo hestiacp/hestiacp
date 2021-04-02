@@ -6,6 +6,14 @@ use \Hestia\WebApp\Installers\BaseSetup as BaseSetup;
 
 class PrestashopSetup extends BaseSetup {
 
+    protected $appInfo = [ 
+        'name' => 'Prestashop',
+        'group' => 'ecommerce',
+        'enabled' => true,
+        'version' => '1.7.7.1',
+        'thumbnail' => 'prestashop-thumb.png'
+    ];
+    
     protected $appname = 'prestashop';
     protected $extractsubdir="/tmp-prestashop";
 
@@ -22,6 +30,10 @@ class PrestashopSetup extends BaseSetup {
         ],
 
     ];
+    
+    public function info(){
+        return $this -> appInfo;
+    }
 
     public function install(array $options=null) : bool
     {

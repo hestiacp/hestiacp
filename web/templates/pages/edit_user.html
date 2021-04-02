@@ -192,6 +192,11 @@
                                 </tr>
                                 <? } ?>
                             <? } ?>
+                            <tr>
+                                <td>
+                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_user_login_disabled" <?php if ((isset($data[$user]['LOGIN_DISABLED'])) && (!empty($data[$user]['LOGIN_DISABLED'])) && ($data[$user]['LOGIN_DISABLED'] == "yes")) echo "checked=yes" ?>><?php print _('User can not log in to Control Panel');?></label>
+                                </td>
+                            </tr>
                             <? if ($_SESSION['POLICY_USER_CHANGE_THEME'] !== 'no') {?>
                             <tr>
                                 <td class="vst-text input-label">

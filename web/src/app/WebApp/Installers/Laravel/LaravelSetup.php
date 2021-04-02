@@ -1,11 +1,21 @@
 <?php
 
-namespace Hestia\WebApp\Installers;
+namespace Hestia\WebApp\Installers\Laravel;
+
+use \Hestia\WebApp\Installers\BaseSetup as BaseSetup;
 
 class LaravelSetup extends BaseSetup {
 
     protected $appname = 'laravel';
-
+    
+    protected $appInfo = [ 
+        'name' => 'Laravel',
+        'group' => 'framework',
+        'enabled' => true,
+        'version' => '7.x',
+        'thumbnail' => 'laravel-thumb.png'
+    ];
+    
     protected $config = [
         'form' => [
         ],

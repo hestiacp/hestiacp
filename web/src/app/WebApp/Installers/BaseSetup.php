@@ -14,7 +14,10 @@ abstract class BaseSetup implements InstallerInterface {
 
     protected $domain;
     protected $extractsubdir;
-
+    
+    public function info(){
+        return $this -> appInfo;
+    }
     public function __construct($domain, HestiaApp $appcontext)
     {
         if(filter_var($domain, FILTER_VALIDATE_DOMAIN) === false) {

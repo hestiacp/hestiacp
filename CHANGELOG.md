@@ -45,6 +45,7 @@ All notable changes to this project will be documented in this file.
 - Disabled changing backup folder via Web UI because it used symbolic link instead of mount causing issues with restore mail / user files.
 - Fixed XSS vulnerability in `v-add-sys-ip` and user history log (thanks **@numanturle**).
 - Fixed remote code execution vulnerability which could occur when deleting SSH keys (thanks **@numanturle**).
+- Improve how Quick install of web apps are handled and allow users added apps to be maintained in list view. 
 
 ## [1.3.5] - Service Release
 ### Features

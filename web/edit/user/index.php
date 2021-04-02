@@ -179,25 +179,34 @@ if (!empty($_POST['save'])) {
         unset($output);
     }
 
-    // Update panel login status (admin only)
+    // Update Control Panel login disabled status (admin only)
     if (empty($_SESSION['error_msg'])) {
-        if ($data[$user]['LOGIN_DISABLED'] != $_POST['v_login_disabled']) {
+        if ($_POST['v_login_disabled'] != $data[$user]['LOGIN_DISABLED']) {
             if ($_POST['v_login_disabled'] == 'on') { $_POST['v_login_disabled'] = 'yes'; } else { $_POST['v_login_disabled'] = 'no'; }
             exec (HESTIA_CMD."v-change-user-config-value ".escapeshellarg($v_username)." LOGIN_DISABLED ".escapeshellarg($_POST['v_login_disabled']), $output, $return_var);
             check_return_code($return_var,$output);
+            $data[$user]['LOGIN_DISABLED'] = $_POST['v_login_disabled'];
             unset($output);
-
-            $v_login_disabled = $_POST['v_login_disabled'];
         }
     }
 
-    // Change use IP allow list option (admin only)
-    if (($v_login_use_iplist != $_POST['v_login_use_iplist']) && (empty($_SESSION['error_msg']))) {
-        if ($_POST['v_login_use_iplist'] == 'on') { $_POST['v_login_use_iplist'] = 'yes'; } else { $_POST['v_login_use_iplist'] = 'no'; }
-        $v_login_use_iplist = escapeshellarg($_POST['v_login_use_iplist']);
-        exec (HESTIA_CMD."v-change-user-config-value ".escapeshellarg($v_username)." LOGIN_USE_IPLIST ".$v_login_use_iplist, $output, $return_var);
-        check_return_code($return_var,$output);
-        unset($output);
+    // Update IP whitelist option
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_login_use_iplist'] != $data[$user]['LOGIN_USE_IPLIST']) {
+            if ($_POST['v_login_use_iplist'] == 'on') { $_POST['v_login_use_iplist'] = 'yes'; } else { $_POST['v_login_use_iplist'] = 'no'; }
+            exec (HESTIA_CMD."v-change-user-config-value ".escapeshellarg($v_username)." LOGIN_USE_IPLIST ".escapeshellarg($_POST['v_login_use_iplist']), $output, $return_var);
+            if ($_POST['v_login_use_iplist'] === 'no') {
+                exec (HESTIA_CMD."v-change-user-config-value ".escapeshellarg($v_username)." LOGIN_ALLOW_IPS ''", $output, $return_var);
+                $v_login_allowed_ips = '';
+            } else {
+                exec (HESTIA_CMD."v-change-user-config-value ".escapeshellarg($v_username)." LOGIN_ALLOW_IPS ".escapeshellarg($_POST['v_login_allowed_ips']), $output, $return_var);
+                unset($v_login_allowed_ips);
+                $v_login_allowed_ips = $_POST['v_login_allowed_ips'];
+            }
+            check_return_code($return_var,$output);
+            $data[$user]['LOGIN_USE_IPLIST'] = $_POST['v_login_use_iplist'];
+            unset($output);
+        }
     }
 
     // Change package (admin only)

@@ -129,11 +129,18 @@
                                     <meter max="4" id="meter"></meter>
                                 </td>
                             </tr>
+                            <? if ($_SESSION['userContext'] === 'admin') {?>
+                                <tr>
+                                    <td>
+                                        <label><input type="checkbox" size="20" class="vst-checkbox" onclick="javascript:elementHideShow('password-details')" name="v_login_disabled" <?php if ($data[$user]['LOGIN_DISABLED'] == "yes") echo "checked=yes" ?>><?php print _('Do not allow user to log in to Control Panel');?></label>
+                                    </td>
+                                </tr>
+                            <? } ?>
                             <tr>
                                 <td>
-                                    <table id="password-details">
+                                    <table id="password-details" style="<?php if ($data[$user]['LOGIN_DISABLED'] == "yes") { echo 'display: none;'; } else { echo 'display: table-cell;'; }?>">
                                         <tr>
-                                            <td class="vst-text">
+                                            <td class="vst-text step-top">
                                                 <?php print _('Your password must have at least');?>:
                                                 <ul>
                                                     <li><?php print _('8 characters long');?></li>
@@ -152,28 +159,20 @@
                                                 <?php } ?>
                                             </td>
                                         </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                            <? if ($_SESSION['userContext'] === 'admin') {?>
-                                <tr>
-                                    <td>
-                                        <label><input type="checkbox" size="20" class="vst-checkbox" name="v_login_disabled" <?php if ($data[$user]['LOGIN_DISABLED'] == "yes") echo "checked=yes" ?>><?php print _('User can not log in to Control Panel');?></label>
-                                    </td>
-                                </tr>
-                            <? } ?>
-                            <tr>
-                                <td>
-                                    <label><input type="checkbox" size="20" class="vst-checkbox" onclick="javascript:elementHideShow('ip-allowlist')" name="v_login_use_iplist" <?php if ($data[$user]['LOGIN_USE_IPLIST'] === "yes") echo "checked=yes" ?>><?php print _('Only allow logins from certain IP addresses');?></label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <table id="ip-allowlist" style="<? if ($data[$user]['LOGIN_USE_IPLIST'] === 'yes') { echo 'display: table-cell;'; } else { echo 'display: none;'; } ?>">
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="vst-input" placeholder="<?=_('Example: 127.0.0.1,192.168.1.100');?>" name="v_login_allowed_ips" value="<?=htmlentities(trim($v_login_allowed_ips, "'"))?>">
-                                                <input type="hidden" name="v_login_allowed_ips" value="<?=htmlentities(trim($v_login_allowed_ips, "'"))?>">
+                                                <label><input type="checkbox" size="20" class="vst-checkbox" onclick="javascript:elementHideShow('ip-allowlist')" name="v_login_use_iplist" <?php if ($data[$user]['LOGIN_USE_IPLIST'] === "yes") echo "checked=yes" ?>><?php print _('Use IP address allow list for login attempts');?></label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <table id="ip-allowlist" style="<? if ($data[$user]['LOGIN_USE_IPLIST'] === 'yes') { echo 'display: table-cell;'; } else { echo 'display: none;'; } ?>">
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text" size="20" class="vst-input" placeholder="<?=_('Example: 127.0.0.1,192.168.1.100');?>" name="v_login_allowed_ips" value="<?=htmlentities(trim($v_login_allowed_ips, "'"))?>">
+                                                        </td>
+                                                    </tr>
+                                                </table>
                                             </td>
                                         </tr>
                                     </table>
@@ -250,9 +249,10 @@
                                 </td>
                             </tr>
                             <?}?>
+                            <? if ($_GET['user'] === $_SESSION['user']) { ?>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print _('Default sort order');?>
+                                    <?php print _('Default list sort order');?>
                                 </td>
                             </tr>
                             <tr>
@@ -263,6 +263,7 @@
                                     </select>
                                 </td>
                             </tr>
+                            <? } ?>
                             <? if ($_SESSION['userContext'] === 'admin') {?>
                             <tr>
                                 <td class="vst-text input-label">

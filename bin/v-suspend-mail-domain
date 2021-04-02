@@ -57,7 +57,7 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
 fi
 
 # Removing webmail configuration
-$BIN/v-delete-sys-webmail $user $domain 'yes'
+$BIN/v-delete-mail-domain-webmail $user $domain 'yes'
 
 #----------------------------------------------------------#
 #                       Hestia                             #

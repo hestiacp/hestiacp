@@ -229,7 +229,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
         if (empty($_SESSION['error_msg'])) {
         if (!empty($_POST['v_webmail'])) {
             $v_webmail = escapeshellarg($_POST['v_webmail']);
-            exec (HESTIA_CMD."v-add-sys-webmail ".$user." ".$v_domain." ".$v_webmail." yes", $output, $return_var);
+            exec (HESTIA_CMD."v-add-mail-domain-webmail ".$user." ".$v_domain." ".$v_webmail." yes", $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
         }
@@ -238,7 +238,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
     
     if (empty($_POST['v_webmail'])) {
         if (empty($_SESSION['error_msg'])) {
-        exec (HESTIA_CMD."v-delete-sys-webmail ".$user." ".$v_domain." yes", $output, $return_var);
+        exec (HESTIA_CMD."v-delete-mail-domain-webmail ".$user." ".$v_domain." yes", $output, $return_var);
         check_return_code($return_var,$output);
         $v_webmail = "";
         unset($output);

@@ -69,7 +69,7 @@ if [ ! -z "$IMAP_SYSTEM" ]; then
         for client in ${WEBMAIL_SYSTEM//,/ };do
             webmail="$client"
         done
-        $BIN/v-add-sys-webmail $user $domain $webmail 'yes'
+        $BIN/v-add-mail-domain-webmail $user $domain $webmail 'yes'
     fi   
 fi
 # Logging

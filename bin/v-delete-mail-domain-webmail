@@ -3,7 +3,7 @@
 # options: USER DOMAIN [RESTART] [QUIET]
 # labels: hestia
 #
-# example: v-delete-sys-webmail user demo.com
+# example: v-delete-mail-domain-webmail user demo.com
 #
 # this function removes support for webmail from
 # a specified mail domain.

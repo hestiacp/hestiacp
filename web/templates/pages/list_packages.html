@@ -5,15 +5,19 @@
         <a href="/add/package/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Package')?></a>
     </div>
       <ul class="context-menu sort-order animated fadeIn" style="display:none;">
-        <li entity="sort-date" sort_as_int="1"><span class="name active"><?=_('Date')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
-        <li entity="sort-name"><span class="name" id="default-sort"><?=_('Package')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+        <li entity="sort-date" sort_as_int="1"><span class="name active" id="<?php if ($_SESSION['userSortOrder'] === 'date') { echo 'default-sort'; }?>"><?=_('Date')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+        <li entity="sort-name"><span class="name" id="<?php if ($_SESSION['userSortOrder'] === 'name') { echo 'default-sort'; }?>"><?=_('Name')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
       </ul>
       <div class="l-sort-toolbar clearfix">
         <table>
           <tr>
             <td class="sort-by" title="<?=_('Sort items');?>">
-                <?=_('sort by');?>: <span><b><?=_('Package')?> <i class="fas fa-sort-alpha-down"></i></b></span>
-            </td>
+              <?=_('sort by');?>: <span>
+                <b>
+                  <? if ($_SESSION['userSortOrder'] === 'name') { $label = 'Name'; } else { $label = 'Date'; } ?>
+                  <?=_($label)?> <i class="fas fa-sort-alpha-down"></i>
+                </b>
+              </span>
             <td>
               <form action="/bulk/package/" method="post" id="objects">
                 <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />

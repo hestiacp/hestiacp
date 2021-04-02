@@ -172,7 +172,7 @@
                                     <table id="ip-allowlist" style="<? if ($data[$user]['LOGIN_USE_IPLIST'] === 'yes') { echo 'display: table-cell;'; } else { echo 'display: none;'; } ?>">
                                         <tr>
                                             <td>
-                                                <input type="text" size="20" class="vst-input" name="v_login_allowed_ips" value="<?=htmlentities(trim($v_login_allowed_ips, "'"))?>">
+                                                <input type="text" size="20" class="vst-input" placeholder="<?=_('Example: 127.0.0.1,192.168.1.100');?>" name="v_login_allowed_ips" value="<?=htmlentities(trim($v_login_allowed_ips, "'"))?>">
                                                 <input type="hidden" name="v_login_allowed_ips" value="<?=htmlentities(trim($v_login_allowed_ips, "'"))?>">
                                             </td>
                                         </tr>

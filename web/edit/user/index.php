@@ -193,6 +193,7 @@ if (!empty($_POST['save'])) {
 
     // Change use IP allow list option (admin only)
     if (($v_login_use_iplist != $_POST['v_login_use_iplist']) && (empty($_SESSION['error_msg']))) {
+        if ($_POST['v_login_use_iplist'] == 'on') { $_POST['v_login_use_iplist'] = 'yes'; } else { $_POST['v_login_use_iplist'] = 'no'; }
         $v_login_use_iplist = escapeshellarg($_POST['v_login_use_iplist']);
         exec (HESTIA_CMD."v-change-user-config-value ".escapeshellarg($v_username)." LOGIN_USE_IPLIST ".$v_login_use_iplist, $output, $return_var);
         check_return_code($return_var,$output);

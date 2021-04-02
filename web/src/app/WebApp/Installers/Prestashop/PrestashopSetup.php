@@ -1,9 +1,19 @@
 <?php
 
-namespace Hestia\WebApp\Installers;
+namespace Hestia\WebApp\Installers\Prestashop;
+
+use \Hestia\WebApp\Installers\BaseSetup as BaseSetup;
 
 class PrestashopSetup extends BaseSetup {
 
+    protected $appInfo = [ 
+        'name' => 'Prestashop',
+        'group' => 'ecommerce',
+        'enabled' => true,
+        'version' => '1.7.7.1',
+        'thumbnail' => 'prestashop-thumb.png'
+    ];
+    
     protected $appname = 'prestashop';
     protected $extractsubdir="/tmp-prestashop";
 

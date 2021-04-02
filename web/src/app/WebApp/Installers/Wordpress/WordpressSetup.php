@@ -1,11 +1,20 @@
 <?php
 
-namespace Hestia\WebApp\Installers;
+namespace Hestia\WebApp\Installers\Wordpress;
 
 use Hestia\System\Util;
+use \Hestia\WebApp\Installers\BaseSetup as BaseSetup;
 
 class WordpressSetup extends BaseSetup {
 
+    protected $appInfo = [ 
+        'name' => 'Wordpress',
+        'group' => 'cms',
+        'enabled' => true,
+        'version' => 'latest',
+        'thumbnail' => 'wp-thumb.png'
+    ];
+    
     protected $appname = 'wordpress';
     protected $config = [
         'form' => [
@@ -25,7 +34,7 @@ class WordpressSetup extends BaseSetup {
         ],
         
     ];
-
+    
     public function install(array $options = null)
     {
         parent::install($options);

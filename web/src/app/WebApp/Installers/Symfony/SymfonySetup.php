@@ -1,9 +1,19 @@
 <?php
 
-namespace Hestia\WebApp\Installers;
+namespace Hestia\WebApp\Installers\Symfony;
+
+use \Hestia\WebApp\Installers\BaseSetup as BaseSetup;
 
 class SymfonySetup extends BaseSetup {
-
+    
+    protected $appInfo = [ 
+        'name' => 'Symfony',
+        'group' => 'framework',
+        'enabled' => true,
+        'version' => '5.2',
+        'thumbnail' => 'symfony-thumb.png'
+    ];
+    
     protected $appname = 'symfony';
 
     protected $config = [

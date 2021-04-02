@@ -238,6 +238,9 @@ LANGUAGE=''
 THEME=''
 NOTIFICATIONS='no'
 PREF_UI_SORT='name'
+LOGIN_DISABLED='no'
+LOGIN_USE_IPLIST='no'
+LOGIN_ALLOW_IPS=''
 TIME='$time'
 DATE='$date'" > $USER_DATA/user.conf
 chmod 660 $USER_DATA/user.conf

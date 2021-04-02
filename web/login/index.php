@@ -142,7 +142,6 @@ function authenticate_user($user, $password, $twofa = ''){
                 $error = "<a class=\"error\">"._('Invalid username or password')."</a>";
                 $v_session_id = escapeshellarg($_POST['token']);
                 exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." failed ".$v_session_id." ".$v_user_agent, $output, $return_var);
-
                 return $error;
             } else {
 
@@ -150,6 +149,25 @@ function authenticate_user($user, $password, $twofa = ''){
                 exec (HESTIA_CMD . "v-list-user ".$v_user." json", $output, $return_var);
                 $data = json_decode(implode('', $output), true);
                 unset($output); 
+                if ($data[$user]['LOGIN_DISABLED'] === 'yes') {
+                    sleep(2);
+                    $error = "<a class=\"error\">"._('Invalid username or password')."</a>";
+                    $v_session_id = escapeshellarg($_POST['token']);
+                    exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." failed ".$v_session_id." ".$v_user_agent, $output, $return_var);
+                    return $error;
+                }
+
+                if ($data[$user]['LOGIN_USE_IPLIST'] === 'yes') {
+                    $v_login_user_allowed_ips = explode(',',$data[$user]['LOGIN_ALLOW_IPS']);
+                    if (!in_array($ip,$v_login_user_allowed_ips)) {
+                        sleep(2);
+                        $error = "<a class=\"error\">"._('Invalid username or password')."</a>";
+                        $v_session_id = escapeshellarg($_POST['token']);
+                        exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." failed ".$v_session_id." ".$v_user_agent, $output, $return_var);
+                        return $error;
+                    }
+                }
+
                 if ($data[$user]['TWOFA'] != '') {
                         if(empty($twofa)){
                             $_SESSION['login']['username'] = $user;

@@ -42,6 +42,16 @@ rebuild_user_conf() {
     if [ -z "${PREF_UI_SORT+x}" ]; then 
         sed -i "/NOTIFICATIONS/a PREF_UI_SORT='name'" $USER_DATA/user.conf 
     fi
+    if [ -z "${LOGIN_DISABLED+x}" ]; then 
+        sed -i "/PREF_UI_SORT/a LOGIN_DISABLED=''" $USER_DATA/user.conf 
+    fi
+    if [ -z "${LOGIN_USE_IPLIST+x}" ]; then 
+        sed -i "/LOGIN_DISABLED/a LOGIN_USE_IPLIST=''" $USER_DATA/user.conf 
+    fi
+    if [ -z "${LOGIN_ALLOW_IPS+x}" ]; then 
+        sed -i "/LOGIN_USE_IPLIST/a LOGIN_ALLOW_IPS=''" $USER_DATA/user.conf 
+    fi
+
     # Run template trigger
     if [ -x "$HESTIA/data/packages/$PACKAGE.sh" ]; then
         $HESTIA/data/packages/$PACKAGE.sh "$user" "$CONTACT" "$NAME"

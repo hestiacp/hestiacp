@@ -130,23 +130,52 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="vst-text">
-                                    <?php print _('Your password must have at least');?>:
-                                    <ul>
-                                        <li><?php print _('8 characters long');?></li>
-                                        <li><?php print _('1 uppercase & 1 lowercase character');?></li>
-                                        <li><?php print _('1 number');?></li>
-                                    </ul>
-                                </td>
-                            </tr>
-                            <tr>
                                 <td>
-                                    <label><input type="checkbox" class="vst-checkbox password-option" name="v_twofa" <?php if(!empty($v_twofa)) echo "checked=yes" ?>><?php print _('Enable 2FA');?></label>
-                                    <?php if (!empty($v_twofa)) { ?>
-                                    <p><?php echo _('2FA Reset Code:').' '.$v_twofa; ?></br></p>
-                                    <p><?php echo _('Please scan the code below in your 2FA application:'); ?></p>
-                                    <div><img class="qr-code" src="<?php echo $v_qrcode; ?>"></div>
-                                    <?php } ?>
+                                    <table id="password-details">
+                                        <tr>
+                                            <td class="vst-text">
+                                                <?php print _('Your password must have at least');?>:
+                                                <ul>
+                                                    <li><?php print _('8 characters long');?></li>
+                                                    <li><?php print _('1 uppercase & 1 lowercase character');?></li>
+                                                    <li><?php print _('1 number');?></li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        <? if ($_SESSION['userContext'] === 'admin') {?>
+                                            <tr>
+                                                <td>
+                                                    <label><input type="checkbox" size="20" class="vst-checkbox" onclick="javascript:elementHideShow('password-options');elementHideShow('password-options-ip');" name="v_login_disabled" <?php if ($data[$user]['LOGIN_DISABLED'] == "yes") echo "checked=yes" ?>><?php print _('Do not allow user to log in to Control Panel');?></label>
+                                                </td>
+                                            </tr>
+                                        <? } ?>
+                                        <tr>
+                                            <td id="password-options" style="<?php if ($data[$user]['LOGIN_DISABLED'] == "yes") { echo 'display: none;'; } else { echo 'display: table-cell;'; }?>">
+                                                <label><input type="checkbox" class="vst-checkbox password-option" name="v_twofa" <?php if(!empty($v_twofa)) echo "checked=yes" ?>><?php print _('Enable 2FA');?></label>
+                                                <?php if (!empty($v_twofa)) { ?>
+                                                <p><?php echo _('2FA Reset Code:').' '.$v_twofa; ?></br></p>
+                                                <p><?php echo _('Please scan the code below in your 2FA application:'); ?></p>
+                                                <div><img class="qr-code" src="<?php echo $v_qrcode; ?>"></div>
+                                                <?php } ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td id="password-options-ip" style="<?php if ($data[$user]['LOGIN_DISABLED'] == "yes") { echo 'display: none;'; } else { echo 'display: table-cell;'; }?>">
+                                                <label><input type="checkbox" size="20" class="vst-checkbox" onclick="javascript:elementHideShow('ip-allowlist')" name="v_login_use_iplist" <?php if ($data[$user]['LOGIN_USE_IPLIST'] === "yes") echo "checked=yes" ?>><?php print _('Use IP address allow list for login attempts');?></label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <table id="ip-allowlist" style="<? if ($data[$user]['LOGIN_USE_IPLIST'] === 'yes') { echo 'display: table-cell;'; } else { echo 'display: none;'; } ?>">
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text" size="20" class="vst-input" placeholder="<?=_('Example: 127.0.0.1,192.168.1.100');?>" name="v_login_allowed_ips" value="<?=htmlentities(trim($v_login_allowed_ips, "'"))?>">
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </td>
                             </tr>
                             <tr>
@@ -220,9 +249,10 @@
                                 </td>
                             </tr>
                             <?}?>
+                            <? if ($_GET['user'] === $_SESSION['user']) { ?>
                             <tr>
                                 <td class="vst-text input-label">
-                                    <?php print _('Default sort order');?>
+                                    <?php print _('Default list sort order');?>
                                 </td>
                             </tr>
                             <tr>
@@ -233,6 +263,7 @@
                                     </select>
                                 </td>
                             </tr>
+                            <? } ?>
                             <? if ($_SESSION['userContext'] === 'admin') {?>
                             <tr>
                                 <td class="vst-text input-label">

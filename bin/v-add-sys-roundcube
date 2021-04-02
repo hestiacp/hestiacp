@@ -191,5 +191,9 @@ fi
 #                       Logging                            #
 #----------------------------------------------------------#
 
-$BIN/v-log-action "system" "Info" "Plugins" "Roundcube enabled (Version: $version)."
+if [ "$UPDATE" = "yes" ]; then
+    $BIN/v-log-action "system" "Info" "Plugins" "Roundcube updated (Version: $version)."
+else
+    $BIN/v-log-action "system" "Info" "Plugins" "Roundcube enabled (Version: $version)."
+fi
 log_event "$OK" "$ARGUMENTS"

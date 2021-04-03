@@ -69,7 +69,7 @@ $BIN/v-restart-cron
 check_result $? "Restart restart failed" >/dev/null
 
 # Logging
-$BIN/v-log-action "$user" "Info" "Cron Jobs" "Cron job deleted (Job: $job)."
+$BIN/v-log-action "$user" "Info" "Cron Jobs" "Cron job deleted (ID: $job)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

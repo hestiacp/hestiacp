@@ -88,7 +88,7 @@ $BIN/v-restart-cron
 check_result $? "Cron restart failed" >/dev/null
 
 # Logging
-$BIN/v-log-action "$user" "Info" "Cron Jobs" "Cron job added (Job: $job, Command: $cmd)"
+$BIN/v-log-action "$user" "Info" "Cron Jobs" "Cron job added (ID: $job, Command: $command)"
 log_event "$OK" "$ARGUMENTS"
 
 exit

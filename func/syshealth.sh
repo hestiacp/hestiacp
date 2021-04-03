@@ -309,13 +309,14 @@ function syshealth_repair_system_config() {
 # Repair System Cron Jobs
 # Add default cron jobs to "admin" user account's cron tab
 function syshealth_repair_system_cronjobs() {
-    $HESTIA/bin/v-add-cron-job 'admin' '*/2' '*' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue restart"
-    $HESTIA/bin/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue daily"
-    $HESTIA/bin/v-add-cron-job 'admin' '15' '02' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue disk"
-    $HESTIA/bin/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue traffic"
-    $HESTIA/bin/v-add-cron-job 'admin' '30' '03' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue webstats"
-    $HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue backup"
-    $HESTIA/bin/v-add-cron-job 'admin' '10' '05' '*' '*' '*' "sudo $HESTIA/bin/v-backup-users"
-    $HESTIA/bin/v-add-cron-job 'admin' '20' '00' '*' '*' '*' "sudo $HESTIA/bin/v-update-user-stats"
-    $HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-rrd"
+    $HESTIA/bin/v-add-cron-job 'admin' '*/2' '*' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue restart" '' 'no'
+    $HESTIA/bin/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue daily" '' 'no'
+    $HESTIA/bin/v-add-cron-job 'admin' '15' '02' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue disk" '' 'no'
+    $HESTIA/bin/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue traffic" '' 'no'
+    $HESTIA/bin/v-add-cron-job 'admin' '30' '03' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue webstats" '' 'no'
+    $HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue backup" '' 'no'
+    $HESTIA/bin/v-add-cron-job 'admin' '10' '05' '*' '*' '*' "sudo $HESTIA/bin/v-backup-users" '' 'no'
+    $HESTIA/bin/v-add-cron-job 'admin' '20' '00' '*' '*' '*' "sudo $HESTIA/bin/v-update-user-stats" '' 'no'
+    $HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-rrd" '' 'no'
+    $HESTIA/bin/v-restart-cron
 }

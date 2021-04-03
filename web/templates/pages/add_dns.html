@@ -99,6 +99,7 @@
                                         <input type="text" size="20" class="vst-input vst-list-editor" name="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
                                     </td>
                                 </tr>
+                                <? if (($_SESSION['userContext'] === 'admin') || ($_SESSION['userContext'] === 'user') && ($_SESSION['POLICY_USER_EDIT_DNS_TEMPLATES'] === 'yes')) { ?>
                                 <tr>
                                     <td class="vst-text input-label">
                                         <?php print _('Template') . "<span class='optional'>" . strtoupper($_SESSION['DNS_SYSTEM']) . "</span>";?>
@@ -120,6 +121,7 @@
                                         </select>
                                     </td>
                                 </tr>
+                                <? } ?>
                                 <tr>
                                     <td class="vst-text input-label step-top">
                                         <a href="javascript:elementHideShow('advtable');" class="vst-advanced"><?php print _('Advanced options');?></a>

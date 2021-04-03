@@ -366,118 +366,120 @@
                         <tr>
                                 <td class="step-top">
                                     <table id="advanced-opts" style="display: none;">
-                                        <tr>
-                                            <td class="vst-text input-label">
-                                                <?php print _('Web Template')  . "<span class='optional'>" .strtoupper($_SESSION['WEB_SYSTEM']) . "</span>";?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <select class="vst-list" name="v_template">
-                                                    <?php
-                                                        foreach ($templates as $key => $value) {
-                                                            echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
-                                                            $svalue = "'".$value."'";
-                                                            if ((!empty($v_template)) && ( $value == $v_template ) || ($svalue == $v_template)){
-                                                                echo ' selected' ;
+                                        <? if (($_SESSION['userContext'] === 'admin') || ($_SESSION['userContext'] === 'user') && ($_SESSION['POLICY_USER_EDIT_WEB_TEMPLATES'] === 'yes')) { ?>
+                                            <tr>
+                                                <td class="vst-text input-label">
+                                                    <?php print _('Web Template')  . "<span class='optional'>" .strtoupper($_SESSION['WEB_SYSTEM']) . "</span>";?>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <select class="vst-list" name="v_template">
+                                                        <?php
+                                                            foreach ($templates as $key => $value) {
+                                                                echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
+                                                                $svalue = "'".$value."'";
+                                                                if ((!empty($v_template)) && ( $value == $v_template ) || ($svalue == $v_template)){
+                                                                    echo ' selected' ;
+                                                                }
+                                                                echo ">".htmlentities($value)."</option>\n";
                                                             }
-                                                            echo ">".htmlentities($value)."</option>\n";
-                                                        }
-                                                    ?>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <?php if($_SESSION['WEB_SYSTEM'] == 'nginx'){?>
-                                        <tr>
-                                            <td class="vst-text">
-                                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_nginx_cache_check" <?php if (!empty($v_nginx_cache)) echo "checked=yes" ?> onclick="javascript:elementHideShow('v_nginx_duration');"><?php print _('Enable FastCGI Cache'); ?> <a href="https://docs.hestiacp.com/admin_docs/nginx_caching.html" target="_blank"><i class="fas fa-question-circle"></i></a></label>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="step-left">
-                                                <table id="v_nginx_duration" style="display:<?php if ($v_nginx_cache != 'yes' ) { echo 'none';} else {echo 'block';}?> ;" >
-                                                    <td class="vst-text input-label">
-                                                        <?php print _('Cache Duration'); ?> <span class="optional"><?=_('For example: 30s, 10m or 1d');?>
-                                                    </td>
-                                                    <tr>
-                                                        <td><input type="text" size="20" class="vst-input" name="v_nginx_cache_duration" value="<?=htmlentities(trim($v_nginx_cache_duration, "'"))?>"></td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                        <?php } ?>                          
-                                        <?php if (!empty($_SESSION['WEB_BACKEND'])) { ?>
-                                        <tr>
-                                            <td class="vst-text input-label">
-                                                <?php print _('Backend Template') . " <span class='optional'>" . strtoupper($_SESSION['WEB_BACKEND']) . "</span>";?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <select class="vst-list" name="v_backend_template">
-                                                    <?php
-                                                        foreach ($backend_templates as $key => $value) {
-                                                            echo "\t\t\t\t<option value=\"".$value."\"";
-                                                            $svalue = "'".$value."'";
-                                                            if ((!empty($v_backend_template)) && ( $value == $v_backend_template ) || ($svalue == $v_backend_template)){
-                                                                echo ' selected' ;
-                                                            }
-                                                            if ((empty($v_backend_template)) && ($value == 'default')){
-                                                                echo ' selected' ;
-                                                            }
-                                                            echo ">".htmlentities($value)."</option>\n";
-                                                        }
-                                                    ?>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <?php }?>
-                                        <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { ?>
-                                        <tr style="display: none;">
-                                            <td class="vst-text input-label">
-                                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_proxy" <?php if (!empty($v_proxy)) echo "checked=yes" ?> onclick="javascript:elementHideShow('proxytable');"><?php print _('Proxy Support') . "<span class='optional'>" . strtoupper($_SESSION['PROXY_SYSTEM']) . "</span>";?></label>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <table style="display:<?php if (empty($v_proxy)) { echo 'none';} else {echo 'block';}?> ;" id="proxytable">
-                                                    <tr>
+                                                        ?>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <?php if($_SESSION['WEB_SYSTEM'] == 'nginx'){?>
+                                            <tr>
+                                                <td class="vst-text">
+                                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_nginx_cache_check" <?php if (!empty($v_nginx_cache)) echo "checked=yes" ?> onclick="javascript:elementHideShow('v_nginx_duration');"><?php print _('Enable FastCGI Cache'); ?> <a href="https://docs.hestiacp.com/admin_docs/nginx_caching.html" target="_blank"><i class="fas fa-question-circle"></i></a></label>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="step-left">
+                                                    <table id="v_nginx_duration" style="display:<?php if ($v_nginx_cache != 'yes' ) { echo 'none';} else {echo 'block';}?> ;" >
                                                         <td class="vst-text input-label">
-                                                            <?php print _('Proxy Template');?>
+                                                            <?php print _('Cache Duration'); ?> <span class="optional"><?=_('For example: 30s, 10m or 1d');?>
                                                         </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <select class="vst-list" name="v_proxy_template">
-                                                                <?php
-                                                                    foreach ($proxy_templates as $key => $value) {
-                                                                        echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
-                                                                        $svalue = "'".$value."'";
-                                                                        if ((!empty($v_proxy_template)) && ( $value == $v_proxy_template ) || ($svalue == $v_proxy_template)){
-                                                                            echo ' selected' ;
+                                                        <tr>
+                                                            <td><input type="text" size="20" class="vst-input" name="v_nginx_cache_duration" value="<?=htmlentities(trim($v_nginx_cache_duration, "'"))?>"></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <?php } ?>                          
+                                            <?php if (!empty($_SESSION['WEB_BACKEND'])) { ?>
+                                            <tr>
+                                                <td class="vst-text input-label">
+                                                    <?php print _('Backend Template') . " <span class='optional'>" . strtoupper($_SESSION['WEB_BACKEND']) . "</span>";?>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <select class="vst-list" name="v_backend_template">
+                                                        <?php
+                                                            foreach ($backend_templates as $key => $value) {
+                                                                echo "\t\t\t\t<option value=\"".$value."\"";
+                                                                $svalue = "'".$value."'";
+                                                                if ((!empty($v_backend_template)) && ( $value == $v_backend_template ) || ($svalue == $v_backend_template)){
+                                                                    echo ' selected' ;
+                                                                }
+                                                                if ((empty($v_backend_template)) && ($value == 'default')){
+                                                                    echo ' selected' ;
+                                                                }
+                                                                echo ">".htmlentities($value)."</option>\n";
+                                                            }
+                                                        ?>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <?php }?>
+                                            <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { ?>
+                                            <tr style="display: none;">
+                                                <td class="vst-text input-label">
+                                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_proxy" <?php if (!empty($v_proxy)) echo "checked=yes" ?> onclick="javascript:elementHideShow('proxytable');"><?php print _('Proxy Support') . "<span class='optional'>" . strtoupper($_SESSION['PROXY_SYSTEM']) . "</span>";?></label>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <table style="display:<?php if (empty($v_proxy)) { echo 'none';} else {echo 'block';}?> ;" id="proxytable">
+                                                        <tr>
+                                                            <td class="vst-text input-label">
+                                                                <?php print _('Proxy Template');?>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <select class="vst-list" name="v_proxy_template">
+                                                                    <?php
+                                                                        foreach ($proxy_templates as $key => $value) {
+                                                                            echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
+                                                                            $svalue = "'".$value."'";
+                                                                            if ((!empty($v_proxy_template)) && ( $value == $v_proxy_template ) || ($svalue == $v_proxy_template)){
+                                                                                echo ' selected' ;
+                                                                            }
+                                                                            if ((empty($v_proxy_template)) && ($value == 'default')){
+                                                                                echo ' selected' ;
+                                                                            }
+                                                                            echo ">".htmlentities($value)."</option>\n";
                                                                         }
-                                                                        if ((empty($v_proxy_template)) && ($value == 'default')){
-                                                                            echo ' selected' ;
-                                                                        }
-                                                                        echo ">".htmlentities($value)."</option>\n";
-                                                                    }
-                                                                ?>
-                                                            </select>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="vst-text input-label">
-                                                            <?php print _('Proxy Extensions');?>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <textarea size="20" class="vst-textinput short" name="v_proxy_ext"><?php if (!empty($v_proxy_ext)) { echo htmlentities(trim($v_proxy_ext, "'"));} else { echo 'jpg, jpeg, gif, png, ico, svg, css, zip, tgz, gz, rar, bz2, exe, pdf, doc, xls, ppt, txt, odt, ods, odp, odf, tar, bmp, rtf, js, mp3, avi, mpeg, flv, html, htm'; }  ?></textarea>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
+                                                                    ?>
+                                                                </select>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="vst-text input-label">
+                                                                <?php print _('Proxy Extensions');?>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <textarea size="20" class="vst-textinput short" name="v_proxy_ext"><?php if (!empty($v_proxy_ext)) { echo htmlentities(trim($v_proxy_ext, "'"));} else { echo 'jpg, jpeg, gif, png, ico, svg, css, zip, tgz, gz, rar, bz2, exe, pdf, doc, xls, ppt, txt, odt, ods, odp, odf, tar, bmp, rtf, js, mp3, avi, mpeg, flv, html, htm'; }  ?></textarea>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
                                         <?php } ?>
                                         <tr>
                                             <td class="vst-text input-label">

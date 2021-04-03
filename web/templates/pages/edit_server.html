@@ -1122,6 +1122,20 @@
                                         </tr>
                                         <tr>
                                             <td class="vst-text input-label">
+                                                <?php print _('Allow users to change web domain templates');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_policy_user_edit_web_templates">
+                                                    <option value='yes' <?php if($_SESSION['POLICY_USER_EDIT_WEB_TEMPLATES'] !== 'no') echo 'selected' ?>><?php print _('yes'); ?></option>
+                                                    <option value='no' <?php if($_SESSION['POLICY_USER_EDIT_WEB_TEMPLATES'] == 'no') echo 'selected' ?>><?php print _('no'); ?></option>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text input-label">
                                                 <?php print _('Allow users to view action and login history logs');?>
                                             </td>
                                         </tr>

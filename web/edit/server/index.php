@@ -706,6 +706,28 @@ if (!empty($_POST['save'])) {
         }
     }
 
+    // Change POLICY_USER_EDIT_WEB_TEMPLATES
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_policy_user_edit_web_templates'] != $_SESSION['POLICY_USER_EDIT_WEB_TEMPLATES']) {
+            exec (HESTIA_CMD."v-change-sys-config-value POLICY_USER_EDIT_WEB_TEMPLATES ".escapeshellarg($_POST['v_policy_user_edit_web_templates']), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) $v_policy_user_edit_details = $_POST['v_policy_user_edit_web_templates'];
+            $v_security_adv = 'yes';
+        }
+    }
+
+    // Change POLICY_USER_EDIT_DNS_TEMPLATES
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_policy_user_edit_dns_templates'] != $_SESSION['POLICY_USER_EDIT_DNS_TEMPLATES']) {
+            exec (HESTIA_CMD."v-change-sys-config-value POLICY_USER_EDIT_DNS_TEMPLATES ".escapeshellarg($_POST['v_policy_user_edit_dns_templates']), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) $v_policy_user_edit_details = $_POST['v_policy_user_edit_dns_templates'];
+            $v_security_adv = 'yes';
+        }
+    }
+
     // Change POLICY_USER_VIEW_LOGS
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_policy_user_view_logs'] != $_SESSION['POLICY_USER_VIEW_LOGS']) {

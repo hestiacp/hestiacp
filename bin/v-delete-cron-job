@@ -15,6 +15,7 @@
 # Argument definition
 user=$1
 job=$2
+restart=$3
 
 # Includes
 # shellcheck source=/usr/local/hestia/func/main.sh
@@ -27,7 +28,7 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER JOB'
+check_args '2' "$#" 'USER JOB [RESTART]'
 is_format_valid 'user' 'job'
 is_system_enabled "$CRON_SYSTEM" 'CRON_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
@@ -65,7 +66,7 @@ if [ ! -z "$suspended" ]; then
 fi
 
 # Restarting crond
-$BIN/v-restart-cron
+$BIN/v-restart-cron $restart
 check_result $? "Restart restart failed" >/dev/null
 
 # Logging

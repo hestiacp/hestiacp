@@ -84,7 +84,7 @@ sync_cron_jobs
 increase_user_value $user '$U_CRON_JOBS'
 
 # Restarting crond
-$BIN/v-restart-cron
+$BIN/v-restart-cron $restart
 check_result $? "Cron restart failed" >/dev/null
 
 # Logging

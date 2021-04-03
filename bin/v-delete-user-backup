@@ -33,7 +33,6 @@ check_args '2' "$#" 'USER BACKUP'
 is_format_valid 'user' 'backup'
 is_system_enabled "$BACKUP_SYSTEM" 'BACKUP_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'backup' 'BACKUP' "$2"
 
 # Perform verification if read-only mode is enabled

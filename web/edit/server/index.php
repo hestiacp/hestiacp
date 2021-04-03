@@ -750,6 +750,17 @@ if (!empty($_POST['save'])) {
         }
     }
 
+    // Change POLICY_USER_VIEW_SUSPENDED
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_policy_user_view_suspended'] != $_SESSION['POLICY_USER_VIEW_SUSPENDED']) {
+            exec (HESTIA_CMD."v-change-sys-config-value POLICY_USER_VIEW_SUSPENDED ".escapeshellarg($_POST['v_policy_user_view_suspended']), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) $v_policy_system_hide_admin = $_POST['v_policy_user_view_suspended'];
+            $v_security_adv = 'yes';
+        }
+    }
+
     // Change POLICY_USER_CHANGE_THEME
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_policy_user_change_theme'] == 'on') { $_POST['v_policy_user_change_theme'] = 'no'; } else { $_POST['v_policy_user_change_theme'] = 'yes'; } {

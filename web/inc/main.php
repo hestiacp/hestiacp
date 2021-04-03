@@ -146,13 +146,20 @@ function top_panel($user, $TAB) {
     $command = HESTIA_CMD."v-list-user ".escapeshellarg($user)." 'json'";
     exec ($command, $output, $return_var);
     if ( $return_var > 0 ) {
-        echo "<b>ERROR: Unable to retrieve account details.</b><br>Please log in again.";
+        echo "<span style='font-size: 18px;'><b>ERROR: Unable to retrieve account details.</b><br>Please <b><a href='/login/'>log in</a></b> again.</span>";
         session_destroy();
         header("Location: /login/");
         exit;
     }
     $panel = json_decode(implode('', $output), true);
     unset($output);
+
+    // Log out active sessions for suspended users
+    if ($panel[$user]['SUSPENDED'] === 'yes') {
+        $_SESSION['error_msg'] = "You have been logged out. Please log in again.";
+        session_destroy();
+        header("Location: /login/");
+    }
 
     // Load user's selected theme and do not change it when impersonting user
     if ( (isset($panel[$user]['THEME'])) && (!isset($_SESSION['look']) )) {

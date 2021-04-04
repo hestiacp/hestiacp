@@ -197,7 +197,7 @@
                                         <?php } ?>
                                         <tr>
                                             <td>
-                                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_experimental_features" <?php if ((isset($_SESSION['POLICY_SYSTEM_ENABLE_BACON'])) && (!empty($_SESSION['POLICY_SYSTEM_ENABLE_BACON'])) && ($_SESSION['POLICY_SYSTEM_ENABLE_BACON'] == "true")) echo "checked=yes" ?>><?php print _('Enable preview features');?></label>
+                                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_experimental_features" <?php if ((isset($_SESSION['POLICY_SYSTEM_ENABLE_BACON'])) && (!empty($_SESSION['POLICY_SYSTEM_ENABLE_BACON'])) && ($_SESSION['POLICY_SYSTEM_ENABLE_BACON'] == "true")) echo "checked=yes" ?>><?php print _('Enable preview features');?></label> <span class="hint">(<a href="/list/server/preview/"><?=_('View');?></a>)</span>
                                             </td>
                                         </tr>
                                         <tr>

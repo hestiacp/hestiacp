@@ -154,6 +154,11 @@
                                                 
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <td>
+                                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_experimental_features" <?php if ((isset($_SESSION['POLICY_SYSTEM_ENABLE_JETSKIS'])) && (!empty($_SESSION['POLICY_SYSTEM_ENABLE_JETSKIS'])) && ($_SESSION['POLICY_SYSTEM_ENABLE_JETSKIS'] == "true")) echo "checked=yes" ?>><?php print _('Enable preview features');?></label>
+                                            </td>
+                                        </tr>
                                         <?php if ($_SESSION['RELEASE_BRANCH'] != "release") { ?>
                                             <tr>
                                                 <td>
@@ -476,6 +481,7 @@
                                                 <br><br>
                                             </td>
                                         </tr>
+                                        <? if ($_SESSION['POLICY_SYSTEM_ENABLE_JETSKIS'] === 'true') {?>
                                         <tr>
                                             <td class="vst-text">
                                                 <?php print _('phpMyAdmin Single Sign On') ?>
@@ -491,6 +497,7 @@
                                                 <br />
                                             </td>
                                         </tr>
+                                        <? } ?>
                                         <?php } ?>
                                         <?php if ($v_mysql == 'yes') {
                                                   $i = 0;
@@ -1092,6 +1099,7 @@
                                                         </td>
                                                         
                                             </tr>
+                                            <? if ($_SESSION['POLICY_SYSTEM_ENABLE_JETSKIS'] === 'true') { ?>
                                               <tr>
                                             <td class="vst-text input-label">
                                                 <?php print _('Allow suspended users to log in with read-only access');?>
@@ -1106,6 +1114,7 @@
                                                 <br><br>
                                             </td>
                                         </tr>
+                                        <? } ?>
                                         <tr>
                                             <td class="vst-text input-label">
                                                 <?php print _('Allow users to edit their account details');?>

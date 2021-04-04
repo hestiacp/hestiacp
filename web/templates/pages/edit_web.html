@@ -7,10 +7,11 @@
             <a href="/delete/web/cache/?domain=<?=$_GET['domain'];?>&token=<?=$_SESSION['token'];?>" class="ui-button cancel <?php if ( $v_nginx_cache == 'yes' || ($v_proxy_template == 'caching' && $_SESSION['PROXY_SYSTEM'] == 'nginx')) { echo "block"; } else{ echo "hidden"; }?>" id="v-clear-cache">
                 <i class="fas fa-trash status-icon red"></i><?=_('Purge Nginx Cache');?>
             </a>
-
-            <a href="/add/webapp/?domain=<?=$v_domain?>" class="ui-button cancel" dir="ltr">
-                <i class="fas fa-magic status-icon blue"></i> <?=_('Quick Install App')?>
-            </a>
+            <? if ($_SESSION['PLUGIN_APP_INSTALLER'] !== 'false') {?>
+                <a href="/add/webapp/?domain=<?=$v_domain?>" class="ui-button cancel" dir="ltr">
+                    <i class="fas fa-magic status-icon blue"></i> <?=_('Quick Install App')?>
+                </a>
+            <? } ?>
             <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save')?></a>
         </div>
     </div>

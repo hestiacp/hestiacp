@@ -1228,6 +1228,20 @@
                                     <table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="hestia">
                                         <tr>
                                             <td class="vst-text step-top">
+                                                <?php print _('Quick App Installer');?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select class="vst-list" name="v_plugin_app_installer">
+                                                    <option value='false'><?php print _('no'); ?></option>
+                                                    <option value='true' <?php if($_SESSION['PLUGIN_APP_INSTALLER'] == 'true') echo 'selected' ?> ><?php print _('yes'); ?></option>
+                                                </select>
+                                                <br><br>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vst-text input-label">
                                                 <?php print _('Filemanager');?>
                                             </td>
                                         </tr>

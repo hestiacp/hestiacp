@@ -288,6 +288,16 @@ if (!empty($_POST['save'])) {
         }
     }
 
+   // Enable/Disable Quick App Installer
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_plugin_app_installer'] != $_SESSION['PLUGIN_APP_INSTALLER']) {
+            if ($_POST['v_plugin_app_installer'] == 'true') { $_POST['v_plugin_app_installer'] = 'true'; } else { $_POST['v_plugin_app_installer'] = 'false'; }
+            exec (HESTIA_CMD."v-change-sys-config-value PLUGIN_APP_INSTALLER ".escapeshellarg($_POST['v_plugin_app_installer']), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+        }
+    }
+
     // Update experimental features status
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_experimental_features'] != $_SESSION['POLICY_SYSTEM_ENABLE_BACON']) {
@@ -315,7 +325,7 @@ if (!empty($_POST['save'])) {
             }
         }
     }
-    // Set File Manager support
+    // Set phpMyAdmin SSO key
     if (empty($_SESSION['error_msg'])) {
         if (!empty($_POST['v_phpmyadmin_key'])) {
             if ($_POST['v_phpmyadmin_key'] == 'yes' && $_SESSION['PHPMYADMIN_KEY'] == '') {

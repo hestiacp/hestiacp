@@ -156,18 +156,6 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_experimental_features" <?php if ((isset($_SESSION['POLICY_SYSTEM_ENABLE_JETSKIS'])) && (!empty($_SESSION['POLICY_SYSTEM_ENABLE_JETSKIS'])) && ($_SESSION['POLICY_SYSTEM_ENABLE_JETSKIS'] == "true")) echo "checked=yes" ?>><?php print _('Enable preview features');?></label>
-                                            </td>
-                                        </tr>
-                                        <?php if ($_SESSION['RELEASE_BRANCH'] != "release") { ?>
-                                            <tr>
-                                                <td>
-                                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_debug_mode" <?php if ((isset($_SESSION['DEBUG_MODE'])) && (!empty($_SESSION['DEBUG_MODE'])) && ($_SESSION['DEBUG_MODE'] == "true")) echo "checked=yes" ?>><?php print _('Enable debug mode');?></label>
-                                                </td>
-                                            </tr>
-                                        <?php } ?>
-                                        <tr>
-                                            <td>
                                                 <br><br>
                                             </td>
                                         </tr>
@@ -198,6 +186,18 @@
                                         <tr>
                                             <td class="vst-text input-label">
                                                 <?php print _('Options'); ?>
+                                            </td>
+                                        </tr>
+                                        <?php if ($_SESSION['RELEASE_BRANCH'] != "release") { ?>
+                                            <tr>
+                                                <td>
+                                                    <label><input type="checkbox" size="20" class="vst-checkbox" name="v_debug_mode" <?php if ((isset($_SESSION['DEBUG_MODE'])) && (!empty($_SESSION['DEBUG_MODE'])) && ($_SESSION['DEBUG_MODE'] == "true")) echo "checked=yes" ?>><?php print _('Enable debug mode');?></label>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                        <tr>
+                                            <td>
+                                                <label><input type="checkbox" size="20" class="vst-checkbox" name="v_experimental_features" <?php if ((isset($_SESSION['POLICY_SYSTEM_ENABLE_BACON'])) && (!empty($_SESSION['POLICY_SYSTEM_ENABLE_BACON'])) && ($_SESSION['POLICY_SYSTEM_ENABLE_BACON'] == "true")) echo "checked=yes" ?>><?php print _('Enable preview features');?></label>
                                             </td>
                                         </tr>
                                         <tr>
@@ -481,10 +481,10 @@
                                                 <br><br>
                                             </td>
                                         </tr>
-                                        <? if ($_SESSION['POLICY_SYSTEM_ENABLE_JETSKIS'] === 'true') {?>
+                                        <? if ($_SESSION['POLICY_SYSTEM_ENABLE_BACON'] === 'true') {?>
                                         <tr>
                                             <td class="vst-text">
-                                                <?php print _('phpMyAdmin Single Sign On') ?>
+                                                <?php print _('phpMyAdmin Single Sign On') ?> <span class="hint">(Preview)</span>
                                             </td>
                                         </tr>
                                         <tr>
@@ -1099,10 +1099,10 @@
                                                         </td>
                                                         
                                             </tr>
-                                            <? if ($_SESSION['POLICY_SYSTEM_ENABLE_JETSKIS'] === 'true') { ?>
+                                            <? if ($_SESSION['POLICY_SYSTEM_ENABLE_BACON'] === 'true') { ?>
                                               <tr>
                                             <td class="vst-text input-label">
-                                                <?php print _('Allow suspended users to log in with read-only access');?>
+                                                <?php print _('Allow suspended users to log in with read-only access');?> <span class="hint">(Preview)</span>
                                             </td>
                                         </tr>
                                         <tr>

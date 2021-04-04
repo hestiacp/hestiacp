@@ -290,9 +290,9 @@ if (!empty($_POST['save'])) {
 
     // Update experimental features status
     if (empty($_SESSION['error_msg'])) {
-        if ($_POST['v_experimental_features'] != $_SESSION['POLICY_SYSTEM_ENABLE_JETSKIS']) {
+        if ($_POST['v_experimental_features'] != $_SESSION['POLICY_SYSTEM_ENABLE_BACON']) {
             if ($_POST['v_experimental_features'] == 'on') { $_POST['v_experimental_features'] = 'true'; } else { $_POST['v_experimental_features'] = 'false'; }
-            exec (HESTIA_CMD."v-change-sys-config-value POLICY_SYSTEM_ENABLE_JETSKIS ".escapeshellarg($_POST['v_experimental_features']), $output, $return_var);
+            exec (HESTIA_CMD."v-change-sys-config-value POLICY_SYSTEM_ENABLE_BACON ".escapeshellarg($_POST['v_experimental_features']), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
             $v_debug_mode_adv = 'yes';

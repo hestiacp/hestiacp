@@ -37,7 +37,10 @@ export PATH=$PATH:/usr/sbin
 check_args '1' "$#" 'USER [RESTART]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
+check_user=$(is_object_unsuspended 'user' 'USER' "$user")
+if [ ! -z "$check_user" ]; then
+    exit
+fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode

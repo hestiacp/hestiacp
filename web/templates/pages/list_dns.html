@@ -1,7 +1,7 @@
-    <div class="l-center">
+<div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
-          <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes')) {?>
+          <? if ($read_only === 'true') {?>
             <!-- Hide item creation button when impersonating 'admin' account -->
           <? } else {?>
             <a href="/add/dns/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add DNS Domain')?></a>
@@ -32,7 +32,7 @@
                   <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search')?>"><i class="fas fa-search"></i></button>
                 </form>
               </td>
-              <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes')) {?>
+              <? if ($read_only === 'true') {?>
                 <!-- Hide bulk actions for domain items when impersonating 'admin' account-->
               <? } else { ?>
                 <td>
@@ -64,7 +64,6 @@
         <div class="header table-header">
             <div class="l-unit__col l-unit__col--right">
                   <div class="clearfix l-unit__stat-col--left super-compact">
-                    <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes')) { $display_mode = 'disabled'; } ?>
                       <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all')?>" onChange="checkedAll('objects');" <?=$display_mode;?>>
                   </div>
                   <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print _('Name');?></b></div>
@@ -108,7 +107,7 @@ sort-expire="<?=strtotime($data[$key]['EXP'])?>" sort-records="<?=(int)$data[$ke
               <div class="clearfix l-unit__stat-col--left text-right">
                   <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                   <div class="actions-panel clearfix">
-                    <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes')) {?>
+                    <? if ($read_only === 'true') {?>
                       <!-- Restrict administrators from editing domain items when impersonating the 'admin' user -->
                       &nbsp;
                     <? } else { ?>

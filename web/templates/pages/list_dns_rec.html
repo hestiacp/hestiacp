@@ -1,8 +1,8 @@
-    <div class="l-center">
+<div class="l-center">
       <div class="l-sort clearfix noselect">
         <div class="l-unit-toolbar__buttonstrip">
           <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/dns/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back')?></a>
-          <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes')) {?>
+          <? if ($read_only === 'true') {?>
             <!-- Hide item creation button when impersonating 'admin' account -->
           <? } else { ?>
             <a href="/add/dns/?domain=<?=htmlentities($_GET['domain'])?>" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Add Record')?></a>
@@ -34,7 +34,7 @@
                   <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search')?>"><i class="fas fa-search"></i></button>
                 </form>
               </td>
-              <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes')) {?>
+              <? if ($read_only === 'true') {?>
                 <!-- Hide bulk actions for domain items when impersonating 'admin' account-->
               <? } else { ?>
                 <td>
@@ -64,7 +64,6 @@
       <div class="header table-header">
         <div class="l-unit__col l-unit__col--right">
           <div class="clearfix l-unit__stat-col--left super-compact">
-            <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes')) { $display_mode = 'disabled'; } ?>
             <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all')?>" onChange="checkedAll('objects');" <?=$display_mode;?>>
           </div>
           <div class="clearfix l-unit__stat-col--left small"><b><?php print _('Record');?></b></div>
@@ -89,7 +88,7 @@ v_unit_id="<?=$key?>" v_section="dns_rec" sort-date="<?=strtotime($data[$key]['D
               <input id="check<?=$data[$key]['ID']?>" class="ch-toggle" type="checkbox" title="<?=_('Select')?>" name="record[]" value="<?=$data[$key]['ID']?>" <?=$display_mode;?>>
             </div>
             <div class="clearfix l-unit__stat-col--left small truncate">
-              <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes') || ($data[$key]['SUSPENDED'] == 'yes')) {?>
+              <? if (($read_only === 'true') || ($data[$key]['SUSPENDED'] == 'yes')) {?>
                 <b><? echo substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?></b></div>
               <? } else { ?>
                 <b><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing DNS Record').': '.htmlspecialchars($data[$key]['RECORD'])?>"><? echo substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?></a></b></div>
@@ -98,7 +97,7 @@ v_unit_id="<?=$key?>" v_section="dns_rec" sort-date="<?=strtotime($data[$key]['D
             <div class="clearfix l-unit__stat-col--left super-compact text-right">
               <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                 <div class="actions-panel clearfix">
-                  <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes')) {?>
+                  <? if ($read_only === 'true') {?>
                     <!-- Restrict editing of DNS records when impersonating 'admin' account -->
                     &nbsp;
                   <? } else { ?>

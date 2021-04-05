@@ -277,7 +277,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
 
             # Checking backend template
             check_backend_tpl=$(is_backend_template_valid $BACKEND)
-            if [ ! -z "$check_proxy_tpl" ]; then
+            if [ ! -z "$check_backend_tpl" ]; then
                 BACKEND='default'
             fi
 

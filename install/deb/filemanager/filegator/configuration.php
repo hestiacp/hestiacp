@@ -42,6 +42,11 @@ $dist_config['services']['Filegator\Services\Storage\Filesystem']['config']['ada
         ]);
     };
 
+$dist_config['services']['Filegator\Services\Archiver\ArchiverInterface'] = [
+    'handler' => '\Filegator\Services\Archiver\Adapters\HestiaZipArchiver',
+    'config' => [],
+];
+
 $dist_config['services']['Filegator\Services\Auth\AuthInterface'] = [
         'handler' => '\Filegator\Services\Auth\Adapters\HestiaAuth',
         'config' => [

@@ -128,6 +128,9 @@ function render_page($user, $TAB, $page) {
     // I think those variables should be passed via arguments
     extract($GLOBALS, EXTR_SKIP);
 
+    // Policies controller
+    @include_once(dirname(__DIR__) . '/inc/policies.php');
+
     // Body
     include($__template_dir . "pages/$page.html");
 

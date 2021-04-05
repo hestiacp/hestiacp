@@ -60,7 +60,9 @@
 				<!-- Hide 'edit user' entry point from other administrators for default 'admin' account-->
 				<div class="l-menu__item"><a href="/list/log/" title="<?_('Logs')?>" class="l-profile__username"><i class="fas fa-history"></i></a></div>
 			<? } else { ?>
-				<div class="l-menu__item"><a href="/edit/user/?user=<?php echo $user; ?>&token=<?=$_SESSION['token']?>" title="<?=htmlspecialchars($user)?> (<?=htmlspecialchars($panel[$user]['NAME'])?>)" class="l-profile__username"><i class="fas fa-user-circle"></i></a></div>
+				<? if ($panel[$user]['SUSPENDED'] === 'no') {?>
+					<div class="l-menu__item"><a href="/edit/user/?user=<?php echo $user; ?>&token=<?=$_SESSION['token']?>" title="<?=htmlspecialchars($user)?> (<?=htmlspecialchars($panel[$user]['NAME'])?>)" class="l-profile__username"><i class="fas fa-user-circle"></i></a></div>
+				<? } ?>
 			<? } ?>
 			<div class="l-menu__item"><a href="https://docs.hestiacp.com/" rel="noopener" title="<?=_('Help')?>" class="l-profile__help" target="_blank"><i class="fas fa-question-circle"></i></a></div>
 			<? if(isset($_SESSION['look']) && (!empty($_SESSION['look']))){ ?>

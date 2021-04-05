@@ -81,7 +81,7 @@ if (!empty($_POST['save'])) {
         }
         $_SESSION['error_msg'] = sprintf(_('Field "%s" can not be blank.'),$error_msg);
     }
-    if (!empty($_SESSION['error_msg'])) {
+    if (empty($_SESSION['error_msg'])) {
         $v_rule = escapeshellarg($_GET['rule']);
         $v_action = escapeshellarg($_POST['v_action']);
         $v_protocol = escapeshellarg($_POST['v_protocol']);
@@ -93,7 +93,7 @@ if (!empty($_POST['save'])) {
         $v_comment = escapeshellarg($_POST['v_comment']);
     
         // Change Status
-        exec (HESTIA_CMD."v-change-firewall-rule ".$v_rule." ".$v_action." ".$v_ip."  ".$v_port." ".$v_protocol." ".$v_comment, $output, $return_var);
+        exec (HESTIA_CMD."v-change-firewall-rule ".$v_rule." ".$v_action." ".$v_ip." ".$v_port." ".$v_protocol." ".$v_comment, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     

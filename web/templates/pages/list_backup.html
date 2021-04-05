@@ -49,9 +49,9 @@
                     <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes')) { $display_mode = 'disabled'; } ?>
                       <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all')?>" onChange="checkedAll('objects');" <?=$display_mode;?>>
                   </div>
-                  <div class="clearfix l-unit__stat-col--left wide-3"><b><?php print _('File Name');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left wide-4"><b><?php print _('File Name');?></b></div>
                   <div class="clearfix l-unit__stat-col--left compact-4 text-right"><b>&nbsp;</b></div>
-                  <div class="clearfix l-unit__stat-col--left text-center wide"><b><?php print _('Date');?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?php print _('Date');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?php print _('Size');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?php print _('Type');?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?php print _('Runtime');?></b></div>
@@ -83,7 +83,7 @@
                   <div class="clearfix l-unit__stat-col--left super-compact">
                     <input id="check<?php echo $i ?>" class="ch-toggle" type="checkbox" title="<?=_('Select')?>" name="backup[]" value="<?php echo $key ?>" <?=$display_mode;?>>
                   </div>
-                  <div class="clearfix l-unit__stat-col--left wide-3 truncate">
+                  <div class="clearfix l-unit__stat-col--left wide-4 truncate">
                     <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes')) {?>
                       <b><?=$key?></b>
                     <? } else { ?>
@@ -114,7 +114,7 @@
                     </div>
                   </div>
                   <!-- END QUICK ACTION TOOLBAR AREA -->
-                  <div class="clearfix l-unit__stat-col--left text-center wide"><b><?=translate_date($data[$key]['DATE'])?></b></div>
+                  <div class="clearfix l-unit__stat-col--left text-center"><b><?=translate_date($data[$key]['DATE'])?></b></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><b><?=humanize_usage_size($data[$key]['SIZE'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['SIZE'])?></span></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['TYPE']?></div>
                   <div class="clearfix l-unit__stat-col--left text-center"><?=humanize_time($data[$key]['RUNTIME'])?></div>

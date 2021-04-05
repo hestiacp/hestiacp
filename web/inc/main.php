@@ -161,6 +161,12 @@ function top_panel($user, $TAB) {
         header("Location: /login/");
     }
 
+    // Reset user permissions if changed while logged in
+    if (($panel[$user]['ROLE']) !== ($_SESSION['userContext']) && (!isset($_SESSION['look']))) {
+        unset($_SESSION['userContext']);
+        $_SESSION['userContext'] = $panel[$user]['ROLE'];
+    }
+
     // Load user's selected theme and do not change it when impersonting user
     if ( (isset($panel[$user]['THEME'])) && (!isset($_SESSION['look']) )) {
         $_SESSION['userTheme'] = $panel[$user]['THEME'];

@@ -1,6 +1,6 @@
 <?php
 
-    if (($_SESSION['userContext'] === 'user') && ($_SESSION['POLICY_USER_VIEW_SUSPENDED'] === 'yes')) {
+    if (($_SESSION['userContext'] === 'user') && ($panel[$user]['SUSPENDED'] === 'yes') && ($_SESSION['POLICY_USER_VIEW_SUSPENDED'] === 'yes')) {
       $read_only='true';
     }
     

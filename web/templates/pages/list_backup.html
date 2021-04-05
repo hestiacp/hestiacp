@@ -93,11 +93,12 @@
                   <div class="clearfix l-unit__stat-col--left compact-4 text-right">
                     <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
                       <div class="actions-panel clearfix">
-                        <? if ($read_only === 'true') {?>
+                        <? if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($read_only === 'true')) {?>
                           <!-- Restrict ability to restore or delete backups when impersonating 'admin' account -->
                           &nbsp;
                         <? } else { ?>
                           <div class="actions-panel__col actions-panel__download shortcut-d" key-action="href"><a href="/download/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('download')?>"><i class="fas fa-file-download status-icon lightblue status-icon dim"></i></a></div>
+                          <? if ($read_only === 'false') {?>
                           <div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href"><a href="/list/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('restore')?>"><i class="fas fa-undo status-icon green status-icon dim"></i></a></div>
                           <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                             <a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('delete')?>">
@@ -108,6 +109,7 @@
                               </div>
                             </a>
                           </div>
+                          <? } ?>
                         <? } ?> 
                       </div>
                     </div>

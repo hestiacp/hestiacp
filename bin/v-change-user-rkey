@@ -66,7 +66,7 @@ fi
 
 # Logging
 $BIN/v-log-action "system" "Warning" "Users" "Password reset requested (User: $user)."
-$BIN/v-log-action "$user" "Warn" "System" "Password reset requested."
+$BIN/v-log-action "$user" "Warning" "System" "Password reset requested."
 log_event "$OK" "$ARGUMENTS"
 
 exit

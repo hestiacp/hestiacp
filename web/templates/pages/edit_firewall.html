@@ -99,7 +99,7 @@
                             <tr>
                                 <td>
                                     <select class="vst-list" tabindex="-1" id="quickips_list" onchange="this.nextElementSibling.value=this.value">
-                                        <option value="">clear</option>
+                                        <option value="">&nbsp;</option>
                                     </select>
                                     <input type="text" size="20" class="vst-input vst-list-editor" name="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
                                 </td>
@@ -133,7 +133,7 @@
             var targetelement = document.getElementById('quickips_list');
 
             var newEl = document.createElement("option");
-            newEl.text = "Ipset Lists";
+            newEl.text= "IP address lists:";
             newEl.disabled = true;
             targetelement.appendChild(newEl);
 

@@ -13,8 +13,8 @@
           <? } ?> 
         </div>
         <ul class="context-menu sort-order animated fadeIn" style="display:none;">
-          <li entity="sort-name"><span class="name"><?=_('Command')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
-          <li entity="sort-date" sort_as_int="1"><span class="name active"><?=_('Date')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+          <li entity="sort-name"><span class="name <? if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?=_('Command')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+          <li entity="sort-date" sort_as_int="1"><span class="name <? if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?=_('Date')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
         </ul>
         <div class="l-sort-toolbar clearfix">
           <table>

@@ -15,6 +15,11 @@ if ($_SESSION['userContext'] != 'admin')  {
 // Data
 exec (HESTIA_CMD."v-list-user-packages json", $output, $return_var);
 $data = json_decode(implode('', $output), true);
+if($_SESSION['userSortOrder'] == 'name'){
+    ksort($data);
+}else{ 
+    $data = array_reverse($data,true);
+}
 unset($output);
 
 // Render page

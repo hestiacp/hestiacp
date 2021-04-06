@@ -129,10 +129,6 @@ $(document).ready(function(){
                   return $(a).attr(VE.tmp.sort_par) <= $(b).attr(VE.tmp.sort_par) ? VE.tmp.sort_direction : VE.tmp.sort_direction * -1;
                 }).appendTo(".l-center.units");
               });
-              if(document.getElementById('default-sort')){
-                  document.getElementById('default-sort').click();
-                  $('.context-menu.sort-order').toggle();
-              };
               
               $('#objects').submit( function (e){
                  if(!e.originalEvent){

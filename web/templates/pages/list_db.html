@@ -29,9 +29,9 @@
         </div>
         <ul class="context-menu sort-order animated fadeIn" style="display:none;">
           <li entity="sort-charset"><span class="name"><?=_('Charset')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
-           <li entity="sort-date" sort_as_int="1"><span class="name active" id="<?php if ($_SESSION['userSortOrder'] === 'date') { echo 'default-sort'; }?>"><?=_('Date')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+           <li entity="sort-date" sort_as_int="1"><span class="name active"><?=_('Date')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
           <li entity="sort-disk" sort_as_int="1"><span class="name"><?=_('Disk')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
-          <li entity="sort-name"><span class="name" id="<?php if ($_SESSION['userSortOrder'] === 'name') { echo 'default-sort'; }?>"><?=_('Name')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+          <li entity="sort-name"><span class="name"><?=_('Name')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
           <li entity="sort-server"><span class="name"><?=_('Host')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
           <li entity="sort-user"><span class="name"><?=_('Username')?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
         </ul>

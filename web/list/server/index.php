@@ -122,9 +122,7 @@ $sys = json_decode(implode('', $output), true);
 unset($output);
 exec (HESTIA_CMD."v-list-sys-services json", $output, $return_var);
 $data = json_decode(implode('', $output), true);
-if($_SESSION['userSortOrder'] == 'name'){
-    ksort($data);
-}
+ksort($data);
 
 unset($output);
 

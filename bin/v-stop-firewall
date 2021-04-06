@@ -79,10 +79,22 @@ else
     if dpkg-query -W -f'${Status}' "netplan*" 2>/dev/null | grep -q "ok installed"; then
         preup="/usr/lib/networkd-dispatcher/routable.d/50-ifup-hooks"
         if [ ! -e "$preup" ]; then
+            array_test=()
+            for iface in $(ip token | awk -F 'dev ' '{print $2}')
+            do
+                array_test+=("$iface")
+            done
+            for iface in "${array_test[@]}"; do 
+                if [ -z "$interfaces" ]; then
+                    interfaces=" \"\$IFACE\"==\"$iface\""
+                else
+                    interfaces="$interfaces || \"\$IFACE\"==\"$iface\" ";
+                fi
+            done
             IFS='%'
             echo '#!/bin/bash' > $preup
             echo '' >> $preup
-            echo 'if [ "$IFACE" == "'$(/bin/ip token | awk -F 'dev ' '{print $2}')'" ]; then' >> $preup
+            echo 'if [['$interfaces']]; then' >> $preup
             echo '    sleep 3' >> $preup
             echo '    /sbin/iptables-restore < /etc/iptables.rules' >> $preup
             echo 'fi' >> $preup

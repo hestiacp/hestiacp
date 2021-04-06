@@ -9,9 +9,9 @@ include($_SERVER['DOCUMENT_ROOT'].'/inc/main.php');
 if (empty($_GET['backup'])){
     exec (HESTIA_CMD."v-list-user-backups $user json", $output, $return_var);
     $data = json_decode(implode('', $output), true);
-    if($_SESSION['userSortOrder'] == 'name'){
+    if ($_SESSION['userSortOrder'] == 'name') {
         ksort($data);
-    }else{ 
+    } else { 
         $data = array_reverse($data,true);
     }
     unset($output);

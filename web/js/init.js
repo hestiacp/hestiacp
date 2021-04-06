@@ -133,6 +133,23 @@ $(document).ready(function(){
                   document.getElementById('default-sort').click();
                   $('.context-menu.sort-order').toggle();
               };
+              
+              $('#objects').submit( function (e){
+                 if(!e.originalEvent){
+                    return;
+                 }
+                 e.preventDefault();
+                 $('.ch-toggle').each( function (){
+                    if($(this).prop('checked')){
+                        key=this.name;
+                        div=$('<input type="hidden" name="'+key+'[]" value="'+this.value+'"/>');
+                        $('#objects').append(div);
+                    }
+                 });
+                 
+                 $('#objects').submit();
+                 return true;
+              });
 
               // Shortcuts
 

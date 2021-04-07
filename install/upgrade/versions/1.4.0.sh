@@ -127,6 +127,12 @@ if [ ! -f "$HESTIA/conf/defaults/hestia.conf" ]; then
     cp -f $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
 fi
 
+if [ -f "/usr/lib/networkd-dispatcher/routable.d/50-ifup-hooks" ]; then
+    echo "[ * ] Fix potenial issue with multiple network adapters and netplan..."
+    rm "/usr/lib/networkd-dispatcher/routable.d/50-ifup-hooks"
+    $BIN/v-update-firewall
+fi
+
 # Consolidate nginx (standalone) templates used by active websites
 if [ "$WEB_SYSTEM" = "nginx" ]; then
     echo "[ * ] Consolidating nginx templates for Drupal & CodeIgniter..."

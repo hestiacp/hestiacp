@@ -150,3 +150,14 @@ rm -rf $HESTIA/data/templates/web/nginx/php-fpm/drupal7.*tpl
 rm -rf $HESTIA/data/templates/web/nginx/php-fpm/drupal8.*tpl
 rm -rf $HESTIA/data/templates/web/nginx/php-fpm/codeigniter2.*tpl
 rm -rf $HESTIA/data/templates/web/nginx/php-fpm/codeigniter3.*tpl
+
+# Clean up old Hestia controled webapps
+if [ -d "$HESTIA/web/images/webapps/" ]; then 
+    echo "[ * ] Clean up old web apps code..."
+    rm -rf $HESTIA/web/images/webapps/
+    rm -rf $HESTIA/web/src/app/WebApp/Installers/LaravelSetup.php
+    rm -rf $HESTIA/web/src/app/WebApp/Installers/OpencartSetup.php
+    rm -rf $HESTIA/web/src/app/WebApp/Installers/PrestashopSetup.php
+    rm -rf $HESTIA/web/src/app/WebApp/Installers/SymfonySetup.php
+    rm -rf $HESTIA/web/src/app/WebApp/Installers/WordpressSetup.php
+fi

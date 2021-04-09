@@ -15,6 +15,11 @@ if [ -e "/etc/nginx/nginx.conf" ]; then
     fi
 fi
 
+if [ -e "/etc/nginx/nginx.conf" ]; then
+    echo "[ * ] Update Nginx.conf with changes to Cloudflare IP addresses"
+    sed  -i 's/    set_real_ip_from 104.16.0.0\/12;/    set_real_ip_from 104.16.0.0\/13;\n    set_real_ip_from 104.24.0.0\/14;/g' /etc/nginx/nginx.conf
+fi
+
 # Populating HELO/SMTP Banner for existing IPs
 if [ "$MAIL_SYSTEM" == "exim4" ]; then
 

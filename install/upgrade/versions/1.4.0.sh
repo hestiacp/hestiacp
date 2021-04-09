@@ -15,6 +15,11 @@ if [ -e "/etc/nginx/nginx.conf" ]; then
     fi
 fi
 
+if [ -e "/etc/nginx/nginx.conf" ]; then
+    echo "[ * ] Update Nginx.conf with changes to Cloudflare IP addresses"
+    sed  -i 's/    set_real_ip_from 104.16.0.0\/12;/    set_real_ip_from 104.16.0.0\/13;\n    set_real_ip_from 104.24.0.0\/14;/g' /etc/nginx/nginx.conf
+fi
+
 # Populating HELO/SMTP Banner for existing IPs
 if [ "$MAIL_SYSTEM" == "exim4" ]; then
 
@@ -38,7 +43,7 @@ if [ "$MAIL_SYSTEM" == "exim4" ]; then
         echo "[ * ] Updating exim4 configuration..."
 
         # Add new smtp_active_hostname variable to exim config
-        sed -i '/^smtp_banner = \$smtp_active_hostname$/a smtp_active_hostname = ${if exists {\/etc\/exim4\/mailhelo.conf}{${lookup{$interface_address}lsearch{\/etc\/exim4\/mailhelo.conf}{$value}{$primary_hostname}}}{$primary_hostname}}"' /etc/exim4/exim4.conf.template
+        sed -i '/^smtp_banner = \$smtp_active_hostname$/a smtp_active_hostname = ${if exists {\/etc\/exim4\/mailhelo.conf}{${lookup{$interface_address}lsearch{\/etc\/exim4\/mailhelo.conf}{$value}{$primary_hostname}}}{$primary_hostname}}' /etc/exim4/exim4.conf.template
 
         # Lookup HELO address by sending ip instead of sending domain
         sed -i 's/helo_data = \${if exists {\/etc\/exim4\/mailhelo.conf}{${lookup{\$sender_address_domain}lsearch\*{\/etc\/exim4\/mailhelo.conf}{\$value}{\$primary_hostname}}}{\$primary_hostname}}/helo_data = ${if exists {\/etc\/exim4\/mailhelo.conf}{${lookup{$sending_ip_address}lsearch{\/etc\/exim4\/mailhelo.conf}{$value}{$primary_hostname}}}{$primary_hostname}}/' /etc/exim4/exim4.conf.template
@@ -151,6 +156,16 @@ rm -rf $HESTIA/data/templates/web/nginx/php-fpm/drupal8.*tpl
 rm -rf $HESTIA/data/templates/web/nginx/php-fpm/codeigniter2.*tpl
 rm -rf $HESTIA/data/templates/web/nginx/php-fpm/codeigniter3.*tpl
 
+# Clean up old Hestia controled webapps
+if [ -d "$HESTIA/web/images/webapps/" ]; then 
+    echo "[ * ] Clean up old web apps code..."
+    rm -rf $HESTIA/web/images/webapps/
+    rm -rf $HESTIA/web/src/app/WebApp/Installers/LaravelSetup.php
+    rm -rf $HESTIA/web/src/app/WebApp/Installers/OpencartSetup.php
+    rm -rf $HESTIA/web/src/app/WebApp/Installers/PrestashopSetup.php
+    rm -rf $HESTIA/web/src/app/WebApp/Installers/SymfonySetup.php
+    rm -rf $HESTIA/web/src/app/WebApp/Installers/WordpressSetup.php
+fi
 
 
 ##### COMMANDS FOR V1.5.X

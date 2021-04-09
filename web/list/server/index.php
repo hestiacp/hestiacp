@@ -19,7 +19,7 @@ if (isset($_GET['cpu'])) {
     foreach($output as $file) {
         echo $file . "\n";
     }
-    echo "    </pre>\n</body>\n</html>\n";
+    echo "  </pre>\n</div>\n</body>\n</html>\n";
     exit();
 }
 
@@ -31,7 +31,7 @@ if (isset($_GET['mem'])) {
     foreach($output as $file) {
         echo $file . "\n";
     }
-    echo "    </pre>\n</body>\n</html>\n";
+    echo "  </pre>\n</div>\n</body>\n</html>\n";
     exit();
 }
 
@@ -43,7 +43,7 @@ if (isset($_GET['disk'])) {
     foreach($output as $file) {
         echo $file . "\n";
     }
-    echo "    </pre>\n</body>\n</html>\n";
+    echo "  </pre>\n</div>\n</body>\n</html>\n";
     exit();
 }
 
@@ -55,7 +55,7 @@ if (isset($_GET['net'])) {
     foreach($output as $file) {
         echo $file . "\n";
     }
-    echo "    </pre>\n</body>\n</html>\n";
+    echo "  </pre>\n</div>\n</body>\n</html>\n";
     exit();
 }
 
@@ -68,13 +68,12 @@ if (isset($_GET['web'])) {
         $file=str_replace('border="0"', 'border="1"', $file);
         $file=str_replace('bgcolor="#ffffff"', '', $file);
         $file=str_replace('bgcolor="#000000"', 'bgcolor="#282828"', $file);
-        
+
         echo $file . "\n";
     }
-    echo "    </pre>\n</body>\n</html>\n";
+    echo "  </pre>\n</div>\n</body>\n</html>\n";
     exit();
 }
-
 
 // DNS info
 if (isset($_GET['dns'])) {
@@ -84,7 +83,7 @@ if (isset($_GET['dns'])) {
     foreach($output as $file) {
         echo $file . "\n";
     }
-    echo "    </pre>\n</body>\n</html>\n";
+    echo "  </pre>\n</div>\n</body>\n</html>\n";
     exit();
 }
 
@@ -98,7 +97,7 @@ if (isset($_GET['mail'])) {
             echo $file . "\n";
         }
     }
-    echo "    </pre>\n</body>\n</html>\n";
+    echo "  </pre>\n</div>\n</body>\n</html>\n";
     exit();
 }
 
@@ -112,7 +111,7 @@ if (isset($_GET['db'])) {
             echo $file . "\n";
         }
     }
-    echo "    </pre>\n</body>\n</html>\n";
+    echo "  </pre>\n</div>\n</body>\n</html>\n";
     exit();
 }
 

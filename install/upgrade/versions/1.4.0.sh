@@ -26,7 +26,7 @@ if [ "$MAIL_SYSTEM" == "exim4" ]; then
     # Check if we've already done this upgrade before proceeding
     if ! grep -q ^smtp_active_hostname  /etc/exim4/exim4.conf.template; then
 
-        source $HESTIA/func/ip.sh
+        . $HESTIA/func/ip.sh
 
         echo "[ * ] Populating HELO/SMTP Banner value for existing IP addresses..."
         > /etc/exim4/mailhelo.conf

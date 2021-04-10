@@ -23,7 +23,6 @@ class WordpressSetup extends BaseSetup {
             //    'options' => ['http','https'],
             //],
             'site_name' => ['type'=>'text', 'value'=>'WordPress Blog'],
-            'site_description' => ['value'=>'Another WordPress site'],
             'wordpress_account_username' => ['value'=>'wpadmin'],
             'wordpress_account_email' => 'text',
             'wordpress_account_password' => 'password',

@@ -51,6 +51,11 @@ else
     # Debian/Ubuntu
     hostnamectl set-hostname $domain
     echo "$domain" > /etc/hostname
+
+    # Update Roundcube password plugin configuration
+    if [ -d /etc/roundcube/ ]; then
+        sed -i "/password_hestia_host/c\$rcmail_config['password_hestia_host'] = '$domain';" /etc/roundcube/plugins/password/config.inc.php
+    fi
 fi
 
 # Update ip helo for exim

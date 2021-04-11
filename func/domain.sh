@@ -248,7 +248,7 @@ add_web_config() {
             -e "s|%proxy_system%|$PROXY_SYSTEM|g" \
             -e "s|%proxy_port%|$PROXY_PORT|g" \
             -e "s|%proxy_ssl_port%|$PROXY_SSL_PORT|g" \
-            -e "s/%proxy_extentions%/${PROXY_EXT//,/|}/g" \
+            -e "s/%proxy_extensions%/${PROXY_EXT//,/|}/g" \
             -e "s|%user%|$user|g" \
             -e "s|%group%|$user|g" \
             -e "s|%home%|$HOMEDIR|g" \
@@ -764,7 +764,7 @@ add_webmail_config() {
             -e "s|%proxy_system%|$PROXY_SYSTEM|g" \
             -e "s|%proxy_port%|$PROXY_PORT|g" \
             -e "s|%proxy_ssl_port%|$PROXY_SSL_PORT|g" \
-            -e "s/%proxy_extentions%/${PROXY_EXT//,/|}/g" \
+            -e "s/%proxy_extensions%/${PROXY_EXT//,/|}/g" \
             -e "s|%user%|$user|g" \
             -e "s|%group%|$user|g" \
             -e "s|%home%|$HOMEDIR|g" \

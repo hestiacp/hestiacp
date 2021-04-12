@@ -61,7 +61,7 @@ ftp_backup() {
         echo "$error" |$SENDMAIL -s "$subj" $email "yes"
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
         echo "$error"
-        error_code=$E_NOTEXIST
+        errorcode="$E_NOTEXIST"
         return "$E_NOTEXIST"
     fi
 
@@ -78,7 +78,8 @@ ftp_backup() {
         error="Can't parse ftp backup configuration"
         echo "$error" |$SENDMAIL -s "$subj" $email "yes"
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-        error_code=$E_PARSING
+        echo "$error"
+        errorcode="$E_PARSING"
         return "$E_PARSING"
     fi
 
@@ -90,10 +91,10 @@ ftp_backup() {
     ferror=$(echo $fconn |grep -i -e failed -e error -e "Can't" -e "not conn")
     if [ ! -z "$ferror" ]; then
         error="Error: can't login to ftp ftp://$USERNAME@$HOST"
-        echo "$error" |$SENDMAIL -s "$subj" $email "yes"
+        echo "$error" |$SENDMAIL -s "$subj" $email $notify
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
         echo "$error"
-        error_code=$E_CONNECT
+        errorcode="$E_CONNECT"
         return "$E_CONNECT"
     fi
 
@@ -108,9 +109,10 @@ ftp_backup() {
     ftp_result=$(ftpc "mkdir $ftmpdir" "rm $ftmpdir" |grep -v Trying)
     if [ ! -z "$ftp_result" ] ; then
         error="Can't create ftp backup folder ftp://$HOST$BPATH"
-        echo "$error" |$SENDMAIL -s "$subj" $email "yes"
+        echo "$error" |$SENDMAIL -s "$subj" $email $notify
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-        error_code=$E_FTP
+        echo "$error"
+        errorcode="$E_FTP"
         return "$E_FTP"
     fi
 
@@ -278,7 +280,7 @@ sftp_backup() {
         echo "$error" |$SENDMAIL -s "$subj" $email "yes"
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
         echo "$error"
-        error_code=$E_NOTEXIST
+        errorcode="$E_NOTEXIST"
         return "$E_NOTEXIST" 
     fi
 
@@ -296,7 +298,7 @@ sftp_backup() {
         echo "$error" |$SENDMAIL -s "$subj" $email "yes"
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
         echo "$error"
-        error_code=$E_PARSING
+        errorcode="$E_PARSING"
         return "$E_PARSING" 
     fi
 
@@ -321,7 +323,7 @@ sftp_backup() {
         echo "$error" |$SENDMAIL -s "$subj" $email "yes"
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
         echo "$error"
-        error_code=$rc
+        errorcode="$rc"
         return "$rc"
     fi
 

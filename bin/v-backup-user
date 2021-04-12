@@ -593,27 +593,29 @@ backup_new_date=$(date +"%Y-%m-%d_%H-%M-%S")
 
 echo -e "\n-- SUMMARY --" |tee -a $BACKUP/$user.log
 
+errorcode="0"
 # Switching on backup system types
 for backup_type in $(echo -e "${BACKUP_SYSTEM//,/\\n}"); do
     case $backup_type in
         local) local_backup ;;
-        ftp)   backup_error=$(ftp_backup) ;;
-        sftp)  backup_error=$(sftp_backup) ;;
+        ftp)   ftp_backup ;;
+        sftp)  sftp_backup ;;
         google) google_backup ;;
-        b2) backup_error=$(b2_backup) ;;
+        b2) b2_backup ;;
     esac
 done
 
 # Removing tmpdir
 rm -rf $tmpdir
-
-if [[ ! -z $backup_error ]]; then
+if [[ "$errorcode" != "0" ]]; then
     if [[ "$BACKUP_SYSTEM"  =~ "local" ]]; then 
-        echo -e "\nLocal backup was successfully executed. Remote backup failed for reason:"
-        echo -e "\n$backup_error"
+        echo -e "$(date "+%F %T") *** Local backup was successfully executed. Remote backup failed ***" |\
+        tee -a $BACKUP/$user.log
         BACKUP_SYSTEM="local"
     else
-        echo -e "\nBack up failed due to: \n$backup_error"
+        echo -e "$(date "+%F %T") *** Remote backup failed ***" |\
+        tee -a $BACKUP/$user.log
+
         exit $error_code;
     fi
 fi

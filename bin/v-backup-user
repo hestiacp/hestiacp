@@ -70,7 +70,8 @@ let u_disk=$(grep "U_DISK=" $HESTIA/data/users/$user/user.conf |cut -f 2 -d \')*
 let v_disk=$(($(stat -f --format="%a*%S" $BACKUP)))/1024/1024
 
 if [ "$u_disk" -gt "$v_disk" ]; then
-    echo "not enough diskspace available to perform the backup." |$SENDMAIL -s "$subj" $email $notify
+    # Always notify on failure
+    echo "not enough diskspace available to perform the backup." | $SENDMAIL -s "$subj" $email "yes"
     check_result $E_LIMIT "not enough diskspace available to perform the backup."
 fi
 
@@ -82,7 +83,7 @@ fi
 tmpdir=$(mktemp -p $BACKUP_TEMP -d)
 
 if [ "$?" -ne 0 ]; then
-    echo "Can't create tmp dir $tmpdir" |$SENDMAIL -s "$subj" $email $notify
+    echo "Can't create tmp dir $tmpdir" |$SENDMAIL -s "$subj" $email "yes"
     check_result $E_NOTEXIST "can't create tmp dir"
 fi
 

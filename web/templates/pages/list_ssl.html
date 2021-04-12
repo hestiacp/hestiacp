@@ -1,94 +1,93 @@
-    <div class="l-center">
-      <div class="l-sort clearfix noselect">
-        <div class="l-sort-toolbar clearfix float-left">
+<!-- Begin toolbar -->
+<div class="l-center">
+	<div class="l-sort clearfix noselect">
+		<div class="l-sort-toolbar clearfix float-left">
 
-        </div>
-      </div>
-    </div>
+		</div>
+	</div>
+</div>
+<!-- End toolbar -->
 
-    <div class="l-separator"></div>
+<div class="l-separator"></div>
 
-    <div class="l-center animated fadeIn">
-      <?php
-        $back = $_SESSION['back'];
-        if (empty($back)) {
-          $back = "location.href='/generate/ssl/'";
-        } else {
-          $back = "location.href='".$back."'";
-        }
-      ?>
-        <form id="vstobjects" name="v_generate_csr" method="post">
-            <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-            <table class='data'>
-                <tr class="data-add">
-                    <td class="data-dotted">
-                        <table class="data-col1">
-                            <tr>
-                                <td>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                    <td class="data-dotted">
-                        <table class="data-col2">
-                            <tr>
-                                <td class="step-top">
-                                    <span class="page-title"><?=_('Generating CSR')?></span>
-                                </td>
-                            <tr>
-                                <td>
-                                    <?php
-                                        if (!empty($_SESSION['error_msg'])) {
-                                          echo "<span class=\"vst-error\"><i class=\"fas fa-exclamation-circle status-icon red\"></i> ".$_SESSION['error_msg']."</span>";
-                                        } else {
-                                          if (!empty($_SESSION['ok_msg'])) {
-                                            echo "<span class=\"vst-ok\"><i class=\"fas fa-check-circle status-icon green\"></i> ".$_SESSION['ok_msg']."</span>";
-                                          }
-                                        }
-                                    ?>
-                                </td>
+<div class="l-center animated fadeIn">
 
-                            </tr>
-                            </tr>
-                            <tr>
-                                <td class="vst-text" style="padding: 12px 0 0 0;"><?php print _('SSL Certificate');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <textarea size="20" class="vst-textinput" name="v_crt"><?php print $v_crt ?> </textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text" style="padding: 12px 0 0 0;">
-                                    <?php print _('SSL Key');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <textarea size="20" class="vst-textinput" name="v_key"><?php print $v_key ?> </textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="vst-text" style="padding: 24px 0 0 0;">
-                                    <?php print _('SSL CSR');?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <textarea size="20" class="vst-textinput" name="v_csr"><?php print $v_csr ?> </textarea>
-                                </td>
-                            </tr>
-                        </table>
-                        <table class="data-col2">
-                            <tr>
-                                <td style="padding: 24px 0 0 0;">
-                                    <input type="button" class="button cancel" value="<?php print _('Back');?>" onclick="<?php echo $back ?>">
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-        </form>
-    </div>
+	<form id="vstobjects" name="v_generate_csr" method="post">
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+		<table class='data'>
+			<tr class="data-add">
+				<td class="data-dotted">
+					<table class="data-col1">
+						<tr>
+							<td>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td class="data-dotted">
+					<table class="data-col2">
+						<tr>
+							<td class="step-top">
+								<span class="page-title"><?=_('Generating CSR');?></span>
+							</td>
+						<tr>
+							<td>
+								<?php
+									if (!empty($_SESSION['error_msg'])) {
+										$msg_icon = 'fa-exclamation-circle status-icon red';
+										$msg_text = htmlentities($_SESSION['error_msg']);
+										$msg_id = 'vst-error';
+									} else {
+										if (!empty($_SESSION['ok_msg'])) {
+											$msg_icon = 'fa-check-circle status-icon green';
+											$msg_text = $_SESSION['ok_msg'];
+											$msg_id = 'vst-ok';
+										}
+									}
+								?>
+								<span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
+							</td>
+						</tr>
+						</tr>
+						<tr>
+							<td class="vst-text" style="padding: 12px 0 0 0;"><?=_('SSL Certificate');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<textarea size="20" class="vst-textinput" name="v_crt"><?=$v_crt ?> </textarea>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text" style="padding: 12px 0 0 0;">
+								<?=_('SSL Key');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<textarea size="20" class="vst-textinput" name="v_key"><?=$v_key ?> </textarea>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text" style="padding: 24px 0 0 0;">
+								<?=_('SSL CSR');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<textarea size="20" class="vst-textinput" name="v_csr"><?=$v_csr ?> </textarea>
+							</td>
+						</tr>
+					</table>
+					<table class="data-col2">
+						<tr>
+							<td style="padding: 24px 0 0 0;">
+								<input type="button" class="button cancel" value="<?=_('Back');?>" onclick="<?=$back ?>">
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>

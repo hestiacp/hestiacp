@@ -181,7 +181,9 @@ function top_panel($user, $TAB) {
     }
 
     // Set preferred sort order
-    $_SESSION['userSortOrder'] = $panel[$user]['PREF_UI_SORT'];
+    if (!isset($_SESSION['look'])) {
+        $_SESSION['userSortOrder'] = $panel[$user]['PREF_UI_SORT'];
+    }
     
     // Set home location URLs
     if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look']))) {

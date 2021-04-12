@@ -597,16 +597,26 @@ echo -e "\n-- SUMMARY --" |tee -a $BACKUP/$user.log
 for backup_type in $(echo -e "${BACKUP_SYSTEM//,/\\n}"); do
     case $backup_type in
         local) local_backup ;;
-        ftp)   ftp_backup ;;
-        sftp)  sftp_backup ;;
+        ftp)   backup_error=$(ftp_backup) ;;
+        sftp)  backup_error=$(sftp_backup) ;;
         google) google_backup ;;
-        b2) b2_backup ;;
+        b2) backup_error=$(b2_backup) ;;
     esac
 done
 
 # Removing tmpdir
 rm -rf $tmpdir
 
+if [[ ! -z $backup_error ]]; then
+    if [[ "$BACKUP_SYSTEM"  =~ "local" ]]; then 
+        echo -e "\nLocal backup was successfully executed. How ever the remote backup failed for reason:"
+        echo -e "\n$backup_error"
+        BACKUP_SYSTEM="local"
+    else
+        echo -e "\nBack up failed due to: \n$backup_error"
+        exit $error_code;
+    fi
+fi
 # Calculation run time
 run_time=$((end_time - start_time))
 run_time=$((run_time / 60))

@@ -609,7 +609,7 @@ rm -rf $tmpdir
 
 if [[ ! -z $backup_error ]]; then
     if [[ "$BACKUP_SYSTEM"  =~ "local" ]]; then 
-        echo -e "\nLocal backup was successfully executed. How ever the remote backup failed for reason:"
+        echo -e "\nLocal backup was successfully executed. Remote backup failed for reason:"
         echo -e "\n$backup_error"
         BACKUP_SYSTEM="local"
     else

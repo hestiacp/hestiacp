@@ -361,7 +361,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
                 -exec chown -h $user:$user {} \;
         fi
         
-        # Rebuilding vhost
+        # Rebuilding web config for the second time to make sure ftp users keep working 
         rebuild_web_domain_conf
     done
 

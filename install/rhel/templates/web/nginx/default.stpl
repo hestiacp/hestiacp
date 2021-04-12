@@ -11,7 +11,7 @@ server {
 
     location / {
         proxy_pass      https://%ip%:%web_ssl_port%;
-        location ~* ^.+\.(%proxy_extentions%)$ {
+        location ~* ^.+\.(%proxy_extensions%)$ {
             root           %sdocroot%;
             access_log     /var/log/%web_system%/domains/%domain%.log combined;
             access_log     /var/log/%web_system%/domains/%domain%.bytes bytes;

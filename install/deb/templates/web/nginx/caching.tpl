@@ -19,7 +19,7 @@ server {
         proxy_cache_bypass $no_cache;
         proxy_cache_bypass $cookie_session $http_x_update;
 
-        location ~* ^.+\.(%proxy_extentions%)$ {
+        location ~* ^.+\.(%proxy_extensions%)$ {
             proxy_cache    off;
             root           %docroot%;
             access_log     /var/log/%web_system%/domains/%domain%.log combined;

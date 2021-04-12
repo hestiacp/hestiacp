@@ -287,12 +287,6 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
                 FTP_USER="${user}_${FTP_USER}"
             fi
 
-            # Converting stats users
-            if [ ! -z "$STATS_USER" ]; then
-                STATS_USER=$(echo "$STATS_USER"  |sed -e "s/${old_user}_//")
-                STATS_USER="${user}_${STATS_USER}"
-            fi
-
             # Copying SSL certificates
             if [ "$SSL" = 'yes' ]; then
 
@@ -309,7 +303,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
                     done
                 fi
             fi
-
+            
             # Merging web.conf keys
             str="DOMAIN='$domain' IP='$IP' IP6='$IP6' ALIAS='$ALIAS'"
             str="$str CUSTOM_DOCROOT='$CUSTOM_DOCROOT' CUSTOM_PHPROOT='$CUSTOM_PHPROOT'"
@@ -317,7 +311,8 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
             str="$str FASTCGI_CACHE='$FASTCGI_CACHE' FASTCGI_DURATION='$FASTCGI_DURATION'"
             str="$str TPL='$TPL' SSL='$SSL' SSL_HOME='$SSL_HOME'"
             str="$str LETSENCRYPT='$LETSENCRYPT' FTP_USER='$FTP_USER'"
-            str="$str FTP_MD5='$FTP_MD5' BACKEND='$BACKEND' PROXY='$PROXY'"
+            str="$str FTP_MD5='$FTP_MD5' FTP_PATH='$FTP_PATH'"
+            str="$str BACKEND='$BACKEND' PROXY='$PROXY'"
             str="$str PROXY_EXT='$PROXY_EXT' STATS='$STATS'"
             str="$str STATS_USER='$STATS_USER' STATS_CRYPT='$STATS_CRYPT'"
             str="$str U_DISK='$U_DISK' U_BANDWIDTH='0' SUSPENDED='no'"
@@ -328,11 +323,11 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
             if [ ! -z "$WEB_BACKEND" ]; then
                 $BIN/v-add-web-domain-backend $user $domain $BACKEND
             fi
-
-            # Rebuilding vhost
-            rebuild_web_domain_conf
         fi
-
+                
+        # Rebuilding vhost
+        rebuild_web_domain_conf
+        
         # Restoring web domain data
         if [ -d "$HOMEDIR/$user/web/$domain/public_html" ]; then
             rm -rf $HOMEDIR/$user/web/$domain/public_html/*
@@ -365,6 +360,9 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
             find $HOMEDIR/$user/web/$domain/ -user $old_uid \
                 -exec chown -h $user:$user {} \;
         fi
+        
+        # Rebuilding vhost
+        rebuild_web_domain_conf
     done
 
     # Adding user to traffic queue

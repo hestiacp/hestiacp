@@ -1063,8 +1063,12 @@ function doSearch(url) {
 }
 
 
-function elementHideShow(elementToHideOrShow){
+function elementHideShow(elementToHideOrShow,trigger){
     var el = document.getElementById(elementToHideOrShow);
     el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    
+    if (typeof trigger !== 'undefined') {
+        trigger.querySelector('.section-hide-button').classList.toggle('fa-minus-square');
+        trigger.querySelector('.section-hide-button').classList.toggle('fa-plus-square');
+    }
 }
-

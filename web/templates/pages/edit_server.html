@@ -940,11 +940,9 @@
 							<td class="vst-text input-label step-left">
 								<table style="<?php if (empty($v_security_adv)) echo 'display:none;';?>" id="security">
 									<tr>
-										<td class="section-title" onclick="javascript:elementHideShow('security-system-table');">
+										<td class="section-title" onclick="javascript:elementHideShow('security-system-table',this);">
 											<?=('System');?>
-										</td>
-										<td class="section-hide-button">
-											<a href="javascript:elementHideShow('security-system-table');"><i class="fas fa-minus-square status-icon dim maroon"></i></a>
+											<i class="fas fa-plus-square status-icon dim maroon section-hide-button"></i>
 										</td>
 									</tr>
 									<tr>
@@ -1037,11 +1035,9 @@
 									</tr>
 									<?php if (($_SESSION['userContext'] === "admin") && ($_SESSION['user'] === 'admin')) {?>
 										<tr>
-											<td class="section-title" onclick="javascript:elementHideShow('security-sysadminprotect-table');">
+											<td class="section-title" onclick="javascript:elementHideShow('security-sysadminprotect-table',this);">
 												<?=('System Protection');?>
-											</td>
-											<td class="section-hide-button">
-												<a href="javascript:elementHideShow('security-sysadminprotect-table');"><i class="fas fa-minus-square status-icon dim maroon"></i></a>
+												<i class="fas fa-plus-square status-icon dim maroon section-hide-button"></i>
 											</td>
 										</tr>
 										<tr>
@@ -1100,11 +1096,9 @@
 										</tr>
 									<?php } ?>
 									<tr>
-										<td class="section-title" onclick="javascript:elementHideShow('security-policies-table');">
+										<td class="section-title" onclick="javascript:elementHideShow('security-policies-table',this);">
 											<?=('Policies');?>
-										</td>
-										<td class="section-hide-button">
-											<a href="javascript:elementHideShow('security-policies-table');"><i class="fas fa-minus-square status-icon dim maroon"></i></a>
+											<i class="fas fa-plus-square status-icon dim maroon section-hide-button"></i>
 										</td>
 									</tr>
 									<tr>

@@ -3301,6 +3301,7 @@ a.button.cancel {
 }
 
 .section-title {
+  position:relative;
   cursor: default;
   font-size: 1.05rem!important;
   font-weight: 600!important;
@@ -3313,9 +3314,9 @@ a.button.cancel {
 }
 
 .section-hide-button {
-  margin-top: 32px;
-  display: inline-block;
-  margin-left: -14px;
+  position:absolute;
+  right:0;
+  font-size:13.6px;
 }
 
 .qr-code {

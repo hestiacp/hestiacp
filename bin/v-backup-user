@@ -70,7 +70,8 @@ let u_disk=$(grep "U_DISK=" $HESTIA/data/users/$user/user.conf |cut -f 2 -d \')*
 let v_disk=$(($(stat -f --format="%a*%S" $BACKUP)))/1024/1024
 
 if [ "$u_disk" -gt "$v_disk" ]; then
-    echo "not enough diskspace available to perform the backup." |$SENDMAIL -s "$subj" $email $notify
+    # Always notify on failure
+    echo "not enough diskspace available to perform the backup." | $SENDMAIL -s "$subj" $email "yes"
     check_result $E_LIMIT "not enough diskspace available to perform the backup."
 fi
 
@@ -82,7 +83,7 @@ fi
 tmpdir=$(mktemp -p $BACKUP_TEMP -d)
 
 if [ "$?" -ne 0 ]; then
-    echo "Can't create tmp dir $tmpdir" |$SENDMAIL -s "$subj" $email $notify
+    echo "Can't create tmp dir $tmpdir" |$SENDMAIL -s "$subj" $email "yes"
     check_result $E_NOTEXIST "can't create tmp dir"
 fi
 
@@ -592,6 +593,7 @@ backup_new_date=$(date +"%Y-%m-%d_%H-%M-%S")
 
 echo -e "\n-- SUMMARY --" |tee -a $BACKUP/$user.log
 
+errorcode="0"
 # Switching on backup system types
 for backup_type in $(echo -e "${BACKUP_SYSTEM//,/\\n}"); do
     case $backup_type in
@@ -605,7 +607,18 @@ done
 
 # Removing tmpdir
 rm -rf $tmpdir
+if [[ "$errorcode" != "0" ]]; then
+    if [[ "$BACKUP_SYSTEM"  =~ "local" ]]; then 
+        echo -e "$(date "+%F %T") *** Local backup was successfully executed. Remote backup failed ***" |\
+        tee -a $BACKUP/$user.log
+        BACKUP_SYSTEM="local"
+    else
+        echo -e "$(date "+%F %T") *** Remote backup failed ***" |\
+        tee -a $BACKUP/$user.log
 
+        exit $error_code;
+    fi
+fi
 # Calculation run time
 run_time=$((end_time - start_time))
 run_time=$((run_time / 60))

@@ -25,7 +25,7 @@ local_backup(){
         rm -rf $tmpdir
         rm -f $BACKUP/$user.log
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-        echo "Not enough disk space" |$SENDMAIL -s "$subj" $email $notify
+        echo "Not enough disk space" |$SENDMAIL -s "$subj" $email "yes"
         check_result "$E_DISK" "Not enough dsk space"
     fi
 
@@ -58,11 +58,11 @@ ftp_backup() {
     # Checking config
     if [ ! -e "$HESTIA/conf/ftp.backup.conf" ]; then
         error="ftp.backup.conf doesn't exist"
-        rm -rf $tmpdir
-        rm -f $BACKUP/$user.log
-        echo "$error" |$SENDMAIL -s "$subj" $email $notify
+        echo "$error" |$SENDMAIL -s "$subj" $email "yes"
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-        check_result "$E_NOTEXIST" "$error"
+        echo "$error"
+        errorcode="$E_NOTEXIST"
+        return "$E_NOTEXIST"
     fi
 
     # Parse config
@@ -76,11 +76,11 @@ ftp_backup() {
     # Checking variables
     if [ -z "$HOST" ] || [ -z "$USERNAME" ] || [ -z "$PASSWORD" ]; then
         error="Can't parse ftp backup configuration"
-        rm -rf $tmpdir
-        rm -f $BACKUP/$user.log
-        echo "$error" |$SENDMAIL -s "$subj" $email $notify
+        echo "$error" |$SENDMAIL -s "$subj" $email "yes"
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-        check_result "$E_PARSING" "$error"
+        echo "$error"
+        errorcode="$E_PARSING"
+        return "$E_PARSING"
     fi
 
     # Debug info
@@ -91,11 +91,11 @@ ftp_backup() {
     ferror=$(echo $fconn |grep -i -e failed -e error -e "Can't" -e "not conn")
     if [ ! -z "$ferror" ]; then
         error="Error: can't login to ftp ftp://$USERNAME@$HOST"
-        rm -rf $tmpdir
-        rm -f $BACKUP/$user.log
         echo "$error" |$SENDMAIL -s "$subj" $email $notify
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-        check_result "$E_CONNECT" "$error"
+        echo "$error"
+        errorcode="$E_CONNECT"
+        return "$E_CONNECT"
     fi
 
     # Check ftp permissions
@@ -109,11 +109,11 @@ ftp_backup() {
     ftp_result=$(ftpc "mkdir $ftmpdir" "rm $ftmpdir" |grep -v Trying)
     if [ ! -z "$ftp_result" ] ; then
         error="Can't create ftp backup folder ftp://$HOST$BPATH"
-        rm -rf $tmpdir
-        rm -f $BACKUP/$user.log
         echo "$error" |$SENDMAIL -s "$subj" $email $notify
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-        check_result "$E_FTP" "$error"
+        echo "$error"
+        errorcode="$E_FTP"
+        return "$E_FTP"
     fi
 
     # Checking retention
@@ -277,11 +277,11 @@ sftp_backup() {
     # Checking config
     if [ ! -e "$HESTIA/conf/sftp.backup.conf" ]; then
         error="Can't open sftp.backup.conf"
-        rm -rf $tmpdir
-        rm -f $BACKUP/$user.log
-        echo "$error" |$SENDMAIL -s "$subj" $email $notify
+        echo "$error" |$SENDMAIL -s "$subj" $email "yes"
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-        check_result "$E_NOTEXIST" "$error"
+        echo "$error"
+        errorcode="$E_NOTEXIST"
+        return "$E_NOTEXIST" 
     fi
 
     # Parse config
@@ -295,11 +295,11 @@ sftp_backup() {
     # Checking variables
     if [ -z "$HOST" ] || [ -z "$USERNAME" ] || [ -z "$PASSWORD" ]; then
         error="Can't parse sftp backup configuration"
-        rm -rf $tmpdir
-        rm -f $BACKUP/$user.log
-        echo "$error" |$SENDMAIL -s "$subj" $email $notify
+        echo "$error" |$SENDMAIL -s "$subj" $email "yes"
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-        check_result "$E_PARSING" "$error"
+        echo "$error"
+        errorcode="$E_PARSING"
+        return "$E_PARSING" 
     fi
 
     # Debug info
@@ -320,11 +320,11 @@ sftp_backup() {
             $E_CONNECT) error="Can't login to sftp host $HOST" ;;
             $E_FTP) error="Can't create temp folder on sftp $HOST" ;;
         esac
-        rm -rf $tmpdir
-        rm -f $BACKUP/$user.log
-        echo "$error" |$SENDMAIL -s "$subj" $email $notify
+        echo "$error" |$SENDMAIL -s "$subj" $email "yes"
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-        check_result "$rc" "$error"
+        echo "$error"
+        errorcode="$rc"
+        return "$rc"
     fi
 
     # Checking retention

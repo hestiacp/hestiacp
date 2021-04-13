@@ -11,7 +11,7 @@ if (!empty($_GET['domain'])) {
 } else {
     $v_domain = 'example.ltd';
 }
-$v_email = 'admin@' . $v_domain;
+$v_email = '';
 $v_country = 'US';
 $v_state = 'California';
 $v_locality = 'San Francisco';
@@ -39,7 +39,6 @@ if (empty($_POST['v_country'])) $errors[] = _('Country');
 if (empty($_POST['v_state'])) $errors[] = _('State');
 if (empty($_POST['v_locality'])) $errors[] = _('City');
 if (empty($_POST['v_org'])) $errors[] = _('Organization');
-if (empty($_POST['v_email'])) $errors[] = _('Email');
 $v_domain = $_POST['v_domain'];
 $v_aliases = $_POST['v_aliases'];
 $v_email = $_POST['v_email'];

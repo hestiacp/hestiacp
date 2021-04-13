@@ -1210,7 +1210,7 @@ $HESTIA/bin/v-change-sys-hostname $servername > /dev/null 2>&1
 
 # Generating SSL certificate
 echo "[ * ] Generating default self-signed SSL certificate..."
-$HESTIA/bin/v-generate-ssl-cert $(hostname) $email 'US' 'California' \
+$HESTIA/bin/v-generate-ssl-cert $(hostname) '' 'US' 'California' \
      'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
 
 # Parsing certificate file

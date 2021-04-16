@@ -1206,7 +1206,7 @@ cp -rf $HESTIA_INSTALL_DIR/templates/web/skel/document_errors/* /var/www/documen
 cp -rf $HESTIA_INSTALL_DIR/firewall $HESTIA/data/
 
 # Configuring server hostname
-$HESTIA/bin/v-change-sys-hostname $servername > /dev/null 2>&1
+$HESTIA/bin/v-change-sys-hostname $servername 'no' > /dev/null 2>&1
 
 # Generating SSL certificate
 echo "[ * ] Generating default self-signed SSL certificate..."
@@ -1732,10 +1732,12 @@ if [ ! -z "$(grep ^admin: /etc/group)" ] && [ "$force" = 'yes' ]; then
 fi
 
 # Enable sftp jail
+echo "[ * ] Enable SFTP jail..."
 $HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1
 check_result $? "can't enable sftp jail"
 
 # Adding Hestia admin account
+echo "[ * ] Create admin account..."
 $HESTIA/bin/v-add-user admin $vpass $email default "System Administrator"
 check_result $? "can't create admin user"
 $HESTIA/bin/v-change-user-shell admin nologin
@@ -1755,6 +1757,7 @@ if [ "$iptables" = 'yes' ]; then
 fi
 
 # Get public IP
+echo "[ * ] Configure System IP..."
 pub_ip=$(curl --ipv4 -s https://ip.hestiacp.com/)
 if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     if [ -e /etc/rc.local ]; then
@@ -1774,6 +1777,11 @@ if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     systemctl enable rc-local > /dev/null 2>&1
     $HESTIA/bin/v-change-sys-ip-nat $ip $pub_ip > /dev/null 2>&1
     ip=$pub_ip
+fi
+
+if [ "$exim" = 'yes' ]; then
+# Set HELO for IP as it didn't set during v-change-sys-hostname
+$HESTIA/bin/v-change-sys-ip-helo $pub_ip $servername
 fi
 
 # Configuring libapache2-mod-remoteip
@@ -1863,6 +1871,8 @@ systemctl start hestia
 check_result $? "hestia start failed"
 chown admin:admin $HESTIA/data/sessions
 
+# Create backup folder
+mkdir -p /backup/
 
 #----------------------------------------------------------#
 #                  Configure File Manager                   #

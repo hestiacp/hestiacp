@@ -1843,8 +1843,9 @@ systemctl start hestia
 check_result $? "hestia start failed"
 chown admin:admin $HESTIA/data/sessions
 
-# Create backup folder
+# Create backup folder and set correct permission
 mkdir -p /backup/
+chmod 755 /backup/
 
 #----------------------------------------------------------#
 #                  Configure File Manager                   #

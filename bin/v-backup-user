@@ -56,7 +56,14 @@ check_backup_conditions
 if [ -z "$BACKUP" ]; then
     BACKUP=/backup
 fi
-mkdir -p $BACKUP
+
+# Check if backup folder exists and have the correct permission
+if [[ ! -d "$BACKUP" ]]; then 
+    mkdir -p $BACKUP
+fi
+if [ $(stat -c %a $BACKUP) != 755 ]; then
+    chmod 755 $BACKUP
+fi
 
 # Get current time
 start_time=$(date '+%s')

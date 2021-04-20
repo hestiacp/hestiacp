@@ -13,6 +13,9 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
+# make sure path is always loaded 
+source /etc/profile
+
 # Argument definition
 domain=$(hostname -f);
 if [ -z $domain ]; then 

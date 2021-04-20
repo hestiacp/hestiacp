@@ -64,6 +64,14 @@ is_format_valid 'user' 'backup'
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Check if backup folder exists and have the correct permission
+if [[ ! -d "$BACKUP" ]]; then 
+    mkdir -p $BACKUP
+fi
+if [ $(stat -c %a $BACKUP) != 755 ]; then
+    chmod 755 $BACKUP
+fi
+
 # Checking local backup
 if [ ! -e "$BACKUP/$backup" ]; then
     if [[ "$BACKUP_SYSTEM" =~ "google" ]]; then

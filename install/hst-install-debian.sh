@@ -1847,6 +1847,9 @@ chown admin:admin $HESTIA/data/sessions
 mkdir -p /backup/
 chmod 755 /backup/
 
+# create cronjob to generate ssl 
+echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && /usr/local/hestia/bin/v-add-letsencrypt-host" > /etc/cron.d/hestia-ssl
+
 #----------------------------------------------------------#
 #                  Configure File Manager                   #
 #----------------------------------------------------------#
@@ -1914,19 +1917,16 @@ rm -f $tmpfile
 # Add welcome message to notification panel
 $HESTIA/bin/v-add-user-notification admin 'Welcome to Hestia Control Panel!' '<br>You are now ready to begin <a href="/add/user/">adding user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, view the <a href="https://docs.hestiacp.com/" target="_new">documentation</a> or visit our <a href="https://forum.hestiacp.com/" target="_new">user forum</a>.<br><br>Please report any bugs or issues via <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart status-icon red"></i> The Hestia Control Panel development team'
 
-echo "[ ! ] IMPORTANT: You must logout or restart the server before continuing."
+echo "[ ! ] IMPORTANT: System will reboot"
 echo ""
 if [ "$interactive" = 'yes' ]; then
-    echo -n " Do you want to reboot now? [Y/N] "
+    echo -n " Press any key to continue!"
     read reboot
-
-    if [ "$reboot" = "Y" ] || [ "$reboot" = "y" ]; then
-        reboot
-    fi
 fi
 
 # Clean-up
 # Sort final configuration file
 sort_config_file
 
+reboot
 # EOF

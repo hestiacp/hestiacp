@@ -32,8 +32,13 @@ class HestiaAuth implements Service, AuthInterface
         if (isset($_SESSION['user'])) {
             $v_user = $_SESSION['user'];
         }
-        if (isset($_SESSION['look']) && ($_SESSION['userContext'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'no')) {
+        if (isset($_SESSION['look']) && ($_SESSION['userContext'] === 'admin')){
             $v_user = $_SESSION['look'];
+        }
+        if ( $_SESSION['look'] == 'admin' && $_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] == 'yes' ){
+            // Go away do not login 
+            header('Location: /');
+            exit;
         }
         $this->hestia_user = $v_user;
         $this->permissions = isset($config['permissions']) ? (array)$config['permissions'] : [];

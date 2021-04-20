@@ -14,7 +14,10 @@
 #----------------------------------------------------------#
 
 # Argument definition
-domain=$HOSTNAME
+domain=$(hostname -f);
+if [ -z $domain ]; then 
+    domain=$HOSTNAME;
+fi
 user="$($HESTIA/bin/v-search-domain-owner "$domain" web)"
 [[ -z "$user" ]] && user="admin"
 

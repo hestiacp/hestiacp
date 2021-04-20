@@ -1949,10 +1949,8 @@ echo ""
 if [ "$interactive" = 'yes' ]; then
     echo -n " Do you want to reboot now? [Y/N] "
     read reboot
-
-    if [ "$reboot" = "Y" ] || [ "$reboot" = "y" ]; then
-        reboot
-    fi
+    
+    reboot
 fi
 
 # Clean-up

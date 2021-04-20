@@ -89,11 +89,11 @@ else
         # Checking destination path
         real_target_directory="$(readlink -e "${target_domain_directory}/public_html/$target_directory/")"
         if [ -z "$(echo $real_target_directory | egrep "^$target_domain_directory\b")" ]; then
-            check_result $E_FORBIDEN "Error: target dir outside of target domain dir"
+            check_result $E_FORBIDEN "target dir outside of target domain dir"
         fi
 
         if [ ! -e "$real_target_directory" ]; then
-            check_result $E_NOTEXIST "ERROR: Directory $target_directory does not exist under $HOMEDIR/$user/$target_domain/public_html/."
+            check_result $E_NOTEXIST "Directory $target_directory does not exist under $HOMEDIR/$user/$target_domain/public_html/."
         else
             CUSTOM_DOCROOT="$real_target_directory"
             if [ ! -z "$php" ]; then

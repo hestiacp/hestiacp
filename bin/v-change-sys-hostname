@@ -14,7 +14,6 @@
 
 # Argument definition
 domain=$1
-helo="${2-yes}"
 
 # Includes
 # shellcheck source=/usr/local/hestia/func/main.sh
@@ -27,7 +26,7 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'HOSTNAME [HELO]'
+check_args '1' "$#" 'HOSTNAME'
 is_format_valid 'domain'
 
 # Perform verification if read-only mode is enabled
@@ -57,10 +56,13 @@ else
     if [ -d /etc/roundcube/ ]; then
         sed -i "/password_hestia_host/c\$rcmail_config['password_hestia_host'] = '$domain';" /etc/roundcube/plugins/password/config.inc.php
     fi
+    if [ -d /etc/rainloop/ ]; then
+        sed -i "/hestia_host/c\hestia_host = \"$domain\"" /etc/rainloop/data/_data_/_default_/configs/plugin-hestia-change-password.ini 
+    fi
 fi
 
 # Update ip helo for exim
-if [[ ! -z "$MAIL_SYSTEM" && "$helo" == "yes" ]]; then
+if [ ! -z "$MAIL_SYSTEM" ]; then
     pub_ip=$(curl --ipv4 -s https://ip.hestiacp.com/)
     $BIN/v-change-sys-ip-helo $pub_ip $domain
 fi
@@ -70,6 +72,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Warning" "System" "System hostname changed (Host: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

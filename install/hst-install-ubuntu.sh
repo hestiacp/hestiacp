@@ -1206,7 +1206,7 @@ cp -rf $HESTIA_INSTALL_DIR/templates/web/skel/document_errors/* /var/www/documen
 cp -rf $HESTIA_INSTALL_DIR/firewall $HESTIA/data/
 
 # Configuring server hostname
-$HESTIA/bin/v-change-sys-hostname $servername > /dev/null 2>&1
+$HESTIA/bin/v-change-sys-hostname $servername 'no' > /dev/null 2>&1
 
 # Generating SSL certificate
 echo "[ * ] Generating default self-signed SSL certificate..."
@@ -1732,10 +1732,12 @@ if [ ! -z "$(grep ^admin: /etc/group)" ] && [ "$force" = 'yes' ]; then
 fi
 
 # Enable sftp jail
+echo "[ * ] Enable SFTP jail..."
 $HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1
 check_result $? "can't enable sftp jail"
 
 # Adding Hestia admin account
+echo "[ * ] Create admin account..."
 $HESTIA/bin/v-add-user admin $vpass $email default "System Administrator"
 check_result $? "can't create admin user"
 $HESTIA/bin/v-change-user-shell admin nologin
@@ -1756,6 +1758,7 @@ if [ "$iptables" = 'yes' ]; then
 fi
 
 # Get public IP
+echo "[ * ] Configure System IP..."
 pub_ip=$(curl --ipv4 -s https://ip.hestiacp.com/)
 if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     if [ -e /etc/rc.local ]; then
@@ -1775,6 +1778,11 @@ if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     systemctl enable rc-local > /dev/null 2>&1
     $HESTIA/bin/v-change-sys-ip-nat $ip $pub_ip > /dev/null 2>&1
     ip=$pub_ip
+fi
+
+if [ "$exim" = 'yes' ]; then
+# Set HELO for IP as it didn't set during v-change-sys-hostname
+$HESTIA/bin/v-change-sys-ip-helo $pub_ip $servername
 fi
 
 # Configuring libapache2-mod-remoteip
@@ -1864,6 +1872,9 @@ systemctl start hestia
 check_result $? "hestia start failed"
 chown admin:admin $HESTIA/data/sessions
 
+# Create backup folder and set correct permission
+mkdir -p /backup/
+chmod 755 /backup/
 
 #----------------------------------------------------------#
 #                  Configure File Manager                   #
@@ -1872,6 +1883,8 @@ chown admin:admin $HESTIA/data/sessions
 echo "[ * ] Configuring File Manager..."
 $HESTIA/bin/v-add-sys-filemanager quiet
 
+# create cronjob to generate ssl 
+echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && /usr/local/hestia/bin/v-add-letsencrypt-host" > /etc/cron.d/hestia-ssl
 
 #----------------------------------------------------------#
 #                   Hestia Access Info                     #
@@ -1930,21 +1943,18 @@ cat $tmpfile
 rm -f $tmpfile
 
 # Add welcome message to notification panel
-$HESTIA/bin/v-add-user-notification admin 'Welcome to Hestia Control Panel!' '<br>You are now ready to begin <a href="/add/user/">adding user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, view the <a href="https://docs.hestiacp.com/" target="_new">documentation</a> or visit our <a href="https://forum.hestiacp.com/" target="_new">user forum</a>.<br><br>Please report any bugs or issues via <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a> or e-mail <a href="mailto:info@hestiacp.com?Subject="['$new_version'] Bug Report: ">info@hestiacp.com</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart status-icon red"></i> The Hestia Control Panel development team'
+$HESTIA/bin/v-add-user-notification admin 'Welcome to Hestia Control Panel!' '<br>You are now ready to begin <a href="/add/user/">adding user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, view the <a href="https://docs.hestiacp.com/" target="_new">documentation</a> or visit our <a href="https://forum.hestiacp.com/" target="_new">user forum</a>.<br><br>Please report any bugs or issues via <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart status-icon red"></i> The Hestia Control Panel development team'
 
-echo "[ ! ] IMPORTANT: You must logout or restart the server before continuing."
+echo "[ ! ] IMPORTANT: System will reboot"
 echo ""
 if [ "$interactive" = 'yes' ]; then
-    echo -n " Do you want to reboot now? [Y/N] "
+    echo -n " Press any key to continue!"
     read reboot
-
-    if [ "$reboot" = "Y" ] || [ "$reboot" = "y" ]; then
-        reboot
-    fi
 fi
 
 # Clean-up
 # Sort final configuration file
 sort_config_file
 
+reboot
 # EOF

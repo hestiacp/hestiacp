@@ -14,6 +14,7 @@
 
 # Argument definition
 domain=$1
+helo=${2-yes}
 
 # Includes
 # shellcheck source=/usr/local/hestia/func/main.sh
@@ -26,7 +27,7 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'HOSTNAME'
+check_args '1' "$#" 'HOSTNAME [HELO]'
 is_format_valid 'domain'
 
 # Perform verification if read-only mode is enabled
@@ -62,7 +63,7 @@ else
 fi
 
 # Update ip helo for exim
-if [ ! -z "$MAIL_SYSTEM" ]; then
+if [[] ! -z "$MAIL_SYSTEM" && "$helo" == "yes" ]]; then
     pub_ip=$(curl --ipv4 -s https://ip.hestiacp.com/)
     $BIN/v-change-sys-ip-helo $pub_ip $domain
 fi

@@ -153,7 +153,13 @@ echo "[*] Checking for missing dependencies and installing required libraries...
 apt-get -qq install -y $SOFTWARE > /dev/null 2>&1
 
 # Fix for Debian PHP Envroiment
-ln -s /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl > /dev/null 2>&1
+if [ ! -e /usr/local/include/curl ]; then
+    if [ $BUILD_ARCH == "amd64" ]; then
+        ln -s /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl
+    else
+        echo "No x86_64 working"
+    fi
+fi
 
 # Get system cpu cores
 NUM_CPUS=$(grep "^cpu cores" /proc/cpuinfo | uniq |  awk '{print $4}')

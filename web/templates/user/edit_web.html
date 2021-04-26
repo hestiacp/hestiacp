@@ -620,71 +620,69 @@
                                 </tr>
                             <?php }
                             ?>
-                            </table>
-                            <table class="data-col2">
-                            </table>
-                            </td>
-                            </tr>
-                            </table>
-                            </form>
-                            
-                            <div id="templates" class="hidden">
-                            <table class="ftptable ftptable-nrm" name="v_add_domain_ftp">
-                            <tr>
-                            <td class="vst-text input-label">
-                            <?php print _('FTP') ?> #<span class="ftp-user-number"></span> <a class="ftp-remove-user additional-control" onCLick="App.Actions.WEB.remove_ftp_user(this)"><?=_('delete')?></a>
-                            <input type="hidden"  class="v-ftp-user-deleted" name="v_ftp_user[%INDEX%][delete]" value="0" />
-                            <input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[%INDEX%][is_new]" value="1" />
-                            </td>
-                            </tr>
-                            <tr>
-                            <td class="vst-text step-left input-label">
-                            <?php print _('Username');?><br>
-                            <span style="font-size: 10pt; color:#777;"><?php print sprintf(_('Prefix %s will be added to username automatically'),$user."_");?></span>
-                            </td>
-                            </tr>
-                            <tr>
-                            <td class="step-left">
-                            <input type="text" size="20" class="vst-input v-ftp-user" name="v_ftp_user[%INDEX%][v_ftp_user]" value="">
-                            <small class="hint"></small>
-                            </td>
-                            </tr>
-                            <tr>
-                            <td class="vst-text step-left  input-label">
-                            <?php print _('Password');?> / <a href="javascript:void(0);" onClick="FTPrandom(this)"; class="generate" ><?php print _('generate');?></a>
-                            </td>
-                            </tr>
-                            <tr>
-                            <td class="step-left">
-                            <input type="text" class="vst-input v-ftp-user-psw password" name="v_ftp_user[%INDEX%][v_ftp_password]" value="">
-                            </td>
-                            </tr>
-                            
-                            <tr>
-                            <td class="vst-text step-left input-label">
-                            <?php print _('Path');?>
-                            </td>
-                            </tr>
-                            <tr>
-                            <td class="step-left">
-                            <input type="hidden" class="vst-input v-ftp-pre-path" name="v_ftp_pre_path" value="">
-                            <input type="text"  class="vst-input v-ftp-path" name="v_ftp_user[%INDEX%][v_ftp_path]" value="">
-                            <br /><span class="ftp-path-prefix"><?=htmlentities(trim($v_ftp_pre_path_new_user, "'"))?></span><span class="ftp-path-value v-ftp-path-hint"></span>
-                            </td>
-                            </tr>
-                            <tr>
-                            <td class="vst-text step-left input-label">
-                            <?php print _('Send FTP credentials to email');?>
-                            </td>
-                            </tr>
-                            <tr>
-                            <td class="step-left">
-                            <input type="text" class="vst-input vst-email-alert-on-psw" name="v_ftp_user[%INDEX%][v_ftp_email]" value="">
-                            </td>
-                            </tr>
-                            </table>
-                            </div>
-                            </div>
-                            <script>
-                            GLOBAL.FTP_USER_PREFIX = <?=json_encode($user.'_')?>;
-                            </script>
+                        </table>
+                        <table class="data-col2">
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <div id="templates" class="hidden">
+            <table class="ftptable ftptable-nrm" name="v_add_domain_ftp">
+                <tr>
+                    <td class="vst-text input-label">
+                        <?php print _('FTP') ?> #<span class="ftp-user-number"></span> <a class="ftp-remove-user additional-control" onCLick="App.Actions.WEB.remove_ftp_user(this)"><?=_('delete')?></a>
+                        <input type="hidden"  class="v-ftp-user-deleted" name="v_ftp_user[%INDEX%][delete]" value="0" />
+                        <input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[%INDEX%][is_new]" value="1" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="vst-text step-left input-label">
+                        <?php print _('Username');?><br>
+                        <span style="font-size: 10pt; color:#777;"><?php print sprintf(_('Prefix %s will be added to username automatically'),$user."_");?></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="step-left">
+                        <input type="text" size="20" class="vst-input v-ftp-user" name="v_ftp_user[%INDEX%][v_ftp_user]" value="">
+                        <small class="hint"></small>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="vst-text step-left  input-label">
+                       <?php print _('Password');?> / <a href="javascript:void(0);" onClick="FTPrandom(this)"; class="generate" ><?php print _('generate');?></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="step-left">
+                        <input type="text" class="vst-input v-ftp-user-psw password" name="v_ftp_user[%INDEX%][v_ftp_password]" value="">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="vst-text step-left input-label">
+                        <?php print _('Path');?>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="step-left">
+                        <input type="hidden" class="vst-input v-ftp-pre-path" name="v_ftp_pre_path" value="">
+                        <input type="text"  class="vst-input v-ftp-path" name="v_ftp_user[%INDEX%][v_ftp_path]" value="">
+                        <br /><span class="ftp-path-prefix"><?=htmlentities(trim($v_ftp_pre_path_new_user, "'"))?></span><span class="ftp-path-value v-ftp-path-hint"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="vst-text step-left input-label">
+                        <?php print _('Send FTP credentials to email');?>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="step-left">
+                        <input type="text" class="vst-input vst-email-alert-on-psw" name="v_ftp_user[%INDEX%][v_ftp_email]" value="">
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <script>
+        GLOBAL.FTP_USER_PREFIX = <?=json_encode($user.'_')?>;
+    </script>

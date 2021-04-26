@@ -279,8 +279,8 @@ if (!empty($_POST['save'])) {
 
    // Update debug mode status
     if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_debug_mode'] == 'on') { $_POST['v_debug_mode'] = 'true'; } else { $_POST['v_debug_mode'] = 'false'; }
         if ($_POST['v_debug_mode'] != $_SESSION['DEBUG_MODE']) {
-            if ($_POST['v_debug_mode'] == 'on') { $_POST['v_debug_mode'] = 'true'; } else { $_POST['v_debug_mode'] = 'false'; }
             exec (HESTIA_CMD."v-change-sys-config-value DEBUG_MODE ".escapeshellarg($_POST['v_debug_mode']), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
@@ -300,8 +300,8 @@ if (!empty($_POST['save'])) {
 
     // Update experimental features status
     if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_experimental_features'] == 'on') { $_POST['v_experimental_features'] = 'true'; } else { $_POST['v_experimental_features'] = 'false'; }
         if ($_POST['v_experimental_features'] != $_SESSION['POLICY_SYSTEM_ENABLE_BACON']) {
-            if ($_POST['v_experimental_features'] == 'on') { $_POST['v_experimental_features'] = 'true'; } else { $_POST['v_experimental_features'] = 'false'; }
             exec (HESTIA_CMD."v-change-sys-config-value POLICY_SYSTEM_ENABLE_BACON ".escapeshellarg($_POST['v_experimental_features']), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);

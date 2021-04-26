@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: Alow other users create subdomains
+# info: Allow other users create subdomains
 # options: USER DOMAIN
 # labels: web hestia
 #

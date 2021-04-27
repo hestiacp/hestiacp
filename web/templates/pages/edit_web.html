@@ -527,88 +527,90 @@
 											</table>
 										</td>
 									</tr>
-									<tr>
-										<td class="vst-text input-label">
-											<label><input type="checkbox" size="20" class="vst-checkbox" name="v_ftp" <?php if (!empty($v_ftp_user)) echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_additional_ftp_accounts(this)"><?=_('Additional FTP Account');?></label>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<?php foreach ($v_ftp_users as $i => $ftp_user): ?>
-											<?php
-												$v_ftp_user     = $ftp_user['v_ftp_user'];
-												$v_ftp_password = $ftp_user['v_ftp_password'];
-												$v_ftp_path     = $ftp_user['v_ftp_path'];
-												$v_ftp_email    = $ftp_user['v_ftp_email'];
-												$v_ftp_pre_path = $ftp_user['v_ftp_pre_path'];
-											?>
-											<table style="display:<?php if (empty($v_ftp_user)) { echo 'none';} else {echo 'block';}?> ;" class="ftptable ftptable-nrm" name="v_add_domain_ftp">
-												<tr>
-													<td class="vst-text input-label">
-														<?=_('FTP');?> #<span class="ftp-user-number"><?=$i + 1; ?></span> <a class="ftp-remove-user additional-control" onCLick="App.Actions.WEB.remove_ftp_user(this)"><?=_('delete');?></a>
-														<input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[<?=$i ?>][delete]" value="0" />
-														<input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[<?=$i ?>][is_new]" value="<?=htmlentities($ftp_user['is_new']) ?>" />
-													</td>
-												</tr>
-												<tr>
-													<td class="vst-text step-left input-label">
-														<?=_('Username');?><br>
-														<span style="font-size: 10pt; color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user."_");?></span>
-													</td>
-												</tr>
-												<tr>
-													<td class="step-left">
-														<input type="text" size="20" class="vst-input v-ftp-user" <?=$ftp_user['is_new'] != 1 ? 'disabled="disabled"' : '' ?>
-															name="v_ftp_user[<?=$i ?>][v_ftp_user]" value="<?=htmlentities(trim($v_ftp_user, "'"))?>">
-														<small class="hint"></small>
-													</td>
-												</tr>
-												<tr>
-													<td class="vst-text step-left  input-label">
-														<?=_('Password');?> / <a href="javascript:void(0);" onClick="FTPrandom(this)" ; class="generate"><?=_('generate');?></a>
-													</td>
-												</tr>
-												<tr>
-													<td class="step-left">
-														<input type="text" class="vst-input v-ftp-user-psw password" name="v_ftp_user[<?=$i ?>][v_ftp_password]" value="<?=htmlentities(trim($v_ftp_password, "'"))?>">
-													</td>
-												</tr>
+									<?php if (in_array($_SESSION['FTP_SYSTEM'], array('vsftpd', 'proftpd'))) { ?>  
+										<tr>
+											<td class="vst-text input-label">
+												<label><input type="checkbox" size="20" class="vst-checkbox" name="v_ftp" <?php if (!empty($v_ftp_user)) echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_additional_ftp_accounts(this)"><?=_('Additional FTP Account');?></label>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<?php foreach ($v_ftp_users as $i => $ftp_user): ?>
+												<?php
+													$v_ftp_user     = $ftp_user['v_ftp_user'];
+													$v_ftp_password = $ftp_user['v_ftp_password'];
+													$v_ftp_path     = $ftp_user['v_ftp_path'];
+													$v_ftp_email    = $ftp_user['v_ftp_email'];
+													$v_ftp_pre_path = $ftp_user['v_ftp_pre_path'];
+												?>
+												<table style="display:<?php if (empty($v_ftp_user)) { echo 'none';} else {echo 'block';}?> ;" class="ftptable ftptable-nrm" name="v_add_domain_ftp">
+													<tr>
+														<td class="vst-text input-label">
+															<?=_('FTP');?> #<span class="ftp-user-number"><?=$i + 1; ?></span> <a class="ftp-remove-user additional-control" onCLick="App.Actions.WEB.remove_ftp_user(this)"><?=_('delete');?></a>
+															<input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[<?=$i ?>][delete]" value="0" />
+															<input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[<?=$i ?>][is_new]" value="<?=htmlentities($ftp_user['is_new']) ?>" />
+														</td>
+													</tr>
+													<tr>
+														<td class="vst-text step-left input-label">
+															<?=_('Username');?><br>
+															<span style="font-size: 10pt; color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user."_");?></span>
+														</td>
+													</tr>
+													<tr>
+														<td class="step-left">
+															<input type="text" size="20" class="vst-input v-ftp-user" <?=$ftp_user['is_new'] != 1 ? 'disabled="disabled"' : '' ?>
+																name="v_ftp_user[<?=$i ?>][v_ftp_user]" value="<?=htmlentities(trim($v_ftp_user, "'"))?>">
+															<small class="hint"></small>
+														</td>
+													</tr>
+													<tr>
+														<td class="vst-text step-left  input-label">
+															<?=_('Password');?> / <a href="javascript:void(0);" onClick="FTPrandom(this)" ; class="generate"><?=_('generate');?></a>
+														</td>
+													</tr>
+													<tr>
+														<td class="step-left">
+															<input type="text" class="vst-input v-ftp-user-psw password" name="v_ftp_user[<?=$i ?>][v_ftp_password]" value="<?=htmlentities(trim($v_ftp_password, "'"))?>">
+														</td>
+													</tr>
 
-												<tr>
-													<td class="vst-text step-left input-label">
-														<?=_('Path');?>
-													</td>
-												</tr>
-												<tr>
-													<td class="step-left">
-														<input type="hidden" class="vst-input v-ftp-pre-path" name="v_ftp_pre_path" value="<?=!empty($v_ftp_pre_path) ? htmlentities(trim($v_ftp_pre_path, "'")) : '/'; ?>">
-														<input type="hidden" class="vst-input v-ftp-path" name="v_ftp_user[<?=$i ?>][v_ftp_path_prev]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")) ?>">
-														<input type="text" class="vst-input v-ftp-path" name="v_ftp_user[<?=$i ?>][v_ftp_path]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")); ?>">
-														<br /><span class="ftp-path-prefix"><?=htmlentities(trim($v_ftp_pre_path, "'"))?></span><span class="ftp-path-value v-ftp-path-hint"></span>
-													</td>
-												</tr>
-												<?php if ($ftp_user['is_new'] == 1): ?>
-												<tr>
-													<td class="vst-text step-left input-label">
-														<?=_('Send FTP credentials to email');?>
-													</td>
-												</tr>
-												<tr>
-													<td class="step-left">
-														<input type="text" class="vst-input vst-email-alert-on-psw" name="v_ftp_user[<?=$i ?>][v_ftp_email]" value="<?=htmlentities(trim($v_ftp_email, "'"))?>">
-													</td>
-												</tr>
-												<?php endif; ?>
-											</table>
-											<?php endforeach; ?>
-										</td>
-									</tr>
+													<tr>
+														<td class="vst-text step-left input-label">
+															<?=_('Path');?>
+														</td>
+													</tr>
+													<tr>
+														<td class="step-left">
+															<input type="hidden" class="vst-input v-ftp-pre-path" name="v_ftp_pre_path" value="<?=!empty($v_ftp_pre_path) ? htmlentities(trim($v_ftp_pre_path, "'")) : '/'; ?>">
+															<input type="hidden" class="vst-input v-ftp-path" name="v_ftp_user[<?=$i ?>][v_ftp_path_prev]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")) ?>">
+															<input type="text" class="vst-input v-ftp-path" name="v_ftp_user[<?=$i ?>][v_ftp_path]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")); ?>">
+															<br /><span class="ftp-path-prefix"><?=htmlentities(trim($v_ftp_pre_path, "'"))?></span><span class="ftp-path-value v-ftp-path-hint"></span>
+														</td>
+													</tr>
+													<?php if ($ftp_user['is_new'] == 1): ?>
+													<tr>
+														<td class="vst-text step-left input-label">
+															<?=_('Send FTP credentials to email');?>
+														</td>
+													</tr>
+													<tr>
+														<td class="step-left">
+															<input type="text" class="vst-input vst-email-alert-on-psw" name="v_ftp_user[<?=$i ?>][v_ftp_email]" value="<?=htmlentities(trim($v_ftp_email, "'"))?>">
+														</td>
+													</tr>
+													<?php endif; ?>
+												</table>
+												<?php endforeach; ?>
+											</td>
+										</tr>
 
-									<tr class="add-new-ftp-user-button" style="<?=!empty($v_ftp_user) ? '' : 'display:none;' ?>">
-										<td class="vst-text step-top v-add-new-user step-bottom">
-											<a class="additional-control vst-advanced" onClick="App.Actions.WEB.add_ftp_user_form()"><?=_('Add one more FTP Account');?></a>
-										</td>
-									</tr>
+										<tr class="add-new-ftp-user-button" style="<?=!empty($v_ftp_user) ? '' : 'display:none;' ?>">
+											<td class="vst-text step-top v-add-new-user step-bottom">
+												<a class="additional-control vst-advanced" onClick="App.Actions.WEB.add_ftp_user_form()"><?=_('Add one more FTP Account');?></a>
+											</td>
+										</tr>
+									<?php } ?>
 								</table>
 							</td>
 						</tr>

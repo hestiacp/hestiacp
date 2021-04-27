@@ -77,7 +77,7 @@ fi
 update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$ALIAS' "$aliases"
 
 # Logging
-log_history "added alias $malias to $account@$domain "
+$BIN/v-log-action "$user" "Info" "Mail" "Added alias $malias to mail account $account@$domain."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -52,7 +52,7 @@ sed -i "/HOST='$host' /d" $HESTIA/conf/$type.conf
 #----------------------------------------------------------#
 
 # Logging
-log_history "deleted $type database server $host" '' 'admin'
+$BIN/v-log-action "system" "Info" "Database" "Removed remote database host (Host: $host, Type: $type)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

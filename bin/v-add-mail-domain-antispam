@@ -66,7 +66,7 @@ fi
 update_object_value 'mail' 'DOMAIN' "$domain" '$ANTISPAM' 'yes'
 
 # Logging
-log_history "enabled antispam on $domain"
+$BIN/v-log-action "$user" "Info" "Mail" "Anti-spam protection enabled (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -49,6 +49,7 @@ sync_cron_jobs
 # Restarting crond
 $BIN/v-restart-cron $restart
 check_result $? "Cron restart failed" >/dev/null
+$BIN/v-log-action "system" "Info" "System" "Rebuilt cron jobs (User: $user)."
 
 # Logging
 log_event "$OK" "$ARGUMENTS"

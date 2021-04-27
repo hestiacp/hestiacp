@@ -63,7 +63,7 @@ fi
 update_object_value 'mail' 'DOMAIN' "$domain" '$CATCHALL' ''
 
 # Logging
-log_history "deleted catchall email on $domain"
+$BIN/v-log-action "$user" "Info" "Mail" "Catch-all forwarding disabled (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

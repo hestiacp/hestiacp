@@ -76,9 +76,9 @@ chmod 660 $USER_DATA/backup-excludes.conf
 
 # Logging
 if [ -z "$system" ]; then
-    log_history "deleted all exlusions"
+    $BIN/v-log-action "$user" "Info" "Backup" "Deleted all backup exclusions."
 else
-    log_history "deleted $system exlusion"
+    $BIN/v-log-action "$user" "Info" "Backup" "Deleted backup exclusions (Service: $system)"
 fi
 log_event "$OK" "$ARGUMENTS"
 

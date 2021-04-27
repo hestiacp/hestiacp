@@ -127,7 +127,7 @@ if [ "$restart" = "yes" ]; then
 fi
 
 # Logging
-log_history "Enabled FastCGI cache for $domain"
+$BIN/v-log-action "$user" "Info" "Web" "FastCGI cache enabled (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

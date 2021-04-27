@@ -87,7 +87,7 @@ update_object_value 'web' 'DOMAIN' "$domain" '$AUTH_USER' "$auth_user"
 update_object_value 'web' 'DOMAIN' "$domain" '$AUTH_HASH' "$auth_hash"
 
 # Logging
-log_history "changed auth user $httpauth_user password on $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Web domain password disabled (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

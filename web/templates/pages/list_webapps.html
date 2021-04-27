@@ -1,0 +1,53 @@
+<!-- Begin toolbar -->
+<div class="l-center edit">
+	<div class="l-sort clearfix">
+		<div class="l-unit-toolbar__buttonstrip">
+			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/edit/web/?domain=<?=$v_domain?>"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+		</div>
+		<div class="l-unit-toolbar__buttonstrip float-right">
+		</div>
+	</div>
+</div>
+<!-- End toolbar -->
+
+<div class="l-separator"></div>
+
+<div class="l-center animated fadeIn" style="padding-top:240px;">
+
+	<div style="margin-left:68px; margin-top: 20px">
+		<div class="page-title">
+			<span><?=_('Quick Install App');?></span><br>
+		</div>
+		<div>
+			<span>
+				<?php
+					if (!empty($_SESSION['error_msg'])) {
+						$msg_icon = 'fa-exclamation-circle status-icon red';
+						$msg_text = htmlentities($_SESSION['error_msg']);
+						$msg_id = 'vst-error';
+					} else {
+						if (!empty($_SESSION['ok_msg'])) {
+							$msg_icon = 'fa-check-circle status-icon green';
+							$msg_text = $_SESSION['ok_msg'];
+							$msg_id = 'vst-ok';
+						}
+					}
+				?>
+				<span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
+			</span>
+		</div>
+	</div>
+	<div class="app-list cards">
+		<!-- List available web apps -->
+		<?php foreach($v_web_apps as $webapp):?>
+			<div class="card <?=($webapp['enabled']?'':'disable');?>">
+				<span class="card-thumb"><img src="/src/app/WebApp/Installers/<?=$webapp['name'];?>/<?=$webapp['thumbnail'];?>"></span>
+				<div class="card-details">
+					<p class="card-title"><?=$webapp['name'];?></p>
+					<p><?=_('version');?>: <?=$webapp['version'];?></p>
+					<a href="/add/webapp/?app=<?=$webapp['name'];?>&domain=<?=$v_domain?>" class="ui-button cancel" dir="ltr"><?=_('Setup');?></a>
+				</div>
+			</div>
+		<?php endforeach; ?>
+	</div>
+</div>

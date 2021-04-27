@@ -112,8 +112,7 @@ check_result $? "Web restart failed" >/dev/null
 $BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" >/dev/null
 
-
-log_history "added $aliases for $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Added new web domain alias (Alias: $aliases, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

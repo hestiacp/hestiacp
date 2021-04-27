@@ -8,6 +8,10 @@ body {
   background-color: #282828;
 }
 
+.debug-panel-contents {
+  background-color: #282828;
+}
+
 b,
 strong {
   color: #cacaca;

@@ -85,7 +85,7 @@ check_result $? "Composer install failed"
 
 
 # Logging
-log_history "Enabled composer for user $user"
+$BIN/v-log-action "$user" "Info" "Plugins" "Composer support enabled."
 log_event "$OK" "$ARGUMENTS"
 
 exit

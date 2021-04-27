@@ -102,7 +102,13 @@ $BIN/v-update-firewall
 #                       Hestia                             #
 #----------------------------------------------------------#
 
+# Fix missing port value in log if zero
 # Logging
+if [ -z "$port" ]; then
+    port="0"
+fi
+
+$BIN/v-log-action "system" "Info" "Firewall" "Added firewall rule (Action: $action, Port: $port, Protocol: $protocol)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

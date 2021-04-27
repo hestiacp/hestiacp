@@ -892,7 +892,8 @@ $BIN/v-update-user-counters admin
 $BIN/v-update-sys-ip-counters
 
 # Logging
-log_history "restored contents from backup archive $backup"
+$BIN/v-log-action "system" "Info" "Backup" "Restored backup contents (User: $user, Archive: $backup)."
+$BIN/v-log-action "$user" "Info" "Backup" "Restored backup contents (Archive: $backup)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

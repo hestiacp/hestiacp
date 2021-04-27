@@ -1721,6 +1721,7 @@ check_result $? "can't create admin user"
 $HESTIA/bin/v-change-user-shell admin nologin
 $HESTIA/bin/v-change-user-role admin admin
 $HESTIA/bin/v-change-user-language admin $lang
+$HESTIA/bin/v-change-sys-config-value 'POLICY_SYSTEM_PROTECTED_ADMIN' 'yes'
 
 # Roundcube permissions fix
 if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then

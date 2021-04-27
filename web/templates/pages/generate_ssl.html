@@ -1,0 +1,133 @@
+<div class="l-center">
+	<div class="l-sort clearfix">
+		<div class="l-sort-toolbar clearfix float-left">
+			<?php
+				if (!empty($_SESSION['error_msg'])) {
+					$msg_icon = 'fa-exclamation-circle status-icon red';
+					$msg_text = htmlentities($_SESSION['error_msg']);
+					$msg_id = 'vst-error';
+				} else {
+					if (!empty($_SESSION['ok_msg'])) {
+						$msg_icon = 'fa-check-circle status-icon green';
+						$msg_text = $_SESSION['ok_msg'];
+						$msg_id = 'vst-ok';
+					}
+				}
+			?>
+			<span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
+		</div>
+	</div>
+</div>
+
+<div class="l-separator"></div>
+
+<div class="l-center animated fadeIn">
+
+	<form id="vstobjects" name="v_generate_csr" method="post">
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+		<input type="hidden" name="generate" value="generate" />
+		<table class='data'>
+			<tr class="data-add">
+				<td class="data-dotted">
+					<table class="data-col1">
+						<tr>
+							<td>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td class="data-dotted">
+					<table class="data-col2">
+						<tr>
+							<td class="step-top">
+								<span class="page-title"><?=_('Generating CSR');?></span>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text" style="padding: 24px 0 0 0;">
+								<?=_('Domain');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_domain" value="<?=htmlentities(trim($v_domain, "'")) ?>">
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text" style="padding: 24px 0 0 0;">
+								<?=_('Aliases');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<textarea size="20" class="vst-textinput short" name="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text" style="padding: 12px 0 0 0;">
+								<?=_('Email');?>
+								<span class="optional">(<?php print _('optional');?>)</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_email" value="<?=htmlentities(trim($v_email, "'")) ?>">
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text" style="padding: 12px 0 0 0;">
+								<?=_('Country'); ?>
+								<span class="optional">(<?=_('2 letter code');?>)</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_country" value="<?=htmlentities(trim($v_country, "'"))?>">
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text" style="padding: 12px 0 0 0;">
+								<?=_('State / Province');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_state" value="<?=htmlentities(trim($v_state, "'")) ?>">
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text" style="padding: 12px 0 0 0;">
+								<?=_('City / Locality');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_locality" value="<?=htmlentities(trim($v_locality, "'")) ?>">
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text" style="padding: 12px 0 0 0;">
+								<?=_('Organization');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_org" value="<?=htmlentities(trim($v_org, "'")) ?>">
+							</td>
+						</tr>
+					</table>
+					<table class="data-col2">
+						<tr>
+							<td style="padding: 24px 0 0 0;" width="116px">
+								<input type="submit" class="button" name="generate" value="<?=_('Ok');?>">
+							</td>
+							<td style="padding: 24px 0 0 0;">
+								<input type="button" class="button cancel" value="<?=_('Back');?>" onclick="<?=$back?>">
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>

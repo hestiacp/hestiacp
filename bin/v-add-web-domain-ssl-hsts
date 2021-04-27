@@ -13,6 +13,7 @@
 # Argument definition
 user=$1
 domain=$2
+quiet=$3
 
 # Includes
 # shellcheck source=/usr/local/hestia/func/main.sh
@@ -81,7 +82,9 @@ $BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" > /dev/null
 
 # Logging
-log_history "enabled HTTP Strict Transport Security (HSTS) for $domain"
+if [ "$quiet" != "yes" ]; then
+    $BIN/v-log-action "$user" "Info" "Web" "HTTP Strict Transport Security (HSTS) enabled (Domain: $domain)."
+fi
 log_event "$OK" "$ARGUMENTS"
 
 exit

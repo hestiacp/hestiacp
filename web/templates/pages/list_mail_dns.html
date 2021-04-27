@@ -1,0 +1,88 @@
+<?php
+	$v_webmail_alias = "webmail";
+	if (!empty($_SESSION['WEBMAIL_ALIAS'])) $v_webmail_alias = $_SESSION['WEBMAIL_ALIAS'];
+?>
+<div class="l-center">
+	<div class="l-sort clearfix noselect">
+		<div class="l-unit-toolbar__buttonstrip">
+			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/mail/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+		</div>
+		<div class="l-sort-toolbar clearfix">
+			<table>
+				<tr>
+					<td></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div class="l-separator"></div>
+
+<div class="l-center units">
+	<div class="header table-header">
+		<div class="l-unit__col l-unit__col--right">
+			<div>
+				<div class="clearfix l-unit__stat-col--left wide-3"><b><?=_('Record');?></b></div>
+				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Type');?></b></div>
+				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Priority');?></b></div>
+				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('TTL');?></b></div>
+				<div class="clearfix l-unit__stat-col--left wide-3"><b><?=_('IP or Value');?></b></div>
+			</div>
+		</div>
+	</div>
+
+	<div class="l-unit animated fadeIn">
+		<div class="l-unit__col l-unit__col--right">
+			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" style="width:200px !important;" value="mail.<?=htmlspecialchars($_GET['domain']);?>" /></b> </div>
+			<div class="clearfix l-unit__stat-col--left text-center step-top-small"><b>A</b></div>
+			<div class="clearfix l-unit__stat-col--left text-center step-top-small"><b>10</b></div>
+			<div class="clearfix l-unit__stat-col--left text-center step-top-small"><b>14400</b></div>
+			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" value="<?=array_key_first($ips);?>" /></b></div>
+		</div>
+	</div>
+	<?php if($_SESSION['WEBMAIL_SYSTEM']){?>
+		<div class="l-unit animated fadeIn">
+			<div class="l-unit__col l-unit__col--right">
+				<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" style="width:200px !important;" value="<?=$v_webmail_alias;?>.<?=htmlspecialchars($_GET['domain']);?>" /></b> </div>
+				<div class="clearfix l-unit__stat-col--left text-center step-top-small"><b>A</b></div>
+				<div class="clearfix l-unit__stat-col--left text-center step-top-small"><b>&nbsp;</b></div>
+				<div class="clearfix l-unit__stat-col--left text-center step-top-small"><b>14400</b></div>
+				<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" value="<?=array_key_first($ips);?>" /></b></div>
+			</div>
+		</div>
+	<?php } ?>
+	<div class="l-unit animated fadeIn">
+		<div class="l-unit__col l-unit__col--right">
+			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" style="width:200px !important;" value="@" /></b> </div>
+			<div class="clearfix l-unit__stat-col--left text-center step-top-small"><b>TXT</b></div>
+			<div class="clearfix l-unit__stat-col--left text-center step-top-small"><b>&nbsp;</b></div>
+			<div class="clearfix l-unit__stat-col--left text-center step-top-small"><b>14400</b></div>
+			<div class="clearfix l-unit__stat-col--left  wide-3 "><b><input type="text" class="vst-input" value="<?=htmlspecialchars('"v=spf1 a mx ip4:'.array_key_first($ips).'; -all"');?>" /></b></div>
+		</div>
+	</div>
+	<?php foreach($dkim as $key => $value){ ?>
+		<div class="l-unit animated fadeIn">
+			<div class="l-unit__col l-unit__col--right">
+				<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" style="width:200px !important;" value="<?=htmlspecialchars($key);?>" /></b></div>
+				<div class="clearfix l-unit__stat-col--left text-center step-top-small"><b>TXT</b></div>
+				<div class="clearfix l-unit__stat-col--left text-center step-top-small"><b>&nbsp;</b></div>
+				<div class="clearfix l-unit__stat-col--left text-center step-top-small"><b>3600</b></div>
+				<div class="clearfix l-unit__stat-col--left  wide-3 "><b><input type="text" class="vst-input" value="<?=htmlspecialchars(str_replace("'",'"',$dkim[$key]['TXT']));?>" </b></div>
+			</div>
+		</div>
+	<?php } ?>
+</div>
+<div id="vstobjects">
+	<div class="l-separator"></div>
+	<div class="l-center">
+		<div class="l-unit-ft">
+			<table class='data'></table>
+			<div class="data-count l-unit__col l-unit__col--right clearfix">
+
+			</div>
+			<div class="data-count l-unit__col l-unit__col--right back clearfix">
+			</div>
+		</div>
+	</div>
+</div>

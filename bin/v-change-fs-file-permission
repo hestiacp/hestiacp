@@ -53,5 +53,7 @@ if [ $? -ne 0 ]; then
     exit 3
 fi
 
+$BIN/v-log-action "system" "Info" "System" "File system permissions changed (User: $user, File: $src_file, Permissions: $permissions)."
+
 # Exiting
 exit

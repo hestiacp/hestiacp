@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<!-- Load necessary CSS and JavaScript from source -->
+	<?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/title.html'; ?>
+	<?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/css.html'; ?>
+	<?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/top_js.html'; ?>
+	<script type="text/javascript" src="/js/jquery/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="/js/jquery/jquery.cookie.js"></script>
+	<script type="text/javascript" src="/js/jquery/jquery-ui-1.8.20.custom.min.js"></script>
+	<script type="text/javascript" src="/js/events.js"></script>
+</head>
+
+<body>
+	<a href="#" class="to-top" title="<?=_('Top');?>">
+		<i class="fas fa-arrow-up"></i>
+	</a>
+	<div class="l-header">
+		<div class="l-center">
+			<a href="/list/web/" class="l-logo"></a>
+			<div class="l-menu clearfix">
+				<div class="l-menu__item"><a href="/list/rrd/" title="<?=_('Back');?>" class="no-hide"><i class="fas fa-arrow-alt-circle-left"></i></a></div>
+				<div class="l-menu__item <?php if(isset($_GET['cpu'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?cpu"><i class="fas fa-microchip panel-icon"></i><?=_('CPU');?></a></div>
+				<div class="l-menu__item <?php if(isset($_GET['mem'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?mem"><i class="fas fa-memory panel-icon"></i><?=_('RAM');?></a></div>
+				<div class="l-menu__item <?php if(isset($_GET['disk'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?disk"><i class="fas fa-hdd panel-icon"></i><?=_('Disk');?></a></div>
+				<div class="l-menu__item <?php if(isset($_GET['net'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?net"><i class="fas fa-ethernet panel-icon"></i><?=_('Network');?></a></div>
+				<?php if ((isset($_SESSION['WEB_SYSTEM'])) && (!empty($_SESSION['WEB_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['web'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?web"><i class="fas fa-globe-europe panel-icon"></i><?=_('Web');?></a></div><?php }?>
+				<?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['dns'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?dns"><i class="fas fa-atlas panel-icon"></i><?=_('DNS');?></a></div><?php }?>
+				<?php if ((isset($_SESSION['MAIL_SYSTEM'])) && (!empty($_SESSION['MAIL_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['mail'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?mail"><i class="fas fa-mail-bulk panel-icon"></i><?=_('Mail');?></a></div><?php }?>
+				<?php if ((isset($_SESSION['DB_SYSTEM'])) && (!empty($_SESSION['DB_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['db'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?db"><i class="fas fa-database panel-icon"></i><?=_('DB');?></a></div><?php }?>
+			</div>
+			<div class="l-profile noselect">
+				<div class="l-menu__item"><a href="javascript:location.reload();" title="<?=_('Refresh');?>"><i class="fas fa-redo"></i></a></div>
+				<div class="l-menu__item"><a href="/logout/" title="<?=_('Log out');?>" class="l-profile__logout"><i class="fas fa-sign-out-alt"></i></a></div>
+			</div>
+		</div>
+	</div>
+
+	<div class="server-info-output">.</div>
+	<div class="l-center">
+		<pre class="console-output animated fadeIn">

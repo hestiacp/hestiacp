@@ -71,9 +71,9 @@ fi
 #                       Logging                            #
 #----------------------------------------------------------#
 
-if [ "$status" = "enable" ] || [ "$status" = "disable" ]; then
-    log_history "API status has been changed to $status" '' 'admin'
+if [ "$status" = "enable" ]; then
+    $BIN/v-log-action "system" "Warning" "System" "System API access enabled."
 else
-    log_history "API has been disabled and removed" '' 'admin'
+    $BIN/v-log-action "system" "Info" "System" "System API access disabled."
 fi
 log_event "$OK" "$ARGUMENTS"

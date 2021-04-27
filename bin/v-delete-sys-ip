@@ -164,7 +164,7 @@ if [ ! -z "$FIREWALL_SYSTEM" ]; then
 fi
 
 # Logging
-log_history "deleted system ip address $ip" '' 'admin'
+$BIN/v-log-action "system" "Info" "System" "IP address deleted (IP: $ip)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

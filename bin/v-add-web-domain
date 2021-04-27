@@ -62,6 +62,10 @@ if [ "$($BIN/v-list-web-domain $user $domain_idn plain |cut -f 1) " != "$domain"
 else
     is_domain_new 'web' "$domain,$aliases"
 fi
+if [ -z "$(is_ip_format_valid $domain)" ]; then
+    echo "Error: Invalid domain format. IP address detected as input." 
+    exit 1
+fi
 
 is_dir_symlink "$HOMEDIR/$user/web"
 is_dir_symlink "$HOMEDIR/$user/web/$domain"
@@ -205,7 +209,7 @@ $BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging
-log_history "added web domain $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Added new web domain (Name: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

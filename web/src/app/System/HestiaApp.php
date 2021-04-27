@@ -104,7 +104,7 @@ class HestiaApp {
     public function user() : string
     {
         $user = $this->realuser();
-        if ($user == 'admin' && !empty($_SESSION['look'])) {
+        if ($_SESSION['userContext'] === 'admin' && !empty($_SESSION['look'])) {
             $user = $_SESSION['look'];
         }
 

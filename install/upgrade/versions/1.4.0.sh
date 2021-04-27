@@ -168,3 +168,14 @@ if [ -d "$HESTIA/web/images/webapps/" ]; then
     rm -rf $HESTIA/web/src/app/WebApp/Installers/SymfonySetup.php
     rm -rf $HESTIA/web/src/app/WebApp/Installers/WordpressSetup.php
 fi
+
+
+##### COMMANDS FOR V1.5.X
+
+# Back up default package and install latest version
+if [ -d $HESTIA/data/packages/ ]; then
+    echo "[ * ] Migrating legacy default package for all users..."
+    $HESTIA/bin/v-rename-user-package default custom >/dev/null 2>&1
+    echo "[ * ] Replacing default package..."
+    cp -f $HESTIA_INSTALL_DIR/packages/default.pkg $HESTIA/data/packages/
+fi

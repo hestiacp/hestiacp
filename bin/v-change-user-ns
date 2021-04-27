@@ -87,7 +87,7 @@ update_user_value "$user" '$NS' "$ns"
 #----------------------------------------------------------#
 
 # Logging
-log_history "updated nameservers $ns1 $ns2 $ns3 $ns4 $ns5 $ns6 $ns7 $ns8"
+$BIN/v-log-action "$user" "Info" "DNS" "Updated DNS nameservers ($ns1 $ns2 $ns3 $ns4 $ns5 $ns6 $ns7 $ns8)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

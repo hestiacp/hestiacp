@@ -289,7 +289,7 @@ add_web_config() {
         ln -s $conf /etc/$1/conf.d/domains/$domain.conf
 
         # Clear old configurations
-        rm -rf $HOMEDIR/$user/conf/web/$domain.*
+        rm -f $HOMEDIR/$user/conf/web/$domain.*
 
         # Rename/Move extra config files
         for f in $(ls $HOMEDIR/$user/conf/web/*.$domain.conf* 2>/dev/null); do

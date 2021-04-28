@@ -52,7 +52,10 @@ check_args '2' "$#" 'USER DOMAIN [IP] [RESTART] [ALIASES] [PROXY_EXTENSIONS]'
 is_format_valid 'user' 'domain' 'aliases' 'ip' 'proxy_ext'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-is_package_full 'WEB_DOMAINS' 'WEB_ALIASES'
+# Make the new aliases are also counted for when creating a new domain. 
+ALIAS=$aliases
+is_package_full 'WEB_DOMAINS'
+is_package_full 'WEB_ALIASES'
 
 if [ "$($BIN/v-list-web-domain $user $domain_utf plain |cut -f 1) " != "$domain" ]; then
     is_domain_new 'web' "$domain_utf,$aliases"

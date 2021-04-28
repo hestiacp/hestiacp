@@ -12,8 +12,7 @@ if [ -e "/etc/nginx/nginx.conf" ]; then
     if [ -z "$check" ]; then 
         echo "[ * ] Enabling nginx FastCGI cache support..."
         sed  -i 's/# Cache bypass/# FastCGI cache\n    fastcgi_cache_path \/var\/cache\/nginx\/micro levels=1:2 keys_zone=microcache:10m max_size=1024m inactive=30m;\n    fastcgi_cache_key \"$scheme$request_method$host$request_uri\";\n    fastcgi_cache_methods GET HEAD;\n    fastcgi_cache_use_stale updating error timeout invalid_header http_500 http_503;\n    fastcgi_ignore_headers Cache-Control Expires Set-Cookie;\n    add_header X-FastCGI-Cache \$upstream_cache_status;\n\n    # Cache bypass/g' /etc/nginx/nginx.conf
-sed  -i 's/    fastcgi_cache_lock_timeout      5s;/    fastcgi_cache_lock_timeout      5s;\n    fastcgi_cache_background_update on;\n    fastcgi_cache_revalidate        on;/g' /root/nginx.conf
-
+        sed  -i 's/    fastcgi_cache_lock_timeout      5s;/    fastcgi_cache_lock_timeout      5s;\n    fastcgi_cache_background_update on;\n    fastcgi_cache_revalidate        on;/g' /etc/nginx/nginx.conf
     fi
 fi
 
@@ -167,6 +166,7 @@ if [ -d "$HESTIA/web/images/webapps/" ]; then
     rm -rf $HESTIA/web/src/app/WebApp/Installers/PrestashopSetup.php
     rm -rf $HESTIA/web/src/app/WebApp/Installers/SymfonySetup.php
     rm -rf $HESTIA/web/src/app/WebApp/Installers/WordpressSetup.php
+    rm -rf $HESTIA/web/src/app/WebApp/Installers/Joomla
 fi
 
 

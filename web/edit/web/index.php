@@ -506,8 +506,17 @@ if (!empty($_POST['save'])) {
         exec (HESTIA_CMD."v-add-letsencrypt-domain ".$user." ".escapeshellarg($v_domain)." ".escapeshellarg($l_aliases)." ''", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
-        $v_letsencrypt = 'yes';
+        if($return_var != 0){
+            $v_letsencrypt = 'no';
+        }else{
+            $v_letsencrypt = 'yes';
+        }
         $v_ssl = 'yes';
+        if($_POST['v_ssl_forcessl'] == 'on'){
+            $v_ssl_forcessl = 'yes';
+        }else{
+            $v_ssl_forcessl = 'no';
+        }
         $restart_web = 'yes';
         $restart_proxy = 'yes';
      }

@@ -268,10 +268,6 @@ add_web_config() {
         rm -f /etc/$1/conf.d/domains/$domain.ssl.conf
         ln -s $conf /etc/$1/conf.d/domains/$domain.ssl.conf
 
-        # Clear old configurations
-        rm -f $HOMEDIR/$user/conf/web/$domain.*
-        rm -f $HOMEDIR/$user/conf/web/ssl.$domain.*
-
         # Rename/Move extra SSL config files
         for f in $(ls $HOMEDIR/$user/conf/web/*.$domain.conf* 2>/dev/null); do
             if [[ $f =~ .*/s(nginx|apache2)\.$domain\.conf(.*) ]]; then
@@ -287,10 +283,6 @@ add_web_config() {
     else
         rm -f /etc/$1/conf.d/domains/$domain.conf
         ln -s $conf /etc/$1/conf.d/domains/$domain.conf
-
-        # Clear old configurations
-        rm -f $HOMEDIR/$user/conf/web/$domain.*
-
         # Rename/Move extra config files
         for f in $(ls $HOMEDIR/$user/conf/web/*.$domain.conf* 2>/dev/null); do
             if [[ $f =~ .*/(nginx|apache2)\.$domain\.conf(.*) ]]; then

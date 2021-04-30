@@ -41,9 +41,6 @@ format_aliases
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Parsing domain values as they are used to get the current alias usage
-
-
 if [ -z "$aliases" ]; then
     check_result $E_INVALID "invalid alias format: empty"
 fi

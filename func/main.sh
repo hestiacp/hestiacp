@@ -169,7 +169,7 @@ is_system_enabled() {
 is_package_full() {
     case "$1" in
         WEB_DOMAINS) used=$(wc -l $USER_DATA/web.conf);;
-        WEB_ALIASES) used=$(echo $ALIAS |tr ',' '\n' | wc -l );;
+        WEB_ALIASES) used=$(echo $aliases |tr ',' '\n' |wc -l);;
         DNS_DOMAINS) used=$(wc -l $USER_DATA/dns.conf);;
         DNS_RECORDS) used=$(wc -l $USER_DATA/dns/$domain.conf);;
         MAIL_DOMAINS) used=$(wc -l $USER_DATA/mail.conf);;

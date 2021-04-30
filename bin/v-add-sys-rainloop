@@ -79,7 +79,7 @@ if [ "$UPDATE" == "no" ]; then
     mkdir $RL_CONFIG_DIR
     
     cd "$RL_INSTALL_DIR"
-    [ ! -f "${RC_INSTALL_DIR}/${RC_FILE}" ] && wget "$RL_URL" --quiet -O "${RL_INSTALL_DIR}/${RL_FILE}"
+    [ ! -f "${RC_INSTALL_DIR}/${RC_FILE}" ] && wget "$RL_URL" --retry-connrefused --quiet -O "${RL_INSTALL_DIR}/${RL_FILE}"
     
     key=$(openssl rand -hex 4);
     

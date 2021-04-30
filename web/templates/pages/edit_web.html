@@ -680,5 +680,5 @@
 	</div>
 </div>
 <script>
-	GLOBAL.FTP_USER_PREFIX = <?php json_encode($user.'_') ?>;
+	GLOBAL.FTP_USER_PREFIX = "<?php echo htmlentities($user.'_') ?>";
 </script>

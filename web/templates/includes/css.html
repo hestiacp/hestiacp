@@ -1,0 +1,19 @@
+<link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+<link type="text/css" rel="stylesheet" href="/css/themes/default.min.css?<?=JS_LATEST_UPDATE?>" rel="preload" />
+<?php 
+	if (!empty($_SESSION['userTheme'])) {
+		$selected_theme = $_SESSION['userTheme']; 
+	} else {
+		$selected_theme = $_SESSION['THEME'];
+	} 
+?>
+<!-- Load custom theme -->
+<?php if ($selectedTheme !== 'default') {?>
+  <!-- Load HestiaCP-shipped themes (minified, updated/overwritten with updates) - ($HESTIA/web/css/themes/*.min.css) -->
+  <link type="text/css" rel="stylesheet" href="/css/themes/<?=$selected_theme; ?>.min.css?<?=rand(); ?>" rel="preload" />
+  <!-- Load custom theme files ($HESTIA/web/css/themes/custom/*.css) -->
+  <link type="text/css" rel="stylesheet" href="/css/themes/custom/<?=$selected_theme; ?>.css?<?=rand(); ?>" rel="preload" />
+<?php } ?>
+<link type="text/css" href="/css/dependencies/animate.min.css?<?=JS_LATEST_UPDATE?>" rel="stylesheet" rel="preload" />
+<link type="text/css" href="/css/dependencies/jquery-custom-dialogs.css?<?=JS_LATEST_UPDATE?>" rel="stylesheet" rel="preload" />
+<link type="text/css" href="/css/dependencies/fontawesome.min.css?<?=JS_LATEST_UPDATE?>" rel="stylesheet" rel="preload" />

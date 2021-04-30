@@ -12,7 +12,7 @@ if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
 }
 
 // Delete as someone else?
-if (($_SESSION['user'] == 'admin') && (!empty($_GET['user']))) {
+if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
     $user=$_GET['user'];
 }
 

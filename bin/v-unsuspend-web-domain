@@ -104,6 +104,7 @@ $BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging
+$BIN/v-log-action "system" "Info" "Web" "Unsuspended web domain (User: $user, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

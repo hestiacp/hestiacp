@@ -95,7 +95,7 @@ function syshealth_update_user_config_format() {
     # USER CONFIGURATION
     # Create array of known keys in configuration file
     system="user"
-    known_keys=(NAME PACKAGE CONTACT CRON_REPORTS MD5 RKEY TWOFA QRCODE PHPCLI ROLE SUSPENDED SUSPENDED_USERS SUSPENDED_WEB SUSPENDED_DNS SUSPENDED_MAIL SUSPENDED_DB SUSPENDED_CRON IP_AVAIL IP_OWNED U_USERS U_DISK U_DISK_DIRS U_DISK_WEB U_DISK_MAIL U_DISK_DB U_BANDWIDTH U_WEB_DOMAINS U_WEB_SSL U_WEB_ALIASES U_DNS_DOMAINS U_DNS_RECORDS U_MAIL_DKIM U_MAIL_DKIM U_MAIL_ACCOUNTS U_MAIL_DOMAINS U_MAIL_SSL U_DATABASES U_CRON_JOBS U_BACKUPS LANGUAGE NOTIFICATIONS TIME DATE)
+    known_keys=(NAME PACKAGE CONTACT CRON_REPORTS MD5 RKEY TWOFA QRCODE PHPCLI ROLE SUSPENDED SUSPENDED_USERS SUSPENDED_WEB SUSPENDED_DNS SUSPENDED_MAIL SUSPENDED_DB SUSPENDED_CRON IP_AVAIL IP_OWNED U_USERS U_DISK U_DISK_DIRS U_DISK_WEB U_DISK_MAIL U_DISK_DB U_BANDWIDTH U_WEB_DOMAINS U_WEB_SSL U_WEB_ALIASES U_DNS_DOMAINS U_DNS_RECORDS U_MAIL_DKIM U_MAIL_DKIM U_MAIL_ACCOUNTS U_MAIL_DOMAINS U_MAIL_SSL U_DATABASES U_CRON_JOBS U_BACKUPS LANGUAGE THEME NOTIFICATIONS PREF_UI_SORT TIME DATE)
     write_kv_config_file
     unset system
     unset known_keys
@@ -304,4 +304,19 @@ function syshealth_repair_system_config() {
             fi
         fi
     fi
+}
+
+# Repair System Cron Jobs
+# Add default cron jobs to "admin" user account's cron tab
+function syshealth_repair_system_cronjobs() {
+    $HESTIA/bin/v-add-cron-job 'admin' '*/2' '*' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue restart" '' 'no'
+    $HESTIA/bin/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue daily" '' 'no'
+    $HESTIA/bin/v-add-cron-job 'admin' '15' '02' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue disk" '' 'no'
+    $HESTIA/bin/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue traffic" '' 'no'
+    $HESTIA/bin/v-add-cron-job 'admin' '30' '03' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue webstats" '' 'no'
+    $HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue backup" '' 'no'
+    $HESTIA/bin/v-add-cron-job 'admin' '10' '05' '*' '*' '*' "sudo $HESTIA/bin/v-backup-users" '' 'no'
+    $HESTIA/bin/v-add-cron-job 'admin' '20' '00' '*' '*' '*' "sudo $HESTIA/bin/v-update-user-stats" '' 'no'
+    $HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-rrd" '' 'no'
+    $HESTIA/bin/v-restart-cron
 }

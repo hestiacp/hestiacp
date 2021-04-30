@@ -64,6 +64,14 @@ is_format_valid 'user' 'backup'
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Check if backup folder exists and have the correct permission
+if [[ ! -d "$BACKUP" ]]; then 
+    mkdir -p $BACKUP
+fi
+if [ $(stat -c %a $BACKUP) != 755 ]; then
+    chmod 755 $BACKUP
+fi
+
 # Checking local backup
 if [ ! -e "$BACKUP/$backup" ]; then
     if [[ "$BACKUP_SYSTEM" =~ "google" ]]; then
@@ -884,7 +892,8 @@ $BIN/v-update-user-counters admin
 $BIN/v-update-sys-ip-counters
 
 # Logging
-log_history "restored contents from backup archive $backup"
+$BIN/v-log-action "system" "Info" "Backup" "Restored backup contents (User: $user, Archive: $backup)."
+$BIN/v-log-action "$user" "Info" "Backup" "Restored backup contents (Archive: $backup)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -57,7 +57,7 @@ if [ ! -z "$DNS_SYSTEM" ] && [ -e "$USER_DATA/dns/$domain.conf" ]; then
     records=$($BIN/v-list-dns-records $user $domain plain)
     dkim_records=$(echo "$records" |grep -w '_domainkey' | cut -f 1 -d ' ')
     for id in $dkim_records; do
-        $BIN/v-delete-dns-record $user $domain $id
+        $BIN/v-delete-dns-record $user $domain $id 'yes'
     done
 fi
 
@@ -71,7 +71,7 @@ update_object_value 'mail' 'DOMAIN' "$domain" '$DKIM' 'no'
 decrease_user_value "$user" '$U_MAIL_DKIM'
 
 # Logging
-log_history "disabled DKIM support on $domain"
+$BIN/v-log-action "$user" "Info" "Mail" "DKIM message signing disabled (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

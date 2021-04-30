@@ -283,7 +283,6 @@ add_web_config() {
     else
         rm -f /etc/$1/conf.d/domains/$domain.conf
         ln -s $conf /etc/$1/conf.d/domains/$domain.conf
-
         # Rename/Move extra config files
         for f in $(ls $HOMEDIR/$user/conf/web/*.$domain.conf* 2>/dev/null); do
             if [[ $f =~ .*/(nginx|apache2)\.$domain\.conf(.*) ]]; then

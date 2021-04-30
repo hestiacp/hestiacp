@@ -9,7 +9,11 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 if (empty($_GET['domain'])){
     exec (HESTIA_CMD."v-list-mail-domains $user json", $output, $return_var);
     $data = json_decode(implode('', $output), true);
-    $data = array_reverse($data, true);
+    if($_SESSION['userSortOrder'] == 'name'){
+        ksort($data);
+    }else{ 
+        $data = array_reverse($data,true);
+    }
     unset($output);
 
     render_page($user, $TAB, 'list_mail');
@@ -31,7 +35,11 @@ if (empty($_GET['domain'])){
 } else {
     exec (HESTIA_CMD."v-list-mail-accounts ".escapeshellarg($user)." ".escapeshellarg($_GET['domain'])." json", $output, $return_var);
     $data = json_decode(implode('', $output), true);
-    $data = array_reverse($data, true);
+    if($_SESSION['userSortOrder'] == 'name'){
+        ksort($data);
+    }else{ 
+        $data = array_reverse($data,true);
+    }
     unset($output);
 
     render_page($user, $TAB, 'list_mail_acc');

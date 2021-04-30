@@ -61,6 +61,10 @@ if [ "$($BIN/v-list-dns-domain $user $domain_idn plain |cut -f 1) " != "$domain"
 else
     is_domain_new 'dns' "$domain"
 fi
+if [ -z "$(is_ip_format_valid $domain)" ]; then
+    echo "Error: Invalid domain format. IP address detected as input." 
+    exit 1
+fi
 
 is_package_full 'DNS_DOMAINS'
 template=$(get_user_value '$DNS_TEMPLATE')
@@ -221,7 +225,7 @@ $BIN/v-restart-dns $restart
 check_result $? "DNS restart failed"
 
 # Logging
-log_history "added dns domain $domain"
+$BIN/v-log-action "$user" "Info" "DNS" "Added new DNS domain (Name: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

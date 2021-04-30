@@ -79,7 +79,7 @@ auth_hash=$(echo $AUTH_HASH |tr ':' '\n' |grep -n '' |\
 update_object_value 'web' 'DOMAIN' "$domain" '$AUTH_HASH' "$auth_hash"
 
 # Logging
-log_history "changed auth user $httpauth_user password on $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Web domain password changed (User: $httpauth_user, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

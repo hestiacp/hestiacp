@@ -1,0 +1,253 @@
+<!-- Begin toolbar -->
+<div class="l-center edit">
+	<div class="l-sort clearfix">
+		<div class="l-unit-toolbar__buttonstrip">
+			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/mail/?domain=<?=htmlentities(trim($v_domain, "'"))?>&token=<?=$_SESSION['token']?>"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+		</div>
+		<div class="l-unit-toolbar__buttonstrip float-right">
+			<a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
+		</div>
+	</div>
+</div>
+<!-- End toolbar -->
+
+<div class="l-separator"></div>
+
+<div class="l-center animated fadeIn">
+
+	<form id="vstobjects" name="v_add_mail_acc" method="post">
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+		<input type="hidden" name="ok_acc" value="add" />
+
+		<table class="data mode-add">
+			<tr class="data-add">
+				<td class="data-dotted">
+					<table class="data-col1">
+						<tr>
+							<td></td>
+						</tr>
+					</table>
+				</td>
+				<td class="data-dotted">
+					<table class="data-col2" width="440px">
+						<tr>
+							<td class="step-top">
+								<span class="page-title"><?=_('Adding Mail Account');?></span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<?php
+									if (!empty($_SESSION['error_msg'])) {
+										$msg_icon = 'fa-exclamation-circle status-icon red';
+										$msg_text = htmlentities($_SESSION['error_msg']);
+										$msg_id = 'vst-error';
+									} else {
+										if (!empty($_SESSION['ok_msg'])) {
+											$msg_icon = 'fa-check-circle status-icon green';
+											$msg_text = $_SESSION['ok_msg'];
+											$msg_id = 'vst-ok';
+										}
+									}
+								?>
+								<span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text step-top">
+								<?=_('Domain');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
+								<input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Account');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_account" value="<?=htmlentities(trim($v_account, "'"))?>">
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Password');?> <a href="javascript:randomString();" title="<?=_('generate');?>"><i class="fas fa-sync status-icon green icon-large"></i></a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input password" name="v_password"><br />
+								<meter max="4" id="meter"></meter>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text">
+								<?=_('Your password must have at least');?>:
+								<ul>
+									<li><?=_('8 characters long');?></li>
+									<li><?=_('1 uppercase & 1 lowercase character');?></li>
+									<li><?=_('1 number');?></li>
+								</ul>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text">
+								<a href="javascript:elementHideShow('advtable');" class="vst-advanced"> <?=_('Advanced options');?></a>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
+									<tr>
+										<td class="vst-text input-label">
+											<?=_('Quota');?> <span class="optional">(<?=_('in megabytes');?>)</span>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type="text" size="20" class="vst-input" name="v_quota" value="<?=htmlentities(trim($v_quota, "'"))?>">
+											<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-quota" /</i>
+										</td>
+									</tr>
+									<tr>
+										<td class="vst-text input-label">
+											<?=_('Aliases');?> <span class="optional">(<?=_('use local-part');?>)</span>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<textarea size="20" class="vst-textinput short" name="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
+										</td>
+									</tr>
+									<tr>
+										<td class="vst-text input-label">
+											<?=_('Forward to');?> <span class="optional">(<?=_('one or more email addresses');?>)</span>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<textarea size="20" class="vst-textinput short" name="v_fwd" id="v_fwd" <?php if($v_blackhole == 'yes') echo "disabled";?>><?=htmlentities(trim($v_fwd, "'"))?></textarea>
+										</td>
+									</tr>
+									<tr>
+										<td class="vst-text input-label">
+											<label><input type="checkbox" size="20" class="vst-checkbox" id="v_blackhole" name="v_blackhole" <?php if ($v_blackhole == 'yes') echo "checked=yes" ?>><?=_('Discard all mail');?></label>
+										</td>
+									</tr>
+									<tr <?php if ($v_blackhole == 'yes') echo 'style="display:none"'; ?> id="id_fwd_for">
+										<td class="vst-text input-label">
+											<label><input type="checkbox" size="20" class="vst-checkbox" id="v_fwd_for" name="v_fwd_only" <?php if ($v_fwd_only == 'yes') echo "checked=yes" ?>><?=_('Do not store forwarded mail');?></label>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Send login credentials to email address') ?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" class="vst-input" name="v_send_email" value="<?=htmlentities(trim($v_send_email, "'"))?>">
+								<input type="hidden" name="v_credentials" id="v_credentials">
+							</td>
+						</tr>
+					</table>
+					<table class="data-col2">
+					</table>
+				</td>
+				<td class="mail-infoblock-td">
+					<div class="mail-infoblock">
+						<table>
+							<?php $uname_arr=posix_uname(); $hostname=$uname_arr['nodename']; ?>
+							<tr>
+								<td colspan="2">
+									<select id="mail_configuration" class="vst-list flat">
+										<option v_type="hostname" domain="<?=$v_domain?>"><?=_('Use domain hostname');?></option>
+										<option v_type="starttls"><?=_('Use STARTTLS');?></option>
+										<option v_type="ssl"><?=_('Use SSL / TLS');?></option>
+										<option v_type="no_encryption" domain="<?=htmlentities(trim($v_domain, "'"))?>" no_encryption="<?=_('No encryption');?>"><?=_('No encryption');?></option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td><?=_('Username');?>:</td>
+								<td>
+									<div><span id="v_account">example</span>@<?=htmlentities(trim($v_domain, "'"))?></div>
+								</td>
+							</tr>
+							<tr>
+								<td><?=_('Password');?>:</td>
+								<td>
+									<div id="v_password">******</div>
+								</td>
+							</tr>
+							<tr>
+								<td><?=_('IMAP hostname');?>:</td>
+								<td>
+									<div id="td_imap_hostname">mail.<?=$v_domain?></div>
+								</td>
+							</tr>
+							<tr>
+								<td><?=_('IMAP port');?>:</td>
+								<td>
+									<div id="td_imap_port">143</div>
+								</td>
+							</tr>
+							<tr>
+								<td><?=_('IMAP security');?>:</td>
+								<td>
+									<div id="td_imap_encryption"><?=_('STARTTLS');?></div>
+								</td>
+							</tr>
+							<tr>
+								<td><?=_('IMAP auth method');?>:</td>
+								<td>
+									<div><?=_('Normal password');?></div>
+								</td>
+							</tr>
+							<tr>
+								<td><?=_('SMTP hostname');?>:</td>
+								<td>
+									<div id="td_smtp_hostname">mail.<?=$v_domain?></div>
+								</td>
+							</tr>
+							<tr>
+								<td><?=_('SMTP port');?>:</td>
+								<td>
+									<div id="td_smtp_port">587</div>
+								</td>
+							</tr>
+							<tr>
+								<td><?=_('SMTP security');?>:</td>
+								<td>
+									<div id="td_smtp_encryption"><?=_('STARTTLS');?></div>
+								</td>
+							</tr>
+							<tr>
+								<td><?=_('SMTP auth method');?>:</td>
+								<td>
+									<div><?=_('Normal password');?></div>
+								</td>
+							</tr>
+							<?php if ($_SESSION['WEBMAIL_SYSTEM']) {?>
+								<tr>
+									<td><?=_('Webmail URL');?>:</td>
+									<td>
+										<div><a class="vst" href="http://<?=$v_webmail_alias?>" target="_blank">http://<?=$v_webmail_alias?> <i></i></a></div>
+									</td>
+								</tr>
+							<?php } ?>
+						</table>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>

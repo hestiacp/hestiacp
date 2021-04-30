@@ -67,7 +67,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_history "changed language to $language"
+$BIN/v-log-action "$user" "Info" "System" "Display language changed (Value: $language)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

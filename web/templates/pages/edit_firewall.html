@@ -1,0 +1,147 @@
+<!-- Begin toolbar -->
+<div class="l-center edit">
+	<div class="l-sort clearfix">
+		<div class="l-unit-toolbar__buttonstrip">
+			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/firewall/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+		</div>
+		<div class="l-unit-toolbar__buttonstrip float-right">
+			<a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
+		</div>
+	</div>
+</div>
+<!-- End toolbar -->
+
+<div class="l-separator"></div>
+
+<div class="l-center animated fadeIn">
+
+	<form id="vstobjects" name="v_edit_firewall" method="post" class="<?=$v_status?>">
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+		<input type="hidden" name="save" value="save" />
+
+		<table class='data'>
+			<tr class="data-add">
+				<td class="data-dotted">
+					<table class="data-col1">
+						<tr>
+							<td>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td class="data-dotted">
+					<table class="data-col2" width="600px">
+						<tr>
+							<td class="step-top">
+								<span class="page-title"><?=_('Editing Firewall Rule');?></span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<?php
+									if (!empty($_SESSION['error_msg'])) {
+										$msg_icon = 'fa-exclamation-circle status-icon red';
+										$msg_text = htmlentities($_SESSION['error_msg']);
+										$msg_id = 'vst-error';
+									} else {
+										if (!empty($_SESSION['ok_msg'])) {
+											$msg_icon = 'fa-check-circle status-icon green';
+											$msg_text = $_SESSION['ok_msg'];
+											$msg_id = 'vst-ok';
+										}
+									}
+								?>
+								<span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text step-top">
+								<?=_('Action'); ?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<select class="vst-list" name="v_action">
+									<option value="DROP" <?php if ((!empty($v_action)) && ( $v_action == "DROP" )) echo 'selected'?>><?=_('DROP');?></option>
+									<option value="ACCEPT" <?php if ((!empty($v_action)) && ( $v_action == "ACCEPT" )) echo 'selected'?>><?=_('ACCEPT');?></option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Protocol') ?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<select class="vst-list" name="v_protocol">
+									<option value="TCP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "TCP" )) echo 'selected'?>><?=_('TCP');?></option>
+									<option value="UDP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "UDP" )) echo 'selected'?>><?=_('UDP');?></option>
+									<option value="ICMP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "ICMP" )) echo 'selected'?>><?=_('ICMP');?></option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Port');?> <span class="optional">(<?=_('Ranges and Lists are acceptable');?>)</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_port" value="<?=htmlentities(trim($v_port, "'"))?>" placeholder="<?=_('All ports: 0, Range: 80-82, List: 80,443,8080,8443');?>">
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('IP address / IPset');?> <span class="optional">(<?=_('CIDR format is supported');?>)</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<select class="vst-list" tabindex="-1" id="quickips_list" onchange="this.nextElementSibling.value=this.value">
+									<option value="">&nbsp;</option>
+								</select>
+								<input type="text" size="20" class="vst-input vst-list-editor" name="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Comment');?> <span class="optional">(<?=_('optional');?>)</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_comment" maxlength="255" value="<?=htmlentities(trim($v_comment, "'"))?>">
+							</td>
+						</tr>
+					</table>
+					<table class="data-col2">
+					</table>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+
+<script>
+	var iplists = JSON.parse('<?=$ipset_lists_json?>');
+	iplists.sort(function (a, b) {
+		return a.name > b.name;
+	});
+
+	$(function () {
+		var targetelement = document.getElementById('quickips_list');
+
+		var newEl = document.createElement("option");
+		newEl.text = "IP address lists:";
+		newEl.disabled = true;
+		targetelement.appendChild(newEl);
+
+		iplists.forEach(iplist => {
+			var newEl = document.createElement("option");
+			newEl.text = iplist.name;
+			newEl.value = "ipset:" + iplist.name;
+			targetelement.appendChild(newEl);
+		});
+	});
+</script>

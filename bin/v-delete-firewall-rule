@@ -54,6 +54,7 @@ $BIN/v-update-firewall
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "Firewall" "Removed firewall rule (ID: $rule)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

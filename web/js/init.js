@@ -120,14 +120,31 @@ $(document).ready(function(){
               VE.tmp.sort_direction = $(this).hasClass('up')*1 || -1; 
 
               $('.l-sort .sort-by span b').html($(this).parent('li').find('.name').html());
-              $('.l-sort .sort-by i').removeClass('fa-sort-amount-up fa-sort-amount-down');
-              $(this).hasClass('up') ? $('.l-sort .sort-by i').addClass('fa-sort-amount-up') : $('.l-sort .sort-by i').addClass('fa-sort-amount-down');
+              $('.l-sort .sort-by i').removeClass('fa-sort-alpha-up fa-sort-alpha-down');
+              $(this).hasClass('up') ? $('.l-sort .sort-by i').addClass('fa-sort-alpha-up') : $('.l-sort .sort-by i').addClass('fa-sort-alpha-down');
               $('.units .l-unit').sort(function (a, b) {
                 if(VE.tmp.sort_as_int)
                   return parseInt($(a).attr(VE.tmp.sort_par)) >= parseInt($(b).attr(VE.tmp.sort_par)) ? VE.tmp.sort_direction : VE.tmp.sort_direction * -1;
                 else
                   return $(a).attr(VE.tmp.sort_par) <= $(b).attr(VE.tmp.sort_par) ? VE.tmp.sort_direction : VE.tmp.sort_direction * -1;
                 }).appendTo(".l-center.units");
+              });
+              
+              $('#objects').submit( function (e){
+                 if(!e.originalEvent){
+                    return;
+                 }
+                 e.preventDefault();
+                 $('.ch-toggle').each( function (){
+                    if($(this).prop('checked')){
+                        key=this.name;
+                        div=$('<input type="hidden" name="'+key+'" value="'+this.value+'"/>');
+                        $('#objects').append(div);
+                    }
+                 });
+                 
+                 $('#objects').submit();
+                 return false;
               });
 
               // Shortcuts

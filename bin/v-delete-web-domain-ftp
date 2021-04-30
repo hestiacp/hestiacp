@@ -85,7 +85,7 @@ update_object_value 'web' 'DOMAIN' "$domain" '$FTP_MD5' "$ftp_md5"
 update_object_value 'web' 'DOMAIN' "$domain" '$FTP_PATH' "$ftp_path"
 
 # Logging
-log_history "deleted ftp account ${3} for $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Deleted FTP account (User: ${3}, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

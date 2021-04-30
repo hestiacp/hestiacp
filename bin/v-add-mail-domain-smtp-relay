@@ -71,7 +71,7 @@ update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMTP_RELAY_USERNAME' "$usernam
 update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMTP_RELAY_PASSWORD' "$password"
 
 # Logging
-log_history "Added domain smtp relay support for $domain"
+$BIN/v-log-action "$user" "Info" "Mail" "SMTP Relay enabled (Domain: $domain, Host: $host, Port: $port)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

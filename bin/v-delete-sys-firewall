@@ -51,6 +51,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Error" "Firewall" "System firewall has been disabled."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -8,7 +8,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 
 // Check user
-if ($_SESSION['user'] != 'admin') {
+if ($_SESSION['userContext'] != 'admin')  {
     header("Location: /list/user");
     exit;
 }
@@ -19,6 +19,11 @@ if (empty($_GET['package'])) {
     exit;
 }
 
+// Prevent editing of default package
+if ($_GET['package'] === 'default') {
+    header("Location: /list/package/");
+    exit;
+}
 
 // List package
 $v_package = escapeshellarg($_GET['package']);

@@ -40,7 +40,10 @@ check_args '2' "$#" 'USER DOMAIN [RESTART]'
 is_format_valid 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
+check_user=$(is_object_unsuspended 'user' 'USER' "$user")
+if [ ! -z "$check_user" ]; then
+    exit
+fi
 is_object_valid 'web' 'DOMAIN' "$domain"
 
 # Perform verification if read-only mode is enabled
@@ -110,6 +113,7 @@ $BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging
+$BIN/v-log-action "system" "Info" "System" "Rebuilt web domain (User: $user, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

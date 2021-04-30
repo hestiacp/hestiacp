@@ -6,35 +6,88 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 $TAB = 'login';
 
+/*
 // Logout
 if (isset($_GET['logout'])) {
     setcookie('limit2fa','',time() - 3600,"/");
     session_destroy();
 }
+*/
 
-// Login as someone else
+/* ACTIONS FOR CURRENT USER SESSION */
 if (isset($_SESSION['user'])) {
-    if (empty($_GET['loginas']) ){
-        header("Location: /list/web/");
+
+    // User impersonation
+    // Allow administrators to view and manipulate contents of other user accounts
+    if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['loginas']))) {
+        // Ensure token is passed and matches before granting user impersonation access
+        if ((!$_GET['token']) || ($_SESSION['token'] != $_GET['token'])) {
+            header('location: /list/user/');
+            exit();
+        } else {
+            $v_user = escapeshellarg($_GET['loginas']);
+            $v_impersonator = escapeshellarg($_SESSION['user']);
+            exec (HESTIA_CMD . "v-list-user ".$v_user." json", $output, $return_var);
+            if ( $return_var == 0 ) {
+                $data = json_decode(implode('', $output), true);
+                reset($data);
+                $_SESSION['look'] = key($data);
+                // Log impersonation events
+                exec (HESTIA_CMD . "v-log-action ".$v_impersonator." 'Info' 'Security' 'Logged in as another user (User: $v_user)'", $output, $return_var);
+                exec (HESTIA_CMD . "v-log-action system 'Warning' 'Security' 'User impersonation session started (User: $v_user, Administrator: $v_impersonator)'", $output, $return_var);
+                // Reset account details for File Manager to impersonated user
+                unset($_SESSION['_sf2_attributes']);
+                unset($_SESSION['_sf2_meta']);
+                header("Location: /login/");
+            }
+        }
         exit;
     }
-    if ($_SESSION['user'] == 'admin' && !empty($_GET['loginas'])) {
-        exec (HESTIA_CMD . "v-list-user ".escapeshellarg($_GET['loginas'])." json", $output, $return_var);
-        if ( $return_var == 0 ) {
-            $data = json_decode(implode('', $output), true);
-            reset($data);
-            $_SESSION['look'] = key($data);
-            $_SESSION['look_alert'] = 'yes';
-            # Remove current path for filemanager
-            unset($_SESSION['_sf2_attributes']);
-            unset($_SESSION['_sf2_meta']);
+
+    // Set view based on account properties
+    if (empty($_GET['loginas'])) {
+        // Default view to Users list for administrator accounts
+        if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look']))) {
+            header("Location: /list/user/");
+            exit;
         }
+        
+        // Obtain account properties
+        if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']))) {
+            $v_user = escapeshellarg($_SESSION['look']);
+        } else {
+            $v_user = escapeshellarg($_SESSION['user']);
+        }
+
+        exec (HESTIA_CMD . "v-list-user ".$v_user." json", $output, $return_var);
+        $data = json_decode(implode('', $output), true);
+        unset($output); 
+        
+        // Determine package features and land user at the first available page
+        if ($data[$user]['WEB_DOMAINS'] !== "0") {
+            header("Location: /list/web/");
+        } else if ($data[$user]['DNS_DOMAINS'] !== "0") {
+            header("Location: /list/dns/");
+        } else if ($data[$user]['MAIL_DOMAINS'] !== "0") {
+            header("Location: /list/mail/");
+        } else if ($data[$user]['DATABASES'] !== "0") {
+            header("Location: /list/db/");
+        } else if ($data[$user]['CRON_JOBS'] !== "0") {
+            header("Location: /list/cron/");
+        } else if ($data[$user]['BACKUPS'] !== "0") {
+            header("Location: /list/backup/");
+        } else {
+            header("Location: /error/");
+        }
+        exit;
     }
-    if ($_SESSION['user'] == 'admin' && empty($_GET['loginas'])) {
-        header("Location: /list/user/");
-    } else {
-        header("Location: /list/web/");
+
+    // Do not allow non-administrators to access account impersonation
+    if (($_SESSION['userContext'] !== 'admin') && (!empty($_GET['loginas']))) {
+        header("Location: /login/");
+        exit;
     }
+
     exit;
 }
 
@@ -43,12 +96,15 @@ function authenticate_user($user, $password, $twofa = ''){
     if(isset($_SESSION['token']) && isset($_POST['token']) && $_POST['token'] == $_SESSION['token']) {
     $v_user = escapeshellarg($user);
     $ip = $_SERVER['REMOTE_ADDR'];
+    $user_agent = $_SERVER['HTTP_USER_AGENT'];
     if(isset($_SERVER['HTTP_CF_CONNECTING_IP'])){
         if(!empty($_SERVER['HTTP_CF_CONNECTING_IP'])){
             $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
         }
     }
     $v_ip = escapeshellarg($ip);
+    $v_user_agent = escapeshellarg($user_agent);
+
      // Get user's salt
     $output = '';
     exec (HESTIA_CMD."v-get-user-salt ".$v_user." ".$v_ip." json" , $output, $return_var);
@@ -88,16 +144,34 @@ function authenticate_user($user, $password, $twofa = ''){
             if ( $return_var > 0 ) {
                 sleep(2);
                 $error = "<a class=\"error\">"._('Invalid username or password')."</a>";
-                $v_murmur = escapeshellarg($_POST['murmur']);
-                exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." failed ".$v_murmur, $output, $return_var);
-
+                $v_session_id = escapeshellarg($_POST['token']);
+                exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." failed ".$v_session_id." ".$v_user_agent, $output, $return_var);
                 return $error;
             } else {
 
-                // Get user speciefic parameters
+                // Get user specific parameters
                 exec (HESTIA_CMD . "v-list-user ".$v_user." json", $output, $return_var);
                 $data = json_decode(implode('', $output), true);
                 unset($output); 
+                if ($data[$user]['LOGIN_DISABLED'] === 'yes') {
+                    sleep(2);
+                    $error = "<a class=\"error\">"._('Invalid username or password')."</a>";
+                    $v_session_id = escapeshellarg($_POST['token']);
+                    exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." failed ".$v_session_id." ".$v_user_agent, $output, $return_var);
+                    return $error;
+                }
+
+                if ($data[$user]['LOGIN_USE_IPLIST'] === 'yes') {
+                    $v_login_user_allowed_ips = explode(',',$data[$user]['LOGIN_ALLOW_IPS']);
+                    if (!in_array($ip,$v_login_user_allowed_ips)) {
+                        sleep(2);
+                        $error = "<a class=\"error\">"._('Invalid username or password')."</a>";
+                        $v_session_id = escapeshellarg($_POST['token']);
+                        exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." failed ".$v_session_id." ".$v_user_agent, $output, $return_var);
+                        return $error;
+                    }
+                }
+
                 if ($data[$user]['TWOFA'] != '') {
                         if(empty($twofa)){
                             $_SESSION['login']['username'] = $user;
@@ -112,28 +186,40 @@ function authenticate_user($user, $password, $twofa = ''){
                                 $error = "<a class=\"error\">"._('Invalid or missing 2FA token')."</a>";
                                 $_SESSION['login']['username'] = $user;
                                 $_SESSION['login']['password'] = $password;
-                                $v_murmur = escapeshellarg($_POST['murmur']);
-                                exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." failed ".$v_murmur, $output, $return_var);
+                                $v_session_id = escapeshellarg($_POST['token']);
+                                exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." failed ".$v_session_id." ".$v_user_agent, $output, $return_var);
                                 return $error;
                                 unset($_POST['twofa']);
                             }
                         }
                 }
+                
 
-                if ($data[$user]['ROLE'] == 'admin'){
-                    exec (HESTIA_CMD . "v-list-user admin json", $output, $return_var);
-                    $data = json_decode(implode('', $output), true);
-                    unset($output);
-                }
+                
                 // Define session user
                 $_SESSION['user'] = key($data);
                 $v_user = $_SESSION['user'];
                 //log successfull login attempt
-                $v_murmur = escapeshellarg($_POST['murmur']);
-                exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." success ".$v_murmur, $output, $return_var);
+                $v_session_id = escapeshellarg($_POST['token']);
+                exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." success ".$v_session_id." ".$v_user_agent, $output, $return_var);
 
                 $_SESSION['LAST_ACTIVITY'] = time();
                 $_SESSION['MURMUR'] = $_POST['murmur'];
+
+                // Define user role / context
+                $_SESSION['userContext'] = $data[$user]['ROLE'];
+
+                // Set active user theme on login
+                $_SESSION['userTheme'] = $data[$user]['THEME'];
+                if ($_SESSION['POLICY_USER_CHANGE_THEME'] !== 'yes') {
+                    unset($_SESSION['userTheme']);
+                }
+
+                if (!empty($data[$user]['PREF_UI_SORT'])) {
+                    $_SESSION['userSortOrder'] = $data[$user]['PREF_UI_SORT'];
+                } else {
+                    $_SESSION['userSortOrder'] = 'name';
+                }
 
                 // Define language
                 $output = '';
@@ -153,10 +239,24 @@ function authenticate_user($user, $password, $twofa = ''){
                     unset($_SESSION['request_uri']);
                     exit;
                 } else {
-                    if ($user == 'admin') {
+                    if ($_SESSION['userContext'] === 'admin') {
                         header("Location: /list/user/");
                     } else {
-                        header("Location: /list/web/");
+                        if($data[$user]['WEB_DOMAINS'] != "0") {
+                            header("Location: /list/web/");
+                        } else if ($data[$user]['DNS_DOMAINS'] != "0") {
+                            header("Location: /list/dns/");
+                        } else if ($data[$user]['MAIL_DOMAINS'] != "0") {
+                            header("Location: /list/mail/");
+                        } else if ($data[$user]['DATABASES'] != "0") {
+                            header("Location: /list/db/");
+                        } else if ($data[$user]['CRON_JOBS'] != "0") {
+                            header("Location: /list/cron/");
+                        } else if ($data[$user]['BACKUPS'] != "0") {
+                            header("Location: /list/backup/");
+                        } else {
+                            header("Location: /error/");
+                        }
                     }
                     exit;
                 }
@@ -206,20 +306,20 @@ $_SESSION['token'] = md5(uniqid(mt_rand(), true));
 
 require_once('../templates/header.html');
 if(!empty($_SESSION['login'])){
-    require_once('../templates/login_2.html');
+    require_once('..templates/pages/login/login_2.html');
 }else if (empty($_POST['user'])) {
     if($_SESSION['LOGIN_STYLE'] == 'old'){
-        require_once('../templates/login_a.html');
+        require_once('../templates/pages/login/login_a.html');
     }else{
-        require_once('../templates/login.html');
+        require_once('../templates/pages/login/login.html');
     }
 }else if (empty($_POST['password'])) {
-    require_once('../templates/login_1.html');
+    require_once('../templates/pages/login/login_1.html');
 }else{
     if($_SESSION['LOGIN_STYLE'] == 'old'){
-        require_once('../templates/login_a.html');
+        require_once('../templates/pages/login/login_a.html');
     }else{
-        require_once('../templates/login.html');
+        require_once('../templates/pages/login/login.html');
     }
 }
 ?>

@@ -104,7 +104,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_history "changed $db_editor alias to $alias"
+$BIN/v-log-action "system" "Info" "System" "System access alias changed (Tool: $db_editor, Alias: $alias)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

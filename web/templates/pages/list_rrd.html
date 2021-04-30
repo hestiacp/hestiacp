@@ -1,0 +1,70 @@
+<!-- Begin toolbar -->
+<div class="l-center">
+	<div class="l-sort clearfix noselect">
+		<div class="l-unit-toolbar__buttonstrip">
+			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+			<a href="/list/server/?cpu" class="ui-button cancel" dir="ltr"><i class="fas fa-chart-pie status-icon green"></i><?=_('show: CPU / MEM / NET / DISK');?></a>
+		</div>
+		<div class="l-sort-toolbar clearfix">
+			<table>
+				<tr>
+					<td>
+						<a class="vst<?php if ((empty($_GET['period'])) || ($_GET['period'] == 'daily')) echo " selected" ?>" href="?period=daily"><?=_('Daily');?></a>
+						<a class="vst<?php if ((!empty($_GET['period'])) && ($_GET['period'] == 'weekly')) echo " selected" ?>" href="?period=weekly"><?=_('Weekly');?></a>
+						<a class="vst<?php if ((!empty($_GET['period'])) && ($_GET['period'] == 'monthly')) echo " selected" ?>" href="?period=monthly"><?=_('Monthly');?></a>
+						<a class="vst<?php if ((!empty($_GET['period'])) && ($_GET['period'] == 'yearly')) echo " selected" ?>" href="?period=yearly"><?=_('Yearly');?></a>
+					</td>
+
+					<td>
+						<div class="timer-container" style="float:right;">
+							<span class="timer-button pause"></span>
+							<span class="timer-button play hidden"></span>
+
+							<div class="refresh-timer">
+								<div class="movement left">
+									<div class="loader-half left"></div>
+								</div>
+								<div class="movement right">
+									<div class="loader-half right"></div>
+								</div>
+							</div>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+<!-- End toolbar -->
+
+<div class="l-separator"></div>
+
+<div class="l-center units animated fadeIn">
+	<!-- Begin graph list item loop -->
+	<?php
+		if (empty($_GET['period'])) {
+			$period='daily';
+		} else {
+			$period=$_GET['period'];
+		}
+		foreach ($data as $key => $value) {
+		?>
+		<div class="l-unit l-unit__stats">
+			<div class="l-unit__col l-unit__col--right">
+				<div class="l-unit__name separate">
+					<?= _($data[$key]['TITLE'])?>
+				</div>
+				<div>
+					<a href="/list/rrd/image.php?/rrd/<?=$data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png"?>" target="_blank"><img class="graph-rounded" src="/list/rrd/image.php?/rrd/<?=$data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png"?>"></a>
+				</div>
+			</div>
+		</div>
+	<?php } ?>
+
+</div>
+
+<div id="vstobjects">
+	<div class="l-separator"></div>
+	<div class="l-center">
+	</div>
+</div>

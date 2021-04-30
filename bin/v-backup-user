@@ -56,7 +56,14 @@ check_backup_conditions
 if [ -z "$BACKUP" ]; then
     BACKUP=/backup
 fi
-mkdir -p $BACKUP
+
+# Check if backup folder exists and have the correct permission
+if [[ ! -d "$BACKUP" ]]; then 
+    mkdir -p $BACKUP
+fi
+if [ $(stat -c %a $BACKUP) != 755 ]; then
+    chmod 755 $BACKUP
+fi
 
 # Get current time
 start_time=$(date '+%s')
@@ -665,10 +672,10 @@ sed -i "/v-backup-user $user /d" $HESTIA/data/queue/backup.pipe
 
 U_BACKUPS=$(grep BACKUP $USER_DATA/backup.conf |wc -l)
 update_user_value "$user" '$U_BACKUPS' "$U_BACKUPS"
+cd $BACKUP
 
 # Send notification
 if [ -e "$BACKUP/$user.log" ] && [ "$notify" = "yes" ]; then
-    cd $BACKUP
     subj="$user → backup has been completed"
     email=$(get_user_value '$CONTACT')
     cat $BACKUP/$user.log |$SENDMAIL -s "$subj" $email $notify
@@ -677,6 +684,8 @@ if [ -e "$BACKUP/$user.log" ] && [ "$notify" = "yes" ]; then
 fi
 
 # Logging
+$BIN/v-log-action "$user" "Info" "Backup" "Backup created (Archive: $backup_new_date.tar)."
+$BIN/v-log-action "system" "Info" "Backup" "Backup created (User: $user, Archive: $backup_new_date.tar)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -57,6 +57,7 @@ bckp=$(echo "$BACKUP_SYSTEM" |\
 sed -i "s/BACKUP_SYSTEM=.*/BACKUP_SYSTEM='$bckp'/g" $HESTIA/conf/hestia.conf
 
 # Logging
+$BIN/v-log-action "system" "Info" "Backup" "Removed remote backup host (Host: $host, Type: $type)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

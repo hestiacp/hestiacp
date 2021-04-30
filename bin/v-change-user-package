@@ -138,7 +138,12 @@ U_DATABASES='$U_DATABASES'
 U_CRON_JOBS='$U_CRON_JOBS'
 U_BACKUPS='$U_BACKUPS'
 LANGUAGE='$LANGUAGE'
+THEME='$THEME'
 NOTIFICATIONS='$NOTIFICATIONS'
+PREF_UI_SORT='$PREF_UI_SORT'
+LOGIN_DISABLED='$LOGIN_DISABLED'
+LOGIN_USE_IPLIST='$LOGIN_USE_IPLIST'
+LOGIN_ALLOW_IPS='$LOGIN_ALLOW_IPS'
 TIME='$TIME'
 DATE='$DATE'" > $USER_DATA/user.conf
 }
@@ -188,7 +193,8 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_history "changed $user package to $package" '' 'admin'
+$BIN/v-log-action "$user" "Info" "System" "You have been assigned a new package ($package)."
+$BIN/v-log-action "system" "Info" "System" "Package limits applied to user (Package: $package, User: $user)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -76,7 +76,7 @@ decrease_user_value "$user" '$U_MAIL_ACCOUNTS'
 update_object_value 'mail' 'DOMAIN' "$domain" '$ACCOUNTS' "$accounts"
 
 # Logging
-log_history "deleted $account@$domain mail account"
+$BIN/v-log-action "$user" "Info" "Mail" "Mail account removed (User: $account@$domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

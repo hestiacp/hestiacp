@@ -236,12 +236,14 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
         }
     }
     
-    if (empty($_POST['v_webmail'])) {
-        if (empty($_SESSION['error_msg'])) {
-        exec (HESTIA_CMD."v-delete-mail-domain-webmail ".$user." ".$v_domain." yes", $output, $return_var);
-        check_return_code($return_var,$output);
-        $v_webmail = "";
-        unset($output);
+    if (!empty($_SESSION['IMAP_SYSTEM']) && !empty($_SESSION['WEBMAIL_SYSTEM'])) {
+        if (empty($_POST['v_webmail'])) {
+            if (empty($_SESSION['error_msg'])) {
+            exec (HESTIA_CMD."v-delete-mail-domain-webmail ".$user." ".$v_domain." yes", $output, $return_var);
+            check_return_code($return_var,$output);
+            $v_webmail = "";
+            unset($output);
+            }
         }
     }
     

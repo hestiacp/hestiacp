@@ -1235,6 +1235,32 @@ fi
 # Install dhparam.pem
 cp -f $HESTIA_INSTALL_DIR/ssl/dhparam.pem /etc/ssl
 
+# Deleting old admin user
+if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ "$force" = 'yes' ]; then
+    chattr -i /home/admin/conf > /dev/null 2>&1
+    userdel -f admin > /dev/null 2>&1
+    chattr -i /home/admin/conf > /dev/null 2>&1
+    mv -f /home/admin  $hst_backups/home/ > /dev/null 2>&1
+    rm -f /tmp/sess_* > /dev/null 2>&1
+fi
+if [ ! -z "$(grep ^admin: /etc/group)" ] && [ "$force" = 'yes' ]; then
+    groupdel admin > /dev/null 2>&1
+fi
+
+# Enable sftp jail
+echo "[ * ] Enable SFTP jail..."
+$HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1
+check_result $? "can't enable sftp jail"
+
+# Adding Hestia admin account
+echo "[ * ] Create admin account..."
+$HESTIA/bin/v-add-user admin $vpass $email default "System Administrator"
+check_result $? "can't create admin user"
+$HESTIA/bin/v-change-user-shell admin nologin
+$HESTIA/bin/v-change-user-role admin admin
+$HESTIA/bin/v-change-user-language admin $lang
+$HESTIA/bin/v-change-sys-config-value 'POLICY_SYSTEM_PROTECTED_ADMIN' 'yes'
+
 
 #----------------------------------------------------------#
 #                     Configure Nginx                      #
@@ -1716,34 +1742,8 @@ fi
 
 
 #----------------------------------------------------------#
-#                   Configure Admin User                   #
+#                   Configure IP                           #
 #----------------------------------------------------------#
-
-# Deleting old admin user
-if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ "$force" = 'yes' ]; then
-    chattr -i /home/admin/conf > /dev/null 2>&1
-    userdel -f admin > /dev/null 2>&1
-    chattr -i /home/admin/conf > /dev/null 2>&1
-    mv -f /home/admin  $hst_backups/home/ > /dev/null 2>&1
-    rm -f /tmp/sess_* > /dev/null 2>&1
-fi
-if [ ! -z "$(grep ^admin: /etc/group)" ] && [ "$force" = 'yes' ]; then
-    groupdel admin > /dev/null 2>&1
-fi
-
-# Enable sftp jail
-echo "[ * ] Enable SFTP jail..."
-$HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1
-check_result $? "can't enable sftp jail"
-
-# Adding Hestia admin account
-echo "[ * ] Create admin account..."
-$HESTIA/bin/v-add-user admin $vpass $email default "System Administrator"
-check_result $? "can't create admin user"
-$HESTIA/bin/v-change-user-shell admin nologin
-$HESTIA/bin/v-change-user-role admin admin
-$HESTIA/bin/v-change-user-language admin $lang
-$HESTIA/bin/v-change-sys-config-value 'POLICY_SYSTEM_PROTECTED_ADMIN' 'yes'
 
 # Configuring system IPs
 $HESTIA/bin/v-update-sys-ip > /dev/null 2>&1

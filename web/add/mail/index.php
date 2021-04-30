@@ -95,11 +95,13 @@ if (!empty($_POST['ok'])) {
         }
     }
     
-    if (empty($_POST['v_webmail'])) {
-        if (empty($_SESSION['error_msg'])) {
-        exec (HESTIA_CMD."v-delete-mail-domain-webmail ".$user." ".$v_domain." yes", $output, $return_var);
-        check_return_code($return_var,$output);
-        unset($output);
+    if (!empty($_SESSION['IMAP_SYSTEM'])) {
+        if (empty($_POST['v_webmail'])) {
+            if (empty($_SESSION['error_msg'])) {
+            exec (HESTIA_CMD."v-delete-mail-domain-webmail ".$user." ".$v_domain." yes", $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            }
         }
     }
     

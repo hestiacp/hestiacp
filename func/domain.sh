@@ -267,10 +267,39 @@ add_web_config() {
     if [[ "$2" =~ stpl$ ]]; then
         rm -f /etc/$1/conf.d/domains/$domain.ssl.conf
         ln -s $conf /etc/$1/conf.d/domains/$domain.ssl.conf
+
+        # Rename/Move extra SSL config files
+        for f in $(ls $HOMEDIR/$user/conf/web/*.$domain.conf* 2>/dev/null); do
+            if [[ $f =~ .*/s(nginx|apache2)\.$domain\.conf(.*) ]]; then
+                ServerType="${BASH_REMATCH[1]}"
+                CustomConfigName="${BASH_REMATCH[2]}"
+                if [ "$CustomConfigName" = "_letsencrypt" ]; then
+                    rm -f "$f"
+                    continue
+                fi
+                mv "$f" "$HOMEDIR/$user/conf/web/$domain/$ServerType.ssl.conf_old$CustomConfigName"
+            fi
+        done
     else
         rm -f /etc/$1/conf.d/domains/$domain.conf
         ln -s $conf /etc/$1/conf.d/domains/$domain.conf
-   fi
+
+        # Rename/Move extra config files
+        for f in $(ls $HOMEDIR/$user/conf/web/*.$domain.conf* 2>/dev/null); do
+            if [[ $f =~ .*/(nginx|apache2)\.$domain\.conf(.*) ]]; then
+                ServerType="${BASH_REMATCH[1]}"
+                CustomConfigName="${BASH_REMATCH[2]}"
+                if [ "$CustomConfigName" = "_letsencrypt" ]; then
+                    rm -f "$f"
+                    continue
+                fi
+                mv "$f" "$HOMEDIR/$user/conf/web/$domain/$ServerType.conf_old$CustomConfigName"
+            elif [[ $f =~ .*/forcessl\.(nginx|apache2)\.$domain\.conf ]]; then
+                ServerType="${BASH_REMATCH[1]}"
+                mv "$f" "$HOMEDIR/$user/conf/web/$domain/$ServerType.forcessl.conf"
+            fi
+        done
+    fi
     
     trigger="${2/.*pl/.sh}"
     if [ -x "${WEBTPL_LOCATION}/$trigger" ]; then

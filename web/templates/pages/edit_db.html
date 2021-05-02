@@ -139,6 +139,6 @@
 </div>
 <?php if ($v_type == 'pgsql'){ $user=strtolower($user); } ?>
 <script>
-	GLOBAL.DB_USER_PREFIX = <?php json_encode($user.'_') ?>;
-	GLOBAL.DB_DBNAME_PREFIX = <?php json_encode($user.'_') ?>;
+    GLOBAL.DB_USER_PREFIX = "<?php echo htmlentities($user.'_');?>";
+    GLOBAL.DB_DBNAME_PREFIX = "<?php echo htmlentities($user.'_')?>";
 </script>

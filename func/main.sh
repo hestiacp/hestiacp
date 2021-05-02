@@ -179,8 +179,15 @@ is_package_full() {
     esac
     used=$(echo "$used"| cut -f 1 -d \ )
     limit=$(grep "^$1=" $USER_DATA/user.conf |cut -f 2 -d \')
-    if [ "$limit" != 'unlimited' ] && [[ "$used" -ge "$limit" ]]; then
-        check_result $E_LIMIT "$1 limit is reached :: upgrade user package"
+    if [ "$1" = WEB_ALIASES ]; then
+        # Used is always calculated with the new alias added
+        if [ "$limit" != 'unlimited' ] && [[ "$used" -gt "$limit" ]]; then
+            check_result $E_LIMIT "$1 limit is reached :: upgrade user package"
+        fi
+    else
+        if [ "$limit" != 'unlimited' ] && [[ "$used" -ge "$limit" ]]; then
+            check_result $E_LIMIT "$1 limit is reached :: upgrade user package"
+        fi
     fi
 }
 

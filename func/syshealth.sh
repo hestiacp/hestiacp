@@ -328,7 +328,7 @@ function syshealth_repair_system_config() {
     # Hide system services
     if [ -z "$POLICY_SYSTEM_HIDE_SERVICES" ]; then
         echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYSTEM_HIDE_SERVICES ('no')"
-        $BIN/v-change-sys-config-value "POLICY_SYSTEM_HIDE_ADMIN" "no"
+        $BIN/v-change-sys-config-value "POLICY_SYSTEM_HIDE_SERVICES" "no"
     fi
     # Password reset
     if [ -z "$POLICY_SYSTEM_PASSWORD_RESET" ]; then

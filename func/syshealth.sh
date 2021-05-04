@@ -304,6 +304,83 @@ function syshealth_repair_system_config() {
             fi
         fi
     fi
+    
+    # Enforce subdomain ownership
+    if [ -z "$ENFORCE_SUBDOMAIN_OWNERSHIP" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: ENFORCE_SUBDOMAIN_OWNERSHIP ('yes')"
+        $BIN/v-change-sys-config-value "ENFORCE_SUBDOMAIN_OWNERSHIP" "yes"
+    fi
+    # Debug mode
+    if [ -z "$DEBUG_MODE" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: DEBUG_MODE ('false')"
+        $BIN/v-change-sys-config-value "DEBUG_MODE" "false"
+    fi
+    # Quick install plugin
+    if [ -z "$PLUGIN_APP_INSTALLER" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: PLUGIN_APP_INSTALLER ('yes')"
+        $BIN/v-change-sys-config-value "PLUGIN_APP_INSTALLER" "true"
+    fi
+    # Enable preview mode
+    if [ -z "$POLICY_SYSTEM_ENABLE_BACON" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYSTEM_ENABLE_BACON ('false')"
+        $BIN/v-change-sys-config-value "POLICY_SYSTEM_ENABLE_BACON" "false"
+    fi
+    # Hide system services
+    if [ -z "$POLICY_SYSTEM_HIDE_SERVICES" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYSTEM_HIDE_SERVICES ('no')"
+        $BIN/v-change-sys-config-value "POLICY_SYSTEM_HIDE_ADMIN" "no"
+    fi
+    # Password reset
+    if [ -z "$POLICY_SYSTEM_PASSWORD_RESET" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYSTEM_PASSWORD_RESET ('no')"
+        $BIN/v-change-sys-config-value "POLICY_SYSTEM_PASSWORD_RESET" "no"
+    fi
+    # Protect admin user
+    if [ -z "$POLICY_SYSTEM_PROTECTED_ADMIN" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYSTEM_PROTECTED_ADMIN ('no')"
+        $BIN/v-change-sys-config-value "POLICY_SYSTEM_PROTECTED_ADMIN" "no"
+    fi
+    # Theme editor
+    if [ -z "$POLICY_USER_CHANGE_THEME" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_CHANGE_THEME ('yes')"
+        $BIN/v-change-sys-config-value "POLICY_USER_CHANGE_THEME" "true"
+    fi    
+    # Allow user delte logs
+    if [ -z "$POLICY_USER_DELETE_LOGS" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_DELETE_LOGS ('yes')"
+        $BIN/v-change-sys-config-value "POLICY_USER_DELETE_LOGS" "yes"
+    fi
+    # Allow users to delete details
+    if [ -z "$POLICY_USER_EDIT_DETAILS" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_EDIT_DETAILS ('yes')"
+        $BIN/v-change-sys-config-value "POLICY_USER_EDIT_DETAILS" "yes"
+    fi
+    # Allow users to edit DNS templates
+    if [ -z "$POLICY_USER_EDIT_DNS_TEMPLATES" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_EDIT_DNS_TEMPLATES ('yes')"
+        $BIN/v-change-sys-config-value "POLICY_USER_EDIT_DNS_TEMPLATES" "no"
+    fi
+    # Allow users to edit web templates
+    if [ -z "$POLICY_USER_EDIT_WEB_TEMPLATES" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_EDIT_WEB_TEMPLATES ('yes')"
+        $BIN/v-change-sys-config-value "POLICY_USER_EDIT_WEB_TEMPLATES" "true"
+    fi
+    # View user logs
+    if [ -z "$POLICY_USER_VIEW_LOGS" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_VIEW_LOGS ('yes')"
+        $BIN/v-change-sys-config-value "POLICY_USER_VIEW_LOGS" "true"
+    fi
+    # Allow users to login (read only) when suspended
+    if [ -z "$POLICY_USER_VIEW_SUSPENDED" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_VIEW_SUSPENDED ('no')"
+        $BIN/v-change-sys-config-value "POLICY_USER_VIEW_SUSPENDED" "no"
+    fi
+    # PHPMyadmin SSO key
+    if [ -z "$PHPMYADMIN_KEY" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: PHPMYADMIN_KEY ('')"
+        $BIN/v-change-sys-config-value "PHPMYADMIN_KEY" ""
+    fi
+    
 }
 
 # Repair System Cron Jobs

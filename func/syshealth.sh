@@ -345,7 +345,7 @@ function syshealth_repair_system_config() {
         echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_CHANGE_THEME ('yes')"
         $BIN/v-change-sys-config-value "POLICY_USER_CHANGE_THEME" "true"
     fi    
-    # Allow user delte logs
+    # Allow user delete logs
     if [ -z "$POLICY_USER_DELETE_LOGS" ]; then
         echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_DELETE_LOGS ('yes')"
         $BIN/v-change-sys-config-value "POLICY_USER_DELETE_LOGS" "yes"

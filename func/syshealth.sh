@@ -317,7 +317,7 @@ function syshealth_repair_system_config() {
     fi
     # Quick install plugin
     if [ -z "$PLUGIN_APP_INSTALLER" ]; then
-        echo "[ ! ] Adding missing variable to hestia.conf: PLUGIN_APP_INSTALLER ('yes')"
+        echo "[ ! ] Adding missing variable to hestia.conf: PLUGIN_APP_INSTALLER ('true')"
         $BIN/v-change-sys-config-value "PLUGIN_APP_INSTALLER" "true"
     fi
     # Enable preview mode

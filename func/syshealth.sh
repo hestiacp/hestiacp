@@ -358,7 +358,7 @@ function syshealth_repair_system_config() {
     # Allow users to edit DNS templates
     if [ -z "$POLICY_USER_EDIT_DNS_TEMPLATES" ]; then
         echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_EDIT_DNS_TEMPLATES ('yes')"
-        $BIN/v-change-sys-config-value "POLICY_USER_EDIT_DNS_TEMPLATES" "no"
+        $BIN/v-change-sys-config-value "POLICY_USER_EDIT_DNS_TEMPLATES" "yes"
     fi
     # Allow users to edit web templates
     if [ -z "$POLICY_USER_EDIT_WEB_TEMPLATES" ]; then

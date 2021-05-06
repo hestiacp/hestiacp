@@ -84,7 +84,7 @@
 				<div class="clearfix l-unit__stat-col--left text-right compact-3">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
 						<div class="actions-panel clearfix">
-							<?php if (($key == 'default') && ($_SESSION['userContext'] === 'admin') && ($_SESSION['user'] !== 'admin')) { ?>
+							<?php if (($key == 'default')) { ?>
 								<!-- Restrict editing default package -->
 							<?php } else {?>
 								<div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Package');?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>

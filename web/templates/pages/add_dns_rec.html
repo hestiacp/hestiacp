@@ -149,5 +149,5 @@
 </div>
 
 <script>
-	GLOBAL.DNS_REC_PREFIX = <?php json_encode($_GET['domain']) ?>;
+	GLOBAL.DNS_REC_PREFIX = "<?=htmlentities($_GET['domain']); ?>";
 </script>

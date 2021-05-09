@@ -549,6 +549,6 @@
 	  </div>
 
 	<script>
-		GLOBAL.FTP_USER_PREFIX = <?php json_encode($user.'_') ?>;
-		GLOBAL.FTP_USER_PREPATH = <?= json_encode($v_ftp_user_prepath) ?>;
+		GLOBAL.FTP_USER_PREFIX = "<?=htmlentities($user.'_');?>";
+		GLOBAL.FTP_USER_PREPATH = "<?=htmlentities($v_ftp_user_prepath);?>";
 	</script>

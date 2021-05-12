@@ -7,32 +7,14 @@
 				if($autoupdate == 'Enabled') {
 					$btn_url = '/delete/cron/autoupdate/?token='.$_SESSION['token'].'';
 					$btn_icon = 'fa-toggle-on status-icon green';
-					$btn_label = 'disable autoupdate';
+					$btn_label = _('Disable autoupdate');
 				} else {
 					$btn_url = '/add/cron/autoupdate/?token='.$_SESSION['token'].'';
 					$btn_icon = 'fa-toggle-off status-icon red';
-					$btn_label = 'enable autoupdate';
+					$btn_label = _('Enable autoupdate');
 				}
 			?>
-			<a class="ui-button cancel" dir="ltr" href="<?=$btn_url;?>"><i class="fas <?=$btn_icon;?>"></i><?=_($btn_label);?></a>
-		</div>
-		<div class="l-sort-toolbar clearfix">
-			<table>
-				<tr>
-					<td>
-						<form action="/bulk/hestia/" method="post" id="objects">
-						<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-						<div class="l-select">
-							<select name="action" id="">
-								<option value=""><?=_('apply to selected');?></option>
-								<option value="update"><?=_('update') ?></option>
-							</select>
-						</div>
-						<button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected');?>"><i class="fas fa-arrow-right"></i></button>
-						</form>
-					</td>
-				</tr>
-			</table>
+			<a class="ui-button cancel" dir="ltr" href="<?=$btn_url;?>"><i class="fas <?=$btn_icon;?>"></i><?=$btn_label;?></a>
 		</div>
 	</div>
 </div>

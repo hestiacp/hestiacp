@@ -8,6 +8,7 @@
 			<?php if ((isset($_SESSION['FIREWALL_SYSTEM'])) && (!empty($_SESSION['FIREWALL_SYSTEM']))) {?>
 				<a href="/list/firewall/" class="ui-button cancel" dir="ltr"><i class="fas fa-shield-alt status-icon red"></i><?=_('Firewall');?></a>
 			<?php }?>
+            <a href="/list/updates/" class="ui-button cancel" dir="ltr"><i class="fas fa-sync status-icon green"></i><?=_('Updates');?></a>
 			<a href="/list/log/?user=system&token=<?=$_SESSION['token']?>" class="ui-button cancel" dir="ltr"><i class="fas fa-history status-icon lightblue"></i><?=_('Logs');?></a>
 			<div class="actions-panel display-inline-block" key-action="js">
 				<a class="data-controls do_servicerestart ui-button danger cancel">
@@ -19,21 +20,13 @@
 				</a>
 			</div>
 		</div>
-		<ul class="context-menu sort-order animated fadeIn" style="display:none;">
-			<li entity="sort-cpu" sort_as_int="1"><span class="name"><?=_('CPU');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
-			<li entity="sort-memory" sort_as_int="1"><span class="name"><?=_('Memory');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
-			<li entity="sort-name"><span class="name active"><?=_('Name');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
-		</ul>
 		<div class="l-sort-toolbar clearfix">
 			<table>
 				<tr>
-					<td class="sort-by" title="<?=_('Sort items');?>">
-						<?=_('sort by');?>: <span><b><?=_('Name');?> <i class="fas fa-sort-alpha-down"></i></b></span>
-					</td>
 					<td>
 						<form action="/bulk/service/" method="post" id="objects">
 							<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-							<div class="l-select">
+							<div class="l-select" style="width:160px !important;">
 								<select class="" name="action">
 									<option value=""><?=_('apply to selected');?></option>
 									<option value="stop"><?=_('stop');?></option>

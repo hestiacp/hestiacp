@@ -7,11 +7,11 @@
 				if($autoupdate == 'Enabled') {
 					$btn_url = '/delete/cron/autoupdate/?token='.$_SESSION['token'].'';
 					$btn_icon = 'fa-toggle-on status-icon green';
-					$btn_label = _('Disable autoupdate');
+					$btn_label = _('Disable automatic updates');
 				} else {
 					$btn_url = '/add/cron/autoupdate/?token='.$_SESSION['token'].'';
 					$btn_icon = 'fa-toggle-off status-icon red';
-					$btn_label = _('Enable autoupdate');
+					$btn_label = _('Enable automatic updates');
 				}
 			?>
 			<a class="ui-button cancel" dir="ltr" href="<?=$btn_url;?>"><i class="fas <?=$btn_icon;?>"></i><?=$btn_label;?></a>

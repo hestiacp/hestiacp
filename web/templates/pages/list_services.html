@@ -4,10 +4,6 @@
 		<div class="l-unit-toolbar__buttonstrip">
 			<a href="/edit/server/" class="ui-button cancel" dir="ltr"><i class="fas fa-cog status-icon maroon"></i><?=_('Configure');?></a>
 			<a href="/list/rrd/" class="ui-button cancel" dir="ltr"><i class="fas fa-chart-area status-icon green"></i><?=_('Graphs');?></a>
-			<a href="/list/ip/" class="ui-button cancel" dir="ltr"><i class="fas fa-ethernet status-icon blue"></i><?=_('IP');?></a>
-			<?php if ((isset($_SESSION['FIREWALL_SYSTEM'])) && (!empty($_SESSION['FIREWALL_SYSTEM']))) {?>
-				<a href="/list/firewall/" class="ui-button cancel" dir="ltr"><i class="fas fa-shield-alt status-icon red"></i><?=_('Firewall');?></a>
-			<?php }?>
             <a href="/list/updates/" class="ui-button cancel" dir="ltr"><i class="fas fa-sync status-icon green"></i><?=_('Updates');?></a>
 			<a href="/list/log/?user=system&token=<?=$_SESSION['token']?>" class="ui-button cancel" dir="ltr"><i class="fas fa-history status-icon lightblue"></i><?=_('Logs');?></a>
 			<div class="actions-panel display-inline-block" key-action="js">

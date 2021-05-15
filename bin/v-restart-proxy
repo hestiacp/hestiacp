@@ -72,7 +72,7 @@ if [ -f "$HESTIA/web/inc/nginx_proxy" ]; then
     # Default behaviour
     
     # Preform an check if Nginx is valid as reload doesn't throw an error / exit
-    result=$(service $WEB_SYSTEM $PROXY_SYSTEM  >> /dev/null 2>&1 )
+    service $PROXY_SYSTEM configtest  >> /dev/null 2>&1
     if [ $? -ne 0 ]; then
         send_email_report
         check_result $E_RESTART "$PROXY_SYSTEM restart failed"

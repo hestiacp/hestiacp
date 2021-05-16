@@ -95,21 +95,36 @@ log_event() {
 
 # Log user history
 log_history() {
-    cmd=$1
-    undo=${2-no}
+    message=$1
     log_user=${3-$user}
 
-    if ! $BIN/v-list-user "$log_user" >/dev/null; then
-        return $E_NOTEXIST
+    # Set default event level and category if not specified
+    if [ -z "$event_level" ]; then
+        event_level="Info"
+    fi
+    if [ -z "$event_category" ]; then
+        event_category="System"
     fi
 
-    log=$HESTIA/data/users/$log_user/history.log
-    touch $log
-    if [ '99' -lt "$(wc -l $log |cut -f 1 -d ' ')" ]; then
-        tail -n 49 $log > $log.moved
-        mv -f $log.moved $log
-        chmod 660 $log
+    # Log system events to system log file
+    if [ "$log_user" = "system" ]; then
+        log=$HESTIA/data/users/admin/system.log
+    else 
+        if ! $BIN/v-list-user "$log_user" >/dev/null; then
+            return $E_NOTEXIST
+        fi
+        log=$HESTIA/data/users/$log_user/history.log
     fi
+    touch $log
+
+    # TODO: Improve log pruning and pagination
+    #
+    #if [ '1000' -lt "$(wc -l $log |cut -f 1 -d ' ')" ]; then
+    #    tail -n 499 $log > $log.moved
+    #    mv -f $log.moved $log
+    #    chmod 660 $log
+    #fi
+
     if [ -z "$date" ]; then
         time_n_date=$(date +'%T %F')
         time=$(echo "$time_n_date" |cut -f 1 -d \ )
@@ -117,7 +132,7 @@ log_history() {
     fi
     curr_str=$(grep "ID=" $log | cut -f 2 -d \' | sort -n | tail -n1)
     id="$((curr_str +1))"
-    echo "ID='$id' DATE='$date' TIME='$time' CMD='$cmd' UNDO='$undo'" >> $log
+    echo "ID='$id' DATE='$date' TIME='$time' LEVEL='$event_level' CATEGORY='$event_category' MESSAGE='$message'" >> $log
 }
 
 # Result checker
@@ -164,8 +179,15 @@ is_package_full() {
     esac
     used=$(echo "$used"| cut -f 1 -d \ )
     limit=$(grep "^$1=" $USER_DATA/user.conf |cut -f 2 -d \')
-    if [ "$limit" != 'unlimited' ] && [[ "$used" -ge "$limit" ]]; then
-        check_result $E_LIMIT "$1 limit is reached :: upgrade user package"
+    if [ "$1" = WEB_ALIASES ]; then
+        # Used is always calculated with the new alias added
+        if [ "$limit" != 'unlimited' ] && [[ "$used" -gt "$limit" ]]; then
+            check_result $E_LIMIT "$1 limit is reached :: upgrade user package"
+        fi
+    else
+        if [ "$limit" != 'unlimited' ] && [[ "$used" -ge "$limit" ]]; then
+            check_result $E_LIMIT "$1 limit is reached :: upgrade user package"
+        fi
     fi
 }
 
@@ -623,7 +645,7 @@ is_user_format_valid() {
 is_domain_format_valid() {
     object_name=${2-domain}
     exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|_|/|\|\"|'|;|%|\`| ]"
-    if [[ $1 =~ $exclude ]] || [[ $1 =~ ^[0-9]+$ ]] || [[ $1 =~ "\.\." ]] || [[ $1 =~ "$(printf '\t')" ]]; then
+    if [[ $1 =~ $exclude ]] || [[ $1 =~ ^[0-9]+$ ]] || [[ $1 =~ "\.\." ]] || [[ $1 =~ "$(printf '\t')" ]] ||  [[ "$1" = "www" ]]; then
         check_result $E_INVALID "invalid $object_name format :: $1"
     fi
 }

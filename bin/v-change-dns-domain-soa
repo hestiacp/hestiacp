@@ -83,7 +83,7 @@ $BIN/v-restart-dns $restart
 check_result $? "DNS restart failed" >/dev/null
 
 # Logging
-log_history "changed soa record for $domain to $soa"
+$BIN/v-log-action "$user" "Info" "DNS" "SOA record for DNS domain changed (SOA: $soa, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

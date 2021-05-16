@@ -60,6 +60,10 @@ if [ "$($BIN/v-list-mail-domain $user $domain_idn plain |cut -f 1) " != "$domain
 else
     is_domain_new 'mail' "$domain"
 fi
+if [ -z "$(is_ip_format_valid $domain)" ]; then
+    echo "Error: Invalid domain format. IP address detected as input." 
+    exit 1
+fi
 
 is_package_full 'MAIL_DOMAINS'
 is_dir_symlink $HOMEDIR/$user/mail
@@ -156,18 +160,18 @@ if [ ! -z "$DNS_SYSTEM" ] && [ "$dkim" = 'yes' ]; then
         p=$(cat $USER_DATA/mail/$domain.pub|grep -v ' KEY---'|tr -d '\n')
         record='_domainkey'
         policy="\"t=y; o=~;\""
-        $BIN/v-add-dns-record $user $domain $record TXT "$policy" '' '' 'no'
+        $BIN/v-add-dns-record $user $domain $record TXT "$policy" '' '' 'no' '' 'yes'
 
         record='mail._domainkey'
         selector="\"v=DKIM1\; k=rsa\; p=$p\""
-        $BIN/v-add-dns-record $user $domain $record TXT "$selector"
+        $BIN/v-add-dns-record $user $domain $record TXT "$selector" '' '' 'yes' '' 'yes'
     fi
 fi
 
 # Add webmail configuration to mail domain
 if [ ! -z "$WEB_SYSTEM" ] || [ ! -z "$PROXY_SYSTEM" ]; then
     if [ ! -z "$IMAP_SYSTEM" ]; then
-        $BIN/v-add-sys-webmail $user $domain '' 'no'
+        $BIN/v-add-mail-domain-webmail $user $domain '' 'no'
     fi
 fi
     
@@ -191,7 +195,7 @@ $BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging
-log_history "added mail domain $domain"
+$BIN/v-log-action "$user" "Info" "Mail" "Added new mail domain ($domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

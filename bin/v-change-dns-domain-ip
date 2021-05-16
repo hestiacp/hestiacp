@@ -89,7 +89,7 @@ $BIN/v-restart-dns $restart
 check_result $? "DNS restart failed" >/dev/null
 
 # Logging
-log_history "changed dns ip for $domain to $ip"
+$BIN/v-log-action "$user" "Info" "DNS" "IP address for DNS domain changed (IP: $ip, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

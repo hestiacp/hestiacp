@@ -55,7 +55,8 @@ update_user_value "$user" '$QRCODE' ""
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-log_history "[WARNING] two-factor authentication disabled for $user"
+$BIN/v-log-action "system" "Warning" "System" "Two-factor authentication disabled (User: $user)."
+$BIN/v-log-action "$user" "Warning" "System" "Two-factor authentication disabled."
 log_event "$OK" "$ARGUMENTS"
 
 exit

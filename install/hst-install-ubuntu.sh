@@ -23,7 +23,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.4.0~alpha'
+HESTIA_INSTALL_VER='1.4.0~beta'
 pma_v='5.1.0'
 rc_v="1.4.11"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
@@ -605,7 +605,7 @@ echo
 # Installing Nginx repo
 
 echo "[ * ] NGINX"
-echo "deb [arch=ARCH] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
+echo "deb [arch=$ARCH] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
 apt-key adv --fetch-keys 'https://nginx.org/keys/nginx_signing.key' > /dev/null 2>&1
 
 # Installing sury PHP repo
@@ -1206,11 +1206,11 @@ cp -rf $HESTIA_INSTALL_DIR/templates/web/skel/document_errors/* /var/www/documen
 cp -rf $HESTIA_INSTALL_DIR/firewall $HESTIA/data/
 
 # Configuring server hostname
-$HESTIA/bin/v-change-sys-hostname $servername > /dev/null 2>&1
+$HESTIA/bin/v-change-sys-hostname $servername 'no' > /dev/null 2>&1
 
 # Generating SSL certificate
 echo "[ * ] Generating default self-signed SSL certificate..."
-$HESTIA/bin/v-generate-ssl-cert $(hostname) $email 'US' 'California' \
+$HESTIA/bin/v-generate-ssl-cert $(hostname) '' 'US' 'California' \
      'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
 
 # Parsing certificate file
@@ -1234,6 +1234,32 @@ fi
 
 # Install dhparam.pem
 cp -f $HESTIA_INSTALL_DIR/ssl/dhparam.pem /etc/ssl
+
+# Deleting old admin user
+if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ "$force" = 'yes' ]; then
+    chattr -i /home/admin/conf > /dev/null 2>&1
+    userdel -f admin > /dev/null 2>&1
+    chattr -i /home/admin/conf > /dev/null 2>&1
+    mv -f /home/admin  $hst_backups/home/ > /dev/null 2>&1
+    rm -f /tmp/sess_* > /dev/null 2>&1
+fi
+if [ ! -z "$(grep ^admin: /etc/group)" ] && [ "$force" = 'yes' ]; then
+    groupdel admin > /dev/null 2>&1
+fi
+
+# Enable sftp jail
+echo "[ * ] Enable SFTP jail..."
+$HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1
+check_result $? "can't enable sftp jail"
+
+# Adding Hestia admin account
+echo "[ * ] Create admin account..."
+$HESTIA/bin/v-add-user admin $vpass $email default "System Administrator"
+check_result $? "can't create admin user"
+$HESTIA/bin/v-change-user-shell admin nologin
+$HESTIA/bin/v-change-user-role admin admin
+$HESTIA/bin/v-change-user-language admin $lang
+$HESTIA/bin/v-change-sys-config-value 'POLICY_SYSTEM_PROTECTED_ADMIN' 'yes'
 
 
 #----------------------------------------------------------#
@@ -1451,7 +1477,7 @@ if [ "$mysql" = 'yes' ]; then
     echo "[ * ] Installing phpMyAdmin version v$pma_v..."
 
     # Download latest phpmyadmin release
-    wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
+    wget --retry-connrefused --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
 
     # Unpack files
     tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
@@ -1716,31 +1742,8 @@ fi
 
 
 #----------------------------------------------------------#
-#                   Configure Admin User                   #
+#                   Configure IP                           #
 #----------------------------------------------------------#
-
-# Deleting old admin user
-if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ "$force" = 'yes' ]; then
-    chattr -i /home/admin/conf > /dev/null 2>&1
-    userdel -f admin > /dev/null 2>&1
-    chattr -i /home/admin/conf > /dev/null 2>&1
-    mv -f /home/admin  $hst_backups/home/ > /dev/null 2>&1
-    rm -f /tmp/sess_* > /dev/null 2>&1
-fi
-if [ ! -z "$(grep ^admin: /etc/group)" ] && [ "$force" = 'yes' ]; then
-    groupdel admin > /dev/null 2>&1
-fi
-
-# Enable sftp jail
-$HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1
-check_result $? "can't enable sftp jail"
-
-# Adding Hestia admin account
-$HESTIA/bin/v-add-user admin $vpass $email default "System Administrator"
-check_result $? "can't create admin user"
-$HESTIA/bin/v-change-user-shell admin nologin
-$HESTIA/bin/v-change-user-role admin admin
-$HESTIA/bin/v-change-user-language admin $lang
 
 # Configuring system IPs
 $HESTIA/bin/v-update-sys-ip > /dev/null 2>&1
@@ -1755,6 +1758,7 @@ if [ "$iptables" = 'yes' ]; then
 fi
 
 # Get public IP
+echo "[ * ] Configure System IP..."
 pub_ip=$(curl --ipv4 -s https://ip.hestiacp.com/)
 if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     if [ -e /etc/rc.local ]; then
@@ -1774,6 +1778,11 @@ if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     systemctl enable rc-local > /dev/null 2>&1
     $HESTIA/bin/v-change-sys-ip-nat $ip $pub_ip > /dev/null 2>&1
     ip=$pub_ip
+fi
+
+if [ "$exim" = 'yes' ]; then
+# Set HELO for IP as it didn't set during v-change-sys-hostname
+$HESTIA/bin/v-change-sys-ip-helo $pub_ip $servername
 fi
 
 # Configuring libapache2-mod-remoteip
@@ -1863,6 +1872,9 @@ systemctl start hestia
 check_result $? "hestia start failed"
 chown admin:admin $HESTIA/data/sessions
 
+# Create backup folder and set correct permission
+mkdir -p /backup/
+chmod 755 /backup/
 
 #----------------------------------------------------------#
 #                  Configure File Manager                   #
@@ -1871,6 +1883,8 @@ chown admin:admin $HESTIA/data/sessions
 echo "[ * ] Configuring File Manager..."
 $HESTIA/bin/v-add-sys-filemanager quiet
 
+# create cronjob to generate ssl 
+echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && /usr/local/hestia/bin/v-add-letsencrypt-host" > /etc/cron.d/hestia-ssl
 
 #----------------------------------------------------------#
 #                   Hestia Access Info                     #
@@ -1929,21 +1943,18 @@ cat $tmpfile
 rm -f $tmpfile
 
 # Add welcome message to notification panel
-$HESTIA/bin/v-add-user-notification admin 'Welcome to Hestia Control Panel!' '<br>You are now ready to begin <a href="/add/user/">adding user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, view the <a href="https://docs.hestiacp.com/" target="_new">documentation</a> or visit our <a href="https://forum.hestiacp.com/" target="_new">user forum</a>.<br><br>Please report any bugs or issues via <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a> or e-mail <a href="mailto:info@hestiacp.com?Subject="['$new_version'] Bug Report: ">info@hestiacp.com</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart status-icon red"></i> The Hestia Control Panel development team'
+$HESTIA/bin/v-add-user-notification admin 'Welcome to Hestia Control Panel!' '<br>You are now ready to begin <a href="/add/user/">adding user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, view the <a href="https://docs.hestiacp.com/" target="_new">documentation</a> or visit our <a href="https://forum.hestiacp.com/" target="_new">user forum</a>.<br><br>Please report any bugs or issues via <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart status-icon red"></i> The Hestia Control Panel development team'
 
-echo "[ ! ] IMPORTANT: You must logout or restart the server before continuing."
+echo "[ ! ] IMPORTANT: System will reboot"
 echo ""
 if [ "$interactive" = 'yes' ]; then
-    echo -n " Do you want to reboot now? [Y/N] "
+    echo -n " Press any key to continue!"
     read reboot
-
-    if [ "$reboot" = "Y" ] || [ "$reboot" = "y" ]; then
-        reboot
-    fi
 fi
 
 # Clean-up
 # Sort final configuration file
 sort_config_file
 
+reboot
 # EOF

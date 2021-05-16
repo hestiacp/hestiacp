@@ -1,48 +1,23 @@
 <!doctype html>
-<html lang="<?php echo $_SESSION['LANGUAGE'];?>">
+<html lang="<?=$_SESSION['LANGUAGE'];?>">
+
 <head>
-  <meta charset="utf-8">
-  <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
-  <title><?php echo $_SERVER['HTTP_HOST']; ?> - <?=_($TAB)?> - <?=_('Hestia Control Panel');?></title>
-  <!-- Load base theme-->
-  <link type="text/css" rel="stylesheet" href="/css/themes/default.min.css?<?=JS_LATEST_UPDATE?>" rel="preload" />
-  <? if ($_SESSION['THEME'] !== 'default') {?>
-    <!-- Load provided theme -->
-    <link type="text/css" rel="stylesheet" href="/css/themes/<?php echo $_SESSION['THEME']; ?>.min.css?<?php echo rand(); ?>" rel="preload" />
-    <!-- Load custom theme -->
-    <link type="text/css" rel="stylesheet" href="/css/themes/custom/<?php echo $_SESSION['THEME']; ?>.css?<?php echo rand(); ?>" rel="preload" />
-  <? } ?>
-  <link type="text/css" href="/css/dependencies/animate.min.css?<?=JS_LATEST_UPDATE?>" rel="stylesheet" rel="preload" />
-  <link type="text/css" href="/css/dependencies/jquery-custom-dialogs.css?<?=JS_LATEST_UPDATE?>" rel="stylesheet" rel="preload" />
-  <link type="text/css" href="/css/dependencies/fontawesome.min.css?<?=JS_LATEST_UPDATE?>" rel="stylesheet" rel="preload" />
-  <script type="text/javascript" src="/inc/jquery/jquery-3.5.1.min.js"></script> 
+  <?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/title.html'; ?>
+  <?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/css.html'; ?>
+  <?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/top_js.html'; ?>
   <script>
     //
     //  GLOBAL SETTINGS
     //
     var GLOBAL = {};
-    GLOBAL.FTP_USER_PREFIX  = 'admin_';
-    GLOBAL.DB_USER_PREFIX   = 'admin_';
-    GLOBAL.DB_DBNAME_PREFIX = 'admin_';
+    GLOBAL.FTP_USER_PREFIX = '';
+    GLOBAL.DB_USER_PREFIX = '';
+    GLOBAL.DB_DBNAME_PREFIX = '';
     GLOBAL.AJAX_URL = '';
-
-    if (window.requestIdleCallback) {
-        requestIdleCallback(function () {
-            Fingerprint2.get(function (components) {
-                var values = components.map(function (component) { return component.value })
-                var murmur = Fingerprint2.x64hash128(values.join(''), 31);
-                $('#murmur').val(murmur);
-            })
-        })
-    } else {
-        setTimeout(function () {
-                Fingerprint2.get(function (components) {
-                var values = components.map(function (component) { return component.value })
-                var murmur = Fingerprint2.x64hash128(values.join(''), 31);
-                $('#murmur').val(murmur);
-            })
-        }, 500);
-    }
   </script>
 </head>
+
 <body class="body-<?=strtolower($TAB)?> lang-<?=$_SESSION['language']?>">
+  <?php if (($_SESSION['DEBUG_MODE']) == "true" ) {?>
+    <?php require ''.$_SERVER['HESTIA'].'/web/templates/pages/debug_panel.html'; ?>
+  <?php } ?>

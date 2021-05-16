@@ -11,7 +11,13 @@ if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
     exit();
 }
 
-if ($_SESSION['user'] == 'admin') {
+// Prevent editing of default package
+if ($_GET['package'] === 'default') {
+    header("Location: /list/package/");
+    exit;
+}
+
+if ($_SESSION['userContext'] === 'admin') {
     if (!empty($_GET['package'])) {
         $v_package = escapeshellarg($_GET['package']);
         exec (HESTIA_CMD."v-delete-user-package ".$v_package, $output, $return_var);

@@ -1,0 +1,144 @@
+<!-- Begin toolbar -->
+<div class="l-center edit">
+	<div class="l-sort clearfix">
+		<div class="l-unit-toolbar__buttonstrip">
+			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/db/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+		</div>
+		<div class="l-unit-toolbar__buttonstrip float-right">
+			<a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
+		</div>
+	</div>
+</div>
+<!-- End toolbar -->
+
+<div class="l-separator"></div>
+
+<div class="l-center animated fadeIn">
+
+	<form id="vstobjects" name="v_edit_db" method="post" class="<?=$v_status?>">
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+		<input type="hidden" name="save" value="save" />
+
+		<table class='data'>
+			<tr class="data-add">
+				<td class="data-dotted">
+					<table class="data-col1">
+						<tr>
+							<td>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td class="data-dotted">
+					<table class="data-col2" width="600px">
+						<tr>
+							<td class="step-top">
+								<span class="page-title"><?=_('Editing Database');?></span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<?php
+									if (!empty($_SESSION['error_msg'])) {
+										$msg_icon = 'fa-exclamation-circle status-icon red';
+										$msg_text = htmlentities($_SESSION['error_msg']);
+										$msg_id = 'vst-error';
+									} else {
+										if (!empty($_SESSION['ok_msg'])) {
+											$msg_icon = 'fa-check-circle status-icon green';
+											$msg_text = $_SESSION['ok_msg'];
+											$msg_id = 'vst-ok';
+										}
+									}
+								?>
+								<span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text step-top">
+								<?=_('Database');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_database" value="<?=htmlentities(trim($v_database, "'"))?>" disabled>
+								<small class="hint"></small>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?php
+									print _('Username');
+									echo "&nbsp;&nbsp;&nbsp;&nbsp;<em><small>(".sprintf(_('maximum characters length, including prefix'), 32).")</small></em>";
+								?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_dbuser" value="<?=htmlentities(trim($v_dbuser, "'"))?>">
+								<small class="hint"></small>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Password');?> <a href="javascript:randomString();" title="<?=_('generate');?>"><i class="fas fa-sync status-icon green icon-large"></i></a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>"><br />
+								<meter max="4" id="meter"></meter>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text">
+								<?=_('Your password must have at least');?>:
+								<ul>
+									<li><?=_('8 characters long');?></li>
+									<li><?=_('1 uppercase & 1 lowercase character');?></li>
+									<li><?=_('1 number');?></li>
+								</ul>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Type');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_type" value="<?=htmlentities(trim($v_type, "'"))?>" disabled>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Host');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_host" value="<?=htmlentities(trim($v_host, "'"))?>" disabled>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Charset');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_charset" value="<?=htmlentities(trim($v_charset, "'"))?>" disabled>
+							</td>
+						</tr>
+					</table>
+					<table class="data-col2"></table>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+<?php if ($v_type == 'pgsql'){ $user=strtolower($user); } ?>
+<script>
+    GLOBAL.DB_USER_PREFIX = "<?php echo htmlentities($user.'_');?>";
+    GLOBAL.DB_DBNAME_PREFIX = "<?php echo htmlentities($user.'_')?>";
+</script>

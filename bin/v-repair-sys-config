@@ -33,5 +33,5 @@ fi
 #----------------------------------------------------------#
 #                        Hestia                            #
 #----------------------------------------------------------#
-log_history "executed $mode operation on system configuration file." '' 'admin'
+$BIN/v-log-action "system" "Info" "System" "Executed $mode operation on system configuration."
 log_event "$OK" "$ARGUMENTS"

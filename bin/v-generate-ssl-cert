@@ -93,8 +93,13 @@ cd $workdir
 # Generate private key
 openssl genrsa $KEY_SIZE > $domain.key 2>/dev/null
 
+subj=""
 # Generate the CSR
-subj="/emailAddress=$email/C=$country/ST=$state/L=$city/O=$org"
+if [ -z "$email" ]; then 
+    subj="/emailAddress=$email"
+fi
+
+subj="$subj/C=$country/ST=$state/L=$city/O=$org"
 subj="$subj/OU=$org_unit/CN=$domain_idn"
 
 if [ -z "$aliases" ]; then

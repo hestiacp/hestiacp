@@ -51,7 +51,7 @@ update_ip_helo_value $ip $helo
 #----------------------------------------------------------#
 
 # Logging
-log_history "changed associated HELO/SMTP Banner on $ip to $helo" '' 'admin'
+$BIN/v-log-action "system" "Info" "System" "Configured HELO/SMTP banner (IP: $ip, Value: $helo)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

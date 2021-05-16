@@ -1,0 +1,147 @@
+<!-- Begin toolbar -->
+<div class="l-center edit">
+	<div class="l-sort clearfix">
+		<div class="l-unit-toolbar__buttonstrip">
+			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/dns/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+		</div>
+		<div class="l-unit-toolbar__buttonstrip float-right">
+			<a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
+		</div>
+	</div>
+</div>
+<!-- End toolbar -->
+
+<div class="l-separator"></div>
+
+<div class="l-center animated fadeIn">
+
+	<form id="vstobjects" name="v_edit_dns" method="post" class="<?=$v_status?>">
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+		<input type="hidden" name="save" value="save" />
+		
+		<table class='data'>
+			<tr class="data-add">
+				<td class="data-dotted">
+					<table class="data-col1">
+						<tr>
+							<td>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td class="data-dotted">
+					<table class="data-col2">
+						<tr>
+							<td class="step-top">
+								<span class="page-title"><?=_('Editing DNS Domain');?></span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<?php
+									if (!empty($_SESSION['error_msg'])) {
+										$msg_icon = 'fa-exclamation-circle status-icon red';
+										$msg_text = htmlentities($_SESSION['error_msg']);
+										$msg_id = 'vst-error';
+									} else {
+										if (!empty($_SESSION['ok_msg'])) {
+											$msg_icon = 'fa-check-circle status-icon green';
+											$msg_text = $_SESSION['ok_msg'];
+											$msg_id = 'vst-ok';
+										}
+									}
+								?>
+								<span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text step-top">
+								<?=_('Domain');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
+								<input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('IP Address');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<select class="vst-list" tabindex="-1" onchange="this.nextElementSibling.value=this.value">
+									<option value="">clear</option>
+									<?php
+										foreach ($v_ips as $ip => $value) {
+											$display_ip = empty($value['NAT']) ? $ip : "{$value['NAT']}";
+											$ip_selected = ((!empty($v_ip) && ($v_ip==$ip||$v_ip==$display_ip) ))? 'selected' : '';
+											echo "<option value='{$display_ip}' {$ip_selected}>" . htmlentities($display_ip) . "</option>\n";
+										}
+									?>
+								</select>
+								<input type="text" size="20" class="vst-input vst-list-editor" name="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
+							</td>
+						</tr>
+						<?php if (($_SESSION['userContext'] === 'admin') || ($_SESSION['userContext'] === 'user') && ($_SESSION['POLICY_USER_EDIT_DNS_TEMPLATES'] === 'yes')) { ?>
+							<tr>
+								<td class="vst-text input-label">
+									<?=_('Template') . "<span class='optional'>" . strtoupper($_SESSION['DNS_SYSTEM']) . "</span>";?>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<select class="vst-list" name="v_template">
+										<?php
+											foreach ($templates as $key => $value) {
+												echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
+												$svalue = "'".$value."'";
+												if ((!empty($v_template)) && ( $value == $v_template ) || ($svalue == $v_template)){
+													echo ' selected' ;
+												}
+												echo ">".htmlentities($value)."</option>\n";
+											}
+										?>
+									</select>
+								</td>
+							</tr>
+						<?php } ?>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Expiration Date');?><span class="optional">(<?=_('YYYY-MM-DD');?>)</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_exp" value="<?=htmlentities(trim($v_exp, "'"))?>">
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('SOA');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_soa" value="<?=htmlentities(trim($v_soa, "'"))?>">
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('TTL');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_ttl" value="<?=htmlentities(trim($v_ttl, "'"))?>">
+							</td>
+						</tr>
+					</table>
+					<table class="data-col2"></table>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>

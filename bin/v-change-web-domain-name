@@ -101,7 +101,7 @@ fi
 $BIN/v-rebuild-web-domains $user $restart
 
 # Logging
-log_history "changed web domain name $old_domain to $new_domain"
+$BIN/v-log-action "$user" "Info" "Web" "Renamed web domain (Old Domain: $old_domain, New Domain: $new_domain)."
 log_event "$OK" "$EVENT"
 
 exit

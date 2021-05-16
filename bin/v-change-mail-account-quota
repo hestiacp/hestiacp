@@ -81,7 +81,7 @@ fi
 update_object_value "mail/$domain" 'ACCOUNT' "$account" '$QUOTA' "$quota"
 
 # Logging
-log_history "changed mail quota for $account@$domain to $quota"
+$BIN/v-log-action "$user" "Info" "Mail" "Mail account quota changed (Quota: $quota, Account: $account@$domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -56,7 +56,14 @@ check_backup_conditions
 if [ -z "$BACKUP" ]; then
     BACKUP=/backup
 fi
-mkdir -p $BACKUP
+
+# Check if backup folder exists and have the correct permission
+if [[ ! -d "$BACKUP" ]]; then 
+    mkdir -p $BACKUP
+fi
+if [ $(stat -c %a $BACKUP) != 755 ]; then
+    chmod 755 $BACKUP
+fi
 
 # Get current time
 start_time=$(date '+%s')
@@ -70,7 +77,8 @@ let u_disk=$(grep "U_DISK=" $HESTIA/data/users/$user/user.conf |cut -f 2 -d \')*
 let v_disk=$(($(stat -f --format="%a*%S" $BACKUP)))/1024/1024
 
 if [ "$u_disk" -gt "$v_disk" ]; then
-    echo "not enough diskspace available to perform the backup." |$SENDMAIL -s "$subj" $email $notify
+    # Always notify on failure
+    echo "not enough diskspace available to perform the backup." | $SENDMAIL -s "$subj" $email "yes"
     check_result $E_LIMIT "not enough diskspace available to perform the backup."
 fi
 
@@ -82,7 +90,7 @@ fi
 tmpdir=$(mktemp -p $BACKUP_TEMP -d)
 
 if [ "$?" -ne 0 ]; then
-    echo "Can't create tmp dir $tmpdir" |$SENDMAIL -s "$subj" $email $notify
+    echo "Can't create tmp dir $tmpdir" |$SENDMAIL -s "$subj" $email "yes"
     check_result $E_NOTEXIST "can't create tmp dir"
 fi
 
@@ -592,6 +600,7 @@ backup_new_date=$(date +"%Y-%m-%d_%H-%M-%S")
 
 echo -e "\n-- SUMMARY --" |tee -a $BACKUP/$user.log
 
+errorcode="0"
 # Switching on backup system types
 for backup_type in $(echo -e "${BACKUP_SYSTEM//,/\\n}"); do
     case $backup_type in
@@ -605,7 +614,18 @@ done
 
 # Removing tmpdir
 rm -rf $tmpdir
+if [[ "$errorcode" != "0" ]]; then
+    if [[ "$BACKUP_SYSTEM"  =~ "local" ]]; then 
+        echo -e "$(date "+%F %T") *** Local backup was successfully executed. Remote backup failed ***" |\
+        tee -a $BACKUP/$user.log
+        BACKUP_SYSTEM="local"
+    else
+        echo -e "$(date "+%F %T") *** Remote backup failed ***" |\
+        tee -a $BACKUP/$user.log
 
+        exit $error_code;
+    fi
+fi
 # Calculation run time
 run_time=$((end_time - start_time))
 run_time=$((run_time / 60))
@@ -652,10 +672,10 @@ sed -i "/v-backup-user $user /d" $HESTIA/data/queue/backup.pipe
 
 U_BACKUPS=$(grep BACKUP $USER_DATA/backup.conf |wc -l)
 update_user_value "$user" '$U_BACKUPS' "$U_BACKUPS"
+cd $BACKUP
 
 # Send notification
 if [ -e "$BACKUP/$user.log" ] && [ "$notify" = "yes" ]; then
-    cd $BACKUP
     subj="$user → backup has been completed"
     email=$(get_user_value '$CONTACT')
     cat $BACKUP/$user.log |$SENDMAIL -s "$subj" $email $notify
@@ -664,6 +684,8 @@ if [ -e "$BACKUP/$user.log" ] && [ "$notify" = "yes" ]; then
 fi
 
 # Logging
+$BIN/v-log-action "$user" "Info" "Backup" "Backup created (Archive: $backup_new_date.tar)."
+$BIN/v-log-action "system" "Info" "Backup" "Backup created (User: $user, Archive: $backup_new_date.tar)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

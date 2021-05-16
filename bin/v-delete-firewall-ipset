@@ -72,6 +72,7 @@ rm -f "${IPSET_PATH}/${IPSET_FILE}.iplist"
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "Firewall" "Deleted IP list (Name: $ip_name)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

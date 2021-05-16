@@ -1,0 +1,153 @@
+<!-- Begin toolbar -->
+<div class="l-center edit">
+	<div class="l-sort clearfix">
+		<div class="l-unit-toolbar__buttonstrip">
+			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/dns/?domain=<?=htmlentities(trim($v_domain, "'"))?>&token=<?=$_SESSION['token']?>"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+		</div>
+		<div class="l-unit-toolbar__buttonstrip float-right">
+			<a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
+		</div>
+	</div>
+</div>
+<!-- End toolbar -->
+
+<div class="l-separator"></div>
+
+<div class="l-center animated fadeIn">
+
+	<form id="vstobjects" name="v_add_dns_rec" method="post">
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+		<input type="hidden" name="ok_rec" value="add" />
+		
+		<table class="data mode-add">
+			<tr class="data-add">
+				<td class="data-dotted">
+					<table class="data-col1">
+						<tr>
+							<td></td>
+						</tr>
+					</table>
+				</td>
+				<td class="data-dotted">
+					<table class="data-col2" width="600px">
+						<tr>
+							<td class="step-top">
+								<span class="page-title"><?=_('Adding DNS Record');?></span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<?php
+									if (!empty($_SESSION['error_msg'])) {
+										$msg_icon = 'fa-exclamation-circle status-icon red';
+										$msg_text = htmlentities($_SESSION['error_msg']);
+										$msg_id = 'vst-error';
+									} else {
+										if (!empty($_SESSION['ok_msg'])) {
+											$msg_icon = 'fa-check-circle status-icon green';
+											$msg_text = $_SESSION['ok_msg'];
+											$msg_id = 'vst-ok';
+										}
+									}
+								?>
+								<span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text step-top">
+								<?=_('Domain');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
+								<input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Record');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_rec" value="<?=htmlentities(trim($v_rec, "'"))?>">
+								<small class="hint"></small>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Type');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<select class="vst-list" name="v_type">
+									<option value="A" <?php if ($v_type == 'A') echo selected; ?>>A</option>
+									<option value="AAAA" <?php if ($v_type == 'AAAA') echo selected; ?>>AAAA</option>
+									<option value="CAA" <?php if ($v_type == 'CAA') echo selected; ?>>CAA</option>
+									<option value="CNAME" <?php if ($v_type == 'CNAME') echo selected; ?>>CNAME</option>
+									<option value="DNSKEY" <?php if ($v_type == 'DNSKEY') echo selected; ?>>DNSKEY</option>
+									<option value="IPSECKEY" <?php if ($v_type == 'IPSECKEY') echo selected; ?>>IPSECKEY</option>
+									<option value="KEY" <?php if ($v_type == 'KEY') echo selected; ?>>KEY</option>
+									<option value="MX" <?php if ($v_type == 'MX') echo selected; ?>>MX</option>
+									<option value="NS" <?php if ($v_type == 'NS') echo selected; ?>>NS</option>
+									<option value="PTR" <?php if ($v_type == 'PTR') echo selected; ?>>PTR</option>
+									<option value="SPF" <?php if ($v_type == 'SPF') echo selected; ?>>SPF</option>
+									<option value="SRV" <?php if ($v_type == 'SRV') echo selected; ?>>SRV</option>
+									<option value="TLSA" <?php if ($v_type == 'TLSA') echo selected; ?>>TLSA</option>
+									<option value="TXT" <?php if ($v_type == 'TXT') echo selected; ?>>TXT</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('IP or Value');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<select class="vst-list" tabindex="-1" onchange="this.nextElementSibling.value=this.value">
+									<option value="">&nbsp;</option>
+									<?php
+										foreach ($v_ips as $ip => $value) {
+											$display_ip = empty($value['NAT']) ? $ip : "{$value['NAT']}";
+											echo "<option value='{$display_ip}'>" . htmlentities($display_ip) . "</option>\n";
+										}
+									?>
+								</select>
+								<input type="text" size="20" class="vst-input vst-list-editor" name="v_val" value="<?=htmlentities(trim($v_val, "'"))?>">
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Priority');?> <span class="optional">(<?=_('optional');?>)</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_priority" value="<?=htmlentities(trim($v_priority, "'"))?>">
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('TTL');?> <span class="optional">(<?=_('optional');?>)</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_ttl" value="<?=htmlentities(trim($v_ttl, "'"))?>">
+							</td>
+						</tr>
+					</table>
+					<table class="data-col2">
+					</table>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+
+<script>
+	GLOBAL.DNS_REC_PREFIX = "<?=htmlentities($_GET['domain']); ?>";
+</script>

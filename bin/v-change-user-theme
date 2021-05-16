@@ -1,0 +1,61 @@
+#!/bin/bash
+# info: updates user role
+# options: USER ROLE
+# labels: hestia
+#
+# example: v-change-user-theme user theme
+#
+# Changes web UI display theme for specified user.
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+theme=$2
+
+
+# Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
+source $HESTIA/conf/hestia.conf
+# Unset THEME variable from $HESTIA/conf/hestia.conf
+unset THEME
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Reading user values
+source $USER_DATA/user.conf
+
+
+is_format_valid 'user' 'theme'
+is_object_valid 'user' 'USER' "$user"
+
+is_object_unsuspended 'user' 'USER' "$user"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Set theme value
+check_ckey=$(grep "THEME" $USER_DATA/user.conf)
+if [ -z "$check_ckey" ]; then
+    # Rebuild user configuration to repair missing value
+    $BIN/v-rebuild-user $user
+fi
+update_user_value "$user" '$THEME' "$theme"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+$BIN/v-log-action "$user" "Info" "System" "Applied theme to user interface (Theme: $theme)."
+
+exit

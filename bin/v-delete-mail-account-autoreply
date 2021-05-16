@@ -70,7 +70,7 @@ rm -f $USER_DATA/mail/$domain/$account@$domain.msg
 update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$AUTOREPLY' 'no'
 
 # Logging
-log_history "$ARGUMENTS"
+$BIN/v-log-action "$user" "Info" "Mail" "Mail account auto-reply removed (User: $account@$domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

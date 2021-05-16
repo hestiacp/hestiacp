@@ -61,9 +61,8 @@ if [ "$MODE" != "quiet" ]; then
     echo "PMA Hestia-SSO plugin has been succesfully removed/disabled"
 fi
 
-
-log_history "Disabled support SSO" '' 'admin'
-
 # Logging
+$BIN/v-log-action "system" "Info" "Plugins" "phpMyAdmin Single Sign-On (SSO) disabled."
 log_event "$OK" "$ARGUMENTS"
+
 exit

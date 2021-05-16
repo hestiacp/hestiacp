@@ -1,0 +1,43 @@
+#!/bin/bash
+# info: delete exim mail queue
+# options: none
+# labels: hestia
+#
+# example: v-delete-sys-mail-queue
+#
+# This function checks for messages stuck in the exim mail queue
+# and prompts the user to clear the queue if desired.
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
+source $HESTIA/conf/hestia.conf
+
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+message_count=$(exim -bpc)
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+if [ "$message_count" -gt 0 ]; then
+    read -p "Are you sure you want to delete $message_count messages from the exim queue? [y/N] " answer
+
+    if [ "$answer" = "y" ] || [ "$answer" = "Y" ]; then
+        exiqgrep -i | xargs exim -Mrm
+    fi
+fi
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+$BIN/v-log-action "system" "Info" "System" "Package copied (Package: $package, New Package: $new_package)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

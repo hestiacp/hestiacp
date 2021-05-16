@@ -166,6 +166,10 @@ body {
   background-color: #fff;
 }
 
+.debug-panel-contents {
+  background-color: #fff;
+}
+
 /* HTML5 display definitions
    ========================================================================== */
 /**
@@ -839,7 +843,7 @@ a {
   padding: 4rem;
 }
 
-.notification-container .empty .status-icon {
+.notification-container .empty . {
   color: #54a6e5;
 }
 
@@ -1152,7 +1156,7 @@ form#vstobjects .alert {
 
 .l-stat__col ul {
   list-style-type: none;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   padding-left: 0;
   line-height: 14px;
 }
@@ -1333,10 +1337,12 @@ div.l-content > div.l-separator:nth-of-type(4) {
               inset -1px -1px 4px rgba(220,220,220,0.4);
 }
 
-.context-menu.sort-order span.name i.fas.fa-sort-amount-down {
+.context-menu.sort-order span.name i.fas.fa-sort-amount-down,
+.context-menu.sort-order span.name i.fas.fa-sort-alpha-down {
   float: right;
   margin-top: 2px;
 }
+
 
 .context-menu.sort-order li:last-child {
   border-bottom: none;
@@ -2860,10 +2866,6 @@ a.vst-text:active b{
   text-transform: none;
 }
 
-.body-web .vst-advanced:focus {
-  background: none !inportant;
-}
-
 .login-box .vst-advanced:hover {
   color: #cc3366;
   background-color: transparent;
@@ -3299,20 +3301,22 @@ a.button.cancel {
 }
 
 .section-title {
+  position:relative;
   cursor: default;
-  font-size: 1.2rem!important;
+  font-size: 1.05rem!important;
   font-weight: 600!important;
   padding-bottom: 12px!important;
   padding-top: 28px!important;
   letter-spacing: -0.01em;
   border-bottom: 1px solid #ccc;
   cursor: pointer;
+  min-width: 390px;
 }
 
 .section-hide-button {
-  margin-top: 30px;
-  display: inline-block;
-  margin-left: -14px;
+  position:absolute;
+  right:0;
+  font-size:13.6px;
 }
 
 .qr-code {
@@ -3504,6 +3508,10 @@ form#vstobjects.suspended {
 }
 
 .pill.usage b { color: #30659d; }
+
+.label-space-right {
+  margin-right: 8px;
+}
 
 .badge {
   display: inline-block;
@@ -3704,6 +3712,71 @@ form#vstobjects.suspended {
 .admin-warning-button {
   padding-left: 59px !important;
   padding-right: 59px !important;
+}
+
+.footer-banner {
+  width: 100%;
+  text-align:center;
+  border-top: 1px solid rgba(255,255,255,0.25);
+  box-shadow: 0px -2px 4px rgb(0 0 0 / 40%);
+  font-size: 0.75rem;
+  padding: 10px;
+  position: fixed;
+  bottom: 0px;
+}
+
+.footer-banner b, .footer-banner strong {
+  color: unset;
+}
+
+.footer-banner a {
+  font-weight: 500;
+  color: #fff;
+}
+
+.footer-banner a:hover {
+  color: #fff;
+}
+
+.footer-banner a:hover {
+  text-decoration: underline;
+}
+
+.footer-banner.alpha {
+  background-color: #222;
+  color: #fff;
+}
+
+.footer-banner.alpha a {
+  color: #fff;
+}
+
+.footer-banner.alpha a:hover {
+  color: #fff;
+}
+
+.footer-banner.beta {
+  background-color: #eaeaea;
+  color: #404040;
+}
+
+.footer-banner.beta a {
+  color: #404040;
+}
+
+.footer-banner.developer {
+  background-color: yellow;
+  color: #000;
+}
+
+.footer-banner.developer a {
+  font-weight: 500;
+  color: #000;
+}
+
+.footer-banner.updates {
+  background-color: green;
+  color: #fff;
 }
 
 .float-left {
@@ -4097,6 +4170,43 @@ form#vstobjects.suspended {
   width: 270px;
 }
 
+
+.debug-panel-header {
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.25);
+  box-shadow: 0px -2px 4px rgb(0 0 0 / 40%);
+  font-size: 0.75rem;
+  padding: 10px;
+  background-color: yellow;
+  color: #000;
+  position: sticky;
+  top: 0;
+  z-index: 3001;
+}
+
+.debug-panel-header a {
+  font-weight: 500;
+  color: #000;
+}
+
+.debug-panel-contents {
+  font-size:12px !important;
+  padding:18px;
+  position: absolute;
+  top:0;
+  z-index:3000;
+  height:250px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  border-bottom: 1px solid rgba(255,255,255,0.65);
+  box-shadow: 0px 2px 4px rgb(0 0 0 / 25%);
+}
+
+.body-login .debug-panel-header, .body-login .debug-panel-contents,
+.body-reset .debug-panel-header, .body-reset .debug-panel-contents {
+  display: none;
+}
 
 @media screen and (max-width: 950px) {
   .helper-container {

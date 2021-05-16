@@ -91,6 +91,7 @@ chmod 660 $conf
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Warning" "Firewall" "Banned IP address $ip."
 log_event "$OK" "$ARGUMENTS"
 
 exit

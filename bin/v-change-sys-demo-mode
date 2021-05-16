@@ -53,6 +53,14 @@ $BIN/v-restart-proxy $restart
 check_result $? "restart" >/dev/null 2>&1
 
 # Logging
+if [ "$active" = "yes" ]; then
+    $BIN/v-log-action "system" "Warning" "System" "Demonstration mode (restricted access) enabled."
+else
+    $BIN/v-log-action "system" "Warning" "Info" "Demonstration mode (restricted access) disabled."
+fi
+
+
+
 log_event "$OK" "$ARGUMENTS"
 
 exit

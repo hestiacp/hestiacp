@@ -1,11 +1,12 @@
 #!/bin/bash
-# info: Alow other users create subdomains
+# info: Allow other users create subdomains
 # options: USER DOMAIN
 # labels: web hestia
 #
-# example: v-add-web-domain-allow-users
+# example: v-add-web-domain-allow-users admin admin.com
 #
-# Disallow other users to create a new subdomain.
+# Bypass the rule check for Enforce subdomain ownership for a specific domain. 
+# Enforce subdomain ownership setting in /edit/server/ set to no will always overwrite this behaviour
 # eg: admin adds admin.com
 # user can create user.admin.com
 
@@ -65,7 +66,7 @@ fi
 # Adding new alias
 update_object_value 'web' 'DOMAIN' "$domain" '$ALLOW_USERS' "yes"
 
-log_history "Allow users create subdomain for $domain"
+$BIN/v-log-action "$user" "Warning" "Web" "Subdomain ownership enforcement disabled (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

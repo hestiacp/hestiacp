@@ -68,17 +68,7 @@ U_DISK_MAIL=0
 
 # Starting loop
 for domain in $(search_objects 'mail' 'SUSPENDED' "*" 'DOMAIN'); do
-    rebuild_mail_domain_conf
-    if [ ! -z "$WEB_SYSTEM" ] || [ ! -z "$PROXY_SYSTEM" ]; then
-        if [ ! -z "$IMAP_SYSTEM" ]; then
-            WEBMAIL=$(get_object_value 'web' 'DOMAIN' "$domain" "$WEBMAIL")
-            $BIN/v-delete-mail-domain-webmail $user $domain $restart 'yes'
-            $BIN/v-add-mail-domain-webmail $user $domain $WEBMAIL $restart 'yes'
-            if [ $? -ne 0 ]; then
-                $BIN/v-add-mail-domain-webmail $user $domain '' $restart 'yes'
-            fi
-        fi
-    fi
+    $BIN/v-rebuild-mail-domain $user $domain
 done
 
 

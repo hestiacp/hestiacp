@@ -110,6 +110,15 @@ if [ "$MAIL_SYSTEM" == "exim4" ]; then
     fi
 fi
 
+# Set default webmail system for mail domains
+if [ ! -z "$WEBMAIL_SYSTEM" ]; then
+    for user in $($BIN/v-list-users plain | cut -f1); do
+        for domain in $($BIN/v-list-mail-domains $user plain | cut -f1); do
+            $BIN/v-add-mail-domain-webmail $user $domain
+        done 
+    done
+fi
+
 # Fix PostgreSQL repo
 if [ -f /etc/apt/sources.list.d/postgresql.list ]; then
     echo "[ * ] Updating PostgreSQL repository..."

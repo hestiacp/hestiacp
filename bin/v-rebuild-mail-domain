@@ -82,6 +82,7 @@ fi
 
 # Update disk usage statistics
 $BIN/v-update-user-disk $user
+$BIN/v-update-user-counters $user
 
 # Logging
 $BIN/v-log-action "system" "Info" "System" "Rebuilt mail domain (User: $user, Domain: $domain)."

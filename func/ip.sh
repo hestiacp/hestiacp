@@ -47,16 +47,16 @@ is_ip_rdns_valid() {
 update_ip_helo_value() {
     ip="$1"
     helo="$2"
-    localip="$1"
+    natip="$1"
     
     # In case the IP is an NAT use the real ip address 
     if [ ! -f $HESTIA/data/ips/$ip ]; then
-        localip=$(get_real_ip $ip);
+        $ip=$(get_real_ip $ip);
     fi 
     
     # Create or update ip value
     if [ ! $(get_ip_value '$HELO') ]; then
-        echo "HELO='$helo'" >> $HESTIA/data/ips/$localip
+        echo "HELO='$helo'" >> $HESTIA/data/ips/$ip
     else
         update_ip_value '$HELO' "$helo"
     fi
@@ -68,13 +68,13 @@ update_ip_helo_value() {
 
     #Create or update ip:helo pair in mailhelo.conf file
     if [ ! -z "$helo" ]; then
-        if [ $(cat /etc/${MAIL_SYSTEM}/mailhelo.conf | grep "$ip") ]; then
-            sed -i "/^$ip:/c $ip:$helo" /etc/${MAIL_SYSTEM}/mailhelo.conf
+        if [ $(cat /etc/${MAIL_SYSTEM}/mailhelo.conf | grep "$natip") ]; then
+            sed -i "/^$natip:/c $natip:$helo" /etc/${MAIL_SYSTEM}/mailhelo.conf
         else
-            echo $ip:$helo >> /etc/${MAIL_SYSTEM}/mailhelo.conf
+            echo $natip:$helo >> /etc/${MAIL_SYSTEM}/mailhelo.conf
         fi
     else
-        sed -i "/^$ip:/d" /etc/${MAIL_SYSTEM}/mailhelo.conf
+        sed -i "/^$natip:/d" /etc/${MAIL_SYSTEM}/mailhelo.conf
     fi
 }
 

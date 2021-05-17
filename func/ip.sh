@@ -47,10 +47,16 @@ is_ip_rdns_valid() {
 update_ip_helo_value() {
     ip="$1"
     helo="$2"
-
+    localip="$1"
+    
+    # In case the IP is an NAT use the real ip address 
+    if [ ! -f $HESTIA/data/ips/$ip ]; then
+        localip=$(get_real_ip $ip);
+    fi 
+    
     # Create or update ip value
     if [ ! $(get_ip_value '$HELO') ]; then
-        echo "HELO='$helo'" >> $HESTIA/data/ips/$ip
+        echo "HELO='$helo'" >> $HESTIA/data/ips/$localip
     else
         update_ip_value '$HELO' "$helo"
     fi

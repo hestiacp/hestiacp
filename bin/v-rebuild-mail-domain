@@ -15,6 +15,7 @@
 # Argument definition
 user=$1
 domain=$2
+restart=${3-yes}
 
 # Includes
 # shellcheck source=/usr/local/hestia/func/main.sh
@@ -69,8 +70,8 @@ if [ ! -z "$WEB_SYSTEM" ] || [ ! -z "$PROXY_SYSTEM" ]; then
     if [ ! -z "$IMAP_SYSTEM" ]; then
         WEBMAIL=$(get_object_value 'web' 'DOMAIN' "$domain" "$WEBMAIL")
         if [ ! -z "$WEBMAIL" ]; then
-            $BIN/v-delete-mail-domain-webmail $user $domain '' $restart 'yes'
-            $BIN/v-add-mail-domain-webmail $user $domain $WEBMAIL '' $restart 'yes'
+            $BIN/v-delete-mail-domain-webmail $user $domain "$restart" 'yes'
+            $BIN/v-add-mail-domain-webmail $user $domain $WEBMAIL "$restart" 'yes'
         fi
     fi
 fi

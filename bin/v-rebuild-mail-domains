@@ -68,7 +68,7 @@ U_DISK_MAIL=0
 
 # Starting loop
 for domain in $(search_objects 'mail' 'SUSPENDED' "*" 'DOMAIN'); do
-    $BIN/v-rebuild-mail-domain $user $domain
+    $BIN/v-rebuild-mail-domain $user $domain "no"
 done
 
 

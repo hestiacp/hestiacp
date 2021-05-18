@@ -868,6 +868,9 @@ mkdir -p $HOMEDIR/$user/tmp
 chmod 700 $HOMEDIR/$user/tmp
 chown -R $user:$user $HOMEDIR/$user/tmp
 
+# Delete Hestia File manager key 
+rm -f $HOMEDIR/$user/.ssh/hst-filemanager-key
+
 # Sending mail notification
 subj="$user → restore has been completed"
 cat $tmpdir/restore.log |$SENDMAIL -s "$subj" $email $notify

@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 - **NOTE:** Ubuntu 16.04 (Xenial) is no longer supported as it has reached EOL (end-of-life) status. 
 - **NOTE:** Apache in "standalone" mode is no longer actively supported and has been removed from installer options. Nginx (Proxy) + Apache2 will remain supported. 
 - **NOTE:** Custom "quick installer apps" will not work anymore due to changes in how we handle quick installer apps. Minimal changes to the Quick installer apps are required! Please check https://github.com/hestiacp/hestia-quick-install for how to migrate!
-- **NOTE:** Manual upgrade scripts are available to update Raincube and PHPmyadmin to the last version they can be found in /usr/local/hestia/install/upgrade/manual/
+- **NOTE:** Manual upgrade scripts are available to update Roundcube, Rainloop and PHPmyadmin to the last version they can be found in /usr/local/hestia/install/upgrade/manual/
 
 ### Features
 - Introduced single sign-on support for phpMyAdmin.

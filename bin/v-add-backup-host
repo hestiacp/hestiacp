@@ -6,8 +6,7 @@
 # example: v-add-backup-host sftp backup.acme.com admin p4$$w@Rd
 #          v-add-backup-host b2 bucketName keyID applicationKey
 #
-# This function adds a backup host
-
+# Add a new remote backup location. Currently SFTP, FTP and Backblaze are supported 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

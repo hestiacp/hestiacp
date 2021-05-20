@@ -45,6 +45,7 @@ if (isset($restart)) {
     exec (HESTIA_CMD."v-restart-web", $output, $return_var);
     exec (HESTIA_CMD."v-restart-proxy", $output, $return_var);
     exec (HESTIA_CMD."v-restart-dns", $output, $return_var);
+    exec (HESTIA_CMD."v-restart-web-backend", $output, $return_var);
 }
 
 header("Location: /list/web/");

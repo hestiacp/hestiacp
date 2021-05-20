@@ -332,10 +332,10 @@
 									</tr>
 									<tr>
 										<td class="vst-text">
-											<?=_('DNS Cluster');?>: <span class="optional"><?php if ($v_dns_cluster == 'yes') { echo 'Yes'; } else { echo 'No'; } ?></span>
+											<?=_('DNS Cluster');?>: <span class="optional"><?php if ($v_dns_cluster == 'yes') { echo _('Yes'); } else { echo _('No'); } ?></span>
 										</td>
 									</tr>
-									<?php if ($v_dns_cluster = 'yes') {
+									<?php if ($v_dns_cluster == 'yes') {
 										$i = 0;
 										foreach ($dns_cluster as $key => $value) {
 											$i++;

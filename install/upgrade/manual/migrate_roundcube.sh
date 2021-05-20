@@ -17,7 +17,7 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-if [ ! -d "/usr/share/phpmyadmin/" ]; then
+if [ ! -d "/usr/share/roundcube/" ]; then
     echo "Install Roundcube not done via APT"
     exit 2;
 fi

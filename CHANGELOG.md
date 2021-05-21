@@ -9,7 +9,6 @@ All notable changes to this project will be documented in this file.
 - **NOTE:** Manual upgrade scripts are available to update Roundcube, Rainloop and PHPmyadmin to the last version they can be found in /usr/local/hestia/install/upgrade/manual/
 
 ### Features
-- Introduced single sign-on support for phpMyAdmin.
 - Introduced support for NGINX FastCGI cache.
 - Introduced support for SMTP Relay / smarthosts (server-wide or per-domain).
 - Introduced the ability to choose which webmail client to use per-domain (Roundcube or Rainloop).

@@ -178,6 +178,10 @@ if [ -d "$HESTIA/web/images/webapps/" ]; then
     rm -rf $HESTIA/web/src/app/WebApp/Installers/Joomla
 fi
 
+# Update ClamAV configuration file
+if [ -f "/etc/clamav/clamd.conf" ]; then
+    cp -f $HESTIA_INSTALL_DIR/clamav/clamd.conf /etc/clamav/
+fi
 
 ##### COMMANDS FOR V1.5.X
 

@@ -1,9 +1,9 @@
 #!/bin/bash
 # info: Purge nginx cache
-# options: USER DOMAIN MODE
+# options: USER DOMAINå
 # labels: hestia web
 #
-# example: v-purge-nginx-cache user domain.tld proxy
+# example: v-purge-nginx-cache user domain.tld
 #
 # The function purges nginx cache.
 

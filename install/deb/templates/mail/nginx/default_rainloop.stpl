@@ -11,6 +11,11 @@ ssl_certificate_key %ssl_key%;
 ssl_stapling on;
 ssl_stapling_verify on;
 
+location ^~ /data {
+    deny all;
+    return 404;
+}
+
 location ~ ^/(README.md|config|temp|logs|bin|SQL|INSTALL|LICENSE|CHANGELOG|UPGRADING)$ {
     deny all;
     return 404;

@@ -19,7 +19,7 @@ if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
 if (!empty($_GET['domain'])) {
     $v_username = escapeshellarg($user);
     $v_domain = escapeshellarg($_GET['domain']);
-    exec (HESTIA_CMD."v-delete-web-domain ".$v_username." ".$v_domain, $output, $return_var);
+    exec (HESTIA_CMD."v-delete-web-domain ".$v_username." ".$v_domain." 'yes'", $output, $return_var);
     check_return_code($return_var,$output);
     unset($output);
 }

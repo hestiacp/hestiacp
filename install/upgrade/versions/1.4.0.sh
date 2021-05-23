@@ -64,6 +64,7 @@ if [ "$MAIL_SYSTEM" == "exim4" ]; then
             echo '      If you want to use the Hestia smtp relay feature,'
             echo '      please review the /etc/exim4/exim4.conf.template'
             echo '      file and resolve any conflicts.'
+            $HESTIA/bin/v-add-user-notification admin 'Manual intervention required to enable SMTP Relay' 'ERROR: Manual intervention required to enable SMTP Relay: <br />Exim only supports one plaintext authenticator. If you want to use the Hestia smtp relay feature, please review the /etc/exim4/exim4.conf.template file and resolve any conflicts.'
         else
             disable_smtp_relay=false
         fi
@@ -176,6 +177,12 @@ if [ -d "$HESTIA/web/images/webapps/" ]; then
     rm -rf $HESTIA/web/src/app/WebApp/Installers/SymfonySetup.php
     rm -rf $HESTIA/web/src/app/WebApp/Installers/WordpressSetup.php
     rm -rf $HESTIA/web/src/app/WebApp/Installers/Joomla
+fi
+
+# Update ClamAV configuration file
+if [ -f "/etc/clamav/clamd.conf" ]; then
+    cp -f $HESTIA_INSTALL_DIR/clamav/clamd.conf /etc/clamav/
+    $HESTIA/bin/v-add-user-notification admin 'ClamAV config has been overwritten' 'Warning: If you have manualy changed /etc/clamav/clamd.conf and any changes you made will be lost an backup has been created in the /root/hst_backups folder with the original config. If you have not changed the config file you can ignore this message'
 fi
 
 if [ -f "$HESTIA/data/firewall/ipset/blacklist.sh" ]; then

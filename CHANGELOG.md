@@ -90,6 +90,7 @@ All notable changes to this project will be documented in this file.
 - Standardize headers for upgrade scripts
 - Improved how we handle custom themes
 - Refactored HMTL / PHP code WebUI
+- Updated ClamAV configuration
 
 
 ## [1.3.5] - Service Release

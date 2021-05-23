@@ -178,6 +178,9 @@ if [ -d "$HESTIA/web/images/webapps/" ]; then
     rm -rf $HESTIA/web/src/app/WebApp/Installers/Joomla
 fi
 
+if [ -f "$HESTIA/data/firewall/ipset/blacklist.sh" ]; then
+    sed -i  '/BruteForceBlocker/d' $HESTIA/data/firewall/ipset/blacklist.sh
+fi
 
 ##### COMMANDS FOR V1.5.X
 

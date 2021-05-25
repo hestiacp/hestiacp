@@ -38,7 +38,7 @@ then
    cp -r /var/lib/phpmyadmin/* /root/hst_backup_man/var_phmyadmin
    
    echo '[ * ] Remove PHPmyAdmin via ATP'
-   apt-get autoremove phpmyadmin
+   apt-mark hold phpmmyadmin
    
    echo '[ * ] Delete possible trail'
    # make sure everything is deleted 

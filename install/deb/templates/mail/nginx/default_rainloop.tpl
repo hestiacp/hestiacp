@@ -13,7 +13,12 @@ location ~ /\.(?!well-known\/) {
     return 404;
 }
 
-location ~ /data/ {
+location ^~ /data {
+    deny all;
+    return 404;
+}
+
+location ~ ^/(README.md|config|temp|logs|bin|SQL|INSTALL|LICENSE|CHANGELOG|UPGRADING)$ {
     deny all;
     return 404;
 }

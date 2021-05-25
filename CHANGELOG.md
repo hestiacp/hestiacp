@@ -91,6 +91,7 @@ All notable changes to this project will be documented in this file.
 - Standardize headers for upgrade scripts
 - Improved how we handle custom themes
 - Refactored HMTL / PHP code WebUI
+- Updated ClamAV configuration
 - Fixed issue where file manger key got the wrong permissions
 - Update version Laveral @mariojgt
 

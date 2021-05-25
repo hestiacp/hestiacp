@@ -187,10 +187,6 @@ if [ -f "/etc/clamav/clamd.conf" ]; then
     $HESTIA/bin/v-add-user-notification admin 'ClamAV config has been overwritten' 'Warning: If you have manualy changed /etc/clamav/clamd.conf and any changes you made will be lost an backup has been created in the /root/hst_backups folder with the original config. If you have not changed the config file you can ignore this message'
 fi
 
-if [ -f "$HESTIA/data/firewall/ipset/blacklist.sh" ]; then
-    sed -i  '/BruteForceBlocker/d' $HESTIA/data/firewall/ipset/blacklist.sh
-fi
-
 ##### COMMANDS FOR V1.5.X
 
 # Back up default package and install latest version

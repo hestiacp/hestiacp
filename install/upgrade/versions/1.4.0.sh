@@ -117,7 +117,7 @@ fi
 if [ ! -z "$WEBMAIL_SYSTEM" ]; then
     for user in $($BIN/v-list-users plain | cut -f1); do
         for domain in $($BIN/v-list-mail-domains $user plain | cut -f1); do
-            $BIN/v-add-mail-domain-webmail $user $domain
+            $BIN/v-add-mail-domain-webmail $user $domain '' no
         done 
     done
 fi

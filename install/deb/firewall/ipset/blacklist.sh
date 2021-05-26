@@ -8,6 +8,7 @@ BLACKLISTS=(
     "https://www.projecthoneypot.org/list_of_ips.php?t=d&rss=1" # Project Honey Pot Directory of Dictionary Attacker IPs
     "https://check.torproject.org/cgi-bin/TorBulkExitList.py?ip=1.1.1.1"  # TOR Exit Nodes
     "https://www.maxmind.com/en/high-risk-ip-sample-list" # MaxMind GeoIP Anonymous Proxies
+    "http://danger.rulez.sk/projects/bruteforceblocker/blist.php" # BruteForceBlocker IP List
     "https://www.spamhaus.org/drop/drop.lasso" # Spamhaus Don't Route Or Peer List (DROP)
     "https://cinsscore.com/list/ci-badguys.txt" # C.I. Army Malicious IP List
     "https://lists.blocklist.de/lists/all.txt" # blocklist.de attackers

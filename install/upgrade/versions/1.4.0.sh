@@ -117,7 +117,7 @@ fi
 if [ ! -z "$WEBMAIL_SYSTEM" ]; then
     for user in $($BIN/v-list-users plain | cut -f1); do
         for domain in $($BIN/v-list-mail-domains $user plain | cut -f1); do
-            $BIN/v-add-mail-domain-webmail $user $domain
+            $BIN/v-add-mail-domain-webmail $user $domain '' no
         done 
     done
 fi
@@ -185,10 +185,6 @@ fi
 if [ -f "/etc/clamav/clamd.conf" ]; then
     cp -f $HESTIA_INSTALL_DIR/clamav/clamd.conf /etc/clamav/
     $HESTIA/bin/v-add-user-notification admin 'ClamAV config has been overwritten' 'Warning: If you have manualy changed /etc/clamav/clamd.conf and any changes you made will be lost an backup has been created in the /root/hst_backups folder with the original config. If you have not changed the config file you can ignore this message'
-fi
-
-if [ -f "$HESTIA/data/firewall/ipset/blacklist.sh" ]; then
-    sed -i  '/BruteForceBlocker/d' $HESTIA/data/firewall/ipset/blacklist.sh
 fi
 
 ##### COMMANDS FOR V1.5.X

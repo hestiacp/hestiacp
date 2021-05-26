@@ -306,7 +306,7 @@ $_SESSION['token'] = md5(uniqid(mt_rand(), true));
 
 require_once('../templates/header.html');
 if(!empty($_SESSION['login'])){
-    require_once('..templates/pages/login/login_2.html');
+    require_once('../templates/pages/login/login_2.html');
 }else if (empty($_POST['user'])) {
     if($_SESSION['LOGIN_STYLE'] == 'old'){
         require_once('../templates/pages/login/login_a.html');

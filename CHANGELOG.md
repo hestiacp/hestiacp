@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.4.1] - Bug fix
+
+- Fixed bug with 2FA enabled logins 
+
 ## [1.4.0] - Major Release (Feature / Quality Update)
 
 - **NOTE:** Ubuntu 16.04 (Xenial) is no longer supported as it has reached EOL (end-of-life) status. 

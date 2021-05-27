@@ -59,6 +59,7 @@ server {
                 if ($http_cookie ~ SESS) {
                     set $no_cache 1;
                 }
+        }
     }
 
     location /error/ {

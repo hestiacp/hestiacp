@@ -23,7 +23,7 @@ if [ ! -d "/usr/share/roundcube/" ]; then
 fi
 
 
-echo "For deleting Roudcube you will need confirm the removal with root password. Password can be found in /usr/local/hestia/conf/mysql.conf"
+echo "For deleting Roundcube you will need confirm the removal with root password. Password can be found in /usr/local/hestia/conf/mysql.conf"
 read -p "Please enter Y to continue" -n 1 -r
 echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]

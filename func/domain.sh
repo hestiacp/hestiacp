@@ -231,7 +231,8 @@ add_web_config() {
             WEBTPL_LOCATION="$WEBTPL/$1/$WEB_BACKEND"
         fi
     fi
-
+    
+    # Leave proxy_extentions as custom templates might depend on it
     cat "${WEBTPL_LOCATION}/$2" | \
         sed -e "s|%ip%|$local_ip|g" \
             -e "s|%domain%|$domain|g" \
@@ -248,6 +249,7 @@ add_web_config() {
             -e "s|%proxy_system%|$PROXY_SYSTEM|g" \
             -e "s|%proxy_port%|$PROXY_PORT|g" \
             -e "s|%proxy_ssl_port%|$PROXY_SSL_PORT|g" \
+            -e "s/%proxy_extentions%/${PROXY_EXT//,/|}/g" \
             -e "s/%proxy_extensions%/${PROXY_EXT//,/|}/g" \
             -e "s|%user%|$user|g" \
             -e "s|%group%|$user|g" \

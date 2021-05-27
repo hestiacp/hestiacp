@@ -232,7 +232,10 @@ add_web_config() {
         fi
     fi
     
-    # Leave proxy_extentions as custom templates might depend on it
+    # Note: Removing or renaming template variables will lead to broken custom templates.
+    #   -If possible custom templates should be automatically upgraded to use the new format
+    #   -Alternatively a depreciation period with proper notifications should be considered 
+    
     cat "${WEBTPL_LOCATION}/$2" | \
         sed -e "s|%ip%|$local_ip|g" \
             -e "s|%domain%|$domain|g" \
@@ -740,6 +743,10 @@ add_webmail_config() {
         override_alias_idn="mail.$domain_idn"
         
     fi
+    
+    # Note: Removing or renaming template variables will lead to broken custom templates.
+    #   -If possible custom templates should be automatically upgraded to use the new format
+    #   -Alternatively a depreciation period with proper notifications should be considered 
     
     cat $MAILTPL/$1/$2 | \
         sed -e "s|%ip%|$local_ip|g" \

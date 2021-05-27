@@ -1945,6 +1945,6 @@ if [ "$interactive" = 'yes' ]; then
     read reboot
     reboot
 else
-    echo "[ ! ] IMPORTANT: IMPORTANT: You must logout or restart the server before continuing"
+    echo "[ ! ] IMPORTANT: You must logout or restart the server before continuing"
 fi
 # EOF

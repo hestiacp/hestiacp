@@ -91,6 +91,7 @@ if(!empty($data[$v_domain]['CUSTOM_DOCROOT']))
 
 if(!empty($v_custom_doc_root) &&
     false !== preg_match('/\/home\/'.$v_username.'\/web\/([[:alnum:]].*?)\/public_html\/([[:alnum:]].*)?/', $v_custom_doc_root, $matches) ) {
+	// Regex for extracting target web domain and custom document root. Regex test: https://regex101.com/r/2CLvIF/1
 
     if(!empty($matches[1]))
         $v_custom_doc_domain = $matches[1];

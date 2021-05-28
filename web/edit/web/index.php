@@ -98,6 +98,13 @@ if(!empty($v_custom_doc_root) &&
     if(!empty($matches[2]))
         $v_custom_doc_folder = rtrim($matches[2], '/');
 
+    #1844 "public_html" field in "Custom document root" not load his state
+    $public_html_custom_doc = strpos($v_custom_doc_domain,'/public_html');
+    if($public_html_custom_doc > 0){
+        $v_custom_doc_domain = substr($v_custom_doc_domain,0,$public_html_custom_doc);
+        $v_custom_doc_folder = 'public_html';
+    }
+    
     if($v_custom_doc_domain && !in_array($v_custom_doc_domain, $user_domains)) {
         $v_custom_doc_domain = '';
         $v_custom_doc_folder = '';

@@ -4,7 +4,7 @@ session_start();
 
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
 define('JS_LATEST_UPDATE', time());
-define('DEFAULT_PHP_VERSION', "php-" . exec('php -r "echo (float)phpversion();"'));
+define('DEFAULT_PHP_VERSION', 'php-' . exec('php -r "echo (float)phpversion();"'));
 
 $i = 0;
 
@@ -40,11 +40,11 @@ if (!isset($_SESSION['user_combined_ip'])) {
 if ($_SESSION['user_combined_ip'] != $user_combined_ip && $_SERVER['REMOTE_ADDR'] != '127.0.0.1'){
     $v_user = escapeshellarg($_SESSION['user']);
     $v_session_id = escapeshellarg($_SESSION['token']);
-    exec(HESTIA_CMD . "v-log-user-logout " . $v_user . " " . $v_session_id, $output, $return_var);
+    exec(HESTIA_CMD . 'v-log-user-logout ' . $v_user . ' ' . $v_session_id, $output, $return_var);
     session_destroy();
     session_start();
     $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
-    header("Location: /login/");
+    header('Location: /login/');
     exit;
 }
 // Load Hestia Config directly
@@ -55,14 +55,14 @@ if ((!isset($_SESSION['VERSION'])) && (!defined('NO_AUTH_REQUIRED'))) {
     session_destroy();
     session_start();
     $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
-    header("Location: /login/");
+    header('Location: /login/');
     exit;
 }
 
 // Check user session
 if ((!isset($_SESSION['user'])) && (!defined('NO_AUTH_REQUIRED'))) {
     $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
-    header("Location: /login/");
+    header('Location: /login/');
     exit;
 }
 
@@ -77,13 +77,13 @@ if (isset($_SESSION['user'])) {
 if (!defined('NO_AUTH_REQUIRED')){
     if (empty($_SESSION['LAST_ACTIVITY']) || empty($_SESSION['INACTIVE_SESSION_TIMEOUT'])){
         session_destroy();
-        header("Location: /login/");
+        header('Location: /login/');
     } elseif ($_SESSION['INACTIVE_SESSION_TIMEOUT'] * 60 + $_SESSION['LAST_ACTIVITY'] < time()) {
         $v_user = escapeshellarg($_SESSION['user']);
         $v_session_id = escapeshellarg($_SESSION['token']);
-        exec(HESTIA_CMD . "v-log-user-logout " . $v_user . " " . $v_session_id, $output, $return_var);
+        exec(HESTIA_CMD . 'v-log-user-logout ' . $v_user . ' ' . $v_session_id, $output, $return_var);
         session_destroy();
-        header("Location: /login/");
+        header('Location: /login/');
     } else {
         $_SESSION['LAST_ACTIVITY'] = time();
     }
@@ -101,7 +101,7 @@ require_once(dirname(__FILE__) . '/i18n.php');
 
 function check_error($return_var) {
     if ( $return_var > 0 ) {
-        header("Location: /error/");
+        header('Location: /error/');
         exit;
     }
 }
@@ -132,7 +132,7 @@ function render_page($user, $TAB, $page) {
     @include_once(dirname(__DIR__) . '/inc/policies.php');
 
     // Body
-    include($__template_dir . "pages/$page.html");
+    include($__template_dir . 'pages/' . $page . '.html');
 
     // Including common js files
     @include_once(dirname(__DIR__) . '/templates/includes/end_js.html');
@@ -146,12 +146,12 @@ function render_page($user, $TAB, $page) {
 
 function top_panel($user, $TAB) {
     global $panel;
-    $command = HESTIA_CMD . "v-list-user " . escapeshellarg($user) . " 'json'";
+    $command = HESTIA_CMD . 'v-list-user ' . escapeshellarg($user) . " 'json'";
     exec ($command, $output, $return_var);
     if ( $return_var > 0 ) {
-        echo "<span style='font-size: 18px;'><b>ERROR: Unable to retrieve account details.</b><br>Please <b><a href='/login/'>log in</a></b> again.</span>";
+        echo '<span style="font-size: 18px;"><b>ERROR: Unable to retrieve account details.</b><br>Please <b><a href="/login/">log in</a></b> again.</span>';
         session_destroy();
-        header("Location: /login/");
+        header('Location: /login/');
         exit;
     }
     $panel = json_decode(implode('', $output), true);
@@ -159,9 +159,9 @@ function top_panel($user, $TAB) {
 
     // Log out active sessions for suspended users
     if (($panel[$user]['SUSPENDED'] === 'yes') && ($_SESSION['POLICY_USER_VIEW_SUSPENDED'] !== 'yes')) {
-        $_SESSION['error_msg'] = "You have been logged out. Please log in again.";
+        $_SESSION['error_msg'] = 'You have been logged out. Please log in again.';
         session_destroy();
-        header("Location: /login/");
+        header('Location: /login/');
     }
 
     // Reset user permissions if changed while logged in
@@ -188,21 +188,21 @@ function top_panel($user, $TAB) {
     // Set home location URLs
     if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look']))) {
         // Display users list for administrators unless they are impersonating a user account
-        $home_url = "/list/user/";
+        $home_url = '/list/user/';
     } else {
         // Set home location URL based on available package features from account
-        if ($panel[$user]['WEB_DOMAINS'] != "0") {
-            $home_url = "/list/web/";
-        } elseif ($panel[$user]['DNS_DOMAINS'] != "0") {
-            $home_url = "/list/dns/";
-        } elseif ($panel[$user]['MAIL_DOMAINS'] != "0") {
-            $home_url = "/list/mail/";
-        } elseif ($panel[$user]['DATABASES'] != "0") {
-            $home_url = "/list/db/";
-        } elseif ($panel[$user]['CRON_JOBS'] != "0") {
-            $home_url = "/list/cron/";
-        } elseif ($panel[$user]['BACKUPS'] != "0") {
-            $home_url = "/list/backups/";
+        if ($panel[$user]['WEB_DOMAINS'] != '0') {
+            $home_url = '/list/web/';
+        } elseif ($panel[$user]['DNS_DOMAINS'] != '0') {
+            $home_url = '/list/dns/';
+        } elseif ($panel[$user]['MAIL_DOMAINS'] != '0') {
+            $home_url = '/list/mail/';
+        } elseif ($panel[$user]['DATABASES'] != '0') {
+            $home_url = '/list/db/';
+        } elseif ($panel[$user]['CRON_JOBS'] != '0') {
+            $home_url = '/list/cron/';
+        } elseif ($panel[$user]['BACKUPS'] != '0') {
+            $home_url = '/list/backups/';
         }
     }
 
@@ -210,8 +210,8 @@ function top_panel($user, $TAB) {
 }
 
 function translate_date($date){
-  $date = strtotime($date);
-  return strftime("%d &nbsp;", $date) . _(strftime("%b", $date)) . strftime(" &nbsp;%Y", $date);
+    $date = strtotime($date);
+    return strftime('%d &nbsp;', $date) . _(strftime('%b', $date)) . strftime(' &nbsp;%Y', $date);
 }
 
 function humanize_time($usage) {
@@ -219,27 +219,14 @@ function humanize_time($usage) {
         $usage = $usage / 60;
         if ( $usage > 24 ) {
             $usage = $usage / 24;
-
             $usage = number_format($usage);
-            if ( $usage == 1 ) {
-                $usage = $usage . ' ' . _('day');
-            } else {
-                $usage = $usage . ' ' . _('days');
-            }
+            $usage .= ' ' . _('day' . ($usage != 1) ?: 's');
         } else {
             $usage = number_format($usage);
-            if ( $usage == 1 ) {
-                $usage = $usage . ' ' . _('hour');
-            } else {
-                $usage = $usage . ' ' . _('hours');
-            }
+            $usage .= ' ' . _('hour' . ($usage != 1) ?: 's');
         }
     } else {
-        if ( $usage == 1 ) {
-            $usage = $usage . ' ' . _('minute');
-        } else {
-            $usage = $usage . ' ' . _('minutes');
-        }
+        $usage .= ' ' . _('minute' . ($usage != 1) ?: 's');
     }
     return $usage;
 }
@@ -248,13 +235,13 @@ function humanize_usage_size($usage) {
     if ( $usage > 1024 ) {
         $usage = $usage / 1024;
         if ( $usage > 1024 ) {
+            $usage = $usage / 1024 ;
+            if ( $usage > 1024 ) {
                 $usage = $usage / 1024 ;
-                if ( $usage > 1024 ) {
-                    $usage = $usage / 1024 ;
-                    $usage = number_format($usage, 2);
-                } else {
-                    $usage = number_format($usage, 2);
-                }
+                $usage = number_format($usage, 2);
+            } else {
+                $usage = number_format($usage, 2);
+            }
         } else {
             $usage = number_format($usage, 2);
         }
@@ -268,11 +255,7 @@ function humanize_usage_measure($usage) {
         $usage = $usage / 1024;
         if ( $usage > 1024 ) {
                 $usage = $usage / 1024 ;
-                if ( $usage > 1024 ) {
-                    $measure = 'pb';
-                } else {
-                    $measure = 'tb';
-                }
+                $measure = ( $usage > 1024 ) ? 'pb' : 'tb';
         } else {
             $measure = 'gb';
         }
@@ -303,13 +286,13 @@ function get_percentage($used,$total) {
 function send_email($to, $subject, $mailtext, $from) {
     $charset = "utf-8";
     $to = '<' . $to . '>';
-    $boundary = '--' . md5( uniqid("myboundary") );
+    $boundary = '--' . md5( uniqid('myboundary') );
     $priorities = array( '1 (Highest)', '2 (High)', '3 (Normal)', '4 (Low)', '5 (Lowest)' );
     $priority = $priorities[2];
-    $ctencoding = "8bit";
+    $ctencoding = '8bit';
     $sep = chr(13) . chr(10);
-    $disposition = "inline";
-    $subject = "=?$charset?B?" . base64_encode($subject) . "?=";
+    $disposition = 'inline';
+    $subject = "=?$charset?B?" . base64_encode($subject) . '?=';
     $header = "From: $from \nX-Priority: $priority\nCC:\n";
     $header .= "Mime-Version: 1.0\nContent-Type: text/plain; charset=$charset \n";
     $header .= "Content-Transfer-Encoding: $ctencoding\nX-Mailer: Php/libMailv1.3\n";
@@ -318,37 +301,17 @@ function send_email($to, $subject, $mailtext, $from) {
 }
 
 function list_timezones() {
-    $tz = new DateTimeZone('AKST');
-    $timezone_offsets['AKST'] = $tz->getOffset(new DateTime);
-    $tz = new DateTimeZone('AKDT');
-    $timezone_offsets['AKDT'] = $tz->getOffset(new DateTime);
-    $tz = new DateTimeZone('PST');
-    $timezone_offsets['PST'] = $tz->getOffset(new DateTime);
-    $tz = new DateTimeZone('PDT');
-    $timezone_offsets['PDT'] = $tz->getOffset(new DateTime);
-    $tz = new DateTimeZone('MST');
-    $timezone_offsets['MST'] = $tz->getOffset(new DateTime);
-    $tz = new DateTimeZone('MDT');
-    $timezone_offsets['MDT'] = $tz->getOffset(new DateTime);
-    $tz = new DateTimeZone('CST');
-    $timezone_offsets['CST'] = $tz->getOffset(new DateTime);
-    $tz = new DateTimeZone('CDT');
-    $timezone_offsets['CDT'] = $tz->getOffset(new DateTime);
-    $tz = new DateTimeZone('EST');
-    $timezone_offsets['EST'] = $tz->getOffset(new DateTime);
-    $tz = new DateTimeZone('EDT');
-    $timezone_offsets['EDT'] = $tz->getOffset(new DateTime);
-    $tz = new DateTimeZone('AST');
-    $timezone_offsets['AST'] = $tz->getOffset(new DateTime);
-    $tz = new DateTimeZone('ADT');
-    $timezone_offsets['ADT'] = $tz->getOffset(new DateTime);
-
-    foreach(DateTimeZone::listIdentifiers() as $timezone){
+    foreach(['AKST', 'AKDT', 'PST', 'PDT', 'MST', 'MDT', 'CST', 'CDT', 'EST', 'EDT', 'AST', 'ADT'] as $timezone) {
+        $tz = new DateTimeZone($timezone);
+        $timezone_offsets[$timezone] = $tz->getOffset(new DateTime);
+    }
+ 
+    foreach(DateTimeZone::listIdentifiers() as $timezone) {
         $tz = new DateTimeZone($timezone);
         $timezone_offsets[$timezone] = $tz->getOffset(new DateTime);
     }
 
-    foreach($timezone_offsets as $timezone => $offset){
+    foreach($timezone_offsets as $timezone => $offset) {
         $offset_prefix = $offset < 0 ? '-' : '+';
         $offset_formatted = gmdate( 'H:i', abs($offset) );
         $pretty_offset = "UTC${offset_prefix}${offset_formatted}";
@@ -375,11 +338,11 @@ function list_timezones() {
  * @return string
  */
 function is_it_mysql_or_mariadb() {
-    exec (HESTIA_CMD . "v-list-sys-services json", $output, $return_var);
+    exec (HESTIA_CMD . 'v-list-sys-services json', $output, $return_var);
     $data = json_decode(implode('', $output), true);
     unset($output);
-    $mysqltype='mysql';
-    if (isset($data['mariadb'])) $mysqltype='mariadb';
+    $mysqltype = 'mysql';
+    if (isset($data['mariadb'])) $mysqltype = 'mariadb';
     return $mysqltype;
 }
 
@@ -399,13 +362,13 @@ function load_hestia_config() {
  * @return array
  */
 function backendtpl_with_webdomains() {
-    exec (HESTIA_CMD . "v-list-users json", $output, $return_var);
+    exec (HESTIA_CMD . 'v-list-users json', $output, $return_var);
     $users = json_decode(implode('', $output), true);
     unset($output);
 
     $backend_list=[];
     foreach ($users as $user => $user_details) {
-        exec (HESTIA_CMD . "v-list-web-domains ". escapeshellarg($user) . " json", $output, $return_var);
+        exec (HESTIA_CMD . 'v-list-web-domains '. escapeshellarg($user) . ' json', $output, $return_var);
         $domains = json_decode(implode('', $output), true);
         unset($output);
 

@@ -12,19 +12,19 @@ $i = 0;
 $user_combined_ip = $_SERVER['REMOTE_ADDR'];
 
 if (isset($_SERVER['HTTP_CLIENT_IP'])){
-    $user_combined_ip .=  '|'. $_SERVER['HTTP_CLIENT_IP'];
+    $user_combined_ip .= '|' . $_SERVER['HTTP_CLIENT_IP'];
 }
 if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])){
-    $user_combined_ip .=  '|'. $_SERVER['HTTP_X_FORWARDED_FOR'];
+    $user_combined_ip .= '|' . $_SERVER['HTTP_X_FORWARDED_FOR'];
 }
 if (isset($_SERVER['HTTP_FORWARDED_FOR'])){
-    $user_combined_ip .=  '|'. $_SERVER['HTTP_FORWARDED_FOR'];
+    $user_combined_ip .= '|' . $_SERVER['HTTP_FORWARDED_FOR'];
 }
 if (isset($_SERVER['HTTP_X_FORWARDED'])){
-    $user_combined_ip .=  '|'. $_SERVER['HTTP_X_FORWARDED'];
+    $user_combined_ip .= '|' . $_SERVER['HTTP_X_FORWARDED'];
 }
 if (isset($_SERVER['HTTP_FORWARDED'])){
-    $user_combined_ip .=  '|'. $_SERVER['HTTP_FORWARDED'];
+    $user_combined_ip .= '|' . $_SERVER['HTTP_FORWARDED'];
 }
 if (isset($_SERVER['HTTP_CF_CONNECTING_IP'])){
     if(!empty($_SERVER['HTTP_CF_CONNECTING_IP'])){
@@ -40,7 +40,7 @@ if (!isset($_SESSION['user_combined_ip'])){
 if ($_SESSION['user_combined_ip'] != $user_combined_ip && $_SERVER['REMOTE_ADDR'] != '127.0.0.1'){
     $v_user = escapeshellarg($_SESSION['user']);
     $v_session_id = escapeshellarg($_SESSION['token']);
-    exec(HESTIA_CMD."v-log-user-logout ".$v_user." ".$v_session_id, $output, $return_var);
+    exec(HESTIA_CMD . "v-log-user-logout " . $v_user . " " . $v_session_id, $output, $return_var);
     session_destroy();
     session_start();
     $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
@@ -81,7 +81,7 @@ if (!defined('NO_AUTH_REQUIRED')){
     } else if ($_SESSION['INACTIVE_SESSION_TIMEOUT'] * 60 + $_SESSION['LAST_ACTIVITY'] < time()) {
         $v_user = escapeshellarg($_SESSION['user']);
         $v_session_id = escapeshellarg($_SESSION['token']);
-        exec(HESTIA_CMD."v-log-user-logout ".$v_user." ".$v_session_id, $output, $return_var);
+        exec(HESTIA_CMD . "v-log-user-logout " . $v_user . " " . $v_session_id, $output, $return_var);
         session_destroy();
         header("Location: /login/");
     } else {
@@ -97,7 +97,7 @@ if (isset($_SESSION['look']) && ($_SESSION['userContext'] === 'admin')) {
     $user = $_SESSION['look'];
 }
 
-require_once(dirname(__FILE__).'/i18n.php');
+require_once(dirname(__FILE__) . '/i18n.php');
 
 function check_error($return_var) {
     if ( $return_var > 0 ) {
@@ -109,7 +109,7 @@ function check_error($return_var) {
 function check_return_code($return_var,$output) {
     if ($return_var != 0) {
         $error = implode('<br>', $output);
-        if (empty($error)) $error = sprintf(_('Error code:'),$return_var);
+        if (empty($error)) $error = sprintf(_('Error code:'), $return_var);
         $_SESSION['error_msg'] = $error;
     }
 }
@@ -137,8 +137,8 @@ function render_page($user, $TAB, $page) {
     // Including common js files
     @include_once(dirname(__DIR__) . '/templates/includes/end_js.html');
     // Including page specific js file
-    if(file_exists($__pages_js_dir.$page.'.js'))
-       echo '<script type="text/javascript" src="/js/pages/'.$page.'.js?'.JS_LATEST_UPDATE.'"></script>';
+    if(file_exists($__pages_js_dir . $page . '.js'))
+       echo '<script src="/js/pages/' . $page . '.js?' . JS_LATEST_UPDATE . '"></script>';
 
     // Footer
     include($__template_dir . 'footer.html');
@@ -146,7 +146,7 @@ function render_page($user, $TAB, $page) {
 
 function top_panel($user, $TAB) {
     global $panel;
-    $command = HESTIA_CMD."v-list-user ".escapeshellarg($user)." 'json'";
+    $command = HESTIA_CMD . "v-list-user " . escapeshellarg($user) . " 'json'";
     exec ($command, $output, $return_var);
     if ( $return_var > 0 ) {
         echo "<span style='font-size: 18px;'><b>ERROR: Unable to retrieve account details.</b><br>Please <b><a href='/login/'>log in</a></b> again.</span>";
@@ -206,40 +206,39 @@ function top_panel($user, $TAB) {
         }
     }
 
-    include(dirname(__FILE__).'/../templates/includes/panel.html');
-
+    include(dirname(__FILE__) . '/../templates/includes/panel.html');
 }
 
 function translate_date($date){
   $date = strtotime($date);
-  return strftime("%d &nbsp;", $date)._(strftime("%b", $date)).strftime(" &nbsp;%Y", $date);
+  return strftime("%d &nbsp;", $date) . _(strftime("%b", $date)) . strftime(" &nbsp;%Y", $date);
 }
 
 function humanize_time($usage) {
     if ( $usage > 60 ) {
         $usage = $usage / 60;
         if ( $usage > 24 ) {
-             $usage = $usage / 24;
+            $usage = $usage / 24;
 
             $usage = number_format($usage);
             if ( $usage == 1 ) {
-                $usage = $usage." "._('day');
+                $usage = $usage . ' ' . _('day');
             } else {
-                $usage = $usage." "._('days');
+                $usage = $usage . ' ' . _('days');
             }
         } else {
             $usage = number_format($usage);
             if ( $usage == 1 ) {
-                $usage = $usage." "._('hour');
+                $usage = $usage . ' ' . _('hour');
             } else {
-                $usage = $usage." "._('hours');
+                $usage = $usage . ' ' . _('hours');
             }
         }
     } else {
         if ( $usage == 1 ) {
-            $usage = $usage." "._('minute');
+            $usage = $usage . ' ' . _('minute');
         } else {
-            $usage = $usage." "._('minutes');
+            $usage = $usage . ' ' . _('minutes');
         }
     }
     return $usage;
@@ -260,13 +259,11 @@ function humanize_usage_size($usage) {
             $usage = number_format($usage, 2);
         }
     }
-
     return $usage;
 }
 
 function humanize_usage_measure($usage) {
     $measure = 'kb';
-
     if ( $usage > 1024 ) {
         $usage = $usage / 1024;
         if ( $usage > 1024 ) {
@@ -282,14 +279,12 @@ function humanize_usage_measure($usage) {
     } else {
         $measure = 'mb';
     }
-
     return _($measure);
 }
 
-
 function get_percentage($used,$total) {
-    if (!isset($total)) $total =  0;
-    if (!isset($used)) $used =  0;
+    if (!isset($total)) $total = 0;
+    if (!isset($used)) $used = 0;
     if ( $total == 0 ) {
         $percent = 0;
     } else {
@@ -302,21 +297,20 @@ function get_percentage($used,$total) {
         if ( $percent < 0 ) {
             $percent = 0;
         }
-
     }
     return $percent;
 }
 
-function send_email($to,$subject,$mailtext,$from) {
+function send_email($to, $subject, $mailtext, $from) {
     $charset = "utf-8";
-    $to = '<'.$to.'>';
+    $to = '<' . $to . '>';
     $boundary = '--' . md5( uniqid("myboundary") );
     $priorities = array( '1 (Highest)', '2 (High)', '3 (Normal)', '4 (Low)', '5 (Lowest)' );
     $priority = $priorities[2];
     $ctencoding = "8bit";
     $sep = chr(13) . chr(10);
     $disposition = "inline";
-    $subject = "=?$charset?B?".base64_encode($subject)."?=";
+    $subject = "=?$charset?B?" . base64_encode($subject) . "?=";
     $header = "From: $from \nX-Priority: $priority\nCC:\n";
     $header .= "Mime-Version: 1.0\nContent-Type: text/plain; charset=$charset \n";
     $header .= "Content-Transfer-Encoding: $ctencoding\nX-Mailer: Php/libMailv1.3\n";
@@ -382,7 +376,7 @@ function list_timezones() {
  * @return string
  */
 function is_it_mysql_or_mariadb() {
-    exec (HESTIA_CMD."v-list-sys-services json", $output, $return_var);
+    exec (HESTIA_CMD . "v-list-sys-services json", $output, $return_var);
     $data = json_decode(implode('', $output), true);
     unset($output);
     $mysqltype='mysql';

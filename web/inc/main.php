@@ -11,28 +11,28 @@ $i = 0;
 // Saving user IPs to the session for preventing session hijacking
 $user_combined_ip = $_SERVER['REMOTE_ADDR'];
 
-if (isset($_SERVER['HTTP_CLIENT_IP'])){
+if (isset($_SERVER['HTTP_CLIENT_IP'])) {
     $user_combined_ip .= '|' . $_SERVER['HTTP_CLIENT_IP'];
 }
-if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])){
+if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
     $user_combined_ip .= '|' . $_SERVER['HTTP_X_FORWARDED_FOR'];
 }
-if (isset($_SERVER['HTTP_FORWARDED_FOR'])){
+if (isset($_SERVER['HTTP_FORWARDED_FOR'])) {
     $user_combined_ip .= '|' . $_SERVER['HTTP_FORWARDED_FOR'];
 }
-if (isset($_SERVER['HTTP_X_FORWARDED'])){
+if (isset($_SERVER['HTTP_X_FORWARDED'])) {
     $user_combined_ip .= '|' . $_SERVER['HTTP_X_FORWARDED'];
 }
-if (isset($_SERVER['HTTP_FORWARDED'])){
+if (isset($_SERVER['HTTP_FORWARDED'])) {
     $user_combined_ip .= '|' . $_SERVER['HTTP_FORWARDED'];
 }
-if (isset($_SERVER['HTTP_CF_CONNECTING_IP'])){
-    if(!empty($_SERVER['HTTP_CF_CONNECTING_IP'])){
+if (isset($_SERVER['HTTP_CF_CONNECTING_IP'])) {
+    if (!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
       $user_combined_ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
     }
 }
 
-if (!isset($_SESSION['user_combined_ip'])){
+if (!isset($_SESSION['user_combined_ip'])) {
     $_SESSION['user_combined_ip'] = $user_combined_ip;
 }
 
@@ -68,7 +68,7 @@ if ((!isset($_SESSION['user'])) && (!defined('NO_AUTH_REQUIRED'))) {
 
 // Generate CSRF Token
 if (isset($_SESSION['user'])) {
-    if(!isset($_SESSION['token'])){
+    if (!isset($_SESSION['token'])){
         $token = bin2hex(file_get_contents('/dev/urandom', false, null, 0, 16));
         $_SESSION['token'] = $token;
     }
@@ -78,7 +78,7 @@ if (!defined('NO_AUTH_REQUIRED')){
     if (empty($_SESSION['LAST_ACTIVITY']) || empty($_SESSION['INACTIVE_SESSION_TIMEOUT'])){
         session_destroy();
         header("Location: /login/");
-    } else if ($_SESSION['INACTIVE_SESSION_TIMEOUT'] * 60 + $_SESSION['LAST_ACTIVITY'] < time()) {
+    } elseif ($_SESSION['INACTIVE_SESSION_TIMEOUT'] * 60 + $_SESSION['LAST_ACTIVITY'] < time()) {
         $v_user = escapeshellarg($_SESSION['user']);
         $v_session_id = escapeshellarg($_SESSION['token']);
         exec(HESTIA_CMD . "v-log-user-logout " . $v_user . " " . $v_session_id, $output, $return_var);
@@ -193,15 +193,15 @@ function top_panel($user, $TAB) {
         // Set home location URL based on available package features from account
         if($panel[$user]['WEB_DOMAINS'] != "0") {
             $home_url = "/list/web/";
-        } else if ($panel[$user]['DNS_DOMAINS'] != "0") {
+        } elseif ($panel[$user]['DNS_DOMAINS'] != "0") {
             $home_url = "/list/dns/";
-        } else if ($panel[$user]['MAIL_DOMAINS'] != "0") {
+        } elseif ($panel[$user]['MAIL_DOMAINS'] != "0") {
             $home_url = "/list/mail/";
-        } else if ($panel[$user]['DATABASES'] != "0") {
+        } elseif ($panel[$user]['DATABASES'] != "0") {
             $home_url = "/list/db/";
-        } else if ($panel[$user]['CRON_JOBS'] != "0") {
+        } elseif ($panel[$user]['CRON_JOBS'] != "0") {
             $home_url = "/list/cron/";
-        } else if ($panel[$user]['BACKUPS'] != "0") {
+        } elseif ($panel[$user]['BACKUPS'] != "0") {
             $home_url = "/list/backups/";
         }
     }
@@ -291,11 +291,10 @@ function get_percentage($used,$total) {
         $percent = $used / $total;
         $percent = $percent * 100;
         $percent = number_format($percent, 0, '', '');
-        if ( $percent > 100 ) {
-            $percent = 100;
-        }
         if ( $percent < 0 ) {
             $percent = 0;
+        } elseif ( $percent > 100 ) {
+            $percent = 100;
         }
     }
     return $percent;

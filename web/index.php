@@ -1,7 +1,3 @@
 <?php
 session_start();
-if (isset($_SESSION['user'])) {
-    header("Location: /list/user/");
-} else {
-    header("Location: /login/");
-}
+header('Location: /' . (isset($_SESSION['user']) ? 'list/user' : 'login') . '/');

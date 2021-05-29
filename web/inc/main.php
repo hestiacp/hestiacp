@@ -191,7 +191,7 @@ function top_panel($user, $TAB) {
         $home_url = "/list/user/";
     } else {
         // Set home location URL based on available package features from account
-        if($panel[$user]['WEB_DOMAINS'] != "0") {
+        if ($panel[$user]['WEB_DOMAINS'] != "0") {
             $home_url = "/list/web/";
         } elseif ($panel[$user]['DNS_DOMAINS'] != "0") {
             $home_url = "/list/dns/";

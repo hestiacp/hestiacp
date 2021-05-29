@@ -1,14 +1,18 @@
 <!doctype html>
-<html lang="<?=$_SESSION['LANGUAGE'];?>">
+<html lang="<?=$_SESSION['LANGUAGE']?>">
 
 <head>
-  <?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/title.html'; ?>
-  <?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/css.html'; ?>
-  <?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/top_js.html'; ?>
+<?php
+  require $_SERVER['HESTIA'] . '/web/templates/includes/title.html';
+  require $_SERVER['HESTIA'] . '/web/templates/includes/css.html';
+  require $_SERVER['HESTIA'] . '/web/templates/includes/top_js.html';
+?>
   <script>
+<?php    
     //
     //  GLOBAL SETTINGS
     //
+?>
     var GLOBAL = {};
     GLOBAL.FTP_USER_PREFIX = '';
     GLOBAL.DB_USER_PREFIX = '';
@@ -18,6 +22,7 @@
 </head>
 
 <body class="body-<?=strtolower($TAB)?> lang-<?=$_SESSION['language']?>">
-  <?php if (($_SESSION['DEBUG_MODE']) == "true" ) {?>
-    <?php require ''.$_SERVER['HESTIA'].'/web/templates/pages/debug_panel.html'; ?>
-  <?php } ?>
+<?php
+  if (($_SESSION['DEBUG_MODE']) == "true" ) {
+    require $_SERVER['HESTIA'].'/web/templates/pages/debug_panel.html';
+  }

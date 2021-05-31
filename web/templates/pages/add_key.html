@@ -3,7 +3,7 @@
 	<div class="l-sort clearfix">
 		<div class="l-unit-toolbar__buttonstrip">
             <?php if (($_SESSION['userContext'] === 'admin') && (isset($_GET['user'])) && ($_GET['user'] !== 'admin')) { ?>
-                <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/key/?user=<?=$_GET['user']?>"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+                <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/key/?user=<?=htmlentities($_GET['user']);?>"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
             <?php } else { ?>
                 <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/key/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
             <?php } ?>

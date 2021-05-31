@@ -21,9 +21,11 @@ if (!empty($_POST['ok'])) {
         $user = $_GET['user'];
     }
     
+    $user = escapeshellarg($user);
+    
     if(!$_SESSION['error_msg']){
         if($_POST){
-            //key if key already exisits
+            //key if key already exists
             exec (HESTIA_CMD . "v-list-user-ssh-key ".$user." json", $output, $return_var);
             $data = json_decode(implode('', $output), true);
             unset($output);

@@ -90,14 +90,15 @@ if(!empty($data[$v_domain]['CUSTOM_DOCROOT']))
     $v_custom_doc_root = realpath($data[$v_domain]['CUSTOM_DOCROOT']) . DIRECTORY_SEPARATOR;
 
 if(!empty($v_custom_doc_root) &&
-    false !== preg_match('/\/home\/'.$v_username.'\/web\/([[:alnum:]].*)\/public_html\/([[:alnum:]].*)?/', $v_custom_doc_root, $matches) ) {
+    false !== preg_match('/\/home\/'.$v_username.'\/web\/([[:alnum:]].*?)\/public_html\/([[:alnum:]].*)?/', $v_custom_doc_root, $matches) ) {
+	// Regex for extracting target web domain and custom document root. Regex test: https://regex101.com/r/2CLvIF/1
 
     if(!empty($matches[1]))
         $v_custom_doc_domain = $matches[1];
 
     if(!empty($matches[2]))
         $v_custom_doc_folder = rtrim($matches[2], '/');
-
+    
     if($v_custom_doc_domain && !in_array($v_custom_doc_domain, $user_domains)) {
         $v_custom_doc_domain = '';
         $v_custom_doc_folder = '';

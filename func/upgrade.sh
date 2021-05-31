@@ -155,8 +155,12 @@ upgrade_set_version() {
 }
 
 upgrade_set_branch() {
+    
     # Set branch in hestia.conf
-    $BIN/v-change-sys-config-value "RELEASE_BRANCH" "$@"
+    DISPLAY_VER=$(echo $@ | sed "s|~alpha||g" | sed "s|~beta||g");
+    if [ "$DISPLAY_VER" = "$@" ]; then 
+        $BIN/v-change-sys-config-value "RELEASE_BRANCH" "release"
+    fi
 }
 
 upgrade_send_notification_to_panel () {

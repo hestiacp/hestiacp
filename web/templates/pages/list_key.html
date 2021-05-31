@@ -3,7 +3,11 @@
 	<div class="l-sort clearfix noselect">
 		<div class="l-unit-toolbar__buttonstrip">
 			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/edit/user/?user=<?=$user;?>&token=<?=$_SESSION['token']?>"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+            <?php if (($_SESSION['userContext'] === 'admin') && (isset($_GET['user'])) && ($_GET['user'] !== 'admin')) { ?>
+            <a href="/add/key/?user=<?=$_GET['user']?>" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add SSH Key');?></a>
+            <?php } else { ?>
 			<a href="/add/key/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add SSH Key');?></a>
+            <?php } ?>
 		</div>
 	</div>
 </div>

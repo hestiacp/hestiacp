@@ -82,7 +82,7 @@ else
             IFS='%'
             echo '#!/bin/sh' > $preup
             echo '' >> $preup
-            echo 'if [ "$IFACE" = "'$(route | awk '/default .+/ {print $8}' | uniq)'" ]; then' >> $preup
+            echo 'if [ "$IFACE" = "'$(ip route list | awk '/default .+/ {print $5}' | uniq)'" ]; then' >> $preup
             [ -x "$(which ipset)" ] && echo "    ${HESTIA}/bin/v-update-firewall-ipset" >> $preup
             echo '    sleep 3' >> $preup
             echo '    /sbin/iptables-restore < /etc/iptables.rules' >> $preup
@@ -96,7 +96,7 @@ else
             IFS='%'
             echo '#!/bin/sh' > $preup
             echo '' >> $preup
-            echo 'if [ "$IFACE" = "'$(route | awk '/default .+/ {print $8}' | uniq)'" ]; then' >> $preup
+            echo 'if [ "$IFACE" = "'$(ip route list | awk '/default .+/ {print $5}' | uniq)'" ]; then' >> $preup
             [ -x "$(which ipset)" ] && echo "    ${HESTIA}/bin/v-update-firewall-ipset" >> $preup
             echo '    /sbin/iptables-restore < /etc/iptables.rules' >> $preup
             echo 'fi' >> $preup

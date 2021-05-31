@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## Development
+
+### Bug fix
+ 
+- # Fixed an issue where users where not able to save / update web domains when POLICY_USER_EDIT_WEB_TEMPLATES is enabled (#1872)
+- # Fixed an issue where admin users where not able to add new ssh key for users (#1870)
+- # Fixed an issue where domain.com was not affected as a valid domain (#1874)
+- # Fixed an issue where "development" icon was not removed on update to release (#1835)
+
 ## [1.4.1] - Bug fix
 
 - Fixed bug with 2FA enabled logins 

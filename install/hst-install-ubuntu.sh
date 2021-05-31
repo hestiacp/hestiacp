@@ -23,7 +23,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.4.0~beta'
+HESTIA_INSTALL_VER='1.4.2~alpha'
 pma_v='5.1.0'
 rc_v="1.4.11"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
@@ -1210,9 +1210,13 @@ $HESTIA/bin/v-change-sys-hostname $servername 'no' > /dev/null 2>&1
 
 # Generating SSL certificate
 echo "[ * ] Generating default self-signed SSL certificate..."
-$HESTIA/bin/v-generate-ssl-cert $(hostname) '' 'US' 'California' \
-     'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
-
+if [ "$release" = "18.04" ]; then
+    $HESTIA/bin/v-generate-ssl-cert $(hostname) $email 'US' 'California' \
+         'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
+else
+    $HESTIA/bin/v-generate-ssl-cert $(hostname) '' 'US' 'California' \
+        'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
+fi
 # Parsing certificate file
 crt_end=$(grep -n "END CERTIFICATE-" /tmp/hst.pem |cut -f 1 -d:)
 key_start=$(grep -n "BEGIN RSA" /tmp/hst.pem |cut -f 1 -d:)
@@ -1886,6 +1890,23 @@ $HESTIA/bin/v-add-sys-filemanager quiet
 # create cronjob to generate ssl 
 echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && /usr/local/hestia/bin/v-add-letsencrypt-host" > /etc/cron.d/hestia-ssl
 
+echo "[ * ] Finish up install..."
+write_config_value "PHPMYADMIN_KEY" ""
+write_config_value "POLICY_USER_VIEW_SUSPENDED" "no"
+write_config_value "POLICY_USER_VIEW_LOGS" "yes"
+write_config_value "POLICY_USER_EDIT_WEB_TEMPLATES" "true"
+write_config_value "POLICY_USER_EDIT_DNS_TEMPLATES" "yes"
+write_config_value "POLICY_USER_EDIT_DETAILS" "yes"
+write_config_value "POLICY_USER_DELETE_LOGS" "yes"
+write_config_value "POLICY_USER_CHANGE_THEME" "yes"
+write_config_value "POLICY_SYSTEM_PROTECTED_ADMIN" "no"
+write_config_value "POLICY_SYSTEM_PASSWORD_RESET" "no"
+write_config_value "POLICY_SYSTEM_HIDE_SERVICES" "no"
+write_config_value "POLICY_SYSTEM_ENABLE_BACON" "no"
+write_config_value "PLUGIN_APP_INSTALLER" "true"
+write_config_value "DEBUG_MODE" "no"
+write_config_value "ENFORCE_SUBDOMAIN_OWNERSHIP" "yes"
+
 #----------------------------------------------------------#
 #                   Hestia Access Info                     #
 #----------------------------------------------------------#
@@ -1945,16 +1966,17 @@ rm -f $tmpfile
 # Add welcome message to notification panel
 $HESTIA/bin/v-add-user-notification admin 'Welcome to Hestia Control Panel!' '<br>You are now ready to begin <a href="/add/user/">adding user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, view the <a href="https://docs.hestiacp.com/" target="_new">documentation</a> or visit our <a href="https://forum.hestiacp.com/" target="_new">user forum</a>.<br><br>Please report any bugs or issues via <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart status-icon red"></i> The Hestia Control Panel development team'
 
-echo "[ ! ] IMPORTANT: System will reboot"
-echo ""
-if [ "$interactive" = 'yes' ]; then
-    echo -n " Press any key to continue!"
-    read reboot
-fi
-
 # Clean-up
 # Sort final configuration file
 sort_config_file
 
-reboot
+if [ "$interactive" = 'yes' ]; then
+    echo "[ ! ] IMPORTANT: System will reboot"
+    echo ""
+    echo -n " Press any key to continue!"
+    read reboot
+    reboot
+else
+    echo "[ ! ] IMPORTANT: You must logout or restart the server before continuing"
+fi
 # EOF

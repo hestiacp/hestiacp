@@ -290,8 +290,8 @@ function syshealth_repair_system_config() {
 
     # Enforce subdomain ownership
     if [ -z "$ENFORCE_SUBDOMAIN_OWNERSHIP" ]; then
-        echo "[ ! ] Adding missing variable to hestia.conf: ENFORCE_SUBDOMAIN_OWNERSHIP ('yes')"
-        $BIN/v-change-sys-config-value "ENFORCE_SUBDOMAIN_OWNERSHIP" "yes"
+        echo "[ ! ] Adding missing variable to hestia.conf: ENFORCE_SUBDOMAIN_OWNERSHIP ('no')"
+        $BIN/v-change-sys-config-value "ENFORCE_SUBDOMAIN_OWNERSHIP" "no"
     fi
 
     # API access allowed IP's

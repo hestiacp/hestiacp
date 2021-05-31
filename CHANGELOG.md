@@ -1,17 +1,22 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [DEVELOPMENT]
+## [1.4.1] - Bug fix
+
+- Fixed bug with 2FA enabled logins 
+
+## [1.4.0] - Major Release (Feature / Quality Update)
 
 - **NOTE:** Ubuntu 16.04 (Xenial) is no longer supported as it has reached EOL (end-of-life) status. 
 - **NOTE:** Apache in "standalone" mode is no longer actively supported and has been removed from installer options. Nginx (Proxy) + Apache2 will remain supported. 
 - **NOTE:** Custom "quick installer apps" will not work anymore due to changes in how we handle quick installer apps. Minimal changes to the Quick installer apps are required! Please check https://github.com/hestiacp/hestia-quick-install for how to migrate!
+- **NOTE:** Manual upgrade scripts are available to update Roundcube, Rainloop and PHPmyadmin to the last version they can be found in /usr/local/hestia/install/upgrade/manual/
 
 ### Features
-- Introduced single sign-on support for phpMyAdmin.
 - Introduced support for NGINX FastCGI cache.
 - Introduced support for SMTP Relay / smarthosts (server-wide or per-domain).
 - Introduced the ability to choose which webmail client to use per-domain (Roundcube or Rainloop).
+- Added support for Rainloop (Run v-add-sys-rainloop to install it)
 - Added B2 Backup Support for Remote Backup Location - thanks **@rez0n**!
 - Added template support for osTicket - thanks **@madito**!
 - Packages for phpMyAdmin, Roundcube, and Rainloop will be pulled directly from their upstream source instead of APT for new installations.
@@ -30,8 +35,8 @@ All notable changes to this project will be documented in this file.
     - Limit access to admin account when other users have the role "Administrator" assigned to them.
 - Disable user to login via WebUI / Limit access to WebUI to certain IP address per user. 
 - Discourage websites to be created under "admin" account and redirect users to create new users. 
-- Added support for redirecting to www / non www domains (or custom)  #427 / #1638
-- Log failed login attempts
+- Added support for redirecting to www / non www domains (or custom)  #427 / #1638.
+- Allow users to see failed login attempts on there account. 
 - Introduced support for ARM based systems. Currently the packages are not available via ATP! 
 - Force reboot of system after install
 
@@ -90,7 +95,9 @@ All notable changes to this project will be documented in this file.
 - Standardize headers for upgrade scripts
 - Improved how we handle custom themes
 - Refactored HMTL / PHP code WebUI
-
+- Updated ClamAV configuration
+- Fixed issue where file manger key got the wrong permissions
+- Update version Laveral @mariojgt
 
 ## [1.3.5] - Service Release
 ### Features

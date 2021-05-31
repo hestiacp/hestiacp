@@ -58,12 +58,15 @@ if [ "$MAIL_SYSTEM" == "exim4" ]; then
         echo '[ * ] Enabling SMTP relay support...'
         if grep -q "driver = plaintext" /etc/exim4/exim4.conf.template; then
             disable_smtp_relay=true
-            echo '[ ! ] ERROR: Manual intervention required to enable SMTP Relay:'
+            echo '[ ! ] ERROR: SMTP Relay upgrade failed:'
             echo ''
-            echo '      Exim only supports one plaintext authenticator.'
-            echo '      If you want to use the Hestia smtp relay feature,'
-            echo '      please review the /etc/exim4/exim4.conf.template'
-            echo '      file and resolve any conflicts.'
+            echo 'Because of the complexity of the SMTP Relay upgrade,'
+            echo 'we were unable to safely modify your existing exim config file.'
+            echo 'If you would like to use the new SMTP Relay features,'
+            echo 'you will have to replace or modify your config with the one found'
+            echo 'on GitHub at https://github.com/hestiacp/hestiacp/blob/release/install/deb/exim/exim4.conf.template.'
+            echo 'Your exim config file will be found here: /etc/exim4/exim4.conf.template'
+            $HESTIA/bin/v-add-user-notification admin 'SMTP Relay upgrade failed' 'Because of the complexity of the SMTP Relay upgrade, we were unable to safely modify your existing exim config file.<br><br>If you would like to use the new SMTP Relay features, you will have to replace or modify your config with the one found on <a href="https://github.com/hestiacp/hestiacp/blob/release/install/deb/exim/exim4.conf.template" target="_new"><i class="fab fa-github"></i> GitHub</a>.<br><br>Your exim config file will be found here:<br><br><code>/etc/exim4/exim4.conf.template</code>'
         else
             disable_smtp_relay=false
         fi
@@ -108,6 +111,15 @@ if [ "$MAIL_SYSTEM" == "exim4" ]; then
         line=$(expr $(sed -n '/begin transports/=' /etc/exim4/exim4.conf.template) + 2)
         sed -i "${line}i $insert" /etc/exim4/exim4.conf.template
     fi
+fi
+
+# Set default webmail system for mail domains
+if [ ! -z "$WEBMAIL_SYSTEM" ]; then
+    for user in $($BIN/v-list-users plain | cut -f1); do
+        for domain in $($BIN/v-list-mail-domains $user plain | cut -f1); do
+            $BIN/v-add-mail-domain-webmail $user $domain '' no
+        done 
+    done
 fi
 
 # Fix PostgreSQL repo
@@ -169,6 +181,11 @@ if [ -d "$HESTIA/web/images/webapps/" ]; then
     rm -rf $HESTIA/web/src/app/WebApp/Installers/Joomla
 fi
 
+# Update ClamAV configuration file
+if [ -f "/etc/clamav/clamd.conf" ]; then
+    cp -f $HESTIA_INSTALL_DIR/clamav/clamd.conf /etc/clamav/
+    $HESTIA/bin/v-add-user-notification admin 'ClamAV config has been overwritten' 'Warning: If you have manualy changed /etc/clamav/clamd.conf and any changes you made will be lost an backup has been created in the /root/hst_backups folder with the original config. If you have not changed the config file you can ignore this message'
+fi
 
 ##### COMMANDS FOR V1.5.X
 

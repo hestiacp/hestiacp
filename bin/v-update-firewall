@@ -183,15 +183,14 @@ if [ -d "/etc/sysconfig" ]; then
     fi
 else
     /sbin/iptables-save > /etc/iptables.rules
-    if dpkg-query -W -f'${Status}' "netplan*" 2>/dev/null | grep -q "ok installed"; then
-        preup="/usr/lib/networkd-dispatcher/routable.d/50-ifup-hooks"
+    if dpkg-query -W -f'${Status}' "netplan*" 2>/dev/null | grep -q "ok installed" && [ -d /etc/netplan ] && [ -n "$(ls -A /etc/netplan 2>/dev/null)" ]; then
+        preup="/usr/lib/networkd-dispatcher/routable.d/10-hestia-iptables"
         if [ ! -e "$preup" ]; then
             IFS='%'
-            echo '#!/bin/bash' > $preup
+            echo '#!/bin/sh' > $preup
             echo '' >> $preup
-            echo "${HESTIA}/bin/v-update-firewall-ipset" >> $preup
-            echo '' >> $preup
-            echo 'if [ "$IFACE" == "'$(/bin/ip token | awk -F 'dev ' '{print $2}')'" ]; then' >> $preup
+            echo 'if [ "$IFACE" = "'$(ip route list | awk '/default .+/ {print $5}' | uniq)'" ]; then' >> $preup
+            [ -x "$(which ipset)" ] && echo "    ${HESTIA}/bin/v-update-firewall-ipset" >> $preup
             echo '    sleep 3' >> $preup
             echo '    /sbin/iptables-restore < /etc/iptables.rules' >> $preup
             echo 'fi' >> $preup
@@ -199,11 +198,15 @@ else
             chmod +x $preup
         fi
     else
-        preup="/etc/network/if-pre-up.d/iptables"
+        preup="/etc/network/if-pre-up.d/hestia-iptables"
         if [ ! -e "$preup" ]; then
+            IFS='%'
             echo '#!/bin/sh' > $preup
-            echo "${HESTIA}/bin/v-update-firewall-ipset" >> $preup
-            echo "/sbin/iptables-restore < /etc/iptables.rules" >> $preup
+            echo '' >> $preup
+            echo 'if [ "$IFACE" = "'$(ip route list | awk '/default .+/ {print $5}' | uniq)'" ]; then' >> $preup
+            [ -x "$(which ipset)" ] && echo "    ${HESTIA}/bin/v-update-firewall-ipset" >> $preup
+            echo '    /sbin/iptables-restore < /etc/iptables.rules' >> $preup
+            echo 'fi' >> $preup
             echo "exit 0" >> $preup
             chmod +x $preup
         fi

@@ -478,7 +478,7 @@ update_domain_zone() {
                                             7200
                                             3600
                                             1209600
-                                            3600 )
+                                            180 )
 " > $zn_conf
     fields='$RECORD\t$TTL\tIN\t$TYPE\t$PRIORITY\t$VALUE'
     while read line ; do

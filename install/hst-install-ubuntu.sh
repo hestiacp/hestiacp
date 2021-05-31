@@ -1210,9 +1210,13 @@ $HESTIA/bin/v-change-sys-hostname $servername 'no' > /dev/null 2>&1
 
 # Generating SSL certificate
 echo "[ * ] Generating default self-signed SSL certificate..."
-$HESTIA/bin/v-generate-ssl-cert $(hostname) '' 'US' 'California' \
-     'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
-
+if [ "$release" = "18.04" ]; then
+    $HESTIA/bin/v-generate-ssl-cert $(hostname) $email 'US' 'California' \
+         'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
+else
+    $HESTIA/bin/v-generate-ssl-cert $(hostname) '' 'US' 'California' \
+        'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
+fi
 # Parsing certificate file
 crt_end=$(grep -n "END CERTIFICATE-" /tmp/hst.pem |cut -f 1 -d:)
 key_start=$(grep -n "BEGIN RSA" /tmp/hst.pem |cut -f 1 -d:)

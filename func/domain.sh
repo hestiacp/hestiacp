@@ -567,7 +567,7 @@ is_dns_fqnd() {
     r=$2
     fqdn_type=$(echo $t | grep "NS\|CNAME\|MX\|PTR\|SRV")
     tree_length=3
-    if [ $t = 'CNAME' ]; then
+    if [[ $t = 'CNAME' || $t = 'MX' ]]; then
         tree_length=2
     fi
 

@@ -16,7 +16,7 @@ if [ "$FIREWALL_SYSTEM" = "iptables" ]; then
 fi
 
 # Fix potential issue of updating to Nginx 1.21.0
-if [ "WEB_SYSTEM" = "nginx" ] || [ "PROXY_SYSTEM" = "nginx" ]; then
+if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
     default_conf="/etc/nginx/conf.d/default.conf"
     nginx_conf="/etc/nginx/nginx.conf"
 

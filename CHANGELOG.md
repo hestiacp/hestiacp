@@ -18,12 +18,13 @@ Then run the update via
 ### Bugfixes
 
 - Fix issue wit startup script for iptables / network (#1849) (@myrevery)
-- Fix problem with acciditenly replacing nginx.conf during upgrade nginx (#1878 / @myrevery)
+- Fix problem with accidentally replacing nginx.conf during upgrade nginx (#1878 / @myrevery)
 - Fix issue with installing Ubuntu 18.04
-- Fix issue with login into filemanger as admin user
+- Fix issue with login into file manger as admin user
 - Added proxy_extentions back to support older custom templates
-- Added the posibilty to skip the forced reboot when interactive is set to no
-- Fixed an issue with modx template 
+- Added the possibility to skip the forced reboot when interactive is set to no
+- Fixed an issue with modx template
+- Updated translations (Croatian, Czech and Italian) 
 
 ## [1.4.1] - Bug fix
 

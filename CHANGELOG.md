@@ -1,6 +1,30 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.4.2] - Service release
+
+- **NOTE:** During the 1.4.1 / 1.4.0 release we have introduced a bug for Ubuntu 20.04 and 18.04 users with multiple network ports on the server. This release will solve the issue caused by this bug! If you are unable to download the backup please do the following:
+
+```
+    iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+```
+
+Then run the update via 
+
+```
+    apt update && apt upgrade
+```
+
+### Bugfixes
+
+- Fix issue wit startup script for iptables / network (#1849) (@myrevery)
+- Fix problem with acciditenly replacing nginx.conf during upgrade nginx (#1878 / @myrevery)
+- Fix issue with installing Ubuntu 18.04
+- Fix issue with login into filemanger as admin user
+- Added proxy_extentions back to support older custom templates
+- Added the posibilty to skip the forced reboot when interactive is set to no
+- Fixed an issue with modx template 
+
 ## [1.4.1] - Bug fix
 
 - Fixed bug with 2FA enabled logins 

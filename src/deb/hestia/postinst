@@ -75,6 +75,7 @@ upgrade_rainloop | tee -a $LOG
 
 # Set new version number in hestia.conf
 upgrade_set_version $new_version
+upgrade_set_branch $new_version
 
 # Perform upgrade clean-up tasks (rebuild domains and users, restart services, delete temporary files)
 upgrade_cleanup_message | tee -a $LOG

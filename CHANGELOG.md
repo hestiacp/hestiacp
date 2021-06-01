@@ -24,8 +24,12 @@ Then run the update via
 - Added proxy_extentions back to support older custom templates
 - Added the possibility to skip the forced reboot when interactive is set to no
 - Fixed an issue with modx template
-- Updated translations (Croatian, Czech and Italian) 
-
+- Updated translations (Croatian, Czech and Italian)  
+- Fixed a issue where users where not able to save / update web domains when POLICY_USER_EDIT_WEB_TEMPLATES is enabled (#1872)
+- Fixed a issue where admin users where not able to add new ssh key for users (#1870)
+- Fixed a issue where domain.com was not affected as a valid domain (#1874)
+- Fixed a issue where "development" icon was not removed on update to release (#1835)
+  
 ## [1.4.1] - Bug fix
 
 - Fixed bug with 2FA enabled logins 

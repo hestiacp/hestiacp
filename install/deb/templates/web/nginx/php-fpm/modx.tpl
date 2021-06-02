@@ -53,12 +53,14 @@ server {
             fastcgi_index index.php;
             include /etc/nginx/fastcgi_params;
             include %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
-                if ($request_uri ~* "/manager/|index.php") {
-                    set $no_cache 1;
-                }
-                if ($http_cookie ~ SESS) {
-                    set $no_cache 1;
-                }
+            
+            if ($request_uri ~* "/manager/|index.php") {
+                set $no_cache 1;
+            }
+            if ($http_cookie ~ SESS) {
+                set $no_cache 1;
+            }
+        }
     }
 
     location /error/ {

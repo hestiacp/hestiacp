@@ -625,6 +625,8 @@ if [ "$HESTIA_B" = true ]; then
     chmod +x $BUILD_DIR_HESTIA/usr/local/hestia/web/inc/mail-wrapper.php
     # Allow the executable to be executed
     chmod +x $BUILD_DIR_HESTIA/usr/local/hestia/bin/*
+    find $BUILD_DIR_HESTIA/usr/local/hestia/install/ \( -name '*.sh' \) -exec chmod +x {} \;
+    chmod -x $BUILD_DIR_HESTIA/usr/local/hestia/install/* 
     chown -R root:root $BUILD_DIR_HESTIA
 
     if [ "$BUILD_DEB" = true ]; then

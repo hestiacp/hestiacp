@@ -1,6 +1,35 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.4.2] - Service release
+
+- **NOTE:** During the 1.4.1 / 1.4.0 release we have introduced a bug for Ubuntu 20.04 and 18.04 users with multiple network ports on the server. This release will solve the issue caused by this bug! If you are unable to download the backup please do the following:
+
+```
+    iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+```
+
+Then run the update via 
+
+```
+    apt update && apt upgrade
+```
+
+### Bugfixes
+
+- Fix issue wit startup script for iptables / network (#1849) (@myrevery)
+- Fix problem with accidentally replacing nginx.conf during upgrade nginx (#1878 / @myrevery)
+- Fix issue with installing Ubuntu 18.04
+- Fix issue with login into file manger as admin user
+- Added proxy_extentions back to support older custom templates
+- Added the possibility to skip the forced reboot when interactive is set to no
+- Fixed an issue with modx template
+- Updated translations (Croatian, Czech and Italian)  
+- Fixed an issue where users where not able to save / update web domains when POLICY_USER_EDIT_WEB_TEMPLATES is enabled (#1872)
+- Fixed an issue where admin users where not able to add new ssh key for users (#1870)
+- Fixed an issue where domain.com was not affected as a valid domain (#1874)
+- Fixed an issue where "development" icon was not removed on update to release (#1835)
+  
 ## [1.4.1] - Bug fix
 
 - Fixed bug with 2FA enabled logins 

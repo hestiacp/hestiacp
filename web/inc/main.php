@@ -6,6 +6,13 @@ define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
 define('JS_LATEST_UPDATE', time());
 define('DEFAULT_PHP_VERSION', "php-" . exec('php -r "echo (float)phpversion();"'));
 
+function destroy_sessions(){
+    unset($_SESSION);
+    session_unset();
+    session_destroy();
+    session_start();
+}
+
 $i = 0;
 
 // Saving user IPs to the session for preventing session hijacking
@@ -41,8 +48,7 @@ if ($_SESSION['user_combined_ip'] != $user_combined_ip && $_SERVER['REMOTE_ADDR'
     $v_user = escapeshellarg($_SESSION['user']);
     $v_session_id = escapeshellarg($_SESSION['token']);
     exec(HESTIA_CMD."v-log-user-logout ".$v_user." ".$v_session_id, $output, $return_var);
-    session_destroy();
-    session_start();
+    destroy_sessions();
     $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
     header("Location: /login/");
     exit;
@@ -52,8 +58,7 @@ if ($_SESSION['user_combined_ip'] != $user_combined_ip && $_SERVER['REMOTE_ADDR'
 
 // Check system settings
 if ((!isset($_SESSION['VERSION'])) && (!defined('NO_AUTH_REQUIRED'))) {
-    session_destroy();
-    session_start();
+    destroy_sessions();
     $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
     header("Location: /login/");
     exit;
@@ -61,6 +66,7 @@ if ((!isset($_SESSION['VERSION'])) && (!defined('NO_AUTH_REQUIRED'))) {
 
 // Check user session
 if ((!isset($_SESSION['user'])) && (!defined('NO_AUTH_REQUIRED'))) {
+    destroy_sessions();
     $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
     header("Location: /login/");
     exit;
@@ -82,7 +88,7 @@ if (!defined('NO_AUTH_REQUIRED')){
         $v_user = escapeshellarg($_SESSION['user']);
         $v_session_id = escapeshellarg($_SESSION['token']);
         exec(HESTIA_CMD."v-log-user-logout ".$v_user." ".$v_session_id, $output, $return_var);
-        session_destroy();
+        destroy_sessions();
         header("Location: /login/");
     } else {
         $_SESSION['LAST_ACTIVITY'] = time();
@@ -101,8 +107,8 @@ require_once(dirname(__FILE__).'/i18n.php');
 
 function check_error($return_var) {
     if ( $return_var > 0 ) {
-        header("Location: /error/");
-        exit;
+        destroy_sessions();
+        header("Location: /login/");
     }
 }
 

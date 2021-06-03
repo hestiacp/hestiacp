@@ -173,25 +173,25 @@ function authenticate_user($user, $password, $twofa = ''){
                 }
 
                 if ($data[$user]['TWOFA'] != '') {
-                        if(empty($twofa)){
+                    if(empty($twofa)){
+                        $_SESSION['login']['username'] = $user;
+                        $_SESSION['login']['password'] = $password;
+                        return false;
+                    }else{
+                        $v_twofa = escapeshellarg($twofa);
+                        exec(HESTIA_CMD ."v-check-user-2fa ".$v_user." ".$v_twofa, $output, $return_var);
+                        unset($output);
+                        if ( $return_var > 0 ) {
+                            sleep(2);
+                            $error = "<a class=\"error\">"._('Invalid or missing 2FA token')."</a>";
                             $_SESSION['login']['username'] = $user;
                             $_SESSION['login']['password'] = $password;
-                            return false;
-                        }else{
-                            $v_twofa = escapeshellarg($twofa);
-                            exec(HESTIA_CMD ."v-check-user-2fa ".$v_user." ".$v_twofa, $output, $return_var);
-                            unset($output);
-                            if ( $return_var > 0 ) {
-                                sleep(2);
-                                $error = "<a class=\"error\">"._('Invalid or missing 2FA token')."</a>";
-                                $_SESSION['login']['username'] = $user;
-                                $_SESSION['login']['password'] = $password;
-                                $v_session_id = escapeshellarg($_POST['token']);
-                                exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." failed ".$v_session_id." ".$v_user_agent, $output, $return_var);
-                                return $error;
-                                unset($_POST['twofa']);
-                            }
+                            $v_session_id = escapeshellarg($_POST['token']);
+                            exec(HESTIA_CMD."v-log-user-login ".$v_user." ".$v_ip." failed ".$v_session_id." ".$v_user_agent, $output, $return_var);
+                            return $error;
+                            unset($_POST['twofa']);
                         }
+                    }
                 }
                 
 
@@ -231,7 +231,11 @@ function authenticate_user($user, $password, $twofa = ''){
                     $_SESSION['language'] = 'en';
                 }
                 // Regenerate session id to prevent session fixation
-                session_regenerate_id();
+                session_write_close();
+                session_unset();
+                session_destroy();
+                session_start();
+                session_regenerate_id(true);
 
                 // Redirect request to control panel interface
                 if (!empty($_SESSION['request_uri'])) {
@@ -266,17 +270,32 @@ function authenticate_user($user, $password, $twofa = ''){
         unset($_POST);
         unset($_GET);
         unset($_SESSION);
+        // Delete old session and  start a new one
+        session_write_close();
+        session_unset();
         session_destroy();
         session_start();
         return false;
     }
 }
+
+if (isset($_SESSION['login']['username'])) {
+    $user = $_SESSION['login']['username'];
+}else{
+    if (preg_match('/^[[:alnum:]][-|\.|_[:alnum:]]{0,28}[[:alnum:]]$/',$_POST['user'])) {
+        $user = $_POST['user'];
+    }else{
+        $user = ''; 
+    }
+}
+
 if (!empty($_SESSION['login']['username']) && !empty($_SESSION['login']['password']) && !empty($_POST['twofa'])){
     $error = authenticate_user($_SESSION['login']['username'], $_SESSION['login']['password'], $_POST['twofa']);
     unset($_POST);
-} else if (!empty($_POST['user']) && !empty($_POST['password'])) {
-    $error = authenticate_user($_POST['user'], $_POST['password']);
+} else if (!empty($user) && !empty($_POST['password'])) {
+    $error = authenticate_user($user, $_POST['password']);
     unset($_POST);
+    unset($user);
 }else{
     unset($_SESSION['login']);
 }
@@ -307,13 +326,14 @@ $_SESSION['token'] = md5(uniqid(mt_rand(), true));
 require_once('../templates/header.html');
 if(!empty($_SESSION['login'])){
     require_once('../templates/pages/login/login_2.html');
-}else if (empty($_POST['user'])) {
+}else if (empty($user)) {
     if($_SESSION['LOGIN_STYLE'] == 'old'){
         require_once('../templates/pages/login/login_a.html');
     }else{
         require_once('../templates/pages/login/login.html');
     }
 }else if (empty($_POST['password'])) {
+    $_SESSION['login']['username'] = $_POST['user'];
     require_once('../templates/pages/login/login_1.html');
 }else{
     if($_SESSION['LOGIN_STYLE'] == 'old'){

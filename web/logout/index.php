@@ -20,6 +20,8 @@ if (!empty($_SESSION['look'])) {
         exec(HESTIA_CMD."v-log-user-logout ".$v_user." ".$v_session_id, $output, $return_var);
     }
     
+    unset($_SESSION);
+    session_unset();
     session_destroy();
     header("Location: /login/");
 }

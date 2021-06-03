@@ -16,6 +16,11 @@ exec (HESTIA_CMD."v-list-sys-rrd json", $output, $return_var);
 $data = json_decode(implode('', $output), true);
 unset($output);
 
+$period=$_GET['period'];
+if (!in_array($period, array('daily', 'weekly', 'monthly', 'yearly'))) {
+    $period = 'daily';
+}
+
 // Render page
 render_page($user, $TAB, 'list_rrd');
 

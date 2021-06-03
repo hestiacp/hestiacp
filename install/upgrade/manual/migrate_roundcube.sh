@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: Disconnect PHPmyadmin from APT and solving issues with PHPMyadmin accidental updates from ATP
+# info: Disconnect Roundcube from APT and solving issues with Roundcube accidental updates from ATP
 
 
 #----------------------------------------------------------#
@@ -8,7 +8,7 @@
 
 # Includes
 source $HESTIA/func/main.sh
-# get current phpmyadmin version 
+# get current Roundcube version 
 source $HESTIA/install/upgrade/upgrade.conf
 source $HESTIA/conf/hestia.conf
 
@@ -42,7 +42,7 @@ then
     rm -f -r /etc/roundcube
     rm -f -r /var/lib/roundcube/
     
-    # Install roundcube
+    # Install Roundcube
     $HESTIA/bin/v-add-sys-roundcube
     # restore backup
     echo "SET FOREIGN_KEY_CHECKS = 0;" > ~/drop_all_tables.sql

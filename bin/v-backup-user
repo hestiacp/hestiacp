@@ -31,6 +31,111 @@ source $HESTIA/func/backup.sh
 # shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
+# Return Disk Usage
+get_user_disk_usage() {
+    u_usage=0
+    web_exclusions=''
+    mail_exclusions=''
+    db_exclusions=''
+    user_exclusions=''
+
+    # Parsing excludes
+    if [ -e "$USER_DATA/backup-excludes.conf" ]; then
+        web_exclusions=$(grep 'WEB=' $USER_DATA/backup-excludes.conf |\
+            awk -F "WEB='" '{print $2}' | cut -f 1 -d \')
+        mail_exclusions=$(grep 'MAIL=' $USER_DATA/backup-excludes.conf |\
+            awk -F "MAIL='" '{print $2}' | cut -f 1 -d \')
+        db_exclusions=$(grep 'DB=' $USER_DATA/backup-excludes.conf |\
+            awk -F "DB='" '{print $2}' | cut -f 1 -d \')
+        user_exclusions=$(grep 'USER=' $USER_DATA/backup-excludes.conf |\
+            awk -F "USER='" '{print $2}' | cut -f 1 -d \')
+    fi
+
+    if [ -f "$USER_DATA/web.conf" ] && [ "$web_exclusions" != '*' ]; then
+        usage=0
+        domains=$(grep 'DOMAIN=' $USER_DATA/web.conf |\
+            awk -F "DOMAIN='" '{print $2}' | cut -f 1 -d \')
+
+        for domain in $domains; do
+            exclusion=$(echo -e "$web_exclusions" |tr ',' '\n' |grep "^$domain$")
+            if [ -z "$exclusion" ]; then
+                # Defining home directory
+                home_dir="$HOMEDIR/$user/web/$domain/"
+                exlusion=$(echo -e "$web_exclusions" |tr ',' '\n' |grep "^$domain:")
+                fargs=()
+
+                if [ ! -z "$exlusion" ]; then
+                    xdirs="$(echo -e "$exlusion" |tr ':' '\n' |grep -v $domain)"
+                    for xpath in $xdirs; do
+                        fargs+=(--exclude=$xpath)
+                    done
+                fi
+
+                # Checking home directory exist
+                if [ -e "$home_dir" ]; then
+                    disk_usage=$(nice -n 19 du -shm $home_dir ${fargs[@]} | cut -f 1 )
+                    u_usage=$((u_usage + disk_usage))
+                fi
+            fi
+        done
+    fi
+
+    if [ -f "$USER_DATA/mail.conf" ] && [ "$mail_exclusions" != '*' ]; then
+        usage=0
+        domains=$(grep 'DOMAIN=' $USER_DATA/mail.conf |\
+            awk -F "DOMAIN='" '{print $2}' | cut -f 1 -d \')
+
+        for domain in $domains; do
+            check_exl=$(echo "$mail_exclusions" |tr ',' '\n' |grep "^$domain$")
+            if [ -f "$USER_DATA/mail/$domain.conf" ] && [ -z "$check_exl" ]; then
+                accounts=$(grep 'ACCOUNT=' $USER_DATA/mail/$domain.conf |\
+                    awk -F "ACCOUNT='" '{print $2}' | cut -f 1 -d \')
+
+                for account in $accounts; do
+                    home_dir=$HOMEDIR/$user/mail/$domain/$account
+                    exclusion=$(echo "$mail_exclusions" |tr ',' '\n' |grep "$domain:")
+                    exclusion=$(echo "$exclusion" |tr ':' '\n' |grep -E "^$account|\*")
+
+                    if [ -z "$exclusion" ] && [ -e "$home_dir" ]; then
+                        disk_usage=$(nice -n 19 du -shm $home_dir | cut -f 1 )
+                        u_usage=$((u_usage + disk_usage))
+                    fi
+                done
+            fi
+        done
+    fi
+
+    if [ -f "$USER_DATA/db.conf" ] && [ "$db_exclusions" != '*' ]; then
+        usage=0
+        databases=$(grep 'DB=' $USER_DATA/db.conf |\
+            awk -F "DB='" '{print $2}' | cut -f 1 -d \')
+        for database in $databases; do
+            exclusion=$(echo "$db_exclusions" |tr ',' '\n' |grep "^$database$")
+            if [ -z "$exclusion" ]; then
+                # Get database values
+                get_database_values
+
+                # Switching on db type
+                case $DB_SYSTEM in
+                    mysql) get_mysql_disk_usage ;;
+                    pgsql) get_pgsql_disk_usage ;;
+                esac
+                u_usage=$((u_usage + usage))
+            fi
+        done
+    fi
+
+    if [ "$user_exclusions" != '*' ]; then
+        fargs=()
+        for xpath in $(echo "$user_exclusions" |tr ',' '\n'); do
+            fargs+=(--exclude=$xpath)
+        done
+        usage=$(du -shm $HOMEDIR/$user --exclude $HOMEDIR/$user/web --exclude $HOMEDIR/$user/mail --exclude $HOMEDIR/$user/conf ${fargs[@]} |cut -f 1 )
+        u_usage=$((u_usage + usage))
+    fi
+
+    echo ${u_usage}
+}
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -73,7 +178,7 @@ subj="$user → backup failed"
 email=$(grep CONTACT $HESTIA/data/users/admin/user.conf |cut -f 2 -d \')
 
 # Validate available disk space (take usage * 2, due to the backup handling)
-let u_disk=$(grep "U_DISK=" $HESTIA/data/users/$user/user.conf |cut -f 2 -d \')*2
+let u_disk=$(($(get_user_disk_usage) * 2))
 let v_disk=$(($(stat -f --format="%a*%S" $BACKUP)))/1024/1024
 
 if [ "$u_disk" -gt "$v_disk" ]; then

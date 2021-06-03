@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add web domain
-# options: USER DOMAIN [IP] [ALIASES] [PROXY_EXTENSIONS] [RESTART]
+# options: USER DOMAIN [IP] [RESTART] [ALIASES] [PROXY_EXTENSIONS]
 # labels: web
 #
 # example: v-add-web-domain admin wonderland.com 192.18.22.43 yes www.wonderland.com

@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
+- Include DMARC record in DNS record list #1836
+
 ### Bugfixes
 
 - Improve the calculated disk size of a new backup estimated by excluding the exclude folders, mail accounts and database in backups (#1616) @Myself5

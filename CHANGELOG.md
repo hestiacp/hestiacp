@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bugfixes
 - Improve the calculated disk size of a new backup estimated by excluding the exclude folders, mail accounts and database in backups (#1616) @Myself5
+- Improve v-update-firewall / v-stop-firewarewall to make it self healing (#1892) @myrevery 
 
 ## [1.4.2] - Service release
 

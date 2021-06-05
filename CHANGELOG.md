@@ -13,7 +13,7 @@ All notable changes to this project will be documented in this file.
 - Fixed "Allowed IP addresses for API" field with strange behaviour #1866
 - Fixed an issue where the "Saved confirmation" was not set due to a redirect #1879
 - Increased minimal memory requirements for ClamD / ClamAV.  #1840
-
+- Restore of backup did not rebuild the "Forced SSL" and "HSTS" config on new account #1862
 
 ## [1.4.2] - Service release
 

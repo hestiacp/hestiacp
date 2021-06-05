@@ -580,7 +580,7 @@ rebuild_mail_domain_conf() {
 
         # Removing configuration files if domain is suspended
         if [ "$SUSPENDED" = 'yes' ]; then
-            rm -f /etc/exim/domains/$domain_idn
+            rm -f /etc/$MAIL_SYSTEM/domains/$domain_idn
             rm -f /etc/dovecot/conf.d/domains/$domain_idn.conf
         fi
 

@@ -239,6 +239,9 @@ set_default_value 'dovecot' 'yes'
 if [ $memory -lt 1500000 ]; then
     set_default_value 'clamd' 'no'
     set_default_value 'spamd' 'no'
+elif [ $memory -lt 300000 ]; then
+    set_default_value 'clamd' 'no'
+    set_default_value 'spamd' 'yes'
 else
     set_default_value 'clamd' 'yes'
     set_default_value 'spamd' 'yes'

@@ -981,13 +981,11 @@
 															</tr>
 															<tr>
 																<td>
-																	<textarea size="20" class="vst-textinput short" name="v_api_allowed_ip">
-																		<?php 
-																			foreach(explode(',',$_SESSION['API_ALLOWED_IP']) as $ip ){
-																				echo $ip."\n";
+																	<textarea size="20" class="vst-textinput short" name="v_api_allowed_ip"><?php 
+																		foreach(explode(',',$_SESSION['API_ALLOWED_IP']) as $ip ){ 
+                                                                            echo trim($ip)."\n";
 																			}
-																		?>
-																	</textarea>
+																		?></textarea>
 																	<br><br>
 																</td>
 															</tr>

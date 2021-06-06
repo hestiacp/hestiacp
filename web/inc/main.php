@@ -3,7 +3,11 @@
 session_start();
 
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
-define('JS_LATEST_UPDATE', time());
+if ($_SESSION['RELEASE_BRANCH'] == 'release' && $_SESSION['DEBUG_MODE'] == 'false') {
+    define('JS_LATEST_UPDATE','v=' . $_SESSION['VERSION']);
+}else{
+    define('JS_LATEST_UPDATE','r=' . time());
+}
 define('DEFAULT_PHP_VERSION', 'php-' . exec('php -r "echo (float)phpversion();"'));
 
 function destroy_sessions(){

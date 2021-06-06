@@ -7,14 +7,18 @@
 // Load HestiaCP-shipped themes (minified, updated/overwritten with updates) - ($HESTIA/web/css/themes/*.min.css)
         if (file_exists($_SERVER['HESTIA'] . '/web/css/themes/' . $selected_theme . '.min.css')) {
 ?>
-<link rel="stylesheet" href="/css/themes/<?=$selected_theme?>.min.css?<?=rand()?>" rel="preload" />
+<link rel="stylesheet" href="/css/themes/<?=$selected_theme?>.min.css?<?=JS_LATEST_UPDATE?>" rel="preload" />
 <?php
         }
 // Load custom theme files ($HESTIA/web/css/themes/custom/*.css)
-        if (file_exists($_SERVER['HESTIA'] . '/web/css/themes/custom/' . $selected_theme . '.min.css')) {
+        elseif (file_exists($_SERVER['HESTIA'] . '/web/css/themes/custom/' . $selected_theme . '.min.css')) {
 ?>
-<link rel="stylesheet" href="/css/themes/custom/<?=$selected_theme?>.css?<?=rand()?>" rel="preload" />
+<link rel="stylesheet" href="/css/themes/custom/<?=$selected_theme?>.min.css?<?=JS_LATEST_UPDATE?>" rel="preload" />
 <?php
+        }else{
+        ?>
+<link rel="stylesheet" href="/css/themes/custom/<?=$selected_theme?>.css?<?=JS_LATEST_UPDATE?>>" rel="preload" />
+        <?php    
         }
     }
 ?>

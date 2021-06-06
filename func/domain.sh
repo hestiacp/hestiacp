@@ -924,10 +924,18 @@ is_base_domain_owner(){
                     parse_object_kv_list "$web"
                     if [ -z "$ALLOW_USERS" ] ||  [ "$ALLOW_USERS" != "yes" ]; then
                         # Don't care if $basedomain all ready exists only if the owner is of the base domain is the current user
-                        is_domain_new "" $basedomain
+                        test=$(is_domain_new "" $basedomain)
+                        if [ $? -ne 0 ]; then
+                            echo "Error: $basedomain belongs to a different user";
+                            exit 1;
+                        fi
                     fi
                 else
-                    is_domain_new "" $basedomain
+                    test=$(is_domain_new "" $basedomain);
+                    if [ $? -ne 0 ]; then
+                        echo "Error: $basedomain belongs to a different user";
+                        exit 1;
+                    fi
                 fi
             fi
         fi

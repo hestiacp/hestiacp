@@ -1,15 +1,15 @@
 <?php
 
-$login_url_skip=0;
-if ($_SERVER['SCRIPT_FILENAME']=='/usr/local/hestia/web/reset/mail/index.php') $login_url_skip=1;
-if ($_SERVER['SCRIPT_FILENAME']=='/usr/local/hestia/web//reset/mail/index.php') $login_url_skip=1;
-if ($_SERVER['SCRIPT_FILENAME']=='/usr/local/hestia/web/reset/mail/set-ar.php') $login_url_skip=1;
-if ($_SERVER['SCRIPT_FILENAME']=='/usr/local/hestia/web//reset/mail/set-ar.php') $login_url_skip=1;
-if ($_SERVER['SCRIPT_FILENAME']=='/usr/local/hestia/web/reset/mail/get-ar.php') $login_url_skip=1;
-if ($_SERVER['SCRIPT_FILENAME']=='/usr/local/hestia/web//reset/mail/get-ar.php') $login_url_skip=1;
-if (substr($_SERVER['SCRIPT_FILENAME'], 0, 21)=='/usr/local/hestia/bin/') $login_url_skip=1;
+$login_url_skip = 0;
+if (($_SERVER['SCRIPT_FILENAME']=='/usr/local/hestia/web/reset/mail/index.php') ||
+    ($_SERVER['SCRIPT_FILENAME']=='/usr/local/hestia/web//reset/mail/index.php') ||
+    ($_SERVER['SCRIPT_FILENAME']=='/usr/local/hestia/web/reset/mail/set-ar.php') ||
+    ($_SERVER['SCRIPT_FILENAME']=='/usr/local/hestia/web//reset/mail/set-ar.php') ||
+    ($_SERVER['SCRIPT_FILENAME']=='/usr/local/hestia/web/reset/mail/get-ar.php') ||
+    ($_SERVER['SCRIPT_FILENAME']=='/usr/local/hestia/web//reset/mail/get-ar.php') ||
+    (substr($_SERVER['SCRIPT_FILENAME'], 0, 21)=='/usr/local/hestia/bin/')) $login_url_skip = 1;
 
-if ($login_url_skip==0) {
+if ($login_url_skip == 0) {
     if (!isset($login_url_loaded)) {
         $login_url_loaded=1;
         if (file_exists('/usr/local/hestia/web/inc/login_url.php')) {

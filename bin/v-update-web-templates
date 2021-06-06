@@ -26,6 +26,9 @@ source $HESTIA/conf/hestia.conf
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Check if /install/upgrade/manual/install_awstats_geoip.sh has been applied 
+awstats_patch=$(cat  $HESTIA/data/templates/web/awstats/awstats.tpl | grep "LoadPlugin=\"geoip GEOIP_STANDARD /usr/share/GeoIP/GeoIP.dat\"");
+
 # Update templates
 if [ -d "${WEBTPL}" ]; then
     rm -rf "${WEBTPL}/skel" 2>/dev/null
@@ -47,6 +50,11 @@ for php_ver in $(ls /etc/php/); do
     [ ! -d "/etc/php/$php_ver/fpm/pool.d/" ] && continue
     cp -f "$HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl"  ${WEBTPL}/php-fpm/PHP-${php_ver/\./_}.tpl
 done
+
+if [ ! -z "$awstats_patch" ]; then 
+    # restore LoadPlugin variable
+    echo "LoadPlugin=\"geoip GEOIP_STANDARD /usr/share/GeoIP/GeoIP.dat\"" >> $HESTIA/data/templates/web/awstats/awstats.tpl
+fi
 
 # Rebuilding web domains
 if [  -z "$skip" ]; then

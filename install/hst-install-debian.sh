@@ -23,8 +23,8 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.4.3~alpha
-pma_v='5.1.0'
+HESTIA_INSTALL_VER='1.4.3~alpha'
+pma_v='5.1.1'
 rc_v="1.4.11"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
 fpm_v="7.4"
@@ -258,6 +258,9 @@ set_default_value 'dovecot' 'yes'
 if [ $memory -lt 1500000 ]; then
     set_default_value 'clamd' 'no'
     set_default_value 'spamd' 'no'
+elif [ $memory -lt 3000000 ]; then
+    set_default_value 'clamd' 'no'
+    set_default_value 'spamd' 'yes'
 else
     set_default_value 'clamd' 'yes'
     set_default_value 'spamd' 'yes'

@@ -220,10 +220,6 @@ function authenticate_user($user, $password, $twofa = ''){
                 $_SESSION['language'] = (in_array($data[$v_user]['LANGUAGE'], $languages)) ? $data[$user]['LANGUAGE'] : 'en';
                 
                 // Regenerate session id to prevent session fixation
-                session_write_close();
-                session_unset();
-                session_destroy();
-                session_start();
                 session_regenerate_id(true);
 
                 // Redirect request to control panel interface

@@ -18,6 +18,9 @@ All notable changes to this project will be documented in this file.
 - Increased minimal memory requirements for ClamD / ClamAV.  #1840
 - Restore of backup did not rebuild the "Forced SSL" and "HSTS" config on new account #1862
 - Keep changes made by /install/upgrade/manual/install_awstats_geopip.sh on update HestiaCP (via Discord)
+- Refactor/improve PHP and HTML code @s0t (#1860)
+- Fixed XSS vulnerability in login page and a few other locations @briansemrau / @numanturle
+- Delete old sessions after after session_regenerate_id() @briansemrau
 
 ## [1.4.2] - Service release
 

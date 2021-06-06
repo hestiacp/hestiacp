@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue where the "Saved confirmation" was not set due to a redirect #1879
 - Increased minimal memory requirements for ClamD / ClamAV.  #1840
 - Restore of backup did not rebuild the "Forced SSL" and "HSTS" config on new account #1862
+- Keep changes made by /install/upgrade/manual/install_awstats_geopip.sh on update HestiaCP (via Discord)
 
 ## [1.4.2] - Service release
 

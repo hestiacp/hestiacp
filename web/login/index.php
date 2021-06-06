@@ -263,24 +263,17 @@ function authenticate_user($user, $password, $twofa = ''){
         return false;
     }
 }
-if (isset($_SESSION['login']['username'])) {
-    $user = $_SESSION['login']['username'];
+if (preg_match('/^[[:alnum:]][-|\.|_[:alnum:]]{0,28}[[:alnum:]]$/',$_POST['user'])) {
+    $_SESSION['login']['username'] = $_POST['user'];
 }else{
-    if (preg_match('/^[[:alnum:]][-|\.|_[:alnum:]]{0,28}[[:alnum:]]$/',$_POST['user'])) {
-        $user = $_POST['user'];
-    }else{
-        $user = ''; 
-    }
+    $user = ''; 
 }
-
 if (!empty($_SESSION['login']['username']) && !empty($_SESSION['login']['password']) && !empty($_POST['twofa'])) {
     $error = authenticate_user($_SESSION['login']['username'], $_SESSION['login']['password'], $_POST['twofa']);
     unset($_POST);
-} elseif (!empty($user) && !empty($_POST['password'])) {
-    $error = authenticate_user($user, $_POST['password']);
+} elseif (!empty($_SESSION['login']['username']) && !empty($_POST['password'])) {
+    $error = authenticate_user($_SESSION['login']['username'], $_POST['password']);
     unset($_POST);
-} else {
-    unset($_SESSION['login']);
 }
 // Check system configuration
 load_hestia_config();
@@ -302,12 +295,13 @@ if (empty($_SESSION['language'])) {
 $_SESSION['token'] = md5(uniqid(mt_rand(), true));
 
 require_once('../templates/header.html');
-if (!empty($_SESSION['login'])) {
+if (!empty($_SESSION['login']['password'])) {
     require_once('../templates/pages/login/login_2.html');
-} elseif (empty($user)) {
-    require_once('../templates/pages/login/login' . (($_SESSION['LOGIN_STYLE'] != 'old') ? '' : '_a') . '_a.html');
+} elseif (empty($_SESSION['login']['username'])) {
+    require_once('../templates/pages/login/login' . (($_SESSION['LOGIN_STYLE'] != 'old') ? '' : '_a') . '.html');
 } elseif (empty($_POST['password'])) {
+    
     require_once('../templates/pages/login/login_1.html');
 } else {
-    require_once('../templates/pages/login/login' . (($_SESSION['LOGIN_STYLE'] != 'old') ? '' : '_a') . '_a.html');
+    require_once('../templates/pages/login/login' . (($_SESSION['LOGIN_STYLE'] != 'old') ? '' : '_a') . '.html');
 }

@@ -14,7 +14,6 @@ function destroy_sessions(){
     unset($_SESSION);
     session_unset();
     session_destroy();
-    session_start();
 }
 
 $i = 0;
@@ -52,9 +51,7 @@ if ($_SESSION['user_combined_ip'] != $user_combined_ip && $_SERVER['REMOTE_ADDR'
     $v_user = escapeshellarg($_SESSION['user']);
     $v_session_id = escapeshellarg($_SESSION['token']);
     exec(HESTIA_CMD . 'v-log-user-logout ' . $v_user . ' ' . $v_session_id, $output, $return_var);
-    session_destroy();
-    session_start();
-    $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
+    destroy_sessions();
     header('Location: /login/');
     exit;
 }
@@ -64,7 +61,6 @@ if ($_SESSION['user_combined_ip'] != $user_combined_ip && $_SERVER['REMOTE_ADDR'
 // Check system settings
 if ((!isset($_SESSION['VERSION'])) && (!defined('NO_AUTH_REQUIRED'))) {
     destroy_sessions();
-    $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
     header('Location: /login/');
     exit;
 }
@@ -72,7 +68,6 @@ if ((!isset($_SESSION['VERSION'])) && (!defined('NO_AUTH_REQUIRED'))) {
 // Check user session
 if ((!isset($_SESSION['user'])) && (!defined('NO_AUTH_REQUIRED'))) {
     destroy_sessions();
-    $_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
     header('Location: /login/');
     exit;
 }
@@ -87,7 +82,7 @@ if (isset($_SESSION['user'])) {
 
 if (!defined('NO_AUTH_REQUIRED')){
     if (empty($_SESSION['LAST_ACTIVITY']) || empty($_SESSION['INACTIVE_SESSION_TIMEOUT'])){
-        session_destroy();
+        destroy_sessions();
         header('Location: /login/');
     } elseif ($_SESSION['INACTIVE_SESSION_TIMEOUT'] * 60 + $_SESSION['LAST_ACTIVITY'] < time()) {
         $v_user = escapeshellarg($_SESSION['user']);
@@ -136,7 +131,7 @@ function render_page($user, $TAB, $page) {
     // Panel
     top_panel(empty($_SESSION['look']) ? $_SESSION['user'] : $_SESSION['look'], $TAB);
 
-    // Extarct global variables
+    // Extract global variables
     // I think those variables should be passed via arguments
     extract($GLOBALS, EXTR_SKIP);
 
@@ -162,7 +157,7 @@ function top_panel($user, $TAB) {
     exec ($command, $output, $return_var);
     if ( $return_var > 0 ) {
         echo '<span style="font-size: 18px;"><b>ERROR: Unable to retrieve account details.</b><br>Please <b><a href="/login/">log in</a></b> again.</span>';
-        session_destroy();
+        destroy_sessions();
         header('Location: /login/');
         exit;
     }
@@ -172,7 +167,7 @@ function top_panel($user, $TAB) {
     // Log out active sessions for suspended users
     if (($panel[$user]['SUSPENDED'] === 'yes') && ($_SESSION['POLICY_USER_VIEW_SUSPENDED'] !== 'yes')) {
         $_SESSION['error_msg'] = 'You have been logged out. Please log in again.';
-        session_destroy();
+        destroy_sessions();
         header('Location: /login/');
     }
 

@@ -1,0 +1,55 @@
+#!/bin/bash
+# info: delete ip adresss from allowed ip list api
+# options: IP 
+# labels: hestia
+#
+# example: v-delete-sys-api-ip 1.1.1.1
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+ip46=${1// /}
+
+# Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
+source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
+source $HESTIA/conf/hestia.conf
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'IP'
+is_format_valid 'ip46'
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+new_list=''
+set -f                      # avoid globbing (expansion of *).
+array=(${API_ALLOWED_IP//,/ })
+for i in "${!array[@]}"
+do
+    if [ "${array[i]}" != "$ip46" ]; then
+        if [ "$new_list" = '' ]; then
+            new_list="${array[i]}";
+        else
+            new_list="$new_list,${array[i]}"
+        fi
+    fi
+done
+
+$BIN/v-change-sys-config-value 'API_ALLOWED_IP' "$new_list"
+
+# Logging
+$BIN/v-log-action "system" "Warning" "System" "Removed IP address added from Allowed IP API (IP: $ip46)"
+log_event "$OK" "$ARGUMENTS"

@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 - Include DMARC record in DNS record list #1836
+- Enabled phpMyAdmin Single Sign On support
 
 ### Bugfixes
 
@@ -18,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - Increased minimal memory requirements for ClamD / ClamAV.  #1840
 - Restore of backup did not rebuild the "Forced SSL" and "HSTS" config on new account #1862
 - Keep changes made by /install/upgrade/manual/install_awstats_geopip.sh on update HestiaCP (via Discord)
+- Fixed an issue where phpmyadmin did not update when Postgresql was availble.
 
 ## [1.4.2] - Service release
 

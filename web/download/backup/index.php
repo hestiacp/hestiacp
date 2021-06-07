@@ -29,13 +29,13 @@ if(!file_exists('/backup/'.$backup)){
     exit;
 
 }else{
-    if ($_SESSION['user'] == 'admin') {
+    if ($_SESSION['userContext'] === 'admin') {
         header('Content-type: application/gzip');
         header("Content-Disposition: attachment; filename=\"".$backup."\";" ); 
         header("X-Accel-Redirect: /backup/" . $backup);
     }
 
-    if ((!empty($_SESSION['user'])) && ($_SESSION['user'] != 'admin')) {
+    if ((!empty($_SESSION['user'])) && ($_SESSION['userContext'] != 'admin') ) {
         if (strpos($backup, $user.'.') === 0) {
             header('Content-type: application/gzip');
             header("Content-Disposition: attachment; filename=\"".$backup."\";" ); 

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: get user value
 # options: USER KEY
+# labels: panel
+#
+# example: v-get-user-value admin FNAME
 #
 # The function for obtaining certain user's parameters.
 
@@ -14,6 +17,7 @@ user=$1
 key=$(echo "$2"| tr '[:lower:]' '[:upper:]' | sed "s/^/$/")
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 

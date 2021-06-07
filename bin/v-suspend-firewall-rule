@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: suspend firewall rule
 # options: RULE
+# labels: panel
+#
+# example: v-suspend-firewall-rule 7
 #
 # The function suspends a certain firewall rule.
 
@@ -13,7 +16,9 @@
 rule=$1
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -47,6 +52,7 @@ $BIN/v-update-firewall
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "Firewall" "Suspended firewall rule (Rule: $rule)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

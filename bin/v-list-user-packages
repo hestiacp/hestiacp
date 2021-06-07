@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list user packages
 # options: [FORMAT]
+# labels: 
 #
 # The function for obtaining the list of available hosting packages.
 
@@ -13,6 +14,7 @@
 format=${1-shell}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 

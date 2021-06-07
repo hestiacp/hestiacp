@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: schedule user backup restoration
 # options: USER BACKUP [WEB] [DNS] [MAIL] [DB] [CRON] [UDIR]
+# labels: panel
+#
+# example: v-schedule-user-restore 2019-04-22_01-00-00.tar
 #
 # The function for scheduling user backup restoration.
 
@@ -20,7 +23,9 @@ cron=$7
 udir=$8
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -35,6 +40,8 @@ is_object_valid 'user' 'USER' "$user"
 is_backup_enabled
 is_backup_scheduled 'restore'
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -52,6 +59,7 @@ echo "$BIN/v-restore-user $user $backup $options  yes >> $log 2>&1" >>\
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "Backup" "Restore of backup archive requested (User: $user, Archive: $backup)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

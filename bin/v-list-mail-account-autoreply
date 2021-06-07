@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list mail account autoreply
 # options: USER DOMAIN ACCOUNT [FORMAT]
+# labels: mail
+#
+# example: v-list-mail-account-autoreply admin example.com testing
 #
 # The function of obtaining mail account autoreply message.
 
@@ -16,6 +19,7 @@ account=$3
 format=${4-shell}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 # JSON list function

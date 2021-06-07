@@ -1,0 +1,50 @@
+#!/bin/bash
+# info: restore single database
+# options: USER BACKUP DOMAIN [NOTIFY]
+# labels: panel
+#
+# example: v-restore-web-domain USER BACKUP DATABASE [NOTIFY]
+# 
+# The function allows the user to restore a single database
+# from a backup archive.
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+backup=$2
+database=$3
+notify=$4
+
+# Includes
+# shellcheck /usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck /usr/local/hestia/conf/hestia.conf
+source $HESTIA/conf/hestia.conf
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+args_usage='USER BACKUP DOMAIN [NOTIFY]'
+check_args '3' "$#" "$args_usage"
+is_format_valid 'user' 'backup'
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+$BIN/v-restore-user $user $backup 'no' 'no' 'no' $database 'no' 'no' $notify
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+log_event "$OK" "$ARGUMENTS"
+
+exit

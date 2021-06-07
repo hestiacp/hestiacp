@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete system sftp jail
 # options: NONE
+# labels: panel
+#
+# example: v-delete-sys-sftp-jail 
 #
 # The script disables sftp jailed environment
 
@@ -14,7 +17,9 @@
 source /etc/profile
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -22,7 +27,8 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -80,6 +86,7 @@ service ssh restart > /dev/null 2>&1
 service sshd restart > /dev/null 2>&1
 
 # Logging
+$BIN/v-log-action "system" "Warning" "Plugins" "SFTP Chroot Jail disabled."
 log_event "$OK" "$ARGUMENTS"
 
 exit

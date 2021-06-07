@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: suspend database
 # options: USER DATABASE
+# labels: panel
+#
+# example: v-suspend-database admin admin_wordpress_db
 #
 # The function for suspending a certain user database.
 
@@ -14,8 +17,11 @@ user=$1
 database=$2
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/db.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -58,6 +64,7 @@ update_object_value 'db' 'DB' "$database" '$SUSPENDED' 'yes'
 increase_user_value "$user" '$SUSPENDED_DB'
 
 # Logging
+$BIN/v-log-action "system" "Info" "Database" "Suspended database (User: $user, Database: $database)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

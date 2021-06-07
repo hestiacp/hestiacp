@@ -15,8 +15,11 @@ $dist_config['services']['Filegator\Services\Storage\Filesystem']['config']['ada
         if (isset($_SESSION['user'])) {
             $v_user = $_SESSION['user'];
         }
-        if (isset($_SESSION['look']) && $_SESSION['look'] != 'admin' && $v_user === 'admin') {
+        if (isset($_SESSION['look']) && ($_SESSION['userContext'] === 'admin')) {
             $v_user = $_SESSION['look'];
+        }
+        if ((isset($_SESSION['look']) && ($_SESSION['look'] == 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] == 'yes') )) {
+            header('Location: /');
         }
         # Create filemanager sftp key if missing and trash it after 30 min
         if (! file_exists('/home/'.basename($v_user).'/.ssh/hst-filemanager-key')) {
@@ -42,6 +45,11 @@ $dist_config['services']['Filegator\Services\Storage\Filesystem']['config']['ada
         ]);
     };
 
+$dist_config['services']['Filegator\Services\Archiver\ArchiverInterface'] = [
+    'handler' => '\Filegator\Services\Archiver\Adapters\HestiaZipArchiver',
+    'config' => [],
+];
+
 $dist_config['services']['Filegator\Services\Auth\AuthInterface'] = [
         'handler' => '\Filegator\Services\Auth\Adapters\HestiaAuth',
         'config' => [
@@ -51,15 +59,36 @@ $dist_config['services']['Filegator\Services\Auth\AuthInterface'] = [
     ];
 
 $dist_config['services']['Filegator\Services\View\ViewInterface']['config'] = [
-    'add_to_head' => '',
+    'add_to_head' => '
+    <style>
+        .logo {
+            width: 46px;
+        }
+    </style>
+    ',
     'add_to_body' => '
 <script>
     var checkVueLoaded = setInterval(function() {
-        if (document.getElementsByClassName("navbar-item").length) {
+        if (document.getElementsByClassName("container").length) {
             clearInterval(checkVueLoaded);
             var navProfile = document.getElementsByClassName("navbar-item profile")[0]; navProfile.replaceWith(navProfile.cloneNode(true))
             document.getElementsByClassName("navbar-item logout")[0].text="Exit to Control Panel \u00BB";
-        }
+            div = document.getElementsByClassName("container")[0];
+            callback = function(){
+                if (document.getElementsByClassName("navbar-item logout")[0]){
+                    if ( document.getElementsByClassName("navbar-item logout")[0].text != "Exit to Control Panel \u00BB" ){
+                        var navProfile = document.getElementsByClassName("navbar-item profile")[0]; navProfile.replaceWith(navProfile.cloneNode(true))
+                        document.getElementsByClassName("navbar-item logout")[0].text="Exit to Control Panel \u00BB";
+                    }
+                }
+            }
+            config = {
+                childList:true,
+                subtree:true
+            }
+            observer = new MutationObserver(callback);
+            observer.observe(div,config);
+        }    
     }, 200);
 </script>',
 ];

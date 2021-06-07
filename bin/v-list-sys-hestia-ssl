@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list hestia ssl certificate
 # options: [FORMAT]
+# labels: 
+#
+# example: v-list-sys-hestia-ssl
 #
 # The function of obtaining hestia ssl files.
 
@@ -13,6 +16,7 @@
 format=${1-shell}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 # JSON list function

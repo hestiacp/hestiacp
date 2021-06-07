@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change user default template
 # options: USER TYPE TEMPLATE
+# labels: panel
+#
+# example: v-change-user-template admin WEB wordpress
 #
 # The function changes default user web template.
 
@@ -15,8 +18,11 @@ type=$(echo "$2" | tr '[:lower:]' '[:upper:]')
 template=$3
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -53,7 +59,7 @@ esac
 #----------------------------------------------------------#
 
 # Logging
-log_history "changed $type template to $template"
+$BIN/v-log-action "$user" "Info" "Web" "Default domain template changed (Type: $type, Template: $template)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

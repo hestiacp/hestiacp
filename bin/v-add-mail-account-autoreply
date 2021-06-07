@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add mail account autoreply message
 # options: USER DOMAIN ACCOUNT MESSAGE
+# labels: mail
+#
+# example: v-add-mail-account-autoreply admin example.com user Hello from e-mail!
 #
 # The function add new email account.
 
@@ -17,8 +20,11 @@ account=$3
 autoreply=$4
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 # Define mail user
@@ -76,7 +82,7 @@ chmod 660 $USER_DATA/mail/$account@$domain.msg
 update_object_value "mail/$domain" 'ACCOUNT' "$account" '$AUTOREPLY' 'yes'
 
 # Logging
-log_history "added autoreply message on $account@$domain"
+$BIN/v-log-action "$user" "Info" "Mail" "Added auto-reply message for mail account $account@$domain."
 log_event "$OK" "$ARGUMENTS"
 
 exit

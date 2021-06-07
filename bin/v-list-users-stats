@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list overall user stats
 # options: [FORMAT]
+# labels: 
 #
 # The function for listing overall user statistics
 
@@ -13,6 +14,7 @@
 format=${1-shell}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 # JSON list function

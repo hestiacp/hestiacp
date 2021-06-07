@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update user disk quota
 # options: USER
+# labels: panel
+#
+# example: v-update-user-quota alice
 #
 # The functions upates disk quota for specific user
 
@@ -13,7 +16,9 @@
 user=$1
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 

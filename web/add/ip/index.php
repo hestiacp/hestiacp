@@ -7,7 +7,7 @@ $TAB = 'IP';
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check user
-if ($_SESSION['user'] != 'admin') {
+if ($_SESSION['userContext'] != 'admin')  {
     header("Location: /list/user");
     exit;
 }
@@ -42,6 +42,7 @@ if (!empty($_POST['ok'])) {
     $v_netmask = escapeshellarg($_POST['v_netmask']);
     $v_name = escapeshellarg($_POST['v_name']);
     $v_nat = escapeshellarg($_POST['v_nat']);
+    $v_helo = escapeshellarg($_POST['v_helo']);
     $v_interface = escapeshellarg($_POST['v_interface']);
     $v_owner = escapeshellarg($_POST['v_owner']);
     $v_shared = $_POST['v_shared'];
@@ -57,7 +58,7 @@ if (!empty($_POST['ok'])) {
 
     // Add IP
     if (empty($_SESSION['error_msg'])) {
-        exec (HESTIA_CMD."v-add-sys-ip ".$v_ip." ".$v_netmask." ".$v_interface."  ".$v_owner." ".escapeshellarg($ip_status)." ".$v_name." ".$v_nat, $output, $return_var);
+        exec (HESTIA_CMD."v-add-sys-ip ".$v_ip." ".$v_netmask." ".$v_interface."  ".$v_owner." ".escapeshellarg($ip_status)." ".$v_name." ".$v_nat." ".$v_helo, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
         $v_owner = $_POST['v_owner'];
@@ -71,6 +72,7 @@ if (!empty($_POST['ok'])) {
         unset($v_netmask);
         unset($v_name);
         unset($v_nat);
+        unset($v_helo);
     }
 }
 

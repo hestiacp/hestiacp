@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: unsuspend database
 # options: USER DATABASE
+# labels: panel
+#
+# example: v-unsuspend-database admin mydb
 #
 # The function for unsuspending database.
 
@@ -14,8 +17,11 @@ user=$1
 database=$2
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/db.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -30,6 +36,8 @@ is_object_valid 'user' 'USER' "$user"
 is_object_valid 'db' 'DB' "$database"
 is_object_suspended 'db' 'DB' "$database"
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -54,6 +62,7 @@ update_object_value 'db' 'DB' "$database" '$SUSPENDED' 'no'
 decrease_user_value "$user" '$SUSPENDED_DB'
 
 # Logging
+$BIN/v-log-action "system" "Info" "Database" "Unsuspended database (User: $user, Database: $database)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

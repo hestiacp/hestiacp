@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete backup ftp server
-# options: TYPE
+# options: TYPE [HOST]
+# labels: 
+#
+# example: v-delete-backup-host sftp
 #
 # The function deletes ftp backup host
 
@@ -13,7 +16,9 @@
 type=$1
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -29,7 +34,8 @@ if [ -z "$types" ]; then
     exit $E_INVALID
 fi
 
-
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -51,6 +57,7 @@ bckp=$(echo "$BACKUP_SYSTEM" |\
 sed -i "s/BACKUP_SYSTEM=.*/BACKUP_SYSTEM='$bckp'/g" $HESTIA/conf/hestia.conf
 
 # Logging
+$BIN/v-log-action "system" "Info" "Backup" "Removed remote backup host (Host: $host, Type: $type)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

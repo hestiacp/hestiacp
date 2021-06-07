@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: suspend user
 # options: USER [RESTART]
+# labels: panel
+#
+# example: v-suspend-user alice yes
 #
 # The function suspends a certain user and all his objects.
 
@@ -14,7 +17,9 @@ user=$1
 restart=$2
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -38,13 +43,16 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Adding '!' in front of the password
-/usr/sbin/usermod --lock $user
+# Do not restrict access to SFTP/FTP/SSH if POLICY_USER_VIEW_SUSPENDED is set to yes
+if [ -z "$POLICY_USER_VIEW_SUSPENDED" ] || [ "$POLICY_USER_VIEW_SUSPENDED" = 'no' ]; then
+    # Adding '!' in front of the password
+    /usr/sbin/usermod --lock $user
 
-# Suspending ftp accounts
-for ftp in $(grep "^${user}_" /etc/passwd |cut -f 1 -d : ); do
-    /usr/sbin/usermod --lock $ftp 2>/dev/null
-done
+    # Suspending ftp accounts
+    for ftp in $(grep "^${user}_" /etc/passwd |cut -f 1 -d : ); do
+        /usr/sbin/usermod --lock $ftp 2>/dev/null
+    done
+fi
 
 # Suspending web domains
 if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
@@ -94,6 +102,7 @@ update_user_value "$user" '$SUSPENDED' 'yes'
 increase_user_value 'admin' '$SUSPENDED_USERS'
 
 # Logging
+$BIN/v-log-action "system" "Info" "Users" "Suspended user account (Name: $user)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

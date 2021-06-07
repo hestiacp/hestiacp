@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: open file
 # options: USER FILE
+# labels: 
+#
+# example: v-open-fs-file admin README.md
 #
 # The function opens/reads files on the file system
 
@@ -8,6 +11,7 @@ user=$1
 src_file=$2
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 #----------------------------------------------------------#

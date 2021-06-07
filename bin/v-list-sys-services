@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list system services
 # options: [FORMAT]
+# labels: panel
+#
+# example: v-list-sys-services json
 #
 # The function for obtaining the list of configured system services.
 
@@ -13,7 +16,9 @@
 format=${1-shell}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 export PATH=$PATH:/sbin
@@ -157,10 +162,14 @@ fi
 
 # Checking WEB Backend
 if [ ! -z "$WEB_BACKEND" ] && [ "$WEB_BACKEND" != 'remote' ]; then
-    proc_name=$(ls /usr/sbin/php*fpm* | rev | cut -d'/' -f 1 | rev)
-    get_srv_state $proc_name
-    data="$data\nNAME='$WEB_BACKEND' SYSTEM='backend server' STATE='$state'"
-    data="$data CPU='$cpu' MEM='$mem' RTIME='$rtime'"
+    php_versions=$(ls /usr/sbin/php*fpm* | cut -d'/' -f4 | sed 's|php-fpm||')
+    for version in $php_versions; do
+        proc_name="php-fpm${version}"
+        service_name="php${version}-fpm"
+        get_srv_state $proc_name
+        data="$data\nNAME='$service_name' SYSTEM='backend server' STATE='$state'"
+        data="$data CPU='$cpu' MEM='$mem' RTIME='$rtime'"
+    done
 fi
 
 # Checking WEB Proxy
@@ -228,8 +237,8 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'remote' ]; then
                 service='mariadb'
                 proc_name='mysqld'
             fi
-            if [ -f /usr/bin/mysqladmin ]; then
-                mariadb_v=`mysqladmin --version | awk 'NR==1{print $5}' | head -c 4`
+            if [ -f /usr/bin/mysql ]; then
+                mariadb_v=`mysql -V | awk 'NR==1{print $5}' | head -c 4`
                 if [ $mariadb_v = "10.5" ]; then
                     service='mariadb'
                     proc_name='mariadbd'
@@ -281,19 +290,22 @@ fi
 # Checking FIREWALL system
 if [ ! -z "$FIREWALL_SYSTEM" ] && [ "$FIREWALL_SYSTEM" != 'remote' ]; then
     state="stopped"
-    /sbin/iptables -n -L fail2ban-HESTIA >/dev/null 2>&1
-    if [ "$?" -eq 0 ]; then
+    if $(iptables -S INPUT | grep -qx '\-P INPUT DROP'); then
         state="running"
     fi
     data="$data\nNAME='$FIREWALL_SYSTEM' SYSTEM='firewall'"
-    data="$data STATE='$state' CPU='0' MEM='0' RTIME='$rtime'"
+    data="$data STATE='$state' CPU='0' MEM='0' RTIME='0'"
 fi
 
 
 # Checking FIREWALL Fail2ban extention
 if [ ! -z "$FIREWALL_EXTENSION" ]; then
-    if [ "$(lsb_release -s -r)" = "20.04" ]; then
-        get_srv_state $FIREWALL_EXTENSION f2b/server script
+    if [ -e '/usr/bin/lsb_release' ]; then
+        if [ "$(lsb_release -s -r)" = "20.04" ]; then
+            get_srv_state $FIREWALL_EXTENSION f2b/server script
+        else
+            get_srv_state $FIREWALL_EXTENSION fail2ban-server script
+        fi
     else
         get_srv_state $FIREWALL_EXTENSION fail2ban-server script
     fi

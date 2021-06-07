@@ -43,6 +43,37 @@ is_ip_rdns_valid() {
     return 1 # False
 }
 
+# Update ip helo for exim
+update_ip_helo_value() {
+    ip="$1"
+    helo="$2"
+    natip="$1"
+    
+    # In case the IP is an NAT use the real ip address 
+    if [ ! -f $HESTIA/data/ips/$ip ]; then
+        ip=$(get_real_ip $ip);
+    fi 
+    
+    # Create or update ip value
+    update_ip_value_new 'HELO' "$helo"
+
+    # Create mailhelo.conf file if doesn't exist
+    if [ ! -e "/etc/${MAIL_SYSTEM}/mailhelo.conf" ]; then
+        touch /etc/${MAIL_SYSTEM}/mailhelo.conf
+    fi
+
+    #Create or update ip:helo pair in mailhelo.conf file
+    if [ ! -z "$helo" ]; then
+        if [ $(cat /etc/${MAIL_SYSTEM}/mailhelo.conf | grep "$natip") ]; then
+            sed -i "/^$natip:/c $natip:$helo" /etc/${MAIL_SYSTEM}/mailhelo.conf
+        else
+            echo $natip:$helo >> /etc/${MAIL_SYSTEM}/mailhelo.conf
+        fi
+    else
+        sed -i "/^$natip:/d" /etc/${MAIL_SYSTEM}/mailhelo.conf
+    fi
+}
+
 # Update ip address value
 update_ip_value() {
     key="$1"
@@ -56,6 +87,19 @@ update_ip_value() {
     new=$(echo "$value" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
     sed -i "$str_number s/$c_key='${old//\*/\\*}'/$c_key='${new//\*/\\*}'/g"\
         $conf
+}
+
+# New method that is improved on a later date we need to check if we can improve it for other locations
+update_ip_value_new() {
+    key="$1"
+    value="$2"
+    conf="$HESTIA/data/ips/$ip"
+    check_ckey=$(grep "^$key='" $conf)
+    if [ -z "$check_ckey" ]; then
+        echo "$key='$value'" >> $conf
+    else
+        sed -i "s|^$key=.*|$key='$value'|g" $conf
+    fi
 }
 
 # Get ip name
@@ -83,13 +127,19 @@ increase_ip_value() {
     if [ -z "$current_usr" ]; then
         new_usr="$USER"
     else
-        check_usr=$(echo -e "${current_usr//,/\n}" |grep -w $USER)
+        check_usr=$(echo -e "${current_usr//,/\\n}" | grep -x "$USER")
         if [ -z "$check_usr" ]; then
             new_usr="$current_usr,$USER"
         else
             new_usr="$current_usr"
         fi
     fi
+
+    # Make sure users list does not contain duplicates
+    new_usr=$(echo "$new_usr" |\
+        sed "s/,/\n/g"|\
+        sort -u |\
+        sed ':a;N;$!ba;s/\n/,/g')
 
     sed -i "s/$web_key='$current_web'/$web_key='$new_web'/g" \
         $HESTIA/data/ips/$sip
@@ -113,11 +163,12 @@ decrease_ip_value() {
 
     new_web=$((current_web - 1))
     check_ip=$(grep $sip $USER_DATA/web.conf |wc -l)
-    if [ "$check_ip" -lt 2 ]; then
+    if [[ $check_ip = 0 ]]; then
         new_usr=$(echo "$current_usr" |\
             sed "s/,/\n/g"|\
             sed "s/^$user$//g"|\
             sed "/^$/d"|\
+            sort -u |\
             sed ':a;N;$!ba;s/\n/,/g')
     else
         new_usr="$current_usr"

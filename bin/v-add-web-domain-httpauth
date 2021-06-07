@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add password protection for web domain
 # options: USER DOMAIN AUTH_USER AUTH_PASSWORD [RESTART]
+# labels: web
+#
+# example: v-add-web-domain-httpauth admin acme.com user02 super_pass
 #
 # The call is used for securing web domain with http auth
 
@@ -17,8 +20,11 @@ password=$4; HIDE=4
 restart=${5-yes}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 # Defining htpasswd file
@@ -28,7 +34,8 @@ shtaccess="$htaccess"
 shtpasswd="$htpasswd"
 docroot="$HOMEDIR/$user/web/$domain/public_html"
 
-
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -109,7 +116,7 @@ update_object_value 'web' 'DOMAIN' "$domain" '$AUTH_USER' "$auth_user"
 update_object_value 'web' 'DOMAIN' "$domain" '$AUTH_HASH' "$auth_hash"
 
 # Logging
-log_history "added http auth user $httpauth_user on $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Password protection enabled (Domain: $domain, Username: $httpauth_user)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

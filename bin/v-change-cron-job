@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change cron job
 # options: USER JOB MIN HOUR DAY MONTH WDAY COMMAND
+# labels: 
+#
+# example: v-change-cron-job admin 7 * * * * * * /usr/bin/uptime
 #
 # The function is used for changing existing job. It fully replace job
 # parameters with new one but with same id.
@@ -21,7 +24,9 @@ wday=$7
 command=$8
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -77,7 +82,7 @@ $BIN/v-restart-cron
 check_result $? "Cron restart failed" >/dev/null
 
 # Logging
-log_history "changed cron job $job"
+$BIN/v-log-action "$user" "Info" "Cron Jobs" "Cron job updated (Job: $job, Command: $command)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

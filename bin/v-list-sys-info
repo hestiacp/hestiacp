@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list system os
 # options: [FORMAT]
+# labels: 
+#
+# example: v-list-sys-info
 #
 # The function checks available updates for hestia packages.
 
@@ -13,6 +16,7 @@
 format=${1-shell}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 # Retrieve Hestia Control Panel version number

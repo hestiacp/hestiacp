@@ -1,24 +1,23 @@
 <!doctype html>
-<html>
+<html lang="<?=$_SESSION['LANGUAGE'];?>">
+
 <head>
-  <meta charset="utf-8">
-  <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
-  <title><?php echo $_SERVER['HTTP_HOST']; ?> - <?=_($TAB)?> - <?=_('Hestia Control Panel');?></title>
-  <link type="text/css" rel="stylesheet" href="/css/styles.min.css?<?php echo JS_LATEST_UPDATE; ?>" />
-  <link type="text/css" rel="stylesheet" href="/css/active-theme.css?<?php echo rand(); ?>" />
-  <link type="text/css" href="/css/animate.min.css?<?php echo JS_LATEST_UPDATE; ?>" rel="stylesheet" />
-  <link type="text/css" href="/css/jquery-custom-dialogs.css?<?php echo JS_LATEST_UPDATE; ?>" rel="stylesheet" />
-  <link type="text/css" href="/css/all.min.css?<?php echo JS_LATEST_UPDATE; ?>" rel="stylesheet" />
-  <script src="/inc/jquery/jquery-3.5.1.min.js"></script>
+  <?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/title.html'; ?>
+  <?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/css.html'; ?>
+  <?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/top_js.html'; ?>
   <script>
     //
     //  GLOBAL SETTINGS
     //
     var GLOBAL = {};
-    GLOBAL.FTP_USER_PREFIX  = 'admin_';
-    GLOBAL.DB_USER_PREFIX   = 'admin_';
-    GLOBAL.DB_DBNAME_PREFIX = 'admin_';
+    GLOBAL.FTP_USER_PREFIX = '';
+    GLOBAL.DB_USER_PREFIX = '';
+    GLOBAL.DB_DBNAME_PREFIX = '';
     GLOBAL.AJAX_URL = '';
   </script>
 </head>
+
 <body class="body-<?=strtolower($TAB)?> lang-<?=$_SESSION['language']?>">
+  <?php if (($_SESSION['DEBUG_MODE']) == "true" ) {?>
+    <?php require ''.$_SERVER['HESTIA'].'/web/templates/pages/debug_panel.html'; ?>
+  <?php } ?>

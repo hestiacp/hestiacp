@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: run cli command
-# options: USER FILE
+# options: USER CMD [ARG...]
+# labels: hestia
+#
+# example: v-run-cli-cmd user composer require package
 #
 # The function runs a limited list of cli commands with dropped privileges as the specific hestia user
 
@@ -8,6 +11,7 @@ user=$1
 clicmd=$2
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 #----------------------------------------------------------#

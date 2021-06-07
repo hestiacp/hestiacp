@@ -1,0 +1,237 @@
+<!-- Begin toolbar -->
+<div class="l-center edit">
+	<div class="l-sort clearfix">
+		<div class="l-unit-toolbar__buttonstrip">
+			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/dns/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+		</div>
+		<div class="l-unit-toolbar__buttonstrip float-right">
+			<a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
+		</div>
+	</div>
+</div>
+<!-- End toolbar -->
+
+<div class="l-separator"></div>
+
+<div class="l-center animated fadeIn">
+
+	<form id="vstobjects" name="v_add_dns" method="post">
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+		<input type="hidden" name="ok" value="Add" />
+
+		<table class="data mode-add">
+			<tr class="data-add">
+				<td class="data-dotted">
+					<table class="data-col1">
+						<tr>
+							<td></td>
+						</tr>
+					</table>
+				</td>
+				<td class="data-dotted">
+					<table class="data-col2" width="600px">
+						<tr>
+							<td class="step-top">
+								<span class="page-title"><?=_('Adding DNS Domain');?></span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<?php
+									if (!empty($_SESSION['error_msg'])) {
+										$msg_icon = 'fa-exclamation-circle status-icon red';
+										$msg_text = htmlentities($_SESSION['error_msg']);
+										$msg_id = 'vst-error';
+									} else {
+										if (!empty($_SESSION['ok_msg'])) {
+											$msg_icon = 'fa-check-circle status-icon green';
+											$msg_text = $_SESSION['ok_msg'];
+											$msg_id = 'vst-ok';
+										}
+									}
+								?>
+								<span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
+							</td>
+						</tr>
+						<?php if (($user == 'admin') && (($_GET['accept'] !== "true")))  {?>
+							<tr>
+								<td class="step-top">
+									<span class="alert alert-danger alert-with-icon">
+										<i class="fas fa-exclamation"></i>
+										<?=_('Avoid adding web domains on admin account');?>
+									</span>
+								</td>
+							</tr>
+						<?php } ?>
+						<?php if (($user == 'admin') && (empty($_GET['accept']))) {?>
+							<tr>
+								<td class="step-top">
+									<span><a href="/add/user/" class="vst-advanced admin-warning-button"><?=_('Add User');?></a></span>
+									<span><a href="/add/dns/?accept=true" class="vst-advanced button danger admin-warning-button"><?=_('Continue');?></a> </span>
+								</td>
+							</tr>
+						<?php } ?>
+						<?php if (($user == 'admin') && (($_GET['accept'] === "true")) || ($user !== "admin"))  {?>
+							<tr>
+								<td class="vst-text step-top">
+									<?=_('Domain');?>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<input type="text" size="20" class="vst-input" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
+								</td>
+							</tr>
+							<tr>
+								<td class="vst-text input-label">
+									<?=_('IP address');?>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<select class="vst-list" tabindex="-1" onchange="this.nextElementSibling.value=this.value">
+										<option value="">clear</option>
+										<?php
+											foreach ($v_ips as $ip => $value) {
+												$display_ip = empty($value['NAT']) ? $ip : "{$value['NAT']}";
+												echo "<option value='{$display_ip}'>" . htmlentities($display_ip) . "</option>\n";
+											}
+										?>
+									</select>
+									<input type="text" size="20" class="vst-input vst-list-editor" name="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
+								</td>
+							</tr>
+							<?php if (($_SESSION['userContext'] === 'admin') || ($_SESSION['userContext'] === 'user') && ($_SESSION['POLICY_USER_EDIT_DNS_TEMPLATES'] === 'yes')) { ?>
+								<tr>
+									<td class="vst-text input-label">
+										<?=_('Template') . "<span class='optional'>" . strtoupper($_SESSION['DNS_SYSTEM']) . "</span>";?>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<select class="vst-list" name="v_template">
+											<?php
+												foreach ($templates as $key => $value) {
+													echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
+													$svalue = "'".$value."'";
+													if ((!empty($v_template)) && ( $value == $v_template ) || ($svalue == $v_template)){
+														echo ' selected' ;
+													}
+													echo ">".htmlentities($value)."</option>\n";
+												}
+											?>
+										</select>
+									</td>
+								</tr>
+							<?php } ?>
+							<tr>
+								<td class="vst-text input-label step-top">
+									<a href="javascript:elementHideShow('advtable');" class="vst-advanced"><?=_('Advanced options');?></a>
+								</td>
+							</tr>
+							<tr>
+								<td class="vst-text step-top">
+									<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
+										<tr>
+											<td class="vst-text input-label">
+												<?=_('Expiration Date');?> <span class="optional">(<?=_('YYYY-MM-DD');?>)</span>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<input type="text" size="20" class="vst-input" name="v_exp" value="<?=htmlentities(trim($v_exp, "'"))?>">
+											</td>
+										</tr>
+										<tr>
+											<td class="vst-text input-label">
+												<?=_('TTL');?>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<input type="text" size="20" class="vst-input" name="v_ttl" value="<?=htmlentities(trim($v_ttl, "'"))?>">
+											</td>
+										</tr>
+										<tr>
+											<td class="vst-text input-label">
+												<?=_('Name servers');?>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<input type="text" size="20" class="vst-input" name="v_ns1" value="<?=htmlentities(trim($v_ns1, "'"))?>">
+												<span class="remove-ns additional-control delete"><?=_('delete');?></span>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<input type="text" size="20" class="vst-input" name="v_ns2" value="<?=htmlentities(trim($v_ns2, "'"))?>">
+												<span class="remove-ns additional-control delete"><?=_('delete');?></span>
+											</td>
+										</tr>
+										<?php
+											if($v_ns3) {
+												echo '<tr>
+													<td>
+														<input type="text" size="20" class="vst-input" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
+														<span class="remove-ns additional-control delete">'._('delete').'</span>
+													</td>
+												</tr>';
+											}
+											if($v_ns4) {
+												echo '<tr>
+													<td>
+														<input type="text" size="20" class="vst-input" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
+														<span class="remove-ns additional-control delete">'._('delete').'</span>
+													</td>
+												</tr>';
+											}
+											if($v_ns5) {
+												echo '<tr>
+													<td>
+														<input type="text" size="20" class="vst-input" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
+														<span class="remove-ns additional-control delete">'._('delete').'</span>
+													</td>
+												</tr>';
+											}
+											if($v_ns6) {
+												echo '<tr>
+													<td>
+														<input type="text" size="20" class="vst-input" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
+														<span class="remove-ns additional-control delete">'._('delete').'</span>
+													</td>
+												</tr>';
+											}
+											if($v_ns7) {
+												echo '<tr>
+													<td>
+														<input type="text" size="20" class="vst-input" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
+														<span class="remove-ns additional-control delete">'._('delete').'</span>
+													</td>
+												</tr>';
+											}
+											if($v_ns8) {
+												echo '<tr>
+													<td>
+														<input type="text" size="20" class="vst-input" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
+														<span class="remove-ns additional-control delete">'._('delete').'</span>
+													</td>
+												</tr>';
+											}
+										?>
+										<tr class="add-ns" <?php if ($v_ns8) echo 'style="display:none;"' ; ?> >
+											<td class="step-top-small">
+												<span class="add-ns-button additional-control add"><?=_('Add one more Name Server');?></span>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+						<table class="data-col2"></table>
+					</td>
+				</tr>
+			<?php } ?>
+		</table>
+	</form>
+</div>

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: Adding force SSL for a domain
 # options: USER DOMAIN
+# labels: hestia web
+#
+# example: v-add-web-domain-ssl-force admin acme.com
 #
 # The function forces SSL for the requested domain.
 
@@ -12,9 +15,12 @@
 # Argument definition
 user=$1
 domain=$2
+quiet=$3
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -67,6 +73,8 @@ else
     echo 'RewriteRule ^(.*)$ https://%{HTTP_HOST}$1 [R=301,L]' >> $forcessl
 fi
 
+chown root:$user $forcessl
+chmod 640 $forcessl
 
 #----------------------------------------------------------#
 #                       Hestia                             #
@@ -80,15 +88,17 @@ fi
 update_object_value 'web' 'DOMAIN' "$domain" '$SSL_FORCE' 'yes'
 
 # Restart web server
-$BIN/v-restart-web
+$BIN/v-restart-web $restart
 check_result $? "Web restart failed" > /dev/null
 
 # Restart proxy
-$BIN/v-restart-proxy
+$BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" > /dev/null
 
 # Logging
-log_history "enabled automatic HTTP-to-HTTPS redirection for $domain"
+if [ "$quiet" != "yes" ]; then
+    $BIN/v-log-action "$user" "Info" "Web" "Automatic HTTPS redirection enabled (Domain: $domain)."
+fi
 log_event "$OK" "$ARGUMENTS"
 
 exit

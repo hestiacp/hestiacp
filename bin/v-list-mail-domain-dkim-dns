@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list mail domain dkim dns records
 # options: USER DOMAIN [FORMAT]
+# labels: mail
+#
+# example: v-list-mail-domain-dkim-dns admin example.com
 #
 # The function of obtaining domain dkim dns records for proper setup.
 
@@ -15,6 +18,7 @@ domain=$2
 format=${3-shell}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 # JSON list function

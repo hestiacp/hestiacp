@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update databases disk usage
 # options: USER
+# labels: panel
+#
+# example: v-update-databases-disk admin
 #
 # The function recalculates disk usage for all user databases.
 
@@ -13,7 +16,9 @@
 user=$1
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 

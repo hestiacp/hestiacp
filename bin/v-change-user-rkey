@@ -1,8 +1,9 @@
 #!/bin/bash
-# info: change user password
-# options: USER
+# info: change user random key
+# options: USER [HASH]
+# labels: hestia
 #
-# The function changes user's password and updates RKEY value.
+# The function changes user's RKEY value thats has been used for security value to be used forgot password function only.
 
 
 #----------------------------------------------------------#
@@ -11,21 +12,24 @@
 
 # Argument definition
 user=$1
+hash=$2
 
-
+echo $rkeyhash;
 # Importing system enviroment  as we run this script
 # mostly by cron wich not read it by itself
 source /etc/profile
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'USER'
+check_args '1' "$#" 'USER [HASH]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -33,6 +37,13 @@ is_object_unsuspended 'user' 'USER' "$user"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
+if [ ! -z "$hash" ]; then
+    password=$hash
+    is_password_valid
+    hash=$password;
+else
+    hash=$(generate_password)
+fi
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -44,7 +55,7 @@ d=$(date +%s)
 #----------------------------------------------------------#
 
 # Changing RKEY value
-update_user_value "$user" '$RKEY' "$(generate_password)"
+update_user_value "$user" '$RKEY' "$hash"
 
 #check if RKEYEXP exists
 if [ -z "$(grep RKEYEXP $USER_DATA/user.conf)" ]; then
@@ -54,7 +65,8 @@ else
 fi
 
 # Logging
-log_history "forgot password request"
+$BIN/v-log-action "system" "Warning" "Users" "Password reset requested (User: $user)."
+$BIN/v-log-action "$user" "Warning" "System" "Password reset requested."
 log_event "$OK" "$ARGUMENTS"
 
 exit

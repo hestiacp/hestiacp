@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update user package
 # options: PACKAGE
+# labels: panel
+#
+# example: v-update-user-package default
 #
 # The function propagates package to connected users.
 
@@ -13,7 +16,9 @@
 package=$1
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 

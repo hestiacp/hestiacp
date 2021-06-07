@@ -7,7 +7,7 @@ $TAB = 'FIREWALL';
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check user
-if ($_SESSION['user'] != 'admin') {
+if ($_SESSION['userContext'] != 'admin')  {
     header("Location: /list/user");
     exit;
 }
@@ -30,9 +30,7 @@ foreach($data as $key => $value) {
 $ipset_lists_json=json_encode($ipset_lists);
 
 // Check POST request
-if (!empty($_POST['ok'])) {
-
-    // Check token
+if (!empty($_POST['ok'])) {    // Check token
     if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
         header('location: /login/');
         exit();
@@ -41,7 +39,7 @@ if (!empty($_POST['ok'])) {
     // Check empty fields
     if (empty($_POST['v_action'])) $errors[] = _('action');
     if (empty($_POST['v_protocol'])) $errors[] = _('protocol');
-    if (!isset($_POST['v_port'])) $errors[] = _('port');
+    if (empty($_POST['v_port']) && strlen($_POST['v_port']) == 0) $errors[] = _('port');
     if (empty($_POST['v_ip'])) $errors[] = _('ip address');
     if (!empty($errors[0])) {
         foreach ($errors as $i => $error) {

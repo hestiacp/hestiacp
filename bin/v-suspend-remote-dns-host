@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: suspend remote dns server
 # options: HOST
+# labels: dns
+#
+# example: v-suspend-remote-dns-host hostname.tld
 #
 # The function for suspending remote dns server.
 
@@ -13,7 +16,9 @@
 host=$1
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 

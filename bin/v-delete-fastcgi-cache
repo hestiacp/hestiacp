@@ -1,0 +1,91 @@
+#!/bin/bash
+# info: Disable FastCGI cache for nginx
+# options: USER DOMAIN [RESTART]
+# labels: hestia web
+#
+# example: v-delete-fastcgi-cache user domain.tld
+#
+# The function disables FastCGI cache for nginx
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+restart=$3
+
+# Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
+source $HESTIA/conf/hestia.conf
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_valid 'web' 'DOMAIN' "$domain" "$FASTCGI_CACHE"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Load domain data
+parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
+
+# Remove FastCGI cache configuration
+if [ -f $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.fastcgi_cache.conf ]; then
+    rm -rf $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.fastcgi_cache.conf
+fi
+
+conf='/etc/nginx/conf.d/fastcgi_cache_pool.conf'
+if [ -f "$conf" ]; then
+    sed -i "/ keys_zone=$domain/d" $conf
+    if [ ! -s "$conf" ]; then
+        rm -rf $conf
+    fi
+fi
+
+# Delete FastCGI cache folder
+if [ -d /var/cache/nginx/micro/$domain ]; then
+    rm -rf /var/cache/nginx/micro/$domain
+fi
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+if [ -z "$FASTCGI_CACHE" ]; then
+add_object_key "web" 'DOMAIN' "$domain" 'FASTCGI_CACHE' 'ALIAS'
+fi
+if [ -z "$FASTCGI_DURATION" ]; then
+add_object_key "web" 'DOMAIN' "$domain" 'FASTCGI_DURATION' 'ALIAS'
+fi
+
+# Set FastCGI cache flag to disabled
+update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_CACHE' 'no'
+update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_DURATION' '0s'
+
+# Restart web server
+if [ ! -z "$restart" ]; then
+    $BIN/v-restart-web
+    check_result $? "Web server restart failed" > /dev/null
+fi
+
+# Logging
+$BIN/v-log-action "$user" "Info" "Web" "FastCGI cache disabled (Domain: $domain)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

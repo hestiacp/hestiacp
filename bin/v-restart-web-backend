@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: restart backend server
 # options: NONE
+# labels: web
+#
+# example: v-restart-web-backend
 #
 # The function reloads backend server configuration.
 
@@ -10,7 +13,9 @@
 #----------------------------------------------------------#
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 PATH="$PATH:/usr/local/sbin:/sbin:/usr/sbin:/root/bin"
 

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change dns domain template
 # options: USER DOMAIN TEMPLATE [RESTART]
+# labels: dns
+#
+# example: v-change-dns-domain-tpl admin example.com child-ns yes
 #
 # The function for changing the template of records. By updating old records
 # will be removed and new records will be generated in accordance with
@@ -19,8 +22,11 @@ template=$3
 restart=$4
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
@@ -121,7 +127,7 @@ if [ "$template" = "office365" ]; then
     if [ "$?" -eq 0 ]; then
         record='@'
         formatted_domain=$(echo "$domain" | sed 's/\./-/g')
-        $BIN/v-add-dns-record $user $domain $record MX "${formatted_domain}.mail.protection.outlook.com." '0'
+        $BIN/v-add-dns-record $user $domain $record MX "${formatted_domain}.mail.protection.outlook.com." '0' '' $restart
     fi
 fi
 
@@ -160,7 +166,7 @@ $BIN/v-restart-dns $restart
 check_result $? "DNS restart failed" >/dev/null
 
 # Logging
-log_history "changed dns template for $domain to $template" '' 'admin'
+$BIN/v-log-action "system" "Info" "DNS" "Template for DNS domain changed (Template: $template, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

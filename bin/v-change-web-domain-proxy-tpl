@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change web domain proxy template
 # options: USER DOMAIN TEMPLATE [EXTENTIONS] [RESTART]
+# labels: web
+#
+# example: v-change-web-domain-proxy-tpl admin domain.tld hosting
 #
 # The function changes proxy template
 
@@ -20,6 +23,9 @@ extentions=${4-$default_extentions}
 restart="$5"
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/func/main.sh
 source $HESTIA/func/domain.sh
 source $HESTIA/func/ip.sh
@@ -86,7 +92,7 @@ $BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging
-log_history "changed proxy template for $domain to $template"
+$BIN/v-log-action "$user" "Info" "Web" "Proxy template changed (Domain: $domain, Template: $template)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

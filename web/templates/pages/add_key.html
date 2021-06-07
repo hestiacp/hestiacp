@@ -1,0 +1,76 @@
+<!-- Begin toolbar -->
+<div class="l-center edit">
+	<div class="l-sort clearfix">
+		<div class="l-unit-toolbar__buttonstrip">
+            <?php if (($_SESSION['userContext'] === 'admin') && (isset($_GET['user'])) && ($_GET['user'] !== 'admin')) { ?>
+                <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/key/?user=<?=htmlentities($_GET['user']);?>"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+            <?php } else { ?>
+                <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/key/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+            <?php } ?>
+		</div>
+		<div class="l-unit-toolbar__buttonstrip float-right">
+			<a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
+		</div>
+	</div>
+</div>
+<!-- End toolbar -->
+
+<div class="l-separator"></div>
+
+<div class="l-center animated fadeIn">
+
+	<form id="vstobjects" name="v_add_key" method="post">
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+		<input type="hidden" name="ok" value="Add" />
+
+		<table class="data mode-add">
+			<tr class="data-add">
+				<td class="data-dotted">
+					<table class="data-col1">
+						<tr>
+							<td></td>
+						</tr>
+					</table>
+				</td>
+				<td class="data-dotted">
+					<table class="data-col2" width="600px">
+						<tr>
+							<td class="step-top">
+								<span class="page-title"><?=_('Add SSH Key');?></span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<?php
+									if (!empty($_SESSION['error_msg'])) {
+										$msg_icon = 'fa-exclamation-circle status-icon red';
+										$msg_text = htmlentities($_SESSION['error_msg']);
+										$msg_id = 'vst-error';
+									} else {
+										if (!empty($_SESSION['ok_msg'])) {
+											$msg_icon = 'fa-check-circle status-icon green';
+											$msg_text = $_SESSION['ok_msg'];
+											$msg_id = 'vst-ok';
+										}
+									}
+								?>
+								<span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text step-top">
+								<?=_('SSH KEY') ?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<textarea class="vst-textinput" name="v_key"><?=htmlentities(trim($v_key, "'"))?></textarea>
+							</td>
+						</tr>
+					</table>
+					<table class="data-col2"></table>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>

@@ -1,9 +1,12 @@
 #!/bin/bash
 # info: add backup host
 # options: TYPE HOST USERNAME PASSWORD [PATH] [PORT]
+# labels: 
 #
-# This function adds a backup host
-
+# example: v-add-backup-host sftp backup.acme.com admin p4$$w@Rd
+#          v-add-backup-host b2 bucketName keyID applicationKey
+#
+# Add a new remote backup location. Currently SFTP, FTP and Backblaze are supported 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -19,8 +22,14 @@ path=${5-/backup}
 port=$6
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
+
+# Paths
+b2cli="/usr/local/bin/b2"
+b2lnk="https://f000.backblazeb2.com/file/backblazefiles/b2/cli/linux/b2"
 
 # Defining ftp command function
 ftpc() {
@@ -41,7 +50,7 @@ sftpc() {
         set count 0
         spawn /usr/bin/sftp -o StrictHostKeyChecking=no -o Port=$port $user@$host
         expect {
-            "password:" {
+            -nocase "password:" {
                 send "$password\r"
                 exp_continue
             }
@@ -100,9 +109,11 @@ if [ "$type" != 'local' ];then
         which expect >/dev/null 2>&1
         check_result $? "expect command not found"  $E_NOTEXIST
     fi
-    if ! (is_ip_format_valid "$host" >/dev/null); then
-        host "$host" >/dev/null 2>&1
-        check_result $? "host connection failed" "$E_CONNECT"
+    if [ "$type" != 'b2' ]; then
+        if ! (is_ip_format_valid "$host" >/dev/null); then
+            host "$host" >/dev/null 2>&1
+            check_result $? "host connection failed" "$E_CONNECT"
+        fi
     fi
 fi
 
@@ -143,6 +154,7 @@ if [ "$type" = 'ftp' ]; then
         exit $E_FTP
     fi
 fi
+
 if [ "$type" = 'sftp' ]; then
     if [ -z $port ]; then
         port=22
@@ -170,12 +182,44 @@ if [ "$type" = 'sftp' ]; then
     fi
 fi
 
+if [ "$type" = 'b2' ]; then
+    # Download b2 binary
+    if [ ! -f "$b2cli" ]; then
+        wget -O $b2cli $b2lnk > /dev/null 2>&1
+        chmod +x $b2cli > /dev/null 2>&1
+        if [ ! -f "$b2cli" ]; then
+            echo "Error: Binary download failed, b2 doesnt work as expected."
+            exit 3
+        fi
+    fi
+
+    # Validate b2 binary
+    b2version="$(b2 version)"
+    if [[ ! "$b2version" =~ "b2 command line tool" ]]; then
+        echo "Error: Binary download failed, b2 doesnt work as expected."
+        exit 3
+    fi
+    
+    b2 clear-account > /dev/null 2>&1
+    b2 authorize-account "$user" "$raw_password"> /dev/null 2>&1
+    b2 ls --long $host $user > /dev/null 2>&1
+    
+    if [ $? -ne 0 ]; then
+        check_result "$E_CONNECT" "b2 failed to verify connection"
+    fi
+fi
 
 # Adding backup host
-if [ $type != 'local' ]; then
+if [ $type != 'local' ] && [ $type != 'b2' ]; then
     new_timestamp
     str="HOST='$host'\nUSERNAME='$user'\nPASSWORD='$password'"
     str="$str\nBPATH='$path'\nPORT='$port'\nTIME='$time'\nDATE='$date'"
+    echo -e "$str" > $HESTIA/conf/$type.backup.conf
+    chmod 660 $HESTIA/conf/$type.backup.conf
+elif [ $type == 'b2' ]; then
+    new_timestamp
+    str="BUCKET='$host'\nB2_KEYID='$user'\nB2_KEY='$password'"
+    str="$str\nTIME='$time'\nDATE='$date'"
     echo -e "$str" > $HESTIA/conf/$type.backup.conf
     chmod 660 $HESTIA/conf/$type.backup.conf
 fi

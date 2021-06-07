@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add 2fa to existing user
 # options: USER
+# labels: hestia panel
+#
+# example: v-add-user-2fa admin
 #
 # The function creates a new 2fa token for user.
 
@@ -13,7 +16,9 @@
 user=$1
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 

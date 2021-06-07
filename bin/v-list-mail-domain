@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list mail domain
 # options: USER DOMAIN [FORMAT]
+# labels: mail
+#
+# example: v-list-mail-domain user01 mydomain.com
 #
 # The function of obtaining the list of domain parameters.
 
@@ -15,7 +18,9 @@ domain=$2
 format=${3-shell}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 # JSON list function
@@ -34,40 +39,53 @@ json_list() {
         "SUSPENDED": "'$SUSPENDED'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'",
-        "WEBMAIL_ALIAS": "'$WEBMAIL_ALIAS.$domain'"
+        "WEBMAIL_ALIAS": "'$WEBMAIL_ALIAS.$domain'",
+        "WEBMAIL":"'$WEBMAIL'",
+        "U_SMTP_RELAY":"'$U_SMTP_RELAY'",
+        "U_SMTP_RELAY_HOST":"'$U_SMTP_RELAY_HOST'",
+        "U_SMTP_RELAY_PORT":"'$U_SMTP_RELAY_PORT'",
+        "U_SMTP_RELAY_USERNAME":"'$U_SMTP_RELAY_USERNAME'"
         }'
     echo '}'
 }
 
 # SHELL list function
 shell_list() {
-    echo "DOMAIN:         $DOMAIN"
-    echo "ANTIVIRUS:      $ANTIVIRUS"
-    echo "ANTISPAM:       $ANTISPAM"
-    echo "DKIM:           $DKIM"
-    echo "CATCHALL:       $CATCHALL"
-    echo "ACCOUNTS:       $ACCOUNTS"
-    echo "DISK:           $U_DISK"
-    echo "SSL:            $SSL"
-    echo "LETSENCRYPT:    $LETSENCRYPT"
-    echo "SUSPENDED:      $SUSPENDED"
-    echo "TIME:           $TIME"
-    echo "DATE:           $DATE"
-    echo "WEBMAIL_ALIAS:  $WEBMAIL_ALIAS.$domain"
+    echo "DOMAIN:             $DOMAIN"
+    echo "ANTIVIRUS:          $ANTIVIRUS"
+    echo "ANTISPAM:           $ANTISPAM"
+    echo "DKIM:               $DKIM"
+    echo "CATCHALL:           $CATCHALL"
+    echo "ACCOUNTS:           $ACCOUNTS"
+    echo "DISK:               $U_DISK"
+    echo "SSL:                $SSL"
+    echo "LETSENCRYPT:        $LETSENCRYPT"
+    echo "SUSPENDED:          $SUSPENDED"
+    echo "TIME:               $TIME"
+    echo "DATE:               $DATE"
+    echo "WEBMAIL_ALIAS:      $WEBMAIL_ALIAS.$domain"
+    echo "WEBMAIL:            $WEBMAIL"
+    echo "U_SMTP_RELAY:          $U_SMTP_RELAY"
+    echo "U_SMTP_RELAY_HOST      $U_SMTP_RELAY_HOST"
+    echo "U_SMTP_RELAY_PORT      $U_SMTP_RELAY_PORT"
+    echo "U_SMTP_RELAY_USERNAME  $U_SMTP_RELAY_USERNAME"
 }
 
 # PLAIN list function
 plain_list() {
     echo -ne "$DOMAIN\t$ANTIVIRUS\t$ANTISPAM\t$DKIM\t$CATCHALL\t"
-    echo -e "$ACCOUNTS\t$U_DISK\t$SSL\t$LETSENCRYPT\t$SUSPENDED\t$TIME\t$DATE\t$WEBMAIL_ALIAS.$domain"
+    echo -e "$ACCOUNTS\t$U_DISK\t$SSL\t$LETSENCRYPT\t$SUSPENDED\t$TIME\t$DATE\t$WEBMAIL_ALIAS.$domain\t$WEBMAIL\t"
+    echo -e "$U_SMTP_RELAY\t$U_SMTP_RELAY_HOST\t$U_SMTP_RELAY_PORT\t$U_SMTP_RELAY_USERNAME"
 }
 
 # CSV list function
 csv_list() {
     echo -n "DOMAIN,ANTIVIRUS,ANTISPAM,DKIM,CATCHALL,ACCOUNTS,U_DISK,"
-    echo "SSL,LETSENCRYPT,SUSPENDED,TIME,DATE"
-    echo -n "$DOMAIN,$ANTIVIRUS,$ANTISPAM,$DKIM,$CATCHALL,$ACCOUNTS,$U_DISK"
-    echo "$SSL,$LETSENCRYPT,$SUSPENDED,$TIME,$DATE,$WEBMAIL_ALIAS.$domain"
+    echo "SSL,LETSENCRYPT,SUSPENDED,TIME,DATE,WEBMAIL_ALIAS,WEBMAIL,"
+    echo "U_SMTP_RELAY,U_SMTP_RELAY_HOST,U_SMTP_RELAY_PORT,U_SMTP_RELAY_USERNAME"
+    echo -n "$DOMAIN,$ANTIVIRUS,$ANTISPAM,$DKIM,$CATCHALL,$ACCOUNTS,$U_DISK,"
+    echo "$SSL,$LETSENCRYPT,$SUSPENDED,$TIME,$DATE,$WEBMAIL_ALIAS.$domain,$WEBMAIL,"
+    echo "$U_SMTP_RELAY,$U_SMTP_RELAY_HOST,$U_SMTP_RELAY_PORT,$U_SMTP_RELAY_USERNAME"
 }
 
 

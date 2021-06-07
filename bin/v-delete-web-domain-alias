@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete web domain alias
 # options: USER DOMAIN ALIAS [RESTART]
+# labels: web
+#
+# example: v-delete-web-domain-alias admin example.com www.example.com
 #
 # The function of deleting the alias domain (parked domain). By this call
 # default www aliase can be removed as well.
@@ -17,6 +20,9 @@ dom_alias=$3
 restart=$4
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/func/main.sh
 source $HESTIA/func/domain.sh
 source $HESTIA/func/ip.sh
@@ -31,9 +37,7 @@ check_args '3' "$#" 'USER DOMAIN DOM_ALIAS [RESTART]'
 is_format_valid 'user' 'domain' 'dom_alias'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
-is_object_unsuspended 'web' 'DOMAIN' "$domain"
 get_domain_values 'web'
 if [ -z "$(echo $ALIAS |tr ',' '\n' |grep ^$dom_alias$)" ]; then
     check_result $E_NOTEXIST "alias $dom_alias doesn't exist"
@@ -91,7 +95,7 @@ $BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging
-log_history "deleted alias $dom_alias on $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Deleted web domain alias (Alias: $dom_alias, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -1,0 +1,44 @@
+#!/bin/bash
+# info: revokes api key
+# options: [HASH]
+# labels: panel
+#
+# example: v-revoke-api-key mykey
+#
+# The function removes a key from in $HESTIA/data/keys/
+
+# Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+hash=$1
+KEYS="$HESTIA/data/keys/"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+if [ ! -d ${KEYS} ]; then
+  mkdir -p ${KEYS}
+fi
+
+if [[ -e ${KEYS}${hash} ]] ; then
+   rm ${KEYS}${hash}
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "system" "Info" "System" "System API key revoked (Key: $hash)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

@@ -25,7 +25,7 @@ local_backup(){
         rm -rf $tmpdir
         rm -f $BACKUP/$user.log
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-        echo "Not enough disk space" |$SENDMAIL -s "$subj" $email $notify
+        echo "Not enough disk space" |$SENDMAIL -s "$subj" $email "yes"
         check_result "$E_DISK" "Not enough dsk space"
     fi
 
@@ -58,11 +58,11 @@ ftp_backup() {
     # Checking config
     if [ ! -e "$HESTIA/conf/ftp.backup.conf" ]; then
         error="ftp.backup.conf doesn't exist"
-        rm -rf $tmpdir
-        rm -f $BACKUP/$user.log
-        echo "$error" |$SENDMAIL -s "$subj" $email $notify
+        echo "$error" |$SENDMAIL -s "$subj" $email "yes"
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-        check_result "$E_NOTEXIST" "$error"
+        echo "$error"
+        errorcode="$E_NOTEXIST"
+        return "$E_NOTEXIST"
     fi
 
     # Parse config
@@ -76,11 +76,11 @@ ftp_backup() {
     # Checking variables
     if [ -z "$HOST" ] || [ -z "$USERNAME" ] || [ -z "$PASSWORD" ]; then
         error="Can't parse ftp backup configuration"
-        rm -rf $tmpdir
-        rm -f $BACKUP/$user.log
-        echo "$error" |$SENDMAIL -s "$subj" $email $notify
+        echo "$error" |$SENDMAIL -s "$subj" $email "yes"
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-        check_result "$E_PARSING" "$error"
+        echo "$error"
+        errorcode="$E_PARSING"
+        return "$E_PARSING"
     fi
 
     # Debug info
@@ -91,11 +91,11 @@ ftp_backup() {
     ferror=$(echo $fconn |grep -i -e failed -e error -e "Can't" -e "not conn")
     if [ ! -z "$ferror" ]; then
         error="Error: can't login to ftp ftp://$USERNAME@$HOST"
-        rm -rf $tmpdir
-        rm -f $BACKUP/$user.log
         echo "$error" |$SENDMAIL -s "$subj" $email $notify
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-        check_result "$E_CONNECT" "$error"
+        echo "$error"
+        errorcode="$E_CONNECT"
+        return "$E_CONNECT"
     fi
 
     # Check ftp permissions
@@ -109,11 +109,11 @@ ftp_backup() {
     ftp_result=$(ftpc "mkdir $ftmpdir" "rm $ftmpdir" |grep -v Trying)
     if [ ! -z "$ftp_result" ] ; then
         error="Can't create ftp backup folder ftp://$HOST$BPATH"
-        rm -rf $tmpdir
-        rm -f $BACKUP/$user.log
         echo "$error" |$SENDMAIL -s "$subj" $email $notify
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-        check_result "$E_FTP" "$error"
+        echo "$error"
+        errorcode="$E_FTP"
+        return "$E_FTP"
     fi
 
     # Checking retention
@@ -194,7 +194,7 @@ sftpc() {
         spawn /usr/bin/sftp -o StrictHostKeyChecking=no \
             -o Port=$PORT $USERNAME@$HOST
         expect {
-            "password:" {
+            -nocase "password:" {
                 send "$PASSWORD\r"
                 exp_continue
             }
@@ -277,11 +277,11 @@ sftp_backup() {
     # Checking config
     if [ ! -e "$HESTIA/conf/sftp.backup.conf" ]; then
         error="Can't open sftp.backup.conf"
-        rm -rf $tmpdir
-        rm -f $BACKUP/$user.log
-        echo "$error" |$SENDMAIL -s "$subj" $email $notify
+        echo "$error" |$SENDMAIL -s "$subj" $email "yes"
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-        check_result "$E_NOTEXIST" "$error"
+        echo "$error"
+        errorcode="$E_NOTEXIST"
+        return "$E_NOTEXIST" 
     fi
 
     # Parse config
@@ -295,11 +295,11 @@ sftp_backup() {
     # Checking variables
     if [ -z "$HOST" ] || [ -z "$USERNAME" ] || [ -z "$PASSWORD" ]; then
         error="Can't parse sftp backup configuration"
-        rm -rf $tmpdir
-        rm -f $BACKUP/$user.log
-        echo "$error" |$SENDMAIL -s "$subj" $email $notify
+        echo "$error" |$SENDMAIL -s "$subj" $email "yes"
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-        check_result "$E_PARSING" "$error"
+        echo "$error"
+        errorcode="$E_PARSING"
+        return "$E_PARSING" 
     fi
 
     # Debug info
@@ -320,11 +320,11 @@ sftp_backup() {
             $E_CONNECT) error="Can't login to sftp host $HOST" ;;
             $E_FTP) error="Can't create temp folder on sftp $HOST" ;;
         esac
-        rm -rf $tmpdir
-        rm -f $BACKUP/$user.log
-        echo "$error" |$SENDMAIL -s "$subj" $email $notify
+        echo "$error" |$SENDMAIL -s "$subj" $email "yes"
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-        check_result "$rc" "$error"
+        echo "$error"
+        errorcode="$rc"
+        return "$rc"
     fi
 
     # Checking retention
@@ -418,4 +418,43 @@ google_download() {
     if [ "$?" -ne 0 ]; then
         check_result "$E_CONNECT" "gsutil failed to download $1"
     fi
-} 
+}
+
+# BackBlaze B2 backup function
+b2_backup() {
+    # Defining backblaze b2 settings
+    source $HESTIA/conf/b2.backup.conf
+
+    # Recreate backblaze auth file ~/.b2_account_info (for situation when key was changed in b2.backup.conf)
+    b2 clear-account > /dev/null 2>&1
+    b2 authorize-account $B2_KEYID $B2_KEY > /dev/null 2>&1
+
+    # Uploading backup archive
+    echo -e "$(date "+%F %T") Upload to B2: $user/$user.$backup_new_date.tar"
+    if [ "$localbackup" = 'yes' ]; then
+        cd $BACKUP
+        b2 upload-file $BUCKET $user.$backup_new_date.tar $user/$user.$backup_new_date.tar > /dev/null 2>&1
+    else
+        cd $tmpdir
+        tar -cf $BACKUP/$user.$backup_new_date.tar .
+        cd $BACKUP/
+        b2 upload-file $BUCKET $user.$backup_new_date.tar $user/$user.$backup_new_date.tar > /dev/null 2>&1
+        rc=$?
+        rm -f $user.$backup_new_date.tar
+        if [ "$rc" -ne 0 ]; then
+            check_result "$E_CONNECT" "b2 failed to upload $user.$backup_new_date.tar"
+        fi
+    fi
+
+    # Checking retention
+    backup_list=$(b2 ls --long $BUCKET $user | cut -f 1 -d ' ' 2>/dev/null)
+    backups_count=$(echo "$backup_list" |wc -l)
+    if [ "$backups_count" -ge "$BACKUPS" ]; then
+        backups_rm_number=$((backups_count - BACKUPS))
+        for backup in $(echo "$backup_list" |head -n $backups_rm_number); do
+            backup_file_name=$(b2 get-file-info $backup | grep fileName | cut -f 4 -d '"' 2>/dev/null)
+            echo -e "$(date "+%F %T") Rotated b2 backup: $backup_file_name"
+            b2 delete-file-version $backup > /dev/null 2>&1
+        done
+    fi
+}

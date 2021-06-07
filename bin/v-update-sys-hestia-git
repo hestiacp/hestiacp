@@ -1,16 +1,24 @@
 #!/bin/bash
-
-# v-update-sys-hestia-git
+# info: Delete log file for user
+# options: REPOSITORY BRANCH INSTALL [PACKAGES]
+# labels: hestia
+#
+# example: v-update-sys-hestia-git hestiacp staging/beta install all
+#          # Will download from the hestiacp repository
+#          # Pulls code from staging/beta branch
+#          # install: installs package immediately
+#          # install-auto: installs package and schedules automatic updates from Git
+#          # 'all': (optional) - compiles nginx and php alongside panel.
+#          #                     this option takes a long time, only use when needed
+#
 # Downloads and compiles/installs packages from GitHub repositories
-# Options:  REPOSITORY BRANCH INSTALL [PACKAGES]
-# Example:  v-update-sys-hestia-git hestiacp staging/beta install all
-#           - Will download from the hestiacp repository
-#           - Pulls code from staging/beta branch
-#           - install: installs package immediately
-#           - install-auto: installs package and schedules automatic updates from Git
-#           - 'all': (optional) - compiles nginx and php alongside panel.
-#                                 this option takes a long time, only use when needed
 
+# Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 # Define download function
 download_file() {
@@ -64,6 +72,12 @@ BUILD_DIR='/tmp/hestiacp-src'
 DEB_DIR="$BUILD_DIR/debs"
 INSTALL_DIR='/usr/local/hestia'
 ARCHIVE_DIR="${BUILD_DIR}/archive"
+architecture="$(uname -m)"
+if [ $architecture == 'aarch64' ]; then
+    BUILD_ARCH='arm64'
+else
+    BUILD_ARCH='amd64'
+fi
 
 # Set command variables
 fork=$1
@@ -73,7 +87,6 @@ flags=$4
 
 # Set Version for compiling
 BUILD_VER=$(curl -s https://raw.githubusercontent.com/$fork/hestiacp/$branch/src/deb/hestia/control | grep "Version:" | cut -d' ' -f2)
-BUILD_ARCH='amd64'
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
 NGINX_V=$(curl -s https://raw.githubusercontent.com/$fork/hestiacp/$branch/src/deb/nginx/control |grep "Version:" |cut -d' ' -f2)
 OPENSSL_V='1.1.1g'
@@ -120,6 +133,11 @@ if [ ! -z "$2" ]; then
 else
     source /usr/local/hestia/conf/hestia.conf
     branch=$RELEASE_BRANCH
+    branch_check=$(curl -s --head -w %{http_code} https://raw.githubusercontent.com/$fork/hestiacp/$branch/src/deb/hestia/control -o /dev/null)
+    if [ $branch_check -ne "200" ]; then
+        echo "ERROR: invalid branch name specified."
+        exit 1
+    fi
 fi
 
 if [ -z "$branch" ]; then
@@ -135,7 +153,13 @@ echo "[*] Checking for missing dependencies and installing required libraries...
 apt-get -qq install -y $SOFTWARE > /dev/null 2>&1
 
 # Fix for Debian PHP Envroiment
-ln -s /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl > /dev/null 2>&1
+if [ ! -e /usr/local/include/curl ]; then
+    if [ $BUILD_ARCH == "amd64" ]; then
+        ln -s /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl
+    else
+        echo "No x86_64 working"
+    fi
+fi
 
 # Get system cpu cores
 NUM_CPUS=$(grep "^cpu cores" /proc/cpuinfo | uniq |  awk '{print $4}')
@@ -226,6 +250,9 @@ if [ "$NGINX_B" = true ] ; then
     # Download control, postinst and postrm files
     cd DEBIAN
     download_file $GIT_REP/nginx/control
+    if [ "$BUILD_ARCH" != "amd64" ]; then
+        sed -i "s/amd64/${BUILD_ARCH}/g" "control"
+    fi
     download_file $GIT_REP/nginx/copyright
     download_file $GIT_REP/nginx/postinst
     download_file $GIT_REP/nginx/postrm
@@ -288,14 +315,31 @@ if [ "$PHP_B" = true ] ; then
     cd php-$PHP_V
 
     # Configure PHP
-    ./configure     --prefix=/usr/local/hestia/php \
+    if [ $BUILD_ARCH = 'amd64' ]; then
+        ./configure   --prefix=/usr/local/hestia/php \
                     --enable-fpm \
                     --with-fpm-user=admin \
                     --with-fpm-group=admin \
                     --with-libdir=lib/x86_64-linux-gnu \
                     --with-mysqli \
+                    --with-gettext \
                     --with-curl \
+                    --with-zip \
+                    --with-gmp \
                     --enable-mbstring
+    else
+        ./configure   --prefix=/usr/local/hestia/php \
+                    --enable-fpm \
+                    --with-fpm-user=admin \
+                    --with-fpm-group=admin \
+                    --with-libdir=lib/aarch64-linux-gnu \
+                    --with-mysqli \
+                    --with-gettext \
+                    --with-curl \
+                    --with-zip \
+                    --with-gmp \
+                    --enable-mbstring
+    fi
 
     # Create the files and install them
     make -j $NUM_CPUS && make INSTALL_ROOT=$BUILD_DIR install
@@ -311,6 +355,9 @@ if [ "$PHP_B" = true ] ; then
     # Download control, postinst and postrm files
     cd DEBIAN
     download_file $GIT_REP/php/control
+    if [ "$BUILD_ARCH" != "amd64" ]; then
+        sed -i "s/amd64/${BUILD_ARCH}/g" "control"
+    fi
     download_file $GIT_REP/php/copyright
 
     # Move php directory
@@ -367,6 +414,9 @@ if [ "$HESTIA_B" = true ] ; then
     # Download control, postinst and postrm files
     cd DEBIAN
     download_file $GIT_REP/hestia/control
+    if [ "$BUILD_ARCH" != "amd64" ]; then
+        sed -i "s/amd64/${BUILD_ARCH}/g" "control"
+    fi
     download_file $GIT_REP/hestia/copyright
     download_file $GIT_REP/hestia/postinst
 

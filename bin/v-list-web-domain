@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list web domain parameters
 # options: USER DOMAIN [FORMAT]
+# labels: web
+#
+# example: v-list-web-domain admin example.com
 #
 # The function to obtain web domain parameters.
 
@@ -15,6 +18,7 @@ domain=$2
 format=${3-shell}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 # JSON list function
@@ -41,6 +45,10 @@ json_list() {
         "BACKEND": "'$BACKEND'",
         "PROXY": "'$PROXY'",
         "PROXY_EXT": "'$PROXY_EXT'",
+        "FASTCGI_CACHE": "'$FASTCGI_CACHE'",
+        "FASTCGI_DURATION": "'$FASTCGI_DURATION'",
+        "REDIRECT": "'$REDIRECT'",
+        "REDIRECT_CODE": "'$REDIRECT_CODE'",
         "CUSTOM_DOCROOT": "'$CUSTOM_DOCROOT'",
         "SUSPENDED": "'$SUSPENDED'",
         "TIME": "'$TIME'",

@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: add mail SSL for $domain
 # options: USER DOMAIN SSL_DIR [RESTART]
+# labels: hestia
 #
 # The function turns on SSL support for a mail domain. Parameter ssl_dir
 # is a path to a directory where 2 or 3 ssl files can be found. Certificate file 
@@ -31,9 +32,13 @@ fi
 domain_idn=$(idn -t --quiet -a "$domain")
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
@@ -107,7 +112,7 @@ $BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging
-log_history "enabled mail ssl support for $domain"
+$BIN/v-log-action "$user" "Info" "Mail" "SSL enabled (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

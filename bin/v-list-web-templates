@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list web templates
-# options: USER [FORMAT]
+# options: [FORMAT]
+# labels: web
+#
+# example: v-list-web-templates
 #
 # The function for obtaining the list of web templates available to a user.
 
@@ -13,7 +16,9 @@
 format=${1-shell}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 # JSON list function

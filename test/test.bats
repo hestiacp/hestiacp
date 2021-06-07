@@ -13,11 +13,16 @@ function setup() {
     # echo "# Setup_file" > &3
     if [ $BATS_TEST_NUMBER = 1 ]; then
         echo 'user=test-5285' > /tmp/hestia-test-env.sh
+        echo 'user2=test-5286' >> /tmp/hestia-test-env.sh
         echo 'userbk=testbk-5285' >> /tmp/hestia-test-env.sh
         echo 'userpass1=test-5285' >> /tmp/hestia-test-env.sh
         echo 'userpass2=t3st-p4ssw0rd' >> /tmp/hestia-test-env.sh
         echo 'HESTIA=/usr/local/hestia' >> /tmp/hestia-test-env.sh
         echo 'domain=test-5285.hestiacp.com' >> /tmp/hestia-test-env.sh
+        echo 'rootdomain=testhestiacp.com' >> /tmp/hestia-test-env.sh
+        echo 'subdomain=cdn.testhestiacp.com' >> /tmp/hestia-test-env.sh
+        echo 'database=test-5285_database' >> /tmp/hestia-test-env.sh
+        echo 'dbuser=test-5285_dbuser' >> /tmp/hestia-test-env.sh
     fi
 
     source /tmp/hestia-test-env.sh
@@ -47,7 +52,12 @@ function validate_web_domain() {
     domain_ip=$(get_real_ip "$domain_ip")
 
     if [ ! -z $webpath ]; then
-        assert_file_exist $HOMEDIR/$user/web/$domain/public_html/$webpath
+        domain_docroot=$(get_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_DOCROOT')
+        if [ -n "$domain_docroot" ] && [ -d "$domain_docroot" ]; then
+            assert_file_exist "${domain_docroot}/${webpath}"
+        else
+            assert_file_exist "${HOMEDIR}/${user}/web/${domain}/public_html/${webpath}"
+        fi
     fi
 
     # Test HTTP
@@ -133,6 +143,42 @@ function validate_webmail_domain() {
     fi
 }
 
+function validate_database(){
+    local database=$1
+    local dbuser=$2
+    local password=$3
+    
+    host_str=$(grep "HOST='localhost'" $HESTIA/conf/mysql.conf)
+    parse_object_kv_list "$host_str"
+    if [ -z $PORT ]; then PORT=3306; fi
+    
+    refute [ -z "$HOST" ]
+    refute [ -z "$PORT" ]
+    refute [ -z "$database" ]
+    refute [ -z "$dbuser" ]
+    refute [ -z "$password" ]
+    
+    
+    # Create an connection to verify correct username / password has been set correctly
+    tmpfile=$(mktemp /tmp/mysql.XXXXXX)
+    echo "[client]">$tmpfile
+    echo "host='$HOST'" >> $tmpfile
+    echo "user='$dbuser'" >> $tmpfile
+    echo "password='$password'" >> $tmpfile
+    echo "port='$PORT'" >> $tmpfile
+    chmod 600 $tmpfile
+    
+    sql_tmp=$(mktemp /tmp/query.XXXXXX)
+    echo "show databases;" > $sql_tmp
+    run mysql --defaults-file=$tmpfile < "$sql_tmp"
+    
+    assert_success
+    assert_output --partial "$database"
+    
+    rm -f "$sql_tmp"
+    rm -f "$tmpfile"
+}
+
 #----------------------------------------------------------#
 #                         MAIN                             #
 #----------------------------------------------------------#
@@ -149,7 +195,6 @@ function validate_webmail_domain() {
 #----------------------------------------------------------#
 
 @test "Check reverse Dns validation" {
-
     # 1. PTR record for a IP should return a hostname(reverse) which in turn must resolve to the same IP addr(forward). (Full circle)
     #  `-> not implemented in `is_ip_rdns_valid` yet and also not tested here
     # 2. Reject rPTR records that match generic dynamic IP pool patterns
@@ -288,7 +333,7 @@ function validate_webmail_domain() {
 
     run v-add-cron-job $user 1 1 1 1 1 echo 1
     assert_failure $E_EXISTS
-    assert_output --partial 'JOB=1 is already exists'
+    assert_output --partial 'JOB=1 already exists'
 }
 
 @test "Cron: Second cron job" {
@@ -459,6 +504,18 @@ function validate_webmail_domain() {
     assert_failure $E_EXISTS
 }
 
+@test "WEB: Add web domain wildcard alias" {
+    run v-add-web-domain-alias $user $domain "*.$domain"
+    assert_success
+    refute_output
+}
+
+@test "WEB: Delete web domain wildcard alias" {
+    run v-delete-web-domain-alias $user $domain "*.$domain"
+    assert_success
+    refute_output
+}
+
 @test "WEB: Add web domain stats" {
     run v-add-web-domain-stats $user $domain awstats
     assert_success
@@ -504,7 +561,288 @@ function validate_webmail_domain() {
     assert_success
     refute_output
 }
+ 
+#----------------------------------------------------------#
+#                      MULTIPHP                            #
+#----------------------------------------------------------#
 
+@test "Multiphp: Default php Backend version" {
+    def_phpver=$(multiphp_default_version)
+    multi_domain="multiphp.${domain}"
+
+    run v-add-web-domain $user $multi_domain 198.18.0.125
+    assert_success
+    refute_output
+
+    echo -e "<?php\necho PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "$def_phpver" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+
+}
+
+@test "Multiphp: Change backend version - PHP v5.6" {
+    test_phpver='5.6'
+    multi_domain="multiphp.${domain}"
+
+    if [ ! -d "/etc/php/${test_phpver}/fpm/pool.d/" ]; then
+        skip "PHP ${test_phpver} not installed"
+    fi
+
+    run v-change-web-domain-backend-tpl $user $multi_domain 'PHP-5_6' 'yes'
+    assert_success
+    refute_output
+
+    # Changing web backend will create a php-fpm pool config in the corresponding php folder
+    assert_file_exist "/etc/php/${test_phpver}/fpm/pool.d/${multi_domain}.conf"
+
+    # A single php-fpm pool config file must be present
+    num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+    assert_equal "$num_fpm_config_files" '1'
+
+    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+}
+
+@test "Multiphp: Change backend version - PHP v7.0" {
+    test_phpver='7.0'
+    multi_domain="multiphp.${domain}"
+
+    if [ ! -d "/etc/php/${test_phpver}/fpm/pool.d/" ]; then
+        skip "PHP ${test_phpver} not installed"
+    fi
+
+    run v-change-web-domain-backend-tpl $user $multi_domain 'PHP-7_0' 'yes'
+    assert_success
+    refute_output
+
+    # Changing web backend will create a php-fpm pool config in the corresponding php folder
+    assert_file_exist "/etc/php/${test_phpver}/fpm/pool.d/${multi_domain}.conf"
+
+    # A single php-fpm pool config file must be present
+    num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+    assert_equal "$num_fpm_config_files" '1'
+
+    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+}
+
+@test "Multiphp: Change backend version - PHP v7.1" {
+    test_phpver='7.1'
+    multi_domain="multiphp.${domain}"
+
+    if [ ! -d "/etc/php/${test_phpver}/fpm/pool.d/" ]; then
+        skip "PHP ${test_phpver} not installed"
+    fi
+
+    run v-change-web-domain-backend-tpl $user $multi_domain 'PHP-7_1' 'yes'
+    assert_success
+    refute_output
+
+    # Changing web backend will create a php-fpm pool config in the corresponding php folder
+    assert_file_exist "/etc/php/${test_phpver}/fpm/pool.d/${multi_domain}.conf"
+
+    # A single php-fpm pool config file must be present
+    num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+    assert_equal "$num_fpm_config_files" '1'
+
+    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+}
+
+@test "Multiphp: Change backend version - PHP v7.2" {
+    test_phpver='7.2'
+    multi_domain="multiphp.${domain}"
+
+    if [ ! -d "/etc/php/${test_phpver}/fpm/pool.d/" ]; then
+        skip "PHP ${test_phpver} not installed"
+    fi
+
+    run v-change-web-domain-backend-tpl $user $multi_domain 'PHP-7_2' 'yes'
+    assert_success
+    refute_output
+
+    # Changing web backend will create a php-fpm pool config in the corresponding php folder
+    assert_file_exist "/etc/php/${test_phpver}/fpm/pool.d/${multi_domain}.conf"
+
+    # A single php-fpm pool config file must be present
+    num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+    assert_equal "$num_fpm_config_files" '1'
+
+    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+}
+
+@test "Multiphp: Change backend version - PHP v7.3" {
+    test_phpver='7.3'
+    multi_domain="multiphp.${domain}"
+
+    if [ ! -d "/etc/php/${test_phpver}/fpm/pool.d/" ]; then
+        skip "PHP ${test_phpver} not installed"
+    fi
+
+    run v-change-web-domain-backend-tpl $user $multi_domain 'PHP-7_3' 'yes'
+    assert_success
+    refute_output
+
+    # Changing web backend will create a php-fpm pool config in the corresponding php folder
+    assert_file_exist "/etc/php/${test_phpver}/fpm/pool.d/${multi_domain}.conf"
+
+    # A single php-fpm pool config file must be present
+    num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+    assert_equal "$num_fpm_config_files" '1'
+
+    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+}
+
+@test "Multiphp: Change backend version - PHP v7.4" {
+    test_phpver='7.4'
+    multi_domain="multiphp.${domain}"
+
+    if [ ! -d "/etc/php/${test_phpver}/fpm/pool.d/" ]; then
+        skip "PHP ${test_phpver} not installed"
+    fi
+
+    run v-change-web-domain-backend-tpl $user $multi_domain 'PHP-7_4' 'yes'
+    assert_success
+    refute_output
+
+    # Changing web backend will create a php-fpm pool config in the corresponding php folder
+    assert_file_exist "/etc/php/${test_phpver}/fpm/pool.d/${multi_domain}.conf"
+
+    # A single php-fpm pool config file must be present
+    num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+    assert_equal "$num_fpm_config_files" '1'
+
+    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+}
+
+@test "Multiphp: Change backend version - PHP v8.0" {
+    test_phpver='8.0'
+    multi_domain="multiphp.${domain}"
+
+    if [ ! -d "/etc/php/${test_phpver}/fpm/pool.d/" ]; then
+        skip "PHP ${test_phpver} not installed"
+    fi
+
+    run v-change-web-domain-backend-tpl $user $multi_domain 'PHP-8_0' 'yes'
+    assert_success
+    refute_output
+
+    # Changing web backend will create a php-fpm pool config in the corresponding php folder
+    assert_file_exist "/etc/php/${test_phpver}/fpm/pool.d/${multi_domain}.conf"
+
+    # A single php-fpm pool config file must be present
+    num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+    assert_equal "$num_fpm_config_files" '1'
+
+    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    rm $HOMEDIR/$user/web/$multi_domain/public_html/php-test.php
+}
+
+@test "Multiphp: Cleanup" {
+    multi_domain="multiphp.${domain}"
+
+    run v-delete-web-domain $user $multi_domain 'yes'
+    assert_success
+    refute_output
+
+    # No php-fpm pool config file must be present
+    num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+    assert_equal "$num_fpm_config_files" '0'
+}
+
+
+#----------------------------------------------------------#
+#                     CUSTOM DOCROOT                       #
+#----------------------------------------------------------#
+
+@test "Docroot: Self Subfolder" {
+    docroot1_domain="docroot1.${domain}"
+
+    run v-add-web-domain $user $docroot1_domain 198.18.0.125
+    assert_success
+    refute_output
+
+    run v-add-fs-directory $user "$HOMEDIR/$user/web/$docroot1_domain/public_html/public/"
+    assert_success
+    refute_output
+
+    run v-change-web-domain-docroot $user "$docroot1_domain" "$docroot1_domain" "/public"
+    assert_success
+    refute_output
+
+    echo -e '<?php\necho "self-sub-".$_SERVER["HTTP_HOST"];' > "$HOMEDIR/$user/web/$docroot1_domain/public_html/public/php-test.php"
+    validate_web_domain $user $docroot1_domain "self-sub-${docroot1_domain}" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$docroot1_domain/public_html/public/php-test.php"
+}
+
+@test "Docroot: Other domain subfolder" {
+    docroot1_domain="docroot1.${domain}"
+    docroot2_domain="docroot2.${domain}"
+
+    run v-add-web-domain $user $docroot2_domain 198.18.0.125
+    assert_success
+    refute_output
+
+    run v-add-fs-directory $user "$HOMEDIR/$user/web/$docroot2_domain/public_html/public/"
+    assert_success
+    refute_output
+
+    run v-change-web-domain-docroot $user "$docroot1_domain" "$docroot2_domain" "/public"
+    assert_success
+    refute_output
+
+    echo -e '<?php\necho "doc2-sub-".$_SERVER["HTTP_HOST"];' > "$HOMEDIR/$user/web/$docroot2_domain/public_html/public/php-test.php"
+    validate_web_domain $user $docroot1_domain "doc2-sub-${docroot1_domain}" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$docroot2_domain/public_html/public/php-test.php"
+}
+
+@test "Docroot: Other domain root folder" {
+    docroot1_domain="docroot1.${domain}"
+    docroot2_domain="docroot2.${domain}"
+
+    run v-change-web-domain-docroot $user "$docroot1_domain" "$docroot2_domain"
+    assert_success
+    refute_output
+
+    echo -e '<?php\necho "doc2-root-".$_SERVER["HTTP_HOST"];' > "$HOMEDIR/$user/web/$docroot2_domain/public_html/php-test.php"
+    validate_web_domain $user $docroot1_domain "doc2-root-${docroot1_domain}" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$docroot2_domain/public_html/php-test.php"
+}
+
+@test "Docroot: Reset" {
+    docroot1_domain="docroot1.${domain}"
+
+    run v-change-web-domain-docroot $user "$docroot1_domain" "default"
+    assert_success
+    refute_output
+
+    echo -e '<?php\necho "doc1-root-".$_SERVER["HTTP_HOST"];' > "$HOMEDIR/$user/web/$docroot1_domain/public_html/php-test.php"
+    validate_web_domain $user $docroot1_domain "doc1-root-${docroot1_domain}" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$docroot1_domain/public_html/php-test.php"
+}
+
+@test "Docroot: Cleanup" {
+    docroot1_domain="docroot1.${domain}"
+    docroot2_domain="docroot2.${domain}"
+
+    run v-delete-web-domain $user $docroot1_domain
+    assert_success
+    refute_output
+
+    run v-delete-web-domain $user $docroot2_domain
+    assert_success
+    refute_output
+}
 
 #----------------------------------------------------------#
 #                         DNS                              #
@@ -611,11 +949,174 @@ function validate_webmail_domain() {
     assert_failure $E_NOTEXIST
 }
 
+#----------------------------------------------------------#
+#    Limit possibilities adding different owner domain    #
+#----------------------------------------------------------#
+
+@test "Allow Users: User can't add user.user2.com " {
+    # Case: admin company.ltd
+    # users should not be allowed to add user.company.ltd
+    run v-add-user $user2 $user2 $user@hestiacp.com default "Super Test"
+    assert_success
+    refute_output
+    
+    run v-add-web-domain $user2 $rootdomain 
+    assert_success
+    refute_output
+    
+    run v-add-web-domain $user $subdomain
+    assert_failure $E_EXISTS
+}
+
+@test "Allow Users: User can't add user.user2.com as alias" {
+    run v-add-web-domain-alias $user $domain $subdomain
+    assert_failure $E_EXISTS
+}
+
+@test "Allow Users: User can't add user.user2.com as mail domain" {
+    run v-add-mail-domain $user $subdomain
+    assert_failure $E_EXISTS
+}
+
+@test "Allow Users: User can't add user.user2.com as dns domain" {
+    run v-add-dns-domain $user $subdomain 198.18.0.125
+    assert_failure $E_EXISTS
+}
+
+@test "Allow Users: Set Allow users" {
+    # Allow user to yes allows
+    # Case: admin company.ltd
+    # users are allowed to add user.company.ltd
+    run v-add-web-domain-allow-users $user2 $rootdomain
+    assert_success
+    refute_output
+}
+
+@test "Allow Users: User can add user.user2.com" {
+    run v-add-web-domain $user $subdomain
+    assert_success
+    refute_output
+}
+
+@test "Allow Users: User can add user.user2.com as alias" {
+    run v-delete-web-domain $user $subdomain
+    assert_success
+    refute_output
+    
+    run v-add-web-domain-alias $user $domain $subdomain
+    assert_success
+    refute_output
+}
+
+@test "Allow Users: User can add user.user2.com as mail domain" {
+    run v-add-mail-domain $user $subdomain
+    assert_success
+    refute_output
+}
+
+@test "Allow Users: User can add user.user2.com as dns domain" {
+    run v-add-dns-domain $user $subdomain 198.18.0.125
+    assert_success
+    refute_output
+}
+
+@test "Allow Users: Cleanup tests" {
+    run v-delete-dns-domain $user $subdomain
+    assert_success
+    refute_output
+
+    run v-delete-mail-domain $user $subdomain
+    assert_success
+    refute_output
+}
+
+
+@test "Allow Users: Set Allow users no" {
+    run v-delete-web-domain-alias $user $domain $subdomain 
+    assert_success
+    refute_output
+    
+    run v-delete-web-domain-allow-users $user2 $rootdomain
+    assert_success
+    refute_output
+}
+
+@test "Allow Users: User can't add user.user2.com again" {
+    run v-add-web-domain $user $subdomain
+    assert_failure $E_EXISTS
+}
+
+@test "Allow Users: user2 can add user.user2.com again" {
+    run v-add-web-domain $user2 $subdomain
+    assert_success
+    refute_output
+
+    run v-delete-user $user2
+    assert_success
+    refute_output
+}
+
+
 
 #----------------------------------------------------------#
 #                         DB                               #
 #----------------------------------------------------------#
 
+@test "DB: Add database (mysql)" {
+    run v-add-database $user database dbuser 1234 mysql
+    assert_success
+    refute_output
+    # validate_database database_name database_user password
+    validate_database $database $dbuser 1234
+}
+@test "DB: Add Database (mysql) (Duplicate)" {
+    run v-add-database $user database dbuser 1234 mysql
+    assert_failure $E_EXISTS
+}
+
+@test "DB: Rebuild Database (mysql)" {
+    run v-rebuild-database $user $database
+    assert_success
+    refute_output 
+}
+
+@test "DB: Change database user password (mysql)" {
+    run v-change-database-password $user $database 123456
+    assert_success
+    refute_output 
+    
+    validate_database $database $dbuser 123456
+}
+
+@test "DB: Change database user (mysql)" {
+    run v-change-database-user $user $database database
+    assert_success
+    refute_output 
+    validate_database $database $database 123456
+}
+
+@test "DB: Suspend database" {
+    run v-suspend-database $user $database
+    assert_success
+    refute_output
+}
+
+@test "DB: Unsuspend database" {
+    run v-unsuspend-database $user $database
+    assert_success
+    refute_output
+}
+
+@test "DB: Delete database" {
+    run v-delete-database $user $database
+    assert_success
+    refute_output 
+}
+
+@test "DB: Delete missing database" {
+    run v-delete-database $user $database
+    assert_failure $E_NOTEXIST
+}
 
 #----------------------------------------------------------#
 #                     Backup / Restore                     #
@@ -636,7 +1137,20 @@ function validate_webmail_domain() {
 #      - hestia111_db
 #    cron:
 #      - 1: /bin/true
-#
+#  Hestia 1.3.1 archive contains (As zstd format)
+#    user: hestia131
+#    web:
+#      - test.hestia.com (+SSL self-signed)
+#    dns:
+#      - test.hestia.com
+#    mail:
+#      - test.hestia.com
+#    mail acc:
+#      - testaccount@test.hestia.com
+#    db:
+#      - hestia131_db
+#    cron:
+#      - 1: /bin/true 
 #  Vesta 0.9.8-23 archive contains:
 #    user: vesta09823
 #    web:
@@ -783,6 +1297,139 @@ function validate_webmail_domain() {
 }
 
 @test "Restore[2]: From Hestia Cleanup" {
+    run v-delete-user $userbk
+    assert_success
+    refute_output
+}
+
+@test "Restore[3]: Hestia (zstd) archive for a non-existing user" {
+    if [ -d "$HOMEDIR/$userbk" ]; then
+        run v-delete-user $userbk
+        assert_success
+        refute_output
+    fi
+    
+    mkdir -p /backup
+    
+    local archive_name="hestia131.2020-12-12"
+    run wget --quiet --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache "https://hestiacp.com/testing/data/${archive_name}.tar" -O "/backup/${archive_name}.tar"
+    assert_success
+    
+    run v-restore-user $userbk "${archive_name}.tar"
+    assert_success
+    
+    rm "/backup/${archive_name}.tar"
+}
+
+@test "Restore[3]: From Hestia [WEB]" {
+    local domain="test.hestia.com"
+    validate_web_domain $userbk $domain 'Hello Hestia'
+}
+
+@test "Restore[3]: From Hestia [DNS]" {
+    local domain="test.hestia.com"
+    
+    run v-list-dns-domain $userbk $domain
+    assert_success
+    
+    run nslookup $domain 127.0.0.1
+    assert_success
+}
+
+@test "Restore[3]: From Hestia [MAIL]" {
+    local domain="test.hestia.com"
+    
+    run v-list-mail-domain $userbk $domain
+    assert_success
+}
+
+@test "Restore[3]: From Hestia [MAIL-Account]" {
+    local domain="test.hestia.com"
+    
+    run v-list-mail-account $userbk $domain testaccount
+    assert_success
+}
+
+@test "Restore[3]: From Hestia [DB]" {
+    run v-list-database $userbk "${userbk}_db"
+    assert_success
+}
+
+@test "Restore[3]: From Hestia [CRON]" {
+    run v-list-cron-job $userbk 1
+    assert_success
+}
+
+@test "Restore[3]: From Hestia Cleanup" {
+    run v-delete-user $userbk
+    assert_success
+    refute_output
+}
+
+@test "Restore[4]: Hestia (zstd) archive for a existing user" {
+    if [ -d "$HOMEDIR/$userbk" ]; then
+        run v-delete-user $userbk
+        assert_success
+        refute_output
+    fi
+
+    if [ ! -d "$HOMEDIR/$userbk" ]; then
+        run v-add-user $userbk $userbk test@hestia.com
+        assert_success
+    fi
+
+    mkdir -p /backup
+    
+    local archive_name="hestia131.2020-12-12"
+    run wget --quiet --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache "https://hestiacp.com/testing/data/${archive_name}.tar" -O "/backup/${archive_name}.tar"
+    assert_success
+    
+    run v-restore-user $userbk "${archive_name}.tar"
+    assert_success
+    
+    rm "/backup/${archive_name}.tar"
+}
+
+@test "Restore[4]: From Hestia [WEB]" {
+    local domain="test.hestia.com"
+    validate_web_domain $userbk $domain 'Hello Hestia'
+}
+
+@test "Restore[4]: From Hestia [DNS]" {
+    local domain="test.hestia.com"
+    
+    run v-list-dns-domain $userbk $domain
+    assert_success
+    
+    run nslookup $domain 127.0.0.1
+    assert_success
+}
+
+@test "Restore[4]: From Hestia [MAIL]" {
+    local domain="test.hestia.com"
+    
+    run v-list-mail-domain $userbk $domain
+    assert_success
+}
+
+@test "Restore[4]: From Hestia [MAIL-Account]" {
+    local domain="test.hestia.com"
+    
+    run v-list-mail-account $userbk $domain testaccount
+    assert_success
+}
+
+@test "Restore[4]: From Hestia [DB]" {
+    run v-list-database $userbk "${userbk}_db"
+    assert_success
+}
+
+@test "Restore[4]: From Hestia [CRON]" {
+    run v-list-cron-job $userbk 1
+    assert_success
+}
+
+@test "Restore[4]: From Hestia Cleanup" {
     run v-delete-user $userbk
     assert_success
     refute_output

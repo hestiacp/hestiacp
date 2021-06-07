@@ -42,10 +42,7 @@ App.Actions.WEB.update_ftp_username_hint = function(elm, hint) {
     if (hint.trim() == '') {
         $(elm).parent().find('.hint').html('');
     }
-
-    if (hint.indexOf(GLOBAL.FTP_USER_PREFIX) == 0) {
-        hint = hint.slice(GLOBAL.FTP_USER_PREFIX.length, hint.length);
-    }
+    
     hint = hint.replace(/[^\w\d]/gi, '');
 
     $(elm).parent().find('.v-ftp-user').val(hint);
@@ -228,7 +225,7 @@ $(function() {
 
     $('select[name="v_stats"]').change(function(evt){
         var select = $(evt.target);
-
+    
         if(select.val() == 'none'){
             $('.stats-auth').hide();
         } else {
@@ -236,6 +233,8 @@ $(function() {
         }
     });
 });
+
+
 
 function WEBrandom() {
     var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';

@@ -15,10 +15,22 @@ if [ ! -e "/usr/local/hestia/data/users/admin" ]; then
     exit
 fi
 
-# Load hestia.conf
+###############################################################
+#                Initialize functions/variables               #
+###############################################################
+
+# Load upgrade functions and variables
+source /usr/local/hestia/func/main.sh
+source /usr/local/hestia/func/upgrade.sh
 source /usr/local/hestia/conf/hestia.conf
+source /usr/local/hestia/install/upgrade/upgrade.conf
 
 # Reset backend port
 if [ ! -z "$BACKEND_PORT" ]; then
     /usr/local/hestia/bin/v-change-sys-port $BACKEND_PORT
+fi
+
+# Restart hestia service
+if [ -f "/etc/init.d/hestia" ]; then
+    systemctl restart hestia > /dev/null 2>&1
 fi

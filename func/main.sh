@@ -16,8 +16,8 @@ DNSTPL=$HESTIA/data/templates/dns
 RRD=$HESTIA/web/rrd
 SENDMAIL="$HESTIA/web/inc/mail-wrapper.php"
 HESTIA_GIT_REPO="https://raw.githubusercontent.com/hestiacp/hestiacp"
-HESTIA_THEMES="$HESTIA_INSTALL_DIR/themes"
-HESTIA_THEMES_CUSTOM="$HESTIA/data/templates/themes"
+HESTIA_THEMES="$HESTIA/web/css/themes"
+HESTIA_THEMES_CUSTOM="$HESTIA/web/css/themes/custom"
 SCRIPT="$(basename $0)"
 
 # Return codes
@@ -95,21 +95,36 @@ log_event() {
 
 # Log user history
 log_history() {
-    cmd=$1
-    undo=${2-no}
+    message=$1
     log_user=${3-$user}
 
-    if ! $BIN/v-list-user "$log_user" >/dev/null; then
-        return $E_NOTEXIST
+    # Set default event level and category if not specified
+    if [ -z "$event_level" ]; then
+        event_level="Info"
+    fi
+    if [ -z "$event_category" ]; then
+        event_category="System"
     fi
 
-    log=$HESTIA/data/users/$log_user/history.log
-    touch $log
-    if [ '99' -lt "$(wc -l $log |cut -f 1 -d ' ')" ]; then
-        tail -n 49 $log > $log.moved
-        mv -f $log.moved $log
-        chmod 660 $log
+    # Log system events to system log file
+    if [ "$log_user" = "system" ]; then
+        log=$HESTIA/data/users/admin/system.log
+    else 
+        if ! $BIN/v-list-user "$log_user" >/dev/null; then
+            return $E_NOTEXIST
+        fi
+        log=$HESTIA/data/users/$log_user/history.log
     fi
+    touch $log
+
+    # TODO: Improve log pruning and pagination
+    #
+    #if [ '1000' -lt "$(wc -l $log |cut -f 1 -d ' ')" ]; then
+    #    tail -n 499 $log > $log.moved
+    #    mv -f $log.moved $log
+    #    chmod 660 $log
+    #fi
+
     if [ -z "$date" ]; then
         time_n_date=$(date +'%T %F')
         time=$(echo "$time_n_date" |cut -f 1 -d \ )
@@ -117,7 +132,7 @@ log_history() {
     fi
     curr_str=$(grep "ID=" $log | cut -f 2 -d \' | sort -n | tail -n1)
     id="$((curr_str +1))"
-    echo "ID='$id' DATE='$date' TIME='$time' CMD='$cmd' UNDO='$undo'" >> $log
+    echo "ID='$id' DATE='$date' TIME='$time' LEVEL='$event_level' CATEGORY='$event_category' MESSAGE='$message'" >> $log
 }
 
 # Result checker
@@ -164,8 +179,15 @@ is_package_full() {
     esac
     used=$(echo "$used"| cut -f 1 -d \ )
     limit=$(grep "^$1=" $USER_DATA/user.conf |cut -f 2 -d \')
-    if [ "$limit" != 'unlimited' ] && [[ "$used" -ge "$limit" ]]; then
-        check_result $E_LIMIT "$1 limit is reached :: upgrade user package"
+    if [ "$1" = WEB_ALIASES ]; then
+        # Used is always calculated with the new alias added
+        if [ "$limit" != 'unlimited' ] && [[ "$used" -gt "$limit" ]]; then
+            check_result $E_LIMIT "$1 limit is reached :: upgrade user package"
+        fi
+    else
+        if [ "$limit" != 'unlimited' ] && [[ "$used" -ge "$limit" ]]; then
+            check_result $E_LIMIT "$1 limit is reached :: upgrade user package"
+        fi
     fi
 }
 
@@ -239,7 +261,7 @@ is_object_new() {
         object=$(grep "$2='$3'" $USER_DATA/$1.conf)
     fi
     if [ ! -z "$object" ]; then
-        check_result $E_EXISTS "$2=$3 is already exists"
+        check_result $E_EXISTS "$2=$3 already exists"
     fi
 }
 
@@ -346,7 +368,7 @@ is_object_value_empty() {
     parse_object_kv_list "$str"
     eval value=$4
     if [ ! -z "$value" ] && [ "$value" != 'no' ]; then
-        check_result $E_EXISTS "${4//$}=$value is already exists"
+        check_result $E_EXISTS "${4//$}=$value already exists"
     fi
 }
 
@@ -623,7 +645,7 @@ is_user_format_valid() {
 is_domain_format_valid() {
     object_name=${2-domain}
     exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|_|/|\|\"|'|;|%|\`| ]"
-    if [[ $1 =~ $exclude ]] || [[ $1 =~ ^[0-9]+$ ]] || [[ $1 =~ "\.\." ]] || [[ $1 =~ "$(printf '\t')" ]]; then
+    if [[ $1 =~ $exclude ]] || [[ $1 =~ ^[0-9]+$ ]] || [[ $1 =~ "\.\." ]] || [[ $1 =~ "$(printf '\t')" ]] ||  [[ "$1" = "www" ]]; then
         check_result $E_INVALID "invalid $object_name format :: $1"
     fi
 }
@@ -676,7 +698,7 @@ is_number_format_valid() {
 
 # Autoreply format validator
 is_autoreply_format_valid() {
-    if [[ "$1" =~ [$|\`] ]] || [ 10240 -le ${#1} ]; then
+    if [ 10240 -le ${#1} ]; then
         check_result $E_INVALID "invalid autoreply format :: $1"
     fi
 }
@@ -922,7 +944,7 @@ is_service_format_valid() {
 }
 
 is_hash_format_valid() {
-  if ! [[ "$1" =~ ^[_A-Za-z0-9]{1,32}$ ]]; then
+  if ! [[ "$1" =~ ^[-_A-Za-z0-9]{1,32}$ ]]; then
         check_result $E_INVALID "invalid $2 format :: $1"
     fi    
 }
@@ -962,6 +984,7 @@ is_format_valid() {
                 host)           is_object_format_valid "$arg" "$arg_name" ;;
                 hour)           is_cron_format_valid "$arg" $arg_name ;;
                 id)             is_int_format_valid "$arg" 'id' ;;
+                iface)          is_interface_format_valid "$arg" ;;
                 ip)             is_ip_format_valid "$arg" ;;
                 ip_name)        is_domain_format_valid "$arg" 'IP name';;
                 ip_status)      is_ip_status_format_valid "$arg" ;;
@@ -1153,6 +1176,12 @@ multiphp_default_version() {
     echo "$sys_phpversion"
 }
 
+is_hestia_package(){
+    if [ -z "$(echo $1 | grep -w $2)" ]; then
+        check_result $E_INVALID "$2 package is not controlled by hestiacp"
+    fi
+}
+
 # Run arbitrary cli commands with dropped privileges
 # Note: setpriv --init-groups is not available on debian9 (util-linux 2.29.2)
 # Input:
@@ -1164,4 +1193,15 @@ user_exec() {
     user_groups=${user_groups//\ /,}
 
     setpriv --groups "$user_groups" --reuid "$user" --regid "$user" -- $@
+}
+
+# Simple chmod wrapper that skips symlink files after glob expand
+no_symlink_chmod() {
+    local filemode=$1; shift;
+
+    for i in "$@"; do
+        [[ -L ${i} ]] && continue
+
+        chmod "${filemode}" "${i}"
+    done
 }

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add password protection to web domain statistics
 # options: USER DOMAIN STATS_USER STATS_PASSWORD [RESTART]
+# labels: web
+#
+# example: v-add-web-domain-stats-user admin example.com watchdog your_password
 #
 # The call is used for securing the web statistics page.
 
@@ -17,8 +20,11 @@ password=$4; HIDE=4
 restart=$5
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -49,8 +55,8 @@ conf_dir="$HOMEDIR/$user/conf/web"
 
 # Adding htaccess file
 if [ "$WEB_SYSTEM" = 'nginx' ]; then
-    echo "auth_basic \"Web Statistics\";" > $conf_dir/$domain.auth
-    echo "auth_basic_user_file $stats_dir/.htpasswd;" >> $conf_dir/$domain.auth
+    echo "auth_basic \"Web Statistics\";" > $stats_dir/auth.conf
+    echo "auth_basic_user_file $stats_dir/.htpasswd;" >> $stats_dir/auth.conf
 else
     echo "AuthUserFile $stats_dir/.htpasswd" > $stats_dir/.htaccess
     echo "AuthName \"Web Statistics\"" >> $stats_dir/.htaccess
@@ -79,7 +85,7 @@ if [ "$WEB_SYSTEM" = 'nginx' ]; then
 fi
 
 # Logging
-log_history "added password protection for web stats on $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Web traffic analyzer password enabled (Username: $stats_user, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

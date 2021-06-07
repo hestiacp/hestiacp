@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list user parameters
 # options: USER [FORMAT]
+# labels: 
+#
+# example: v-list-user admin
 #
 # The function to obtain user parameters.
 
@@ -14,6 +17,7 @@ user=$1
 format=${2-shell}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 # JSON list function
@@ -74,7 +78,12 @@ json_list() {
         "U_CRON_JOBS": "'$U_CRON_JOBS'",
         "U_BACKUPS": "'$U_BACKUPS'",
         "LANGUAGE": "'$LANGUAGE'",
+        "THEME": "'$THEME'",
         "NOTIFICATIONS": "'$NOTIFICATIONS'",
+        "PREF_UI_SORT": "'$PREF_UI_SORT'",
+        "LOGIN_DISABLED": "'$LOGIN_DISABLED'",
+        "LOGIN_USE_IPLIST": "'$LOGIN_USE_IPLIST'",
+        "LOGIN_ALLOW_IPS": "'$LOGIN_ALLOW_IPS'",
         "PHPCLI": "'$PHPCLI'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
@@ -88,6 +97,7 @@ shell_list() {
     echo "FULL NAME:      $NAME"
     echo "EMAIL:          $CONTACT"
     echo "LANGUAGE:       $LANGUAGE"
+    echo "THEME:          $THEME"
     echo "SUSPENDED:      $SUSPENDED"
     echo "PACKAGE:        $PACKAGE"
     echo "SHELL:          $SHELL"
@@ -122,7 +132,7 @@ plain_list() {
     echo -ne "$U_WEB_DOMAINS\t$U_WEB_SSL\t$U_WEB_ALIASES\t"
     echo -ne "$U_DNS_DOMAINS\t$U_DNS_RECORDS\t$U_MAIL_DOMAINS\t"
     echo -ne "$U_MAIL_DKIM\t$U_MAIL_ACCOUNTS\t$U_DATABASES\t"
-    echo -e "$U_CRON_JOBS\t$U_BACKUPS\t$LANGUAGE\t$TIME\t$DATE"
+    echo -e "$U_CRON_JOBS\t$U_BACKUPS\t$LANGUAGE\t$THEME\t$TIME\t$DATE"
 }
 
 # CSV list function
@@ -137,7 +147,7 @@ csv_list() {
     echo -n "U_DISK_WEB,U_DISK_MAIL,U_DISK_DB,U_BANDWIDTH,U_WEB_DOMAINS,"
     echo -n "U_WEB_SSL,U_WEB_ALIASES,U_DNS_DOMAINS,U_DNS_RECORDS,"
     echo -n "U_MAIL_DOMAINS,U_MAIL_DKIM,U_MAIL_ACCOUNTS,U_DATABASES"
-    echo "U_CRON_JOBS,U_BACKUPS,LANGUAGE,NOTIFICATIONS,TIME,DATE"
+    echo "U_CRON_JOBS,U_BACKUPS,LANGUAGE,THEME,NOTIFICATIONS,TIME,DATE"
     echo -n "$USER,\"$NAME\",$PACKAGE,$WEB_TEMPLATE,"
     echo -n "$BACKEND_TEMPLATE,$PROXY_TEMPLATE,$DNS_TEMPLATE,$WEB_DOMAINS,"
     echo -n "$WEB_ALIASES,$DNS_DOMAINS,$DNS_RECORDS,$MAIL_DOMAINS,"
@@ -149,7 +159,7 @@ csv_list() {
     echo -n "$U_DISK_MAIL,$U_DISK_DB,$U_BANDWIDTH,$U_WEB_DOMAINS,$U_WEB_SSL,"
     echo -n "$U_WEB_ALIASES,$U_DNS_DOMAINS,$U_DNS_RECORDS,$U_MAIL_DOMAINS,"
     echo -n "$U_MAIL_DKIM,$U_MAIL_ACCOUNTS,$U_DATABASES,$U_CRON_JOBS,"
-    echo "$U_BACKUPS,$LANGUAGE,$NOTIFICATIONS,$TIME,$DATE"
+    echo "$U_BACKUPS,$LANGUAGE,$THEME,$NOTIFICATIONS,$TIME,$DATE"
 }
 
 
@@ -170,6 +180,8 @@ is_object_valid 'user' 'USER' "$user"
 USER=$user
 HOME=$HOMEDIR/$user
 source $HESTIA/data/users/$user/user.conf
+U_USERS=$(cat $HESTIA/data/users/admin/user.conf | grep "U_USERS" | cut -d'=' -f2 | sed "s/'//g")
+SUSPENDED_USERS=$(cat $HESTIA/data/users/admin/user.conf | grep "SUSPENDED_USERS" | cut -d'=' -f2 | sed "s/'//g")
 
 # Listing data
 case $format in

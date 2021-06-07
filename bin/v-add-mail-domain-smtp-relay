@@ -1,0 +1,77 @@
+#!/bin/bash
+# info: Add mail domain smtp relay support
+# options: USER DOMAIN HOST USERNAME PASSWORD [PORT]
+# labels: mail
+#
+# example: v-add-mail-domain-smtp-relay user domain.tld srv.smtprelay.tld uname123 pass12345
+#
+# This function adds mail domain smtp relay support.
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+host=$3
+username=$4
+password=$5
+port=${6-587}
+
+# Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
+source $HESTIA/conf/hestia.conf
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '5' "$#" 'USER DOMAIN HOST USERNAME PASSWORD'
+is_format_valid 'port' 'user' 'domain'
+is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'mail' 'DOMAIN' "$domain"
+is_object_unsuspended 'mail' 'DOMAIN' "$domain"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+cat >/etc/exim4/domains/${domain}/smtp_relay.conf << EOL
+host:$host
+port:$port
+user:$username
+pass:$password
+EOL
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Adding smtp relay values in config
+if [ -z "$U_SMTP_RELAY" ]; then
+    add_object_key 'mail' 'DOMAIN' "$domain" 'U_SMTP_RELAY' 'ACCOUNTS'
+    add_object_key 'mail' 'DOMAIN' "$domain" 'U_SMTP_RELAY_HOST' 'ACCOUNTS'
+    add_object_key 'mail' 'DOMAIN' "$domain" 'U_SMTP_RELAY_PORT' 'ACCOUNTS'
+    add_object_key 'mail' 'DOMAIN' "$domain" 'U_SMTP_RELAY_USERNAME' 'ACCOUNTS'
+    add_object_key 'mail' 'DOMAIN' "$domain" 'U_SMTP_RELAY_PASSWORD' 'ACCOUNTS'
+fi
+
+update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMTP_RELAY' 'true'
+update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMTP_RELAY_HOST' "$host"
+update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMTP_RELAY_PORT' "$port"
+update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMTP_RELAY_USERNAME' "$username"
+update_object_value 'mail' 'DOMAIN' "$domain" '$U_SMTP_RELAY_PASSWORD' "$password"
+
+# Logging
+$BIN/v-log-action "$user" "Info" "Mail" "SMTP Relay enabled (Domain: $domain, Host: $host, Port: $port)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

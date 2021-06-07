@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add webdomain proxy support
 # options: USER DOMAIN [TEMPLATE] [EXTENTIONS] [RESTART]
+# labels: web
+#
+# example: v-add-web-domain-proxy admin example.com
 #
 # The function enables proxy support for a domain. This can significantly
 # improve website speed.
@@ -20,9 +23,13 @@ extentions=${4-$default_extentions}
 restart="$5"
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -78,7 +85,7 @@ update_object_value 'web' 'DOMAIN' "$domain" '$PROXY_EXT' "$extentions"
 $BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" >/dev/null
 
-log_history "enabled proxy support for $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Proxy enabled (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

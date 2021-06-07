@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add firewall rule
 # options: ACTION IP PORT [PROTOCOL] [COMMENT] [RULE]
+# labels: 
+#
+# example: v-add-firewall-rule DROP 185.137.111.77 25
 #
 # The function adds new rule to system firewall
 
@@ -22,7 +25,9 @@ comment=$5
 rule=$6
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 # Get next firewall rule id
@@ -97,7 +102,13 @@ $BIN/v-update-firewall
 #                       Hestia                             #
 #----------------------------------------------------------#
 
+# Fix missing port value in log if zero
 # Logging
+if [ -z "$port" ]; then
+    port="0"
+fi
+
+$BIN/v-log-action "system" "Info" "Firewall" "Added firewall rule (Action: $action, Port: $port, Protocol: $protocol)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

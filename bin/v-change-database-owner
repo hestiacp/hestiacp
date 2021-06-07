@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change database owner
 # options: DATABASE USER
+# labels: 
+#
+# example: v-change-database-owner mydb alice
 #
 # The function for changing database owner.
 
@@ -15,9 +18,13 @@ user=$2
 
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/db.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
 source $HESTIA/func/rebuild.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 

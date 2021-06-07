@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add firewall ipset
 # options: NAME [SOURCE] [IPVERSION] [AUTOUPDATE] [FORCE]
+# labels: hestia
+#
+# example: v-add-firewall-ipset country-nl 'http://ipverse.net/ipblocks/data/countries/nl.zone'
 #
 # The function adds new ipset to system firewall
 
@@ -15,7 +18,9 @@ autoupdate=${4:-yes}
 force=${5:-no}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -183,6 +188,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "Firewall" "Added new IP list (Name: $ip_name, IP version: $ip_version, Autoupdate: $autoupdate)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

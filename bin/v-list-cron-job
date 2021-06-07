@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list cron job
 # options: USER JOB [FORMAT]
+# labels: panel
+#
+# example: v-list-cron-job admin 7
 #
 # The function of obtaining cron job parameters.
 
@@ -15,6 +18,7 @@ job=$2
 format=${3-shell}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 # JSON list function

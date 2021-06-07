@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add user sftp jail
 # options: USER [RESTART]
+# labels: 
+#
+# example: v-add-user-sftp-jail admin
 #
 # The script enables sftp jailed environment
 
@@ -14,7 +17,9 @@ user=$1
 restart=$2
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -45,6 +50,9 @@ if [[ " ${users[@]} " =~ " ${user} " ]]; then
     fi
     exit;
 fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

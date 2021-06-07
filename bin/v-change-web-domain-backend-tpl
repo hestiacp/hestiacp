@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change web domain backend template
 # options: USER DOMAIN TEMPLATE [RESTART]
+# labels: web
+#
+# example: v-change-web-domain-backend-tpl admin acme.com PHP-7_4
 #
 # The function changes backend template
 
@@ -17,9 +20,13 @@ template=$3
 restart=$4
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
@@ -49,11 +56,11 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Deleting current backend
-delete_web_backend
-
 # Prepare new backend configuration
 prepare_web_backend
+
+# Deleting current backend
+delete_web_backend
 
 # Allocating backend port
 backend_port=9000
@@ -166,7 +173,7 @@ $BIN/v-restart-web-backend $restart
 check_result $? "Web backend restart failed" >/dev/null
 
 # Logging
-log_history "changed backend template for $domain to $template"
+$BIN/v-log-action "$user" "Info" "Web" "Backend template applied (Domain: $domain, Template: $template)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

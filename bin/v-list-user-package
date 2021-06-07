@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list user package
 # options: PACKAGE [FORMAT]
+# labels: 
 #
 # The function for getting the list of system ip parameters.
 
@@ -15,6 +16,7 @@ PACKAGE=$package
 format=${2-shell}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 # JSON list function

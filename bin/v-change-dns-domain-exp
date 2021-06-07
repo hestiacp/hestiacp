@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change dns domain expiration date
 # options: USER DOMAIN EXP
+# labels: dns
+#
+# example: v-change-dns-domain-exp admin domain.pp.ua 2020-11-20
 #
 # The function of changing the term of expiration domain's registration. The
 # serial number will be refreshed automatically during update.
@@ -17,7 +20,9 @@ domain_idn=$2
 exp=$3
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
@@ -65,7 +70,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_history "changed whois expiration date for $domain"
+$BIN/v-log-action "$user" "Info" "DNS" "Updated DNS SOA expiration date (Domain: $domain, Value: $exp)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

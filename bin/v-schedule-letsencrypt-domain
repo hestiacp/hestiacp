@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: adding cronjob for letsencrypt cetificate installation
 # options: USER DOMAIN [ALIASES]
+# labels: panel
+#
+# example: v-schedule-letsencrypt-domain admin example.com www.example.com
 #
 # The function adds cronjob for letsencrypt ssl certificate installation
 
@@ -15,8 +18,11 @@ domain=$2
 aliases=$3
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -33,6 +39,8 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

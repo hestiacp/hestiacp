@@ -1,8 +1,11 @@
 #!/bin/bash
 # info: stop system firewall
 # options: NONE
+# labels: panel
 #
-# The function stops  iptables
+# example: v-stop-firewall
+#
+# The function stops iptables
 
 
 #----------------------------------------------------------#
@@ -15,7 +18,11 @@ modprobe="/sbin/modprobe"
 
 # Includes
 source /etc/profile.d/hestia.sh
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/firewall.sh
+source $HESTIA/func/firewall.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -32,6 +39,9 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+# Self heal iptables links
+heal_iptables_links
 
 # Creating temporary file
 tmp=$(mktemp)
@@ -66,27 +76,28 @@ if [ -d "/etc/sysconfig" ]; then
     fi
 else
     /sbin/iptables-save > /etc/iptables.rules
-    if dpkg-query -W -f'${Status}' "netplan*" 2>/dev/null | grep -q "ok installed"; then
-        preup="/usr/lib/networkd-dispatcher/routable.d/50-ifup-hooks"
-        if [ ! -e "$preup" ]; then
-            IFS='%'
-            echo '#!/bin/bash' > $preup
-            echo '' >> $preup
-            echo 'if [ "$IFACE" == "'$(/bin/ip token | awk -F 'dev ' '{print $2}')'" ]; then' >> $preup
-            echo '    sleep 3' >> $preup
-            echo '    /sbin/iptables-restore < /etc/iptables.rules' >> $preup
-            echo 'fi' >> $preup
-            echo "exit 0" >> $preup
-            chmod +x $preup
-        fi
+    routable="/usr/lib/networkd-dispatcher/routable.d/10-hestia-iptables"
+    preup="/etc/network/if-pre-up.d/hestia-iptables"
+    # Recreate the Hestia iptables rules loading script
+    rm -f $routable $preup
+    if dpkg-query -W -f'${Status}' "netplan*" 2>/dev/null | grep -q "ok installed" && [ -d /etc/netplan ] && [ -n "$(ls -A /etc/netplan 2>/dev/null)" ]; then
+        echo '#!/bin/sh' > $routable
+        echo '' >> $routable
+        echo 'if [ "$IFACE" = "'$(ip route list | awk '/default .+/ {print $5}' | uniq)'" ]; then' >> $routable
+        echo '    /sbin/iptables-restore < /etc/iptables.rules' >> $routable
+        echo 'fi' >> $routable
+        echo '' >> $routable
+        echo "exit 0" >> $routable
+        chmod +x $routable
     else
-        preup="/etc/network/if-pre-up.d/iptables"
-        if [ ! -e "$preup" ]; then
-            echo '#!/bin/sh' > $preup
-            echo "/sbin/iptables-restore < /etc/iptables.rules" >> $preup
-            echo "exit 0" >> $preup
-            chmod +x $preup
-        fi
+        echo '#!/bin/sh' > $preup
+        echo '' >> $preup
+        echo 'if [ "$IFACE" = "'$(ip route list | awk '/default .+/ {print $5}' | uniq)'" ]; then' >> $preup
+        echo '    /sbin/iptables-restore < /etc/iptables.rules' >> $preup
+        echo 'fi' >> $preup
+        echo '' >> $preup
+        echo "exit 0" >> $preup
+        chmod +x $preup
     fi
 fi
 

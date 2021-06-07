@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete firewall blocking rule
 # options: IP CHAIN
+# labels: panel
+#
+# example: v-delete-firewall-ban 198.11.130.250 MAIL
 #
 # The function deletes blocking rule from system firewall
 
@@ -20,7 +23,11 @@ chain=$(echo $2|tr '[:lower:]' '[:upper:]')
 iptables="/sbin/iptables"
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/firewall.sh
+source $HESTIA/func/firewall.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -39,6 +46,9 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+# Self heal iptables links
+heal_iptables_links
 
 # Checking ip in banlist
 conf="$HESTIA/data/firewall/banlist.conf"
@@ -62,6 +72,7 @@ chmod 660 $conf
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "Firewall" "Removed IP from ban list (IP: $ip, Service: $chain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

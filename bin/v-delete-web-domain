@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete web domain
-# options: USER DOMAIN
+# options: USER DOMAIN [RESTART]
+# labels: web
+#
+# example: v-delete-web-domain admin wonderland.com
 #
 # The call of function leads to the removal of domain and all its components
 # (statistics, folders contents, ssl certificates, etc.). This operation is
@@ -19,6 +22,9 @@ domain_idn=$2
 restart=$3
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/func/main.sh
 source $HESTIA/func/domain.sh
 source $HESTIA/func/ip.sh
@@ -34,13 +40,11 @@ format_domain_idn
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN'
+check_args '2' "$#" 'USER DOMAIN [RESTART]'
 is_format_valid 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
-is_object_unsuspended 'web' 'DOMAIN' "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -63,7 +67,7 @@ fi
 
 # Deleting web backend
 if [ ! -z "$WEB_BACKEND" ]; then
-    $BIN/v-delete-web-domain-backend $user $domain $restart
+    $BIN/v-delete-web-domain-backend $user $domain 'no'
 fi
 
 # Deleting vhost configuration
@@ -72,9 +76,14 @@ del_web_config "$WEB_SYSTEM" "$TPL.tpl"
 # Deleting SSL configuration and certificates
 if [ "$SSL" = 'yes' ]; then
     del_web_config "$WEB_SYSTEM" "$TPL.stpl"
-    $BIN/v-delete-web-domain-ssl-force $user $domain
+    $BIN/v-delete-web-domain-ssl-force $user $domain 'no' 'yes'
     rm -f $HOMEDIR/$user/conf/web/$domain/ssl/$domain.*
     rm -f $USER_DATA/ssl/$domain.*
+fi
+
+if [ "$FASTCGI_CACHE" = "yes" ]; then
+    # make sure no trails left behind 
+    $BIN/v-delete-fastcgi-cache $user $domain
 fi
 
 # Deleting domain from web.conf
@@ -107,7 +116,6 @@ rm -f /var/log/$WEB_SYSTEM/domains/$domain.error*
 rm -rf $HOMEDIR/$user/web/$domain
 rm -rf $HOMEDIR/$user/conf/web/$domain
 
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
@@ -123,16 +131,27 @@ if [ ! -z "$ALIAS" ]; then
     decrease_user_value "$user" '$U_WEB_ALIASES' "$aliases"
 fi
 
+# Check if is suspended to decrease the suspended value
+if [ ! -z "$SUSPENDED" ]; then
+    if [ "$SUSPENDED" == "yes" ]; then
+        decrease_user_value "$user" '$SUSPENDED_WEB'
+    fi
+fi
+
 # Restarting web server
 $BIN/v-restart-web $restart
 check_result $? "Web restart failed" >/dev/null
 
-# Restartinh proxy server
+# Restarting proxy server
 $BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" >/dev/null
 
+# Restarting backend server
+$BIN/v-restart-web-backend $restart
+check_result $? "Backend restart failed" >/dev/null
+
 # Logging
-log_history "deleted web domain $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Deleted web domain (Name: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

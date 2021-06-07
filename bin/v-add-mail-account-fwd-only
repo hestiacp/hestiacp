@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add mail account forward-only flag
 # options: USER DOMAIN ACCOUNT
+# labels: mail
+#
+# example: v-add-mail-account-fwd-only admin example.com user
 #
 # The function adds fwd-only flag
 
@@ -16,8 +19,11 @@ domain_idn=$2
 account=$3
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 # Define mail user
@@ -49,7 +55,7 @@ is_object_unsuspended "mail/$domain" 'ACCOUNT' "$account"
 fwd=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$FWD')
 if [ -z "$fwd" ]; then
     echo "Error: forward doesn't exist"
-    log_event "$E_NOTEXIST $ARGUMENTS"
+    log_event "$E_NOTEXIST" "$ARGUMENTS"
     exit $E_NOTEXIST
 fi
 
@@ -77,7 +83,7 @@ add_object_key "mail/$domain" 'ACCOUNT' "$account" 'FWD_ONLY' 'MD5'
 update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$FWD_ONLY' "yes"
 
 # Logging
-log_history "added fwd_only flag for $account@$domain"
+$BIN/v-log-action "$user" "Warning" "Mail" "Forward-only flag enabled on mail account $account@$domain."
 log_event "$OK" "$ARGUMENTS"
 
 exit

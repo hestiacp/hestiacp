@@ -15,7 +15,7 @@ if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
 $domain = $_POST['domain'];
 $action = $_POST['action'];
 
-if ($_SESSION['user'] == 'admin') {
+if ($_SESSION['userContext'] === 'admin') {
     switch ($action) {
         case 'delete': $cmd='v-delete-web-domain';
             break;
@@ -45,6 +45,7 @@ if (isset($restart)) {
     exec (HESTIA_CMD."v-restart-web", $output, $return_var);
     exec (HESTIA_CMD."v-restart-proxy", $output, $return_var);
     exec (HESTIA_CMD."v-restart-dns", $output, $return_var);
+    exec (HESTIA_CMD."v-restart-web-backend", $output, $return_var);
 }
 
 header("Location: /list/web/");

@@ -1,8 +1,11 @@
 #!/bin/bash
 # info: suspend web domains
 # options: USER [RESTART]
+# labels: web
 #
-# The function of suspending all user's sites. 
+# example: v-suspend-web-domains bob
+#
+# The function of suspending all user's sites.
 
 
 #----------------------------------------------------------#
@@ -14,8 +17,11 @@ user=$1
 restart=$2
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 

@@ -15,7 +15,7 @@ if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
 $user = $_POST['user'];
 $action = $_POST['action'];
 
-if ($_SESSION['user'] == 'admin') {
+if ($_SESSION['userContext'] === 'admin') {
     switch ($action) {
         case 'delete': $cmd='v-delete-user'; $restart = 'no';
             break;
@@ -26,6 +26,8 @@ if ($_SESSION['user'] == 'admin') {
         case 'update counters': $cmd='v-update-user-counters';
             break;
         case 'rebuild': $cmd='v-rebuild-all'; $restart = 'no';
+            break;
+        case 'rebuild user': $cmd='v-rebuild-user'; $restart = 'no';
             break;
         case 'rebuild web': $cmd='v-rebuild-web-domains'; $restart = 'no';
             break;
@@ -51,12 +53,6 @@ foreach ($user as $value) {
     $value = escapeshellarg($value);
     exec (HESTIA_CMD.$cmd." ".$value." ".$restart, $output, $return_var);
     $changes = 'yes';
-}
-
-if ((!empty($restart)) && (!empty($changes))) {
-    exec (HESTIA_CMD."v-restart-web", $output, $return_var);
-    exec (HESTIA_CMD."v-restart-dns", $output, $return_var);
-    exec (HESTIA_CMD."v-restart-cron", $output, $return_var);
 }
 
 header("Location: /list/user/");

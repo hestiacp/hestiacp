@@ -24,10 +24,10 @@ if (isset($_GET['system_reset_token']) && is_numeric($_GET['system_reset_token']
         header('location: /list/server/');
         exit();
     }
-    if ($_SESSION['user'] == 'admin') {
+    if ($_SESSION['userContext'] === 'admin') {
         if (!empty($_GET['hostname'])) {
             touch($reset_token_file);
-            $_SESSION['error_msg'] = __('The system is going down for reboot NOW!');
+            $_SESSION['error_msg'] = _('The system is going down for reboot NOW!');
             exec(HESTIA_CMD . "v-restart-system yes", $output, $return_var);
         }
         unset($output);

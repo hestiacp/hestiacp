@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change web domain statistics
 # options: USER DOMAIN TYPE
+# labels: web
+#
+# example: v-change-web-domain-stats admin example.com awstats
 #
 # The function of deleting site's system of statistics. Its type is
 # automatically chooses from client's configuration file.
@@ -17,8 +20,11 @@ domain_idn=$2
 type=$3
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
@@ -93,7 +99,6 @@ fi
 update_object_value 'web' 'DOMAIN' "$domain" '$STATS' "$type"
 
 # Logging
-log_history "changed web log stats for $domain to $type"
 log_event "$OK" "$ARGUMENTS"
 
 # Build stats

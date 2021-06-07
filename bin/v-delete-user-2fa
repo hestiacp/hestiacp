@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete 2fa of existing user
 # options: USER
+# labels: hestia panel
+#
+# example: v-delete-user-2fa admin
 #
 # The function deletes 2fa token of a user.
 
@@ -13,7 +16,9 @@
 user=$1
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -50,7 +55,8 @@ update_user_value "$user" '$QRCODE' ""
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-log_history "[WARNING] two-factor authentication disabled for $user"
+$BIN/v-log-action "system" "Warning" "System" "Two-factor authentication disabled (User: $user)."
+$BIN/v-log-action "$user" "Warning" "System" "Two-factor authentication disabled."
 log_event "$OK" "$ARGUMENTS"
 
 exit

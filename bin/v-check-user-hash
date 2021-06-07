@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: check user hash
 # options: USER HASH [IP]
+# labels: 
+#
+# example: v-check-user-hash admin CN5JY6SMEyNGnyCuvmK5z4r7gtHAC4mRZ...
 #
 # The function verifies user hash
 
@@ -15,7 +18,9 @@ hash=$2; HIDE=2
 ip=${3-127.0.0.1}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 time_n_date=$(date +'%T %F')

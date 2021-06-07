@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: rebuild all assets for a specified user
 # options: USER [RESTART]
+# labels: hestia
 #
 # The function rebuilds all assets for a user account:
 # - Web domains
@@ -19,8 +20,13 @@ user=$1
 restart=$2
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/func/main.sh
 source $HESTIA/func/rebuild.sh
+source $HESTIA/func/syshealth.sh
 source $HESTIA/conf/hestia.conf
 
 # Export sbin
@@ -34,8 +40,13 @@ export PATH=$PATH:/usr/sbin
 check_args '1' "$#" 'USER [RESTART]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
+check_user=$(is_object_unsuspended 'user' 'USER' "$user")
+if [ ! -z "$check_user" ]; then
+    exit
+fi
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

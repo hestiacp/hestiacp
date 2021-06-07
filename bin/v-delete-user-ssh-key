@@ -1,9 +1,11 @@
 #!/bin/bash
 # info: add ssh key
-# options: USER key
+# options: USER KEY
+# labels: hestia
 #
-# Function check if $user/.ssh/authorized_keys exists and create it
-# After that it append the new key(s)
+# example: v-delete-user-ssh-key user unique_id
+#
+# Delete user ssh key from authorized_keys
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -14,7 +16,9 @@ user=$1
 keyid=$2
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
@@ -26,7 +30,6 @@ source $HESTIA/conf/hestia.conf
 check_args '2' "$#" 'USER KEYID'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 
 source $USER_DATA/user.conf
 
@@ -51,7 +54,7 @@ sed -i "/${keyid}/d" "$AUTHKEY_FILE"
 #----------------------------------------------------------#
 
 # Logging
-log_history "Deleted ssh-key $user"
+$BIN/v-log-action "$user" "Info" "SSH" "SSH key deleted (Key ID: $keyid)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

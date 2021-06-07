@@ -1,11 +1,14 @@
 #!/bin/bash
 # info: adding ssl for domain
 # options: USER DOMAIN SSL_DIR [SSL_HOME] [RESTART]
+# labels: web
+#
+# example: v-add-web-domain-ssl admin example.com /home/admin/conf/example.com/web
 #
 # The function turns on SSL support for a domain. Parameter ssl_dir is a path
 # to directory where 2 or 3 ssl files can be found. Certificate file 
-# domain.tld.crt and its key domain.tld.key  are mandatory. Certificate
-# authority domain.tld.ca file is optional. If home directory  parameter
+# domain.tld.crt and its key domain.tld.key are mandatory. Certificate
+# authority domain.tld.ca file is optional. If home directory parameter
 # (ssl_home) is not set, https domain uses public_shtml as separate
 # documentroot directory.
 
@@ -36,9 +39,13 @@ domain=$domain
 domain_idn=$(idn -t --quiet -a "$domain")
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
@@ -93,6 +100,10 @@ if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
     cp -f $USER_DATA/ssl/$domain.ca $HOMEDIR/$user/conf/web/$domain/ssl/$domain.ca
 fi
 
+if [ "$SSL_FORCE" == "yes" ]; then
+    # Enabling SSL redirection on demand
+    $BIN/v-add-web-domain-ssl-force "$user" "$domain"
+fi
 # Parsing domain values
 get_domain_values 'web'
 local_ip=$(get_real_ip $IP)
@@ -120,9 +131,6 @@ increase_user_value "$user" '$U_WEB_SSL'
 update_object_value 'web' 'DOMAIN' "$domain" '$SSL_HOME' "$SSL_HOME"
 update_object_value 'web' 'DOMAIN' "$domain" '$SSL' "yes"
 
-# Enabling automatic SSL redirection
-$BIN/v-add-web-domain-ssl-force "$user" "$domain"
-
 # Restarting web server
 $BIN/v-restart-web $restart
 check_result $? "Web restart failed" >/dev/null
@@ -142,7 +150,7 @@ if [ ! -z "$UPDATE_SSL_SCRIPT" ]; then
 fi
 
 # Logging
-log_history "enabled ssl support for $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Added certificate and enabled SSL (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

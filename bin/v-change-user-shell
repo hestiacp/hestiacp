@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change user shell
 # options: USER SHELL
+# labels: panel
+#
+# example: v-change-user-shell admin nologin
 #
 # The function changes system shell of a user. Shell gives ability to use ssh.
 
@@ -14,7 +17,9 @@ user=$1
 shell=$2
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -58,7 +63,7 @@ fi
 update_user_value "$user" '$SHELL' "$shell"
 
 # Logging
-log_history "changed $user shell to $shell" '' 'admin'
+$BIN/v-log-action "system" "Info" "System" "User SSH shell changed (Shell: $shell, User: $user)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

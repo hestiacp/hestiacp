@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change user contact email
 # options: USER EMAIL
+# labels: panel
+#
+# example: v-change-user-contact admin admin@yahoo.com
 #
 # The function for changing of e-mail associated with a certain user.
 
@@ -14,7 +17,9 @@ user=$1
 email=$2
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -51,7 +56,7 @@ $BIN/v-rebuild-cron-jobs $user > /dev/null 2>&1
 #----------------------------------------------------------#
 
 # Logging
-log_history "changed contact email to $email"
+$BIN/v-log-action "$user" "Info" "System" "Email address changed (Value: $email)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

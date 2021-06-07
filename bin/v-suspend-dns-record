@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: suspend dns domain record
 # options: USER DOMAIN ID [RESTART]
+# labels: dns
+#
+# example: v-suspend-dns-record alice wonderland.com 42 yes
 #
 # The function suspends a certain domain record.
 
@@ -17,8 +20,11 @@ id=$3
 restart=$4
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
@@ -62,6 +68,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "DNS" "Suspended DNS record (User: $user, Domain: $domain, Record: $id)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

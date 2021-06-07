@@ -60,6 +60,8 @@ mysql_connect() {
     mysql --defaults-file=$mycnf -e 'SELECT VERSION()' > $mysql_out 2>&1
     if [ '0' -ne "$?" ]; then
         if [ "$notify" != 'no' ]; then
+            email=$(grep CONTACT $HESTIA/data/users/admin/user.conf |cut -f 2 -d \')
+            subj="MySQL connection error on $(hostname)"
             echo -e "Can't connect to MySQL $HOST\n$(cat $mysql_out)" |\
                 $SENDMAIL -s "$subj" $email
         fi
@@ -90,6 +92,8 @@ mysql_dump() {
     if [ '0' -ne "$?" ]; then
         rm -rf $tmpdir
         if [ "$notify" != 'no' ]; then
+            email=$(grep CONTACT $HESTIA/data/users/admin/user.conf |cut -f 2 -d \')
+           subj="MySQL error on $(hostname)"
             echo -e "Can't dump database $database\n$(cat $err)" |\
                 $SENDMAIL -s "$subj" $email
         fi
@@ -115,6 +119,8 @@ psql_connect() {
     psql -h $HOST -U $USER -p $PORT -c "SELECT VERSION()" > /dev/null 2>/tmp/e.psql
     if [ '0' -ne "$?" ]; then
         if [ "$notify" != 'no' ]; then
+            email=$(grep CONTACT $HESTIA/data/users/admin/user.conf |cut -f 2 -d \')
+            subj="PostgreSQL connection error on $(hostname)"
             echo -e "Can't connect to PostgreSQL $HOST\n$(cat /tmp/e.psql)" |\
                 $SENDMAIL -s "$subj" $email
         fi
@@ -136,6 +142,8 @@ psql_dump() {
     if [ '0' -ne "$?" ]; then
         rm -rf $tmpdir
         if [ "$notify" != 'no' ]; then
+            email=$(grep CONTACT $HESTIA/data/users/admin/user.conf |cut -f 2 -d \')
+            subj="PostgreSQL error on $(hostname)"
             echo -e "Can't dump database $database\n$(cat /tmp/e.psql)" |\
                 $SENDMAIL -s "$subj" $email
         fi
@@ -278,6 +286,24 @@ add_pgsql_database() {
 
     query="SELECT rolpassword FROM pg_authid WHERE rolname='$dbuser';"
     md5=$(psql_query "$query" | grep md5 | cut -f 2 -d \ )
+}
+
+add_mysql_database_temp_user() {
+    mysql_connect $host;
+    query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost
+    IDENTIFIED BY '$dbpass'"
+    mysql_query "$query" > /dev/null
+  }
+
+delete_mysql_database_temp_user(){
+    echo $database;
+    echo $dbuser;
+    echo $host;
+    mysql_connect $host;
+    query="REVOKE ALL ON \`$database\`.* FROM \`$dbuser\`@localhost"
+    mysql_query "$query" > /dev/null
+    query="DROP USER '$dbuser'@'localhost'"
+    mysql_query "$query" > /dev/null
 }
 
 # Check if database host do not exist in config 

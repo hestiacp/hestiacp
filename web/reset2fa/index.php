@@ -34,6 +34,6 @@ if(!empty($_POST['user']) && !empty($_POST['twofa'])){
 }
 
 require_once '../templates/header.html';
-require_once '../templates/reset2fa.html';
+require_once '../templates/pages/login/reset2fa.html';
 
 ?>

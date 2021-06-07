@@ -20,11 +20,15 @@ if ((!empty($_POST['user'])) && (empty($_POST['code']))) {
         $data = json_decode(implode('', $output), true);
         if($email == $data[$user]['CONTACT']){
             //genrate new rkey
-            exec ("/usr/bin/sudo /usr/local/hestia/bin/v-change-user-rkey ".$v_user."", $output, $return_var);
+            $rkey = substr( password_hash( rand(0,10), PASSWORD_DEFAULT ), 5, 12 );
+            $hash = password_hash($rkey, PASSWORD_DEFAULT);
+            $v_rkey = tempnam("/tmp","vst");
+            $fp = fopen($v_rkey, "w");
+            fwrite($fp, $hash."\n");
+            fclose($fp);
+            exec ("/usr/bin/sudo /usr/local/hestia/bin/v-change-user-rkey ".$v_user." ".$v_rkey."", $output, $return_var);
             unset($output);
-            exec ($cmd." ".$v_user." json", $output, $return_var);
-            $data = json_decode(implode('', $output), true);
-            $rkey = $data[$user]['RKEY'];
+            unlink($v_rkey);
             $name = $data[$user]['NAME'];
             $contact = $data[$user]['CONTACT'];
             $to = $data[$user]['CONTACT'];
@@ -58,7 +62,7 @@ if ((!empty($_POST['user'])) && (!empty($_POST['code'])) && (!empty($_POST['pass
         if ( $return_var == 0 ) {
             $data = json_decode(implode('', $output), true);
             $rkey = $data[$user]['RKEY'];
-            if (hash_equals($rkey, $_POST['code'])) {
+            if (password_verify($_POST['code'], $rkey)) {
                 unset($output);
                 exec("/usr/bin/sudo /usr/local/hestia/bin/v-get-user-value ".$v_user." RKEYEXP", $output,$return_var);
                 if($output[0] > time() - 900){
@@ -96,14 +100,14 @@ if ((!empty($_POST['user'])) && (!empty($_POST['code'])) && (!empty($_POST['pass
 
 if (empty($_GET['action'])) {
     require_once '../templates/header.html';
-    require_once '../templates/reset_1.html';
+    require_once '../templates/pages/login/reset_1.html';
 } else {
     require_once '../templates/header.html';
     if ($_GET['action'] == 'code' ) {
-        require_once '../templates/reset_2.html';
+        require_once '../templates/pages/login/reset_2.html';
     }
     if (($_GET['action'] == 'confirm' ) && (!empty($_GET['code']))) {
-        require_once '../templates/reset_3.html';
+        require_once '../templates/pages/login/reset_3.html';
     }
 }
 

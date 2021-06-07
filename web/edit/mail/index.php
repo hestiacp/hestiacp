@@ -13,9 +13,10 @@ if (empty($_GET['domain'])) {
 }
 
 // Edit as someone else?
-if (($_SESSION['user'] == 'admin') && (!empty($_GET['user']))) {
+if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
     $user=escapeshellarg($_GET['user']);
 }
+
 $v_username = $user;
 
 // Get all user domains 
@@ -24,13 +25,19 @@ $user_domains = json_decode(implode('', $output), true);
 $user_domains = array_keys($user_domains);
 unset($output);
 
+exec (HESTIA_CMD."v-list-sys-webmail json", $output, $return_var);
+$webmail_clients = json_decode(implode('', $output), true);
+unset($output);
+
 // List mail domain
 if ((!empty($_GET['domain'])) && (empty($_GET['account']))) {
 
     $v_domain = $_GET['domain'];
-    if(!in_array($v_domain, $user_domains)) {
-        header("Location: /list/mail/");
-        exit;
+    if ($_SESSION['userContext'] !== 'admin') {
+        if(!in_array($v_domain, $user_domains)) {
+            header("Location: /list/mail/");
+            exit;
+        }
     }
 
     exec (HESTIA_CMD."v-list-mail-domain ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
@@ -46,7 +53,12 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account']))) {
     $v_time = $data[$v_domain]['TIME'];
     $v_suspended = $data[$v_domain]['SUSPENDED'];
     $v_webmail_alias = $data[$v_domain]['WEBMAIL_ALIAS'];
-    
+    $v_webmail = $data[$v_domain]['WEBMAIL'];
+    $v_smtp_relay = $data[$v_domain]['U_SMTP_RELAY'];
+    $v_smtp_relay_host = $data[$v_domain]['U_SMTP_RELAY_HOST'];
+    $v_smtp_relay_port = $data[$v_domain]['U_SMTP_RELAY_PORT'];
+    $v_smtp_relay_user = $data[$v_domain]['U_SMTP_RELAY_USERNAME'];
+
     if ( $v_suspended == 'yes' ) {
         $v_status =  'suspended';
     } else {
@@ -77,9 +89,11 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account']))) {
 if ((!empty($_GET['domain'])) && (!empty($_GET['account']))) {
 
     $v_domain = $_GET['domain'];
-    if(!in_array($v_domain, $user_domains)) {
-        header("Location: /list/mail/");
-        exit;
+    if ($_SESSION['userContext'] !== 'admin') {
+        if(!in_array($v_domain, $user_domains)) {
+            header("Location: /list/mail/");
+            exit;
+        }
     }
 
     $v_account = $_GET['account'];
@@ -93,6 +107,12 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['account']))) {
     $v_aliases = str_replace(',', "\n", $data[$v_account]['ALIAS']);
     $valiases = explode(",", $data[$v_account]['ALIAS']);
     $v_fwd = str_replace(',', "\n", $data[$v_account]['FWD']);
+    if ($v_fwd == ":blackhole:") {
+        $v_fwd = '';
+        $v_blackhole = "yes";
+    }else{
+        $v_blackhole = "no";        
+    }
     $vfwd = explode(",", $data[$v_account]['FWD']);
     $v_fwd_only = $data[$v_account]['FWD_ONLY'];
     $v_quota = $data[$v_account]['QUOTA'];
@@ -155,7 +175,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
         unset($output);
     }
 
-    // Add antivirs
+    // Add antivirus
     if (($v_antivirus == 'no') && (!empty($_POST['v_antivirus'])) && (empty($_SESSION['error_msg']))) {
         exec (HESTIA_CMD."v-add-mail-domain-antivirus ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
         check_return_code($return_var,$output);
@@ -203,6 +223,28 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
         exec (HESTIA_CMD."v-add-mail-domain-catchall ".$v_username." ".escapeshellarg($v_domain)." ".$v_catchall, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
+    }
+    
+    if (!empty($_SESSION['IMAP_SYSTEM']) && !empty($_SESSION['WEBMAIL_SYSTEM'])){
+        if (empty($_SESSION['error_msg'])) {
+        if (!empty($_POST['v_webmail'])) {
+            $v_webmail = escapeshellarg($_POST['v_webmail']);
+            exec (HESTIA_CMD."v-add-mail-domain-webmail ".$user." ".$v_domain." ".$v_webmail." yes", $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+        }
+        }
+    }
+    
+    if (!empty($_SESSION['IMAP_SYSTEM']) && !empty($_SESSION['WEBMAIL_SYSTEM'])) {
+        if (empty($_POST['v_webmail'])) {
+            if (empty($_SESSION['error_msg'])) {
+            exec (HESTIA_CMD."v-delete-mail-domain-webmail ".$user." ".$v_domain." yes", $output, $return_var);
+            check_return_code($return_var,$output);
+            $v_webmail = "";
+            unset($output);
+            }
+        }
     }
     
     // Change SSL certificate
@@ -365,6 +407,40 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
         }
     }
 
+    // Add SMTP Relay Support
+    if (empty($_SESSION['error_msg'])) {
+        if (isset($_POST['v_smtp_relay']) && (!empty($_POST['v_smtp_relay_host'])) && (!empty($_POST['v_smtp_relay_user']))) {           
+            if (($_POST['v_smtp_relay_host'] != $v_smtp_relay_host) ||
+                ($_POST['v_smtp_relay_user'] != $v_smtp_relay_user) ||
+                ($_POST['v_smtp_relay_port'] != $v_smtp_relay_port) ||
+                (!empty($_POST['v_smtp_relay_pass']))) {
+                if (!empty($_POST['v_smtp_relay_pass'])) {
+                    $v_smtp_relay = true;	
+                    $v_smtp_relay_host = escapeshellarg($_POST['v_smtp_relay_host']);
+                    $v_smtp_relay_user = escapeshellarg($_POST['v_smtp_relay_user']);
+                    $v_smtp_relay_pass = escapeshellarg($_POST['v_smtp_relay_pass']);
+                    if (!empty($_POST['v_smtp_relay_port'])) {
+                        $v_smtp_relay_port = escapeshellarg($_POST['v_smtp_relay_port']);
+                    } else {
+                        $v_smtp_relay_port = '587';
+                    }
+                    exec (HESTIA_CMD."v-add-mail-domain-smtp-relay ".$v_username." ".escapeshellarg($v_domain)." ".$v_smtp_relay_host." ".$v_smtp_relay_user." ".$v_smtp_relay_pass." ".$v_smtp_relay_port, $output, $return_var);
+                    check_return_code($return_var,$output);
+                    unset($output);   
+                } else {
+                    $_SESSION['error_msg'] = _('SMTP Relay Password is required');
+                }
+            }
+        }
+        if ((!isset($_POST['v_smtp_relay'])) && ($v_smtp_relay == true)) {
+            $v_smtp_relay = false;
+            $v_smtp_relay_host = $v_smtp_relay_user = $v_smtp_relay_pass = $v_smtp_relay_port = '';
+            exec (HESTIA_CMD."v-delete-mail-domain-smtp-relay ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+        }
+    }
+
     // Set success message
     if (empty($_SESSION['error_msg'])) {
         $_SESSION['ok_msg'] = _('Changes has been saved.');
@@ -450,9 +526,23 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['acco
             }
         }
     }
-
+    // Change forwarders to :blackhole: 
+    if (empty($_SESSION['error_msg']) && !empty($_POST['v_blackhole'])) {
+        foreach ($vfwd as $forward) {
+            if ((empty($_SESSION['error_msg'])) && (!empty($forward))) {
+                exec (HESTIA_CMD."v-delete-mail-account-forward ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." ".escapeshellarg($forward), $output, $return_var);
+                check_return_code($return_var,$output);
+                unset($output);
+            }
+            exec (HESTIA_CMD."v-add-mail-account-forward ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." :blackhole:", $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            $v_fwd  = '';
+            $v_blackhole = "yes";
+        }   
+    }
     // Change forwarders
-    if (empty($_SESSION['error_msg'])) {
+    if (empty($_SESSION['error_msg']) && empty($_POST['v_blackhole'])) {
         $wfwd = preg_replace("/\n/", " ", $_POST['v_fwd']);
         $wfwd = preg_replace("/,/", " ", $wfwd);
         $wfwd = preg_replace('/\s+/', ' ',$wfwd);
@@ -475,6 +565,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['acco
                 unset($output);
             }
         }
+        $v_blackhole = "no";
     }
 
     // Delete FWD_ONLY flag

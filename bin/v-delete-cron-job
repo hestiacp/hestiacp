@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete cron job
 # options: USER JOB
+# labels: 
+#
+# example: v-delete-cron-job admin 9
 #
 # The function deletes cron job.
 
@@ -12,9 +15,12 @@
 # Argument definition
 user=$1
 job=$2
+restart=$3
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -22,13 +28,11 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER JOB'
+check_args '2' "$#" 'USER JOB [RESTART]'
 is_format_valid 'user' 'job'
 is_system_enabled "$CRON_SYSTEM" 'CRON_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'cron' 'JOB' "$job"
-is_object_unsuspended 'cron' 'JOB' "$job"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -38,6 +42,7 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
+suspended=$(grep "JOB='$job'" $USER_DATA/cron.conf |grep "SUSPENDED='yes'")
 # Deleting job
 sed -i "/JOB='$job' /d" $USER_DATA/cron.conf
 
@@ -55,12 +60,17 @@ sync_cron_jobs
 # Decreasing cron value
 decrease_user_value "$user" '$U_CRON_JOBS'
 
+# Check if is suspended to decrease the suspended value
+if [ ! -z "$suspended" ]; then
+    decrease_user_value "$user" '$SUSPENDED_CRON'
+fi
+
 # Restarting crond
-$BIN/v-restart-cron
+$BIN/v-restart-cron $restart
 check_result $? "Restart restart failed" >/dev/null
 
 # Logging
-log_history "deleted cron job $job"
+$BIN/v-log-action "$user" "Info" "Cron Jobs" "Cron job deleted (ID: $job)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

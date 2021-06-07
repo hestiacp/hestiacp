@@ -1,8 +1,11 @@
 #!/bin/bash
 # info: list hestia autoupdate settings
 # options: [FORMAT]
+# labels: 
 #
-# The function for obtaining autoupdate setings.
+# example: v-list-sys-hestia-autoupdate
+#
+# The function for obtaining autoupdate settings.
 
 
 #----------------------------------------------------------#
@@ -14,6 +17,7 @@ user='admin'
 format=${1-shell}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 # JSON list function

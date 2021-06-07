@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change user full name
-# options: USER NAME
+# options: USER NAME [LAST_NAME]
+# labels: panel
+#
+# example: v-change-user-name admin John Smith
 #
 # The function allow to change user's full name.
 
@@ -15,7 +18,9 @@ name=$2
 lname=$3
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -23,7 +28,7 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER NAME'
+check_args '2' "$#" 'USER NAME [LAST_NAME]'
 is_format_valid 'user' 'name'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -51,7 +56,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_history "changed user display name to $name"
+$BIN/v-log-action "$user" "Info" "System" "User display name changed (Value: $name)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: backup system user with all its objects
 # options: USER NOTIFY
+# labels: 
+#
+# example: v-backup-user admin yes
 #
 # The call is used for backing up user with all its domains and databases.
 
@@ -17,12 +20,122 @@ user=$1
 notify=${2-no}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/db.sh
+# shellcheck source=/usr/local/hestia/func/backup.sh
 source $HESTIA/func/backup.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
+# Return Disk Usage
+get_user_disk_usage() {
+    u_usage=0
+    web_exclusions=''
+    mail_exclusions=''
+    db_exclusions=''
+    user_exclusions=''
+
+    # Parsing excludes
+    if [ -e "$USER_DATA/backup-excludes.conf" ]; then
+        web_exclusions=$(grep 'WEB=' $USER_DATA/backup-excludes.conf |\
+            awk -F "WEB='" '{print $2}' | cut -f 1 -d \')
+        mail_exclusions=$(grep 'MAIL=' $USER_DATA/backup-excludes.conf |\
+            awk -F "MAIL='" '{print $2}' | cut -f 1 -d \')
+        db_exclusions=$(grep 'DB=' $USER_DATA/backup-excludes.conf |\
+            awk -F "DB='" '{print $2}' | cut -f 1 -d \')
+        user_exclusions=$(grep 'USER=' $USER_DATA/backup-excludes.conf |\
+            awk -F "USER='" '{print $2}' | cut -f 1 -d \')
+    fi
+
+    if [ -f "$USER_DATA/web.conf" ] && [ "$web_exclusions" != '*' ]; then
+        usage=0
+        domains=$(grep 'DOMAIN=' $USER_DATA/web.conf |\
+            awk -F "DOMAIN='" '{print $2}' | cut -f 1 -d \')
+
+        for domain in $domains; do
+            exclusion=$(echo -e "$web_exclusions" |tr ',' '\n' |grep "^$domain$")
+            if [ -z "$exclusion" ]; then
+                # Defining home directory
+                home_dir="$HOMEDIR/$user/web/$domain/"
+                exlusion=$(echo -e "$web_exclusions" |tr ',' '\n' |grep "^$domain:")
+                fargs=()
+
+                if [ ! -z "$exlusion" ]; then
+                    xdirs="$(echo -e "$exlusion" |tr ':' '\n' |grep -v $domain)"
+                    for xpath in $xdirs; do
+                        fargs+=(--exclude=$xpath)
+                    done
+                fi
+
+                # Checking home directory exist
+                if [ -e "$home_dir" ]; then
+                    disk_usage=$(nice -n 19 du -shm $home_dir ${fargs[@]} | cut -f 1 )
+                    u_usage=$((u_usage + disk_usage))
+                fi
+            fi
+        done
+    fi
+
+    if [ -f "$USER_DATA/mail.conf" ] && [ "$mail_exclusions" != '*' ]; then
+        usage=0
+        domains=$(grep 'DOMAIN=' $USER_DATA/mail.conf |\
+            awk -F "DOMAIN='" '{print $2}' | cut -f 1 -d \')
+
+        for domain in $domains; do
+            check_exl=$(echo "$mail_exclusions" |tr ',' '\n' |grep "^$domain$")
+            if [ -f "$USER_DATA/mail/$domain.conf" ] && [ -z "$check_exl" ]; then
+                accounts=$(grep 'ACCOUNT=' $USER_DATA/mail/$domain.conf |\
+                    awk -F "ACCOUNT='" '{print $2}' | cut -f 1 -d \')
+
+                for account in $accounts; do
+                    home_dir=$HOMEDIR/$user/mail/$domain/$account
+                    exclusion=$(echo "$mail_exclusions" |tr ',' '\n' |grep "$domain:")
+                    exclusion=$(echo "$exclusion" |tr ':' '\n' |grep -E "^$account|\*")
+
+                    if [ -z "$exclusion" ] && [ -e "$home_dir" ]; then
+                        disk_usage=$(nice -n 19 du -shm $home_dir | cut -f 1 )
+                        u_usage=$((u_usage + disk_usage))
+                    fi
+                done
+            fi
+        done
+    fi
+
+    if [ -f "$USER_DATA/db.conf" ] && [ "$db_exclusions" != '*' ]; then
+        usage=0
+        databases=$(grep 'DB=' $USER_DATA/db.conf |\
+            awk -F "DB='" '{print $2}' | cut -f 1 -d \')
+        for database in $databases; do
+            exclusion=$(echo "$db_exclusions" |tr ',' '\n' |grep "^$database$")
+            if [ -z "$exclusion" ]; then
+                # Get database values
+                get_database_values
+
+                # Switching on db type
+                case $DB_SYSTEM in
+                    mysql) get_mysql_disk_usage ;;
+                    pgsql) get_pgsql_disk_usage ;;
+                esac
+                u_usage=$((u_usage + usage))
+            fi
+        done
+    fi
+
+    if [ "$user_exclusions" != '*' ]; then
+        fargs=()
+        for xpath in $(echo "$user_exclusions" |tr ',' '\n'); do
+            fargs+=(--exclude=$xpath)
+        done
+        usage=$(du -shm $HOMEDIR/$user --exclude $HOMEDIR/$user/web --exclude $HOMEDIR/$user/mail --exclude $HOMEDIR/$user/conf ${fargs[@]} |cut -f 1 )
+        u_usage=$((u_usage + usage))
+    fi
+
+    echo ${u_usage}
+}
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -35,6 +148,8 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_backup_enabled
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -46,7 +161,14 @@ check_backup_conditions
 if [ -z "$BACKUP" ]; then
     BACKUP=/backup
 fi
-mkdir -p $BACKUP
+
+# Check if backup folder exists and have the correct permission
+if [[ ! -d "$BACKUP" ]]; then 
+    mkdir -p $BACKUP
+fi
+if [ $(stat -c %a $BACKUP) != 755 ]; then
+    chmod 755 $BACKUP
+fi
 
 # Get current time
 start_time=$(date '+%s')
@@ -56,11 +178,12 @@ subj="$user → backup failed"
 email=$(grep CONTACT $HESTIA/data/users/admin/user.conf |cut -f 2 -d \')
 
 # Validate available disk space (take usage * 2, due to the backup handling)
-let u_disk=$(grep "U_DISK=" $HESTIA/data/users/$user/user.conf |cut -f 2 -d \')*2
+let u_disk=$(($(get_user_disk_usage) * 2))
 let v_disk=$(($(stat -f --format="%a*%S" $BACKUP)))/1024/1024
 
 if [ "$u_disk" -gt "$v_disk" ]; then
-    echo "not enough diskspace available to perform the backup." |$SENDMAIL -s "$subj" $email $notify
+    # Always notify on failure
+    echo "not enough diskspace available to perform the backup." | $SENDMAIL -s "$subj" $email "yes"
     check_result $E_LIMIT "not enough diskspace available to perform the backup."
 fi
 
@@ -72,7 +195,7 @@ fi
 tmpdir=$(mktemp -p $BACKUP_TEMP -d)
 
 if [ "$?" -ne 0 ]; then
-    echo "Can't create tmp dir $tmpdir" |$SENDMAIL -s "$subj" $email $notify
+    echo "Can't create tmp dir $tmpdir" |$SENDMAIL -s "$subj" $email "yes"
     check_result $E_NOTEXIST "can't create tmp dir"
 fi
 
@@ -266,7 +389,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
 
         # Backup files
         if [ "$BACKUP_MODE" = 'zstd' ]; then
-            tar ${fargs[@]} -cpf- * | zstd -$BACKUP_GZIP - > $tmpdir/web/$domain/domain_data.tar.zst
+            tar ${fargs[@]} -cpf- * | pzstd -$BACKUP_GZIP - > $tmpdir/web/$domain/domain_data.tar.zst
         else    
             tar ${fargs[@]} -cpf- * | gzip -$BACKUP_GZIP - > $tmpdir/web/$domain/domain_data.tar.gz
         fi
@@ -372,7 +495,7 @@ if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
         accounts=()
         for account in $(ls); do
             exclusion=$(echo "$MAIL" |tr ',' '\n' |grep "$domain:")
-            exclusion=$(echo "$exclusion" |tr ':' '\n' |grep "^$account$")
+            exclusion=$(echo "$exclusion" |tr ':' '\n' |grep -E "^$account|\*")
 
             # Checking exlusions
             if [ -z "$exclusion" ] && [[ "$MAIL_SYSTEM" =~ exim ]]; then
@@ -385,7 +508,7 @@ if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
         # Compress archive
         if [ ${#accounts[@]} -gt 0 ]; then
             if [ "$BACKUP_MODE" = 'zstd' ]; then
-                tar -cpf- ${accounts[@]}  | zstd -$BACKUP_GZIP - > $tmpdir/mail/$domain/accounts.tar.zst
+                tar -cpf- ${accounts[@]}  | pzstd -$BACKUP_GZIP - > $tmpdir/mail/$domain/accounts.tar.zst
             else    
                 tar -cpf- ${accounts[@]} | gzip -$BACKUP_GZIP - > $tmpdir/mail/$domain/accounts.tar.gz
             fi        
@@ -465,7 +588,7 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
 
             # Compress dump
             if [ "$BACKUP_MODE" = 'zstd' ]; then
-                zstd -$BACKUP_GZIP $dump
+                pzstd -$BACKUP_GZIP $dump
                 rm $dump;
             else    
                 gzip -$BACKUP_GZIP $dump
@@ -546,7 +669,7 @@ if [ "$USER" != '*' ]; then
 
             # Backup files and dirs
             if [ "$BACKUP_MODE" = 'zstd' ]; then
-                tar --anchored -cpf- ${fargs[@]} $udir | zstd -$BACKUP_GZIP - > $tmpdir/user_dir/$udir.tar.zst
+                tar --anchored -cpf- ${fargs[@]} $udir | pzstd -$BACKUP_GZIP - > $tmpdir/user_dir/$udir.tar.zst
             else    
                 tar --anchored -cpf- ${fargs[@]} $udir | gzip -$BACKUP_GZIP - > $tmpdir/user_dir/$udir.tar.gz
             fi 
@@ -582,6 +705,7 @@ backup_new_date=$(date +"%Y-%m-%d_%H-%M-%S")
 
 echo -e "\n-- SUMMARY --" |tee -a $BACKUP/$user.log
 
+errorcode="0"
 # Switching on backup system types
 for backup_type in $(echo -e "${BACKUP_SYSTEM//,/\\n}"); do
     case $backup_type in
@@ -589,12 +713,24 @@ for backup_type in $(echo -e "${BACKUP_SYSTEM//,/\\n}"); do
         ftp)   ftp_backup ;;
         sftp)  sftp_backup ;;
         google) google_backup ;;
+        b2) b2_backup ;;
     esac
 done
 
 # Removing tmpdir
 rm -rf $tmpdir
+if [[ "$errorcode" != "0" ]]; then
+    if [[ "$BACKUP_SYSTEM"  =~ "local" ]]; then 
+        echo -e "$(date "+%F %T") *** Local backup was successfully executed. Remote backup failed ***" |\
+        tee -a $BACKUP/$user.log
+        BACKUP_SYSTEM="local"
+    else
+        echo -e "$(date "+%F %T") *** Remote backup failed ***" |\
+        tee -a $BACKUP/$user.log
 
+        exit $error_code;
+    fi
+fi
 # Calculation run time
 run_time=$((end_time - start_time))
 run_time=$((run_time / 60))
@@ -641,10 +777,10 @@ sed -i "/v-backup-user $user /d" $HESTIA/data/queue/backup.pipe
 
 U_BACKUPS=$(grep BACKUP $USER_DATA/backup.conf |wc -l)
 update_user_value "$user" '$U_BACKUPS' "$U_BACKUPS"
+cd $BACKUP
 
 # Send notification
 if [ -e "$BACKUP/$user.log" ] && [ "$notify" = "yes" ]; then
-    cd $BACKUP
     subj="$user → backup has been completed"
     email=$(get_user_value '$CONTACT')
     cat $BACKUP/$user.log |$SENDMAIL -s "$subj" $email $notify
@@ -653,6 +789,8 @@ if [ -e "$BACKUP/$user.log" ] && [ "$notify" = "yes" ]; then
 fi
 
 # Logging
+$BIN/v-log-action "$user" "Info" "Backup" "Backup created (Archive: $backup_new_date.tar)."
+$BIN/v-log-action "system" "Info" "Backup" "Backup created (User: $user, Archive: $backup_new_date.tar)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

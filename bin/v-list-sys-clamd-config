@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list clamd config parameters
 # options: [FORMAT]
+# labels: 
+#
+# example: v-list-sys-clamd-config
 #
 # The function for obtaining the list of clamd config parameters.
 
@@ -13,6 +16,7 @@
 format=${1-shell}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 # JSON list function

@@ -1,0 +1,1306 @@
+<!-- Begin toolbar -->
+<div class="l-center edit">
+	<div class="l-sort clearfix">
+		<div class="l-unit-toolbar__buttonstrip">
+			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+			<a href="/list/ip/" class="ui-button cancel" dir="ltr"><i class="fas fa-ethernet status-icon blue"></i><?=_('IP');?></a>
+			<?php if ((isset($_SESSION['FIREWALL_SYSTEM'])) && (!empty($_SESSION['FIREWALL_SYSTEM']))) {?>
+				<a href="/list/firewall/" class="ui-button cancel" dir="ltr"><i class="fas fa-shield-alt status-icon red"></i><?=_('Firewall');?></a>
+			<?php }?>
+		</div>
+		<div class="l-unit-toolbar__buttonstrip float-right">
+			<a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
+		</div>
+	</div>
+</div>
+<!-- End toolbar -->
+
+<div class="l-separator"></div>
+
+<div class="l-center animated fadeIn">
+
+	<form id="vstobjects" name="v_configure_server" method="post">
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+		<input type="hidden" name="save" value="save" />
+
+		<table class="data mode-add">
+			<tr class="data-add">
+				<td class="data-dotted">
+					<table class="data-col1">
+						<tr>
+							<td></td>
+						</tr>
+					</table>
+				</td>
+				<td class="data-dotted">
+					<table class="data-col2" width="600px">
+						<tr>
+							<td class="step-top">
+								<span class="page-title"><?=_('Configuring Server');?></span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<?php
+									if (!empty($_SESSION['error_msg'])) {
+										$msg_icon = 'fa-exclamation-circle status-icon red';
+										$msg_text = htmlentities($_SESSION['error_msg']);
+										$msg_id = 'vst-error';
+									} else {
+										if (!empty($_SESSION['ok_msg'])) {
+											$msg_icon = 'fa-check-circle status-icon green';
+											$msg_text = $_SESSION['ok_msg'];
+											$msg_id = 'vst-ok';
+										}
+									}
+								?>
+								<span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
+								<br><br>
+							</td>
+						</tr>
+
+						<!-- Basic options tab -->
+						<tr>
+							<td class="vst-text input-label step-top advanced-options">
+								<a href="javascript:elementHideShow('basic');" class="vst-text">
+									<i class="fas fa-cog"></i><b><?=_('Basic options');?> <img src="/images/arrow.png"></b>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label step-left">
+								<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="basic">
+									<tr>
+										<td class="vst-text step-top">
+											<?=_('Hostname');?>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type="text" size="20" class="vst-input" name="v_hostname" value="<?=htmlentities(trim($v_hostname, "'"))?>">
+											<br><br>
+										</td>
+									</tr>
+									<tr>
+										<td class="vst-text input-label">
+											<?=_('Time Zone');?>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<select class="vst-list" name="v_timezone">
+												<?php
+													foreach ($v_timezones as $key => $value) {
+														echo "\t\t\t\t<option value=\"".$key."\"";
+														if ((!empty($v_timezone)) && ( $key == $v_timezone)){
+															echo ' selected' ;
+														}
+														if ((!empty($v_timezone)) && ( $key == $_POST['v_timezone'])){
+															echo ' selected' ;
+														}
+														echo ">".$value."</option>\n";
+													}
+												?>
+											</select>
+											<br><br>
+										</td>
+									</tr>
+									<tr>
+										<td class="vst-text input-label">
+											<?=_('Theme');?>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<select class="vst-list" name="v_theme">
+												<?php
+													foreach ($theme as $key => $value) {
+														echo "\t\t\t\t<option value=\"".$value."\"";
+														if ((!empty($_SESSION['THEME'])) && ( $value == $_SESSION['THEME'])){
+															echo ' selected' ;
+														}
+														if ((!empty($_SESSION['THEME'])) && ( $value == $_POST['v_theme'])){
+															echo ' selected' ;
+														}
+														echo ">".$value."</option>\n";
+													}
+												?>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<td class="vst-text input-label">
+											<label><input type="checkbox" size="20" class="vst-checkbox" name="v_policy_user_change_theme" <?php if ((isset($_SESSION['POLICY_USER_CHANGE_THEME'])) && (!empty($_SESSION['POLICY_USER_CHANGE_THEME'])) && ($_SESSION['POLICY_USER_CHANGE_THEME'] == "no")) echo "checked=yes" ?>><?=_('Set as selected theme for all users');?></label>
+										</td>
+									</tr>
+									<tr>
+										<td class="vst-text input-label step-top">
+											<?=_('Default Language');?>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<select class="vst-list" name="v_language">
+												<?php
+													foreach ($languages as $key => $value) {
+														echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".$key."\"";
+														if ( $key == $v_language ){
+															echo 'selected' ;
+														}
+														if (( $key == $_SESSION['LANGUAGE'] && (empty($v_language)) )) {
+															echo 'selected' ;
+														}
+														echo ">".htmlentities($value)."</option>\n";
+													}
+												?>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<td class="vst-text input-label">
+											<label><input type="checkbox" size="20" class="vst-checkbox" name="v_language_update"><?=_('Set as default language for all users');?></label>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<br><br>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+
+						<!-- Updates tab -->
+						<tr>
+							<td class="vst-text input-label step-top advanced-options">
+								<a href="javascript:elementHideShow('version');" class="vst-text">
+									<i class="fas fa-code-branch"></i><b><?=_('Updates');?> <img src="/images/arrow.png"></b>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label step-left">
+								<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="version">
+									<tr>
+										<td class="vst-text step-top">
+											<?=_('Version'); ?>: <span class="optional"><?=$_SESSION['VERSION'];?></span>
+										</td>
+									</tr>
+									<?php if ($_SESSION['RELEASE_BRANCH'] !== 'release') {?>
+										<tr>
+											<td class="vst-text">
+												<?=_('Release'); ?>: <span class="optional"><?=$_SESSION['RELEASE_BRANCH'];?></span>
+											</td>
+										</tr>
+									<?php } ?>
+									<tr>
+										<td class="vst-text input-label">
+											<?=_('Options'); ?>
+										</td>
+									</tr>
+									<?php if ($_SESSION['RELEASE_BRANCH'] != "release") { ?>
+										<tr>
+											<td>
+												<label><input type="checkbox" size="20" class="vst-checkbox" name="v_debug_mode" <?php if ((isset($_SESSION['DEBUG_MODE'])) && (!empty($_SESSION['DEBUG_MODE'])) && ($_SESSION['DEBUG_MODE'] == "true")) echo "checked=yes" ?>><?=_('Enable debug mode');?></label>
+											</td>
+										</tr>
+									<?php } ?>
+									<tr>
+										<td>
+											<label><input type="checkbox" size="20" class="vst-checkbox" name="v_experimental_features" <?php if ((isset($_SESSION['POLICY_SYSTEM_ENABLE_BACON'])) && (!empty($_SESSION['POLICY_SYSTEM_ENABLE_BACON'])) && ($_SESSION['POLICY_SYSTEM_ENABLE_BACON'] == "true")) echo "checked=yes" ?>><?=_('Enable preview features');?></label> <span class="hint">(<a href="/list/server/preview/"><?=_('View');?></a>)</span>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<label><input type="checkbox" size="20" class="vst-checkbox" name="v_upgrade_send_notification_email" <?php if ((isset($_SESSION['UPGRADE_SEND_EMAIL'])) && (!empty($_SESSION['UPGRADE_SEND_EMAIL'])) && ($_SESSION['UPGRADE_SEND_EMAIL'] == "true")) echo "checked=yes" ?>><?=_('SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL');?></label>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<label><input type="checkbox" size="20" class="vst-checkbox" name="v_upgrade_send_email_log" <?php if ((isset($_SESSION['UPGRADE_SEND_EMAIL_LOG'])) && (!empty($_SESSION['UPGRADE_SEND_EMAIL_LOG'])) && ($_SESSION['UPGRADE_SEND_EMAIL_LOG'] == "true")) echo "checked=yes" ?>><?=_('SYSTEM_UPGRADE_SEND_EMAIL_LOG');?></label>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<br />
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+
+						<!-- Web Server tab -->
+						<tr>
+							<td class="vst-text input-label step-top advanced-options">
+								<a href="javascript:elementHideShow('web');" class="vst-text">
+									<i class="fas fa-globe-americas"></i><b><?=_('Web Server');?> <img src="/images/arrow.png"></b>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label step-left">
+								<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="web" class="step-top">
+									<?php if (!empty($_SESSION['PROXY_SYSTEM'])) { ?>
+										<tr>
+											<td class="vst-text">
+												<?=_('Proxy Server');?>: <span class="optional"><?=$_SESSION['PROXY_SYSTEM']; ?> <a href="/edit/server/<? echo $_SESSION['PROXY_SYSTEM'] ?>/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a></span>
+											</td>
+										</tr>
+									<?php } ?>
+									<?php if (!empty($_SESSION['WEB_SYSTEM'])) { ?>
+										<tr>
+											<td class="vst-text">
+												<?=_('Web Server');?>: <span class="optional"><?=$_SESSION['WEB_SYSTEM']; ?> <a href="/edit/server/<? echo $_SESSION['WEB_SYSTEM'] ?>/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a></span>
+											</td>
+										</tr>
+									<?php } ?>
+									<?php if (!empty($_SESSION['WEB_BACKEND'])) { ?>
+										<tr>
+											<td class="vst-text">
+												<?=_('Backend Server');?>: <span class="optional"><?=$_SESSION['WEB_BACKEND']; ?> <a href="/edit/server/<? echo $_SESSION['WEB_BACKEND'] ?>/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a></span>
+											</td>
+										</tr>
+									<?php } ?>
+									<?php if (!empty($_SESSION['WEB_BACKEND_POOL'])) { ?>
+										<tr>
+											<td class="vst-text">
+												<?=_('Backend Pool Mode');?>: <span class="optional"><?=$_SESSION['WEB_BACKEND_POOL']; ?></span>
+											</td>
+										</tr>
+									<?php } ?>
+									<?php if(count($v_php_versions)): ?>
+										<tr>
+											<td class="vst-text step-top">
+												<?=_('Enabled multi PHP versions');?>
+
+												<span class="alert alert-info alert-with-icon">
+													<i class="fas fa-info"></i>
+													<?=_('Please wait while php is installed or removed');?>
+												</span>
+											</td>
+										</tr>
+										<?php foreach($v_php_versions as $php_version): ?>
+											<tr>
+												<td class="vst-text input-label">
+													<input type="checkbox" size="20" class="vst-checkbox"
+														<?=$php_version->installed?'checked':''; ?>
+														<?=$php_version->protected?'disabled':''; ?>
+														id="<?=$php_version->name?>"
+														name="v_php_versions[<?=$php_version->tpl?>]">
+													<label for="<?=$php_version->name?>"><?=$php_version->name?></label>
+												</td>
+											</tr>
+											<?php foreach($php_version->usedby as $wd_user => $wd_domains ): ?>
+												<?php foreach($wd_domains as $wd_domain ): ?>
+													<tr>
+														<td class="vst-text" style="border: 1px lightgrey; padding:0 10px;">
+															<span>
+																<i class="fas fa-user"></i>
+																<?=$wd_user;?>
+															</span>
+															<span class="optional" style="float:right"><?=$wd_domain;?></span>
+														</td>
+													</tr>
+												<?php endforeach; ?>
+											<?php endforeach; ?>
+										<?php endforeach; ?>
+									<?php endif; ?>
+									<tr>
+										<td>
+											<br />
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+
+						<!-- DNS Server tab -->
+						<tr>
+							<td class="vst-text input-label step-top advanced-options">
+								<a href="javascript:elementHideShow('dns');" class="vst-text">
+									<i class="fas fa-atlas"></i><b><?=_('DNS Server');?> <img src="/images/arrow.png"></b>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label step-left">
+								<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="dns">
+									<tr>
+										<td class="vst-text step-top">
+											<?=_('DNS Server');?>: <span class="optional"><?=$_SESSION['DNS_SYSTEM']; ?> <a href="/edit/server/<? echo $_SESSION['DNS_SYSTEM'] ?>/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a></span>
+										</td>
+									</tr>
+									<tr>
+										<td class="vst-text">
+											<?=_('DNS Cluster');?>: <span class="optional"><?php if ($v_dns_cluster == 'yes') { echo _('Yes'); } else { echo _('No'); } ?></span>
+										</td>
+									</tr>
+									<?php if ($v_dns_cluster == 'yes') {
+										$i = 0;
+										foreach ($dns_cluster as $key => $value) {
+											$i++;
+										?>
+										<tr>
+											<td class="vst-text">
+												<?=_('Host'). ' #'.$i  ?>
+											</td>
+										</tr>
+										<tr>
+											<td class="vst-text">
+												<input type="text" size="20" class="vst-input" name="v_dns_remote_host" value="<?=$key; ?>" disabled>
+											</td>
+										</tr>
+									<?php } } ?>
+									<tr>
+										<td><br></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+
+						<!-- Mail Server tab -->
+						<tr>
+							<td class="vst-text input-label step-top advanced-options">
+								<a href="javascript:elementHideShow('mail');" class="vst-text">
+									<i class="fas fa-mail-bulk"></i><b><?=_('Mail Server');?> <img src="/images/arrow.png"></b>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label step-left">
+								<table style="display:<?php if (empty($v_mail_adv)) echo 'none';?> ;" id="mail">
+									<tr>
+										<td class="vst-text step-top">
+											<?=_('Mail Server');?>: <span class="optional"><?=$_SESSION['MAIL_SYSTEM']; ?> <a href="/edit/server/<? echo $_SESSION['MAIL_SYSTEM'] ?>/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a></span>
+										</td>
+									</tr>
+									<?php if (!empty($_SESSION['ANTIVIRUS_SYSTEM'])) { ?>
+										<tr>
+											<td class="vst-text">
+												<?=_('Antivirus');?>: <span class="optional"><?=$_SESSION['ANTIVIRUS_SYSTEM']; ?> <a href="/edit/server/<? echo $_SESSION['ANTIVIRUS_SYSTEM'] ?>/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a></span>
+											</td>
+										</tr>
+									<?php } ?>
+									<?php if (!empty($_SESSION['ANTISPAM_SYSTEM'])) { ?>
+										<tr>
+											<td class="vst-text">
+												<?=_('AntiSpam');?>: <span class="optional"><?=$_SESSION['ANTISPAM_SYSTEM']; ?> <a href="/edit/server/<? echo $_SESSION['ANTISPAM_SYSTEM'] ?>/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a></span>
+											</td>
+										</tr>
+									<?php } ?>
+									<?php if($_SESSION['WEBMAIL_SYSTEM']){?>
+										<tr>
+											<td class="vst-text step-top">
+												<?=_('Webmail URL');?> <span class="hint">(<?=$_SESSION['WEBMAIL_ALIAS'];?>.example.com)</span>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<input type="text" size="20" class="vst-input" name="v_webmail_alias" value="<?=$_SESSION['WEBMAIL_ALIAS']; ?>">
+												<br><br>
+											</td>
+										</tr>
+									<?php } ?>
+									<tr>
+										<td class="vst-text">
+											<label>
+												<input type="checkbox" size="20" class="vst-checkbox" name="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo "checked=yes"; ?> onclick="javascript:elementHideShow('smtp_relay_table');"><?=_('Global SMTP Relay');?>
+											</label>
+										</td>
+									</tr>
+									<tr>
+										<td class="step-left">
+											<table style="display:<?php if ($v_smtp_relay == 'true') {echo 'block';} else {echo 'none';} ?>;" id="smtp_relay_table">
+												<tr>
+													<td class="input-label vst-text">
+														<?=_('Host');?>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<input type="text" size="20" class="vst-input" name="v_smtp_relay_host" value="<?=htmlentities(trim($v_smtp_relay_host, "'"))?>">
+													</td>
+												</tr>
+												<tr>
+													<td class="input-label vst-text">
+														<?=_('Port');?>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<input type="text" size="20" class="vst-input" name="v_smtp_relay_port" value="<?=htmlentities(trim($v_smtp_relay_port, "'"))?>">
+													</td>
+												</tr>
+												<tr>
+													<td class="input-label vst-text">
+														<?=_('Username');?>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<input type="text" size="20" class="vst-input" name="v_smtp_relay_user" value="<?=htmlentities(trim($v_smtp_relay_user, "'"))?>">
+													</td>
+												</tr>
+												<tr>
+													<td class="input-label vst-text">
+														<?=_('Password');?>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<input type="text" size="20" class="vst-input password" name="v_smtp_relay_pass">
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<br>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+
+						<!-- Databases tab -->
+						<tr>
+							<td class="vst-text input-label step-top advanced-options">
+								<a href="javascript:elementHideShow('db');" class="vst-text">
+									<i class="fas fa-database"></i><b><?=_('Databases');?> <img src="/images/arrow.png"></b>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label step-left">
+								<table style="display:<?php if (empty($v_db_adv)) echo 'none';?> ;" id="db">
+									<tr>
+										<td class="vst-text step-top">
+											<?=_('MySQL Support');?> <a href="/edit/server/mysql/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<select class="vst-list" name="v_mysql" disabled>
+												<option value='no'><?=_('No'); ?></option>
+												<option value='yes' <?php if($v_mysql == 'yes') echo 'selected' ?>><?=_('Yes'); ?></option>
+											</select>
+											<br><br>
+										</td>
+									</tr>
+
+									<!-- MySQL / MariaDB Options-->
+									<?php if ($v_mysql == 'yes') { ?>
+										<tr>
+											<td class="vst-text">
+												<?=_('phpMyAdmin URL');?>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<input type="text" size="20" class="vst-input" name="v_mysql_url" value="<?=$_SESSION['DB_PMA_ALIAS']; ?>">
+												<br><br>
+											</td>
+										</tr>
+										<?php if ($_SESSION['POLICY_SYSTEM_ENABLE_BACON'] === 'true' && 1 != 1) {
+                                        //disable for 1.4.0 release due some bugs
+                                        ?>
+											<tr>
+												<td class="vst-text">
+													<?=_('phpMyAdmin Single Sign On');?> <span class="hint">(Preview)</span>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<select class="vst-list" name="v_phpmyadmin_key">
+														<option value='no'><?=_('Disabled'); ?></option>
+														<option value='yes' <?php if($_POST['v_phpmyadmin_key'] == "yes" || $_SESSION['PHPMYADMIN_KEY'] != ''){ echo 'selected="selected"'; }; ?>><?=_('Enabled'); ?></option>
+													</select>
+													<br />
+													<br />
+												</td>
+											</tr>
+										<?php } ?>
+									<?php } ?>
+									<?php if ($v_mysql == 'yes') {
+										$i = 0;
+										foreach ($v_mysql_hosts as $value) {
+											$i++;
+										?>
+										<tr>
+											<td class="vst-text step-left">
+												<?=_('Host'). ' #'.$i  ?>
+											</td>
+										</tr>
+										<tr>
+											<td class="step-left">
+												<input type="text" size="20" class="vst-input" name="v_mysql_host" value="<?=$value['HOST']?>" disabled>
+												<br><br>
+											</td>
+										</tr>
+										<tr>
+											<td class="vst-text step-left">
+												<?=_('Password');?>
+											</td>
+										</tr>
+										<tr>
+											<td class="step-left">
+												<input type="text" size="20" class="vst-input password" name="v_mysql_password" value="">
+												<br><br>
+											</td>
+										</tr>
+
+										<tr>
+											<td class="vst-text step-left">
+												<?=_('Maximum Number Of Databases');?>
+											</td>
+										</tr>
+										<tr>
+											<td class="step-left">
+												<input type="text" size="20" class="vst-input" name="v_mysql_max" value="<?=$value['MAX_DB']; ?>" disabled>
+												<br><br>
+											</td>
+										</tr>
+										<tr>
+											<td class="vst-text step-left">
+												<?=_('Current Number Of Databases');?>
+											</td>
+										</tr>
+										<tr>
+											<td class="step-left">
+												<input type="text" size="20" class="vst-input" name="v_mysql_max" value="<?=$value['U_DB_BASES']; ?>" disabled>
+												<br><br>
+											</td>
+										</tr>
+									<?php }} ?>
+
+									<!-- PostgreSQL Options-->
+									<?php if ($v_pgsql == 'yes') { ?>
+										<tr>
+											<td class="vst-text input-label">
+												<?=_('PostgreSQL Support');?> <a href="/edit/server/postgresql/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<select class="vst-list" name="v_pgsql" disabled>
+													<option value='no'><?=_('No'); ?></option>
+													<option value='yes' <?php if($v_pgsql == 'yes') echo 'selected' ?>><?=_('Yes'); ?></option>
+												</select>
+												<br><br>
+											</td>
+										</tr>
+										<tr>
+											<td class="vst-text">
+												<?=_('phpPgAdmin URL');?>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<input type="text" size="20" class="vst-input" name="v_pgsql_url" value="<?=$_SESSION['DB_PGA_ALIAS']; ?>">
+												<br><br>
+											</td>
+										</tr>
+									<?php } ?>
+									<?php if ($v_pgsql == 'yes') {
+										$i = 0;
+										foreach ($v_pgsql_hosts as $value) {
+											$i++;
+										?>
+										<tr>
+											<td class="vst-text step-left">
+												<?=_('Host'). ' #'.$i  ?>
+											</td>
+										</tr>
+										<tr>
+											<td class="step-left">
+												<input type="text" size="20" class="vst-input" name="v_pgsql_host" value="<?=$value['HOST']?>" disabled>
+												<br><br>
+											</td>
+										</tr>
+										<tr>
+											<td class="vst-text step-left">
+												<?=_('Maximum Number Of Databases');?>
+											</td>
+										</tr>
+										<tr>
+											<td class="step-left">
+												<input type="text" size="20" class="vst-input" name="v_psql_max" value="<?=$value['MAX_DB']; ?>" disabled>
+												<br><br>
+											</td>
+										</tr>
+										<tr>
+											<td class="vst-text step-left">
+												<?=_('Current Number Of Databases');?>
+											</td>
+										</tr>
+										<tr>
+											<td class="step-left">
+												<input type="text" size="20" class="vst-input" name="v_pgsql_max" value="<?=$value['U_DB_BASES']; ?>" disabled>
+												<br><br><br><br>
+											</td>
+										</tr>
+									<?php }} ?>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label step-top advanced-options">
+								<a href="javascript:elementHideShow('backup');" class="vst-text">
+									<i class="fas fa-undo"></i><b><?=_('Backups');?> <img src="/images/arrow.png"></b>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label step-left">
+								<table style="<?php if (empty($v_backup_adv)) echo 'display:none';?> ;" id="backup">
+									<tr>
+										<td class="vst-text step-top">
+											<?=_('Local backup');?>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<select class="vst-list" name="v_backup">
+												<option value='no'><?=_('No'); ?></option>
+												<option value='yes' <?php if($v_backup == 'yes') echo 'selected' ?>><?=_('Yes'); ?></option>
+											</select>
+											<br><br>
+										</td>
+									</tr>
+									<tr>
+										<td class="vst-text">
+											<?=_('Compression');?> <a href="http://docs.hestiacp.com/admin_docs/backups.html#what-is-the-difference-between-zstd-and-gzip"><i class="fas fa-question-circle"></i></a>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<select class="vst-list" name="v_backup_mode">
+												<option value='gzip' <?php if($v_backup_mode != 'zstd') echo 'selected' ?>>gzip</option>
+												<option value='zstd' <?php if($v_backup_mode == 'zstd') echo 'selected' ?>>zstd</option>
+											</select>
+											<br><br>
+										</td>
+									</tr>
+									<tr>
+										<td class="vst-text">
+											<?=_('Compression level');?> <a href="http://docs.hestiacp.com/admin_docs/backups.html#what-is-the-optimal-compression-ratio"><i class="fas fa-question-circle"></i></a>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<select class="vst-list" name="v_backup_gzip">
+												<?php for ($level = 1; $level < 20; $level++) { ?>
+													<option value='<?=$level;?>' <?php if($v_backup_gzip == $level) echo 'selected' ?>><?=$level;?><?php if($level > 9){ echo sprintf(' (%s)', _('zstd only')); } ?></option>
+												<?php } ?>
+											</select>
+											<br><br>
+										</td>
+									</tr>
+									<tr>
+										<td class="vst-text">
+											<?=_('Directory');?> <a href="https://docs.hestiacp.com/admin_docs/backups.html#how-to-change-default-backup-folder"><i class="fas fa-question-circle"></i></a>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type="text" size="20" class="vst-input" name="v_backup_dir" value="<?=trim($v_backup_dir, "'")?>" disabled="disabled">
+											<br><br>
+										</td>
+									</tr>
+									<tr>
+										<td class="vst-text input-label">
+											<label><input type="checkbox" size="20" class="vst-checkbox" name="v_backup_remote_adv" <?php if (!empty($v_backup_remote_adv)) echo "checked=yes" ?> onclick="javascript:elementHideShow('remote_backup');"><?=_('Remote backup');?></label>
+										</td>
+									</tr>
+									<tr>
+										<td class="vst-text input-label step-left">
+											<table style="display:<?php if (empty($v_backup_remote_adv)) echo 'none';?> ;" id="remote_backup">
+												<tr>
+													<td class="vst-text">
+														<?=_('Protocol');?> <a href="http://docs.hestiacp.com/admin_docs/backups.html#what-kind-of-protocols-are-currently-supported"><i class="fas fa-question-circle"></i></a>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<select class="vst-list" name="v_backup_type" id="backup_type">
+															<option value='ftp'><?=_('ftp'); ?></option>
+															<option value='sftp' <?php if((!empty($v_backup_type)) && (trim($v_backup_type,"'")  == 'sftp' )) echo 'selected="selected"'; ?>><?=_('sftp'); ?></option>
+															<option value="b2" <?php if((!empty($v_backup_type)) && (trim($v_backup_type,"'")  == 'b2' )) echo 'selected="selected"'; ?>><?=_('Backblaze '); ?>
+														</select>
+														<br><br>
+													</td>
+												</tr>
+												<tr style="display: <?php if ((!empty($v_backup_type)) && !in_array(trim($v_backup_type, "'"),array('ftp','sftp'))){ echo 'none';} else {echo 'block';} ?>" id="backup_sftp">
+													<td>
+														<table>
+															<tr>
+																<td class="vst-text">
+																	<?=_('Host');?>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<input type="text" size="20" class="vst-input" name="v_backup_host" value="<?=trim($v_backup_host, "'")?>">
+																	<br><br>
+																</td>
+															</tr>
+															<tr>
+																<td class="vst-text">
+																	<?=_('Port');?>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<input type="text" size="20" class="vst-input" name="v_backup_port" value="<?=trim($v_backup_port, "'")?>">
+																	<br><br>
+																</td>
+															</tr>
+															<tr>
+																<td class="vst-text">
+																	<?=_('Username');?>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<input type="text" size="20" class="vst-input" name="v_backup_username" value="<?=trim($v_backup_username, "'")?>">
+																	<br><br>
+																</td>
+															</tr>
+															<tr>
+																<td class="vst-text">
+																	<?=_('Password');?>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<input type="text" size="20" class="vst-input password" name="v_backup_password" value="<?=trim($v_backup_password, "'")?>">
+																	<br><br>
+																</td>
+															</tr>
+															<tr>
+																<td class="vst-text">
+																	<?=_('Directory');?>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<input type="text" size="20" class="vst-input" name="v_backup_bpath" value="<?=trim($v_backup_bpath, "'")?>">
+																	<br><br>
+																</td>
+															</tr>
+														</table>
+													</td>
+												</tr>
+												<tr style="display: <?php if ((empty($v_backup_type)) || !in_array(trim($v_backup_type, "'"),array('b2'))){ echo 'none';} else {echo 'block';} ?>" id="backup_bucket">
+													<td>
+														<table>
+															<tr>
+																<td class="vst-text">
+																	<?=_('Bucket');?>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<input type="text" size="20" class="vst-input" name="v_backup_bucket" value="<?=trim($v_backup_bucket, "'")?>">
+																	<br><br>
+																</td>
+															</tr>
+															<tr>
+																<td class="vst-text">
+																	<?=_('Application ID');?>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<input type="text" size="20" class="vst-input" name="v_backup_application_id" value="<?=trim($v_backup_application_id, "'")?>">
+																	<br><br>
+																</td>
+															</tr>
+															<tr>
+																<td class="vst-text">
+																	<?=_('Application Key');?>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<input type="text" size="20" class="vst-input" name="v_backup_application_key" value="<?=trim($v_backup_application_key, "'")?>">
+																	<br><br>
+																</td>
+															</tr>
+														</table>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label step-top advanced-options">
+								<a href="javascript:elementHideShow('ssl');" class="vst-text">
+									<i class="fas fa-lock"></i><b><?=_('Hestia SSL');?><img src="/images/arrow.png"></b>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label step-left">
+								<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="ssl">
+									<tr>
+										<td class="vst-text step-top">
+											<?=_('SSL Certificate');?>
+											<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=$v_hostname?>"><?=_('Generate CSR');?></a></span>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<textarea size="20" class="vst-textinput short console" name="v_ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
+										</td>
+									</tr>
+									<tr>
+										<td class="vst-text input-label">
+											<?=_('SSL Key');?>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<textarea size="20" class="vst-textinput short console" name="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<table class="additional-info">
+												<tr>
+													<td>
+														<b><?=_('SUBJECT');?>:</b>
+													</td>
+													<td class="details">
+														<?=$v_ssl_subject?>
+													</td>
+												</tr>
+												<?php if ($v_ssl_aliases){?>
+													<tr>
+														<td>
+															<b><?=_('Aliases');?>:</b>
+														</td>
+														<td class="details">
+															<?=$v_ssl_aliases?>
+														</td>
+													</tr>
+												<?php } ?>
+												<tr>
+													<td>
+														<b><?=_('NOT_BEFORE');?>:</b>
+													</td>
+													<td class="details">
+														<?=$v_ssl_not_before?>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<b><?=_('NOT_AFTER');?>:</b>
+													</td>
+													<td class="details">
+														<?=$v_ssl_not_after?>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<b><?=_('SIGNATURE');?>:</b>
+													</td>
+													<td class="details">
+														<?=$v_ssl_signature?>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<b><?=_('PUB_KEY');?>:</b>
+													</td>
+													<td class="details">
+														<?=$v_ssl_pub_key?>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<b><?=_('ISSUER');?>:</b>
+													</td>
+													<td class="details">
+														<?=$v_ssl_issuer?>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label step-top advanced-options">
+								<a href="javascript:elementHideShow('security');" class="vst-text">
+									<i class="fas fa-key"></i><b><?=_('Security');?> <img src="/images/arrow.png"></b>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label step-left">
+								<table style="<?php if (empty($v_security_adv)) echo 'display:none;';?>" id="security">
+									<tr>
+										<td class="section-title" onclick="javascript:elementHideShow('security-system-table',this);">
+											<?=('System');?>
+											<i class="fas fa-plus-square status-icon dim maroon section-hide-button"></i>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<table id="security-system-table" style="display: none;">
+												<td class="vst-text input-label step-top" style="font-size:1rem;padding-bottom:12px;">
+													<?=_('API');?>
+												</td>
+												<tr>
+													<td class="vst-text input-label">
+														<?=_('Enable API access');?>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<select class="vst-list" name="v_api" id="api">
+															<option value='yes'><?=_('Yes'); ?></option>
+															<option value='no' <?php if($_SESSION['API'] == 'no') echo 'selected' ?>><?=_('No'); ?></option>
+														</select>
+														<br><br>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<table id="security_ip" style="<?php if ($_SESSION['API'] == "no") echo 'display:none;';?>">
+															<tr>
+																<td class="vst-text input-label">
+																	<?=_('Allowed IP addresses for API');?> <span class="optional" style="float:right">1 IP address per line</span>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<textarea size="20" class="vst-textinput short" name="v_api_allowed_ip"><?php 
+																		foreach(explode(',',$_SESSION['API_ALLOWED_IP']) as $ip ){ 
+                                                                            echo trim($ip)."\n";
+																			}
+																		?></textarea>
+																	<br><br>
+																</td>
+															</tr>
+														</table>
+													</td>
+												</tr>
+												<td class="vst-text input-label step-top" style="font-size:1rem;padding-bottom:12px;">
+													<?=_('Login');?>
+												</td>
+												<tr>
+													<td class="vst-text input-label">
+														<?=_('Login screen style');?>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<select class="vst-list" name="v_login_style">
+															<option value='default'><?=_('Default'); ?></option>
+															<option value='old' <?php if($_SESSION['LOGIN_STYLE'] == 'old') echo 'selected' ?>><?=_('Old Style'); ?></option>
+														</select>
+														<br><br>
+													</td>
+												</tr>
+												<tr>
+													<td class="vst-text input-label">
+														<?=_('Allow users to reset their passwords');?>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<select class="vst-list" name="v_policy_system_password_reset">
+															<option value='yes'><?=_('Yes'); ?></option>
+															<option value='no' <?php if($_SESSION['POLICY_SYSTEM_PASSWORD_RESET'] == 'no') echo 'selected' ?>><?=_('No'); ?></option>
+														</select>
+														<br><br>
+													</td>
+												</tr>
+												<tr>
+													<td class="vst-text input-label">
+														<?=_('Inactive session timeout');?> (<?=_('Minutes');?>)
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<input type="text" size="20" class="vst-input" name="v_inactive_session_timeout" value="<?=trim($_SESSION['INACTIVE_SESSION_TIMEOUT'], "'")?>">
+														<br><br>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+									<?php if (($_SESSION['userContext'] === "admin") && ($_SESSION['user'] === 'admin')) {?>
+										<tr>
+											<td class="section-title" onclick="javascript:elementHideShow('security-sysadminprotect-table',this);">
+												<?=('System Protection');?>
+												<i class="fas fa-plus-square status-icon dim maroon section-hide-button"></i>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<table id="security-sysadminprotect-table" class="step-top" style="display: none;">
+													<tr>
+														<td class="vst-text input-label step-top" style="font-size:1rem;padding-bottom:12px;">
+															<?=_('System Administrator account');?>
+														</td>
+
+													</tr>
+													<tr>
+														<td class="vst-text input-label">
+															<?=_('Restrict access to read-only for other administrators');?>
+														</td>
+													</tr>
+													<tr>
+														<td>
+															<select class="vst-list" name="v_policy_system_protected_admin">
+																<option value='yes'><?=_('Yes'); ?></option>
+																<option value='no' <?php if($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] !== 'yes') echo 'selected' ?>><?=_('No'); ?></option>
+															</select>
+															<br><br>
+														</td>
+													</tr>
+													<tr>
+														<td class="vst-text input-label">
+															<?=_('Hide account from other administrators');?>
+														</td>
+													</tr>
+													<tr>
+														<td>
+															<select class="vst-list" name="v_policy_system_hide_admin">
+																<option value='yes'><?=_('Yes'); ?></option>
+																<option value='no' <?php if($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] !== 'yes') echo 'selected' ?>><?=_('No'); ?></option>
+															</select>
+															<br><br>
+														</td>
+													</tr>
+													<tr>
+														<td class="vst-text input-label">
+															<?=_('Do not allow other administrators to access Server Settings');?>
+														</td>
+													</tr>
+													<tr>
+														<td>
+															<select class="vst-list" name="v_policy_system_hide_services">
+																<option value='yes'><?=_('Yes'); ?></option>
+																<option value='no' <?php if($_SESSION['POLICY_SYSTEM_HIDE_SERVICES'] !== 'yes') echo 'selected' ?>><?=_('No'); ?></option>
+															</select>
+															<br><br>
+														</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+									<?php } ?>
+									<tr>
+										<td class="section-title" onclick="javascript:elementHideShow('security-policies-table',this);">
+											<?=('Policies');?>
+											<i class="fas fa-plus-square status-icon dim maroon section-hide-button"></i>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<table id="security-policies-table" style="display: none;">
+												<tr>
+													<td class="vst-text input-label step-top" style="font-size:1rem;padding-bottom:12px;">
+														<?=_('Users');?>
+													</td>
+												</tr>
+												<?php if ($_SESSION['POLICY_SYSTEM_ENABLE_BACON'] === 'true') { ?>
+												<tr>
+													<td class="vst-text input-label">
+														<?=_('Allow suspended users to log in with read-only access');?> <span class="hint">(Preview)</span>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<select class="vst-list" name="v_policy_user_view_suspended">
+															<option value='yes' <?php if($_SESSION['POLICY_USER_VIEW_SUSPENDED'] !== 'no') echo 'selected' ?>><?=_('Yes'); ?></option>
+															<option value='no' <?php if($_SESSION['POLICY_USER_VIEW_SUSPENDED'] == 'no') echo 'selected' ?>><?=_('No'); ?></option>
+														</select>
+														<br><br>
+													</td>
+												</tr>
+												<?php } ?>
+												<tr>
+													<td class="vst-text input-label">
+														<?=_('Allow users to edit their account details');?>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<select class="vst-list" name="v_policy_user_edit_details">
+															<option value='yes' <?php if($_SESSION['POLICY_USER_EDIT_DETAILS'] !== 'no') echo 'selected' ?>><?=_('Yes'); ?></option>
+															<option value='no' <?php if($_SESSION['POLICY_USER_EDIT_DETAILS'] == 'no') echo 'selected' ?>><?=_('No'); ?></option>
+														</select>
+														<br><br>
+													</td>
+												</tr>
+												<tr>
+													<td class="vst-text input-label">
+														<?=_('Allow users to change templates when editing web domains');?>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<select class="vst-list" name="v_policy_user_edit_web_templates">
+															<option value='yes' <?php if($_SESSION['POLICY_USER_EDIT_WEB_TEMPLATES'] !== 'no') echo 'selected' ?>><?=_('Yes'); ?></option>
+															<option value='no' <?php if($_SESSION['POLICY_USER_EDIT_WEB_TEMPLATES'] == 'no') echo 'selected' ?>><?=_('No'); ?></option>
+														</select>
+														<br><br>
+													</td>
+												</tr>
+												<tr>
+													<td class="vst-text input-label">
+														<?=_('Allow users to change templates when editing DNS zones');?>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<select class="vst-list" name="v_policy_user_edit_dns_templates">
+															<option value='yes' <?php if($_SESSION['POLICY_USER_EDIT_DNS_TEMPLATES'] !== 'no') echo 'selected' ?>><?=_('Yes'); ?></option>
+															<option value='no' <?php if($_SESSION['POLICY_USER_EDIT_DNS_TEMPLATES'] == 'no') echo 'selected' ?>><?=_('No'); ?></option>
+														</select>
+														<br><br>
+													</td>
+												</tr>
+												<tr>
+													<td class="vst-text input-label">
+														<?=_('Allow users to view action and login history logs');?>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<select class="vst-list" name="v_policy_user_view_logs">
+															<option value='yes' <?php if($_SESSION['POLICY_USER_VIEW_LOGS'] !== 'no') echo 'selected' ?>><?=_('Yes'); ?></option>
+															<option value='no' <?php if($_SESSION['POLICY_USER_VIEW_LOGS'] == 'no') echo 'selected' ?>><?=_('No'); ?></option>
+														</select>
+														<br><br>
+													</td>
+												</tr>
+												<tr>
+													<td class="vst-text input-label">
+														<?=_('Allow users to delete log history');?>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<select class="vst-list" name="v_policy_user_delete_logs">
+															<option value='yes' <?php if($_SESSION['POLICY_USER_DELETE_LOGS'] !== 'no') echo 'selected' ?>><?=_('Yes'); ?></option>
+															<option value='no' <?php if($_SESSION['POLICY_USER_DELETE_LOGS'] == 'no') echo 'selected' ?>><?=_('No'); ?></option>
+														</select>
+														<br><br>
+													</td>
+												</tr>
+												<tr>
+													<td class="vst-text input-label step-top" style="font-size:1rem;padding-bottom:12px;">
+														<?=_('Domains');?>
+													</td>
+												</tr>
+												<tr>
+													<td class="vst-text input-label">
+														<?=_('Enforce subdomain ownership');?>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<select class="vst-list" name="v_enforce_subdomain_ownership">
+															<option value='yes'><?=_('Yes'); ?></option>
+															<option value='no' <?php if($_SESSION['ENFORCE_SUBDOMAIN_OWNERSHIP'] == 'no') echo 'selected' ?>><?=_('No'); ?></option>
+														</select>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<br><br>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label step-top advanced-options">
+								<a href="javascript:elementHideShow('hestia');" class="vst-text">
+									<i class="fas fa-puzzle-piece"></i><b><?=_('Hestia Control Panel Plugins');?> <img src="/images/arrow.png"></b>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label step-left">
+								<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="hestia">
+									<tr>
+										<td class="vst-text step-top">
+											<?=_('Quick App Installer');?>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<select class="vst-list" name="v_plugin_app_installer">
+												<option value='false'><?=_('No'); ?></option>
+												<option value='true' <?php if($_SESSION['PLUGIN_APP_INSTALLER'] == 'true') echo 'selected' ?>><?=_('Yes'); ?></option>
+											</select>
+											<br><br>
+										</td>
+									</tr>
+									<tr>
+										<td class="vst-text input-label">
+											<?=_('Filemanager');?>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<select class="vst-list" name="v_filemanager">
+												<option value='false'><?=_('No'); ?></option>
+												<option value='true' <?php if($_SESSION['FILE_MANAGER'] == 'true') echo 'selected' ?>><?=_('Yes'); ?></option>
+											</select>
+											<br><br>
+										</td>
+									</tr>
+									<tr>
+										<td class="vst-text input-label">
+											<?=_('FileSystem Disk Quota');?>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<select class="vst-list" name="v_quota">
+												<option value='no'><?=_('No'); ?></option>
+												<option value='yes' <?php if($_SESSION['DISK_QUOTA'] == 'yes') echo 'selected' ?>><?=_('Yes'); ?></option>
+											</select>
+											<br><br>
+										</td>
+									</tr>
+									<tr>
+										<td class="vst-text input-label">
+											<?=_('Firewall');?>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<select class="vst-list" name="v_firewall">
+												<option value='no'><?=_('No'); ?></option>
+												<option value='yes' <?php if($_SESSION['FIREWALL_SYSTEM'] == 'iptables') echo 'selected' ?>><?=_('Yes'); ?></option>
+											</select>
+											<br><br>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+					<table class="data-col2"></table>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>

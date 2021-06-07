@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change hostname
 # options: HOSTNAME
+# labels: panel
+#
+# example: v-change-sys-hostname mydomain.tld
 #
 # The function for changing system hostname.
 
@@ -11,9 +14,12 @@
 
 # Argument definition
 domain=$1
+helo=${2-yes}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -21,7 +27,7 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'HOSTNAME'
+check_args '1' "$#" 'HOSTNAME [HELO]'
 is_format_valid 'domain'
 
 # Perform verification if read-only mode is enabled
@@ -46,14 +52,28 @@ else
     # Debian/Ubuntu
     hostnamectl set-hostname $domain
     echo "$domain" > /etc/hostname
+
+    # Update Roundcube password plugin configuration
+    if [ -d /etc/roundcube/ ]; then
+        sed -i "/password_hestia_host/c\$rcmail_config['password_hestia_host'] = '$domain';" /etc/roundcube/plugins/password/config.inc.php
+    fi
+    if [ -d /etc/rainloop/ ]; then
+        sed -i "/hestia_host/c\hestia_host = \"$domain\"" /etc/rainloop/data/_data_/_default_/configs/plugin-hestia-change-password.ini 
+    fi
 fi
 
+# Update ip helo for exim
+if [[ ! -z "$MAIL_SYSTEM" && "$helo" == "yes" ]]; then
+    pub_ip=$(curl --ipv4 -s https://ip.hestiacp.com/)
+    $BIN/v-change-sys-ip-helo $pub_ip $domain
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Warning" "System" "System hostname changed (Host: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

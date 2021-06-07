@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: get mail account value
 # options: USER DOMAIN ACCOUNT KEY
+# labels: mail
+#
+# example: v-get-mail-account-value admin example.tld tester QUOTA
 #
 # The function for getting a certain mail account parameter.
 
@@ -17,6 +20,7 @@ account=$3
 key=$4
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 # Additional argument formatting

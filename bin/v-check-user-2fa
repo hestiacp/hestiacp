@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: check user token
 # options: USER TOKEN
+# labels: hestia panel
+#
+# example: v-check-user-2fa admin 493690
 #
 # The function verifies user 2fa token.
 
@@ -14,7 +17,9 @@ user=$1
 token=$2
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 

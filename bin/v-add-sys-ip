@@ -1,11 +1,14 @@
 #!/bin/bash
 # info: add system ip address
-# options: IP NETMASK [INTERFACE] [USER] [IP_STATUS] [IP_NAME] [NAT_IP]
+# options: IP NETMASK [INTERFACE] [USER] [IP_STATUS] [IP_NAME] [NAT_IP] [HELO]
+# labels:
+#
+# example: v-add-sys-ip 216.239.32.21 255.255.255.0
 #
 # The function adds ip address into a system. It also creates rc scripts. You
 # can specify ip name which will be used as root domain for temporary aliases.
 # For example, if you set a1.myhosting.com as name, each new domain created on
-# this  ip will automatically receive alias $domain.a1.myhosting.com. Of course
+# this ip will automatically receive alias $domain.a1.myhosting.com. Of course
 # you must have wildcard record *.a1.myhosting.com pointed to ip. This feature 
 # is very handy when customer wants to test domain before dns migration.
 
@@ -25,11 +28,16 @@ user="${4-admin}"
 ip_status="${5-shared}"
 ip_name=$6
 nat_ip=$7
+helo=$8
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -37,8 +45,8 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'IP NETMASK [INTERFACE] [USER] [STATUS] [NAME] [NATED_IP]'
-is_format_valid 'ip' 'netmask' 'interface' 'user' 'ip_status'
+check_args '2' "$#" 'IP NETMASK [INTERFACE] [USER] [STATUS] [NAME] [NATED_IP] [HELO]'
+is_format_valid 'ip' 'netmask' 'iface' 'user' 'ip_status'
 is_ip_free
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -109,6 +117,7 @@ U_WEB_DOMAINS='0'
 INTERFACE='$iface'
 NETMASK='$netmask'
 NAT='$nat_ip'
+HELO='$helo'
 TIME='$time'
 DATE='$date'" > $HESTIA/data/ips/$ip
 chmod 660 $HESTIA/data/ips/$ip
@@ -210,8 +219,13 @@ if [ ! -z "$FIREWALL_SYSTEM" ]; then
     $BIN/v-update-firewall
 fi
 
+# Update ip helo for exim
+if [ ! -z "$MAIL_SYSTEM" ] && [ ! -z "$helo"]; then
+    $BIN/v-change-sys-ip-helo $ip $helo
+fi
+
 # Logging
-log_history "added system ip address $ip" '' 'admin'
+$BIN/v-log-action "system" "Info" "Network" "Added new IP address to the system (IP: $ip)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

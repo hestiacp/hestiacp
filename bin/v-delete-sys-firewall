@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete system firewall
 # options: NONE
+# labels: panel
+#
+# example: v-delete-sys-firewall
 #
 # The script disables firewall support
 
@@ -10,7 +13,9 @@
 #----------------------------------------------------------#
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -46,6 +51,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Error" "Firewall" "System firewall has been disabled."
 log_event "$OK" "$ARGUMENTS"
 
 exit

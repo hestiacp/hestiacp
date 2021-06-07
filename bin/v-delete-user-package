@@ -1,9 +1,14 @@
 #!/bin/bash
 # info: delete user package
 # options: PACKAGE
+# labels: panel
 #
-# The function for deleting user package. It does not allow to delete package
-# if it is in use.
+# example: v-delete-user-package admin palegreen
+#
+# The function for deleting user package.
+#
+# If the package is in use, users will be updated to
+# use the default package.
 
 
 #----------------------------------------------------------#
@@ -14,16 +19,18 @@
 package=$1
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 # Functions
 is_package_in_use() {
-    check_package=$(grep "PACKAGE='$package'" $USER_DATA/*/user.conf)
+    check_package=$(grep "PACKAGE='$package" $HESTIA/data/users/*/user.conf | cut -d'/' -f7)
     if [ ! -z "$check_package" ]; then
-        echo "Error: package $package is in use"
-        log_event "$E_INUSE" "$ARGUMENTS"
-        exit $E_INUSE
+        for user in $check_package; do
+            $BIN/v-change-user-package "$user" 'default'
+        done
     fi
 }
 
@@ -52,7 +59,7 @@ rm -f $HESTIA/data/packages/$package.pkg
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-log_history "deleted user package $package" '' 'admin'
+$BIN/v-log-action "system" "Info" "System" "Deleted package (Name: $package)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

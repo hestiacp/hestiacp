@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add composer (php dependency manager) for a user
 # options: USER
+# labels: hestia
+#
+# example: v-add-user-composer user
 #
 # The function adds support for composer (php dependency manager)
 # Homepage: https://getcomposer.org/
@@ -16,7 +19,12 @@ user=$1
 if [ -z "$HESTIA" ]; then
     HESTIA="/usr/local/hestia"
 fi
+
+# Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
+source $HESTIA/conf/hestia.conf
 
 
 #----------------------------------------------------------#
@@ -70,14 +78,14 @@ if [[ "$signature" != $(sha384sum $COMPOSER_SETUP_FILE | cut -f 1 -d " ") ]]; th
     check_result $E_INVALID "Composer signature does not match"
 fi
 
-COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php "$COMPOSER_SETUP_FILE" --quiet --install-dir="$COMPOSER_DIR" --filename=composer
+COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php "$COMPOSER_SETUP_FILE" --1 --quiet --install-dir="$COMPOSER_DIR" --filename=composer
 check_result $? "Composer install failed"
 
 [ -f "$COMPOSER_SETUP_FILE" ] && rm -f "$COMPOSER_SETUP_FILE"
 
 
 # Logging
-log_history "Enabled composer for user $user"
+$BIN/v-log-action "$user" "Info" "Plugins" "Composer support enabled."
 log_event "$OK" "$ARGUMENTS"
 
 exit

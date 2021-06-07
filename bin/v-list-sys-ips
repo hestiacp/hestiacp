@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list system ips
 # options: [FORMAT]
+# labels: panel
+#
+# example: v-list-sys-ips
 #
 # The function for obtaining the list of system ip adresses.
 
@@ -13,7 +16,10 @@
 format=${1-shell}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/main.sh
+source $HESTIA/func/ip.sh
 
 # JSON list function
 json_list() {
@@ -31,6 +37,7 @@ json_list() {
         "INTERFACE": "'$INTERFACE'",
         "NETMASK": "'$NETMASK'",
         "NAT": "'$NAT'",
+        "HELO": "'$HELO'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
         }'
@@ -46,14 +53,17 @@ json_list() {
 
 # SHELL list function
 shell_list() {
-    echo "IP   MASK   NAT   STATUS   WEB  DATE"
-    echo "--   ----   ---   ------   ---  ----"
+    echo "IP   MASK   NAT    HELO                    STATUS   WEB  DATE"
+    echo "--   ----   ---    --------------------    ------   ---  ----"
     while read IP; do
         source $HESTIA/data/ips/$IP
         if [ -z "$NAT" ]; then
             NAT='no'
         fi
-        echo "$IP $NETMASK $NAT $STATUS $U_WEB_DOMAINS $DATE"
+        if [ -z "$HELO" ]; then
+            HELO='unset'
+        fi
+        echo "$IP $NETMASK $NAT $HELO $STATUS $U_WEB_DOMAINS $DATE"
     done < <(ls $HESTIA/data/ips/)
 }
 
@@ -62,18 +72,18 @@ plain_list() {
     while read IP; do
         source $HESTIA/data/ips/$IP
         echo -ne "$IP\t$OWNER\t$STATUS\t$NAME\t$U_SYS_USERS\t$U_WEB_DOMAINS\t"
-        echo -e "$INTERFACE\t$NETMASK\t$NAT\t$TIME\t$DATE"
+        echo -e "$INTERFACE\t$NETMASK\t$NAT\t$HELO\t$TIME\t$DATE"
     done < <(ls $HESTIA/data/ips/)
 }
 
 # CSV list function
 csv_list() {
     echo -n "IP,OWNER,STATUS,NAME,U_SYS_USERS,U_WEB_DOMAINS,INTERFACE"
-    echo "NETMASK,NAT,TIME,DATE"
+    echo "NETMASK,NAT,HELO,TIME,DATE"
     while read IP; do
         source $HESTIA/data/ips/$IP
         echo -n "$IP,$OWNER,$STATUS,$NAME,\"$U_SYS_USERS\",$U_WEB_DOMAINS,"
-        echo "$INTERFACE, $NETMASK,$NAT,$TIME,$DATE"
+        echo "$INTERFACE, $NETMASK,$NAT,$HELO,$TIME,$DATE"
     done < <(ls $HESTIA/data/ips/)
 }
 

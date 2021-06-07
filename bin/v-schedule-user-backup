@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: schedule user backup creation
 # options: USER
+# labels: panel
+#
+# example: v-schedule-user-backup admin
 #
 # The function for scheduling user backup creation.
 
@@ -13,7 +16,9 @@
 user=$1
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -28,6 +33,8 @@ is_object_valid 'user' 'USER' "$user"
 is_backup_enabled
 is_backup_scheduled 'backup'
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

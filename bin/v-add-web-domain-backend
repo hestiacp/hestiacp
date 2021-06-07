@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add web domain backend
 # options: USER DOMAIN [TEMPLATE] [RESTART]
+# labels: web
+#
+# example: v-add-web-domain-backend admin exmaple.com default yes
 #
 # The call is used for adding web backend configuration.
 
@@ -16,8 +19,11 @@ template=${3-default}
 restart=$4
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -42,11 +48,6 @@ check_hestia_demo_mode
 # Defining pool directory
 prepare_web_backend
 get_domain_values 'web'
-
-# Checking backend configuration
-#if [ -e "$pool/$backend_type.conf" ]; then
-#    exit
-#fi
 
 # Allocating backend port
 backend_port=9000
@@ -87,7 +88,7 @@ $BIN/v-restart-web-backend $restart
 check_result $? "Web backend restart failed" >/dev/null
 
 # Logging
-log_history "added $WEB_BACKEND backend configuration for $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Web domain configuration applied (Domain: $domain, Backend: $WEB_BACKEND)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

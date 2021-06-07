@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete mail account alias aka nickname
 # options: USER DOMAIN ACCOUNT ALIAS
+# labels: mail
+#
+# example: v-delete-mail-account-alias admin example.com alice alicia
 #
 # The function deletes email account alias.
 
@@ -17,8 +20,11 @@ account=$3
 malias=$4
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
@@ -34,11 +40,8 @@ check_args '4' "$#" 'USER DOMAIN ACCOUNT ALIAS'
 is_format_valid 'user' 'domain' 'account' 'malias'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
-is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 is_object_valid "mail/$domain" 'ACCOUNT' "$account"
-is_object_unsuspended "mail/$domain" 'ACCOUNT' "$account"
 aliases=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$ALIAS')
 if [ -z "$(echo $aliases | grep -w $malias)" ]; then
     echo "Error: alias $malias doesn't exist"
@@ -74,7 +77,7 @@ aliases=$(echo "$aliases" |\
 update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$ALIAS' "$aliases"
 
 # Logging
-log_history "deleted alias $malias on $account@$domain"
+$BIN/v-log-action "$user" "Info" "Mail" "Mail account alias removed (Alias: $malias, User: $account@$domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

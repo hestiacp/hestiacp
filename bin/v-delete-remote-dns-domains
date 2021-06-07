@@ -1,6 +1,8 @@
 #!/bin/bash
 # info: delete remote dns domains
 # options: [HOST]
+# labels: dns
+#
 # The function deletes remote dns domains.
 
 
@@ -12,8 +14,11 @@
 host=$1
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/remote.sh
 source $HESTIA/func/remote.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -26,7 +31,8 @@ is_system_enabled "$DNS_CLUSTER" 'DNS_CLUSTER'
 is_procces_running
 remote_dns_health_check
 
-
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change file permission
 # options: USER FILE PERMISSIONS
+# labels: 
+#
+# example: v-change-fs-file-permission admin readme.txt 0777
 #
 # The function changes file access permissions on the file system
 
@@ -9,6 +12,7 @@ src_file=$2
 permissions=$3
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 #----------------------------------------------------------#
@@ -18,6 +22,9 @@ source $HESTIA/func/main.sh
 check_args '3' "$#" 'USER FILE PERMISSIONS'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 # Checking user homedir
 homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
@@ -45,6 +52,8 @@ if [ $? -ne 0 ]; then
     echo "Error: access permission on $src_file was not changed"
     exit 3
 fi
+
+$BIN/v-log-action "system" "Info" "System" "File system permissions changed (User: $user, File: $src_file, Permissions: $permissions)."
 
 # Exiting
 exit

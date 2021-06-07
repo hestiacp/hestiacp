@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list dns status
 # options: [FORMAT]
+# labels: 
+#
+# example: v-list-sys-dns-status
 #
 # The function lists dns server status
 
@@ -13,7 +16,7 @@
 #format=${1-shell}
 
 # Includes
-#source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 #----------------------------------------------------------#

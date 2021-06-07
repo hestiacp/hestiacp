@@ -1,0 +1,50 @@
+#!/bin/bash
+# info: add user login
+# options: USER IP STATUS [FINGERPRINT]
+
+# Argument definition
+user=$1
+ip=$2
+status=$3
+session_id=$4
+user_agent=$5
+
+active="yes"
+if [ "$status" = "failed" ]; then
+    active="no"
+fi
+
+# Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
+source $HESTIA/conf/hestia.conf
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER IP SESSION_ID USER_AGENT'
+is_format_valid 'user' 'ip'
+is_object_valid 'user' 'USER' "$user"
+
+# Generating timestamp
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" |cut -f 1 -d \ )
+date=$(echo "$time_n_date" |cut -f 2 -d \ )
+
+if [ ! -f $USER_DATA/auth.log ]; then
+    touch $USER_DATA/auth.log
+fi
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+echo "DATE='$date' TIME='$time' IP='$ip' ACTION='login' STATUS='$status' USER_AGENT='$user_agent' SESSION='$session_id' ACTIVE='$active'" >> $USER_DATA/auth.log
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

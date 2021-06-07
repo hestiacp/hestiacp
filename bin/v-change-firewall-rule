@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change firewall rule
 # options: RULE ACTION IP PORT [PROTOCOL] [COMMENT]
+# labels: 
+#
+# example: v-change-firewall-rule 3 ACCEPT 5.188.123.17 443
 #
 # The function is used for changing existing firewall rule.
 # It fully replace rule with new one but keeps same id.
@@ -23,7 +26,9 @@ protocol=$(echo $protocol|tr '[:lower:]' '[:upper:]')
 comment=$6
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 # Sort function
@@ -39,7 +44,7 @@ sort_fw_rules() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '5' "$#" 'RULE ACTION IP  PORT [PROTOCOL] [COMMENT]'
+check_args '4' "$#" 'RULE ACTION IP PORT [PROTOCOL] [COMMENT]'
 is_format_valid 'rule' 'action' 'protocol' 'port_ext'
 if [ ! -z "$comment" ]; then
     is_format_valid 'comment'
@@ -91,6 +96,6 @@ $BIN/v-update-firewall
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "Firewall" "Firewall rule changed (Rule: $rule, Action: $action, Protocol: $protocol, Port: $port_ext)."
 log_event "$OK" "$ARGUMENTS"
-
 exit

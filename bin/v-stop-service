@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: stop service
-# options: service
+# options: SERVICE
+# labels: panel
+#
+# example: v-stop-service apache2
 #
 # The function stops system service.
 
@@ -13,6 +16,7 @@
 service=$1
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 
@@ -43,9 +47,16 @@ for service in $service_list; do
     if [ "$service" = "iptables" ]; then
         $BIN/v-stop-firewall
     else
-        systemctl stop $service >/dev/null 2>&1
+        systemctl stop $service
+        result=$?
+        if [ "$result" -ne 0 ]; then
+            $BIN/v-log-action "system" "Error" "System" "Service failed to stop (Name: $service)."
+        else
+            $BIN/v-log-action "system" "Info" "System" "Service stopped (Name: $service)."
+        fi
     fi
     check_result $? "ERROR: $service stop failed" $E_RESTART
+
 done
 
 

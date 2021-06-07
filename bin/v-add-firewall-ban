@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add firewall blocking rule
 # options: IP CHAIN
+# labels: 
+#
+# example: v-add-firewall-ban 37.120.129.20 MAIL
 #
 # The function adds new blocking rule to system firewall
 
@@ -20,7 +23,11 @@ chain=$(echo $2|tr '[:lower:]' '[:upper:]')
 iptables="/sbin/iptables"
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/firewall.sh
+source $HESTIA/func/firewall.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -39,6 +46,9 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+# Self heal iptables links
+heal_iptables_links
 
 # Checking server ip
 if [ -e "$HESTIA/data/ips/$ip" ] || [ "$ip" = '127.0.0.1' ]; then
@@ -81,6 +91,7 @@ chmod 660 $conf
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Warning" "Firewall" "Banned IP address $ip."
 log_event "$OK" "$ARGUMENTS"
 
 exit

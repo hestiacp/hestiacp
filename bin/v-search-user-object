@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: search objects
 # options: USER OBJECT [FORMAT]
+# labels: panel
+#
+# example: v-search-user-object admin example.com json
 #
 # The function that allows to find user objects.
 
@@ -15,8 +18,13 @@ object=$2
 format=${3-shell}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 # Json list function
 json_list_search() {

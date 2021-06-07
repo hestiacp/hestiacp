@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change user language
 # options: USER LANGUAGE
+# labels: panel
+#
+# example: v-change-user-language admin en
 #
 # The function for changing language.
 
@@ -14,7 +17,9 @@ user=$1
 language=$2
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -62,7 +67,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_history "changed language to $language"
+$BIN/v-log-action "$user" "Info" "System" "Display language changed (Value: $language)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

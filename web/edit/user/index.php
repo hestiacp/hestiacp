@@ -14,12 +14,24 @@ if (empty($_GET['user'])) {
 }
 
 // Edit as someone else?
-if (($_SESSION['user'] == 'admin') && (!empty($_GET['user']))) {
+if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
     $user=$_GET['user'];
     $v_username=$_GET['user'];
 } else {
     $user=$_SESSION['user'];
     $v_username=$_SESSION['user'];
+}
+
+// Prevent other users with admin privileges from editing properties of default 'admin' user
+if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look'])) && ($user == 'admin') || ($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look'])) && ($user == 'admin') && ($_SESSION['user'] != 'admin')) {
+    header("Location: /list/user/");
+    exit;
+}
+
+// Ensure token is passed before loading page
+if ((!$_GET['token']) || ($_SESSION['token'] != $_GET['token'])) {
+    header('location: /login/');
+    exit();
 }
 
 // List user
@@ -33,12 +45,17 @@ $v_password = "";
 $v_email = $data[$v_username]['CONTACT'];
 $v_package = $data[$v_username]['PACKAGE'];
 $v_language = $data[$v_username]['LANGUAGE'];
+$v_user_theme = $data[$v_username]['THEME'];
+$v_sort_order = $data[$v_username]['PREF_UI_SORT'];
 $v_name = $data[$v_username]['NAME'];
 $v_shell = $data[$v_username]['SHELL'];
 $v_twofa = $data[$v_username]['TWOFA'];
 $v_qrcode = $data[$v_username]['QRCODE'];
 $v_phpcli = $data[$v_username]['PHPCLI'];
 $v_role = $data[$v_username]['ROLE'];
+$v_login_disabled = $data[$v_username]['LOGIN_DISABLED'];
+$v_login_use_iplist = $data[$v_username]['LOGIN_USE_IPLIST'];
+$v_login_allowed_ips = $data[$v_username]['LOGIN_ALLOW_IPS'];
 $v_ns = $data[$v_username]['NS'];
 $nameservers = explode(",", $v_ns);
 $v_ns1 = $nameservers[0];
@@ -70,7 +87,16 @@ unset($output);
 
 // List languages
 exec (HESTIA_CMD."v-list-sys-languages json", $output, $return_var);
-$languages = json_decode(implode('', $output), true);
+$language = json_decode(implode('', $output), true);
+foreach($language as $lang){
+    $languages[$lang] = translate_json($lang);
+}
+asort($languages);
+unset($output);
+
+// List themes
+exec (HESTIA_CMD."v-list-sys-themes json", $output, $return_var);
+$themes = json_decode(implode('', $output), true);
 unset($output);
 
 // List shells
@@ -143,8 +169,48 @@ if (!empty($_POST['save'])) {
         $v_qrcode = '';
     }
 
+    // Change default sort order
+    if (($v_sort_order != $_POST['v_sort_order']) && (empty($_SESSION['error_msg']))) {
+        $v_sort_order = escapeshellarg($_POST['v_sort_order']);
+        exec (HESTIA_CMD."v-change-user-sort-order ".escapeshellarg($v_username)." ".$v_sort_order, $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($_SESSION['userSortOrder']);
+        $_SESSION['userSortOrder'] = $v_sort_order;
+        unset($output);
+    }
+
+    // Update Control Panel login disabled status (admin only)
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_login_disabled'] != $data[$user]['LOGIN_DISABLED']) {
+            if ($_POST['v_login_disabled'] == 'on') { $_POST['v_login_disabled'] = 'yes'; } else { $_POST['v_login_disabled'] = 'no'; }
+            exec (HESTIA_CMD."v-change-user-config-value ".escapeshellarg($v_username)." LOGIN_DISABLED ".escapeshellarg($_POST['v_login_disabled']), $output, $return_var);
+            check_return_code($return_var,$output);
+            $data[$user]['LOGIN_DISABLED'] = $_POST['v_login_disabled'];
+            unset($output);
+        }
+    }
+
+    // Update IP whitelist option
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_login_use_iplist'] != $data[$user]['LOGIN_USE_IPLIST']) {
+            if ($_POST['v_login_use_iplist'] == 'on') { $_POST['v_login_use_iplist'] = 'yes'; } else { $_POST['v_login_use_iplist'] = 'no'; }
+            exec (HESTIA_CMD."v-change-user-config-value ".escapeshellarg($v_username)." LOGIN_USE_IPLIST ".escapeshellarg($_POST['v_login_use_iplist']), $output, $return_var);
+            if ($_POST['v_login_use_iplist'] === 'no') {
+                exec (HESTIA_CMD."v-change-user-config-value ".escapeshellarg($v_username)." LOGIN_ALLOW_IPS ''", $output, $return_var);
+                $v_login_allowed_ips = '';
+            } else {
+                exec (HESTIA_CMD."v-change-user-config-value ".escapeshellarg($v_username)." LOGIN_ALLOW_IPS ".escapeshellarg($_POST['v_login_allowed_ips']), $output, $return_var);
+                unset($v_login_allowed_ips);
+                $v_login_allowed_ips = $_POST['v_login_allowed_ips'];
+            }
+            check_return_code($return_var,$output);
+            $data[$user]['LOGIN_USE_IPLIST'] = $_POST['v_login_use_iplist'];
+            unset($output);
+        }
+    }
+
     // Change package (admin only)
-    if (($v_package != $_POST['v_package']) && ($_SESSION['user'] == 'admin') && (empty($_SESSION['error_msg']))) {
+    if (($v_package != $_POST['v_package']) && ($_SESSION['userContext'] === 'admin') && (empty($_SESSION['error_msg']))) {
         $v_package = escapeshellarg($_POST['v_package']);
         exec (HESTIA_CMD."v-change-user-package ".escapeshellarg($v_username)." ".$v_package, $output, $return_var);
         check_return_code($return_var,$output);
@@ -152,19 +218,21 @@ if (!empty($_POST['save'])) {
     }
 
     // Change phpcli (admin only)
-    if (($v_phpcli != $_POST['v_phpcli']) && ($_SESSION['user'] == 'admin') && (empty($_SESSION['error_msg']))) {
+    if (($v_phpcli != $_POST['v_phpcli']) && ($_SESSION['userContext'] === 'admin') && (empty($_SESSION['error_msg']))) {
         $v_phpcli = escapeshellarg($_POST['v_phpcli']);
         exec (HESTIA_CMD."v-change-user-php-cli ".escapeshellarg($v_username)." ".$v_phpcli, $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
     }
     // Change Role (admin only)
-    if (($v_role != $_POST['$v_role']) && ($_SESSION['user'] == 'admin') && (empty($_SESSION['error_msg']))) {
-        $v_role = escapeshellarg($_POST['v_role']);
-        exec (HESTIA_CMD."v-change-user-role ".escapeshellarg($v_username)." ".$v_role, $output, $return_var);
-        check_return_code($return_var,$output);
-        unset($output);
-        $v_role = $_POST['v_role'];
+    if (($v_role != $_POST['v_role']) && ($_SESSION['userContext'] === 'admin') && $v_username != "admin" && (empty($_SESSION['error_msg']))) {
+        if (!empty($_POST['v_role'])) {
+            $v_role = escapeshellarg($_POST['v_role']);
+            exec (HESTIA_CMD."v-change-user-role ".escapeshellarg($v_username)." ".$v_role, $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            $v_role = $_POST['v_role'];
+        }
     }
     // Change language
     if (($v_language != $_POST['v_language']) && (empty($_SESSION['error_msg']))) {
@@ -172,13 +240,18 @@ if (!empty($_POST['save'])) {
         exec (HESTIA_CMD."v-change-user-language ".escapeshellarg($v_username)." ".$v_language, $output, $return_var);
         check_return_code($return_var,$output);
         if (empty($_SESSION['error_msg'])) {
-             if ((empty($_GET['user'])) || ($_GET['user'] == $_SESSION['user'])) $_SESSION['language'] = $_POST['v_language'];
+             if (($_GET['user'] == $_SESSION['user'])) {
+                 unset ($_SESSION['language']);
+                 $_SESSION['language'] = $_POST['v_language'];
+                 $refresh = $_SERVER['REQUEST_URI'];
+                 header("Location: $refresh");
+             }
         }
         unset($output);
     }
 
     // Change shell (admin only)
-    if (($v_shell != $_POST['v_shell']) && ($_SESSION['user'] == 'admin') && (empty($_SESSION['error_msg']))) {
+    if (($v_shell != $_POST['v_shell']) && ($_SESSION['userContext'] === 'admin') && (empty($_SESSION['error_msg']))) {
         $v_shell = escapeshellarg($_POST['v_shell']);
         exec (HESTIA_CMD."v-change-user-shell ".escapeshellarg($v_username)." ".$v_shell, $output, $return_var);
         check_return_code($return_var,$output);
@@ -208,6 +281,20 @@ if (!empty($_POST['save'])) {
                 unset($output);
                 $v_name = $_POST['v_name'];
             }
+    }
+
+    // Update theme
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_user_theme'] != $_SESSION['userTheme']) {
+            exec (HESTIA_CMD."v-change-user-theme ".escapeshellarg($v_username)." ".escapeshellarg($_POST['v_user_theme']), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            $v_user_theme = $_POST['v_user_theme'];
+            if ($_SESSION['user'] === $v_username) {
+                unset($_SESSION['userTheme']);
+                $_SESSION['userTheme'] = $v_user_theme;
+            }
+        }
     }
 
     // Change NameServers

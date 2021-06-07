@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: unsuspend dns domain
 # options: USER DOMAIN
+# labels: dns
+#
+# example: v-unsuspend-dns-domain alice wonderland.com
 #
 # The function unsuspends a certain user's domain.
 
@@ -15,7 +18,9 @@ domain=$2
 domain_idn=$2
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
@@ -23,6 +28,8 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -66,6 +73,7 @@ decrease_user_value "$user" '$SUSPENDED_DNS'
 sed -i "s/SUSPENDED='yes'/SUSPENDED='no'/g" $USER_DATA/dns/$domain.conf
 
 # Logging
+$BIN/v-log-action "system" "Info" "DNS" "Unsuspended DNS zone (User: $user, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

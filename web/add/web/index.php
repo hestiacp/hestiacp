@@ -104,8 +104,16 @@ if (!empty($_POST['ok'])) {
     $v_ftp_email = $_POST['v_ftp_email'];
     if (!empty($v_domain)) $v_ftp_user_prepath .= $v_domain;
 
+    exec (HESTIA_CMD."v-list-user ".$user." json", $output, $return_var);
+    $user_config = json_decode(implode('', $output), true);
+    unset($output);
+    
+    $v_template = $user_config[$user]['TEMPLATE'];
+    $v_backend_template = $user_config[$user]['BACKEND_TEMPLATE'];
+    $v_proxy_template = $user_config[$user]['PROXY_TEMPLATE'];
+    
     // Set advanced option checkmark
-    if (!empty($_POST['v_proxy'])) $v_adv = 'yes';
+    if (!empty($_POST['v_proxy'])) $v_adv = 'yes'; $v_proxy = "yes";
     if (!empty($_POST['v_ftp'])) $v_adv = 'yes';
     if ($_POST['v_proxy_ext'] != $v_proxy_ext) $v_adv = 'yes';
     if ((!empty($_POST['v_aliases'])) && ($_POST['v_aliases'] != 'www.'.$_POST['v_domain'])) $v_adv = 'yes';
@@ -160,13 +168,54 @@ if (!empty($_POST['ok'])) {
         exec (HESTIA_CMD."v-delete-web-domain-proxy ".$user." ".escapeshellarg($v_domain)." 'no'", $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
+        $restart_web = 'yes';
     }
+    
+    // Change template
+    if (($v_template != $_POST['v_template']) && (empty($_SESSION['error_msg']))) {
+        exec (HESTIA_CMD."v-change-web-domain-tpl ".$user." ".escapeshellarg($v_domain)." ".escapeshellarg($_POST['v_template'])." 'no'", $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
+        $restart_web = 'yes';
+    }
+    // Change backend template
+    if ((!empty($_SESSION['WEB_BACKEND'])) && ( $v_backend_template != $_POST['v_backend_template']) && (empty($_SESSION['error_msg']))) {
+        $v_backend_template = $_POST['v_backend_template'];
+        exec (HESTIA_CMD."v-change-web-domain-backend-tpl ".$user." ".escapeshellarg($v_domain)." ".escapeshellarg($v_backend_template), $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
+    }
+    // Change proxy template / Update extension list
+    if ((!empty($_SESSION['PROXY_SYSTEM'])) && (!empty($v_proxy)) && (!empty($_POST['v_proxy'])) && (empty($_SESSION['error_msg'])) ) {
+        $ext = preg_replace("/\n/", " ", $_POST['v_proxy_ext']);
+        $ext = preg_replace("/,/", " ", $ext);
+        $ext = preg_replace('/\s+/', ' ',$ext);
+        $ext = trim($ext);
+        $ext = str_replace(' ', ", ", $ext);
+        if (( $v_proxy_template != $_POST['v_proxy_template']) || ($v_proxy_ext != $ext)) {
+            $ext = str_replace(', ', ",", $ext);
+            if (!empty($_POST['v_proxy_template'])) $v_proxy_template = $_POST['v_proxy_template'];
+            exec (HESTIA_CMD."v-change-web-domain-proxy-tpl ".$user." ".escapeshellarg($v_domain)." ".escapeshellarg($v_proxy_template)." ".escapeshellarg($ext)." 'no'", $output, $return_var);
+            check_return_code($return_var,$output);
+            $v_proxy_ext = str_replace(',', ', ', $ext);
+            unset($output);
+            $restart_proxy = 'yes';
+        }
+    }
+    
 
     // Add Lets Encrypt support
      if ((!empty($_POST['v_letsencrypt'])) && (empty($_SESSION['error_msg']))) {
         exec (HESTIA_CMD."v-schedule-letsencrypt-domain ".$user." ".escapeshellarg($v_domain), $output, $return_var);
         check_return_code($return_var,$output);
         unset($output);
+        
+        if(!empty($_POST['v_ssl_forcessl']) && $_POST['v_ssl_forcessl'] = 'yes'){
+            exec (HESTIA_CMD."v-add-web-domain-ssl-preset ".$user." ".escapeshellarg($v_domain)." 'yes'", $output, $return_var); 
+            check_return_code($return_var,$output);
+            unset ($output); 
+        }        
+        
      } else {
         // Add SSL certificates only if Lets Encrypt is off
          if ((!empty($_POST['v_ssl'])) && (empty($_SESSION['error_msg']))) {
@@ -202,6 +251,12 @@ if (!empty($_POST['ok'])) {
              exec (HESTIA_CMD."v-add-web-domain-ssl ".$user." ".escapeshellarg($v_domain)." ".$tmpdir." ".$v_ssl_home." 'no'", $output, $return_var);
              check_return_code($return_var,$output);
              unset($output);
+             
+             if(!empty($_POST['v_ssl_forcessl']) && $_POST['v_ssl_forcessl'] = 'yes'){
+                exec (HESTIA_CMD."v-add-web-domain-ssl-force ".$user." ".escapeshellarg($v_domain), $output, $return_var); 
+                check_return_code($return_var,$output);
+                unset ($output); 
+             }
 
             // Cleanup certificate tempfiles
             if (!empty($_POST['v_ssl_crt'])) unlink($tmpdir."/".$v_domain.".crt");
@@ -342,7 +397,7 @@ if (!empty($_POST['ok'])) {
                     $v_ftp_user_data['is_new'] = 1;
                 }
 
-                $v_ftp_username = preg_replace("/^".$user."_/", "", $v_ftp_user_data['v_ftp_user']);
+                $v_ftp_username = $user.'_'.$v_ftp_user_data['v_ftp_user'];
                 $v_ftp_users_updated[] = array(
                     'is_new'            => $v_ftp_user_data['is_new'],
                     'v_ftp_user'        => $return_var == 0 ? $v_ftp_username_full : $v_ftp_username,
@@ -383,6 +438,38 @@ if (!empty($_POST['ok'])) {
 $v_ftp_user_prepath = $panel[$user]['HOME'] . "/web";
 $v_ftp_email = $panel[$user]['CONTACT'];
 $v_custom_doc_root_prepath = '/home/'.$user.'/web/';
+
+if( $_POST['v_ssl_forcessl'] != 'no' ){
+    $v_ssl_forcessl = 'yes';
+}else{
+    $v_ssl_forcessl = 'no';
+}
+// List user package
+exec (HESTIA_CMD."v-list-user ".$user." json", $output, $return_var);
+$user_config = json_decode(implode('', $output), true);
+unset($output);
+// List web templates and set default values
+exec (HESTIA_CMD."v-list-web-templates json", $output, $return_var);
+$templates = json_decode(implode('', $output), true);
+unset($output);
+$v_template = (!empty($_POST['v_template'])) ? $_POST['v_template'] : $user_config[$user]['WEB_TEMPLATE'];
+
+// List backend templates
+if (!empty($_SESSION['WEB_BACKEND'])) {
+    exec (HESTIA_CMD."v-list-web-templates-backend json", $output, $return_var);
+    $backend_templates = json_decode(implode('', $output), true);
+    unset($output);
+    $v_backend_template = (!empty($_POST['v_backend_template'])) ? $_POST['v_backend_template'] : $user_config[$user]['BACKEND_TEMPLATE'];
+}
+
+// List proxy templates
+if (!empty($_SESSION['PROXY_SYSTEM'])) {
+    exec (HESTIA_CMD."v-list-web-templates-proxy json", $output, $return_var);
+    $proxy_templates = json_decode(implode('', $output), true);
+    unset($output);
+    $v_proxy_template = (!empty($_POST['v_proxy_template'])) ? $_POST['v_proxy_template'] : $user_config[$user]['PROXY_TEMPLATE'];
+
+}
 
 // List IP addresses
 exec (HESTIA_CMD."v-list-user-ips ".$user." json", $output, $return_var);

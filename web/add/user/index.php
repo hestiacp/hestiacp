@@ -7,7 +7,7 @@ $TAB = 'USER';
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check user
-if ($_SESSION['user'] != 'admin') {
+if ($_SESSION['userContext'] != 'admin')  {
     header("Location: /list/user");
     exit;
 }
@@ -85,27 +85,42 @@ if (!empty($_POST['ok'])) {
         unset($output);
     }
 
+    // Set login restriction
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_login_disabled']) {
+            if ($_POST['v_login_disabled'] == 'on') { $_POST['v_login_disabled'] = 'yes'; } else { $_POST['v_login_disabled'] = 'no'; }
+            exec (HESTIA_CMD."v-change-user-config-value ".$v_username." LOGIN_DISABLED ".escapeshellarg($_POST['v_login_disabled']), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+        }
+    }
+
     // Send email to the new user
     if ((empty($_SESSION['error_msg'])) && (!empty($v_notify))) {
         $to = $_POST['v_notify'];
-        $subject = _("Welcome to Hestia Control Panel"); //currently not supported to use the account language
+        // send email in "users" language 
+        putenv("LANGUAGE=".$_POST['v_language']);
+        
+        $subject = _("Welcome to Hestia Control Panel");
         $hostname = exec('hostname');
         unset($output);
-        $from = sprintf(_('MAIL_FROM'),$hostname); //currently not supported to use the account language
+        $from = sprintf(_('MAIL_FROM'),$hostname);
 
         if (!empty($_POST['v_name'])) {
             $mailtext = sprintf(_('GREETINGS_GORDON'),$_POST['v_name'])."\r\n";
         } else {
             $mailtext = _('GREETINGS')."\r\n";
         }
+        
         $mailtext .= sprintf(_('ACCOUNT_READY'),$_SERVER['HTTP_HOST'],$_POST['v_username'],$_POST['v_password']);
         send_email($to, $subject, $mailtext, $from);
+        putenv("LANGUAGE=".detect_user_language());
     }
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
         $_SESSION['ok_msg'] = sprintf(_('USER_CREATED_OK'),htmlentities($_POST['v_username']),htmlentities($_POST['v_username']));
-        $_SESSION['ok_msg'] .= " / <a href=/login/?loginas=".htmlentities($_POST['v_username']).">" . _('login as') ." ".htmlentities($_POST['v_username']). "</a>";
+        $_SESSION['ok_msg'] .= " / <a href=/login/?loginas=".htmlentities($_POST['v_username'])."&token=".htmlentities($_SESSION['token']).">" . _('login as') ." ".htmlentities($_POST['v_username']). "</a>";
         unset($v_username);
         unset($v_password);
         unset($v_email);
@@ -123,8 +138,11 @@ unset($output);
 
 // List languages
 exec (HESTIA_CMD."v-list-sys-languages json", $output, $return_var);
-$languages = json_decode(implode('', $output), true);
-unset($output);
+$language = json_decode(implode('', $output), true);
+foreach($language as $lang){
+    $languages[$lang] = translate_json($lang);
+}
+asort($languages);
 
 // Render page
 render_page($user, $TAB, 'add_user');

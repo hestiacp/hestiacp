@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: get file type
 # options: USER FILE
+# labels: 
+#
+# example: v-get-fs-file-type admin index.html
 #
 # The function shows file type
 
@@ -8,6 +11,7 @@ user=$1
 path=$2
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 #----------------------------------------------------------#

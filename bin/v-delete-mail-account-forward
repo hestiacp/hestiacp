@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete mail account forward
 # options: USER DOMAIN ACCOUNT EMAIL
+# labels: mail
+#
+# example: v-delete-mail-account-forward admin acme.com tony bob@acme.com
 #
 # The function add delete email account forward address.
 
@@ -17,8 +20,11 @@ account=$3
 forward=$4
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
@@ -31,14 +37,13 @@ format_domain_idn
 #----------------------------------------------------------#
 
 check_args '4' "$#" 'USER DOMAIN ACCOUNT FORWARD'
-is_format_valid 'user' 'domain' 'account' 'forward'
+if [ "$forward"  != ':blackhole:' ]; then
+    is_format_valid 'forward'
+fi
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
-is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 is_object_valid "mail/$domain" 'ACCOUNT' "$account"
-is_object_unsuspended "mail/$domain" 'ACCOUNT' "$account"
 fwd=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$FWD')
 if [ -z "$(echo $fwd | grep -w $forward)" ]; then
     check_result $E_NOTEXIST "forward $forward doesn't exist"
@@ -74,7 +79,7 @@ fi
 update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$FWD' "$fwd"
 
 # Logging
-log_history "deleted $forward forward on $account@$domain"
+$BIN/v-log-action "$user" "Info" "Mail" "Mail account forwarding address removed (User: $account@$domain, Send To: $forward)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

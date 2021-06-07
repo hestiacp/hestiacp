@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add php fpm version
 # options: VERSION
+# labels: hestia
+#
+# example: v-add-web-php 8.0
 #
 # The function checks and delete a fpm php version if not used by any domain.
 
@@ -13,7 +16,9 @@
 version=$1
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -28,19 +33,20 @@ php_fpm="/etc/init.d/php$version-fpm"
 
 # Verify php version format
 if [[ ! $version =~ ^[0-9]\.[0-9]+ ]]; then
-    echo "The php version format is invalid, it should look like [0-9].[0-9]..."
+    echo "The specified PHP version format is invalid, it should look like [0-9].[0-9]."
+    echo "Example:  7.0, 7.4, 8.0"
     exit
 fi
 
 # Check if php version already exists
 if [ -f "$php_fpm" ] && [ -f "$HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl" ]; then
-    echo "Version already installed..."
+    echo "ERROR: Specified PHP version is already installed."
     exit
 fi
 
 # Check if php version is supported
 if [ ! -f "$HESTIA_INSTALL_DIR/multiphp/$WEB_SYSTEM/PHP-${version//.}.sh" ]; then
-    echo "Version is currently not supported or does not exist..."
+    echo "ERROR: Specified PHP version is not supported or does not exist."
     exit
 fi
 
@@ -63,6 +69,11 @@ if [[ `echo "$version 7.2" | awk '{print ($1 < $2)}'` == 1 ]]; then
     mph="$mph php$version-mcrypt"
 fi
 
+# Check if version is 8.0 or higher and drop php json.
+if [[ ${version:0:1} == "8" ]]; then
+    mph=$(echo "$mph" | sed -e "s/php$version-json//")
+fi
+
 if ! echo "$DB_SYSTEM" | grep -w 'mysql' >/dev/null; then
     mph=$(echo "$mph" | sed -e "s/php$version-mysql//")
 fi
@@ -77,7 +88,7 @@ apt-get -y -qq -o Dpkg::Options::="--force-confold" install $mph > /dev/null 2>&
 BACK_PID=$!
 
 # Check if package installation is done, print a spinner
-echo "Install PHP-$version, please wait..."
+echo "Installing PHP-$version, please wait..."
 spinner="/-\|"
 spin_i=1
 while kill -0 $BACK_PID > /dev/null 2>&1 ; do
@@ -90,7 +101,7 @@ echo
 
 # Check if installation was sucessfully
 if [ ! -f "$php_fpm" ]; then
-    echo "Installation failed, please run the following command manualy for debuging:"
+    echo "ERROR: Installation failed, please run the following command manually for debugging:"
     echo "apt-get install $mph"
 fi
 
@@ -121,7 +132,7 @@ cp -f $HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl \
 #----------------------------------------------------------#
 
 # Logging
-log_history "installed php $version" '' 'admin'
+$BIN/v-log-action "system" "Info" "System" "Installed PHP $version."
 log_event "$OK" "$ARGUMENTS"
 
 exit

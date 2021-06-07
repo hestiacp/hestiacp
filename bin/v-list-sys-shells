@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list system shells
 # options: [FORMAT]
+# labels: panel
+# 
+# example: v-list-sys-shells
 #
 # The function for obtaining the list of system shells.
 
@@ -13,6 +16,7 @@
 format=${1-shell}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 # JSON list function

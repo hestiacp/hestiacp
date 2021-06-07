@@ -1,8 +1,12 @@
 #!/bin/bash
 # info: add system quota
 # options: NONE
+# labels: 
+#
+# example: v-add-sys-quota
 #
 # The script enables filesystem quota on /home partition
+# Some kernels do require additional packages to be installed first
 
 
 #----------------------------------------------------------#
@@ -10,7 +14,9 @@
 #----------------------------------------------------------#
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -42,7 +48,8 @@ if [ $? -ne 0 ]; then
     fi
 fi
 
-
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -96,6 +103,7 @@ done
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "Plugins" "System Quota enforcement enabled."
 log_history "system quota enforcement enabled"
 log_event "$OK" "$ARGUMENTS"
 

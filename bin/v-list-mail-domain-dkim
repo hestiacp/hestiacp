@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list mail domain dkim
 # options: USER DOMAIN [FORMAT]
+# labels: mail
+#
+# example: v-list-mail-domain-dkim admin maildomain.tld
 #
 # The function of obtaining domain dkim files.
 
@@ -15,6 +18,7 @@ domain=$2
 format=${3-shell}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 # JSON list function

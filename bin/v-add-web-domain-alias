@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add web domain alias
 # options: USER DOMAIN ALIASES [RESTART]
+# labels: web
+#
+# example: v-add-web-domain-alias admin acme.com www.acme.com yes
 #
 # The call is intended for adding aliases to a domain (it is also called
 # "domain parking"). The function supports wildcards *.domain.tpl.
@@ -18,9 +21,13 @@ aliases=$3
 restart="$4"
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
@@ -46,7 +53,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 is_domain_new 'web' "$aliases"
-is_package_full 'WEB_ALIASES'
+is_base_domain_owner "$aliases"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -56,7 +63,6 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Parsing domain values
 get_domain_values 'web'
 
 # Preparing domain values for the template substitution
@@ -67,6 +73,8 @@ else
     ALIAS="$ALIAS,$aliases"
 fi
 prepare_web_domain_values
+
+is_package_full 'WEB_ALIASES'
 
 # Rebuilding vhost
 del_web_config "$WEB_SYSTEM" "$TPL.tpl"
@@ -103,8 +111,7 @@ check_result $? "Web restart failed" >/dev/null
 $BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" >/dev/null
 
-
-log_history "added $aliases for $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Added new web domain alias (Alias: $aliases, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

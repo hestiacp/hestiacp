@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: open config
 # options: CONFIG
+# labels: 
+#
+# example: v-open-fs-config /etc/mysql/my.cnf
 #
 # The function opens/reads config files on the file system
 
@@ -48,6 +51,8 @@ if [ $? -ne 0 ]; then
     echo "Error: file $src_file was not opened"
     exit 3
 fi
+
+$BIN/v-log-action "system" "Info" "System" "Configuration file opened (File: $src_file)."
 
 # Exiting
 exit

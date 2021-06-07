@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change database username
 # options: USER DATABASE DBUSER [DBPASS]
+# labels: 
+#
+# example: v-change-database-user admin my_db joe_user
 #
 # The function for changing database user. It uses the
 
@@ -16,9 +19,13 @@ dbuser="$user"_"$3"
 password=$4; HIDE=4
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/db.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
 source $HESTIA/func/rebuild.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -93,7 +100,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_history "changed $database database user to $dbuser"
+$BIN/v-log-action "$user" "Info" "Database" "Database user changed (Database: $database, User: $dbuser)"
 log_event "$OK" "$ARGUMENTS"
 
 exit

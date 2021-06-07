@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change system timezone
 # options: TIMEZONE
+# labels: panel
+#
+# example: v-change-sys-timezone Europe/Berlin
 #
 # The function for changing system timezone.
 
@@ -13,7 +16,9 @@
 timezone=$1
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 is_timezone_valid() {
@@ -70,6 +75,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "System" "System time zone changed (Value: $timezone)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

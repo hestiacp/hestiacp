@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: List firewall ipset
 # options: [FORMAT]
+# labels: hestia
+#
+# example: v-list-firewall-ipset json
 #
 # The function prints defined ipset lists
 
@@ -13,7 +16,9 @@
 format=${1-shell}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 

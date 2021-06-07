@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list remote dns host
 # options: [FORMAT]
+# labels: 
+#
+# example: v-list-remote-dns-hosts json
 #
 # The function for obtaining the list of remote dns host.
 
@@ -13,6 +16,7 @@
 format=${1-shell}
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 # JSON list function

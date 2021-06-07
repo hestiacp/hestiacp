@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: suspend dns domain
 # options: USER DOMAIN [RESTART]
+# labels: dns
+#
+# example: v-suspend-dns-domain alice acme.com
 #
 # The function suspends a certain user's domain.
 
@@ -16,7 +19,9 @@ domain_idn=$2
 restart="$3"
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
@@ -65,6 +70,7 @@ sed -i "s/SUSPENDED='no'/SUSPENDED='yes'/g" $USER_DATA/dns/$domain.conf
 increase_user_value "$user" '$SUSPENDED_DNS'
 
 # Logging
+$BIN/v-log-action "system" "Info" "DNS" "Suspended DNS zone (User: $user, Domain: $domain)"
 log_event "$OK" "$ARGUMENTS"
 
 exit

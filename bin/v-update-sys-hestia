@@ -1,9 +1,12 @@
 #!/bin/bash
 # info: update hestia package/configs
-# options: PACKAGE [VERSION]
+# options: PACKAGE
+# labels: panel
 #
-# The function runs as rpm update trigger. It pulls shell script from hestia
-# server and runs it.
+# example: v-update-sys-hestia hestia-php
+#
+# The function runs as apt update trigger. It pulls shell script from hestia
+# server and runs it. (hestia, hestia-nginx and hestia-php are valid options)
 
 
 #----------------------------------------------------------#
@@ -17,7 +20,9 @@ package=$1
 source /etc/profile
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -27,6 +32,10 @@ source $HESTIA/conf/hestia.conf
 
 # Checking arg number
 check_args '1' "$#" 'PACKAGE'
+is_hestia_package "hestia,hestia-nginx,hestia-php" "$package"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

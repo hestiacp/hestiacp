@@ -1,0 +1,121 @@
+#!/bin/bash
+# info: Adding force redirect to domain
+# options: USER DOMAIN REDIRECT HTTPCODE [RESTART]
+# labels: hestia web
+#
+# example: v-add-web-domain-redirect user domain.tld domain.tld 
+# example: v-add-web-domain-redirect user domain.tld www.domain.tld 
+# example: v-add-web-domain-redirect user domain.tld shop.domain.tld  
+# example: v-add-web-domain-redirect user domain.tld different-domain.com
+# example: v-add-web-domain-redirect user domain.tld shop.different-domain.com
+# example: v-add-web-domain-redirect user domain.tld different-domain.com 302
+#
+# Function creates a forced redirect to a domain 
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+redirect=$(echo $3 | idn);
+code=${4-301}
+restart=${5-no}
+
+# Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
+source $HESTIA/conf/hestia.conf
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'USER DOMAIN REDIRECT [HTTP-CODE] [RESTART]'
+is_format_valid 'user' 'domain'
+is_number_format_valid "$code" "code"
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+
+
+scheme=0
+if [[ "$3" =~ http://|https:// ]]; then
+    scheme=1
+    regex='(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
+    if ! [[ "$3" =~ $regex ]]; then
+        echo "Invalid redirect"
+        exit 2;
+    fi
+else
+    regex='[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
+    if ! [[ "$3" =~ $regex ]]; then
+        echo "Invalid redirect"
+        exit 2;
+    fi
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Check if proxy is active
+if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
+    conf="$HOMEDIR/$user/conf/web/$domain/nginx.conf_redirect"
+    sconf="$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_redirect"
+fi
+# Insert redirect commands
+if [ ! -z "$PROXY_SYSTEM" ] || [ "$WEB_SYSTEM" = 'nginx' ]; then
+    if [ "$scheme" = 1 ]; then
+        echo "   return $code $redirect\$request_uri;" > $conf        
+        if [ ! -e "$sconf" ]; then
+            ln -s "$conf" "$sconf"
+        fi
+    else
+        echo "if (\$host != \"$redirect\") {" > $conf
+        echo "   return $code \$scheme://$redirect\$request_uri;" >> $conf
+        echo "}" >> $conf
+        
+        if [ ! -e "$sconf" ]; then
+            ln -s "$conf" "$sconf"
+        fi
+    fi
+else
+    echo "Non supported please use .htaccess instead" 
+    exit 2;
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+if [ -z "$REDIRECT" ]; then
+    add_object_key "web" 'DOMAIN' "$domain" 'REDIRECT' 'U_DISK'
+    add_object_key "web" 'DOMAIN' "$domain" 'REDIRECT_CODE' 'U_DISK'
+fi
+
+update_object_value 'web' 'DOMAIN' "$domain" '$REDIRECT' "$redirect"
+update_object_value 'web' 'DOMAIN' "$domain" '$REDIRECT_CODE' "$code"
+
+if [ "$restart" = "yes" ]; then
+    # Restarting web server
+    $BIN/v-restart-web $restart
+    check_result $? "Web restart failed" >/dev/null
+    
+    $BIN/v-restart-proxy $restart
+    check_result $? "Proxy restart failed" >/dev/null
+fi
+
+# Logging
+$BIN/v-log-action "$user" "Info" "Web" "Domain redirection enabled (Domain: $domain, Redirect to: $redirect)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

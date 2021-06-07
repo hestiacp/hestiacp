@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: change domain ssl certificate
 # options: USER DOMAIN SSL_DIR [RESTART]
+# labels: hestia
 #
 # The function changes SSL domain certificate and the key. If ca file present
 # it will be replaced as well.
@@ -17,8 +18,11 @@ domain_idn=$2
 restart=$3
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
@@ -65,7 +69,7 @@ $BIN/v-restart-mail $restart
 check_result $? "Mail restart failed" >/dev/null
 
 # Logging
-log_history "changed ssl certificate for $domain"
+$BIN/v-log-action "$user" "Info" "Mail" "SSL certificate changed (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

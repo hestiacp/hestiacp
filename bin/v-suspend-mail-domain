@@ -1,8 +1,11 @@
 #!/bin/bash
 # info: suspend mail domain
 # options: USER DOMAIN
+# labels: mail
 #
-# The function suspends mail domain. 
+# example: v-suspend-mail-domain admin domain.com
+#
+# The function suspends mail domain.
 
 
 #----------------------------------------------------------#
@@ -15,8 +18,11 @@ domain=$2
 domain_idn=$2
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
@@ -51,7 +57,7 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
 fi
 
 # Removing webmail configuration
-$BIN/v-delete-sys-webmail $user $domain 'yes'
+$BIN/v-delete-mail-domain-webmail $user $domain 'yes'
 
 #----------------------------------------------------------#
 #                       Hestia                             #
@@ -63,6 +69,7 @@ sed -i "s/SUSPENDED='no'/SUSPENDED='yes'/g" $USER_DATA/mail/$domain.conf
 increase_user_value "$user" '$SUSPENDED_MAIL'
 
 # Logging
+$BIN/v-log-action "system" "Info" "Mail" "Suspended mail domain (User: $user, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

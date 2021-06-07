@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete mail domain
 # options: USER DOMAIN
+# labels: mail
+#
+# example: v-delete-mail-domain admin mydomain.tld
 #
 # The function for deleting MAIL domain. By deleting it all accounts will
 # also be deleted.
@@ -16,8 +19,11 @@ domain=$2
 domain_idn=$2
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 # Additional argument formatting
@@ -33,9 +39,7 @@ check_args '2' "$#" 'USER DOMAIN'
 is_format_valid 'user' 'domain'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
-is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -60,7 +64,7 @@ fi
 if [ "$DKIM" = 'yes' ] && [ -e "$USER_DATA/dns/$domain.conf" ]; then
     dkim_records=$($BIN/v-list-dns-records $user $domain plain | awk '{print $1,$2}' | grep -w '_domainkey' | cut -f 1 -d ' ')
     for id in $dkim_records; do
-        $BIN/v-delete-dns-record $user $domain $id
+        $BIN/v-delete-dns-record $user $domain $id '' 'yes'
     done
 fi
 
@@ -71,7 +75,9 @@ fi
 
 # Delete webmail configuration if it exists
 if [ ! -z "$WEB_SYSTEM" ] || [ ! -z "$PROXY_SYSTEM" ]; then
-    $BIN/v-delete-sys-webmail $user $domain 'yes'
+    if [ ! -z "$IMAP_SYSTEM" ]; then
+        $BIN/v-delete-mail-domain-webmail $user $domain 'yes'    
+    fi
 fi
 
 #----------------------------------------------------------#
@@ -85,9 +91,6 @@ rm -f $USER_DATA/mail/$domain.pem
 rm -f $USER_DATA/mail/$domain.pub
 rm -f $USER_DATA/mail/*@$domain.msg
 
-# Unsetting HELO for mail domain
-sed -i "/^${domain}:/d" /etc/exim4/mailhelo.conf
-
 # Decreasing domain value
 decrease_user_value "$user" '$U_MAIL_DOMAINS'
 if [ "$DKIM" = 'yes' ]; then
@@ -96,8 +99,15 @@ fi
 
 decrease_user_value "$user" '$U_MAIL_ACCOUNTS' "$accounts"
 
+# Check if is suspended to decrease the suspended value
+if [ ! -z "$SUSPENDED" ]; then
+    if [ "$SUSPENDED" == "yes" ]; then
+        decrease_user_value "$user" '$SUSPENDED_MAIL'
+    fi
+fi
+
 # Logging
-log_history "deleted mail domain $domain"
+$BIN/v-log-action "$user" "Info" "Mail" "Mail domain deleted (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

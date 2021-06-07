@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update host certificate for hestia
 # options: USER HOSTNAME
+# labels: panel
+#
+# example: v-update-host-certificate admin example.com
 #
 # Function updates certificates for hestia
 
@@ -21,8 +24,11 @@ user=$1
 hostname=$2
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -43,6 +49,9 @@ if [ ! -f "/home/$user/conf/web/$hostname/ssl/$hostname.pem" ]; then
     echo "Error: domain $hostname does not have an SSL certificate.";
     exit 1;
 fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -91,6 +100,7 @@ $BIN/v-restart-service hestia
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "System" "System SSL certificate updated (Host: $hostname)."
 log_event "$OK" "$ARGUMENTS"
 
 exit 0;

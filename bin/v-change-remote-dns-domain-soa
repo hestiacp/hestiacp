@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change remote dns domain SOA
 # options: USER DOMAIN
+# labels: dns
+#
+# example: v-change-remote-dns-domain-soa admin example.org.uk
 #
 # The function synchronize dns domain with the remote server.
 
@@ -14,8 +17,11 @@ user=$1
 domain=$2
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/remote.sh
 source $HESTIA/func/remote.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -31,6 +37,8 @@ is_object_valid 'dns' 'DOMAIN' "$domain"
 is_procces_running
 remote_dns_health_check
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #

@@ -1,19 +1,22 @@
 #!/bin/bash
-# info: disable system wide smtp relay support
-# options: 
+# info: add ip adresss to allowed ip list api
+# options: IP 
 # labels: hestia
 #
-# example: v-delete-sys-smtp-relay
-#
-# this function disables system wide smtp relay support.
+# example: v-add-sys-api-ip 1.1.1.1
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
+ip46=${1// /}
+
 # Includes
+
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
+source $HESTIA/func/ip.sh
 # shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
@@ -21,27 +24,23 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
+check_args '1' "$#" 'IP'
+is_format_valid 'ip46'
+
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-
-$BIN/v-change-sys-config-value SMTP_RELAY false
-$BIN/v-change-sys-config-value SMTP_RELAY_HOST ''
-$BIN/v-change-sys-config-value SMTP_RELAY_PORT ''
-$BIN/v-change-sys-config-value SMTP_RELAY_USER ''
-
-rm -f /etc/exim4/smtp_relay.conf
-
-#----------------------------------------------------------#
-#                       Hestia                             #
-#----------------------------------------------------------#
+if [ "$API_ALLOWED_IP" != "" ]; then
+    $BIN/v-change-sys-config-value 'API_ALLOWED_IP' "$API_ALLOWED_IP,$ip46"
+else
+    $BIN/v-change-sys-config-value 'API_ALLOWED_IP' "$ip46"
+fi
 
 # Logging
-$BIN/v-log-action "system" "Info" "Mail" "Global SMTP Relay disabled."
+$BIN/v-log-action "system" "Warning" "System" "Added new IP address added to Allowed IP API (IP: $ip46)"
 log_event "$OK" "$ARGUMENTS"
-
-exit

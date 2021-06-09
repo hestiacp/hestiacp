@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 
 - Include DMARC record in DNS record list #1836
 - Enabled phpMyAdmin Single Sign On support
+- Add command to add / delete from API_ALLOWED_IP list (#1904)
 
 ### Bugfixes
 

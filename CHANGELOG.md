@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 - Include DMARC record in DNS record list #1836
+- Enabled phpMyAdmin Single Sign On support
+- Add command to add / delete from API_ALLOWED_IP list (#1904)
 
 ### Bugfixes
 
@@ -22,6 +24,7 @@ All notable changes to this project will be documented in this file.
 - Fixed XSS vulnerability in login page and a few other locations @briansemrau / @numanturle
 - Delete old session after after session_regenerate_id() @briansemrau
 - Improve error message when domain all ready exists on different account.
+- Fixed an issue where phpmyadmin did not update when Postgresql was availble.
 
 ## [1.4.2] - Service release
 

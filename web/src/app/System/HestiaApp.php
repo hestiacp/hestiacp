@@ -90,7 +90,7 @@ class HestiaApp {
         }else{
             $this->updateComposer($version);
         }
-        
+
         if (!empty($args) && is_array($args)) {
             array_unshift($args, 'composer');
         } else {

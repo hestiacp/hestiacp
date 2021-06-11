@@ -10,12 +10,11 @@
 						<td style="padding: 40px 60px 0 0;" class="animated fadeIn">
 							<form method="post" action="/login/" id="form_login">
 								<input type="hidden" name="token" value="<?=$_SESSION['token']; ?>">
-								<input type="hidden" name="user" value="<?=$_POST['user']; ?>">
-								<input type="hidden" name="murmur" value="<?=$_SESSION['token']; ?>" id="murmur">
+                                <input type="hidden" name="murmur" value="" id="murmur">
 								<table class="login-box">
 									<tr>
 										<td style="padding: 12px 0 0 2px;" class="login-welcome">
-											<?=_('Welcome');?> <?=$_POST['user']; ?>!
+											<?=_('Welcome');?> <?=htmlspecialchars($_SESSION['login']['username']); ?>!
 										</td>
 									</tr>
 									<tr>

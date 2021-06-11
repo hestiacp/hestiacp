@@ -181,7 +181,7 @@ $v_ssl_issuer = $ssl_str['HESTIA']['ISSUER'];
 
 // Check POST request
 if (!empty($_POST['save'])) {
-
+    $require_refresh = false;
     // Check token
     if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
         header('location: /login/');
@@ -813,8 +813,7 @@ if (!empty($_POST['save'])) {
                 unset($output);
                 if ($_POST['v_policy_user_change_theme']) { 
                     unset ($_SESSION['userTheme']);
-                    $refresh = $_SERVER['REQUEST_URI'];
-                    header("Location: $refresh");
+                    $require_refresh = true;
                 }
                 if (empty($_SESSION['error_msg'])) $v_policy_user_change_theme = $_POST['v_policy_user_change_theme'];
             }
@@ -943,7 +942,12 @@ if (!empty($_POST['save'])) {
     if (empty($_SESSION['error_msg'])) {
         $_SESSION['ok_msg'] = _('Changes has been saved.');
     }
-
+    if ($require_refresh == true){
+        $refresh = $_SERVER['REQUEST_URI'];
+        $_SESSION['ok_msg'] = _('Changes has been saved.');
+        header("Location: $refresh");
+        die();
+    }
 }
     
 // Check system configuration

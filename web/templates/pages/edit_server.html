@@ -502,8 +502,7 @@
 												<br><br>
 											</td>
 										</tr>
-										<?php if ($_SESSION['POLICY_SYSTEM_ENABLE_BACON'] === 'true' && 1 != 1) {
-                                        //disable for 1.4.0 release due some bugs
+										<?php if ($_SESSION['POLICY_SYSTEM_ENABLE_BACON'] === 'true') {
                                         ?>
 											<tr>
 												<td class="vst-text">
@@ -981,13 +980,11 @@
 															</tr>
 															<tr>
 																<td>
-																	<textarea size="20" class="vst-textinput short" name="v_api_allowed_ip">
-																		<?php 
-																			foreach(explode(',',$_SESSION['API_ALLOWED_IP']) as $ip ){
-																				echo $ip."\n";
+																	<textarea size="20" class="vst-textinput short" name="v_api_allowed_ip"><?php 
+																		foreach(explode(',',$_SESSION['API_ALLOWED_IP']) as $ip ){ 
+                                                                            echo trim($ip)."\n";
 																			}
-																		?>
-																	</textarea>
+																		?></textarea>
 																	<br><br>
 																</td>
 															</tr>

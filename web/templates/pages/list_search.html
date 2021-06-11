@@ -18,7 +18,7 @@
 					<td class="l-sort-toolbar__search-box">
 						<form action="/search/" method="get">
 							<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-							<input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>" />
+							<input type="text" name="q" class="search-input" value="<? echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : '' ?>" title="<?=_('Search');?>" />
 							<button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search');?>"><i class="fas fa-search"></i></button>
 						</form>
 					</td>
@@ -143,7 +143,7 @@
 				</div>
 				<div class="clearfix l-unit__stat-col--left text-center"><?=translate_date($value['DATE'])?></div>
 				<div class="clearfix l-unit__stat-col--left text-center"><b>
-						<a href="/search/?q=<?=$_GET['q'] ?>&u=<?=$value['USER']; ?>"><?=$value['USER']; ?></a></b></div>
+						<a href="/search/?q=<?=htmlspecialchars($q); ?>&u=<?=$value['USER']; ?>"><?=$value['USER']; ?></a></b></div>
 				<div class="clearfix l-unit__stat-col--left text-center"><?=_($object)?></b></div>
 			</div>
 		</div>

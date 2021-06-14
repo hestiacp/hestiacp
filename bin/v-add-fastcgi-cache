@@ -85,7 +85,7 @@ cat << EOF > $fastcgi
     set $no_cache 0;
 EOF
 
-if [ ! -z "$debug" ]; then
+if [ "$debug" = 'yes' ]; then
     echo "    add_header \"X-STATUS\" \"$status\";" >> $fastcgi
 fi
 

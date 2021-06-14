@@ -15,6 +15,9 @@
 				<div class="l-menu__item <?php if($TAB == 'FM' ) echo 'l-menu__item--active' ?>"><a href="/fm/"><i class="fas fa-folder-open panel-icon"></i><?=_('Files')?></a></div>
 			<?php } ?>
 			<div class="l-menu__item <?php if($TAB == 'STATS' ) echo 'l-menu__item--active' ?>"><a href="/list/stats/"><i class="fas fa-chart-line panel-icon"></i><?=_('Statistics')?></a></div>
+            <?php if ((isset($_SESSION['CSF'])) && (!empty($_SESSION['CSF'])) && ($_SESSION['CSF'] == "true")) {?>
+                <div class="l-menu__item <?php if($TAB == 'CSF' ) echo 'l-menu__item--active' ?>"><a href="/list/csf/"><i class="fas fa-shield-alt panel-icon"></i><?=_('CSF')?></a></div>
+            <?php } ?>
 		</div>
 		<div class="l-profile noselect">
 			<div class="l-menu__item">

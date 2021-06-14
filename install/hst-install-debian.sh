@@ -65,7 +65,7 @@ elif [ "$release" -eq 10 ]; then
         util-linux ipset libapache2-mpm-itk zstd lsb-release"
 fi
 
-installer_dependencies="apt-transport-https curl dirmngr gnupg wget ca-certificates"
+installer_dependencies="apt-transport-https curl dirmngr gnupg wget ca-certificates rename"
 
 # Defining help function
 help() {
@@ -89,6 +89,7 @@ help() {
   -r, --port              Change Backend Port             default: 8083
   -l, --lang              Default language                default: en
   -y, --interactive       Interactive install   [yes|no]  default: yes
+  -n, --csf               Install CSF           [yes|no]  default: no
   -s, --hostname          Set hostname
   -e, --email             Set admin email
   -p, --password          Set admin password
@@ -198,6 +199,7 @@ for arg; do
         --port)                 args="${args}-r " ;;
         --lang)                 args="${args}-l " ;;
         --interactive)          args="${args}-y " ;;
+		--csf                   args="${args}-n " ;;
         --api)                  args="${args}-d " ;;
         --hostname)             args="${args}-s " ;;
         --email)                args="${args}-e " ;;
@@ -233,6 +235,7 @@ while getopts "a:w:v:j:k:m:g:d:x:z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
         l) lang=$OPTARG ;;              # Language
         d) api=$OPTARG ;;               # Activate API
         y) interactive=$OPTARG ;;       # Interactive install
+		n) csf=$OPTARG ;;               # CSF
         s) servername=$OPTARG ;;        # Hostname
         e) email=$OPTARG ;;             # Admin email
         p) vpass=$OPTARG ;;             # Admin password
@@ -269,6 +272,7 @@ set_default_value 'iptables' 'yes'
 set_default_value 'fail2ban' 'yes'
 set_default_value 'quota' 'no'
 set_default_value 'interactive' 'yes'
+set_default_value 'csf' 'no'
 set_default_value 'api' 'yes'
 set_default_port '8083'
 set_default_lang 'en'
@@ -283,6 +287,11 @@ if [ "$exim" = 'no' ]; then
     dovecot='no'
 fi
 if [ "$iptables" = 'no' ]; then
+    fail2ban='no'
+	csf='no'
+fi
+if [ "$csf" = 'yes' ]; then
+    iptables='no'
     fail2ban='no'
 fi
 
@@ -549,6 +558,12 @@ fi
 if [ "$iptables" = 'yes' ] && [ "$fail2ban" = 'yes' ]; then
     echo -n ' + Fail2Ban Access Monitor'
 fi
+
+# Firewall CSF Alternative
+if [ "$csf" = 'yes' ]; then
+    echo '   - CSF (Firewall)'
+fi
+
 echo -e "\n"
 echo "========================================================================"
 echo -e "\n"
@@ -1697,6 +1712,51 @@ if [ "$fail2ban" = 'yes' ]; then
     update-rc.d fail2ban defaults
     systemctl start fail2ban
     check_result $? "fail2ban start failed"
+fi
+
+#----------------------------------------------------------#
+#                       Install CSF                        #
+#----------------------------------------------------------#
+# With the help of martineliascz from https://forum.hestiacp.com/t/how-to-csf-support-in-hestia-cp/227
+if [ "$csf" = 'yes' ]; then
+    # Display information
+    echo "[ * ] Install CSF..."
+    
+    # Get path location and move
+    cd /usr/src
+
+    # Remove if-exist
+    rm -fv csf.tgz
+
+    # Download latest CSF release
+    wget --quiet https://download.configserver.com/csf.tgz
+
+    # Unpack files
+    tar -xzf csf.tgz
+
+    # Move, install & adapt installer for Hestia
+    cd csf
+    chmod +r install.sh
+    source ./install.sh > /dev/null 2>&1
+
+    find . -type f -exec sed -i 's/VESTA/HESTIA/g' {} + && \
+    find . -type f -exec sed -i 's/Vesta/Hestia/g' {} + && \
+    find . -type f -exec sed -i 's/vesta/hestia/g' {} + && \
+    rename 's/VESTA/HESTIA/' * && \
+    rename 's/vesta/hestia/' *
+
+    chmod +r install.hestia.sh
+    source ./install.hestia.sh > /dev/null 2>&1
+fi
+
+#----------------------------------------------------------#
+#                       Configure CSF                      #
+#----------------------------------------------------------#
+# With the help of martineliascz from https://forum.hestiacp.com/t/how-to-csf-support-in-hestia-cp/227
+if [ "$csf" = 'yes' ]; then
+    echo "[ * ] Enabling  CSF..."
+    # Min requirements CSF
+    
 fi
 
 #----------------------------------------------------------#

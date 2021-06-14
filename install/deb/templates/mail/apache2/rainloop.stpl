@@ -10,9 +10,9 @@ SSLVerifyClient none
 SSLCertificateFile         %home%/%user%/conf/mail/%root_domain%/ssl/%root_domain%.crt
 SSLCertificateKeyFile      %home%/%user%/conf/mail/%root_domain%/ssl/%root_domain%.key
 
-<Directory /var/lib/roundcube/>
+<Directory /var/lib/rainloop/>
     Options +FollowSymLinks
-    # This is needed to parse /var/lib/roundcube/.htaccess. See its
+    # This is needed to parse /var/lib/rainloop/.htaccess. See its
     # content before setting AllowOverride to None.
     AllowOverride All
     order allow,deny

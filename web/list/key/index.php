@@ -5,6 +5,10 @@ $TAB = 'USER';
 // Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
+if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
+    $user = htmlspecialchars($_GET['user']);
+}
+
 exec (HESTIA_CMD . "v-list-user-ssh-key ".escapeshellarg($user)." json", $output, $return_var);
 
 $data = json_decode(implode('', $output), true);

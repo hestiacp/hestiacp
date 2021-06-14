@@ -65,7 +65,7 @@ $BIN/v-restart-mail $restart
 check_result $? "Mail restart failed" >/dev/null
 
 # Logging
-log_history "disabled mail SSL support on $domain"
+$BIN/v-log-action "$user" "Warning" "Mail" "SSL disabled (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -317,8 +317,8 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
             str="$str CUSTOM_DOCROOT='$CUSTOM_DOCROOT' CUSTOM_PHPROOT='$CUSTOM_PHPROOT'"
             str="$str REDIRECT='$REDIRECT' REDIRECT_CODE='$REDIRECT_CODE'"
             str="$str FASTCGI_CACHE='$FASTCGI_CACHE' FASTCGI_DURATION='$FASTCGI_DURATION'"
-            str="$str TPL='$TPL' SSL='$SSL' SSL_HOME='$SSL_HOME'"
-            str="$str LETSENCRYPT='$LETSENCRYPT' FTP_USER='$FTP_USER'"
+            str="$str TPL='$TPL' SSL='$SSL' SSL_HOME='$SSL_HOME' SSL_HSTS='$SSL_HSTS'"
+            str="$str SSL_FORCE='$SSL_FORCE' LETSENCRYPT='$LETSENCRYPT' FTP_USER='$FTP_USER'"
             str="$str FTP_MD5='$FTP_MD5' FTP_PATH='$FTP_PATH'"
             str="$str BACKEND='$BACKEND' PROXY='$PROXY'"
             str="$str PROXY_EXT='$PROXY_EXT' STATS='$STATS'"
@@ -868,6 +868,9 @@ mkdir -p $HOMEDIR/$user/tmp
 chmod 700 $HOMEDIR/$user/tmp
 chown -R $user:$user $HOMEDIR/$user/tmp
 
+# Delete Hestia File manager key 
+rm -f $HOMEDIR/$user/.ssh/hst-filemanager-key
+
 # Sending mail notification
 subj="$user → restore has been completed"
 cat $tmpdir/restore.log |$SENDMAIL -s "$subj" $email $notify
@@ -892,7 +895,8 @@ $BIN/v-update-user-counters admin
 $BIN/v-update-sys-ip-counters
 
 # Logging
-log_history "restored contents from backup archive $backup"
+$BIN/v-log-action "system" "Info" "Backup" "Restored backup contents (User: $user, Archive: $backup)."
+$BIN/v-log-action "$user" "Info" "Backup" "Restored backup contents (Archive: $backup)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

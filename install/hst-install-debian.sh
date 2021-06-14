@@ -23,8 +23,8 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.4.0~alpha'
-pma_v='5.1.0'
+HESTIA_INSTALL_VER='1.4.3~alpha'
+pma_v='5.1.1'
 rc_v="1.4.11"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
 fpm_v="7.4"
@@ -258,6 +258,9 @@ set_default_value 'dovecot' 'yes'
 if [ $memory -lt 1500000 ]; then
     set_default_value 'clamd' 'no'
     set_default_value 'spamd' 'no'
+elif [ $memory -lt 3000000 ]; then
+    set_default_value 'clamd' 'no'
+    set_default_value 'spamd' 'yes'
 else
     set_default_value 'clamd' 'yes'
     set_default_value 'spamd' 'yes'
@@ -1201,6 +1204,31 @@ rm /tmp/hst.pem
 # Install dhparam.pem
 cp -f $HESTIA_INSTALL_DIR/ssl/dhparam.pem /etc/ssl
 
+# Deleting old admin user
+if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ "$force" = 'yes' ]; then
+    chattr -i /home/admin/conf > /dev/null 2>&1
+    userdel -f admin > /dev/null 2>&1
+    chattr -i /home/admin/conf > /dev/null 2>&1
+    mv -f /home/admin  $hst_backups/home/ > /dev/null 2>&1
+    rm -f /tmp/sess_* > /dev/null 2>&1
+fi
+if [ ! -z "$(grep ^admin: /etc/group)" ] && [ "$force" = 'yes' ]; then
+    groupdel admin > /dev/null 2>&1
+fi
+
+# Enable sftp jail
+echo "[ * ] Enable SFTP jail..."
+$HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1
+check_result $? "can't enable sftp jail"
+
+# Adding Hestia admin account
+$HESTIA/bin/v-add-user admin $vpass $email default "System Administrator"
+check_result $? "can't create admin user"
+$HESTIA/bin/v-change-user-shell admin nologin
+$HESTIA/bin/v-change-user-role admin admin
+$HESTIA/bin/v-change-user-language admin $lang
+$HESTIA/bin/v-change-sys-config-value 'POLICY_SYSTEM_PROTECTED_ADMIN' 'yes'
+
 #----------------------------------------------------------#
 #                     Configure Nginx                      #
 #----------------------------------------------------------#
@@ -1422,7 +1450,7 @@ if [ "$mysql" = 'yes' ]; then
     echo "[ * ] Installing phpMyAdmin version v$pma_v..."
 
     # Download latest phpmyadmin release
-    wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
+    wget --quiet --retry-connrefused https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
 
     # Unpack files
     tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
@@ -1695,32 +1723,8 @@ else
 fi
 
 #----------------------------------------------------------#
-#                   Configure Admin User                   #
+#                   Configure IP                           #
 #----------------------------------------------------------#
-
-# Deleting old admin user
-if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ "$force" = 'yes' ]; then
-    chattr -i /home/admin/conf > /dev/null 2>&1
-    userdel -f admin > /dev/null 2>&1
-    chattr -i /home/admin/conf > /dev/null 2>&1
-    mv -f /home/admin  $hst_backups/home/ > /dev/null 2>&1
-    rm -f /tmp/sess_* > /dev/null 2>&1
-fi
-if [ ! -z "$(grep ^admin: /etc/group)" ] && [ "$force" = 'yes' ]; then
-    groupdel admin > /dev/null 2>&1
-fi
-
-# Enable sftp jail
-echo "[ * ] Enable SFTP jail..."
-$HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1
-check_result $? "can't enable sftp jail"
-
-# Adding Hestia admin account
-$HESTIA/bin/v-add-user admin $vpass $email default "System Administrator"
-check_result $? "can't create admin user"
-$HESTIA/bin/v-change-user-shell admin nologin
-$HESTIA/bin/v-change-user-role admin admin
-$HESTIA/bin/v-change-user-language admin $lang
 
 # Roundcube permissions fix
 if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
@@ -1857,6 +1861,22 @@ echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && /usr/local/hestia/bi
 echo "[ * ] Configuring File Manager..."
 $HESTIA/bin/v-add-sys-filemanager quiet
 
+echo "[ * ] Finish up install..."
+write_config_value "PHPMYADMIN_KEY" ""
+write_config_value "POLICY_USER_VIEW_SUSPENDED" "no"
+write_config_value "POLICY_USER_VIEW_LOGS" "yes"
+write_config_value "POLICY_USER_EDIT_WEB_TEMPLATES" "true"
+write_config_value "POLICY_USER_EDIT_DNS_TEMPLATES" "yes"
+write_config_value "POLICY_USER_EDIT_DETAILS" "yes"
+write_config_value "POLICY_USER_DELETE_LOGS" "yes"
+write_config_value "POLICY_USER_CHANGE_THEME" "yes"
+write_config_value "POLICY_SYSTEM_PROTECTED_ADMIN" "no"
+write_config_value "POLICY_SYSTEM_PASSWORD_RESET" "no"
+write_config_value "POLICY_SYSTEM_HIDE_SERVICES" "no"
+write_config_value "POLICY_SYSTEM_ENABLE_BACON" "no"
+write_config_value "PLUGIN_APP_INSTALLER" "true"
+write_config_value "DEBUG_MODE" "no"
+write_config_value "ENFORCE_SUBDOMAIN_OWNERSHIP" "yes"
 
 #----------------------------------------------------------#
 #                   Hestia Access Info                     #
@@ -1917,16 +1937,17 @@ rm -f $tmpfile
 # Add welcome message to notification panel
 $HESTIA/bin/v-add-user-notification admin 'Welcome to Hestia Control Panel!' '<br>You are now ready to begin <a href="/add/user/">adding user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, view the <a href="https://docs.hestiacp.com/" target="_new">documentation</a> or visit our <a href="https://forum.hestiacp.com/" target="_new">user forum</a>.<br><br>Please report any bugs or issues via <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart status-icon red"></i> The Hestia Control Panel development team'
 
-echo "[ ! ] IMPORTANT: System will reboot"
-echo ""
-if [ "$interactive" = 'yes' ]; then
-    echo -n " Press any key to continue!"
-    read reboot
-fi
-
 # Clean-up
 # Sort final configuration file
 sort_config_file
 
-reboot
+if [ "$interactive" = 'yes' ]; then
+    echo "[ ! ] IMPORTANT: System will reboot"
+    echo ""
+    echo -n " Press any key to continue!"
+    read reboot
+    reboot
+else
+    echo "[ ! ] IMPORTANT: You must logout or restart the server before continuing"
+fi
 # EOF

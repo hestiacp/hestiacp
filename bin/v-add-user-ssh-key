@@ -69,7 +69,7 @@ echo "$key" >> "$AUTHKEY_FILE"
 #----------------------------------------------------------#
 
 # Logging
-log_history "Added ssh-key $user"
+$BIN/v-log-action "$user" "Info" "System" "Added a new SSH key."
 log_event "$OK" "$ARGUMENTS"
 
 exit

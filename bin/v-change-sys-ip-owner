@@ -91,7 +91,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_history "changed owner of $ip to $user" '' 'admin'
+$BIN/v-log-action "system" "Info" "System" "IP address owner changed (IP: $ip, Owner: $user)"
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -3,11 +3,12 @@
 # options: USER DOMAIN
 # labels: web hestia
 #
-# example: v-delete-web-domain-allow-users
+# example: v-delete-web-domain-allow-users admin admin.com
 #
-# Disallow other users to create a new subdomain.
+# Enable the rule check for Enforce subdomain ownership for a specific domain. 
+# Enforce subdomain ownership setting in /edit/server/ set to no will always overwrite this behaviour
 # eg: admin adds admin.com
-# user can't create user.admin.com
+# user can create user.admin.com
 
 
 #----------------------------------------------------------#
@@ -65,7 +66,7 @@ fi
 # Adding new alias
 update_object_value 'web' 'DOMAIN' "$domain" '$ALLOW_USERS' "no"
 
-log_history "Allow users create subdomain for $domain"
+$BIN/v-log-action "system" "Info" "Web" "Subdomain ownership enforcement enabled (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

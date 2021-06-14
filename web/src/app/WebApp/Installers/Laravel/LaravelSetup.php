@@ -12,7 +12,7 @@ class LaravelSetup extends BaseSetup {
         'name' => 'Laravel',
         'group' => 'framework',
         'enabled' => true,
-        'version' => '7.x',
+        'version' => '8.x',
         'thumbnail' => 'laravel-thumb.png'
     ];
     
@@ -21,7 +21,7 @@ class LaravelSetup extends BaseSetup {
         ],
         'database' => true,
         'resources' => [
-            'composer' => [ 'src' => 'laravel/laravel', 'dst' => '/' ],
+            'composer' => [ 'src' => 'laravel/laravel', 'dst' => '/'],
         ],
     ];
 

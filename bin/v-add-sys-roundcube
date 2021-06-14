@@ -51,12 +51,12 @@ if [ -z "$HOMEDIR" ] || [ -z "$HESTIA_INSTALL_DIR" ]; then
 fi
 
 if [ -z "$(echo "$DB_SYSTEM" | grep -w 'mysql')" ]; then
-    echo "ERROR: Mysql not available. Instalation aborted"
+    echo "ERROR: Mysql not available. Installation aborted"
     exit 2
 fi
 
 if [ -d "/usr/share/roundcube" ]; then
-    echo "ERROR: Install done from atp source unable to continue"
+    echo "ERROR: Install done from apt source, unable to continue"
     exit 2;
 fi
 
@@ -64,7 +64,7 @@ fi
 if [ -f "/var/lib/roundcube/index.php" ]; then
     version=$(cat $RC_INSTALL_DIR/index.php | grep -o -E '[0-9].[0-9].[0-9]+' | head -1);
     if [ "$version" == "$rc_v" ]; then
-        echo "Error: Installed version ($version) is equal as the availble version ($rc_v)"
+        echo "Error: Installed version ($version) is equal to the available version ($rc_v)"
         exit 2;
     else 
         UPDATE="yes"
@@ -86,7 +86,7 @@ if [ "$UPDATE" == "no" ]; then
     mkdir -p $RC_CONFIG_DIR/
     
     cd "$RC_INSTALL_DIR"
-    [ ! -f "${RC_INSTALL_DIR}/${RC_FILE}" ] && wget "$RC_URL" --quiet -O "${RC_INSTALL_DIR}/${RC_FILE}"
+    [ ! -f "${RC_INSTALL_DIR}/${RC_FILE}" ] && wget "$RC_URL" --retry-connrefused --quiet -O "${RC_INSTALL_DIR}/${RC_FILE}"
     
     tar xzf $RC_FILE
     cp -rf $RC_EXTRACT/* $RC_INSTALL_DIR
@@ -191,7 +191,9 @@ fi
 #                       Logging                            #
 #----------------------------------------------------------#
 
-
-
-log_history "Roundcube successfuly installed" '' 'admin'
+if [ "$UPDATE" = "yes" ]; then
+    $BIN/v-log-action "system" "Info" "Plugins" "Roundcube updated (Version: $version)."
+else
+    $BIN/v-log-action "system" "Info" "Plugins" "Roundcube enabled (Version: $version)."
+fi
 log_event "$OK" "$ARGUMENTS"

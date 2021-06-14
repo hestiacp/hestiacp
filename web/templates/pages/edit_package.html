@@ -1,0 +1,449 @@
+<!-- Begin toolbar -->
+<div class="l-center edit">
+	<div class="l-sort clearfix">
+		<div class="l-unit-toolbar__buttonstrip">
+			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/package/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+		</div>
+		<div class="l-unit-toolbar__buttonstrip float-right">
+			<a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
+		</div>
+	</div>
+</div>
+<!-- End toolbar -->
+
+<div class="l-separator"></div>
+
+<div class="l-center animated fadeIn">
+
+	<form id="vstobjects" name="v_edit_package" method="post" class="<?=$v_status?>">
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+		<input type="hidden" name="save" value="save" />
+		
+		<table class='data'>
+			<tr class="data-add">
+				<td class="data-dotted">
+					<table class="data-col1">
+						<tr>
+							<td>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td class="data-dotted">
+					<table class="data-col2">
+						<tr>
+							<td class="step-top">
+								<span class="page-title"><?=_('Editing Package');?></span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<?php
+									if (!empty($_SESSION['error_msg'])) {
+										$msg_icon = 'fa-exclamation-circle status-icon red';
+										$msg_text = htmlentities($_SESSION['error_msg']);
+										$msg_id = 'vst-error';
+									} else {
+										if (!empty($_SESSION['ok_msg'])) {
+											$msg_icon = 'fa-check-circle status-icon green';
+											$msg_text = $_SESSION['ok_msg'];
+											$msg_id = 'vst-ok';
+										}
+									}
+								?>
+								<span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text step-top">
+								<?=_('Package Name');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_package_new" value="<?=htmlentities(trim($v_package_new, "'"))?>">
+								<input type="hidden" name="v_package" value="<?=htmlentities(trim($v_package, "'"))?>">
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Quota');?> <span class="optional">(<?=_('in megabytes');?>)</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_disk_quota" value="<?=htmlentities(trim($v_disk_quota, "'"))?>">
+								<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-disk-quota"></i>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Bandwidth');?> <span class="optional">(<?=_('in megabytes');?>)</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_bandwidth" value="<?=htmlentities(trim($v_bandwidth, "'"))?>">
+								<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-bandwidth"></i>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Backups');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_backups" value="<?=htmlentities(trim($v_backups, "'"))?>">
+							</td>
+						</tr>
+						<tr>
+							<td class="section-title" onclick="javascript:elementHideShow('web-options',this)">
+								<?=_('Web');?>
+								<i class="fas fa-plus-square status-icon dim maroon section-hide-button"></i>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<table id="web-options" style="display: none;">
+									<tr>
+										<td class="vst-text input-label step-top">
+											<?=_('Web Domains');?>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type="text" size="20" class="vst-input" name="v_web_domains" value="<?=htmlentities(trim($v_web_domains, "'"))?>">
+											<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-web-domains"></i>
+										</td>
+									</tr>
+									<tr>
+										<td class="vst-text input-label">
+											<?=_('Web Aliases');?> <span class="optional">(<?=_('per domain');?>)</span>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type="text" size="20" class="vst-input" name="v_web_aliases" value="<?=htmlentities(trim($v_web_aliases, "'"))?>">
+											<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-web-aliases"></i>
+										</td>
+									</tr>
+									<tr>
+										<td class="vst-text input-label">
+											<?=_('Web Template')  . " <span class='optional'> " .strtoupper($_SESSION['WEB_SYSTEM']) . "</span>";?>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<select class="vst-list" name="v_web_template">
+												<?php
+													foreach ($web_templates as $key => $value) {
+														echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
+														if ((!empty($v_web_template)) && ( $value == $v_web_template)){
+															echo ' selected' ;
+														}
+														if ((!empty($v_web_template)) && ( $value == $_POST['v_web_template'])){
+															echo ' selected' ;
+														}
+														echo ">".htmlentities($value)."</option>\n";
+													}
+												?>
+											</select>
+										</td>
+									</tr>
+									<?php if (!empty($_SESSION['WEB_BACKEND'])) { echo ""; ?>
+										<tr>
+											<td class="vst-text input-label">
+												<?=_('Backend Template')  . "<span class='optional'>" .strtoupper($_SESSION['WEB_BACKEND']) . "</span>";?>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<select class="vst-list" name="v_backend_template">
+													<?php
+															foreach ($backend_templates as $key => $value) {
+																echo "\t\t\t\t<option value=\"".$value."\"";
+																if ((!empty($v_backend_template)) && ( $value == $v_backend_template)){
+																	echo ' selected' ;
+																}
+																if ((!empty($v_backend_template)) && ( $value == $_POST['v_backend_template'])){
+																	echo ' selected' ;
+																}
+																echo ">".htmlentities($value)."</option>\n";
+															}
+														?>
+												</select>
+											</td>
+										</tr>
+									<?=""; }?>
+									<?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?>
+										<tr>
+											<td class="vst-text input-label">
+												<?=_('Proxy Template')  . "<span class='optional'>" .strtoupper($_SESSION['PROXY_SYSTEM']) . "</span>";?>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<select class="vst-list" name="v_proxy_template">
+													<?php
+															foreach ($proxy_templates as $key => $value) {
+																echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
+																if ((!empty($v_proxy_template)) && ( $value == $v_proxy_template)){
+																	echo ' selected' ;
+																}
+																if ((!empty($v_proxy_template)) && ( $value == $_POST['v_proxy_template'])){
+																	echo ' selected' ;
+																}
+																echo ">".htmlentities($value)."</option>\n";
+															}
+														?>
+												</select>
+											</td>
+										</tr>
+									<?=""; }?>
+								</table>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="section-title" onclick="javascript:elementHideShow('dns-options',this)">
+								<?=_('DNS');?>
+								<i class="fas fa-plus-square status-icon dim maroon section-hide-button"></i>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<table id="dns-options" style="display: none;">
+									<tr>
+										<td class="vst-text input-label step-top">
+											<?=_('DNS Template')  . "<span class='optional'>" .strtoupper($_SESSION['DNS_SYSTEM']) . "</span>";?>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<select class="vst-list" name="v_dns_template">
+												<?php
+													foreach ($dns_templates as $key => $value) {
+														echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
+														if ((!empty($v_dns_template)) && ( $value == $v_dns_template)){
+															echo ' selected' ;
+														}
+														if ((!empty($v_dns_template)) && ( $value == $_POST['v_dns_template'])){
+															echo ' selected' ;
+														}
+														echo ">".htmlentities($value)."</option>\n";
+													}
+												?>
+											</select>
+										</td>
+									</tr>
+
+									<tr>
+										<td class="vst-text input-label">
+											<?=_('DNS domains');?>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type="text" size="20" class="vst-input" name="v_dns_domains" value="<?=htmlentities(trim($v_dns_domains, "'"))?>">
+											<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-dns-domain"></i>
+										</td>
+									</tr>
+									<tr>
+										<td class="vst-text input-label">
+											<?=_('DNS records');?> <span class="optional">(<?=_('per domain');?>)</span>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type="text" size="20" class="vst-input" name="v_dns_records" value="<?=htmlentities(trim($v_dns_records, "'"))?>">
+											<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-dns-records"></i>
+										</td>
+									</tr>
+									<?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?>
+										<tr>
+											<td class="vst-text input-label">
+												<?=_('Name Servers');?>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<input type="text" size="20" class="vst-input" name="v_ns1" value="<?=htmlentities(trim($v_ns1, "'"))?>">
+												<span class="remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<input type="text" size="20" class="vst-input" name="v_ns2" value="<?=htmlentities(trim($v_ns2, "'"))?>">
+												<span class="remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
+											</td>
+										</tr>
+										<?php 
+											if($v_ns3) {
+												echo '<tr>
+													<td>
+														<input type="text" size="20" class="vst-input" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
+														<span class="remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
+													</td>
+												</tr>';
+											}
+											if($v_ns4) {
+												echo '<tr>
+													<td>
+														<input type="text" size="20" class="vst-input" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
+														<span class="remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
+													</td>
+												</tr>';
+											}
+											if($v_ns5) {
+												echo '<tr>
+													<td>
+														<input type="text" size="20" class="vst-input" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
+														<span class="remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
+													</td>
+												</tr>';
+											}
+											if($v_ns6) {
+												echo '<tr>
+													<td>
+														<input type="text" size="20" class="vst-input" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
+														<span class="remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
+													</td>
+												</tr>';
+											}
+											if($v_ns7) {
+												echo '<tr>
+													<td>
+														<input type="text" size="20" class="vst-input" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
+														<span class="remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
+													</td>
+												</tr>';
+											}
+											if($v_ns8) {
+												echo '<tr>
+													<td>
+														<input type="text" size="20" class="vst-input" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
+														<span class="remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
+													</td>
+												</tr>';
+											}
+										?>
+										<tr class="add-ns" <?php if ($v_ns8) echo 'style="display:none;"' ; ?> >
+											<td class="step-top-small">
+												<span class="add-ns-button additional-control add"><?=_('Add one more Name Server');?></span>
+											</td>
+										</tr>
+									<?php } ?>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td class="section-title" onclick="javascript:elementHideShow('mail-options',this)">
+								<?=_('Mail');?>
+								<i class="fas fa-plus-square status-icon dim maroon section-hide-button"></i>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<table id="mail-options" style="display: none;">
+									<tr>
+										<td class="vst-text input-label step-top">
+											<?=_('Mail Domains');?>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type="text" size="20" class="vst-input" name="v_mail_domains" value="<?=htmlentities(trim($v_mail_domains, "'"))?>">
+											<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-mail-domains"></i>
+										</td>
+									</tr>
+									<tr>
+										<td class="vst-text input-label">
+											<?=_('Mail Accounts');?> <span class="optional">(<?=_('per domain');?>)</span>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type="text" size="20" class="vst-input" name="v_mail_accounts" value="<?=htmlentities(trim($v_mail_accounts, "'"))?>">
+											<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-mail-accounts"></i>
+										<td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td class="section-title" onclick="javascript:elementHideShow('database-options',this)">
+								<?=_('Databases');?>
+								<i class="fas fa-plus-square status-icon dim maroon section-hide-button"></i>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<table id="database-options" style="display: none;">
+									<tr>
+										<td class="vst-text input-label step-top">
+											<?=_('Databases');?>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type="text" size="20" class="vst-input" name="v_databases" value="<?=htmlentities(trim($v_databases, "'"))?>">
+											<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-databases"></i>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td class="section-title" onclick="javascript:elementHideShow('system-options',this)">
+								<?=_('System');?>
+								<i class="fas fa-plus-square status-icon dim maroon section-hide-button"></i>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<table id="system-options" style="display: none;">
+									<tr>
+										<td class="vst-text input-label step-top">
+											<?=_('Cron Jobs');?>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type="text" size="20" class="vst-input" name="v_cron_jobs" value="<?=htmlentities(trim($v_cron_jobs, "'"))?>">
+											<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-cron-jobs"></i>
+										</td>
+									</tr>
+									<tr>
+										<td class="vst-text input-label">
+											<?=_('SSH Access');?>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<select class="vst-list" name="v_shell">
+												<?php
+													foreach ($shells as $key => $value) {
+														echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
+														if ((!empty($v_shell)) && ( $value == $v_shell)){
+															echo ' selected' ;
+														}
+														if ((!empty($v_shell)) && ( $value == $_POST['v_shell'])){
+															echo ' selected' ;
+														}
+														echo ">".htmlentities($value)."</option>\n";
+													}
+												?>
+											</select>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+					<table class="data-col2"></table>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>

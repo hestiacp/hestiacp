@@ -231,7 +231,11 @@ add_web_config() {
             WEBTPL_LOCATION="$WEBTPL/$1/$WEB_BACKEND"
         fi
     fi
-
+    
+    # Note: Removing or renaming template variables will lead to broken custom templates.
+    #   -If possible custom templates should be automatically upgraded to use the new format
+    #   -Alternatively a depreciation period with proper notifications should be considered 
+    
     cat "${WEBTPL_LOCATION}/$2" | \
         sed -e "s|%ip%|$local_ip|g" \
             -e "s|%domain%|$domain|g" \
@@ -248,6 +252,7 @@ add_web_config() {
             -e "s|%proxy_system%|$PROXY_SYSTEM|g" \
             -e "s|%proxy_port%|$PROXY_PORT|g" \
             -e "s|%proxy_ssl_port%|$PROXY_SSL_PORT|g" \
+            -e "s/%proxy_extentions%/${PROXY_EXT//,/|}/g" \
             -e "s/%proxy_extensions%/${PROXY_EXT//,/|}/g" \
             -e "s|%user%|$user|g" \
             -e "s|%group%|$user|g" \
@@ -268,10 +273,6 @@ add_web_config() {
         rm -f /etc/$1/conf.d/domains/$domain.ssl.conf
         ln -s $conf /etc/$1/conf.d/domains/$domain.ssl.conf
 
-        # Clear old configurations
-        rm -f $HOMEDIR/$user/conf/web/$domain.*
-        rm -f $HOMEDIR/$user/conf/web/ssl.$domain.*
-
         # Rename/Move extra SSL config files
         for f in $(ls $HOMEDIR/$user/conf/web/*.$domain.conf* 2>/dev/null); do
             if [[ $f =~ .*/s(nginx|apache2)\.$domain\.conf(.*) ]]; then
@@ -287,10 +288,6 @@ add_web_config() {
     else
         rm -f /etc/$1/conf.d/domains/$domain.conf
         ln -s $conf /etc/$1/conf.d/domains/$domain.conf
-
-        # Clear old configurations
-        rm -rf $HOMEDIR/$user/conf/web/$domain.*
-
         # Rename/Move extra config files
         for f in $(ls $HOMEDIR/$user/conf/web/*.$domain.conf* 2>/dev/null); do
             if [[ $f =~ .*/(nginx|apache2)\.$domain\.conf(.*) ]]; then
@@ -570,7 +567,7 @@ is_dns_fqnd() {
     r=$2
     fqdn_type=$(echo $t | grep "NS\|CNAME\|MX\|PTR\|SRV")
     tree_length=3
-    if [ $t = 'CNAME' ]; then
+    if [[ $t = 'CNAME' || $t = 'MX' ]]; then
         tree_length=2
     fi
 
@@ -746,6 +743,10 @@ add_webmail_config() {
         override_alias_idn="mail.$domain_idn"
         
     fi
+    
+    # Note: Removing or renaming template variables will lead to broken custom templates.
+    #   -If possible custom templates should be automatically upgraded to use the new format
+    #   -Alternatively a depreciation period with proper notifications should be considered 
     
     cat $MAILTPL/$1/$2 | \
         sed -e "s|%ip%|$local_ip|g" \
@@ -923,10 +924,18 @@ is_base_domain_owner(){
                     parse_object_kv_list "$web"
                     if [ -z "$ALLOW_USERS" ] ||  [ "$ALLOW_USERS" != "yes" ]; then
                         # Don't care if $basedomain all ready exists only if the owner is of the base domain is the current user
-                        is_domain_new "" $basedomain
+                        test=$(is_domain_new "" $basedomain)
+                        if [ $? -ne 0 ]; then
+                            echo "Error: $basedomain belongs to a different user";
+                            exit 1;
+                        fi
                     fi
                 else
-                    is_domain_new "" $basedomain
+                    test=$(is_domain_new "" $basedomain);
+                    if [ $? -ne 0 ]; then
+                        echo "Error: $basedomain belongs to a different user";
+                        exit 1;
+                    fi
                 fi
             fi
         fi

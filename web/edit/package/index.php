@@ -8,7 +8,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 
 // Check user
-if ($_SESSION['user'] != 'admin') {
+if ($_SESSION['userContext'] != 'admin')  {
     header("Location: /list/user");
     exit;
 }
@@ -19,6 +19,11 @@ if (empty($_GET['package'])) {
     exit;
 }
 
+// Prevent editing of default package
+if ($_GET['package'] === 'default') {
+    header("Location: /list/package/");
+    exit;
+}
 
 // List package
 $v_package = escapeshellarg($_GET['package']);
@@ -28,6 +33,7 @@ unset($output);
 
 // Parse package
 $v_package = $_GET['package'];
+$v_package_new = $_GET['package'];
 $v_web_template = $data[$v_package]['WEB_TEMPLATE'];
 $v_backend_template = $data[$v_package]['BACKEND_TEMPLATE'];
 $v_proxy_template = $data[$v_package]['PROXY_TEMPLATE'];
@@ -99,6 +105,7 @@ if (!empty($_POST['save'])) {
 
     // Check empty fields
     if (empty($_POST['v_package'])) $errors[] = _('package');
+    if (empty($_POST['v_package_new'])) $errors[] = _('package_new');
     if (empty($_POST['v_web_template'])) $errors[] = _('web template');
     if (!empty($_SESSION['WEB_BACKEND'])) {
         if (empty($_POST['v_backend_template'])) $errors[] = _('backend template');
@@ -139,6 +146,7 @@ if (!empty($_POST['save'])) {
 
     // Protect input
     $v_package = escapeshellarg($_POST['v_package']);
+    $v_package_new = escapeshellarg($_POST['v_package_new']);
     $v_web_template = escapeshellarg($_POST['v_web_template']);
     if (!empty($_SESSION['WEB_BACKEND'])) {
         $v_backend_template = escapeshellarg($_POST['v_backend_template']);
@@ -220,7 +228,12 @@ if (!empty($_POST['save'])) {
     exec (HESTIA_CMD."v-update-user-package ".$v_package." 'json'", $output, $return_var);
     check_return_code($return_var,$output);
     unset($output);
-
+    
+    if($v_package_new != $v_package){
+        exec (HESTIA_CMD."v-rename-user-package " . $v_package . " " . $v_package_new, $output, $return_var);
+        check_return_code($return_var,$output);
+        unset($output);
+    }
     // Set success message
     if (empty($_SESSION['error_msg'])) {
         $_SESSION['ok_msg'] = _('Changes has been saved.');

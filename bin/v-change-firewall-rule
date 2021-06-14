@@ -96,6 +96,6 @@ $BIN/v-update-firewall
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "Firewall" "Firewall rule changed (Rule: $rule, Action: $action, Protocol: $protocol, Port: $port_ext)."
 log_event "$OK" "$ARGUMENTS"
-
 exit

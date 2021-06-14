@@ -6,7 +6,7 @@ $TAB = 'RRD';
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check user
-if ($_SESSION['user'] != 'admin') {
+if ($_SESSION['userContext'] != 'admin')  {
     header('Location: /list/user');
     exit;
 }
@@ -15,6 +15,11 @@ if ($_SESSION['user'] != 'admin') {
 exec (HESTIA_CMD."v-list-sys-rrd json", $output, $return_var);
 $data = json_decode(implode('', $output), true);
 unset($output);
+
+$period=$_GET['period'];
+if (!in_array($period, array('daily', 'weekly', 'monthly', 'yearly'))) {
+    $period = 'daily';
+}
 
 // Render page
 render_page($user, $TAB, 'list_rrd');

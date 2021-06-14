@@ -70,7 +70,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_history "changed whois expiration date for $domain"
+$BIN/v-log-action "$user" "Info" "DNS" "Updated DNS SOA expiration date (Domain: $domain, Value: $exp)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -85,7 +85,7 @@ if [ ! -z "$restart" ]; then
 fi
 
 # Logging
-log_history "Disabled FastCGI cache for $domain"
+$BIN/v-log-action "$user" "Info" "Web" "FastCGI cache disabled (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

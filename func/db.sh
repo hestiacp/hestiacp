@@ -60,6 +60,8 @@ mysql_connect() {
     mysql --defaults-file=$mycnf -e 'SELECT VERSION()' > $mysql_out 2>&1
     if [ '0' -ne "$?" ]; then
         if [ "$notify" != 'no' ]; then
+            email=$(grep CONTACT $HESTIA/data/users/admin/user.conf |cut -f 2 -d \')
+            subj="MySQL connection error on $(hostname)"
             echo -e "Can't connect to MySQL $HOST\n$(cat $mysql_out)" |\
                 $SENDMAIL -s "$subj" $email
         fi
@@ -90,6 +92,8 @@ mysql_dump() {
     if [ '0' -ne "$?" ]; then
         rm -rf $tmpdir
         if [ "$notify" != 'no' ]; then
+            email=$(grep CONTACT $HESTIA/data/users/admin/user.conf |cut -f 2 -d \')
+           subj="MySQL error on $(hostname)"
             echo -e "Can't dump database $database\n$(cat $err)" |\
                 $SENDMAIL -s "$subj" $email
         fi
@@ -115,6 +119,8 @@ psql_connect() {
     psql -h $HOST -U $USER -p $PORT -c "SELECT VERSION()" > /dev/null 2>/tmp/e.psql
     if [ '0' -ne "$?" ]; then
         if [ "$notify" != 'no' ]; then
+            email=$(grep CONTACT $HESTIA/data/users/admin/user.conf |cut -f 2 -d \')
+            subj="PostgreSQL connection error on $(hostname)"
             echo -e "Can't connect to PostgreSQL $HOST\n$(cat /tmp/e.psql)" |\
                 $SENDMAIL -s "$subj" $email
         fi
@@ -136,6 +142,8 @@ psql_dump() {
     if [ '0' -ne "$?" ]; then
         rm -rf $tmpdir
         if [ "$notify" != 'no' ]; then
+            email=$(grep CONTACT $HESTIA/data/users/admin/user.conf |cut -f 2 -d \')
+            subj="PostgreSQL error on $(hostname)"
             echo -e "Can't dump database $database\n$(cat /tmp/e.psql)" |\
                 $SENDMAIL -s "$subj" $email
         fi

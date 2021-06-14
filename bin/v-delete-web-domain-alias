@@ -95,7 +95,7 @@ $BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging
-log_history "deleted alias $dom_alias on $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Deleted web domain alias (Alias: $dom_alias, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

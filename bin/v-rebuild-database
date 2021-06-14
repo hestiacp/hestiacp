@@ -70,6 +70,7 @@ update_user_value "$user" '$U_DISK_DB' "$U_DISK_DB"
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "System" "Rebuilt database (User: $user, Database: $database)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

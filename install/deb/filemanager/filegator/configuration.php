@@ -15,8 +15,11 @@ $dist_config['services']['Filegator\Services\Storage\Filesystem']['config']['ada
         if (isset($_SESSION['user'])) {
             $v_user = $_SESSION['user'];
         }
-        if (isset($_SESSION['look']) && $_SESSION['look'] != 'admin' && $v_user === 'admin') {
+        if (isset($_SESSION['look']) && ($_SESSION['userContext'] === 'admin')) {
             $v_user = $_SESSION['look'];
+        }
+        if ((isset($_SESSION['look']) && ($_SESSION['look'] == 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] == 'yes') )) {
+            header('Location: /');
         }
         # Create filemanager sftp key if missing and trash it after 30 min
         if (! file_exists('/home/'.basename($v_user).'/.ssh/hst-filemanager-key')) {

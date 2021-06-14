@@ -118,7 +118,7 @@ function session_invalid(){
     //delete all current sessions
     session_destroy();
     setcookie($session_name, null, -1, '/');
-    header('Location: /phpmyadmin/index.php');
+    header("Location: " . dirname($_SERVER['PHP_SELF']) . "/index.php");
     die();
 }
     $api = new Hestia_API();
@@ -127,6 +127,8 @@ function session_invalid(){
             $api -> delete_temp_user($_SESSION['HESTIA_sso_database'], $_SESSION['HESTIA_sso_user'],  $_SESSION['PMA_single_signon_user'], $_SESSION['HESTIA_sso_host']);
             //remove sessin
             session_invalid();
+            header("Location: " . dirname($_SERVER['PHP_SELF']) . "/index.php");
+            die();
         }else{ 
             if(isset($_GET['user']) && isset($_GET['hestia_token'])){
                 $database = $_GET['database'];
@@ -153,15 +155,19 @@ function session_invalid(){
                         
                         @session_write_close();
                         setcookie($session_name, $id , 0, "/");
-                        header('Location: /phpmyadmin/index.php');
+                        header("Location: " . dirname($_SERVER['PHP_SELF']) . "/index.php");
                         die();
                     }
                 }else{
                     session_invalid();
+                    header("Location: " . dirname($_SERVER['PHP_SELF']) . "/index.php");
+                    die();
                 }
             }
         }
     }else{
         session_invalid();
+        header("Location: " . dirname($_SERVER['PHP_SELF']) . "/index.php");
+        die();
     }
 ?>

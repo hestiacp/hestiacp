@@ -27,7 +27,7 @@ if (!empty( $data['config']['LANGUAGE'])) {
 }
 
 // Define vars
-$from = 'Hestia Control Panel <hestia@'.gethostname().'>';
+$from = 'Hestia Control Panel <noreply@'.gethostname().'>';
 $to = $argv[3]."\n";
 $subject = $argv[2]."\n";
 $mailtext = file_get_contents("php://stdin");

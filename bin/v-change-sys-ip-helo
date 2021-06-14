@@ -43,15 +43,23 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Change ip HELO/SMTP Banner
-update_ip_helo_value $ip $helo
+# Check if IP address is behind NAT configuration and if so use Public IP for HELO
+source $HESTIA/data/ips/$ip
+
+if [  -z "$NAT" ]; then 
+    # Change ip HELO/SMTP Banner
+    update_ip_helo_value $ip $helo
+else
+    # Change ip HELO/SMTP Banner
+    update_ip_helo_value $NAT $helo
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging
-log_history "changed associated HELO/SMTP Banner on $ip to $helo" '' 'admin'
+$BIN/v-log-action "system" "Info" "System" "Configured HELO/SMTP banner (IP: $ip, Value: $helo)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

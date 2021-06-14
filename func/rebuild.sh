@@ -1,6 +1,8 @@
 # User account rebuild
 rebuild_user_conf() {
 
+    sanitize_config_file "user"
+
     # Get user variables
     source $USER_DATA/user.conf
 
@@ -34,6 +36,22 @@ rebuild_user_conf() {
     if [ -z "${ROLE+x}" ]; then 
         sed -i "/PHPCLI/a ROLE='user'" $USER_DATA/user.conf 
     fi
+    if [ -z "${THEME+x}" ]; then 
+        sed -i "/LANGUAGE/a THEME=''" $USER_DATA/user.conf 
+    fi
+    if [ -z "${PREF_UI_SORT+x}" ]; then 
+        sed -i "/NOTIFICATIONS/a PREF_UI_SORT='name'" $USER_DATA/user.conf 
+    fi
+    if [ -z "${LOGIN_DISABLED+x}" ]; then 
+        sed -i "/PREF_UI_SORT/a LOGIN_DISABLED=''" $USER_DATA/user.conf 
+    fi
+    if [ -z "${LOGIN_USE_IPLIST+x}" ]; then 
+        sed -i "/LOGIN_DISABLED/a LOGIN_USE_IPLIST=''" $USER_DATA/user.conf 
+    fi
+    if [ -z "${LOGIN_ALLOW_IPS+x}" ]; then 
+        sed -i "/LOGIN_USE_IPLIST/a LOGIN_ALLOW_IPS=''" $USER_DATA/user.conf 
+    fi
+
     # Run template trigger
     if [ -x "$HESTIA/data/packages/$PACKAGE.sh" ]; then
         $HESTIA/data/packages/$PACKAGE.sh "$user" "$CONTACT" "$NAME"
@@ -281,13 +299,13 @@ rebuild_web_domain_conf() {
 
     # Refresh HTTPS redirection if previously enabled
     if [ "$SSL_FORCE" = 'yes' ]; then
-        $BIN/v-delete-web-domain-ssl-force $user $domain no
-        $BIN/v-add-web-domain-ssl-force $user $domain yes
+        $BIN/v-delete-web-domain-ssl-force $user $domain no yes
+        $BIN/v-add-web-domain-ssl-force $user $domain yes yes
     fi
 
     if [ "$SSL_HSTS" = 'yes' ]; then
-        $BIN/v-delete-web-domain-ssl-hsts $user $domain no
-        $BIN/v-add-web-domain-ssl-hsts $user $domain yes
+        $BIN/v-delete-web-domain-ssl-hsts $user $domain no yes
+        $BIN/v-add-web-domain-ssl-hsts $user $domain yes yes
     fi
     if [ "$FASTCGI_CACHE" = 'yes' ]; then
         $BIN/v-delete-fastcgi-cache $user $domain
@@ -562,7 +580,7 @@ rebuild_mail_domain_conf() {
 
         # Removing configuration files if domain is suspended
         if [ "$SUSPENDED" = 'yes' ]; then
-            rm -f /etc/exim/domains/$domain_idn
+            rm -f /etc/$MAIL_SYSTEM/domains/$domain_idn
             rm -f /etc/dovecot/conf.d/domains/$domain_idn.conf
         fi
 

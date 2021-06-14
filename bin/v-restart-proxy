@@ -24,7 +24,7 @@ send_email_report() {
     email=$(echo "$email" | cut -f 2 -d "'")
     tmpfile=$(mktemp)
     subj="$(hostname): $PROXY_SYSTEM restart failed"
-    service $PROXY_SYSTEM configtest >> $tmpfile 2>&1
+    nginx -t >> $tmpfile 2>&1
     service $PROXY_SYSTEM restart >> $tmpfile 2>&1
     cat $tmpfile |$SENDMAIL -s "$subj" $email
     rm -f $tmpfile
@@ -70,6 +70,14 @@ if [ -f "$HESTIA/web/inc/nginx_proxy" ]; then
         nohup $BIN/v-restart-proxy 'background' &>/dev/null &
     else
     # Default behaviour
+    
+    # Preform an check if Nginx is valid as reload doesn't throw an error / exit
+    service $PROXY_SYSTEM configtest  >> /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        send_email_report
+        check_result $E_RESTART "$PROXY_SYSTEM restart failed"
+    fi
+    
     # Restart system
     $BIN/v-restart-service $PROXY_SYSTEM > /dev/null 2>&1
 

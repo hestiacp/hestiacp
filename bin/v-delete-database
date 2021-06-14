@@ -75,7 +75,7 @@ if [ ! -z "$suspended" ]; then
 fi
 
 # Logging
-log_history "deleted $database database"
+$BIN/v-log-action "$user" "Info" "Database" "Deleted database (Name: $database)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

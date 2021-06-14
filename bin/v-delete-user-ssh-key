@@ -54,7 +54,7 @@ sed -i "/${keyid}/d" "$AUTHKEY_FILE"
 #----------------------------------------------------------#
 
 # Logging
-log_history "Deleted ssh-key $user"
+$BIN/v-log-action "$user" "Info" "SSH" "SSH key deleted (Key ID: $keyid)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

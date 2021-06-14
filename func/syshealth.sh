@@ -95,7 +95,7 @@ function syshealth_update_user_config_format() {
     # USER CONFIGURATION
     # Create array of known keys in configuration file
     system="user"
-    known_keys=(NAME PACKAGE CONTACT CRON_REPORTS MD5 RKEY TWOFA QRCODE PHPCLI ROLE SUSPENDED SUSPENDED_USERS SUSPENDED_WEB SUSPENDED_DNS SUSPENDED_MAIL SUSPENDED_DB SUSPENDED_CRON IP_AVAIL IP_OWNED U_USERS U_DISK U_DISK_DIRS U_DISK_WEB U_DISK_MAIL U_DISK_DB U_BANDWIDTH U_WEB_DOMAINS U_WEB_SSL U_WEB_ALIASES U_DNS_DOMAINS U_DNS_RECORDS U_MAIL_DKIM U_MAIL_DKIM U_MAIL_ACCOUNTS U_MAIL_DOMAINS U_MAIL_SSL U_DATABASES U_CRON_JOBS U_BACKUPS LANGUAGE NOTIFICATIONS TIME DATE)
+    known_keys=(NAME PACKAGE CONTACT CRON_REPORTS MD5 RKEY TWOFA QRCODE PHPCLI ROLE SUSPENDED SUSPENDED_USERS SUSPENDED_WEB SUSPENDED_DNS SUSPENDED_MAIL SUSPENDED_DB SUSPENDED_CRON IP_AVAIL IP_OWNED U_USERS U_DISK U_DISK_DIRS U_DISK_WEB U_DISK_MAIL U_DISK_DB U_BANDWIDTH U_WEB_DOMAINS U_WEB_SSL U_WEB_ALIASES U_DNS_DOMAINS U_DNS_RECORDS U_MAIL_DKIM U_MAIL_DKIM U_MAIL_ACCOUNTS U_MAIL_DOMAINS U_MAIL_SSL U_DATABASES U_CRON_JOBS U_BACKUPS LANGUAGE THEME NOTIFICATIONS PREF_UI_SORT TIME DATE)
     write_kv_config_file
     unset system
     unset known_keys
@@ -290,8 +290,8 @@ function syshealth_repair_system_config() {
 
     # Enforce subdomain ownership
     if [ -z "$ENFORCE_SUBDOMAIN_OWNERSHIP" ]; then
-        echo "[ ! ] Adding missing variable to hestia.conf: ENFORCE_SUBDOMAIN_OWNERSHIP ('yes')"
-        $BIN/v-change-sys-config-value "ENFORCE_SUBDOMAIN_OWNERSHIP" "yes"
+        echo "[ ! ] Adding missing variable to hestia.conf: ENFORCE_SUBDOMAIN_OWNERSHIP ('no')"
+        $BIN/v-change-sys-config-value "ENFORCE_SUBDOMAIN_OWNERSHIP" "no"
     fi
 
     # API access allowed IP's
@@ -304,4 +304,96 @@ function syshealth_repair_system_config() {
             fi
         fi
     fi
+    
+    # Enforce subdomain ownership
+    if [ -z "$ENFORCE_SUBDOMAIN_OWNERSHIP" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: ENFORCE_SUBDOMAIN_OWNERSHIP ('yes')"
+        $BIN/v-change-sys-config-value "ENFORCE_SUBDOMAIN_OWNERSHIP" "yes"
+    fi
+    # Debug mode
+    if [ -z "$DEBUG_MODE" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: DEBUG_MODE ('false')"
+        $BIN/v-change-sys-config-value "DEBUG_MODE" "false"
+    fi
+    # Quick install plugin
+    if [ -z "$PLUGIN_APP_INSTALLER" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: PLUGIN_APP_INSTALLER ('true')"
+        $BIN/v-change-sys-config-value "PLUGIN_APP_INSTALLER" "true"
+    fi
+    # Enable preview mode
+    if [ -z "$POLICY_SYSTEM_ENABLE_BACON" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYSTEM_ENABLE_BACON ('false')"
+        $BIN/v-change-sys-config-value "POLICY_SYSTEM_ENABLE_BACON" "false"
+    fi
+    # Hide system services
+    if [ -z "$POLICY_SYSTEM_HIDE_SERVICES" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYSTEM_HIDE_SERVICES ('no')"
+        $BIN/v-change-sys-config-value "POLICY_SYSTEM_HIDE_SERVICES" "no"
+    fi
+    # Password reset
+    if [ -z "$POLICY_SYSTEM_PASSWORD_RESET" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYSTEM_PASSWORD_RESET ('no')"
+        $BIN/v-change-sys-config-value "POLICY_SYSTEM_PASSWORD_RESET" "no"
+    fi
+    # Protect admin user
+    if [ -z "$POLICY_SYSTEM_PROTECTED_ADMIN" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYSTEM_PROTECTED_ADMIN ('no')"
+        $BIN/v-change-sys-config-value "POLICY_SYSTEM_PROTECTED_ADMIN" "no"
+    fi
+    # Theme editor
+    if [ -z "$POLICY_USER_CHANGE_THEME" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_CHANGE_THEME ('yes')"
+        $BIN/v-change-sys-config-value "POLICY_USER_CHANGE_THEME" "true"
+    fi    
+    # Allow user delete logs
+    if [ -z "$POLICY_USER_DELETE_LOGS" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_DELETE_LOGS ('yes')"
+        $BIN/v-change-sys-config-value "POLICY_USER_DELETE_LOGS" "yes"
+    fi
+    # Allow users to delete details
+    if [ -z "$POLICY_USER_EDIT_DETAILS" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_EDIT_DETAILS ('yes')"
+        $BIN/v-change-sys-config-value "POLICY_USER_EDIT_DETAILS" "yes"
+    fi
+    # Allow users to edit DNS templates
+    if [ -z "$POLICY_USER_EDIT_DNS_TEMPLATES" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_EDIT_DNS_TEMPLATES ('yes')"
+        $BIN/v-change-sys-config-value "POLICY_USER_EDIT_DNS_TEMPLATES" "yes"
+    fi
+    # Allow users to edit web templates
+    if [ -z "$POLICY_USER_EDIT_WEB_TEMPLATES" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_EDIT_WEB_TEMPLATES ('yes')"
+        $BIN/v-change-sys-config-value "POLICY_USER_EDIT_WEB_TEMPLATES" "true"
+    fi
+    # View user logs
+    if [ -z "$POLICY_USER_VIEW_LOGS" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_VIEW_LOGS ('yes')"
+        $BIN/v-change-sys-config-value "POLICY_USER_VIEW_LOGS" "true"
+    fi
+    # Allow users to login (read only) when suspended
+    if [ -z "$POLICY_USER_VIEW_SUSPENDED" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_VIEW_SUSPENDED ('no')"
+        $BIN/v-change-sys-config-value "POLICY_USER_VIEW_SUSPENDED" "no"
+    fi
+    # PHPMyadmin SSO key
+    if [ -z "$PHPMYADMIN_KEY" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: PHPMYADMIN_KEY ('')"
+        $BIN/v-change-sys-config-value "PHPMYADMIN_KEY" ""
+    fi
+    
+}
+
+# Repair System Cron Jobs
+# Add default cron jobs to "admin" user account's cron tab
+function syshealth_repair_system_cronjobs() {
+    $HESTIA/bin/v-add-cron-job 'admin' '*/2' '*' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue restart" '' 'no'
+    $HESTIA/bin/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue daily" '' 'no'
+    $HESTIA/bin/v-add-cron-job 'admin' '15' '02' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue disk" '' 'no'
+    $HESTIA/bin/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue traffic" '' 'no'
+    $HESTIA/bin/v-add-cron-job 'admin' '30' '03' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue webstats" '' 'no'
+    $HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue backup" '' 'no'
+    $HESTIA/bin/v-add-cron-job 'admin' '10' '05' '*' '*' '*' "sudo $HESTIA/bin/v-backup-users" '' 'no'
+    $HESTIA/bin/v-add-cron-job 'admin' '20' '00' '*' '*' '*' "sudo $HESTIA/bin/v-update-user-stats" '' 'no'
+    $HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-rrd" '' 'no'
+    $HESTIA/bin/v-restart-cron
 }

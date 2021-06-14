@@ -1,0 +1,195 @@
+<!-- Begin toolbar -->
+<div class="l-center edit">
+	<div class="l-sort clearfix">
+		<div class="l-unit-toolbar__buttonstrip">
+			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+		</div>
+		<div class="l-unit-toolbar__buttonstrip float-right">
+			<a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
+		</div>
+	</div>
+</div>
+<!-- End toolbar -->
+
+<div class="l-separator"></div>
+
+<div class="l-center animated fadeIn">
+
+	<form id="vstobjects" name="v_add_user" method="post">
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+		<input type="hidden" name="ok" value="Add" />
+
+		<table class="data mode-add">
+			<tr class="data-add">
+				<td class="data-dotted">
+					<table class="data-col1">
+						<tr>
+							<td></td>
+						</tr>
+					</table>
+				</td>
+				<td class="data-dotted">
+					<table class="data-col2">
+						<tr>
+							<td class="step-top">
+								<span class="page-title"><?=_('Adding User');?></span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<?php
+									if (!empty($_SESSION['error_msg'])) {
+										$msg_icon = 'fa-exclamation-circle status-icon red';
+										$msg_text = htmlentities($_SESSION['error_msg']);
+										$msg_id = 'vst-error';
+									} else {
+										if (!empty($_SESSION['ok_msg'])) {
+											$msg_icon = 'fa-check-circle status-icon green';
+											$msg_text = $_SESSION['ok_msg'];
+											$msg_id = 'vst-ok';
+										}
+									}
+								?>
+								<span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text step-top">
+								<?=_('Username');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_username" value="<?=htmlentities(trim($v_username, "'"))?>" tabindex="1">
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text ">
+								<?=_('Contact');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>" tabindex="2">
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Email');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_email" id='v_email' value="<?=htmlentities(trim($v_email, "'"))?>" tabindex="3">
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Password');?> <a href="javascript:randomString();" title="<?=_('generate');?>"><i class="fas fa-sync status-icon green icon-large"></i></a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>" tabindex="4" /><br />
+								<meter max="4" id="meter"></meter>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text">
+								<?=_('Your password must have at least');?>:
+								<ul>
+									<li><?=_('8 characters long');?></li>
+									<li><?=_('1 uppercase & 1 lowercase character');?></li>
+									<li><?=_('1 number');?></li>
+								</ul>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label><input type="checkbox" size="20" class="vst-checkbox" onclick="javascript:elementHideShow('send-welcome');" name="v_login_disabled" <?php if ($data[$user]['LOGIN_DISABLED'] == "yes") echo "checked=yes" ?>><?=_('Do not allow user to log in to Control Panel');?></label>
+							</td>
+						</tr>
+						<tr id="send-welcome">
+							<td class="vst-text input-label">
+								<label><input type="checkbox" size="20" class="vst-checkbox" name="v_email_notice" id='v_email_notify' value="" tabindex="5" /><?=_('Send welcome email');?></label>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Language');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<select class="vst-list" name="v_language" tabindex="6">
+									<?php
+										foreach ($languages as $key => $value) {
+											echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($key)."\"";
+											if (( $key == $_SESSION['LANGUAGE'] ) && (empty($v_language))){
+												echo ' selected' ;
+											}
+											if (isset($v_language)){
+												if ( htmlentities($key) == trim($v_language,"'") ){
+													echo ' selected' ;
+												}
+											}
+											echo ">".htmlentities($value)."</option>\n";
+										}
+									?>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Role');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<select class="vst-list" name="v_role" tabindex="7">
+									<option value="user"><?=_('User');?>
+									<option value="admin" <?php if($v_role == "admin" ){ echo "selected"; } ?>><?=_('Administrator');?>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label" name="v_package">
+								<?=_('Package');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<select class="vst-list" name="v_package" tabindex="8">
+									<?php
+										foreach ($data as $key => $value) {
+											echo "\n\t\t\t\t\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($key)."\"";
+											if ((!empty($v_package)) && ( $key == $_POST['v_package'])){
+												echo 'selected' ;
+											} else {
+												if ( $key == 'default'){
+													echo 'selected' ;
+												}
+											}
+											echo ">".htmlentities($key)."</option>\n";
+										}
+									?>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Send login credentials to email address');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" class="vst-input" name="v_notify" id="v_notify" value="<?=htmlentities(trim($v_notify, "'"))?>" tabindex="8">
+							</td>
+						</tr>
+					</table>
+					<table class="data-col2"></table>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>

@@ -38,6 +38,10 @@ if [ ! -z $1 ]; then
     if [ ! -z $2 ]; then
         # Copy package
         cp -f $HESTIA/data/packages/$package.pkg $HESTIA/data/packages/$new_package.pkg
+        # Don't leave the .sh file behind
+        if [ ! -f $HESTIA/data/packages/$package.sh ]; then 
+            cp $HESTIA/data/packages/$package.sh $HESTIA/data/packages/$new_package.sh
+        fi
     else
         echo "Error: new package name not specified."
     fi
@@ -48,6 +52,7 @@ fi
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
+$BIN/v-log-action "system" "Info" "System" "Package copied (Package: $package, New Package: $new_package)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

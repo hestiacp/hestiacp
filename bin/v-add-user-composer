@@ -15,6 +15,7 @@
 
 # Argument definition
 user=$1
+version=${2-2}
 
 if [ -z "$HESTIA" ]; then
     HESTIA="/usr/local/hestia"
@@ -31,8 +32,9 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'USER'
+check_args '1' "$#" 'USER [VERSION]'
 is_format_valid 'user'
+is_number_format_valid 'version' "$version"
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 
@@ -78,14 +80,14 @@ if [[ "$signature" != $(sha384sum $COMPOSER_SETUP_FILE | cut -f 1 -d " ") ]]; th
     check_result $E_INVALID "Composer signature does not match"
 fi
 
-COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php "$COMPOSER_SETUP_FILE" --1 --quiet --install-dir="$COMPOSER_DIR" --filename=composer
+COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php "$COMPOSER_SETUP_FILE" --quiet "--$version" --install-dir="$COMPOSER_DIR" --filename=composer
 check_result $? "Composer install failed"
 
 [ -f "$COMPOSER_SETUP_FILE" ] && rm -f "$COMPOSER_SETUP_FILE"
 
 
 # Logging
-log_history "Enabled composer for user $user"
+$BIN/v-log-action "$user" "Info" "Plugins" "Composer support enabled."
 log_event "$OK" "$ARGUMENTS"
 
 exit

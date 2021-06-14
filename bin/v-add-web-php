@@ -132,7 +132,7 @@ cp -f $HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl \
 #----------------------------------------------------------#
 
 # Logging
-log_history "installed php $version" '' 'admin'
+$BIN/v-log-action "system" "Info" "System" "Installed PHP $version."
 log_event "$OK" "$ARGUMENTS"
 
 exit

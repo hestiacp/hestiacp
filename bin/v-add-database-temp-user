@@ -78,8 +78,8 @@ echo '{
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
-log_history "Granted $dbuser access to $database"
 
 # Logging
+$BIN/v-log-action "$user" "Info" "Databases" "Granted user $dbuser access to database $database."
 log_event "$OK" "$ARGUMENTS"
 exit

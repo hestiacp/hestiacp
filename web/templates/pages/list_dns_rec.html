@@ -1,0 +1,146 @@
+<!-- Begin toolbar -->
+<div class="l-center">
+	<div class="l-sort clearfix noselect">
+		<div class="l-unit-toolbar__buttonstrip">
+			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/dns/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+			<?php if ($read_only !== 'true') {?>
+				<a href="/add/dns/?domain=<?=htmlentities($_GET['domain'])?>" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i> <?=_('Add Record');?></a>
+				<a href="/edit/dns/?domain=<?=htmlentities($_GET['domain'])?>" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-pencil-alt status-icon blue"></i> <?=_('Editing DNS Domain');?></a>
+			<?php } ?>
+		</div>
+		<ul class="context-menu sort-order animated fadeIn" style="display:none;">
+			<li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?=_('Date');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+			<li entity="sort-value"><span class="name"><?=_('IP or Value');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+			<li entity="sort-record"><span class="name"><?=_('Record');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+			<li entity="sort-ttl" sort_as_int="1"><span class="name"><?=_('TTL');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+			<li entity="sort-type"><span class="name"><?=_('Type');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+		</ul>
+		<div class="l-sort-toolbar clearfix">
+			<table>
+				<tr>
+					<td class="sort-by" title="<?=_('Sort items');?>">
+						<?=_('sort by');?>: <span>
+							<b>
+								<?php if ($_SESSION['userSortOrder'] === 'name') { $label = 'Record'; } else { $label = 'Date'; } ?>
+								<?=_($label)?> <i class="fas fa-sort-alpha-down"></i>
+							</b>
+						</span>
+					</td>
+					<td class="l-sort-toolbar__search-box">
+						<form action="/search/" method="get">
+							<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+							<input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>" />
+							<button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search');?>"><i class="fas fa-search"></i></button>
+						</form>
+					</td>
+					<?php if ($read_only !== 'true') {?>
+						<td>
+							<form action="/bulk/dns/" method="post" id="objects">
+								<input type="hidden" name="domain" value="<?=htmlentities($_GET['domain'])?>" />
+								<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+								<div class="l-select">
+									<select name="action" id="">
+										<option value=""><?=_('apply to selected');?></option>
+										<option value="suspend"><?=_('suspend');?></option>
+										<option value="unsuspend"><?=_('unsuspend');?></option>
+										<option value="delete"><?=_('delete');?></option>
+									</select>
+								</div>
+								<button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected');?>"><i class="fas fa-arrow-right"></i></button>
+							</form>
+						</td>
+					<?php } ?>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+<!-- End toolbar -->
+
+<div class="l-separator"></div>
+
+<div class="l-center units">
+	<div class="header table-header">
+		<div class="l-unit__col l-unit__col--right">
+			<div class="clearfix l-unit__stat-col--left super-compact">
+				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>" onChange="checkedAll('objects');" <?=$display_mode;?>>
+			</div>
+			<div class="clearfix l-unit__stat-col--left small"><b><?=_('Record');?></b></div>
+			<div class="clearfix l-unit__stat-col--left super-compact text-right"><b>&nbsp;</b></div>
+			<div class="clearfix l-unit__stat-col--left compact text-center" style="padding-left: 32px;"><b><?=_('Type');?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact text-center"><b><?=_('Priority');?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact text-center"><b><?=_('TTL');?></b></div>
+			<div class="clearfix l-unit__stat-col--left super-compact"><b>&nbsp;</b></div>
+			<div class="clearfix l-unit__stat-col--left wide-6"><b><?=_('IP or Value');?></b></div>
+		</div>
+	</div>
+
+	<!-- Begin DNS record list item loop -->
+	<?php
+		foreach ($data as $key => $value) {
+			++$i;
+		?>
+		<div class="l-unit<?php if ($status == 'suspended') echo ' l-unit--suspended'; if($_SESSION['favourites']['DNS_REC'][$key] == 1) echo ' l-unit--starred';?> animated fadeIn"
+			v_unit_id="<?=htmlentities($key);?>" v_section="dns_rec" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-record="<?=$data[$key]['RECORD']?>" sort-type="<?=$data[$key]['TYPE']?>" sort-ttl="<?=$data[$key]['TTL']?>" sort-value="<?=$data[$key]['VALUE']?>">
+			<div class="l-unit__col l-unit__col--right">
+				<div class="clearfix l-unit__stat-col--left super-compact">
+					<input id="check<?=$data[$key]['ID']?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="record[]" value="<?=$data[$key]['ID']?>" <?=$display_mode;?>>
+				</div>
+				<div class="clearfix l-unit__stat-col--left small truncate">
+					<b>
+					<?php if (($read_only === 'true') || ($data[$key]['SUSPENDED'] == 'yes')) {?>
+						<?=substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?>
+					<?php } else { ?>
+						<a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing DNS Record').': '.htmlspecialchars($data[$key]['RECORD'])?>"><? echo substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?></a>
+					<?php } ?>
+					</b>
+				</div>
+			<!-- START QUICK ACTION TOOLBAR AREA -->
+			<div class="clearfix l-unit__stat-col--left super-compact text-right">
+				<div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+					<div class="actions-panel clearfix">
+						<?php if ($read_only === 'true') {?>
+							<!-- Restrict editing of DNS records when impersonating 'admin' account -->
+							&nbsp;
+						<?php } else { ?>
+							<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
+								<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing DNS Record');?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+							<?php } ?>
+							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+								<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('delete');?>">
+									<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
+									<input type="hidden" name="delete_url" value="/delete/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" />
+									<div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=_('Confirmation');?>">
+										<p class="confirmation"><?=sprintf(_('DELETE_RECORD_CONFIRMATION'),$key)?></p>
+									</div>
+								</a>
+							</div>
+						<?php } ?>
+					</div>
+				</div>
+			</div>
+			<!-- END QUICK ACTION TOOLBAR AREA -->
+			<div class="clearfix l-unit__stat-col--left compact text-center" style="padding-left: 32px;"><b><?=$data[$key]['TYPE']?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact text-center"><?=$data[$key]['PRIORITY']?>&nbsp;</div>
+			<div class="clearfix l-unit__stat-col--left compact text-center"><?php if($data[$key]['TTL'] == ''){ echo _('Default'); }else{ echo $data[$key]['TTL'];} ?></div>
+			<div class="clearfix l-unit__stat-col--left super-compact"><b>&nbsp;</b></div>
+			<div class="clearfix l-unit__stat-col--left wide-6 truncate" style="word-break: break-word;"><?=htmlspecialchars($data[$key]['VALUE'], ENT_QUOTES, 'UTF-8');?></div>
+		</div>
+	</div>
+<?php } ?>
+
+</div>
+
+<div id="vstobjects">
+	<div class="l-separator"></div>
+	<div class="l-center">
+		<div class="l-unit-ft">
+			<table class='data'></table>
+			<div class="data-count l-unit__col l-unit__col--right total clearfix">
+				<?php printf(ngettext('%d DNS record', '%d DNS records', $i),$i); ?>
+			</div>
+			<div class="data-count l-unit__col l-unit__col--right back clearfix">
+			</div>
+		</div>
+	</div>
+</div>

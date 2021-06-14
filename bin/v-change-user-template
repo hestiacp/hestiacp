@@ -59,7 +59,7 @@ esac
 #----------------------------------------------------------#
 
 # Logging
-log_history "changed $type template to $template"
+$BIN/v-log-action "$user" "Info" "Web" "Default domain template changed (Type: $type, Template: $template)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

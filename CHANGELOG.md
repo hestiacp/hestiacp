@@ -1,18 +1,98 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [DEVELOPMENT]
+## [Development]
+
 ### Features
-- Introduced single sign-on support for phpMyAdmin.
+
+- Include DMARC record in DNS record list #1836
+- Enabled phpMyAdmin Single Sign On support
+- Add command to add / delete from API_ALLOWED_IP list (#1904)
+
+### Bugfixes
+
+- Improve the calculated disk size of a new backup estimated by excluding the exclude folders, mail accounts and database in backups (#1616) @Myself5
+- Improve v-update-firewall / v-stop-firewarewall to make it self healing (#1892) @myrevery 
+- Update phpMyAdmin version to 1.5.1 (See https://www.phpmyadmin.net/news/2021/6/4/phpmyadmin-511-released/)
+- Fixed a bug after rebuilding mail with Exim4 and suspended domains (#1886)
+- Fixed "Allowed IP addresses for API" field with strange behaviour #1866
+- Fixed an issue where the "Saved confirmation" was not set due to a redirect #1879
+- Increased minimal memory requirements for ClamD / ClamAV.  #1840
+- Restore of backup did not rebuild the "Forced SSL" and "HSTS" config on new account #1862
+- Keep changes made by /install/upgrade/manual/install_awstats_geopip.sh on update HestiaCP (via Discord)
+- Refactor/improve PHP and HTML code @s0t (#1860)
+- Fixed XSS vulnerability in login page and a few other locations @briansemrau / @numanturle
+- Delete old session after after session_regenerate_id() @briansemrau
+- Improve error message when domain all ready exists on different account.
+- Fixed an issue where phpmyadmin did not update when Postgresql was availble.
+
+## [1.4.2] - Service release
+
+- **NOTE:** During the 1.4.1 / 1.4.0 release we have introduced a bug for Ubuntu 20.04 and 18.04 users with multiple network ports on the server. This release will solve the problems caused by this bug! If you are unable to download the Hestia packages via apt. Run the following command via CLI or SSH as root
+
+```
+    iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+```
+
+Then run the update via 
+
+```
+    apt update && apt upgrade
+```
+
+### Bugfixes
+
+- Fix issue wit startup script for iptables / network (#1849) (@myrevery)
+- Fix problem with accidentally replacing nginx.conf during upgrade nginx (#1878 / @myrevery)
+- Fix issue with installing Ubuntu 18.04
+- Fix issue with login into file manger as admin user
+- Added proxy_extentions back to support older custom templates
+- Added the possibility to skip the forced reboot when interactive is set to no
+- Fixed an issue with modx template
+- Updated translations (Croatian, Czech and Italian)  
+- Fixed an issue where users where not able to save / update web domains when POLICY_USER_EDIT_WEB_TEMPLATES is enabled (#1872)
+- Fixed an issue where admin users where not able to add new ssh key for users (#1870)
+- Fixed an issue where domain.com was not affected as a valid domain (#1874)
+- Fixed an issue where "development" icon was not removed on update to release (#1835)
+  
+## [1.4.1] - Bug fix
+
+- Fixed bug with 2FA enabled logins 
+
+## [1.4.0] - Major Release (Feature / Quality Update)
+
+- **NOTE:** Ubuntu 16.04 (Xenial) is no longer supported as it has reached EOL (end-of-life) status. 
+- **NOTE:** Apache in "standalone" mode is no longer actively supported and has been removed from installer options. Nginx (Proxy) + Apache2 will remain supported. 
+- **NOTE:** Custom "quick installer apps" will not work anymore due to changes in how we handle quick installer apps. Minimal changes to the Quick installer apps are required! Please check https://github.com/hestiacp/hestia-quick-install for how to migrate!
+- **NOTE:** Manual upgrade scripts are available to update Roundcube, Rainloop and PHPmyadmin to the last version they can be found in /usr/local/hestia/install/upgrade/manual/
+
+### Features
 - Introduced support for NGINX FastCGI cache.
 - Introduced support for SMTP Relay / smarthosts (server-wide or per-domain).
 - Introduced the ability to choose which webmail client to use per-domain (Roundcube or Rainloop).
+- Added support for Rainloop (Run v-add-sys-rainloop to install it)
 - Added B2 Backup Support for Remote Backup Location - thanks **@rez0n**!
 - Added template support for osTicket - thanks **@madito**!
 - Packages for phpMyAdmin, Roundcube, and Rainloop will be pulled directly from their upstream source instead of APT for new installations.
 - Added DNS records view to mail domains which provides DKIM, SPF, and other entries to use with an external provider.
 - Added an upgrade script to provide in-place upgrades to php7.4 (or any other version).
-
+- Added Drupal and Nextcloud quick installer support (Removed placeholder Joomla)
+- Added a new optional theme "Vestia"
+- Added a switch to disable the API and also limit the api by default to 127.0.0.1 only. For current installs added the option "allow-all" on default 
+- After first reboot of Hestia will try do 1 attempt to request / generate a valid Lets encrypt certificate
+- Introduced multiple new security policies via WebUI. 
+    - Allow users to edit Web / Proxy / DNS / Backend templates
+    - Allow users to edit account details
+    - Allow suspended users to login with "read-only" access
+    - Allow users view / delete user history
+    - Enforce sub domain ownership
+    - Limit access to admin account when other users have the role "Administrator" assigned to them.
+- Disable user to login via WebUI / Limit access to WebUI to certain IP address per user. 
+- Discourage websites to be created under "admin" account and redirect users to create new users. 
+- Added support for redirecting to www / non www domains (or custom)  #427 / #1638.
+- Allow users to see failed login attempts on there account. 
+- Introduced support for ARM based systems. Currently the packages are not available via ATP! 
+- Force reboot of system after install
 
 ### Bugfixes
 - Fixed an issue where user name was duplicated when editing FTP users. (#1411)
@@ -46,9 +126,32 @@ All notable changes to this project will be documented in this file.
 - Fixed XSS vulnerability in `v-add-sys-ip` and user history log (thanks **@numanturle**).
 - Fixed remote code execution vulnerability which could occur when deleting SSH keys (thanks **@numanturle**).
 - Fixed vulnerability in v-update-sys-hestia (thanks **@numanturle**)
+- Disabled the Update via WebUI due to timeout issues. Please update via ```apt update && apt upgrade``` in command line instead.
 - Improve how Quick install of web apps are handled and allow users added apps to be maintained in list view. 
-- Add Drupal quick installer
-- Add Nextcloud quick installer
+- Fixed an issue where the api was enabled after an update of HestiaCP
+- Fixed an issue when the default php version got deleted webmail didn't work any more. #1477
+- Limit access when "demo" mode is enabled. 
+- Fixed an issue where limitations on aliases didn't work propperly
+- Fixed an issue where "Exit to control pannel" link got changed to "Logout" #1669
+- Allow packages to be deleted when in use. Current users are changed to "Default" package. 
+- Fixed multiple bugs with in v-restore-users
+- Redesign statics page
+- Allow self signed certificates to be created with aliases. 
+- Fixed issue where mail accounts where sorting incorrectly by size #1687
+- Improve results v-search-command #1703
+- Merge Codeiginiter / Drupal templates. 
+- Prepare template for FastCGI support an improve security by allowing only .well-known for Let's encrypt requests
+- Update Cloudflare Ips in nginx.conf
+- Fixed an issue where emails where send to nobody when connection failed to database #1765
+- Fixed an issue where no notifications where send on failure and save local backup if remote backup failed. 
+- Fixed an issue where domains containing 2 dots in the top level domain could accidentally got removed #1763
+- Fixed an issue where www could be created and after delete webmail doesn't work anymore #1746
+- Standardize headers for upgrade scripts
+- Improved how we handle custom themes
+- Refactored HMTL / PHP code WebUI
+- Updated ClamAV configuration
+- Fixed issue where file manger key got the wrong permissions
+- Update version Laveral @mariojgt
 
 ## [1.3.5] - Service Release
 ### Features

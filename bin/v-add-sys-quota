@@ -103,6 +103,7 @@ done
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "Plugins" "System Quota enforcement enabled."
 log_history "system quota enforcement enabled"
 log_event "$OK" "$ARGUMENTS"
 

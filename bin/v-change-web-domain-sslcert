@@ -92,7 +92,7 @@ $BIN/v-restart-proxy $restart
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging
-log_history "changed ssl certificate for $domain"
+$BIN/v-log-action "$user" "Info" "Web" "SSL certificate changed (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

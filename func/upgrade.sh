@@ -135,6 +135,7 @@ upgrade_complete_message_log() {
     echo "https://github.com/hestiacp/hestiacp/issues                                  "
     echo "============================================================================="
     echo 
+    $BIN/v-log-action "system" "Info" "Updates" "Update installed (Version: $new_version)."
 }
 
 upgrade_cleanup_message() {
@@ -150,8 +151,16 @@ upgrade_get_version() {
 
 upgrade_set_version() {
     # Set new version number in hestia.conf
-    sed -i "/VERSION/d" $HESTIA/conf/hestia.conf
-    echo "VERSION='$@'" >> $HESTIA/conf/hestia.conf
+    $BIN/v-change-sys-config-value "VERSION" "$@"
+}
+
+upgrade_set_branch() {
+    
+    # Set branch in hestia.conf
+    DISPLAY_VER=$(echo $@ | sed "s|~alpha||g" | sed "s|~beta||g");
+    if [ "$DISPLAY_VER" = "$@" ]; then 
+        $BIN/v-change-sys-config-value "RELEASE_BRANCH" "release"
+    fi
 }
 
 upgrade_send_notification_to_panel () {
@@ -293,6 +302,17 @@ upgrade_init_logging() {
 
     # Create log file
     touch $LOG
+
+    # Add message to system log
+    $BIN/v-log-action "system" "Info" "Updates" "Started update installation (Latest: $new_version, Previous: $VERSION)."
+
+    # Add warnings for pre-release builds
+    if [[ "$new_version" =~ "alpha" ]]; then
+        $BIN/v-log-action "system" "Warning" "Updates" "Development build for testing purposes only. Report bugs at https://github.com/hestiacp/hestiacp/issues/."
+    fi
+    if [[ "$new_version" =~ "beta" ]]; then
+        $BIN/v-log-action "system" "Warning" "Updates" "Beta release. Please report bugs at https://github.com/hestiacp/hestiacp/issues/."
+    fi
 }
 
 upgrade_start_backup() {
@@ -454,7 +474,7 @@ upgrade_start_routine() {
 upgrade_phpmyadmin() {
     if [ "$UPGRADE_UPDATE_PHPMYADMIN" = "true" ]; then
         # Check if MariaDB/MySQL is installed on the server before attempting to install or upgrade phpMyAdmin
-        if [ "$DB_SYSTEM" = "mysql" ]; then
+        if [ ! -z "$(echo $DB_SYSTEM | grep -w 'mysql')" ]; then
             # Define version check function
             function version_ge(){ test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o ! -z "$1" -a "$1" = "$2"; }
 

@@ -276,9 +276,8 @@ if (!empty($_POST['ok_acc'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = sprintf(_('MAIL_ACCOUNT_CREATED_OK'),htmlentities(strtolower($_POST['v_account'])),htmlentities($_POST[v_domain]),htmlentities(strtolower($_POST['v_account'])),htmlentities($_POST[v_domain]));
+        $_SESSION['ok_msg'] = sprintf(_('MAIL_ACCOUNT_CREATED_OK'),htmlentities(strtolower($_POST['v_account'])),htmlentities($_POST['v_domain']),htmlentities(strtolower($_POST['v_account'])),htmlentities($_POST['v_domain']));
         unset($v_account);
-        unset($v_password);
         unset($v_password);
         unset($v_aliases);
         unset($v_fwd);

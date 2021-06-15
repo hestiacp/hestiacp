@@ -105,7 +105,6 @@ if (!empty($_POST['save'])) {
 
     // Check empty fields
     if (empty($_POST['v_package'])) $errors[] = _('package');
-    if (empty($_POST['v_package_new'])) $errors[] = _('package_new');
     if (empty($_POST['v_web_template'])) $errors[] = _('web template');
     if (!empty($_SESSION['WEB_BACKEND'])) {
         if (empty($_POST['v_backend_template'])) $errors[] = _('backend template');

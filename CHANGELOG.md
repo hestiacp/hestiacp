@@ -24,7 +24,8 @@ All notable changes to this project will be documented in this file.
 - Fixed XSS vulnerability in login page and a few other locations @briansemrau / @numanturle
 - Delete old session after after session_regenerate_id() @briansemrau
 - Improve error message when domain all ready exists on different account.
-- Fixed an issue where phpmyadmin did not update when Postgresql was availble.
+- Fixed an issue where phpmyadmin did not update when Postgresql was available.
+- Fixed an issue where HELO message was not set / error was created on NAT IP
 
 ## [1.4.2] - Service release
 

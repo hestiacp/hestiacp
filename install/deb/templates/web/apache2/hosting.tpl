@@ -32,6 +32,7 @@
         php_admin_value open_basedir %docroot%:%home%/%user%/tmp:/bin:/usr/bin:/usr/local/bin:/var/www/html:/tmp:/usr/share:/etc/phpMyAdmin:/etc/phpmyadmin:/var/lib/phpmyadmin:/etc/roundcubemail:/etc/roundcube:/var/lib/roundcube
         php_admin_value upload_tmp_dir %home%/%user%/tmp
         php_admin_value session.save_path %home%/%user%/tmp
+        php_admin_value sys_temp_dir %home%/%user%/tmp
     </Directory>
     <Directory %home%/%user%/web/%domain%/stats>
         AllowOverride All

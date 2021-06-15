@@ -47,7 +47,7 @@ class HestiaApp {
         return $this->run($cmd, $args, $cmd_result);
     }
 
-    public function installComposer()
+    public function installComposer($version)
     {
         exec("curl https://composer.github.io/installer.sig", $output);
 
@@ -69,7 +69,7 @@ class HestiaApp {
         }
 
         $install_folder = $this->getUserHomeDir() . DIRECTORY_SEPARATOR . '.composer';
-        $this->runUser('v-run-cli-cmd', ["/usr/bin/php", $composer_setup, "--1", "--quiet", "--install-dir=".$install_folder, "--filename=composer" ], $status);
+        $this->runUser('v-run-cli-cmd', ["/usr/bin/php", $composer_setup, "--quiet", "--install-dir=".$install_folder, "--filename=composer", "--$version" ], $status);
 
         unlink($composer_setup);
 
@@ -77,12 +77,18 @@ class HestiaApp {
             throw new \Exception("Error installing composer");
         }
     }
+    
+    public function updateComposer($version){
+        $this->runUser('v-run-cli-cmd', ["composer", "selfupdate","--$version"]);
+    }
 
-    public function runComposer($args, &$cmd_result=null) : bool
+    public function runComposer($args, &$cmd_result=null,$version=1) : bool
     {
         $composer = $this->getUserHomeDir() . DIRECTORY_SEPARATOR . '.composer' . DIRECTORY_SEPARATOR . 'composer';
         if(!is_file($composer)) {
-            $this->installComposer();
+            $this->installComposer($version);
+        }else{
+            $this->updateComposer($version);
         }
 
         if (!empty($args) && is_array($args)) {

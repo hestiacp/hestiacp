@@ -31,7 +31,7 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN DEBUG'
+check_args '2' "$#" 'USER DOMAIN [DURATION] [DEBUG] [RESTART]'
 is_format_valid 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -85,7 +85,7 @@ cat << EOF > $fastcgi
     set $no_cache 0;
 EOF
 
-if [ ! -z "$debug" ]; then
+if [ "$debug" = 'yes' ]; then
     echo "    add_header \"X-STATUS\" \"$status\";" >> $fastcgi
 fi
 

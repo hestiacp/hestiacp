@@ -3,7 +3,7 @@
 # options: USER
 # labels: hestia
 #
-# example: v-add-user-composer user
+# example: v-add-user-composer user [version]
 #
 # The function adds support for composer (php dependency manager)
 # Homepage: https://getcomposer.org/
@@ -34,7 +34,7 @@ source $HESTIA/conf/hestia.conf
 
 check_args '1' "$#" 'USER [VERSION]'
 is_format_valid 'user'
-is_number_format_valid 'version' "$version"
+is_number_format_valid "$version" "version"
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 

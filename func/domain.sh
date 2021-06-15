@@ -927,14 +927,14 @@ is_base_domain_owner(){
                         test=$(is_domain_new "" $basedomain)
                         if [ $? -ne 0 ]; then
                             echo "Error: $basedomain belongs to a different user";
-                            exit 1;
+                            exit 4;
                         fi
                     fi
                 else
                     test=$(is_domain_new "" $basedomain);
                     if [ $? -ne 0 ]; then
                         echo "Error: $basedomain belongs to a different user";
-                        exit 1;
+                        exit 4;
                     fi
                 fi
             fi

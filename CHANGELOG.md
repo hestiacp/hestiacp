@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Development]
+## [1.4.2] - Service release
 
 ### Features
 
@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file.
 ### Bugfixes
 
 - Improve the calculated disk size of a new backup estimated by excluding the exclude folders, mail accounts and database in backups (#1616) @Myself5
-- Improve v-update-firewall / v-stop-firewarewall to make it self healing (#1892) @myrevery 
+- Improve v-update-firewall / v-stop-firewall to make it self healing (#1892) @myrevery 
 - Update phpMyAdmin version to 1.5.1 (See https://www.phpmyadmin.net/news/2021/6/4/phpmyadmin-511-released/)
 - Fixed a bug after rebuilding mail with Exim4 and suspended domains (#1886)
 - Fixed "Allowed IP addresses for API" field with strange behaviour #1866

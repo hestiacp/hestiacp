@@ -27,6 +27,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue where phpmyadmin did not update when Postgresql was available.
 - Webmail clients set to rainloop where not able to create a SSL certificate via LE #1913
 - Fixed an issue where plugin-hestia-change-pasword did not change the port on v-change-sys-port (Rainloop) #1895
+- Fixed an issue where HELO message was not set / error was created on NAT IP
 
 ## [1.4.2] - Service release
 

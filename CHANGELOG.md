@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [1.4.2] - Service release
+## [1.4.3] - Service release
 
 ### Features
 

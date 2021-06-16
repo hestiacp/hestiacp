@@ -81,10 +81,11 @@ done
 # Do a blank echo to get the \n back
 echo
 
-# Check if installation was sucessfully
+# Check if installation was successfully
 if [ -f "$php_fpm" ]; then
     echo "ERROR: Uninstallation failed, please run the following command manually for debugging:"
     echo "apt-get purge $mph"
+    exit 1; 
 fi
 
 # Cleanup php folder

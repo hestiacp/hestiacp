@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.4.4] - Service release
+
+### Features
+
+
+### Bugfixes
+
+- Add template for when webmail is disabled allowing to generate SSL. 
+
 ## [1.4.3] - Service release
 
 ### Features

@@ -21,7 +21,7 @@ class LaravelSetup extends BaseSetup {
         ],
         'database' => true,
         'resources' => [
-            'composer' => [ 'src' => 'laravel/laravel', 'dst' => '/' ],
+            'composer' => [ 'src' => 'laravel/laravel', 'dst' => '/'],
         ],
     ];
 

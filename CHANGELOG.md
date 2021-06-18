@@ -1,16 +1,18 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Development]
+## [1.4.3] - Service release
 
 ### Features
 
 - Include DMARC record in DNS record list #1836
+- Enabled phpMyAdmin Single Sign On support #1460
+- Add command to add / delete from API_ALLOWED_IP list (#1904)
 
 ### Bugfixes
 
 - Improve the calculated disk size of a new backup estimated by excluding the exclude folders, mail accounts and database in backups (#1616) @Myself5
-- Improve v-update-firewall / v-stop-firewarewall to make it self healing (#1892) @myrevery 
+- Improve v-update-firewall / v-stop-firewall to make it self healing (#1892) @myrevery 
 - Update phpMyAdmin version to 1.5.1 (See https://www.phpmyadmin.net/news/2021/6/4/phpmyadmin-511-released/)
 - Fixed a bug after rebuilding mail with Exim4 and suspended domains (#1886)
 - Fixed "Allowed IP addresses for API" field with strange behaviour #1866
@@ -18,6 +20,14 @@ All notable changes to this project will be documented in this file.
 - Increased minimal memory requirements for ClamD / ClamAV.  #1840
 - Restore of backup did not rebuild the "Forced SSL" and "HSTS" config on new account #1862
 - Keep changes made by /install/upgrade/manual/install_awstats_geopip.sh on update HestiaCP (via Discord)
+- Refactor/improve PHP and HTML code @s0t (#1860)
+- Fixed XSS vulnerability in login page and a few other locations @briansemrau / @numanturle
+- Delete old session after session_regenerate_id() @briansemrau
+- Improve error message when domain all ready exists on different account.
+- Fixed an issue where phpmyadmin did not update when Postgresql was available.
+- Webmail clients set to rainloop where not able to create a SSL certificate via LE #1913
+- Fixed an issue where plugin-hestia-change-pasword did not change the port on v-change-sys-port (Rainloop) #1895
+- Fixed an issue where HELO message was not set / error was created on NAT IP
 
 ## [1.4.2] - Service release
 

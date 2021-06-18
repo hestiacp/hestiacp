@@ -474,7 +474,7 @@ upgrade_start_routine() {
 upgrade_phpmyadmin() {
     if [ "$UPGRADE_UPDATE_PHPMYADMIN" = "true" ]; then
         # Check if MariaDB/MySQL is installed on the server before attempting to install or upgrade phpMyAdmin
-        if [ "$DB_SYSTEM" = "mysql" ]; then
+        if [ ! -z "$(echo $DB_SYSTEM | grep -w 'mysql')" ]; then
             # Define version check function
             function version_ge(){ test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o ! -z "$1" -a "$1" = "$2"; }
 

@@ -60,7 +60,7 @@ check_args '2' "$#" 'USER DOMAIN [WEBMAIL] [RESTART]'
 is_format_valid 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_system_enabled "$IMAP_SYSTEM" 'IMAP_SYSTEM'
-is_type_valid "$WEBMAIL_SYSTEM" "$webmail"
+is_type_valid "$WEBMAIL_SYSTEM disabled" "$webmail"
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
@@ -126,10 +126,15 @@ else
         if [ "$WEB_SYSTEM" = "nginx" ]; then
             WEBMAIL_TEMPLATE="web_system"
         fi
-    else
+    elif [ "$webmail" == "rainloop" ]; then
         WEBMAIL_TEMPLATE="rainloop"
         if [ ! -z "$PROXY_SYSTEM" ]; then
             PROXY_TEMPLATE="default_rainloop"
+        fi
+    else
+        WEBMAIL_TEMPLATE="disabled"
+        if [ ! -z "$PROXY_SYSTEM" ]; then
+            PROXY_TEMPLATE="disabled"
         fi
     fi
     

@@ -588,6 +588,11 @@ rebuild_mail_domain_conf() {
         if [ ! -e $HOMEDIR/$user/mail/$domain_idn ]; then
             mkdir "$HOMEDIR/$user/mail/$domain_idn"
         fi
+        
+        # Webamil client
+        if [ "$WEBAMIL" = '' ]; then
+           $HESTIA/bin/v-add-mail-domain-webmail $user $domain 'roundcube' 'no'
+        fi
 
         # Adding catchall email
         dom_aliases=$HOMEDIR/$user/conf/mail/$domain/aliases

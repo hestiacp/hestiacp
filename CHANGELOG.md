@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
+- Add nginx user_agent separation to desktop/mobile (e.g. for fastcgi cache)
 
 ### Bugfixes
 

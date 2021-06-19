@@ -4,9 +4,12 @@ All notable changes to this project will be documented in this file.
 ## [1.4.4] - Service release
 
 ### Features
+
 - Add nginx user_agent separation to desktop/mobile (e.g. for fastcgi cache)
 
 ### Bugfixes
+
+- Add template for when webmail is disabled allowing to generate SSL. 
 
 ## [1.4.3] - Service release
 

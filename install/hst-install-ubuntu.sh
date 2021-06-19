@@ -1788,8 +1788,8 @@ if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
 fi
 
 if [ "$exim" = 'yes' ]; then
-# Set HELO for IP as it didn't set during v-change-sys-hostname
-$HESTIA/bin/v-change-sys-ip-helo $ip $servername
+    # Set HELO for IP as it didn't set during v-change-sys-hostname
+    $HESTIA/bin/v-change-sys-ip-helo $local_ip $servername
 fi
 
 # Configuring libapache2-mod-remoteip

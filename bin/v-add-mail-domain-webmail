@@ -134,7 +134,7 @@ else
     else
         WEBMAIL_TEMPLATE="disabled"
         if [ ! -z "$PROXY_SYSTEM" ]; then
-            PROXY_TEMPLATE="disabled"
+            PROXY_TEMPLATE="default_disabled"
         fi
     fi
     

@@ -1,7 +1,7 @@
-<VirtualHost %ip%:%web_port%>
+<VirtualHost %ip%:%web_ssl_port%>
 ServerName %domain_idn%
 ServerAlias %alias_idn%
-Alias / /var/lib/rainloop/
+Alias / /var/www/html/
 Alias /error/ %home%/%user%/web/%root_domain%/document_errors/
 #SuexecUserGroup %user% %group%
 

@@ -13,6 +13,8 @@ All notable changes to this project will be documented in this file.
 - Fix PHP bug in /list/log/ 
 - Fix issue with time in /list/services as it was showing as 50 minute1 instead of minutes
 - Add missing back buttons + fix behavoir of back buttons on login page. 
+- Set "default" when WEB_TEMPLATE and PROXY_TEMPLATE is missing in user.conf 
+- Add BACKEND_TEMPLATE to default package
 
 ## [1.4.3] - Service release
 

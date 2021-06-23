@@ -90,7 +90,7 @@ fi
 sed -i "/DOMAIN='$domain'/ d" $USER_DATA/web.conf
 
 # Deleting proxy
-if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
+if [ ! -z "$PROXY_SYSTEM" ]; then
     del_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
     if [ "$SSL" = 'yes' ]; then
         del_web_config "$PROXY_SYSTEM" "$PROXY.stpl"

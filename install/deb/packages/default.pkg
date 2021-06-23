@@ -1,5 +1,6 @@
 WEB_TEMPLATE='default'
 PROXY_TEMPLATE='default'
+BACKEND_TEMPLATE='default'
 DNS_TEMPLATE='default'
 WEB_DOMAINS='unlimited'
 WEB_ALIASES='unlimited'

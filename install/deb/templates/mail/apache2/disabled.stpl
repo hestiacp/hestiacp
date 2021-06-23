@@ -1,22 +1,21 @@
 <VirtualHost %ip%:%web_ssl_port%>
-    ServerName %domain_idn%
-    ServerAlias %alias%
-    Alias / /var/lib/roundcube/
-    Alias /error/ %home%/%user%/web/%root_domain%/document_errors/
-    #SuexecUserGroup %user% %group%
-    
-    SSLEngine on
-    SSLVerifyClient none
-    SSLCertificateFile         %home%/%user%/conf/mail/%root_domain%/ssl/%root_domain%.crt
-    SSLCertificateKeyFile      %home%/%user%/conf/mail/%root_domain%/ssl/%root_domain%.key
-    
-    <Directory /var/www/html>
-        Options +FollowSymLinks
-        AllowOverride All
-        order allow,deny
-        allow from all
-    </Directory>
+ServerName %domain_idn%
+ServerAlias %alias_idn%
+Alias / /var/www/html/
+Alias /error/ %home%/%user%/web/%root_domain%/document_errors/
+#SuexecUserGroup %user% %group%
 
-    IncludeOptional %home%/%user%/conf/mail/%root_domain%/%web_system%.ssl.conf_*
+SSLEngine on
+SSLVerifyClient none
+SSLCertificateFile         %home%/%user%/conf/mail/%root_domain%/ssl/%root_domain%.crt
+SSLCertificateKeyFile      %home%/%user%/conf/mail/%root_domain%/ssl/%root_domain%.key
+    
+<Directory /var/www/html>
+    Options +FollowSymLinks
+    AllowOverride All
+    order allow,deny
+    allow from all
+</Directory>
 
+IncludeOptional %home%/%user%/conf/mail/%root_domain%/%web_system%.conf_*
 </VirtualHost>

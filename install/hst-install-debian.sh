@@ -1481,8 +1481,9 @@ if [ "$mysql" = 'yes' ]; then
     sed -i "s|define('TEMP_DIR', ROOT_PATH . 'tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
 
     # Create temporary folder and change permission
-    chmod 777 /usr/share/phpmyadmin/tmp
-
+    chmod 770 /usr/share/phpmyadmin/tmp
+    chown root:www-data /usr/share/phpmyadmin/tmp
+    
     # Generate blow fish
     blowfish=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)
     sed -i "s|%blowfish_secret%|$blowfish|" /etc/phpmyadmin/config.inc.php
@@ -1497,6 +1498,11 @@ if [ "$mysql" = 'yes' ]; then
     # Special thanks to Pavel Galkin (https://skurudo.ru)
     # https://github.com/skurudo/phpmyadmin-fixer
     source $HESTIA_INSTALL_DIR/phpmyadmin/pma.sh > /dev/null 2>&1
+    
+    # limit access to /etc/phpmyadmin/ 
+    chown -R root:www-data /etc/phpmyadmin/
+    chmod -R 640  /etc/phpmyadmin/*
+    chmod 750 /etc/phpmyadmin/conf.d/
 fi
 
 

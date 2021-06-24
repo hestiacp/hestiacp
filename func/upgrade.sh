@@ -483,7 +483,8 @@ upgrade_phpmyadmin() {
                 echo "[ ! ] Verifying phpMyAdmin v${pma_release_file##*-} installation..."
                 # Update permissions
                 if [ -e /var/lib/phpmyadmin/blowfish_secret.inc.php ]; then
-                    chmod 0644 /var/lib/phpmyadmin/blowfish_secret.inc.php
+                    chown root:www-data /var/lib/phpmyadmin/blowfish_secret.inc.php
+                    chmod 0640 /var/lib/phpmyadmin/blowfish_secret.inc.php
                 fi
             else
                 # Display upgrade information
@@ -497,7 +498,7 @@ upgrade_phpmyadmin() {
                 tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
 
                 # Delete file to prevent error
-                rm -fr /usr/share/phpmyadmin/doc/html
+                rm -rf /usr/share/phpmyadmin/doc/html
 
                 # Overwrite old files
                 cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
@@ -509,11 +510,14 @@ upgrade_phpmyadmin() {
                 # Create temporary folder and change permissions
                 if [ ! -d /usr/share/phpmyadmin/tmp ]; then
                     mkdir /usr/share/phpmyadmin/tmp
-                    chmod 777 /usr/share/phpmyadmin/tmp
+                    chown root:www-data /usr/share/phpmyadmin/tmp
+                    chmod 770 /usr/share/phpmyadmin/tmp
+                    
                 fi
 
                 if [ -e /var/lib/phpmyadmin/blowfish_secret.inc.php ]; then
-                    chmod 0644 /var/lib/phpmyadmin/blowfish_secret.inc.php
+                    chown root:www-data /var/lib/phpmyadmin/blowfish_secret.inc.php
+                    chmod 0640 /var/lib/phpmyadmin/blowfish_secret.inc.php
                 fi
 
                 # Clean up source files

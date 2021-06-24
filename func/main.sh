@@ -610,7 +610,7 @@ sync_cron_jobs() {
     else
         crontab="/var/spool/cron/$user"
     fi
-    rm -f $crontab
+    >$crontab
     if [ "$CRON_REPORTS" = 'yes' ]; then
         echo "MAILTO=$CONTACT" > $crontab
         echo 'CONTENT_TYPE="text/plain; charset=utf-8"' >> $crontab

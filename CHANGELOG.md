@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - Add missing back buttons + fix behavoir of back buttons on login page. 
 - Set "default" when WEB_TEMPLATE and PROXY_TEMPLATE is missing in user.conf 
 - Add BACKEND_TEMPLATE to default package
+- Fix possible error occur for v-rebuild-cron-jobs #1943 (thanks @clarkchentw)
 
 ## [1.4.3] - Service release
 

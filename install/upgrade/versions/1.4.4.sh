@@ -12,14 +12,8 @@ if [ -d "/etc/nginx/conf.d/" ]; then
     cp -f $HESTIA_INSTALL_DIR/nginx/agents.conf /etc/nginx/conf.d/
 fi
 
-# Reset PMA SSO to fix bug with Nginx + Apache2 
-if [ "$PHPMYADMIN_KEY" != "" ]; then
-    echo "[ * ] Refressh hestia-sso for PMA..."
-    $BIN/v-delete-sys-pma-sso 
-    $BIN/v-add-sys-pma-sso 
-fi
-
 if [ -d "/etc/phpmyadmin/" ]; then 
+    echo "[ * ] Secure PHPmyAdmin"
     # limit access to /etc/phpmyadmin/ and /usr/share/phpmyadmin/tmp and so on
     chown -R root:www-data /etc/phpmyadmin/
     chmod -R 640  /etc/phpmyadmin/*
@@ -34,4 +28,11 @@ if [ -d "/etc/phpmyadmin/" ]; then
         chmod 770 /var/lib/phpmyadmin/tmp
         chown root:www-data /usr/share/phpmyadmin/tmp
     fi
+fi
+
+# Reset PMA SSO to fix bug with Nginx + Apache2 
+if [ "$PHPMYADMIN_KEY" != "" ]; then
+    echo "[ * ] Refressh hestia-sso for PMA..."
+    $BIN/v-delete-sys-pma-sso 
+    $BIN/v-add-sys-pma-sso 
 fi

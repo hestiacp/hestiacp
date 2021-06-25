@@ -34,12 +34,20 @@ $dist_config['services']['Filegator\Services\Storage\Filesystem']['config']['ada
             }
         }
 
+        preg_match('/(Hestia SFTP Chroot\nMatch User)(.*)/i', file_get_contents('/etc/ssh/sshd_config'), $matches);
+        $user_list = explode(',', $matches[2]);
+        if(in_array($v_user,$user_list)){
+            $root = '/';
+        }else{
+            $root = '/home/'.$v_user;
+        }
+      
         return new \League\Flysystem\Sftp\SftpAdapter([
             'host' => '127.0.0.1',
             'port' => intval($_SESSION['SFTP_PORT']),
             'username' => basename($v_user),
             'privateKey' => '/home/'.basename($v_user).'/.ssh/hst-filemanager-key',
-            'root' => '/',
+            'root' => $root,
             'timeout' => 10,
             'directoryPerm' => 0755,
         ]);

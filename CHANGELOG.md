@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 - Add nginx user_agent separation to desktop/mobile (e.g. for fastcgi cache)
+- Run phpmyadmin folder under www-data user instead of "user" improving security. (Reported via Discord)
+- Added new template for mod php users to access phpmymyadmin
 
 ### Bugfixes
 

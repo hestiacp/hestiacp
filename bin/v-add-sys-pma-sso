@@ -84,9 +84,10 @@ sed -i "s/%API_HESTIA_PORT%/$BACKEND_PORT/g" $PMA_INSTALL/hestia-sso.php
 
 
 # Check if config already contains the keys 
-
 touch $PMA_CONFIG/hestia-sso.inc.php
-chmod 644 $PMA_CONFIG/hestia-sso.inc.php
+chmod 640 $PMA_CONFIG/hestia-sso.inc.php
+chown root:www-data $PMA_CONFIG/hestia-sso.inc.php
+
 echo "<?php
 if(isset(\$_GET['hestia_token']) || isset(\$_COOKIE['SignonSession'])){
 \$cfg['Servers'][\$i]['auth_type'] = 'signon';

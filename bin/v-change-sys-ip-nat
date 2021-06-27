@@ -70,7 +70,9 @@ fi
 if [ ! -z "$old" ] && [ ! -z "$DNS_SYSTEM" ]; then
     for user in $($HESTIA/bin/v-list-sys-users plain); do
         sed -i "s/$old/$new/" $HESTIA/data/users/$user/dns.conf
-        sed -i "s/$old/$new/" $HESTIA/data/users/$user/dns/*.conf
+        if ls $HESTIA/data/users/$user/dns/*.conf 1> /dev/null 2>&1; then
+            sed -i "s/$old/$new/" $HESTIA/data/users/$user/dns/*.conf
+        fi
         $BIN/v-rebuild-dns-domains $user no
     done
     $BIN/v-restart-dns $restart

@@ -19,6 +19,8 @@ All notable changes to this project will be documented in this file.
 - Add BACKEND_TEMPLATE to default package
 - Fix possible error occur for v-rebuild-cron-jobs #1943 (thanks @clarkchentw)
 - Restrict access Filemanager when SSH is enabled for the user
+- Check for DNS domains when running v-change-sys-ip-nat (@clarkchentw)
+- Fix logical error in installer (@clarkchentw)
 
 ## [1.4.3] - Service release
 

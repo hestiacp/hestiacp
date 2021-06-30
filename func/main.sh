@@ -610,11 +610,20 @@ sync_cron_jobs() {
     else
         crontab="/var/spool/cron/$user"
     fi
-    >$crontab
+    
+    # remove file if exists
+    if [ -e "$crontab" ]; then
+        rm -f $crontab
+    fi
+
+    # touch new crontab file
+    touch $crontab
+        
     if [ "$CRON_REPORTS" = 'yes' ]; then
         echo "MAILTO=$CONTACT" > $crontab
         echo 'CONTENT_TYPE="text/plain; charset=utf-8"' >> $crontab
     fi
+    
     while read line; do
         parse_object_kv_list "$line"
         if [ "$SUSPENDED" = 'no' ]; then

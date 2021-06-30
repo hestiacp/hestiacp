@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.4.5] - Service release
+
+### Bugfixes
+
+- Revert #1943 and rework it to fix possible errors occuring on v-rebuild-cron-jobs.
+- Fixed #1956 to prevent reset of defined webmail client.
+
 ## [1.4.4] - Service release
 
 ### Features

@@ -590,7 +590,7 @@ rebuild_mail_domain_conf() {
         fi
         
         # Webamil client
-        if [ "$WEBAMIL" = '' ]; then
+        if [ "$WEBMAIL" = '' ]; then
            $HESTIA/bin/v-add-mail-domain-webmail $user $domain 'roundcube' 'no'
         fi
 

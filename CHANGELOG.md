@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.4.5] - Service release
+
+### Bugfixes
+
+- Revert #1943 Fix possible error occur for v-rebuild-cron-jobs 
+
 ## [1.4.4] - Service release
 
 ### Features

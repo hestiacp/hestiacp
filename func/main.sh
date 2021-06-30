@@ -611,8 +611,12 @@ sync_cron_jobs() {
         crontab="/var/spool/cron/$user"
     fi
     
-    # remove file 
-    rm -f $crontab
+    # remove file if exists
+    if [ -e "$crontab" ]; then
+        rm -f $crontab
+    fi
+
+    # touch new crontab file
     touch $crontab
         
     if [ "$CRON_REPORTS" = 'yes' ]; then

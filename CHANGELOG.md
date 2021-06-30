@@ -5,7 +5,8 @@ All notable changes to this project will be documented in this file.
 
 ### Bugfixes
 
-- Revert #1943 Fix possible error occur for v-rebuild-cron-jobs 
+- Revert #1943 and rework it to fix possible errors occuring on v-rebuild-cron-jobs.
+- Fixed #1956 to prevent reset of defined webmail client.
 
 ## [1.4.4] - Service release
 

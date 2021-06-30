@@ -74,6 +74,10 @@ args_usage='DOMAIN EMAIL COUNTRY STATE CITY ORG UNIT [ALIASES] [FORMAT]'
 check_args '7' "$#" "$args_usage"
 is_format_valid 'domain' 'aliases' 'format'
 
+release="$(lsb_release -s -r)"
+if [ "$release" = "18.04" ]; then
+    is_format_valid 'email'
+fi
 
 if [ ! -f /root/.rnd ]; then
     touch /root/.rnd
@@ -108,7 +112,7 @@ if [ -z "$aliases" ]; then
         -batch \
         -subj "$subj" \
         -key $domain.key \
-        -out $domain.csr #>/dev/null 2>&1
+        -out $domain.csr >/dev/null 2>&1
 else
     for alias in $(echo $domain,$aliases |tr ',' '\n' |sort -u); do
         if [[ "$alias" = *[![:ascii:]]* ]]; then

@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 - Add nginx user_agent separation to desktop/mobile (e.g. for fastcgi cache)
-- Run phpmyadmin folder under www-data user instead of "user" improving security. (Reported via Discord)
+- Run phpmyadmin folder under www-data user instead of "user" improving security. (@bet0x)
 - Added new template for mod php users to access phpmymyadmin
 
 ### Bugfixes
@@ -18,7 +18,7 @@ All notable changes to this project will be documented in this file.
 - Set "default" when WEB_TEMPLATE and PROXY_TEMPLATE is missing in user.conf 
 - Add BACKEND_TEMPLATE to default package
 - Fix possible error occur for v-rebuild-cron-jobs #1943 (thanks @clarkchentw)
-- Restrict access Filemanager when SSH is enabled for the user
+- Restrict access Filemanager when SSH is enabled for the user (@bet0x)
 - Check for DNS domains when running v-change-sys-ip-nat (@clarkchentw)
 - Fix logical error in installer (@clarkchentw)
 

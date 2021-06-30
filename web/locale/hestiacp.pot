@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-15 07:55+0200\n"
+"POT-Creation-Date: 2021-06-19 16:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -230,15 +230,15 @@ msgstr ""
 msgid "RULE_CREATED_OK"
 msgstr ""
 
-#: ../../web/add/cron/index.php:19 ../../web/inc/main.php:236
+#: ../../web/add/cron/index.php:19
 msgid "minute"
 msgstr ""
 
-#: ../../web/add/cron/index.php:20 ../../web/inc/main.php:233
+#: ../../web/add/cron/index.php:20
 msgid "hour"
 msgstr ""
 
-#: ../../web/add/cron/index.php:21 ../../web/inc/main.php:230
+#: ../../web/add/cron/index.php:21
 msgid "day"
 msgstr ""
 
@@ -626,6 +626,7 @@ msgstr ""
 #: ../../web/templates/pages/login/login_1.html:44
 #: ../../web/templates/pages/login/reset_1.html:41
 #: ../../web/templates/pages/login/reset2fa.html:55
+#: ../../web/templates/pages/login/login_2.html:42
 #: ../../web/templates/pages/list_updates.html:5
 #: ../../web/templates/pages/edit_server_mysql.html:5
 #: ../../web/templates/pages/edit_cron.html:5
@@ -4128,6 +4129,27 @@ msgstr ""
 #, php-format
 msgid "Error code:"
 msgstr ""
+
+#: ../../web/inc/main.php:230
+#, php-format
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../web/inc/main.php:232
+#, php-format
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../web/inc/main.php:235
+#, php-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../../web/delete/web/cache/index.php:25
 msgid "Nginx cache has been successfully purged"

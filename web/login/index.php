@@ -6,13 +6,13 @@ include($_SERVER['DOCUMENT_ROOT'] . '/inc/main.php');
 
 $TAB = 'login';
 
-/*
-// Logout
+
 if (isset($_GET['logout'])) {
-    setcookie('limit2fa','',time() - 3600,"/");
+    unset($_SESSION);
+    session_unset();
     session_destroy();
+    header('Location: /login/');
 }
-*/
 
 /* ACTIONS FOR CURRENT USER SESSION */
 if (isset($_SESSION['user'])) {

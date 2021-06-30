@@ -23,7 +23,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.4.3'
+HESTIA_INSTALL_VER='1.4.4'
 pma_v='5.1.1'
 rc_v="1.4.11"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
@@ -932,8 +932,7 @@ if [ ! -z "$sftp_subsys_enabled" ]; then
 fi
 
 # Reduce SSH login grace time
-sed -i "s/LoginGraceTime 2m/LoginGraceTime 1m/g" /etc/ssh/sshd_config
-sed -i "s/#LoginGraceTime 2m/LoginGraceTime 1m/g" /etc/ssh/sshd_config
+sed -i "s/[#]LoginGraceTime [[:digit:]]m/LoginGraceTime 1m/g" /etc/ssh/sshd_config
 
 # Disable SSH suffix broadcast
 if [ -z "$(grep "^DebianBanner no" /etc/ssh/sshd_config)" ]; then
@@ -1277,6 +1276,7 @@ echo "[ * ] Configuring NGINX..."
 rm -f /etc/nginx/conf.d/*.conf
 cp -f $HESTIA_INSTALL_DIR/nginx/nginx.conf /etc/nginx/
 cp -f $HESTIA_INSTALL_DIR/nginx/status.conf /etc/nginx/conf.d/
+cp -f $HESTIA_INSTALL_DIR/nginx/agents.conf /etc/nginx/conf.d/
 cp -f $HESTIA_INSTALL_DIR/nginx/phpmyadmin.inc /etc/nginx/conf.d/
 cp -f $HESTIA_INSTALL_DIR/nginx/phppgadmin.inc /etc/nginx/conf.d/
 cp -f $HESTIA_INSTALL_DIR/logrotate/nginx /etc/logrotate.d/
@@ -1507,15 +1507,16 @@ if [ "$mysql" = 'yes' ]; then
     # Create copy of config file
     cp -f $HESTIA_INSTALL_DIR/phpmyadmin/config.inc.php /etc/phpmyadmin/
     mkdir -p /var/lib/phpmyadmin/tmp
-    chmod 777 /var/lib/phpmyadmin/tmp
-
+    chmod 770 /var/lib/phpmyadmin/tmp
+    chown root:www-data /usr/share/phpmyadmin/tmp
+    
     # Set config and log directory
     sed -i "s|define('CONFIG_DIR', ROOT_PATH);|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
     sed -i "s|define('TEMP_DIR', ROOT_PATH . 'tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
 
     # Create temporary folder and change permission
-    chmod 777 /usr/share/phpmyadmin/tmp
-
+    chmod 770 /usr/share/phpmyadmin/tmp
+    chown root:www-data /usr/share/phpmyadmin/tmp
     # Generate blow fish
     blowfish=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)
     sed -i "s|%blowfish_secret%|$blowfish|" /etc/phpmyadmin/config.inc.php
@@ -1530,6 +1531,11 @@ if [ "$mysql" = 'yes' ]; then
     # Special thanks to Pavel Galkin (https://skurudo.ru)
     # https://github.com/skurudo/phpmyadmin-fixer
     source $HESTIA_INSTALL_DIR/phpmyadmin/pma.sh > /dev/null 2>&1
+    
+    # limit access to /etc/phpmyadmin/ 
+    chown -R root:www-data /etc/phpmyadmin/
+    chmod -R 640  /etc/phpmyadmin/*
+    chmod 750 /etc/phpmyadmin/conf.d/
 fi
 
 
@@ -1788,8 +1794,8 @@ if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
 fi
 
 if [ "$exim" = 'yes' ]; then
-# Set HELO for IP as it didn't set during v-change-sys-hostname
-$HESTIA/bin/v-change-sys-ip-helo $ip $servername
+    # Set HELO for IP as it didn't set during v-change-sys-hostname
+    $HESTIA/bin/v-change-sys-ip-helo $local_ip $servername
 fi
 
 # Configuring libapache2-mod-remoteip

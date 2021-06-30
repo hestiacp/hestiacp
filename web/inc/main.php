@@ -225,17 +225,15 @@ function humanize_time($usage) {
     if ( $usage > 60 ) {
         $usage = $usage / 60;
         if ( $usage > 24 ) {
-            $usage = $usage / 24;
-            $usage = number_format($usage);
-            $usage .= ' ' . _('day' . ($usage != 1) ?: 's');
+             $usage = $usage / 24;
+             $usage = number_format($usage);
+             return sprintf(ngettext('%d day', '%d days', $usage), $usage);
         } else {
-            $usage = number_format($usage);
-            $usage .= ' ' . _('hour' . ($usage != 1) ?: 's');
+            return sprintf(ngettext('%d hour', '%d hours', $usage), $usage);
         }
     } else {
-        $usage .= ' ' . _('minute' . ($usage != 1) ?: 's');
+        return sprintf(ngettext('%d minute', '%d minutes', $usage), $usage);
     }
-    return $usage;
 }
 
 function humanize_usage_size($usage) {
@@ -269,7 +267,7 @@ function humanize_usage_measure($usage) {
     } else {
         $measure = 'mb';
     }
-    return _($measure);
+    return $measure;
 }
 
 function get_percentage($used,$total) {

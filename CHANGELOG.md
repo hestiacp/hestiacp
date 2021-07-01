@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## Development 
+
+### Features
+
+### Bugfixes
+
 ## [1.4.5] - Service release
 
 ### Bugfixes

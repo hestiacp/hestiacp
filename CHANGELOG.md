@@ -7,6 +7,8 @@ All notable changes to this project will be documented in this file.
 
 ### Bugfixes
 
+- Fix #1961 Renewal Apache2 only SSL certificate fails 
+
 ## [1.4.5] - Service release
 
 ### Bugfixes
@@ -20,7 +22,7 @@ All notable changes to this project will be documented in this file.
 
 - Add nginx user_agent separation to desktop/mobile (e.g. for fastcgi cache)
 - Run phpmyadmin folder under www-data user instead of "user" improving security. (@bet0x)
-- Added new template for mod php users to access phpmymyadmin
+- Added new template for mod php users to access phpmyadmin
 
 ### Bugfixes
 

@@ -77,7 +77,9 @@ else
     sed -i "/COMMENT='HESTIA'/c\RULE='2' ACTION='ACCEPT' PROTOCOL='TCP' PORT='$PORT' IP='0.0.0.0/0' COMMENT='HESTIA' SUSPENDED='no' TIME='07:40:16' DATE='2014-05-25'" $HESTIA/data/firewall/rules.conf
     
     # Restart services
-    $HESTIA/bin/v-restart-service iptables
+    if [ -n "$FIREWALL_SYSTEM" ] && [ "$FIREWALL_SYSTEM" != no ]; then
+        $HESTIA/bin/v-restart-service iptables
+    fi
 
     # Check if Hestia is running
     if [[ $(ps -eaf | grep -i hestia |sed '/^$/d' | wc -l) > 1 ]]; then

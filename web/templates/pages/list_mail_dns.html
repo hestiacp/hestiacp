@@ -68,7 +68,7 @@
 			<div class="clearfix l-unit__stat-col--left text-center step-top-small"><b>&nbsp;</b></div>
 			<div class="clearfix l-unit__stat-col--left text-center step-top-small"><b>14400</b></div>
             <?php $ip = (empty($ips[array_key_first($ips)]['NAT'])) ?  array_key_first($ips) : $ips[array_key_first($ips)]['NAT'];?>
-			<div class="clearfix l-unit__stat-col--left  wide-3 "><b><input type="text" class="vst-input" value="<?=htmlspecialchars('v=spf1 a mx ip4:'.$ip.'; -all');?>" /></b></div>
+			<div class="clearfix l-unit__stat-col--left  wide-3 "><b><input type="text" class="vst-input" value="<?=htmlspecialchars('v=spf1 a mx ip4:'.$ip.' -all');?>" /></b></div>
 		</div>
 	</div>
     <div class="l-unit animated fadeIn">

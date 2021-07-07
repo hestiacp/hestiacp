@@ -93,7 +93,6 @@ upgrade_send_notification_to_email
 upgrade_send_log_to_email
 
 if [ -e "/etc/hestiacp/hooks/post_install.sh" ]; then
-    echo "[ * ] Execute post install hook"
     /etc/hestiacp/hooks/post_install.sh
 fi
 

@@ -21,6 +21,5 @@ if [ ! "$HESTIA_V" = "$VERSION" ]; then
 fi
 
 if [ -e "/etc/hestiacp/hooks/pre_install.sh" ]; then
-    echo "[ * ] Execute pre install hook"
     /etc/hestiacp/hooks/pre_install.sh
 fi

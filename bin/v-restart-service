@@ -33,25 +33,26 @@ is_format_valid 'service' 'restart'
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get installed php versions
-php_versions=$(ls /usr/sbin/php*fpm* | cut -d'/' -f4 | sed 's|php-fpm||')
-
-# Substitute php-fpm service name formats
-for version in $php_versions; do
-    if [ "$service" = "php-fpm${version}" ]; then
-        service="php${version}-fpm"
-    fi
-done
-
-# Multi-instance service restart request handling
-if [ "$service" = "php-fpm" ];then
+if [ -d /usr/sbin/php*/fpm/ ]; then 
+    # Get installed php versions
+    php_versions=$(ls /usr/sbin/php*fpm* | cut -d'/' -f4 | sed 's|php-fpm||')
+    
+    # Substitute php-fpm service name formats
     for version in $php_versions; do
-        service_list="${service_list} php${version}-fpm"
+        if [ "$service" = "php-fpm${version}" ]; then
+            service="php${version}-fpm"
+        fi
     done
-else
-    service_list="$service"
-fi
-
+    
+    # Multi-instance service restart request handling
+    if [ "$service" = "php-fpm" ];then
+        for version in $php_versions; do
+            service_list="${service_list} php${version}-fpm"
+        done
+    else
+        service_list="$service"
+    fi
+fi 
 for service in $service_list; do
 
     if [ "$service" = "iptables" ]; then

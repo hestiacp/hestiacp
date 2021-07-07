@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## Development 
+## [1.4.6] - Service release 
 
 ### Features
 

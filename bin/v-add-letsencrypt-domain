@@ -331,7 +331,7 @@ for auth in $authz; do
                     check_result $? "Proxy restart failed" > /dev/null
                 fi
             else  
-                get_object_value 'mail' 'DOMAIN' "$domain" "WEBMAIL" 
+                get_object_value 'mail' 'DOMAIN' "$root_domain" "WEBMAIL" 
                 if [ ! -z "$WEBMAIL" ]; then 
                     well_known="/var/lib/$WEBMAIL/.well-known"
                     acme_challenge="$well_known/acme-challenge"

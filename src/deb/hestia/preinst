@@ -19,7 +19,3 @@ HESTIA_V=$(dpkg -s hestia | grep -i version | awk '{ print $2 }')
 if [ ! "$HESTIA_V" = "$VERSION" ]; then
     sed -i "s/VERSION=.*/VERSION='$HESTIA_V'/g" /usr/local/hestia/conf/hestia.conf
 fi
-
-if [ -e "/etc/hestiacp/hooks/pre_install.sh" ]; then
-    /etc/hestiacp/hooks/pre_install.sh
-fi

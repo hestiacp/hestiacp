@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - Merge LE logs in 1 file per domain #1968 @tlcd96
 - Refresh phpmyadmin config for Apache2 + PHP FPM
 - Mute notification mysql is down with v-update-sys-rrd-mysql
+- Fixed an issue with v-change-web-domain-backed-tpl and username = domain.com #1799
 
 ## [1.4.5] - Service release
 

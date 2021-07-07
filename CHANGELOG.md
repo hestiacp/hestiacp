@@ -5,9 +5,15 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
+- Add support for custom install hooks #1757
+- Add template for CraftCMS #1973 @anvme
+
 ### Bugfixes
 
 - Fix #1961 Renewal Apache2 only SSL certificate fails 
+- Merge LE logs in 1 file per domain #1968 @tlcd96
+- Refresh phpmyadmin config for Apache2 + PHP FPM
+- Mute notification mysql is down with v-update-sys-rrd-mysql
 
 ## [1.4.5] - Service release
 

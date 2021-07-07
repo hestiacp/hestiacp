@@ -37,6 +37,8 @@ case $period in
     *) exit $E_RRD ;;
 esac
 
+notify="no"
+
 # Checking directory
 if [ ! -d "$RRD/db" ]; then
     mkdir $RRD/db

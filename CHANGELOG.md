@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 
 - Revert #1943 and rework it to fix possible errors occuring on v-rebuild-cron-jobs.
 - Fixed #1956 to prevent reset of defined webmail client.
+- Explicitly disable cron reports #1978
 
 ## [1.4.4] - Service release
 

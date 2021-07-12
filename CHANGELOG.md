@@ -7,7 +7,10 @@ All notable changes to this project will be documented in this file.
 
 ### Bugfixes
 
-- Fix #1961 Renewal Apache2 only SSL certificate fails 
+- Fix #1961 Renewal Apache2 only SSL certificate fails
+- Fixed #1956 to prevent reset of defined webmail client.
+- Explicitly disable cron reports #1978 
+- Fixed an issue where in rare cases certificate failed to install @dpeca and @myvesta
 
 ## [1.4.5] - Service release
 

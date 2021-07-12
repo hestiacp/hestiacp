@@ -474,11 +474,11 @@ if [[ "$status" -ne 200 ]]; then
 fi
 
 # Splitting up downloaded pem
-crt_end=$(grep -n END $ssl_dir/$domain.pem |head -n1 |cut -f1 -d:)
+crt_end=$(grep -n 'END CERTIFICATE' $ssl_dir/$domain.pem |head -n1 |cut -f1 -d:)
 head -n $crt_end $ssl_dir/$domain.pem > $ssl_dir/$domain.crt
 
 pem_lines=$(wc -l $ssl_dir/$domain.pem |cut -f 1 -d ' ')
-ca_end=$(grep -n  "BEGIN" $ssl_dir/$domain.pem |tail -n1 |cut -f 1 -d :)
+ca_end=$(grep -n  'BEGIN CERTIFICATE'"' $ssl_dir/$domain.pem |tail -n1 |cut -f 1 -d :)
 ca_end=$(( pem_lines - crt_end + 1 ))
 tail -n $ca_end $ssl_dir/$domain.pem > $ssl_dir/$domain.ca
 

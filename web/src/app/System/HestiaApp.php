@@ -69,6 +69,14 @@ class HestiaApp {
         }
 
         $install_folder = $this->getUserHomeDir() . DIRECTORY_SEPARATOR . '.composer';
+        
+        if (!file_exists($install_folder)) {
+            exec(HESTIA_CMD .'v-rebuild-user '.$this -> user(), $output, $return_code);
+            if($return_code !== 0){
+                throw new \Exception("Unable to rebuild user");
+            }
+        }
+        
         $this->runUser('v-run-cli-cmd', ["/usr/bin/php", $composer_setup, "--quiet", "--install-dir=".$install_folder, "--filename=composer", "--$version" ], $status);
 
         unlink($composer_setup);

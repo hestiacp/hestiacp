@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - Fixed #1956 to prevent reset of defined webmail client.
 - Explicitly disable cron reports #1978 
 - Fixed an issue where in rare cases certificate failed to install @dpeca and @myvesta
+- Fixed an issue where composer failed to install when .composer folder is missing
 
 ## [1.4.5] - Service release
 

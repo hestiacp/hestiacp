@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 
 - Add support for custom install hooks #1757
 - Add template for CraftCMS #1973 @anvme
+- Upgrade Filegator to 7.6.0
 
 ### Bugfixes
 

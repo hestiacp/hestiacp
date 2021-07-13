@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 - Explicitly disable cron reports #1978 
 - Fixed an issue where in rare cases certificate failed to install @dpeca and @myvesta
 - Fixed an issue where composer failed to install when .composer folder is missing
+- Fix #1980 Lets Encrypt Auto Renewal Reverts Webmail Client back to Roundcube
 
 ## [1.4.5] - Service release
 

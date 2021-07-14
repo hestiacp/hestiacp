@@ -75,13 +75,13 @@ apikey=$($BIN/v-generate-api-key);
 
 # copy config dir to /usr/share/phpmyadmin/
 cp -f $HESTIA_INSTALL_DIR/phpmyadmin/hestia-sso.php $PMA_INSTALL/hestia-sso.php
-chmod 644 $PMA_INSTALL/hestia-sso.php 
+chmod 640 $PMA_INSTALL/hestia-sso.php 
+chown root:www-data $PMA_INSTALL/hestia-sso.php 
 
 sed -i "s/%PHPMYADMIN_KEY%/$phpmyadminkey/g" $PMA_INSTALL/hestia-sso.php 
 sed -i "s/%API_KEY%/$apikey/g" $PMA_INSTALL/hestia-sso.php 
 sed -i "s/%API_HOST_NAME%/$(hostname)/g" $PMA_INSTALL/hestia-sso.php 
 sed -i "s/%API_HESTIA_PORT%/$BACKEND_PORT/g" $PMA_INSTALL/hestia-sso.php 
-
 
 # Check if config already contains the keys 
 touch $PMA_CONFIG/hestia-sso.inc.php

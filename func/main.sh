@@ -622,6 +622,8 @@ sync_cron_jobs() {
     if [ "$CRON_REPORTS" = 'yes' ]; then
         echo "MAILTO=$CONTACT" > $crontab
         echo 'CONTENT_TYPE="text/plain; charset=utf-8"' >> $crontab
+    else
+        echo 'MAILTO=""' > $crontab
     fi
     
     while read line; do

@@ -1,9 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## Development 
+## [1.4.6] - Service release 
 
 ### Features
+
+- Add support for custom install hooks #1757
+- Add template for CraftCMS #1973 @anvme
+- Upgrade Filegator to 7.6.0
 
 ### Bugfixes
 

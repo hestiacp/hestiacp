@@ -1,5 +1,11 @@
 <?php
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+require 'vendor/autoload.php';
+
 session_start();
 
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
@@ -289,20 +295,52 @@ function get_percentage($used,$total) {
 }
 
 function send_email($to, $subject, $mailtext, $from) {
-    $charset = "utf-8";
-    $to = '<' . $to . '>';
-    $boundary = '--' . md5( uniqid('myboundary') );
-    $priorities = array( '1 (Highest)', '2 (High)', '3 (Normal)', '4 (Low)', '5 (Lowest)' );
-    $priority = $priorities[2];
-    $ctencoding = '8bit';
-    $sep = chr(13) . chr(10);
-    $disposition = 'inline';
-    $subject = "=?$charset?B?" . base64_encode($subject) . '?=';
-    $header = "From: $from \nX-Priority: $priority\nCC:\n";
-    $header .= "Mime-Version: 1.0\nContent-Type: text/plain; charset=$charset \n";
-    $header .= "Content-Transfer-Encoding: $ctencoding\nX-Mailer: Php/libMailv1.3\n";
-    $message = $mailtext;
-    mail($to, $subject, $message, $header);
+
+    if (isset($_SESSION['USE_SERVER_SMTP'] && $_SESSION['USE_SERVER_SMTP'] == "y") {
+        $use_smtp = $_SESSION['USE_SERVER_SMTP'];
+        $smtp_host = $_SESSION['USE_SERVER_SMTP_HOST'];
+        $smtp_user = $_SESSION['USE_SERVER_SMTP_USER'];
+        $smtp_passwd = $_SESSION['USE_SERVER_SMTP_PASSWD'];
+        $smtp_addr = $_SESSION['USE_SERVER_SMTP_ADDR'];
+
+        $mail = new PHPMailer();
+        $mail->IsSMTP();
+        $mail->Mailer = "smtp";
+
+        $mail->SMTPDebug  = 0;
+        $mail->SMTPAuth   = TRUE;
+        $mail->SMTPSecure = "STARTTLS";
+        $mail->Port       = 587;
+        $mail->Host       = $smtp_host;
+        $mail->Username   = $smtp_user;
+        $mail->Password   = $smtp_passwd;
+
+        $mail->IsHTML(true);
+        $mail->ClearReplyTos();
+        $mail->AddAddress($to, "Hestia Control Panel User");
+        $mail->SetFrom($smtp_addr, "Hestia Control Panel");
+
+        $mail->Subject = $subject;
+        $content = $mailtext;
+
+        $mail->MsgHTML($content);
+        $mail->Send();
+    } else {
+        $charset = "utf-8";
+        $to = '<' . $to . '>';
+        $boundary = '--' . md5( uniqid('myboundary') );
+        $priorities = array( '1 (Highest)', '2 (High)', '3 (Normal)', '4 (Low)', '5 (Lowest)' );
+        $priority = $priorities[2];
+        $ctencoding = '8bit';
+        $sep = chr(13) . chr(10);
+        $disposition = 'inline';
+        $subject = "=?$charset?B?" . base64_encode($subject) . '?=';
+        $header = "From: $from \nX-Priority: $priority\nCC:\n";
+        $header .= "Mime-Version: 1.0\nContent-Type: text/plain; charset=$charset \n";
+        $header .= "Content-Transfer-Encoding: $ctencoding\nX-Mailer: Php/libMailv1.3\n";
+        $message = $mailtext;
+        mail($to, $subject, $message, $header);
+    }
 }
 
 function list_timezones() {

@@ -1,0 +1,85 @@
+#!/bin/bash
+# info: setup SMTP Account for server logging
+# options: NONE
+# labels:
+#
+# example: v-setup-server-smtp-account
+#
+# This function allows configuring a SMTP account for the server to use
+# for logging, notification and warn emails etc.
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
+source $HESTIA/conf/hestia.conf
+
+function updateConfig
+{
+	CONFIG=$1
+	VALUE=$2
+	# Updating hestia.conf value
+	if [ -z "$(grep $CONFIG $HESTIA/conf/hestia.conf)" ]; then
+	    echo "$CONFIG='$VALUE'" >> $HESTIA/conf/hestia.conf
+	else
+	    sed -i "s/"$CONFIG"=.*/"$CONFIG"='"$VALUE"'/g" $HESTIA/conf/hestia.conf
+	fi
+}
+
+function setupFiles
+{
+	echo "Use SMTP account for server communication (Y/n): "
+	read use_smtp_prompt
+
+	use_smtp="${use_smtp_prompt:-y}"
+	use_smtp="${use_smtp,,}"
+	if [ "${use_smtp}" == "y" ] ; then
+		use_smtp=y
+
+		echo "Enter SMTP Host:"
+		read -i $USE_SERVER_SMTP_HOST -e smtp_server_host
+		echo "Enter SMTP Username:"
+		read -i $USE_SERVER_SMTP_USER -e smtp_server_user_name
+		echo "Enter SMTP Password (stored as plaintext):"
+		read -i $USE_SERVER_SMTP_PASSWD -e smtp_server_password
+		echo "Enter SMTP Address:"
+		read -i $USE_SERVER_SMTP_ADDR -e smtp_server_addr
+	else
+		use_smtp=n
+	fi
+
+	echo "Summary:
+	Use SMTP: $use_smtp
+	SMTP Host: $smtp_server_host
+	SMTP Username: $smtp_server_user_name
+	SMTP Password: $smtp_server_password
+	SMTP Address: $smtp_server_addr
+	Are these values correct? (y/N)"
+	read correct_validation
+	correct="${correct_validation:-n}"
+	correct="${correct,,}"
+	if [ "${correct}" != "y" ] ; then
+		echo "Not Proceeding. Restart or Quit (r/Q)?"
+		read restart_quit_prompt
+		restart_quit="${restart_quit_prompt:-q}"
+		restart_quit="${restart_quit,,}"
+		if [ "${restart_quit}" == "r" ] ; then
+			clear
+			setupFiles
+		else
+			exit 3
+		fi
+	else
+		updateConfigTest "USE_SERVER_SMTP" $use_smtp
+		updateConfigTest "USE_SERVER_SMTP_HOST" $smtp_server_host
+		updateConfigTest "USE_SERVER_SMTP_USER" $smtp_server_user_name
+		updateConfigTest "USE_SERVER_SMTP_PASSWD" $smtp_server_password
+		updateConfigTest "USE_SERVER_SMTP_ADDR" $smtp_server_addr
+	fi
+}
+
+setupFiles

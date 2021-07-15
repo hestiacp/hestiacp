@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.4.7] - Service release 
+
+### Bugfixes
+
+- Fix #1984 phppgadmin not working on apache2 systems
+- Fix #1985 Restart service not working
+
+
 ## [1.4.6] - Service release 
 
 ### Features

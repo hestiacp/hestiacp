@@ -914,7 +914,13 @@ function validate_database(){
     run v-add-mail-domain $user $domain
     assert_success
     refute_output
+}
 
+@test "MAIL: Add mail domain webmail client" {
+    skip 
+    run v-add-mail-domain-webmail $user $domain "rouncube"
+    assert_success
+    refute_output
     validate_mail_domain $user $domain
 
     # echo -e "<?php\necho 'Server: ' . \$_SERVER['SERVER_SOFTWARE'];" > /var/lib/roundcube/check_server.php
@@ -950,7 +956,7 @@ function validate_database(){
 }
 
 #----------------------------------------------------------#
-#    Limit possibilities adding different owner domain    #
+#    Limit possibilities adding different owner domain     #
 #----------------------------------------------------------#
 
 @test "Allow Users: User can't add user.user2.com " {

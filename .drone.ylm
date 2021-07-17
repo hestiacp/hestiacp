@@ -1,0 +1,75 @@
+---
+kind: pipeline
+type: ssh
+name: default
+
+concurrency:
+  limit: 1
+
+server:
+  host:
+    from_secret: test-server
+  user: 
+    from_secret: username
+  ssh_key: 
+    from_secret: ssh_key
+
+platform:
+  os: linux
+  arch: amd64
+   
+steps:
+- name: submodules
+  image: alpine/git
+  commands:
+  - git submodule update --init --recursive
+- name: build-install
+  commands:
+  - ./src/hst_autocompile.sh --hestia --install '~localsrc'
+- name: bast-test
+  commands:
+  - bats ./test/test.bats
+- name: php-test
+  commands: 
+  - ./test/check_php.php
+
+trigger:
+  event: [ push ]
+
+---      
+kind: pipeline
+type: ssh
+name: pull-request
+
+concurrency:
+      limit: 1
+
+server:
+  host:
+    from_secret: test-server
+  user: 
+    from_secret: username
+  ssh_key: 
+    from_secret: ssh_key
+
+platform:
+      os: linux
+      arch: amd64
+
+steps:
+- name: submodules
+  image: alpine/git
+  commands:
+  - git submodule update --init --recursive
+- name: build-install
+  commands:
+  - ./src/hst_autocompile.sh --hestia --install '~localsrc'
+- name: bast-test
+  commands:
+  - bats ./test/test.bats
+- name: php-test
+  commands: 
+  - ./test/check_php.php
+
+trigger:
+  event: [ pull_request ]

@@ -26,7 +26,7 @@ steps:
 - name: build-install
   commands:
   - ./src/hst_autocompile.sh --hestia --install '~localsrc'
-- name: bast-test
+- name: bash-test
   commands:
   - bats ./test/test.bats
 - name: php-test
@@ -64,7 +64,7 @@ steps:
 - name: build-install
   commands:
   - ./src/hst_autocompile.sh --hestia --install '~localsrc'
-- name: bast-test
+- name: bash-test
   commands:
   - bats ./test/test.bats
 - name: php-test
@@ -75,4 +75,4 @@ trigger:
   event: [ pull_request ]
 ---
 kind: signature
-hmac: d1d1dce9762039d55ad52a43bd8ba33802fe02e142b850d6a43bd073c70f82a2
+hmac: 05165282c2f9b98afd11675dc98c99c4037d1672485eca49f462dc946c120a68

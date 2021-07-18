@@ -637,7 +637,7 @@ echo
 
 echo "[ * ] NGINX"
 if [ "$release" -eq 11 ]; then
-    echo "    Skip nginx repo, not available yet."
+    echo "      Skip nginx repo, not available yet."
 else
     echo "deb [arch=$ARCH] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
 fi
@@ -670,7 +670,12 @@ fi
 # Installing HestiaCP repo
 echo "[ * ] Hestia Control Panel"
 if [ "$ARCH" = "amd64" ]; then
-    echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
+    # Temporary solution for Deb11 support
+    if [ "$release" -eq 11 ]; then
+        echo "      Skip hestia repo, not available yet."
+    else
+        echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
+    fi
 else
     echo "# deb https://$RHOST/ $codename main" > $apt/hestia.list
     echo -e "\e[91m[ ! ] HestiaCP on ARM is currently in Development.\e[0m"
@@ -975,7 +980,7 @@ systemctl enable systemd-timesyncd
 systemctl start systemd-timesyncd
 
 # Setup rssh
-if [ ! "$release" -eq 10 ] || [ ! "$release" -eq 11 ]; then
+if [ "$release" -eq 9 ]; then
     if [ -z "$(grep /usr/bin/rssh /etc/shells)" ]; then
         echo /usr/bin/rssh >> /etc/shells
     fi
@@ -1227,6 +1232,12 @@ fi
 echo "[ * ] Enable SFTP jail..."
 $HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1
 check_result $? "can't enable sftp jail"
+
+# Switch to sha512 for deb11.
+if [ "$release" -eq 11 ]; then
+    # Switching to sha512
+    sed -i "s/obscure yescrypt/obscure sha512/g" /etc/pam.d/common-password
+fi
 
 # Adding Hestia admin account
 $HESTIA/bin/v-add-user admin $vpass $email default "System Administrator"
@@ -1549,7 +1560,7 @@ if [ "$named" = 'yes' ]; then
     chown bind:bind /var/cache/bind
     chmod 640 /etc/bind/named.conf
     chmod 640 /etc/bind/named.conf.options
-    aa-complain /usr/sbin/named 2>/dev/null
+    aa-complain /usr/sbin/named 2> /dev/null
     if [ "$apparmor" = 'yes' ]; then
         echo "/home/** rwm," >> /etc/apparmor.d/local/usr.sbin.named 2> /dev/null
         systemctl status apparmor >/dev/null 2>&1
@@ -1557,7 +1568,7 @@ if [ "$named" = 'yes' ]; then
             systemctl restart apparmor
         fi
     fi
-    update-rc.d bind9 defaults
+    update-rc.d bind9 defaults > /dev/null 2>&1
     systemctl start bind9
     check_result $? "bind9 start failed"
 

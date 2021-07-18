@@ -670,12 +670,7 @@ fi
 # Installing HestiaCP repo
 echo "[ * ] Hestia Control Panel"
 if [ "$ARCH" = "amd64" ]; then
-    # Temporary solution for Deb11 support
-    if [ "$release" -eq 11 ]; then
-        echo "      Skip hestia repo, not available yet."
-    else
-        echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
-    fi
+    echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
 else
     echo "# deb https://$RHOST/ $codename main" > $apt/hestia.list
     echo -e "\e[91m[ ! ] HestiaCP on ARM is currently in Development.\e[0m"

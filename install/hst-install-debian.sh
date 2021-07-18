@@ -28,7 +28,7 @@ pma_v='5.1.1'
 rc_v="1.4.11"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
 fpm_v="7.4"
-mariadb_v="10.5"
+mariadb_v="10.6"
 
 if [ "$release" -eq 9 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
@@ -39,14 +39,13 @@ if [ "$release" -eq 9 ]; then
         php$fpm_v-json php$fpm_v-mbstring php$fpm_v-opcache php$fpm_v-pspell
         php$fpm_v-readline php$fpm_v-xml vsftpd proftpd-basic bind9 exim4
         exim4-daemon-heavy clamav-daemon spamassassin dovecot-imapd
-        dovecot-pop3d net-tools
-        mariadb-client mariadb-common mariadb-server postgresql
-        postgresql-contrib phppgadmin mc flex whois rssh git idn zip
+        dovecot-pop3d net-tools mariadb-client mariadb-common mariadb-server
+        postgresql postgresql-contrib phppgadmin mc flex whois rssh git idn zip
         sudo bc ftp lsof rrdtool quota e2fslibs bsdutils e2fsprogs curl
         imagemagick fail2ban dnsutils bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx
         hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat
         rsyslog openssh-server setpriv ipset libapache2-mod-ruid2 zstd lsb-release"
-elif [ "$release" -eq 10 ]; then
+elif [ "$release" -eq 10 ] || [ "$release" -eq 11 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
         apache2-suexec-pristine libapache2-mod-fcgid libapache2-mod-php$fpm_v
         php$fpm_v php$fpm_v-common php$fpm_v-cgi php$fpm_v-mysql php$fpm_v-curl
@@ -55,14 +54,14 @@ elif [ "$release" -eq 10 ]; then
         php$fpm_v-gd php$fpm_v-intl php$fpm_v-json php$fpm_v-mbstring
         php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
         awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy
-        clamav-daemon spamassassin dovecot-imapd dovecot-pop3d 
-        net-tools mariadb-client
-        mariadb-common mariadb-server postgresql postgresql-contrib
-        phppgadmin mc flex whois git idn zip sudo bc ftp lsof rrdtool
-        quota e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx hestia-php expect
-        libmail-dkim-perl unrar-free vim-common acl sysstat rsyslog openssh-server
-        util-linux ipset libapache2-mpm-itk zstd lsb-release"
+        clamav-daemon spamassassin dovecot-imapd dovecot-pop3d net-tools
+        mariadb-client mariadb-common mariadb-server postgresql
+        postgresql-contrib phppgadmin mc flex whois git idn zip sudo bc ftp lsof
+        rrdtool quota e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban 
+        dnsutils bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx
+        hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat
+        rsyslog openssh-server util-linux ipset libapache2-mpm-itk zstd
+        lsb-release"
 fi
 
 installer_dependencies="apt-transport-https curl dirmngr gnupg wget ca-certificates"
@@ -655,7 +654,12 @@ fi
 # Installing MariaDB repo
 if [ "$mysql" = 'yes' ]; then
     echo "[ * ] MariaDB"
-    echo "deb [arch=$ARCH] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
+    # Temporary solution for Deb11 support
+    if [ "$release" -eq 11 ]; then
+        echo "deb [arch=$ARCH] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$VERSION sid main" > $apt/mariadb.list
+    else
+        echo "deb [arch=$ARCH] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
+    fi
     apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc' > /dev/null 2>&1
 fi
 
@@ -967,7 +971,7 @@ systemctl enable systemd-timesyncd
 systemctl start systemd-timesyncd
 
 # Setup rssh
-if [ ! "$release" -eq 10 ]; then
+if [ ! "$release" -eq 10 ] || [ ! "$release" -eq 11 ]; then
     if [ -z "$(grep /usr/bin/rssh /etc/shells)" ]; then
         echo /usr/bin/rssh >> /etc/shells
     fi
@@ -1292,7 +1296,7 @@ if [ "$apache" = 'yes' ]; then
         a2enmod mpm_event > /dev/null 2>&1
         cp -f $HESTIA_INSTALL_DIR/apache2/hestia-event.conf /etc/apache2/conf.d/
     else
-        if [ "$release" -eq 10 ]; then
+        if [ "$release" -eq 10 ] || [ "$release" -eq 11 ]; then
             a2enmod mpm_itk > /dev/null 2>&1
         else
             a2enmod ruid2 > /dev/null 2>&1
@@ -1605,9 +1609,7 @@ if [ "$dovecot" = 'yes' ]; then
     cp -rf $HESTIA_INSTALL_DIR/dovecot /etc/
     cp -f $HESTIA_INSTALL_DIR/logrotate/dovecot /etc/logrotate.d/
     chown -R root:root /etc/dovecot*
-    if [ "$release" -eq 9 ] || [ "$release" -eq 10 ]; then
-        rm -f /etc/dovecot/conf.d/15-mailboxes.conf
-    fi
+    rm -f /etc/dovecot/conf.d/15-mailboxes.conf
     update-rc.d dovecot defaults
     systemctl start dovecot
     check_result $? "dovecot start failed"

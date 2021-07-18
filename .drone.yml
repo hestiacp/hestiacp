@@ -31,7 +31,7 @@ steps:
   - bats ./test/test.bats
 - name: php-test
   commands: 
-  - ./test/check_php.php
+  - ./test/check_php.sh
 
 trigger:
   event: [ push ]
@@ -73,3 +73,7 @@ steps:
 
 trigger:
   event: [ pull_request ]
+  
+  ---
+  kind: signature
+  hmac: d1d1dce9762039d55ad52a43bd8ba33802fe02e142b850d6a43bd073c70f82a2

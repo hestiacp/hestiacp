@@ -36,7 +36,7 @@ steps:
 trigger:
   event: [ push ]
 
----      
+---
 kind: pipeline
 type: ssh
 name: pull-request
@@ -73,7 +73,6 @@ steps:
 
 trigger:
   event: [ pull_request ]
-  
-  ---
-  kind: signature
-  hmac: d1d1dce9762039d55ad52a43bd8ba33802fe02e142b850d6a43bd073c70f82a2
+---
+kind: signature
+hmac: d1d1dce9762039d55ad52a43bd8ba33802fe02e142b850d6a43bd073c70f82a2

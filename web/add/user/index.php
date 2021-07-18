@@ -104,7 +104,8 @@ if (!empty($_POST['ok'])) {
         $subject = _("Welcome to Hestia Control Panel");
         $hostname = exec('hostname');
         unset($output);
-        $from = sprintf(_('MAIL_FROM'),$hostname);
+        $from = "noreply@".$hostname;
+        $from_name = _('Hestia Control Panel');
 
         if (!empty($_POST['v_name'])) {
             $mailtext = sprintf(_('GREETINGS_GORDON'),$_POST['v_name'])."\r\n";
@@ -113,7 +114,7 @@ if (!empty($_POST['ok'])) {
         }
         
         $mailtext .= sprintf(_('ACCOUNT_READY'),$_SERVER['HTTP_HOST'],$_POST['v_username'],$_POST['v_password']);
-        send_email($to, $subject, $mailtext, $from);
+        send_email($to, $subject, $mailtext, $from, $from_name);
         putenv("LANGUAGE=".detect_user_language());
     }
 

@@ -1,5 +1,11 @@
 <?php
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+require 'vendor/autoload.php';
+
 session_start();
 
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
@@ -288,21 +294,34 @@ function get_percentage($used,$total) {
     return $percent;
 }
 
-function send_email($to, $subject, $mailtext, $from) {
-    $charset = "utf-8";
-    $to = '<' . $to . '>';
-    $boundary = '--' . md5( uniqid('myboundary') );
-    $priorities = array( '1 (Highest)', '2 (High)', '3 (Normal)', '4 (Low)', '5 (Lowest)' );
-    $priority = $priorities[2];
-    $ctencoding = '8bit';
-    $sep = chr(13) . chr(10);
-    $disposition = 'inline';
-    $subject = "=?$charset?B?" . base64_encode($subject) . '?=';
-    $header = "From: $from \nX-Priority: $priority\nCC:\n";
-    $header .= "Mime-Version: 1.0\nContent-Type: text/plain; charset=$charset \n";
-    $header .= "Content-Transfer-Encoding: $ctencoding\nX-Mailer: Php/libMailv1.3\n";
-    $message = $mailtext;
-    mail($to, $subject, $message, $header);
+function send_email($to, $subject, $mailtext, $from, $from_name) {
+
+    $mail = new PHPMailer();
+
+    if (isset($_SESSION['USE_SERVER_SMTP']) && $_SESSION['USE_SERVER_SMTP'] == "y") {
+        $from = $_SESSION['SERVER_SMTP_ADDR'];
+
+        $mail->IsSMTP();
+        $mail->Mailer = "smtp";
+        $mail->SMTPDebug  = 0;
+        $mail->SMTPAuth   = TRUE;
+        $mail->SMTPSecure = $_SESSION['SERVER_SMTP_SECURITY'];
+        $mail->Port       = $_SESSION['SERVER_SMTP_PORT'];
+        $mail->Host       = $_SESSION['SERVER_SMTP_HOST'];
+        $mail->Username   = $_SESSION['SERVER_SMTP_USER'];
+        $mail->Password   = $_SESSION['SERVER_SMTP_PASSWD'];
+    }
+
+    $mail->IsHTML(true);
+    $mail->ClearReplyTos();
+    $mail->AddAddress($to, "Hestia Control Panel User");
+    $mail->SetFrom($from, $from_name);
+
+    $mail->Subject = $subject;
+    $content = $mailtext;
+
+    $mail->MsgHTML($content);
+    $mail->Send();
 }
 
 function list_timezones() {

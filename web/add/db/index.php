@@ -89,9 +89,10 @@ if (!empty($_POST['ok'])) {
         $to = $v_db_email;
         $subject = _("Database Credentials");
         $hostname = exec('hostname');
-        $from = sprintf(_('MAIL_FROM'),$hostname);
+        $from = "noreply@".$hostname;
+        $from_name = _('Hestia Control Panel');
         $mailtext = sprintf(_('DATABASE_READY'),$user."_".$_POST['v_database'],$user."_".$_POST['v_dbuser'],$_POST['v_password'],$db_admin_link);
-        send_email($to, $subject, $mailtext, $from);
+        send_email($to, $subject, $mailtext, $from, $from_name);
     }
 
     // Flush field values on success

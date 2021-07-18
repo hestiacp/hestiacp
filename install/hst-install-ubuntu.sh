@@ -1917,6 +1917,13 @@ write_config_value "DEBUG_MODE" "no"
 write_config_value "ENFORCE_SUBDOMAIN_OWNERSHIP" "yes"
 
 #----------------------------------------------------------#
+#                  Configure PHPMailer                     #
+#----------------------------------------------------------#
+
+echo "[ * ] Configuring PHPMailer..."
+$HESTIA/bin/v-add-sys-phpmailer quiet
+
+#----------------------------------------------------------#
 #                   Hestia Access Info                     #
 #----------------------------------------------------------#
 

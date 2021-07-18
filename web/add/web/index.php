@@ -381,9 +381,10 @@ if (!empty($_POST['ok'])) {
                     if ((!empty($v_ftp_user_data['v_ftp_email'])) && (empty($_SESSION['error_msg']))) {
                         $to = $v_ftp_user_data['v_ftp_email'];
                         $subject = _("FTP login credentials");
-                        $from = sprintf(_('MAIL_FROM'), $v_domain );
+                        $from = "noreply@".$v_domain;
+                        $from_name = _('Hestia Control Panel');
                         $mailtext = sprintf(_('FTP_ACCOUNT_READY'),$v_domain,$user,$v_ftp_user_data['v_ftp_user'],$v_ftp_user_data['v_ftp_password']);
-                        send_email($to, $subject, $mailtext, $from);
+                        send_email($to, $subject, $mailtext, $from, $from_name);
                         unset($v_ftp_email);
                     }
                 } else {

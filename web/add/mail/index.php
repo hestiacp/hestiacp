@@ -269,9 +269,10 @@ if (!empty($_POST['ok_acc'])) {
         $to = $v_send_email;
         $subject = _("Email Credentials");
         $hostname = exec('hostname');
-        $from = sprintf(_('MAIL_FROM'), $hostname);
+        $from = "noreply@".$hostname;
+        $from_name = _('Hestia Control Panel');
         $mailtext = $v_credentials;
-        send_email($to, $subject, $mailtext, $from);
+        send_email($to, $subject, $mailtext, $from, $from_name);
     }
 
     // Flush field values on success

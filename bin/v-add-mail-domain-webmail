@@ -20,6 +20,10 @@ webmail=$3
 restart="$4"
 quiet=$5
 
+if [ -z "$restart" ]; then 
+    restart="yes"
+fi
+
 # Additional argument formatting
 if [[ "$domain" =~ [[:upper:]] ]]; then
     domain=$(echo "$domain" |tr '[:upper:]' '[:lower:]')
@@ -100,17 +104,17 @@ else
         if [ "$dns_domain" = "$domain" ]; then
             if [ -z "$webmail_record" ]; then
                 if [ "$quiet" = "yes" ]; then
-                    $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip '' '' '$restart' '' 'yes'
+                    $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip '' '' $restart '' 'yes'
                 else
-                    $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip '' '' '$restart' '' 'yes'
+                    $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip '' '' $restart '' 'yes'
                 fi
             else
                 if [ "$quiet" = "yes" ]; then
                     $BIN/v-delete-dns-record $user $domain $webmail_record $restart 'yes'
-                    $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip '' '' '$restart' '' 'yes'
+                    $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip '' '' $restart '' 'yes'
                 else
                     $BIN/v-delete-dns-record $user $domain $webmail_record $restart 'yes'
-                    $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip '' '' '$restart' '' 'yes'
+                    $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip '' '' $restart '' 'yes'
                 fi
             fi
         fi

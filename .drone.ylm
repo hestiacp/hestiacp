@@ -8,7 +8,7 @@ concurrency:
 
 server:
   host:
-    from_secret: test-server
+    from_secret: server_address
   user: 
     from_secret: username
   ssh_key: 
@@ -46,7 +46,7 @@ concurrency:
 
 server:
   host:
-    from_secret: test-server
+    from_secret: server_address
   user: 
     from_secret: username
   ssh_key: 

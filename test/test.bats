@@ -924,7 +924,7 @@ function validate_database(){
     validate_mail_domain $user $domain
 }
 
-@test "MAIL: Add mail domain webmail client" {
+@test "MAIL: Add mail domain webmail client (Roundcube)" {
     run v-add-mail-domain-webmail $user $domain "roundcube" "yes"
     assert_success
     refute_output

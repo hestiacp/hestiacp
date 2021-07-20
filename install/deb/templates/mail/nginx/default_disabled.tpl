@@ -1,13 +1,11 @@
 server {
-    listen      %ip%:%proxy_ssl_port% ssl http2;
+    listen      %ip%:%proxy_port%;
     server_name %domain_idn% %alias_idn%;
-    root        /var/lib/roundcube;
+    root        /var/www/html;
     index       index.php index.html index.htm;
     access_log /var/log/nginx/domains/%domain%.log combined;
     error_log  /var/log/nginx/domains/%domain%.error.log error;
     
-    ssl_certificate     %ssl_pem%;
-    ssl_certificate_key %ssl_key%;
     ssl_stapling on;
     ssl_stapling_verify on;
     

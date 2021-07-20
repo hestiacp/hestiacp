@@ -1,7 +1,7 @@
 ---
 kind: pipeline
 type: ssh
-name: default
+name: HestiaCP + Nginx + Apache2  
 
 concurrency:
   limit: 1
@@ -19,60 +19,61 @@ platform:
   arch: amd64
    
 steps:
-- name: submodules
+- name: Down submodules
   image: alpine/git
   commands:
   - git submodule update --init --recursive
 - name: build-install
   commands:
   - ./src/hst_autocompile.sh --hestia --install '~localsrc'
-- name: bash-test
+- name: Run Bats
   commands:
   - bats ./test/test.bats
-- name: php-test
+- name: Run Check PHP
   commands: 
   - ./test/check_php.sh
 
 trigger:
-  event: [ push ]
+  event: [ push, pull_request ]
 
 ---
 kind: pipeline
 type: ssh
-name: pull-request
+name: HestiaCP + Nginx  
 
 concurrency:
-      limit: 1
+  limit: 1
 
 server:
   host:
-    from_secret: server_address
+    from_secret: server_address2
   user: 
     from_secret: username
   ssh_key: 
     from_secret: ssh_key
 
 platform:
-      os: linux
-      arch: amd64
-
+  os: linux
+  arch: amd64
+   
 steps:
-- name: submodules
+- name: Down submodules
   image: alpine/git
   commands:
   - git submodule update --init --recursive
 - name: build-install
   commands:
   - ./src/hst_autocompile.sh --hestia --install '~localsrc'
-- name: bash-test
+- name: Run Bats
   commands:
   - bats ./test/test.bats
-- name: php-test
+- name: Run Check PHP
   commands: 
   - ./test/check_php.sh
 
 trigger:
-  event: [ pull_request ]
+  event: [ push, pull_request ]
+
 ---
 kind: signature
-hmac: 05165282c2f9b98afd11675dc98c99c4037d1672485eca49f462dc946c120a68
+hmac: 206d86147c4ee57339c4af654f073c0d2f136f591c890eb4244ccaef087c433f

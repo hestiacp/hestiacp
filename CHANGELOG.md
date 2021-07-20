@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [Development]
+
+### Features
+
+- Add support for automated testing HestiaCP code
+
 ## [1.4.7] - Service release 
 
 ### Bugfixes

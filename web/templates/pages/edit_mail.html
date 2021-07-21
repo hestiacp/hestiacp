@@ -76,13 +76,13 @@
 								<select class="vst-list" name="v_webmail" tabindex="6">
 									<?php foreach ($webmail_clients as $client){
 										echo "\t\t\t\t<option value=\"".htmlentities($client)."\"";
-										if (( $v_webmail == $client )) {
+										if (( htmlentities(trim($v_webmail,"'")) == $client )) {
 											echo ' selected' ;
 										}
 										echo ">".htmlentities(ucfirst($client))."</option>\n";
 										}
 									?>
-									<option value="disabled" <?php if ( empty($v_webmail) || ($v_webmail == 'disabled')) { echo "selected";}?>><?=_('Disabled');?></option>
+									<option value="disabled" <?php if (htmlentities(trim($v_webmail,"'")) == 'disabled') { echo "selected";}?>><?=_('Disabled');?></option>
 								</select>
 							</td>
 						</tr>

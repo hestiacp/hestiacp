@@ -23,6 +23,7 @@ function setup() {
         echo 'userpass2=t3st-p4ssw0rd' >> /tmp/hestia-test-env.sh
         echo 'HESTIA=/usr/local/hestia' >> /tmp/hestia-test-env.sh
         echo 'domain=test-5285.hestiacp.com' >> /tmp/hestia-test-env.sh
+        echo 'domainuk=test-5285.hestiacp.com.uk' >> /tmp/hestia-test-env.sh
         echo 'rootdomain=testhestiacp.com' >> /tmp/hestia-test-env.sh
         echo 'subdomain=cdn.testhestiacp.com' >> /tmp/hestia-test-env.sh
         echo 'database=test-5285_database' >> /tmp/hestia-test-env.sh
@@ -121,26 +122,38 @@ function validate_webmail_domain() {
     if [ ! -z "$webpath" ]; then
         assert_file_exist /var/lib/roundcube/$webpath
     fi
-
-    # Test HTTP
-    run curl --location --silent --show-error --insecure --resolve "webmail.${domain}:80:${domain_ip}" "http://webmail.${domain}/${webpath}"
-    assert_success
-    assert_output --partial "$webproof"
-
-    # Test HTTP
-    run curl --location --silent --show-error --insecure --resolve "mail.${domain}:80:${domain_ip}" "http://mail.${domain}/${webpath}"
-    assert_success
-    assert_output --partial "$webproof"
+    
+    if [ "$SSL" = "no" ]; then 
+        # Test HTTP
+        run curl --location --silent --show-error --insecure  --resolve "webmail.${domain}:80:${domain_ip}" "http://webmail.${domain}/${webpath}"
+        assert_success
+        assert_output --partial "$webproof"
+            
+        # Test HTTP
+        run curl  --location --silent --show-error --insecure --resolve "mail.${domain}:80:${domain_ip}" "http://mail.${domain}/${webpath}"
+        assert_success
+        assert_output --partial "$webproof"
+    fi
 
     # Test HTTPS
     if [ "$SSL" = "yes" ]; then
+        # Test HTTP with 301 redirect for some reasons due to 301 redirect it fails
+        run curl --silent --show-error --insecure --resolve "webmail.${domain}:80:${domain_ip}" "http://webmail.${domain}/${webpath}"
+        assert_success
+        assert_output --partial "301 Moved Permanently"
+
+        # Test HTTP with 301 redirect for some reasons due to 301 redirect it fails
+        run curl --silent --show-error --insecure --resolve "mail.${domain}:80:${domain_ip}" "http://mail.${domain}/${webpath}"
+        assert_success
+        assert_output --partial "301 Moved Permanently"
+                
         run v-list-mail-domain-ssl $user $domain
         assert_success
-
+    
         run curl --location --silent --show-error --insecure --resolve "webmail.${domain}:443:${domain_ip}" "https://webmail.${domain}/${webpath}"
         assert_success
         assert_output --partial "$webproof"
-
+    
         run curl --location --silent --show-error --insecure --resolve "mail.${domain}:443:${domain_ip}" "https://mail.${domain}/${webpath}"
         assert_success
         assert_output --partial "$webproof"
@@ -181,17 +194,6 @@ function validate_database(){
     
     rm -f "$sql_tmp"
     rm -f "$tmpfile"
-}
-
-#----------------------------------------------------------#
-#                         MAIN                             #
-#----------------------------------------------------------#
-
-@test "Add new userXXX" {
-    skip
-    run v-add-user $user $user $user@hestiacp.com default "Super Test"
-    assert_success
-    refute_output
 }
 
 #----------------------------------------------------------#
@@ -918,19 +920,51 @@ function validate_database(){
     run v-add-mail-domain $user $domain
     assert_success
     refute_output
+    
+    validate_mail_domain $user $domain
 }
 
-@test "MAIL: Add mail domain webmail client" {
-    skip 
-    run v-add-mail-domain-webmail $user $domain "rouncube"
+@test "MAIL: Add mail domain webmail client (Roundcube)" {
+    run v-add-mail-domain-webmail $user $domain "roundcube" "yes"
     assert_success
     refute_output
-    validate_mail_domain $user $domain
 
     # echo -e "<?php\necho 'Server: ' . \$_SERVER['SERVER_SOFTWARE'];" > /var/lib/roundcube/check_server.php
     validate_webmail_domain $user $domain 'Welcome to Roundcube Webmail'
     # rm /var/lib/roundcube/check_server.php
 }
+
+@test "Mail: Add SSL to mail domain" {
+    cp -f $HESTIA/ssl/certificate.crt /tmp/$domain.crt
+    cp -f $HESTIA/ssl/certificate.key /tmp/$domain.key
+
+    run v-add-mail-domain-ssl $user $domain /tmp
+    assert_success
+    refute_output
+    
+    validate_webmail_domain $user $domain 'Welcome to Roundcube Webmail'
+}
+
+@test "MAIL: Add mail domain webmail client (Rainloop)" {
+    if [ -z "$(echo $WEBMAIL_SYSTEM | grep -w "rainloop")" ]; then 
+        skip "Webmail client Rainloop not installed"
+    fi
+    run v-add-mail-domain-webmail $user $domain "rainloop" "yes"
+    assert_success
+    refute_output
+    validate_mail_domain $user $domain
+    
+    validate_webmail_domain $user $domain 'RainLoop Webmail'
+}    
+
+@test "MAIL: Disable webmail client" {
+    run v-add-mail-domain-webmail $user $domain "disabled" "yes"
+    assert_success
+    refute_output
+    validate_mail_domain $user $domain
+    
+    validate_webmail_domain $user $domain 'Success!'
+} 
 
 @test "MAIL: Add domain (duplicate)" {
     run v-add-mail-domain $user $domain
@@ -957,6 +991,12 @@ function validate_database(){
 @test "MAIL: Delete missing account" {
     run v-delete-mail-account $user $domain test
     assert_failure $E_NOTEXIST
+}
+
+@test "MAIL: Rebuild mail domain" {
+    run v-rebuild-mail-domains $user
+    assert_success
+    refute_output
 }
 
 #----------------------------------------------------------#
@@ -1065,8 +1105,6 @@ function validate_database(){
     assert_success
     refute_output
 }
-
-
 
 #----------------------------------------------------------#
 #                         DB                               #

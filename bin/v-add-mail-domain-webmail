@@ -20,6 +20,10 @@ webmail=$3
 restart="$4"
 quiet=$5
 
+if [ -z "$restart" ]; then 
+    restart="yes"
+fi
+
 # Additional argument formatting
 if [[ "$domain" =~ [[:upper:]] ]]; then
     domain=$(echo "$domain" |tr '[:upper:]' '[:lower:]')

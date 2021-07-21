@@ -503,7 +503,8 @@ if [ "$PHP_B" = true ] ; then
     fi
 
     # Set permission
-    #chmod +x postinst
+    get_branch_file 'src/deb/nginx/postinst' "$BUILD_DIR_HESTIAPHP/DEBIAN/postinst"
+    chmod +x postinst
 
     # Move php directory
     [ "$HESTIA_DEBUG" ] && echo DEBUG: mkdir -p $BUILD_DIR_HESTIAPHP/usr/local/hestia

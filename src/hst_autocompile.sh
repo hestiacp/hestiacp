@@ -459,7 +459,7 @@ if [ "$PHP_B" = true ] ; then
         # Download and unpack source files
         cd $BUILD_DIR
         download_file $PHP '-' | tar xz
-
+        
         # Change to untarred php directory
         cd $BUILD_DIR_PHP
 
@@ -475,7 +475,6 @@ if [ "$PHP_B" = true ] ; then
                         --with-curl \
                         --with-zip \
                         --with-gmp \
-                        --enable-intl \
                         --enable-mbstring
         else
             ./configure   --prefix=/usr/local/hestia/php \
@@ -488,7 +487,6 @@ if [ "$PHP_B" = true ] ; then
                         --with-curl \
                         --with-zip \
                         --with-gmp \
-                        --enable-intl \
                         --enable-mbstring
         fi
     fi

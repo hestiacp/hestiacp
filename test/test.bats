@@ -1619,6 +1619,21 @@ function validate_database(){
     refute_output
 }
 
+#----------------------------------------------------------#
+#                         System                           #
+#----------------------------------------------------------#
+
+@test "System: Set/Enable SMTP account for internal mail" {
+  run v-add-sys-smtp $domain 587 STARTTLS info@$domain 1234-test noreply@$domain
+  assert_success
+  refute_output
+}
+
+@test "System: Disable SMTP account for internal mail" {
+  run v-delete-sys-smtp
+  assert_success
+  refute_output
+}
 
 #----------------------------------------------------------#
 #                         CLEANUP                          #

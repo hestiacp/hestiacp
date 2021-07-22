@@ -501,11 +501,6 @@ if [ "$PHP_B" = true ] ; then
         [ "$HESTIA_DEBUG" ] && echo DEBUG: cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch_dash
         cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch_dash
     fi
-
-    # Set permission
-    get_branch_file 'src/deb/nginx/postinst' "$BUILD_DIR_HESTIAPHP/DEBIAN/postinst"
-    chmod +x postinst
-
     # Move php directory
     [ "$HESTIA_DEBUG" ] && echo DEBUG: mkdir -p $BUILD_DIR_HESTIAPHP/usr/local/hestia
     mkdir -p $BUILD_DIR_HESTIAPHP/usr/local/hestia
@@ -534,7 +529,8 @@ if [ "$PHP_B" = true ] ; then
             sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
         fi
         get_branch_file 'src/deb/php/copyright' "$BUILD_DIR_HESTIAPHP/DEBIAN/copyright"
-
+        get_branch_file 'src/deb/php/postinst' "$BUILD_DIR_HESTIAPHP/DEBIAN/postinst"
+        chmod +x $BUILD_DIR_HESTIAPHP/DEBIAN/postinst
         # Get custom config
         get_branch_file 'src/deb/php/php-fpm.conf' "${BUILD_DIR_HESTIAPHP}/usr/local/hestia/php/etc/php-fpm.conf"
         get_branch_file 'src/deb/php/php.ini' "${BUILD_DIR_HESTIAPHP}/usr/local/hestia/php/lib/php.ini"

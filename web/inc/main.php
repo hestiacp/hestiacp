@@ -298,7 +298,7 @@ function send_email($to, $subject, $mailtext, $from, $from_name) {
 
     $mail = new PHPMailer();
 
-    if (isset($_SESSION['USE_SERVER_SMTP']) && $_SESSION['USE_SERVER_SMTP'] == "y") {
+    if (isset($_SESSION['USE_SERVER_SMTP']) && $_SESSION['USE_SERVER_SMTP'] == "true") {
         $from = $_SESSION['SERVER_SMTP_ADDR'];
 
         $mail->IsSMTP();
@@ -319,7 +319,8 @@ function send_email($to, $subject, $mailtext, $from, $from_name) {
 
     $mail->Subject = $subject;
     $content = $mailtext;
-
+    $mail->AltBody($content);
+    $content = nl2br($content);
     $mail->MsgHTML($content);
     $mail->Send();
 }

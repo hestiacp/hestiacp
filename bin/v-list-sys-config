@@ -194,7 +194,7 @@ shell_list() {
 
     echo "SMTP Server Account enabled:       $USE_SERVER_SMTP"
 
-    if [ ! -z "$USE_SERVER_SMTP" ] && [ "$USE_SERVER_SMTP" == 'y' ]; then
+    if [ ! -z "$USE_SERVER_SMTP" ] && [ "$USE_SERVER_SMTP" != 'false' ]; then
     echo "SMTP Server Account Host:          $SERVER_SMTP_HOST"
     echo "SMTP Server Account Port:          $SERVER_SMTP_PORT"
     echo "SMTP Server Account Security:      $SERVER_SMTP_SECURITY"

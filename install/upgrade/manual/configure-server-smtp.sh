@@ -26,7 +26,7 @@ function setupFiles
 	use_smtp="${use_smtp_prompt:-y}"
 	use_smtp="${use_smtp,,}"
 	if [ "${use_smtp}" == "y" ] ; then
-		use_smtp=y
+		use_smtp=true
 
 		echo "Enter SMTP Host:"
 		read -i $SERVER_SMTP_HOST -e smtp_server_host
@@ -41,7 +41,7 @@ function setupFiles
 		echo "Enter SMTP Address:"
 		read -i $SERVER_SMTP_ADDR -e smtp_server_addr
 	else
-		use_smtp=n
+		use_smtp=false
 	fi
 
 	echo "Summary:

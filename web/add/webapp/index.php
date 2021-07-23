@@ -91,7 +91,7 @@ if(!empty($installer)) {
     $v_web_apps = array();
     foreach($appInstallers as $app){
         $hestia = new \Hestia\System\HestiaApp();
-        if( preg_match('/Installers\/([a-zA-Z0-9].*)\/([a-zA-Z0-9].*).php/', $app, $matches)){
+        if( preg_match('/Installers\/([a-zA-Z][a-zA-Z0,9].*)\/([a-zA-Z][a-zA-Z0,9].*).php/', $app, $matches)){
             if ($matches[1] != "Resources"){
                 $app_installer_class = '\Hestia\WebApp\Installers\\'.$matches[1].'\\' . $matches[1] . 'Setup';
                 $app_installer = new $app_installer_class($v_domain, $hestia);

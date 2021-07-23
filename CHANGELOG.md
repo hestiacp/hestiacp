@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 
 - Resolve issue with double ENFORCE_SUBDOMAIN_OWNERSHIP keys in hestia.conf
 - Resolve issue with create new user during install in some cases #2000
+- Fix an issue with Quick Install apps named Test123 
 
 ## [1.4.7] - Service release 
 

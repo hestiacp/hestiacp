@@ -1173,9 +1173,6 @@ write_config_value "THEME" "dark"
 # Inactive session timeout
 write_config_value "INACTIVE_SESSION_TIMEOUT" "60"
 
-# Do not allow users to create subdomains when they don't own the domain
-write_config_value "ENFORCE_SUBDOMAIN_OWNERSHIP" "yes"
-
 # Version & Release Branch
 write_config_value "VERSION" "${HESTIA_INSTALL_VER}"
 write_config_value "RELEASE_BRANCH" "release"
@@ -1909,7 +1906,7 @@ write_config_value "POLICY_USER_EDIT_DETAILS" "yes"
 write_config_value "POLICY_USER_DELETE_LOGS" "yes"
 write_config_value "POLICY_USER_CHANGE_THEME" "yes"
 write_config_value "POLICY_SYSTEM_PROTECTED_ADMIN" "no"
-write_config_value "POLICY_SYSTEM_PASSWORD_RESET" "no"
+write_config_value "POLICY_SYSTEM_PASSWORD_RESET" "yes"
 write_config_value "POLICY_SYSTEM_HIDE_SERVICES" "no"
 write_config_value "POLICY_SYSTEM_ENABLE_BACON" "no"
 write_config_value "PLUGIN_APP_INSTALLER" "true"

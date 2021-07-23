@@ -71,6 +71,9 @@ class DokuWikiSetup extends BaseSetup {
 			$this->getDocRoot($this->extractsubdir . "/dokuwiki-release_stable_2020-07-29/."),
 			$this->getDocRoot()], $result);
 
+		// enable htaccess
+		$this->appcontext->runUser('v-move-fs-file', [$this->getDocRoot(".htaccess.dist"), $this->getDocRoot(".htaccess")], $result);
+
 		$installUrl = $webDomain . "install.php";
 
 		$cmd = "curl --request POST "

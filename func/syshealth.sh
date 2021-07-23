@@ -380,7 +380,42 @@ function syshealth_repair_system_config() {
         echo "[ ! ] Adding missing variable to hestia.conf: PHPMYADMIN_KEY ('')"
         $BIN/v-change-sys-config-value "PHPMYADMIN_KEY" ""
     fi
+    # Use SMTP server for hestia internal mail 
+    if [ -z "$USE_SERVER_SMTP" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: USE_SERVER_SMTP ('')"
+        $BIN/v-change-sys-config-value "USE_SERVER_SMTP" "false"
+    fi
+
+    if [ -z "$SERVER_SMTP_PORT" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: SERVER_SMTP_PORT ('')"
+        $BIN/v-change-sys-config-value "SERVER_SMTP_PORT" ""
+    fi
+
+    if [ -z "$SERVER_SMTP_HOST" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: SERVER_SMTP_HOST ('')"
+        $BIN/v-change-sys-config-value "SERVER_SMTP_HOST" ""
+    fi
+
+    if [ -z "$SERVER_SMTP_SECURITY" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: SERVER_SMTP_SECURITY ('')"
+        $BIN/v-change-sys-config-value "SERVER_SMTP_SECURITY" ""
+    fi
+
+    if [ -z "$SERVER_SMTP_USER" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: SERVER_SMTP_USER ('')"
+        $BIN/v-change-sys-config-value "SERVER_SMTP_USER" ""
+    fi
     
+    if [ -z "$SERVER_SMTP_PASSWD" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: SERVER_SMTP_PASSWD ('')"
+        $BIN/v-change-sys-config-value "SERVER_SMTP_PASSWD" ""
+    fi
+        
+    if [ -z "$SERVER_SMTP_ADDR" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: SERVER_SMTP_ADDR ('')"
+        $BIN/v-change-sys-config-value "SERVER_SMTP_ADDR" ""
+    fi    
+
 }
 
 # Repair System Cron Jobs

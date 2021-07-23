@@ -6,6 +6,12 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 - Add support for automated testing HestiaCP code
+- Add support for SMTP server for internal email #1988 @Myself5 / #1165
+
+### Bugfixes
+
+- Resolve issue with double ENFORCE_SUBDOMAIN_OWNERSHIP keys in hestia.conf
+- Resolve issue with create new user during install in some cases #2000
 
 ## [1.4.7] - Service release 
 

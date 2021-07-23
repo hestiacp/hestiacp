@@ -89,7 +89,14 @@ json_list() {
         "POLICY_USER_EDIT_DNS_TEMPLATES": "'$POLICY_USER_EDIT_DNS_TEMPLATES'",
         "POLICY_USER_DELETE_LOGS": "'$POLICY_USER_DELETE_LOGS'",
         "POLICY_USER_VIEW_LOGS": "'$POLICY_USER_VIEW_LOGS'",
-        "POLICY_USER_CHANGE_THEME": "'$POLICY_USER_CHANGE_THEME'"
+        "POLICY_USER_CHANGE_THEME": "'$POLICY_USER_CHANGE_THEME'",
+        "USE_SERVER_SMTP": "'$USE_SERVER_SMTP'",
+        "SERVER_SMTP_HOST": "'$SERVER_SMTP_HOST'",
+        "SERVER_SMTP_PORT": "'$SERVER_SMTP_PORT'",
+        "SERVER_SMTP_SECURITY": "'$SERVER_SMTP_SECURITY'",
+        "SERVER_SMTP_USER": "'$SERVER_SMTP_USER'",
+        "SERVER_SMTP_PASSWD": "'$SERVER_SMTP_PASSWD'",
+        "SERVER_SMTP_ADDR": "'$SERVER_SMTP_ADDR'"
     }
     }'
 }
@@ -183,6 +190,17 @@ shell_list() {
 	echo "SMTP Relay Server:                 $SMTP_RELAY_HOST"
 	echo "SMTP Relay Port:                   $SMTP_RELAY_PORT"
 	echo "SMTP Relay User:                   $SMTP_RELAY_USER"
+    fi
+
+    echo "SMTP Server Account enabled:       $USE_SERVER_SMTP"
+
+    if [ ! -z "$USE_SERVER_SMTP" ] && [ "$USE_SERVER_SMTP" != 'false' ]; then
+    echo "SMTP Server Account Host:          $SERVER_SMTP_HOST"
+    echo "SMTP Server Account Port:          $SERVER_SMTP_PORT"
+    echo "SMTP Server Account Security:      $SERVER_SMTP_SECURITY"
+    echo "SMTP Server Account Username:      $SERVER_SMTP_USER"
+    echo "SMTP Server Account Password:      $SERVER_SMTP_PASSWD"
+    echo "SMTP Server Account Address:       $SERVER_SMTP_ADDR"
     fi
 
     echo "Release Branch:                   $RELEASE_BRANCH"

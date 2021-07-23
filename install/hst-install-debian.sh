@@ -1881,6 +1881,20 @@ write_config_value "POLICY_SYSTEM_ENABLE_BACON" "no"
 write_config_value "PLUGIN_APP_INSTALLER" "true"
 write_config_value "DEBUG_MODE" "no"
 write_config_value "ENFORCE_SUBDOMAIN_OWNERSHIP" "yes"
+write_config_value "USE_SERVER_SMTP" "false"
+write_config_value "SERVER_SMTP_PORT" ""
+write_config_value "SERVER_SMTP_HOST" ""
+write_config_value "SERVER_SMTP_SECURITY" ""
+write_config_value "SERVER_SMTP_USER" ""
+write_config_value "SERVER_SMTP_PASSWD" ""
+write_config_value "SERVER_SMTP_ADDR" ""
+
+#----------------------------------------------------------#
+#                  Configure PHPMailer                     #
+#----------------------------------------------------------#
+
+echo "[ * ] Configuring PHPMailer..."
+$HESTIA/bin/v-add-sys-phpmailer quiet
 
 #----------------------------------------------------------#
 #                   Hestia Access Info                     #

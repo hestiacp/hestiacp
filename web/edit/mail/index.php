@@ -611,9 +611,10 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['acco
         $to = $v_send_email;
         $subject = _("Email Credentials");
         $hostname = exec('hostname');
-        $from = sprintf(_('MAIL_FROM'), $hostname);
+        $from = "noreply@".$hostname;
+        $from_name = _('Hestia Control Panel');
         $mailtext = $v_credentials;
-        send_email($to, $subject, $mailtext, $from);
+        send_email($to, $subject, $mailtext, $from, $from_name);
     }
 
     // Set success message

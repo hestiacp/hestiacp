@@ -55,9 +55,18 @@ class DokuWikiSetup extends BaseSetup {
 	public function install(array $options = null)
 	{
 		parent::install($options);
+		
+		//check if ssl is enabled 
+        $this->appcontext->run('v-list-web-domain', [$this->appcontext->user(), $this->domain, 'json'], $status);
+		
+        if($status->code !== 0) {
+            throw new \Exception("Cannot list domain");
+        }
+        
+		$sslEnabled = ($status->json[$this->domain]['SSL'] == 'no' ? 0 : 1);
 
-		$webDomain = "https://" . $this->domain . "/";
-
+		$webDomain = ($sslEnabled ? "https://" : "http://") . $this->domain . "/";
+		
 		$this->appcontext->runUser('v-copy-fs-directory',[
 			$this->getDocRoot($this->extractsubdir . "/dokuwiki-release_stable_2020-07-29/."),
 			$this->getDocRoot()], $result);
@@ -65,6 +74,7 @@ class DokuWikiSetup extends BaseSetup {
 		$installUrl = $webDomain . "install.php";
 
 		$cmd = "curl --request POST "
+		  . ($sslEnabled ? "" : "--insecure " )
 		  . "--url $installUrl "
 		  . "--header 'Content-Type: application/x-www-form-urlencoded' "
 		  . "--data l=en "

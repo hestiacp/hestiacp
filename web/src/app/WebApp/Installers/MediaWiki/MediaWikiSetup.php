@@ -35,13 +35,20 @@ class MediaWikiSetup extends BaseSetup {
 	{
 		parent::install($options);
 
-		$webAddresss = "https://" . $this->domain;
+        //check if ssl is enabled 
+        $this->appcontext->run('v-list-web-domain', [$this->appcontext->user(), $this->domain, 'json'], $status);
+		
+        if($status->code !== 0) {
+            throw new \Exception("Cannot list domain");
+        }
+        
+		$sslEnabled = ($status->json[$this->domain]['SSL'] == 'no' ? 0 : 1);
+		
+		$webDomain = ($sslEnabled ? "https://" : "http://") . $this->domain . "/";
 
 		$this->appcontext->runUser('v-copy-fs-directory',[
 			$this->getDocRoot($this->extractsubdir . "/mediawiki-1.36.1/."),
 			$this->getDocRoot()], $result);		
-
-		$this->cleanup();
 
 		$this->appcontext->runUser('v-run-cli-cmd', ['/usr/bin/php',
 			$this->getDocRoot('maintenance/install.php'), 
@@ -58,7 +65,9 @@ class MediaWikiSetup extends BaseSetup {
 			"MediaWiki", // A Space here would trigger the next argument and preemptively set the admin username
 			$options['admin_username'],
 			], $status);
-
+			
+		$this->cleanup();
+		
 		return ($status->code === 0);
 	}
 }

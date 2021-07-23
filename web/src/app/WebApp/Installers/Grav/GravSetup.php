@@ -18,7 +18,9 @@ class GravSetup extends BaseSetup {
 	protected $appname = 'grav';
 	
 	protected $config = [
-		'form' => [],
+		'form' => [
+			"ignore this"=>"text",
+		],
 		'database' => false,
 		'resources' => [
 			'composer' => [ 'src' => 'getgrav/grav', 'dst' => '/']

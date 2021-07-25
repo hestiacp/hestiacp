@@ -28,6 +28,9 @@ function setup() {
         echo 'subdomain=cdn.testhestiacp.com' >> /tmp/hestia-test-env.sh
         echo 'database=test-5285_database' >> /tmp/hestia-test-env.sh
         echo 'dbuser=test-5285_dbuser' >> /tmp/hestia-test-env.sh
+        echo 'pguser=test5290' >> /tmp/hestia-test-env.sh
+        echo 'pgdatabase=test5290_database' >> /tmp/hestia-test-env.sh
+        echo 'pgdbuser=test5290_dbuser' >> /tmp/hestia-test-env.sh
     fi
 
     source /tmp/hestia-test-env.sh
@@ -79,6 +82,32 @@ function validate_web_domain() {
         assert_success
         assert_output --partial "$webproof"
     fi
+}
+
+function validate_headers_domain() {
+  local user=$1
+  local domain=$2
+  local webproof=$3
+  
+  refute [ -z "$user" ]
+  refute [ -z "$domain" ]
+  refute [ -z "$webproof" ]
+  
+  source $HESTIA/func/ip.sh
+  
+  run v-list-web-domain $user $domain
+  assert_success
+  
+  USER_DATA=$HESTIA/data/users/$user
+  local domain_ip=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP')
+  SSL=$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL')
+  domain_ip=$(get_real_ip "$domain_ip")
+  
+  # Test HTTP with  code redirect for some reasons due to 301 redirect it fails
+  curl -i --resolve "${domain}:80:${domain_ip}" "http://${domain}"
+  assert_success
+  assert_output --partial "$webproof"
+  
 }
 
 function validate_mail_domain() {
@@ -161,11 +190,12 @@ function validate_webmail_domain() {
 }
 
 function validate_database(){
-    local database=$1
-    local dbuser=$2
-    local password=$3
+    local type=$1
+    local database=$2
+    local dbuser=$3
+    local password=$4
     
-    host_str=$(grep "HOST='localhost'" $HESTIA/conf/mysql.conf)
+    host_str=$(grep "HOST='localhost'" $HESTIA/conf/$type.conf)
     parse_object_kv_list "$host_str"
     if [ -z $PORT ]; then PORT=3306; fi
     
@@ -176,24 +206,33 @@ function validate_database(){
     refute [ -z "$password" ]
     
     
-    # Create an connection to verify correct username / password has been set correctly
-    tmpfile=$(mktemp /tmp/mysql.XXXXXX)
-    echo "[client]">$tmpfile
-    echo "host='$HOST'" >> $tmpfile
-    echo "user='$dbuser'" >> $tmpfile
-    echo "password='$password'" >> $tmpfile
-    echo "port='$PORT'" >> $tmpfile
-    chmod 600 $tmpfile
-    
-    sql_tmp=$(mktemp /tmp/query.XXXXXX)
-    echo "show databases;" > $sql_tmp
-    run mysql --defaults-file=$tmpfile < "$sql_tmp"
-    
-    assert_success
-    assert_output --partial "$database"
-    
-    rm -f "$sql_tmp"
-    rm -f "$tmpfile"
+    if [ "$type" = "mysql" ]; then 
+      # Create an connection to verify correct username / password has been set correctly
+      tmpfile=$(mktemp /tmp/mysql.XXXXXX)
+      echo "[client]">$tmpfile
+      echo "host='$HOST'" >> $tmpfile
+      echo "user='$dbuser'" >> $tmpfile
+      echo "password='$password'" >> $tmpfile
+      echo "port='$PORT'" >> $tmpfile
+      chmod 600 $tmpfile
+      
+      sql_tmp=$(mktemp /tmp/query.XXXXXX)
+      echo "show databases;" > $sql_tmp
+      run mysql --defaults-file=$tmpfile < "$sql_tmp"
+      
+      assert_success
+      assert_output --partial "$database"
+      
+      rm -f "$sql_tmp"
+      rm -f "$tmpfile"
+    else
+      tmpfile=$(mktemp /tmp/pg.XXXXXX)
+      echo "PGPASSWORD='$password'" > $tmpfile
+      source $tmpfile
+      run export PGPASSWORD="$password" | psql -h $HOST -U "$dbuser" -p $PORT -d "$database" -c "\l"
+      assert_success
+      rm $tmpfile
+    fi
 }
 
 #----------------------------------------------------------#
@@ -479,7 +518,6 @@ function validate_database(){
     fi
 }
 
-
 #----------------------------------------------------------#
 #                         WEB                              #
 #----------------------------------------------------------#
@@ -553,7 +591,46 @@ function validate_database(){
     rm $HOMEDIR/$user/web/$domain/public_html/php-test.php
 }
 
-@test "WEB Generate Self signed certificate" {
+@test "WEB: Add redirect to www.domain.com" {
+    run v-add-web-domain-redirect $user $domain www.$domain 301
+    assert_success
+    refute_output 
+  
+    run validate_headers_domain $user $domain "301"
+}
+
+@test "WEB: Delete redirect to www.domain.com" {
+    run v-delete-web-domain-redirect $user $domain
+    assert_success
+    refute_output 
+}
+
+@test "WEB: Enable Fast CGI Cache" {
+    if [ "$WEB_SYSTEM" != "nginx" ]; then 
+      skip "FastCGI cache is not supported"
+    fi
+    
+    run v-add-fastcgi-cache $user $domain '1m' yes
+    assert_success
+    refute_output
+    
+    echo -e "<?php\necho 'Hestia Test:'.(4*3);" > $HOMEDIR/$user/web/$domain/public_html/php-test.php
+    run validate_headers_domain $user $domain "Miss"
+    run validate_headers_domain $user $domain "Hit"
+    rm $HOMEDIR/$user/web/$domain/public_html/php-test.php
+}
+
+@test "WEB: Disable Fast CGI Cache" {
+    if [ "$WEB_SYSTEM" != "nginx" ]; then 
+      skip "FastCGI cache is not supported"
+    fi
+    run v-delete-fastcgi-cache $user $domain '1m' yes
+    assert_success
+    refute_output
+}
+
+
+@test "WEB: Generate Self signed certificate" {
     ssl=$(v-generate-ssl-cert "$domain" "info@$domain" US CA "Orange County" HestiaCP IT "mail.$domain" | tail -n1 | awk '{print $2}')
     mv $ssl/$domain.crt /tmp/$domain.crt
     mv $ssl/$domain.key /tmp/$domain.key
@@ -1112,60 +1189,156 @@ function validate_database(){
 #                         DB                               #
 #----------------------------------------------------------#
 
-@test "DB: Add database (mysql)" {
+@test "MYSQL: Add database" {
     run v-add-database $user database dbuser 1234 mysql
     assert_success
     refute_output
-    # validate_database database_name database_user password
-    validate_database $database $dbuser 1234
+    # validate_database mysql database_name database_user password
+    validate_database mysql $database $dbuser 1234
 }
-@test "DB: Add Database (mysql) (Duplicate)" {
+@test "MYSQL: Add Database (Duplicate)" {
     run v-add-database $user database dbuser 1234 mysql
     assert_failure $E_EXISTS
 }
 
-@test "DB: Rebuild Database (mysql)" {
+@test "MYSQL: Rebuild Database" {
     run v-rebuild-database $user $database
     assert_success
     refute_output 
 }
 
-@test "DB: Change database user password (mysql)" {
+@test "MYSQL: Change database user password" {
     run v-change-database-password $user $database 123456
     assert_success
     refute_output 
     
-    validate_database $database $dbuser 123456
+    validate_database mysql $database $dbuser 123456
 }
 
-@test "DB: Change database user (mysql)" {
+@test "MYSQL: Change database user" {
     run v-change-database-user $user $database database
     assert_success
     refute_output 
-    validate_database $database $database 123456
+    validate_database mysql $database $database 123456
 }
 
-@test "DB: Suspend database" {
+@test "MYSQL: Suspend database" {
     run v-suspend-database $user $database
     assert_success
     refute_output
 }
 
-@test "DB: Unsuspend database" {
+@test "MYSQL: Unsuspend database" {
     run v-unsuspend-database $user $database
     assert_success
     refute_output
 }
 
-@test "DB: Delete database" {
+@test "MYSQL: Delete database" {
     run v-delete-database $user $database
     assert_success
     refute_output 
 }
 
-@test "DB: Delete missing database" {
+@test "MYSQL: Delete missing database" {
     run v-delete-database $user $database
     assert_failure $E_NOTEXIST
+}
+
+@test "PGSQL: Add database invalid user" {
+  if [ -z "$(echo $DB_SYSTEM | grep -w "pgsql")" ]; then 
+    skip "PostGreSQL is not installed"
+  fi
+  run v-add-database "$user" "database" "dbuser" "1234ABCD" "pgsql"
+  assert_failure $E_INVALID
+}
+
+@test "PGSQL: Add database" {
+  if [ -z "$(echo $DB_SYSTEM | grep -w "pgsql")" ]; then 
+    skip "PostGreSQL is not installed"
+  fi
+  run v-add-user $pguser $pguser $user@hestiacp.com default "Super Test"
+  run v-add-database "$pguser" "database" "dbuser" "1234ABCD" "pgsql"
+  assert_success
+  refute_output
+  
+  validate_database pgsql $pgdatabase $pgdbuser 1234ABCD
+}
+
+@test "PGSQL: Add Database (Duplicate)" {
+  if [ -z "$(echo $DB_SYSTEM | grep -w "pgsql")" ]; then n 
+    skip "PostGreSQL is not installed"
+  fi
+  run v-add-database "$pguser" "database" "dbuser" "1234ABCD" "pgsql"
+  assert_failure $E_EXISTS
+}
+
+@test "PGSQL: Rebuild Database" {
+  if [ -z "$(echo $DB_SYSTEM | grep -w "pgsql")" ]; then 
+    skip "PostGreSQL is not installed"
+  fi
+  run v-rebuild-database $pguser $pgdatabase
+  assert_success
+  refute_output 
+}
+
+@test "PGSQL: Change database user password" {
+  if [ -z "$(echo $DB_SYSTEM | grep -w "pgsql")" ]; then 
+    skip "PostGreSQL is not installed"
+  fi
+  run v-change-database-password $pguser $pgdatabase 123456
+  assert_success
+  refute_output 
+  
+  validate_database pgsql $pgdatabase $pgdbuser 123456
+}
+
+@test "PGSQL: Suspend database" {
+  if [ -z "$(echo $DB_SYSTEM | grep -w "pgsql")" ]; then 
+    skip "PostGreSQL is not installed"
+  fi
+  run v-suspend-database $pguser $pgdatabase
+  assert_success
+  refute_output
+}
+
+@test "PGSQL: Unsuspend database" {
+  if [ -z "$(echo $DB_SYSTEM | grep -w "pgsql")" ]; then 
+    skip "PostGreSQL is not installed"
+  fi
+  run v-unsuspend-database $pguser $pgdatabase
+  assert_success
+  refute_output
+}
+
+@test "PGSQL: Change database user" {
+  if [ -z "$(echo $DB_SYSTEM | grep -w "pgsql")" ]; then 
+    skip "PostGreSQL is not installed"
+  fi
+  skip
+  run v-change-database-user $pguser $pgdatabase database
+  assert_success
+  refute_output 
+  validate_database pgsql $pgdatabase $pgdatabase 123456
+}
+
+
+@test "PGSQL: Delete database" {
+  if [ -z "$(echo $DB_SYSTEM | grep -w "pgsql")" ]; then  
+    skip "PostGreSQL is not installed"
+  fi
+  run v-delete-database $pguser $pgdatabase
+  assert_success
+  refute_output 
+}
+
+@test "PGSQL: Delete missing database" {
+  if [ -z "$(echo $DB_SYSTEM | grep -w "pgsql")" ]; then 
+    skip "PostGreSQL is not installed"
+  fi
+  run v-delete-database $pguser $pgdatabase
+  assert_failure $E_NOTEXIST
+  run v-delete-user $pguser
 }
 
 #----------------------------------------------------------#
@@ -1176,9 +1349,10 @@ function validate_database(){
   assert_success
   refute_output
 }
+
+@test "System: Disable SMTP account for internal mail" {
   run v-delete-sys-smtp
   assert_success
-@test "System: Disable SMTP account for internal mail" {
   refute_output
 }
 
@@ -1208,14 +1382,12 @@ function validate_database(){
 }
 
 @test "Delete user" {
-    # skip
     run v-delete-user $user
     assert_success
     refute_output
 }
 
 @test "Ip: Delete the test IP" {
-    # skip
     run v-delete-sys-ip 198.18.0.125
     assert_success
     refute_output

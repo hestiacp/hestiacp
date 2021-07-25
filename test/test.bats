@@ -1262,11 +1262,11 @@ function validate_database(){
   assert_success
   refute_output
   
-  validate_database pgsql $pgdatabase $pgdbuser 1234ABCD
+  validate_database pgsql $pgdatabase $pgdbuser "1234ABCD"
 }
 
 @test "PGSQL: Add Database (Duplicate)" {
-  if [ -z "$(echo $DB_SYSTEM | grep -w "pgsql")" ]; then n 
+  if [ -z "$(echo $DB_SYSTEM | grep -w "pgsql")" ]; then 
     skip "PostGreSQL is not installed"
   fi
   run v-add-database "$pguser" "database" "dbuser" "1234ABCD" "pgsql"
@@ -1286,11 +1286,11 @@ function validate_database(){
   if [ -z "$(echo $DB_SYSTEM | grep -w "pgsql")" ]; then 
     skip "PostGreSQL is not installed"
   fi
-  run v-change-database-password $pguser $pgdatabase 123456
+  run v-change-database-password $pguser $pgdatabase "123456"
   assert_success
   refute_output 
   
-  validate_database pgsql $pgdatabase $pgdbuser 123456
+  validate_database pgsql $pgdatabase $pgdbuser "123456"
 }
 
 @test "PGSQL: Suspend database" {

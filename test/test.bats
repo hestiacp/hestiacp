@@ -226,12 +226,12 @@ function validate_database(){
       rm -f "$sql_tmp"
       rm -f "$tmpfile"
     else
-      tmpfile=$(mktemp /tmp/pg.XXXXXX)
-      echo "PGPASSWORD='$password'" > $tmpfile
-      source $tmpfile
-      run export PGPASSWORD="$password" | psql -h $HOST -U "$dbuser" -p $PORT -d "$database" -c "\l"
+      
+      echo "*:*:*:$dbuser:$password" > /root/.pgpass
+      chmod 600 /root/.pgpass
+      run export PGPASSWORD="$password" | psql -h $HOST -U "$dbuser" -p $PORT -d "$database" --no-password  -c "\l"
       assert_success
-      rm $tmpfile
+      rm /root/.pgpass
     fi
 }
 

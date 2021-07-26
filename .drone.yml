@@ -19,16 +19,17 @@ platform:
   arch: amd64
    
 steps:
-- name: Down submodules
+- name: Download submodules
   image: alpine/git
   commands:
   - git submodule update --init --recursive
-- name: build-install
+- name: Build Hestia package and install
   commands:
   - ./src/hst_autocompile.sh --hestia --install '~localsrc'
 - name: Run Bats
   commands:
   - bats ./test/test.bats
+  - bats ./test/restore.bats
 - name: Run Check PHP
   commands: 
   - ./test/check_php.sh
@@ -57,16 +58,17 @@ platform:
   arch: amd64
    
 steps:
-- name: Down submodules
+- name: Download submodules
   image: alpine/git
   commands:
   - git submodule update --init --recursive
-- name: build-install
+- name: Build Hestia package install
   commands:
   - ./src/hst_autocompile.sh --hestia --install '~localsrc'
 - name: Run Bats
   commands:
   - bats ./test/test.bats
+  - bats ./test/restore.bats
 - name: Run Check PHP
   commands: 
   - ./test/check_php.sh
@@ -76,4 +78,4 @@ trigger:
 
 ---
 kind: signature
-hmac: 206d86147c4ee57339c4af654f073c0d2f136f591c890eb4244ccaef087c433f
+hmac: f3763c63fcebe50a2ad24dc3fb2ab3191cba15750e4dd80be82cea87466d96bc

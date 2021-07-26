@@ -317,7 +317,14 @@ check_result $? "Unable to connect to the Hestia APT repository"
 # Check installed packages
 tmpfile=$(mktemp -p /tmp)
 dpkg --get-selections > $tmpfile
-for pkg in exim4 mariadb-server apache2 nginx hestia postfix ufw; do
+conflicts_pkg="exim4 mariadb-server apache2 nginx hestia postfix ufw"
+
+# Drop postfix from the list if exim should not be installed
+if [ "$exim" = 'no' ]; then
+    conflicts_pkg=$(echo $conflicts_pkg | sed -i 's/postfix//g' | xargs)
+fi
+
+for pkg in $conflicts_pkg; do
     if [ ! -z "$(grep $pkg $tmpfile)" ]; then
         conflicts="$pkg* $conflicts"
     fi

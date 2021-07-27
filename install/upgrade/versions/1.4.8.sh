@@ -17,7 +17,7 @@ if [ "$matches" > 1 ]; then
 	$HESTIA/bin/v-change-sys-config-value "ENFORCE_SUBDOMAIN_OWNERSHIP" "$ENFORCE_SUBDOMAIN_OWNERSHIP"
 fi
 
-if [ "$IMAP_SYSTEM" = "dovecot" ];
+if [ "$IMAP_SYSTEM" = "dovecot" ]; then 
 	version=$(dovecot --version |  cut -f -2 -d .);
 	if [ "$version" = "2.3" ]; then 
 		echo "[ * ] Update dovecot config to sync with 2.3 settings"	

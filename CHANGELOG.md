@@ -1,19 +1,27 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Development]
+## [1.4.8] - Service release 
 
 ### Features
 
-- Add support for automated testing HestiaCP code
+- Add support for automated testing for HestiaCP code with @drone
 - Add support for SMTP server for internal email #1988 @Myself5 / #1165
 
 ### Bugfixes
 
+- Updated jQuery and jQuery UI to the latest version due to a vulnerability in jQuery. @dependabot
 - Resolve issue with double ENFORCE_SUBDOMAIN_OWNERSHIP keys in hestia.conf
 - Resolve issue with create new user during install in some cases #2000
-- Fixed an issue with Quick Install apps named Test123
-- Fixed #1995 Postfix should not conflict when no mailservice is selected
+- Fixed an issue with Quick Install apps named Test123 (@PsychotherapistSam)
+- Fix an issue with dovecot 2.3 ssl config (#1432)
+- Load $HESTIA path during upgrade script (#1698)
+- Remove TLS 1.1 from Proftpd config (#950)
+- Don't remove postfix when Exim is not installed (#1995)
+- Fix a bug in no-php Nginx FPM template (##2007)
+- Update German translations
+- Fixed a few minor error in Mail DMS records (#2005)
+
 
 ## [1.4.7] - Service release 
 
@@ -44,7 +52,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bugfixes
 
-- Revert #1943 and rework it to fix possible errors occuring on v-rebuild-cron-jobs.
+- Revert #1943 and rework it to fix possible errors occurring on v-rebuild-cron-jobs.
 - Fixed #1956 to prevent reset of defined webmail client.
 - Explicitly disable cron reports #1978
 
@@ -61,11 +69,11 @@ All notable changes to this project will be documented in this file.
 - Add template for when webmail is disabled allowing to generate SSL. 
 - Fixed PHP bug in /list/log/ 
 - Fixed issue with time in /list/services as it was showing as 50 minute1 instead of minutes
-- Add missing back buttons + fix behavoir of back buttons on login page. 
+- Add missing back buttons + fix behaviour of back buttons on login page. 
 - Set "default" when WEB_TEMPLATE and PROXY_TEMPLATE is missing in user.conf 
 - Add BACKEND_TEMPLATE to default package
 - Fixed possible error occur for v-rebuild-cron-jobs #1943 (thanks @clarkchentw)
-- Restrict access Filemanager when SSH is enabled for the user (@bet0x)
+- Restrict access file manager when SSH is enabled for the user (@bet0x)
 - Check for DNS domains when running v-change-sys-ip-nat (@clarkchentw)
 - Fixed logical error in installer (@clarkchentw)
 

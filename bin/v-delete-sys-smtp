@@ -1,0 +1,48 @@
+#!/bin/bash
+# info: Remove SMTP Account for logging, notification and internal mail
+# options: NONE
+# labels:
+#
+# example: v-delete-sys-smtp
+#
+# This function allows configuring a SMTP account for the server to use
+# for logging, notification and warn emails etc.
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
+source $HESTIA/conf/hestia.conf
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+$BIN/v-change-sys-config-value "USE_SERVER_SMTP" 'false'
+$BIN/v-change-sys-config-value "SERVER_SMTP_HOST" ''
+$BIN/v-change-sys-config-value "SERVER_SMTP_PORT" ''
+$BIN/v-change-sys-config-value "SERVER_SMTP_SECURITY" ''
+$BIN/v-change-sys-config-value "SERVER_SMTP_USER" ''
+$BIN/v-change-sys-config-value "SERVER_SMTP_PASSWD" ''
+$BIN/v-change-sys-config-value "SERVER_SMTP_ADDR" ''
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "system" "Info" "Mail" "Server SMTP disabled."
+log_event "$OK" "$ARGUMENTS"
+
+exit

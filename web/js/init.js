@@ -35,7 +35,7 @@ $(document).ready(function(){
             $(window).scroll(function(){hover_menu()});
 
             $('.l-sort-toolbar .sort-by').click(function(){
-              $('.context-menu.sort-order').toggle().css({left: $(this).position().left - 0});
+              $('.context-menu.sort-order').toggle().css({left: $(this).parent().parent().parent().position().left - 0});
             });
 
 

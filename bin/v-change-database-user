@@ -65,7 +65,11 @@ get_database_values
 
 #Fix issue #1084 with "Upper case not allowed with PGSQL"
 if [ "$TYPE" = "pgsql" ]; then
-   dbuser=$(echo $dbuser | tr '[:upper:]' '[:lower:]'); 
+   dbuser=$(echo $dbuser | tr '[:upper:]' '[:lower:]');
+   exclude="-"
+    if [[ "$dbuser" =~ $exclude ]]; then
+        check_result $E_INVALID "invalid database user format"
+    fi
 fi
 
 # Rebuild database

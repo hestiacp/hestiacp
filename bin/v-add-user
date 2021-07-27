@@ -64,7 +64,7 @@ shell_conf=$(echo "$pkg_data" | grep 'SHELL' | cut -f 2 -d \')
 shell=$(grep -w "$shell_conf" /etc/shells |head -n1)
 
 # Adding user
-/usr/sbin/useradd "$user" -s "$shell" -c "$email" -m -d "$HOMEDIR/$user"
+/usr/sbin/useradd "$user" -s "$shell" -c "$email" -m -d "$HOMEDIR/$user" -U
 check_result $? "user creation failed" $E_INVALID
 
 # Adding password

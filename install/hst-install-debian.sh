@@ -23,7 +23,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.4.7'
+HESTIA_INSTALL_VER='1.4.8'
 pma_v='5.1.1'
 rc_v="1.4.11"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
@@ -343,7 +343,14 @@ check_result $? "Unable to connect to the Hestia APT repository"
 # Check installed packages
 tmpfile=$(mktemp -p /tmp)
 dpkg --get-selections > $tmpfile
-for pkg in exim4 mariadb-server apache2 nginx hestia postfix; do
+conflicts_pkg="exim4 mariadb-server apache2 nginx hestia postfix"
+
+# Drop postfix from the list if exim should not be installed
+if [ "$exim" = 'no' ]; then
+    conflicts_pkg=$(echo $conflicts_pkg | sed 's/postfix//g' | xargs)
+fi
+
+for pkg in $conflicts_pkg; do
     if [ ! -z "$(grep $pkg $tmpfile)" ]; then
         conflicts="$pkg* $conflicts"
     fi
@@ -1144,9 +1151,6 @@ write_config_value "THEME" "dark"
 # Inactive session timeout
 write_config_value "INACTIVE_SESSION_TIMEOUT" "60"
 
-# Do not allow users to create subdomains when they don't own the domain
-write_config_value "ENFORCE_SUBDOMAIN_OWNERSHIP" "yes"
-
 # Version & Release Branch
 write_config_value "VERSION" "${HESTIA_INSTALL_VER}"
 write_config_value "RELEASE_BRANCH" "release"
@@ -1608,6 +1612,16 @@ if [ "$dovecot" = 'yes' ]; then
     if [ "$release" -eq 9 ] || [ "$release" -eq 10 ]; then
         rm -f /etc/dovecot/conf.d/15-mailboxes.conf
     fi
+    
+    #Alter config for 2.2 
+    version=$(dovecot --version |  cut -f -2 -d .);
+    if [ "$version" = "2.2" ]; then 
+      echo "[ * ] Downgrade dovecot config to sync with 2.2 settings"	
+      sed -i 's|#ssl_dh_parameters_length = 4096|ssl_dh_parameters_length = 4096|g' /etc/dovecot/conf.d/10-ssl.conf
+      sed -i 's|ssl_dh = </etc/ssl/dhparam.pem|#ssl_dh = </etc/ssl/dhparam.pem|g' /etc/dovecot/conf.d/10-ssl.conf
+      sed -i 's|ssl_min_protocols = TLSv1.1|ssl_protocols = !SSLv3 !TLSv1|g' /etc/dovecot/conf.d/10-ssl.conf
+    fi
+    
     update-rc.d dovecot defaults
     systemctl start dovecot
     check_result $? "dovecot start failed"
@@ -1879,11 +1893,25 @@ write_config_value "POLICY_USER_DELETE_LOGS" "yes"
 write_config_value "POLICY_USER_CHANGE_THEME" "yes"
 write_config_value "POLICY_SYSTEM_PROTECTED_ADMIN" "no"
 write_config_value "POLICY_SYSTEM_PASSWORD_RESET" "no"
-write_config_value "POLICY_SYSTEM_HIDE_SERVICES" "no"
+write_config_value "POLICY_SYSTEM_HIDE_SERVICES" "yes"
 write_config_value "POLICY_SYSTEM_ENABLE_BACON" "no"
 write_config_value "PLUGIN_APP_INSTALLER" "true"
 write_config_value "DEBUG_MODE" "no"
 write_config_value "ENFORCE_SUBDOMAIN_OWNERSHIP" "yes"
+write_config_value "USE_SERVER_SMTP" "false"
+write_config_value "SERVER_SMTP_PORT" ""
+write_config_value "SERVER_SMTP_HOST" ""
+write_config_value "SERVER_SMTP_SECURITY" ""
+write_config_value "SERVER_SMTP_USER" ""
+write_config_value "SERVER_SMTP_PASSWD" ""
+write_config_value "SERVER_SMTP_ADDR" ""
+
+#----------------------------------------------------------#
+#                  Configure PHPMailer                     #
+#----------------------------------------------------------#
+
+echo "[ * ] Configuring PHPMailer..."
+$HESTIA/bin/v-add-sys-phpmailer quiet
 
 #----------------------------------------------------------#
 #                   Hestia Access Info                     #

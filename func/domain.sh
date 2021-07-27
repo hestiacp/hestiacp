@@ -802,9 +802,7 @@ add_webmail_config() {
         fi
 
         # Remove old configurations
-        rm -rf $HOMEDIR/$user/conf/mail/$domain.*
-        rm -rf $HOMEDIR/$user/conf/mail/ssl.$domain.*
-        rm -rf $HOMEDIR/$user/conf/mail/*nginx.$domain.*
+        find $HOMEDIR/$user/conf/mail/ -maxdepth 1 -type f \( -name "$domain.*" -o -name "ssl.$domain.*" -o -name "*nginx.$domain.*" \) -exec rm {} \;
     else
         if [ ! -z "$WEB_SYSTEM" ]; then
             rm -f /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
@@ -815,7 +813,7 @@ add_webmail_config() {
             ln -s $conf /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
         fi
         # Clear old configurations
-        rm -rf $HOMEDIR/$user/conf/mail/$domain.*
+        find $HOMEDIR/$user/conf/mail/ -maxdepth 1 -type f \( -name "$domain.*" \) -exec rm {} \;
     fi
 }
 
@@ -919,7 +917,7 @@ is_base_domain_owner(){
         if [ "$object" != "none" ]; then
             get_base_domain $object
             web=$(grep -F -H -h "DOMAIN='$basedomain'" $HESTIA/data/users/*/web.conf);
-            if [ $ENFORCE_SUBDOMAIN_OWNERSHIP = "yes" ]; then
+            if [ "$ENFORCE_SUBDOMAIN_OWNERSHIP" = "yes" ]; then
                 if [ ! -z "$web" ]; then
                     parse_object_kv_list "$web"
                     if [ -z "$ALLOW_USERS" ] ||  [ "$ALLOW_USERS" != "yes" ]; then

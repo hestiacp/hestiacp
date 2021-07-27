@@ -2,13 +2,13 @@
 
 [Hestia Control Panel](https://www.hestiacp.com/)
 ==================================================
-**Latest stable release:** Version 1.4.7 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md)<br>
+**Latest stable release:** Version 1.4.8 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md) | [![Build Status](https://drone.hestiacp.com/api/badges/hestiacp/hestiacp/status.svg?ref=refs/heads/main)](https://drone.hestiacp.com/hestiacp/hestiacp) <br>
 
 **Web:** [www.hestiacp.com](https://www.hestiacp.com/)<br>
 **Documentation:** [docs.hestiacp.com](https://docs.hestiacp.com/)<br>
 **Forums:** [forum.hestiacp.com](https://forum.hestiacp.com/)<br>
 **Discord:** [Join the discussion](https://discord.gg/nXRUZch)<br />
-<br>
+<br><br>
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ST87LQH2CHGLA)
 <br>
 

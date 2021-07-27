@@ -347,7 +347,7 @@ conflicts_pkg="exim4 mariadb-server apache2 nginx hestia postfix"
 
 # Drop postfix from the list if exim should not be installed
 if [ "$exim" = 'no' ]; then
-    conflicts_pkg=$(echo $conflicts_pkg | sed -i 's/postfix//g' | xargs)
+    conflicts_pkg=$(echo $conflicts_pkg | sed 's/postfix//g' | xargs)
 fi
 
 for pkg in $conflicts_pkg; do

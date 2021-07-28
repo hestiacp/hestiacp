@@ -23,7 +23,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.4.8'
+HESTIA_INSTALL_VER='1.4.9'
 pma_v='5.1.1'
 rc_v="1.4.11"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
@@ -1619,7 +1619,7 @@ if [ "$dovecot" = 'yes' ]; then
       echo "[ * ] Downgrade dovecot config to sync with 2.2 settings"	
       sed -i 's|#ssl_dh_parameters_length = 4096|ssl_dh_parameters_length = 4096|g' /etc/dovecot/conf.d/10-ssl.conf
       sed -i 's|ssl_dh = </etc/ssl/dhparam.pem|#ssl_dh = </etc/ssl/dhparam.pem|g' /etc/dovecot/conf.d/10-ssl.conf
-      sed -i 's|ssl_min_protocols = TLSv1.1|ssl_protocols = !SSLv3 !TLSv1|g' /etc/dovecot/conf.d/10-ssl.conf
+      sed -i 's|ssl_min_protocol = TLSv1.1|ssl_protocols = !SSLv3 !TLSv1|g' /etc/dovecot/conf.d/10-ssl.conf
     fi
     
     update-rc.d dovecot defaults

@@ -698,7 +698,7 @@ if (!empty($_POST['save'])) {
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_inactive_session_timeout'] != $_SESSION['INACTIVE_SESSION_TIMEOUT']) {
             if($_POST['v_inactive_session_timeout'] < 1){
-               $_SESSION['error_msg'] = _('Inactive session timeout can not lower then 1 minute');
+               $_SESSION['error_msg'] = _('Inactive session timeout can not lower than 1 minute');
             }else{
                exec (HESTIA_CMD."v-change-sys-config-value INACTIVE_SESSION_TIMEOUT ".escapeshellarg($_POST['v_inactive_session_timeout']), $output, $return_var);
                check_return_code($return_var,$output);

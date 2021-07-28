@@ -319,7 +319,6 @@ function send_email($to, $subject, $mailtext, $from, $from_name) {
 
     $mail->Subject = $subject;
     $content = $mailtext;
-    $mail->AltBody($content);
     $content = nl2br($content);
     $mail->MsgHTML($content);
     $mail->Send();

@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.4.9] - Service release 
+
+### Bugfixes
+
+- Updated jQuery and jQuery UI to the latest version due to a vulnerability in jQuery. @dependabot
+- Fixed bug in /etc/dovecot/conf.d/10-ssl.conf for new installs
+- Fixed bug with notifications
+- Fixed translation string @myrevery 
+
 ## [1.4.8] - Service release 
 
 ### Features

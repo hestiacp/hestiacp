@@ -459,7 +459,11 @@ if [ "$PHP_B" = true ] ; then
         # Download and unpack source files
         cd $BUILD_DIR
         download_file $PHP '-' | tar xz
-        
+        download_file $OPENSSL '-' | tar xz
+
+        # Rename openssl folder
+        mv openssl-$OPENSSL_V openssl
+       
         # Change to untarred php directory
         cd $BUILD_DIR_PHP
 
@@ -470,6 +474,7 @@ if [ "$PHP_B" = true ] ; then
                         --with-fpm-user=admin \
                         --with-fpm-group=admin \
                         --with-libdir=lib/x86_64-linux-gnu \
+                        --with-openssl=$BUILD_DIR \
                         --with-mysqli \
                         --with-gettext \
                         --with-curl \
@@ -482,6 +487,7 @@ if [ "$PHP_B" = true ] ; then
                         --with-fpm-user=admin \
                         --with-fpm-group=admin \
                         --with-libdir=lib/aarch64-linux-gnu \
+                        --with-openssl=$BUILD_DIR \
                         --with-mysqli \
                         --with-gettext \
                         --with-curl \

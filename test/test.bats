@@ -652,10 +652,10 @@ function validate_database(){
 }
 
 #----------------------------------------------------------#
-#                         ID                               #
+#                         IDN                              #
 #----------------------------------------------------------#
 
-@test "WEB: Add IDN domain UTF" {
+@test "WEB: Add IDN domain UTF idn-tést.eu" {
    run v-add-web-domain $user idn-tést.eu 198.18.0.125
    assert_success
    refute_output
@@ -665,19 +665,30 @@ function validate_database(){
    rm $HOMEDIR/$user/web/idn-tést.eu/public_html/php-test.php
 }
 
-@test "WEB: Add IDN domain ASCII" {
+@test "WEB: Add IDN domain ASCII idn-tést.eu" {
  # Expected to fail due to utf exists
  run v-add-web-domain $user $( idn -a idn-tést.eu) 198.18.0.125
  assert_failure $E_EXISTS
 
 }
 
-@test "WEB: Delete IDN domain" {
+@test "WEB: Delete IDN domain idn-tést.eu" {
  run v-delete-web-domain $user idn-tést.eu
  assert_success
  refute_output
 }
  
+@test "WEB: Add IDN domain UTF bløst.com" {
+ run v-add-web-domain $user bløst.com 198.18.0.125
+ assert_success
+ refute_output
+}
+
+@test "WEB: Delete IDN domain bløst.com" {
+ run v-delete-web-domain $user bløst.com
+ assert_success
+ refute_output
+}
 
 #----------------------------------------------------------#
 #                      MULTIPHP                            #

@@ -571,6 +571,7 @@ if [ "$PHP_B" = true ] ; then
     # clear up the source folder
     if [ "$KEEPBUILD" != 'true' ]; then
         rm -r $BUILD_DIR/php-$PHP_V
+        rm -r $BUILD_DIR/openssl
         rm -r $BUILD_DIR_HESTIAPHP
         if [ "$use_src_folder" == 'true' ] && [ -d $BUILD_DIR/hestiacp-$branch_dash ]; then
             rm -r $BUILD_DIR/hestiacp-$branch_dash

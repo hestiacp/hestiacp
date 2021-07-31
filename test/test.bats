@@ -69,7 +69,9 @@ function validate_web_domain() {
     fi
 
     # Test HTTP
-    run curl --location --silent --show-error --insecure --resolve "${domain}:80:${domain_ip}" "http://${domain}/${webpath}"
+    # Curl hates UTF domains so convert them to ascci. 
+    domain_idn=$(idn -a $domain)
+    run curl --location --silent --show-error --insecure --resolve "${domain_idn}:80:${domain_ip}" "http://${domain_idn}/${webpath}"
     assert_success
     assert_output --partial "$webproof"
 
@@ -78,7 +80,7 @@ function validate_web_domain() {
         run v-list-web-domain-ssl $user $domain
         assert_success
 
-        run curl --location --silent --show-error --insecure --resolve "${domain}:443:${domain_ip}" "https://${domain}/${webpath}"
+        run curl --location --silent --show-error --insecure --resolve "${domain_idn}:443:${domain_ip}" "https://${domain_idn}/${webpath}"
         assert_success
         assert_output --partial "$webproof"
     fi
@@ -648,7 +650,46 @@ function validate_database(){
     assert_success
     refute_output
 }
+
+#----------------------------------------------------------#
+#                         IDN                              #
+#----------------------------------------------------------#
+
+@test "WEB: Add IDN domain UTF idn-tést.eu" {
+   run v-add-web-domain $user idn-tést.eu 198.18.0.125
+   assert_success
+   refute_output
+   
+   echo -e "<?php\necho 'Hestia Test:'.(4*3);" > $HOMEDIR/$user/web/idn-tést.eu/public_html/php-test.php
+   validate_web_domain $user idn-tést.eu 'Hestia Test:12' 'php-test.php'
+   rm $HOMEDIR/$user/web/idn-tést.eu/public_html/php-test.php
+}
+
+@test "WEB: Add IDN domain ASCII idn-tést.eu" {
+ # Expected to fail due to utf exists
+ run v-add-web-domain $user $( idn -a idn-tést.eu) 198.18.0.125
+ assert_failure $E_EXISTS
+
+}
+
+@test "WEB: Delete IDN domain idn-tést.eu" {
+ run v-delete-web-domain $user idn-tést.eu
+ assert_success
+ refute_output
+}
  
+@test "WEB: Add IDN domain UTF bløst.com" {
+ run v-add-web-domain $user bløst.com 198.18.0.125
+ assert_success
+ refute_output
+}
+
+@test "WEB: Delete IDN domain bløst.com" {
+ run v-delete-web-domain $user bløst.com
+ assert_success
+ refute_output
+}
+
 #----------------------------------------------------------#
 #                      MULTIPHP                            #
 #----------------------------------------------------------#

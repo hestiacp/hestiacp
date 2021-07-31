@@ -266,6 +266,9 @@ fi
 if [ "$iptables" = 'no' ]; then
     fail2ban='no'
 fi
+if [ "$apache" = "no" ]; then
+    phpfpm='yes'
+fi
 
 # Checking root permissions
 if [ "x$(id -u)" != 'x0' ]; then
@@ -1271,6 +1274,7 @@ $HESTIA/bin/v-change-user-role admin admin
 $HESTIA/bin/v-change-user-language admin $lang
 $HESTIA/bin/v-change-sys-config-value 'POLICY_SYSTEM_PROTECTED_ADMIN' 'yes'
 
+locale-gen "en_US.utf8" > /dev/null 2>&1
 
 #----------------------------------------------------------#
 #                     Configure Nginx                      #

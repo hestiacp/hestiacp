@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [Development]
+
+### Bugfixes
+
+- Fix UI issues after upgrade jQuery + jQuery UI to last version (#2021 and #2032)
+
 ## [1.4.9] - Service release 
 
 ### Bugfixes

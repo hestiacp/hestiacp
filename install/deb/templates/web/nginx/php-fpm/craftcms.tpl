@@ -29,21 +29,6 @@ server {
         deny all;
         return 404;
     }
-
-    # Craft-specific location handlers to ensure AdminCP requests route through index.php
-    # If you change your `cpTrigger`, change it here as well
-    location ^~ /admin {
-        try_files $uri $uri/ @phpfpm_nocache;
-    }
-    location ^~ /index.php/admin {
-        try_files $uri $uri/ @phpfpm_nocache;
-    }
-    location ^~ /cpresources {
-        try_files $uri $uri/ /index.php?$query_string;
-    }
-    location ^~ /actions {
-        try_files $uri $uri/ /index.php?$query_string;
-    }
     
     location / {
         try_files $uri $uri/ /index.php?$args;

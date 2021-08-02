@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Development]
 
+### Features
+
+- Added v-delete-firewall-ban ip all #2031
+
 ### Bugfixes
 
 - Fix UI issues after upgrade jQuery + jQuery UI to last version (#2021 and #2032)

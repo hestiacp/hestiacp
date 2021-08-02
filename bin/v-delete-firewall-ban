@@ -52,7 +52,8 @@ heal_iptables_links
 
 conf="$HESTIA/data/firewall/banlist.conf"
 if [ "$chain" == "ALL" ]; then  
-    if [ -z $(grep  "IP='$ip' CHAIN='*'" $conf) ]; then 
+    check_ip=$(grep  "IP='$ip' CHAIN='*'" $conf)
+    if [ -z  "$check_ip" ]; then 
         exit;
     fi
     grep  "IP='$ip' CHAIN='*'" $conf | while read -r line ; do

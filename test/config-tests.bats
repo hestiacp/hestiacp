@@ -65,7 +65,7 @@ function setup() {
 @test "Proxy Config test" {
     if [ "$PROXY_SYSTEM" = "nginx" ]; then
         for template in $(v-list-web-templates plain); do
-            run v-change-web-domain-tpl $user testhestiacp.com $template
+            run v-change-web-domain-proxy-tpl $user testhestiacp.com $template
             assert_success
             refute_output
         done

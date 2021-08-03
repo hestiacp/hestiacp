@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 - Added v-delete-firewall-ban ip all #2031
+- Include config tests for nginx/apache2 templates
 
 ### Bugfixes
 

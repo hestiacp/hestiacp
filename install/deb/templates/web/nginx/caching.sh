@@ -13,10 +13,5 @@ if [ -e "$conf" ]; then
     if [ -n "$(grep "=${domain}:" $conf)" ]; then
         sed -i "/=${domain}:/d" $conf
     fi
-    if [ -z "$(grep "=${domain}:" $conf)" ]; then
-        echo "$str" >> $conf
-    fi
-else
-    echo "$str" >> $conf
 fi
-
+echo "$str" >> $conf

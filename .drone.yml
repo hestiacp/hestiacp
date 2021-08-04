@@ -26,10 +26,15 @@ steps:
 - name: Build Hestia package and install
   commands:
   - ./src/hst_autocompile.sh --hestia --install '~localsrc'
-- name: Run Bats
+- name: Run system / user tests
   commands:
   - bats ./test/test.bats
+- name: Run restore tests
+  commands:
   - bats ./test/restore.bats
+- name: Run config tests 
+  commands:
+  - bats ./test/config-tests.bats
 - name: Run Check PHP
   commands: 
   - ./test/check_php.sh
@@ -65,10 +70,15 @@ steps:
 - name: Build Hestia package install
   commands:
   - ./src/hst_autocompile.sh --hestia --install '~localsrc'
-- name: Run Bats
+- name: Run system / user tests
   commands:
   - bats ./test/test.bats
+- name: Run restore tests
+  commands:
   - bats ./test/restore.bats
+- name: Run config tests 
+  commands:
+  - bats ./test/config-tests.bats
 - name: Run Check PHP
   commands: 
   - ./test/check_php.sh
@@ -78,4 +88,4 @@ trigger:
 
 ---
 kind: signature
-hmac: f3763c63fcebe50a2ad24dc3fb2ab3191cba15750e4dd80be82cea87466d96bc
+hmac: bca7f80ac6198662bc658235d7345485213847f1c00f027e1439775e02776bc7

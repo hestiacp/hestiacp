@@ -50,7 +50,7 @@ update_ip_helo_value() {
     natip="$1"
     
     # In case the IP is an NAT use the real ip address 
-    if [ ! -f $HESTIA/data/ips/$ip ]; then
+    if [ ! -e "$HESTIA/data/ips/$ip" ]; then
         ip=$(get_real_ip $ip);
     fi 
     

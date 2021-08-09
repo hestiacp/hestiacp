@@ -317,6 +317,7 @@ function send_email($to, $subject, $mailtext, $from, $from_name) {
     $mail->AddAddress($to, "Hestia Control Panel User");
     $mail->SetFrom($from, $from_name);
 
+    $mail->CharSet = "utf-8";
     $mail->Subject = $subject;
     $content = $mailtext;
     $content = nl2br($content);

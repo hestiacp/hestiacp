@@ -74,6 +74,11 @@ update_ip_helo_value() {
     fi
 }
 
+delete_ip_helo_value (){
+    ip=$1
+    sed -i "/^$ip:/d" /etc/${MAIL_SYSTEM}/mailhelo.conf   
+}
+
 # Update ip address value
 update_ip_value() {
     key="$1"
@@ -195,7 +200,7 @@ get_real_ip() {
     if [ -e "$HESTIA/data/ips/$1" ]; then
         echo $1
     else
-        nat=$(grep -H "^NAT='$1'" $HESTIA/data/ips/*)
+        nat=$(grep -H "^NAT='$1'" $HESTIA/data/ips/* | head -n1 )
         if [ ! -z "$nat" ]; then
             echo "$nat" |cut -f 1 -d : |cut -f 7 -d /
         fi

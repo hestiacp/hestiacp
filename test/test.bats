@@ -482,6 +482,14 @@ function check_ip_not_banned(){
     fi
 }
 
+@test "Ip: Change Helo" {
+    local ip="198.18.0.121"
+    run v-change-sys-ip-helo 198.18.0.121 dev.hestiacp.com
+    assert_success
+    refute_output
+    assert_file_contains /etc/exim4/mailhelo.conf "198.18.0.121:dev.hestiacp.com"
+}
+
 @test "Ip: Delete ips" {
     local ip="198.18.0.12"
     run v-delete-sys-ip $ip

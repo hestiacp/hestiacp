@@ -198,7 +198,7 @@ $(document).ready(function(){
                           }
                       }
                       else {
-                          if ($('.l-unit .ch-toggle:eq(0)').attr('checked')) {
+                          if ($('.l-unit .ch-toggle:eq(0)').prop('checked')) {
                                 $('.l-unit').removeClass('selected');
                                 $('.l-unit .ch-toggle').prop('checked', false);
                           }

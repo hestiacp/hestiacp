@@ -1,5 +1,5 @@
 App.Actions.MAIL.toggle_letsencrypt = function(elm) {
-    if ($(elm).attr('checked')) {
+    if ($(elm).prop('checked')) {
         $('#ssltable textarea[name=v_ssl_crt],#ssltable textarea[name=v_ssl_key], #ssltable textarea[name=v_ssl_ca]').attr('disabled', 'disabled');
         $('#generate-csr').hide();
 	if(!$('.lets-encrypt-note').hasClass('enabled')){

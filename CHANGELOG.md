@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Development]
+## [1.4.10] - Service release 
 
 ### Features
 
@@ -13,7 +13,8 @@ All notable changes to this project will be documented in this file.
 - Fixed UI issues after upgrade jQuery + jQuery UI to last version (#2021 and #2032) + [forum](https://forum.hestiacp.com/t/confusion-about-send-welcome-email-checkbox/4259/11)
 - Fixed security issues in caching templates of Nginx when used as Reverse Proxy
 - Fixed an issue with deleting multiple mail accounts (#2047)
-- Fixed an issue with phpmailer + non latin characters (#2050) thanks @Faymir 
+- Fixed an issue with phpmailer + non latin characters (#2050) thanks @Faymir
+- Remove caching template for CraftCMS (#2039) @anvme 
 
 ## [1.4.9] - Service release 
 

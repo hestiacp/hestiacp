@@ -87,7 +87,7 @@
 				<div class="clearfix l-unit__stat-col--left text-center step-top-small"><b>TXT</b></div>
 				<div class="clearfix l-unit__stat-col--left text-center step-top-small"><b>&nbsp;</b></div>
 				<div class="clearfix l-unit__stat-col--left text-center step-top-small"><b>3600</b></div>
-				<div class="clearfix l-unit__stat-col--left  wide-3 "><b><input type="text" class="vst-input" value="v=DKIM1; k=rsa; p=<?=htmlspecialchars(str_replace(array('"',"'"),'',$dkim[$key]['TXT']));?>" </b></div>
+				<div class="clearfix l-unit__stat-col--left  wide-3 "><b><input type="text" class="vst-input" value="<?=htmlspecialchars(str_replace(array('"',"'"),'',$dkim[$key]['TXT']));?>" /></b></div>
 			</div>
 		</div>
 	<?php } ?>

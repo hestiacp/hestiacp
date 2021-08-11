@@ -224,7 +224,7 @@
 								<table style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;" id="ssltable">
 									<tr>
 										<td class="input-label vst-text">
-											<label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" id="letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letencrypt == 'on') echo "checked=yes" ?> onclick="elementHideShow('ssl-details');App.Actions.WEB.toggle_letsencrypt(this)"><?=_('Lets Encrypt Support');?></label>
+											<label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" id="letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letencrypt == 'on') echo "checked=yes" ?> onclick="elementHideShow('letsinfo');App.Actions.WEB.toggle_letsencrypt(this)"><?=_('Lets Encrypt Support');?></label>
 										</td>
 									</tr>
 									<tr>
@@ -349,6 +349,9 @@
 														<td class="details">
 															<?=$v_ssl_issuer?>
 														</td>
+													</tr>
+													<tr id="letsinfo" style="display:<?php if ($v_letsencrypt == 'yes' || $v_letencrypt == 'on' ) { echo 'block';} else {echo 'none';} ?>">
+														<td><a href="#" onclick="elementHideShow('ssl-details'); return false;" class="generate"><?=_('Show Certifcate');?></a></td>
 													</tr>
 												</table>
 											</td>

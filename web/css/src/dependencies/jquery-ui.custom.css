@@ -7,6 +7,7 @@
 	left: 0;
 	padding: .2em;
 	outline: 0;
+	z-index: 1000 !important;
 }
 .ui-dialog .ui-dialog-titlebar {
 	padding: .4em 1em;
@@ -137,3 +138,13 @@
 .ui-tabs-panel{
 	clear:both !important;
 }
+
+.ui-widget-overlay {
+	 background-color: rgba(0,0,0,0.9);
+	 height: 100%;
+	 width:100%;
+	 z-index: 999 !important;
+	 position: absolute;
+	 top:0px;
+	 left:0px;
+ }

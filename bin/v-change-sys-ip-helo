@@ -26,6 +26,10 @@ if [ -z "$MAIL_SYSTEM" ]; then
     check_result "$E_NOTEXIST" "Mail system not installed"
 fi
 
+if [ ! -e "$HESTIA/data/ips/$ip" ]; then 
+    exit;
+fi
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#

@@ -720,8 +720,3 @@ upgrade_restart_services() {
     fi
     $BIN/v-restart-service hestia
 }
-
-upgrade_perform_cleanup() {
-    # Remove upgrade configuration file as it's not needed
-    rm -f $HESTIA_INSTALL_DIR/upgrade/upgrade.conf
-}

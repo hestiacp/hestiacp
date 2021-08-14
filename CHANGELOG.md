@@ -7,6 +7,8 @@ All notable changes to this project will be documented in this file.
 
 ### Bugfixes
 
+- Improve handling upgrade of Roundcube #1917
+
 ## [1.4.10] - Service release 
 
 ### Features

@@ -92,7 +92,6 @@ upgrade_set_branch $new_version
 upgrade_cleanup_message | tee -a $LOG
 upgrade_rebuild_users | tee -a $LOG
 upgrade_restart_services | tee -a $LOG
-upgrade_perform_cleanup | tee -a $LOG
 
 # Add upgrade notification to admin user's panel and display completion message
 upgrade_complete_message_log >> $LOG

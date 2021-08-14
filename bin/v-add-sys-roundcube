@@ -111,11 +111,20 @@ if [ "$UPDATE" == "no" ]; then
     ln -s $RC_CONFIG_DIR/plugins/newmail_notifier/config.inc.php ./plugins/newmail_notifier/config.inc.php
     cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_zipdownload.inc.php $RC_CONFIG_DIR/plugins/zipdownload/config.inc.php
     ln -s $RC_CONFIG_DIR/plugins/zipdownload/config.inc.php ./plugins/zipdownload/config.inc.php
+    # Set up correct permissions roundcube    
+    chown -R root:www-data $RC_CONFIG_DIR/
+    chmod 751 -R $RC_CONFIG_DIR    
+    chmod 644 $RC_CONFIG_DIR/config.inc.php
+    chmod 644 $RC_CONFIG_DIR/plugins/password/config.inc.php
+    chmod 644 $RC_CONFIG_DIR/plugins/newmail_notifier/config.inc.php
+    chmod 644 $RC_CONFIG_DIR/plugins/zipdownload/config.inc.php
     
+    # Add robots.txt
+    echo "User-agent: *" > /var/lib/roundcube/robots.txt
+    echo "Disallow: /" >> /var/lib/roundcube/robots.txt
     
-    chmod 640 $RC_CONFIG_DIR/config.inc.php
-    chown root:www-data $RC_CONFIG_DIR/config.inc.php
-    
+    chown -R root:www-data $RC_INSTALL_DIR
+  
     # Log file 
     if [ ! -d  $RC_LOG ];then
         mkdir $RC_LOG
@@ -146,10 +155,6 @@ if [ "$UPDATE" == "no" ]; then
     rm -f -r $RC_INSTALL_DIR/$RC_FILE;
     rm -f -r $RC_INSTALL_DIR/$RC_EXTRACT;
     
-    # Add robots.txt
-    echo "User-agent: *" > /var/lib/roundcube/robots.txt
-    echo "Disallow: /" >> /var/lib/roundcube/robots.txt
-    
     # Updating hestia.conf
     if [ -z "$(grep WEBMAIL_SYSTEM $HESTIA/conf/hestia.conf)" ]; then
         $BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' 'roundcube'
@@ -173,6 +178,7 @@ else
     # Run Roundcube upgrade script
     $RC_INSTALL_DIR/$RC_EXTRACT/bin/installto.sh -y $RC_INSTALL_DIR > /dev/null 2>&1
     $RC_INSTALL_DIR/bin/update.sh --version "$version" > /dev/null 2>&1
+    chown -R root:www-data $RC_INSTALL_DIR
     
     #clean up the mess
     if [ -d "$RC_INSTALL_DIR/installer" ]; then

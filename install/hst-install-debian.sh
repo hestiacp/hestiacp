@@ -648,6 +648,7 @@ echo
 echo "[ * ] NGINX"
 if [ "$release" -eq 11 ]; then
     echo "      Skip nginx repo, not available yet."
+    echo "#deb [arch=$ARCH] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
 else
     echo "deb [arch=$ARCH] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
 fi
@@ -668,12 +669,7 @@ fi
 # Installing MariaDB repo
 if [ "$mysql" = 'yes' ]; then
     echo "[ * ] MariaDB"
-    # Temporary solution for Deb11 support
-    if [ "$release" -eq 11 ]; then
-        echo "deb [arch=$ARCH] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$VERSION sid main" > $apt/mariadb.list
-    else
-        echo "deb [arch=$ARCH] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
-    fi
+    echo "deb [arch=$ARCH] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
     apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc' > /dev/null 2>&1
 fi
 

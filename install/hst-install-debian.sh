@@ -1597,8 +1597,8 @@ if [ "$exim" = 'yes' ]; then
     echo "[ * ] Configuring Exim mail server..."
     gpasswd -a Debian-exim mail > /dev/null 2>&1
     exim_version=$(exim4 --version |  head -1 | awk  '{print $3}' | cut -f -2 -d .);
-    if [ "exim_version" = "4.94" ]; then
-      cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.4.94.template /etc/exim4/exim/exim4.conf.template
+    if [ "$exim_version" = "4.94" ]; then
+      cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.4.94.template /etc/exim/exim4.conf.template
     else
       cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.template /etc/exim4/
     fi

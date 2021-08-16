@@ -697,10 +697,14 @@ if (!empty($_POST['save'])) {
     // Change INACTIVE_SESSION_TIMEOUT
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_inactive_session_timeout'] != $_SESSION['INACTIVE_SESSION_TIMEOUT']) {
-            exec (HESTIA_CMD."v-change-sys-config-value INACTIVE_SESSION_TIMEOUT ".escapeshellarg($_POST['v_inactive_session_timeout']), $output, $return_var);
-            check_return_code($return_var,$output);
-            unset($output);
-            if (empty($_SESSION['error_msg'])) $v_login_style = $_POST['v_inactive_session_timeout'];
+            if($_POST['v_inactive_session_timeout'] < 1){
+               $_SESSION['error_msg'] = _('Inactive session timeout can not lower than 1 minute');
+            }else{
+               exec (HESTIA_CMD."v-change-sys-config-value INACTIVE_SESSION_TIMEOUT ".escapeshellarg($_POST['v_inactive_session_timeout']), $output, $return_var);
+               check_return_code($return_var,$output);
+               unset($output);
+               if (empty($_SESSION['error_msg'])) $v_login_style = $_POST['v_inactive_session_timeout'];
+            }
             $v_security_adv = 'yes';
         }
     }
@@ -795,7 +799,7 @@ if (!empty($_POST['save'])) {
 
     // Change POLICY_USER_VIEW_SUSPENDED
     if (empty($_SESSION['error_msg'])) {
-        if ($_POST['v_policy_user_view_suspended'] != $_SESSION['POLICY_USER_VIEW_SUSPENDED']) {
+        if ($_POST['v_policy_user_view_suspended'] != $_SESSION['POLICY_USER_VIEW_SUSPENDED'] && !empty($_SESSION['POLICY_USER_VIEW_SUSPENDED'])) {
             exec (HESTIA_CMD."v-change-sys-config-value POLICY_USER_VIEW_SUSPENDED ".escapeshellarg($_POST['v_policy_user_view_suspended']), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);

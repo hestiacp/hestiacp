@@ -49,36 +49,43 @@ is_web_domain_new() {
 
 # Web alias existence check
 is_web_alias_new() {
-    web_alias=$(grep -wH "$1" $HESTIA/data/users/*/web.conf)
-    if [ ! -z "$web_alias" ]; then
-        a1=$(echo "$web_alias" |grep -F "'$1'" |cut -f 7 -d /)
-        if [ ! -z "$a1" ] && [ "$2" == "web"  ]; then
-            check_result $E_EXISTS "Web alias $1 exists"
+    grep -wH "$1" $HESTIA/data/users/*/web.conf | while read -r line ; do
+        user=$(echo $line |cut -f 7 -d /)
+        string=$(echo $line |cut -f 2- -d ':')
+        parse_object_kv_list  $string
+        if [ ! -z "$ALIAS" ]; then
+            a1=$(echo "'$ALIAS'" |grep -F "'$1'");
+            if [ ! -z "$a1" ] && [ "$2" == "web"  ]; then
+                return $E_EXISTS 
+            fi
+            if [ ! -z "$a1" ] && [ "$user" != "$user" ]; then
+                return $E_EXISTS 
+            fi
+            a2=$(echo "'$ALIAS'" |grep -F "'$1,")
+            if [ ! -z "$a2" ] && [ "$2" == "web"  ]; then
+                return $E_EXISTS
+            fi
+            if [ ! -z "$a2" ] && [ "$user" != "$user" ]; then
+                return $E_EXISTS
+            fi
+            a3=$(echo "'$ALIAS'" |grep -F ",$1," )
+            if [ ! -z "$a3" ] && [ "$2" == "web"  ]; then
+               return $E_EXISTS
+            fi
+            if [ ! -z "$a3" ] && [ "$user" != "$user" ]; then
+                return $E_EXISTS
+            fi
+            a4=$(echo "'$ALIAS'" |grep -F ",$1'")
+            if [ ! -z "$a4" ] && [ "$2" == "web"  ]; then
+                return $E_EXISTS
+            fi
+            if [ ! -z "$a4" ] && [ "$user" != "$user" ]; then
+                return $E_EXISTS
+            fi
         fi
-        if [ ! -z "$a1" ] && [ "$a1" != "$user" ]; then
-            check_result $E_EXISTS "Web alias $1 exists"
-        fi
-        a2=$(echo "$web_alias" |grep -F "'$1," |cut -f 7 -d /)
-        if [ ! -z "$a2" ] && [ "$2" == "web"  ]; then
-            check_result $E_EXISTS "Web alias $1 exists"
-        fi
-        if [ ! -z "$a2" ] && [ "$a2" != "$user" ]; then
-            check_result $E_EXISTS "Web alias $1 exists"
-        fi
-        a3=$(echo "$web_alias" |grep -F ",$1," |cut -f 7 -d /)
-        if [ ! -z "$a3" ] && [ "$2" == "web"  ]; then
-            check_result $E_EXISTS "Web alias $1 exists"
-        fi
-        if [ ! -z "$a3" ] && [ "$a3" != "$user" ]; then
-            check_result $E_EXISTS "Web alias $1 exists"
-        fi
-        a4=$(echo "$web_alias" |grep -F ",$1'" |cut -f 7 -d /)
-        if [ ! -z "$a4" ] && [ "$2" == "web"  ]; then
-            check_result $E_EXISTS "Web alias $1 exists"
-        fi
-        if [ ! -z "$a4" ] && [ "$a4" != "$user" ]; then
-            check_result $E_EXISTS "Web alias $1 exists"
-        fi
+    done
+    if [ $? -ne 0 ]; then
+        check_result $E_EXISTS "Web alias $1 exists"
     fi
 }
 
@@ -802,9 +809,7 @@ add_webmail_config() {
         fi
 
         # Remove old configurations
-        rm -rf $HOMEDIR/$user/conf/mail/$domain.*
-        rm -rf $HOMEDIR/$user/conf/mail/ssl.$domain.*
-        rm -rf $HOMEDIR/$user/conf/mail/*nginx.$domain.*
+        find $HOMEDIR/$user/conf/mail/ -maxdepth 1 -type f \( -name "$domain.*" -o -name "ssl.$domain.*" -o -name "*nginx.$domain.*" \) -exec rm {} \;
     else
         if [ ! -z "$WEB_SYSTEM" ]; then
             rm -f /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
@@ -815,7 +820,7 @@ add_webmail_config() {
             ln -s $conf /etc/$1/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
         fi
         # Clear old configurations
-        rm -rf $HOMEDIR/$user/conf/mail/$domain.*
+        find $HOMEDIR/$user/conf/mail/ -maxdepth 1 -type f \( -name "$domain.*" \) -exec rm {} \;
     fi
 }
 
@@ -919,7 +924,7 @@ is_base_domain_owner(){
         if [ "$object" != "none" ]; then
             get_base_domain $object
             web=$(grep -F -H -h "DOMAIN='$basedomain'" $HESTIA/data/users/*/web.conf);
-            if [ $ENFORCE_SUBDOMAIN_OWNERSHIP = "yes" ]; then
+            if [ "$ENFORCE_SUBDOMAIN_OWNERSHIP" = "yes" ]; then
                 if [ ! -z "$web" ]; then
                     parse_object_kv_list "$web"
                     if [ -z "$ALLOW_USERS" ] ||  [ "$ALLOW_USERS" != "yes" ]; then

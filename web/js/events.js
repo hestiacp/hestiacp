@@ -76,7 +76,7 @@ VE.callbacks.click.do_suspend = function(evt, elm) {
      var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
      var url = $('input[name="suspend_url"]', ref).val();
      var dialog_elm = ref.find('.confirmation-text-suspention');
-     VE.helpers.createConfirmationDialog(dialog_elm, '', url);
+     VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
 }
 
 /*
@@ -86,7 +86,7 @@ VE.callbacks.click.do_unsuspend = function(evt, elm) {
      var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
      var url = $('input[name="unsuspend_url"]', ref).val();
      var dialog_elm = ref.find('.confirmation-text-suspention');
-     VE.helpers.createConfirmationDialog(dialog_elm, '', url);
+     VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
 }
 
 /*
@@ -96,21 +96,21 @@ VE.callbacks.click.do_delete = function(evt, elm) {
      var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
      var url = $('input[name="delete_url"]', ref).val();
      var dialog_elm = ref.find('.confirmation-text-delete');
-     VE.helpers.createConfirmationDialog(dialog_elm, '', url);
+     VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
 }
 
 VE.callbacks.click.do_servicerestart = function(evt, elm) {
     var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
     var url = $('input[name="servicerestart_url"]', ref).val();
     var dialog_elm = ref.find('.confirmation-text-servicerestart');
-    VE.helpers.createConfirmationDialog(dialog_elm, '', url);
+    VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
 }
 
 VE.callbacks.click.do_servicestop = function(evt, elm) {
     var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
     var url = $('input[name="servicestop_url"]', ref).val();
     var dialog_elm = ref.find('.confirmation-text-servicestop');
-    VE.helpers.createConfirmationDialog(dialog_elm, '', url);
+    VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
 }
 
 /*

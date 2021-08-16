@@ -284,7 +284,7 @@ add_pgsql_database() {
     query="GRANT CONNECT ON DATABASE template1 to $dbuser"
     psql_query "$query" > /dev/null
 
-    query="SELECT rolpassword FROM pg_authid WHERE rolname='$dbuser';"
+    query="SELECT rolpassword FROM pg_authid WHERE rolname='$dbuser'"
     md5=$(psql_query "$query" | grep md5 | cut -f 2 -d \ )
 }
 
@@ -350,7 +350,7 @@ change_pgsql_password() {
     query="ALTER ROLE $DBUSER WITH LOGIN PASSWORD '$dbpass'"
     psql_query "$query" > /dev/null
 
-    query="SELECT rolpassword FROM pg_authid WHERE rolname='$DBUSER';"
+    query="SELECT rolpassword FROM pg_authid WHERE rolname='$DBUSER'"
     md5=$(psql_query "$query" | grep md5 |cut -f 2 -d \ )
 }
 
@@ -387,9 +387,9 @@ delete_pgsql_database() {
     psql_query "$query" > /dev/null
 
     if [ "$(grep "DBUSER='$DBUSER'" $USER_DATA/db.conf |wc -l)" -lt 2 ]; then
-        query="REVOKE CONNECT ON DATABASE template1 FROM $db_user"
+        query="REVOKE CONNECT ON DATABASE template1 FROM $DBUSER"
         psql_query "$query" > /dev/null
-        query="DROP ROLE $db_user"
+        query="DROP ROLE $DBUSER"
         psql_query "$query" > /dev/null
     fi
 }
@@ -413,9 +413,9 @@ dump_pgsql_database() {
 
     psql_dump $dump $database
 
-    query="SELECT rolpassword FROM pg_authid WHERE rolname='$DBUSER';"
+    query="SELECT rolpassword FROM pg_authid WHERE rolname='$DBUSER'"
     md5=$(psql_query "$query" | head -n1 | cut -f 2 -d \ )
-    pw_str="UPDATE pg_authid SET rolpassword='$md5' WHERE rolname='$DBUSER';"
+    pw_str="UPDATE pg_authid SET rolpassword='$md5' WHERE rolname='$DBUSER'"
     gr_str="GRANT ALL PRIVILEGES ON DATABASE $database to '$DBUSER'"
     echo -e "$pw_str\n$gr_str" >> $grants
 }

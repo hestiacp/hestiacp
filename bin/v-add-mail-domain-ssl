@@ -78,7 +78,7 @@ fi
 # Call routine to add SSL configuration to mail domain
 add_mail_ssl_config
 
-if [ "$webmail" == "roundcube" ]; then
+if [ "$WEBMAIL" == "roundcube" ]; then
     WEBMAIL_TEMPLATE="default"
     if [ ! -z "$PROXY_SYSTEM" ]; then
         PROXY_TEMPLATE="default"
@@ -88,7 +88,7 @@ if [ "$webmail" == "roundcube" ]; then
     if [ "$WEB_SYSTEM" = "nginx" ]; then
         WEBMAIL_TEMPLATE="web_system"
     fi
-elif [ "$webmail" == "rainloop" ]; then
+elif [ "$WEBMAIL" == "rainloop" ]; then
     WEBMAIL_TEMPLATE="rainloop"
     if [ ! -z "$PROXY_SYSTEM" ]; then
         PROXY_TEMPLATE="default_rainloop"

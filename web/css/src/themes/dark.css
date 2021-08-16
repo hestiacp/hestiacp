@@ -1472,7 +1472,7 @@ form#vstobjects.suspended {
 .cron-helper-tabs a:active {
   color: #3b9de8 !important;
 }
-.cron-helper-tabs .ui-tabs-selected a {
+.cron-helper-tabs .ui-tabs-selected a, li[aria-expanded="true"] a {
   color: #ff3478 !important;
 }
 

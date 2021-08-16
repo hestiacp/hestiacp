@@ -13,11 +13,22 @@ server {
         proxy_pass      http://%ip%:%web_port%;
 
         proxy_cache %domain%;
-        proxy_cache_valid 15m;
-        proxy_cache_valid 404 1m;
+        proxy_cache_valid 200 5m;
+        proxy_cache_valid 301 302 10m;
+        proxy_cache_valid 404 10m;
+        proxy_cache_bypass $no_cache $cookie_session $http_x_update;
         proxy_no_cache $no_cache;
-        proxy_cache_bypass $no_cache;
-        proxy_cache_bypass $cookie_session $http_x_update;
+
+        set $no_cache 0;
+            if ($request_uri ~* "/wp-admin/|wp-.*.php|xmlrpc.php|/store.*|/cart.*|/my-account.*|/checkout.*|/user/|/admin/|/administrator/|/manager/|index.php") {
+                set $no_cache 1;
+            }
+            if ($http_cookie ~* "comment_author|wordpress_[a-f0-9]+|wp-postpass|wordpress_no_cache|wordpress_logged_in|woocommerce_items_in_cart|woocommerce_cart_hash|PHPSESSID") {
+                set $no_cache 1;
+            }
+            if ($http_cookie ~ SESS) {
+                set $no_cache 1;
+            }
 
         location ~* ^.+\.(%proxy_extensions%)$ {
             proxy_cache    off;

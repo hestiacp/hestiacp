@@ -34,7 +34,8 @@ if ((!empty($_POST['user'])) && (empty($_POST['code']))) {
             $to = $data[$user]['CONTACT'];
             $subject = sprintf(_('MAIL_RESET_SUBJECT'),date("Y-m-d H:i:s"));
             $hostname = exec('hostname');
-            $from = sprintf(_('MAIL_FROM'),$hostname);
+            $from = "noreply@".$hostname;
+            $from_name = _('Hestia Control Panel');
             if (!empty($name)) {
                 $mailtext = sprintf(_('GREETINGS_GORDON'),$name);
             } else {
@@ -42,7 +43,7 @@ if ((!empty($_POST['user'])) && (empty($_POST['code']))) {
             }
             if (in_array(str_replace(':'.$_SERVER['SERVER_PORT'],'.conf',$_SERVER['HTTP_HOST']), array_merge(scandir('/etc/nginx/conf.d'),scandir('/etc/nginx/conf.d/domains'),scandir('/etc/apache2/conf.d/domains'),scandir('/etc/apache2/conf.d')))){
                 $mailtext .= sprintf(_('PASSWORD_RESET_REQUEST'),$_SERVER['HTTP_HOST'],$user,$rkey,$_SERVER['HTTP_HOST'],$user,$rkey);
-                if (!empty($rkey)) send_email($to, $subject, $mailtext, $from);
+                if (!empty($rkey)) send_email($to, $subject, $mailtext, $from, $from_name, $data[$user]['NAME']);
                 header("Location: /reset/?action=code&user=".$_POST['user']);
                 exit;
             } else {

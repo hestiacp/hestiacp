@@ -69,7 +69,7 @@ if [[ "$sshport" =~ ^[0-9]+$ ]] && [ "$sshport" -ne "22"  ]; then
 fi
 
 # Load ipset lists before adding Hestia iptables rules
-[ -x "$(which ipset)" ] && $BIN/v-update-firewall-ipset
+$BIN/v-update-firewall-ipset
 
 # Creating temporary file
 tmp=$(mktemp)
@@ -189,11 +189,11 @@ else
     preup="/etc/network/if-pre-up.d/hestia-iptables"
     # Recreate the Hestia iptables rules loading script
     rm -f $routable $preup
-    if dpkg-query -W -f'${Status}' "netplan*" 2>/dev/null | grep -q "ok installed" && [ -d /etc/netplan ] && [ -n "$(ls -A /etc/netplan 2>/dev/null)" ]; then
+    if dpkg-query -W -f'${Status}' "netplan.io" 2>/dev/null | grep -q "ok installed" && [ -n "$(ls -A /etc/netplan 2>/dev/null)" ] && systemctl is-enabled networkd-dispatcher >/dev/null 2>&1; then
         echo '#!/bin/sh' > $routable
         echo '' >> $routable
         echo 'if [ "$IFACE" = "'$(ip route list | awk '/default .+/ {print $5}' | uniq)'" ]; then' >> $routable
-        echo '    [ -x "'$(which ipset)'" ] && '"${HESTIA}/bin/v-update-firewall-ipset" >> $routable
+        echo "    ${HESTIA}/bin/v-update-firewall-ipset" >> $routable
         echo '    /sbin/iptables-restore < /etc/iptables.rules' >> $routable
         echo 'fi' >> $routable
         echo '' >> $routable
@@ -203,7 +203,7 @@ else
         echo '#!/bin/sh' > $preup
         echo '' >> $preup
         echo 'if [ "$IFACE" = "'$(ip route list | awk '/default .+/ {print $5}' | uniq)'" ]; then' >> $preup
-        echo '    [ -x "'$(which ipset)'" ] && '"${HESTIA}/bin/v-update-firewall-ipset" >> $preup
+        echo "    ${HESTIA}/bin/v-update-firewall-ipset" >> $preup
         echo '    /sbin/iptables-restore < /etc/iptables.rules' >> $preup
         echo 'fi' >> $preup
         echo '' >> $preup

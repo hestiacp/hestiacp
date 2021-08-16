@@ -685,12 +685,19 @@ add_mail_ssl_config() {
     fi
     
     echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
+    echo "local_name $domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
+    echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
+    echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
+    echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+    echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
     echo "local_name mail.$domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
     echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
     echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
     echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
 
     # Add domain SSL configuration to exim4
+    ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem /usr/local/hestia/ssl/mail/$domain.crt
+    ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key /usr/local/hestia/ssl/mail/$domain.key
     ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem /usr/local/hestia/ssl/mail/mail.$domain.crt
     ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key /usr/local/hestia/ssl/mail/mail.$domain.key
 
@@ -719,6 +726,7 @@ del_mail_ssl_config() {
 
     # Remove SSL certificates
     rm -f $HOMEDIR/$user/conf/mail/$domain/ssl/*
+    rm -f /usr/local/hestia/ssl/mail/$domain.*
     rm -f /usr/local/hestia/ssl/mail/mail.$domain.*
 }
 

@@ -1412,10 +1412,21 @@ if [ "$proftpd" = 'yes' ]; then
     echo "127.0.0.1 $servername" >> /etc/hosts
     cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/proftpd/
     cp -f $HESTIA_INSTALL_DIR/proftpd/tls.conf /etc/proftpd/
-
+    
+    if [ "$release" -eq 11 ]; then 
+      sed -i 's|IdentLookups                  off|#IdentLookups                  off|g' /etc/proftpd/proftpd.conf
+    fi
+    
     update-rc.d proftpd defaults > /dev/null 2>&1
     systemctl start proftpd >> $LOG
     check_result $? "proftpd start failed"
+    
+    if [ "$release" -eq 11 ]; then
+     unit_files="$(systemctl list-unit-files |grep proftpd)"
+       if [[ "$unit_files" =~ "disabled" ]]; then
+           systemctl enable proftpd
+       fi
+    fi
 fi
 
 

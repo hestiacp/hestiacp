@@ -6,8 +6,9 @@
 server {
     listen      %ip%:%proxy_port%;
     server_name %domain_idn% %alias_idn%;
-        
+
     include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
+    include %home%/%user%/conf/web/%domain%/nginx.conf_*;
 
     location / {
         proxy_pass      http://%ip%:%web_port%;
@@ -35,7 +36,5 @@ server {
     location ~ /\.bzr/  {return 404;}
 
     disable_symlinks if_not_owner from=%docroot%;
-
-    include %home%/%user%/conf/web/%domain%/nginx.conf_*;
 }
 

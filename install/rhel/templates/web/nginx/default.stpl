@@ -8,6 +8,7 @@ server {
     error_log  /var/log/%web_system%/domains/%domain%.error.log error;
 
     include %home%/%user%/conf/web/%domain%/nginx.hsts.conf*;
+    include %home%/%user%/conf/web/%domain%/nginx.ssl.conf_*;
 
     location / {
         proxy_pass      https://%ip%:%web_ssl_port%;
@@ -33,7 +34,5 @@ server {
     location ~ /\.git/  {return 404;}
     location ~ /\.hg/   {return 404;}
     location ~ /\.bzr/  {return 404;}
-
-    include %home%/%user%/conf/web/%domain%/nginx.ssl.conf_*;
 }
 

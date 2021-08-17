@@ -3,6 +3,7 @@ server {
     server_name %domain_idn% %alias_idn%;
         
     include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
+    include %home%/%user%/conf/web/%domain%/nginx.conf_*;
 
     location / {
         proxy_pass      http://%ip%:%web_port%;
@@ -28,7 +29,5 @@ server {
     location ~ /\.git/  {return 404;}
     location ~ /\.hg/   {return 404;}
     location ~ /\.bzr/  {return 404;}
-
-    include %home%/%user%/conf/web/%domain%/nginx.conf_*;
 }
 

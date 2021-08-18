@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
+- Add support for Debian 11  (Bullseye) #1611
+- Add support for openssl in hestia-php 
+
 ### Bugfixes
 
 - Improve handling upgrade of Roundcube #1917

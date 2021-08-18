@@ -72,6 +72,10 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
 fi
 
+# Create mail account folder (mailbox)
+ mkdir $HOMEDIR/$user/mail/$domain/$account
+ chown $user:mail $HOMEDIR/$user/mail/$domain/$account
+ chmod 700 $HOMEDIR/$user/mail/$domain/$account
 
 #----------------------------------------------------------#
 #                       Hestia                             #

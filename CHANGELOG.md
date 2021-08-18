@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 - Fixed security issues in caching templates of Nginx when used as Reverse Proxy
 - Fixed an issue with deleting multiple mail accounts (#2047)
 - Fixed an issue with phpmailer + non latin characters (#2050) thanks @Faymir 
+- Fix Unable to load dynamic library 'pdo_mysql.so' after php reinstalling (#2069)
 
 ## [1.4.9] - Service release 
 

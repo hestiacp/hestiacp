@@ -23,7 +23,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.4.7~alpha'
+HESTIA_INSTALL_VER='1.4.11~alpha'
 pma_v='5.1.1'
 rc_v="1.4.11"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
@@ -266,6 +266,9 @@ fi
 if [ "$iptables" = 'no' ]; then
     fail2ban='no'
 fi
+if [ "$apache" = "no" ]; then
+    phpfpm='yes'
+fi
 
 # Checking root permissions
 if [ "x$(id -u)" != 'x0' ]; then
@@ -317,7 +320,14 @@ check_result $? "Unable to connect to the Hestia APT repository"
 # Check installed packages
 tmpfile=$(mktemp -p /tmp)
 dpkg --get-selections > $tmpfile
-for pkg in exim4 mariadb-server apache2 nginx hestia postfix ufw; do
+conflicts_pkg="exim4 mariadb-server apache2 nginx hestia postfix ufw"
+
+# Drop postfix from the list if exim should not be installed
+if [ "$exim" = 'no' ]; then
+    conflicts_pkg=$(echo $conflicts_pkg | sed 's/postfix//g' | xargs)
+fi
+
+for pkg in $conflicts_pkg; do
     if [ ! -z "$(grep $pkg $tmpfile)" ]; then
         conflicts="$pkg* $conflicts"
     fi
@@ -1264,6 +1274,7 @@ $HESTIA/bin/v-change-user-role admin admin
 $HESTIA/bin/v-change-user-language admin $lang
 $HESTIA/bin/v-change-sys-config-value 'POLICY_SYSTEM_PROTECTED_ADMIN' 'yes'
 
+locale-gen "en_US.utf8" > /dev/null 2>&1
 
 #----------------------------------------------------------#
 #                     Configure Nginx                      #
@@ -1644,6 +1655,16 @@ if [ "$dovecot" = 'yes' ]; then
         rm -f /etc/dovecot/conf.d/15-mailboxes.conf
     fi
     chown -R root:root /etc/dovecot*
+        
+    #Alter config for 2.2 
+    version=$(dovecot --version |  cut -f -2 -d .);
+    if [ "$version" = "2.2" ]; then 
+      echo "[ * ] Downgrade dovecot config to sync with 2.2 settings"	
+      sed -i 's|#ssl_dh_parameters_length = 4096|ssl_dh_parameters_length = 4096|g' /etc/dovecot/conf.d/10-ssl.conf
+      sed -i 's|ssl_dh = </etc/ssl/dhparam.pem|#ssl_dh = </etc/ssl/dhparam.pem|g' /etc/dovecot/conf.d/10-ssl.conf
+      sed -i 's|ssl_min_protocol = TLSv1.1|ssl_protocols = !SSLv3 !TLSv1|g' /etc/dovecot/conf.d/10-ssl.conf
+    fi
+    
     update-rc.d dovecot defaults
     systemctl start dovecot >> $LOG
     check_result $? "dovecot start failed"

@@ -672,7 +672,7 @@ a.vst-advanced:active, a.vst-advanced:focus {
     box-shadow: none !important;
 }
 
-.cron-helper-tabs .ui-tabs-selected a {
+.cron-helper-tabs .ui-tabs-selected a, li[aria-expanded="true"] a {
     color: #ff6701;
 }
 

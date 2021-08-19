@@ -58,7 +58,7 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-mph="php$version-mbstring php$version-bcmath php$version-cli php$version-curl
+mph="php$version-common php$version-mbstring php$version-bcmath php$version-cli php$version-curl
      php$version-fpm php$version-gd php$version-intl php$version-mysql
      php$version-soap php$version-xml php$version-zip php$version-mbstring
      php$version-json php$version-bz2 php$version-pspell php$version-imagick php$version-pgsql

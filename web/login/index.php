@@ -292,7 +292,8 @@ if (empty($_SESSION['language'])) {
 }
 
 // Generate CSRF token
-$_SESSION['token'] = md5(uniqid(mt_rand(), true));
+$token = bin2hex(file_get_contents('/dev/urandom', false, null, 0, 16));
+$_SESSION['token'] = $token;
 
 require_once('../templates/header.html');
 if (!empty($_SESSION['login']['password'])) {

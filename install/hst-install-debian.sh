@@ -23,12 +23,12 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.4.7~alpha'
+HESTIA_INSTALL_VER='1.4.11~aplpha'
 pma_v='5.1.1'
 rc_v="1.4.11"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
 fpm_v="7.4"
-mariadb_v="10.5"
+mariadb_v="10.6"
 
 if [ "$release" -eq 9 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
@@ -39,14 +39,13 @@ if [ "$release" -eq 9 ]; then
         php$fpm_v-json php$fpm_v-mbstring php$fpm_v-opcache php$fpm_v-pspell
         php$fpm_v-readline php$fpm_v-xml vsftpd proftpd-basic bind9 exim4
         exim4-daemon-heavy clamav-daemon spamassassin dovecot-imapd
-        dovecot-pop3d net-tools
-        mariadb-client mariadb-common mariadb-server postgresql
-        postgresql-contrib phppgadmin mc flex whois rssh git idn zip
+        dovecot-pop3d net-tools mariadb-client mariadb-common mariadb-server
+        postgresql postgresql-contrib phppgadmin mc flex whois rssh git idn zip
         sudo bc ftp lsof rrdtool quota e2fslibs bsdutils e2fsprogs curl
         imagemagick fail2ban dnsutils bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx
         hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat
         rsyslog openssh-server setpriv ipset libapache2-mod-ruid2 zstd lsb-release"
-elif [ "$release" -eq 10 ]; then
+elif [ "$release" -eq 10 ] || [ "$release" -eq 11 ]; then
     software="nginx apache2 apache2-utils apache2-suexec-custom
         apache2-suexec-pristine libapache2-mod-fcgid libapache2-mod-php$fpm_v
         php$fpm_v php$fpm_v-common php$fpm_v-cgi php$fpm_v-mysql php$fpm_v-curl
@@ -55,14 +54,14 @@ elif [ "$release" -eq 10 ]; then
         php$fpm_v-gd php$fpm_v-intl php$fpm_v-json php$fpm_v-mbstring
         php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
         awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy
-        clamav-daemon spamassassin dovecot-imapd dovecot-pop3d 
-        net-tools mariadb-client
-        mariadb-common mariadb-server postgresql postgresql-contrib
-        phppgadmin mc flex whois git idn zip sudo bc ftp lsof rrdtool
-        quota e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban dnsutils
-        bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx hestia-php expect
-        libmail-dkim-perl unrar-free vim-common acl sysstat rsyslog openssh-server
-        util-linux ipset libapache2-mpm-itk zstd lsb-release"
+        clamav-daemon spamassassin dovecot-imapd dovecot-pop3d net-tools
+        mariadb-client mariadb-common mariadb-server postgresql
+        postgresql-contrib phppgadmin mc flex whois git idn zip sudo bc ftp lsof
+        rrdtool quota e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban 
+        dnsutils bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx
+        hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat
+        rsyslog openssh-server util-linux ipset libapache2-mpm-itk zstd
+        lsb-release"
 fi
 
 installer_dependencies="apt-transport-https curl dirmngr gnupg wget ca-certificates"
@@ -285,6 +284,9 @@ fi
 if [ "$iptables" = 'no' ]; then
     fail2ban='no'
 fi
+if [ "$apache" = "no" ]; then
+    phpfpm='yes'
+fi
 
 # Checking root permissions
 if [ "x$(id -u)" != 'x0' ]; then
@@ -343,7 +345,14 @@ check_result $? "Unable to connect to the Hestia APT repository"
 # Check installed packages
 tmpfile=$(mktemp -p /tmp)
 dpkg --get-selections > $tmpfile
-for pkg in exim4 mariadb-server apache2 nginx hestia postfix; do
+conflicts_pkg="exim4 mariadb-server apache2 nginx hestia postfix"
+
+# Drop postfix from the list if exim should not be installed
+if [ "$exim" = 'no' ]; then
+    conflicts_pkg=$(echo $conflicts_pkg | sed 's/postfix//g' | xargs)
+fi
+
+for pkg in $conflicts_pkg; do
     if [ ! -z "$(grep $pkg $tmpfile)" ]; then
         conflicts="$pkg* $conflicts"
     fi
@@ -637,7 +646,12 @@ echo
 # Installing Nginx repo
 
 echo "[ * ] NGINX"
-echo "deb [arch=$ARCH] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
+if [ "$release" -eq 11 ]; then
+    echo "      Skip nginx repo, not available yet."
+    echo "#deb [arch=$ARCH] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
+else
+    echo "deb [arch=$ARCH] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
+fi
 apt-key adv --fetch-keys 'https://nginx.org/keys/nginx_signing.key' > /dev/null 2>&1
 
 # Installing sury PHP repo
@@ -967,7 +981,7 @@ systemctl enable systemd-timesyncd
 systemctl start systemd-timesyncd
 
 # Setup rssh
-if [ ! "$release" -eq 10 ]; then
+if [ "$release" -eq 9 ]; then
     if [ -z "$(grep /usr/bin/rssh /etc/shells)" ]; then
         echo /usr/bin/rssh >> /etc/shells
     fi
@@ -1217,6 +1231,12 @@ echo "[ * ] Enable SFTP jail..."
 $HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1
 check_result $? "can't enable sftp jail"
 
+# Switch to sha512 for deb11.
+if [ "$release" -eq 11 ]; then
+    # Switching to sha512
+    sed -i "s/obscure yescrypt/obscure sha512/g" /etc/pam.d/common-password
+fi
+
 # Adding Hestia admin account
 $HESTIA/bin/v-add-user admin $vpass $email default "System Administrator"
 check_result $? "can't create admin user"
@@ -1225,6 +1245,7 @@ $HESTIA/bin/v-change-user-role admin admin
 $HESTIA/bin/v-change-user-language admin $lang
 $HESTIA/bin/v-change-sys-config-value 'POLICY_SYSTEM_PROTECTED_ADMIN' 'yes'
 
+locale-gen "en_US.utf8" > /dev/null 2>&1
 #----------------------------------------------------------#
 #                     Configure Nginx                      #
 #----------------------------------------------------------#
@@ -1289,7 +1310,7 @@ if [ "$apache" = 'yes' ]; then
         a2enmod mpm_event > /dev/null 2>&1
         cp -f $HESTIA_INSTALL_DIR/apache2/hestia-event.conf /etc/apache2/conf.d/
     else
-        if [ "$release" -eq 10 ]; then
+        if [ "$release" -eq 10 ] || [ "$release" -eq 11 ]; then
             a2enmod mpm_itk > /dev/null 2>&1
         else
             a2enmod ruid2 > /dev/null 2>&1
@@ -1391,10 +1412,21 @@ if [ "$proftpd" = 'yes' ]; then
     echo "127.0.0.1 $servername" >> /etc/hosts
     cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/proftpd/
     cp -f $HESTIA_INSTALL_DIR/proftpd/tls.conf /etc/proftpd/
-
+    
+    if [ "$release" -eq 11 ]; then 
+      sed -i 's|IdentLookups                  off|#IdentLookups                  off|g' /etc/proftpd/proftpd.conf
+    fi
+    
     update-rc.d proftpd defaults > /dev/null 2>&1
     systemctl start proftpd >> $LOG
     check_result $? "proftpd start failed"
+    
+    if [ "$release" -eq 11 ]; then
+     unit_files="$(systemctl list-unit-files |grep proftpd)"
+       if [[ "$unit_files" =~ "disabled" ]]; then
+           systemctl enable proftpd
+       fi
+    fi
 fi
 
 
@@ -1538,7 +1570,7 @@ if [ "$named" = 'yes' ]; then
     chown bind:bind /var/cache/bind
     chmod 640 /etc/bind/named.conf
     chmod 640 /etc/bind/named.conf.options
-    aa-complain /usr/sbin/named 2>/dev/null
+    aa-complain /usr/sbin/named 2> /dev/null
     if [ "$apparmor" = 'yes' ]; then
         echo "/home/** rwm," >> /etc/apparmor.d/local/usr.sbin.named 2> /dev/null
         systemctl status apparmor >/dev/null 2>&1
@@ -1546,7 +1578,7 @@ if [ "$named" = 'yes' ]; then
             systemctl restart apparmor
         fi
     fi
-    update-rc.d bind9 defaults
+    update-rc.d bind9 defaults > /dev/null 2>&1
     systemctl start bind9
     check_result $? "bind9 start failed"
 
@@ -1564,7 +1596,12 @@ fi
 if [ "$exim" = 'yes' ]; then
     echo "[ * ] Configuring Exim mail server..."
     gpasswd -a Debian-exim mail > /dev/null 2>&1
-    cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.template /etc/exim4/
+    exim_version=$(exim4 --version |  head -1 | awk  '{print $3}' | cut -f -2 -d .);
+    if [ "$exim_version" = "4.94" ]; then
+      cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.4.94.template /etc/exim/exim4.conf.template
+    else
+      cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.template /etc/exim4/
+    fi
     cp -f $HESTIA_INSTALL_DIR/exim/dnsbl.conf /etc/exim4/
     cp -f $HESTIA_INSTALL_DIR/exim/spam-blocks.conf /etc/exim4/
     touch /etc/exim4/white-blocks.conf
@@ -1602,9 +1639,17 @@ if [ "$dovecot" = 'yes' ]; then
     cp -rf $HESTIA_INSTALL_DIR/dovecot /etc/
     cp -f $HESTIA_INSTALL_DIR/logrotate/dovecot /etc/logrotate.d/
     chown -R root:root /etc/dovecot*
-    if [ "$release" -eq 9 ] || [ "$release" -eq 10 ]; then
-        rm -f /etc/dovecot/conf.d/15-mailboxes.conf
+    rm -f /etc/dovecot/conf.d/15-mailboxes.conf
+    
+    #Alter config for 2.2 
+    version=$(dovecot --version |  cut -f -2 -d .);
+    if [ "$version" = "2.2" ]; then 
+      echo "[ * ] Downgrade dovecot config to sync with 2.2 settings"	
+      sed -i 's|#ssl_dh_parameters_length = 4096|ssl_dh_parameters_length = 4096|g' /etc/dovecot/conf.d/10-ssl.conf
+      sed -i 's|ssl_dh = </etc/ssl/dhparam.pem|#ssl_dh = </etc/ssl/dhparam.pem|g' /etc/dovecot/conf.d/10-ssl.conf
+      sed -i 's|ssl_min_protocol = TLSv1.1|ssl_protocols = !SSLv3 !TLSv1|g' /etc/dovecot/conf.d/10-ssl.conf
     fi
+    
     update-rc.d dovecot defaults
     systemctl start dovecot
     check_result $? "dovecot start failed"

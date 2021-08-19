@@ -294,8 +294,7 @@ function get_percentage($used,$total) {
     return $percent;
 }
 
-function send_email($to, $subject, $mailtext, $from, $from_name) {
-
+function send_email($to, $subject, $mailtext, $from, $from_name, $to_name = '') {
     $mail = new PHPMailer();
 
     if (isset($_SESSION['USE_SERVER_SMTP']) && $_SESSION['USE_SERVER_SMTP'] == "true") {
@@ -314,12 +313,16 @@ function send_email($to, $subject, $mailtext, $from, $from_name) {
 
     $mail->IsHTML(true);
     $mail->ClearReplyTos();
-    $mail->AddAddress($to, "Hestia Control Panel User");
+    if (empty($to_name)){
+        $mail->AddAddress($to);
+    }else{
+        $mail->AddAddress($to, $to_name);
+    }
     $mail->SetFrom($from, $from_name);
 
+    $mail->CharSet = "utf-8";
     $mail->Subject = $subject;
     $content = $mailtext;
-    $mail->AltBody($content);
     $content = nl2br($content);
     $mail->MsgHTML($content);
     $mail->Send();

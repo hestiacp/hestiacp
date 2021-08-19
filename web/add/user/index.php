@@ -114,7 +114,7 @@ if (!empty($_POST['ok'])) {
         }
         
         $mailtext .= sprintf(_('ACCOUNT_READY'),$_SERVER['HTTP_HOST'],$_POST['v_username'],$_POST['v_password']);
-        send_email($to, $subject, $mailtext, $from, $from_name);
+        send_email($to, $subject, $mailtext, $from, $from_name, $_POST['name']);
         putenv("LANGUAGE=".detect_user_language());
     }
 

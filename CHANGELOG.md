@@ -5,21 +5,62 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
-- Add support for automated testing HestiaCP code
+### Bugfixes
+
+- Improve handling upgrade of Roundcube #1917
+
+## [1.4.10] - Service release 
+
+### Features
+
+- Added v-delete-firewall-ban ip all #2031
+- Include config tests for nginx/apache2 templates
+
+### Bugfixes
+
+- Fixed UI issues after upgrade jQuery + jQuery UI to last version (#2021 and #2032) + [forum](https://forum.hestiacp.com/t/confusion-about-send-welcome-email-checkbox/4259/11)
+- Fixed security issues in caching templates of Nginx when used as Reverse Proxy
+- Fixed an issue with deleting multiple mail accounts (#2047)
+- Fixed an issue with phpmailer + non latin characters (#2050) thanks @Faymir 
+- Fix Unable to load dynamic library 'pdo_mysql.so' after php reinstalling (#2069)
+
+## [1.4.9] - Service release 
+
+### Bugfixes
+
+- Updated jQuery and jQuery UI to the latest version due to a vulnerability in jQuery. @dependabot
+- Fixed bug in /etc/dovecot/conf.d/10-ssl.conf for new installs
+- Fixed bug with notifications
+- Fixed translation string @myrevery 
+
+## [1.4.8] - Service release 
+
+### Features
+
+- Add support for automated testing for HestiaCP code with @drone
 - Add support for SMTP server for internal email #1988 @Myself5 / #1165
 
 ### Bugfixes
 
+- Updated jQuery and jQuery UI to the latest version due to a vulnerability in jQuery. @dependabot
 - Resolve issue with double ENFORCE_SUBDOMAIN_OWNERSHIP keys in hestia.conf
 - Resolve issue with create new user during install in some cases #2000
-- Fix an issue with Quick Install apps named Test123 
+- Fixed an issue with Quick Install apps named Test123 (@PsychotherapistSam)
+- Fix an issue with dovecot 2.3 ssl config (#1432)
+- Load $HESTIA path during upgrade script (#1698)
+- Remove TLS 1.1 from Proftpd config (#950)
+- Don't remove postfix when Exim is not installed (#1995)
+- Fix a bug in no-php Nginx FPM template (##2007)
+- Update German translations
+- Fixed a few minor error in Mail DMS records (#2005)
+
 
 ## [1.4.7] - Service release 
 
 ### Bugfixes
 
-- Fix #1984 phppgadmin not working on apache2 systems
-- Fix #1985 Restart service not working
+- Fixed #1984 phppgadmin not working on apache2 systems
+- Fixed #1985 Restart service not working
 
 
 ## [1.4.6] - Service release 
@@ -32,18 +73,18 @@ All notable changes to this project will be documented in this file.
 
 ### Bugfixes
 
-- Fix #1961 Renewal Apache2 only SSL certificate fails
+- Fixed #1961 Renewal Apache2 only SSL certificate fails
 - Fixed #1956 to prevent reset of defined webmail client.
 - Explicitly disable cron reports #1978 
 - Fixed an issue where in rare cases certificate failed to install @dpeca and @myvesta
 - Fixed an issue where composer failed to install when .composer folder is missing
-- Fix #1980 Lets Encrypt Auto Renewal Reverts Webmail Client back to Roundcube
+- Fixed #1980 Lets Encrypt Auto Renewal Reverts Webmail Client back to Roundcube
 
 ## [1.4.5] - Service release
 
 ### Bugfixes
 
-- Revert #1943 and rework it to fix possible errors occuring on v-rebuild-cron-jobs.
+- Revert #1943 and rework it to fix possible errors occurring on v-rebuild-cron-jobs.
 - Fixed #1956 to prevent reset of defined webmail client.
 - Explicitly disable cron reports #1978
 
@@ -58,15 +99,15 @@ All notable changes to this project will be documented in this file.
 ### Bugfixes
 
 - Add template for when webmail is disabled allowing to generate SSL. 
-- Fix PHP bug in /list/log/ 
-- Fix issue with time in /list/services as it was showing as 50 minute1 instead of minutes
-- Add missing back buttons + fix behavoir of back buttons on login page. 
+- Fixed PHP bug in /list/log/ 
+- Fixed issue with time in /list/services as it was showing as 50 minute1 instead of minutes
+- Add missing back buttons + fix behaviour of back buttons on login page. 
 - Set "default" when WEB_TEMPLATE and PROXY_TEMPLATE is missing in user.conf 
 - Add BACKEND_TEMPLATE to default package
-- Fix possible error occur for v-rebuild-cron-jobs #1943 (thanks @clarkchentw)
-- Restrict access Filemanager when SSH is enabled for the user (@bet0x)
+- Fixed possible error occur for v-rebuild-cron-jobs #1943 (thanks @clarkchentw)
+- Restrict access file manager when SSH is enabled for the user (@bet0x)
 - Check for DNS domains when running v-change-sys-ip-nat (@clarkchentw)
-- Fix logical error in installer (@clarkchentw)
+- Fixed logical error in installer (@clarkchentw)
 
 ## [1.4.3] - Service release
 
@@ -112,10 +153,10 @@ Then run the update via
 
 ### Bugfixes
 
-- Fix issue wit startup script for iptables / network (#1849) (@myrevery)
-- Fix problem with accidentally replacing nginx.conf during upgrade nginx (#1878 / @myrevery)
-- Fix issue with installing Ubuntu 18.04
-- Fix issue with login into file manger as admin user
+- Fixed issue wit startup script for iptables / network (#1849) (@myrevery)
+- Fixed problem with accidentally replacing nginx.conf during upgrade nginx (#1878 / @myrevery)
+- Fixed issue with installing Ubuntu 18.04
+- Fixed issue with login into file manger as admin user
 - Added proxy_extentions back to support older custom templates
 - Added the possibility to skip the forced reboot when interactive is set to no
 - Fixed an issue with modx template
@@ -552,7 +593,7 @@ Then run the update via
 - Remove broken /webmail alias from previous versions.
 - Webmail IP address is now inherited from web domain when using multiple IPs.
 - Exim now uses the web domain IP if it exists.
-- Fix incorrect MX record for DNS domains using the Office 365 template.
+- Fixed incorrect MX record for DNS domains using the Office 365 template.
 
 ## [1.0.6] - 2019-09-24 - Hotfix
 ### Bugfixes
@@ -560,9 +601,9 @@ Then run the update via
 
 ## [1.0.5] - 2019-08-06 - Hotfix
 ### Bugfixes
-- Fix several security issues, thanks to Andrea Cardaci (https://cardaci.xyz/)
+- Fixed several security issues, thanks to Andrea Cardaci (https://cardaci.xyz/)
 - Rework Let's Encrypt ACME staging to use hestia conform standard.
-- Fix if condition, use nginx for Let's Encrypt ACME request if present.
+- Fixed if condition, use nginx for Let's Encrypt ACME request if present.
 
 ## [1.0.4] - 2019-07-09 - Hotfix
 ### Bugfixes

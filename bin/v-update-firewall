@@ -185,31 +185,25 @@ if [ -d "/etc/sysconfig" ]; then
     fi
 else
     /sbin/iptables-save > /etc/iptables.rules
-    routable="/usr/lib/networkd-dispatcher/routable.d/10-hestia-iptables"
-    preup="/etc/network/if-pre-up.d/hestia-iptables"
-    # Recreate the Hestia iptables rules loading script
-    rm -f $routable $preup
-    if dpkg-query -W -f'${Status}' "netplan.io" 2>/dev/null | grep -q "ok installed" && [ -n "$(ls -A /etc/netplan 2>/dev/null)" ] && systemctl is-enabled networkd-dispatcher >/dev/null 2>&1; then
-        echo '#!/bin/sh' > $routable
-        echo '' >> $routable
-        echo 'if [ "$IFACE" = "'$(ip route list | awk '/default .+/ {print $5}' | uniq)'" ]; then' >> $routable
-        echo "    ${HESTIA}/bin/v-update-firewall-ipset" >> $routable
-        echo '    /sbin/iptables-restore < /etc/iptables.rules' >> $routable
-        echo 'fi' >> $routable
-        echo '' >> $routable
-        echo "exit 0" >> $routable
-        chmod +x $routable
-    else
-        echo '#!/bin/sh' > $preup
-        echo '' >> $preup
-        echo 'if [ "$IFACE" = "'$(ip route list | awk '/default .+/ {print $5}' | uniq)'" ]; then' >> $preup
-        echo "    ${HESTIA}/bin/v-update-firewall-ipset" >> $preup
-        echo '    /sbin/iptables-restore < /etc/iptables.rules' >> $preup
-        echo 'fi' >> $preup
-        echo '' >> $preup
-        echo "exit 0" >> $preup
-        chmod +x $preup
+    sd_unit="/lib/systemd/system/hestia-iptables.service"
+    if [ ! -e "$sd_unit" ]; then
+        echo "[Unit]" >> $sd_unit
+        echo "Description=Loading Hestia firewall rules" >> $sd_unit
+        echo "DefaultDependencies=no" >> $sd_unit
+        echo "Wants=network-pre.target local-fs.target" >> $sd_unit
+        echo "Before=network-pre.target" >> $sd_unit
+        echo "After=local-fs.target" >> $sd_unit
+        echo "" >> $sd_unit
+        echo "[Service]" >> $sd_unit
+        echo "Type=oneshot" >> $sd_unit
+        echo "RemainAfterExit=yes" >> $sd_unit
+        echo "ExecStartPre=-${HESTIA}/bin/v-update-firewall-ipset" >> $sd_unit
+        echo "ExecStart=/sbin/iptables-restore /etc/iptables.rules" >> $sd_unit
+        echo "" >> $sd_unit
+        echo "[Install]" >> $sd_unit
+        echo "WantedBy=multi-user.target" >> $sd_unit
     fi
+    systemctl is-enabled hestia-iptables >/dev/null 2>&1 || systemctl enable hestia-iptables >/dev/null 2>&1
 fi
 
 

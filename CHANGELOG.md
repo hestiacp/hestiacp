@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
+- Replace old firewall system with systemd service / startup script #2064 @myrevery
+
 ### Bugfixes
 
 - Improve handling upgrade of Roundcube #1917

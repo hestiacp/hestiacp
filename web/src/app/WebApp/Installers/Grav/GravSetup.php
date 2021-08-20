@@ -19,17 +19,36 @@ class GravSetup extends BaseSetup {
 	
 	protected $config = [
 		'form' => [
-			"ignore this"=>"text",
+			'admin' => ['type'=>'boolean', 'value'=>false, 'label' => "Create admin account"],
+			'username' => ['text'=>'admin'],
+			'password' => 'password',
+			'email' => 'text'
 		],
 		'database' => false,
 		'resources' => [
 			'composer' => [ 'src' => 'getgrav/grav', 'dst' => '/']
-		], 
+		],
 	];
 	
 	public function install(array $options = null)
 	{
 		parent::install($options);
+		if ( $options['admin'] == true ){
+			chdir($this->getDocRoot());
+			$this -> appcontext -> runUser('v-run-cli-cmd', ['php', 
+			$this->getDocRoot('/bin/gpm'),
+				'install admin'
+		    ], $status);
+			$this -> appcontext -> runUser('v-run-cli-cmd', ['php', 
+				$this->getDocRoot('/bin/plugin'),
+				'login new-user',
+				'-u '.$options['username'],
+				'-p '.$options['password'],
+				'-e '.$options['email'],
+				'-P a',
+				'-N '.$options['username']
+			 ], $status);
+		}
 		return (1);
 	}
 }

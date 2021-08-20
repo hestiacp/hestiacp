@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
+- Add Quick installers for GravCMS, Docuwiki and Mediawiki (#2002) @PsychotherapistSam
+
 ### Bugfixes
 
 - Improve handling upgrade of Roundcube #1917

@@ -95,6 +95,7 @@ class DokuWikiSetup extends BaseSetup {
 		exec($cmd, $msg, $code);
 
 		// remove temp folder
+		$this->appcontext->runUser('v-delete-fs-file', [$this->getDocRoot("install.php")], $result);
 		$this->cleanup();
 
 		return ($code === 0);

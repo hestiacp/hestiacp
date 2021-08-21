@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 ### Bugfixes
 
 - Improve handling upgrade of Roundcube #1917
+- Fix an issue with sorting the update scripts when version goes higher then 1.x.10 
 
 ## [1.4.10] - Service release 
 

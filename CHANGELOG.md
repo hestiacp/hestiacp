@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 - Improve handling upgrade of Roundcube #1917
 - Fix an issue with sorting the update scripts when version goes higher then 1.x.10 
 - Allow the use of multiple CAA records for domain. #2073
+- Add missing group (www-data) to migrate_phpmyadmin script #2077 @bet0x
 
 ## [1.4.10] - Service release 
 

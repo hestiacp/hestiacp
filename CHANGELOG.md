@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - Fix an issue with sorting the update scripts when version goes higher then 1.x.10 
 - Allow the use of multiple CAA records for domain. #2073
 - Add missing group (www-data) to migrate_phpmyadmin script #2077 @bet0x
+- Fix an issue where news@domain.com get forwarded to /var/spool/news
 
 ## [1.4.10] - Service release 
 

@@ -15,3 +15,13 @@ if [ "$FIREWALL_SYSTEM" = "iptables" ]; then
     rm -f /usr/lib/networkd-dispatcher/routable.d/10-hestia-iptables /etc/network/if-pre-up.d/hestia-iptables
     $BIN/v-update-firewall
 fi
+
+if [ -f "/etc/exim4/exim4.conf.template" ]; then
+    test=$(grep 'require_files = ${local_part}:+${home}/.forward' /etc/exim4/exim4.conf.template)
+    if [ -z "$test" ]; then
+    echo "[ * ] Fix bug where email send to news@domain.com is handled by /var/spool/news"
+    insert="\  require_files = \${local_part}:+\${home}/.forward\n\  domains = +local_domains"
+    line=$(expr $(sed -n '/userforward/=' /etc/exim4/exim4.conf.template) + 1)
+    sed -i "${line}i $insert" /etc/exim4/exim4.conf.template
+    fi
+fi

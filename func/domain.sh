@@ -649,8 +649,8 @@ add_mail_ssl_config() {
         mkdir -p $HOMEDIR/$user/conf/mail/$domain/ssl/
     fi
 
-    if [ ! -d /usr/local/hestia/ssl/mail ]; then
-        mkdir -p /usr/local/hestia/ssl/mail
+    if [ ! -d $HESTIA/ssl/mail ]; then
+        mkdir -p $HESTIA/ssl/mail
     fi
 
     if [ ! -d /etc/dovecot/conf.d/domains ]; then
@@ -696,18 +696,18 @@ add_mail_ssl_config() {
     echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
 
     # Add domain SSL configuration to exim4
-    ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem /usr/local/hestia/ssl/mail/$domain.crt
-    ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key /usr/local/hestia/ssl/mail/$domain.key
-    ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem /usr/local/hestia/ssl/mail/mail.$domain.crt
-    ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key /usr/local/hestia/ssl/mail/mail.$domain.key
+    ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem $HESTIA/ssl/mail/$domain.crt
+    ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key $HESTIA/ssl/mail/$domain.key
+    ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem $HESTIA/ssl/mail/mail.$domain.crt
+    ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key $HESTIA/ssl/mail/mail.$domain.key
 
     # Set correct permissions on certificates
-    chmod 750 $HOMEDIR/$user/conf/mail/$domain/ssl
+    chmod 0750 $HOMEDIR/$user/conf/mail/$domain/ssl
     chown -R $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain/ssl
     chmod 0644 $HOMEDIR/$user/conf/mail/$domain/ssl/*
     chown -h $user:mail $HOMEDIR/$user/conf/mail/$domain/ssl/*
-    chmod -R 0644 /usr/local/hestia/ssl/mail/*
-    chown -h $user:mail /usr/local/hestia/ssl/mail/*
+    chmod -R 0644 $HESTIA/ssl/mail/*
+    chown -h $user:mail $HESTIA/ssl/mail/*
 }
 
 # Delete SSL support for mail domain
@@ -726,8 +726,8 @@ del_mail_ssl_config() {
 
     # Remove SSL certificates
     rm -f $HOMEDIR/$user/conf/mail/$domain/ssl/*
-    rm -f /usr/local/hestia/ssl/mail/$domain.*
-    rm -f /usr/local/hestia/ssl/mail/mail.$domain.*
+    rm -f $HESTIA/ssl/mail/$domain.crt $HESTIA/ssl/mail/$domain.key
+    rm -f $HESTIA/ssl/mail/mail.$domain.crt $HESTIA/ssl/mail/mail.$domain.key
 }
 
 # Delete generated certificates from user configuration data directory

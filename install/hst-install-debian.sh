@@ -23,7 +23,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.4.11~aplpha'
+HESTIA_INSTALL_VER='1.4.11~beta'
 pma_v='5.1.1'
 rc_v="1.4.11"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
@@ -646,12 +646,7 @@ echo
 # Installing Nginx repo
 
 echo "[ * ] NGINX"
-if [ "$release" -eq 11 ]; then
-    echo "      Skip nginx repo, not available yet."
-    echo "#deb [arch=$ARCH] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
-else
-    echo "deb [arch=$ARCH] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
-fi
+echo "deb [arch=$ARCH] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
 apt-key adv --fetch-keys 'https://nginx.org/keys/nginx_signing.key' > /dev/null 2>&1
 
 # Installing sury PHP repo
@@ -1598,7 +1593,7 @@ if [ "$exim" = 'yes' ]; then
     gpasswd -a Debian-exim mail > /dev/null 2>&1
     exim_version=$(exim4 --version |  head -1 | awk  '{print $3}' | cut -f -2 -d .);
     if [ "$exim_version" = "4.94" ]; then
-      cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.4.94.template /etc/exim/exim4.conf.template
+      cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.4.94.template /etc/exim4/exim4.conf.template
     else
       cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.template /etc/exim4/
     fi

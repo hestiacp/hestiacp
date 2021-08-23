@@ -269,6 +269,8 @@ userforward:
   driver = redirect
   check_local_user
   file = $home/.forward
+  require_files = ${local_part}:+${home}/.forward
+  domains = +local_domains
   allow_filter
   no_verify
   no_expn

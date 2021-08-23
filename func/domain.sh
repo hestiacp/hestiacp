@@ -621,11 +621,25 @@ is_mail_domain_new() {
         if [ "$2" == 'mail' ]; then
             check_result $E_EXISTS "Mail domain $1 exists"
         fi
-        mail_user=$(echo "$mail" |cut -f 7 -d /)
+        mail_user=$(echo "$mail" | cut -f 7 -d /)
         if [ "$mail_user" != "$user" ]; then
             check_result $E_EXISTS "Mail domain $1 exists"
         fi
     fi
+    mail_sub=$(echo "$1" | cut -f 1 -d .)
+    mail_nosub=$(echo "$1" | cut -f 1 -d . --complement)
+    for mail_reserved in $(echo "mail $WEBMAIL_ALIAS"); do
+        if [ ! -z "$(ls $HESTIA/data/users/*/mail/$mail_reserved.$1.conf 2>/dev/null)" ]; then
+            if [ "$2" == 'mail' ]; then
+                check_result $E_EXISTS "Required subdomain \"$mail_reserved.$1\" already exists"
+            fi
+        fi
+        if [ ! -z "$(ls $HESTIA/data/users/*/mail/$mail_nosub.conf 2>/dev/null)" ] && [ "$mail_sub" = "$mail_reserved" ]; then
+            if [ "$2" == 'mail' ]; then
+                check_result $E_INVALID "The subdomain \"$mail_sub.\" is reserved by \"$mail_nosub\""
+            fi
+        fi
+    done
 }
 
 # Checking mail account existance
@@ -640,7 +654,6 @@ is_mail_new() {
         check_result $E_EXISTS "mail alias $1 is already exists"
     fi
 }
-
 
 # Add mail server SSL configuration
 add_mail_ssl_config() {

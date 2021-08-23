@@ -1,12 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Development]
+## [1.4.11] - Service release 
 
 ### Features
 
-- Add support for Debian 11  (Bullseye) #1611
-- Add support for openssl in hestia-php 
+- Added support for Debian 11  (Bullseye) #1611
+- Added support for openssl in hestia-php 
+- Use hestia-php for installing dependencies to solve issue user configurations (hestia-php 7.4.22 required)
 - Replace old firewall system with systemd service / startup script #2064 @myrevery
 - Add Quick installers for GravCMS, Docuwiki and Mediawiki (#2002) @PsychotherapistSam
 

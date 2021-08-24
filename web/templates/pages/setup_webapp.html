@@ -42,7 +42,11 @@
 						$f_name = $WebappInstaller->formNs() . '_' . $form_name;
 						$f_type = $form_control;
 						$f_value = '';
-						$f_label = ucwords(str_replace(['.','_'], ' ', $form_name));
+						if(isset($form_control['label'])){
+							$f_label = htmlentities($form_control['label']);
+						}else{
+							$f_label = ucwords(str_replace(['.','_'], ' ', $form_name));
+						}
 						$f_placeholder = '';
 						if (is_array($form_control)) {
 								$f_type = (!empty($form_control['type']))?$form_control['type']:'text';

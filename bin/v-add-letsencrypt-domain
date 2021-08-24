@@ -78,7 +78,7 @@ fi
 # Set DNS CAA record retrieval commands
 if [ ! -z "$DNS_SYSTEM" ]; then
     dns_domain=$($BIN/v-list-dns-domains $user | grep $domain | cut -d' ' -f1)
-    caa_record=$($BIN/v-list-dns-records $user $domain | grep -i "CAA" | cut -d' ' -f1)
+    caa_record=$($BIN/v-list-dns-records $user $domain | grep -i "CAA" | grep -i "letsencrypt.org" | cut -d' ' -f1 )    
 fi
 
 if [ -z "$mail" ] || [ "$mail" = 'no' ]; then

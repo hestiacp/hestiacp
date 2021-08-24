@@ -159,7 +159,8 @@ function authenticate_user($user, $password, $twofa = ''){
 
                 if ($data[$user]['LOGIN_USE_IPLIST'] === 'yes') {
                     $v_login_user_allowed_ips = explode(',', $data[$user]['LOGIN_ALLOW_IPS']);
-                    if (!in_array($ip, $v_login_user_allowed_ips)) {
+                    $v_login_user_allowed_ips = array_map('trim', $v_login_user_allowed_ips);
+                    if (!in_array($ip, $v_login_user_allowed_ips, true)) {
                         sleep(2);
                         $error = '<a class="error">' . _('Invalid username or password') . '</a>';
                         $v_session_id = escapeshellarg($_POST['token']);

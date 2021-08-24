@@ -61,7 +61,7 @@ no_support_message(){
     echo "Your operating system (OS) is not supported by"
     echo "Hestia Control Panel. Officially supported releases:"
     echo "****************************************************"
-    echo "  Debian 9, 10 11"
+    echo "  Debian 9, 10, 11"
     echo "  Ubuntu 18.04, 20.04 LTS"
     echo ""
     exit 1;

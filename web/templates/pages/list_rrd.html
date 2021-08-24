@@ -17,16 +17,11 @@
 
 					<td>
 						<div class="timer-container" style="float:right;">
-							<span class="timer-button pause"></span>
-							<span class="timer-button play hidden"></span>
-
-							<div class="refresh-timer">
-								<div class="movement left">
-									<div class="loader-half left"></div>
-								</div>
-								<div class="movement right">
-									<div class="loader-half right"></div>
-								</div>
+							<span class="timer-button pause-stop" onclick="stopTimer()"><i class="fas fa-pause"></i></span>
+							<div class="timer-button spinner">
+								  <div class="spinner-inner"></div>
+								  <div class="spinner-mask"></div>
+								  <div class="spinner-mask-two"></div>
 							</div>
 						</div>
 					</td>

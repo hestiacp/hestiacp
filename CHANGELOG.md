@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - Allow the use of multiple CAA records for domain. #2073
 - Add missing group (www-data) to migrate_phpmyadmin script #2077 @bet0x
 - Fix an issue where news@domain.com get forwarded to /var/spool/news
+- Synced up translations with HestiaCP (IT, PL, RU, SK and ZN-CN updated)
 
 ## [1.4.10] - Service release 
 

@@ -93,8 +93,9 @@ fi
 [[ -d /etc/php/$version ]] && rm -rf "/etc/php/$version"
 
 if [ "$WEB_BACKEND" = "php-fpm" ]; then
+    conf=$(find /etc/php* -name www.conf)
     # Check if www.conf is still missing
-    if [ ! -f "/etc/php/*/fpm/pool.d/www.conf" ]; then
+    if [ -z  "$conf" ]; then
         # If not grab the "last php version
         last=$($HESTIA/bin/v-list-sys-php "shell" | tail -n1);
         cp -f $HESTIA/install/deb/php-fpm/www.conf /etc/php/$last/fpm/pool.d/www.conf

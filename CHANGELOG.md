@@ -9,7 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
-- Added support for Debian 11  (Bullseye) #1611
+- Added support for Debian 11  (Bullseye) #1661
 - Added support for openssl in hestia-php 
 - Use hestia-php for installing dependencies to solve issue user configurations (hestia-php 7.4.22 required)
 - Replace old firewall system with systemd service / startup script #2064 @myrevery

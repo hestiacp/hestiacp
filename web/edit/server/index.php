@@ -720,6 +720,17 @@ if (!empty($_POST['save'])) {
         }
     }
 
+    // Change ID who authorized to learn process information. (GID)
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_proc_group_id'] != $_SESSION['PROC_GROUP_ID']) {
+            exec (HESTIA_CMD."v-change-sys-config-value PROC_GROUP_ID ".escapeshellarg($_POST['v_proc_group_id']), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) $v_proc_group_id = $_POST['v_proc_group_id'];
+            $v_security_adv = 'yes';
+        }
+    }
+
     // Change POLICY_USER_EDIT_DETAILS
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_policy_user_edit_details'] != $_SESSION['POLICY_USER_EDIT_DETAILS']) {

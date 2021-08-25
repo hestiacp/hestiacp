@@ -1946,6 +1946,9 @@ if [ "$host_ip" = "$ip" ]; then
     ip="$servername"
 fi
 
+# Proc GID. ID who authorized to learn process information
+write_config_value "PROC_GROUP_ID" ""
+
 echo -e "\n"
 echo "===================================================================="
 echo -e "\n"

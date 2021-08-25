@@ -1216,6 +1216,22 @@
 														</select>
 													</td>
 												</tr>
+												<tr>
+													<td class="vst-text input-label step-top" style="font-size:1rem;padding-bottom:12px;">
+														<?=_('Process information');?>
+													</td>
+												</tr>
+												<tr>
+													<td class="vst-text input-label">
+														<?=_('ID who authorized to learn process information');?> (<?=_('GID');?>)
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<input type="text" size="20" class="vst-input" name="v_proc_group_id" value="<?=trim($_SESSION['PROC_GROUP_ID'], "'")?>">
+														<br><br>
+													</td>
+												</tr>
 											</table>
 										</td>
 									</tr>

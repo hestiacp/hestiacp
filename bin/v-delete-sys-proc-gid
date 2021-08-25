@@ -1,0 +1,38 @@
+#!/bin/bash
+# info: Specifies the ID of a group whose members are authorized to learn process information otherwise prohibited by hidepid. Need for zabbix agent
+# options: GID 
+# labels: hestia
+#
+# example: v-delete-sys-proc-gid 1234
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+gid=$1
+
+# Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
+source $HESTIA/conf/hestia.conf
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+$BIN/v-change-sys-config-value "PROC_GROUP_ID" ''
+
+# Logging
+$BIN/v-log-action "system" "Warning" "System" "Remove ID of a group whose members are authorized to learn process information otherwise prohibited by hidepid"
+log_event "$OK" "$ARGUMENTS"
+
+exit

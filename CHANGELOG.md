@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Development] 
 
+- Allow custom mail domains with own certificates #2061 @myrevery 
 - Fixed #2082 v-delete-web-php creates always new config file
 
 ## [1.4.11] - Service release 

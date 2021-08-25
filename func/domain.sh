@@ -621,11 +621,25 @@ is_mail_domain_new() {
         if [ "$2" == 'mail' ]; then
             check_result $E_EXISTS "Mail domain $1 exists"
         fi
-        mail_user=$(echo "$mail" |cut -f 7 -d /)
+        mail_user=$(echo "$mail" | cut -f 7 -d /)
         if [ "$mail_user" != "$user" ]; then
             check_result $E_EXISTS "Mail domain $1 exists"
         fi
     fi
+    mail_sub=$(echo "$1" | cut -f 1 -d .)
+    mail_nosub=$(echo "$1" | cut -f 1 -d . --complement)
+    for mail_reserved in $(echo "mail $WEBMAIL_ALIAS"); do
+        if [ ! -z "$(ls $HESTIA/data/users/*/mail/$mail_reserved.$1.conf 2>/dev/null)" ]; then
+            if [ "$2" == 'mail' ]; then
+                check_result $E_EXISTS "Required subdomain \"$mail_reserved.$1\" already exists"
+            fi
+        fi
+        if [ ! -z "$(ls $HESTIA/data/users/*/mail/$mail_nosub.conf 2>/dev/null)" ] && [ "$mail_sub" = "$mail_reserved" ]; then
+            if [ "$2" == 'mail' ]; then
+                check_result $E_INVALID "The subdomain \"$mail_sub.\" is reserved by \"$mail_nosub\""
+            fi
+        fi
+    done
 }
 
 # Checking mail account existance
@@ -641,7 +655,6 @@ is_mail_new() {
     fi
 }
 
-
 # Add mail server SSL configuration
 add_mail_ssl_config() {
      # Ensure that SSL certificate directories exists
@@ -649,8 +662,8 @@ add_mail_ssl_config() {
         mkdir -p $HOMEDIR/$user/conf/mail/$domain/ssl/
     fi
 
-    if [ ! -d /usr/local/hestia/ssl/mail ]; then
-        mkdir -p /usr/local/hestia/ssl/mail
+    if [ ! -d $HESTIA/ssl/mail ]; then
+        mkdir -p $HESTIA/ssl/mail
     fi
 
     if [ ! -d /etc/dovecot/conf.d/domains ]; then
@@ -685,22 +698,29 @@ add_mail_ssl_config() {
     fi
     
     echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
+    echo "local_name $domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
+    echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
+    echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
+    echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+    echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
     echo "local_name mail.$domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
     echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
     echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
     echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
 
     # Add domain SSL configuration to exim4
-    ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem /usr/local/hestia/ssl/mail/mail.$domain.crt
-    ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key /usr/local/hestia/ssl/mail/mail.$domain.key
+    ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem $HESTIA/ssl/mail/$domain.crt
+    ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key $HESTIA/ssl/mail/$domain.key
+    ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem $HESTIA/ssl/mail/mail.$domain.crt
+    ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key $HESTIA/ssl/mail/mail.$domain.key
 
     # Set correct permissions on certificates
-    chmod 750 $HOMEDIR/$user/conf/mail/$domain/ssl
+    chmod 0750 $HOMEDIR/$user/conf/mail/$domain/ssl
     chown -R $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain/ssl
     chmod 0644 $HOMEDIR/$user/conf/mail/$domain/ssl/*
     chown -h $user:mail $HOMEDIR/$user/conf/mail/$domain/ssl/*
-    chmod -R 0644 /usr/local/hestia/ssl/mail/*
-    chown -h $user:mail /usr/local/hestia/ssl/mail/*
+    chmod -R 0644 $HESTIA/ssl/mail/*
+    chown -h $user:mail $HESTIA/ssl/mail/*
 }
 
 # Delete SSL support for mail domain
@@ -719,7 +739,8 @@ del_mail_ssl_config() {
 
     # Remove SSL certificates
     rm -f $HOMEDIR/$user/conf/mail/$domain/ssl/*
-    rm -f /usr/local/hestia/ssl/mail/mail.$domain.*
+    rm -f $HESTIA/ssl/mail/$domain.crt $HESTIA/ssl/mail/$domain.key
+    rm -f $HESTIA/ssl/mail/mail.$domain.crt $HESTIA/ssl/mail/mail.$domain.key
 }
 
 # Delete generated certificates from user configuration data directory

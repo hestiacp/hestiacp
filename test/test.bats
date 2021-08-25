@@ -237,6 +237,24 @@ function validate_database(){
     fi
 }
 
+function check_ip_banned(){
+  local ip=$1
+  local chain=$2
+  
+  run grep "IP='$ip' CHAIN='$chain'" $HESTIA/data/firewall/banlist.conf
+  assert_success
+  assert_output --partial "$ip"
+}
+
+function check_ip_not_banned(){
+  local ip=$1
+  local chain=$2
+  run grep "IP='$ip' CHAIN='$chain'" $HESTIA/data/firewall/banlist.conf
+  assert_failure E_ARGS
+  refute_output
+}
+
+
 #----------------------------------------------------------#
 #                           IP                             #
 #----------------------------------------------------------#
@@ -462,6 +480,14 @@ function validate_database(){
         local a2_remoteip="/etc/$WEB_SYSTEM/mods-enabled/remoteip.conf"
         [ -f "$a2_remoteip" ] && assert_file_contains "$a2_remoteip" "RemoteIPInternalProxy $ip\$"
     fi
+}
+
+@test "Ip: Change Helo" {
+    local ip="198.18.0.121"
+    run v-change-sys-ip-helo 198.18.0.121 dev.hestiacp.com
+    assert_success
+    refute_output
+    assert_file_contains /etc/exim4/mailhelo.conf "198.18.0.121:dev.hestiacp.com"
 }
 
 @test "Ip: Delete ips" {
@@ -1395,6 +1421,50 @@ function validate_database(){
   run v-delete-sys-smtp
   assert_success
   refute_output
+}
+
+#----------------------------------------------------------#
+#                        Firewall                          #
+#----------------------------------------------------------#
+
+@test "Firewall: Add ip to banlist" {
+  run v-add-firewall-ban '1.2.3.4' 'HESTIA'
+  assert_success
+  refute_output
+  
+  check_ip_banned '1.2.3.4' 'HESTIA'
+}
+
+@test "Firewall: Delete ip to banlist" {
+  run v-delete-firewall-ban '1.2.3.4' 'HESTIA'
+  assert_success
+  refute_output
+  check_ip_not_banned '1.2.3.4' 'HESTIA'
+}
+
+@test "Firewall: Add ip to banlist for ALL" {
+  run v-add-firewall-ban '1.2.3.4' 'HESTIA'
+  assert_success
+  refute_output
+  run v-add-firewall-ban '1.2.3.4' 'MAIL'
+  assert_success
+  refute_output
+  check_ip_banned '1.2.3.4' 'HESTIA'
+}
+
+@test "Firewall: Delete ip to banlist CHAIN = ALL" {
+  run v-delete-firewall-ban '1.2.3.4' 'ALL'
+  assert_success
+  refute_output
+  check_ip_not_banned '1.2.3.4' 'HESTIA'
+}
+
+@test "Test Whitelist Fail2ban" {
+
+echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
+run v-add-firewall-ban '1.2.3.4' 'HESTIA'
+rm $HESTIA/data/firewall/excludes.conf
+check_ip_not_banned '1.2.3.4' 'HESTIA'
 }
 
 #----------------------------------------------------------#

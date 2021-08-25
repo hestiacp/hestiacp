@@ -50,18 +50,34 @@ check_hestia_demo_mode
 # Self heal iptables links
 heal_iptables_links
 
-# Checking ip in banlist
 conf="$HESTIA/data/firewall/banlist.conf"
-check_ip=$(grep "IP='$ip' CHAIN='$chain'" $conf 2>/dev/null)
-if [ -z "$check_ip" ]; then
-    exit
+if [ "$chain" == "ALL" ]; then  
+    check_ip=$(grep  "IP='$ip' CHAIN='*'" $conf)
+    if [ -z  "$check_ip" ]; then 
+        exit;
+    fi
+    grep  "IP='$ip' CHAIN='*'" $conf | while read -r line ; do
+        parse_object_kv_list  $line
+        
+        # Deleting ip from banlist
+        sip=$(echo "$IP"| sed "s|/|\\\/|g")
+        sed -i "/IP='$sip' CHAIN='$CHAIN'/d" $conf
+        b=$($iptables -L fail2ban-$CHAIN --line-number -n|grep -w $ip|awk '{print $1}')
+        $iptables -D fail2ban-$CHAIN $b 2>/dev/null   
+    done  
+else
+    # Checking ip in banlist
+    check_ip=$(grep "IP='$ip' CHAIN='$chain'" $conf 2>/dev/null)
+    if [ -z "$check_ip" ]; then
+        exit
+    fi
+    
+    # Deleting ip from banlist
+    sip=$(echo "$ip"| sed "s|/|\\\/|g")
+    sed -i "/IP='$sip' CHAIN='$chain'/d" $conf
+    b=$($iptables -L fail2ban-$chain --line-number -n|grep -w $ip|awk '{print $1}')
+    $iptables -D fail2ban-$chain $b 2>/dev/null
 fi
-
-# Deleting ip from banlist
-sip=$(echo "$ip"| sed "s|/|\\\/|g")
-sed -i "/IP='$sip' CHAIN='$chain'/d" $conf
-b=$($iptables -L fail2ban-$chain --line-number -n|grep -w $ip|awk '{print $1}')
-$iptables -D fail2ban-$chain $b 2>/dev/null
 
 # Changing permissions
 chmod 660 $conf

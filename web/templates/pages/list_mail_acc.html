@@ -40,6 +40,7 @@
 						<td>
 							<form action="/bulk/mail/" method="post" id="objects">
 								<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+								<input type="hidden" value="<?=htmlspecialchars($_GET['domain']); ?>" name="domain" />
 								<div class="l-select">
 									<select name="action" id="">
 										<option value=""><?=_('apply to selected');?></option>
@@ -132,7 +133,6 @@
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact">
 					<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="account[]" value="<?=$key?>" <?=$display_mode;?>>
-					<input type="hidden" value="<?=$_GET['domain'] ?>" name="domain" />
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-3 truncate">
 					<?php if (($read_only === 'true') || ($data[$key]['SUSPENDED'] == 'yes')) { ?>

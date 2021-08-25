@@ -294,9 +294,11 @@ function FTPrandom(elm) {
     App.Actions.WEB.randomPasswordGenerated && App.Actions.WEB.randomPasswordGenerated(elm);
 }
 
-function elementHideShow(elementToHideOrShow){
-    var el = document.getElementById(elementToHideOrShow);
-    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+function elementHideShow(element){
+    if ( document.getElementById(element)){
+        var el = document.getElementById(element);
+        el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    }
 }
 
 $('.v-redirect-custom-value').change( function(){

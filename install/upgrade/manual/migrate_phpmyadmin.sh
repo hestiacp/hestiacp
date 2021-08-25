@@ -53,6 +53,7 @@ then
    mkdir -p /etc/phpmyadmin/conf.d/  
    mkdir /usr/share/phpmyadmin/tmp
    chmod 770 /usr/share/phpmyadmin/tmp/
+   chown root:www-data /usr/share/phpmyadmin/tmp/
    mkdir -p /etc/phpmyadmin/conf.d/  
    
    # Configuring Apache2 for PHPMYADMIN

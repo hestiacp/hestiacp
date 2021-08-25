@@ -1,11 +1,43 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Development]
+## [Development] 
+
+- Allow custom mail domains with own certificates #2061 @myrevery 
+
+## [1.4.11] - Service release 
+
+### Features
+
+- Added support for Debian 11  (Bullseye) #1661
+- Added support for openssl in hestia-php 
+- Use hestia-php for installing dependencies to solve issue user configurations (hestia-php 7.4.22 required)
+- Replace old firewall system with systemd service / startup script #2064 @myrevery
+- Add Quick installers for GravCMS, Docuwiki and Mediawiki (#2002) @PsychotherapistSam
 
 ### Bugfixes
 
-- Fix UI issues after upgrade jQuery + jQuery UI to last version (#2021 and #2032)
+- Improve handling upgrade of Roundcube #1917
+- Fix an issue with sorting the update scripts when version goes higher then 1.x.10 
+- Allow the use of multiple CAA records for domain. #2073
+- Add missing group (www-data) to migrate_phpmyadmin script #2077 @bet0x
+- Fix an issue where news@domain.com get forwarded to /var/spool/news
+- Synced up translations with HestiaCP (IT, PL, RU, SK and ZN-CN updated)
+
+## [1.4.10] - Service release 
+
+### Features
+
+- Added v-delete-firewall-ban ip all #2031
+- Include config tests for nginx/apache2 templates
+
+### Bugfixes
+
+- Fixed UI issues after upgrade jQuery + jQuery UI to last version (#2021 and #2032) + [forum](https://forum.hestiacp.com/t/confusion-about-send-welcome-email-checkbox/4259/11)
+- Fixed security issues in caching templates of Nginx when used as Reverse Proxy
+- Fixed an issue with deleting multiple mail accounts (#2047)
+- Fixed an issue with phpmailer + non latin characters (#2050) thanks @Faymir 
+- Fix Unable to load dynamic library 'pdo_mysql.so' after php reinstalling (#2069)
 
 ## [1.4.9] - Service release 
 

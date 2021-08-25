@@ -212,7 +212,7 @@ echo "Build version $BUILD_VER, with Nginx version $NGINX_V and PHP version $PHP
 
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
 OPENSSL_V='1.1.1k'
-PCRE_V='8.44'
+PCRE_V='8.45'
 ZLIB_V='1.2.11'
 
 # Create build directories
@@ -459,17 +459,18 @@ if [ "$PHP_B" = true ] ; then
         # Download and unpack source files
         cd $BUILD_DIR
         download_file $PHP '-' | tar xz
-        
+
         # Change to untarred php directory
         cd $BUILD_DIR_PHP
 
         # Configure PHP
         if [ $BUILD_ARCH = 'amd64' ]; then
-            ./configure   --prefix=/usr/local/hestia/php \
+            ./configure --prefix=/usr/local/hestia/php \
                         --enable-fpm \
                         --with-fpm-user=admin \
                         --with-fpm-group=admin \
                         --with-libdir=lib/x86_64-linux-gnu \
+                        --with-openssl \
                         --with-mysqli \
                         --with-gettext \
                         --with-curl \
@@ -477,11 +478,12 @@ if [ "$PHP_B" = true ] ; then
                         --with-gmp \
                         --enable-mbstring
         else
-            ./configure   --prefix=/usr/local/hestia/php \
+            ./configure --prefix=/usr/local/hestia/php \
                         --enable-fpm \
                         --with-fpm-user=admin \
                         --with-fpm-group=admin \
                         --with-libdir=lib/aarch64-linux-gnu \
+                        --with-openssl \
                         --with-mysqli \
                         --with-gettext \
                         --with-curl \
@@ -564,7 +566,7 @@ if [ "$PHP_B" = true ] ; then
 
     # clear up the source folder
     if [ "$KEEPBUILD" != 'true' ]; then
-        rm -r $BUILD_DIR/php-$PHP_V
+        rm -r $BUILD_DIR/php-$(echo $PHP_V |cut -d"~" -f1)
         rm -r $BUILD_DIR_HESTIAPHP
         if [ "$use_src_folder" == 'true' ] && [ -d $BUILD_DIR/hestiacp-$branch_dash ]; then
             rm -r $BUILD_DIR/hestiacp-$branch_dash

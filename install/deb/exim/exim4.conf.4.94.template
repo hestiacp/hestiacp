@@ -70,7 +70,7 @@ ignore_bounce_errors_after = 2d
 timeout_frozen_after = 7d
 
 DKIM_DOMAIN = ${lc:${domain:$h_from:}}
-DKIM_FILE = /etc/exim4/domains/${lc:${domain:$h_from:}}/dkim.pem
+DKIM_FILE = /etc/exim4/domains/${lookup{${lc:${domain:$h_from:}}}dsearch{/etc/exim4/domains/}}/dkim.pem
 DKIM_PRIVATE_KEY = ${if exists{DKIM_FILE}{DKIM_FILE}{0}}
 
 OUTGOING_IP = /etc/exim4/domains/$sender_address_domain/ip
@@ -288,8 +288,8 @@ procmail:
 
 autoreplay:
   driver = accept
-  require_files = /etc/exim4/domains/$domain/autoreply.${local_part}.msg
-  condition = ${if exists{/etc/exim4/domains/$domain/autoreply.${local_part}.msg}{yes}{no}}
+  require_files = /etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/autoreply.${local_part}.msg
+  condition = ${if exists{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/autoreply.${local_part}.msg}{yes}{no}}
   retry_use_local_part
   transport = userautoreply
   unseen
@@ -297,7 +297,7 @@ autoreplay:
 aliases:
   driver = redirect
   headers_add = X-redirected: yes
-  data = ${extract{1}{:}{${lookup{$local_part@$domain}lsearch{/etc/exim4/domains/$domain/aliases}}}}
+  data = ${extract{1}{:}{${lookup{$local_part@$domain}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/aliases}}}}
   require_files = /etc/exim4/domains/$domain/aliases
   redirect_router = dnslookup
   pipe_transport = address_pipe
@@ -306,30 +306,30 @@ aliases:
 localuser_fwd_only:
   driver = accept
   transport = devnull
-  condition = ${if exists{/etc/exim4/domains/$domain/fwd_only}{${lookup{$local_part}lsearch{/etc/exim4/domains/$domain/fwd_only}{true}{false}}}}
+  condition = ${if exists{/etc/exim4/domains/$domain/fwd_only}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/fwd_only}{true}{false}}}}
 
 localuser_spam:
   driver = accept
   transport = local_spam_delivery
-  condition = ${if eq {${if match{$h_X-Spam-Status:}{\N^Yes\N}{yes}{no}}} {${lookup{$local_part}lsearch{/etc/exim4/domains/$domain/passwd}{yes}{no_such_user}}}}
+  condition = ${if eq {${if match{$h_X-Spam-Status:}{\N^Yes\N}{yes}{no}}} {${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}{yes}{no_such_user}}}}
 
 localuser:
   driver = accept
   transport = local_delivery
-  condition = ${lookup{$local_part}lsearch{/etc/exim4/domains/$domain/passwd}{true}{false}}
+  condition = ${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}{true}{false}}
 
 catchall:
   driver = redirect
   headers_add = X-redirected: yes
   require_files = /etc/exim4/domains/$domain/aliases
-  data = ${extract{1}{:}{${lookup{*@$domain}lsearch{/etc/exim4/domains/$domain/aliases}}}}
+  data = ${extract{1}{:}{${lookup{*@$domain}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/aliases}}}}
   file_transport = local_delivery
   redirect_router = dnslookup
 
 terminate_alias:
   driver = accept
   transport = devnull
-  condition = ${lookup{$local_part@$domain}lsearch{/etc/exim4/domains/$domain/aliases}{true}{false}}
+  condition = ${lookup{$local_part@$domain}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/aliases}{true}{false}}
 
 
 
@@ -367,7 +367,7 @@ local_delivery:
   driver = appendfile
   maildir_format
   maildir_use_size_file
-  user = ${extract{2}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/$domain/passwd}}}}
+  user = ${extract{2}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}
   group = mail
   create_directory
   directory_mode = 770
@@ -376,15 +376,15 @@ local_delivery:
   delivery_date_add
   envelope_to_add
   return_path_add
-  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/$domain/passwd}}}}/mail/$domain/$local_part"
-  quota = ${extract{6}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/$domain/passwd}}}}M
+  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}"
+  quota = ${extract{6}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}M
   quota_warn_threshold = 75%
 
 local_spam_delivery:
   driver = appendfile
   maildir_format
   maildir_use_size_file
-  user = ${extract{2}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/$domain/passwd}}}}
+  user = ${extract{2}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}
   group = mail
   create_directory
   directory_mode = 770
@@ -393,9 +393,9 @@ local_spam_delivery:
   delivery_date_add
   envelope_to_add
   return_path_add
-  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/$domain/passwd}}}}/mail/$domain/$local_part/.Spam"
-  quota = ${extract{6}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/$domain/passwd}}}}M
-  quota_directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/$domain/passwd}}}}/mail/$domain/$local_part"
+  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}/.Spam"
+  quota = ${extract{6}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}M
+  quota_directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}"
   quota_warn_threshold = 75%
 
 address_pipe:
@@ -413,8 +413,8 @@ address_reply:
 
 userautoreply:
   driver = autoreply
-  file = /etc/exim4/domains/$domain/autoreply.${local_part}.msg
-  from = "${local_part}@${domain}"
+  file = /etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/autoreply.${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}.msg
+  from = "${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}@${lookup{$domain}dsearch{/etc/exim4/domains/}}"
   headers = Content-Type: text/plain; charset=utf-8;\nContent-Transfer-Encoding: 8bit
   subject = "${if def:h_Subject: {Autoreply: \"${rfc2047:$h_Subject:}\"} {Autoreply Message}}"
   to = "${sender_address}"

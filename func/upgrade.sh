@@ -438,9 +438,10 @@ upgrade_start_routine() {
     done
 
     # Define variables for accessing supported versions
-    all_versions=$(printf "%s\n" ${available_versions[@]})
-    oldest_version=$(printf "%s\n" ${available_versions[@]} | sort -r | tail -n1)
-    latest_version=$(printf "%s\n" ${available_versions[@]} | tail -n1)
+    # Sort version by -V due to issues with version numbers 1.4.10 and higher 
+    all_versions=$(printf "%s\n" ${available_versions[@]} | sort -V)
+    oldest_version=$(printf "%s\n" ${available_versions[@]} | sort -V | head -n1)
+    latest_version=$(printf "%s\n" ${available_versions[@]} | sort -V | tail -n1)
 
     # Check for supported versions and process necessary upgrade steps
     if [ $(check_version $latest_version) -gt $(check_version $VERSION) ]; then

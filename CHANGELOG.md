@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [Development] 
+
+- Allow custom mail domains with own certificates #2061 @myrevery 
+
 ## [1.4.11] - Service release 
 
 ### Features

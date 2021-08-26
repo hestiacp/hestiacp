@@ -31,7 +31,7 @@ json_list() {
         unset TTL
         parse_object_kv_list "$str"
         [ -z "$TTL" ] && TTL="$zone_ttl"
-        VALUE=$(echo "$VALUE" |sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
+        VALUE=$(echo "$VALUE" |sed -e 's/"/\\"/g' -e "s/%quote%/'/g" -e 's/     /\\u0009/g')
         echo -n '    "'$ID'": {
         "RECORD": "'$RECORD'",
         "TYPE": "'$TYPE'",

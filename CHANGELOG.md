@@ -1,11 +1,21 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.4.12] - Service release 
+
+### Bugfixes
+
+- Allow custom mail domains with own certificates #2061 @myrevery 
+- Fixed Replace tabulation with \u0009 in v-list-dns-records #2089 @codibit
+- Fix #2087 Exim 4.94 Did not send any email to remote servers. 
+- Fixed #2082 v-delete-web-php creates always new config file
+- Add /home/user/.composer in open_basedir #2088 @anvme
+
 ## [1.4.11] - Service release 
 
 ### Features
 
-- Added support for Debian 11  (Bullseye) #1611
+- Added support for Debian 11  (Bullseye) #1661
 - Added support for openssl in hestia-php 
 - Use hestia-php for installing dependencies to solve issue user configurations (hestia-php 7.4.22 required)
 - Replace old firewall system with systemd service / startup script #2064 @myrevery

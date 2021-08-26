@@ -73,9 +73,9 @@ DKIM_DOMAIN = ${lc:${domain:$h_from:}}
 DKIM_FILE = /etc/exim4/domains/${lookup{${lc:${domain:$h_from:}}}dsearch{/etc/exim4/domains/}}/dkim.pem
 DKIM_PRIVATE_KEY = ${if exists{DKIM_FILE}{DKIM_FILE}{0}}
 
-OUTGOING_IP = /etc/exim4/domains/$sender_address_domain/ip
+OUTGOING_IP = /etc/exim4/domains/${lookup{$sender_address_domain}dsearch{/etc/exim4/domains}}/ip
 
-SMTP_RELAY_FILE = ${if exists{/etc/exim4/domains/${sender_address_domain}/smtp_relay.conf}{/etc/exim4/domains/$sender_address_domain/smtp_relay.conf}{/etc/exim4/smtp_relay.conf}}
+SMTP_RELAY_FILE = ${if exists{/etc/exim4/domains/${lookup{$sender_address_domain}dsearch{/etc/exim4/domains}}/smtp_relay.conf}{/etc/exim4/domains/${lookup{$sender_address_domain}dsearch{/etc/exim4/domains}}/smtp_relay.conf}{/etc/exim4/smtp_relay.conf}}
 SMTP_RELAY_HOST = ${lookup{host}lsearch{SMTP_RELAY_FILE}}
 SMTP_RELAY_PORT = ${lookup{port}lsearch{SMTP_RELAY_FILE}}
 SMTP_RELAY_USER = ${lookup{user}lsearch{SMTP_RELAY_FILE}}

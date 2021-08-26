@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 - Allow custom mail domains with own certificates #2061 @myrevery 
 - Fix #2087 Exim 4.94 Did not send any email to remote servers. 
+- Fixed #2082 v-delete-web-php creates always new config file
 
 ## [1.4.11] - Service release 
 

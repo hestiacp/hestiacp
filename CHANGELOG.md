@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [Development] 
 
 - Allow custom mail domains with own certificates #2061 @myrevery 
+- Fix #2087 Exim 4.94 Did not send any email to remote servers. 
 
 ## [1.4.11] - Service release 
 

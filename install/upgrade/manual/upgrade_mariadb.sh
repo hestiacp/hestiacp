@@ -3,7 +3,7 @@
 # This script validates and upgrades the MariaDB version to 10.5
 
 # Set MariaDB Target Version
-mariadb_v='10.5'
+mariadb_v='10.6'
 
 # Load OS informations
 source /etc/os-release

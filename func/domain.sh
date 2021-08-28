@@ -714,6 +714,8 @@ add_mail_ssl_config() {
     echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
     echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
     echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+    
+    # Add domain SSL configuration to exim4
     ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem $HESTIA/ssl/mail/mail.$domain.crt
     ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key $HESTIA/ssl/mail/mail.$domain.key
 

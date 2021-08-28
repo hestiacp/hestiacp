@@ -6,3 +6,6 @@
 #######                      Place additional commands below.                   #######
 #######################################################################################
 
+if [ -e "$HESTIA/ssl/mail/" ]; then
+    rm -fr $HESTIA/ssl/mail/*
+fi

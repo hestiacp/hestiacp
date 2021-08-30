@@ -37,9 +37,6 @@
             $hostname = explode( ':', $_SERVER['HTTP_HOST']);
             $port=$hostname[1];
             $hostname=$hostname[0];
-            if( $_SERVER['DOCUMENT_URI'] == '/login/index.php' ) {
-                return true; //allow users to submit still the first request post requests are blocked any way
-            }
             if (strpos($_SERVER['HTTP_ORIGIN'],gethostname()) !== false  && in_array($port, array('443',$_SERVER['SERVER_PORT'])) ) { 
                 return checkStrictness(2);
             }else{

@@ -8,6 +8,8 @@ require 'vendor/autoload.php';
 
 session_start();
 
+// Load Hestia Config directly
+load_hestia_config();
 require_once(dirname(__FILE__) . '/prevent_csrf.php');
 
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
@@ -63,8 +65,7 @@ if ($_SESSION['user_combined_ip'] != $user_combined_ip && $_SERVER['REMOTE_ADDR'
     header('Location: /login/');
     exit;
 }
-// Load Hestia Config directly
-    load_hestia_config();
+
 
 // Check system settings
 if ((!isset($_SESSION['VERSION'])) && (!defined('NO_AUTH_REQUIRED'))) {

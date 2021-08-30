@@ -17,14 +17,15 @@
     }
     function prevent_post_csrf(){
         if ($_SERVER['REQUEST_METHOD']=='POST') {
-            if(strpos($_SERVER['HTTP_ORIGIN'],gethostname())){ 
+            $hostname = explode( ':', $_SERVER['HTTP_HOST']);
+            $port=$hostname[1];
+            $hostname=$hostname[0];
+            if (strpos($_SERVER['HTTP_ORIGIN'],gethostname()) !== false  && in_array($port, array('443',$_SERVER['SERVER_PORT'])) ) { 
                 return checkStrictness(2);
             }else{
-                $hostname = explode( ':', $_SERVER['HTTP_HOST']);
-                $hostname=$hostname[0];
-                if (strpos($_SERVER['HTTP_ORIGIN'],$hostname)) { 
+                if (strpos($_SERVER['HTTP_ORIGIN'],$hostname) !== false && in_array($port, array('443',$_SERVER['SERVER_PORT'])) ){ 
                     return checkStrictness(1);
-                }else{
+                } else {
                     return checkStrictness(0);
                 }
             }
@@ -33,18 +34,18 @@
     
     function prevent_get_csrf(){
         if ($_SERVER['REQUEST_METHOD']=='GET') {
-            if( $_SERVER['DOCUMENT_URI'] == '/login/index.php') {
+            $hostname = explode( ':', $_SERVER['HTTP_HOST']);
+            $port=$hostname[1];
+            $hostname=$hostname[0];
+            if( $_SERVER['DOCUMENT_URI'] == '/login/index.php' ) {
                 return true; //allow users to submit still the first request post requests are blocked any way
             }
-            echo $_SERVER['DOCUMENT_URI'];
-            if (strpos($_SERVER['HTTP_ORIGIN'],gethostname())) { 
+            if (strpos($_SERVER['HTTP_ORIGIN'],gethostname()) !== false  && in_array($port, array('443',$_SERVER['SERVER_PORT'])) ) { 
                 return checkStrictness(2);
             }else{
-                $hostname = explode( ':', $_SERVER['HTTP_HOST']);
-                $hostname=$hostname[0];
-                if (strpos($_SERVER['HTTP_ORIGIN'],$hostname)) { 
+                if (strpos($_SERVER['HTTP_ORIGIN'],$hostname) !== false && in_array($port, array('443',$_SERVER['SERVER_PORT'])) ){ 
                     return checkStrictness(1);
-                }else{
+                } else {
                     return checkStrictness(0);
                 }
             }

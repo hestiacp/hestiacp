@@ -10,7 +10,6 @@
         if ($level >= $_SESSION['POLICY_CSRF_STRICTNESS']) {
             return true;
         }else{
-            //var_dump($_SERVER);
             echo "CSRF detected (".$level.") Please disable any plugins/add-ons inside your browser or contact your system administrator. If you are the system administrator run v-change-sys-config-value 'POLICY_CSRF_STRICTNESS' '0' as root to disable this check.";
             die();
         }
@@ -37,6 +36,12 @@
             $hostname = explode( ':', $_SERVER['HTTP_HOST']);
             $port=$hostname[1];
             $hostname=$hostname[0];
+            if (strpos($_SERVER['HTTP_REFERER'],gethostname()) !== false || strpos($_SERVER['HTTP_REFERER'],$hostname )) {
+                $_SERVER['HTTP_ORIGIN'] = $_SERVER['HTTP_REFERER'];
+            }
+            if (in_array($_SERVER['DOCUMENT_URI'], array('/list/user/index.php', '/login/index.php')) ){
+                return true;
+            }
             if (strpos($_SERVER['HTTP_ORIGIN'],gethostname()) !== false  && in_array($port, array('443',$_SERVER['SERVER_PORT'])) ) { 
                 return checkStrictness(2);
             }else{

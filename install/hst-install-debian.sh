@@ -168,6 +168,18 @@ sort_config_file(){
     cp $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
 }
 
+# Validate hostname according to RFC1178
+validate_hostname () {
+    if [[ $(echo "$servername" | grep -o "\." | wc -l) -gt 1 ]] && [[ ! $servername =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        # Hostname valid
+        return 1
+    else
+        # Hostname invalid
+        return 0
+    fi
+}
+
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -577,18 +589,31 @@ if [ "$interactive" = 'yes' ]; then
 
     # Asking to set FQDN hostname
     if [ -z "$servername" ]; then
+        # Ask and validate FQDN hostname.
         read -p "Please enter FQDN hostname [$(hostname -f)]: " servername
+
+        # Set hostname if it wasn't set
+        if [ -z "$servername" ]; then
+            servername=$(hostname -f)
+        fi
+
+        # Validate Hostname, go to loop if the validation fails.
+        while validate_hostname; do
+            echo -e "\nPlease use a valid hostname according to RFC1178 (ex. hostname.domain.tld)."
+            read -p "Please enter FQDN hostname [$(hostname -f)]: " servername
+        done
+    else
+        # Validate FQDN hostname if it is preset
+        if validate_hostname; then
+            echo "Please use a valid hostname according to RFC1178 (ex. hostname.domain.tld)."
+            exit 1
+        fi
     fi
 fi
 
 # Generating admin password if it wasn't set
 if [ -z "$vpass" ]; then
     vpass=$(gen_pass)
-fi
-
-# Set hostname if it wasn't set
-if [ -z "$servername" ]; then
-    servername=$(hostname -f)
 fi
 
 # Set FQDN if it wasn't set

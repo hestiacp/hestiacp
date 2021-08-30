@@ -8,6 +8,8 @@ require 'vendor/autoload.php';
 
 session_start();
 
+require_once(dirname(__FILE__) . '/prevent_csrf.php');
+
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
 if ($_SESSION['RELEASE_BRANCH'] == 'release' && $_SESSION['DEBUG_MODE'] == 'false') {
     define('JS_LATEST_UPDATE','v=' . $_SESSION['VERSION']);

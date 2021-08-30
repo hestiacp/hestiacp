@@ -1033,6 +1033,22 @@
 														<br><br>
 													</td>
 												</tr>
+												<tr>
+													<td class="vst-text input-label">
+														<?=_('Prevent CSRF ');?>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<select class="vst-list" name="v_policy_csrf_strictness">
+															<option value="0"  <?php if($_SESSION['POLICY_CSRF_STRICTNESS'] == '0') echo 'selected' ?>><?=_('Disabled');?></option>
+															<option value="1"  <?php if($_SESSION['POLICY_CSRF_STRICTNESS'] == '1') echo 'selected' ?>><?=_('Enabled');?></option>
+															<option value="2"  <?php if($_SESSION['POLICY_CSRF_STRICTNESS'] == '2') echo 'selected' ?>><?=_('Strict');?></option>
+															
+														</select>
+														<br><br>
+													</td>
+												</tr>
 											</table>
 										</td>
 									</tr>

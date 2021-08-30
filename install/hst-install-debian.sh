@@ -1928,6 +1928,7 @@ write_config_value "SERVER_SMTP_SECURITY" ""
 write_config_value "SERVER_SMTP_USER" ""
 write_config_value "SERVER_SMTP_PASSWD" ""
 write_config_value "SERVER_SMTP_ADDR" ""
+write_config_value "POLICY_CSRF_STRICTNESS" "1"
 
 #----------------------------------------------------------#
 #                  Configure PHPMailer                     #

@@ -6,7 +6,7 @@
     if ( $_SERVER['SCRIPT_FILENAME'] == '/usr/local/hestia/web/api/index.php' ){ $check_csrf=false; } // Own check
     if (substr($_SERVER['SCRIPT_FILENAME'], 0, 22)=='/usr/local/hestia/bin/' ){ $check_csrf=false; }
     
-    $get_exceptions = array('/list/user/index.php', '/login/index.php','/list/web/index.php','/list/dns/index.php','/list/mail/index.php','/list/db/index.php','/list/cron/index.php','/list/backup/index.php','/reset/index.php')
+    $get_exceptions = array('/list/user/index.php', '/login/index.php','/list/web/index.php','/list/dns/index.php','/list/mail/index.php','/list/db/index.php','/list/cron/index.php','/list/backup/index.php','/reset/index.php');
     
     function checkStrictness($level){
         if ($level >= $_SESSION['POLICY_CSRF_STRICTNESS']) {

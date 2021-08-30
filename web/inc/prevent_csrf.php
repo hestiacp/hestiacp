@@ -38,16 +38,13 @@
             $hostname = explode( ':', $_SERVER['HTTP_HOST']);
             $port=$hostname[1];
             $hostname=$hostname[0];
-            if (strpos($_SERVER['HTTP_REFERER'],gethostname()) !== false || strpos($_SERVER['HTTP_REFERER'],$hostname )) {
-                $_SERVER['HTTP_ORIGIN'] = $_SERVER['HTTP_REFERER'];
-            }
             if (in_array($_SERVER['DOCUMENT_URI'], $get_exceptions) ){
                 return true;
             }
-            if (strpos($_SERVER['HTTP_ORIGIN'],gethostname()) !== false  && in_array($port, array('443',$_SERVER['SERVER_PORT'])) ) { 
+            if (strpos($_SERVER['HTTP_REFERER'],gethostname()) !== false  && in_array($port, array('443',$_SERVER['SERVER_PORT'])) ) { 
                 return checkStrictness(2);
             }else{
-                if (strpos($_SERVER['HTTP_ORIGIN'],$hostname) !== false && in_array($port, array('443',$_SERVER['SERVER_PORT'])) ){ 
+                if (strpos($_SERVER['HTTP_REFERER'],$hostname) !== false && in_array($port, array('443',$_SERVER['SERVER_PORT'])) ){ 
                     return checkStrictness(1);
                 } else {
                     return checkStrictness(0);

@@ -209,7 +209,7 @@ upgrade_send_notification_to_email () {
         echo "- Check our forums for possible solutions: https://forum.hestiacp.com" >> $message_tmp_file
         echo "- File an issue report on GitHub: https://github.com/hestiacp/hestiacp/issues" >> $message_tmp_file
         echo "" >> $message_tmp_file
-        echo "Help support the Hestia Control Panel project by donating via PayPal: https://www.hestiacp.com/donate" >> $message_tmp_file"
+        echo "Help support the Hestia Control Panel project by donating via PayPal: https://www.hestiacp.com/donate" >> $message_tmp_file
         echo "==================================================="  >> $message_tmp_file
         echo "Have a wonderful day," >> $message_tmp_file
         echo "The Hestia Control Panel development team" >> $message_tmp_file

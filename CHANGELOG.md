@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 ## [1.4.13] - Development
 
+### Features
+- Introduce UPGRADE_MESSAGE variable to support custom messages in e-mail upgrade notification.
+
+### Bugfixes
+- Improve the hostname check to prevent invalid hostnames or the use of an ip address (RFC1178).
 - Add small wait for /usr/bin/iptables-restore [Forum](https://forum.hestiacp.com/t/clean-install-arm64-does-not-start-after-reboot-v-start-service-iptables/4395/7)
 
 ## [1.4.12] - Service release 

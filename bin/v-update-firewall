@@ -185,6 +185,7 @@ if [ -d "/etc/sysconfig" ]; then
     fi
 else
     /sbin/iptables-save > /etc/iptables.rules
+    iptablesversion=$(iptables --version |  head -1 | awk  '{print $2}' | cut -f -2 -d .);
     sd_unit="/lib/systemd/system/hestia-iptables.service"
     if [ ! -e "$sd_unit" ]; then
         echo "[Unit]" >> $sd_unit
@@ -198,7 +199,11 @@ else
         echo "Type=oneshot" >> $sd_unit
         echo "RemainAfterExit=yes" >> $sd_unit
         echo "ExecStartPre=-${HESTIA}/bin/v-update-firewall-ipset" >> $sd_unit
-        echo "ExecStart=/sbin/iptables-restore /etc/iptables.rules" >> $sd_unit
+        if [ "$iptablesversion" = "v1.6" ]; then
+            echo "ExecStart=/sbin/iptables-restore /etc/iptables.rules" >> $sd_unit
+        else 
+            echo "ExecStart=/sbin/iptables-restore --wait=10 /etc/iptables.rules" >> $sd_unit
+        fi
         echo "" >> $sd_unit
         echo "[Install]" >> $sd_unit
         echo "WantedBy=multi-user.target" >> $sd_unit

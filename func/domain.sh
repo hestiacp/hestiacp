@@ -697,20 +697,25 @@ add_mail_ssl_config() {
         rm -f /etc/dovecot/conf.d/domains/$domain.conf
     fi
     
-    echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
-    echo "local_name $domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
-    echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
-    echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
-    echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+    mail_check=$(v-list-mail-domain-ssl $user $domain | grep SUBJECT | grep " $domain");
+    mail_check_alias=$(v-list-mail-domain-ssl $user $domain | grep ALIASES | grep " $domain");
+    if [ ! -z "$mail_check" ] || [ ! -z "$mail_check_alias" ]; then 
+        echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
+        echo "local_name $domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
+        echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
+        echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
+        echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+        # Add domain SSL configuration to exim4
+        ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem $HESTIA/ssl/mail/$domain.crt
+        ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key $HESTIA/ssl/mail/$domain.key
+    fi 
     echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
     echo "local_name mail.$domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
     echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
     echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
     echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
-
+    
     # Add domain SSL configuration to exim4
-    ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem $HESTIA/ssl/mail/$domain.crt
-    ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key $HESTIA/ssl/mail/$domain.key
     ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem $HESTIA/ssl/mail/mail.$domain.crt
     ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key $HESTIA/ssl/mail/mail.$domain.key
 
@@ -725,7 +730,10 @@ add_mail_ssl_config() {
 
 # Delete SSL support for mail domain
 del_mail_ssl_config() {
-    
+    # Do a few checks to prevent accidentally removal of domain.com
+    mail_check=$(v-list-mail-domain-ssl $user $domain | grep SUBJECT | grep " $domain");
+    mail_check_alias=$(v-list-mail-domain-ssl $user $domain | grep ALIASES | grep " $domain");
+
     # Remove old mail certificates
     rm -f $HOMEDIR/$user/conf/mail/$domain/ssl/*
 
@@ -739,7 +747,9 @@ del_mail_ssl_config() {
 
     # Remove SSL certificates
     rm -f $HOMEDIR/$user/conf/mail/$domain/ssl/*
-    rm -f $HESTIA/ssl/mail/$domain.crt $HESTIA/ssl/mail/$domain.key
+    if [ ! -z "$mail_check" ] || [ ! -z "$mail_check_alias" ]; then 
+        rm -f $HESTIA/ssl/mail/$domain.crt $HESTIA/ssl/mail/$domain.key
+    fi
     rm -f $HESTIA/ssl/mail/mail.$domain.crt $HESTIA/ssl/mail/mail.$domain.key
 }
 

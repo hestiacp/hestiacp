@@ -8,8 +8,8 @@
   font-style: normal;
   font-weight: 300;
   src: local('Exo Light'), local('Exo-Light'),
-       url('/webfonts/exo-v8-latin-ext_latin-300.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('/webfonts/exo-v8-latin-ext_latin-300.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+	   url('/webfonts/exo-v8-latin-ext_latin-300.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+	   url('/webfonts/exo-v8-latin-ext_latin-300.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
   font-display: swap;
 }
 
@@ -19,8 +19,8 @@
   font-style: italic;
   font-weight: 300;
   src: local('Exo Light Italic'), local('Exo-LightItalic'),
-       url('/webfonts/exo-v8-latin-ext_latin-300italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('/webfonts/exo-v8-latin-ext_latin-300italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+	   url('/webfonts/exo-v8-latin-ext_latin-300italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+	   url('/webfonts/exo-v8-latin-ext_latin-300italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
   font-display: swap;
 }
 
@@ -30,8 +30,8 @@
   font-style: normal;
   font-weight: 400;
   src: local('Exo Regular'), local('Exo-Regular'),
-       url('/webfonts/exo-v8-latin-ext_latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('/webfonts/exo-v8-latin-ext_latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+	   url('/webfonts/exo-v8-latin-ext_latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+	   url('/webfonts/exo-v8-latin-ext_latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
   font-display: swap;
 }
 
@@ -41,8 +41,8 @@
   font-style: italic;
   font-weight: 400;
   src: local('Exo Italic'), local('Exo-Italic'),
-       url('/webfonts/exo-v8-latin-ext_latin-italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('/webfonts/exo-v8-latin-ext_latin-italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+	   url('/webfonts/exo-v8-latin-ext_latin-italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+	   url('/webfonts/exo-v8-latin-ext_latin-italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
   font-display: swap;
 }
 
@@ -52,8 +52,8 @@
   font-style: normal;
   font-weight: 500;
   src: local('Exo Medium'), local('Exo-Medium'),
-       url('/webfonts/exo-v8-latin-ext_latin-500.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('/webfonts/exo-v8-latin-ext_latin-500.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+	   url('/webfonts/exo-v8-latin-ext_latin-500.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+	   url('/webfonts/exo-v8-latin-ext_latin-500.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
   font-display: swap;
 }
 
@@ -63,8 +63,8 @@
   font-style: italic;
   font-weight: 500;
   src: local('Exo Medium Italic'), local('Exo-MediumItalic'),
-       url('/webfonts/exo-v8-latin-ext_latin-500italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('/webfonts/exo-v8-latin-ext_latin-500italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+	   url('/webfonts/exo-v8-latin-ext_latin-500italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+	   url('/webfonts/exo-v8-latin-ext_latin-500italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
   font-display: swap;
 }
 
@@ -74,8 +74,8 @@
   font-style: normal;
   font-weight: 600;
   src: local('Exo SemiBold'), local('Exo-SemiBold'),
-       url('/webfonts/exo-v8-latin-ext_latin-600.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('/webfonts/exo-v8-latin-ext_latin-600.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+	   url('/webfonts/exo-v8-latin-ext_latin-600.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+	   url('/webfonts/exo-v8-latin-ext_latin-600.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
   font-display: swap;
 }
 
@@ -85,8 +85,8 @@
   font-style: italic;
   font-weight: 600;
   src: local('Exo SemiBold Italic'), local('Exo-SemiBoldItalic'),
-       url('/webfonts/exo-v8-latin-ext_latin-600italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('/webfonts/exo-v8-latin-ext_latin-600italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+	   url('/webfonts/exo-v8-latin-ext_latin-600italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+	   url('/webfonts/exo-v8-latin-ext_latin-600italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
   font-display: swap;
 }
 
@@ -96,8 +96,8 @@
   font-style: normal;
   font-weight: 700;
   src: local('Exo Bold'), local('Exo-Bold'),
-       url('/webfonts/exo-v8-latin-ext_latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('/webfonts/exo-v8-latin-ext_latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+	   url('/webfonts/exo-v8-latin-ext_latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+	   url('/webfonts/exo-v8-latin-ext_latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
   font-display: swap;
 }
 
@@ -107,8 +107,8 @@
   font-style: italic;
   font-weight: 700;
   src: local('Exo Bold Italic'), local('Exo-BoldItalic'),
-       url('/webfonts/exo-v8-latin-ext_latin-700italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('/webfonts/exo-v8-latin-ext_latin-700italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+	   url('/webfonts/exo-v8-latin-ext_latin-700italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+	   url('/webfonts/exo-v8-latin-ext_latin-700italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
   font-display: swap;
 }
 
@@ -121,8 +121,8 @@
 @font-face {
   font-family: 'Inconsolata';
   src: local('Inconsolata Bold'), local('Inconsolata-Bold'),
-      url('/webfonts/Inconsolata-Bold.woff2') format('woff2'),
-      url('/webfonts/Inconsolata-Bold.woff') format('woff');
+	  url('/webfonts/Inconsolata-Bold.woff2') format('woff2'),
+	  url('/webfonts/Inconsolata-Bold.woff') format('woff');
   font-weight: bold;
   font-style: normal;
   font-display: swap;
@@ -132,8 +132,8 @@
 @font-face {
   font-family: 'Inconsolata';
   src: local('Inconsolata Regular'), local('Inconsolata-Regular'),
-      url('/webfonts/Inconsolata-Regular.woff2') format('woff2'),
-      url('/webfonts/Inconsolata-Regular.woff') format('woff');
+	  url('/webfonts/Inconsolata-Regular.woff2') format('woff2'),
+	  url('/webfonts/Inconsolata-Regular.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -747,7 +747,7 @@ a {
   color: #046c98 !important;
   text-shadow: 0px -1px 1px rgba(255,255,255,0.5) !important;
   box-shadow: inset 0px 0px 1px #fff,
-              inset -1px -1px 4px rgba(220,220,220,0.4) !important;
+			  inset -1px -1px 4px rgba(220,220,220,0.4) !important;
   transition: 0.2s;
   border-left: 1px solid rgba(0,0,0,0.15);
   border-right: 1px solid rgba(0,0,0,0.15);
@@ -803,8 +803,8 @@ a {
   color: #046c98 !important;
   text-shadow: 0px -1px 1px rgba(255,255,255,0.5) !important;
   box-shadow: 0px 1px 3px rgba(0,0,0,0.15),
-              inset 0px 0px 1px #fff,
-              inset -1px -1px 4px rgba(220,220,220,0.4) !important;
+			  inset 0px 0px 1px #fff,
+			  inset -1px -1px 4px rgba(220,220,220,0.4) !important;
   transition: 0.2s;
 }
 
@@ -1325,7 +1325,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   text-shadow: 1px 1px rgba(255,255,255,0.5);
   background: linear-gradient(to bottom, rgba(241,248,253,1) 0%,rgba(218,236,250,1) 50%,rgba(190,221,246,1) 51%,rgba(227,240,251,1) 100%);
   box-shadow: inset 0px 0px 1px #fff,
-              inset 0px 0px 6px rgba(255,255,255,0.6);
+			  inset 0px 0px 6px rgba(255,255,255,0.6);
   transition: 0.2s;
 }
 
@@ -1334,7 +1334,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   color: #046c98;
   text-shadow: 0px -1px 1px rgba(255,255,255,0.5);
   box-shadow: inset 0px 0px 1px #fff,
-              inset -1px -1px 4px rgba(220,220,220,0.4);
+			  inset -1px -1px 4px rgba(220,220,220,0.4);
 }
 
 .context-menu.sort-order span.name i.fas.fa-sort-amount-down,
@@ -2383,7 +2383,7 @@ body.mobile .l-icon-shortcuts {
   background-color: #eee;
   text-shadow: 1px 1px #fff;
   box-shadow: 0px 2px 4px rgba(120,120,120,0.25),
-              inset 0px 0px 1px rgba(255,255,255,0.9);
+			  inset 0px 0px 1px rgba(255,255,255,0.9);
   z-index: 200;
   width: 16px;
   height: 16px;
@@ -2401,7 +2401,7 @@ body.mobile .l-icon-shortcuts {
   background-color: #eee;
   text-shadow: 1px 1px #fff;
   box-shadow: 0px 2px 4px rgba(120,120,120,0.25),
-              inset 0px 0px 1px rgba(255,255,255,0.9);
+			  inset 0px 0px 1px rgba(255,255,255,0.9);
   z-index: 200;
   height: 16px;
   width: 16px;
@@ -2421,78 +2421,139 @@ body.mobile .l-icon-shortcuts {
 }
 
 .timer-container {
-  margin-top: 4px;
+  height: 30px;
 }
 
-.timer-container .refresh-timer {
-  border: 2px solid #9f9f9f;
-  border-radius: 14px;
-  height: 14px;
-  width: 14px;
-  float: left;
-  margin: 2px 10px 0 0;
-}
-
-.timer-container .refresh-timer.paused {
-  border: 2px solid #9f9f9f;
-}
-
-.timer-container .refresh-timer.paused .loader-half.right,
-.timer-container .refresh-timer.paused .loader-half.dark {
-  background-color: #9d9f9f;
-}
-
-.timer-container .loader-half {
-  border-radius: 0 14px 14px 0;
-  height: 14px;
-  width: 7px;
-  float: left;
-}
-
-.timer-container .loader-half.left {
-  border-radius: 14px 0 0 14px;
-  background-color: #fff;
-}
-
-.timer-container .loader-half.right {
-  margin-left: 7px;
-  background-color: #9f9f9f;
-}
-
-.timer-container .loader-half.dark {
-  background-color: #9f9f9f;
-}
-
-.timer-container .movement {
-  float: left;
-  width: 14px;
-  height: 14px;
-  position: absolute;
-}
-.timer-container .movement.left {
-  z-index: 10;
-}
-
-.timer-container .movement.right {
-  transform: rotate(180deg);
-  -webkit-transform: rotate(180deg);
-}
-
-.timer-container .timer-button {
+.timer-button {
   cursor: pointer;
   text-decoration: underline;
-  margin: 7px 0 0 38px;
-  width: 15px;
+  margin: 6px 0px 2px 2px;
+  width: 20px;
   float: left;
-  height: 10px;
 }
 
-.timer-container .timer-button.pause {
-  background: url(/images/pause.png) no-repeat ;
+.spinner {
+  -webkit-mask-box-image: -webkit-radial-gradient(
+        center,ellipse cover, rgba(0,0,0,1) 68%, rgba(0,0,0,0) 69.5%);
+  background: #eee;
+  width: 20x;
+  height: 20px;
+  position: relative;
+  margin: 4px 0px 2px 2px;
+
 }
 
-.timer-container .timer-button.play {
-  background: url(/images/start.png) no-repeat;
+.spinner-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: transparent;
+  border-width: 10px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-color: transparent;
+  border-top-color: rgba(124,124,124,1);
+  -webkit-transform: rotate(-45deg);
+  -webkit-animation: inner 15s linear infinite;
+}
+
+.spinner-mask {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background: transparent;
+  border-width: 10px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-color: transparent;
+  border-top-color: #eee;
+  -webkit-transform: rotate(-45deg);
+  -webkit-animation: mask 15s linear infinite;
+}
+.spinner-mask:after, .spinner-mask-two {
+  display: block;
+  content: '';
+  opacity: 0;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background: transparent;
+  border-width:10px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-color: transparent;
+  border-top-color: rgba(124,124,124,1);
+  -webkit-transform: rotate(45deg);
+  -webkit-animation: mask-two 15s linear infinite;
+}
+
+@-webkit-keyframes inner {
+  0% {
+    -webkit-transform: rotate(-45deg);
+  }
+  25% {border-left-color:transparent;}
+  26% {
+    border-left-color:  rgba(124,124,124,1);
+  }
+  50% {border-bottom-color:transparent;}
+  51% {
+    border-bottom-color:  rgba(124,124,124,1);
+  }
+  75% {border-right-color:transparent;}
+  76% {
+    border-right-color:  rgba(124,124,124,1);
+  }
+  100% {
+    -webkit-transform: rotate(315deg);
+    border-left-color:  rgba(124,124,124,1);
+    border-bottom-color:  rgba(124,124,124,1);
+    border-right-color:  rgba(124,124,124,1);
+  }
+}
+
+ @-webkit-keyframes mask {
+  0% {
+    -webkit-transform: rotate(-45deg);
+  }
+  75% {
+    -webkit-transform: rotate(-45deg);
+  }
+  100% {
+    -webkit-transform: rotate(45deg);
+  }
+}
+
+@-webkit-keyframes mask-two {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 0;
+  }
+  26% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes whee {
+  from {
+    -webkit-transform: rotate(0deg);
+    -webkit-filter: sepia() hue-rotate(0deg) contrast(95%);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    -webkit-filter: sepia() hue-rotate(360deg) contrast(95%);
+  }
+}
+
+.paused div{
+  animation-play-state: paused;
 }
 
 .uppercase {
@@ -3035,8 +3096,8 @@ td.hint {
   background-color: #3b9de8 !important;
   background: linear-gradient(to bottom, rgba(235,243,249,1) 0%,rgba(192,216,236,1) 51%,rgba(223,235,245,1) 100%) !important;
   box-shadow: 0px 1px 3px rgba(0,0,0,0.25),
-              inset 0px 0px 1px #fff,
-              inset 0px 0px 3px rgba(255,255,255,0.5) !important;
+			  inset 0px 0px 1px #fff,
+			  inset 0px 0px 3px rgba(255,255,255,0.5) !important;
   text-shadow: 0px 1px 1px rgba(255,255,255,0.85) !important;
 }
 
@@ -3048,8 +3109,8 @@ td.hint {
   border: 1px solid #54a6e5 !important;
   background: linear-gradient(to bottom, rgba(241,248,253,1) 0%,rgba(190,221,246,1) 51%,rgba(227,240,251,1) 100%) !important;
   box-shadow: 0px 1px 3px rgba(0,0,0,0.25),
-              inset 0px 0px 1px #fff,
-              inset 0px 0px 6px rgba(255,255,255,0.6) !important;
+			  inset 0px 0px 1px #fff,
+			  inset 0px 0px 6px rgba(255,255,255,0.6) !important;
   transition: 0.2s;
 }
 
@@ -3063,8 +3124,8 @@ td.hint {
   color: #517bab !important;
   text-shadow: 0px -1px 2px rgba(255,255,255,0.85) !important;
   box-shadow: 0px 1px 2px rgba(0,0,0,0.2),
-              inset 0px 0px 1px #fff,
-              inset -1px -1px 4px rgba(220,220,220,0.4) !important;
+			  inset 0px 0px 1px #fff,
+			  inset -1px -1px 4px rgba(220,220,220,0.4) !important;
 }
 
 .ui-button-text-only {
@@ -3129,7 +3190,7 @@ a.button.cancel {
   background: linear-gradient(to bottom, #fcd0ca 0%,#f5a69d 50%,#f9e3df 100%) !important;
   color: #ce1500 !important;
   text-shadow: 0px 1px 1px rgba(255,255,255,0.2),
-               0px -1px 1px rgba(255,255,255,0.6) !important;
+			   0px -1px 1px rgba(255,255,255,0.6) !important;
   border: 1px solid #F4301A !important;
 }
 
@@ -3249,15 +3310,15 @@ a.button.cancel {
 }
 
 .additional-info td {
-    font-size: 0.75rem;
-    height: 20px;
-    font-weight: normal;
-    line-height: 0.95rem;
-    min-width: 70px
+	font-size: 0.75rem;
+	height: 20px;
+	font-weight: normal;
+	line-height: 0.95rem;
+	min-width: 70px
 }
 
 .additional-info td.details {
-    padding-left: 20px !important;
+	padding-left: 20px !important;
 }
 
 :focus {outline:none;}
@@ -3266,7 +3327,7 @@ a.button.cancel {
 .login {
   background-color: rgba(255,255,255,0.7);
   box-shadow: 0px 8px 25px rgba(0,0,0, 0.3),
-              inset 0px 0px 2px rgba(255,255,255,1);
+			  inset 0px 0px 2px rgba(255,255,255,1);
   font-family: 'Exo', Tahoma, Arial, Helvetica, sans-serif;
   margin: 0;
   padding: 0;
@@ -3522,7 +3583,7 @@ form#vstobjects.suspended {
   font-weight: 700;
   font-size: 0.75rem;
   box-shadow: 0px 1px 2px rgba(70,70,70,0.5), 
-              inset 0px 2px 2px #fff;
+			  inset 0px 2px 2px #fff;
   text-shadow: 0px 1px 2px rgba(0,0,0,0.5);
   border: 1px solid #b8b8b8 !important;
 }
@@ -3966,7 +4027,7 @@ form#vstobjects.suspended {
   font-weight: 500 !important;
   background-color: rgba(255,255,255,0.9) !important;
   box-shadow: inset 0px 1px 3px rgba(0,0,0,0.25), 
-              0 8px 40px 0 rgba(0, 0, 0, 0.35) !important;
+			  0 8px 40px 0 rgba(0, 0, 0, 0.35) !important;
   border-radius: 6px !important;
   border: 1px solid rgba(255,255,255,0.98) !important;
   text-align: center !important;
@@ -4210,7 +4271,7 @@ form#vstobjects.suspended {
 
 @media screen and (max-width: 950px) {
   .helper-container {
-    display: none;
+	display: none;
   }
 }
 

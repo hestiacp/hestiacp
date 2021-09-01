@@ -1,7 +1,7 @@
 <?php
     $check_csrf = true;
     
-    if ( $_SERVER['SCRIPT_FILENAME'] == '/usr/local/hestia/web/inc/mail-wrapper.php '){ $check_csrf=false; } // Excutede only from CLI
+    if ( $_SERVER['SCRIPT_FILENAME'] == '/usr/local/hestia/web/inc/mail-wrapper.php '){ $check_csrf=false; } // execute only from CLI
     if ( $_SERVER['SCRIPT_FILENAME'] == '/usr/local/hestia/web/reset/mail/index.php '){ $check_csrf=false; } // Localhost only
     if ( $_SERVER['SCRIPT_FILENAME'] == '/usr/local/hestia/web/api/index.php' ){ $check_csrf=false; } // Own check
     if (substr($_SERVER['SCRIPT_FILENAME'], 0, 22)=='/usr/local/hestia/bin/' ){ $check_csrf=false; }
@@ -10,7 +10,9 @@
         if ($level >= $_SESSION['POLICY_CSRF_STRICTNESS']) {
             return true;
         }else{
-            echo "CSRF detected (".$level.") Please disable any plugins/add-ons inside your browser or contact your system administrator. If you are the system administrator run v-change-sys-config-value 'POLICY_CSRF_STRICTNESS' '0' as root to disable this check.";
+            echo "<h1>Potential use CSRF detected</h1>\n".
+            "<p>Please disable any plugins/add-ons inside your browser or contact your system administrator. If you are the system administrator you can run v-change-sys-config-value 'POLICY_CSRF_STRICTNESS' '0' as root to disable this check.<p>".
+            "<p>If you folowed a bookmark or an static link <a href='/'>please click here</a>";
             die();
         }
     }
@@ -36,6 +38,7 @@
             $hostname = explode( ':', $_SERVER['HTTP_HOST']);
             $port=$hostname[1];
             $hostname=$hostname[0];
+            //list of possible entries route and these should never be blocked
             if (in_array($_SERVER['DOCUMENT_URI'], array('/list/user/index.php', '/login/index.php','/list/web/index.php','/list/dns/index.php','/list/mail/index.php','/list/db/index.php','/list/cron/index.php','/list/backup/index.php','/reset/index.php'))){
                 return true;
             }

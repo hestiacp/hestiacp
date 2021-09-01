@@ -1,7 +1,8 @@
 <?php
 session_start();
 
-define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
+// Main include
+include($_SERVER['DOCUMENT_ROOT'] . '/inc/main.php');
 
 if (!empty($_SESSION['look'])) {
     if ((!$_GET['token']) || ($_SESSION['token'] != $_GET['token'])) {

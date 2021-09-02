@@ -215,7 +215,9 @@ var reloadFunction = '';
 
 $(document).ready(startTime);
 function startTime(){
-  reloadFunction = setInterval(updateInterval, 100);
+    if ($(".spinner")[0]){
+    reloadFunction = setInterval(updateInterval, 100);
+  }
 }
 
 function updateInterval(){

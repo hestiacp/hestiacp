@@ -85,13 +85,30 @@ rm -f $HOMEDIR/$user/web/$new_domain/logs/$domain.*
 # Updating domain certificates
 if [ -e "$USER_DATA/ssl/$domain.crt" ]; then
     cd $USER_DATA/ssl
-    mv $domain.crt $new_domain.crt
-    mv $domain.ca $new_domain.ca
-    mv $domain.pem $new_domain.pem
-    mv $domain.key $new_domain.key
+    mv $USER_DATA/ssl/$domain.crt $USER_DATA/ssl/$new_domain.crt
+    mv $USER_DATA/ssl/$domain.ca $USER_DATA/ssl/$new_domain.ca
+    mv $USER_DATA/ssl/$domain.pem $USER_DATA/ssl/$new_domain.pem
+    mv $USER_DATA/ssl/$domain.key $USER_DATA/ssl/$new_domain.key
     rm -f $HOMEDIR/$user/conf/web/$domain/ssl/$domain.*
 fi
 
+# Deleting vhost configuration
+del_web_config "$WEB_SYSTEM" "$TPL.tpl"
+# Deleting SSL configuration and certificates
+if [ "$SSL" = 'yes' ]; then
+    del_web_config "$WEB_SYSTEM" "$TPL.stpl"
+fi
+
+# Deleting proxy
+if [ ! -z "$PROXY_SYSTEM" ]; then
+    del_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
+    if [ "$SSL" = 'yes' ]; then
+        del_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
+    fi
+    if [ -e "/etc/$PROXY_SYSTEM/conf.d/01_caching_pool.conf" ]; then
+        sed -i "/=$domain:/d" /etc/$PROXY_SYSTEM/conf.d/01_caching_pool.conf
+    fi
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #

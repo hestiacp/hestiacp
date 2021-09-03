@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - Add small wait for /usr/bin/iptables-restore [Forum](https://forum.hestiacp.com/t/clean-install-arm64-does-not-start-after-reboot-v-start-service-iptables/4395/7)
 - Fix bug in v-change-sys-api. When using  v-change-sys-api remove and then  v-change-sys-api enable + custom release branch the resetting of api failed + no "error" output was producted
 - Improve error reporting pma-sso function
+- Fixed 2104 v-change-web-domain-name unable to start webserver
 
 ## [1.4.12] - Service release 
 

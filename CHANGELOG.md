@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file.
 
 ### Bugfixes
 - Improve the hostname check to prevent invalid hostnames or the use of an ip address (RFC1178).
+- Prevent CSRF from other domains / websites
+- Fix #2096 Hostname SSL got overwritten by mail.hostname.com certificate
 - Add small wait for /usr/bin/iptables-restore [Forum](https://forum.hestiacp.com/t/clean-install-arm64-does-not-start-after-reboot-v-start-service-iptables/4395/7)
 - Fix bug in v-change-sys-api. When using  v-change-sys-api remove and then  v-change-sys-api enable + custom release branch the resetting of api failed + no "error" output was producted
 - Improve error reporting pma-sso function

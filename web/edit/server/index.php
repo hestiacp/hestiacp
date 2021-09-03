@@ -703,8 +703,19 @@ if (!empty($_POST['save'])) {
                exec (HESTIA_CMD."v-change-sys-config-value INACTIVE_SESSION_TIMEOUT ".escapeshellarg($_POST['v_inactive_session_timeout']), $output, $return_var);
                check_return_code($return_var,$output);
                unset($output);
-               if (empty($_SESSION['error_msg'])) $v_login_style = $_POST['v_inactive_session_timeout'];
+               if (empty($_SESSION['error_msg'])) $v_inactive_session_timeout = $_POST['v_inactive_session_timeout'];
             }
+            $v_security_adv = 'yes';
+        }
+    }
+    
+   // Change POLICY_CSRF_STRICTNESS
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_policy_csrf_strictness'] != $_SESSION['POLICY_CSRF_STRICTNESS']) {
+            exec (HESTIA_CMD."v-change-sys-config-value POLICY_CSRF_STRICTNESS ".escapeshellarg($_POST['v_policy_csrf_strictness']), $output, $return_var);
+            check_return_code($return_var,$output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) $v_policy_csrf_strictness = $_POST['v_inactive_session_timeout'];
             $v_security_adv = 'yes';
         }
     }

@@ -8,6 +8,7 @@ require 'vendor/autoload.php';
 
 session_start();
 
+
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
 if ($_SESSION['RELEASE_BRANCH'] == 'release' && $_SESSION['DEBUG_MODE'] == 'false') {
     define('JS_LATEST_UPDATE','v=' . $_SESSION['VERSION']);
@@ -15,6 +16,11 @@ if ($_SESSION['RELEASE_BRANCH'] == 'release' && $_SESSION['DEBUG_MODE'] == 'fals
     define('JS_LATEST_UPDATE','r=' . time());
 }
 define('DEFAULT_PHP_VERSION', 'php-' . exec('php -r "echo (float)phpversion();"'));
+
+// Load Hestia Config directly
+load_hestia_config();
+require_once(dirname(__FILE__) . '/prevent_csrf.php');
+
 
 function destroy_sessions(){
     unset($_SESSION);
@@ -61,8 +67,7 @@ if ($_SESSION['user_combined_ip'] != $user_combined_ip && $_SERVER['REMOTE_ADDR'
     header('Location: /login/');
     exit;
 }
-// Load Hestia Config directly
-    load_hestia_config();
+
 
 // Check system settings
 if ((!isset($_SESSION['VERSION'])) && (!defined('NO_AUTH_REQUIRED'))) {

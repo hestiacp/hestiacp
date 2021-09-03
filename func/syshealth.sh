@@ -415,7 +415,10 @@ function syshealth_repair_system_config() {
         echo "[ ! ] Adding missing variable to hestia.conf: SERVER_SMTP_ADDR ('')"
         $BIN/v-change-sys-config-value "SERVER_SMTP_ADDR" ""
     fi    
-
+    if [ -z "$POLICY_CSRF_STRICTNESS" ]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: POLICY_CSRF_STRICTNESS ('')"
+        $BIN/v-change-sys-config-value "POLICY_CSRF_STRICTNESS" "1"
+    fi  
 }
 
 # Repair System Cron Jobs

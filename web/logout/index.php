@@ -1,9 +1,14 @@
 <?php
 session_start();
 
-define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
+// Main include
+include($_SERVER['DOCUMENT_ROOT'] . '/inc/main.php');
 
 if (!empty($_SESSION['look'])) {
+    if ((!$_GET['token']) || ($_SESSION['token'] != $_GET['token'])) {
+        header('location: /list/user/');
+        exit();
+    }
     $v_user = escapeshellarg($_SESSION['look']);
     $v_impersonator = escapeshellarg($_SESSION['user']);
     exec (HESTIA_CMD . "v-log-action system 'Warning' 'Security' 'User impersonation session ended (User: $v_user, Administrator: $v_impersonator)'", $output, $return_var);

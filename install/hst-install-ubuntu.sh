@@ -1310,6 +1310,7 @@ rm -f /etc/nginx/conf.d/*.conf
 cp -f $HESTIA_INSTALL_DIR/nginx/nginx.conf /etc/nginx/
 cp -f $HESTIA_INSTALL_DIR/nginx/status.conf /etc/nginx/conf.d/
 cp -f $HESTIA_INSTALL_DIR/nginx/agents.conf /etc/nginx/conf.d/
+cp -f $HESTIA_INSTALL_DIR/nginx/cachemap.conf /etc/nginx/conf.d/
 cp -f $HESTIA_INSTALL_DIR/nginx/phpmyadmin.inc /etc/nginx/conf.d/
 cp -f $HESTIA_INSTALL_DIR/nginx/phppgadmin.inc /etc/nginx/conf.d/
 cp -f $HESTIA_INSTALL_DIR/logrotate/nginx /etc/logrotate.d/

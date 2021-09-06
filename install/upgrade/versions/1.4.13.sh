@@ -36,3 +36,10 @@ if [ "$PHPMYADMIN_KEY" != "" ]; then
     $BIN/v-delete-sys-pma-sso 
     $BIN/v-add-sys-pma-sso 
 fi
+
+# Loading firewall rules Systemd unit needs update. #2100
+if [ "$FIREWALL_SYSTEM" = "iptables" ]; then
+    echo "[ * ] Update loading firewall rules service..."
+    $BIN/v-delete-sys-firewall
+    $BIN/v-add-sys-firewall
+fi

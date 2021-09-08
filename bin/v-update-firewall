@@ -185,7 +185,7 @@ if [ -d "/etc/sysconfig" ]; then
     fi
 else
     /sbin/iptables-save > /etc/iptables.rules
-    iptablesversion=$(iptables --version |  head -1 | awk  '{print $2}' | cut -f -2 -d .);
+    iptablesversion=$(iptables --version | head -1 | awk '{print $2}' | cut -f -2 -d .);
     sd_unit="/lib/systemd/system/hestia-iptables.service"
     if [ ! -e "$sd_unit" ]; then
         echo "[Unit]" >> $sd_unit
@@ -207,6 +207,7 @@ else
         echo "" >> $sd_unit
         echo "[Install]" >> $sd_unit
         echo "WantedBy=multi-user.target" >> $sd_unit
+        systemctl daemon-reload
     fi
     systemctl is-enabled hestia-iptables >/dev/null 2>&1 || systemctl enable hestia-iptables >/dev/null 2>&1
 fi

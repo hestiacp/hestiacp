@@ -52,6 +52,8 @@ for service in $service_list; do
         # Run the restart rules for iptables firewall
         $BIN/v-stop-firewall
         $BIN/v-update-firewall
+    elif [ "$restart" = "ssl" ] && [ "$service" = "nginx" ]; then
+        service $service upgrade > /dev/null 2>&1
     elif [ -z "$restart" -o "$restart" = "no" ] && [ \
             "$service" = "nginx" -o     \
             "$service" = "apache2" -o   \

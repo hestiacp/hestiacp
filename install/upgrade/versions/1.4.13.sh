@@ -43,3 +43,8 @@ if [ "$FIREWALL_SYSTEM" = "iptables" ]; then
     $BIN/v-delete-sys-firewall
     $BIN/v-add-sys-firewall
 fi
+
+# Not used any more
+if [ -d "$HESTIA/web/edit/file/" ]; then
+    rm -fr $HESTIA/web/edit/file/
+fi

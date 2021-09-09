@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: adding user package
-# options: PKG_DIR PACKAGE [REWRITE]
+# options: tmpfile PACKAGE [REWRITE]
 # labels: 
 #
 # The function adds new user package to the system.
@@ -11,7 +11,7 @@
 #----------------------------------------------------------#
 
 # Argument definition
-pkg_dir=$1
+tmpfile=$1
 package=$2
 rewrite=$3
 
@@ -31,7 +31,7 @@ is_package_new() {
 }
 
 is_package_consistent() {
-    source $pkg_dir/$package.pkg
+    source $tmpfile
     if [ "$WEB_DOMAINS" != 'unlimited' ]; then
         is_int_format_valid $WEB_DOMAINS 'WEB_DOMAINS'
     fi
@@ -78,7 +78,12 @@ is_format_valid 'pkg_dir' 'package'
 if [ "$rewrite" != 'yes' ]; then
     is_package_new
 fi
-is_package_valid "$pkg_dir"
+
+if [ ! -f "$tmpfile" ]; then 
+    echo "$tmpfile does not exists"
+    exit $E_NOTEXIST;
+fi
+
 is_package_consistent
 
 # Perform verification if read-only mode is enabled
@@ -89,7 +94,7 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-cp -f $pkg_dir/$package.pkg $HESTIA/data/packages/
+cp -f $tmpfile $HESTIA/data/packages/$package.pkg
 chmod 644 $HESTIA/data/packages/$package.pkg
 
 

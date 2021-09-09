@@ -1,5 +1,6 @@
 <?php
-error_reporting(NULL);
+
+error_reporting(null);
 ob_start();
 $TAB = 'PACKAGE';
 
@@ -7,7 +8,7 @@ $TAB = 'PACKAGE';
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check user
-if ($_SESSION['userContext'] != 'admin')  {
+if ($_SESSION['userContext'] != 'admin') {
     header("Location: /list/user");
     exit;
 }
@@ -22,42 +23,80 @@ if (!empty($_POST['ok'])) {
     }
 
     // Check empty fields
-    if (empty($_POST['v_package'])) $errors[] = _('package');
-    if (empty($_POST['v_web_template'])) $errors[] = _('web template');
+    if (empty($_POST['v_package'])) {
+        $errors[] = _('package');
+    }
+    if (empty($_POST['v_web_template'])) {
+        $errors[] = _('web template');
+    }
     if (!empty($_SESSION['WEB_BACKEND'])) {
-        if (empty($_POST['v_backend_template'])) $errors[] = _('backend template');
+        if (empty($_POST['v_backend_template'])) {
+            $errors[] = _('backend template');
+        }
     }
     if (!empty($_SESSION['PROXY_SYSTEM'])) {
-        if (empty($_POST['v_proxy_template'])) $errors[] = _('proxy template');
+        if (empty($_POST['v_proxy_template'])) {
+            $errors[] = _('proxy template');
+        }
     }
-    if (empty($_POST['v_dns_template'])) $errors[] = _('dns template');
-    if (empty($_POST['v_shell'])) $errrors[] = _('shell');
-    if (!isset($_POST['v_web_domains'])) $errors[] = _('web domains');
-    if (!isset($_POST['v_web_aliases'])) $errors[] = _('web aliases');
-    if (!isset($_POST['v_dns_domains'])) $errors[] = _('dns domains');
-    if (!isset($_POST['v_dns_records'])) $errors[] = _('dns records');
-    if (!isset($_POST['v_mail_domains'])) $errors[] = _('mail domains');
-    if (!isset($_POST['v_mail_accounts'])) $errors[] = _('mail accounts');
-    if (!isset($_POST['v_databases'])) $errors[] = _('databases');
-    if (!isset($_POST['v_cron_jobs'])) $errors[] = _('cron jobs');
-    if (!isset($_POST['v_backups'])) $errors[] = _('backups');
-    if (!isset($_POST['v_disk_quota'])) $errors[] = _('quota');
-    if (!isset($_POST['v_bandwidth'])) $errors[] = _('bandwidth');
-    
+    if (empty($_POST['v_dns_template'])) {
+        $errors[] = _('dns template');
+    }
+    if (empty($_POST['v_shell'])) {
+        $errrors[] = _('shell');
+    }
+    if (!isset($_POST['v_web_domains'])) {
+        $errors[] = _('web domains');
+    }
+    if (!isset($_POST['v_web_aliases'])) {
+        $errors[] = _('web aliases');
+    }
+    if (!isset($_POST['v_dns_domains'])) {
+        $errors[] = _('dns domains');
+    }
+    if (!isset($_POST['v_dns_records'])) {
+        $errors[] = _('dns records');
+    }
+    if (!isset($_POST['v_mail_domains'])) {
+        $errors[] = _('mail domains');
+    }
+    if (!isset($_POST['v_mail_accounts'])) {
+        $errors[] = _('mail accounts');
+    }
+    if (!isset($_POST['v_databases'])) {
+        $errors[] = _('databases');
+    }
+    if (!isset($_POST['v_cron_jobs'])) {
+        $errors[] = _('cron jobs');
+    }
+    if (!isset($_POST['v_backups'])) {
+        $errors[] = _('backups');
+    }
+    if (!isset($_POST['v_disk_quota'])) {
+        $errors[] = _('quota');
+    }
+    if (!isset($_POST['v_bandwidth'])) {
+        $errors[] = _('bandwidth');
+    }
+
     // Check if name server entries are blank if DNS server is installed
     if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {
-        if (empty($_POST['v_ns1'])) $errors[] = _('ns1');
-        if (empty($_POST['v_ns2'])) $errors[] = _('ns2');
+        if (empty($_POST['v_ns1'])) {
+            $errors[] = _('ns1');
+        }
+        if (empty($_POST['v_ns2'])) {
+            $errors[] = _('ns2');
+        }
     }
     if (!empty($errors[0])) {
         foreach ($errors as $i => $error) {
-            if ( $i == 0 ) {
+            if ($i == 0) {
                 $error_msg = $error;
             } else {
                 $error_msg = $error_msg.", ".$error;
             }
         }
-        $_SESSION['error_msg'] = sprintf(_('Field "%s" can not be blank.'),$error_msg);
+        $_SESSION['error_msg'] = sprintf(_('Field "%s" can not be blank.'), $error_msg);
     }
 
     // Protect input
@@ -87,23 +126,27 @@ if (!empty($_POST['ok'])) {
     $v_ns7 = trim($_POST['v_ns7'], '.');
     $v_ns8 = trim($_POST['v_ns8'], '.');
     $v_ns = $v_ns1.",".$v_ns2;
-    if (!empty($v_ns3)) $v_ns .= ",".$v_ns3;
-    if (!empty($v_ns4)) $v_ns .= ",".$v_ns4;
-    if (!empty($v_ns5)) $v_ns .= ",".$v_ns5;
-    if (!empty($v_ns6)) $v_ns .= ",".$v_ns6;
-    if (!empty($v_ns7)) $v_ns .= ",".$v_ns7;
-    if (!empty($v_ns8)) $v_ns .= ",".$v_ns8;
+    if (!empty($v_ns3)) {
+        $v_ns .= ",".$v_ns3;
+    }
+    if (!empty($v_ns4)) {
+        $v_ns .= ",".$v_ns4;
+    }
+    if (!empty($v_ns5)) {
+        $v_ns .= ",".$v_ns5;
+    }
+    if (!empty($v_ns6)) {
+        $v_ns .= ",".$v_ns6;
+    }
+    if (!empty($v_ns7)) {
+        $v_ns .= ",".$v_ns7;
+    }
+    if (!empty($v_ns8)) {
+        $v_ns .= ",".$v_ns8;
+    }
     $v_ns = escapeshellarg($v_ns);
     $v_time = escapeshellarg(date('H:i:s'));
     $v_date = escapeshellarg(date('Y-m-d'));
-
-    // Create temporary dir
-    if (empty($_SESSION['error_msg'])) {
-        exec ('mktemp -d', $output, $return_var);
-        $tmpdir = $output[0];
-        check_return_code($return_var,$output);
-        unset($output);
-    }
 
     // Create package file
     if (empty($_SESSION['error_msg'])) {
@@ -131,79 +174,108 @@ if (!empty($_POST['ok'])) {
         $pkg .= "TIME=".$v_time."\n";
         $pkg .= "DATE=".$v_date."\n";
 
-        $fp = fopen($tmpdir."/".$_POST['v_package'].".pkg", 'w');
+        $tmpfile = tempnam('/tmp/', 'hst_');
+        $fp = fopen($tmpfile, 'w');
         fwrite($fp, $pkg);
+        exec(HESTIA_CMD."v-add-user-package ".$tmpfile." ".$v_package, $output, $return_var);
+        check_return_code($return_var, $output);
+        unset($output);
+
         fclose($fp);
     }
 
-    // Add new package
-    if (empty($_SESSION['error_msg'])) {
-        exec (HESTIA_CMD."v-add-user-package ".$tmpdir." ".$v_package, $output, $return_var);
-        check_return_code($return_var,$output);
-        unset($output);
-    }
-
-    // Remove tmpdir
-    exec ('rm -rf '.$tmpdir, $output, $return_var);
-    unset($output);
-
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = sprintf(_('PACKAGE_CREATED_OK'),htmlentities($_POST['v_package']),htmlentities($_POST['v_package']));
+        $_SESSION['ok_msg'] = sprintf(_('PACKAGE_CREATED_OK'), htmlentities($_POST['v_package']), htmlentities($_POST['v_package']));
         unset($v_package);
     }
-
 }
 
 
 // List web temmplates
-exec (HESTIA_CMD."v-list-web-templates json", $output, $return_var);
+exec(HESTIA_CMD."v-list-web-templates json", $output, $return_var);
 $web_templates = json_decode(implode('', $output), true);
 unset($output);
 
 // List web templates for backend
 if (!empty($_SESSION['WEB_BACKEND'])) {
-    exec (HESTIA_CMD."v-list-web-templates-backend json", $output, $return_var);
+    exec(HESTIA_CMD."v-list-web-templates-backend json", $output, $return_var);
     $backend_templates = json_decode(implode('', $output), true);
     unset($output);
 }
 
 // List web templates for proxy
 if (!empty($_SESSION['PROXY_SYSTEM'])) {
-    exec (HESTIA_CMD."v-list-web-templates-proxy json", $output, $return_var);
+    exec(HESTIA_CMD."v-list-web-templates-proxy json", $output, $return_var);
     $proxy_templates = json_decode(implode('', $output), true);
     unset($output);
 }
 
 // List DNS templates
-exec (HESTIA_CMD."v-list-dns-templates json", $output, $return_var);
+exec(HESTIA_CMD."v-list-dns-templates json", $output, $return_var);
 $dns_templates = json_decode(implode('', $output), true);
 unset($output);
 
 // List system shells
-exec (HESTIA_CMD."v-list-sys-shells json", $output, $return_var);
+exec(HESTIA_CMD."v-list-sys-shells json", $output, $return_var);
 $shells = json_decode(implode('', $output), true);
 unset($output);
 
 // Set default values
-if (empty($v_web_template)) $v_web_template = 'default';
-if (empty($v_backend_template)) $v_backend_template = 'default';
-if (empty($v_proxy_template)) $v_proxy_template = 'default';
-if (empty($v_dns_template)) $v_dns_template = 'default';
-if (empty($v_shell)) $v_shell = 'nologin';
-if (empty($v_web_domains)) $v_web_domains = "'1'";
-if (empty($v_web_aliases)) $v_web_aliases = "'1'";
-if (empty($v_dns_domains)) $v_dns_domains = "'1'";
-if (empty($v_dns_records)) $v_dns_records = "'1'";
-if (empty($v_mail_domains)) $v_mail_domains = "'1'";
-if (empty($v_mail_accounts)) $v_mail_accounts = "'1'";
-if (empty($v_databases)) $v_databases = "'1'";
-if (empty($v_cron_jobs)) $v_cron_jobs = "'1'";
-if (empty($v_backups)) $v_backups = "'1'";
-if (empty($v_disk_quota)) $v_disk_quota = "'1000'";
-if (empty($v_bandwidth)) $v_bandwidth = "'1000'";
-if (empty($v_ns1)) $v_ns1 = 'ns1.example.ltd';
-if (empty($v_ns2)) $v_ns2 = 'ns2.example.ltd';
+if (empty($v_web_template)) {
+    $v_web_template = 'default';
+}
+if (empty($v_backend_template)) {
+    $v_backend_template = 'default';
+}
+if (empty($v_proxy_template)) {
+    $v_proxy_template = 'default';
+}
+if (empty($v_dns_template)) {
+    $v_dns_template = 'default';
+}
+if (empty($v_shell)) {
+    $v_shell = 'nologin';
+}
+if (empty($v_web_domains)) {
+    $v_web_domains = "'1'";
+}
+if (empty($v_web_aliases)) {
+    $v_web_aliases = "'1'";
+}
+if (empty($v_dns_domains)) {
+    $v_dns_domains = "'1'";
+}
+if (empty($v_dns_records)) {
+    $v_dns_records = "'1'";
+}
+if (empty($v_mail_domains)) {
+    $v_mail_domains = "'1'";
+}
+if (empty($v_mail_accounts)) {
+    $v_mail_accounts = "'1'";
+}
+if (empty($v_databases)) {
+    $v_databases = "'1'";
+}
+if (empty($v_cron_jobs)) {
+    $v_cron_jobs = "'1'";
+}
+if (empty($v_backups)) {
+    $v_backups = "'1'";
+}
+if (empty($v_disk_quota)) {
+    $v_disk_quota = "'1000'";
+}
+if (empty($v_bandwidth)) {
+    $v_bandwidth = "'1000'";
+}
+if (empty($v_ns1)) {
+    $v_ns1 = 'ns1.example.ltd';
+}
+if (empty($v_ns2)) {
+    $v_ns2 = 'ns2.example.ltd';
+}
 
 // Render page
 render_page($user, $TAB, 'add_package');

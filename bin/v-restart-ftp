@@ -36,6 +36,10 @@ send_email_report() {
 #----------------------------------------------------------#
 
 # Exit
+if [ -z "$FTP_SYSTEM" ] || [ "$FTP_SYSTEM" = 'remote' ]; then
+    exit
+fi
+
 if [ "$1" = "no" ]; then
     exit
 fi
@@ -44,10 +48,6 @@ fi
 if [ "$1" = 'scheduled' ] || [ -z "$1" -a "$SCHEDULED_RESTART" = 'yes' ]; then
     sed -i "/\/$SCRIPT now/d" $HESTIA/data/queue/restart.pipe
     echo "$BIN/$SCRIPT now" >> $HESTIA/data/queue/restart.pipe
-    exit
-fi
-
-if [ -z "$FTP_SYSTEM" ] || [ "$FTP_SYSTEM" = 'remote' ]; then
     exit
 fi
 

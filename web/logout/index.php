@@ -5,7 +5,7 @@ session_start();
 // Main include
 include($_SERVER['DOCUMENT_ROOT'] . '/inc/main.php');
 // Check token
-verify_csrf($_POST);
+verify_csrf($_GET);
 
 if (!empty($_SESSION['look'])) {
     $v_user = escapeshellarg($_SESSION['look']);

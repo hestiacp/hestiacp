@@ -48,3 +48,8 @@ fi
 if [ -d "$HESTIA/web/edit/file/" ]; then
     rm -fr $HESTIA/web/edit/file/
 fi
+
+# Not used any more
+if [ -d "$HESTIA/web/edit/server/theme/" ]; then
+    rm -fr $HESTIA/web/edit/server/theme/
+fi

@@ -12,9 +12,8 @@ if (isset($_SESSION['user'])) {
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 if ((!empty($_POST['user'])) && (empty($_POST['code']))) {
-    if ($_POST['token'] != $_SESSION['token']) {
-        header('Location: /');
-    }
+    // Check token
+    verify_csrf($_POST);
     $v_user = escapeshellarg($_POST['user']);
     $user = $_POST['user'];
     $email = $_POST['email'];
@@ -61,9 +60,8 @@ if ((!empty($_POST['user'])) && (empty($_POST['code']))) {
 }
 
 if ((!empty($_POST['user'])) && (!empty($_POST['code'])) && (!empty($_POST['password']))) {
-    if ($_POST['token'] != $_SESSION['token']) {
-        header('Location: /');
-    }
+    // Check token
+    verify_csrf($_POST);
     if ($_POST['password'] == $_POST['password_confirm']) {
         $v_user = escapeshellarg($_POST['user']);
         $user = $_POST['user'];

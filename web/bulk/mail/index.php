@@ -1,16 +1,14 @@
 <?php
+
 // Init
-error_reporting(NULL);
+error_reporting(null);
 ob_start();
 session_start();
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check token
-if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
-    header('location: /login/');
-    exit();
-}
+verify_csrf($_POST);
 
 $domain = $_POST['domain'];
 $account = $_POST['account'];
@@ -61,7 +59,7 @@ if (empty($account)) {
     foreach ($domain as $value) {
         // Mail
         $value = escapeshellarg($value);
-        exec (HESTIA_CMD.$cmd." ".$user." ".$value, $output, $return_var);
+        exec(HESTIA_CMD.$cmd." ".$user." ".$value, $output, $return_var);
         $restart = 'yes';
     }
 } else {
@@ -69,12 +67,12 @@ if (empty($account)) {
         // Mail Account
         $value = escapeshellarg($value);
         $dom = escapeshellarg($domain);
-        exec (HESTIA_CMD.$cmd." ".$user." ".$dom." ".$value, $output, $return_var);
+        exec(HESTIA_CMD.$cmd." ".$user." ".$dom." ".$value, $output, $return_var);
         $restart = 'yes';
     }
 }
 
-if (empty($account)) { 
+if (empty($account)) {
     header("Location: /list/mail/");
     exit;
 } else {

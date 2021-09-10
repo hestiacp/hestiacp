@@ -1,12 +1,13 @@
 <?php
-error_reporting(NULL);
+
+error_reporting(null);
 $TAB = 'SERVER';
 
 // Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check user
-if ($_SESSION['userContext'] != 'admin')  {
+if ($_SESSION['userContext'] != 'admin') {
     header("Location: /list/user");
     exit;
 }
@@ -16,7 +17,6 @@ if (!empty($_POST['save'])) {
 
     // Set success message
     $_SESSION['ok_msg'] = _('Info (Read-only mode): Crontab can be edited only trough ssh');
-
 }
 
 $v_config_path = '/etc/crontab';

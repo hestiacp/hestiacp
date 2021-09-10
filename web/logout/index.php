@@ -4,10 +4,8 @@ session_start();
 
 // Main include
 include($_SERVER['DOCUMENT_ROOT'] . '/inc/main.php');
-if ((!$_GET['token']) || ($_SESSION['token'] != $_GET['token'])) {
-    header('location: /list/user/');
-    exit();
-}
+// Check token
+verify_csrf($_POST);
 
 if (!empty($_SESSION['look'])) {
     $v_user = escapeshellarg($_SESSION['look']);

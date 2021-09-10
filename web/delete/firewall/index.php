@@ -1,6 +1,7 @@
 <?php
+
 // Init
-error_reporting(NULL);
+error_reporting(null);
 ob_start();
 session_start();
 
@@ -8,22 +9,19 @@ session_start();
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check user
-if ($_SESSION['userContext'] != 'admin')  {
+if ($_SESSION['userContext'] != 'admin') {
     header("Location: /list/user");
     exit;
 }
 
 // Check token
-if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
-    header('location: /login/');
-    exit();
-}
+verify_csrf($_GET);
 
 if (!empty($_GET['rule'])) {
     $v_rule = escapeshellarg($_GET['rule']);
-    exec (HESTIA_CMD."v-delete-firewall-rule ".$v_rule, $output, $return_var);
+    exec(HESTIA_CMD."v-delete-firewall-rule ".$v_rule, $output, $return_var);
 }
-check_return_code($return_var,$output);
+check_return_code($return_var, $output);
 unset($output);
 
 $back = $_SESSION['back'];

@@ -1,16 +1,14 @@
 <?php
+
 // Init
-error_reporting(NULL);
+error_reporting(null);
 ob_start();
 session_start();
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check token
-if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
-    header('Location: /login/');
-    exit();
-}
+verify_csrf($_GET);
 
 $backup = escapeshellarg($_GET['backup']);
 
@@ -21,12 +19,24 @@ $db = 'no';
 $cron = 'no';
 $udir = 'no';
 
-if ($_GET['type'] == 'web') $web = escapeshellarg($_GET['object']);
-if ($_GET['type'] == 'dns') $dns = escapeshellarg($_GET['object']);
-if ($_GET['type'] == 'mail') $mail = escapeshellarg($_GET['object']);
-if ($_GET['type'] == 'db') $db = escapeshellarg($_GET['object']);
-if ($_GET['type'] == 'cron') $cron = 'yes';
-if ($_GET['type'] == 'udir') $udir = escapeshellarg($_GET['object']);
+if ($_GET['type'] == 'web') {
+    $web = escapeshellarg($_GET['object']);
+}
+if ($_GET['type'] == 'dns') {
+    $dns = escapeshellarg($_GET['object']);
+}
+if ($_GET['type'] == 'mail') {
+    $mail = escapeshellarg($_GET['object']);
+}
+if ($_GET['type'] == 'db') {
+    $db = escapeshellarg($_GET['object']);
+}
+if ($_GET['type'] == 'cron') {
+    $cron = 'yes';
+}
+if ($_GET['type'] == 'udir') {
+    $udir = escapeshellarg($_GET['object']);
+}
 
 if (!empty($_GET['type'])) {
     $restore_cmd = HESTIA_CMD."v-schedule-user-restore ".$user." ".$backup." ".$web." ".$dns." ".$mail." ".$db." ".$cron." ".$udir;
@@ -34,7 +44,7 @@ if (!empty($_GET['type'])) {
     $restore_cmd = HESTIA_CMD."v-schedule-user-restore ".$user." ".$backup;
 }
 
-exec ($restore_cmd, $output, $return_var);
+exec($restore_cmd, $output, $return_var);
 if ($return_var == 0) {
     $_SESSION['error_msg'] = _('RESTORE_SCHEDULED');
 } else {

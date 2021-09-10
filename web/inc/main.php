@@ -175,14 +175,13 @@ function verify_csrf($method, $return = false)
 {
     if ($method['token'] !== $_SESSION['token'] || empty($method['token']) || empty($_SESSION['token'])) {
         if ($return === true) {
-                return false;
-            } else {
-                header('Location: /login/');
-                die();
-            }
+            return false;
         } else {
-            return true;
+            header('Location: /login/');
+            die();
         }
+    } else {
+        return true;
     }
 }
 

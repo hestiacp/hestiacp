@@ -21,10 +21,7 @@ if (isset($_SESSION['user'])) {
     // Allow administrators to view and manipulate contents of other user accounts
     if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['loginas']))) {
         // Ensure token is passed and matches before granting user impersonation access
-        if ((!$_GET['token']) || ($_SESSION['token'] != $_GET['token'])) {
-            header('location: /list/user/');
-            exit();
-        } else {
+        if (verify_csrf($_GET)) {
             $v_user = escapeshellarg($_GET['loginas']);
             $v_impersonator = escapeshellarg($_SESSION['user']);
             exec(HESTIA_CMD . "v-list-user ".$v_user." json", $output, $return_var);
@@ -90,7 +87,7 @@ if (isset($_SESSION['user'])) {
 function authenticate_user($user, $password, $twofa = '')
 {
     unset($_SESSION['login']);
-    if (isset($_SESSION['token']) && isset($_POST['token']) && $_POST['token'] == $_SESSION['token']) {
+    if (verify_csrf($_POST, true)) {
         $v_user = escapeshellarg($user);
         $ip = $_SERVER['REMOTE_ADDR'];
         $user_agent = $_SERVER['HTTP_USER_AGENT'];

@@ -12,9 +12,8 @@ if (isset($_SESSION['user'])) {
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 if ((!empty($_POST['user'])) && (empty($_POST['code']))) {
-    if ($_POST['token'] != $_SESSION['token']) {
-        header('Location: /');
-    }
+    // Check token
+    verify_csrf($_POST);
     $v_user = escapeshellarg($_POST['user']);
     $user = $_POST['user'];
     $email = $_POST['email'];
@@ -23,14 +22,13 @@ if ((!empty($_POST['user'])) && (empty($_POST['code']))) {
     if ($return_var == 0) {
         $data = json_decode(implode('', $output), true);
         if ($email == $data[$user]['CONTACT']) {
-            //genrate new rkey
-            $rkey = substr(password_hash(rand(0, 10), PASSWORD_DEFAULT), 5, 12);
+            $rkey = substr(password_hash("", PASSWORD_DEFAULT), 8, 12);
             $hash = password_hash($rkey, PASSWORD_DEFAULT);
             $v_rkey = tempnam("/tmp", "vst");
             $fp = fopen($v_rkey, "w");
             fwrite($fp, $hash."\n");
             fclose($fp);
-            exec("/usr/bin/sudo /usr/local/hestia/bin/v-change-user-rkey ".$v_user." ".$v_rkey."", $output, $return_var);
+            exec(HESTIA_CMD . "v-change-user-rkey ".$v_user." ".$v_rkey."", $output, $return_var);
             unset($output);
             unlink($v_rkey);
             $name = $data[$user]['NAME'];
@@ -61,27 +59,24 @@ if ((!empty($_POST['user'])) && (empty($_POST['code']))) {
 }
 
 if ((!empty($_POST['user'])) && (!empty($_POST['code'])) && (!empty($_POST['password']))) {
-    if ($_POST['token'] != $_SESSION['token']) {
-        header('Location: /');
-    }
+    // Check token
+    verify_csrf($_POST);
     if ($_POST['password'] == $_POST['password_confirm']) {
         $v_user = escapeshellarg($_POST['user']);
         $user = $_POST['user'];
-        $cmd="/usr/bin/sudo /usr/local/hestia/bin/v-list-user";
-        exec($cmd." ".$v_user." json", $output, $return_var);
+        exec(HESTIA_CMD . "v-list-user ".$v_user." json", $output, $return_var);
         if ($return_var == 0) {
             $data = json_decode(implode('', $output), true);
             $rkey = $data[$user]['RKEY'];
             if (password_verify($_POST['code'], $rkey)) {
                 unset($output);
-                exec("/usr/bin/sudo /usr/local/hestia/bin/v-get-user-value ".$v_user." RKEYEXP", $output, $return_var);
+                exec(HESTIA_CMD . "v-get-user-value ".$v_user." RKEYEXP", $output, $return_var);
                 if ($output[0] > time() - 900) {
                     $v_password = tempnam("/tmp", "vst");
                     $fp = fopen($v_password, "w");
                     fwrite($fp, $_POST['password']."\n");
                     fclose($fp);
-                    $cmd="/usr/bin/sudo /usr/local/hestia/bin/v-change-user-password";
-                    exec($cmd." ".$v_user." ".$v_password, $output, $return_var);
+                    exec(HESTIA_CMD . "v-change-user-password ".$v_user." ".$v_password, $output, $return_var);
                     unlink($v_password);
                     if ($return_var > 0) {
                         sleep(5);
@@ -104,7 +99,6 @@ if ((!empty($_POST['user'])) && (!empty($_POST['code'])) && (!empty($_POST['pass
         } else {
             sleep(5);
             $ERROR = "<a class=\"error\">"._('Invalid username or code')."</a>";
-            exec(HESTIA_CMD . 'v-log-user-login ' . $v_user . ' ' . $v_ip . ' failed ' . $v_session_id . ' ' . $v_user_agent .' yes "Invalid Username or Code"', $output, $return_var);
         }
     } else {
         $ERROR = "<a class=\"error\">"._('Passwords not match')."</a>";

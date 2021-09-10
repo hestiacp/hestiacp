@@ -17,10 +17,7 @@ if ($_SESSION['userContext'] != 'admin') {
 if (!empty($_POST['ok'])) {
 
     // Check token
-    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
-        header('location: /login/');
-        exit();
-    }
+    verify_csrf($_POST);
 
     // Check empty fields
     if (empty($_POST['v_package'])) {

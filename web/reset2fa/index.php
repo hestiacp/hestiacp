@@ -13,9 +13,8 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 //Check values
 if (!empty($_POST['user']) && !empty($_POST['twofa'])) {
-    if ($_POST['token'] != $_SESSION['token']) {
-        header('Location: /');
-    }
+    // Check token
+    verify_csrf($_POST);
     $error = true;
     $v_user = escapeshellarg($_POST['user']);
     $user = $_POST['user'];

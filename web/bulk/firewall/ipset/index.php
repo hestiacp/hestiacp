@@ -1,6 +1,7 @@
 <?php
+
 // Init
-error_reporting(NULL);
+error_reporting(null);
 ob_start();
 session_start();
 
@@ -8,13 +9,10 @@ session_start();
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check token
-if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
-    header('location: /login/');
-    exit();
-}
+verify_csrf($_POST);
 
 // Check user
-if ($_SESSION['userContext'] != 'admin')  {
+if ($_SESSION['userContext'] != 'admin') {
     header("Location: /list/user");
     exit;
 }
@@ -30,7 +28,7 @@ switch ($action) {
 
 foreach ($setname as $value) {
     $v_name = escapeshellarg($value);
-    exec (HESTIA_CMD.$cmd." ".$v_name, $output, $return_var);
+    exec(HESTIA_CMD.$cmd." ".$v_name, $output, $return_var);
 }
 
 header("Location: /list/firewall/ipset/");

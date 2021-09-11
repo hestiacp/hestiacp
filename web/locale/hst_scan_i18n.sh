@@ -15,7 +15,7 @@ find ../.. \( -name '*.php' -o -name '*.html' -o -name '*.sh' \) | xgettext --ou
 OLDIFS=$IFS
 IFS=$'\n'
 for string in $(awk -F'SYSTEM=' '/data=".+ SYSTEM=[^"]/ {print $2}' $HESTIA/bin/v-list-sys-services | cut -d\' -f2); do
-    if [ -z "$(grep "$string" hestiacp.pot)" ]; then
+    if [ -z "$(grep "\"$string\"" hestiacp.pot)" ]; then
         echo -e "\n#: ../../bin/v-list-sys-services:"$(grep -n "$string" $HESTIA/bin/v-list-sys-services | cut -d: -f1)"\nmsgid \"$string\"\nmsgstr \"\"" >> hestiacp.pot
     fi
 done

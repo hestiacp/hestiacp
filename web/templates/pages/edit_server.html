@@ -946,7 +946,7 @@
 								<table style="<?php if (empty($v_security_adv)) echo 'display:none;';?>" id="security">
 									<tr>
 										<td class="section-title" onclick="javascript:elementHideShow('security-system-table',this);">
-											<?=('System');?>
+											<?=_('System');?>
 											<i class="fas fa-plus-square status-icon dim maroon section-hide-button"></i>
 										</td>
 									</tr>
@@ -1055,7 +1055,7 @@
 									<?php if (($_SESSION['userContext'] === "admin") && ($_SESSION['user'] === 'admin')) {?>
 										<tr>
 											<td class="section-title" onclick="javascript:elementHideShow('security-sysadminprotect-table',this);">
-												<?=('System Protection');?>
+												<?=_('System Protection');?>
 												<i class="fas fa-plus-square status-icon dim maroon section-hide-button"></i>
 											</td>
 										</tr>
@@ -1116,7 +1116,7 @@
 									<?php } ?>
 									<tr>
 										<td class="section-title" onclick="javascript:elementHideShow('security-policies-table',this);">
-											<?=('Policies');?>
+											<?=_('Policies');?>
 											<i class="fas fa-plus-square status-icon dim maroon section-hide-button"></i>
 										</td>
 									</tr>
@@ -1131,7 +1131,7 @@
 												<?php if ($_SESSION['POLICY_SYSTEM_ENABLE_BACON'] === 'true') { ?>
 												<tr>
 													<td class="vst-text input-label">
-														<?=_('Allow suspended users to log in with read-only access');?> <span class="hint">(Preview)</span>
+														<?=_('Allow suspended users to log in with read-only access');?> <span class="hint">(<?=_('Preview');?>)</span>
 													</td>
 												</tr>
 												<tr>

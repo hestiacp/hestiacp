@@ -1481,13 +1481,13 @@ if [ "$mysql" = 'yes' ]; then
     if [ $memory -gt 3900000 ]; then
         mycnf="my-large.cnf"
     fi
-
+    
+    # Run mysql_install_db 
+    mysql_install_db >> $LOG
     # Remove symbolic link
     rm -f /etc/mysql/my.cnf
-
     # Configuring MariaDB
     cp -f $HESTIA_INSTALL_DIR/mysql/$mycnf /etc/mysql/my.cnf
-    mysql_install_db >> $LOG
 
     update-rc.d mysql defaults > /dev/null 2>&1
     systemctl start mysql >> $LOG

@@ -393,8 +393,12 @@ upgrade_start_backup() {
                 echo "      ---- mysql"
             fi
             cp -f /etc/mysql/*.cnf $HESTIA_BACKUP/conf/mysql/
+            if [ -d "/etc/mysql/conf.d/" ]; then
             cp -f /etc/mysql/conf.d/*.cnf $HESTIA_BACKUP/conf/mysql/ > /dev/null 2>&1
-            cp -f /etc/mysql/mariadb.conf.d/*.cnf $HESTIA_BACKUP/conf/mysql/ > /dev/null 2>&1       
+            fi
+            if [ -d "/etc/mysql/mariadb.conf.d/" ]; then
+            cp -f /etc/mysql/mariadb.conf.d/*.cnf $HESTIA_BACKUP/conf/mysql/ > /dev/null 2>&1
+            fi       
         fi
         if [[ "$DB_SYSTEM" =~ "pgsql" ]]; then
             if [ "$DEBUG_MODE" = "true" ]; then

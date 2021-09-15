@@ -1,5 +1,6 @@
 <?php
-error_reporting(NULL);
+
+error_reporting(null);
 ob_start();
 $TAB = 'MAIL';
 
@@ -19,28 +20,27 @@ if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
 
 $v_username = $user;
 
-// Get all user domains 
-exec (HESTIA_CMD."v-list-mail-domains ".escapeshellarg($user)." json", $output, $return_var);
+// Get all user domains
+exec(HESTIA_CMD."v-list-mail-domains ".escapeshellarg($user)." json", $output, $return_var);
 $user_domains = json_decode(implode('', $output), true);
 $user_domains = array_keys($user_domains);
 unset($output);
 
-exec (HESTIA_CMD."v-list-sys-webmail json", $output, $return_var);
+exec(HESTIA_CMD."v-list-sys-webmail json", $output, $return_var);
 $webmail_clients = json_decode(implode('', $output), true);
 unset($output);
 
 // List mail domain
 if ((!empty($_GET['domain'])) && (empty($_GET['account']))) {
-
     $v_domain = $_GET['domain'];
     if ($_SESSION['userContext'] !== 'admin') {
-        if(!in_array($v_domain, $user_domains)) {
+        if (!in_array($v_domain, $user_domains)) {
             header("Location: /list/mail/");
             exit;
         }
     }
 
-    exec (HESTIA_CMD."v-list-mail-domain ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
+    exec(HESTIA_CMD."v-list-mail-domain ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
     $data = json_decode(implode('', $output), true);
     unset($output);
 
@@ -59,15 +59,15 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account']))) {
     $v_smtp_relay_port = $data[$v_domain]['U_SMTP_RELAY_PORT'];
     $v_smtp_relay_user = $data[$v_domain]['U_SMTP_RELAY_USERNAME'];
 
-    if ( $v_suspended == 'yes' ) {
+    if ($v_suspended == 'yes') {
         $v_status =  'suspended';
     } else {
         $v_status =  'active';
     }
-    
+
     $v_ssl = $data[$v_domain]['SSL'];
     if (!empty($v_ssl)) {
-        exec (HESTIA_CMD."v-list-mail-domain-ssl ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
+        exec(HESTIA_CMD."v-list-mail-domain-ssl ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
         $ssl_str = json_decode(implode('', $output), true);
         unset($output);
         $v_ssl_crt = $ssl_str[$v_domain]['CRT'];
@@ -82,22 +82,23 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account']))) {
         $v_ssl_issuer = $ssl_str[$v_domain]['ISSUER'];
     }
     $v_letsencrypt = $data[$v_domain]['LETSENCRYPT'];
-    if (empty($v_letsencrypt)) $v_letsencrypt = 'no';
+    if (empty($v_letsencrypt)) {
+        $v_letsencrypt = 'no';
+    }
 }
 
 // List mail account
 if ((!empty($_GET['domain'])) && (!empty($_GET['account']))) {
-
     $v_domain = $_GET['domain'];
     if ($_SESSION['userContext'] !== 'admin') {
-        if(!in_array($v_domain, $user_domains)) {
+        if (!in_array($v_domain, $user_domains)) {
             header("Location: /list/mail/");
             exit;
         }
     }
 
     $v_account = $_GET['account'];
-    exec (HESTIA_CMD."v-list-mail-account ".$user." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." 'json'", $output, $return_var);
+    exec(HESTIA_CMD."v-list-mail-account ".$user." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." 'json'", $output, $return_var);
     $data = json_decode(implode('', $output), true);
     unset($output);
 
@@ -110,8 +111,8 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['account']))) {
     if ($v_fwd == ":blackhole:") {
         $v_fwd = '';
         $v_blackhole = "yes";
-    }else{
-        $v_blackhole = "no";        
+    } else {
+        $v_blackhole = "no";
     }
     $vfwd = explode(",", $data[$v_account]['FWD']);
     $v_fwd_only = $data[$v_account]['FWD_ONLY'];
@@ -119,7 +120,7 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['account']))) {
     $v_autoreply = $data[$v_account]['AUTOREPLY'];
     $v_suspended = $data[$v_account]['SUSPENDED'];
     $v_webmail_alias = $data[$v_account]['WEBMAIL_ALIAS'];
-    if ( $v_suspended == 'yes' ) {
+    if ($v_suspended == 'yes') {
         $v_status =  'suspended';
     } else {
         $v_status =  'active';
@@ -128,8 +129,8 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['account']))) {
     $v_time = $data[$v_account]['TIME'];
 
     // Parse autoreply
-    if ( $v_autoreply == 'yes' ) {
-        exec (HESTIA_CMD."v-list-mail-account-autoreply ".$user." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." json", $output, $return_var);
+    if ($v_autoreply == 'yes') {
+        exec(HESTIA_CMD."v-list-mail-account-autoreply ".$user." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." json", $output, $return_var);
         $autoreply_str = json_decode(implode('', $output), true);
         unset($output);
         $v_autoreply_message = $autoreply_str[$v_account]['MSG'];
@@ -141,68 +142,65 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['account']))) {
 // Check POST request for mail domain
 if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['account']))) {
     $v_domain = $_POST['v_domain'];
-    if(!in_array($v_domain, $user_domains)) {
+    if (!in_array($v_domain, $user_domains)) {
         check_return_code(3, ["Unknown domain"]);
     }
 
     // Check token
-    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
-        header('location: /login/');
-        exit();
-    }
+    verify_csrf($_POST);
 
     // Delete antispam
     if (($v_antispam == 'yes') && (empty($_POST['v_antispam'])) && (empty($_SESSION['error_msg']))) {
-        exec (HESTIA_CMD."v-delete-mail-domain-antispam ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
-        check_return_code($return_var,$output);
+        exec(HESTIA_CMD."v-delete-mail-domain-antispam ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
+        check_return_code($return_var, $output);
         $v_antispam = 'no';
         unset($output);
     }
 
     // Add antispam
     if (($v_antispam == 'no') && (!empty($_POST['v_antispam'])) && (empty($_SESSION['error_msg']))) {
-        exec (HESTIA_CMD."v-add-mail-domain-antispam ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
-        check_return_code($return_var,$output);
+        exec(HESTIA_CMD."v-add-mail-domain-antispam ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
+        check_return_code($return_var, $output);
         $v_antispam = 'yes';
         unset($output);
     }
 
     // Delete antivirus
     if (($v_antivirus == 'yes') && (empty($_POST['v_antivirus'])) && (empty($_SESSION['error_msg']))) {
-        exec (HESTIA_CMD."v-delete-mail-domain-antivirus ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
-        check_return_code($return_var,$output);
+        exec(HESTIA_CMD."v-delete-mail-domain-antivirus ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
+        check_return_code($return_var, $output);
         $v_antivirus = 'no';
         unset($output);
     }
 
     // Add antivirus
     if (($v_antivirus == 'no') && (!empty($_POST['v_antivirus'])) && (empty($_SESSION['error_msg']))) {
-        exec (HESTIA_CMD."v-add-mail-domain-antivirus ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
-        check_return_code($return_var,$output);
+        exec(HESTIA_CMD."v-add-mail-domain-antivirus ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
+        check_return_code($return_var, $output);
         $v_antivirus = 'yes';
         unset($output);
     }
 
     // Delete DKIM
     if (($v_dkim == 'yes') && (empty($_POST['v_dkim'])) && (empty($_SESSION['error_msg']))) {
-        exec (HESTIA_CMD."v-delete-mail-domain-dkim ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
-        check_return_code($return_var,$output);
+        exec(HESTIA_CMD."v-delete-mail-domain-dkim ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
+        check_return_code($return_var, $output);
         $v_dkim = 'no';
         unset($output);
     }
 
     // Add DKIM
     if (($v_dkim == 'no') && (!empty($_POST['v_dkim'])) && (empty($_SESSION['error_msg']))) {
-        exec (HESTIA_CMD."v-add-mail-domain-dkim ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
-        check_return_code($return_var,$output);
+        exec(HESTIA_CMD."v-add-mail-domain-dkim ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
+        check_return_code($return_var, $output);
         $v_dkim = 'yes';
         unset($output);
     }
 
     // Delete catchall
     if ((!empty($v_catchall)) && (empty($_POST['v_catchall'])) && (empty($_SESSION['error_msg']))) {
-        exec (HESTIA_CMD."v-delete-mail-domain-catchall ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
-        check_return_code($return_var,$output);
+        exec(HESTIA_CMD."v-delete-mail-domain-catchall ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
+        check_return_code($return_var, $output);
         $v_catchall = '';
         unset($output);
     }
@@ -211,8 +209,8 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
     if ((!empty($v_catchall)) && (!empty($_POST['v_catchall'])) && (empty($_SESSION['error_msg']))) {
         if ($v_catchall != $_POST['v_catchall']) {
             $v_catchall = escapeshellarg($_POST['v_catchall']);
-            exec (HESTIA_CMD."v-change-mail-domain-catchall ".$v_username." ".escapeshellarg($v_domain)." ".$v_catchall, $output, $return_var);
-            check_return_code($return_var,$output);
+            exec(HESTIA_CMD."v-change-mail-domain-catchall ".$v_username." ".escapeshellarg($v_domain)." ".$v_catchall, $output, $return_var);
+            check_return_code($return_var, $output);
             unset($output);
         }
     }
@@ -220,43 +218,43 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
     // Add catchall
     if ((empty($v_catchall)) && (!empty($_POST['v_catchall'])) && (empty($_SESSION['error_msg']))) {
         $v_catchall = escapeshellarg($_POST['v_catchall']);
-        exec (HESTIA_CMD."v-add-mail-domain-catchall ".$v_username." ".escapeshellarg($v_domain)." ".$v_catchall, $output, $return_var);
-        check_return_code($return_var,$output);
+        exec(HESTIA_CMD."v-add-mail-domain-catchall ".$v_username." ".escapeshellarg($v_domain)." ".$v_catchall, $output, $return_var);
+        check_return_code($return_var, $output);
         unset($output);
     }
-    
-    if (!empty($_SESSION['IMAP_SYSTEM']) && !empty($_SESSION['WEBMAIL_SYSTEM'])){
-        if (empty($_SESSION['error_msg'])) {
-        if (!empty($_POST['v_webmail'])) {
-            $v_webmail = escapeshellarg($_POST['v_webmail']);
-            exec (HESTIA_CMD."v-add-mail-domain-webmail ".$user." ".$v_domain." ".$v_webmail." yes", $output, $return_var);
-            check_return_code($return_var,$output);
-            unset($output);
-        }
-        }
-    }
-    
+
     if (!empty($_SESSION['IMAP_SYSTEM']) && !empty($_SESSION['WEBMAIL_SYSTEM'])) {
-        if (empty($_POST['v_webmail'])) {
-            if (empty($_SESSION['error_msg'])) {
-            exec (HESTIA_CMD."v-delete-mail-domain-webmail ".$user." ".$v_domain." yes", $output, $return_var);
-            check_return_code($return_var,$output);
-            $v_webmail = "";
-            unset($output);
+        if (empty($_SESSION['error_msg'])) {
+            if (!empty($_POST['v_webmail'])) {
+                $v_webmail = escapeshellarg($_POST['v_webmail']);
+                exec(HESTIA_CMD."v-add-mail-domain-webmail ".$user." ".$v_domain." ".$v_webmail." yes", $output, $return_var);
+                check_return_code($return_var, $output);
+                unset($output);
             }
         }
     }
-    
+
+    if (!empty($_SESSION['IMAP_SYSTEM']) && !empty($_SESSION['WEBMAIL_SYSTEM'])) {
+        if (empty($_POST['v_webmail'])) {
+            if (empty($_SESSION['error_msg'])) {
+                exec(HESTIA_CMD."v-delete-mail-domain-webmail ".$user." ".$v_domain." yes", $output, $return_var);
+                check_return_code($return_var, $output);
+                $v_webmail = "";
+                unset($output);
+            }
+        }
+    }
+
     // Change SSL certificate
-    if (( $v_letsencrypt == 'no' ) && (empty($_POST['v_letsencrypt'])) && ( $v_ssl == 'yes' ) && (!empty($_POST['v_ssl'])) && (empty($_SESSION['error_msg']))) {
-        if (( $v_ssl_crt != str_replace("\r\n", "\n",  $_POST['v_ssl_crt'])) || ( $v_ssl_key != str_replace("\r\n", "\n",  $_POST['v_ssl_key'])) || ( $v_ssl_ca != str_replace("\r\n", "\n",  $_POST['v_ssl_ca']))) {
-            exec ('mktemp -d', $mktemp_output, $return_var);
+    if (($v_letsencrypt == 'no') && (empty($_POST['v_letsencrypt'])) && ($v_ssl == 'yes') && (!empty($_POST['v_ssl'])) && (empty($_SESSION['error_msg']))) {
+        if (($v_ssl_crt != str_replace("\r\n", "\n", $_POST['v_ssl_crt'])) || ($v_ssl_key != str_replace("\r\n", "\n", $_POST['v_ssl_key'])) || ($v_ssl_ca != str_replace("\r\n", "\n", $_POST['v_ssl_ca']))) {
+            exec('mktemp -d', $mktemp_output, $return_var);
             $tmpdir = $mktemp_output[0];
 
             // Certificate
             if (!empty($_POST['v_ssl_crt'])) {
                 $fp = fopen($tmpdir."/".$v_domain.".crt", 'w');
-                fwrite($fp, str_replace("\r\n", "\n",  $_POST['v_ssl_crt']));
+                fwrite($fp, str_replace("\r\n", "\n", $_POST['v_ssl_crt']));
                 fwrite($fp, "\n");
                 fclose($fp);
             }
@@ -277,13 +275,13 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
                 fclose($fp);
             }
 
-            exec (HESTIA_CMD."v-change-mail-domain-sslcert ".$user." ".escapeshellarg($v_domain)." ".$tmpdir." 'no'", $output, $return_var);
-            check_return_code($return_var,$output);
+            exec(HESTIA_CMD."v-change-mail-domain-sslcert ".$user." ".escapeshellarg($v_domain)." ".$tmpdir." 'no'", $output, $return_var);
+            check_return_code($return_var, $output);
             unset($output);
             $restart_web = 'yes';
             $restart_proxy = 'yes';
 
-            exec (HESTIA_CMD."v-list-mail-domain-ssl ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
+            exec(HESTIA_CMD."v-list-mail-domain-ssl ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
             $ssl_str = json_decode(implode('', $output), true);
             unset($output);
             $v_ssl_crt = $ssl_str[$v_domain]['CRT'];
@@ -298,17 +296,23 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
             $v_ssl_issuer = $ssl_str[$v_domain]['ISSUER'];
 
             // Cleanup certificate tempfiles
-            if (!empty($_POST['v_ssl_crt'])) unlink($tmpdir."/".$v_domain.".crt");
-            if (!empty($_POST['v_ssl_key'])) unlink($tmpdir."/".$v_domain.".key");
-            if (!empty($_POST['v_ssl_ca']))  unlink($tmpdir."/".$v_domain.".ca");
+            if (!empty($_POST['v_ssl_crt'])) {
+                unlink($tmpdir."/".$v_domain.".crt");
+            }
+            if (!empty($_POST['v_ssl_key'])) {
+                unlink($tmpdir."/".$v_domain.".key");
+            }
+            if (!empty($_POST['v_ssl_ca'])) {
+                unlink($tmpdir."/".$v_domain.".ca");
+            }
             rmdir($tmpdir);
         }
     }
 
     // Delete Lets Encrypt support
-    if (( $v_letsencrypt == 'yes' ) && (empty($_POST['v_letsencrypt']) || empty($_POST['v_ssl'])) && (empty($_SESSION['error_msg']))) {
-        exec (HESTIA_CMD."v-delete-letsencrypt-domain ".$user." ".escapeshellarg($v_domain)." ' ' 'yes'", $output, $return_var);
-        check_return_code($return_var,$output);
+    if (($v_letsencrypt == 'yes') && (empty($_POST['v_letsencrypt']) || empty($_POST['v_ssl'])) && (empty($_SESSION['error_msg']))) {
+        exec(HESTIA_CMD."v-delete-letsencrypt-domain ".$user." ".escapeshellarg($v_domain)." ' ' 'yes'", $output, $return_var);
+        check_return_code($return_var, $output);
         unset($output);
         $v_ssl_crt = '';
         $v_ssl_key = '';
@@ -320,9 +324,9 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
     }
 
     // Delete SSL certificate
-    if (( $v_ssl == 'yes' ) && (empty($_POST['v_ssl'])) && (empty($_SESSION['error_msg']))) {
-        exec (HESTIA_CMD."v-delete-mail-domain-ssl ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
-        check_return_code($return_var,$output);
+    if (($v_ssl == 'yes') && (empty($_POST['v_ssl'])) && (empty($_SESSION['error_msg']))) {
+        exec(HESTIA_CMD."v-delete-mail-domain-ssl ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
+        check_return_code($return_var, $output);
         unset($output);
         $v_ssl_crt = '';
         $v_ssl_key = '';
@@ -332,30 +336,34 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
     }
 
     // Add Lets Encrypt support
-    if ((!empty($_POST['v_ssl'])) && ( $v_letsencrypt == 'no' ) && (!empty($_POST['v_letsencrypt'])) && empty($_SESSION['error_msg'])) {
-        exec (HESTIA_CMD."v-add-letsencrypt-domain ".$user." ".escapeshellarg($v_domain)." ' ' 'yes'", $output, $return_var);
-        check_return_code($return_var,$output);
+    if ((!empty($_POST['v_ssl'])) && ($v_letsencrypt == 'no') && (!empty($_POST['v_letsencrypt'])) && empty($_SESSION['error_msg'])) {
+        exec(HESTIA_CMD."v-add-letsencrypt-domain ".$user." ".escapeshellarg($v_domain)." ' ' 'yes'", $output, $return_var);
+        check_return_code($return_var, $output);
         unset($output);
         $v_letsencrypt = 'yes';
         $v_ssl = 'yes';
         $restart_mail = 'yes';
-     }
+    }
 
-     // Add SSL certificate
-     if (( $v_ssl == 'no' ) && (!empty($_POST['v_ssl']))  && (empty($v_letsencrypt_deleted)) && (empty($_SESSION['error_msg']))) {
-        if (empty($_POST['v_ssl_crt'])) $errors[] = 'ssl certificate';
-        if (empty($_POST['v_ssl_key'])) $errors[] = 'ssl key';
+    // Add SSL certificate
+    if (($v_ssl == 'no') && (!empty($_POST['v_ssl']))  && (empty($v_letsencrypt_deleted)) && (empty($_SESSION['error_msg']))) {
+        if (empty($_POST['v_ssl_crt'])) {
+            $errors[] = 'ssl certificate';
+        }
+        if (empty($_POST['v_ssl_key'])) {
+            $errors[] = 'ssl key';
+        }
         if (!empty($errors[0])) {
             foreach ($errors as $i => $error) {
-                if ( $i == 0 ) {
+                if ($i == 0) {
                     $error_msg = $error;
                 } else {
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
+            $_SESSION['error_msg'] = _('Field "%s" can not be blank.', $error_msg);
         } else {
-            exec ('mktemp -d', $mktemp_output, $return_var);
+            exec('mktemp -d', $mktemp_output, $return_var);
             $tmpdir = $mktemp_output[0];
 
             // Certificate
@@ -378,14 +386,14 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
                 fwrite($fp, str_replace("\r\n", "\n", $_POST['v_ssl_ca']));
                 fclose($fp);
             }
-            exec (HESTIA_CMD."v-add-mail-domain-ssl ".$user." ".escapeshellarg($v_domain)." ".$tmpdir." 'no'", $output, $return_var);
-            check_return_code($return_var,$output);
+            exec(HESTIA_CMD."v-add-mail-domain-ssl ".$user." ".escapeshellarg($v_domain)." ".$tmpdir." 'no'", $output, $return_var);
+            check_return_code($return_var, $output);
             unset($output);
             $v_ssl = 'yes';
             $restart_web = 'yes';
             $restart_proxy = 'yes';
 
-            exec (HESTIA_CMD."v-list-mail-domain-ssl ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
+            exec(HESTIA_CMD."v-list-mail-domain-ssl ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
             $ssl_str = json_decode(implode('', $output), true);
             unset($output);
             $v_ssl_crt = $ssl_str[$v_domain]['CRT'];
@@ -400,22 +408,28 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
             $v_ssl_issuer = $ssl_str[$v_domain]['ISSUER'];
 
             // Cleanup certificate tempfiles
-            if (!empty($_POST['v_ssl_crt'])) unlink($tmpdir."/".$v_domain.".crt");
-            if (!empty($_POST['v_ssl_key'])) unlink($tmpdir."/".$v_domain.".key");
-            if (!empty($_POST['v_ssl_ca'])) unlink($tmpdir."/".$v_domain.".ca");
+            if (!empty($_POST['v_ssl_crt'])) {
+                unlink($tmpdir."/".$v_domain.".crt");
+            }
+            if (!empty($_POST['v_ssl_key'])) {
+                unlink($tmpdir."/".$v_domain.".key");
+            }
+            if (!empty($_POST['v_ssl_ca'])) {
+                unlink($tmpdir."/".$v_domain.".ca");
+            }
             rmdir($tmpdir);
         }
     }
 
     // Add SMTP Relay Support
     if (empty($_SESSION['error_msg'])) {
-        if (isset($_POST['v_smtp_relay']) && (!empty($_POST['v_smtp_relay_host'])) && (!empty($_POST['v_smtp_relay_user']))) {           
+        if (isset($_POST['v_smtp_relay']) && (!empty($_POST['v_smtp_relay_host'])) && (!empty($_POST['v_smtp_relay_user']))) {
             if (($_POST['v_smtp_relay_host'] != $v_smtp_relay_host) ||
                 ($_POST['v_smtp_relay_user'] != $v_smtp_relay_user) ||
                 ($_POST['v_smtp_relay_port'] != $v_smtp_relay_port) ||
                 (!empty($_POST['v_smtp_relay_pass']))) {
                 if (!empty($_POST['v_smtp_relay_pass'])) {
-                    $v_smtp_relay = true;	
+                    $v_smtp_relay = true;
                     $v_smtp_relay_host = escapeshellarg($_POST['v_smtp_relay_host']);
                     $v_smtp_relay_user = escapeshellarg($_POST['v_smtp_relay_user']);
                     $v_smtp_relay_pass = escapeshellarg($_POST['v_smtp_relay_pass']);
@@ -424,9 +438,9 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
                     } else {
                         $v_smtp_relay_port = '587';
                     }
-                    exec (HESTIA_CMD."v-add-mail-domain-smtp-relay ".$v_username." ".escapeshellarg($v_domain)." ".$v_smtp_relay_host." ".$v_smtp_relay_user." ".$v_smtp_relay_pass." ".$v_smtp_relay_port, $output, $return_var);
-                    check_return_code($return_var,$output);
-                    unset($output);   
+                    exec(HESTIA_CMD."v-add-mail-domain-smtp-relay ".$v_username." ".escapeshellarg($v_domain)." ".$v_smtp_relay_host." ".$v_smtp_relay_user." ".$v_smtp_relay_pass." ".$v_smtp_relay_port, $output, $return_var);
+                    check_return_code($return_var, $output);
+                    unset($output);
                 } else {
                     $_SESSION['error_msg'] = _('SMTP Relay Password is required');
                 }
@@ -435,8 +449,8 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
         if ((!isset($_POST['v_smtp_relay'])) && ($v_smtp_relay == true)) {
             $v_smtp_relay = false;
             $v_smtp_relay_host = $v_smtp_relay_user = $v_smtp_relay_pass = $v_smtp_relay_port = '';
-            exec (HESTIA_CMD."v-delete-mail-domain-smtp-relay ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
-            check_return_code($return_var,$output);
+            exec(HESTIA_CMD."v-delete-mail-domain-smtp-relay ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
+            check_return_code($return_var, $output);
             unset($output);
         }
     }
@@ -451,10 +465,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
 if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['account']))) {
 
     // Check token
-    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
-        header('location: /login/');
-        exit();
-    }
+    verify_csrf($_POST);
 
     // Validate email
     if ((!empty($_POST['v_send_email'])) && (empty($_SESSION['error_msg']))) {
@@ -464,7 +475,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['acco
     }
 
     $v_domain = $_POST['v_domain'];
-    if(!in_array($v_domain, $user_domains)) {
+    if (!in_array($v_domain, $user_domains)) {
         check_return_code(3, ["Unknown domain"]);
     }
 
@@ -474,15 +485,15 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['acco
 
     // Change password
     if ((!empty($_POST['v_password'])) && (empty($_SESSION['error_msg']))) {
-        if (!validate_password($_POST['v_password'])) { 
+        if (!validate_password($_POST['v_password'])) {
             $_SESSION['error_msg'] = _('Password does not match the minimum requirements');
-        }else{         
-            $v_password = tempnam("/tmp","vst");
+        } else {
+            $v_password = tempnam("/tmp", "vst");
             $fp = fopen($v_password, "w");
             fwrite($fp, $_POST['v_password']."\n");
             fclose($fp);
-            exec (HESTIA_CMD."v-change-mail-account-password ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." ".$v_password, $output, $return_var);
-            check_return_code($return_var,$output);
+            exec(HESTIA_CMD."v-change-mail-account-password ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." ".$v_password, $output, $return_var);
+            check_return_code($return_var, $output);
             unset($output);
             unlink($v_password);
             $v_password = escapeshellarg($_POST['v_password']);
@@ -496,8 +507,8 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['acco
         } else {
             $v_quota = escapeshellarg($_POST['v_quota']);
         }
-        exec (HESTIA_CMD."v-change-mail-account-quota ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." ".$v_quota, $output, $return_var);
-        check_return_code($return_var,$output);
+        exec(HESTIA_CMD."v-change-mail-account-quota ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." ".$v_quota, $output, $return_var);
+        check_return_code($return_var, $output);
         unset($output);
     }
 
@@ -505,63 +516,63 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['acco
     if (empty($_SESSION['error_msg'])) {
         $waliases = preg_replace("/\n/", " ", $_POST['v_aliases']);
         $waliases = preg_replace("/,/", " ", $waliases);
-        $waliases = preg_replace('/\s+/', ' ',$waliases);
+        $waliases = preg_replace('/\s+/', ' ', $waliases);
         $waliases = trim($waliases);
         $aliases = explode(" ", $waliases);
         $v_aliases = str_replace(' ', "\n", $waliases);
         $result = array_diff($valiases, $aliases);
         foreach ($result as $alias) {
             if ((empty($_SESSION['error_msg'])) && (!empty($alias))) {
-                exec (HESTIA_CMD."v-delete-mail-account-alias ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." ".escapeshellarg($alias), $output, $return_var);
-                check_return_code($return_var,$output);
+                exec(HESTIA_CMD."v-delete-mail-account-alias ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." ".escapeshellarg($alias), $output, $return_var);
+                check_return_code($return_var, $output);
                 unset($output);
             }
         }
         $result = array_diff($aliases, $valiases);
         foreach ($result as $alias) {
             if ((empty($_SESSION['error_msg'])) && (!empty($alias))) {
-                exec (HESTIA_CMD."v-add-mail-account-alias ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." ".escapeshellarg($alias), $output, $return_var);
-                check_return_code($return_var,$output);
+                exec(HESTIA_CMD."v-add-mail-account-alias ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." ".escapeshellarg($alias), $output, $return_var);
+                check_return_code($return_var, $output);
                 unset($output);
             }
         }
     }
-    // Change forwarders to :blackhole: 
+    // Change forwarders to :blackhole:
     if (empty($_SESSION['error_msg']) && !empty($_POST['v_blackhole'])) {
         foreach ($vfwd as $forward) {
             if ((empty($_SESSION['error_msg'])) && (!empty($forward))) {
-                exec (HESTIA_CMD."v-delete-mail-account-forward ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." ".escapeshellarg($forward), $output, $return_var);
-                check_return_code($return_var,$output);
+                exec(HESTIA_CMD."v-delete-mail-account-forward ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." ".escapeshellarg($forward), $output, $return_var);
+                check_return_code($return_var, $output);
                 unset($output);
             }
-            exec (HESTIA_CMD."v-add-mail-account-forward ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." :blackhole:", $output, $return_var);
-            check_return_code($return_var,$output);
+            exec(HESTIA_CMD."v-add-mail-account-forward ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." :blackhole:", $output, $return_var);
+            check_return_code($return_var, $output);
             unset($output);
             $v_fwd  = '';
             $v_blackhole = "yes";
-        }   
+        }
     }
     // Change forwarders
     if (empty($_SESSION['error_msg']) && empty($_POST['v_blackhole'])) {
         $wfwd = preg_replace("/\n/", " ", $_POST['v_fwd']);
         $wfwd = preg_replace("/,/", " ", $wfwd);
-        $wfwd = preg_replace('/\s+/', ' ',$wfwd);
+        $wfwd = preg_replace('/\s+/', ' ', $wfwd);
         $wfwd = trim($wfwd);
         $fwd = explode(" ", $wfwd);
         $v_fwd = str_replace(' ', "\n", $wfwd);
         $result = array_diff($vfwd, $fwd);
         foreach ($result as $forward) {
             if ((empty($_SESSION['error_msg'])) && (!empty($forward))) {
-                exec (HESTIA_CMD."v-delete-mail-account-forward ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." ".escapeshellarg($forward), $output, $return_var);
-                check_return_code($return_var,$output);
+                exec(HESTIA_CMD."v-delete-mail-account-forward ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." ".escapeshellarg($forward), $output, $return_var);
+                check_return_code($return_var, $output);
                 unset($output);
             }
         }
         $result = array_diff($fwd, $vfwd);
         foreach ($result as $forward) {
             if ((empty($_SESSION['error_msg'])) && (!empty($forward))) {
-                exec (HESTIA_CMD."v-add-mail-account-forward ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." ".escapeshellarg($forward), $output, $return_var);
-                check_return_code($return_var,$output);
+                exec(HESTIA_CMD."v-add-mail-account-forward ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." ".escapeshellarg($forward), $output, $return_var);
+                check_return_code($return_var, $output);
                 unset($output);
             }
         }
@@ -570,24 +581,24 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['acco
 
     // Delete FWD_ONLY flag
     if (($v_fwd_only == 'yes') && (empty($_POST['v_fwd_only'])) && (empty($_SESSION['error_msg']))) {
-        exec (HESTIA_CMD."v-delete-mail-account-fwd-only ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account), $output, $return_var);
-        check_return_code($return_var,$output);
+        exec(HESTIA_CMD."v-delete-mail-account-fwd-only ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account), $output, $return_var);
+        check_return_code($return_var, $output);
         unset($output);
         $v_fwd_only = '';
     }
 
     // Add FWD_ONLY flag
     if (($v_fwd_only != 'yes') && (!empty($_POST['v_fwd_only'])) && (empty($_SESSION['error_msg']))) {
-        exec (HESTIA_CMD."v-add-mail-account-fwd-only ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account), $output, $return_var);
-        check_return_code($return_var,$output);
+        exec(HESTIA_CMD."v-add-mail-account-fwd-only ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account), $output, $return_var);
+        check_return_code($return_var, $output);
         unset($output);
         $v_fwd_only = 'yes';
     }
 
     // Delete autoreply
     if (($v_autoreply == 'yes') && (empty($_POST['v_autoreply'])) && (empty($_SESSION['error_msg']))) {
-        exec (HESTIA_CMD."v-delete-mail-account-autoreply ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account), $output, $return_var);
-        check_return_code($return_var,$output);
+        exec(HESTIA_CMD."v-delete-mail-account-autoreply ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account), $output, $return_var);
+        check_return_code($return_var, $output);
         unset($output);
         $v_autoreply = 'no';
         $v_autoreply_message = '';
@@ -595,11 +606,11 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['acco
 
     // Add autoreply
     if ((!empty($_POST['v_autoreply'])) && (empty($_SESSION['error_msg']))) {
-        if ( $v_autoreply_message != str_replace("\r\n", "\n", $_POST['v_autoreply_message'])) {
+        if ($v_autoreply_message != str_replace("\r\n", "\n", $_POST['v_autoreply_message'])) {
             $v_autoreply_message = str_replace("\r\n", "\n", $_POST['v_autoreply_message']);
             $v_autoreply_message = escapeshellarg($v_autoreply_message);
-            exec (HESTIA_CMD."v-add-mail-account-autoreply ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." ".$v_autoreply_message, $output, $return_var);
-            check_return_code($return_var,$output);
+            exec(HESTIA_CMD."v-add-mail-account-autoreply ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." ".$v_autoreply_message, $output, $return_var);
+            check_return_code($return_var, $output);
             unset($output);
             $v_autoreply = 'yes';
             $v_autoreply_message = $_POST['v_autoreply_message'];
@@ -625,7 +636,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['acco
 
 
 // Render page
-if (empty($_GET['account']))  {
+if (empty($_GET['account'])) {
     // Display body for mail domain
     render_page($user, $TAB, 'edit_mail');
 } else {

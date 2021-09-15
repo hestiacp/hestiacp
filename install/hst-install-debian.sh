@@ -23,7 +23,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.4.12'
+HESTIA_INSTALL_VER='1.4.13'
 pma_v='5.1.1'
 rc_v="1.4.11"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
@@ -167,6 +167,18 @@ sort_config_file(){
     fi
     cp $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
 }
+
+# Validate hostname according to RFC1178
+validate_hostname () {
+    if [[ $(echo "$servername" | grep -o "\." | wc -l) -gt 1 ]] && [[ ! $servername =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        # Hostname valid
+        return 1
+    else
+        # Hostname invalid
+        return 0
+    fi
+}
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -577,18 +589,31 @@ if [ "$interactive" = 'yes' ]; then
 
     # Asking to set FQDN hostname
     if [ -z "$servername" ]; then
+        # Ask and validate FQDN hostname.
         read -p "Please enter FQDN hostname [$(hostname -f)]: " servername
+
+        # Set hostname if it wasn't set
+        if [ -z "$servername" ]; then
+            servername=$(hostname -f)
+        fi
+
+        # Validate Hostname, go to loop if the validation fails.
+        while validate_hostname; do
+            echo -e "\nPlease use a valid hostname according to RFC1178 (ex. hostname.domain.tld)."
+            read -p "Please enter FQDN hostname [$(hostname -f)]: " servername
+        done
+    else
+        # Validate FQDN hostname if it is preset
+        if validate_hostname; then
+            echo "Please use a valid hostname according to RFC1178 (ex. hostname.domain.tld)."
+            exit 1
+        fi
     fi
 fi
 
 # Generating admin password if it wasn't set
 if [ -z "$vpass" ]; then
     vpass=$(gen_pass)
-fi
-
-# Set hostname if it wasn't set
-if [ -z "$servername" ]; then
-    servername=$(hostname -f)
 fi
 
 # Set FQDN if it wasn't set
@@ -1439,12 +1464,11 @@ if [ "$mysql" = 'yes' ]; then
         mycnf="my-large.cnf"
     fi
 
+    mysql_install_db >> $LOG
     # Remove symbolic link
     rm -f /etc/mysql/my.cnf
-
     # Configuring MariaDB
     cp -f $HESTIA_INSTALL_DIR/mysql/$mycnf /etc/mysql/my.cnf
-    mysql_install_db >> $LOG
 
     update-rc.d mysql defaults > /dev/null 2>&1
     systemctl start mysql >> $LOG
@@ -1915,7 +1939,7 @@ write_config_value "POLICY_USER_EDIT_DETAILS" "yes"
 write_config_value "POLICY_USER_DELETE_LOGS" "yes"
 write_config_value "POLICY_USER_CHANGE_THEME" "yes"
 write_config_value "POLICY_SYSTEM_PROTECTED_ADMIN" "no"
-write_config_value "POLICY_SYSTEM_PASSWORD_RESET" "no"
+write_config_value "POLICY_SYSTEM_PASSWORD_RESET" "yes"
 write_config_value "POLICY_SYSTEM_HIDE_SERVICES" "yes"
 write_config_value "POLICY_SYSTEM_ENABLE_BACON" "no"
 write_config_value "PLUGIN_APP_INSTALLER" "true"
@@ -1928,6 +1952,7 @@ write_config_value "SERVER_SMTP_SECURITY" ""
 write_config_value "SERVER_SMTP_USER" ""
 write_config_value "SERVER_SMTP_PASSWD" ""
 write_config_value "SERVER_SMTP_ADDR" ""
+write_config_value "POLICY_CSRF_STRICTNESS" "1"
 
 #----------------------------------------------------------#
 #                  Configure PHPMailer                     #

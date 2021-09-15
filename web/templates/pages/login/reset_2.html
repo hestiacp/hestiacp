@@ -26,6 +26,7 @@
 									<tr>
 										<td>
 											<input type="hidden" name="action" value="confirm">
+											<input type="hidden" name="token" value="<?=$_SESSION['token'];?>"/>
 											<input type="hidden" name="user" value="<?=htmlentities($_GET['user'], ENT_QUOTES|ENT_HTML5)?>">
 											<input tabindex="1" type="text" size="20px" style="width:240px" name="code" class="vst-input">
 										</td>

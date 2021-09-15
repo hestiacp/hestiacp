@@ -9,6 +9,7 @@
 						</td>
 						<td style="padding: 40px 60px 0 0;" class="animated fadeIn">
 							<form method="post" action="/reset/">
+								<input type="hidden" name="token" value="<?=$_SESSION['token'];?>"/>
 								<table class="login-box">
 									<tr>
 										<td style="padding: 12px 0 0 2px;" class="login-welcome">

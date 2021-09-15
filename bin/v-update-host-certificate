@@ -84,15 +84,10 @@ if [ -z "$UPDATE_HOSTNAME_SSL" ]; then
 fi
 
 # Restart services
-$BIN/v-restart-web
-$BIN/v-restart-proxy
-if [ ! -z "$MAIL_SYSTEM" ]; then
-    # Restart exim (and dovecot if applicable)
-    $BIN/v-restart-mail
-fi
-if [ "$FTP_SYSTEM" = "vsftpd" ]; then
-    $BIN/v-restart-ftp
-fi
+$BIN/v-restart-web updatessl
+$BIN/v-restart-proxy updatessl
+$BIN/v-restart-mail
+$BIN/v-restart-ftp
 $BIN/v-restart-service hestia
 
 #----------------------------------------------------------#

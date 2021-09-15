@@ -1,18 +1,16 @@
 <?php
+
 // Init
-error_reporting(NULL);
+error_reporting(null);
 ob_start();
 session_start();
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check token
-if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
-    header('location: /login/');
-    exit();
-}
+verify_csrf($_GET);
 
-// If the stored reset token matches the current request one it means that we need 
-// to prevent the action because the browser automatically reloaded the page when 
+// If the stored reset token matches the current request one it means that we need
+// to prevent the action because the browser automatically reloaded the page when
 // the server turned on. This will prevent duplicate restarts.
 $reset_token_dir = '/var/tmp/';
 if (isset($_GET['system_reset_token']) && is_numeric($_GET['system_reset_token'])) {

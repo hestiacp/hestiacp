@@ -12,9 +12,17 @@ echo "[ * ] Remove old hestiacp.pot and generate new one"
 rm hestiacp.pot
 echo "" > hestiacp.pot
 find ../.. \( -name '*.php' -o -name '*.html' -o -name '*.sh' \) | xgettext --output=hestiacp.pot --language=PHP --join-existing -f -
+OLDIFS=$IFS
+IFS=$'\n'
+for string in $(awk -F'SYSTEM=' '/data=".+ SYSTEM=[^"]/ {print $2}' $HESTIA/bin/v-list-sys-services | cut -d\' -f2); do
+    if [ -z "$(grep "\"$string\"" hestiacp.pot)" ]; then
+        echo -e "\n#: ../../bin/v-list-sys-services:"$(grep -n "$string" $HESTIA/bin/v-list-sys-services | cut -d: -f1)"\nmsgid \"$string\"\nmsgstr \"\"" >> hestiacp.pot
+    fi
+done
+IFS=$OLDIFS
 
 echo "[ * ] Scan language folders"
-languages=$(ls -d $HESTIA/web/locale/*/ |awk -F'/' '{print $(NF-1)}');
+languages=$(ls -d $HESTIA/web/locale/*/ | awk -F'/' '{print $(NF-1)}');
 echo "[ * ] Update hestiacp.pot with new files"
 for lang in $languages; do
     if [ -e "$HESTIA/web/locale/$lang/LC_MESSAGES/hestiacp.po" ]; then 

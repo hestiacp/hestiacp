@@ -1,24 +1,21 @@
 <?php
+
 // Init
-error_reporting(NULL);
+error_reporting(null);
 ob_start();
 session_start();
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check token
-if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
-    header('location: /login/');
-    exit();
-}
+verify_csrf($_GET);
 
 if ($_SESSION['userContext'] === 'admin') {
     if (!empty($_GET['ip'])) {
         $v_ip = escapeshellarg($_GET['ip']);
-        exec (HESTIA_CMD."v-delete-sys-ip ".$v_ip, $output, $return_var);
+        exec(HESTIA_CMD."v-delete-sys-ip ".$v_ip, $output, $return_var);
     }
-    check_return_code($return_var,$output);
+    check_return_code($return_var, $output);
     unset($output);
-
 }
 
 $back = $_SESSION['back'];

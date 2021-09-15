@@ -8,6 +8,9 @@ ip=$2
 status=$3
 session_id=$4
 user_agent=$5
+authlog="${6-no}"
+reason="${7}"
+
 
 active="yes"
 if [ "$status" = "failed" ]; then
@@ -24,7 +27,7 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER IP SESSION_ID USER_AGENT'
+check_args '2' "$#" 'USER IP SESSION_ID USER_AGENT [AUTHLOG] [REASON]'
 is_format_valid 'user' 'ip'
 is_object_valid 'user' 'USER' "$user"
 
@@ -43,8 +46,13 @@ fi
 
 echo "DATE='$date' TIME='$time' IP='$ip' ACTION='login' STATUS='$status' USER_AGENT='$user_agent' SESSION='$session_id' ACTIVE='$active'" >> $USER_DATA/auth.log
 
+if [ "$authlog" = "yes" ]; then
+    echo "$date $time $user $ip failed to login ($reason)" >> $HESTIA/log/auth.log    
+fi
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
+echo "Test" >> $HESTIA/log/system.log
 exit

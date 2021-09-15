@@ -191,12 +191,25 @@ upgrade_send_notification_to_email () {
         echo "$HOSTNAME has been upgraded from Hestia Control Panel v$VERSION to v${new_version}." >> $message_tmp_file
         echo "Installation log: $LOG" >> $message_tmp_file
         echo "" >> $message_tmp_file
+
+        # Check for additional upgrade notes from update scripts.
+        if [[ -z "$UPGRADE_MESSAGE" ]]; then
+            echo "==================================================="  >> $message_tmp_file
+            echo "The upgrade script has generated additional notifications, which must be heeded urgently:" >> $message_tmp_file
+            echo "" >> $message_tmp_file
+            echo -e $UPGRADE_MESSAGE >> $message_tmp_file
+            echo "" >> $message_tmp_file
+            echo "==================================================="  >> $message_tmp_file
+            echo "" >> $message_tmp_file
+        fi
+
         echo "What's new: https://github.com/hestiacp/hestiacp/blob/$RELEASE_BRANCH/CHANGELOG.md" >> $message_tmp_file
         echo  >> $message_tmp_file
         echo "What to do if you run into issues:" >> $message_tmp_file
         echo "- Check our forums for possible solutions: https://forum.hestiacp.com" >> $message_tmp_file
         echo "- File an issue report on GitHub: https://github.com/hestiacp/hestiacp/issues" >> $message_tmp_file
         echo "" >> $message_tmp_file
+        echo "Help support the Hestia Control Panel project by donating via PayPal: https://www.hestiacp.com/donate" >> $message_tmp_file
         echo "==================================================="  >> $message_tmp_file
         echo "Have a wonderful day," >> $message_tmp_file
         echo "The Hestia Control Panel development team" >> $message_tmp_file
@@ -380,8 +393,12 @@ upgrade_start_backup() {
                 echo "      ---- mysql"
             fi
             cp -f /etc/mysql/*.cnf $HESTIA_BACKUP/conf/mysql/
+            if [ -d "/etc/mysql/conf.d/" ]; then
             cp -f /etc/mysql/conf.d/*.cnf $HESTIA_BACKUP/conf/mysql/ > /dev/null 2>&1
-            cp -f /etc/mysql/mariadb.conf.d/*.cnf $HESTIA_BACKUP/conf/mysql/ > /dev/null 2>&1       
+            fi
+            if [ -d "/etc/mysql/mariadb.conf.d/" ]; then
+            cp -f /etc/mysql/mariadb.conf.d/*.cnf $HESTIA_BACKUP/conf/mysql/ > /dev/null 2>&1
+            fi       
         fi
         if [[ "$DB_SYSTEM" =~ "pgsql" ]]; then
             if [ "$DEBUG_MODE" = "true" ]; then

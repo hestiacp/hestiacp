@@ -19,6 +19,12 @@ fi
 #                Initialize functions/variables               #
 ###############################################################
 
+if [ -z "$HESTIA" ]; then
+    export HESTIA='/usr/local/hestia'
+    PATH=$PATH:/usr/local/hestia/bin
+    export PATH
+fi
+
 # Load upgrade functions and variables
 source /usr/local/hestia/func/main.sh
 source /usr/local/hestia/func/upgrade.sh

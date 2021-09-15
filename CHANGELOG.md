@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [1.4.13] - Development
+## [1.4.13] - Service release 
 
 ### Features
 - Introduce UPGRADE_MESSAGE variable to support custom messages in e-mail upgrade notification.
@@ -10,10 +10,16 @@ All notable changes to this project will be documented in this file.
 - Improve the hostname check to prevent invalid hostnames or the use of an ip address (RFC1178).
 - Prevent CSRF from other domains / websites
 - Fix #2096 Hostname SSL got overwritten by mail.hostname.com certificate
-- Add small wait for /usr/bin/iptables-restore [Forum](https://forum.hestiacp.com/t/clean-install-arm64-does-not-start-after-reboot-v-start-service-iptables/4395/7)
+- Add small wait for /usr/bin/iptables-restore [Forum](https://forum.hestiacp.com/t/clean-install-arm64-does-not-start-after-reboot-v-start-service-iptables/4395/7) + Fixed v-add-firewall / v-delete-firewall function (#2112) @myrevery
 - Fix bug in v-change-sys-api. When using  v-change-sys-api remove and then  v-change-sys-api enable + custom release branch the resetting of api failed + no "error" output was producted
-- Improve error reporting pma-sso function
-- Fixed 2104 v-change-web-domain-name unable to start webserver
+- Improve error reporting PMA Single sign on function function
+- Fixed an issue in v-change-web-domain-name where webserserver where not able to start because old config files where not propperly deleted #2104
+- Fixed potential XSS vulnerability in /list/keys/  @wtwwer [Disclosure](https://huntr.dev/bounties/0fefa2f6-7024-44c8-87c7-4d01fb93403e/)
+- Removed /edit/file as it has been replaced by Filegator and part of the old Vesta Filemanager 
+- Fixed potential External control / path vulnerability in /add/package @wtwwer [Disclosure](https://huntr.dev/bounties/e0a2c6ff-b4fe-45a2-9d79-1f4dc1b381ab/)
+- Add extra checks to prevent type juggling @vikychoi [Disclosure](https://huntr.dev/bounties/c24fb15c-3c84-45c8-af04-a660f8da388f/)
+- Improved and updated some missing translation strings @myrevery
+- Sync translations with Github
 
 ## [1.4.12] - Service release 
 

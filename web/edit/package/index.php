@@ -262,10 +262,7 @@ if (!empty($_POST['save'])) {
     unset($output);
 
     fclose($fp);
-
-    // Remove temporary dir
-    exec('rm -rf '.$tmpdir, $output, $return_var);
-    unset($output);
+    unlink($tmpfile);
 
     // Propogate new package
     exec(HESTIA_CMD."v-update-user-package ".$v_package." 'json'", $output, $return_var);

@@ -1462,9 +1462,58 @@ function check_ip_not_banned(){
 @test "Test Whitelist Fail2ban" {
 
 echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
-run v-add-firewall-ban '1.2.3.4' 'HESTIA'
-rm $HESTIA/data/firewall/excludes.conf
-check_ip_not_banned '1.2.3.4' 'HESTIA'
+  run v-add-firewall-ban '1.2.3.4' 'HESTIA'
+  rm $HESTIA/data/firewall/excludes.conf
+  check_ip_not_banned '1.2.3.4' 'HESTIA'
+}
+
+#----------------------------------------------------------#
+#                         PACKAGE                          #
+#----------------------------------------------------------#
+
+@test "Package: Create new Package" {
+    cp $HESTIA/data/packages/default.pkg /tmp/package
+    run v-add-user-package /tmp/package hestiatest
+    assert_success
+    refute_output
+}
+
+@test "Package: Assign user to new Package" {
+    run v-change-user-package  $user hestiatest
+    assert_success
+    refute_output
+}
+
+@test "Package: Create new package (Duplicate)" {
+    sed -i "s/BANDWIDTH='unlimited'/BANDWIDTH='100'/g" /tmp/package
+    run v-add-user-package /tmp/package hestiatest
+    assert_failure $E_EXISTS
+}
+
+@test "Package: Update new Package" {
+    sed -i "s/BANDWIDTH='unlimited'/BANDWIDTH='100'/g" /tmp/package
+    run v-add-user-package /tmp/package hestiatest yes
+    assert_success
+    refute_output
+}
+
+@test "Package: Update package of user" {
+    run v-change-user-package  $user hestiatest
+    assert_success
+    refute_output
+    run grep "BANDWIDTH='100'" $HESTIA/data/users/$user/user.conf
+    assert_success
+    assert_output --partial "100"
+}
+
+@test "Package: Delete package" {
+    run v-delete-user-package hestiatest
+    rm /tmp/package
+    assert_success
+    refute_output
+    run grep "BANDWIDTH='unlimited'" $HESTIA/data/users/$user/user.conf
+    assert_success
+    assert_output --partial "unlimited"
 }
 
 #----------------------------------------------------------#

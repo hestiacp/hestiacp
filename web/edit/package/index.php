@@ -233,11 +233,6 @@ if (!empty($_POST['save'])) {
     $v_time = escapeshellarg(date('H:i:s'));
     $v_date = escapeshellarg(date('Y-m-d'));
 
-    // Create temprorary directory
-    exec('mktemp -d', $output, $return_var);
-    $tmpdir = $output[0];
-    unset($output);
-
     // Save package file on a fs
     $pkg = "WEB_TEMPLATE=".$v_web_template."\n";
     $pkg .= "BACKEND_TEMPLATE=".$v_backend_template."\n";
@@ -258,14 +253,15 @@ if (!empty($_POST['save'])) {
     $pkg .= "BACKUPS=".$v_backups."\n";
     $pkg .= "TIME=".$v_time."\n";
     $pkg .= "DATE=".$v_date."\n";
-    $fp = fopen($tmpdir."/".$_POST['v_package'].".pkg", 'w');
-    fwrite($fp, $pkg);
-    fclose($fp);
 
-    // Save changes
-    exec(HESTIA_CMD."v-add-user-package ".$tmpdir." ".$v_package." 'yes'", $output, $return_var);
+    $tmpfile = tempnam('/tmp/', 'hst_');
+    $fp = fopen($tmpfile, 'w');
+    fwrite($fp, $pkg);
+    exec(HESTIA_CMD."v-add-user-package ".$tmpfile." ".$v_package." yes", $output, $return_var);
     check_return_code($return_var, $output);
     unset($output);
+
+    fclose($fp);
 
     // Remove temporary dir
     exec('rm -rf '.$tmpdir, $output, $return_var);

@@ -11,9 +11,10 @@ source $HESTIA/func/syshealth.sh
 
 add_upgrade_message (){ 
     if [ -f "$HESTIA_BACKUP/message.log" ]; then 
-        echo $1 >> $HESTIA_BACKUP/message.log
+        echo -e $1 >> $HESTIA_BACKUP/message.log
+        echo -e "\n\n" >> $HESTIA_BACKUP/message.log
     else
-        echo $1 > $HESTIA_BACKUP/message.log
+        echo -e $1 > $HESTIA_BACKUP/message.log
     fi    
 }
 

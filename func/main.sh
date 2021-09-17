@@ -1126,7 +1126,7 @@ is_format_valid() {
                 proxy_ext)      is_extention_format_valid "$arg" ;;
                 quota)          is_int_format_valid "$arg" 'quota' ;;
                 record)         is_common_format_valid "$arg" 'record';;
-                restart)        is_boolean_format_valid "$arg" 'restart' ;;
+                restart)        is_restart_format_valid "$arg" 'restart' ;;
                 role)           is_role_valid "$arg" 'role' ;;
                 rtype)          is_dns_type_format_valid "$arg" ;;
                 rule)           is_int_format_valid "$arg" "rule id" ;;
@@ -1188,6 +1188,11 @@ format_aliases() {
     fi
 }
 
+is_restart_format_valid() {
+  if [ "$1" != 'yes' ] && [ "$1" != 'no' ] && [ "$1" != 'ssl' ] && [ "$1" != 'reload' ];  then
+  check_result $E_INVALID "invalid $2 format :: $1"
+  fi
+}
 
 check_backup_conditions() {
     # Checking load average

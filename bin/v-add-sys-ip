@@ -85,8 +85,8 @@ if [ -z "$sys_ip_check" ]; then
         else
             netplan=0
         fi
-        else
-            netplan=0
+    else
+        netplan=0
     fi
     
     if [ "$netplan" == "1" ]; then

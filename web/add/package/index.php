@@ -179,6 +179,7 @@ if (!empty($_POST['ok'])) {
         unset($output);
 
         fclose($fp);
+        unlink($tmpfile);
     }
 
     // Flush field values on success

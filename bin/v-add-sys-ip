@@ -76,8 +76,20 @@ if [ -z "$sys_ip_check" ]; then
     # Adding sys ip
     /sbin/ip addr add $ip/$cidr dev $iface \
         broadcast $broadcast label $iface
-
-    if dpkg-query -W -f'${Status}' "netplan*" 2>/dev/null | grep -q "ok installed"; then
+    
+    # Improve check netplan
+    if dpkg-query -W -f'${Status}' "netplan*" 2>/dev/null | grep -q "ok installed"; then 
+        result=$(cat /etc/netplan/*.yaml 2>/dev/null | grep $(hostname -I | cut -d' ' -f1));
+        if [ ! -z $result ]; then 
+            netplan=1
+        else
+            netplan=0
+        fi
+    else
+        netplan=0
+    fi
+    
+    if [ "$netplan" == "1" ]; then
         if [ -f "/etc/netplan/60-hestia.yaml" ]; then
             sys_ip="        - $ip/$cidr"
         else

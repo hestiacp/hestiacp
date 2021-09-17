@@ -12,6 +12,6 @@
 #######                                                                         #######
 ####### add_upgrade_message "My message here"                                   #######
 #######                                                                         #######
-####### Use again to create a new line                                          #######
+####### You can use \n within the string to create new lines.                   #######
 #######################################################################################
 

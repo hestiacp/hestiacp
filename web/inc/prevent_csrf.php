@@ -2,13 +2,13 @@
 
     $check_csrf = true;
 
-    if ($_SERVER['SCRIPT_FILENAME'] == '/usr/local/hestia/web/inc/mail-wrapper.php ') {
+    if ($_SERVER['SCRIPT_FILENAME'] == '/usr/local/hestia/web/inc/mail-wrapper.php' || $_SERVER['SCRIPT_FILENAME'] == '/usr/local/hestia//web/inc/mail-wrapper.php') {
         $check_csrf=false;
     } // execute only from CLI
-    if ($_SERVER['SCRIPT_FILENAME'] == '/usr/local/hestia/web/reset/mail/index.php ') {
+    if ($_SERVER['SCRIPT_FILENAME'] == '/usr/local/hestia/web/reset/mail/index.php' || $_SERVER['SCRIPT_FILENAME'] == '/usr/local/hestia/web//reset/mail/index.php') {
         $check_csrf=false;
     } // Localhost only
-    if ($_SERVER['SCRIPT_FILENAME'] == '/usr/local/hestia/web/api/index.php') {
+    if ($_SERVER['SCRIPT_FILENAME'] == '/usr/local/hestia/web/api/index.php' || $_SERVER['SCRIPT_FILENAME'] == '/usr/local/hestia/web//api/index.php') {
         $check_csrf=false;
     } // Own check
     if (substr($_SERVER['SCRIPT_FILENAME'], 0, 22)=='/usr/local/hestia/bin/') {
@@ -20,6 +20,7 @@
         if ($level >= $_SESSION['POLICY_CSRF_STRICTNESS']) {
             return true;
         } else {
+            http_response_code(400);
             echo "<h1>Potential use CSRF detected</h1>\n".
             "<p>Please disable any plugins/add-ons inside your browser or contact your system administrator. If you are the system administrator you can run v-change-sys-config-value 'POLICY_CSRF_STRICTNESS' '0' as root to disable this check.<p>".
             "<p>If you folowed a bookmark or an static link <a href='/'>please click here</a>";

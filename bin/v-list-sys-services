@@ -233,6 +233,10 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'remote' ]; then
         service="$db"
         proc_name=''
         if [ "$service" = 'mysql' ]; then
+            if [ -d "/etc/sysconfig" ]; then
+                service='mysqld'
+                proc_name='mysqld'
+            fi
             if [ -e "/lib/systemd/system/mariadb.service" ]; then
                 service='mariadb'
                 proc_name='mysqld'
@@ -243,10 +247,6 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'remote' ]; then
                     service='mariadb'
                     proc_name='mariadbd'
                 fi
-            fi
-            if [ -d "/etc/sysconfig" ]; then
-                service='mysqld'
-                proc_name='mysqld'
             fi
         fi
         if [ "$service" == 'pgsql' ]; then

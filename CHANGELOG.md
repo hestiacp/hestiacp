@@ -7,6 +7,8 @@ All notable changes to this project will be documented in this file.
 
 ### Bugfixes
 
+- Limit access to files/folders that are not required on default /phpmyadmin (*.json, templates, locale, vendor) #2143
+
 ## [1.4.14] - Service release 
 
 ### Bugfixes

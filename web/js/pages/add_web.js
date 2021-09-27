@@ -121,7 +121,7 @@ App.Listeners.WEB.keypress_ftp_path = function() {
 //
 //
 App.Actions.WEB.add_ftp_user_form = function() {
-    var ref = $('#templates').find('.ftptable').clone(true);
+    var ref = $('#templates').find('.ftptable-nrm').clone(true);
     var index = $('.data-col2 .ftptable').length + 1;
     
     ref.find('input').each(function(i, elm) {
@@ -131,7 +131,7 @@ App.Actions.WEB.add_ftp_user_form = function() {
     
     ref.find('.ftp-user-number').text(index);
     
-    $('.data-col2 .ftptable:last').after(ref);
+    $('#ftp_users').append(ref);
     
     var index = 1;
     $('.data-col2 .ftp-user-number:visible').each(function(i, o) {

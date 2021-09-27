@@ -971,8 +971,12 @@ sed -i "s/[#]LoginGraceTime [[:digit:]]m/LoginGraceTime 1m/g" /etc/ssh/sshd_conf
 
 # Disable SSH suffix broadcast
 if [ -z "$(grep "^DebianBanner no" /etc/ssh/sshd_config)" ]; then
-    echo '' >> /etc/ssh/sshd_config
-    echo 'DebianBanner no' >> /etc/ssh/sshd_config
+    sed -i '/^[#]Banner .*/a DebianBanner no' /etc/ssh/sshd_config
+    if [ -z "$(grep "^DebianBanner no" /etc/ssh/sshd_config)" ]; then
+      # If first attempt fails just add it
+      echo '' >> /etc/ssh/sshd_config
+      echo 'DebianBanner no' >> /etc/ssh/sshd_config
+    fi
 fi
 
 # Restart SSH daemon

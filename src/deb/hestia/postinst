@@ -84,6 +84,9 @@ upgrade_roundcube | tee -a $LOG
 # Upgrade Rainloop if applicable
 upgrade_rainloop | tee -a $LOG
 
+# Upgrade PHPMailer if applicable
+upgrade_phpmailer | tee -a $LOG
+
 # Set new version number in hestia.conf
 upgrade_set_version $new_version
 upgrade_set_branch $new_version

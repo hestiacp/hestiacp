@@ -1,7 +1,11 @@
 location /%pma_alias% {
     alias /usr/share/phpmyadmin/;
 
-    location ~ /(libraries|setup) {
+    location ~ /(libraries|setup|vendor|templates|locale|sql) {
+        deny all;
+        return 404;
+    }
+    location ~ /(.+\.(json|lock|md)) {
         deny all;
         return 404;
     }

@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 
 ## Features
 
+### Bugfixes
+
+## [1.4.15] - Service release 
+
+## Features
+
 - Add templates Chevereto #2153 @ManualRechkle
 
 ### Bugfixes

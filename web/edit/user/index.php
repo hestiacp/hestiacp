@@ -29,11 +29,8 @@ if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look'])) && ($us
     exit;
 }
 
-// Ensure token is passed before loading page
-if ((!$_GET['token']) || ($_SESSION['token'] != $_GET['token'])) {
-    header('location: /login/');
-    exit();
-}
+// Check token
+verify_csrf($_GET);
 
 // List user
 exec(HESTIA_CMD."v-list-user ".escapeshellarg($v_username)." json", $output, $return_var);
@@ -110,10 +107,6 @@ unset($output);
 exec(HESTIA_CMD."v-list-sys-php json", $output, $return_var);
 $php_versions = json_decode(implode('', $output), true);
 unset($output);
-
-
-
-// Are you admin?
 
 // Check POST request
 if (!empty($_POST['save'])) {

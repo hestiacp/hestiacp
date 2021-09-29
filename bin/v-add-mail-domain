@@ -115,6 +115,7 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     touch $HOMEDIR/$user/conf/mail/$domain/aliases
     touch $HOMEDIR/$user/conf/mail/$domain/passwd
     touch $HOMEDIR/$user/conf/mail/$domain/fwd_only
+    touch $HOMEDIR/$user/conf/mail/$domain/accounts
     ln -s $HOMEDIR/$user/conf/mail/$domain \
         /etc/$MAIL_SYSTEM/domains/$domain_idn
 
@@ -154,6 +155,7 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     if [ "$IMAP_SYSTEM" = 'dovecot' ]; then
         chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain/passwd
     fi
+    chown $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain/accounts
     chown $user:mail $HOMEDIR/$user/mail/$domain_idn
 fi
 

@@ -178,7 +178,7 @@ if (isset($_POST['user']) || isset($_POST['hash'])) {
     api($json_data['hash'], $json_data['user'], $json_data['password'], $json_data['returncode'], $json_data['cmd'], $json_data['arg1'], $json_data['arg2'], $json_data['arg3'], $json_data['arg4'], $json_data['arg5'], $json_data['arg6'], $json_data['arg7'], $json_data['arg8'], $json_data['arg9']);
 
 } else {
-    echo "Error: data received is null or invalid, check https://docs.hestiacp.com/admin_docs/rest_api.html";
+    echo "Error: data received is null or invalid, check https://docs.hestiacp.com/admin_docs/api.html";
     exit;
 }
 

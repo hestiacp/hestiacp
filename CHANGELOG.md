@@ -1,6 +1,22 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [DEVELOPMENT] - Service release 
+
+## Features
+
+- Add templates Chevereto #2153 @ManualRechkle
+
+### Bugfixes
+
+- Fix bug in v-add-sys-ip with netplan active
+- Limit access to files/folders that are not required on default /phpmyadmin (*.json, templates, locale, vendor) #2143
+- Update translations
+- Fix issue with Exim 4.94 and Autoreply #2151
+- Fix multiple UI bugs #2415
+- Fix link broken link to Documentation #2142 
+- Improve detection for MariaDB #2141 thanks @gejobj
+
 ## [1.4.14] - Service release 
 
 ### Bugfixes

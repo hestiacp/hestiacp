@@ -439,7 +439,7 @@ upgrade_start_backup() {
         if [ "$DEBUG_MODE" = "true" ]; then
             echo "      ---- sshd"
         fi
-        cp -f /etc/ssh/* $HESTIA_BACKUP/conf/ssh/
+        cp -fr /etc/ssh/* $HESTIA_BACKUP/conf/ssh/
     fi
     if [ -d "/etc/roundcube" ]; then
         if [ "$DEBUG_MODE" = "true" ]; then

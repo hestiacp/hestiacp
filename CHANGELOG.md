@@ -9,7 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bugfixes
 
-- Fix bug with .json not loading on Apache2 due to rule in /etc/apache2/conf.d/hpmyadmin.conf
+- Fix bug with .json not loading on Apache2 due to rule in /etc/apache2/conf.d/phpmyadmin.conf
 
 ### Bugfixes
 

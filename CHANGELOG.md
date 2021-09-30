@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 
 ## Features
 
+### Bugfixes
+
 ## [1.4.17] - Service release 
 
 ### Bugfixes

@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 
 ## Features
 
+## [1.4.16] - Service release 
+
+### Bugfixes
+
+- Fix bug with .json not loading on Apache2 due to rule in /etc/apache2/conf.d/hpmyadmin.conf
+
 ### Bugfixes
 
 ## [1.4.15] - Service release 

@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 
 ## Features
 
+## [1.4.17] - Service release 
+
+### Bugfixes
+
+- Fix bug with nginx and phmyadmin not loading
+
 ## [1.4.16] - Service release 
 
 ### Bugfixes

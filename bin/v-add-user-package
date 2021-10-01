@@ -65,6 +65,19 @@ is_package_consistent() {
     if [ "$BACKUPS" != 'unlimited' ]; then
         is_int_format_valid $BACKUPS 'BACKUPS'
     fi
+    if [ -n "$WEB_TEMPLATE" ]; then
+        is_web_template_valid $WEB_TEMPLATE
+    fi
+    if [ -n "$BACKEND_TEMPLATE" ]; then
+        is_backend_template_valid $BACKEND_TEMPLATE
+    fi
+    if [ -n "$PROXY_TEMPLATE" ]; then
+        is_proxy_template_valid $PROXY_TEMPLATE
+    fi
+    if [ -n "$DNS_TEMPLATE" ]; then
+        is_dns_template_valid $DNS_TEMPLATE
+    fi
+    
     is_format_valid_shell $SHELL
 }
 

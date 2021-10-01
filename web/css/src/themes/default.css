@@ -2440,7 +2440,7 @@ body.mobile .l-icon-shortcuts {
   height: 20px;
   position: relative;
   margin: 4px 0px 2px 2px;
-
+  clip-path: ellipse(10px 10px at 50% 50%);
 }
 
 .spinner-inner {

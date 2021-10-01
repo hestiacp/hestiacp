@@ -33,7 +33,7 @@ mariadb_v="10.6"
 # Defining software pack for all distros
 software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     apparmor-utils awstats bc bind9 bsdmainutils bsdutils clamav-daemon
-    cron curl dnsutils dovecot-imapd dovecot-pop3d e2fslibs e2fsprogs exim4
+    cron curl dnsutils dovecot-imapd dovecot-pop3d dovecot-sieve dovecot-managesieved e2fslibs e2fsprogs exim4
     exim4-daemon-heavy expect fail2ban flex ftp git idn imagemagick
     libapache2-mod-fcgid libapache2-mod-php$fpm_v libapache2-mod-rpaf
     lsof mc mariadb-client mariadb-common mariadb-server nginx

@@ -315,7 +315,8 @@ localuser_spam:
 
 localuser:
   driver = accept
-  transport = local_delivery
+#  transport = local_delivery
+  transport = dovecot_virtual_delivery
   condition = ${lookup{$local_part}lsearch{/etc/exim4/domains/$domain/passwd}{true}{false}}
 
 catchall:
@@ -397,6 +398,18 @@ local_spam_delivery:
   quota = ${extract{6}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/$domain/passwd}}}}M
   quota_directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/$domain/passwd}}}}/mail/$domain/$local_part"
   quota_warn_threshold = 75%
+  
+dovecot_virtual_delivery:
+  driver = pipe
+  command = /usr/lib/dovecot/dovecot-lda -e -d $local_part@$domain -f $sender_address -a $original_local_part@$original_domain
+  delivery_date_add
+  envelope_to_add
+  return_path_add
+  log_output = true
+  log_defer_output = true
+  user = ${extract{2}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/$domain/passwd}}}}
+  group = mail
+  return_output
 
 address_pipe:
   driver = pipe

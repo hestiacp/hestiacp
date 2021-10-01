@@ -103,6 +103,7 @@ if [ "$UPDATE" == "no" ]; then
     mkdir -p $RC_CONFIG_DIR/plugins/password
     mkdir -p $RC_CONFIG_DIR/plugins/newmail_notifier
     mkdir -p $RC_CONFIG_DIR/plugins/zipdownload
+    mkdir -p $RC_CONFIG_DIR/plugins/managesieve
     
     # Allow changes to the respective config / Create symlinks to /etc/roundcube/ 
     cp -f $HESTIA_INSTALL_DIR/roundcube/config.inc.php $RC_CONFIG_DIR/plugins/password/config.inc.php
@@ -111,6 +112,8 @@ if [ "$UPDATE" == "no" ]; then
     ln -s $RC_CONFIG_DIR/plugins/newmail_notifier/config.inc.php ./plugins/newmail_notifier/config.inc.php
     cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_zipdownload.inc.php $RC_CONFIG_DIR/plugins/zipdownload/config.inc.php
     ln -s $RC_CONFIG_DIR/plugins/zipdownload/config.inc.php ./plugins/zipdownload/config.inc.php
+    cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_managesieve.inc.php $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
+    ln -s $RC_CONFIG_DIR/plugins/managesieve/config.inc.php ./plugins/managesieve/config.inc.php
     # Set up correct permissions roundcube    
     chown -R root:www-data $RC_CONFIG_DIR/
     chmod 751 -R $RC_CONFIG_DIR    
@@ -118,6 +121,7 @@ if [ "$UPDATE" == "no" ]; then
     chmod 644 $RC_CONFIG_DIR/plugins/password/config.inc.php
     chmod 644 $RC_CONFIG_DIR/plugins/newmail_notifier/config.inc.php
     chmod 644 $RC_CONFIG_DIR/plugins/zipdownload/config.inc.php
+    chmod 644 $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
     
     # Add robots.txt
     echo "User-agent: *" > /var/lib/roundcube/robots.txt

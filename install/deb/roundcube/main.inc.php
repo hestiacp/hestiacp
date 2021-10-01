@@ -97,7 +97,7 @@ $config['des_key'] = '%des_key%';
 $config['max_recipients'] = 100;
 
 // List of active plugins (in plugins/ directory)
-$config['plugins'] = array('password', 'newmail_notifier', 'zipdownload', 'archive');
+$config['plugins'] = array('password', 'newmail_notifier', 'zipdownload', 'archive', 'managesieve');
 
 $config['default_user'] = '%u';
 

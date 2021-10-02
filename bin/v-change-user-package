@@ -24,12 +24,8 @@ source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
 
 is_package_avalable() {
-
-    usr_data=$(cat $USER_DATA/user.conf)
-    IFS=$'\n'
-    for key in $usr_data; do
-        eval ${key%%=*}=${key#*=}
-    done
+    
+    source $USER_DATA/user.conf
 
     WEB_DOMAINS='0'
     DATABASES='0'

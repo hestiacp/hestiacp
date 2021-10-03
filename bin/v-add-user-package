@@ -18,6 +18,8 @@ rewrite=$3
 # Includes
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
 # shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
@@ -76,6 +78,15 @@ is_package_consistent() {
     fi
     if [ -n "$DNS_TEMPLATE" ]; then
         is_dns_template_valid $DNS_TEMPLATE
+    fi
+    if [ -n "$NS" ]; then
+        IFS=',' read -r -a nameservers <<< "$NS"
+        i=1;
+        for ns in "${nameservers[@]}"
+        do
+            is_domain_format_valid "$ns" "ns$i"
+            i=$((i+1))
+        done
     fi
     
     is_format_valid_shell $SHELL

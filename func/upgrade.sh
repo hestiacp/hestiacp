@@ -439,7 +439,7 @@ upgrade_start_backup() {
         if [ "$DEBUG_MODE" = "true" ]; then
             echo "      ---- sshd"
         fi
-        cp -f /etc/ssh/* $HESTIA_BACKUP/conf/ssh/
+        cp -fr /etc/ssh/* $HESTIA_BACKUP/conf/ssh/
     fi
     if [ -d "/etc/roundcube" ]; then
         if [ "$DEBUG_MODE" = "true" ]; then
@@ -604,7 +604,7 @@ upgrade_roundcube(){
     if [ "UPGRADE_UPDATE_ROUNDCUBE" = "true" ]; then
         if [ ! -z "$(echo "$WEBMAIL_SYSTEM" | grep -w 'roundcube')" ]; then
             rc_version=$(cat /var/lib/roundcube/index.php | grep -o -E '[0-9].[0-9].[0-9]+' | head -1);
-            if [ "$rc_version" == "$rc_v" ]; then
+            if [ "$rc_version" != "$rc_v" ]; then
                 echo "[ * ] Upgrading Roundcube to version v$rc_v..."
                 $HESTIA/bin/v-add-sys-roundcube
             fi
@@ -616,11 +616,23 @@ upgrade_rainloop(){
     if [ "UPGRADE_UPDATE_RAINLOOP" = "true" ]; then
         if [ ! -z "$(echo "$WEBMAIL_SYSTEM" | grep -w 'rainloop')" ]; then
             rc_version=$(cat /var/lib/rainloop/data/VERSION);
-            if [ "$rc_version" == "$rc_v" ]; then
+            if [ "$rc_version" != "$rl_v" ]; then
                 echo "[ * ] Upgrading Rainloop to version v$rl_v..."
                 $HESTIA/bin/v-add-sys-rainloop
             fi
         fi
+    fi
+}
+
+upgrade_phpmailer(){
+    if [ ! -d "$HESTIA/web/inc/vendor/" ]; then
+        echo "[ ! ] Install PHPmailer";
+        $HESTIA/bin/v-add-sys-phpmailer
+    fi
+    phpm_version=$(cat $HESTIA/web/inc/vendor/phpmailer/phpmailer/VERSION);
+    if [ "$phpm_version" != "$pm_v" ]; then
+    echo "[ * ] Upgrading Rainloop to version v$pm_v..."
+        $HESTIA/bin/v-add-sys-phpmailer
     fi
 }
 

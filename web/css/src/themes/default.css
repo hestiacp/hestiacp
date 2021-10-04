@@ -2440,7 +2440,7 @@ body.mobile .l-icon-shortcuts {
   height: 20px;
   position: relative;
   margin: 4px 0px 2px 2px;
-
+  clip-path: ellipse(10px 10px at 50% 50%);
 }
 
 .spinner-inner {
@@ -4065,6 +4065,7 @@ form#vstobjects.suspended {
 .ui-widget-overlay {
   opacity: 0.8 !important;
   background: rgba(10,10,10,0.9) !important;
+  position: fixed !important;
 }
 
 .helper-container {

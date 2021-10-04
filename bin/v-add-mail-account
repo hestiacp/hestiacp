@@ -70,6 +70,8 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     fi
     str="$account:$md5:$user:mail::$HOMEDIR/$user:${quota}:userdb_quota_rule=*:storage=${quota}M"
     echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
+    userstr="$account:$account:$user:mail:$HOMEDIR/$user"
+    echo $userstr >> $HOMEDIR/$user/conf/mail/$domain/accounts
 fi
 
 # Create mail account folder (mailbox)

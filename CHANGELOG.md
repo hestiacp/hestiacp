@@ -7,6 +7,38 @@ All notable changes to this project will be documented in this file.
 
 ### Bugfixes
 
+- Disable /reset/ endpoint when POLICY_SYSTEM_PASSWORD_RESET = no
+
+## [1.4.17] - Service release 
+
+### Bugfixes
+
+- Fix bug with nginx and phmyadmin not loading
+
+## [1.4.16] - Service release 
+
+### Bugfixes
+
+- Fix bug with .json not loading on Apache2 due to rule in /etc/apache2/conf.d/phpmyadmin.conf
+
+### Bugfixes
+
+## [1.4.15] - Service release 
+
+## Features
+
+- Add templates Chevereto #2153 @ManualRechkle
+
+### Bugfixes
+
+- Fix bug in v-add-sys-ip with netplan active
+- Limit access to files/folders that are not required on default /phpmyadmin (*.json, templates, locale, vendor) #2143
+- Update translations
+- Fix issue with Exim 4.94 and Autoreply #2151
+- Fix multiple UI bugs #2415
+- Fix link broken link to Documentation #2142 
+- Improve detection for MariaDB #2141 thanks @gejobj
+
 ## [1.4.14] - Service release 
 
 ### Bugfixes

@@ -541,6 +541,7 @@ rebuild_mail_domain_conf() {
         mkdir -p $HOMEDIR/$user/conf/mail/$domain
         ln -s $HOMEDIR/$user/conf/mail/$domain \
             /etc/$MAIL_SYSTEM/domains/$domain_idn
+        rm -f $HOMEDIR/$user/conf/mail/$domain/accounts
         rm -f $HOMEDIR/$user/conf/mail/$domain/aliases
         rm -f $HOMEDIR/$user/conf/mail/$domain/antispam
         rm -f $HOMEDIR/$user/conf/mail/$domain/antivirus
@@ -548,6 +549,7 @@ rebuild_mail_domain_conf() {
         rm -f $HOMEDIR/$user/conf/mail/$domain/passwd
         rm -f $HOMEDIR/$user/conf/mail/$domain/fwd_only
         rm -f $HOMEDIR/$user/conf/mail/$domain/ip
+        touch $HOMEDIR/$user/conf/mail/$domain/accounts
         touch $HOMEDIR/$user/conf/mail/$domain/aliases
         touch $HOMEDIR/$user/conf/mail/$domain/passwd
         touch $HOMEDIR/$user/conf/mail/$domain/fwd_only
@@ -624,6 +626,8 @@ rebuild_mail_domain_conf() {
             fi
             str="$account:$MD5:$user:mail::$HOMEDIR/$user:${QUOTA}:userdb_quota_rule=*:storage=${QUOTA}M"
             echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
+            userstr="$account:$account:$user:mail:$HOMEDIR/$user"
+            echo $userstr >> $HOMEDIR/$user/conf/mail/$domain/accounts
             for malias in ${ALIAS//,/ }; do
                 echo "$malias@$domain_idn:$account@$domain_idn" >> $dom_aliases
             done
@@ -647,6 +651,7 @@ rebuild_mail_domain_conf() {
         if [ "$IMAP_SYSTEM" = "dovecot" ]; then
             chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain/passwd
         fi
+        chown $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain/accounts
         chown $user:mail $HOMEDIR/$user/mail/$domain_idn
     fi
 

@@ -1055,9 +1055,10 @@ function checkedAll(frmname) {
 }
 
 function doSearch(url) {
+    console.log(url);
+    return false;
     var url = url || '/search/';
-    var loc = url + '?q=' + $('.search-input').val();
-
+    var loc = url + '?q=' + $('.search-input').val().'&token='. $('input[name="token"]').val();
     location.href = loc;
     return false;
 }

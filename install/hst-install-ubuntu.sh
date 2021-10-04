@@ -182,6 +182,7 @@ for arg; do
         --postgresql)           args="${args}-g " ;;
         --exim)                 args="${args}-x " ;;
         --dovecot)              args="${args}-z " ;;
+        --sieve)                args="${args}-b " ;;
         --clamav)               args="${args}-c " ;;
         --spamassassin)         args="${args}-t " ;;
         --iptables)             args="${args}-i " ;;
@@ -217,6 +218,7 @@ while getopts "a:w:v:j:k:m:g:d:x:z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
         g) postgresql=$OPTARG ;;        # PostgreSQL
         x) exim=$OPTARG ;;              # Exim
         z) dovecot=$OPTARG ;;           # Dovecot
+        b) sieve=$OPTARG ;;             # Sieve
         c) clamd=$OPTARG ;;             # ClamAV
         t) spamd=$OPTARG ;;             # SpamAssassin
         i) iptables=$OPTARG ;;          # Iptables
@@ -248,6 +250,7 @@ set_default_value 'mysql' 'yes'
 set_default_value 'postgresql' 'no'
 set_default_value 'exim' 'yes'
 set_default_value 'dovecot' 'yes'
+set_default_value 'sieve' 'yes'
 if [ $memory -lt 1500000 ]; then
     set_default_value 'clamd' 'no'
     set_default_value 'spamd' 'no'
@@ -274,6 +277,10 @@ if [ "$exim" = 'no' ]; then
     clamd='no'
     spamd='no'
     dovecot='no'
+    sieve='no'
+fi
+if [ "$dovecot" = 'no' ]; then
+    sieve='no';
 fi
 if [ "$iptables" = 'no' ]; then
     fail2ban='no'
@@ -516,6 +523,9 @@ if [ "$exim" = 'yes' ]; then
     echo
     if [ "$dovecot" = 'yes' ]; then
         echo '   - Dovecot POP3/IMAP Server'
+        if [ "$sieve" = 'yes' ]; then
+            echo -n '+ Sieve'
+        fi
     fi
 fi
 
@@ -831,6 +841,10 @@ fi
 if [ "$dovecot" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/dovecot-imapd//")
     software=$(echo "$software" | sed -e "s/dovecot-pop3d//")
+fi
+if [ "$sieve" = 'no' ]; then
+    software=$(echo "$software" | sed -e "s/dovecot-sieve//")
+    software=$(echo "$software" | sed -e "s/dovecot-managesieved//")
 fi
 if [ "$mysql" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/mariadb-server//")
@@ -1170,6 +1184,9 @@ if [ "$exim" = 'yes' ]; then
     fi
     if [ "$dovecot" = 'yes' ]; then
         write_config_value "IMAP_SYSTEM" "dovecot"
+    fi
+    if [ "$sieve" = 'yes' ]; then
+        write_config_value "SIEVE_SYSTEM" "yes"
     fi
 fi
 
@@ -1695,7 +1712,6 @@ if [ "$dovecot" = 'yes' ]; then
     check_result $? "dovecot start failed"
 fi
 
-
 #----------------------------------------------------------#
 #                     Configure ClamAV                     #
 #----------------------------------------------------------#
@@ -1784,6 +1800,17 @@ if [ "$mysql" == 'yes' ] && [ "$dovecot" == "yes" ]; then
     write_config_value "WEBMAIL_ALIAS" "webmail"
 fi
 
+#----------------------------------------------------------#
+#                     Configure Sieve                      #
+#----------------------------------------------------------#
+# Min requirements Dovecote + Exim + Mysql + roundcube
+if [ "$sieve" = 'yes' ]; then
+    echo "[ * ] Configuring Sieve ..."
+    $HESTIA/bin/v-add-sys-sieve
+else
+    # This should uninstall sieve if you had installed before
+    $HESTIA/bin/v-add-sys-sieve
+fi
 
 #----------------------------------------------------------#
 #                       Configure API                      #

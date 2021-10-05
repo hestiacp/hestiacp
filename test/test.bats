@@ -363,6 +363,47 @@ function check_ip_not_banned(){
     assert_output --partial 'ns0.com'
 }
 
+@test "Change user language" {
+  run v-change-user-language $user "nl"
+  assert_success
+  refute_output
+}
+
+@test "Change user language (Does not exists)" {
+  run v-change-user-language $user "aa"
+  assert_failure $E_NOTEXIST
+}
+
+@test "Change user sort order" {
+  run v-change-user-sort-order $user "name"
+  assert_success
+  refute_output
+}
+
+@test "Change user theme" {
+  run v-change-user-theme $user "flat"
+  assert_success
+  refute_output
+}
+
+@test "Change user theme (Does not exists)" {
+  run v-change-user-theme $user "aa"
+  assert_failure $E_NOTEXIST
+}
+
+@test "Change user login ip" {
+  run v-change-user-config-value $user "LOGIN_USE_IPLIST" "1.2.3.4,1.2.3.5"
+  assert_success
+  refute_output
+}
+
+@test "Change user login ip (Failed)" {
+  run v-change-user-config-value $user "LOGIN_USE_IPLIST" "'; echo 'jaap'; echo '"
+  assert_failure $E_INVALID
+}
+
+
+
 #----------------------------------------------------------#
 #                         Cron                             #
 #----------------------------------------------------------#

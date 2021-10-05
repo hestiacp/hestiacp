@@ -45,7 +45,7 @@ check_args '2' "$#" 'USER LANGUAGE'
 is_format_valid 'user' 'language'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-is_language_valid $language
+is_language_valid "$language"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode

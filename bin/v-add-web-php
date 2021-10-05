@@ -35,19 +35,19 @@ php_fpm="/etc/init.d/php$version-fpm"
 if [[ ! $version =~ ^[0-9]\.[0-9]+ ]]; then
     echo "The specified PHP version format is invalid, it should look like [0-9].[0-9]."
     echo "Example:  7.0, 7.4, 8.0"
-    exit
+    exit $E_INVALID;
 fi
 
 # Check if php version already exists
 if [ -f "$php_fpm" ] && [ -f "$HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl" ]; then
     echo "ERROR: Specified PHP version is already installed."
-    exit
+    exit $E_INVALID;
 fi
 
 # Check if php version is supported
 if [ ! -f "$HESTIA_INSTALL_DIR/multiphp/$WEB_SYSTEM/PHP-${version//.}.sh" ]; then
     echo "ERROR: Specified PHP version is not supported or does not exist."
-    exit
+    exit $E_INVALID;
 fi
 
 # Perform verification if read-only mode is enabled

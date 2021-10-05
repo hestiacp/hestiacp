@@ -56,6 +56,9 @@ fi
 if [ ! -z "$nat_ip" ] ; then
     is_format_valid 'nat_ip'
 fi
+if [ ! -z "$helo" ] ; then
+    is_format_valid 'helo'
+fi
 if [ "$user" != "admin" ]; then
     ip_status="dedicated"
 fi

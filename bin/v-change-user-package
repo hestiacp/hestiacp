@@ -24,12 +24,8 @@ source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
 
 is_package_avalable() {
-
-    usr_data=$(cat $USER_DATA/user.conf)
-    IFS=$'\n'
-    for key in $usr_data; do
-        eval ${key%%=*}=${key#*=}
-    done
+    
+    source $USER_DATA/user.conf
 
     WEB_DOMAINS='0'
     DATABASES='0'
@@ -38,9 +34,7 @@ is_package_avalable() {
     DISK_QUOTA='0'
     BANDWIDTH='0'
 
-    pkg_data=$(cat $HESTIA/data/packages/$package.pkg |grep -v TIME |\
-        grep -v DATE)
-    eval $pkg_data
+    source $HESTIA/data/packages/$package.pkg
 
     # Checking usage agains package limits
     if [ "$WEB_DOMAINS" != 'unlimited' ]; then
@@ -81,8 +75,11 @@ is_package_avalable() {
 }
 
 change_user_package() {
-    eval $(cat $USER_DATA/user.conf)
-    eval $(cat $HESTIA/data/packages/$package.pkg |egrep -v "TIME|DATE")
+    source $USER_DATA/user.conf
+    # Keep user creation date and time saved
+    time="$TIME"
+    date="$DATE"
+    source $HESTIA/data/packages/$package.pkg
     echo "NAME='$NAME'
 PACKAGE='$package'
 WEB_TEMPLATE='$WEB_TEMPLATE'
@@ -144,8 +141,8 @@ PREF_UI_SORT='$PREF_UI_SORT'
 LOGIN_DISABLED='$LOGIN_DISABLED'
 LOGIN_USE_IPLIST='$LOGIN_USE_IPLIST'
 LOGIN_ALLOW_IPS='$LOGIN_ALLOW_IPS'
-TIME='$TIME'
-DATE='$DATE'" > $USER_DATA/user.conf
+TIME='$time'
+DATE='$date'" > $USER_DATA/user.conf
 }
 
 
@@ -173,7 +170,7 @@ check_hestia_demo_mode
 change_user_package
 
 # Update user shell
-shell_conf=$(echo "$pkg_data" | grep 'SHELL' | cut -f 2 -d \')
+shell_conf=$(cat $HESTIA/data/packages/$package.pkg | grep 'SHELL' | cut -f 2 -d \')
 $BIN/v-change-user-shell $user $shell_conf
 
 # Run template trigger

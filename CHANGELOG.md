@@ -14,6 +14,8 @@ All notable changes to this project will be documented in this file.
 ### Bugfixes
 
 - Fix bug with nginx and phmyadmin not loading
+- Fix #2166 Search function broken 
+- Update Quick installers to the last version
 
 ## [1.4.16] - Service release 
 

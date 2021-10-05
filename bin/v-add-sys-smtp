@@ -31,7 +31,11 @@ source $HESTIA/conf/hestia.conf
 #----------------------------------------------------------#
 
 check_args '6' "$#" 'DOMAIN PORT SMTP_SECURITY USERNAME PASSWORD EMAIL'
-is_format_valid 'domain' 'port' 'email'
+is_format_valid 'domain' 'port' 'email' 'password'
+if ! is_email_format_valid "$username" "username"; then 
+    is_common_format_valid "$username" "username";
+fi
+is_common_format_valid "$smtp_security" "SMTP_SECURITY"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -41,12 +45,13 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 $BIN/v-change-sys-config-value "USE_SERVER_SMTP" 'true'
-$BIN/v-change-sys-config-value "SERVER_SMTP_HOST" $domain
-$BIN/v-change-sys-config-value "SERVER_SMTP_PORT" $port
-$BIN/v-change-sys-config-value "SERVER_SMTP_SECURITY" $smtp_security
-$BIN/v-change-sys-config-value "SERVER_SMTP_USER" $username
-$BIN/v-change-sys-config-value "SERVER_SMTP_PASSWD" $password
-$BIN/v-change-sys-config-value "SERVER_SMTP_ADDR" $email
+$BIN/v-change-sys-config-value "SERVER_SMTP_HOST" "$domain" 
+$BIN/v-change-sys-config-value "SERVER_SMTP_PORT" "$port"
+$BIN/v-change-sys-config-value "SERVER_SMTP_SECURITY" "$smtp_security"
+# Allow skip some sanity checks to allow as is_common_format_valid doesn't allow @ for example
+$BIN/v-change-sys-config-value "SERVER_SMTP_USER" "$username" "yes"
+$BIN/v-change-sys-config-value "SERVER_SMTP_PASSWD" "$password" "yes"
+$BIN/v-change-sys-config-value "SERVER_SMTP_ADDR" "$email"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

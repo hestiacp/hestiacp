@@ -1090,6 +1090,7 @@ is_format_valid() {
                 ftp_password)   is_password_format_valid "$arg" ;;
                 ftp_user)       is_user_format_valid "$arg" "$arg_name" ;;
                 hash)           is_hash_format_valid "$arg" "$arg_name" ;;
+                helo)           is_domain_format_valid "$arg" "$arg_name" ;;
                 host)           is_object_format_valid "$arg" "$arg_name" ;;
                 hour)           is_cron_format_valid "$arg" $arg_name ;;
                 id)             is_int_format_valid "$arg" 'id' ;;
@@ -1100,7 +1101,7 @@ is_format_valid() {
                 ip_name)        is_domain_format_valid "$arg" 'IP name';;
                 ip_status)      is_ip_status_format_valid "$arg" ;;
                 job)            is_int_format_valid "$arg" 'job' ;;
-                key)            is_user_format_valid "$arg" "$arg_name" ;;
+                key)            is_common_format_valid "$arg" "$arg_name" ;;
                 malias)         is_user_format_valid "$arg" "$arg_name" ;;
                 max_db)         is_int_format_valid "$arg" 'max db';;
                 min)            is_cron_format_valid "$arg" $arg_name ;;
@@ -1140,6 +1141,7 @@ is_format_valid() {
                 ttl)            is_int_format_valid "$arg" 'ttl';;
                 user)           is_user_format_valid "$arg" $arg_name;;
                 wday)           is_cron_format_valid "$arg" $arg_name ;;
+                value)          is_common_format_valid "$arg" $arg_name;;
             esac
         fi
     done

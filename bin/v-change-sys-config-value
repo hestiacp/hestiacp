@@ -16,7 +16,7 @@
 # Argument definition
 key=$(echo "$1" | tr '[:lower:]' '[:upper:]' )
 value=$2
-
+check=$3
 # Includes
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
@@ -33,9 +33,10 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'KEY VALUE'
-is_format_valid 'key'
-
-
+is_common_format_valid "$key" "key"
+if [ "$check" != "skip" ]; then
+    is_common_format_valid "$value" "$key"
+fi
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#

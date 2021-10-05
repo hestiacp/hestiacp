@@ -1805,14 +1805,11 @@ if [ "$mysql" == 'yes' ] && [ "$dovecot" == "yes" ]; then
 fi
 
 #----------------------------------------------------------#
-#                     Configure Sieve                      #
+#                     Install Sieve                        #
 #----------------------------------------------------------#
 # Min requirements Dovecote + Exim + Mysql + roundcube
 if [ "$sieve" = 'yes' ]; then
-    echo "[ * ] Configuring Sieve ..."
-    $HESTIA/bin/v-add-sys-sieve
-else
-    # This should uninstall sieve if you had installed before
+    echo "[ * ] Install Sieve ..."
     $HESTIA/bin/v-add-sys-sieve
 fi
 

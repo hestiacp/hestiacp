@@ -436,7 +436,7 @@ function check_ip_not_banned(){
     run v-add-cron-job $user 1 1 1 1 1 echo 1
     assert_success
     refute_output
-
+    
     run v-add-cron-job $user 1 1 1 1 1 echo 1
     assert_failure $E_EXISTS
     assert_output --partial 'JOB=1 already exists'
@@ -701,6 +701,7 @@ function check_ip_not_banned(){
 
 @test "WEB: Generate Self signed certificate" {
     ssl=$(v-generate-ssl-cert "$domain" "info@$domain" US CA "Orange County" HestiaCP IT "mail.$domain" | tail -n1 | awk '{print $2}')
+    echo $ssl;
     mv $ssl/$domain.crt /tmp/$domain.crt
     mv $ssl/$domain.key /tmp/$domain.key
 }

@@ -22,10 +22,13 @@ path=${5-/backup}
 port=$6
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Paths
 b2cli="/usr/local/bin/b2"
@@ -103,11 +106,14 @@ EOF
 
 if [ "$type" != 'local' ];then
     check_args '4' "$#" "TYPE HOST USERNAME PASSWORD [PATH] [PORT]"
-    is_format_valid 'user' 'host' 'path' 'port'
+    is_format_valid 'host' 'path' 'port'
+    is_username_format_valid "$username" "username"
     is_password_valid
+    format_no_quotes "$password" "password"
+    
     if [ "$type" = 'sftp' ]; then
         which expect >/dev/null 2>&1
-        check_result $? "expect command not found"  $E_NOTEXIST
+        check_result $? "expect command not found"  "$E_NOTEXIST"
     fi
     if [ "$type" != 'b2' ]; then
         if ! (is_ip_format_valid "$host" >/dev/null); then
@@ -132,10 +138,10 @@ if [ "$type" = 'ftp' ]; then
     fconn=$(ftpc 2>&1)
     ferror=$(echo $fconn |\
         grep -i -e failed -e error -e "can't" -e "not conn" -e "incorrect")
-    if [ ! -z "$ferror" ]; then
+    if [ -n "$ferror" ]; then
         echo "Error: can't login to ftp $user@$host"
         log_event "$E_CONNECT" "$ARGUMENTS"
-        exit $E_CONNECT
+        exit "$E_CONNECT"
     fi
 
     # Checking write permissions
@@ -146,12 +152,12 @@ if [ "$type" = 'ftp' ]; then
         ftmpdir="$path/vst.bK76A9SUkt"
     fi
     ftp_result=$(ftpc "mkdir $ftmpdir" "rm $ftmpdir"|grep -v Trying)
-    if [ ! -z "$ftp_result" ] ; then
+    if [ -n "$ftp_result" ] ; then
         echo "$ftp_result"
         rm -rf $tmpdir
         echo "Error: can't create $ftmpdir folder on the ftp"
         log_event "$E_FTP" "$ARGUMENTS"
-        exit $E_FTP
+        exit "$E_FTP"
     fi
 fi
 
@@ -202,7 +208,7 @@ if [ "$type" = 'b2' ]; then
     
     b2 clear-account > /dev/null 2>&1
     b2 authorize-account "$user" "$raw_password"> /dev/null 2>&1
-    b2 ls --long $host $user > /dev/null 2>&1
+    b2 ls --long "$host" "$user" > /dev/null 2>&1
     
     if [ $? -ne 0 ]; then
         check_result "$E_CONNECT" "b2 failed to verify connection"

@@ -14,16 +14,13 @@
 user=$1
 hash=$2
 
-echo $rkeyhash;
-# Importing system enviroment  as we run this script
-# mostly by cron wich not read it by itself
-source /etc/profile
-
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -37,7 +34,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-if [ ! -z "$hash" ]; then
+if [ -n "$hash" ]; then
     password=$hash
     is_password_valid
     hash=$password;

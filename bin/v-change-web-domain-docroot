@@ -30,12 +30,14 @@ export target_directory=$4
 export php=$5
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -70,7 +72,7 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Unset existing custom document root path
-if [ ! -z "$CUSTOM_DOCROOT" ]; then
+if [ -n "$CUSTOM_DOCROOT" ]; then
     update_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_DOCROOT' ""
     update_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_PHPROOT' ""
 fi
@@ -84,19 +86,19 @@ if [ "$target_domain" = "default" ]; then
 else
     # Check for existence of specified directory under target domain's public_html folder
     target_domain_directory="$HOMEDIR/$user/web/$target_domain"
-    if [ ! -z "$target_directory" ]; then
+    if [ -n "$target_directory" ]; then
 
         # Checking destination path
         real_target_directory="$(readlink -e "${target_domain_directory}/public_html/$target_directory/")"
         if [ -z "$(echo $real_target_directory | egrep "^$target_domain_directory\b")" ]; then
-            check_result $E_FORBIDEN "Target dir outside of target domain dir"
+            check_result "$E_FORBIDEN" "Target dir outside of target domain dir"
         fi
 
         if [ ! -e "$real_target_directory" ]; then
-            check_result $E_NOTEXIST "Directory $target_directory does not exist under $HOMEDIR/$user/$target_domain/public_html/."
+            check_result "$E_NOTEXIST" "Directory $target_directory does not exist under $HOMEDIR/$user/$target_domain/public_html/."
         else
             CUSTOM_DOCROOT="$real_target_directory"
-            if [ ! -z "$php" ]; then
+            if [ -n "$php" ]; then
                 custom_phproot="${target_domain_directory}/public_html/"
             else
                 custom_phproot="$real_target_directory"
@@ -121,7 +123,7 @@ fi
 #----------------------------------------------------------#
 
 # Rebuild domain configuration
-$BIN/v-rebuild-web-domain $user $domain
+$BIN/v-rebuild-web-domain "$user" "$domain"
 
 # Logging
 if [ "$target_domain" = "default" ]; then

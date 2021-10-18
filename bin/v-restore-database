@@ -19,10 +19,12 @@ database=$3
 notify=$4
 
 # Includes
-# shellcheck source=/usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -39,7 +41,7 @@ is_format_valid 'user' 'backup'
 #                       Action                             #
 #----------------------------------------------------------#
 
-$BIN/v-restore-user $user $backup 'no' 'no' 'no' $database 'no' 'no' $notify
+$BIN/v-restore-user "$user" "$backup" 'no' 'no' 'no' "$database" 'no' 'no' "$notify"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

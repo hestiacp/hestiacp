@@ -20,12 +20,14 @@ ttl=$3
 restart=$4
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -63,7 +65,7 @@ if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
 fi
 
 # Updating dns-cluster queue
-if [ ! -z "$DNS_CLUSTER" ]; then
+if [ -n "$DNS_CLUSTER" ]; then
     # Check for first sync
     dlock=$(grep "domain $user $domain" $HESTIA/data/queue/dns-cluster.pipe)
     if [ -z "$dlock" ]; then
@@ -78,7 +80,7 @@ fi
 #----------------------------------------------------------#
 
 # Restarting named
-$BIN/v-restart-dns $restart
+$BIN/v-restart-dns "$restart"
 check_result $? "DNS restart failed" >/dev/null
 
 # Logging

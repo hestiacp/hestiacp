@@ -18,19 +18,23 @@ password=$3
 port=${4-587}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'HOST USERNAME PASSWORD'
-is_format_valid 'port'
+is_format_valid 'port' 'host' 'password'
+is_username_format_valid "$username" 'username'
+format_no_single_quote "$password" 'passowrd'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
-
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
@@ -39,10 +43,10 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 
-$BIN/v-change-sys-config-value SMTP_RELAY 'true'
-$BIN/v-change-sys-config-value SMTP_RELAY_HOST $host
-$BIN/v-change-sys-config-value SMTP_RELAY_PORT $port
-$BIN/v-change-sys-config-value SMTP_RELAY_USER $username
+change_sys_value 'SMTP_RELAY' 'true'
+change_sys_value 'SMTP_RELAY_HOST' "$host"
+change_sys_value 'SMTP_RELAY_PORT' "$port"
+change_sys_value 'SMTP_RELAY_USER' "$username"
 
 cat >/etc/exim4/smtp_relay.conf << EOL
 host:$host

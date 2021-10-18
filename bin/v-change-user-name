@@ -18,10 +18,12 @@ name=$2
 lname=$3
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -32,7 +34,7 @@ check_args '2' "$#" 'USER NAME [LAST_NAME]'
 is_format_valid 'user' 'name'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-if [ ! -z "$lname" ]; then
+if [ -n "$lname" ]; then
     is_common_format_valid "$name $lname" "last name"
 fi
 
@@ -44,11 +46,8 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get old values
-old_name=$(get_user_value '$NAME')
-
 # Changing ns values
-if [ ! -z "$lname" ]; then
+if [ -n "$lname" ]; then
     update_user_value "$user" '$NAME' "$name $lname"
 else
     update_user_value "$user" '$NAME' "$name"

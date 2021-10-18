@@ -16,8 +16,12 @@
 #format=${1-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+#source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 #source $HESTIA/func/main.sh
-
+# load config file
+# source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                       Action                             #

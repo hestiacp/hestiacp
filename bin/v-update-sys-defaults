@@ -11,16 +11,18 @@
 system=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/syshealth.sh
-source $HESTIA/func/syshealth.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                        Action                            #
 #----------------------------------------------------------#
 
-if [ ! -z "$system" ]; then
+if [ -n "$system" ]; then
     syshealth_update_${system}_config_format
 else
     syshealth_update_web_config_format

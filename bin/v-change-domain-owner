@@ -17,12 +17,14 @@ domain=$1
 user=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -33,9 +35,9 @@ check_args '2' "$#" 'DOMAIN USER'
 is_format_valid 'domain' 'user'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-owner=$($BIN/v-search-domain-owner $domain)
+owner=$($BIN/v-search-domain-owner "$domain")
 if [ -z "$owner" ]; then
-    check_result $E_NOTEXIST "domain $domain doesn't exist"
+    check_result "$E_NOTEXIST" "domain $domain doesn't exist"
 fi
 if [ "$owner" = "$user" ]; then
     echo "ERROR: $domain is already owned by $user."
@@ -54,13 +56,13 @@ echo "Moving $domain from $owner to $user, please wait..."
 
 # WEB domain
 web_data=$(grep "DOMAIN='$domain'" $HESTIA/data/users/$owner/web.conf)
-if [ ! -z "$web_data" ]; then
+if [ -n "$web_data" ]; then
     echo "[*] Moving web domain..."
-    $BIN/v-suspend-web-domain $owner $domain >> /dev/null 2>&1
+    $BIN/v-suspend-web-domain "$owner" "$domain" >> /dev/null 2>&1
     parse_object_kv_list "$web_data"
 
     # Change IP
-    if [ ! -z "$ip" ]; then
+    if [ -n "$ip" ]; then
         web_data=$(echo "$web_data" | sed "s/IP='$IP'/IP='$ip'/")
     fi
 
@@ -78,8 +80,8 @@ if [ ! -z "$web_data" ]; then
     fi
 
     # Check ftp user account
-    if [ ! -z "$FTP_USER" ]; then
-        /usr/sbin/userdel -f  $FTP_USER >> /dev/null 2>&1
+    if [ -n "$FTP_USER" ]; then
+        /usr/sbin/userdel -f  "$FTP_USER" >> /dev/null 2>&1
         old_str="FTP_USER='$FTP_USER'"
         new_str=$(echo "$old_str" | sed "s/${owner}_/${user}_/")
         web_data=$(echo "$web_data" | sed "s/$old_str/$new_str/")
@@ -93,26 +95,26 @@ if [ ! -z "$web_data" ]; then
     mv $HOMEDIR/$owner/web/$domain $HOMEDIR/$user/web/
 
     # Change ownership
-    find $HOMEDIR/$user/web/$domain -user $owner \
+    find "$HOMEDIR/$user/web/$domain" -user "$owner" \
         -exec chown -h $user:$user {} \;
 
     # Rebuild config
-    $BIN/v-unsuspend-web-domain $user $domain no >> /dev/null 2>&1
-    $BIN/v-rebuild-web-domains $owner no
-    $BIN/v-rebuild-web-domains $user
+    $BIN/v-unsuspend-web-domain "$user" "$domain" no >> /dev/null 2>&1
+    $BIN/v-rebuild-web-domains "$owner" no
+    $BIN/v-rebuild-web-domains "$user"
 
     # Cleanup old config
-    rm -rf $HOMEDIR/$owner/conf/web/$domain/
+    rm -rf "$HOMEDIR/$owner/conf/web/$domain/"
 fi
 
 # DNS domain
 dns_data=$(grep "DOMAIN='$domain'" $HESTIA/data/users/$owner/dns.conf)
-if [ ! -z "$dns_data" ]; then
+if [ -n "$dns_data" ]; then
     echo "[*] Moving DNS zone and records..."
     parse_object_kv_list "$dns_data"
 
     # Change IP
-    if [ ! -z "$ip" ]; then
+    if [ -n "$ip" ]; then
         dns_data=$(echo "$dns_data" | sed "s/IP='$IP'/IP='$ip'/")
         sed -i "s/$IP/$ip/g" $HESTIA/data/users/$owner/dns/$domain.conf
     fi
@@ -126,22 +128,22 @@ if [ ! -z "$dns_data" ]; then
         $HESTIA/data/users/$user/dns/
 
     # Rebuild config
-    $BIN/v-unsuspend-dns-domain $user $domain no >> /dev/null 2>&1
-    $BIN/v-rebuild-dns-domains $owner no
-    $BIN/v-rebuild-dns-domains $user
+    $BIN/v-unsuspend-dns-domain "$user" "$domain" no >> /dev/null 2>&1
+    $BIN/v-rebuild-dns-domains "$owner" no
+    $BIN/v-rebuild-dns-domains "$user"
 
     # Cleanup old config
     rm -f $HOMEDIR/$owner/conf/dns/$domain.db
 
     # Resync dns cluster
-    if [ ! -z "$DNS_CLUSTER" ]; then
+    if [ -n "$DNS_CLUSTER" ]; then
         $BIN/v-sync-dns-cluster
     fi
 fi
 
 # MAIL domain
 mail_data=$(grep "DOMAIN='$domain'" $HESTIA/data/users/$owner/mail.conf)
-if [ ! -z "$mail_data" ]; then
+if [ -n "$mail_data" ]; then
     echo "[*] Moving mail domain and accounts..."
 
     parse_object_kv_list "$mail_data"
@@ -189,7 +191,7 @@ if [ ! -z "$mail_data" ]; then
         fi
 
         # Add domain SSL configuration to dovecot
-        if [ -f /etc/dovecot/conf.d/domains/$domain.conf ]; then
+        if [ -f "/etc/dovecot/conf.d/domains/$domain.conf" ]; then
             rm -f /etc/dovecot/conf.d/domains/$domain.conf
         fi
         
@@ -248,17 +250,17 @@ if [ ! -z "$mail_data" ]; then
     fi
 
     # Rebuild config
-    $BIN/v-unsuspend-mail-domain $user $domain no >> /dev/null 2>&1
-    $BIN/v-rebuild-mail-domains $owner no
-    $BIN/v-rebuild-mail-domains $user
+    $BIN/v-unsuspend-mail-domain "$user" "$domain" no >> /dev/null 2>&1
+    $BIN/v-rebuild-mail-domains "$owner" no
+    $BIN/v-rebuild-mail-domains "$user"
 fi
 
 # Update counters
-$BIN/v-update-user-counters $owner
-$BIN/v-update-user-counters $user
+$BIN/v-update-user-counters "$owner"
+$BIN/v-update-user-counters "$user"
 
 # Send notification to panel
-if [ ! -z "$web_data" ] || [ ! -z "$dns_data" ] || [ ! -z "$mail_data" ]; then
+if [ -n "$web_data" ] || [ -n "$dns_data" ] || [ -n "$mail_data" ]; then
     $HESTIA/bin/v-add-user-notification "$user" "$domain has been added to your account" ''
 fi
 

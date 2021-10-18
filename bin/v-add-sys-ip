@@ -31,15 +31,16 @@ nat_ip=$7
 helo=$8
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -50,13 +51,13 @@ is_format_valid 'ip' 'netmask' 'iface' 'user' 'ip_status'
 is_ip_free
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-if [ ! -z "$ip_name" ] ; then
+if [ -n "$ip_name" ] ; then
     is_format_valid 'ip_name'
 fi
-if [ ! -z "$nat_ip" ] ; then
+if [ -n "$nat_ip" ] ; then
     is_format_valid 'nat_ip'
 fi
-if [ ! -z "$helo" ] ; then
+if [ -n "$helo" ] ; then
     is_format_valid 'helo'
 fi
 if [ "$user" != "admin" ]; then
@@ -83,7 +84,7 @@ if [ -z "$sys_ip_check" ]; then
     # Improve check netplan
     if dpkg-query -W -f'${Status}' "netplan*" 2>/dev/null | grep -q "ok installed"; then 
         result=$(cat /etc/netplan/*.yaml 2>/dev/null | grep $(hostname -I | cut -d' ' -f1));
-        if [ ! -z "$result" ]; then 
+        if [ -n "$result" ]; then 
             netplan=1
         else
             netplan=0
@@ -166,7 +167,7 @@ if [ ! -z "$WEB_SYSTEM" ]; then
 fi
 
 # Proxy support
-if [ ! -z "$PROXY_SYSTEM" ]; then
+if [ -n "$PROXY_SYSTEM" ]; then
     cat $WEBTPL/$PROXY_SYSTEM/proxy_ip.tpl |\
         sed -e "s/%ip%/$ip/g" \
             -e "s/%web_port%/$WEB_PORT/g" \
@@ -224,19 +225,19 @@ $BIN/v-restart-web
 check_result $? "Web restart failed" >/dev/null
 
 # Restarting proxy server
-if [ ! -z "$PROXY_SYSTEM" ]; then
+if [ -n "$PROXY_SYSTEM" ]; then
     $BIN/v-restart-proxy
     check_result $? "Proxy restart failed" >/dev/null
 fi
 
 # Restarting firewall
-if [ ! -z "$FIREWALL_SYSTEM" ]; then
+if [ -n "$FIREWALL_SYSTEM" ]; then
     $BIN/v-update-firewall
 fi
 
 # Update ip helo for exim
-if [ ! -z "$MAIL_SYSTEM" ] && [ ! -z "$helo"]; then
-    $BIN/v-change-sys-ip-helo $ip $helo
+if [ -n "$MAIL_SYSTEM" ] && [ -n "$helo" ]; then
+    $BIN/v-change-sys-ip-helo "$ip" "$helo"
 fi
 
 # Logging

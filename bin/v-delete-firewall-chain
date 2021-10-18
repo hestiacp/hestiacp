@@ -12,22 +12,20 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Importing system variables
-source /etc/profile
 
 # Argument definition
 chain=$(echo $1 | tr '[:lower:]' '[:upper:]')
 
-# Defining absolute path to iptables
-iptables="/sbin/iptables"
-
+iptables='/sbin/iptables'
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/firewall.sh
 source $HESTIA/func/firewall.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -53,7 +51,7 @@ heal_iptables_links
 chains=$HESTIA/data/firewall/chains.conf
 banlist=$HESTIA/data/firewall/banlist.conf
 chain_param=$(grep "CHAIN='$chain'" $chains 2>/dev/null)
-if [ ! -z "$chain_param" ]; then
+if [ -n "$chain_param" ]; then
     parse_object_kv_list "$chain_param"
     sed -i "/CHAIN='$chain'/d" $chains
     sed -i "/CHAIN='$chain'/d" $banlist

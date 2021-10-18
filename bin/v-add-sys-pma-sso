@@ -14,10 +14,12 @@
 MODE=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 PMA_INSTALL="/usr/share/phpmyadmin"
 PMA_CONFIG="/etc/phpmyadmin"
@@ -35,7 +37,7 @@ if [ "x$(id -u)" != 'x0' ]; then
     exit 10
 fi
 
-if [ ! -z "$PHPMYADMIN_KEY" ] && [ "$PHPMYADMIN_KEY" != "" ] ; then
+if [ -n "$PHPMYADMIN_KEY" ] && [ "$PHPMYADMIN_KEY" != "" ] ; then
     echo "Error: SSO has been installed before to reenable it please run v-delete-sys-pma-sso first"
     exit 1;
 fi
@@ -98,7 +100,7 @@ if(isset(\$_GET['hestia_token']) || isset(\$_COOKIE['SignonSession'])){
 ?>" >> $PMA_CONFIG/hestia-sso.inc.php
 
 file=$(cat $PMA_CONFIG/config.inc.php)
-if ! [[  $file =~ "hestia-sso.inc.php" ]]; then 
+if ! [[  "$file" =~ hestia-sso.inc.php ]]; then 
     if [[ $file =~ "//Add Hestia SSO code here" ]]; then 
         sed -i "s|//Add Hestia SSO code here|//Add Hestia SSO code here\n     include ('$PMA_CONFIG/hestia-sso.inc.php');|g" $PMA_CONFIG/config.inc.php
     else

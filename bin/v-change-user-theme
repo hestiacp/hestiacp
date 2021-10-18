@@ -17,21 +17,18 @@ theme=$2
 
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-# Unset THEME variable from $HESTIA/conf/hestia.conf
-unset THEME
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
-
-# Reading user values
-source $USER_DATA/user.conf
-
 
 is_format_valid 'user'
 is_common_format_valid "$theme" "theme"
@@ -43,7 +40,7 @@ themes=$($HESTIA/bin/v-list-sys-themes plain);
 
 if ! echo "$themes" | grep -q -x "$theme" ; then
     echo "Theme does not exists"
-    exit $E_NOTEXIST;
+    exit "$E_NOTEXIST";
 fi
 
 
@@ -58,7 +55,7 @@ check_hestia_demo_mode
 check_ckey=$(grep "THEME" $USER_DATA/user.conf)
 if [ -z "$check_ckey" ]; then
     # Rebuild user configuration to repair missing value
-    $BIN/v-rebuild-user $user
+    $BIN/v-rebuild-user "$user"
 fi
 update_user_value "$user" '$THEME' "$theme"
 

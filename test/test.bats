@@ -124,10 +124,13 @@ function validate_mail_domain() {
 
     assert_dir_exist $HOMEDIR/$user/mail/$domain
     assert_dir_exist $HOMEDIR/$user/conf/mail/$domain
-
     assert_file_exist $HOMEDIR/$user/conf/mail/$domain/aliases
-    assert_file_exist $HOMEDIR/$user/conf/mail/$domain/antispam
-    assert_file_exist $HOMEDIR/$user/conf/mail/$domain/antivirus
+    if [ -n "$ANTISPAM_SYSTEM" ]; then
+      assert_file_exist $HOMEDIR/$user/conf/mail/$domain/antispam
+    fi
+    if [ -n "$ANTIVIRUS_SYSTEM" ]; then
+      assert_file_exist $HOMEDIR/$user/conf/mail/$domain/antivirus
+    fi
     assert_file_exist $HOMEDIR/$user/conf/mail/$domain/fwd_only
     assert_file_exist $HOMEDIR/$user/conf/mail/$domain/ip
     assert_file_exist $HOMEDIR/$user/conf/mail/$domain/passwd

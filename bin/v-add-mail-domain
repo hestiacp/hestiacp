@@ -134,7 +134,7 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
         fi
     fi
     
-    if [ -n "$ANTISPAM_SYSTEM" ]; then
+    if [ -n "$ANTIVIRUS_SYSTEM" ]; then
         # Adding antivirus protection
         if [ "$antivirus" = 'yes' ]; then
             touch "$HOMEDIR/$user/conf/mail/$domain/antivirus"

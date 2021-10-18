@@ -127,7 +127,7 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
         echo "$local_ip" > $HOMEDIR/$user/conf/mail/$domain/ip
     fi
     
-    if [ -n "$ANTIVIRUS_SYSTEM" ]; then 
+    if [ -n "$ANTISPAM_SYSTEM" ]; then 
         # Adding antispam protection
         if [ "$antispam" = 'yes' ]; then
             touch "$HOMEDIR/$user/conf/mail/$domain/antispam"

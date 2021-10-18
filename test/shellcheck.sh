@@ -3,6 +3,11 @@
 # To be used with in shellcheck and automated usage 
 # Generate timestamp
 
+if [ ! -f "/usr/bin/shellcheck" ]; then 
+    echo "Run APT install shell check"
+    exit 2; 
+fi
+
 run_shell_check() {
     # If logging specified, export shellcheck output to log
     # Excluded codes
@@ -30,10 +35,7 @@ run_shell_check() {
 # Exclude: /usr/local/hestia/data/ 
 # Exclude: /usr/local/hestia/test/
 # Exclude: /usr/local/hestia/src/
-# Exclude: /usr/local/hestia/src/
-# Exclude: /usr/local/hestia/install/deb and /usr/local/hestia/install/rhel 
-# Note currently exclude /user/local/hestia/install aswell should be altered later on
-find "/usr/local/hestia/" -name "*.sh" -not -path "/usr/local/hestia/data/*" -not -path "/usr/local/hestia/test/*" -not -path "/usr/local/hestia/src/*"  -not -path "/usr/local/hestia/install/*" -not -path "/usr/local/hestia/install/rhel/*" -not -path "/usr/local/hestia/php/*" -not -path "/usr/local/hestia/nginx/*" -print0 | while read -r -d $'\0' file
+find "/usr/local/hestia/" -name "*.sh" -not -path "/usr/local/hestia/data/*" -not -path "/usr/local/hestia/test/*" -not -path "/usr/local/hestia/php/*" -not -path "/usr/local/hestia/nginx/*" -print0 | while read -r -d $'\0' file
 do
     run_shell_check "$file"
 done

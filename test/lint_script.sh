@@ -53,3 +53,4 @@ else
         clear
         shellcheck -x "$script" | less
     fi
+fi

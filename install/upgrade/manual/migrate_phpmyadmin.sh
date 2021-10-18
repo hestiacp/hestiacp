@@ -91,7 +91,7 @@ then
    rm -fr phpMyAdmin-$pma_v-all-languages
    rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
    
-   if [ -z '$DB_PMA_ALIAS' ]; then
+   if [ -z "$DB_PMA_ALIAS" ]; then
        echo "DB_PMA_ALIAS='phpmyadmin'" >> $HESTIA/conf/hestia.conf
    fi
    $HESTIA/bin/v-change-sys-db-alias 'pma' "phpmyadmin"

@@ -95,18 +95,14 @@ concurrency:
   limit: 1
 
 steps:
-  - name: lint
-    image: osshelp/drone-linter
-    settings:
-      skip_yml: true
-      skip_dockerfile: true
-      skip_markdown: true
-      skip_python: true
-      skip_json: true
-      
+  - name: shellcheck
+    image: koalaman/shellcheck-alpine
+    commands:
+    - ./test/shellcheck.sh
+
 trigger:
    event: [ pull_request, push ] 
 
 ---
 kind: signature
-hmac: 3973ae433df64eec6f538a98da320263ca25e20b4a45ca81cf77b9e8880d18db
+hmac: 48d34d11001c99b470114f50c4284fa107a5e61ad08ada38307493b9e9b2883f

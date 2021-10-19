@@ -30,7 +30,7 @@ RC_CONFIG_DIR="/etc/roundcube"
 if [ "$HAS_DOVECOT_SIEVE_INSTALLED" = "0" ]; then
 
 	# if sieve is not installed... install it.
-	apt-get -qq install dovecot-sieve -y
+	apt-get -qq install dovecot-sieve dovecot-managesieved -y
 	
 	# dovecot.conf install
 	sed -i "s/namespace/service stats \{\n  unix_listener stats-writer \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n\}\n\nnamespace/g" /etc/dovecot/dovecot.conf
@@ -68,6 +68,10 @@ if [ "$HAS_DOVECOT_SIEVE_INSTALLED" = "0" ]; then
 	
 	sed -i "s/'archive'/'archive', 'managesieve'/g" $RC_CONFIG_DIR/config.inc.php
 	
+	#restart dovecot and exim4
+	systemctl restart dovecot > /dev/null 2>&1
+	systemctl restart exim4 > /dev/null 2>&1
+	
 else
 
 	# Uninstall sieve if it exist
@@ -103,6 +107,10 @@ else
 		rm -f -r $RC_CONFIG_DIR/plugins/managesieve
 		rm -f $RC_INSTALL_DIR/plugins/managesieve/config.inc.php
 		sed -i "s/'archive', 'managesieve'/'archive'/g" $RC_CONFIG_DIR/config.inc.php
+		
+		#restart dovecot and exim4
+		systemctl restart dovecot > /dev/null 2>&1
+		systemctl restart exim4 > /dev/null 2>&1
 	
 	fi
 	

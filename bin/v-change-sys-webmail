@@ -27,7 +27,7 @@ export WEBMAIL_ALIAS="$WEBMAIL_ALIAS"
 OLD_ALIAS=$WEBMAIL_ALIAS
 NEW_ALIAS=$1
 
-restart=${$2-yes}
+restart=${2-yes}
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode

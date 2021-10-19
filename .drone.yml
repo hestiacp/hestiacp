@@ -98,6 +98,7 @@ steps:
   - name: lint
     image: osshelp/drone-linter
     settings:
+      skip_yml: true
       skip_dockerfile: true
       skip_markdown: true
       skip_python: true
@@ -108,4 +109,4 @@ trigger:
 
 ---
 kind: signature
-hmac: 27464babbb9d8bb446a1263e5b0fd9720f937d9eed0c9997f034a609e5cf0be5
+hmac: 3973ae433df64eec6f538a98da320263ca25e20b4a45ca81cf77b9e8880d18db

@@ -1,0 +1,82 @@
+#!/bin/bash
+# info: list sshd port
+# options: [FORMAT]
+# labels: panel
+# 
+# example: v-list-sys-sshd-port
+#
+# The function for obtainings the port of sshd listens to
+
+# Argument definition
+
+# Argument definition
+format=${1-shell}
+
+# Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+
+json_list() {
+    sh_counter=$(echo "$ports" | wc -l)
+    i=1
+    echo '['
+    for port in $ports; do
+        if [ "$i" -lt "$sh_counter" ]; then
+            echo -e  "\t\"$port\","
+        else
+            echo -e  "\t\"$port\""
+        fi
+        (( ++i))
+    done
+    echo "]"
+}
+
+# SHELL list function
+shell_list() {
+    echo "PORT"
+    echo "-----"
+    for port in $ports; do
+        echo "$port"
+    done
+}
+
+# PLAIN list function
+plain_list() {
+    for port in $ports; do
+        echo "$port"
+    done
+}
+
+# CSV list function
+csv_list() {
+    echo "SHELL"
+    for port in $ports; do
+        echo "$port"
+    done
+}
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+ports=$(sshd -T | grep '^port'| cut -d ' ' -f2);
+
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list ;;
+esac
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

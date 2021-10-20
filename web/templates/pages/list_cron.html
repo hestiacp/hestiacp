@@ -114,9 +114,7 @@
 								<!-- Restrict other administrators from editing, deleting, or suspending 'admin' user cron jobs -->
 								&nbsp;
 							<?php } else { ?>
-								<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
-									<div class="actions-panel__col actions-panel__download shortcut-enter" key-action="href"><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Cron Job');?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
-								<?php } ?>
+								<div class="actions-panel__col actions-panel__download shortcut-enter" key-action="href"><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Cron Job');?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
 								<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
 									<a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=_($spnd_action)?>">
 										<i class="fas <?=$spnd_icon?> status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>

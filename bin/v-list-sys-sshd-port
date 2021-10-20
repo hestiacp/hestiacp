@@ -49,7 +49,7 @@ plain_list() {
 
 # CSV list function
 csv_list() {
-    echo "SHELL"
+    echo "PORT"
     for port in $ports; do
         echo "$port"
     done

@@ -416,7 +416,7 @@ function check_ip_not_banned(){
   refute_output
 }
 @test "List user notification" {
-  run v-list-user-notifications admin csv
+  run v-list-user-notifications $user csv
   assert_success
   assert_output --partial "$user,\"Test message\",\"Message\",yes"
 }

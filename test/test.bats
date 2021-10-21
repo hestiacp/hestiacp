@@ -420,7 +420,7 @@ function check_ip_not_banned(){
   assert_success
   assert_output --partial "$user,\"Test message\",\"Message\",yes"
 }
-@test "List user notification" {
+@test "Delete user notification" {
   run v-delete-user-notification admin 1
   assert_success
   refute_output

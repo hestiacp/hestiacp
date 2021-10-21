@@ -80,12 +80,12 @@ plain_list() {
 # CSV list function
 csv_list() {
     IFS=$'\n'
-    echo "NID,TOPIC,NOTICE,TIME,DATE"
+    echo "NID,TOPIC,NOTICE,ACK,TIME,DATE"
     while read str; do
         parse_object_kv_list "$str"
         TOPIC=$(echo "$TOPIC" |sed -e "s/%quote%/'/g")
         NOTICE=$(echo "$NOTICE" |sed -e "s/%quote%/'/g")
-        echo "$NID,\"$TOPIC\",\"$NOTICE\",$TIME,$DATE"
+        echo "$NID,\"$TOPIC\",\"$NOTICE\",$ACK,$TIME,$DATE"
     done < <(cat $USER_DATA/notifications.conf)
 }
 

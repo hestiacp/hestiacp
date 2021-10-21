@@ -21,8 +21,6 @@ restart=$2
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# load config file
-source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -39,7 +37,7 @@ is_format_valid 'service' 'restart'
 if [ "$service" = "php-fpm" ];then
     service_list=''
     # Get installed php versions
-    php_versions=$(ls /usr/sbin/php*fpm* | cut -d'/' -f4 | sed 's|php-fpm||')
+    php_versions=$(/usr/sbin/phpquery -V);
     # Substitute php-fpm service name formats
     for version in $php_versions; do
         service_list="${service_list} php${version}-fpm"

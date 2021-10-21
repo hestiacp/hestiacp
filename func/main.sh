@@ -1333,19 +1333,16 @@ no_symlink_chmod() {
 }
 
 source_conf(){
-  if [ "$1" == "$HESTIA/conf/hestia.conf" ]; then 
-    if [ -n "$BACKEND_PORT" ]; then 
-    return;
-    fi
- fi
- while read -r keyline; 
- do
-  local mykey="${keyline%%=*}"
-  local myval="${keyline#*=}"
-  myval="$(echo $myval| sed -e "s/^'//" -e "s/'$//")"
-  declare -g "$mykey"="$myval"
-  export "${mykey}"
-  done < "$1"
+  while IFS='= ' read -r lhs rhs
+  do
+      if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
+          rhs="${rhs%%\#*}"    # Del in line right comments
+          rhs="${rhs%%*( )}"   # Del trailing spaces
+          rhs="${rhs%\'*}"     # Del opening string quotes 
+          rhs="${rhs#\'*}"     # Del closing string quotes 
+          declare -g $lhs="$rhs"
+      fi
+  done < $1
 }
 
 format_no_quotes() {

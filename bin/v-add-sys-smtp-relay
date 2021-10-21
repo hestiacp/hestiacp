@@ -30,10 +30,10 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'HOST USERNAME PASSWORD'
+check_args '3' "$#" 'HOST USERNAME PASSWORD [PORT]'
 is_format_valid 'port' 'host' 'password'
 is_username_format_valid "$username" 'username'
-format_no_single_quote "$password" 'passowrd'
+format_no_quotes "$password" 'passowrd'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode

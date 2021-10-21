@@ -405,7 +405,26 @@ function check_ip_not_banned(){
   assert_failure $E_INVALID
 }
 
-
+@test "Add user notification" {
+  run v-add-user-notification $user "Test message" "Message"
+  assert_success
+  refute_output
+}
+@test "Acknowledge user notification" {
+  run v-acknowledge-user-notification $user 1
+  assert_success
+  refute_output
+}
+@test "List user notification" {
+  run v-list-user-notifications admin csv
+  assert_success
+  assert_output --partial "$user,\"Test message\",\"Message\",yes"
+}
+@test "List user notification" {
+  run v-delete-user-notification admin 1
+  assert_success
+  refute_output
+}
 
 #----------------------------------------------------------#
 #                         Cron                             #
@@ -1468,6 +1487,20 @@ function check_ip_not_banned(){
   refute_output
 }
 
+@test "System: Set/Enable SMTP relay" {
+  run v-add-sys-smtp-relay $domain info@$domain 1234-test 587
+  assert_success
+  refute_output
+  assert_file_exist /etc/exim4/smtp_relay.conf
+}
+
+@test "System: Delete SMTP relay" {
+  run v-delete-sys-smtp-relay 
+  assert_success
+  refute_output
+  assert_file_not_exist /etc/exim4/smtp_relay.conf
+}
+
 #----------------------------------------------------------#
 #                        Firewall                          #
 #----------------------------------------------------------#
@@ -1562,25 +1595,43 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
 }
 
 #----------------------------------------------------------#
+#                         Backup user                      #
+#----------------------------------------------------------#
+
+@test "Backup user" {
+  run v-backup-user $user
+  assert_success
+}
+
+@test "List Backups" {
+  run v-list-user-backups $user plain
+  assert_success
+  assert_output --partial "$user"
+}
+
+@test "Delete backups" {
+  run v-delete-user-backup $user $(v-list-user-backups $user plain | cut -f1)
+  assert_success
+  run rm /backup/$user.log
+}
+
+#----------------------------------------------------------#
 #                         CLEANUP                          #
 #----------------------------------------------------------#
 
 @test "Mail: Delete domain" {
-    # skip
     run v-delete-mail-domain $user $domain
     assert_success
     refute_output
 }
 
 @test "DNS: Delete domain" {
-    # skip
     run v-delete-dns-domain $user $domain
     assert_success
     refute_output
 }
 
 @test "WEB: Delete domain" {
-    # skip
     run v-delete-web-domain $user $domain
     assert_success
     refute_output

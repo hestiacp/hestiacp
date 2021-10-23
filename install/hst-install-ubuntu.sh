@@ -521,6 +521,7 @@ if [ "$exim" = 'yes' ]; then
     fi
 fi
 
+echo 
 # Database stack
 if [ "$mysql" = 'yes' ]; then
     echo '   - MariaDB Database Server'
@@ -783,7 +784,7 @@ if [ "$phpfpm" = 'yes' ]; then
     fpm="php$fpm_v php$fpm_v-common php$fpm_v-bcmath php$fpm_v-cli
          php$fpm_v-curl php$fpm_v-fpm php$fpm_v-gd php$fpm_v-intl
          php$fpm_v-mysql php$fpm_v-soap php$fpm_v-xml php$fpm_v-zip
-         php$fpm_v-mbstring php$fpm_v-json php$fpm_v-bz2 php$fpm_v-pspell
+         php$fpm_v-mbstring php$fpm_v-bz2 php$fpm_v-pspell
          php$fpm_v-imagick"
     software="$software $fpm"
 fi

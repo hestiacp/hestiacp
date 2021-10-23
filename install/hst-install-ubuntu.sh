@@ -1810,10 +1810,7 @@ if [ "$sieve" = 'yes' ]; then
     RC_CONFIG_DIR="/etc/roundcube"
     
     echo "[ * ] Install Sieve ..."
-    
-    # if sieve is not installed... install it.
-    apt-get -qq install dovecot-sieve dovecot-managesieved -y
-    
+
     # dovecot.conf install
     sed -i "s/namespace/service stats \{\n  unix_listener stats-writer \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n\}\n\nnamespace/g" /etc/dovecot/dovecot.conf
     
@@ -1829,7 +1826,6 @@ if [ "$sieve" = 'yes' ]; then
     cp -f $HESTIA_INSTALL_DIR/dovecot/sieve/* /etc/dovecot/conf.d
     
     # dovecot default file install
-    mkdir /etc/dovecot/sieve
     echo -e "require [\"fileinto\"];\n# rule:[SPAM]\nif header :contains \"X-Spam-Flag\" \"YES\" {\n    fileinto \"INBOX.Spam\";\n}\n" > /etc/dovecot/sieve/default
     
     # exim4 install

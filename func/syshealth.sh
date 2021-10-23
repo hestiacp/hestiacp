@@ -127,7 +127,7 @@ function syshealth_update_ip_config_format() {
     # IP ADDRESS
     # Create array of known keys in configuration file
     system="ip"
-    known_keys=(OWNER STATUS NAME U_SYS_USERS U_WEB_DOMAINS INTERFACE NETMASK NAT HELO TIME DATE)
+    known_keys=(OWNER STATUS NAME U_SYS_USERS U_WEB_DOMAINS INTERFACE NETMASK NAT TIME DATE)
     write_kv_config_file
     unset system
     unset known_keys

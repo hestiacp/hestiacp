@@ -1840,11 +1840,6 @@ if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     ip=$pub_ip
 fi
 
-if [ "$exim" = 'yes' ]; then
-    # Set HELO for IP as it didn't set during v-change-sys-hostname
-    $HESTIA/bin/v-change-sys-ip-helo $local_ip $servername
-fi
-
 # Configuring libapache2-mod-remoteip
 if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
     cd /etc/apache2/mods-available

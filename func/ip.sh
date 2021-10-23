@@ -44,42 +44,6 @@ is_ip_rdns_valid() {
     return 1 # False
 }
 
-# Update ip helo for exim
-update_ip_helo_value() {
-    ip="$1"
-    helo="$2"
-    natip="$1"
-    
-    # In case the IP is an NAT use the real ip address 
-    if [ ! -e "$HESTIA/data/ips/$ip" ]; then
-        ip=$(get_real_ip $ip);
-    fi 
-    
-    # Create or update ip value
-    update_ip_value_new 'HELO' "$helo"
-
-    # Create mailhelo.conf file if doesn't exist
-    if [ ! -e "/etc/${MAIL_SYSTEM}/mailhelo.conf" ]; then
-        touch /etc/${MAIL_SYSTEM}/mailhelo.conf
-    fi
-
-    #Create or update ip:helo pair in mailhelo.conf file
-    if [ -n "$helo" ]; then
-        if [ $(cat /etc/${MAIL_SYSTEM}/mailhelo.conf | grep "$natip") ]; then
-            sed -i "/^$natip:/c $natip:$helo" /etc/${MAIL_SYSTEM}/mailhelo.conf
-        else
-            echo $natip:$helo >> /etc/${MAIL_SYSTEM}/mailhelo.conf
-        fi
-    else
-        sed -i "/^$natip:/d" /etc/${MAIL_SYSTEM}/mailhelo.conf
-    fi
-}
-
-delete_ip_helo_value (){
-    ip=$1
-    sed -i "/^$ip:/d" /etc/${MAIL_SYSTEM}/mailhelo.conf   
-}
-
 # Update ip address value
 update_ip_value() {
     key="$1"

@@ -1110,7 +1110,6 @@ is_format_valid() {
                 ftp_password)   is_password_format_valid "$arg" ;;
                 ftp_user)       is_user_format_valid "$arg" "$arg_name" ;;
                 hash)           is_hash_format_valid "$arg" "$arg_name" ;;
-                helo)           is_domain_format_valid "$arg" "$arg_name" ;;
                 host)           is_object_format_valid "$arg" "$arg_name" ;;
                 hour)           is_cron_format_valid "$arg" $arg_name ;;
                 id)             is_int_format_valid "$arg" 'id' ;;

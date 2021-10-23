@@ -128,14 +128,6 @@ if [ -n "$PROXY_SYSTEM" ]; then
     fi
 fi
 
-if [ -n "$MAIL_SYSTEM" ]; then
-    if [ -z "$NAT" ]; then 
-        delete_ip_helo_value "$ip"
-    else
-        delete_ip_helo_value "$NAT"
-    fi
-fi
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

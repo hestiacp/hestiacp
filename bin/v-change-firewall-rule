@@ -13,9 +13,6 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Importing system variables
-source /etc/profile
-
 # Argument definition
 rule=$1
 action=$(echo $2|tr '[:lower:]' '[:upper:]')
@@ -26,10 +23,12 @@ protocol=$(echo $protocol|tr '[:lower:]' '[:upper:]')
 comment=$6
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Sort function
 sort_fw_rules() {
@@ -55,7 +54,7 @@ is_object_valid '../../data/firewall/rules' 'RULE' "$rule"
 if [[ "$ip" =~ ^ipset: ]]; then
     ipset_name="${ip#ipset:}"
     v-list-firewall-ipset plain | grep "^$ipset_name\s" >/dev/null
-    check_result $? 'ipset object not found' $E_NOTEXIST
+    check_result $? 'ipset object not found' "$E_NOTEXIST"
 else
     is_format_valid 'ip'
 fi

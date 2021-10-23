@@ -17,10 +17,12 @@ user=$1
 restart=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -46,37 +48,37 @@ check_hestia_demo_mode
 # Do not restrict access to SFTP/FTP/SSH if POLICY_USER_VIEW_SUSPENDED is set to yes
 if [ -z "$POLICY_USER_VIEW_SUSPENDED" ] || [ "$POLICY_USER_VIEW_SUSPENDED" = 'no' ]; then
     # Adding '!' in front of the password
-    /usr/sbin/usermod --lock $user
+    /usr/sbin/usermod --lock "$user"
 
     # Suspending ftp accounts
     for ftp in $(grep "^${user}_" /etc/passwd |cut -f 1 -d : ); do
-        /usr/sbin/usermod --lock $ftp 2>/dev/null
+        /usr/sbin/usermod --lock "$ftp" 2>/dev/null
     done
 fi
 
 # Suspending web domains
-if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
-    $BIN/v-suspend-web-domains $user $restart
+if [ -n "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
+    $BIN/v-suspend-web-domains "$user" "no"
 fi
 
 # Suspending mail domains
-if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
-    $BIN/v-suspend-mail-domains $user
+if [ -n "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
+    $BIN/v-suspend-mail-domains "$user" "no"
 fi
 
 # Suspending dns domains
-if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
-    $BIN/v-suspend-dns-domains $user $restart
+if [ -n "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
+    $BIN/v-suspend-dns-domains "$user" "no"
 fi
 
 # Suspending datbabases
-if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
-    $BIN/v-suspend-databases $user
+if [ -n "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
+    $BIN/v-suspend-databases "$user"
 fi
 
 # Suspending cron jobs
-if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
-    $BIN/v-suspend-cron-jobs $user $restart
+if [ -n "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
+    $BIN/v-suspend-cron-jobs "$user" "no"
 fi
 
 
@@ -85,16 +87,16 @@ fi
 #----------------------------------------------------------#
 
 # Restarting system services
-$BIN/v-restart-web $restart
+$BIN/v-restart-web "$restart"
 check_result $? "Web restart failed" >/dev/null
 
-$BIN/v-restart-proxy $restart
+$BIN/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" >/dev/null
 
-$BIN/v-restart-dns $restart
+$BIN/v-restart-dns "$restart"
 check_result $? "DNS restart failed" >/dev/null
 
-$BIN/v-restart-cron $restart
+$BIN/v-restart-cron "$restart"
 check_result $? "Cron restart failed" >/dev/null
 
 # Changing suspend value

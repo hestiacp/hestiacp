@@ -14,8 +14,13 @@
 # Downloads and compiles/installs packages from GitHub repositories
 
 # Includes
+
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -29,7 +34,7 @@ download_file() {
     # Default destination is the curent working directory
     local dstopt=""
 
-    if [ ! -z "$(echo "$url" | grep -E "\.(gz|gzip|bz2|zip|xz)$")" ]; then
+    if [ -n "$(echo "$url" | grep -E "\.(gz|gzip|bz2|zip|xz)$")" ]; then
         # When an archive file is downloaded it will be first saved localy
         dstopt="--directory-prefix=$ARCHIVE_DIR"
         local is_archive="true"
@@ -38,10 +43,10 @@ download_file() {
             >&2 echo "[!] No filename was found in url, exiting ($url)"
             exit 1
         fi
-            if [ ! -z "$force" ] && [ -f "$ARCHIVE_DIR/$filename" ]; then
+            if [ -n "$force" ] && [ -f "$ARCHIVE_DIR/$filename" ]; then
             rm -f $ARCHIVE_DIR/$filename
         fi
-        elif [ ! -z "$destination" ]; then
+        elif [ -n "$destination" ]; then
             # Plain files will be written to specified location
             dstopt="-O $destination"
         fi
@@ -58,7 +63,7 @@ download_file() {
         wget $url -q $dstopt --show-progress --progress=bar:force --limit-rate=3m
     fi
 
-    if [ ! -z "$destination" ] && [ "$is_archive" = "true" ]; then
+    if [ -n "$destination" ] && [ "$is_archive" = "true" ]; then
         if [ "$destination" = "-" ]; then
             cat "$ARCHIVE_DIR/$filename"
         elif [ -d "$(dirname $destination)" ]; then
@@ -108,9 +113,9 @@ timestamp() {
 }
 
 # Set install flags
-if [ ! -z "$1" ]; then
+if [ -n "$1" ]; then
     fork_check=$(curl -s --head -w %{http_code} https://raw.githubusercontent.com/$fork/hestiacp/main/src/deb/hestia/control -o /dev/null)
-    if [ $fork_check -ne "200" ]; then
+    if [ "$fork_check" -ne "200" ]; then
         echo "ERROR: invalid repository name specified."
         exit 1
     else
@@ -121,7 +126,7 @@ else
     fork="hestiacp"
 fi
 
-if [ ! -z "$2" ]; then
+if [ -n "$2" ]; then
     branch_check=$(curl -s --head -w %{http_code} https://raw.githubusercontent.com/$fork/hestiacp/$branch/src/deb/hestia/control -o /dev/null)
     if [ $branch_check -ne "200" ]; then
         echo "ERROR: invalid branch name specified."
@@ -134,7 +139,7 @@ else
     source /usr/local/hestia/conf/hestia.conf
     branch=$RELEASE_BRANCH
     branch_check=$(curl -s --head -w %{http_code} https://raw.githubusercontent.com/$fork/hestiacp/$branch/src/deb/hestia/control -o /dev/null)
-    if [ $branch_check -ne "200" ]; then
+    if [ "$branch_check" -ne "200" ]; then
         echo "ERROR: invalid branch name specified."
         exit 1
     fi
@@ -165,7 +170,7 @@ fi
 NUM_CPUS=$(grep "^cpu cores" /proc/cpuinfo | uniq |  awk '{print $4}')
 
 # Check for existence of flags argument and set packages to build
-if [ ! -z "$flags" ]; then
+if [ -n "$flags" ]; then
     if [ "$flags" = "all" ]; then
         HESTIA_B='true'
         NGINX_B='true'
@@ -487,7 +492,7 @@ else
         echo "Installation of development build aborted."
         echo "Removing temporary files..."
         rm -rf $BUILD_DIR
-        unset $answer
+        unset "$answer"
         echo ""
     fi
 fi

@@ -14,10 +14,12 @@
 user=admin
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -38,10 +40,10 @@ check_hestia_demo_mode
 
 
 # Deleting job
-if [ ! -z "$check_cron_apt" ]; then
+if [ -n "$check_cron_apt" ]; then
     job=$(echo $check_cron_apt|tr ' ' "\n"|grep JOB|cut -f 2 -d "'")
 fi
-if [ ! -z "$check_cron_git" ]; then
+if [ -n "$check_cron_git" ]; then
     job=$(echo $check_cron_git|tr ' ' "\n"|grep JOB|cut -f 2 -d "'")
 fi
 

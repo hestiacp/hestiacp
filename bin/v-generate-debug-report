@@ -1,8 +1,10 @@
 #!/bin/bash
 
 # Includes
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Variables and arguments
 HESTIA="/usr/local/hestia"
@@ -46,17 +48,17 @@ fi
 
 # Generate timestamp
 time_n_date=$(date +'%F %T')
-time_n_date=$(echo $time_n_date | sed "s|:||g" | sed "s| |_|g")
+time_n_date=$(echo "$time_n_date" | sed "s|:||g" | sed "s| |_|g")
 
 # If logging specified, export shellcheck output to log
 if [ "$log" = "yes" ]; then 
     if [ "$mode" = "all" ]; then
-        shellcheck -x "$HESTIA/bin/$script" > "$DEBUG_PATH/${script}_$date-$time.log"
+        shellcheck -x "$HESTIA/bin/$script" > "$DEBUG_PATH/${script}_$time_n_date.log"
     fi
     if [ "$mode" = "warn" ]; then
-        shellcheck -x -e "SC2086,SC1090,SC2154,SC2153" "$HESTIA/bin/$script" > "$DEBUG_PATH/${script}_$date-$time.log"
+        shellcheck -x -e "SC2086,SC1090,SC2154,SC2153" "$HESTIA/bin/$script" > "$DEBUG_PATH/${script}_$time_n_date.log"
     else
-        shellcheck -x -e "SC2086,SC2016,SC2153,SC2154,SC1090,SC2034,SC2119" "$HESTIA/bin/$script" > "$DEBUG_PATH/${script}_$date-$time.log"
+        shellcheck -x -e "SC2086,SC2016,SC2153,SC2154,SC1090,SC2034,SC2119" "$HESTIA/bin/$script" > "$DEBUG_PATH/${script}_$time_n_date.log"
     fi
 else
     # Prompt user to scroll output from shellcheck

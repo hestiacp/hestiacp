@@ -15,11 +15,12 @@ user=$1
 ttl=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -40,9 +41,9 @@ PRVKEY_FILE="$HOMEDIR/$user/.ssh/hst-filemanager-key"
 PUBKEY_FILE="$HOMEDIR/$user/.ssh/hst-filemanager-key.pub"
 AUTHKEY_FILE="$HOMEDIR/$user/.ssh/authorized_keys"
 
-[ -z "$(readlink -f "$PRVKEY_FILE"  | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result $E_FORBIDEN "Invalid private key file path"
-[ -z "$(readlink -f "$PUBKEY_FILE"  | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result $E_FORBIDEN "Invalid public key file path"
-[ -z "$(readlink -f "$AUTHKEY_FILE" | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result $E_FORBIDEN "Invalid authorized keys path"
+[ -z "$(readlink -f "$PRVKEY_FILE"  | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result "$E_FORBIDEN" "Invalid private key file path"
+[ -z "$(readlink -f "$PUBKEY_FILE"  | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result "$E_FORBIDEN" "Invalid public key file path"
+[ -z "$(readlink -f "$AUTHKEY_FILE" | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result "$E_FORBIDEN" "Invalid authorized keys path"
 
 if [ ! -f "${PRVKEY_FILE}" ]; then
 

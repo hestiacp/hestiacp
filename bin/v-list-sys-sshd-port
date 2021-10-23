@@ -1,38 +1,30 @@
 #!/bin/bash
-# info: list system shells
+# info: list sshd port
 # options: [FORMAT]
 # labels: panel
 # 
-# example: v-list-sys-shells
+# example: v-list-sys-sshd-port
 #
-# The function for obtaining the list of system shells.
+# The function for obtainings the port of sshd listens to
 
-
-#----------------------------------------------------------#
-#                    Variable&Function                     #
-#----------------------------------------------------------#
+# Argument definition
 
 # Argument definition
 format=${1-shell}
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# load config file
-source_conf "$HESTIA/conf/hestia.conf"
 
-# JSON list function
 json_list() {
-    sh_counter=$(echo "$shells" | wc -l)
+    sh_counter=$(echo "$ports" | wc -l)
     i=1
     echo '['
-    for shell in $shells; do
+    for port in $ports; do
         if [ "$i" -lt "$sh_counter" ]; then
-            echo -e  "\t\"$shell\","
+            echo -e  "\t\"$port\","
         else
-            echo -e  "\t\"$shell\""
+            echo -e  "\t\"$port\""
         fi
         (( ++i))
     done
@@ -41,35 +33,33 @@ json_list() {
 
 # SHELL list function
 shell_list() {
-    echo "SHELL"
+    echo "PORT"
     echo "-----"
-    for shell in $shells; do
-        echo "$shell"
+    for port in $ports; do
+        echo "$port"
     done
 }
 
 # PLAIN list function
 plain_list() {
-    for shell in $shells; do
-        echo "$shell"
+    for port in $ports; do
+        echo "$port"
     done
 }
 
 # CSV list function
 csv_list() {
-    echo "SHELL"
-    for shell in $shells; do
-        echo "$shell"
+    echo "PORT"
+    for port in $ports; do
+        echo "$port"
     done
 }
 
-
 #----------------------------------------------------------#
-#                       Action                             #
+#                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Defining system shells
-shells=$(grep -v '#' /etc/shells |awk -F '/' '{print $NF}' |sort -u)
+ports=$(sshd -T | grep '^port'| cut -d ' ' -f2);
 
 # Listing data
 case $format in
@@ -78,6 +68,11 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
 
 
 #----------------------------------------------------------#

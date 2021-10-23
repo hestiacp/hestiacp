@@ -28,10 +28,12 @@ KEY_SIZE=4096
 DAYS=365
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Json function
 json_list_ssl() {
@@ -47,13 +49,13 @@ json_list_ssl() {
 
 # Shell function
 shell_list_ssl() {
-    if [ ! -z "$crt" ]; then
+    if [ -n "$crt" ]; then
         echo -e "$crt"
     fi
-    if [ ! -z "$key" ]; then
+    if [ -n "$key" ]; then
         echo -e "\n$key"
     fi
-    if [ ! -z "$csr" ]; then
+    if [ -n "$csr" ]; then
         echo -e "\n$csr"
     fi
     echo -e "\nDirectory: $workdir"
@@ -72,13 +74,14 @@ fi
 
 args_usage='DOMAIN EMAIL COUNTRY STATE CITY ORG UNIT [ALIASES] [FORMAT]'
 check_args '7' "$#" "$args_usage"
-is_format_valid 'domain' 'aliases' 'format'
+is_format_valid 'domain' 'aliases' 'format' 'email'
 
 release="$(lsb_release -s -r)"
-if [ "$release" = "18.04" ]; then
-    is_format_valid 'email'
-fi
 
+if [ -z "$email" ] && [ "$release" = "18.04" ]; then 
+    echo "Email adress is required";
+    exit 2;
+fi
 if [ ! -f /root/.rnd ]; then
     touch /root/.rnd
 fi
@@ -95,7 +98,7 @@ workdir=$(mktemp -d)
 cd $workdir
 
 # Generate private key
-openssl genrsa $KEY_SIZE > $domain.key 2>/dev/null
+openssl genrsa "$KEY_SIZE" > "$domain.key" 2>/dev/null
 
 subj=""
 # Generate the CSR
@@ -166,6 +169,10 @@ case $format in
     *)      check_args '1' '0' '[FORMAT]'
 esac
 
+# Don't allow non root users view folder
+chmod 660 $workdir
+# Clean up the mess
+echo "rm -rf $workdir" | at "now +15 minute" > /dev/null 2>&1
 # Delete tmp dir
 #rm -rf $workdir
 

@@ -13,8 +13,12 @@
 #----------------------------------------------------------#
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Argument definition
 format=${1-shell}
@@ -24,14 +28,13 @@ json_list() {
     echo '{'
     i=1
     while read USER; do
-        source $HESTIA/data/users/$USER/user.conf
         if [ ! -f "$HESTIA/data/users/$USER/user.conf" ]; then
             continue;
         fi
         if [ $i -gt 1 ]; then
             echo ","
         fi
-        source $HESTIA/data/users/$USER/user.conf
+        source_conf "$HESTIA/data/users/$USER/user.conf"
         echo -n '    "'$USER'": {
         "NAME": "'$NAME'",
         "PACKAGE": "'$PACKAGE'",
@@ -96,11 +99,10 @@ shell_list() {
     echo "USER   PKG   WEB   DNS   MAIL   DB   DISK   BW   SPND   DATE"
     echo "----   ---   ---   ---   ---    --   ----   --   ----   ----"
     while read USER; do
-        source $HESTIA/data/users/$USER/user.conf
         if [ ! -f "$HESTIA/data/users/$USER/user.conf" ]; then
             continue;
         fi
-        source $HESTIA/data/users/$USER/user.conf
+        source_conf "$HESTIA/data/users/$USER/user.conf"
         echo -n "$USER $PACKAGE $U_WEB_DOMAINS $U_DNS_DOMAINS $U_MAIL_DOMAINS"
         echo " $U_DATABASES $U_DISK $U_BANDWIDTH $SUSPENDED $DATE"
     done < <(grep '@' /etc/passwd |cut -f1 -d:)
@@ -109,11 +111,10 @@ shell_list() {
 # PLAIN list function
 plain_list() {
     while read USER; do
-        source $HESTIA/data/users/$USER/user.conf
         if [ ! -f "$HESTIA/data/users/$USER/user.conf" ]; then
             continue;
         fi
-        source $HESTIA/data/users/$USER/user.conf
+        source_conf "$HESTIA/data/users/$USER/user.conf"
         echo -ne "$USER\t$NAME\t$PACKAGE\t$WEB_TEMPLATE\t"
         echo -ne "$BACKEND_TEMPLATE\t$PROXY_TEMPLATE\t$DNS_TEMPLATE\t"
         echo -ne "$WEB_DOMAINS\t$WEB_ALIASES\t$DNS_DOMAINS\t$DNS_RECORDS\t"
@@ -145,11 +146,10 @@ csv_list() {
     echo -n "U_MAIL_DOMAINS,U_MAIL_DKIM,U_MAIL_ACCOUNTS,U_DATABASES"
     echo "U_CRON_JOBS,U_BACKUPS,LANGUAGE,TIME,DATE"
     while read USER; do
-        source $HESTIA/data/users/$USER/user.conf
         if [ ! -f "$HESTIA/data/users/$USER/user.conf" ]; then
             continue;
         fi
-        source $HESTIA/data/users/$USER/user.conf
+        source_conf "$HESTIA/data/users/$USER/user.conf"
         echo -n "$USER,\"$NAME\",$PACKAGE,$WEB_TEMPLATE,"
         echo -n "$BACKEND_TEMPLATE,$PROXY_TEMPLATE,$DNS_TEMPLATE,"
         echo -n "$WEB_DOMAINS,$WEB_ALIASES,$DNS_DOMAINS,$DNS_RECORDS,"
@@ -169,8 +169,6 @@ csv_list() {
 # Raw list function
 raw_list() {
     while read USER; do
-        echo $HESTIA/data/users/$USER/user.conf
-        cat $HESTIA/data/users/$USER/user.conf
         if [ ! -f "$HESTIA/data/users/$USER/user.conf" ]; then
             continue;
         fi

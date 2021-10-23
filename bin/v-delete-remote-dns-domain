@@ -17,12 +17,14 @@ user=$1
 domain=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/remote.sh
 source $HESTIA/func/remote.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -49,10 +51,10 @@ for cluster in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
     parse_object_kv_list "$cluster"
 
     # Syncing domain
-    cluster_cmd v-delete-dns-domain $DNS_USER $domain 'yes'
+    cluster_cmd v-delete-dns-domain "$DNS_USER" "$domain" 'yes'
     rc=$?
     if [ "$rc" -ne 0 ] && [ $rc -ne 3 ]; then
-        check_result $rc "$HOST connection failed (sync)" $E_CONNECT
+        check_result $rc "$HOST connection failed (sync)" "$E_CONNECT"
     fi
 
 done
@@ -64,9 +66,9 @@ done
 
 # Updating pipe
 pipe="$HESTIA/data/queue/dns-cluster.pipe"
-str=$(grep -n "$SCRIPT $1 $2$" $pipe | cut -f1 -d: | head -n1)
-if [ ! -z "$str" ]; then
-    sed -i "$str d"  $pipe
+str=$(grep -n "$SCRIPT $1 $2$" "$pipe" | cut -f1 -d: | head -n1)
+if [ -n "$str" ]; then
+    sed -i "$str d"  "$pipe"
 fi
 
 exit

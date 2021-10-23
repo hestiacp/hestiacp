@@ -23,13 +23,16 @@ ssl_dir=$3
 restart=$4
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-# shellcheck source=/usr/local/hestia/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -85,10 +88,10 @@ fi
 #----------------------------------------------------------#
 
 # Restarting web server
-$BIN/v-restart-web $restart
+$BIN/v-restart-web "$restart"
 check_result $? "Web restart failed" >/dev/null
 
-$BIN/v-restart-proxy $restart
+$BIN/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging

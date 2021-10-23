@@ -18,10 +18,12 @@ if [ "$status" = "failed" ]; then
 fi
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -29,6 +31,12 @@ source $HESTIA/conf/hestia.conf
 
 check_args '2' "$#" 'USER IP SESSION_ID USER_AGENT [AUTHLOG] [REASON]'
 is_format_valid 'user' 'ip'
+is_common_format_valid "$session_id" "SESSION_ID"
+is_common_format_valid "$user_agent" "USER_AGENT"
+is_common_format_valid "$authlog" "AUTHLOG"
+is_common_format_valid "$reason" "REASON"
+
+
 is_object_valid 'user' 'USER' "$user"
 
 # Generating timestamp
@@ -36,23 +44,22 @@ time_n_date=$(date +'%T %F')
 time=$(echo "$time_n_date" |cut -f 1 -d \ )
 date=$(echo "$time_n_date" |cut -f 2 -d \ )
 
-if [ ! -f $USER_DATA/auth.log ]; then
-    touch $USER_DATA/auth.log
+if [ ! -f "$USER_DATA/auth.log" ]; then
+    touch "$USER_DATA/auth.log"
 fi
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-echo "DATE='$date' TIME='$time' IP='$ip' ACTION='login' STATUS='$status' USER_AGENT='$user_agent' SESSION='$session_id' ACTIVE='$active'" >> $USER_DATA/auth.log
+echo "DATE='$date' TIME='$time' IP='$ip' ACTION='login' STATUS='$status' USER_AGENT='$user_agent' SESSION='$session_id' ACTIVE='$active'" >> "$USER_DATA/auth.log"
 
 if [ "$authlog" = "yes" ]; then
-    echo "$date $time $user $ip failed to login ($reason)" >> $HESTIA/log/auth.log    
+    echo "$date $time $user $ip failed to login ($reason)" >> "$HESTIA/log/auth.log"    
 fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-echo "Test" >> $HESTIA/log/system.log
 exit

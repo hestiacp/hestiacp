@@ -12,12 +12,14 @@
 ip46=${1// /}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -36,7 +38,7 @@ check_hestia_demo_mode
 
 new_list=''
 set -f                      # avoid globbing (expansion of *).
-array=(${API_ALLOWED_IP//,/ })
+array=("${API_ALLOWED_IP//,/ }")
 for i in "${!array[@]}"
 do
     if [ "${array[i]}" != "$ip46" ]; then

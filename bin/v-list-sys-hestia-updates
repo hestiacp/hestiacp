@@ -16,10 +16,12 @@
 format=${1-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 fields="\$NAME \$VERSION \$ARCH \$UPDATED \$DESCR \$TIME \$DATE"
 
@@ -79,7 +81,7 @@ DATE=$(date -d @$pkg_date +"%F")
 TIME=$(date -d @$pkg_date +"%T")
 
 UPDATED='yes'
-if [ ! -z "$hesta_v" ] && [ "$hestia_v" \> "$VERSION" ]; then
+if [ -n "$hesta_v" ] && [ "$hestia_v" \> "$VERSION" ]; then
     UPDATED='no'
 fi
 
@@ -95,7 +97,7 @@ DATE=$(date -d @$pkg_date +"%F")
 TIME=$(date -d @$pkg_date +"%T")
 
 UPDATED='yes'
-if [ ! -z "$php_v" ] && [ "$php_v" \> "$VERSION" ]; then
+if [ -n "$php_v" ] && [ "$php_v" \> "$VERSION" ]; then
     UPDATED='no'
 fi
 
@@ -112,7 +114,7 @@ DATE=$(date -d @$pkg_date +"%F")
 TIME=$(date -d @$pkg_date +"%T")
 
 UPDATED='yes'
-if [ ! -z "$nginx_v" ] && [ "$nginx_v" \> "$VERSION" ]; then
+if [ -n "$nginx_v" ] && [ "$nginx_v" \> "$VERSION" ]; then
     UPDATED='no'
 fi
 

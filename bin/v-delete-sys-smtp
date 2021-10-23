@@ -13,10 +13,12 @@
 #----------------------------------------------------------#
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -29,13 +31,13 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-$BIN/v-change-sys-config-value "USE_SERVER_SMTP" 'false'
-$BIN/v-change-sys-config-value "SERVER_SMTP_HOST" ''
-$BIN/v-change-sys-config-value "SERVER_SMTP_PORT" ''
-$BIN/v-change-sys-config-value "SERVER_SMTP_SECURITY" ''
-$BIN/v-change-sys-config-value "SERVER_SMTP_USER" ''
-$BIN/v-change-sys-config-value "SERVER_SMTP_PASSWD" ''
-$BIN/v-change-sys-config-value "SERVER_SMTP_ADDR" ''
+change_sys_value "USE_SERVER_SMTP" "false"
+change_sys_value "SERVER_SMTP_HOST" ""
+change_sys_value "SERVER_SMTP_PORT" ""
+change_sys_value "SERVER_SMTP_SECURITY" ""
+change_sys_value "SERVER_SMTP_USER" ""
+change_sys_value "SERVER_SMTP_PASSWD" ""
+change_sys_value "SERVER_SMTP_ADDR" ""
 
 #----------------------------------------------------------#
 #                       Hestia                             #

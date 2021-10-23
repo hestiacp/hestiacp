@@ -34,6 +34,7 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
+is_package_valid "$package"
 is_package_new "$new_package"
 is_object_format_valid "$package" "Package"
 is_object_format_valid "$new_package" "New package"

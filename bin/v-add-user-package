@@ -91,9 +91,11 @@ is_package_consistent() {
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'PKG_DIR PACKAGE' 'rewrite'
-is_format_valid 'pkg_dir' 'package'
+is_format_valid 'package'
 if [ "$rewrite" != 'yes' ]; then
     is_package_new "$package"
+else 
+    is_package_valid "$package"
 fi
 
 if [ ! -f "$tmpfile" ]; then 

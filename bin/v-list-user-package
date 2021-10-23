@@ -101,7 +101,7 @@ csv_list() {
 # Checking args
 check_args '1' "$#" 'PACKAGE [FORMAT]'
 is_format_valid 'package'
-is_package_valid
+is_package_valid 
 
 
 #----------------------------------------------------------#

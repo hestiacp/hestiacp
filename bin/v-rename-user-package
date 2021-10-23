@@ -43,7 +43,7 @@ if [ -z "$new_name" ]; then
     exit "$E_ARGS"
 fi
 
-is_package_valid "$old_name" "Old package"
+is_package_valid "$old_name"
 is_object_format_valid "$new_name" "New package"
 pkg_dir="$HESTIA/data/packages"
 if [  -e "$pkg_dir/$new_name.pkg" ]; then
@@ -66,7 +66,7 @@ if [ -e "$HESTIA/data/packages/$old_name.pkg" ]; then
     fi
 
     # Update package for existing users
-    for user in $($HESTA/v-list-users plain); do
+    for user in $($BIN/v-list-users plain); do
         OLD_PACKAGE=$(v-get-user-value "$user" 'PACKAGE')
         if [ "$old_name" = "$OLD_PACKAGE" ]; then
             if [ "$mode" == "yes" ]; then

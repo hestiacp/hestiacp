@@ -218,12 +218,16 @@ generate_password() {
 
 # Package existence check
 is_package_valid() {
-    if [ -z "$1" ]; then
-        pkg_dir="$HESTIA/data/packages"
+    if [ -z $1 ]; then 
+      if [ ! -e "$HESTIA/data/packages/$package.pkg" ]; then
+      check_result "$E_NOTEXIST" "package $package doesn't exist"
+      fi    
+    else
+      if [ ! -e "$HESTIA/data/packages/$1.pkg" ]; then
+          check_result "$E_NOTEXIST" "package $1 doesn't exist"
+      fi
     fi
-    if [ ! -e "$pkg_dir/$package.pkg" ]; then
-        check_result "$E_NOTEXIST" "package $package doesn't exist"
-    fi
+
 }
 
 is_package_new() {

@@ -1584,15 +1584,15 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
     assert_output --partial "100"
 }
 
+@test "Package: Copy package Not Exists" {
+  run v-copy-user-package hestiadoesnotexists hestiatest2
+  assert_failure $E_NOTEXIST
+}
+
 @test "Package: Copy package" {
   run v-copy-user-package hestiatest hestiatest2
   assert_success
   refute_output
-}
-
-@test "Package: Copy package Not Exists" {
-  run v-copy-user-package hestiadoesnotexists hestiatest2
-  assert_failure $E_NOTEXIST
 }
 
 @test "Package: Copy package Exists" {

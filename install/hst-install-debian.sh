@@ -1800,6 +1800,10 @@ fi
 #----------------------------------------------------------#
 # Min requirements Dovecote + Exim + Mysql + roundcube
 if [ "$sieve" = 'yes' ]; then
+    # Folder paths
+    RC_INSTALL_DIR="/var/lib/roundcube"
+    RC_CONFIG_DIR="/etc/roundcube"
+    
     echo "[ * ] Install Sieve ..."
     
     # if sieve is not installed... install it.

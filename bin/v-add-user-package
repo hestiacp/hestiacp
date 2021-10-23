@@ -25,15 +25,6 @@ source $HESTIA/func/domain.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-# Functions
-is_package_new() {
-    if [ -e "$HESTIA/data/packages/$package.pkg" ]; then
-        echo "Error: package $package already exists."
-        log_event "$E_EXISTS" "$ARGUMENTS"
-        exit "$E_EXISTS"
-    fi
-}
-
 is_package_consistent() {
     source_conf "$tmpfile"
     if [ "$WEB_DOMAINS" != 'unlimited' ]; then

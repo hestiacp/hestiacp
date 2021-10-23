@@ -30,22 +30,13 @@ source_conf "$HESTIA/conf/hestia.conf"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
-is_package_new() {
-    if [ -e "$HESTIA/data/packages/$1.pkg" ]; then
-        echo "Error: package $1 already exists."
-        log_event "$E_EXISTS" "$ARGUMENTS"
-        exit "$E_EXISTS"
-    fi
-}
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-is_package_valid "$package" "Package"
 is_package_new "$new_package"
-is_object_format_valid "$package" "New package"
+is_object_format_valid "$package" "Package"
+is_object_format_valid "$new_package" "New package"
 
 if [ -n "$1" ]; then 
     if [ ! -f "$HESTIA/data/packages/$package.pkg" ]; then
@@ -56,7 +47,7 @@ if [ -n "$1" ]; then
         # Copy package
         cp -f "$HESTIA/data/packages/$package.pkg" "$HESTIA/data/packages/$new_package.pkg"
         # Don't leave the .sh file behind
-        if [ ! -f "$HESTIA/data/packages/$package.sh" ]; then 
+        if [ -f "$HESTIA/data/packages/$package.sh" ]; then 
             cp $HESTIA/data/packages/$package.sh $HESTIA/data/packages/$new_package.sh
         fi
     else

@@ -226,6 +226,14 @@ is_package_valid() {
     fi
 }
 
+is_package_new() {
+  if [ -e "$HESTIA/data/packages/$1.pkg" ]; then
+      echo "Error: package $1 already exists."
+      log_event "$E_EXISTS" "$ARGUMENTS"
+      exit "$E_EXISTS"
+  fi
+}
+
 # Validate system type
 is_type_valid() {
     if [ -z "$(echo $1 | grep -w $2)" ]; then

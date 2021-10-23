@@ -36,7 +36,7 @@ if [ "$release" -eq 9 ]; then
         php$fpm_v-cgi php$fpm_v-mysql php$fpm_v-curl php$fpm_v-pgsql
         php$fpm_v-imagick php$fpm_v-imap php$fpm_v-ldap php$fpm_v-apcu awstats
         php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli php$fpm_v-gd php$fpm_v-intl
-        php$fpm_v-json php$fpm_v-mbstring php$fpm_v-opcache php$fpm_v-pspell
+        php$fpm_v-mbstring php$fpm_v-opcache php$fpm_v-pspell
         php$fpm_v-readline php$fpm_v-xml vsftpd proftpd-basic bind9 exim4
         exim4-daemon-heavy clamav-daemon spamassassin dovecot-imapd
         dovecot-pop3d dovecot-sieve dovecot-managesieved 
@@ -52,7 +52,7 @@ elif [ "$release" -eq 10 ] || [ "$release" -eq 11 ]; then
         php$fpm_v php$fpm_v-common php$fpm_v-cgi php$fpm_v-mysql php$fpm_v-curl
         php$fpm_v-pgsql php$fpm_v-imagick php$fpm_v-imap php$fpm_v-ldap
         php$fpm_v-apcu awstats php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli
-        php$fpm_v-gd php$fpm_v-intl php$fpm_v-json php$fpm_v-mbstring
+        php$fpm_v-gd php$fpm_v-intl php$fpm_v-mbstring
         php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
         awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy
         clamav-daemon spamassassin dovecot-imapd dovecot-pop3d dovecot-sieve dovecot-managesieved 
@@ -201,7 +201,7 @@ for arg; do
         --postgresql)           args="${args}-g " ;;
         --exim)                 args="${args}-x " ;;
         --dovecot)              args="${args}-z " ;;
-        --sieve)                args="${args}-Z " ;;       
+        --sieve)                args="${args}-Z " ;;
         --clamav)               args="${args}-c " ;;
         --spamassassin)         args="${args}-t " ;;
         --iptables)             args="${args}-i " ;;
@@ -541,7 +541,7 @@ if [ "$exim" = 'yes' ]; then
     fi
     echo
     if [ "$dovecot" = 'yes' ]; then
-        echo '   - Dovecot POP3/IMAP Server'
+        echo -n '   - Dovecot POP3/IMAP Server '
         if [ "$sieve" = 'yes' ]; then
           echo -n '+ Sieve'
         fi

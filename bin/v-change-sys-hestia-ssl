@@ -18,12 +18,14 @@ ssl_dir=$1
 restart=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -70,7 +72,7 @@ cp -f $ssl_dir/certificate.key $HESTIA/ssl/certificate.key
 # Restarting web server
 if [ "$restart" != 'no' ]; then
     kill -HUP $(cat /var/run/hestia-nginx.pid)
-    $BIN/v-restart-mail $restart
+    $BIN/v-restart-mail "$restart"
 fi
 
 # Logging

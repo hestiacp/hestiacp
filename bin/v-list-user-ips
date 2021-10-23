@@ -17,8 +17,12 @@ user=$1
 format=${2-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -26,7 +30,7 @@ json_list() {
     ip_count=$(echo "$ips" |wc -l)
     i=1
     for IP in $ips; do
-        source $HESTIA/data/ips/$IP
+        source_conf "$HESTIA/data/ips/$IP"
         echo -n '    "'$IP'": {
         "OWNER": "'$OWNER'",
         "STATUS": "'$STATUS'",
@@ -48,7 +52,7 @@ shell_list() {
     echo "IP  NAT  OWNER   STATUS   NAME"
     echo "--  ---  -----   ------   ---"
     for IP in $ips; do
-        source $HESTIA/data/ips/$IP
+        source_conf "$HESTIA/data/ips/$IP"
         if [ -z "$NAT" ]; then
             NAT='no'
         fi
@@ -62,7 +66,7 @@ shell_list() {
 # PLAIN list function
 plain_list() {
     for IP in $ips; do
-        source $HESTIA/data/ips/$IP
+        source_conf "$HESTIA/data/ips/$IP"
         echo -e "$IP\t$OWNER\t$STATUS\t$NAME\t$NAT"
     done
 }
@@ -71,7 +75,7 @@ plain_list() {
 csv_list() {
     echo "IP,OWNER,STATUS,NAME,NAT"
     for IP in $ips; do
-        source $HESTIA/data/ips/$IP
+        source_conf "$HESTIA/data/ips/$IP"
         echo "$IP,$OWNER,$STATUS,$NAME,$NAT"
     done
 }

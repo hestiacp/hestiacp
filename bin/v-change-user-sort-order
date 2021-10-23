@@ -17,22 +17,19 @@ sort_order=$2
 
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-# Unset THEME variable from $HESTIA/conf/hestia.conf
-unset THEME
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Reading user values
-source $USER_DATA/user.conf
-
-is_format_valid 'user' 'theme'
+is_format_valid 'user'
+is_common_format_valid "$sort_order" "sort_order"
 is_object_valid 'user' 'USER' "$user"
 
 is_object_unsuspended 'user' 'USER' "$user"
@@ -44,14 +41,8 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Set theme value
-check_ckey=$(grep "PREF_UI_SORT" $USER_DATA/user.conf)
-if [ -z "$check_ckey" ]; then
-    # Rebuild user configuration to repair missing value
-    $BIN/v-rebuild-user $user
-fi
-update_user_value "$user" '$PREF_UI_SORT' "$sort_order"
-
+$HESTIA/bin/v-change-user-config-value "$user" "$PREF_UI_SORT" "$sort_order"
+$BIN/v-log-action "$user" "Warning" "System" "Change user setting ($key)"
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

@@ -20,18 +20,16 @@ user=$1
 restart=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-# shellcheck source=/usr/local/hestia/func/rebuild.sh
-# shellcheck source=/usr/local/hestia/func/syshealth.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
 source $HESTIA/func/rebuild.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
 source $HESTIA/func/syshealth.sh
-source $HESTIA/conf/hestia.conf
-
-# Export sbin
-export PATH=$PATH:/usr/sbin
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -41,7 +39,7 @@ check_args '1' "$#" 'USER [RESTART]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 check_user=$(is_object_unsuspended 'user' 'USER' "$user")
-if [ ! -z "$check_user" ]; then
+if [ -n "$check_user" ]; then
     exit
 fi
 
@@ -53,12 +51,12 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Rebuild loop
-$BIN/v-rebuild-web-domains $user $restart
-$BIN/v-rebuild-dns-domains $user $restart
-$BIN/v-rebuild-mail-domains $user $restart
-$BIN/v-rebuild-databases $user $restart
-$BIN/v-rebuild-cron-jobs $user $restart
-$BIN/v-rebuild-user $user $restart
+$BIN/v-rebuild-web-domains "$user" "$restart"
+$BIN/v-rebuild-dns-domains "$user" "$restart"
+$BIN/v-rebuild-mail-domains "$user" "$restart"
+$BIN/v-rebuild-databases "$user" "$restart"
+$BIN/v-rebuild-cron-jobs "$user" "$restart"
+$BIN/v-rebuild-user "$user" "$restart"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

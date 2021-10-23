@@ -17,10 +17,12 @@ restart=$1
 skip=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -31,9 +33,9 @@ cp -rf $HESTIA_INSTALL_DIR/templates/mail $HESTIA/data/templates/
 
 # Rebuild mail domains if mail services are enabled
 if [ -z "$skip" ]; then
-	if [ ! -z $MAIL_SYSTEM ]; then
+	if [ -n "$MAIL_SYSTEM" ]; then
 		for user in $($HESTIA/bin/v-list-sys-users plain); do
-			$BIN/v-rebuild-mail-domains $user no
+			$BIN/v-rebuild-mail-domains "$user" no
 		done
 	fi
 fi
@@ -41,12 +43,12 @@ fi
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-if [ ! -z "$restart" ] || [ "$restart" == "yes" ]; then
+if [ -n "$restart" ] || [ "$restart" == "yes" ]; then
     # Restarting web server
-    $BIN/v-restart-web $restart
+    $BIN/v-restart-web "$restart"
     check_result $? "restart" >/dev/null 2>&1
     
-    $BIN/v-restart-proxy $restart
+    $BIN/v-restart-proxy "$restart"
     check_result $? "restart" >/dev/null 2>&1
 fi
 $BIN/v-log-action "system" "Info" "Updates" "Default mail domain templates updated."

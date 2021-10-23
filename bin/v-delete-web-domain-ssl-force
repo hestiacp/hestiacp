@@ -19,10 +19,14 @@ restart=$3
 quiet=$4
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -46,10 +50,10 @@ check_hestia_demo_mode
 parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 
 # Remove forcessl configs
-if [ -f $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.forcessl.conf ]; then
+if [ -f "$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.forcessl.conf" ]; then
     rm -f $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.forcessl.conf
 fi
-if [ -f $HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.forcessl.conf ]; then
+if [ -f "$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.forcessl.conf" ]; then
     rm -f $HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.forcessl.conf
 fi
 
@@ -64,10 +68,10 @@ fi
 update_object_value 'web' 'DOMAIN' "$domain" '$SSL_FORCE' 'no'
 
 # Restart services if requested
-$BIN/v-restart-web $restart
+$BIN/v-restart-web "$restart"
 check_result $? "Web restart failed" >/dev/null
 
-$BIN/v-restart-proxy $restart
+$BIN/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging

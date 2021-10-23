@@ -13,19 +13,13 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Importing system environment  as we run this script
-# mostly by cron wich do not read it by itself
-source /etc/profile
-
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
-# Another workaround for cron environment
-PATH="$PATH:$BIN"
-export PATH
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Checking rrddir
 if [ ! -d "$RRD" ]; then
@@ -101,37 +95,37 @@ fi
 # Updateing system stats
 for period in $periods; do
 
-    $BIN/v-update-sys-rrd-la $period >/dev/null 2>&1
-    $BIN/v-update-sys-rrd-net $period >/dev/null 2>&1
-    $BIN/v-update-sys-rrd-mem $period >/dev/null 2>&1
-    $BIN/v-update-sys-rrd-ssh $period >/dev/null 2>&1
+    $BIN/v-update-sys-rrd-la "$period" >/dev/null 2>&1
+    $BIN/v-update-sys-rrd-net "$period" >/dev/null 2>&1
+    $BIN/v-update-sys-rrd-mem "$period" >/dev/null 2>&1
+    $BIN/v-update-sys-rrd-ssh "$period" >/dev/null 2>&1
 
     # Updating web stats
-    if [ ! -z "$WEB_SYSTEM" ]; then
-        $BIN/v-update-sys-rrd-$WEB_SYSTEM $period >/dev/null 2>&1
+    if [ -n "$WEB_SYSTEM" ]; then
+        $BIN/v-update-sys-rrd-$WEB_SYSTEM "$period" >/dev/null 2>&1
     fi
 
-    if [ ! -z "$PROXY_SYSTEM" ]; then
-        $BIN/v-update-sys-rrd-$PROXY_SYSTEM $period >/dev/null 2>&1
+    if [ -n "$PROXY_SYSTEM" ]; then
+        $BIN/v-update-sys-rrd-$PROXY_SYSTEM "$period" >/dev/null 2>&1
     fi
 
     # Updating mail stats
-    if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
-        $BIN/v-update-sys-rrd-mail $period >/dev/null 2>&1
+    if [ -n "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
+        $BIN/v-update-sys-rrd-mail "$period" >/dev/null 2>&1
     fi
 
     # Updating ftp stats
-    if [ ! -z "$FTP_SYSTEM" ] && [ "$FTP_SYSTEM" != 'no' ]; then
-        $BIN/v-update-sys-rrd-ftp $period >/dev/null 2>&1
+    if [ -n "$FTP_SYSTEM" ] && [ "$FTP_SYSTEM" != 'no' ]; then
+        $BIN/v-update-sys-rrd-ftp "$period" >/dev/null 2>&1
     fi
 
     # Updating db stats
-    if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
+    if [ -n "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
         for type in ${DB_SYSTEM//,/ }; do
             # Switching on db type
             case $type in
-                mysql) $BIN/v-update-sys-rrd-mysql $period >/dev/null 2>&1 ;;
-                pgsql) $BIN/v-update-sys-rrd-pgsql $period >/dev/null 2>&1 ;;
+                mysql) $BIN/v-update-sys-rrd-mysql "$period" >/dev/null 2>&1 ;;
+                pgsql) $BIN/v-update-sys-rrd-pgsql "$period" >/dev/null 2>&1 ;;
             esac
         done
     fi

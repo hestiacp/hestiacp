@@ -16,10 +16,12 @@
 user=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -44,7 +46,7 @@ source $USER_DATA/user.conf
 # Check if 2FA is enabled
 if [ -z "$TWOFA" ]; then
     echo "Error: two-factor authentication is not enabled"
-    exit $E_NOTEXIST
+    exit "$E_NOTEXIST"
 fi
 
 # Remove 2FA from user config

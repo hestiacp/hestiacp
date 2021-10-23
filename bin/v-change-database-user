@@ -19,14 +19,16 @@ dbuser="$user"_"$3"
 password=$4; HIDE=4
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/db.sh
 # shellcheck source=/usr/local/hestia/func/rebuild.sh
 source $HESTIA/func/rebuild.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -68,7 +70,7 @@ if [ "$TYPE" = "pgsql" ]; then
    dbuser=$(echo $dbuser | tr '[:upper:]' '[:lower:]');
    exclude="-"
     if [[ "$dbuser" =~ $exclude ]]; then
-        check_result $E_INVALID "invalid database user format"
+        check_result "$E_INVALID" "invalid database user format"
     fi
 fi
 
@@ -79,7 +81,7 @@ case $TYPE in
 esac
 
 # Change password
-if [ ! -z "$dbpass" ]; then
+if [ -n "$dbpass" ]; then
     case $TYPE in
         mysql) change_mysql_password ;;
         pgsql) change_pgsql_password ;;

@@ -10,7 +10,7 @@ echo "[ * ] Configuring PHPMailer..."
 $HESTIA/bin/v-add-sys-phpmailer quiet
 
 matches=$(grep -o 'ENFORCE_SUBDOMAIN_OWNERSHIP' $HESTIA/conf/hestia.conf | wc -l);
-if [ "$matches" > 1 ]; then
+if [ "$matches" -gt 1 ]; then
 	echo "[ * ] Removing double matches ENFORCE_SUBDOMAIN_OWNERSHIP key"
 	source $HESTIA/conf/hestia.conf
 	sed -i "/ENFORCE_SUBDOMAIN_OWNERSHIP='$ENFORCE_SUBDOMAIN_OWNERSHIP'/d" $HESTIA/conf/hestia.conf

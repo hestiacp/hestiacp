@@ -315,8 +315,7 @@ localuser_spam:
 
 localuser:
   driver = accept
-#  transport = local_delivery
-  transport = dovecot_virtual_delivery
+  transport = local_delivery
   condition = ${lookup{$local_part}lsearch{/etc/exim4/domains/$domain/passwd}{true}{false}}
 
 catchall:

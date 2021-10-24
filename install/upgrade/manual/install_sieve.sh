@@ -14,11 +14,8 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-# shellcheck source=/usr/local/hestia/install/upgrade/upgrade.conf
-source $HESTIA/install/upgrade/upgrade.conf
+source_conf "$HESTIA/install/upgrade/upgrade.conf"
 
-MODE=$2
-UPDATE="no"
 HAS_DOVECOT_SIEVE_INSTALLED=`dpkg --get-selections dovecot-sieve | grep dovecot-sieve | wc -l`
 
 # Folder paths
@@ -53,7 +50,7 @@ if [ "$HAS_DOVECOT_SIEVE_INSTALLED" = "0" ]; then
     # exim4 install
     sed -i "s/\stransport = local_delivery/ transport = dovecot_virtual_delivery/" /etc/exim4/exim4.conf.template
     
-    sed -i "s/address_pipe:/dovecot_virtual_delivery:\n  driver = pipe\n  command = \/usr\/lib\/dovecot\/dovecot-lda -e -d \${lookup{$local_part}lsearch{/etc/exim4/domains/\${lookup{\$domain}dsearch{/etc/exim4/domains/}}@\${lookup{$domain}dsearch{/etc/exim4/domains/} -f \$sender_address -a \$original_local_part@\$original_domain\n  delivery_date_add\n  envelope_to_add\n  return_path_add\n  log_output = true\n  log_defer_output = true\n  user = \$\{extract\{2\}\{:\}\{\$\{lookup\{\$local_part\}lsearch\{\/etc\/exim4\/domains\/\$domain\/passwd\}\}\}\}\n  group = mail\n  return_output\n\naddress_pipe:/g" /etc/exim4/exim4.conf.template
+    sed -i "s/address_pipe:/dovecot_virtual_delivery:\n  driver = pipe\n  command = \/usr\/lib\/dovecot\/dovecot-lda -e -d \$local_part@\$domain -f \$sender_address -a \$original_local_part@\$original_domain\n  delivery_date_add\n  envelope_to_add\n  return_path_add\n  log_output = true\n  log_defer_output = true\n  user = \${extract{2}{:}{\${lookup{\$local_part}lsearch{\/etc\/exim4\/domains\/\${lookup{\$domain}dsearch{\/etc\/exim4\/domains\/}}\/passwd}}}}\n  group = mail\n  return_output\n\naddress_pipe:/g" /etc/exim4/exim4.conf.template
     
     # roundcube install
     mkdir -p $RC_CONFIG_DIR/plugins/managesieve

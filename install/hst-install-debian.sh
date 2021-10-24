@@ -367,12 +367,12 @@ if [ "$exim" = 'no' ]; then
 fi
 
 for pkg in $conflicts_pkg; do
-    if [ ! -z "$(grep $pkg $tmpfile)" ]; then
+    if [ -n "$(grep $pkg $tmpfile)" ]; then
         conflicts="$pkg* $conflicts"
     fi
 done
 rm -f $tmpfile
-if [ ! -z "$conflicts" ] && [ -z "$force" ]; then
+if [ -n "$conflicts" ] && [ -z "$force" ]; then
     echo '!!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!!'
     echo
     echo 'WARNING: The following packages are already installed'
@@ -1825,7 +1825,8 @@ if [ "$sieve" = 'yes' ]; then
     # exim4 install
     sed -i "s/\stransport = local_delivery/ transport = dovecot_virtual_delivery/" /etc/exim4/exim4.conf.template
     
-    sed -i "s/address_pipe:/dovecot_virtual_delivery:\n  driver = pipe\n  command = \/usr\/lib\/dovecot\/dovecot-lda -e -d \$local_part@\$domain -f \$sender_address -a \$original_local_part@\$original_domain\n  delivery_date_add\n  envelope_to_add\n  return_path_add\n  log_output = true\n  log_defer_output = true\n  user = \$\{extract\{2\}\{:\}\{\$\{lookup\{\$local_part\}lsearch\{\/etc\/exim4\/domains\/\$domain\/passwd\}\}\}\}\n  group = mail\n  return_output\n\naddress_pipe:/g" /etc/exim4/exim4.conf.template
+   sed -i "s/address_pipe:/dovecot_virtual_delivery:\n  driver = pipe\n  command = \/usr\/lib\/dovecot\/dovecot-lda -e -d \$local_part@\$domain -f \$sender_address -a \$original_local_part@\$original_domain\n  delivery_date_add\n  envelope_to_add\n  return_path_add\n  log_output = true\n  log_defer_output = true\n  user = \${extract{2}{:}{\${lookup{\$local_part}lsearch{\/etc\/exim4\/domains\/\${lookup{\$domain}dsearch{\/etc\/exim4\/domains\/}}\/passwd}}}}\n group = mail\n  return_output\n\naddress_pipe:/g" /etc/exim4/exim4.conf.template
+    
     
     # Modify roundcube install install
     mkdir -p $RC_CONFIG_DIR/plugins/managesieve
@@ -1888,7 +1889,7 @@ fi
 # Get public IP
 pub_ip=$(curl --ipv4 -s https://ip.hestiacp.com/)
 
-if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
+if [ -n "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     $HESTIA/bin/v-change-sys-ip-nat $ip $pub_ip > /dev/null 2>&1
     ip=$pub_ip
 fi
@@ -1906,10 +1907,10 @@ if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
     if [ "$local_ip" != "127.0.0.1" ] && [ "$pub_ip" != "127.0.0.1" ]; then
         echo "  RemoteIPInternalProxy 127.0.0.1" >> remoteip.conf
     fi
-    if [ ! -z "$local_ip" ] && [ "$local_ip" != "$pub_ip" ]; then
+    if [ -n "$local_ip" ] && [ "$local_ip" != "$pub_ip" ]; then
         echo "  RemoteIPInternalProxy $local_ip" >> remoteip.conf
     fi
-    if [ ! -z "$pub_ip" ]; then
+    if [ -n "$pub_ip" ]; then
         echo "  RemoteIPInternalProxy $pub_ip" >> remoteip.conf
     fi
     echo "</IfModule>" >> remoteip.conf

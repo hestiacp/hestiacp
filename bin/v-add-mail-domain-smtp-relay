@@ -20,22 +20,27 @@ password=$5
 port=${6-587}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 check_args '5' "$#" 'USER DOMAIN HOST USERNAME PASSWORD'
-is_format_valid 'port' 'user' 'domain'
+is_format_valid 'port' 'user' 'domain' 'host'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
 is_object_unsuspended 'mail' 'DOMAIN' "$domain"
+is_password_valid "$password" "Password"
+is_username_format_valid "$username" "Username"
+format_no_quotes "$password" "Password"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode

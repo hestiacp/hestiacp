@@ -11,8 +11,6 @@ fi
 if [ ! -d $current ] && [ ! -f $current ] ; then
     echo "Invalid directory or file: $current"
     error=true
-
-    continue
 fi
 
 echo "Checking PHP files..."

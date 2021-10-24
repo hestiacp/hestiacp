@@ -11,12 +11,15 @@
 #----------------------------------------------------------#
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-# shellcheck source=/usr/local/hestia/install/upgrade/upgrade.conf
-source $HESTIA/install/upgrade/upgrade.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+# load config file
+source_conf "$HESTIA/install/upgrade/upgrade.conf"
+
 
 MODE=$1
 user="admin"
@@ -80,7 +83,7 @@ cp --recursive --force ${HESTIA_INSTALL_DIR}/filemanager/filegator/* "${FM_INSTA
 
 chown $user: -R "${FM_INSTALL_DIR}"
 
-if [ -z "$openssl_version"  ]; then 
+if [ -z "$openssl_installed"  ]; then 
     COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php $COMPOSER_BIN --quiet --no-dev install
 else
     COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/local/hestia/php/bin/php $COMPOSER_BIN --quiet --no-dev install

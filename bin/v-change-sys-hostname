@@ -17,10 +17,12 @@ domain=$1
 helo=${2-yes}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -38,7 +40,7 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-hostname $domain
+hostname "$domain"
 
 if [ -d "/etc/sysconfig" ]; then
     # RHEL/CentOS/Amazon
@@ -50,7 +52,7 @@ if [ -d "/etc/sysconfig" ]; then
     fi
 else
     # Debian/Ubuntu
-    hostnamectl set-hostname $domain
+    hostnamectl set-hostname "$domain"
     echo "$domain" > /etc/hostname
 
     # Update Roundcube password plugin configuration
@@ -63,7 +65,7 @@ else
 fi
 
 # Update ip helo for exim
-if [[ ! -z "$MAIL_SYSTEM" && "$helo" == "yes" ]]; then
+if [[ -n "$MAIL_SYSTEM" && "$helo" == "yes" ]]; then
     pub_ip=$(curl --ipv4 -s https://ip.hestiacp.com/)
     $BIN/v-change-sys-ip-helo $pub_ip $domain
 fi

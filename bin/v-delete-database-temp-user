@@ -20,12 +20,14 @@ type=${4-mysql}
 host=$5
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/db.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -42,7 +44,7 @@ get_next_dbhost
 
 if [[ $dbuser != *"hestia_sso"* ]]; then
     echo "DBUSER is invalid SSO user"
-    exit $E_INVALID;
+    exit "$E_INVALID";
 fi
 
 # Perform verification if read-only mode is enabled

@@ -6,6 +6,6 @@ ip="$3"
 home_dir="$4"
 docroot="$5"
 
-chmod 755 $docroot
+chmod 755 "$docroot"
 
 exit 0

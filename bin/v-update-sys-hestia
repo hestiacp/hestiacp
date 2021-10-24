@@ -16,14 +16,13 @@
 # Argument definition
 package=$1
 
-# Importing system environment
-source /etc/profile
-
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -47,7 +46,7 @@ apt-get update -o Dir::Etc::sourcelist="sources.list.d/hestia.list" \
 
 # Update hestia package
 apt-get install $package -qq > /dev/null 2>&1
-check_result $? "$package update failed" $E_UPDATE
+check_result $? "$package update failed" "$E_UPDATE"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

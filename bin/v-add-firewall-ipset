@@ -18,10 +18,12 @@ autoupdate=${4:-yes}
 force=${5:-no}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -51,11 +53,11 @@ else
 fi
 
 if [ "$ip_version" != "v4" ] && [ "$ip_version" != "v6" ]; then
-    check_result $E_INVALID "invalid ip version, valid: (v4|v6)"
+    check_result "$E_INVALID" "invalid ip version, valid: (v4|v6)"
 fi
 
 if ! echo "$data_source" | egrep -q '^(https?|script|file):'; then
-    check_result $E_INVALID "invalid ipset source, valid: (http[s]://|script:|file:)"
+    check_result "$E_INVALID" "invalid ipset source, valid: (http[s]://|script:|file:)"
 fi
 
 
@@ -130,7 +132,7 @@ if [ ! -f "${IPSET_PATH}/${IPSET_FILE}.iplist" ] || [ "$force" = "yes" ]; then
 
     # Validate iplist file size
     iplist_size=$(sed -r -e '/^#|^$/d' "$iplist_tempfile" | wc -l)
-    [[ "$iplist_size" -le $IPSET_MIN_SIZE ]] && check_result $E_INVALID "iplist file too small (<${IPSET_MIN_SIZE}), ignoring"
+    [[ "$iplist_size" -le "$IPSET_MIN_SIZE" ]] && check_result "$E_INVALID" "iplist file too small (<${IPSET_MIN_SIZE}), ignoring"
     mv -f "$iplist_tempfile" "${IPSET_PATH}/${IPSET_FILE}.iplist"
 
 fi

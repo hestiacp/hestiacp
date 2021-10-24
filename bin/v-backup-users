@@ -12,15 +12,13 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Importing system environment  as we run this script
-# mostly by cron which not read it by itself
-source /etc/profile
-
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -43,7 +41,7 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
     check_backup_conditions
     check_suspend=$(grep "SUSPENDED='no'" $HESTIA/data/users/$user/user.conf)
     log=$HESTIA/log/backup.log
-    if [ ! -z "$check_suspend" ]; then
+    if [ -n "$check_suspend" ]; then
         echo -e "================================" >> $log
         echo -e "$user" >> $log
         echo -e "--------------------------------\n" >> $log

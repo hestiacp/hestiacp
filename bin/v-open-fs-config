@@ -7,6 +7,9 @@
 #
 # The function opens/reads config files on the file system
 
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+
 src_file=$1
 
 # Checking arguments
@@ -28,7 +31,7 @@ if [ ! -e "$src_file" ]; then
 fi
 
 # Checking path
-if [ ! -z "$src_file" ]; then
+if [ -n "$src_file" ]; then
     rpath=$(readlink -f "$src_file")
     services="nginx|apache|httpd|php|ftp|bind|named|exim|dovecot|spamassassin"
     services="$services|clam|mysql|postgresql|pgsql|cron|ssh|fail2ban|iptables"

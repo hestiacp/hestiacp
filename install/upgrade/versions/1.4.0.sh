@@ -114,7 +114,7 @@ if [ "$MAIL_SYSTEM" == "exim4" ]; then
 fi
 
 # Set default webmail system for mail domains
-if [ ! -z "$WEBMAIL_SYSTEM" ]; then
+if [ -n "$WEBMAIL_SYSTEM" ]; then
     for user in $($BIN/v-list-users plain | cut -f1); do
         for domain in $($BIN/v-list-mail-domains $user plain | cut -f1); do
             $BIN/v-add-mail-domain-webmail $user $domain '' no

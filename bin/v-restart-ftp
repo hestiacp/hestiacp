@@ -13,19 +13,20 @@
 #----------------------------------------------------------#
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-PATH="$PATH:/usr/local/sbin:/sbin:/usr/sbin:/root/bin"
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 send_email_report() {
     email=$(grep CONTACT $HESTIA/data/users/admin/user.conf)
     email=$(echo "$email" | cut -f 2 -d "'")
     tmpfile=$(mktemp)
     subj="$(hostname): $FTP_SYSTEM restart failed"
-    service $FTP_SYSTEM configtest >> $tmpfile 2>&1
-    service $FTP_SYSTEM restart >> $tmpfile 2>&1
+    service "$FTP_SYSTEM" configtest >> $tmpfile 2>&1
+    service "$FTP_SYSTEM" restart >> $tmpfile 2>&1
     cat $tmpfile |$SENDMAIL -s "$subj" $email
     rm -f $tmpfile
 }
@@ -45,17 +46,17 @@ if [ "$1" = "no" ]; then
 fi
 
 # Schedule restart
-if [ "$1" = 'scheduled' ] || [ -z "$1" -a "$SCHEDULED_RESTART" = 'yes' ]; then
+if [ "$1" = 'scheduled' ] || [ -z "$1" ]  && [ "$SCHEDULED_RESTART" = 'yes' ]; then
     sed -i "/\/$SCRIPT now/d" $HESTIA/data/queue/restart.pipe
     echo "$BIN/$SCRIPT now" >> $HESTIA/data/queue/restart.pipe
     exit
 fi
 
 # Restart system
-$BIN/v-restart-service $FTP_SYSTEM > /dev/null 2>&1
+$BIN/v-restart-service "$FTP_SYSTEM" > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     send_email_report
-    check_result $E_RESTART "$FTP_SYSTEM restart failed"
+    check_result "$E_RESTART" "$FTP_SYSTEM restart failed"
 fi
 
 # Update restart queue

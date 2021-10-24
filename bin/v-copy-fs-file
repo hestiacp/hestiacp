@@ -12,6 +12,8 @@ src_file=$2
 dst_file=$3
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
@@ -28,7 +30,7 @@ check_hestia_demo_mode
 
 # Checking user homedir
 homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
-if [ -z $homedir ]; then
+if [ -z "$homedir" ]; then
     echo "Error: user home directory doesn't exist"
     exit 12
 fi

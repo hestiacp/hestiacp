@@ -18,10 +18,12 @@ user=$1
 mode=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -47,7 +49,7 @@ fi
 
 if [ -f "$USER_DATA/stats.log" ]; then
     rm -f "$log_file"
-    touch $log_file
+    touch "$log_file"
 fi
 
 #----------------------------------------------------------#

@@ -15,10 +15,12 @@ user=admin
 mode=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -30,7 +32,7 @@ is_package_full 'CRON_JOBS'
 get_next_cronjob
 check_cron_apt=$(grep 'v-update-sys-hestia-all' $USER_DATA/cron.conf)
 check_cron_git=$(grep 'v-update-sys-hestia-git' $USER_DATA/cron.conf)
-if [ ! -z "$check_cron_apt" ] || [ ! -z "$check_cron_git" ]; then
+if [ -n "$check_cron_apt" ] || [ -n "$check_cron_git" ]; then
     exit
 fi
 
@@ -87,7 +89,7 @@ sync_cron_jobs
 #----------------------------------------------------------#
 
 # Increasing cron value
-increase_user_value $user '$U_CRON_JOBS'
+increase_user_value "$user" '$U_CRON_JOBS'
 
 # Restarting crond
 $BIN/v-restart-cron

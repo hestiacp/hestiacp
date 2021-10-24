@@ -19,16 +19,19 @@ antispam=${3-yes}
 antivirus=${4-yes}
 dkim=${5-yes}
 dkim_size=${6-1024}
+restart=${7-yes}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
 # shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Define mail user
 if [ "$MAIL_SYSTEM" = 'exim4' ]; then
@@ -120,21 +123,21 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
         /etc/$MAIL_SYSTEM/domains/$domain_idn
 
     # Seeting outgoing ip address
-    if [ ! -z "$local_ip" ]; then
+    if [ -n "$local_ip" ]; then
         echo "$local_ip" > $HOMEDIR/$user/conf/mail/$domain/ip
     fi
     
-    if [ -n "ANTIVIRUS_SYSTEM" ]; then 
+    if [ -n "$ANTISPAM_SYSTEM" ]; then 
         # Adding antispam protection
         if [ "$antispam" = 'yes' ]; then
-            touch $HOMEDIR/$user/conf/mail/$domain/antispam
+            touch "$HOMEDIR/$user/conf/mail/$domain/antispam"
         fi
     fi
     
-    if [ -n "ANTISPAM_SYSTEM" ]; then
+    if [ -n "$ANTIVIRUS_SYSTEM" ]; then
         # Adding antivirus protection
         if [ "$antivirus" = 'yes' ]; then
-            touch $HOMEDIR/$user/conf/mail/$domain/antivirus
+            touch "$HOMEDIR/$user/conf/mail/$domain/antivirus"
         fi
     fi
 
@@ -160,24 +163,24 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
 fi
 
 # Adding dkim dns records
-if [ ! -z "$DNS_SYSTEM" ] && [ "$dkim" = 'yes' ]; then
+if [ -n "$DNS_SYSTEM" ] && [ "$dkim" = 'yes' ]; then
     check_dns_domain=$(is_object_valid 'dns' 'DOMAIN' "$domain")
     if [ "$?" -eq 0 ]; then
         p=$(cat $USER_DATA/mail/$domain.pub|grep -v ' KEY---'|tr -d '\n')
         record='_domainkey'
         policy="\"t=y; o=~;\""
-        $BIN/v-add-dns-record $user $domain $record TXT "$policy" '' '' 'no' '' 'yes'
+        $BIN/v-add-dns-record "$user" "$domain" "$record" TXT "$policy" '' '' 'no' '' 'yes'
 
         record='mail._domainkey'
         selector="\"v=DKIM1\; k=rsa\; p=$p\""
-        $BIN/v-add-dns-record $user $domain $record TXT "$selector" '' '' 'yes' '' 'yes'
+        $BIN/v-add-dns-record "$user" "$domain" "$record" TXT "$selector" '' '' 'yes' '' 'yes'
     fi
 fi
 
 # Add webmail configuration to mail domain
-if [ ! -z "$WEB_SYSTEM" ] || [ ! -z "$PROXY_SYSTEM" ]; then
-    if [ ! -z "$IMAP_SYSTEM" ]; then
-        $BIN/v-add-mail-domain-webmail $user $domain '' 'no'
+if [ -n "$WEB_SYSTEM" ] || [ -n "$PROXY_SYSTEM" ]; then
+    if [ -n "$IMAP_SYSTEM" ]; then
+        $BIN/v-add-mail-domain-webmail "$user" "$domain" '' 'no'
     fi
 fi
     
@@ -193,11 +196,11 @@ if [ "$dkim" = 'yes' ]; then
 fi
 
 # Restarting web server
-$BIN/v-restart-web $restart
+$BIN/v-restart-web "$restart"
 check_result $? "Web restart failed" >/dev/null
 
 # Restarting proxy server
-$BIN/v-restart-proxy $restart
+$BIN/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging

@@ -23,11 +23,11 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.4.18~alpha'
+HESTIA_INSTALL_VER='1.5.0~alpha'
 pma_v='5.1.1'
-rc_v="1.4.11"
+rc_v="1.5.0"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
-fpm_v="7.4"
+fpm_v="8.0"
 mariadb_v="10.6"
 
 if [ "$release" -eq 9 ]; then
@@ -36,10 +36,11 @@ if [ "$release" -eq 9 ]; then
         php$fpm_v-cgi php$fpm_v-mysql php$fpm_v-curl php$fpm_v-pgsql
         php$fpm_v-imagick php$fpm_v-imap php$fpm_v-ldap php$fpm_v-apcu awstats
         php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli php$fpm_v-gd php$fpm_v-intl
-        php$fpm_v-json php$fpm_v-mbstring php$fpm_v-opcache php$fpm_v-pspell
+        php$fpm_v-mbstring php$fpm_v-opcache php$fpm_v-pspell
         php$fpm_v-readline php$fpm_v-xml vsftpd proftpd-basic bind9 exim4
         exim4-daemon-heavy clamav-daemon spamassassin dovecot-imapd
-        dovecot-pop3d net-tools mariadb-client mariadb-common mariadb-server
+        dovecot-pop3d dovecot-sieve dovecot-managesieved 
+        net-tools mariadb-client mariadb-common mariadb-server
         postgresql postgresql-contrib phppgadmin mc flex whois rssh git idn zip
         sudo bc ftp lsof rrdtool quota e2fslibs bsdutils e2fsprogs curl
         imagemagick fail2ban dnsutils bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx
@@ -51,11 +52,11 @@ elif [ "$release" -eq 10 ] || [ "$release" -eq 11 ]; then
         php$fpm_v php$fpm_v-common php$fpm_v-cgi php$fpm_v-mysql php$fpm_v-curl
         php$fpm_v-pgsql php$fpm_v-imagick php$fpm_v-imap php$fpm_v-ldap
         php$fpm_v-apcu awstats php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli
-        php$fpm_v-gd php$fpm_v-intl php$fpm_v-json php$fpm_v-mbstring
+        php$fpm_v-gd php$fpm_v-intl php$fpm_v-mbstring
         php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
         awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy
-        clamav-daemon spamassassin dovecot-imapd dovecot-pop3d net-tools
-        mariadb-client mariadb-common mariadb-server postgresql
+        clamav-daemon spamassassin dovecot-imapd dovecot-pop3d dovecot-sieve dovecot-managesieved 
+        net-tools mariadb-client mariadb-common mariadb-server postgresql
         postgresql-contrib phppgadmin mc flex whois git idn zip sudo bc ftp lsof
         rrdtool quota e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban 
         dnsutils bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx
@@ -79,6 +80,7 @@ help() {
   -g, --postgresql        Install PostgreSQL    [yes|no]  default: no
   -x, --exim              Install Exim          [yes|no]  default: yes
   -z, --dovecot           Install Dovecot       [yes|no]  default: yes
+  -Z, --sieve             Install Sieve         [yes|no]  default: no
   -c, --clamav            Install ClamAV        [yes|no]  default: yes
   -t, --spamassassin      Install SpamAssassin  [yes|no]  default: yes
   -i, --iptables          Install Iptables      [yes|no]  default: yes
@@ -133,8 +135,7 @@ set_default_lang() {
     if [ -z "$lang" ]; then
         eval lang=$1
     fi
-    lang_list="ar az bg bs cs da de el en es fa fi fr hr hu id it ja ka ko nl no pl pt pt-br ro
-        ru sr sv th tr uk ur vi zh-cn zh-tw"
+    lang_list="ar az bg bn bs cs da de el en es fa fi fr he hr hu hy id it ja ka ko nl no pl pt pt-br ro ru sk sr sv th tr uk ur vi zh-cn zh-tw"
     if ! (echo $lang_list |grep -w $lang > /dev/null 2>&1); then
         eval lang=$1
     fi
@@ -200,6 +201,7 @@ for arg; do
         --postgresql)           args="${args}-g " ;;
         --exim)                 args="${args}-x " ;;
         --dovecot)              args="${args}-z " ;;
+        --sieve)                args="${args}-Z " ;;
         --clamav)               args="${args}-c " ;;
         --spamassassin)         args="${args}-t " ;;
         --iptables)             args="${args}-i " ;;
@@ -223,7 +225,7 @@ done
 eval set -- "$args"
 
 # Parsing arguments
-while getopts "a:w:v:j:k:m:g:d:x:z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
+while getopts "a:w:v:j:k:m:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
     case $Option in
         a) apache=$OPTARG ;;            # Apache
         w) phpfpm=$OPTARG ;;            # PHP-FPM
@@ -235,6 +237,7 @@ while getopts "a:w:v:j:k:m:g:d:x:z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
         g) postgresql=$OPTARG ;;        # PostgreSQL
         x) exim=$OPTARG ;;              # Exim
         z) dovecot=$OPTARG ;;           # Dovecot
+        Z) sieve=$OPTARG ;;             # Sieve
         c) clamd=$OPTARG ;;             # ClamAV
         t) spamd=$OPTARG ;;             # SpamAssassin
         i) iptables=$OPTARG ;;          # Iptables
@@ -266,6 +269,7 @@ set_default_value 'mysql' 'yes'
 set_default_value 'postgresql' 'no'
 set_default_value 'exim' 'yes'
 set_default_value 'dovecot' 'yes'
+set_default_value 'sieve' 'no'
 if [ $memory -lt 1500000 ]; then
     set_default_value 'clamd' 'no'
     set_default_value 'spamd' 'no'
@@ -293,6 +297,9 @@ if [ "$exim" = 'no' ]; then
     spamd='no'
     dovecot='no'
 fi
+if [ "$dovecot" = "no" ]; then 
+  sieve='no'
+fi
 if [ "$iptables" = 'no' ]; then
     fail2ban='no'
 fi
@@ -306,16 +313,11 @@ if [ "x$(id -u)" != 'x0' ]; then
 fi
 
 # Checking admin user account
-if [ ! -z "$(grep ^admin: /etc/passwd /etc/group)" ] && [ -z "$force" ]; then
+if [ -n "$(grep ^admin: /etc/passwd /etc/group)" ] && [ -z "$force" ]; then
     echo 'Please remove admin user account before proceeding.'
     echo 'If you want to do it automatically run installer with -f option:'
     echo -e "Example: bash $0 --force\n"
     check_result 1 "User admin exists"
-fi
-
-# Check if a default webserver was set
-if [ $apache = 'no' ] && [ $nginx = 'no' ]; then
-    check_result 1 "No web server was selected"
 fi
 
 # Clear the screen once launch permissions have been verified
@@ -336,7 +338,7 @@ echo
 apt-get -qq update
 
 # Creating backup directory
-mkdir -p $hst_backups
+mkdir -p "$hst_backups"
 
 # Pre-install packages
 echo "[ * ] Installing dependencies..."
@@ -365,12 +367,12 @@ if [ "$exim" = 'no' ]; then
 fi
 
 for pkg in $conflicts_pkg; do
-    if [ ! -z "$(grep $pkg $tmpfile)" ]; then
+    if [ -n "$(grep $pkg $tmpfile)" ]; then
         conflicts="$pkg* $conflicts"
     fi
 done
 rm -f $tmpfile
-if [ ! -z "$conflicts" ] && [ -z "$force" ]; then
+if [ -n "$conflicts" ] && [ -z "$force" ]; then
     echo '!!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!!'
     echo
     echo 'WARNING: The following packages are already installed'
@@ -506,11 +508,7 @@ install_welcome_message
 # Web stack
 
 echo '   - NGINX Web / Proxy Server'
-
-if [ "$apache" = 'yes' ] && [ "$nginx" = 'no' ] ; then
-    echo '   - Apache Web Server'
-fi
-if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
+if [ "$apache" = 'yes' ]; then
     echo '   - Apache Web Server (as backend)'
 fi
 if [ "$phpfpm"  = 'yes' ] && [ "$multiphp" = 'no' ]; then
@@ -543,10 +541,14 @@ if [ "$exim" = 'yes' ]; then
     fi
     echo
     if [ "$dovecot" = 'yes' ]; then
-        echo '   - Dovecot POP3/IMAP Server'
+        echo -n '   - Dovecot POP3/IMAP Server '
+        if [ "$sieve" = 'yes' ]; then
+          echo -n '+ Sieve'
+        fi
     fi
 fi
 
+echo 
 # Database stack
 if [ "$mysql" = 'yes' ]; then
     echo '   - MariaDB Database Server'
@@ -620,7 +622,7 @@ fi
 mask1='(([[:alnum:]](-?[[:alnum:]])*)\.)'
 mask2='*[[:alnum:]](-?[[:alnum:]])+\.[[:alnum:]]{2,}'
 if ! [[ "$servername" =~ ^${mask1}${mask2}$ ]]; then
-    if [ ! -z "$servername" ]; then
+    if [ -n "$servername" ]; then
         servername="$servername.example.com"
     else
         servername="example.com"
@@ -648,7 +650,7 @@ echo
 #----------------------------------------------------------#
 
 # Checking swap on small instances
-if [ -z "$(swapon -s)" ] && [ $memory -lt 1000000 ]; then
+if [ -z "$(swapon -s)" ] && [ "$memory" -lt 1000000 ]; then
     fallocate -l 1G /swapfile
     chmod 600 /swapfile
     mkswap /swapfile
@@ -811,7 +813,7 @@ if [ "$phpfpm" = 'yes' ]; then
     fpm="php$fpm_v php$fpm_v-common php$fpm_v-bcmath php$fpm_v-cli
          php$fpm_v-curl php$fpm_v-fpm php$fpm_v-gd php$fpm_v-intl
          php$fpm_v-mysql php$fpm_v-soap php$fpm_v-xml php$fpm_v-zip
-         php$fpm_v-mbstring php$fpm_v-json php$fpm_v-bz2 php$fpm_v-pspell
+         php$fpm_v-mbstring php$fpm_v-bz2 php$fpm_v-pspell
          php$fpm_v-imagick"
     software="$software $fpm"
 fi
@@ -851,6 +853,8 @@ if [ "$exim" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/dovecot-pop3d//")
     software=$(echo "$software" | sed -e "s/clamav-daemon//")
     software=$(echo "$software" | sed -e "s/spamassassin//")
+    software=$(echo "$software" | sed -e "s/dovecot-sieve//")
+    software=$(echo "$software" | sed -e "s/dovecot-managesieved//")
 fi
 if [ "$clamd" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/clamav-daemon//")
@@ -861,6 +865,10 @@ fi
 if [ "$dovecot" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/dovecot-imapd//")
     software=$(echo "$software" | sed -e "s/dovecot-pop3d//")
+fi
+if [ "$sieve" = 'no' ]; then
+  software=$(echo "$software" | sed -e "s/dovecot-sieve//")
+  software=$(echo "$software" | sed -e "s/dovecot-managesieved//")
 fi
 if [ "$mysql" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/mariadb-server//")
@@ -928,7 +936,7 @@ echo "========================================================================"
 echo
 
 # Install Hestia packages from local folder
-if [ ! -z "$withdebs" ] && [ -d "$withdebs" ]; then
+if [ -n "$withdebs" ] && [ -d "$withdebs" ]; then
     echo "[ * ] Installing local package files..."
     echo "    - hestia core package"
     dpkg -i $withdebs/hestia_*.deb > /dev/null 2>&1
@@ -962,7 +970,7 @@ echo "[ * ] Configuring system settings..."
 
 # Enable SFTP subsystem for SSH
 sftp_subsys_enabled=$(grep -iE "^#?.*subsystem.+(sftp )?sftp-server" /etc/ssh/sshd_config)
-if [ ! -z "$sftp_subsys_enabled" ]; then
+if [ -n "$sftp_subsys_enabled" ]; then
     sed -i -E "s/^#?.*Subsystem.+(sftp )?sftp-server/Subsystem sftp internal-sftp/g" /etc/ssh/sshd_config
 fi
 
@@ -1111,7 +1119,7 @@ if [ "$postgresql" = 'yes' ]; then
     installed_db_types="$installed_db_types,pgsql"
 fi
 
-if [ ! -z "$installed_db_types" ]; then
+if [ -n "$installed_db_types" ]; then
     db=$(echo "$installed_db_types" |\
         sed "s/,/\n/g"|\
         sort -r -u |\
@@ -1144,6 +1152,9 @@ if [ "$exim" = 'yes' ]; then
     fi
     if [ "$dovecot" = 'yes' ]; then
         write_config_value "IMAP_SYSTEM" "dovecot"
+    fi
+    if [ "$sieve" = 'yes' ]; then
+      write_config_value "SIEVE_SYSTEM" "yes"
     fi
 fi
 
@@ -1195,7 +1206,7 @@ cp -rf $HESTIA_INSTALL_DIR/packages $HESTIA/data/
 
 # Update nameservers in hosting package
 IFS='.' read -r -a domain_elements <<< "$servername"
-if [ ! -z "${domain_elements[-2]}" ] && [ ! -z "${domain_elements[-1]}" ]; then
+if [ -n "${domain_elements[-2]}" ] && [ -n "${domain_elements[-1]}" ]; then
     serverdomain="${domain_elements[-2]}.${domain_elements[-1]}"
     sed -i s/"domain.tld"/"$serverdomain"/g $HESTIA/data/packages/*.pkg
 fi
@@ -1239,14 +1250,14 @@ rm /tmp/hst.pem
 cp -f $HESTIA_INSTALL_DIR/ssl/dhparam.pem /etc/ssl
 
 # Deleting old admin user
-if [ ! -z "$(grep ^admin: /etc/passwd)" ] && [ "$force" = 'yes' ]; then
+if [ -n "$(grep ^admin: /etc/passwd)" ] && [ "$force" = 'yes' ]; then
     chattr -i /home/admin/conf > /dev/null 2>&1
     userdel -f admin > /dev/null 2>&1
     chattr -i /home/admin/conf > /dev/null 2>&1
     mv -f /home/admin  $hst_backups/home/ > /dev/null 2>&1
     rm -f /tmp/sess_* > /dev/null 2>&1
 fi
-if [ ! -z "$(grep ^admin: /etc/group)" ] && [ "$force" = 'yes' ]; then
+if [ -n "$(grep ^admin: /etc/group)" ] && [ "$force" = 'yes' ]; then
     groupdel admin > /dev/null 2>&1
 fi
 
@@ -1293,7 +1304,7 @@ for ip in $dns_resolver; do
         resolver="$ip $resolver"
     fi
 done
-if [ ! -z "$resolver" ]; then
+if [ -n "$resolver" ]; then
     sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /etc/nginx/nginx.conf
     sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
 fi
@@ -1549,6 +1560,7 @@ if [ "$mysql" = 'yes' ]; then
 
     # Special thanks to Pavel Galkin (https://skurudo.ru)
     # https://github.com/skurudo/phpmyadmin-fixer
+    # shellcheck source=/usr/local/hestia/install/deb/phpmyadmin/pma.sh
     source $HESTIA_INSTALL_DIR/phpmyadmin/pma.sh > /dev/null 2>&1
     
     # limit access to /etc/phpmyadmin/ 
@@ -1784,6 +1796,61 @@ if [ "$mysql" == 'yes' ] && [ "$dovecot" == "yes" ]; then
 fi
 
 #----------------------------------------------------------#
+#                     Install Sieve                        #
+#----------------------------------------------------------#
+# Min requirements Dovecote + Exim + Mysql + roundcube
+if [ "$sieve" = 'yes' ]; then
+    # Folder paths
+    RC_INSTALL_DIR="/var/lib/roundcube"
+    RC_CONFIG_DIR="/etc/roundcube"
+    
+    echo "[ * ] Install Sieve ..."
+     
+    # dovecot.conf install
+    sed -i "s/namespace/service stats \{\n  unix_listener stats-writer \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n\}\n\nnamespace/g" /etc/dovecot/dovecot.conf
+    
+    # dovecot conf files
+    #  10-master.conf
+    sed -i -E -z "s/  }\n  user = dovecot\n}/  \}\n  unix_listener auth-master \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n  user = dovecot\n\}/g" /etc/dovecot/conf.d/10-master.conf
+    #  15-lda.conf
+    sed -i "s/\#mail_plugins = \\\$mail_plugins/mail_plugins = \$mail_plugins sieve\n  auth_socket_path = \/var\/run\/dovecot\/auth-master/g" /etc/dovecot/conf.d/15-lda.conf
+    #  20-imap.conf
+    sed -i "s/mail_plugins = quota imap_quota/mail_plugins = quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
+    
+    # replace dovecot-sieve config files
+    cp -f $HESTIA_INSTALL_DIR/dovecot/sieve/* /etc/dovecot/conf.d
+    
+    echo -e "require [\"fileinto\"];\n# rule:[SPAM]\nif header :contains \"X-Spam-Flag\" \"YES\" {\n    fileinto \"INBOX.Spam\";\n}\n" > /etc/dovecot/sieve/default
+    
+    # exim4 install
+    sed -i "s/\stransport = local_delivery/ transport = dovecot_virtual_delivery/" /etc/exim4/exim4.conf.template
+    
+   sed -i "s/address_pipe:/dovecot_virtual_delivery:\n  driver = pipe\n  command = \/usr\/lib\/dovecot\/dovecot-lda -e -d \$local_part@\$domain -f \$sender_address -a \$original_local_part@\$original_domain\n  delivery_date_add\n  envelope_to_add\n  return_path_add\n  log_output = true\n  log_defer_output = true\n  user = \${extract{2}{:}{\${lookup{\$local_part}lsearch{\/etc\/exim4\/domains\/\${lookup{\$domain}dsearch{\/etc\/exim4\/domains\/}}\/passwd}}}}\n group = mail\n  return_output\n\naddress_pipe:/g" /etc/exim4/exim4.conf.template
+    
+    
+    # Modify roundcube install install
+    mkdir -p $RC_CONFIG_DIR/plugins/managesieve
+    
+    cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_managesieve.inc.php $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
+        ln -s $RC_CONFIG_DIR/plugins/managesieve/config.inc.php $RC_INSTALL_DIR/plugins/managesieve/config.inc.php
+    
+    # permission changes
+    chown -R dovecot:mail /var/log/dovecot.log
+    chmod 660 /var/log/dovecot.log
+    
+    chown -R root:www-data $RC_CONFIG_DIR/
+        chmod 751 -R $RC_CONFIG_DIR
+    
+    chmod 644 $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
+    
+    sed -i "s/'archive'/'archive', 'managesieve'/g" $RC_CONFIG_DIR/config.inc.php
+    
+    #restart dovecot and exim4
+    systemctl restart dovecot > /dev/null 2>&1
+    systemctl restart exim4 > /dev/null 2>&1
+fi
+
+#----------------------------------------------------------#
 #                       Configure API                      #
 #----------------------------------------------------------#
 
@@ -1822,7 +1889,7 @@ fi
 # Get public IP
 pub_ip=$(curl --ipv4 -s https://ip.hestiacp.com/)
 
-if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
+if [ -n "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     $HESTIA/bin/v-change-sys-ip-nat $ip $pub_ip > /dev/null 2>&1
     ip=$pub_ip
 fi
@@ -1840,10 +1907,10 @@ if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
     if [ "$local_ip" != "127.0.0.1" ] && [ "$pub_ip" != "127.0.0.1" ]; then
         echo "  RemoteIPInternalProxy 127.0.0.1" >> remoteip.conf
     fi
-    if [ ! -z "$local_ip" ] && [ "$local_ip" != "$pub_ip" ]; then
+    if [ -n "$local_ip" ] && [ "$local_ip" != "$pub_ip" ]; then
         echo "  RemoteIPInternalProxy $local_ip" >> remoteip.conf
     fi
-    if [ ! -z "$pub_ip" ]; then
+    if [ -n "$pub_ip" ]; then
         echo "  RemoteIPInternalProxy $pub_ip" >> remoteip.conf
     fi
     echo "</IfModule>" >> remoteip.conf

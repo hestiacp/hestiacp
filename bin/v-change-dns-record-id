@@ -57,10 +57,6 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ "$id" -eq "$newid" ]; then
-    exit "$E_UPDATE"
-fi
-
 # Change id
 sed -i "s/^ID='$id'/ID='$newid'/" $USER_DATA/dns/$domain.conf
 

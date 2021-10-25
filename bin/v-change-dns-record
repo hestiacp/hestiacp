@@ -94,7 +94,7 @@ is_dns_nameserver_valid "$domain" "$TYPE" "$dvalue"
 if [[ "$RECORD" == "$record" ]] && [[ "$TYPE" == "$type" ]] && [[ "$PRIORITY" -eq "$priority" ]] \
         && [[ "$VALUE" == "$dvalue" ]] && [[ "$SUSPENDED" == 'no' ]] && [[ "$TTL" -eq "$ttl" ]]; then
     echo "No pending changes in DNS entry."
-    exit "$E_UPDATE"
+    exit "$E_EXSIST"
 fi
 
 # Generating timestamp

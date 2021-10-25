@@ -1091,7 +1091,7 @@ function check_ip_not_banned(){
 
 @test "DNS: Change DNS record (no update)" {
   run v-change-dns-records $user $domain 20 test A 198.18.0.125 "" "" 1500
-  assert_failure $E_UPDATE
+  assert_failure $E_EXSIST
 }
 
 @test "DNS: Change DNS record id" {
@@ -1104,7 +1104,7 @@ function check_ip_not_banned(){
 
 @test "DNS: Change DNS record id (no update)" {
   run v-change-dns-record-id  $user $domain 20 20
-  assert_failure $E_UPDATE
+  assert_failure $E_EXSIST
 }
 
 @test "DNS: Delete domain record" {

@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 ### Bugfixes
 
 - Disable /reset/ endpoint when POLICY_SYSTEM_PASSWORD_RESET = no
+- Prevent SOA count up after v-change-dns-records with no changes are made
 
 ## [1.4.17] - Service release 
 

@@ -8,16 +8,14 @@ fi
 #                Initialize functions/variables               #
 ###############################################################
 
-if [ -z "$HESTIA" ]; then
-    export HESTIA='/usr/local/hestia'
-    PATH=$PATH:/usr/local/hestia/bin
-    export PATH
-fi
+source /etc/hestiacp/hestia.conf
 
 # Load upgrade functions and variables
-source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/upgrade.sh
 source $HESTIA/func/upgrade.sh
-source $HESTIA/conf/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+source_conf "$HESTIA/conf/hestia.conf"
 source $HESTIA/install/upgrade/upgrade.conf
 
 ###############################################################
@@ -83,6 +81,9 @@ upgrade_roundcube | tee -a $LOG
 
 # Upgrade Rainloop if applicable
 upgrade_rainloop | tee -a $LOG
+
+# Upgrade PHPMailer if applicable
+upgrade_phpmailer | tee -a $LOG
 
 # Set new version number in hestia.conf
 upgrade_set_version $new_version

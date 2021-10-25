@@ -21,17 +21,23 @@ password=$5
 email=$6
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 check_args '6' "$#" 'DOMAIN PORT SMTP_SECURITY USERNAME PASSWORD EMAIL'
-is_format_valid 'domain' 'port' 'email'
+is_format_valid 'domain' 'port' 'email' 'password'
+is_username_format_valid "$username" 'username'
+format_no_quotes "$password" 'passowrd'
+is_common_format_valid "$smtp_security" "SMTP_SECURITY"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -40,13 +46,14 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-$BIN/v-change-sys-config-value "USE_SERVER_SMTP" 'true'
-$BIN/v-change-sys-config-value "SERVER_SMTP_HOST" $domain
-$BIN/v-change-sys-config-value "SERVER_SMTP_PORT" $port
-$BIN/v-change-sys-config-value "SERVER_SMTP_SECURITY" $smtp_security
-$BIN/v-change-sys-config-value "SERVER_SMTP_USER" $username
-$BIN/v-change-sys-config-value "SERVER_SMTP_PASSWD" $password
-$BIN/v-change-sys-config-value "SERVER_SMTP_ADDR" $email
+
+change_sys_value "USE_SERVER_SMTP" 'true'
+change_sys_value "SERVER_SMTP_HOST" "$domain" 
+change_sys_value "SERVER_SMTP_PORT" "$port"
+change_sys_value "SERVER_SMTP_SECURITY" "$smtp_security"
+change_sys_value "SERVER_SMTP_USER" "$username"
+change_sys_value "SERVER_SMTP_PASSWD" "$password"
+change_sys_value "SERVER_SMTP_ADDR" "$email"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

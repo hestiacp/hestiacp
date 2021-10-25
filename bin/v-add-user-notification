@@ -17,10 +17,12 @@ notice=$(echo $3 |sed "s/'/%quote%/g")
 type=$4
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -41,7 +43,7 @@ check_hestia_demo_mode
 if [ -e "$USER_DATA/notifications.conf" ]; then
     nid=$(grep "NID=" $USER_DATA/notifications.conf |cut -f 2 -d \')
     nid=$(echo "$nid" |sort -n |tail -n1)
-    if [ ! -z "$nid" ]; then
+    if [ -n "$nid" ]; then
         nid="$((nid +1))"
     else
         nid=1

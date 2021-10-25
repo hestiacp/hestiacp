@@ -1,3 +1,4 @@
+#!/bin/bash
 # Global
 database_set_default_ports() {
 
@@ -73,7 +74,7 @@ mysql_connect() {
     mysql_ver=$(cat $mysql_out |tail -n1 |cut -f 1 -d -)
     mysql_fork="mysql"
     check_mysql_fork=$(grep "MariaDB" $mysql_out)
-    if [ ! -z "$check_mysql_fork" ]; then
+    if [  "$check_mysql_fork" ]; then
         mysql_fork="mariadb"
     fi
     rm -f $mysql_out
@@ -99,7 +100,7 @@ mysql_dump() {
         fi
         echo "Error: dump $database failed"
         log_event  "$E_DB" "$ARGUMENTS"
-        exit $E_DB
+        exit "$E_DB"
     fi
 }
 
@@ -126,7 +127,7 @@ psql_connect() {
         fi
         echo "Error: Connection to $HOST failed"
         log_event  "$E_CONNECT" "$ARGUMENTS"
-        exit $E_CONNECT
+        exit "$E_CONNECT"
     fi
 }
 
@@ -149,7 +150,7 @@ psql_dump() {
         fi
         echo "Error: dump $database failed"
         log_event  "$E_DB" "$ARGUMENTS"
-        exit $E_DB
+        exit "$E_DB"
     fi
 }
 
@@ -310,7 +311,7 @@ delete_mysql_database_temp_user(){
 is_dbhost_new() {
     if [ -e "$HESTIA/conf/$type.conf" ]; then
         check_host=$(grep "HOST='$host'" $HESTIA/conf/$type.conf)
-        if [ ! -z "$check_host" ]; then
+        if [  "$check_host" ]; then
             echo "Error: db host exist"
             log_event "$E_EXISTS" "$ARGUMENTS"
             exit $E_EXISTS

@@ -25,7 +25,7 @@ function write_kv_config_file() {
 
     touch $HESTIA/conf/defaults/$system.conf
 
-    for key in ${known_keys[@]}; do
+    for key in $known_keys; do
         echo $key >> $HESTIA/conf/defaults/$system.conf
     done
 }
@@ -181,7 +181,7 @@ function syshealth_repair_system_config() {
     fi
 
     # Webmail alias
-    if [ ! -z "$IMAP_SYSTEM" ]; then
+    if [ -n "$IMAP_SYSTEM" ]; then
         if [ -z "$WEBMAIL_ALIAS" ]; then
             echo "[ ! ] Adding missing variable to hestia.conf: WEBMAIL_ALIAS ('webmail')"
             $BIN/v-change-sys-config-value 'WEBMAIL_ALIAS' 'webmail'
@@ -189,7 +189,7 @@ function syshealth_repair_system_config() {
     fi
 
     # phpMyAdmin/phpPgAdmin alias
-    if [ ! -z "$DB_SYSTEM" ]; then
+    if [ -n "$DB_SYSTEM" ]; then
         if [ "$DB_SYSTEM" = "mysql" ]; then
             if [ -z "$DB_PMA_ALIAS" ]; then 
                 echo "[ ! ] Adding missing variable to hestia.conf: DB_PMA_ALIAS ('phpmyadmin)"

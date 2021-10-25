@@ -11,6 +11,11 @@ if (isset($_SESSION['user'])) {
 // Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
+if ($_SESSION['POLICY_SYSTEM_PASSWORD_RESET'] == 'no') {
+    header('Location: /login/');
+    exit();
+}
+
 if ((!empty($_POST['user'])) && (empty($_POST['code']))) {
     // Check token
     verify_csrf($_POST);

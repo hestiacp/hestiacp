@@ -19,12 +19,14 @@ auth_user=$3
 password=$4; HIDE=4
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Defining htpasswd file
 htpasswd="$HOMEDIR/$user/conf/web/$domain/htpasswd"
@@ -41,12 +43,13 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
+is_common_format_valid "$auth_user" "auth user"
 is_password_valid
 get_domain_values 'web'
 if [ -z "$(echo "$AUTH_USER" |tr : '\n' |grep ^$auth_user$)" ]; then
     echo "Error: auth user $auth_user doesn't exist"
     log_event "$E_NOTEXIST" "$ARGUMENTS"
-    exit $E_NOTEXIST
+    exit "$E_NOTEXIST"
 fi
 
 # Perform verification if read-only mode is enabled
@@ -58,7 +61,7 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Adding httpasswd user
-auth_hash=$($BIN/v-generate-password-hash htpasswd htpasswd $password)
+auth_hash=$($BIN/v-generate-password-hash htpasswd htpasswd "$password")
 touch $htpasswd
 sed -i "/^$auth_user:/d" $htpasswd
 echo "$auth_user:$auth_hash" >> $htpasswd
@@ -69,9 +72,9 @@ echo "$auth_user:$auth_hash" >> $htpasswd
 #----------------------------------------------------------#
 
 # Rebuilding AUTH_HASH variable
-position=$(echo $AUTH_USER |tr ':' '\n' |grep -n '' |grep ":$auth_user$" |\
+position=$(echo "$AUTH_USER" |tr ':' '\n' |grep -n '' |grep ":$auth_user$" |\
     cut -f 1 -d:)
-auth_hash=$(echo $AUTH_HASH |tr ':' '\n' |grep -n '' |\
+auth_hash=$(echo "$AUTH_HASH" |tr ':' '\n' |grep -n '' |\
     sed -e "s%^$position:.*%$position:$auth_hash%" |\
     cut -f 2 -d :| sed -e "/^$/d"| sed -e ':a;N;$!ba;s/\n/:/g')
 

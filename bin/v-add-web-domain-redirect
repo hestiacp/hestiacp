@@ -25,10 +25,12 @@ code=${4-301}
 restart=${5-no}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -73,7 +75,7 @@ if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
     sconf="$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_redirect"
 fi
 # Insert redirect commands
-if [ ! -z "$PROXY_SYSTEM" ] || [ "$WEB_SYSTEM" = 'nginx' ]; then
+if [ -n "$PROXY_SYSTEM" ] || [ "$WEB_SYSTEM" = 'nginx' ]; then
     if [ "$scheme" = 1 ]; then
         echo "   return $code $redirect\$request_uri;" > $conf        
         if [ ! -e "$sconf" ]; then
@@ -107,10 +109,10 @@ update_object_value 'web' 'DOMAIN' "$domain" '$REDIRECT_CODE' "$code"
 
 if [ "$restart" = "yes" ]; then
     # Restarting web server
-    $BIN/v-restart-web $restart
+    $BIN/v-restart-web "$restart"
     check_result $? "Web restart failed" >/dev/null
     
-    $BIN/v-restart-proxy $restart
+    $BIN/v-restart-proxy "$restart"
     check_result $? "Proxy restart failed" >/dev/null
 fi
 

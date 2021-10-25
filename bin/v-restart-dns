@@ -13,11 +13,12 @@
 #----------------------------------------------------------#
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-PATH="$PATH:/usr/local/sbin:/sbin:/usr/sbin:/root/bin"
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 send_email_report() {
     if [ -e '/etc/named.conf' ]; then
@@ -28,9 +29,9 @@ send_email_report() {
     email=$(grep CONTACT $HESTIA/data/users/admin/user.conf)
     email=$(echo "$email" | cut -f 2 -d "'")
     tmpfile=$(mktemp)
-    subj="$(hostname): $DNS_SYSTEM restart failed"
-    /usr/sbin/named-checkconf $dns_conf >> $tmpfile 2>&1
-    service $DNS_SYSTEM restart >> $tmpfile 2>&1
+    subj="$(hostname): "$DNS_SYSTEM" restart failed"
+    /usr/sbin/named-checkconf "$dns_conf" >> $tmpfile 2>&1
+    service "$DNS_SYSTEM" restart >> $tmpfile 2>&1
     cat $tmpfile |$SENDMAIL -s "$subj" $email
     rm -f $tmpfile
 }
@@ -57,10 +58,10 @@ if [ "$1" = 'scheduled' ] || [ -z "$1" -a "$SCHEDULED_RESTART" = 'yes' ]; then
 fi
 
 # Restart system
-$BIN/v-restart-service $DNS_SYSTEM > /dev/null 2>&1
+$BIN/v-restart-service "$DNS_SYSTEM" > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     send_email_report
-    check_result $E_RESTART "$DNS_SYSTEM restart failed"
+    check_result "$E_RESTART" "$DNS_SYSTEM restart failed"
 fi
 
 # Update restart queue

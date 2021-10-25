@@ -16,12 +16,14 @@
 user=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -51,7 +53,7 @@ for domain in $(search_objects 'web' 'SUSPENDED' "no" 'DOMAIN'); do
     while read line; do
         if  [[ "$line" =~ ^[0-9]+$ ]]; then
             line=${line#0}
-            if [ ! -z "$line" ]; then
+            if [ -n "$line" ]; then
                 bytes=$(($bytes + $line))
             fi
         fi

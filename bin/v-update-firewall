@@ -19,12 +19,14 @@ sysctl="/sbin/sysctl"
 
 # Includes
 source /etc/profile.d/hestia.sh
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/firewall.sh
 source $HESTIA/func/firewall.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -32,7 +34,6 @@ source $HESTIA/conf/hestia.conf
 #----------------------------------------------------------#
 
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -85,8 +86,9 @@ if [ "$conntrack" != 'no' ] || grep --quiet container=lxc /proc/1/environ; then
     echo "$str" >> $tmp
 fi
 
+ips=$(ls $HESTIA/data/ips)
 # Handling local traffic
-for ip in $(ls $HESTIA/data/ips); do
+for ip in $ips; do
     echo "$iptables -A INPUT -s $ip -j ACCEPT" >> $tmp
 done
 echo "$iptables -A INPUT -s 127.0.0.1 -j ACCEPT" >> $tmp
@@ -152,7 +154,7 @@ if [ -x "$HESTIA/data/firewall/custom.sh" ]; then
 fi
 
 # Checking fail2ban support
-if [ ! -z "$FIREWALL_EXTENSION" ]; then
+if [ -n "$FIREWALL_EXTENSION" ]; then
     for chain in $(cat $HESTIA/data/firewall/chains.conf 2>/dev/null); do
         parse_object_kv_list "$chain"
         if [[ "$PORT" =~ ,|-|: ]] ; then

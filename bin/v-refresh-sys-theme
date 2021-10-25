@@ -12,10 +12,12 @@
 #----------------------------------------------------------#
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -25,5 +27,5 @@ source $HESTIA/conf/hestia.conf
 CURRENT_THEME=$THEME
 
 # Cycle theme to regenerate (helps if cache is stuck)
-$BIN/v-change-sys-theme default
-$BIN/v-change-sys-theme $CURRENT_THEME
+$BIN/v-change-sys-theme "default"
+$BIN/v-change-sys-theme "$CURRENT_THEME"

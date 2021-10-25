@@ -18,10 +18,12 @@ domain=$2
 restart="${3-yes}"
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -41,48 +43,48 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Working on Web domain
-if [ ! -z "$WEB_SYSTEM" ]; then
+if [ -n "$WEB_SYSTEM" ]; then
     str=$(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
-    if [  ! -z "$str" ]; then
+    if [  -n "$str" ]; then
         domain_found='yes'
-        $BIN/v-delete-web-domain $user $domain 'no'
+        $BIN/v-delete-web-domain "$user" "$domain" 'no'
         check_result $? "can't suspend web" > /dev/null
     fi
 fi
 
 # Working on DNS domain
-if [ ! -z "$DNS_SYSTEM" ]; then
+if [ -n "$DNS_SYSTEM" ]; then
     str=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
-    if [  ! -z "$str" ]; then
+    if [  -n "$str" ]; then
         domain_found='yes'
-        $BIN/v-delete-dns-domain $user $domain 'no'
+        $BIN/v-delete-dns-domain "$user" "$domain" 'no'
         check_result $? "can't suspend dns" > /dev/null
     fi
 fi
 
 # Working on Mail domain
-if [ ! -z "$MAIL_SYSTEM" ]; then
+if [ -n "$MAIL_SYSTEM" ]; then
     str=$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf)
-    if [  ! -z "$str" ]; then
+    if [  -n "$str" ]; then
         domain_found='yes'
-        $BIN/v-delete-mail-domain $user $domain
+        $BIN/v-delete-mail-domain "$user" "$domain"
         check_result $? "can't suspend mail" > /dev/null
     fi
 fi
 
 # Checking domain search result
 if [ -z "$domain_found" ]; then
-    check_result $E_NOTEXIST "domain $domain doesn't exist"
+    check_result "$E_NOTEXIST" "domain $domain doesn't exist"
 fi
 
 # Restarting services
-$BIN/v-restart-web $restart
+$BIN/v-restart-web "$restart"
 check_result $? "can't restart web" > /dev/null
 
-$BIN/v-restart-proxy $restart
+$BIN/v-restart-proxy "$restart"
 check_result $? "can't restart proxy" > /dev/null
 
-$BIN/v-restart-dns $restart
+$BIN/v-restart-dns "$restart"
 check_result $? "can't restart dns" > /dev/null
 
 

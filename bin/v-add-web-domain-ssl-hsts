@@ -14,13 +14,15 @@
 user=$1
 domain=$2
 quiet=$3
+restart="$4"
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -47,11 +49,11 @@ parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 # Check if SSL is enabled
 if [ "$SSL" != 'yes' ]; then
     echo "Error: SSL is not enabled"
-    exit $E_NOTEXIST
+    exit "$E_NOTEXIST"
 fi
 
 # Check for Apache/Nginx or Nginx/PHP-FPM configuration
-if [ -z $PROXY_SYSTEM ]; then
+if [ -z "$PROXY_SYSTEM" ]; then
     hstsconf="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.hsts.conf"
 else
     hstsconf="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.hsts.conf"
@@ -74,11 +76,11 @@ fi
 update_object_value 'web' 'DOMAIN' "$domain" '$SSL_HSTS' 'yes'
 
 # Restart web server
-$BIN/v-restart-web $restart
+$BIN/v-restart-web "$restart"
 check_result $? "Web restart failed" > /dev/null
 
 # Restart proxy
-$BIN/v-restart-proxy $restart
+$BIN/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" > /dev/null
 
 # Logging

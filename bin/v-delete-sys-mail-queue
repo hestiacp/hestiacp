@@ -13,10 +13,12 @@
 #----------------------------------------------------------#
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 # Perform verification if read-only mode is enabled
@@ -37,7 +39,7 @@ fi
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
-$BIN/v-log-action "system" "Info" "System" "Package copied (Package: $package, New Package: $new_package)."
+$BIN/v-log-action "system" "Info" "System" "Mail queue ($message_count) has been deleted"
 log_event "$OK" "$ARGUMENTS"
 
 exit

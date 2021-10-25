@@ -15,10 +15,12 @@
 format=${1-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -127,22 +129,22 @@ csv_list() {
 rrd_types="la mem net"
 
 # Checking web system
-if [ ! -z "$WEB_SYSTEM" ]; then
+if [ -n "$WEB_SYSTEM" ]; then
     rrd_types="$rrd_types web"
 fi
 
 # Checking mail system
-if [ ! -z "$MAIL_SYSTEM" ]; then
+if [ -n "$MAIL_SYSTEM" ]; then
     rrd_types="$rrd_types mail"
 fi
 
 # Checking db system
-if [ ! -z "$DB_SYSTEM" ]; then
+if [ -n "$DB_SYSTEM" ]; then
     rrd_types="$rrd_types db"
 fi
 
 # Checking ftp system
-if [ ! -z "$FTP_SYSTEM" ]; then
+if [ -n "$FTP_SYSTEM" ]; then
     rrd_types="$rrd_types ftp"
 fi
 

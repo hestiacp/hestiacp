@@ -124,10 +124,13 @@ function validate_mail_domain() {
 
     assert_dir_exist $HOMEDIR/$user/mail/$domain
     assert_dir_exist $HOMEDIR/$user/conf/mail/$domain
-
     assert_file_exist $HOMEDIR/$user/conf/mail/$domain/aliases
-    assert_file_exist $HOMEDIR/$user/conf/mail/$domain/antispam
-    assert_file_exist $HOMEDIR/$user/conf/mail/$domain/antivirus
+    if [ -n "$ANTISPAM_SYSTEM" ]; then
+      assert_file_exist $HOMEDIR/$user/conf/mail/$domain/antispam
+    fi
+    if [ -n "$ANTIVIRUS_SYSTEM" ]; then
+      assert_file_exist $HOMEDIR/$user/conf/mail/$domain/antivirus
+    fi
     assert_file_exist $HOMEDIR/$user/conf/mail/$domain/fwd_only
     assert_file_exist $HOMEDIR/$user/conf/mail/$domain/ip
     assert_file_exist $HOMEDIR/$user/conf/mail/$domain/passwd
@@ -363,6 +366,66 @@ function check_ip_not_banned(){
     assert_output --partial 'ns0.com'
 }
 
+@test "Change user language" {
+  run v-change-user-language $user "nl"
+  assert_success
+  refute_output
+}
+
+@test "Change user language (Does not exists)" {
+  run v-change-user-language $user "aa"
+  assert_failure $E_NOTEXIST
+}
+
+@test "Change user sort order" {
+  run v-change-user-sort-order $user "name"
+  assert_success
+  refute_output
+}
+
+@test "Change user theme" {
+  run v-change-user-theme $user "flat"
+  assert_success
+  refute_output
+}
+
+@test "Change user theme (Does not exists)" {
+  run v-change-user-theme $user "aa"
+  assert_failure $E_NOTEXIST
+}
+
+@test "Change user login ip" {
+  run v-change-user-config-value $user "LOGIN_USE_IPLIST" "1.2.3.4,1.2.3.5"
+  assert_success
+  refute_output
+}
+
+@test "Change user login ip (Failed)" {
+  run v-change-user-config-value $user "LOGIN_USE_IPLIST" "'; echo 'jaap'; echo '"
+  assert_failure $E_INVALID
+}
+
+@test "Add user notification" {
+  run v-add-user-notification $user "Test message" "Message"
+  assert_success
+  refute_output
+}
+@test "Acknowledge user notification" {
+  run v-acknowledge-user-notification $user 1
+  assert_success
+  refute_output
+}
+@test "List user notification" {
+  run v-list-user-notifications $user csv
+  assert_success
+  assert_output --partial "1,\"Test message\",\"Message\",yes"
+}
+@test "Delete user notification" {
+  run v-delete-user-notification admin 1
+  assert_success
+  refute_output
+}
+
 #----------------------------------------------------------#
 #                         Cron                             #
 #----------------------------------------------------------#
@@ -395,7 +458,7 @@ function check_ip_not_banned(){
     run v-add-cron-job $user 1 1 1 1 1 echo 1
     assert_success
     refute_output
-
+    
     run v-add-cron-job $user 1 1 1 1 1 echo 1
     assert_failure $E_EXISTS
     assert_output --partial 'JOB=1 already exists'
@@ -660,6 +723,7 @@ function check_ip_not_banned(){
 
 @test "WEB: Generate Self signed certificate" {
     ssl=$(v-generate-ssl-cert "$domain" "info@$domain" US CA "Orange County" HestiaCP IT "mail.$domain" | tail -n1 | awk '{print $2}')
+    echo $ssl;
     mv $ssl/$domain.crt /tmp/$domain.crt
     mv $ssl/$domain.key /tmp/$domain.key
 }
@@ -1423,6 +1487,20 @@ function check_ip_not_banned(){
   refute_output
 }
 
+@test "System: Set/Enable SMTP relay" {
+  run v-add-sys-smtp-relay $domain info@$domain 1234-test 587
+  assert_success
+  refute_output
+  assert_file_exist /etc/exim4/smtp_relay.conf
+}
+
+@test "System: Delete SMTP relay" {
+  run v-delete-sys-smtp-relay 
+  assert_success
+  refute_output
+  assert_file_not_exist /etc/exim4/smtp_relay.conf
+}
+
 #----------------------------------------------------------#
 #                        Firewall                          #
 #----------------------------------------------------------#
@@ -1506,8 +1584,25 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
     assert_output --partial "100"
 }
 
+@test "Package: Copy package Not Exists" {
+  run v-copy-user-package hestiadoesnotexists hestiatest2
+  assert_failure $E_NOTEXIST
+}
+
+@test "Package: Copy package" {
+  run v-copy-user-package hestiatest hestiatest2
+  assert_success
+  refute_output
+}
+
+@test "Package: Copy package Exists" {
+  run v-copy-user-package hestiatest hestiatest2
+  assert_failure $E_EXISTS
+}
+
 @test "Package: Delete package" {
     run v-delete-user-package hestiatest
+    run v-delete-user-package hestiatest2
     rm /tmp/package
     assert_success
     refute_output
@@ -1517,25 +1612,43 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
 }
 
 #----------------------------------------------------------#
+#                         Backup user                      #
+#----------------------------------------------------------#
+
+@test "Backup user" {
+  run v-backup-user $user
+  assert_success
+}
+
+@test "List Backups" {
+  run v-list-user-backups $user plain
+  assert_success
+  assert_output --partial "$user"
+}
+
+@test "Delete backups" {
+  run v-delete-user-backup $user $(v-list-user-backups $user plain | cut -f1)
+  assert_success
+  run rm /backup/$user.log
+}
+
+#----------------------------------------------------------#
 #                         CLEANUP                          #
 #----------------------------------------------------------#
 
 @test "Mail: Delete domain" {
-    # skip
     run v-delete-mail-domain $user $domain
     assert_success
     refute_output
 }
 
 @test "DNS: Delete domain" {
-    # skip
     run v-delete-dns-domain $user $domain
     assert_success
     refute_output
 }
 
 @test "WEB: Delete domain" {
-    # skip
     run v-delete-web-domain $user $domain
     assert_success
     refute_output

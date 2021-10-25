@@ -1,5 +1,6 @@
 <?php
-error_reporting(NULL);
+
+error_reporting(null);
 if ($_GET['user'] === 'system') {
     $TAB = 'SERVER';
 } else {
@@ -18,14 +19,11 @@ if (($_SESSION['userContext'] !== 'admin') && (!empty($_GET['user']))) {
 // Data
 if (($_SESSION['userContext'] === "admin") && (!empty($_GET['user']))) {
     // Check token
-    if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
-        header('location: /login/');
-        exit();
-    }
+    verify_csrf($_GET);
     $user=escapeshellarg($_GET['user']);
 }
 
-exec (HESTIA_CMD."v-list-user-log $user json", $output, $return_var);
+exec(HESTIA_CMD."v-list-user-log $user json", $output, $return_var);
 check_error($return_var);
 $data = json_decode(implode('', $output), true);
 $data = array_reverse($data);

@@ -166,8 +166,8 @@ upgrade_set_version() {
 upgrade_set_branch() {
     
     # Set branch in hestia.conf
-    DISPLAY_VER=$(echo $@ | sed "s|~alpha||g" | sed "s|~beta||g");
-    if [ "$DISPLAY_VER" = "$@" ]; then 
+    DISPLAY_VER=$(echo "$1" | sed "s|~alpha||g" | sed "s|~beta||g");
+    if [ "$DISPLAY_VER" = "$1" ]; then 
         $BIN/v-change-sys-config-value "RELEASE_BRANCH" "release"
     fi
 }
@@ -176,13 +176,13 @@ upgrade_send_notification_to_panel () {
     # Add notification to panel if variable is set to true or is not set
     if [[ "$new_version" =~ "alpha" ]]; then
         # Send notifications for development releases
-        $HESTIA/bin/v-add-user-notification admin 'Development snapshot installed' '<b>Version:</b> '$new_version'<br><b>Code Branch:</b> '$RELEASE_BRANCH'<br><br>Please tell us about any bugs or issues by opening an issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a> and feel free to share your feedback on our <a href="https://forum.hestiacp.com" target="_new">discussion forum</a>.<br><br><i class="fas fa-heart status-icon red"></i> The Hestia Control Panel development team'
+        $BIN/v-add-user-notification admin 'Development snapshot installed' '<b>Version:</b> '$new_version'<br><b>Code Branch:</b> '$RELEASE_BRANCH'<br><br>Please tell us about any bugs or issues by opening an issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a> and feel free to share your feedback on our <a href="https://forum.hestiacp.com" target="_new">discussion forum</a>.<br><br><i class="fas fa-heart status-icon red"></i> The Hestia Control Panel development team'
     elif [[ "$new_version" =~ "beta" ]]; then
         # Send feedback notification for beta releases
-        $HESTIA/bin/v-add-user-notification admin 'Thank you for testing Hestia Control Panel '$new_version'.' '<b>Please share your feedback with our development team through our <a href="https://forum.hestiacp.com" target="_new">discussion forum</a>.<br><br>Found a bug? Report it on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>!</b><br><br><i class="fas fa-heart status-icon red"></i> The Hestia Control Panel development team'
+        $BIN/v-add-user-notification admin 'Thank you for testing Hestia Control Panel '$new_version'.' '<b>Please share your feedback with our development team through our <a href="https://forum.hestiacp.com" target="_new">discussion forum</a>.<br><br>Found a bug? Report it on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>!</b><br><br><i class="fas fa-heart status-icon red"></i> The Hestia Control Panel development team'
     else
         # Send normal upgrade complete notification for stable releases
-        $HESTIA/bin/v-add-user-notification admin 'Upgrade complete' 'Your server has been updated to Hestia Control Panel <b>v'$new_version'</b>.<br><br>Please tell us about any bugs or issues by opening an issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart status-icon red"></i> The Hestia Control Panel development team'
+        $BIN/v-add-user-notification admin 'Upgrade complete' 'Your server has been updated to Hestia Control Panel <b>v'$new_version'</b>.<br><br>Please tell us about any bugs or issues by opening an issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart status-icon red"></i> The Hestia Control Panel development team'
     fi
 }
 
@@ -243,31 +243,31 @@ upgrade_init_backup() {
     mkdir -p $HESTIA_BACKUP/conf/hestia/
 
     # System services (apache2, nginx, bind9, vsftpd, etc).
-    if [ ! -z "$WEB_SYSTEM" ]; then
+    if [ -n "$WEB_SYSTEM" ]; then
         mkdir -p $HESTIA_BACKUP/conf/$WEB_SYSTEM/
     fi
-    if [ ! -z "$IMAP_SYSTEM" ]; then
+    if [ -n "$IMAP_SYSTEM" ]; then
         mkdir -p $HESTIA_BACKUP/conf/$IMAP_SYSTEM/
     fi
-    if [ ! -z "$MAIL_SYSTEM" ]; then
+    if [ -n "$MAIL_SYSTEM" ]; then
         mkdir -p $HESTIA_BACKUP/conf/$MAIL_SYSTEM/
     fi
-    if [ ! -z "$DNS_SYSTEM" ]; then
+    if [ -n "$DNS_SYSTEM" ]; then
         mkdir -p $HESTIA_BACKUP/conf/$DNS_SYSTEM/
     fi
-    if [ ! -z "$PROXY_SYSTEM" ]; then
+    if [ -n "$PROXY_SYSTEM" ]; then
         mkdir -p $HESTIA_BACKUP/conf/$PROXY_SYSTEM/
     fi
-    if [ ! -z "$DB_SYSTEM" ]; then
+    if [ -n "$DB_SYSTEM" ]; then
         mkdir -p $HESTIA_BACKUP/conf/$DB_SYSTEM/
     fi
-    if [ ! -z "$FTP_SYSTEM" ]; then
+    if [ -n "$FTP_SYSTEM" ]; then
         mkdir -p $HESTIA_BACKUP/conf/$FTP_SYSTEM/
     fi
-    if [ ! -z "$FIREWALL_SYSTEM" ]; then
+    if [ -n "$FIREWALL_SYSTEM" ]; then
         mkdir -p $HESTIA_BACKUP/conf/$FIREWALL_SYSTEM/
     fi
-    if [ ! -z "$FIREWALL_EXTENSION" ]; then
+    if [ -n "$FIREWALL_EXTENSION" ]; then
         mkdir -p $HESTIA_BACKUP/conf/$FIREWALL_EXTENSION/
     fi
     if [ -e "/etc/ssh/sshd_config" ]; then
@@ -281,22 +281,22 @@ upgrade_init_backup() {
     mkdir -p $HESTIA_BACKUP/templates/
 
     # System services (apache2, nginx, bind9, vsftpd, etc).
-    if [ ! -z "$WEB_SYSTEM" ]; then
+    if [ -n "$WEB_SYSTEM" ]; then
         mkdir -p $HESTIA_BACKUP/conf/$WEB_SYSTEM/
     fi
-    if [ ! -z "$IMAP_SYSTEM" ]; then
+    if [ -n "$IMAP_SYSTEM" ]; then
         mkdir -p $HESTIA_BACKUP/conf/$IMAP_SYSTEM/
     fi
-    if [ ! -z "$MAIL_SYSTEM" ]; then
+    if [ -n "$MAIL_SYSTEM" ]; then
         mkdir -p $HESTIA_BACKUP/conf/$MAIL_SYSTEM/
     fi
-    if [ ! -z "$DNS_SYSTEM" ]; then
+    if [ -n "$DNS_SYSTEM" ]; then
         mkdir -p $HESTIA_BACKUP/conf/$DNS_SYSTEM/
     fi
-    if [ ! -z "$PROXY_SYSTEM" ]; then
+    if [ -n "$PROXY_SYSTEM" ]; then
         mkdir -p $HESTIA_BACKUP/conf/$PROXY_SYSTEM/
     fi
-    if [ ! -z "$DB_SYSTEM" ]; then
+    if [ -n "$DB_SYSTEM" ]; then
         if [[  "$DB_SYSTEM" =~ "mysql" ]]; then 
             mkdir -p $HESTIA_BACKUP/conf/mysql/        
         fi
@@ -304,13 +304,13 @@ upgrade_init_backup() {
             mkdir -p $HESTIA_BACKUP/conf/pgsql/        
         fi
     fi
-    if [ ! -z "$FTP_SYSTEM" ]; then
+    if [ -n "$FTP_SYSTEM" ]; then
         mkdir -p $HESTIA_BACKUP/conf/$FTP_SYSTEM/
     fi
-    if [ ! -z "$FIREWALL_SYSTEM" ]; then
+    if [ -n "$FIREWALL_SYSTEM" ]; then
         mkdir -p $HESTIA_BACKUP/conf/$FIREWALL_SYSTEM/
     fi
-    if [ ! -z "$FIREWALL_EXTENSION" ]; then
+    if [ -n "$FIREWALL_EXTENSION" ]; then
         mkdir -p $HESTIA_BACKUP/conf/$FIREWALL_EXTENSION/
     fi
     if [ -e "/etc/ssh/sshd_config" ]; then
@@ -369,31 +369,31 @@ upgrade_start_backup() {
     cp -rf $HESTIA/conf/* $HESTIA_BACKUP/conf/hestia/
 
     # System service configuration files (apache2, nginx, bind9, vsftpd, etc).
-    if [ ! -z "$WEB_SYSTEM" ]; then
+    if [ -n "$WEB_SYSTEM" ]; then
         if [ "$DEBUG_MODE" = "true" ]; then
             echo "      ---- $WEB_SYSTEM"
         fi
         cp -fr /etc/$WEB_SYSTEM/* $HESTIA_BACKUP/conf/$WEB_SYSTEM/
     fi
-    if [ ! -z "$PROXY_SYSTEM" ]; then
+    if [ -n "$PROXY_SYSTEM" ]; then
         if [ "$DEBUG_MODE" = "true" ]; then
             echo "      ---- $PROXY_SYSTEM"
         fi
         cp -fr /etc/$PROXY_SYSTEM/* $HESTIA_BACKUP/conf/$PROXY_SYSTEM/
     fi
-    if [ ! -z "$IMAP_SYSTEM" ]; then
+    if [ -n "$IMAP_SYSTEM" ]; then
         if [ "$DEBUG_MODE" = "true" ]; then
             echo "      ---- $IMAP_SYSTEM"
         fi
         cp -fr /etc/$IMAP_SYSTEM/* $HESTIA_BACKUP/conf/$IMAP_SYSTEM/
     fi
-    if [ ! -z "$MAIL_SYSTEM" ]; then
+    if [ -n "$MAIL_SYSTEM" ]; then
         if [ "$DEBUG_MODE" = "true" ]; then
             echo "      ---- $MAIL_SYSTEM"
         fi
         cp -fr /etc/$MAIL_SYSTEM/* $HESTIA_BACKUP/conf/$MAIL_SYSTEM/
     fi
-    if [ ! -z "$DNS_SYSTEM" ]; then
+    if [ -n "$DNS_SYSTEM" ]; then
         if [ "$DNS_SYSTEM" = "bind9" ]; then
             if [ "$DEBUG_MODE" = "true" ]; then
                 echo "      ---- $DNS_SYSTEM"
@@ -401,7 +401,7 @@ upgrade_start_backup() {
             cp -fr /etc/bind/* $HESTIA_BACKUP/conf/$DNS_SYSTEM/
         fi
     fi
-    if [ ! -z "$DB_SYSTEM" ]; then
+    if [ -n "$DB_SYSTEM" ]; then
         if [[ "$DB_SYSTEM" =~ "mysql" ]]; then
             if [ "$DEBUG_MODE" = "true" ]; then
                 echo "      ---- mysql"
@@ -416,7 +416,7 @@ upgrade_start_backup() {
             cp -fr /etc/postgresql/* $HESTIA_BACKUP/conf/pgsql/         
         fi
     fi
-    if [ ! -z "$FTP_SYSTEM" ]; then
+    if [ -n "$FTP_SYSTEM" ]; then
         if [ "$DEBUG_MODE" = "true" ]; then
             echo "      ---- $FTP_SYSTEM"
         fi
@@ -428,7 +428,7 @@ upgrade_start_backup() {
             cp -f /etc/proftpd/proftpd.conf $HESTIA_BACKUP/conf/$FTP_SYSTEM/
         fi
     fi
-    if [ ! -z "$FIREWALL_EXTENSION" ]; then
+    if [ -n "$FIREWALL_EXTENSION" ]; then
         if [ "$DEBUG_MODE" = "true" ]; then
             echo "      ---- $FIREWALL_EXTENSION"
         fi
@@ -439,7 +439,7 @@ upgrade_start_backup() {
         if [ "$DEBUG_MODE" = "true" ]; then
             echo "      ---- sshd"
         fi
-        cp -f /etc/ssh/* $HESTIA_BACKUP/conf/ssh/
+        cp -fr /etc/ssh/* $HESTIA_BACKUP/conf/ssh/
     fi
     if [ -d "/etc/roundcube" ]; then
         if [ "$DEBUG_MODE" = "true" ]; then
@@ -463,7 +463,7 @@ upgrade_start_backup() {
 }
 
 upgrade_refresh_config() {
-    source /usr/local/hestia/conf/hestia.conf
+    source_conf "/usr/local/hestia/conf/hestia.conf"
     source /usr/local/hestia/func/main.sh
 }
 
@@ -483,9 +483,9 @@ upgrade_start_routine() {
 
     # Define variables for accessing supported versions
     # Sort version by -V due to issues with version numbers 1.4.10 and higher 
-    all_versions=$(printf "%s\n" ${available_versions[@]} | sort -V)
-    oldest_version=$(printf "%s\n" ${available_versions[@]} | sort -V | head -n1)
-    latest_version=$(printf "%s\n" ${available_versions[@]} | sort -V | tail -n1)
+    all_versions=$(printf "%s\n" "${available_versions[@]}" | sort -V)
+    oldest_version=$(printf "%s\n" "$all_versions" | head -n1)
+    latest_version=$(printf "%s\n" "$all_versions" | sort -V | tail -n1)
 
     # Check for supported versions and process necessary upgrade steps
     if [ $(check_version $latest_version) -gt $(check_version $VERSION) ]; then
@@ -496,7 +496,7 @@ upgrade_start_routine() {
                 source $HESTIA/install/upgrade/versions/$version_step.sh
             fi
         done
-        upgrade_set_version $VERSION
+        upgrade_set_version "$VERSION"
         upgrade_refresh_config
     else
         echo ""
@@ -507,7 +507,7 @@ upgrade_start_routine() {
             source $HESTIA/install/upgrade/versions/$VERSION.sh
         fi
         VERSION="$new_version"
-        upgrade_set_version $VERSION
+        upgrade_set_version "$VERSION"
         upgrade_refresh_config
     fi
 
@@ -519,9 +519,9 @@ upgrade_start_routine() {
 upgrade_phpmyadmin() {
     if [ "$UPGRADE_UPDATE_PHPMYADMIN" = "true" ]; then
         # Check if MariaDB/MySQL is installed on the server before attempting to install or upgrade phpMyAdmin
-        if [ ! -z "$(echo $DB_SYSTEM | grep -w 'mysql')" ]; then
+        if [ -n "$(echo $DB_SYSTEM | grep -w 'mysql')" ]; then
             # Define version check function
-            function version_ge(){ test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o ! -z "$1" -a "$1" = "$2"; }
+            function version_ge(){ test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o -n "$1" -a "$1" = "$2"; }
 
             pma_release_file=$(ls /usr/share/phpmyadmin/RELEASE-DATE-* 2>/dev/null |tail -n 1)
             if version_ge "${pma_release_file##*-}" "$pma_v"; then
@@ -601,10 +601,10 @@ upgrade_filemanager_update_config() {
 }
 
 upgrade_roundcube(){
-    if [ "UPGRADE_UPDATE_ROUNDCUBE" = "true" ]; then
-        if [ ! -z "$(echo "$WEBMAIL_SYSTEM" | grep -w 'roundcube')" ]; then
+    if [ "$UPGRADE_UPDATE_ROUNDCUBE" = "true" ]; then
+        if [ -n "$(echo "$WEBMAIL_SYSTEM" | grep -w 'roundcube')" ]; then
             rc_version=$(cat /var/lib/roundcube/index.php | grep -o -E '[0-9].[0-9].[0-9]+' | head -1);
-            if [ "$rc_version" == "$rc_v" ]; then
+            if [ "$rc_version" != "$rc_v" ]; then
                 echo "[ * ] Upgrading Roundcube to version v$rc_v..."
                 $HESTIA/bin/v-add-sys-roundcube
             fi
@@ -613,14 +613,26 @@ upgrade_roundcube(){
 }
 
 upgrade_rainloop(){
-    if [ "UPGRADE_UPDATE_RAINLOOP" = "true" ]; then
-        if [ ! -z "$(echo "$WEBMAIL_SYSTEM" | grep -w 'rainloop')" ]; then
+    if [ "$UPGRADE_UPDATE_RAINLOOP" = "true" ]; then
+        if [ -n "$(echo "$WEBMAIL_SYSTEM" | grep -w 'rainloop')" ]; then
             rc_version=$(cat /var/lib/rainloop/data/VERSION);
-            if [ "$rc_version" == "$rc_v" ]; then
+            if [ "$rc_version" != "$rl_v" ]; then
                 echo "[ * ] Upgrading Rainloop to version v$rl_v..."
                 $HESTIA/bin/v-add-sys-rainloop
             fi
         fi
+    fi
+}
+
+upgrade_phpmailer(){
+    if [ ! -d "$HESTIA/web/inc/vendor/" ]; then
+        echo "[ ! ] Install PHPmailer";
+        $HESTIA/bin/v-add-sys-phpmailer
+    fi
+    phpm_version=$(cat $HESTIA/web/inc/vendor/phpmailer/phpmailer/VERSION);
+    if [ "$phpm_version" != "$pm_v" ]; then
+    echo "[ * ] Upgrading Rainloop to version v$pm_v..."
+        $HESTIA/bin/v-add-sys-phpmailer
     fi
 }
 
@@ -659,35 +671,35 @@ upgrade_rebuild_users() {
             else
                 echo "      - $user..."
             fi
-            if [ ! -z "$WEB_SYSTEM" ]; then
+            if [ -n "$WEB_SYSTEM" ]; then
                 if [ "$DEBUG_MODE" = "true" ]; then
                     echo "      ---- Web domains..."
-                    $BIN/v-rebuild-web-domains $user 'no'
+                    $BIN/v-rebuild-web-domains "$user" 'no'
                 else
-                    $BIN/v-rebuild-web-domains $user 'no' >/dev/null 2>&1
+                    $BIN/v-rebuild-web-domains "$user" 'no' >/dev/null 2>&1
                 fi
             fi
-            if [ ! -z "$DNS_SYSTEM" ]; then
+            if [ -n "$DNS_SYSTEM" ]; then
                 if [ "$DEBUG_MODE" = "true" ]; then
                     echo "      ---- DNS zones..."
-                    $BIN/v-rebuild-dns-domains $user 'no'
+                    $BIN/v-rebuild-dns-domains "$user" 'no'
                 else
-                    $BIN/v-rebuild-dns-domains $user 'no' >/dev/null 2>&1
+                    $BIN/v-rebuild-dns-domains "$user" 'no' >/dev/null 2>&1
                 fi
             fi
-            if [ ! -z "$MAIL_SYSTEM" ]; then 
+            if [ -n "$MAIL_SYSTEM" ]; then 
                 if [ "$DEBUG_MODE" = "true" ]; then
                     echo "      ---- Mail domains..."
-                    $BIN/v-rebuild-mail-domains $user 'no'
+                    $BIN/v-rebuild-mail-domains "$user" 'no'
                 else
-                    $BIN/v-rebuild-mail-domains $user 'no' >/dev/null 2>&1
+                    $BIN/v-rebuild-mail-domains "$user" 'no' >/dev/null 2>&1
                 fi
             fi
             if [ "$DEBUG_MODE" = "true" ]; then
                 echo "      ---- User configuration..."
-                $BIN/v-rebuild-user $user 'no'
+                $BIN/v-rebuild-user "$user" 'no'
             else
-                $BIN/v-rebuild-user $user 'no' >/dev/null 2>&1
+                $BIN/v-rebuild-user "$user" 'no' >/dev/null 2>&1
             fi
         done
     fi
@@ -706,51 +718,49 @@ upgrade_replace_default_config() {
 upgrade_restart_services() {
     if [ "$UPGRADE_RESTART_SERVICES" = "true" ]; then
         echo "[ * ] Restarting services..."
-        export restart="yes"
         sleep 2
-        if [ ! -z "$MAIL_SYSTEM" ]; then
+        if [ -n "$MAIL_SYSTEM" ]; then
             if [ "$DEBUG_MODE" = "true" ]; then
                 echo "      - $MAIL_SYSTEM"
             fi
-            $BIN/v-restart-mail $restart
+            $BIN/v-restart-mail 'yes'
         fi
-        if [ ! -z "$WEB_SYSTEM" ]; then
+        if [ -n "$WEB_SYSTEM" ]; then
             if [ "$DEBUG_MODE" = "true" ]; then
                 echo "      - $WEB_SYSTEM"
             fi
-            $BIN/v-restart-web $restart
+            $BIN/v-restart-web 'yes'
         fi
-        if [ ! -z "$PROXY_SYSTEM" ]; then
+        if [ -n "$PROXY_SYSTEM" ]; then
             if [ "$DEBUG_MODE" = "true" ]; then
                 echo "      - $PROXY_SYSTEM"
             fi
-            $BIN/v-restart-proxy $restart
+            $BIN/v-restart-proxy 'yes'
         fi
-        if [ ! -z "$DNS_SYSTEM" ]; then
+        if [ -n "$DNS_SYSTEM" ]; then
             if [ "$DEBUG_MODE" = "true" ]; then
                 echo "      - $DNS_SYSTEM"
             fi
-            $BIN/v-restart-dns $restart
+            $BIN/v-restart-dns 'yes'
         fi
-        for v in `ls /etc/php/`; do
-            if [ -e /etc/php/$v/fpm ]; then
-                if [ "$DEBUG_MODE" = "true" ]; then
-                    echo "      - php$v-fpm"
-                fi
-                $BIN/v-restart-service php$v-fpm
+        versions_list=$(ls -d /etc/php/*)
+        for v in $versions_list; do 
+            if [ "$DEBUG_MODE" = "true" ]; then
+                echo "      - php$v-fpm"
             fi
+            $BIN/v-restart-service "php$v-fpm" 'yes'
         done
-        if [ ! -z "$FTP_SYSTEM" ]; then
+        if [ -n "$FTP_SYSTEM" ]; then
             if [ "$DEBUG_MODE" = "true" ]; then
                 echo "      - $FTP_SYSTEM"
             fi
-            $BIN/v-restart-ftp $restart
+            $BIN/v-restart-ftp 'yes'
         fi
-        if [ ! -z "$FIREWALL_EXTENSION" ]; then
+        if [ -n "$FIREWALL_EXTENSION" ]; then
             if [ "$DEBUG_MODE" = "true" ]; then
                 echo "      - $FIREWALL_EXTENSION"
             fi
-            $BIN/v-restart-service $FIREWALL_EXTENSION
+            $BIN/v-restart-service "$FIREWALL_EXTENSION"
         fi
         # Restart SSH daemon service
         if [ "$DEBUG_MODE" = "true" ]; then

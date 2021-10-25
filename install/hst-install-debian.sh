@@ -23,7 +23,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.4.15~alpha'
+HESTIA_INSTALL_VER='1.4.18~alpha'
 pma_v='5.1.1'
 rc_v="1.4.11"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
@@ -135,7 +135,7 @@ set_default_lang() {
     fi
     lang_list="ar az bg bs cs da de el en es fa fi fr hr hu id it ja ka ko nl no pl pt pt-br ro
         ru sr sv th tr uk ur vi zh-cn zh-tw"
-    if !(echo $lang_list |grep -w $lang > /dev/null 2>&1); then
+    if ! (echo $lang_list |grep -w $lang > /dev/null 2>&1); then
         eval lang=$1
     fi
 }
@@ -971,8 +971,12 @@ sed -i "s/[#]LoginGraceTime [[:digit:]]m/LoginGraceTime 1m/g" /etc/ssh/sshd_conf
 
 # Disable SSH suffix broadcast
 if [ -z "$(grep "^DebianBanner no" /etc/ssh/sshd_config)" ]; then
-    echo '' >> /etc/ssh/sshd_config
-    echo 'DebianBanner no' >> /etc/ssh/sshd_config
+    sed -i '/^[#]Banner .*/a DebianBanner no' /etc/ssh/sshd_config
+    if [ -z "$(grep "^DebianBanner no" /etc/ssh/sshd_config)" ]; then
+      # If first attempt fails just add it
+      echo '' >> /etc/ssh/sshd_config
+      echo 'DebianBanner no' >> /etc/ssh/sshd_config
+    fi
 fi
 
 # Restart SSH daemon

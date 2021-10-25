@@ -12,15 +12,13 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Importing system environment  as we run this script
-# mostly by cron which do not read it by itself
-source /etc/profile
-
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -38,19 +36,20 @@ config='/etc/ssh/sshd_config'
 sftp_n=$(grep -n "Subsystem.*sftp" $config |grep -v internal |grep ":#")
 sftp_i=$(grep -n "^# Hestia SFTP Chroot" $config)
 
+date=$("date +%s");
 # Backing up config
 cp $config $config.bak-$(date +%s)
 
 # Enabling normal sftp
-if [ ! -z "$sftp_n" ]; then
-    fline=$(echo $sftp_n |cut -f 1 -d :)
+if [ -n "$sftp_n" ]; then
+    fline=$(echo "$sftp_n" |cut -f 1 -d :)
     sed -i "${fline}s/#Subsystem/Subsystem sftp/" $config
     restart='yes'
 fi
 
 # Disabling jailed sftp
-if [ ! -z "$sftp_i" ]; then
-    fline=$(echo $sftp_i |cut -f 1 -d :)
+if [ -n "$sftp_i" ]; then
+    fline=$(echo "$sftp_i" |cut -f 1 -d :)
     lline=$((fline + 5))
     sed -i "${fline},${lline}d" $config
     restart='yes'
@@ -64,7 +63,7 @@ if [ "$restart" = 'yes' ]; then
     if [ "$?" -ne 0 ]; then
         mail_text="OpenSSH can not be restarted. Please check config:
             \n\n$(/usr/sbin/sshd -t)"
-        echo -e "$mail_text" |$SENDMAIL -s "$subj" $email
+        echo -e "$mail_text" |$SENDMAIL -s "$subj" "$email"
     else
         service ssh restart >/dev/null 2>&1
         service sshd restart >/dev/null 2>&1

@@ -16,9 +16,12 @@
 service=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -44,7 +47,7 @@ for service in $service_list; do
     if [ "$service" = "iptables" ]; then
         $BIN/v-update-firewall
     else
-        systemctl start $service
+        systemctl start "$service"
         result=$?
         if [ "$result" -ne 0 ]; then
             $BIN/v-log-action "system" "Error" "System" "Service failed to start (Name: $service)."
@@ -52,7 +55,7 @@ for service in $service_list; do
             $BIN/v-log-action "system" "Info" "System" "Service started (Name: $service)."
         fi
     fi
-    check_result $? "ERROR: $service start failed" $E_RESTART
+    check_result $? "ERROR: $service start failed" "$E_RESTART"
 done
 
 

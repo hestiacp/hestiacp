@@ -13,10 +13,12 @@
 
 
 # Includes
-# shellcheck /usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck /usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -24,13 +26,8 @@ source $HESTIA/conf/hestia.conf
 # Argument definition
 user=$1
 event_level=$2
-event_category=$3
+export event_category=$3
 event_details=$4
-
-# Generating timestamp
-time_n_date=$(date +'%T %F')
-time=$(echo "$time_n_date" |cut -f 1 -d \ )
-date=$(echo "$time_n_date" |cut -f 2 -d \ )
 
 # Validate event type input
 if [ "$event_level" != "Info" ] && [ "$event_level" != "Warning" ] && [ "$event_level" != "Error" ]; then 

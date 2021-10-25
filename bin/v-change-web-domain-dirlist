@@ -18,12 +18,14 @@ domain=$2
 mode=$3
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -41,10 +43,9 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
-
+get_domain_values 'web'
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -56,7 +57,7 @@ get_domain_values 'web'
 if [ "$mode" = "on" ]; then
     # Enable directory listing
     sed -i "s/-Index/+Index/g" $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.conf
-    if [ -e "$ssl_dir/$domain.ca" ]; then
+    if [ "$SSL" == "yes" ]; then
         # Enable directory listing for SSL-enforced domains
         sed -i "s/-Index/+Index/g" $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.ssl.conf
     fi
@@ -64,7 +65,7 @@ if [ "$mode" = "on" ]; then
 else
     # Disable directory listing
     sed -i "s/+Index/-Index/g" $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.conf
-    if [ -e "$ssl_dir/$domain.ca" ]; then
+    if [ "$SSL" == "yes" ]; then
         # Enable directory listing for SSL-enforced domains
         sed -i "s/+Index/-Index/g" $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.ssl.conf
     fi

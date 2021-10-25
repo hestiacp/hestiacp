@@ -1084,13 +1084,13 @@ function check_ip_not_banned(){
 }
 
 @test "DNS: Change DNS record" {
-  run v-change-dns-records $user $domain 20 test A 198.18.0.125 "" "" 1500
+  run v-change-dns-record $user $domain 20 test A 198.18.0.125 "" "" 1500
   assert_success
   refute_output
 }
 
 @test "DNS: Change DNS record (no update)" {
-  run v-change-dns-records $user $domain 20 test A 198.18.0.125 "" "" 1500
+  run v-change-dns-record $user $domain 20 test A 198.18.0.125 "" "" 1500
   assert_failure $E_EXSIST
 }
 

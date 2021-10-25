@@ -70,7 +70,7 @@ unset TTL
 line=$(grep "ID='$id'" $USER_DATA/dns/$domain.conf)
 parse_object_kv_list "$line"
 
-if [ -z $type ]; then
+if [ -z "$type" ]; then
     type=$TYPE
 fi
 
@@ -91,10 +91,10 @@ fi
 is_dns_fqnd "$TYPE" "$dvalue"
 is_dns_nameserver_valid "$domain" "$TYPE" "$dvalue"
 
-if [[ $RECORD == $record ]] && [[ $TYPE == $type ]] && [[ $PRIORITY -eq $priority ]] \
-        && [[ $VALUE == $dvalue ]] && [[ $SUSPENDED == 'no' ]] && [[ $TTL -eq $ttl ]]; then
+if [[ "$RECORD" == "$record" ]] && [[ "$TYPE" == "$type" ]] && [[ "$PRIORITY" -eq "$priority" ]] \
+        && [[ "$VALUE" == "$dvalue" ]] && [[ "$SUSPENDED" == 'no' ]] && [[ "$TTL" -eq "$ttl" ]]; then
     echo "No pending changes in DNS entry."
-    exit
+    exit "$E_UPDATE"
 fi
 
 # Generating timestamp

@@ -1083,6 +1083,30 @@ function check_ip_not_banned(){
     refute_output
 }
 
+@test "DNS: Change DNS record" {
+  run v-change-dns-records $user $domain 20 test A 198.18.0.125 "" "" 1500
+  assert_success
+  refute_output
+}
+
+@test "DNS: Change DNS record (no update)" {
+  run v-change-dns-records $user $domain 20 test A 198.18.0.125 "" "" 1500
+  assert_failure $E_UPDATE
+}
+
+@test "DNS: Change DNS record id" {
+  run v-change-dns-record-id $user $domain 20 21
+  assert_success
+  refute_output
+  # Change back
+  run v-change-dns-record-id $user $domain 21 20
+}
+
+@test "DNS: Change DNS record id (no update)" {
+  run v-change-dns-record-id  $user $domain 20 20
+  assert_failure $E_UPDATE
+}
+
 @test "DNS: Delete domain record" {
     run v-delete-dns-record $user $domain 20
     assert_success

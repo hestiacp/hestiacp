@@ -30,7 +30,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 check_args '1' "$#" 'DOMAIN [TYPE]'
 
-if_format_valid 'domain'
+is_format_valid 'domain'
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode

@@ -1,16 +1,24 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [DEVELOPMENT] - Service release 
+## [DEVELOPMENT] - Development version
 
 ## Features
 
+- Add support for Dovecote Sieve #2163
 - Improve HELO based system and use RDNS lookup instead our old system
 
 ### Bugfixes
 
 - Disable /reset/ endpoint when POLICY_SYSTEM_PASSWORD_RESET = no
 - Prevent SOA count up after v-change-dns-records with no changes are made
+- Fix #1296 Logrotate does not rotate logs any more on Ubuntu 20.04 and Debian 11
+- Run shellcheck to improve code quality 
+- Improve ssh port detection for filemanager. Allowing users to create /etc/ssh/sshd.conf.d/custom.conf with custom port. 
+
+### Security 
+
+- Update jQuery UI to the last version [CVE-2021-41182](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-41182)
 
 ## [1.4.17] - Service release 
 

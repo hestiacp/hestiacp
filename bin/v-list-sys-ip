@@ -39,7 +39,6 @@ json_list() {
         "INTERFACE": "'$INTERFACE'",
         "NETMASK": "'$NETMASK'",
         "NAT": "'$NAT'",
-        "HELO": "'$HELO'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
         }'
@@ -57,7 +56,6 @@ shell_list() {
     echo "NAME:           $NAME"
     echo "USERS:          $U_SYS_USERS"
     echo "DOMAINS:        $U_WEB_DOMAINS"
-    echo "HELO:           $HELO"
     echo "TIME:           $TIME"
     echo "DATE:           $DATE"
 }
@@ -65,15 +63,15 @@ shell_list() {
 # PLAIN list function
 plain_list() {
     echo -ne "$IP\t$OWNER\t$STATUS\t$NAME\t$U_SYS_USERS\t$U_WEB_DOMAINS\t"
-    echo -e "$INTERFACE\t$NETMASK\t$NAT\t$HELO\t$TIME\t$DATE"
+    echo -e "$INTERFACE\t$NETMASK\t$NAT\t$TIME\t$DATE"
 }
 
 # CSV list function
 csv_list() {
     echo -n "IP,OWNER,STATUS,NAME,U_SYS_USERS,U_WEB_DOMAINS,INTERFACE"
-    echo "NETMASK,NAT,HELO,TIME,DATE"
+    echo "NETMASK,NAT,TIME,DATE"
     echo -n "$IP,$OWNER,$STATUS,$NAME,\"$U_SYS_USERS\",$U_WEB_DOMAINS,"
-    echo "$INTERFACE, $NETMASK,$NAT,$HELO,$TIME,$DATE"
+    echo "$INTERFACE, $NETMASK,$NAT,$TIME,$DATE"
 }
 
 

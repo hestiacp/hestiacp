@@ -14,7 +14,6 @@
 
 # Argument definition
 domain=$1
-helo=${2-yes}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -29,7 +28,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'HOSTNAME [HELO]'
+check_args '1' "$#" 'HOSTNAME'
 is_format_valid 'domain'
 
 # Perform verification if read-only mode is enabled
@@ -62,12 +61,6 @@ else
     if [ -d /etc/rainloop/ ]; then
         sed -i "/hestia_host/c\hestia_host = \"$domain\"" /etc/rainloop/data/_data_/_default_/configs/plugin-hestia-change-password.ini 
     fi
-fi
-
-# Update ip helo for exim
-if [[ -n "$MAIL_SYSTEM" && "$helo" == "yes" ]]; then
-    pub_ip=$(curl --ipv4 -s https://ip.hestiacp.com/)
-    $BIN/v-change-sys-ip-helo $pub_ip $domain
 fi
 
 #----------------------------------------------------------#

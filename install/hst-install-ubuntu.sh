@@ -23,7 +23,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.4.17~alpha'
+HESTIA_INSTALL_VER='1.5.0~alpha'
 pma_v='5.1.1'
 rc_v="1.4.11"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
@@ -1087,8 +1087,11 @@ source /etc/profile.d/hestia.sh
 # Configuring logrotate for Hestia logs
 cp -f $HESTIA_INSTALL_DIR/logrotate/hestia /etc/logrotate.d/hestia
 
+rm -f /var/log/hestia
+mkdir -p /var/log/hestia
+ln -s /var/log/hestia $HESTIA/log
 # Building directory tree and creating some blank files for Hestia
-mkdir -p $HESTIA/conf $HESTIA/log $HESTIA/ssl $HESTIA/data/ips \
+mkdir -p $HESTIA/conf $HESTIA/ssl $HESTIA/data/ips \
     $HESTIA/data/queue $HESTIA/data/users $HESTIA/data/firewall \
     $HESTIA/data/sessions
 touch $HESTIA/data/queue/backup.pipe $HESTIA/data/queue/disk.pipe \
@@ -1097,9 +1100,7 @@ touch $HESTIA/data/queue/backup.pipe $HESTIA/data/queue/disk.pipe \
     $HESTIA/log/nginx-error.log $HESTIA/log/auth.log
 chmod 750 $HESTIA/conf $HESTIA/data/users $HESTIA/data/ips $HESTIA/log
 chmod -R 750 $HESTIA/data/queue
-chmod 660 $HESTIA/log/*
-rm -f /var/log/hestia
-ln -s $HESTIA/log /var/log/hestia
+chmod 660 /var/log/hestia/*
 chmod 770 $HESTIA/data/sessions
 
 # Generating Hestia configuration

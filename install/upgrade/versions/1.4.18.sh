@@ -35,3 +35,11 @@ if [ -n "$MAIL_SYSTEM" ]; then
         sed '/^HELO/d' $HESTIA/data/ips/$ip;
     done
 fi
+
+if [ -L "/var/log/hestia" ]; then
+    echo "[ ! ] Move /usr/local/hestia/log/* to /var/log/hestia/"
+    rm /var/log/hestia
+    cp $HESTIA/log/* /var/log/hestia
+    rm -rf $HESTIA/log/
+   ln -s /var/log/hestia $HESTIA/log
+fi

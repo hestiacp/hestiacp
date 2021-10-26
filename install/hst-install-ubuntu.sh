@@ -1100,7 +1100,7 @@ touch $HESTIA/data/queue/backup.pipe $HESTIA/data/queue/disk.pipe \
     $HESTIA/log/nginx-error.log $HESTIA/log/auth.log
 chmod 750 $HESTIA/conf $HESTIA/data/users $HESTIA/data/ips $HESTIA/log
 chmod -R 750 $HESTIA/data/queue
-chmod 660 /var/log/hestia/log/*
+chmod 660 /var/log/hestia/*
 chmod 770 $HESTIA/data/sessions
 
 # Generating Hestia configuration

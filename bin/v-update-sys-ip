@@ -127,15 +127,6 @@ if [ ! -e "$HESTIA/data/ips/$pub_ip" ]; then
     fi
 fi
 
-# Update ip helo for exim
-if [ -n "$MAIL_SYSTEM" ]; then
-    helo=$(is_ip_rdns_valid "$pub_ip")
-
-    if [ -n "$helo" ]; then
-        $BIN/v-change-sys-ip-helo "$ip" "$helo"
-    fi
-fi
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 
 ## Features
 
+- Improve HELO based system and use RDNS lookup instead our old system
+
 ### Bugfixes
 
 - Disable /reset/ endpoint when POLICY_SYSTEM_PASSWORD_RESET = no

@@ -1214,7 +1214,7 @@ cp -rf $HESTIA_INSTALL_DIR/templates/web/skel/document_errors/* /var/www/documen
 cp -rf $HESTIA_INSTALL_DIR/firewall $HESTIA/data/
 
 # Configuring server hostname
-$HESTIA/bin/v-change-sys-hostname $servername 'no' > /dev/null 2>&1
+$HESTIA/bin/v-change-sys-hostname $servername > /dev/null 2>&1
 
 # Generating SSL certificate
 echo "[ * ] Generating default self-signed SSL certificate..."
@@ -1825,11 +1825,6 @@ pub_ip=$(curl --ipv4 -s https://ip.hestiacp.com/)
 if [ ! -z "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     $HESTIA/bin/v-change-sys-ip-nat $ip $pub_ip > /dev/null 2>&1
     ip=$pub_ip
-fi
-
-if [ "$exim" = 'yes' ]; then
-    # Set HELO for IP as it didn't set during v-change-sys-hostname
-    $HESTIA/bin/v-change-sys-ip-helo $local_ip $servername
 fi
 
 # Configuring libapache2-mod-remoteip

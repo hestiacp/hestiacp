@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add system ip address
-# options: IP NETMASK [INTERFACE] [USER] [IP_STATUS] [IP_NAME] [NAT_IP] [HELO]
+# options: IP NETMASK [INTERFACE] [USER] [IP_STATUS] [IP_NAME] [NAT_IP]
 # labels:
 #
 # example: v-add-sys-ip 216.239.32.21 255.255.255.0
@@ -28,7 +28,6 @@ user="${4-admin}"
 ip_status="${5-shared}"
 ip_name=$6
 nat_ip=$7
-helo=$8
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -46,7 +45,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'IP NETMASK [INTERFACE] [USER] [STATUS] [NAME] [NATED_IP] [HELO]'
+check_args '2' "$#" 'IP NETMASK [INTERFACE] [USER] [STATUS] [NAME] [NATED_IP]'
 is_format_valid 'ip' 'netmask' 'iface' 'user' 'ip_status'
 is_ip_free
 is_object_valid 'user' 'USER' "$user"
@@ -56,9 +55,6 @@ if [ -n "$ip_name" ] ; then
 fi
 if [ -n "$nat_ip" ] ; then
     is_format_valid 'nat_ip'
-fi
-if [ -n "$helo" ] ; then
-    is_format_valid 'helo'
 fi
 if [ "$user" != "admin" ]; then
     ip_status="dedicated"
@@ -133,7 +129,6 @@ U_WEB_DOMAINS='0'
 INTERFACE='$iface'
 NETMASK='$netmask'
 NAT='$nat_ip'
-HELO='$helo'
 TIME='$time'
 DATE='$date'" > $HESTIA/data/ips/$ip
 chmod 660 $HESTIA/data/ips/$ip
@@ -233,11 +228,6 @@ fi
 # Restarting firewall
 if [ -n "$FIREWALL_SYSTEM" ]; then
     $BIN/v-update-firewall
-fi
-
-# Update ip helo for exim
-if [ -n "$MAIL_SYSTEM" ] && [ -n "$helo" ]; then
-    $BIN/v-change-sys-ip-helo "$ip" "$helo"
 fi
 
 # Logging

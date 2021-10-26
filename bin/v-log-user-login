@@ -32,7 +32,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 check_args '2' "$#" 'USER IP SESSION_ID USER_AGENT [AUTHLOG] [REASON]'
 is_format_valid 'user' 'ip'
 is_common_format_valid "$session_id" "SESSION_ID"
-is_common_format_valid "$user_agent" "USER_AGENT"
+format_no_quotes "$user_agent" "USER_AGENT"
 is_common_format_valid "$authlog" "AUTHLOG"
 is_common_format_valid "$reason" "REASON"
 

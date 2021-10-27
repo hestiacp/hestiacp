@@ -67,7 +67,7 @@ add_ssl="yes"
 if [ "$SSL" = "yes" ]; then
     # Valildate SSL Certificate
     if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
-        if openssl verify -CAfile $USER_DATA/ssl/$domain.ca $USER_DATA/ssl/$domain.pem | grep -q "$domain.pem: OK"; then
+        if openssl verify -CAfile <(openssl x509 -in $USER_DATA/ssl/$domain.ca) $USER_DATA/ssl/$domain.pem | grep -q "$domain.pem: OK"; then
             add_ssl="no"
         fi
     else

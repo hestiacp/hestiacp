@@ -16,7 +16,6 @@ source $HESTIA/func/upgrade.sh
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 source_conf "$HESTIA/conf/hestia.conf"
-source $HESTIA/install/upgrade/upgrade.conf
 
 ###############################################################
 #             Set new version numbers for packages            #
@@ -33,6 +32,9 @@ is_debug_build
 
 # Detect operating system version
 detect_os
+
+# Initialize upgrade
+prepare_upgrade_config
 
 # Initialize backup directories
 upgrade_init_backup
@@ -60,9 +62,11 @@ upgrade_start_backup | tee -a $LOG
 # Execute version-specific upgrade scripts
 upgrade_start_routine | tee -a $LOG
 
+# Run upgrades of dependencies
+source_conf "$HESTIA_BACKUP/upgrade.conf"
+
 # Upgrade File Manager and update configuration
 upgrade_filemanager | tee -a $LOG
-upgrade_filemanager_update_config | tee -a $LOG
 
 # Update Web domain templates
 upgrade_rebuild_web_templates | tee -a $LOG

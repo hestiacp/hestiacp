@@ -105,7 +105,7 @@ fi
 # Add configuration file
 cp -f $HESTIA_INSTALL_DIR/filemanager/filegator/configuration.php $HESTIA/web/fm/configuration.php
 
-
+echo "$fm_v" > "${FM_INSTALL_DIR}/version"
 # Set permissions
 chown root: -R "${FM_INSTALL_DIR}"
 chown $user: "${FM_INSTALL_DIR}/private"

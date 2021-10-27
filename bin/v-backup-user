@@ -770,6 +770,7 @@ echo "$backup_str" >> $USER_DATA/backup.conf
 tail -n $BACKUPS $USER_DATA/backup.conf > $USER_DATA/backup.conf_
 mv -f $USER_DATA/backup.conf_ $USER_DATA/backup.conf
 chmod 660 $USER_DATA/backup.conf
+chmod 660 $BACKUP/$user.log
 
 # Deleting task from queue
 sed -i "/v-backup-user $user /d" $HESTIA/data/queue/backup.pipe
@@ -783,9 +784,10 @@ if [ -e "$BACKUP/$user.log" ] && [ "$notify" = "yes" ]; then
     subj="$user → backup has been completed"
     email=$(get_user_value '$CONTACT')
     cat $BACKUP/$user.log |$SENDMAIL -s "$subj" "$email" "$notify"
-    rm $BACKUP/$user.log
     $BIN/v-add-user-notification "$user" "Backup created successfully" "<b>Archive:</b> $user.$backup_new_date.tar"
 fi
+
+
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Backup" "Backup created (Archive: $backup_new_date.tar)."

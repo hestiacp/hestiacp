@@ -1106,7 +1106,7 @@ mkdir -p $HESTIA/conf $HESTIA/ssl $HESTIA/data/ips \
 touch $HESTIA/data/queue/backup.pipe $HESTIA/data/queue/disk.pipe \
     $HESTIA/data/queue/webstats.pipe $HESTIA/data/queue/restart.pipe \
     $HESTIA/data/queue/traffic.pipe $HESTIA/data/queue/daily.pipe $HESTIA/log/system.log \
-    $HESTIA/log/nginx-error.log $HESTIA/log/auth.log
+    $HESTIA/log/nginx-error.log $HESTIA/log/auth.log $HESTIA/log/backup.log
 chmod 750 $HESTIA/conf $HESTIA/data/users $HESTIA/data/ips $HESTIA/log
 chmod -R 750 $HESTIA/data/queue
 chmod 660 /var/log/hestia/*

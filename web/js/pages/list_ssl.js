@@ -1,6 +1,5 @@
 function saveTextToBlob ( file, element ){
     text = document.getElementById(element).value;
-    console.log(text, file);
     var textFileAsBlob = new Blob([text], {type:'text/plain'}); 
     var downloadLink = document.createElement("a");
     downloadLink.download = file;

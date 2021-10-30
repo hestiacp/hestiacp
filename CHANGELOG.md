@@ -5,16 +5,29 @@ All notable changes to this project will be documented in this file.
 
 ## Features
 
-- Add support for Dovecote Sieve #2163
+- Add support for Dovecote Sieve #2163 (@2163)
 - Improve HELO based system and use RDNS lookup instead our old system
+- Set default php version for new installs to PHP8.0 
 
 ### Bugfixes
 
 - Disable /reset/ endpoint when POLICY_SYSTEM_PASSWORD_RESET = no
+- Add rate limit forgot password
 - Prevent SOA count up after v-change-dns-records with no changes are made
 - Fix #1296 Logrotate does not rotate logs any more on Ubuntu 20.04 and Debian 11
 - Run shellcheck to improve code quality 
 - Improve ssh port detection for filemanager. Allowing users to create /etc/ssh/sshd.conf.d/custom.conf with custom port. 
+- Fix an bug in v-add-letsencrypt-host due to changes of Lets Encrypt causing issues with rate limiting
+- Improve Update process Hestia and allow versions to decide a a rebuild is required
+- Add Download SSL certificate function for self generated ssl cerrtificates #2181
+- Block access to .user.ini for Nginx + Apache2 #2179
+- Add support for download B2 backup to local server to allow for restore #2199
+- Update permissions /var/kog/roundcube on older installations #2173
+- Update translations
+
+### Dependencies
+
+- Update Roundcube to 1.5.0 https://roundcube.net/news/2021/10/18/roundcube-1.5.0-released
 
 ### Security 
 
@@ -33,8 +46,6 @@ All notable changes to this project will be documented in this file.
 ### Bugfixes
 
 - Fix bug with .json not loading on Apache2 due to rule in /etc/apache2/conf.d/phpmyadmin.conf
-
-### Bugfixes
 
 ## [1.4.15] - Service release 
 

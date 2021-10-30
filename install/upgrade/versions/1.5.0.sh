@@ -59,5 +59,6 @@ if [ -d "/var/log/roundcube" ]; then
 fi
 
 if [ -d "/etc/roundcube" ]; then
-   chmod 644 /etc/roundcube/*.php
+   chmod 644 /etc/roundcube/defaults.inc.php
+   chmod 644 /etc/roundcube/mimetypes.php
 fi

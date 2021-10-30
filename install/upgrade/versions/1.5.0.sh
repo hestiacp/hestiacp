@@ -53,7 +53,11 @@ if [ -L "/var/log/hestia" ]; then
     touch /var/log/hestia/auth.log /var/log/hestia/error.log /var/log/hestia/system.log /var/log/hestia/nginx-error.log /var/log/hestia/nginx-access.log
 fi
 
-if [ -d "/var/log/roundcube" ]; then 
+if [ -d "/var/log/roundcube" ]; then
    chown www-data:root /var/log/roundcube
    chmod 751 /var/log/roundcube
+fi
+
+if [ -d "/etc/roundcube" ]; then
+   chmod 644 /etc/roundcube/*.php
 fi

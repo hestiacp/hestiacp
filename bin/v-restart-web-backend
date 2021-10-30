@@ -50,9 +50,8 @@ if [ "$1" = 'scheduled' ] || [ -z "$1" ] && [ "$SCHEDULED_RESTART" = 'yes' ]; th
 fi
 
 tmpfile=$(mktemp)
-php_versions=$(ls /usr/sbin/php*fpm* | cut -d'/' -f4 | sed 's|php-fpm||')
 # Substitute php-fpm service name formats
-for version in $php_versions; do
+for version in $($BIN/v-list-sys-php plain); do
     v_php="php$version-fpm"
     if [ ! -f "/etc/php/${version}/fpm/pool.d/dummy.conf" ]; then
         cp -f "$HESTIA_INSTALL_DIR/php-fpm/dummy.conf" "/etc/php/${version}/fpm/pool.d/"

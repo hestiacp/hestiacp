@@ -43,3 +43,8 @@ if [ -L "/var/log/hestia" ]; then
     rm -rf $HESTIA/log/
    ln -s /var/log/hestia $HESTIA/log
 fi
+
+if [ -d "/var/log/roundcube" ]; then 
+   chown www-data:root /var/log/roundcube
+   chmod 751 /var/log/roundcube
+fi

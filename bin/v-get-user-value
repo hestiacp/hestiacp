@@ -14,7 +14,7 @@
 
 # Argument definition
 user=$1
-key=$(echo "$2"| tr '[:lower:]' '[:upper:]' | sed "s/^/$/")
+key=$(echo "$2"| tr '[:lower:]' '[:upper:]')
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf

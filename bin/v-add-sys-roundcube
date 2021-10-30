@@ -132,7 +132,7 @@ if [ "$UPDATE" == "no" ]; then
     if [ ! -d  $RC_LOG ];then
         mkdir $RC_LOG
     fi
-    chown www-data:root $RC_LOG
+    chown www-data:www-data $RC_LOG
     chmod 751 $RC_LOG
     
     if [ ! -z "$(echo "$DB_SYSTEM" | grep -w 'mysql')" ]; then

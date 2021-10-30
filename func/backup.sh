@@ -459,3 +459,17 @@ b2_backup() {
         done
     fi
 }
+
+b2_download() {
+    # Defining backblaze b2 settings
+    source_conf "$HESTIA/conf/b2.backup.conf"
+
+    # Recreate backblaze auth file ~/.b2_account_info (for situation when key was changed in b2.backup.conf)
+    b2 clear-account > /dev/null 2>&1
+    b2 authorize-account $B2_KEYID $B2_KEY > /dev/null 2>&1
+    cd $BACKUP
+    b2 download-file-by-name $BUCKET $user/$1 $1 > /dev/null 2>&1
+    if [ "$?" -ne 0 ]; then
+    check_result "$E_CONNECT" "b2 failed to download $user.$1"
+    fi
+}

@@ -85,10 +85,18 @@ if [ ! -e "$BACKUP/$backup" ]; then
         ftp_download "$backup"
         downloaded='yes'
     fi
+    if [[ "$BACKUP_SYSTEM" =~ "b2" ]] && [ -z "$downloaded" ]; then
+        b2_download "$backup"
+        downloaded='yes'
+    fi
     if [ -z "$downloaded" ]; then
         check_result "$E_NOTEXIST" "backup file $backup doesn't exist in '${BACKUP}' folder"
     fi
 fi
+
+if [ ! -e "$BACKUP/$backup" ]; then 
+   check_result "$E_NOTEXIST" "backup file $backup doesn't exist in '${BACKUP}' folder"
+fi 
 
 # Checking user existence on the server
 check_user=$(is_object_valid 'user' 'USER' "$user")

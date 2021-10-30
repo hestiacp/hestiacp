@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 
 - Add support for Dovecote Sieve #2163 (@2163)
 - Improve HELO based system and use RDNS lookup instead our old system
-- Set default php version for new installs to PHP8.0 
+- Set default php version for new installs to PHP 8.0 
 
 ### Bugfixes
 
@@ -16,7 +16,7 @@ All notable changes to this project will be documented in this file.
 - Prevent SOA count up after v-change-dns-records with no changes are made
 - Fix #1296 Logrotate does not rotate logs any more on Ubuntu 20.04 and Debian 11
 - Run shellcheck to improve code quality 
-- Improve ssh port detection for filemanager. Allowing users to create /etc/ssh/sshd.conf.d/custom.conf with custom port. 
+- Improve ssh port detection for filemanager. Allowing users to create /etc/ssh/sshd.conf.d/custom.conf with custom port
 - Fix an bug in v-add-letsencrypt-host due to changes of Lets Encrypt causing issues with rate limiting
 - Improve Update process Hestia and allow versions to decide a a rebuild is required
 - Add Download SSL certificate function for self generated ssl cerrtificates #2181
@@ -24,6 +24,7 @@ All notable changes to this project will be documented in this file.
 - Add support for download B2 backup to local server to allow for restore #2199
 - Update permissions /var/kog/roundcube on older installations #2173
 - Update translations
+- Fix Roundcube persmissions
 
 ### Dependencies
 

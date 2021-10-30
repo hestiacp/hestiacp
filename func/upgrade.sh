@@ -3,6 +3,7 @@
 # Hestia Control Panel - Upgrade Control Script
 
 # Import system health check and repair library
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
 source $HESTIA/func/syshealth.sh
 
 #####################################################################
@@ -237,6 +238,29 @@ upgrade_send_log_to_email() {
     fi
 }
 
+upgrade_config_set_value() {
+    if [ -f "$HESTIA_BACKUP/upgrade.conf" ]; then 
+        if [ "$2" = "true" ]; then 
+            sed -i "s/$1='false'/$1='true'/g" $HESTIA_BACKUP/upgrade.conf
+        fi
+    fi
+}
+
+prepare_upgrade_config () {
+    mkdir -p $HESTIA_BACKUP
+    touch $HESTIA_BACKUP/upgrade.conf
+    while IFS='= ' read -r lhs rhs
+      do
+          if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
+              rhs="${rhs%%\#*}"    # Del in line right comments
+              rhs="${rhs%%*( )}"   # Del trailing spaces
+              rhs="${rhs%\'*}"     # Del opening string quotes 
+              rhs="${rhs#\'*}"     # Del closing string quotes 
+              echo "$lhs='$rhs'" >> $HESTIA_BACKUP/upgrade.conf
+          fi
+      done < "$HESTIA/install/upgrade/upgrade.conf"
+}
+
 upgrade_init_backup() {
     # Ensure that backup directories are created
     # Hestia Control Panel configuration files
@@ -464,7 +488,6 @@ upgrade_start_backup() {
 
 upgrade_refresh_config() {
     source_conf "/usr/local/hestia/conf/hestia.conf"
-    source /usr/local/hestia/func/main.sh
 }
 
 upgrade_start_routine() {   
@@ -517,111 +540,111 @@ upgrade_start_routine() {
 }
 
 upgrade_phpmyadmin() {
-    if [ "$UPGRADE_UPDATE_PHPMYADMIN" = "true" ]; then
-        # Check if MariaDB/MySQL is installed on the server before attempting to install or upgrade phpMyAdmin
-        if [ -n "$(echo $DB_SYSTEM | grep -w 'mysql')" ]; then
-            # Define version check function
-            function version_ge(){ test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o -n "$1" -a "$1" = "$2"; }
+    # Check if MariaDB/MySQL is installed on the server before attempting to install or upgrade phpMyAdmin
+    if [ -n "$(echo $DB_SYSTEM | grep -w 'mysql')" ]; then
+        # Define version check function
+        function version_ge(){ test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o -n "$1" -a "$1" = "$2"; }
 
-            pma_release_file=$(ls /usr/share/phpmyadmin/RELEASE-DATE-* 2>/dev/null |tail -n 1)
-            if version_ge "${pma_release_file##*-}" "$pma_v"; then
-                echo "[ ! ] Verifying phpMyAdmin v${pma_release_file##*-} installation..."
-                # Update permissions
-                if [ -e /var/lib/phpmyadmin/blowfish_secret.inc.php ]; then
-                    chown root:www-data /var/lib/phpmyadmin/blowfish_secret.inc.php
-                    chmod 0640 /var/lib/phpmyadmin/blowfish_secret.inc.php
-                fi
-            else
-                # Display upgrade information
-                echo "[ * ] Upgrading phpMyAdmin to version v$pma_v..."
-                [ -d /usr/share/phpmyadmin ] || mkdir -p /usr/share/phpmyadmin
-
-                # Download latest phpMyAdmin release
-                wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
-
-                # Unpack files
-                tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
-
-                # Delete file to prevent error
-                rm -rf /usr/share/phpmyadmin/doc/html
-
-                # Overwrite old files
-                cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
-
-                # Set config and log directory
-                sed -i "s|define('CONFIG_DIR', ROOT_PATH);|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
-                sed -i "s|define('TEMP_DIR', ROOT_PATH . 'tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
-
-                # Create temporary folder and change permissions
-                if [ ! -d /usr/share/phpmyadmin/tmp ]; then
-                    mkdir /usr/share/phpmyadmin/tmp
-                    chown root:www-data /usr/share/phpmyadmin/tmp
-                    chmod 770 /usr/share/phpmyadmin/tmp
-                    
-                fi
-
-                if [ -e /var/lib/phpmyadmin/blowfish_secret.inc.php ]; then
-                    chown root:www-data /var/lib/phpmyadmin/blowfish_secret.inc.php
-                    chmod 0640 /var/lib/phpmyadmin/blowfish_secret.inc.php
-                fi
-
-                # Clean up source files
-                rm -fr phpMyAdmin-$pma_v-all-languages
-                rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
+        pma_release_file=$(ls /usr/share/phpmyadmin/RELEASE-DATE-* 2>/dev/null |tail -n 1)
+        if version_ge "${pma_release_file##*-}" "$pma_v"; then
+            echo "[ ! ] Verifying phpMyAdmin v${pma_release_file##*-} installation..., No update found"
+            # Update permissions
+            if [ -e /var/lib/phpmyadmin/blowfish_secret.inc.php ]; then
+                chown root:www-data /var/lib/phpmyadmin/blowfish_secret.inc.php
+                chmod 0640 /var/lib/phpmyadmin/blowfish_secret.inc.php
             fi
+        else
+            # Display upgrade information
+            echo "[ * ] Upgrading phpMyAdmin to version v$pma_v..."
+            [ -d /usr/share/phpmyadmin ] || mkdir -p /usr/share/phpmyadmin
+
+            # Download latest phpMyAdmin release
+            wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
+
+            # Unpack files
+            tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
+
+            # Delete file to prevent error
+            rm -rf /usr/share/phpmyadmin/doc/html
+
+            # Overwrite old files
+            cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
+
+            # Set config and log directory
+            sed -i "s|define('CONFIG_DIR', ROOT_PATH);|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
+            sed -i "s|define('TEMP_DIR', ROOT_PATH . 'tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
+
+            # Create temporary folder and change permissions
+            if [ ! -d /usr/share/phpmyadmin/tmp ]; then
+                mkdir /usr/share/phpmyadmin/tmp
+                chown root:www-data /usr/share/phpmyadmin/tmp
+                chmod 770 /usr/share/phpmyadmin/tmp
+                
+            fi
+
+            if [ -e /var/lib/phpmyadmin/blowfish_secret.inc.php ]; then
+                chown root:www-data /var/lib/phpmyadmin/blowfish_secret.inc.php
+                chmod 0640 /var/lib/phpmyadmin/blowfish_secret.inc.php
+            fi
+
+            # Clean up source files
+            rm -fr phpMyAdmin-$pma_v-all-languages
+            rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
         fi
     fi
 }
 
 upgrade_filemanager() {
-    if [ "$UPGRADE_UPDATE_FILEMANAGER" = "true" ]; then
-        FILE_MANAGER_CHECK=$(cat $HESTIA/conf/hestia.conf | grep "FILE_MANAGER='false'")
-        if [ -z "$FILE_MANAGER_CHECK" ]; then
+    FILE_MANAGER_CHECK=$(cat $HESTIA/conf/hestia.conf | grep "FILE_MANAGER='false'")
+    if [ -z "$FILE_MANAGER_CHECK" ]; then
+        if [ -f "$HESTIA/web/fm/version" ]; then 
+        fm_verison=$(cat $HESTIA/web/fm/version);
+        else
+        fm_verison="1.0.0"
+        fi
+        if [ "$fm_verison" != "$fm_v" ]; then 
             echo "[ * ] Updating File Manager..."
             # Reinstall the File Manager
             $HESTIA/bin/v-delete-sys-filemanager quiet
             $HESTIA/bin/v-add-sys-filemanager quiet
-        fi
-    fi
-}
-
-upgrade_filemanager_update_config() {
-    if [ "$UPGRADE_UPDATE_FILEMANAGER_CONFIG" = "true" ]; then
-        FILE_MANAGER_CHECK=$(cat $HESTIA/conf/hestia.conf | grep "FILE_MANAGER='false'")
-        if [ -z "$FILE_MANAGER_CHECK" ]; then
-            if [ -e "$HESTIA/web/fm/configuration.php" ]; then
-                echo "[ * ] Updating File Manager configuration..."
-                # Update configuration.php
-                cp -f $HESTIA_INSTALL_DIR/filemanager/filegator/configuration.php $HESTIA/web/fm/configuration.php
-                # Set environment variable for interface
-                $HESTIA/bin/v-change-sys-config-value 'FILE_MANAGER' 'true'
+        else
+            echo "[ * ] Verify version Filemanager, No update found"
+            
+            if [ "$UPGRADE_UPDATE_FILEMANAGER_CONFIG" = "true" ]; then
+                if [ -e "$HESTIA/web/fm/configuration.php" ]; then
+                    echo "[ * ] Updating File Manager configuration..."
+                    # Update configuration.php
+                    cp -f $HESTIA_INSTALL_DIR/filemanager/filegator/configuration.php $HESTIA/web/fm/configuration.php
+                    # Set environment variable for interface
+                    $HESTIA/bin/v-change-sys-config-value 'FILE_MANAGER' 'true'
+                fi
             fi
         fi
-    fi
+    fi  
 }
 
 upgrade_roundcube(){
-    if [ "$UPGRADE_UPDATE_ROUNDCUBE" = "true" ]; then
-        if [ -n "$(echo "$WEBMAIL_SYSTEM" | grep -w 'roundcube')" ]; then
-            rc_version=$(cat /var/lib/roundcube/index.php | grep -o -E '[0-9].[0-9].[0-9]+' | head -1);
-            if [ "$rc_version" != "$rc_v" ]; then
-                echo "[ * ] Upgrading Roundcube to version v$rc_v..."
-                $HESTIA/bin/v-add-sys-roundcube
-            fi
+    if [ -n "$(echo "$WEBMAIL_SYSTEM" | grep -w 'roundcube')" ]; then
+        rc_version=$(cat /var/lib/roundcube/index.php | grep -o -E '[0-9].[0-9].[0-9]+' | head -1);
+        if [ "$rc_version" != "$rc_v" ]; then
+            echo "[ * ] Upgrading Roundcube to version v$rc_v..."
+            $HESTIA/bin/v-add-sys-roundcube
+        else
+            echo "[ * ] Verify version Roundcube, No update found"
         fi
     fi
 }
 
 upgrade_rainloop(){
-    if [ "$UPGRADE_UPDATE_RAINLOOP" = "true" ]; then
-        if [ -n "$(echo "$WEBMAIL_SYSTEM" | grep -w 'rainloop')" ]; then
-            rc_version=$(cat /var/lib/rainloop/data/VERSION);
-            if [ "$rc_version" != "$rl_v" ]; then
-                echo "[ * ] Upgrading Rainloop to version v$rl_v..."
-                $HESTIA/bin/v-add-sys-rainloop
-            fi
+    if [ -n "$(echo "$WEBMAIL_SYSTEM" | grep -w 'rainloop')" ]; then
+        rl_version=$(cat /var/lib/rainloop/data/VERSION);
+        if [ "$rl_version" != "$rl_v" ]; then
+            echo "[ * ] Upgrading Rainloop to version v$rl_v..."
+            $HESTIA/bin/v-add-sys-rainloop
+        else
+            echo "[ * ] Verify version Rainloop, No update found"
         fi
-    fi
+        fi
 }
 
 upgrade_phpmailer(){
@@ -631,9 +654,11 @@ upgrade_phpmailer(){
     fi
     phpm_version=$(cat $HESTIA/web/inc/vendor/phpmailer/phpmailer/VERSION);
     if [ "$phpm_version" != "$pm_v" ]; then
-    echo "[ * ] Upgrading Rainloop to version v$pm_v..."
+    echo "[ * ] Upgrade phpmailer"
         $HESTIA/bin/v-add-sys-phpmailer
-    fi
+    else
+        echo "[ * ] Verify Version phpmailer No update found"
+    fi 
 }
 
 upgrade_rebuild_web_templates() {
@@ -743,7 +768,7 @@ upgrade_restart_services() {
             fi
             $BIN/v-restart-dns 'yes'
         fi
-        versions_list=$(ls -d /etc/php/*)
+        versions_list=$($BIN/v-list-sys-php plain)
         for v in $versions_list; do 
             if [ "$DEBUG_MODE" = "true" ]; then
                 echo "      - php$v-fpm"

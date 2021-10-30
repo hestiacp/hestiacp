@@ -15,6 +15,13 @@
 ####### You can use \n within the string to create new lines.                   #######
 #######################################################################################
 
+upgrade_config_set_value 'UPGRADE_UPDATE_WEB_TEMPLATES' 'true'
+upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'true'
+upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'true'
+upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'true'
+upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'true'
+
+
 if [ -n "$DB_PMA_ALIAS" ]; then
     $HESTIA/bin/v-change-sys-db-alias 'pma' "$DB_PMA_ALIAS"
 fi
@@ -39,9 +46,10 @@ fi
 if [ -L "/var/log/hestia" ]; then
     echo "[ ! ] Move /usr/local/hestia/log/* to /var/log/hestia/"
     rm /var/log/hestia
-    cp $HESTIA/log/* /var/log/hestia
-    rm -rf $HESTIA/log/
-   ln -s /var/log/hestia $HESTIA/log
+    mkdir -p /var/log/hestia
+    cp /usr/local/hestia/log/* /var/log/hestia/
+    rm -rf /usr/local/hestia/log
+    ln -s /var/log/hestia /usr/local/hestia/log
 fi
 
 if [ -d "/var/log/roundcube" ]; then 

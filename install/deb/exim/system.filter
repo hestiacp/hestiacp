@@ -1,0 +1,16 @@
+if $h_X-Spam-Status: contains "Yes"
+then
+    headers add "Old-Subject: $h_subject"
+    headers remove "Subject"
+    headers add "Subject: *** SPAM *** $h_old-subject"
+    headers remove "Old-Subject"
+endif
+
+# X-Anti-Virus: infected
+if $h_X-Anti-Virus: contains "infected"
+then
+    headers add "Old-Subject: $h_subject"
+    headers remove "Subject"
+    headers add "Subject: *** VIRUS *** $h_old-subject"
+    headers remove "Old-Subject"
+endif

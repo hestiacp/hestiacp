@@ -81,6 +81,10 @@ SMTP_RELAY_PORT = ${lookup{port}lsearch{SMTP_RELAY_FILE}}
 SMTP_RELAY_USER = ${lookup{user}lsearch{SMTP_RELAY_FILE}}
 SMTP_RELAY_PASS = ${lookup{pass}lsearch{SMTP_RELAY_FILE}}
 
+# Custom Filter
+system_filter = /etc/exim4/system.filter
+system_filter_user = Debian-exim
+
 ######################################################################
 #                       ACL CONFIGURATION                            #
 #         Specifies access control lists for incoming SMTP mail      #
@@ -206,6 +210,10 @@ acl_check_data:
          condition      = ${if >{$acl_m2}{SPAM_SCORE} {yes}{no}}
          add_header     = X-Spam-Status: Yes
          message        = SpamAssassin detected spam (from $sender_address to $recipients).
+  # reject spam at high scores (> 10)
+  deny   message        = This message scored $spam_score spam points.
+         spam           = debian-spamd:true
+         condition      = ${if >{$spam_score_int}{100}{1}{0}}						 														 
 .endif
 
   accept

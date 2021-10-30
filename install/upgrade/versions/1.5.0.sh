@@ -50,6 +50,7 @@ if [ -L "/var/log/hestia" ]; then
     cp /usr/local/hestia/log/* /var/log/hestia/
     rm -rf /usr/local/hestia/log
     ln -s /var/log/hestia /usr/local/hestia/log
+    touch /var/log/hestia/auth.log /var/log/hestia/error.log /var/log/hestia/system.log /var/log/hestia/nginx-error.log /var/log/hestia/nginx-access.log
 fi
 
 if [ -d "/var/log/roundcube" ]; then 

@@ -6,6 +6,7 @@
 
 #SPAMASSASSIN = yes
 #SPAM_SCORE = 50
+#SPAM_REJECT_SCORE = 100
 #CLAMD = yes
 
 smtp_banner = $smtp_active_hostname
@@ -175,10 +176,12 @@ acl_check_rcpt:
 .endif
 
 .ifdef SPAMASSASSIN
-  warn    set acl_m1    = no
-
-  warn    condition     = ${if exists {/etc/exim4/domains/$domain/antispam}{yes}{no}}
-          set acl_m1    = yes
+ warn    set acl_m1    = no
+         set acl_m3    = no
+ warn    condition     = ${if exists {/etc/exim4/domains/$domain/antispam}{yes}{no}}
+         set acl_m1    = yes
+ warn    condition     = ${if exists {/etc/exim4/domains/$domain/reject_spam}{yes}{no}}
+         set acl_m3    = yes
 .endif
 
   accept
@@ -192,20 +195,26 @@ acl_check_data:
 .endif
 
 .ifdef SPAMASSASSIN
-  warn   !authenticated = *
-         hosts          = !+relay_from_hosts
-         condition      = ${if < {$message_size}{1024K}}
-         condition      = ${if eq{$acl_m1}{yes}{yes}{no}}
-         spam           = debian-spamd:true/defer_ok
-         add_header     = X-Spam-Score: $spam_score_int
-         add_header     = X-Spam-Bar: $spam_bar
-         add_header     = X-Spam-Report: $spam_report
-         set acl_m2     = $spam_score_int
+ warn   !authenticated = *
+        hosts          = !+relay_from_hosts
+        condition      = ${if < {$message_size}{1024K}}
+        condition      = ${if eq{$acl_m1}{yes}{yes}{no}}
+        spam           = debian-spamd:true/defer_ok
+        add_header     = X-Spam-Score: $spam_score_int
+        add_header     = X-Spam-Bar: $spam_bar
+        add_header     = X-Spam-Report: $spam_report
+        set acl_m2     = $spam_score_int
 
-  warn   condition      = ${if !eq{$acl_m2}{} {yes}{no}}
-         condition      = ${if >{$acl_m2}{SPAM_SCORE} {yes}{no}}
-         add_header     = X-Spam-Status: Yes
-         message        = SpamAssassin detected spam (from $sender_address to $recipients).
+ warn   condition      = ${if !eq{$acl_m2}{} {yes}{no}}
+        condition      = ${if >{$acl_m2}{SPAM_SCORE} {yes}{no}}
+        add_header     = X-Spam-Status: Yes
+        message        = SpamAssassin detected spam (from $sender_address to $recipients).
+ 
+  # Deny spam at high score if spam score > SPAM_REJECT_SCORE and delete_spam is enabled
+  deny   message        = This message scored $spam_score spam points
+         spam           = debian-spamd:true
+         condition      = ${if eq{$acl_m3}{yes}{yes}{no}}
+         condition      = ${if >{$spam_score_int}{SPAM_REJECT_SCORE}{1}{0}}	
 .endif
 
   accept

@@ -29,7 +29,6 @@ server {
     }
 
     client_max_body_size 512M;
-    fastcgi_buffers 64 4K;
 
     # Disable gzip to avoid the removal of the ETag header
     gzip off;

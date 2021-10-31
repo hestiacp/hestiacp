@@ -39,7 +39,7 @@ if [ -n "$MAIL_SYSTEM" ]; then
     
     # Clean up legacy ip variable
     for ip in $($BIN/v-list-sys-ips plain | cut -f1); do
-        sed '/^HELO/d' $HESTIA/data/ips/$ip;
+        sed '/^HELO/d' $HESTIA/data/ips/$ip  > /dev/null
     done
 fi
 

@@ -13,10 +13,12 @@
 #----------------------------------------------------------#
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -35,15 +37,11 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Updating FIREWALL_SYSTEM value
+$BIN/v-change-sys-config-value "FIREWALL_SYSTEM" ""
+
 # Stopping firewall
 $BIN/v-stop-firewall
-
-# Updating FIREWALL_SYSTEM value
-if [ -z "$(grep FIREWALL_SYSTEM $HESTIA/conf/hestia.conf)" ]; then
-    echo "FIREWALL_SYSTEM=''" >> $HESTIA/conf/hestia.conf
-else
-    sed -i "s/FIREWALL_SYSTEM=.*/FIREWALL_SYSTEM=''/g" $HESTIA/conf/hestia.conf
-fi
 
 
 #----------------------------------------------------------#
@@ -51,7 +49,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-$BIN/v-log-action "system" "Error" "Firewall" "System firewall has been disabled."
+$BIN/v-log-action "system" "Warning" "Firewall" "System firewall disabled."
 log_event "$OK" "$ARGUMENTS"
 
 exit

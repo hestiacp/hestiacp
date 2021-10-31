@@ -16,10 +16,12 @@
 format=${1-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -67,15 +69,7 @@ csv_list() {
 #----------------------------------------------------------#
 
 # List through /etc/php
-versions_list=$(ls -d /etc/php/*)
-versions=()
-for version in $versions_list; do
-    if [ -d "$version/fpm" ] 
-    then
-    version=$(echo $version | cut -d'/' -f4);
-    versions+=" $version"
-    fi
-done
+versions=$(/usr/sbin/phpquery -V);
 
 # Listing data
 case $format in

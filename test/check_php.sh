@@ -11,12 +11,10 @@ fi
 if [ ! -d $current ] && [ ! -f $current ] ; then
     echo "Invalid directory or file: $current"
     error=true
-
-    continue
 fi
 
 echo "Checking PHP files..."
-for file in `find $current -type f -name "*.php"` ; do
+for file in `find $current -type f -name "*.php" -not -path "${current}fm/*"` ; do
     RESULTS=`php -l -n $file`
 
     if [ "$RESULTS" != "No syntax errors detected in $file" ] ; then
@@ -26,7 +24,7 @@ for file in `find $current -type f -name "*.php"` ; do
 done
 
 echo "Checking HTML/PHP combined files..."
-for file in `find $current -type f -name "*.html"` ; do
+for file in `find $current -type f -name "*.html" -not -path "${current}fm/*"` ; do
     RESULTS=`php -l -n $file`
 
     if [ "$RESULTS" != "No syntax errors detected in $file" ] ; then

@@ -22,10 +22,12 @@ type=$1
 alias=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -33,6 +35,8 @@ source $HESTIA/conf/hestia.conf
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'type alias'
+
+is_common_format_valid "$alias" "Alias"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode

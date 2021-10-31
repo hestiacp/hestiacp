@@ -16,12 +16,12 @@
 format=${1-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
-export PATH=$PATH:/sbin
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -98,7 +98,7 @@ get_srv_state() {
     fi
 
     # Checking pid
-    if [ ! -z "$pids" ]; then
+    if [ -n "$pids" ]; then
         pid=$(echo "$pids" |cut -f 1 -d '|')
         pids=${pids%|}
         pids=$(egrep "$pids" $tmp_file)
@@ -126,7 +126,7 @@ get_srv_state() {
         fi
 
         # Calculating uptime
-        if [ ! -z "$pid_file" ]; then
+        if [ -n "$pid_file" ]; then
             mtime=$(stat -c "%Y" $pid_file)
             rtime=$((ctime - mtime))
             rtime=$((rtime  / 60))
@@ -154,34 +154,34 @@ ps -eo pid,pcpu,size > $tmp_file
 ctime=$(date +%s)
 
 # Checking WEB system
-if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'remote' ]; then
+if [ -n "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'remote' ]; then
     get_srv_state $WEB_SYSTEM
     data="NAME='$WEB_SYSTEM' SYSTEM='web server' STATE='$state' CPU='$cpu'"
     data="$data MEM='$mem' RTIME='$rtime'"
 fi
 
 # Checking WEB Backend
-if [ ! -z "$WEB_BACKEND" ] && [ "$WEB_BACKEND" != 'remote' ]; then
+if [ -n "$WEB_BACKEND" ] && [ "$WEB_BACKEND" != 'remote' ]; then
     php_versions=$(ls /usr/sbin/php*fpm* | cut -d'/' -f4 | sed 's|php-fpm||')
     for version in $php_versions; do
         proc_name="php-fpm${version}"
         service_name="php${version}-fpm"
-        get_srv_state $proc_name
+        get_srv_state "$proc_name"
         data="$data\nNAME='$service_name' SYSTEM='backend server' STATE='$state'"
         data="$data CPU='$cpu' MEM='$mem' RTIME='$rtime'"
     done
 fi
 
 # Checking WEB Proxy
-if [ ! -z "$PROXY_SYSTEM" ] && [ "$PROXY_SYSTEM" != 'remote' ]; then
-    get_srv_state $PROXY_SYSTEM
+if [ -n "$PROXY_SYSTEM" ] && [ "$PROXY_SYSTEM" != 'remote' ]; then
+    get_srv_state "$PROXY_SYSTEM"
     data="$data\nNAME='$PROXY_SYSTEM' SYSTEM='reverse proxy' STATE='$state'"
     data="$data CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
 
 # DNS
-service=$DNS_SYSTEM
-if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
+service="$DNS_SYSTEM"
+if [ -n "$service" ] && [ "$service" != 'remote' ]; then
     proc_name='named'
     get_srv_state $service $proc_name
     data="$data\nNAME='$service' SYSTEM='dns server' STATE='$state'"
@@ -189,31 +189,31 @@ if [ ! -z "$service" ] && [ "$service" != 'remote' ]; then
 fi
 
 # Checking MAIL system
-if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'remote' ]; then
-    get_srv_state $MAIL_SYSTEM
+if [ -n "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'remote' ]; then
+    get_srv_state "$MAIL_SYSTEM"
     data="$data\nNAME='$MAIL_SYSTEM' SYSTEM='mail server' STATE='$state'"
     data="$data CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
 
 # Checking MAIL IMAP
-if [ ! -z "$IMAP_SYSTEM" ] && [ "$IMAP_SYSTEM" != 'remote' ]; then
-    get_srv_state $IMAP_SYSTEM
+if [ -n "$IMAP_SYSTEM" ] && [ "$IMAP_SYSTEM" != 'remote' ]; then
+    get_srv_state "$IMAP_SYSTEM"
     data="$data\nNAME='$IMAP_SYSTEM' SYSTEM='pop/imap server' STATE='$state'"
     data="$data CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
 
 # Checking MAIL ANTIVIRUS
-if [ ! -z "$ANTIVIRUS_SYSTEM" ] && [ "$ANTIVIRUS_SYSTEM" != 'remote' ]; then
+if [ -n "$ANTIVIRUS_SYSTEM" ] && [ "$ANTIVIRUS_SYSTEM" != 'remote' ]; then
     if [ -d "/etc/sysconfig" ]; then
         if [ "$ANTIVIRUS_SYSTEM" == 'clamav' ];then
             ANTIVIRUS_SYSTEM='clamd'
         fi
-        get_srv_state $ANTIVIRUS_SYSTEM
+        get_srv_state "$ANTIVIRUS_SYSTEM"
     else
         if [ "$ANTIVIRUS_SYSTEM" == 'clamav-daemon' ];then
             proc_name='clamd'
         fi
-        get_srv_state $ANTIVIRUS_SYSTEM $proc_name
+        get_srv_state "$ANTIVIRUS_SYSTEM" "$proc_name"
     fi
     data="$data\nNAME='$ANTIVIRUS_SYSTEM' SYSTEM='email antivirus'"
     data="$data STATE='$state' CPU='$cpu' MEM='$mem' RTIME='$rtime'"
@@ -221,32 +221,32 @@ if [ ! -z "$ANTIVIRUS_SYSTEM" ] && [ "$ANTIVIRUS_SYSTEM" != 'remote' ]; then
 fi
 
 # Checking MAIL ANTISPAM
-if [ ! -z "$ANTISPAM_SYSTEM" ] && [ "$ANTISPAM_SYSTEM" != 'remote' ]; then
-    get_srv_state $ANTISPAM_SYSTEM spamd
+if [ -n "$ANTISPAM_SYSTEM" ] && [ "$ANTISPAM_SYSTEM" != 'remote' ]; then
+    get_srv_state "$ANTISPAM_SYSTEM" "spamd"
     data="$data\nNAME='$ANTISPAM_SYSTEM' SYSTEM='email antispam'"
     data="$data STATE='$state' CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
 
 # Checking DB system
-if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'remote' ]; then
+if [ -n "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'remote' ]; then
     for db in ${DB_SYSTEM//,/ }; do
         service="$db"
         proc_name=''
         if [ "$service" = 'mysql' ]; then
+            if [ -d "/etc/sysconfig" ]; then
+                service='mysqld'
+                proc_name='mysqld'
+            fi
             if [ -e "/lib/systemd/system/mariadb.service" ]; then
                 service='mariadb'
                 proc_name='mysqld'
             fi
             if [ -f /usr/bin/mysql ]; then
                 mariadb_v=`mysql -V | awk 'NR==1{print $5}' | head -c 4`
-                if [ $mariadb_v = "10.5" ]; then
+                if [ $mariadb_v = "10.5" ] || [ $mariadb_v = "10.6" ]; then
                     service='mariadb'
                     proc_name='mariadbd'
                 fi
-            fi
-            if [ -d "/etc/sysconfig" ]; then
-                service='mysqld'
-                proc_name='mysqld'
             fi
         fi
         if [ "$service" == 'pgsql' ]; then
@@ -259,7 +259,7 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'remote' ]; then
                 proc_name='postgres'
             fi
         fi
-        get_srv_state $service $proc_name
+        get_srv_state "$service" "$proc_name"
         data="$data\nNAME='$service' SYSTEM='database server' STATE='$state'"
         data="$data CPU='$cpu' MEM='$mem' RTIME='$rtime'"
         proc_name=''
@@ -267,15 +267,15 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'remote' ]; then
 fi
 
 # Checking FTP system
-if [ ! -z "$FTP_SYSTEM" ] && [ "$FTP_SYSTEM" != 'remote' ]; then
-    get_srv_state $FTP_SYSTEM
+if [ -n "$FTP_SYSTEM" ] && [ "$FTP_SYSTEM" != 'remote' ]; then
+    get_srv_state "$FTP_SYSTEM"
     data="$data\nNAME='$FTP_SYSTEM' SYSTEM='ftp server' STATE='$state'"
     data="$data CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
 
 # Checking CRON system
-if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'remote' ]; then
-    get_srv_state $CRON_SYSTEM
+if [ -n "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'remote' ]; then
+    get_srv_state "$CRON_SYSTEM"
     data="$data\nNAME='$CRON_SYSTEM' SYSTEM='job scheduler' STATE='$state'"
     data="$data CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
@@ -288,7 +288,7 @@ if [ -e "/etc/ssh/sshd_config" ]; then
 fi
 
 # Checking FIREWALL system
-if [ ! -z "$FIREWALL_SYSTEM" ] && [ "$FIREWALL_SYSTEM" != 'remote' ]; then
+if [ -n "$FIREWALL_SYSTEM" ] && [ "$FIREWALL_SYSTEM" != 'remote' ]; then
     state="stopped"
     if $(iptables -S INPUT | grep -qx '\-P INPUT DROP'); then
         state="running"
@@ -299,15 +299,15 @@ fi
 
 
 # Checking FIREWALL Fail2ban extention
-if [ ! -z "$FIREWALL_EXTENSION" ]; then
+if [ -n "$FIREWALL_EXTENSION" ]; then
     if [ -e '/usr/bin/lsb_release' ]; then
         if [ "$(lsb_release -s -r)" = "20.04" ]; then
-            get_srv_state $FIREWALL_EXTENSION f2b/server script
+            get_srv_state "$FIREWALL_EXTENSION" f2b/server script
         else
-            get_srv_state $FIREWALL_EXTENSION fail2ban-server script
+            get_srv_state "$FIREWALL_EXTENSION" fail2ban-server script
         fi
     else
-        get_srv_state $FIREWALL_EXTENSION fail2ban-server script
+        get_srv_state "$FIREWALL_EXTENSION" fail2ban-server script
     fi
     data="$data\nNAME='$FIREWALL_EXTENSION' SYSTEM='brute-force monitor'"
     data="$data STATE='$state' CPU='$cpu' MEM='$mem' RTIME='$rtime'"

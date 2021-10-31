@@ -14,13 +14,15 @@
 
 # Argument definition
 user=$1
-system=$(echo $2 | tr '[:lower:]' '[:upper:]')
+system=$(echo "$2" | tr '[:lower:]' '[:upper:]')
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -48,8 +50,8 @@ if [ -z "$system" ]; then
     CRON=''
     USER=''
 else
-    touch $USER_DATA/backup-excludes.conf
-    source $USER_DATA/backup-excludes.conf
+    touch "$USER_DATA/backup-excludes.conf"
+    source_conf "$USER_DATA/backup-excludes.conf"
     case $system in
         WEB)   WEB='';;
         DNS)   DNS='';;

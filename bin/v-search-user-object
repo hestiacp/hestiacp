@@ -18,10 +18,12 @@ object=$2
 format=${3-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -31,7 +33,7 @@ json_list_search() {
     echo '{'
     fileds_count=$(echo $fields| wc -w )
     while read line; do
-        eval $line
+        eval "$line"
         if [ -n "$list_data" ]; then
             echo -e '        },'
         fi
@@ -44,7 +46,7 @@ json_list_search() {
                 (( ++i))
                 echo -e "\t\"$value\": {"
             else
-                if [ $i -lt $fileds_count ]; then
+                if [ $i -lt "$fileds_count" ]; then
                     (( ++i))
                     echo -e "\t\t\"${field//$/}\": \"${value//,/, }\","
                 else
@@ -124,7 +126,7 @@ for row in $search; do
         if [ -n "$(echo $DOMAIN |grep $object)" ]; then
             # Check domain alias
             check_alias="$(echo $ALIAS| tr ',' '\n' |grep $object)"
-            if [ ! -z "$check_alias" ];then
+            if [ -n "$check_alias" ];then
                 dom_alias=$(echo $check_alias | tr ' ' ',')
             fi
             key="DOMAIN"
@@ -135,7 +137,7 @@ for row in $search; do
             ((i ++))
         else
             check_alias="$(echo $ALIAS| tr ',' '\n' |grep $object)"
-            if [ ! -z "$check_alias" ];then
+            if [ -n "$check_alias" ];then
                 key="DOMAIN"
                 result="$DOMAIN"
                 object_parent="$DOMAIN"
@@ -228,7 +230,7 @@ for row in $search; do
         fi
     fi
 
-    if [ ! -z "$result" ]; then
+    if [ -n "$result" ]; then
         type=$(echo $type|cut -f1 -d \.)
         str="ID='$i' USER='$user' TYPE='$type' KEY='$key'"
         str="$str RESULT='$result' ALIAS='$dom_alias'"

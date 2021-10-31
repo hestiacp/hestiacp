@@ -1,65 +1,50 @@
 #!/bin/bash
-# info: change ip HELO/SMTP Banner
-# options: IP HELO
+# info: Remove SMTP Account for logging, notification and internal mail
+# options: NONE
+# labels:
 #
-# The function for changing HELO/SMTP Banner associated with ip.
-
+# example: v-delete-sys-smtp
+#
+# This function allows configuring a SMTP account for the server to use
+# for logging, notification and warn emails etc.
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Argument definition
-ip=$1
-helo=$2
-
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/ip.sh
-source $HESTIA/func/ip.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
-# Check if mail system is installed
-if [ -z "$MAIL_SYSTEM" ]; then
-    check_result "$E_NOTEXIST" "Mail system not installed"
-fi
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'IP HELO'
-is_format_valid 'ip'
-is_format_valid 'helo'
-is_ip_valid "$ip"
-
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Check if IP address is behind NAT configuration and if so use Public IP for HELO
-source $HESTIA/data/ips/$ip
-
-if [  -z "$NAT" ]; then 
-    # Change ip HELO/SMTP Banner
-    update_ip_helo_value $ip $helo
-else
-    # Change ip HELO/SMTP Banner
-    update_ip_helo_value $NAT $helo
-fi
+change_sys_value "USE_SERVER_SMTP" "false"
+change_sys_value "SERVER_SMTP_HOST" ""
+change_sys_value "SERVER_SMTP_PORT" ""
+change_sys_value "SERVER_SMTP_SECURITY" ""
+change_sys_value "SERVER_SMTP_USER" ""
+change_sys_value "SERVER_SMTP_PASSWD" ""
+change_sys_value "SERVER_SMTP_ADDR" ""
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging
-$BIN/v-log-action "system" "Info" "System" "Configured HELO/SMTP banner (IP: $ip, Value: $helo)."
+$BIN/v-log-action "system" "Info" "Mail" "Server SMTP disabled."
 log_event "$OK" "$ARGUMENTS"
 
 exit

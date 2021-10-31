@@ -8,11 +8,14 @@ fi
 #                Initialize functions/variables               #
 ###############################################################
 
+source /etc/hestiacp/hestia.conf
+
 # Load upgrade functions and variables
-source /usr/local/hestia/func/main.sh
-source /usr/local/hestia/func/upgrade.sh
-source /usr/local/hestia/conf/hestia.conf
-source /usr/local/hestia/install/upgrade/upgrade.conf
+# shellcheck source=/usr/local/hestia/func/upgrade.sh
+source $HESTIA/func/upgrade.sh
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+source_conf "$HESTIA/conf/hestia.conf"
 
 ###############################################################
 #             Set new version numbers for packages            #
@@ -30,11 +33,19 @@ is_debug_build
 # Detect operating system version
 detect_os
 
+# Initialize upgrade
+prepare_upgrade_config
+
 # Initialize backup directories
 upgrade_init_backup
 
 # Initialize logging
 upgrade_init_logging
+
+# Check if preinstall hook exists
+if [ -e "/etc/hestiacp/hooks/pre_install.sh" ]; then
+/etc/hestiacp/hooks/pre_install.sh
+fi
 
 # Set up console display and welcome message
 upgrade_welcome_message_log >> $LOG
@@ -51,9 +62,11 @@ upgrade_start_backup | tee -a $LOG
 # Execute version-specific upgrade scripts
 upgrade_start_routine | tee -a $LOG
 
+# Run upgrades of dependencies
+source_conf "$HESTIA_BACKUP/upgrade.conf"
+
 # Upgrade File Manager and update configuration
 upgrade_filemanager | tee -a $LOG
-upgrade_filemanager_update_config | tee -a $LOG
 
 # Update Web domain templates
 upgrade_rebuild_web_templates | tee -a $LOG
@@ -73,6 +86,9 @@ upgrade_roundcube | tee -a $LOG
 # Upgrade Rainloop if applicable
 upgrade_rainloop | tee -a $LOG
 
+# Upgrade PHPMailer if applicable
+upgrade_phpmailer | tee -a $LOG
+
 # Set new version number in hestia.conf
 upgrade_set_version $new_version
 upgrade_set_branch $new_version
@@ -81,7 +97,6 @@ upgrade_set_branch $new_version
 upgrade_cleanup_message | tee -a $LOG
 upgrade_rebuild_users | tee -a $LOG
 upgrade_restart_services | tee -a $LOG
-upgrade_perform_cleanup | tee -a $LOG
 
 # Add upgrade notification to admin user's panel and display completion message
 upgrade_complete_message_log >> $LOG
@@ -91,5 +106,9 @@ upgrade_complete_message
 upgrade_send_notification_to_panel
 upgrade_send_notification_to_email
 upgrade_send_log_to_email
+
+if [ -e "/etc/hestiacp/hooks/post_install.sh" ]; then
+    /etc/hestiacp/hooks/post_install.sh
+fi
 
 exit 0

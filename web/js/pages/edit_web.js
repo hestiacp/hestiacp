@@ -106,7 +106,7 @@ App.Listeners.WEB.keypress_ftp_path = function() {
 //
 //
 App.Actions.WEB.add_ftp_user_form = function() {
-    var ref = $('#templates').find('.ftptable').clone(true);
+    var ref = $('#templates').find('.ftptable-nrm').clone(true);
     var index = $('.data-col2 .ftptable').length + 1;
     
     ref.find('input').each(function(i, elm) {
@@ -116,7 +116,7 @@ App.Actions.WEB.add_ftp_user_form = function() {
     
     ref.find('.ftp-user-number').text(index);
     
-    $('.data-col2 .ftptable:last').after(ref);
+    $('#ftp_users').append(ref);
     
     var index = 1;
     $('.data-col2 .ftp-user-number:visible').each(function(i, o) {
@@ -143,12 +143,12 @@ App.Actions.WEB.remove_ftp_user = function(elm) {
     
     if ($('.ftptable-nrm:visible').length == 0) {
         $('.add-new-ftp-user-button').hide();
-        $('input[name="v_ftp"]').attr('checked', false);
+        $('input[name="v_ftp"]').prop('checked', false);
     }
 }
 
 App.Actions.WEB.toggle_additional_ftp_accounts = function(elm) {
-    if ($(elm).attr('checked')) {
+    if ($(elm).prop('checked')) {
         $('.ftptable-nrm, .v-add-new-user, .add-new-ftp-user-button').show();
         $('.ftptable-nrm').each(function(i, elm) {
             var login = $(elm).find('.v-ftp-user');
@@ -177,7 +177,8 @@ App.Actions.WEB.toggle_ssl = function (elm){
 }
 
 App.Actions.WEB.toggle_letsencrypt = function(elm) {
-    if ($(elm).attr('checked')) {
+    if ($(elm).prop('checked')) {
+        $('#ssl-details').hide();
         $('#ssltable textarea[name=v_ssl_crt],#ssltable textarea[name=v_ssl_key], #ssltable textarea[name=v_ssl_ca]').attr('disabled', 'disabled');
         $('#generate-csr').hide();
 	if(!$('.lets-encrypt-note').hasClass('enabled')){
@@ -187,6 +188,7 @@ App.Actions.WEB.toggle_letsencrypt = function(elm) {
     else {
         $('#ssltable textarea[name=v_ssl_crt],#ssltable textarea[name=v_ssl_key], #ssltable textarea[name=v_ssl_ca]').removeAttr('disabled');
         $('#generate-csr').show();
+        $('#ssl-details').show();
 	$('.lets-encrypt-note').hide();
     }
 }
@@ -292,9 +294,11 @@ function FTPrandom(elm) {
     App.Actions.WEB.randomPasswordGenerated && App.Actions.WEB.randomPasswordGenerated(elm);
 }
 
-function elementHideShow(elementToHideOrShow){
-    var el = document.getElementById(elementToHideOrShow);
-    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+function elementHideShow(element){
+    if ( document.getElementById(element)){
+        var el = document.getElementById(element);
+        el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    }
 }
 
 $('.v-redirect-custom-value').change( function(){

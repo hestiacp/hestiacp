@@ -28,14 +28,16 @@ aliases=$5
 proxy_ext=$6
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
 # shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -55,7 +57,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_package_full 'WEB_DOMAINS' 
 
 if [ "$aliases" != "none" ]; then 
-    ALIAS=$aliases
+    ALIAS="$aliases"
     is_package_full 'WEB_ALIASES' 
 fi
 
@@ -77,7 +79,7 @@ is_dir_symlink "$HOMEDIR/$user/web/$domain"
 
 is_base_domain_owner "$domain,$aliases"
 
-if [ ! -z "$ip" ]; then
+if [ -n "$ip" ]; then
     is_ip_valid "$ip" "$user"
 else
     get_user_ip
@@ -92,9 +94,9 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Reading user values
-source $USER_DATA/user.conf
+source_conf "$USER_DATA/user.conf"
 
-[[ -e "$HOMEDIR/$user/web/$domain" ]] && check_result $E_EXISTS "Web domain folder for $domain should not exist"
+[[ -e "$HOMEDIR/$user/web/$domain" ]] && check_result "$E_EXISTS" "Web domain folder for $domain should not exist"
 
 # Creating domain directories
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain"
@@ -128,7 +130,7 @@ user_exec chmod 644 $HOMEDIR/$user/web/$domain/public_*html/*
 chown --no-dereference $user:www-data $HOMEDIR/$user/web/$domain/public_*html
 
 # Adding PHP-FPM backend
-if [ ! -z "$WEB_BACKEND" ]; then
+if [ -n "$WEB_BACKEND" ]; then
     if [ -z "$BACKEND_TEMPLATE" ]; then
         BACKEND_TEMPLATE='default'
         if [ -z "$(grep BACKEND_TEMPLATE $USER_DATA/user.conf)" ]; then
@@ -138,8 +140,8 @@ if [ ! -z "$WEB_BACKEND" ]; then
             update_user_value "$user" '$BACKEND_TEMPLATE' "default"
         fi
     fi
-    BACKEND="$BACKEND_TEMPLATE"
-    $BIN/v-add-web-domain-backend "$user" "$domain" $BACKEND_TEMPLATE $restart
+    export BACKEND="$BACKEND_TEMPLATE"
+    $BIN/v-add-web-domain-backend "$user" "$domain" "$BACKEND_TEMPLATE" "$restart"
     check_result $? "Backend error" >/dev/null
 fi
 
@@ -160,8 +162,8 @@ else
         ALIAS="$aliases"
     fi
 
-    ip_alias=$(get_ip_alias $domain)
-    if [ ! -z "$ip_alias" ]; then
+    ip_alias=$(get_ip_alias "$domain")
+    if [ -n "$ip_alias" ]; then
         ALIAS="$ALIAS,$ip_alias"
     fi
 fi
@@ -169,18 +171,28 @@ fi
 # Preparing domain variables
 prepare_web_domain_values
 
+if [ -z "$WEB_TEMPLATE" ]; then 
+    WEB_TEMPLATE='default'
+    update_user_value "$user" '$WEB_TEMPLATE' "default"
+fi
+
 # Adding web server config
 add_web_config "$WEB_SYSTEM" "$WEB_TEMPLATE.tpl"
 
 # Adding proxy config
-if [ ! -z "$PROXY_SYSTEM" ]; then
+if [ -n "$PROXY_SYSTEM" ]; then
     PROXY_EXT="$proxy_ext"
     if [ -z "$proxy_ext" ]; then
         PROXY_EXT="jpg,jpeg,gif,png,ico,svg,css,zip,tgz,gz,rar,bz2,doc,xls"
         PROXY_EXT="$PROXY_EXT,exe,pdf,ppt,txt,odt,ods,odp,odf,tar,wav,bmp"
         PROXY_EXT="$PROXY_EXT,rtf,js,mp3,avi,mpeg,flv,html,htm"
     fi
-    add_web_config "$PROXY_SYSTEM" "$PROXY_TEMPLATE.tpl"
+    if [ -z "$PROXY_TEMPLATE" ]; then 
+        PROXY_TEMPLATE='default'
+        update_user_value "$user" '$PROXY_TEMPLATE' "default"
+    fi
+    
+    add_web_config "$PROXY_SYSTEM" "$PROXY_TEMPLATE.tpl" 
 fi
 
 
@@ -206,11 +218,11 @@ echo "DOMAIN='$domain' IP='$ip' IP6='' CUSTOM_DOCROOT='' ALIAS='$ALIAS' TPL='$WE
  SUSPENDED='no' TIME='$time' DATE='$date'" >> $USER_DATA/web.conf
 
 # Restarting web server
-$BIN/v-restart-web $restart
+$BIN/v-restart-web "$restart"
 check_result $? "Web restart failed" >/dev/null
 
 # Restarting proxy server
-$BIN/v-restart-proxy $restart
+$BIN/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging

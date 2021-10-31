@@ -3,7 +3,7 @@
 # options: USER
 # labels: hestia
 #
-# example: v-add-user-composer user
+# example: v-add-user-composer user [version]
 #
 # The function adds support for composer (php dependency manager)
 # Homepage: https://getcomposer.org/
@@ -22,10 +22,12 @@ if [ -z "$HESTIA" ]; then
 fi
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -34,11 +36,11 @@ source $HESTIA/conf/hestia.conf
 
 check_args '1' "$#" 'USER [VERSION]'
 is_format_valid 'user'
-is_number_format_valid 'version' "$version"
+is_number_format_valid "$version" "version"
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 
-[ -z "$HOMEDIR" ] && check_result $E_NOTEXIST "Hestia environment vars not present"
+[ -z "$HOMEDIR" ] && check_result "$E_NOTEXIST" "Hestia environment vars not present"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -56,9 +58,9 @@ if [ -f "$COMPOSER_BIN" ]; then
     exit
 fi
 
-[ -z "$(readlink -m "$COMPOSER_DIR" | egrep "^$HOMEDIR/$user/")" ] && check_result $E_FORBIDEN "Path outside of user homedir (Composer dir)"
-[ -z "$(readlink -m "$COMPOSER_BIN" | egrep "^$HOMEDIR/$user/")" ] && check_result $E_FORBIDEN "Path outside of user homedir (Composer bin)"
-[ -z "$(readlink -m "$HOMEDIR/$user/.config/" | egrep "^$HOMEDIR/$user/")" ] && check_result $E_FORBIDEN "Path outside of user homedir (.conf)"
+[ -z "$(readlink -m "$COMPOSER_DIR" | egrep "^$HOMEDIR/$user/")" ] && check_result "$E_FORBIDEN" "Path outside of user homedir (Composer dir)"
+[ -z "$(readlink -m "$COMPOSER_BIN" | egrep "^$HOMEDIR/$user/")" ] && check_result "$E_FORBIDEN" "Path outside of user homedir (Composer bin)"
+[ -z "$(readlink -m "$HOMEDIR/$user/.config/" | egrep "^$HOMEDIR/$user/")" ] && check_result "$E_FORBIDEN" "Path outside of user homedir (.conf)"
 
 mkdir -p "$COMPOSER_DIR"
 chown $user: "$COMPOSER_DIR"
@@ -75,9 +77,9 @@ check_result $? "Download signature"
 user_exec wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache https://getcomposer.org/installer --quiet -O "$COMPOSER_SETUP_FILE"
 check_result $? "Download composer installer"
 
-if [[ "$signature" != $(sha384sum $COMPOSER_SETUP_FILE | cut -f 1 -d " ") ]]; then
+if [[ "$signature" != $(sha384sum "$COMPOSER_SETUP_FILE" | cut -f 1 -d " ") ]]; then
     rm -f "$COMPOSER_SETUP_FILE"
-    check_result $E_INVALID "Composer signature does not match"
+    check_result "$E_INVALID" "Composer signature does not match"
 fi
 
 COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php "$COMPOSER_SETUP_FILE" --quiet "--$version" --install-dir="$COMPOSER_DIR" --filename=composer

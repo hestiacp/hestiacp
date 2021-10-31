@@ -52,7 +52,8 @@ then
    mkdir -p /etc/phpmyadmin
    mkdir -p /etc/phpmyadmin/conf.d/  
    mkdir /usr/share/phpmyadmin/tmp
-   chmod 777 /usr/share/phpmyadmin/tmp/
+   chmod 770 /usr/share/phpmyadmin/tmp/
+   chown root:www-data /usr/share/phpmyadmin/tmp/
    mkdir -p /etc/phpmyadmin/conf.d/  
    
    # Configuring Apache2 for PHPMYADMIN
@@ -76,7 +77,7 @@ then
    # Create copy of config file
    cp -f $HESTIA_INSTALL_DIR/phpmyadmin/config.inc.php /etc/phpmyadmin/
    mkdir -p /var/lib/phpmyadmin/tmp
-   chmod 777 -R /var/lib/phpmyadmin/tmp
+   chmod 770 -R /var/lib/phpmyadmin/tmp
    
    # Set config and log directory
    sed -i "s|define('CONFIG_DIR', ROOT_PATH);|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
@@ -90,7 +91,7 @@ then
    rm -fr phpMyAdmin-$pma_v-all-languages
    rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
    
-   if [ -z '$DB_PMA_ALIAS' ]; then
+   if [ -z "$DB_PMA_ALIAS" ]; then
        echo "DB_PMA_ALIAS='phpmyadmin'" >> $HESTIA/conf/hestia.conf
    fi
    $HESTIA/bin/v-change-sys-db-alias 'pma' "phpmyadmin"

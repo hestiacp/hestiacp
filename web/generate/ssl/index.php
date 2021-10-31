@@ -1,5 +1,6 @@
 <?php
-error_reporting(NULL);
+
+error_reporting(null);
 $TAB = 'WEB';
 
 // Main include
@@ -28,17 +29,24 @@ if (!isset($_POST['generate'])) {
 }
 
 // Check token
-if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
-    header('Location: /login/');
-    exit();
-}
+verify_csrf($_POST);
 
 // Check input
-if (empty($_POST['v_domain'])) $errors[] = _('Domain');
-if (empty($_POST['v_country'])) $errors[] = _('Country');
-if (empty($_POST['v_state'])) $errors[] = _('State');
-if (empty($_POST['v_locality'])) $errors[] = _('City');
-if (empty($_POST['v_org'])) $errors[] = _('Organization');
+if (empty($_POST['v_domain'])) {
+    $errors[] = _('Domain');
+}
+if (empty($_POST['v_country'])) {
+    $errors[] = _('Country');
+}
+if (empty($_POST['v_state'])) {
+    $errors[] = _('State');
+}
+if (empty($_POST['v_locality'])) {
+    $errors[] = _('City');
+}
+if (empty($_POST['v_org'])) {
+    $errors[] = _('Organization');
+}
 $v_domain = $_POST['v_domain'];
 $v_aliases = $_POST['v_aliases'];
 $v_email = $_POST['v_email'];
@@ -50,13 +58,13 @@ $v_org = $_POST['v_org'];
 // Check for errors
 if (!empty($errors[0])) {
     foreach ($errors as $i => $error) {
-        if ( $i == 0 ) {
+        if ($i == 0) {
             $error_msg = $error;
         } else {
             $error_msg = $error_msg.", ".$error;
         }
     }
-    $_SESSION['error_msg'] = sprintf(_('Field "%s" can not be blank.'),$error_msg);
+    $_SESSION['error_msg'] = sprintf(_('Field "%s" can not be blank.'), $error_msg);
     render_page($user, $TAB, 'generate_ssl');
     unset($_SESSION['error_msg']);
     exit;
@@ -66,7 +74,7 @@ if (!empty($errors[0])) {
 $v_domain = escapeshellarg($_POST['v_domain']);
 $waliases = preg_replace("/\n/", " ", $_POST['v_aliases']);
 $waliases = preg_replace("/,/", " ", $waliases);
-$waliases = preg_replace('/\s+/', ' ',$waliases);
+$waliases = preg_replace('/\s+/', ' ', $waliases);
 $waliases = trim($waliases);
 $aliases = explode(" ", $waliases);
 $v_aliases = escapeshellarg(str_replace(' ', "\n", $waliases));
@@ -77,7 +85,8 @@ $v_state = escapeshellarg($_POST['v_state']);
 $v_locality = escapeshellarg($_POST['v_locality']);
 $v_org = escapeshellarg($_POST['v_org']);
 
-exec (HESTIA_CMD."v-generate-ssl-cert ".$v_domain." ".$v_email." ".$v_country." ".$v_state." ".$v_locality." ".$v_org." IT  '".$v_aliases."' json", $output, $return_var);
+exec(HESTIA_CMD."v-generate-ssl-cert ".$v_domain." ".$v_email." ".$v_country." ".$v_state." ".$v_locality." ".$v_org." IT  ".$v_aliases." json", $output, $return_var);
+
 // Revert to raw values
 $v_domain = $_POST['v_domain'];
 $v_email = $_POST['v_email'];
@@ -89,7 +98,9 @@ $v_org = $_POST['v_org'];
 // Check return code
 if ($return_var != 0) {
     $error = implode('<br>', $output);
-    if (empty($error)) $error = sprintf(_('Error code:'),$return_var);
+    if (empty($error)) {
+        $error = sprintf(_('Error code:'), $return_var);
+    }
     $_SESSION['error_msg'] = $error;
     render_page($user, $TAB, 'generate_ssl');
     unset($_SESSION['error_msg']);

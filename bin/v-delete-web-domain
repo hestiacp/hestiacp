@@ -22,13 +22,16 @@ domain_idn=$2
 restart=$3
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-# shellcheck source=/usr/local/hestia/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -56,18 +59,18 @@ check_hestia_demo_mode
 
 # Parsing domain values
 get_domain_values 'web'
-local_ip=$(get_real_ip $IP)
+local_ip=$(get_real_ip "$IP")
 
 # Deleting ftp users
-if [ ! -z "$FTP_USER" ]; then
+if [ -n "$FTP_USER" ]; then
     for ftp_user in ${FTP_USER//:/ }; do
         $BIN/v-delete-web-domain-ftp "$user" "$domain" "$ftp_user"
     done
 fi
 
 # Deleting web backend
-if [ ! -z "$WEB_BACKEND" ]; then
-    $BIN/v-delete-web-domain-backend $user $domain 'no'
+if [ -n "$WEB_BACKEND" ]; then
+    $BIN/v-delete-web-domain-backend "$user" "$domain" 'no'
 fi
 
 # Deleting vhost configuration
@@ -76,32 +79,32 @@ del_web_config "$WEB_SYSTEM" "$TPL.tpl"
 # Deleting SSL configuration and certificates
 if [ "$SSL" = 'yes' ]; then
     del_web_config "$WEB_SYSTEM" "$TPL.stpl"
-    $BIN/v-delete-web-domain-ssl-force $user $domain 'no' 'yes'
+    $BIN/v-delete-web-domain-ssl-force "$user" "$domain" 'no' 'yes'
     rm -f $HOMEDIR/$user/conf/web/$domain/ssl/$domain.*
     rm -f $USER_DATA/ssl/$domain.*
 fi
 
 if [ "$FASTCGI_CACHE" = "yes" ]; then
     # make sure no trails left behind 
-    $BIN/v-delete-fastcgi-cache $user $domain
+    $BIN/v-delete-fastcgi-cache "$user" "$domain"
 fi
 
 # Deleting domain from web.conf
-sed -i "/DOMAIN='$domain'/ d" $USER_DATA/web.conf
+sed -i "/DOMAIN='$domain'/ d" "$USER_DATA/web.conf"
 
 # Deleting proxy
-if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
+if [ -n "$PROXY_SYSTEM" ]; then
     del_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
     if [ "$SSL" = 'yes' ]; then
         del_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
     fi
     if [ -e "/etc/$PROXY_SYSTEM/conf.d/01_caching_pool.conf" ]; then
-        sed -i "/=$domain:/d" /etc/$PROXY_SYSTEM/conf.d/01_caching_pool.conf
+        sed -i "/=$domain:/d" "/etc/$PROXY_SYSTEM/conf.d/01_caching_pool.conf"
     fi
 fi
 
 # Deleting web stats
-if [ ! -z "$STATS" ] && [ "$STATS" != 'no' ]; then
+if [ -n "$STATS" ] && [ "$STATS" != 'no' ]; then
     sed -i "/ $domain$/d" $HESTIA/data/queue/webstats.pipe
     rm -f $HOMEDIR/$user/conf/web/$domain/$STATS.conf
     rm -f /etc/awstats/$STATS.$domain.conf
@@ -126,28 +129,28 @@ decrease_user_value "$user" '$U_WEB_DOMAINS'
 if [ "$SSL" = 'yes' ]; then
     decrease_user_value "$user" '$U_WEB_SSL'
 fi
-if [ ! -z "$ALIAS" ]; then
-    aliases=$(echo $ALIAS | tr ',' '\n' | wc -l )
+if [ -n "$ALIAS" ]; then
+    aliases=$(echo "$ALIAS" | tr ',' '\n' | wc -l )
     decrease_user_value "$user" '$U_WEB_ALIASES' "$aliases"
 fi
 
 # Check if is suspended to decrease the suspended value
-if [ ! -z "$SUSPENDED" ]; then
+if [ -n "$SUSPENDED" ]; then
     if [ "$SUSPENDED" == "yes" ]; then
         decrease_user_value "$user" '$SUSPENDED_WEB'
     fi
 fi
 
 # Restarting web server
-$BIN/v-restart-web $restart
+$BIN/v-restart-web "$restart"
 check_result $? "Web restart failed" >/dev/null
 
 # Restarting proxy server
-$BIN/v-restart-proxy $restart
+$BIN/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" >/dev/null
 
 # Restarting backend server
-$BIN/v-restart-web-backend $restart
+$BIN/v-restart-web-backend "$restart"
 check_result $? "Backend restart failed" >/dev/null
 
 # Logging

@@ -1,4 +1,4 @@
-
+#!/bin/bash
 heal_iptables_links() {
     packages="iptables iptables-save iptables-restore"
     for package in $packages; do

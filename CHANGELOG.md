@@ -1,18 +1,241 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Development]
+## [DEVELOPMENT] - Development version
+
+## Features
+
+- Add support for Dovecote Sieve #2163 (@2163)
+- Improve HELO based system and use RDNS lookup instead our old system
+- Set default php version for new installs to PHP8.0 
+
+### Bugfixes
+
+- Disable /reset/ endpoint when POLICY_SYSTEM_PASSWORD_RESET = no
+- Add rate limit forgot password
+- Prevent SOA count up after v-change-dns-records with no changes are made
+- Fix #1296 Logrotate does not rotate logs any more on Ubuntu 20.04 and Debian 11
+- Run shellcheck to improve code quality 
+- Improve ssh port detection for filemanager. Allowing users to create /etc/ssh/sshd.conf.d/custom.conf with custom port. 
+- Fix an bug in v-add-letsencrypt-host due to changes of Lets Encrypt causing issues with rate limiting
+- Improve Update process Hestia and allow versions to decide a a rebuild is required
+- Add Download SSL certificate function for self generated ssl cerrtificates #2181
+- Block access to .user.ini for Nginx + Apache2 #2179
+- Add support for download B2 backup to local server to allow for restore #2199
+- Update permissions /var/kog/roundcube on older installations #2173
+- Update translations
+
+### Dependencies
+
+- Update Roundcube to 1.5.0 https://roundcube.net/news/2021/10/18/roundcube-1.5.0-released
+
+### Security 
+
+- Update jQuery UI to the last version [CVE-2021-41182](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-41182)
+
+## [1.4.17] - Service release 
+
+### Bugfixes
+
+- Fix bug with nginx and phmyadmin not loading
+- Fix #2166 Search function broken 
+- Update Quick installers to the last version
+
+## [1.4.16] - Service release 
+
+### Bugfixes
+
+- Fix bug with .json not loading on Apache2 due to rule in /etc/apache2/conf.d/phpmyadmin.conf
+
+## [1.4.15] - Service release 
+
+## Features
+
+- Add templates Chevereto #2153 @ManualRechkle
+
+### Bugfixes
+
+- Fix bug in v-add-sys-ip with netplan active
+- Limit access to files/folders that are not required on default /phpmyadmin (*.json, templates, locale, vendor) #2143
+- Update translations
+- Fix issue with Exim 4.94 and Autoreply #2151
+- Fix multiple UI bugs #2415
+- Fix link broken link to Documentation #2142 
+- Improve detection for MariaDB #2141 thanks @gejobj
+
+## [1.4.14] - Service release 
+
+### Bugfixes
+
+- Fixed an issue with edit package
+- Fixed an issue with v-update-letsencrypt and v-restart-service
+- Fixed an issue with v-add-sys-ip and Ubuntu with no netplan enabled
+- Fixed broken UPGRADE_MESSAGE variable not showing up in email
+- Include / expand the config backup system during update
+
+## [1.4.13] - Service release 
+
+### Features
+- Introduce UPGRADE_MESSAGE variable to support custom messages in e-mail upgrade notification.
+
+### Bugfixes
+- Improve the hostname check to prevent invalid hostnames or the use of an ip address (RFC1178).
+- Prevent CSRF from other domains / websites
+- Fix #2096 Hostname SSL got overwritten by mail.hostname.com certificate
+- Add small wait for /usr/bin/iptables-restore [Forum](https://forum.hestiacp.com/t/clean-install-arm64-does-not-start-after-reboot-v-start-service-iptables/4395/7) + Fixed v-add-firewall / v-delete-firewall function (#2112) @myrevery
+- Fix bug in v-change-sys-api. When using  v-change-sys-api remove and then  v-change-sys-api enable + custom release branch the resetting of api failed + no "error" output was producted
+- Improve error reporting PMA Single sign on function function
+- Fixed an issue in v-change-web-domain-name where webserserver where not able to start because old config files where not propperly deleted #2104
+- Fixed potential XSS vulnerability in /list/keys/  @wtwwer [Disclosure](https://huntr.dev/bounties/0fefa2f6-7024-44c8-87c7-4d01fb93403e/)
+- Removed /edit/file as it has been replaced by Filegator and part of the old Vesta Filemanager 
+- Fixed potential External control / path vulnerability in /add/package @wtwwer [Disclosure](https://huntr.dev/bounties/e0a2c6ff-b4fe-45a2-9d79-1f4dc1b381ab/)
+- Add extra checks to prevent type juggling @vikychoi [Disclosure](https://huntr.dev/bounties/c24fb15c-3c84-45c8-af04-a660f8da388f/)
+- Improved and updated some missing translation strings @myrevery
+- Sync translations with Github
+
+## [1.4.12] - Service release 
+
+### Bugfixes
+
+- Allow custom mail domains with own certificates #2061 @myrevery 
+- Fixed Replace tabulation with \u0009 in v-list-dns-records #2089 @codibit
+- Fix #2087 Exim 4.94 Did not send any email to remote servers. 
+- Fixed #2082 v-delete-web-php creates always new config file
+- Add /home/user/.composer in open_basedir #2088 @anvme
+
+## [1.4.11] - Service release 
+
+### Features
+
+- Added support for Debian 11  (Bullseye) #1661
+- Added support for openssl in hestia-php 
+- Use hestia-php for installing dependencies to solve issue user configurations (hestia-php 7.4.22 required)
+- Replace old firewall system with systemd service / startup script #2064 @myrevery
+- Add Quick installers for GravCMS, Docuwiki and Mediawiki (#2002) @PsychotherapistSam
+
+### Bugfixes
+
+- Improve handling upgrade of Roundcube #1917
+- Fix an issue with sorting the update scripts when version goes higher then 1.x.10 
+- Allow the use of multiple CAA records for domain. #2073
+- Add missing group (www-data) to migrate_phpmyadmin script #2077 @bet0x
+- Fix an issue where news@domain.com get forwarded to /var/spool/news
+- Synced up translations with HestiaCP (IT, PL, RU, SK and ZN-CN updated)
+
+## [1.4.10] - Service release 
+
+### Features
+
+- Added v-delete-firewall-ban ip all #2031
+- Include config tests for nginx/apache2 templates
+
+### Bugfixes
+
+- Fixed UI issues after upgrade jQuery + jQuery UI to last version (#2021 and #2032) + [forum](https://forum.hestiacp.com/t/confusion-about-send-welcome-email-checkbox/4259/11)
+- Fixed security issues in caching templates of Nginx when used as Reverse Proxy
+- Fixed an issue with deleting multiple mail accounts (#2047)
+- Fixed an issue with phpmailer + non latin characters (#2050) thanks @Faymir
+- Remove caching template for CraftCMS (#2039) @anvme 
+- Fixed an issue with phpmailer + non latin characters (#2050) thanks @Faymir 
+- Fix Unable to load dynamic library 'pdo_mysql.so' after php reinstalling (#2069)
+
+## [1.4.9] - Service release 
+
+### Bugfixes
+
+- Updated jQuery and jQuery UI to the latest version due to a vulnerability in jQuery. @dependabot
+- Fixed bug in /etc/dovecot/conf.d/10-ssl.conf for new installs
+- Fixed bug with notifications
+- Fixed translation string @myrevery 
+
+## [1.4.8] - Service release 
+
+### Features
+
+- Add support for automated testing for HestiaCP code with @drone
+- Add support for SMTP server for internal email #1988 @Myself5 / #1165
+
+### Bugfixes
+
+- Updated jQuery and jQuery UI to the latest version due to a vulnerability in jQuery. @dependabot
+- Resolve issue with double ENFORCE_SUBDOMAIN_OWNERSHIP keys in hestia.conf
+- Resolve issue with create new user during install in some cases #2000
+- Fixed an issue with Quick Install apps named Test123 (@PsychotherapistSam)
+- Fix an issue with dovecot 2.3 ssl config (#1432)
+- Load $HESTIA path during upgrade script (#1698)
+- Remove TLS 1.1 from Proftpd config (#950)
+- Don't remove postfix when Exim is not installed (#1995)
+- Fix a bug in no-php Nginx FPM template (##2007)
+- Update German translations
+- Fixed a few minor error in Mail DMS records (#2005)
+
+
+## [1.4.7] - Service release 
+
+### Bugfixes
+
+- Fixed #1984 phppgadmin not working on apache2 systems
+- Fixed #1985 Restart service not working
+
+
+## [1.4.6] - Service release 
+
+### Features
+
+- Add support for custom install hooks #1757
+- Add template for CraftCMS #1973 @anvme
+- Upgrade Filegator to 7.6.0
+
+### Bugfixes
+
+- Fixed #1961 Renewal Apache2 only SSL certificate fails
+- Fixed #1956 to prevent reset of defined webmail client.
+- Explicitly disable cron reports #1978 
+- Fixed an issue where in rare cases certificate failed to install @dpeca and @myvesta
+- Fixed an issue where composer failed to install when .composer folder is missing
+- Fixed #1980 Lets Encrypt Auto Renewal Reverts Webmail Client back to Roundcube
+
+## [1.4.5] - Service release
+
+### Bugfixes
+
+- Revert #1943 and rework it to fix possible errors occurring on v-rebuild-cron-jobs.
+- Fixed #1956 to prevent reset of defined webmail client.
+- Explicitly disable cron reports #1978
+
+## [1.4.4] - Service release
+
+### Features
+
+- Add nginx user_agent separation to desktop/mobile (e.g. for fastcgi cache)
+- Run phpmyadmin folder under www-data user instead of "user" improving security. (@bet0x)
+- Added new template for mod php users to access phpmyadmin
+
+### Bugfixes
+
+- Add template for when webmail is disabled allowing to generate SSL. 
+- Fixed PHP bug in /list/log/ 
+- Fixed issue with time in /list/services as it was showing as 50 minute1 instead of minutes
+- Add missing back buttons + fix behaviour of back buttons on login page. 
+- Set "default" when WEB_TEMPLATE and PROXY_TEMPLATE is missing in user.conf 
+- Add BACKEND_TEMPLATE to default package
+- Fixed possible error occur for v-rebuild-cron-jobs #1943 (thanks @clarkchentw)
+- Restrict access file manager when SSH is enabled for the user (@bet0x)
+- Check for DNS domains when running v-change-sys-ip-nat (@clarkchentw)
+- Fixed logical error in installer (@clarkchentw)
+
+## [1.4.3] - Service release
 
 ### Features
 
 - Include DMARC record in DNS record list #1836
-- Enabled phpMyAdmin Single Sign On support
+- Enabled phpMyAdmin Single Sign On support #1460
 - Add command to add / delete from API_ALLOWED_IP list (#1904)
 
 ### Bugfixes
 
 - Improve the calculated disk size of a new backup estimated by excluding the exclude folders, mail accounts and database in backups (#1616) @Myself5
-- Improve v-update-firewall / v-stop-firewarewall to make it self healing (#1892) @myrevery 
+- Improve v-update-firewall / v-stop-firewall to make it self healing (#1892) @myrevery 
 - Update phpMyAdmin version to 1.5.1 (See https://www.phpmyadmin.net/news/2021/6/4/phpmyadmin-511-released/)
 - Fixed a bug after rebuilding mail with Exim4 and suspended domains (#1886)
 - Fixed "Allowed IP addresses for API" field with strange behaviour #1866
@@ -22,9 +245,12 @@ All notable changes to this project will be documented in this file.
 - Keep changes made by /install/upgrade/manual/install_awstats_geopip.sh on update HestiaCP (via Discord)
 - Refactor/improve PHP and HTML code @s0t (#1860)
 - Fixed XSS vulnerability in login page and a few other locations @briansemrau / @numanturle
-- Delete old session after after session_regenerate_id() @briansemrau
+- Delete old session after session_regenerate_id() @briansemrau
 - Improve error message when domain all ready exists on different account.
-- Fixed an issue where phpmyadmin did not update when Postgresql was availble.
+- Fixed an issue where phpmyadmin did not update when Postgresql was available.
+- Webmail clients set to rainloop where not able to create a SSL certificate via LE #1913
+- Fixed an issue where plugin-hestia-change-pasword did not change the port on v-change-sys-port (Rainloop) #1895
+- Fixed an issue where HELO message was not set / error was created on NAT IP
 
 ## [1.4.2] - Service release
 
@@ -42,10 +268,10 @@ Then run the update via
 
 ### Bugfixes
 
-- Fix issue wit startup script for iptables / network (#1849) (@myrevery)
-- Fix problem with accidentally replacing nginx.conf during upgrade nginx (#1878 / @myrevery)
-- Fix issue with installing Ubuntu 18.04
-- Fix issue with login into file manger as admin user
+- Fixed issue wit startup script for iptables / network (#1849) (@myrevery)
+- Fixed problem with accidentally replacing nginx.conf during upgrade nginx (#1878 / @myrevery)
+- Fixed issue with installing Ubuntu 18.04
+- Fixed issue with login into file manger as admin user
 - Added proxy_extentions back to support older custom templates
 - Added the possibility to skip the forced reboot when interactive is set to no
 - Fixed an issue with modx template
@@ -482,7 +708,7 @@ Then run the update via
 - Remove broken /webmail alias from previous versions.
 - Webmail IP address is now inherited from web domain when using multiple IPs.
 - Exim now uses the web domain IP if it exists.
-- Fix incorrect MX record for DNS domains using the Office 365 template.
+- Fixed incorrect MX record for DNS domains using the Office 365 template.
 
 ## [1.0.6] - 2019-09-24 - Hotfix
 ### Bugfixes
@@ -490,9 +716,9 @@ Then run the update via
 
 ## [1.0.5] - 2019-08-06 - Hotfix
 ### Bugfixes
-- Fix several security issues, thanks to Andrea Cardaci (https://cardaci.xyz/)
+- Fixed several security issues, thanks to Andrea Cardaci (https://cardaci.xyz/)
 - Rework Let's Encrypt ACME staging to use hestia conform standard.
-- Fix if condition, use nginx for Let's Encrypt ACME request if present.
+- Fixed if condition, use nginx for Let's Encrypt ACME request if present.
 
 ## [1.0.4] - 2019-07-09 - Hotfix
 ### Bugfixes

@@ -1,7 +1,7 @@
 #!/bin/bash
 # info: add system firewall
 # options: NONE
-# labels: 
+# labels: panel
 #
 # example: v-add-sys-firewall
 #
@@ -13,10 +13,12 @@
 #----------------------------------------------------------#
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -30,25 +32,18 @@ fi
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Adding firewall directory
-mkdir -p $HESTIA/data/firewall/
-
 # Adding default ruleset
-if [ ! -e "$HESTIA/data/firewall/rules.conf" ]; then
-    cp $HESTIA/install/rhel/7/* $HESTIA/data/firewall/
+if [ -z "$(ls -A $HESTIA/data/firewall 2>/dev/null)" ]; then
+    cp -rf $HESTIA_INSTALL_DIR/firewall $HESTIA/data/
 fi
 
 # Updating FIREWAL_SYSTEM value
-if [ -z "$(grep FIREWALL_SYSTEM $HESTIA/conf/hestia.conf)" ]; then
-    echo "FIREWALL_SYSTEM='iptables'" >> $HESTIA/conf/hestia.conf
-else
-    sed -i "s/FIREWALL_SYSTEM.*/FIREWALL_SYSTEM='iptables'/g" \
-        $HESTIA/conf/hestia.conf
-fi
+$BIN/v-change-sys-config-value "FIREWALL_SYSTEM" "iptables"
 
 # Updating firewall rules
 $BIN/v-update-firewall
@@ -59,6 +54,7 @@ $BIN/v-update-firewall
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "Firewall" "System firewall enabled."
 log_event "$OK" "$ARGUMENTS"
 
 exit

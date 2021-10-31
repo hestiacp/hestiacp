@@ -18,12 +18,14 @@ user=$1
 database=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/db.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -68,7 +70,7 @@ decrease_dbhost_values
 decrease_user_value "$user" '$U_DATABASES'
 
 # Check if is suspended to decrease the suspended value
-if [ ! -z "$suspended" ]; then
+if [ -n "$suspended" ]; then
     if [ "$suspended" == "yes" ]; then
         decrease_user_value "$user" '$SUSPENDED_DB'
     fi

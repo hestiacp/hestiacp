@@ -211,8 +211,8 @@ fi
 echo "Build version $BUILD_VER, with Nginx version $NGINX_V and PHP version $PHP_V"
 
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
-OPENSSL_V='1.1.1k'
-PCRE_V='8.44'
+OPENSSL_V='1.1.1l'
+PCRE_V='8.45'
 ZLIB_V='1.2.11'
 
 # Create build directories
@@ -465,30 +465,30 @@ if [ "$PHP_B" = true ] ; then
 
         # Configure PHP
         if [ $BUILD_ARCH = 'amd64' ]; then
-            ./configure   --prefix=/usr/local/hestia/php \
+            ./configure --prefix=/usr/local/hestia/php \
                         --enable-fpm \
                         --with-fpm-user=admin \
                         --with-fpm-group=admin \
                         --with-libdir=lib/x86_64-linux-gnu \
+                        --with-openssl \
                         --with-mysqli \
                         --with-gettext \
                         --with-curl \
                         --with-zip \
                         --with-gmp \
-                        --enable-intl \
                         --enable-mbstring
         else
-            ./configure   --prefix=/usr/local/hestia/php \
+            ./configure --prefix=/usr/local/hestia/php \
                         --enable-fpm \
                         --with-fpm-user=admin \
                         --with-fpm-group=admin \
                         --with-libdir=lib/aarch64-linux-gnu \
+                        --with-openssl \
                         --with-mysqli \
                         --with-gettext \
                         --with-curl \
                         --with-zip \
                         --with-gmp \
-                        --enable-intl \
                         --enable-mbstring
         fi
     fi
@@ -503,10 +503,6 @@ if [ "$PHP_B" = true ] ; then
         [ "$HESTIA_DEBUG" ] && echo DEBUG: cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch_dash
         cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch_dash
     fi
-
-    # Set permission
-    #chmod +x postinst
-
     # Move php directory
     [ "$HESTIA_DEBUG" ] && echo DEBUG: mkdir -p $BUILD_DIR_HESTIAPHP/usr/local/hestia
     mkdir -p $BUILD_DIR_HESTIAPHP/usr/local/hestia
@@ -535,7 +531,8 @@ if [ "$PHP_B" = true ] ; then
             sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
         fi
         get_branch_file 'src/deb/php/copyright' "$BUILD_DIR_HESTIAPHP/DEBIAN/copyright"
-
+        get_branch_file 'src/deb/php/postinst' "$BUILD_DIR_HESTIAPHP/DEBIAN/postinst"
+        chmod +x $BUILD_DIR_HESTIAPHP/DEBIAN/postinst
         # Get custom config
         get_branch_file 'src/deb/php/php-fpm.conf' "${BUILD_DIR_HESTIAPHP}/usr/local/hestia/php/etc/php-fpm.conf"
         get_branch_file 'src/deb/php/php.ini' "${BUILD_DIR_HESTIAPHP}/usr/local/hestia/php/lib/php.ini"
@@ -569,7 +566,7 @@ if [ "$PHP_B" = true ] ; then
 
     # clear up the source folder
     if [ "$KEEPBUILD" != 'true' ]; then
-        rm -r $BUILD_DIR/php-$PHP_V
+        rm -r $BUILD_DIR/php-$(echo $PHP_V |cut -d"~" -f1)
         rm -r $BUILD_DIR_HESTIAPHP
         if [ "$use_src_folder" == 'true' ] && [ -d $BUILD_DIR/hestiacp-$branch_dash ]; then
             rm -r $BUILD_DIR/hestiacp-$branch_dash

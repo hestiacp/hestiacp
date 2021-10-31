@@ -16,10 +16,14 @@
 format=${1-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -89,100 +93,119 @@ json_list() {
         "POLICY_USER_EDIT_DNS_TEMPLATES": "'$POLICY_USER_EDIT_DNS_TEMPLATES'",
         "POLICY_USER_DELETE_LOGS": "'$POLICY_USER_DELETE_LOGS'",
         "POLICY_USER_VIEW_LOGS": "'$POLICY_USER_VIEW_LOGS'",
-        "POLICY_USER_CHANGE_THEME": "'$POLICY_USER_CHANGE_THEME'"
+        "POLICY_USER_CHANGE_THEME": "'$POLICY_USER_CHANGE_THEME'",
+        "POLICY_CSRF_STRICTNESS": "'$POLICY_CSRF_STRICTNESS'",
+        "USE_SERVER_SMTP": "'$USE_SERVER_SMTP'",
+        "SERVER_SMTP_HOST": "'$SERVER_SMTP_HOST'",
+        "SERVER_SMTP_PORT": "'$SERVER_SMTP_PORT'",
+        "SERVER_SMTP_SECURITY": "'$SERVER_SMTP_SECURITY'",
+        "SERVER_SMTP_USER": "'$SERVER_SMTP_USER'",
+        "SERVER_SMTP_PASSWD": "'$SERVER_SMTP_PASSWD'",
+        "SERVER_SMTP_ADDR": "'$SERVER_SMTP_ADDR'"
     }
     }'
 }
 
 # Shell list
 shell_list() {
-    if [ ! -z "$WEB_SYSTEM" ]; then
+    if [ -n "$WEB_SYSTEM" ]; then
         echo "Web Server:                       $WEB_SYSTEM:$WEB_PORT ($WEB_RGROUPS)"
         echo "SSL Support:                      $WEB_SSL:$WEB_SSL_PORT"
     fi
-    if [ ! -z "$WEB_BACKEND" ]; then
+    if [ -n "$WEB_BACKEND" ]; then
         echo "Web Backend:                      $WEB_BACKEND"
     fi
-    if [ ! -z "$PROXY_SYSTEM" ]; then
+    if [ -n "$PROXY_SYSTEM" ]; then
         echo "Proxy Server:                     $PROXY_SYSTEM:$PROXY_PORT"
         echo "Proxy SSL:                        $PROXY_SYSTEM:$PROXY_SSL_PORT"
     fi
-    if [ ! -z "$STATS_SYSTEM" ]; then
+    if [ -n "$STATS_SYSTEM" ]; then
         echo "Statistics Engine:                ${STATS_SYSTEM//,/, }"
     fi
-    if [ ! -z "$FTP_SYSTEM" ]; then
+    if [ -n "$FTP_SYSTEM" ]; then
         echo "FTP Server:                       $FTP_SYSTEM"
     fi
-    if [ ! -z "$MAIL_SYSTEM" ]; then
+    if [ -n "$MAIL_SYSTEM" ]; then
         echo -n "Mail Server:                      $MAIL_SYSTEM"
-        if [ ! -z "$IMAP_SYSTEM" ]; then
+        if [ -n "$IMAP_SYSTEM" ]; then
             echo -n " + $IMAP_SYSTEM"
         fi
-        if [ ! -z "$ANTIVIRUS_SYSTEM" ]; then
+        if [ -n "$ANTIVIRUS_SYSTEM" ]; then
             echo -n " + $ANTIVIRUS_SYSTEM"
         fi
-        if [ ! -z "$ANTISPAM_SYSTEM" ]; then
+        if [ -n "$ANTISPAM_SYSTEM" ]; then
             echo -n " + $ANTISPAM_SYSTEM"
         fi
         echo
-        if [ ! -z "$WEBMAIL_ALIAS" ]; then
+        if [ -n "$WEBMAIL_ALIAS" ]; then
             echo "Webmail alias:                    $WEBMAIL_ALIAS"
         fi
     fi
-    if [ ! -z "$DB_SYSTEM" ]; then
+    if [ -n "$DB_SYSTEM" ]; then
         echo "Database:                         ${DB_SYSTEM//,/, }"
-        if [ ! -z "$DB_PMA_ALIAS" ]; then
+        if [ -n "$DB_PMA_ALIAS" ]; then
             echo "phpMyAdmin Alias:                 $DB_PMA_ALIAS"
         fi
-        if [ ! -z "$DB_PGA_ALIAS" ]; then
+        if [ -n "$DB_PGA_ALIAS" ]; then
             echo "phpPgAdmin Alias:                 $DB_PGA_ALIAS"
         fi
     fi
-    if [ ! -z "$DNS_SYSTEM" ]; then
+    if [ -n "$DNS_SYSTEM" ]; then
         echo -n "DNS Server:                       $DNS_SYSTEM"
-        if [ ! -z "$DNS_CLUSTER" ]; then
+        if [ -n "$DNS_CLUSTER" ]; then
             echo -n " (cluster)"
         fi
         echo
     fi
-    if [ ! -z "$CRON_SYSTEM" ]; then
+    if [ -n "$CRON_SYSTEM" ]; then
         echo "CRON daemon:                      $CRON_SYSTEM"
     fi
-    if [ ! -z "$FIREWALL_SYSTEM" ]; then
+    if [ -n "$FIREWALL_SYSTEM" ]; then
         echo -n "Firewall:                         $FIREWALL_SYSTEM"
-        if [ ! -z "$FIREWALL_EXTENSION" ]; then
+        if [ -n "$FIREWALL_EXTENSION" ]; then
             echo -n "+ $FIREWALL_EXTENSION"
         fi
         echo
     fi
-    if [ ! -z "$BACKUP_SYSTEM" ]; then
+    if [ -n "$BACKUP_SYSTEM" ]; then
         echo "Backups:                          ${BACKUP_SYSTEM//,/, }"
         echo "Backup Directory:                 $BACKUP"
     fi
-    if [ ! -z "$DISK_QUOTA" ]; then
+    if [ -n "$DISK_QUOTA" ]; then
         echo "Disk Quota enabled:               $DISK_QUOTA"
     fi
-    if [ ! -z "$LANGUAGE" ] && [ "$LANGUAGE" != 'en' ]; then
+    if [ -n "$LANGUAGE" ] && [ "$LANGUAGE" != 'en' ]; then
         echo "System Language:                  $LANGUAGE"
     fi
     echo "Version:                          $VERSION"
-    if [ ! -z "$DEMO_MODE" ]; then
+    if [ -n "$DEMO_MODE" ]; then
         echo "Demo Mode:                        $DEMO_MODE"
     fi
-    if [ ! -z "$FILE_MANAGER" ]; then
+    if [ -n "$FILE_MANAGER" ]; then
         echo "File Manager enabled:             $FILE_MANAGER"
     fi
-    if [ ! -z "$API" ]; then
+    if [ -n "$API" ]; then
     echo "API enabled:             $API"
     echo "API allowed IP's:             $API_ALLOWED_IP"
     
     fi
     
-    if [ ! -z "$SMTP_RELAY" ] && [ "$SMTP_RELAY" != 'false' ]; then
+    if [ -n "$SMTP_RELAY" ] && [ "$SMTP_RELAY" != 'false' ]; then
 	echo "SMTP Relay enabled:                $SMTP_RELAY"
 	echo "SMTP Relay Server:                 $SMTP_RELAY_HOST"
 	echo "SMTP Relay Port:                   $SMTP_RELAY_PORT"
 	echo "SMTP Relay User:                   $SMTP_RELAY_USER"
+    fi
+
+    echo "SMTP Server Account enabled:       $USE_SERVER_SMTP"
+
+    if [ -n "$USE_SERVER_SMTP" ] && [ "$USE_SERVER_SMTP" != 'false' ]; then
+    echo "SMTP Server Account Host:          $SERVER_SMTP_HOST"
+    echo "SMTP Server Account Port:          $SERVER_SMTP_PORT"
+    echo "SMTP Server Account Security:      $SERVER_SMTP_SECURITY"
+    echo "SMTP Server Account Username:      $SERVER_SMTP_USER"
+    echo "SMTP Server Account Password:      $SERVER_SMTP_PASSWD"
+    echo "SMTP Server Account Address:       $SERVER_SMTP_ADDR"
     fi
 
     echo "Release Branch:                   $RELEASE_BRANCH"

@@ -45,7 +45,7 @@
 					?>
 					<span class="label-space-right"><i class="fas <?=$user_icon;?> icon-pad-right" title="<?=_('Logged in as');?>: <?=htmlspecialchars($panel[$user]['NAME'])?>"></i><b><?=htmlspecialchars($user)?></b></span>
 					<span class="label-space-right"><i class="fas fa-hdd icon-pad-right" title="<?=_('Disk');?>: <?=humanize_usage_size($panel[$user]['U_DISK'])?> <?=humanize_usage_measure($panel[$user]['U_DISK'])?>"></i><b><?=humanize_usage_size($panel[$user]['U_DISK'])?></b> <?=humanize_usage_measure($panel[$user]['U_DISK'])?></span>
-					<span><i class="fas fa-exchange-alt icon-pad-right" title="<?=_('Bandwidth');?>: <?=humanize_usage_size($panel[$user]['U_DISK'])?> <?=humanize_usage_measure($panel[$user]['U_DISK'])?>"></i><b><?=humanize_usage_size($panel[$user]['U_BANDWIDTH'])?></b> <?=humanize_usage_measure($panel[$user]['U_BANDWIDTH'])?></span>
+					<span><i class="fas fa-exchange-alt icon-pad-right" title="<?=_('Bandwidth');?>: <?=humanize_usage_size($panel[$user]['U_BANDWIDTH'])?> <?=humanize_usage_measure($panel[$user]['U_BANDWIDTH'])?>"></i><b><?=humanize_usage_size($panel[$user]['U_BANDWIDTH'])?></b> <?=humanize_usage_measure($panel[$user]['U_BANDWIDTH'])?></span>
 				</span>
 			</div>
 
@@ -84,9 +84,9 @@
 			
 			<!-- Logout -->
 			<?php if (isset($_SESSION['look']) && (!empty($_SESSION['look']))) { ?>
-				<div class="l-menu__item"><a href="/logout/" title="<?=_('Log out');?> (<?=$user?>)" class="l-profile__logout"><i class="fas fa-arrow-alt-circle-up"></i></a></div>
+				<div class="l-menu__item"><a href="/logout/?token=<?=$_SESSION['token']?>" title="<?=_('Log out');?> (<?=$user?>)" class="l-profile__logout"><i class="fas fa-arrow-alt-circle-up"></i></a></div>
 			<?php } else { ?>
-				<div class="l-menu__item"><a href="/logout/" title="<?=_('Log out');?>" class="l-profile__logout"><i class="fas fa-sign-out-alt"></i></a></div>
+				<div class="l-menu__item"><a href="/logout/?token=<?=$_SESSION['token']?>" title="<?=_('Log out');?>" class="l-profile__logout"><i class="fas fa-sign-out-alt"></i></a></div>
 			<?php } ?>
 		</div>
 	</div>

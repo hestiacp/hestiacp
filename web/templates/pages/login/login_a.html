@@ -30,6 +30,13 @@
 									<tr>
 										<td style="padding: 12px 0 5px 2px;">
 											<?=_('Password');?>
+											<?php if ($_SESSION['POLICY_SYSTEM_PASSWORD_RESET'] !== 'no' ) {?>
+											<div style="padding:0 6px 0px 14px; float:right;">
+												<a tabindex="5" class="vst-advanced" href="/reset/">
+													<?=_('forgot password');?>
+												</a>
+											</div>
+										<?php } ?>
 										</td>
 									</tr>
 									<tr>
@@ -61,7 +68,7 @@
 		</tr>
 	</table>
 </center>
-<script src="/inc/jquery/jquery-3.5.1.min.js"></script>
+<script src="/inc/jquery/jquery-3.6.0.min.js"></script>
 </body>
 
 </html>

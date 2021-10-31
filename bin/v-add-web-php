@@ -16,10 +16,12 @@
 version=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -35,19 +37,19 @@ php_fpm="/etc/init.d/php$version-fpm"
 if [[ ! $version =~ ^[0-9]\.[0-9]+ ]]; then
     echo "The specified PHP version format is invalid, it should look like [0-9].[0-9]."
     echo "Example:  7.0, 7.4, 8.0"
-    exit
+    exit "$E_INVALID";
 fi
 
 # Check if php version already exists
 if [ -f "$php_fpm" ] && [ -f "$HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl" ]; then
     echo "ERROR: Specified PHP version is already installed."
-    exit
+    exit "$E_INVALID";
 fi
 
 # Check if php version is supported
 if [ ! -f "$HESTIA_INSTALL_DIR/multiphp/$WEB_SYSTEM/PHP-${version//.}.sh" ]; then
     echo "ERROR: Specified PHP version is not supported or does not exist."
-    exit
+    exit "$E_INVALID";
 fi
 
 # Perform verification if read-only mode is enabled
@@ -58,7 +60,7 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-mph="php$version-mbstring php$version-bcmath php$version-cli php$version-curl
+mph="php$version-common php$version-mbstring php$version-bcmath php$version-cli php$version-curl
      php$version-fpm php$version-gd php$version-intl php$version-mysql
      php$version-soap php$version-xml php$version-zip php$version-mbstring
      php$version-json php$version-bz2 php$version-pspell php$version-imagick php$version-pgsql
@@ -113,7 +115,7 @@ if [ "$WEB_SYSTEM" = "apache2" ]; then
     if ! a2query -q -m setenvif; then
         a2enmod -q setenvif
     fi
-    $BIN/v-restart-web
+    $BIN/v-restart-web "yes"
 fi
 
 # Configure fpm

@@ -18,14 +18,16 @@ user=$2
 
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/db.sh
 # shellcheck source=/usr/local/hestia/func/rebuild.sh
 source $HESTIA/func/rebuild.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -43,7 +45,7 @@ owner=$(echo $database | cut -f 1 -d '_')
 if [ ! -d "$HESTIA/data/users/$owner" ]; then
     echo "Error: database owner doesn't exist"
     log_event "$E_NOTEXIST" "$ARGUMENTS"
-    exit $E_NOTEXIST
+    exit "$E_NOTEXIST"
 fi
 
 # Check if owner is the same as the dst user
@@ -56,7 +58,7 @@ db_data=$(grep "DB='$database'" $HESTIA/data/users/$owner/db.conf)
 if [ -z "$db_data" ]; then
     echo "Error: database $database doesn't exist"
     log_event "$E_NOTEXIST" "$ARGUMENTS"
-    exit $E_NOTEXIST
+    exit "$E_NOTEXIST"
 fi
 
 parse_object_kv_list "$db_data"
@@ -70,10 +72,10 @@ fi
 # Check if database name is uniqe
 new_db=$(echo $database | sed "s/^${owner}_/${usersmall}_/")
 check_db=$(grep "DB='$new_db'" $HESTIA/data/users/$user/db.conf)
-if [ ! -z "$check_db" ]; then
+if [ -n "$check_db" ]; then
     echo "Error: $new_db database exists"
     log_event "$E_EXISTS" "$ARGUMENTS"
-    exit $E_EXISTS
+    exit "$E_EXISTS"
 fi
 
 # Perform verification if read-only mode is enabled
@@ -85,7 +87,7 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Creating temporary directory
-tmpdir=$(mktemp -p $BACKUP -d "tmp.$database.XXXXXXXXXX" > /dev/null 2>&1)
+tmpdir=$(mktemp -p $BACKUP -d "tmp.$database.XXXXXXXXXX")
 
 # Suspend database
 $BIN/v-suspend-database $owner $database > /dev/null 2>&1
@@ -104,27 +106,27 @@ echo "$db_data" >> $HESTIA/data/users/$user/db.conf
 parse_object_kv_list "$db_data"
 
 # Unsuspend db
-$BIN/v-unsuspend-database $user $new_db > /dev/null 2>&1
+$BIN/v-unsuspend-database "$user" "$new_db" > /dev/null 2>&1
 
 # Rebuild databases
-$BIN/v-rebuild-databases $user
+$BIN/v-rebuild-databases "$user"
 
 # Import dump
 case $TYPE in
-    mysql) import_mysql_database $dump ;;
-    pgsql) import_pgsql_database $dump ;;
+    mysql) import_mysql_database "$dump" ;;
+    pgsql) import_pgsql_database "$dump" ;;
 esac
 
 # Deleting tmpdir
 rm -rf $tmpdir
 
 # Remove old database
-$BIN/v-unsuspend-database $owner $database > /dev/null 2>&1
-$BIN/v-delete-database $owner $database > /dev/null 2>&1
+$BIN/v-unsuspend-database "$owner" "$database" > /dev/null 2>&1
+$BIN/v-delete-database "$owner" "$database" > /dev/null 2>&1
 
 # Update counters
-$BIN/v-update-user-counters $owner
-$BIN/v-update-user-counters $user
+$BIN/v-update-user-counters "$owner"
+$BIN/v-update-user-counters "$user"
 
 
 #----------------------------------------------------------#

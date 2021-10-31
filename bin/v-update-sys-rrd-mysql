@@ -16,12 +16,14 @@
 period=${1-daily}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/db.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -34,7 +36,7 @@ case $period in
     weekly)  start='-7d'; end='now'; grid='HOUR:8:DAY:1:DAY:1:0:%a %d';;
     monthly) start='-1m'; end='now'; grid='WEEK:1:WEEK:1:WEEK:1:0:%b %d';;
     yearly)  start='-1y'; end='now'; grid='MONTH:1:YEAR:1:MONTH:2:2419200:%b';;
-    *) exit $E_RRD ;;
+    *) exit "$E_RRD" ;;
 esac
 
 # Checking directory
@@ -44,7 +46,7 @@ fi
 
 # Parsing db hosts
 conf="$HESTIA/conf/mysql.conf"
-hosts=$(grep HOST $conf |awk '{print $1}' |cut -f 2 -d \')
+hosts=$(grep HOST "$conf" |awk '{print $1}' |cut -f 2 -d \')
 check_row=$(echo "$hosts" |wc -l)
 if [ 0 -eq "$check_row" ]; then
     exit
@@ -73,7 +75,7 @@ for host in $hosts; do
     fi
 
     if [ "$period" = 'daily' ]; then
-        mysql_connect $host
+        mysql_connect "$host"
         query='SHOW GLOBAL STATUS'
         status=$(mysql_query "$query" 2>/dev/null)
         if [ $? -ne 0 ]; then
@@ -119,7 +121,7 @@ for host in $hosts; do
         GPRINT:s:'MAX:Max\:''%8.0lf\j'  &>/dev/null; result=$?
 
     if [ "$result" -ne 0 ]; then
-        exit $E_RRD
+        exit "$E_RRD"
     fi
 
 done

@@ -2,13 +2,13 @@
 
 [Hestia Control Panel](https://www.hestiacp.com/)
 ==================================================
-**Latest stable release:** Version 1.4.2 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md)<br>
+**Latest stable release:** Version 1.4.17 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md) | [![Build Status](https://drone.hestiacp.com/api/badges/hestiacp/hestiacp/status.svg?ref=refs/heads/main)](https://drone.hestiacp.com/hestiacp/hestiacp) <br>
 
 **Web:** [www.hestiacp.com](https://www.hestiacp.com/)<br>
 **Documentation:** [docs.hestiacp.com](https://docs.hestiacp.com/)<br>
 **Forums:** [forum.hestiacp.com](https://forum.hestiacp.com/)<br>
 **Discord:** [Join the discussion](https://discord.gg/nXRUZch)<br />
-<br>
+<br><br>
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ST87LQH2CHGLA)
 <br>
 
@@ -22,14 +22,14 @@ Features and Services
 * Multiple PHP versions (5.6 - 8.0, 7.4 as default)
 * DNS Server (Bind) with clustering capabilities
 * POP/IMAP/SMTP mail services with Anti-Virus, Anti-Spam, and Webmail (ClamAV, SpamAssassin, Roundcube, Rainloop)
-* MariaDB or PostgreSQL databases
+* MariaDB and/or PostgreSQL databases
 * Let's Encrypt SSL support with wildcard certificates
 * Firewall with brute-force attack detection and IP lists (iptables, fail2ban, and ipset).
 
 Supported platforms and operating systems
 ----------------------------
 * **CPU Architecture:** AMD64 (x86_64 Intel/AMD)
-* **Debian:** 10 or 9
+* **Debian:** 11, 10 or 9
 * **Ubuntu:** 20.04 LTS or 18.04 LTS
 * **NOTE:** Hestia Control Panel must be installed on top of a fresh operating system installation to ensure proper functionality.
 

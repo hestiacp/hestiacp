@@ -1,5 +1,5 @@
 <?php
-error_reporting(NULL);
+#error_reporting(NULL);
 $TAB = 'USER';
 
 // Main include

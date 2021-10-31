@@ -17,12 +17,14 @@ ip=$1
 ip_status=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -42,7 +44,7 @@ if [ "$web_domains" -ne '0' ] && [ "$sys_user" != "$ip_owner" ]; then
     check_result "$E_INUSE" "ip $ip is used"
 fi
 if [ "$ip_owner" != "admin" ] && [ "$ip_status" == "shared" ]; then
-    $HESTIA/bin/v-change-sys-ip-owner $ip admin
+    $HESTIA/bin/v-change-sys-ip-owner "$ip" "admin"
 fi
 
 # Perform verification if read-only mode is enabled

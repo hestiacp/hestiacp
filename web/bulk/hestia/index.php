@@ -1,16 +1,14 @@
 <?php
+
 // Init
-error_reporting(NULL);
+error_reporting(null);
 ob_start();
 session_start();
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check token
-if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
-    header('location: /login/');
-    exit();
-}
+verify_csrf($_POST);
 
 
 $pkg = $_POST['pkg'];
@@ -24,7 +22,7 @@ if ($_SESSION['userContext'] === 'admin') {
     }
     foreach ($pkg as $value) {
         $value = escapeshellarg($value);
-        exec (HESTIA_CMD.$cmd." ".$value, $output, $return_var);
+        exec(HESTIA_CMD.$cmd." ".$value, $output, $return_var);
     }
 }
 

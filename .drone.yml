@@ -1,0 +1,108 @@
+---
+kind: pipeline
+type: ssh
+name: HestiaCP + Nginx + Apache2  
+
+concurrency:
+  limit: 1
+
+server:
+  host:
+    from_secret: server_address
+  user: 
+    from_secret: username
+  ssh_key: 
+    from_secret: ssh_key
+
+platform:
+  os: linux
+  arch: amd64
+   
+steps:
+- name: Download submodules
+  image: alpine/git
+  commands:
+  - git submodule update --init --recursive
+- name: Build Hestia package and install
+  commands:
+  - ./src/hst_autocompile.sh --hestia --install '~localsrc'
+- name: Run system / user tests
+  commands:
+  - bats ./test/test.bats
+- name: Run restore tests
+  commands:
+  - bats ./test/restore.bats
+- name: Run config tests 
+  commands:
+  - bats ./test/config-tests.bats
+- name: Run Check PHP
+  commands: 
+  - ./test/check_php.sh
+
+trigger:
+  event: [ push, pull_request ]
+
+---
+kind: pipeline
+type: ssh
+name: HestiaCP + Nginx  
+
+concurrency:
+  limit: 1
+
+server:
+  host:
+    from_secret: server_address2
+  user: 
+    from_secret: username
+  ssh_key: 
+    from_secret: ssh_key
+
+platform:
+  os: linux
+  arch: amd64
+   
+steps:
+- name: Download submodules
+  image: alpine/git
+  commands:
+  - git submodule update --init --recursive
+- name: Build Hestia package install
+  commands:
+  - ./src/hst_autocompile.sh --hestia --install '~localsrc'
+- name: Run system / user tests
+  commands:
+  - bats ./test/test.bats
+- name: Run restore tests
+  commands:
+  - bats ./test/restore.bats
+- name: Run config tests 
+  commands:
+  - bats ./test/config-tests.bats
+- name: Run Check PHP
+  commands: 
+  - ./test/check_php.sh
+
+trigger:
+  event: [ push, pull_request ]
+
+---
+kind: pipeline
+type: docker
+name: Linting
+
+concurrency:
+  limit: 1
+
+steps:
+  - name: shellcheck
+    image: koalaman/shellcheck-alpine
+    commands:
+    - ./test/shellcheck.sh
+
+trigger:
+   event: [ pull_request, push ] 
+
+---
+kind: signature
+hmac: 48d34d11001c99b470114f50c4284fa107a5e61ad08ada38307493b9e9b2883f

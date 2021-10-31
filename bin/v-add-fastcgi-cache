@@ -17,21 +17,22 @@
 user=$1
 domain=$2
 duration=${3-2m}
-debug=${4-no}
-restart=${5-no}
+restart=${4-no}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN DEBUG'
+check_args '2' "$#" 'USER DOMAIN [DURATION] [DEBUG] [RESTART]'
 is_format_valid 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -62,18 +63,11 @@ parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 # Check that nginx is not in proxy mode
 if [ "$WEB_SYSTEM" != 'nginx' ]; then
     echo "Error: nginx is in proxy mode"
-    exit $E_NOTEXIST
-fi
-
-if ! grep --quiet "forcessl" $HESTIA/data/templates/web/nginx/default.tpl; then
-    $BIN/v-update-web-templates
+    exit "$E_NOTEXIST"
 fi
 
 fastcgi="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.fastcgi_cache.conf"
 no_cache='$no_cache'
-cookie_session='$cookie_session'
-http_x_update='$http_x_update'
-status='$upstream_cache_status'
 
 cat << EOF > $fastcgi
     fastcgi_cache $domain;
@@ -85,9 +79,6 @@ cat << EOF > $fastcgi
     set $no_cache 0;
 EOF
 
-if [ ! -z "$debug" ]; then
-    echo "    add_header \"X-STATUS\" \"$status\";" >> $fastcgi
-fi
 
 chown root:$user $fastcgi
 chmod 640 $fastcgi
@@ -120,11 +111,9 @@ fi
 update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_CACHE' 'yes'
 update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_DURATION' "$duration"
 
-if [ "$restart" = "yes" ]; then
-    # Restart web server
-    $BIN/v-restart-web
-    check_result $? "Web server restart failed" > /dev/null
-fi
+# Restart web server
+$BIN/v-restart-web "$restart"
+check_result $? "Web server restart failed" > /dev/null
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Web" "FastCGI cache enabled (Domain: $domain)."

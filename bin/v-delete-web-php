@@ -16,10 +16,12 @@
 version=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -55,11 +57,12 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-mph="php$version-mbstring php$version-bcmath php$version-cli php$version-curl
-     php$version-fpm php$version-gd php$version-intl php$version-mysql
-     php$version-soap php$version-xml php$version-zip php$version-mbstring
-     php$version-json php$version-bz2 php$version-pspell"
-
+mph="php$version-common php$version-mbstring php$version-bcmath php$version-cli php$version-curl
+ php$version-fpm php$version-gd php$version-intl php$version-mysql
+ php$version-soap php$version-xml php$version-zip php$version-mbstring
+ php$version-json php$version-bz2 php$version-pspell php$version-imagick php$version-pgsql
+ php$version-imap php$version-ldap"
+ 
 # Check is version is 7.1 or below to add mcrypt
 if [[ `echo "$version 7.2" | awk '{print ($1 < $2)}'` == 1 ]]; then
     mph="$mph php$version-mcrypt"
@@ -81,22 +84,24 @@ done
 # Do a blank echo to get the \n back
 echo
 
-# Check if installation was sucessfully
+# Check if installation was successfully
 if [ -f "$php_fpm" ]; then
     echo "ERROR: Uninstallation failed, please run the following command manually for debugging:"
     echo "apt-get purge $mph"
+    exit 1; 
 fi
 
 # Cleanup php folder
 [[ -d /etc/php/$version ]] && rm -rf "/etc/php/$version"
 
 if [ "$WEB_BACKEND" = "php-fpm" ]; then
-    # Check if www.conf is still missing
-    if [ ! -f "/etc/php/*/fpm/pool.d/www.conf" ]; then
+    conf=$(find /etc/php* -name www.conf)
+    # Check if www.conf exists
+    if [ -z  "$conf" ]; then
         # If not grab the "last php version
-        last=$($HESTIA/bin/v-list-sys-php "shell" | tail -n1);
+        last=$($BIN/v-list-sys-php "shell" | tail -n1);
         cp -f $HESTIA/install/deb/php-fpm/www.conf /etc/php/$last/fpm/pool.d/www.conf
-        $HESTIA/bin/v-restart-web-backend
+        $BIN/v-restart-web-backend
     fi
 fi
 

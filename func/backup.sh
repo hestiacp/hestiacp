@@ -1,3 +1,4 @@
+#!/bin/bash
 # Local storage
 # Defining local storage function
 local_backup(){
@@ -25,7 +26,7 @@ local_backup(){
         rm -rf $tmpdir
         rm -f $BACKUP/$user.log
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-        echo "Not enough disk space" |$SENDMAIL -s "$subj" $email "yes"
+        echo "Not enough disk space" | $SENDMAIL -s "$subj" "$email" "yes"
         check_result "$E_DISK" "Not enough dsk space"
     fi
 
@@ -66,7 +67,7 @@ ftp_backup() {
     fi
 
     # Parse config
-    source $HESTIA/conf/ftp.backup.conf
+    source_conf "$HESTIA/conf/ftp.backup.conf"
 
     # Set default port
     if [ -z "$(grep 'PORT=' $HESTIA/conf/ftp.backup.conf)" ]; then
@@ -89,7 +90,7 @@ ftp_backup() {
     # Checking ftp connection
     fconn=$(ftpc)
     ferror=$(echo $fconn |grep -i -e failed -e error -e "Can't" -e "not conn")
-    if [ ! -z "$ferror" ]; then
+    if [ -n "$ferror" ]; then
         error="Error: can't login to ftp ftp://$USERNAME@$HOST"
         echo "$error" |$SENDMAIL -s "$subj" $email $notify
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
@@ -107,7 +108,7 @@ ftp_backup() {
     fi
     ftpc "mkdir $ftmpdir" "rm $ftmpdir"
     ftp_result=$(ftpc "mkdir $ftmpdir" "rm $ftmpdir" |grep -v Trying)
-    if [ ! -z "$ftp_result" ] ; then
+    if [ -n "$ftp_result" ] ; then
         error="Can't create ftp backup folder ftp://$HOST$BPATH"
         echo "$error" |$SENDMAIL -s "$subj" $email $notify
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
@@ -160,7 +161,7 @@ ftp_backup() {
 
 # FTP backup download function
 ftp_download() {
-    source $HESTIA/conf/ftp.backup.conf
+    source_conf "$HESTIA/conf/ftp.backup.conf"
     if [ -z "$PORT" ]; then
         PORT='21'
     fi
@@ -173,7 +174,7 @@ ftp_download() {
 
 #FTP Delete function
 ftp_delete() {
-    source $HESTIA/conf/ftp.backup.conf
+    source_conf "$HESTIA/conf/ftp.backup.conf"
     if [ -z "$PORT" ]; then
         PORT='21'
     fi
@@ -246,7 +247,7 @@ EOF
 
 # SFTP backup download function
 sftp_download() {
-    source $HESTIA/conf/sftp.backup.conf
+    source_conf "$HESTIA/conf/sftp.backup.conf"
     if [ -z "$PORT" ]; then
         PORT='22'
     fi
@@ -260,7 +261,7 @@ sftp_download() {
 
 sftp_delete() {
     echo "$1"
-    source $HESTIA/conf/sftp.backup.conf
+    source_conf "$HESTIA/conf/sftp.backup.conf"
     if [ -z "$PORT" ]; then
         PORT='22'
     fi
@@ -285,7 +286,7 @@ sftp_backup() {
     fi
 
     # Parse config
-    source $HESTIA/conf/sftp.backup.conf
+    source_conf "$HESTIA/conf/sftp.backup.conf"
 
     # Set default port
     if [ -z "$(grep 'PORT=' $HESTIA/conf/sftp.backup.conf)" ]; then
@@ -374,7 +375,7 @@ sftp_backup() {
 google_backup() {
 
     # Defining google settings
-    source $HESTIA/conf/google.backup.conf
+    source_conf "$HESTIA/conf/google.backup.conf"
     gsutil="$HESTIA/3rdparty/gsutil/gsutil"
     export BOTO_CONFIG="$HESTIA/conf/.google.backup.boto"
 
@@ -411,7 +412,7 @@ google_backup() {
 }
 
 google_download() {
-    source $HESTIA/conf/google.backup.conf
+    source_conf "$HESTIA/conf/google.backup.conf"
     gsutil="$HESTIA/3rdparty/gsutil/gsutil"
     export BOTO_CONFIG="$HESTIA/conf/.google.backup.boto"
     ${gsutil} cp gs://$BUCKET/$BPATH/$1 $BACKUP/ > /dev/null 2>&1
@@ -423,7 +424,7 @@ google_download() {
 # BackBlaze B2 backup function
 b2_backup() {
     # Defining backblaze b2 settings
-    source $HESTIA/conf/b2.backup.conf
+    source_conf "$HESTIA/conf/b2.backup.conf"
 
     # Recreate backblaze auth file ~/.b2_account_info (for situation when key was changed in b2.backup.conf)
     b2 clear-account > /dev/null 2>&1
@@ -456,5 +457,19 @@ b2_backup() {
             echo -e "$(date "+%F %T") Rotated b2 backup: $backup_file_name"
             b2 delete-file-version $backup > /dev/null 2>&1
         done
+    fi
+}
+
+b2_download() {
+    # Defining backblaze b2 settings
+    source_conf "$HESTIA/conf/b2.backup.conf"
+
+    # Recreate backblaze auth file ~/.b2_account_info (for situation when key was changed in b2.backup.conf)
+    b2 clear-account > /dev/null 2>&1
+    b2 authorize-account $B2_KEYID $B2_KEY > /dev/null 2>&1
+    cd $BACKUP
+    b2 download-file-by-name $BUCKET $user/$1 $1 > /dev/null 2>&1
+    if [ "$?" -ne 0 ]; then
+    check_result "$E_CONNECT" "b2 failed to download $user.$1"
     fi
 }

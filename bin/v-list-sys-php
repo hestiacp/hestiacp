@@ -26,9 +26,9 @@ source_conf "$HESTIA/conf/hestia.conf"
 # JSON list function
 json_list() {
     i=1
-    objects=$(echo "$versions" |wc -w)
+    objects=$(echo "${versions[@]}" |wc -w)
     echo '['
-    for version in $versions; do
+    for version in "${versions[@]}"; do
         if [ "$i" -lt "$objects" ]; then
             echo -e  "\t\"$version\","
         else
@@ -43,14 +43,14 @@ json_list() {
 shell_list() {
     echo "VERSION"
     echo "--------"
-    for version in $versions; do
+    for version in "${versions[@]}"; do
         echo "$version"
     done
 }
 
 # PLAIN list function
 plain_list() {
-    for version in $versions; do
+    for version in "${versions[@]}"; do
         echo "$version"
     done
 }
@@ -58,7 +58,7 @@ plain_list() {
 # CSV list function
 csv_list() {
     echo "VERSION"
-    for version in $versions; do
+    for version in "${versions[@]}"; do
         echo "$version"
     done
 }
@@ -68,8 +68,12 @@ csv_list() {
 #                       Action                             #
 #----------------------------------------------------------#
 
+declare -a versions;
 # List through /etc/php
-versions=$(/usr/sbin/phpquery -V);
+for version in /etc/php/*/fpm; do
+    ver=$(echo "$version" | awk -F"/" '{ print $4 }');
+    versions+=("$ver")
+done
 
 # Listing data
 case $format in

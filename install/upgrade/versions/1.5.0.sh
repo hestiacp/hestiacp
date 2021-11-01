@@ -39,7 +39,7 @@ if [ -n "$MAIL_SYSTEM" ]; then
     
     # Clean up legacy ip variable
     for ip in $($BIN/v-list-sys-ips plain | cut -f1); do
-        sed '/^HELO/d' $HESTIA/data/ips/$ip;
+        sed '/^HELO/d' $HESTIA/data/ips/$ip  > /dev/null
     done
 fi
 
@@ -53,7 +53,12 @@ if [ -L "/var/log/hestia" ]; then
     touch /var/log/hestia/auth.log /var/log/hestia/error.log /var/log/hestia/system.log /var/log/hestia/nginx-error.log /var/log/hestia/nginx-access.log
 fi
 
-if [ -d "/var/log/roundcube" ]; then 
+if [ -d "/var/log/roundcube" ]; then
    chown www-data:root /var/log/roundcube
    chmod 751 /var/log/roundcube
+fi
+
+if [ -d "/etc/roundcube" ]; then
+   chmod 644 /etc/roundcube/defaults.inc.php
+   chmod 644 /etc/roundcube/mimetypes.php
 fi

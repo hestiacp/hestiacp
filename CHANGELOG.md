@@ -19,12 +19,13 @@ All notable changes to this project will be documented in this file.
 - Improve ssh port detection for filemanager. Allowing users to create /etc/ssh/sshd.conf.d/custom.conf with custom port
 - Fix an bug in v-add-letsencrypt-host due to changes of Lets Encrypt causing issues with rate limiting
 - Improve Update process Hestia and allow versions to decide a a rebuild is required
-- Add Download SSL certificate function for self generated ssl cerrtificates #2181
+- Add Download SSL certificate function for self generated ssl certificates #2181
 - Block access to .user.ini for Nginx + Apache2 #2179
 - Add support for download B2 backup to local server to allow for restore #2199
 - Update permissions /var/kog/roundcube on older installations #2173
 - Update translations
-- Fix Roundcube persmissions
+- Fix Roundcube permissions
+- Add webp to list of media formats that can be cached by the browser 
 
 ### Dependencies
 

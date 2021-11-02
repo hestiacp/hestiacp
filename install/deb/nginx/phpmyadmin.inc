@@ -17,7 +17,7 @@ location /%pma_alias% {
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $request_filename;
     }
-    location /%pma_alias%/(.+\.(jpg|jpeg|gif|css|png|js|ico|html|xml|txt))$ {
+    location /%pma_alias%/(.+\.(jpg|jpeg|gif|css|png|webp|js|ico|html|xml|txt))$ {
         root /usr/share/phpmyadmin/;
     }
 }

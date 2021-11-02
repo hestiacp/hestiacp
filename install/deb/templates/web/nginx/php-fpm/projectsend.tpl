@@ -58,7 +58,7 @@ server {
        fastcgi_request_buffering off;
     }
 
-    location ~* \.(?:svg|gif|png|html|ttf|woff|ico|jpg|jpeg)$ {
+    location ~* \.(?:svg|gif|png|webp|html|ttf|woff|ico|jpg|jpeg)$ {
         try_files $uri /index.php$uri$is_args$args;
         # Optional: Don't log access to other assets
         access_log off;

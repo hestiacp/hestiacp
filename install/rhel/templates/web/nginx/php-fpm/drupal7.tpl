@@ -54,7 +54,7 @@ server {
         try_files $uri /index.php?$query_string;
     }
 
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ {
+    location ~* \.(js|css|png|webp|jpg|jpeg|gif|ico|svg)$ {
         try_files $uri @rewrite;
         expires max;
         log_not_found off;

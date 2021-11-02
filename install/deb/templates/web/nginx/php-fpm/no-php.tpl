@@ -15,7 +15,7 @@ server {
     include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
 
     location / {
-        location ~* ^.+\.(jpeg|jpg|png|gif|bmp|ico|svg|css|js)$ {
+        location ~* ^.+\.(jpeg|jpg|png|webp|gif|bmp|ico|svg|css|js)$ {
             expires     max;
             fastcgi_hide_header "Set-Cookie";
         }

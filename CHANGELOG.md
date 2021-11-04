@@ -22,10 +22,11 @@ All notable changes to this project will be documented in this file.
 - Add Download SSL certificate function for self generated ssl certificates #2181
 - Block access to .user.ini for Nginx + Apache2 #2179
 - Add support for download B2 backup to local server to allow for restore #2199
-- Update permissions /var/kog/roundcube on older installations #2173
+- Update permissions /var/log/roundcube on older installations #2173
 - Update translations
 - Fix Roundcube permissions
 - Add webp to list of media formats that can be cached by the browser 
+- Disable  /list/log/auth when in Demo mode
 
 ### Dependencies
 

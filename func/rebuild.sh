@@ -383,15 +383,17 @@ rebuild_web_domain_conf() {
                 grep "^$position:" |cut -f 2 -d :)
             ftp_md5=$(echo $FTP_MD5 | tr ':' '\n' |grep -n '' |\
                 grep "^$position:" |cut -f 2 -d :)
-
             # rebuild S/FTP users
             $BIN/v-delete-web-domain-ftp "$user" "$domain" "$ftp_user"
-            $BIN/v-add-web-domain-ftp "$user" "$domain" "${ftp_user#*_}" "!xplaceholder$FTP_MD5" "$ftp_path"
-
+            # Generate temporary password to add user but update afterwards
+            temp_password=$(generate_password);
+            $BIN/v-add-web-domain-ftp "$user" "$domain" "${ftp_user#*_}" "$temp_password" "$ftp_path"
             # Updating ftp user password
             chmod u+w /etc/shadow
             sed -i "s|^$ftp_user:[^:]*:|$ftp_user:$ftp_md5:|" /etc/shadow
             chmod u-w /etc/shadow
+            #Update web.conf for next rebuild or move
+            update_object_value 'web' 'DOMAIN' "$domain" '$FTP_MD5' "$ftp_md5"
         fi
     done
 

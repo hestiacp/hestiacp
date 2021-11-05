@@ -77,6 +77,12 @@ if [ -n "$PROXY_SYSTEM" ] && [ -n "$PROXY" ]; then
     fi
 fi
 
+# Check for webmail
+if [ -n "$IMAP_SYSTEM" ]; then
+    $BIN/v-rebuild-mail-domain "$user" "$domain"
+fi
+
+
 
 #----------------------------------------------------------#
 #                       Hestia                             #

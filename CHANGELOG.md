@@ -26,6 +26,7 @@ All notable changes to this project will be documented in this file.
 - Update translations
 - Fix Roundcube permissions
 - Add webp to list of media formats that can be cached by the browser 
+- Disable  /list/log/auth when in Demo mode
 - Fix #1139 By force rebuilding webmail config files
 
 ### Dependencies

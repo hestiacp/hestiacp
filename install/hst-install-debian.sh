@@ -180,6 +180,16 @@ validate_hostname () {
     fi
 }
 
+validate_email (){
+  if [[ ! "$email" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.[A-Za-z]{2,63}$ ]] ; then
+    # Email invalid
+    return 0
+  else
+    # Email valid
+    return 1
+  fi
+}
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -586,7 +596,15 @@ if [ "$interactive" = 'yes' ]; then
 
     # Asking for contact email
     if [ -z "$email" ]; then
+        while validate_email; do
+        echo -e "\nPlease use a valid emailadress (ex. info@domain.tld)."
         read -p 'Please enter admin email address: ' email
+        done
+    else
+      if validate_email; then
+      echo "Please use a valid emailadress (ex. info@domain.tld)."
+      exit 1
+      fi
     fi
 
     # Asking to set FQDN hostname
@@ -628,6 +646,10 @@ if ! [[ "$servername" =~ ^${mask1}${mask2}$ ]]; then
         servername="example.com"
     fi
     echo "127.0.0.1 $servername" >> /etc/hosts
+fi
+
+if [ -z $(grep -i "$servername" /etc/hosts) ]; then
+  echo "127.0.0.1 $servername" >> /etc/hosts
 fi
 
 # Set email if it wasn't set

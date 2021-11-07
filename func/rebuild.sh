@@ -724,21 +724,30 @@ rebuild_mysql_database() {
         fi
     else
         # mariadb
-        if [ "$(echo $mysql_ver |cut -d '.' -f1)" -eq 5 ]; then
+        mysql_ver_sub=$(echo $mysql_ver |cut -d '.' -f1)
+        mysql_ver_sub_sub=$(echo $mysql_ver |cut -d '.' -f2)
+        if [ "$mysql_ver_sub" -eq 5 ]; then
             # mariadb = 5
             mysql_query "CREATE USER \`$DBUSER\`" > /dev/null
             mysql_query "CREATE USER \`$DBUSER\`@localhost" > /dev/null
+            query="UPDATE mysql.user SET Password='$MD5' WHERE User='$DBUSER'"
         else
             # mariadb = 10
             mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\` IDENTIFIED BY PASSWORD '$MD5'" > /dev/null
             mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\`@localhost IDENTIFIED BY PASSWORD '$MD5'" > /dev/null
+            query="UPDATE mysql.user SET Password='$MD5' WHERE User='$DBUSER'"
+            if [ "$mysql_ver_sub_sub" -ge 4 ]; then
+                query="SET PASSWORD FOR '$DBUSER'@'%' = '$MD5';"
+                query2="SET PASSWORD FOR '$DBUSER'@'localhost' = '$MD5';"
+            fi
         fi
-        # mariadb any version
-        query="UPDATE mysql.user SET Password='$MD5' WHERE User='$DBUSER'"
     fi
     mysql_query "GRANT ALL ON \`$DB\`.* TO \`$DBUSER\`@\`%\`" >/dev/null
     mysql_query "GRANT ALL ON \`$DB\`.* TO \`$DBUSER\`@localhost" >/dev/null
     mysql_query "$query" >/dev/null
+    if [ ! -z "$query2" ]; then
+        mysql_query "$query2" >/dev/null
+    fi
     mysql_query "FLUSH PRIVILEGES" >/dev/null
 }
 

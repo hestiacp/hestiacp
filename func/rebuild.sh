@@ -413,21 +413,32 @@ rebuild_web_domain_conf() {
         sed -i "/^$auth_user:/d" $htpasswd
         echo "$auth_user:$auth_hash" >> $htpasswd
 
-        # Checking web server include
-        if [ ! -e "$htaccess" ]; then
-            if [ "$WEB_SYSTEM" != 'nginx' ]; then
+        # Adding htaccess password protection
+        if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
+            htaccess="$HOMEDIR/$user/conf/web/$domain/nginx.conf_htaccess"
+            shtaccess="$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_htaccess"
+            if [ ! -f "$htaccess" ]; then
+                echo "auth_basic  \"$domain password access\";" > $htaccess
+                echo "auth_basic_user_file    $htpasswd;" >> $htaccess
+                ln -s $htaccess $shtaccess
+                restart_required='yes'
+            fi
+        else
+            htaccess="$HOMEDIR/$user/conf/web/$domain/apache2.conf_htaccess"
+            shtaccess="$HOMEDIR/$user/conf/web/$domain/apache2.ssl.conf_htaccess"
+            if [ ! -f "$htaccess" ]; then
                 echo "<Directory $docroot>" > $htaccess
                 echo "    AuthUserFile $htpasswd" >> $htaccess
                 echo "    AuthName \"$domain access\"" >> $htaccess
                 echo "    AuthType Basic" >> $htaccess
                 echo "    Require valid-user" >> $htaccess
                 echo "</Directory>" >> $htaccess
-            else
-                echo "auth_basic  \"$domain password access\";" > $htaccess
-                echo "auth_basic_user_file    $htpasswd;" >> $htaccess
+                ln -s $htaccess $shtaccess
+                restart_required='yes'
             fi
-            chmod 640 $htpasswd $htaccess >/dev/null 2>&1
         fi
+        chmod 644 $htpasswd $htaccess
+        chgrp $user $htpasswd $htaccess
     done
 
     # Set folder permissions

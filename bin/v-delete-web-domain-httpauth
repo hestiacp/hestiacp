@@ -28,10 +28,6 @@ source $HESTIA/func/domain.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-# Defining htpasswd file
-htaccess="$HOMEDIR/$user/conf/web/$domain/htaccess"
-htpasswd="$HOMEDIR/$user/conf/web/$domain/htpasswd"
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -57,18 +53,29 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
+htpasswd="$HOMEDIR/$user/conf/web/$domain/htpasswd"
 # Deleting auth user
 sed -i "/^$auth_user:/d" $htpasswd
 
 # Deleting password protection
 if [ "$(echo "$AUTH_USER" |tr : '\n' |wc -l)" -le 1 ]; then
-    rm -f $htaccess $htpasswd $shtaccess $shtpasswd
+    if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
+    htaccess="$HOMEDIR/$user/conf/web/$domain/nginx.conf_htaccess"
+    shtaccess="$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_htaccess"
+    else
+    htaccess="$HOMEDIR/$user/conf/web/$domain/apache2.conf_htaccess"
+    shtaccess="$HOMEDIR/$user/conf/web/$domain/apache2.ssl.conf_htaccess"
+    fi
+    rm -f $htaccess $htpasswd $shtaccess
     restart_required='yes'
 fi
 
 # Restarting web server
 if [ "$restart" != 'no' ] && [ "$restart_required" = 'yes' ]; then
     $BIN/v-restart-web
+    if [ -n "$PROXY_SYSTEM" ]; then
+        $BIN/v-restart-proxy
+    fi
 fi
 
 

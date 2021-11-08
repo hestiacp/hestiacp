@@ -30,15 +30,14 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 check_args '1' "$#" 'USER'
 is_format_valid 'user'
+# Limit to only Hestia user(s)
+is_object_valid 'user' 'USER' "$user"
 user_str=$(grep "^$user:" /etc/passwd |egrep "rssh|nologin")
+echo $user_str
 if [ -z "$user_str" ]; then
     exit
 fi
 
-# Do not create chroot for syslog user
-if [ $user = "syslog" ]; then
-    exit
-fi
 
 # Get current users and split into array
 ssh_users=$(grep -A1 "^# Hestia SFTP Chroot" /etc/ssh/sshd_config | sed -n 2p | sed 's/Match User //')
@@ -46,7 +45,7 @@ IFS=',' read -r -a users <<< "$ssh_users"
 
 match_string="$ssh_users,"
 # Check if jail exist
-if [[ ! "$match_string" =~ ,$user, ]]; then
+if [[ "$match_string" =~ ,$user, ]]; then
     if [[ -d /home/$user && -z "$(find /home/$user -user root -print -prune -o -prune)" ]]; then
        chown root:root /home/$user
     fi

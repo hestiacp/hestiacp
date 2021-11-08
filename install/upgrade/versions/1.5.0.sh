@@ -33,7 +33,7 @@ if [ -n "$MAIL_SYSTEM" ]; then
     
         sed -i 's/^  helo_data = \${if exists {\/etc\/exim4\/mailhelo\.conf}{\${lookup{\$sending_ip_address}lsearch{\/etc\/exim4\/mailhelo\.conf}{\$value}{\$primary_hostname}}}{\$primary_hostname}}$/  helo_data = \${lookup dnsdb{ptr=\$sending_ip_address}{\$value}{\$primary_hostname}}/' /etc/exim4/exim4.conf.template
     
-        sed -i '/s^          condition     = ${if match {${lookup dnsdb{>: defer_never,ptr=$sender_host_address}}\\}{$sender_helo_name}{no}{yes}}/          condition     = ${if match {${lookup dnsdb{>: defer_never,ptr=$sender_host_address}}}{$sender_helo_name}{no}{yes}}' /etc/exim4/exim4.conf.template
+        sed -i 's|condition     = ${if match {${lookup dnsdb{>: defer_never,ptr=$sender_host_address}}\\}{$sender_helo_name}{no}{yes}}|condition     = ${if match {${lookup dnsdb{>: defer_never,ptr=$sender_host_address}}}{$sender_helo_name}{no}{yes}}|g' /etc/exim4/exim4.conf.template
     fi
     
     # Clean up legacy mailhelo file

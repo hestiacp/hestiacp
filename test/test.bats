@@ -1326,7 +1326,8 @@ function check_ip_not_banned(){
     run v-add-web-domain $user2 $subdomain
     assert_success
     refute_output
-
+}
+@test "Allow Users: Delete user2" {
     run v-delete-user $user2
     assert_success
     refute_output

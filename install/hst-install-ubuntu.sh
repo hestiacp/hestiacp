@@ -26,7 +26,7 @@ VERBOSE='no'
 HESTIA_INSTALL_VER='1.5.0~beta'
 pma_v='5.1.1'
 rc_v="1.5.0"
-multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
+multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1")
 fpm_v="8.0"
 mariadb_v="10.6"
 

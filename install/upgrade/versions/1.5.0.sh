@@ -32,18 +32,16 @@ if [ -n "$MAIL_SYSTEM" ]; then
         sed -i 's/^smtp_active_hostname = \${if exists {\/etc\/exim4\/mailhelo\.conf}{\${lookup{\$interface_address}lsearch{\/etc\/exim4\/mailhelo\.conf}{\$value}{\$primary_hostname}}}{\$primary_hostname}}$/smtp_active_hostname = \${lookup dnsdb{ptr=\$interface_address}{\$value}{\$primary_hostname}}/' /etc/exim4/exim4.conf.template
     
         sed -i 's/^  helo_data = \${if exists {\/etc\/exim4\/mailhelo\.conf}{\${lookup{\$sending_ip_address}lsearch{\/etc\/exim4\/mailhelo\.conf}{\$value}{\$primary_hostname}}}{\$primary_hostname}}$/  helo_data = \${lookup dnsdb{ptr=\$sending_ip_address}{\$value}{\$primary_hostname}}/' /etc/exim4/exim4.conf.template
-    
-        sed -i 's|condition     = ${if match {${lookup dnsdb{>: defer_never,ptr=$sender_host_address}}\\}{$sender_helo_name}{no}{yes}}|condition     = ${if match {${lookup dnsdb{>: defer_never,ptr=$sender_host_address}}}{$sender_helo_name}{no}{yes}}|g' /etc/exim4/exim4.conf.template
     fi
     
     # Clean up legacy mailhelo file
     rm -f /etc/${MAIL_SYSTEM}/mailhelo.conf
+    
+    # Clean up legacy ip variable
+    for ip in $($BIN/v-list-sys-ips plain | cut -f1); do
+        sed '/^HELO/d' $HESTIA/data/ips/$ip  > /dev/null
+    done
 fi
-
-# Clean up legacy ip variable
- for ip in $($BIN/v-list-sys-ips plain | cut -f1); do
-     sed '/^HELO/d' $HESTIA/data/ips/$ip  > /dev/null
- done
 
 if [ -L "/var/log/hestia" ]; then
     echo "[ ! ] Move /usr/local/hestia/log/* to /var/log/hestia/"

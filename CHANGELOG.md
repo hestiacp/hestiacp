@@ -1,13 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [DEVELOPMENT] - Development version
+## [1.5.0] - Service release
 
 ## Features
 
 - Add support for Dovecote Sieve #2163 (@2163)
 - Improve HELO based system and use RDNS lookup instead our old system
 - Set default php version for new installs to PHP 8.0 
+- Add support for ARM64 Processors
 
 ### Bugfixes
 

@@ -39,7 +39,7 @@ ARM64 (arm64)
 ----------------------------
 * **Debian:** 11, 10
 * **Ubuntu:** 20.04 LTS
-* **NOTE:** For ARM based processors we currently only support the 64 bit variant. ARM 32bit (armhf) is currenlty not supported!
+* **NOTE:** ARM 64 bit processors only! ARM 32bit (armhf) is currently not supported!
 
 Installing Hestia Control Panel
 ============================

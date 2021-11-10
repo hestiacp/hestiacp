@@ -40,6 +40,7 @@ All notable changes to this project will be documented in this file.
 
 ### Security 
 
+- Improve input validation Add / Edit User package and improve reading config files to prevent security issues.
 - Update jQuery UI to the last version [CVE-2021-41182](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-41182)
 
 ## [1.4.17] - Service release 

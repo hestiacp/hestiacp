@@ -30,10 +30,7 @@ source $HESTIA/func/domain.sh
 source_conf "$HESTIA/conf/hestia.conf"
 
 # Defining htpasswd file
-htaccess="$HOMEDIR/$user/conf/web/$domain/htaccess"
 htpasswd="$HOMEDIR/$user/conf/web/$domain/htpasswd"
-shtaccess="$htaccess"
-shtpasswd="$htpasswd"
 docroot="$HOMEDIR/$user/web/$domain/public_html"
 
 # Perform verification if read-only mode is enabled
@@ -63,41 +60,47 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
+
 # Adding htaccess password protection
-if [ ! -e "$htaccess" ]; then
-    if [ "$WEB_SYSTEM" != 'nginx' ]; then
-        echo "<Directory $docroot>" > $htaccess
-        echo "    AuthUserFile $htpasswd" >> $htaccess
-        echo "    AuthName \"$domain access\"" >> $htaccess
-        echo "    AuthType Basic" >> $htaccess
-        echo "    Require valid-user" >> $htaccess
-        echo "</Directory>" >> $htaccess
+    if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
+        htaccess="$HOMEDIR/$user/conf/web/$domain/nginx.conf_htaccess"
+        shtaccess="$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_htaccess"
+        if [ ! -f "$htaccess" ]; then
+            echo "auth_basic  \"$domain password access\";" > $htaccess
+            echo "auth_basic_user_file    $htpasswd;" >> $htaccess
+            ln -s $htaccess $shtaccess
+            restart_required='yes'
+        fi
     else
-        echo "auth_basic  \"$domain password access\";" > $htaccess
-        echo "auth_basic_user_file    $htpasswd;" >> $htaccess
+        htaccess="$HOMEDIR/$user/conf/web/$domain/apache2.conf_htaccess"
+        shtaccess="$HOMEDIR/$user/conf/web/$domain/apache2.ssl.conf_htaccess"
+        if [ ! -f "$htaccess" ]; then
+            echo "<Directory $docroot>" > $htaccess
+            echo "    AuthUserFile $htpasswd" >> $htaccess
+            echo "    AuthName \"$domain access\"" >> $htaccess
+            echo "    AuthType Basic" >> $htaccess
+            echo "    Require valid-user" >> $htaccess
+            echo "</Directory>" >> $htaccess
+            ln -s $htaccess $shtaccess
+            restart_required='yes'
+        fi
     fi
-    restart_required='yes'
-fi
+
 
 # Adding httpasswd user
 auth_hash=$($BIN/v-generate-password-hash htpasswd htpasswd $password)
 touch $htpasswd
-chmod 640 $htpasswd $htaccess
+chmod 644 $htpasswd $htaccess
 chgrp $user $htpasswd $htaccess
 sed -i "/^$auth_user:/d" $htpasswd
 echo "$auth_user:$auth_hash" >> $htpasswd
 
-# Symbolic link for secure web templates
-if [ ! -L "$shtpasswd" ]; then
-    ln -s $htpasswd $shtpasswd 
-fi
-if [ ! -L "$shtaccess" ]; then
-    ln -s $htaccess $shtaccess
-fi
-
 # Restarting web server
 if [ "$restart" != 'no' ] && [ "$restart_required" = 'yes' ]; then
     $BIN/v-restart-web
+    if [ -n "$PROXY_SYSTEM" ]; then
+        $BIN/v-restart-proxy
+    fi
 fi
 
 #----------------------------------------------------------#

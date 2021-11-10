@@ -28,7 +28,7 @@ server {
             rewrite ^(.+)$ /index.php?q=$1 last;
         }
 
-        location ~* ^.+\.(jpeg|jpg|png|gif|bmp|ico|svg|css|js)$ {
+        location ~* ^.+\.(jpeg|jpg|png|webp|gif|bmp|ico|svg|css|js)$ {
             expires     max;
             fastcgi_hide_header "Set-Cookie";
         }

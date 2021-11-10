@@ -37,7 +37,7 @@ is_format_valid 'service' 'restart'
 if [ "$service" = "php-fpm" ];then
     service_list=''
     # Get installed php versions
-    php_versions=$(/usr/sbin/phpquery -V);
+    php_versions=$($BIN/v-list-sys-php plain);
     # Substitute php-fpm service name formats
     for version in $php_versions; do
         service_list="${service_list} php${version}-fpm"

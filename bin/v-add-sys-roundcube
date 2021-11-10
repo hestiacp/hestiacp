@@ -100,6 +100,7 @@ if [ "$UPDATE" == "no" ]; then
     # Replace with Hestia config
     cp -f $HESTIA_INSTALL_DIR/roundcube/main.inc.php $RC_CONFIG_DIR/config.inc.php
     cp -f $HESTIA_INSTALL_DIR/roundcube/mimetypes.php $RC_CONFIG_DIR/mimetypes.php
+    chmod 644 $RC_CONFIG_DIR/*.php
     
     cp -f $HESTIA_INSTALL_DIR/roundcube/hestia.php $RC_INSTALL_DIR/plugins/password/drivers/
     mkdir -p $RC_CONFIG_DIR/plugins/password

@@ -383,15 +383,17 @@ rebuild_web_domain_conf() {
                 grep "^$position:" |cut -f 2 -d :)
             ftp_md5=$(echo $FTP_MD5 | tr ':' '\n' |grep -n '' |\
                 grep "^$position:" |cut -f 2 -d :)
-
             # rebuild S/FTP users
             $BIN/v-delete-web-domain-ftp "$user" "$domain" "$ftp_user"
-            $BIN/v-add-web-domain-ftp "$user" "$domain" "${ftp_user#*_}" "!xplaceholder$FTP_MD5" "$ftp_path"
-
+            # Generate temporary password to add user but update afterwards
+            temp_password=$(generate_password);
+            $BIN/v-add-web-domain-ftp "$user" "$domain" "${ftp_user#*_}" "$temp_password" "$ftp_path"
             # Updating ftp user password
             chmod u+w /etc/shadow
             sed -i "s|^$ftp_user:[^:]*:|$ftp_user:$ftp_md5:|" /etc/shadow
             chmod u-w /etc/shadow
+            #Update web.conf for next rebuild or move
+            update_object_value 'web' 'DOMAIN' "$domain" '$FTP_MD5' "$ftp_md5"
         fi
     done
 
@@ -411,21 +413,32 @@ rebuild_web_domain_conf() {
         sed -i "/^$auth_user:/d" $htpasswd
         echo "$auth_user:$auth_hash" >> $htpasswd
 
-        # Checking web server include
-        if [ ! -e "$htaccess" ]; then
-            if [ "$WEB_SYSTEM" != 'nginx' ]; then
+        # Adding htaccess password protection
+        if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
+            htaccess="$HOMEDIR/$user/conf/web/$domain/nginx.conf_htaccess"
+            shtaccess="$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_htaccess"
+            if [ ! -f "$htaccess" ]; then
+                echo "auth_basic  \"$domain password access\";" > $htaccess
+                echo "auth_basic_user_file    $htpasswd;" >> $htaccess
+                ln -s $htaccess $shtaccess
+                restart_required='yes'
+            fi
+        else
+            htaccess="$HOMEDIR/$user/conf/web/$domain/apache2.conf_htaccess"
+            shtaccess="$HOMEDIR/$user/conf/web/$domain/apache2.ssl.conf_htaccess"
+            if [ ! -f "$htaccess" ]; then
                 echo "<Directory $docroot>" > $htaccess
                 echo "    AuthUserFile $htpasswd" >> $htaccess
                 echo "    AuthName \"$domain access\"" >> $htaccess
                 echo "    AuthType Basic" >> $htaccess
                 echo "    Require valid-user" >> $htaccess
                 echo "</Directory>" >> $htaccess
-            else
-                echo "auth_basic  \"$domain password access\";" > $htaccess
-                echo "auth_basic_user_file    $htpasswd;" >> $htaccess
+                ln -s $htaccess $shtaccess
+                restart_required='yes'
             fi
-            chmod 640 $htpasswd $htaccess >/dev/null 2>&1
         fi
+        chmod 644 $htpasswd $htaccess
+        chgrp $user $htpasswd $htaccess
     done
 
     # Set folder permissions
@@ -711,21 +724,30 @@ rebuild_mysql_database() {
         fi
     else
         # mariadb
-        if [ "$(echo $mysql_ver |cut -d '.' -f1)" -eq 5 ]; then
+        mysql_ver_sub=$(echo $mysql_ver |cut -d '.' -f1)
+        mysql_ver_sub_sub=$(echo $mysql_ver |cut -d '.' -f2)
+        if [ "$mysql_ver_sub" -eq 5 ]; then
             # mariadb = 5
             mysql_query "CREATE USER \`$DBUSER\`" > /dev/null
             mysql_query "CREATE USER \`$DBUSER\`@localhost" > /dev/null
+            query="UPDATE mysql.user SET Password='$MD5' WHERE User='$DBUSER'"
         else
             # mariadb = 10
             mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\` IDENTIFIED BY PASSWORD '$MD5'" > /dev/null
             mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\`@localhost IDENTIFIED BY PASSWORD '$MD5'" > /dev/null
+            query="UPDATE mysql.user SET Password='$MD5' WHERE User='$DBUSER'"
+            if [ "$mysql_ver_sub_sub" -ge 4 ]; then
+                query="SET PASSWORD FOR '$DBUSER'@'%' = '$MD5';"
+                query2="SET PASSWORD FOR '$DBUSER'@'localhost' = '$MD5';"
+            fi
         fi
-        # mariadb any version
-        query="UPDATE mysql.user SET Password='$MD5' WHERE User='$DBUSER'"
     fi
     mysql_query "GRANT ALL ON \`$DB\`.* TO \`$DBUSER\`@\`%\`" >/dev/null
     mysql_query "GRANT ALL ON \`$DB\`.* TO \`$DBUSER\`@localhost" >/dev/null
     mysql_query "$query" >/dev/null
+    if [ ! -z "$query2" ]; then
+        mysql_query "$query2" >/dev/null
+    fi
     mysql_query "FLUSH PRIVILEGES" >/dev/null
 }
 

@@ -20,22 +20,32 @@ Hestia Control Panel is designed to provide administrators an easy to use web an
 Features and Services
 ----------------------------
 * Apache2 and NGINX with PHP-FPM
-* Multiple PHP versions (5.6 - 8.0, 7.4 as default)
+* Multiple PHP versions (5.6 - 8.0, 8.0 as default)
 * DNS Server (Bind) with clustering capabilities
-* POP/IMAP/SMTP mail services with Anti-Virus, Anti-Spam, and Webmail (ClamAV, SpamAssassin, Roundcube, Rainloop)
+* POP/IMAP/SMTP mail services with Anti-Virus, Anti-Spam, and Webmail (ClamAV, SpamAssassin, Sieve, Roundcube, Rainloop)
 * MariaDB and/or PostgreSQL databases
 * Let's Encrypt SSL support with wildcard certificates
 * Firewall with brute-force attack detection and IP lists (iptables, fail2ban, and ipset).
 
 Supported platforms and operating systems
+========================================================
+
+AMD (x86_64 Intel/AMD)
 ----------------------------
-* **CPU Architecture:** AMD64 (x86_64 Intel/AMD)
 * **Debian:** 11, 10 or 9
 * **Ubuntu:** 20.04 LTS or 18.04 LTS
-* **NOTE:** Hestia Control Panel must be installed on top of a fresh operating system installation to ensure proper functionality.
+
+ARM64 (arm64)
+----------------------------
+* **Debian:** 11, 10
+* **Ubuntu:** 20.04 LTS
+* **NOTE:** For ARM based processors we currently only support the 64 bit variant. ARM 32bit (armhf) is currenlty not supported!
 
 Installing Hestia Control Panel
 ============================
+
+* **NOTE:** Hestia Control Panel must be installed on top of a fresh operating system installation to ensure proper functionality.
+
 While we have taken every effort to make the installation process and the control panel interface as friendly as possible (even for new users), it is assumed that you will have some prior knowledge and understanding in the basics how to set up a Linux server before continuing.
 
 ## Step 1: Log in

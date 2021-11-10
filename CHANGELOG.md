@@ -28,6 +28,10 @@ All notable changes to this project will be documented in this file.
 - Add webp to list of media formats that can be cached by the browser 
 - Disable  /list/log/auth when in Demo mode
 - Fix #1139 By force rebuilding webmail config files
+- Fix a bug in rebuild mysql database @depca
+- Fix #1239 Bug in basic auth not working properly
+- Add validation for email address before install server for admin account
+- Fix bug in v-change-domain-owner #2210
 
 ### Dependencies
 

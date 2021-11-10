@@ -634,8 +634,10 @@ if [ "$HESTIA_B" = true ]; then
             sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIA/DEBIAN/control"
         fi
         get_branch_file 'src/deb/hestia/copyright' "$BUILD_DIR_HESTIA/DEBIAN/copyright"
+        get_branch_file 'src/deb/hestia/preinst' "$BUILD_DIR_HESTIA/DEBIAN/preinst"
         get_branch_file 'src/deb/hestia/postinst' "$BUILD_DIR_HESTIA/DEBIAN/postinst"
         chmod +x $BUILD_DIR_HESTIA/DEBIAN/postinst
+        chmod +x $BUILD_DIR_HESTIA/DEBIAN/preinst
 
         echo Building Hestia DEB
         dpkg-deb --build $BUILD_DIR_HESTIA $DEB_DIR

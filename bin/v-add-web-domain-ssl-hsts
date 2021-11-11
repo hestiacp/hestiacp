@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: Adding hsts to a domain
-# options: USER DOMAIN
+# options: USER DOMAIN [RESTART] [QUIET]
 # labels: hestia
 #
 # The function enables HSTS for the requested domain.
@@ -13,8 +13,8 @@
 # Argument definition
 user=$1
 domain=$2
-quiet=$3
 restart="$4"
+quiet="$3"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf

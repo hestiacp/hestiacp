@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: remove ssl force from domain
-# options: USER DOMAIN [RESTART]
+# options: USER DOMAIN [RESTART] [QUIET]
 # labels: hestia
 #
 # example: v-delete-web-domain-ssl-hsts user domain.tld

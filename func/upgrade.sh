@@ -750,6 +750,12 @@ upgrade_restart_services() {
             fi
             $BIN/v-restart-mail 'yes'
         fi
+        if [ -n "$IMAP_SYSTEM" ]; then
+            if [ "$DEBUG_MODE" = "true" ]; then
+                echo "      - $IMAP_SYSTEM"
+            fi
+            $BIN/v-restart-service "$IMAP_SYSTEM"
+        fi
         if [ -n "$WEB_SYSTEM" ]; then
             if [ "$DEBUG_MODE" = "true" ]; then
                 echo "      - $WEB_SYSTEM"

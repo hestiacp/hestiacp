@@ -579,6 +579,6 @@ send_notice 'LETSENCRYPT' "$domain SSL has been installed successfully"
 log_event "$OK" "$ARGUMENTS"
 
 # Cleanup debug since the SSL was issues succesfully
-#rm -f "$log_file"
+rm -f "$log_file"
 
 exit

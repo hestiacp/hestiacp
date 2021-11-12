@@ -3,7 +3,7 @@
 # options: USER DOMAIN SSL_DIR [RESTART]
 # labels: web
 #
-# example: v-update-web-domain-ssl admin domain.com /home/admin/tmp
+# example: v-update-mail-domain-ssl admin domain.com /home/admin/tmp
 #
 # The function updates the SSL certificate for a domain. Parameter ssl_dir is a path
 # to directory where 2 or 3 ssl files can be found. Certificate file 
@@ -46,13 +46,12 @@ format_domain_idn
 
 check_args '3' "$#" 'USER DOMAIN SSL_DIR [RESTART]'
 is_format_valid 'user' 'domain' 'ssl_dir'
-is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
-is_system_enabled "$WEB_SSL" 'SSL_SUPPORT'
+is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-is_object_valid 'web' 'DOMAIN' "$domain"
-is_object_unsuspended 'web' 'DOMAIN' "$domain"
-is_object_value_exist 'web' 'DOMAIN' "$domain" '$SSL'
+is_object_valid 'mail' 'DOMAIN' "$domain"
+is_object_unsuspended 'mail' 'DOMAIN' "$domain"
+is_object_value_exist 'mail' 'DOMAIN' "$domain" '$SSL'
 is_web_domain_cert_valid
 
 
@@ -61,28 +60,29 @@ is_web_domain_cert_valid
 #----------------------------------------------------------#
 
 # Deleting old certificate
-rm -f $HOMEDIR/$user/conf/web/$domain/ssl/$domain.*
-rm -f $USER_DATA/ssl/$domain.*
+rm -f $HOMEDIR/$user/conf/web/$domain/ssl/mail.$domain.*
+rm -f $USER_DATA/ssl/mail.$domain.*
 
-# Adding certificate to user data directory
-cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/$domain.crt
-cp -f $ssl_dir/$domain.key $USER_DATA/ssl/$domain.key
-cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/$domain.pem
-if [ -e "$ssl_dir/$domain.ca" ]; then
-    cp -f $ssl_dir/$domain.ca $USER_DATA/ssl/$domain.ca
-    echo >> $USER_DATA/ssl/$domain.pem
-    cat $USER_DATA/ssl/$domain.ca >> $USER_DATA/ssl/$domain.pem
+# Add certificate to Hestia user configuration data directory
+if [ -f "$ssl_dir/$domain.crt" ]; then
+    cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/mail.$domain.crt
+    cp -f $ssl_dir/$domain.key $USER_DATA/ssl/mail.$domain.key
+    cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/mail.$domain.pem
+    if [ -e "$ssl_dir/$domain.ca" ]; then
+        cp -f $ssl_dir/$domain.ca $USER_DATA/ssl/mail.$domain.ca
+        echo >> $USER_DATA/ssl/mail.$domain.pem
+        cat $USER_DATA/ssl/mail.$domain.ca >> $USER_DATA/ssl/mail.$domain.pem
+    fi
 fi
-chmod 660 $USER_DATA/ssl/$domain.*
 
+chmod 660 $USER_DATA/ssl/mail.$domain.*
 
-
-# Adding certificate to user dir
-cp -f $USER_DATA/ssl/$domain.crt $HOMEDIR/$user/conf/web/$domain/ssl/$domain.crt
-cp -f $USER_DATA/ssl/$domain.key $HOMEDIR/$user/conf/web/$domain/ssl/$domain.key
-cp -f $USER_DATA/ssl/$domain.pem $HOMEDIR/$user/conf/web/$domain/ssl/$domain.pem
-if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
-    cp -f $USER_DATA/ssl/$domain.ca $HOMEDIR/$user/conf/web/$domain/ssl/$domain.ca
+# Add certificate to user home directory
+cp -f $USER_DATA/ssl/mail.$domain.crt $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt
+cp -f $USER_DATA/ssl/mail.$domain.key $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key
+cp -f $USER_DATA/ssl/mail.$domain.pem $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem
+if [ -e "$USER_DATA/ssl/mail.$domain.ca" ]; then
+    cp -f $USER_DATA/ssl/mail.$domain.ca $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.ca
 fi
 
 
@@ -99,7 +99,7 @@ $BIN/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging
-$BIN/v-log-action "$user" "Info" "Web" "SSL certificate updated (Domain: $domain)."
+$BIN/v-log-action "$user" "Info" "Mail" "SSL certificate updated (Domain: $domain)."
 log_event "$OK" "$EVENT"
 
 exit

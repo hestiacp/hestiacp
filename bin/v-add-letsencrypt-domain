@@ -505,9 +505,7 @@ fi
 if [ -z "$mail" ]; then
     ssl_home=$(search_objects 'web' 'LETSENCRYPT' 'yes' 'SSL_HOME')
     ssl_enabled="$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL')"
-    ssl_force="$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL_FORCE')"
     if [ "$ssl_enabled" = "yes" ]; then 
-        # There is no need to delete and then add ssl config as it only slow down Hesita and the process
         $BIN/v-update-web-domain-ssl "$user" "$domain" "$ssl_dir" "$ssl_home" "updatessl" 
     else
         $BIN/v-add-web-domain-ssl "$user" "$domain" "$ssl_dir" "$ssl_home" "updatessl" 
@@ -516,7 +514,6 @@ if [ -z "$mail" ]; then
  # TODO replace with v-update-mail-domain-ssl if ssl is enabled
     ssl_enabled="$(get_object_value 'mail' 'DOMAIN' "$root_domain" '$SSL')"
     if [ "$ssl_enabled" = "yes" ]; then 
-        # There is no need to delete and then add ssl config as it only slow down Hesita and the process
         $BIN/v-update-mail-domain-ssl "$user" "$domain" "$ssl_dir" "$ssl_home" "updatessl" 
     else
         $BIN/v-add-mail-domain-ssl "$user" "$domain" "$ssl_dir" "$ssl_home" "updatessl" 

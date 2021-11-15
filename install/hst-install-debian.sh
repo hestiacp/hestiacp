@@ -1549,8 +1549,7 @@ if [ "$mysql" = 'yes' ]; then
 
     # Configuring Apache2 for PHPMYADMIN
     if [ "$apache" = 'yes' ]; then
-        cp -f $HESTIA_INSTALL_DIR/pma/apache.conf /etc/phpmyadmin/
-        ln -s /etc/phpmyadmin/apache.conf /etc/apache2/conf.d/phpmyadmin.conf
+        touch /etc/apache2/conf.d/phpmyadmin.inc
     fi
 
     # Overwrite old files
@@ -1606,7 +1605,7 @@ if [ "$postgresql" = 'yes' ]; then
 
     # Configuring phpPgAdmin
     if [ "$apache" = 'yes' ]; then
-        cp -f $HESTIA_INSTALL_DIR/pga/phppgadmin.conf /etc/apache2/conf.d/
+        cp -f $HESTIA_INSTALL_DIR/pga/phppgadmin.conf /etc/apache2/conf.d/phppgadmin.conf
     fi
     cp -f $HESTIA_INSTALL_DIR/pga/config.inc.php /etc/phppgadmin/
 

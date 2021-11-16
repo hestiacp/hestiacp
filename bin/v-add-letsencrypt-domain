@@ -514,9 +514,9 @@ if [ -z "$mail" ]; then
  # TODO replace with v-update-mail-domain-ssl if ssl is enabled
     ssl_enabled="$(get_object_value 'mail' 'DOMAIN' "$root_domain" '$SSL')"
     if [ "$ssl_enabled" = "yes" ]; then 
-        $BIN/v-update-mail-domain-ssl "$user" "$domain" "$ssl_dir" "$ssl_home" "updatessl" 
+        $BIN/v-update-mail-domain-ssl "$user" "$root_domain" "$ssl_dir" "$ssl_home" "updatessl" 
     else
-        $BIN/v-add-mail-domain-ssl "$user" "$domain" "$ssl_dir" "$ssl_home" "updatessl" 
+        $BIN/v-add-mail-domain-ssl "$user" "$root_domain" "$ssl_dir" "$ssl_home" "updatessl" 
     fi
 fi
 

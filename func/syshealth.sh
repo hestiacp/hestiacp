@@ -241,7 +241,7 @@ function syshealth_repair_system_config() {
     if [[ -z $(check_key_exists 'BACKEND_PORT') ]]; then 
         ORIGINAL_PORT=$(cat $HESTIA/nginx/conf/nginx.conf | grep "listen" | sed 's/[^0-9]*//g')
         echo "[ ! ] Adding missing variable to hestia.conf: BACKEND_PORT ('$ORIGINAL_PORT')"
-        $HESTIA/bin/v-change-sys-config-value 'BACKEND_PORT' $PORT
+        $HESTIA/bin/v-change-sys-config-value 'BACKEND_PORT' $ORIGINAL_PORT
     fi
 
     # Upgrade: Send email notification

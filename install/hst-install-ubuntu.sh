@@ -126,6 +126,7 @@ set_default_lang() {
 set_default_port() {
     if [ -z "$port" ]; then
         eval port=$1
+        echo "BACKEND_PORT='$port'" >> $HESTIA/conf/hestia.conf
     fi
 }
 

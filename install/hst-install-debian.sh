@@ -19,7 +19,7 @@ os='debian'
 architecture="$(uname -m)"
 release=$(cat /etc/debian_version | tr "." "\n" | head -n1)
 codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
-HESTIA_INSTALL_DIR="$HESTIA/install/deb"
+HESTIA_INSTALL_DIR="$HESTIA/install/deb "
 VERBOSE='no'
 
 # Define software versions
@@ -145,6 +145,7 @@ set_default_lang() {
 set_default_port() {
     if [ -z "$port" ]; then
         eval port=$1
+        echo "BACKEND_PORT='$port'" >> $HESTIA/conf/hestia.conf
     fi
 }
 

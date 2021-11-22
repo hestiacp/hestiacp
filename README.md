@@ -19,7 +19,7 @@ Hestia Control Panel is designed to provide administrators an easy to use web an
 Features and Services
 ----------------------------
 * Apache2 and NGINX with PHP-FPM
-* Multiple PHP versions (5.6 - 8.0, 7.4 as default)
+* Multiple PHP versions (5.6 - 8.1, 8.0 as default)
 * DNS Server (Bind) with clustering capabilities
 * POP/IMAP/SMTP mail services with Anti-Virus, Anti-Spam, and Webmail (ClamAV, SpamAssassin, Roundcube, Rainloop)
 * MariaDB and/or PostgreSQL databases

@@ -434,12 +434,12 @@ b2_backup() {
     echo -e "$(date "+%F %T") Upload to B2: $user/$user.$backup_new_date.tar"
     if [ "$localbackup" = 'yes' ]; then
         cd $BACKUP
-        b2 upload-file $BUCKET $user.$backup_new_date.tar $user/$user.$backup_new_date.tar > /dev/null 2>&1
+        b2 upload-file $BUCKET $user.$backup_new_date.tar $user/$user.tar
     else
         cd $tmpdir
         tar -cf $BACKUP/$user.$backup_new_date.tar .
         cd $BACKUP/
-        b2 upload-file $BUCKET $user.$backup_new_date.tar $user/$user.$backup_new_date.tar > /dev/null 2>&1
+        b2 upload-file $BUCKET $user.$backup_new_date.tar $user/$user.tar
         rc=$?
         rm -f $user.$backup_new_date.tar
         if [ "$rc" -ne 0 ]; then

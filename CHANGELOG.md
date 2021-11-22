@@ -1,11 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [DEVELOPMENT] - Service release 
-
-## Features
-
 ## [1.4.17] - Service release 
+
+## Note
+
+- #2228 Fix unable to download PCRE files for compiling hestia-nginx keep
 
 ### Bugfixes
 

@@ -1,7 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [1.5.0] - Service release
+## [1.5.0] - Major Release (Feature / Quality Update)
+
+- **NOTE:** Hestia packages for arm64 has been added to atp.hestiacp.com 
 
 ## Features
 
@@ -9,6 +11,8 @@ All notable changes to this project will be documented in this file.
 - Improve HELO based system and use RDNS lookup instead our old system
 - Set default php version for new installs to PHP 8.0 
 - Add support for ARM64 Processors
+- Add support for PHP 8.1 #2233 
+- Disable access phpmyadmin/phppgadmin over ip address in Apache2 #2072
 
 ### Bugfixes
 

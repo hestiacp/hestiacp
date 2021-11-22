@@ -307,6 +307,10 @@ branch_dash=$(echo "$branch" |sed 's/\//-/g');
 
 if [ "$NGINX_B" = true ] ; then
     echo "Building hestia-nginx package..."
+    if [ "$CROSS" = "true" ]; then 
+      echo "Cross compile not supported for hestia-nginx or hestia-php"
+      exit 1;
+    fi
     # Change to build directory
     cd $BUILD_DIR
 
@@ -446,6 +450,11 @@ fi
 #################################################################################
 
 if [ "$PHP_B" = true ] ; then
+    if [ "$CROSS" = "true" ]; then 
+      echo "Cross compile not supported for hestia-nginx or hestia-php"
+      exit 1;
+    fi
+    
     echo "Building hestia-php package..."
 
     BUILD_DIR_HESTIAPHP=$BUILD_DIR/hestia-php_$PHP_V
@@ -587,13 +596,11 @@ fi
 
 arch="$BUILD_ARCH"
 
-if [ "$CROSS" = "true" ]; then 
-  arch="amd64 arm64"
-fi
-
-for BUILD_ARCH in $arch; do 
-
-  if [ "$HESTIA_B" = true ]; then
+if [ "$HESTIA_B" = true ]; then
+  if [ "$CROSS" = "true" ]; then 
+    arch="amd64 arm64"
+  fi
+  for BUILD_ARCH in $arch; do 
       echo "Building Hestia Control Panel package..."
       
       BUILD_DIR_HESTIA=$BUILD_DIR/hestia_$HESTIA_V
@@ -676,8 +683,9 @@ for BUILD_ARCH in $arch; do
           rm -rf hestiacp-$branch_dash
       fi
       cd $BUILD_DIR/hestiacp-$branch_dash
-  fi
-done
+  done
+fi
+
 
 #################################################################################
 #

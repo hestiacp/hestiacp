@@ -23,7 +23,16 @@ upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'true'
 
 
 if [ -n "$DB_PMA_ALIAS" ]; then
-    $HESTIA/bin/v-change-sys-db-alias 'pma' "$DB_PMA_ALIAS"
+   if [ -e "/etc/apache2/conf.d/phpmyadmin.conf" ]; then
+      rm /etc/apache2/conf.d/phpmyadmin.conf
+      touch /etc/apache2/conf.d/phpmyadmin.inc
+   fi
+   if [ -e "/etc/apache2/conf.d/phppgadmin.conf" ]; then
+      rm /etc/apache2/conf.d/phppgadmin.conf
+      touch /etc/apache2/conf.d/phppgadmin.inc
+   fi
+   $HESTIA/bin/v-change-sys-db-alias 'pga' "$DB_PGA_ALIAS"
+   $HESTIA/bin/v-change-sys-db-alias 'pma' "$DB_PMA_ALIAS"
 fi
 
 if [ -n "$MAIL_SYSTEM" ]; then

@@ -1,13 +1,18 @@
 server {
-    listen      %ip%:%web_port%;
+    listen      %ip%:%web_ssl_port% ssl http2;
     server_name %domain_idn% %alias_idn%;
-    root        %docroot%;
+    root        %sdocroot%;
     index       index.php index.html index.htm;
     access_log  /var/log/nginx/domains/%domain%.log combined;
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;
     error_log   /var/log/nginx/domains/%domain%.error.log error;
-        
-    include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
+
+    ssl_certificate      %ssl_pem%;
+    ssl_certificate_key  %ssl_key%;
+    ssl_stapling on;
+    ssl_stapling_verify on;
+
+    include %home%/%user%/conf/web/%domain%/nginx.hsts.conf*;
 
     location / {
 
@@ -22,7 +27,7 @@ server {
                 return  404;
             }
 
-            fastcgi_pass    unix:/run/php/php8.0-fpm-%domain%.sock;
+            fastcgi_pass    unix:/run/php/php7.4-fpm-%domain%.sock;
             fastcgi_index   index.php;
             include         /etc/nginx/fastcgi_params;
         }
@@ -44,5 +49,5 @@ server {
 
     include     /etc/nginx/conf.d/phpmyadmin.inc*;
     include     /etc/nginx/conf.d/phppgadmin.inc*;
-    include     %home%/%user%/conf/web/%domain%/nginx.conf_*;
+    include     %home%/%user%/conf/web/%domain%/nginx.ssl.conf_*;
 }

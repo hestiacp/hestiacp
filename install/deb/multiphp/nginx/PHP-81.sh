@@ -8,7 +8,7 @@ docroot="$5"
 
 pool_conf="[$2]
 
-listen = /run/php/php5.6-fpm-$2.sock
+listen = /run/php/php7.4-fpm-$2.sock
 listen.owner = $1
 listen.group = www-data
 listen.mode = 0660
@@ -48,8 +48,8 @@ pool_file_74="/etc/php/7.4/fpm/pool.d/$2.conf"
 pool_file_80="/etc/php/8.0/fpm/pool.d/$2.conf"
 pool_file_81="/etc/php/8.1/fpm/pool.d/$2.conf"
 
-if [ ! -f "$pool_file_56" ]; then
-    echo "$pool_conf" > $pool_file_56
+if [ -f "$pool_file_56" ]; then
+    rm $pool_file_56
     service php5.6-fpm restart
 fi
 
@@ -83,8 +83,8 @@ if [ -f "$pool_file_80" ]; then
     service php8.0-fpm restart
 fi
 
-if [ -f "$pool_file_81" ]; then
-    rm $pool_file_81
+if [ ! -f "$pool_file_81" ]; then
+    echo "$pool_conf" > $pool_file_81
     service php8.1-fpm restart
 fi
 

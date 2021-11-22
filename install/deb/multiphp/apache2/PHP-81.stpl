@@ -1,9 +1,3 @@
-#=======================================================================#
-# Default Web Domain Template                                           #
-# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS #
-#=======================================================================#
-
-# PHPMyAdmin and phppgadmin require access as www-data instead of user for security reasons
 <VirtualHost %ip%:%web_ssl_port%>
 
     ServerName %domain_idn%
@@ -17,25 +11,26 @@
     CustomLog /var/log/%web_system%/domains/%domain%.bytes bytes
     CustomLog /var/log/%web_system%/domains/%domain%.log combined
     ErrorLog /var/log/%web_system%/domains/%domain%.error.log
+    <Directory %home%/%user%/web/%domain%/stats>
+        AllowOverride All
+    </Directory>
     <Directory %sdocroot%>
         AllowOverride All
         SSLRequireSSL
         Options +Includes -Indexes +ExecCGI
-        php_admin_value open_basedir %sdocroot%:%home%/%user%/tmp
-        php_admin_value upload_tmp_dir %home%/%user%/tmp
-        php_admin_value session.save_path %home%/%user%/tmp
-        php_admin_value sys_temp_dir %home%/%user%/tmp
-    </Directory>
-    <Directory %home%/%user%/web/%domain%/stats>
-        AllowOverride All
-    </Directory>
+	</Directory>
     SSLEngine on
     SSLVerifyClient none
     SSLCertificateFile %ssl_crt%
     SSLCertificateKeyFile %ssl_key%
     %ssl_ca_str%SSLCertificateChainFile %ssl_ca%
 
+    <FilesMatch \.php$>
+        SetHandler "proxy:unix:/run/php/php8.0-fpm-%domain%.sock|fcgi://localhost"
+    </FilesMatch>
+    SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0
+
     IncludeOptional %home%/%user%/conf/web/%domain%/%web_system%.ssl.conf_*
-    IncludeOptional /etc/apache2/conf.d/*.inc
+
 </VirtualHost>
 

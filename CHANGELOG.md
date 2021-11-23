@@ -3,9 +3,11 @@ All notable changes to this project will be documented in this file.
 
 ## [1.5.0] - Major Release (Feature / Quality Update)
 
-- **NOTE:** Hestia packages for arm64 has been added to atp.hestiacp.com 
+### Breaking changes ###
+- **NOTE:** Changes have been made on how phpmyadmin/phppgadmin config are included in apache2 config domains. To restore to the old behaviour add `IncludeOptional conf.d/*.inc` below `IncludeOptional conf.d/*.conf` in /etc/apache2/apache2.conf and restart your server. 
+- **NOTE:** Hestia packages for arm64 has been added to atp.hestiacp.com please use the normal install instructions instead! For current ARM installs to enable auto update remove the `#` in /etc/apt/sources.list.d/hestia `#deb https://apt.hestiacp.com/ focal main` becomes `deb https://apt.hestiacp.com/ focal main` and then run `apt update && apt upgrade -y`
 
-## Features
+### Features
 
 - Add support for Dovecote Sieve #2163 (@2163)
 - Improve HELO based system and use RDNS lookup instead our old system

@@ -4,22 +4,22 @@ All notable changes to this project will be documented in this file.
 ## [1.5.0] - Major Release (Feature / Quality Update)
 
 ### Breaking changes ###
-- **NOTE:** Changes have been made on how phpmyadmin/phppgadmin config are included in apache2 config domains. To restore to the old behaviour add `IncludeOptional conf.d/*.inc` below `IncludeOptional conf.d/*.conf` in /etc/apache2/apache2.conf and restart your server. 
-- **NOTE:** Hestia packages for arm64 has been added to atp.hestiacp.com please use the normal install instructions instead! For current ARM installs to enable auto update remove the `#` in /etc/apt/sources.list.d/hestia.list `# deb https://apt.hestiacp.com/ focal main` becomes `deb https://apt.hestiacp.com/ focal main` and then run `apt update && apt upgrade -y`
+- **NOTE:** Changes have been made on how phpmyadmin/phppgadmin config are included in apache2 config. To restore to the old behaviour add `IncludeOptional conf.d/*.inc` below `IncludeOptional conf.d/*.conf` in /etc/apache2/apache2.conf and restart your server. 
+- **NOTE:** Hestia packages for arm64 has been added to atp.hestiacp.com please use the normal install instructions instead! For current ARM installs to enable auto update remove the `#` in /etc/apt/sources.list.d/hestia.list `# deb https://apt.hestiacp.com/ focal main` becomes `deb https://apt.hestiacp.com/ focal main` and then run `apt update && apt upgrade -y` 
 
 ### Features
 
-- Add support for Dovecote Sieve #2163 (@2163)
+- Add support for Dovecote Sieve #2163 (@gejobj)
 - Improve HELO based system and use RDNS lookup instead our old system
+- Add support for PHP 8.1 #2233 
 - Set default php version for new installs to PHP 8.0 
 - Add support for ARM64 Processors
-- Add support for PHP 8.1 #2233 
 - Disable access phpmyadmin/phppgadmin over ip address in Apache2 #2072
 
 ### Bugfixes
 
-- Disable /reset/ endpoint when POLICY_SYSTEM_PASSWORD_RESET = no
-- Add rate limit forgot password
+- Disable /reset/ endpoint when POLICY_SYSTEM_PASSWORD_RESET = no #2167
+- Add rate limit forgot password #2199
 - Prevent SOA count up after v-change-dns-records with no changes are made
 - Fix #1296 Log rotate does not rotate logs any more on Ubuntu 20.04 and Debian 11
 - Run shellcheck to improve code quality 

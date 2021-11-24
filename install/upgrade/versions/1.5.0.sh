@@ -27,20 +27,29 @@ if [ -n "$DB_PMA_ALIAS" ]; then
       rm /etc/apache2/conf.d/phpmyadmin.conf
       touch /etc/apache2/conf.d/phpmyadmin.inc
    fi
+   $HESTIA/bin/v-change-sys-db-alias 'pma' "$DB_PMA_ALIAS"
+fi
+
+if [ -n "$DB_PGA_ALIAS" ]; then
    if [ -e "/etc/apache2/conf.d/phppgadmin.conf" ]; then
       rm /etc/apache2/conf.d/phppgadmin.conf
       touch /etc/apache2/conf.d/phppgadmin.inc
    fi
    $HESTIA/bin/v-change-sys-db-alias 'pga' "$DB_PGA_ALIAS"
-   $HESTIA/bin/v-change-sys-db-alias 'pma' "$DB_PMA_ALIAS"
+
 fi
 
 if [ -n "$MAIL_SYSTEM" ]; then
 
     if [ -f "/etc/exim4/exim4.conf.template" ]; then
         sed -i 's/^smtp_active_hostname = \${if exists {\/etc\/exim4\/mailhelo\.conf}{\${lookup{\$interface_address}lsearch{\/etc\/exim4\/mailhelo\.conf}{\$value}{\$primary_hostname}}}{\$primary_hostname}}$/smtp_active_hostname = \${lookup dnsdb{>: ptr=\$interface_address}{\${listextract{1}{\$value}}}{\$primary_hostname}}/' /etc/exim4/exim4.conf.template
-    
+                
         sed -i 's/^  helo_data = \${if exists {\/etc\/exim4\/mailhelo\.conf}{\${lookup{\$sending_ip_address}lsearch{\/etc\/exim4\/mailhelo\.conf}{\$value}{\$primary_hostname}}}{\$primary_hostname}}$/  helo_data = \${lookup dnsdb{>: ptr=\$sending_ip_address}{\${listextract{1}{\$value}}}{\$primary_hostname}}/' /etc/exim4/exim4.conf.template
+        
+        # When 1.5.0 beta was installed
+        sed -i 's/^smtp_active_hostname = \${lookup dnsdb{ptr=\$interface_address}{\$value}{\$primary_hostname}}$/smtp_active_hostname = \${lookup dnsdb{>: ptr=\$interface_address}{\${listextract{1}{\$value}}}{\$primary_hostname}}/' /etc/exim4/exim4.conf.template
+            
+         sed -i 's/^  helo_data = \${lookup dnsdb{ptr=\$sending_ip_address}{\$value}{\$primary_hostname}}$/smtp_active_hostname = \${lookup dnsdb{>: ptr=\$interface_address}{\${listextract{1}{\$value}}}{\$primary_hostname}}/' /etc/exim4/exim4.conf.template
     fi
     
     # Clean up legacy mailhelo file

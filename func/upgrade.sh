@@ -493,10 +493,11 @@ upgrade_refresh_config() {
 upgrade_start_routine() {   
     # Parse version numbers for comparison
     function check_version { echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'; }
-
+    
     # Remove pre-release designation from version number for upgrade scripts
-    VERSION=$(echo $VERSION | sed "s|~alpha||g" | sed "s|~beta||g")
+    VERSION=$(echo "$VERSION" | sed "s/~\([a-zA-Z0-9].*\)//g");
 
+    
     # Get list of all available version steps and create array
     upgrade_steps=$(ls $HESTIA/install/upgrade/versions/*.sh)
     for script in $upgrade_steps; do

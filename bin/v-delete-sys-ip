@@ -17,14 +17,16 @@
 ip=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -47,20 +49,20 @@ check_hestia_demo_mode
 
 # Import ip variables
 source $HESTIA/data/ips/$ip
-cidr=$(convert_netmask $NETMASK)
+cidr=$(convert_netmask "$NETMASK")
 main_ip=$(hostname -i)
 
 # Checking main ip on the interface
 interface=$(/sbin/ip addr | grep "$ip/$cidr" | awk '{print $NF}')
-if [ ! -z "$interface" ] && [ "$ip" = "$main_ip" ]; then
+if [ -n "$interface" ] && [ "$ip" = "$main_ip" ]; then
     echo "Error: can't delete main IP address"
     log_event "$E_FORBIDEN" "$ARGUMENTS"
-    exit $E_FORBIDEN
+    exit "$E_FORBIDEN"
 fi
 
 # Deleting system ip
-if [ ! -z "$interface" ]; then
-    /sbin/ip addr del $ip/$cidr dev $INTERFACE
+if [ -n "$interface" ]; then
+    /sbin/ip addr del "$ip/$cidr" dev "$INTERFACE"
     if [ "$?" -ne 0 ]; then
         echo "Error: can't delete system ip"
         log_event "$E_FORBIDEN" "$ARGUMENTS"
@@ -81,7 +83,7 @@ if [ -f "/etc/netplan/60-hestia.yaml" ]; then
     fi
 elif [ -e "/etc/network/interfaces" ]; then
     ip_str=$(grep -n $ip$ /etc/network/interfaces |cut -f1 -d:)
-    if [ ! -z "$ip_str" ]; then
+    if [ -n "$ip_str" ]; then
         first_str=$((ip_str - 3))
         last_str=$((ip_str + 1))
         sed -i "$first_str,$last_str d" /etc/network/interfaces
@@ -92,12 +94,12 @@ fi
 rm -f $HESTIA/data/ips/$ip
 
 # Deleting web config
-if [ ! -z "$WEB_SYSTEM" ]; then
+if [ -n "$WEB_SYSTEM" ]; then
     rm -f /etc/$WEB_SYSTEM/conf.d/$ip.conf
 fi
 
 # Deleting proxy config
-if [ ! -z "$PROXY_SYSTEM" ]; then
+if [ -n "$PROXY_SYSTEM" ]; then
     rm -f /etc/$PROXY_SYSTEM/conf.d/$ip.conf
 
     # mod_extract_forwarded
@@ -111,9 +113,9 @@ if [ ! -z "$PROXY_SYSTEM" ]; then
     # mod_rpaf
     rpaf_conf="/etc/$WEB_SYSTEM/mods-enabled/rpaf.conf"
     if [ -e "$rpaf_conf" ]; then
-        ips=$(grep RPAFproxy_ips $rpaf_conf)
+        ips=$(grep RPAFproxy_ips "$rpaf_conf")
         new_ips=$(echo "$ips" | sed "s/ $ip//")
-        sed -i "s/$ips/$new_ips/g" $rpaf_conf
+        sed -i "s/$ips/$new_ips/g" "$rpaf_conf"
 
         # Remove RPAFproxy_ips line when ip list is empty
         [ "$(grep RPAFproxy_ips $rpaf_conf | sed 's/^[[:space:]]*//g')" = "RPAFproxy_ips" ] && sed -i "/RPAFproxy_ips/d" $rpaf_conf
@@ -122,15 +124,7 @@ if [ ! -z "$PROXY_SYSTEM" ]; then
     #mod_remoteip
     remoteip_conf="/etc/$WEB_SYSTEM/mods-enabled/remoteip.conf"
     if [ -e "$remoteip_conf" ]; then
-        sed -i "/RemoteIPInternalProxy $ip\$/d" $remoteip_conf
-    fi
-fi
-
-if [ ! -z "$MAIL_SYSTEM" ]; then
-    if [ -z "$NAT" ]; then 
-        delete_ip_helo_value $ip
-    else
-        delete_ip_helo_value $NAT
+        sed -i "/RemoteIPInternalProxy $ip\$/d" "$remoteip_conf"
     fi
 fi
 
@@ -139,7 +133,7 @@ fi
 #----------------------------------------------------------#
 
 # Updating user conf
-if [ ! -z "$OWNER" ]; then
+if [ -n "$OWNER" ]; then
     decrease_user_value "$OWNER" '$IP_OWNED'
 fi
 
@@ -160,13 +154,13 @@ $BIN/v-restart-web
 check_result $? "Web restart failed" >/dev/null
 
 # Restarting proxy server
-if [ ! -z "$PROXY_SYSTEM" ]; then
+if [ -n "$PROXY_SYSTEM" ]; then
     $BIN/v-restart-proxy
     check_result $? "Proxy restart failed" >/dev/null
 fi
 
 # Restarting firewall
-if [ ! -z "$FIREWALL_SYSTEM" ]; then
+if [ -n "$FIREWALL_SYSTEM" ]; then
     $BIN/v-update-firewall
 fi
 

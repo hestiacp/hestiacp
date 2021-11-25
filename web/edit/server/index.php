@@ -72,6 +72,7 @@ $v_php_versions = [
      'php-7.3',
      'php-7.4',
      'php-8.0',
+     'php-8.1',
 ];
 sort($v_php_versions);
 

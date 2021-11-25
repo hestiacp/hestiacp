@@ -23,12 +23,14 @@ dom_alias_idn=$(idn -t --quiet -a "$dom_alias" )
 restart="$4"
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -75,9 +77,9 @@ else
         else
             rec=$(grep -w "RECORD='$sub'" $USER_DATA/dns/$root.conf)
         fi
-        if [ ! -z "$rec" ]; then
+        if [ -n "$rec" ]; then
             parse_object_kv_list "$rec"
-            $BIN/v-delete-dns-record $user "$root" "$ID" $restart
+            $BIN/v-delete-dns-record "$user" "$root" "$ID" "$restart"
         fi
     fi
 fi

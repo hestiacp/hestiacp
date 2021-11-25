@@ -10,10 +10,12 @@
 MODE=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 PMA_INSTALL="/usr/share/phpmyadmin"
 PMA_CONFIG="/etc/phpmyadmin"
@@ -41,7 +43,7 @@ fi
 
 apikey=$(grep -Po "'API_KEY', '(.*)'" /usr/share/phpmyadmin/hestia-sso.php |  cut "-d'" -f4 )
 
-$BIN/v-revoke-api-key $apikey
+$BIN/v-revoke-api-key "$apikey"
 
 #remove new files
 rm /usr/share/phpmyadmin/hestia-sso.php

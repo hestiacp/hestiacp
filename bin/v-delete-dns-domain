@@ -19,12 +19,14 @@ domain=$2
 restart="$3"
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -62,7 +64,7 @@ if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
 fi
 
 # Updating dns-cluster queue
-if [ ! -z "$DNS_CLUSTER" ]; then
+if [ -n "$DNS_CLUSTER" ]; then
     cmd="$BIN/v-delete-remote-dns-domain $user $domain"
     echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
 fi
@@ -81,11 +83,11 @@ decrease_user_value "$user" '$U_DNS_DOMAINS'
 decrease_user_value "$user" '$U_DNS_RECORDS' "$records"
 
 # Restarting named
-$BIN/v-restart-dns $restart
+$BIN/v-restart-dns "$restart"
 check_result $? "Bind restart failed" >/dev/null
 
 # Check if is suspended to decrease the suspended value
-if [ ! -z "$suspended" ]; then
+if [ -n "$suspended" ]; then
     decrease_user_value "$user" '$SUSPENDED_DNS'
 fi
 

@@ -17,8 +17,12 @@ user=$1
 format=${2-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -63,7 +67,7 @@ check_args '1' "$#" 'USER [FORMAT]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 if [ ! -e "$USER_DATA/ssl/le.conf" ]; then
-    check_result $E_NOTEXIST "LetsEncrypt user account doesn't exist"
+    check_result "$E_NOTEXIST" "LetsEncrypt user account doesn't exist"
 fi
 
 
@@ -71,7 +75,8 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
-source $USER_DATA/ssl/le.conf
+# load config file
+source_conf "$USER_DATA/ssl/le.conf"
 
 # Listing data
 case $format in

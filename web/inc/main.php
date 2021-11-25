@@ -15,7 +15,7 @@ if ($_SESSION['RELEASE_BRANCH'] == 'release' && $_SESSION['DEBUG_MODE'] == 'fals
 } else {
     define('JS_LATEST_UPDATE', 'r=' . time());
 }
-define('DEFAULT_PHP_VERSION', 'php-' . exec('php -r "echo (float)phpversion();"'));
+define('DEFAULT_PHP_VERSION', 'php-' . exec('php -r "echo substr(phpversion(),0,3);"'));
 
 // Load Hestia Config directly
 load_hestia_config();
@@ -444,7 +444,6 @@ function backendtpl_with_webdomains()
         exec(HESTIA_CMD . 'v-list-web-domains '. escapeshellarg($user) . ' json', $output, $return_var);
         $domains = json_decode(implode('', $output), true);
         unset($output);
-
         foreach ($domains as $domain => $domain_details) {
             if (!empty($domain_details['BACKEND'])) {
                 $backend = $domain_details['BACKEND'];

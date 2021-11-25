@@ -11,6 +11,11 @@ if (isset($_SESSION['user'])) {
 // Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
+if ($_SESSION['POLICY_SYSTEM_PASSWORD_RESET'] == 'no') {
+    header('Location: /login/');
+    exit();
+}
+
 if ((!empty($_POST['user'])) && (empty($_POST['code']))) {
     // Check token
     verify_csrf($_POST);
@@ -21,38 +26,45 @@ if ((!empty($_POST['user'])) && (empty($_POST['code']))) {
     exec($cmd." ".$v_user." json", $output, $return_var);
     if ($return_var == 0) {
         $data = json_decode(implode('', $output), true);
-        if ($email == $data[$user]['CONTACT']) {
-            $rkey = substr(password_hash("", PASSWORD_DEFAULT), 8, 12);
-            $hash = password_hash($rkey, PASSWORD_DEFAULT);
-            $v_rkey = tempnam("/tmp", "vst");
-            $fp = fopen($v_rkey, "w");
-            fwrite($fp, $hash."\n");
-            fclose($fp);
-            exec(HESTIA_CMD . "v-change-user-rkey ".$v_user." ".$v_rkey."", $output, $return_var);
-            unset($output);
-            unlink($v_rkey);
-            $name = $data[$user]['NAME'];
-            $contact = $data[$user]['CONTACT'];
-            $to = $data[$user]['CONTACT'];
-            $subject = sprintf(_('MAIL_RESET_SUBJECT'), date("Y-m-d H:i:s"));
-            $hostname = exec('hostname');
-            $from = "noreply@".$hostname;
-            $from_name = _('Hestia Control Panel');
-            if (!empty($name)) {
-                $mailtext = sprintf(_('GREETINGS_GORDON'), $name);
-            } else {
-                $mailtext = _('GREETINGS');
-            }
-            if (in_array(str_replace(':'.$_SERVER['SERVER_PORT'], '.conf', $_SERVER['HTTP_HOST']), array_merge(scandir('/etc/nginx/conf.d'), scandir('/etc/nginx/conf.d/domains'), scandir('/etc/apache2/conf.d/domains'), scandir('/etc/apache2/conf.d')))) {
-                $mailtext .= sprintf(_('PASSWORD_RESET_REQUEST'), $_SERVER['HTTP_HOST'], $user, $rkey, $_SERVER['HTTP_HOST'], $user, $rkey);
-                if (!empty($rkey)) {
-                    send_email($to, $subject, $mailtext, $from, $from_name, $data[$user]['NAME']);
+        unset($output);
+        exec(HESTIA_CMD . "v-get-user-value ".$v_user." RKEYEXP", $output, $return_var);
+        $rkeyexp = json_decode(implode('', $output), true);
+        if ($rkeyexp === null || $rkeyexp < time() - 900) {
+            if ($email == $data[$user]['CONTACT']) {
+                $rkey = substr(password_hash("", PASSWORD_DEFAULT), 8, 12);
+                $hash = password_hash($rkey, PASSWORD_DEFAULT);
+                $v_rkey = tempnam("/tmp", "vst");
+                $fp = fopen($v_rkey, "w");
+                fwrite($fp, $hash."\n");
+                fclose($fp);
+                exec(HESTIA_CMD . "v-change-user-rkey ".$v_user." ".$v_rkey."", $output, $return_var);
+                unset($output);
+                unlink($v_rkey);
+                $name = $data[$user]['NAME'];
+                $contact = $data[$user]['CONTACT'];
+                $to = $data[$user]['CONTACT'];
+                $subject = sprintf(_('MAIL_RESET_SUBJECT'), date("Y-m-d H:i:s"));
+                $hostname = exec('hostname');
+                $from = "noreply@".$hostname;
+                $from_name = _('Hestia Control Panel');
+                if (!empty($name)) {
+                    $mailtext = sprintf(_('GREETINGS_GORDON'), $name);
+                } else {
+                    $mailtext = _('GREETINGS');
                 }
-                header("Location: /reset/?action=code&user=".$_POST['user']);
-                exit;
-            } else {
-                $ERROR = "<a class=\"error\">"._('Invalid host domain')."</a>";
+                if (in_array(str_replace(':'.$_SERVER['SERVER_PORT'], '.conf', $_SERVER['HTTP_HOST']), array_merge(scandir('/etc/nginx/conf.d'), scandir('/etc/nginx/conf.d/domains'), scandir('/etc/apache2/conf.d/domains'), scandir('/etc/apache2/conf.d')))) {
+                    $mailtext .= sprintf(_('PASSWORD_RESET_REQUEST'), $_SERVER['HTTP_HOST'], $user, $rkey, $_SERVER['HTTP_HOST'], $user, $rkey);
+                    if (!empty($rkey)) {
+                        send_email($to, $subject, $mailtext, $from, $from_name, $data[$user]['NAME']);
+                    }
+                    header("Location: /reset/?action=code&user=".$_POST['user']);
+                    exit;
+                } else {
+                    $ERROR = "<a class=\"error\">"._('Invalid host domain')."</a>";
+                }
             }
+        } else {
+            $ERROR = "<a class=\"error\">"._('Please wait 15 minutes before sending a new request')."</a>";
         }
     }
     unset($output);

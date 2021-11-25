@@ -12,10 +12,12 @@
 #----------------------------------------------------------#
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -28,11 +30,10 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-
-$BIN/v-change-sys-config-value SMTP_RELAY false
-$BIN/v-change-sys-config-value SMTP_RELAY_HOST ''
-$BIN/v-change-sys-config-value SMTP_RELAY_PORT ''
-$BIN/v-change-sys-config-value SMTP_RELAY_USER ''
+change_sys_value "SMTP_RELAY" "false"
+change_sys_value "SMTP_RELAY_HOST" ""
+change_sys_value "SMTP_RELAY_PORT" ""
+change_sys_value "SMTP_RELAY_USER" ""
 
 rm -f /etc/exim4/smtp_relay.conf
 

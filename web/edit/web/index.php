@@ -260,7 +260,7 @@ if (!empty($_POST['save'])) {
         if (($_SESSION['WEB_SYSTEM'] == 'nginx') && ($v_nginx_cache_check != $_POST['v_nginx_cache_check']) || ($v_nginx_cache_duration != $_POST['v_nginx_cache_duration'] && $_POST['v_nginx_cache'] = "yes") && (empty($_SESSION['error_msg']))) {
             if ($_POST['v_nginx_cache_check'] == 'on') {
                 if (empty($_POST['v_nginx_cache_duration'])) {
-                    echo $_POST['v_nginx_cache_duration'] = "2m";
+                    $_POST['v_nginx_cache_duration'] = "2m";
                 }
                 exec(HESTIA_CMD."v-add-fastcgi-cache ".$v_username." ".escapeshellarg($v_domain).' '. escapeshellarg($_POST['v_nginx_cache_duration']), $output, $return_var);
                 check_return_code($return_var, $output);

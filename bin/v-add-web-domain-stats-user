@@ -20,12 +20,14 @@ password=$4; HIDE=4
 restart=$5
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -80,7 +82,7 @@ update_object_value 'web' 'DOMAIN' "$domain" '$STATS_CRYPT' "$stats_pass"
 
 # Restarting web server
 if [ "$WEB_SYSTEM" = 'nginx' ]; then
-    $BIN/v-restart-web $restart
+    $BIN/v-restart-web "$restart"
     check_result $? "Web restart failed" >/dev/null
 fi
 

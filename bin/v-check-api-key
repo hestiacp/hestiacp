@@ -12,18 +12,20 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-[[ -z $HESTIA ]] && HESTIA="/usr/local/hestia"
-
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 new_timestamp
 
 abort_missmatch() {
     echo "Error: key missmatch"
     echo "$date $time api $ip failed to login" >> $HESTIA/log/auth.log
-    exit $E_PASSWORD
+    exit "$E_PASSWORD"
 }
 
 ip=${2-127.0.0.1}

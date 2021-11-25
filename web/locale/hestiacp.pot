@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-13 08:33+0200\n"
+"POT-Creation-Date: 2021-10-30 10:34+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,12 +42,12 @@ msgstr ""
 msgid "RESTORE_EXISTS"
 msgstr ""
 
-#: ../../web/reset/index.php:37
+#: ../../web/reset/index.php:46
 #, php-format
 msgid "MAIL_RESET_SUBJECT"
 msgstr ""
 
-#: ../../web/reset/index.php:40 ../../web/inc/mail-wrapper.php:31
+#: ../../web/reset/index.php:49 ../../web/inc/mail-wrapper.php:31
 #: ../../web/templates/includes/panel.html:12
 #: ../../web/templates/includes/title.html:2
 #: ../../web/templates/pages/list_services.html:56
@@ -66,41 +66,45 @@ msgstr ""
 msgid "Hestia Control Panel"
 msgstr ""
 
-#: ../../web/reset/index.php:42 ../../web/add/user/index.php:125
+#: ../../web/reset/index.php:51 ../../web/add/user/index.php:125
 #, php-format
 msgid "GREETINGS_GORDON"
 msgstr ""
 
-#: ../../web/reset/index.php:44 ../../web/add/user/index.php:127
+#: ../../web/reset/index.php:53 ../../web/add/user/index.php:127
 msgid "GREETINGS"
 msgstr ""
 
-#: ../../web/reset/index.php:47
+#: ../../web/reset/index.php:56
 #, php-format
 msgid "PASSWORD_RESET_REQUEST"
 msgstr ""
 
-#: ../../web/reset/index.php:54
+#: ../../web/reset/index.php:63
 msgid "Invalid host domain"
 msgstr ""
 
-#: ../../web/reset/index.php:83
+#: ../../web/reset/index.php:67
+msgid "Please wait 15 minutes before sending a new request"
+msgstr ""
+
+#: ../../web/reset/index.php:95
 msgid "An internal error occurred"
 msgstr ""
 
-#: ../../web/reset/index.php:91
+#: ../../web/reset/index.php:103
 msgid "Code has been expired"
 msgstr ""
 
-#: ../../web/reset/index.php:96 ../../web/reset/index.php:101
+#: ../../web/reset/index.php:108 ../../web/reset/index.php:113
 msgid "Invalid username or code"
 msgstr ""
 
-#: ../../web/reset/index.php:104
+#: ../../web/reset/index.php:116
 msgid "Passwords not match"
 msgstr ""
 
-#: ../../web/inc/main.php:134 ../../web/generate/ssl/index.php:101
+#: ../../web/inc/main.php:134 ../../web/generate/ssl/index.php:102
 #, php-format
 msgid "Error code:"
 msgstr ""
@@ -184,7 +188,7 @@ msgstr ""
 msgid "Field \"%s\" can not be blank."
 msgstr ""
 
-#: ../../web/generate/ssl/index.php:110
+#: ../../web/generate/ssl/index.php:111
 msgid "SSL_GENERATED_OK"
 msgstr ""
 
@@ -198,8 +202,8 @@ msgid "Nginx cache has been successfully purged"
 msgstr ""
 
 #: ../../web/templates/includes/panel.html:2
-#: ../../web/templates/pages/list_server_info.html:16
-#: ../../web/templates/pages/list_weblog.html:17
+#: ../../web/templates/pages/list_server_info.html:21
+#: ../../web/templates/pages/list_weblog.html:21
 msgid "Top"
 msgstr ""
 
@@ -236,7 +240,7 @@ msgstr ""
 #: ../../web/templates/pages/list_mail.html:70
 #: ../../web/templates/pages/list_db.html:32
 #: ../../web/templates/pages/list_db.html:91
-#: ../../web/templates/pages/list_server_info.html:26
+#: ../../web/templates/pages/list_server_info.html:31
 #: ../../web/templates/pages/list_mail_acc.html:17
 #: ../../web/templates/pages/list_mail_acc.html:74
 msgid "Disk"
@@ -275,8 +279,8 @@ msgstr ""
 
 #: ../../web/templates/includes/panel.html:87
 #: ../../web/templates/includes/panel.html:89
-#: ../../web/templates/pages/list_server_info.html:35
-#: ../../web/templates/pages/list_weblog.html:31
+#: ../../web/templates/pages/list_server_info.html:40
+#: ../../web/templates/pages/list_weblog.html:35
 msgid "Log out"
 msgstr ""
 
@@ -353,7 +357,7 @@ msgstr ""
 #: ../../web/templates/includes/panel.html:140
 #: ../../web/templates/pages/add_firewall_banlist.html:77
 #: ../../web/templates/pages/edit_package.html:210
-#: ../../web/templates/pages/list_server_info.html:29
+#: ../../web/templates/pages/list_server_info.html:34
 #: ../../web/templates/pages/add_package.html:207
 msgid "DNS"
 msgstr ""
@@ -395,7 +399,7 @@ msgstr ""
 
 #: ../../web/templates/includes/panel.html:170
 #: ../../web/templates/pages/add_firewall_banlist.html:79
-#: ../../web/templates/pages/list_server_info.html:31
+#: ../../web/templates/pages/list_server_info.html:36
 msgid "DB"
 msgstr ""
 
@@ -585,7 +589,7 @@ msgstr ""
 #: ../../web/templates/pages/list_webapps.html:5
 #: ../../web/templates/pages/edit_server_nginx.html:5
 #: ../../web/templates/pages/list_rrd.html:5
-#: ../../web/templates/pages/list_server_info.html:23
+#: ../../web/templates/pages/list_server_info.html:28
 #: ../../web/templates/pages/list_ip.html:5
 #: ../../web/templates/pages/edit_cron.html:5
 #: ../../web/templates/pages/add_mail.html:5
@@ -602,7 +606,7 @@ msgstr ""
 #: ../../web/templates/pages/login/login_2.html:42
 #: ../../web/templates/pages/edit_mail_acc.html:5
 #: ../../web/templates/pages/add_package.html:5
-#: ../../web/templates/pages/list_weblog.html:24
+#: ../../web/templates/pages/list_weblog.html:28
 #: ../../web/templates/pages/list_mail_acc.html:9
 #: ../../web/templates/pages/add_cron.html:5
 #: ../../web/templates/pages/add_db.html:5
@@ -738,7 +742,6 @@ msgstr ""
 #: ../../web/templates/pages/edit_firewall.html:109
 #: ../../web/templates/pages/edit_ip.html:119
 #: ../../web/templates/pages/edit_ip.html:129
-#: ../../web/templates/pages/edit_ip.html:139
 #: ../../web/templates/pages/edit_web.html:280
 #: ../../web/templates/pages/edit_web.html:516
 #: ../../web/templates/pages/edit_dns_rec.html:126
@@ -747,7 +750,6 @@ msgstr ""
 #: ../../web/templates/pages/add_web.html:396
 #: ../../web/templates/pages/add_ip.html:125
 #: ../../web/templates/pages/add_ip.html:135
-#: ../../web/templates/pages/add_ip.html:145
 #: ../../web/templates/pages/add_dns_rec.html:124
 #: ../../web/templates/pages/add_dns_rec.html:134
 #: ../../web/templates/pages/generate_ssl.html:69
@@ -1359,7 +1361,7 @@ msgstr ""
 
 #: ../../web/templates/pages/list_stats.html:176
 #: ../../web/templates/pages/edit_package.html:102
-#: ../../web/templates/pages/list_server_info.html:28
+#: ../../web/templates/pages/list_server_info.html:33
 #: ../../web/templates/pages/add_package.html:100
 msgid "Web"
 msgstr ""
@@ -1372,7 +1374,7 @@ msgstr ""
 
 #: ../../web/templates/pages/list_stats.html:204
 #: ../../web/templates/pages/edit_package.html:342
-#: ../../web/templates/pages/list_server_info.html:30
+#: ../../web/templates/pages/list_server_info.html:35
 #: ../../web/templates/pages/add_package.html:339
 msgid "Mail"
 msgstr ""
@@ -1935,9 +1937,9 @@ msgstr[1] ""
 
 #: ../../web/templates/pages/list_search.html:6
 #: ../../web/templates/pages/list_log.html:30
-#: ../../web/templates/pages/list_server_info.html:34
+#: ../../web/templates/pages/list_server_info.html:39
 #: ../../web/templates/pages/list_log_auth.html:12
-#: ../../web/templates/pages/list_weblog.html:29
+#: ../../web/templates/pages/list_weblog.html:33
 msgid "Refresh"
 msgstr ""
 
@@ -2166,11 +2168,6 @@ msgstr ""
 #: ../../web/templates/pages/edit_ip.html:129
 #: ../../web/templates/pages/add_ip.html:135
 msgid "NAT IP association"
-msgstr ""
-
-#: ../../web/templates/pages/edit_ip.html:139
-#: ../../web/templates/pages/add_ip.html:145
-msgid "HELO/SMTP Banner"
 msgstr ""
 
 #: ../../web/templates/pages/edit_web.html:9
@@ -3187,7 +3184,7 @@ msgid "Description"
 msgstr ""
 
 #: ../../web/templates/pages/list_services.html:101
-#: ../../web/templates/pages/list_server_info.html:24
+#: ../../web/templates/pages/list_server_info.html:29
 msgid "CPU"
 msgstr ""
 
@@ -3214,11 +3211,11 @@ msgstr ""
 msgid "mb"
 msgstr ""
 
-#: ../../web/templates/pages/list_server_info.html:25
+#: ../../web/templates/pages/list_server_info.html:30
 msgid "RAM"
 msgstr ""
 
-#: ../../web/templates/pages/list_server_info.html:27
+#: ../../web/templates/pages/list_server_info.html:32
 msgid "Network"
 msgstr ""
 
@@ -3720,20 +3717,20 @@ msgstr ""
 msgid "Adding Package"
 msgstr ""
 
-#: ../../web/templates/pages/list_weblog.html:25
+#: ../../web/templates/pages/list_weblog.html:29
 msgid "Access Log"
 msgstr ""
 
-#: ../../web/templates/pages/list_weblog.html:25
-#: ../../web/templates/pages/list_weblog.html:26
+#: ../../web/templates/pages/list_weblog.html:29
+#: ../../web/templates/pages/list_weblog.html:30
 msgid "Download"
 msgstr ""
 
-#: ../../web/templates/pages/list_weblog.html:26
+#: ../../web/templates/pages/list_weblog.html:30
 msgid "Error Log"
 msgstr ""
 
-#: ../../web/templates/pages/list_weblog.html:36
+#: ../../web/templates/pages/list_weblog.html:40
 #, php-format
 msgid "Last 70 lines of %s.%s.log"
 msgstr ""
@@ -3843,13 +3840,13 @@ msgstr ""
 
 #: ../../web/add/user/index.php:51 ../../web/add/web/index.php:385
 #: ../../web/add/web/index.php:406 ../../web/add/mail/index.php:184
-#: ../../web/add/db/index.php:49 ../../web/edit/user/index.php:270
+#: ../../web/add/db/index.php:49 ../../web/edit/user/index.php:263
 #: ../../web/edit/web/index.php:763 ../../web/edit/mail/index.php:473
 msgid "Please enter valid email address."
 msgstr ""
 
 #: ../../web/add/user/index.php:57 ../../web/add/mail/index.php:191
-#: ../../web/add/db/index.php:56 ../../web/edit/user/index.php:129
+#: ../../web/add/db/index.php:56 ../../web/edit/user/index.php:122
 #: ../../web/edit/mail/index.php:489 ../../web/edit/db/index.php:64
 msgid "Password does not match the minimum requirements"
 msgstr ""
@@ -3915,7 +3912,7 @@ msgstr ""
 msgid "assigned user"
 msgstr ""
 
-#: ../../web/add/ip/index.php:75
+#: ../../web/add/ip/index.php:74
 #, php-format
 msgid "IP_CREATED_OK"
 msgstr ""
@@ -4108,7 +4105,7 @@ msgstr ""
 msgid "ns2"
 msgstr ""
 
-#: ../../web/add/package/index.php:186
+#: ../../web/add/package/index.php:187
 #, php-format
 msgid "PACKAGE_CREATED_OK"
 msgstr ""
@@ -4135,12 +4132,12 @@ msgstr ""
 msgid "SSH KEY created"
 msgstr ""
 
-#: ../../web/edit/user/index.php:282
+#: ../../web/edit/user/index.php:275
 msgid "Please enter a valid name"
 msgstr ""
 
-#: ../../web/edit/user/index.php:352 ../../web/edit/web/index.php:979
-#: ../../web/edit/ip/index.php:113 ../../web/edit/cron/index.php:72
+#: ../../web/edit/user/index.php:345 ../../web/edit/web/index.php:979
+#: ../../web/edit/ip/index.php:104 ../../web/edit/cron/index.php:72
 #: ../../web/edit/mail/index.php:460 ../../web/edit/mail/index.php:633
 #: ../../web/edit/firewall/index.php:118 ../../web/edit/db/index.php:80
 #: ../../web/edit/server/dovecot/index.php:146
@@ -4166,8 +4163,8 @@ msgstr ""
 #: ../../web/edit/server/mysql/index.php:42
 #: ../../web/edit/server/bind9/index.php:55
 #: ../../web/edit/server/apache2/index.php:42
-#: ../../web/edit/package/index.php:286 ../../web/edit/dns/index.php:145
-#: ../../web/edit/dns/index.php:197
+#: ../../web/edit/package/index.php:279 ../../web/edit/dns/index.php:145
+#: ../../web/edit/dns/index.php:194
 #: ../../web/edit/backup/exclusions/index.php:117
 msgid "Changes has been saved."
 msgstr ""

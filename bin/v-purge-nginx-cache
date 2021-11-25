@@ -16,10 +16,14 @@ user=$1
 domain=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -40,16 +44,16 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Load domain data
-parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
+conf=$(grep "DOMAIN='$domain'" "$USER_DATA/web.conf");
+parse_object_kv_list "$conf"
 
 # Purge nginx FastCGI cache
-if [ -d /var/cache/nginx/micro/$domain ]; then
+if [ -d "/var/cache/nginx/micro/$domain" ]; then
     rm -rf /var/cache/nginx/micro/$domain
 fi
 
 # Purge nginx proxy cache
-if [ -d /var/cache/nginx/$domain ]; then
+if [ -d "/var/cache/nginx/$domain" ]; then
     rm -rf /var/cache/nginx/$domain
 fi
 
@@ -58,8 +62,8 @@ fi
 #----------------------------------------------------------#
 
 # Restart services if requested
-if [ ! -z "$restart" ]; then
-    $BIN/v-restart-web
+if [ -n "$restart" ]; then
+    $BIN/v-restart-web "$restart"
     check_result $? "Web restart failed" > /dev/null
 fi
 

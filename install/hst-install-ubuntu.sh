@@ -602,7 +602,7 @@ fi
 mask1='(([[:alnum:]](-?[[:alnum:]])*)\.)'
 mask2='*[[:alnum:]](-?[[:alnum:]])+\.[[:alnum:]]{2,}'
 if ! [[ "$servername" =~ ^${mask1}${mask2}$ ]]; then
-    if [ -n "$servername" ]; then
+    if [[ -n "$servername" ]]; then
         servername="$servername.example.com"
     else
         servername="example.com"
@@ -610,12 +610,12 @@ if ! [[ "$servername" =~ ^${mask1}${mask2}$ ]]; then
     echo "127.0.0.1 $servername" >> /etc/hosts
 fi
 
-if [ -z $(grep -i "$servername" /etc/hosts) ];  then
-  echo "127.0.0.1 $servername" >> /etc/hosts
+if [[ -z $(grep -i "$servername" /etc/hosts) ]]; then
+    echo "127.0.0.1 $servername" >> /etc/hosts
 fi
 
 # Set email if it wasn't set
-if [ -z "$email" ]; then
+if [[ -z "$email" ]]; then
     email="admin@$servername"
 fi
 

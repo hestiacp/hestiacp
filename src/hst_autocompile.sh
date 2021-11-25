@@ -642,7 +642,7 @@ if [ "$HESTIA_B" = true ]; then
       # Allow the executable to be executed
       chmod +x $BUILD_DIR_HESTIA/usr/local/hestia/bin/*
       find $BUILD_DIR_HESTIA/usr/local/hestia/install/ \( -name '*.sh' \) -exec chmod +x {} \;
-      chmod -x $BUILD_DIR_HESTIA/usr/local/hestia/install/* 
+      chmod -x $BUILD_DIR_HESTIA/usr/local/hestia/install/*.sh
       chown -R root:root $BUILD_DIR_HESTIA
   
       if [ "$BUILD_DEB" = true ]; then

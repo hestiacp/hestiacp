@@ -39,8 +39,8 @@ AMD (x86_64 Intel/AMD)
 
 ARM64 (arm64)
 ----------------------------
-* **Debian:** 11, 10
-* **Ubuntu:** 20.04 LTS
+* **Debian:** 11, 10, 9
+* **Ubuntu:** 20.04 LTS or 18.04 LTS
 * **NOTE:** ARM 64 bit processors only! ARM 32bit (armhf) is currently not supported!
 
 Installing Hestia Control Panel

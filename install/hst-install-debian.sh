@@ -19,11 +19,11 @@ os='debian'
 architecture="$(uname -m)"
 release=$(cat /etc/debian_version | tr "." "\n" | head -n1)
 codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
-HESTIA_INSTALL_DIR="$HESTIA/install/deb "
+HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.5.0'
+HESTIA_INSTALL_VER='1.5.1~alpha'
 pma_v='5.1.1'
 rc_v="1.5.0"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1")
@@ -709,7 +709,7 @@ fi
 
 # Installing HestiaCP repo
 echo "[ * ] Hestia Control Panel"
-echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
+echo "deb [arch=$ARCH] https://$RHOST/ $codename main" > $apt/hestia.list
 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
 
 # Installing PostgreSQL repo

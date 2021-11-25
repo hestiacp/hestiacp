@@ -19,11 +19,11 @@ os='debian'
 architecture="$(uname -m)"
 release=$(cat /etc/debian_version | tr "." "\n" | head -n1)
 codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
-HESTIA_INSTALL_DIR="$HESTIA/install/deb"
+HESTIA_INSTALL_DIR="$HESTIA/install/deb "
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.5.0~beta'
+HESTIA_INSTALL_VER='1.5.0'
 pma_v='5.1.1'
 rc_v="1.5.0"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1")
@@ -145,6 +145,7 @@ set_default_lang() {
 set_default_port() {
     if [ -z "$port" ]; then
         eval port=$1
+        echo "BACKEND_PORT='$port'" >> $HESTIA/conf/hestia.conf
     fi
 }
 
@@ -455,17 +456,6 @@ x86_64)
     ;;
  aarch64)
     ARCH="arm64"
-    if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
-        echo
-        echo -e "\e[91mInstallation aborted\e[0m"
-        echo "===================================================================="
-        echo -e "\e[33mERROR: HestiaCP on ARM is currently not supported with install from ATP!\e[0m"
-        echo -e "\e[33mPlease compile your own packages for HestiaCP. \e[0m"
-        echo -e "\e[33mPlease follow the instructions at: \e[0m"
-        echo -e "  \e[33mhttps://docs.hestiacp.com/development/panel.html#compiling\e[21m\e[0m"
-        echo ""
-        check_result 1 "Installation aborted"    
-    fi
     ;;
 *)
 echo
@@ -719,15 +709,7 @@ fi
 
 # Installing HestiaCP repo
 echo "[ * ] Hestia Control Panel"
-if [ "$ARCH" = "amd64" ]; then
-    echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
-else
-    echo "# deb https://$RHOST/ $codename main" > $apt/hestia.list
-    echo -e "\e[91m[ ! ] HestiaCP on ARM is currently in Development.\e[0m"
-    echo -e "\e[91m      This will mean that we don't provide any packages and you are responisble\e[0m"
-    echo -e "\e[91m      for building the packages your self. To build your own packeges see\e[0m"
-    echo -e "\e[91m      https://docs.hestiacp.com/development/panel.html#compiling\e[0m"
-fi
+echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
 
 # Installing PostgreSQL repo

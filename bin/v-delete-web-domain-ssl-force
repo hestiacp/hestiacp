@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: remove ssl force from domain
-# options: USER DOMAIN [RESTART]
+# options: USER DOMAIN [RESTART] [QUIET]
 # labels: hestia web
 #
 # example: v-delete-web-domain-ssl-force admin domain.tld
@@ -15,8 +15,8 @@
 # Argument definition
 user=$1
 domain=$2
-restart=$3
-quiet=$4
+restart="$3"
+quiet="$4"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf

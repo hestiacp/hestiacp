@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: Adding force SSL for a domain
-# options: USER DOMAIN
+# options: USER DOMAIN [RESTART] [QUIET]
 # labels: hestia web
 #
 # example: v-add-web-domain-ssl-force admin acme.com
@@ -15,8 +15,9 @@
 # Argument definition
 user=$1
 domain=$2
-quiet=$3
-restart="$4"
+restart="$3"
+quiet="$4"
+
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf

@@ -15,12 +15,13 @@
 ####### You can use \n within the string to create new lines.                   #######
 #######################################################################################
 
+echo "[ * ] Apply changes for 1.5.0"
+
 upgrade_config_set_value 'UPGRADE_UPDATE_WEB_TEMPLATES' 'true'
 upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'true'
 upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'true'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'true'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'true'
-
 
 if [ -n "$DB_PMA_ALIAS" ]; then
    if [ -e "/etc/apache2/conf.d/phpmyadmin.conf" ]; then

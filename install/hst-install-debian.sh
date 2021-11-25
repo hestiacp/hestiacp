@@ -639,7 +639,7 @@ if ! [[ "$servername" =~ ^${mask1}${mask2}$ ]]; then
 fi
 
 if [[ -z $(grep -i "$servername" /etc/hosts) ]]; then
-  echo "127.0.0.1 $servername" >> /etc/hosts
+    echo "127.0.0.1 $servername" >> /etc/hosts
 fi
 
 # Set email if it wasn't set

@@ -966,7 +966,7 @@ function check_ip_not_banned(){
         skip "PHP ${test_phpver} not installed"
     fi
 
-    run v-change-web-domain-backend-tpl $user $multi_domain 'PHP-8_0' 'yes'
+    run v-change-web-domain-backend-tpl $user $multi_domain 'PHP-8_1' 'yes'
     assert_success
     refute_output
 

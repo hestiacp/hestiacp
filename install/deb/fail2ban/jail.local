@@ -42,7 +42,7 @@ maxretry = 5
 enabled  = false
 filter   = roundcube-auth
 action   = hestia[name=WEB]
-logpath  = /var/log/roundcube/errors
+logpath  = /var/log/roundcube/errors.log
 maxretry = 5
 
 [recidive]

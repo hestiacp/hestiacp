@@ -60,6 +60,10 @@ is_web_domain_cert_valid
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Deleting old certificate
+rm -f $HOMEDIR/$user/conf/web/$domain/ssl/$domain.*
+rm -f $USER_DATA/ssl/$domain.*
+
 # Adding certificate to user data directory
 cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/$domain.crt
 cp -f $ssl_dir/$domain.key $USER_DATA/ssl/$domain.key

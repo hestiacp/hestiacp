@@ -55,6 +55,7 @@ if [ -z "$password" ]; then
 else
     is_format_valid 'user'
 fi
+is_type_valid "api ssh" "$type"
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_password_valid
 is_dnshost_new

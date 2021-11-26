@@ -78,6 +78,12 @@ if [ ! -z "$new" ]; then
         $BIN/v-restart-proxy
         $BIN/v-restart-web
     fi
+    
+    if [ -n "$IMAP_SYSTEM" ]; then
+        for user in $($HESTIA/bin/v-list-sys-users plain); do
+            $BIN/v-rebuild-mail-domains "$user" no
+        done
+    fi
 
     # Updating DNS
     if [ ! -z "$DNS_SYSTEM" ]; then

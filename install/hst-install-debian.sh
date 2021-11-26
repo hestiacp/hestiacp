@@ -23,10 +23,10 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.5.0~beta'
+HESTIA_INSTALL_VER='1.5.1~alpha'
 pma_v='5.1.1'
 rc_v="1.5.0"
-multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
+multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1")
 fpm_v="8.0"
 mariadb_v="10.6"
 
@@ -145,6 +145,7 @@ set_default_lang() {
 set_default_port() {
     if [ -z "$port" ]; then
         eval port=$1
+        echo "BACKEND_PORT='$port'" >> $HESTIA/conf/hestia.conf
     fi
 }
 
@@ -178,6 +179,16 @@ validate_hostname () {
         # Hostname invalid
         return 0
     fi
+}
+
+validate_email (){
+  if [[ ! "$email" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.[A-Za-z]{2,63}$ ]] ; then
+    # Email invalid
+    return 0
+  else
+    # Email valid
+    return 1
+  fi
 }
 
 
@@ -445,17 +456,6 @@ x86_64)
     ;;
  aarch64)
     ARCH="arm64"
-    if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
-        echo
-        echo -e "\e[91mInstallation aborted\e[0m"
-        echo "===================================================================="
-        echo -e "\e[33mERROR: HestiaCP on ARM is currently not supported with install from ATP!\e[0m"
-        echo -e "\e[33mPlease compile your own packages for HestiaCP. \e[0m"
-        echo -e "\e[33mPlease follow the instructions at: \e[0m"
-        echo -e "  \e[33mhttps://docs.hestiacp.com/development/panel.html#compiling\e[21m\e[0m"
-        echo ""
-        check_result 1 "Installation aborted"    
-    fi
     ;;
 *)
 echo
@@ -586,7 +586,15 @@ if [ "$interactive" = 'yes' ]; then
 
     # Asking for contact email
     if [ -z "$email" ]; then
+        while validate_email; do
+        echo -e "\nPlease use a valid emailadress (ex. info@domain.tld)."
         read -p 'Please enter admin email address: ' email
+        done
+    else
+      if validate_email; then
+      echo "Please use a valid emailadress (ex. info@domain.tld)."
+      exit 1
+      fi
     fi
 
     # Asking to set FQDN hostname
@@ -622,7 +630,7 @@ fi
 mask1='(([[:alnum:]](-?[[:alnum:]])*)\.)'
 mask2='*[[:alnum:]](-?[[:alnum:]])+\.[[:alnum:]]{2,}'
 if ! [[ "$servername" =~ ^${mask1}${mask2}$ ]]; then
-    if [ -n "$servername" ]; then
+    if [[ -n "$servername" ]]; then
         servername="$servername.example.com"
     else
         servername="example.com"
@@ -630,8 +638,12 @@ if ! [[ "$servername" =~ ^${mask1}${mask2}$ ]]; then
     echo "127.0.0.1 $servername" >> /etc/hosts
 fi
 
+if [[ -z $(grep -i "$servername" /etc/hosts) ]]; then
+    echo "127.0.0.1 $servername" >> /etc/hosts
+fi
+
 # Set email if it wasn't set
-if [ -z "$email" ]; then
+if [[ -z "$email" ]]; then
     email="admin@$servername"
 fi
 
@@ -697,15 +709,7 @@ fi
 
 # Installing HestiaCP repo
 echo "[ * ] Hestia Control Panel"
-if [ "$ARCH" = "amd64" ]; then
-    echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
-else
-    echo "# deb https://$RHOST/ $codename main" > $apt/hestia.list
-    echo -e "\e[91m[ ! ] HestiaCP on ARM is currently in Development.\e[0m"
-    echo -e "\e[91m      This will mean that we don't provide any packages and you are responisble\e[0m"
-    echo -e "\e[91m      for building the packages your self. To build your own packeges see\e[0m"
-    echo -e "\e[91m      https://docs.hestiacp.com/development/panel.html#compiling\e[0m"
-fi
+echo "deb [arch=$ARCH] https://$RHOST/ $codename main" > $apt/hestia.list
 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
 
 # Installing PostgreSQL repo
@@ -1527,8 +1531,7 @@ if [ "$mysql" = 'yes' ]; then
 
     # Configuring Apache2 for PHPMYADMIN
     if [ "$apache" = 'yes' ]; then
-        cp -f $HESTIA_INSTALL_DIR/pma/apache.conf /etc/phpmyadmin/
-        ln -s /etc/phpmyadmin/apache.conf /etc/apache2/conf.d/phpmyadmin.conf
+        touch /etc/apache2/conf.d/phpmyadmin.inc
     fi
 
     # Overwrite old files
@@ -1584,7 +1587,7 @@ if [ "$postgresql" = 'yes' ]; then
 
     # Configuring phpPgAdmin
     if [ "$apache" = 'yes' ]; then
-        cp -f $HESTIA_INSTALL_DIR/pga/phppgadmin.conf /etc/apache2/conf.d/
+        cp -f $HESTIA_INSTALL_DIR/pga/phppgadmin.conf /etc/apache2/conf.d/phppgadmin.conf
     fi
     cp -f $HESTIA_INSTALL_DIR/pga/config.inc.php /etc/phppgadmin/
 
@@ -1789,7 +1792,7 @@ fi
 #----------------------------------------------------------#
 
 echo "[ * ] Install Roundcube..."
-# Min requirements Dovecote + Exim + Mysql
+# Min requirements Dovecot + Exim + Mysql
 
 if [ "$mysql" == 'yes' ] && [ "$dovecot" == "yes" ]; then
     $HESTIA/bin/v-add-sys-roundcube 
@@ -1799,13 +1802,13 @@ fi
 #----------------------------------------------------------#
 #                     Install Sieve                        #
 #----------------------------------------------------------#
-# Min requirements Dovecote + Exim + Mysql + roundcube
+# Min requirements Dovecot + Exim + Mysql + Roundcube
 if [ "$sieve" = 'yes' ]; then
     # Folder paths
     RC_INSTALL_DIR="/var/lib/roundcube"
     RC_CONFIG_DIR="/etc/roundcube"
     
-    echo "[ * ] Install Sieve ..."
+    echo "[ * ] Install Sieve..."
      
     # dovecot.conf install
     sed -i "s/namespace/service stats \{\n  unix_listener stats-writer \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n\}\n\nnamespace/g" /etc/dovecot/dovecot.conf
@@ -1829,24 +1832,23 @@ if [ "$sieve" = 'yes' ]; then
    sed -i "s/address_pipe:/dovecot_virtual_delivery:\n  driver = pipe\n  command = \/usr\/lib\/dovecot\/dovecot-lda -e -d \$local_part@\$domain -f \$sender_address -a \$original_local_part@\$original_domain\n  delivery_date_add\n  envelope_to_add\n  return_path_add\n  log_output = true\n  log_defer_output = true\n  user = \${extract{2}{:}{\${lookup{\$local_part}lsearch{\/etc\/exim4\/domains\/\${lookup{\$domain}dsearch{\/etc\/exim4\/domains\/}}\/passwd}}}}\n group = mail\n  return_output\n\naddress_pipe:/g" /etc/exim4/exim4.conf.template
     
     
-    # Modify roundcube install install
+    # Modify Roundcube install
     mkdir -p $RC_CONFIG_DIR/plugins/managesieve
     
     cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_managesieve.inc.php $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
         ln -s $RC_CONFIG_DIR/plugins/managesieve/config.inc.php $RC_INSTALL_DIR/plugins/managesieve/config.inc.php
     
-    # permission changes
+    # Permission changes
     chown -R dovecot:mail /var/log/dovecot.log
     chmod 660 /var/log/dovecot.log
-    
     chown -R root:www-data $RC_CONFIG_DIR/
-        chmod 751 -R $RC_CONFIG_DIR
-    
+    chmod 751 -R $RC_CONFIG_DIR
+    chmod 644 $RC_CONFIG_DIR/*.php
     chmod 644 $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
     
     sed -i "s/'archive'/'archive', 'managesieve'/g" $RC_CONFIG_DIR/config.inc.php
     
-    #restart dovecot and exim4
+    # Restart Dovecot and exim4
     systemctl restart dovecot > /dev/null 2>&1
     systemctl restart exim4 > /dev/null 2>&1
 fi

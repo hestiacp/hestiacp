@@ -1586,6 +1586,37 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
   check_ip_not_banned '1.2.3.4' 'HESTIA'
 }
 
+@test "Test create ipset" {
+  run v-add-firewall-ipset "blacklist" "script:/usr/local/hestia/install/deb/firewall/ipset/blacklist.sh" v4 yes
+  assert_success
+  refute_output
+}
+
+@test "Create firewall with Ipset" {
+  run v-add-firewall-rule 'DROP' 'ipset:blacklist' '8083,22' 'TCP' 'Test'
+  assert_success
+  refute_output
+}
+
+@test "List firewall rules" {
+  run v-list-firewall csv
+  assert_success
+  assert_line --partial '11,DROP,TCP,8083,22,ipset:blacklist'
+  
+}
+
+@test "Delete firewall with Ipset" {
+  run v-delete-firewall-rule '11'
+  assert_success
+  refute_output
+}
+
+@test "Test delete ipset" {
+  run v-delete-firewall-ipset "blacklist" 
+  assert_success
+  refute_output
+}
+
 #----------------------------------------------------------#
 #                         PACKAGE                          #
 #----------------------------------------------------------#

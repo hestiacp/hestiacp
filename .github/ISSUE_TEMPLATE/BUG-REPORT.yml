@@ -1,0 +1,74 @@
+name: Bug Report
+description: File a bug report and help us to improve Hestia Control Panel
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        If you have encountered a bug or problem in Hestia Control Panel, use this form to let us know.
+        **Important: DO NOT include any private/sensitive information such as email addresses, passwords, IP addresses, or hostnames.**
+  - type: textarea
+    id: describe
+    attributes:
+      label: Describe the bug
+      description: |
+        A clear description of what the bug is. Include as much detail as possible, such as the configuration of your server and any troubleshooting steps that you've already performed.
+      placeholder: Tell us exactly what you see!
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Tell us how to replicate the bug
+      description: |
+        What steps did you take when the bug occured or things did not work as you expected?
+      placeholder: |
+        1. Click on the Web tab.
+        2. Click on Add Web Domain.
+        3. Attempted to add a domain and received an Internal Server Error after pressing Save.
+    validations:
+      required: true
+  - type: dropdown
+    id: part
+    attributes:
+      label: Which components are affected by this bug?
+      multiple: true
+      options:
+        - Control Panel Backend
+        - Control Panel Command Line Interface
+        - Control Panel Installation or Upgrade
+        - Control Panel Web Interface
+        - Backend Web Server (Nginx, Apache2)
+        - Database (MariaDB, PostgreSQL)
+        - Let's Encrypt SSL
+        - Mail (Exim, Dovecot)
+        - Mail Security (Antivirus, Antispam)
+        - Webmail (Roundcube, Rainloop)
+        - Firewall (Iptables, Fail2ban)
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Hestia Control Panel Version
+      placeholder: 1.x.x
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: Ubuntu 20.04 or Debian 11
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Log capture
+      description: Copy and paste any relevant log output in the field below. This will be automatically formatted into code, so no need for backticks. **Remove any sensitive information before submitting!**
+      render: shell
+  - type: markdown
+    attributes:
+      value: |
+        *Thank you* for taking the time to fill out this bug report.

@@ -30,7 +30,7 @@ $dist_config['services']['Filegator\Services\Storage\Filesystem']['config']['ada
         $port=json_decode(implode('', $output));
         if ( is_numeric($port[0]) && $port[0] > 0 ){
             $_SESSION['SFTP_PORT'] = $port[0];
-        }else if( preg_match('/^\s*Port\s+(\d+)$/im', file_get_contents('/etc/ssh/sshd_config'), $matches) ) {
+        } else if ( preg_match('/^\s*Port\s+(\d+)$/im', file_get_contents('/etc/ssh/sshd_config'), $matches) ) {
             $_SESSION['SFTP_PORT'] = $matches[1] ?? 22;
         } else {
             $_SESSION['SFTP_PORT'] = 22;

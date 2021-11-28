@@ -9,7 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
-- Add support for Dovecote Sieve #2163 (@gejobj)
+- Add support for Dovecote Sieve #2163 (@gejobj) => [How to enable Managesieve](https://docs.hestiacp.com/admin_docs/mail.html#how-can-i-enable-managesieve)
 - Improve HELO based system and use RDNS lookup instead our old system
 - Add support for PHP 8.1 #2233 
 - Set default php version for new installs to PHP 8.0 

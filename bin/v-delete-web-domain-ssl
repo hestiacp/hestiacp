@@ -65,10 +65,8 @@ if [ -n "$PROXY_SYSTEM" ] && [ -n "$PROXY" ]; then
 fi
 
 # Deleting old certificate
-tmpdir=$(mktemp -p $HOMEDIR/$user/web/$domain/private -d)
 rm -f $HOMEDIR/$user/conf/web/$domain/ssl/$domain.*
-mv $USER_DATA/ssl/$domain.* $tmpdir
-chown -R $user:$user $tmpdir
+rm -f $USER_DATA/ssl/$domain.*
 
 # Deleting force ssl
 $BIN/v-delete-web-domain-ssl-force "$user" "$domain" 'no' 'yes'

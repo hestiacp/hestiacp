@@ -505,14 +505,19 @@ fi
 if [ -z "$mail" ]; then
     ssl_home=$(search_objects 'web' 'LETSENCRYPT' 'yes' 'SSL_HOME')
     ssl_enabled="$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL')"
-    ssl_force="$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL_FORCE')"
-    [[ "$ssl_enabled" = "yes" ]] && $BIN/v-delete-web-domain-ssl $user $domain > /dev/null 2>&1
-    $BIN/v-add-web-domain-ssl "$user" "$domain" "$ssl_dir" "$ssl_home" updatessl
-    [[ "$ssl_force" = "yes" ]] && $BIN/v-add-web-domain-ssl-force "$user" "$domain" > /dev/null 2>&1
-else
+    if [ "$ssl_enabled" = "yes" ]; then 
+        $BIN/v-update-web-domain-ssl "$user" "$domain" "$ssl_dir" "$ssl_home" "updatessl" 
+    else
+        $BIN/v-add-web-domain-ssl "$user" "$domain" "$ssl_dir" "$ssl_home" "updatessl" 
+    fi
+ else
+ # TODO replace with v-update-mail-domain-ssl if ssl is enabled
     ssl_enabled="$(get_object_value 'mail' 'DOMAIN' "$root_domain" '$SSL')"
-    [[ "$ssl_enabled" = "yes" ]] && $BIN/v-delete-mail-domain-ssl "$user" "$root_domain" > /dev/null 2>&1
-    $BIN/v-add-mail-domain-ssl "$user" "$root_domain" "$ssl_dir" updatessl
+    if [ "$ssl_enabled" = "yes" ]; then 
+        $BIN/v-update-mail-domain-ssl "$user" "$root_domain" "$ssl_dir" "$ssl_home" "updatessl" 
+    else
+        $BIN/v-add-mail-domain-ssl "$user" "$root_domain" "$ssl_dir" "$ssl_home" "updatessl" 
+    fi
 fi
 
 if [ "$?" -ne '0' ]; then

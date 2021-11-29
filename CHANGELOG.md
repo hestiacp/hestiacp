@@ -16,7 +16,7 @@ All notable changes to this project will be documented in this file.
 
 ### Dependencies
 
-- Update Roundcube to 1.5.0 [Release Notice](https://roundcube.net/news/2021/11/28/update-1.5.1-released)
+- Update Roundcube to 1.5.1 [Release Notice](https://roundcube.net/news/2021/11/28/update-1.5.1-released)
 
 ## [1.5.0] - Major Release (Feature / Quality Update)
 

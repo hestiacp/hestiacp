@@ -1,6 +1,23 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.5.1] - Service release
+
+### Bugfixes
+
+- Add B2 delete file support to BlackBlaze
+- Open phpmyadmin in new tab or window #2250 @manuelserol
+- Fix issue with ipset not working properly [Forum](https://forum.hestiacp.com/t/error-ipset-object-not-found/5015)
+- Improve port detection on multiple servers for SSH #2242 and #2255
+- Fixed an issue with # in config files
+- Fixed multiple bugs in installer
+- Set correct permission /install/deb/ folder 
+- Adjust /etc/apt/sources.list.d/hestia.list to include architecture to resolve issue with I386 missing in apt.hestiacp.com
+
+### Dependencies
+
+- Update Roundcube to 1.5.0 [Release Notice](https://roundcube.net/news/2021/11/28/update-1.5.1-released)
+
 ## [1.5.0] - Major Release (Feature / Quality Update)
 
 ### Breaking changes ###

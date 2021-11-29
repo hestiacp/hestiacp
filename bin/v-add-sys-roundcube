@@ -182,6 +182,7 @@ else
     # Run Roundcube upgrade script
     $RC_INSTALL_DIR/$RC_EXTRACT/bin/installto.sh -y $RC_INSTALL_DIR > /dev/null 2>&1
     $RC_INSTALL_DIR/bin/update.sh --version "$version" > /dev/null 2>&1
+    $RC_INSTALL_DIR/bin/indexcontacts.sh
     chown -R root:www-data $RC_INSTALL_DIR
     
     #clean up the mess

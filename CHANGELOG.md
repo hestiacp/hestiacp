@@ -13,6 +13,8 @@ All notable changes to this project will be documented in this file.
 - Fixed multiple bugs in installer
 - Set correct permission /install/deb/ folder 
 - Adjust /etc/apt/sources.list.d/hestia.list to include architecture to resolve issue with I386 missing in apt.hestiacp.com
+- Fallback to hostname without retrying ptr lookup in exim (#2259)
+- Enable quota with in dovecot when sieve is enabled @madito
 
 ### Dependencies
 

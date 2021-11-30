@@ -41,3 +41,11 @@ esac
 
 echo "[ * ] Update /etc/apt/sources.list.d/hestia.list"
 sed -i "s|deb https://$RHOST/ $codename main|deb [arch=$ARCH] https://$RHOST/ $codename main|g" /etc/apt/sources.list.d/hestia.list
+
+if [ -n "$MAIL_SYSTEM" ]; then
+    echo "[ ! ] Update Exim config"
+    if [ -f "/etc/exim4/exim4.conf.template" ]; then
+        sed -i 's/^smtp_active_hostname = \${lookup dnsdb{>: ptr=\$interface_address}{\${listextract{1}{\$value}}}{\$primary_hostname}}$/smtp_active_hostname = \${lookup dnsdb{>: defer_never,ptr=\$interface_address}{\${listextract{1}{\$value}}}{\$primary_hostname}}/' /etc/exim4/exim4.conf.template
+        sed -i 's/^  helo_data = \${lookup dnsdb{>: ptr=\$sending_ip_address}{\${listextract{1}{\$value}}}{\$primary_hostname}}$/  helo_data = \${lookup dnsdb{>: defer_never,ptr=\$sending_ip_address}{\${listextract{1}{\$value}}}{\$primary_hostname}}/' /etc/exim4/exim4.conf.template
+    fi
+fi

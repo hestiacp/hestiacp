@@ -45,3 +45,11 @@ sed -i "s|deb https://$RHOST/ $codename main|deb [arch=$ARCH] https://$RHOST/ $c
 if [ -n "$IMAP_SYSTEM" ]; then 
     sed -i "s/mail_plugins = \$mail_plugins sieve/mail_plugins = \$mail_plugins quota sieve/g" /etc/dovecot/conf.d/15-lda.conf
 fi
+
+if [ -n "$MAIL_SYSTEM" ]; then
+    echo "[ ! ] Update Exim config"
+    if [ -f "/etc/exim4/exim4.conf.template" ]; then
+        sed -i 's/^smtp_active_hostname = \${lookup dnsdb{>: ptr=\$interface_address}{\${listextract{1}{\$value}}}{\$primary_hostname}}$/smtp_active_hostname = \${lookup dnsdb{>: defer_never,ptr=\$interface_address}{\${listextract{1}{\$value}}}{\$primary_hostname}}/' /etc/exim4/exim4.conf.template
+        sed -i 's/^  helo_data = \${lookup dnsdb{>: ptr=\$sending_ip_address}{\${listextract{1}{\$value}}}{\$primary_hostname}}$/  helo_data = \${lookup dnsdb{>: defer_never,ptr=\$sending_ip_address}{\${listextract{1}{\$value}}}{\$primary_hostname}}/' /etc/exim4/exim4.conf.template
+    fi
+fi

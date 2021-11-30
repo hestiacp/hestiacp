@@ -41,3 +41,7 @@ esac
 
 echo "[ * ] Update /etc/apt/sources.list.d/hestia.list"
 sed -i "s|deb https://$RHOST/ $codename main|deb [arch=$ARCH] https://$RHOST/ $codename main|g" /etc/apt/sources.list.d/hestia.list
+
+if [ -n "$IMAP_SYSTEM" ]; then 
+    sed -i "s/mail_plugins = \$mail_plugins sieve/mail_plugins = \$mail_plugins quota sieve/g" /etc/dovecot/conf.d/15-lda.conf
+fi

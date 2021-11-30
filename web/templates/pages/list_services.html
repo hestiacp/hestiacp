@@ -118,8 +118,7 @@
 				$spnd_icon = 'fa-play';
 				$state_icon = 'fa-minus-circle status-icon red';
 			}
-
-			if (($key == "php5.6-fpm") || ($key == "php7.0-fpm") || ($key == "php7.1-fpm") || ($key == "php7.2-fpm") || ($key == "php7.3-fpm") || ($key == "php7.4-fpm") || ($key == "php8.0-fpm")) {
+			if(in_array($key, $phpfpm)){
 				$edit_url="php";
 			} else {
 				$edit_url=$key;

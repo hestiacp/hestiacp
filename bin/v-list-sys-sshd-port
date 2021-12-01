@@ -59,7 +59,13 @@ csv_list() {
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-ports=$(sshd -T | grep '^port'| cut -d ' ' -f2);
+version=$(lsb_release -s -r)
+
+if [[ "$version" = 9 || "$version" = 10 ]]; then
+    ports=$(sshd -T -C "user=root" | grep '^port'| cut -d ' ' -f2);
+else
+    ports=$(sshd -T | grep '^port'| cut -d ' ' -f2);
+fi
 
 # Listing data
 case $format in

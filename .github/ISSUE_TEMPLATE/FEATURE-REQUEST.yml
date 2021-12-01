@@ -1,0 +1,30 @@
+name: Feature
+description: Suggest a new idea or change
+title: "[Feature] "
+labels: [feature]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Is there a feature or change that you think would make Hestia Control Panel work better for you? Send us your ideas and our development team will take them into consideration.
+        Before submitting a new idea, look at the **[current feature requests list](https://github.com/hestiacp/hestiacp/labels/feature)** to see if it has already been requested.
+  - type: textarea
+    id: request
+    attributes:
+      label: Describe the feature or change in detail
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Would you like to sponsor this feature to have it implemented?
+      description: While there is no obligation, our development team has a limited number of resources and time available and a financial contribution would help prioritize your request.
+      options:
+        - "Yes"
+        - "No"
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        **Thank you** for taking the time to send us your request, we appreciate your contribution.

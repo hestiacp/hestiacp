@@ -1,15 +1,36 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.5.1] - Service release
+
+### Bugfixes
+
+- Add B2 delete file support to BlackBlaze
+- Open phpmyadmin in new tab or window #2250 @manuelserol
+- Fix issue with ipset not working properly [Forum](https://forum.hestiacp.com/t/error-ipset-object-not-found/5015)
+- Improve port detection on multiple servers for SSH #2242 and #2255
+- Fixed an issue with # in config files
+- Fixed multiple bugs in installer
+- Set correct permission /install/deb/ folder 
+- Adjust /etc/apt/sources.list.d/hestia.list to include architecture to resolve issue with I386 missing in apt.hestiacp.com
+- Fallback to hostname without retrying ptr lookup in exim (#2259)
+- Enable quota with in dovecot when sieve is enabled @madito
+- Unable to edit php8.1 service #2261
+
+### Dependencies
+
+- Update Roundcube to 1.5.1 [Release Notice](https://roundcube.net/news/2021/11/28/update-1.5.1-released)
+
 ## [1.5.0] - Major Release (Feature / Quality Update)
 
 ### Breaking changes ###
 - **NOTE:** Changes have been made on how phpmyadmin/phppgadmin config are included in apache2 config. To restore to the old behaviour add `IncludeOptional conf.d/*.inc` below `IncludeOptional conf.d/*.conf` in /etc/apache2/apache2.conf and restart your server. 
 - **NOTE:** Hestia packages for arm64 has been added to atp.hestiacp.com please use the normal install instructions instead! For current ARM installs to enable auto update remove the `#` in /etc/apt/sources.list.d/hestia.list `# deb https://apt.hestiacp.com/ focal main` becomes `deb https://apt.hestiacp.com/ focal main` and then run `apt update && apt upgrade -y` 
+- **NOTE:** Make sure your server / VPS has a valid PTR record or otherwise you will not be able to send any mail!
 
 ### Features
 
-- Add support for Dovecote Sieve #2163 (@gejobj)
+- Add support for Dovecote Sieve #2163 (@gejobj) => [How to enable Managesieve](https://docs.hestiacp.com/admin_docs/mail.html#how-can-i-enable-managesieve)
 - Improve HELO based system and use RDNS lookup instead our old system
 - Add support for PHP 8.1 #2233 
 - Set default php version for new installs to PHP 8.0 

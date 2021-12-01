@@ -626,12 +626,16 @@ upgrade_filemanager() {
 
 upgrade_roundcube(){
     if [ -n "$(echo "$WEBMAIL_SYSTEM" | grep -w 'roundcube')" ]; then
-        rc_version=$(cat /var/lib/roundcube/index.php | grep -o -E '[0-9].[0-9].[0-9]+' | head -1);
-        if [ "$rc_version" != "$rc_v" ]; then
-            echo "[ * ] Upgrading Roundcube to version v$rc_v..."
-            $HESTIA/bin/v-add-sys-roundcube
+        if [ -d "/usr/share/roundcube" ]; then
+            echo "[ ! ] Roundcube: Unable to update. Updates are managed by apt.";
         else
-            echo "[ * ] Verify version Roundcube, No update found"
+            rc_version=$(cat /var/lib/roundcube/index.php | grep -o -E '[0-9].[0-9].[0-9]+' | head -1);
+            if [ "$rc_version" != "$rc_v" ]; then
+                echo "[ * ] Upgrading Roundcube to version v$rc_v..."
+                $HESTIA/bin/v-add-sys-roundcube
+            else
+                echo "[ * ] Verify version Roundcube, No update found"
+            fi
         fi
     fi
 }

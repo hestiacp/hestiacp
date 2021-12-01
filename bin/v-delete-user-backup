@@ -57,9 +57,13 @@ fi
 if [[ "$TYPE" =~ "ftp" ]] && [ "$deleted" == "0" ]; then
     ftp_delete "$backup"
 fi
+if [[ "$TYPE" =~ "b2" ]]; then
+    b2_delete "$user" "$backup"
+fi
 if [[ "$TYPE" =~ "local" ]]; then
     rm -f "$backup_folder/$2"
 fi
+
 
 # Deleting backup
 sed -i "/BACKUP='$2' /d" "$USER_DATA/backup.conf"

@@ -27,9 +27,11 @@ $dist_config['services']['Filegator\Services\Storage\Filesystem']['config']['ada
 
     if (!isset($_SESSION['SFTP_PORT'])) {
         exec("sudo /usr/local/hestia/bin/v-list-sys-sshd-port json", $output, $result);
-        if ($output) {
-            $port=json_decode(implode('', $output));
+        $port=json_decode(implode('', $output));
+        if ( is_numeric($port[0]) && $port[0] > 0 ){
             $_SESSION['SFTP_PORT'] = $port[0];
+        } else if ( preg_match('/^\s*Port\s+(\d+)$/im', file_get_contents('/etc/ssh/sshd_config'), $matches) ) {
+            $_SESSION['SFTP_PORT'] = $matches[1] ?? 22;
         } else {
             $_SESSION['SFTP_PORT'] = 22;
         }

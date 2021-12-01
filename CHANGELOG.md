@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - Adjust /etc/apt/sources.list.d/hestia.list to include architecture to resolve issue with I386 missing in apt.hestiacp.com
 - Fallback to hostname without retrying ptr lookup in exim (#2259)
 - Enable quota with in dovecot when sieve is enabled @madito
+- Unable to edit php8.1 service #2261
 
 ### Dependencies
 

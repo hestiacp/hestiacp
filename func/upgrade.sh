@@ -779,13 +779,15 @@ upgrade_restart_services() {
             fi
             $BIN/v-restart-dns 'yes'
         fi
-        versions_list=$($BIN/v-list-sys-php plain)
-        for v in $versions_list; do 
-            if [ "$DEBUG_MODE" = "true" ]; then
-                echo "      - php$v-fpm"
-            fi
-            $BIN/v-restart-service "php$v-fpm" 'yes'
-        done
+        if [ -n "$WEB_BACKEND" ]; then 
+            versions_list=$($BIN/v-list-sys-php plain)
+            for v in $versions_list; do 
+                if [ "$DEBUG_MODE" = "true" ]; then
+                    echo "      - php$v-fpm"
+                fi
+                $BIN/v-restart-service "php$v-fpm" 'yes'
+            done
+        fi 
         if [ -n "$FTP_SYSTEM" ]; then
             if [ "$DEBUG_MODE" = "true" ]; then
                 echo "      - $FTP_SYSTEM"

@@ -59,7 +59,7 @@ csv_list() {
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-ports=$(sshd -T | grep '^port'| cut -d ' ' -f2);
+ports=$(sshd -T -C "user=root" | grep '^port'| cut -d ' ' -f2);
 
 # Listing data
 case $format in

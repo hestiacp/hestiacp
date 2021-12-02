@@ -1274,7 +1274,7 @@ check_result $? "can't enable sftp jail"
 # Switch to sha512 for deb11.
 if [ "$release" -eq 11 ]; then
     # Switching to sha512
-    sed -i "s/obscure yescrypt/obscure sha512/g" /etc/pam.d/common-password
+    sed -i "s/ yescrypt/ sha512/g" /etc/pam.d/common-password 
 fi
 
 # Adding Hestia admin account

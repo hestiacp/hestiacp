@@ -53,7 +53,7 @@ is_object_valid '../../data/firewall/rules' 'RULE' "$rule"
 
 if [[ "$ip" =~ ^ipset: ]]; then
     ipset_name="${ip#ipset:}"
-    v-list-firewall-ipset plain | grep "^$ipset_name\s" >/dev/null
+    $BIN/v-list-firewall-ipset plain | grep "^$ipset_name\s" >/dev/null
     check_result $? 'ipset object not found' "$E_NOTEXIST"
 else
     is_format_valid 'ip'

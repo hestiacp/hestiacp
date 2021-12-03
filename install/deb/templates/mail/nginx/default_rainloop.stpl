@@ -39,5 +39,7 @@ location @fallback {
     proxy_pass https://%ip%:%web_ssl_port%;
 }
 
+proxy_hide_header Upgrade;
+
 include %home%/%user%/conf/mail/%root_domain%/%proxy_system%.conf_*;
 }

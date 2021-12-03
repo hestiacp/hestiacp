@@ -41,5 +41,7 @@ server {
         alias /var/www/document_errors/;
     }
 
+    proxy_hide_header Upgrade;
+
     include %home%/%user%/conf/mail/%root_domain%/%web_system%.conf_*;
 }

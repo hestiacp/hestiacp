@@ -48,5 +48,5 @@ location /error/ {
 
 proxy_hide_header Upgrade;
 
-include %home%/%user%/conf/mail/%root_domain%/%web_system%.conf_*;
+include %home%/%user%/conf/mail/%root_domain%/%web_system%.ssl.conf_*;
 }

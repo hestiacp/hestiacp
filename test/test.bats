@@ -754,7 +754,7 @@ function check_ip_not_banned(){
 }
 
 
-@test "WEB: Generate Self signed certificate" {
+@test "WEB: Generate Self signed certificate ASCII idn-tést.eu" {
     run v-generate-ssl-cert "xn--idn-tst-fya.eu" "info@xn--idn-tst-fya.eu" US CA "Orange County" HestiaCP IT "mail.xn--idn-tst-fya.eu"
     assert_success
 }
@@ -772,7 +772,7 @@ function check_ip_not_banned(){
    refute_output
 }
 
-@test "WEB: Generate Self signed certificate" {
+@test "WEB: Generate Self signed certificate ASCII bløst.рф" {
     run v-generate-ssl-cert "xn--blst-hra.xn--p1ai" "info@xn--blst-hra.xn--p1ai" US CA "Orange County" HestiaCP IT "mail.xn--blst-hra.xn--p1ai"
     assert_success
 }

@@ -748,26 +748,37 @@ function check_ip_not_banned(){
 }
 
 @test "WEB: Add IDN domain ASCII idn-tést.eu" {
- # Expected to fail due to utf exists
- run v-add-web-domain $user $( idn -a idn-tést.eu) 198.18.0.125
- assert_failure $E_EXISTS
-
+   # Expected to fail due to utf exists
+   run v-add-web-domain $user $( idn -a idn-tést.eu) 198.18.0.125
+   assert_failure $E_EXISTS
 }
+
+
+@test "WEB: Generate Self signed certificate" {
+    run v-generate-ssl-cert "xn--idn-tst-fya.eu" "info@xn--idn-tst-fya.eu" US CA "Orange County" HestiaCP IT "mail.xn--idn-tst-fya.eu"
+    assert_success
+}
+
 
 @test "WEB: Delete IDN domain idn-tést.eu" {
- run v-delete-web-domain $user idn-tést.eu
- assert_success
- refute_output
+   run v-delete-web-domain $user idn-tést.eu
+   assert_success
+   refute_output
 }
  
-@test "WEB: Add IDN domain UTF bløst.com" {
- run v-add-web-domain $user bløst.com 198.18.0.125
- assert_success
- refute_output
+@test "WEB: Add IDN domain UTF bløst.рф" {
+   run v-add-web-domain $user bløst.рф 198.18.0.125
+   assert_success
+   refute_output
 }
 
-@test "WEB: Delete IDN domain bløst.com" {
- run v-delete-web-domain $user bløst.com
+@test "WEB: Generate Self signed certificate" {
+    run v-generate-ssl-cert "xn--blst-hra.xn--p1ai" "info@xn--blst-hra.xn--p1ai" US CA "Orange County" HestiaCP IT "mail.xn--blst-hra.xn--p1ai"
+    assert_success
+}
+
+@test "WEB: Delete IDN domain bløst.рф" {
+ run v-delete-web-domain $user bløst.рф
  assert_success
  refute_output
 }

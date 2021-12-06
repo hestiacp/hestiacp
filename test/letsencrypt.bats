@@ -70,12 +70,12 @@ function setup() {
 
 #Check if CAA records hasn't been deleted
 @test "Check if CAA record hasn't been deleted" {
-    run v-list-dns-records $user $domain csv | grep CAA
-    assert_output --partial 'letsencrypt.org'
+    run v-list-dns-records $user $domain csv | grep letsencrypt.org
+    assert_output --partial letsencrypt.org
 }
 
 @test "Delete user" {
-    skip
+    #skip
     run v-delete-user $user
     assert_success
     refute_output

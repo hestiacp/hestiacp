@@ -63,7 +63,7 @@ function setup() {
     refute_output
 }
 
-@test "Run renewal script for LE" {
+@test Delete mail ssl" {
     run v-delete-letsencrypt-domain $user $domain "no" "yes"
     assert_success
     refute_output

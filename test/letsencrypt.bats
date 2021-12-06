@@ -27,13 +27,13 @@ function setup() {
 }
 
 @test "Create DNS domain" {
-    run v-add-dns-domain $user $domain
+    run v-add-dns-domain $user $domain $ip
     assert_success
     refute_output
 }
 
 @test "Create web domain" {
-    run v-add-web-domain $user $domain
+    run v-add-web-domain $user $domain $ip yes "www.$domain,renewal.$domain"
     assert_success
     refute_output
 }

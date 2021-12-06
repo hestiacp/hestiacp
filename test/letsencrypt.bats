@@ -75,6 +75,7 @@ function setup() {
 }
 
 @test "Delete user" {
+    skip
     run v-delete-user $user
     assert_success
     refute_output

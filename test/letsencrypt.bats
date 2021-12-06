@@ -15,7 +15,6 @@ function random() {
 
 function setup() {
     source /tmp/hestia-le-env.sh
-    source /etc/hestiacp/hestia.conf
     source $HESTIA/func/main.sh
     source $HESTIA/conf/hestia.conf
     source $HESTIA/func/ip.sh

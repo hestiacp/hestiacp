@@ -63,19 +63,18 @@ function setup() {
 }
 
 @test Delete mail ssl" {
-    run v-delete-letsencrypt-domain $user $domain "no" "yes"
+    v-delete-letsencrypt-domain $user $domain "yes" "yes"
     assert_success
     refute_output
 }
 
-#Check if CAA records hasn't been deleted
-@test "Check if CAA record hasn't been deleted" {
-    run v-list-dns-records $user $(idn -a $domain) csv | grep letsencrypt.org
+@test Delete web ssl" {
+    v-delete-letsencrypt-domain $user $domain "yes" "no"
     assert_success
+    refute_output
 }
 
 @test "Delete user" {
-    #skip
     run v-delete-user $user
     assert_success
     refute_output

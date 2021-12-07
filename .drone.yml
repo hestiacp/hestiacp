@@ -76,6 +76,10 @@ steps:
 - name: Run restore tests
   commands:
   - bats ./test/restore.bats
+- name: Run Letsencrypt test against Staging
+  commands:
+  - cp /root/le-env.sh /tmp/hestia-le-env.sh
+  - bats ./test/letsencrypt.bats
 - name: Run config tests 
   commands:
   - bats ./test/config-tests.bats
@@ -105,4 +109,4 @@ trigger:
 
 ---
 kind: signature
-hmac: 48d34d11001c99b470114f50c4284fa107a5e61ad08ada38307493b9e9b2883f
+hmac: da6a96c077ec55ccfb27ec8a3250eeb0700153078adf088dc70998b2cd033b28

@@ -30,6 +30,11 @@ check_hestia_demo_mode
 # Set LE counter
 lecounter=0
 max_LE_failures=30
+days_valid_setting=31
+if [ "$LE_STAGING" = "yes" ]; then 
+    # Overwrite setting to allow testing for renewal to be done easier
+    days_valid_setting=181
+fi
 
 # Checking user certificates
 for user in $($HESTIA/bin/v-list-sys-users plain); do
@@ -53,7 +58,7 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
         now=$(date +%s)
         seconds_valid=$((expiration - now))
         days_valid=$((seconds_valid / 86400))
-        if [[ "$days_valid" -lt 31 ]]; then
+        if [[ "$days_valid" -lt "$days_valid_setting" ]]; then
             if [ $lecounter -gt 0 ]; then
                 sleep 10
             fi

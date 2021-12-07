@@ -63,13 +63,13 @@ function setup() {
 }
 
 @test Delete mail ssl" {
-    v-delete-letsencrypt-domain $user $domain "yes" "yes"
+    run v-delete-letsencrypt-domain $user $domain "yes" "yes"
     assert_success
     refute_output
 }
 
 @test Delete web ssl" {
-    v-delete-letsencrypt-domain $user $domain "yes" "no"
+    run v-delete-letsencrypt-domain $user $domain "yes"
     assert_success
     refute_output
 }

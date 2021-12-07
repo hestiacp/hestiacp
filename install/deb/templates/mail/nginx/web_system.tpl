@@ -26,7 +26,6 @@ server {
         }
 
         location ~ ^/(.*\.php)$ {
-            alias /var/lib/roundcube/$1;
             fastcgi_pass 127.0.0.1:9000;
             fastcgi_index index.php;
             include fastcgi_params;

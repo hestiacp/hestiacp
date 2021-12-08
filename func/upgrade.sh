@@ -117,6 +117,9 @@ upgrade_complete_message() {
     echo "please take a moment to report it to us on GitHub at the URL below:          "
     echo "https://github.com/hestiacp/hestiacp/issues                                  "
     echo
+    echo "Read the release notes to learn about new fixes and features:                "
+    echo "https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md               "
+    echo
     echo "We hope that you enjoy using this version of Hestia Control Panel,           "
     echo "have a wonderful day!                                                        "
     echo
@@ -183,7 +186,7 @@ upgrade_send_notification_to_panel () {
         $BIN/v-add-user-notification admin 'Thank you for testing Hestia Control Panel '$new_version'.' '<b>Please share your feedback with our development team through our <a href="https://forum.hestiacp.com" target="_new">discussion forum</a>.<br><br>Found a bug? Report it on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>!</b><br><br><i class="fas fa-heart status-icon red"></i> The Hestia Control Panel development team'
     else
         # Send normal upgrade complete notification for stable releases
-        $BIN/v-add-user-notification admin 'Upgrade complete' 'Your server has been updated to Hestia Control Panel <b>v'$new_version'</b>.<br><br>Please tell us about any bugs or issues by opening an issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart status-icon red"></i> The Hestia Control Panel development team'
+        $BIN/v-add-user-notification admin 'Upgrade complete' 'Hestia Control Panel has been updated to <b>v'$new_version'</b>.<br><a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md" target="_new">View release notes</a><br><br>Please tell us about any bugs or issues by opening a new issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart status-icon red"></i> The Hestia Control Panel development team'
     fi
 }
 

@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update letsencrypt ssl certificates
 # options: NONE
-# labels: panel
 #
 # example: v-update-letsencrypt-ssl
 #
-# The function for renew letsencrypt expired ssl certificate for all users
-
+# This function for renew letsencrypt expired ssl certificate for all users
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes

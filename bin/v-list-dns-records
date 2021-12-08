@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list dns domain records
 # options: USER DOMAIN [FORMAT]
-# labels: dns
 #
 # example: v-list-dns-records admin example.com
 #
-# The function for getting all DNS domain records.
-
+# This function for getting all DNS domain records.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -97,7 +95,6 @@ csv_list() {
     done < <(cat $USER_DATA/dns/$domain.conf)
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -106,7 +103,6 @@ check_args '2' "$#" 'USER DOMAIN [FORMAT]'
 is_format_valid 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"
-
 
 #----------------------------------------------------------#
 #                       Action                             #

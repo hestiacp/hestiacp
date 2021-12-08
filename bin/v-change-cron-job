@@ -1,16 +1,14 @@
 #!/bin/bash
 # info: change cron job
 # options: USER JOB MIN HOUR DAY MONTH WDAY COMMAND
-# labels: 
 #
 # example: v-change-cron-job admin 7 * * * * * * /usr/bin/uptime
 #
-# The function is used for changing existing job. It fully replace job
+# This function is used for changing existing job. It fully replace job
 # parameters with new one but with same id.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -31,7 +29,6 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -46,7 +43,6 @@ is_object_unsuspended 'cron' 'JOB' "$job"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -73,7 +69,6 @@ sort_cron_jobs
 
 # Sync system cron with user
 sync_cron_jobs
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

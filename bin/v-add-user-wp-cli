@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: add wp-cli for a user
 # options: USER
-# labels: hestia
 #
 # example: v-add-user-wp-cli user
 #
-# The function adds support for wp-cli to the user account
-
+# This function adds support for wp-cli to the user account
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -25,7 +23,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -59,7 +56,6 @@ chown $user:$user "$WPCLI_DIR"
 
 user_exec wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O "$WPCLI_BIN" https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar 
 user_exec chmod +x "$WPCLI_BIN"
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

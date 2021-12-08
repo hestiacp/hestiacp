@@ -1,16 +1,14 @@
 #!/bin/bash
 # info: delete dns domain
 # options: USER DOMAIN
-# labels: dns
 #
 # example: v-delete-dns-domain alice acme.com
 #
-# The function for deleting DNS domain. By deleting it all records will also be
+# This function for deleting DNS domain. By deleting it all records will also be
 # deleted.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -28,7 +26,6 @@ source $HESTIA/func/domain.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -41,7 +38,6 @@ is_object_valid 'dns' 'DOMAIN' "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -68,7 +64,6 @@ if [ -n "$DNS_CLUSTER" ]; then
     cmd="$BIN/v-delete-remote-dns-domain $user $domain"
     echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

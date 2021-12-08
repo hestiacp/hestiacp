@@ -1,10 +1,10 @@
 #!/bin/bash
 # info: Delete auth log file for user
 #
-# The function for deleting a users auth log file
+# This function for deleting a users auth log file
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition

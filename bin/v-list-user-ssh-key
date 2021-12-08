@@ -1,14 +1,12 @@
 #!/bin/bash
 # info: add ssh key
 # options: USER [FORMAT]
-# labels: hestia
 #
 # Lists $user/.ssh/authorized_keys
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
-
 
 # Argument definition
 user=$1

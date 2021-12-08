@@ -1,6 +1,14 @@
 #!/bin/bash
 
-# Hestia Debian installer v1.0
+# ======================================================== #
+#
+# Hestia Control Panel Installer for Debian
+# https://www.hestiacp.com/
+#
+# Currently Supported Versions:
+# Debian 9, 10, 11
+#
+# ======================================================== #
 
 #----------------------------------------------------------#
 #                  Variables&Functions                     #

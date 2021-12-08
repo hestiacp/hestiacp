@@ -1,16 +1,15 @@
 #!/bin/bash
 # info: update web templates
 # options: [RESTART]
-# labels: hestia
 #
-# The function for changing the release branch for the
+# This function for changing the release branch for the
 # Hestia Control Panel. This allows the user to switch between
 # stable and pre-release builds which will automaticlly update
 # based on the appropriate release schedule if auto-update is
 # turned on.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -24,14 +23,12 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -43,11 +40,7 @@ if [ -z "$branch" ]; then
     echo "Release branches:"
     echo "- release:            the latest stable release"
     echo "- beta:               beta and release candidate test releases"
-    echo "- develop:            unstable development builds"
-    echo ""
-    echo "Integration branches (not tied to a specific release/version):"
-    echo "- staging/fixes:      contains new fixes since the last release."
-    echo "- staging/features:   contains new features since the last release."
+    echo "- main:               work-in-progress code for the next release"
     echo ""
     echo "You can also specify another branch name from the"
     echo "GitHub repository to install the code from that branch."
@@ -73,5 +66,6 @@ fi
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
+
 $BIN/v-log-action "system" "Info" "System" "Update branch changed (Value: $branch)."
 exit

@@ -1,19 +1,17 @@
 #!/bin/bash
 # info: add new database server
 # options: TYPE HOST DBUSER DBPASS [MAX_DB] [CHARSETS] [TEMPLATE] [PORT]
-# labels: 
 #
 # example: v-add-database-host mysql localhost alice p@$$wOrd
 #
-# The function add new database server to the server pool. It supports local
+# This function add new database server to the server pool. It supports local
 # and remote database servers, which is useful for clusters. By adding a host
 # you can set limit for number of databases on a host. Template parameter is
 # used only for PostgreSQL and has an default value "template1". You can read
 # more about templates in official PostgreSQL documentation.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -65,7 +63,6 @@ is_pgsql_host_alive() {
     fi
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -112,7 +109,6 @@ case $type in
            str="$str U_SYS_USERS='' U_DB_BASES='0' SUSPENDED='no'";
            str="$str TIME='$time' DATE='$date' PORT='$port'";;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

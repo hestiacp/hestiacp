@@ -1,18 +1,16 @@
 #!/bin/bash
 # info: updating ssl certificate for domain
 # options: USER DOMAIN SSL_DIR [RESTART]
-# labels: web
 #
 # example: v-update-mail-domain-ssl admin domain.com /home/admin/tmp
 #
-# The function updates the SSL certificate for a domain. Parameter ssl_dir is a path
+# This function updates the SSL certificate for a domain. Parameter ssl_dir is a path
 # to directory where 2 or 3 ssl files can be found. Certificate file 
 # domain.tld.crt and its key domain.tld.key are mandatory. Certificate
 # authority domain.tld.ca file is optional.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -39,7 +37,6 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -53,7 +50,6 @@ is_object_valid 'mail' 'DOMAIN' "$domain"
 is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 is_object_value_exist 'mail' 'DOMAIN' "$domain" '$SSL'
 is_web_domain_cert_valid
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -84,8 +80,6 @@ cp -f $USER_DATA/ssl/mail.$domain.pem $HOMEDIR/$user/conf/mail/$domain/ssl/$doma
 if [ -e "$USER_DATA/ssl/mail.$domain.ca" ]; then
     cp -f $USER_DATA/ssl/mail.$domain.ca $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.ca
 fi
-
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

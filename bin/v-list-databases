@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: listing databases
 # options: USER [FORMAT]
-# labels: panel
 #
 # example: v-list-databases user json
 #
-# The function for obtaining the list of all user's databases.
-
+# This function for obtaining the list of all user's databases.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -93,7 +91,6 @@ check_args '1' "$#" 'USER [FORMAT]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -105,7 +102,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list |column -t ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

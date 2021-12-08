@@ -1,6 +1,14 @@
 #!/bin/bash
 
-# Hestia Ubuntu installer v1.0
+# ======================================================== #
+#
+# Hestia Control Panel Installer for Ubuntu
+# https://www.hestiacp.com/
+#
+# Currently Supported Versions:
+# Ubuntu 18.04 LTS, 20.04 LTS
+#
+# ======================================================== #
 
 #----------------------------------------------------------#
 #                  Variables&Functions                     #

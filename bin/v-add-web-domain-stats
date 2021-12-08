@@ -1,18 +1,16 @@
 #!/bin/bash
 # info: add log analyzer to generate domain statistics
 # options: USER DOMAIN TYPE
-# labels: web
 #
 # example: v-add-web-domain-stats admin example.com awstats
 #
-# The call is used for enabling log analyzer system to a domain. For viewing
+# This function is used for enabling log analyzer system to a domain. For viewing
 # the domain statistics use http://domain.tld/vstats/ link. Access this page
 # is not protected by default. If you want to secure it with passwords you
 # should use v-add-web-domain_stat_auth script.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -35,7 +33,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 format_domain
 format_domain_idn
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -52,7 +49,6 @@ is_object_value_empty 'web' 'DOMAIN' "$domain" '$STATS'
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -92,7 +88,6 @@ if [ "$type" == 'awstats' ]; then
     ln -s $HOMEDIR/$user/conf/web/$domain/$type.conf \
         /etc/awstats/$type.$domain_idn.conf
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

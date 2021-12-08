@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update PostgreSQL rrd
 # options: PERIOD
-# labels: panel
 #
 # example: v-update-sys-rrd-pgsql
 #
-# The function is for updating postgresql rrd database and graphic.
-
+# This function is for updating postgresql rrd database and graphic.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -22,7 +20,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -141,7 +138,6 @@ for host in $hosts; do
     fi
 
 done
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

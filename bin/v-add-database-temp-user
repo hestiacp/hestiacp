@@ -1,16 +1,15 @@
 #!/bin/bash
 # info: add temp database user
 # options: USER DATABASE [TYPE] [HOST] [TTL]
-# labels: hestia database
 #
 # example: v-add-database-temp-user wordress wordpress_db mysql
 #
-# The function creates an temporary database user mysql_sso_db_XXXXXXXX and a random password 
+# This function creates an temporary database user mysql_sso_db_XXXXXXXX and a random password 
 # The user has an limited validity and only granted access to the specific database 
 # Returns json to be read SSO Script
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition

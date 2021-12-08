@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete web domain SSL support
 # options: USER DOMAIN [RESTART]
-# labels: web
 #
 # example: v-delete-web-domain-ssl admin acme.com
 #
-# The function disable https support and deletes SSL certificates.
-
+# This function disable https support and deletes SSL certificates.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -33,7 +31,6 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -47,7 +44,6 @@ is_object_value_exist 'web' 'DOMAIN' "$domain" '$SSL'
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -70,7 +66,6 @@ rm -f $USER_DATA/ssl/$domain.*
 
 # Deleting force ssl
 $BIN/v-delete-web-domain-ssl-force "$user" "$domain" 'no' 'yes'
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

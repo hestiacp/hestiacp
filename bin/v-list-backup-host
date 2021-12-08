@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list backup host
 # options: TYPE [FORMAT]
-# labels: panel
 #
 # example: v-list-backup-host local
 #
-# The function for obtaining the list of backup host parameters.
-
+# This function for obtaining the list of backup host parameters.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -110,14 +108,12 @@ is_type_format_valid() {
     fi
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'TYPE [FORMAT]'
 is_type_format_valid "$type"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -138,7 +134,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list |column -t ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

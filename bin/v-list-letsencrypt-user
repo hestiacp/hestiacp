@@ -1,15 +1,14 @@
 #!/bin/bash
 # info: list letsencrypt key
 # options: USER [FORMAT]
-# labels: panel
 #
 # example: v-list-letsencrypt-user admin
 #
-# The function for obtaining the letsencrypt key thumbprint
+# This function for obtaining the letsencrypt key thumbprint
 
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -58,7 +57,6 @@ csv_list() {
     echo "$user,$EMAIL,$EXPONENT,$MODULUS,$THUMB,$KID"
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -69,7 +67,6 @@ is_object_valid 'user' 'USER' "$user"
 if [ ! -e "$USER_DATA/ssl/le.conf" ]; then
     check_result "$E_NOTEXIST" "LetsEncrypt user account doesn't exist"
 fi
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -85,7 +82,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

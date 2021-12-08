@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: add password protection to web domain statistics
 # options: USER DOMAIN STATS_USER STATS_PASSWORD [RESTART]
-# labels: web
 #
 # example: v-add-web-domain-stats-user admin example.com watchdog your_password
 #
-# The call is used for securing the web statistics page.
-
+# This function is used for securing the web statistics page.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -29,7 +27,6 @@ source $HESTIA/func/domain.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -45,7 +42,6 @@ is_password_valid
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -70,7 +66,6 @@ fi
 salt=$(generate_password "$PW_MATRIX" "8")
 stats_pass=$($BIN/v-generate-password-hash md5 $salt $password)
 echo "$stats_user:$stats_pass" > $stats_dir/.htpasswd
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update disk usage for domain
 # options: USER DOMAIN
-# labels: web
 #
 # example: v-update-web-domain-disk alice wonderland.com
 #
-# The function recalculates disk usage for specific webdomain.
-
+# This function recalculates disk usage for specific webdomain.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -32,7 +30,6 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -45,7 +42,6 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -57,7 +53,6 @@ home_dir="$HOMEDIR/$user/web/$domain/"
 if [ -e "$home_dir" ]; then
     disk_usage=$(nice -n 19 du -shm $home_dir | cut -f 1 )
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

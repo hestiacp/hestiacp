@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list user backups
 # options: USER [FORMAT]
-# labels: 
 #
 # example: v-list-user-backups admin
 #
-# The function for obtaining the list of available user backups.
-
+# This function for obtaining the list of available user backups.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -87,7 +85,6 @@ csv_list() {
     done < <(cat $USER_DATA/backup.conf)
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -95,7 +92,6 @@ csv_list() {
 check_args '1' "$#" 'USER [FORMAT]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -114,7 +110,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list |column -t ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

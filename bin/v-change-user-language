@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change user language
 # options: USER LANGUAGE
-# labels: panel
 #
 # example: v-change-user-language admin en
 #
-# The function for changing language.
-
+# This function for changing language.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -24,7 +22,6 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 is_language_valid() {
     if ! [[ "$1" =~ ^[[:alnum:]_-]+$ ]]; then
         echo "Error: language $1 is not valid"
@@ -38,7 +35,6 @@ is_language_valid() {
     fi
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -51,7 +47,6 @@ is_language_valid "$language"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

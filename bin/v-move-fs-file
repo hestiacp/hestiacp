@@ -1,11 +1,10 @@
 #!/bin/bash
 # info: move file
 # options: USER SRC_FILE DST_FILE
-# labels: 
 #
 # example: v-move-fs-file admin readme.txt new_readme.txt
 #
-# The function moved file or directory on the file system. This function
+# This function moved file or directory on the file system. This function
 # can also be used to rename files just like normal mv command.
 
 user=$1

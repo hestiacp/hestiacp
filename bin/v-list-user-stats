@@ -1,15 +1,14 @@
 #!/bin/bash
 # info: list user stats
 # options: USER [FORMAT]
-# labels: panel
 #
 # example: v-list-user-stats admin
 #
-# The function for listing user statistics
+# This function for listing user statistics
 
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition

@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update MySQL rrd
 # options: PERIOD
-# labels: panel
 #
 # example: v-update-sys-rrd-mysql
 #
-# The function is for updating mysql rrd database and graphic.
-
+# This function is for updating mysql rrd database and graphic.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -24,7 +22,6 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/db.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -125,7 +122,6 @@ for host in $hosts; do
     fi
 
 done
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

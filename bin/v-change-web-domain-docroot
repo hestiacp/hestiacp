@@ -1,7 +1,6 @@
 #!/bin/bash
 # info: Changes the document root for an existing web domain
 # options: USER DOMAIN TARGET_DOMAIN [DIRECTORY] [PHP]
-# labels: hestia
 #
 # example: v-change-web-domain-docroot admin domain.tld otherdomain.tld
 #          # add custom docroot
@@ -14,9 +13,8 @@
 # This call changes the document root of a chosen web domain
 # to another available domain under the user context.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition

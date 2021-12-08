@@ -2,11 +2,19 @@
 
 # This script validates and upgrades the MariaDB version to 10.5
 
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
 # Set MariaDB Target Version
 mariadb_v='10.6'
 
 # Load OS informations
 source /etc/os-release
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
 
 # Detect installed mariadb version
 IFS=' ' read -r -a mysql_v <<< $(mysqld -V)
@@ -26,6 +34,10 @@ else
     echo "Can't detect the os version, cancelling."
     exit 1
 fi
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
 
 # Installing MariaDB repo
 echo "Add new MariaDB repository..."

@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update database disk usage
 # options: USER DATABASE
-# labels: panel
 #
 # example: v-update-database-disk admin wp_db
 #
-# The function recalculates disk usage for specific database.
-
+# This function recalculates disk usage for specific database.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -38,7 +36,6 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'db' 'DB' "$database"
 is_object_unsuspended 'db' 'DB' "$database"
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -51,7 +48,6 @@ case $TYPE in
     mysql) get_mysql_disk_usage ;;
     pgsql) get_pgsql_disk_usage ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

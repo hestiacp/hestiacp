@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete mail account forward
 # options: USER DOMAIN ACCOUNT EMAIL
-# labels: mail
 #
 # example: v-delete-mail-account-forward admin acme.com tony bob@acme.com
 #
-# The function add delete email account forward address.
-
+# This function deletes an email accounts forwarding address.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -33,7 +31,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 format_domain
 format_domain_idn
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -54,7 +51,6 @@ fi
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -71,7 +67,6 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     sed -i "/^$account@$domain_idn:/ d" $HOMEDIR/$user/conf/mail/$domain/aliases
     echo "$account@$domain_idn:$fwd" >> $HOMEDIR/$user/conf/mail/$domain/aliases
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

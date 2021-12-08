@@ -1,13 +1,11 @@
 #!/bin/bash
 # info: insert dns record
 # options: USER DOMAIN DATA [RESTART]
-# labels: 
 #
-# The function inserts raw dns record to the domain conf
-
+# This function inserts raw dns record to the domain conf
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -23,7 +21,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -46,7 +43,6 @@ check_hestia_demo_mode
 
 # Insert values
 echo "$data" >> $USER_DATA/dns/$domain.conf
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

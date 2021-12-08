@@ -1,18 +1,16 @@
 #!/bin/bash
 # info: disable web domain stats authentication support
 # options: USER DOMAIN [RESTART]
-# labels: web
 #
 # example: v-delete-web-domain-stats-user admin acme.com
 #
-# The function removes authentication of statistics system. If the script is
+# This function removes authentication of statistics system. If the script is
 # called without naming a certain user, all users will be removed. After
 # deleting all of them statistics will be accessible for view without an
 # authentication.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -30,7 +28,6 @@ source $HESTIA/func/domain.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -44,7 +41,6 @@ is_object_value_exist 'web' 'DOMAIN' "$domain" '$STATS_USER'
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

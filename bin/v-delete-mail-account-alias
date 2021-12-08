@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete mail account alias aka nickname
 # options: USER DOMAIN ACCOUNT ALIAS
-# labels: mail
 #
 # example: v-delete-mail-account-alias admin example.com alice alicia
 #
-# The function deletes email account alias.
-
+# This function deletes email account alias.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -33,7 +31,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 format_domain
 format_domain_idn
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -54,7 +51,6 @@ fi
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -69,7 +65,6 @@ aliases=$(echo "$aliases" |\
     sed "s/^$malias$//g"|\
     sed "/^$/d"|\
     sed ':a;N;$!ba;s/\n/,/g')
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

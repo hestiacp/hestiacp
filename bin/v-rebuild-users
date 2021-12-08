@@ -1,14 +1,13 @@
 #!/bin/bash
 # info: rebuild system users
 # options: [RESTART]
-# labels: hestia
 #
 # example: v-rebuild-users
 #
-# The function rebuilds user configuration for all users.
+# This function rebuilds user configuration for all users.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -41,7 +40,6 @@ check_hestia_demo_mode
 for user in $($HESTIA/bin/v-list-sys-users plain); do
     $BIN/v-rebuild-user "$user" "$restart"
 done
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

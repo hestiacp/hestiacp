@@ -1,7 +1,6 @@
 #!/bin/bash
 # info: add backup host
 # options: TYPE HOST USERNAME PASSWORD [PATH] [PORT]
-# labels: 
 #
 # example: v-add-backup-host sftp backup.acme.com admin p4$$w@Rd
 #          v-add-backup-host b2 bucketName keyID applicationKey
@@ -9,7 +8,7 @@
 # Add a new remote backup location. Currently SFTP, FTP and Backblaze are supported 
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -98,7 +97,6 @@ sftpc() {
         exit \$rc
 EOF
 }
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -229,7 +227,6 @@ elif [ $type == 'b2' ]; then
     echo -e "$str" > $HESTIA/conf/$type.backup.conf
     chmod 660 $HESTIA/conf/$type.backup.conf
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

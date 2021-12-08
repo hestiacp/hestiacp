@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: add system user
 # options: USER PASSWORD EMAIL [PACKAGE] [NAME] [LASTNAME]
-# labels: 
 #
 # example: v-add-user admin2 P4$$w@rD bgates@aol.com
 #
-# The function creates new user account.
-
+# This function creates new user account.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -137,11 +135,6 @@ chown $user:$user \
 chmod a+x $HOMEDIR/$user
 chattr +i $HOMEDIR/$user/conf > /dev/null 2>&1
 
-
-#----------------------------------------------------------#
-#                       Hestia                             #
-#----------------------------------------------------------#
-
 # Adding user dir
 mkdir -p  $USER_DATA/ssl $USER_DATA/dns $USER_DATA/mail
 
@@ -265,6 +258,10 @@ fi
 
 # Adding jailed sftp env
 $BIN/v-add-user-sftp-jail $user
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
 
 # Logging
 $BIN/v-log-action "system" "Info" "Users" "User account added (Name: $user)."

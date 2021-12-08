@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: listing availble PHP versions installed
 # options: [FORMAT]
-# labels: hestia panel
 #
 # example: v-list-sys-php
 #
 # List /etc/php/* version check if folder fpm is available
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -63,7 +61,6 @@ csv_list() {
     done
 }
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -82,7 +79,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

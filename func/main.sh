@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
+
+#===========================================================================#
+#                                                                           #
+# Hestia Control Panel - Core Function Library                              #
+#                                                                           #
+#===========================================================================#
+
 # Internal variables
 HOMEDIR='/home'
 BACKUP='/backup'

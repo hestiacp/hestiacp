@@ -1,18 +1,16 @@
 #!/bin/bash
 # info: update system ip
 # options: NONE
-# labels: panel
 #
 # example: v-update-sys-ip
 #          # Intended for internal usage
 #
-# The function scans configured ip in the system and register them with hestia
+# This function scans configured ip in the system and register them with hestia
 # internal database. This call is intended for use on vps servers, where ip is
 # set by hypervizor.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
@@ -24,7 +22,6 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/ip.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -95,7 +92,6 @@ if [ ! -z "$new" ]; then
         $BIN/v-restart-dns
     fi
     
-
     # Updating FTP
     if [ ! -z "$FTP_SYSTEM" ] && [ "$FTP_SYSTEM" = 'vsftpd' ]; then
         conf=$(find /etc/ -maxdepth 2 -name $FTP_SYSTEM.conf)

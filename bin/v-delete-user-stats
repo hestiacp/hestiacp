@@ -1,16 +1,14 @@
 #!/bin/bash
 # info: delete user usage statistics
 # options: USER DOMAIN
-# labels: panel
 #
 # example: v-delete-user-stats user
 # example: v-delete-user-stats admin overall
 #
-# The function deletes user statistics data.
-
+# This function deletes user statistics data.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -24,7 +22,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -53,8 +50,9 @@ if [ -f "$USER_DATA/stats.log" ]; then
 fi
 
 #----------------------------------------------------------#
-#                       Logging                            #
+#                       Hestia                             #
 #----------------------------------------------------------#
+
 if [ "$mode" = "overall" ]; then
     $BIN/v-log-action "system" "Info" "System" "Overall usage statistics deleted."
 else

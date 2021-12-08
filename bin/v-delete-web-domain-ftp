@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete webdomain ftp account
 # options: USER DOMAIN FTP_USER
-# labels: web
 #
 # example: v-delete-web-domain-ftp admin wonderland.com bob_ftp
 #
-# The function deletes additional ftp account.
-
+# This function deletes additional ftp account.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -33,7 +31,6 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -52,7 +49,6 @@ fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

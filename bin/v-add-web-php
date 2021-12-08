@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: add php fpm version
 # options: VERSION
-# labels: hestia
 #
 # example: v-add-web-php 8.0
 #
-# The function checks and delete a fpm php version if not used by any domain.
-
+# This function checks and delete a fpm php version if not used by any domain.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -22,7 +20,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -54,7 +51,6 @@ fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

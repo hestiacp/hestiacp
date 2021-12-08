@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change ip owner
 # options: IP USER
-# labels: panel
 #
 # example: v-change-sys-ip-owner 91.198.136.14 admin
 #
-# The function of changing ip address ownership.
-
+# This function of changing ip address ownership.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -42,7 +40,6 @@ ip_status="$(get_ip_value '$STATUS')"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

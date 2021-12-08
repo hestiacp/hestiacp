@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: rebuild dns domain
 # options: USER DOMAIN [RESTART] [UPDATE_SERIAL]
-# labels: dns
 #
 # example: v-rebuild-dns-domain alice wonderland.com
 #
-# The function rebuilds DNS configuration files.
-
+# This function rebuilds DNS configuration files.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -48,6 +46,7 @@ is_object_valid 'dns' 'DOMAIN' "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -84,7 +83,6 @@ fi
 
 # Rebuiling zone config
 rebuild_dns_domain_conf
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

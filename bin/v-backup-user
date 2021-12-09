@@ -183,7 +183,7 @@ let v_disk=$(($(stat -f --format="%a*%S" $BACKUP)))/1024/1024
 if [ "$u_disk" -gt "$v_disk" ]; then
     # Always notify on failure
     echo "not enough diskspace available to perform the backup." | $SENDMAIL -s "$subj" "$email" "yes"
-    check_result "$E_LIMIT ""not enough diskspace available to perform the backup."
+    check_result "$E_LIMIT" "not enough diskspace available to perform the backup."
 fi
 
 if [ -z "$BACKUP_TEMP" ]; then

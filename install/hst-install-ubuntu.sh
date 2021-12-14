@@ -126,7 +126,6 @@ set_default_lang() {
 set_default_port() {
     if [ -z "$port" ]; then
         eval port=$1
-        echo "BACKEND_PORT='$port'" >> $HESTIA/conf/hestia.conf
     fi
 }
 
@@ -247,6 +246,9 @@ while getopts "a:w:v:j:k:m:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
         *) help ;;                      # Print help (default)
     esac
 done
+
+# write default value to hesita.conf will get overwritten if changed
+write_config_value "BACKEND_PORT" "8083"
 
 # Defining default software stack
 set_default_value 'nginx' 'yes'

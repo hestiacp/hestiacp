@@ -182,11 +182,11 @@
 								$alias_new = array();
 								foreach($aliases as $alias){
 									if($alias != 'www.'.$key){
-										$alias_new[] = $alias;
+										$alias_new[] = trim($alias);
 									}
 								}
 								?>
-								<a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Domain');?>: <?=$key?>"><?=$key?><?php if(!empty($alias_new)){ echo " <span class=\"hint\">(".implode(',',$alias_new).")"; } ?></a>
+								<a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Domain');?>: <?=$key?>"><?=$key?><?php if( !empty($alias_new) && !empty($data[$key]['ALIAS']) ){ echo " <span class=\"hint\">(".implode(',',$alias_new).")"; } ?></a>
 							<?php } ?>
 						</b>
 					</div>

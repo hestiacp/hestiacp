@@ -28,7 +28,7 @@ server {
         proxy_pass      http://%ip%:%web_port%;
     }
 
-    location ~ /\.(?!well-known\/) { 
+    location ~ /\.(?!well-known\/|file) {
        deny all; 
        return 404;
     }

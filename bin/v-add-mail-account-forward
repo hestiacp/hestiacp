@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add mail account forward address
 # options: USER DOMAIN ACCOUNT FORWARD
+# labels: mail
+#
+# example: v-add-mail-account-forward admin acme.com alice bob
 #
 # The function add new email account.
 
@@ -17,9 +20,14 @@ account=$3
 email_forward=$4
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -31,7 +39,10 @@ format_domain_idn
 #----------------------------------------------------------#
 
 check_args '4' "$#" 'USER DOMAIN ACCOUNT FORWARD'
-is_format_valid 'user' 'domain' 'account' 'email_forward'
+is_format_valid 'user' 'domain' 'account'
+if [ "$email_forward"  != ':blackhole:' ]; then
+    is_format_valid 'email_forward'
+fi
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -40,9 +51,9 @@ is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 is_object_valid "mail/$domain" 'ACCOUNT' "$account"
 is_object_unsuspended "mail/$domain" 'ACCOUNT' "$account"
 fwd=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$FWD')
-if [ ! -z "$(echo $fwd | grep -w "$email_forward")" ]; then
+if [ -n "$(echo $fwd | grep -w "$email_forward")" ]; then
     echo "Error: forward $email_forward exists"
-    log_event "$E_EXISTS $ARGUMENTS"
+    log_event "$E_EXISTS" "$ARGUMENTS"
     exit $E_EXISTS
 fi
 
@@ -76,7 +87,7 @@ fi
 update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$FWD' "$fwd"
 
 # Logging
-log_history "added forwarding from $account@$domain to $email_forward"
+$BIN/v-log-action "$user" "Warning" "Mail" "Mail forwarding on mail account $account@$domain enabled (send to: $email_forward)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

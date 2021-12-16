@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: add ssh key
-# options: USER 
+# options: USER [FORMAT]
+# labels: hestia
 #
 # Lists $user/.ssh/authorized_keys
 
@@ -15,7 +16,12 @@ user=$1
 format=${2-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -94,7 +100,7 @@ fi
 first_loop=1
 while read l; do
     sshkey=$([[ -n $l && ${l###} = $l ]] && ssh-keygen -l -f <(echo $l));
-    if [ ! -z "$sshkey" ]
+    if [ -n "$sshkey" ]
     then
         (( $first_loop )) && keys="$sshkey"  || keys="$keys"$'\n'"$sshkey"
         unset first_loop

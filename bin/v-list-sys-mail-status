@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list mail status
 # options: [FORMAT]
+# labels: mail
+#
+# example: v-list-sys-mail-status json
 #
 # The function lists mail server status
 
@@ -12,9 +15,16 @@
 # Argument definition
 #format=${1-shell}
 
+
 # Includes
-#source $HESTIA/func/main.sh
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -38,9 +48,14 @@ else
     eximstats /var/log/exim/main.log 2>/dev/null
 fi
 
+if [ $? -ne 0 ]; then
+    echo "[Exim4] No valid log lines read"
+    exit 0;
+fi
+
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-exit
+exit 0

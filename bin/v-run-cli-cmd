@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: run cli command
-# options: USER FILE
+# options: USER CMD [ARG...]
+# labels: hestia
+#
+# example: v-run-cli-cmd user composer require package
 #
 # The function runs a limited list of cli commands with dropped privileges as the specific hestia user
 
@@ -8,7 +11,13 @@ user=$1
 clicmd=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -20,8 +29,8 @@ is_object_valid 'user' 'USER' "$user"
 
 # Checking user homedir
 homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
-if [ -z $homedir ]; then
-    check_result $E_NOTEXIST "Error: user home directory doesn't exist"
+if [ -z "$homedir" ]; then
+    check_result "$E_NOTEXIST" "Error: user home directory doesn't exist"
 fi
 
 if [ "$clicmd" = "composer" ]; then
@@ -29,7 +38,7 @@ if [ "$clicmd" = "composer" ]; then
 fi
 
 if [ -z "$(which "$clicmd")" ]; then
-    check_result $E_NOTEXIST "Error: Cli command does not exist"
+    check_result "$E_NOTEXIST" "Error: Cli command does not exist"
 fi
 basecmd="$(basename "$clicmd")"
 
@@ -53,9 +62,10 @@ if [ "$basecmd" != 'ps'         -a \
      "$basecmd" != 'php7.2'     -a \
      "$basecmd" != 'php7.3'     -a \
      "$basecmd" != 'php7.4'     -a \
+     "$basecmd" != 'php8.0'     -a \
      "$basecmd" != 'php'        -a \
      "$basecmd" != 'composer' ]; then
-    check_result $E_FORBIDEN "Error: Cli command not enabled"
+    check_result "$E_FORBIDEN" "Error: Cli command not enabled"
 fi
 
 all_scriptargs=("$@")

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: generate self signed certificate and CSR request
 # options: DOMAIN EMAIL COUNTRY STATE CITY ORG UNIT [ALIASES] [FORMAT]
+# labels: panel
+#
+# example: v-generate-ssl-cert example.com mail@yahoo.com USA California Monterey ACME.COM IT
 #
 # The function generates self signed SSL certificate and CSR request
 
@@ -25,8 +28,12 @@ KEY_SIZE=4096
 DAYS=365
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Json function
 json_list_ssl() {
@@ -42,13 +49,13 @@ json_list_ssl() {
 
 # Shell function
 shell_list_ssl() {
-    if [ ! -z "$crt" ]; then
+    if [ -n "$crt" ]; then
         echo -e "$crt"
     fi
-    if [ ! -z "$key" ]; then
+    if [ -n "$key" ]; then
         echo -e "\n$key"
     fi
-    if [ ! -z "$csr" ]; then
+    if [ -n "$csr" ]; then
         echo -e "\n$csr"
     fi
     echo -e "\nDirectory: $workdir"
@@ -67,11 +74,20 @@ fi
 
 args_usage='DOMAIN EMAIL COUNTRY STATE CITY ORG UNIT [ALIASES] [FORMAT]'
 check_args '7' "$#" "$args_usage"
-is_format_valid 'domain_alias' 'format'
+is_format_valid 'domain' 'aliases' 'format' 'email'
 
+release="$(lsb_release -s -r)"
+
+if [ -z "$email" ] && [ "$release" = "18.04" ]; then 
+    echo "Email adress is required";
+    exit 2;
+fi
 if [ ! -f /root/.rnd ]; then
     touch /root/.rnd
 fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -82,19 +98,24 @@ workdir=$(mktemp -d)
 cd $workdir
 
 # Generate private key
-openssl genrsa $KEY_SIZE > $domain.key 2>/dev/null
+openssl genrsa "$KEY_SIZE" > "$domain.key" 2>/dev/null
 
+subj=""
 # Generate the CSR
-subj="/C=$country/ST=$state/localityName=$city/O=$org"
-subj="$subj/organizationalUnitName=$org_unit/commonName=$domain_idn"
-subj="$subj/emailAddress=$email"
+if [ -z "$email" ]; then 
+    subj="/emailAddress=$email"
+fi
+
+subj="$subj/C=$country/ST=$state/L=$city/O=$org"
+subj="$subj/OU=$org_unit/CN=$domain_idn"
+
 if [ -z "$aliases" ]; then
     openssl req -sha256\
         -new \
         -batch \
         -subj "$subj" \
         -key $domain.key \
-        -out $domain.csr #>/dev/null 2>&1
+        -out $domain.csr >/dev/null 2>&1
 else
     for alias in $(echo $domain,$aliases |tr ',' '\n' |sort -u); do
         if [[ "$alias" = *[![:ascii:]]* ]]; then
@@ -148,6 +169,10 @@ case $format in
     *)      check_args '1' '0' '[FORMAT]'
 esac
 
+# Don't allow non root users view folder
+chmod 660 $workdir
+# Clean up the mess
+echo "rm -rf $workdir" | at "now +15 minute" > /dev/null 2>&1
 # Delete tmp dir
 #rm -rf $workdir
 

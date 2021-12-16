@@ -1,0 +1,70 @@
+#!/bin/bash
+# info: disables support for single sign on PHPMYADMIN 
+# options: [mode]
+# labels: hestia
+#
+# example: v-delete-sys-pma-sso
+#
+# Disables support for SSO to PHPmyAdmin
+
+MODE=$1
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+PMA_INSTALL="/usr/share/phpmyadmin"
+PMA_CONFIG="/etc/phpmyadmin"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+if [ "x$(id -u)" != 'x0' ]; then
+    echo "Error: Script can be run executed only by root"
+    exit 10
+fi
+
+if [ ! -e "$PMA_INSTALL/hestia-sso.php" ]; then
+     echo 'Error:  PMA Single Sign On already disabled'
+     exit 1;
+fi 
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+apikey=$(grep -Po "'API_KEY', '(.*)'" /usr/share/phpmyadmin/hestia-sso.php |  cut "-d'" -f4 )
+
+$BIN/v-revoke-api-key "$apikey"
+
+#remove new files
+rm /usr/share/phpmyadmin/hestia-sso.php
+rm /etc/phpmyadmin/hestia-sso.inc.php
+
+#revert config
+sed -i "/hestia-sso.inc.php/d" $PMA_CONFIG/config.inc.php
+
+# disable key
+$BIN/v-change-sys-config-value 'PHPMYADMIN_KEY' ""
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+if [ "$MODE" != "quiet" ]; then
+    echo "PMA Hestia-SSO plugin has been succesfully removed/disabled"
+fi
+
+# Logging
+$BIN/v-log-action "system" "Info" "Plugins" "phpMyAdmin Single Sign-On (SSO) disabled."
+log_event "$OK" "$ARGUMENTS"
+
+exit

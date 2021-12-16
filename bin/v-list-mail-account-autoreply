@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list mail account autoreply
 # options: USER DOMAIN ACCOUNT [FORMAT]
+# labels: mail
+#
+# example: v-list-mail-account-autoreply admin example.com testing
 #
 # The function of obtaining mail account autoreply message.
 
@@ -16,13 +19,17 @@ account=$3
 format=${4-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
     TO_ESCAPE='\\';
     msg=$(echo "$msg" |sed -e "s|${TO_ESCAPE}|${TO_ESCAPE}${TO_ESCAPE}|g" -e 's/"/\\"/g' -e "s/%quote%/'/g")
-    i='1'       # iterator
     echo '{'
     echo -e "\t\"$account\": {"
     echo "            \"MSG\": \"$msg\""

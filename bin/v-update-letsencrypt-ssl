@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update letsencrypt ssl certificates
 # options: NONE
+# labels: panel
+#
+# example: v-update-letsencrypt-ssl
 #
 # The function for renew letsencrypt expired ssl certificate for all users
 
@@ -9,14 +12,16 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Importing system enviroment  as we run this script
-# mostly by cron wich not read it by itself
-source /etc/profile
-
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -25,6 +30,11 @@ source $HESTIA/conf/hestia.conf
 # Set LE counter
 lecounter=0
 max_LE_failures=30
+days_valid_setting=31
+if [ "$LE_STAGING" = "yes" ]; then 
+    # Overwrite setting to allow testing for renewal to be done easier
+    days_valid_setting=181
+fi
 
 # Checking user certificates
 for user in $($HESTIA/bin/v-list-sys-users plain); do
@@ -48,7 +58,7 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
         now=$(date +%s)
         seconds_valid=$((expiration - now))
         days_valid=$((seconds_valid / 86400))
-        if [[ "$days_valid" -lt 31 ]]; then
+        if [[ "$days_valid" -lt "$days_valid_setting" ]]; then
             if [ $lecounter -gt 0 ]; then
                 sleep 10
             fi
@@ -71,7 +81,7 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
             # Loop through all crt aliases
             for alias in ${aliases//,/ } ; do
                 # Validate if the alias still exists in web.conf
-                if [[ " ${ALIASES[@]} " =~ " ${alias} " ]]; then
+                if [[ "$ALIAS" =~ $alias ]]; then
                     f_aliases+="$alias,"
                 fi
             done
@@ -82,15 +92,18 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
             # Write the filtered alias list to the default var
             aliases=$f_aliases
 
-            msg=$($BIN/v-add-letsencrypt-domain $user $domain $aliases)
+            msg=$($BIN/v-add-letsencrypt-domain "$user" "$domain" "$aliases")
             if [ $? -ne 0 ]; then
-                echo $msg
-                log_event $E_INVALID "$domain $msg"
+                echo "$msg"
+                log_event "$E_INVALID" "$domain $msg"
+                $BIN/v-log-action "$user" "Error" "Web" "Let's Encrypt SSL certificate update failed (Domain: $domain)."
                 if [ -z "$fail_counter" ]; then
                     add_object_key "web" 'DOMAIN' "$domain" 'LETSENCRYPT_FAIL_COUNT' 'LETSENCRYPT'
                 fi
                 ((fail_counter++))
                 update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT' "$fail_counter"
+            else
+                $BIN/v-log-action "$user" "Info" "Web" "Let's Encrypt SSL certificate renewed (Domain: $domain)."
             fi
         fi
     done
@@ -118,15 +131,18 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
                 sleep 10
             fi
             ((lecounter++))
-            msg=$($BIN/v-add-letsencrypt-domain $user $domain ' ' yes)
+            msg=$($BIN/v-add-letsencrypt-domain "$user" "$domain" "" "yes")
             if [ $? -ne 0 ]; then
-                echo $msg
-                log_event $E_INVALID "$domain $msg"
+                echo "$msg"
+                $BIN/v-log-action "$user" "Error" "Web" "Let's Encrypt SSL certificate update failed (Domain: $domain)."
+                log_event "$E_INVALID" "$domain $msg"
                 if [ -z "$fail_counter" ]; then
                     add_object_key "mail" 'DOMAIN' "$domain" 'LETSENCRYPT_FAIL_COUNT' 'LETSENCRYPT'
                 fi
                 ((fail_counter++))
                 update_object_value 'mail' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT' "$fail_counter"
+            else
+                $BIN/v-log-action "$user" "Info" "Web" "Let's Encrypt SSL certificate renewed (Domain: $domain)."
             fi
         fi
     done

@@ -1,3 +1,4 @@
+#!/bin/bash
 # Global
 database_set_default_ports() {
 
@@ -60,6 +61,8 @@ mysql_connect() {
     mysql --defaults-file=$mycnf -e 'SELECT VERSION()' > $mysql_out 2>&1
     if [ '0' -ne "$?" ]; then
         if [ "$notify" != 'no' ]; then
+            email=$(grep CONTACT $HESTIA/data/users/admin/user.conf |cut -f 2 -d \')
+            subj="MySQL connection error on $(hostname)"
             echo -e "Can't connect to MySQL $HOST\n$(cat $mysql_out)" |\
                 $SENDMAIL -s "$subj" $email
         fi
@@ -71,7 +74,7 @@ mysql_connect() {
     mysql_ver=$(cat $mysql_out |tail -n1 |cut -f 1 -d -)
     mysql_fork="mysql"
     check_mysql_fork=$(grep "MariaDB" $mysql_out)
-    if [ ! -z "$check_mysql_fork" ]; then
+    if [  "$check_mysql_fork" ]; then
         mysql_fork="mariadb"
     fi
     rm -f $mysql_out
@@ -90,12 +93,14 @@ mysql_dump() {
     if [ '0' -ne "$?" ]; then
         rm -rf $tmpdir
         if [ "$notify" != 'no' ]; then
+            email=$(grep CONTACT $HESTIA/data/users/admin/user.conf |cut -f 2 -d \')
+           subj="MySQL error on $(hostname)"
             echo -e "Can't dump database $database\n$(cat $err)" |\
                 $SENDMAIL -s "$subj" $email
         fi
         echo "Error: dump $database failed"
         log_event  "$E_DB" "$ARGUMENTS"
-        exit $E_DB
+        exit "$E_DB"
     fi
 }
 
@@ -115,12 +120,14 @@ psql_connect() {
     psql -h $HOST -U $USER -p $PORT -c "SELECT VERSION()" > /dev/null 2>/tmp/e.psql
     if [ '0' -ne "$?" ]; then
         if [ "$notify" != 'no' ]; then
+            email=$(grep CONTACT $HESTIA/data/users/admin/user.conf |cut -f 2 -d \')
+            subj="PostgreSQL connection error on $(hostname)"
             echo -e "Can't connect to PostgreSQL $HOST\n$(cat /tmp/e.psql)" |\
                 $SENDMAIL -s "$subj" $email
         fi
         echo "Error: Connection to $HOST failed"
         log_event  "$E_CONNECT" "$ARGUMENTS"
-        exit $E_CONNECT
+        exit "$E_CONNECT"
     fi
 }
 
@@ -136,12 +143,14 @@ psql_dump() {
     if [ '0' -ne "$?" ]; then
         rm -rf $tmpdir
         if [ "$notify" != 'no' ]; then
+            email=$(grep CONTACT $HESTIA/data/users/admin/user.conf |cut -f 2 -d \')
+            subj="PostgreSQL error on $(hostname)"
             echo -e "Can't dump database $database\n$(cat /tmp/e.psql)" |\
                 $SENDMAIL -s "$subj" $email
         fi
         echo "Error: dump $database failed"
         log_event  "$E_DB" "$ARGUMENTS"
-        exit $E_DB
+        exit "$E_DB"
     fi
 }
 
@@ -276,15 +285,33 @@ add_pgsql_database() {
     query="GRANT CONNECT ON DATABASE template1 to $dbuser"
     psql_query "$query" > /dev/null
 
-    query="SELECT rolpassword FROM pg_authid WHERE rolname='$dbuser';"
+    query="SELECT rolpassword FROM pg_authid WHERE rolname='$dbuser'"
     md5=$(psql_query "$query" | grep md5 | cut -f 2 -d \ )
+}
+
+add_mysql_database_temp_user() {
+    mysql_connect $host;
+    query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost
+    IDENTIFIED BY '$dbpass'"
+    mysql_query "$query" > /dev/null
+  }
+
+delete_mysql_database_temp_user(){
+    echo $database;
+    echo $dbuser;
+    echo $host;
+    mysql_connect $host;
+    query="REVOKE ALL ON \`$database\`.* FROM \`$dbuser\`@localhost"
+    mysql_query "$query" > /dev/null
+    query="DROP USER '$dbuser'@'localhost'"
+    mysql_query "$query" > /dev/null
 }
 
 # Check if database host do not exist in config 
 is_dbhost_new() {
     if [ -e "$HESTIA/conf/$type.conf" ]; then
         check_host=$(grep "HOST='$host'" $HESTIA/conf/$type.conf)
-        if [ ! -z "$check_host" ]; then
+        if [  "$check_host" ]; then
             echo "Error: db host exist"
             log_event "$E_EXISTS" "$ARGUMENTS"
             exit $E_EXISTS
@@ -324,7 +351,7 @@ change_pgsql_password() {
     query="ALTER ROLE $DBUSER WITH LOGIN PASSWORD '$dbpass'"
     psql_query "$query" > /dev/null
 
-    query="SELECT rolpassword FROM pg_authid WHERE rolname='$DBUSER';"
+    query="SELECT rolpassword FROM pg_authid WHERE rolname='$DBUSER'"
     md5=$(psql_query "$query" | grep md5 |cut -f 2 -d \ )
 }
 
@@ -361,9 +388,9 @@ delete_pgsql_database() {
     psql_query "$query" > /dev/null
 
     if [ "$(grep "DBUSER='$DBUSER'" $USER_DATA/db.conf |wc -l)" -lt 2 ]; then
-        query="REVOKE CONNECT ON DATABASE template1 FROM $db_user"
+        query="REVOKE CONNECT ON DATABASE template1 FROM $DBUSER"
         psql_query "$query" > /dev/null
-        query="DROP ROLE $db_user"
+        query="DROP ROLE $DBUSER"
         psql_query "$query" > /dev/null
     fi
 }
@@ -387,9 +414,9 @@ dump_pgsql_database() {
 
     psql_dump $dump $database
 
-    query="SELECT rolpassword FROM pg_authid WHERE rolname='$DBUSER';"
+    query="SELECT rolpassword FROM pg_authid WHERE rolname='$DBUSER'"
     md5=$(psql_query "$query" | head -n1 | cut -f 2 -d \ )
-    pw_str="UPDATE pg_authid SET rolpassword='$md5' WHERE rolname='$DBUSER';"
+    pw_str="UPDATE pg_authid SET rolpassword='$md5' WHERE rolname='$DBUSER'"
     gr_str="GRANT ALL PRIVILEGES ON DATABASE $database to '$DBUSER'"
     echo -e "$pw_str\n$gr_str" >> $grants
 }

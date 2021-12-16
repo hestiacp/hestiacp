@@ -1,0 +1,52 @@
+#!/bin/bash
+# info: restore single database
+# options: USER BACKUP DATABASE [NOTIFY]
+# labels: panel
+#
+# example: v-restore-database USER BACKUP DATABASE [NOTIFY]
+# 
+# The function allows the user to restore a single database
+# from a backup archive.
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+backup=$2
+database=$3
+notify=$4
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+args_usage='USER BACKUP DATABASE [NOTIFY]'
+check_args '3' "$#" "$args_usage"
+is_format_valid 'user' 'backup'
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+$BIN/v-restore-user "$user" "$backup" 'no' 'no' 'no' "$database" 'no' 'no' "$notify"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+log_event "$OK" "$ARGUMENTS"
+
+exit

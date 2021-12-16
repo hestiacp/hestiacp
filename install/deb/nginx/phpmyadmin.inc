@@ -1,7 +1,11 @@
 location /%pma_alias% {
     alias /usr/share/phpmyadmin/;
 
-    location ~ /(libraries|setup) {
+    location ~ /(libraries|setup|templates|locale) {
+        deny all;
+        return 404;
+    }
+    location ~ /(.+\.(json|lock|md)) {
         deny all;
         return 404;
     }
@@ -13,7 +17,7 @@ location /%pma_alias% {
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $request_filename;
     }
-    location /%pma_alias%/(.+\.(jpg|jpeg|gif|css|png|js|ico|html|xml|txt))$ {
+    location /%pma_alias%/(.+\.(jpg|jpeg|gif|css|png|webp|js|ico|html|xml|txt))$ {
         root /usr/share/phpmyadmin/;
     }
 }

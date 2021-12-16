@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list user packages
 # options: [FORMAT]
+# labels: 
 #
 # The function for obtaining the list of available hosting packages.
 
@@ -13,8 +14,12 @@
 format=${1-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -24,7 +29,7 @@ json_list() {
     echo "{"
     for package in $packages; do
         PACKAGE=${package/.pkg/}
-        source $HESTIA/data/packages/$package
+        source_conf "$HESTIA/data/packages/$PACKAGE.pkg"
         echo -n '    "'$PACKAGE'": {
         "WEB_TEMPLATE": "'$WEB_TEMPLATE'",
         "PROXY_TEMPLATE": "'$PROXY_TEMPLATE'",

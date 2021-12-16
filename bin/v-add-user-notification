@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: add user notification
 # options: USER TOPIC NOTICE [TYPE]
+# labels: 
 #
 # The function adds user notification.
 
@@ -16,8 +17,12 @@ notice=$(echo $3 |sed "s/'/%quote%/g")
 type=$4
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -28,7 +33,8 @@ check_args '2' "$#" 'USER TOPIC NOTICE [TYPE]'
 is_format_valid 'user' 'topic' 'notice'
 is_object_valid 'user' 'USER' "$user"
 
-
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -37,7 +43,7 @@ is_object_valid 'user' 'USER' "$user"
 if [ -e "$USER_DATA/notifications.conf" ]; then
     nid=$(grep "NID=" $USER_DATA/notifications.conf |cut -f 2 -d \')
     nid=$(echo "$nid" |sort -n |tail -n1)
-    if [ ! -z "$nid" ]; then
+    if [ -n "$nid" ]; then
         nid="$((nid +1))"
     else
         nid=1

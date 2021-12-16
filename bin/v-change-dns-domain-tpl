@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change dns domain template
 # options: USER DOMAIN TEMPLATE [RESTART]
+# labels: dns
+#
+# example: v-change-dns-domain-tpl admin example.com child-ns yes
 #
 # The function for changing the template of records. By updating old records
 # will be removed and new records will be generated in accordance with
@@ -19,9 +22,14 @@ template=$3
 restart=$4
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -59,7 +67,7 @@ for nameserver in ${ns//,/ };do
 done
 
 # Reading template
-template_data=$(cat $DNSTPL/$template.tpl)
+template_data=$(cat "$DNSTPL/$template.tpl")
 
 # Deleting unused nameservers
 if [ -z "$ns3" ]; then
@@ -100,17 +108,17 @@ records="$(wc -l $USER_DATA/dns/$domain.conf |cut -f 1 -d ' ')"
 
 # Refresh DKIM records in DNS if signing key exists for domain
 if [ "$template" = "default" ] || [ "$template" = "child-ns" ]; then
-    if [ ! -z "MAIL_SYSTEM" ] && [ -f $HOMEDIR/$user/conf/mail/$domain/dkim.pem ]; then
+    if [ -n "$MAIL_SYSTEM" ] && [ -f "$HOMEDIR/$user/conf/mail/$domain/dkim.pem" ]; then
         check_dns_domain=$(is_object_valid 'dns' 'DOMAIN' "$domain")
         if [ "$?" -eq 0 ]; then
-            p=$(cat $USER_DATA/mail/$domain.pub|grep -v ' KEY---'|tr -d '\n')
+            p=$(cat "$USER_DATA/mail/$domain.pub" |grep -v ' KEY---'|tr -d '\n')
             record='_domainkey'
             policy="\"t=y; o=~;\""
-            $BIN/v-add-dns-record $user $domain $record TXT "$policy" '' '' 'no'
+            $BIN/v-add-dns-record "$user" "$domain" "$record" TXT "$policy" '' '' 'no'
 
             record='mail._domainkey'
             selector="\"v=DKIM1\; k=rsa\; p=$p\""
-            $BIN/v-add-dns-record $user $domain $record TXT "$selector"
+            $BIN/v-add-dns-record "$user" "$domain" "$record" TXT "$selector"
         fi
     fi
 fi
@@ -121,7 +129,7 @@ if [ "$template" = "office365" ]; then
     if [ "$?" -eq 0 ]; then
         record='@'
         formatted_domain=$(echo "$domain" | sed 's/\./-/g')
-        $BIN/v-add-dns-record $user $domain $record MX "${formatted_domain}.mail.protection.outlook.com." '0'
+        $BIN/v-add-dns-record "$user" "$domain" "$record" MX "${formatted_domain}.mail.protection.outlook.com." '0' '' "$restart"
     fi
 fi
 
@@ -151,16 +159,16 @@ update_object_value 'dns' 'DOMAIN' "$domain" '$TPL' "$template"
 update_object_value 'dns' 'DOMAIN' "$domain" '$RECORDS' "$records"
 
 # Rebuild DNS zone and update counters to ensure that it has updated correctly
-$BIN/v-rebuild-dns-domain $user $domain no
-$BIN/v-update-user-stats $user
-$BIN/v-update-user-counters $user
+$BIN/v-rebuild-dns-domain "$user" "$domain" no
+$BIN/v-update-user-stats "$user"
+$BIN/v-update-user-counters "$user"
 
 # Restarting named
-$BIN/v-restart-dns $restart
+$BIN/v-restart-dns "$restart"
 check_result $? "DNS restart failed" >/dev/null
 
 # Logging
-log_history "changed dns template for $domain to $template" '' 'admin'
+$BIN/v-log-action "system" "Info" "DNS" "Template for DNS domain changed (Template: $template, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

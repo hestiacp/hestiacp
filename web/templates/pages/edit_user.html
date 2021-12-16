@@ -1,0 +1,436 @@
+<!-- Begin toolbar -->
+<div class="l-center edit">
+	<div class="l-sort clearfix">
+		<div class="l-unit-toolbar__buttonstrip">
+			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+			<?php 
+				if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look'])) && ($_SESSION['user'] !== $v_username)) {
+					$ssh_key_url = "/list/key/?user=".$user."&token=".$_SESSION['token']."";
+					$log_url = "/list/log/?user=".$user."&token=".$_SESSION['token']."";
+				} else {
+					$ssh_key_url = "/list/key/";
+					$log_url = "/list/log/";
+				} 
+			?>
+			<a href="<?=$ssh_key_url; ?>" id="btn-create" class="ui-button cancel" dir="ltr" title="<?=_('Manage SSH keys');?>"><i class="fas fa-key status-icon orange"></i><?=_('Manage SSH keys');?></a>
+			<?php if (($_SESSION['userContext'] == 'admin') || ($_SESSION['userContext'] !== 'admin') && ($_SESSION['POLICY_USER_VIEW_LOGS'] !== 'no')) {?>
+				<a href="<?=$log_url; ?>" id="btn-create" class="ui-button cancel" dir="ltr" title="<?=_('Logs');?>"><i class="fas fa-history status-icon maroon"></i><?=_('Logs');?></a>
+			<?php } ?>
+		</div>
+		<div class="l-unit-toolbar__buttonstrip float-right">
+			<div class="actions-panel clearfix">
+			<?php if (($_SESSION['user'] == $v_username) || (isset($_SESSION['look']))) {?>
+				<!-- Do not show delete button for currently logged in user-->
+			<?} else {?>
+				<a href="/login/?loginas=<?=$v_username?>&token=<?=$_SESSION['token']?>" id="btn-create" class="ui-button cancel" dir="ltr" title="<?=_('login as');?>"><i class="fas fa-sign-in-alt status-icon maroon"></i><?=_('login as');?></a>
+				<div class="display-inline-block" key-action="js">
+					<a class="data-controls do_delete ui-button danger cancel">
+						<i class="do_delete fas fa-times-circle status-icon red"></i>
+						<?=_('Delete');?>
+						<input type="hidden" name="delete_url" value="/delete/user/?user=<?=$v_username?>&token=<?=$_SESSION['token']?>" />
+						<div class="confirmation-text-delete hidden" title="<?=_('Confirmation');?>">
+							<p class="confirmation"><?=sprintf(_('DELETE_USER_CONFIRMATION'),$v_username)?></p>
+						</div>
+					</a>
+				</div>
+			<?php } ?>
+			<a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save');?></a>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End toolbar -->
+
+<div class="l-separator"></div>
+
+<div class="l-center animated fadeIn">
+
+	<form id="vstobjects" method="post" name="v_edit_user" class="<?=$v_status?>">
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+		<input type="hidden" name="save" value="save" />
+
+		<table class='data'>
+			<tr class="data-add">
+				<td class="data-dotted">
+					<table class="data-col1">
+						<tr>
+							<td>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td class="data-dotted">
+					<table class="data-col2">
+						<tr>
+							<td class="step-top">
+								<span class="page-title"><?=_('Editing User');?></span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<?php
+									if (!empty($_SESSION['error_msg'])) {
+										$msg_icon = 'fa-exclamation-circle status-icon red';
+										$msg_text = htmlentities($_SESSION['error_msg']);
+										$msg_id = 'vst-error';
+									} else {
+										if (!empty($_SESSION['ok_msg'])) {
+											$msg_icon = 'fa-check-circle status-icon green';
+											$msg_text = $_SESSION['ok_msg'];
+											$msg_id = 'vst-ok';
+										}
+									}
+								?>
+								<span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text step-top">
+								<?=_('Username');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_user" value="<?=htmlentities(trim($v_username, "'"))?>" disabled>
+								<input type="hidden" name="v_username" value="<?=htmlentities(trim($v_username, "'"))?>">
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Contact');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>" <?php if (($_SESSION['userContext'] !=='admin' ) && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !=='yes' )) { echo 'disabled' ; }?> >
+								<?php if (($_SESSION['userContext'] !== 'admin') && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !== 'yes')) {?>
+									<input type="hidden" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>">
+								<?php } ?>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Email');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_email" value="<?=htmlentities(trim($v_email, "'"))?>" <?php if (($_SESSION['userContext'] !=='admin' ) && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !=='yes' )) { echo 'disabled' ; }?>>
+								<?php if (($_SESSION['userContext'] !== 'admin') && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !== 'yes')) {?>
+									<input type="hidden" name="v_email" value="<?=htmlentities(trim($v_email, "'"))?>">
+								<?php } ?>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Password');?> <a href="javascript:randomString();" title="<?=_('generate');?>"><i class="fas fa-sync status-icon green icon-large"></i></a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>"><br />
+								<meter max="4" id="meter"></meter>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<table id="password-details">
+									<tr>
+										<td class="vst-text">
+											<?=_('Your password must have at least');?>:
+											<ul>
+												<li><?=_('8 characters long');?></li>
+												<li><?=_('1 uppercase & 1 lowercase character');?></li>
+												<li><?=_('1 number');?></li>
+											</ul>
+										</td>
+									</tr>
+									<?php if ($_SESSION['userContext'] === 'admin') {?>
+										<tr>
+											<td>
+												<label><input type="checkbox" size="20" class="vst-checkbox" onclick="javascript:elementHideShow('password-options');elementHideShow('password-options-ip');" name="v_login_disabled" <?php if ($data[$user]['LOGIN_DISABLED'] == "yes") echo "checked=yes" ?>><?=_('Do not allow user to log in to Control Panel');?></label>
+											</td>
+										</tr>
+									<?php } ?>
+									<tr>
+										<td id="password-options" style="<?php if ($data[$user]['LOGIN_DISABLED'] == "yes") { echo 'display: none;'; } else { echo 'display: table-cell;'; }?>">
+											<label><input type="checkbox" class="vst-checkbox password-option" name="v_twofa" <?php if(!empty($v_twofa)) echo "checked=yes" ?>><?=_('Enable 2FA');?></label>
+											<?php if (!empty($v_twofa)) { ?>
+											<p><?=_('2FA Reset Code:').' '.$v_twofa; ?></br></p>
+											<p><?=_('Please scan the code below in your 2FA application:'); ?></p>
+											<div><img class="qr-code" src="<?=$v_qrcode; ?>"></div>
+											<?php } ?>
+										</td>
+									</tr>
+									<tr>
+										<td id="password-options-ip" style="<?php if ($data[$user]['LOGIN_DISABLED'] == "yes") { echo 'display: none;'; } else { echo 'display: table-cell;'; }?>">
+											<label><input type="checkbox" size="20" class="vst-checkbox" onclick="javascript:elementHideShow('ip-allowlist')" name="v_login_use_iplist" <?php if ($data[$user]['LOGIN_USE_IPLIST'] === "yes") echo "checked=yes" ?>><?=_('Use IP address allow list for login attempts');?></label>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<table id="ip-allowlist" style="<?php if ($data[$user]['LOGIN_USE_IPLIST'] === 'yes') { echo 'display: table-cell;'; } else { echo 'display: none;'; } ?>">
+												<tr>
+													<td>
+														<input type="text" size="20" class="vst-input" placeholder="<?=_('Example: 127.0.0.1,192.168.1.100');?>" name="v_login_allowed_ips" value="<?=htmlentities(trim($v_login_allowed_ips, "'"))?>">
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Language');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<select class="vst-list" name="v_language">
+									<?php
+											foreach ($languages as $key => $value) {
+												echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".$key."\"";
+												$skey = "'".$key."'";
+												if (( $key == $v_language ) || ( $skey == $v_language)){
+													echo 'selected' ;
+												}
+												if (( $key == detect_user_language() ) && (empty($v_language))){
+													echo 'selected' ;
+												}
+												echo ">".htmlentities($value)."</option>\n";
+											}
+										?>
+								</select>
+							</td>
+						</tr>
+						<?php if ($v_username == 'admin') {?>
+							<!-- Hide option to change 'admin' user's role-->
+						<?php } else { ?>
+							<?php if (($_SESSION['userContext'] === 'admin') && ($_SESSION['user'] != $v_username)) {?>
+							<tr>
+								<td class="vst-text input-label">
+									<?=_('Role');?>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<select class="vst-list" name="v_role">
+										<option value="user"><?=_('User');?>
+										<option value="admin" <?php if($v_role == "admin" ){ echo "selected"; } ?>><?=_('Administrator');?>
+									</select>
+								</td>
+							</tr>
+							<?php } ?>
+						<?php } ?>
+						<?php if ($_SESSION['POLICY_USER_CHANGE_THEME'] !== 'no') {?>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Theme') ?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<select class="vst-list" name="v_user_theme">
+									<?php
+										foreach ($themes as $key => $value) {
+											echo "\t\t\t\t<option value=\"".$value."\"";
+											if ((!empty($_SESSION['userTheme'])) && ( $value == $v_user_theme )) {
+												echo ' selected' ;
+											}
+											if ((empty($v_user_theme) && (!empty($_SESSION['THEME']))) && ( $value == $_SESSION['THEME'] )) {
+												echo ' selected' ;
+											}
+											if ((!empty($_SESSION['userTheme'])) && ( $value == $_POST['v_user_theme'])){
+												echo ' selected' ;
+											}
+											echo ">".$value."</option>\n";
+										}
+									?>
+								</select>
+							</td>
+						</tr>
+						<?php } ?>
+						<?php if ($_GET['user'] === $_SESSION['user']) { ?>
+							<tr>
+								<td class="vst-text input-label">
+									<?=_('Default list sort order');?>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<select class="vst-list" name="v_sort_order">
+										<option value='date' <?php if($_SESSION['userSortOrder'] === 'date') echo 'selected' ?>><?=_('Date'); ?></option>
+										<option value='name' <?php if($_SESSION['userSortOrder'] === 'name') echo 'selected' ?>><?=_('Name'); ?></option>
+									</select>
+								</td>
+								</tr>
+						<?php } ?>
+						<?php if ($_SESSION['userContext'] === 'admin') {?>
+							<tr>
+								<td class="vst-text input-label">
+										<?=_('Package');?>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<select class="vst-list" name="v_package">
+										<?php
+											foreach ($packages as $key => $value) {
+												echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($key)."\"";
+												$skey = "'".$key."'";
+												if (( $key == $v_package ) || ( $skey == $v_package)){
+													echo 'selected' ;
+												}
+												echo ">".htmlentities($key)."</option>\n";
+											}
+										?>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td class="step-top vst-text" style="/*padding: 32px 0 20px 0;*/">
+									<a href="javascript:elementHideShow('advanced-opts');" class="vst-advanced"><?=_('Advanced options');?></a>
+								</td>
+							</tr>
+							<tr>
+								<td class="step-top">
+									<table id="advanced-opts" style="display: none;">
+										<tr>
+											<td class="vst-text input-label">
+												<?=_('SSH Access');?>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<select class="vst-list" name="v_shell">
+													<?php
+														foreach ($shells as $key => $value) {
+															echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
+															$svalue = "'".$value."'";
+															if (( $value == $v_shell ) || ($svalue == $v_shell )){
+																echo 'selected' ;
+															}
+															echo ">".htmlentities($value)."</option>\n";
+														}
+													?>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td class="vst-text input-label">
+												<?=_('PHP CLI Version');?>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<select class="vst-list" name="v_phpcli">
+													<?php
+														foreach ($php_versions as $key => $value) {
+															$php = explode('-',$value);
+															echo "\t\t\t\t<option value=\"".$value."\"";
+															$svalue = "'".$value."'";
+															if ((!empty($v_phpcli)) && ( $value == $v_phpcli ) || ($svalue == $v_phpcli)){
+																echo ' selected' ;
+															}
+															if ((empty($v_phpcli)) && ($value == DEFAULT_PHP_VERSION)){
+																echo ' selected' ;
+															}
+															echo ">".htmlentities($value)."</option>\n";
+														}
+													?>
+												</select>
+											</td>
+										</tr>
+										<?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?>
+											<tr>
+												<td class="vst-text input-label">
+													<?=_('Default Name Servers');?>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input type="text" size="20" class="vst-input" name="v_ns1" value="<?=htmlentities(trim($v_ns1, "'"))?>">
+													<span class="remove-ns additional-control delete vst-advanced button danger"><?=_('delete');?></span>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input type="text" size="20" class="vst-input" name="v_ns2" value="<?=htmlentities(trim($v_ns2, "'"))?>">
+													<span class="remove-ns additional-control delete vst-advanced button danger"><?=_('delete');?></span>
+												</td>
+											</tr>
+											<?php
+												if($v_ns3) {
+													echo '<tr>
+														<td>
+															<input type="text" size="20" class="vst-input" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
+															<span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
+														</td>
+													</tr>';
+												}
+												if($v_ns4) {
+													echo '<tr>
+														<td>
+															<input type="text" size="20" class="vst-input" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
+															<span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
+														</td>
+													</tr>';
+												}
+												if($v_ns5) {
+													echo '<tr>
+														<td>
+															<input type="text" size="20" class="vst-input" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
+															<span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
+														</td>
+													</tr>';
+												}
+												if($v_ns6) {
+													echo '<tr>
+														<td>
+															<input type="text" size="20" class="vst-input" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
+															<span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
+														</td>
+													</tr>';
+												}
+												if($v_ns7) {
+													echo '<tr>
+														<td>
+															<input type="text" size="20" class="vst-input" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
+															<span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
+														</td>
+													</tr>';
+												}
+												if($v_ns8) {
+													echo '<tr>
+														<td>
+															<input type="text" size="20" class="vst-input" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
+															<span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
+														</td>
+													</tr>';
+												}
+											?>
+											<tr class="add-ns" <?php if ($v_ns8) echo 'style="display:none;"' ; ?> >
+												<td class="step-top-small">
+													<span class="add-ns-button vst-advanced button"><?=_('Add one more Name Server');?></span>
+												</td>
+											</tr>
+										<?php } ?>
+									</table>
+								</td>
+							</tr>
+						<?php } ?>
+						<?php if ($_SESSION['userContext'] !== 'admin') {?>
+							<tr>
+								<td class="step-top">
+								</td>
+							</tr>
+						<?php } ?>
+					</table>
+					<table class="data-col2"></table>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>

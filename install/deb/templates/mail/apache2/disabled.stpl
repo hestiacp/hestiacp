@@ -1,0 +1,12 @@
+<VirtualHost %ip%:%web_ssl_port%>
+ServerName %domain_idn%
+ServerAlias %alias_idn%
+DocumentRoot /var/www/html/
+Alias /error/ /var/www/document_errors/
+
+SSLEngine on
+SSLVerifyClient none
+SSLCertificateFile         %home%/%user%/conf/mail/%root_domain%/ssl/%root_domain%.crt
+SSLCertificateKeyFile      %home%/%user%/conf/mail/%root_domain%/ssl/%root_domain%.key
+
+</VirtualHost>

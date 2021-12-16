@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete firewall ipset
 # options: NAME
+# labels: hestia
+#
+# example: v-delete-firewall-ipset country-nl
 #
 # The function removes ipset from system and from hestia
 
@@ -12,8 +15,12 @@
 ip_name=${1}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -67,6 +74,7 @@ rm -f "${IPSET_PATH}/${IPSET_FILE}.iplist"
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "Firewall" "Deleted IP list (Name: $ip_name)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

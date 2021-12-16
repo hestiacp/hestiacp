@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add web domain
-# options: USER DOMAIN [IP] [ALIASES] [PROXY_EXTENSIONS] [RESTART]
+# options: USER DOMAIN [IP] [RESTART] [ALIASES] [PROXY_EXTENSIONS]
+# labels: web
+#
+# example: v-add-web-domain admin wonderland.com 192.18.22.43 yes www.wonderland.com
 #
 # The function adds virtual host to a server. In cases when ip is
 # undefined in the script, "default" template will be used. The alias of
@@ -25,15 +28,22 @@ aliases=$5
 proxy_ext=$6
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
 format_domain_idn
 format_aliases
+domain_utf=$(idn -t --quiet -u "$domain_idn")
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -44,11 +54,32 @@ check_args '2' "$#" 'USER DOMAIN [IP] [RESTART] [ALIASES] [PROXY_EXTENSIONS]'
 is_format_valid 'user' 'domain' 'aliases' 'ip' 'proxy_ext'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-is_package_full 'WEB_DOMAINS' 'WEB_ALIASES'
-is_domain_new 'web' "$domain,$aliases"
+is_package_full 'WEB_DOMAINS' 
+
+if [ "$aliases" != "none" ]; then 
+    ALIAS="$aliases"
+    is_package_full 'WEB_ALIASES' 
+fi
+
+if [ "$($BIN/v-list-web-domain $user $domain_utf plain |cut -f 1) " != "$domain" ]; then
+    is_domain_new 'web' "$domain_utf,$aliases"
+fi
+if [ "$($BIN/v-list-web-domain $user $domain_idn plain |cut -f 1) " != "$domain" ]; then
+    is_domain_new 'web' "$domain_idn,$aliases"
+else
+    is_domain_new 'web' "$domain,$aliases"
+fi
+if [ -z "$(is_ip_format_valid $domain)" ]; then
+    echo "Error: Invalid domain format. IP address detected as input." 
+    exit 1
+fi
+
 is_dir_symlink "$HOMEDIR/$user/web"
 is_dir_symlink "$HOMEDIR/$user/web/$domain"
-if [ ! -z "$ip" ]; then
+
+is_base_domain_owner "$domain,$aliases"
+
+if [ -n "$ip" ]; then
     is_ip_valid "$ip" "$user"
 else
     get_user_ip
@@ -63,12 +94,13 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Reading user values
-source $USER_DATA/user.conf
+source_conf "$USER_DATA/user.conf"
+
+[[ -e "$HOMEDIR/$user/web/$domain" ]] && check_result "$E_EXISTS" "Web domain folder for $domain should not exist"
 
 # Creating domain directories
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain"
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/public_html"
-$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/public_shtml"
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/document_errors"
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/cgi-bin"
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/private"
@@ -92,13 +124,13 @@ done
 chown -R $user:$user $HOMEDIR/$user/web/$domain
 chown root:$user /var/log/$WEB_SYSTEM/domains/$domain.* $conf
 chmod 640 /var/log/$WEB_SYSTEM/domains/$domain.*
-chmod 751 $HOMEDIR/$user/web/$domain $HOMEDIR/$user/web/$domain/*
-chmod 551 $HOMEDIR/$user/web/$domain/stats $HOMEDIR/$user/web/$domain/logs
-chmod 644 $HOMEDIR/$user/web/$domain/public_*html/*
-chown $user:www-data $HOMEDIR/$user/web/$domain/public_*html
+user_exec chmod 751 $HOMEDIR/$user/web/$domain $HOMEDIR/$user/web/$domain/*
+user_exec chmod 551 $HOMEDIR/$user/web/$domain/stats $HOMEDIR/$user/web/$domain/logs
+user_exec chmod 644 $HOMEDIR/$user/web/$domain/public_*html/*
+chown --no-dereference $user:www-data $HOMEDIR/$user/web/$domain/public_*html
 
-# Addding PHP-FPM backend
-if [ ! -z "$WEB_BACKEND" ]; then
+# Adding PHP-FPM backend
+if [ -n "$WEB_BACKEND" ]; then
     if [ -z "$BACKEND_TEMPLATE" ]; then
         BACKEND_TEMPLATE='default'
         if [ -z "$(grep BACKEND_TEMPLATE $USER_DATA/user.conf)" ]; then
@@ -108,8 +140,8 @@ if [ ! -z "$WEB_BACKEND" ]; then
             update_user_value "$user" '$BACKEND_TEMPLATE' "default"
         fi
     fi
-    BACKEND="$BACKEND_TEMPLATE"
-    $BIN/v-add-web-domain-backend "$user" "$domain" $BACKEND_TEMPLATE $restart
+    export BACKEND="$BACKEND_TEMPLATE"
+    $BIN/v-add-web-domain-backend "$user" "$domain" "$BACKEND_TEMPLATE" "$restart"
     check_result $? "Backend error" >/dev/null
 fi
 
@@ -130,8 +162,8 @@ else
         ALIAS="$aliases"
     fi
 
-    ip_alias=$(get_ip_alias $domain)
-    if [ ! -z "$ip_alias" ]; then
+    ip_alias=$(get_ip_alias "$domain")
+    if [ -n "$ip_alias" ]; then
         ALIAS="$ALIAS,$ip_alias"
     fi
 fi
@@ -139,18 +171,28 @@ fi
 # Preparing domain variables
 prepare_web_domain_values
 
+if [ -z "$WEB_TEMPLATE" ]; then 
+    WEB_TEMPLATE='default'
+    update_user_value "$user" '$WEB_TEMPLATE' "default"
+fi
+
 # Adding web server config
 add_web_config "$WEB_SYSTEM" "$WEB_TEMPLATE.tpl"
 
 # Adding proxy config
-if [ ! -z "$PROXY_SYSTEM" ]; then
+if [ -n "$PROXY_SYSTEM" ]; then
     PROXY_EXT="$proxy_ext"
     if [ -z "$proxy_ext" ]; then
         PROXY_EXT="jpg,jpeg,gif,png,ico,svg,css,zip,tgz,gz,rar,bz2,doc,xls"
         PROXY_EXT="$PROXY_EXT,exe,pdf,ppt,txt,odt,ods,odp,odf,tar,wav,bmp"
         PROXY_EXT="$PROXY_EXT,rtf,js,mp3,avi,mpeg,flv,html,htm"
     fi
-    add_web_config "$PROXY_SYSTEM" "$PROXY_TEMPLATE.tpl"
+    if [ -z "$PROXY_TEMPLATE" ]; then 
+        PROXY_TEMPLATE='default'
+        update_user_value "$user" '$PROXY_TEMPLATE' "default"
+    fi
+    
+    add_web_config "$PROXY_SYSTEM" "$PROXY_TEMPLATE.tpl" 
 fi
 
 
@@ -176,15 +218,15 @@ echo "DOMAIN='$domain' IP='$ip' IP6='' CUSTOM_DOCROOT='' ALIAS='$ALIAS' TPL='$WE
  SUSPENDED='no' TIME='$time' DATE='$date'" >> $USER_DATA/web.conf
 
 # Restarting web server
-$BIN/v-restart-web $restart
+$BIN/v-restart-web "$restart"
 check_result $? "Web restart failed" >/dev/null
 
 # Restarting proxy server
-$BIN/v-restart-proxy $restart
+$BIN/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging
-log_history "added web domain $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Added new web domain (Name: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

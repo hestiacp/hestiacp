@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change user default template
 # options: USER TYPE TEMPLATE
+# labels: panel
+#
+# example: v-change-user-template admin WEB wordpress
 #
 # The function changes default user web template.
 
@@ -15,9 +18,14 @@ type=$(echo "$2" | tr '[:lower:]' '[:upper:]')
 template=$3
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -38,11 +46,11 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 case $type in 
-    WEB) is_web_template_valid $template;
+    WEB) is_web_template_valid "$template";
         update_user_value "$user" '$WEB_TEMPLATE' "$template";;
-    PROXY) is_proxy_template_valid $template;
+    PROXY) is_proxy_template_valid "$template";
         update_user_value "$user" '$PROXY_TEMPLATE' "$template";;
-    DNS) is_dns_template_valid $template;
+    DNS) is_dns_template_valid "$template";
         update_user_value "$user" '$DNS_TEMPLATE' "$template";;
     *) check_args '1' '0' 'USER TYPE TEMPLATE'
 esac
@@ -53,7 +61,7 @@ esac
 #----------------------------------------------------------#
 
 # Logging
-log_history "changed $type template to $template"
+$BIN/v-log-action "$user" "Info" "Web" "Default domain template changed (Type: $type, Template: $template)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

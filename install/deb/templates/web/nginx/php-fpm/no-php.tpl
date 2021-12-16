@@ -14,24 +14,24 @@ server {
         
     include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
 
-    types {
-            text/html   html htm shtml php php5;
-    }
-
     location / {
-        location ~* ^.+\.(jpeg|jpg|png|gif|bmp|ico|svg|css|js)$ {
+        location ~* ^.+\.(jpeg|jpg|png|webp|gif|bmp|ico|svg|css|js)$ {
             expires     max;
             fastcgi_hide_header "Set-Cookie";
         }
+    }
+    
+    location ~ [^/]\.php(/|$) {
+        types { } default_type "text/html";
     }
 
     location /error/ {
         alias   %home%/%user%/web/%domain%/document_errors/;
     }
 
-    location ~* "/\.(htaccess|htpasswd)$" {
-        deny    all;
-        return  404;
+    location ~ /\.(?!well-known\/) { 
+       deny all; 
+       return 404;
     }
 
     location /vstats/ {

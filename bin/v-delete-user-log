@@ -1,5 +1,9 @@
 #!/bin/bash
 # info: Delete log file for user
+# options: USER
+# labels: hestia
+#
+# example: v-delete-user-log user 
 #
 # The function for deleting a users log file
 
@@ -9,29 +13,50 @@
 
 # Argument definition
 user=$1
-date=$(date "+%F %T")
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
 #----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER'
+is_format_valid 'user'
+if [ "$user" != "system" ]; then
+    is_object_valid 'user' 'USER' "$user"
+fi
+
+#----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Remove log file
-if [ -z $user ]; then
-    echo "Error: no user specified."
-elif [ ! -f "$HESTIA/data/users/$user/history.log" ]; then
-    echo "Error: no history log found for $user."
+# Set correct path for log file (system or user)
+if [ "$user" = "system" ]; then
+    log_file="$HESTIA/data/users/admin/system.log"
 else
-    rm -f $HESTIA/data/users/$user/history.log
+    log_file="$HESTIA/data/users/$user/history.log"
 fi
 
-log_history "Log for $user was cleared on $date."
-log_event "$OK" "$ARGUMENTS"
+# Verify log file exists before deleting to prevent errors
+if [ -f "$log_file" ]; then
+    rm -f "$log_file"
+    # Add event to user and system logs specifying that the log history was cleared
+    if [ "$user" = "system" ]; then
+        $BIN/v-log-action "system" "Warning" "Security" "System log history deleted."
+    else
+        $BIN/v-log-action "system" "Warning" "Security" "User action log deleted (User: $user)."
+        $BIN/v-log-action "$user" "Info" "Security" "Log entries deleted."
+    fi
+    log_event "$OK" "$ARGUMENTS"
+fi
 
 exit

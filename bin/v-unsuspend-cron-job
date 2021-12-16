@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: unsuspend cron job
 # options: USER JOB [RESTART]
+# labels: panel
+#
+# example: v-unsuspend-cron-job admin 7 yes
 #
 # The function unsuspend certain cron job.
 
@@ -15,8 +18,12 @@ job=$2
 restart="${3-yes}"
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -28,6 +35,9 @@ is_format_valid 'user' 'job' 'restart'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'cron' 'JOB' "$job"
 is_object_suspended 'cron' 'JOB' "$job"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 
 #----------------------------------------------------------#
@@ -47,10 +57,11 @@ sync_cron_jobs
 #----------------------------------------------------------#
 
 # Restarting crond
-$BIN/v-restart-cron $restart
+$BIN/v-restart-cron "$restart"
 check_result $? "Cron restart failed" >/dev/null
 
 # Logging
+$BIN/v-log-action "system" "Info" "Cron Jobs" "Unsuspended cron job (User: $user, Job: $job)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update database disk usage
 # options: USER DATABASE
+# labels: panel
+#
+# example: v-update-database-disk admin wp_db
 #
 # The function recalculates disk usage for specific database.
 
@@ -14,10 +17,14 @@ user=$1
 database=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/db.sh
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #

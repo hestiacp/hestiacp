@@ -28,7 +28,8 @@ server {
             fastcgi_pass   %backend_lsnr%;
             fastcgi_index  index.php;
             fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
-            include        /etc/nginx/fastcgi_params;
+            include /etc/nginx/fastcgi_params;
+            include     %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
         }
 
         location ~ ^/setup/(?!pub/). {
@@ -50,7 +51,8 @@ server {
             fastcgi_index  index.php;
             fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
             fastcgi_param  PATH_INFO        $fastcgi_path_info;
-            include        /etc/nginx/fastcgi_params;
+            include /etc/nginx/fastcgi_params;
+            include     %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
         }
 
         # Deny everything but index.php
@@ -85,7 +87,7 @@ server {
             rewrite ^/static/(version\d*/)?(.*)$ /static/$2 last;
         }
 
-        location ~* \.(ico|jpg|jpeg|png|gif|svg|js|css|swf|eot|ttf|otf|woff|woff2)$ {
+        location ~* \.(ico|jpg|jpeg|png|webp|gif|svg|js|css|swf|eot|ttf|otf|woff|woff2)$ {
             add_header Cache-Control "public";
             add_header X-Frame-Options "SAMEORIGIN";
             expires +1y;
@@ -119,7 +121,7 @@ server {
             deny all;
         }
 
-        location ~* \.(ico|jpg|jpeg|png|gif|svg|js|css|swf|eot|ttf|otf|woff|woff2)$ {
+        location ~* \.(ico|jpg|jpeg|png|webp|gif|svg|js|css|swf|eot|ttf|otf|woff|woff2)$ {
             add_header Cache-Control "public";
             add_header X-Frame-Options "SAMEORIGIN";
             expires +1y;
@@ -159,7 +161,8 @@ server {
 
         fastcgi_index  index.php;
         fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
-        include        /etc/nginx/fastcgi_params;
+        include /etc/nginx/fastcgi_params;
+        include     %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
     }
 
     gzip on;
@@ -184,8 +187,9 @@ server {
     gzip_vary on;
 
     # Banned locations (only reached if the earlier PHP entry point regexes don't match)
-    location ~* (\.php$|\.htaccess$|\.git) {
-        deny all;
+    location ~ /\.(?!well-known\/) { 
+       deny all; 
+       return 404;
     }
 
     location /vstats/ {

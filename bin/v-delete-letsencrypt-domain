@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: deleting letsencrypt ssl cetificate for domain
 # options: USER DOMAIN [RESTART] [MAIL]
+# labels: panel
+#
+# example: v-delete-letsencrypt-domain admin acme.com yes
 #
 # The function turns off letsencrypt SSL support for a domain.
 
@@ -16,9 +19,14 @@ restart=$3
 mail=$4
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -30,7 +38,6 @@ is_format_valid 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_system_enabled "$WEB_SSL" 'SSL_SUPPORT'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 if [ -z "$mail" ]; then
     is_object_valid 'web' 'DOMAIN' "$domain"
     is_object_unsuspended 'web' 'DOMAIN' "$domain"
@@ -50,26 +57,36 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Delete DNS CAA record
-if [ ! -z "$DNS_SYSTEM" ]; then
-    dns_domain=$($BIN/v-list-dns-domains $user | grep $domain | cut -d' ' -f1)
-    caa_record=$($BIN/v-list-dns-records $user $domain | grep -i "letsencrypt" | cut -d' ' -f1)
-
+if [ -n "$DNS_SYSTEM" ]; then
+    dns_domain=$($BIN/v-list-dns-domains "$user" | grep "$domain" | cut -d' ' -f1)
+    caa_record=$($BIN/v-list-dns-records "$user" "$domain" | grep -i "letsencrypt" | cut -d' ' -f1)
+    
     if [ "$dns_domain" = "$domain" ]; then
-        if [ ! -z "$caa_record" ]; then
-            $BIN/v-delete-dns-record $user $domain $caa_record
+        if [ -n "$caa_record" ]; then
+            if [ -z "$mail" ]; then
+                mail_exists=$(is_object_value_exist 'mail' 'DOMAIN' "$domain" '$LETSENCRYPT');
+                if [ "$mail_exists" != '' ]; then
+                    $BIN/v-delete-dns-record "$user" "$domain" "$caa_record"
+                fi
+            else
+                web_exists=$(is_object_value_exist 'web' 'DOMAIN' "$domain" '$LETSENCRYPT');
+                if [ "$web_exists" != '' ]; then
+                    $BIN/v-delete-dns-record "$user" "$domain" "$caa_record"
+                fi
+            fi
         fi
     fi
 fi
 
 # Delete SSL
 if [ -z "$mail" ]; then
-    $BIN/v-delete-web-domain-ssl $user $domain $restart >/dev/null 2>&1
+    $BIN/v-delete-web-domain-ssl "$user" "$domain" "$restart" >/dev/null 2>&1
 else
-    $BIN/v-delete-mail-domain-ssl $user $domain $restart >/dev/null 2>&1
+    $BIN/v-delete-mail-domain-ssl "$user" "$domain" "$restart" >/dev/null 2>&1
 fi
-cmdstatus="$?"
-if [ "$cmdstatus" -ne "$E_NOTEXIST" ]; then
-    check_result "$cmdstatus" "SSL delete" >/dev/null
+
+if [ $? -ne "$E_NOTEXIST" ]; then
+    check_result $? "SSL delete" >/dev/null
 fi
 
 
@@ -85,18 +102,17 @@ else
 fi
 
 # Restarting web
-$BIN/v-restart-web $restart
+$BIN/v-restart-web "$restart"
 check_result $? "Web restart failed" >/dev/null
 
-if [ -z "$mail" ]; then
-    # Restarting proxy
-    if [ ! -z "$PROXY_SYSTEM" ]; then
-        $BIN/v-restart-web $restart >/dev/null
-        check_result $? "Proxy restart failed" >/dev/null
-    fi
-else
+if [ -n "$PROXY_SYSTEM" ]; then
+    $BIN/v-restart-web "$restart" >/dev/null
+    check_result $? "Proxy restart failed" >/dev/null
+fi
+
+if [ -n "$mail" ]; then
     # Restarting mail
-    $BIN/v-restart-mail $restart
+    $BIN/v-restart-mail "$restart"
     check_result $? "Mail restart failed" >/dev/null
 fi
 

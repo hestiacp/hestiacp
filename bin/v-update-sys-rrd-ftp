@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update ftp rrd
 # options: PERIOD
+# labels: panel
+#
+# example: v-update-sys-rrd-ftp
 #
 # The function is for updating ftpd rrd database and graphic.
 
@@ -13,7 +16,11 @@
 period=${1-daily}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 
@@ -27,7 +34,7 @@ case $period in
     weekly)  start='-7d'; end='now'; grid='HOUR:8:DAY:1:DAY:1:0:%a %d';;
     monthly) start='-1m'; end='now'; grid='WEEK:1:WEEK:1:WEEK:1:0:%b %d';;
     yearly)  start='-1y'; end='now'; grid='MONTH:1:YEAR:1:MONTH:2:2419200:%b';;
-    *) exit $E_RRD ;;
+    *) exit "$E_RRD" ;;
 esac
 
 # Checking directory
@@ -53,7 +60,7 @@ fi
 # Parsing data
 if [ "$period" = 'daily' ]; then
     a=0
-    a=$(ps aux |grep $FTP_SYSTEM |grep -v grep| grep -v nobody|\
+    a=$(ps aux |grep "$FTP_SYSTEM" |grep -v grep| grep -v nobody|\
         grep -v root|wc -l)
 
     # Updating rrd database
@@ -91,7 +98,7 @@ rrdtool graph $RRD/ftp/$period-ftp.png \
 #----------------------------------------------------------#
 
 if [ "$result" -ne 0 ]; then
-    exit $E_RRD
+    exit "$E_RRD"
 fi
 
 exit

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update PostgreSQL rrd
 # options: PERIOD
+# labels: panel
+#
+# example: v-update-sys-rrd-pgsql
 #
 # The function is for updating postgresql rrd database and graphic.
 
@@ -13,8 +16,12 @@
 period=${1-daily}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -27,7 +34,7 @@ case $period in
     weekly)  start='-7d'; end='now'; grid='HOUR:8:DAY:1:DAY:1:0:%a %d';;
     monthly) start='-1m'; end='now'; grid='WEEK:1:WEEK:1:WEEK:1:0:%b %d';;
     yearly)  start='-1y'; end='now'; grid='MONTH:1:YEAR:1:MONTH:2:2419200:%b';;
-    *) exit $E_RRD ;;
+    *) exit "$E_RRD" ;;
 esac
 
 # Checking directory
@@ -73,19 +80,19 @@ for host in $hosts; do
         done
 
         export PGPASSWORD="$PASSWORD"
-        sql="psql -h $HOST -U $USER -c"
+        sql="psql -h $HOST -U $USER"
 
         # Checking empty vars
         if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
             echo "Error: config is broken"
             log_event "$E_PARSING" "$ARGUMENTS"
-            exit $E_PARSING
+            exit "$E_PARSING"
         fi
 
         # Parsing data
         q='SELECT SUM(xact_commit + xact_rollback), SUM(numbackends)
                 FROM pg_stat_database;'
-        status=$($sql plsql -d postgres -c "$q" 2>/dev/null); code="$?"
+        status=$($sql -d postgres -c "$q" 2>/dev/null); code="$?"
         if [ '0' -ne "$code" ]; then
             active=0
             slow=0
@@ -130,7 +137,7 @@ for host in $hosts; do
         GPRINT:t:'MAX:Max\:''%8.0lf\j'  &>/dev/null; result=$?
 
     if [ "$result" -ne 0 ]; then
-        exit $E_RRD
+        exit "$E_RRD"
     fi
 
 done

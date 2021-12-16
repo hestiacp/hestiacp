@@ -1,5 +1,9 @@
 #!/usr/bin/env bats
 
+if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then
+    . /etc/profile.d/hestia.sh
+fi
+
 load 'test_helper/bats-support/load'
 load 'test_helper/bats-assert/load'
 load 'test_helper/bats-file/load'
@@ -13,11 +17,20 @@ function setup() {
     # echo "# Setup_file" > &3
     if [ $BATS_TEST_NUMBER = 1 ]; then
         echo 'user=test-5285' > /tmp/hestia-test-env.sh
+        echo 'user2=test-5286' >> /tmp/hestia-test-env.sh
         echo 'userbk=testbk-5285' >> /tmp/hestia-test-env.sh
         echo 'userpass1=test-5285' >> /tmp/hestia-test-env.sh
         echo 'userpass2=t3st-p4ssw0rd' >> /tmp/hestia-test-env.sh
         echo 'HESTIA=/usr/local/hestia' >> /tmp/hestia-test-env.sh
         echo 'domain=test-5285.hestiacp.com' >> /tmp/hestia-test-env.sh
+        echo 'domainuk=test-5285.hestiacp.com.uk' >> /tmp/hestia-test-env.sh
+        echo 'rootdomain=testhestiacp.com' >> /tmp/hestia-test-env.sh
+        echo 'subdomain=cdn.testhestiacp.com' >> /tmp/hestia-test-env.sh
+        echo 'database=test-5285_database' >> /tmp/hestia-test-env.sh
+        echo 'dbuser=test-5285_dbuser' >> /tmp/hestia-test-env.sh
+        echo 'pguser=test5290' >> /tmp/hestia-test-env.sh
+        echo 'pgdatabase=test5290_database' >> /tmp/hestia-test-env.sh
+        echo 'pgdbuser=test5290_dbuser' >> /tmp/hestia-test-env.sh
     fi
 
     source /tmp/hestia-test-env.sh
@@ -47,11 +60,18 @@ function validate_web_domain() {
     domain_ip=$(get_real_ip "$domain_ip")
 
     if [ ! -z $webpath ]; then
-        assert_file_exist $HOMEDIR/$user/web/$domain/public_html/$webpath
+        domain_docroot=$(get_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_DOCROOT')
+        if [ -n "$domain_docroot" ] && [ -d "$domain_docroot" ]; then
+            assert_file_exist "${domain_docroot}/${webpath}"
+        else
+            assert_file_exist "${HOMEDIR}/${user}/web/${domain}/public_html/${webpath}"
+        fi
     fi
 
     # Test HTTP
-    run curl --location --silent --show-error --insecure --resolve "${domain}:80:${domain_ip}" "http://${domain}/${webpath}"
+    # Curl hates UTF domains so convert them to ascci. 
+    domain_idn=$(idn -a $domain)
+    run curl --location --silent --show-error --insecure --resolve "${domain_idn}:80:${domain_ip}" "http://${domain_idn}/${webpath}"
     assert_success
     assert_output --partial "$webproof"
 
@@ -60,10 +80,36 @@ function validate_web_domain() {
         run v-list-web-domain-ssl $user $domain
         assert_success
 
-        run curl --location --silent --show-error --insecure --resolve "${domain}:443:${domain_ip}" "https://${domain}/${webpath}"
+        run curl --location --silent --show-error --insecure --resolve "${domain_idn}:443:${domain_ip}" "https://${domain_idn}/${webpath}"
         assert_success
         assert_output --partial "$webproof"
     fi
+}
+
+function validate_headers_domain() {
+  local user=$1
+  local domain=$2
+  local webproof=$3
+  
+  refute [ -z "$user" ]
+  refute [ -z "$domain" ]
+  refute [ -z "$webproof" ]
+  
+  source $HESTIA/func/ip.sh
+  
+  run v-list-web-domain $user $domain
+  assert_success
+  
+  USER_DATA=$HESTIA/data/users/$user
+  local domain_ip=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP')
+  SSL=$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL')
+  domain_ip=$(get_real_ip "$domain_ip")
+  
+  # Test HTTP with  code redirect for some reasons due to 301 redirect it fails
+  curl -i --resolve "${domain}:80:${domain_ip}" "http://${domain}"
+  assert_success
+  assert_output --partial "$webproof"
+  
 }
 
 function validate_mail_domain() {
@@ -78,10 +124,13 @@ function validate_mail_domain() {
 
     assert_dir_exist $HOMEDIR/$user/mail/$domain
     assert_dir_exist $HOMEDIR/$user/conf/mail/$domain
-
     assert_file_exist $HOMEDIR/$user/conf/mail/$domain/aliases
-    assert_file_exist $HOMEDIR/$user/conf/mail/$domain/antispam
-    assert_file_exist $HOMEDIR/$user/conf/mail/$domain/antivirus
+    if [ -n "$ANTISPAM_SYSTEM" ]; then
+      assert_file_exist $HOMEDIR/$user/conf/mail/$domain/antispam
+    fi
+    if [ -n "$ANTIVIRUS_SYSTEM" ]; then
+      assert_file_exist $HOMEDIR/$user/conf/mail/$domain/antivirus
+    fi
     assert_file_exist $HOMEDIR/$user/conf/mail/$domain/fwd_only
     assert_file_exist $HOMEDIR/$user/conf/mail/$domain/ip
     assert_file_exist $HOMEDIR/$user/conf/mail/$domain/passwd
@@ -107,49 +156,113 @@ function validate_webmail_domain() {
     if [ ! -z "$webpath" ]; then
         assert_file_exist /var/lib/roundcube/$webpath
     fi
-
-    # Test HTTP
-    run curl --location --silent --show-error --insecure --resolve "webmail.${domain}:80:${domain_ip}" "http://webmail.${domain}/${webpath}"
-    assert_success
-    assert_output --partial "$webproof"
-
-    # Test HTTP
-    run curl --location --silent --show-error --insecure --resolve "mail.${domain}:80:${domain_ip}" "http://mail.${domain}/${webpath}"
-    assert_success
-    assert_output --partial "$webproof"
+    
+    if [ "$SSL" = "no" ]; then 
+        # Test HTTP
+        run curl --location --silent --show-error --insecure  --resolve "webmail.${domain}:80:${domain_ip}" "http://webmail.${domain}/${webpath}"
+        assert_success
+        assert_output --partial "$webproof"
+            
+        # Test HTTP
+        run curl  --location --silent --show-error --insecure --resolve "mail.${domain}:80:${domain_ip}" "http://mail.${domain}/${webpath}"
+        assert_success
+        assert_output --partial "$webproof"
+    fi
 
     # Test HTTPS
     if [ "$SSL" = "yes" ]; then
+        # Test HTTP with 301 redirect for some reasons due to 301 redirect it fails
+        run curl --silent --show-error --insecure --resolve "webmail.${domain}:80:${domain_ip}" "http://webmail.${domain}/${webpath}"
+        assert_success
+        assert_output --partial "301 Moved Permanently"
+
+        # Test HTTP with 301 redirect for some reasons due to 301 redirect it fails
+        run curl --silent --show-error --insecure --resolve "mail.${domain}:80:${domain_ip}" "http://mail.${domain}/${webpath}"
+        assert_success
+        assert_output --partial "301 Moved Permanently"
+                
         run v-list-mail-domain-ssl $user $domain
         assert_success
-
+    
         run curl --location --silent --show-error --insecure --resolve "webmail.${domain}:443:${domain_ip}" "https://webmail.${domain}/${webpath}"
         assert_success
         assert_output --partial "$webproof"
-
+    
         run curl --location --silent --show-error --insecure --resolve "mail.${domain}:443:${domain_ip}" "https://mail.${domain}/${webpath}"
         assert_success
         assert_output --partial "$webproof"
     fi
 }
 
-#----------------------------------------------------------#
-#                         MAIN                             #
-#----------------------------------------------------------#
-
-@test "Add new userXXX" {
-    skip
-    run v-add-user $user $user $user@hestiacp.com default "Super Test"
-    assert_success
-    refute_output
+function validate_database(){
+    local type=$1
+    local database=$2
+    local dbuser=$3
+    local password=$4
+    
+    host_str=$(grep "HOST='localhost'" $HESTIA/conf/$type.conf)
+    parse_object_kv_list "$host_str"
+    if [ -z $PORT ]; then PORT=3306; fi
+    
+    refute [ -z "$HOST" ]
+    refute [ -z "$PORT" ]
+    refute [ -z "$database" ]
+    refute [ -z "$dbuser" ]
+    refute [ -z "$password" ]
+    
+    
+    if [ "$type" = "mysql" ]; then 
+      # Create an connection to verify correct username / password has been set correctly
+      tmpfile=$(mktemp /tmp/mysql.XXXXXX)
+      echo "[client]">$tmpfile
+      echo "host='$HOST'" >> $tmpfile
+      echo "user='$dbuser'" >> $tmpfile
+      echo "password='$password'" >> $tmpfile
+      echo "port='$PORT'" >> $tmpfile
+      chmod 600 $tmpfile
+      
+      sql_tmp=$(mktemp /tmp/query.XXXXXX)
+      echo "show databases;" > $sql_tmp
+      run mysql --defaults-file=$tmpfile < "$sql_tmp"
+      
+      assert_success
+      assert_output --partial "$database"
+      
+      rm -f "$sql_tmp"
+      rm -f "$tmpfile"
+    else
+      
+      echo "*:*:*:$dbuser:$password" > /root/.pgpass
+      chmod 600 /root/.pgpass
+      run export PGPASSWORD="$password" | psql -h $HOST -U "$dbuser" -p $PORT -d "$database" --no-password  -c "\l"
+      assert_success
+      rm /root/.pgpass
+    fi
 }
+
+function check_ip_banned(){
+  local ip=$1
+  local chain=$2
+  
+  run grep "IP='$ip' CHAIN='$chain'" $HESTIA/data/firewall/banlist.conf
+  assert_success
+  assert_output --partial "$ip"
+}
+
+function check_ip_not_banned(){
+  local ip=$1
+  local chain=$2
+  run grep "IP='$ip' CHAIN='$chain'" $HESTIA/data/firewall/banlist.conf
+  assert_failure E_ARGS
+  refute_output
+}
+
 
 #----------------------------------------------------------#
 #                           IP                             #
 #----------------------------------------------------------#
 
 @test "Check reverse Dns validation" {
-
     # 1. PTR record for a IP should return a hostname(reverse) which in turn must resolve to the same IP addr(forward). (Full circle)
     #  `-> not implemented in `is_ip_rdns_valid` yet and also not tested here
     # 2. Reject rPTR records that match generic dynamic IP pool patterns
@@ -253,6 +366,66 @@ function validate_webmail_domain() {
     assert_output --partial 'ns0.com'
 }
 
+@test "Change user language" {
+  run v-change-user-language $user "nl"
+  assert_success
+  refute_output
+}
+
+@test "Change user language (Does not exists)" {
+  run v-change-user-language $user "aa"
+  assert_failure $E_NOTEXIST
+}
+
+@test "Change user sort order" {
+  run v-change-user-sort-order $user "name"
+  assert_success
+  refute_output
+}
+
+@test "Change user theme" {
+  run v-change-user-theme $user "flat"
+  assert_success
+  refute_output
+}
+
+@test "Change user theme (Does not exists)" {
+  run v-change-user-theme $user "aa"
+  assert_failure $E_NOTEXIST
+}
+
+@test "Change user login ip" {
+  run v-change-user-config-value $user "LOGIN_USE_IPLIST" "1.2.3.4,1.2.3.5"
+  assert_success
+  refute_output
+}
+
+@test "Change user login ip (Failed)" {
+  run v-change-user-config-value $user "LOGIN_USE_IPLIST" "'; echo 'jaap'; echo '"
+  assert_failure $E_INVALID
+}
+
+@test "Add user notification" {
+  run v-add-user-notification $user "Test message" "Message"
+  assert_success
+  refute_output
+}
+@test "Acknowledge user notification" {
+  run v-acknowledge-user-notification $user 1
+  assert_success
+  refute_output
+}
+@test "List user notification" {
+  run v-list-user-notifications $user csv
+  assert_success
+  assert_output --partial "1,\"Test message\",\"Message\",yes"
+}
+@test "Delete user notification" {
+  run v-delete-user-notification admin 1
+  assert_success
+  refute_output
+}
+
 #----------------------------------------------------------#
 #                         Cron                             #
 #----------------------------------------------------------#
@@ -285,10 +458,10 @@ function validate_webmail_domain() {
     run v-add-cron-job $user 1 1 1 1 1 echo 1
     assert_success
     refute_output
-
+    
     run v-add-cron-job $user 1 1 1 1 1 echo 1
     assert_failure $E_EXISTS
-    assert_output --partial 'JOB=1 is already exists'
+    assert_output --partial 'JOB=1 already exists'
 }
 
 @test "Cron: Second cron job" {
@@ -428,7 +601,6 @@ function validate_webmail_domain() {
     fi
 }
 
-
 #----------------------------------------------------------#
 #                         WEB                              #
 #----------------------------------------------------------#
@@ -457,6 +629,18 @@ function validate_webmail_domain() {
 @test "WEB: Add web domain alias (duplicate)" {
     run v-add-web-domain-alias $user $domain v3.$domain
     assert_failure $E_EXISTS
+}
+
+@test "WEB: Add web domain wildcard alias" {
+    run v-add-web-domain-alias $user $domain "*.$domain"
+    assert_success
+    refute_output
+}
+
+@test "WEB: Delete web domain wildcard alias" {
+    run v-delete-web-domain-alias $user $domain "*.$domain"
+    assert_success
+    refute_output
 }
 
 @test "WEB: Add web domain stats" {
@@ -490,10 +674,54 @@ function validate_webmail_domain() {
     rm $HOMEDIR/$user/web/$domain/public_html/php-test.php
 }
 
-@test "WEB: Add ssl" {
-    cp -f $HESTIA/ssl/certificate.crt /tmp/$domain.crt
-    cp -f $HESTIA/ssl/certificate.key /tmp/$domain.key
+@test "WEB: Add redirect to www.domain.com" {
+    run v-add-web-domain-redirect $user $domain www.$domain 301
+    assert_success
+    refute_output 
+  
+    run validate_headers_domain $user $domain "301"
+}
 
+@test "WEB: Delete redirect to www.domain.com" {
+    run v-delete-web-domain-redirect $user $domain
+    assert_success
+    refute_output 
+}
+
+@test "WEB: Enable Fast CGI Cache" {
+    if [ "$WEB_SYSTEM" != "nginx" ]; then 
+      skip "FastCGI cache is not supported"
+    fi
+    
+    run v-add-fastcgi-cache $user $domain '1m' yes
+    assert_success
+    refute_output
+    
+    echo -e "<?php\necho 'Hestia Test:'.(4*3);" > $HOMEDIR/$user/web/$domain/public_html/php-test.php
+    run validate_headers_domain $user $domain "Miss"
+    run validate_headers_domain $user $domain "Hit"
+    rm $HOMEDIR/$user/web/$domain/public_html/php-test.php
+}
+
+@test "WEB: Disable Fast CGI Cache" {
+    if [ "$WEB_SYSTEM" != "nginx" ]; then 
+      skip "FastCGI cache is not supported"
+    fi
+    run v-delete-fastcgi-cache $user $domain '1m' yes
+    assert_success
+    refute_output
+}
+
+
+@test "WEB: Generate Self signed certificate" {
+    ssl=$(v-generate-ssl-cert "$domain" "info@$domain" US CA "Orange County" HestiaCP IT "mail.$domain" | tail -n1 | awk '{print $2}')
+    echo $ssl;
+    mv $ssl/$domain.crt /tmp/$domain.crt
+    mv $ssl/$domain.key /tmp/$domain.key
+}
+
+@test "WEB: Add ssl" {
+    # Use self signed certificates during last test
     run v-add-web-domain-ssl $user $domain /tmp
     assert_success
     refute_output
@@ -505,6 +733,361 @@ function validate_webmail_domain() {
     refute_output
 }
 
+#----------------------------------------------------------#
+#                         IDN                              #
+#----------------------------------------------------------#
+
+@test "WEB: Add IDN domain UTF idn-tést.eu" {
+   run v-add-web-domain $user idn-tést.eu 198.18.0.125
+   assert_success
+   refute_output
+   
+   echo -e "<?php\necho 'Hestia Test:'.(4*3);" > $HOMEDIR/$user/web/idn-tést.eu/public_html/php-test.php
+   validate_web_domain $user idn-tést.eu 'Hestia Test:12' 'php-test.php'
+   rm $HOMEDIR/$user/web/idn-tést.eu/public_html/php-test.php
+}
+
+@test "WEB: Add IDN domain ASCII idn-tést.eu" {
+   # Expected to fail due to utf exists
+   run v-add-web-domain $user $( idn -a idn-tést.eu) 198.18.0.125
+   assert_failure $E_EXISTS
+}
+
+
+@test "WEB: Generate Self signed certificate ASCII idn-tést.eu" {
+    run v-generate-ssl-cert "xn--idn-tst-fya.eu" "info@xn--idn-tst-fya.eu" US CA "Orange County" HestiaCP IT "mail.xn--idn-tst-fya.eu"
+    assert_success
+}
+
+
+@test "WEB: Delete IDN domain idn-tést.eu" {
+   run v-delete-web-domain $user idn-tést.eu
+   assert_success
+   refute_output
+}
+ 
+@test "WEB: Add IDN domain UTF bløst.рф" {
+   run v-add-web-domain $user bløst.рф 198.18.0.125
+   assert_success
+   refute_output
+}
+
+@test "WEB: Generate Self signed certificate ASCII bløst.рф" {
+    run v-generate-ssl-cert "xn--blst-hra.xn--p1ai" "info@xn--blst-hra.xn--p1ai" US CA "Orange County" HestiaCP IT "mail.xn--blst-hra.xn--p1ai"
+    assert_success
+}
+
+@test "WEB: Delete IDN domain bløst.рф" {
+ run v-delete-web-domain $user bløst.рф
+ assert_success
+ refute_output
+}
+
+#----------------------------------------------------------#
+#                      MULTIPHP                            #
+#----------------------------------------------------------#
+
+@test "Multiphp: Default php Backend version" {
+    def_phpver=$(multiphp_default_version)
+    multi_domain="multiphp.${domain}"
+
+    run v-add-web-domain $user $multi_domain 198.18.0.125
+    assert_success
+    refute_output
+
+    echo -e "<?php\necho PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "$def_phpver" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+
+}
+
+@test "Multiphp: Change backend version - PHP v5.6" {
+    test_phpver='5.6'
+    multi_domain="multiphp.${domain}"
+
+    if [ ! -d "/etc/php/${test_phpver}/fpm/pool.d/" ]; then
+        skip "PHP ${test_phpver} not installed"
+    fi
+
+    run v-change-web-domain-backend-tpl $user $multi_domain 'PHP-5_6' 'yes'
+    assert_success
+    refute_output
+
+    # Changing web backend will create a php-fpm pool config in the corresponding php folder
+    assert_file_exist "/etc/php/${test_phpver}/fpm/pool.d/${multi_domain}.conf"
+
+    # A single php-fpm pool config file must be present
+    num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+    assert_equal "$num_fpm_config_files" '1'
+
+    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+}
+
+@test "Multiphp: Change backend version - PHP v7.0" {
+    test_phpver='7.0'
+    multi_domain="multiphp.${domain}"
+
+    if [ ! -d "/etc/php/${test_phpver}/fpm/pool.d/" ]; then
+        skip "PHP ${test_phpver} not installed"
+    fi
+
+    run v-change-web-domain-backend-tpl $user $multi_domain 'PHP-7_0' 'yes'
+    assert_success
+    refute_output
+
+    # Changing web backend will create a php-fpm pool config in the corresponding php folder
+    assert_file_exist "/etc/php/${test_phpver}/fpm/pool.d/${multi_domain}.conf"
+
+    # A single php-fpm pool config file must be present
+    num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+    assert_equal "$num_fpm_config_files" '1'
+
+    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+}
+
+@test "Multiphp: Change backend version - PHP v7.1" {
+    test_phpver='7.1'
+    multi_domain="multiphp.${domain}"
+
+    if [ ! -d "/etc/php/${test_phpver}/fpm/pool.d/" ]; then
+        skip "PHP ${test_phpver} not installed"
+    fi
+
+    run v-change-web-domain-backend-tpl $user $multi_domain 'PHP-7_1' 'yes'
+    assert_success
+    refute_output
+
+    # Changing web backend will create a php-fpm pool config in the corresponding php folder
+    assert_file_exist "/etc/php/${test_phpver}/fpm/pool.d/${multi_domain}.conf"
+
+    # A single php-fpm pool config file must be present
+    num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+    assert_equal "$num_fpm_config_files" '1'
+
+    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+}
+
+@test "Multiphp: Change backend version - PHP v7.2" {
+    test_phpver='7.2'
+    multi_domain="multiphp.${domain}"
+
+    if [ ! -d "/etc/php/${test_phpver}/fpm/pool.d/" ]; then
+        skip "PHP ${test_phpver} not installed"
+    fi
+
+    run v-change-web-domain-backend-tpl $user $multi_domain 'PHP-7_2' 'yes'
+    assert_success
+    refute_output
+
+    # Changing web backend will create a php-fpm pool config in the corresponding php folder
+    assert_file_exist "/etc/php/${test_phpver}/fpm/pool.d/${multi_domain}.conf"
+
+    # A single php-fpm pool config file must be present
+    num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+    assert_equal "$num_fpm_config_files" '1'
+
+    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+}
+
+@test "Multiphp: Change backend version - PHP v7.3" {
+    test_phpver='7.3'
+    multi_domain="multiphp.${domain}"
+
+    if [ ! -d "/etc/php/${test_phpver}/fpm/pool.d/" ]; then
+        skip "PHP ${test_phpver} not installed"
+    fi
+
+    run v-change-web-domain-backend-tpl $user $multi_domain 'PHP-7_3' 'yes'
+    assert_success
+    refute_output
+
+    # Changing web backend will create a php-fpm pool config in the corresponding php folder
+    assert_file_exist "/etc/php/${test_phpver}/fpm/pool.d/${multi_domain}.conf"
+
+    # A single php-fpm pool config file must be present
+    num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+    assert_equal "$num_fpm_config_files" '1'
+
+    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+}
+
+@test "Multiphp: Change backend version - PHP v7.4" {
+    test_phpver='7.4'
+    multi_domain="multiphp.${domain}"
+
+    if [ ! -d "/etc/php/${test_phpver}/fpm/pool.d/" ]; then
+        skip "PHP ${test_phpver} not installed"
+    fi
+
+    run v-change-web-domain-backend-tpl $user $multi_domain 'PHP-7_4' 'yes'
+    assert_success
+    refute_output
+
+    # Changing web backend will create a php-fpm pool config in the corresponding php folder
+    assert_file_exist "/etc/php/${test_phpver}/fpm/pool.d/${multi_domain}.conf"
+
+    # A single php-fpm pool config file must be present
+    num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+    assert_equal "$num_fpm_config_files" '1'
+
+    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+}
+
+@test "Multiphp: Change backend version - PHP v8.0" {
+    test_phpver='8.0'
+    multi_domain="multiphp.${domain}"
+
+    if [ ! -d "/etc/php/${test_phpver}/fpm/pool.d/" ]; then
+        skip "PHP ${test_phpver} not installed"
+    fi
+
+    run v-change-web-domain-backend-tpl $user $multi_domain 'PHP-8_0' 'yes'
+    assert_success
+    refute_output
+
+    # Changing web backend will create a php-fpm pool config in the corresponding php folder
+    assert_file_exist "/etc/php/${test_phpver}/fpm/pool.d/${multi_domain}.conf"
+
+    # A single php-fpm pool config file must be present
+    num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+    assert_equal "$num_fpm_config_files" '1'
+
+    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    rm $HOMEDIR/$user/web/$multi_domain/public_html/php-test.php
+}
+
+@test "Multiphp: Change backend version - PHP v8.1" {
+    test_phpver='8.1'
+    multi_domain="multiphp.${domain}"
+
+    if [ ! -d "/etc/php/${test_phpver}/fpm/pool.d/" ]; then
+        skip "PHP ${test_phpver} not installed"
+    fi
+
+    run v-change-web-domain-backend-tpl $user $multi_domain 'PHP-8_1' 'yes'
+    assert_success
+    refute_output
+
+    # Changing web backend will create a php-fpm pool config in the corresponding php folder
+    assert_file_exist "/etc/php/${test_phpver}/fpm/pool.d/${multi_domain}.conf"
+
+    # A single php-fpm pool config file must be present
+    num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+    assert_equal "$num_fpm_config_files" '1'
+
+    echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+    validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+    rm $HOMEDIR/$user/web/$multi_domain/public_html/php-test.php
+}
+
+@test "Multiphp: Cleanup" {
+    multi_domain="multiphp.${domain}"
+
+    run v-delete-web-domain $user $multi_domain 'yes'
+    assert_success
+    refute_output
+
+    # No php-fpm pool config file must be present
+    num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+    assert_equal "$num_fpm_config_files" '0'
+}
+
+
+#----------------------------------------------------------#
+#                     CUSTOM DOCROOT                       #
+#----------------------------------------------------------#
+
+@test "Docroot: Self Subfolder" {
+    docroot1_domain="docroot1.${domain}"
+
+    run v-add-web-domain $user $docroot1_domain 198.18.0.125
+    assert_success
+    refute_output
+
+    run v-add-fs-directory $user "$HOMEDIR/$user/web/$docroot1_domain/public_html/public/"
+    assert_success
+    refute_output
+
+    run v-change-web-domain-docroot $user "$docroot1_domain" "$docroot1_domain" "/public"
+    assert_success
+    refute_output
+
+    echo -e '<?php\necho "self-sub-".$_SERVER["HTTP_HOST"];' > "$HOMEDIR/$user/web/$docroot1_domain/public_html/public/php-test.php"
+    validate_web_domain $user $docroot1_domain "self-sub-${docroot1_domain}" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$docroot1_domain/public_html/public/php-test.php"
+}
+
+@test "Docroot: Other domain subfolder" {
+    docroot1_domain="docroot1.${domain}"
+    docroot2_domain="docroot2.${domain}"
+
+    run v-add-web-domain $user $docroot2_domain 198.18.0.125
+    assert_success
+    refute_output
+
+    run v-add-fs-directory $user "$HOMEDIR/$user/web/$docroot2_domain/public_html/public/"
+    assert_success
+    refute_output
+
+    run v-change-web-domain-docroot $user "$docroot1_domain" "$docroot2_domain" "/public"
+    assert_success
+    refute_output
+
+    echo -e '<?php\necho "doc2-sub-".$_SERVER["HTTP_HOST"];' > "$HOMEDIR/$user/web/$docroot2_domain/public_html/public/php-test.php"
+    validate_web_domain $user $docroot1_domain "doc2-sub-${docroot1_domain}" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$docroot2_domain/public_html/public/php-test.php"
+}
+
+@test "Docroot: Other domain root folder" {
+    docroot1_domain="docroot1.${domain}"
+    docroot2_domain="docroot2.${domain}"
+
+    run v-change-web-domain-docroot $user "$docroot1_domain" "$docroot2_domain"
+    assert_success
+    refute_output
+
+    echo -e '<?php\necho "doc2-root-".$_SERVER["HTTP_HOST"];' > "$HOMEDIR/$user/web/$docroot2_domain/public_html/php-test.php"
+    validate_web_domain $user $docroot1_domain "doc2-root-${docroot1_domain}" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$docroot2_domain/public_html/php-test.php"
+}
+
+@test "Docroot: Reset" {
+    docroot1_domain="docroot1.${domain}"
+
+    run v-change-web-domain-docroot $user "$docroot1_domain" "default"
+    assert_success
+    refute_output
+
+    echo -e '<?php\necho "doc1-root-".$_SERVER["HTTP_HOST"];' > "$HOMEDIR/$user/web/$docroot1_domain/public_html/php-test.php"
+    validate_web_domain $user $docroot1_domain "doc1-root-${docroot1_domain}" 'php-test.php'
+    rm "$HOMEDIR/$user/web/$docroot1_domain/public_html/php-test.php"
+}
+
+@test "Docroot: Cleanup" {
+    docroot1_domain="docroot1.${domain}"
+    docroot2_domain="docroot2.${domain}"
+
+    run v-delete-web-domain $user $docroot1_domain
+    assert_success
+    refute_output
+
+    run v-delete-web-domain $user $docroot2_domain
+    assert_success
+    refute_output
+}
 
 #----------------------------------------------------------#
 #                         DNS                              #
@@ -525,6 +1108,30 @@ function validate_webmail_domain() {
     run v-add-dns-record $user $domain test A 198.18.0.125 20
     assert_success
     refute_output
+}
+
+@test "DNS: Change DNS record" {
+  run v-change-dns-record $user $domain 20 test A 198.18.0.125 "" "" 1500
+  assert_success
+  refute_output
+}
+
+@test "DNS: Change DNS record (no update)" {
+  run v-change-dns-record $user $domain 20 test A 198.18.0.125 "" "" 1500
+  assert_failure $E_EXSIST
+}
+
+@test "DNS: Change DNS record id" {
+  run v-change-dns-record-id $user $domain 20 21
+  assert_success
+  refute_output
+  # Change back
+  run v-change-dns-record-id $user $domain 21 20
+}
+
+@test "DNS: Change DNS record id (no update)" {
+  run v-change-dns-record-id  $user $domain 20 20
+  assert_failure $E_EXSIST
 }
 
 @test "DNS: Delete domain record" {
@@ -576,13 +1183,49 @@ function validate_webmail_domain() {
     run v-add-mail-domain $user $domain
     assert_success
     refute_output
-
+    
     validate_mail_domain $user $domain
+}
+
+@test "MAIL: Add mail domain webmail client (Roundcube)" {
+    run v-add-mail-domain-webmail $user $domain "roundcube" "yes"
+    assert_success
+    refute_output
 
     # echo -e "<?php\necho 'Server: ' . \$_SERVER['SERVER_SOFTWARE'];" > /var/lib/roundcube/check_server.php
     validate_webmail_domain $user $domain 'Welcome to Roundcube Webmail'
     # rm /var/lib/roundcube/check_server.php
 }
+
+@test "Mail: Add SSL to mail domain" {
+    # Use generated certificates during WEB Generate Self signed certificate  
+    run v-add-mail-domain-ssl $user $domain /tmp
+    assert_success
+    refute_output
+    
+    validate_webmail_domain $user $domain 'Welcome to Roundcube Webmail'
+}
+
+@test "MAIL: Add mail domain webmail client (Rainloop)" {
+    if [ -z "$(echo $WEBMAIL_SYSTEM | grep -w "rainloop")" ]; then 
+        skip "Webmail client Rainloop not installed"
+    fi
+    run v-add-mail-domain-webmail $user $domain "rainloop" "yes"
+    assert_success
+    refute_output
+    validate_mail_domain $user $domain
+    
+    validate_webmail_domain $user $domain 'RainLoop Webmail'
+}    
+
+@test "MAIL: Disable webmail client" {
+    run v-add-mail-domain-webmail $user $domain "disabled" "yes"
+    assert_success
+    refute_output
+    validate_mail_domain $user $domain
+    
+    validate_webmail_domain $user $domain 'Success!'
+} 
 
 @test "MAIL: Add domain (duplicate)" {
     run v-add-mail-domain $user $domain
@@ -611,354 +1254,496 @@ function validate_webmail_domain() {
     assert_failure $E_NOTEXIST
 }
 
+@test "MAIL: Rebuild mail domain" {
+    run v-rebuild-mail-domains $user
+    assert_success
+    refute_output
+}
+
+#----------------------------------------------------------#
+#    Limit possibilities adding different owner domain     #
+#----------------------------------------------------------#
+
+@test "Allow Users: User can't add user.user2.com " {
+    # Case: admin company.ltd
+    # users should not be allowed to add user.company.ltd
+    run v-add-user $user2 $user2 $user@hestiacp.com default "Super Test"
+    assert_success
+    refute_output
+    
+    run v-add-web-domain $user2 $rootdomain 
+    assert_success
+    refute_output
+    
+    run v-add-web-domain $user $subdomain
+    assert_failure $E_EXISTS
+}
+
+@test "Allow Users: User can't add user.user2.com as alias" {
+    run v-add-web-domain-alias $user $domain $subdomain
+    assert_failure $E_EXISTS
+}
+
+@test "Allow Users: User can't add user.user2.com as mail domain" {
+    run v-add-mail-domain $user $subdomain
+    assert_failure $E_EXISTS
+}
+
+@test "Allow Users: User can't add user.user2.com as dns domain" {
+    run v-add-dns-domain $user $subdomain 198.18.0.125
+    assert_failure $E_EXISTS
+}
+
+@test "Allow Users: Set Allow users" {
+    # Allow user to yes allows
+    # Case: admin company.ltd
+    # users are allowed to add user.company.ltd
+    run v-add-web-domain-allow-users $user2 $rootdomain
+    assert_success
+    refute_output
+}
+
+@test "Allow Users: User can add user.user2.com" {
+    run v-add-web-domain $user $subdomain
+    assert_success
+    refute_output
+}
+
+@test "Allow Users: User can add user.user2.com as alias" {
+    run v-delete-web-domain $user $subdomain
+    assert_success
+    refute_output
+    
+    run v-add-web-domain-alias $user $domain $subdomain
+    assert_success
+    refute_output
+}
+
+@test "Allow Users: User can add user.user2.com as mail domain" {
+    run v-add-mail-domain $user $subdomain
+    assert_success
+    refute_output
+}
+
+@test "Allow Users: User can add user.user2.com as dns domain" {
+    run v-add-dns-domain $user $subdomain 198.18.0.125
+    assert_success
+    refute_output
+}
+
+@test "Allow Users: Cleanup tests" {
+    run v-delete-dns-domain $user $subdomain
+    assert_success
+    refute_output
+
+    run v-delete-mail-domain $user $subdomain
+    assert_success
+    refute_output
+}
+
+
+@test "Allow Users: Set Allow users no" {
+    run v-delete-web-domain-alias $user $domain $subdomain 
+    assert_success
+    refute_output
+    
+    run v-delete-web-domain-allow-users $user2 $rootdomain
+    assert_success
+    refute_output
+}
+
+@test "Allow Users: User can't add user.user2.com again" {
+    run v-add-web-domain $user $subdomain
+    assert_failure $E_EXISTS
+}
+
+@test "Allow Users: user2 can add user.user2.com again" {
+    run v-add-web-domain $user2 $subdomain
+    assert_success
+    refute_output
+}
+@test "Allow Users: Delete user2" {
+    run v-delete-user $user2
+    assert_success
+    refute_output
+}
 
 #----------------------------------------------------------#
 #                         DB                               #
 #----------------------------------------------------------#
 
+@test "MYSQL: Add database" {
+    run v-add-database $user database dbuser 1234 mysql
+    assert_success
+    refute_output
+    # validate_database mysql database_name database_user password
+    validate_database mysql $database $dbuser 1234
+}
+@test "MYSQL: Add Database (Duplicate)" {
+    run v-add-database $user database dbuser 1234 mysql
+    assert_failure $E_EXISTS
+}
+
+@test "MYSQL: Rebuild Database" {
+    run v-rebuild-database $user $database
+    assert_success
+    refute_output 
+}
+
+@test "MYSQL: Change database user password" {
+    run v-change-database-password $user $database 123456
+    assert_success
+    refute_output 
+    
+    validate_database mysql $database $dbuser 123456
+}
+
+@test "MYSQL: Change database user" {
+    run v-change-database-user $user $database database
+    assert_success
+    refute_output 
+    validate_database mysql $database $database 123456
+}
+
+@test "MYSQL: Suspend database" {
+    run v-suspend-database $user $database
+    assert_success
+    refute_output
+}
+
+@test "MYSQL: Unsuspend database" {
+    run v-unsuspend-database $user $database
+    assert_success
+    refute_output
+}
+
+@test "MYSQL: Delete database" {
+    run v-delete-database $user $database
+    assert_success
+    refute_output 
+}
+
+@test "MYSQL: Delete missing database" {
+    run v-delete-database $user $database
+    assert_failure $E_NOTEXIST
+}
+
+@test "PGSQL: Add database invalid user" {
+  if [ -z "$(echo $DB_SYSTEM | grep -w "pgsql")" ]; then 
+    skip "PostGreSQL is not installed"
+  fi
+  run v-add-database "$user" "database" "dbuser" "1234ABCD" "pgsql"
+  assert_failure $E_INVALID
+}
+
+@test "PGSQL: Add database" {
+  if [ -z "$(echo $DB_SYSTEM | grep -w "pgsql")" ]; then 
+    skip "PostGreSQL is not installed"
+  fi
+  run v-add-user $pguser $pguser $user@hestiacp.com default "Super Test"
+  run v-add-database "$pguser" "database" "dbuser" "1234ABCD" "pgsql"
+  assert_success
+  refute_output
+  
+  validate_database pgsql $pgdatabase $pgdbuser "1234ABCD"
+}
+
+@test "PGSQL: Add Database (Duplicate)" {
+  if [ -z "$(echo $DB_SYSTEM | grep -w "pgsql")" ]; then 
+    skip "PostGreSQL is not installed"
+  fi
+  run v-add-database "$pguser" "database" "dbuser" "1234ABCD" "pgsql"
+  assert_failure $E_EXISTS
+}
+
+@test "PGSQL: Rebuild Database" {
+  if [ -z "$(echo $DB_SYSTEM | grep -w "pgsql")" ]; then 
+    skip "PostGreSQL is not installed"
+  fi
+  run v-rebuild-database $pguser $pgdatabase
+  assert_success
+  refute_output 
+}
+
+@test "PGSQL: Change database user password" {
+  if [ -z "$(echo $DB_SYSTEM | grep -w "pgsql")" ]; then 
+    skip "PostGreSQL is not installed"
+  fi
+  run v-change-database-password $pguser $pgdatabase "123456"
+  assert_success
+  refute_output 
+  
+  validate_database pgsql $pgdatabase $pgdbuser "123456"
+}
+
+@test "PGSQL: Suspend database" {
+  if [ -z "$(echo $DB_SYSTEM | grep -w "pgsql")" ]; then 
+    skip "PostGreSQL is not installed"
+  fi
+  run v-suspend-database $pguser $pgdatabase
+  assert_success
+  refute_output
+}
+
+@test "PGSQL: Unsuspend database" {
+  if [ -z "$(echo $DB_SYSTEM | grep -w "pgsql")" ]; then 
+    skip "PostGreSQL is not installed"
+  fi
+  run v-unsuspend-database $pguser $pgdatabase
+  assert_success
+  refute_output
+}
+
+@test "PGSQL: Change database user" {
+  if [ -z "$(echo $DB_SYSTEM | grep -w "pgsql")" ]; then 
+    skip "PostGreSQL is not installed"
+  fi
+  skip
+  run v-change-database-user $pguser $pgdatabase database
+  assert_success
+  refute_output 
+  validate_database pgsql $pgdatabase $pgdatabase 123456
+}
+
+
+@test "PGSQL: Delete database" {
+  if [ -z "$(echo $DB_SYSTEM | grep -w "pgsql")" ]; then  
+    skip "PostGreSQL is not installed"
+  fi
+  run v-delete-database $pguser $pgdatabase
+  assert_success
+  refute_output 
+}
+
+@test "PGSQL: Delete missing database" {
+  if [ -z "$(echo $DB_SYSTEM | grep -w "pgsql")" ]; then 
+    skip "PostGreSQL is not installed"
+  fi
+  run v-delete-database $pguser $pgdatabase
+  assert_failure $E_NOTEXIST
+  run v-delete-user $pguser
+}
 
 #----------------------------------------------------------#
-#                     Backup / Restore                     #
+#                         System                           #
+#----------------------------------------------------------#
+@test "System: Set/Enable SMTP account for internal mail" {
+  run v-add-sys-smtp $domain 587 STARTTLS info@$domain 1234-test noreply@$domain
+  assert_success
+  refute_output
+}
+
+@test "System: Disable SMTP account for internal mail" {
+  run v-delete-sys-smtp
+  assert_success
+  refute_output
+}
+
+@test "System: Set/Enable SMTP relay" {
+  run v-add-sys-smtp-relay $domain info@$domain 1234-test 587
+  assert_success
+  refute_output
+  assert_file_exist /etc/exim4/smtp_relay.conf
+}
+
+@test "System: Delete SMTP relay" {
+  run v-delete-sys-smtp-relay 
+  assert_success
+  refute_output
+  assert_file_not_exist /etc/exim4/smtp_relay.conf
+}
+
+#----------------------------------------------------------#
+#                        Firewall                          #
 #----------------------------------------------------------#
 
-#Test backup
-#  Hestia v1.1.1 archive contains:
-#    user: hestia111
-#    web:
-#      - test.hestia.com (+SSL self-signed)
-#    dns:
-#      - test.hestia.com
-#    mail:
-#      - test.hestia.com
-#    mail acc:
-#      - testaccount@test.hestia.com
-#    db:
-#      - hestia111_db
-#    cron:
-#      - 1: /bin/true
-#
-#  Vesta 0.9.8-23 archive contains:
-#    user: vesta09823
-#    web:
-#      - vesta09823.tld (+SSL self-signed)
-#    dns:
-#      - vesta09823.tld
-#    mail:
-#      - vesta09823.tld
-#    mail acc:
-#      - testaccount@vesta09823.tld
-#    db:
-#      - vesta09823_db
-#    cron:
-#      - 1: /bin/true
-#
-
-# Testing Hestia backups
-@test "Restore[1]: Hestia archive for a non-existing user" {
-    if [ -d "$HOMEDIR/$userbk" ]; then
-        run v-delete-user $userbk
-        assert_success
-        refute_output
-    fi
-
-    mkdir -p /backup
-
-    local archive_name="hestia111.2020-03-26"
-    run wget --quiet --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache "https://hestiacp.com/testing/data/${archive_name}.tar" -O "/backup/${archive_name}.tar"
-    assert_success
-
-    run v-restore-user $userbk "${archive_name}.tar"
-    assert_success
-
-    rm "/backup/${archive_name}.tar"
+@test "Firewall: Add ip to banlist" {
+  run v-add-firewall-ban '1.2.3.4' 'HESTIA'
+  assert_success
+  refute_output
+  
+  check_ip_banned '1.2.3.4' 'HESTIA'
 }
 
-@test "Restore[1]: From Hestia [WEB]" {
-    local domain="test.hestia.com"
-    validate_web_domain $userbk $domain 'Hello Hestia'
+@test "Firewall: Delete ip to banlist" {
+  run v-delete-firewall-ban '1.2.3.4' 'HESTIA'
+  assert_success
+  refute_output
+  check_ip_not_banned '1.2.3.4' 'HESTIA'
 }
 
-@test "Restore[1]: From Hestia [DNS]" {
-    local domain="test.hestia.com"
-
-    run v-list-dns-domain $userbk $domain
-    assert_success
-
-    run nslookup $domain 127.0.0.1
-    assert_success
+@test "Firewall: Add ip to banlist for ALL" {
+  run v-add-firewall-ban '1.2.3.4' 'HESTIA'
+  assert_success
+  refute_output
+  run v-add-firewall-ban '1.2.3.4' 'MAIL'
+  assert_success
+  refute_output
+  check_ip_banned '1.2.3.4' 'HESTIA'
 }
 
-@test "Restore[1]: From Hestia [MAIL]" {
-    local domain="test.hestia.com"
-
-    run v-list-mail-domain $userbk $domain
-    assert_success
+@test "Firewall: Delete ip to banlist CHAIN = ALL" {
+  run v-delete-firewall-ban '1.2.3.4' 'ALL'
+  assert_success
+  refute_output
+  check_ip_not_banned '1.2.3.4' 'HESTIA'
 }
 
-@test "Restore[1]: From Hestia [MAIL-Account]" {
-    local domain="test.hestia.com"
+@test "Test Whitelist Fail2ban" {
 
-    run v-list-mail-account $userbk $domain testaccount
-    assert_success
+echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
+  run v-add-firewall-ban '1.2.3.4' 'HESTIA'
+  rm $HESTIA/data/firewall/excludes.conf
+  check_ip_not_banned '1.2.3.4' 'HESTIA'
 }
 
-@test "Restore[1]: From Hestia [DB]" {
-    run v-list-database $userbk "${userbk}_db"
-    assert_success
+@test "Test create ipset" {
+  run v-add-firewall-ipset "blacklist" "script:/usr/local/hestia/install/deb/firewall/ipset/blacklist.sh" v4 yes
+  assert_success
+  refute_output
 }
 
-@test "Restore[1]: From Hestia [CRON]" {
-    run v-list-cron-job $userbk 1
-    assert_success
+@test "Create firewall with Ipset" {
+  run v-add-firewall-rule 'DROP' 'ipset:blacklist' '8083,22' 'TCP' 'Test'
+  assert_success
+  refute_output
 }
 
-@test "Restore[1]: From Hestia Cleanup" {
-    run v-delete-user $userbk
+@test "List firewall rules" {
+  run v-list-firewall csv
+  assert_success
+  assert_line --partial '11,DROP,TCP,8083,22,ipset:blacklist'
+  
+}
+
+@test "Delete firewall with Ipset" {
+  run v-delete-firewall-rule '11'
+  assert_success
+  refute_output
+}
+
+@test "Test delete ipset" {
+  run v-delete-firewall-ipset "blacklist" 
+  assert_success
+  refute_output
+}
+
+#----------------------------------------------------------#
+#                         PACKAGE                          #
+#----------------------------------------------------------#
+
+@test "Package: Create new Package" {
+    cp $HESTIA/data/packages/default.pkg /tmp/package
+    run v-add-user-package /tmp/package hestiatest
     assert_success
     refute_output
 }
 
-
-@test "Restore[2]: Hestia archive over a existing user" {
-    if [ -d "$HOMEDIR/$userbk" ]; then
-        run v-delete-user $userbk
-        assert_success
-        refute_output
-    fi
-
-    if [ ! -d "$HOMEDIR/$userbk" ]; then
-        run v-add-user $userbk $userbk test@hestia.com
-        assert_success
-    fi
-
-    mkdir -p /backup
-
-    local archive_name="hestia111.2020-03-26"
-    run wget --quiet --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache "https://hestiacp.com/testing/data/${archive_name}.tar" -O "/backup/${archive_name}.tar"
-    assert_success
-
-    run v-restore-user $userbk "${archive_name}.tar"
-    assert_success
-
-    rm "/backup/${archive_name}.tar"
-}
-
-@test "Restore[2]: From Hestia [WEB]" {
-    local domain="test.hestia.com"
-    validate_web_domain $userbk "${domain}" 'Hello Hestia'
-}
-
-@test "Restore[2]: From Hestia [DNS]" {
-    local domain="test.hestia.com"
-
-    run v-list-dns-domain $userbk $domain
-    assert_success
-
-    run nslookup $domain 127.0.0.1
-    assert_success
-}
-
-@test "Restore[2]: From Hestia [MAIL]" {
-    local domain="test.hestia.com"
-
-    run v-list-mail-domain $userbk $domain
-    assert_success
-}
-
-@test "Restore[2]: From Hestia [MAIL-Account]" {
-    local domain="test.hestia.com"
-
-    run v-list-mail-account $userbk $domain testaccount
-    assert_success
-}
-
-@test "Restore[2]: From Hestia [DB]" {
-    run v-list-database $userbk "${userbk}_db"
-    assert_success
-}
-
-@test "Restore[2]: From Hestia [CRON]" {
-    run v-list-cron-job $userbk 1
-    assert_success
-}
-
-@test "Restore[2]: From Hestia Cleanup" {
-    run v-delete-user $userbk
+@test "Package: Assign user to new Package" {
+    run v-change-user-package  $user hestiatest
     assert_success
     refute_output
 }
 
-
-# Testing Vesta Backups
-@test "Restore[1]: Vesta archive for a non-existing user" {
-    if [ -d "$HOMEDIR/$userbk" ]; then
-        run v-delete-user $userbk
-        assert_success
-        refute_output
-    fi
-
-    mkdir -p /backup
-
-    local archive_name="vesta09823.2018-10-18"
-    run wget --quiet --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache "https://hestiacp.com/testing/data/${archive_name}.tar" -O "/backup/${archive_name}.tar"
-    assert_success
-
-    run v-restore-user $userbk "${archive_name}.tar"
-    assert_success
-
-    rm "/backup/${archive_name}.tar"
+@test "Package: Create new package (Duplicate)" {
+    sed -i "s/BANDWIDTH='unlimited'/BANDWIDTH='100'/g" /tmp/package
+    run v-add-user-package /tmp/package hestiatest
+    assert_failure $E_EXISTS
 }
 
-@test "Restore[1]: From Vesta [WEB]" {
-    local domain="vesta09823.tld"
-    validate_web_domain $userbk $domain 'Hello Vesta'
-}
-
-@test "Restore[1]: From Vesta [DNS]" {
-    local domain="vesta09823.tld"
-
-    run v-list-dns-domain $userbk $domain
-    assert_success
-
-    run nslookup $domain 127.0.0.1
-    assert_success
-}
-
-@test "Restore[1]: From Vesta [MAIL]" {
-    local domain="vesta09823.tld"
-
-    run v-list-mail-domain $userbk $domain
-    assert_success
-}
-
-@test "Restore[1]: From Vesta [MAIL-Account]" {
-    local domain="vesta09823.tld"
-
-    run v-list-mail-account $userbk $domain testaccount
-    assert_success
-}
-
-@test "Restore[1]: From Vesta [DB]" {
-    run v-list-database $userbk "${userbk}_db"
-    assert_success
-}
-
-@test "Restore[1]: From Vesta [CRON]" {
-    run v-list-cron-job $userbk 1
-    assert_success
-}
-
-@test "Restore[1]: From Vesta Cleanup" {
-    run v-delete-user $userbk
+@test "Package: Update new Package" {
+    sed -i "s/BANDWIDTH='unlimited'/BANDWIDTH='100'/g" /tmp/package
+    run v-add-user-package /tmp/package hestiatest yes
     assert_success
     refute_output
 }
 
-
-@test "Restore[2]: Vesta archive over a existing user" {
-    if [ -d "$HOMEDIR/$userbk" ]; then
-        run v-delete-user $userbk
-        assert_success
-        refute_output
-    fi
-
-    if [ ! -d "$HOMEDIR/$userbk" ]; then
-        run v-add-user $userbk $userbk test@hestia.com
-        assert_success
-    fi
-
-    mkdir -p /backup
-
-    local archive_name="vesta09823.2018-10-18"
-    run wget --quiet --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache "https://hestiacp.com/testing/data/${archive_name}.tar" -O "/backup/${archive_name}.tar"
-    assert_success
-
-    run v-restore-user $userbk "${archive_name}.tar"
-    assert_success
-
-    rm "/backup/${archive_name}.tar"
-}
-
-@test "Restore[2]: From Vesta [WEB]" {
-    local domain="vesta09823.tld"
-    validate_web_domain $userbk "${domain}" 'Hello Vesta'
-}
-
-@test "Restore[2]: From Vesta [DNS]" {
-    local domain="vesta09823.tld"
-
-    run v-list-dns-domain $userbk $domain
-    assert_success
-
-    run nslookup $domain 127.0.0.1
-    assert_success
-}
-
-@test "Restore[2]: From Vesta [MAIL]" {
-    local domain="vesta09823.tld"
-
-    run v-list-mail-domain $userbk $domain
-    assert_success
-}
-
-@test "Restore[2]: From Vesta [MAIL-Account]" {
-    local domain="vesta09823.tld"
-
-    run v-list-mail-account $userbk $domain testaccount
-    assert_success
-}
-
-@test "Restore[2]: From Vesta [DB]" {
-    run v-list-database $userbk "${userbk}_db"
-    assert_success
-}
-
-@test "Restore[2]: From Vesta [CRON]" {
-    run v-list-cron-job $userbk 1
-    assert_success
-}
-
-@test "Restore[2]: From Vesta Cleanup" {
-    run v-delete-user $userbk
+@test "Package: Update package of user" {
+    run v-change-user-package  $user hestiatest
     assert_success
     refute_output
+    run grep "BANDWIDTH='100'" $HESTIA/data/users/$user/user.conf
+    assert_success
+    assert_output --partial "100"
 }
 
+@test "Package: Copy package Not Exists" {
+  run v-copy-user-package hestiadoesnotexists hestiatest2
+  assert_failure $E_NOTEXIST
+}
+
+@test "Package: Copy package" {
+  run v-copy-user-package hestiatest hestiatest2
+  assert_success
+  refute_output
+}
+
+@test "Package: Copy package Exists" {
+  run v-copy-user-package hestiatest hestiatest2
+  assert_failure $E_EXISTS
+}
+
+@test "Package: Delete package" {
+    run v-delete-user-package hestiatest
+    run v-delete-user-package hestiatest2
+    rm /tmp/package
+    assert_success
+    refute_output
+    run grep "BANDWIDTH='unlimited'" $HESTIA/data/users/$user/user.conf
+    assert_success
+    assert_output --partial "unlimited"
+}
+
+#----------------------------------------------------------#
+#                         Backup user                      #
+#----------------------------------------------------------#
+
+@test "Backup user" {
+  run v-backup-user $user
+  assert_success
+}
+
+@test "List Backups" {
+  run v-list-user-backups $user plain
+  assert_success
+  assert_output --partial "$user"
+}
+
+@test "Delete backups" {
+  run v-delete-user-backup $user $(v-list-user-backups $user plain | cut -f1)
+  assert_success
+  run rm /backup/$user.log
+}
 
 #----------------------------------------------------------#
 #                         CLEANUP                          #
 #----------------------------------------------------------#
 
 @test "Mail: Delete domain" {
-    # skip
     run v-delete-mail-domain $user $domain
     assert_success
     refute_output
 }
 
 @test "DNS: Delete domain" {
-    # skip
     run v-delete-dns-domain $user $domain
     assert_success
     refute_output
 }
 
 @test "WEB: Delete domain" {
-    # skip
     run v-delete-web-domain $user $domain
     assert_success
     refute_output
 }
 
 @test "Delete user" {
-    # skip
     run v-delete-user $user
     assert_success
     refute_output
 }
 
 @test "Ip: Delete the test IP" {
-    # skip
     run v-delete-sys-ip 198.18.0.125
     assert_success
     refute_output

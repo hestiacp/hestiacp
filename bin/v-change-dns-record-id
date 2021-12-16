@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change dns domain record id
 # options: USER DOMAIN ID NEWID [RESTART]
+# labels: dns
+#
+# example: v-change-dns-record-id admin acme.com 24 42 yes
 #
 # The function for changing internal record id.
 
@@ -18,9 +21,14 @@ newid=$4
 restart=$5
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -42,6 +50,8 @@ is_object_unsuspended 'dns' 'DOMAIN' "$domain"
 is_object_valid "dns/$domain" 'ID' "$id"
 is_object_new "dns/$domain" 'ID' "$newid"
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -60,7 +70,7 @@ if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
 fi
 
 # Updating dns-cluster queue
-if [ ! -z "$DNS_CLUSTER" ]; then
+if [ -n "$DNS_CLUSTER" ]; then
     # Check for first sync
     dlock=$(grep "domain $user $domain" $HESTIA/data/queue/dns-cluster.pipe)
     if [ -z "$dlock" ]; then
@@ -75,11 +85,10 @@ fi
 #----------------------------------------------------------#
 
 # Restarting named
-$BIN/v-restart-dns $restart
+$BIN/v-restart-dns "$restart"
 check_result $? "DNS restart failed" >/dev/null
 
 # Logging
-log_history "changed dns record id on $domain"
 log_event "$OK" "$ARGUMENTS"
 
 exit

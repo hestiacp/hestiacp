@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: generate api key
-# options: none
+# options: NONE
+# labels: panel
+#
+# example: v-generate-api-key 
 #
 # The function creates a key file in $HESTIA/data/keys/
 
@@ -9,32 +12,43 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
 keygen() {
-    < /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32};echo;
+    < /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c 32; echo;
 }
-KEYS="$HESTIA/data/keys/"
 HASH=$(keygen)
 
-
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ ! -d ${KEYS} ]; then
-  mkdir -p ${KEYS}
+if [ ! -d "$HESTIA/data/keys/" ]; then
+    mkdir -p $HESTIA/data/keys/
+    chown admin:root $HESTIA/data/keys/
+    chmod 750 $HESTIA/data/keys/
 fi
 
-if [[ -e ${KEYS}${HASH} ]] ; then
-    while [[ -e ${KEYS}${HASH} ]] ; do
+if [[ -e "$HESTIA/data/keys/$HASH" ]] ; then
+    while [[ -e "$HESTIA/data/keys/$HASH" ]] ; do
         HASH=$(keygen)
     done
 fi
 
-touch ${KEYS}${HASH}
-echo ${HASH}
+touch $HESTIA/data/keys/$HASH
+echo "$HASH"
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
+$BIN/v-log-action "system" "Warning" "System" "New system API key generated (Key: ${HASH})."
 
 exit

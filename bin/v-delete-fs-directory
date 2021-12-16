@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete directory
 # options: USER DIRECTORY
+# labels: 
+#
+# example: v-delete-fs-directory admin report1
 #
 # The function deletes directory on the file system
 
@@ -9,8 +12,12 @@ user=$1
 dst_dir=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -19,9 +26,12 @@ check_args '2' "$#" 'USER DIRECTORY'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 # Checking user homedir
 homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
-if [ -z $homedir ]; then
+if [ -z "$homedir" ]; then
     echo "Error: user home directory doesn't exist"
     exit 12
 fi

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change mail account quota
 # options: USER DOMAIN ACCOUNT QUOTA
+# labels: mail
+#
+# example: v-change-mail-account-quota admin mydomain.tld user01 unlimited
 #
 # The function changes email account disk quota.
 
@@ -17,9 +20,14 @@ account=$3
 quota=$4
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -57,9 +65,9 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     if [ "$quota" = 'unlimited' ]; then
         quota=0
     fi
-    sed -i "/^$account:/d" $HOMEDIR/$user/conf/mail/$domain/passwd
-    str="$account:$md5:$user:mail::$HOMEDIR/$user::userdb_quota_rule=*:storage=${quota}M"
-    echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
+    sed -i "/^$account:/d" "$HOMEDIR/$user/conf/mail/$domain/passwd"
+    str="$account:$md5:$user:mail::$HOMEDIR/$user:${quota}:userdb_quota_rule=*:storage=${quota}M"
+    echo "$str" >> "$HOMEDIR/$user/conf/mail/$domain/passwd"
 fi
 
 
@@ -75,7 +83,7 @@ fi
 update_object_value "mail/$domain" 'ACCOUNT' "$account" '$QUOTA' "$quota"
 
 # Logging
-log_history "changed mail quota for $account@$domain to $quota"
+$BIN/v-log-action "$user" "Info" "Mail" "Mail account quota changed (Quota: $quota, Account: $account@$domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

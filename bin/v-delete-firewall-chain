@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete firewall chain
 # options: CHAIN
+# labels: panel
+#
+# example: v-delete-firewall-chain WEB
 #
 # The function adds new rule to system firewall
 
@@ -9,18 +12,20 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Importing system variables
-source /etc/profile
 
 # Argument definition
 chain=$(echo $1 | tr '[:lower:]' '[:upper:]')
 
-# Defining absolute path to iptables
-iptables="/sbin/iptables"
-
+iptables='/sbin/iptables'
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
+# shellcheck source=/usr/local/hestia/func/firewall.sh
+source $HESTIA/func/firewall.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -39,11 +44,14 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Self heal iptables links
+heal_iptables_links
+
 # Deleting chain
 chains=$HESTIA/data/firewall/chains.conf
 banlist=$HESTIA/data/firewall/banlist.conf
 chain_param=$(grep "CHAIN='$chain'" $chains 2>/dev/null)
-if [ ! -z "$chain_param" ]; then
+if [ -n "$chain_param" ]; then
     parse_object_kv_list "$chain_param"
     sed -i "/CHAIN='$chain'/d" $chains
     sed -i "/CHAIN='$chain'/d" $banlist

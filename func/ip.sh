@@ -1,15 +1,16 @@
+#!/bin/bash
 # Check ip ownership
 is_ip_owner() {
     owner=$(grep 'OWNER=' $HESTIA/data/ips/$ip |cut -f 2 -d \')
     if [ "$owner" != "$user" ]; then
-        check_result $E_FORBIDEN "$ip is not owned by $user"
+        check_result "$E_FORBIDEN" "$ip is not owned by $user"
     fi
 }
 
 # Check if ip address is free
 is_ip_free() {
     if [ -e "$HESTIA/data/ips/$ip" ]; then
-        check_result $E_EXISTS "$ip is already exists"
+        check_result "$E_EXISTS" "$ip is already exists"
     fi
 }
 
@@ -19,9 +20,9 @@ is_ip_key_empty() {
     string=$(cat $HESTIA/data/ips/$ip)
     eval $string
     eval value="$key"
-    if [ ! -z "$value" ] && [ "$value" != '0' ]; then
+    if [ -n "$value" ] && [ "$value" != '0' ]; then
         key="$(echo $key|sed -e "s/\$U_//")"
-        check_result $E_EXISTS "IP is in use / $key = $value"
+        check_result "$E_EXISTS" "IP is in use / $key = $value"
     fi
 }
 
@@ -35,7 +36,7 @@ is_ip_rdns_valid() {
         local rdns=$(dig +short -x "$ip" | head -n 1 | sed 's/.$//') || unset rdns
     fi
 
-    if [ ! -z "$rdns" ] && [ ! $(echo $rdns | awk "/$awk_ip/ || /$rev_awk_ip/") ]; then
+    if [ -n "$rdns" ] && [ ! $(echo $rdns | awk "/$awk_ip/ || /$rev_awk_ip/") ]; then
         echo $rdns
         return 0 # True
     fi
@@ -58,10 +59,23 @@ update_ip_value() {
         $conf
 }
 
+# New method that is improved on a later date we need to check if we can improve it for other locations
+update_ip_value_new() {
+    key="$1"
+    value="$2"
+    conf="$HESTIA/data/ips/$ip"
+    check_ckey=$(grep "^$key='" $conf)
+    if [ -z "$check_ckey" ]; then
+        echo "$key='$value'" >> $conf
+    else
+        sed -i "s|^$key=.*|$key='$value'|g" $conf
+    fi
+}
+
 # Get ip name
 get_ip_alias() {
     ip_name=$(grep "NAME=" $HESTIA/data/ips/$local_ip |cut -f 2 -d \')
-    if [ ! -z "$ip_name" ]; then
+    if [ -n "$ip_name" ]; then
         echo "${1//./-}.$ip_name"
     fi
 }
@@ -77,19 +91,25 @@ increase_ip_value() {
     if [ -z "$current_web" ]; then
         echo "Error: Parsing error"
         log_event "$E_PARSING" "$ARGUMENTS"
-        exit $E_PARSING
+        exit "$E_PARSING"
     fi
     new_web=$((current_web + 1))
     if [ -z "$current_usr" ]; then
         new_usr="$USER"
     else
-        check_usr=$(echo -e "${current_usr//,/\n}" |grep -w $USER)
+        check_usr=$(echo -e "${current_usr//,/\\n}" | grep -x "$USER")
         if [ -z "$check_usr" ]; then
             new_usr="$current_usr,$USER"
         else
             new_usr="$current_usr"
         fi
     fi
+
+    # Make sure users list does not contain duplicates
+    new_usr=$(echo "$new_usr" |\
+        sed "s/,/\n/g"|\
+        sort -u |\
+        sed ':a;N;$!ba;s/\n/,/g')
 
     sed -i "s/$web_key='$current_web'/$web_key='$new_web'/g" \
         $HESTIA/data/ips/$sip
@@ -113,11 +133,12 @@ decrease_ip_value() {
 
     new_web=$((current_web - 1))
     check_ip=$(grep $sip $USER_DATA/web.conf |wc -l)
-    if [ "$check_ip" -lt 2 ]; then
+    if [[ $check_ip = 0 ]]; then
         new_usr=$(echo "$current_usr" |\
             sed "s/,/\n/g"|\
             sed "s/^$user$//g"|\
             sed "/^$/d"|\
+            sort -u |\
             sed ':a;N;$!ba;s/\n/,/g')
     else
         new_usr="$current_usr"
@@ -142,10 +163,10 @@ get_ip_value() {
 # Get real ip address
 get_real_ip() {
     if [ -e "$HESTIA/data/ips/$1" ]; then
-        echo $1
+        echo "$1"
     else
-        nat=$(grep -H "^NAT='$1'" $HESTIA/data/ips/*)
-        if [ ! -z "$nat" ]; then
+        nat=$(grep -H "^NAT='$1'" $HESTIA/data/ips/* | head -n1 )
+        if [ -n "$nat" ]; then
             echo "$nat" |cut -f 1 -d : |cut -f 7 -d /
         fi
     fi
@@ -218,7 +239,7 @@ get_user_ip() {
     fi
     local_ip=$ip
     nat=$(grep "^NAT" $HESTIA/data/ips/$ip |cut -f 2 -d \')
-    if [ ! -z "$nat" ]; then
+    if [ -n "$nat" ]; then
         ip=$nat
     fi
 }
@@ -229,13 +250,13 @@ is_ip_valid() {
     if [ ! -e "$HESTIA/data/ips/$1" ]; then
         nat=$(grep -H "^NAT='$1'" $HESTIA/data/ips/*)
         if [ -z "$nat" ]; then
-            check_result $E_NOTEXIST "IP $1 doesn't exist"
+            check_result "$E_NOTEXIST" "IP $1 doesn't exist"
         else
             nat=$(echo "$nat" |cut -f1 -d: |cut -f7 -d/)
             local_ip=$nat
         fi
     fi
-    if [ ! -z $2 ]; then
+    if [ -n "$2" ]; then
         if [ -z "$nat" ]; then
             ip_data=$(cat $HESTIA/data/ips/$1)
         else
@@ -244,11 +265,11 @@ is_ip_valid() {
         ip_owner=$(echo "$ip_data" |grep OWNER= |cut -f2 -d \')
         ip_status=$(echo "$ip_data" |grep STATUS= |cut -f2 -d \')
         if [ "$ip_owner" != "$user" ] && [ "$ip_status" = 'dedicated' ]; then
-            check_result $E_FORBIDEN "$user user can't use IP $1"
+            check_result "$E_FORBIDEN" "$user user can't use IP $1"
         fi
         get_user_owner
         if [ "$ip_owner" != "$user" ] && [ "$ip_owner" != "$owner" ]; then
-            check_result $E_FORBIDEN "$user user can't use IP $1"
+            check_result "$E_FORBIDEN" "$user user can't use IP $1"
         fi
     fi
 }

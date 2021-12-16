@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update apache2 rrd
 # options: PERIOD
+# labels: panel
+#
+# example: v-update-sys-rrd-apache2
 #
 # The function is for updating apache rrd database and graphic.
 
@@ -13,8 +16,12 @@
 period=${1-daily}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#

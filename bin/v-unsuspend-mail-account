@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: unsuspend mail account
 # options: USER DOMAIN ACCOUNT
+# labels: mail
+#
+# example: v-unsuspend-mail-account admin acme.com tester
 #
 # The function unsuspends mail account.
 
@@ -16,9 +19,14 @@ domain_idn=$2
 account=$3
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -40,6 +48,8 @@ is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 is_object_valid "mail/$domain" 'ACCOUNT' "$account"
 is_object_suspended "mail/$domain" 'ACCOUNT' "$account"
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -65,6 +75,7 @@ fi
 update_object_value "mail/$domain" 'ACCOUNT' "$account" '$SUSPENDED' 'no'
 
 # Logging
+$BIN/v-log-action "system" "Info" "Mail" "Unsuspended mail account (User: $user, Account: $account@$domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

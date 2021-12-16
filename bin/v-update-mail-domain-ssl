@@ -1,0 +1,105 @@
+#!/bin/bash
+# info: updating ssl certificate for domain
+# options: USER DOMAIN SSL_DIR [RESTART]
+# labels: web
+#
+# example: v-update-mail-domain-ssl admin domain.com /home/admin/tmp
+#
+# The function updates the SSL certificate for a domain. Parameter ssl_dir is a path
+# to directory where 2 or 3 ssl files can be found. Certificate file 
+# domain.tld.crt and its key domain.tld.key are mandatory. Certificate
+# authority domain.tld.ca file is optional.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+domain_idn=$2
+ssl_dir=$3
+restart=$4
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
+source $HESTIA/func/ip.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+# Additional argument formatting
+format_domain
+format_domain_idn
+# TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'USER DOMAIN SSL_DIR [RESTART]'
+is_format_valid 'user' 'domain' 'ssl_dir'
+is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'mail' 'DOMAIN' "$domain"
+is_object_unsuspended 'mail' 'DOMAIN' "$domain"
+is_object_value_exist 'mail' 'DOMAIN' "$domain" '$SSL'
+is_web_domain_cert_valid
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Deleting old certificate
+rm -f $HOMEDIR/$user/conf/web/$domain/ssl/mail.$domain.*
+rm -f $USER_DATA/ssl/mail.$domain.*
+
+# Add certificate to Hestia user configuration data directory
+if [ -f "$ssl_dir/$domain.crt" ]; then
+    cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/mail.$domain.crt
+    cp -f $ssl_dir/$domain.key $USER_DATA/ssl/mail.$domain.key
+    cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/mail.$domain.pem
+    if [ -e "$ssl_dir/$domain.ca" ]; then
+        cp -f $ssl_dir/$domain.ca $USER_DATA/ssl/mail.$domain.ca
+        echo >> $USER_DATA/ssl/mail.$domain.pem
+        cat $USER_DATA/ssl/mail.$domain.ca >> $USER_DATA/ssl/mail.$domain.pem
+    fi
+fi
+
+chmod 660 $USER_DATA/ssl/mail.$domain.*
+
+# Add certificate to user home directory
+cp -f $USER_DATA/ssl/mail.$domain.crt $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt
+cp -f $USER_DATA/ssl/mail.$domain.key $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key
+cp -f $USER_DATA/ssl/mail.$domain.pem $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem
+if [ -e "$USER_DATA/ssl/mail.$domain.ca" ]; then
+    cp -f $USER_DATA/ssl/mail.$domain.ca $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.ca
+fi
+
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Restarting web server
+$BIN/v-restart-web "$restart"
+check_result $? "Web restart failed" >/dev/null
+
+$BIN/v-restart-proxy "$restart"
+check_result $? "Proxy restart failed" >/dev/null
+
+# Logging
+$BIN/v-log-action "$user" "Info" "Mail" "SSL certificate updated (Domain: $domain)."
+log_event "$OK" "$EVENT"
+
+exit

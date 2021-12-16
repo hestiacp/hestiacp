@@ -1,6 +1,9 @@
 #!/bin/bash
-# info: list web templates
-# options: USER [FORMAT]
+# info: list system themes
+# options: [FORMAT]
+# labels: hestia
+#
+# example: v-list-sys-themes
 #
 # The function for obtaining the list of themes in the theme
 # library and displaying them in the backend or user interface.
@@ -14,68 +17,49 @@
 format=${1-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    object1=$(echo "$themes" |wc -w)
-    object2=$(echo "$themes_custom" |wc -w)
     i=1
     echo '['
-    for theme in $themes; do
-        if [ "$i" -lt "$object1" ]; then
+    for theme in "${available_themes[@]}"; do
+        if [ "$i" -lt "$theme_count" ]; then
             echo -e  "\t\"$theme\","
         else
-            if [ $object2 -gt 0 ]; then
-                echo -e  "\t\"$theme\","
-            else
-                echo -e  "\t\"$theme\""            
-            fi
+            echo -e  "\t\"$theme\""
         fi
         (( ++i))
     done
-    for custom_theme in $themes_custom; do
-        if [ "$i" -lt "$object2" ]; then
-            echo -e  "\t\"$custom_theme\","
-        else
-            echo -e  "\t\"$custom_theme\""
-        fi
-        (( ++i))
-    done
-    echo "]"
+    echo ']'
 }
 
 # SHELL list function
 shell_list() {
     echo "THEME"
-    echo "------"
-    for theme in $themes; do
+    echo "-----"
+    for theme in "${available_themes[@]}"; do
         echo "$theme"
-    done
-    for custom_theme in $themes_custom; do
-        echo "$custom_theme"
     done
 }
 
 # PLAIN list function
 plain_list() {
-    for theme in $themes; do
+    for theme in "${available_themes[@]}"; do
         echo "$theme"
-    done
-    for custom_theme in $themes_custom; do
-        echo "$custom_theme"
     done
 }
 
 # CSV list function
 csv_list() {
     echo "THEME"
-    for theme in $themes; do
+    for theme in "${available_themes[@]}"; do
         echo "$theme"
-    done
-    for custom_theme in $themes_custom; do
-        echo "$custom_theme"
     done
 }
 
@@ -84,16 +68,21 @@ csv_list() {
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Parsing templates
+# Parse system provided themes
+provided_themes=$(ls -v $HESTIA/web/css/themes | grep '\.min.css' | sed 's/\.min.css$//')
 
-# System provided themes
-themes=$(ls -v $HESTIA_THEMES/)
-themes=$(echo "$themes" | grep '\.css' | sed 's/\.css$//')
+# Parse custom themes
+if [ -d "$HESTIA/web/css/themes/custom" ]; then
+    custom_themes=$(ls -v $HESTIA/web/css/themes/custom/ | grep '\.css' | sed 's/\.css$//')
+fi 
 
-# Custom themes
-themes_custom=$(ls -v $HESTIA_THEMES_CUSTOM/)
-themes_custom=$(echo "$themes_custom" | grep '\.css' | sed 's/\.css$//')
+# Create array with all available themes
+for theme in $provided_themes $custom_themes; do
+    available_themes+=("$theme")
+done
 
+# Get count of themes (for proper JSON formatting)
+theme_count="${#available_themes[@]}"
 
 # Listing data
 case $format in

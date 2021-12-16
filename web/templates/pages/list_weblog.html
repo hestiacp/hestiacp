@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<!-- Load necessary CSS and JavaScript from source -->
+	<?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/title.html'; ?>
+	<?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/css.html'; ?>
+	<?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/top_js.html'; ?>
+	<script src="/js/jquery/jquery.cookie.js?<?=JS_LATEST_UPDATE?>"></script>
+	<script src="/js/jquery/jquery-ui.min.js?<?=JS_LATEST_UPDATE?>"></script>
+	<script src="/js/jquery/jquery.finder.js?<?=JS_LATEST_UPDATE?>"></script>
+	<script src="/js/hotkeys.js?<?=JS_LATEST_UPDATE?>"></script>
+	<script src="/js/events.js?<?=JS_LATEST_UPDATE?>"></script>
+	<script src="/js/app.js?<?=JS_LATEST_UPDATE?>"></script>
+	<script src="/js/init.js?<?=JS_LATEST_UPDATE?>"></script>
+	<script src="/js/i18n.js.php?<?=JS_LATEST_UPDATE?>"></script>
+	<script src="/js/templates.js?<?=JS_LATEST_UPDATE?>"></script>
+</head>
+
+<body>
+	<a href="#" class="to-top" title="<?=_('Top');?>">
+		<i class="fas fa-arrow-up"></i>
+	</a>
+	<div class="l-header">
+		<div class="l-center">
+			<a href="/" class="l-logo"></a>
+			<div class="l-menu clearfix">
+				<div class="l-menu__item"><a href="/list/web/"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;&nbsp;<?=_('Back');?></a></div>
+				<div class="l-menu__item <?php if($_GET['type'] == 'access') echo 'l-menu__item--active' ?>"><a href="/list/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=access&token=<?=$_SESSION['token']?>"><i class="fas fa-eye"></i>&nbsp;&nbsp;&nbsp;<?=_('Access Log');?></a><a href="/download/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=access&&token=<?=$_SESSION['token']?>" title="<?=_('Download');?>"><i class="fas fa-download"></i></a></div>
+				<div class="l-menu__item <?php if($_GET['type'] == 'error') echo 'l-menu__item--active' ?>"><a href="/list/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=error&token=<?=$_SESSION['token']?>"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;&nbsp;<?=_('Error Log');?></a><a href="/download/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=error&token=<?=$_SESSION['token']?>" title="<?=_('Download');?>"><i class="fas fa-download"></i></a></div>
+			</div>
+			<div class="l-profile">
+				<div class="l-menu__item"><a href="javascript:location.reload();" title="<?=_('Refresh');?>"><i class="fas fa-redo"></i></a></div>
+				<div class="l-menu__item"><a href="/edit/user/?user=<?=$user; ?>" title="<?=$user?>" class="l-profile__username"><i class="fas fa-user-circle"></i></a></div>
+				<div class="l-menu__item"><a href="/logout/?token=<?=$_SESSION['token']?>" title="<?=_('Log out');?>" class="l-profile__logout"><i class="fas fa-sign-out-alt"></i></a></div>
+			</div>
+		</div>
+	</div>
+
+	<div style="margin-left: auto; margin-right: auto; padding-top: 80px; width: 1020px;"><?=_('Last 70 lines of %s.%s.log',htmlentities($_GET['domain']),htmlentities($_GET['type'])) ;?></div>
+	<pre style="width: 1020px; margin-left: auto; margin-right: auto;" class="console-output">

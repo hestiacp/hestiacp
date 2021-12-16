@@ -1,0 +1,189 @@
+<!-- Begin toolbar -->
+<div class="l-center edit">
+	<div class="l-sort clearfix">
+		<div class="l-unit-toolbar__buttonstrip">
+			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/mail/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+		</div>
+		<div class="l-unit-toolbar__buttonstrip float-right">
+			<a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
+		</div>
+	</div>
+</div>
+<!-- End toolbar -->
+
+<div class="l-separator"></div>
+
+<div class="l-center animated fadeIn">
+
+	<form id="vstobjects" name="v_add_mail" method="post">
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+		<input type="hidden" name="ok" value="Add" />
+		
+		<table class="data mode-add">
+			<tr class="data-add">
+				<td class="data-dotted">
+					<table class="data-col1">
+						<tr>
+							<td></td>
+						</tr>
+					</table>
+				</td>
+				<td class="data-dotted">
+					<table class="data-col2" width="600px">
+						<tr>
+							<td class="step-top">
+								<span class="page-title"><?=_('Adding Mail Domain');?></span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<?php
+									if (!empty($_SESSION['error_msg'])) {
+										$msg_icon = 'fa-exclamation-circle status-icon red';
+										$msg_text = htmlentities($_SESSION['error_msg']);
+										$msg_id = 'vst-error';
+									} else {
+										if (!empty($_SESSION['ok_msg'])) {
+											$msg_icon = 'fa-check-circle status-icon green';
+											$msg_text = $_SESSION['ok_msg'];
+											$msg_id = 'vst-ok';
+										}
+									}
+								?>
+								<span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
+							</td>
+						</tr>
+						<?php if (($user == 'admin') && (($_GET['accept'] !== "true")))  {?>
+							<tr>
+								<td class="step-top">
+									<span class="alert alert-danger alert-with-icon">
+										<i class="fas fa-exclamation"></i>
+										<?=_('Avoid adding web domains on admin account');?>
+									</span>
+								</td>
+							</tr>
+						<?php } ?>
+						<?php if (($user == 'admin') && (empty($_GET['accept']))) {?>
+							<tr>
+								<td class="step-top">
+									<span><a href="/add/user/" class="vst-advanced admin-warning-button"><?=_('Add User');?></a></span>
+									<span><a href="/add/mail/?accept=true" class="vst-advanced button danger admin-warning-button"><?=_('Continue');?></a> </span>
+								</td>
+							</tr>
+						<?php } ?>
+						<?php if (($user == 'admin') && (($_GET['accept'] === "true")) || ($user !== "admin"))  {?>
+							<tr>
+								<td class="vst-text step-top">
+									<?=_('Domain');?>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<input type="text" size="20" class="vst-input" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
+								</td>
+							</tr>
+							<?php if($_SESSION['WEBMAIL_SYSTEM']){?>
+								<tr>
+									<td class="vst-text step-top">
+										<?=_('Webmail Client');?>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<select class="vst-list" name="v_webmail" tabindex="6">
+											<?php foreach ($webmail_clients as $client){
+												echo "\t\t\t\t<option value=\"".htmlentities($client)."\"";
+												if (( $v_webmail == $client )) {
+													echo ' selected' ;
+												}
+												echo ">".htmlentities(ucfirst($client))."</option>\n";
+												}
+											?>
+											<option value="" <?php if (empty($v_webmail) || $v_webmail == 'disabled' ){ echo "selected";}?>><?=_('Disabled');?></option>
+										</select>
+									</td>
+								</tr>
+							<?php } ?>
+							<?php if (!empty($_SESSION['ANTISPAM_SYSTEM'])) {?>
+								<tr>
+									<td class="vst-text input-label step-top">
+										<label><input type="checkbox" size="20" class="vst-checkbox" name="v_antispam" <?php if ((empty($v_antispam)) || ($v_antispam == 'yes')) echo "checked=yes"; ?>><?=_('AntiSpam Support');?></label>
+									</td>
+								</tr>
+							<?php } ?>
+							<?php if (!empty($_SESSION['ANTIVIRUS_SYSTEM'])) {?>
+								<tr>
+									<td class="vst-text input-label">
+										<label><input type="checkbox" size="20" class="vst-checkbox" name="v_antivirus" <?php if ((empty($v_antivirus)) || ($v_antivirus == 'yes')) echo "checked=yes"; ?>><?=_('AntiVirus Support');?></label>
+									</td>
+								</tr>
+							<?php } ?>
+							<tr>
+								<td class="vst-text input-label">
+									<label><input type="checkbox" size="20" class="vst-checkbox" name="v_dkim" <?php if (isset($v_dkim)&&$v_dkim == 'yes') echo "checked=yes"; ?>><?=_('DKIM Support');?></label>
+								</td>
+							</tr>
+							<tr>
+								<td class="vst-text input-label">
+									<label><input type="checkbox" size="20" class="vst-checkbox" name="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo "checked=yes"; ?> onclick="javascript:elementHideShow('smtp_relay_table');"><?=_('SMTP Relay');?></label>
+								</td>
+							</tr>
+							<tr>
+								<td class="step-left">
+									<table style="display:<?php if ($v_smtp_relay == 'true'){echo 'block';} else {echo 'none';} ?>;" id="smtp_relay_table">
+										<tr>
+											<td class="input-label vst-text">
+												<?=_('Host');?>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<input type="text" size="20" class="vst-input" name="v_smtp_relay_host" value="<?=htmlentities(trim($v_smtp_relay_host, "'"))?>">
+											</td>
+										</tr>
+										<tr>
+											<td class="input-label vst-text">
+												<?=_('Port');?>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<input type="text" size="20" class="vst-input" name="v_smtp_relay_port" value="<?=htmlentities(trim($v_smtp_relay_port, "'"))?>">
+											</td>
+										</tr>
+										<tr>
+											<td class="input-label vst-text">
+												<?=_('Username');?>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<input type="text" size="20" class="vst-input" name="v_smtp_relay_user" value="<?=htmlentities(trim($v_smtp_relay_user, "'"))?>">
+											</td>
+										</tr>
+										<tr>
+											<td class="input-label vst-text">
+												<?=_('Password');?>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<input type="text" size="20" class="vst-input" name="v_smtp_relay_pass">
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						<?php } ?>
+						<tr>
+							<td>
+								<br>
+							</td>
+						</tr>
+					</table>
+					<table class="data-col2"></table>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>

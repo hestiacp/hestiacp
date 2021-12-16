@@ -1,0 +1,98 @@
+#!/bin/bash
+# info: add PHPMailer functionality to Hestia Control Panel
+# options: [MODE]
+# labels: hestia
+#
+# The function installs PHPMailer for Server sided email communication
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+# upgrade config file
+source "$HESTIA/install/upgrade/upgrade.conf"
+
+MODE=$1
+user="admin"
+
+PM_INSTALL_DIR="$HESTIA/web/inc"
+COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking root permissions
+if [ "x$(id -u)" != 'x0' ]; then
+    echo "ERROR: v-add-sys-phpmailer can be run executed only by root user"
+    exit 10
+fi
+
+# Ensure that $HESTIA (/usr/local/hestia/) and other variables are valid.
+if [ -z "$HESTIA" ]; then
+    HESTIA="/usr/local/hestia"
+fi
+
+if [ -z "$HOMEDIR" ] || [ -z "$HESTIA_INSTALL_DIR" ]; then
+    echo "ERROR: Environment variables not present, installation aborted."
+    exit 2
+fi
+
+# Ensure that Composer is installed for the user before continuing as it is a dependency of the PHPMailer.
+if [ ! -f "$COMPOSER_BIN" ]; then
+    $BIN/v-add-user-composer "$user"
+    if [ $? -ne 0 ]; then
+        $BIN/v-add-user-notification admin 'Composer installation failed!' '<b>PHPMailer will not work without Composer.</b><br><br>Please try running the installer manually from a shell session:<br>v-add-sys-phpmailer<br><br>If this continues, open an issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.'
+        exit 1
+    fi
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+cd "$PM_INSTALL_DIR"
+rm --recursive --force ${PM_INSTALL_DIR}/vendor
+mkdir -p ${PM_INSTALL_DIR}/vendor
+chown $user: -R ${PM_INSTALL_DIR}/vendor
+
+openssl_installed=$(/usr/local/hestia/php/bin/php -m | grep openssl);
+if [ -z "$openssl_version"  ]; then 
+    COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php $COMPOSER_BIN --quiet --no-dev install
+else
+    COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/local/hestia/php/bin/php $COMPOSER_BIN --quiet --no-dev install
+fi
+
+# Check if installation was successful, if not abort script and throw error message notification and clean-up
+if [ $? -ne 0 ]; then
+    echo "ERROR: PHPMailer installation failed!"
+    echo "Please report this to our development team:"
+    echo "https://github.com/hestiacp/hestiacp/issues"
+    $BIN/v-add-user-notification admin 'PHPMailer installation failed!' 'Please report this to our development team on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.'
+    # Installation failed, clean up files
+    rm --recursive --force ${PM_INSTALL_DIR}/vendor
+    $BIN/v-change-sys-config-value 'USE_SERVER_SMTP' 'n'
+    $BIN/v-log-action "system" "Error" "Plugins" "PHPMailer installation failed (Version: $pm_v)."
+    exit 1
+fi
+
+# Set permissions
+chown root: -R "${PM_INSTALL_DIR}/vendor"
+
+#----------------------------------------------------------#
+#                       Logging                            #
+#----------------------------------------------------------#
+
+$BIN/v-log-action "system" "Info" "Plugins" "PHPMailer enabled (Version: $pm_v)."
+log_event "$OK" "$ARGUMENTS"

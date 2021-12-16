@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: adding user package
-# options: PKG_DIR PACKAGE [REWRITE]
+# options: tmpfile PACKAGE [REWRITE]
+# labels: 
 #
 # The function adds new user package to the system.
 
@@ -10,59 +11,78 @@
 #----------------------------------------------------------#
 
 # Argument definition
-pkg_dir=$1
+tmpfile=$1
 package=$2
 rewrite=$3
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
-
-# Functions
-is_package_new() {
-    if [ -e "$HESTIA/data/packages/$package.pkg" ]; then
-        echo "Error: package $package already exists."
-        log_event "$E_EXISTS" "$ARGUMENTS"
-        exit $E_EXISTS
-    fi
-}
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 is_package_consistent() {
-    source $pkg_dir/$package.pkg
+    source_conf "$tmpfile"
     if [ "$WEB_DOMAINS" != 'unlimited' ]; then
-        is_int_format_valid $WEB_DOMAINS 'WEB_DOMAINS'
+        is_int_format_valid "$WEB_DOMAINS" 'WEB_DOMAINS'
     fi
     if [ "$WEB_ALIASES" != 'unlimited' ]; then
-        is_int_format_valid $WEB_ALIASES 'WEB_ALIASES'
+        is_int_format_valid "$WEB_ALIASES" 'WEB_ALIASES'
     fi
     if [ "$DNS_DOMAINS" != 'unlimited' ]; then
-        is_int_format_valid $DNS_DOMAINS 'DNS_DOMAINS'
+        is_int_format_valid "$DNS_DOMAINS" 'DNS_DOMAINS'
     fi
     if [ "$DNS_RECORDS" != 'unlimited' ]; then
-        is_int_format_valid $DNS_RECORDS 'DNS_RECORDS'
+        is_int_format_valid "$DNS_RECORDS" 'DNS_RECORDS'
     fi
     if [ "$MAIL_DOMAINS" != 'unlimited' ]; then
-        is_int_format_valid $MAIL_DOMAINS 'MAIL_DOMAINS'
+        is_int_format_valid "$MAIL_DOMAINS" 'MAIL_DOMAINS'
     fi
     if [ "$MAIL_ACCOUNTS" != 'unlimited' ]; then
-        is_int_format_valid $MAIL_ACCOUNTS 'MAIL_ACCOUNTS'
+        is_int_format_valid "$MAIL_ACCOUNTS" 'MAIL_ACCOUNTS'
     fi
     if [ "$DATABASES" != 'unlimited' ]; then
-        is_int_format_valid $DATABASES 'DATABASES'
+        is_int_format_valid "$DATABASES" 'DATABASES'
     fi
     if [ "$CRON_JOBS" != 'unlimited' ]; then
-        is_int_format_valid $CRON_JOBS 'CRON_JOBS'
+        is_int_format_valid "$CRON_JOBS" 'CRON_JOBS'
     fi
     if [ "$DISK_QUOTA" != 'unlimited' ]; then
-        is_int_format_valid $DISK_QUOTA 'DISK_QUOTA'
+        is_int_format_valid "$DISK_QUOTA" 'DISK_QUOTA'
     fi
     if [ "$BANDWIDTH" != 'unlimited' ]; then
-        is_int_format_valid $BANDWIDTH 'BANDWIDTH'
+        is_int_format_valid "$BANDWIDTH" 'BANDWIDTH'
     fi
     if [ "$BACKUPS" != 'unlimited' ]; then
-        is_int_format_valid $BACKUPS 'BACKUPS'
+        is_int_format_valid "$BACKUPS" 'BACKUPS'
     fi
-    is_format_valid_shell $SHELL
+    if [ -n "$WEB_TEMPLATE" ]; then
+        is_web_template_valid "$WEB_TEMPLATE"
+    fi
+    if [ -n "$BACKEND_TEMPLATE" ]; then
+        is_backend_template_valid "$BACKEND_TEMPLATE"
+    fi
+    if [ -n "$PROXY_TEMPLATE" ]; then
+        is_proxy_template_valid "$PROXY_TEMPLATE"
+    fi
+    if [ -n "$DNS_TEMPLATE" ]; then
+        is_dns_template_valid "$DNS_TEMPLATE"
+    fi
+    if [ -n "$NS" ]; then
+        IFS=',' read -r -a nameservers <<< "$NS"
+        i=1;
+        for ns in "${nameservers[@]}"
+        do
+            is_domain_format_valid "$ns" "ns$i"
+            i=$((i+1))
+        done
+    fi
+    
+    is_format_valid_shell "$SHELL"
 }
 
 
@@ -71,11 +91,18 @@ is_package_consistent() {
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'PKG_DIR PACKAGE' 'rewrite'
-is_format_valid 'pkg_dir' 'package'
+is_format_valid 'package'
 if [ "$rewrite" != 'yes' ]; then
-    is_package_new
+    is_package_new "$package"
+else 
+    is_package_valid "$package"
 fi
-is_package_valid "$pkg_dir"
+
+if [ ! -f "$tmpfile" ]; then 
+    echo "$tmpfile does not exists"
+    exit "$E_NOTEXIST";
+fi
+
 is_package_consistent
 
 # Perform verification if read-only mode is enabled
@@ -86,8 +113,8 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-cp -f $pkg_dir/$package.pkg $HESTIA/data/packages/
-chmod 644 $HESTIA/data/packages/$package.pkg
+cp -f "$tmpfile" "$HESTIA/data/packages/$package.pkg"
+chmod 644 "$HESTIA/data/packages/$package.pkg"
 
 
 #----------------------------------------------------------#
@@ -96,9 +123,9 @@ chmod 644 $HESTIA/data/packages/$package.pkg
 
 # Logging
 if [ "$rewrite" != 'yes' ]; then
-    log_history "added user package $package" '' 'admin'
+    $BIN/v-log-action "system" "Info" "Packages" "Package added (Name: $package)."
 else
-    log_history "updated user package $package" '' 'admin'
+    $BIN/v-log-action "system" "Info" "Packages" "Package limits updated (Name: $package)."
 fi
 log_event "$OK" "$ARGUMENTS"
 

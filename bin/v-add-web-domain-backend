@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add web domain backend
 # options: USER DOMAIN [TEMPLATE] [RESTART]
+# labels: web
+#
+# example: v-add-web-domain-backend admin exmaple.com default yes
 #
 # The call is used for adding web backend configuration.
 
@@ -16,10 +19,16 @@ template=${3-default}
 restart=$4
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -43,11 +52,6 @@ check_hestia_demo_mode
 prepare_web_backend
 get_domain_values 'web'
 
-# Checking backend configuration
-#if [ -e "$pool/$backend_type.conf" ]; then
-#    exit
-#fi
-
 # Allocating backend port
 backend_port=9000
 ports=$(grep -v '^;' $pool/* 2>/dev/null |grep listen |grep -o :[0-9].*)
@@ -68,9 +72,9 @@ cat $WEBTPL/$WEB_BACKEND/$template.tpl |\
 
 
 # Set correct document root path
-if [ ! -z "$CUSTOM_DOCROOT" ]; then
+if [ -n "$CUSTOM_DOCROOT" ]; then
     docroot="$CUSTOM_DOCROOT"
-    if [ ! -z "$CUSTOM_PHPROOT" ]; then
+    if [ -n "$CUSTOM_PHPROOT" ]; then
         docroot="$CUSTOM_PHPROOT"
     fi
     sed -i "s|/home\/$user\/web\/$domain\/public_html|$docroot|g"  $pool/$backend_type.conf
@@ -83,11 +87,11 @@ fi
 #----------------------------------------------------------#
 
 # Restart backend server
-$BIN/v-restart-web-backend $restart
+$BIN/v-restart-web-backend "$restart"
 check_result $? "Web backend restart failed" >/dev/null
 
 # Logging
-log_history "added $WEB_BACKEND backend configuration for $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Web domain configuration applied (Domain: $domain, Backend: $WEB_BACKEND)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

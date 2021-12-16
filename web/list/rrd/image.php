@@ -1,7 +1,7 @@
 <?php
 error_reporting(NULL);
 session_start();
-if ($_SESSION['user'] != 'admin') exit;
+if ($_SESSION['userContext'] != 'admin')  exit;
 $real_path = realpath($_SERVER["DOCUMENT_ROOT"].$_SERVER['QUERY_STRING']);
 if (empty($real_path)) exit;
 $dir_name = dirname($real_path);

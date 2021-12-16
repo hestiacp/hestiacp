@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: change remote dns domain expiration date
 # options: USER DOMAIN
+# labels: dns
 #
 # The function synchronize dns domain with the remote server.
 
@@ -14,9 +15,14 @@ user=$1
 domain=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/remote.sh
 source $HESTIA/func/remote.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -31,6 +37,8 @@ is_object_valid 'dns' 'DOMAIN' "$domain"
 is_procces_running
 remote_dns_health_check
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -44,8 +52,8 @@ for cluster in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
 
     # Syncing domain
     str=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
-    cluster_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME 'no'
-    check_result $? "$HOST connection failed (exp insert)" $E_CONNECT
+    cluster_cmd v-insert-dns-domain "$DNS_USER" "$str" "$HOSTNAME" 'no'
+    check_result $? "$HOST connection failed (exp insert)" "$E_CONNECT"
 
 done
 
@@ -57,7 +65,7 @@ done
 # Updating pipe
 pipe="$HESTIA/data/queue/dns-cluster.pipe"
 str=$(grep -n "$SCRIPT $1 $2 $3$" $pipe | cut -f1 -d: | head -n1)
-if [ ! -z "$str" ]; then
+if [ -n "$str" ]; then
     sed -i "$str d"  $pipe
 fi
 

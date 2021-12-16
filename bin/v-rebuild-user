@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: rebuild system user
 # options: USER [RESTART]
+# labels: panel
+#
+# example: v-rebuild-user admin yes
 #
 # The function rebuilds system user account.
 
@@ -14,12 +17,20 @@ user=$1
 restart=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
+source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
 source $HESTIA/func/rebuild.sh
-source $HESTIA/conf/hestia.conf
-
-# Export sbin
-export PATH=$PATH:/usr/sbin
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+source $HESTIA/func/syshealth.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -29,26 +40,30 @@ export PATH=$PATH:/usr/sbin
 check_args '1' "$#" 'USER [RESTART]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
+check_user=$(is_object_unsuspended 'user' 'USER' "$user")
+if [ -n "$check_user" ]; then
+    exit
+fi
 
-
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Update disk quota
 if [ "$DISK_QUOTA" = 'yes' ]; then
-    $BIN/v-update-user-quota $user
+    $BIN/v-update-user-quota "$user"
 fi
 
 # Rebuild user
 rebuild_user_conf
 
 # Update user counters
-$BIN/v-update-user-counters $user
+$BIN/v-update-user-counters "$user"
 
 # Update account usage statistics
-$BIN/v-update-user-stats $user
+$BIN/v-update-user-stats "$user"
 
 
 #----------------------------------------------------------#
@@ -56,6 +71,7 @@ $BIN/v-update-user-stats $user
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "System" "Rebuilt user profile (User: $user)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

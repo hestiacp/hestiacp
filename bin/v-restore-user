@@ -1,16 +1,17 @@
 #!/bin/bash
 # info: restore user
 # options: USER BACKUP [WEB] [DNS] [MAIL] [DB] [CRON] [UDIR] [NOTIFY]
+# labels: panel
 #
-# The function for restoring user from backup.
+# example: v-restore-user admin 2019-04-22_01-00-00.tar
+#
+# The function for restoring user from backup. To be able to restore the backup,
+# the archive needs to be placed in /backup.
 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
-
-# Import Hestia variable for cron launch
-source /etc/profile
 
 # Argument definition
 user=$1
@@ -29,13 +30,24 @@ if [ -z "$BACKUP" ]; then
 fi
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/backup.sh
 source $HESTIA/func/backup.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/db.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
 source $HESTIA/func/rebuild.sh
-source $HESTIA/conf/hestia.conf
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+source $HESTIA/func/syshealth.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -51,24 +63,40 @@ is_format_valid 'user' 'backup'
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Check if backup folder exists and have the correct permission
+if [[ ! -d "$BACKUP" ]]; then 
+    mkdir -p "$BACKUP"
+fi
+if [ $(stat -c %a "$BACKUP") != 755 ]; then
+    chmod 755 "$BACKUP"
+fi
+
 # Checking local backup
 if [ ! -e "$BACKUP/$backup" ]; then
     if [[ "$BACKUP_SYSTEM" =~ "google" ]]; then
-        google_download $backup
+        google_download "$backup"
         downloaded='yes'
     fi
     if [[ "$BACKUP_SYSTEM" =~ "sftp" ]] && [ -z "$downloaded" ]; then
-        sftp_download $backup
+        sftp_download "$backup"
         downloaded='yes'
     fi
     if [[ "$BACKUP_SYSTEM" =~ "ftp" ]] && [ -z "$downloaded" ]; then
-        ftp_download $backup
+        ftp_download "$backup"
+        downloaded='yes'
+    fi
+    if [[ "$BACKUP_SYSTEM" =~ "b2" ]] && [ -z "$downloaded" ]; then
+        b2_download "$backup"
         downloaded='yes'
     fi
     if [ -z "$downloaded" ]; then
-        check_result $E_NOTEXIST "backup file $backup doesn't exist in '${BACKUP}' folder"
+        check_result "$E_NOTEXIST" "backup file $backup doesn't exist in '${BACKUP}' folder"
     fi
 fi
+
+if [ ! -e "$BACKUP/$backup" ]; then 
+   check_result "$E_NOTEXIST" "backup file $backup doesn't exist in '${BACKUP}' folder"
+fi 
 
 # Checking user existence on the server
 check_user=$(is_object_valid 'user' 'USER' "$user")
@@ -87,7 +115,7 @@ disk_usage=$(df $BACKUP |tail -n1 |tr ' ' '\n' |grep % |cut -f 1 -d %)
 if [ "$disk_usage" -ge "$BACKUP_DISK_LIMIT" ]; then
     echo "Error: Not enough disk space" |$SENDMAIL -s "$subj" $email $notify
     sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-    check_result $E_DISK "Not enough disk space"
+    check_result "$E_DISK" "Not enough disk space"
 fi
 
 # Checking load average
@@ -100,7 +128,7 @@ while [ "$la" -ge "$BACKUP_LA_LIMIT" ]; do
         la_error="LoadAverage $la is above threshold"
         echo "Error: $la_error" |$SENDMAIL -s "$subj" $email $notify
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-        check_result $E_LA "$la_error"
+        check_result "$E_LA" "$la_error"
     fi
     la=$(cat /proc/loadavg |cut -f 1 -d ' ' |cut -f 1 -d '.')
     (( ++i))
@@ -133,6 +161,13 @@ fi
 
 # Restoring user account
 if [ "$create_user" = 'yes' ]; then
+    
+    # Add check if user already exists as Linux User
+    getent passwd "$user" > /dev/null 2>&1
+    if [ "$?" == 0 ]; then
+        check_result "$E_EXISTS" "User already exists"  
+    fi 
+    
     echo "-- USER --" |tee $tmpdir/restore.log
     echo -e "$(date "+%F %T") $user" |tee -a $tmpdir/restore.log
 
@@ -170,7 +205,7 @@ new_uid=$(grep "^$user:" /etc/passwd |cut -f 3 -d :)
 
 
 # Restoring web domains
-if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
+if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
     echo -e  "\n-- WEB --" |tee -a $tmpdir/restore.log
 
     # Creating web domain restore list
@@ -193,13 +228,13 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
         echo -e "$(date "+%F %T") $domain" |tee -a $tmpdir/restore.log
 
         # Cleanup previous domain keys
-        unset -v DOMAIN IP IP6 ALIAS TPL SSL SSL_HOME LETSENCRYPT FTP_USER FTP_MD5 BACKEND PROXY PROXY_EXT STATS STATS_USER STATS_CRYPT U_DISK
+        unset -v DOMAIN IP IP6 ALIAS TPL SSL SSL_HOME LETSENCRYPT FTP_USER FTP_MD5 BACKEND PROXY PROXY_EXT STATS STATS_USER STATS_CRYPT U_DISK CUSTOM_DOCROOT CUSTOM_PHPROOT
 
         # Checking domain existance
         check_config=$(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
         if [ -z "$check_config" ]; then
             check_new=$(is_domain_new 'web' $domain)
-            if [ ! -z "$check_new" ]; then
+            if [ -n "$check_new" ]; then
                 rm -rf $tmpdir
                 error="$domain belongs to another user"
                 echo "$error" |$SENDMAIL -s "$subj" $email $notify
@@ -225,7 +260,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
             # Deleting conflicting aliases
             for dom_alias in ${ALIAS//,/ }; do
                 check_new=$(is_domain_new 'web' $dom_alias)
-                if [ ! -z "$check_new" ]; then
+                if [ -n "$check_new" ]; then
                     ALIAS=$(echo "$ALIAS" |\
                         sed "s/,/\n/g"|\
                         sed "s/^$dom_alias$//g"|\
@@ -236,7 +271,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
 
             # Checking IP address
             check_ip=$(is_ip_valid $IP $user)
-            if [ ! -z "$check_ip" ]; then
+            if [ -n "$check_ip" ]; then
                 local_ip=''
                 get_user_ip $user
                 old_ip=$IP
@@ -245,32 +280,26 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
 
             # Checking web template
             check_tpl=$(is_web_template_valid $TPL)
-            if [ ! -z "$check_tpl" ]; then
+            if [ -n "$check_tpl" ]; then
                 TPL='default'
             fi
 
             # Checking proxy template
             check_proxy_tpl=$(is_proxy_template_valid $PROXY)
-            if [ ! -z "$check_proxy_tpl" ]; then
+            if [ -n "$check_proxy_tpl" ]; then
                 PROXY='default'
             fi
 
             # Checking backend template
             check_backend_tpl=$(is_backend_template_valid $BACKEND)
-            if [ ! -z "$check_proxy_tpl" ]; then
+            if [ -n "$check_backend_tpl" ]; then
                 BACKEND='default'
             fi
 
             # Converting FTP users
-            if [ ! -z "$FTP_USER" ]; then
+            if [ -n "$FTP_USER" ]; then
                 FTP_USER=$(echo "$FTP_USER"  |sed -e "s/${old_user}_//")
                 FTP_USER="${user}_${FTP_USER}"
-            fi
-
-            # Converting stats users
-            if [ ! -z "$STATS_USER" ]; then
-                STATS_USER=$(echo "$STATS_USER"  |sed -e "s/${old_user}_//")
-                STATS_USER="${user}_${STATS_USER}"
             fi
 
             # Copying SSL certificates
@@ -289,12 +318,16 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
                     done
                 fi
             fi
-
+            
             # Merging web.conf keys
             str="DOMAIN='$domain' IP='$IP' IP6='$IP6' ALIAS='$ALIAS'"
-            str="$str TPL='$TPL' SSL='$SSL' SSL_HOME='$SSL_HOME'"
-            str="$str LETSENCRYPT='$LETSENCRYPT' FTP_USER='$FTP_USER'"
-            str="$str FTP_MD5='$FTP_MD5' BACKEND='$BACKEND' PROXY='$PROXY'"
+            str="$str CUSTOM_DOCROOT='$CUSTOM_DOCROOT' CUSTOM_PHPROOT='$CUSTOM_PHPROOT'"
+            str="$str REDIRECT='$REDIRECT' REDIRECT_CODE='$REDIRECT_CODE'"
+            str="$str FASTCGI_CACHE='$FASTCGI_CACHE' FASTCGI_DURATION='$FASTCGI_DURATION'"
+            str="$str TPL='$TPL' SSL='$SSL' SSL_HOME='$SSL_HOME' SSL_HSTS='$SSL_HSTS'"
+            str="$str SSL_FORCE='$SSL_FORCE' LETSENCRYPT='$LETSENCRYPT' FTP_USER='$FTP_USER'"
+            str="$str FTP_MD5='$FTP_MD5' FTP_PATH='$FTP_PATH'"
+            str="$str BACKEND='$BACKEND' PROXY='$PROXY'"
             str="$str PROXY_EXT='$PROXY_EXT' STATS='$STATS'"
             str="$str STATS_USER='$STATS_USER' STATS_CRYPT='$STATS_CRYPT'"
             str="$str U_DISK='$U_DISK' U_BANDWIDTH='0' SUSPENDED='no'"
@@ -302,14 +335,14 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
             echo $str >> $USER_DATA/web.conf
 
             # Rebuilding backend
-            if [ ! -z "$WEB_BACKEND" ]; then
+            if [ -n "$WEB_BACKEND" ]; then
                 $BIN/v-add-web-domain-backend $user $domain $BACKEND
             fi
-
-            # Rebuilding vhost
-            rebuild_web_domain_conf
         fi
-
+                
+        # Rebuilding vhost
+        rebuild_web_domain_conf
+        
         # Restoring web domain data
         if [ -d "$HOMEDIR/$user/web/$domain/public_html" ]; then
             rm -rf $HOMEDIR/$user/web/$domain/public_html/*
@@ -318,7 +351,7 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
         [[ -d $HOMEDIR/$user/web/$domain/stats ]] && chmod u+w "$HOMEDIR/$user/web/$domain/stats"
     
         if [ "$backup_mode" = "zstd" ]; then
-            user_exec tar -I zstd -xpf $tmpdir/web/$domain/domain_data.tar.zst \
+            user_exec tar -I pzstd -xpf $tmpdir/web/$domain/domain_data.tar.zst \
                 -C "$HOMEDIR/$user/web/$domain/" \
                 --anchored \
                 --exclude='logs/*'
@@ -342,6 +375,9 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
             find $HOMEDIR/$user/web/$domain/ -user $old_uid \
                 -exec chown -h $user:$user {} \;
         fi
+        
+        # Rebuilding web config for the second time to make sure ftp users keep working 
+        rebuild_web_domain_conf
     done
 
     # Adding user to traffic queue
@@ -352,14 +388,14 @@ if [ "$web" != 'no' ] && [ ! -z "$WEB_SYSTEM" ]; then
     # Restarting web server
     $BIN/v-restart-web
     check_result $? "Web restart failed"
-    if [ ! -z "$PROXY_SYSTEM" ]; then
+    if [ -n "$PROXY_SYSTEM" ]; then
         $BIN/v-restart-proxy
         check_result $? "Proxy restart failed"
     fi
 fi
 
 # Restoring DNS domains
-if [ "$dns" != 'no' ] && [ ! -z "$DNS_SYSTEM" ]; then
+if [ "$dns" != 'no' ] && [ -n "$DNS_SYSTEM" ]; then
     echo -e  "\n-- DNS --" |tee -a $tmpdir/restore.log
 
     # Creating dns domain restore list
@@ -384,7 +420,7 @@ if [ "$dns" != 'no' ] && [ ! -z "$DNS_SYSTEM" ]; then
         check_config=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
         if [ -z "$check_config" ]; then
             check_new=$(is_domain_new 'dns' $domain)
-            if [ ! -z "$check_new" ]; then
+            if [ -n "$check_new" ]; then
                 rm -rf $tmpdir
                 error="$domain belongs to another user"
                 echo "$error" |$SENDMAIL -s "$subj" $email $notify
@@ -409,8 +445,8 @@ if [ "$dns" != 'no' ] && [ ! -z "$DNS_SYSTEM" ]; then
 
             # Checking IP address
             check_ip=$(is_ip_valid $IP $user)
-            if [ ! -z "$check_ip" ]; then
-                local_ip=''
+            if [ -n "$check_ip" ]; then
+                export local_ip=''
                 get_user_ip $user
                 old_ip=$IP
                 IP=$ip
@@ -418,7 +454,7 @@ if [ "$dns" != 'no' ] && [ ! -z "$DNS_SYSTEM" ]; then
 
             # Checking DNS template
             check_tpl=$(is_dns_template_valid $TPL)
-            if [ ! -z "$check_tpl" ]; then
+            if [ -n "$check_tpl" ]; then
                 TPL='default'
             fi
 
@@ -433,7 +469,7 @@ if [ "$dns" != 'no' ] && [ ! -z "$DNS_SYSTEM" ]; then
         cp -f $tmpdir/dns/$domain/$backup_system/$domain.conf $USER_DATA/dns/
 
         # Update IP in records
-        if [ ! -z "$old_ip" ]; then
+        if [ -n "$old_ip" ]; then
             sed -i s/$old_ip/$IP/g $USER_DATA/dns/$domain.conf
         fi
 
@@ -441,7 +477,7 @@ if [ "$dns" != 'no' ] && [ ! -z "$DNS_SYSTEM" ]; then
         rebuild_dns_domain_conf
 
         # Updating dns-cluster queue
-        if [ ! -z "$DNS_CLUSTER" ]; then
+        if [ -n "$DNS_CLUSTER" ]; then
             cmd="$BIN/v-add-remote-dns-domain $user $domain yes"
             echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
         fi
@@ -453,7 +489,7 @@ if [ "$dns" != 'no' ] && [ ! -z "$DNS_SYSTEM" ]; then
 fi
 
 # Restoring mail domains
-if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
+if [ "$mail" != 'no' ] && [ -n "$MAIL_SYSTEM" ]; then
     echo -e  "\n-- MAIL --" |tee -a $tmpdir/restore.log
 
     # Creating mail domain restore list
@@ -482,7 +518,7 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
         check_config=$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf)
         if [ -z "$check_config" ]; then
             check_new=$(is_domain_new 'mail' $domain)
-            if [ ! -z "$check_new" ]; then
+            if [ -n "$check_new" ]; then
                 rm -rf $tmpdir
                 error="$domain belongs to another user"
                 echo "$error" |$SENDMAIL -s "$subj" $email $notify
@@ -493,6 +529,7 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
 
         # Unpacking domain container
         tar xf $BACKUP/$backup -C $tmpdir ./mail/$domain
+        
         if [ "$?" -ne 0 ]; then
             rm -rf $tmpdir
             error="Can't unpack $domain mail container"
@@ -514,7 +551,7 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
 
         # Restore SSL
         check_config=$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf | grep -o "SSL='yes'")
-        if [ ! -z "$check_config" ]; then
+        if [ -n "$check_config" ]; then
             if [ ! -e "$HESTIA/data/users/$user/ssl/" ]; then
                 mkdir -p $HESTIA/data/users/$user/ssl/
             fi
@@ -522,20 +559,29 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
             if [ ! -e "$HOMEDIR/$user/conf/mail/$domain/ssl/" ]; then
                 mkdir -p $HOMEDIR/$user/conf/mail/$domain/ssl/
             fi
-
+            
             # Add certificate to Hestia user configuration data directory
             if [ -f $tmpdir/mail/$domain/$backup_system/ssl/$domain.crt ]; then
-                echo "path found"
                 cp -f $tmpdir/mail/$domain/$backup_system/ssl/$domain.crt $USER_DATA/ssl/mail.$domain.crt
                 cp -f $tmpdir/mail/$domain/$backup_system/ssl/$domain.key $USER_DATA/ssl/mail.$domain.key
                 cp -f $tmpdir/mail/$domain/$backup_system/ssl/$domain.crt $USER_DATA/ssl/mail.$domain.pem
-                if [ -e "$tmpdir/mail/$domain/$backup_system/ssl//$domain.ca" ]; then
-                    cp -f $tmpdir/mail/$domain/$backup_system/ssl//$domain.ca $USER_DATA/ssl/mail.$domain.ca
+                if [ -e "$tmpdir/mail/$domain/$backup_system/ssl/$domain.ca" ]; then
+                    cp -f $tmpdir/mail/$domain/$backup_system/ssl/$domain.ca $USER_DATA/ssl/mail.$domain.ca
                     echo >> $USER_DATA/ssl/mail.$domain.pem
                     cat $USER_DATA/ssl/mail.$domain.ca >> $USER_DATA/ssl/mail.$domain.pem
                 fi
+            elif [ -f "$tmpdir/mail/$domain/conf/ssl/$domain.crt" ]; then
+                cp -f $tmpdir/mail/$domain/conf/ssl/$domain.crt $USER_DATA/ssl/mail.$domain.crt
+                cp -f $tmpdir/mail/$domain/conf/ssl/$domain.key $USER_DATA/ssl/mail.$domain.key
+                cp -f $tmpdir/mail/$domain/conf/ssl/$domain.crt $USER_DATA/ssl/mail.$domain.pem
+                if [ -e "$tmpdir/mail/$domain/conf/ssl/$domain.ca" ]; then
+                    cp -f $tmpdir/mail/$domain/conf/ssl/$domain.ca $USER_DATA/ssl/mail.$domain.ca
+                    echo >> $USER_DATA/ssl/mail.$domain.pem
+                    cat $USER_DATA/ssl/mail.$domain.ca >> $USER_DATA/ssl/mail.$domain.pem
+                fi
+                
             fi
-            
+
             chmod 660 $USER_DATA/ssl/mail.$domain.*
 
             # Add certificate to user home directory
@@ -580,20 +626,24 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
             chmod -R 0644 /usr/local/hestia/ssl/mail/*
             chown -h $user:mail /usr/local/hestia/ssl/mail/*
         fi
-
+        
         # Restoring email accounts
         cp -f $tmpdir/mail/$domain/$backup_system/$domain.conf $USER_DATA/mail/
-
-        # Rebuilding mail config
-        $BIN/v-rebuild-mail-domains $user
-        
+               
         domain_idn=$domain
         format_domain_idn
-
+        
+        if [ ! -d "$HOMEDIR/$user/mail/$domain_idn" ]; then
+            mkdir $HOMEDIR/$user/mail/$domain_idn
+        fi
+        
+        # Current Hestia store email in the $HOMEDIR/$user/mail/$domain_idn
+        chmod u+w "$HOMEDIR/$user/mail/$domain_idn"
+        chown $user:$user "$HOMEDIR/$user/mail/$domain_idn"
+        
         # Restoring emails
         if [ $backup_mode = 'zstd' ]; then    
             if [ -e "$tmpdir/mail/$domain/accounts.tar.zst" ]; then
-                chmod u+w "$HOMEDIR/$user/mail/$domain_idn"
                 $BIN/v-extract-fs-archive "$user" "$tmpdir/mail/$domain/accounts.tar.zst" "$HOMEDIR/$user/mail/$domain_idn/"
                 if [ "$?" -ne 0 ]; then
                     rm -rf $tmpdir
@@ -609,7 +659,6 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
             fi
         else
             if [ -e "$tmpdir/mail/$domain/accounts.tar.gz" ]; then
-                chmod u+w "$HOMEDIR/$user/mail/$domain_idn"
                 $BIN/v-extract-fs-archive "$user" "$tmpdir/mail/$domain/accounts.tar.gz" "$HOMEDIR/$user/mail/$domain_idn/"
                 if [ "$?" -ne 0 ]; then
                     rm -rf $tmpdir
@@ -625,22 +674,26 @@ if [ "$mail" != 'no' ] && [ ! -z "$MAIL_SYSTEM" ]; then
             fi
         fi
         # Chowning mail conf files to exim user
-        find $HOMEDIR/$user/conf/mail/$domain_idn -user root \
-            -exec chown $exim_user {} \;
-            
+        if [ -d "$HOMEDIR/$user/conf/mail/$domain" ]; then 
+            find $HOMEDIR/$user/conf/mail/$domain -user root \
+                -exec chown $exim_user {} \;
+        fi
+        
+        $HESTIA/bin/v-rebuild-mail-domain $user $domain
+        
     done
 
     # Restarting web server
     $BIN/v-restart-web
     check_result $? "Web restart failed"
-    if [ ! -z "$PROXY_SYSTEM" ]; then
+    if [ -n "$PROXY_SYSTEM" ]; then
         $BIN/v-restart-proxy
         check_result $? "Proxy restart failed"
     fi
 fi
 
 # Restoring databases
-if [ "$db" != 'no' ] && [ ! -z "$DB_SYSTEM" ]; then
+if [ "$db" != 'no' ] && [ -n "$DB_SYSTEM" ]; then
     echo -e  "\n-- DB --" |tee -a $tmpdir/restore.log
 
     # Creating database restore list
@@ -697,7 +750,7 @@ if [ "$db" != 'no' ] && [ ! -z "$DB_SYSTEM" ]; then
 
         # Unzipping database dump
         if [ $backup_mode = 'zstd' ]; then  
-            zstd -d $tmpdir/db/$database/$database.*.sql.zst
+            pzstd -d $tmpdir/db/$database/$database.*.sql.zst
         else
             gzip -d $tmpdir/db/$database/$database.*.sql.gz
         fi
@@ -714,7 +767,7 @@ if [ "$db" != 'no' ] && [ ! -z "$DB_SYSTEM" ]; then
 fi
 
 # Restoring cron jobs
-if [ "$cron" != 'no' ] && [ ! -z "CRON_SYSTEM" ]; then
+if [ "$cron" != 'no' ] && [ -n "$CRON_SYSTEM" ]; then
     echo -e  "\n-- CRON --" |tee -a $tmpdir/restore.log
 
     # Unpacking cron container
@@ -755,7 +808,7 @@ if [ "$udir" != 'no' ]; then
     echo -e  "\n-- USER FILES --" |tee -a $tmpdir/restore.log
 
     # Unpacking user dir container
-    if [ ! -z "$(tar -tf $BACKUP/$backup |grep './user_dir')" ]; then
+    if [ -n "$(tar -tf $BACKUP/$backup |grep './user_dir')" ]; then
 
         # Creating user dir restore list
         backup_dirs=$(tar -tf $BACKUP/$backup |grep "^./user_dir")
@@ -822,6 +875,9 @@ mkdir -p $HOMEDIR/$user/tmp
 chmod 700 $HOMEDIR/$user/tmp
 chown -R $user:$user $HOMEDIR/$user/tmp
 
+# Delete Hestia File manager key 
+rm -f $HOMEDIR/$user/.ssh/hst-filemanager-key
+
 # Sending mail notification
 subj="$user → restore has been completed"
 cat $tmpdir/restore.log |$SENDMAIL -s "$subj" $email $notify
@@ -846,7 +902,8 @@ $BIN/v-update-user-counters admin
 $BIN/v-update-sys-ip-counters
 
 # Logging
-log_history "restored contents from backup archive $backup"
+$BIN/v-log-action "system" "Info" "Backup" "Restored backup contents (User: $user, Archive: $backup)."
+$BIN/v-log-action "$user" "Info" "Backup" "Restored backup contents (Archive: $backup)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

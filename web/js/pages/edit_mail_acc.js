@@ -79,6 +79,17 @@ App.Listeners.MAIL_ACC.keypress_v_password = function() {
     });
 }
 
+$('#v_blackhole').on('click', function(evt){
+       if($('#v_blackhole').is(':checked')){
+           $('#v_fwd').prop('disabled', true);
+           $('#v_fwd_for').prop('checked', true);
+           $('#id_fwd_for').hide();
+       }else{
+           $('#v_fwd').prop('disabled', false);
+           $('#id_fwd_for').show();       
+       }
+    });
+
 App.Listeners.MAIL_ACC.keypress_v_password();
 
 

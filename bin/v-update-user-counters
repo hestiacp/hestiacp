@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update user usage counters
 # options: USER
+# labels: panel
+#
+# example: v-update-user-counters admin
 #
 # Function updates usage counters like U_WEB_DOMAINS, U_MAIL_ACCOUNTS, etc.
 
@@ -13,8 +16,12 @@
 user=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -22,7 +29,7 @@ source $HESTIA/conf/hestia.conf
 #----------------------------------------------------------#
 
 check_args '0' "$#" 'USER'
-if [ ! -z "$user" ]; then
+if [ -n "$user" ]; then
     is_format_valid 'user'
     is_object_valid 'user' 'USER' "$user"
 fi
@@ -85,8 +92,9 @@ for user in $user_list; do
         U_USERS=$($HESTIA/bin/v-list-sys-users plain|wc -l)
     fi
 
+    ips=$(ls $HESTIA/data/ips);
     # Checking ip
-    for ip in $(ls $HESTIA/data/ips) ;do
+    for ip in $ips ;do
         source $HESTIA/data/ips/$ip
         if [ "$OWNER" = "$user" ]; then
             IP_OWNED=$((IP_OWNED + 1))
@@ -114,7 +122,7 @@ for user in $user_list; do
             if [ "$SUSPENDED" = 'yes' ]; then
                 SUSPENDED_WEB=$((SUSPENDED_WEB + 1))
             fi
-            if [ ! -z "$ALIAS" ]; then
+            if [ -n "$ALIAS" ]; then
                 aliases=$(echo "$ALIAS"|tr ',' '\n'| wc -l)
                 U_WEB_ALIASES=$((U_WEB_ALIASES + aliases))
             fi

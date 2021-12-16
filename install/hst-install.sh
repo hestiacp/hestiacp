@@ -5,8 +5,8 @@
 #
 # Currently Supported Operating Systems:
 #
-#   Debian 9, 10
-#   Ubuntu 16.04, 18.04, 20.04
+#   Debian 9, 10, 11
+#   Ubuntu 18.04, 20.04
 #
 
 # Am I root?
@@ -61,8 +61,8 @@ no_support_message(){
     echo "Your operating system (OS) is not supported by"
     echo "Hestia Control Panel. Officially supported releases:"
     echo "****************************************************"
-    echo "  Debian 9, 10"
-    echo "  Ubuntu 16.04 LTS, 18.04, 20.04 LTS"
+    echo "  Debian 9, 10, 11"
+    echo "  Ubuntu 18.04, 20.04 LTS"
     echo ""
     exit 1;
 }
@@ -99,7 +99,7 @@ check_wget_curl(){
 
 # Check for supported operating system before proceeding with download
 # of OS-specific installer, and throw error message if unsupported OS detected.
-if [[ "$release" =~ ^(9|10|16.04|18.04|20.04)$ ]]; then
+if [[ "$release" =~ ^(9|10|11|18.04|20.04)$ ]]; then
     check_wget_curl $*
 else
     no_support_message

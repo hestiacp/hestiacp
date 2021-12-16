@@ -1,6 +1,10 @@
 #!/bin/bash
 # info: duplicate existing package
+# options: PACKAGE NEW_PACKAGE
+# labels: hestia
 #
+# example: v-copy-user-package default new
+# 
 # The function allows the user to duplicate an existing
 # package file to facilitate easier configuration.
 
@@ -13,8 +17,14 @@ package=$1
 new_package=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 # Perform verification if read-only mode is enabled
@@ -24,24 +34,36 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ ! -z $1 ]; then 
-    if [ ! -f $HESTIA/data/packages/$package.pkg ]; then
+is_package_valid "$package"
+is_package_new "$new_package"
+is_object_format_valid "$package" "Package"
+is_object_format_valid "$new_package" "New package"
+
+if [ -n "$1" ]; then 
+    if [ ! -f "$HESTIA/data/packages/$package.pkg" ]; then
         echo "Error: package does not exist."
-        exit
+        exit "$E_NOTEXIST"
     fi
-    if [ ! -z $2 ]; then
+    if [ -n "$2" ]; then
         # Copy package
-        cp -f $HESTIA/data/packages/$package.pkg $HESTIA/data/packages/$new_package.pkg
+        cp -f "$HESTIA/data/packages/$package.pkg" "$HESTIA/data/packages/$new_package.pkg"
+        # Don't leave the .sh file behind
+        if [ -f "$HESTIA/data/packages/$package.sh" ]; then 
+            cp $HESTIA/data/packages/$package.sh $HESTIA/data/packages/$new_package.sh
+        fi
     else
         echo "Error: new package name not specified."
+        exit "$E_ARGS"
     fi
 else
     echo "Error: package name not specified."
+    exit "$E_ARGS"
 fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
+$BIN/v-log-action "system" "Info" "System" "Package copied (Package: $package, New Package: $new_package)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

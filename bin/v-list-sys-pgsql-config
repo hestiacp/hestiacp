@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list postgresql config parameters
 # options: [FORMAT]
+# labels: panel
+#
+# example: v-list-sys-pgsql-config
 #
 # The function for obtaining the list of postgresql config parameters.
 
@@ -13,7 +16,12 @@
 format=${1-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {

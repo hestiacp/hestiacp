@@ -1,10 +1,11 @@
 #!/bin/bash
 # info: enable or disable demo mode
 # options: ACTIVE
+# labels: hestia
+#
 # This function will set the demo mode variable,
 # which will prevent usage of certain v-scripts in the backend
 # and prevent modification of objects in the control panel.
-#
 # It will also disable virtual hosts for Apache and NGINX
 # for domains which have been created.
 
@@ -16,9 +17,12 @@
 active=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -32,10 +36,14 @@ is_format_valid 'active'
 
 if [ "$active" = "yes" ]; then
     #TO-DO: Instructions for disabling vhosts
-    $BIN/v-change-sys-config-value 'DEMO_MODE' "$active"
+    # Disable API for Demo server
+    $BIN/v-change-sys-api 'disable'
+    $BIN/v-change-sys-config-value 'DEMO_MODE' 'yes'
 elif [ "$active" = "no" ]; then
+    # Note even v-change-sys-demo-mode can be called v-change-sys-config-value is protected to disable demo mode call
+    # Use sed -i "s|^DEMO_MODE=.*'|DEMO_MODE='no'|g" $HESTIA/conf/hestia.conf
     #TODO: Instructions for enabling vhosts
-    $BIN/v-change-sys-config-value 'DEMO_MODE' "$active"
+    $BIN/v-change-sys-config-value 'DEMO_MODE' 'no'
 fi
 
 #----------------------------------------------------------#
@@ -43,13 +51,21 @@ fi
 #----------------------------------------------------------#
 
 # Restarting web server
-$BIN/v-restart-web $restart
+$BIN/v-restart-web "yes"
 check_result $? "restart" >/dev/null 2>&1
 
-$BIN/v-restart-proxy $restart
+$BIN/v-restart-proxy "yes"
 check_result $? "restart" >/dev/null 2>&1
 
 # Logging
+if [ "$active" = "yes" ]; then
+    $BIN/v-log-action "system" "Warning" "System" "Demonstration mode (restricted access) enabled."
+else
+    $BIN/v-log-action "system" "Warning" "Info" "Demonstration mode (restricted access) disabled."
+fi
+
+
+
 log_event "$OK" "$ARGUMENTS"
 
 exit

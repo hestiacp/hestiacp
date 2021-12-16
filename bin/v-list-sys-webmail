@@ -1,0 +1,84 @@
+#!/bin/bash
+# info: listing available webmail clients
+# options: [FORMAT]
+# labels: hestia mail
+#
+# example: v-list-sys-webmail
+#
+# List available webmail clients
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+format=${1-shell}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+# JSON list function
+json_list() {
+    i=1
+    objects=$(echo -e "${WEBMAIL_SYSTEM//,/\\n}" |wc -l)
+    echo '['
+    for client in ${WEBMAIL_SYSTEM//,/ };do
+        if [ "$i" -ne "$objects" ]; then
+            echo -e  "\t\"$client\","
+        else
+            echo -e  "\t\"$client\""
+        fi
+        (( ++i))
+    done
+    echo ']'  
+}
+
+# SHELL list function
+shell_list() {
+    echo "Webmail Client"
+    echo "--------"
+    for client in ${WEBMAIL_SYSTEM//,/ };do
+        echo "$client"
+    done
+}
+
+# PLAIN list function
+plain_list() {
+    for client in ${WEBMAIL_SYSTEM//,/ };do
+        echo "$client"
+    done
+}
+
+# CSV list function
+csv_list() {
+    echo "CLIENT"
+    for client in ${WEBMAIL_SYSTEM//,/ };do
+        echo "$client"
+    done
+}
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list ;;
+esac
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

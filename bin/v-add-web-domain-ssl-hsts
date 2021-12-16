@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: Adding hsts to a domain
-# options: USER DOMAIN
+# options: USER DOMAIN [RESTART] [QUIET]
+# labels: hestia
 #
 # The function enables HSTS for the requested domain.
 
@@ -12,11 +13,16 @@
 # Argument definition
 user=$1
 domain=$2
+restart="$3"
+quiet="$4"
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -43,11 +49,11 @@ parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 # Check if SSL is enabled
 if [ "$SSL" != 'yes' ]; then
     echo "Error: SSL is not enabled"
-    exit $E_NOTEXIST
+    exit "$E_NOTEXIST"
 fi
 
 # Check for Apache/Nginx or Nginx/PHP-FPM configuration
-if [ -z $PROXY_SYSTEM ]; then
+if [ -z "$PROXY_SYSTEM" ]; then
     hstsconf="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.hsts.conf"
 else
     hstsconf="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.hsts.conf"
@@ -55,6 +61,8 @@ fi
 
 echo 'add_header Strict-Transport-Security "max-age=15768000;" always;' > $hstsconf
 
+chown root:$user $hstsconf
+chmod 640 $hstsconf
 
 #----------------------------------------------------------#
 #                       Hestia                             #
@@ -68,15 +76,17 @@ fi
 update_object_value 'web' 'DOMAIN' "$domain" '$SSL_HSTS' 'yes'
 
 # Restart web server
-$BIN/v-restart-web
+$BIN/v-restart-web "$restart"
 check_result $? "Web restart failed" > /dev/null
 
 # Restart proxy
-$BIN/v-restart-proxy
+$BIN/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" > /dev/null
 
 # Logging
-log_history "enabled HTTP Strict Transport Security (HSTS) for $domain"
+if [ "$quiet" != "yes" ]; then
+    $BIN/v-log-action "$user" "Info" "Web" "HTTP Strict Transport Security (HSTS) enabled (Domain: $domain)."
+fi
 log_event "$OK" "$ARGUMENTS"
 
 exit

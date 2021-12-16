@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: enable/disable directory listing
 # options: USER DOMAIN MODE
+# labels: hestia
+#
+# example: v-change-web-domain-dirlist user demo.com on
 #
 # The call is used for changing the directory list mode.
 
@@ -15,9 +18,14 @@ domain=$2
 mode=$3
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -35,10 +43,9 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
-
+get_domain_values 'web'
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -50,7 +57,7 @@ get_domain_values 'web'
 if [ "$mode" = "on" ]; then
     # Enable directory listing
     sed -i "s/-Index/+Index/g" $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.conf
-    if [ -e "$ssl_dir/$domain.ca" ]; then
+    if [ "$SSL" == "yes" ]; then
         # Enable directory listing for SSL-enforced domains
         sed -i "s/-Index/+Index/g" $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.ssl.conf
     fi
@@ -58,7 +65,7 @@ if [ "$mode" = "on" ]; then
 else
     # Disable directory listing
     sed -i "s/+Index/-Index/g" $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.conf
-    if [ -e "$ssl_dir/$domain.ca" ]; then
+    if [ "$SSL" == "yes" ]; then
         # Enable directory listing for SSL-enforced domains
         sed -i "s/+Index/-Index/g" $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.ssl.conf
     fi
@@ -74,7 +81,11 @@ fi
 $BIN/v-restart-web
 
 # Logging
-log_history "turned directory browsing $mode for $domain."
+if [ "$mode" = "on" ]; then
+    $BIN/v-log-action "$user" "Warning" "Web" "Directory browsing enabled (Domain: $domain)."
+else
+    $BIN/v-log-action "$user" "Info" "Web" "Directory browsing disabled (Domain: $domain)."
+fi
 log_event "$OK" "$EVENT"
 
 exit

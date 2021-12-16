@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: rebuild dns domains
 # options: USER [RESTART] [UPDATE_SERIAL]
+# labels: dns
+#
+# example: v-rebuild-dns-domains alice
 #
 # The function rebuilds DNS configuration files.
 
@@ -15,10 +18,18 @@ restart=$2
 update_serial=$3
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
 source $HESTIA/func/rebuild.sh
-source $HESTIA/conf/hestia.conf
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+source $HESTIA/func/syshealth.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -29,12 +40,16 @@ check_args '1' "$#" 'USER [RESTART] [UPDATE_SERIAL]'
 is_format_valid 'user'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
+check_user=$(is_object_unsuspended 'user' 'USER' "$user")
+if [ -n "$check_user" ]; then
+    exit
+fi
 if [ "$DNS_SYSTEM" = 'remote' ]; then
     exit
 fi
 
-
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -42,7 +57,7 @@ fi
 user_domains=0
 user_records=0
 suspended_dns=0
-conf="$USER_DATA/dns.conf"
+export conf="$USER_DATA/dns.conf"
 
 # Defining user name servers
 ns=$(get_user_value '$NS')
@@ -83,10 +98,11 @@ update_user_value "$user" '$U_DNS_RECORDS' "$user_records"
 update_user_value "$user" '$SUSPENDED_DNS' "$suspended_dns"
 
 # Restarting named
-$BIN/v-restart-dns $restart
+$BIN/v-restart-dns "$restart"
 check_result $? "Bind restart failed" >/dev/null
 
 # Logging
+$BIN/v-log-action "system" "Info" "System" "Rebuilt DNS zones (User: $user)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change domain ssl certificate
 # options: USER DOMAIN SSL_DIR [RESTART]
+# labels: web
+#
+# example: v-change-web-domain-sslcert admin example.com /home/admin/tmp
 #
 # The function changes SSL domain certificate and the key. If ca file present
 # it will be replaced as well.
@@ -18,9 +21,14 @@ ssl_dir=$3
 restart=$4
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -79,14 +87,14 @@ fi
 #----------------------------------------------------------#
 
 # Restarting web server
-$BIN/v-restart-web $restart
+$BIN/v-restart-web "$restart"
 check_result $? "Web restart failed" >/dev/null
 
-$BIN/v-restart-proxy $restart
+$BIN/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging
-log_history "changed ssl certificate for $domain"
+$BIN/v-log-action "$user" "Info" "Web" "SSL certificate changed (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

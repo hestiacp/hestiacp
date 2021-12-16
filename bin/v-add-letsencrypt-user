@@ -1,8 +1,11 @@
 #!/bin/bash
 # info: register letsencrypt user account
 # options: USER
+# labels: web
 #
-# The function creates and register LetsEncrypt account 
+# example: v-add-letsencrypt-user bob
+#
+# The function creates and register LetsEncrypt account
 
 
 #----------------------------------------------------------#
@@ -13,8 +16,12 @@
 user=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # LE API
 LE_API='https://acme-v02.api.letsencrypt.org'
@@ -59,11 +66,12 @@ is_object_valid 'user' 'USER' "$user"
 if [ -e "$USER_DATA/ssl/le.conf" ]; then
     source "$USER_DATA/ssl/le.conf"
 fi
-if [ ! -z "$KID" ]; then
+if [ -n "$KID" ]; then
     exit
 fi
 
-
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -80,7 +88,7 @@ agreement=''
 # Generating user key
 KEY="$USER_DATA/ssl/user.key"
 if [ ! -e "$KEY" ]; then
-    openssl genrsa -out $KEY 4096 >/dev/null 2>&1
+    openssl genrsa -out "$KEY" 4096 >/dev/null 2>&1
     chmod 600 $KEY
 fi
 
@@ -118,7 +126,7 @@ kid=$(echo "$answer" |grep -i location: |cut -f2 -d ' '|tr -d '\r')
 # Checking answer status
 status=$(echo "$answer" |grep HTTP/ |tail -n1 |cut -f2 -d ' ')
 if [[ "${status:0:2}" -ne "20" ]]; then
-    check_result $E_CONNECT "Let's Encrypt acc registration failed $status"
+    check_result "$E_CONNECT" "Let's Encrypt acc registration failed $status"
 fi
 
 

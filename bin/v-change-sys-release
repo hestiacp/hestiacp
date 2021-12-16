@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: update web templates
 # options: [RESTART]
+# labels: hestia
 #
 # The function for changing the release branch for the
 # Hestia Control Panel. This allows the user to switch between
@@ -16,8 +17,12 @@
 branch=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -51,8 +56,8 @@ if [ -z "$branch" ]; then
 else
     # Check that requested branch exists
     echo "Checking for existence of $branch branch..."
-    branch_check=$(curl -s --head -w %{http_code} https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/hestia/control -o /dev/null)
-    if [ $branch_check -ne "200" ]; then
+    branch_check=$(curl -s --head -w %{http_code} "https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/hestia/control" -o /dev/null)
+    if [ "$branch_check" -ne "200" ]; then
         echo "Error: invalid branch name specified."
         exit 1
     fi
@@ -68,5 +73,5 @@ fi
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
-
+$BIN/v-log-action "system" "Info" "System" "Update branch changed (Value: $branch)."
 exit

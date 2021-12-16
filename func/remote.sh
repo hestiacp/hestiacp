@@ -1,40 +1,67 @@
+#!/bin/bash
 # Check if script already running or not
 is_procces_running() {
     SCRIPT=$(basename $0)
     for pid in $(pidof -x $SCRIPT); do
         if [ $pid != $$ ]; then
-            check_result $E_INUSE "$SCRIPT is already running"
+            check_result "$E_INUSE" "$SCRIPT is already running"
         fi
     done
 }
 
 send_api_cmd() {
-    answer=$(curl -s -k \
-        --data-urlencode "user=$USER" \
-        --data-urlencode "password=$PASSWORD" \
-        --data-urlencode "returncode=yes" \
-        --data-urlencode "cmd=$1" \
-        --data-urlencode "arg1=$2" \
-        --data-urlencode "arg2=$3" \
-        --data-urlencode "arg3=$4" \
-        --data-urlencode "arg4=$5" \
-        --data-urlencode "arg5=$6" \
-        --data-urlencode "arg6=$7" \
-        --data-urlencode "arg7=$8" \
-        --data-urlencode "arg8=$9" \
-        https://$HOST:$PORT/api/)
+    if [ -n "$PASSWORD" ]; then
+        answer=$(curl -s -k \
+            --data-urlencode "user=$USER" \
+            --data-urlencode "password=$PASSWORD" \
+            --data-urlencode "returncode=yes" \
+            --data-urlencode "cmd=$1" \
+            --data-urlencode "arg1=$2" \
+            --data-urlencode "arg2=$3" \
+            --data-urlencode "arg3=$4" \
+            --data-urlencode "arg4=$5" \
+            --data-urlencode "arg5=$6" \
+            --data-urlencode "arg6=$7" \
+            --data-urlencode "arg7=$8" \
+            --data-urlencode "arg8=$9" \
+            https://$HOST:$PORT/api/)    
+    else
+        answer=$(curl -s -k \
+            --data-urlencode "hash=$HASH" \
+            --data-urlencode "returncode=yes" \
+            --data-urlencode "cmd=$1" \
+            --data-urlencode "arg1=$2" \
+            --data-urlencode "arg2=$3" \
+            --data-urlencode "arg3=$4" \
+            --data-urlencode "arg4=$5" \
+            --data-urlencode "arg5=$6" \
+            --data-urlencode "arg6=$7" \
+            --data-urlencode "arg7=$8" \
+            --data-urlencode "arg8=$9" \
+            https://$HOST:$PORT/api/)
+    fi
     return $answer
 }
 
 send_api_file() {
-    answer=$(curl -s -k \
-        --data-urlencode "user=$USER" \
-        --data-urlencode "password=$PASSWORD" \
-        --data-urlencode "returncode=yes" \
-        --data-urlencode "cmd=v-make-tmp-file" \
-        --data-urlencode "arg1=$(cat $1)" \
-        --data-urlencode "arg2=$2" \
-        https://$HOST:$PORT/api/)
+    if [ -n "$PASSWORD" ]; then
+        answer=$(curl -s -k \
+                --data-urlencode "user=$USER" \
+                --data-urlencode "password=$PASSWORD" \
+                --data-urlencode "returncode=yes" \
+                --data-urlencode "cmd=v-make-tmp-file" \
+                --data-urlencode "arg1=$(cat $1)" \
+                --data-urlencode "arg2=$2" \
+                https://$HOST:$PORT/api/) 
+    else
+        answer=$(curl -s -k \
+                --data-urlencode "hash=$HASH" \
+                --data-urlencode "returncode=yes" \
+                --data-urlencode "cmd=v-make-tmp-file" \
+                --data-urlencode "arg1=$(cat $1)" \
+                --data-urlencode "arg2=$2" \
+                https://$HOST:$PORT/api/)
+    fi
     return $answer
 }
 
@@ -74,7 +101,7 @@ send_scp_file() {
 is_dnshost_new() {
     if [ -e "$HESTIA/conf/dns-cluster.conf" ]; then
         check_host=$(grep "HOST='$host'" $HESTIA/conf/dns-cluster.conf)
-        if [ ! -z "$check_host" ]; then
+        if [ -n "$check_host" ]; then
             check_result $E_EXISTS "remote dns host $host exists"
         fi
     fi
@@ -82,10 +109,10 @@ is_dnshost_new() {
 
 is_dnshost_alive() {
     cluster_cmd v-list-sys-config
-    check_result $? "$type connection to $HOST failed" $E_CONNECT
+    check_result $? "$type connection to $HOST failed" "$E_CONNECT"
 
-    cluster_cmd v-list-user $DNS_USER
-    check_result $? "$DNS_USER doesn't exist" $E_CONNECT
+    cluster_cmd v-list-user "$DNS_USER"
+    check_result $? "$DNS_USER doesn't exist" "$E_CONNECT"
 }
 
 remote_dns_health_check() {
@@ -97,7 +124,7 @@ remote_dns_health_check() {
         parse_object_kv_list "$str"
 
         # Checking host connection
-        cluster_cmd v-list-user $DNS_USER
+        cluster_cmd v-list-user "$DNS_USER"
         if [ $? -ne 0 ]; then
 
             # Creating error report

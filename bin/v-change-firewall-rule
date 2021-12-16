@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change firewall rule
 # options: RULE ACTION IP PORT [PROTOCOL] [COMMENT]
+# labels: 
+#
+# example: v-change-firewall-rule 3 ACCEPT 5.188.123.17 443
 #
 # The function is used for changing existing firewall rule.
 # It fully replace rule with new one but keeps same id.
@@ -9,9 +12,6 @@
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
-
-# Importing system variables
-source /etc/profile
 
 # Argument definition
 rule=$1
@@ -23,8 +23,12 @@ protocol=$(echo $protocol|tr '[:lower:]' '[:upper:]')
 comment=$6
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Sort function
 sort_fw_rules() {
@@ -39,7 +43,7 @@ sort_fw_rules() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '5' "$#" 'RULE ACTION IP  PORT [PROTOCOL] [COMMENT]'
+check_args '4' "$#" 'RULE ACTION IP PORT [PROTOCOL] [COMMENT]'
 is_format_valid 'rule' 'action' 'protocol' 'port_ext'
 if [ ! -z "$comment" ]; then
     is_format_valid 'comment'
@@ -49,8 +53,8 @@ is_object_valid '../../data/firewall/rules' 'RULE' "$rule"
 
 if [[ "$ip" =~ ^ipset: ]]; then
     ipset_name="${ip#ipset:}"
-    v-list-firewall-ipset plain | grep "^$ipset_name\s" >/dev/null
-    check_result $? 'ipset object not found' $E_NOTEXIST
+    $BIN/v-list-firewall-ipset plain | grep "^$ipset_name\s" >/dev/null
+    check_result $? 'ipset object not found' "$E_NOTEXIST"
 else
     is_format_valid 'ip'
 fi
@@ -91,6 +95,6 @@ $BIN/v-update-firewall
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "Firewall" "Firewall rule changed (Rule: $rule, Action: $action, Protocol: $protocol, Port: $port_ext)."
 log_event "$OK" "$ARGUMENTS"
-
 exit

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add firewall rule
 # options: ACTION IP PORT [PROTOCOL] [COMMENT] [RULE]
+# labels: 
+#
+# example: v-add-firewall-rule DROP 185.137.111.77 25
 #
 # The function adds new rule to system firewall
 
@@ -8,9 +11,6 @@
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
-
-# Importing system variables
-source /etc/profile
 
 # Argument definition
 action=$(echo $1|tr '[:lower:]' '[:upper:]')
@@ -22,8 +22,12 @@ comment=$5
 rule=$6
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Get next firewall rule id
 get_next_fw_rule() {
@@ -52,13 +56,13 @@ is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 get_next_fw_rule
 is_format_valid 'rule'
 is_object_new '../../data/firewall/rules' 'RULE' "$rule"
-if [ ! -z "$comment" ]; then
+if [ -n "$comment" ]; then
     is_format_valid 'comment'
 fi
 if [[ "$ip" =~ ^ipset: ]]; then
     ipset_name="${ip#ipset:}"
-    v-list-firewall-ipset plain | grep "^$ipset_name\s" >/dev/null
-    check_result $? 'ipset object not found' $E_NOTEXIST
+    $BIN/v-list-firewall-ipset plain | grep "^$ipset_name\s" >/dev/null
+    check_result $? 'ipset object not found' "$E_NOTEXIST"
 else
     is_format_valid 'ip'
 fi
@@ -97,7 +101,13 @@ $BIN/v-update-firewall
 #                       Hestia                             #
 #----------------------------------------------------------#
 
+# Fix missing port value in log if zero
 # Logging
+if [ -z "$port" ]; then
+    port="0"
+fi
+
+$BIN/v-log-action "system" "Info" "Firewall" "Added firewall rule (Action: $action, Port: $port, Protocol: $protocol)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

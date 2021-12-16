@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: list user package
 # options: PACKAGE [FORMAT]
+# labels: 
 #
 # The function for getting the list of system ip parameters.
 
@@ -15,8 +16,12 @@ PACKAGE=$package
 format=${2-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 # JSON list function
 json_list() {
     echo '{'
@@ -96,7 +101,7 @@ csv_list() {
 # Checking args
 check_args '1' "$#" 'PACKAGE [FORMAT]'
 is_format_valid 'package'
-is_package_valid
+is_package_valid 
 
 
 #----------------------------------------------------------#
@@ -104,7 +109,7 @@ is_package_valid
 #----------------------------------------------------------#
 
 # Parsing package
-source $HESTIA/data/packages/$PACKAGE.pkg
+source_conf "$HESTIA/data/packages/$PACKAGE.pkg"
 
 # Listing data
 case $format in

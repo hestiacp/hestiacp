@@ -1,0 +1,62 @@
+#!/bin/bash
+# info: delete user usage statistics
+# options: USER DOMAIN
+# labels: panel
+#
+# example: v-delete-user-stats user
+# example: v-delete-user-stats admin overall
+#
+# The function deletes user statistics data.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+mode=$2
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER'
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Actions                            #
+#----------------------------------------------------------#
+
+if [ "$user" = 'admin' ] && [ "$mode" = "overall" ]; then
+    log_file="$USER_DATA/overall_stats.log"
+else
+    log_file="$USER_DATA/stats.log"
+fi
+
+if [ -f "$USER_DATA/stats.log" ]; then
+    rm -f "$log_file"
+    touch "$log_file"
+fi
+
+#----------------------------------------------------------#
+#                       Logging                            #
+#----------------------------------------------------------#
+if [ "$mode" = "overall" ]; then
+    $BIN/v-log-action "system" "Info" "System" "Overall usage statistics deleted."
+else
+    $BIN/v-log-action "system" "Info" "System" "Usage statistics deleted (User: $user)."
+fi

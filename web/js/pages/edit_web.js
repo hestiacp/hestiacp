@@ -2,7 +2,7 @@ App.Actions.WEB.update_custom_doc_root = function(elm, hint) {
     var prepath = $('input[name="v-custom-doc-root_prepath"]').val();
     var domain = $('select[name="v-custom-doc-domain"]').val();
     var folder = $('input[name="v-custom-doc-folder"]').val();
-    console.log(domain, folder);
+
     $('.custom_docroot_hint').html(prepath+domain+'/public_html/'+folder);
 }
 App.Listeners.DB.keypress_custom_folder = function() {
@@ -42,9 +42,6 @@ App.Actions.WEB.update_ftp_username_hint = function(elm, hint) {
         $(elm).parent().find('.hint').html('');
     }
 
-    if (hint.indexOf(GLOBAL.FTP_USER_PREFIX) == 0) {
-        hint = hint.slice(GLOBAL.FTP_USER_PREFIX.length, hint.length);
-    }
     hint = hint.replace(/[^\w\d]/gi, '');
 
     $(elm).parent().find('.v-ftp-user').val(hint);
@@ -109,7 +106,7 @@ App.Listeners.WEB.keypress_ftp_path = function() {
 //
 //
 App.Actions.WEB.add_ftp_user_form = function() {
-    var ref = $('#templates').find('.ftptable').clone(true);
+    var ref = $('#templates').find('.ftptable-nrm').clone(true);
     var index = $('.data-col2 .ftptable').length + 1;
     
     ref.find('input').each(function(i, elm) {
@@ -119,7 +116,7 @@ App.Actions.WEB.add_ftp_user_form = function() {
     
     ref.find('.ftp-user-number').text(index);
     
-    $('.data-col2 .ftptable:last').after(ref);
+    $('#ftp_users').append(ref);
     
     var index = 1;
     $('.data-col2 .ftp-user-number:visible').each(function(i, o) {
@@ -146,12 +143,12 @@ App.Actions.WEB.remove_ftp_user = function(elm) {
     
     if ($('.ftptable-nrm:visible').length == 0) {
         $('.add-new-ftp-user-button').hide();
-        $('input[name="v_ftp"]').attr('checked', false);
+        $('input[name="v_ftp"]').prop('checked', false);
     }
 }
 
 App.Actions.WEB.toggle_additional_ftp_accounts = function(elm) {
-    if ($(elm).attr('checked')) {
+    if ($(elm).prop('checked')) {
         $('.ftptable-nrm, .v-add-new-user, .add-new-ftp-user-button').show();
         $('.ftptable-nrm').each(function(i, elm) {
             var login = $(elm).find('.v-ftp-user');
@@ -171,8 +168,17 @@ App.Actions.WEB.toggle_additional_ftp_accounts = function(elm) {
     }
 }
 
+App.Actions.WEB.toggle_ssl = function (elm){
+    elementHideShow('ssltable');
+    if($('#ssl_crt').val().length > 0 || $('#ssl_hsts').prop('checked') || $('#letsencrypt').prop('checked')){
+        return false;
+    }
+    $('#v_ssl_forcessl').prop('checked', true);
+}
+
 App.Actions.WEB.toggle_letsencrypt = function(elm) {
-    if ($(elm).attr('checked')) {
+    if ($(elm).prop('checked')) {
+        $('#ssl-details').hide();
         $('#ssltable textarea[name=v_ssl_crt],#ssltable textarea[name=v_ssl_key], #ssltable textarea[name=v_ssl_ca]').attr('disabled', 'disabled');
         $('#generate-csr').hide();
 	if(!$('.lets-encrypt-note').hasClass('enabled')){
@@ -182,6 +188,7 @@ App.Actions.WEB.toggle_letsencrypt = function(elm) {
     else {
         $('#ssltable textarea[name=v_ssl_crt],#ssltable textarea[name=v_ssl_key], #ssltable textarea[name=v_ssl_ca]').removeAttr('disabled');
         $('#generate-csr').show();
+        $('#ssl-details').show();
 	$('.lets-encrypt-note').hide();
     }
 }
@@ -230,6 +237,28 @@ $(function() {
             $('.stats-auth').show();
         }
     });
+    
+    $('select[name="v_nginx_cache"]').change(function(evt){
+        var select = $(evt.target);
+    
+        if(select.val() != 'yes'){
+            $('#v-clear-cache').hide();
+            $('#v_nginx_cache_length').hide();
+        } else {
+            $('#v-clear-cache').show();
+            $('#v_nginx_cache_length').show();
+        }
+    });  
+    
+    $('select[name="v_proxy_template"]').change(function(evt){
+        var select = $(evt.target);
+
+        if(select.val() != 'caching'){
+            $('#v-clear-cache').hide();
+        } else {
+            $('#v-clear-cache').show();
+        }
+    });  
 
     $('#vstobjects').on('submit', function(evt) {
         $('input[disabled]').each(function(i, elm) {
@@ -265,7 +294,18 @@ function FTPrandom(elm) {
     App.Actions.WEB.randomPasswordGenerated && App.Actions.WEB.randomPasswordGenerated(elm);
 }
 
-function elementHideShow(elementToHideOrShow){
-    var el = document.getElementById(elementToHideOrShow);
-    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+function elementHideShow(element){
+    if ( document.getElementById(element)){
+        var el = document.getElementById(element);
+        el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    }
 }
+
+$('.v-redirect-custom-value').change( function(){
+    
+    if(this.value == "custom"){
+        $('#custom_redirect').show();
+    }else{
+        $('#custom_redirect').hide();
+    }
+})

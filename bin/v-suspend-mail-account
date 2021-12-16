@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: suspend mail account
 # options: USER DOMAIN ACCOUNT
+# labels: mail
+#
+# example: v-suspend-mail-account admin acme.com bob
 #
 # The function suspends mail account.
 
@@ -16,9 +19,14 @@ domain_idn=$2
 account=$3
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -53,9 +61,9 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     if [ "$quota" = 'unlimited' ]; then
       quota=0                                                                                              
     fi
-    sed -i "/^$account:/d" $HOMEDIR/$user/conf/mail/$domain/passwd
+    sed -i "/^$account:/d" "$HOMEDIR/$user/conf/mail/$domain/passwd"
     str="$account:SUSPENDED:$user:mail::$HOMEDIR/$user::userdb_quota_rule=*:storage=${quota}M"
-    echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
+    echo "$str" >> "$HOMEDIR/$user/conf/mail/$domain/passwd"
 fi
 
 
@@ -67,6 +75,7 @@ fi
 update_object_value "mail/$domain" 'ACCOUNT' "$account" '$SUSPENDED' 'yes'
 
 # Logging
+$BIN/v-log-action "system" "Info" "Mail" "Suspended mail account (User: $user, Account: $account@$domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: suspend cron job
 # options: USER JOB [RESTART]
+# labels: panel
+#
+# example: v-suspend-cron-job admin 5 yes
 #
 # The function suspends a certain job of the cron scheduler.
 
@@ -15,8 +18,12 @@ job=$2
 restart=$3
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -50,10 +57,11 @@ sync_cron_jobs
 #----------------------------------------------------------#
 
 # Restarting crond
-$BIN/v-restart-cron $restart
+$BIN/v-restart-cron "$restart"
 check_result $? "Cron restart failed" >/dev/null
 
 # Logging
+$BIN/v-log-action "system" "Info" "Cron Jobs" "Cron job suspended (Job: $job)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

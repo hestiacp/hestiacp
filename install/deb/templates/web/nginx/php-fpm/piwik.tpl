@@ -21,7 +21,7 @@ server {
     location / {
         try_files $uri /index.php;
 
-        location ~* ^.+\.(jpeg|jpg|png|gif|bmp|ico|svg|css|js)$ {
+        location ~* ^.+\.(jpeg|jpg|png|webp|gif|bmp|ico|svg|css|js)$ {
             valid_referers none blocked %domain_idn% %alias_idn%;
             if ($invalid_referer)  {
                 return 444;
@@ -37,7 +37,8 @@ server {
             }
 
             fastcgi_pass    %backend_lsnr%;
-            include         /etc/nginx/fastcgi_params;
+            include /etc/nginx/fastcgi_params;
+            include     %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
         }
     }
 
@@ -55,9 +56,9 @@ server {
         alias   %home%/%user%/web/%domain%/document_errors/;
     }
 
-    location ~* "/\.(htaccess|htpasswd)$" {
-        deny    all;
-        return  404;
+    location ~ /\.(?!well-known\/) { 
+       deny all; 
+       return 404;
     }
 
     location /vstats/ {

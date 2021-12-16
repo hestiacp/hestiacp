@@ -1,0 +1,66 @@
+<center>
+	<table class="login">
+		<tr>
+			<td>
+				<table>
+					<tr>
+						<td style="padding: 22px 30px 0 42px; height: 280px; width: 170px;">
+							<a href="/"><img border=0 src="/images/logo.svg" title="<?=_('Hestia Control Panel');?>" style="margin-top: 70px;" /></a>
+						</td>
+						<td style="padding: 40px 60px 0 0;" class="animated fadeIn">
+							<form method="post">
+								<table class="login-box">
+									<tr>
+										<td style="padding: 12px 0 0 2px;" class="login-welcome">
+											<?=_('Forgot Password');?>
+										</td>
+									</tr>
+									<tr>
+										<td style="padding: 12px 0 0 2px;">
+											<input type="hidden" name="action" value="confirm">
+											<input type="hidden" name="token" value="<?=$_SESSION['token'];?>"/>
+											<input type="hidden" name="user" value="<?=htmlentities($_GET['user'], ENT_QUOTES|ENT_HTML5)?>">
+											<input type="hidden" name="code" value="<?=htmlentities($_GET['code'], ENT_QUOTES|ENT_HTML5)?>">
+											<?=_('New Password');?>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input tabindex="1" type="password" size="20px" style="width:200px;" name="password" class="vst-input">
+										</td>
+									</tr>
+									<tr>
+										<td style="padding: 12px 0 0 2px;">
+											<?=_('Confirm Password');?>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input tabindex="2" type="password" size="20px" style="width:200px;" name="password_confirm" class="vst-input">
+										</td>
+									</tr>
+									<tr>
+										<td style="padding: 20px 0 12px 0;">
+											<input tabindex="3" type="submit" value="<?=_('Reset');?>" class="button">&nbsp;&nbsp;
+											<input type="button" class="button cancel" value="<?=_('Back');?>" onclick="location.href='/login/'">
+										</td>
+									</tr>
+								</table>
+							</form>
+						</td>
+					</tr>
+					<tr>
+						<td colspan=2>
+							<div class="login-bottom">
+								<div style="height:20px"><?php if (isset($ERROR)) echo $ERROR ?></div>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</center>
+</body>
+
+</html>

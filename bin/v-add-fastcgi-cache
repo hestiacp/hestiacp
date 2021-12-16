@@ -1,0 +1,122 @@
+#!/bin/bash
+# info: Enable FastCGI cache for nginx
+# options: USER DOMAIN [DURATION] [DEBUG] [RESTART]
+# labels: hestia web
+#
+# example: v-add-fastcgi-cache user domain.tld 30m
+#
+# The function enables FastCGI cache for nginx
+# Acceptable values for duration is time in seconds (10s) minutes (10m) or days (10d)
+# Add "yes" as last parameter to append debug information to response headers
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+duration=${3-2m}
+restart=${4-no}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN [DURATION] [DEBUG] [RESTART]'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'web' 'DOMAIN' "$domain"
+is_object_unsuspended 'web' 'DOMAIN' "$domain"
+
+if ! [[ "$duration" =~ ^[0-9].*[s|m|d]$ ]]; then
+   echo "Invalid duration";
+   exit 2;
+fi
+
+if [[ "$duration" =~ ^[0].*[s|m|d]$ ]]; then
+   echo "Invalid duration";
+   exit 2;
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Load domain data
+parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
+
+# Check that nginx is not in proxy mode
+if [ "$WEB_SYSTEM" != 'nginx' ]; then
+    echo "Error: nginx is in proxy mode"
+    exit "$E_NOTEXIST"
+fi
+
+fastcgi="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.fastcgi_cache.conf"
+no_cache='$no_cache'
+
+cat << EOF > $fastcgi
+    fastcgi_cache $domain;
+    fastcgi_cache_valid 200 $duration;
+    fastcgi_cache_valid 301 302 10m;
+    fastcgi_cache_valid 404 10m;
+    fastcgi_cache_bypass $no_cache;
+    fastcgi_no_cache $no_cache;
+    set $no_cache 0;
+EOF
+
+
+chown root:$user $fastcgi
+chmod 640 $fastcgi
+
+str="fastcgi_cache_path /var/cache/nginx/micro/$domain levels=1:2" 
+str="$str keys_zone=$domain:10m max_size=512m inactive=30m;" 
+conf='/etc/nginx/conf.d/fastcgi_cache_pool.conf'
+if [ -f "$conf" ]; then
+    if [ -z "$(grep "=${domain}:" $conf)" ]; then
+        echo "$str" >> $conf
+    fi
+else
+    echo "$str" >> $conf
+fi
+
+mkdir -p /var/cache/nginx/micro/$domain
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+if [ -z "$FASTCGI_CACHE" ]; then
+    add_object_key "web" 'DOMAIN' "$domain" 'FASTCGI_CACHE' 'ALIAS'
+fi
+if [ -z "$FASTCGI_DURATION" ]; then
+    add_object_key "web" 'DOMAIN' "$domain" 'FASTCGI_DURATION' 'ALIAS'
+fi
+
+# Set FastCGI cache flag to enabled
+update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_CACHE' 'yes'
+update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_DURATION' "$duration"
+
+# Restart web server
+$BIN/v-restart-web "$restart"
+check_result $? "Web server restart failed" > /dev/null
+
+# Logging
+$BIN/v-log-action "$user" "Info" "Web" "FastCGI cache enabled (Domain: $domain)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

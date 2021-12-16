@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list web domain access log
 # options: USER DOMAIN [LINES] [FORMAT]
+# labels: web
+#
+# example: v-list-web-domain-accesslog admin example.com
 #
 # The function of obtaining raw access web domain logs.
 
@@ -16,8 +19,12 @@ ttl=${3-70}
 format=${4-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {

@@ -1,6 +1,7 @@
 #!/bin/bash
 # info: add letsencrypt cronjob
 # options: NONE
+# labels: 
 #
 # The script for enabling letsencrypt cronjob
 
@@ -10,8 +11,12 @@
 #----------------------------------------------------------#
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -20,6 +25,8 @@ source $HESTIA/conf/hestia.conf
 
 is_system_enabled "$CRON_SYSTEM" 'CRON_SYSTEM'
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -28,7 +35,7 @@ is_system_enabled "$CRON_SYSTEM" 'CRON_SYSTEM'
 # Add cron job
 cmd="sudo $HESTIA/bin/v-update-sys-queue letsencrypt"
 check_cron=$(grep "$cmd" $HESTIA/data/users/admin/cron.conf 2> /dev/null)
-if [ -z "$check_cron" ] && [ ! -z "$CRON_SYSTEM" ]; then
+if [ -z "$check_cron" ] && [ -n "$CRON_SYSTEM" ]; then
     $BIN/v-add-cron-job admin '*/5' '*' '*' '*' '*' "$cmd"
 fi
 

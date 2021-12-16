@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add file
 # options: USER FILE
+# labels: 
+#
+# example: v-add-fs-file admin readme.md
 #
 # The function creates new files on file system
 
@@ -8,6 +11,9 @@ user=$1
 dst_file=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
 #----------------------------------------------------------#
@@ -17,6 +23,9 @@ source $HESTIA/func/main.sh
 check_args '2' "$#" 'USER FILE'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 # Checking user homedir
 homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
@@ -28,7 +37,7 @@ fi
 # Checking destination path
 rpath=$(readlink -f "$dst_file")
 if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
-    echo "Error: invalid destination path $dst_dir"
+    echo "Error: invalid destination path $dst_file"
     exit 2
 fi
 

@@ -1,0 +1,216 @@
+<?php
+	$v_webmail_alias = "webmail";
+	if (!empty($_SESSION['WEBMAIL_ALIAS'])) $v_webmail_alias = $_SESSION['WEBMAIL_ALIAS'];
+?>
+<!-- Begin toolbar -->
+<div class="l-center">
+	<div class="l-sort clearfix noselect">
+		<div class="l-unit-toolbar__buttonstrip">
+			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/mail/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+			<?php if ($read_only !== 'true') { ?>
+				<a href="/add/mail/?domain=<?=htmlentities($_GET['domain'])?>" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Mail Account');?></a>
+				<a href="/edit/mail/?domain=<?=htmlentities($_GET['domain'])?>" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-pencil-alt status-icon blue"></i><?=_('Editing Mail Domain');?></a>
+			<?php } ?>
+		</div>
+		<ul class="context-menu sort-order animated fadeIn" style="display:none;">
+			<li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?=_('Date');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+			<li entity="sort-disk" sort_as_int="1"><span class="name"><?=_('Disk');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+			<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?=_('Name');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+			<li entity="sort-quota" sort_as_int="1"><span class="name"><?=_('Quota');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+		</ul>
+		<div class="l-sort-toolbar clearfix">
+			<table>
+				<tr>
+					<td class="sort-by" title="<?=_('Sort items');?>">
+						<?=_('sort by');?>: <span>
+							<b>
+								<?php if ($_SESSION['userSortOrder'] === 'name') { $label = 'Name'; } else { $label = 'Date'; } ?>
+								<?=_($label)?> <i class="fas fa-sort-alpha-down"></i>
+							</b>
+						</span>
+					</td>
+					<td class="l-sort-toolbar__search-box">
+						<form action="/search/" method="get">
+							<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+							<input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>" />
+							<button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search');?>"><i class="fas fa-search"></i></button>
+						</form>
+					</td>
+					<?php if ($read_only !== 'true') { ?>
+						<td>
+							<form action="/bulk/mail/" method="post" id="objects">
+								<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+								<input type="hidden" value="<?=htmlspecialchars($_GET['domain']); ?>" name="domain" />
+								<div class="l-select">
+									<select name="action" id="">
+										<option value=""><?=_('apply to selected');?></option>
+										<option value="suspend"><?=_('suspend');?></option>
+										<option value="unsuspend"><?=_('unsuspend');?></option>
+										<option value="delete"><?=_('delete');?></option>
+									</select>
+								</div>
+								<button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected');?>"><i class="fas fa-arrow-right"></i></button>
+							</form>
+						</td>
+					<?php } ?>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+<!-- End toolbar -->
+
+<div class="l-separator"></div>
+
+<div class="l-center units">
+	<div class="header table-header">
+		<div class="l-unit__col l-unit__col--right">
+			<div>
+				<div class="clearfix l-unit__stat-col--left super-compact">
+					<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>" onChange="checkedAll('objects');" <?=$display_mode;?>>
+				</div>
+				<div class="clearfix l-unit__stat-col--left wide-3"><b><?=_('Name');?></b></div>
+				<div class="clearfix l-unit__stat-col--left text-right compact-4"><b>&nbsp;</b></div>
+				<div class="clearfix l-unit__stat-col--left text-center compact"><b><?=_('Disk');?></b></div>
+				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Quota');?></b></div>
+				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Aliases');?></b></div>
+				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Forwarding');?></b></div>
+				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Autoreply');?></b></div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Begin mail account list item loop -->
+	<?php
+		foreach ($data as $key => $value) {
+			++$i;
+			if ($data[$key]['SUSPENDED'] == 'yes') {
+				$status = 'suspended';
+				$spnd_action = 'unsuspend';
+				$spnd_icon = 'fa-play';
+				$spnd_confirmation = _('UNSUSPEND_MAIL_ACCOUNT_CONFIRMATION');
+				if ($data[$key]['ALIAS'] == '') {
+					$alias_icon = 'fa-minus-circle';
+				} else {
+					$alias_icon = 'fa-check-circle';
+				}
+				if ($data[$key]['FWD'] == '') {
+					$fwd_icon = 'fa-minus-circle';
+				} else {
+					$fwd_icon = 'fa-check-circle';
+				}
+				if ($data[$key]['AUTOREPLY'] == 'no') {
+					$autoreply_icon = 'fa-minus-circle';
+				} else {
+					$autoreply_icon = 'fa-check-circle';
+				}
+			} else {
+				$status = 'active';
+				$spnd_action = 'suspend';
+				$spnd_icon = 'fa-pause';
+				$spnd_confirmation = _('SUSPEND_MAIL_ACCOUNT_CONFIRMATION');
+				if ($data[$key]['ALIAS'] == '') {
+					$alias_icon = 'fa-minus-circle';
+				} else {
+					$alias_icon = 'fa-check-circle status-icon green';
+				}
+				if ($data[$key]['FWD'] == '') {
+					$fwd_icon = 'fa-minus-circle';
+				} else {
+					$fwd_icon = 'fa-check-circle status-icon green';
+				}
+				if ($data[$key]['AUTOREPLY'] == 'no') {
+					$autoreply_icon = 'fa-minus-circle';
+				} else {
+					$autoreply_icon = 'fa-check-circle status-icon green';
+				}
+			}
+		?>
+		<div class="l-unit <?php if ($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['MAIL_ACC'][$key." @".$_GET['domain']]==1) echo ' l-unit--starred' ; ?> animated fadeIn"
+			v_unit_id="<?=$key."@".$_GET['domain']?>" v_section="mail_acc" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?=$data[$key]['U_DISK']?>"
+			sort-quota="<?=$data[$key]['QUOTA']?>" sort-star="
+			<?php if ($_SESSION['favourites']['MAIL_ACC'][$key."@".$_GET['domain']] == 1) echo '1'; else echo '0'; ?>">
+			<div class="l-unit__col l-unit__col--right">
+				<div class="clearfix l-unit__stat-col--left super-compact">
+					<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="account[]" value="<?=$key?>" <?=$display_mode;?>>
+				</div>
+				<div class="clearfix l-unit__stat-col--left wide-3 truncate">
+					<?php if (($read_only === 'true') || ($data[$key]['SUSPENDED'] == 'yes')) { ?>
+						<b><?=$key."@".$_GET['domain']?></b>
+					<?php } else { ?>
+						<b><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Mail Account');?>: <?=$key?>@<?=htmlspecialchars($_GET['domain'])?>"><?=$key."@".$_GET['domain']?></a></b>
+					<?php } ?>
+				</div>
+				<!-- START QUICK ACTION TOOLBAR AREA -->
+				<div class="clearfix l-unit__stat-col--left text-right compact-4">
+					<div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+						<div class="actions-panel clearfix">
+							<?php if ($read_only === 'true') { ?>
+								<!-- Restrict the ability to edit, delete, or suspend domain items when impersonating 'admin' account -->
+								<?php if ($data[$key]['SUSPENDED'] == 'yes') { ?>
+									&nbsp;
+								<?php } else { ?>
+									<div class="actions-panel__col actions-panel__edit" key-action="href"><a href="http://<?=$v_webmail_alias;?>.<?=htmlspecialchars($_GET['domain'])?>/?_user=<?=$key?>@<?=htmlspecialchars($_GET['domain'])?>" target="_blank" title="<?=_('open webmail');?>"><i class="fas fa-envelope-open-text status-icon maroon status-icon dim"></i></a></div>
+								<?php } ?>
+							<?php } else { ?>
+								<?php if ($data[$key]['SUSPENDED'] == 'no') { ?>
+									<?php if($_SESSION['WEBMAIL_SYSTEM']){?>
+										<?php if (!empty($data[$key]['WEBMAIL'])) { ?>
+											<div class="actions-panel__col actions-panel__edit" key-action="href"><a href="http://<?=$v_webmail_alias;?>.<?=htmlspecialchars($_GET['domain'])?>/?_user=<?=$key?>@<?=htmlspecialchars($_GET['domain'])?>" target="_blank" title="<?=_('open webmail');?>"><i class="fas fa-envelope-open-text status-icon maroon status-icon dim"></i></a></div>
+										<?php } ?>
+									<?php } ?>
+								<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Mail Account');?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+								<?php } ?>
+								<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
+									<a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=_($spnd_action)?>">
+										<i class="fas <?=$spnd_icon?> status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
+										<input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" />
+										<div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=_('Confirmation');?>">
+											<p class="confirmation"><?=sprintf($spnd_confirmation,$key)?></p>
+										</div>
+									</a>
+								</div>
+								<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+									<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('delete');?>">
+										<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
+										<input type="hidden" name="delete_url" value="/delete/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" />
+										<div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=_('Confirmation');?>">
+											<p class="confirmation"><?=sprintf(_('DELETE_MAIL_ACCOUNT_CONFIRMATION'),$key)?></p>
+										</div>
+									</a>
+								</div>
+							<?php } ?>
+						</div>
+					</div>
+					<!-- END QUICK ACTION TOOLBAR AREA -->
+				</div>
+
+				<div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
+				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_(humanize_usage_size($data[$key]['QUOTA'])) ?></b> <span class="text-small"><?=_(humanize_usage_measure($data[$key]['QUOTA'])) ?></span></div>
+				<div class="clearfix l-unit__stat-col--left text-center">
+					<i class="fas <?=$alias_icon;?>"></i>
+				</div>
+				<div class="clearfix l-unit__stat-col--left text-center">
+					<i class="fas <?=$fwd_icon;?>"></i>
+				</div>
+				<div class="clearfix l-unit__stat-col--left text-center">
+					<i class="fas <?=$autoreply_icon;?>"></i>
+				</div>
+			</div>
+		</div>
+	<?php } ?>
+</div>
+
+<div id="vstobjects">
+	<div class="l-separator"></div>
+	<div class="l-center">
+		<div class="l-unit-ft">
+			<table class='data'></table>
+			<div class="data-count l-unit__col l-unit__col--right clearfix">
+				<?php printf(ngettext('%d mail account', '%d mail accounts', $i),$i); ?>
+			</div>
+			<div class="data-count l-unit__col l-unit__col--right back clearfix">
+			</div>
+		</div>
+	</div>
+</div>

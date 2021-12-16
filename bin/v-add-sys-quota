@@ -1,8 +1,12 @@
 #!/bin/bash
 # info: add system quota
 # options: NONE
+# labels: 
+#
+# example: v-add-sys-quota
 #
 # The script enables filesystem quota on /home partition
+# Some kernels do require additional packages to be installed first
 
 
 #----------------------------------------------------------#
@@ -10,8 +14,10 @@
 #----------------------------------------------------------#
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -26,7 +32,7 @@ if [ -z "$kernel_module_check" ]; then
     echo "Installing required kernel modules for quota support..."
     reboot_req="Y"
     apt-get -qq install linux-image-extra-virtual -y
-    check_result $? "kernel module installation failed" $E_UPDATE
+    check_result $? "kernel module installation failed" "$E_UPDATE"
 fi
 
 # Checking quota package
@@ -34,15 +40,16 @@ quota=$(which --skip-alias --skip-functions quota 2>/dev/null)
 if [ $? -ne 0 ]; then
     if [ -d "/etc/sysconfig" ]; then
         yum -y install quota >/dev/null 2>&1
-        check_result $? "quota package installation failed" $E_UPDATE
+        check_result $? "quota package installation failed" "$E_UPDATE"
     else
         export DEBIAN_FRONTEND=noninteractive
         apt-get -y install quota >/dev/null 2>&1
-        check_result $? "quota package installation failed" $E_UPDATE
+        check_result $? "quota package installation failed" "$E_UPDATE"
     fi
 fi
 
-
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -56,7 +63,7 @@ if [ $(echo $opt | tr ',' '\n' | grep -x $fnd | wc -l) -ne 5 ]; then
     old=$(echo $(echo $opt | tr ',' '\n' | grep -v 'usrquota\|grpquota\|usrjquota=\|grpjquota=\|jqfmt=') | tr ' ' ',')
     new='usrquota,grpquota,usrjquota=aquota.user,grpjquota=aquota.group,jqfmt=vfsv0'
     sed -i "$lnr s/$opt/$old,$new/" /etc/fstab
-    mount -o remount $mnt
+    mount -o remount "$mnt"
 fi
 
 # Adding v2 group and user quota index
@@ -73,9 +80,9 @@ echo 'touch /forcequotacheck' >> /etc/cron.daily/quotacheck
 chmod a+x /etc/cron.daily/quotacheck
 
 # Enabling group and user quota
-if [ ! -z "$(quotaon -pa | grep " $mnt " | grep 'user\|group' | grep 'is off')" ]; then
+if [ -n "$(quotaon -pa | grep " $mnt " | grep 'user\|group' | grep 'is off')" ]; then
     quotaon -v $mnt
-    check_result $? "quota can't be enabled in $mnt" $E_DISK
+    check_result $? "quota can't be enabled in $mnt" "$E_DISK"
 fi
 
 # Updating hestia.conf value
@@ -87,7 +94,7 @@ fi
 
 # Rebuilding user quota
 for user in $($HESTIA/bin/v-list-sys-users plain); do
-    $BIN/v-update-user-quota $user
+    $BIN/v-update-user-quota "$user"
 done
 
 
@@ -96,6 +103,7 @@ done
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "Plugins" "System Quota enforcement enabled."
 log_history "system quota enforcement enabled"
 log_event "$OK" "$ARGUMENTS"
 

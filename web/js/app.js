@@ -1056,15 +1056,18 @@ function checkedAll(frmname) {
 
 function doSearch(url) {
     var url = url || '/search/';
-    var loc = url + '?q=' + $('.search-input').val();
-
+    var loc = url + '?q=' + $('.search-input').val() + '&token=' +  $('input[name="token"]').val();
     location.href = loc;
     return false;
 }
 
 
-function elementHideShow(elementToHideOrShow){
+function elementHideShow(elementToHideOrShow,trigger){
     var el = document.getElementById(elementToHideOrShow);
     el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    
+    if (typeof trigger !== 'undefined') {
+        trigger.querySelector('.section-hide-button').classList.toggle('fa-minus-square');
+        trigger.querySelector('.section-hide-button').classList.toggle('fa-plus-square');
+    }
 }
-

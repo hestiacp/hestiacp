@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: Download backup
-# options: USER BACKUP 
+# options: USER BACKUP
+# labels: hestia
+#
+# example: v-download-backup admin admin.2020-11-05_05-10-21.tar
 #
 # The function download back-up from remote server
 
@@ -8,9 +11,6 @@
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
-
-# Import Hestia variable for cron launch
-source /etc/profile
 
 # Argument definition
 user=$1
@@ -22,13 +22,23 @@ if [ -z "$BACKUP" ]; then
 fi
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/db.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
 source $HESTIA/func/rebuild.sh
-source $HESTIA/conf/hestia.conf
+# shellcheck source=/usr/local/hestia/func/backup.sh
 source $HESTIA/func/backup.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -36,6 +46,9 @@ source $HESTIA/func/backup.sh
 
 check_args '2' "$#" 'USER BACKUP'
 is_format_valid 'user' 'backup'
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -53,22 +66,22 @@ fi
 # Checking local backup
 if [ ! -e "$BACKUP/$backup" ]; then
     if [[ "$BACKUP_SYSTEM" =~ "google" ]]; then
-        google_download $backup
+        google_download "$backup"
         downloaded='yes'
     fi
     if [[ "$BACKUP_SYSTEM" =~ "sftp" ]] && [ -z "$downloaded" ]; then
-        sftp_download $backup
+        sftp_download "$backup"
         downloaded='yes'
     fi
     if [[ "$BACKUP_SYSTEM" =~ "ftp" ]] && [ -z "$downloaded" ]; then
-        ftp_download $backup
+        ftp_download "$backup"
         downloaded='yes'
     fi
     if [ -z "$downloaded" ]; then
         subj="Download of $backup failed for $user"
         $BIN/v-add-user-notification $user "$subj" "<b>Unable to retrieve backup file from remote server.</b><br><b>Error:</b> $backup file doesn't exist in '${BACKUP}' directory."
         sed -i "/v-download-backup $user /d" $HESTIA/data/queue/backup.pipe
-        check_result $E_NOTEXIST "backup file $backup doesn't exist in '${BACKUP}' folder"
+        check_result "$E_NOTEXIST" "backup file $backup doesn't exist in '${BACKUP}' folder"
     else
         if [ -e "$BACKUP/$backup" ]; then
         chmod 0640 $BACKUP/$backup
@@ -87,14 +100,16 @@ if [ -e "$BACKUP/$backup" ]; then
     cd $BACKUP
     subj="Download of $backup completed for $user"
     email=$(get_user_value '$CONTACT')
-    echo "Backup file $backup was retrieved from the remote server and will be available to download for 12 hours." | $SENDMAIL -s "$subj" $email $notify
-    $BIN/v-add-user-notification $user "$subj" "Backup file <b>$backup</b> was retrieved from the remote server and will be available to download for <b>12 hours</b>."
+    echo "Backup file $backup was retrieved from the remote server and will be available to download for 12 hours." | $SENDMAIL -s "$subj" "$email" "$notify"
+    $BIN/v-add-user-notification "$user" "$subj" "Backup file <b>$backup</b> was retrieved from the remote server and will be available to download for <b>12 hours</b>."
 fi
 
 # Cleaning restore queue
 sed -i "/v-download-backup $user /d" $HESTIA/data/queue/backup.pipe
 
 # Logging
+$BIN/v-log-action "system" "Info" "Backup" "Backup download requested (User: $user, Archive: $backup)."
+$BIN/v-log-action "$user" "Info" "Backup" "Backup download requested (Archive: $backup)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

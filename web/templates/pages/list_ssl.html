@@ -1,0 +1,93 @@
+<!-- Begin toolbar -->
+<div class="l-center">
+	<div class="l-sort clearfix noselect">
+		<div class="l-sort-toolbar clearfix float-left">
+
+		</div>
+	</div>
+</div>
+<!-- End toolbar -->
+
+<div class="l-separator"></div>
+
+<div class="l-center animated fadeIn">
+
+	<form id="vstobjects" name="v_generate_csr" method="post">
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+		<table class='data'>
+			<tr class="data-add">
+				<td class="data-dotted">
+					<table class="data-col1">
+						<tr>
+							<td>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td class="data-dotted">
+					<table class="data-col2">
+						<tr>
+							<td class="step-top">
+								<span class="page-title"><?=_('Generating CSR');?></span>
+							</td>
+						<tr>
+							<td>
+								<?php
+									if (!empty($_SESSION['error_msg'])) {
+										$msg_icon = 'fa-exclamation-circle status-icon red';
+										$msg_text = htmlentities($_SESSION['error_msg']);
+										$msg_id = 'vst-error';
+									} else {
+										if (!empty($_SESSION['ok_msg'])) {
+											$msg_icon = 'fa-check-circle status-icon green';
+											$msg_text = $_SESSION['ok_msg'];
+											$msg_id = 'vst-ok';
+										}
+									}
+								?>
+								<span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
+							</td>
+						</tr>
+						</tr>
+						<tr>
+							<td class="vst-text" style="padding: 12px 0 0 0;"><?=_('SSL Certificate');?> <a href="javascript:saveTextToBlob('<?php echo $v_domain;?>.crt', 'v_crt');"><i class="fas fa-download"></i></a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<textarea size="20" class="vst-textinput" name="v_crt" id="v_crt"><?=$v_crt ?> </textarea>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text" style="padding: 12px 0 0 0;">
+								<?=_('SSL Key');?> <a href="javascript:saveTextToBlob('<?php echo $v_domain;?>.key', 'v_key');"><i class="fas fa-download"></i></a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<textarea size="20" class="vst-textinput" name="v_key" id="v_key"><?=$v_key ?> </textarea>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text" style="padding: 24px 0 0 0;">
+								<?=_('SSL CSR');?> <a href="javascript:saveTextToBlob('<?php echo $v_domain;?>.csr', 'v_crt');"><i class="fas fa-download"></i></a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<textarea size="20" class="vst-textinput" name="v_csr" id="v_csr"><?=$v_csr ?> </textarea>
+							</td>
+						</tr>
+					</table>
+					<table class="data-col2">
+						<tr>
+							<td style="padding: 24px 0 0 0;">
+								<input type="button" class="button cancel" value="<?=_('Back');?>" onclick="<?=$back ?>">
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>

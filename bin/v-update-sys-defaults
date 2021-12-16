@@ -1,0 +1,40 @@
+#!/bin/bash
+# info: update default key database
+# options: [SYSTEM]
+# labels: 
+#
+# example: v-update-sys-defaults
+# example: v-update-sys-defaults user
+#
+# The function updates the known key/value pair database
+
+system=$1
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+source $HESTIA/func/syshealth.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                        Action                            #
+#----------------------------------------------------------#
+
+if [ -n "$system" ]; then
+    syshealth_update_${system}_config_format
+else
+    syshealth_update_web_config_format
+    syshealth_update_mail_config_format
+    syshealth_update_dns_config_format
+    syshealth_update_db_config_format
+    syshealth_update_user_config_format
+fi
+
+#----------------------------------------------------------#
+#                        Hestia                            #
+#----------------------------------------------------------#
+log_event "$OK" "$ARGUMENTS"

@@ -1,6 +1,11 @@
 #!/bin/bash
 # info: updates user role
 # options: USER ROLE
+# labels: hestia
+#
+# example: v-change-user-role user administrator
+#
+# Give/revoke user administrator rights to manage all accounts as admin 
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -12,28 +17,33 @@ role=$2
 
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Reading user values
-source $USER_DATA/user.conf
+ROLE=$(get_user_value '$ROLE')
 
 is_format_valid 'user' 'role'
 is_object_valid 'user' 'USER' "$user"
 
 is_object_unsuspended 'user' 'USER' "$user"
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
+$BIN/v-log-action "system" "Warning" "Security" "User privileges changed (User: $user, Role: $role, Previous: $ROLE)."
 update_user_value "$user" '$ROLE' "$role"
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

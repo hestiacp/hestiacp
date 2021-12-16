@@ -3,7 +3,7 @@
 # This script validates and upgrades the MariaDB version to 10.5
 
 # Set MariaDB Target Version
-mariadb_v='10.5'
+mariadb_v='10.6'
 
 # Load OS informations
 source /etc/os-release
@@ -53,6 +53,6 @@ apt remove -qq mariadb-server -y  > /dev/null 2>&1
 
 # Install new version and run upgrader
 echo "Installing new MariaDB Server, start and run upgrade..."
-apt install -qq mariadb-server -y  > /dev/null 2>&1
+apt install -qq mariadb-server -y 
 systemctl start mysql > /dev/null 2>&1
 mysql_upgrade

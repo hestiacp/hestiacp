@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update domains bandwidth usage
 # options: USER
+# labels: web
+#
+# example: v-update-web-domains-traff bob
 #
 # The function recalculates bandwidth usage for all user webdomains.
 
@@ -13,9 +16,14 @@
 user=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -45,7 +53,7 @@ for domain in $(search_objects 'web' 'SUSPENDED' "no" 'DOMAIN'); do
     while read line; do
         if  [[ "$line" =~ ^[0-9]+$ ]]; then
             line=${line#0}
-            if [ ! -z "$line" ]; then
+            if [ -n "$line" ]; then
                 bytes=$(($bytes + $line))
             fi
         fi

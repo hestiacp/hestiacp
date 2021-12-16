@@ -1,14 +1,16 @@
 #!/bin/bash
 # info: Changes the document root for an existing web domain
-
 # options: USER DOMAIN TARGET_DOMAIN [DIRECTORY] [PHP]
-# example usage:
-# add custom docroot:    v-change-web-domain-docroot admin domain.tld otherdomain.tld
-#                        points domain.tld to otherdomain.tld's document root.
+# labels: hestia
 #
-# remove custom docroot: v-change-web-domain-docroot admin test.local default
-#                        returns document root to default value for domain.
-
+# example: v-change-web-domain-docroot admin domain.tld otherdomain.tld
+#          # add custom docroot
+#          # points domain.tld to otherdomain.tld's document root.
+#
+# example: v-change-web-domain-docroot admin test.local default
+#          # remove custom docroot
+#          # returns document root to default value for domain.
+#
 # This call changes the document root of a chosen web domain
 # to another available domain under the user context.
 
@@ -28,9 +30,14 @@ export target_directory=$4
 export php=$5
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -65,7 +72,7 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Unset existing custom document root path
-if [ ! -z "$CUSTOM_DOCROOT" ]; then
+if [ -n "$CUSTOM_DOCROOT" ]; then
     update_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_DOCROOT' ""
     update_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_PHPROOT' ""
 fi
@@ -78,21 +85,28 @@ if [ "$target_domain" = "default" ]; then
     update_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_PHPROOT' "" 
 else
     # Check for existence of specified directory under target domain's public_html folder
-    if [ ! -z "$target_directory" ]; then
-        if [ ! -e "$HOMEDIR/$user/web/$target_domain/public_html/$target_directory" ]; then
-            echo "ERROR: Directory $target_directory does not exist under $HOMEDIR/$user/$target_domain/public_html/."
-            exit 1
+    target_domain_directory="$HOMEDIR/$user/web/$target_domain"
+    if [ -n "$target_directory" ]; then
+
+        # Checking destination path
+        real_target_directory="$(readlink -e "${target_domain_directory}/public_html/$target_directory/")"
+        if [ -z "$(echo $real_target_directory | egrep "^$target_domain_directory\b")" ]; then
+            check_result "$E_FORBIDEN" "Target dir outside of target domain dir"
+        fi
+
+        if [ ! -e "$real_target_directory" ]; then
+            check_result "$E_NOTEXIST" "Directory $target_directory does not exist under $HOMEDIR/$user/$target_domain/public_html/."
         else
-            CUSTOM_DOCROOT="$HOMEDIR/$user/web/$target_domain/public_html/$target_directory/"
-            if [ ! -z "$php" ]; then
-                custom_phproot="$HOMEDIR/$user/web/$target_domain/public_html/"
+            CUSTOM_DOCROOT="$real_target_directory"
+            if [ -n "$php" ]; then
+                custom_phproot="${target_domain_directory}/public_html/"
             else
-                custom_phproot="$HOMEDIR/$user/web/$target_domain/public_html/$target_directory/"
+                custom_phproot="$real_target_directory"
             fi
         fi
     else
-        CUSTOM_DOCROOT="$HOMEDIR/$user/web/$target_domain/public_html/"
-        custom_phproot="$HOMEDIR/$user/web/$target_domain/public_html/"
+        CUSTOM_DOCROOT="${target_domain_directory}/public_html/"
+        custom_phproot="${target_domain_directory}/public_html/"
     fi
     
     add_object_key 'web' 'DOMAIN' "$domain" 'CUSTOM_DOCROOT' 'IP6'
@@ -109,13 +123,13 @@ fi
 #----------------------------------------------------------#
 
 # Rebuild domain configuration
-$BIN/v-rebuild-web-domain $user $domain
+$BIN/v-rebuild-web-domain "$user" "$domain"
 
 # Logging
 if [ "$target_domain" = "default" ]; then
-    log_history "set web domain $domain to use default document root."
+    $BIN/v-log-action "$user" "Info" "Web" "Domain document root reset (Domain: $domain)."
 else
-    log_history "set web domain $domain to use document root from $target_domain."
+    $BIN/v-log-action "$user" "Info" "Web" "Domain document root updated (Domain: $domain, Target: $target_domain)."
 fi
 
 log_event "$OK" "$ARGUMENTS"

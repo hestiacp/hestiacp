@@ -1,0 +1,310 @@
+<!-- Begin toolbar -->
+<div class="l-center edit">
+	<div class="l-sort clearfix">
+		<div class="l-unit-toolbar__buttonstrip">
+			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/mail/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+		</div>
+		<div class="l-unit-toolbar__buttonstrip float-right">
+			<a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
+		</div>
+	</div>
+</div>
+<!-- End toolbar -->
+
+<div class="l-separator"></div>
+
+<div class="l-center animated fadeIn">
+
+	<form id="vstobjects" name="v_edit_mail" method="post" class="<?=$v_status?>">
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+		<input type="hidden" name="save" value="save" />
+		
+		<table class='data'>
+			<tr class="data-add">
+				<td class="data-dotted">
+					<table class="data-col1">
+						<tr>
+							<td>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td class="data-dotted">
+					<table class="data-col2">
+						<tr>
+							<td class="step-top">
+								<span class="page-title"><?=_('Editing Mail Domain');?></span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<?php
+									if (!empty($_SESSION['error_msg'])) {
+										$msg_icon = 'fa-exclamation-circle status-icon red';
+										$msg_text = htmlentities($_SESSION['error_msg']);
+										$msg_id = 'vst-error';
+									} else {
+										if (!empty($_SESSION['ok_msg'])) {
+											$msg_icon = 'fa-check-circle status-icon green';
+											$msg_text = $_SESSION['ok_msg'];
+											$msg_id = 'vst-ok';
+										}
+									}
+								?>
+								<span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text step-top">
+								<?=_('Domain');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
+								<input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
+							</td>
+						</tr>
+						<?php if($_SESSION['WEBMAIL_SYSTEM']){?>
+						<tr>
+							<td class="vst-text step-top">
+								<?=_('Webmail Client');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<select class="vst-list" name="v_webmail" tabindex="6">
+									<?php foreach ($webmail_clients as $client){
+										echo "\t\t\t\t<option value=\"".htmlentities($client)."\"";
+										if (( htmlentities(trim($v_webmail,"'")) == $client )) {
+											echo ' selected' ;
+										}
+										echo ">".htmlentities(ucfirst($client))."</option>\n";
+										}
+									?>
+									<option value="disabled" <?php if (htmlentities(trim($v_webmail,"'")) == 'disabled') { echo "selected";}?>><?=_('Disabled');?></option>
+								</select>
+							</td>
+						</tr>
+						<?php } ?>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Catchall email');?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_catchall" value="<?=htmlentities(trim($v_catchall, "'"))?>"> <?php /*'*/ ?>
+							</td>
+						</tr>
+						<?php if (!empty($_SESSION['ANTISPAM_SYSTEM'])) {?>
+							<tr>
+								<td class="vst-text input-label step-top">
+									<label><input type="checkbox" size="20" class="vst-checkbox" name="v_antispam" <?php if ($v_antispam == 'yes') echo "checked=yes"; ?>><?=_('AntiSpam Support');?></label>
+								</td>
+							</tr>
+						<?php } ?>
+						<?php if (!empty($_SESSION['ANTIVIRUS_SYSTEM'])) {?>
+							<tr>
+								<td class="vst-text input-label">
+									<label><input type="checkbox" size="20" class="vst-checkbox" name="v_antivirus" <?php if ($v_antivirus == 'yes') echo "checked=yes"; ?>><?=_('AntiVirus Support');?></label>
+								</td>
+							</tr>
+						<?php } ?>
+						<tr>
+							<td class="vst-text input-label">
+								<label><input type="checkbox" size="20" class="vst-checkbox" name="v_dkim" <?php if ($v_dkim == 'yes') echo "checked=yes"; ?>><?=_('DKIM Support');?></label>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');"><?=_('SSL Support');?></label>
+							</td>
+						</tr>
+						<tr id="ssltable" style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;" class="step-left">
+							<td>
+								<table>
+									<tr>
+										<td class="input-label vst-text">
+											<label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" onclick="javascript:elementHideShow('ssl-details');App.Actions.MAIL.toggle_letsencrypt(this);" <?php if($v_letsencrypt == 'yes' || $v_letencrypt == 'on') echo "checked=yes" ?>"><?=_('Lets Encrypt Support');?></label>
+										</td>
+									</tr>
+									<tr id="le-warning" class="step-top">
+										<td>
+											<span class="alert alert-info alert-with-icon">
+												<i class="fas fa-exclamation"></i>
+												<?=_("To enable Let's Encrypt SSL, ensure that DNS records exist for mail.$v_domain and $v_webmail_alias!")?><br />
+											</span>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<table id="ssl-details" style="<?php if ($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') { echo 'display: none;'; } ?>">
+												<tr>
+													<td class="vst-text input-label step-top">
+														<?=_('SSL Certificate');?>
+														<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=$v_domain?>"><?=_('Generate CSR');?></a></span>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<textarea size="20" class="vst-textinput short console" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
+													</td>
+												</tr>
+												<tr>
+													<td class="vst-text input-label">
+														<?=_('SSL Key');?>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<textarea size="20" class="vst-textinput short console" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
+													</td>
+												</tr>
+												<tr>
+													<td class="vst-text input-label">
+														<?=_('SSL Certificate Authority / Intermediate');?> <span class="optional">(<?=_('optional');?>)</span>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<textarea size="20" class="vst-textinput short console" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
+													</td>
+												</tr>
+											</table>
+											<?php if ($v_ssl != 'no' ) { ?>
+												<tr>
+													<td>
+														<table class="additional-info">
+															<tr>
+																<td>
+																	<b><?=_('SUBJECT');?>:</b>
+																</td>
+																<td class="details">
+																	<?=$v_ssl_subject?>
+																</td>
+															</tr>
+															<?php if ($v_ssl_aliases){?>
+																<tr>
+																	<td>
+																		<b><?=_('Aliases');?>:</b>
+																	</td>
+																	<td class="details">
+																		<?=$v_ssl_aliases?>
+																	</td>
+																</tr>
+															<?php } ?>
+															<tr>
+																<td>
+																	<b><?=_('NOT_BEFORE');?>:</b>
+																</td>
+																<td class="details">
+																	<?=$v_ssl_not_before?>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<b><?=_('NOT_AFTER');?>:</b>
+																</td>
+																<td class="details">
+																	<?=$v_ssl_not_after?>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<b><?=_('SIGNATURE');?>:</b>
+																</td>
+																<td class="details">
+																	<?=$v_ssl_signature?>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<b><?=_('PUB_KEY');?>:</b>
+																</td>
+																<td class="details">
+																	<?=$v_ssl_pub_key?>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<b><?=_('ISSUER');?>:</b>
+																</td>
+																<td class="details">
+																	<?=$v_ssl_issuer?>
+																</td>
+															</tr>
+														</table>
+													</td>
+												</tr>
+											<? } // if ssl is enabled ?>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<label>
+									<input type="checkbox" size="20" class="vst-checkbox" name="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo "checked=yes"; ?> onclick="javascript:elementHideShow('smtp_relay_table');"><?=_('SMTP Relay');?>
+								</label>
+							</td>
+						</tr>
+						<tr>
+							<td class="step-left">
+								<table style="display:<?php if ($v_smtp_relay == 'true') {echo 'block';} else {echo 'none';} ?>;" id="smtp_relay_table">
+									<tr>
+										<td class="input-label vst-text">
+											<?=_('Host');?>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type="text" size="20" class="vst-input" name="v_smtp_relay_host" value="<?=htmlentities(trim($v_smtp_relay_host, "'"))?>">
+										</td>
+									</tr>
+									<tr>
+										<td class="input-label vst-text">
+											<?=_('Port');?>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type="text" size="20" class="vst-input" name="v_smtp_relay_port" value="<?=htmlentities(trim($v_smtp_relay_port, "'"))?>">
+										</td>
+									</tr>
+									<tr>
+										<td class="input-label vst-text">
+											<?=_('Username');?>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type="text" size="20" class="vst-input" name="v_smtp_relay_user" value="<?=htmlentities(trim($v_smtp_relay_user, "'"))?>">
+										</td>
+									</tr>
+									<tr>
+										<td class="input-label vst-text">
+											<?=_('Password');?>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type="text" size="20" class="vst-input" name="v_smtp_relay_pass">
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<br>
+							</td>
+						</tr>
+					</table>
+					<table class="data-col2"></table>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>

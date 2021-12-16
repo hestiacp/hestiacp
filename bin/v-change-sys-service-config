@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change service config
 # options: CONFIG SERVICE [RESTART]
+# labels: panel
+#
+# example: v-change-sys-service-config /home/admin/dovecot.conf dovecot yes
 #
 # The function for changing service confguration.
 
@@ -15,8 +18,12 @@ service=$2
 restart=$3
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -76,7 +83,7 @@ esac
 # Checking config path
 for config in $dst; do
     if [ ! -e "$config" ]; then
-        check_result $E_NOTEXIST "$service config doesn't exist"
+        check_result "$E_NOTEXIST" "$service config doesn't exist"
     fi
 done
 
@@ -112,7 +119,7 @@ if [ "$update" = 'yes' ] && [ "$restart" != 'no' ]; then
             cat "$config.vst.back" > "$config"
             rm -f "$config.vst.back"
         done
-        check_result $E_RESTART "ERROR: $service failed to start with new configuration."
+        check_result "$E_RESTART" "ERROR: $service failed to start with new configuration."
     fi
 fi
 

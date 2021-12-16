@@ -1,12 +1,13 @@
 <?php
-error_reporting(NULL);
+
+error_reporting(null);
 $TAB = 'SERVER';
 
 // Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check user
-if ($_SESSION['user'] != 'admin') {
+if ($_SESSION['userContext'] != 'admin') {
     header("Location: /list/user");
     exit;
 }
@@ -15,24 +16,23 @@ if ($_SESSION['user'] != 'admin') {
 if (!empty($_POST['save'])) {
 
     // Check token
-    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
-        header('location: /login/');
-        exit();
-    }
+    verify_csrf($_POST);
 
     // Set restart flag
     $v_restart = 'yes';
-    if (empty($_POST['v_restart'])) $v_restart = 'no';
+    if (empty($_POST['v_restart'])) {
+        $v_restart = 'no';
+    }
 
     // Update config
     if (!empty($_POST['v_config'])) {
-        exec ('mktemp', $mktemp_output, $return_var);
+        exec('mktemp', $mktemp_output, $return_var);
         $new_conf = $mktemp_output[0];
         $fp = fopen($new_conf, 'w');
-        fwrite($fp, str_replace("\r\n", "\n",  $_POST['v_config']));
+        fwrite($fp, str_replace("\r\n", "\n", $_POST['v_config']));
         fclose($fp);
-        exec (HESTIA_CMD."v-change-sys-service-config ".$new_conf." exim ".$v_restart, $output, $return_var);
-        check_return_code($return_var,$output);
+        exec(HESTIA_CMD."v-change-sys-service-config ".$new_conf." exim ".$v_restart, $output, $return_var);
+        check_return_code($return_var, $output);
         unset($output);
         unlink($new_conf);
     }
@@ -41,7 +41,6 @@ if (!empty($_POST['save'])) {
     if (empty($_SESSION['error_msg'])) {
         $_SESSION['ok_msg'] = _('Changes has been saved.');
     }
-
 }
 
 $v_config_path = '/etc/exim/exim.conf';

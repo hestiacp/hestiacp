@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list mail domain ssl certificate
 # options: USER DOMAIN [FORMAT]
+# labels: hestia
+#
+# example: v-list-mail-domain-ssl user acme.com json
 #
 # The function of obtaining domain ssl files.
 
@@ -15,7 +18,12 @@ domain=$2
 format=${3-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -24,7 +32,7 @@ format_domain_idn
 # JSON list function
 json_list() {
     echo '{'
-    echo -e "\t\"$domain_idn\": {"
+    echo -e "\t\"$domain\": {"
     echo "        \"CRT\": \"$crt\","
     echo "        \"KEY\": \"$key\","
     echo "        \"CA\": \"$ca\","
@@ -40,20 +48,20 @@ json_list() {
 
 # SHELL list function
 shell_list() {
-    if [ ! -z "$crt" ]; then
+    if [ -n "$crt" ]; then
         echo -e "$crt"
     fi
-    if [ ! -z "$key" ]; then
+    if [ -n "$key" ]; then
         echo -e "\n$key"
     fi
-    if [ ! -z "$ca" ]; then
+    if [ -n "$ca" ]; then
         echo -e "\n$ca"
     fi
-    if [ ! -z "$crt" ]; then
+    if [ -n "$crt" ]; then
         echo
         echo
         echo "SUBJECT:        $subj"
-        if [ ! -z "$alt_dns" ]; then
+        if [ -n "$alt_dns" ]; then
             echo "ALIASES:        ${alt_dns//,/ }"
         fi
         echo "VALID FROM:     $before"
@@ -66,16 +74,16 @@ shell_list() {
 
 # PLAIN list function
 plain_list() {
-    if [ ! -z "$crt" ]; then
+    if [ -n "$crt" ]; then
         echo -e "$crt"
     fi
-    if [ ! -z "$key" ]; then
+    if [ -n "$key" ]; then
         echo -e "\n$key"
     fi
-    if [ ! -z "$ca" ]; then
+    if [ -n "$ca" ]; then
         echo -e "\n$ca"
     fi
-    if [ ! -z "$crt" ]; then
+    if [ -n "$crt" ]; then
         echo "$subj"
         echo "${alt_dns//,/ }"
         echo "$before"
@@ -103,7 +111,7 @@ csv_list() {
 check_args '2' "$#" 'USER DOMAIN [FORMAT]'
 is_format_valid 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
-is_object_valid 'mail' 'DOMAIN' "$domain_idn"
+is_object_valid 'mail' 'DOMAIN' "$domain"
 
 
 #----------------------------------------------------------#
@@ -115,7 +123,7 @@ if [ -e "$USER_DATA/ssl/mail.$domain.crt" ]; then
     crt=$(cat $USER_DATA/ssl/mail.$domain.crt |sed ':a;N;$!ba;s/\n/\\n/g')
 
     info=$(openssl x509 -text -in $USER_DATA/ssl/mail.$domain.crt)
-    subj=$(echo "$info" |grep Subject: |cut -f 2 -d =)
+    subj=$(echo "$info" |grep Subject: |sed -e "s/\"//g" -e "s/.*= //")
     before=$(echo "$info" |grep Before: |sed -e "s/.*Before: //")
     after=$(echo "$info" |grep "After :" |sed -e "s/.*After : //")
     signature=$(echo "$info" |grep "Algorithm:" |head -n1 )

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: unsuspend firewall rule
 # options: RULE
+# labels: panel
+#
+# example: v-unsuspend-firewall-rule 7
 #
 # The function unsuspends a certain firewall rule.
 
@@ -13,8 +16,12 @@
 rule=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -35,7 +42,7 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Suspending rule
-update_object_value ../../data/firewall/rules RULE $rule '$SUSPENDED' no
+update_object_value ../../data/firewall/rules RULE "$rule" '$SUSPENDED' "no"
 
 # Updating system firewall
 $BIN/v-update-firewall
@@ -46,6 +53,7 @@ $BIN/v-update-firewall
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "Firewall" "Unsuspended firewall rule (Rule: $rule)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

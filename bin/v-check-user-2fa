@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: check user token
 # options: USER TOKEN
+# labels: hestia panel
+#
+# example: v-check-user-2fa admin 493690
 #
 # The function verifies user 2fa token.
 
@@ -14,8 +17,12 @@ user=$1
 token=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -37,11 +44,11 @@ source $USER_DATA/user.conf
 # Check if 2FA is enabled
 if [ -z "$TWOFA" ]; then
     echo "Error: Two-factor authentication is not enabled."
-    exit $E_NOTEXIST
+    exit "$E_NOTEXIST"
 fi
 
 # Check if token is valid
-result=$($HESTIA/php/bin/php $HESTIA/web/inc/2fa/check.php $TWOFA $token)
+result=$($HESTIA/php/bin/php $HESTIA/web/inc/2fa/check.php "$TWOFA" "$token")
 if [ "$result" != "ok" ]; then
     echo "Error: Authentication token mismatch."
     exit 9

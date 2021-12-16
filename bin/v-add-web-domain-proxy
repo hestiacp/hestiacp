@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add webdomain proxy support
 # options: USER DOMAIN [TEMPLATE] [EXTENTIONS] [RESTART]
+# labels: web
+#
+# example: v-add-web-domain-proxy admin example.com
 #
 # The function enables proxy support for a domain. This can significantly
 # improve website speed.
@@ -14,16 +17,22 @@
 user=$1
 domain=$2
 template=$3
-default_extentions="jpg,jpeg,gif,png,ico,svg,css,zip,tgz,gz,rar,bz2,doc,xls,\
+default_extentions="jpg,jpeg,gif,png,webp,ico,svg,css,zip,tgz,gz,rar,bz2,doc,xls,\
 exe,pdf,ppt,txt,odt,ods,odp,odf,tar,wav,bmp,rtf,js,mp3,avi,mpeg,flv,html,htm"
 extentions=${4-$default_extentions}
 restart="$5"
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -54,7 +63,7 @@ check_hestia_demo_mode
 # Defining domain parameters
 get_domain_values 'web'
 prepare_web_domain_values
-local_ip=$(get_real_ip $IP)
+local_ip=$(get_real_ip "$IP")
 
 # Preparing domain values for the template substitution
 PROXY_EXT="$extentions"
@@ -75,10 +84,10 @@ update_object_value 'web' 'DOMAIN' "$domain" '$PROXY' "$template"
 update_object_value 'web' 'DOMAIN' "$domain" '$PROXY_EXT' "$extentions"
 
 # Restarting web server
-$BIN/v-restart-proxy $restart
+$BIN/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" >/dev/null
 
-log_history "enabled proxy support for $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Proxy enabled (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

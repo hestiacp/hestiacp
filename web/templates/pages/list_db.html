@@ -1,0 +1,196 @@
+<?php
+	list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
+
+	$db_myadmin_link = "//".$http_host."/phpmyadmin/";
+	$db_pgadmin_link = "//".$http_host."/phppgadmin/";
+
+	if (!empty($_SESSION['DB_PMA_ALIAS'])) {
+		$db_myadmin_link = "//".$http_host."/".$_SESSION['DB_PMA_ALIAS']."/";
+	}
+	if (!empty($_SESSION['DB_PGA_ALIAS'])) {
+		$db_pgadmin_link = "//".$http_host."/".$_SESSION['DB_PGA_ALIAS']."/";
+	}
+?>
+
+<!-- Begin toolbar -->
+<div class="l-center">
+	<div class="l-sort clearfix noselect">
+		<div class="l-unit-toolbar__buttonstrip">
+			<?php if ($read_only !== 'true') {?>
+				<a href="/add/db/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Database');?></a>
+				<?php if (($_SESSION['DB_SYSTEM'] === 'mysql') || ($_SESSION['DB_SYSTEM'] === 'mysql,pgsql') || ($_SESSION['DB_SYSTEM'] === 'pgsql,mysql')) {?>
+					<a class="ui-button cancel" dir="ltr" href="<?=$db_myadmin_link; ?>" target="_blank"><i class="fas fa-database status-icon orange"></i>phpMyAdmin</a>
+				<?php } ?>
+				<?php if (($_SESSION['DB_SYSTEM'] === 'pgsql') || ($_SESSION['DB_SYSTEM'] === 'mysql,pgsql') || ($_SESSION['DB_SYSTEM'] === 'pgsql,mysql')) {?>
+					<a class="ui-button cancel" dir="ltr" href="<?=$db_pgadmin_link; ?>" target="_blank"><i class="fas fa-database status-icon orange"></i>phpPgAdmin</a>
+				<?php } ?>
+			<?php } ?>
+		</div>
+		<ul class="context-menu sort-order animated fadeIn" style="display:none;">
+			<li entity="sort-charset"><span class="name"><?=_('Charset');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+			<li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?=_('Date');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+			<li entity="sort-disk" sort_as_int="1"><span class="name"><?=_('Disk');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+			<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?=_('Name');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+			<li entity="sort-server"><span class="name"><?=_('Host');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+			<li entity="sort-user"><span class="name"><?=_('Username');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+		</ul>
+		<div class="l-sort-toolbar clearfix">
+			<table>
+				<tr>
+					<td class="sort-by" title="<?=_('Sort items');?>">
+						<?=_('sort by');?>: <span>
+							<b>
+								<?php if ($_SESSION['userSortOrder'] === 'name') { $label = 'Name'; } else { $label = 'Date'; } ?>
+								<?=_($label)?> <i class="fas fa-sort-alpha-down"></i>
+							</b>
+						</span>
+					</td>
+					<td class="l-sort-toolbar__search-box">
+						<form action="/search/" method="get">
+							<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+							<input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>" />
+							<button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search');?>"><i class="fas fa-search"></i></button>
+						</form>
+					</td>
+					<?php if ($read_only !== 'true') {?>
+						<td>
+							<form action="/bulk/db/" method="post" id="objects">
+								<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+								<div class="l-select">
+									<select name="action" id="">
+										<option value=""><?=_('apply to selected');?></option>
+										<?php if ($_SESSION['userContext'] === 'admin') {?>
+											<option value="rebuild"><?=_('rebuild');?></option>
+										<?php } ?>
+										<option value="suspend"><?=_('suspend');?></option>
+										<option value="unsuspend"><?=_('unsuspend');?></option>
+										<option value="delete"><?=_('delete');?></option>
+									</select>
+								</div>
+								<button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected');?>"><i class="fas fa-arrow-right"></i></button>
+							</form>
+						</td>
+					<?php } ?>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+<!-- End toolbar -->
+
+<div class="l-separator"></div>
+
+<div class="l-center units">
+	<div class="header table-header">
+		<div class="l-unit__col l-unit__col--right">
+			<div class="clearfix l-unit__stat-col--left super-compact">
+				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>" onChange="checkedAll('objects');" <?=$display_mode;?>>
+			</div>
+			<div class="clearfix l-unit__stat-col--left wide-3"><b><?=_('Name');?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-right compact-3"><b>&nbsp;</b></div>
+			<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Disk');?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center compact"><b><?=_('Type');?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center wide"><b><?=_('Username');?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Hostname');?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Charset');?></b></div>
+		</div>
+	</div>
+
+	<!-- Begin database list item loop -->
+	<?php
+		list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
+		foreach ($data as $key => $value) {
+			++$i;
+			if ($data[$key]['SUSPENDED'] == 'yes') {
+				$status = 'suspended';
+				$spnd_action = 'unsuspend';
+				$spnd_icon = 'fa-play';
+				$spnd_confirmation = _('UNSUSPEND_DATABASE_CONFIRMATION') ;
+			} else {
+				$status = 'active';
+				$spnd_action = 'suspend';
+				$spnd_icon = 'fa-pause';
+				$spnd_confirmation = _('SUSPEND_DATABASE_CONFIRMATION') ;
+			}
+			if ($data[$key]['HOST'] != 'localhost' ) $http_host = $data[$key]['HOST'];
+			if ($data[$key]['TYPE'] == 'mysql') $db_admin = "phpMyAdmin";
+			if ($data[$key]['TYPE'] == 'mysql') $db_admin_link = "https://".$http_host."/phpmyadmin/";
+			if (($data[$key]['TYPE'] == 'mysql') && (!empty($_SESSION['DB_PMA_ALIAS']))) $db_admin_link = $_SESSION['DB_PMA_ALIAS'];
+			if ($data[$key]['TYPE'] == 'pgsql') $db_admin = "phpPgAdmin";
+			if ($data[$key]['TYPE'] == 'pgsql') $db_admin_link = "https://".$http_host."/phppgadmin/";
+			if (($data[$key]['TYPE'] == 'pgsql') && (!empty($_SESSION['DB_PGA_ALIAS']))) $db_admin_link = $_SESSION['DB_PGA_ALIAS'];
+		?>
+		<div class="l-unit <?php if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['DB'][$key] == 1) echo ' l-unit--starred'; ?> animated fadeIn" v_unit_id="<?=$key?>" v_section="db"
+			sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?=$data[$key]['U_DISK']?>"
+			sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" sort-charset="<?=$data[$key]['CHARSET']?>" sort-star="<?php if($_SESSION['favourites']['DB'][$key] == 1) echo '1'; else echo '0'; ?>">
+			<div class="l-unit__col l-unit__col--right">
+				<div>
+					<div class="clearfix l-unit__stat-col--left super-compact">
+						<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="database[]" value="<?=$key?>" <?=$display_mode;?>>
+					</div>
+					<div class="clearfix l-unit__stat-col--left wide-3 truncate">
+						<?php if (($read_only === 'true') || ($data[$key]['SUSPENDED'] == 'yes')) {?>
+							<b><?=$key?></b>
+						<?php } else { ?>
+							<b><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Database');?>: <?=$key?>"><?=$key?></a></b>
+						<?php } ?>
+					</div>
+					<!-- START QUICK ACTION TOOLBAR AREA -->
+					<div class="clearfix l-unit__stat-col--left text-right compact-3">
+						<div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+							<div class="actions-panel clearfix">
+								<?php if ($read_only === 'true') {?>
+									<!-- Restrict the ability to edit, delete, or suspend domain items when impersonating 'admin' user -->
+									&nbsp;
+								<?php } else { ?>
+									<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
+										<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Database');?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+									<?php } ?>
+									<?php if ($data[$key]['TYPE'] == 'mysql' && isset($_SESSION['PHPMYADMIN_KEY']) && $_SESSION['PHPMYADMIN_KEY'] != '') { $time = time(); ?>
+										<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a target="_blank" href="<?=$db_myadmin_link;?>/hestia-sso.php?database=<?=$key;?>&user=<?=$user;?>&exp=<?=$time;?>&hestia_token=<?=password_hash($key.$user.$_SESSION['user_combined_ip'].$time.$_SESSION['PHPMYADMIN_KEY'], PASSWORD_DEFAULT)?>" title="<?=_('phpMyAdmin');?>"><i class="fas fa-sign-in-alt status-icon orange status-icon dim"></i></a></div>
+									<?php } ?>
+									<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
+										<a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=_($spnd_action)?>">
+											<i class="fas <?=$spnd_icon?> status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
+											<input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" />
+											<div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=_('Confirmation');?>">
+												<p class="confirmation"><?=sprintf($spnd_confirmation,$key)?></p>
+											</div>
+										</a>
+									</div>
+									<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+										<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('delete');?>">
+											<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
+											<input type="hidden" name="delete_url" value="/delete/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" />
+											<div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=_('Confirmation');?>">
+												<p class="confirmation"><?=sprintf(_('DELETE_DATABASE_CONFIRMATION'),$key)?></p>
+											</div>
+										</a>
+									</div>
+								<?php } ?>
+							</div>
+						</div>
+					</div>
+					<!-- END QUICK ACTION TOOLBAR AREA -->
+					<div class="clearfix l-unit__stat-col--left text-center"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
+					<div class="clearfix l-unit__stat-col--left text-center compact"><?=$data[$key]['TYPE']?></div>
+					<div class="clearfix l-unit__stat-col--left text-center wide"><b><?=$data[$key]['DBUSER']?></b></div>
+					<div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['HOST']?></b></div>
+					<div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['CHARSET']?></div>
+				</div>
+			</div>
+		</div>
+	<?php } ?>
+</div>
+
+<div id="vstobjects">
+	<div class="l-separator"></div>
+	<div class="l-center">
+		<div class="l-unit-ft">
+			<table class='data'></table>
+			<div class="data-count l-unit__col l-unit__col--right clearfix">
+				<?php printf(ngettext('%d SQL database', '%d SQL databases', $i),$i); ?>
+			</div>
+		</div>
+	</div>
+</div>

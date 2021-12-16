@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete firewall blocking rule
 # options: IP CHAIN
+# labels: panel
+#
+# example: v-delete-firewall-ban 198.11.130.250 MAIL
 #
 # The function deletes blocking rule from system firewall
 
@@ -8,9 +11,6 @@
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
-
-# Importing system variables
-source /etc/profile
 
 # Argument definition
 ip=$1
@@ -20,8 +20,14 @@ chain=$(echo $2|tr '[:lower:]' '[:upper:]')
 iptables="/sbin/iptables"
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
+# shellcheck source=/usr/local/hestia/func/firewall.sh
+source $HESTIA/func/firewall.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -40,18 +46,37 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Checking ip in banlist
-conf="$HESTIA/data/firewall/banlist.conf"
-check_ip=$(grep "IP='$ip' CHAIN='$chain'" $conf 2>/dev/null)
-if [ -z "$check_ip" ]; then
-    exit
-fi
+# Self heal iptables links
+heal_iptables_links
 
-# Deleting ip from banlist
-sip=$(echo "$ip"| sed "s|/|\\\/|g")
-sed -i "/IP='$sip' CHAIN='$chain'/d" $conf
-b=$($iptables -L fail2ban-$chain --line-number -n|grep -w $ip|awk '{print $1}')
-$iptables -D fail2ban-$chain $b 2>/dev/null
+conf="$HESTIA/data/firewall/banlist.conf"
+if [ "$chain" == "ALL" ]; then  
+    check_ip=$(grep  "IP='$ip' CHAIN='*'" $conf)
+    if [ -z  "$check_ip" ]; then 
+        exit;
+    fi
+    grep  "IP='$ip' CHAIN='*'" $conf | while read -r line ; do
+        parse_object_kv_list  $line
+        
+        # Deleting ip from banlist
+        sip=$(echo "$IP"| sed "s|/|\\\/|g")
+        sed -i "/IP='$sip' CHAIN='$CHAIN'/d" $conf
+        b=$($iptables -L fail2ban-$CHAIN --line-number -n|grep -w $ip|awk '{print $1}')
+        $iptables -D fail2ban-$CHAIN $b 2>/dev/null   
+    done  
+else
+    # Checking ip in banlist
+    check_ip=$(grep "IP='$ip' CHAIN='$chain'" $conf 2>/dev/null)
+    if [ -z "$check_ip" ]; then
+        exit
+    fi
+    
+    # Deleting ip from banlist
+    sip=$(echo "$ip"| sed "s|/|\\\/|g")
+    sed -i "/IP='$sip' CHAIN='$chain'/d" $conf
+    b=$($iptables -L fail2ban-$chain --line-number -n|grep -w $ip|awk '{print $1}')
+    $iptables -D fail2ban-$chain $b 2>/dev/null
+fi
 
 # Changing permissions
 chmod 660 $conf
@@ -62,6 +87,7 @@ chmod 660 $conf
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Info" "Firewall" "Removed IP from ban list (IP: $ip, Service: $chain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

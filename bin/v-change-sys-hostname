@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change hostname
 # options: HOSTNAME
+# labels: panel
+#
+# example: v-change-sys-hostname mydomain.tld
 #
 # The function for changing system hostname.
 
@@ -13,8 +16,12 @@
 domain=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -32,7 +39,7 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-hostname $domain
+hostname "$domain"
 
 if [ -d "/etc/sysconfig" ]; then
     # RHEL/CentOS/Amazon
@@ -44,16 +51,24 @@ if [ -d "/etc/sysconfig" ]; then
     fi
 else
     # Debian/Ubuntu
-    hostnamectl set-hostname $domain
+    hostnamectl set-hostname "$domain"
     echo "$domain" > /etc/hostname
-fi
 
+    # Update Roundcube password plugin configuration
+    if [ -d /etc/roundcube/ ]; then
+        sed -i "/password_hestia_host/c\$rcmail_config['password_hestia_host'] = '$domain';" /etc/roundcube/plugins/password/config.inc.php
+    fi
+    if [ -d /etc/rainloop/ ]; then
+        sed -i "/hestia_host/c\hestia_host = \"$domain\"" /etc/rainloop/data/_data_/_default_/configs/plugin-hestia-change-password.ini 
+    fi
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging
+$BIN/v-log-action "system" "Warning" "System" "System hostname changed (Host: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: list user log
 # options: USER [FORMAT]
+# labels: 
+#
+# example: v-list-user-log
 #
 # The function of obtaining the list of 100 last users commands.
 
@@ -14,7 +17,12 @@ user=$1
 format=${2-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -26,13 +34,16 @@ json_list() {
         ID=$(echo "$str" |cut -f 2 -d \')
         DATE=$(echo "$str" |cut -f 4 -d \')
         TIME=$(echo "$str" |cut -f 6 -d \')
-        CMD=$(echo "$str" |cut -f 8 -d \')
-        CMD=${CMD//\"/\\\"}
+        LEVEL=$(echo "$str" |cut -f 8 -d \')
+        CATEGORY=$(echo "$str" |cut -f 10 -d \')
+        MESSAGE=$(echo "$str" |cut -f 12 -d \')
+        MESSAGE=${MESSAGE//\"/\\\"}
         echo -n '    "'$ID'": {
-        "CMD": "'$CMD'",
-        "UNDO": "'$UNDO'",
+        "DATE": "'$DATE'",
         "TIME": "'$TIME'",
-        "DATE": "'$DATE'"
+        "LEVEL": "'$LEVEL'",
+        "CATEGORY": "'$CATEGORY'",
+        "MESSAGE": "'$MESSAGE'"
     }'
         if [ "$i" -lt "$objects" ]; then
             echo ','
@@ -46,13 +57,16 @@ json_list() {
 
 shell_list() {
     IFS=$'\n'
-    echo "DATE~TIME~CMD"
-    echo "----~----~---"
+    echo "ID~DATE~TIME~LEVEL~CATEGORY~MESSAGE"
+    echo "----~----~----~-----~--------~-------"
     for str in $logs; do
+        ID=$(echo "$str" |cut -f 2 -d \')
         DATE=$(echo "$str" |cut -f 4 -d \')
         TIME=$(echo "$str" |cut -f 6 -d \')
-        CMD=$(echo "$str" |cut -f 8 -d \')
-        echo "$DATE~$TIME~$CMD"
+        LEVEL=$(echo "$str" |cut -f 8 -d \')
+        CATEGORY=$(echo "$str" |cut -f 10 -d \')
+        MESSAGE=$(echo "$str" |cut -f 12 -d \')
+        echo "$ID~$DATE~$TIME~$LEVEL~$CATEGORY~$MESSAGE"
     done
 }
 
@@ -60,22 +74,28 @@ shell_list() {
 plain_list() {
     IFS=$'\n'
     for str in $logs; do
+        ID=$(echo "$str" |cut -f 2 -d \')
         DATE=$(echo "$str" |cut -f 4 -d \')
         TIME=$(echo "$str" |cut -f 6 -d \')
-        CMD=$(echo "$str" |cut -f 8 -d \')
-        echo -e "$ID\t$CMD\t$UNDO\t$TIME\t$DATE"
+        LEVEL=$(echo "$str" |cut -f 8 -d \')
+        CATEGORY=$(echo "$str" |cut -f 10 -d \')
+        MESSAGE=$(echo "$str" |cut -f 12 -d \')
+        echo -e "$ID\t$DATE\t$TIME\t$LEVEL\t$CATEGORY\t$MESSAGE"
     done
 }
 
 # CSV list function
 csv_list() {
     IFS=$'\n'
-    echo "ID,CMD,UNDO,TIME,DATE"
+    echo "ID,MESSAGE,TIME,DATE"
     for str in $logs; do
+        ID=$(echo "$str" |cut -f 2 -d \')
         DATE=$(echo "$str" |cut -f 4 -d \')
         TIME=$(echo "$str" |cut -f 6 -d \')
-        CMD=$(echo "$str" |cut -f 8 -d \')
-        echo "$ID,\"$CMD\",\"$UNDO\",$TIME,$DATE"
+        LEVEL=$(echo "$str" |cut -f 8 -d \')
+        CATEGORY=$(echo "$str" |cut -f 10 -d \')
+        MESSAGE=$(echo "$str" |cut -f 12 -d \')
+        echo "$ID,\"$DATE\",\"$TIME",\"$LEVEL\",\"$CATEGORY\",\"$MESSAGE""
     done
 }
 
@@ -85,15 +105,21 @@ csv_list() {
 
 check_args '1' "$#" 'USER [FORMAT]'
 is_format_valid 'user'
-is_object_valid 'user' 'USER' "$user"
-
+if [ "$user" != "system" ]; then
+    is_object_valid 'user' 'USER' "$user"
+fi
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Parsing history log
-logs=$(tail -n 300 $USER_DATA/history.log 2>/dev/null)
+if [ "$user" = "system" ]; then
+    log_file="$HESTIA/data/users/admin/system.log"
+else
+    log_file="$USER_DATA/history.log"
+fi
+logs=$(tail -n 300 $log_file 2>/dev/null)
 
 case $format in
     json)   json_list ;;

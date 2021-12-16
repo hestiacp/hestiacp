@@ -2,15 +2,18 @@
 
 [Hestia Control Panel](https://www.hestiacp.com/)
 ==================================================
-**Latest stable release:** Version 1.2.4 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md)<br>
+**Latest stable release:** Version 1.5.1 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md) | [![Build Status](https://drone.hestiacp.com/api/badges/hestiacp/hestiacp/status.svg?ref=refs/heads/main)](https://drone.hestiacp.com/hestiacp/hestiacp) <br>
 
 **Web:** [www.hestiacp.com](https://www.hestiacp.com/)<br>
 **Documentation:** [docs.hestiacp.com](https://docs.hestiacp.com/)<br>
 **Forums:** [forum.hestiacp.com](https://forum.hestiacp.com/)<br>
-**Discord:** [Join HestiaCP Discord channel](https://discord.gg/nXRUZch)<br />
+**Discord:** [Join the discussion](https://discord.gg/nXRUZch)<br />
 <br>
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ST87LQH2CHGLA)
-<br>
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ST87LQH2CHGLA)<br /><br />
+Bitcoin : bc1q48jt5wg5jaj8g9zy7c3j03cv57j2m2u5anlutu<br>
+Ethereum : 0xfF3Dd2c889bd0Ff73d8085B84A314FC7c88e5D51<br>
+Binance: bnb1l4ywvw5ejfmsgjdcx8jn5lxj7zsun8ktfu7rh8<br>
+Smart Chain: 0xfF3Dd2c889bd0Ff73d8085B84A314FC7c88e5D51<br>
 
 **Welcome!**
 ---------------------------- 
@@ -19,21 +22,32 @@ Hestia Control Panel is designed to provide administrators an easy to use web an
 Features and Services
 ----------------------------
 * Apache2 and NGINX with PHP-FPM
-* Multiple PHP versions (5.6 - 7.4, 7.3 as default for optimal compatibility)
+* Multiple PHP versions (5.6 - 8.1, 8.0 as default)
 * DNS Server (Bind) with clustering capabilities
-* POP/IMAP/SMTP mail services with Anti-Virus, Anti-Spam, and Webmail (ClamAV, SpamAssassin, and Roundcube)
-* MariaDB or PostgreSQL databases
+* POP/IMAP/SMTP mail services with Anti-Virus, Anti-Spam, and Webmail (ClamAV, SpamAssassin, Sieve, Roundcube, Rainloop)
+* MariaDB and/or PostgreSQL databases
 * Let's Encrypt SSL support with wildcard certificates
 * Firewall with brute-force attack detection and IP lists (iptables, fail2ban, and ipset).
 
-Supported operating systems
+Supported platforms and operating systems
+========================================================
+
+AMD (x86_64 Intel/AMD)
 ----------------------------
-* Debian 10, 9
-* Ubuntu 20.04 LTS, 18.04 LTS, or 16.04 LTS
-* **NOTE:** Hestia Control Panel must be installed on top of a fresh operating system installation to ensure proper functionality.
+* **Debian:** 11, 10 or 9
+* **Ubuntu:** 20.04 LTS or 18.04 LTS
+
+ARM64 (arm64)
+----------------------------
+* **Debian:** 11, 10, 9
+* **Ubuntu:** 20.04 LTS or 18.04 LTS
+* **NOTE:** ARM 64 bit processors only! ARM 32bit (armhf) is currently not supported!
 
 Installing Hestia Control Panel
 ============================
+
+* **NOTE:** Hestia Control Panel must be installed on top of a fresh operating system installation to ensure proper functionality.
+
 While we have taken every effort to make the installation process and the control panel interface as friendly as possible (even for new users), it is assumed that you will have some prior knowledge and understanding in the basics how to set up a Linux server before continuing.
 
 ## Step 1: Log in
@@ -65,11 +79,20 @@ bash hst-install.sh -h
 ```
 Alternatively, @gabizz has made available a command-line script generator at https://gabizz.github.io/hestiacp-scriptline-generator/ which allows you to easily generate the installation command via GUI.
 
-Issues
-=============================
-If you've run into a problem, [file a new issue report via GitHub](https://github.com/hestiacp/hestiacp/issues) so that we may investigate further.
+How to upgrade an existing installation
+============================
+Automatic Updates are enabled by default on new installations of Hestia Control Panel and can be managed from **Server Settings > Updates**. To manually check for and install available updates, use the apt package manager:
+```bash
+apt-get update
+apt-get upgrade
+```
 
-**We cannot provide support for requests that do not describe the troubleshooting steps that have already been performed, or for third-party applications which do not relate to Hestia Control Panel. Please make sure that you fill in the necessary details in your issue reports!**
+Issues & Support Requests
+=============================
+* If you encounter a general problem while using Hestia Control Panel and need help, please [visit our forum](https://forum.hestiacp.com/) to search for potential solutions or post a new thread where community members can assist.
+* Bugs and other reproducible issues should be filed via GitHub by [creating a new issue report](https://github.com/hestiacp/hestiacp/issues) so that our developers can investigate further. Please note that requests for support will be redirected to our forum.
+
+**IMPORTANT: We _cannot_ provide support for requests that do not describe the troubleshooting steps that have already been performed, or for third-party applications not related to Hestia Control Panel (such as WordPress). Please make sure that you include as much information as possible in your forum posts or issue reports!**
 
 Contributions
 =============================

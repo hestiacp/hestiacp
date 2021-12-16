@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add web domain alias
 # options: USER DOMAIN ALIASES [RESTART]
+# labels: web
+#
+# example: v-add-web-domain-alias admin acme.com www.acme.com yes
 #
 # The call is intended for adding aliases to a domain (it is also called
 # "domain parking"). The function supports wildcards *.domain.tpl.
@@ -18,10 +21,16 @@ aliases=$3
 restart="$4"
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -35,7 +44,7 @@ format_aliases
 #----------------------------------------------------------#
 
 if [ -z "$aliases" ]; then
-    check_result $E_INVALID "invalid alias format: empty"
+    check_result "$E_INVALID" "Invalid alias format: empty"
 fi
 
 check_args '3' "$#" 'USER DOMAIN ALIASES [RESTART]'
@@ -46,7 +55,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 is_domain_new 'web' "$aliases"
-is_package_full 'WEB_ALIASES'
+is_base_domain_owner "$aliases"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -56,7 +65,6 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Parsing domain values
 get_domain_values 'web'
 
 # Preparing domain values for the template substitution
@@ -68,6 +76,8 @@ else
 fi
 prepare_web_domain_values
 
+is_package_full 'WEB_ALIASES'
+
 # Rebuilding vhost
 del_web_config "$WEB_SYSTEM" "$TPL.tpl"
 add_web_config "$WEB_SYSTEM" "$TPL.tpl"
@@ -77,7 +87,7 @@ if [ "$SSL" = 'yes' ]; then
 fi
 
 # Rebuilding proxy configuration
-if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
+if [ -n  "$PROXY_SYSTEM" ] && [ -n "$PROXY" ]; then
     del_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
     add_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
     if [ "$SSL" = 'yes' ]; then
@@ -96,15 +106,14 @@ update_object_value 'web' 'DOMAIN' "$domain" '$ALIAS' "$ALIAS"
 increase_user_value "$user" '$U_WEB_ALIASES'
 
 # Restarting web server
-$BIN/v-restart-web $restart
+$BIN/v-restart-web "$restart"
 check_result $? "Web restart failed" >/dev/null
 
 # Restarting proxy server
-$BIN/v-restart-proxy $restart
+$BIN/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" >/dev/null
 
-
-log_history "added $aliases for $domain"
+$BIN/v-log-action "$user" "Info" "Web" "Added new web domain alias (Alias: $aliases, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

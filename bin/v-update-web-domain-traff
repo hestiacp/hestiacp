@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: update domain bandwidth usage
 # options: USER DOMAIN
+# labels: web
+#
+# example: v-update-web-domain-traff admin example.com
 #
 # The function recalculates bandwidth usage for specific domain.
 
@@ -15,9 +18,14 @@ domain=$2
 domain_idn=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -52,7 +60,7 @@ bytes=0
 while read line; do
     if  [[ "$line" =~ ^[0-9]+$ ]]; then
         line=${line#0}
-        if [ ! -z "$line" ]; then
+        if [ -n "$line" ]; then
             bytes=$(($bytes + $line))
         fi
     fi

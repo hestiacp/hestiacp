@@ -1,0 +1,89 @@
+<!-- Begin toolbar -->
+<div class="l-center edit">
+	<div class="l-sort clearfix">
+		<div class="l-unit-toolbar__buttonstrip">
+			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/add/webapp/?domain=<?=$v_domain?>"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+		</div>
+		<div class="l-unit-toolbar__buttonstrip float-right">
+			<?php
+				if (!empty($_SESSION['error_msg'])) {
+					echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
+				} else {
+					if (!empty($_SESSION['ok_msg'])) {
+						echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+					}
+				}
+			?>
+			<a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Install');?></a>
+		</div>
+	</div>
+</div>
+<!-- End toolbar -->
+
+<div class="l-separator"></div>
+
+<div class="l-center animated fadeIn" style="padding-top:240px;">
+
+	<?php if( !empty($WebappInstaller->getOptions())): ?>
+		<form id="vstobjects" method="POST" name="v_setup_webapp" style="padding-top:0px;">
+			<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+			<input type="hidden" name="ok" value="true" />
+
+			<div class="app-form">
+				<?php if( !$WebappInstaller->isDomainRootClean()): ?>
+					<span class="alert alert-info alert-with-icon">
+						<i class="fas fa-info"></i>
+						<?=_('Data loss warning!<br>Your web domain already has files uploaded, the installer will overwrite your files and/or the installation might fail.<br/><br/> Please use the installer only for empty web domains');?>
+					</span>
+					<br />
+				<?php endif; ?>
+				<?php foreach ($WebappInstaller->getOptions() as $form_name => $form_control):?>
+					<?php
+						$f_name = $WebappInstaller->formNs() . '_' . $form_name;
+						$f_type = $form_control;
+						$f_value = '';
+						if(isset($form_control['label'])){
+							$f_label = htmlentities($form_control['label']);
+						}else{
+							$f_label = ucwords(str_replace(['.','_'], ' ', $form_name));
+						}
+						$f_placeholder = '';
+						if (is_array($form_control)) {
+								$f_type = (!empty($form_control['type']))?$form_control['type']:'text';
+								$f_value = (!empty($form_control['value']))?$form_control['value']:'';
+								$f_placeholder = (!empty($form_control['placeholder']))?$form_control['placeholder']:'';
+						}
+
+						$f_value = htmlentities($f_value);
+						$f_label = htmlentities($f_label);
+						$f_placeholder = htmlentities($f_placeholder);
+					?>
+					<div class="form-group">
+						<label style="padding-bottom: 2px;" for="<?=$f_name?>"><?=$f_label?>
+							<?php if ($f_type === 'password'):?> / <a href="javascript:randomString('<?=$f_name?>');" class="generate"><?=_('generate');?></a> <?php endif?>
+						</label>
+						<?php if (in_array($f_type, ['select']) && count($form_control['options']) ):?>
+							<p style="margin-top:0;"></p>
+							<select class="vst-list" name="<?=$f_name?>">
+								<?php foreach ($form_control['options'] as $option):?>
+									<?php $selected = (!empty($form_control['value']) && $option === $form_control['value'])?'selected':''?>
+									<option value="<?=$option?>" <?=$selected?>><?=htmlentities($option)?></option>
+								<?php endforeach; ?>
+							</select>
+							</p>
+						<?php elseif (in_array($f_type, ['boolean'])):?>
+							<p>
+								<?php $checked = (!empty($f_value))?'checked':''?>
+								<input style="width:auto;" type="checkbox" class="vst-input" name="<?=$f_name?>" id="<?=$f_name?>" <?=$checked?> value="true">
+							</p>
+						<?php else:?>
+							<p style="margin-top:0;"></p>
+							<input type="text" size="20" class="vst-input" name="<?=$f_name?>" id="<?=$f_name?>" placeholder="<?=$f_placeholder?>" value="<?=$f_value?>">
+							</p>
+						<?php endif; ?>
+					</div>
+				<?php endforeach; ?>
+			</div>
+		</form>
+	<?php endif ?>
+</div>

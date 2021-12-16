@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: delete mail account forward-only flag
 # options: USER DOMAIN ACCOUNT
+# labels: mail
+#
+# example: v-delete-mail-account-fwd-only admin example.com jack
 #
 # The function deletes fwd-only flag
 
@@ -16,9 +19,14 @@ domain_idn=$2
 account=$3
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -34,11 +42,8 @@ check_args '3' "$#" 'USER DOMAIN ACCOUNT'
 is_format_valid 'user' 'domain' 'account'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
-is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 is_object_valid "mail/$domain" 'ACCOUNT' "$account"
-is_object_unsuspended "mail/$domain" 'ACCOUNT' "$account"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -62,7 +67,7 @@ fi
 update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$FWD_ONLY' ''
 
 # Logging
-log_history "deleted fwd_only flag for $account@$domain"
+$BIN/v-log-action "$user" "Info" "Mail" "Mail account forwarding disabled (User: $account@$domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

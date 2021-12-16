@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: unsuspend user
 # options: USER [RESTART]
+# labels: panel
+#
+# example: v-unsuspend-user bob
 #
 # The function unsuspends user and all his objects.
 
@@ -14,8 +17,12 @@ user=$1
 restart=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -29,46 +36,51 @@ if [ "$user" = 'admin' ]; then
     exit
 fi
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Deleting '!' in front of the password
-/usr/sbin/usermod --unlock $user
+# Do not restrict access to SFTP/FTP/SSH if POLICY_USER_VIEW_SUSPENDED is set to yes
+if [ -z "$POLICY_USER_VIEW_SUSPENDED" ] || [ "$POLICY_USER_VIEW_SUSPENDED" = 'no' ]; then
+    # Deleting '!' in front of the password
+    /usr/sbin/usermod --unlock $user
 
-# Unsuspending ftp accounts
-for ftp in $(grep "^${user}_" /etc/passwd |cut -f 1 -d : ); do
-    /usr/sbin/usermod --unlock $ftp 2>/dev/null
-done
+    # Unsuspending ftp accounts
+    for ftp in $(grep "^${user}_" /etc/passwd |cut -f 1 -d : ); do
+        /usr/sbin/usermod --unlock $ftp 2>/dev/null
+    done
+fi
 
 # Changing suspend value
 update_user_value "$user" '$SUSPENDED' 'no'
 decrease_user_value 'admin' '$SUSPENDED_USERS'
 
 # Unsuspending web domains
-if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
-    $BIN/v-unsuspend-web-domains $user $restart
+if [ -n "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
+    $BIN/v-unsuspend-web-domains "$user" "no"
 fi
 
 # Unsuspending dns domains
-if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
-    $BIN/v-unsuspend-dns-domains $user $restart
+if [ -n "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
+    $BIN/v-unsuspend-dns-domains "$user" "no"
 fi
 
 # Unsuspending mail domains
-if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
-    $BIN/v-unsuspend-mail-domains $user
+if [ -n "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
+    $BIN/v-unsuspend-mail-domains "$user" "no"
 fi
 
 # Unsuspending datbabases
-if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
-    $BIN/v-unsuspend-databases $user
+if [ -n "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
+    $BIN/v-unsuspend-databases "$user"
 fi
 
 # Unsuspending cron jobs
-if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
-    $BIN/v-unsuspend-cron-jobs $user $restart
+if [ -n "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
+    $BIN/v-unsuspend-cron-jobs "$user" "no"
 fi
 
 
@@ -79,19 +91,20 @@ fi
 
 
 # Restarting system services
-$BIN/v-restart-web $restart
+$BIN/v-restart-web "$restart"
 check_result $? "Web restart failed" >/dev/null
 
-$BIN/v-restart-proxy $restart
+$BIN/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" >/dev/null
 
-$BIN/v-restart-dns $restart
+$BIN/v-restart-dns "$restart"
 check_result $? "DNS restart failed" >/dev/null
 
-$BIN/v-restart-cron $restart
+$BIN/v-restart-cron "$restart"
 check_result $? "Cron restart failed" >/dev/null
 
 # Logging
+$BIN/v-log-action "system" "Info" "Users" "Unsuspended user account (User: $user)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

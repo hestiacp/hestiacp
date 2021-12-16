@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add dns domain
-# options: USER DOMAIN IP [NS1] [NS2] [NS3] [..] [NS8] [RESTART]
+# options: USER DOMAIN IP [NS1] [NS2] [NS3] [NS4] [NS5] [NS6] [NS7] [NS8] [RESTART]
+# labels: dns
+#
+# example: v-add-dns-domain admin example.com ns1.example.com ns2.example.com '' '' '' '' '' '' yes
 #
 # The function adds DNS zone with records defined in the template. If the exp
 # argument isn't stated, the expiration date value will be set to next year.
@@ -28,13 +31,19 @@ ns8=${11}
 restart=${12}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
 format_domain_idn
+domain_utf=$(idn -t --quiet -u "$domain_idn")
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -45,40 +54,55 @@ is_format_valid 'user' 'domain' 'ip'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-is_domain_new 'dns' "$domain"
+
+if [ "$($BIN/v-list-dns-domain $user $domain_utf plain |cut -f 1) " != "$domain" ]; then
+    is_domain_new 'dns' "$domain_utf"
+fi
+if [ "$($BIN/v-list-dns-domain $user $domain_idn plain |cut -f 1) " != "$domain" ]; then
+    is_domain_new 'dns' "$domain_idn"
+else
+    is_domain_new 'dns' "$domain"
+fi
+if [ -z "$(is_ip_format_valid $domain)" ]; then
+    echo "Error: Invalid domain format. IP address detected as input." 
+    exit 1
+fi
+
 is_package_full 'DNS_DOMAINS'
 template=$(get_user_value '$DNS_TEMPLATE')
-is_dns_template_valid $template
+is_dns_template_valid "$template"
 
-if [ ! -z "$ns1" ]; then
+is_base_domain_owner "$domain"
+
+if [ -n "$ns1" ]; then
     ns1=$(echo $4 |sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns1'
 fi
-if [ ! -z "$ns2" ]; then
+if [ -n "$ns2" ]; then
     ns2=$(echo $5 |sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns2'
 fi
-if [ ! -z "$ns3" ]; then
+if [ -n "$ns3" ]; then
     ns3=$(echo $6 |sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns3'
 fi
-if [ ! -z "$ns4" ]; then
+if [ -n "$ns4" ]; then
     ns4=$(echo $7 |sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns4'
 fi
-if [ ! -z "$ns5" ]; then
+if [ -n "$ns5" ]; then
     ns5=$(echo $8 |sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns5'
 fi
-if [ ! -z "$ns6" ]; then
+if [ -n "$ns6" ]; then
     ns6=$(echo $9 |sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns6'
 fi
-if [ ! -z "$ns7" ]; then
+if [ -n "$ns7" ]; then
     ns7=$(echo ${10} |sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns7'
 fi
-if [ ! -z "$ns8" ]; then
+if [ -n "$ns8" ]; then
     ns8=$(echo ${11} |sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns8'
 fi
@@ -106,7 +130,7 @@ serial=$(date +'%Y%m%d01')
 ttl=14400
 
 # Reading template
-template_data=$(cat $DNSTPL/$template.tpl)
+template_data=$(cat "$DNSTPL/$template.tpl")
 
 # Deleting unused nameservers
 if [ -z "$ns3" ]; then
@@ -184,7 +208,7 @@ if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
 fi
 
 # Updating dns-cluster queue
-if [ ! -z "$DNS_CLUSTER" ]; then
+if [ -n "$DNS_CLUSTER" ]; then
     cmd="$BIN/v-add-remote-dns-domain $user $domain yes"
     echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
 fi
@@ -203,7 +227,7 @@ $BIN/v-restart-dns $restart
 check_result $? "DNS restart failed"
 
 # Logging
-log_history "added dns domain $domain"
+$BIN/v-log-action "$user" "Info" "DNS" "Added new DNS domain (Name: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

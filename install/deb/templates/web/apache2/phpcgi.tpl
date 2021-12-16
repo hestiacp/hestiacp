@@ -25,6 +25,7 @@
         php_admin_value open_basedir %docroot%:%home%/%user%/tmp
         php_admin_value upload_tmp_dir %home%/%user%/tmp
         php_admin_value session.save_path %home%/%user%/tmp
+        php_admin_value sys_temp_dir %home%/%user%/tmp
         Action phpcgi-script /cgi-bin/php
         <Files *.php>
             SetHandler phpcgi-script
@@ -34,6 +35,6 @@
         AllowOverride All
     </Directory>
     IncludeOptional %home%/%user%/conf/web/%domain%/%web_system%.conf_*
-
+    IncludeOptional /etc/apache2/conf.d/*.inc
 </VirtualHost>
 

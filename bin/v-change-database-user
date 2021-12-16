@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: change database username
 # options: USER DATABASE DBUSER [DBPASS]
+# labels: 
+#
+# example: v-change-database-user admin my_db joe_user
 #
 # The function for changing database user. It uses the
 
@@ -16,10 +19,16 @@ dbuser="$user"_"$3"
 password=$4; HIDE=4
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/db.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
 source $HESTIA/func/rebuild.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -58,7 +67,11 @@ get_database_values
 
 #Fix issue #1084 with "Upper case not allowed with PGSQL"
 if [ "$TYPE" = "pgsql" ]; then
-   dbuser=$(echo $dbuser | tr '[:upper:]' '[:lower:]'); 
+   dbuser=$(echo $dbuser | tr '[:upper:]' '[:lower:]');
+   exclude="-"
+    if [[ "$dbuser" =~ $exclude ]]; then
+        check_result "$E_INVALID" "invalid database user format"
+    fi
 fi
 
 # Rebuild database
@@ -68,7 +81,7 @@ case $TYPE in
 esac
 
 # Change password
-if [ ! -z "$dbpass" ]; then
+if [ -n "$dbpass" ]; then
     case $TYPE in
         mysql) change_mysql_password ;;
         pgsql) change_pgsql_password ;;
@@ -93,7 +106,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-log_history "changed $database database user to $dbuser"
+$BIN/v-log-action "$user" "Info" "Database" "Database user changed (Database: $database, User: $dbuser)"
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
 #
@@ -37,7 +39,7 @@ if [ "$num_php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
     sed -i "/^WEB_BACKEND=/d" $HESTIA/conf/hestia.conf
     echo "WEB_BACKEND='php-fpm'" >> $HESTIA/conf/hestia.conf
 
-    for php_ver in $(ls /etc/php/); do
+    for php_ver in $(v-list-sys-php); do
         [ ! -d "/etc/php/$php_ver/fpm/pool.d/" ] && continue
         cp -f "$HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl"  ${WEBTPL}/php-fpm/PHP-${php_ver/\./_}.tpl
     done
@@ -137,7 +139,7 @@ if [ "$num_php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
     done
 
     # cleanup legacy multiphp templates
-    for php_ver in $(ls /etc/php/); do
+    for php_ver in $(v-list-sys-php); do
         [ ! -d "/etc/php/$php_ver/fpm/pool.d/" ] && continue
         echo "Remove legacy multiphp templates for: $php_ver"
         [ -f "$WEBTPL/$WEB_SYSTEM/PHP-${php_ver//.}.sh" ]   && rm "$WEBTPL/$WEB_SYSTEM/PHP-${php_ver//.}.sh"

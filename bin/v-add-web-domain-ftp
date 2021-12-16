@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add ftp account for web domain.
 # options: USER DOMAIN FTP_USER FTP_PASSWORD [FTP_PATH]
+# labels: web
+#
+# example: v-add-web-domain-ftp alice wonderland.com alice_ftp p4$$vvOrD
 #
 # The function creates additional ftp account for web domain.
 
@@ -18,9 +21,14 @@ password=$4; HIDE=4
 ftp_path=$5
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -40,10 +48,10 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 check_ftp_user=$(grep "^$ftp_user:" /etc/passwd)
-if [ ! -z "$check_ftp_user" ] && [ "$FTP_USER" != "$ftp_user" ]; then
+if [ -n "$check_ftp_user" ] && [ "$FTP_USER" != "$ftp_user" ]; then
     echo "Error: ftp user $ftp_user already exists"
     log_event "$E_EXISTS" "$ARGUMENTS"
-    exit $E_EXISTS
+    exit "$E_EXISTS"
 fi
 is_password_valid
 
@@ -60,7 +68,7 @@ get_domain_values 'web'
 
 # Defining ftp user shell
 shell=$(which nologin)
-if [ ! -z "$FTP_SHELL" ]; then
+if [ -n "$FTP_SHELL" ]; then
     shell=$FTP_SHELL
 fi
 
@@ -73,7 +81,7 @@ else
     if [ -z "$(echo $ftp_path_a |grep $HOMEDIR/$user/web/$domain)" ]; then
         echo "Error: absolute path $ftp_path_a is invalid"
         log_event "$E_INVALID" "$ARGUMENTS"
-        exit $E_INVALID
+        exit "$E_INVALID"
     fi
     # Creating ftp user home directory
     if [ ! -e "$ftp_path_a" ]; then
@@ -93,10 +101,18 @@ fi
 
 # Set ftp user password
 echo "$ftp_user:$password" | /usr/sbin/chpasswd
+
+if [ $? -ne 0 ]; then 
+    # Delete user on failure again
+    /usr/sbin/deluser "$ftp_user"  > /dev/null 2>&1
+    echo "Error: Password not accepted due to PAM restrictions"
+    exit 2
+fi
+
 ftp_md5=$(awk -v user=$ftp_user -F : 'user == $1 {print $2}' /etc/shadow)
 
 # Adding jailed sftp env
-$BIN/v-add-user-sftp-jail $ftp_user
+$BIN/v-add-user-sftp-jail "$ftp_user"
 
 
 #----------------------------------------------------------#
@@ -122,7 +138,7 @@ update_object_value 'web' 'DOMAIN' "$domain" '$FTP_MD5' "$ftp_md5"
 update_object_value 'web' 'DOMAIN' "$domain" '$FTP_PATH' "$ftp_path"
 
 # Logging
-log_history "added ftp account ${1}_${3}@$domain"
+$BIN/v-log-action "$user" "Info" "Web" "Added new FTP account (Name: ${1}_${3}@$domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -1,8 +1,11 @@
 #!/bin/bash
 # info: unsuspend mail domain
 # options: USER DOMAIN
+# labels: mail
 #
-# The function unsuspends mail domain. 
+# example: v-unsuspend-mail-domain user02 acme.com
+#
+# The function unsuspends mail domain.
 
 
 #----------------------------------------------------------#
@@ -13,11 +16,17 @@
 user=$1
 domain=$2
 domain_idn=$2
+restart=${3-yes}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -36,6 +45,8 @@ is_object_valid 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
 is_object_suspended 'mail' 'DOMAIN' "$domain"
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -56,10 +67,16 @@ sed -i "s/SUSPENDED='yes'/SUSPENDED='no'/g" $USER_DATA/mail/$domain.conf
 decrease_user_value "$user" '$SUSPENDED_MAIL'
 
 # Enable webmail access
-if [ ! -z "$IMAP_SYSTEM" ]; then
-    $BIN/v-add-sys-webmail $user $domain 'yes'
+if [ -n "$IMAP_SYSTEM" ]; then
+    if [ -n "$WEBMAIL_SYSTEM" ]; then
+        for client in ${WEBMAIL_SYSTEM//,/ };do
+            webmail="$client"
+        done
+        $BIN/v-add-mail-domain-webmail "$user" "$domain" "$webmail" "$restart"
+    fi   
 fi
 # Logging
+$BIN/v-log-action "system" "Info" "Mail" "Unsuspended mail domain (User: $user, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

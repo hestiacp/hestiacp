@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: suspend all mail domain accounts
 # options: USER DOMAIN
+# labels: mail
+#
+# example: v-suspend-mail-accounts admin example.com
 #
 # The function suspends all mail domain accounts.
 
@@ -15,8 +18,12 @@ domain=$2
 domain_idn=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain

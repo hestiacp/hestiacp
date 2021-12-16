@@ -13,7 +13,7 @@ App.Templates.html = {
                     </li>'
         ],
         notification_empty: [
-                    '<li class="empty"><span><i class="fas fa-bell-slash status-icon" style="font-size: 4rem;"></i><br><br>\
+                    '<li class="empty"><span><i class="fas fa-bell-slash status-icon dim" style="font-size: 4rem;"></i><br><br>\
                     '+App.Constants.NOTIFICATIONS_EMPTY+'\</span></li>'
         ]
     },

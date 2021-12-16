@@ -1,0 +1,157 @@
+<!-- Begin toolbar -->
+<div class="l-center edit">
+	<div class="l-sort clearfix">
+		<div class="l-unit-toolbar__buttonstrip">
+			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+		</div>
+		<div class="l-unit-toolbar__buttonstrip float-right">
+			<a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
+		</div>
+	</div>
+</div>
+<!-- End toolbar -->
+
+<div class="l-separator"></div>
+
+<div class="l-center animated fadeIn">
+
+	<form id="vstobjects" name="v_configure_server" method="post">
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+		<input type="hidden" name="save" value="save" />
+
+		<table class="data mode-add">
+			<tr class="data-add">
+				<td class="data-dotted">
+					<table class="data-col1">
+						<tr>
+							<td></td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<table class="data-col2" width="600px">
+						<tr>
+							<td class="step-top">
+								<span class="page-title"><?=_('Configuring Server');?>: <?=$v_service_name;?></span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<?php
+									if (!empty($_SESSION['error_msg'])) {
+										$msg_icon = 'fa-exclamation-circle status-icon red';
+										$msg_text = htmlentities($_SESSION['error_msg']);
+										$msg_id = 'vst-error';
+									} else {
+										if (!empty($_SESSION['ok_msg'])) {
+											$msg_icon = 'fa-check-circle status-icon green';
+											$msg_text = $_SESSION['ok_msg'];
+											$msg_id = 'vst-ok';
+										}
+									}
+								?>
+								<span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text step-top">
+								<?=$v_config_path;?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<textarea class="vst-textinput console" name="v_config"><?=$v_config?></textarea>
+							</td>
+						</tr>
+						<?php if (!empty($v_config_path1)) { ?>
+							<tr>
+								<td class="vst-text step-top">
+									<?=$v_config_path1;?>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<textarea class="vst-textinput console" name="v_config1"><?=$v_config1?></textarea>
+								</td>
+							</tr>
+							<tr>
+								<td class="vst-text step-top">
+									<?=$v_config_path2;?>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<textarea class="vst-textinput console" name="v_config2"><?=$v_config2?></textarea>
+								</td>
+							</tr>
+							<tr>
+								<td class="vst-text step-top">
+									<?=$v_config_path3;?>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<textarea class="vst-textinput console" name="v_config3"><?=$v_config3?></textarea>
+								</td>
+							</tr>
+							<tr>
+								<td class="vst-text step-top">
+									<?=$v_config_path4;?>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<textarea class="vst-textinput console" name="v_config4"><?=$v_config4?></textarea>
+								</td>
+							</tr>
+							<tr>
+								<td class="vst-text step-top">
+									<?=$v_config_path5;?>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<textarea class="vst-textinput console" name="v_config5"><?=$v_config5?></textarea>
+								</td>
+							</tr>
+							<tr>
+								<td class="vst-text step-top">
+									<?=$v_config_path6;?>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<textarea class="vst-textinput console" name="v_config6"><?=$v_config6?></textarea>
+								</td>
+							</tr>
+							<tr>
+								<td class="vst-text step-top">
+									<?=$v_config_path7;?>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<textarea class="vst-textinput console" name="v_config7"><?=$v_config7?></textarea>
+								</td>
+							</tr>
+							<tr>
+								<td class="vst-text step-top">
+									<?=$v_config_path8;?>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<textarea class="vst-textinput console" name="v_config8"><?=$v_config8?></textarea>
+								</td>
+							</tr>
+						<?php } ?>
+						<td class="vst-text input-label" style="text-transform: capitalize;">
+							<label><input type="checkbox" size="20" class="vst-checkbox" name="v_restart" checked="yes"><?=_('restart');?></label>
+						</td>
+					</table>
+					<table class="data-col2"></table>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>

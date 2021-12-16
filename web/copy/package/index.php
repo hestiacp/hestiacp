@@ -1,18 +1,16 @@
 <?php
+
 // Init
-error_reporting(NULL);
+error_reporting(null);
 ob_start();
 session_start();
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check token
-if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
-    header('location: /login/');
-    exit();
-}
+verify_csrf($_GET);
 
 // Check user
-if ($_SESSION['user'] != 'admin') {
+if ($_SESSION['userContext'] != 'admin') {
     header("Location: /list/user");
     exit;
 }
@@ -23,16 +21,18 @@ if (empty($_GET['package'])) {
     exit;
 }
 
-if ($_SESSION['user'] == 'admin') {
+if ($_SESSION['userContext'] === 'admin') {
     if (!empty($_GET['package'])) {
         $v_package = escapeshellarg($_GET['package']);
-        exec (HESTIA_CMD."v-copy-user-package ".$v_package." ".$v_package."-copy", $output, $return_var);
+        exec(HESTIA_CMD."v-copy-user-package ".$v_package." ".$v_package."-copy", $output, $return_var);
     }
 
     if ($return_var != 0) {
         $error = implode('<br>', $output);
-        if (empty($error)) $error = 'Error: unable to copy package.';
-            $_SESSION['error_msg'] = $error;
+        if (empty($error)) {
+            $error = 'Error: unable to copy package.';
+        }
+        $_SESSION['error_msg'] = $error;
     }
     unset($output);
 }

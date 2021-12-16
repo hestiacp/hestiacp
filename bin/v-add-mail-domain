@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add mail domain
 # options: USER DOMAIN [ANTISPAM] [ANTIVIRUS] [DKIM] [DKIM_SIZE]
+# labels: mail
+#
+# example: v-add-mail-domain admin mydomain.tld
 #
 # The function adds MAIL domain.
 
@@ -16,12 +19,19 @@ antispam=${3-yes}
 antivirus=${4-yes}
 dkim=${5-yes}
 dkim_size=${6-1024}
+restart=${7-yes}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-source $HESTIA/conf/hestia.conf
+# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Define mail user
 if [ "$MAIL_SYSTEM" = 'exim4' ]; then
@@ -33,7 +43,7 @@ fi
 # Additional argument formatting
 format_domain
 format_domain_idn
-
+domain_utf=$(idn -t --quiet -u "$domain_idn")
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -44,9 +54,24 @@ is_format_valid 'user' 'domain' 'antispam' 'antivirus' 'dkim' 'dkim_size'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-is_domain_new 'mail' "$domain"
+
+if [ "$($BIN/v-list-mail-domain $user $domain_utf plain |cut -f 1) " != "$domain" ]; then
+    is_domain_new 'mail' "$domain_utf"
+fi
+if [ "$($BIN/v-list-mail-domain $user $domain_idn plain |cut -f 1) " != "$domain" ]; then
+    is_domain_new 'mail' "$domain_idn"
+else
+    is_domain_new 'mail' "$domain"
+fi
+if [ -z "$(is_ip_format_valid $domain)" ]; then
+    echo "Error: Invalid domain format. IP address detected as input." 
+    exit 1
+fi
+
 is_package_full 'MAIL_DOMAINS'
 is_dir_symlink $HOMEDIR/$user/mail
+
+is_base_domain_owner "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -69,7 +94,7 @@ fi
 new_timestamp
 
 # Adding domain to mail.conf
-s="DOMAIN='$domain' ANTIVIRUS='$antivirus' ANTISPAM='$antispam' DKIM='$dkim'"
+s="DOMAIN='$domain' ANTIVIRUS='$antivirus' ANTISPAM='$antispam' DKIM='$dkim' WEBMAIL=''"
 s="$s SSL='no' LETSENCRYPT='no' CATCHALL='' ACCOUNTS='0' U_DISK='0' SUSPENDED='no' TIME='$time'"
 s="$s DATE='$date'"
 echo $s >> $USER_DATA/mail.conf
@@ -93,39 +118,27 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     touch $HOMEDIR/$user/conf/mail/$domain/aliases
     touch $HOMEDIR/$user/conf/mail/$domain/passwd
     touch $HOMEDIR/$user/conf/mail/$domain/fwd_only
+    touch $HOMEDIR/$user/conf/mail/$domain/accounts
     ln -s $HOMEDIR/$user/conf/mail/$domain \
         /etc/$MAIL_SYSTEM/domains/$domain_idn
 
     # Seeting outgoing ip address
-    if [ ! -z "$local_ip" ]; then
+    if [ -n "$local_ip" ]; then
         echo "$local_ip" > $HOMEDIR/$user/conf/mail/$domain/ip
     fi
-
-    # Touch mailhelo.conf if it doesnt exist
-    if [ ! -f "/etc/exim4/mailhelo.conf" ]; then
-        touch /etc/exim4/mailhelo.conf
+    
+    if [ -n "$ANTISPAM_SYSTEM" ]; then 
+        # Adding antispam protection
+        if [ "$antispam" = 'yes' ]; then
+            touch "$HOMEDIR/$user/conf/mail/$domain/antispam"
+        fi
     fi
-
-    # Setting HELO for mail domain
-    if [ ! -z "$local_ip" ]; then
-        IP_RDNS=$(is_ip_rdns_valid "$local_ip")
-        if [ ! -z "$IP_RDNS" ]; then
-            if [ $(grep -s "^${domain}:" /etc/exim4/mailhelo.conf) ]; then
-                sed -i "/^${domain}:/c\\${domain}:${IP_RDNS}" /etc/exim4/mailhelo.conf
-            else
-                echo ${domain}:${IP_RDNS} >> /etc/exim4/mailhelo.conf
-            fi
-        fi        
-    fi
-
-    # Adding antispam protection
-    if [ "$antispam" = 'yes' ]; then
-        touch $HOMEDIR/$user/conf/mail/$domain/antispam
-    fi
-
-    # Adding antivirus protection
-    if [ "$antivirus" = 'yes' ]; then
-        touch $HOMEDIR/$user/conf/mail/$domain/antivirus
+    
+    if [ -n "$ANTIVIRUS_SYSTEM" ]; then
+        # Adding antivirus protection
+        if [ "$antivirus" = 'yes' ]; then
+            touch "$HOMEDIR/$user/conf/mail/$domain/antivirus"
+        fi
     fi
 
     # Adding dkim support
@@ -145,28 +158,29 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     if [ "$IMAP_SYSTEM" = 'dovecot' ]; then
         chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain/passwd
     fi
+    chown $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain/accounts
     chown $user:mail $HOMEDIR/$user/mail/$domain_idn
 fi
 
 # Adding dkim dns records
-if [ ! -z "$DNS_SYSTEM" ] && [ "$dkim" = 'yes' ]; then
+if [ -n "$DNS_SYSTEM" ] && [ "$dkim" = 'yes' ]; then
     check_dns_domain=$(is_object_valid 'dns' 'DOMAIN' "$domain")
     if [ "$?" -eq 0 ]; then
         p=$(cat $USER_DATA/mail/$domain.pub|grep -v ' KEY---'|tr -d '\n')
         record='_domainkey'
         policy="\"t=y; o=~;\""
-        $BIN/v-add-dns-record $user $domain $record TXT "$policy" '' '' 'no'
+        $BIN/v-add-dns-record "$user" "$domain" "$record" TXT "$policy" '' '' 'no' '' 'yes'
 
         record='mail._domainkey'
         selector="\"v=DKIM1\; k=rsa\; p=$p\""
-        $BIN/v-add-dns-record $user $domain $record TXT "$selector"
+        $BIN/v-add-dns-record "$user" "$domain" "$record" TXT "$selector" '' '' 'yes' '' 'yes'
     fi
 fi
 
 # Add webmail configuration to mail domain
-if [ ! -z "$WEB_SYSTEM" ] || [ ! -z "$PROXY_SYSTEM" ]; then
-    if [ ! -z "$IMAP_SYSTEM" ]; then
-        $BIN/v-add-sys-webmail $user $domain ''
+if [ -n "$WEB_SYSTEM" ] || [ -n "$PROXY_SYSTEM" ]; then
+    if [ -n "$IMAP_SYSTEM" ]; then
+        $BIN/v-add-mail-domain-webmail "$user" "$domain" '' 'no'
     fi
 fi
     
@@ -182,15 +196,15 @@ if [ "$dkim" = 'yes' ]; then
 fi
 
 # Restarting web server
-$BIN/v-restart-web $restart
+$BIN/v-restart-web "$restart"
 check_result $? "Web restart failed" >/dev/null
 
 # Restarting proxy server
-$BIN/v-restart-proxy $restart
+$BIN/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging
-log_history "added mail domain $domain"
+$BIN/v-log-action "$user" "Info" "Mail" "Added new mail domain ($domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

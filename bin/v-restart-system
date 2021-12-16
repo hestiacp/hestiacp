@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: restart operating system
-# options: restart
+# options: RESTART [DELAY]
+# labels: panel
+#
+# example: v-restart-system yes
 #
 # The function restarts operating system.
 
@@ -14,8 +17,12 @@ restart=$1
 delay=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -32,9 +39,10 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 if [  "$restart" = 'yes' ]; then
+    $BIN/v-log-action "system" "Warning" "System" "System restart initiated."
     if [ "$delay" ]; then
         echo "The server will restart in $delay seconds..."
-        sleep $delay
+        sleep "$delay"
     fi
     /sbin/reboot
 fi

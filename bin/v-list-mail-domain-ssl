@@ -18,8 +18,12 @@ domain=$2
 format=${3-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -44,20 +48,20 @@ json_list() {
 
 # SHELL list function
 shell_list() {
-    if [ ! -z "$crt" ]; then
+    if [ -n "$crt" ]; then
         echo -e "$crt"
     fi
-    if [ ! -z "$key" ]; then
+    if [ -n "$key" ]; then
         echo -e "\n$key"
     fi
-    if [ ! -z "$ca" ]; then
+    if [ -n "$ca" ]; then
         echo -e "\n$ca"
     fi
-    if [ ! -z "$crt" ]; then
+    if [ -n "$crt" ]; then
         echo
         echo
         echo "SUBJECT:        $subj"
-        if [ ! -z "$alt_dns" ]; then
+        if [ -n "$alt_dns" ]; then
             echo "ALIASES:        ${alt_dns//,/ }"
         fi
         echo "VALID FROM:     $before"
@@ -70,16 +74,16 @@ shell_list() {
 
 # PLAIN list function
 plain_list() {
-    if [ ! -z "$crt" ]; then
+    if [ -n "$crt" ]; then
         echo -e "$crt"
     fi
-    if [ ! -z "$key" ]; then
+    if [ -n "$key" ]; then
         echo -e "\n$key"
     fi
-    if [ ! -z "$ca" ]; then
+    if [ -n "$ca" ]; then
         echo -e "\n$ca"
     fi
-    if [ ! -z "$crt" ]; then
+    if [ -n "$crt" ]; then
         echo "$subj"
         echo "${alt_dns//,/ }"
         echo "$before"

@@ -13,11 +13,13 @@
 #----------------------------------------------------------#
 
 # Includes
-source /etc/profile
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
 
 restart=$1
 
@@ -38,7 +40,7 @@ sftp_n=$(grep -n "Subsystem.*sftp" $config |grep -v internal |grep -v ":#")
 sftp_i=$(grep -n "^# Hestia SFTP Chroot" $config)
 
 # Disabling normal sftp
-if [ ! -z "$sftp_n" ]; then
+if [ -n "$sftp_n" ]; then
     fline=$(echo $sftp_n |cut -f 1 -d :)
     sed -i "${fline}s/Subsystem.*sftp/#Subsystem sftp/" $config
     restart='yes'
@@ -73,8 +75,18 @@ fi
 # Checking users
 shells="rssh|nologin"
 for user in $(grep "$HOMEDIR" /etc/passwd |egrep "$shells" |cut -f 1 -d:); do
-    $BIN/v-add-user-sftp-jail $user $restart
+    if [ -d "$HESTIA/data/users/$user" ]; then
+    $BIN/v-add-user-sftp-jail "$user" "no"
+    fi
 done
+
+# Restart ssh service
+if [ "$restart" = 'no' ]; then
+    # Skip restart of SSH daemon
+    echo "" > /dev/null 2>&1
+else
+    service ssh restart > /dev/null 2>&1
+fi
 
 # Add v-add-sys-sftp-jail to startup
 if [ ! -e "/etc/cron.d/hestia-sftp" ]; then

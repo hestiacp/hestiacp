@@ -10,12 +10,14 @@
 #----------------------------------------------------------#
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-# shellcheck source=/usr/local/hestia/install/upgrade/upgrade.conf
-source $HESTIA/install/upgrade/upgrade.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+# upgrade config file
+source "$HESTIA/install/upgrade/upgrade.conf"
 
 MODE=$2
 UPDATE="no"
@@ -98,6 +100,7 @@ if [ "$UPDATE" == "no" ]; then
     # Replace with Hestia config
     cp -f $HESTIA_INSTALL_DIR/roundcube/main.inc.php $RC_CONFIG_DIR/config.inc.php
     cp -f $HESTIA_INSTALL_DIR/roundcube/mimetypes.php $RC_CONFIG_DIR/mimetypes.php
+    chmod 644 $RC_CONFIG_DIR/*.php
     
     cp -f $HESTIA_INSTALL_DIR/roundcube/hestia.php $RC_INSTALL_DIR/plugins/password/drivers/
     mkdir -p $RC_CONFIG_DIR/plugins/password
@@ -111,6 +114,7 @@ if [ "$UPDATE" == "no" ]; then
     ln -s $RC_CONFIG_DIR/plugins/newmail_notifier/config.inc.php ./plugins/newmail_notifier/config.inc.php
     cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_zipdownload.inc.php $RC_CONFIG_DIR/plugins/zipdownload/config.inc.php
     ln -s $RC_CONFIG_DIR/plugins/zipdownload/config.inc.php ./plugins/zipdownload/config.inc.php
+    
     # Set up correct permissions roundcube    
     chown -R root:www-data $RC_CONFIG_DIR/
     chmod 751 -R $RC_CONFIG_DIR    
@@ -129,7 +133,7 @@ if [ "$UPDATE" == "no" ]; then
     if [ ! -d  $RC_LOG ];then
         mkdir $RC_LOG
     fi
-    chown www-data:root $RC_LOG
+    chown www-data:www-data $RC_LOG
     chmod 751 $RC_LOG
     
     if [ ! -z "$(echo "$DB_SYSTEM" | grep -w 'mysql')" ]; then
@@ -178,6 +182,7 @@ else
     # Run Roundcube upgrade script
     $RC_INSTALL_DIR/$RC_EXTRACT/bin/installto.sh -y $RC_INSTALL_DIR > /dev/null 2>&1
     $RC_INSTALL_DIR/bin/update.sh --version "$version" > /dev/null 2>&1
+    $RC_INSTALL_DIR/bin/indexcontacts.sh > /dev/null 2>&1
     chown -R root:www-data $RC_INSTALL_DIR
     
     #clean up the mess

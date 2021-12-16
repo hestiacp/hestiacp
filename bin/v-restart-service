@@ -17,10 +17,10 @@ service=$1
 restart=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-PATH="$PATH:/usr/local/sbin:/sbin:/usr/sbin:/root/bin"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -37,7 +37,7 @@ is_format_valid 'service' 'restart'
 if [ "$service" = "php-fpm" ];then
     service_list=''
     # Get installed php versions
-    php_versions=$(ls /usr/sbin/php*fpm* | cut -d'/' -f4 | sed 's|php-fpm||')
+    php_versions=$($BIN/v-list-sys-php plain);
     # Substitute php-fpm service name formats
     for version in $php_versions; do
         service_list="${service_list} php${version}-fpm"
@@ -69,18 +69,19 @@ for service in $service_list; do
             "$service" = "php7.3-fpm" -o \
             "$service" = "php7.4-fpm" -o \
             "$service" = "php8.0-fpm" -o \
+            "$service" = "php8.1-fpm" -o \
             "$service" = "proftpd" -o    \
             "$service" = "ssh" -o       \
             "$service" = "fail2ban" ]; then
-        systemctl reload-or-restart $service > /dev/null 2>&1
+        systemctl reload-or-restart "$service" > /dev/null 2>&1
     else
-        systemctl reset-failed $service > /dev/null 2>&1
-        systemctl restart $service > /dev/null 2>&1
+        systemctl reset-failed "$service "> /dev/null 2>&1
+        systemctl restart "$service" > /dev/null 2>&1
     fi
 
     # Check the result of the service restart and report whether it failed.
     if [ $? -ne 0 ]; then
-        check_result $E_RESTART "ERROR: Restart of $service failed."
+        check_result "$E_RESTART" "ERROR: Restart of $service failed."
         $BIN/v-log-action "system" "Error" "System" "Service failed to restart (Name: $service)."
     else
         $BIN/v-log-action "system" "Info" "System" "Service restarted (Name: $service)."

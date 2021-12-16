@@ -12,9 +12,6 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Importing system variables
-source /etc/profile
-
 # Argument definition
 chain=$(echo $1 | tr '[:lower:]' '[:upper:]')
 port=$2
@@ -31,13 +28,14 @@ if [ -z "$hestiaport" ]; then
 fi
 
 # Includes
-# shellcheck /usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck /usr/local/hestia/func/firewall.sh
+# shellcheck source=/usr/local/hestia/func/firewall.sh
 source $HESTIA/func/firewall.sh
-# shellcheck /usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #

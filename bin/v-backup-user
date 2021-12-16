@@ -12,14 +12,13 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Importing system variables
-source /etc/profile
-
 # Argument definition
 user=$1
 notify=${2-no}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
@@ -28,8 +27,8 @@ source $HESTIA/func/domain.sh
 source $HESTIA/func/db.sh
 # shellcheck source=/usr/local/hestia/func/backup.sh
 source $HESTIA/func/backup.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Return Disk Usage
 get_user_disk_usage() {
@@ -64,16 +63,16 @@ get_user_disk_usage() {
                 exlusion=$(echo -e "$web_exclusions" |tr ',' '\n' |grep "^$domain:")
                 fargs=()
 
-                if [ ! -z "$exlusion" ]; then
-                    xdirs="$(echo -e "$exlusion" |tr ':' '\n' |grep -v $domain)"
+                if [ -n "$exlusion" ]; then
+                    xdirs=$(echo -e "$exlusion" |tr ':' '\n' |grep -v "$domain")
                     for xpath in $xdirs; do
-                        fargs+=(--exclude=$xpath)
+                        fargs+=(--exclude="$xpath")
                     done
                 fi
 
                 # Checking home directory exist
                 if [ -e "$home_dir" ]; then
-                    disk_usage=$(nice -n 19 du -shm $home_dir ${fargs[@]} | cut -f 1 )
+                    disk_usage=$(nice -n 19 du -shm "$home_dir" "${fargs[@]}"| cut -f 1 )
                     u_usage=$((u_usage + disk_usage))
                 fi
             fi
@@ -82,13 +81,13 @@ get_user_disk_usage() {
 
     if [ -f "$USER_DATA/mail.conf" ] && [ "$mail_exclusions" != '*' ]; then
         usage=0
-        domains=$(grep 'DOMAIN=' $USER_DATA/mail.conf |\
+        domains=$(grep 'DOMAIN=' "$USER_DATA/mail.conf" |\
             awk -F "DOMAIN='" '{print $2}' | cut -f 1 -d \')
 
         for domain in $domains; do
             check_exl=$(echo "$mail_exclusions" |tr ',' '\n' |grep "^$domain$")
             if [ -f "$USER_DATA/mail/$domain.conf" ] && [ -z "$check_exl" ]; then
-                accounts=$(grep 'ACCOUNT=' $USER_DATA/mail/$domain.conf |\
+                accounts=$(grep 'ACCOUNT=' "$USER_DATA/mail/$domain.conf" |\
                     awk -F "ACCOUNT='" '{print $2}' | cut -f 1 -d \')
 
                 for account in $accounts; do
@@ -97,7 +96,7 @@ get_user_disk_usage() {
                     exclusion=$(echo "$exclusion" |tr ':' '\n' |grep -E "^$account|\*")
 
                     if [ -z "$exclusion" ] && [ -e "$home_dir" ]; then
-                        disk_usage=$(nice -n 19 du -shm $home_dir | cut -f 1 )
+                        disk_usage=$(nice -n 19 du -shm "$home_dir" | cut -f 1 )
                         u_usage=$((u_usage + disk_usage))
                     fi
                 done
@@ -107,7 +106,7 @@ get_user_disk_usage() {
 
     if [ -f "$USER_DATA/db.conf" ] && [ "$db_exclusions" != '*' ]; then
         usage=0
-        databases=$(grep 'DB=' $USER_DATA/db.conf |\
+        databases=$(grep 'DB=' "$USER_DATA/db.conf" |\
             awk -F "DB='" '{print $2}' | cut -f 1 -d \')
         for database in $databases; do
             exclusion=$(echo "$db_exclusions" |tr ',' '\n' |grep "^$database$")
@@ -128,9 +127,9 @@ get_user_disk_usage() {
     if [ "$user_exclusions" != '*' ]; then
         fargs=()
         for xpath in $(echo "$user_exclusions" |tr ',' '\n'); do
-            fargs+=(--exclude=$xpath)
+            fargs+=(--exclude="$xpath")
         done
-        usage=$(du -shm $HOMEDIR/$user --exclude $HOMEDIR/$user/web --exclude $HOMEDIR/$user/mail --exclude $HOMEDIR/$user/conf ${fargs[@]} |cut -f 1 )
+        usage=$(du -shm "$HOMEDIR/$user" --exclude "$HOMEDIR/$user/web" --exclude "$HOMEDIR/$user/mail" --exclude "$HOMEDIR/$user/conf" "${fargs[@]}" |cut -f 1 )
         u_usage=$((u_usage + usage))
     fi
 
@@ -166,7 +165,7 @@ fi
 if [[ ! -d "$BACKUP" ]]; then 
     mkdir -p $BACKUP
 fi
-if [ $(stat -c %a $BACKUP) != 755 ]; then
+if [ "$(stat -c %a "$BACKUP")" != 755 ]; then
     chmod 755 $BACKUP
 fi
 
@@ -175,7 +174,7 @@ start_time=$(date '+%s')
 
 # Set notification email and subject
 subj="$user → backup failed"
-email=$(grep CONTACT $HESTIA/data/users/admin/user.conf |cut -f 2 -d \')
+email=$(grep CONTACT "$HESTIA/data/users/admin/user.conf" |cut -f 2 -d \')
 
 # Validate available disk space (take usage * 2, due to the backup handling)
 let u_disk=$(($(get_user_disk_usage) * 2))
@@ -183,8 +182,8 @@ let v_disk=$(($(stat -f --format="%a*%S" $BACKUP)))/1024/1024
 
 if [ "$u_disk" -gt "$v_disk" ]; then
     # Always notify on failure
-    echo "not enough diskspace available to perform the backup." | $SENDMAIL -s "$subj" $email "yes"
-    check_result $E_LIMIT "not enough diskspace available to perform the backup."
+    echo "not enough diskspace available to perform the backup." | $SENDMAIL -s "$subj" "$email" "yes"
+    check_result "$E_LIMIT" "not enough diskspace available to perform the backup."
 fi
 
 if [ -z "$BACKUP_TEMP" ]; then
@@ -195,8 +194,8 @@ fi
 tmpdir=$(mktemp -p $BACKUP_TEMP -d)
 
 if [ "$?" -ne 0 ]; then
-    echo "Can't create tmp dir $tmpdir" |$SENDMAIL -s "$subj" $email "yes"
-    check_result $E_NOTEXIST "can't create tmp dir"
+    echo "Can't create tmp dir $tmpdir" |$SENDMAIL -s "$subj" "$email" "yes"
+    check_result "$E_NOTEXIST" "can't create tmp dir"
 fi
 
 # Backup sys configs
@@ -236,7 +235,7 @@ if [ -e "$USER_DATA/backup-excludes.conf" ]; then
 fi
 
 # WEB domains
-if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
+if [ -n "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
     echo -e "\n-- WEB --" |tee -a $BACKUP/$user.log
     mkdir $tmpdir/web/
 
@@ -280,7 +279,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
             # legacy format: all domain configs in single file
             tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.tpl"
             conf="$HOMEDIR/$user/conf/web/$WEB_SYSTEM.conf"
-            get_web_config_lines $tpl_file $conf
+            get_web_config_lines "$tpl_file" "$conf"
             sed -n "$top_line,$bottom_line p" $conf > conf/$WEB_SYSTEM.conf
         fi
 
@@ -294,14 +293,14 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
                 # legacy format: all domain configs in single file
                 tpl_file="$WEBTPL/$WEB_SYSTEM/$WEB_BACKEND/$TPL.stpl"
                 conf="$HOMEDIR/$user/conf/web/s$WEB_SYSTEM.conf"
-                get_web_config_lines $tpl_file $conf
+                get_web_config_lines "$tpl_file" "$conf"
                 sed -n "$top_line,$bottom_line p" $conf > \
                     conf/s$WEB_SYSTEM.conf
             fi
         fi
 
         # Backup proxy config
-        if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
+        if [ -n "$PROXY_SYSTEM" ] && [ -n "$PROXY" ]; then
             if [ -e "$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.conf" ]; then
                 cp $HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.conf* conf/
             elif [ -e "$HOMEDIR/$user/conf/web/$domain.$PROXY_SYSTEM.conf" ]; then
@@ -310,14 +309,14 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
                 # legacy format: all domain configs in single file
                 tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.tpl"
                 conf="$HOMEDIR/$user/conf/web/$PROXY_SYSTEM.conf"
-                get_web_config_lines $tpl_file $conf
+                get_web_config_lines "$tpl_file" "$conf"
                 sed -n "$top_line,$bottom_line p" $conf > \
                     conf/$PROXY_SYSTEM.conf
             fi
         fi
 
         # Backup ssl proxy config
-        if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ] && [ "$SSL" = 'yes' ]; then
+        if [ -n "$PROXY_SYSTEM" ] && [ -n "$PROXY" ] && [ "$SSL" = 'yes' ]; then
             if [ -e "$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.ssl.conf" ]; then
                 cp $HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.ssl.conf* conf/
             elif [ -e "$HOMEDIR/$user/conf/web/$domain.$PROXY_SYSTEM.ssl.conf" ]; then
@@ -326,7 +325,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
                 # legacy format: all domain configs in single file
                 tpl_file="$WEBTPL/$PROXY_SYSTEM/$PROXY.stpl"
                 conf="$HOMEDIR/$user/conf/web/s$PROXY_SYSTEM.conf"
-                get_web_config_lines $tpl_file $conf
+                get_web_config_lines "$tpl_file" "$conf"
                 sed -n "$top_line,$bottom_line p" $conf >\
                     conf/s$PROXY_SYSTEM.conf
             fi
@@ -346,7 +345,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
             cp $HESTIA/data/templates/web/$WEB_SYSTEM/$TPL.tpl template/$WEB_SYSTEM/
             cp $HESTIA/data/templates/web/$WEB_SYSTEM/$TPL.stpl template/$WEB_SYSTEM/   
         fi
-        if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
+        if [ -n "$PROXY_SYSTEM" ] && [ -n "$PROXY" ]; then
             mkdir  template/$PROXY_SYSTEM
             cp $HESTIA/data/templates/web/$PROXY_SYSTEM/$PROXY.tpl template/$PROXY_SYSTEM/
             cp $HESTIA/data/templates/web/$PROXY_SYSTEM/$PROXY.stpl template/$PROXY_SYSTEM/      
@@ -371,7 +370,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
         set -f
         fargs=()
         fargs+=(--exclude='./logs/*')
-        if [ ! -z "$exlusion" ]; then
+        if [ -n "$exlusion" ]; then
             xdirs="$(echo -e "$exlusion" |tr ':' '\n' |grep -v $domain)"
             for xpath in $xdirs; do
                 if [ -d "$xpath" ]; then
@@ -389,9 +388,9 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
 
         # Backup files
         if [ "$BACKUP_MODE" = 'zstd' ]; then
-            tar ${fargs[@]} -cpf- * | pzstd -$BACKUP_GZIP - > $tmpdir/web/$domain/domain_data.tar.zst
+            tar "${fargs[@]}" -cpf- * | pzstd -"$BACKUP_GZIP" - > $tmpdir/web/$domain/domain_data.tar.zst
         else    
-            tar ${fargs[@]} -cpf- * | gzip -$BACKUP_GZIP - > $tmpdir/web/$domain/domain_data.tar.gz
+            tar "${fargs[@]}" -cpf- * | gzip -"$BACKUP_GZIP" - > $tmpdir/web/$domain/domain_data.tar.gz
         fi
     done
 
@@ -404,7 +403,7 @@ if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
 fi
 
 # DNS domains
-if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS" != '*' ]; then
+if [ -n "$DNS_SYSTEM" ] && [ "$DNS" != '*' ]; then
     echo -e "\n-- DNS --" |tee -a $BACKUP/$user.log
     mkdir $tmpdir/dns/
 
@@ -450,7 +449,7 @@ if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS" != '*' ]; then
 fi
 
 # Mail domains
-if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
+if [ -n "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
     echo -e "\n-- MAIL --" |tee -a $BACKUP/$user.log
     mkdir $tmpdir/mail/
 
@@ -486,14 +485,14 @@ if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
         conf="$USER_DATA/mail.conf"
         grep "DOMAIN='$domain'" $conf > hestia/mail.conf
         cp $USER_DATA/mail/$domain.* hestia/
-        if [ ! -z "$(ls $USER_DATA/mail/|grep *@$domain)" ]; then
+        if [ -n "$(ls $USER_DATA/mail/|grep *@$domain)" ]; then
             cp $USER_DATA/mail/*@$domain.* hestia/
         fi
 
         # Backup emails
         cd $HOMEDIR/$user/mail/$domain_idn
         accounts=()
-        for account in $(ls); do
+        for account in *; do
             exclusion=$(echo "$MAIL" |tr ',' '\n' |grep "$domain:")
             exclusion=$(echo "$exclusion" |tr ':' '\n' |grep -E "^$account|\*")
 
@@ -508,9 +507,9 @@ if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
         # Compress archive
         if [ ${#accounts[@]} -gt 0 ]; then
             if [ "$BACKUP_MODE" = 'zstd' ]; then
-                tar -cpf- ${accounts[@]}  | pzstd -$BACKUP_GZIP - > $tmpdir/mail/$domain/accounts.tar.zst
+                tar -cpf- "${accounts[@]}"  | pzstd -"$BACKUP_GZIP" - > $tmpdir/mail/$domain/accounts.tar.zst
             else    
-                tar -cpf- ${accounts[@]} | gzip -$BACKUP_GZIP - > $tmpdir/mail/$domain/accounts.tar.gz
+                tar -cpf- "${accounts[@]}" | gzip -"$BACKUP_GZIP" - > $tmpdir/mail/$domain/accounts.tar.gz
             fi        
         fi
     done
@@ -525,7 +524,7 @@ fi
 
 
 # Databases
-if [ ! -z "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
+if [ -n "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
     echo -e "\n-- DB --" |tee -a $BACKUP/$user.log
     mkdir $tmpdir/db/
 
@@ -607,7 +606,7 @@ if [ ! -z "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
 fi
 
 # Cron jobs
-if [ ! -z "$CRON_SYSTEM" ] && [ "$CRON" != '*' ]; then
+if [ -n "$CRON_SYSTEM" ] && [ "$CRON" != '*' ]; then
     echo -e "\n-- CRON --" |tee -a $BACKUP/$user.log
     mkdir $tmpdir/cron/
 
@@ -644,13 +643,13 @@ if [ "$USER" != '*' ]; then
     fargs=()
     for xpath in $(echo "$USER" |tr ',' '\n'); do
         if [ -d "$xpath" ]; then
-            fargs+=(--exclude=$xpath/*)
+            fargs+=(--exclude="$xpath"/*)
             echo "$(date "+%F %T") excluding directory $xpath" |\
             tee -a $BACKUP/$user.log
         else
             echo "$(date "+%F %T") excluding file $xpath" |\
             tee -a $BACKUP/$user.log
-            fargs+=(--exclude=$xpath)
+            fargs+=(--exclude="$xpath")
         fi
     done
 
@@ -669,9 +668,9 @@ if [ "$USER" != '*' ]; then
 
             # Backup files and dirs
             if [ "$BACKUP_MODE" = 'zstd' ]; then
-                tar --anchored -cpf- ${fargs[@]} $udir | pzstd -$BACKUP_GZIP - > $tmpdir/user_dir/$udir.tar.zst
+                tar --anchored -cpf- "${fargs[@]}" $udir | pzstd -"$BACKUP_GZIP" - > $tmpdir/user_dir/$udir.tar.zst
             else    
-                tar --anchored -cpf- ${fargs[@]} $udir | gzip -$BACKUP_GZIP - > $tmpdir/user_dir/$udir.tar.gz
+                tar --anchored -cpf- "${fargs[@]}" $udir | gzip -"$BACKUP_GZIP" - > $tmpdir/user_dir/$udir.tar.gz
             fi 
             
         fi
@@ -771,6 +770,7 @@ echo "$backup_str" >> $USER_DATA/backup.conf
 tail -n $BACKUPS $USER_DATA/backup.conf > $USER_DATA/backup.conf_
 mv -f $USER_DATA/backup.conf_ $USER_DATA/backup.conf
 chmod 660 $USER_DATA/backup.conf
+chmod 660 $BACKUP/$user.log
 
 # Deleting task from queue
 sed -i "/v-backup-user $user /d" $HESTIA/data/queue/backup.pipe
@@ -783,10 +783,11 @@ cd $BACKUP
 if [ -e "$BACKUP/$user.log" ] && [ "$notify" = "yes" ]; then
     subj="$user → backup has been completed"
     email=$(get_user_value '$CONTACT')
-    cat $BACKUP/$user.log |$SENDMAIL -s "$subj" $email $notify
-    rm $BACKUP/$user.log
+    cat $BACKUP/$user.log |$SENDMAIL -s "$subj" "$email" "$notify"
     $BIN/v-add-user-notification "$user" "Backup created successfully" "<b>Archive:</b> $user.$backup_new_date.tar"
 fi
+
+
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Backup" "Backup created (Archive: $backup_new_date.tar)."

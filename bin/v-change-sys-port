@@ -16,26 +16,28 @@
 PORT=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Functions
 is_port_valid() {
     # Check if PORT is numeric
-    if [[ ! $PORT =~ ^[0-9]+$ ]]; then
+    if [[ ! "$PORT" =~ ^[0-9]+$ ]]; then
         echo "Port should contains a numeric value only!"
-        log_event $E_INVALID "$ARGUMENTS"
-        exit $E_INVALID
+        log_event "$E_INVALID" "$ARGUMENTS"
+        exit "$E_INVALID"
     fi
 
     # Check if PORT is already used
-    BUSY_PORT=$(lsof -i:$PORT)
-    if [ ! -z "$BUSY_PORT" ] && [ "$PORT" != "$BACKEND_PORT" ]; then
+    BUSY_PORT=$(lsof -i:"$PORT")
+    if [ -n  "$BUSY_PORT" ] && [ "$PORT" != "$BACKEND_PORT" ]; then
         echo "Port is already used by Hestia, please set anotherone!"
-        log_event $E_INUSE "$ARGUMENTS"
-        exit $E_INUSE
+        log_event "$E_INUSE" "$ARGUMENTS"
+        exit "$E_INUSE"
     fi
 }
 
@@ -58,14 +60,13 @@ check_hestia_demo_mode
 # Get original port
 ORIGINAL_PORT=$(cat $HESTIA/nginx/conf/nginx.conf | grep "listen" | sed 's/[^0-9]*//g')
 
-# Set new port in config via v-change-sys-config-value
-$HESTIA/bin/v-change-sys-config-value "BACKEND_PORT" $PORT
-
 # Check if port is different to nginx.conf
 if [ "$ORIGINAL_PORT" = "$PORT" ]; then
     # Nothing to do, exit
     exit
 else
+    # Set new port in config via v-change-sys-config-value
+    $HESTIA/bin/v-change-sys-config-value "BACKEND_PORT" "$PORT"
     # Replace port in config files.
     sed -i "/listen/c\        listen          $PORT ssl;" $HESTIA/nginx/conf/nginx.conf
     if [ -d /etc/roundcube/ ]; then
@@ -82,7 +83,7 @@ else
     fi
 
     # Check if Hestia is running
-    if [[ $(ps -eaf | grep -i hestia |sed '/^$/d' | wc -l) > 1 ]]; then
+    if [[ $(ps -eaf | grep -i hestia |sed '/^$/d' | wc -l) -gt 1 ]]; then
         $HESTIA/bin/v-restart-service hestia
     fi  
 fi

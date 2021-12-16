@@ -16,7 +16,7 @@ server {
     location / {
         try_files $uri /index.php;
 
-        location ~* ^.+\.(jpeg|jpg|png|gif|bmp|ico|svg|css|js)$ {
+        location ~* ^.+\.(jpeg|jpg|png|webp|gif|bmp|ico|svg|css|js)$ {
             valid_referers none blocked %domain_idn% %alias_idn%;
             if ($invalid_referer)  {
                 return 444;

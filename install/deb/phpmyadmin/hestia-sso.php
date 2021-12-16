@@ -113,7 +113,7 @@ class Hestia_API
                 $user_combined_ip[] = $_SERVER['HTTP_CF_CONNECTING_IP'];
             }
         }
-        return implode($user_combined_ip, '|');
+        return implode('|',$user_combined_ip);
     }
 }
 

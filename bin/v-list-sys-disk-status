@@ -16,8 +16,12 @@
 #format=${1-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+#source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 #source $HESTIA/func/main.sh
-
+# load config file
+# source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -28,6 +32,11 @@ df -h
 echo -en "\n-------------------------------------"
 echo -en  "-------------------------------------\n\n"
 
+# Displaying inodes usage
+df -ih
+echo -en "\n-------------------------------------"
+echo -en  "-------------------------------------\n\n"
+ 
 # Displaying I/O usage
 iostat -m
 echo -en "\n-------------------------------------"

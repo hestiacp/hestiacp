@@ -48,11 +48,10 @@ server {
         proxy_pass      http://%ip%:%web_port%;
     }
 
-    location ~ /\.ht    {return 404;}
-    location ~ /\.svn/  {return 404;}
-    location ~ /\.git/  {return 404;}
-    location ~ /\.hg/   {return 404;}
-    location ~ /\.bzr/  {return 404;}
+    location ~ /\.(?!well-known\/|file) {
+       deny all; 
+       return 404;
+    }
 
     include %home%/%user%/conf/web/%domain%/nginx.conf_*;
 }

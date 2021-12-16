@@ -20,14 +20,16 @@ template=$3
 restart=$4
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
 # shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -45,7 +47,7 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
-is_backend_template_valid $template
+is_backend_template_valid "$template"
 get_domain_values 'web'
 
 # Perform verification if read-only mode is enabled
@@ -82,7 +84,7 @@ cat $WEBTPL/$WEB_BACKEND/$template.tpl |\
         -e "s|%backend_version%|$backend_version|g" > $pool/$backend_type.conf
 
 # Set correct document root path
-if [ ! -z "$CUSTOM_DOCROOT" ]; then
+if [ -n "$CUSTOM_DOCROOT" ]; then
     docroot="$CUSTOM_DOCROOT"
     sed -i "s|/home\/$user\/web\/$domain\/public_html|$docroot|g"  $pool/$backend_type.conf
 fi
@@ -95,7 +97,7 @@ if [[ "$backend_type" = "$user" && $WEB_BACKEND_POOL = 'user' ]]; then
 
     for domain in $(shell_list); do
         get_domain_values 'web'
-        local_ip=$(get_real_ip $IP)
+        local_ip=$(get_real_ip "$IP")
         prepare_web_domain_values
 
         # Rebuilding vhost
@@ -107,7 +109,7 @@ if [[ "$backend_type" = "$user" && $WEB_BACKEND_POOL = 'user' ]]; then
         fi
 
         # Rebuilding proxy configuration
-        if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
+        if [ -n "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
             del_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
             add_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
             if [ "$SSL" = 'yes' ]; then
@@ -122,7 +124,7 @@ if [[ "$backend_type" = "$user" && $WEB_BACKEND_POOL = 'user' ]]; then
     done
 
     # Chaning template in user config
-    old_template=$(grep BACKEND_TEMPLATE $USER_DATA/user.conf)
+    old_template=$(grep BACKEND_TEMPLATE "$USER_DATA/user.conf")
     if [ -z "$old_template" ]; then
         sed -i "s/^WEB_DOMAINS/BACKEND_TEMPLATE='$template'\nWEB_DOMAINS/g" \
             $USER_DATA/user.conf
@@ -132,7 +134,7 @@ if [[ "$backend_type" = "$user" && $WEB_BACKEND_POOL = 'user' ]]; then
 else
     # Parsing domain values
     get_domain_values 'web'
-    local_ip=$(get_real_ip $IP)
+    local_ip=$(get_real_ip "$IP")
     BACKEND="$template"
     prepare_web_domain_values
 
@@ -145,7 +147,7 @@ else
     fi
 
     # Rebuilding proxy configuration
-    if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
+    if [ -n "$PROXY_SYSTEM" ] && [ -n "$PROXY" ]; then
         del_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
         add_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
         if [ "$SSL" = 'yes' ]; then
@@ -166,10 +168,10 @@ fi
 
 
 # Restarting web
-$BIN/v-restart-web $restart
+$BIN/v-restart-web "$restart"
 check_result $? "Web restart failed" >/dev/null
 
-$BIN/v-restart-web-backend $restart
+$BIN/v-restart-web-backend "$restart"
 check_result $? "Web backend restart failed" >/dev/null
 
 # Logging

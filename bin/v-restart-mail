@@ -13,11 +13,12 @@
 #----------------------------------------------------------#
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-PATH="$PATH:/usr/local/sbin:/sbin:/usr/sbin:/root/bin"
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 send_email_report() {
     local mail_service="$1"
@@ -52,19 +53,19 @@ fi
 
 tmpfile=$(mktemp)
 # Restart IMAP system if present
-if [ ! -z "$IMAP_SYSTEM" ]; then
-    $BIN/v-restart-service $IMAP_SYSTEM >> $tmpfile 2>&1
+if [ -n "$IMAP_SYSTEM" ]; then
+    $BIN/v-restart-service "$IMAP_SYSTEM" >> $tmpfile 2>&1
     if [ $? -ne 0 ]; then
         send_email_report "$IMAP_SYSTEM"
-        check_result $E_RESTART "$IMAP_SYSTEM restart failed"
+        check_result "$E_RESTART" "$IMAP_SYSTEM restart failed"
     fi
 fi
 
 # Restart mail system
-$BIN/v-restart-service $MAIL_SYSTEM >> $tmpfile 2>&1
+$BIN/v-restart-service "$MAIL_SYSTEM" >> $tmpfile 2>&1
 if [ $? -ne 0 ]; then
     send_email_report "$MAIL_SYSTEM"
-    check_result $E_RESTART "$MAIL_SYSTEM restart failed"
+    check_result "$E_RESTART" "$MAIL_SYSTEM restart failed"
 fi
 
 # Update restart queue

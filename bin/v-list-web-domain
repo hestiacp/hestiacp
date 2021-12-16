@@ -18,8 +18,12 @@ domain=$2
 format=${3-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -63,36 +67,36 @@ shell_list() {
     echo "ALIAS:          ${ALIAS//,/ }"
     echo "IP:             $IP"
     echo "DOCUMENT_ROOT:  $DOCROOT"
-    if [ ! -z "$IP6" ]; then
+    if [ -n "$IP6" ]; then
         echo "IP6:            $IP6"
     fi
-    if [ ! -z "$SSL" ] && [ "$SSL" != 'no' ]; then
+    if [ -n "$SSL" ] && [ "$SSL" != 'no' ]; then
         echo "SSL:            $SSL / $SSL_HOME"
-        if [ ! -z "$LETSENCRYPT" ] && [ "$LETSENCRYPT" != 'no' ]; then
+        if [ -n "$LETSENCRYPT" ] && [ "$LETSENCRYPT" != 'no' ]; then
          echo "LETSENCRYPT:    $LETSENCRYPT"
         fi
-        if [ ! -z "$SSL_FORCE" ]; then
+        if [ -n "$SSL_FORCE" ]; then
          echo "SSL_FORCE:       $SSL_FORCE"
         fi
-        if [ ! -z "$SSL_HSTS" ]; then
+        if [ -n "$SSL_HSTS" ]; then
          echo "SSL_HSTS:       $SSL_HSTS"
         fi
     fi
     echo "TEMPLATE:       $TPL"
-    if [ ! -z "$WEB_BACKEND" ]; then
+    if [ -n "$WEB_BACKEND" ]; then
         echo "BACKEND:        $BACKEND"
     fi
-    if [ ! -z "$PROXY_SYSTEM" ]; then
+    if [ -n "$PROXY_SYSTEM" ]; then
         echo "PROXY:          $PROXY"
         echo "PROXY EXT:      ${PROXY_EXT//,/ }"
     fi
-    if [ ! -z "$STATS" ]; then
+    if [ -n "$STATS" ]; then
         echo "STATS:          $STATS"
     fi
-    if [ ! -z "$FTP_USER" ]; then
+    if [ -n "$FTP_USER" ]; then
         echo "FTP_USER:       ${FTP_USER//,/, }"
     fi
-    if [ ! -z "$AUTH_USER" ]; then
+    if [ -n "$AUTH_USER" ]; then
         echo "HTTP_AUTH:      $AUTH_USER"
     fi
     echo "DISK:           $U_DISK"
@@ -139,7 +143,7 @@ is_object_valid 'web' 'DOMAIN' "$domain"
 # Parsing domain
 parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 
-if [ ! -z "$CUSTOM_DOCROOT" ]; then
+if [ -n "$CUSTOM_DOCROOT" ]; then
     DOCROOT="$CUSTOM_DOCROOT"
 else
     DOCROOT="$HOMEDIR/$user/web/$DOMAIN/public_html/"

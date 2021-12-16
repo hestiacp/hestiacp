@@ -12,9 +12,6 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# Importing system variables
-source /etc/profile
-
 # Argument definition
 action=$(echo $1|tr '[:lower:]' '[:upper:]')
 ip=$2
@@ -25,10 +22,12 @@ comment=$5
 rule=$6
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Get next firewall rule id
 get_next_fw_rule() {
@@ -57,13 +56,13 @@ is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 get_next_fw_rule
 is_format_valid 'rule'
 is_object_new '../../data/firewall/rules' 'RULE' "$rule"
-if [ ! -z "$comment" ]; then
+if [ -n "$comment" ]; then
     is_format_valid 'comment'
 fi
 if [[ "$ip" =~ ^ipset: ]]; then
     ipset_name="${ip#ipset:}"
-    v-list-firewall-ipset plain | grep "^$ipset_name\s" >/dev/null
-    check_result $? 'ipset object not found' $E_NOTEXIST
+    $BIN/v-list-firewall-ipset plain | grep "^$ipset_name\s" >/dev/null
+    check_result $? 'ipset object not found' "$E_NOTEXIST"
 else
     is_format_valid 'ip'
 fi

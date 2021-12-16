@@ -17,10 +17,12 @@ user=$1
 restart=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 
 #----------------------------------------------------------#
@@ -47,7 +49,7 @@ sync_cron_jobs
 #----------------------------------------------------------#
 
 # Restarting crond
-$BIN/v-restart-cron $restart
+$BIN/v-restart-cron "$restart"
 check_result $? "Cron restart failed" >/dev/null
 $BIN/v-log-action "system" "Info" "System" "Rebuilt cron jobs (User: $user)."
 

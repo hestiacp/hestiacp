@@ -13,9 +13,6 @@
 #                    Variable&Function                     #
 #----------------------------------------------------------#
 
-# make sure path is always loaded 
-source /etc/profile
-
 # Argument definition
 domain=$(hostname -f);
 if [ -z $domain ]; then 
@@ -25,12 +22,14 @@ user="$($HESTIA/bin/v-search-domain-owner "$domain" web)"
 [[ -z "$user" ]] && user="admin"
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -51,7 +50,7 @@ is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 # Check if hostname already exists as domain
 if [ "$($BIN/v-list-web-domain $user $domain plain |cut -f 1)" != "$domain" ]; then
     # Create web domain for hostname
-    $BIN/v-add-web-domain $user $domain
+    $BIN/v-add-web-domain "$user" "$domain"
 fi
 
 # Validate web domain
@@ -68,7 +67,7 @@ add_ssl="yes"
 if [ "$SSL" = "yes" ]; then
     # Valildate SSL Certificate
     if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
-        if openssl verify -CAfile $USER_DATA/ssl/$domain.ca $USER_DATA/ssl/$domain.pem | grep -q "$domain.pem: OK"; then
+        if openssl verify -CAfile <(openssl x509 -in $USER_DATA/ssl/$domain.ca) $USER_DATA/ssl/$domain.pem | grep -q "$domain.pem: OK"; then
             add_ssl="no"
         fi
     else
@@ -81,16 +80,16 @@ fi
 # Add let's encrypt ssl if needed
 if [ "$add_ssl" = "yes" ]; then
     # Add let's encrypt ssl
-    $BIN/v-add-letsencrypt-domain $user $domain
-    check_result $? "Let's Encrypt SSL creation failed"  $E_UPDATE
+    $BIN/v-add-letsencrypt-domain "$user" "$domain"
+    check_result $? "Let's Encrypt SSL creation failed"  "$E_UPDATE"
 fi
 
 # Add certificate to backend
-$BIN/v-update-host-certificate $user $domain
+$BIN/v-update-host-certificate "$user" "$domain"
 
 # Enable automatic ssl forward and hsts
-$BIN/v-add-web-domain-ssl-force $user $domain > /dev/null 2>&1
-$BIN/v-add-web-domain-ssl-hsts $user $domain > /dev/null 2>&1
+$BIN/v-add-web-domain-ssl-force "$user" "$domain" > /dev/null 2>&1
+$BIN/v-add-web-domain-ssl-hsts "$user" "$domain" > /dev/null 2>&1
 
 
 #----------------------------------------------------------#

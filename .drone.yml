@@ -76,6 +76,10 @@ steps:
 - name: Run restore tests
   commands:
   - bats ./test/restore.bats
+- name: Run Letsencrypt test against Staging
+  commands:
+  - cp /root/le-env.sh /tmp/hestia-le-env.sh
+  - bats ./test/letsencrypt.bats
 - name: Run config tests 
   commands:
   - bats ./test/config-tests.bats
@@ -87,5 +91,22 @@ trigger:
   event: [ push, pull_request ]
 
 ---
+kind: pipeline
+type: docker
+name: Linting
+
+concurrency:
+  limit: 1
+
+steps:
+  - name: shellcheck
+    image: koalaman/shellcheck-alpine
+    commands:
+    - ./test/shellcheck.sh
+
+trigger:
+   event: [ pull_request, push ] 
+
+---
 kind: signature
-hmac: bca7f80ac6198662bc658235d7345485213847f1c00f027e1439775e02776bc7
+hmac: da6a96c077ec55ccfb27ec8a3250eeb0700153078adf088dc70998b2cd033b28

@@ -19,15 +19,17 @@
 package=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Functions
 is_package_in_use() {
     check_package=$(grep "PACKAGE='$package" $HESTIA/data/users/*/user.conf | cut -d'/' -f7)
-    if [ ! -z "$check_package" ]; then
+    if [ -n "$check_package" ]; then
         for user in $check_package; do
             $BIN/v-change-user-package "$user" 'default'
         done
@@ -52,7 +54,7 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Deleting user package
-rm -f $HESTIA/data/packages/$package.pkg
+rm -f "$HESTIA/data/packages/$package.pkg"
 
 
 #----------------------------------------------------------#

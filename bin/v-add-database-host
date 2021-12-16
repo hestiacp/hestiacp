@@ -27,18 +27,20 @@ template=${7}
 port=${8}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/db.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 is_mysql_host_alive() {
     mycnf=$(mktemp)
     echo "[client]">$mycnf
     echo "host='$host'" >> $mycnf
-    echo "user='$user'" >> $mycnf
+    echo "user='$dbuser'" >> $mycnf
     echo "password='$password'" >> $mycnf
     echo "port='$port'" >> $mycnf
     
@@ -49,7 +51,7 @@ is_mysql_host_alive() {
     if [ "$?" -ne '0' ]; then
         echo "Error: MySQL connection to $host failed"
         log_event "$E_CONNECT" "$ARGUMENTS"
-        exit $E_CONNECT
+        exit "$E_CONNECT"
     fi
 }
 
@@ -59,7 +61,7 @@ is_pgsql_host_alive() {
     if [ "$?" -ne '0' ]; then
         echo "Error: PostgreSQL connection to $host failed"
         log_event "$E_CONNECT" "$ARGUMENTS"
-        exit $E_CONNECT
+        exit "$E_CONNECT"
     fi
 }
 

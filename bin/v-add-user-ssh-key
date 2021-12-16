@@ -18,11 +18,12 @@ user=$1
 key=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 # Additional argument formatting
 
 #----------------------------------------------------------#
@@ -45,17 +46,17 @@ check_hestia_demo_mode
 source $USER_DATA/user.conf
 
 AUTHKEY_FILE="$HOMEDIR/$user/.ssh/authorized_keys"
-[ -z "$(readlink -f "$AUTHKEY_FILE" | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result $E_FORBIDEN "Invalid authorized keys path"
+[ -z "$(readlink -f "$AUTHKEY_FILE" | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result "$E_FORBIDEN" "Invalid authorized keys path"
 
 #check if file exits
 if [ ! -f "$AUTHKEY_FILE" ]; then
     v-add-fs-file "$user" "${AUTHKEY_FILE}"
 fi
 
-[ -z "$key" ] && check_result $E_NOTEXIST "Empty ssh public key"
+[ -z "$key" ] && check_result "$E_NOTEXIST" "Empty ssh public key"
 
 if ! echo "$key" | ssh-keygen -l -f - > /dev/null 2>&1; then
-    check_result $E_PARSING "Validating user private key"
+    check_result "$E_PARSING" "Validating user private key"
 fi
 
 # make sure authorized_keys is ending with EOL

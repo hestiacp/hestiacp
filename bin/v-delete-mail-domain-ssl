@@ -14,14 +14,17 @@
 # Argument definition
 user=$1
 domain=$2
+restart=$3
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -61,7 +64,7 @@ update_object_value 'mail' 'DOMAIN' "$domain" '$LETSENCRYPT' 'no'
 decrease_user_value "$user" '$U_MAIL_SSL'
 
 # Restarting mail server
-$BIN/v-restart-mail $restart
+$BIN/v-restart-mail "$restart"
 check_result $? "Mail restart failed" >/dev/null
 
 # Logging

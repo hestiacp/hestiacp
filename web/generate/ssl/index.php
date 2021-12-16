@@ -85,7 +85,8 @@ $v_state = escapeshellarg($_POST['v_state']);
 $v_locality = escapeshellarg($_POST['v_locality']);
 $v_org = escapeshellarg($_POST['v_org']);
 
-exec(HESTIA_CMD."v-generate-ssl-cert ".$v_domain." ".$v_email." ".$v_country." ".$v_state." ".$v_locality." ".$v_org." IT  '".$v_aliases."' json", $output, $return_var);
+exec(HESTIA_CMD."v-generate-ssl-cert ".$v_domain." ".$v_email." ".$v_country." ".$v_state." ".$v_locality." ".$v_org." IT  ".$v_aliases." json", $output, $return_var);
+
 // Revert to raw values
 $v_domain = $_POST['v_domain'];
 $v_email = $_POST['v_email'];

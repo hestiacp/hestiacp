@@ -72,7 +72,7 @@ new_timestamp() {
 # Event string for logger
 ARGS=("$@")
 for ((I=1; I <= $# ; I++)); do
-    if [[ "$HIDE" != $I ]]; then
+    if [[ "$HIDE" != "$I" ]]; then
         ARGUMENTS="$ARGUMENTS '${ARGS[${I}-1]}'"
     else
         ARGUMENTS="$ARGUMENTS '******'"
@@ -139,7 +139,7 @@ log_history() {
 check_result() {
     if [ $1 -ne 0 ]; then
         echo "Error: $2"
-        if [ ! -z "$3" ]; then
+        if [ -n "$3" ]; then
             log_event "$3" "$ARGUMENTS"
             exit $3
         else
@@ -153,14 +153,14 @@ check_result() {
 check_args() {
     if [ "$1" -gt "$2" ]; then
         echo "Usage: $(basename $0) $3"
-        check_result $E_ARGS "not enought arguments" >/dev/null
+        check_result "$E_ARGS" "not enought arguments" >/dev/null
     fi
 }
 
 # Subsystem checker
 is_system_enabled() {
     if [ -z "$1" ] || [ "$1" = no ]; then
-        check_result $E_DISABLED "$2 is not enabled"
+        check_result "$E_DISABLED" "$2 is not enabled"
     fi
 }
 
@@ -182,11 +182,11 @@ is_package_full() {
     if [ "$1" = WEB_ALIASES ]; then
         # Used is always calculated with the new alias added
         if [ "$limit" != 'unlimited' ] && [[ "$used" -gt "$limit" ]]; then
-            check_result $E_LIMIT "$1 limit is reached :: upgrade user package"
+            check_result "$E_LIMIT" "$1 limit is reached :: upgrade user package"
         fi
     else
         if [ "$limit" != 'unlimited' ] && [[ "$used" -ge "$limit" ]]; then
-            check_result $E_LIMIT "$1 limit is reached :: upgrade user package"
+            check_result "$E_LIMIT" "$1 limit is reached :: upgrade user package"
         fi
     fi
 }
@@ -218,18 +218,30 @@ generate_password() {
 
 # Package existence check
 is_package_valid() {
-    if [ -z "$1" ]; then
-        pkg_dir="$HESTIA/data/packages"
+    if [ -z $1 ]; then 
+      if [ ! -e "$HESTIA/data/packages/$package.pkg" ]; then
+      check_result "$E_NOTEXIST" "package $package doesn't exist"
+      fi    
+    else
+      if [ ! -e "$HESTIA/data/packages/$1.pkg" ]; then
+          check_result "$E_NOTEXIST" "package $1 doesn't exist"
+      fi
     fi
-    if [ ! -e "$pkg_dir/$package.pkg" ]; then
-        check_result $E_NOTEXIST "package $package doesn't exist"
-    fi
+
+}
+
+is_package_new() {
+  if [ -e "$HESTIA/data/packages/$1.pkg" ]; then
+      echo "Error: package $1 already exists."
+      log_event "$E_EXISTS" "$ARGUMENTS"
+      exit "$E_EXISTS"
+  fi
 }
 
 # Validate system type
 is_type_valid() {
     if [ -z "$(echo $1 | grep -w $2)" ]; then
-        check_result $E_INVALID "$2 type is invalid"
+        check_result "$E_INVALID" "$2 type is invalid"
     fi
 }
 
@@ -237,7 +249,7 @@ is_type_valid() {
 is_backup_enabled() {
     BACKUPS=$(grep "^BACKUPS=" $USER_DATA/user.conf | cut -f2 -d \')
     if [ -z "$BACKUPS" ] || [[ "$BACKUPS" -le '0' ]]; then
-        check_result $E_DISABLED "user backup is disabled"
+        check_result "$E_DISABLED" "user backup is disabled"
     fi
 }
 
@@ -245,8 +257,8 @@ is_backup_enabled() {
 is_backup_scheduled() {
     if [ -e "$HESTIA/data/queue/backup.pipe" ]; then
         check_q=$(grep " $user " $HESTIA/data/queue/backup.pipe | grep $1)
-        if [ ! -z "$check_q" ]; then
-            check_result $E_EXISTS "$1 is already scheduled"
+        if [ -n "$check_q" ]; then
+            check_result "$E_EXISTS" "$1 is already scheduled"
         fi
     fi
 }
@@ -260,8 +272,8 @@ is_object_new() {
     else
         object=$(grep "$2='$3'" $USER_DATA/$1.conf)
     fi
-    if [ ! -z "$object" ]; then
-        check_result $E_EXISTS "$2=$3 already exists"
+    if [ -n "$object" ]; then
+        check_result "$E_EXISTS" "$2=$3 already exists"
     fi
 }
 
@@ -270,14 +282,14 @@ is_object_valid() {
     if [ $2 = 'USER' ]; then
         tstpath="$(readlink -f "$HESTIA/data/users/$3")"
         if [ "$(dirname "$tstpath")" != "$(readlink -f "$HESTIA/data/users")" ] || [ ! -d "$HESTIA/data/users/$3" ]; then
-            check_result $E_NOTEXIST "$1 $3 doesn't exist"
+            check_result "$E_NOTEXIST" "$1 $3 doesn't exist"
         fi
     else
         object=$(grep "$2='$3'" $HESTIA/data/users/$user/$1.conf)
         if [ -z "$object" ]; then
             arg1=$(basename $1)
             arg2=$(echo $2 |tr '[:upper:]' '[:lower:]')
-            check_result $E_NOTEXIST "$arg1 $arg2 $3 doesn't exist"
+            check_result "$E_NOTEXIST" "$arg1 $arg2 $3 doesn't exist"
         fi
     fi
 }
@@ -297,7 +309,7 @@ parse_object_kv_list_non_eval() {
     for objkv in $( echo "$str" | perl -n -e "while(/\b([a-zA-Z]+[\w]*)='(.*?)'(\s|\$)/g) {print \$1.'='.\$2 . \"\n\" }" ); do
 
         if ! [[ "$objkv" =~ ^([[:alnum:]][_[:alnum:]]{0,64}[[:alnum:]])=(\'?[^\']+?\'?)?$ ]]; then
-            check_result $E_INVALID "Invalid key value format [$objkv]"
+            check_result "$E_INVALID" "Invalid key value format [$objkv]"
         fi
 
         obj_key=${objkv%%=*}    # strip everything after first  '=' char
@@ -330,7 +342,7 @@ parse_object_kv_list() {
         fi
 
         if ! [[ "$objkv" =~ ^([[:alnum:]][_[:alnum:]]{0,64}[[:alnum:]])=(\'?[^\']+?\'?)?$ ]]; then
-            check_result $E_INVALID "Invalid key value format [$objkv]"
+            check_result "$E_INVALID" "Invalid key value format [$objkv]"
         fi
 
         eval "$objkv"
@@ -346,7 +358,7 @@ is_object_suspended() {
         spnd=$(grep "$2='$3'" $USER_DATA/$1.conf|grep "SUSPENDED='yes'")
     fi
     if [ -z "$spnd" ]; then
-        check_result $E_UNSUSPENDED "$(basename $1) $3 is not suspended"
+        check_result "$E_UNSUSPENDED" "$(basename $1) $3 is not suspended"
     fi
 }
 
@@ -357,8 +369,8 @@ is_object_unsuspended() {
     else
         spnd=$(grep "$2='$3'" $USER_DATA/$1.conf |grep "SUSPENDED='yes'")
     fi
-    if [ ! -z "$spnd" ]; then
-        check_result $E_SUSPENDED "$(basename $1) $3 is suspended"
+    if [ -n "$spnd" ]; then
+        check_result "$E_SUSPENDED" "$(basename $1) $3 is suspended"
     fi
 }
 
@@ -367,8 +379,8 @@ is_object_value_empty() {
     str=$(grep "$2='$3'" $USER_DATA/$1.conf)
     parse_object_kv_list "$str"
     eval value=$4
-    if [ ! -z "$value" ] && [ "$value" != 'no' ]; then
-        check_result $E_EXISTS "${4//$}=$value already exists"
+    if [ -n "$value" ] && [ "$value" != 'no' ]; then
+        check_result "$E_EXISTS" "${4//$}=$value already exists"
     fi
 }
 
@@ -378,7 +390,7 @@ is_object_value_exist() {
     parse_object_kv_list "$str"
     eval value=$4
     if [ -z "$value" ] || [ "$value" = 'no' ]; then
-        check_result $E_NOTEXIST "${4//$}=$value doesn't exist"
+        check_result "$E_NOTEXIST" "${4//$}=$value doesn't exist"
     fi
 }
 
@@ -403,7 +415,7 @@ is_hash_valid() {
 # Check if directory is a symlink
 is_dir_symlink() {
     if [[ -L "$1" ]]; then
-        check_result $E_FORBIDEN "$1 directory is a symlink"
+        check_result "$E_FORBIDEN" "$1 directory is a symlink"
     fi
 }
 
@@ -458,7 +470,7 @@ get_user_value() {
 update_user_value() {
     key="${2//$}"
     lnr=$(grep -n "^$key='" $HESTIA/data/users/$1/user.conf |cut -f 1 -d ':')
-    if [ ! -z "$lnr" ]; then
+    if [ -n "$lnr" ]; then
         sed -i "$lnr d" $HESTIA/data/users/$1/user.conf
         sed -i "$lnr i\\$key='${3}'" $HESTIA/data/users/$1/user.conf
     fi
@@ -512,7 +524,7 @@ send_notice() {
 
         nid=$(grep "NID=" $USER_DATA/notifications.conf |cut -f 2 -d \')
         nid=$(echo "$nid" |sort -n |tail -n1)
-        if [ ! -z "$nid" ]; then
+        if [ -n "$nid" ]; then
             nid="$((nid +1))"
         else
             nid=1
@@ -604,7 +616,7 @@ sort_cron_jobs() {
 
 # Sync cronjobs with system cron
 sync_cron_jobs() {
-    source $USER_DATA/user.conf
+    source_conf "$USER_DATA/user.conf"
     if [ -e "/var/spool/cron/crontabs" ]; then
         crontab="/var/spool/cron/crontabs/$user"
     else
@@ -642,22 +654,23 @@ sync_cron_jobs() {
 is_user_format_valid() {
     if [ ${#1} -eq 1 ]; then
         if ! [[ "$1" =~ ^^[[:alnum:]]$ ]]; then
-            check_result $E_INVALID "invalid $2 format :: $1"
+            check_result "$E_INVALID" "invalid $2 format :: $1"
         fi
     else
         if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,28}[[:alnum:]]$ ]]
             then
-            check_result $E_INVALID "invalid $2 format :: $1"
+            check_result "$E_INVALID" "invalid $2 format :: $1"
         fi
     fi
 }
 
 # Domain format validator
+# removed "" around  \.\. and $(printf '\t'): SC2076: Don't quote right-hand side of =~, it'll match literally rather than as a regex. And we need regex match!
 is_domain_format_valid() {
     object_name=${2-domain}
     exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|_|/|\|\"|'|;|%|\`| ]"
-    if [[ $1 =~ $exclude ]] || [[ $1 =~ ^[0-9]+$ ]] || [[ $1 =~ "\.\." ]] || [[ $1 =~ "$(printf '\t')" ]] ||  [[ "$1" = "www" ]]; then
-        check_result $E_INVALID "invalid $object_name format :: $1"
+    if [[ $1 =~ $exclude ]] || [[ $1 =~ ^[0-9]+$ ]] || [[ $1 =~ \.\. ]] || [[ $1 =~ $(printf '\t') ]] ||  [[ "$1" = "www" ]]; then
+        check_result "$E_INVALID" "invalid $object_name format :: $1"
     fi
 }
 
@@ -666,10 +679,10 @@ is_alias_format_valid() {
     for object in ${1//,/ }; do
         exclude="[!|@|#|$|^|&|(|)|+|=|{|}|:|<|>|?|_|/|\|\"|'|;|%|\`| ]"
         if [[ "$object" =~ $exclude ]]; then
-            check_result $E_INVALID "invalid alias format :: $object"
+            check_result "$E_INVALID" "invalid alias format :: $object"
         fi
         if [[ "$object" =~ [*] ]] && ! [[ "$object" =~ ^[*]\..* ]]; then
-            check_result $E_INVALID "invalid alias format :: $object"
+            check_result "$E_INVALID" "invalid alias format :: $object"
         fi
     done
 }
@@ -680,13 +693,13 @@ is_ip_format_valid() {
     ip_regex='([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])'
     ip_clean=$(echo "${1%/*}")
     if ! [[ $ip_clean =~ ^$ip_regex\.$ip_regex\.$ip_regex\.$ip_regex$ ]]; then
-        check_result $E_INVALID "invalid $object_name format :: $1"
+        check_result "$E_INVALID" "invalid $object_name format :: $1"
     fi
     if [ $1 != "$ip_clean" ]; then
         ip_cidr="$ip_clean/"
         ip_cidr=$(echo "${1#$ip_cidr}")
         if [[ "$ip_cidr" -gt 32 ]] || [[ "$ip_cidr" =~ [:alnum:] ]]; then
-            check_result $E_INVALID "invalid $object_name format :: $1"
+            check_result "$E_INVALID" "invalid $object_name format :: $1"
         fi
     fi
 }
@@ -716,10 +729,10 @@ is_ipv6_format_valid() {
    
     echo $t_ip | grep --silent "\(${FLAT}\)\|\(${COMP2}\)\|\(${COMP3}\)\|\(${COMP4}\)\|\(${COMP5}\)\|\(${COMP6}\)\|\(${COMP7}\)\|\(${EDGE_TAIL}\)\|\(${EDGE_LEAD}\)"
     if [ $? -ne 0 ]; then
-        check_result $E_INVALID "invalid $object_name format :: $1"
+        check_result "$E_INVALID" "invalid $object_name format :: $1"
     fi
     
-    if [ ! -z "$(echo $1|grep '/')" ]; then
+    if [ -n "$(echo $1|grep '/')" ]; then
         if [[ "$t_cidr" -lt 0 ]] || [[ "$t_cidr" -gt 128 ]]; then
             valid_cidr=0
         fi
@@ -728,7 +741,7 @@ is_ipv6_format_valid() {
         fi
     fi
     if [ "$valid_cidr" -eq 0 ]; then
-        check_result $E_INVALID "invalid $object_name format :: $1"
+        check_result "$E_INVALID" "invalid $object_name format :: $1"
     fi
 }
 
@@ -743,7 +756,7 @@ is_ip46_format_valid() {
         fi
     done
 
-    if [ ! -z "$(echo $1|grep '/')" ]; then
+    if [ -n "$(echo $1|grep '/')" ]; then
         if [[ "$t_cidr" -lt 0 ]] || [[ "$t_cidr" -gt 32 ]]; then
             valid_cidr=0
         fi
@@ -774,7 +787,7 @@ is_ip46_format_valid() {
            ipv6_valid="INVALID"
         fi
 
-        if [ ! -z "$(echo $1|grep '/')" ]; then
+        if [ -n "$(echo $1|grep '/')" ]; then
             if [[ "$t_cidr" -lt 0 ]] || [[ "$t_cidr" -gt 128 ]]; then
                 valid_cidr=0
             fi
@@ -783,8 +796,8 @@ is_ip46_format_valid() {
             fi
         fi
         
-        if [ ! -z "$ipv6_valid" ] || [ "$valid_cidr" -eq 0 ]; then
-            check_result $E_INVALID "invalid IP format :: $1"
+        if [ -n "$ipv6_valid" ] || [ "$valid_cidr" -eq 0 ]; then
+            check_result "$E_INVALID" "invalid IP format :: $1"
         fi
     fi
 }
@@ -793,7 +806,7 @@ is_ip46_format_valid() {
 is_extention_format_valid() {
     exclude="[!|#|$|^|&|(|)|+|=|{|}|:|@|<|>|?|/|\|\"|'|;|%|\`| ]"
     if [[ "$1" =~ $exclude ]]; then
-        check_result $E_INVALID "invalid proxy extention format :: $1"
+        check_result "$E_INVALID" "invalid proxy extention format :: $1"
     fi
 }
 
@@ -801,21 +814,21 @@ is_extention_format_valid() {
 is_number_format_valid() {
     object_name=${2-number}
     if ! [[ "$1" =~ ^[0-9]+$ ]] ; then
-        check_result $E_INVALID "invalid $object_name format :: $1"
+        check_result "$E_INVALID" "invalid $object_name format :: $1"
     fi
 }
 
 # Autoreply format validator
 is_autoreply_format_valid() {
     if [ 10240 -le ${#1} ]; then
-        check_result $E_INVALID "invalid autoreply format :: $1"
+        check_result "$E_INVALID" "invalid autoreply format :: $1"
     fi
 }
 
 # Boolean format validator
 is_boolean_format_valid() {
     if [ "$1" != 'yes' ] && [ "$1" != 'no' ]; then
-        check_result $E_INVALID "invalid $2 format :: $1"
+        check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
 }
 
@@ -823,48 +836,55 @@ is_boolean_format_valid() {
 is_common_format_valid() {
     exclude="[!|#|$|^|&|(|)|+|=|{|}|:|<|>|?|/|\|\"|'|;|%|\`| ]"
     if [[ "$1" =~ $exclude ]]; then
-        check_result $E_INVALID "invalid $2 format :: $1"
+        check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
     if [ 400 -le ${#1} ]; then
-        check_result $E_INVALID "invalid $2 format :: $1"
+        check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
     if [[ "$1" =~ @ ]] && [ ${#1} -gt 1 ] ; then
-        check_result $E_INVALID "invalid $2 format :: $1"
+        check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
     if [[ $1 =~ \* ]]; then
         if [[ "$(echo $1 | grep -o '\*\.' |wc -l)" -eq 0 ]] && [[ $1 != '*' ]] ; then
-                        check_result $E_INVALID "invalid $2 format :: $1"
+                        check_result "$E_INVALID" "invalid $2 format :: $1"
         fi
     fi
     if [[ $(echo -n "$1" | tail -c 1) =~ [^a-zA-Z0-9_*@] ]]; then
-           check_result $E_INVALID "invalid $2 format :: $1"
+           check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
     if [[ $(echo -n "$1" | grep -c '\.\.') -gt 0 ]];then
-           check_result $E_INVALID "invalid $2 format :: $1"
+           check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
     if [[ $(echo -n "$1" | head -c 1) =~ [^a-zA-Z0-9_*@] ]]; then
-           check_result $E_INVALID "invalid $2 format :: $1"
+           check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
     if [[ $(echo -n "$1" | grep -c '\-\-') -gt 0 ]]; then
-           check_result $E_INVALID "invalid $2 format :: $1"
+           check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
     if [[ $(echo -n "$1" | grep -c '\_\_') -gt 0 ]]; then
-           check_result $E_INVALID "invalid $2 format :: $1"
+           check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
+}
+
+is_string_format_valid() {
+  exclude="[!|#|$|^|&|(|)|+|=|{|}|:|<|>|?|/|\|\"|'|;|%|\`]"
+  if [[ "$1" =~ $exclude ]]; then
+      check_result "$E_INVALID" "invalid $2 format :: $1"
+  fi
 }
 
 # Database format validator
 is_database_format_valid() {
     exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|/|\|\"|'|;|%|\`| ]"
     if [[ "$1" =~ $exclude ]] || [ 64 -le ${#1} ]; then
-        check_result $E_INVALID "invalid $2 format :: $1"
+        check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
 }
 
 # Date format validator
 is_date_format_valid() {
     if ! [[ "$1" =~ ^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$ ]]; then
-        check_result $E_INVALID "invalid date format :: $1"
+        check_result "$E_INVALID" "invalid date format :: $1"
     fi
 }
 
@@ -872,10 +892,10 @@ is_date_format_valid() {
 is_dbuser_format_valid() {
     exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|/|\|\"|'|;|%|\`| ]"
     if [ 33 -le ${#1} ]; then
-        check_result $E_INVALID "mysql username can be up to 32 characters long"
+        check_result "$E_INVALID" "mysql username can be up to 32 characters long"
     fi
     if [[ "$1" =~ $exclude ]]; then
-        check_result $E_INVALID "invalid $2 format :: $1"
+        check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
 }
 
@@ -883,7 +903,7 @@ is_dbuser_format_valid() {
 is_dns_type_format_valid() {
     known_dnstype='A,AAAA,NS,CNAME,MX,TXT,SRV,DNSKEY,KEY,IPSECKEY,PTR,SPF,TLSA,CAA'
     if [ -z "$(echo $known_dnstype |grep -w $1)" ]; then
-        check_result $E_INVALID "invalid dns record type format :: $1"
+        check_result "$E_INVALID" "invalid dns record type format :: $1"
     fi
 }
 
@@ -905,21 +925,23 @@ is_dns_record_format_valid() {
 # Email format validator
 is_email_format_valid() {
     if [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.[A-Za-z]{2,63}$ ]] ; then
-        check_result $E_INVALID "invalid email format :: $1"
+      if [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.(xn--)[[:alnum:]]{2,63}$ ]] ; then
+        check_result "$E_INVALID" "invalid email format :: $1"
+      fi
     fi
 }
 
 # Firewall action validator
 is_fw_action_format_valid() {
     if [ "$1" != "ACCEPT" ] && [ "$1" != 'DROP' ] ; then
-        check_result $E_INVALID "invalid action format :: $1"
+        check_result "$E_INVALID" "invalid action format :: $1"
     fi
 }
 
 # Firewall protocol validator
 is_fw_protocol_format_valid() {
     if [ "$1" != "ICMP" ] && [ "$1" != 'UDP' ] && [ "$1" != 'TCP' ] ; then
-        check_result $E_INVALID "invalid protocol format :: $1"
+        check_result "$E_INVALID" "invalid protocol format :: $1"
     fi
 }
 
@@ -927,12 +949,12 @@ is_fw_protocol_format_valid() {
 is_fw_port_format_valid() {
     if [ "${#1}" -eq 1 ]; then
         if ! [[ "$1" =~ [0-9] ]]; then
-            check_result $E_INVALID "invalid port format :: $1"
+            check_result "$E_INVALID" "invalid port format :: $1"
         fi
     else
         if ! [[ "$1" =~ ^[0-9][-|,|:|0-9]{0,30}[0-9]$ ]]
         then
-            check_result $E_INVALID "invalid port format :: $1"
+            check_result "$E_INVALID" "invalid port format :: $1"
         fi
     fi
 }
@@ -940,7 +962,7 @@ is_fw_port_format_valid() {
 # Integer validator
 is_int_format_valid() {
     if ! [[ "$1" =~ ^[0-9]+$ ]] ; then 
-        check_result $E_INVALID "invalid $2 format :: $1"
+        check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
 }
 
@@ -948,14 +970,14 @@ is_int_format_valid() {
 is_interface_format_valid() {
     netdevices=$(cat /proc/net/dev |grep : |cut -f 1 -d : |tr -d ' ')
     if [ -z $(echo "$netdevices" |grep -x $1) ]; then
-        check_result $E_INVALID "invalid interface format :: $1"
+        check_result "$E_INVALID" "invalid interface format :: $1"
     fi
 }
 
 # IP status validator
 is_ip_status_format_valid() {
     if [ -z "$(echo shared,dedicated | grep -w $1 )" ]; then
-        check_result $E_INVALID "invalid status format :: $1"
+        check_result "$E_INVALID" "invalid status format :: $1"
     fi
 }
 
@@ -1003,35 +1025,35 @@ is_cron_format_valid() {
               fi
         done
     if [ "$check_format" != 'ok' ]; then
-        check_result $E_INVALID "invalid $2 format :: $1"
+        check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
 }
 
 # Name validator
 is_name_format_valid() {
     if ! [[ "$1" =~ ^[[:alnum:]][-|\ |\.|_[:alnum:]]{0,28}[[:alnum:]]$ ]]; then
-        check_result $E_INVALID "invalid $2 format :: $1"
+        check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
 }
 
 # Object validator
 is_object_format_valid() {
     if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,64}[[:alnum:]]$ ]]; then
-        check_result $E_INVALID "invalid $2 format :: $1"
+        check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
 }
 
 # Role validator 
 is_role_valid (){
     if ! [[ "$1" =~ ^admin|user$ ]]; then
-        check_result $E_INVALID "invalid $2 format :: $1"
+        check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
 }
 
 # Password validator
 is_password_format_valid() {
     if [ "${#1}" -lt '6' ]; then
-        check_result $E_INVALID "invalid password format :: $1"
+        check_result "$E_INVALID" "invalid password format :: $1"
     fi
 }
 # Missing function - 
@@ -1048,13 +1070,13 @@ is_format_valid_shell() {
 # Service name validator
 is_service_format_valid() {
     if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,64}$ ]]; then
-        check_result $E_INVALID "invalid $2 format :: $1"
+        check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
 }
 
 is_hash_format_valid() {
   if ! [[ "$1" =~ ^[-_A-Za-z0-9]{1,32}$ ]]; then
-        check_result $E_INVALID "invalid $2 format :: $1"
+        check_result "$E_INVALID" "invalid $2 format :: $1"
     fi    
 }
 
@@ -1062,7 +1084,7 @@ is_hash_format_valid() {
 is_format_valid() {
     for arg_name in $*; do
         eval arg=\$$arg_name
-        if [ !  -z "$arg" ]; then
+        if [ -n "$arg" ]; then
             case $arg_name in
                 account)        is_user_format_valid "$arg" "$arg_name";;
                 action)         is_fw_action_format_valid "$arg";;
@@ -1100,7 +1122,7 @@ is_format_valid() {
                 ip_name)        is_domain_format_valid "$arg" 'IP name';;
                 ip_status)      is_ip_status_format_valid "$arg" ;;
                 job)            is_int_format_valid "$arg" 'job' ;;
-                key)            is_user_format_valid "$arg" "$arg_name" ;;
+                key)            is_common_format_valid "$arg" "$arg_name" ;;
                 malias)         is_user_format_valid "$arg" "$arg_name" ;;
                 max_db)         is_int_format_valid "$arg" 'max db';;
                 min)            is_cron_format_valid "$arg" $arg_name ;;
@@ -1140,6 +1162,7 @@ is_format_valid() {
                 ttl)            is_int_format_valid "$arg" 'ttl';;
                 user)           is_user_format_valid "$arg" $arg_name;;
                 wday)           is_cron_format_valid "$arg" $arg_name ;;
+                value)          is_common_format_valid "$arg" $arg_name;;
             esac
         fi
     done
@@ -1177,7 +1200,7 @@ format_domain_idn() {
 }
 
 format_aliases() {
-    if [ ! -z "$aliases" ] && [ "$aliases" != 'none' ]; then
+    if [ -n "$aliases" ] && [ "$aliases" != 'none' ]; then
         aliases=$(echo $aliases |tr '[:upper:]' '[:lower:]' |tr ',' '\n')
         aliases=$(echo "$aliases" |sed -e "s/\.$//" |sort -u)
         aliases=$(echo "$aliases" |tr -s '.')
@@ -1190,7 +1213,7 @@ format_aliases() {
 
 is_restart_format_valid() {
   if [ "$1" != 'yes' ] && [ "$1" != 'no' ] && [ "$1" != 'ssl' ] && [ "$1" != 'reload' ];  then
-  check_result $E_INVALID "invalid $2 format :: $1"
+  check_result "$E_INVALID" "invalid $2 format :: $1"
   fi
 }
 
@@ -1214,7 +1237,7 @@ download_file() {
   # Default destination is the curent working directory
   local dstopt=""
 
-  if [ ! -z "$(echo "$url" | grep -E "\.(gz|gzip|bz2|zip|xz)$")" ]; then
+  if [ -n "$(echo "$url" | grep -E "\.(gz|gzip|bz2|zip|xz)$")" ]; then
     # When an archive file is downloaded it will be first saved localy
     dstopt="--directory-prefix=$ARCHIVE_DIR"
     local is_archive="true"
@@ -1223,10 +1246,10 @@ download_file() {
       >&2 echo "[!] No filename was found in url, exiting ($url)"
       exit 1
     fi
-    if [ ! -z "$force" ] && [ -f "$ARCHIVE_DIR/$filename" ]; then
+    if [ -n "$force" ] && [ -f "$ARCHIVE_DIR/$filename" ]; then
       rm -f $ARCHIVE_DIR/$filename
     fi
-  elif [ ! -z "$destination" ]; then
+  elif [ -n "$destination" ]; then
     # Plain files will be written to specified location
     dstopt="-O $destination"
   fi
@@ -1243,7 +1266,7 @@ download_file() {
     wget $url -q $dstopt --show-progress --progress=bar:force --limit-rate=3m
   fi
 
-  if [ ! -z "$destination" ] && [ "$is_archive" = "true" ]; then
+  if [ -n "$destination" ] && [ "$is_archive" = "true" ]; then
     if [ "$destination" = "-" ]; then
       cat "$ARCHIVE_DIR/$filename"
     elif [ -d "$(dirname $destination)" ]; then
@@ -1254,21 +1277,21 @@ download_file() {
 
 check_hestia_demo_mode() {
     demo_mode=$(grep DEMO_MODE /usr/local/hestia/conf/hestia.conf | cut -d '=' -f2 | sed "s|'||g")
-    if [ ! -z "$demo_mode" ] && [ "$demo_mode" = "yes" ]; then
+    if [ -n "$demo_mode" ] && [ "$demo_mode" = "yes" ]; then
         echo "ERROR: Unable to perform operation due to security restrictions that are in place."
         exit 1
     fi
 }
 
 multiphp_count() {
-    echo $(ls -d /etc/php/*/fpm/pool.d 2>/dev/null |wc -l)
+    $BIN/v-list-sys-php plain | wc -l
 }
 
 multiphp_versions() {
     local -a php_versions_list;
     local php_ver;
     if [ "$(multiphp_count)" -gt 0 ] ; then
-        for php_ver in $(ls -v /etc/php/); do
+        for php_ver in $( $BIN/v-list-sys-php plain); do
             [ ! -d "/etc/php/$php_ver/fpm/pool.d/" ] && continue
             php_versions_list+=($php_ver)
         done
@@ -1284,7 +1307,7 @@ multiphp_default_version() {
     # the most recent php version which does have it installed.
     if [ ! -d "/etc/php/$sys_phpversion/fpm/pool.d/" ]; then
         local all_versions="$(multiphp_versions)"
-        if [ ! -z "$all_versions" ]; then
+        if [ -n "$all_versions" ]; then
             sys_phpversion="${all_versions##*\ }";
         fi
     fi
@@ -1294,7 +1317,7 @@ multiphp_default_version() {
 
 is_hestia_package(){
     if [ -z "$(echo $1 | grep -w $2)" ]; then
-        check_result $E_INVALID "$2 package is not controlled by hestiacp"
+        check_result "$E_INVALID" "$2 package is not controlled by hestiacp"
     fi
 }
 
@@ -1308,7 +1331,7 @@ user_exec() {
     local user_groups=$(id -G "$user")
     user_groups=${user_groups//\ /,}
 
-    setpriv --groups "$user_groups" --reuid "$user" --regid "$user" -- $@
+    setpriv --groups "$user_groups" --reuid "$user" --regid "$user" -- "${@}"
 }
 
 # Simple chmod wrapper that skips symlink files after glob expand
@@ -1320,4 +1343,39 @@ no_symlink_chmod() {
 
         chmod "${filemode}" "${i}"
     done
+}
+
+source_conf(){
+  while IFS='= ' read -r lhs rhs
+  do
+      if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
+          rhs="${rhs%%^\#*}"   # Del in line right comments
+          rhs="${rhs%%*( )}"   # Del trailing spaces
+          rhs="${rhs%\'*}"     # Del opening string quotes 
+          rhs="${rhs#\'*}"     # Del closing string quotes 
+          declare -g $lhs="$rhs"
+      fi
+  done < $1
+}
+
+format_no_quotes() {
+    exclude="['|\"]"
+    if [[ "$1" =~ $exclude ]]; then
+       check_result "$E_INVALID" "Invalid $2 contains qoutes (\" or ') :: $1"
+    fi
+}
+
+is_username_format_valid(){
+    if [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.[A-Za-z]{2,63}$ ]] ; then
+      is_string_format_valid "$1" "$2"
+    fi
+}
+
+change_sys_value(){
+  check_ckey=$(grep "^$1='" "$HESTIA/conf/hestia.conf")
+  if [ -z "$check_ckey" ]; then
+      echo "$1='$2'" >> "$HESTIA/conf/hestia.conf"
+  else
+      sed -i "s|^$1=.*|$1='$2'|g" "$HESTIA/conf/hestia.conf"
+  fi
 }

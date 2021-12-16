@@ -1,13 +1,72 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [DEVELOPMENT] - Service release 
-
-## Features
+## [1.5.1] - Service release
 
 ### Bugfixes
 
-- Disable /reset/ endpoint when POLICY_SYSTEM_PASSWORD_RESET = no
+- Add B2 delete file support to BlackBlaze
+- Open phpmyadmin in new tab or window #2250 @manuelserol
+- Fix issue with ipset not working properly [Forum](https://forum.hestiacp.com/t/error-ipset-object-not-found/5015)
+- Improve port detection on multiple servers for SSH #2242 and #2255
+- Fixed an issue with # in config files
+- Fixed multiple bugs in installer
+- Set correct permission /install/deb/ folder 
+- Adjust /etc/apt/sources.list.d/hestia.list to include architecture to resolve issue with I386 missing in apt.hestiacp.com
+- Fallback to hostname without retrying ptr lookup in exim (#2259)
+- Enable quota with in dovecot when sieve is enabled @madito
+- Unable to edit php8.1 service #2261
+
+### Dependencies
+
+- Update Roundcube to 1.5.1 [Release Notice](https://roundcube.net/news/2021/11/28/update-1.5.1-released)
+
+## [1.5.0] - Major Release (Feature / Quality Update)
+
+### Breaking changes ###
+- **NOTE:** Changes have been made on how phpmyadmin/phppgadmin config are included in apache2 config. To restore to the old behaviour add `IncludeOptional conf.d/*.inc` below `IncludeOptional conf.d/*.conf` in /etc/apache2/apache2.conf and restart your server. 
+- **NOTE:** Hestia packages for arm64 has been added to atp.hestiacp.com please use the normal install instructions instead! For current ARM installs to enable auto update remove the `#` in /etc/apt/sources.list.d/hestia.list `# deb https://apt.hestiacp.com/ focal main` becomes `deb https://apt.hestiacp.com/ focal main` and then run `apt update && apt upgrade -y` 
+- **NOTE:** Make sure your server / VPS has a valid PTR record or otherwise you will not be able to send any mail!
+
+### Features
+
+- Add support for Dovecote Sieve #2163 (@gejobj) => [How to enable Managesieve](https://docs.hestiacp.com/admin_docs/mail.html#how-can-i-enable-managesieve)
+- Improve HELO based system and use RDNS lookup instead our old system
+- Add support for PHP 8.1 #2233 
+- Set default php version for new installs to PHP 8.0 
+- Add support for ARM64 Processors
+- Disable access phpmyadmin/phppgadmin over ip address in Apache2 #2072
+
+### Bugfixes
+
+- Disable /reset/ endpoint when POLICY_SYSTEM_PASSWORD_RESET = no #2167
+- Add rate limit forgot password #2199
+- Prevent SOA count up after v-change-dns-records with no changes are made
+- Fix #1296 Log rotate does not rotate logs any more on Ubuntu 20.04 and Debian 11
+- Run shellcheck to improve code quality 
+- Improve ssh port detection for filemanager. Allowing users to create /etc/ssh/sshd.conf.d/custom.conf with custom port
+- Fix an bug in v-add-letsencrypt-host due to changes of Lets Encrypt causing issues with rate limiting
+- Improve Update process Hestia and allow versions to decide a a rebuild is required
+- Add Download SSL certificate function for self generated ssl certificates #2181
+- Block access to .user.ini for Nginx + Apache2 #2179
+- Add support for download B2 backup to local server to allow for restore #2199
+- Update permissions /var/log/roundcube on older installations #2173
+- Update translations
+- Fix Roundcube permissions
+- Add .webp to list of media formats that can be cached by the browser 
+- Disable  /list/log/auth when in Demo mode
+- Fix #1139 By force rebuilding webmail config files
+- Fix a bug in rebuild mysql database @depca
+- Fix #1239 Bug in basic auth not working properly
+- Add validation for email address before install server for admin account
+- Fix bug in v-change-domain-owner #2210
+- Improve input validation Add / Edit User package and improve reading config files to prevent security issues.
+
+
+### Dependencies
+
+- Update Roundcube to 1.5.0 https://roundcube.net/news/2021/10/18/roundcube-1.5.0-released
+- Update jQuery UI to the last version [CVE-2021-41182](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-41182)
 
 ## [1.4.17] - Service release 
 
@@ -22,8 +81,6 @@ All notable changes to this project will be documented in this file.
 ### Bugfixes
 
 - Fix bug with .json not loading on Apache2 due to rule in /etc/apache2/conf.d/phpmyadmin.conf
-
-### Bugfixes
 
 ## [1.4.15] - Service release 
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.4.18
+# Hestia Control Panel upgrade script for target version 1.5.2
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -15,7 +15,10 @@
 ####### You can use \n within the string to create new lines.                   #######
 #######################################################################################
 
-if [ ! -z "$DB_PMA_ALIAS" ]; then
-    $HESTIA/bin/v-change-sys-db-alias 'pma' $DB_PMA_ALIAS
-fi
+echo "[ * ] Apply changes for 1.5.2"
 
+upgrade_config_set_value 'UPGRADE_UPDATE_WEB_TEMPLATES' 'false'
+upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'false'
+upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'true'
+upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'true'
+upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'

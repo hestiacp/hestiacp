@@ -685,12 +685,12 @@ echo
 
 echo "[ * ] NGINX"
 echo "deb [arch=$ARCH] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
-apt-key adv --fetch-keys 'https://nginx.org/keys/nginx_signing.key' > /dev/null 2>&1
+wget -O- https://nginx.org/keys/nginx_signing.key | gpg --dearmor | sudo tee /usr/share/keyrings/nginx-keyring.gpg
 
 # Installing sury PHP repo
 echo "[ * ] PHP"
 echo "deb https://packages.sury.org/php/ $codename main" > $apt/php.list
-apt-key adv --fetch-keys 'https://packages.sury.org/php/apt.gpg' > /dev/null 2>&1
+wget -O- https://packages.sury.org/php/apt.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/sury-keyring.gpg
 
 # Installing sury Apache2 repo
 if [ "$apache" = 'yes' ]; then
@@ -703,19 +703,19 @@ fi
 if [ "$mysql" = 'yes' ]; then
     echo "[ * ] MariaDB"
     echo "deb [arch=$ARCH] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
-    apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc' > /dev/null 2>&1
+    wget -O-  https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | sudo tee /usr/share/keyrings/mariadb.sury-keyring.gpg
 fi
 
 # Installing HestiaCP repo
 echo "[ * ] Hestia Control Panel"
 echo "deb [arch=$ARCH] https://$RHOST/ $codename main" > $apt/hestia.list
-apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
+wget -O- https://$GPG/deb_signing.key | gpg --dearmor | sudo tee /usr/share/keyrings/hestia-keyring.gpg
 
 # Installing PostgreSQL repo
 if [ "$postgresql" = 'yes' ]; then
     echo "[ * ] PostgreSQL"
     echo "deb [arch=$ARCH] https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
-    apt-key adv --fetch-keys 'https://www.postgresql.org/media/keys/ACCC4CF8.asc' > /dev/null 2>&1
+    wget -O-  https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /usr/share/keyrings/mariadb.sury-keyring.gpg
 fi
 
 # Echo for a new line

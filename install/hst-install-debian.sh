@@ -677,6 +677,10 @@ fi
 # Define apt conf location
 apt=/etc/apt/sources.list.d
 
+#create new folder if not all-ready exists
+mkdir /root/.gnupg/
+chmod 600 /root/.gnupg/
+
 # Updating system
 echo "Adding required repositories to proceed with installation:"
 echo
@@ -684,38 +688,40 @@ echo
 # Installing Nginx repo
 
 echo "[ * ] NGINX"
-echo "deb [$ARCH signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
-wget -O- https://nginx.org/keys/nginx_signing.key | gpg --dearmor | tee /usr/share/keyrings/nginx-keyring.gpg
+echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
+curl https://nginx.org/keys/nginx_signing.key | gpg --dearmor | tee /usr/share/keyrings/nginx-keyring.gpg >/dev/null 2>&1
 
 # Installing sury PHP repo
 echo "[ * ] PHP"
-echo "deb [$ARCH signed-by=/usr/share/keyrings/sury-keyring.gpg] https://packages.sury.org/php/ $codename main" > $apt/php.list
-wget -O- https://packages.sury.org/php/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/sury-keyring.gpg
+echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/sury-keyring.gpg] https://packages.sury.org/php/ $codename main" > $apt/php.list
+curl https://packages.sury.org/php/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/sury-keyring.gpg >/dev/null 2>&1
 
 # Installing sury Apache2 repo
 if [ "$apache" = 'yes' ]; then
     echo "[ * ] Apache2"
-    echo "deb [$ARCH signed-by=/usr/share/keyrings/apache2-keyring.gpg] https://packages.sury.org/apache2/ $codename main" > $apt/apache2.list
-    wget -O- https://https://packages.sury.org/apache2/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/apache2-keyring.gpg
+    echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/apache2-keyring.gpg] https://packages.sury.org/apache2/ $codename main" > $apt/apache2.list
+    curl https://packages.sury.org/apache2/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/apache2-keyring.gpg >/dev/null 2>&1
 fi
 
 # Installing MariaDB repo
 if [ "$mysql" = 'yes' ]; then
     echo "[ * ] MariaDB"
-    echo "deb [$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
-    wget -O-  https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | tee /usr/share/keyrings/mariadb-keyring.gpg
+    echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
+    curl  https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | tee /usr/share/keyrings/mariadb-keyring.gpg >/dev/null 2>&1
 fi
 
 # Installing HestiaCP repo
 echo "[ * ] Hestia Control Panel"
-echo "deb [$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list
-gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver <hkp://keyserver.ubuntu.com:80> --recv-keys A189E93654F0B0E5
+echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list
+gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5 >/dev/null 2>&1
+fi
 
 # Installing PostgreSQL repo
 if [ "$postgresql" = 'yes' ]; then
     echo "[ * ] PostgreSQL"
-    echo "deb [$ARCH signed-by=/usr/share/keyrings/postgresql-keyring.gpg] https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
-    wget -O-  https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | tee /usr/share/keyrings/postgresql-keyring.gpg
+    echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/postgresql-keyring.gpg] https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
+    curl  https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | tee /usr/share/keyrings/postgresql-keyring.gpg >/dev/null 2>&1
+    ficd 
 fi
 
 # Echo for a new line

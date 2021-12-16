@@ -714,7 +714,6 @@ fi
 echo "[ * ] Hestia Control Panel"
 echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list
 gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5 >/dev/null 2>&1
-fi
 
 # Installing PostgreSQL repo
 if [ "$postgresql" = 'yes' ]; then

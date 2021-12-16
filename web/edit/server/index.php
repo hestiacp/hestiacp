@@ -247,6 +247,9 @@ if (!empty($_POST['save'])) {
     if (empty($_SESSION['error_msg'])) {
         if (!empty($v_php_versions)) {
             $post_php = $_POST['v_php_versions'];
+            if(empty($post_php)){
+                $post_php = array();
+            }
 
             array_map(function ($php_version) use ($post_php) {
                 if (array_key_exists($php_version->tpl, $post_php)) {

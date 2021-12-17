@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list clamd config parameters
 # options: [FORMAT]
-# labels: 
 #
 # example: v-list-sys-clamd-config
 #
-# The function for obtaining the list of clamd config parameters.
-
+# This function for obtaining the list of clamd config parameters.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -48,7 +46,6 @@ csv_list() {
     echo "$config_path"
 }
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -72,7 +69,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

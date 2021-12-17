@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: Adding force SSL for a domain
 # options: USER DOMAIN [RESTART] [QUIET]
-# labels: hestia web
 #
 # example: v-add-web-domain-ssl-force admin acme.com
 #
-# The function forces SSL for the requested domain.
-
+# This function forces SSL for the requested domain.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -40,7 +38,6 @@ is_object_unsuspended 'web' 'DOMAIN' "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

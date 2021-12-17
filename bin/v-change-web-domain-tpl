@@ -1,16 +1,14 @@
 #!/bin/bash
 # info: change web domain template
 # options: USER DOMAIN TEMPLATE [RESTART]
-# labels: web
 #
 # example: v-change-web-domain-tpl admin acme.com opencart
 #
-# The function changes template of the web configuration file. The content
+# This function changes template of the web configuration file. The content
 # of webdomain directories remains untouched.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -37,7 +35,6 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -53,7 +50,6 @@ is_web_template_valid "$template"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -76,7 +72,6 @@ add_web_config "$WEB_SYSTEM" "$template.tpl"
 if [ "$SSL" = 'yes' ]; then
     add_web_config "$WEB_SYSTEM" "$template.stpl"
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

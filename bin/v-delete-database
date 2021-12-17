@@ -1,16 +1,14 @@
 #!/bin/bash
 # info: delete database
 # options: USER DATABASE
-# labels: 
 #
 # example: v-delete-database admin wp_db
 #
-# The function for deleting the database. If database user have access to
+# This function for deleting the database. If database user have access to
 # another database, he will not be deleted.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -27,7 +25,6 @@ source $HESTIA/func/db.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -40,7 +37,6 @@ is_object_valid 'db' 'DB' "$database"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -56,7 +52,6 @@ case $TYPE in
     mysql) delete_mysql_database ;;
     pgsql) delete_pgsql_database ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

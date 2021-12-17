@@ -1,7 +1,6 @@
 #!/bin/bash
 # info: change phpmyadmin/phppgadmin alias url
 # options: TYPE ALIAS
-# labels: hestia
 #
 # example: v-change-sys-db-alias pma phpmyadmin
 #          # Sets phpMyAdmin alias to phpmyadmin
@@ -12,9 +11,8 @@
 # This function changes the database editor url in
 # apache2 or nginx configuration.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -29,7 +27,6 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -40,7 +37,6 @@ is_common_format_valid "$alias" "Alias"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

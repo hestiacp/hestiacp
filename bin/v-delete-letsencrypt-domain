@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: deleting letsencrypt ssl cetificate for domain
 # options: USER DOMAIN [RESTART] [MAIL]
-# labels: panel
 #
 # example: v-delete-letsencrypt-domain admin acme.com yes
 #
-# The function turns off letsencrypt SSL support for a domain.
-
+# This function turns off letsencrypt SSL support for a domain.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -27,7 +25,6 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/domain.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -50,7 +47,6 @@ fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -88,7 +84,6 @@ fi
 if [ $? -ne "$E_NOTEXIST" ]; then
     check_result $? "SSL delete" >/dev/null
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

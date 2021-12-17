@@ -1,11 +1,14 @@
 #!/bin/bash
 # info: revokes api key
 # options: [HASH]
-# labels: panel
 #
 # example: v-revoke-api-key mykey
 #
-# The function removes a key from in $HESTIA/data/keys/
+# This function removes a key from in $HESTIA/data/keys/
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -16,7 +19,7 @@ source $HESTIA/func/main.sh
 source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 hash=$1

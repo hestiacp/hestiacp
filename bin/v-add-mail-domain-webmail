@@ -1,16 +1,15 @@
 #!/bin/bash
 # info: add webmail support for a domain
 # options: USER DOMAIN [WEBMAIL] [RESTART] [QUIET]
-# labels: hestia
 #
 # example: v-add-sys-webmail user domain.com
 # example: v-add-sys-webmail user domain.com rainloop
 # example: v-add-sys-webmail user domain.com roundcube
 #
-# this function enables webmail client for a mail domain.
+# This function enables webmail client for a mail domain.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -50,7 +49,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 # Additional argument formatting
 format_domain
 format_domain_idn
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -167,6 +165,7 @@ fi
 
 # Set SSL as enabled in configuration
 update_object_value 'mail' 'DOMAIN' "$domain" '$WEBMAIL' "$webmail"
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

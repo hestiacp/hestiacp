@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: listing backend templates
 # options: [FORMAT]
-# labels: web
 #
 # example: v-list-web-templates-backend
 #
-# The function for obtaining the list of available backend templates.
-
+# This function for obtaining the list of available backend templates.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -63,7 +61,6 @@ csv_list() {
     done
 }
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -83,7 +80,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

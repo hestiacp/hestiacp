@@ -1,22 +1,19 @@
 #!/bin/bash
 # info: Delete force redirect to domain
 # options: USER DOMAIN [RESTART]
-# labels: hestia web
 #
 # example: v-add-web-domain-redirect user domain.tld
 #
 # Function delete a forced redirect to a domain 
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 user=$1
 domain=$2
 restart=${3-no}
-
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -27,7 +24,6 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/domain.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -42,7 +38,6 @@ is_object_unsuspended 'web' 'DOMAIN' "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

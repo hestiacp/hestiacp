@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: add firewall blocking rule
 # options: IP CHAIN
-# labels: 
 #
 # example: v-add-firewall-ban 37.120.129.20 MAIL
 #
-# The function adds new blocking rule to system firewall
-
+# This function adds new blocking rule to system firewall
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -28,7 +26,6 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/firewall.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -83,7 +80,6 @@ $iptables -I fail2ban-$chain 1 -s $ip \
 
 # Changing permissions
 chmod 660 $conf
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

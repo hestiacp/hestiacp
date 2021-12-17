@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: adding cronjob for letsencrypt cetificate installation
 # options: USER DOMAIN [ALIASES]
-# labels: panel
 #
 # example: v-schedule-letsencrypt-domain admin example.com www.example.com
 #
-# The function adds cronjob for letsencrypt ssl certificate installation
-
+# This function adds cronjob for letsencrypt ssl certificate installation
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -26,7 +24,6 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/domain.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -60,8 +57,6 @@ $BIN/v-add-cron-letsencrypt-job
 # Adding LE task
 echo "$BIN/v-add-letsencrypt-domain $user $domain '$aliases' no yes" \
     >> $HESTIA/data/queue/letsencrypt.pipe
-
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

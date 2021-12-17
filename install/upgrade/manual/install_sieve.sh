@@ -1,7 +1,7 @@
 #!/bin/bash
 # info: Install / remove  sieve / manage-sieve for Dovecot 
 #
-# The function enables resolving IP addresses  with the use of GeoIP database
+# Thos function installs manage-sieve functionality for dovecot.
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -71,9 +71,7 @@ if [ "$HAS_DOVECOT_SIEVE_INSTALLED" = "0" ]; then
     #restart dovecot and exim4
     systemctl restart dovecot > /dev/null 2>&1
     systemctl restart exim4 > /dev/null 2>&1
-    
 else
-
     # Uninstall sieve if it exist
     if [ -f "/etc/dovecot/conf.d/90-sieve.conf" ]; then
         
@@ -111,7 +109,5 @@ else
         #restart dovecot and exim4
         systemctl restart dovecot > /dev/null 2>&1
         systemctl restart exim4 > /dev/null 2>&1
-    
     fi
-    
 fi

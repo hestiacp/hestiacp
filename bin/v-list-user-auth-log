@@ -2,11 +2,10 @@
 # info: list user log
 # options: USER [FORMAT]
 #
-# The function of obtaining the list of 10 last users commands.
-
+# This function of obtaining the list of 10 last users commands.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -130,7 +129,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list |column -t -s '~';;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

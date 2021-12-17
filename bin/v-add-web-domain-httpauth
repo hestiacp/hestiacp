@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: add password protection for web domain
 # options: USER DOMAIN AUTH_USER AUTH_PASSWORD [RESTART]
-# labels: web
 #
 # example: v-add-web-domain-httpauth admin acme.com user02 super_pass
 #
-# The call is used for securing web domain with http auth
-
+# This function is used for securing web domain with http auth
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -35,6 +33,7 @@ docroot="$HOMEDIR/$user/web/$domain/public_html"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -55,11 +54,9 @@ if [ -n "$(echo "$AUTH_USER" |tr : '\n' |grep ^$auth_user$)" ]; then
     exit "$E_EXISTS"
 fi
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-
 
 # Adding htaccess password protection
     if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
@@ -85,7 +82,6 @@ fi
             restart_required='yes'
         fi
     fi
-
 
 # Adding httpasswd user
 auth_hash=$($BIN/v-generate-password-hash htpasswd htpasswd $password)

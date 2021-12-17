@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list user ips
 # options: USER [FORMAT]
-# labels: 
 #
 # example: v-list-user-ips admin
 #
-# The function for obtaining the list of available ip addresses.
-
+# This function for obtaining the list of available ip addresses.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -80,7 +78,6 @@ csv_list() {
     done
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -88,7 +85,6 @@ csv_list() {
 check_args '1' "$#" 'USER [FORMAT]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -111,7 +107,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list |column -t ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

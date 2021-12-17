@@ -1,14 +1,13 @@
 #!/bin/bash
 # info: change active system theme
 # options: NONE
-# labels: hestia
 #
 # example: v-refresh-sys-theme
 #
-# The function for changing the currently active system theme.
+# This function for changing the currently active system theme.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes

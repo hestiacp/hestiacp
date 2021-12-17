@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change database owner
 # options: DATABASE USER
-# labels: 
 #
 # example: v-change-database-owner mydb alice
 #
-# The function for changing database owner.
-
+# This function for changing database owner.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -28,7 +26,6 @@ source $HESTIA/func/db.sh
 source $HESTIA/func/rebuild.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -81,7 +78,6 @@ fi
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -127,7 +123,6 @@ $BIN/v-delete-database "$owner" "$database" > /dev/null 2>&1
 # Update counters
 $BIN/v-update-user-counters "$owner"
 $BIN/v-update-user-counters "$user"
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

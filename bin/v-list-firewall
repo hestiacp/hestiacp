@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list iptables rules
 # options: [FORMAT]
-# labels: 
 #
 # example: v-list-firewall json
 #
-# The function of obtaining the list of all iptables rules.
-
+# This function of obtaining the list of all iptables rules.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -87,7 +85,6 @@ csv_list() {
     done < <(cat $HESTIA/data/firewall/rules.conf)
 }
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -99,7 +96,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list |column -t -s '^' ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

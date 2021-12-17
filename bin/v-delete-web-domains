@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete web domains
 # options: USER [RESTART]
-# labels: web
 #
 # example: v-delete-web-domains admin
 #
-# The function deletes all user's webdomains.
-
+# This function deletes all user's webdomains.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -37,7 +35,6 @@ is_object_valid 'user' 'USER' "$user"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

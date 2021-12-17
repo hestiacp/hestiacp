@@ -1,15 +1,14 @@
 #!/bin/bash
 # info: restore single database
 # options: USER BACKUP DATABASE [NOTIFY]
-# labels: panel
 #
 # example: v-restore-database USER BACKUP DATABASE [NOTIFY]
 # 
-# The function allows the user to restore a single database
+# This function allows the user to restore a single database
 # from a backup archive.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition

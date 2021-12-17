@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list user nameservers
 # options: USER [FORMAT]
-# labels: 
 #
 # example: v-list-user-ns admin
 #
 # Function for obtaining the list of user's DNS servers.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -64,7 +62,6 @@ csv_list() {
     done
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -72,7 +69,6 @@ csv_list() {
 check_args '1' "$#" 'USER [FORMAT]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -88,7 +84,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

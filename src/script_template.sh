@@ -1,53 +1,38 @@
 #!/bin/bash
-# info: unsuspend dns domains
-# options: USER [RESTART]
+# info: command function
+# options: REQUIRED_ARGUMENT [OPTIONAL_ARGUMENT]
 #
-# example: v-unsuspend-dns-domains alice
+# example: v-new-command user dosomething
 #
-# This function unsuspends all user's DNS domains.
+# Add detailed comments about what the function does and how
+# to use it here.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
-user=$1
-restart=${3-no}
 
-# Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
-# load config file
-source_conf "$HESTIA/conf/hestia.conf"
+# Includes - Call any necessary libraries from $HESTIA/func/
+#            Remember to add shellcheck headers!
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'USER [RESTART]'
-is_format_valid 'user'
-is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
-is_object_valid 'user' 'USER' "$user"
+# Insert any necessary verification steps here
 
 # Perform verification if read-only mode is enabled
-check_hestia_demo_mode
+# check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Starting unsuspend loop
-for domain in $(search_objects 'dns' 'SUSPENDED' "yes" 'DOMAIN'); do
-    $BIN/v-unsuspend-dns-domain "$user" "$domain" "$restart"
-done
+# Insert action steps here
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-# Logging
-log_event "$OK" "$ARGUMENTS"
-
-exit
+# Insert logging or last stage service restarts here

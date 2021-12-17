@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete mail account forward-only flag
 # options: USER DOMAIN ACCOUNT
-# labels: mail
 #
 # example: v-delete-mail-account-fwd-only admin example.com jack
 #
-# The function deletes fwd-only flag
-
+# This function deletes fwd-only flag
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -33,7 +31,6 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -48,7 +45,6 @@ is_object_valid "mail/$domain" 'ACCOUNT' "$account"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -57,7 +53,6 @@ check_hestia_demo_mode
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     sed -i "/^$account$/d" $HOMEDIR/$user/conf/mail/$domain/fwd_only
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: restart mail service
 # options: NONE
-# labels: mail
 #
 # example: v-restart-mail
 #
-# The function tells exim or dovecot services to reload configuration files.
-
+# This function tells exim or dovecot services to reload configuration files.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
@@ -29,7 +27,6 @@ send_email_report() {
     cat "$tmpfile" |$SENDMAIL -s "$subj" $email
     [[ -f "$tmpfile" ]] && rm -f $tmpfile
 }
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -72,7 +69,6 @@ fi
 if [ -e "$HESTIA/data/queue/restart.pipe" ]; then
     sed -i "/\/$SCRIPT now/d" $HESTIA/data/queue/restart.pipe
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

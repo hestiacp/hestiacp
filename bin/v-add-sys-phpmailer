@@ -1,12 +1,11 @@
 #!/bin/bash
 # info: add PHPMailer functionality to Hestia Control Panel
 # options: [MODE]
-# labels: hestia
 #
-# The function installs PHPMailer for Server sided email communication
+# This function installs PHPMailer for server-side email communication.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
@@ -24,7 +23,6 @@ user="admin"
 
 PM_INSTALL_DIR="$HESTIA/web/inc"
 COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #

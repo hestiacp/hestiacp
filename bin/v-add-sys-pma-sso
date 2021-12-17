@@ -1,14 +1,13 @@
 #!/bin/bash
-# info: enables support for single sign on PHPmyAdmin 
+# info: enables support for single sign on phpMyAdmin 
 # options: [mode]
-# labels: 
 #
 # example: v-add-sys-pma-sso
 #
-# Enables support for SSO to PHPmyAdmin
+# This function enables support for SSO to phpMyAdmin
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 MODE=$1

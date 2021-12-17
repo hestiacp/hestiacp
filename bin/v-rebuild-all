@@ -1,9 +1,8 @@
 #!/bin/bash
 # info: rebuild all assets for a specified user
 # options: USER [RESTART]
-# labels: hestia
 #
-# The function rebuilds all assets for a user account:
+# This function rebuilds all assets for a user account:
 # - Web domains
 # - DNS zones
 # - Mail domains
@@ -12,7 +11,7 @@
 # - User account configuration
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition

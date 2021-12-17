@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: get user salt
 # options: USER [IP] [FORMAT]
-# labels: panel
 #
 # example: v-get-user-salt admin
 #
-# The function provides users salt
-
+# This function provides users salt
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -60,7 +58,6 @@ csv_list() {
     echo "$method, $salt"
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -75,7 +72,6 @@ if [ ! -d "$HESTIA/data/users/$user" ]; then
     echo "$date $time $user $ip failed to login" >> $HESTIA/log/auth.log
     exit 9
 fi
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -108,7 +104,6 @@ if [ -z "$salt" ]; then
     exit 9
 fi
 
-
 # Listing data
 case $format in
     json)   json_list ;;
@@ -117,11 +112,8 @@ case $format in
     shell)  shell_list ;;
 esac
 
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
-
-# Logging
 
 exit

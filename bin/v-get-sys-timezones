@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list system timezone
 # options: [FORMAT]
-# labels: panel
 #
 # example: v-get-sys-timezones json
 #
-# The function checks system timezone settings
-
+# This function checks system timezone settings
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -22,7 +20,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                       Action                             #

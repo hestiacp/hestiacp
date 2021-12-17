@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list web templates
 # options: [FORMAT]
-# labels: web
 #
 # example: v-list-web-templates
 #
-# The function for obtaining the list of web templates available to a user.
-
+# This function for obtaining the list of web templates available to a user.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -63,7 +61,6 @@ csv_list() {
     done
 }
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -79,7 +76,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

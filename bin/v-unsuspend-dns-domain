@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: unsuspend dns domain
 # options: USER DOMAIN
-# labels: dns
 #
 # example: v-unsuspend-dns-domain alice wonderland.com
 #
-# The function unsuspends a certain user's domain.
-
+# This function unsuspends a certain user's domain.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -43,7 +41,6 @@ is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"
 is_object_suspended 'dns' 'DOMAIN' "$domain"
-
 
 #----------------------------------------------------------#
 #                       Action                             #

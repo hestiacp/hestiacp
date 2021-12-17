@@ -1,7 +1,6 @@
 #!/bin/bash
 # info: Adding force redirect to domain
 # options: USER DOMAIN REDIRECT HTTPCODE [RESTART]
-# labels: hestia web
 #
 # example: v-add-web-domain-redirect user domain.tld domain.tld 
 # example: v-add-web-domain-redirect user domain.tld www.domain.tld 
@@ -12,9 +11,8 @@
 #
 # Function creates a forced redirect to a domain 
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -44,7 +42,6 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 
-
 scheme=0
 if [[ "$3" =~ http://|https:// ]]; then
     scheme=1
@@ -63,7 +60,6 @@ fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -99,11 +95,13 @@ fi
 #                       Hestia                             #
 #----------------------------------------------------------#
 
+# Update object keys
 if [ -z "$REDIRECT" ]; then
     add_object_key "web" 'DOMAIN' "$domain" 'REDIRECT' 'U_DISK'
     add_object_key "web" 'DOMAIN' "$domain" 'REDIRECT_CODE' 'U_DISK'
 fi
 
+# Update values for domain
 update_object_value 'web' 'DOMAIN' "$domain" '$REDIRECT' "$redirect"
 update_object_value 'web' 'DOMAIN' "$domain" '$REDIRECT_CODE' "$code"
 

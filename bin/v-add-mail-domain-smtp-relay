@@ -1,14 +1,13 @@
 #!/bin/bash
 # info: Add mail domain smtp relay support
 # options: USER DOMAIN HOST USERNAME PASSWORD [PORT]
-# labels: mail
 #
 # example: v-add-mail-domain-smtp-relay user domain.tld srv.smtprelay.tld uname123 pass12345
 #
 # This function adds mail domain smtp relay support.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition

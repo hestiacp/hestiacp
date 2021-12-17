@@ -1,6 +1,10 @@
 #!/bin/bash
 
-# Hestia Control Panel - System Health Check and Repair Function Library
+#===========================================================================#
+#                                                                           #
+# Hestia Control Panel - System Health Check and Repair Function Library    #
+#                                                                           #
+#===========================================================================#
 
 # Read known configuration keys from $HESTIA/conf/defaults/$system.conf
 function read_kv_config_file() {

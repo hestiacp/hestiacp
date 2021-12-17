@@ -1,16 +1,14 @@
 #!/bin/bash
 # info: delete web domain alias
 # options: USER DOMAIN ALIAS [RESTART]
-# labels: web
 #
 # example: v-delete-web-domain-alias admin example.com www.example.com
 #
-# The function of deleting the alias domain (parked domain). By this call
+# This function of deleting the alias domain (parked domain). By this call
 # default www aliase can be removed as well.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -47,7 +45,6 @@ fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

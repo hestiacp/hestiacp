@@ -1,6 +1,10 @@
 #!/bin/bash
 
-# Hestia Control Panel - Upgrade Control Script
+#===========================================================================#
+#                                                                           #
+# Hestia Control Panel - Upgrade Function Library                           #
+#                                                                           #
+#===========================================================================#
 
 # Import system health check and repair library
 # shellcheck source=/usr/local/hestia/func/syshealth.sh
@@ -106,7 +110,7 @@ upgrade_welcome_message_log() {
 
 upgrade_step_message() {
     echo
-    echo "[ - ] Now applying any necessary patches from version v$version_step..."
+    echo "[ - ] Now applying patches and updates for version v$version_step..."
 }
 
 upgrade_complete_message() {
@@ -168,7 +172,6 @@ upgrade_set_version() {
 }
 
 upgrade_set_branch() {
-    
     # Set branch in hestia.conf
     DISPLAY_VER=$(echo "$1" | sed "s|~alpha||g" | sed "s|~beta||g");
     if [ "$DISPLAY_VER" = "$1" ]; then 
@@ -482,11 +485,10 @@ upgrade_start_backup() {
     fi
     if [ -d "/etc/phpmyadmin" ]; then
         if [ "$DEBUG_MODE" = "true" ]; then
-            echo "      ---- PHPmyAdmin"
+            echo "      ---- phpMyAdmin"
         fi
         cp -fr /etc/phpmyadmin/* $HESTIA_BACKUP/conf/phpmyadmin
     fi
-
 }
 
 upgrade_refresh_config() {
@@ -551,7 +553,7 @@ upgrade_phpmyadmin() {
 
         pma_release_file=$(ls /usr/share/phpmyadmin/RELEASE-DATE-* 2>/dev/null |tail -n 1)
         if version_ge "${pma_release_file##*-}" "$pma_v"; then
-            echo "[ * ] Verify phpMyAdmin v${pma_release_file##*-} installation, No update found"
+            echo "[ * ] phpMyAdmin is up to date (${pma_release_file##*-})..."
             # Update permissions
             if [ -e /var/lib/phpmyadmin/blowfish_secret.inc.php ]; then
                 chown root:www-data /var/lib/phpmyadmin/blowfish_secret.inc.php
@@ -602,17 +604,17 @@ upgrade_filemanager() {
     FILE_MANAGER_CHECK=$(cat $HESTIA/conf/hestia.conf | grep "FILE_MANAGER='false'")
     if [ -z "$FILE_MANAGER_CHECK" ]; then
         if [ -f "$HESTIA/web/fm/version" ]; then 
-        fm_verison=$(cat $HESTIA/web/fm/version);
+            fm_version=$(cat $HESTIA/web/fm/version);
         else
-        fm_verison="1.0.0"
+            fm_version="1.0.0"
         fi
-        if [ "$fm_verison" != "$fm_v" ]; then 
+        if [ "$fm_version" != "$fm_v" ]; then 
             echo "[ ! ] Updating File Manager..."
             # Reinstall the File Manager
             $HESTIA/bin/v-delete-sys-filemanager quiet yes
             $HESTIA/bin/v-add-sys-filemanager quiet
         else
-            echo "[ * ] Verify version Filemanager, No update found"
+            echo "[ * ] File Manager is up to date ($fm_v)..."
             
             if [ "$UPGRADE_UPDATE_FILEMANAGER_CONFIG" = "true" ]; then
                 if [ -e "$HESTIA/web/fm/configuration.php" ]; then
@@ -637,7 +639,7 @@ upgrade_roundcube(){
                 echo "[ ! ] Upgrading Roundcube to version v$rc_v..."
                 $HESTIA/bin/v-add-sys-roundcube
             else
-                echo "[ * ] Verify version Roundcube, No update found"
+                echo "[ * ] Roundcube is up to date ($rc_v)..."
             fi
         fi
     fi
@@ -650,9 +652,9 @@ upgrade_rainloop(){
             echo "[ ! ] Upgrading Rainloop to version v$rl_v..."
             $HESTIA/bin/v-add-sys-rainloop
         else
-            echo "[ * ] Verify version Rainloop, No update found"
+            echo "[ * ] Rainloop is up to date ($rl_v)..."
         fi
-        fi
+    fi
 }
 
 upgrade_phpmailer(){
@@ -662,10 +664,10 @@ upgrade_phpmailer(){
     fi
     phpm_version=$(cat $HESTIA/web/inc/vendor/phpmailer/phpmailer/VERSION);
     if [ "$phpm_version" != "$pm_v" ]; then
-    echo "[ ! ] Upgrade phpmailer"
+    echo "[ ! ] Upgrading PHPmailer..."
         $HESTIA/bin/v-add-sys-phpmailer
     else
-        echo "[ * ] Verify Version phpmailer No update found"
+        echo "[ * ] PHPmailer is up to date ($pm_v)..."
     fi 
 }
 

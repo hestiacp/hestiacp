@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change service config
 # options: CONFIG SERVICE [RESTART]
-# labels: panel
 #
 # example: v-change-sys-service-config /home/admin/dovecot.conf dovecot yes
 #
-# The function for changing service confguration.
-
+# This function for changing service confguration.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -25,7 +23,6 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -39,7 +36,6 @@ fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -122,7 +118,6 @@ if [ "$update" = 'yes' ] && [ "$restart" != 'no' ]; then
         check_result "$E_RESTART" "ERROR: $service failed to start with new configuration."
     fi
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list hestia ssl certificate
 # options: [FORMAT]
-# labels: 
 #
 # example: v-list-sys-hestia-ssl
 #
-# The function of obtaining hestia ssl files.
-
+# This function of obtaining hestia ssl files.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -94,13 +92,6 @@ csv_list() {
     echo "\"$before\",\"$after\",\"$signature\",\"$pub_key\",\"$issuer\""
 }
 
-
-#----------------------------------------------------------#
-#                    Verifications                         #
-#----------------------------------------------------------#
-
-
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -129,7 +120,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

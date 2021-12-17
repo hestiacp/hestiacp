@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update user notification
 # options: USER NOTIFICATION
-# labels: panel
 #
 # example: v-acknowledge-user-notification
 #
-# The function updates user notification.
-
+# This function updates user notification.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -23,6 +21,7 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -33,7 +32,6 @@ is_object_valid 'user' 'USER' "$user"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

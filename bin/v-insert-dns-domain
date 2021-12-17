@@ -1,13 +1,11 @@
 #!/bin/bash
 # info: insert dns domain
 # options: USER DATA [SRC] [FLUSH] [RESTART]
-# labels: 
 #
-# The function inserts raw record to the dns.conf
-
+# This function inserts raw record to the dns.conf
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -26,7 +24,6 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/domain.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -81,7 +78,6 @@ echo "$dns_rec" >> $USER_DATA/dns.conf
 
 # Set permission
 chmod 660 $USER_DATA/dns.conf
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

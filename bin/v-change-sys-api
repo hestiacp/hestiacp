@@ -1,7 +1,6 @@
 #!/bin/bash
 # info: Enable / Disable API access 
 # options: STATUS 
-# labels: hestia
 #
 # example: v-change-sys-api enable
 #          # Enable API
@@ -10,7 +9,6 @@
 #          # Disable API
 #
 # Enabled / Disable API
-
 
 status=$1
 
@@ -21,8 +19,9 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
+
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 check_args '1' "$#" "STATUS"
@@ -71,9 +70,10 @@ if [ "$status" = "remove" ]; then
 fi
 
 #----------------------------------------------------------#
-#                       Logging                            #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
+# Logging
 if [ "$status" = "enable" ]; then
     $BIN/v-log-action "system" "Warning" "System" "System API access enabled."
 else

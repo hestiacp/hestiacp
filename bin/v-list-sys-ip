@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list system ip
 # options: IP [FORMAT]
-# labels: panel
 #
 # example: v-list-sys-ip 116.203.78.202
 #
-# The function for getting the list of system ip parameters.
-
+# This function for getting the list of system ip parameters.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -25,7 +23,6 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/ip.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 # JSON list function
 json_list() {
@@ -74,7 +71,6 @@ csv_list() {
     echo "$INTERFACE, $NETMASK,$NAT,$TIME,$DATE"
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -84,7 +80,6 @@ is_format_valid 'ip'
 if [ ! -e "$HESTIA/data/ips/$ip" ]; then
     check_result $E_NOTEXIST "ip $ip doesn't exist"
 fi
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -100,7 +95,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

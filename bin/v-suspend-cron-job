@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: suspend cron job
 # options: USER JOB [RESTART]
-# labels: panel
 #
 # example: v-suspend-cron-job admin 5 yes
 #
-# The function suspends a certain job of the cron scheduler.
-
+# This function suspends a certain job of the cron scheduler.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -25,7 +23,6 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -39,7 +36,6 @@ is_object_unsuspended 'cron' 'JOB' "$job"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -50,7 +46,6 @@ increase_user_value "$user" '$SUSPENDED_CRON'
 
 # Sync system cron with user
 sync_cron_jobs
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

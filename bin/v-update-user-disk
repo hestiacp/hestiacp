@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update user disk usage
 # options: USER
-# labels: panel
 #
 # example: v-update-user-disk admin
 #
 # The functions recalculates disk usage and updates database.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -23,7 +21,6 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -31,7 +28,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 check_args '1' "$#" 'USER'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -52,7 +48,6 @@ IFS=$OLDIFS
 
 # Updating disk value in config
 update_user_value "$user" '$U_DISK_DIRS' "$disk_usage"
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

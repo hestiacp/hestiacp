@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: suspend database server
 # options: TYPE HOST
-# labels: panel
 #
 # example: v-suspend-database-host mysql localhost
 #
-# The function for suspending a database server.
-
+# This function for suspending a database server.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -24,7 +22,6 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -38,14 +35,12 @@ is_object_unsuspended "../../conf/$type" 'HOST' "$host"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Suspend database creation on a server
 update_object_value "../../conf/$type" 'HOST' "$host" '$SUSPENDED' 'yes'
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

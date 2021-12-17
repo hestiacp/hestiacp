@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: add mail account forward-only flag
 # options: USER DOMAIN ACCOUNT
-# labels: mail
 #
 # example: v-add-mail-account-fwd-only admin example.com user
 #
-# The function adds fwd-only flag
-
+# This function adds fwd-only flag
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -40,7 +38,6 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -63,7 +60,6 @@ fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list remote dns host
 # options: [FORMAT]
-# labels: 
 #
 # example: v-list-remote-dns-hosts json
 #
-# The function for obtaining the list of remote dns host.
-
+# This function for obtaining the list of remote dns host.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -81,7 +79,6 @@ csv_list() {
     done < <(cat $HESTIA/conf/dns-cluster.conf)
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -89,7 +86,6 @@ csv_list() {
 if [ ! -e "$HESTIA/conf/dns-cluster.conf" ]; then
     exit
 fi
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -102,7 +98,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list |column -t ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

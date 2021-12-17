@@ -1,12 +1,15 @@
 #!/bin/bash
 # info: update default key database
 # options: [SYSTEM]
-# labels: 
 #
 # example: v-update-sys-defaults
 # example: v-update-sys-defaults user
 #
-# The function updates the known key/value pair database
+# This function updates the known key/value pair database
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
 
 system=$1
 
@@ -37,4 +40,5 @@ fi
 #----------------------------------------------------------#
 #                        Hestia                            #
 #----------------------------------------------------------#
+
 log_event "$OK" "$ARGUMENTS"

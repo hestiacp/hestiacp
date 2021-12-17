@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: add mail account alias aka nickname
 # options: USER DOMAIN ACCOUNT ALIAS
-# labels: mail
 #
 # example: v-add-mail-account-alias admin acme.com alice alicia
 #
-# The function add new email alias.
-
+# This function add new email alias.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -34,7 +32,6 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -53,7 +50,6 @@ is_mail_new "$malias"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -63,7 +59,6 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     str="$malias@$domain_idn:$account@$domain_idn"
     echo "$str" >> $HOMEDIR/$user/conf/mail/$domain/aliases
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

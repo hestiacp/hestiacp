@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete mail domain dkim support
 # options: USER DOMAIN
-# labels: mail
 #
 # example: v-delete-mail-domain-dkim admin mydomain.tld
 #
-# The function delete DKIM domain pem.
-
+# This function delete DKIM domain pem.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -27,7 +25,6 @@ source $HESTIA/func/domain.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -41,7 +38,6 @@ is_object_value_exist 'mail' 'DOMAIN' "$domain" '$DKIM'
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -62,7 +58,6 @@ if [ -n "$DNS_SYSTEM" ] && [ -e "$USER_DATA/dns/$domain.conf" ]; then
         $BIN/v-delete-dns-record "$user" "$domain" "$id" 'yes'
     done
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

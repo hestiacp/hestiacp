@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list mail domain ssl certificate
 # options: USER DOMAIN [FORMAT]
-# labels: hestia
 #
 # example: v-list-mail-domain-ssl user acme.com json
 #
-# The function of obtaining domain ssl files.
-
+# This function of obtaining domain ssl files.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -103,7 +101,6 @@ csv_list() {
     echo "\"$before\",\"$after\",\"$signature\",\"$pub_key\",\"$issuer\""
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -112,7 +109,6 @@ check_args '2' "$#" 'USER DOMAIN [FORMAT]'
 is_format_valid 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -151,9 +147,8 @@ case $format in
     shell)  shell_list ;;
 esac
 
-
 #----------------------------------------------------------#
-#                       Hestia                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 exit

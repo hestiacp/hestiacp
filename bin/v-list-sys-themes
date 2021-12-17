@@ -1,16 +1,14 @@
 #!/bin/bash
 # info: list system themes
 # options: [FORMAT]
-# labels: hestia
 #
 # example: v-list-sys-themes
 #
-# The function for obtaining the list of themes in the theme
+# This function for obtaining the list of themes in the theme
 # library and displaying them in the backend or user interface.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -63,7 +61,6 @@ csv_list() {
     done
 }
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -91,7 +88,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -1,27 +1,10 @@
 #!/bin/bash
 # info: list virtual memory info
 # options: [FORMAT]
-# labels: panel
 #
 # example: v-list-sys-memory-status json
 #
-# The function lists virtual memory information
-
-
-#----------------------------------------------------------#
-#                    Variable&Function                     #
-#----------------------------------------------------------#
-
-# Argument definition
-#format=${1-shell}
-
-# Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-#source /etc/hestiacp/hestia.conf
-# shellcheck source=/usr/local/hestia/func/main.sh
-#source $HESTIA/func/main.sh
-# load config file
-#source_conf "$HESTIA/conf/hestia.conf"
+# This function lists virtual memory information
 
 #----------------------------------------------------------#
 #                       Action                             #

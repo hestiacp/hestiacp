@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: add mail domain catchall account
 # options: USER DOMAIN EMAIL
-# labels: mail
 #
 # example: v-add-mail-domain-catchall admin example.com master@example.com
 #
-# The function enables catchall account for incoming emails.
-
+# This function enables catchall account for incoming emails.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -32,7 +30,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 format_domain
 format_domain_idn
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -49,7 +46,6 @@ is_object_value_empty 'mail' 'DOMAIN' "$domain" '$CATCHALL'
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -59,7 +55,6 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     sed -i "/*@$domain_idn:/d" $HOMEDIR/$user/conf/mail/$domain/aliases
     echo "*@$domain_idn:$email" >> $HOMEDIR/$user/conf/mail/$domain/aliases
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

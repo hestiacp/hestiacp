@@ -1,7 +1,6 @@
 #!/bin/bash
 # info: enable or disable demo mode
 # options: ACTIVE
-# labels: hestia
 #
 # This function will set the demo mode variable,
 # which will prevent usage of certain v-scripts in the backend
@@ -9,9 +8,8 @@
 # It will also disable virtual hosts for Apache and NGINX
 # for domains which have been created.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 active=$1
@@ -23,6 +21,7 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -63,8 +62,6 @@ if [ "$active" = "yes" ]; then
 else
     $BIN/v-log-action "system" "Warning" "Info" "Demonstration mode (restricted access) disabled."
 fi
-
-
 
 log_event "$OK" "$ARGUMENTS"
 

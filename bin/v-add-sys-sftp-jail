@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: add system sftp jail
 # options: [RESTART]
-# labels: 
 #
 # example: v-add-sys-sftp-jail yes
 #
-# The script enables sftp jailed environment
-
+# This function enables sftp jailed environment.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
@@ -19,7 +17,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 restart=$1
 

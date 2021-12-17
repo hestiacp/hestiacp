@@ -58,7 +58,7 @@ for cluster in $(cat $HESTIA/conf/dns-cluster.conf); do
     check_result $? "$HOST connection failed (soa sync)" "$E_CONNECT"
 
     # Sync domain
-    cluster_cmd v-delete-dns-record "$DNS_USER" "$domain" "$id "'no'
+    cluster_cmd v-delete-dns-record "$DNS_USER" "$domain" "$id" 'no'
     #check_result $? "$HOST connection failed (delete)" $E_CONNECT
 
     # Rebuilding dns zone

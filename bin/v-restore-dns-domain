@@ -3,7 +3,7 @@
 # options: USER BACKUP DOMAIN [NOTIFY]
 # labels: panel
 #
-# example: v-restore-web-domain USER BACKUP DOMAIN [NOTIFY]
+# example: v-restore-dns-domain USER BACKUP DOMAIN [NOTIFY]
 # 
 # The function allows the user to restore a single DNS domain
 # from a backup archive.

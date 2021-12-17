@@ -198,13 +198,11 @@
 											<?=_('Options'); ?>
 										</td>
 									</tr>
-									<?php if ($_SESSION['RELEASE_BRANCH'] != "release") { ?>
-										<tr>
-											<td>
-												<label><input type="checkbox" size="20" class="vst-checkbox" name="v_debug_mode" <?php if ((isset($_SESSION['DEBUG_MODE'])) && (!empty($_SESSION['DEBUG_MODE'])) && ($_SESSION['DEBUG_MODE'] == "true")) echo "checked=yes" ?>><?=_('Enable debug mode');?></label>
-											</td>
-										</tr>
-									<?php } ?>
+									<tr>
+										<td>
+											<label><input type="checkbox" size="20" class="vst-checkbox" name="v_debug_mode" <?php if ((isset($_SESSION['DEBUG_MODE'])) && (!empty($_SESSION['DEBUG_MODE'])) && ($_SESSION['DEBUG_MODE'] == "true")) echo "checked=yes" ?>><?=_('Enable debug mode');?></label>
+										</td>
+									</tr>
 									<tr>
 										<td>
 											<label><input type="checkbox" size="20" class="vst-checkbox" name="v_experimental_features" <?php if ((isset($_SESSION['POLICY_SYSTEM_ENABLE_BACON'])) && (!empty($_SESSION['POLICY_SYSTEM_ENABLE_BACON'])) && ($_SESSION['POLICY_SYSTEM_ENABLE_BACON'] == "true")) echo "checked=yes" ?>><?=_('Enable preview features');?></label> <span class="hint">(<a href="/list/server/preview/"><?=_('View');?></a>)</span>

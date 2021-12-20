@@ -3,6 +3,47 @@ All notable changes to this project will be documented in this file.
 
 ## [1.5.1] - Service release
 
+### Features
+
+- Add link to changelog in notification panel for release builds (#2276)
+
+### Bugfixes
+
+- Fix check for curl symlink on Debian during build process (#2275)
+- Fix #965 Don't delete CAA records when delete webmail ssl (#2279)
+- Fix #2272 where email validator didn't allow IDN domains (#2273)
+- Extend automated testing (Bats) (#2280)
+- Improve update text (#2270)
+- Do not restart php-fpm when modphp is installed (#2270)
+- Replace sed with slightly narrow sed (#2270)
+- Apply fix also to v-change-firewall-rule (#2249)
+- #2267 Update templates to allow .user.ini to be used (#2269)
+- Fix bug in v-backup-user #2284
+- Allow nextcloud / owncloud to access .file to split files [Forum](https://forum.hestiacp.com/t/tip-create-a-nginx-template-for-nextcloud-to-let-synchronize-files-bigger-than-10mb/5123)
+- Fix issue #2288 Port not set properly on install in hestia.conf (#2291)
+- #2286 Allow admin login as suspended user (#2289)
+- #2282 Edit user delete button broken (#2289)
+- #2278 Show alias in list web (#2289)
+- Fix php error in /edit/server when no extra php version where installed (#2289)
+- Fix error message /edit/firewall and /add/firewall (#2292)
+- Minor changes to v-add-web-php (#2293)
+- fix for Safari/iOS error NSPOSIXErrorDomain:100, part 2 (#2274)
+- include ssl template in mail .stpl files, not plain http
+- Update country iplists (#2294)
+- Fix bug in v-delete-dns-records (#2295)
+- Update examples for docs.hestiacp.com
+- #2296 - Fix API allowed IPs being reset on save (#2300)
+- Fix missing option for debug mode on release builds/flag reset on saving (#2300)
+- Hide DNS, Mail, and Database sections if not installed (#2300)
+- Minor code quality improvements (#2298)
+- Fix for grep error when adding ipset for the first time (#2307)
+- * Fix incorrect variable spelling ($v_interace > $v_interface) (#2307)
+
+### Dependencies
+
+
+## [1.5.1] - Service release
+
 ### Bugfixes
 
 - Add B2 delete file support to BlackBlaze

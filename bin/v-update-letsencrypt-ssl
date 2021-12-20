@@ -69,9 +69,9 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
             aliases=$(echo "$aliases" |egrep -v "^$domain,?$")
             aliases=$(echo "$aliases" |sed -e ':a;N;$!ba;s/\n/,/g')
 
-            # Source domain.conf
-            source <(cat $HESTIA/data/users/$user/web.conf | grep "DOMAIN='$domain'")
-
+            # Parsing domain
+            parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
+            
             # Split aliases into array
             IFS=',' read -r -a ALIASES <<< "$ALIAS"
 
@@ -90,15 +90,15 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
             if [[ ${f_aliases: -1} = ',' ]] ; then f_aliases=${f_aliases::-1}; fi
 
             # Write the filtered alias list to the default var
-            aliases=$f_aliases
+            aliases=$f_aliases    
 
-            domain_redirect="$(get_object_value 'web' 'DOMAIN' "$domain" '$REDIRECT')"
-            if [[ "$domain_redirect" != '' ]] ; then
-            	domain_redirect_code="$(get_object_value 'web' 'DOMAIN' "$domain" '$REDIRECT_CODE')"
+            domain_redirect="$REDIRECT"
+            if [[ -n "$domain_redirect"  ]] ; then
+            	domain_redirect_code="$REDIRECT_CODE"
                 $BIN/v-delete-web-domain-redirect $user $domain
             fi
 
-            domain_forcessl="$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL_FORCE')"
+            domain_forcessl="$SSL_FORCE"
             if [[ "$domain_forcessl" == 'yes' ]] ; then
                 $BIN/v-delete-web-domain-ssl-force $user $domain
             fi
@@ -119,7 +119,7 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
             if [[ "$domain_forcessl" == 'yes' ]] ; then
                 $BIN/v-add-web-domain-ssl-force $user $domain
             fi
-            if [[ "$domain_redirect" != '' ]] ; then
+            if [[ -n "$domain_redirect" ]] ; then
                 $BIN/v-add-web-domain-redirect $user $domain $domain_redirect $domain_redirect_code
             fi
 
@@ -166,6 +166,12 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
     done
 
 done
+
+$HESTIA/bin/v-restart-web yes
+if [ -n "PROXY_SYSTEM" ]; then
+    $HESTIA/bin/v-restart-proxy yes
+fi
+
 
 #----------------------------------------------------------#
 #                        Hestia                            #

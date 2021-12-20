@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: unsuspend all mail domain accounts
 # options: USER DOMAIN
-# labels: mail
 #
 # example: v-unsuspend-mail-accounts admin acme.com
 #
-# The function unsuspends all mail domain accounts.
-
+# This function unsuspends all mail domain accounts.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -29,7 +27,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -55,12 +52,8 @@ for account in $(search_objects "mail/$domain" 'SUSPENDED' 'yes' 'ACCOUNT'); do
     $BIN/v-unsuspend-mail-account "$user" "$domain" "$account"
 done
 
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
-
-# No Logging
-#log_event "$OK" "$ARGUMENTS"
 
 exit

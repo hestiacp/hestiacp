@@ -1,11 +1,14 @@
 #!/bin/bash
 # info: archive directory
 # options: USER ARCHIVE SOURCE [SOURCE...]
-# labels: 
 #
 # example: v-add-fs-archive admin archive.tar readme.txt
 #
-# The function creates tar archive
+# This function creates tar archive
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
 
 user=$1
 archive=$2

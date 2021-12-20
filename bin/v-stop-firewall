@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: stop system firewall
 # options: NONE
-# labels: panel
 #
 # example: v-stop-firewall
 #
-# The function stops iptables
-
+# This function stops iptables
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Defining absolute path for iptables and modprobe
@@ -26,7 +24,6 @@ source $HESTIA/func/firewall.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -35,7 +32,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

@@ -6,7 +6,6 @@
 #######                      Place additional commands below.                   #######
 #######################################################################################
 
-
 if [ -d "/etc/nginx/conf.d/" ]; then
     #Add nginx user_agent separation to desktop/mobile
     cp -f $HESTIA_INSTALL_DIR/nginx/agents.conf /etc/nginx/conf.d/

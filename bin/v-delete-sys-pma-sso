@@ -1,11 +1,14 @@
 #!/bin/bash
 # info: disables support for single sign on PHPMYADMIN 
 # options: [mode]
-# labels: hestia
 #
 # example: v-delete-sys-pma-sso
 #
-# Disables support for SSO to PHPmyAdmin
+# Disables support for SSO to phpMyAdmin
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
 
 MODE=$1
 

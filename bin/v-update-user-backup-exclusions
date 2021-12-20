@@ -1,14 +1,13 @@
 #!/bin/bash
 # info: update backup exclusion list
 # options: USER FILE
-# labels: panel
 #
 # example: v-update-user-backup-exclusions admin /tmp/backup_exclusions
 #
-# The function for updating backup exclusion list
+# This function for updating backup exclusion list
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -35,7 +34,6 @@ is_file_valid() {
         check_result "$E_INVALID" "invalid characters in the exlusion list"
     fi
 }
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -73,7 +71,6 @@ echo "DB='$DB'" >> $USER_DATA/backup-excludes.conf
 echo "CRON='$CRON'" >> $USER_DATA/backup-excludes.conf
 echo "USER='$USER'" >> $USER_DATA/backup-excludes.conf
 chmod 660 $USER_DATA/backup-excludes.conf
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

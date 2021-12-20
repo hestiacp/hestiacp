@@ -1,14 +1,13 @@
 #!/bin/bash
 # info: changes user configuration value
 # options: USER KEY VALUE
-# labels: hestia
 #
 # example: v-change-user-config-value admin ROLE admin
 #
 # Changes key/value for specified user.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition

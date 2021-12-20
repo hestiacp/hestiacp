@@ -1,17 +1,16 @@
 #!/bin/bash
 # info: change sysconfig value
 # options: KEY VALUE
-# labels: panel
 #
 # example: v-change-sys-config-value VERSION 1.0
 #
-# The function is for changing main config settings such as COMPANY_NAME or
+# This function is for changing main config settings such as COMPANY_NAME or
 # COMPANY_EMAIL and so on.
 
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
 
-#----------------------------------------------------------#
-#                    Variable&Function                     #
-#----------------------------------------------------------#
 # Argument definition
 key=$(echo "$1"| tr '[:lower:]' '[:upper:]')
 value=$2
@@ -37,6 +36,7 @@ format_no_quotes "$value" 'value'
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
 change_sys_value "$key" "$value"
 
 # Sort configuration file in alphabetical order on change

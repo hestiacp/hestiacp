@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: stop service
 # options: SERVICE
-# labels: panel
 #
 # example: v-stop-service apache2
 #
-# The function stops system service.
-
+# This function stops system service.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -32,7 +30,6 @@ is_format_valid 'service'
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -61,7 +58,6 @@ for service in $service_list; do
     check_result $? "ERROR: $service stop failed" "$E_RESTART"
 
 done
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: unsuspend web/dns/mail domain
 # options: USER DOMAIN
-# labels: panel
 #
 # example: v-unsuspend-domain admin acme.com
 #
-# The function unsuspends web/dns/mail domain.
-
+# This function unsuspends web/dns/mail domain.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -24,7 +22,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -87,7 +84,6 @@ check_result $? "can't restart proxy" > /dev/null
 
 $BIN/v-restart-dns "$restart"
 check_result $? "can't restart dns" > /dev/null
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

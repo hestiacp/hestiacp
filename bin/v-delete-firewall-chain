@@ -1,17 +1,14 @@
 #!/bin/bash
 # info: delete firewall chain
 # options: CHAIN
-# labels: panel
 #
 # example: v-delete-firewall-chain WEB
 #
-# The function adds new rule to system firewall
-
+# This function adds new rule to system firewall
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
-
 
 # Argument definition
 chain=$(echo $1 | tr '[:lower:]' '[:upper:]')
@@ -27,7 +24,6 @@ source $HESTIA/func/firewall.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -38,7 +34,6 @@ is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -65,7 +60,6 @@ $iptables -X fail2ban-$CHAIN 2>/dev/null
 
 # Changing permissions
 chmod 660 $chains
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

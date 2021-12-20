@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list web domain parameters
 # options: USER DOMAIN [FORMAT]
-# labels: web
 #
 # example: v-list-web-domain admin example.com
 #
-# The function to obtain web domain parameters.
-
+# This function to obtain web domain parameters.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -125,7 +123,6 @@ csv_list() {
     echo  "$DATE"
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -134,7 +131,6 @@ check_args '2' "$#" 'USER DOMAIN [FORMAT]'
 is_format_valid 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
-
 
 #----------------------------------------------------------#
 #                       Action                             #

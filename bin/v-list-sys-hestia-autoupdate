@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list hestia autoupdate settings
 # options: [FORMAT]
-# labels: 
 #
 # example: v-list-sys-hestia-autoupdate
 #
-# The function for obtaining autoupdate settings.
-
+# This function for obtaining autoupdate settings.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -64,7 +62,6 @@ csv_list() {
     fi
 }
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -79,8 +76,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list;;
 esac
-
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

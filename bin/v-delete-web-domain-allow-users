@@ -1,7 +1,6 @@
 #!/bin/bash
 # info: disables other users create subdomains
 # options: USER DOMAIN
-# labels: web hestia
 #
 # example: v-delete-web-domain-allow-users admin admin.com
 #
@@ -10,9 +9,8 @@
 # eg: admin adds admin.com
 # user can create user.admin.com
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -51,7 +49,6 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-
 
 # Load domain data
 parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)

@@ -1,16 +1,14 @@
 #!/bin/bash
 # info: change dns domain expiration date
 # options: USER DOMAIN EXP
-# labels: dns
 #
 # example: v-change-dns-domain-exp admin domain.pp.ua 2020-11-20
 #
-# The function of changing the term of expiration domain's registration. The
+# This function of changing the term of expiration domain's registration. The
 # serial number will be refreshed automatically during update.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -32,7 +30,6 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -47,7 +44,6 @@ is_object_unsuspended 'dns' 'DOMAIN' "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -65,7 +61,6 @@ if [ -n "$DNS_CLUSTER" ]; then
         echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
     fi
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

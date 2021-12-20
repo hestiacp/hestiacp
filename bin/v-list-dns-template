@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list dns template
 # options: TEMPLATE [FORMAT]
-# labels: dns
 #
 # example: v-list-dns-template zoho
 #
-# The function for obtaining the DNS template parameters.
-
+# This function for obtaining the DNS template parameters.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -84,7 +82,6 @@ csv_list() {
     done < <(cat $DNSTPL/$template.tpl)
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -92,7 +89,6 @@ csv_list() {
 check_args '1' "$#" 'TEMPLATE [FORMAT]'
 is_format_valid 'template'
 is_dns_template_valid "$template"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -105,7 +101,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list |column -t -s '^';;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

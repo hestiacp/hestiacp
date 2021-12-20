@@ -1,15 +1,14 @@
 #!/bin/bash
 # info: restore single dns domain
 # options: USER BACKUP DOMAIN [NOTIFY]
-# labels: panel
 #
 # example: v-restore-dns-domain USER BACKUP DOMAIN [NOTIFY]
 # 
-# The function allows the user to restore a single DNS domain
+# This function allows the user to restore a single DNS domain
 # from a backup archive.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition

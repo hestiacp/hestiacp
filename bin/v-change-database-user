@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change database username
 # options: USER DATABASE DBUSER [DBPASS]
-# labels: 
 #
 # example: v-change-database-user admin my_db joe_user
 #
-# The function for changing database user. It uses the
-
+# This function for changing database user. It uses the
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -30,7 +28,6 @@ source $HESTIA/func/rebuild.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -47,7 +44,6 @@ dbpass="$password"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -99,7 +95,6 @@ if [ -z "$check_old_dbuser" ]; then
         pgsql) delete_pgsql_user ;;
     esac
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

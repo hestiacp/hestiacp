@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: enable/disable directory listing
 # options: USER DOMAIN MODE
-# labels: hestia
 #
 # example: v-change-web-domain-dirlist user demo.com on
 #
-# The call is used for changing the directory list mode.
-
+# This function is used for changing the directory list mode.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument defenition
@@ -31,7 +29,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 format_domain
 format_domain_idn
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -44,6 +41,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 get_domain_values 'web'
+
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
@@ -71,7 +69,6 @@ else
     fi
     echo "Disabled directory browsing for $domain."
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

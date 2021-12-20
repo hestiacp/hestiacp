@@ -1,13 +1,17 @@
 #!/bin/bash
-# Hestia installation wrapper
-# https://www.hestiacp.com
 
+# ======================================================== #
+#
+# Hestia Control Panel Installation Routine
+# Automatic OS detection wrapper
+# https://www.hestiacp.com/
 #
 # Currently Supported Operating Systems:
 #
-#   Debian 9, 10, 11
-#   Ubuntu 18.04, 20.04
+# Debian 9, 10, 11
+# Ubuntu 18.04, 20.04
 #
+# ======================================================== #
 
 # Am I root?
 if [ "x$(id -u)" != 'x0' ]; then

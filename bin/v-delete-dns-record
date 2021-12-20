@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete dns record
 # options: USER DOMAIN ID [RESTART]
-# labels: dns
 #
 # example: v-delete-dns-record bob acme.com 42 yes
 #
-# The function for deleting a certain record of DNS zone.
-
+# This function for deleting a certain record of DNS zone.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -35,7 +33,6 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -49,7 +46,6 @@ is_dns_record_critical
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -73,7 +69,6 @@ if [ -n "$DNS_CLUSTER" ]; then
         echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
     fi
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

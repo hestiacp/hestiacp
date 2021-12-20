@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: suspend user
 # options: USER [RESTART]
-# labels: panel
 #
 # example: v-suspend-user alice yes
 #
-# The function suspends a certain user and all his objects.
-
+# This function suspends a certain user and all his objects.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -23,7 +21,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -39,7 +36,6 @@ fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -80,7 +76,6 @@ fi
 if [ -n "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
     $BIN/v-suspend-cron-jobs "$user" "no"
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

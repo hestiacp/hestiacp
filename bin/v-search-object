@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: search objects
 # options: OBJECT [FORMAT]
-# labels: panel
 #
 # example: v-search-object example.com json
 #
-# The function that allows to find system objects.
-
+# This function that allows to find system objects.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -84,7 +82,6 @@ shell_list_search() {
 
 check_args '1' "$#" 'OBJECT [FORMAT]'
 is_format_valid 'object'
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -263,8 +260,5 @@ rm $conf
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
-
-# Logging
-#log_event "$OK" "$ARGUMENTS"
 
 exit

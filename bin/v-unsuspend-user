@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: unsuspend user
 # options: USER [RESTART]
-# labels: panel
 #
 # example: v-unsuspend-user bob
 #
-# The function unsuspends user and all his objects.
-
+# This function unsuspends user and all his objects.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -23,7 +21,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -83,12 +80,9 @@ if [ -n "$CRON_SYSTEM" ] && [ "$CRON_SYSTEM" != 'no' ]; then
     $BIN/v-unsuspend-cron-jobs "$user" "no"
 fi
 
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
-
-
 
 # Restarting system services
 $BIN/v-restart-web "$restart"

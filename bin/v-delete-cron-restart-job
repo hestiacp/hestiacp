@@ -1,13 +1,11 @@
 #!/bin/bash
 # info: delete restart job
 # options: NONE
-# labels: 
 #
-# The script for disabling restart cron tasks
-
+# This function for disabling restart cron tasks
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
@@ -18,7 +16,6 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -27,6 +24,7 @@ is_system_enabled "$CRON_SYSTEM" 'CRON_SYSTEM'
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -38,7 +36,6 @@ if [ -n "$check_cron" ]; then
     parse_object_kv_list "$check_cron"
     $BIN/v-delete-cron-job admin "$JOB"
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

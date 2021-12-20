@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: generate api key
 # options: NONE
-# labels: panel
 #
 # example: v-generate-api-key 
 #
-# The function creates a key file in $HESTIA/data/keys/
-
+# This function creates a key file in $HESTIA/data/keys/
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
@@ -27,6 +25,7 @@ HASH=$(keygen)
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -49,6 +48,8 @@ echo "$HASH"
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
+
+# Logging
 $BIN/v-log-action "system" "Warning" "System" "New system API key generated (Key: ${HASH})."
 
 exit

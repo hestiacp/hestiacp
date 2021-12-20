@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list user notifications
 # options: USER [FORMAT]
-# labels: 
 #
 # example: v-list-user-notifications admin
 #
-# The function for getting the list notifications
-
+# This function for getting the list notifications
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -89,7 +87,6 @@ csv_list() {
     done < <(cat $USER_DATA/notifications.conf)
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -98,7 +95,6 @@ csv_list() {
 check_args '1' "$#" 'USER [FORMAT]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -111,7 +107,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

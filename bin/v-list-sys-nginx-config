@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list nginx config parameters
 # options: [FORMAT]
-# labels: panel
 #
 # example: v-list-sys-nginx-config 
 #
-# The function for obtaining the list of nginx config parameters.
-
+# This function for obtaining the list of nginx config parameters.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -62,7 +60,6 @@ csv_list() {
     echo
 }
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -87,7 +84,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list |column -t;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

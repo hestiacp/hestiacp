@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete mail account autoreply message
 # options: USER DOMAIN ACCOUNT ALIAS
-# labels: mail
 #
 # example: v-delete-mail-account-autoreply admin mydomain.tld bob
 #
-# The function delete email account autoreply.
-
+# This function deletes an email accounts autoreply.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -34,7 +32,6 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -50,7 +47,6 @@ is_object_value_exist "mail/$domain" 'ACCOUNT' "$account" '$AUTOREPLY'
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -59,7 +55,6 @@ check_hestia_demo_mode
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     rm -f $HOMEDIR/$user/conf/mail/$domain/autoreply.$account.msg
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

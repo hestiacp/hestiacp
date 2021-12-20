@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: rebuild dns domains
 # options: USER [RESTART] [UPDATE_SERIAL]
-# labels: dns
 #
 # example: v-rebuild-dns-domains alice
 #
-# The function rebuilds DNS configuration files.
-
+# This function rebuilds DNS configuration files.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -31,7 +29,6 @@ source $HESTIA/func/syshealth.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -50,6 +47,7 @@ fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -86,7 +84,6 @@ for domain in $(search_objects 'dns' 'DOMAIN' "*" 'DOMAIN'); do
     fi
     rebuild_dns_domain_conf
 done
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

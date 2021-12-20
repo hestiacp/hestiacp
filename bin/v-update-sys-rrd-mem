@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update memory rrd
 # options: PERIOD
-# labels: panel
 #
 # example: v-update-sys-rrd-mem
 #
-# The function is for updating memory rrd database and graphic.
-
+# This function is for updating memory rrd database and graphic.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -22,7 +20,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -114,7 +111,6 @@ rrdtool graph $RRD/mem/$period-mem.png \
     GPRINT:swap:'LAST:Current\:''%8.0lf' \
     GPRINT:swap:'MIN:Min\:''%8.0lf' \
     GPRINT:swap:'MAX:Max\:''%8.0lf\j' &>/dev/null; result=$?
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

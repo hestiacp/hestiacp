@@ -1,16 +1,14 @@
 #!/bin/bash
 # info: add web domain alias
 # options: USER DOMAIN ALIASES [RESTART]
-# labels: web
 #
 # example: v-add-web-domain-alias admin acme.com www.acme.com yes
 #
-# The call is intended for adding aliases to a domain (it is also called
-# "domain parking"). The function supports wildcards *.domain.tpl.
-
+# This function adds one or more aliases to a domain (it is also called
+# "domain parking"). This function supports wildcards *.domain.tpl.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -38,7 +36,6 @@ format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 format_aliases
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -59,7 +56,6 @@ is_base_domain_owner "$aliases"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -95,7 +91,6 @@ if [ -n  "$PROXY_SYSTEM" ] && [ -n "$PROXY" ]; then
         add_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
     fi
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

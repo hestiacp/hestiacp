@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list vsftpd config parameters
 # options: [FORMAT]
-# labels: panel
 #
 # example: v-list-sys-vsftpd-config
 #
-# The function for obtaining the list of vsftpd config parameters.
-
+# This function for obtaining the list of vsftpd config parameters.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -48,7 +46,6 @@ csv_list() {
     echo "$config_path"
 }
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -63,7 +60,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

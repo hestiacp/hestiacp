@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change user full name
 # options: USER NAME [LAST_NAME]
-# labels: panel
 #
 # example: v-change-user-name admin John Smith
 #
-# The function allow to change user's full name.
-
+# This function allow to change user's full name.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -25,7 +23,6 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -40,7 +37,6 @@ fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

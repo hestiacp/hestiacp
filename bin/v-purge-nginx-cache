@@ -1,14 +1,13 @@
 #!/bin/bash
 # info: Purge nginx cache
 # options: USER DOMAINå
-# labels: hestia web
 #
 # example: v-purge-nginx-cache user domain.tld
 #
-# The function purges nginx cache.
+# This function purges nginx cache.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition

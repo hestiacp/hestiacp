@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change system backend port
 # options: PORT
-# labels: hestia panel
 #
 # example: v-change-sys-port 5678
 #
-# The function for changing the system backend port in NGINX configuration.
-
+# This function for changing the system backend port in NGINX configuration.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -41,7 +39,6 @@ is_port_valid() {
     fi
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -51,7 +48,6 @@ is_port_valid
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

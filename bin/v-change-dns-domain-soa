@@ -1,16 +1,14 @@
 #!/bin/bash
 # info: change dns domain soa record
 # options: USER DOMAIN SOA [RESTART]
-# labels: dns
 #
 # example: v-change-dns-domain-soa admin acme.com d.ns.domain.tld
 #
-# The function for changing SOA record. This type of records can not be
+# This function for changing SOA record. This type of records can not be
 # modified by v-change-dns-record call.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -35,7 +33,6 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -50,7 +47,6 @@ is_object_unsuspended 'dns' 'DOMAIN' "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -74,7 +70,6 @@ if [ -n "$DNS_CLUSTER" ]; then
         echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
     fi
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

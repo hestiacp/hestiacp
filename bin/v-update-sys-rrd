@@ -1,16 +1,14 @@
 #!/bin/bash
 # info: update system rrd charts
 # options: NONE
-# labels: panel
 #
 # example: v-update-sys-rrd
 #
-# The script is wrapper for all rrd functions. It updates all 
+# This function is wrapper for all rrd functions. It updates all 
 # v-update-sys-rrd_* at once.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
@@ -25,7 +23,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 if [ ! -d "$RRD" ]; then
     mkdir -p $RRD
 fi
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -91,7 +88,6 @@ else
     periods="$periods yearly"
 fi
 
-
 # Updateing system stats
 for period in $periods; do
 
@@ -131,12 +127,8 @@ for period in $periods; do
     fi
 done
 
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
-
-# No Logging
-#log_event "$OK" "$ARGUMENTS"
 
 exit

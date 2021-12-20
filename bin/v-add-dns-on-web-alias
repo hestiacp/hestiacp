@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: add dns domain or dns record after web domain alias
 # options: USER ALIAS IP [RESTART]
-# labels: dns
 #
 # example: v-add-dns-on-web-alias admin www.example.com 8.8.8.8
 #
-# The function adds dns domain or dns record based on web domain alias.
-
+# This function adds dns domain or dns record based on web domain alias.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -27,7 +25,6 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/domain.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -84,7 +81,6 @@ if [ -z "$check_record" ]; then
     $BIN/v-add-dns-record \
         "$user" "$top_domain" "$sub_domain" A "$ip" '' '' "$restart" >> /dev/null
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

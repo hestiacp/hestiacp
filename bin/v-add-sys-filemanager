@@ -1,13 +1,12 @@
 #!/bin/bash
 # info: add file manager functionality to Hestia Control Panel
 # options: [MODE]
-# labels: hestia
 #
-# The function installs the File Manager on the server
+# This function installs the File Manager on the server
 # for access through the Web interface.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
@@ -20,7 +19,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 # load config file
 source_conf "$HESTIA/install/upgrade/upgrade.conf"
 
-
 MODE=$1
 user="admin"
 
@@ -28,7 +26,6 @@ FM_INSTALL_DIR="$HESTIA/web/fm"
 FM_FILE="filegator_v${fm_v}.zip"
 FM_URL="https://github.com/filegator/filegator/releases/download/v${fm_v}/${FM_FILE}"
 COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #

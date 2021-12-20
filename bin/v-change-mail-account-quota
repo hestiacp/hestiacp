@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change mail account quota
 # options: USER DOMAIN ACCOUNT QUOTA
-# labels: mail
 #
 # example: v-change-mail-account-quota admin mydomain.tld user01 unlimited
 #
-# The function changes email account disk quota.
-
+# This function changes email account disk quota.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -34,7 +32,6 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -55,7 +52,6 @@ is_object_unsuspended "mail/$domain" 'ACCOUNT' "$account"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -69,7 +65,6 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     str="$account:$md5:$user:mail::$HOMEDIR/$user:${quota}:userdb_quota_rule=*:storage=${quota}M"
     echo "$str" >> "$HOMEDIR/$user/conf/mail/$domain/passwd"
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

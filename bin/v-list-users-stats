@@ -1,13 +1,11 @@
 #!/bin/bash
 # info: list overall user stats
 # options: [FORMAT]
-# labels: 
 #
-# The function for listing overall user statistics
-
+# This function for listing overall user statistics
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -115,13 +113,11 @@ csv_list() {
     done < <(cat $HESTIA/data/users/admin/overall_stats.log)
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 check_args '0' "$#" '[FORMAT]'
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -143,7 +139,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list |column -t ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

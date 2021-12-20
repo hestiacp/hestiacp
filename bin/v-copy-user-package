@@ -1,15 +1,14 @@
 #!/bin/bash
 # info: duplicate existing package
 # options: PACKAGE NEW_PACKAGE
-# labels: hestia
 #
 # example: v-copy-user-package default new
 # 
-# The function allows the user to duplicate an existing
+# This function allows the user to duplicate an existing
 # package file to facilitate easier configuration.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -25,7 +24,6 @@ source $HESTIA/func/main.sh
 source $HESTIA/conf/hestia.conf
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -63,6 +61,7 @@ fi
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
+
 $BIN/v-log-action "system" "Info" "System" "Package copied (Package: $package, New Package: $new_package)."
 log_event "$OK" "$ARGUMENTS"
 

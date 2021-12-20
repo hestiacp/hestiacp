@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete web/dns/mail domain
 # options: USER DOMAIN
-# labels: panel
 #
 # example: v-delete-domain admin domain.tld
 #
-# The function deletes web/dns/mail domain.
-
+# This function deletes web/dns/mail domain.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -25,7 +23,6 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -36,7 +33,6 @@ is_object_valid 'user' 'USER' "$user"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -86,7 +82,6 @@ check_result $? "can't restart proxy" > /dev/null
 
 $BIN/v-restart-dns "$restart"
 check_result $? "can't restart dns" > /dev/null
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

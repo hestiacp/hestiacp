@@ -168,7 +168,7 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
 done
 
 $HESTIA/bin/v-restart-web yes
-if [ -n "PROXY_SYSTEM" ]; then
+if [ -n "$PROXY_SYSTEM" ]; then
     $HESTIA/bin/v-restart-proxy yes
 fi
 

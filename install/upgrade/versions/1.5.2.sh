@@ -23,7 +23,7 @@ upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'true'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'true'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
-echo "[ * ] Replace apt key with keyring for extra securirty"
+echo "[ * ] Updating apt keyring configuration..."
 
 if [ ! -f "/usr/share/keyrings/nginx-keyring.gpg" ]; then 
     # Get Architecture
@@ -43,6 +43,7 @@ if [ ! -f "/usr/share/keyrings/nginx-keyring.gpg" ]; then
     os=$(grep "^ID=" /etc/os-release | cut -f 2 -d '=')
     codename="$(lsb_release -s -c)"
     VERSION="$(lsb_release -s -r)"
+    mariadb_v=`mysql -V | awk 'NR==1{print $5}' | head -c 4`
     
     apt="/etc/apt/sources.list.d"
     
@@ -66,18 +67,18 @@ if [ ! -f "/usr/share/keyrings/nginx-keyring.gpg" ]; then
             curl -s https://packages.sury.org/apache2/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/apache2-keyring.gpg >/dev/null 2>&1
         fi
     fi
-    if [ -f "$apt/mysql.list" ]; then
-        rm  $apt/mysql.list 
+    if [ -f "$apt/mariadb.list" ]; then
+        rm  $apt/mariadb.list 
         echo "   [ * ] MariaDB"
-        echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
+        echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://mirror.mva-n.net/mariadb/repo//$VERSION $codename main" > $apt/mariadb.list
         curl -s https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | tee /usr/share/keyrings/mariadb-keyring.gpg >/dev/null 2>&1
     fi
     if [ -f "$apt/hestia.list" ]; then
         rm  $apt/hestia.list 
-        echo "   [ * ] hestia"
+        echo "   [ * ] Hestia"
         echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list
         gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5 >/dev/null 2>&1
-        apt-key del A189E93654F0B0E5
+        apt-key del A189E93654F0B0E5 >/dev/null 2>&1
     fi
     if [ -f "$apt/postgresql.list" ]; then
         rm  $apt/postgresql.list 

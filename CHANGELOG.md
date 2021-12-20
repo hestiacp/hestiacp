@@ -1,43 +1,42 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [1.5.1] - Service release
+## [1.5.2] - Service release
 
 ### Features
 
-- Add link to changelog in notification panel for release builds (#2276)
+- Release notes are now available from the notification panel (#2276)
+- Web domain aliases are now displayed in the domain list (#2278 / #2289)
+- DNS, Mail, and Database sections will now be hidden in /edit/server if not installed (#2300)
+- Turkey has been added as an option for ipset (#2294)
 
 ### Bugfixes
 
-- Fix check for curl symlink on Debian during build process (#2275)
-- Fix #965 Don't delete CAA records when delete webmail ssl (#2279)
-- Fix #2272 where email validator didn't allow IDN domains (#2273)
-- Extend automated testing (Bats) (#2280)
-- Improve update text (#2270)
-- Do not restart php-fpm when modphp is installed (#2270)
-- Replace sed with slightly narrow sed (#2270)
-- Apply fix also to v-change-firewall-rule (#2249)
-- #2267 Update templates to allow .user.ini to be used (#2269)
-- Fix bug in v-backup-user #2284
-- Allow nextcloud / owncloud to access .file to split files [Forum](https://forum.hestiacp.com/t/tip-create-a-nginx-template-for-nextcloud-to-let-synchronize-files-bigger-than-10mb/5123)
-- Fix issue #2288 Port not set properly on install in hestia.conf (#2291)
-- #2286 Allow admin login as suspended user (#2289)
-- #2282 Edit user delete button broken (#2289)
-- #2278 Show alias in list web (#2289)
-- Fix php error in /edit/server when no extra php version where installed (#2289)
-- Fix error message /edit/firewall and /add/firewall (#2292)
-- Minor changes to v-add-web-php (#2293)
-- fix for Safari/iOS error NSPOSIXErrorDomain:100, part 2 (#2274)
-- include ssl template in mail .stpl files, not plain http
-- Update country iplists (#2294)
-- Fix bug in v-delete-dns-records (#2295)
-- Update examples for docs.hestiacp.com
-- #2296 - Fix API allowed IPs being reset on save (#2300)
-- Fix missing option for debug mode on release builds/flag reset on saving (#2300)
-- Hide DNS, Mail, and Database sections if not installed (#2300)
-- Minor code quality improvements (#2298)
-- Fix for grep error when adding ipset for the first time (#2307)
-- * Fix incorrect variable spelling ($v_interace > $v_interface) (#2307)
+- Improvements have been made to overall code quality (#2293, #2298, #2307)
+- Added improvements to the automated testing suite (bats) (#2280)
+- Clarified text that is shown during upgrade process (#2270)
+- Updated web domain templates to allow the use of .user.ini (#2267 / #2269)
+- Fixed an issue with the curl symlink on Debian during build process (#2275)
+- Fixed an issue where CAA records were deleted when turning off SSL for webmail (#2279)
+- Fixed an issue where email validation would fail when using IDN domains (#2273)
+- Changed behavior to prevent php-fpm restarts when modphp is installed (#2270)
+- Fixed an issue where passwords may not be correctly set on Debian 11 (#2270)
+- Fixed an issue with command path v-change-firewall-rule (#2249)
+- Fixed an issue in `v-backup-user` where you may encounter an error "invalid parameters for check_result" (#2284)
+- Fixed an issue which impacted the performance of Nextcloud/Owncloud ([forum post](https://forum.hestiacp.com/t/tip-create-a-nginx-template-for-nextcloud-to-let-synchronize-files-bigger-than-10mb/5123))
+- Fixed an issue where the access port for HestiaCP was not properly set on install (#2288 / #2291)
+- Fixed an issue where admins could not log in as a suspended user in the panel (#2286 / #2289)
+- Fixed an issue where the "Delete" button in the Edit User interface did not work as expected (#2282 / #2289)
+- Fixed an issue where editing an existing firewall rule with ipset would fail (#2292)
+- Fixed an error that may occur in /edit/server when no extra php versions were installed (#2289)
+- Fixed an issue where accessing the panel via Safari would result in error NSPOSIXErrorDomain:100 (#2274)
+- Corrected command syntax in v-delete-dns-records (#2295)
+- Fixed an issue where API allowed IP list values would be lost when saving changes (#2296 / #2300)
+- Fixed an issue where the debug mode option was not displayed on release builds and would be reset when saving server settings (#2300)
+- Fixed an issue where grep would throw an error when adding ipset rules for the first time (#2307)
+- Fixed incorrect variable spelling ($v_interace > $v_interface) (#2307)
+- Updated mail domain templates
+- Updated command line examples for docs.hestiacp.com
 
 ### Dependencies
 

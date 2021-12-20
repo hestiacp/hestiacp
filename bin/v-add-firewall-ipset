@@ -34,10 +34,28 @@ is_boolean_format_valid "$autoupdate" 'bool (yes/no)'
 is_boolean_format_valid "$force" 'bool (yes/no)'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
-ipset_hstobject='../../data/firewall/ipset'
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
+# Define variables for ipset configuration
+ipset_hstobject='../../data/firewall/ipset'
 IPSET_BIN="$(which ipset)"
 IPSET_PATH="$HESTIA/data/firewall/ipset"
+
+# Ensure ipset is installed
+if [ -z "$IPSET_BIN" ]; then
+    apt-get --quiet --yes install ipset > /dev/null
+    check_result $? "Installing ipset package"
+
+    IPSET_BIN="$(which ipset)"
+    check_result $? "ipset binary not found"
+fi
+
+# Ensure ipset configuration path and master file exist before attempting to parse
+mkdir -p "$IPSET_PATH"
+if [ ! -f "$HESTIA/data/firewall/ipset.conf" ]; then 
+    touch $HESTIA/data/firewall/ipset.conf
+fi
 
 if [ -z "$data_source" ]; then
     if [ ! -f "${IPSET_PATH}.conf" ] || [[ ! $(grep "LISTNAME='$ip_name'" "${IPSET_PATH}.conf") ]]; then
@@ -58,27 +76,12 @@ if ! echo "$data_source" | egrep -q '^(https?|script|file):'; then
     check_result "$E_INVALID" "invalid ipset source, valid: (http[s]://|script:|file:)"
 fi
 
-
 IPSET_FILE="${ip_name}.${ip_version}"
 IPSET_MIN_SIZE=10
-
-# Perform verification if read-only mode is enabled
-check_hestia_demo_mode
-
-# Install ipset package if missing
-if [ -z "$IPSET_BIN" ]; then
-    apt-get --quiet --yes install ipset > /dev/null
-    check_result $? "Installing ipset package"
-
-    IPSET_BIN="$(which ipset)"
-    check_result $? "ipset binary not found"
-fi
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-
-mkdir -p "$IPSET_PATH"
 
 # Generate ip lists file if missing or when forced
 if [ ! -f "${IPSET_PATH}/${IPSET_FILE}.iplist" ] || [ "$force" = "yes" ]; then

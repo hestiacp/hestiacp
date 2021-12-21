@@ -71,7 +71,7 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
 
             # Parsing domain
             parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
-            
+
             # Split aliases into array
             IFS=',' read -r -a ALIASES <<< "$ALIAS"
 

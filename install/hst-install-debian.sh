@@ -45,7 +45,7 @@ if [ "$release" -eq 9 ]; then
         php$fpm_v-imagick php$fpm_v-imap php$fpm_v-ldap php$fpm_v-apcu awstats
         php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli php$fpm_v-gd php$fpm_v-intl
         php$fpm_v-mbstring php$fpm_v-opcache php$fpm_v-pspell
-        php$fpm_v-readline php$fpm_v-xml vsftpd proftpd-basic bind9 exim4
+        php$fpm_v-readline php$fpm_v-xml vsftpd proftpd-basic bind9 chrony exim4
         exim4-daemon-heavy clamav-daemon spamassassin dovecot-imapd
         dovecot-pop3d dovecot-sieve dovecot-managesieved 
         net-tools mariadb-client mariadb-common mariadb-server
@@ -62,7 +62,7 @@ elif [ "$release" -eq 10 ] || [ "$release" -eq 11 ]; then
         php$fpm_v-apcu awstats php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli
         php$fpm_v-gd php$fpm_v-intl php$fpm_v-mbstring
         php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
-        awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy
+        awstats vsftpd proftpd-basic bind9 chrony exim4 exim4-daemon-heavy
         clamav-daemon spamassassin dovecot-imapd dovecot-pop3d dovecot-sieve dovecot-managesieved 
         net-tools mariadb-client mariadb-common mariadb-server postgresql
         postgresql-contrib phppgadmin mc flex whois git idn zip sudo bc ftp lsof
@@ -1018,10 +1018,12 @@ if [ -z "$(grep ^/usr/sbin/nologin /etc/shells)" ]; then
     echo "/usr/sbin/nologin" >> /etc/shells
 fi
 
-# Configuring NTP
-sed -i 's/#NTP=/NTP=pool.ntp.org/' /etc/systemd/timesyncd.conf
-systemctl enable systemd-timesyncd
-systemctl start systemd-timesyncd
+# Configure chrony
+if [ -f "/etc/chrony/chrony.conf" ]; then
+    sed -i 's/pool 2.debian.pool.ntp.org iburst/#pool 2.debian.pool.ntp.org iburst/g' /etc/chrony/chrony.conf
+    echo 'pool pool.ntp.org iburst' > /etc/chrony/sources.d/hestia.sources
+    chronyc reload sources > /dev/null 2>&1
+fi
 
 # Setup rssh
 if [ "$release" -eq 9 ]; then

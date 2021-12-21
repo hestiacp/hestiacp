@@ -41,7 +41,7 @@ mariadb_v="10.6"
 # Defining software pack for all distros
 software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     apparmor-utils awstats bc bind9 bsdmainutils bsdutils clamav-daemon
-    cron curl dnsutils dovecot-imapd dovecot-pop3d dovecot-sieve dovecot-managesieved 
+    cron chrony curl dnsutils dovecot-imapd dovecot-pop3d dovecot-sieve dovecot-managesieved 
     e2fslibs e2fsprogs exim4 exim4-daemon-heavy expect fail2ban flex ftp git idn 
     imagemagick libapache2-mod-fcgid libapache2-mod-php$fpm_v libapache2-mod-rpaf
     lsof mc mariadb-client mariadb-common mariadb-server nginx
@@ -1014,10 +1014,12 @@ if [ -z "$(grep nologin /etc/shells)" ]; then
     echo "/usr/sbin/nologin" >> /etc/shells
 fi
 
-# Configuring NTP
-sed -i 's/#NTP=/NTP=pool.ntp.org/' /etc/systemd/timesyncd.conf
-systemctl enable systemd-timesyncd
-systemctl start systemd-timesyncd
+# Configure chrony
+if [ -f "/etc/chrony/chrony.conf" ]; then
+    sed -i 's/pool 2.debian.pool.ntp.org iburst/#pool 2.debian.pool.ntp.org iburst/g' /etc/chrony/chrony.conf
+    echo 'pool pool.ntp.org iburst' > /etc/chrony/sources.d/hestia.sources
+    chronyc reload sources > /dev/null 2>&1
+fi
 
 # Setup rssh
 if [ "$release" != '20.04' ]; then

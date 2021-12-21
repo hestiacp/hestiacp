@@ -201,9 +201,11 @@ function top_panel($user, $TAB)
 
     // Log out active sessions for suspended users
     if (($panel[$user]['SUSPENDED'] === 'yes') && ($_SESSION['POLICY_USER_VIEW_SUSPENDED'] !== 'yes')) {
+        if(empty($_SESSION['look'])){
         $_SESSION['error_msg'] = 'You have been logged out. Please log in again.';
         destroy_sessions();
         header('Location: /login/');
+        }
     }
 
     // Reset user permissions if changed while logged in

@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
+
+#===========================================================================#
+#                                                                           #
+# Hestia Control Panel - Core Function Library                              #
+#                                                                           #
+#===========================================================================#
+
 # Internal variables
 HOMEDIR='/home'
 BACKUP='/backup'
@@ -925,7 +932,9 @@ is_dns_record_format_valid() {
 # Email format validator
 is_email_format_valid() {
     if [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.[A-Za-z]{2,63}$ ]] ; then
+      if [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.(xn--)[[:alnum:]]{2,63}$ ]] ; then
         check_result "$E_INVALID" "invalid email format :: $1"
+      fi
     fi
 }
 

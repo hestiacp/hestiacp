@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list mail domains
 # options: USER [FORMAT]
-# labels: mail
 #
 # example: v-list-mail-domains admin
 #
-# The function of obtaining the list of all user domains.
-
+# This function of obtaining the list of all user domains.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -91,7 +89,6 @@ csv_list() {
     done < <(cat $USER_DATA/mail.conf)
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -99,7 +96,6 @@ csv_list() {
 check_args '1' "$#" 'USER [FORMAT]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -112,7 +108,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list |column -t ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: rebuild mail domain
 # options: USER DOMAIN
-# labels: hestia
 #
 # example: v-rebuild-mail-domain user domain.tld
 #
-# The function rebuilds configuration files for a single domain.
-
+# This function rebuilds configuration files for a single domain.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -60,6 +58,7 @@ fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#

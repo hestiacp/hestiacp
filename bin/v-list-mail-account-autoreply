@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list mail account autoreply
 # options: USER DOMAIN ACCOUNT [FORMAT]
-# labels: mail
 #
 # example: v-list-mail-account-autoreply admin example.com testing
 #
-# The function of obtaining mail account autoreply message.
-
+# This function of obtaining mail account autoreply message.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -52,7 +50,6 @@ csv_list() {
     echo "$msg"
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -64,7 +61,6 @@ is_object_valid 'mail' 'DOMAIN' "$domain"
 is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 is_object_valid "mail/$domain" 'ACCOUNT' "$account"
 is_object_unsuspended "mail/$domain" 'ACCOUNT' "$account"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -82,7 +78,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

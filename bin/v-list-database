@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list database
 # options: USER DATABASE [FORMAT]
-# labels: panel
 #
 # example: v-list-database wp_db
 #
-# The function for obtaining of all database's parameters.
-
+# This function for obtaining of all database's parameters.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -67,7 +65,6 @@ csv_list() {
     echo "$DB,$DBUSER,$HOST,$TYPE,$CHARSET,$U_DISK,$SUSPENDED,$TIME,$DATE"
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -76,7 +73,6 @@ check_args '2' "$#" 'USER DATABASE [FORMAT]'
 is_format_valid 'user' 'database'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'db' 'DB' "$database"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -92,7 +88,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

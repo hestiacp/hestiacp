@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update user usage counters
 # options: USER
-# labels: panel
 #
 # example: v-update-user-counters admin
 #
 # Function updates usage counters like U_WEB_DOMAINS, U_MAIL_ACCOUNTS, etc.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -23,7 +21,6 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -33,7 +30,6 @@ if [ -n "$user" ]; then
     is_format_valid 'user'
     is_object_valid 'user' 'USER' "$user"
 fi
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -225,7 +221,6 @@ for user in $user_list; do
     update_user_value "$user" '$U_CRON_JOBS' "$U_CRON_JOBS"
     update_user_value "$user" '$U_BACKUPS' "$U_BACKUPS"
 done
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

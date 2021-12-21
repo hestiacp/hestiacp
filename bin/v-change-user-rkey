@@ -1,13 +1,11 @@
 #!/bin/bash
 # info: change user random key
 # options: USER [HASH]
-# labels: hestia
 #
-# The function changes user's RKEY value thats has been used for security value to be used forgot password function only.
-
+# This function changes user's RKEY value thats has been used for security value to be used forgot password function only.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -47,10 +45,6 @@ fi
 
 d=$(date +%s)
 
-#----------------------------------------------------------#
-#                       Hestia                             #
-#----------------------------------------------------------#
-
 # Changing RKEY value
 update_user_value "$user" '$RKEY' "$hash"
 
@@ -60,6 +54,10 @@ if [ -z "$(grep RKEYEXP $USER_DATA/user.conf)" ]; then
 else
     update_user_value "$user" '$RKEYEXP' "$d"
 fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
 
 # Logging
 $BIN/v-log-action "system" "Warning" "Users" "Password reset requested (User: $user)."

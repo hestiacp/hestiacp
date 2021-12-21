@@ -1,11 +1,10 @@
 #!/bin/bash
 # info: archive to directory
 # options: USER ARCHIVE DIRECTORY [SELECTED_DIR] [STRIP] [TEST]
-# labels: 
 #
 # example: v-extract-fs-archive admin latest.tar.gz /home/admin
 #
-# The function extracts archive into directory on the file system
+# This function extracts archive into directory on the file system
 
 user=$1
 src_file=$2

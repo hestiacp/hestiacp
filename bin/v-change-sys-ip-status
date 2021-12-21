@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change ip status
 # options: IP IP_STATUS
-# labels: panel
 #
 # example: v-change-sys-ip-status 91.198.136.14 yourstatus
 #
-# The function of changing an ip address's status.
-
+# This function of changing an ip address's status.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -25,7 +23,6 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/ip.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -50,14 +47,12 @@ fi
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Changing ip name
 update_ip_value '$STATUS' "$ip_status"
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

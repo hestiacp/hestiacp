@@ -1,11 +1,10 @@
 #!/bin/bash
 # info: Restore system configuration
 # options: [SYSTEM]
-# labels: 
 #
 # example: v-repair-sys-config
 #
-# The function repairs or restores the system configuration file.
+# This function repairs or restores the system configuration file.
 
 mode=$1
 
@@ -14,7 +13,6 @@ mode=$1
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-
 
 #----------------------------------------------------------#
 #                        Action                            #
@@ -33,5 +31,6 @@ fi
 #----------------------------------------------------------#
 #                        Hestia                            #
 #----------------------------------------------------------#
+
 $BIN/v-log-action "system" "Info" "System" "Executed $mode operation on system configuration."
 log_event "$OK" "$ARGUMENTS"

@@ -3,7 +3,7 @@
 # DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS #
 #=======================================================================#
 
-# PHPMyAdmin and phppgadmin require access as www-data instead of user for security reasons
+# phpMyAdmin and phpPgAdmin require access as www-data instead of user for security reasons
 <VirtualHost %ip%:%web_port%>
 
     ServerName %domain_idn%

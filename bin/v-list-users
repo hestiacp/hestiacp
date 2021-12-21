@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list users
 # options: [FORMAT]
-# labels: panel
 #
 # example: v-list-users
 #
-# The function to obtain the list of all system users.
-
+# This function to obtain the list of all system users.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
@@ -177,7 +175,6 @@ raw_list() {
     done < <(grep '@' /etc/passwd |cut -f1 -d:)
 }
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -189,7 +186,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list |column -t ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

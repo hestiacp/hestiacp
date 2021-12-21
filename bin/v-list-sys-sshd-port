@@ -1,13 +1,14 @@
 #!/bin/bash
 # info: list sshd port
 # options: [FORMAT]
-# labels: panel
 # 
 # example: v-list-sys-sshd-port
 #
-# The function for obtainings the port of sshd listens to
+# This function for obtainings the port of sshd listens to
 
-# Argument definition
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
 
 # Argument definition
 format=${1-shell}
@@ -56,7 +57,7 @@ csv_list() {
 }
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                       Action                             #
 #----------------------------------------------------------#
 
 version=$(lsb_release -s -r)
@@ -74,12 +75,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
-#----------------------------------------------------------#
-#                       Action                             #
-#----------------------------------------------------------#
-
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

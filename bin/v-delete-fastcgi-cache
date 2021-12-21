@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: Disable FastCGI cache for nginx
 # options: USER DOMAIN [RESTART]
-# labels: hestia web
 #
 # example: v-delete-fastcgi-cache user domain.tld
 #
-# The function disables FastCGI cache for nginx
-
+# This function disables FastCGI cache for nginx
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -39,7 +37,6 @@ is_object_valid 'web' 'DOMAIN' "$domain" "$FASTCGI_CACHE"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -64,7 +61,6 @@ fi
 if [ -d "/var/cache/nginx/micro/$domain" ]; then
     rm -rf /var/cache/nginx/micro/$domain
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

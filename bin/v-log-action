@@ -2,7 +2,6 @@
 # info: adds action event to user or system log
 # options: LOG_TYPE USER
 
-
 # Event Levels:
 # info, warning, error
 
@@ -11,6 +10,9 @@
 # system:   ip, firewall, service, updates,
 #           users, pwchange, pwreset, impersonation
 
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf

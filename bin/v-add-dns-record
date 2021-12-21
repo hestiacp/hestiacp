@@ -1,18 +1,16 @@
 #!/bin/bash
 # info: add dns record
 # options: USER DOMAIN RECORD TYPE VALUE [PRIORITY] [ID] [RESTART] [TTL]
-# labels: dns
 #
 # example: v-add-dns-record admin acme.com www A 162.227.73.112
 #
-# The call is used for adding new DNS record. Complex records of TXT, MX and
-# SRV types can be used by a filling in the 'value' argument. The function also
-# gets an id parameter for definition of certain record identifier or for the
+# This function is used to add a new DNS record. Complex records of TXT, MX and
+# SRV types can be used by a filling in the 'value' argument. This function also
+# gets an ID parameter for definition of certain record identifiers or for the
 # regulation of records.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -80,7 +78,6 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -102,7 +99,6 @@ is_format_valid 'ttl'
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -139,7 +135,6 @@ if [ -n "$DNS_CLUSTER" ]; then
         echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
     fi
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

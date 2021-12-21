@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change password for http auth user
 # options: USER DOMAIN AUTH_USER AUTH_PASSWORD [RESTART]
-# labels: web
 #
 # example: v-change-web-domain-httpauth admin acme.com alice white_rA$$bIt
 #
-# The call is used for changing http auth user password
-
+# This function is used for changing http auth user password
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -30,7 +28,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # Defining htpasswd file
 htpasswd="$HOMEDIR/$user/conf/web/$domain/htpasswd"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -55,7 +52,6 @@ fi
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -65,7 +61,6 @@ auth_hash=$($BIN/v-generate-password-hash htpasswd htpasswd "$password")
 touch $htpasswd
 sed -i "/^$auth_user:/d" $htpasswd
 echo "$auth_user:$auth_hash" >> $htpasswd
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

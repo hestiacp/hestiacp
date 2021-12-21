@@ -1,7 +1,7 @@
 #!/bin/bash
 # info: enable multiphp 
 #
-# The function enables php-fpm backend for standalone apache2 setups
+# This function enables php-fpm backend for standalone apache2 configurations.
 
 
 #----------------------------------------------------------#
@@ -14,7 +14,6 @@ source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -26,7 +25,6 @@ fi
 if [ "$(multiphp_count)" -gt 1 ]; then
     check_result $E_EXISTS "Multiphp allready enabled" >/dev/null
 fi
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -49,7 +47,6 @@ sed -i "/^WEB_BACKEND=/d" $HESTIA/conf/hestia.conf
 echo "WEB_BACKEND='php-fpm'" >> $HESTIA/conf/hestia.conf
 
 for user in $($BIN/v-list-sys-users plain); do
-
     # Define user data and get suspended status
     USER_DATA=$HESTIA/data/users/$user
     SUSPENDED=$(get_user_value '$SUSPENDED')

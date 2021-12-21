@@ -1,13 +1,11 @@
 #!/bin/bash
 # info: inserts dns records
 # options: USER DOMAIN DATA_FILE [RESTART]
-# labels: 
 #
-# The function copy dns record to the domain conf
-
+# This function copy dns record to the domain conf
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -23,7 +21,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -48,7 +45,6 @@ if [ -e "$data_file" ]; then
     mv -f $data_file $USER_DATA/dns/$domain.conf
     chmod 660 $USER_DATA/dns/$domain.conf
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

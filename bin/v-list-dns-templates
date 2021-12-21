@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list dns templates
 # options: [FORMAT]
-# labels: dns
 #
 # example: v-list-dns-templates json
 #
-# The function for obtaining the list of all DNS templates available.
-
+# This function for obtaining the list of all DNS templates available.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -63,7 +61,6 @@ csv_list() {
     done
 }
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -78,7 +75,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

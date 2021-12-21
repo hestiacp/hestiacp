@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: check user hash
 # options: USER HASH [IP]
-# labels: 
 #
 # example: v-check-user-hash admin CN5JY6SMEyNGnyCuvmK5z4r7gtHAC4mRZ...
 #
-# The function verifies user hash
-
+# This function verifies user hash
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -29,11 +27,9 @@ time_n_date=$(date +'%T %F')
 time=$(echo "$time_n_date" |cut -f 1 -d \ )
 date=$(echo "$time_n_date" |cut -f 2 -d \ )
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
-
 
 check_args '2' "$#" 'USER HASH'
 is_format_valid 'user'
@@ -55,11 +51,9 @@ if [[ -z "$hash" ]]; then
     exit 9
 fi
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-
 
 # Parsing user's salt
 shadow=$(grep "^$user:" /etc/shadow | cut -f 2 -d :)
@@ -95,7 +89,6 @@ if [[ "$shadow" != "$hash" ]]; then
     echo "$date $time $user $ip failed to login" >> $HESTIA/log/auth.log
     exit 9
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

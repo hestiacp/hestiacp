@@ -1,6 +1,14 @@
 #!/bin/bash
 
-# Hestia Ubuntu installer v1.0
+# ======================================================== #
+#
+# Hestia Control Panel Installer for Ubuntu
+# https://www.hestiacp.com/
+#
+# Currently Supported Versions:
+# Ubuntu 18.04 LTS, 20.04 LTS
+#
+# ======================================================== #
 
 #----------------------------------------------------------#
 #                  Variables&Functions                     #
@@ -23,7 +31,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.5.1'
+HESTIA_INSTALL_VER='1.5.2'
 pma_v='5.1.1'
 rc_v="1.5.1"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1")
@@ -126,7 +134,6 @@ set_default_lang() {
 set_default_port() {
     if [ -z "$port" ]; then
         eval port=$1
-        echo "BACKEND_PORT='$port'" >> $HESTIA/conf/hestia.conf
     fi
 }
 
@@ -539,7 +546,7 @@ fi
 
 # Firewall stack
 if [ "$iptables" = 'yes' ]; then
-    echo -n '   - Firewall (Iptables)'
+    echo -n '   - Firewall (iptables)'
 fi
 if [ "$iptables" = 'yes' ] && [ "$fail2ban" = 'yes' ]; then
     echo -n ' + Fail2Ban Access Monitor'
@@ -1099,9 +1106,11 @@ source /etc/profile.d/hestia.sh
 # Configuring logrotate for Hestia logs
 cp -f $HESTIA_INSTALL_DIR/logrotate/hestia /etc/logrotate.d/hestia
 
+# Create log path and symbolic link
 rm -f /var/log/hestia
 mkdir -p /var/log/hestia
 ln -s /var/log/hestia $HESTIA/log
+
 # Building directory tree and creating some blank files for Hestia
 mkdir -p $HESTIA/conf $HESTIA/ssl $HESTIA/data/ips \
     $HESTIA/data/queue $HESTIA/data/users $HESTIA/data/firewall \
@@ -1119,6 +1128,10 @@ chmod 770 $HESTIA/data/sessions
 rm -f $HESTIA/conf/hestia.conf > /dev/null 2>&1
 touch $HESTIA/conf/hestia.conf
 chmod 660 $HESTIA/conf/hestia.conf
+
+# Write default port value to hestia.conf
+# If a custom port is specified it will be set at the end of the installation process.
+write_config_value "BACKEND_PORT" "8083"
 
 # Web stack
 if [ "$apache" = 'yes' ]; then
@@ -1889,7 +1902,7 @@ if [ "$iptables" = 'yes' ]; then
 fi
 
 # Get public IP
-echo "[ * ] Configure System IP..."
+echo "[ * ] Configuring System IP..."
 pub_ip=$(curl --ipv4 -s https://ip.hestiacp.com/)
 if [ -n "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     if [ -e /etc/rc.local ]; then
@@ -2002,17 +2015,21 @@ chown admin:admin $HESTIA/data/sessions
 mkdir -p /backup/
 chmod 755 /backup/
 
+# create cronjob to generate ssl 
+echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && /usr/local/hestia/bin/v-add-letsencrypt-host" > /etc/cron.d/hestia-ssl
+
 #----------------------------------------------------------#
-#                  Configure File Manager                   #
+#                  Configure File Manager                  #
 #----------------------------------------------------------#
 
 echo "[ * ] Configuring File Manager..."
 $HESTIA/bin/v-add-sys-filemanager quiet
 
-# create cronjob to generate ssl 
-echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && /usr/local/hestia/bin/v-add-letsencrypt-host" > /etc/cron.d/hestia-ssl
+#----------------------------------------------------------#
+#              Set hestia.conf default values              #
+#----------------------------------------------------------#
 
-echo "[ * ] Finish up install..."
+echo "[ * ] Updating configuration files..."
 write_config_value "PHPMYADMIN_KEY" ""
 write_config_value "POLICY_USER_VIEW_SUSPENDED" "no"
 write_config_value "POLICY_USER_VIEW_LOGS" "yes"
@@ -2036,6 +2053,7 @@ write_config_value "SERVER_SMTP_USER" ""
 write_config_value "SERVER_SMTP_PASSWD" ""
 write_config_value "SERVER_SMTP_ADDR" ""
 write_config_value "POLICY_CSRF_STRICTNESS" "1"
+
 #----------------------------------------------------------#
 #                  Configure PHPMailer                     #
 #----------------------------------------------------------#
@@ -2074,16 +2092,17 @@ we hope that you enjoy using it as much as we do!
 Please feel free to contact us at any time if you have any questions,
 or if you encounter any bugs or problems:
 
-Web:     https://www.hestiacp.com/
-Forum:   https://forum.hestiacp.com/
-Discord: https://discord.gg/nXRUZch
-GitHub:  https://www.github.com/hestiacp/hestiacp
+Documentation:  https://docs.hestiacp.com/
+Forum:          https://forum.hestiacp.com/
+Discord:        https://discord.gg/nXRUZch
+GitHub:         https://www.github.com/hestiacp/hestiacp
 
 Note: Automatic updates are enabled by default. If you would like to disable them,
 please log in and navigate to Server > Updates to turn them off.
 
 Help support the Hestia Control Panel project by donating via PayPal:
 https://www.hestiacp.com/donate
+
 --
 Sincerely yours,
 The Hestia Control Panel development team
@@ -2107,12 +2126,11 @@ $HESTIA/bin/v-add-user-notification admin 'Welcome to Hestia Control Panel!' '<b
 sort_config_file
 
 if [ "$interactive" = 'yes' ]; then
-    echo "[ ! ] IMPORTANT: System will reboot"
-    echo ""
-    echo -n " Press any key to continue!"
+    echo "[ ! ] IMPORTANT: The system will now reboot to complete the installation process."
+    echo -n "                 Press any key to continue!"
     read reboot
     reboot
 else
-    echo "[ ! ] IMPORTANT: You must logout or restart the server before continuing"
+    echo "[ ! ] IMPORTANT: You must restart the system before continuing!"
 fi
 # EOF

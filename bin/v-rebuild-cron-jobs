@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: rebuild cron jobs
 # options: USER [RESTART]
-# labels: panel
 #
 # example: v-rebuild-cron-jobs admin yes
 #
-# The function rebuilds system cron config file for specified user.
-
+# This function rebuilds system cron config file for specified user.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -24,7 +22,6 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -36,13 +33,13 @@ is_object_valid 'user' 'USER' "$user"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Rebuild cron jobs
 sync_cron_jobs
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

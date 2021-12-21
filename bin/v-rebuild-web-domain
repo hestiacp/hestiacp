@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: rebuild web domain
 # options: USER DOMAIN [RESTART]
-# labels: hestia
 #
 # example: v-rebuild-web-domain user domain.tld 
 #
-# The function rebuilds web configuration files.
-
+# This function rebuilds web configuration files.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -33,7 +31,6 @@ source $HESTIA/func/syshealth.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -50,6 +47,7 @@ is_object_valid 'web' 'DOMAIN' "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -98,7 +96,6 @@ if [ -n "$WEB_BACKEND" ]; then
 fi
 
 rebuild_web_domain_conf
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

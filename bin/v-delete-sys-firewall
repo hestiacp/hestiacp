@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete system firewall
 # options: NONE
-# labels: panel
 #
 # example: v-delete-sys-firewall
 #
-# The script disables firewall support
-
+# This function disables firewall support
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
@@ -19,7 +17,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -32,7 +29,6 @@ fi
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -42,7 +38,6 @@ $BIN/v-change-sys-config-value "FIREWALL_SYSTEM" ""
 
 # Stopping firewall
 $BIN/v-stop-firewall
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

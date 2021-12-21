@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change mail domain catchall email
 # options: USER DOMAIN EMAIL
-# labels: mail
 #
 # example: v-change-mail-domain-catchall user01 mydomain.tld master@mydomain.tld
 #
-# The function changes mail domain catchall.
-
+# This function changes mail domain catchall.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -32,7 +30,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 format_domain
 format_domain_idn
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -48,7 +45,6 @@ is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -58,7 +54,6 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     sed -i "/*@$domain_idn:/d" "$HOMEDIR/$user/conf/mail/$domain/aliases"
     echo "*@$domain_idn:$email" >> "$HOMEDIR/$user/conf/mail/$domain/aliases"
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

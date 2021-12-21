@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete dns domains based on SRC field
 # options: USER SRC [RESTART]
-# labels: dns
 #
 # example: v-delete-dns-domains-src admin '' yes
 #
-# The function for deleting DNS domains related to a certain host.
-
+# This function for deleting DNS domains related to a certain host.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -25,7 +23,6 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -38,7 +35,6 @@ is_object_valid 'user' 'USER' "$user"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -47,7 +43,6 @@ check_hestia_demo_mode
 for domain in $(search_objects 'dns' 'SRC' "$src" 'DOMAIN'); do
     $BIN/v-delete-dns-domain "$user" "$domain" 'no'
 done
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

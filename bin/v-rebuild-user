@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: rebuild system user
 # options: USER [RESTART]
-# labels: panel
 #
 # example: v-rebuild-user admin yes
 #
-# The function rebuilds system user account.
-
+# This function rebuilds system user account.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -32,7 +30,6 @@ source $HESTIA/func/syshealth.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -47,6 +44,7 @@ fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -64,7 +62,6 @@ $BIN/v-update-user-counters "$user"
 
 # Update account usage statistics
 $BIN/v-update-user-stats "$user"
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

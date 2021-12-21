@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update firewall ipset
 # options: [REFRESH]
-# labels: hestia
 #
 # example: v-update-firewall-ipset
 #
-# The function creates ipset lists and updates the lists if they are expired or ondemand
-
+# This function creates ipset lists and updates the lists if they are expired or ondemand
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Force refresh
@@ -23,7 +21,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -61,7 +58,6 @@ for ipset_name in $(search_objects "$ipset_hstobject" 'SUSPENDED' 'no' 'LISTNAME
 
     $BIN/v-add-firewall-ipset "$ipset_name" '' '' '' 'yes'
 done
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

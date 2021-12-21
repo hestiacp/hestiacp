@@ -1,16 +1,14 @@
 #!/bin/bash
 # info: change domain ssl certificate
 # options: USER DOMAIN SSL_DIR [RESTART]
-# labels: web
 #
 # example: v-change-web-domain-sslcert admin example.com /home/admin/tmp
 #
-# The function changes SSL domain certificate and the key. If ca file present
+# This function changes SSL domain certificate and the key. If ca file present
 # it will be replaced as well.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -35,7 +33,6 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -52,7 +49,6 @@ is_web_domain_cert_valid
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -80,7 +76,6 @@ cp -f $USER_DATA/ssl/$domain.pem $HOMEDIR/$user/conf/web/$domain/ssl/$domain.pem
 if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
     cp -f $USER_DATA/ssl/$domain.ca $HOMEDIR/$user/conf/web/$domain/ssl/$domain.ca
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

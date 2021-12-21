@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change user nameservers
 # options: USER NS1 NS2 [NS3] [NS4] [NS5] [NS6] [NS7] [NS8]
-# labels: panel
 #
 # example: v-change-user-ns ns1.domain.tld ns2.domain.tld
 #
-# The function for changing default nameservers for specific user.
-
+# This function for changing default nameservers for specific user.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -30,7 +28,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -71,7 +68,6 @@ is_object_unsuspended 'user' 'USER' "$user"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -82,7 +78,6 @@ ns=$(echo "$ns" | sed -e "s/,,//g" -e "s/,$//")
 
 # Changing ns values
 update_user_value "$user" '$NS' "$ns"
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

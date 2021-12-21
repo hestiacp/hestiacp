@@ -1,11 +1,14 @@
 #!/bin/bash
 # info: open file
 # options: USER FILE
-# labels: 
 #
 # example: v-check-fs-permission admin readme.txt
 #
-# The function opens/reads files on the file system
+# This function opens/reads files on the file system
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
 
 user=$1
 src=$2

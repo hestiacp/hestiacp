@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update IP usage counters
 # options: IP
-# labels: panel
 #
 # example: v-update-sys-ip-counters
 #
 # Function updates usage U_WEB_ADOMAINS and U_SYS_USERS counters.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -24,7 +22,6 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/ip.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -63,7 +60,6 @@ for ip in $ip_list; do
     update_ip_value '$U_WEB_DOMAINS' "$web_domains"
     update_ip_value '$U_SYS_USERS' "$sys_users"
 done
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

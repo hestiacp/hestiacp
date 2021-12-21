@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: restart dns service
 # options: NONE
-# labels: dns
 #
 # example: v-restart-dns
 #
-# The function tells BIND service to reload dns zone files.
-
+# This function tells BIND service to reload dns zone files.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
@@ -35,7 +33,6 @@ send_email_report() {
     cat $tmpfile |$SENDMAIL -s "$subj" $email
     rm -f $tmpfile
 }
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -68,7 +65,6 @@ fi
 if [ -e "$HESTIA/data/queue/restart.pipe" ]; then
     sed -i "/\/$SCRIPT now/d" $HESTIA/data/queue/restart.pipe
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

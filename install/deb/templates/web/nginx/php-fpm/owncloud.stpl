@@ -42,7 +42,7 @@ server {
         deny all;
     }
     
-    location ~ /\.(?!well-known\/) { 
+    location ~ /\.(?!well-known\/|file) {
        deny all; 
        return 404;
     }
@@ -84,6 +84,8 @@ server {
         alias   %home%/%user%/web/%domain%/stats/;
         include %home%/%user%/web/%domain%/stats/auth.conf*;
     }
+
+    proxy_hide_header Upgrade;
 
     include     /etc/nginx/conf.d/phpmyadmin.inc*;
     include     /etc/nginx/conf.d/phppgadmin.inc*;

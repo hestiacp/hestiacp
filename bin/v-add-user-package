@@ -1,13 +1,11 @@
 #!/bin/bash
 # info: adding user package
 # options: tmpfile PACKAGE [REWRITE]
-# labels: 
 #
-# The function adds new user package to the system.
-
+# This function adds new user package to the system.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -85,7 +83,6 @@ is_package_consistent() {
     is_format_valid_shell "$SHELL"
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -108,14 +105,12 @@ is_package_consistent
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 cp -f "$tmpfile" "$HESTIA/data/packages/$package.pkg"
 chmod 644 "$HESTIA/data/packages/$package.pkg"
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

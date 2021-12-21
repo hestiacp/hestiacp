@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update user package
 # options: PACKAGE
-# labels: panel
 #
 # example: v-update-user-package default
 #
-# The function propagates package to connected users.
-
+# This function propagates package to connected users.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -23,7 +21,6 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -31,7 +28,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 check_args '1' "$#" 'PACKAGE'
 is_format_valid 'package'
 is_package_valid
-
 
 #----------------------------------------------------------#
 #                       Action                             #

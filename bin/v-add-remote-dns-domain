@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: add remote dns domain
 # options: USER DOMAIN [FLUSH]
-# labels: dns
 #
 # example: v-add-remote-dns-domain admin mydomain.tld yes
 #
-# The function synchronize dns domain with the remote server.
-
+# This function synchronize dns domain with the remote server.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -27,7 +25,6 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/remote.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -83,8 +80,6 @@ for cluster in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
     cluster_cmd v-rebuild-dns-domain $DNS_USER $domain 'yes' 'no'
     check_result $? "$HOST connection failed" "$E_CONNECT"
 done
-
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

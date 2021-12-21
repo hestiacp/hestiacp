@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change web domain backend template
 # options: USER DOMAIN TEMPLATE [RESTART]
-# labels: web
 #
 # example: v-change-web-domain-backend-tpl admin acme.com PHP-7_4
 #
-# The function changes backend template
-
+# This function changes backend template
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -35,7 +33,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 format_domain
 format_domain_idn
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -52,7 +49,6 @@ get_domain_values 'web'
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -161,11 +157,9 @@ else
     update_object_value 'web' 'DOMAIN' "$domain" '$BACKEND' "$template"
 fi
 
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
-
 
 # Restarting web
 $BIN/v-restart-web "$restart"

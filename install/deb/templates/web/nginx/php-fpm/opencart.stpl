@@ -62,6 +62,8 @@ server {
        return 404;
     }
 
+    proxy_hide_header Upgrade;
+
     include     /etc/nginx/conf.d/phpmyadmin.inc*;
     include     /etc/nginx/conf.d/phppgadmin.inc*;
     include     %home%/%user%/conf/web/%domain%/nginx.ssl.conf_*;

@@ -37,6 +37,7 @@ All notable changes to this project will be documented in this file.
 - Fixed incorrect variable spelling ($v_interace > $v_interface) (#2307)
 - Updated mail domain templates
 - Updated command line examples for docs.hestiacp.com
+- Fixed an issue where Lets encrypt was not able to obtain an valid ssl certificate when force ssl and / or redirect was enabled (#2176 / #2304 / #2304)
 
 ### Dependencies
 

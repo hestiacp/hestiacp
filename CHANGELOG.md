@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [Development] - Unreleased
+
+### Features
+
+### Bugfixes
+
+### Dependencies
+
 ## [1.5.2] - Service release
 
 ### Features
@@ -38,7 +46,7 @@ All notable changes to this project will be documented in this file.
 - Updated mail domain templates
 - Updated command line examples for docs.hestiacp.com
 - Fixed an issue where Lets encrypt was not able to obtain an valid ssl certificate when force ssl and / or redirect was enabled (#2176 / #2304 / #2304)
-- Fixed a issue in v-list-sys-dns-system
+- Fixed a issue in v-list-sys-dns-status
 
 ### Dependencies
 

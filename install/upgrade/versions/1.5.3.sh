@@ -68,7 +68,7 @@ if [ ! -f "/usr/share/keyrings/nginx-keyring.gpg" ]; then
     if [ -f "$apt/mariadb.list" ]; then
         rm  $apt/mariadb.list 
         echo "   [ * ] MariaDB"
-        echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://mirror.mva-n.net/mariadb/repo//$VERSION $codename main" > $apt/mariadb.list
+        echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
         curl -s https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | tee /usr/share/keyrings/mariadb-keyring.gpg >/dev/null 2>&1
     fi
     if [ -f "$apt/hestia.list" ]; then

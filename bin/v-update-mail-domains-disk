@@ -38,10 +38,9 @@ fi
 #----------------------------------------------------------#
 
 # Starting loop
-for domain in $(search_objects 'mail' 'SUSPENDED' "no" 'DOMAIN'); do
+for domain in $($BIN/v-list-mail-domains $user plain | cut -f 1); do
     dom_disk=0
-    accounts=$(search_objects "mail/$domain" 'SUSPENDED' "no" 'ACCOUNT')
-    for account in $accounts; do
+    for account in $($BIN/v-list-mail-accounts $user $domain plain | cut -f 1); do
         home_dir=$HOMEDIR/$user/mail/$domain/$account
         if [ -e "$home_dir" ]; then
             udisk=$(nice -n 19 du -shm $home_dir | cut -f 1 )

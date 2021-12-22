@@ -40,15 +40,16 @@ if [ ! -f "/usr/share/keyrings/nginx-keyring.gpg" ]; then
     #Get OS details
     os=$(grep "^ID=" /etc/os-release | cut -f 2 -d '=')
     codename="$(lsb_release -s -c)"
-    VERSION="$(lsb_release -s -r)"
+    release="$(lsb_release -s -r)"
     mariadb_v=`mysql -V | awk 'NR==1{print $5}' | head -c 4`
+    RHOST='apt.hestiacp.com'
     
     apt="/etc/apt/sources.list.d"
     
     if [ -f "$apt/nginx.list" ]; then
         rm  $apt/nginx.list 
         echo "   [ * ] NGINX"
-        echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
+        echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://nginx.org/packages/mainline/$os/ $codename nginx" > $apt/nginx.list
         curl -s  https://nginx.org/keys/nginx_signing.key | gpg --dearmor | tee /usr/share/keyrings/nginx-keyring.gpg >/dev/null 2>&1
     fi
     if [ "$os" = "debian" ]; then
@@ -68,7 +69,7 @@ if [ ! -f "/usr/share/keyrings/nginx-keyring.gpg" ]; then
     if [ -f "$apt/mariadb.list" ]; then
         rm  $apt/mariadb.list 
         echo "   [ * ] MariaDB"
-        echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
+        echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$os $codename main" > $apt/mariadb.list
         curl -s https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | tee /usr/share/keyrings/mariadb-keyring.gpg >/dev/null 2>&1
     fi
     if [ -f "$apt/hestia.list" ]; then

@@ -28,7 +28,13 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 check_args '1' "$#" 'USER'
 is_format_valid 'user'
-is_object_valid 'user' 'USER' "$user" # Limit to only Hestia user(s)
+check=$(is_object_valid 'user' 'USER' "$user")
+if [ $? -ne 0 ]; then 
+    user_str=$(grep "^$user:" /etc/passwd |egrep "rssh|nologin")
+    #try to detect "owner" of the ftp_user if not found dont set it up
+    user=$(echo $user_str | cut -f6 -d : | cut -f3 -d / ) 
+    is_object_valid 'user' 'USER' "$user"
+fi 
 user_str=$(grep "^$user:" /etc/passwd |egrep "rssh|nologin")
 if [ -z "$user_str" ]; then
     exit

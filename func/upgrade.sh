@@ -632,8 +632,8 @@ upgrade_filemanager() {
 upgrade_roundcube(){
     if [ -n "$(echo "$WEBMAIL_SYSTEM" | grep -w 'roundcube')" ]; then
         if [ -d "/usr/share/roundcube" ]; then
-            echo "[ * ] Roundcube: Unable to update. Updates are managed over apt.";
-            echo "      To update to the last version of Roundcube please run the command migrate_roundcube.sh located in: /usr/local/hestia/install/upgrade/manual/"
+            echo "[ ! ] Roundcube: Updates are currently managed using the apt package manager";
+            echo "      To upgrade to the latest version of Roundcube directly from upstream, from please run the command migrate_roundcube.sh located in: /usr/local/hestia/install/upgrade/manual/"
         else
             rc_version=$(cat /var/lib/roundcube/index.php | grep -o -E '[0-9].[0-9].[0-9]+' | head -1);
             if [ "$rc_version" != "$rc_v" ]; then

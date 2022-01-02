@@ -9,6 +9,9 @@ All notable changes to this project will be documented in this file.
 
 ### Dependencies
 
+- Update Roundcube to 1.5.2 ([Release notes](https://github.com/roundcube/roundcubemail/releases/tag/1.5.2))
+- Update PHPMailer to 7.5.3 ([Release message](https://github.com/PHPMailer/PHPMailer/releases/tag/v6.5.3))
+
 ## [1.5.2] - Service release
 
 ### Features

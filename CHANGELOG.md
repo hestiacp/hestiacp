@@ -1,14 +1,21 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Development] - Unreleased
+## [1.5.3] - Service release
 
 ### Features
 
 ### Bugfixes
 
+- Fixed an issue where suspended objects where excluded in disk size calculation (#2312 #2313)
+- Fixed an issue when a users was unable edit them self when 2FA was enabled (#2314 #2316)
+- Fixed an issue in v-add-user-sftp as ftp users where not recognised as valid sftp jail set ups (#2308 #2319)
+- Fixed an issue when "Preview" features got disabled it kept the preview features enabled (#2322 #2323)
+- Limit access openbase dir hestia-php
+
 ### Dependencies
 
+- Update PCRE Version 1.8.84 to PCRE 2.10.39
 - Update Roundcube to 1.5.2 ([Release notes](https://github.com/roundcube/roundcubemail/releases/tag/1.5.2))
 - Update PHPMailer to 7.5.3 ([Release message](https://github.com/PHPMailer/PHPMailer/releases/tag/v6.5.3))
 

@@ -49,7 +49,7 @@ if [ "$release" -eq 9 ]; then
         exim4-daemon-heavy clamav-daemon spamassassin dovecot-imapd
         dovecot-pop3d dovecot-sieve dovecot-managesieved 
         net-tools mariadb-client mariadb-common mariadb-server
-        postgresql postgresql-contrib phppgadmin mc flex whois rssh git idn zip
+        postgresql postgresql-contrib phppgadmin mc flex whois rssh git idn unzip zip
         sudo bc ftp lsof rrdtool quota e2fslibs bsdutils e2fsprogs curl
         imagemagick fail2ban dnsutils bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx
         hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat
@@ -65,7 +65,7 @@ elif [ "$release" -eq 10 ] || [ "$release" -eq 11 ]; then
         awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy
         clamav-daemon spamassassin dovecot-imapd dovecot-pop3d dovecot-sieve dovecot-managesieved 
         net-tools mariadb-client mariadb-common mariadb-server postgresql
-        postgresql-contrib phppgadmin mc flex whois git idn zip sudo bc ftp lsof
+        postgresql-contrib phppgadmin mc flex whois git idn unzip zip sudo bc ftp lsof
         rrdtool quota e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban 
         dnsutils bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx
         hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat

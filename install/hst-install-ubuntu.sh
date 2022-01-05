@@ -31,8 +31,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.5.3~aplha'
-pma_v='5.1.1'
+HESTIA_INSTALL_VER='1.5.3'
 rc_v="1.5.1"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1")
 fpm_v="8.0"
@@ -51,7 +50,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     php$fpm_v-imagick php$fpm_v-intl php$fpm_v-mbstring
     php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
     postgresql postgresql-contrib proftpd-basic quota rrdtool rssh spamassassin sudo hestia=${HESTIA_INSTALL_VER}
-    hestia-nginx hestia-php vim-common vsftpd whois zip acl sysstat setpriv
+    hestia-nginx hestia-php vim-common vsftpd whois unzip zip acl sysstat setpriv
     ipset libonig5 libzip5 openssh-server lsb-release zstd"
 
 installer_dependencies="apt-transport-https curl dirmngr gnupg wget software-properties-common ca-certificates"
@@ -2016,7 +2015,7 @@ mkdir -p /backup/
 chmod 755 /backup/
 
 # create cronjob to generate ssl 
-echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && /usr/local/hestia/bin/v-add-letsencrypt-host" > /etc/cron.d/hestia-ssl
+echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:' && /usr/local/hestia/bin/v-add-letsencrypt-host" > /etc/cron.d/hestia-ssl
 
 #----------------------------------------------------------#
 #                  Configure File Manager                  #

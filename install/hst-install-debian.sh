@@ -2002,7 +2002,7 @@ mkdir -p /backup/
 chmod 755 /backup/
 
 # create cronjob to generate ssl 
-echo "@reboot root sleep 1 && rm /etc/cron.d/hestia-ssl && while $(service nginx configtest) -ne 0; do sleep 1; done; /usr/local/hestia/bin/v-add-letsencrypt-host" > /etc/cron.d/hestia-ssl
+echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:' && /usr/local/hestia/bin/v-add-letsencrypt-host" > /etc/cron.d/hestia-ssl
 
 #----------------------------------------------------------#
 #                  Configure File Manager                  #

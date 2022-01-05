@@ -1,6 +1,25 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.5.3] - Service release
+
+### Features
+
+### Bugfixes
+
+- Fixed an issue where suspended objects where excluded in disk size calculation (#2312 #2313)
+- Fixed an issue when a users was unable edit them self when 2FA was enabled (#2314 #2316)
+- Fixed an issue in v-add-user-sftp as ftp users where not recognised as valid sftp jail set ups (#2308 #2319)
+- Fixed an issue when "Preview" features got disabled it kept the preview features enabled (#2322 #2323)
+- Limit access openbase dir hestia-php
+- Fixed an issue where an email was send after install nginx command not found (#2328)
+
+### Dependencies
+
+- Update PCRE 8.84 to PCRE2 10.39 for hestia-nginx package
+- Update Roundcube to 1.5.2 ([Release notes](https://github.com/roundcube/roundcubemail/releases/tag/1.5.2))
+- Update PHPMailer to 6.5.3 ([Release message](https://github.com/PHPMailer/PHPMailer/releases/tag/v6.5.3))
+
 ## [1.5.2] - Service release
 
 ### Features
@@ -38,7 +57,7 @@ All notable changes to this project will be documented in this file.
 - Updated mail domain templates
 - Updated command line examples for docs.hestiacp.com
 - Fixed an issue where Lets encrypt was not able to obtain an valid ssl certificate when force ssl and / or redirect was enabled (#2176 / #2304 / #2304)
-- Fixed a issue in v-list-sys-dns-system
+- Fixed a issue in v-list-sys-dns-status
 
 ### Dependencies
 

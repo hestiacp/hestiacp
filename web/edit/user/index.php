@@ -135,7 +135,7 @@ if (!empty($_POST['save'])) {
     }
 
     // Enable twofa
-    if ((!empty($_POST['v_twofa'])) && (empty($_SESSION['error_msg']))) {
+    if ((!empty($_POST['v_twofa'])) && (empty($v_twofa)) && (empty($_SESSION['error_msg']))) {
         exec(HESTIA_CMD."v-add-user-2fa ".escapeshellarg($v_username), $output, $return_var);
         check_return_code($return_var, $output);
         unset($output);

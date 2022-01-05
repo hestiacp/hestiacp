@@ -31,7 +31,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.5.2'
+HESTIA_INSTALL_VER='1.5.3'
 pma_v='5.1.1'
 rc_v="1.5.1"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1")
@@ -49,7 +49,7 @@ if [ "$release" -eq 9 ]; then
         exim4-daemon-heavy clamav-daemon spamassassin dovecot-imapd
         dovecot-pop3d dovecot-sieve dovecot-managesieved 
         net-tools mariadb-client mariadb-common mariadb-server
-        postgresql postgresql-contrib phppgadmin mc flex whois rssh git idn zip
+        postgresql postgresql-contrib phppgadmin mc flex whois rssh git idn unzip zip
         sudo bc ftp lsof rrdtool quota e2fslibs bsdutils e2fsprogs curl
         imagemagick fail2ban dnsutils bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx
         hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat
@@ -65,7 +65,7 @@ elif [ "$release" -eq 10 ] || [ "$release" -eq 11 ]; then
         awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy
         clamav-daemon spamassassin dovecot-imapd dovecot-pop3d dovecot-sieve dovecot-managesieved 
         net-tools mariadb-client mariadb-common mariadb-server postgresql
-        postgresql-contrib phppgadmin mc flex whois git idn zip sudo bc ftp lsof
+        postgresql-contrib phppgadmin mc flex whois git idn unzip zip sudo bc ftp lsof
         rrdtool quota e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban 
         dnsutils bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx
         hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat
@@ -2002,7 +2002,7 @@ mkdir -p /backup/
 chmod 755 /backup/
 
 # create cronjob to generate ssl 
-echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && /usr/local/hestia/bin/v-add-letsencrypt-host" > /etc/cron.d/hestia-ssl
+echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:' && /usr/local/hestia/bin/v-add-letsencrypt-host" > /etc/cron.d/hestia-ssl
 
 #----------------------------------------------------------#
 #                  Configure File Manager                  #

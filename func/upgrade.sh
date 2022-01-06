@@ -561,7 +561,7 @@ upgrade_phpmyadmin() {
             fi
         else
             # Display upgrade information
-            echo "[ * ] Upgrading phpMyAdmin to version $pma_v..."
+            echo "[ ! ] Upgrading phpMyAdmin to version $pma_v..."
             [ -d /usr/share/phpmyadmin ] || mkdir -p /usr/share/phpmyadmin
 
             # Download latest phpMyAdmin release
@@ -609,7 +609,7 @@ upgrade_filemanager() {
             fm_version="1.0.0"
         fi
         if [ "$fm_version" != "$fm_v" ]; then 
-            echo "[ ! ] Updating File Manager..."
+            echo "[ ! ] Updating File Manager to version $fm_v..."
             # Reinstall the File Manager
             $HESTIA/bin/v-delete-sys-filemanager quiet yes
             $HESTIA/bin/v-add-sys-filemanager quiet
@@ -660,7 +660,7 @@ upgrade_rainloop(){
 
 upgrade_phpmailer(){
     if [ ! -d "$HESTIA/web/inc/vendor/" ]; then
-        echo "[ ! ] Install PHPmailer";
+        echo "[ ! ] Installing PHPmailer...";
         $HESTIA/bin/v-add-sys-phpmailer
     fi
     phpm_version=$(cat $HESTIA/web/inc/vendor/phpmailer/phpmailer/VERSION);

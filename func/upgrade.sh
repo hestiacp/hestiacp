@@ -110,7 +110,7 @@ upgrade_welcome_message_log() {
 
 upgrade_step_message() {
     echo
-    echo "[ - ] Now applying patches and updates for version v$version_step..."
+    echo "[ - ] Now applying patches and updates for version $version_step..."
 }
 
 upgrade_complete_message() {
@@ -561,7 +561,7 @@ upgrade_phpmyadmin() {
             fi
         else
             # Display upgrade information
-            echo "[ * ] Upgrading phpMyAdmin to version v$pma_v..."
+            echo "[ * ] Upgrading phpMyAdmin to version $pma_v..."
             [ -d /usr/share/phpmyadmin ] || mkdir -p /usr/share/phpmyadmin
 
             # Download latest phpMyAdmin release
@@ -637,7 +637,7 @@ upgrade_roundcube(){
         else
             rc_version=$(cat /var/lib/roundcube/index.php | grep -o -E '[0-9].[0-9].[0-9]+' | head -1);
             if [ "$rc_version" != "$rc_v" ]; then
-                echo "[ ! ] Upgrading Roundcube to version v$rc_v..."
+                echo "[ ! ] Upgrading Roundcube to version $rc_v..."
                 $HESTIA/bin/v-add-sys-roundcube
             else
                 echo "[ * ] Roundcube is up to date ($rc_v)..."
@@ -650,7 +650,7 @@ upgrade_rainloop(){
     if [ -n "$(echo "$WEBMAIL_SYSTEM" | grep -w 'rainloop')" ]; then
         rl_version=$(cat /var/lib/rainloop/data/VERSION);
         if [ "$rl_version" != "$rl_v" ]; then
-            echo "[ ! ] Upgrading Rainloop to version v$rl_v..."
+            echo "[ ! ] Upgrading Rainloop to version $rl_v..."
             $HESTIA/bin/v-add-sys-rainloop
         else
             echo "[ * ] Rainloop is up to date ($rl_v)..."
@@ -665,7 +665,7 @@ upgrade_phpmailer(){
     fi
     phpm_version=$(cat $HESTIA/web/inc/vendor/phpmailer/phpmailer/VERSION);
     if [ "$phpm_version" != "$pm_v" ]; then
-    echo "[ ! ] Upgrading PHPmailer..."
+    echo "[ ! ] Upgrading PHPmailer to version $pm_v..."
         $HESTIA/bin/v-add-sys-phpmailer
     else
         echo "[ * ] PHPmailer is up to date ($pm_v)..."

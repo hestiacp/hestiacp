@@ -25,17 +25,7 @@ server {
         access_log off;
     }
 
-    location ~ \..*/.*\.php$ {
-        deny all;
-        return 404;
-    }
-
     location ~ ^/sites/.*/private/ {
-        deny all;
-        return 404;
-    }
-
-    location ~ ^/sites/[^/]+/files/.*\.php$ {
         deny all;
         return 404;
     }
@@ -53,6 +43,15 @@ server {
             fastcgi_hide_header "Set-Cookie";
         }
 
+        location ~ \..*/.*\.php$ {
+            deny all;
+            return 404;
+        }
+        location ~ ^/sites/[^/]+/files/.*\.php$ {
+            deny all;
+            return 404;
+        }
+        
         location ~ [^/]\.php(/|$)|^/update.php {
             fastcgi_split_path_info ^(.+?\.php)(|/.*)$;
             fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;

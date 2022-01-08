@@ -19,18 +19,8 @@ server {
         log_not_found off;
         access_log off;
     }
-
-    location ~ \..*/.*\.php$ {
-        deny all;
-        return 404;
-    }
-
+    
     location ~ ^/sites/.*/private/ {
-        deny all;
-        return 404;
-    }
-
-    location ~ ^/sites/[^/]+/files/.*\.php$ {
         deny all;
         return 404;
     }
@@ -47,6 +37,15 @@ server {
             try_files $uri @rewrite;
             expires 30d;
             fastcgi_hide_header "Set-Cookie";
+        }
+        
+        location ~ \..*/.*\.php$ {
+            deny all;
+            return 404;
+        }
+        location ~ ^/sites/[^/]+/files/.*\.php$ {
+            deny all;
+            return 404;
         }
 
         location ~ [^/]\.php(/|$)|^/update.php {

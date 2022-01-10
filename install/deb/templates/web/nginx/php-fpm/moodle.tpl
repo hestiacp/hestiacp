@@ -33,10 +33,6 @@ server {
         deny all;
     }
 
-    location ~ \..*/.*\.php$ {
-        return 403;
-        }
-
     # No no for private
     location ~ ^/sites/.*/private/ {
         return 403;
@@ -46,6 +42,10 @@ server {
         location ~* ^.+\.(jpeg|jpg|png|webp|gif|bmp|ico|svg|css|js)$ {
             expires     max;
             fastcgi_hide_header "Set-Cookie";
+        }
+        
+        location ~ \..*/.*\.php$ {
+        return 403;
         }
 
         location ~ [^/]\.php(/|$) {

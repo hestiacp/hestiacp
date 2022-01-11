@@ -288,11 +288,19 @@ fi
 
 # Generate Links for sourcecode
 HESTIA_ARCHIVE_LINK='https://github.com/hestiacp/hestiacp/archive/'$branch'.tar.gz'
-NGINX='https://nginx.org/download/nginx-'$(echo $NGINX_V |cut -d"~" -f1)'.tar.gz'
+if [[ $NGINX_V =~ - ]]; then
+  NGINX='https://nginx.org/download/nginx-'$(echo $NGINX_V |cut -d"-" -f1)'.tar.gz'
+else
+  NGINX='https://nginx.org/download/nginx-'$(echo $NGINX_V |cut -d"~" -f1)'.tar.gz'
+fi
 OPENSSL='https://www.openssl.org/source/openssl-'$OPENSSL_V'.tar.gz'
 PCRE='https://github.com/PhilipHazel/pcre2/releases/download/pcre2-'$PCRE_V'/pcre2-'$PCRE_V'.tar.gz'
 ZLIB='https://www.zlib.net/zlib-'$ZLIB_V'.tar.gz'
-PHP='http://de2.php.net/distributions/php-'$(echo $PHP_V |cut -d"~" -f1)'.tar.gz'
+if [[ $PHP_V =~ - ]]; then
+ PHP='http://de2.php.net/distributions/php-'$(echo $PHP_V |cut -d"-" -f1)'.tar.gz'
+else
+  PHP='http://de2.php.net/distributions/php-'$(echo $PHP_V |cut -d"~" -f1)'.tar.gz'
+fi
 
 # Forward slashes in branchname are replaced with dashes to match foldername in github archive.
 branch_dash=$(echo "$branch" |sed 's/\//-/g');
@@ -313,8 +321,12 @@ if [ "$NGINX_B" = true ] ; then
     cd $BUILD_DIR
 
     BUILD_DIR_HESTIANGINX=$BUILD_DIR/hestia-nginx_$NGINX_V
-    BUILD_DIR_NGINX=$BUILD_DIR/nginx-$(echo $NGINX_V |cut -d"~" -f1)
-
+    if [[ $NGINX_V =~ - ]]; then
+      BUILD_DIR_NGINX=$BUILD_DIR/nginx-$(echo $NGINX_V |cut -d"-" -f1)
+    else 
+      BUILD_DIR_NGINX=$BUILD_DIR/nginx-$(echo $NGINX_V |cut -d"~" -f1)
+    fi
+    
     if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIANGINX" ]; then
         # Check if target directory exist
         if [ -d "$BUILD_DIR_HESTIANGINX" ]; then
@@ -456,8 +468,15 @@ if [ "$PHP_B" = true ] ; then
     echo "Building hestia-php package..."
 
     BUILD_DIR_HESTIAPHP=$BUILD_DIR/hestia-php_$PHP_V
+    
     BUILD_DIR_PHP=$BUILD_DIR/php-$(echo $PHP_V |cut -d"~" -f1)
-
+    
+    if [[ $PHP_V =~ - ]]; then
+      BUILD_DIR_PHP=$BUILD_DIR/php-$(echo $PHP_V |cut -d"-" -f1)
+    else
+      BUILD_DIR_PHP=$BUILD_DIR/php-$(echo $PHP_V |cut -d"~" -f1)
+    fi
+    
     if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIAPHP" ]; then
         # Check if target directory exist
         if [ -d $BUILD_DIR_HESTIAPHP ]; then

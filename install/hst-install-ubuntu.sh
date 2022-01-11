@@ -31,7 +31,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.5.4'
+HESTIA_INSTALL_VER='1.5.5~alpha'
 # Dependencies
 pma_v='5.1.1'
 rc_v="1.5.1"
@@ -1430,20 +1430,14 @@ fi
 
 if [ "$multiphp" = 'yes' ] ; then
     for v in "${multiphp_v[@]}"; do
-        rm -f /etc/php/$v/fpm/pool.d/*
-        echo "[ * ] Install PHP version $v..."
+        echo "[ * ] Install PHP $v..."
         $HESTIA/bin/v-add-web-php "$v" > /dev/null 2>&1
     done
 fi
 
 if [ "$phpfpm" = 'yes' ]; then
-    echo "[ * ] Configuring PHP-FPM..."
+    echo "[ * ] Configuring PHP $fpm_v..."
     $HESTIA/bin/v-add-web-php "$fpm_v" > /dev/null 2>&1
-    cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf
-    update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1
-    systemctl start php$fpm_v-fpm >> $LOG
-    check_result $? "php-fpm start failed"
-    update-alternatives --set php /usr/bin/php$fpm_v > /dev/null 2>&1
 fi
 
 

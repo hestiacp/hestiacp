@@ -119,6 +119,8 @@ v_tpl=${version//.}
 rm -f /etc/php/$version/fpm/pool.d/*
 cp -f $HESTIA_INSTALL_DIR/php-fpm/dummy.conf /etc/php/$version/fpm/pool.d/
 sed -i "s/9999/99$v_tpl/g" /etc/php/$version/fpm/pool.d/dummy.conf
+cp -f $HESTIA_INSTALL_DIR/php-fpm/php-fpm.conf /etc/php/$version/fpm/
+sed -i "s/fpm_v/$version/g" /etc/php/$version/fpm/php-fpm.conf
 
 # Install backend template
 cp -f $HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl \

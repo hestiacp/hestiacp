@@ -1,6 +1,19 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.5.4] - Service release
+
+### Features
+
+### Bugfixes
+
+- Fixed an issue with v-add-sys-phpmailer not updating properly (#2336)
+- Fixed an issue where users where not able to download backups via UI (#2335)
+- Fixed an issue where php8.0 got "rounded" to php8 causing default.tpl falling back to 8.1 (#2340)
+- Fixed an issue with recalculating disk usage (#2341)
+- Fixed an issue where php files where still executable in upload folder Wordpress
+- Fixed an bug where version numbers includeing revisions (-x) where unable to build properly
+
 ## [1.5.3] - Service release
 
 ### Features

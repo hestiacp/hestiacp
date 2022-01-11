@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.5.4
+# Hestia Control Panel upgrade script for target version 1.5.5
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -20,3 +20,9 @@ upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'true'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
+
+# Update php-fpm.conf
+for version in /etc/php/*/fpm/php-fpm.conf; do
+    cp -f $HESTIA_INSTALL_DIR/php-fpm/php-fpm.conf /etc/php/$version/fpm/
+    sed -i "s/fpm_v/$version/g" /etc/php/$version/fpm/php-fpm.conf
+done

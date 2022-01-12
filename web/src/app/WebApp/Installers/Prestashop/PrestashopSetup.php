@@ -28,6 +28,11 @@ class PrestashopSetup extends BaseSetup
         'resources' => [
             'archive'  => [ 'src' => 'https://github.com/PrestaShop/PrestaShop/releases/download/1.7.7.8/prestashop_1.7.7.8.zip' ],
         ],
+        'server' => [
+            'nginx' => [
+                'template' => 'prestashop',
+            ],
+        ],
 
     ];
 

@@ -23,6 +23,11 @@ class LaravelSetup extends BaseSetup {
         'resources' => [
             'composer' => [ 'src' => 'laravel/laravel', 'dst' => '/'],
         ],
+        'server' => [
+            'nginx' => [
+                'template' => 'laravel',
+            ],
+        ],
     ];
 
     public function install(array $options=null) : bool

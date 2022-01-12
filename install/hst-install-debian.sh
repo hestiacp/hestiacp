@@ -31,7 +31,8 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.5.3~alpha'
+HESTIA_INSTALL_VER='1.5.5~alpha'
+# Dependencies
 pma_v='5.1.1'
 rc_v="1.5.1"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1")
@@ -49,7 +50,7 @@ if [ "$release" -eq 9 ]; then
         exim4-daemon-heavy clamav-daemon spamassassin dovecot-imapd
         dovecot-pop3d dovecot-sieve dovecot-managesieved 
         net-tools mariadb-client mariadb-common mariadb-server
-        postgresql postgresql-contrib phppgadmin mc flex whois rssh git idn zip
+        postgresql postgresql-contrib phppgadmin mc flex whois rssh git idn unzip zip
         sudo bc ftp lsof rrdtool quota e2fslibs bsdutils e2fsprogs curl
         imagemagick fail2ban dnsutils bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx
         hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat
@@ -65,7 +66,7 @@ elif [ "$release" -eq 10 ] || [ "$release" -eq 11 ]; then
         awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy
         clamav-daemon spamassassin dovecot-imapd dovecot-pop3d dovecot-sieve dovecot-managesieved 
         net-tools mariadb-client mariadb-common mariadb-server postgresql
-        postgresql-contrib phppgadmin mc flex whois git idn zip sudo bc ftp lsof
+        postgresql-contrib phppgadmin mc flex whois git idn unzip zip sudo bc ftp lsof
         rrdtool quota e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban 
         dnsutils bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx
         hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat
@@ -1398,20 +1399,14 @@ fi
 
 if [ "$multiphp" = 'yes' ] ; then
     for v in "${multiphp_v[@]}"; do
-        rm -f /etc/php/$v/fpm/pool.d/*
-        echo "[ * ] Install PHP version $v..."
+        echo "[ * ] Install PHP $v..."
         $HESTIA/bin/v-add-web-php "$v" > /dev/null 2>&1
     done
 fi
 
 if [ "$phpfpm" = 'yes' ]; then
-    echo "[ * ] Configuring PHP-FPM..."
+    echo "[ * ] Configuring PHP $fpm_v..."
     $HESTIA/bin/v-add-web-php "$fpm_v" > /dev/null 2>&1
-    cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf
-    update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1
-    systemctl start php$fpm_v-fpm >> $LOG
-    check_result $? "php-fpm start failed"
-    update-alternatives --set php /usr/bin/php$fpm_v > /dev/null 2>&1
 fi
 
 
@@ -2002,7 +1997,7 @@ mkdir -p /backup/
 chmod 755 /backup/
 
 # create cronjob to generate ssl 
-echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && /usr/local/hestia/bin/v-add-letsencrypt-host" > /etc/cron.d/hestia-ssl
+echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:' && /usr/local/hestia/bin/v-add-letsencrypt-host" > /etc/cron.d/hestia-ssl
 
 #----------------------------------------------------------#
 #                  Configure File Manager                  #

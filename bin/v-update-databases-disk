@@ -35,7 +35,7 @@ is_object_valid 'user' 'USER' "$user"
 #----------------------------------------------------------#
 
 # Starting update loop
-for database in $(search_objects 'db' 'SUSPENDED' "no" 'DB'); do
+for database in $($BIN/v-list-databases $user plain | cut -f 1); do
     $BIN/v-update-database-disk "$user" "$database"
 done
 

@@ -52,7 +52,7 @@ if ((!empty($_POST['user'])) && (empty($_POST['code']))) {
                 } else {
                     $mailtext = _('GREETINGS');
                 }
-                if (in_array(str_replace(':'.$_SERVER['SERVER_PORT'], '.conf', $_SERVER['HTTP_HOST']), array_merge(scandir('/etc/nginx/conf.d'), scandir('/etc/nginx/conf.d/domains'), scandir('/etc/apache2/conf.d/domains'), scandir('/etc/apache2/conf.d')))) {
+                if ($hostname.":".$_SERVER['SERVER_PORT'] == $_SERVER['HTTP_HOST']) {
                     $mailtext .= sprintf(_('PASSWORD_RESET_REQUEST'), $_SERVER['HTTP_HOST'], $user, $rkey, $_SERVER['HTTP_HOST'], $user, $rkey);
                     if (!empty($rkey)) {
                         send_email($to, $subject, $mailtext, $from, $from_name, $data[$user]['NAME']);

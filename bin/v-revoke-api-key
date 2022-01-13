@@ -24,6 +24,10 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 hash=$1
 
+args_usage='HASH'
+check_args '1' "$#" "$args_usage"
+is_format_valid 'hash'
+
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 

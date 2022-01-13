@@ -26,6 +26,11 @@ class DrupalSetup extends BaseSetup {
         'resources' => [
            'composer' => [ 'src' => 'drupal/recommended-project', 'dst' => '/' ],
         ],
+        'server' => [
+            'nginx' => [
+                'template' => 'drupal-composer'
+            ],
+        ],
     ];
 
     public function install(array $options=null) : bool

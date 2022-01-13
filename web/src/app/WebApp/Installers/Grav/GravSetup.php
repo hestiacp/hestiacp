@@ -28,6 +28,11 @@ class GravSetup extends BaseSetup {
 		'resources' => [
 			'composer' => [ 'src' => 'getgrav/grav', 'dst' => '/']
 		],
+		'server' => [
+			'nginx' => [
+				'template' => 'grav',
+			],
+		],
 	];
 	
 	public function install(array $options = null)

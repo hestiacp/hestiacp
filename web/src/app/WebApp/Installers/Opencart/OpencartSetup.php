@@ -27,6 +27,11 @@ class OpencartSetup extends BaseSetup
         'resources' => [
             'archive'  => [ 'src' => 'https://github.com/opencart/opencart/releases/download/3.0.3.8/opencart-3.0.3.8.zip' ],
         ],
+        'server' => [
+            'nginx' => [
+                'template' => 'opencart',
+            ],
+        ],
     ];
 
     public function install(array $options = null): bool

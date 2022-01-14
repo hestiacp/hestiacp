@@ -31,7 +31,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # Paths
 b2cli="/usr/local/bin/b2"
-b2lnk="https://f000.backblazeb2.com/file/backblazefiles/b2/cli/linux/b2"
+b2lnk="https://github.com/Backblaze/B2_Command_Line_Tool/releases/latest/download/b2-linux"
 
 # Defining ftp command function
 ftpc() {

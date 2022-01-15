@@ -14,6 +14,9 @@ source $HESTIA/func/syshealth.sh
 #######                Functions & Initialization             #######
 #####################################################################
 
+# Define version check function
+function version_ge(){ test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o -n "$1" -a "$1" = "$2"; }
+
 add_upgrade_message (){ 
     if [ -f "$HESTIA_BACKUP/message.log" ]; then 
         echo -e $1 >> $HESTIA_BACKUP/message.log
@@ -108,6 +111,14 @@ upgrade_welcome_message_log() {
     echo 
 }
 
+upgrade_welcome_dependencies_message_log() {
+    echo "=============================================================================="
+    echo "Hestia Control Panel Software Dependencies Update Log"
+    echo "=============================================================================="
+    echo
+    echo "Updates has been found for one or more depencies for HestiaCP"
+}
+
 upgrade_step_message() {
     echo
     echo "[ - ] Now applying patches and updates for version v$version_step..."
@@ -145,6 +156,17 @@ upgrade_complete_message() {
 }
 
 upgrade_complete_message_log() {
+    echo 
+    echo "============================================================================="
+    echo "UPGRADE COMPLETE.                                                            "
+    echo "Please report any issues on GitHub:                                          "
+    echo "https://github.com/hestiacp/hestiacp/issues                                  "
+    echo "============================================================================="
+    echo 
+    $BIN/v-log-action "system" "Info" "Updates" "Update installed (Version: $new_version)."
+}
+
+upgrade_complete_message_dependencies_log() {
     echo 
     echo "============================================================================="
     echo "UPGRADE COMPLETE.                                                            "
@@ -548,8 +570,6 @@ upgrade_start_routine() {
 upgrade_phpmyadmin() {
     # Check if MariaDB/MySQL is installed on the server before attempting to install or upgrade phpMyAdmin
     if [ -n "$(echo $DB_SYSTEM | grep -w 'mysql')" ]; then
-        # Define version check function
-        function version_ge(){ test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o -n "$1" -a "$1" = "$2"; }
 
         pma_release_file=$(ls /usr/share/phpmyadmin/RELEASE-DATE-* 2>/dev/null |tail -n 1)
         if version_ge "${pma_release_file##*-}" "$pma_v"; then
@@ -559,6 +579,7 @@ upgrade_phpmyadmin() {
                 chown root:www-data /var/lib/phpmyadmin/blowfish_secret.inc.php
                 chmod 0640 /var/lib/phpmyadmin/blowfish_secret.inc.php
             fi
+            exit $E_UPDATE;
         else
             # Display upgrade information
             echo "[ * ] Upgrading phpMyAdmin to version v$pma_v..."
@@ -608,14 +629,8 @@ upgrade_filemanager() {
         else
             fm_version="1.0.0"
         fi
-        if [ "$fm_version" != "$fm_v" ]; then 
-            echo "[ ! ] Updating File Manager..."
-            # Reinstall the File Manager
-            $HESTIA/bin/v-delete-sys-filemanager quiet yes
-            $HESTIA/bin/v-add-sys-filemanager quiet
-        else
+        if version_ge  "$fm_version" "$fm_v"; then
             echo "[ * ] File Manager is up to date ($fm_v)..."
-            
             if [ "$UPGRADE_UPDATE_FILEMANAGER_CONFIG" = "true" ]; then
                 if [ -e "$HESTIA/web/fm/configuration.php" ]; then
                     echo "[ ! ] Updating File Manager configuration..."
@@ -625,6 +640,12 @@ upgrade_filemanager() {
                     $HESTIA/bin/v-change-sys-config-value 'FILE_MANAGER' 'true'
                 fi
             fi
+            exit $E_UPDATE;
+        else
+            echo "[ ! ] Updating File Manager..."
+            # Reinstall the File Manager
+            $HESTIA/bin/v-delete-sys-filemanager quiet yes
+            $HESTIA/bin/v-add-sys-filemanager quiet            
         fi
     fi  
 }
@@ -633,14 +654,15 @@ upgrade_roundcube(){
     if [ -n "$(echo "$WEBMAIL_SYSTEM" | grep -w 'roundcube')" ]; then
         if [ -d "/usr/share/roundcube" ]; then
             echo "[ ! ] Roundcube: Updates are currently managed using the apt package manager";
-            echo "      To upgrade to the latest version of Roundcube directly from upstream, from please run the command migrate_roundcube.sh located in: /usr/local/hestia/install/upgrade/manual/"
+            echo "      To upgrade to the latest version of Roundcube directly from upstream, Run the command migrate_roundcube.sh located in: /usr/local/hestia/install/upgrade/manual/ to update to the last version"
         else
             rc_version=$(cat /var/lib/roundcube/index.php | grep -o -E '[0-9].[0-9].[0-9]+' | head -1);
-            if [ "$rc_version" != "$rc_v" ]; then
+            if version_ge "$rc_version" "$rc_v"; then
+                echo "[ * ] Roundcube is up to date ($rc_v)..."
+                exit $E_UPDATE;
+            else
                 echo "[ ! ] Upgrading Roundcube to version v$rc_v..."
                 $HESTIA/bin/v-add-sys-roundcube
-            else
-                echo "[ * ] Roundcube is up to date ($rc_v)..."
             fi
         fi
     fi
@@ -649,11 +671,12 @@ upgrade_roundcube(){
 upgrade_rainloop(){
     if [ -n "$(echo "$WEBMAIL_SYSTEM" | grep -w 'rainloop')" ]; then
         rl_version=$(cat /var/lib/rainloop/data/VERSION);
-        if [ "$rl_version" != "$rl_v" ]; then
+        if version_ge "$rl_version" "$rl_v"; then
+            echo "[ * ] Rainloop is up to date ($rl_v)..."
+            exit $E_UPDATE;
+        else
             echo "[ ! ] Upgrading Rainloop to version v$rl_v..."
             $HESTIA/bin/v-add-sys-rainloop
-        else
-            echo "[ * ] Rainloop is up to date ($rl_v)..."
         fi
     fi
 }
@@ -664,11 +687,12 @@ upgrade_phpmailer(){
         $HESTIA/bin/v-add-sys-phpmailer
     fi
     phpm_version=$(cat $HESTIA/web/inc/vendor/phpmailer/phpmailer/VERSION);
-    if [ "$phpm_version" != "$pm_v" ]; then
-    echo "[ ! ] Upgrading PHPmailer..."
-        $HESTIA/bin/v-add-sys-phpmailer
-    else
+    if version_ge "$phpm_version" "$pm_v"; then
         echo "[ * ] PHPmailer is up to date ($pm_v)..."
+        exit $E_UPDATE;
+    else
+        echo "[ ! ] Upgrading PHPmailer..."
+        $HESTIA/bin/v-add-sys-phpmailer
     fi 
 }
 

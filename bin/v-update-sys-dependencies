@@ -1,0 +1,95 @@
+#!/bin/bash
+# info: Check for updates of dependencies and install if needed
+# options: [UPDATE]
+#
+# example: v-update-sys-dependencies yes
+#
+# Request the file https://raw.githubusercontent.com/hestiacp/hestiacp/main/install/upgrade/upgrade.conf from Github and check if there are changes
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+source $HESTIA/func/syshealth.sh
+# shellcheck source=/usr/local/hestia/func/upgrade.sh
+source $HESTIA/func/upgrade.sh
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+if [ -f "$HESTIA/install/upgrade/upgrade-last.conf" ]; then 
+    rm "$HESTIA/install/upgrade/upgrade-last.conf"
+fi 
+
+wget -q -O $HESTIA/install/upgrade/upgrade-last.conf https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/upgrade/upgrade.conf
+packages=""
+if ! cmp -s "$HESTIA/install/upgrade/upgrade.conf" "$HESTIA/install/upgrade/upgrade-last.conf"; then 
+    source_conf "$HESTIA/install/upgrade/upgrade-last.conf"
+    mkdir -p $HESTIA_BACKUP
+    # Set log file path
+    LOG="$HESTIA_BACKUP/hst-upgrade-$(date +%d%m%Y%H%M).log"
+    # Create log file
+    touch $LOG
+    
+    upgrade_welcome_dependencies_message_log | tee  -a $LOG | tee > /dev/null
+    
+    set -o pipefail
+    # Update dependencies
+    # Filegator
+    upgrade_filemanager | tee -a $LOG | tee > /dev/null
+    if [ $? = 0 ]; then
+        packages="$packages Filegator (v$fm_v)"
+    fi
+    # Rainloop
+    upgrade_rainloop | tee -a $LOG | tee > /dev/null
+    if [ $? = 0 ]; then
+        packages="$packages Rainloop (v$rl_v)"
+    fi
+    # Roundcube
+    upgrade_roundcube | tee -a  $LOG | tee > /dev/null
+    if [ $? = 0 ]; then
+        packages="$packages Roundcube (v$rc_v)"
+    fi
+    # PHPmailer
+    upgrade_phpmailer | tee -a  $LOG | tee > /dev/null
+    if [ $? = 0 ]; then
+        packages="$packages PHPmailer (v$pm_v)"
+    fi
+    # PHPmyAdmin
+    upgrade_phpmyadmin | tee -a $LOG | tee > /dev/null
+    if [ $? = 0 ]; then
+        packages="$packages PHPmyAdmin (v$pma_v)"
+    fi
+    
+    upgrade_complete_message_dependencies_log | tee -a  $LOG > /dev/null
+    
+    $HESTIA/bin/v-add-user-notification "admin" "Insert message with list of message availble updates $packages"   
+    
+    rm  $HESTIA/install/upgrade/upgrade.conf
+    mv $HESTIA/install/upgrade/upgrade-last.conf $HESTIA/install/upgrade/upgrade.conf
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

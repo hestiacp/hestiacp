@@ -1020,9 +1020,12 @@ if [ -z "$(grep ^/usr/sbin/nologin /etc/shells)" ]; then
 fi
 
 # Configuring NTP
-sed -i 's/#NTP=/NTP=pool.ntp.org/' /etc/systemd/timesyncd.conf
-systemctl enable systemd-timesyncd
-systemctl start systemd-timesyncd
+if [ -f "/etc/systemd/timesyncd.conf" ]; then
+    echo "[ * ] Configuring NTP time synchronization..."
+    sed -i 's/#NTP=/NTP=pool.ntp.org/' /etc/systemd/timesyncd.conf
+    systemctl enable systemd-timesyncd > /dev/null 2>&1
+    systemctl start systemd-timesyncd> /dev/null 2>&1
+fi
 
 # Setup rssh
 if [ "$release" -eq 9 ]; then

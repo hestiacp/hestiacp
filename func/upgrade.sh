@@ -121,7 +121,7 @@ upgrade_welcome_dependencies_message_log() {
 
 upgrade_step_message() {
     echo
-    echo "[ - ] Now applying patches and updates for version v$version_step..."
+    echo "[ - ] Now applying patches and updates for version $version_step..."
 }
 
 upgrade_complete_message() {
@@ -582,7 +582,7 @@ upgrade_phpmyadmin() {
             exit $E_UPDATE;
         else
             # Display upgrade information
-            echo "[ * ] Upgrading phpMyAdmin to version v$pma_v..."
+            echo "[ ! ] Upgrading phpMyAdmin to version $pma_v..."
             [ -d /usr/share/phpmyadmin ] || mkdir -p /usr/share/phpmyadmin
 
             # Download latest phpMyAdmin release
@@ -642,7 +642,7 @@ upgrade_filemanager() {
             fi
             exit $E_UPDATE;
         else
-            echo "[ ! ] Updating File Manager..."
+            echo "[ ! ] Updating File Manager to version $fm_v..."
             # Reinstall the File Manager
             $HESTIA/bin/v-delete-sys-filemanager quiet yes
             $HESTIA/bin/v-add-sys-filemanager quiet            
@@ -661,7 +661,7 @@ upgrade_roundcube(){
                 echo "[ * ] Roundcube is up to date ($rc_v)..."
                 exit $E_UPDATE;
             else
-                echo "[ ! ] Upgrading Roundcube to version v$rc_v..."
+                echo "[ ! ] Upgrading Roundcube to version $rc_v..."
                 $HESTIA/bin/v-add-sys-roundcube
             fi
         fi
@@ -675,7 +675,7 @@ upgrade_rainloop(){
             echo "[ * ] Rainloop is up to date ($rl_v)..."
             exit $E_UPDATE;
         else
-            echo "[ ! ] Upgrading Rainloop to version v$rl_v..."
+            echo "[ ! ] Upgrading Rainloop to version $rl_v..."
             $HESTIA/bin/v-add-sys-rainloop
         fi
     fi
@@ -683,7 +683,7 @@ upgrade_rainloop(){
 
 upgrade_phpmailer(){
     if [ ! -d "$HESTIA/web/inc/vendor/" ]; then
-        echo "[ ! ] Install PHPmailer";
+        echo "[ ! ] Installing PHPmailer...";
         $HESTIA/bin/v-add-sys-phpmailer
     fi
     phpm_version=$(cat $HESTIA/web/inc/vendor/phpmailer/phpmailer/VERSION);
@@ -691,7 +691,7 @@ upgrade_phpmailer(){
         echo "[ * ] PHPmailer is up to date ($pm_v)..."
         exit $E_UPDATE;
     else
-        echo "[ ! ] Upgrading PHPmailer..."
+        echo "[ ! ] Upgrading PHPmailer to version $pm_v..."
         $HESTIA/bin/v-add-sys-phpmailer
     fi 
 }

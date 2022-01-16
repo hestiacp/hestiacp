@@ -545,6 +545,11 @@ upgrade_start_routine() {
     #####################################################################
 }
 
+clean_up_downloaded_binaries() {
+    # Backblaze B2 CLI
+    rm -f /usr/local/bin/b2
+}
+
 upgrade_phpmyadmin() {
     # Check if MariaDB/MySQL is installed on the server before attempting to install or upgrade phpMyAdmin
     if [ -n "$(echo $DB_SYSTEM | grep -w 'mysql')" ]; then

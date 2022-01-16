@@ -88,6 +88,9 @@ if [ -e "/usr/local/hestia/data/users/admin" ]; then
 
     # Upgrade phpMyAdmin if applicable
     upgrade_phpmyadmin
+    
+    # Delete downloaded binaries to get latest version in the next run
+    clean_up_downloaded_binaries
 
     # Set new version number in hestia.conf
     upgrade_set_version

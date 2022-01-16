@@ -4,8 +4,12 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-require 'vendor/autoload.php';
+if(!file_exists('vendor/autoload.php')){
+    trigger_error('Unable able to load required libaries. Please run v-add-sys-phpmailer in command line');
+    exit('Unable able to load required libaries. Please run v-add-sys-phpmailer in command line');
+}
 
+require 'vendor/autoload.php';
 session_start();
 
 

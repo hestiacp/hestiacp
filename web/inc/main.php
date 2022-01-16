@@ -6,7 +6,8 @@ use PHPMailer\PHPMailer\Exception;
 
 if(!file_exists('vendor/autoload.php')){
     trigger_error('Unable able to load required libaries. Please run v-add-sys-phpmailer in command line');
-    exit('Unable able to load required libaries. Please run v-add-sys-phpmailer in command line');
+    echo 'Unable able to load required libaries. Please run v-add-sys-phpmailer in command line';
+    exit(1);
 }
 
 require 'vendor/autoload.php';

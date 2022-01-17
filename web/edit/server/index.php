@@ -400,7 +400,7 @@ if (!empty($_POST['save'])) {
             $v_debug_mode_adv = 'yes';
             
         }
-        if (($_POST['v_experimental_features'] != $_SESSION['POLICY_SYSTEM_ENABLE_BACON']) && $_POST['v_experimental_features'] == "false" ) {
+        if (($_POST['v_policy_user_view_suspended'] != $_SESSION['POLICY_SYSTEM_ENABLE_BACON']) && $_POST['v_experimental_features'] == "false" ) {
             //disable preview mode
             exec(HESTIA_CMD."v-change-sys-config-value POLICY_USER_VIEW_SUSPENDED ".escapeshellarg($_POST['v_policy_user_view_suspended']), $output, $return_var);
             check_return_code($return_var, $output);

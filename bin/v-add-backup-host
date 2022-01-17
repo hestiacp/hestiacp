@@ -21,17 +21,16 @@ path=${5-/backup}
 port=$6
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
+# Fetch current verison B2 CLI tool
+source_conf "$HESTIA/install/upgrade/upgrade.conf"
 
 # Paths
 b2cli="/usr/local/bin/b2"
-b2lnk="https://github.com/Backblaze/B2_Command_Line_Tool/releases/latest/download/b2-linux"
+b2lnk="https://github.com/Backblaze/B2_Command_Line_Tool/releases/download/v$b2_v/b2-linux"
 
 # Defining ftp command function
 ftpc() {

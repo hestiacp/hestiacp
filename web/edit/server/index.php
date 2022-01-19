@@ -276,7 +276,15 @@ if (!empty($_POST['save'])) {
             }, $v_php_versions);
         }
     }
-
+    
+    if (empty($_SESSION['error_msg'])) {
+        if($_POST['v_php_default_version'] != DEFAULT_PHP_VERSION) {
+            exec(HESTIA_CMD . "v-change-sys-php " . escapeshellarg($_POST['v_php_default_version']), $output, $return_var);
+            check_return_code($return_var, $output);
+            unset($output);
+        }   
+    }
+    
     // Change timezone
     if (empty($_SESSION['error_msg'])) {
         if (!empty($_POST['v_timezone'])) {

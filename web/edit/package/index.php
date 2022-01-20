@@ -19,6 +19,12 @@ if (empty($_GET['package'])) {
     exit;
 }
 
+// Prevent editing of system package
+if ($_GET['package'] === 'system') {
+    header("Location: /list/package/");
+    exit;
+}
+
 // List package
 $v_package = escapeshellarg($_GET['package']);
 exec(HESTIA_CMD."v-list-user-package ".$v_package." 'json'", $output, $return_var);

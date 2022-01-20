@@ -1327,7 +1327,7 @@ check_result $? "can't enable sftp jail"
 
 # Adding Hestia admin account
 echo "[ * ] Create admin account..."
-$HESTIA/bin/v-add-user admin $vpass $email default "System Administrator"
+$HESTIA/bin/v-add-user admin $vpass $email "system" "System Administrator"
 check_result $? "can't create admin user"
 $HESTIA/bin/v-change-user-shell admin nologin
 $HESTIA/bin/v-change-user-role admin admin

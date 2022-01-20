@@ -1,5 +1,4 @@
 <?php
-error_reporting(NULL);
 ob_start();
 $TAB = 'LOG';
 

@@ -1,6 +1,5 @@
 <?php
 
-error_reporting(null);
 $TAB = 'SERVER';
 
 // Main include

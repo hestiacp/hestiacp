@@ -1,6 +1,5 @@
 <?php
 
-error_reporting(null);
 ob_start();
 $TAB = 'PACKAGE';
 
@@ -16,12 +15,6 @@ if ($_SESSION['userContext'] != 'admin') {
 
 // Check package argument
 if (empty($_GET['package'])) {
-    header("Location: /list/package/");
-    exit;
-}
-
-// Prevent editing of default package
-if ($_GET['package'] === 'default') {
     header("Location: /list/package/");
     exit;
 }

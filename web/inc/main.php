@@ -1,5 +1,6 @@
 <?php
 
+session_start();
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
@@ -11,8 +12,6 @@ if(!file_exists(dirname(__FILE__).'/vendor/autoload.php')){
 }
 
 require 'vendor/autoload.php';
-session_start();
-
 
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
 if ($_SESSION['RELEASE_BRANCH'] == 'release' && $_SESSION['DEBUG_MODE'] == 'false') {
@@ -26,12 +25,12 @@ define('DEFAULT_PHP_VERSION', 'php-' . exec('php -r "echo substr(phpversion(),0,
 load_hestia_config();
 require_once(dirname(__FILE__) . '/prevent_csrf.php');
 
-
 function destroy_sessions()
 {
     unset($_SESSION);
     session_unset();
     session_destroy();
+    session_start();
 }
 
 $i = 0;

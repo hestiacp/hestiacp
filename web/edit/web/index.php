@@ -1,6 +1,5 @@
 <?php
 
-error_reporting(null);
 ob_start();
 unset($_SESSION['error_msg']);
 $TAB = 'WEB';

@@ -1,5 +1,5 @@
 <?php
-error_reporting(NULL);
+
 $TAB = 'RRD';
 
 // Main include

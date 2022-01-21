@@ -93,3 +93,8 @@ if [ ! -f "/usr/share/keyrings/nginx-keyring.gpg" ]; then
     fi
     
 fi
+
+echo "[ * ] Refresh Hostname SSL"
+hostname=$(hostname);
+user=$(v-search-domain-owner "$hostname");
+$HESTIA/v-update-host-certificate "$user" "$hostname"

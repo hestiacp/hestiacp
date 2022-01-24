@@ -580,7 +580,7 @@ upgrade_phpmyadmin() {
                 chmod 0640 /var/lib/phpmyadmin/blowfish_secret.inc.php
             fi
         else
-            # Display upgrade infob2     rmation
+            # Display upgrade information
             echo "[ * ] Upgrading phpMyAdmin to version v$pma_v..."
             [ -d /usr/share/phpmyadmin ] || mkdir -p /usr/share/phpmyadmin
 

@@ -14,6 +14,9 @@ source $HESTIA/func/syshealth.sh
 #######                Functions & Initialization             #######
 #####################################################################
 
+# Define version check function
+function version_ge(){ test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o -n "$1" -a "$1" = "$2"; }
+
 add_upgrade_message (){ 
     if [ -f "$HESTIA_BACKUP/message.log" ]; then 
         echo -e $1 >> $HESTIA_BACKUP/message.log
@@ -545,12 +548,29 @@ upgrade_start_routine() {
     #####################################################################
 }
 
+upgrade_b2_tool(){
+    b2cli="/usr/local/bin/b2"
+    b2lnk="https://github.com/Backblaze/B2_Command_Line_Tool/releases/download/v$b2_v/b2-linux"
+    if [ -f "$b2cli" ]; then
+        b2_version=$(b2 version | grep -o -E '[0-9].[0-9].[0-9]+' | head -1);
+        if version_ge "$b2_version" "$b2_v"; then
+            echo "[ * ] Backblaze CLI tool is up to date ($b2_v)..."
+        else
+            echo "[ * ] Upgrading Backblaze CLI tool to version v$b2_v..."
+            rm $b2cli
+            wget -O $b2cli $b2lnk > /dev/null 2>&1
+            chmod +x $b2cli > /dev/null 2>&1
+            if [ ! -f "$b2cli" ]; then
+                echo "Error: Binary download failed, b2 doesnt work as expected."
+                exit 3
+            fi
+        fi
+    fi   
+}
+
 upgrade_phpmyadmin() {
     # Check if MariaDB/MySQL is installed on the server before attempting to install or upgrade phpMyAdmin
     if [ -n "$(echo $DB_SYSTEM | grep -w 'mysql')" ]; then
-        # Define version check function
-        function version_ge(){ test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o -n "$1" -a "$1" = "$2"; }
-
         pma_release_file=$(ls /usr/share/phpmyadmin/RELEASE-DATE-* 2>/dev/null |tail -n 1)
         if version_ge "${pma_release_file##*-}" "$pma_v"; then
             echo "[ * ] phpMyAdmin is up to date (${pma_release_file##*-})..."

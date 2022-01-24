@@ -303,15 +303,39 @@
 											<?php endforeach; ?>
 										<?php endforeach; ?>
 									<?php endif; ?>
+									<?php if(!empty($_SESSION['WEB_BACKEND'])){
+									?>
+									<tr>
+										<td class="vst-text step-top">
+											<?=_('System PHP version');?></span>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<select class="vst-list" name="v_php_default_version">
+												<?php foreach($v_php_versions as $php_version){
+												if($php_version -> installed){
+												?>
+												<option value="<?=$php_version->version; ?>" <?php if($php_version->name == DEFAULT_PHP_VERSION){ echo "selected" ;}?> ><?=$php_version->name; ?></option>
+												<?php	
+												}
+												}
+												?>
+											</select>
+										</td>
+									</tr>
+									<?php
+									}
+									?>
 									<tr>
 										<td>
 											<br />
 										</td>
 									</tr>
+
 								</table>
 							</td>
 						</tr>
-
 						<!-- DNS Server tab -->
 						<?php if (!empty($_SESSION['DNS_SYSTEM'])) { ?>
 							<tr>

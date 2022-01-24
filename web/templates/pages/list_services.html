@@ -5,6 +5,9 @@
 			<a href="/edit/server/" class="ui-button cancel" dir="ltr"><i class="fas fa-cog status-icon maroon"></i><?=_('Configure');?></a>
 			<a href="/list/rrd/" class="ui-button cancel" dir="ltr"><i class="fas fa-chart-area status-icon blue"></i><?=_('Graphs');?></a>
             <a href="/list/updates/" class="ui-button cancel" dir="ltr"><i class="fas fa-sync status-icon green"></i><?=_('Updates');?></a>
+			<?php if (!empty($_SESSION['FIREWALL_SYSTEM']) && $_SESSION['FIREWALL_SYSTEM'] == "iptables" ) {?>
+			<a href="/list/firewall/" class="ui-button cancel" dir="ltr"><i class="fas fa-shield-alt status-icon red"></i><?=_('Firewall');?></a>
+			<?php }?>
 			<a href="/list/log/?user=system&token=<?=$_SESSION['token']?>" class="ui-button cancel" dir="ltr"><i class="fas fa-binoculars status-icon orange"></i><?=_('Logs');?></a>
 			<div class="actions-panel display-inline-block" key-action="js">
 				<a class="data-controls do_servicerestart ui-button danger cancel">

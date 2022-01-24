@@ -304,9 +304,6 @@ add_mysql_database_temp_user() {
   }
 
 delete_mysql_database_temp_user(){
-    echo $database;
-    echo $dbuser;
-    echo $host;
     mysql_connect $host;
     query="REVOKE ALL ON \`$database\`.* FROM \`$dbuser\`@localhost"
     mysql_query "$query" > /dev/null

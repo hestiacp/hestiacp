@@ -3,8 +3,6 @@
 define('NO_AUTH_REQUIRED',true);
 define('NO_AUTH_REQUIRED2',true);
 
-error_reporting(NULL);
-
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Checking IP of incoming connection, checking is it NAT address

@@ -1,8 +1,5 @@
 <?php
 
-// Init
-error_reporting(null);
-session_start();
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check token

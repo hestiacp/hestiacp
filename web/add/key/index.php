@@ -1,6 +1,6 @@
 <?php
-
-error_reporting(E_ALL);
+ob_start();
+session_start();
 $TAB = 'USER';
 
 // Main include

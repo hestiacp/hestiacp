@@ -529,12 +529,12 @@
 											</tr>
 											<tr>
 												<td class="vst-text">
-													<?=_('phpMyAdmin Single Sign On');?>
+													<?=_('phpMyAdmin Single Sign On');?><span class="hint">(<a href="https://docs.hestiacp.com/admin_docs/database/phpmyadmin-sso.html" target="_blank"><?=_('More info');?>)</span>
 												</td>
 											</tr>
 											<tr>
 												<td>
-													<select class="vst-list" name="v_phpmyadmin_key">
+													<select class="vst-list" name="v_phpmyadmin_key" <?php if ($_SESSION['API'] != 'yes'){ echo "disabled"; }?>>
 														<option value='no'><?=_('Disabled'); ?></option>
 														<option value='yes' <?php if($_POST['v_phpmyadmin_key'] == "yes" || $_SESSION['PHPMYADMIN_KEY'] != ''){ echo 'selected="selected"'; }; ?>><?=_('Enabled'); ?></option>
 													</select>

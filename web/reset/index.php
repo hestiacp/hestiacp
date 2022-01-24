@@ -1,15 +1,14 @@
 <?php
 
-session_start();
+// Main include
+include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
+
 define('NO_AUTH_REQUIRED', true);
 $TAB = 'RESET PASSWORD';
 
 if (isset($_SESSION['user'])) {
     header("Location: /list/user");
 }
-
-// Main include
-include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 if ($_SESSION['POLICY_SYSTEM_PASSWORD_RESET'] == 'no') {
     header('Location: /login/');

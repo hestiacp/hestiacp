@@ -331,6 +331,10 @@ if [ "x$(id -u)" != 'x0' ]; then
     check_result 1 "Script can be run executed only by root"
 fi
 
+if [ -d "/usr/local/hestia" ]; then
+  check_result 1 "Hestia install detected. Unable to continue"
+fi
+
 # Checking admin user account
 if [ -n "$(grep ^admin: /etc/passwd /etc/group)" ] && [ -z "$force" ]; then
     echo 'Please remove admin user account before proceeding.'

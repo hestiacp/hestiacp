@@ -61,9 +61,9 @@ fi
 
 # Cleanup quotes on dvalue
 # - [CAA] records will be left unchanged
-# - [SRV] will be  stripped of double quotes even when  containg spaces
+# - [SRV] will be  stripped of double quotes even when  containing spaces
 # - Rest of record types will be striped of quotes and the final string
-#   will be enclosed in double quotes if  containg spaces or semicolons 
+#   will be enclosed in double quotes if  containing spaces or semicolons 
 
 if [ "$rtype" != "CAA" ]; then
     dvalue=${dvalue//\"/}

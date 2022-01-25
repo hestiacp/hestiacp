@@ -1157,6 +1157,12 @@ function check_ip_not_banned(){
     refute_output
 }
 
+@test "DNS: Change DNS domain template" {
+  run v-change-dns-domain-tpl $user $domain default-nomail
+  assert_success
+  refute_output
+}
+
 @test "DNS: Suspend domain" {
     run v-suspend-dns-domain $user $domain
     assert_success

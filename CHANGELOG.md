@@ -1,6 +1,41 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.5.5] - Service release
+
+### Features
+
+- Improve default php-fpm.conf files. (#2318, #2343)
+- Notify user when a suspended user tries to login (#2310, #2345)
+- Allow setting default web install templates for Quick install (#2344) (https://github.com/hestiacp/hestia-quick-install)
+- Improve security how apt keys are downloaded #2299 (https://blog.cloudflare.com/dont-use-apt-key/)
+- Allow users to set system php version in Web GUI (#2357)
+- Added a link to the firewall in list services (#2371) @fra81
+
+### Changes
+
+- Modify template warning #2346
+- Removed 127.0.0.1 from the default accepted ip list api. (#2325)
+- Update translations
+
+### Bugfixes
+
+- Update CSS to prevent wrapping in email info box (#2353) @chriscapisce
+- Remove unwanted debug information regarding PhpMyAdmin SSO causing emails to be send to administrator
+- Allow the use of 8 name servers for DNS templates (Gmail, Zoho and Office 365) (#2369, #2370)
+- Fixed an issue where databases where not able to backup if it required custom settings
+- Allow users to edit default.pkg again. On new installs the default admin user will get assigned a new system.pkg (#2365)
+- Disable enabling PMA SSO when Api was disabled + Added link to FAQ for frequently asked questions. (#2365)
+- Remove error_reporting(null) and allow all errors to be logged in /var/log/hestia/nginx-error.log (#2365)
+- Fixed an issue where value "Allow suspended wasn't saved" (#2356, #2355)
+- Fixed and issue where AUTH_USER and AUTH_HASH was not present and there for during rebuild caused issues with Nginx (#2350, #2355)
+
+### Dependencies
+
+- Update PHPmyadmin to 5.1.2 (https://www.phpmyadmin.net/files/5.1.2/)
+- Update Filegator to 7.7.1 (https://github.com/filegator/filegator/releases/tag/v7.7.1)
+- Update B2CLI to 3.2.0 (https://github.com/Backblaze/B2_Command_Line_Tool/releases/tag/v3.2.0) (#2349) @ptrinh
+
 ## [1.5.4] - Service release
 
 ### Features

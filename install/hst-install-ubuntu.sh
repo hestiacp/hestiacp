@@ -662,6 +662,9 @@ fi
 # Define apt conf location
 apt=/etc/apt/sources.list.d
 
+# Create new folder if not all-ready exists
+mkdir /root/.gnupg/ && chmod 700 /root/.gnupg/
+
 # Updating system
 echo "Adding required repositories to proceed with installation:"
 echo

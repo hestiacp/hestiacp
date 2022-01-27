@@ -1,7 +1,7 @@
 ---
 kind: pipeline
 type: ssh
-name: HestiaCP + Nginx + Apache2  
+name: Ubuntu | Nginx + Apache2  
 
 concurrency:
   limit: 1
@@ -45,7 +45,7 @@ trigger:
 ---
 kind: pipeline
 type: ssh
-name: HestiaCP + Nginx  
+name: Debian | Nginx  
 
 concurrency:
   limit: 1
@@ -109,4 +109,4 @@ trigger:
 
 ---
 kind: signature
-hmac: da6a96c077ec55ccfb27ec8a3250eeb0700153078adf088dc70998b2cd033b28
+hmac: e6d1a0d62ad4f5b0b8bed33c248e55e6de60ee9c1601ee5395fe5d5e72942e85

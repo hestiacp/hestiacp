@@ -31,10 +31,10 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.5.4'
+HESTIA_INSTALL_VER='1.5.5'
 # Dependencies
-pma_v='5.1.1'
-rc_v="1.5.1"
+pma_v='5.1.2'
+rc_v="1.5.2"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1")
 fpm_v="8.0"
 mariadb_v="10.6"
@@ -310,6 +310,10 @@ fi
 # Checking root permissions
 if [ "x$(id -u)" != 'x0' ]; then
     check_result 1 "Script can be run executed only by root"
+fi
+
+if [ -d "/usr/local/hestia" ]; then
+  check_result 1 "Hestia install detected. Unable to continue"
 fi
 
 # Checking admin user account
@@ -665,9 +669,10 @@ echo
 # Installing Nginx repo
 
 echo "[ * ] NGINX"
-echo "deb [arch=$ARCH] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
-apt-key adv --fetch-keys 'https://nginx.org/keys/nginx_signing.key' > /dev/null 2>&1
+echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
+curl -s  https://nginx.org/keys/nginx_signing.key | gpg --dearmor | tee /usr/share/keyrings/nginx-keyring.gpg >/dev/null 2>&1
 
+#add-apt-repository  does not support it yet see #https://bugs.launchpad.net/ubuntu/+source/software-properties/+bug/1862764
 # Installing sury PHP repo
 echo "[ * ] PHP"
 LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
@@ -681,20 +686,20 @@ fi
 # Installing MariaDB repo
 if [ "$mysql" = 'yes' ]; then
     echo "[ * ] MariaDB"
-    echo "deb [arch=$ARCH] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
-    apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc' > /dev/null 2>&1
+    echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
+    curl -s https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | tee /usr/share/keyrings/mariadb-keyring.gpg >/dev/null 2>&1
 fi
 
 # Installing HestiaCP repo
 echo "[ * ] Hestia Control Panel"
-echo "deb [arch=$ARCH] https://$RHOST/ $codename main" > $apt/hestia.list
-apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
+echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list
+gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5 >/dev/null 2>&1
 
 # Installing PostgreSQL repo
 if [ "$postgresql" = 'yes' ]; then
     echo "[ * ] PostgreSQL"
-    echo "deb [arch=$ARCH] https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
-    apt-key adv --fetch-keys 'https://www.postgresql.org/media/keys/ACCC4CF8.asc' > /dev/null 2>&1
+    echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/postgresql-keyring.gpg] https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
+    curl -s https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | tee /usr/share/keyrings/postgresql-keyring.gpg >/dev/null 2>&1
 fi
 
 # Echo for a new line
@@ -1326,7 +1331,7 @@ check_result $? "can't enable sftp jail"
 
 # Adding Hestia admin account
 echo "[ * ] Create admin account..."
-$HESTIA/bin/v-add-user admin $vpass $email default "System Administrator"
+$HESTIA/bin/v-add-user admin $vpass $email "system" "System Administrator"
 check_result $? "can't create admin user"
 $HESTIA/bin/v-change-user-shell admin nologin
 $HESTIA/bin/v-change-user-role admin admin
@@ -1430,20 +1435,14 @@ fi
 
 if [ "$multiphp" = 'yes' ] ; then
     for v in "${multiphp_v[@]}"; do
-        rm -f /etc/php/$v/fpm/pool.d/*
-        echo "[ * ] Install PHP version $v..."
+        echo "[ * ] Install PHP $v..."
         $HESTIA/bin/v-add-web-php "$v" > /dev/null 2>&1
     done
 fi
 
 if [ "$phpfpm" = 'yes' ]; then
-    echo "[ * ] Configuring PHP-FPM..."
+    echo "[ * ] Configuring PHP $fpm_v..."
     $HESTIA/bin/v-add-web-php "$fpm_v" > /dev/null 2>&1
-    cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf
-    update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1
-    systemctl start php$fpm_v-fpm >> $LOG
-    check_result $? "php-fpm start failed"
-    update-alternatives --set php /usr/bin/php$fpm_v > /dev/null 2>&1
 fi
 
 

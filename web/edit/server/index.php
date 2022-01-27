@@ -276,7 +276,15 @@ if (!empty($_POST['save'])) {
             }, $v_php_versions);
         }
     }
-
+    
+    if (empty($_SESSION['error_msg'])) {
+        if($_POST['v_php_default_version'] != DEFAULT_PHP_VERSION) {
+            exec(HESTIA_CMD . "v-change-sys-php " . escapeshellarg($_POST['v_php_default_version']), $output, $return_var);
+            check_return_code($return_var, $output);
+            unset($output);
+        }   
+    }
+    
     // Change timezone
     if (empty($_SESSION['error_msg'])) {
         if (!empty($_POST['v_timezone'])) {
@@ -400,7 +408,7 @@ if (!empty($_POST['save'])) {
             $v_debug_mode_adv = 'yes';
             
         }
-        if (($_POST['v_experimental_features'] != $_SESSION['POLICY_SYSTEM_ENABLE_BACON']) && $_POST['v_experimental_features'] == "false" ) {
+        if (($_POST['v_policy_user_view_suspended'] != $_SESSION['POLICY_SYSTEM_ENABLE_BACON']) && $_POST['v_experimental_features'] == "false" ) {
             //disable preview mode
             exec(HESTIA_CMD."v-change-sys-config-value POLICY_USER_VIEW_SUSPENDED ".escapeshellarg($_POST['v_policy_user_view_suspended']), $output, $return_var);
             check_return_code($return_var, $output);

@@ -1,6 +1,5 @@
 <?php
 
-error_reporting(null);
 if ($_GET['user'] === 'system') {
     $TAB = 'SERVER';
 } else {

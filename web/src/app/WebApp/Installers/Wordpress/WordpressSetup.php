@@ -31,13 +31,18 @@ class WordpressSetup extends BaseSetup {
         'resources' => [
             'archive'  => [ 'src' => 'https://wordpress.org/latest.tar.gz' ],
         ],
+        'server' => [
+            'nginx' => [
+                'template' => 'wordpress',
+            ],
+        ],
         
     ];
     
     public function install(array $options = null)
     {
         parent::install($options);
-
+        parent::setup($options);
         $this->appcontext->runUser('v-open-fs-file',[$this->getDocRoot("wp-config-sample.php")], $result);
 
         $distconfig = preg_replace( [
@@ -67,7 +72,8 @@ class WordpressSetup extends BaseSetup {
             . "&admin_password=" . rawurlencode($options['wordpress_account_password'])
             . "&admin_password2=". rawurlencode($options['wordpress_account_password'])
             . "&admin_email="    . rawurlencode($options['wordpress_account_email'])), $output, $return_var);
-
+        
+    
         return ($return_var === 0);
     }
 }

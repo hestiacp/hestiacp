@@ -1,5 +1,4 @@
 <?php
-error_reporting(NULL);
 $TAB = 'BACKUP';
 
 // Main include

@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.5.6] - Service release
+
+### Bugfixes
+
+- Fixed an issue with the installer. system.pkg didn't allow for a Web alias #2381
+- Fixed an issue with upgrade script causing command to to be executed (https://forum.hestiacp.com/t/upgrading-to-1-5-5-error-line/5449/3)
+
 ## [1.5.5] - Service release
 
 ### Features

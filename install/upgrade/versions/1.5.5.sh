@@ -99,7 +99,3 @@ if [ ! -f "$HESTIA/data/packages/system.pkg" ]; then
     cp -f $HESTIA/install/deb/packages/system.pkg $HESTIA/data/packages/system.pkg
 fi
 
-echo "[ * ] Refresh Hostname SSL"
-hostname=$(hostname);
-user=$(v-search-domain-owner "$hostname");
-$HESTIA/bin/v-update-host-certificate "$user" "$hostname"

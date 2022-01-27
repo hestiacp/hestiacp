@@ -230,7 +230,7 @@ if [ -n "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'remote' ]; then
         service="$db"
         proc_name=''
         if [ "$service" = 'mysql' ]; then
-            if [ -d "/etc/sysconfig" ]; then
+            if [ -f "/etc/mysql/mysql.cnf" ]; then
                 service='mysqld'
                 proc_name='mysqld'
             fi

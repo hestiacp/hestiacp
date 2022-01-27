@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 
 ### Bugfixes
 
+- Fixed an issue with apt update and public key missing
+
+If you have to following error
+
+```
+The following signatures couldn't be verified because the public key is not available: NO_PUBKEY A189E93654F0B0E5
+```
+
+Follow the following instructions
+
+```
+rm /usr/share/keyrings/hestia-keyring.gpg
+mkdir /root/.gnupg/
+gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5
+```
+
+After that run apt update && apt upgrade 
+
+## [1.5.6] - Service release
+
+### Bugfixes
+
 - Fixed an issue with the installer. system.pkg didn't allow for a Web alias #2381
 - Fixed an issue with upgrade script causing command to to be executed (https://forum.hestiacp.com/t/upgrading-to-1-5-5-error-line/5449/3)
 

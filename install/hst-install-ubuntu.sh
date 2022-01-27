@@ -31,7 +31,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.5.5'
+HESTIA_INSTALL_VER='1.5.6'
 # Dependencies
 pma_v='5.1.2'
 rc_v="1.5.2"

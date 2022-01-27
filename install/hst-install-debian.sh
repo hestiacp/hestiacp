@@ -31,10 +31,10 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.5.5~alpha'
+HESTIA_INSTALL_VER='1.5.5'
 # Dependencies
-pma_v='5.1.1'
-rc_v="1.5.1"
+pma_v='5.1.2'
+rc_v="1.5.2"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1")
 fpm_v="8.0"
 mariadb_v="10.6"
@@ -329,6 +329,10 @@ fi
 # Checking root permissions
 if [ "x$(id -u)" != 'x0' ]; then
     check_result 1 "Script can be run executed only by root"
+fi
+
+if [ -d "/usr/local/hestia" ]; then
+  check_result 1 "Hestia install detected. Unable to continue"
 fi
 
 # Checking admin user account

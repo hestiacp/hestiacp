@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.5.6
+# Hestia Control Panel upgrade script for target version 1.5.7
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -20,8 +20,3 @@ upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
-
-echo "[ * ] Refresh Hostname SSL"
-hostname=$(hostname);
-user=$($HESTIA/bin/v-search-domain-owner "$hostname");
-$HESTIA/bin/v-update-host-certificate "$user" "$hostname"

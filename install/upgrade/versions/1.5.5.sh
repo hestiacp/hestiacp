@@ -101,5 +101,5 @@ fi
 
 echo "[ * ] Refresh Hostname SSL"
 hostname=$(hostname);
-user=$(v-search-domain-owner "$hostname");
+user=$($HESTIA/bin/v-search-domain-owner "$hostname");
 $HESTIA/bin/v-update-host-certificate "$user" "$hostname"

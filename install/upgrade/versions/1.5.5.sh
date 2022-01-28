@@ -29,7 +29,7 @@ done
 
 echo "[ * ] Updating apt keyring configuration..."
 
-mkdir /root/.gnupg
+mkdir -p /root/.gnupg && chmod 700 /root/.gnupg
 
 if [ ! -f "/usr/share/keyrings/nginx-keyring.gpg" ]; then 
     # Get Architecture

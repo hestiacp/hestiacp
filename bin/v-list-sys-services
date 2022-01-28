@@ -230,19 +230,24 @@ if [ -n "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'remote' ]; then
         service="$db"
         proc_name=''
         if [ "$service" = 'mysql' ]; then
-            if [ -d "/etc/sysconfig" ]; then
+            mysql_version=$(mysql -V)
+            mariadb_string="MariaDB"
+            if [[ ! $mysql_version =~ $mariadb_string ]]; then
+                # MySQL
                 service='mysqld'
                 proc_name='mysqld'
-            fi
-            if [ -e "/lib/systemd/system/mariadb.service" ]; then
-                service='mariadb'
-                proc_name='mysqld'
-            fi
-            if [ -f /usr/bin/mysql ]; then
-                mariadb_v=`mysql -V | awk 'NR==1{print $5}' | head -c 4`
-                if [ $mariadb_v = "10.5" ] || [ $mariadb_v = "10.6" ]; then
+            else
+                # MariaDB
+                if [ -e "/lib/systemd/system/mariadb.service" ]; then
                     service='mariadb'
-                    proc_name='mariadbd'
+                    proc_name='mysqld'
+                fi
+                if [ -f /usr/bin/mysql ]; then
+                    mariadb_v=`mysql -V | awk 'NR==1{print $5}' | head -c 4`
+                    if [ $mariadb_v = "10.5" ] || [ $mariadb_v = "10.6" ]; then
+                        service='mariadb'
+                        proc_name='mariadbd'
+                    fi
                 fi
             fi
         fi

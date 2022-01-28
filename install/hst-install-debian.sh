@@ -1404,16 +1404,25 @@ fi
 #                     Configure PHP-FPM                    #
 #----------------------------------------------------------#
 
-if [ "$multiphp" = 'yes' ] ; then
-    for v in "${multiphp_v[@]}"; do
-        echo "[ * ] Install PHP $v..."
-        $HESTIA/bin/v-add-web-php "$v" > /dev/null 2>&1
-    done
-fi
-
-if [ "$phpfpm" = 'yes' ]; then
-    echo "[ * ] Configuring PHP $fpm_v..."
-    $HESTIA/bin/v-add-web-php "$fpm_v" > /dev/null 2>&1
+if [ "$phpfpm" = "yes" ]; then
+  if [ "$multiphp" = 'yes' ] ; then
+      for v in "${multiphp_v[@]}"; do
+          echo "[ * ] Install PHP $v..."
+          $HESTIA/bin/v-add-web-php "$v" > /dev/null 2>&1
+      done
+  else
+        echo "[ * ] Install  PHP $fpm_v..."
+        $HESTIA/bin/v-add-web-php "$fpm_v" > /dev/null 2>&1
+  fi
+  
+  echo "[ * ] Configuring PHP $fpm_v..."
+  # Create www.conf for webmail and php(*)admin
+  cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf
+  update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1
+  systemctl start php$fpm_v-fpm >> $LOG
+  check_result $? "php-fpm start failed"
+  # Set default php version to $fpm_v
+  update-alternatives --set php /usr/bin/php$fpm_v > /dev/null 2>&1
 fi
 
 

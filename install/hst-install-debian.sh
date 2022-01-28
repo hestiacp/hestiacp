@@ -691,8 +691,7 @@ fi
 apt=/etc/apt/sources.list.d
 
 #create new folder if not all-ready exists
-mkdir /root/.gnupg/
-chmod 600 /root/.gnupg/
+mkdir -p /root/.gnupg/ && chmod 700 /root/.gnupg/
 
 # Updating system
 echo "Adding required repositories to proceed with installation:"

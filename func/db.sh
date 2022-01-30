@@ -96,8 +96,10 @@ mysql_query() {
 
 mysql_dump() {
     err="/tmp/e.mysql"
-    mysqldump --defaults-extra-file=$mycnf --single-transaction --routines -r $1 $2 2> $err
+    mysqldump --defaults-file=$mycnf --single-transaction --routines -r $1 $2 2> $err
     if [ '0' -ne "$?" ]; then
+      mysqldumo --defaults-extra-file=$mycnf --single-transaction --routines -r $1 $2 2> $err
+      if [ '0' -ne "$?" ]; then
         rm -rf $tmpdir
         if [ "$notify" != 'no' ]; then
             email=$(grep CONTACT $HESTIA/data/users/admin/user.conf |cut -f 2 -d \')
@@ -108,6 +110,7 @@ mysql_dump() {
         echo "Error: dump $database failed"
         log_event  "$E_DB" "$ARGUMENTS"
         exit "$E_DB"
+        fi
     fi
 }
 

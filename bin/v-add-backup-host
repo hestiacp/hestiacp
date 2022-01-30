@@ -192,10 +192,13 @@ if [ "$type" = 'b2' ]; then
     # Download b2 binary
     if [ ! -f "$b2cli" ]; then
         if [ "$arch" = 'aarch64' ] || [ "$arch" = 'arm64' ]; then
-                pip install b2 > /dev/null 2>&1
+            if ! [ -x "$(command -v pip3)" ]; then
+                apt install python3-pip
+            fi
+            pip3 install b2 > /dev/null 2>&1
         else
-                wget -O $b2cli $b2lnk > /dev/null 2>&1
-                chmod +x $b2cli > /dev/null 2>&1
+            wget -O $b2cli $b2lnk > /dev/null 2>&1
+            chmod +x $b2cli > /dev/null 2>&1
         fi
         if [ ! -f "$b2cli" ]; then
             echo "Error: Binary download failed, b2 doesnt work as expected."

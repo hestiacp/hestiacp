@@ -20,6 +20,9 @@ password=$(perl -e 'print quotemeta shift(@ARGV)' "${raw_password}")
 path=${5-/backup}
 port=$6
 
+# CPU Architecture
+arch=$(uname -m)
+
 # Includes
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
@@ -188,8 +191,12 @@ fi
 if [ "$type" = 'b2' ]; then
     # Download b2 binary
     if [ ! -f "$b2cli" ]; then
-        wget -O $b2cli $b2lnk > /dev/null 2>&1
-        chmod +x $b2cli > /dev/null 2>&1
+        if [ "$arch" = 'aarch64' ] || [ "$arch" = 'arm64' ]; then
+                pip install b2 > /dev/null 2>&1
+        else
+                wget -O $b2cli $b2lnk > /dev/null 2>&1
+                chmod +x $b2cli > /dev/null 2>&1
+        fi
         if [ ! -f "$b2cli" ]; then
             echo "Error: Binary download failed, b2 doesnt work as expected."
             exit 3

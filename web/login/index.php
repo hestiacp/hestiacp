@@ -107,6 +107,8 @@ function authenticate_user($user, $password, $twofa = '')
             sleep(2);
             if($return_var == 5){
                 $error = '<a class="error">' . _('Account has been suspended') . '</a>';   
+            }elseif($return_var == 1){
+                $error = '<a class="error">' . _('Unsuported hash method') . '</a>';     
             }else{
                 $error = '<a class="error">' . _('Invalid username or password') . '</a>';    
             }

@@ -162,10 +162,11 @@ steps:
         script:
             - freight-add ./hestia/*.deb apt/bionic apt/focal apt/strech apt/buster apt/bullseye
             - freight-cache
+            - rm -fr ./hestia/
   
 trigger:
     event: [ promote] 
 
 ---
 kind: signature
-hmac: 6c4fc23040a1c7f528ff2e4a30c1a056c94a25b3060da6b880eb3f3b9d26b2ab
+hmac: 31806a1e5357c43d17d24ef797995fb9952a1d883ad282fd152d7d0378112213

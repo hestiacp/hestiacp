@@ -131,7 +131,7 @@ steps:
     image: debian:bullseye
     commands:
     - ln -snf /etc/localtime && echo CET > /etc/timezone
-    - ./hestiacp/src/hst_autocompile.sh --dontinstalldeps --hestia --debug --cross --noinstall --keepbuild --debug '~localsrc'
+    - ./src/hst_autocompile.sh --dontinstalldeps --hestia --debug --cross --noinstall --keepbuild --debug '~localsrc'
     - mkdir -p ./hestia/
     - mv /tmp/hestiacp-src/deb/*.deb ./hestia/
   - name: Publish

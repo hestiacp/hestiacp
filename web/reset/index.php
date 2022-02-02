@@ -1,10 +1,10 @@
 <?php
 
-// Main include
-include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
-
 define('NO_AUTH_REQUIRED', true);
 $TAB = 'RESET PASSWORD';
+
+// Main include
+include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 if (isset($_SESSION['user'])) {
     header("Location: /list/user");

@@ -735,7 +735,7 @@ if [ "$beta" = 'yes' ]; then
   sed -i 's/deb/#deb/' $apt/hestia.list
   echo "[ ! ] Hestia Control Panel (Preview version)"
   echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-beta-keyring.gpg] https://$RHOSTBETA/ $codename main" > $apt/hestia-beta.list
-  curl -s "https://$RHOSTBETA/pubkey.gpg" | gpg --dearmor | tee /usr/share/keyrings/hestia-beta.gpg  >/dev/null 2>&1
+  curl -s "https://$RHOSTBETA/pubkey.gpg" | gpg --dearmor | tee /usr/share/keyrings/hestia-beta-keyring.gpg  >/dev/null 2>&1
 fi
 
 # Installing PostgreSQL repo

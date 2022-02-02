@@ -32,8 +32,8 @@ check=$(is_object_valid 'user' 'USER' "$user")
 if [ $? -ne 0 ]; then 
     user_str=$(grep "^$user:" /etc/passwd |egrep "rssh|nologin")
     #try to detect "owner" of the ftp_user if not found dont set it up
-    user=$(echo $user_str | cut -f6 -d : | cut -f3 -d / ) 
-    is_object_valid 'user' 'USER' "$user"
+    user_onwer=$(echo $user_str | cut -f6 -d : | cut -f3 -d / ) 
+    is_object_valid 'user' 'USER' "$user_onwer"
 fi 
 user_str=$(grep "^$user:" /etc/passwd |egrep "rssh|nologin")
 if [ -z "$user_str" ]; then

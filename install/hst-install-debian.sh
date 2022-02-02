@@ -16,7 +16,7 @@
 export PATH=$PATH:/sbin
 export DEBIAN_FRONTEND=noninteractive
 RHOST='apt.hestiacp.com'
-RHOSTBETA='beta.hestia.com'
+RHOSTBETA='beta.hestiacp.com'
 GPG='gpg.hestiacp.com'
 VERSION='debian'
 HESTIA='/usr/local/hestia'

@@ -84,6 +84,7 @@ help() {
   -e, --email             Set admin email
   -p, --password          Set admin password
   -D, --with-debs         Path to Hestia debs
+  -B, --beta              Development version   [yes|no]  default: yes            
   -f, --force             Force installation
   -h, --help              Print this help
 
@@ -215,6 +216,7 @@ for arg; do
         --email)                args="${args}-e " ;;
         --password)             args="${args}-p " ;;
         --force)                args="${args}-f " ;;
+        --beta                  args="${args}-B " ;;
         --with-debs)            args="${args}-D " ;;
         --help)                 args="${args}-h " ;;
         *)                      [[ "${arg:0:1}" == "-" ]] || delim="\""
@@ -224,7 +226,7 @@ done
 eval set -- "$args"
 
 # Parsing arguments
-while getopts "a:w:v:j:k:m:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
+while getopts "a:w:v:j:k:m:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:B:fh" Option; do
     case $Option in
         a) apache=$OPTARG ;;            # Apache
         w) phpfpm=$OPTARG ;;            # PHP-FPM
@@ -249,6 +251,7 @@ while getopts "a:w:v:j:k:m:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
         s) servername=$OPTARG ;;        # Hostname
         e) email=$OPTARG ;;             # Admin email
         p) vpass=$OPTARG ;;             # Admin password
+        B) beta==$OPTARG ;;             # Beta / Development version
         D) withdebs=$OPTARG ;;          # Hestia debs path
         f) force='yes' ;;               # Force install
         h) help ;;                      # Help
@@ -284,6 +287,7 @@ set_default_value 'fail2ban' 'yes'
 set_default_value 'quota' 'no'
 set_default_value 'interactive' 'yes'
 set_default_value 'api' 'yes'
+set_default_value 'beta' 'no'
 set_default_port '8083'
 set_default_lang 'en'
 
@@ -459,7 +463,7 @@ esac
 #----------------------------------------------------------#
 
 install_welcome_message() {
-    DISPLAY_VER=$(echo $HESTIA_INSTALL_VER | sed "s|~alpha||g" | sed "s|~beta||g")
+    if [ "$HESTIA_INSTALL_VER" != "$release_branch_ver" ] && [ $beta != 'yes' ]; then
     echo
     echo '                _   _           _   _        ____ ____                  '
     echo '               | | | | ___  ___| |_(_) __ _ / ___|  _ \                 '
@@ -697,6 +701,14 @@ fi
 echo "[ * ] Hestia Control Panel"
 echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list
 gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5 >/dev/null 2>&1
+
+if [ "$beta" = 'yes' ]; then
+  # Enable preview mode
+  sed -i 's/deb/#deb/' $apt/hestia.list
+  echo "[ ! ] Hestia Control Panel (Preview version)"
+  echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-beta-keyring.gpg] https://$RHOSTBETA/ $codename main" > $apt/hestia-beta.list
+  curl -s "https://$RHOSTBETA/pubkey.gpg" | gpg --dearmor | tee /usr/share/keyrings/hestia-beta-keyring.gpg  >/dev/null 2>&1
+fi
 
 # Installing PostgreSQL repo
 if [ "$postgresql" = 'yes' ]; then

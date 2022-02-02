@@ -104,7 +104,7 @@ help() {
   -e, --email             Set admin email
   -p, --password          Set admin password
   -D, --with-debs         Path to Hestia debs
-  -B, --beta              Installl beta program 
+  -B, --beta              Development version   [yes|no]  default: yes 
   -f, --force             Force installation
   -h, --help              Print this help
 

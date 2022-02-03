@@ -216,7 +216,7 @@ for arg; do
         --email)                args="${args}-e " ;;
         --password)             args="${args}-p " ;;
         --force)                args="${args}-f " ;;
-        --beta                  args="${args}-B " ;;
+        --beta)                  args="${args}-B " ;;
         --with-debs)            args="${args}-D " ;;
         --help)                 args="${args}-h " ;;
         *)                      [[ "${arg:0:1}" == "-" ]] || delim="\""
@@ -251,7 +251,7 @@ while getopts "a:w:v:j:k:m:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:B:fh" Option; do
         s) servername=$OPTARG ;;        # Hostname
         e) email=$OPTARG ;;             # Admin email
         p) vpass=$OPTARG ;;             # Admin password
-        B) beta==$OPTARG ;;             # Beta / Development version
+        B) beta=$OPTARG ;;              # Beta / Development version
         D) withdebs=$OPTARG ;;          # Hestia debs path
         f) force='yes' ;;               # Force install
         h) help ;;                      # Help
@@ -504,8 +504,6 @@ install_welcome_message() {
     echo "we will begin installing the following components on your server:"
     echo
 }
-
-if [ "$HESTIA_INSTALL_VER" = "$release_branch_ver" ] && [ $beta = 'yes' ]; then]
 
 # Printing nice ASCII logo
 clear

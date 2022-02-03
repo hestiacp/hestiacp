@@ -1,0 +1,77 @@
+#!/bin/bash
+# info: Switch between release / development or beta apt repository 
+# options: [RESTART]
+#
+# This function allows switching between the stable (apt.hestiacp.com) and unstable (beta.hestiacp.com) apt repository 
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+repo=$1
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Define apt conf location
+apt=/etc/apt/sources.list.d
+RHOSTBETA="beta.hestiacp.com"
+codename="$(lsb_release -s -c)"
+release="$(lsb_release -s -r)"
+RHOST='apt.hestiacp.com'
+# Get Architecture
+architecture="$(uname -m)"
+case $architecture in 
+x86_64)
+    ARCH="amd64"
+    ;;
+ aarch64)
+    ARCH="arm64"
+    ;;
+*)
+    echo "   [ ! ] Unsuported architectrue"
+esac
+
+if [ $repo != "beta" ]; then
+    if [ -f "$apt/hestia-beta.list" ]; then
+        rm $apt/hestia-beta.list
+        sed -i 's/#deb/deb/' $apt/hestia.list
+    else
+        echo "apt.hestiacp.com already active"
+        exit 1; 
+    fi
+else
+    if [ ! -f "$apt/hestia-beta.list" ]; then
+        sed -i 's/deb/#deb/' $apt/hestia.list
+        echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-beta-keyring.gpg] https://$RHOSTBETA/ $codename main" > $apt/hestia-beta.list
+        curl -s "https://$RHOSTBETA/pubkey.gpg" | gpg --dearmor | tee /usr/share/keyrings/hestia-beta-keyring.gpg  >/dev/null 2>&1
+    else
+        echo "beta.hestiacp.com already active"
+        exit 1; 
+    fi
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+$BIN/v-log-action "system" "Info" "System" "Update APT repository changed  (Value: $repo)."
+
+exit

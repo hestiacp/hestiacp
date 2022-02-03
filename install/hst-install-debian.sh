@@ -447,8 +447,8 @@ if [ -d /etc/netplan ] && [ -z "$force" ]; then
     fi
 fi
 
-# Validate whether installation script matches release version before continuing with install
 if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
+    # Validate whether installation script matches release version before continuing with install
     release_branch_ver=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/release/src/deb/hestia/control |grep "Version:" |awk '{print $2}')
     if [ "$HESTIA_INSTALL_VER" != "$release_branch_ver" ] && [ $beta != 'yes' ]; then
         echo
@@ -465,6 +465,20 @@ if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
         echo ""
         check_result 1 "Installation aborted"
     fi
+    
+    # Validate if a development version is installed when --beta is enabled
+    DISPLAY_VER=$(echo $HESTIA_INSTALL_VER | sed "s|~alpha||g" | sed "s|~beta||g")
+    if [ "$HESTIA_INSTALL_VER" = "$DISPLAY_VER" ] && [ $beta = 'yes' ]; then
+        echo
+        echo -e "\e[91mInstallation aborted\e[0m"
+        echo "===================================================================="
+        echo -e "\e[33mERROR: Unable to use beta atp server for stable release\e[0m"
+        echo -e "\e[33mPlease remove the -B or --beta flag from the installer string\e[0m"
+                
+        echo ""
+        check_result 1 "Installation aborted"
+    fi
+    
 fi
 
 case $architecture in 

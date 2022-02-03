@@ -420,10 +420,11 @@ if [ -d /etc/netplan ] && [ -z "$force" ]; then
     fi
 fi
 
-# Validate whether installation script matches release version before continuing with install
+
 if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
+    # Validate whether installation script matches release version before continuing with install
     release_branch_ver=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/release/src/deb/hestia/control |grep "Version:" |awk '{print $2}')
-    if [ "$HESTIA_INSTALL_VER" != "$release_branch_ver" ]; then
+    if [ "$HESTIA_INSTALL_VER" != "$release_branch_ver" ] && [ $beta != 'yes' ]; then
         echo
         echo -e "\e[91mInstallation aborted\e[0m"
         echo "===================================================================="
@@ -435,6 +436,20 @@ if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
         echo -e "\e[33mTo test pre-release versions, build the .deb packages and re-run the installer:\e[0m"
         echo -e "  \e[33m./hst_autocompile.sh \e[1m--hestia branchname no\e[21m\e[0m"
         echo -e "  \e[33m./hst-install.sh .. \e[1m--with-debs /tmp/hestiacp-src/debs\e[21m\e[0m"
+        echo ""
+        check_result 1 "Installation aborted"
+    fi
+    
+    # Validate if a development version is installed when --beta is enabled
+    DISPLAY_VER=$(echo $HESTIA_INSTALL_VER | sed "s|~alpha||g" | sed "s|~beta||g")
+    if [ "$HESTIA_INSTALL_VER" = "$DISPLAY_VER" ] && [ $beta = 'yes' ]; then
+        echo
+        echo -e "\e[91mInstallation aborted\e[0m"
+        echo "===================================================================="
+        echo -e "\e[33mERROR: Unable to use beta atp server for stable release\e[0m"
+        echo -e "\e[33mPlease remove the -B or --beta flag from the installer string\e[0m"
+        
+                
         echo ""
         check_result 1 "Installation aborted"
     fi
@@ -463,7 +478,7 @@ esac
 #----------------------------------------------------------#
 
 install_welcome_message() {
-    if [ "$HESTIA_INSTALL_VER" != "$release_branch_ver" ] && [ $beta != 'yes' ]; then
+    DISPLAY_VER=$(echo $HESTIA_INSTALL_VER | sed "s|~alpha||g" | sed "s|~beta||g")
     echo
     echo '                _   _           _   _        ____ ____                  '
     echo '               | | | | ___  ___| |_(_) __ _ / ___|  _ \                 '
@@ -484,11 +499,13 @@ install_welcome_message() {
     echo "                            www.hestiacp.com                            "
     echo
     echo "========================================================================"
-    echo
+    echo 
     echo "Thank you for downloading Hestia Control Panel! In a few moments,"
     echo "we will begin installing the following components on your server:"
     echo
 }
+
+if [ "$HESTIA_INSTALL_VER" = "$release_branch_ver" ] && [ $beta = 'yes' ]; then]
 
 # Printing nice ASCII logo
 clear

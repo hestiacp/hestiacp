@@ -1,4 +1,4 @@
-a#!/bin/bash
+#!/bin/bash
 # info: add user sftp jail
 # options: USER [RESTART]
 #

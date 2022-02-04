@@ -2149,8 +2149,7 @@ sort_config_file
 
 if [ "$interactive" = 'yes' ]; then
     echo "[ ! ] IMPORTANT: The system will now reboot to complete the installation process."
-    echo -n "                 Press any key to continue!"
-    read reboot
+    read -n 1 -s -r -p "Press any key to continue"
     reboot
 else
     echo "[ ! ] IMPORTANT: You must restart the system before continuing!"

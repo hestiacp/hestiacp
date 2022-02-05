@@ -177,10 +177,10 @@
 							<tr>
 								<td colspan="2">
 									<select id="mail_configuration" class="vst-list flat">
-										<option v_type="hostname" domain="<?=$v_domain?>"><?=_('Use domain hostname');?></option>
+										<option v_type="hostname" domain="<?='mail.'.$v_domain?>"><?=_('Use domain hostname');?></option>
 										<option v_type="starttls"><?=_('Use STARTTLS');?></option>
 										<option v_type="ssl"><?=_('Use SSL / TLS');?></option>
-										<option v_type="no_encryption" domain="<?=htmlentities(trim($v_domain, "'"))?>" no_encryption="<?=_('No encryption');?>"><?=_('No encryption');?></option>
+										<option v_type="no_encryption" domain="<?=htmlentities(trim('mail.'.$v_domain, "'"))?>" no_encryption="<?=_('No encryption');?>"><?=_('No encryption');?></option>
 									</select>
 								</td>
 							</tr>

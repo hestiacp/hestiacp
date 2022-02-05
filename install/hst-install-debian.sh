@@ -16,7 +16,6 @@
 export PATH=$PATH:/sbin
 export DEBIAN_FRONTEND=noninteractive
 RHOST='apt.hestiacp.com'
-RHOSTBETA='beta.hestiacp.com'
 GPG='gpg.hestiacp.com'
 VERSION='debian'
 HESTIA='/usr/local/hestia'
@@ -104,7 +103,6 @@ help() {
   -e, --email             Set admin email
   -p, --password          Set admin password
   -D, --with-debs         Path to Hestia debs
-  -B, --beta              Development version   [yes|no]  default: yes 
   -f, --force             Force installation
   -h, --help              Print this help
 
@@ -238,7 +236,6 @@ for arg; do
         --password)             args="${args}-p " ;;
         --force)                args="${args}-f " ;;
         --with-debs)            args="${args}-D " ;;
-        --beta)                 args="${args}-B " ;;
         --help)                 args="${args}-h " ;;
         *)                      [[ "${arg:0:1}" == "-" ]] || delim="\""
                                 args="${args}${delim}${arg}${delim} ";;
@@ -247,7 +244,7 @@ done
 eval set -- "$args"
 
 # Parsing arguments
-while getopts "a:w:v:j:k:m:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:B:fh" Option; do
+while getopts "a:w:v:j:k:m:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
     case $Option in
         a) apache=$OPTARG ;;            # Apache
         w) phpfpm=$OPTARG ;;            # PHP-FPM
@@ -273,7 +270,6 @@ while getopts "a:w:v:j:k:m:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:B:fh" Option; do
         e) email=$OPTARG ;;             # Admin email
         p) vpass=$OPTARG ;;             # Admin password
         D) withdebs=$OPTARG ;;          # Hestia debs path
-        B) beta=$OPTARG ;;              # Hestia preview program
         f) force='yes' ;;               # Force install
         h) help ;;                      # Help
         *) help ;;                      # Print help (default)
@@ -308,7 +304,6 @@ set_default_value 'fail2ban' 'yes'
 set_default_value 'quota' 'no'
 set_default_value 'interactive' 'yes'
 set_default_value 'api' 'yes'
-set_default_value 'beta' 'no'
 set_default_port '8083'
 set_default_lang 'en'
 
@@ -447,10 +442,10 @@ if [ -d /etc/netplan ] && [ -z "$force" ]; then
     fi
 fi
 
+# Validate whether installation script matches release version before continuing with install
 if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
-    # Validate whether installation script matches release version before continuing with install
     release_branch_ver=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/release/src/deb/hestia/control |grep "Version:" |awk '{print $2}')
-    if [ "$HESTIA_INSTALL_VER" != "$release_branch_ver" ] && [ $beta != 'yes' ]; then
+    if [ "$HESTIA_INSTALL_VER" != "$release_branch_ver" ]; then
         echo
         echo -e "\e[91mInstallation aborted\e[0m"
         echo "===================================================================="
@@ -465,20 +460,6 @@ if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
         echo ""
         check_result 1 "Installation aborted"
     fi
-    
-    # Validate if a development version is installed when --beta is enabled
-    DISPLAY_VER=$(echo $HESTIA_INSTALL_VER | sed "s|~alpha||g" | sed "s|~beta||g")
-    if [ "$HESTIA_INSTALL_VER" = "$DISPLAY_VER" ] && [ $beta = 'yes' ]; then
-        echo
-        echo -e "\e[91mInstallation aborted\e[0m"
-        echo "===================================================================="
-        echo -e "\e[33mERROR: Unable to use beta atp server for stable release\e[0m"
-        echo -e "\e[33mPlease remove the -B or --beta flag from the installer string\e[0m"
-                
-        echo ""
-        check_result 1 "Installation aborted"
-    fi
-    
 fi
 
 case $architecture in 
@@ -741,16 +722,10 @@ if [ "$mysql" = 'yes' ]; then
     curl -s https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | tee /usr/share/keyrings/mariadb-keyring.gpg >/dev/null 2>&1
 fi
 
+# Installing HestiaCP repo
 echo "[ * ] Hestia Control Panel"
 echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list
 gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5 >/dev/null 2>&1
-if [ "$beta" = 'yes' ]; then
-  # Enable preview mode
-  sed -i 's/deb/#deb/' $apt/hestia.list
-  echo "[ ! ] Hestia Control Panel (Preview version)"
-  echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-beta-keyring.gpg] https://$RHOSTBETA/ $codename main" > $apt/hestia-beta.list
-  curl -s "https://$RHOSTBETA/pubkey.gpg" | gpg --dearmor | tee /usr/share/keyrings/hestia-beta-keyring.gpg  >/dev/null 2>&1
-fi
 
 # Installing PostgreSQL repo
 if [ "$postgresql" = 'yes' ]; then

@@ -1,10 +1,10 @@
 #!/bin/bash
-# info: Update release branch variable
+# info: update web templates
 # options: [RESTART]
 #
 # This function for changing the release branch for the
 # Hestia Control Panel. This allows the user to switch between
-# stable and pre-release builds which will automatically update
+# stable and pre-release builds which will automaticlly update
 # based on the appropriate release schedule if auto-update is
 # turned on.
 

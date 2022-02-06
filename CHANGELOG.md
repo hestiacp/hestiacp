@@ -9,12 +9,12 @@ All notable changes to this project will be documented in this file.
 
 ### Bugfixes
 
-- Fixed an issue where FTP accounts where SFTP jail was not enabled correctly #2403 
-- Fixed an issue where press enter key did only respond to "enter" key #2398 
-- Fixed an issue where "User sort" variable wasn't saved properly #2391
-- Fixed an issue with inconstant behaviour between info box mail server settings #2392
-- Fixed an issue where .gnupg folder in /root/ had the wrong premission. 
-- Fixed an issue where users where getting redirected to login page when visiting /reset/ endpoint #2401
+- Fixed an issue where SFTP jail was not enabled correctly for additional FTP accounts #2403 
+- Fixed an issue in the installer where the "Press any key to continue" prompt only responded to the Enter key #2398 
+- Fixed an issue where list sort order preference variable wasn't saved properly #2391
+- Fixed an issue with inconsistent behaviour in mail account settings information dialog #2392
+- Fixed an issue where .gnupg folder in /root/ had the wrong permissions set.
+- Fixed an issue where users were being redirected to login page when visiting /reset/ endpoint #2401
 
 ### Dependencies
 

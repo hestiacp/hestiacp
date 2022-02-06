@@ -1,6 +1,25 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.5.8] - Service release
+
+### Features
+
+ - No new features has been introduced
+
+### Bugfixes
+
+- Fixed an issue where FTP accounts where SFTP jail was not enabled correctly #2403 
+- Fixed an issue where press enter key did only respond to "enter" key #2398 
+- Fixed an issue where "User sort" variable wasn't saved properly #2391
+- Fixed an issue with inconstant behaviour between info box mail server settings #2392
+- Fixed an issue where .gnupg folder in /root/ had the wrong premission. 
+- Fixed an issue where users where getting redirected to login page when visiting /reset/ endpoint #2401
+
+### Dependencies
+
+- No Dependencies have been updated
+
 ## [1.5.7] - Service release
 
 ### Bugfixes

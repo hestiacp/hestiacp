@@ -44,23 +44,33 @@ if ((!empty($_POST['user'])) && (empty($_POST['code']))) {
                 $to = $data[$user]['CONTACT'];
                 $subject = sprintf(_('MAIL_RESET_SUBJECT'), date("Y-m-d H:i:s"));
                 $hostname = exec('hostname');
-                $from = "noreply@".$hostname;
-                $from_name = _('Hestia Control Panel');
-                if (!empty($name)) {
-                    $mailtext = sprintf(_('GREETINGS_GORDON'), $name);
-                } else {
-                    $mailtext = _('GREETINGS');
-                }
+                $hostname_full = exec('hostname -f');
                 if ($hostname.":".$_SERVER['SERVER_PORT'] == $_SERVER['HTTP_HOST']) {
-                    $mailtext .= sprintf(_('PASSWORD_RESET_REQUEST'), $_SERVER['HTTP_HOST'], $user, $rkey, $_SERVER['HTTP_HOST'], $user, $rkey);
-                    if (!empty($rkey)) {
-                        send_email($to, $subject, $mailtext, $from, $from_name, $data[$user]['NAME']);
-                    }
-                    header("Location: /reset/?action=code&user=".$_POST['user']);
-                    exit;
-                } else {
+                    $check = true; 
+                    $hostname_email = $hostname;
+                }else if ($hostname_full.":".$_SERVER['SERVER_PORT'] == $_SERVER['HTTP_HOST']) {
+                    $check = true;
+                    $hostname_email = $hostname_full;
+                }else{
+                    $check = false;
                     $ERROR = "<a class=\"error\">"._('Invalid host domain')."</a>";
                 }
+                if ($check == true){
+                    $from = "noreply@".$hostname_email;
+                    $from_name = _('Hestia Control Panel');
+                    if (!empty($name)) {
+                        $mailtext = sprintf(_('GREETINGS_GORDON'), $name);
+                    } else {
+                        $mailtext = _('GREETINGS');
+                    }
+                    $mailtext .= sprintf(_('PASSWORD_RESET_REQUEST'), $_SERVER['HTTP_HOST'], $user, $rkey, $_SERVER['HTTP_HOST'], $user, $rkey);
+                        if (!empty($rkey)) {
+                            send_email($to, $subject, $mailtext, $from, $from_name, $data[$user]['NAME']);
+                        }
+                        header("Location: /reset/?action=code&user=".$_POST['user']);
+                        exit;
+                }
+                
             }
         } else {
             $ERROR = "<a class=\"error\">"._('Please wait 15 minutes before sending a new request')."</a>";

@@ -31,3 +31,13 @@ for user in $(grep "$HOMEDIR" /etc/passwd |egrep "$shells" |cut -f 1 -d:); do
     $BIN/v-add-user-sftp-jail "$user" "no"
     fi
 done
+
+echo "[ * ] Add .bash_history for existing bash shell users"
+for user in $($BIN/v-list-users plain | cut -f1); do
+    for shell in $($BIN/v-list-user $user plain | cut -f20); do
+        if [[ "$shell" =~ bash ]] && [[ ! -f /home/$user/.bash_history ]]; then
+            touch /home/$user/.bash_history
+            chown $user:$user /home/$user/.bash_history
+        fi
+    done
+done

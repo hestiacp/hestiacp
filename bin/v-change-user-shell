@@ -45,6 +45,12 @@ shell_path=$(grep -w "$shell" /etc/shells | head -n1)
 /usr/bin/chsh -s "$shell_path" "$user" >/dev/null 2>&1
 shell=$(basename "$shell_path")
 
+# Add .bash_history
+if [[ "$shell" =~ bash ]] && [[ ! -f /home/$user/.bash_history ]]; then
+    touch /home/$user/.bash_history
+    chown $user:$user /home/$user/.bash_history
+fi
+
 # Adding jailed sftp env
 if [[ "$shell" =~ nologin ]] || [[ "$shell" =~ rssh ]]; then
     $BIN/v-add-user-sftp-jail "$user" >/dev/null 2>&1

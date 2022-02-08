@@ -119,6 +119,7 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
             fi
             if [[ -n "$domain_redirect" ]] ; then
                 $BIN/v-add-web-domain-redirect $user $domain $domain_redirect $domain_redirect_code
+                unset domain_redirect
             fi
             
             if [ -n "$UPDATE_HOSTNAME_SSL" ] && [ "$UPDATE_HOSTNAME_SSL" = "yes" ]; then

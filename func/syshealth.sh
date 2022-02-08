@@ -53,6 +53,7 @@ function syshealth_update_web_config_format() {
     write_kv_config_file
     unset system
     unset known_keys
+    unset domain_redirect
 }
 
 # Update list of known keys for dns.conf files
